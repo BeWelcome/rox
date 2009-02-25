@@ -416,7 +416,7 @@ if ($countbroadcast>0) {
 
 $str = "
 SELECT
-    messages.*,
+    SQL_CALC_FOUND_ROWS messages.*,
     Username,
     members.Status AS MemberStatus
 FROM
@@ -429,6 +429,8 @@ WHERE
 	
 ";
 $qry = sql_query($str);
+
+$rCount=sql_query("SELECT FOUND_ROWS() as cnt") ;
 
 $count = 0;
 while ($rr = mysql_fetch_object($qry)) {
@@ -498,6 +500,7 @@ WHERE
     $_SERVER['SERVER_NAME'] = 'www.bewelcome.org';
 
 	$SenderMail="localevent@bewelcome.org" ;
+	$text=$text."<br />".ww("mailbot_localvol_info","<a href=\"http://www.bewelcome.org/bw/member.php?cid=".$rr->Username."\">".$rr->Username."</a>",$rCount->Cnt,"<a href=\"http://www.bewelcome.org/bw/mypreferences.php\">".ww("MyPreferences")."</a>","<b>".ww("PreferenceLocalEvent")."</b>" );
     if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $SenderMail, "html", "", "")) {
         LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
         $str = "
@@ -557,68 +560,73 @@ if (IsLoggedIn()) {
 	  * @param $ReplaceWithBr allows 
      * @return string translated according to the best language find
      */
-    function fTrad($IdTrad,$ReplaceWithBr=false) {
+    function fTrad($IdTrad,$ReplaceWithBr=false,$IdForceLanguage=-1) {
 		
-			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
-			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
+		global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
+		$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 																					// Will receive the choosen language
 
-	 		$AllowedTags = "<b><i><br><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a forum_trads
-			if (empty($IdTrad)) {
-			   return (""); // in case there is nothing, return and empty string
-			}
-			else  {
-			   if (!is_numeric($IdTrad)) {
-			   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
-			   }
-			}
+ 		$AllowedTags = "<b><i><br><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a forum_trads
+		if (empty($IdTrad)) {
+		   return (""); // in case there is nothing, return and empty string
+		}
+		else  {
+		   if (!is_numeric($IdTrad)) {
+		   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
+		   }
+		}
 		
+		if ($IdForceLanguage<=0) {
 			if (isset($_SESSION['IdLanguage'])) {
-		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+				$IdLanguage=$_SESSION['IdLanguage'] ;
 			}
 			else {
-		 		$IdLanguage=0 ; // by default language 0
+				$IdLanguage=0 ; // by default language 0
 			} 
-			// Try default language
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
-			$q = sql_query($query);
-			$row = mysql_fetch_object($q) ;
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					LogStr("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
-				} 
-				else {
-							$fTradIdLastUsedLanguage=$row->IdLanguage ;
-			   	    return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-				}
+		}
+		else {
+			$IdLanguage=$IdForceLanguage ;
+		}
+		// Try default language
+       	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+		$q = sql_query($query);
+		$row = mysql_fetch_object($q) ;
+		if (isset ($row->Sentence)) {
+			if (isset ($row->Sentence) == "") {
+				LogStr("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
+			} 
+			else {
+						$fTradIdLastUsedLanguage=$row->IdLanguage ;
+		   	    return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 			}
-			// Try default eng
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
-			$q = sql_query($query);
-			$row = mysql_fetch_object($q) ;
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					LogStr("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
-				} else {
-					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-				}
+		}
+		// Try default eng
+       	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+		$q = sql_query($query);
+		$row = mysql_fetch_object($q) ;
+		if (isset ($row->Sentence)) {
+			if (isset ($row->Sentence) == "") {
+				LogStr("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
+			} else {
+				 $fTradIdLastUsedLanguage=$row->IdLanguage ;
+				return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 			}
-			// Try first language available
-     	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
-			$q = sql_query($query);
-			$row = mysql_fetch_object($q) ;
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					LogStr("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
-				} else {
-					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-				}
+		}
+		// Try first language available
+    	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+		$q = sql_query($query);
+		$row = mysql_fetch_object($q) ;
+		if (isset ($row->Sentence)) {
+			if (isset ($row->Sentence) == "") {
+				LogStr("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
+			} else {
+				 $fTradIdLastUsedLanguage=$row->IdLanguage ;
+			   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 			}
-			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
-			LogStr($strerror, "Bug");
-			return ($strerror); // If really nothing was found, return an empty string
-	 } // end of fTrad
+		}
+		$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
+		LogStr($strerror, "Bug");
+		return ($strerror); // If really nothing was found, return an empty string
+	} // end of fTrad
 
 ?>

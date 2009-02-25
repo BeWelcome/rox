@@ -601,7 +601,8 @@ FROM
     members          
 WHERE
     comments.IdToMember   = $this->id  AND
-    comments.IdFromMember = ".$id."                 
+    comments.IdFromMember = ".$id."  AND
+    comments.IdFromMember = members.Id
           ";
           
           

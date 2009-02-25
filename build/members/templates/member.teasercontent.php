@@ -3,8 +3,7 @@
 
         <div id="pic_main" >
             <div id="img1" >
-                <?php $layoutbits = new MOD_layoutbits;
-                echo $layoutbits->PIC_100_100 ($member->Username,'',$style=""); ?>
+                <a href="gallery/show/user/<?=$member->Username?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>"></a>
             </div> <!-- img1 -->
         </div> <!-- pic_main -->
     </div> <!-- teaser_l -->

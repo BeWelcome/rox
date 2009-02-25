@@ -68,6 +68,9 @@ The following page will allow you to translate this message in other languages
 
 <?php
 if (empty($IdMess)) { // We will only propose this when a new message is created
+if (!isset($IdLocation)) {
+	$IdLocation=0 ;
+}
 ?>
 <form name="preparenewmessage" action="contactlocal/recordnewmessage"  id="idpreparenewmessage" method="post">
 <p>
@@ -75,6 +78,7 @@ if (empty($IdMess)) { // We will only propose this when a new message is created
 <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
 <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
+<input type="hidden" name="IdLocation"  value="<?=$IdLocation?>"/>
 <input type="hidden" name="IdMess"  value="<?=$IdMess?>"/>
 <table><tr><td>
 Language: <select  name="IdLanguage">
@@ -87,7 +91,11 @@ Language: <select  name="IdLanguage">
 		echo ">",$ll->LanguageName,"</option>\n" ;
 	}
 ?>
-</select><br/>
+</select>
+<?php
+if (!empty($rrLocation)) echo " for ".$rrLocation->Choice ;
+?>
+<br/>
 Title of message <input type="Text" name="Title"  size="100" value="<?=$TitleText?>"/><br />
 Text of message <br/><textarea name="MessageText" cols="120" rows="5"><?=$MessageText?></textarea><br />
 </td>

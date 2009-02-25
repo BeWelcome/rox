@@ -72,6 +72,39 @@ class ContactlocalsModel extends RoxModelBase {
 	} // end of GetAllowedLocation
 		
 
+		
+		
+    /**
+	* this function returns an structured array with the possible location for a specified message
+	**/
+    function GetLocation($IdLoc) { 
+		$rr=$this->singleLookup("select id,Name from cities where id=".$IdLoc) ;
+		if (isset($rr->id)) {
+			$rr->Type="City" ;
+			$rr->Choice=" City: ".$rr->Name ;
+		}
+		else {
+			$rr=$this->singleLookup("select id,Name from regions where id=".$IdLoc) ;
+			if (isset($rr->id)) {
+				$rr->Type="Region" ;
+				$rr->Choice=" Region: ".$rr->Name ;
+			}
+			else {
+				$rr=$this->singleLookup("select id,Name from countries where id=".$IdLoc) ;
+				if (isset($rr->id)) {
+					$rr->Type="Country" ;
+					$rr->Choice=" Country: ".$rr->Name ;
+				}
+				else {
+					$ss="Found Location #".$IdLoc." in scope, does'nt match any city or region or country" ;
+				    MOD_log::get()->write($ss,"contactlocation") ; 				
+					die ($ss) ;
+				}
+			}
+		}
+		return($rr) ;
+	} // end of GetLocation
+
     /**
 	* this function returns an structured array with the possible location for a specified message
 	**/
@@ -79,31 +112,7 @@ class ContactlocalsModel extends RoxModelBase {
 		$tt_temp=$this->bulkLookup("select * from localvolmessages_location where IdLocalVolMessage=".$IdMess) ;
 		$tt=array() ;
 		for ($ii=0;$ii<count($tt_temp);$ii++) {
-			$IdLoc=$tt_temp[$ii]->IdLocation ;
-			$rr=$this->singleLookup("select id,Name from cities where id=".$IdLoc) ;
-			if (isset($rr->id)) {
-				$rr->Type="City" ;
-				$rr->Choice=" City: ".$rr->Name ;
-			}
-			else {
-				$rr=$this->singleLookup("select id,Name from regions where id=".$IdLoc) ;
-				if (isset($rr->id)) {
-					$rr->Type="Region" ;
-					$rr->Choice=" Region: ".$rr->Name ;
-				}
-				else {
-					$rr=$this->singleLookup("select id,Name from countries where id=".$IdLoc) ;
-					if (isset($rr->id)) {
-						$rr->Type="Country" ;
-						$rr->Choice=" Country: ".$rr->Name ;
-					}
-					else {
-						$ss="Found Location #".$IdLoc." in scope, does'nt match any city or region or country" ;
-					    MOD_log::get()->write($ss,"contactlocation") ; 				
-						die ($ss) ;
-					}
-				}
-			}
+			$rr=$this->GetLocation($tt_temp[$ii]->IdLocation) ;
 			array_push($tt,$rr) ;
 		}
 		return($tt) ;
@@ -185,6 +194,9 @@ class ContactlocalsModel extends RoxModelBase {
 
 			$qry = $this->dao->query($squery);
 			while ($m=$qry->fetch(PDB::FETCH_OBJ)) { // Browse all members
+				if ($leayoutbits->GetPreference("PreferenceLocalEvent",$m->id)!="Yes") {
+					continue ; // Skip preferences of members who chosen not to receive localevent notification
+				}
 				for ($ii=0,$AlreadyIn=false;$ii<count($ListOfUsers);$ii++) {	// Test if the member is already enqueued to avoid duplicates
 					if ($ListOfUsers[$ii]==$m->id) {
 						$AlreadyIn=true ;
@@ -268,8 +280,6 @@ class ContactlocalsModel extends RoxModelBase {
 		while ($row=$s->fetch(PDB::FETCH_OBJ)) {
 			array_push($rr->ListMessageText,$row) ;
 		}
-
-
 		array_push( $tt,$rr) ;
 	}
 	return($tt) ;
@@ -332,7 +342,7 @@ class ContactlocalsModel extends RoxModelBase {
 		if (!$this->CanWorkWith($IdMess)) {
 			die("Your are not allowe to work with message #".$IdMess) ;
 		}
-		$rMess=$this->$rMess ;
+		$rMess=$this->rMess ;
 
 		$squery="delete from translations where IdTrad=".$rMess->IdTitleText ;
 		$result = $this->dao->query($squery);
@@ -470,8 +480,17 @@ class ContactlocalsModel extends RoxModelBase {
 			if (!$result) {
 				throw new PException('recordnewmessage::Failed to add back the Title and Text ');
 			}
-
-			MOD_log::get()->write("contactlocal : ".$ssIdTitleText." created IdMess=#".$IdMess,"contactlocal") ; 
+			$ssGivelLocation=" No location done" ;
+			
+			if (isset($post['IdLocation'])) {
+				$IdLocation=$post['IdLocation'] ;
+				$ss="replace into localvolmessages_location(IdLocation,IdLocalVolMessage) values(".$IdLocation.",".$IdMess.") " ;
+				$result = $this->dao->query($ss);
+				if (!$result) {
+					throw new PException('recordnewmessage::Failed to AddLocation to message #'.$IdMess);
+				}
+			}
+			MOD_log::get()->write("contactlocal : ".$ssIdTitleText." created IdMess=#".$IdMess.$ssGivelLocation,"contactlocal") ; 
 		} // end if it is a new message
 	} // end of recordnewmessage
 

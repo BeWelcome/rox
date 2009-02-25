@@ -86,7 +86,6 @@ class ContactlocalController extends RoxControllerBase
 					$page = new ContactlocalsPage("","preparenewmessage",$data);
 					break ;
 					
-					
 				case 'dellocation':
 					$model->DelLocation($args->post) ;
 					$data->IdMess=$model->IdMess ;
@@ -99,6 +98,11 @@ class ContactlocalController extends RoxControllerBase
 				case 'preparenewmessage':
 					$data->PossibleLocations=$model->GetAllowedLocation() ;
 					$data->PossibleLanguages=$model->GetMemberLanguages() ;
+					$data->IdLocation=0 ;
+					if (isset($request[2])) {
+						$data->IdLocation=$request[2] ;
+						$data->rrLocation=$model->GetLocation($data->IdLocation) ;
+					}
 					$page = new ContactlocalsPage("","preparenewmessage",$data);
 					break ;
 				case 'delete':
@@ -126,8 +130,11 @@ class ContactlocalController extends RoxControllerBase
 					break ;
 				case 'recordnewmessage':
 					$model->recordnewmessage($args->post) ;
-					$data=$model->LoadList($model->IdMess) ;
 					$data->IdMess=$model->IdMess ;
+					$tt=$model->LoadList($data->IdMess) ;
+					$data->localmessage=$tt[0] ;
+					$data->PossibleLocations=$model->GetAllowedLocation() ;
+					$data->PossibleLanguages=$model->GetMemberLanguages() ;
 					$page = new ContactlocalsPage("","preparenewmessage",$data);
 					break ;					
 					

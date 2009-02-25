@@ -55,6 +55,13 @@ class ContactlocalsPage extends RoxPageView {
                 break ;
             case "preparenewmessage":
 				$callbackId=564;
+				if (isset($this->_data->IdLocation)) {
+					$IdLocation=$this->_data->IdLocation ;
+					$rrLocation=$this->_data->rrLocation ;
+				}
+				else {
+					$IdLocation=0 ;
+				}
 				require 'templates/preparenewmessage.php';    
                 break ;
             default:

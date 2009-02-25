@@ -209,7 +209,7 @@ WHERE
         }
     }
 
-		// Rewrite the title and the message to the vorresponding default language for this member if any
+		// Rewrite the title and the message to the corresponding default language for this member if any
 		$rPost->thread_title=fTrad($rPost->IdTitle) ;
 		$rPost->message=fTrad($rPost->IdContent) ;
 
@@ -303,7 +303,9 @@ FROM
     members
 WHERE
     messages.IdSender = members.id  AND
-    messages.Status = 'ToSend'
+    messages.Status = 'ToSend' AND
+    messages.MessageType = 'MemberToMember' AND
+	
 ";
 $qry = sql_query($str);
 
@@ -402,22 +404,133 @@ WHERE
     sql_query($str);
 
 }
-// and for Test server
+   
+$sResult = $sResult.$count . " intermember Messages sent";
+if ($countbroadcast>0) {
+    $sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
+} 
+
+// -----------------------------------------------------------------------------
+// Messages from LocalVolunteers
+// -----------------------------------------------------------------------------
+
 $str = "
+SELECT
+    SQL_CALC_FOUND_ROWS messages.*,
+    Username,
+    members.Status AS MemberStatus
+FROM
+    messages,
+    members
+WHERE
+    messages.IdSender = members.id  AND
+    messages.Status = 'ToSend' AND
+    messages.MessageType = 'LocalToMember' AND
+	
+";
+$qry = sql_query($str);
+
+$rCount=sql_query("SELECT FOUND_ROWS() as cnt") ;
+
+$count = 0;
+while ($rr = mysql_fetch_object($qry)) {
+    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned
+        if (IsLoggedIn()) {
+            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
+        }
+        $str = "
 UPDATE
-    hcvoltest.messages
+    messages
+SET
+    Status = 'Freeze'
+WHERE
+    id = $rr->id
+        "; 
+        sql_query($str);
+        LogStr("Mailbot refuse to send localvolunteer message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
+        continue ;
+    } 
+     
+    $Email = GetEmail($rr->IdReceiver);
+    $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
+    $subj = ww("YouveGotAMail", $rr->Username);
+    $urltoreply = $baseuri."bw/contactmember.php?action=reply&cid=".$rr->Username."&iMes=".$rr->id;
+    $MessageFormatted=$rr->Message;
+    if ($rr->JoinMemberPict=="yes") {
+        $rImage=LoadRow("
+SELECT
+    *
+FROM
+    membersphotos
+WHERE
+    IdMember = $rr->IdSender  AND
+    SortOrder = 0
+        ");
+        $MessageFormatted = '
+            <html><head>
+            <title>'.$subj.'</title></head>
+            <body>
+            <table>
+            <tr><td>
+        ';
+        if (isset($rImage->FilePath)) {
+            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+        }
+        $MessageFormatted .= '</td><td>';
+        $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
+        $MessageFormatted .= '</td>';
+        
+        if (IsLoggedIn()) { // In this case we display the tracks for the admin who will probably need to check who is sending for sure and who is not
+            echo " from ".$rr->Username." to ".fUsername($rr->IdReceiver). " email=".$Email,"<br>" ;
+        }
+        if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
+            $MessageFormatted .= '<tr><td colspan=2>'.ww('mailbot_JoinSenderMail', $rr->Username, GetEmail($rr->IdSender)).'</td>';
+        }
+        
+        $MessageFormatted .= '</table></body></html>';
+        
+        $text=$MessageFormatted;
+        
+    } else {
+        $text = ww('mailbot_YouveGotAMailText', fUsername($rr->IdReceiver), $rr->Username, $rr->Message, $urltoreply, $rr->Username, $rr->Username);
+    }
+    
+    // to force because context is not defined
+    // TODO: What the hell is this?
+    $_SERVER['SERVER_NAME'] = 'www.bewelcome.org';
+
+	$SenderMail="localevent@bewelcome.org" ;
+	$text=$text."<br />".ww("mailbot_localvol_info","<a href=\"http://www.bewelcome.org/bw/member.php?cid=".$rr->Username."\">".$rr->Username."</a>",$rCount->Cnt,"<a href=\"http://www.bewelcome.org/bw/mypreferences.php\">".ww("MyPreferences")."</a>","<b>".ww("PreferenceLocalEvent")."</b>" );
+    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $SenderMail, "html", "", "")) {
+        LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
+        $str = "
+UPDATE
+    messages
+SET
+    Status = 'Failed'
+WHERE
+    id = $rr->id
+        ";
+    } else {
+        $str = "
+UPDATE
+    messages
 SET
     Status = 'Sent',
     IdTriggerer = $IdTriggerer,
     DateSent = NOW()
 WHERE
-    Status = 'ToSend'
-";
-sql_query($str);
+    id = $rr->id
+        ";
+        $count++;
+    }
+    sql_query($str);
+
+}
     
-$sResult = $sResult.$count . " intermember Messages sent";
-if ($countbroadcast>0) {
-    $sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
+$sResult = $sResult.$count . " localmember Messages sent";
+if ($count>0) {
+    $sResult=$sResult. " and ".$count. " localmember Messages sent" ;
 } 
 
 
@@ -447,68 +560,73 @@ if (IsLoggedIn()) {
 	  * @param $ReplaceWithBr allows 
      * @return string translated according to the best language find
      */
-    function fTrad($IdTrad,$ReplaceWithBr=false) {
+    function fTrad($IdTrad,$ReplaceWithBr=false,$IdForceLanguage=-1) {
 		
-			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
-			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
+		global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
+		$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 																					// Will receive the choosen language
 
-	 		$AllowedTags = "<b><i><br><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a forum_trads
-			if (empty($IdTrad)) {
-			   return (""); // in case there is nothing, return and empty string
-			}
-			else  {
-			   if (!is_numeric($IdTrad)) {
-			   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
-			   }
-			}
+ 		$AllowedTags = "<b><i><br><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a forum_trads
+		if (empty($IdTrad)) {
+		   return (""); // in case there is nothing, return and empty string
+		}
+		else  {
+		   if (!is_numeric($IdTrad)) {
+		   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
+		   }
+		}
 		
+		if ($IdForceLanguage<=0) {
 			if (isset($_SESSION['IdLanguage'])) {
-		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+				$IdLanguage=$_SESSION['IdLanguage'] ;
 			}
 			else {
-		 		$IdLanguage=0 ; // by default language 0
+				$IdLanguage=0 ; // by default language 0
 			} 
-			// Try default language
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
-			$q = sql_query($query);
-			$row = mysql_fetch_object($q) ;
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					LogStr("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
-				} 
-				else {
-							$fTradIdLastUsedLanguage=$row->IdLanguage ;
-			   	    return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-				}
+		}
+		else {
+			$IdLanguage=$IdForceLanguage ;
+		}
+		// Try default language
+       	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+		$q = sql_query($query);
+		$row = mysql_fetch_object($q) ;
+		if (isset ($row->Sentence)) {
+			if (isset ($row->Sentence) == "") {
+				LogStr("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
+			} 
+			else {
+						$fTradIdLastUsedLanguage=$row->IdLanguage ;
+		   	    return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 			}
-			// Try default eng
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
-			$q = sql_query($query);
-			$row = mysql_fetch_object($q) ;
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					LogStr("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
-				} else {
-					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-				}
+		}
+		// Try default eng
+       	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+		$q = sql_query($query);
+		$row = mysql_fetch_object($q) ;
+		if (isset ($row->Sentence)) {
+			if (isset ($row->Sentence) == "") {
+				LogStr("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
+			} else {
+				 $fTradIdLastUsedLanguage=$row->IdLanguage ;
+				return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 			}
-			// Try first language available
-     	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
-			$q = sql_query($query);
-			$row = mysql_fetch_object($q) ;
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					LogStr("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
-				} else {
-					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-				}
+		}
+		// Try first language available
+    	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+		$q = sql_query($query);
+		$row = mysql_fetch_object($q) ;
+		if (isset ($row->Sentence)) {
+			if (isset ($row->Sentence) == "") {
+				LogStr("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
+			} else {
+				 $fTradIdLastUsedLanguage=$row->IdLanguage ;
+			   return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 			}
-			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
-			LogStr($strerror, "Bug");
-			return ($strerror); // If really nothing was found, return an empty string
-	 } // end of fTrad
+		}
+		$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
+		LogStr($strerror, "Bug");
+		return ($strerror); // If really nothing was found, return an empty string
+	} // end of fTrad
 
 ?>

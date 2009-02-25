@@ -423,9 +423,7 @@ FROM
 WHERE
     messages.IdSender = members.id  AND
     messages.Status = 'ToSend' AND
-    messages.MessageType = 'LocalToMember' AND
-	
-";
+    messages.MessageType = 'LocalToMember' ";
 $qry = sql_query($str);
 
 $rCount=sql_query("SELECT FOUND_ROWS() as cnt") ;

@@ -583,11 +583,12 @@ class MOD_words
 	 } // end of mTrad
 	 
     /**
-     * @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
-	  * @param $ReplaceWithBr allows 
-     * @return string translated according to the best language find
-     */
-    public function fTrad($IdTrad,$ReplaceWithBr=false) {
+	* @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
+	 * @param $ReplaceWithBr allows 
+	 * @parame $IdForceLanguage optional can be use to force the routine to try to choose a specific language
+	* @return string translated according to the best language find
+	*/
+    public function fTrad($IdTrad,$ReplaceWithBr=false,$IdForceLanguage=-1) {
 		
 			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
@@ -603,12 +604,17 @@ class MOD_words
 			   }
 			}
 		
-			if (isset($_SESSION['IdLanguage'])) {
-		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+			if ($IdForceLanguage<=0) {
+				if (isset($_SESSION['IdLanguage'])) {
+					$IdLanguage=$_SESSION['IdLanguage'] ;
+				}
+				else {
+					$IdLanguage=0 ; // by default language 0
+				} 
 			}
 			else {
-		 		$IdLanguage=0 ; // by default language 0
-			} 
+				$IdLanguage=$IdForceLanguage ;
+			}
 			// Try default language
         	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
 			$q = $this->_dao->query($query);
@@ -649,8 +655,7 @@ class MOD_words
 			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
 			MOD_log::get()->write($strerror, "Bug");
 			return ($strerror); // If really nothing was found, return an empty string
-	 } // end of fTrad
-	 
+	 } // end of fTrad	 
     
 /*
 * author jeanyves

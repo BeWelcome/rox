@@ -304,9 +304,7 @@ FROM
 WHERE
     messages.IdSender = members.id  AND
     messages.Status = 'ToSend' AND
-    messages.MessageType = 'MemberToMember' AND
-	
-";
+    messages.MessageType = 'MemberToMember' ";
 $qry = sql_query($str);
 
 $count = 0;

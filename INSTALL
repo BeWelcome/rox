@@ -72,7 +72,7 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
     The test database is in testdb/bewelcome.sql.gz
 
       mysql -u root -p -e 'CREATE DATABASE bewelcome'
-      zcat testdb/bewelcome.sql.gz | mysql bewelcome -u root -p
+      unzip testdb/bewelcome.sql.zip && cat bewelcome.sql | mysql bewelcome -u root -p
 
     (On Mac OS X 10.4 and later, use gzcat instead of zcat.)
 
@@ -80,9 +80,9 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
 
       mysql bewelcome -u root -p -e 'UPDATE members SET password = PASSWORD("password")'
       
-      Create a non-root user (e.g. with username bewelcome) for the database.  
+      Create a non-root user (e.g. with username bewelcome) for the database. 
       GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'password';
-
+      FLUSH PRIVILEGES;
       
       Note: to update into the most recent DB version, browse to bw/groups.php on localhost. This will
       kick off the automatic DB update.
@@ -177,7 +177,6 @@ Installation should be finished so far.  If it's not working, refer to:
   * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
   * IRC: #bewelcome-dev on Freenode
   * email/jabber/gtalk: kasper.souren@gmail.com
-  * skype: kasper.souren
 
 
 ==Common issues==

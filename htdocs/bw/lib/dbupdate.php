@@ -104,7 +104,7 @@ function DBUpdateCheck()
 	
 	$updates[25] = "INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
 VALUES (
-NULL , NOW( ) , 'Gallery', 'This right is for Gallery managment (to allow to delete or edit other members pictures in the gallery) Avalaible scope are &quot;All&quot; for all scope &quot;edit&quot; for editing gallery text &quot;delete&quot; for allowing to delete other people picture')" ; // To create a right for gallery
+NULL , NOW( ) , 'Gallery', 'This right is for Gallery managment (to allow to delete or edit other members pictures in the gallery) Avalaible scope are 'All' for all scope 'edit' for editing gallery text 'delete' for allowing to delete other people picture')" ; // To create a right for gallery
 
 
 	$updates[26] = 'ALTER TABLE `cryptedfields` CHANGE `id` `id` INT( 11 ) NOT NULL' ; 
@@ -147,7 +147,7 @@ ADD `TableColumn` VARCHAR( 200 ) NOT NULL DEFAULT 'NotSet' COMMENT 'Security red
 
 	$updates[37] = "INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
 VALUES (
-NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators Various options will be define later for now, only Scope is : &quot;All&quot; &quot;Edit&quot; Scope will allow to edit messages'
+NULL , NOW( ) , 'ForumModerator', 'This is the right needed for forum moderators Various options will be define later for now, only Scope is : 'All' 'Edit' Scope will allow to edit messages'
 )" ;
 
 	$updates[37] = "CREATE TABLE `tags` (
@@ -244,7 +244,7 @@ ADD `expiredate` TIMESTAMP NULL COMMENT 'When the thread will expire' AFTER `id`
 	$updates[] ="ALTER TABLE `forums_posts` ADD INDEX ( `id` ) " ;
 	$updates[] ="ALTER TABLE `memberslanguageslevel` CHANGE `Level` `Level` ENUM( 'MotherLanguage', 'Expert', 'Fluent', 'Intermediate', 'Beginner', 'HelloOnly', 'DontKnow' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DontKnow' COMMENT 'level in the language'" ;
 	$updates[] ="ALTER TABLE `forums_tags` CHANGE `Type` `Type` ENUM( 'Category', 'Member' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Member' COMMENT 'Type of the tag'" ;
-	$updates[] ="ALTER TABLE `previousversion` CHANGE `Type` `Type` ENUM( 'DoneByMember', 'DoneByOtherMember&quot;,&quot;DoneByVolunteer', 'DoneByAdmin', 'DoneByModerator' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DoneByMember'" ;	
+	$updates[] ="ALTER TABLE `previousversion` CHANGE `Type` `Type` ENUM( 'DoneByMember', 'DoneByOtherMember','DoneByVolunteer', 'DoneByAdmin', 'DoneByModerator' ) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DoneByMember'" ;	
     
 	$updates[] ="CREATE TABLE `members_tags_subscribed` (
 `id` int( 11 ) NOT NULL AUTO_INCREMENT COMMENT 'primary key',
@@ -391,7 +391,7 @@ UNIQUE (
 		 
     $updates[]="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
 VALUES (
-NULL , NOW( ) , 'SqlForVolunteers', 'This allow the user to execute some specific query using adminquery page. The Scope can be &quot;All&quot; for all queries or &quot;1&quot;;&quot;3&quot;;&quot;6&quot; if the user has only rights to execute the specific 1 3 and 6 queries. Nota : in future the specific scope for this query will be granted via the adminquery page'
+NULL , NOW( ) , 'SqlForVolunteers', 'This allow the user to execute some specific query using adminquery page. The Scope can be 'All' for all queries or '1';'3';'6' if the user has only rights to execute the specific 1 3 and 6 queries. Nota : in future the specific scope for this query will be granted via the adminquery page'
 )" ;
     
     // AUTO_INCREMENT for tb user table
@@ -472,7 +472,7 @@ CHANGE `id` `id` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT
 			 'hidden',
 			 'yes,hidden,no',
 			 '
-				'echo "<select name=PreferenceLinkPrivacy class=\\\"prefsel\\\">" ;
+				'echo "<select name=PreferenceLinkPrivacy class=\"prefsel\">" ;
 				echo "<option value=yes " ;
 				if ($Value=="yes") echo " selected " ;
 				echo ">",ww("Yes"),"</option>" ;
@@ -1076,11 +1076,11 @@ from (`geonames_cache` `gc` join `geo_usage`) where ((`geo_usage`.`geoId` = `gc`
 	$updates[] ="INSERT INTO `preferences` (`id`, `codeName`, `codeDescription`, `Description`, `created`, `DefaultValue`, `PossibleValues`, `EvalString`, `Status`) 
 	VALUES (NULL, 'PreferenceForumFirstPage', 'PreferenceForumFirstPageDesc', 'This preference is used to state what is the first page of teh forum for the user', NOW(), 
 	'Pref_ForumFirstPageLastPost', 'Pref_ForumFirstPageLastPost;Pref_ForumFirstPageCategory', 
-	'echo \"\n<select name=PreferenceForumFirstPage class=\\\"prefsel\\\">\" ; echo \"<option value=Pref_ForumFirstPageLastPost\" ; if (\$Value==\"Pref_ForumFirstPageLastPost\") echo \" selected \" ; echo \">\",ww(\"Pref_ForumFirstPageLastPost\"),\"</option>\" ; echo \"<option value=Pref_ForumFirstPageCategory\" ; if (\$Value==\"Pref_ForumFirstPageCategory\") echo \" selected \" ; echo \">\",ww(\"Pref_ForumFirstPageCategory\"),\"</option>\" ; echo \"</select> \" ;', 'Advanced')";
+	'echo \"\n<select name=PreferenceForumFirstPage class=\"prefsel\">\" ; echo \"<option value=Pref_ForumFirstPageLastPost\" ; if (\$Value==\"Pref_ForumFirstPageLastPost\") echo \" selected \" ; echo \">\",ww(\"Pref_ForumFirstPageLastPost\"),\"</option>\" ; echo \"<option value=Pref_ForumFirstPageCategory\" ; if (\$Value==\"Pref_ForumFirstPageCategory\") echo \" selected \" ; echo \">\",ww(\"Pref_ForumFirstPageCategory\"),\"</option>\" ; echo \"</select> \" ;', 'Advanced')";
 	
 	$updates[] ="INSERT INTO `rights` ( `id` , `created` , `Name` , `Description` )
 VALUES (
-NULL , NOW( ) , 'ContactLocation', 'This right allows to contact by mail a group of people in a location The scope can be : &quot;All&quot; for all location &quot;LocalVol&quot;, in this case the location the member can contact will depend on the one he is registered as a local vol for &quot;IdLocation1&quot;,&quot;IdLocation2&quot; : a list of integer values which match the geoname id of the corresponding location &quot;WeekLimit=X&quot; is a value which define the limit in number of mail of this type sent per week by this member &quot;DoesNotNeedApproval&quot; : a Parameter which allow the mail wrote by the sender to be sent immediately without any need of review by the Local Vol coordinator '
+NULL , NOW( ) , 'ContactLocation', 'This right allows to contact by mail a group of people in a location The scope can be : 'All' for all location 'LocalVol', in this case the location the member can contact will depend on the one he is registered as a local vol for 'IdLocation1','IdLocation2' : a list of integer values which match the geoname id of the corresponding location 'WeekLimit=X' is a value which define the limit in number of mail of this type sent per week by this member 'DoesNotNeedApproval' : a Parameter which allow the mail wrote by the sender to be sent immediately without any need of review by the Local Vol coordinator '
 )";
 	$updates[] ="ALTER TABLE `messages` ADD `MessageType` ENUM( 'MemberToMember', 'LocalVolToMember' ) NOT NULL DEFAULT 'MemberToMember' COMMENT 'Type of the message, state if it is a memner to member message or something else' AFTER `id` ,
 ADD `IdMessageFromLocalVol` INT NOT NULL DEFAULT '0' COMMENT 'Id of to the localvol messages if this is a type LocalVolToMember' AFTER `MessageType` ";
@@ -1127,6 +1127,24 @@ NULL , NOW( ) , 'RequireCaptchaForContact', 'When this flag is set for a member,
 	$updates[] ="ALTER TABLE `localvolmessages`
   DROP `IdLocalMessage`,
   DROP `IdLanguage`";
+  
+$updates[] = "select now() " ;
+$updates[] = "select now() " ;
+$updates[] = "select now() " ;
+$updates[] = "select now() " ;
+$updates[] = "select now() " ;
+$updates[] = "select now() " ;
+$updates[] = <<<SQL
+INSERT INTO `preferences` ( `codeName`, `codeDescription`, `Description`, `created`, `DefaultValue`, `PossibleValues`, `EvalString`, `Status`) VALUES 
+( 'PreferenceLocalEvent', 'PreferenceLocalEventDesc', 'this preference which is by default set to True will allow the owner to receive the notification for local event in its area (City/Region or Country)', '2009-02-25 12:33:50', 'Yes', 'Yes;No', 
+'echo "<select name=\'PreferenceLocalEvent\' class=\'prefsel\'><option value=Yes " ;if (\$Value==\'Yes\') echo " selected " ;echo ">",ww(\'Yes\'),"</option><option value=No" ;if (\$Value==\'No\') echo " selected " ;echo ">",ww(\'No\'),"</option></select>" ;', 'Active'),
+( 'PreferenceForumCity', 'PreferenceForumCityDesc', 'this preference which is by default set to Yes will allow the owner to receive the notification for forum post event in its City', '2009-02-25 12:39:33', 'Yes', 'Yes;No', 
+'echo "<select name=\'PreferenceForumCity\' class=\'prefsel\'><option value=Yes " ;if (\$Value==\'Yes\') echo " selected " ;echo ">",ww(\'Yes\'),"</option><option value=No" ;if (\$Value==\'No\') echo " selected " ;echo ">",ww(\'No\'),"</option></select>" ;', 'Active'),
+( 'PreferenceForumRegion', 'PreferenceForumRegionDesc', 'this preference which is by default set to yes will allow the owner to receive the notification for forum post event in its Region', '2009-02-25 12:39:33', 'Yes', 'Yes;No', 
+'echo "<select name=\'PreferenceForumRegion\' class=\'prefsel\'><option value=Yes " ;if (\$Value==\'Yes\') echo " selected " ;echo ">",ww(\'Yes\'),"</option><option value=No" ;if (\$Value==\'No\') echo " selected " ;echo ">",ww(\'No\'),"</option></select>" ;', 'Active'),
+( 'PreferenceCountryRegion', 'PreferenceForumCountryDesc', 'this preference which is by default set to No will allow the owner to receive the notification for forum post event in its Region', '2009-02-25 12:39:33', 'No', 'No;Yes', 
+'echo "<select name=\'PreferenceForumCountry\' class=\'prefsel\'><option value=Yes " ;if (\$Value==\'Yes\') echo " selected " ;echo ">",ww(\'Yes\'),"</option><option value=No" ;if (\$Value==\'No\') echo " selected " ;echo ">",ww(\'No\'),"</option></select>" ;', 'Active')
+SQL;
 
     if (empty($res)) {
         $version = 0;

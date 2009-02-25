@@ -14,6 +14,9 @@ $words = new MOD_words();
 
 <h3><?php echo $words->get('localvolunteers'); ?></h3>
 <?php require 'localvolunteerslist.php'; ?>
+if ((MOD_right::get()->HasRight('ContactLocation','$regioninfo->idregion')) or (MOD_right::get()->HasRight('ContactLocation','All'))) {
+	echo " <a href=\"contactlocal/preparenewmessage/".$regioninfo->idregion."\" title=\" prepare a local volunteer message for this region\">write a local vol message</a>" ;
+}
 <h3><?php echo $words->get('members'); ?></h3>
 <?php require 'memberlist.php'; ?>
 

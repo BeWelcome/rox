@@ -98,7 +98,7 @@ class ContactlocalsPage extends RoxPageView {
         $words = $this->getWords();
         echo '<ul class="linklist">';
         echo '<li><a href="http://www.bevolunteer.org/wiki/How_ContactLocalsWorks">Wiki Doc</a></li>';
-        echo '<li><a href="contactlocal/listall">Start page</a></li>';
+        echo '<li><a href="contactlocal/listall">List All</a></li>';
         echo '<li><a href="contactlocal/preparenewmessage">Start new message</a></li>';
         if (MOD_right::get()->HasRight("Poll","create")) {
              echo '<li><a href="polls/create">',$words->getFormatted("polls_createlink"),'</a></li>';

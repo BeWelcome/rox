@@ -11,6 +11,25 @@
 class ContactlocalsModel extends RoxModelBase {
 
 	public $IdMess ;
+	private $rMess ;  // Will be used to store the message
+	
+
+    /**
+	* this function returns true if the current user can do change on current message
+	**/
+    function CanWorkWith($IdMess=-1) { 
+		if ($IdMess>0) {
+			$this->rMess=$this->singleLookup("select * from localvolmessages where id=".$IdMess) ;
+		}
+		if (empty($this->rMess) or ($this->rMess==false)) {
+			die("contaclocal : \$this->rMess is not set") ;
+		}
+		if (MOD_right::get()->rightScope("ContactLocation","All")) return (true) ;
+		if ($_SESSION["IdMember"]==$rMess->IdCreator) return(true) ;
+		return(false) ;
+	} // end of CanWorkWith
+
+
     /**
 	* this function returns an structured array with the possible location the member is allow to send a message in
 	**/
@@ -112,8 +131,107 @@ class ContactlocalsModel extends RoxModelBase {
 	} // end of GetMemberLanguages
 
     /**
-     * this function returns the list of pending messages
-     **/
+	* this function Triggers a message
+	* $IdMess is the id of the message to trig
+	* $DoTrigger is to set to true to really trig the message, elsewhere it will just count the message to trig
+	* returns a string with a feedback about what happen
+	**/
+    function Trigger($IdMess=0,$DoTrigger=false) {
+		$words = new MOD_words();
+		global $fTradIdLastUsedLanguage  ; // This is set for the fTrad function (will define which language to use)
+		$sRet="" ; // This will be the return string
+		
+		if ($DoTrigger) {
+			$sRet="Effective triggering\n" ;
+		}
+		else {
+			$sRet="Simulation no effective triggering" ;
+		}
+	
+		if (empty($IdMess)) {
+			die("Trigger : parameter IdMess is missing") ;
+		}
+		else {
+			$this->IdMess=$IdMess ;
+			$sQuery="select  localvolmessages.*,localvolmessages.id as IdMess,members.id as 'IdCreator', members.Username as 'CreatorUsername' from localvolmessages,members where members.id=localvolmessages.IdSender and localvolmessages.id=".$IdMess ;
+		}
+		$rMess=$this->singleLookup($sQuery) ;
+
+		if (!$this->CanWorkWith($IdMess)) {
+			die("Your are not allowe to work with message #".$IdMess) ;
+		}
+	
+
+		$rMess->ChosenLocations=$this->GetMessageLocation($rMess->IdMess) ;
+
+		$CountMembers=0 ;
+		// Loop to enqueue all members who are in the location
+		$ListOfUsers=array() ;
+		foreach ($rMess->ChosenLocations as $loc) {
+			$layoutbits = new MOD_layoutbits();
+
+			$sLog="Enqueing for ".$loc->Choice." IdLocation=#".$loc->id ;
+			$sRet=$sRet."<br />\n".$sLog ;
+		    if ($DoTrigger) MOD_log::get()->write($sLog,"contactlocation") ; 				
+			if ($loc->Type=="City") {
+				$squery="select members.id,Username from members  where members.IdCity=".$loc->id." and members.Status in ('Active','Inactive')" ;
+			}
+			else if ($loc->Type=="Region") {
+				$squery="select members.id,Username from members,cities  where members.IdCity=cities.id and cities.IdRegion=".$loc->id." and members.Status in ('Active','Inactive')" ;
+			}
+			else if ($loc->Type=="Country") {
+				$squery="select members.id,Username from members,cities  where members.IdCity=cities.id and cities.IdCountry=".$loc->id." and members.Status in ('Active','Inactive')" ;
+			}
+
+			$qry = $this->dao->query($squery);
+			while ($m=$qry->fetch(PDB::FETCH_OBJ)) { // Browse all members
+				for ($ii=0,$AlreadyIn=false;$ii<count($ListOfUsers);$ii++) {	// Test if the member is already enqueued to avoid duplicates
+					if ($ListOfUsers[$ii]==$m->id) {
+						$AlreadyIn=true ;
+						break ;
+					}
+				} // end of for $ii
+				if (!$AlreadyIn) {
+					$CountMembers++ ;
+					$fTradIdLastUsedLanguage=$MemberIdLanguage = $layoutbits->GetPreference("PreferenceLanguage",$m->id);
+
+					$MessageText=$words->fTrad($rMess->IdMessageText,false,$MemberIdLanguage) ; // Try to force the translation of the language to suit the receiver default language
+					
+					$ss="insert into messages(MessageType,IdMessageFromLocalVol,created,IdReceiver,IdSender,Status,Message,IdTriggerer,JoinMemberPict" ;
+					$ss=$ss." values('LocalVolToMember',".$rMess->id.",now(),".$m->id.",".$rMess->IdCreator.",'".$MessageText."',".$_SESSION["IdMember"].",'Yes')" ;
+
+					if ($DoTrigger) {
+						$sLog=" Enqueing members <b>".$m->Username."</b> in language #".$MemberIdLanguage." for ".$loc->Choice." IdLocation=#".$loc->id ;
+						$qry = $this->dao->query($ss);
+						if (!$qry) {
+							throw new PException('failed for '.$ss.'!');
+						}
+						MOD_log::get()->write($sLog,"contactlocation") ; 				
+					}
+					else {
+						$sLog=" Could be sent to member <b>".$m->Username."</b> in language #".$MemberIdLanguage." for ".$loc->Choice." IdLocation=#".$loc->id ;
+					}
+					$sRet=$sRet."<br />\n".$sLog ;
+				}
+			} // end of while
+	
+			if ($DoTrigger) {
+				$sLog=" for Message #".$rMess->id." ".$CountMembers." members notified" ;
+				MOD_log::get()->write($sLog,"contactlocation") ; 				
+			}
+			else {
+				$sLog=" for Message #".$rMess->id." ".$CountMembers." are to be notified (when message will be triggered)" ;
+			}
+			$sRet=$sRet."<br />\n".$sLog ;
+	
+		} // end of for each location	
+		return($sRet) ;
+		die(sRet) ;
+	} // end of Trigger
+    
+    /**
+	* this function returns the list of pending messages
+	**/
     function LoadList($IdMess=0) {
 	if (empty($IdMess)) {
 		$sQuery="select  localvolmessages.*,localvolmessages.id as IdMess,members.id as 'IdCreator', members.Username as 'CreatorUsername' from localvolmessages,members where members.id=localvolmessages.IdSender order by localvolmessages.Status,localvolmessages.created" ;
@@ -124,7 +242,7 @@ class ContactlocalsModel extends RoxModelBase {
 	}
 	$qry = $this->dao->query($sQuery);
     if (!$qry) {
-        throw new PException('polls::LoadList Could not retrieve the localvolmessages!');
+        throw new PException('ContactClocal::LoadList Could not retrieve the localvolmessages!');
     }
 
 	// for all the records
@@ -156,45 +274,7 @@ class ContactlocalsModel extends RoxModelBase {
 	}
 	return($tt) ;
 } // end of LoadList
-    
-    /**
-     * this function returns false if the result of the poll are not available
-		 * @IdPoll is the id of the poll
-     **/
-    function GetPollResults($IdPoll,$Email="",$IdMember=0) {
-	$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* GetPollResults */") ;
-	if ($rPoll->ResultsVisibility=='Not Visible') {
-				return(false) ;
-			}
-			// Todo: proceed with status VisibleAfterVisit in a better way (for now someone who knows the results of a not closed poll)
-			
-			$Data->rPoll=$rPoll ;
-			$rr=$this->singlelookup("select count(*) as TotContrib from polls_contributions where  IdPoll=".$IdPoll) ;
-			$TotContrib=$Data->TotContrib=$rr->TotContrib ;
-			$Data->Choices=$this->bulkLookup("select *,(Counter/".$TotContrib.")*100 as Percent from polls_choices where IdPoll=".$IdPoll." order by Counter,created desc") ;
-			$Data->Contributions=$this->bulkLookup("select comment,Username from polls_contributions,members where  IdPoll=".$IdPoll." and comment <>'' and members.id=polls_contributions.IdMember") ;
-	
-			return($Data) ;
-			
-	  } // end of GetPollResults
 
-    /**
-     * this function returns true if the user has allready contributed to the specific post
-		 * @IdPoll is the id of the poll
-		 * @$Email is the mandatory Email which must be provided for a not logged user (optional)
-		 * @$IdMember id of the member (optional)
-     **/
-    function HasAlreadyContributed($IdPoll,$Email="",$IdMember=0) {
-			if (!empty($IdMember)) {
-				$rr=$this->singleLookup("select count(*) as cnt from polls_contributions where IdMember=".$IdMember." and IdPoll=".$IdPoll) ;
-				if ($rr->cnt>0) return(true) ;  
-			}
-			if (!empty($Email)) {
-				$rr=$this->singleLookup("select count(*) as cnt from polls_contributions where Email='".$Email." and IdPoll=".$IdPoll) ;
-				if ($rr->cnt>0) return(true) ;  
-			}
-			return(false) ;
-		} // end of HasAlreadyContributed
 
 
     /**
@@ -204,6 +284,9 @@ class ContactlocalsModel extends RoxModelBase {
      **/
     function DelLocation($post) {
 		$this->IdMess=$IdMess=$post['IdMess'] ;
+		if (!$this->CanWorkWith($IdMess)) {
+			die("Your are not allowe to work with message #".$IdMess) ;
+		}
 		$IdLocation=$post['IdLocation'] ;
 		$ss="delete from localvolmessages_location where IdLocation=".$IdLocation." and IdLocalVolMessage=".$IdMess;
 		$result = $this->dao->query($ss);
@@ -222,8 +305,11 @@ class ContactlocalsModel extends RoxModelBase {
     function DelTranslation($post) {
 		$words = new MOD_words();
 		$this->IdMess=$IdMess=$post['IdMess'] ;
+		if (!$this->CanWorkWith($IdMess)) {
+			die("Your are not allowe to work with message #".$IdMess) ;
+		}
 		$IdLanguage=$post["IdLanguage"] ;
-		$rMess=$this->singleLookup("select * from localvolmessages where id=".$IdMess) ;
+		$rMess=$this->rMess;
 
 		$squery="delete from translations where IdTrad=".$rMess->IdTitleText." and IdLanguage=".$IdLanguage ;
 		$result = $this->dao->query($squery);
@@ -243,7 +329,10 @@ class ContactlocalsModel extends RoxModelBase {
      **/
     function DeleteMessage($IdMess) {
 		$this->IdMess=$IdMess ;
-		$rMess=$this->singleLookup("select * from localvolmessages where id=".$IdMess) ;
+		if (!$this->CanWorkWith($IdMess)) {
+			die("Your are not allowe to work with message #".$IdMess) ;
+		}
+		$rMess=$this->$rMess ;
 
 		$squery="delete from translations where IdTrad=".$rMess->IdTitleText ;
 		$result = $this->dao->query($squery);
@@ -283,7 +372,10 @@ class ContactlocalsModel extends RoxModelBase {
 		$words = new MOD_words();
 		$this->IdMess=$IdMess=$post['IdMess'] ;
 		$IdLanguage=$post["IdLanguage"] ;
-		$rMess=$this->singleLookup("select * from localvolmessages where id=".$IdMess) ;
+		if (!$this->CanWorkWith($IdMess)) {
+			die("Your are not allowe to work with message #".$IdMess) ;
+		}
+		$rMess=$this->rMess ;
 
 		$ss=$this->dao->escape($post['IdTitleText']) ;
  		$words->ReplaceInFTrad($ss,"localvolmessages.IdTitleText",$rMess->id,$rMess->IdTitleText) ;
@@ -304,7 +396,10 @@ class ContactlocalsModel extends RoxModelBase {
 		$words = new MOD_words();
 		$this->IdMess=$IdMess=$post['IdMess'] ;
 		$IdLanguage=$post["IdLanguage"] ;
-		$rMess=$this->singleLookup("select * from localvolmessages where id=".$IdMess) ;
+		if (!$this->CanWorkWith($IdMess)) {
+			die("Your are not allowed UdpateTranslation with message #".$IdMess) ;
+		}
+		$rMess=$this->rMess ;
 
 		$ss=$this->dao->escape($post['IdTitleText']) ;
  		$words->ReplaceInFTrad($ss,"localvolmessages.IdTitleText",$rMess->id,$rMess->IdTitleText) ;
@@ -323,6 +418,9 @@ class ContactlocalsModel extends RoxModelBase {
      **/
     function AddLocation($post) {
 		$this->IdMess=$IdMess=$post['IdMess'] ;
+		if (!$this->CanWorkWith($IdMess)) {
+			die("Your are not allowed to AddLocation with message #".$IdMess) ;
+		}
 		$IdLocation=$post['IdLocation'] ;
 		$ss="replace into localvolmessages_location(IdLocation,IdLocalVolMessage) values(".$IdLocation.",".$IdMess.") " ;
 		$result = $this->dao->query($ss);
@@ -340,42 +438,42 @@ class ContactlocalsModel extends RoxModelBase {
 		 * according to $post['IdMess'] the message will be inserted or updated
      **/
     function recordnewmessage($post) {
-			$words = new MOD_words();
-			if (empty($post['IdMess'])) {
-				$IdMess=0 ;
+		$words = new MOD_words();
+		if (empty($post['IdMess'])) {
+			$IdMess=0 ;
+		}
+		else {
+			$IdMess=$post['IdMess'] ;
+		}
+		$IdLanguage=$post['IdLanguage'] ;
+		if (isset($post["PurposeDescription"])) {
+			$PurposeDescription=$this->dao->escape($post["PurposeDescription"]) ;
+		}
+		if ($IdMess==0) { // IF it is a new mssage
+			
+			$ss="insert into localvolmessages(created,IdSender,IdTitleText,IdMessageText,PurposeDescription) " ;
+			$ss=$ss."values(now(),".$_SESSION["IdMember"].",0,0,'".$PurposeDescription."')" ;
+			$result = $this->dao->query($ss);
+			if (!$result) {
+				throw new PException('recordnewmessage::Failed to insert a Message ');
 			}
-			else {
-				$IdMess=$post['IdMess'] ;
-			}
-			$IdLanguage=$post['IdLanguage'] ;
-			if (isset($post["PurposeDescription"])) {
-				$PurposeDescription=$this->dao->escape($post["PurposeDescription"]) ;
-			}
-			if ($IdMess==0) { // IF it is a new mssage
+			$this->IdMess=$IdMess=$result->insertId();
+
+			$ssIdTitleText=$this->dao->escape($post['Title']) ;
+			$IdTitleText=$words->InsertInFTrad($ssIdTitleText,"localvolmessages.IdTitleText",$IdMess, $_SESSION["IdMember"], 0) ;
+
+			$ss=$this->dao->escape($post['MessageText']) ;
+			$IdMessageText=$words->InsertInFTrad($ss,"localvolmessages.IdMessageText",$IdMess, $_SESSION["IdMember"], 0) ;
 				
-				$ss="insert into localvolmessages(created,IdSender,IdTitleText,IdMessageText,PurposeDescription) " ;
-				$ss=$ss."values(now(),".$_SESSION["IdMember"].",0,0,'".$PurposeDescription."')" ;
- 				$result = $this->dao->query($ss);
-				if (!$result) {
-					throw new PException('recordnewmessage::Failed to insert a Message ');
-				}
-				$this->IdMess=$IdMess=$result->insertId();
+			$ss="update localvolmessages set IdTitleText=$IdTitleText,IdMessageText=$IdMessageText where id=$IdMess" ;
+			$result = $this->dao->query($ss);
+			if (!$result) {
+				throw new PException('recordnewmessage::Failed to add back the Title and Text ');
+			}
 
-				$ssIdTitleText=$this->dao->escape($post['Title']) ;
-				$IdTitleText=$words->InsertInFTrad($ssIdTitleText,"localvolmessages.IdTitleText",$IdMess, $_SESSION["IdMember"], 0) ;
-
-				$ss=$this->dao->escape($post['MessageText']) ;
-				$IdMessageText=$words->InsertInFTrad($ss,"localvolmessages.IdMessageText",$IdMess, $_SESSION["IdMember"], 0) ;
-				
-				$ss="update localvolmessages set IdTitleText=$IdTitleText,IdMessageText=$IdMessageText where id=$IdMess" ;
- 				$result = $this->dao->query($ss);
-				if (!$result) {
-	   			throw new PException('recordnewmessage::Failed to add back the Title and Text ');
-				}
-
-				MOD_log::get()->write("contactlocal : ".$ssIdTitleText." created IdMess=#".$IdMess,"contactlocal") ; 
-			} // end if it is a new message
-		} // end of recordnewmessage
+			MOD_log::get()->write("contactlocal : ".$ssIdTitleText." created IdMess=#".$IdMess,"contactlocal") ; 
+		} // end if it is a new message
+	} // end of recordnewmessage
 
 } // end of ContactLocalsModel
 

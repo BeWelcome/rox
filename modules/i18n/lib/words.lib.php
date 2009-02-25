@@ -305,7 +305,10 @@ class MOD_words
     
     private function _text_and_buffer($word)
     {
-        if ($word->get_tr_success() != LookedUpWord::NO_TR_LINK) {
+        if ($word->get_tr_success() != LookedUpWord::NO_TR_LINK)  {
+			if ((isset($word->donottranslate)) and($word->donottranslate=='Yes') ) { // Skip the case where word is not to translate
+				return $word->text();
+			}
             if(!array_key_exists($word->getCode(), self::$_buffer)) {
                 self::$_buffer[$word->getCode()]=$word->standaloneTrLink();
             }
@@ -589,11 +592,12 @@ class MOD_words
 	 } // end of mTrad
 	 
     /**
-     * @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
-	  * @param $ReplaceWithBr allows 
-     * @return string translated according to the best language find
-     */
-    public function fTrad($IdTrad,$ReplaceWithBr=false) {
+	* @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
+	 * @param $ReplaceWithBr allows 
+	 * @parame $IdForceLanguage optional can be use to force the routine to try to choose a specific language
+	* @return string translated according to the best language find
+	*/
+    public function fTrad($IdTrad,$ReplaceWithBr=false,$IdForceLanguage=-1) {
 		
 			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
@@ -609,12 +613,17 @@ class MOD_words
 			   }
 			}
 		
-			if (isset($_SESSION['IdLanguage'])) {
-		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+			if ($IdForceLanguage<=0) {
+				if (isset($_SESSION['IdLanguage'])) {
+					$IdLanguage=$_SESSION['IdLanguage'] ;
+				}
+				else {
+					$IdLanguage=0 ; // by default language 0
+				} 
 			}
 			else {
-		 		$IdLanguage=0 ; // by default language 0
-			} 
+				$IdLanguage=$IdForceLanguage ;
+			}
 			// Try default language
         	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
 			$q = $this->_dao->query($query);

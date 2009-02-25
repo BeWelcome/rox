@@ -38,6 +38,10 @@ class MembersModel extends RoxModelBase
      */
     public function setLocation($IdMember,$geonameid = false)
     {
+	
+		// Address IdCity address must only consider Populated palces (definition of cities), it also must consider the address checking process
+	
+		$Rank=0 ; // Rank=0 means the main address, todo when we will deal with several addresses we will need to consider the other rank Values ;
         $IdMember = (int)$IdMember;
         $geonameid = (int)($geonameid);
         
@@ -80,8 +84,7 @@ WHERE   members.id = $IdMember
                 "
 UPDATE  addresses
 SET     IdCity = $geonameid
-WHERE   IdMember = $IdMember
-                "
+WHERE   IdMember = $IdMember and Rank=".$Rank
             );
             
             // name is not set:

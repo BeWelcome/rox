@@ -209,7 +209,7 @@ WHERE
         }
     }
 
-		// Rewrite the title and the message to the vorresponding default language for this member if any
+		// Rewrite the title and the message to the corresponding default language for this member if any
 		$rPost->thread_title=fTrad($rPost->IdTitle) ;
 		$rPost->message=fTrad($rPost->IdContent) ;
 
@@ -303,7 +303,9 @@ FROM
     members
 WHERE
     messages.IdSender = members.id  AND
-    messages.Status = 'ToSend'
+    messages.Status = 'ToSend' AND
+    messages.MessageType = 'MemberToMember' AND
+	
 ";
 $qry = sql_query($str);
 
@@ -402,22 +404,130 @@ WHERE
     sql_query($str);
 
 }
-// and for Test server
+   
+$sResult = $sResult.$count . " intermember Messages sent";
+if ($countbroadcast>0) {
+    $sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
+} 
+
+// -----------------------------------------------------------------------------
+// Messages from LocalVolunteers
+// -----------------------------------------------------------------------------
+
 $str = "
+SELECT
+    messages.*,
+    Username,
+    members.Status AS MemberStatus
+FROM
+    messages,
+    members
+WHERE
+    messages.IdSender = members.id  AND
+    messages.Status = 'ToSend' AND
+    messages.MessageType = 'LocalToMember' AND
+	
+";
+$qry = sql_query($str);
+
+$count = 0;
+while ($rr = mysql_fetch_object($qry)) {
+    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned
+        if (IsLoggedIn()) {
+            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
+        }
+        $str = "
 UPDATE
-    hcvoltest.messages
+    messages
+SET
+    Status = 'Freeze'
+WHERE
+    id = $rr->id
+        "; 
+        sql_query($str);
+        LogStr("Mailbot refuse to send localvolunteer message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
+        continue ;
+    } 
+     
+    $Email = GetEmail($rr->IdReceiver);
+    $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
+    $subj = ww("YouveGotAMail", $rr->Username);
+    $urltoreply = $baseuri."bw/contactmember.php?action=reply&cid=".$rr->Username."&iMes=".$rr->id;
+    $MessageFormatted=$rr->Message;
+    if ($rr->JoinMemberPict=="yes") {
+        $rImage=LoadRow("
+SELECT
+    *
+FROM
+    membersphotos
+WHERE
+    IdMember = $rr->IdSender  AND
+    SortOrder = 0
+        ");
+        $MessageFormatted = '
+            <html><head>
+            <title>'.$subj.'</title></head>
+            <body>
+            <table>
+            <tr><td>
+        ';
+        if (isset($rImage->FilePath)) {
+            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+        }
+        $MessageFormatted .= '</td><td>';
+        $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
+        $MessageFormatted .= '</td>';
+        
+        if (IsLoggedIn()) { // In this case we display the tracks for the admin who will probably need to check who is sending for sure and who is not
+            echo " from ".$rr->Username." to ".fUsername($rr->IdReceiver). " email=".$Email,"<br>" ;
+        }
+        if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
+            $MessageFormatted .= '<tr><td colspan=2>'.ww('mailbot_JoinSenderMail', $rr->Username, GetEmail($rr->IdSender)).'</td>';
+        }
+        
+        $MessageFormatted .= '</table></body></html>';
+        
+        $text=$MessageFormatted;
+        
+    } else {
+        $text = ww('mailbot_YouveGotAMailText', fUsername($rr->IdReceiver), $rr->Username, $rr->Message, $urltoreply, $rr->Username, $rr->Username);
+    }
+    
+    // to force because context is not defined
+    // TODO: What the hell is this?
+    $_SERVER['SERVER_NAME'] = 'www.bewelcome.org';
+
+	$SenderMail="localevent@bewelcome.org" ;
+    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $SenderMail, "html", "", "")) {
+        LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
+        $str = "
+UPDATE
+    messages
+SET
+    Status = 'Failed'
+WHERE
+    id = $rr->id
+        ";
+    } else {
+        $str = "
+UPDATE
+    messages
 SET
     Status = 'Sent',
     IdTriggerer = $IdTriggerer,
     DateSent = NOW()
 WHERE
-    Status = 'ToSend'
-";
-sql_query($str);
+    id = $rr->id
+        ";
+        $count++;
+    }
+    sql_query($str);
+
+}
     
-$sResult = $sResult.$count . " intermember Messages sent";
-if ($countbroadcast>0) {
-    $sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
+$sResult = $sResult.$count . " localmember Messages sent";
+if ($count>0) {
+    $sResult=$sResult. " and ".$count. " localmember Messages sent" ;
 } 
 
 

@@ -114,17 +114,22 @@ class ContactlocalController extends RoxControllerBase
 					$data->PossibleLanguages=$model->GetMemberLanguages() ;
 					$page = new ContactlocalsPage("","preparenewmessage",$data);
 					break ;
+				case 'testnotification':
+					$data->IdMess=$request[2] ;
+					$ss=$model->Trigger($data->IdMess) ;
+					$page = new ContactlocalsPage($ss,"",$model->LoadList()); // Without error
+					break ;
+				case 'trigger':
+					$data->IdMess=$request[2] ;
+					$ss=$model->Trigger($data->IdMess,true) ;
+					$page = new ContactlocalsPage($ss,"",$model->LoadList()); // Without error
+					break ;
 				case 'recordnewmessage':
 					$model->recordnewmessage($args->post) ;
 					$data=$model->LoadList($model->IdMess) ;
 					$data->IdMess=$model->IdMess ;
 					$page = new ContactlocalsPage("","preparenewmessage",$data);
-					break ;
-				case 'update':
-					$IdPoll=(isset($request[2]) ? $request[2]: false) ;
-					$page = new PollsPage("","showpoll",$model->LoadPoll($IdPoll));
-					break ;
-					
+					break ;					
 					
 				case false:
 				default :

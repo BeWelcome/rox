@@ -210,7 +210,7 @@ class ContactlocalsModel extends RoxModelBase {
 					$MessageText=$words->fTrad($rMess->IdMessageText,false,$MemberIdLanguage) ; // Try to force the translation of the language to suit the receiver default language
 					
 					$ss="insert into messages(MessageType,IdMessageFromLocalVol,created,IdReceiver,IdSender,Status,Message,IdTriggerer,JoinMemberPict" ;
-					$ss=$ss." values('LocalVolToMember',".$rMess->id.",now(),".$m->id.",".$rMess->IdCreator.",'".$MessageText."',".$_SESSION["IdMember"].",'Yes')" ;
+					$ss=$ss." values('LocalVolToMember',".$rMess->id.",now(),".$m->id.",".$rMess->IdCreator.",'ToSend','".$MessageText."',".$_SESSION["IdMember"].",'Yes')" ;
 
 					if ($DoTrigger) {
 						$sLog=" Enqueing members <b>".$m->Username."</b> in language #".$MemberIdLanguage." for ".$loc->Choice." IdLocation=#".$loc->id ;

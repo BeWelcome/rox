@@ -345,15 +345,15 @@ class ContactlocalsModel extends RoxModelBase {
     function SetToSend($IdMess) {
 		$this->IdMess=$IdMess ;
 		if (!$this->CanWorkWith($IdMess)) {
-			die("Your are not allowe to work with message #".$IdMess) ;
+			die("Your are not allowed to work with message #".$IdMess) ;
 		}
 		$rMess=$this->rMess ;
 
 
-		$squery="update from set Status='ToSend'  where Status='ToApprove' and id=".$IdMess ;
+		$squery="update localvolmessages from set Status='ToSend'  where Status='ToApprove' and id=".$IdMess ;
 		$result = $this->dao->query($squery);
 		if (!$result) {
-			throw new PException('DeleteMessage::Failed to delete IdLanguage #'.$IdLanguage.' (the locations) for message #'.$IdMess);
+			throw new PException('SetToSend::Failed to change Status for message #'.$IdMess);
 		}
 			
 		MOD_log::get()->write("contactlocal : set ToSend IdMess=#".$IdMess,"contactlocal") ; 
@@ -363,12 +363,11 @@ class ContactlocalsModel extends RoxModelBase {
     /**
 	* this function delete a whole a message
 	 * @IdMess is teh id of the message
-	 * returns true if the poll is added with success
 	**/
     function DeleteMessage($IdMess) {
 		$this->IdMess=$IdMess ;
 		if (!$this->CanWorkWith($IdMess)) {
-			die("Your are not allowe to work with message #".$IdMess) ;
+			die("Your are not allowed to work with message #".$IdMess) ;
 		}
 		$rMess=$this->rMess ;
 

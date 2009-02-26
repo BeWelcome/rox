@@ -162,7 +162,7 @@ class ContactlocalsModel extends RoxModelBase {
 		}
 		else {
 			$this->IdMess=$IdMess ;
-			$sQuery="select  localvolmessages.*,localvolmessages.id as IdMess,members.id as 'IdCreator', members.Username as 'CreatorUsername' from localvolmessages,members where members.id=localvolmessages.IdSender and localvolmessages.Status='ToSend' and localvolmessages.id=".$IdMess ;
+			$sQuery="select  localvolmessages.*,localvolmessages.id as IdMess,members.id as 'IdCreator', members.Username as 'CreatorUsername' from localvolmessages,members where members.id=localvolmessages.IdSender and localvolmessages.Status in('ToSend','ToApprove') and localvolmessages.id=".$IdMess ;
 		}
 		$rMess=$this->singleLookup($sQuery) ;
 

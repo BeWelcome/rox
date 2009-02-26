@@ -87,7 +87,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 		// Owner can delete it too if it is in the ToApprove or ToSend STatus 
 		if ((($_SESSION["IdMember"]==$p->IdCreator)and(($p->Status=='ToApprove')or($p->Status=='ToSend'))) or (MOD_right::get()->HasRight("ContactLocation","All"))) {
 			echo "<br /><a href=\"contactlocal/delete/".$p->IdMess."\" onclick=\"return confirm('Are you sure you want to delete this message ?')\">Delete</a>" ;
-			echo "<br /><a href=\"contactlocal/tosend/".$p->IdMess."\" onclick=\"return confirm('Are you sure you allow this message to be sent ?')\">Set Ready To Send</a>" ;
+			if ($p->Status=='ToApprove') echo "<br /><a href=\"contactlocal/tosend/".$p->IdMess."\" onclick=\"return confirm('Are you sure you allow this message to be sent ?')\">Set Ready To Send</a>" ;
 		}
 		// Local Vol coord with All right can approve the message
 		// Owner can approve it too if it is in the ToApproveSTatus and if he has scope CanApprove

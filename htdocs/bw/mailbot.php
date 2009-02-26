@@ -426,7 +426,7 @@ WHERE
     messages.MessageType = 'LocalVolToMember' ";
 $qry = sql_query($str);
 
-$rCount=sql_query("SELECT FOUND_ROWS() as cnt") ;
+$rCount=sql_query("SELECT FOUND_ROWS() as Cnt") ;
 
 $count = 0;
 while ($rr = mysql_fetch_object($qry)) {
@@ -497,7 +497,7 @@ WHERE
 
 	$SenderMail="localevent@bewelcome.org" ;
 	$text=$text."<br />".ww("mailbot_localvol_info","<a href=\"http://www.bewelcome.org/bw/member.php?cid=".$rr->Username."\">".$rr->Username."</a>",$rCount->Cnt,"<a href=\"http://www.bewelcome.org/bw/mypreferences.php\">".ww("MyPreferences")."</a>","<b>".ww("PreferenceLocalEvent")."</b>" );
-    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $SenderMail, "html", "", "")) {
+    if (!bw_mail($Email, $subj, $text, "", $SenderMail, $MemberIdLanguage, "html", "", "")) {
         LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
         $str = "
 UPDATE

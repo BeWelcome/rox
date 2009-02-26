@@ -194,7 +194,7 @@ class ContactlocalsModel extends RoxModelBase {
 
 			$qry = $this->dao->query($squery);
 			while ($m=$qry->fetch(PDB::FETCH_OBJ)) { // Browse all members
-				if ($leayoutbits->GetPreference("PreferenceLocalEvent",$m->id)!="Yes") {
+				if ($layoutbits->GetPreference("PreferenceLocalEvent",$m->id)!="Yes") {
 					continue ; // Skip preferences of members who chosen not to receive localevent notification
 				}
 				for ($ii=0,$AlreadyIn=false;$ii<count($ListOfUsers);$ii++) {	// Test if the member is already enqueued to avoid duplicates

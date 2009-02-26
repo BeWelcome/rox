@@ -350,7 +350,7 @@ class ContactlocalsModel extends RoxModelBase {
 		$rMess=$this->rMess ;
 
 
-		$squery="update localvolmessages from set Status='ToSend'  where Status='ToApprove' and id=".$IdMess ;
+		$squery="update localvolmessages set Status='ToSend'  where Status='ToApprove' and id=".$IdMess ;
 		$result = $this->dao->query($squery);
 		if (!$result) {
 			throw new PException('SetToSend::Failed to change Status for message #'.$IdMess);

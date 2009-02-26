@@ -96,7 +96,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 		}
 		// Local Vol coord with All right can approve the message
 		// Owner can approve it too if it is in the ToSend and if he has scope CanApprove
-		if ((($_SESSION["IdMember"]==$p->IdCreator)and($p->Status=='ToSend')and (MOD_right::get()->HasRight("ContactLocation","CanTrigger"))) or (MOD_right::get()->HasRight("ContactLocation","All"))) {
+		if ((($_SESSION["IdMember"]==$p->IdCreator)and($p->Status=='ToSend')and (MOD_right::get()->HasRight("ContactLocation","CanTrigger"))) or ((MOD_right::get()->HasRight("ContactLocation","All"))and($p->Status=='ToSend'))) {
 			echo "<br /><a href=\"contactlocal/trigger/".$p->IdMess."\" onclick=\"return confirm('Are you sure you want to trigger this message ?')\">trigger</a>" ;
 		}
 		?></td>

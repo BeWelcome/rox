@@ -91,8 +91,8 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 		}
 		// Local Vol coord with All right can approve the message
 		// Owner can approve it too if it is in the ToApproveSTatus and if he has scope CanApprove
-		if ((($_SESSION["IdMember"]==$p->IdCreator)and($p->Status=='ToApprove')) or (MOD_right::get()->HasRight("ContactLocation","All"))) {
-			echo "<br /><a href=\"contactlocal/testnotification/".$p->IdMess."\">test</a>" ;
+		if (($_SESSION["IdMember"]==$p->IdCreator) or (MOD_right::get()->HasRight("ContactLocation","All"))) {
+			if ($p->Status=='ToApprove') echo "<br /><a href=\"contactlocal/testnotification/".$p->IdMess."\">test</a>" ;
 		}
 		// Local Vol coord with All right can approve the message
 		// Owner can approve it too if it is in the ToSend and if he has scope CanApprove

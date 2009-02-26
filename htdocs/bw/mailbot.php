@@ -106,10 +106,10 @@ WHERE
         
     } else {
 		
-				// If this message was to count has a reminder
-				if ($rr->broadcast_type=="RemindToLog") {
-    			sql_query("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$rr->IdReceiver);
-				}
+		// If this message was to count has a reminder
+		if ($rr->broadcast_type=="RemindToLog") {
+    		sql_query("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$rr->IdReceiver);
+		}
 				
 
         $str = "
@@ -122,7 +122,7 @@ WHERE
     IdReceiver = $rr->IdReceiver
         ";
         $countbroadcast++ ;
-				LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast,"Debug") ;
+		LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast,"Debug") ;
     }
     sql_query($str);
 } // end of while on broadcast (massmail)
@@ -423,7 +423,7 @@ FROM
 WHERE
     messages.IdSender = members.id  AND
     messages.Status = 'ToSend' AND
-    messages.MessageType = 'LocalToMember' ";
+    messages.MessageType = 'LocalVolToMember' ";
 $qry = sql_query($str);
 
 $rCount=sql_query("SELECT FOUND_ROWS() as cnt") ;
@@ -524,7 +524,6 @@ WHERE
 
 }
     
-$sResult = $sResult.$count . " localmember Messages sent";
 if ($count>0) {
     $sResult=$sResult. " and ".$count. " localmember Messages sent" ;
 } 

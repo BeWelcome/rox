@@ -423,10 +423,11 @@ FROM
 WHERE
     messages.IdSender = members.id  AND
     messages.Status = 'ToSend' AND
-    messages.MessageType = 'LocalVolToMember' ";
+    messages.MessageType = 'LocalVolToMember' 
+	and members.Status in('Active','ActiveHidden')";
 $qry = sql_query($str);
 
-$rCount=sql_query("SELECT FOUND_ROWS() as Cnt") ;
+$rCount=mysql_fetch_object(sql_query("SELECT FOUND_ROWS() as Cnt")) ;
 
 $count = 0;
 while ($rr = mysql_fetch_object($qry)) {

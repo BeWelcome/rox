@@ -75,7 +75,7 @@ FROM
 WHERE
     broadcast.id = broadcastmessages.IdBroadcast  AND
     broadcastmessages.IdReceiver = members.id     AND
-    broadcastmessages.Status = 'ToSend'
+    broadcastmessages.Status = 'ToSend' limit 100
 ";
 $qry = sql_query($str);
 
@@ -93,15 +93,9 @@ while ($rr = mysql_fetch_object($qry)) {
 			$sender_mail="reminder@bewelcome.org" ;
 		}
     if (!bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ")) {
-        $str = "
-UPDATE
-    broadcastmessages
-SET
-    Status = 'Failed'
-WHERE
-    IdBroadcast =  $rr->IdBroadcast  AND
-    IdReceiver = $rr->IdReceiver
-        ";
+        $str = "UPDATE   broadcastmessages
+SET   Status = 'Failed'
+WHERE    IdBroadcast =  $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
         LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."] Type=[".$rr->broadcast_type."]","mailbot");
         
     } else {
@@ -112,20 +106,15 @@ WHERE
 		}
 				
 
-        $str = "
-UPDATE
-    broadcastmessages
-SET
-    Status = 'Sent'
-WHERE
-    IdBroadcast = $rr->IdBroadcast  AND
-    IdReceiver = $rr->IdReceiver
-        ";
+        $str = "UPDATE    broadcastmessages
+SET    Status = 'Sent'
+WHERE    IdBroadcast = $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
         $countbroadcast++ ;
 		LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast,"Debug") ;
     }
     sql_query($str);
 } // end of while on broadcast (massmail)
+	if ($countbroadcast>0)	LogStr(" \$countbroadcast=".$countbroadcast." sent at this cycle","Debug") ;
 
 
 // -----------------------------------------------------------------------------

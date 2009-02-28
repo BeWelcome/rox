@@ -132,6 +132,7 @@ AND countries.id=cities.IdCountry ' . $InScope;
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
     }
+
     
     /**
      * Returns the number of people due to be checked to problems or what.

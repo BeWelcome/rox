@@ -185,7 +185,8 @@ class RoxView extends PAppView {
                         $numberPersonsToBeChecked,
                         $numberMessagesToBeChecked,
                         $numberSpamToBeChecked,
-												$numberPersonsToAcceptInGroup
+						$numberPersonsToAcceptInGroup,
+						$numberPendingLocalMess
                     )
     {
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';

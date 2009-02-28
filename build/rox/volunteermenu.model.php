@@ -76,6 +76,32 @@ WHERE
     }
     
     /**
+     * Returns the number of local volunteers messages to trigger
+     * 
+     *
+     * @return integer indicating the number of Message
+     */
+    public function getNumberPendingLocalMess()
+    {
+        $R = MOD_right::get();
+		
+		if ($R->HasRight("ContactLocation","All"))  {
+			$Query="select SQL_CACHE COUNT(*) AS cnt from localvolmessages where Status='ToSend'" ;
+		}
+		elseif ($R->HasRight("ContactLocation","CanTrigger")) {
+			$Query="select SQL_CACHE COUNT(*) AS cnt from localvolmessages where Status='ToSend' and IdSender=".$_SESSION["IdMember"] ;
+		}
+		else {
+			return(0) ;
+		}
+		 
+        $result = $this->dao->query($Query);
+        $record = $result->fetch(PDB::FETCH_OBJ);
+        return $record->cnt;
+    } // end of getNumberPendingLocalMess
+
+	
+    /**
      * Returns the number of people due to be checked to problems or what.
      * The number depends on the scope of the person logged on.
      *

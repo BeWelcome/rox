@@ -301,6 +301,7 @@ class PageWithRoxLayout extends PageWithHTML
         $numberMessagesToBeChecked = $model->getNumberPersonsToAcceptInGroup() ;
         $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
         $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
+        $numberPendingLocalMess = $model->getNumberPendingLocalMess() ;
 
         $widget = $this->createWidget('VolunteerbarWidget');
         $widget->render();

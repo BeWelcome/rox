@@ -48,7 +48,6 @@ class MOD_words
     private $_trMode;  // the translation mode - can be browse, translate, or edit
     private $_whereCategory = '';
     private $_offerTranslationLink = false;
-    private $_langWrite = 0;
     /*private $_prepared = array();*/
     static private $_buffer = array();
     private $_dao;  // database access object
@@ -66,9 +65,6 @@ class MOD_words
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
         }
-        if (isset($_SESSION['IdLanguage']))
-            $this->_langWrite = $_SESSION['IdLanguage'];
-        else $this->_langWrite = 0;
 
         $db_vars = PVars::getObj('config_rdbms');
         if (!$db_vars) {
@@ -107,10 +103,7 @@ class MOD_words
                 }
         }
     }
-   
-    public function setlangWrite($IdLanguage) {
-        $this->_langWrite = $IdLanguage;
-    }
+    
     
     public function getTrMode() {
         return $this->_trMode;
@@ -305,10 +298,7 @@ class MOD_words
     
     private function _text_and_buffer($word)
     {
-        if ($word->get_tr_success() != LookedUpWord::NO_TR_LINK)  {
-			if ((isset($word->donottranslate)) and($word->donottranslate=='Yes') ) { // Skip the case where word is not to translate
-				return $word->text();
-			}
+        if ($word->get_tr_success() != LookedUpWord::NO_TR_LINK) {
             if(!array_key_exists($word->getCode(), self::$_buffer)) {
                 self::$_buffer[$word->getCode()]=$word->standaloneTrLink();
             }
@@ -548,9 +538,10 @@ class MOD_words
 			   }
 			}
 		
-			if (isset($this->_langWrite)) {
-		 	   	$IdLanguage=$this->_langWrite;
-			} else {
+			if (isset($_SESSION['IdLanguage'])) {
+		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+			}
+			else {
 		 		$IdLanguage=0 ; // by default language 0
 			} 
 			// Try default language
@@ -664,8 +655,7 @@ class MOD_words
 			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
 			MOD_log::get()->write($strerror, "Bug");
 			return ($strerror); // If really nothing was found, return an empty string
-	 } // end of fTrad
-	 
+	 } // end of fTrad	 
     
 /*
 * author jeanyves
@@ -737,7 +727,6 @@ function MakeRevision($Id, $TableName, $IdMemberParam = 0, $DoneBy = "DoneByMemb
 * 
 */ 
 function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
-    $ss = $this->_dao->escape($ss);
 	if ($_IdMember == 0) { // by default it is current member
 		$IdMember = $_SESSION['IdMember'];
 	} else {
@@ -745,7 +734,7 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 	}
 
 	if ($_IdLanguage == -1)
-		$IdLanguage = $this->_langWrite;
+		$IdLanguage = $_SESSION['IdLanguage'];
 	else
 		$IdLanguage = $_IdLanguage;
 
@@ -765,7 +754,25 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 	$IdOwner = $IdMember;
 	$IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-	$Sentence = $this->_dao->escape($ss);
+	if (strpos($ss,"\\'")!==false) {
+		$Sentence=$ss ;
+		$page="" ;
+		if (isset($_SERVER["PHP_SELF"])) {
+			$page=$_SERVER["PHP_SELF"] ;
+		}
+		MOD_log::get()->write("in module word->InsertInMTrad, for IdTrad=".$IdTrad. " The sentence is already escaped with a quote page [".$page."]", "Bug");
+	}
+	elseif (strpos($ss,'\\"')!==false) {
+		$Sentence=$ss ;
+		$page="" ;
+		if (isset($_SERVER["PHP_SELF"])) {
+			$page=$_SERVER["PHP_SELF"] ;
+		}
+		MOD_log::get()->write("in module word->InsertInMTrad, for IdTrad=".$IdTrad. " The sentence is already escaped with a double quote page [".$page."]", "Bug");
+	}
+	else {
+		$Sentence = $this->_dao->escape($ss);
+	}
 	$str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
 	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
 	$s = $this->_dao->query($str);
@@ -794,26 +801,23 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 * @$ss is for the content of the text
 * @$TableColumn refers to the table and column the trad is associated to
 * @$IdRecord is the num of the record in this table
-* $IdTrad is the record in forum_trads to replace (unique for each IdLanguage)
-* @$IdOwner ; is the id of the member who own the record
+* $IdTrad is the record in member_trads to replace they are several records with the smae IdTrad teh difference is thr language,
+* if IdTrad is set to 0 a new record will be created, this is the usual way to insert records
+* @$IdOwner ; is the id of the member who own the record, if set to 0 We Will use the current member
 * 
 * Warning : as default language this function will use:
 * - the content of the current $_SESSION['IdLanguage'] of the current member
 * 
 */ 
 function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
-    $ss = $this->_dao->escape($ss);
+//    $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string
 	if ($IdOwner == 0) {
 		$IdMember = $_SESSION['IdMember'];
 	} else {
 		$IdMember = $IdOwner;
 	}
 	//  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
-    if (isset($this->_langWrite)) {
-        $IdLanguage=$this->_langWrite;
-    } else {
-        $IdLanguage=0 ; // by default language 0
-    } 
+	$IdLanguage = $_SESSION['IdLanguage'];
 	if ($IdTrad == 0) {
 		return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
 	}
@@ -830,7 +834,7 @@ function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 		if ($ss != $this->_dao->escape($rr->Sentence)) { // Update only if sentence has changed
 			$this->MakeRevision($rr->id, "memberstrads"); // create revision
 			$str = "update memberstrads set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' where id=" . $rr->id;
-			// echo "\$str=".$str."<br />\n";
+//			echo "\$str=".$str."<br />\n";
 			$s = $this->_dao->query($str);
 			if (!$s) {
 				throw new PException('Failed in ReplaceInMTrad updating Sentence for IdTrad=#'.$IdTrad);

@@ -189,13 +189,14 @@
                 <dd><a href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></a></dd>
             <?php } ?>
             <?php } ?>
-                <dt><?=$words->getInLang('Messenger', $profile_language_code);?>:</dt>
                 <?php
                 if(isset($messengers))
                 { ?>
+                <dt><?=$words->getInLang('Messenger', $profile_language_code);?>:</dt>
                 <dd>
                   <?php
                     foreach($messengers as $m) {
+                        if (isset($m["address"]) && $m["address"] != '')
                         echo "<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' />"
                             .$m["network"].": ".$m["address"]."<br />";
                     }

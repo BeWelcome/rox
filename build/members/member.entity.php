@@ -67,6 +67,7 @@ SELECT SQL_CACHE
     languages.id AS id
 FROM
     languages
+ORDER BY languages.id asc
             ";
         $s = $this->dao->query($str);
         while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
@@ -193,16 +194,16 @@ FROM
     public function get_phone() {
         $phone = array();
         if ($this->get_crypted($this->HomePhoneNumber, ""))
-            $phone['HomePhoneNumber'] = $this->get_crypted($this->HomePhoneNumber, "*");
+            $phone['HomePhoneNumber'] = $this->get_crypted($this->HomePhoneNumber, "");
         if ($this->get_crypted($this->CellPhoneNumber, ""))
-            $phone['CellPhoneNumber'] = $this->get_crypted($this->CellPhoneNumber, "*");
+            $phone['CellPhoneNumber'] = $this->get_crypted($this->CellPhoneNumber, "");
         if ($this->get_crypted($this->WorkPhoneNumber, ""))
-            $phone['WorkPhoneNumber'] = $this->get_crypted($this->WorkPhoneNumber, "*");
+            $phone['WorkPhoneNumber'] = $this->get_crypted($this->WorkPhoneNumber, "");
         return $phone;
     }
     
     public function get_homephonenumber() {
-        return $this->get_crypted($this->HomePhoneNumber, "*");
+        return $this->get_crypted($this->HomePhoneNumber, "");
     }
     
     /**
@@ -224,27 +225,27 @@ WHERE IdMember = ".$this->id
      * TODO: get name from crypted fields in an architecturally sane place (to be determined)
      */    
     public function get_name() {
-        $name1 = $this->get_crypted($this->FirstName, "*");
-        $name2 = $this->get_crypted($this->SecondName, "*");
-        $name3 = $this->get_crypted($this->LastName, "*");
+        $name1 = $this->get_crypted($this->FirstName, "");
+        $name2 = $this->get_crypted($this->SecondName, "");
+        $name3 = $this->get_crypted($this->LastName, "");
         $name = $name1." " . $name2 . " " . $name3;
         return $name;
     }
     
     public function get_firstname() {
-        return $this->get_crypted($this->FirstName, "*");
+        return $this->get_crypted($this->FirstName, "");
     }
     
     public function get_secondname() {
-        return $this->get_crypted($this->SecondName, "*");
+        return $this->get_crypted($this->SecondName, "");
     }
         
     public function get_lastname() {
-        return $this->get_crypted($this->LastName, "*");
+        return $this->get_crypted($this->LastName, "");
     }
     
     public function get_email() {
-        return $this->get_crypted($this->Email, "*");
+        return $this->get_crypted($this->Email, "");
     }
     
     public function get_messengers() {
@@ -260,7 +261,7 @@ WHERE IdMember = ".$this->id
           $r = array();
           foreach($messengers as $m) {
               $address_id = $this->__get("chat_".$m['network']);
-              $address = $this->get_crypted($address_id, "*");
+              $address = $this->get_crypted($address_id, "");
               if(isset($address) && $address != "*") {
                   $r[] = array("network" => $m["nicename"], "network_raw" => $m['network'], "image" => $m["image"], "address" => $address, "address_id" => $address_id);
               }
@@ -272,7 +273,7 @@ WHERE IdMember = ".$this->id
     
     
     public function get_age() {
-        $age = $this->get_crypted("age", "*");
+        $age = $this->get_crypted("age", "");
         return $age;
     }
 
@@ -281,7 +282,7 @@ WHERE IdMember = ".$this->id
         if(!isset($this->address)) {
             $this->get_address();
         }
-        return $this->get_crypted($this->address->StreetName, '*');
+        return $this->get_crypted($this->address->StreetName, '');
     }
     
 
@@ -289,7 +290,7 @@ WHERE IdMember = ".$this->id
         if(!isset($this->address)) {
             $this->get_address();
         }
-        return $this->get_crypted($this->address->Zip, '*');        
+        return $this->get_crypted($this->address->Zip, '');        
     }
 
 
@@ -336,49 +337,31 @@ WHERE IdMember = ".$this->id
 
     
     public function get_photo() {
-        $photos = $this->bulkLookup(
-            "
-SELECT * FROM membersphotos        
-WHERE IdMember = ".$this->id    
-        );
+        // $photos = $this->bulkLookup(
+            // "
+// SELECT * FROM membersphotos        
+// WHERE IdMember = ".$this->id    
+        // );
         
-        return $photos;
+        // return $photos;
     }
     
     
     
     public function get_previous_photo($photorank) {
-        $photorank--;
+        // $photorank--;
         
-        if($photorank < 0) {
-            $photos = $this->bulkLookup(
-                "
-SELECT * FROM membersphotos        
-WHERE IdMember = $this->id
-ORDER BY SortOrder DESC LIMIT 1"    
-            );
-        }
+        // if($photorank < 0) {
+            // $photos = $this->bulkLookup(
+                // "
+// SELECT * FROM membersphotos        
+// WHERE IdMember = $this->id
+// ORDER BY SortOrder DESC LIMIT 1"    
+            // );
+        // }
         
     }
-/*
-$photorank=GetParam("photorank",0);
-switch (GetParam("action")) {
-    case "previouspicture" :
-        $photorank--;
-        if ($photorank < 0) {
-              $rr=LoadRow("select SQL_CACHE * from membersphotos where IdMember=" . $IdMember . " order by SortOrder desc limit 1");
-            if (isset($rr->SortOrder)) $photorank = $rr->SortOrder;
-            else $photorank=0;
-        }
-        break;
-    case "nextpicture" :
-        $photorank++;
-        break;
-    case "logout" :
-        Logout();
-        exit (0);
-}
- */    
+   
     public function count_comments() 
     {
         $positive = $this->bulkLookup(
@@ -545,8 +528,15 @@ LEFT JOIN
     memberspreferences.IdMember = $this->id
 WHERE
     preferences.Status != 'Inactive'
+ORDER BY Value asc
           ";
-          return $this->bulkLookup($sql);
+        $rows = array();
+        if (!$sql_result = $this->dao->query($sql)) {
+            // sql problem
+        } else while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
+            $rows[$row->codeName] = $row;
+        }
+        return $rows;
       }
 
   

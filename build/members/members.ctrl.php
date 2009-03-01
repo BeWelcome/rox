@@ -277,56 +277,39 @@ class MembersController extends RoxControllerBase
     
     public function myPreferencesCallback($args, $action, $mem_redirect)
     {
-        $post_args = $args->post;
-        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if( PPostHandler::isHandling()) {
-            if( !($User = APP_User::login()))
-                return false;
-            $vars =& $post_args;
-            $errors = array();
-            $messages = array();
-
-            $query = "select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . trim($vars['OldPassword']) . "')";
-            $qry = $this->dao->query($query);
-            $rr = $qry->fetch(PDB::FETCH_OBJ);
-            if (!$rr || !array_key_exists('id', $rr))
-                $errors[] = 'ChangePasswordInvalidPasswordError';
-            if( isset($vars['NewPassword']) && strlen($vars['NewPassword']) > 0) {
-                if( strlen($vars['NewPassword']) < 8) {
-                    $errors[] = 'ChangePasswordPasswordLengthError';
-                }
-                if(isset($vars['ConfirmPassword'])) {
-                    if(strlen(trim($vars['ConfirmPassword'])) == 0) {
-                        $errors[] = 'ChangePasswordConfirmPasswordError';
-                    } elseif(trim($vars['NewPassword']) != trim($vars['ConfirmPassword'])) {
-                        $errors[] = 'ChangePasswordMatchError';
-                    }
-                }
-            }
-            if( count($errors) > 0) {
-                $vars['errors'] = $errors;
-                return false;
-            }
-            if( isset($vars['NewPassword']) && strlen($vars['NewPassword']) > 0) {
-//            	$pwenc = MOD_user::passwordEncrypt($vars['NewPassword']);
-//              $query = 'UPDATE `user` SET `pw` = \''.$pwenc.'\' WHERE `id` = '.(int)$User->getId();
-                $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['NewPassword']).'\') WHERE `id` = '.$_SESSION['IdMember'];
-                if( $this->dao->exec($query)) {
-                    $messages[] = 'ChangePasswordUpdated';
-                    $L = MOD_log::get();
-                    $L->write("Password changed", "change password");
-                } else {
-                    $errors[] = 'ChangePasswordNotUpdated';
-                }
-            }
-
-            $vars['errors'] = $errors;
-            $vars['messages'] = $messages;
+        $vars = $args->post;
+        $request = $args->request;
+        $model = new MembersModel;
+        $errors = $model->checkMyPreferences($vars);
+        
+        if (count($errors) > 0) {
+            // show form again
+            $mem_redirect->problems = $errors;
+            $mem_redirect->post = $vars;
             return false;
-        } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
         }
+    
+        if( !($User = APP_User::login()))
+            return false;
+        
+        $model->editPreferences($vars);
+        
+        // set profile as public
+        if( isset($vars['PreferencePublicProfile']) && $vars['PreferencePublicProfile'] != '') {   
+            $model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);
+        }
+        // set new password
+        if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
+            $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['passwordnew']).'\') WHERE `id` = '.$_SESSION['IdMember'];
+            if( $this->dao->exec($query)) {
+                $messages[] = 'ChangePasswordUpdated';
+                $L = MOD_log::get();
+                $L->write("Password changed", "change password");
+            } else {
+                $mem_redirect->problems = array(0 => 'ChangePasswordNotUpdated');
+            }
+        }
+        return false;
     }
     
     /**

@@ -161,7 +161,7 @@ WHERE
     }
     
     /**
-     * Get languages spoken by member
+     * Set the languages spoken by member
      */
     public function set_language_spoken($IdLanguage,$Level,$IdMember) 
     {
@@ -190,6 +190,85 @@ VALUES
         ");
     }
     
+    /**
+     * Set the preferred language for a member
+     */
+    public function set_preference($IdMember,$IdPreference,$Value) 
+    {
+		$rr = $this->singleLookup("select memberspreferences.id as id from memberspreferences,preferences where IdMember=" . $IdMember . " and IdPreference=preferences.id and preferences.id=" . $IdPreference );
+		if (isset ($rr->id)) {
+        // LogStr("updating one preference " . $rPref->codeName . "To Value <b>/" . $Value . " </b>", "Update Preference");
+        $s = $this->dao->query("
+UPDATE
+    memberspreferences
+SET
+    Value = '".$this->dao->escape($Value)."'
+WHERE
+    id = ". $rr->id
+        );
+        if(!$s) var_dump('AAARGH 2 ');
+
+		} else {
+        $s = $this->dao->query("
+INSERT INTO
+    memberspreferences
+    (
+    IdMember,
+    IdPreference,
+    Value,
+    created
+    )
+VALUES
+    (
+    '$IdMember',
+    '$IdPreference',
+    '$Value',
+    NOW()
+    )
+        ");
+        // LogStr("inserting one preference " . $rPref->codeName . "To Value <b>/" . $Value . " </b>", "Update Preference");
+    if(!$s) var_dump('AAARGH 2 ');
+		}
+    }
+    
+    /**
+     * Set a member's profile public/private
+     */
+    public function set_public_profile ($IdMember,$Public = false) 
+    {
+        $rr = $this->singleLookup(
+            "
+SELECT *
+FROM memberspublicprofiles 
+WHERE IdMember = ".$IdMember
+         );
+        if (!$rr && $Public == true) {
+        $s = $this->dao->query("
+INSERT INTO
+    memberspublicprofiles
+    (
+    IdMember,
+    created,
+    Type
+    )
+VALUES
+    (
+    '$IdMember',
+    NOW(),
+    'normal'
+    )
+        ");
+		} elseif ($rr && $Public == false) {
+        $s = $this->dao->query("
+DELETE FROM
+    memberspublicprofiles
+WHERE
+    id = ". $rr->id
+        );
+		}
+    }
+    
+    
     
 
     // checkCommentForm - NOT FINISHED YET !
@@ -205,7 +284,6 @@ VALUES
         
     }
     
-    // checkCommentForm - NOT FINISHED YET !
     public function addComment($TCom,&$vars)
     {
         // Mark if an admin's check is needed for this comment (in case it is "bad")
@@ -269,7 +347,8 @@ SET
     IdFromMember=" . $_SESSION['IdMember'] . ",
     Lenght='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
-    TextFree='" . $vars['TextFree'] . "'
+    TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
+    TextFree='" . $TCom->TextFree . ($vars['TextFree'] != '') ? '<hr>' . $this->dao->escape($vars['TextFree']) : '' . "'
 WHERE
     id=" . $TCom->id;
 			$qry = $this->dao->query($str);
@@ -375,6 +454,84 @@ WHERE
         // (skipped:) age hidden
         
         return $errors;
+    }
+
+    /**
+     * Check form values of MyPreferences form,
+     *
+     * @param unknown_type $vars
+     * @return unknown
+     */
+	public function checkMyPreferences(&$vars)
+    {
+        $errors = array();
+        $log = MOD_log::get();
+
+        // Password Check
+        if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
+            $query = "select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . trim($vars['passwordold']) . "')";
+            $qry = $this->dao->query($query);
+            $rr = $qry->fetch(PDB::FETCH_OBJ);
+            if (!$rr || !array_key_exists('id', $rr))
+                $errors[] = 'ChangePasswordInvalidPasswordError';
+            if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
+                if( strlen($vars['passwordnew']) < 6) {
+                    $errors[] = 'ChangePasswordPasswordLengthError';
+                }
+                if(isset($vars['passwordconfirm'])) {
+                    if(strlen(trim($vars['passwordconfirm'])) == 0) {
+                        $errors[] = 'ChangePasswordConfirmPasswordError';
+                    } elseif(trim($vars['passwordnew']) != trim($vars['passwordconfirm'])) {
+                        $errors[] = 'ChangePasswordMatchError';
+                    }
+                }
+            }
+        }
+        
+        // Languages Check
+        if (isset($vars['PreferenceLanguage'])) {
+            $squery = "
+SELECT
+    id,
+    Name
+FROM
+    languages
+ORDER BY
+    Name" ;
+            $qry = $this->dao->query($squery);
+            $langok = false;
+            while ($rp = $qry->fetch(PDB::FETCH_OBJ)) {
+              $rp->id;
+              if ($vars['PreferenceLanguage'] == $rp->id)
+                  $langok = true;
+            }
+            if ($langok == false) {
+                $errors[] = 'PreferenceLanguageError'; 
+            }
+        }
+        
+        // email (e-mail duplicates in BW database allowed)
+        // if (!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) {
+            // $errors[] = 'SignupErrorInvalidEmail';
+            // $log->write("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
+        // }
+        
+        return $errors;
+    }
+
+    /**
+     * Edit a members preferences, one at a time
+     * 
+     */
+	public function editPreferences(&$vars)
+    {
+        // set other preferences
+		$query = "select * from preferences";
+        $rr = $this->bulkLookup($query);
+		foreach ($rr as $rWhile) { // browse all preference
+            if (isset($vars[$rWhile->codeName]) && $vars[$rWhile->codeName] != '')
+                $result = $this->set_preference($vars['memberid'], $rWhile->id, $vars[$rWhile->codeName]);
+		}
     }
 
     /**

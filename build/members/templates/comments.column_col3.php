@@ -3,4 +3,4 @@
 <? } ?>
   <h3>Comments for <?=$username?></h3>
   
-<?php require 'comment_template.php' ?>
+<?php require_once 'comment_template.php' ?>

@@ -80,11 +80,13 @@ if (isset($data->previousvalues)) {
 	}
 	echo "</tr>" ;
 	$iStyle=0 ;
-	foreach ($data->Fields as $Field) {
+	for ($ii=0;$ii<count($data->Fields[0]);$ii++) {
 		$iStyle++ ;
 		echo "<tr valign=\"top\" class=\"",$styles[$iStyle%2],"\">" ;
-		echo "<td>",$Field->Name,"</td>" ;
-		echo "<td>",$Field->Value,"</td>" ;
+		echo "<td>",$data->Fields[0][$ii],"</td>" ;
+		for ($jj=0;$jj<count($data->Values);$jj++) {
+			echo "<td>",$data->Values[$jj][$ii],"</td>" ;
+		}
 		echo "</tr>" ;
 	}
 	echo "</table>"  ;

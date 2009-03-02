@@ -137,12 +137,14 @@ class PreviousversionModel extends RoxModelBase {
 		
 		$data->Fields=$ttN ;
 		$data->Values=$ttV ;
+		/*
 		echo "<br />Names<br />" ;
 		print_r($ttN) ;
 		echo "<br />Values<br />" ;
 		print_r($ttV) ;
 		
 		die(0) ;
+		*/
 		
 //		print_r($data) ; die(0) ;
 		
@@ -151,15 +153,21 @@ class PreviousversionModel extends RoxModelBase {
 	
 	
 	
-	function GetFieldsName($sparam) {
-		$ss=strip_tags($sparam,"<value>") ;
-		$ss=str_replace("</field>","",$ss) ;
-		return(explode("<field>",$ss)) ;
-	} 
 	function GetFieldsValues($sparam) {
-		$ss=strip_tags($sparam,"<field>") ;
+//	echo "\$sparam",htmlentities($sparam),"<br />" ;
+		$ss=strip_tags_content($sparam,"<value>") ;
+//	echo "\$ss1",htmlentities($ss),"<br />" ;
 		$ss=str_replace("</value>","",$ss) ;
+//	echo "\$ss2",htmlentities($ss),"<br />" ;
 		return(explode("<value>",$ss)) ;
+	} 
+	function GetFieldsName($sparam) {
+//	echo "\$sparam",htmlentities($sparam),"<br />" ;
+		$ss=strip_tags_content($sparam,"<field>") ;
+//	echo "\$ss1",htmlentities($ss),"<br />" ;
+		$ss=str_replace("</field>","",$ss) ;
+//	echo "\$ss2",htmlentities($ss),"<br />" ;
+		return(explode("<field>",$ss)) ;
 	} 
     /**
 	* this function returns the list of pending messages
@@ -438,7 +446,24 @@ class PreviousversionModel extends RoxModelBase {
 
 } // end of ContactLocalsModel
 
+function strip_tags_content($text, $tags = '', $invert = FALSE) {
 
+  preg_match_all('/<(.+?)[\s]*\/?[\s]*>/si', trim($tags), $tags);
+  $tags = array_unique($tags[1]);
+   
+  if(is_array($tags) AND count($tags) > 0) {
+    if($invert == FALSE) {
+      return preg_replace('@<(?!(?:'. implode('|', $tags) .')\b)(\w+)\b.*?>.*?</\1>@si', '', $text);
+    }
+    else {
+      return preg_replace('@<('. implode('|', $tags) .')\b.*?>.*?</\1>@si', '', $text);
+    }
+  }
+  elseif($invert == FALSE) {
+    return preg_replace('@<(\w+)\b.*?>.*?</\1>@si', '', $text);
+  }
+  return $text;
+}
 
 
 ?>

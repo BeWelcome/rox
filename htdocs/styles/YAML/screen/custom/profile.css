@@ -1,9 +1,18 @@
 @media all
 {
-#profile dl {
+#linkpath {
+    float: left;
+    
+}
+#profile-info {
+    width: 55%;
+    float: left;
+}
+
+#profile dl, #preferences dl {
     display: block;
 }
-#profile dt {
+#profile dt, #preferences dt {
     line-height: 1.5em;
     font-size: 1em;
     font-weight: normal;
@@ -13,7 +22,7 @@
     clear: left;
     margin-bottom: 0.8em;
 }
-#profile dd {    
+#profile dd, #preferences dd {    
     margin-left: 15em;
     line-height: 1.5em;
     margin-bottom: 0.8em;
@@ -34,6 +43,7 @@
     margin: 0 0 2em 0;
 }
 
+
 /* list the spoken languages of a member */
 #profile .profile_languages li {
     float: left;
@@ -53,7 +63,17 @@
     color: #888;
 }
 
+#preferences ul, select {
+    margin-bottom: 2em;
+}
+    
 
+/* colors for comment quality */
+.neutral { color: #333; }
+.good { color: green; }
+.bad { color: red; }
+
+.neutral, .good, .bad { font-weight: bold; font-size: 1.1em; }
 
 
 /* space for the icons next to the headline */

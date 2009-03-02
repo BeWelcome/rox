@@ -26,7 +26,7 @@
               }
             ?>
             </p>
-        </div> <!-- profile-info -->
+        
 
         <div id="navigation-path" >
             <!--<a href="country/" >Country</a>-->
@@ -104,6 +104,7 @@
                 </tr>
             </tbody>
         </table>
+        </div> <!-- profile-info -->
 
         <div id="linkpath">
             <?

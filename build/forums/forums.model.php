@@ -2539,6 +2539,11 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             $sanitize->allow('strike');
             $sanitize->allow('br');
             $sanitize->allow('blockquote');
+            $sanitize->allow('h1');
+            $sanitize->allow('h2');
+            $sanitize->allow('h3');
+            $sanitize->allow('h4');
+            $sanitize->allow('h5');
         
             $sanitize->allowAttribute('color');    
             $sanitize->allowAttribute('bgcolor');            

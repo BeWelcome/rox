@@ -45,20 +45,19 @@ This File display a topic and the messages which are inside it
 ?>
 <h2><?php 
 	
-	if ($User) {
-		$url=$_SERVER['REQUEST_URI'] ;
-		if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
-			$url.="/reverse"  ;
-		}
-		echo "<a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" /></a> " ;
-	}
 	if ($topic->topicinfo->IdGroup>0) {
 		echo $words->getFormatted("Group_" . $topic->topicinfo->GroupName),"::" ;
 	}
 // If the forum belongs to a group display the group name first
 // Display the title of the post
 	echo $words->fTrad($topic->topicinfo->IdTitle); 
-
+	if ($User) {
+		$url=$_SERVER['REQUEST_URI'] ;
+		if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
+			$url.="/reverse"  ;
+		}
+		echo " <a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" /></a> " ;
+	}
 ?></h2>
 
 <span class="forumsthreadtags"><strong>Tags:</strong> <?php

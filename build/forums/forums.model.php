@@ -21,8 +21,8 @@ class Forums extends PAppModel {
 	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 	public $words ; // a shortcut to words module
 	public $ForumOrderList ; // The order of list in forum ascencding or desc this is a preference
-
-	 
+    public $BW_Right;
+    	 
 /**
 * GetLanguageChoosen function
 *
@@ -155,6 +155,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 
 		
 		$this->words= new MOD_words();
+		$this->BW_Right = MOD_right::get();
 		$this->IdGroup=0 ; // By default no group
 		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
 		$this->ForumOrderList=$layoutbits->GetPreference("PreferenceForumOrderListAsc") ;

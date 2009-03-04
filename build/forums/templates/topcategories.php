@@ -47,47 +47,31 @@ $User = APP_User::login();
 		if ($threads = $list->threads) {
 ?>
 			<br style="clear: both;" />
-			<?php
-			if (isset($list->IdName)) {
-				$TagName=$this->words->fTrad($list->IdName) ;			
-				$tag_description=$this->words->fTrad($list->IdDescription) ;			
-				echo '<h3>' ;
-				echo '<div class="row">';
-				if (isset($_SESSION["IdMember"])) { // Not needed for not logged in member (like google)
-					echo '<a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
-					?>
-					<script language="Javascript" type="text/javascript">
-					<!--
-						$('HideUnhide_<?=$list->IdTagCategory?>').observe('click', function(){
-							show_hide_threadlist('IdForum_<?=$list->IdTagCategory?>') ;
-						});
-					//!-->
-					</script>
-					<?php
-				}
-				echo '<a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a>' ;
-				echo '</h3>' ;
-			}
-			else {
-				$TagName=$this->words->getFormatted('ForumNoSpecificCategories') ;			
-				$tag_description="here goes the unclassfied forums post" ;			
-				$list->IdTagCategory="NoCategory" ;
-				echo '<h3>' ;
-				if (isset($_SESSION["IdMember"])) { // Not needed for not logged in member (like google)
-					echo '<a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
-					?>
-					<script language="Javascript" type="text/javascript">
-					<!--
-						$('HideUnhide_<?=$list->IdTagCategory?>').observe('click', function(){
-							show_hide_threadlist('IdForum_<?=$list->IdTagCategory?>') ;
-						});
-					//!-->
-					</script>
-					<?php
-				}
-				echo '<a  title="'.$tag_description.'">',$TagName,'</a></h3>' ;
-			}
-			?>
+            <div class="row">
+                <h3>
+                <?php
+                if (isset($list->IdName)) {
+                    $TagName=$this->words->fTrad($list->IdName) ;			
+                    $tag_description=$this->words->fTrad($list->IdDescription) ;			
+                    echo '<a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a>' ;
+                } else {
+                    $TagName=$this->words->getFormatted('ForumNoSpecificCategories') ;			
+                    $tag_description="here goes the unclassfied forums post" ;			
+                    $list->IdTagCategory="NoCategory" ;
+                    echo '<a  title="'.$tag_description.'">',$TagName,'</a>';
+                }
+                if (isset($_SESSION["IdMember"])) { // Not needed for not logged in member (like google)
+                    echo ' <a href="javascript:void();" id="HideUnhide_',$list->IdTagCategory,'">+/-</a> ' ;
+                    ?>
+                    <script language="Javascript" type="text/javascript">
+                    <!--
+                        $('HideUnhide_<?=$list->IdTagCategory?>').observe('click', function(){
+                            show_hide_threadlist('IdForum_<?=$list->IdTagCategory?>') ;
+                        });
+                    //!-->
+                    </script>
+                <?php } ?>
+                </h3>
 			</div><!--  row -->
 <?php		echo '<span  id="IdForum_',$list->IdTagCategory,'">' ;
 			require 'boardonecategory.php';

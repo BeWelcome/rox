@@ -123,14 +123,13 @@ Boston, MA  02111-1307, USA.
 
         <hr />
         <?php
-         // echo $post->message;
          $Sentence=$words->fTrad($post->IdContent) ;
-         echo "<div id=\"d".$post->IdContent."\">",$Sentence;
-         echo "</div>" ;
-//     echo "</<hr /><p>",$post->message,"</p>";
-
-       echo "    </div> <!-- forumsmessage -->" ;
          ?>
+         <div id="d<?=$post->IdContent?>" class="text">
+            <?=$Sentence?>
+         </div>
+         
+        </div> <!-- forumsmessage -->
 </div> <!-- forumspost -->
 
 <script type="text/javascript">

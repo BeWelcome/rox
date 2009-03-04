@@ -595,9 +595,7 @@ class MOD_words
 		
 			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
-																					// Will receive the choosen language
 
-	 		$AllowedTags = "<b><i><br><br/><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a forum_trads
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return and empty string
 			}
@@ -640,7 +638,7 @@ class MOD_words
 					MOD_log::get()->write("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				   return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
 				}
 			}
 			// Try first language available
@@ -652,7 +650,7 @@ class MOD_words
 					MOD_log::get()->write("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				   return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
 				}
 			}
 			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;

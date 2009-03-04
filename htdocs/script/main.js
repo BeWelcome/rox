@@ -36,12 +36,12 @@ else if (req.indexOf('blog') != -1) {
 	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
 } */
 else if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('message/write')) {
-    	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
+    	document.write('<script src="script/nicEdit.js" type="text/javascript"></script>');
         document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 else if (req.indexOf('message/write')) {
-    document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
-    document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
+    	document.write('<script src="script/nicEdit.js" type="text/javascript"></script>');
+        document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 if (req.indexOf('user/settings') != -1) {
 //    document.write('<script type="text/javascript" src="script/prototype.js"></script>');
@@ -57,8 +57,10 @@ if (
 		|| req.indexOf('gallery/show/image') != -1
 		|| req.indexOf('message/write') != -1
 		|| req.indexOf('editmyprofile') != -1
+		|| req.indexOf('forums/create') != -1
 	) {
 	document.write('<script type="text/javascript" src="script/fieldset.js"></script>');
+    document.write('<script src="script/nicEdit.js" type="text/javascript"></script>');
 }
 if (req.indexOf('gallery') != -1) {
 //    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');

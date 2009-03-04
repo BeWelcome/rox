@@ -500,6 +500,8 @@ ol li { margin-left: 1em; padding-bottom: 0.4em; list-style-type:decimal;}
 dl {margin-left: 0; margin-top: 1em;}
 dt {margin-left: 0;}
 dd {}
+
+.nicEdit-main ul,.nicEdit-main ul li { margin-left: 1em; list-style-type: disc; }
 /* ###########################################
 ** ### Divs, headings, lists etc. in content columns #################################
 ** ###########################################

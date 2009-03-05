@@ -46,7 +46,7 @@ if (!CheckStatus("Active")) { // only Active member can send a Message
 
 $m = prepareProfileHeader($IdMember,""); 
 $ss="select count(*) as NbTrust from comments where comments.Quality='Good' and comments.IdToMember=".$_SESSION["IdMember"];
-echo $ss,"<br />" ;
+// echo $ss,"<br />" ;
 $mSender=LoadRow($ss) ; 
 $m->mSender=$mSender ;
 

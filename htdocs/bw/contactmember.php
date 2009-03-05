@@ -45,13 +45,14 @@ if (!CheckStatus("Active")) { // only Active member can send a Message
 }
 
 $m = prepareProfileHeader($IdMember,""); 
+$mSender=sql_query("select members.id as IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and comments.Quality='Good' and members.id=".$_SESSION["IdMember"]." group by comments.IdToMember") ; 
+$m->mSender=$mSender ;
 
 $JoinMemberPictRes="no";
 if (GetParam("JoinMemberPict")=="on") {
   $JoinMemberPictRes="yes";
 }
 
-$mSender=sql_query("select members.id as IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and comments.Quality='Good' and members.id=".$_SESSION["IdMember"]." group by comments.IdToMember") ; 
 switch (GetParam("action")) {
 
 	case "reply" :
@@ -74,7 +75,6 @@ switch (GetParam("action")) {
 		$Warning="";	
 		EvaluateMyEvents(); // Recompute nb mail to read
 //		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
-		$m->mSender=$mSender ;
 		DisplayContactMember($m, stripslashes($Message), 0, $Warning,GetStrParam("JoinMemberPict"));
 		exit(0);
 	case "edit" :
@@ -98,7 +98,8 @@ switch (GetParam("action")) {
 		}
 		
 		// In case this member is submitted to Captcha
-		if (($mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+//		if (($mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+		if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
 			if (GetStrParam("c_verification")!=$_SESSION['ExpectedCaptchaValue']) {
 				LogStr("Captcha failed ".GetStrParam("c_verification")."entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
 				
@@ -140,6 +141,5 @@ switch (GetParam("action")) {
 
 }
 
-$m->mSender=$mSender ;
 DisplayContactMember($m, stripslashes($Message), $iMes, "",GetStrParam("JoinMemberPict"));
 ?>

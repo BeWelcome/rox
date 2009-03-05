@@ -51,6 +51,7 @@ if (GetParam("JoinMemberPict")=="on") {
   $JoinMemberPictRes="yes";
 }
 
+$mSender=sql_query("select members.id as IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
 switch (GetParam("action")) {
 
 	case "reply" :
@@ -73,7 +74,6 @@ switch (GetParam("action")) {
 		$Warning="";	
 		EvaluateMyEvents(); // Recompute nb mail to read
 //		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
-		$mSender=sql_query("select members.id,IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
 		$m->mSender=$mSender ;
 		DisplayContactMember($m, stripslashes($Message), 0, $Warning,GetStrParam("JoinMemberPict"));
 		exit(0);
@@ -83,7 +83,6 @@ switch (GetParam("action")) {
 		$Message=$rm->Message;
 		$Warning="";
 		$m=LoadRow("select * from members where id=".$rm->IdReceiver); 
-		$mSender=sql_query("select members.id,IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
 		$m->mSender=$mSender ;
 		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
 		exit(0);
@@ -97,8 +96,6 @@ switch (GetParam("action")) {
 			DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
 			exit(0);
 		}
-		
-		$mSender=sql_query("select members.id,IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
 		
 		// In case this member is submitted to Captcha
 		if (($mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
@@ -143,7 +140,6 @@ switch (GetParam("action")) {
 
 }
 
-$mSender=sql_query("select members.id,IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
 $m->mSender=$mSender ;
 DisplayContactMember($m, stripslashes($Message), $iMes, "",GetStrParam("JoinMemberPict"));
 ?>

@@ -45,6 +45,10 @@ if (!CheckStatus("Active")) { // only Active member can send a Message
 }
 
 $m = prepareProfileHeader($IdMember,""); 
+$ss="select count(*) as NbTrust from comments where comments.Quality='Good' and comments.IdToMember=".$_SESSION["IdMember"];
+echo $ss,"<br />" ;
+$mSender=LoadRow($ss) ; 
+$m->mSender=$mSender ;
 
 $JoinMemberPictRes="no";
 if (GetParam("JoinMemberPict")=="on") {
@@ -81,7 +85,7 @@ switch (GetParam("action")) {
 		$Message=$rm->Message;
 		$Warning="";
 		$m=LoadRow("select * from members where id=".$rm->IdReceiver); 
-	
+		$m->mSender=$mSender ;
 		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
 		exit(0);
 	case "sendmessage" :
@@ -96,7 +100,8 @@ switch (GetParam("action")) {
 		}
 		
 		// In case this member is submitted to Captcha
-		if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+		if (($mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+//		if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
 			if (GetStrParam("c_verification")!=$_SESSION['ExpectedCaptchaValue']) {
 				LogStr("Captcha failed ".GetStrParam("c_verification")."entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
 				
@@ -120,6 +125,7 @@ switch (GetParam("action")) {
 		LogStr("Has sent message #" . $iMes." to ".$m->Username, "contactmember");
 		ComputeSpamCheck($iMes); // Check whether the message is to send or to check
 		$result = ww("YourMessageWillBeProcessed",$_SESSION['Username'],$iMes,"<a href=\"member.php?cid=".$m->Username."\">".$m->Username."</a>");
+		$m->mSender=$mSender ;
 		DisplayResult($m, stripslashes($Message), $result);
 		exit (0);
 	case ww("SaveAsDraft") :

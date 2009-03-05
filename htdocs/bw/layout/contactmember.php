@@ -73,10 +73,10 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "              <input type=hidden name=action value=sendmessage>\n";
 	echo "              <input type=hidden name=cid value=\"" . $m->id . "\">\n";
 	echo "              <input type=hidden name=iMes value=\"" . $iMes . "\">\n";
-	echo "              <h4><label for='messageField'>", ww("YourMessageFor", LinkWithUsername($m->Username)), "</label></h4>\n";
+	echo "              <h4>", ww("YourMessageFor", LinkWithUsername($m->Username)), "</h4>\n";
 	echo "              <p><textarea name=Message rows=15 cols=80 id='messageField'>", $Message, "</textarea></p>\n";
-	if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
-		$CaptchaValue=rand(10000,99999) ;
+	if (($m->mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+		$CaptchaValue=rand(100000,999999) ;
 		echo "<p>" ;
 		$_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
 		echo ww("ContactCaptchaRequest",GetCaptcha($CaptchaValue))," <input type=text name=c_verification value=\"\">" ;

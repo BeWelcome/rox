@@ -75,8 +75,7 @@ function DisplayContactMember($m, $Message = "", $iMes = 0, $Warning = "",$JoinM
 	echo "              <input type=hidden name=iMes value=\"" . $iMes . "\">\n";
 	echo "              <h4>", ww("YourMessageFor", LinkWithUsername($m->Username)), "</h4>\n";
 	echo "              <p><textarea name=Message rows=15 cols=80 id='messageField'>", $Message, "</textarea></p>\n";
-//	if (($m->mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
-	if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+	if (($m->mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
 		$CaptchaValue=rand(100000,999999) ;
 		echo "<p>" ;
 		$_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison

@@ -51,7 +51,7 @@ if (GetParam("JoinMemberPict")=="on") {
   $JoinMemberPictRes="yes";
 }
 
-$mSender=sql_query("select members.id as IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and comments.Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
+$mSender=sql_query("select members.id as IdMember, count(*) as NbTrust from members,comments where members.id=comments.IdToMember and comments.Quality='Good' and members.id=".$_SESSION["IdMember"]." group by comments.IdToMember") ; 
 switch (GetParam("action")) {
 
 	case "reply" :

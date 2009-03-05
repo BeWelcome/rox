@@ -73,6 +73,8 @@ switch (GetParam("action")) {
 		$Warning="";	
 		EvaluateMyEvents(); // Recompute nb mail to read
 //		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetParam("JoinMemberPict"));
+		$mSender=sql_query("select members.id from IdMember, count(*) has NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
+		$m->mSender=$mSender ;
 		DisplayContactMember($m, stripslashes($Message), 0, $Warning,GetStrParam("JoinMemberPict"));
 		exit(0);
 	case "edit" :
@@ -81,7 +83,8 @@ switch (GetParam("action")) {
 		$Message=$rm->Message;
 		$Warning="";
 		$m=LoadRow("select * from members where id=".$rm->IdReceiver); 
-	
+		$mSender=sql_query("select members.id from IdMember, count(*) has NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
+		$m->mSender=$mSender ;
 		DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
 		exit(0);
 	case "sendmessage" :
@@ -95,8 +98,10 @@ switch (GetParam("action")) {
 			exit(0);
 		}
 		
+		$mSender=sql_query("select members.id from IdMember, count(*) has NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
+		
 		// In case this member is submitted to Captcha
-		if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+		if (($mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
 			if (GetStrParam("c_verification")!=$_SESSION['ExpectedCaptchaValue']) {
 				LogStr("Captcha failed ".GetStrParam("c_verification")."entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
 				
@@ -120,6 +125,7 @@ switch (GetParam("action")) {
 		LogStr("Has sent message #" . $iMes." to ".$m->Username, "contactmember");
 		ComputeSpamCheck($iMes); // Check whether the message is to send or to check
 		$result = ww("YourMessageWillBeProcessed",$_SESSION['Username'],$iMes,"<a href=\"member.php?cid=".$m->Username."\">".$m->Username."</a>");
+		$m->mSender=$mSender ;
 		DisplayResult($m, stripslashes($Message), $result);
 		exit (0);
 	case ww("SaveAsDraft") :

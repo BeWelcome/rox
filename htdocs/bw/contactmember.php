@@ -143,5 +143,7 @@ switch (GetParam("action")) {
 
 }
 
+$mSender=sql_query("select members.id from IdMember, count(*) has NbTrust from members,comments where members.id=comments.IdToMember and Quality='Good' and members.id=".$_SESSION["IdMember"]) ; 
+$m->mSender=$mSender ;
 DisplayContactMember($m, stripslashes($Message), $iMes, "",GetStrParam("JoinMemberPict"));
 ?>

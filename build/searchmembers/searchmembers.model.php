@@ -948,13 +948,13 @@ FROM
     public function get_sort_order()
     {
         return array(
-            'members.created' => 'FindPeopleNewMembers',
+            'Accomodation' => 'Accomodation',
             'BirthDate' => 'Age',
             'LastLogin' => 'Lastlogin',
+            'countries.Name' => 'Country',
             'NbComment' => 'Comments',
-            'Accomodation' => 'Accomodation',
-            'cities.Name' => 'City',
-            'countries.Name' => 'Country'
+            'members.created' => 'FindPeopleNewMembers',
+            'cities.Name' => 'City'
         );
     }
 }

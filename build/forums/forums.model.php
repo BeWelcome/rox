@@ -22,7 +22,8 @@ class Forums extends PAppModel {
 	public $words ; // a shortcut to words module
 	public $ForumOrderList ; // The order of list in forum ascencding or desc this is a preference
     public $BW_Right;
-    	 
+
+	 
 /**
 * GetLanguageChoosen function
 *
@@ -133,7 +134,7 @@ function FindAppropriatedLanguage($IdPost=0) {
         parent::__construct();
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
-        
+		
         $layoutbits = new MOD_layoutbits();
 		
 		switch($layoutbits->GetPreference("PreferenceForumFirstPage")) {
@@ -1715,12 +1716,12 @@ WHERE `threadid` = '$this->threadid' "
 				
 				// Todo here use IdWriter instead of authorid
         $query = sprintf("
-SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,`user`.`id` AS `user_id`,`user`.`handle` AS `user_handle`,`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername
+SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,
+`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername
 
 FROM `forums_posts`
-LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
 LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
-LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
+LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
 WHERE `threadid` = '%d' 
 ORDER BY `posttime` ASC
 LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
@@ -1819,18 +1820,14 @@ SELECT
     UNIX_TIMESTAMP(`create_time`) AS `posttime`,
     `message`,
 	 `IdContent`,
-    `user`.`id` AS `user_id`,
-    `members`.`Username` AS `user_handle`,
     `members`.`Username` AS `OwnerUsername`,
     `IdWriter`,
 	 `threadid`,
 		`OwnerCanStillEdit`,
     `geonames_cache`.`fk_countrycode`
-FROM `forums_posts`
-LEFT JOIN `user` ON (`forums_posts`.`authorid` = `user`.`id`)
-LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
-LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
-WHERE `threadid` = '%d'
+FROM `forums_posts`,`members`
+LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
+WHERE `threadid` = '%d' and `forums_posts`.`IdWriter` = `members`.`id`
 ORDER BY `posttime` DESC
 LIMIT %d
             ",
@@ -2292,17 +2289,15 @@ AND IdTag=%d
            }
         }
 
-				// Todo here use IdWriter instead of authorid
         $query = sprintf(
             "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
-    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `user`.`id` AS `user_id`,`IdWriter`,   `members`.`Username` AS `user_handle`, `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
-		FROM (`forums_posts`,`members`,`forums_threads`,`user`) 
+    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
+		FROM (`forums_posts`,`members`,`forums_threads`) 
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-LEFT JOIN `geonames_cache` ON (`user`.`location` = `geonames_cache`.`geonameid`)
+LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 
-AND `user`.`handle` = `members`.`Username` AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
-AND `forums_posts`.`authorid` = `user`.`id` 
+AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
 ORDER BY `posttime` DESC    ",    $IdMember   );
         $s = $this->dao->query($query);
         if (!$s) {

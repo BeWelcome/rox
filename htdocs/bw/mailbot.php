@@ -162,12 +162,10 @@ FROM
     countries,
     forums_posts,
     forums_threads,
-    members,
-    user
+    members
 WHERE
     forums_threads.threadid = forums_posts.threadid  AND
-    forums_posts.authorid = user.id  AND
-    members.Username = user.handle  AND
+    forums_posts.IdWriter = members.id  AND
     forums_posts.postid = $rr->IdPost  AND
     cities.id = members.IdCity  AND
     countries.id = cities.IdCountry

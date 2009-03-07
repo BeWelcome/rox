@@ -35,9 +35,9 @@ Boston, MA  02111-1307, USA.
         <div class="forumsavatar">
             <img
                 class="framed"
-                src="<?php echo MOD_layoutbits::smallUserPic_username($post->user_handle) ?>"
+                src="<?php echo MOD_layoutbits::smallUserPic_username($post->OwnerUsername) ?>"
                 alt="avatar"
-                title="<?php echo $post->user_handle; ?>"
+                title="<?php echo $post->OwnerUsername; ?>"
                 height="56"
                 width="56"
                 style="height:auto; width:auto;"

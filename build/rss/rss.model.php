@@ -27,14 +27,14 @@ class RssModel extends RoxModelBase
 SELECT
     p.*,
     t.*, 
-    u.handle AS author
+    m.Username AS author
 FROM
     forums_posts    AS p,
     forums_threads  AS t, 
-    user 			AS u
+    members			AS m
 WHERE
     p.threadid = t.threadid AND
-    p.authorid = u.id
+    p.IdWriter = m.id
 ORDER BY
     p.create_time DESC 
 LIMIT 15
@@ -66,15 +66,15 @@ LIMIT 15
 SELECT
     p.*, 
     t.*, 
-    u.handle AS author
+    m.Username AS author
 FROM
     forums_posts    AS p,
     forums_threads  AS t, 
-    user 			AS u
+    members			AS m
 WHERE
     $condition   AND
     p.threadId = t.threadid AND
-    p.authorid = u.id
+    p.IdWriter = m.id
 ORDER BY
     p.create_time DESC 
 LIMIT 15
@@ -203,18 +203,19 @@ SELECT
     t.title,
     ft.tagid     AS tagid,
     ft.tag       AS tagname, 
-    u.handle 	 AS author
+    m.Username 	 AS author
 FROM
     forums_posts	AS p,
     forums_threads	AS t,
     tags_threads	AS tt,
     forums_tags		AS ft,
-    user 			AS u
+    members 			AS m
 WHERE
     ".$condition." AND
     ft.tagid     = tt.IdTag   AND
     tt.IdThread  = ft.id      AND
-    ft.id     	 = p.threadid
+    ft.id     	 = p.threadid AND
+	m.id		 = p.IdWriter
 ORDER BY
     p.create_time DESC 
 LIMIT 0,30

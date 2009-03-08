@@ -68,7 +68,7 @@ Boston, MA  02111-1307, USA.
             if ($can_edit_own && $post->OwnerCanStillEdit=="Yes" && $User && $post->IdWriter == $_SESSION["IdMember"] ) {
                 echo '<a href="forums/edit/m'.$post->postid.'"><img src="images/icons/comment_edit.png" alt="edit" />'.$words->getFormatted('forum_EditUser').'</a>&nbsp;&nbsp;<a href="forums/translate/m'.$post->postid.'"><img src="images/icons/world_edit.png" alt="translate" />'.$words->getFormatted('forum_TranslateUser').'</a>&nbsp;&nbsp;';
             }
-            if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) ) {
+            if (($this->BW_Right->HasRight("ForumModerator","Edit")) ||($this->BW_Right->HasRight("ForumModerator","All")) ) {
 //                 echo ' [<a href="forums/modedit/m'.$post->postid.'">Mod Edit</a>]';
                 echo '<a href="forums/modfulleditpost/'.$post->postid.'"><img src="images/icons/group_edit.png" alt="adminedit" />Admin Edit</a>';
             }
@@ -123,14 +123,13 @@ Boston, MA  02111-1307, USA.
 
         <hr />
         <?php
-         // echo $post->message;
          $Sentence=$words->fTrad($post->IdContent) ;
-         echo "<div id=\"d".$post->IdContent."\">",$Sentence;
-         echo "</div>" ;
-//     echo "</<hr /><p>",$post->message,"</p>";
-
-       echo "    </div> <!-- forumsmessage -->" ;
          ?>
+         <div id="d<?=$post->IdContent?>" class="text">
+            <?=$Sentence?>
+         </div>
+         
+        </div> <!-- forumsmessage -->
 </div> <!-- forumspost -->
 
 <script type="text/javascript">

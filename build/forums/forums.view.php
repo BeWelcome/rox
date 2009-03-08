@@ -14,10 +14,12 @@ class ForumsView extends RoxAppView {
 	public $page ;
 	private $words ;
 	public $uri;
+    public $BW_Right;
     
     public function __construct(Forums &$model) {
         $this->_model =& $model;
 		$this->words=$this->_model->words ;
+		$this->BW_Right=$this->_model->BW_Right ;
     }
     
 		

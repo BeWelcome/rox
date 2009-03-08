@@ -1146,6 +1146,27 @@ INSERT INTO `preferences` ( `codeName`, `codeDescription`, `Description`, `creat
 'echo "<select name=\'PreferenceForumCountry\' class=\'prefsel\'><option value=Yes " ;if (\$Value==\'Yes\') echo " selected " ;echo ">",ww(\'Yes\'),"</option><option value=No" ;if (\$Value==\'No\') echo " selected " ;echo ">",ww(\'No\'),"</option></select>" ;', 'Active')
 SQL;
 
+$updates[] = <<<SQL
+ALTER TABLE `forums_posts` ADD `HasVotes` ENUM( 'No', 'Yes' ) NOT NULL DEFAULT 'No' COMMENT 'States if there is a vote connected to this post',
+ADD `IdLocalEvent` INT NOT NULL DEFAULT '0' COMMENT 'States if there is a local event connected to this posts'
+SQL;
+
+$updates[] = <<<SQL
+CREATE TABLE `forums_posts_votes` (
+`IdPost` INT NOT NULL COMMENT 'Id of the corresponding post',
+`IdContributor` INT NOT NULL COMMENT 'if of the member who contributes',
+`Choice` ENUM( 'Yes', 'DontKnow', 'DontCare', 'No' ) NULL DEFAULT NULL COMMENT 'result of vote',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when it was updated',
+`created` TIMESTAMP NOT NULL COMMENT 'when it was created',
+`NbUpdates` INT NOT NULL DEFAULT '0' COMMENT 'use to count the number of time a guy has voted/updated for a given post'
+) ENGINE = MYISAM COMMENT = 'This table is used to store the vote of members about some specific posts'
+SQL;
+
+$updates[] = <<<SQL
+ALTER TABLE `forums_posts_votes` ADD PRIMARY KEY ( `IdPost` , `IdContributor` ) 
+SQL;
+
+
     if (empty($res)) {
         $version = 0;
     } else {

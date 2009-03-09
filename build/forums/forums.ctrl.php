@@ -76,6 +76,14 @@ class ForumsController extends PAppController
         $page->newBar .= $view->getAsString('userBar');
         
         $this->parseRequest();
+        
+        // set uri for correct links in group pages etc.
+        $view->uri = $this->uri;
+        $page->uri = $this->uri;
+        
+        $view->BW_Right = $this->BW_Right;
+        $page->BW_Right = $this->BW_Right;
+        
         $this->_model->prepareForum();
         
         $page->teaserBar .= $view->getAsString('teaser');
@@ -430,6 +438,7 @@ class ForumsController extends PAppController
     
     private $action = 0;
     private $isTopLevel = true;
+    private $uri = 'forums/';
     const ACTION_VIEW = 0;
     const ACTION_NEW = 1;
     const ACTION_EDIT = 2;

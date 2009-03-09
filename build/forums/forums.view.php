@@ -45,6 +45,9 @@ class ForumsView extends RoxAppView {
     
     public function getURI()
     {
+		if (empty($this->uri)) {
+			$this->uri='forums/' ; // This should be already initialized but it seems it is not
+		}
         return $this->uri;
     }
     

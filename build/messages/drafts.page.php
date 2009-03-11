@@ -10,7 +10,7 @@ class MessagesDraftsboxPage extends MessagesPageWithMailbox
     }
     
     protected function mailboxDescription() {
-        echo 'These are your drafts.';
+        
     }
     
     protected function getMailboxWidgetClassname()

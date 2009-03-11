@@ -55,7 +55,7 @@ ORDER BY
             return array();
         } else {
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent"');
+            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal"');
         }
     }
     
@@ -110,15 +110,40 @@ WHERE
         if (!is_numeric($message_id)) {
             return false;
         }
-        $user_id = $_SESSION['IdMember'];
         $this->dao->query(
             "
 DELETE FROM messages
-WHERE id = $message_id AND IdReceiver = $user_id
+WHERE id = $message_id
             "
         );
     }
-
+    
+    // Mark a message as "read" or "unread"
+    public function markReadMessage($message_id, $read = true)
+    {
+        $this->dao->query(
+            "
+UPDATE messages
+SET
+    WhenFirstRead = ".($read ? 'NOW()' : '')."
+WHERE id = $message_id
+            "
+        );
+    }
+    
+    // Mark a message as "read" or "unread"
+    public function moveMessage($message_id, $folder)
+    {
+        $this->dao->query(
+            "
+UPDATE messages
+SET
+    InFolder = '$folder'
+WHERE id = $message_id
+            "
+        );
+    }
+     
     public function getMember($username) {
         return $this->singleLookup(
             "
@@ -258,8 +283,8 @@ WHERE id = $message_id
             "
         );
     }
+    
 }
-
 
 
 

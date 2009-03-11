@@ -36,9 +36,10 @@ class MailboxWidget extends ItemlistWithPagination
     {
         return array(
             'select' => '',
-            // 'contact' => 'From/To',
-            'dateSent' => 'Date',
-            'title' => 'Text',
+            'from' => 'From',
+            'message' => 'Text',
+            // 'status' => 'Status'
+            //'date' => 'Date',
         );
     }
     
@@ -49,72 +50,46 @@ class MailboxWidget extends ItemlistWithPagination
      */
     protected function tableCell_select($message)
     {
-        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
-        $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
-        $read = (int)$message->WhenFirstRead;
         ?>
-        <table><tr>
-        <td>
-        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/dir_<?=$read ? 'read_' : '' ?><?=$direction_in ? 'right' : 'left' ?>.png" alt="<?=$direction_in ? 'From' : 'To' ?>" title="<?=$direction_in ? 'From' : 'To' ?>"></a>
-        </td>
-        <td>
         <input type="checkbox" name="message-mark[]" class="msganchor" id="<?=$message->id?>" value="<?=$message->id?>" />
-        </td>
-        </tr></table>
         <?php
     }
     
-    /**
-     * Table cell in column 'contact', for the given $message
-     *
-     * @param unknown_type $message
-     */
-    protected function tableCell_contact($message)
-    {
-        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
-        $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
-        $contact_id = $direction_in ? $message->IdSender : $message->IdReceiver;
-        $read = (int)$message->WhenFirstRead;
-        ?>
-        <table><tr>
-        <td>
-        <a href="bw/member.php?cid=<?=$contact_username ?>"><?=MOD_layoutbits::PIC_30_30($contact_username,'',$style='float_left')?></a>
-        </td>
-        </tr></table><?php
-    }
-    
-    protected function tableCell_title($message)
-    {
-        $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
-        $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
-				$TheMessage=str_replace("\n","<br />",$message->Message) ;
-        ?>
-        <a style="color: #333; font-size: 14px" href="messages/with/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
-        <br /><a class="text" style="color: #999" href="messages/<?=$message->id ?>"><?=(strlen($TheMessage) >= 150) ? substr($TheMessage,0,150).' ...' : $TheMessage ?></a>
-        <?php
-    }
-    
-    protected function tableCell_dateSent($message)
+    protected function tableCell_from($message)
     {
         $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;
         $date_sent = $message->DateSent;
         $date_created = $message->created;
+        $layoutbits = new MOD_layoutbits();
         $date_string = date("M d, Y - H:i",strtotime($date_created));
         ?>
         <table><tr>
         <td>
-        <a href="bw/member.php?cid=<?=$contact_username ?>"><?=MOD_layoutbits::PIC_30_30($contact_username,'')?></a>
+        <?=MOD_layoutbits::PIC_30_30($message->senderUsername,'')?>
         </td>
         <td>
-        <a style="color: #333;" href="messages/with/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a><br />
-        <span class="small"><?=$date_string ?></span>
+        <a style="color: #333;" href="messages/with/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
+        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="conversation with <?=$contact_username ?>" title="conversation with <?=$contact_username ?>"></a>
+        <br />
+        <span class="small"><?=$layoutbits->ago(strtotime($date_created)) ?></span>
         </td>
         </tr></table>
         <?php
     }
     
-    protected function tableCell_action($message)
+    protected function tableCell_message($message)
+    {
+        $TheMessage=str_replace(array("\n","<br />"),array(" "," "),$message->Message) ;
+        $read = (int)$message->WhenFirstRead;
+        ?>
+        <span>
+        <a class="text" <?=($read) ? '' : 'class="unread"'?> href="messages/<?=$message->id ?>"><?=(strlen($TheMessage) >= 150) ? substr($TheMessage,0,150).' ...' : $TheMessage ?></a>
+        </span>
+        <?php
+    }
+    
+    protected function tableCell_status($message)
     {
         $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
         $contact_username = $direction_in ? $message->senderUsername : $message->receiverUsername;

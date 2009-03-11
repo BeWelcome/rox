@@ -43,6 +43,7 @@ class ReadMessagePage extends MessagesBasePage
 {
     protected function column_col3()
     {
+        $words = new MOD_words();
         $message = $this->message;
         $contactUsername = $message->senderUsername;
         $direction_in = true;
@@ -69,9 +70,9 @@ class ReadMessagePage extends MessagesBasePage
         </p>
         <p>
           <?php if ($direction_in) { ?>
-          <a class="button" href="messages/<?=$message->id ?>/reply">reply</a>
+          <a class="button" href="messages/<?=$message->id ?>/reply"><?=$words->get('replymessage')?></a>
           <?php } else { ?>
-          <a class="button" href="messages/<?=$message->id ?>/edit">edit</a>
+          <a class="button" href="messages/<?=$message->id ?>/edit"><?=$words->get('editmessage')?></a>
           <?php } ?>
         </p>
         <?php
@@ -111,7 +112,8 @@ class MessageSentPage extends ReadMessagePage
 {
     protected function column_col3()
     {
-        echo '<p class="note">message has been sent.</p>';
+        $words = new MOD_words();
+        echo '<p class="note">'.$words->get('Message_hasbeensent').'</p>';
         parent::column_col3();
     }
 }

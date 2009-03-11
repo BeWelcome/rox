@@ -66,15 +66,14 @@ class MessagesBasePage extends RoxPageView
     
     protected function getSubmenuItems()
     {
-        /*
+        
         $words = $this->getWords();
         $items = array();
         $items[] = array('received', 'messages/received', 'Received');
         $items[] = array('sent', 'messages/sent', 'Sent');
         $items[] = array('spam', 'messages/spam', 'Spam');
         $items[] = array('drafts', 'messages/drafts', 'Drafts');
-        return $items; */
-        return false;
+        return $items; 
     }
 }
 

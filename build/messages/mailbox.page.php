@@ -17,7 +17,10 @@ class MessagesPageWithMailbox extends MessagesBasePage
     
     protected function messageActions()
     {
-        require_once 'templates/actions.php';
+        $request = PRequest::get()->request;
+        $message_page = (isset($request[1])) ? $request[1] : '';
+        $words = $this->getWords();
+        require 'templates/actions.php';
     }
         
     protected function column_col3()
@@ -39,95 +42,25 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $widget = $this->getMailboxWidget();
         if ($widget->needsPagination()) {
             echo $formstart;
+            echo '<div class="floatbox">';
             $widget->showPagination();
-            echo '<br style="clear:both" />';
+            $this->messageActions();
+            echo '</div>';
             $widget->render();
-            $this->messageActions($actionurl);
+            echo '<div class="floatbox">';
+            $this->messageActions();
             $widget->showPagination();
+            echo '</div>';
             echo $formend;
-            echo '<br style="clear:both" />';
         } else {
             echo $formstart;
+            $this->messageActions();
             $widget->render();
-            $this->messageActions($actionurl);
+            $this->messageActions();
             echo $formend;
         }
     }
-    
-    protected function footer() {
-        parent::footer();
-        ?>
-        <script type="text/javascript">
-        //<![cdata[
-        var hold = 0;
-        var msg = '';
-
-        function clickablerows() {
-            if (!document.getElementsByTagName || !document.createTextNode) return;
-            
-            var links = $$('.full a');
-            for (i = 0; i < links.length; i++) {
-                links[i].onmouseover = function() { hold = 1; }
-                links[i].onmouseout = function() { hold = 0; }
-            }
-            
-            var hold_inner = 0;
-            var inputs = $$('.full .select input');
-            for (i = 0; i < inputs.length; i++) {
-                inputs[i].onmouseover = function() {
-                    hold = 0;
-                    hold_inner = 1;
-                }
-                inputs[i].onmouseout = function() {
-                    hold_inner = 0;
-                }
-            }
-            
-            var select = $$('.full .select');
-            for (i = 0; i < select.length; i++) {
-                select[i].onclick = function() {
-                    hold = 1;
-                    e = this.select('input');
-                    if (hold_inner != 1) {
-                        if (e[0].checked == false) {
-                            e[0].checked = true;
-                        } else {
-                            e[0].checked = false;
-                        }
-                    }
-                    if (e[0].checked == true) {
-                        new Effect.Highlight(this.parentNode, { startcolor: '#ffffff', endcolor: '#ffff99', restorecolor: '#ffff99' });
-                    } else {
-                        new Effect.Highlight(this.parentNode, { startcolor: '#ffff99', endcolor: '#ffffff', restorecolor: '#ffffff' });
-                    }
-                    //hold = 0; 
-                }
-                select[i].onmouseout = function() {
-                    hold = 0;
-                    hold_inner = 0;
-                }
-            }
-            
-            var rows = $$('.full tr tr');
-            for (i = 0; i < rows.length; i++) {
-                rows[i].onclick = function() {
-                    if (hold == 0) {
-                        msg = this.select('input.msganchor');
-                        if (msg[0]) {
-                            window.location.href = http_baseuri+'messages/'+msg[0].identify();
-                            return false;
-                        }
-                    }
-                }
-            }
-            
-        }
-        
-        clickablerows();
-        //]]>
-        </script>
-        <?php
-    }    
+      
 }
 
 

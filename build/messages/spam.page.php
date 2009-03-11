@@ -29,13 +29,6 @@ class MailboxWidget_Spam extends MailboxWidget
             'InFolder = "Spam"'
         ));
     }
-
-    protected function getTableColumns()
-    {
-        $columns = parent::getTableColumns();
-        $columns['contact'] = 'From';
-        return $columns;
-    }
     
     protected function hrefPage($i_page) {
         return 'messages/spam/'.$i_page;

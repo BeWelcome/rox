@@ -1166,6 +1166,20 @@ $updates[] = <<<SQL
 ALTER TABLE `forums_posts_votes` ADD PRIMARY KEY ( `IdPost` , `IdContributor` ) 
 SQL;
 
+$updates[] = "CREATE TABLE IF NOT EXISTS `notes` (
+  `id` int(11) NOT NULL auto_increment,
+  `IdMember` int(11) NOT NULL,
+  `IdRelMember` int(11) NOT NULL,
+  `Type` enum('message','profile_comment','profile_comment_negative','gallery_comment','picture_comment','blog_comment','chat_invitation') character set utf8 collate utf8_unicode_ci NOT NULL,
+  `Link` varchar(300) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `WordCode` varchar(300) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `FreeText` varchar(300) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `Checked` tinyint(1) NOT NULL default '0',
+  `SendMail` tinyint(1) NOT NULL default '0',
+  `created` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26";
+
 
     if (empty($res)) {
         $version = 0;

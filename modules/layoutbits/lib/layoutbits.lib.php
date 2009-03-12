@@ -460,10 +460,13 @@ class MOD_layoutbits
      */
     public function ago($timestamp)
     {
+        // test if the given timestamp could be a unix timestamp, otherwise try to make it one
+        if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
         $words = new MOD_words();
         $difference_in_seconds = time() - $timestamp;
         $period_in_seconds = 1;
-
+        $difference = time() - $timestamp;
+/*
         foreach (array(
             'second' => 60,
             'minute' => 60,
@@ -483,16 +486,16 @@ class MOD_layoutbits
         // if nothing helped
         $difference_in_decades = round($difference_in_seconds / $period_in_seconds);
         return $difference_in_decades.' '.$words->get(($difference_in_decades > 1) ? 'decades' : 'decade').' '.$words->get('ago');
-        /*
-        $periods = array($words->get('second'), $words->get('minute'),$words->get('hour'), $words->get('day'), $words->get('week'), $words->get('month'), $words->get('years'), $words->get('decade'));
+*/
+        $periods = array('second','minute','hour','day','week','month','year','decade');
         $lengths = array("60","60","24","7","4.35","12","10");
         for($j = 0; $difference >= $lengths[$j]; $j++)
-        $difference /= $lengths[$j];
+            $difference /= $lengths[$j];
         $difference = round($difference);
         if($difference != 1) $periods[$j].= "s";
-        $text = "$difference $periods[$j] ago";
+        $text = $difference.' '.$words->get($periods[$j]).' '.$words->get('ago');
         return $text;
-        */
+        
     }
 
 

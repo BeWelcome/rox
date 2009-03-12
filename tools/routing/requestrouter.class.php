@@ -110,7 +110,8 @@ class RequestRouter
     protected function loadRoutingAliasTable()
     {
         $alias_table = array();
-        $force_refresh = ('localhost' == $_SERVER['SERVER_NAME']);
+		// Added check for PVars::getObj('syshcvol')->IniCache to be able to switch on/off caching for the alias.ini files
+        $force_refresh = ('localhost' == $_SERVER['SERVER_NAME'] || PVars::getObj('syshcvol')->IniCache == 0);
         if (is_file($cachefile = SCRIPT_BASE.'build/alias.cache.ini') && !$force_refresh) {
             $this->iniParse($cachefile, $alias_table);
         } else {

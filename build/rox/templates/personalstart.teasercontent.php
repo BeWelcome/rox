@@ -26,16 +26,20 @@ Boston, MA  02111-1307, USA.
 <div id="teaser" class="clearfix teaser_main">
 <h2><?=$ww->HelloUsername($_SESSION['Username'])?></h2>
 <div class="subcolumns">
-    <div class="c38l">
+    <div class="c50l">
     <div class="subcl">
     <div class="floatbox">
         <img src="<?=$thumbPathMember?>" id="MainUserpic" class="float_left" alt="ProfilePicture" style="margin-right: 10px;" />
+        <div class="float_left">
         <p>
         <?php if (isset($_mainPageNewMessagesMessage)) { ?>
-            <a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a><br />
-        <?php } ?>
-        Start now to <a href="searchmembers">Search for members</a> (by place or username) in the field on the right, <a href="addafriend">add a friend</a> or <a href="explore">explore BeWelcome</a>! If you hosting status changed, use the dropdown on the right or go <a href="searchmembers">edit your profile</a>
+            <a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a>
         </p>
+        <?php } ?>
+        <?php
+        $notify_widget->render();
+        ?>
+        </div>
     </div> <!-- floatbox -->
     </div> <!-- subcl -->
     </div> <!-- c38l -->
@@ -57,7 +61,7 @@ Boston, MA  02111-1307, USA.
 
     /* Instead we use this temporary solution */
 ?>
-<div class="c62r">
+<div class="c50r">
     <div class="subcr">
     <div id="mapsearch">
     <!--

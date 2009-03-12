@@ -22,7 +22,7 @@ class PersonalStartpage extends RoxPageView
     }
 }
 
-/*
+
 class MailboxWidget_Personalstart extends MailboxWidget_Received
 {
     protected function showItems()
@@ -47,18 +47,16 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
     
     protected function showBetweenListItems($prev_item, $item, $i_row)
     {
-        // $time_difference = $item->unixtime_created - $prev_item->unixtime_created;
-        // $seconds = $time_difference % 60;
-        // $time_difference = (int)($time_difference/60);
-        // $minutes = $time_difference % 60;
-        // $time_difference = (int)($time_difference/60);
-        // $hours = $time_difference % 24;
-        // $time_difference = (int)($time_difference/24);
-        // $days = $time_difference;
-        // echo '<div style="color:#ccc;">'.$days.' days and '.$hours.':'.$minutes.':'.$seconds.' between messages</div>';
         echo '<p class="small">'.MOD_layoutbits::ago($item->unixtime_created).'</p>';
     }
 }
-*/
+
+
+
+class NotifyMemberWidget_Personalstart extends NotifyMemberWidget
+{
+    // currently no modifications here
+}
+
 
 ?>

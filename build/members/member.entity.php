@@ -565,7 +565,8 @@ WHERE
       public function get_comments() {
           $sql = " 
 SELECT *,
-    comments.Quality AS comQuality
+    comments.Quality AS comQuality,
+    comments.id AS id
 FROM
     comments,
     members          
@@ -585,7 +586,8 @@ WHERE
         $id = (int)$id;
           $sql = " 
 SELECT *,
-    comments.Quality AS comQuality
+    comments.Quality AS comQuality,
+    comments.id AS id
 FROM
     comments,
     members          

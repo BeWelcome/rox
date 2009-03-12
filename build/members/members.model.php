@@ -286,6 +286,7 @@ WHERE
     
     public function addComment($TCom,&$vars)
     {
+        $return = true;
         // Mark if an admin's check is needed for this comment (in case it is "bad")
 		$AdminAction = "NothingNeeded";
 		if ($vars['Quality'] == "Bad") {
@@ -330,14 +331,15 @@ INSERT INTO
         " . $vars['IdMember'] . ",
         " . $_SESSION['IdMember'] . ",
         '" . $LenghtComments . "','" . $vars['Quality'] . "',
-        '" . $vars['TextWhere'] . "',
-        '" . $vars['TextFree'] . "',
+        '" . $this->dao->escape($vars['TextWhere']) . "',
+        '" . $this->dao->escape($vars['TextFree']) . "',
         '" . $AdminAction . "',now()
     )"
     ;
             $qry = $this->dao->query($str);
             if(!$qry) $return = false;
 		} else {
+		    $textfree_add = ($vars['TextFree'] != '') ? ('<hr>' . $vars['TextFree']) : '';
 			$str = "
 UPDATE
     comments
@@ -348,12 +350,20 @@ SET
     Lenght='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
     TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
-    TextFree='" . $TCom->TextFree . ($vars['TextFree'] != '') ? '<hr>' . $this->dao->escape($vars['TextFree']) : '' . "'
+    TextFree='" . $this->dao->escape($TCom->TextFree . $textfree_add) . "'
 WHERE
     id=" . $TCom->id;
-			$qry = $this->dao->query($str);
+			$qry = $this->dao->exec($str);
             if(!$qry) $return = false;
 		}
+		if ($return != false) {
+		    // Create a note (member-notification) for this action
+		    $c_add = ($vars['Quality'] == "Bad") ? '_bad' : '';
+		    $note = array('IdMember' => $vars['IdMember'], 'IdRelMember' => $_SESSION['IdMember'], 'Type' => 'profile_comment'.$c_add, 'Link' => 'members/'.$vars['IdMember'].'/comments','WordCode' => 'Notify_profile_comment');
+		    $noteEntity = $this->createEntity('Note');
+            $noteEntity->createNote($note);
+        }
+        return $return;
         
     }
     

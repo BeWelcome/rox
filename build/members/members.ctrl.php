@@ -336,9 +336,8 @@ class MembersController extends RoxControllerBase
         
         $member = $this->getMember($request[1]);
         $TCom = $member->get_comments_commenter($_SESSION['IdMember']);
-        
         // add the comment!
-        if (!$model->addComment($TCom[0],$vars)) return false;
+        if (!$model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
         
         return 'members/'.$request[1].'/comments';
     }

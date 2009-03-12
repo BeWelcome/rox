@@ -18,6 +18,7 @@ class RoxEntityFactory
      * @var array
      */
     private $_entities = array(
+        'Note'              => 'build/notify/note.entity',
         'Group'             => 'build/groups/group.entity',
         'Member'            => 'build/members/member.entity',
         'GroupMembership'   => 'build/groups/groupmembership.entity',

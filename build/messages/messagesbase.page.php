@@ -29,39 +29,7 @@ class MessagesBasePage extends RoxPageView
     
     public function leftSidebar()
     {
-        $words = $this->getWords();
-        $items = array();
-        $items[] = array('received', 'messages/received', 'Received');
-        $items[] = array('sent', 'messages/sent', 'Sent');
-        $items[] = array('spam', 'messages/spam', 'Spam');
-        $items[] = array('drafts', 'messages/drafts', 'Drafts');
-        ?>
-        <div id="sidebar_menu">
-          <ul>
-      <?php
-        $active_menu_item = $this->getSubmenuActiveItem();
-        foreach ($items as $index => $item) {
-            $name = $item[0];
-            $url = $item[1];
-            $label = $item[2];
-            if ($name === $active_menu_item) {
-                $attributes = ' class="active"';
-            } else {
-                $attributes = '';
-            }
-            
-            ?><li id="messages_sub<?=$index ?>" <?=$attributes ?>>
-              <a style="cursor:pointer;" href="<?=$url ?>">
-                <span><?=$label ?></span>
-              </a>
-              <?=$words->flushBuffer(); ?>
-            </li>
-            <?php
-            
-        }
-        ?></ul>
-        </div>
-        <?php
+
     }
     
     protected function getSubmenuItems()

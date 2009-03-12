@@ -119,6 +119,10 @@ class MessagesController extends RoxControllerBase
             }
             
             $page->setModel($model);
+			if (isset($_GET['sort']))
+				$page->sort_element = $_GET['sort'];
+			if (isset($_GET['dir']))
+				$page->sort_dir = $_GET['dir'];
         }
         // finally display the page.
         // the render() method will call other methods to render the page.

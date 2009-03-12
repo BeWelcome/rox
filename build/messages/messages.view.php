@@ -51,20 +51,23 @@ class ReadMessagePage extends MessagesBasePage
             $contactUsername = $message->receiverUsername;
             $direction_in = false;
         }
-        ?><div class="floatbox">
-        <div style="float:left">
-        <?=MOD_layoutbits::linkWithPicture($contactUsername) ?>
+        ?>
+		<div class="floatbox">
+			<div class="float_left">
+				<?=MOD_layoutbits::linkWithPicture($contactUsername) ?>
+			</div>
+			<div class="float_left">
+				<p>
+				  <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>') : $words->get('MessageTo','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>')) ?> </span>
+				  &nbsp;&nbsp;&nbsp;&nbsp;
+				  <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" title="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>"> <?=$words->getSilent('messages_allmessageswith',$contactUsername)?></a>
+				</p>
+				<p>
+				  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=$message->DateSent ?>
+				</p>
+			</div>
         </div>
-        <div>
-        <p>
-          <span class="grey small"><?=($direction_in ? 'Message from' : 'Message to') ?> : </span>
-          <a href="people/<?=$contactUsername ?>"><?=$contactUsername ?></a>
-        </p>
-        <p>
-          <span class="grey small">Message date : </span> <?=$message->DateSent ?>
-        </p>
-        </div>
-        </div>
+		<?=$words->flushBuffer()?>
         <p id="messagecontent">
         <?echo str_replace("\n","<br />",$message->Message) ; ?>
         </p>

@@ -10,6 +10,8 @@
  */
 class MessagesModel extends RoxModelBase
 {
+	public $sort_element;
+	
     function __construct()
     {
         parent::__construct();
@@ -24,8 +26,11 @@ class MessagesModel extends RoxModelBase
             $where_string = implode(" AND ",$where_filters);
         }
         if (!$sort_string) {
-            $sort_string = "IF(messages.created > messages.DateSent, messages.created, messages.DateSent) DESC";
+			$sort_string = $this->sortFilters($this->sort_element);
+			if (!$sort_string)
+            	$sort_string = "IF(messages.created > messages.DateSent, messages.created, messages.DateSent) DESC";
         }
+		
         return $this->bulkLookup(
             "
 SELECT
@@ -48,12 +53,34 @@ ORDER BY
         );
     }
     
-    public function receivedMailbox()
+    public function sortFilters($sort_element=false)
+    {
+		if (!$sort_element) return false;
+		if (!$sort_dir = $this->sort_dir) $sort_dir = 'ASC';
+		switch ($sort_element) {
+			case 'sender':
+				$sort_string = 'senderUsername '.$sort_dir.', unixtime_DateSent DESC';
+				break;
+			case 'receiver':
+				$sort_string = 'receiverUsername '.$sort_dir.', unixtime_DateSent DESC';
+				break;
+			case 'date':
+				$sort_string = 'unixtime_DateSent '.$sort_dir.', senderUsername DESC';
+				break;
+			default:
+				$sort_string = false;
+		}
+		return $sort_string;
+    }	
+	
+    public function receivedMailbox($sort_element=false)
     {
         if (!isset($_SESSION['IdMember'])) {
             // not logged in - no messages
             return array();
         } else {
+			if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
+			else $sort_string = false;
             $member_id = $_SESSION['IdMember'];
             return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal"');
         }

@@ -10,7 +10,7 @@ class MailboxWidget extends ItemlistWithPagination
     // pagination
     
     protected function hrefPage($i_page) {
-        return 'messages/inbox/'.$i_page;
+        return 'messages/inbox/'.$i_page.$_SERVER['QUERY_STRING'] ;
     }
     
     
@@ -34,9 +34,15 @@ class MailboxWidget extends ItemlistWithPagination
      */
     protected function getTableColumns()
     {
+		// We don't mark the link of the current sortorder yet, but we could:
+		// $sort_current = isset($_GET['sort']) ? $_GET['sort'] : 'date';
+		// This would lgo in the a-tag: '.(($sort_current == 'date') ? 'class="sort_selected"' : '').'
+		$request_str = implode('/',PRequest::get()->request);
+		$dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
+		$words = new MOD_words();
         return array(
             'select' => '',
-            'from' => 'From',
+            'from' => '<a href="'.$request_str.'?sort=sender&dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),
             'message' => 'Text',
             // 'status' => 'Status'
             //'date' => 'Date',
@@ -69,8 +75,7 @@ class MailboxWidget extends ItemlistWithPagination
         <?=MOD_layoutbits::PIC_30_30($message->senderUsername,'')?>
         </td>
         <td>
-        <a style="color: #333;" href="messages/with/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
-        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="conversation with <?=$contact_username ?>" title="conversation with <?=$contact_username ?>"></a>
+        <a style="color: #333;" href="members/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
         <br />
         <span class="small"><?=$layoutbits->ago(strtotime($date_created)) ?></span>
         </td>

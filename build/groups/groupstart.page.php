@@ -18,7 +18,6 @@ class GroupStartPage extends GroupsBasePage
 		else
 		{
 	        $group_id = $this->group->id;
-
 			$memberlist_widget = new GroupMemberlistWidget();
 	        $memberlist_widget->setGroup($this->group);
 

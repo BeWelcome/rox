@@ -8,7 +8,7 @@
  *
  */
 
-class GroupsBasePage extends RoxPageView
+class GroupsBasePage extends PageWithActiveSkin
 {
 
     /**
@@ -51,12 +51,6 @@ class GroupsBasePage extends RoxPageView
         {
             return array();
         }
-    }
-    
-    protected function getStylesheets() {
-        $stylesheets[] = 'styles/YAML/bw_yaml.css';
-        $stylesheets[] = 'styles/YAML/screen/custom/forums.css';
-        return $stylesheets;
     }
 
 

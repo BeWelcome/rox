@@ -108,7 +108,37 @@ ORDER BY languages.id asc
         return $tt;
     }
     
-
+    /**
+     * automatically called by __get('trads'),
+     * when someone writes '$member->trads'
+     *
+     * @return unknown
+     */
+    public function get_trads_fields()
+    {
+		return array(
+            'Occupation',
+            'ILiveWith',
+            'MaxLenghtOfStay',
+            'MotivationForHospitality',
+            'Offer',
+            'Organizations',
+            'AdditionalAccomodationInfo',
+            'OtherRestrictions',
+            'InformationToGuest',
+            'Hobbies',
+            'Books',
+            'Music',
+            'Movies',
+            'PleaseBring',
+            'OfferGuests',
+            'OfferHosts',
+            'PublicTransport',
+            'PastTrips',
+            'PlannedTrips',
+            'ProfileSummary'
+    	);
+	}
     
     /**
      * automatically called by __get('trads'),
@@ -142,6 +172,11 @@ FROM
         );        
         $trads_by_tradid = array();
         $this->profile_languages = array();
+        $field_names = $this->get_trads_fields();
+		$field_ids = array();
+		foreach ($field_names as $field) {
+			$field_ids[] = $this->$field;
+		}		
         foreach ($trads_for_member as $trad) {
             if (!isset($trads_by_tradid[$trad->IdTrad])) {
                 $trads_by_tradid[$trad->IdTrad] = array();
@@ -149,33 +184,11 @@ FROM
             $trads_by_tradid[$trad->IdTrad][$trad->IdLanguage] = $trad;
             //keeping track of which translations of the profile texts have been encountered
             $language_id = $trad->IdLanguage;
-            $this->profile_languages[$language_id] = $language_data[$language_id];
+
+			if (in_array($trad->IdTrad,$field_ids))
+            	$this->profile_languages[$language_id] = $language_data[$language_id];
         }
         $this->trads_by_tradid= $trads_by_tradid;
-        
-        $field_names = array(
-            'Occupation',
-            'ILiveWith',
-            'MaxLenghtOfStay',
-            'MotivationForHospitality',
-            'Offer',
-            'TypicOffer',
-            'Organizations',
-            'AdditionalAccomodationInfo',
-            'OtherRestrictions',
-            'InformationToGuest',
-            'Hobbies',
-            'Books',
-            'Music',
-            'Movies',
-            'PleaseBring',
-            'OfferGuests',
-            'OfferHosts',
-            'PublicTransport',
-            'PastTrips',
-            'PlannedTrips',
-            'ProfileSummary'
-        );
         
         $trads_by_fieldname = new stdClass();
         foreach ($field_names as $name) {

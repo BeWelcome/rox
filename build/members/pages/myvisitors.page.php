@@ -37,15 +37,12 @@ class MyVisitorsPage extends MemberPage
     {
         $words = $this->getWords();
     	$member = $this->member;
-    	$visitors = $member->visitors;
-    	$members = $member->visitors;
-    	//$visitors = $member->relations;
-        
+    	$visitors = $member->visitors;        
         $layoutbits = new MOD_layoutbits();
         ?>
         <h3>Visitors for admin</h3>
         <?php
-    foreach ($members as $member) {
+    foreach ($visitors as $member) {
         $image = new MOD_images_Image('',$member->Username);
         if ($member->HideBirthDate=="No") $member->age = floor($layoutbits->fage_value($member->BirthDate));
         else $member->age = $words->get("Hidden");

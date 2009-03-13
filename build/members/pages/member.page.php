@@ -32,6 +32,7 @@ class MemberPage extends PageWithActiveSkin
                 array('mypreferences', 'mypreferences', $ww->MyPreferences),
                 array('editmyprofile', 'editmyprofile', $ww->EditMyProfile),
                 array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
+                array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", $ww->Gallery)
             );
@@ -39,6 +40,8 @@ class MemberPage extends PageWithActiveSkin
             return array(
                 array('profile', "members/$username", 'Profile'),
                 array('comments', "members/$username/comments", 'View Comments('.$comments_count['all'].')'),
+                array('trips', "trip/show/$username", $ww->Trips),
+                array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", 'Photo Gallery')
             );
         }

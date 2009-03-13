@@ -80,7 +80,6 @@ require 'profileversion.php';
           } ?>
         </optgroup>
     </select>
-
 <hr />
 <?php
 // Check for errors and update status and display a message

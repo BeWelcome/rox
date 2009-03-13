@@ -100,6 +100,8 @@ class MembersController extends RoxControllerBase
                 // $member->edit_mode = true;
                 if (isset($request[1]))
                     $model->set_profile_language($request[1]);
+				if (isset($request[2]) && $request[2] == 'delete')
+					$page = new DeleteTranslationPage();
                 if (in_array('finish',$request))
                     $page->status = "finish";
                 break;
@@ -367,6 +369,27 @@ class MembersController extends RoxControllerBase
             if (in_array('finish',$request)) return $str;
             return $str.'/finish';
             
+        }
+    }
+	
+    public function deleteTranslationCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        if (isset($args->post)) {
+            $vars = $args->post;
+            $request = $args->request;
+            $model = new MembersModel;
+			if (isset($vars['choice']) && $vars['choice'] == 'yes' && isset($vars['memberid'])) {
+				if (!isset($vars['profile_language'])) return false;
+				$member = $this->getMember($vars['memberid']);
+				$fields = $member->get_trads_fields();
+				$trad_ids = array();
+				foreach ($fields as $field)
+					$trad_ids[] = $member->$field;
+				$model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
+				// Redirect to a nice location like editmyprofile/finish
+				return 'editmyprofile/finish';
+            }
+			return false;
         }
     }
 }

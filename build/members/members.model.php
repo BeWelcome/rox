@@ -189,7 +189,18 @@ VALUES
     )
         ");
     }
-    
+	
+    /**
+     * Delete a profile translation for a member
+     */
+    public function delete_translation_multiple($trad_ids = array(),$IdOwner, $lang_id) 
+    {
+		$words = new MOD_words();
+		foreach ($trad_ids as $trad_id){
+			$words->deleteMTrad($trad_id, $IdOwner, $lang_id);
+		}
+    }
+	    
     /**
      * Set the preferred language for a member
      */

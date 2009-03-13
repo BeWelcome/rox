@@ -123,7 +123,7 @@ class EditProfilePage extends MemberPage
                 <tr align="left" >
                   <td class="label" ><?=$words->getInLang('ProfileSummary', $profile_language)?>:</td>
                   <td>
-                    <textarea name="ProfileSummary" class="long" cols="60"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
+                    <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="60"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >

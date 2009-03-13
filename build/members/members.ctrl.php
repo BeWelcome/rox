@@ -152,6 +152,13 @@ class MembersController extends RoxControllerBase
                         $myself = true;
                     }
                     switch (isset($request[2]) ? $request[2] : false) {
+						case 'relations':
+                            if (!$myself && isset($request[3]) && $request[3] == 'add') {
+                                $page = new AddRelationPage();
+                            } else {
+                                $page = new RelationsPage();
+                            }
+							break;
                         case 'comments':
                             if (!$myself && isset($request[3]) && $request[3] == 'add') {
                                 $page = new AddCommentPage();
@@ -392,7 +399,37 @@ class MembersController extends RoxControllerBase
 			return false;
         }
     }
-}
+	
+    public function addRelationCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        if (isset($args->post)) {
+            $vars = $args->post;
+            $request = $args->request;
+            $model = new MembersModel;
 
+			if (isset($vars['IdOwner']) && $vars['IdOwner'] == $_SESSION['IdMember'] && isset($vars['IdRelation'])) {
+				$member = $this->getMember($vars['IdRelation']);
+				$TabRelationsType = $member->get_TabRelationsType();
+				$stype=""; 
+				$tt=$TabRelationsType;
+				$max=count($tt);
+				for ($ii = 0; $ii < $max; $ii++) {
+					if (isset($vars["Type_" . $tt[$ii]]) && $vars["Type_" . $tt[$ii]] == "on") {
+					  if ($stype!="") $stype.=",";
+					  $stype.=$tt[$ii];
+					}
+				}
+				$relations = $member->get_relations();
+				$vars['stype'] = $stype;
+				$vars['relations'] = $relations;
+				$blub = $model->addRelation($vars);
+				// Redirect to a nice location like editmyprofile/finish
+				return 'members/'.$vars['IdOwner'];
+            }
+			return false;
+        }
+    }
+
+}
 
 ?>

@@ -97,7 +97,16 @@ ORDER BY languages.id asc
         $tt = $this->sql_get_set("members", "Restrictions");
         return $tt;
     }
-    
+	
+	
+    /**
+     * Get all Restrictions for Accomodation
+     */
+    public function get_TabRelationsType() {
+        
+        $tt = $this->sql_get_set("specialrelations", "Type");
+        return $tt;
+    }    
     
     /**
      * Get all Typical Offers possible
@@ -510,6 +519,8 @@ WHERE
           $words = $this->getWords();
           $sql = " 
 SELECT
+	specialrelations.Id AS id,
+	specialrelations.IdRelation AS IdRelation,
     members.Username,
     specialrelations.Comment AS Comment
 FROM
@@ -517,7 +528,8 @@ FROM
     members          
 WHERE
     specialrelations.IdOwner = $this->id  AND
-    specialrelations.IdRelation = members.Id                  
+    specialrelations.IdRelation = members.Id AND
+	specialrelations.Confirmed = 'Yes'                 
           ";
           $s = $this->dao->query($sql);
           $Relations = array();
@@ -527,7 +539,21 @@ WHERE
           }
           return $Relations;
       }
-      
+	  
+      public function get_relation_with_member() {
+	  	  $IdMember = $_SESSION['IdMember'];
+          $words = $this->getWords();
+		  $all_relations = $this->relations;
+		  $relation = array();
+		  if (count($all_relations) > 0) {
+			  foreach ($all_relations as $rel) {
+				if ($rel->IdRelation == $IdMember)
+					$relation = $rel;
+			  }
+		  }
+          return $relation;
+      }
+	        
       public function get_preferences() {
           $sql = " 
 SELECT

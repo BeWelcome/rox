@@ -378,6 +378,61 @@ WHERE
         
     }
     
+    public function addRelation(&$vars)
+    {
+		$return = false;
+		$words = new MOD_words();
+		$TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
+		
+        if (!isset ($TData->id)) {
+			$str = "
+INSERT INTO
+    specialrelations (
+        IdOwner,
+		IdRelation,
+		Type,
+		Comment,
+		created
+    )
+    values (
+		".$_SESSION["IdMember"].",
+		".$vars['IdRelation'].",
+		'".stripslashes($vars['stype'])."',
+		".$words->InsertInMTrad($this->dao->escape($vars['Comment']),"specialrelations.Comment",0).",
+		now()
+    )"
+    ;
+            $qry = $this->dao->query($str);
+            if(!$qry) $return = false;
+		} else {
+		return false;
+		    $textfree_add = ($vars['TextFree'] != '') ? ('<hr>' . $vars['TextFree']) : '';
+			$str = "
+UPDATE
+    comments
+SET 
+    AdminAction='" . $AdminAction . "',
+    IdToMember=" . $vars['IdMember'] . ",
+    IdFromMember=" . $_SESSION['IdMember'] . ",
+    Lenght='" . $LenghtComments . "',
+    Quality='" . $vars['Quality'] . "',
+    TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
+    TextFree='" . $this->dao->escape($TCom->TextFree . $textfree_add) . "'
+WHERE
+    id=" . $TCom->id;
+			$qry = $this->dao->exec($str);
+            if(!$qry) $return = false;
+		}
+		if ($return != false) {
+		    // Create a note (member-notification) for this action
+		    $c_add = ($vars['Quality'] == "Bad") ? '_bad' : '';
+		    $note = array('IdMember' => $vars['IdMember'], 'IdRelMember' => $_SESSION['IdMember'], 'Type' => 'profile_comment'.$c_add, 'Link' => 'members/'.$vars['IdMember'].'/comments','WordCode' => 'Notify_profile_comment');
+		    $noteEntity = $this->createEntity('Note');
+            $noteEntity->createNote($note);
+        }
+        return $return;
+        
+    }
 
     
     /**

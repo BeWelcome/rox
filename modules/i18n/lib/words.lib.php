@@ -108,7 +108,10 @@ class MOD_words
         }
     }
     
-    
+    public function setlangWrite($IdLanguage) {
+        $this->_langWrite = $IdLanguage;
+    }
+	    
     public function getTrMode() {
         return $this->_trMode;
     }
@@ -511,6 +514,61 @@ class MOD_words
         return $row;
     }
 
+
+/**
+* deleteMTrad function
+*
+* This InsertInFTrad create a new translatable text in forum_trads
+* @$ss is for the content of the text
+* @$TableColumn refers to the table and coilumn the trad is associated to
+* @$IdRecord is the num of the record in this table
+* @$_IdMember ; is the id of the member who own the record
+* @$_IdLanguage
+* @$IdTrad  is probably useless (I don't remmber why I defined it)
+* 
+* 
+* Warning : as default language this function will use by priority :
+* 1) the content of $_IdLanguage if it is set to something else than -1
+* 2) the content of an optional $_POST[IdLanguage] if it is set
+* 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
+* 4) The default language (0)
+*
+* returns the id of the created trad
+* 
+*/ 
+public function deleteMTrad($IdTrad, $IdOwner, $IdLanguage) {
+	$IdMember = $_SESSION['IdMember'];
+
+	$str = "
+SELECT *
+FROM 
+	memberstrads
+WHERE
+	IdTrad=" . $IdTrad . " AND
+	IdOwner=" . $IdOwner . " AND
+	IdLanguage=" . $IdLanguage ."
+	";
+	$s = $this->_dao->query($str);
+	if (!$s) {
+		return false;
+	}
+	$Trad = $s->fetch(PDB::FETCH_OBJ);
+	$BW_Right = new MOD_right();
+	if ($IdOwner != $IdMember && !$BW_Right->hasRight('Admin'))  {
+		return false;
+	}
+
+	$this->_dao->query("
+DELETE
+FROM 
+	memberstrads
+WHERE
+	IdTrad=" . $IdTrad . " AND
+	IdOwner=" . $IdMember . " AND
+	IdLanguage=" . $IdLanguage ."
+	");
+	return false;
+} // end of deleteMTrad
 
 
     /**

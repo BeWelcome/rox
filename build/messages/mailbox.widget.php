@@ -4,28 +4,28 @@
 class MailboxWidget extends ItemlistWithPagination
 {
     public function render() {
-        parent::render(); 
+        parent::render();
     }
-    
+
     // pagination
-    
+
     protected function hrefPage($i_page) {
         return 'messages/inbox/'.$i_page.$_SERVER['QUERY_STRING'] ;
     }
-    
-    
+
+
     //-----------------------------------------------------------------
     // getting the items
-    
+
     protected function getAllItems()
     {
         return $this->getMessages();
     }
-    
-    
+
+
     //-----------------------------------------------------------------
     // table layout
-    
+
     /**
      * Columns for messages table.
      * The $key of a column is used as a suffix for method tableCell_$key
@@ -34,21 +34,21 @@ class MailboxWidget extends ItemlistWithPagination
      */
     protected function getTableColumns()
     {
-		// We don't mark the link of the current sortorder yet, but we could:
-		// $sort_current = isset($_GET['sort']) ? $_GET['sort'] : 'date';
-		// This would lgo in the a-tag: '.(($sort_current == 'date') ? 'class="sort_selected"' : '').'
-		$request_str = implode('/',PRequest::get()->request);
-		$dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
-		$words = new MOD_words();
+        // We don't mark the link of the current sortorder yet, but we could:
+        // $sort_current = isset($_GET['sort']) ? $_GET['sort'] : 'date';
+        // This would lgo in the a-tag: '.(($sort_current == 'date') ? 'class="sort_selected"' : '').'
+        $request_str = implode('/',PRequest::get()->request);
+        $dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
+        $words = new MOD_words();
         return array(
             'select' => '',
-            'from' => '<a href="'.$request_str.'?sort=sender&dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),
+            'from' => '<a href="'.$request_str.'?sort=sender&amp;dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),
             'message' => 'Text',
             // 'status' => 'Status'
             //'date' => 'Date',
         );
     }
-    
+
     /**
      * Table cell in column 'select', for the given $message
      *
@@ -57,10 +57,10 @@ class MailboxWidget extends ItemlistWithPagination
     protected function tableCell_select($message)
     {
         ?>
-        <input type="checkbox" name="message-mark[]" class="msganchor" id="<?=$message->id?>" value="<?=$message->id?>" />
+        <input type="checkbox" name="message-mark[]" class="msganchor" id="m<?=$message->id?>" value="<?=$message->id?>" />
         <?php
     }
-    
+
     protected function tableCell_from($message)
     {
         $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
@@ -82,18 +82,18 @@ class MailboxWidget extends ItemlistWithPagination
         </tr></table>
         <?php
     }
-    
+
     protected function tableCell_message($message)
     {
         $TheMessage=str_replace(array("\n","<br />"),array(" "," "),$message->Message) ;
         $read = (int)$message->WhenFirstRead;
         ?>
         <span>
-        <a class="text" <?=($read) ? '' : 'class="unread"'?> href="messages/<?=$message->id ?>"><?=(strlen($TheMessage) >= 150) ? substr($TheMessage,0,150).' ...' : $TheMessage ?></a>
+        <a <?=($read) ? '' : 'class="unread"'?> href="messages/<?=$message->id ?>"><?=(strlen($TheMessage) >= 150) ? substr($TheMessage,0,150).' ...' : $TheMessage ?></a>
         </span>
         <?php
     }
-    
+
     protected function tableCell_status($message)
     {
         $direction_in = ($message->IdReceiver == $_SESSION['IdMember']);
@@ -104,7 +104,7 @@ class MailboxWidget extends ItemlistWithPagination
         <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="conversation with <?=$contact_username ?>" title="conversation with <?=$contact_username ?>"></a>
         <?php
     }
-    
+
 }
 
 

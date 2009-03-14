@@ -1,16 +1,16 @@
-<?php 
+<?php
 
 
 class MessagesMustloginPage extends MessagesBasePage
 {
     private $_redirect_url = 'messages';
-    
+
     // the address after login
     public function setRedirectURL($url)
     {
         $this->_redirect_url = $url;
     }
-    
+
     protected function column_col3()
     {
         $url = $this->_redirect_url;
@@ -19,16 +19,16 @@ class MessagesMustloginPage extends MessagesBasePage
         <a href="<?=$url ?>"><?=$url ?></a><br><br>
         which is only visible to logged-in members.<br>
         (anonymous people don't have a mailbox)<?php
-        
+
         $login_widget = $this->createWidget('LoginFormWidget');
-        
+
         if ($memory = $this->memory) {
             $login_widget->memory = $memory;
         }
-        
+
         $login_widget->render();
     }
-    
+
     /*
     protected function getColumnNames()
     {
@@ -52,22 +52,22 @@ class ReadMessagePage extends MessagesBasePage
             $direction_in = false;
         }
         ?>
-		<div class="floatbox">
-			<div class="float_left">
-				<?=MOD_layoutbits::PIC_50_50($message->senderUsername,'')?>
-			</div>
-			<div class="float_left">
-				<p>
-				  <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>') : $words->get('MessageTo','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>')) ?> </span>
-				  &nbsp;&nbsp;&nbsp;&nbsp;
-				  <a href="messages/with/<?=$contactUsername ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" title="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" /> <?=$words->getSilent('messages_allmessageswith',$contactUsername)?></a>
-				</p>
-				<p>
-				  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=$message->DateSent ?>
-				</p>
-			</div>
+        <div class="floatbox">
+            <div class="float_left">
+                <?=MOD_layoutbits::PIC_50_50($message->senderUsername,'')?>
+            </div>
+            <div class="float_left">
+                <p>
+                  <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>') : $words->get('MessageTo','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>')) ?> </span>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <a href="messages/with/<?=$contactUsername ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" title="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" /> <?=$words->getSilent('messages_allmessageswith',$contactUsername)?></a>
+                </p>
+                <p>
+                  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=$message->DateSent ?>
+                </p>
+            </div>
         </div>
-		<?=$words->flushBuffer()?>
+        <?=$words->flushBuffer()?>
         <p id="messagecontent">
         <?echo str_replace("\n","<br />",$message->Message) ; ?>
         </p>
@@ -80,7 +80,7 @@ class ReadMessagePage extends MessagesBasePage
         </p>
         <?php
     }
-    
+
     protected function getSubmenuActiveItem() {
         return 'received';
     }
@@ -112,7 +112,7 @@ class ReplyMessagePage extends ComposeMessagePage
 
 class EditMessagePage extends ComposeMessagePage
 {
-    
+
 }
 
 class MessageSentPage extends ReadMessagePage

@@ -45,7 +45,7 @@ class MailboxWidget_WithMember extends MailboxWidget
     protected function getTableColumns()
     {
         return array(
-            'status' => 'Status',
+            'select' => '',
             'from' => 'From/To',
             'message' => 'Text'
         );

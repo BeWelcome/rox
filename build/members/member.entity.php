@@ -17,13 +17,13 @@ class Member extends RoxEntityBase
             $this->findById($member_id);
         }
     }
-    
+
     public function init($values, $dao)
     {
         parent::__construct($values, $dao);
     }
-    
-    
+
+
     /**
      * Checks which languages profile has been translated into
      */
@@ -33,7 +33,7 @@ class Member extends RoxEntityBase
         }
         return $this->profile_languages;
     }
-    
+
 
     /**
      * Get languages spoken by member
@@ -43,23 +43,23 @@ class Member extends RoxEntityBase
         $TLanguages = array();
         $str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name,languages.ShortCode AS ShortCode, " .
           "memberslanguageslevel.Level AS Level FROM memberslanguageslevel,languages " .
-          "WHERE memberslanguageslevel.IdMember=" . $this->id . 
+          "WHERE memberslanguageslevel.IdMember=" . $this->id .
           " AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
         $qry = mysql_query($str);
         while ($rr = mysql_fetch_object($qry)) {
-            //$rr->Level = ("LanguageLevel_".$rr->Level);   
+            //$rr->Level = ("LanguageLevel_".$rr->Level);
             array_push($TLanguages, $rr);
         }
         return $TLanguages;
     }
-    
+
     /**
      * Get all available languages
      */
     public function get_languages_all() {
-        
+
         $AllLanguages = array();
-        $str = 
+        $str =
             "
 SELECT SQL_CACHE
     languages.Name AS Name,
@@ -71,52 +71,52 @@ ORDER BY languages.id asc
             ";
         $s = $this->dao->query($str);
         while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
-            //$rr->Level = ("LanguageLevel_".$rr->Level);   
+            //$rr->Level = ("LanguageLevel_".$rr->Level);
             array_push($AllLanguages, $rr);
         }
         return $AllLanguages;
     }
-    
+
     /**
      * Get all possible levels of languages
      */
     public function get_language_levels() {
-        
+
         $table = "memberslanguageslevel";
         $column = "Level";
         $tt = $this->sql_get_enum($table,$column);
         return $tt;
     }
-    
-    
+
+
     /**
      * Get all Restrictions for Accomodation
      */
     public function get_TabRestrictions() {
-        
+
         $tt = $this->sql_get_set("members", "Restrictions");
         return $tt;
     }
-	
-	
+
+
     /**
      * Get all Restrictions for Accomodation
      */
     public function get_TabRelationsType() {
-        
+
         $tt = $this->sql_get_set("specialrelations", "Type");
         return $tt;
-    }    
-    
+    }
+
     /**
      * Get all Typical Offers possible
      */
     public function get_TabTypicOffer() {
-        
+
         $tt = $this->sql_get_set("members", "TypicOffer");
         return $tt;
     }
-    
+
     /**
      * automatically called by __get('trads'),
      * when someone writes '$member->trads'
@@ -125,7 +125,7 @@ ORDER BY languages.id asc
      */
     public function get_trads_fields()
     {
-		return array(
+        return array(
             'Occupation',
             'ILiveWith',
             'MaxLenghtOfStay',
@@ -146,9 +146,9 @@ ORDER BY languages.id asc
             'PastTrips',
             'PlannedTrips',
             'ProfileSummary'
-    	);
-	}
-    
+        );
+    }
+
     /**
      * automatically called by __get('trads'),
      * when someone writes '$member->trads'
@@ -164,10 +164,10 @@ SELECT SQL_CACHE
 FROM
     memberstrads
 WHERE
-    IdOwner = $this->id 
+    IdOwner = $this->id
             "
         );
-        
+
         $language_data = $this->bulkLookup(
             "
 SELECT SQL_CACHE
@@ -175,17 +175,17 @@ SELECT SQL_CACHE
     ShortCode,
     Name
 FROM
-    languages 
-            ", 
+    languages
+            ",
             "id"
-        );        
+        );
         $trads_by_tradid = array();
         $this->profile_languages = array();
         $field_names = $this->get_trads_fields();
-		$field_ids = array();
-		foreach ($field_names as $field) {
-			$field_ids[] = $this->$field;
-		}		
+        $field_ids = array();
+        foreach ($field_names as $field) {
+            $field_ids[] = $this->$field;
+        }
         foreach ($trads_for_member as $trad) {
             if (!isset($trads_by_tradid[$trad->IdTrad])) {
                 $trads_by_tradid[$trad->IdTrad] = array();
@@ -194,11 +194,11 @@ FROM
             //keeping track of which translations of the profile texts have been encountered
             $language_id = $trad->IdLanguage;
 
-			if (in_array($trad->IdTrad,$field_ids))
-            	$this->profile_languages[$language_id] = $language_data[$language_id];
+            if (in_array($trad->IdTrad,$field_ids))
+                $this->profile_languages[$language_id] = $language_data[$language_id];
         }
         $this->trads_by_tradid= $trads_by_tradid;
-        
+
         $trads_by_fieldname = new stdClass();
         foreach ($field_names as $name) {
             if (!$trad_id = $this->$name) {
@@ -211,8 +211,8 @@ FROM
         }
         return $trads_by_fieldname;
     }
-    
-    
+
+
     public function get_phone() {
         $phone = array();
         if ($this->get_crypted($this->HomePhoneNumber, ""))
@@ -223,11 +223,11 @@ FROM
             $phone['WorkPhoneNumber'] = $this->get_crypted($this->WorkPhoneNumber, "");
         return $phone;
     }
-    
+
     public function get_homephonenumber() {
         return $this->get_crypted($this->HomePhoneNumber, "");
     }
-    
+
     /**
      * Get the status of the member's profile (public/private)
      */
@@ -236,16 +236,16 @@ FROM
         $s = $this->singleLookup(
             "
 SELECT *
-FROM memberspublicprofiles 
+FROM memberspublicprofiles
 WHERE IdMember = ".$this->id
          );
         return $s;
     }
-  
-    
+
+
     /**
      * TODO: get name from crypted fields in an architecturally sane place (to be determined)
-     */    
+     */
     public function get_name() {
         $name1 = $this->get_crypted($this->FirstName, "");
         $name2 = $this->get_crypted($this->SecondName, "");
@@ -253,66 +253,66 @@ WHERE IdMember = ".$this->id
         $name = $name1." " . $name2 . " " . $name3;
         return $name;
     }
-    
+
     public function get_firstname() {
         return $this->get_crypted($this->FirstName, "");
     }
-    
+
     public function get_secondname() {
         return $this->get_crypted($this->SecondName, "");
     }
-        
+
     public function get_lastname() {
         return $this->get_crypted($this->LastName, "");
     }
-    
+
     public function get_email() {
         return $this->get_crypted($this->Email, "");
     }
-    
+
     public function get_messengers() {
           $messengers = array(
-            array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png"), 
-            array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.png"), 
-            array("network" => "AOL", "nicename" => "AOL", "image" => "icon_aim.png"), 
-            array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png"), 
-            array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png"), 
-            array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png"),
-            array("network" => "Others", "nicename" => "Other", "image" => "")
+            array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png", "href" => ""),
+            array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.png", "href" => ""),
+            array("network" => "AOL", "nicename" => "AIM", "image" => "icon_aim.png", "href" => "aim:goim?"),
+            array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png", "href" => "msnim:chat?contact="),
+            array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png", "href" => "ymsgr:sendIM?"),
+            array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png", "href" => "skype:echo"),
+            array("network" => "Others", "nicename" => "Other", "image" => "", "href" => "#")
         );
           $r = array();
           foreach($messengers as $m) {
               $address_id = $this->__get("chat_".$m['network']);
               $address = $this->get_crypted($address_id, "");
               if(isset($address) && $address != "*") {
-                  $r[] = array("network" => $m["nicename"], "network_raw" => $m['network'], "image" => $m["image"], "address" => $address, "address_id" => $address_id);
+                  $r[] = array("network" => $m["nicename"], "network_raw" => $m['network'], "image" => $m["image"], "href" => $m["href"], "address" => $address, "address_id" => $address_id);
               }
           }
           if(sizeof($r) == 0)
               return null;
           return $r;
     }
-    
-    
+
+
     public function get_age() {
         $age = $this->get_crypted("age", "");
         return $age;
     }
 
-    
+
     public function get_street() {
         if(!isset($this->address)) {
             $this->get_address();
         }
         return $this->get_crypted($this->address->StreetName, '');
     }
-    
+
 
     public function get_zip() {
         if(!isset($this->address)) {
             $this->get_address();
         }
-        return $this->get_crypted($this->address->Zip, '');        
+        return $this->get_crypted($this->address->Zip, '');
     }
 
 
@@ -322,13 +322,13 @@ WHERE IdMember = ".$this->id
         }
         return $this->address->CityName;
     }
-    
-    
+
+
     public function get_region() {
         //echo "address: " . $this->address;
         if(!isset($this->address)) {
             $this->get_address();
-        }        
+        }
         //echo "address: " . $this->address;
         return $this->address->RegionName;
     }
@@ -336,60 +336,60 @@ WHERE IdMember = ".$this->id
 
     public function get_country() {
         //echo "address: " + $this->address;
-        //return "" 
-        
+        //return ""
+
         if(!isset($this->address)) {
             //echo "No address set, getting it!";
             $this->get_address();
-        }        
+        }
         $r = $this->address->CountryName;
         //echo "r: " + $r;
         return $r;
     }
-    
+
 
     public function get_countrycode() {
         //echo "address: " + $this->address;
         if(!isset($this->address)) {
             $this->get_address();
-        }        
+        }
         return $this->address->CountryCode;
     }
 
 
-    
+
     public function get_photo() {
         // $photos = $this->bulkLookup(
             // "
-// SELECT * FROM membersphotos        
-// WHERE IdMember = ".$this->id    
+// SELECT * FROM membersphotos
+// WHERE IdMember = ".$this->id
         // );
-        
+
         // return $photos;
     }
-    
-    
-    
+
+
+
     public function get_previous_photo($photorank) {
         // $photorank--;
-        
+
         // if($photorank < 0) {
             // $photos = $this->bulkLookup(
                 // "
-// SELECT * FROM membersphotos        
+// SELECT * FROM membersphotos
 // WHERE IdMember = $this->id
-// ORDER BY SortOrder DESC LIMIT 1"    
+// ORDER BY SortOrder DESC LIMIT 1"
             // );
         // }
-        
+
     }
-   
-    public function count_comments() 
+
+    public function count_comments()
     {
         $positive = $this->bulkLookup(
             "
 SELECT COUNT(*) AS positive
-FROM comments 
+FROM comments
 WHERE IdToMember = ".$this->id."
 AND Quality = 'Good'
              "
@@ -398,14 +398,14 @@ AND Quality = 'Good'
         $all = $this->bulkLookup(
             "
 SELECT COUNT(*) AS sum
-FROM comments 
+FROM comments
 WHERE IdToMember = ".$this->id
          );
-         
+
          $r = array('positive' => $positive[0]->positive, 'all' => $all[0]->sum);
          return $r;
     }
-    
+
 
     /**
      * return an array of group entities that the member is in
@@ -419,7 +419,7 @@ WHERE IdToMember = ".$this->id
         {
             return false;
         }
-        
+
         return $this->createEntity('GroupMembership')->getMemberGroups($this);
     }
 
@@ -469,15 +469,15 @@ WHERE IdToMember = ".$this->id
             if ($rr->Location!="") {
                 $rr->Location.=")" ;
             }
-            
+
       array_push($TGroups, $rr);
         }
         return $TGroups;
 
 } // end of get_group_memberships
-    
-    
-   
+
+
+
     /**
      * Member address lookup
      */
@@ -509,27 +509,27 @@ WHERE
             $a[0]->RegionName = 'Unknown';
             $a[0]->IdCity = 'Unknown';
             $a[0]->CityName = 'Unknown';
-            $a[0]->CountryName = 'Unknown';        
+            $a[0]->CountryName = 'Unknown';
         }
         $this->address = $a[0];
     }
-    
-        
+
+
       public function get_relations() {
           $words = $this->getWords();
-          $sql = " 
+          $sql = "
 SELECT
-	specialrelations.Id AS id,
-	specialrelations.IdRelation AS IdRelation,
+    specialrelations.Id AS id,
+    specialrelations.IdRelation AS IdRelation,
     members.Username,
     specialrelations.Comment AS Comment
 FROM
     specialrelations,
-    members          
+    members
 WHERE
     specialrelations.IdOwner = $this->id  AND
     specialrelations.IdRelation = members.Id AND
-	specialrelations.Confirmed = 'Yes'                 
+    specialrelations.Confirmed = 'Yes'
           ";
           $s = $this->dao->query($sql);
           $Relations = array();
@@ -539,23 +539,23 @@ WHERE
           }
           return $Relations;
       }
-	  
+
       public function get_relation_with_member() {
-	  	  $IdMember = $_SESSION['IdMember'];
+          $IdMember = $_SESSION['IdMember'];
           $words = $this->getWords();
-		  $all_relations = $this->relations;
-		  $relation = array();
-		  if (count($all_relations) > 0) {
-			  foreach ($all_relations as $rel) {
-				if ($rel->IdRelation == $IdMember)
-					$relation = $rel;
-			  }
-		  }
+          $all_relations = $this->relations;
+          $relation = array();
+          if (count($all_relations) > 0) {
+              foreach ($all_relations as $rel) {
+                if ($rel->IdRelation == $IdMember)
+                    $relation = $rel;
+              }
+          }
           return $relation;
       }
-	        
+
       public function get_preferences() {
-          $sql = " 
+          $sql = "
 SELECT
     preferences.*,
     Value
@@ -578,15 +578,15 @@ ORDER BY Value asc
         return $rows;
       }
 
-  
+
       public function get_visitors() {
-          $sql = " 
+          $sql = "
 SELECT
     members.BirthDate,
     members.HideBirthDate,
     members.Accomodation,
     members.Username,
-    geonames_cache.name AS city 
+    geonames_cache.name AS city
 FROM
     profilesvisits,
     members,
@@ -598,75 +598,77 @@ WHERE
           ";
           return $this->bulkLookup($sql);
       }
-      
-      
-      
+
+
+
       public function get_comments() {
-          $sql = " 
+          $sql = "
 SELECT *,
     comments.Quality AS comQuality,
     comments.id AS id
 FROM
     comments,
-    members          
+    members
 WHERE
     comments.IdToMember   = $this->id  AND
-    comments.IdFromMember = members.Id                  
+    comments.IdFromMember = members.Id
+ORDER BY
+    comments.updated DESC
           ";
-          
-          
+
+
           //echo $sql;
           //print_r($r);
           return $this->bulkLookup($sql);
-          
+
       }
-      
+
       public function get_comments_commenter($id) {
         $id = (int)$id;
-          $sql = " 
+          $sql = "
 SELECT *,
     comments.Quality AS comQuality,
     comments.id AS id
 FROM
     comments,
-    members          
+    members
 WHERE
     comments.IdToMember   = $this->id  AND
     comments.IdFromMember = ".$id."  AND
     comments.IdFromMember = members.Id
           ";
-          
-          
+
+
           //echo $sql;
           //print_r($r);
           return $this->bulkLookup($sql);
-          
+
       }
-      
-        
+
+
     /**
-     * Fetches translation of specific field in user profile. 
-     * Initializes instance variable $trads if it hasn't been 
+     * Fetches translation of specific field in user profile.
+     * Initializes instance variable $trads if it hasn't been
      * initialized already.
-     * 
+     *
      * @param fieldname name of the profile field
-     * @param language required translation 
-     * 
-     * @return text of $fieldname if available, English otherwise, 
+     * @param language required translation
+     *
+     * @return text of $fieldname if available, English otherwise,
      *     and empty string if field has no content
      */
     public function get_trad($fieldname, $language) {
         if(!isset($this->trads)) {
             $this->trads = $this->get_trads();
         }
-        
-        if(!isset($this->trads->$fieldname)  || empty($this->trads->$fieldname)) 
+
+        if(!isset($this->trads->$fieldname)  || empty($this->trads->$fieldname))
             return "";
         else {
             $field = $this->trads->$fieldname;
             if(!array_key_exists($language, $field)) {
                 // echo "Not translated";
-                if($language != 0 && isset($field[0])) 
+                if($language != 0 && isset($field[0]))
                     return $field[0]->Sentence;
                 foreach ($field as $field_single) {
                     if ($field_single->Sentence != "")
@@ -679,14 +681,14 @@ WHERE
             }
         }
     }
-    
-    
+
+
     public function get_trad_by_tradid($tradid, $language) {
         if(!isset($this->trads)) {
             $this->get_trads();
-        }    
-        
-        if(!isset($this->trads_by_tradid[$tradid])) 
+        }
+
+        if(!isset($this->trads_by_tradid[$tradid]))
             return "";
         else {
             $trad = $this->trads_by_tradid[$tradid];
@@ -699,12 +701,12 @@ WHERE
             else {
                 return $trad[$language]->Sentence;
             }
-        }            
+        }
     }
-            
-                
+
+
     /**
-     * This needs to go someplace else, 
+     * This needs to go someplace else,
      * pending architectural attention
      */
     protected function get_crypted($crypted_id, $return_value = "")
@@ -721,23 +723,23 @@ WHERE
         }
         return MOD_crypt::get_crypted($crypted_id, $return_value);
     }
-    
-    
+
+
     /**
      * Should fetch male & female dummy pics when the member doesn't
      * have any photos uploaded. membersphotos.id for those images = ??
      */
     public function getProfilePictureID() {
         $q = "
-SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder ASC LIMIT 1 
+SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder ASC LIMIT 1
                 ";
         $id = $this->singleLookup_assoc($q);
         if($id) {
             return $id['id'];
         }
-        return null;                
+        return null;
     }
-    
+
     /**
      * attempts to load a member entity using username
      *
@@ -748,11 +750,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     public function findByUsername ($username)
     {
         $username = $this->dao->escape($username);
-        
+
         $where = "Username = '{$username}'";
         return $this->findByWhere($where);
     }
-    
+
     /**
      * finds a GroupMembership object for the member for a given group
      *
@@ -872,7 +874,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return preg_split("/','/", $set); // Split into and array
     }
 
-    
+
     // sql_get_enum returns in an array the possible set values of the colum of table name
     public function sql_get_enum($table, $column)
     {
@@ -885,7 +887,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
         return preg_split("/','/", $set); // Split into and array
     }
-    
+
 }
 
 ?>

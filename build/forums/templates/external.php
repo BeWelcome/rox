@@ -54,7 +54,7 @@ $threadsliced = array_slice($threads, 0, 5);
                     <?php 
                     echo $words->fTrad($thread->IdTitle); 
                     ?></a><br />
-                    <span class="small grey">by <a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> - 
+                    <span class="small grey">by <a href="people/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> - 
                     <?php echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?></span>
                     
                     <a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>

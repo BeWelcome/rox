@@ -69,12 +69,6 @@ Boston, MA  02111-1307, USA.
                 'check member accounts'
             ),
             array(
-                'ContactLocation',
-                'contactlocal',
-                'To Trigger('.$numberPendingLocalMess.')',
-                'check and trigger messages from local volunteers'
-            ),
-            array(
                 'Grep',
                 'bw/admin/admingrep.php',
                 'AdminGrep',

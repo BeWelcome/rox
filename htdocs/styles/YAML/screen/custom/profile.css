@@ -75,6 +75,13 @@
 
 .neutral, .good, .bad { font-weight: bold; font-size: 1.1em; }
 
+/* comment content */
+.comment {
+    display: block;
+    float: left;
+    width: 70%;
+}
+
 
 /* space for the icons next to the headline */
 h3.icon  {

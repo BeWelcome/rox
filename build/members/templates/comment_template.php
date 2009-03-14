@@ -1,54 +1,45 @@
 <?php
-	$iiMax = count($comments);
-	$tt = array ();
-	for ($ii = 0; $ii < $iiMax; $ii++) {
+    $iiMax = count($comments);
+    $tt = array ();
+    for ($ii = 0; $ii < $iiMax; $ii++) {
         $c = $comments[$ii];
-		$quality = "neutral";
-		if ($c->comQuality == "Good") {
-			$quality = "good";
-		}
-		if ($c->comQuality == "Bad") {
-			$quality = "bad";
-		}
+        $quality = "neutral";
+        if ($c->comQuality == "Good") {
+            $quality = "good";
+        }
+        if ($c->comQuality == "Bad") {
+            $quality = "bad";
+        }
 
     $tt = explode(",", $comments[$ii]->Lenght);
     // var_dump($c);
 ?>
-        <style>
-        div.neutral a.username{
-			color: #000000;
-		}
-        div.good a.username{
-			color: green;
-		}
-        div.bad a.username{
-			color: red;
-		}
-        </style>
+
   <div class="subcolumns profilecomment">
 
     <div class="c75l" >
-      <div class="subcl <?=$quality?>" >
-        <a href="people/<?=$c->Username?>"  title="See admin's profile" >
-           <img class="float_left framed"  src="members/avatar/<?=$c->Username?>/?xs"  height="50px"  width="50px"  alt="Profile" >
+      <div class="subcl" >
+        <a href="people/<?=$c->Username?>">
+           <img class="float_left framed"  src="members/avatar/<?=$c->Username?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
-        <div style="display: block; float: left; width: 70%">
-        <p>
-          <strong><?=$c->comQuality?> from <a href="people/<?=$c->Username?>" class="username"><?=$c->Username?></a> <?=$c->created?></strong>
-        </p>
-        <p>
-          <small><?=$c->TextFree?></small>
-        </p>
-        <p>
-          <em><?=$c->TextWhere?></em>
-        </p>
-        <p>
-          <em class="small">Last updated: <?=$layoutbits->ago($c->updated)?></em>
-        </p>
-        <hr />
-        </div>
-      </div>
-    </div>
+        <div class="comment">
+            <p>
+              <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
+              <span class="small grey"><?=$words->get('CommentFrom')?> <a href="people/<?=$c->Username?>"><?=$c->Username?></a> - <?=$c->created?></span>
+            </p>
+            <p>
+              <em><?=$c->TextWhere?></em>
+            </p>
+            <p>
+              <?=$c->TextFree?>
+            </p>
+            <p>
+              <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->updated)?></em>
+            </p>
+            <hr />
+        </div> <!-- comment -->
+      </div> <!-- subcl -->
+    </div> <!-- c75l -->
     <div class="c25r" >
       <div class="subcr" >
         <ul class="linklist" >
@@ -61,13 +52,12 @@
                 ?>
             </li>
             <li>
-                <a href="feedback.php?IdCategory=4" class="small grey"><img src="images/icons/error.png" alt="Report a problem with this comment" /> Report a problem</a>
+                <a href="feedback.php?IdCategory=4" class="small grey"><img src="images/icons/error.png" alt="<?=$words->get('ReportCommentProblem')?>" /><?=$words->get('ReportCommentProblem')?></a>
             </li>
         </ul>
-      </div>
-    </div>
-  </div>
-</div>
+      </div> <!-- subcr -->
+    </div> <!-- c25r -->
+  </div> <!-- subcolumns -->
 <?php
 }
 ?>

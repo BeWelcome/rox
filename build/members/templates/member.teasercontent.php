@@ -3,7 +3,7 @@
 
         <div id="pic_main" >
             <div id="img1" >
-                <a href="gallery/show/user/<?=$member->Username?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>"></a>
+                <a href="gallery/show/user/<?=$member->Username?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" /></a>
             </div> <!-- img1 -->
         </div> <!-- pic_main -->
     </div> <!-- teaser_l -->
@@ -18,11 +18,11 @@
             <?php
               if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
                 if ($member->Status!="Active") {
-                    echo "<table><tr><td bgcolor=yellow><font color=blue><b> ",$member->Status," </b></font></td></table>\n";
+                    echo "<span class=\"memberstatus\"> ",$member->Status," </span>\n";
                 }
               } // end of for people with right dsiplay real status of the member
               if ($member->Status=="ChoiceInactive") {
-                    echo "<table><tr><td bgcolor=yellow align=center>&nbsp;<br><font color=blue><b> ",$ww->WarningTemporayInactive," </b></font><br>&nbsp;</td></tr></table>\n";
+                    echo "<span class=\"memberinactive\"> ",$ww->WarningTemporayInactive," </span>\n";
               }
             ?>
             </p>

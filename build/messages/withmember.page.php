@@ -9,11 +9,14 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
     {
         $contactUsername = $this->contact_member->Username;
         $myselfUsername = $_SESSION['Username'];
-        ?><div class="floatbox">
-        <div style="float:left"><?=MOD_layoutbits::linkWithPicture($contactUsername) ?></div>
-        <h3>All Messages with <a href="bw/member.php?cid=<?=$contactUsername ?>"><?=$contactUsername ?></a>
-        </h3>
-        (in both directions)
+        ?>
+        <div class="floatbox">
+            <div class="float_left framed">
+                <?=MOD_layoutbits::PIC_50_50($contactUsername,'')?>
+            </div>
+            <h4>All Messages with <a href="people/<?=$contactUsername ?>"><?=$contactUsername ?></a>
+            </h4>
+            (in both directions)
         </div>
         <?php
     }
@@ -73,7 +76,7 @@ class MailboxWidget_WithMember extends MailboxWidget
         <?=MOD_layoutbits::PIC_30_30($message->senderUsername,'')?>
         </td>
         <td>
-        <a style="color: #333;" href="messages/with/<?=$contact_username ?>"><strong><?=$link_username ?></strong></a>
+        <a style="color: #333;" href="people/<?=$contact_username ?>"><strong><?=$link_username ?></strong></a>
         <br />
         <span class="small"><?=$layoutbits->ago(strtotime($date_created)) ?></span>
         </td>

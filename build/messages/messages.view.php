@@ -54,13 +54,13 @@ class ReadMessagePage extends MessagesBasePage
         ?>
 		<div class="floatbox">
 			<div class="float_left">
-				<?=MOD_layoutbits::linkWithPicture($contactUsername) ?>
+				<?=MOD_layoutbits::PIC_50_50($message->senderUsername,'')?>
 			</div>
 			<div class="float_left">
 				<p>
 				  <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>') : $words->get('MessageTo','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>')) ?> </span>
 				  &nbsp;&nbsp;&nbsp;&nbsp;
-				  <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" title="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>"> <?=$words->getSilent('messages_allmessageswith',$contactUsername)?></a>
+				  <a href="messages/with/<?=$contactUsername ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" title="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" /> <?=$words->getSilent('messages_allmessageswith',$contactUsername)?></a>
 				</p>
 				<p>
 				  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=$message->DateSent ?>
@@ -79,6 +79,10 @@ class ReadMessagePage extends MessagesBasePage
           <?php } ?>
         </p>
         <?php
+    }
+    
+    protected function getSubmenuActiveItem() {
+        return 'received';
     }
 }
 

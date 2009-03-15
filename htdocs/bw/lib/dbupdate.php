@@ -1180,7 +1180,9 @@ $updates[] = "CREATE TABLE IF NOT EXISTS `notes` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26";
 
-
+$updates[] = "ALTER TABLE `forums_posts` ADD `IdPoll` INT NOT NULL DEFAULT '0' COMMENT 'optional id of a poll connected to this forum post' AFTER `IdLocalEvent`" ;
+$updates[] = "ALTER TABLE `forums_posts` ADD INDEX ( `IdLocalEvent` ) " ;
+$updates[] = "ALTER TABLE `forums_posts` ADD INDEX ( `IdPoll` ) " ;
     if (empty($res)) {
         $version = 0;
     } else {

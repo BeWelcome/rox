@@ -45,6 +45,19 @@ class PageWithHTMLpart extends AbstractBasePage
     protected function getPagePermalink() {
         return 'index';
     }
+	
+    protected function getPage_meta_robots()
+    {
+        if (empty($this->meta_robots)) {
+            $this->meta_robots = 'All' ;
+        }
+        return($this->meta_robots) ;
+    }
+    
+    public function SetMetaRobots($ss) 
+    {
+            $this->meta_robots = $ss ;
+    }
 }
 
 

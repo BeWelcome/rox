@@ -1,9 +1,9 @@
-<div class="warning">
-<h3>There were problems in your sent data.</h3>
-<table>
-  <tr><th>Field name</th><th>Problem</th></tr>
+<div class="error">
+<h3><?= $words->get('MessagesError'); ?></h3>
+
   <?php foreach ($memory->problems as $key => $value) { ?>
-  <tr><td><?=$key ?></td><td><?=$value ?></td></tr>
+  <strong><?=$key ?></strong>
+  <p><?=$value ?></p>
   <?php } ?>
-</table>
+
 </div>

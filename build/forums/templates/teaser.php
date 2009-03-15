@@ -5,22 +5,22 @@ $User = APP_User::login();
 <div id="teaser" class="clearfix">
     <div id="title" class="float_left">
         <h1><?php echo $this->_model->words->getFormatted('ForumTitle'); ?></h1>
-		
+
         <!-- CategoryTitle in teaser -->
         <div class="forumtitle">
             <a href="forums">
-			<?php 
-			echo $this->_model->words->getFormatted('ForumOverviewLink') 
-			?></a>
+            <?php
+            echo $this->_model->words->getFormatted('ForumOverviewLink')
+            ?></a>
             <?php $title = $boards->getBoardName();
             if ($title != 'Forums') {echo ' > <a href="forums/', $title ,'">', $title,'</a>';}
             ?>
         </div> <!-- forumtitle -->
     </div> <!-- title -->
-	
-	
+
+
     <div class="float_right">
-		<!-- Google froum search bar -->
+        <!-- Google froum search bar -->
         <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
         <form action="http://www.google.com/cse" id="cse-search-box">
             <div>
@@ -31,6 +31,6 @@ $User = APP_User::login();
                 <input type="submit" name="sa" value="Search" />
             </div>
         </form>
-        <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&lang=en"></script>
+        <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
     </div> <!-- float_right -->
 </div> <!-- teaser -->

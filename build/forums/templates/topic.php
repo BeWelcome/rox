@@ -56,7 +56,7 @@ This File display a topic and the messages which are inside it
 		if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
 			$url.="/reverse"  ;
 		}
-		echo " <a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" /></a> " ;
+		echo " <a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" alt=\"reverse\" /></a> " ;
 	}
 ?></h2>
 

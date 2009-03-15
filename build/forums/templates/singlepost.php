@@ -30,18 +30,11 @@ Boston, MA  02111-1307, USA.
     <div class="forumsauthor">
         <div class="forumsauthorname">
             <a name="post<?php echo $post->postid; ?>"></a>
-            <a href="bw/member.php?cid=<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
+            <a href="people/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
         </div> <!-- forumsauthorname -->
         <div class="forumsavatar">
-            <img
-                class="framed"
-                src="<?php echo MOD_layoutbits::smallUserPic_username($post->OwnerUsername) ?>"
-                alt="avatar"
-                title="<?php echo $post->OwnerUsername; ?>"
-                height="56"
-                width="56"
-                style="height:auto; width:auto;"
-            /> <!-- img -->
+            <?php echo MOD_layoutbits::PIC_50_50($post->OwnerUsername,'',$style='framed'); ?>
+            
         </div> <!-- forumsavatar -->
     </div> <!-- forumsauthor -->
     <div class="forumsmessage">

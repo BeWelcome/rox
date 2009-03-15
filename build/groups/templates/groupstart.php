@@ -31,8 +31,8 @@
                 <h3><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinNamedGroup', $this->getGroupTitle()) : $words->get('GroupsLeaveNamedGroup', $this->getGroupTitle()) ) ?></h3>
                 <div class="row clearfix">
                     <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
-                <?php endif; ?>
                 </div>
+                <?php endif; ?>
                 <h3><?= $words->get('GroupOwner'); ?></h3>
                 <div class="row">
                     <p><?= (($member =$this->group->getGroupOwner()) ? $member->Username : 'Group has no owner'); ?></p>

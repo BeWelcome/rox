@@ -15,10 +15,9 @@ class GroupWikiPage extends GroupsBasePage
             $group_id = $this->group->id;
 
             $wiki = new WikiController();
-            if ($this->isGroupMember()) {
 
-                $actionurl = 'group/'.$group_id;
-                $wiki->editProcess($actionurl);
+            if ($this->isGroupMember()) {
+                $wiki->editProcess();
             }
             $wikipage = 'Group_'.str_replace(' ', '', ucwords($this->getGroupTitle()));
             

@@ -16,18 +16,24 @@ $words = new MOD_words();
             <li><a href="http://blogs.bevolunteer.org"><?php echo $words->get('BeVolunteerBlogs') ?></a></li>
             <li><a href="terms"><?php echo $words->get('TermsPage') ?></a></li>
             <li><a href="privacy"><?php echo $words->get('PrivacyPage') ?></a></li>
-			<li><a href="stats"><?php echo $words->get('StatsPage') ?></a></li>
+            <li><a href="stats"><?php echo $words->get('StatsPage') ?></a></li>
+        </ul>
 
+<?
+/*
+ * TODO: fix this menu for shops
+ * 
+ * 
 <!-- [START_FASTMENU] -->
 <div id="schnellzugriff">
 <li><a href="about" class="schnellzugriff" id="schnellzugriff_a" onmouseover="einblenden()" onmouseout="ausblenden()">Shop <img src="styles/YAML/images/sign_pagedown.gif" id="linkadvancedimage"/></a></li>
 <ul id="schnellzugriff_ul" onmouseover="einblenden()" onmouseout="ausblenden()">
 <!-- [START_INCLUDE] -->
 <li class="first">
-	<ul class="second">
+    <ul class="second">
 
-	<li><a href="shop/world/">Australia</a></li>
-	<li><a href="shop/europe/">Austria</a></li>
+    <li><a href="shop/world/">Australia</a></li>
+    <li><a href="shop/europe/">Austria</a></li>
          <li><a href="shop/europe/">Belgium</a></li>
          <li><a href="shop/world/">Canada</a></li>
          <li><a href="shop/world/">China</a></li>
@@ -66,7 +72,7 @@ $words = new MOD_words();
          <li><a href="shop/europe/">The Netherlands</a></li>
          <li><a href="shop/europe/">United Kingdom</a></li>
          <li><a href="shop/world/">United States</a></li>
-	</ul>
+    </ul>
 
 </li>
 <!-- [STOP_INCLUDE] -->
@@ -75,3 +81,5 @@ $words = new MOD_words();
 <!-- [STOP_FASTMENU] -->
 <li><?php echo $words->get('Choose your shipping country') ?></li>
         </ul>
+*/
+?>

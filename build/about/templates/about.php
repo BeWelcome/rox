@@ -49,7 +49,7 @@ $words = new MOD_words();
     echo "<h3>", $words->get("AboutUs_HowOrganized"),"</h3>";
     echo "<p>",$words->get("AboutUs_HowOrganizedText"),"</p>";
 
-    $url = 'http://blogs.bevolunteer.org/feed';
+    $url = 'http://www.bevolunteer.org/blog/?feed=rss2';
     $num_items = 1;
     $rss = fetch_rss($url);
     $items = array_slice($rss->items, 0, $num_items);

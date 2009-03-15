@@ -127,6 +127,12 @@ class GroupsBasePage extends PageWithActiveSkin
         }
         return $items;
     }
+    
+    protected function getStylesheets() {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/YAML/screen/custom/forums.css';
+       return $stylesheets;
+    }
 
 
 

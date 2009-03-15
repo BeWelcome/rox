@@ -12,7 +12,7 @@ class GroupForumWidget  // extends ForumBoardWidget
     {
         echo 'group forum';
     }
-    
+
     public function setGroup($group)
     {
         // extract information from the $group object
@@ -26,21 +26,21 @@ class GroupForumWidget  // extends ForumBoardWidget
 class GroupMemberlistWidget  // extends MemberlistWidget?
 {
     private $_group;
-    
+
     public function render()
     {
         $memberships = $this->_group->getMembers();
         for ($i = 0; $i < 6 && $i < count($memberships); $i++)
         {
             ?>
-            <div class="groupmembers center float_left">                
-                <?=MOD_layoutbits::linkWithPicture($memberships[$i]->Username) ?>
-                <a href="people/<?=$memberships[$i]->Username ?>"><?=$memberships[$i]->Username ?></a>               
+            <div class="groupmembers center float_left">
+                <?= MOD_layoutbits::PIC_50_50($memberships[$i]->Username,'',$style='framed'); ?>
+                <a href="people/<?=$memberships[$i]->Username ?>"><?=$memberships[$i]->Username ?></a>
             </div>
             <?php
         }
     }
-    
+
     public function setGroup($group)
     {
         // extract memberlist information from the $group object

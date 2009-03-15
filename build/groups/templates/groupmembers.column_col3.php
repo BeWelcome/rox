@@ -11,7 +11,7 @@
         $membershipinfo = $member->getGroupMembership($this->group);
         ?>
         <tr>
-            <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
+            <td><?php echo MOD_layoutbits::PIC_50_50($member->Username,'',$style='framed'); ?></td>
             <td>
                 <a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
                 <ul>

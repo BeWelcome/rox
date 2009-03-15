@@ -31,6 +31,7 @@ $words = new MOD_words();
 
 $request = PRequest::get()->request;
 $uri = implode('/', $request);
+$groupsforum = ($request[0] == 'groups' && is_numeric($request[1])) ? $request[1] : false;
 
 $vars =& PPostHandler::getVars($callbackId);
 
@@ -46,7 +47,7 @@ if (isset($vars['tags']) && $vars['tags']) {
 <script type="text/javascript" src="script/forums_suggest.js"></script>
 <script type="text/javascript">//<!--
 bkLib.onDomLoaded(function() {
-	new nicEditor({iconsPath: 'nicEditorIcons.gif'}).panelInstance('topic_text');
+	new nicEditor({iconsPath: 'script/nicEditorIcons.gif', buttonList: ['bold','italic','underline','left','center','right','ol','ul','strikethrough','removeformat','hr','image','upload','forecolor','link','fontFamily','fontFormat','xhtml']}).panelInstance('topic_text');
 });	
 
 /*
@@ -183,15 +184,18 @@ if ($allow_title) { // New Topic
         ?>
     </div> <!-- row -->
 
+    <?php if ($groupsforum) { ?>
+        <input type="hidden" name="IdGroup" value="<?=$groupsforum?>">
+    <?php } else { ?>
     <div class="row">
         <label for="IdGroup"><?php echo $words->getFormatted("forum_label_group"); ?></label><br />
         <p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
         <?php
             echo $groupsDropdowns;
         ?>
-    </div> <!-- row -->
-    
-    
+    </div> <!-- row -->    
+    <?php } ?>
+
     <script type="text/javascript">
         function updateContinent() {
             var urlbit = 'k'+$('d_continent').value;

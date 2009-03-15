@@ -66,7 +66,7 @@ class ForumsView extends RoxAppView {
     
     public static function postURL($post)
     {
-        return 'forums/s'.$post->threadid.'-'.str_replace(
+        return $this->forums_uri.'s'.$post->threadid.'-'.str_replace(
             array('/', ' '),
             array('-', '-'),
             $post->title
@@ -349,9 +349,7 @@ class ForumsView extends RoxAppView {
     private function getBoardPageLinks() {
         $currentPage = $this->_model->getPage();
         $itemsPerPage = $this->_model->THREADS_PER_PAGE;
-        $max = $this->_model->getBoard()->getNumberOfThreads();
-		$max=1000 ;
-        
+        $max = $this->_model->getBoard()->getNumberOfThreads();        
         return $this->getPageLinks($currentPage, $itemsPerPage, $max);
     }
 

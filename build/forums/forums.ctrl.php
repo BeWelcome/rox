@@ -13,18 +13,21 @@ class ForumsController extends PAppController
 {
     private $_model;
     private $_view;
-		
-	protected $BW_Right ;
-	protected $BW_Flag ;
     
+    protected $BW_Right;
+    protected $BW_Flag;
+    protected $request;
+    	
     public function __construct() {
         parent::__construct();
         $this->_model = new Forums();
         $this->_view = new ForumsView($this->_model);
-//				$this->_view->page=new RoxGenericPage();
-		$this->BW_Right= MOD_right::get();
-		$this->BW_Flag= MOD_flag::get();
-
+//                $this->_view->page=new RoxGenericPage();
+        $this->BW_Right = MOD_right::get();
+        $this->BW_Flag = MOD_flag::get();
+        $this->request = PRequest::get()->request;
+        $this->forums_uri = $this->get_forums_uri();
+        $this->_model->forums_uri = $this->forums_uri;
     }
     
     public function __destruct() {
@@ -36,6 +39,18 @@ class ForumsController extends PAppController
         $this->_view->topMenu($currentTab);
     }
     
+    public function get_forums_uri() {
+        $request = PRequest::get()->request;
+        $uri = array();
+        foreach ($request as $r) {
+            array_push($uri,$r);
+            if ($r == 'forums' or $r == 'forum') break;
+        }
+        $uri = implode('/', $uri);
+        $uri = rtrim($uri, '/').'/';
+        return $uri;
+    }
+        
     /**
     * index is called when http request = ./forums
     */
@@ -47,33 +62,33 @@ class ForumsController extends PAppController
         $view = $this->_view;
         $page = $view->page=new RoxGenericPage(); 
         
-        $request = PRequest::get()->request;
+        $request = $this->request;
         if (isset($request[0]) && $request[0] != 'forums') {
-			$page = $view->page=new PageWithHTMLpart();
+            $new_request = array();
+            $push = false;
+            foreach ($request as $r) {
+                if ($r == 'forums' or $r == 'forum') $push = true;
+                if ($push == true) array_push($new_request,$r);
+            }
+            $request = $new_request;
+            $page = $view->page=new PageWithHTMLpart();
         }
         
-				// First check if the feature is closed
-		if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
-			$this->_view->showFeatureIsClosed();
-			PPHP::PExit();
-			 break ;
-		} // end of test "if feature is closed" 
+        // First check if the feature is closed
+        if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
+            $this->_view->showFeatureIsClosed();
+            PPHP::PExit();
+             break ;
+        } // end of test "if feature is closed" 
 
         
-		if (APP_User::isBWLoggedIn()) {
-        	$User = APP_User::login();
-		}
-		else {
-        	$User = false;
-		}
-		 
-        
-        // first include the col2-stylesheet
-        $page->addStyles .= $view->customStyles();
-        $page->currentTab = 'forums'; 
-        
-        // then the userBar
-        $page->newBar .= $view->getAsString('userBar');
+        if (APP_User::isBWLoggedIn()) {
+            $User = APP_User::login();
+        }
+        else {
+            $User = false;
+        }
+         
         
         $this->parseRequest();
         
@@ -86,40 +101,45 @@ class ForumsController extends PAppController
         
         $this->_model->prepareForum();
         
+        // first include the col2-stylesheet
+        $page->addStyles .= $view->customStyles();
+        $page->currentTab = 'forums'; 
+        // then the userBar
+        $page->newBar .= $view->getAsString('userBar');
         $page->teaserBar .= $view->getAsString('teaser');
-				
+                
         // we can't replace this ob_start()
         ob_start();
-		if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
+        if ($this->action == self::ACTION_MODERATOR_FULLEDITPOST) {
             if (!isset($request[2])) {
-			 	die("Need to have a IdPost") ;
-			}
-			$IdPost=$request[2] ;
-			if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
-        	 	MOD_log::get()->write("Trying to edit post #".$IdPost." without proper right", "ForumModerator");
-			 	die("You miss right ForumModerator") ;
-			}
+                 die("Need to have a IdPost") ;
+            }
+            $IdPost=$request[2] ;
+            if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
+                 MOD_log::get()->write("Trying to edit post #".$IdPost." without proper right", "ForumModerator");
+                 die("You miss right ForumModerator") ;
+            }
             $callbackId = $this->ModeratorEditPostProcess();
-			 
+             
             $DataPost=$this->_model->prepareModeratorEditPost($IdPost);
             $this->_view->showModeratorEditPost($callbackId,$DataPost);
             PPostHandler::clearVars($callbackId);
-		 }
+         }
         elseif ($this->action == self::ACTION_MODERATOR_EDITTAG) {
             if (!isset($request[2])) {
-			 	die("Need to have a IdTag") ;
-			 }
-			 $IdTag=$request[2] ;
-			 if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
-        	 	MOD_log::get()->write("Trying to edit Tag #".$IdTag." without proper right", "ForumModerator");
-			 	die("You miss right ForumModerator") ;
-			 }
+                 die("Need to have a IdTag") ;
+             }
+             $IdTag=$request[2] ;
+             if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
+                 MOD_log::get()->write("Trying to edit Tag #".$IdTag." without proper right", "ForumModerator");
+                 die("You miss right ForumModerator") ;
+             }
             $callbackId = $this->ModeratorEditTagProcess();
-			 
+             
             $DataTag=$this->_model->prepareModeratorEditTag($IdTag);
             $this->_view->showModeratorEditTag($callbackId,$DataTag);
             PPostHandler::clearVars($callbackId);
-		 }
+         }
         else if ($this->action == self::ACTION_VIEW) {
             if ($this->_model->isTopic()) {
                 $this->_model->prepareTopic(true);
@@ -128,54 +148,54 @@ class ForumsController extends PAppController
             else {
                 $this->_model->prepareForum();
                 if ($this->isTopLevel) {
-//				die("\$this->_model->getTopMode()=".$this->_model->getTopMode()) ;
-					if ($this->_model->getTopMode()==Forums::CV_TOPMODE_CATEGORY) { // Ici on fera l'aiguillage Category ou Recent Posts
-						$this->_view->showTopLevelCategories();
-					}
-					else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LASTPOSTS){
-						$this->_view->showTopLevelRecentPosts(); 
-					}
-					else {
-						die("getTopMode is not set") ;
-					}
+//                die("\$this->_model->getTopMode()=".$this->_model->getTopMode()) ;
+                    if ($this->_model->getTopMode()==Forums::CV_TOPMODE_CATEGORY) { // Ici on fera l'aiguillage Category ou Recent Posts
+                        $this->_view->showTopLevelCategories();
+                    }
+                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LASTPOSTS){
+                        $this->_view->showTopLevelRecentPosts(); 
+                    }
+                    else {
+                        die("getTopMode is not set") ;
+                    }
                 } else {
                     $this->_view->showForum();
                 }
             }
-		}
-		else if ($this->action == self::ACTION_VIEW_CATEGORY) {
+        }
+        else if ($this->action == self::ACTION_VIEW_CATEGORY) {
             $this->_view->showTopLevelCategories();
-		} 
-		else if ($this->action == self::ACTION_VIEW_LASTPOSTS) {
+        } 
+        else if ($this->action == self::ACTION_VIEW_LASTPOSTS) {
             $this->_view->showTopLevelRecentPosts();
         } 
-		else if ($this->action == self::ACTION_RULES) {
+        else if ($this->action == self::ACTION_RULES) {
             $this->_view->rules();
         } 
-		else if ($this->action == self::ACTION_NEW) {
-			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-				MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-			}
+        else if ($this->action == self::ACTION_NEW) {
+            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+                MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+            }
             if (!$User) {
                 PRequest::home();
             }
-			if ((isset($request[2])) and ($request[2]{0}=='u')) {
-				 $IdGroup=substr($request[2],1) ;
-			}
-			else {
-				 $IdGroup=0 ;
-			}
+            if ((isset($request[2])) and ($request[2]{0}=='u')) {
+                 $IdGroup=substr($request[2],1) ;
+            }
+            else {
+                 $IdGroup=0 ;
+            }
             $this->_model->prepareForum();
             $callbackId = $this->createProcess();
             $this->_view->createTopic($callbackId,$IdGroup);
             PPostHandler::clearVars($callbackId);
         } 
         else if ($this->action == self::ACTION_REPLY) {
-			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-			    MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-			}
+            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+                MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+            }
             if (!$User) {
                 PRequest::home();
             }
@@ -207,19 +227,19 @@ class ForumsController extends PAppController
             PPHP::PExit();
             break;        
         } else if ($this->action == self::ACTION_DELETE) {
-			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-				MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-			}
+            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+                MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+            }
             if (!$User || !$this->BW_Right->HasRight("ForumModerator","Delete")) {
                 PRequest::home();
             }
             $this->delProcess();
         } else if ($this->action == self::ACTION_EDIT) {
-			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-				MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-			}
+            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+                MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+            }
             if (!$User) {
                 PRequest::home();
             }
@@ -229,10 +249,10 @@ class ForumsController extends PAppController
             $this->_view->editPost($callbackId,false);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_TRANSLATE) {
-			if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
-				MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-				die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
-			}
+            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+                MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+            }
             if (!$User) {
                 PRequest::home();
             }
@@ -307,7 +327,7 @@ class ForumsController extends PAppController
         }
         
         $page->content .= ob_get_contents();
-		 ob_end_clean();
+         ob_end_clean();
         $page->render();
     } // end of index
     
@@ -338,9 +358,9 @@ class ForumsController extends PAppController
     }
     
     private function searchUserposts($user) {
-				if (APP_User::isBWLoggedIn()) { // Data will be displayed only if the current user is Logged and is an active member
+                if (APP_User::isBWLoggedIn()) { // Data will be displayed only if the current user is Logged and is an active member
             $posts = $this->_model->searchUserposts($user); // todo test if the member is still active
-					
+                    
         }
         else {
             $posts = array() ; // todo post something suggesting to LogIn or to register to see a posts by user
@@ -348,23 +368,23 @@ class ForumsController extends PAppController
         $this->_view->displaySearchResultPosts($posts);
     }
     
-	/**
-	* show latest threads belonging to a group
-	*
-	**/
-	public function showExternalGroupThreads($groupId) {
-        $request = PRequest::get()->request;    
+    /**
+    * show latest threads belonging to a group
+    *
+    **/
+    public function showExternalGroupThreads($groupId) {
+        $request = $this->request;    
         $this->parseRequest();
-		$this->_model->setGroupId($groupId);
-		$this->isTopLevel = false;
+        $this->_model->setGroupId($groupId);
+        $this->isTopLevel = false;
         $this->_model->prepareForum();
         $this->_view->uri = 'groups/'.$request[1].'/forum/';
         $this->_view->showExternal();
-    }  		
-	
+    }          
+    
 // This rebuild the list of lates post to display on the main user page
     public function showExternalLatest() { 
-        $request = PRequest::get()->request;    
+        $request = $this->request;    
         $this->parseRequest();    
         $this->_model->prepareForum();     
         $this->_view->showExternal();
@@ -411,7 +431,7 @@ class ForumsController extends PAppController
         
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
-//			 echo ("here") ;
+//             echo ("here") ;
             return $this->_model->ModeratorEditPostProcess();
         } else {
             PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
@@ -424,7 +444,7 @@ class ForumsController extends PAppController
         
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
-//			 echo ("here") ;
+//             echo ("here") ;
             return $this->_model->ModeratorEditTagProcess();
         } else {
             PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
@@ -463,7 +483,7 @@ class ForumsController extends PAppController
     * Extracts the current action, geoname-id, country-code, admin-code, all tags and the threadid from the request uri
     */
     private function parseRequest() {
-        $request = PRequest::get()->request;
+        $request = $this->request;
     //    die ("\$request[1]=".$request[1]) ;
         // If this is a subforum within a group
         if (isset($request[0]) && $request[0] == 'groups') {
@@ -497,12 +517,12 @@ class ForumsController extends PAppController
                 } else if ($r == 'edit') {
                     $this->action = self::ACTION_EDIT;
                 } else if ($r == 'lastposts') {
-					$this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
                     $this->action = self::ACTION_VIEW_LASTPOSTS;
                 } else if ($r == 'category') {
-					$this->_model->setTopMode(Forums::CV_TOPMODE_CATEGORY);
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_CATEGORY);
                     $this->action = self::ACTION_VIEW_CATEGORY;
-				} else if ($r == 'translate') {
+                } else if ($r == 'translate') {
                     $this->action = self::ACTION_TRANSLATE;
                 } else if ($r == 'modedit') {
                     $this->action = self::ACTION_MODEDIT;
@@ -513,9 +533,9 @@ class ForumsController extends PAppController
                 } else if ($r == 'modedittag') {
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
                 } else if ($r == 'reverse') {  // This mean user has click on the reverse order box
-					$this->_model->SwitchForumOrderList() ;
-				}
-				else if ($r == 'delete') {
+                    $this->_model->SwitchForumOrderList() ;
+                }
+                else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
                 } else if (eregi('page([0-9]+)', $r, $regs)) {
                     $this->_model->setPage($regs[1]);

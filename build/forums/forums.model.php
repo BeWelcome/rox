@@ -741,7 +741,7 @@ WHERE `geonameid` = '%d'
         if ($vars_ok) {
             $topicid = $this->newTopic($vars);
             PPostHandler::clearVars();
-            return PVars::getObj('env')->baseuri.'forums/s'.$topicid;
+            return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$topicid;
         } else {
             return false;
         }
@@ -868,7 +868,7 @@ WHERE `postid` = $this->messageId
                 $this->dao->query("COMMIT");
                 
                 PPostHandler::clearVars();
-                return PVars::getObj('env')->baseuri.'forums/s'.$postinfo->threadid;
+                return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$postinfo->threadid;
             } else {
                 return false;
             }
@@ -1057,7 +1057,7 @@ WHERE `threadid` = '%d' ",
         $this->replyTopic($vars);
     
         PPostHandler::clearVars();
-        return PVars::getObj('env')->baseuri.'forums/s'.$this->threadid;
+        return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
     } // end of replyProcess
     
 	 
@@ -1156,7 +1156,7 @@ WHERE `threadid` = '%d' ",
 			 
      PPostHandler::clearVars();
 		 
-     return PVars::getObj('env')->baseuri.'forums/modfulleditpost/'.$IdPost;
+     return PVars::getObj('env')->baseuri.$this->forums_uri.'modfulleditpost/'.$IdPost;
  		} // end of ModeratorEditPostProcess
     
 /*
@@ -1232,7 +1232,7 @@ WHERE `threadid` = '%d' ",
 	     $IdTag=$vars['IdTag'] ;
         PPostHandler::clearVars();
 		 
-        return PVars::getObj('env')->baseuri.'forums/modedittag/'.$IdTag;
+        return PVars::getObj('env')->baseuri.$this->forums_uri.'modedittag/'.$IdTag;
     } // end of ModeratorEditTagProcess
     
     public function delProcess() {
@@ -1352,7 +1352,7 @@ WHERE `threadid` = '$topicinfo->threadid'
                 ;
                 $this->dao->query($query);
                 
-                $redir = 'forums/s'.$topicinfo->threadid;
+                $redir = $this->forums_uri.'s'.$topicinfo->threadid;
             }
             
             $this->dao->query("COMMIT");
@@ -2505,6 +2505,18 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         return $tags;    
     } // end of getTopCategoryLevelTags
     
+    
+    private function makeClickableLinks($text) 
+    {    
+        $text = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
+            '<a href="\\1">\\1</a>', $text);
+        $text = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
+            '\\1<a href="http://\\2">\\2</a>', $text);
+        $text = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})',
+            '<a href="mailto:\\1">\\1</a>', $text);
+        return $text;
+    }
+    
 /*
 * cleanupText
 *
@@ -2512,6 +2524,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 *
 */
     private function cleanupText($txt) {
+        $txt = $this->makeClickableLinks($txt);
         $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
         $doc = DOMDocument::loadHTML($str);
         if ($doc) {

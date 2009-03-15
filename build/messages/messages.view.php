@@ -45,25 +45,25 @@ class ReadMessagePage extends MessagesBasePage
     {
         $words = new MOD_words();
         $message = $this->message;
-        $contactUsername = $message->senderUsername;
+        $contact_username = $message->senderUsername;
         $direction_in = true;
-        if ($contactUsername == $_SESSION['Username']) {
-            $contactUsername = $message->receiverUsername;
+        if ($contact_username == $_SESSION['Username']) {
+            $contact_username = $message->receiverUsername;
             $direction_in = false;
         }
         ?>
         <div class="floatbox">
             <div class="float_left">
-                <?=MOD_layoutbits::PIC_50_50($message->senderUsername,'')?>
+                <?=MOD_layoutbits::PIC_50_50($contact_username) ?>
             </div>
             <div class="float_left">
                 <p>
-                  <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>') : $words->get('MessageTo','<a href="people/'.$contactUsername.'">'.$contactUsername.'</a>')) ?> </span>
+                  <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="people/'.$contact_username.'">'.$contact_username.'</a>') : $words->get('MessageTo','<a href="people/'.$contact_username.'">'.$contact_username.'</a>')) ?> </span>
                   &nbsp;&nbsp;&nbsp;&nbsp;
-                  <a href="messages/with/<?=$contactUsername ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" title="<?=$words->getSilent('messages_allmessageswith',$contactUsername)?>" /> <?=$words->getSilent('messages_allmessageswith',$contactUsername)?></a>
+                  <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>"> <?=$words->getSilent('messages_allmessageswith',$contact_username)?></a>
                 </p>
                 <p>
-                  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=$message->DateSent ?>
+                  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>
                 </p>
             </div>
         </div>
@@ -95,15 +95,15 @@ class ReplyMessagePage extends ComposeMessagePage
         $message->receiverUsername = $message->senderUsername;
         $message->senderUsername = $_SESSION['Username'];
         $message->Message = "\n\n>".str_replace("\n", "\n> ", wordwrap($message->Message, 70));
-        $contactUsername = $message->senderUsername;
+        $contact_username = $message->senderUsername;
         $direction_in = true;
-        if ($contactUsername == $_SESSION['Username']) {
-            $contactUsername = $message->receiverUsername;
+        if ($contact_username == $_SESSION['Username']) {
+            $contact_username = $message->receiverUsername;
             $direction_in = false;
         }
         ?><div class="floatbox">
         <div style="float:left">
-        <?=MOD_layoutbits::linkWithPicture($contactUsername) ?>
+        <?=MOD_layoutbits::linkWithPicture($contact_username) ?>
         </div>
         <?php
         parent::column_col3();

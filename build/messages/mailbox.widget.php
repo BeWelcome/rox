@@ -72,12 +72,12 @@ class MailboxWidget extends ItemlistWithPagination
         ?>
         <table><tr>
         <td>
-        <?=MOD_layoutbits::PIC_30_30($message->senderUsername,'')?>
+        <?=MOD_layoutbits::PIC_30_30($contact_username,'')?>
         </td>
         <td>
         <a style="color: #333;" href="members/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
         <br />
-        <span class="small"><?=$layoutbits->ago(strtotime($date_created)) ?></span>
+        <span class="small" title="<?=$date_created?>"><?=$layoutbits->ago(strtotime($date_created)) ?></span>
         </td>
         </tr></table>
         <?php

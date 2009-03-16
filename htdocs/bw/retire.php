@@ -29,7 +29,12 @@ require_once "lib/prepare_profile_header.php";
 MustLogIn(); // member must login
 
 $IdMember = $_SESSION["IdMember"];
-$reason = GetStrParam("Reason",""); // find the reason if any 
+$reason = GetStrParam("reason",""); // find the reason if any 
+if (!empty($reason)) {
+// Todo send a feedback
+//	$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetStrParam("reason") . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
+//	sql_query($str);
+}
 
 $m = prepareProfileHeader($IdMember,"",0); // This is the profile of the member who is going to send the mail
 
@@ -38,18 +43,18 @@ switch (GetParam("action")) {
 
 	case "retire" : // Send the mail
 		if (GetParam("Complete_retire")=="on") {
-			 	 $str="update members set Status='AskToLeave' where members.id=".$IdMember ;
-				 sql_query($str) ;
-				 $strlog="Members has withraw with reason [<b>".$reason."</b>]" ;
-				 $Message=ww("retire_FullWithdrawConfirmation") ;
-				 $subj=" Member ".$_SESSION["Username"]." has left bewelcome" ;
+			$str="UPDATE members SET Status='AskToLeave' WHERE members.id=".$IdMember ;
+			sql_query($str) ;
+			$strlog="Members has withraw with reason [<b>".$reason."</b>]" ;
+			$Message=ww("retire_FullWithdrawConfirmation") ;
+			$subj=" Member ".$_SESSION["Username"]." has left bewelcome" ;
 		}
 		else {
-			 	 $str="update members set Status='ChoiceInactive' where members.id=".$IdMember ;
-				 sql_query($str) ;
-				 LogStr("Members has inactivated his profile with reason [<b>".$reason."</b>]","retire") ;
-				 $Message=ww("retire_InactivateProfileConfirmation") ;
-				 $subj=" Member ".$_SESSION["Username"]." has inactivated his profile" ;
+			$str="update members set Status='ChoiceInactive' where members.id=".$IdMember ;
+			sql_query($str) ;
+			LogStr("Members has inactivated his profile with reason [<b>".$reason."</b>]","retire") ;
+			$Message=ww("retire_InactivateProfileConfirmation") ;
+			$subj=" Member ".$_SESSION["Username"]." has inactivated his profile" ;
 		}
 	  	LogStr($strlog,"retire") ;
 		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $strlog, "", $_SYSHCVOL['SignupSenderMail'], 0, "html", "", "");

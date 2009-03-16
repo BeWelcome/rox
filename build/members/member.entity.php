@@ -515,21 +515,34 @@ WHERE
     }
 
 
-      public function get_relations() {
+      public function get_relations()
+	  {
+          $all_relations = $this->all_relations();
+          $Relations = array();
+          foreach($all_relations as $rr) {
+		  	if ($rr->Confirmed == 'Yes')
+              array_push($Relations, $rr);
+          }
+          return $Relations;
+      }
+	  
+      public function get_all_relations()
+	  {
           $words = $this->getWords();
           $sql = "
 SELECT
     specialrelations.Id AS id,
     specialrelations.IdRelation AS IdRelation,
     members.Username,
-    specialrelations.Comment AS Comment
+    specialrelations.Type AS Type,
+    specialrelations.Comment AS Comment,
+    specialrelations.Confirmed AS Confirmed
 FROM
     specialrelations,
     members
 WHERE
     specialrelations.IdOwner = $this->id  AND
-    specialrelations.IdRelation = members.Id AND
-    specialrelations.Confirmed = 'Yes'
+    specialrelations.IdRelation = members.Id 
           ";
           $s = $this->dao->query($sql);
           $Relations = array();
@@ -539,21 +552,7 @@ WHERE
           }
           return $Relations;
       }
-
-      public function get_relation_with_member() {
-          $IdMember = $_SESSION['IdMember'];
-          $words = $this->getWords();
-          $all_relations = $this->relations;
-          $relation = array();
-          if (count($all_relations) > 0) {
-              foreach ($all_relations as $rel) {
-                if ($rel->IdRelation == $IdMember)
-                    $relation = $rel;
-              }
-          }
-          return $relation;
-      }
-
+	  
       public function get_preferences() {
           $sql = "
 SELECT

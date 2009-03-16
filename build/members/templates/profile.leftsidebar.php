@@ -18,7 +18,7 @@
     <a href="link/myself/<?=$member->Username?> "><?=$words->get("MyLinks");?></a>
   </li>
 </ul>
-<h3><?=$words->get('MyRelations');?></h3>
+<h3><a href="members/<?=$member->Username?>/relations/ "><?=$words->get('MyRelations');?></a></h3>
 <ul class="linklist">
     <?php
         $relations = $member->relations;
@@ -32,6 +32,7 @@
     <br />
     <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
     <br />
+    <?=$rel->Comment?>
   </li>
   <?php } ?>
 </ul>

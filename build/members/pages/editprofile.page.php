@@ -1,25 +1,8 @@
 <?php
 
 
-class EditProfilePage extends MemberPage
+class EditProfilePage extends ProfilePage
 {
-    protected function leftSidebar()
-    {
-        $member = $this->member;
-        $words = $this->getWords();
-        ?>
-          <h3><?=$words->get('actions')?></h3>
-          <ul class="linklist" >
-            <li class="icon contactmember16" >
-              <a href="contactmember.php?cid=<?=$member->id?>" ><?=$words->get('ContactMember')?></a>
-            </li>
-            <li class="icon addcomment16" >
-              <a href="addcomments.php?cid=<?=$member->id?>" ><?=$words->get('addcomments')?></a>
-            </li>
-          </ul>
-        <?php
-    }
-
 
     protected function getSubmenuActiveItem()
     {
@@ -623,35 +606,6 @@ class EditProfilePage extends MemberPage
             </table>
           </fieldset>
            */ ?>
-          <fieldset id="myrelations">
-            <legend><?=$words->get('MyRelations');?></legend>
-            <table align="left"  border="0" >
-              <tbody>
-                <?php
-                    $relations = $member->relations;
-                    $ii = 0;
-                    foreach ($relations as $rel) {
-                ?>
-                <tr>
-                  <td>
-                    <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
-                      <img class="framed"  src="<?=PVars::getObj('env')->baseuri?>/photos/???"  height="50px"  width="50px"  alt="Profile" />
-                    </a>
-                    <br />
-                    <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
-                  </td>
-                  <td align="right"  colspan="2" >
-                    <textarea class="long" cols="60" rows="4"  name="RelationComment_<?=$ii++?>" ><?=$rel->Comment?></textarea>
-                  </td>
-                  <td>
-                    <a href="editmyprofile.php?action=delrelation&amp;Username=<?=$rel->Username?>"  onclick="return confirm('Confirm delete ?');" ><?=$words->get("delrelation",$rel->Username)?></a>
-                  </td>
-                </tr>
-              <?php } ?>
-
-              </tbody>
-            </table>
-          </fieldset>
           <table>
             <tbody>
               <tr>

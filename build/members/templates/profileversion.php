@@ -2,7 +2,11 @@
 if (count($languages) > 1) {
 ?>      
         <?=$words->get('ProfileVersion')?>:
-        <span class="activelanguage"><?=$profile_language_name ?> <a class="button" href="editmyprofile/<?=$profile_language_code?>/delete"><?=$words->get('delete')?></a></span>
+        <span class="activelanguage"><?=$profile_language_name ?> 
+        <? if ($this->myself) { ?>
+        <a class="button" href="editmyprofile/<?=$profile_language_code?>/delete"><?=$words->get('delete')?></a>
+        <? } ?>
+        </span>
  		&nbsp;  &nbsp;  &nbsp;  &nbsp;
         <span><?=$words->get('ProfileVersionIn')?>:</span>        
         

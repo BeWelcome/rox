@@ -6,58 +6,77 @@ class AddRelationPage extends RelationsPage
 
     protected function column_col3()
     {
-		$words = new MOD_words();
-		$member = $this->member;
-		$layoutkit = $this->layoutkit;
-		$formkit = $layoutkit->formkit;
-		$callback_tag = $formkit->setPostCallback('MembersController', 'addRelationCallback');
-		$page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request); 
-		$TabRelationsType = $member->get_TabRelationsType();
-		$MyRelation = $member->get_relation_with_member();
-		?>
-		<form method="post" action="<?=$page_url?>" name="relation" id="relation" enctype="multipart/form-data">
-			<input type="hidden"  name="IdRelation"  value="<?=$member->id?>" />
-			<input type="hidden"  name="IdOwner"  value="<?=$_SESSION['IdMember']?>" />
-			<?=$callback_tag?>
-			<h3><?=$words->get('AddRelation')?></h3>
-			<p><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>
-			<div class="row">
-			<label class="grey"><?=$words->get('RelationListCategory')?></label><br />
-			<?php
-				$tt=$TabRelationsType;
-				$max=count($tt);
-				for ($ii = 0; $ii < $max; $ii++) {
-					echo "<input type=checkbox name=\"Type_" . $tt[$ii] . "\"";
-					if (count($MyRelation) > 0 && strpos(" ".$MyRelation->Type,$tt[$ii] )!=0)
-					echo " checked ";
-					echo "> ".$words->get("Relation_Type_" . $tt[$ii])."<br />";
-				}
-			?>
+        $words = new MOD_words();
+        $member = $this->member;
+        $layoutkit = $this->layoutkit;
+        $formkit = $layoutkit->formkit;
+        $callback_tag = $formkit->setPostCallback('MembersController', 'RelationCallback');
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request); 
+        $TabRelationsType = $member->get_TabRelationsType();
+        $relation = $this->model->get_relation_between_members($member->id);
+            if (isset($relation['member']->Confirmed) && $relation['member']->Confirmed == 'No') {
+               $action = 'confirm';
+            } elseif (isset($relation['myself']->id)) {
+               $action = 'update';
+            } else {
+               $action = 'add';
+            }        ?>
+         <? if ($action == 'update' && isset($relation['member']->Confirmed)) : ?>
+           	<p class="note"><?=$words->get('RelationIsConfirmed',$member->Username)?></p>
+         <? elseif ($action == 'update') : ?>
+           	<p class="note"><?=$words->get('RelationWaitConfirmed',$member->Username)?></p>
+         <? endif ?>
+        <form method="post" action="<?=$page_url?>" name="relation" id="relation" enctype="multipart/form-data">
+            <input type="hidden"  name="IdRelation"  value="<?=$member->id?>" />
+            <input type="hidden"  name="IdOwner"  value="<?=$_SESSION['IdMember']?>" />
+            <?=$callback_tag?>
+            <h3><?=$words->get($action.'Relation')?></h3>
+            <p><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>
+            <? if (count($relation['member']) <= 0) : ?>
+            <div class="row">
+            <label class="grey"><?=$words->get('RelationListCategory')?></label><br />
+            <?php
+                $tt=$TabRelationsType;
+                $max=count($tt);
+                for ($ii = 0; $ii < $max; $ii++) {
+                    echo "<input type=checkbox name=\"Type_" . $tt[$ii] . "\"";
+                    if (count($relation['myself']) > 0 && strpos(" ".$relation['myself']->Type,$tt[$ii] )!=0)
+                    echo " checked ";
+                    echo "> ".$words->get("Relation_Type_" . $tt[$ii])."<br />";
+                }
+            ?>
             </div>
+            <? else : ?>
+            <div class="row">
+            Relation-Type: <strong><?=$relation['member']->Type?></strong>
+            </div>
+            <? endif ?>
             <div class="row">
                 <label class="grey"><?=$words->get("RelationText",$member->Username)?></label>
-                <textarea rows="4" cols="60" name="Comment">
-                <?php
-                    if (isset($TRelation->Comment)) {
-                       echo $TRelation->Comment;
+                <textarea rows="4" cols="60" name="Comment"><?php
+                    if (isset($relation['myself']->Comment)) {
+                       echo $relation['myself']->Comment;
                     }
-                ?>
-                </textarea>
+                ?></textarea>
             </div>
-			<?php
-            if (isset($TRelation->id)) {
-			   echo "<input type=hidden name=RelationId value=",$TRelation->id,">";
-			   echo "<input type=hidden name=action value=doupdate>";
-			}
-			else {
-			   echo "<input type=hidden name=action value=doadd>";
-			}
+            <?php
+            if ($action == 'confirm') {
+               echo '<input type="hidden" name="Type" value="'.$relation['member']->Type.'">';
+               echo '<input type="hidden" name="RelationId" value="'.$relation['member']->id.'">';
+               echo '<input type="hidden" name="action" value="confirm">';
+            } elseif ($action == 'update') {
+               echo '<input type="hidden" name="RelationId" value="'.$relation['myself']->id.'">';
+               echo '<input type="hidden" name="action" value="update">';
+            }
+            else {
+               echo '<input type="hidden" name="action" value="add">';
+            }
             ?><br />
-   			<input type="submit" name="submit" value="<?=$words->get('Submit')?>" />
-		</form>
-		<?php
-	
-	}
+               <input type="submit" name="submit" value="<?=$words->get($action.'Relation')?>" />
+        </form>
+        <?php
+    
+    }
 }
 
 

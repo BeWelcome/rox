@@ -155,7 +155,10 @@ class MembersController extends RoxControllerBase
 						case 'relations':
                             if (!$myself && isset($request[3]) && $request[3] == 'add') {
                                 $page = new AddRelationPage();
-                            } else {
+								if (isset($request[4]) && $request[4] == 'finish') {
+									$page->relation_wait = true;
+								}
+	                        } else {
                                 $page = new RelationsPage();
                             }
 							break;
@@ -400,7 +403,7 @@ class MembersController extends RoxControllerBase
         }
     }
 	
-    public function addRelationCallback($args, $action, $mem_redirect, $mem_resend)
+    public function RelationCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post)) {
             $vars = $args->post;
@@ -408,23 +411,42 @@ class MembersController extends RoxControllerBase
             $model = new MembersModel;
 
 			if (isset($vars['IdOwner']) && $vars['IdOwner'] == $_SESSION['IdMember'] && isset($vars['IdRelation'])) {
-				$member = $this->getMember($vars['IdRelation']);
-				$TabRelationsType = $member->get_TabRelationsType();
-				$stype=""; 
-				$tt=$TabRelationsType;
-				$max=count($tt);
-				for ($ii = 0; $ii < $max; $ii++) {
-					if (isset($vars["Type_" . $tt[$ii]]) && $vars["Type_" . $tt[$ii]] == "on") {
-					  if ($stype!="") $stype.=",";
-					  $stype.=$tt[$ii];
+				if (isset($vars['action'])) {
+					$member = $this->getMember($vars['IdRelation']);
+					if (isset($vars['Type'])) $vars['stype'] = $vars['Type'];
+					else {
+						$TabRelationsType = $member->get_TabRelationsType();
+						$stype=""; 
+						$tt=$TabRelationsType;
+						$max=count($tt);
+						for ($ii = 0; $ii < $max; $ii++) {
+							if (isset($vars["Type_" . $tt[$ii]]) && $vars["Type_" . $tt[$ii]] == "on") {
+							  if ($stype!="") $stype.=",";
+							  $stype.=$tt[$ii];
+							}
+						}
+						$relations = $member->get_relations();
+						$vars['stype'] = $stype;
+					}
+					switch ($vars['action']) {
+					case 'add':
+						$blub = $model->addRelation($vars);
+						break;
+					case 'update':
+						$model->updateRelation($vars);
+						break;
+					case 'confirm':
+						$vars['confirm'] = 'Yes';
+						$blub = $model->addRelation($vars);
+						$model->confirmRelation($vars);
+						break;
+					default:
 					}
 				}
-				$relations = $member->get_relations();
-				$vars['stype'] = $stype;
-				$vars['relations'] = $relations;
-				$blub = $model->addRelation($vars);
 				// Redirect to a nice location like editmyprofile/finish
-				return 'members/'.$vars['IdOwner'];
+				$str = implode('/',$request);
+				if (in_array('finish',$request)) return $str;
+				return $str.'/finish';
             }
 			return false;
         }

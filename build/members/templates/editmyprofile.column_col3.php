@@ -42,7 +42,7 @@ $this->editMyProfileFormContent($vars);
             
 <script type="text/javascript">//<!--
 bkLib.onDomLoaded(function() {
-	new nicEditor({iconsPath: 'script/nicEditorIcons.gif', buttonList: ['bold','italic','underline','left','center','right','ol','ul','strikethrough','removeformat','hr','image','upload','forecolor','link','fontFamily','fontFormat','xhtml']}).panelInstance('ProfileSummary');
+	new nicEditor({iconsPath: 'script/nicEditorIcons.gif', buttonList: ['bold','italic','underline','left','center','right','ol','ul','strikethrough','removeformat','hr','forecolor','link','fontFamily','fontFormat','xhtml']}).panelInstance('ProfileSummary');
 });	
 /*tinyMCE.srcMode = '';
 tinyMCE.baseURL = http_baseuri+'script/tiny_mce';

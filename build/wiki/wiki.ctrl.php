@@ -35,10 +35,11 @@ class WikiController extends PAppController {
 			}
 		
 			$url = $this->parseRequest();
+			$this->no_output = true;
 			$this->getWiki($url);
 			
 			PPostHandler::clearVars();
-			
+
 			$url = str_replace('edit/', '', $url);
 			if ($actionurl) {
                 header('Location: '.PVars::getObj('env')->baseuri.$actionurl);
@@ -60,7 +61,7 @@ class WikiController extends PAppController {
 	public function index() {
 		$request = PRequest::get()->request;
 		$User = APP_User::login();
-        
+
         ob_start();
         $this->_view->teaser();
         $str = ob_get_contents();
@@ -110,9 +111,7 @@ class WikiController extends PAppController {
 		}
 
 		require_once('erfurtwiki/ewiki.php');
-
-		
-		
+	
 		define("EWIKI_NAME", "BeWelcome Rox Wiki");
 		
 		echo '<div id="wiki">', ewiki_page($page), '</div>';
@@ -131,6 +130,7 @@ class WikiController extends PAppController {
 		
 		return $request;
 	}
+
 
 }
 ?>

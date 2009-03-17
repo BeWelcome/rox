@@ -313,7 +313,7 @@ class MembersController extends RoxControllerBase
         // set new password
         if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
             $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['passwordnew']).'\') WHERE `id` = '.$_SESSION['IdMember'];
-            if( $this->dao->exec($query)) {
+            if( $model->dao->exec($query)) {
                 $messages[] = 'ChangePasswordUpdated';
                 $L = MOD_log::get();
                 $L->write("Password changed", "change password");

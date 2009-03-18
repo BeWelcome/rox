@@ -30,12 +30,14 @@ class VolunteermenuModel extends PAppModel
         } else {
           $InScope = "AND countries.id IN (" . $AccepterScope . ")";
         }
-        $query = '
+         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
 FROM members, countries, cities
-WHERE members.Status=\'Pending\'
+WHERE  members.Status=\'Pending\'
 AND cities.id=members.IdCity
-AND countries.id=cities.IdCountry ' . $InScope;
+AND countries.id=cities.IdCountry ' . $InScope.' /* Model volunteermenu.model->getNumberPersonsToBeAccepted ' ;
+		if (isset($_SESSION['Username'])) $query.=$_SESSION['Username'] ;
+		$query.=' */';
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;

@@ -3,6 +3,6 @@ $member = $this->member;
 $lang = $this->model->get_profile_language();
 $profile_language = $lang->id;
 $profile_language_code = $lang->ShortCode;
-$myself = ($member->id == $_SESSION['IdMember']);
+$myself = $this->myself;
 $words = $this->getWords();
 ?>

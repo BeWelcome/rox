@@ -52,14 +52,13 @@ class VolunteerbarModel extends PAppModel
         if ($R->hasRight('Accepter','All'))  {
            $InScope = " /* All countries */";
         } else {
-          $InScope = "AND countries.id IN (" . $AccepterScope . ")";
+          $InScope = "AND cities.IdCountry IN (" . $AccepterScope . ")";
         }
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
-FROM members, countries, cities
+FROM members, cities
 WHERE  members.Status=\'Pending\'
-AND cities.id=members.IdCity
-AND countries.id=cities.IdCountry ' . $InScope.' /* Model volunteerbar.model->getNumberPersonsToBeAccepted ' ;
+AND cities.id=members.IdCity ' . $InScope.' /* Model volunteerbar.model->getNumberPersonsToBeAccepted ' ;
 		if (isset($_SESSION['Username'])) $query.=$_SESSION['Username'] ;
 		$query.=' */';
         $result = $this->dao->query($query);

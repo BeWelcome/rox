@@ -23,14 +23,8 @@ Boston, MA  02111-1307, USA.
 */
 /**
  *
- * @author fvanhove@gmx.de, Andreas (lemon-head)
- * @see /htdocs/bw/layout/menus.php method VolMenu
+ * @author Philipp
  *
- * Some of these admin tools could allow severe violations of member privacy.
- * We should take care of that as soon as possible!
- * JeanYves : they are protected by the right system, the only important question IMHO is to
- * discuss case by case, if needed, the relevance and the need for displaying the information then provide
- * still IMHO, this need is real and the displayed data are not, in the context they are used, privacy abuse
  */
  
 	$words = new MOD_words();
@@ -40,30 +34,27 @@ Boston, MA  02111-1307, USA.
 			<?php foreach ($linkpath as $row) {
 			?>		
         <div class="floatbox">			
-			<?php	foreach ($row as $e) {
+			<?php	if (count($row) > 2) { 
+				foreach ($row as $e) {
 			?>
-			<div class="float_left" style="padding-right: 5px; vertical-align: middle">
+			<div class="float_left" style="padding: 15px 5px 0 0; vertical-align: middle">
 				<p class="small grey">
 				<?php if (isset($e['totype']) && $e['totype'][0] != '0') {?> 
-					<img src="images/icons/arrow_right.png" /><br>
-					<?php echo implode(' - ',$e['totype']); ?>
+					<img title="<?php echo implode(' - ',$e['totype']); ?>" src="images/icons/arrow_right.png" /><br />
 				<?php }?>
-				</p>
-				<p class="small grey">
 				<?php if (isset($e['reversetype']) && $e['reversetype'][0] != '0') {?> 
-					<img src="images/icons/icons1616/arrow_left.png" /><br>
-					<?php echo implode(' - ',$e['reversetype']); ?>
+					<img title="<?php echo implode(' - ',$e['reversetype']); ?>" src="images/icons/icons1616/arrow_left.png" />
 				<?php }?>
 				</p>	
 			</div> <!-- float_left -->
+            
             <div class="float_left" style="padding-right: 5px">
                 <p class="center">
                     <?php echo MOD_layoutbits::PIC_30_30($e['memberdata']->Username,'',$style='') ?><br />
-                    <span class="username"><?php echo '<a href="members/'.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span><br />
-                    <span class="small grey"><?php echo $e['memberdata']->Country; ?></span>
+                    <span title="<?php echo $e['memberdata']->City; ?>, <?php echo $e['memberdata']->Country; ?>" class="username"><?php echo '<a href="members/'.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span>
                 </p>
             </div> <!-- float_left -->
-	<?php } ?>
+	<?php } }?>
         </div> <!-- floatbox -->
 <?php } ?>		
     </div> <!-- picture-linkpath -->

@@ -50,8 +50,17 @@ Boston, MA  02111-1307, USA.
             
             <div class="float_left" style="padding-right: 5px">
                 <p class="center">
-                    <?php echo MOD_layoutbits::PIC_30_30($e['memberdata']->Username,'',$style='') ?><br />
-                    <span title="<?php echo $e['memberdata']->City; ?>, <?php echo $e['memberdata']->Country; ?>" class="username"><?php echo '<a href="members/'.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span>
+                <?php
+				if (isset($_SESSION['Username']) && $e['memberdata']->Username == $_SESSION['Username']) {
+					$username = $words->get('me');
+					$myself = true;
+				} else {
+					$username = $e['memberdata']->Username;
+					$myself = false;
+				}
+				?>
+                    <?php echo !$myself ? MOD_layoutbits::PIC_30_30($e['memberdata']->Username,'',$style='') : ''?><br />
+                    <span title="<?php echo $e['memberdata']->City; ?>, <?php echo $e['memberdata']->Country; ?>" class="username"><?php echo '<a href="members/'.$e['memberdata']->Username.'">'.$username.'</a>' ?></span>
                 </p>
             </div> <!-- float_left -->
 	<?php } }?>

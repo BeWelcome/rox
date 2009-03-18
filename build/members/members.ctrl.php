@@ -5,11 +5,6 @@ class MembersController extends RoxControllerBase
 {
     function index($args = false)
     {
-        // REMOVE NEXT 3 LINES TO ACTIVATE most of the members-pages again
-        // $request = $args->request;
-        // if (!isset($request[0]) || $request[0] != 'setlocation')
-            // $this->redirect("");
-
         $model = new MembersModel;
         if (isset($_SESSION['Username'])) {
             // logged in
@@ -398,8 +393,9 @@ class MembersController extends RoxControllerBase
 				$model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
 				// Redirect to a nice location like editmyprofile/finish
 				return 'editmyprofile/finish';
-            }
-			return false;
+            } else {
+				return 'editmyprofile';
+			}
         }
     }
 	

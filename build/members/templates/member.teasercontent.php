@@ -33,63 +33,31 @@
             <h2><strong><a href="country/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
                     (<a href="country/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
             <strong><a href="country/<?=$member->countryCode() ?>" ><?=$member->country() ?></a></strong></h2>
-           <?php
-           /*
-            <A href="../country/<?php echo $member->countrycode()?>" ><?php $member->country()?></A>
-            >
-            <A href="../country/<?php echo $member->countrycode()?>/<?php echo $member->region()?>" ><?php echo $member->region()?></A>
-            >
-            <A href="../country/<?php echo $member->countrycode()?>/<?php echo $member->region()?>/<?php echo $member->city()?>" ><?php echo $member->city()?>�</A>
-           */
-           ?>
         </div> <!-- navigation-path -->
         
 
         <img src="images/icons/<?=($member->Accomodation) ? $member->Accomodation : 'neverask'?>.gif"  class="float_left"  title="<?=$member->Accomodation?>"  width="30"  height="30"  alt="<?=$member->Accomodation?>" />
         <?php
-        // specific icon according to membes.TypicOffer
+        // specific icon according to members.TypicOffer
         if (strstr($member->TypicOffer, "guidedtour"))
         {
-            if (stripos($words->get("TypicOffer_guidedtour"),"<") !== false)
-            {
-                $translation_link = $words->get("TypicOffer_guidedtour");
-                $title = "";
-            }
-            else
-            {
-                $translation_link = "";
-                $title = $words->get("TypicOffer_guidedtour");
-            }
-            echo "              <img src='images/icons/icon_castle.gif' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />{$translation_link}\n";
+            $title = $words->getSilent("TypicOffer_guidedtour");
+			$image_name = 'icon_castle.gif';
+			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
         }
         if (strstr($member->TypicOffer, "dinner"))
         {
-            if (stripos($words->get("TypicOffer_dinner"),"<") !== false)
-            {
-                $translation_link = $words->get("TypicOffer_dinner");
-                $title = "";
-            }
-            else
-            {
-                $translation_link = "";
-                $title = $words->get("TypicOffer_dinner");
-            }
-            echo "              <img src='images/icons/icon_food.gif' class='float_left' title='{$title}' width='30' height='30' alt='icon_food' />{$translation_link}\n";
+            $title = $words->getSilent("TypicOffer_dinner");
+			$image_name = 'icon_food.gif';
+			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
         }
         if (strstr($member->TypicOffer, "CanHostWeelChair"))
         {
-            if (stripos($words->get("TypicOffer_CanHostWeelChair"),"<") !== false)
-            {
-                $translation_link = $words->get("TypicOffer_CanHostWeelChair");
-                $title = "";
-            }
-            else
-            {
-                $translation_link = "";
-                $title = $words->get("TypicOffer_CanHostWeelChair");
-            }
-            echo "              <img src='images/icons/wheelchair.gif' class='float_left' title='{$title}' width='30' height='30' alt='wheelchair' />{$translation_link}\n";
+            $title = $words->getSilent("TypicOffer_CanHostWeelChair");
+			$image_name = 'wheelchair.gif';
+			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
         }
+		echo $words->flushBuffer();
         ?>
         <table>
             <tbody>

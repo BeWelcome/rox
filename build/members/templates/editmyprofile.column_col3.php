@@ -1,4 +1,3 @@
-
 <form method="post" action="<?=$page_url?>" name="signup" id="profile" enctype="multipart/form-data">
 <input type="hidden"  name="memberid"  value="<?=$member->id?>" />
 <input type="hidden"  name="profile_language"  value="<?=$profile_language?>" />
@@ -6,7 +5,7 @@
 
 echo $callback_tag;
 
-$this->editMyProfileFormContent($vars);
+require_once 'editprofile_form.php';
 
 ?>
 </form>
@@ -44,22 +43,6 @@ $this->editMyProfileFormContent($vars);
 bkLib.onDomLoaded(function() {
 	new nicEditor({iconsPath: 'script/nicEditorIcons.gif', buttonList: ['bold','italic','underline','left','center','right','ol','ul','strikethrough','removeformat','hr','forecolor','link','fontFamily','fontFormat','xhtml']}).panelInstance('ProfileSummary');
 });	
-/*tinyMCE.srcMode = '';
-tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
-tinyMCE.init({
-    mode: "exact",
-    elements: "ProfileSummary",
-    plugins : "advimage",
-    theme: "advanced",
-    relative_urls:false,
-    convert_urls:false,
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,link,bullist,separator,justifyleft,justifycenter,justifyfull,bullist,numlist,forecolor,backcolor,image, charmap",
-    theme_advanced_buttons2 : "",
-    theme_advanced_buttons3 : "",
-    theme_advanced_toolbar_location: 'top',
-    theme_advanced_statusbar_location: 'bottom',
-    theme_advanced_resizing: true
-
-});*/
 //-->
 </script>
+</div>

@@ -2,8 +2,8 @@
 /* You can extend this CSS by adding your own CSS file with the the content_css option */
 
 body, td, pre {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 12px;
 }
 
 body {

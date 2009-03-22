@@ -61,6 +61,9 @@ div.forumsmessage ol li{
     margin-left: 1em;
     padding-bottom: 0em;
 }
+div.forumsmessage .text {
+    line-height: 1.5em;
+}
 p.forumstime {
     font-size: 11px;
     color:#888;

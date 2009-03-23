@@ -19,7 +19,7 @@ class GroupWikiPage extends GroupsBasePage
             if ($this->isGroupMember()) {
                 $wiki->editProcess();
             }
-            $wikipage = 'Group_'.str_replace(' ', '', ucwords($this->getGroupTitle()));
+            $wikipage = 'Group_'.str_replace(' ', '', ucwords($this->group->Name));
             
             include "templates/groupwiki.column_col3.php";
         }

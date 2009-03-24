@@ -945,7 +945,7 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 
 	if ($IdTrad <=0) { // if a new IdTrad is needed
 		// Compute a new IdTrad
-		$s = $this->_dao->query("SELECT Next_Forum_trads_IdTrad() AS maxi FROM forum_trads");
+		$s = $this->_dao->query("SELECT Next_Forum_trads_IdTrad() AS maxi");
 		if (!$s) {
 			throw new PException('Failed in InsertInFTrad searching Next_Forum_trads_IdTrad()');
 		}

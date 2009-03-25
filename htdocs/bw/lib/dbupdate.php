@@ -1183,6 +1183,14 @@ $updates[] = "CREATE TABLE IF NOT EXISTS `notes` (
 $updates[] = "ALTER TABLE `forums_posts` ADD `IdPoll` INT NOT NULL DEFAULT '0' COMMENT 'optional id of a poll connected to this forum post' AFTER `IdLocalEvent`" ;
 $updates[] = "ALTER TABLE `forums_posts` ADD INDEX ( `IdLocalEvent` ) " ;
 $updates[] = "ALTER TABLE `forums_posts` ADD INDEX ( `IdPoll` ) " ;
+
+$updates[] = "ALTER TABLE `params` ADD `logs_id_midnight` INT NOT NULL COMMENT 'id of logs table at previous midnight',
+ADD `previous_logs_id_midnight` INT NOT NULL COMMENT 'id of logs table at midnight day before'";
+
+$updates[] = "INSERT INTO `sqlforvolunteers` ( `id` , `Name` , `Query` , `updated` , `param1` , `param2` , `LogMe` )
+VALUES (
+NULL , 'Update the references id in param for yesterday and before yesterday logs (this is helpful for adminlog performances)', 'update params set logs_id_midnight=(select min(id) from logs where created> concat( date( date_sub( now( ) , INTERVAL 1 DAY ) ))), previous_logs_id_midnight=(select min(id) from logs where created>concat( date( date_sub( now( ) , INTERVAL 2 DAY ) ))) ;', NOW( ) , NULL , NULL , 'False'
+)";
     if (empty($res)) {
         $version = 0;
     } else {

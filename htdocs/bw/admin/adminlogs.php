@@ -93,12 +93,21 @@ switch (GetParam("action")) {
 
 $tData = array ();
 
-$str = "SELECT SQL_CALC_FOUND_ROWS logs.*,Username " .
+if (empty($where) and $start_rec==0) { // In this case we will avoid the FOUND_ROW which is a performance killer
+	$str = "SELECT logs.*,Username " .
+        "FROM " .$_SYSHCVOL['ARCH_DB'] . ".logs LEFT JOIN members ON members.id=logs.IdMember " . 
+        "ORDER BY " .$_SYSHCVOL['ARCH_DB'] . ".logs.id DESC LIMIT $start_rec,".$limitcount;
+	$qry = sql_query($str);
+	$rCount=LoadRow("SELECT count(*)  AS cnt from " .$_SYSHCVOL['ARCH_DB'] . ".logs") ;
+}
+else {
+	$str = "SELECT SQL_CALC_FOUND_ROWS logs.*,Username " .
         "FROM " .$_SYSHCVOL['ARCH_DB'] . ".logs LEFT JOIN members ON members.id=logs.IdMember " . 
         "WHERE 1=1 " . $where . " " .
         "ORDER BY " .$_SYSHCVOL['ARCH_DB'] . ".logs.id DESC LIMIT $start_rec,".$limitcount;
-$qry = sql_query($str);
-$rCount=LoadRow("SELECT FOUND_ROWS() AS cnt") ;
+	$qry = sql_query($str);
+	$rCount=LoadRow("SELECT FOUND_ROWS() AS cnt") ;
+}
 while ($rr = mysql_fetch_object($qry)) {
 	array_push($tData, $rr);
 }

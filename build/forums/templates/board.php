@@ -47,7 +47,7 @@ if ($navichain_items = $boards->getNaviChain()) {
 	echo $boards->getBoardName(); 
 	echo "</h2>" ;
 
-	if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) ) {
+	if (($this->BW_Right->HasRight("ForumModerator","Edit")) ||($this->BW_Right->HasRight("ForumModerator","All")) ) {
 	   if (isset($boards->IdTag)) echo " <a href=\"forums/modedittag/".$boards->IdTag."\">Edit Tag</a>" ;
    }
 

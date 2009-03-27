@@ -340,7 +340,7 @@ WHERE id = $IdCrypt
         $rr = self::get()->dao->query(
             "
 SELECT * 
-FROM cryptedfields
+FROM ". $crypt_db ."cryptedfields
 WHERE id = $crypted_id
             "
         )->fetch(PDB::FETCH_OBJ);
@@ -363,7 +363,7 @@ WHERE id = $crypted_id
         $rr = self::get()->dao->query(
             "
 SELECT * 
-FROM cryptedfields
+FROM ". $crypt_db ."cryptedfields
 WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
@@ -415,7 +415,7 @@ WHERE id = $IdCrypt
         $rr = self::get()->dao->query(
             "
 SELECT * 
-FROM cryptedfields
+FROM ". $crypt_db ."cryptedfields
 WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);

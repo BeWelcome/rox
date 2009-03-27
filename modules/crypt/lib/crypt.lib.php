@@ -333,6 +333,7 @@ WHERE id = $IdCrypt
      */
     public static function AdminReadCrypted($IdCrypt = false)
     {
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;	
         if (!$IdCrypt || $IdCrypt == '')
             return ('');
         $crypted_id = (int)$IdCrypt;
@@ -358,6 +359,7 @@ WHERE id = $crypted_id
     // If not return standard "is crypted text"
     // todo : complete this function
     public static function MemberReadCrypted($IdCrypt) {
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;
     	if ($IdCrypt == 0)
     		return (""); // if 0 it mean that the field is empty 
         $rr = self::get()->dao->query(
@@ -405,6 +407,7 @@ WHERE id = $IdCrypt
      * @return insertId()
      */
     public static function NewReplaceInCrypted($ss,$TableColumn,$IdRecord, $IdCrypt, $IdMember = false, $IsCrypted = "crypted") {
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;
     	if (!$ss)
     		return false; // Don't insert null values
     	if (!$IdMember)
@@ -427,7 +430,6 @@ WHERE id = $IdCrypt
         // Micha: What exactly do we need?
         $ssA = self::GetCryptA($ss);
         $ssM = self::GetCryptM($ss,$IsCrypted);
-        $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $query = "
         
 UPDATE

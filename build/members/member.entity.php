@@ -514,20 +514,36 @@ WHERE
         $this->address = $a[0];
     }
 
+    public function get_verification_status()
+    {
+        // Loads the vérification level of the member (if any) 
+        $sql = "
+SELECT *
+FROM verifiedmembers
+WHERE
+    IdVerified = $this->id
+ORDER BY
+    Type desc limit 1
+        ";
+        $rr = $this->singleLookup($sql);
+        if ($rr) {
+            return $rr->Type;
+        }
+    }
 
       public function get_relations()
-	  {
+      {
           $all_relations = $this->all_relations();
           $Relations = array();
           foreach($all_relations as $rr) {
-		  	if ($rr->Confirmed == 'Yes')
+              if ($rr->Confirmed == 'Yes')
               array_push($Relations, $rr);
           }
           return $Relations;
       }
-	  
+      
       public function get_all_relations()
-	  {
+      {
           $words = $this->getWords();
           $sql = "
 SELECT
@@ -552,7 +568,7 @@ WHERE
           }
           return $Relations;
       }
-	  
+      
       public function get_preferences() {
           $sql = "
 SELECT
@@ -578,8 +594,8 @@ ORDER BY Value asc
       }
 
 
-      public function get_visitors() {
-          $sql = "
+        public function get_visitors_raw() {
+            $sql = "
 SELECT
     members.BirthDate,
     members.HideBirthDate,
@@ -594,11 +610,23 @@ WHERE
     profilesvisits.IdMember  = $this->id  AND
     profilesvisits.IdVisitor = members.Id AND
     geonames_cache.geonameid = members.IdCity
-          ";
-          return $this->bulkLookup($sql);
-      }
+            ";
 
+            // FIXME: Not the best way to provide pagination. But for now there's not better choice.
+            $visitors = $this->dao->query($sql);
+            return $visitors;
+        }
 
+        public function get_visitors() 
+        {
+            $s = $this->get_visitors_raw();
+			if (!$s) return false;
+			$visitors = array();
+	        while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
+	            array_push($visitors, $rr);
+	        }
+            return $visitors;
+        }
 
       public function get_comments() {
           $sql = "

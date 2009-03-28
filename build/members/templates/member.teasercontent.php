@@ -12,7 +12,8 @@
         <div id="profile-info" >
             <div id="username" >
                 <strong><?=$member->Username ?></strong>
-                <?=$member->name() ?><br />
+                <?=$member->name() ?> <?=($member->verification_status) ? '<img src="images/icons/shield.png" alt="'.$member->verification_status.'" title="'.$member->verification_status.'">': ''?>
+<br />
             </div> <!-- username -->
             <p>
             <?php

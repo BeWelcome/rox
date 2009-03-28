@@ -25,7 +25,7 @@
         <div class="comment">
             <p>
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
-              <span class="small grey"><?=$words->get('CommentFrom')?> <a href="people/<?=$c->Username?>"><?=$c->Username?></a> - <?=$c->created?></span>
+              <span class="small grey"><?=$words->get('CommentFrom','<a href="people/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
             </p>
             <p>
               <em><?=$c->TextWhere?></em>

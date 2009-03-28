@@ -9,75 +9,37 @@
             <?php } ?>
         </select>
 
-        <h3><?=$words->get('PageSpamFolderTitle')?></h3>
-        <p><?=$words->get('PreferenceInSpamFolderDesc')?></p>
+<?php
+	foreach ($p as $rr) {
+		if ($rr->codeName != 'PreferenceLanguage') {
+?>
+        <h3><?=$words->get($rr->codeName)?></h3>
+		<p><?=$words->get($rr->codeDescription)?></p>
+		<?php
+				if (isset($rr->Value) && $rr->Value != "") {
+					$Value = $rr->Value;
+				} else {
+					$Value = $rr->DefaultValue;
+				}
+		?>
         <ul>
-            <li><input type="radio" name="PreferenceInSpamFolder" value="Yes" <?=($p['PreferenceInSpamFolder']->Value == 'Yes') ? 'checked' : '' ?> /><?=$words->get('PreferencesSpamDelete')?></li>
-            <li><input type="radio" name="PreferenceInSpamFolder" value="No" <?=($p['PreferenceInSpamFolder']->Value == 'No') ? 'checked' : '' ?> /><?=$words->get('PreferencesSpamKeep')?></li>
-        </ul>
+		<?
+			$PossibleValueArray = explode((strpos($rr->PossibleValues,',') ? ',' : ';'),$rr->PossibleValues); 
+			if (count($PossibleValueArray) > 1) {
+		?>
+			<? foreach ($PossibleValueArray as $PValue) : ?>
+            <li><input type="radio" name="<?=$rr->codeName?>" value="<?=$PValue?>" <?=($Value == $PValue) ? 'checked' : '' ?> /><?=$words->get($rr->codeName.preg_replace("/[^a-zA-Z0-9s]/", "", $PValue))?></li>
+			<? endforeach ?>
+		<? } else { ?>
+<li><input type="radio" name="<?=$rr->codeName?>" value="Yes" <?=($Value == 'Yes' || ($rr->Value != 'No' && $rr->DefaultValue == 'Yes')) ? 'checked' : '' ?> /><?=$words->get('Yes')?></li>
+<li><input type="radio" name="<?=$rr->codeName?>" value="No" <?=($Value == 'No' || ($rr->Value != 'Yes' && $rr->DefaultValue == 'No')) ? 'checked' : '' ?> /><?=$words->get('No')?></li>
+		<? } ?>
+    </ul>
+<?
+		} // end if
+	} // end foreach
 
-        <h3><?=$words->get('PreferencesNewsletter')?></h3>
-        <p><?=$words->get('PreferenceAcceptNewsByMailDesc ')?></p>
-        <ul>
-            <li><input type="radio" name="PreferenceAcceptNewsByMail" value="Yes" <?=($p['PreferenceAcceptNewsByMail']->Value == 'Yes') ? 'checked' : '' ?> /><?=$words->get('yes')?></li>
-            <li><input type="radio" name="PreferenceAcceptNewsByMail" value="No" <?=($p['PreferenceAcceptNewsByMail']->Value == 'No') ? 'checked' : '' ?> /><?=$words->get('no')?></li>
-        </ul>
-        
-        <h3><?=$words->get('PreferencesNewsletter')?></h3>
-        <p><?=$words->get('PreferenceLinkPrivacyDesc ')?></p>
-        <ul>
-            <li><input type="radio" name="PreferenceLinkPrivacy" value="Yes" <?=($p['PreferenceLinkPrivacy']->Value == 'Yes') ? 'checked' : '' ?> /><?=$words->get('yes')?></li>
-            <li><input type="radio" name="PreferenceLinkPrivacy" value="No" <?=($p['PreferenceLinkPrivacy']->Value == 'No') ? 'checked' : '' ?> /><?=$words->get('no')?></li>
-        </ul>
-        
-        <h3><?=$words->get('PreferenceForumFirstPage')?></h3>
-        <p><?=$words->get('PreferenceForumFirstPageDesc ')?></p>
-        <ul>
-            <li><input type="radio" name="PreferenceForumFirstPage" value="Pref_ForumFirstPageLastPost" <?=($p['PreferenceForumFirstPage']->Value == 'Pref_ForumFirstPageLastPost') ? 'checked' : '' ?> /><?=$words->get('Pref_ForumFirstPageLastPost')?></li>
-            <li><input type="radio" name="PreferenceForumFirstPage" value="Pref_ForumFirstPageCategory" <?=($p['PreferenceForumFirstPage']->Value == 'Pref_ForumFirstPageCategory') ? 'checked' : '' ?> /><?=$words->get('Pref_ForumFirstPageCategory')?></li>
-        </ul>
-        
-        <h3><?=$words->get('PreferenceLocalEvent')?></h3>
-        <p><?=$words->get('PreferenceLocalEventDesc ')?></p>
-        <ul>
-            <li><input type="radio" name="PreferenceLocalEvent" value="Yes" <?=($p['PreferenceLocalEvent']->Value == 'Yes') ? 'checked' : '' ?> /><?=$words->get('yes')?></li>
-            <li><input type="radio" name="PreferenceLocalEvent" value="No" <?=($p['PreferenceLocalEvent']->Value == 'No') ? 'checked' : '' ?> /><?=$words->get('no')?></li>
-        </ul>
-        
-        <h3><?=$words->get('PreferenceForumCity')?></h3>
-        <p><?=$words->get('PreferenceForumCityDesc ')?></p>
-        <ul>
-            <li><input type="radio" name="PreferenceForumCity" value="Yes" <?=($p['PreferenceForumCity']->Value == 'Yes') ? 'checked' : '' ?> /><?=$words->get('yes')?></li>
-            <li><input type="radio" name="PreferenceForumCity" value="No" <?=($p['PreferenceForumCity']->Value == 'No') ? 'checked' : '' ?> /><?=$words->get('no')?></li>
-        </ul>
-        
-        <h3><?=$words->get('PreferenceForumRegion')?></h3>
-        <p><?=$words->get('PreferenceForumRegionDesc ')?></p>
-        <ul>
-            <li><input type="radio" name="PreferenceForumRegion" value="Yes" <?=($p['PreferenceForumRegion']->Value == 'Yes') ? 'checked' : '' ?> /><?=$words->get('yes')?></li>
-            <li><input type="radio" name="PreferenceForumRegion" value="No" <?=($p['PreferenceForumRegion']->Value == 'No') ? 'checked' : '' ?> /><?=$words->get('no')?></li>
-        </ul>
-        
-        <h3><?=$words->get('PreferenceCountryRegion')?></h3>
-        <p><?=$words->get('PreferenceCountryRegionDesc ')?></p>
-        <ul>
-            <li><input type="radio" name="PreferenceCountryRegion" value="Yes" <?=($p['PreferenceCountryRegion']->Value == 'Yes') ? 'checked' : '' ?> /><?=$words->get('yes')?></li>
-            <li><input type="radio" name="PreferenceCountryRegion" value="No" <?=($p['PreferenceCountryRegion']->Value == 'No') ? 'checked' : '' ?> /><?=$words->get('no')?></li>
-        </ul>
-
-        <h3><?=$words->get('PreferenceAdvanced')?></h3>
-        <p><?=$words->get('PreferenceAdvancedDesc')?></p>
-        <ul>
-            <li><input type="radio" name="PreferenceAdvanced" value="Yes" <?=($p['PreferenceAdvanced']->Value == 'Yes') ? 'checked' : '' ?> /><?=$words->get('yes')?></li>
-            <li><input type="radio" name="PreferenceAdvanced" value="No" <?=($p['PreferenceAdvanced']->Value == 'No') ? 'checked' : '' ?> /><?=$words->get('no')?></li>
-        </ul>
-
-        <h3><?=$words->get('PreferencePublicProfile')?></h3>
-        <p><?=$words->get('PreferencePublicProfileDesc')?></p>
-        <ul>
-            <li><input type="radio" name="PreferencePublicProfile" value="Yes" <?=($this->member->publicProfile == true) ? 'checked' : '' ?> /><?=$words->get('yes')?></li>
-            <li><input type="radio" name="PreferencePublicProfile" value="No" <?=($this->member->publicProfile == false) ? 'checked' : '' ?> /><?=$words->get('no')?></li>
-        </ul>
+?>
 
         <h3><?=$words->get('PreferencesPassword')?></h3>
         <p><?=$words->get('PreferencesPassword')?></p>

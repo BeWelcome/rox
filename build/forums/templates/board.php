@@ -47,7 +47,7 @@ if ($navichain_items = $boards->getNaviChain()) {
 	echo $boards->getBoardName(); 
 	echo "</h2>" ;
 
-	if (($this->BW_Right->HasRight("ForumModerator","Edit")) ||($this->BW_Right->HasRight("ForumModerator","All")) ) {
+	if ((HasRight("ForumModerator","Edit")) ||(HasRight("ForumModerator","All")) ) {
 	   if (isset($boards->IdTag)) echo " <a href=\"forums/modedittag/".$boards->IdTag."\">Edit Tag</a>" ;
    }
 
@@ -75,8 +75,8 @@ if ($navichain_items = $boards->getNaviChain()) {
 
 	$number = $boards->getTotalThreads(); 
 	if ($number == 0) {
-		$this->page->SetMetaRobots("NOINDEX, NOFOLLOW") ;
 		echo $words->getFormatted("Found0Threads");
+		$this->page->SetMetaRobots("NOINDEX, NOFOLLOW") ;
 	} else if ($number == 1) {
 		echo $words->getFormatted("Found1Threads");
 	} else {

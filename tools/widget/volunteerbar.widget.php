@@ -19,7 +19,7 @@ class VolunteerbarWidget extends RoxWidget
                         
             $args['numberPersonsToAcceptInGroup']=0 ;
             if ($R->hasRight("Group")) {
-                $args['$numberPersonsToAcceptInGroup'] = $model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
+                $args['numberPersonsToAcceptInGroup'] = $model->getNumberPersonsToAcceptInGroup($R->rightScope('Group'));
             }
             
             $args['numberMessagesToBeChecked'] = 0;
@@ -28,6 +28,11 @@ class VolunteerbarWidget extends RoxWidget
                 $args['numberMessagesToBeChecked'] = $model->getNumberMessagesToBeChecked();
                 $args['numberSpamToBeChecked'] = $model->getNumberSpamToBeChecked();
             }
+
+			$args['numberPendingLocalMess']=0 ;
+            if ($R->hasRight("ContactLocation")) {
+                $args['numberPendingLocalMess'] = $model->getNumberPendingLocalMess();
+			}
             
             if ($this->layoutkit) { //quick work-around
                 $this->layoutkit->showTemplate('apps/rox/volunteerbar.php', $args);

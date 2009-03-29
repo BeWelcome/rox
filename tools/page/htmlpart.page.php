@@ -1,7 +1,7 @@
 <?php
 
 
-class PageWithHTMLpart extends AbstractBasePage
+class PageWithHTMLpart extends PageWithRoxLayout
 {
     private $_widgets = array();  // will be asked for stylesheet and scriptfile information
 
@@ -58,6 +58,8 @@ class PageWithHTMLpart extends AbstractBasePage
     {
             $this->meta_robots = $ss ;
     }
+	
+	
 }
 
 

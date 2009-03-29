@@ -85,30 +85,18 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getTopmenuItems()
     {
         $items = array();
-
         if (APP_User::isBWLoggedIn('NeedMore,Pending')) {
             $items[] = array('main', 'main', 'Menu');
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
-            $items[] = array('profile', 'people/'.$username, $username, true);
-            $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');            
-            $items[] = array('trips', 'trip/', 'Trips');
-            $items[] = array('blogs', 'blog/', 'Blogs');
-        }        
+            $items[] = array('profile', 'bw/member.php?cid='.$username, 'MyProfile');
+        }
+        $items[] = array('searchmembers', 'searchmembers', 'FindMembers');
+        $items[] = array('trips', 'trip', 'Trips');
+        $items[] = array('blogs', 'blog', 'Blogs');
         $items[] = array('forums', 'forums', 'Community');
-        $items[] = array('groups', 'groups/', 'Groups');
+        $items[] = array('groups', 'bw/groups.php', 'Groups');
         $items[] = array('gallery', 'gallery', 'Gallery');
         $items[] = array('getanswers', 'about', 'GetAnswers');
-
-        /*
-        * Disabled until a new menu structure is found
-        */
-        /*
-        $items[] = array('findhosts', 'findmembers', 'FindHosts');
-        // $items[] = array('explore', 'explore', 'Explore');
-        if (APP_User::isBWLoggedIn('NeedMore,Pending')) {
-            $items[] = array('messages', 'messages', 'Messages');
-        }
-        */
 
         return $items;
     }

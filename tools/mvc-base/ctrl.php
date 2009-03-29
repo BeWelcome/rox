@@ -30,15 +30,6 @@ abstract class RoxControllerBase extends RoxComponentBase
         header('Location: ' . $url);
         PVars::getObj('page')->output_done = true;
     }
-
-    protected function setTitle($title) {
-        PVars::getObj('page')->title = $title . " - BeWelcome.org";
-    }
-
-    protected function setTitleTranslate($title) {
-        $words = new MOD_words;
-        $this->setTitle($words->getBuffered($title));
-    }
 }
 
 

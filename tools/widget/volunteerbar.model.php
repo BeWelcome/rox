@@ -5,32 +5,6 @@ class VolunteerbarModel extends PAppModel
 {
     
     /**
-     * Returns the number of local volunteers messages to trigger
-     * 
-     *
-     * @return integer indicating the number of Message
-     */
-    public function getNumberPendingLocalMess()
-    {
-        $R = MOD_right::get();
-		
-		if ($R->HasRight("ContactLocation","All"))  {
-			$Query="select SQL_CACHE COUNT(*) AS cnt from localvolmessages where Status='ToSend'" ;
-		}
-		elseif ($R->HasRight("ContactLocation","CanTrigger")) {
-			$Query="select SQL_CACHE COUNT(*) AS cnt from localvolmessages where Status='ToSend' and IdSender=".$_SESSION["IdMember"] ;
-		}
-		else {
-			return(0) ;
-		}
-		 
-        $result = $this->dao->query($Query);
-        $record = $result->fetch(PDB::FETCH_OBJ);
-        return $record->cnt;
-    } // end of getNumberPendingLocalMessageToTrigger
-
-
-    /**
      * Returns the number of people due to be checked to become a member
      * of BW. The number depends on the scope of the person logged on.
      *
@@ -40,25 +14,26 @@ class VolunteerbarModel extends PAppModel
     public function getNumberPersonsToBeAccepted($_AccepterScope="")
     {
 		
-   		$R = MOD_right::get();
-		if ($_AccepterScope!="") {
-    		$AccepterScope=$_AccepterScope ;
-		}
-		else {
-      		$AccepterScope=$R->RightScope('Accepter');
-		}
-		if ($AccepterScope=="") return 0 ;
+        		$R = MOD_right::get();
+		 		if ($_AccepterScope!="") {
+        		 $AccepterScope=$_AccepterScope ;
+				}
+				else {
+        		 $AccepterScope=$R->RightScope('Accepter');
+				}
+				if ($AccepterScope=="") return 0 ;
 
         if ($R->hasRight('Accepter','All'))  {
            $InScope = " /* All countries */";
         } else {
-          $InScope = "AND cities.IdCountry IN (" . $AccepterScope . ")";
+          $InScope = "AND countries.id IN (" . $AccepterScope . ")";
         }
-        $query = '
+         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
-FROM members, cities
+FROM members, countries, cities
 WHERE  members.Status=\'Pending\'
-AND cities.id=members.IdCity ' . $InScope.' /* Model volunteerbar.model->getNumberPersonsToBeAccepted ' ;
+AND cities.id=members.IdCity
+AND countries.id=cities.IdCountry ' . $InScope.' /* Model volunteerbar.model->getNumberPersonsToBeAccepted ' ;
 		if (isset($_SESSION['Username'])) $query.=$_SESSION['Username'] ;
 		$query.=' */';
         $result = $this->dao->query($query);
@@ -92,7 +67,7 @@ AND cities.id=members.IdCity ' . $InScope.' /* Model volunteerbar.model->getNumb
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
 FROM pendingmandatory, countries, cities
-WHERE pendingmandatory.Status=\'NeedMore\' OR pendingmandatory.Status=\'Pending\'
+WHERE pendingmandatory.Status=\'Pending\'
 AND cities.id=pendingmandatory.IdCity
 AND countries.id=cities.IdCountry ' . $InScope;
         $result = $this->dao->query($query);

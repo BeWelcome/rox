@@ -2,7 +2,7 @@
         <?=$callback_tag ?>
         <input type="hidden" name="memberid" value="<?=$this->member->id?>" />
         <h3><?=$words->get('PreferenceLanguage')?></h3>
-        <p><?=$words->get('PreferenceLanguageDescription')?></p>
+        <p><?=$words->get('PreferenceLanguageDesc')?></p>
         <select name="PreferenceLanguage" >
             <?php foreach ($languages as $lang) { ?>
                 <option value="<?=$lang->id ?>" <?=($lang->id == $p['PreferenceLanguage']->Value) ? 'selected' : ''?> ><?=$lang->Name ?></option>

@@ -121,6 +121,15 @@ Boston, MA  02111-1307, USA.
          <div id="d<?=$post->IdContent?>" class="text">
             <?=$Sentence?>
          </div>
+		 <?php
+		 // Here add additional data from local volunteers messages if any
+		 if (isset($post->HasVotes) and ($post->HasVotes=='Yes')) {
+			echo "<div>"  ;
+			echo "Has votes for local events #".$post->IdLocalEvent ;
+			echo "</div>" ;
+		 } 	// End of add additional data from local volunteers messages if any
+
+		 ?>
          
         </div> <!-- forumsmessage -->
 </div> <!-- forumspost -->

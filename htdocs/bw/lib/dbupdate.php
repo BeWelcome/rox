@@ -1191,6 +1191,9 @@ $updates[] = "INSERT INTO `sqlforvolunteers` ( `id` , `Name` , `Query` , `update
 VALUES (
 NULL , 'Update the references id in param for yesterday and before yesterday logs (this is helpful for adminlog performances)', 'update params set logs_id_midnight=(select min(id) from logs where created> concat( date( date_sub( now( ) , INTERVAL 1 DAY ) ))), previous_logs_id_midnight=(select min(id) from logs where created>concat( date( date_sub( now( ) , INTERVAL 2 DAY ) ))) ;', NOW( ) , NULL , NULL , 'False'
 )";
+
+$updates[] = "ALTER TABLE `countries` ADD `FirstAdminLevel` VARCHAR( 4 ) NOT NULL DEFAULT 'ADM1' COMMENT 'This will allow for fine tunning with sublevel definitions (for France=regions)',
+ADD `SecondAdminLevel` VARCHAR( 4 ) NOT NULL DEFAULT 'ADM2' COMMENT 'This will allow for fine tunning with second sublevel definitions (for France=departments)' " ;
     if (empty($res)) {
         $version = 0;
     } else {

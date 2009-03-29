@@ -1214,8 +1214,8 @@ ADD `SecondAdminLevel` VARCHAR( 4 ) NOT NULL DEFAULT 'ADM2' COMMENT 'This will a
             bw_error("The database needs update but it cannot be done automatically. Do the changes manually or get the latest DB from the repository (<a href=\"https://www.bewelcome.org/svn/develstuff/trunk/testdb/\">https://www.bewelcome.org/svn/develstuff/trunk/testdb/</a>).", true);
         }
         
-        $qry = sql_query($updates[$version+1]);
-        $qry = sql_query("UPDATE dbversion SET version=version+1");
+        $qry = mysql_query($updates[$version+1]);
+        $qry = mysql_query("UPDATE dbversion SET version=version+1");
         $version++;
     } // end of while they are updates to do
 }

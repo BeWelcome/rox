@@ -57,7 +57,7 @@ class Rox extends PAppModel {
 			
 			require_once "../././htdocs/bw/lib/dbupdate.php";
 			DBUpdateCheck();
-			die("<br />Please refresh again now, database has been updated") ;
+//			die("<br />Please refresh again now, database has been updated") ;
 		}
 	
     }// end of __construct

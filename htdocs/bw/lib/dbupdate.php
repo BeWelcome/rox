@@ -1194,6 +1194,21 @@ NULL , 'Update the references id in param for yesterday and before yesterday log
 
 $updates[] = "ALTER TABLE `countries` ADD `FirstAdminLevel` VARCHAR( 4 ) NOT NULL DEFAULT 'ADM1' COMMENT 'This will allow for fine tunning with sublevel definitions (for France=regions)',
 ADD `SecondAdminLevel` VARCHAR( 4 ) NOT NULL DEFAULT 'ADM2' COMMENT 'This will allow for fine tunning with second sublevel definitions (for France=departments)' " ;
+
+$updates[] = "ALTER TABLE `countries` CHANGE `FirstAdminLevel` `FirstAdminLevel` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'ADM1' COMMENT 'This will allow for fine tunning with sublevel definitions (for France=regions)' ";
+
+$updates[] = "DROP VIEW IF EXISTS `regions`";
+
+$updates[] = "CREATE ALGORITHM=MERGE  VIEW `regions` AS 
+select `gc`.`geonameid` AS `id`,`gc`.`name` AS `Name`,`gc`.`name` AS `ansiname`,`gc`.`name` AS `OtherNames`,
+`gc`.`latitude` AS `latitude`,`gc`.`longitude` AS `longitude`,`gc`.`fclass` AS `feature_class`,
+`gc`.`fcode` AS `feature_code`,`gc`.`fk_countrycode` AS `country_code`,`gc`.`population` AS `population`,
+'0' AS `citiesopen`,`gc`.`parentCountryId` AS `IdCountry`,`counters_regions_nbcities`.`NbCities` AS `NbCities`,
+`geo_usage`.`count` AS `NbMembers` from ((`geonames_cache` `gc`,`countries`  join `geo_usage`) 
+join `counters_regions_nbcities`) 
+where ((`gc`.`fcode` = `countries`.`FirstAdminLevel`) and (`geo_usage`.`geoId` = `gc`.`geonameid`) and (`counters_regions_nbcities`.`IdRegion` = `gc`.`geonameid`) and `gc`.`parentCountryId`=`countries`.`id`)";
+
+
     if (empty($res)) {
         $version = 0;
     } else {

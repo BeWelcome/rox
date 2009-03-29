@@ -164,7 +164,7 @@ function IsLoggedIn($ExtraAllowedStatus="") {
 // optional Scope value can be send if the RightScope is set to All then Scope
 // will always match if not, the sentence in Scope must be find in RightScope
 // The function will use a cache in session
-// $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
+// ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force RightsReloading
 // from scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 // $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
@@ -189,7 +189,7 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 	}
 
 	if ((!isset ($_SESSION['Right_' . $RightName])) or 
-		($_SYSHCVOL['ReloadRight'] == 'True') or 
+		($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') or 
 		($OptionalIdMember != 0)) {
 		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=$IdMember AND rights.id=rightsvolunteers.IdRight AND rights.Name='$RightName'";
 		$qry = mysql_query($str) or bw_error("function HasRight");
@@ -224,7 +224,7 @@ function HasRight($RightName, $_Scope = "", $OptionalIdMember = 0)
 // -----------------------------------------------------------------------------
 // return the Scope in the specific right 
 // The funsction will use a cache in session
-//   $_SYSHCVOL['ReloadRight']=='True' is used to force RightsReloading
+//   or ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force RightsReloading
 //  from scope beware to the "" which must exist in the mysal table but NOT in 
 // the $Scope parameter 
 function RightScope($RightName, $Scope = "") {
@@ -233,7 +233,7 @@ function RightScope($RightName, $Scope = "") {
 	if (!IsLoggedIn())
 		return (0); // No need to search for right if no member logged
 	$IdMember = $_SESSION['IdMember'];
-	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SYSHCVOL['ReloadRight'] == 'True')) {
+	if ((!isset ($_SESSION['Right_' . $RightName])) or ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes')) {
 		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=$IdMember AND rights.id=rightsvolunteers.IdRight AND rights.Name='$RightName'";
 		$qry = mysql_query($str) or die("function RightScope");
 		$right = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity

@@ -21,10 +21,11 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
-require_once "../lib/FunctionsLogin.php";
-require_once "../layout/error.php";
-require_once "../layout/admingroups.php";
+chdir("..") ;
+require_once "lib/init.php";
+require_once "lib/FunctionsLogin.php";
+require_once "layout/error.php";
+require_once "layout/admingroups.php";
 $IdMember = GetParam("cid");
 
 $countmatch = 0;
@@ -183,7 +184,7 @@ switch (GetParam("action")) {
 
 		sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)");
 
-		header("Location: " . "../groups.php?action=ShowMembers&IdGroup=" . $IdGroup); // Sho the group immediately
+		header("Location: " . "groups.php?action=ShowMembers&IdGroup=" . $IdGroup); // Sho the group immediately
 		exit (0);
 		break;
 

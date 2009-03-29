@@ -21,9 +21,10 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
-require_once "../layout/error.php";
-require_once "../layout/admincomments.php";
+chdir("..") ;
+require_once "lib/init.php";
+require_once "layout/error.php";
+require_once "layout/admincomments.php";
 
 function loaddata($Status, $RestrictToIdMember = "") {
 
@@ -64,7 +65,7 @@ $countmatch = 0;
 
 $RightLevel = HasRight('Comments'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the sufficient <b>Comments</b> rights<br>";
+	echo "For this you need the <b>Comments</b> rights<br>";
 	exit (0);
 }
 

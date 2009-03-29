@@ -21,9 +21,10 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
+chdir("..") ;
+require_once "lib/init.php";
 $title = "Words management";
-require_once "../layout/menus.php";
+require_once "layout/menus.php";
 
 function CheckRLang( $rlang )
 {
@@ -50,7 +51,7 @@ $lang = $_SESSION['lang']; // save session language
 $_SESSION['lang'] = CV_def_lang;
 $_SESSION['IdLanguage'] = 0; // force English for menu
 
-require_once "../layout/header.php";
+require_once "layout/header.php";
 
 Menu1("", "Admin Words"); // Displays the top menu
 
@@ -172,7 +173,7 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Find')) {
   echo "</table>\n";
   if ($countfind == 0)
     echo "<h3><font color=red>", $where, " Not found</font></h3>\n";
-   require_once "../layout/footer.php";
+   require_once "layout/footer.php";
   exit(0);
 } // end of Find
 
@@ -181,7 +182,7 @@ if ($RightLevel < 1) {
   echo "<div class=\"info highlight\">\n";
   echo "<h2>For this you need the <strong>Words</strong> rights for lang=<strong>$lang</strong>. Your scope is: $scope</h2>";
   echo "</div>" ;
-  require_once "../layout/footer.php";
+  require_once "layout/footer.php";
   exit (0);
 }
 
@@ -515,4 +516,4 @@ echo "\" rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
 </table>
 </form>
 </div>
-<?php require_once "../layout/footer.php"; ?>
+<?php require_once "layout/footer.php"; ?>

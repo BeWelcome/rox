@@ -21,13 +21,14 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
-require_once "../layout/error.php";
-require_once "../layout/adminmassmails.php";
+chdir("..") ;
+require_once "lib/init.php";
+require_once "layout/error.php";
+require_once "layout/adminmassmails.php";
 
 $RightLevel = HasRight('MassMail'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the sufficient <b>MassMail</b> rights<br>";
+	echo "For this you need the <b>MassMail</b> rights<br>";
 	exit (0);
 }
 
@@ -183,9 +184,9 @@ switch (GetParam("action")) {
 					$str = "insert into broadcast(Type,Name,created,Status,IdCreator) values('" . GetStrParam("Type","Normal") . "','". GetStrParam("Name") . "',Now(),'Created'," . $_SESSION["IdMember"].")";
 					sql_query($str);
 					$IdBroadCast = mysql_insert_id();
-					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Title_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("BroadCast_Title_")) . "',now(),".$_SESSION['IdMember'].",'".addslashes(GetStrParam("Description"))."')";
+					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Title_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("BroadCast_Title_")) . "',now(),".$_SESSION['IdMember'].",'".mysql_real_escape_string(GetStrParam("Description"))."')";
 					sql_query($str);
-					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Body_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("BroadCast_Body_")) . "',now(),".$_SESSION['IdMember'].",'".addslashes(GetStrParam("Description"))."')";
+					$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember,Description) values('BroadCast_Body_" . GetStrParam("Name"). "','en',0,'" . mysql_real_escape_string(GetStrParam("BroadCast_Body_")) . "',now(),".$_SESSION['IdMember'].",'".mysql_real_escape_string(GetStrParam("Description"))."')";
 					sql_query($str);
 					LogStr("Creating massmail <b>".GetStrParam("Name")."</b>","adminmassmails") ;
 			} else { // case update

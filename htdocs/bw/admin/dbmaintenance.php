@@ -1,7 +1,8 @@
 <?php
-require_once "../lib/init.php";
+chdir("..") ;
+require_once "lib/init.php";
 $title = "DB Maintenance";
-require_once "../layout/menus.php";
+require_once "layout/menus.php";
 
 
 function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
@@ -65,7 +66,7 @@ function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 
 MustLogIn(); // Need to be logged
 
-require_once "../layout/header.php";
+require_once "layout/header.php";
 
 // It is always to consider that dbmaintenance works in english
 $_SESSION['lang'] = CV_def_lang;
@@ -79,7 +80,7 @@ Menu2("main.php", "DB_MAINTENANCE"); // Displays the second menu
 
 if (!HasRight("Admin")) {
 	echo("<p> this need Admin rights</p>") ;
-	require_once "../layout/footer.php";
+	require_once "layout/footer.php";
 	die(1) ;
 }
 

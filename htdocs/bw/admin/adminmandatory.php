@@ -21,8 +21,9 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
-require_once "../layout/adminmandatory.php";
+chdir("..") ;
+require_once "lib/init.php";
+require_once "layout/adminmandatory.php";
 
 function loaddata($Status, $RestrictToIdMember = "") {
 
@@ -33,10 +34,28 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
 		$InScope = "";
 	} else {
-		$InScope = "and countries.id in (" . $AccepterScope . ")";
+	  $tt=explode(",",$AccepterScope) ;
+	  $TheScope="" ;
+	  for ($ii=0;((isset($tt)) and $ii<count($tt));$ii++) {
+	  	if ($ii!=0) $TheScope .="," ; 
+		$val=ltrim(rtrim(str_replace("\""," ",$tt[$ii]))) ; // remove the "
+		if ($val>0) {
+		   $TheScope = $TheScope.GetCountryName($val); // If it was an IdCcountry (numeric) retrieve the countryname 
+		}
+		else {
+		   $TheScope = $TheScope."'".$val."'"; // else it is supposed to be a country name
+		}
+	  }
+	  if ($TheScope=="") {
+	  	 $InScope = " and 1=0"; // no way, user has no scope
+	  }
+	  else {
+	  	 $InScope = "and countries.Name in (\"".$TheScope."\")";
+	  }
 	}
+	
 
-	$str = "select cities.IdRegion as IdRegion,pendingmandatory.*,countries.Name as countryname,cities.Name as cityname,members.Username,members.FirstName as OldFirstName,pendingmandatory.IdCity,members.SecondName as OldSecondName,members.LastName as OldLastName,members.Status as Status from members,pendingmandatory,countries,cities where cities.IdCountry=countries.id and cities.id=pendingmandatory.IdCity and members.id=pendingmandatory.IdMember and pendingmandatory.Status='Pending' and members.Status='" . $Status . "'";
+	$str = "select cities.IdRegion as IdRegion,pendingmandatory.*,countries.Name as countryname,cities.Name as cityname,members.Username,members.FirstName as OldFirstName,pendingmandatory.IdCity,members.SecondName as OldSecondName,members.LastName as OldLastName,members.Status as Status from members,pendingmandatory,countries,cities where cities.IdCountry=countries.id and cities.id=pendingmandatory.IdCity and members.id=pendingmandatory.IdMember and pendingmandatory.Status='Pending' and members.Status='" . $Status . "' ".$InScope;
 	if ($RestrictToIdMember != "") {
 		$str .= " and members.id=" . $RestrictToIdMember;
 	}
@@ -82,7 +101,7 @@ $countmatch = 0;
 
 $RightLevel = HasRight('Accepter'); // Check the rights
 if ($RightLevel < 1) {
-	echo "<p>This Need the sufficient <strong>Accepter</strong> rights</p>";
+	echo "<p>For this you need the <strong>Accepter</strong> rights</p>";
 	exit (0);
 }
 
@@ -121,10 +140,10 @@ switch (GetParam("action")) {
 			$IdAddress=$rr->id;
 		}
 		if ($IdAddress!=0) { // if the member already has an address
-				$str = "update addresses set IdCity=" . $pp->IdCity . ",HouseNumber=" . ReplaceInCrypted($pp->HouseNumber, $rr->HouseNumber, $m->id) . ",StreetName=" . ReplaceInCrypted($pp->StreetName, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($pp->Zip, $rr->Zip, $m->id) . " where id=" . $IdAddress;
+				$str = "update addresses set IdCity=" . $pp->IdCity . ",HouseNumber=" . NewReplaceInCrypted($pp->HouseNumber,"addresses.HouseNumber",$IdAddress, $rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($pp->StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($pp->Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;
 				sql_query($str);
 		} else {
-				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . InsertInCrypted($pp->HouseNumber) . "," . InsertInCrypted($pp->StreetName) . "," . InsertInCrypted($pp->Zip) . ",now(),\"Address created by adminmandatory\")";
+				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted($pp->HouseNumber,"addresses.HouseNumber",0) . "," . NewInsertInCrypted($pp->StreetName,"addresses.StreetName",0) . "," . NewInsertInCrypted($pp->Zip,"addresses.Zip",0) . ",now(),\"Address created by adminmandatory\")";
 				sql_query($str);
 			    $IdAddress=mysql_insert_id();
 		}

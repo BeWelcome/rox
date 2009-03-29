@@ -21,9 +21,11 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "../lib/init.php";
-require_once "../lib/f_volunteer_boards.php" ;
-require_once "../layout/adminaccepter.php";
+chdir("..") ;
+require_once "lib/init.php";
+require_once "lib/f_volunteer_boards.php" ;
+require_once "layout/adminaccepter.php";
+
 
 // $IdEmail allow to list all members having a specific email
 // $Status allow to filter a status
@@ -37,15 +39,24 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
 		$InScope = "";
 	} else {
-	  $tt=explode($AccepterScope,",") ;
-	  $InScope = "and countries.id in ($AccepterScope)";
-//	  $AccepterScope.=" (" ;
-//	  for ($ii=0;$ii<max($tt);$ii++) {
-//	  	if ($ii!=0) $AccepterScope .="," ; 
-//		$AccepterScope .= GetCountryName($tt[$ii]);
-//	  }
-//	  $AccepterScope.=")" ;
-
+	  $tt=explode(",",$AccepterScope) ;
+	  $TheScope="" ;
+	  for ($ii=0;((isset($tt)) and $ii<count($tt));$ii++) {
+	  	if ($ii!=0) $TheScope .="," ; 
+		$val=ltrim(rtrim(str_replace("\"","",$tt[$ii]))) ; // remove the "
+		if ($val>0) {
+		   $TheScope = $TheScope.GetCountryName($val); // If it was an IdCcountry (numeric) retrieve the countryname 
+		}
+		else {
+		   $TheScope = $TheScope."'".$val."'"; // else it is supposed to be a country name
+		}
+	  }
+	  if ($TheScope=="") {
+	  	 $InScope = " and 1=0"; // no way, user has no scope
+	  }
+	  else {
+	  	 $InScope = "and countries.Name in (\"".$TheScope."\")";
+	  }
 	}
 	
 	$emailtable="" ;
@@ -127,11 +138,11 @@ if ($RightLevel < 1) {
 	echo "This Need the sufficient <b>Accepter</b> rights<br>";
 	exit (0);
 }
-
 $AccepterScope = RightScope('Accepter');
-if ($AccepterScope != "All") {
-	$AccepterScope = str_replace("\"", "'", $AccepterScope);
+if ($AccepterScope != "All") { 
+	$AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
 }
+
 $LastAction=$StrLog = "";
 switch (GetParam("action")) {
 	case "batchaccept" :
@@ -174,7 +185,8 @@ switch (GetParam("action")) {
 				   $subj = wwinlang("SignupSubjRejected",$defaultlanguage,$_SYSHCVOL['SiteName']);
 				   $text = wwinlang("SignupYouHaveBeenRejected",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName']);
 				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
-				   $StrReject=$StrReject.$m->Username." ";
+					 
+					 $StrReject=$StrReject.$m->Username." ";
 				   $CountReject++;
 
 				   break;
@@ -254,7 +266,7 @@ switch (GetParam("action")) {
 		break;
 
 	case "ShowOneMember" :
-		$RestrictToIdMember = IdMember(GetParam("cid", 0));
+		$RestrictToIdMember = IdMember(GetStrParam("cid", 0));
 		break;
 }
 
@@ -262,6 +274,5 @@ UpdateVolunteer_Board("Accepters_board") ; // Test if the accepter boards neesd 
 
 $Status=GetStrParam("Status","Pending") ;
 $TData = loaddata($Status, $RestrictToIdMember,GetParam("IdEmail",0));
-$TNeedMore = loaddata("Needmore", $RestrictToIdMember);
-DisplayAdminAccepter($TData,$TNeedMore); // call the layout
+DisplayAdminAccepter($TData); // call the layout
 ?>

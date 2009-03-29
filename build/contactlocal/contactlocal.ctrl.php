@@ -105,11 +105,6 @@ class ContactlocalController extends RoxControllerBase
 					}
 					$page = new ContactlocalsPage("","preparenewmessage",$data);
 					break ;
-				case 'tosend':
-					$data->IdMess=$request[2] ;
-					$model->SetToSend($data->IdMess) ;
-					$page = new ContactlocalsPage("","",$model->LoadList()); // Without error
-					break;
 				case 'delete':
 					$data->IdMess=$request[2] ;
 					$model->DeleteMessage($data->IdMess) ;

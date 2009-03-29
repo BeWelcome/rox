@@ -162,7 +162,7 @@ class ContactlocalsModel extends RoxModelBase {
 		}
 		else {
 			$this->IdMess=$IdMess ;
-			$sQuery="select  localvolmessages.*,localvolmessages.id as IdMess,members.id as 'IdCreator', members.Username as 'CreatorUsername' from localvolmessages,members where members.id=localvolmessages.IdSender and localvolmessages.Status in('ToSend','ToApprove') and localvolmessages.id=".$IdMess ;
+			$sQuery="select  localvolmessages.*,localvolmessages.id as IdMess,members.id as 'IdCreator', members.Username as 'CreatorUsername' from localvolmessages,members where members.id=localvolmessages.IdSender and localvolmessages.id=".$IdMess ;
 		}
 		$rMess=$this->singleLookup($sQuery) ;
 
@@ -194,7 +194,7 @@ class ContactlocalsModel extends RoxModelBase {
 
 			$qry = $this->dao->query($squery);
 			while ($m=$qry->fetch(PDB::FETCH_OBJ)) { // Browse all members
-				if ($layoutbits->GetPreference("PreferenceLocalEvent",$m->id)!="Yes") {
+				if ($leayoutbits->GetPreference("PreferenceLocalEvent",$m->id)!="Yes") {
 					continue ; // Skip preferences of members who chosen not to receive localevent notification
 				}
 				for ($ii=0,$AlreadyIn=false;$ii<count($ListOfUsers);$ii++) {	// Test if the member is already enqueued to avoid duplicates
@@ -207,10 +207,10 @@ class ContactlocalsModel extends RoxModelBase {
 					$CountMembers++ ;
 					$fTradIdLastUsedLanguage=$MemberIdLanguage = $layoutbits->GetPreference("PreferenceLanguage",$m->id);
 
-					$MessageText=$this->dao->escape($words->fTrad($rMess->IdMessageText,false,$MemberIdLanguage)) ; // Try to force the translation of the language to suit the receiver default language
+					$MessageText=$words->fTrad($rMess->IdMessageText,false,$MemberIdLanguage) ; // Try to force the translation of the language to suit the receiver default language
 					
-					$ss="insert into messages(MessageType,IdMessageFromLocalVol,created,IdReceiver,IdSender,Status,Message,IdTriggerer,JoinMemberPict)" ;
-					$ss=$ss." values('LocalVolToMember',".$rMess->id.",now(),".$m->id.",".$rMess->IdCreator.",'ToSend','".$MessageText."',".$_SESSION["IdMember"].",'Yes')" ;
+					$ss="insert into messages(MessageType,IdMessageFromLocalVol,created,IdReceiver,IdSender,Status,Message,IdTriggerer,JoinMemberPict" ;
+					$ss=$ss." values('LocalVolToMember',".$rMess->id.",now(),".$m->id.",".$rMess->IdCreator.",'".$MessageText."',".$_SESSION["IdMember"].",'Yes')" ;
 
 					if ($DoTrigger) {
 						$sLog=" Enqueing members <b>".$m->Username."</b> in language #".$MemberIdLanguage." for ".$loc->Choice." IdLocation=#".$loc->id ;
@@ -218,12 +218,7 @@ class ContactlocalsModel extends RoxModelBase {
 						if (!$qry) {
 							throw new PException('failed for '.$ss.'!');
 						}
-						$squery="update localvolmessages set localvolmessages.Status='Sent'  where id=".$IdMess ;
-						$qry2 = $this->dao->query($squery);
-						if (!$qry2) {
-							throw new PException('failed for '.$squery.'!');
-						}
-						MOD_log::get()->write($sLog,"contactlocation") ; 
+						MOD_log::get()->write($sLog,"contactlocation") ; 				
 					}
 					else {
 						$sLog=" Could be sent to member <b>".$m->Username."</b> in language #".$MemberIdLanguage." for ".$loc->Choice." IdLocation=#".$loc->id ;
@@ -338,36 +333,14 @@ class ContactlocalsModel extends RoxModelBase {
 	} // end of DelTranslation
 
     /**
-	* this function SetToSend a whole a message
-	 * @IdMess is the id of the message
-
-	**/
-    function SetToSend($IdMess) {
-		$this->IdMess=$IdMess ;
-		if (!$this->CanWorkWith($IdMess)) {
-			die("Your are not allowed to work with message #".$IdMess) ;
-		}
-		$rMess=$this->rMess ;
-
-
-		$squery="update localvolmessages set Status='ToSend'  where Status='ToApprove' and id=".$IdMess ;
-		$result = $this->dao->query($squery);
-		if (!$result) {
-			throw new PException('SetToSend::Failed to change Status for message #'.$IdMess);
-		}
-			
-		MOD_log::get()->write("contactlocal : set ToSend IdMess=#".$IdMess,"contactlocal") ; 
-		
-	} // end of SetToSend
-
-    /**
-	* this function delete a whole a message
-	 * @IdMess is teh id of the message
-	**/
+     * this function delete a whole a message
+		 * @IdMess is teh id of the message
+		 * returns true if the poll is added with success
+     **/
     function DeleteMessage($IdMess) {
 		$this->IdMess=$IdMess ;
 		if (!$this->CanWorkWith($IdMess)) {
-			die("Your are not allowed to work with message #".$IdMess) ;
+			die("Your are not allowe to work with message #".$IdMess) ;
 		}
 		$rMess=$this->rMess ;
 

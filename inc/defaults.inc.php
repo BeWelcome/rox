@@ -29,6 +29,18 @@ function PPckup()
  */
 function translate($request) {
     $o = array(
+        // the following requests can all be handled by the 'about' application!
+        'theidea' => 'about',
+        'thepeople' => 'about',
+        'getactive' => 'about',
+        'terms' => 'about',
+        'bod' => 'about',
+        'help' => 'about',
+        'terms' => 'about',
+        'impressum' => 'about',
+        'affiliations' => 'about',
+        'privacy' => 'about',
+        'stats' => 'about'
     );
     if (array_key_exists(strtolower($request), $o)) {
         return $o[strtolower($request)];

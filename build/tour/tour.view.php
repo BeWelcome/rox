@@ -28,33 +28,33 @@ class TourView extends PAppView {
      * @param void
      */
     public function ShowSimpleTeaser($title,$step)    {
-        require TEMPLATE_DIR.'apps/tour/teaser_simple.php';
+        require 'templates/teaser_simple.php';
     }
 
 // PreContent (Everything in 'PreContent')    
     public function precontenttour($step)    {
-        require TEMPLATE_DIR.'apps/tour/precontent_tour.php';
+        require 'templates/precontent_tour.php';
     }   
     
 // Pages (Everything in 'Content')
 
     public function tourpage()    {
-        require TEMPLATE_DIR.'apps/tour/tourpage.php';
+        require 'templates/tourpage.php';
     }   
     public function tourpage2()    {
-        require TEMPLATE_DIR.'apps/tour/tourpage2.php';
+        require 'templates/tourpage2.php';
     }   
     public function tourpage3()    {
-        require TEMPLATE_DIR.'apps/tour/tourpage3.php';
+        require 'templates/tourpage3.php';
     }   
     public function tourpage4()    {
-        require TEMPLATE_DIR.'apps/tour/tourpage4.php';
+        require 'templates/tourpage4.php';
     }   
     public function tourpage5()    {
-        require TEMPLATE_DIR.'apps/tour/tourpage5.php';
+        require 'templates/tourpage5.php';
     }   
     public function tourpage6()    {
-        require TEMPLATE_DIR.'apps/tour/tourpage6.php';
+        require 'templates/tourpage6.php';
     }   
 }
 ?>

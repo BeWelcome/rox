@@ -263,7 +263,7 @@ function GetCryptM($ss,$IsCrypted="crypted") {
 			return(strip_tags($ss));
 			break ;
 		default : // we should never come here
-			$strlog="FunctionsCrypt.php:: function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
+			$strlog="FunctionsCrypt.php:: function GetCryptM() Problem to encrypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
 			if (function_exists(LogStr)) {
 				LogStr($strlog,"Bug") ;
 			}

@@ -2251,12 +2251,12 @@ AND IdTag=%d
        }
        
        // Check if there is a previous Subscription
-       if ($this->IsTagSubscribed($IdTag,$_SESSION["IdMember"])) {
+       if ($this->IsTagSubscribed($IdTag,$IdMember)) {
              MOD_log::get()->write("Allready subscribed to IdTag=#".$IdTag, "Forum");
           return(false) ;
        }
        $key=MD5(rand(100000,900000)) ;
-       $query = "insert into members_tags_subscribed(IdTag,IdSubscriber,UnSubscribeKey)  values(".$IdTag.",".$_SESSION["IdMember"].",'".$this->dao->escape($key)."')" ; 
+       $query = "insert into members_tags_subscribed(IdTag,IdSubscriber,UnSubscribeKey)  values(".$IdTag.",".$IdMember.",'".$this->dao->escape($key)."')" ; 
        $s = $this->dao->query($query);
        if (!$s) {
               throw new PException('Forum->SubscribeTag failed !');

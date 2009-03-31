@@ -88,7 +88,7 @@ class MOD_crypt {
     
 
     /**
-     * get_crypted
+     * getall_crypted
      * 
      * Equals the old BW style function "PublicReadCrypted"
      * Get a decrypted value for a given crypted_id
@@ -165,7 +165,13 @@ WHERE id = $IdCrypt
             return ("");
         }*/
         else { 
-            return ($return_value);
+			if ($return_value == "") {
+				$ww= new MOD_words();
+				return ($ww->getFormatted("cryptedhidden"));
+			}
+			else {
+				return ($return_value);
+			}
         }
     }
     
@@ -517,9 +523,9 @@ WHERE
                 return(strip_tags($ss));
                 break ;
              default : // we should never come here
-                $strlog="function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
-                if (function_exists(bw_error)) {
-                      LogStr($strlog,"LogStr") ;
+                $strlog="function MOD_crypt::GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
+                if (function_exists(LogStr)) {
+                      LogStr($strlog,"Bug") ;
                 }
                 if (function_exists(bw_error)) {
                       bw_error($strlog) ;
@@ -533,7 +539,7 @@ WHERE
 
 
     /**
-     * GetCryptM
+     * GetDeCryptM
      *
      * @param string
      * @returns the decrypted value of $ss according to member cryptation algorithm

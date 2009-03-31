@@ -252,30 +252,30 @@ function GetCryptM($ss,$IsCrypted="crypted") {
 // -----------------------------------------------------------------------------
 // Return the crypted value of $ss according to member cryptation algorithm
 function GetCryptM($ss,$IsCrypted="crypted") {
-			switch ($IsCrypted) {
-				 case "crypted" :
-				 case "always" :
-		  	 			if (strstr($ss,"<membercrypted>")!==false) return($ss); 
-		  	 			// todo add right test
-		  	 			return ("<membercrypted>".CryptM($ss)."</membercrypted>");
-				 			break ;
-				 case "not crypted" :
-				 			return(strip_tags($ss));
-							break ;
-				 default : // we should never come here
-				 			$strlog="function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
-							if (function_exists(bw_error)) {
-				 				  LogStr($strlog,"LogStr") ;
-							}
-							if (function_exists(bw_error)) {
-								  bw_error($strlog) ;
-							}
-							else {
-							   error_log($strlog) ;
-							}
-							die ("Major problem with crypting issue") ;
-				
+	switch ($IsCrypted) {
+		 case "crypted" :
+		 case "always" :
+ 			if (strstr($ss,"<membercrypted>")!==false) return($ss); 
+ 			// todo add right test
+ 			return ("<membercrypted>".CryptM($ss)."</membercrypted>");
+ 			break ;
+		case "not crypted" :
+			return(strip_tags($ss));
+			break ;
+		default : // we should never come here
+			$strlog="FunctionsCrypt.php:: function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
+			if (function_exists(LogStr)) {
+				LogStr($strlog,"LogStr") ;
 			}
+			if (function_exists(bw_error)) {
+				bw_error($strlog) ;
+			}
+			else {
+				error_log($strlog) ;
+			}
+			die ("Major problem with crypting issue") ;
+			
+	} // end of switch
 } // end of GetCryptM
 
 

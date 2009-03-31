@@ -265,7 +265,7 @@ function GetCryptM($ss,$IsCrypted="crypted") {
 		default : // we should never come here
 			$strlog="FunctionsCrypt.php:: function GetCryptM() Problem to crypt ".$ss." IsCrypted=[".$IsCrypted."]" ;
 			if (function_exists(LogStr)) {
-				LogStr($strlog,"LogStr") ;
+				LogStr($strlog,"Bug") ;
 			}
 			if (function_exists(bw_error)) {
 				bw_error($strlog) ;

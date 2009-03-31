@@ -55,22 +55,13 @@ class LoginFormWidget extends RoxWidget
         <form id="main-login-form" method="post" action="<?=$url ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
-            <table>
-                <tr>
-                    <td>
-                        <label for="login-u"><?=$ww->Username ?></label><br />
-                        <input type="text" id="login-u" name="u" />
-                    </td>
-                    <td>
-                        <label for="login-p"><?=$ww->Password ?></label><br />
-                        <input type="password" id="login-p" name="p" />
-                    </td>
-                    <td>
-                        <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
-                    </td>
-                </tr>
-            </table>
-            
+          <label for="login-u"><?=$ww->Username ?></label><br />
+          <input type="text" id="login-u" name="u" />
+          <br />
+          <label for="login-p"><?=$ww->Password ?></label><br />
+          <input type="password" id="login-p" name="p" />
+          <br />
+          <input type="submit" value="Login" id="smallbutton" class="button"/>
         </form>
         
         <script type="text/javascript">
@@ -84,21 +75,14 @@ class LoginFormWidget extends RoxWidget
         <form method="post" action="<?=$url ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
-          
-          <table>
-          <tr><td align="right">
-            <label for="login-u"><?=$ww->Username ?></label>
-          </td><td>
-            <input type="text" id="login-u" name="u" />
-          </td></tr>
-          <tr><td align="right">
-            <label for="login-p"><?=$ww->Password ?></label>
-          </td><td>
-            <input type="password" id="login-p" name="p" />
-          </tr></td>
-          <tr><td>&nbsp;</td><td>
-            <input type="submit" value="Login" class="button"/>
-          </td></tr></table>
+          <label for="login-u"><?=$ww->Username ?></label><br />
+          <input type="text" id="login-u" name="u" />
+          <br />
+          <label for="login-p"><?=$ww->Password ?></label><br />
+          <input type="password" id="login-p" name="p" />
+          <br />
+          <input type="submit" value="Login" id="smallbutton" class="button"/>
+          <br />
           <p><?=$ww->LoginformForgetPassword('<a href="bw/lostpassword.php">', '</a>') ?></p>
           <h3><?=$ww->SignupNow ?></h3>
           <p><?=$ww->IndexPageWord17('<a href="signup">', '</a>') ?></p>

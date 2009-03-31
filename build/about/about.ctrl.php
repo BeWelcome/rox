@@ -59,15 +59,13 @@ class AboutController extends RoxControllerBase
                 $page = new AboutStatisticsPage();
                 $page->setModel(new StatsModel());
                 return $page;
-			case 'faq':
-			case 'faqs':
-                return new AboutFaqPage();
 			case 'feedback':
             case 'contact':
             case 'contactus':
             case 'support':
                 return new FeedbackPage();
             case 'faq':
+            case 'faqs':
                 $model = new AboutModel;
                 $faq_categories = $model->getFaqsCategorized();
                 if ($faq_section = $model->getFaqSection($keyword_2)) {

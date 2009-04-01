@@ -92,7 +92,7 @@ AND cities.id=members.IdCity ' . $InScope.' /* Model volunteerbar.model->getNumb
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
 FROM pendingmandatory, countries, cities
-WHERE pendingmandatory.Status=\'NeedMore\' OR pendingmandatory.Status=\'Pending\'
+WHERE (pendingmandatory.Status=\'NeedMore\' OR pendingmandatory.Status=\'Pending\')
 AND cities.id=pendingmandatory.IdCity
 AND countries.id=cities.IdCountry ' . $InScope;
         $result = $this->dao->query($query);

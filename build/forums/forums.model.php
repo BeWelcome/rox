@@ -2232,7 +2232,7 @@ AND IdTag=%d
         if (!$s) {
             throw new PException('Forum->UnsubscribeTagDirect failed to delete !');
         }
-            MOD_log::get()->write("Unsubscribing direct (By NotifyMe) member=#".$IdMember." from IdTag=#".$IdTag, "Forum");
+        MOD_log::get()->write("Unsubscribing direct (By NotifyMe) member=#".$IdMember." from IdTag=#".$IdTag, "Forum");
         return(true) ;
     } // end of UnsubscribeTagDirect
     
@@ -2245,24 +2245,24 @@ AND IdTag=%d
      * It also check that member is not yet subscribing to Tag
      */
     public function SubscribeTag($IdTag,$ParamIdMember=0) {
-       $IdMember=$ParamIdMember ;
-       if (isset($_SESSION["IdMember"]) and $IdMember==0) {
-                 $IdMember=$_SESSION["IdMember"] ;
-       }
+		$IdMember=$ParamIdMember ;
+		if (!empty($_SESSION["IdMember"]) and $IdMember==0) {
+            $IdMember=$_SESSION["IdMember"] ;
+		}
        
-       // Check if there is a previous Subscription
-       if ($this->IsTagSubscribed($IdTag,$IdMember)) {
-             MOD_log::get()->write("Allready subscribed to IdTag=#".$IdTag, "Forum");
-          return(false) ;
-       }
-       $key=MD5(rand(100000,900000)) ;
-       $query = "insert into members_tags_subscribed(IdTag,IdSubscriber,UnSubscribeKey)  values(".$IdTag.",".$IdMember.",'".$this->dao->escape($key)."')" ; 
-       $s = $this->dao->query($query);
-       if (!$s) {
-              throw new PException('Forum->SubscribeTag failed !');
-       }
-       $IdSubscribe=mysql_insert_id() ;
-         MOD_log::get()->write("Subscribing to IdTag=#".$IdTag." IdSubscribe=#".$IdSubscribe, "Forum");
+		// Check if there is a previous Subscription
+		if ($this->IsTagSubscribed($IdTag,$IdMember)) {
+            MOD_log::get()->write("Allready subscribed to IdTag=#".$IdTag, "Forum");
+			return(false) ;
+		}
+		$key=MD5(rand(100000,900000)) ;
+		$query = "insert into members_tags_subscribed(IdTag,IdSubscriber,UnSubscribeKey)  values(".$IdTag.",".$IdMember.",'".$this->dao->escape($key)."')" ; 
+		$s = $this->dao->query($query);
+		if (!$s) {
+            throw new PException('Forum->SubscribeTag IdTag=#'.$IdTag.'failed !');
+		}
+		$IdSubscribe=mysql_insert_id() ;
+        MOD_log::get()->write("Subscribing to IdTag=#".$IdTag." IdSubscribe=#".$IdSubscribe, "Forum");
     } // end of UnsubscribeTag
 
 	 

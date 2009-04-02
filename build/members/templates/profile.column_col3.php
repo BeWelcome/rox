@@ -6,12 +6,12 @@
         ?>
     </div> <!-- profile_translations -->
     
-    <div id="profile_summary" class="clearfix box">
+    <div id="profile_summary" class="floatbox box">
         <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>
         <p><?=$member->get_trad("ProfileSummary", $profile_language); ?></p>
     </div> <!-- profile_summary -->
     
-    <div id="profile_languages" class="clearfix box">
+    <div id="profile_languages" class="floatbox box">
         <h3><?=$words->getInLang('Languages', $profile_language_code);?></h3>
         <ul class="icon profile_languages">
             <?php foreach ($member->get_languages_spoken() as $lang)
@@ -22,7 +22,7 @@
     <?
     if ($member->get_trad("Hobbies", $profile_language) != "" or $member->get_trad("Organizations", $profile_language) != "" or $member->get_trad("Books", $profile_language) != "" or $member->get_trad("Music", $profile_language) != "" or $member->get_trad("Movies", $profile_language) != "") { 
     ?>
-    <div id="profile_interests" class="clearfix box">
+    <div id="profile_interests" class="floatbox box">
         <h3 class="icon sun22" ><?=$words->getInLang('ProfileInterests', $profile_language_code);?></h3>
         <dl id="interests" >
         <?php if ($member->get_trad("Hobbies", $profile_language) != "") { ?>
@@ -58,7 +58,7 @@
 
     if ($member->get_trad("PastTrips", $profile_language) != "" or $member->get_trad("PlannedTrips", $profile_language) != "") { 
     ?>
-    <div id="profile_travel" class="clearfix box">
+    <div id="profile_travel" class="floatbox box">
         <h3 class="icon world22" ><?=$words->getInLang('ProfileTravelExperience', $profile_language_code);?></h3>
         <dl id="travelexperience">
             <dt><?=$words->getInLang('ProfilePastTrips', $profile_language_code);?>:</dt>
@@ -73,7 +73,7 @@
       
     if ($sections->ProfileGroups != 0) {
     ?>
-    <div id="profile_groups" class="clearfix box">
+    <div id="profile_groups" class="floatbox box">
         <h3 class="icon groups22" ><?=$words->getInLang('ProfileGroups', $profile_language_code);?></h3>
         <dl id="mygroups" >
         <?php
@@ -94,7 +94,7 @@
     }
     ?>
     
-    <div id="profile_accommodation" class="clearfix box">
+    <div id="profile_accommodation" class="floatbox box">
         <h3 class="icon accommodation22" ><?=$words->getInLang('ProfileAccommodation', $profile_language_code);?></h3>
         <dl id="accommodation" >
             <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>

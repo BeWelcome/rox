@@ -23,4 +23,7 @@ if ($member->age == "hidden") {
 $languages = $member->get_profile_languages(); 
 $occupation = $member->get_trad("Occupation", $profile_language);        
 
+$verification_status = $member->verification_status;
+if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
+
 ?>

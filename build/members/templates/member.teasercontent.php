@@ -12,8 +12,9 @@
         <div id="profile-info" >
             <div id="username" >
                 <strong><?=$member->Username ?></strong>
-                <?=$member->name() ?> <?=($member->verification_status) ? '<img src="images/icons/shield.png" alt="'.$member->verification_status.'" title="'.$member->verification_status.'">': ''?>
+                <?=$member->name() ?> <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
 <br />
+<?=$words->flushBuffer()?>
             </div> <!-- username -->
             <p>
             <?php

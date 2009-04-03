@@ -86,7 +86,7 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 
   Menu2("admin/adminlogs.php", ww('MainPage')); // Displays the second menu
 
-  DisplayHeaderShortUserContent($title." restricted to Log right");
+  DisplayHeaderShortUserContent($title);
   ShowLeftColumn("",VolMenu())  ; // Show the Actions
 
   // middle column

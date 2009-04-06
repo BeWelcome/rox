@@ -52,6 +52,8 @@ class MOD_words
     /*private $_prepared = array();*/
     static private $_buffer = array();
     private $_dao;  // database access object
+	
+	private $WordMemcache ;
     
     
     /**
@@ -62,6 +64,8 @@ class MOD_words
     public function __construct($category=null)
     {
         $this->_lang = PVars::get()->lang;
+
+			$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
 
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
@@ -77,6 +81,8 @@ class MOD_words
         $dao = PDB::get($db_vars->dsn, $db_vars->user, $db_vars->password);
         $this->_dao =& $dao;
 
+
+			
         $R = MOD_right::get();
         if ($R->hasRight("Words", $this->_lang)) {
             $this->_offerTranslationLink = true;
@@ -459,6 +465,10 @@ class MOD_words
             $whereCategory = ' `category`=\'' . $category . '\'';
         }
         */
+		
+		if ($value=$this->$this->WordMemcache->GetValue($code,$lang)) {
+			return($value) ;
+		}
         
         if (is_numeric($code)) {
             $query =

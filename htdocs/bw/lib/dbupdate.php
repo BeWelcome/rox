@@ -1208,6 +1208,8 @@ select `gc`.`geonameid` AS `id`,`gc`.`name` AS `Name`,`gc`.`name` AS `ansiname`,
 join `counters_regions_nbcities`) 
 where ((`gc`.`fcode` = `countries`.`FirstAdminLevel`) and (`geo_usage`.`geoId` = `gc`.`geonameid`) and (`counters_regions_nbcities`.`IdRegion` = `gc`.`geonameid`) and `gc`.`parentCountryId`=`countries`.`id`)";
 
+$updates[] = "ALTER TABLE `params` ADD `memcache` ENUM( 'False', 'True' ) NOT NULL DEFAULT 'False' COMMENT 'Used to enable the use of memcache'" ;
+
 
     if (empty($res)) {
         $version = 0;

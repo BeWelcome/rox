@@ -53,10 +53,16 @@
     margin-top: -10px;
 }
 
-#topnav {
+#header #topnav {
+	position: relative;
     padding-top: 34px;
+	padding-bottom: 20px;
     width: 100%;
-    display: none;
+}
+#topnav a{
+	background:transparent none repeat scroll 0 0;
+	color:#FFFFFF;
+	text-decoration:none;
 }
 #topnav ul {
 /*    width: 500px; */

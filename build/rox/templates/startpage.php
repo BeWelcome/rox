@@ -26,7 +26,7 @@ $words = new MOD_words();
 
 <div id="index">
   <div class="subcolumns" style="text-align: center;">
-    <div class="c33l">
+    <div class="c50l">
       <div class="subcl">
         <div class="info">
             <h3><?php echo $words->get('IndexPageWord_share');?></h3>
@@ -36,7 +36,7 @@ $words = new MOD_words();
       </div> <!-- subcl -->
     </div> <!-- c33l -->
 
-    <div class="c33l">
+    <div class="c50l">
       <div class="subcl">
         <div class="info">
             <h3><?php echo $words->get('IndexPageWord_plan');?></h3>
@@ -46,19 +46,5 @@ $words = new MOD_words();
       </div> <!-- subcl -->
     </div> <!-- c33l -->
 
-    <div class="c33r">
-      <div class="subcr">
-        <div class="info">
-
-            <h3><?php echo $words->get('IndexPageWord_Members');?></h3>
-        <!--<p><a href="tour/maps"><img src="images/tour/arrow_maps_orange.png"></a></p>
-            <p><?php echo $words->get('IndexPageWord_guideText');?></p>-->
-          <div class="floatbox">
-          <?php require 'startpage_people.php';?>
-          </div> <!-- floatbox -->
-          <p style="padding-top: 5px"><?=$words->get('IndexPageWord_MembersText','<a href="searchmembers">','</a>')?></p>
-        </div> <!-- info index -->
-      </div> <!-- subcr -->
-    </div> <!-- c33r -->
   </div> <!-- subcolumns index_row1 -->
 </div> <!-- index -->

@@ -61,15 +61,13 @@ class TourPage extends PageWithActiveSkin
     }
     
     protected function quicksearch() {
-        parent::quicksearch();
-    }
-    
-    protected function topnav() {
-        parent::topnav();
+/*
         require SCRIPT_BASE . 'build/rox/templates/_languageselector.helper.php';
         $languageSelectorDropDown = _languageSelectorDropDown();
         echo '<div class="float_left" style="padding-left:15px">'.$languageSelectorDropDown.'</div>';
+*/
     }
+    
 }
 
 

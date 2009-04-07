@@ -7,10 +7,10 @@
 #header #topnav {
 	white-space: nowrap;
 }
-/*
+
 #header #topnav ul{ 
 	width: 60%;
-} */
+}
 #header #topnav li { 
 	font-size: 11px;
 	display: inline;
@@ -20,31 +20,13 @@
 }
 #header #topnav li a {color: #999999;}
 #header #topnav img  {padding: 0 4px 0 0;	vertical-align:middle;}
-#header #topnav #logo  {margin-right: 50px; margin-bottom: 0}
-
-#language_select {
- /* color: #fff; */
-  font-size: 11px;
-  float: left; 
-  color: #999999;
-  padding-right: 3em;
-}
-
-#language_select select, #language_select option{
-  font-size: 11px;
-}
+#header #topnav #logo  {margin-right: -50px;}
 
 #form-quicksearch {
 	/*display: inline;
 	height: 25px;
 	padding: 10px 15px; */
-  float: right;
-  color: #fff;
-}
-#nav_flowright #form-quicksearch a{
-  font-size: 11px;
-  color: #fff;
-  padding: 0 1em;
+  padding: 15px;
 }
 
 #form-quicksearch #text-field {  
@@ -72,16 +54,16 @@
 	line-height: 25px;
 	margin: 0;
 	white-space: nowrap;
-    
+    margin-top: 10px;
 }
 #nav_main ul {
-    float:left;
-    margin-top: 14px;
+  float:left;
+	padding: 0 30px 0 30px;
 }
 #nav_main li {
-	float: left;
+	float: right;
 	display: block;
-	margin-left: 0px;
+	margin-right: 0px;
 	text-align: center;
 
 }

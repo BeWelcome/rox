@@ -63,7 +63,7 @@
     color: #888;
 }
 
-#preferences ul, select {
+#preferences ul, #preferences select {
     margin-bottom: 2em;
 }
     

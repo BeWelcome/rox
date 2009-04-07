@@ -180,7 +180,7 @@
                     <?=$words->get('hidden')?>
                   </td>
                   <td>
-                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyNameAndAddressAndBirthdate')?></a>
+                    <a href="bw/updatemandatory.php" ><?=$words->get('UpdateMyNameAndAddressAndBirthdate')?></a>
                   </td>
                 </tr>
                 <tr align="left" >

@@ -9,6 +9,10 @@
     <?php $this->topmenu() ?>
       <div id="topnav">
         <?php $this->topnav() ?>
+      <a href="start">
+        <img id="logo" class="float_right overflow" src="styles/YAML/images/logo.gif"
+          width="250" height="48" alt="Be Welcome" />
+      </a>
       </div> <!-- topnav -->
 
     </div> <!-- header -->

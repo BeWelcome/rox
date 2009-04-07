@@ -129,13 +129,13 @@ class Admin extends PAppModel
      */
     //------------------------------------------------------------------------------ 
 // function IdMember return the numeric id of the member according to its username
-// This function will TARNSLATE the username if the profile has been renamed.
+// This function will TRANSLATE the username if the profile has been renamed.
 // Note that a numeric username is provided no Username trnslation will be made
 function _idMember($username) {
 	if (is_numeric($username)) { // if already numeric just return it
 		return ($username);
 	}
-	$query = "select SQL_CACHE id,ChangedId,Username,Status from members where Username='" . addslashes($username) . "'";
+	$query = "SELECT SQL_CACHE id,ChangedId,Username,Status FROM members WHERE Username='" . mysql_real_escape_string($username) . "'";
 	$rr = LoadRow($query);
 	if (!isset($rr->id)) return(0) ; // Return 0 if no username match
 	if ($rr->ChangedId > 0) { // if it is a renamed profile

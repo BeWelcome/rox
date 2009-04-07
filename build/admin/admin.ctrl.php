@@ -86,7 +86,7 @@ class AdminController extends PAppController
 
             case 'wordsdownload':
 
-                $level = $R->hasRight('Debug');
+                $level = $R->hasRight('Words');
                 if (!$level || $level < 1) {
                     PPHP::PExit(); // TODO: redirect or display message?
                 }

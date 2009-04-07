@@ -91,9 +91,16 @@ class MessagesController extends RoxControllerBase
                         // no message with that id found
                         $page = new MessagesInboxPage();
                     } else {
+                        if (isset($message->WhenFirstRead) && $message->WhenFirstRead == '')
+                            $model->markReadMessage($message->id);
                         if (!isset($request[2])) {
                             $page = new ReadMessagePage();
-                        } else switch ($request[2]) {
+                        } else switch ($request[2]) { 
+			    //message action
+			    case 'delete':
+			      $model->deleteMessage($request[1]);
+			      $page = new MessagesInboxPage();
+			      break;
                             case 'edit':
                                 $page = new EditMessagePage();
                                 break;
@@ -112,6 +119,10 @@ class MessagesController extends RoxControllerBase
             }
             
             $page->setModel($model);
+			if (isset($_GET['sort']))
+				$page->sort_element = $_GET['sort'];
+			if (isset($_GET['dir']))
+				$page->sort_dir = $_GET['dir'];
         }
         // finally display the page.
         // the render() method will call other methods to render the page.
@@ -195,6 +206,70 @@ class MessagesController extends RoxControllerBase
         }
         
         return implode('/', $args->request);
+    }
+    
+    /**
+     * callback for deleting/updating messages
+     *
+     * @param object $args
+     * @param object $action
+     * @param object $mem_redirect
+     * @param object $mem_resend
+     * @access public
+     * @return string
+     */
+    public function mailBoxCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        $BW_Rights = new MOD_right();
+        $layoutkit = 
+        $count = $action->count;
+        $return = $args->req;
+
+        if (!APP_User::loggedIn() /*|| !$BW_Rights->hasRight('Admin') */)
+        {
+            return $return;
+        }
+
+        if ($count < 0)
+        {
+            $mem_redirect->expired = true;
+            return $return;
+        }
+
+        if ($mem_resend->already_sent_as)
+        {
+            $mem_redirect->already_sent_as = $mem_resend->already_sent_as;
+            return $return;
+        }
+
+        // now finally try to send it.
+        $words = new MOD_words();
+        $model = new MessagesModel();
+        $post = $args->post;
+        if (isset($post['message-mark']) && count($post['message-mark']) > 0 && isset($post['submit_multi']))
+        {
+            foreach ($post['message-mark'] as $message) {
+                if (!$m = $model->getMessage($message)) {
+                    $mem_redirect->problems = true;
+                    return $return;
+                }
+                elseif ($post['submit_multi'] == 'delete')
+                    $result = $model->deleteMessage($m->id);
+                elseif ($post['submit_multi'] == 'markasread')
+                    $result = $model->markReadMessage($m->id);
+                elseif ($post['submit_multi'] == 'markasspam')
+                    $result = $model->moveMessage($m->id,'Spam');
+                elseif ($post['submit_multi'] == 'nospam') {
+                    $result = $model->moveMessage($m->id,'Normal');
+                } else {
+                    $mem_redirect->problems = true;
+                    return $return;
+                }
+                
+            }
+        }  
+        $mem_redirect->result = $result;
+        return $return;
     }
 }
 

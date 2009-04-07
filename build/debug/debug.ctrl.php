@@ -16,6 +16,8 @@ class DebugController extends RoxControllerBase
             case 'debug':
             default:
                 switch (isset($request[1]) ? $request[1] : false) {
+                    case 'inicache':
+                        return new DebugInicachePage();
                     case 'sqltest':
                         $page = new SqltestPage;
                         $page->model = new SqltestModel();

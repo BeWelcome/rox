@@ -6,6 +6,7 @@ $words = new MOD_words();
 
 <h2><?php echo $regioninfo->region; ?>
 <?php
+// This is only visible to people with debug rights
 	if (MOD_right::get()->HasRight('Debug')) {
 		echo " <a href=\"geo/displaylocation/".$regioninfo->idregion."\" title=\" specific debug right view database records\">view geo record #".$regioninfo->idregion."</a>" ;
 	}

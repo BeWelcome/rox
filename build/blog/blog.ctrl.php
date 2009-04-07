@@ -272,6 +272,14 @@ class BlogController extends PAppController {
             $sanitize->allow('strike');
             $sanitize->allow('br');
             $sanitize->allow('blockquote');
+            $sanitize->allow('div');
+            $sanitize->allow('h1');
+            $sanitize->allow('h2');
+            $sanitize->allow('h3');
+            $sanitize->allow('h4');
+            $sanitize->allow('h5');
+            $sanitize->allow('ul');
+            $sanitize->allow('li');
         
             $sanitize->allowAttribute('color'); 
             $sanitize->allowAttribute('bgcolor');           

@@ -2,7 +2,7 @@
         <ul>
         <?php
         ?></ul><?php
-        ?><a href="">coming soon</a>
+        ?><a href="">From google</a>
         <ul>
         <?php
         ?></ul>

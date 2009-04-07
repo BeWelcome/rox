@@ -10,6 +10,8 @@
  */
 class MessagesModel extends RoxModelBase
 {
+	public $sort_element;
+	
     function __construct()
     {
         parent::__construct();
@@ -24,8 +26,11 @@ class MessagesModel extends RoxModelBase
             $where_string = implode(" AND ",$where_filters);
         }
         if (!$sort_string) {
-            $sort_string = "IF(unixtime_created > unixtime_DateSent, unixtime_created, unixtime_DateSent) DESC";
+			$sort_string = $this->sortFilters($this->sort_element);
+			if (!$sort_string)
+            	$sort_string = "IF(messages.created > messages.DateSent, messages.created, messages.DateSent) DESC";
         }
+		
         return $this->bulkLookup(
             "
 SELECT
@@ -48,14 +53,47 @@ ORDER BY
         );
     }
     
-    public function receivedMailbox()
+    public function sortFilters($sort_element=false)
+    {
+		if (!$sort_element) return false;
+		if (!$sort_dir = $this->sort_dir) $sort_dir = 'ASC';
+		switch ($sort_element) {
+			case 'sender':
+				$sort_string = 'senderUsername '.$sort_dir.', unixtime_DateSent DESC';
+				break;
+			case 'receiver':
+				$sort_string = 'receiverUsername '.$sort_dir.', unixtime_DateSent DESC';
+				break;
+			case 'date':
+				$sort_string = 'unixtime_DateSent '.$sort_dir.', senderUsername DESC';
+				break;
+			default:
+				$sort_string = false;
+		}
+		return $sort_string;
+    }	
+	
+    public function receivedMailbox($sort_element=false)
+    {
+        if (!isset($_SESSION['IdMember'])) {
+            // not logged in - no messages
+            return array();
+        } else {
+			if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
+			else $sort_string = false;
+            $member_id = $_SESSION['IdMember'];
+            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal"');
+        }
+    }
+    
+    public function spamMailbox()
     {
         if (!isset($_SESSION['IdMember'])) {
             // not logged in - no messages
             return array();
         } else {
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent"');
+            return $this->filteredMailbox('messages.InFolder = "Spam"');
         }
     }
     
@@ -94,6 +132,45 @@ WHERE
         }
     }
     
+    public function deleteMessage($message_id)
+    {
+        if (!is_numeric($message_id)) {
+            return false;
+        }
+        $this->dao->query(
+            "
+DELETE FROM messages
+WHERE id = $message_id
+            "
+        );
+    }
+    
+    // Mark a message as "read" or "unread"
+    public function markReadMessage($message_id, $read = true)
+    {
+        $this->dao->query(
+            "
+UPDATE messages
+SET
+    WhenFirstRead = ".($read ? 'NOW()' : '')."
+WHERE id = $message_id
+            "
+        );
+    }
+    
+    // Mark a message as "read" or "unread"
+    public function moveMessage($message_id, $folder)
+    {
+        $this->dao->query(
+            "
+UPDATE messages
+SET
+    InFolder = '$folder'
+WHERE id = $message_id
+            "
+        );
+    }
+     
     public function getMember($username) {
         return $this->singleLookup(
             "
@@ -206,7 +283,7 @@ WHERE id = ".$input['receiver_id']."
 INSERT INTO messages
 SET
     created = NOW(),
-    Message = '".$fields['text']."',
+    Message = '".mysql_real_escape_string($fields['text'])."',
     IdReceiver = ".$fields['receiver_id'].",
     IdSender = ".$fields['sender_id'].",
     InFolder = 'Normal',
@@ -223,7 +300,7 @@ SET
             "
 UPDATE messages
 SET
-    Message = '".$fields['text']."',
+    Message = '".mysql_real_escape_string($fields['text'])."',
     IdReceiver = ".$fields['receiver_id'].",
     IdSender = ".$fields['sender_id'].",
     InFolder = 'Normal',
@@ -233,8 +310,8 @@ WHERE id = $message_id
             "
         );
     }
+    
 }
-
 
 
 

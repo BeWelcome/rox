@@ -13,7 +13,7 @@ class MessagesBasePage extends RoxPageView
 {
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/YAML/screen/custom/bw_basemod_2col.css';
+        $stylesheets[] = 'styles/YAML/screen/custom/bw_basemod_2col_left.css';
         return $stylesheets;
     }
     
@@ -27,17 +27,21 @@ class MessagesBasePage extends RoxPageView
         </div><?php
     }
     
-    
+    public function leftSidebar()
+    {
 
+    }
+    
     protected function getSubmenuItems()
     {
+        
         $words = $this->getWords();
         $items = array();
         $items[] = array('received', 'messages/received', 'Received');
         $items[] = array('sent', 'messages/sent', 'Sent');
         $items[] = array('spam', 'messages/spam', 'Spam');
         $items[] = array('drafts', 'messages/drafts', 'Drafts');
-        return $items;
+        return $items; 
     }
 }
 

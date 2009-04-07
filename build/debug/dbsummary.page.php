@@ -15,16 +15,15 @@ class DatabaseSummaryPage extends DebugPage
     protected function leftSidebar()
     {
         echo '
-        <h3>Search</h3>
-        table name<br>
+        <h3>Search for table names</h3>
         <form action="debug/dbsummary" method="get">
         <input name="table_filter" size="14" value="'.$this->table_filter.'"/>
+        <input type="submit" value="search"/>
+        </form>
         <br>
-        <br>
-        column name<br>
+        <h3>Search for column names</h3>
+        <form action="debug/dbsummary" method="get">
         <input name="column_filter" size="14" value="'.$this->column_filter.'"/>
-        <br>
-        <br>
         <input type="submit" value="search"/>
         </form>
         <br>';
@@ -77,7 +76,7 @@ class DatabaseSummaryPage extends DebugPage
         if (!$this->table_filter) {
             $table_found = true;
         } else {
-            $table_found = (count(explode($this->table_filter, $tablename)) > 1);
+            $table_found = (count(explode($this->table_filter, $fieldname)) > 1);
         }
         return $column_found && $table_found;
     }
@@ -125,9 +124,8 @@ class DatabaseSummaryWidget extends ScrolltableWidget
     {
         $res = array(
             'name' => 'Table Name',
-            'count' => 'count'
         );
-        foreach (@$this->items as $tablename => $table) {
+        foreach ($this->items as $tablename => $table) {
             foreach ($table->fields as $type => $fields_with_type) {
                 $type = $this->discriminate($type);
                 $res[$type] = $type;
@@ -162,13 +160,7 @@ class DatabaseSummaryWidget extends ScrolltableWidget
         </div>';
     }
     
-    protected function tableCell_count($table) {
-        if (isset($table->TABLE_ROWS) && $table->TABLE_ROWS > 0) {
-            echo $table->TABLE_ROWS;
-        }
-    }
-    
-    protected function tableCell($showtype, $table)
+    protected function tableCell($showtype, $table, $tablename)
     {
         $showfields = array();
         foreach ($table->fields as $type => $fields_with_type) {

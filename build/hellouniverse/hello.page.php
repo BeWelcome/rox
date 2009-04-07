@@ -2,35 +2,40 @@
 
 
 /**
- * verifymembers page
+ * Hello universe page.
+ * This is a base class for other pages in the same application.
+ * We redefine the methods of RoxPageView to configure this page.
+ * Here we make some more decorations.
  *
- * @package verifymembers
- * @author jeanyves
+ * @package hellouniverse
+ * @author Andreas (lemon-head)
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-
-
-
-class VerifyMembersProceedPage extends RoxPageView {
+class HellouniversePage extends RoxPageView  /* HelloUniversePage doesn't work! */
+{
     /**
      * content of the middle column - this is the most important part
      */
-
-    private $membertoverify;
-
-    public function __construct($m) {
-        $this->membertoverify = $m;
-    }    
-
-
     protected function column_col3()
     {
-
         // get the translation module
         $words = $this->getWords();
-		 $m=$this->membertoverify ;
-        require TEMPLATE_DIR.'apps/verifymembers/proceedtoverification.php';    
+        
+        echo '
+<h3>The hello universe (advanced) middle column</h3>
+<p>
+Using the class "'.get_class($this).'".<br>
+Simple version in <a href="hellouniverse">hellouniverse</a>.<br>
+More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!<br>
+With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
+</p>
+<br>
+<p>
+A translated word (wordcode "Groups"):
+'.$words->getFormatted('Groups').'
+</p>
+        ';
     }
     
     /**
@@ -46,7 +51,7 @@ class VerifyMembersProceedPage extends RoxPageView {
      * configure the teaser (the content of the orange bar)
      */
     protected function teaserHeadline() {
-        echo 'Verify members teaser';
+        echo 'The hello universe teaser';
     }
     
     /**
@@ -54,13 +59,7 @@ class VerifyMembersProceedPage extends RoxPageView {
      * @return string the page title
      */
     protected function getPageTitle() {
-	 	 $words = new MOD_words();
-	 	 if (HasRight("Verifier","ApprovedVerifier")) {
-		 	echo $words->getFormatted("verifymembers_approvedverifier") ;
-	     }
-		 else {
-		 	echo $words->getFormatted("verifymembers_teaser") ;
-		 }
+        return 'Hello Unviverse!';
     }
     
     /**
@@ -68,10 +67,9 @@ class VerifyMembersProceedPage extends RoxPageView {
      */
     protected function leftSidebar()
     {
-        echo 'verify members Sidebar';
+        echo 'Hello Universe Sidebar';
     }
-	 
-} // end of VerifyMembersProceedPage
+}
 
 
 

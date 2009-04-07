@@ -22,6 +22,9 @@ class DonateController extends PAppController
     
     public function index()
     {
+        $vw = new ViewWrap($this->_view);
+        $P = PVars::getObj('page');
+        
         $request = PRequest::get()->request;
         if (!isset($request[1])) {
             $request[1] = '';
@@ -47,36 +50,16 @@ class DonateController extends PAppController
                 break;
         }
         
-        ob_start();
-        $this->_view->donate($sub,$TDonationArray,$error);
-        $str = ob_get_contents();
-        ob_end_clean();
-        $P = PVars::getObj('page');
-        $P->content .= $str;
+        $P->content .= $vw->donate($sub,$TDonationArray,$error);
         
         // teaser content
-        ob_start();
-        $this->_view->ShowSimpleTeaser('Donate',$TDonationArray);
-        $str = ob_get_contents();
-        $P = PVars::getObj('page');
-        $P->teaserBar .= $str;
-        ob_end_clean();
+        $P->teaserBar .= $vw->ShowSimpleTeaser('Donate',$TDonationArray);
 
         // submenu
-        ob_start();
-        $this->_view->submenu($sub);
-        $str = ob_get_contents();
-        $P = PVars::getObj('page');
-        $P->subMenu .= $str;
-        ob_end_clean(); 
+        $P->subMenu .= $vw->submenu($sub);
         
         // User bar on the left
-        ob_start();
-        $this->_view->donateBar($TDonationArray);
-        $str = ob_get_contents();
-        ob_end_clean();
-        $Page = PVars::getObj('page');
-        $Page->newBar .= $str;
+        $P->newBar .= $vw->donateBar($TDonationArray);
     }
 }
 

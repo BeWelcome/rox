@@ -61,6 +61,7 @@ class DebugPage extends RoxPageView
             'AccepterSenderMail',
             'FeedbackSenderMail',
             'TestMail',
+            'DISABLEERRORS',
         ) as $key) {
             if (isset($_SYSHCVOL[$key])) {
                 echo '

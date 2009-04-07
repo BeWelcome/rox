@@ -20,7 +20,7 @@ class OnlineView extends PAppView {
         $TMembers=$this->_model->GetMembers() ;
         $TGuests=$this->_model->GetGuests() ;
         $TotMembers=$this->_model->GetTotMembers() ;
-        require TEMPLATE_DIR.'apps/online/teaser.php';
+        require 'templates/teaser.php';
     }
 
     public function ShowOnline()      {
@@ -31,7 +31,7 @@ class OnlineView extends PAppView {
         $TMembers=$this->_model->GetMembers() ;
         $TGuests=$this->_model->GetGuests() ;
         $TotMembers=$this->_model->GetTotMembers() ;
-        require TEMPLATE_DIR.'apps/online/showonline.php';
+        require 'templates/showonline.php';
     }
 }
 ?>

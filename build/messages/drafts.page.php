@@ -10,7 +10,7 @@ class MessagesDraftsboxPage extends MessagesPageWithMailbox
     }
     
     protected function mailboxDescription() {
-        echo 'These are your drafts.';
+        
     }
     
     protected function getMailboxWidgetClassname()
@@ -35,7 +35,7 @@ class MailboxWidget_Drafts extends MailboxWidget
     {
         $columns = parent::getTableColumns();
         unset($columns['dateSent']);
-        $columns['contact'] = 'To';
+        $columns['from'] = 'To';
         return $columns;
     }
 

@@ -115,18 +115,18 @@ class PlacesView extends PAppView {
     }   
 
     private function displayContinent($continent, $countries) {
-        $html = '';
-        $html .= '<ul>';
-        foreach ($countries as $code => $country) {
-            $html .= '<li><a href="places/'.$code.'"><img src="images/icons/flags/'.strtolower($code).'.png" alt="" /></a> <a href="places/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
-            if ($country['number']) {
-                $html .= ' ['.$country['number'].']';
-            }
-            $html .= '</a></li>';
-        }
-        $html .= '</ul>';
-        return $html;   
-    }
+       $html = '';
+       $html .= '<ul>';
+       foreach ($countries as $code => $country) {
+           $html .= '<li><div class="sprite sprite-'.strtolower($code).'"><a href="places/'.$code.'"></a></div> <a href="places/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
+           if ($country['number']) {
+               $html .= '<span class="small grey"> ('.$country['number'].')</span>';
+           }
+           $html .= '</a></li>';
+       }
+       $html .= '</ul>';
+       return $html;   
+   }
     
     public function placesNotFound($ss="") {
         echo '<h2>Places '.$ss.' not found</h2>'; // TODO

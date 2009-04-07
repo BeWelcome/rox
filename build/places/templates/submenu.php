@@ -33,8 +33,7 @@ $words = new MOD_words();
         </a>
         <?php echo $words->flushBuffer(); ?>
       </li>
-	  <?php 
-	  /*
+
       <li id="sub2" <?php if ($subTab=='members') {echo 'class="active"';}?>>
         <a href="places/members">
           <span><?php echo $words->getBuffered('members'); ?></span>
@@ -53,8 +52,7 @@ $words = new MOD_words();
         </a>
         <?php echo $words->flushBuffer(); ?>
       </li>
-	  */ 
-	  ?>
+
     
     <!--<li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active'));"><span>another option</span></a></li> -->
     </ul>

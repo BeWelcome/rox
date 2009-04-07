@@ -10,7 +10,7 @@ class MessagesSpamboxPage extends MessagesPageWithMailbox
     }
     
     protected function mailboxDescription() {
-        echo 'These messages are marked as spam';
+        //echo 'These messages are marked as spam';
     }
     
     protected function getMailboxWidgetClassname()
@@ -26,15 +26,8 @@ class MailboxWidget_Spam extends MailboxWidget
     {
         return $this->model->filteredMailbox(array(
             'IdReceiver = '.$_SESSION['IdMember'],
-            'SpamInfo = "SpamSayMember"'
+            'InFolder = "Spam"'
         ));
-    }
-
-    protected function getTableColumns()
-    {
-        $columns = parent::getTableColumns();
-        $columns['contact'] = 'From';
-        return $columns;
     }
     
     protected function hrefPage($i_page) {

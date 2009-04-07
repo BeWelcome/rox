@@ -465,10 +465,10 @@ class MOD_words
             $whereCategory = ' `category`=\'' . $category . '\'';
         }
         */
-		
+		/*
 		if ($value=$this->$this->WordMemcache->GetValue($code,$lang)) {
 			return($value) ;
-		}
+		} */
         
         if (is_numeric($code)) {
             $query =

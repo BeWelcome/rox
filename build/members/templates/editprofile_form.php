@@ -157,9 +157,6 @@
                     ?> />
                     <?=$words->get('hidden')?>
                   </td>
-                  <td>
-                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyName')?></a>
-                  </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Address')?>:</td>
@@ -170,9 +167,6 @@
                         echo 'checked="checked"';
                     ?> />
                     <?=$words->get('hidden')?>
-                  </td>
-                  <td>
-                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyAddress')?></a>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -186,7 +180,7 @@
                     <?=$words->get('hidden')?>
                   </td>
                   <td>
-                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyZip')?></a>
+                    <a href="updatemandatory.php?cid=14" ><?=$words->get('UpdateMyNameAndAddressAndBirthdate')?></a>
                   </td>
                 </tr>
                 <tr align="left" >

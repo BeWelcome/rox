@@ -65,7 +65,7 @@ class MOD_words
     {
         $this->_lang = PVars::get()->lang;
 
-			$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
+//			$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
 
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';

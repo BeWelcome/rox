@@ -45,12 +45,8 @@ if (isset($vars['tags']) && $vars['tags']) {
 
 ?>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
+<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">//<!--
-bkLib.onDomLoaded(function() {
-	new nicEditor({iconsPath: 'script/nicEditorIcons.gif', buttonList: ['bold','italic','underline','left','center','right','ol','ul','strikethrough','removeformat','hr','image','upload','forecolor','link','fontFamily','fontFormat','xhtml']}).panelInstance('topic_text');
-});	
-
-/*
 tinyMCE.srcMode = '';
 tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
 tinyMCE.init({
@@ -66,7 +62,7 @@ tinyMCE.init({
     theme_advanced_toolbar_location: 'top',
     theme_advanced_statusbar_location: 'bottom',
     theme_advanced_resizing: true
-});*/
+});
 //-->
 </script>
 <h2>

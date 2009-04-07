@@ -23,10 +23,6 @@ $words = new MOD_words();
 ?>
 
 <script type="text/javascript">//<!--
-bkLib.onDomLoaded(function() {
-	new nicEditor({iconsPath: 'nicEditorIcons.gif'}).panelInstance('create-txt');
-});	
-/*
 tinyMCE.srcMode = '';
 tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
 tinyMCE.init({
@@ -44,7 +40,6 @@ tinyMCE.init({
     theme_advanced_resizing: true
 
 });
-*/
 //-->
 </script>
 
@@ -80,7 +75,7 @@ if (in_array('upderror', $vars['errors'])) {
     </div>
     <div class="row">
         <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
-        <textarea id="create-txt" name="txt" rows="10" cols="70"><?php
+        <textarea id="create-txt" name="txt" rows="10" cols="50"><?php
         // the content may be set
         echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
         ?></textarea>

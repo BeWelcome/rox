@@ -625,8 +625,8 @@ WHERE
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         $vars = &PPostHandler::getVars($callbackId);
         if (PPostHandler::isHandling()) {
-            $this->addImage();
-            if ($vars['galleryId']) {
+            $itemId = $this->addImage();
+            if ($vars['galleryId'] && $itemId) {
                 $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
             }
         	return false;
@@ -738,6 +738,7 @@ VALUES
             } catch (PException $e) {
                 error_log($e->__toString());
             }
+            return $itemId;
         }
     }
 

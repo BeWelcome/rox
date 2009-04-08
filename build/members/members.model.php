@@ -1070,7 +1070,7 @@ ORDER BY membersphotos.SortOrder
         // if( $max_y > 100)
             // $max_y = 100;
 		$gallery = new Gallery();
-		$gallery->addImage($img_file);
+		$gallery->addImage($img_file, $memberid);
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
         $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');

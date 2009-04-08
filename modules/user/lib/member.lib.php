@@ -115,12 +115,12 @@ class MOD_member
     {
         if ($userId) {
             $c = self::_getDAO();
-            $query = 'SELECT `handle` FROM `user` WHERE `id` = \''.$c->escape($userId).'\'';
+            $query = 'SELECT `Username` FROM `members` WHERE `id` = \''.$c->escape($userId).'\'';
             $q = $c->query($query);
             $d = $q->fetch(PDB::FETCH_OBJ);
             if( !$d)
                 return false;
-            return $d->handle;
+            return $d->Username;
         } else return $this->_username;
     }
     
@@ -128,7 +128,17 @@ class MOD_member
     {
         return $this->_userId;
     }
-    
+
+    public function getTBuserId()
+    {
+           $c = self::_getDAO();
+           $query = 'SELECT `id` FROM `user` WHERE `handle` = \''.$this->_username.'\'';
+           $q = $c->query($query);
+           $d = $q->fetch(PDB::FETCH_OBJ);
+           if( !$d)
+               return false;
+           return $d->id;
+    }
     
     public function getFromMembersTable($select_string)
     {

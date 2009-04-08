@@ -645,16 +645,18 @@ WHERE
      * 
      * @todo sizes should be customizable
      */
-    public function addImage($otherFile = false)
+    public function addImage($otherFile = false, $IdMember = false)
     {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         $vars = &PPostHandler::getVars($callbackId);
         
-        if (isset($otherFile)) { // if the image upload came from somewhere else
+        if (isset($otherFile) && isset($IdMember)) { // if the image upload came from somewhere else
+	        $member = MOD_member::getMember_userId($IdMember);
+	        $TB_userid = $member->getTBuserId();
             $_FILES['gallery-file'] = array();
 			$_FILES['gallery-file']['error'] = array(0 => '');
 			$_FILES['gallery-file']['tmp_name'] = array(0 => $otherFile);
-			$_FILES['gallery-file']['name'] = array(0 => $_SESSION['Username']);
+			$_FILES['gallery-file']['name'] = array(0 => $member->getUsername());			
 		}
         if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0)
             return false;
@@ -669,7 +671,7 @@ WHERE
             //$vars['error'] = 'Gallery_UploadError';
             return false;
         }
-        $userDir = new PDataDir('gallery/user'.$User->getId());
+        $userDir = new PDataDir('gallery/user'.$otherFile ? $TB_userid : $User->getId());
         $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
 (`id`, `user_id_foreign`, `file`, `original`, `flags`, `mimetype`, `width`, `height`, `title`, `created`)
@@ -678,7 +680,7 @@ VALUES
         ');
         $itemId = false;
         $insert->bindParam(0, $itemId);
-        $userId = $User->getId();
+        $userId = $otherFile ? $TB_userid : $User->getId();
         $insert->bindParam(1, $userId);
         $hash = false;
         $insert->bindParam(2, $hash);
@@ -697,7 +699,6 @@ VALUES
         foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
             if ($error != UPLOAD_ERR_OK)
                 continue;
-
             if (
                 $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
                 $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
@@ -727,6 +728,8 @@ VALUES
                 continue;
             if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
                 continue;
+			var_dump($_FILES['gallery-file']['name']);
+
             if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
                 continue;
             if ($size[0] > 550)

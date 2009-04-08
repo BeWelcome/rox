@@ -413,7 +413,7 @@ WHERE `gallery_items_id_foreign` = '.(int)$image.'
         return $this->dao->exec($query);
     }
 
-    public function getLatestItems($userId = false,$galleryId = false, $numRows = false, $flags = false)
+    public function getLatestItems($userId = false,$galleryId = false, $numRows = false)
     {
     	$query = '
 SELECT
@@ -438,12 +438,8 @@ LEFT JOIN `gallery_items_to_gallery` AS `g` ON
         	$query .= '
 WHERE `user_id_foreign` = '.(int)$userId.'
             ';
-            if ($flags) {
-        	    $query .= '
-AND `flags` = '.(int)$flags.'
-                ';
-            }
-        } elseif ($galleryId) {
+        }
+        if ($galleryId) {
         	$query .= '
 WHERE `gallery_id_foreign` = '.(int)$galleryId.'
             ';
@@ -645,18 +641,16 @@ WHERE
      * 
      * @todo sizes should be customizable
      */
-    public function addImage($otherFile = false, $IdMember = false)
+    public function addImage($otherFile = false)
     {
     	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         $vars = &PPostHandler::getVars($callbackId);
         
-        if (isset($otherFile) && isset($IdMember)) { // if the image upload came from somewhere else
-	        $member = MOD_member::getMember_userId($IdMember);
-	        $TB_userid = $member->getTBuserId();
+        if (isset($otherFile)) { // if the image upload came from somewhere else
             $_FILES['gallery-file'] = array();
 			$_FILES['gallery-file']['error'] = array(0 => '');
 			$_FILES['gallery-file']['tmp_name'] = array(0 => $otherFile);
-			$_FILES['gallery-file']['name'] = array(0 => $member->getUsername());			
+			$_FILES['gallery-file']['name'] = array(0 => $_SESSION['Username']);
 		}
         if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0)
             return false;
@@ -671,7 +665,7 @@ WHERE
             //$vars['error'] = 'Gallery_UploadError';
             return false;
         }
-        $userDir = new PDataDir('gallery/user'.$otherFile ? $TB_userid : $User->getId());
+        $userDir = new PDataDir('gallery/user'.$User->getId());
         $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
 (`id`, `user_id_foreign`, `file`, `original`, `flags`, `mimetype`, `width`, `height`, `title`, `created`)
@@ -680,13 +674,13 @@ VALUES
         ');
         $itemId = false;
         $insert->bindParam(0, $itemId);
-        $userId = $otherFile ? $TB_userid : $User->getId();
+        $userId = $User->getId();
         $insert->bindParam(1, $userId);
         $hash = false;
         $insert->bindParam(2, $hash);
         $orig = false;
         $insert->bindParam(3, $orig);
-        $flags = $otherFile ? 1 : 0;
+        $flags = 0;
         $insert->bindParam(4, $flags);
         $mimetype = false;
         $insert->bindParam(5, $mimetype);
@@ -699,6 +693,7 @@ VALUES
         foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
             if ($error != UPLOAD_ERR_OK)
                 continue;
+
             if (
                 $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
                 $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
@@ -728,8 +723,6 @@ VALUES
                 continue;
             if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
                 continue;
-			var_dump($_FILES['gallery-file']['name']);
-
             if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
                 continue;
             if ($size[0] > 550)

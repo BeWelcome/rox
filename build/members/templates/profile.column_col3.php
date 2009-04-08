@@ -174,10 +174,10 @@
                 <?php echo $member->country ?>
             </dd>
             
-            <?php if ($member->phone) { ?>
+            <?php if ($memberphone = $member->phone) { ?>
                 <dt><?=$words->getInLang('ProfilePhone', $profile_language_code);?>:</dt>
                 <?php
-                foreach ($member->phone as $phone => $value) {
+                foreach ($memberphone as $phone => $value) {
                     echo "<dd>", $words->get('Profile'.$phone), ": ", $value, "</dd>\n";
                 }
             ?>

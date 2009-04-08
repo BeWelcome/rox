@@ -14,9 +14,6 @@
   <li class="icon forumpost16">
     <a href="forums/member/<?=$member->Username?>" ><?=$words->get('ViewForumPosts', 7);?></a>
   </li>
-  <li class="icon forumpost16">
-    <a href="link/myself/<?=$member->Username?> "><?=$words->get("MyLinks");?></a>
-  </li>
 </ul>
 <h3><a href="members/<?=$member->Username?>/relations/ "><?=$words->get('MyRelations');?></a></h3>
 <ul class="linklist">

@@ -37,10 +37,10 @@ class MessagesBasePage extends RoxPageView
         
         $words = $this->getWords();
         $items = array();
-        $items[] = array('received', 'messages/received', 'Received');
-        $items[] = array('sent', 'messages/sent', 'Sent');
-        $items[] = array('spam', 'messages/spam', 'Spam');
-        $items[] = array('drafts', 'messages/drafts', 'Drafts');
+        $items[] = array('received', 'messages/received', $words->get('MyMessagesReceived'));
+        $items[] = array('sent', 'messages/sent', $words->get('MyMessagesSent'));
+        $items[] = array('spam', 'messages/spam', $words->get('MyMessagesSpam'));
+        $items[] = array('drafts', 'messages/drafts', $words->get('MyMessagesDraft'));
         return $items; 
     }
 }

@@ -6,6 +6,7 @@ $words = new MOD_words();
 $User = APP_User::login();
 $R = MOD_right::get();
 $GalleryRight = $R->hasRight('Gallery');
+if (isset($this->current_set)) $current_set = $this->current_set;
 
 if ($User && (($User->getHandle() == $userHandle) || ($GalleryRight > 1)) ) {
 
@@ -54,6 +55,7 @@ $vars = PPostHandler::getVars($callbackId);
 
     <input name="removeOnly" type="hidden" value="1">
     <input type="submit" name="button" value="<?=$words->getBuffered('GalleryRemoveImagesFromPhotoset')?>" class="button" style="cursor:pointer"/>
+    <a href="gallery/show/sets/<?=$this->current_set?>/upload" class="button" /><img src="images/icons/picture_add.png"><?=$words->get('GalleryUploadPhotos')?></a>
 
 </p>
 

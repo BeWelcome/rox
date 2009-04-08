@@ -171,6 +171,8 @@ class GalleryController extends RoxControllerBase {
                             $P->content .= $vw->allGalleries($galleries);
                             break;
                         }
+                        $this->_view->current_set = $request[3];
+                        
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
@@ -192,7 +194,7 @@ class GalleryController extends RoxControllerBase {
                                     $this->_model->editGalleryProcess();
                                     break;
                                 default:
-                                }                           
+                            }                      
                         } 
                         if (!isset($statement)) {
                             $cnt_pictures = $this->_model->getLatestItems('',$gallery->id,1);
@@ -209,12 +211,11 @@ class GalleryController extends RoxControllerBase {
                             $statement = $this->_model->getLatestItems('',$gallery->id);
                             $P->content .= $vw->latestGallery($statement,$username, 'gallery');
                             }
-                            $name = $gallery->title;
-                            
-                            if ($username) {
+                            if ((isset($request[4]) && $request[4] == 'upload') or !$cnt_pictures) {
                                 // Display the upload form
-                                $P->content .= $vw->uploadForm($gallery->id,$cnt_pictures ? true : false);
+                                $P->content = $vw->uploadForm($gallery->id,false);  
                             }
+                            $name = $gallery->title;
                         }
                         break;
                         

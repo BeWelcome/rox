@@ -198,7 +198,8 @@ class GalleryView extends PAppView {
 
     public function uploadForm($galleryId = false, $hide = false) 
     {
-        require 'templates/uploadform.php';
+        if (!$hide)
+            require 'templates/uploadform.php';
     }
 
     public function userBar()

@@ -27,8 +27,8 @@ require_once "footer.helper.php";
 <div id="footer">
   <p class="center"><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
   <div id="flags" class="center">
-    <?php echo $languageSelector; ?>
-
+    <p><?php echo $languageSelector; ?></p>
+    <p>Translator:</p>
     <?php translator_block() ?>
   </div>
 

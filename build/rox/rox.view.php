@@ -151,8 +151,8 @@ class RoxView extends PAppView {
     
     public function startpage()
     {
-        $flagList = $this->buildFlagList();
-        require TEMPLATE_DIR.'apps/rox/startpage.php';
+        require 'templates/_languageselector.helper.php';
+        require 'templates/startpage.php';
     }
     public function mainpage()
     {
@@ -181,19 +181,14 @@ class RoxView extends PAppView {
     }
     
     public function volunteerBar(
-                        $numberPersonsToBeAccepted_void,
-                        $numberPersonsToBeChecked_void,
-                        $numberMessagesToBeChecked_void,
-                        $numberSpamToBeChecked_void,
-												$numberPersonsToAcceptInGroup_void
+                        $numberPersonsToBeAccepted,
+                        $numberPersonsToBeChecked,
+                        $numberMessagesToBeChecked,
+                        $numberSpamToBeChecked,
+						$numberPersonsToAcceptInGroup,
+						$numberPendingLocalMess
                     )
     {
-		 		$numberPersonsToBeAccepted=$this->_model->getNumberPersonsToBeAccepted() ;
-		 		$numberPersonsToBeChecked=$this->_model->getNumberPersonsToBeChecked() ;
-		 		$numberMessagesToBeChecked=$this->_model->getNumberPersonsToAcceptInGroup() ;
-		 		$numberSpamToBeChecked=$this->_model->getNumberSpamToBeChecked() ;
-		 		$numberPersonsToAcceptInGroup=$this->_model->getNumberPersonsToAcceptInGroup() ;
-				
         require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
     }
     
@@ -229,6 +224,18 @@ class RoxView extends PAppView {
         $words = new MOD_words();
         $thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
         //$imagePathMember = MOD_user::getImage();
+
+		// We will mark the fact the member has or has no picture here, this is based on the returned default picture et something
+		if ((strpos($thumbPathMember,"et_male.square")!==false) or
+			(strpos($thumbPathMember,"et.square")!==false) or
+			(strpos($thumbPathMember,"et_female.square")!==false) ) {
+			$_SESSION['MemberHasNoPicture']=1 ;
+		}
+		else {
+			if (isset($_SESSION['MemberHasNoPicture'])) {
+				unset ($_SESSION['MemberHasNoPicture']) ;
+			}
+		}
         
         $_newMessagesNumber = $this->_model->getNewMessagesNumber($_SESSION['IdMember']);
         
@@ -237,7 +244,7 @@ class RoxView extends PAppView {
         } else {
             $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNoNewMessages');
         }
-        require TEMPLATE_DIR.'apps/rox/teaser_main.php';
+        require 'templates/teaser_main.php';
     }
        
     public function teasergetanswers()
@@ -289,13 +296,7 @@ class RoxView extends PAppView {
 	
     public function topMenu($currentTab)
     {
-        require TEMPLATE_DIR.'apps/rox/topmenu.php';
-    }
-    
-    public function footer()
-    {
-        $flagList = $this->buildFlagList();
-        require TEMPLATE_DIR.'apps/rox/footer.php';
+	require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
     
     private function buildFlagList()

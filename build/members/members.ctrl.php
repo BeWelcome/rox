@@ -5,11 +5,6 @@ class MembersController extends RoxControllerBase
 {
     function index($args = false)
     {
-        // REMOVE NEXT 3 LINES TO ACTIVATE most of the members-pages again
-        $request = $args->request;
-        if (!isset($request[0]) || $request[0] != 'setlocation')
-            $this->redirect("");
-
         $model = new MembersModel;
         if (isset($_SESSION['Username'])) {
             // logged in
@@ -43,9 +38,18 @@ class MembersController extends RoxControllerBase
                 if (!isset($request[1]) || empty($request[1])) {
                     // no member specified
                     $page = new MembersMembernotspecifiedPage;
+                } else if ($request[1] == 'avatar') {
+                    if (!isset($request[2]) || !$member = $this->getMember($request[2]))
+                        PPHP::PExit();
+                    PRequest::ignoreCurrentRequest();
+                    $model->showAvatar($member->id);
+                    break;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
+                } else if (!$member->publicProfile) {
+                    // this profile is not public
+                    $page = new MembersMustloginPage;
                 } else {
                     // found a member with given id or username. juhu
                     switch (isset($request[2]) ? $request[2] : false) {
@@ -75,15 +79,6 @@ class MembersController extends RoxControllerBase
         $model = new MembersModel();
         
         $myself = true;
-		
-		/**
-		* get infnomation about the connection between members
-		*
-		**/
-	function linkpath_render($fromID,$toID,$cssID) {
-        $linkwidget = new LinkSinglePictureLinkpathWidget();
-        $linkwidget->render($fromID,$toID,$cssID);
-	}
         
         switch (isset($request[0]) ? $request[0] : false) {
             case 'updatemandatory':
@@ -97,6 +92,13 @@ class MembersController extends RoxControllerBase
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
+                // $member->edit_mode = true;
+                if (isset($request[1]))
+                    $model->set_profile_language($request[1]);
+				if (isset($request[2]) && $request[2] == 'delete')
+					$page = new DeleteTranslationPage();
+                if (in_array('finish',$request))
+                    $page->status = "finish";
                 break;
             case 'myvisitors':
                 $page = new MyVisitorsPage();
@@ -128,6 +130,12 @@ class MembersController extends RoxControllerBase
                     // no member specified
                     $page = new MembersMembernotspecifiedPage;
                     $member = false;
+                } else if ($request[1] == 'avatar') {
+                    if (!isset($request[2]) || !$member = $this->getMember($request[2]))
+                        PPHP::PExit();
+                    PRequest::ignoreCurrentRequest();
+                    $model->showAvatar($member->id);
+                    break;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
@@ -139,12 +147,25 @@ class MembersController extends RoxControllerBase
                         $myself = true;
                     }
                     switch (isset($request[2]) ? $request[2] : false) {
+						case 'relations':
+                            if (!$myself && isset($request[3]) && $request[3] == 'add') {
+                                $page = new AddRelationPage();
+								if (isset($request[4]) && $request[4] == 'finish') {
+									$page->relation_wait = true;
+								}
+	                        } else {
+                                $page = new RelationsPage();
+                            }
+							break;
                         case 'comments':
                             if (!$myself && isset($request[3]) && $request[3] == 'add') {
                                 $page = new AddCommentPage();
                             } else {
                                 $page = new CommentsPage();
                             }
+                            break;
+                        case 'redesign':
+                            $page = new ProfileRedesignPage();
                             break;
                         case 'profile':
                         case '':
@@ -170,7 +191,6 @@ class MembersController extends RoxControllerBase
         return $page;
     }
     
-    
     protected function getMember($cid)
     {
         $model = new MembersModel;
@@ -182,7 +202,6 @@ class MembersController extends RoxControllerBase
             return false;
         }
     }
-    
     
     protected function redirect_myprofile()
     {
@@ -265,56 +284,39 @@ class MembersController extends RoxControllerBase
     
     public function myPreferencesCallback($args, $action, $mem_redirect)
     {
-        $post_args = $args->post;
-        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if( PPostHandler::isHandling()) {
-            if( !($User = APP_User::login()))
-                return false;
-            $vars =& $post_args;
-            $errors = array();
-            $messages = array();
-
-            $query = "select id from members where id=" . $_SESSION["IdMember"] . " and PassWord=PASSWORD('" . trim($vars['OldPassword']) . "')";
-            $qry = $this->dao->query($query);
-            $rr = $qry->fetch(PDB::FETCH_OBJ);
-            if (!$rr || !array_key_exists('id', $rr))
-                $errors[] = 'ChangePasswordInvalidPasswordError';
-            if( isset($vars['NewPassword']) && strlen($vars['NewPassword']) > 0) {
-                if( strlen($vars['NewPassword']) < 8) {
-                    $errors[] = 'ChangePasswordPasswordLengthError';
-                }
-                if(isset($vars['ConfirmPassword'])) {
-                    if(strlen(trim($vars['ConfirmPassword'])) == 0) {
-                        $errors[] = 'ChangePasswordConfirmPasswordError';
-                    } elseif(trim($vars['NewPassword']) != trim($vars['ConfirmPassword'])) {
-                        $errors[] = 'ChangePasswordMatchError';
-                    }
-                }
-            }
-            if( count($errors) > 0) {
-                $vars['errors'] = $errors;
-                return false;
-            }
-            if( isset($vars['NewPassword']) && strlen($vars['NewPassword']) > 0) {
-//            	$pwenc = MOD_user::passwordEncrypt($vars['NewPassword']);
-//              $query = 'UPDATE `user` SET `pw` = \''.$pwenc.'\' WHERE `id` = '.(int)$User->getId();
-                $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['NewPassword']).'\') WHERE `id` = '.$_SESSION['IdMember'];
-                if( $this->dao->exec($query)) {
-                    $messages[] = 'ChangePasswordUpdated';
-                    $L = MOD_log::get();
-                    $L->write("Password changed", "change password");
-                } else {
-                    $errors[] = 'ChangePasswordNotUpdated';
-                }
-            }
-
-            $vars['errors'] = $errors;
-            $vars['messages'] = $messages;
+        $vars = $args->post;
+        $request = $args->request;
+        $model = new MembersModel;
+        $errors = $model->checkMyPreferences($vars);
+        
+        if (count($errors) > 0) {
+            // show form again
+            $mem_redirect->problems = $errors;
+            $mem_redirect->post = $vars;
             return false;
-        } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
         }
+    
+        if( !($User = APP_User::login()))
+            return false;
+        
+        $model->editPreferences($vars);
+        
+        // set profile as public
+        if( isset($vars['PreferencePublicProfile']) && $vars['PreferencePublicProfile'] != '') {   
+            $model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);
+        }
+        // set new password
+        if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
+            $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['passwordnew']).'\') WHERE `id` = '.$_SESSION['IdMember'];
+            if( $model->dao->exec($query)) {
+                $messages[] = 'ChangePasswordUpdated';
+                $L = MOD_log::get();
+                $L->write("Password changed", "change password");
+            } else {
+                $mem_redirect->problems = array(0 => 'ChangePasswordNotUpdated');
+            }
+        }
+        return false;
     }
     
     /**
@@ -330,9 +332,7 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $request = $args->request;
-    
         $model = new MembersModel;
-        
         $errors = $model->checkCommentForm($vars);
         
         if (count($errors) > 0) {
@@ -341,18 +341,113 @@ class MembersController extends RoxControllerBase
             return false;
         }
         
+        $member = $this->getMember($request[1]);
+        $TCom = $member->get_comments_commenter($_SESSION['IdMember']);
         // add the comment!
-        if (!$model->addComment($vars)) return false;
+        if (!$model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
         
         return 'members/'.$request[1].'/comments';
     }
     
     
-    public function editMyProfileCallback($args, $action, $mem_redirect)
+    public function editMyProfileCallback($args, $action, $mem_redirect, $mem_resend)
     {
-        $post_args = $args->post;
+        if (isset($args->post)) {
+            $vars = $args->post;
+            $request = $args->request;
+            $model = new MembersModel;
+            $errors = $model->checkProfileForm($vars);
+            $vars['errors'] = array();
+            if (count($errors) > 0) {
+                // show form again
+                $vars['errors'] = $errors;
+                $mem_redirect->post = $vars;
+                return false;
+            }
+            $vars['member'] = $this->getMember($vars['memberid']);
+            $vars = $model->polishProfileFormValues($vars);
+            $success = $model->updateProfile($vars);
+            if (!$success) $mem_redirect->problems = array(0 => 'Could not update profile');
+            
+            // Redirect to a nice location like editmyprofile/finish
+            $str = implode('/',$request);
+            if (in_array('finish',$request)) return $str;
+            return $str.'/finish';
+            
+        }
     }
-}
+	
+    public function deleteTranslationCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        if (isset($args->post)) {
+            $vars = $args->post;
+            $request = $args->request;
+            $model = new MembersModel;
+			if (isset($vars['choice']) && $vars['choice'] == 'yes' && isset($vars['memberid'])) {
+				if (!isset($vars['profile_language'])) return false;
+				$member = $this->getMember($vars['memberid']);
+				$fields = $member->get_trads_fields();
+				$trad_ids = array();
+				foreach ($fields as $field)
+					$trad_ids[] = $member->$field;
+				$model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
+				// Redirect to a nice location like editmyprofile/finish
+				return 'editmyprofile/finish';
+            } else {
+				return 'editmyprofile';
+			}
+        }
+    }
+	
+    public function RelationCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        if (isset($args->post)) {
+            $vars = $args->post;
+            $request = $args->request;
+            $model = new MembersModel;
 
+			if (isset($vars['IdOwner']) && $vars['IdOwner'] == $_SESSION['IdMember'] && isset($vars['IdRelation'])) {
+				if (isset($vars['action'])) {
+					$member = $this->getMember($vars['IdRelation']);
+					if (isset($vars['Type'])) $vars['stype'] = $vars['Type'];
+					else {
+						$TabRelationsType = $member->get_TabRelationsType();
+						$stype=""; 
+						$tt=$TabRelationsType;
+						$max=count($tt);
+						for ($ii = 0; $ii < $max; $ii++) {
+							if (isset($vars["Type_" . $tt[$ii]]) && $vars["Type_" . $tt[$ii]] == "on") {
+							  if ($stype!="") $stype.=",";
+							  $stype.=$tt[$ii];
+							}
+						}
+						$relations = $member->get_relations();
+						$vars['stype'] = $stype;
+					}
+					switch ($vars['action']) {
+					case 'add':
+						$blub = $model->addRelation($vars);
+						break;
+					case 'update':
+						$model->updateRelation($vars);
+						break;
+					case 'confirm':
+						$vars['confirm'] = 'Yes';
+						$blub = $model->addRelation($vars);
+						$model->confirmRelation($vars);
+						break;
+					default:
+					}
+				}
+				// Redirect to a nice location like editmyprofile/finish
+				$str = implode('/',$request);
+				if (in_array('finish',$request)) return $str;
+				return $str.'/finish';
+            }
+			return false;
+        }
+    }
+
+}
 
 ?>

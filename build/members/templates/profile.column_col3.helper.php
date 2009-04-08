@@ -9,6 +9,7 @@ $member = $this->member;
 $lang = $this->model->get_profile_language();
 $profile_language = $lang->id;
 $profile_language_code = $lang->ShortCode;
+$profile_language_name = $lang->Name;
 $words = $this->getWords();		
 //$words->setLanguage('fr');
 
@@ -17,4 +18,28 @@ $website = $member->WebSite;
 
 $groups = $member->get_group_memberships();
 
+$languages = $member->get_profile_languages(); 
+$occupation = $member->get_trad("Occupation", $profile_language);        
+
+// Prepare sections:
+// -ProfileTravelExperience
+$sections->ProfileTravelExperience = 
+    $member->get_trad("PastTrips", $profile_language) +
+    $member->get_trad("PlannedTrips", $profile_language)
+    ;
+// -ProfileInterests
+    $hobbies = $member->get_trad("Hobbies", $profile_language);
+    $orgas = $member->get_trad("Organizations", $profile_language);
+$sections->ProfileInterests = 
+    $orgas
+    ;
+// -ProfileGroups
+$sections->ProfileGroups = 
+    $groups;
+    ;
+// -ProfileInterests
+$sections->ProfileInterests = 
+    $member->get_trad("Hobbies", $profile_language) +
+    $member->get_trad("Organizations", $profile_language)
+    ;
 ?>

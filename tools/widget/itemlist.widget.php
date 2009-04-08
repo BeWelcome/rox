@@ -29,7 +29,7 @@ class ItemlistWidget extends RoxWidget
     protected function showItems_table()
     {
         echo '
-        <table>';
+        <table class="full">';
         // table headline
         if (!$this->hideColumnTitles()) {
             echo '
@@ -46,7 +46,7 @@ class ItemlistWidget extends RoxWidget
         $index = 0;
         foreach ($items as $itemkey => $item) {
             echo '
-            <tr class="' . ($index%2 ? 'odd' : 'even') . '">';
+            <tr class="' . ($index%2 ? 'highlight' : 'blank') . '">';
             foreach ($this->getTableColumns() as $key => $value) {
                 $methodname = 'tableCell_'.$key;
                 echo '

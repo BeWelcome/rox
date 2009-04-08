@@ -1,0 +1,112 @@
+
+/* ###################################################
+** ### css mods by Manu (crumbking) ###
+** ###################################################
+*/
+
+/* ccs test for shops */
+
+#Spreadshop {
+padding-top:2.4em;
+}
+
+#shopteaser h1 {
+color:#000000;
+font-size:40px;
+padding-top:0.5em;
+}
+
+
+/*---------------------------------------------- Quicklinks ---*/
+
+#schnellzugriff {
+	width:11.27em;
+	z-index:49000;
+         max-height:150px;
+
+	}
+
+#schnellzugriff .schnellzugriff {
+	display:block;
+	padding-right:14px;
+	text-decoration:none;
+
+	z-index:50000;
+	}
+#schnellzugriff .schnellzugriff:hover {
+	text-decoration:underline;
+	}
+#schnellzugriff:hover .schnellzugriff {
+	text-decoration:underline;
+	}
+
+
+#schnellzugriff ul {
+	display:none;
+	position:relative;
+	right:5px;
+	margin:0;
+	margin-bottom:1.5em;
+	padding:10px;
+	list-style-type:none;
+	background-color:#F7F7F7;
+	border:1px solid #CCCCCC;
+	max-height:150px;
+         height:100%;
+	width:15em;
+	z-index:50000;
+	}
+#schnellzugriff h2 {
+	display:block;
+	font-weight:bold;
+	font-size: 2em;
+
+	}
+#schnellzugriff:hover ul {
+	display:block;
+
+	}
+
+#schnellzugriff ul li {
+	display:none;
+	border-top:1px solid #CCCCCC;
+	margin-top:5px;
+	padding-top:5px;
+
+	}
+#schnellzugriff ul li.first {
+	border-top-width:0;
+	margin-top:0;
+	padding-top:5px;
+	}
+
+#schnellzugriff ul li a {
+
+	width:16em;
+	padding-left:16px;
+	padding-top:3px;
+	padding-bottom:3px;
+	color:#333333;
+	background-repeat:no-repeat;
+	text-decoration:none;
+	}
+#schnellzugriff ul li a:hover {
+	text-decoration:underline;
+	}
+
+#schnellzugriff ul li ul {
+	position:relative;
+	float:none;
+	margin:0;
+	padding:0;
+	border-width:0;
+         overflow-y:auto;
+	overflow-x:hidden;
+         height:150px;
+	}
+#schnellzugriff ul li ul li {
+	float:none;
+	margin:0;
+	padding:0;
+	border-width:0;
+	}

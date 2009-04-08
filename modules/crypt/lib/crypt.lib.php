@@ -149,11 +149,12 @@ WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
         
-        if ($rr != NULL && sizeof($rr) > 0) {
+        if ($rr != NULL && sizeof($rr) > 0)
+        {
             if ($rr->IsCrypted == "not crypted") {
                 return $rr->MemberCryptedValue;
             }
-            if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue == 0) {
+            if ($rr->MemberCryptedValue == "" || $rr->MemberCryptedValue === 0) {
                 return (""); // if empty no need to send crypted
             }
             if ($rr->IsCrypted == "crypted") {
@@ -172,7 +173,7 @@ WHERE id = $IdCrypt
 				return ($return_value);
 			}
         }
-    } // end of get_crypted
+    }
     
     /**
      * insertCrypted
@@ -254,7 +255,7 @@ WHERE
     /**
      * MemberCrypt
      *
-     * allows a member to Crypt his data (to update it)
+     * allows a member to DeCrypt his data (to update it)
      *
      * @param $TableComumn must be something like "members.ProfileSummary"
      * @param $Idrecord is the id of the record in the corresponding $TableColumn, 
@@ -302,7 +303,7 @@ WHERE
      * IsCrypted
      * Get a decrypted value for a given crypted_id
      */
-    protected function IsCrypted($IdCrypt)
+    public function IsCrypted($IdCrypt)
     {
         $IdCrypt = (int)$IdCrypt;
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
@@ -336,16 +337,17 @@ WHERE id = $IdCrypt
      * AdminReadCrypted
      * Reads the crypted fields
      */
-    protected function AdminReadCrypted($IdCrypt = false)
+    public static function AdminReadCrypted($IdCrypt = false)
     {
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;	
         if (!$IdCrypt || $IdCrypt == '')
             return ('');
-        $crypted_id = (int)$crypted_id;
+        $crypted_id = (int)$IdCrypt;
         // TODO: limit this to a right 'decrypt' or similar
         $rr = self::get()->dao->query(
             "
 SELECT * 
-FROM cryptedfields
+FROM ". $crypt_db ."cryptedfields
 WHERE id = $crypted_id
             "
         )->fetch(PDB::FETCH_OBJ);
@@ -363,24 +365,25 @@ WHERE id = $crypted_id
     // If not return standard "is crypted text"
     // todo : complete this function
     public static function MemberReadCrypted($IdCrypt) {
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;
     	if ($IdCrypt == 0)
     		return (""); // if 0 it mean that the field is empty 
         $rr = self::get()->dao->query(
             "
 SELECT * 
-FROM cryptedfields
+FROM ". $crypt_db ."cryptedfields
 WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
     	if (!$rr)
     		return (false); // if no value, it is not crypted
-    	if ($_SESSION["IdMember"] == $rr->IdMember) {
+    	if (isset($_SESSION["IdMember"]) && $_SESSION["IdMember"] == $rr->IdMember) {
     		//	  echo $rr->MemberCryptedValue,"<br>";
     		return (self::GetDeCryptM($rr->MemberCryptedValue));
     	} else {
     		if ($rr->MemberCryptedValue == "")
     			return (""); // if empty no need to send crypted	
-    		return (ww("cryptedhidden"));
+    		return ("cryptedhidden");
     	}
     } // end of MemberReadCrypted
 
@@ -410,6 +413,7 @@ WHERE id = $IdCrypt
      * @return insertId()
      */
     public static function NewReplaceInCrypted($ss,$TableColumn,$IdRecord, $IdCrypt, $IdMember = false, $IsCrypted = "crypted") {
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;
     	if (!$ss)
     		return false; // Don't insert null values
     	if (!$IdMember)
@@ -420,8 +424,8 @@ WHERE id = $IdCrypt
         $rr = self::get()->dao->query(
             "
 SELECT * 
-FROM cryptedfields
-WHERE id = $crypted_id
+FROM ". $crypt_db ."cryptedfields
+WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
         
@@ -432,7 +436,6 @@ WHERE id = $crypted_id
         // Micha: What exactly do we need?
         $ssA = self::GetCryptA($ss);
         $ssM = self::GetCryptM($ss,$IsCrypted);
-        $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $query = "
         
 UPDATE
@@ -444,12 +447,12 @@ SET
     AdminCryptedValue = '" . $ssA . "',
     MemberCryptedValue = '" . $ssM . "'
 WHERE
-    id = ". (int)$rr->id .",
-    IdMember = '" . $rr->IdMember
+    id = ". (int)$rr->id ." AND
+    IdMember = '" . $rr->IdMember . "'"
     ;
         
         self::get()->dao->query($query);
-    	return ($IdCrypt);
+    	return $IdCrypt;
     } // end of NewReplaceInCrypted
 
 

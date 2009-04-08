@@ -5,20 +5,20 @@ class MOD_i18n
     private $_lang;
     private $_envVars = array();
 
-    protected $fallbackLangFile;
-    protected $langFile;
+    //protected $fallbackLangFile;
+    //protected $langFile;
     
 	public function __construct($file)
     {
         $this->_lang = PVars::get()->lang;
-        $fallbackLangFile = TEXT_DIR.$this->_fallbackLang.'/'.$file;
-        $langFile = TEXT_DIR.$this->_lang.'/'.$file;
-        if (!file_exists($fallbackLangFile) || !is_readable($fallbackLangFile))
-            throw new PException('Fallback language file not found!');
-        if (!file_exists($langFile) || !is_readable($langFile))
-            $langFile = $fallbackLangFile;
-        $this->langFile = $langFile;
-        $this->fallbackLangFile = $fallbackLangFile;
+        // $fallbackLangFile = TEXT_DIR.$this->_fallbackLang.'/'.$file;
+        // $langFile = TEXT_DIR.$this->_lang.'/'.$file;
+        //if (!file_exists($fallbackLangFile) || !is_readable($fallbackLangFile))
+        //    throw new PException('Fallback language file not found!');
+        //if (!file_exists($langFile) || !is_readable($langFile))
+        //    $langFile = $fallbackLangFile;
+        //$this->langFile = $langFile;
+        //$this->fallbackLangFile = $fallbackLangFile;
     }
     
     public function getText($name)
@@ -29,13 +29,13 @@ class MOD_i18n
     		}
     	}
         $resultArray = array();
-        require $this->langFile;
+        //require $this->langFile;
         if (!isset($$name) || !is_array($$name))
             return array();
         $resultArray = $$name;
         if ($this->_lang == $this->_fallbackLang)
             return $resultArray;
-        require $this->fallbackLangFile;
+        //require $this->fallbackLangFile;
         if (!isset($$name) || !is_array($$name))
             throw new PException('Error in fallback language file!');
         if (count($resultArray) == count($$name))

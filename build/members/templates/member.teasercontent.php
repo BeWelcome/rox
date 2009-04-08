@@ -1,82 +1,90 @@
-        <div id="teaser"  class="clearfix" >
+<div id="teaser"  class="clearfix" >
+    <div id="teaser_l" >
 
-  <div id="teaser_l" >
-  
-    <div id="pic_main" >
-      <div id="img1" >
-<a href="myphotos.php?action=viewphoto&amp;IdPhoto=<?=$member->getProfilePictureID()?>"  title="No picture for admin (He is ugly) but the update picture comment works !" >
-  <img src="memberphotos"  alt="ProfilePicture" >
-</a>
+        <div id="pic_main" >
+            <div id="img1" >
+                <a href="gallery/show/user/<?=$member->Username?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" /></a>
+            </div> <!-- img1 -->
+        </div> <!-- pic_main -->
+    </div> <!-- teaser_l -->
 
-      </div>
-    </div>
-  </div>
-  <div id="teaser_gmap" >
-    <img src="http://maps.google.com/staticmap?zoom=4&maptype=mobile&size=350x120&center=48.1333333,-1.2&markers=48.1333333,-1.2,blue&key=" >
-  </div>
- 
-<? 
-  	// display linkpath, only if not the members one profile
-// var_dump($_SESSION["IdMember"]);	
-// var_dump($m->id);
-// var_dump(strcmp($m->id,$SESSION["IdMember"]));
-	if (strcmp($member->id,$_SESSION["IdMember"]) != 0) {
-		linkpath_render($_SESSION["IdMember"],$member->id,'profile-picture-linkpath');
-    }
-  
- ?>
- 
-  <div id="teaser_r" >
-    <div id="profile-info" >
-      <div id="username" >
-<strong><?=$member->Username ?></strong>
-<?=$member->name() ?>  
+    <div id="teaser_r" >
+        <div id="profile-info" >
+            <div id="username" >
+                <strong><?=$member->Username ?></strong>
+                <?=$member->name() ?> <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
 <br />
-      </div>
-    </div>
-     
-    <div id="navigation-path" >
-       <!--<A href="country/" >Country</A>-->
-       	<h2><strong><a href="country/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
-				(<A href="country/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></A>)
-       	<strong><A href="country/<?=$member->countryCode() ?>" ><?=$member->country() ?></A></strong></h2>
-       <?php
-       /*
-      <A href="../country/<?php echo $member->countrycode()?>" ><?php $member->country()?></A>
-       > 
-      <A href="../country/<?php echo $member->countrycode()?>/<?php echo $member->region()?>" ><?php echo $member->region()?></A>
-       > 
-      <A href="../country/<?php echo $member->countrycode()?>/<?php echo $member->region()?>/<?php echo $member->city()?>" ><?php echo $member->city()?>�</A>
-       */
-       ?>
-    </div>
-    <div id="profile-info">
-      <!--<IMG src="images/neverask.gif"  class="float_left"  title="No, sorry"  width="30"  height="30"  alt="neverask" >-->
-      <table>
-<tbody>
-  <tr>
-    <td>
-       <?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
-      <br />
-      <?=$agestr ?> 
-      <?php 
-    if($occupation != null) echo ", ".$occupation; ?>
-    </td>
-    <td>
-       <?=$ww->ProfileVersionIn ?>:
-       <?php 
-       foreach($languages as $language) { 
-  	?>
-<a href="members/<?=$member->Username ?>/<?=$language ?>">
- <img height="11px"  width="16px"  src="bw/images/flags/<?=$language ?>.png"  alt="<?=$language ?>.png">
-      	</a>       	
-       <?php } ?>
-       
-    </td>
-  </tr>
-</tbody>
-      </table>
-    </div>
-  </div>
-</div>
+<?=$words->flushBuffer()?>
+            </div> <!-- username -->
+            <p>
+            <?php
+              if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
+                if ($member->Status!="Active") {
+                    echo "<span class=\"memberstatus\"> ",$member->Status," </span>\n";
+                }
+              } // end of for people with right dsiplay real status of the member
+              if ($member->Status=="ChoiceInactive") {
+                    echo "<span class=\"memberinactive\"> ",$ww->WarningTemporayInactive," </span>\n";
+              }
+            ?>
+            </p>
+        
+
+        <div id="navigation-path" >
+            <!--<a href="country/" >Country</a>-->
+            <h2><strong><a href="country/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
+                    (<a href="country/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
+            <strong><a href="country/<?=$member->countryCode() ?>" ><?=$member->country() ?></a></strong></h2>
+        </div> <!-- navigation-path -->
+        
+
+        <img src="images/icons/<?=($member->Accomodation) ? $member->Accomodation : 'neverask'?>.gif"  class="float_left"  title="<?=$member->Accomodation?>"  width="30"  height="30"  alt="<?=$member->Accomodation?>" />
+        <?php
+        // specific icon according to members.TypicOffer
+        if (strstr($member->TypicOffer, "guidedtour"))
+        {
+            $title = $words->getSilent("TypicOffer_guidedtour");
+			$image_name = 'icon_castle.gif';
+			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
+        }
+        if (strstr($member->TypicOffer, "dinner"))
+        {
+            $title = $words->getSilent("TypicOffer_dinner");
+			$image_name = 'icon_food.gif';
+			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
+        }
+        if (strstr($member->TypicOffer, "CanHostWeelChair"))
+        {
+            $title = $words->getSilent("TypicOffer_CanHostWeelChair");
+			$image_name = 'wheelchair.gif';
+			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
+        }
+		echo $words->flushBuffer();
+        ?>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                    <?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
+                    <br />
+                    <?=$agestr ?>
+                    <?php
+                    if($occupation != null) echo ", ".$occupation; ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div> <!-- profile-info -->
+
+        <div id="linkpath">
+            <?
+                // display linkpath, only if not the members own profile
+                if (isset($_SESSION["IdMember"]) and strcmp($member->id,$_SESSION["IdMember"]) != 0) {
+                    $linkwidget = new LinkSinglePictureLinkpathWidget();
+                    $linkwidget->render($_SESSION["IdMember"],$member->id,'profile-picture-linkpath');
+                }
+             ?>
+        </div> <!-- linkpath -->
+    </div> <!-- teaser_r -->
+</div> <!-- teaser -->
 

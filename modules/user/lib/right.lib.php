@@ -66,28 +66,28 @@ class MOD_right_flag {
     }
 
     protected function initialize($nomdetable="") {
-				if ($nomdetable=='rights') {
-					 $this->nomtable=$nomdetable ;
-					 
-					 $this->nomtablevolunteer='rightsvolunteers' ;
-					 $this->tablescope='RightScope_' ;
-					 $this->tablelevel='RightLevel_' ;
-					 $this->IdName='IdRight' ;
-					 $this->IdSession='Right_' ;
-				}
-				else if ($nomdetable=='flags') {
-					 $this->nomtable=$nomdetable ;
-					 $this->nomtablevolunteer='flagsmembers' ;
-					 $this->tablescope='FlagScope_' ;
-					 $this->tablelevel='FlagLevel_' ;
-					 $this->IdName='IdFlag' ;
-					 $this->IdSession='Flag_' ;
-				}
-				else {
-						 die("Wrong table name ".$nomdetable." for MOD_right_flag") ;
-				}
-		}
-        
+        if ($nomdetable=='rights') {
+    $this->nomtable=$nomdetable ;
+
+    $this->nomtablevolunteer='rightsvolunteers' ;
+    $this->tablescope='RightScope_' ;
+    $this->tablelevel='RightLevel_' ;
+    $this->IdName='IdRight' ;
+    $this->IdSession='Right_' ;
+        }
+        else if ($nomdetable=='flags') {
+            $this->nomtable=$nomdetable ;
+            $this->nomtablevolunteer='flagsmembers' ;
+            $this->tablescope='FlagScope_' ;
+            $this->tablelevel='FlagLevel_' ;
+            $this->IdName='IdFlag' ;
+            $this->IdSession='Flag_' ;
+        }
+        else {
+            die("Wrong table name ".$nomdetable." for MOD_right_flag") ;
+        }
+    }
+
     public function __destruct()
     {
         unset($this->_dao);
@@ -105,7 +105,7 @@ class MOD_right_flag {
 * optional Scope value can be send if the Scope is set to All then Scope
 * will always match if not, the sentence in Scope must be find in RScope
 * The function will use a cache in session
-* ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading
+*  ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading
 * from scope beware to the "" which must exist in the mysal table but NOT in 
 * the $Scope parameter 
 * $OptionalIdMember  allow to specify another member than the current one, in this case the cache is not used
@@ -204,8 +204,11 @@ public function hasRightAny()
 {
 	global $_SYSHCVOL;
 	
+	if (!isset($_SESSION['Param'])) {
+		   MOD_log::get()->write(" (JY : in module/user/lib/rights.lib.php in hasRightAny() function at this point \$_SESSION['Param'] should be set but it is not (it is a TODO)", "Debug");
+	}
 	// Test if in the session cache it is allready said that the member has no right
-	if (isset($_SESSION['Param']) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
+	if ((isset($_SESSION['Param'])) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
 	     (isset($_SESSION['hasRightAny'])) and 
 		 ($_SESSION['hasRightAny']='no') ){
 		 
@@ -292,10 +295,9 @@ class MOD_right extends MOD_right_flag {
     private static $_instance_right;
 
     function __construct() {
-						 parent::__construct();
-						 parent::initialize("rights") ;
-						 
-		}
+        parent::__construct();
+        parent::initialize("rights") ;
+    }
     /**
      * singleton getter
      * 

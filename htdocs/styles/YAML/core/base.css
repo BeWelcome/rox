@@ -8,19 +8,18 @@
  * Don't make any changes in this file!
  * Your changes should be placed in any css-file in your own stylesheet folder.
  *
- * @copyright       Copyright 2005-2007, Dirk Jesse
+ * @copyright       Copyright 2005-2009, Dirk Jesse
  * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
  *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
  * @link            http://www.yaml.de
  * @package         yaml
- * @version         3.0.4
- * @revision        $Revision: 135 $
- * @lastmodified    $Date: 2007-10-15 21:34:35 +0200 (Mo, 15 Okt 2007) $
+ * @version         3.1
+ * @revision        $Revision: 343 $
+ * @lastmodified    $Date: 2009-01-19 23:41:32 +0100 (Mo, 19. Jan 2009) $
  */
 
 @media all
 {
- /*------------------------------------------------------------------------------------------------------*/
 
  /**
   * @section browser reset
@@ -29,11 +28,12 @@
 
   /* (en) Global reset of paddings and margins for all HTML elements */
   /* (de) Globales Zurücksetzen der Innen- und Außenabstände für alle HTML-Elemente */
-  * { margin:0; padding: 0 }
+  * { margin:0; padding: 0; }
 
   /* (en) Correction: margin/padding reset caused too small select boxes. */
   /* (de) Korrektur: Das Zurücksetzen der Abstände verursacht zu kleine Selectboxen. */
-  option { padding-left: 0.4em }
+  option { padding-left: 0.4em; } /* LTR */
+  select { padding: 1px; }
 
  /**
   * (en) Global fix of the Italics bugs in IE 5.x and IE 6
@@ -60,7 +60,7 @@
     /* (de) Vorgabe der Standardfarben und Textausrichtung */
     color: #000;
     background: #fff;
-    text-align: left;
+    text-align: left; /* LTR */
   }
 
   /* (en) Clear borders for <fieldset> and <img> elements */
@@ -69,13 +69,19 @@
 
   /* (en) new standard values for lists, blockquote and cite */
   /* (de) Neue Standardwerte für Listen & Zitate */
-  ul, ol, dl { margin: 0 0 1em 1em }
-  li { margin-left: 1.5em; line-height: 1.5em; }
+  ul, ol, dl { margin: 0 0 1em 1em } /* LTR */
+  li {
+    margin-left: 0.8em; /* LTR */
+    line-height: 1.5em;
+  }
 
   dt { font-weight: bold; }
-  dd { margin: 0 0 1em 2em; }
+  dd { margin: 0 0 1em 0.8em; } /* LTR */
 
-  blockquote { margin: 0 0 1em 1.5em; }
+  blockquote { margin: 0 0 1em 0.8em; } /* LTR */
+
+  blockquote:before, blockquote:after,
+  q:before, q:after { content: ""; }
 
  /*------------------------------------------------------------------------------------------------------*/
 
@@ -93,16 +99,18 @@
   * |-------------------------------|
   */
 
-  #header { position:relative }
+  #header { position:relative; }
 
-  #topnav {
+  /* (en) Text Alignment for #topnav content */
+  /* (de) Textausrichtung für #topnav Inhalte */
+  #topnav { text-align: right; }  /* LTR */
+
+  /* (en) Absolute positioning only within #header */
+  /* (de) Absolute Positionierung erfolgt nur innerhalb von #header */
+  #header #topnav {
     position:absolute;
     top: 10px;
-    right: 10px;
-
-    /* (en) essential for correct alignment in Opera 6 ! */
-    /* (de) Erforderlich, damit im Opera 6 wirklich rechts plaziert ! */
-    text-align: right;
+    right: 10px; /* LTR */
   }
 
   /* (en) Backup for correct positioning */
@@ -117,35 +125,9 @@
   /* (de) Standard: Flexible mittlere Spalte */
   #col3 { width:auto; margin: 0 200px }
 
-  /* (en) Adjustment: sort #col3 behind float columns using z-index */
-  /* (de) Anpassung: #col3 mittels z-index hinter die float-Spalten verschieben */
-  #col1 {z-index: 3}
-  #col2 {z-index: 5}
-  #col3 {z-index: 1}
-  #col1_content {z-index: 4}
-  #col2_content {z-index: 6}
-  #col3_content {z-index: 2}
-
-  #col1_content, #col2_content, #col3_content { position:relative }
-
- /*------------------------------------------------------------------------------------------------------*/
-
- /**
-  * @section generic classes for layout switching | Generische Klassen zur Layoutumschaltung
-  * @see     http://www.yaml.de/en/documentation/css-components/base-stylesheet.html
-  *
-  * .hidecol1 -> 2-column-layout (using #col2 and #col3)
-  * .hidecol2 -> 2-column-layout (using #col1 and #col3)
-  * .hideboth -> single-column-layout (using #col3)
-  */
-
-  .hideboth #col3 {margin-left: 0; margin-right: 0}
-  .hidecol1 #col3 {margin-left: 0; margin-right: 200px}
-  .hidecol2 #col3 {margin-left: 200px; margin-right: 0}
-
-  .hideboth #col1, .hideboth #col2 {display:none}
-  .hidecol1 #col1 {display:none}
-  .hidecol2 #col2 {display:none}
+  /* (en) Preparation for absolute positioning within content columns */
+  /* (de) Vorbereitung für absolute Positionierungen innerhalb der Inhaltsspalten */
+  #col1_content, #col2_content, #col3_content { position:relative; }
 
  /*------------------------------------------------------------------------------------------------------*/
 
@@ -156,25 +138,26 @@
 
   /* (en) clearfix method for clearing floats */
   /* (de) Clearfix-Methode zum Clearen der Float-Umgebungen */
-   .clearfix:after {
+  .clearfix:after {
     content: ".";
     display: block;
+    font-size:0;
     height: 0;
     clear: both;
-    visibility: hidden
+    visibility: hidden;
   }
 
   /* (en) essential for Safari browser !! */
   /* (de) Diese Angabe benötigt der Safari-Browser zwingend !! */
-  .clearfix { display: block }
+  .clearfix { display: block; }
 
   /* (en) overflow method for clearing floats */
   /* (de) Overflow-Methode zum Clearen der Float-Umgebungen */
-  .floatbox { overflow:hidden }
+  .floatbox { overflow:hidden; }
 
   /* (en) IE-Clearing: Only used in Internet Explorer, switched on in iehacks.css */
   /* (de) IE-Clearing: Benötigt nur der Internet Explorer und über iehacks.css zugeschaltet */
-  #ie_clearing { display: none }
+  #ie_clearing { display: none; }
 
  /*------------------------------------------------------------------------------------------------------*/
 
@@ -183,29 +166,34 @@
   * @see     http://www.yaml.de/en/documentation/practice/subtemplates.html
   */
 
-  .subcolumns, .subcolumns_oldgecko {
-    width: 100%;
-    overflow:hidden;
-  }
+  .subcolumns { width: 100%; overflow:hidden; }
 
-  /* (en) alternative class for optional support of old  Mozilla/Netscape browers */
+  /* (en) alternative class for optional support of old Mozilla/Netscape browers */
   /* (de) Alternative Klasse zur optionalen Unterstützung alter Mozilla/Netscape-Brower */
-  .subcolumns_oldgecko { float:left }
+  .subcolumns_oldgecko { width: 100%; float:left; }
 
   .c50l, .c25l, .c33l, .c38l, .c66l, .c75l, .c62l {float: left; }
   .c50r, .c25r, .c33r, .c38r, .c66r, .c75r, .c62r {float: right; margin-left: -5px; }
 
-  .c25l, .c25r { width: 25% }
-  .c33l, .c33r { width: 33.333% }
-  .c50l, .c50r { width: 50% }
-  .c66l, .c66r { width: 66.666% }
-  .c75l, .c75r { width: 75% }
-  .c38l, .c38r { width: 38.2% }
-  .c62l, .c62r { width: 61.8% }
+  .c25l, .c25r { width: 25%; }
+  .c33l, .c33r { width: 33.333%; }
+  .c50l, .c50r { width: 50%; }
+  .c66l, .c66r { width: 66.666%; }
+  .c75l, .c75r { width: 75%; }
+  .c38l, .c38r { width: 38.2%; }
+  .c62l, .c62r { width: 61.8%; }
 
-  .subc  { padding: 0 0.5em }
-  .subcl { padding: 0 1em 0 0 }
-  .subcr { padding: 0 0 0 1em }
+  .subc  { padding: 0 0.5em; }
+  .subcl { padding: 0 1em 0 0; }
+  .subcr { padding: 0 0 0 1em; }
+
+  .equalize, .equalize .subcolumns { overflow:visible; display:table; table-layout:fixed; }
+  .equalize .c50l,.equalize .c25l,.equalize .c33l,.equalize .c38l,.equalize .c66l,
+  .equalize .c75l,.equalize .c62l,.equalize .c50r,.equalize .c25r,.equalize .c33r,
+  .equalize .c38r,.equalize .c66r,.equalize .c75r,.equalize .c62r {
+    display:table-cell; vertical-align:top;
+    float:none; margin:0; overflow:hidden;
+  }
 
  /*------------------------------------------------------------------------------------------------------*/
 
@@ -219,21 +207,17 @@
 
   /* (en) classes for invisible elements in the base layout */
   /* (de) Klassen für unsichtbare Elemente im Basislayout */
-  .skip, .hideme, .print {
+  .skip, .hideme, .print, dfn {
     position: absolute;
+    left: -1000em; /* LTR */
     top: -1000em;
-    left: -1000em;
-    height: 1px;
-    width: 1px;
   }
 
   /* (en) make skip links visible when using tab navigation */
   /* (de) Skip-Links für Tab-Navigation sichtbar schalten */
   .skip:focus, .skip:active {
     position: static;
-    top: 0;
     left: 0;
-    height: auto;
-    width: auto;
+    top:0;
   }
 }

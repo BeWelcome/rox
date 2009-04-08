@@ -145,7 +145,7 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			case "Active" :
 			case "ActiveHidden" :
 				 $_SESSION['IdMember']=$m->id ; // this is needed for MOD_log::get, because if not it will not link the log with the right member
-				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.") in bwauth.lib.php doBWLogin()", "Login");
+				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
 				 break ;
 			
 			case "ToComplete" :
@@ -305,7 +305,6 @@ VALUES
 	
 		if ($_SESSION['LogCheck'] != Crc32($_SESSION['MemberCryptKey'] . $_SESSION['IdMember'])) 
 		{
-			MOD_log::get()->write("In isBWLoggedIn forcing logout because \$_SESSION['LogCheck'] doesn't match", "Debug");
 			$this->logout();
 			return false;
 		}
@@ -339,6 +338,7 @@ VALUES
 		return (false) ;
 	} // end of isBWLoggedIn
     
+
 	function logout()
 	{
 		if (isset($_SESSION['IdMember'])) {
@@ -350,6 +350,7 @@ VALUES
 			$query = "delete from online where IdMember=" . $_SESSION['IdMember'];
 			$this->dao->query($query);
 		}
+		
 		unset($_SESSION['IdMember']);
 		unset($_SESSION['IsVol']);
 		unset($_SESSION['Username']);

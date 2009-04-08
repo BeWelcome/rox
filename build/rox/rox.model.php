@@ -36,7 +36,6 @@ class Rox extends PAppModel {
 	/**
 	 * @see /htdocs/bw/lib/lang.php
 	 */
-
     public function __construct() {
         parent::__construct();
         
@@ -63,33 +62,6 @@ class Rox extends PAppModel {
 	
     }// end of __construct
     
-    
-    
-    /**
-     * set defaults
-     * TODO: check: how do we replace the files base.php and page.php? do we need a
-     * replacement at all?
-     * @see loadDefault in /build/mytravelbook/mytravelbook.model.ctrl
-     * @see __construct in /build/rox/rox.model.ctrl
-     * @param
-     * @return true
-     */
-    public function loadDefaults()
-    {
-        if (!isset($_SESSION['lang'])) {
-            $_SESSION['lang'] = 'en';
-        }
-        PVars::register('lang', $_SESSION['lang']);
-        
-        if (file_exists(SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php')) {
-	        $loc = array();
-	        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/base.php';
-	        setlocale(LC_ALL, $loc);
-	        require SCRIPT_BASE.'text/'.PVars::get()->lang.'/page.php';
-        }
-        
-        return true;
-    }
     
     /**
      * @param string $lang short identifier (2 or 3 characters) for language
@@ -133,13 +105,13 @@ WHERE `ShortCode` in (' . $l . ')
         $query = '
 SELECT COUNT(*) AS n
 FROM `messages`
-WHERE `IdReceiver` = ' . $_idUser . '
+WHERE `IdReceiver` = ' . mysql_real_escape_string($_idUser) . '
 AND `Status` = \'Sent\'
 AND (NOT FIND_IN_SET(\'receiverdeleted\', `DeleteRequest`))
 AND `WhenFirstRead` = 0';
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
-		return $record->n;
+        return $record->n;
     }
 
 
@@ -148,62 +120,43 @@ AND `WhenFirstRead` = 0';
      * Returns the number of people due to be checked to become a member
      * of BW. The number depends on the scope of the person logged on.
      *
-		 * $_AccepterScope="" is an optional value for accepter Scope which can be used for performance if it was already fetched from database
      * @return integer indicating the number of people waiting acceptance
      */
-    public function getNumberPersonsToBeAccepted($_AccepterScope="")
+    public function getNumberPersonsToBeAccepted()
     {
-		
-		 		if ($_AccepterScope!="") {
-        		 $AccepterScope=$_AccepterScope ;
-				}
-				else {
-        		 $R = MOD_right::get();
-        		 $AccepterScope=$R->RightScope('Accepter');
-				}
-				if ($AccepterScope=="") return 0 ;
-
+        $R = MOD_right::get();
+        $AccepterScope=$R->RightScope('Accepter');
         if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
            $InScope = " /* All countries */";
         } else {
           $InScope = "AND countries.id IN (" . $AccepterScope . ")";
         }
-         $query = '
+        $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
 FROM members, countries, cities
-WHERE  members.Status=\'Pending\'
+WHERE members.Status=\'Pending\'
 AND cities.id=members.IdCity
-AND countries.id=cities.IdCountry ' . $InScope.' /* Model rox.model->getNumberPersonsToBeAccepted ' ;
-		if (isset($_SESSION['Username'])) $query.=$_SESSION['Username'] ;
-		$query.=' */';
+AND countries.id=cities.IdCountry ' . $InScope;
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
     }
+
     
     /**
      * Returns the number of people due to be checked to problems or what.
      * The number depends on the scope of the person logged on.
      *
-		 * $_AccepterScope="" is an optional value for accepter Scope which can be used for performance if it was already fetched from database
      * @return integer indicating the number of people in need to be checked
      */
-    public function getNumberPersonsToBeChecked($_AccepterScope)
+    public function getNumberPersonsToBeChecked($AccepterScope)
     {
-		 		if ($_AccepterScope!="") {
-        		 $AccepterScope=$_AccepterScope ;
-				}
-				else {
-        		 $R = MOD_right::get();
-        		 $AccepterScope=$R->RightScope('Accepter');
-				}
-				if ($AccepterScope=="") return 0 ;
         // FIXME: this if clause indicates a problem, doesn't it???
         // But you need database access to solve it.
         if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-           $InScope = " /* All countries */";
+            $InScope = " /* All countries */";
         } else {
-          $InScope = "AND countries.id IN (" . $AccepterScope . ")";
+            $InScope = "AND countries.id IN (" . $AccepterScope . ")";
         }
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
@@ -221,34 +174,34 @@ AND countries.id=cities.IdCountry ' . $InScope;
      * The number depends on the scope of the person logged on.
      *
      * @return integer indicating the number of people wiche need to be accepted 
-		 * in a Group if the current member has right to accept them
+     * in a Group if the current member has right to accept them
      */
     public function getNumberPersonsToAcceptInGroup($GroupScope)
     {
         // FIXME: this if clause indicates a problem, doesn't it???
         // But you need database access to solve it.
-				$where="" ;
-				if ($GroupScope!='"All"') {
-				 		 $tt=explode(",",$GroupScope) ;
-						 $where="(" ;
-						 foreach ($tt as $Scope) {
-						 				 if ($where!="(") {
-										 		$where.="," ;
-										 }
-										 $where=$where.$Scope;
-						 }
-						 $where=" and `groups`.`Name` in " .$where.")" ;
-				}
-        $query = 'SELECT SQL_CACHE COUNT(*) AS cnt FROM `membersgroups`,`groups` where `membersgroups`.`Status`="WantToBeIn" and `groups`.`id`=`membersgroups`.`IdGroup`'.$where ;
+        $where="" ;
+        if ($GroupScope!='"All"') {
+            $tt=explode(",",$GroupScope) ;
+            $where="(" ;
+            foreach ($tt as $Scope) {
+                if ($where!="(") {
+                    $where.="," ;
+                }
+                $where=$where.$Scope;
+            }
+            $where=" AND `groups`.`Name` IN " .$where.")" ;
+        }
+        $query = 'SELECT SQL_CACHE COUNT(*) AS cnt FROM `membersgroups`,`groups` WHERE `membersgroups`.`Status`="WantToBeIn" and `groups`.`id`=`membersgroups`.`IdGroup`'.$where ;
 //	 die($query) ;
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         if (isset($record->cnt)) {
-					 return $record->cnt;
-				}
-				else {
-					 return(0) ;
-				}
+            return $record->cnt;
+        }
+        else {
+            return(0) ;
+        }
     } // end of getNumberPersonsToAcceptedInGroup
 
     /**
@@ -292,15 +245,24 @@ AND mSender.Status=\'Active\'';
 	**/
 	public function getAllCityLatLong()
 	{
+	/*
 	$query= ' 
 		SELECT latitude,longitude
 		FROM members, cities
 		WHERE cities.id=members.IdCity
-		AND members.Status=\'Active\'
-		ORDER BY members.id desc limit 20';
+		GROUP BY members.IdCity
+		limit 20';
+*/
+
+	$query= ' 
+		SELECT latitude,longitude
+		FROM members, cities
+		WHERE cities.id=members.IdCity and members.Status=\'Active\'
+		ORDER BY members.id DESC
+		LIMIT 20';
 	$s = $this->dao->query($query);
 	if (!$s) {
-	throw new PException('Could not retrieve lat/long for cities!');
+            throw new PException('Could not retrieve lat/long for cities!');
 	}
 	$result = array();
 	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
@@ -309,63 +271,34 @@ AND mSender.Status=\'Active\'';
 	return $result;		
 	}
 	
-	
-	    // * Retrieve the last accepted profile with a picture 
-     // * COPIED FROM VISITS - MODULE
-     // */
-    // public function getMembersStartpage($limit = 0)
-    // {
-// // retrieve the last member
-        // $query = '
-// SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`.`id` AS IdPhoto,`countries`.`Name` AS countryname 
-// FROM 	`members`,`memberspublicprofiles`,`cities`
-// WHERE `membersphotos`.`IdMember`=`members`.`id`
-// AND `membersphotos`.`SortOrder`=0
-// AND `members`.`Status`=\'Active\'
-// AND `memberspublicprofiles`.`IdMember`= `members`.`id`
-// AND `members`.`IdCity`=`cities`.`id`
-// AND `countries`.`id`=`cities`.`IdCountry` 
-// ORDER BY `members`.`id` desc limit '.(int)$limit
-// ;
-        // $s = $this->dao->query($query);
-            // if (!$s) {
-                 // throw new PException('Cannot retrieve last member with photo!');
-            // }
-        // $members = array();
-        // while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            // array_push($members, $row);
-        // }
-        // return $members ;
-    // } // end of	getMembersStartpage
-	
 // retrieve the number of members for each country
 	public function getMembersPerCountry() {
-		$query = 'select countries.Name 
-		as countryname,count(*) 
-		as cnt from members,countries,cities where members.Status="Active" 
-		and members.IdCity=cities.id 
-		and cities.IdCountry=countries.id group by countries.id  order by cnt desc';
-		$s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve number of members per Country!');
-		}
-		$result = array();
-		$i=0;
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			if ($i<6) {
-				$result[$row->countryname] = $row->cnt;
-			}
-			else {
-				if (isset($result["Others"])) {
-					$result["Others"] = $result["Others"] + $row->cnt;
-				}
-				else { 
-					$result["Others"] = $row->cnt;
-				}
-			}
-			$i++;
-		}
-		return $result;		
+            $query = 'SELECT countries.Name 
+		AS countryname,COUNT(*) 
+		AS cnt FROM members,countries,cities WHERE members.Status="Active" 
+		AND members.IdCity=cities.id 
+		AND cities.IdCountry=countries.id GROUP BY countries.id  ORDER BY cnt DESC';
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could not retrieve number of members per Country!');
+            }
+            $result = array();
+            $i=0;
+            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                if ($i<6) {
+                    $result[$row->countryname] = $row->cnt;
+                }
+                else {
+                    if (isset($result["Others"])) {
+                        $result["Others"] = $result["Others"] + $row->cnt;
+                    }
+                    else { 
+                        $result["Others"] = $row->cnt;
+                    }
+                }
+                $i++;
+            }
+            return $result;		
 	}
 
 
@@ -373,17 +306,17 @@ AND mSender.Status=\'Active\'';
 
 
 	public function getLastLoginRank() {
-		$query = 'select TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff, COUNT(*) AS cnt FROM members 
+		$query = 'SELECT TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff, COUNT(*) AS cnt FROM members 
 		WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
 		GROUP BY logindiff 
 		ORDER BY logindiff ASC';
 		$s = $this->dao->query($query);
 		if (!$s) {
-			throw new PException('Could not retrieve last login listing!');
+                    throw new PException('Could not retrieve last login listing!');
 		}
 		$result = array();
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-					$result[$row->logindiff] = $row->cnt;
+                    $result[$row->logindiff] = $row->cnt;
 		}
 		return $result;		
 	}
@@ -409,21 +342,21 @@ AND mSender.Status=\'Active\'';
 		
 		
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			if ($row->logindiff==1) {
-					$result['1 day'] = $result['1 day'] + $row->cnt;
-			} elseif ($row->logindiff<=7) {
-					$result['1 week'] = $result['1 week'] + $row->cnt;
-			} elseif ($row->logindiff<=14) {
-					$result['1-2 weeks'] = $result['1-2 weeks'] + $row->cnt;
-			} elseif ($row->logindiff<=30) {
-					$result['2-4 weeks'] = $result['2-4 weeks'] + $row->cnt;
-			} elseif ($row->logindiff<=90) {
-					$result['1-3 months'] = $result['1-3 months'] + $row->cnt;
-			} elseif ($row->logindiff<=182) {
-					$result['3-6 months'] = $result['3-6 months'] + $row->cnt;
-			} else {
-					$result['longer'] =  $result['longer'] + $row->cnt;		
-			}
+                    if ($row->logindiff==1) {
+                        $result['1 day'] = $result['1 day'] + $row->cnt;
+                    } elseif ($row->logindiff<=7) {
+                        $result['1 week'] = $result['1 week'] + $row->cnt;
+                    } elseif ($row->logindiff<=14) {
+                        $result['1-2 weeks'] = $result['1-2 weeks'] + $row->cnt;
+                    } elseif ($row->logindiff<=30) {
+                        $result['2-4 weeks'] = $result['2-4 weeks'] + $row->cnt;
+                    } elseif ($row->logindiff<=90) {
+                        $result['1-3 months'] = $result['1-3 months'] + $row->cnt;
+                    } elseif ($row->logindiff<=182) {
+                        $result['3-6 months'] = $result['3-6 months'] + $row->cnt;
+                    } else {
+                        $result['longer'] =  $result['longer'] + $row->cnt;		
+                    }
 		}
 		return $result;		
 	}	
@@ -431,18 +364,18 @@ AND mSender.Status=\'Active\'';
 	
 // retrieve the stats from db - all time weekly average
 	public function getStatsLogAll() {
-		$query = 'select AVG(NbActiveMembers) AS NbActiveMembers,AVG(NbMessageSent) AS NbMessageSent,AVG(NbMessageRead) AS NbMessageRead,AVG(NbMemberWithOneTrust) AS NbMemberWithOneTrust,AVG(NbMemberWhoLoggedToday) AS NbMemberWhoLoggedToday,created,YEARWEEK(created) AS week  
+            $query = 'SELECT AVG(NbActiveMembers) AS NbActiveMembers,AVG(NbMessageSent) AS NbMessageSent,AVG(NbMessageRead) AS NbMessageRead,AVG(NbMemberWithOneTrust) AS NbMemberWithOneTrust,AVG(NbMemberWhoLoggedToday) AS NbMemberWhoLoggedToday,created,YEARWEEK(created) AS week  
 		FROM stats
 		GROUP BY week ';
-		$s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve statistics table!');
-		}
-		$result = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$result[] = $row;
-		}
-		return $result;		
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could not retrieve statistics table!');
+            }
+            $result = array();
+            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                $result[] = $row;
+            }
+            return $result;		
 	}
 	
 // retrieve the stats from db - daily for last 2months
@@ -503,19 +436,29 @@ AND membersgroups.IdMember='. $_idUser;
      * Retrieve the last accepted profile with a picture 
      * COPIED FROM VISITS - MODULE
      */
-    public function getMembersStartpage($limit = 0)
+    public function getMembersStartpage($limit = 0,$sortOrder = false)
     {
 // retrieve the last member
         $query = '
-SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`.`id` AS IdPhoto,`countries`.`Name` AS countryname 
+SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`.`id` AS IdPhoto,`countries`.`Name` AS countryname,`cities`.`Name` AS cityname 
 FROM 	`members`,`memberspublicprofiles`,`membersphotos`,`cities`,`countries` 
 WHERE `membersphotos`.`IdMember`=`members`.`id`
 AND `membersphotos`.`SortOrder`=0
-AND `members`.`Status`=\'Active\'
+AND `members`.`Status` = "Active"
 AND `memberspublicprofiles`.`IdMember`= `members`.`id`
 AND `members`.`IdCity`=`cities`.`id`
 AND `countries`.`id`=`cities`.`IdCountry` 
-ORDER BY `members`.`id` desc limit '.(int)$limit
+';
+        if ($sortOrder == 'random')
+        $query .= '
+ORDER BY RAND()
+'; 
+        else
+        $query .= '
+ORDER BY `members`.`id` DESC
+';
+        $query .= '
+LIMIT '.(int)$limit
 ;
         $s = $this->dao->query($query);
             if (!$s) {
@@ -534,20 +477,20 @@ ORDER BY `members`.`id` desc limit '.(int)$limit
      */    
 
     public function getDonations() {
-		$TDonations = array() ;
+        $TDonations = array();
         $R = MOD_right::get();
         $hasRight = $R->hasRight('Treasurer');
-	  	if ($hasRight) {
-		   $query = "select * from donations order by created desc" ;
-		}
-		else {
-		   $query = "select * from donations order by created desc limit 10" ;
-		}
+        if ($hasRight) {
+            $query = "SELECT * FROM donations ORDER BY created DESC";
+        }
+        else {
+            $query = "SELECT * FROM donations ORDER BY created DESC LIMIT 10";
+        }
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			  array_push($TDonations, $row);
-		}
-		return($TDonations) ;
+            array_push($TDonations, $row);
+        }
+        return($TDonations);
     }
     
     /**

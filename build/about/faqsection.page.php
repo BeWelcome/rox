@@ -7,11 +7,12 @@ class AboutFaqsectionPage extends AboutFaqPage
     {
         $words = $this->getWords();
         $req = $_SERVER['REQUEST_URI'];
+        $categories = $this->faq_categories;
         echo '
         <ol>';
         
         $j = 0;
-        foreach ($this->faq_categories as $key => $category) {
+        foreach ($categories as $key => $category) {
             echo '
             <li><div class="'.($j%2 ? 'odd' : 'even').'"><strong><a href="about/faq/'.$key.'">
             '.$words->get($category->Description).'

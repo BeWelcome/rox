@@ -20,7 +20,7 @@ class PublicStartpage extends RoxPageView
     }
     
     protected function teaserContent() {
-        require TEMPLATE_DIR.'apps/rox/teaser.php';
+        require 'templates/teaser.php';
     }
     
     protected function getPageTitle() {
@@ -63,10 +63,10 @@ class PublicStartpage extends RoxPageView
     }
     
     protected function column_col3() {
-        $flagList = $this->_buildFlagList();
+        //$flagList = $this->_buildFlagList();
         $members = $this->model->getMembersStartpage(7);
-        require TEMPLATE_DIR.'apps/rox/startpage.php';
-        require TEMPLATE_DIR.'apps/rox/startpage_people.php';
+        require 'templates/startpage.php';
+        require 'templates/startpage_people.php';
     }
     
     protected function getColumnNames ()

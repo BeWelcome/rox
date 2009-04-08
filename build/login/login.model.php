@@ -312,7 +312,7 @@ WHERE   members.id = $member_id
                 // the following is needed for MOD_log::get,
                 // because otherwise it would not link the log with the right member
                 $_SESSION['IdMember'] = $m->id ;
-                MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.") in login.model.php setBWMemberAsLoggedIn()", "Login");
+                MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
                 break ;
             
             case "ToComplete" :
@@ -478,15 +478,12 @@ WHERE   id = $tb_user_id
     {
 		
 		
-		// Added by JeanYves to be sure of the Logout
-		if (isset($_SESSION["IdMember"])) unset($_SESSION["IdMember"]) ;
-		if (isset($_SESSION["MemberStatus"])) unset($_SESSION["MemberStatus"]) ;
-		if (isset($_SESSION["Status"])) unset($_SESSION["Status"]) ;
-		if (isset($_SESSION["lang"])) unset($_SESSION["lang"]) ;
-		if (isset($_SESSION["IdLang"])) unset($_SESSION["IdLang"]) ;
-		if (isset($_SESSION["thumbPathMember"])) unset($_SESSION["thumbPathMember"]) ;
-		
-		
+				// Added by JeanYves to be sure of the Logout
+				if (isset($_SESSION["IdMember"])) unset($_SESSION["IdMember"]) ;
+				if (isset($_SESSION["MemberStatus"])) unset($_SESSION["MemberStatus"]) ;
+				if (isset($_SESSION["Status"])) unset($_SESSION["Status"]) ;
+				if (isset($_SESSION["lang"])) unset($_SESSION["lang"]) ;
+				if (isset($_SESSION["IdLang"])) unset($_SESSION["IdLang"]) ;
 				
         if (!isset($this->sessionName))
             return false;
@@ -494,11 +491,10 @@ WHERE   id = $tb_user_id
             return false;
         $this->loggedIn = false;
         unset($_SESSION[$this->sessionName]);
-		session_unset() ;
-		session_destroy() ;
+				session_unset() ;
+				session_destroy() ;
         session_regenerate_id();
-        MOD_log::get()->write("End of login.model.php ::Logout", "Login");
-      return true;
+        return true;
     }
 }
 

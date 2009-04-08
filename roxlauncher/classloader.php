@@ -11,41 +11,118 @@ class ClassLoader
     
     function addClassesForAutoloadInisInFolder($path, $subdir_level = 1)
     {
-        if (!is_dir($path)) return;
+        if (!is_dir($path)) return false;
         
-        $this->addClassesFromIniFile($path.'/autoload.ini', $path);
+        $settings = array();
+        // $force_refresh = ('localhost' == $_SERVER['SERVER_NAME']);
+        // sorry, the caching doesn't work that well. so we disable it for now.
+        $force_refresh = true;
+        if (!is_file($cachefile = $path.'/autoload.cache.ini') || $force_refresh) {
+            $this->recursiveIniParsing($settings, $path, '', $subdir_level);
+            $this->createIniFile($cachefile, $settings);
+        } else {
+            $this->iniParsing($settings, $cachefile, '');
+        }
+        
+        // add classes found in $settings
+        foreach ($settings as $k => $v) {
+            foreach ($v as $kk => $vv) {
+                $file = $path.(empty($k) ? '/' : "/$k/").$kk;
+                foreach ($vv as $classname) {
+                    $this->addClass($classname, $file);
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    protected function recursiveIniParsing(&$settings, $start_path, $rel_path, $subdir_level)
+    {
+        $path = empty($rel_path) ? $start_path : $start_path.'/'.$rel_path;
+        $filename = $path.'/autoload.ini';
+        
+        if (is_file($filename)) {
+            $scan_subdirectories = $this->iniParsing($settings, $filename, $rel_path);
+            if (is_array($scan_subdirectories)) {
+                foreach ($scan_subdirectories as $rel_scan_path => $depth) {
+                    $this->recursiveIniParsing($settings, $start_path, $rel_scan_path, $depth);
+                }
+            }
+        }
         
         if ($subdir_level > 0) {
             foreach (scandir($path) as $subdir) {
-                $dir = $path.'/'.$subdir;
-                if (!is_dir($dir)) {
-                    // echo ' - not a dir';
-                } else if ('.' == $dir || '..' == $dir) {
-                    // do nothing
-                } else {
-                    $this->addClassesForAutoloadInisInFolder($dir, $subdir_level-1);
+                if (is_dir($subdir_path = $path.'/'.$subdir) && '.' != $subdir && '..' != $subdir) {
+                    $this->recursiveIniParsing(
+                        $settings,
+                        $start_path,
+                        empty($rel_path) ? $subdir : ($rel_path.'/'.$subdir),
+                        $subdir_level-1
+                    );
                 }
             }
         }
     }
     
-    function addClassesFromIniFile($filename, $path_prefix = false)
-    {
+    protected function iniParsing(&$settings, $filename, $rel_path) {
+        if (!empty($rel_path)) $rel_path .= '/';
         if (is_file($filename)) {
-            $this->addClassesFromIniSettings(
-                parse_ini_file($filename, true),
-                $path_prefix ? $path_prefix : dirname($filename)
-            );
+            $scan_subdirectories = array();
+            foreach (parse_ini_file($filename, true) as $k => $v) {
+                if (is_array($v)) {
+                    foreach ($v as $kk => $vv) {
+                        if (is_numeric($vv)) {
+                            // this is a command to scan subdirectories for more ini files,
+                            // $vv denotes the search depth
+                            $scan_subdirectories[$rel_path.$k.'/'.$kk] = $vv;
+                        } else foreach (split("[,\n\r\t ]+", $vv) as $classname) {
+                            @$settings[$rel_path.$k][$kk][] = $classname;
+                        }
+                    }
+                } else {
+                    if (is_numeric($v)) {
+                        // this is a command to scan subdirectories for more ini files,
+                        // $vv denotes the search depth
+                        $scan_subdirectories[$rel_path.$k] = $v;
+                    } else foreach (split("[,\n\r\t ]+", $v) as $classname) {
+                        @$settings[$rel_path][$k][] = $classname;
+                    }
+                }
+            }
+            return $scan_subdirectories;
+        } else {
+            return false;
         }
     }
     
-    function addClassesFromIniSettings($ini_settings, $path_prefix)
+    protected function createIniFile($filename, $settings) {
+        $str = '';
+        if (isset($settings[''])) {
+            foreach ($settings[''] as $kk => $vv) {
+                $str .= "$kk = ".implode(' ', $vv)."\n";
+            }
+        }
+        foreach ($settings as $k => $v) {
+            if ('' == $k) continue;
+            $str.= "\n[$k]\n";
+            foreach ($v as $kk => $vv) {
+                $str .= "$kk = ".implode(' ', $vv)."\n";
+            }
+        }
+        file_put_contents($filename, $str);
+    }
+    
+    function addClassesFromIniSettings($ini_settings, $path_prefix = false)
     {
+        if (!empty($path_prefix)) {
+            $path_prefix.='/';
+        }
         foreach ($ini_settings as $k => $v) {
             if (!is_array($v)) {
-                $this->addClassesFromIniRow( "$path_prefix/$k" , $v);
+                $this->addClassesFromIniRow( $path_prefix.$k , $v);
             } else foreach ($v as $kk => $vv) {
-                $this->addClassesFromIniRow( "$path_prefix/$k/$kk" , $vv);
+                $this->addClassesFromIniRow( $path_prefix.$k.'/'.$kk , $vv);
             }
         }
     }
@@ -64,12 +141,11 @@ class ClassLoader
         }
     }
     
-    
-    
     function autoload($classname)
     {
         if (isset($this->_files_by_classname[$classname])) {
-            if ($this->requireFileAbsolute($this->_files_by_classname[$classname], $classname)) {
+            $file = $this->_files_by_classname[$classname];
+            if ($this->requireFileAbsolute($file, $classname)) {
                 return true;
             }
         }
@@ -127,7 +203,15 @@ class ClassLoader
     {
         if (is_file($abs_path)) {
             require_once $abs_path;
-            return is_string($classname) ? class_exists($classname) : true;
+            if (!is_string($classname)) {
+                return true;
+            } else if (class_exists($classname) || interface_exists($classname)) {
+//                eval($classname.'::$where_defined = \''.$abs_path.'\';');
+                self::$_where_is_class[$classname] = $abs_path;
+                return true;
+            } else {
+                return false;
+            }
         }
         return false;
     }
@@ -136,6 +220,17 @@ class ClassLoader
     function showClasses()
     {
         echo '<pre>kirschkernspucken<br>'; print_r($this->_files_by_classname); echo '</pre>';
+    }
+    
+    private static $_where_is_class = array();
+    function whereIsClass($classname) {
+        if (!class_exists($classname)) {
+            return false;
+        } else if (!isset(self::$_where_is_class[$classname])) {
+            return false;
+        } else {
+            return self::$_where_is_class[$classname];
+        }
     }
     
     

@@ -8,17 +8,17 @@
  * (de) IE Anpassungs-Stylesheet für YAML vlist-Navigation
  *      Einbindung ins Layout erfolgt über den Import innerhalb des IE-Anspassungs-Stylesheet
  *
- * @copyright       Copyright 2005-2007, Dirk Jesse
+ * @copyright       Copyright 2005-2009, Dirk Jesse
  * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
  *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
  * @link            http://www.yaml.de
  * @package         yaml
- * @version         3.0.2
- * @revision        $Revision: 107 $
- * @lastmodified    $Date: 2007-08-01 18:27:14 +0200 (Mi, 01 Aug 2007) $
+ * @version         3.1
+ * @revision        $Revision: 343 $
+ * @lastmodified    $Date: 2009-01-19 23:41:32 +0100 (Mo, 19. Jan 2009) $
  */
 
-@media all
+@media screen, projection
 {
   /**
    * Box Model Bug
@@ -34,24 +34,27 @@
    * @valid      no
    */
 
-  * html #submenu li a,
-  * html #submenu li strong,
-  * html #submenu li span,
-  * html #submenu li#title,
-  * html #submenu li#active { width: 100%; w\idth: 90%; }
 
-  * html #submenu li ul li a,
-  * html #submenu li ul li strong,
-  * html #submenu li ul li span,
-  * html #submenu li ul li#active { width: 100%; w\idth: 80%; }
+  /* title */
+  * html h6.vlist { width: 100%; w\idth: 90%; }
 
-  * html #submenu li ul li ul li a,
-  * html #submenu li ul li ul li strong,
-  * html #submenu li ul li ul li span,
-  * html #submenu li ul li ul li#active { width: 100%; w\idth: 70%; }
+  /* level 1 */
+  * html .vlist li a,
+  * html .vlist li strong,
+  * html .vlist li span { width: 100%; w\idth: 90%; }
 
-  * html #submenu li ul li ul li ul li a,
-  * html #submenu li ul li ul li ul li strong,
-  * html #submenu li ul li ul li ul li span,
-  * html #submenu li ul li ul li ul li#active { width: 100%; w\idth: 60%; }
+  /* level 2 */
+  * html .vlist li ul li a,
+  * html .vlist li ul li strong,
+  * html .vlist li ul li span { width: 100%; w\idth: 80%; }
+
+  /* level 3 */
+  * html .vlist li ul li ul li a,
+  * html .vlist li ul li ul li strong,
+  * html .vlist li ul li ul li span { width: 100%; w\idth: 70%; }
+
+  /* level 4 */
+  * html .vlist li ul li ul li ul li a,
+  * html .vlist li ul li ul li ul li strong,
+  * html .vlist li ul li ul li ul li span { width: 100%; w\idth: 60%; }
 }

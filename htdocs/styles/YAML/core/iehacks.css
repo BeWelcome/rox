@@ -8,21 +8,19 @@
  * Don't make any changes in this file!
  * Your changes should be added to a separate patch-file.
  *
- * @copyright       Copyright 2005-2007, Dirk Jesse
+ * @copyright       Copyright 2005-2009, Dirk Jesse
  * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
  *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
  * @link            http://www.yaml.de
  * @package         yaml
- * @version         3.0.4
- * @revision        $Revision: 137 $
- * @lastmodified    $Date: 2007-11-18 18:51:18 +0100 (So, 18 Nov 2007) $
+ * @version         3.1
+ * @revision        $Revision: 343 $
+ * @lastmodified    $Date: 2009-01-19 23:41:32 +0100 (Mo, 19. Jan 2009) $
  * @appdef yaml
  */
 
 @media all
 {
-  /*------------------------------------------------------------------------------------------------------*/
-
   /**
    * (en) Debugging: When you see a green background, IE is getting this stylesheet
    * (de) Fehlersuche: Hintergrund leuchtet grün, wenn das Stylesheet korrekt geladen wurde
@@ -61,11 +59,11 @@
 
   * html textarea { overflow:scroll; overflow-x: hidden; }
   * html input { overflow: hidden; }
-  
+
   /*------------------------------------------------------------------------------------------------------*/
 
   /**
-   * (en) Stability fixes with 'position:relative' 
+   * (en) Stability fixes with 'position:relative'
    * (de) Stabilitätsverbesserungen durch 'position:relative'
    *
    * @bugfix
@@ -74,9 +72,9 @@
    * @valid      yes
    */
 
-  body { position:relative }  /* Essential in IE7 for correct layout scaling ... */
-  * html body { position:static }  /* ... but not for IE5.x and IE6 */
-  #main { position: relative } /* helpful for several problems in older IE versions*/
+  body { position:relative; }  /* Essential in IE7 for correct layout scaling ... */
+  * html body { position:static; }  /* ... but not for IE5.x and IE6 */
+  #main { position: relative; } /* helpful for several problems in older IE versions*/
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -91,10 +89,9 @@
    * @valid      yes
    */
 
-
-  .clearfix { display: inline-block }  /* ... especial for IE7 */
-  .clearfix { display: block }      /* ... für IE5,IE6,IE7 */
-  * html .clearfix { height: 1% }   /* ... für IE5 + IE6/Win | hasLayout aktivieren */
+  .clearfix { display: inline-block; }  /* ... especial for IE7 */
+  .clearfix { display: block; }      /* ... für IE5,IE6,IE7 */
+  * html .clearfix { height: 1%; }   /* ... für IE5 + IE6/Win | hasLayout aktivieren */
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -103,12 +100,12 @@
    * (de) Anpassung der .floatbox-Klasse für IE
    *
    * @workaround
-   * @affected   IE 5.x/Win, IE6
-   * @css-for    IE 5.x/Win, IE6
+   * @affected   IE 5.x/Win, IE6, IE7
+   * @css-for    IE 5.x/Win, IE6, IE7
    * @valid      yes
    */
 
-  * html .floatbox { width:100% }
+  .floatbox { width:100%; }
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -121,11 +118,11 @@
    * @css-for    IE 5.x/Win, IE6
    * @valid      yes
    */
-  
+
   .slidebox {
-    margin-right: -1000px;
     position:relative;
-    height: 1%
+    margin-right: -1000px;
+    height: 1%;
   }
 
   /*------------------------------------------------------------------------------------------------------*/
@@ -140,9 +137,9 @@
    * @valid      yes
    */
 
-  * html #col1 { position:relative } /* Nur für < IE7, sonst gibts im IE7 neue Positionierungsprobleme */
-  * html #col2 { position:relative } /* Nur für < IE7, sonst gibts im IE7 neue Positionierungsprobleme */
-  * html #col3 { position:relative }
+  * html #col1,
+  * html #col2,
+  * html #col3 { position:relative; }
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -155,12 +152,12 @@
    * @css-for    IE 5.x/Win, IE6, IE7
    * @valid      no
    */
-   
-  body { height: 1% }
-  #page_margins, #page, #header, #nav, #main, #footer { zoom:1 }             /* IE6 & IE7    */
-  #page_margins, #page { height: 1% }                                        /* IE 5.x       */
-  * html #header, * html #nav, * html #main, * html #footer { width: 100% }  /* IE 5.x & IE6 */
-  * html #header, * html #nav, * html #main, * html #footer { wid\th: auto } /* IE 6         */
+
+  body { height: 1%; }
+  #page_margins, #page, .page_margins, .page, #header, #nav, #main, #footer { zoom:1; }   /* IE6 & IE7    */
+  #page_margins, #page, .page_margins, .page { height: 1%; }                              /* IE 5.x       */
+  * html #header, * html #nav, * html #main, * html #footer { width: 100%; }              /* IE 5.x & IE6 */
+  * html #header, * html #nav, * html #main, * html #footer { wid\th: auto; }             /* IE 6         */
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -173,9 +170,8 @@
    * @css-for    IE 5.x/Win, IE6
    * @valid      yes
    */
-  * html ul { position: relative }
-  * html ol { position: relative }
-  * html dl { position: relative }
+
+  * html ul, * html ol, * html dl { position: relative; }
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -187,8 +183,23 @@
    * @css-for    IE 5.x/Win, IE6, IE7
    * @valid      yes
    */
+
   body ol li { display:list-item; }
-  
+
+  /**
+   * Form related bugfixes
+   *
+   * @bugfix
+   * @affected   IE 5.x/Win, IE6, IE7
+   * @css-for    IE 5.x/Win, IE6, IE7
+   * @valid      no
+   */
+  fieldset, legend { position:relative; }
+  /* global fixes for YAML's form construction set */ 
+  form.yform, 
+  form.yform div,
+  form.yform div * { zoom:1; }
+
   /*------------------------------------------------------------------------------------------------------*/
 
   /**
@@ -208,7 +219,7 @@
    * @valid      no
    */
 
-  #ie_clearing {
+  html #ie_clearing {
     /* (en) Only a small help for debugging */
     /* (de) Nur eine kleine Hilfe zur Fehlersuche */
     position:static;
@@ -228,18 +239,33 @@
     margin: -2px 0 -1em 1px;
   }
 
-  * html #ie_clearing { margin: -2px 0 -1em 0}
-  #col3_content {margin-bottom:-2px }
+  * html #ie_clearing { margin: -2px 0 -1em 0; }
+  #col3_content {margin-bottom:-2px; }
 
   /* (en) avoid horizontal scrollbars in IE7 in borderless layouts because of negative margins */
   /* (de) Vermeidung horizontaler Scrollbalken bei randabfallenden Layouts im IE7 */
-  html {margin-right: 1px}
-  * html {margin-right: 0}
-
+  html { margin-right: 1px; }
+  * html { margin-right: 0 }
 
   /* (en) Bugfix: Essential for IE7 */
   /* (de) Bugfix: Notwendig im IE7 */
-  #col3 { position:relative }
+  #col3 { position:relative; }
+
+  /*------------------------------------------------------------------------------------------------------*/
+
+  /**
+   * IE z-index-Fix
+   * brings #col1 and #col2 in front of #col3
+   *
+   * @workaround
+   * @affected   all IE
+   * @css-for    all IE
+   * @valid      yes
+   */
+
+  *+html #col3 { z-index: -1; }
+  * html #col1, * html #col2 { z-index: 1; }
+  * html #col3  { z-index:auto; }
 
   /*------------------------------------------------------------------------------------------------------*/
 
@@ -255,42 +281,49 @@
 
   * html body a, * html body a:hover { background-color: transparent; }
 
-  /*------------------------------------------------------------------------------------------------------*/
-
-  /**
-   * (en) IE-Adjustments for subtemplates
-   * (de) IE-Anpassung für Subtemplates
-   *
-   * Doubled Float-Margin Fix
-   *
-   * @bugfix
-   * @affected   IE 5.x/Win, IE6
-   * @css-for    IE 5.x/Win, IE6
-   * @valid      yes
-   */
-
-  * html .c50l, * html .c25l, * html .c33l, * html .c38l, * html .c66l, * html .c75l, * html .c62l,
-  * html .c50r, * html .c25r, * html .c33r, * html .c38r, * html .c66r, * html .c75r, * html .c62r {
-    display:inline;
-  }
 }
 
-@media screen
+@media screen, projection
 {
-  /*------------------------------------------------------------------------------------------------------*/
-
   /**
+   * (en) IE-Adjustments for content columns and subtemplates
+   * (de) IE-Anpassung für Spaltencontainer und Subtemplates
+   *
    * Doubled Float-Margin Bug
    * @see        http://positioniseverything.net/explorer/doubled-margin.html
    *
    * @bugfix
    * @affected   IE 5.x/Win, IE6
-   * @css-for    IE 5.x/Win, IE6
+   * @css-for    IE 5.x/Win, IE6, IE7
    * @valid      yes
    */
-  * html #col1 { display: inline }
-  * html #col2 { display: inline }
-  
+  #col1,  #col2 { display:inline; }
+
+  .c50l, .c25l, .c33l, .c38l, .c66l, .c75l, .c62l,
+  .c50r, .c25r, .c33r, .c38r, .c66r, .c75r, .c62r { display:inline; }
+
+  /* Fix for: "Linking to anchors in elements within the containing block" Problem in IE5.x & IE 6.0 */
+  * html .equalize, * html .equalize .subcolumns { overflow:visible; display:block; }
+  .equalize, .equalize .subcolumns { overflow:hidden; display:block; }
+
+  /* transform CSS tables back into floats */
+  .equalize .c25l,.equalize .c33l,.equalize .c38l,.equalize .c50l,.equalize .c66l,.equalize .c75l,.equalize .c62l {
+    float: left; display:inline;
+    padding-bottom: 32767px;
+    margin-bottom: -32767px;
+  }
+  .equalize .c25r,.equalize .c33r,.equalize .c38r,.equalize .c50r,.equalize .c66r,.equalize .c75r,.equalize .c62r {
+    float: right; margin-left: -5px; display:inline;
+    padding-bottom: 32767px;
+    margin-bottom: -32767px;
+  }
+
+  .no-ie-padding .c25l,.no-ie-padding .c33l,.no-ie-padding .c38l,.no-ie-padding .c50l,.no-ie-padding .c66l,.no-ie-padding .c75l,.no-ie-padding .c62l,
+  .no-ie-padding .c25r,.no-ie-padding .c33r,.no-ie-padding .c38r,.no-ie-padding .c50r,.no-ie-padding .c66r,.no-ie-padding .c75r,.no-ie-padding .c62r {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
   /*------------------------------------------------------------------------------------------------------*/
 
   /**
@@ -303,13 +336,17 @@
    * @valid      yes
    */
 
-  * html #col1_content { word-wrap: break-word; }
-  * html #col2_content { word-wrap: break-word; }
+  * html #col1_content,
+  * html #col2_content,
   * html #col3_content { word-wrap: break-word; }
 
-  * html .subcolumns .subc,
-  * html .subcolumns .subcl,
-  * html .subcolumns .subcr { word-wrap: break-word; overflow:hidden; }
+  /* trigger hasLayout to force containing content */
+  .subc, .subcl, .subcr { height: 1%; }
+
+  /* avoid growing widths */
+  * html .subc,
+  * html .subcl,
+  * html .subcr { word-wrap: break-word; overflow:hidden;  }
 }
 
 @media print
@@ -324,5 +361,5 @@
    * @valid      yes
    */
 
-  #col3 { height: 1% }
+  #col3 { height: 1%; }
 }

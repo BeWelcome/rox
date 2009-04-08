@@ -37,7 +37,6 @@ class MOD_layoutbits
      * Quasi-constant functions for userthumbnails
      *
      */
-
     public static function PIC_100_100 ($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=100,$width=100,$quality=85,$picfile,$style);
     }
@@ -56,7 +55,7 @@ class MOD_layoutbits
      */
     private static $_instance;
 
-  public function __construct()
+    public function __construct()
     {
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
@@ -82,7 +81,9 @@ class MOD_layoutbits
     }
 
 
-
+    protected function member_pic_url() {
+        return 'members/avatar/';
+    }
 
     public static function test() {}
     /**
@@ -129,7 +130,7 @@ class MOD_layoutbits
         } else {
             return
                 '<a '.
-                    'href="bw/member.php?cid='.$username.'" '.
+                    'href="people/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img '.
                     'class="framed" '.
@@ -163,6 +164,8 @@ class MOD_layoutbits
     public static function linkWithPictureVar($username,$height,$width,$quality,$picfile,$style)
     {
         $words = new MOD_words();
+        $thumburl = self::member_pic_url().$username.'?'.$height.'_'.$width;
+        /*
         if(!is_file(getcwd().'/bw'.$picfile)) {
             // get a picture by username
             $thumburl = self::smallUserPic_usernameVar($username,$height,$width,$quality) ;
@@ -170,9 +173,10 @@ class MOD_layoutbits
             $thumburl = self::_getThumb($picfile,$height,$width,$quality);
             if ($thumburl === null) $thumburl = "bw/";
         }
+        */
             return
                 '<a '.
-                    'href="bw/member.php?cid='.$username.'" '.
+                    'href="people/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
                 '><img '.
                     'class="'.$style.'" '.
@@ -190,6 +194,11 @@ class MOD_layoutbits
      */
     public static function smallUserPic_userId($userId)
     {
+        //first of all, check if a pic in the new data folder is available
+        $avatarDir = new PDataDir('user/avatars');
+        if($avatarDir->fileExists((int)$userId.'_xs'))
+            return 'members/avatar/'.$userId.'/?xs';
+        
         $picfile = self::userPic_userId($userId);
         $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
@@ -219,14 +228,19 @@ class MOD_layoutbits
      */
     public static function smallUserPic_usernameVar($username,$height,$width,$quality)
     {
+        return self::member_pic_url().$username.'/?xs';
+        /*
         $picfile = self::userPic_username($username);
         $thumbfile = self::_getThumb($picfile,$height,$width,$quality);
         return $thumbfile;
+        */
     }
 
 
     public static function userPic_userId($userId)
     {
+        return self::member_pic_url().$userId.'/';
+        /*
         // check if user is logged in
         if (!APP_User::isBWLoggedIn('NeedMore,Pending')) {
             // check if pic owner has a public profile
@@ -256,24 +270,14 @@ class MOD_layoutbits
             }
         }
         return self::_dummyPic_userId($userId);
+        */
     }
 
 
 
     public static function userPic_username($username)
     {
-        // get the user id
-        $row = self::get()->dao->query(
-            'SELECT SQL_CACHE id '.
-            'FROM members '.
-            "WHERE Username='$username' "
-        )->fetch(PDB::FETCH_OBJ);
-        if ($row) {
-            return self::userPic_userId($row->id);
-        } else {
-            // username not found..
-            return self::_memberNotFoundPic();
-        }
+        return self::member_pic_url().$username.'/';
     }
 
 
@@ -315,10 +319,10 @@ class MOD_layoutbits
         $filename_noext = substr($filename, 0, strrpos($filename, '.'));
         $filepath = getcwd()."/bw/memberphotos";
         $wwwpath = PVars::getObj('env')->baseuri."bw/memberphotos";
-
+    	$avatarDir = new PDataDir('user/avatars');
+        
         $thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 
-        // look if thumbnail already exists
         if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
 
         // look if original file exists
@@ -456,10 +460,13 @@ class MOD_layoutbits
      */
     public function ago($timestamp)
     {
+        // test if the given timestamp could be a unix timestamp, otherwise try to make it one
+        if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
         $words = new MOD_words();
         $difference_in_seconds = time() - $timestamp;
         $period_in_seconds = 1;
-
+        $difference = time() - $timestamp;
+/*
         foreach (array(
             'second' => 60,
             'minute' => 60,
@@ -479,16 +486,16 @@ class MOD_layoutbits
         // if nothing helped
         $difference_in_decades = round($difference_in_seconds / $period_in_seconds);
         return $difference_in_decades.' '.$words->get(($difference_in_decades > 1) ? 'decades' : 'decade').' '.$words->get('ago');
-        /*
-        $periods = array($words->get('second'), $words->get('minute'),$words->get('hour'), $words->get('day'), $words->get('week'), $words->get('month'), $words->get('years'), $words->get('decade'));
+*/
+        $periods = array('second','minute','hour','day','week','month','year','decade');
         $lengths = array("60","60","24","7","4.35","12","10");
         for($j = 0; $difference >= $lengths[$j]; $j++)
-        $difference /= $lengths[$j];
+            $difference /= $lengths[$j];
         $difference = round($difference);
         if($difference != 1) $periods[$j].= "s";
-        $text = "$difference $periods[$j] ago";
+        $text = $difference.' '.$words->get($periods[$j]).' '.$words->get('ago');
         return $text;
-        */
+        
     }
 
 
@@ -546,6 +553,7 @@ class MOD_layoutbits
       }
       if ($IdMember==0) {
            $row = self::get()->dao->query("select SQL_CACHE DefaultValue  from preferences where codeName='".$namepref."'")->fetch(PDB::FETCH_OBJ);
+         if (!empty($row))
          return($row->DefaultValue);
       }
       else {
@@ -574,6 +582,20 @@ class MOD_layoutbits
         )->fetch(PDB::FETCH_OBJ);
         return $row->$Param;
     }
+    
+    // COPIED FROM OLD BW
+    // fage_value return a  the age value corresponding to date
+    public function fage_value($dd) {
+        $pieces = explode("-",$dd);
+        if(count($pieces) != 3) return 0;
+        list($year,$month,$day) = $pieces;
+        $year_diff = date("Y") - $year;
+        $month_diff = date("m") - $month;
+        $day_diff = date("d") - $day;
+        if ($month_diff < 0) $year_diff--;
+        elseif (($month_diff==0) && ($day_diff < 0)) $year_diff--;
+        return $year_diff;
+    } // end of fage_value
 
 }
 

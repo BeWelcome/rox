@@ -11,13 +11,19 @@ $ww = $this->ww;
 $wwsilent = $this->wwsilent;
 $comments_count = $member->count_comments(); 
 
+$layoutbits = new MOD_layoutbits;
+$right = new MOD_right();
+
 $agestr = "";
 if ($member->age == "hidden") {
     $agestr .= $ww->AgeHidden;
 } else {
-    $agestr= $ww->AgeEqualX("hidden");
+    $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate));
 }
 $languages = $member->get_profile_languages(); 
 $occupation = $member->get_trad("Occupation", $profile_language);        
+
+$verification_status = $member->verification_status;
+if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
 
 ?>

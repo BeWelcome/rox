@@ -10,8 +10,10 @@
 */
 
 /* custom styles for headers on the startpage */
-#teaser h1 {font-size: 40px; color: #000; padding-top:1.2em;}
+#teaser h1 {font-size: 40px; color: #000; }
 #teaser h2 {font-weight: normal; letter-spacing: 0; line-height: 1.5em; padding-bottom: 1em; }
+
+#teaser h1.slogan {padding-top: 1.2em; }
 
 #main td.info {padding: 0;}
 
@@ -51,9 +53,16 @@
     margin-top: -10px;
 }
 
-#topnav {
+#header #topnav {
+	position: relative;
     padding-top: 34px;
+	padding-bottom: 20px;
     width: 100%;
+}
+#topnav a{
+	background:transparent none repeat scroll 0 0;
+	color:#FFFFFF;
+	text-decoration:none;
 }
 #topnav ul {
 /*    width: 500px; */
@@ -64,8 +73,8 @@
 
 /* styles for the slideshow */
 .slide {
-  width: 350px;
-  height: 230px;
+    width: 350px;
+    height: 230px;
     margin: 0;
     padding: 0;
     text-align: right;
@@ -73,8 +82,8 @@
 .slide img{
     margin: 0 -30px 0 0;
     padding: 0 0 0 20px;
-  width: 350px;
-  height: 230px;
+    width: 350px;
+    height: 230px;
 }
 
 #slideshow-content {
@@ -108,5 +117,12 @@
 
 .login-widget-small {
     float: right;
-    color: #999;
+    color: #fff;
+    font-size: 0.9em;
+    margin-top: 0;
+}
+
+.login-widget-small td {
+    padding-top: 0;
+    padding-bottom: 0;
 }

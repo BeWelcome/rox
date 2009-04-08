@@ -14,7 +14,15 @@ class AboutController extends RoxControllerBase
     public function index($args = false)
     {
         $request = $args->request;
-                
+
+        if (isset($request[2]) && $request[2] == "submit"
+            && $request[1] == "feedback") {
+
+            $model = new FeedbackModel();
+            $model->sendFeedback($_POST);
+            return new FeedbackSentPage();
+        }
+
         if (!isset($request[0])) {
             // then who activated the about controller?
             $page = new AboutTheideaPage();
@@ -51,17 +59,13 @@ class AboutController extends RoxControllerBase
                 $page = new AboutStatisticsPage();
                 $page->setModel(new StatsModel());
                 return $page;
-			//case 'faq':
-			case 'faqs':
-				$this->redirect('bw/faq.php');
-				return false;
 			case 'feedback':
             case 'contact':
             case 'contactus':
             case 'support':
-			    $this->redirect('bw/feedback.php');
-			    return false;
+                return new FeedbackPage();
             case 'faq':
+            case 'faqs':
                 $model = new AboutModel;
                 $faq_categories = $model->getFaqsCategorized();
                 if ($faq_section = $model->getFaqSection($keyword_2)) {

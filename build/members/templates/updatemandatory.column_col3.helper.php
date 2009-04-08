@@ -33,7 +33,6 @@ $selYear = date("Y",strtotime($member->BirthDate));
 $birthYearOptions = buildBirthYearOptions($selYear);
 $m->gender = $member->Gender;
 
-echo 'HALLO'.$member->street;
 var_dump($member->address);
 // values from previous form submit
 if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {

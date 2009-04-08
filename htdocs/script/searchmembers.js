@@ -25,7 +25,8 @@ function load() {
     // if we have vars stored in the session or given by a GET-parameter, perform a search to show the last results
     if (varsOnLoad || varsGet) {
         put_html('loading', loading);
-        loadMap(0);
+        if (varsGet) searchByText(varsGet, 0);
+        else loadMap(0);
     }
     else
         put_html('help_and_markers', searchHelp);

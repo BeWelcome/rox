@@ -1073,7 +1073,32 @@ ORDER BY membersphotos.SortOrder
         $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_30_30', 30, 30, true, 'square');
+        $this->writeMemberphoto($memberid);
         return true;
+    }
+
+    public function writeMemberphoto($memberid)
+    {
+		$s = $this->dao->exec("
+INSERT INTO 
+    `membersphotos`
+	(
+		FilePath,
+		IdMember,
+		created,
+		SortOrder,
+		Comment
+	) 
+VALUES
+	(
+		'" . $this->avatarDir->dirName() ."/". $memberid . "',
+		" . $memberid . ",
+		now(),
+		-1,
+		''
+	)
+");
+        return $s;
     }
 
     public function bootstrap()

@@ -1,18 +1,18 @@
-$Id: README 57 2006-06-21 11:13:25Z kang $
+
+Check INSTALL for installation instructions.
+
+You probably want to get started by checking out the different applications
+in build/.  htdocs/bw/ is deprecated and the code needs to be rewritten in
+build/.
 
 
 Useful links:
-
 * Developer space on BeVolunteer: http://dev.bevolunteer.org
-* BeWelcome/BeVolunteer developers' blog: http://blogs.bevolunteer.org/tech/
+
 
 
 Standards we try to follow:
-
 * PEAR coding standard: http://pear.php.net/manual/en/standards.php
 * W3C strict XHTML 1.0: http://www.w3.org/TR/xhtml1/
 
 
-The respice PlatformPT wiki might be good to start learning more about
-how and where things are done in BW Rox:
-http://platformpt.wiki.sourceforge.net/

@@ -680,7 +680,7 @@ VALUES
         $insert->bindParam(2, $hash);
         $orig = false;
         $insert->bindParam(3, $orig);
-        $flags = 0;
+        $flags = $otherFile ? 1 : 0;
         $insert->bindParam(4, $flags);
         $mimetype = false;
         $insert->bindParam(5, $mimetype);

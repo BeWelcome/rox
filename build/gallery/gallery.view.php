@@ -111,6 +111,12 @@ class GalleryView extends PAppView {
         $request = PRequest::get()->request;
         $shoutsCtrl->shoutsList('gallery', $request[3]);
     }
+    public function avatars($statement) 
+    {
+		$words = new MOD_words();
+		if (!$statement) echo $words->get('Gallery_NoAvatarsYet','<a href="editmyprofile">','</a>');
+        require 'templates/overview.php';
+    }
     public function allGalleries($galleries) 
     {
         echo '<h3>Latest Photosets</h3>';

@@ -413,7 +413,7 @@ WHERE `gallery_items_id_foreign` = '.(int)$image.'
         return $this->dao->exec($query);
     }
 
-    public function getLatestItems($userId = false,$galleryId = false, $numRows = false)
+    public function getLatestItems($userId = false,$galleryId = false, $numRows = false, $flags = false)
     {
     	$query = '
 SELECT
@@ -438,8 +438,12 @@ LEFT JOIN `gallery_items_to_gallery` AS `g` ON
         	$query .= '
 WHERE `user_id_foreign` = '.(int)$userId.'
             ';
-        }
-        if ($galleryId) {
+            if ($flags) {
+        	    $query .= '
+AND `flags` = '.(int)$flags.'
+                ';
+            }
+        } elseif ($galleryId) {
         	$query .= '
 WHERE `gallery_id_foreign` = '.(int)$galleryId.'
             ';

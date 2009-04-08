@@ -95,7 +95,13 @@ class GalleryController extends RoxControllerBase {
             case 'flickr':
                 $subTab = 'flickr';
                 $P->content .= $vw->latestFlickr();
-                break;         
+                break;
+
+            case 'avatars':
+                $subTab = 'avatars';
+                $statement = $this->_model->getLatestItems($_SESSION['Username'],'',1,1);
+                $P->content .= $vw->avatars($statement);
+                break;
 
             case 'create':
                 if (!$User = APP_User::login())

@@ -98,9 +98,15 @@ class GalleryController extends RoxControllerBase {
                 break;
 
             case 'avatars':
+				$User = APP_User::login();
+				$userId = $User->getId();
+				/*if (isset($request[2]) &&  ) {
+				    $member = new MemberEntity($request[2]);
+				    $
+				} */
                 $subTab = 'avatars';
-                $statement = $this->_model->getLatestItems($_SESSION['Username'],'',1,1);
-                $P->content .= $vw->avatars($statement);
+                $statement = $this->_model->getLatestItems($userId,false,false,1);
+                $P->content = $vw->avatars($statement);
                 break;
 
             case 'create':

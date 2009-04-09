@@ -166,7 +166,7 @@ class PageWithRoxLayout extends PageWithHTML
         $words = $this->getWords();
         $menu_items = $this->getTopmenuItems();
         $active_menu_item = $this->getTopmenuActiveItem();
-
+        $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
 

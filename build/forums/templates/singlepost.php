@@ -33,8 +33,15 @@ Boston, MA  02111-1307, USA.
             <a href="people/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
         </div> <!-- forumsauthorname -->
         <div class="forumsavatar">
-            <?php echo MOD_layoutbits::PIC_50_50($post->OwnerUsername,'',$style='framed'); ?>
-            
+            <img
+                class="framed"
+                src="<?php echo "members/avatar/".$post->OwnerUsername."?50_50"?>" 
+                alt="avatar"
+                title="<?php echo $post->OwnerUsername; ?>"
+                height="56"
+                width="56"
+                style="height:auto; width:auto;"
+            /> <!-- img -->
         </div> <!-- forumsavatar -->
     </div> <!-- forumsauthor -->
     <div class="forumsmessage">

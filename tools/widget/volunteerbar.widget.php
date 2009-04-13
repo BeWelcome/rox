@@ -5,6 +5,10 @@ class VolunteerbarWidget extends RoxWidget
 {
     public function render()
     {
+		if (empty($_SESSION['IdMember'])) {
+			return ; // Do nothing if user is not identified (thi cannot be a volunteer)
+		}
+
         $R = MOD_right::get();
         if (!$R->hasRightAny()) {
             // donothing

@@ -1113,7 +1113,7 @@ WHERE `threadid` = '%d' ",
         $qry=$this->dao->query("select * from forum_trads where IdTrad=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
 				$rr=$qry->fetch(PDB::FETCH_OBJ) ;
 				if (empty($rr->id)) { // Only proceed if no such a post exists
-		 			$ss=$vars["NewTranslatedPost"]  ;
+		 			$ss=$this->dao->escape($vars["NewTranslatedPost"])  ;
 					$this->InsertInFTrad($ss,"forums_posts.IdContent",$IdPost, $_SESSION["IdMember"], $vars["IdLanguage"],$vars["IdTrad"]) ;
        		MOD_log::get()->write("Updating Post=#".$IdPost." Adding translation for title in language=[".$vars["IdLanguage"]."]","ForumModerator");
 				} 

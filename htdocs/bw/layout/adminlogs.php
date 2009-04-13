@@ -79,7 +79,7 @@ function _Pagination($maxpos) {
 function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAndS1, $notAndS2, $maxpos) {
 
   global $title;
-  $rTime=sql_query("select now() as ss") ;
+  $rTime=LoadRow("select now() as ss") ;
   $title = "Admin logs Server time :".$rTime->ss;
   require_once "header.php";
 

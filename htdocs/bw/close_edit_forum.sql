@@ -8,7 +8,7 @@ set OwnerCanStillEdit='No'
 WHERE forums_threads.id = forums_posts.threadid
 AND last_postid != forums_posts.id
 AND `OwnerCanStillEdit` = 'Yes' and `forums_posts`.create_time<date_sub(now(),interval 30 minute)
-/*  and  `forums_posts`.create_time>date_sub(now(),interval 90 minute) */
+  and  `forums_posts`.create_time>date_sub(now(),interval 90 minute) 
   
 /* proceed only post in the last hour */
 ;

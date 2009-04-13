@@ -80,7 +80,7 @@ function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAnd
 
   global $title;
   $rTime=LoadRow("select now() as ss") ;
-  $title = "Admin logs Server time :".$rTime->ss;
+  $title = "Admin logs Server time: ".$rTime->ss;
   require_once "header.php";
 
   Menu1("","Admin Logs page"); // Displays the top menu

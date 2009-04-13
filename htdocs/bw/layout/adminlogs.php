@@ -78,8 +78,9 @@ function _Pagination($maxpos) {
 
 function DisplayAdminLogs($tData, $username, $type, $ip, $andS1, $andS2, $notAndS1, $notAndS2, $maxpos) {
 
-    global $title;
-  $title = "Admin logs";
+  global $title;
+  $rTime=mysql_query("select now() as ss") ;
+  $title = "Admin logs Server time :".$rTime->ss;
   require_once "header.php";
 
   Menu1("","Admin Logs page"); // Displays the top menu

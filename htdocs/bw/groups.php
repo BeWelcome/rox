@@ -66,7 +66,7 @@ switch (GetParam("action")) {
 		}
 		//			echo "str=$str<br>";
 		sql_query($str);
-		LogStr("update profile in Group <b>", wwinlang("Group_" . $TGroup->Name, 0), "</b> with comment " . GetStrParam('Comment'), "Group");
+		LogStr("update profile in Group <b>". wwinlang("Group_" . $TGroup->Name, 0). "</b> with comment " . GetStrParam('Comment'), "Group");
 		break;
 	case "ShowMembers" :
 		$TGroup = LoadRow("select *,groups.id as IdGroup from groups where id=" . GetParam("IdGroup")." /* groups.php show members */");

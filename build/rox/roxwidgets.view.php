@@ -10,6 +10,11 @@ class VolunteerLinksWidget
     {
         $this->_init();
         $this->_model = new VolunteermenuModel();
+
+		if (empty($_SESSION['IdMember'])) {
+			return ; // Do nothing if user is not identified (thi cannot be a volunteer)
+		}
+
         $R = MOD_right::get();
         $mayViewBar = $R->hasRightAny();
         
@@ -40,7 +45,7 @@ class VolunteerLinksWidget
             
             require $this->getTemplatePath();
         }
-    }
+    } // end of render() ;
 }
 
 class VolunteermenuWidget extends VolunteerLinksWidget {

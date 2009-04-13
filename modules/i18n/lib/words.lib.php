@@ -849,10 +849,10 @@ function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 		MOD_log::get()->write("in module word->InsertInMTrad, for IdTrad=".$IdTrad. " The sentence is already escaped with a double quote page [".$page."]", "Bug");
 	}
 	else {
-		$Sentence = $this->_dao->escape($ss);
+		$Sentence = mysql_real_escape_string($ss);
 	}
 	$str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
-	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
+	$str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",'" . $Sentence . "',now())";
 	$s = $this->_dao->query($str);
 	if (!$s) {
 		throw new PException('Failed in InsertInMTrad inserting in membertrads');

@@ -65,7 +65,7 @@ class MOD_words
     {
         $this->_lang = PVars::get()->lang;
 
-//			$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
+		$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
 
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
@@ -465,10 +465,6 @@ class MOD_words
             $whereCategory = ' `category`=\'' . $category . '\'';
         }
         */
-		/*
-		if ($value=$this->$this->WordMemcache->GetValue($code,$lang)) {
-			return($value) ;
-		} */
         
         if (is_numeric($code)) {
             $query =
@@ -478,7 +474,17 @@ class MOD_words
             ;
         } else {
         	// TODO: store translation quality in database!
-            $query =
+			
+			// First try in memcache
+			if ($value=$this->WordMemcache->GetValue($code,$lang)) {
+				$row->Sentence=$value ;
+				$row->donottranslate='No' ;
+				$row->updated="2015-01-01 00:00:00" ;
+//				print_r($row) ; die(" here" ) ;
+				return($row) ;
+			} 
+
+			$query =
                 "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
                 "FROM `words` ".
                 "WHERE `code`='" . $code . "' and `ShortCode`='" . $lang . "'"

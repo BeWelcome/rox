@@ -106,6 +106,7 @@ class MOD_bw_memcache {
         if ($this->IsToggle()) { // Is the memcache active ?
 			$value=$this->memcache->get($Code."_".$IdLanguage) ;
 			if ($value) {
+//			echo " Value ".$Code." found " ;
 				return($value) ;
 			}
 			else {
@@ -193,15 +194,16 @@ class MOD_bw_memcache {
 	 * it returns false if it fails to find something
      */
 	function LookUp($Code,$IdLanguage) {
-		$str="select ".$this->_sentencecolumn." from ".$this->_tablename." where ".$this->_idtradcolumn."='".$Code."' and IdLanguage=".$IdLanguage ;
+		$SentenceCol=$this->_sentencecolumn ;
+		$str="select id,".$SentenceCol." from ".$this->_tablename." where ".$this->_idtradcolumn."='".$Code."' and ShortCode='".$IdLanguage."'" ;
 
-        $qry = $this->_dao->query($str);
+        $qry = mysql_query($str);
         if (!$qry) {
-            throw new PException('bw_memcache->LookUp('.$Code.','.$IdLanguage.') failed !');
+            die('bw_memcache->LookUp("'.$Code.'","'.$IdLanguage.'" str=['.$str.']) failed !');
         }
-        $row = $qry->fetch(PDB::FETCH_OBJ);
-		if (!empty($row->$this->_sentencecolumn)) {
-			return($row->$this->_sentencecolumn) ;
+        $row = mysql_fetch_object($qry);
+		if (!empty($row->id)) {
+			return($row->$SentenceCol) ;
 		}
 		return(false) ;
 	}

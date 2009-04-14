@@ -9,18 +9,12 @@ var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
 document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js"></script>');
-document.write('<script type="text/javascript" src="script/cal.js"></script>');
+document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls"></script>');
 
 var req = new String(location.pathname).toLowerCase();
-if (req == http_baseuri) {
+if (req == http_baseuri || req.indexOf('') != -1) {
 	document.write('<script type="text/javascript" src="script/transition.js"></script>');
-}
-if (req.indexOf('user/settings') != -1) {
-	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
-}
-if (req.indexOf('user/settings') != -1) {
-	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
+	document.write('<script type="text/javascript" src="script/fabtabulous.js"></script>');
 }
 else if (req.indexOf('user/register') != -1) {
 //    document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
@@ -30,23 +24,10 @@ else if (req.indexOf('user/register') != -1) {
 else if (req.indexOf('signup') != -1) {
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
     document.write('<script type="text/javascript" src="script/geo_suggest.js"></script>');
-}/*
-else if (req.indexOf('blog') != -1) {
-    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
-} */
-else if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('message/write')) {
-    	document.write('<script src="script/nicEdit.js" type="text/javascript"></script>');
-        document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
-else if (req.indexOf('message/write')) {
-    	document.write('<script src="script/nicEdit.js" type="text/javascript"></script>');
+else if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('message/write') != -1 ) {
+    	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
         document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
-}
-if (req.indexOf('user/settings') != -1) {
-//    document.write('<script type="text/javascript" src="script/prototype.js"></script>');
-//    document.write('<script type="text/javascript" src="script/scriptaculous.js?effects"></script>');
-    document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
 }
 if (
 		req.indexOf('blog/create') != -1
@@ -56,45 +37,24 @@ if (
 		|| req.indexOf('trip/edit') != -1
 		|| req.indexOf('gallery/show/image') != -1
 		|| req.indexOf('message/write') != -1
-		|| req.indexOf('editmyprofile') != -1
-		|| req.indexOf('forums/create') != -1
 	) {
 	document.write('<script type="text/javascript" src="script/fieldset.js"></script>');
-    document.write('<script src="script/nicEdit.js" type="text/javascript"></script>');
 }
-if (req.indexOf('gallery') != -1) {
-//    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-//	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
-/*	document.write('<script type="text/javascript" src="script/inplaceeditor_extensions.js"></script>'); */
+if (req.indexOf('gallery') != -1 || req.indexOf('tour/meet') != -1) {
 	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
 }
 if (req.indexOf('gallery/upload') != -1) {
 	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
 	document.write('<script type="text/javascript" src="script/gallery.js"></script>');
 }
-if (req.indexOf('trip') != -1) {
-//	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
-}
-if (req.indexOf('bod') != -1) {
-//	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
-}
 if (req.indexOf('thepeople') != -1) {
-//	document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
 	document.write('<script type="text/javascript" src="script/transition.js"></script>');
-}
-if (req.indexOf('tour/meet') != -1) {
-//    document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-//	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?effects"></script>');
-	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
 }
 if (req.indexOf('searchmembers') != -1) {
 	document.write('<script type="text/javascript" src="script/prototip.js"></script>');
     if (req.indexOf('searchmembers/quicksearch') == -1)
         document.write('<script type="text/javascript" src="script/labeled_marker.js"></script>');
 }
-if (req.indexOf('explore') != -1) {
-	document.write(' <!--[if IE 6]><script type="text/javascript" src="script/shop.js"></script><![endif]--> ');
-}
-if (req.indexOf('about') != -1) {
+if (req.indexOf('explore') != -1 || req.indexOf('about') != -1) {
 	document.write(' <!--[if IE 6]><script type="text/javascript" src="script/shop.js"></script><![endif]--> ');
 }

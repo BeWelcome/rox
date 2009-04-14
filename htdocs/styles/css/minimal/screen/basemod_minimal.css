@@ -1,0 +1,48 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS framework
+ * (en) stylesheet for screen layout
+ * (de) Stylesheet für das Bildschirm-Layout
+ *
+ * @creator       YAML Builder V1.2b (http://builder.yaml.de)
+ * @file          basemod.css
+ * @-yaml-minver  3.1
+ */
+
+@media screen, projection
+{
+  /*-------------------------------------------------------------------------*/
+
+  /* (en) Marginal areas & page background */
+  /* (de) Randbereiche & Seitenhintergrund */
+  body { background: #f7f7f7 url(../images/bggrey.png) top left repeat-x; }
+
+  /* Layout Alignment | Layout-Ausrichtung */
+  #page_margins { min-width: 900px; max-width: 960px; margin: 0 auto; width: auto; }
+  #page { padding: 0 }
+
+  
+  /* Layout Properties | Layout-Eigenschaften */
+  #header { position: absolute; top: 0;}
+  #topnav { float: right; margin: 0 2em 1em 2em}  
+  #nav { background: transparent url(../images/header_index_960.png) no-repeat top left; height: 70px; top: 0; padding: 0 2em;}  
+  #teaser {margin: 0 2em 1em 2em; clear: both;}
+  #main { padding: 0 2em; }
+  #footer { padding: 10px 20px; color:#666; background: #f9f9f9; border-top: 5px #efefef solid; }
+
+ /*------------------------------------------------------------------------------------------------------*/
+
+ /**
+   * (en) Formatting content container
+   * (de) Formatierung der Inhalts-Container
+   *
+   */
+
+  #col1 { float: right; width: 20%}
+  #col2 { display:none}
+  #col3 { width: auto; margin: 0 20% 0 0}
+  #col1_content { padding: 0 2em 0 2em }
+  #col3_content { padding: 0 2em 0 2em }
+
+
+}

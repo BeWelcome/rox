@@ -1,0 +1,1086 @@
+@charset "UTF-8";
+/**
+* "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+*
+*  YAML Version: 3.0.2
+*  file       : bw_content.css
+*  function   : formatting  of content (text, graphics, links, lists, tables, etc.)
+*
+*  last modification: 38.09.07 by Matthias Hess (BW: matthias)
+*
+*/
+
+@media all
+{
+  /**
+   * Fonts
+   * (en) font-family and font-size selection for headings and standard text elements
+   *
+   * @section content-fonts
+   */
+
+  /* (en) reset font size for all elements to standard (16 Pixel) */
+  html * { font-size: 100.01% }
+
+  /* (en) base layout gets standard font size 12px */
+  body {
+    font-family: Arial,'Trebuchet MS', Verdana, Helvetica, sans-serif;
+    font-size: 75.00%;
+  }
+
+  /* ### headings ### */
+  h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; }
+
+  h1 {font-size: 2.2em; color: #333; margin: 0 0 0.25em 0; padding-top: .6em; padding-bottom: 0.5em;letter-spacing: -0.05em; font-weight:bold; }
+  h2 {font-size: 1.3em; color: #333; margin: 0 0 0.5em 0; padding-top: .6em; letter-spacing: -0.05em; font-weight:bold; }
+  h3 {font-size: 1.6em; color: #000; margin: 0 0 0.25em 0; padding-top: .6em; letter-spacing: -0.05em; font-weight:bold; }
+  h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: .6em; font-weight:bold; border-bottom: none;}
+  h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic;   padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
+  h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
+
+#main  h1 span, #main_top h1 span, #teaser h1 span.small { letter-spacing: normal; margin: 0; padding: 0; }
+  h2 span{ letter-spacing: normal;}
+  h3 span { letter-spacing: normal;}
+  h4 span{ letter-spacing: normal;}
+  .list h5 {  padding-top: 0;}
+  
+
+  /* ### paragraphs ###*/
+  p,ul,dd,dt { line-height: 1.5em; }
+  p { line-height: 1.5em; margin: 0 0 0.8em 0; }
+
+  /* ### text formatting  ### */
+  strong,b {font-weight: bold; }
+  em,i { font-style:italic; }
+  pre, code {  font-family: "Courier New", Courier, monospace; }
+  address { font-style:normal; line-height: 1.5em; margin: 0 0 1em 0; }
+
+  acronym, abbr {
+    letter-spacing: .07em;
+    border-bottom: 1px dashed #c00;
+    cursor: help;
+  }
+
+  blockquote {
+  color: #444;
+  background: #f8f8f8;
+  border: 1px #ddd solid;
+  border-left: 8px #ddd solid;
+  padding: 1em 1em 0 1em;
+  margin: 0 0 1em 1em;
+}
+
+  hr {
+    color: #fff;
+    background:transparent;
+    margin: 0 0 0.5em 0;
+    padding: 0 0 0.5em 0;
+    border:0;
+    border-bottom: 1px #eee solid;
+  }
+
+   /**
+   * Generic Content Classes
+   * (en) standard classes for positioning and highlighting
+   *
+   * @section content-generic-classes
+   */
+  .hidden {display: none;}
+
+  .note {background: #FFF8C3; padding: 1em; border: 1px #888 solid;}
+  .note .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
+  .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
+
+  .warning {
+    background: #fdd;
+    padding: 1em;
+    border: 1px solid;
+    border-color: #ff0800;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
+  .highlight {background-color: #eeeeee; border:1px solid #E5E5E5; margin-right:4px;}
+
+  .grey {color: #AFABA3; }
+  .black  {color: #000; }
+  .highlighted, a.highlighted  {color: #000; font-weight: bold}
+
+  .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
+  .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
+  .center { text-align:center; margin: 0.5em auto }
+
+  .small {
+    font-size: 0.9em;
+    padding: 0;
+    margin: 0px;
+    font-weight: normal;
+    display: inline;
+  }
+
+  .big {font-size: 1.3em; }
+
+
+  /* ### image positioning ### */
+  img.float_left { float: left; margin-right: 1em; margin-top: 0.15em; margin-bottom: 0.15em; border:0; }
+  img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
+  img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
+  img.framed {padding:1px; border: 1px #ddd solid; background: #f3f3f3 }
+
+  /**
+   * Local and external Links
+   *
+   * (en) Formatting of hyperlinks
+   *
+   */
+  a, a em.file {color: #2184e8; text-decoration:none; background-color:transparent;}
+  a:hover {text-decoration:underline;}
+  a:focus {text-decoration:underline;}
+
+  #topnav a { color: #999; background:transparent; text-decoration:none; }
+  #topnav a:hover { text-decoration:underline; background-color: transparent;}
+  #topnav a:focus { text-decoration:underline; background-color: transparent;}
+  #topnav ul,#topnav li { 
+	display:inline;
+	font-size:11px;
+	height:46px;
+	margin-left:2px;
+	padding:8px 10px 6px 12px;
+  }
+  #topnav img { 
+	padding:0 4px 0 0;
+	vertical-align:middle;
+  }
+
+
+  /*#main a[href^="http:"], #main a[href^="https:"]
+    {
+      padding-left: 12px;
+      background-image: url('../../img/icons/ext_link.gif');
+      background-repeat: no-repeat;
+      background-position: 0 0.45em;
+    }
+    */
+  #main a.imagelink {
+    padding-left: 0;
+    background: transparent;
+  }
+
+  /**
+   * Tables
+   * (en) Generic classes for table-width and design definition
+   *
+   * @section content-tables
+   */
+
+  table { width: auto; border-collapse:collapse; margin-bottom: 0.5em; }
+  table.full { width: 100%; }
+  table.fixed { table-layout:fixed }
+  table.framed {border: 1px solid;   border: none 0pt;  border-bottom: 1px solid #e5e5e5; }
+
+  th,td { padding: 0.5em; }
+  thead th { background: #444; color: #fff }
+  tbody th { color: #333;}
+  tbody th.sub { background: #ddd; color: #333 }
+
+  /* standard tablelist highlighting */
+  tr.highlight{
+  background: #eeeeee;
+  border: none 0pt;
+  border-top: 1px solid #e5e5e5;
+  margin-right: 4px;
+  }
+  tr.blank {
+  border: none 0pt;
+  border-top: 1px solid #e5e5e5;
+  margin-right: 4px;
+  }
+  tr.blank:hover,tr.highlight:hover {
+  background: #ffeebb;
+  border: none 0pt;
+  border-top: 1px solid #e5e5e5;
+  margin-right: 4px;
+  }
+  td.memberlist  {padding: 0.5em 0.5em 0.5em 0.5em;}
+  td.connections  {text-align: center;}
+
+  /* thick orange touch */
+  tr.blank:hover,tr.highlight:hover {
+  background: #faf5dd;
+  }
+
+
+
+  /**
+   * Forms
+   * (en) Generic classes for forms, inputs and textareas
+   *
+   * @section content-forms
+   */
+
+  form {overflow:hidden;}
+  fieldset {margin-top: 1.5em; margin-bottom: 1.5em;}
+  legend {font-size: 1.3em; }
+  select {
+    margin-bottom: 0.5em;
+    font-size: 0.9em;
+    background: #ffffff;
+  }
+
+
+  .form li { padding: 1em 0; }
+
+  textarea {
+    font-size: 1.2em;
+    font-family: Arial, Helvetica;
+    padding: 5px;
+  }
+
+  input, textarea {
+    font-size: 1.3em;
+    border: 1px #ccc solid;
+    background: #ffffff;
+    color: #777;
+    padding: 2px;
+/*    margin: 5px 0px; */
+  }
+  input[type=image] {
+    border: 0;
+    background: transparent;
+  }
+  input[type=submit] {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:1.1em;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto !important;
+    cursor: pointer;
+  }
+
+  input[type=reset] {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:11px;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto !important;
+  }
+
+  input:focus, textarea:focus {
+    background: #ffffff;
+    color: #333;
+    border-color: #666;
+  }
+  
+  
+  
+  
+
+  /* A <label> shouldn't really change the layout.
+  label {
+    color: #333;
+    font-weight: bold;
+  }
+  */
+
+  /**
+   * Pagination
+   * (en) Generic classes for pagination
+   *
+   * @section content-pagination
+   */
+
+   /* NEW by Lupochen */
+  div.pages {clear:both; padding-top:15px;   white-space: nowrap; }
+  div.pages ul{float:right; margin:0;padding:0;}
+  div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
+  /*div.pages li.sep{border:0}
+  div.pages li a {  height: 18px; line-height: 16px; display:block; text-align: center; font-size: 11px; background: #fff;}
+  div.pages li.current {background:#ddd;}*/
+  div.pages li.current a {color:#666;font-weight:bold; }
+  div.pages li a:hover { color: #fff; background: #ff9900; }
+  div.pages li a:active {  color: #fff; background: #ff9900;}
+
+  /* give pagination our 'button' style */
+ div.pages li a {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    font-size:11px;
+    font-weight:bold;
+    height:18px !important;
+    line-height:16px !important;
+    margin:.2em;
+    padding:1px 5px;
+    text-align:center;
+    width:auto;
+}
+div.pages li a:hover {background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%;}
+div.pages li a.off:hover {background: none; color: #666; }
+div.pages li a {color: #ff8800; text-decoration:none; background-color:transparent;}
+div.pages li a:hover {background-color: transparent; color: #333; text-decoration:none;}
+div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
+
+  /*\*/
+   * html div.pages li a {
+       width: 10px; /* IE */
+   }
+   /**/
+
+
+  /* ### Teaser + Divs, lists, styles etc. in teaser ###*/
+
+
+
+
+
+/* ######################################################################################################
+** ### special rulesets of the YAML standard layout #####################################################
+** ######################################################################################################
+*/
+
+/* ###  formatting of text  ################################################################## */
+
+/* Navigation at the end of the page */
+p.navlink { background-color: #f4f8f4; border: 1px #aca dotted; padding: 6px; margin-bottom: 0.5em; }
+p.navlink a { color: #353;}
+p.navlink a:hover { font-weight: bold; background: transparent; }
+
+/* Unordered lists without bullets */
+ul.linklist { list-style-type: none; margin: 0 1em 1em 0; }
+ul.linklist li { margin: 0 0 0.5em 0;}
+ul.linklist li a { line-height: 1em;}
+ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
+/* CrossBrowser-Compatibility */
+ul.browsers { margin: 0  0 .4em 0; }
+
+ul.browsers li {
+  margin: 0;
+  list-style-type: none;
+  background: #f8f8f8; color: #444;
+  padding: 0.1em 0.1em 0.2em 0.5em;
+  font-weight: normal;
+  text-align: left;
+  border-bottom: 1px #fff solid;
+  border-right: 1px #fff solid;
+}
+
+ul.browsers li img { vertical-align:bottom;
+}
+
+ul.browsers li.title {
+  font-weight: bold;
+  background: #eee; color: #444;
+  padding: 0.2em 0.2em 0.2em 0.5em;
+}
+
+
+/* ### tables ################################################################## */
+
+table.bugs { margin-bottom: 1em; margin-top: .5em; }
+table.bugs th {
+  background: #444; color: #fff;
+  padding: 0.5em;
+  text-align: center;
+  border-bottom: 1px #fff solid;
+  border-right: 1px #fff solid;
+}
+
+table.bugs td {
+  background: #888; color: #fff;
+  padding: 0.5em;
+  text-align: center;
+  border-bottom: 1px #fff solid;
+  border-right: 1px #fff solid;
+}
+
+
+/* ###########################################
+** ### standdard formatting in main #################################
+** ###########################################
+*/
+
+#main ul,li { margin:0; padding:0; list-style-type:none;}
+
+
+
+  /* ### footer ###*/
+
+  #footer {
+    border: none;
+    text-align: left;
+    margin: 0; padding: 2.5em 2em;
+    color: #6A6A5B;
+  }
+  #footer p {font-size: 0.9em;}
+
+  #footer a {margin: 0.1em 0.2em; padding: 0.2em 0.3em; color:#999; font-weight: normal; text-align: left;}
+  #footer a:hover { text-decoration:underline; }
+  #footer a:focus { text-decoration:underline; }
+
+  #footer #flags {padding: 0 0 2.5em 0; line-height: 1em; }
+  #footer #flags a {color: #333; }
+  #footer #flags a:hover {color: #333; text-decoration:underline; }
+  #footer #flags a:focus {color: #333; text-decoration:underline; }
+
+
+
+/* ###########################################
+** ### Custom classes for mainpage / user homepage #################################
+** ###########################################
+*/
+
+#main .main_preposts p {
+  font-size: 11px;
+
+}
+#main .main_preposts img {
+  font-size: 11px;
+  float: left;
+  margin: 0 1em 0.15em 0;
+  padding:4px;
+  border: 1px #ddd solid;
+  background: #f3f3f3;
+}
+#MainUserpic {
+  width: 50px;
+  height: 50px;
+  padding:4px;
+  border: 1px #888 solid;
+  margin-right: 0.8em;
+  margin-bottom: 0.8em;
+}
+.news {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 18px;
+  padding: 3px 0;
+  margin: 0px;
+  letter-spacing: -1px;
+}
+h4.news {
+  padding: 13px 0 3px 0;
+}
+.posts p {
+  font-size: 11px;
+  line-height: 1em;
+  margin: 0px;
+  font-weight: normal;
+}
+div.posts {
+  float:left;
+  padding: 0 20px 0 0;
+}
+
+/* ### teaser on mainpage ### */
+#teaser.teaser_main {
+  padding-bottom: 3em;
+}
+#teaser.teaser_main p {
+  padding: 0.5em;
+  margin: 0px;
+  line-height: 1.7em;
+}
+#teaser.teaser_main #teaser_l {float:left; width: 84px; margin: 0 0 0 0; }
+#teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
+#teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
+
+.innerbox50l {
+  float: left;
+  width: 45%;
+    margin-right: 10px;
+}
+.inner50r {
+  float: left;
+  width: 45%;
+    margin-left: 10px;
+}
+
+/* ###########################################
+** ### Other classes & IDs #############################
+** ###########################################
+*/
+
+.titlelink {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
+.username {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
+.hr_div {padding: 5px 30px 0 30px;}
+
+.button, input.button, .control-links a, .control-links input, a.cancel {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:1.1em;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:3px 8px;
+    text-align:center;
+    width:auto;
+}
+.button a, input.button{color: #ff8800; text-decoration:none; background-color:transparent;}
+.button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+.button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+
+a.bigbutton {
+    background: transparent url(../images/bg_bigbutton_a_w.gif) no-repeat scroll top right;
+    color: #fff;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 30px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+
+a.bigbutton span {
+    background: transparent url(../images/bg_bigbutton_span_w.gif) no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 8px 0 8px 18px;
+}
+
+a.bigbutton:active {
+    background-position: bottom right;
+    color: #000;
+    outline: none; /* hide dotted outline in Firefox */
+}
+
+a.bigbutton:active span {
+    background-position: bottom left;
+    padding: 9px 0 7px 18px; /* push text down 1px */
+}
+
+/* Searchmembers styles */
+
+#mapsearch {font-weight: bold;}
+#mapsearch fieldset {padding: 15px 0 0 20px;}
+#mapsearch label {font-size: 1.5em; color: #fff;}
+#mapsearch input {padding: 0.2em; font-size: 1.2em;}
+#mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
+
+#loading_container {margin: 1em 0}
+
+/* Tagcloud */
+#tagcloud a:link, #tagcloud a:visited {
+text-decoration:none;
+background: none;
+}
+
+#tagcloud a:hover, #tagcloud a:active {
+text-decoration: underline;
+color: #000;
+background: none;
+}
+
+#tagcloud a {
+/*padding: 4px; */
+}
+
+#tagcloud  .tag_smallest {
+font-size: 0.8em;
+}
+
+#tagcloud  .tag_small {
+font-size: 1em;
+}
+
+#tagcloud  .tag_medium {
+font-size:1.5em;
+}
+
+#tagcloud  .tag_large {
+font-size:1.7;
+}
+
+#tagcloud  .tag_largest {
+font-size:2em;
+}
+
+
+/* Standard user boxes with pictures */
+#main li.userpicbox {
+    padding: 10px;
+    width: 180px;
+    /* if we want vcard-like member-display then we have to uncomment the following lines*/
+      border: 1px solid transparent;
+}
+#main li.userpicbox:hover{
+    background-color: #f5f5f5;
+    border-top:1px solid #ccc;
+    border-right:1px solid #999;
+    border-bottom:1px solid #999;
+    border-left:1px solid #ccc;
+}
+#main li.userpicbox a {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* Special classes for AboutUsPages*/
+#main li.userpicbox_big {
+    padding: 20px;
+    width: 320px;
+}
+#main li.userpicbox_big:hover{
+    background-color: #f9f6f6;
+    border-color: #666;
+}
+#main li.userpicbox_big h4 {
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+}
+#main li.userpicbox_big p {
+    margin-top: 10px;
+}
+#main li.userpicbox_big img {
+    margin-top: -10px;
+}
+#main #col3 h2.blogtitle {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #888;
+  padding: 0 0 0.3em 0;
+}
+
+
+/* blog & gallery comments */
+div.comment { padding:0; margin-bottom:1em; }
+div.comment h4 {padding:0.2em; margin:0; }
+div.comment .text {padding:0.2em;}
+div.comment .author {background:#fff; padding:0.2em;}
+
+/* Default styles for the "precontent" area of the template */
+#precontent {
+    background: #e5e5e5;
+}
+#SearchAdvanced div {    padding: 10px 30px; }
+#SearchAdvanced a:hover {    background: transparent; }
+
+
+
+/*
+* messages (used in bw/layout/mymessages.php)
+*
+*/
+#messages {padding: 12px 30px 15px 30px;}
+#messages input {margin:0; padding: 0; }
+#messages a:hover {background-color: transparent; color: #333; text-decoration:none;}
+#messages a:focus {background-color: transparent; color: #333; text-decoration:none;}
+
+#messages .highlight{
+  background: #f5f5f5;
+  border: none 0pt;
+  border-top: 1px solid #e5e5e5;
+  margin-right: 4px;
+  }
+#messages .blank{
+  background: none;
+  border: none 0pt;
+  border-top: 1px solid #e5e5e5;
+  margin-right: 4px;
+  }
+#messages tr.highlight:hover {
+  background: #ffeebb;
+  border: none 0pt;
+  border-top: 1px solid #e5e5e5;
+  margin-right: 4px;
+  }
+#messages tr.blank:hover {
+  background: #ffeebb;
+  border: none 0pt;
+  border-top: 1px solid #e5e5e5;
+  margin-right: 4px;
+  }
+#messages p {padding-top: 1.5em; }
+
+#messagecontent {width: 500px; padding-top: 1em;}
+#messagepagination {width: 500px; padding-left: 30px; padding-bottom: 3em;}/* Media screen end */
+}
+
+/*
+* Admin tools classes
+*
+*/
+
+/* css for admincomment */
+
+div.admincomment {
+  width: 65%;
+  padding-bottom: 4em;
+}
+
+/* css for adminmandatory */
+.update {
+  background-color: #FF6;
+}
+
+/*
+* Places - the geo application - classes
+*
+*/
+
+.places ul.float_left {
+  margin-right: 0.5em;
+  padding-bottom: 4em;
+}
+
+/*
+* css for gallery
+*
+*/
+
+.gallerycontainer {width: 150px; float:left; margin-top: 1em; margin-bottom: 2em; margin-right: 2em;}
+.albumdescription {margin: 0; }
+
+
+/* --- Classes for "round boxes" --- */
+div.box {
+  border: none;
+  border-color: #ddd;
+  margin: 1em 0.25em;
+  padding: 0em;
+}
+
+div.box h3 {
+  padding: 0.3em;
+  margin: 0;
+  background: #eee;
+  color: #000;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+/*
+div.box {
+  background-color: transparent;
+  background-image:url(../images/box-right.png);
+  background-position:right center;
+  background-repeat:repeat-y;
+  margin:10px 10px 0pt;
+}
+
+div.box .first {
+  background-color: transparent;
+  background-image:url(../images/box-top-left.png);
+  background-repeat:no-repeat;
+  display:block;
+  line-height:20px;
+  padding:0;
+  margin: 0;
+  border: none;
+}
+
+div.box .first span,div.box .first a {
+  background-color: transparent;
+  background-image:url(../images/box-top.png);
+  background-repeat:repeat-x;
+  display:block;
+  line-height:30px;
+  margin:0pt 10px 0pt 20px;
+  text-decoration:none;
+  padding-top: 10px;
+  cursor: move;
+}
+
+div.box .first a img,div.box .first span img{
+  cursor: pointer;
+}
+
+div.box div.floatbox {
+  background-color: transparent;
+  background-image:url(../images/box-left.png);
+  background-position:left top;
+  background-repeat:repeat-y;
+  min-height:30px;
+  padding:10px 20px 10px 20px;
+  margin-right: 20px;
+}
+
+
+div.box div.corner {
+  background-color: transparent;
+  background-image:url(../images/box-top-right.png);
+  background-position:right top;
+  background-repeat:no-repeat;
+  float:right;
+  height:30px;
+  line-height:30px;
+  margin:0pt;
+  padding:0pt 15px 0pt 0pt;
+}
+
+div.box div.boxbottom {
+  background-color: transparent;
+  background-image:url(../images/box-bottom.png);
+  background-position:left bottom;
+  background-repeat:repeat-x;
+  color:#888888;
+  font-size:0.9em;
+  height:15px;
+  line-height:15px;
+}
+
+div.box div.boxbottom div.author {
+  background-color: transparent;
+  background-image:url(../images/box-bottom-left.png);
+  background-position:left bottom;
+  background-repeat:no-repeat;
+  float:left;
+  height:15px;
+  line-height:15px;
+  padding:0pt 0pt 0pt 20px;
+}
+
+div.box div.boxbottom div.links {
+  background-color: transparent;
+  background-image:url(../images/box-bottom-right.png);
+  background-position:right bottom;
+  background-repeat:no-repeat;
+  float:right;
+  height:15px;
+  line-height:15px;
+  padding:0pt 20px 0pt 0pt;
+}
+*/
+
+h1.search {padding-bottom: 0.3em; margin-bottom: 0;}
+
+
+/* bulletpoint on "about us" page */
+.circle1 {
+    background:  url(../images/circle1.gif) no-repeat;
+    height: 30px;
+    padding-top: 0.3em;
+}
+.circle2 {
+    background:  url(../images/circle2.gif) no-repeat;
+    height: 30px;
+}
+.circle3 {
+    background:  url(../images/circle3.gif) no-repeat;
+    height: 30px;
+}
+.circle1, .circle2, .circle3 a{
+    padding-left: 4em;
+    padding-bottom: 0.6em;
+}
+
+
+#teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div,#teaser td {color: #333}
+
+#teaser .small {
+    line-height: normal;
+}
+#teaser .grey {
+    color: #999;
+}
+
+#teaser #title { float: left; margin-right: 0}
+/*
+#teaser a { color: #333; font-weight: bold; }
+#teaser a:hover {background-color: transparent; text-decoration:none; color: #999;}
+#teaser a:focus {background-color: transparent; text-decoration:none; color: #999;}
+*/
+#teaser #teaser_l {float:left; width: 120px; margin: 0 0 0 0; }
+#teaser #teaser_r {width: 70%; margin: 0 10px 0 0; }
+
+  #teaser #navigation-path{
+    color: #333;
+  }
+
+    #footer {
+    background: none;
+  }
+
+  /* teaser's shadow */
+#teaser_shadow {
+    background: transparent;
+}
+
+#teaser a.bigbutton {
+    color: #444;
+}
+
+#teaser a.bigbutton span {
+    color: #fff;
+}
+
+#teaser a.bigbutton:active {
+    color: #000;
+}
+
+    /* some Gallery classes */
+    .gallery_container {
+        float:none;
+        padding: 2px;
+        padding-right: 10px;
+        padding-bottom: 8px;
+    /*    background: #fff url(/images/photoset_bg.png) bottom right no-repeat;
+        border:2px solid #e5e5e5;
+        border-bottom:0;
+        border-right:0;
+    */
+    }
+    
+    .message {
+        font-weight: normal;
+    }
+    a.unread {
+        font-weight: bold;
+    }
+    
+/* Fieldset menu - creates a tab-menu from form fieldsets via fieldset.js */
+div.fieldset-menu{
+    margin:0 1em 1em 0;
+}
+fieldset{
+    padding:0 1em 0 1em;
+}
+div.fieldset-menu ul{
+    margin: 0;
+    padding:0;
+    list-style-type:none;
+    border-bottom: 1px solid #ccc;
+}
+div.fieldset-menu li{
+    padding-left:1em;
+    padding-right:1em;
+    padding-top: 0.25em;
+    padding-bottom: 0.4em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    display:inline;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    line-height: 2em;
+    background-color: #eee;
+}
+div.fieldset-menu li.active {
+    border-bottom: 1px solid white;
+    font-weight: bold;
+    background-color: #fff;
+}
+div.fieldset-menu li a{
+    color: #333;
+}
+div.fieldset-menu li a:hover{
+    color: #333;
+}
+div.fieldset-menu li.active a {
+    color: #333;
+}
+
+/* Login Widget */
+#login-widget {
+    padding: 2em;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+}
+#login-widget input#login-u, #login-widget input#login-p {
+    width: 8em;
+}
+#loginmessage {
+    width: 100%;
+    padding: 1em 1em 1em 3em;
+    color: #ffffff;
+    background: #222222 url(../images/iconsfam/accept.png) no-repeat scroll 1em 1em;
+    border-bottom: 2px solid #000000;
+}
+#loginmessage.false {
+    background: #222222 url(../images/iconsfam/exclamation.png) no-repeat scroll 1em 1em;
+    border-bottom: 4px solid #ff0000;
+}
+#language_select {
+    color: #ffffff;
+	float: right;
+	padding: 1.3em;
+}
+
+/**
+ *
+ * (en) wordclick.css for translation links (adminword)
+ *
+ */
+
+
+/* basic class for translation link */
+a.tr_link {
+    background:#ddeeff none !important;
+    border:1px solid #888 !important;
+    font-weight:normal !important;
+    display:inline !important;
+    color: #333 !important;
+    padding-left:4px !important;
+    padding-right:4px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* "Hotpink" for missing words + translations */
+a.tr_link.missing_word {
+    background-color: #FF69B4 !important;
+    color: #000 !important;
+    letter-spacing:0 !important;
+}
+a.tr_link.missing_translation {
+    background-color:#FF69B4 !important;
+    color: #000 !important;
+}
+
+/* "Aquamarine" for missing words + translations */
+a.tr_link.obsolete {
+    background-color:#7FFFD4 !important;
+}
+
+/* "GreenYellow" for editing existing translation */
+a.tr_link.successful_translation {
+    background-color:#ADFF2F !important;
+}
+
+/* "LemonChiffon" for hovering */
+a.tr_link:hover {
+    background: #FFFACD !important;
+    color: #333 !important;
+    border:1px solid #888 !important;
+    font-weight: normal !important;
+    text-decoration: none !important;
+}
+
+
+/* are those classes in use ? */
+body.wordclick_mode a.tr_link.successful_translation.tr_control {
+    font-size: 32px !important;
+    border:3px outset grey !important;
+}
+
+.wordclick_activation_link {
+    cursor:pointer;
+}
+
+
+
+}

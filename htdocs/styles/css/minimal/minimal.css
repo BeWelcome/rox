@@ -1,0 +1,28 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+ *
+ * (en) draft for a central stylesheet
+ * (de) Vorlage für ein zentrales Stylesheets
+ *
+ * @copyright       Copyright 2005-2007, Dirk Jesse
+ * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
+ *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
+ * @link            http://www.yaml.de
+ * @package         yaml
+ * @version         3.0.2
+ * @revision        $Revision: 107 $
+ * @lastmodified    $Date: 2007-08-01 18:27:14 +0200 (Mi, 01 Aug 2007) $
+ */
+
+/* import core styles | Basis-Stylesheets einbinden */
+@import url(../../yaml/core/base.css);
+
+/* import screen layout | Screen-Layout einbinden */
+/* #### BW Costumizing #### */
+@import url(screen/basemod_minimal.css);
+@import url(screen/content_minimal.css);
+@import url(navigation/nav_minimal.css);
+
+/* import print layout | Druck-Layout einbinden */
+/* @import url(/css/print/print_003.css); */

@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
 			<?php if (count($row) > 2) { ?>
 			<h3><?php  echo $words->get('HowDoIKnow');?></h3>
 			<?php foreach ($row as $e) { ?>
-			<?php if ($ii_new = $ii++ && ($ii_new != 1 || $ii++ != count($row))) {?> 
+			<?php if ($ii_new = $ii++ && ($ii_new != 0 || $ii++ != count($row))) {?> 
 			<div class="float_left" style="margin: 15px 5px 0 0; vertical-align: middle">
 				<p class="small grey">
 				<?php if (isset($e['totype']) && $e['totype'][0] != '0') {?> 

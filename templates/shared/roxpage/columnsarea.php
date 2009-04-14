@@ -11,13 +11,7 @@
 
   <div id="<?=$mid_column_name ?>">
     <div id="<?=$mid_column_name ?>_content" class="clearfix">
-      <table class="full">
-        <tr>
-          <td class="info">
-            <?php $this->_column($mid_column_name) ?>
-          </td>
-        </tr>
-      </table>
+      <?php $this->_column($mid_column_name) ?>
     </div> <!-- <?=$mid_column_name ?>_content -->
     <!-- IE Column Clearing -->
     <div id="ie_clearing">&nbsp;</div>

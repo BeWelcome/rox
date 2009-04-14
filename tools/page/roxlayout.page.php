@@ -16,9 +16,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        // TODO: merge main.css and bw_yaml.css (for fewer HTTP reqs)5C
-        $stylesheets[] = 'styles/YAML/main.css';
-        $stylesheets[] = 'styles/YAML/bw_yaml.css';
+        $stylesheets[] = 'styles/css/minimal/minimal.css';
         return $stylesheets;
     }
 
@@ -74,7 +72,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheetPatches()
     {
         $stylesheet_patches = parent::getStylesheetPatches();
-        $stylesheet_patches[] = 'styles/YAML/patches/iehacks_3col_vlines.css';
+        $stylesheet_patches[] = 'styles/css/minimal/patches/patch_2col_left_seo.css';
         return $stylesheet_patches;
     }
 
@@ -85,20 +83,29 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getTopmenuItems()
     {
         $items = array();
-        if (APP_User::isBWLoggedIn('NeedMore,Pending')) {
-            $items[] = array('main', 'main', 'Menu');
+
+        if (APP_User::isBWLoggedIn()) {
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
-            $items[] = array('profile', 'bw/member.php?cid='.$username, 'MyProfile');
+            $items[] = array('profile', 'people/'.$username, $username, true);
         }
-        $items[] = array('searchmembers', 'searchmembers', 'FindMembers');
-        $items[] = array('trips', 'trip', 'Trips');
-        $items[] = array('blogs', 'blog', 'Blogs');
-        $items[] = array('forums', 'forums', 'Community');
-        $items[] = array('groups', 'bw/groups.php', 'Groups');
-        $items[] = array('gallery', 'gallery', 'Gallery');
+        // $items[] = array('searchmembers', 'searchmembers/index', 'FindMembers');
+        // $items[] = array('forums', 'forums', 'Community');
+        // $items[] = array('groups', 'bw/groups.php', 'Groups');
+        // $items[] = array('gallery', 'gallery', 'Gallery');
         $items[] = array('getanswers', 'about', 'GetAnswers');
+        $items[] = array('findhosts', 'findmembers', 'FindHosts');
+        $items[] = array('explore', 'explore', 'Explore');
+        if (APP_User::isBWLoggedIn()) {
+            $items[] = array('messages', 'messages', 'Messages');
+        }
+        
+        $subitems = array();
+        
+        $subitems[] = array('forums', 'forums', 'Community');
+        
 
         return $items;
+        return $subitems;
     }
 
     /*
@@ -166,6 +173,7 @@ class PageWithRoxLayout extends PageWithHTML
         $words = $this->getWords();
         $menu_items = $this->getTopmenuItems();
         $active_menu_item = $this->getTopmenuActiveItem();
+        $logged_in = APP_User::isBWLoggedIn();
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }

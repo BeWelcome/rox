@@ -140,12 +140,15 @@ switch (GetParam("action")) {
 			$IdAddress=$rr->id;
 		}
 		if ($IdAddress!=0) { // if the member already has an address
-				$str = "update addresses set IdCity=" . $pp->IdCity . ",HouseNumber=" . NewReplaceInCrypted($pp->HouseNumber,"addresses.HouseNumber",$IdAddress, $rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($pp->StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . ReplaceInCrypted($pp->Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;
-				sql_query($str);
+			$iHouseNumber=NewReplaceInCrypted($pp->HouseNumber,"addresses.HouseNumber",$IdAddress, $rr->HouseNumber, $m->id) ;
+			$iStreetName=NewReplaceInCrypted($pp->StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) ;
+			$iZip=NewReplaceInCrypted($pp->Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) ;
+			$str = "update addresses set IdCity=" . $pp->IdCity . ",HouseNumber=" . $iHouseNumber . ",StreetName=" . $iStreetName . ",Zip=" . $iZip . " where id=" . $IdAddress;
+			sql_query($str);
 		} else {
-				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted($pp->HouseNumber,"addresses.HouseNumber",0) . "," . NewInsertInCrypted($pp->StreetName,"addresses.StreetName",0) . "," . NewInsertInCrypted($pp->Zip,"addresses.Zip",0) . ",now(),\"Address created by adminmandatory\")";
-				sql_query($str);
-			    $IdAddress=mysql_insert_id();
+			$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted($pp->HouseNumber,"addresses.HouseNumber",0) . "," . NewInsertInCrypted($pp->StreetName,"addresses.StreetName",0) . "," . NewInsertInCrypted($pp->Zip,"addresses.Zip",0) . ",now(),\"Address created by adminmandatory\")";
+			sql_query($str);
+		    $IdAddress=mysql_insert_id();
 		}
 
 

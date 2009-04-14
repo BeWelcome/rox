@@ -196,12 +196,18 @@ function NewReplaceInCrypted($ss,$TableColumn,$IdRecord, $IdCrypt, $_IdMember = 
 		if (!isset ($rr->id)) { // if no record exist
 			return (InsertInCrypted($ss,$TableColumn,$IdRecord, $IdMember, $IsCrypted)); // Create a full new crypt record
 		}
+		else {
+			if (empty($IsCrypted)) {
+				$IsCrypted=$rr->IsCrypted ;
+			}
+		}
 	}
 
 	// todo : manage cryptation, manage IdMember when it is not the owner of the record (in this case he must have the proper right)
 
-   $ssA=GetCryptA($ss);
-   $ssM=GetCryptM($ss,$IsCrypted);
+	$ssA=GetCryptA($ss);
+// 	LogStr(" Before calling  GetCryptM(\"".addslashes($ss)."\",\"".$IsCrypted."\")","JYH") ;
+	$ssM=GetCryptM($ss,$IsCrypted);
 	$str = "update ".$_SYSHCVOL['Crypted']."cryptedfields set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IsCrypted='" . $IsCrypted . "',AdminCryptedValue='" . $ssA . "',MemberCryptedValue='" . $ssM . "' where id=" . $rr->id . " and IdMember=" . $rr->IdMember;
 	mysql_query($str);
 	return ($IdCrypt);
@@ -252,6 +258,7 @@ function GetCryptM($ss,$IsCrypted="crypted") {
 // -----------------------------------------------------------------------------
 // Return the crypted value of $ss according to member cryptation algorithm
 function GetCryptM($ss,$IsCrypted="crypted") {
+//	LogStr(" entering GetCryptM(\"".addslashes($ss)."\",\"".$IsCrypted."\")","JYH") ;
 	switch ($IsCrypted) {
 		 case "crypted" :
 		 case "always" :

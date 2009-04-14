@@ -16,8 +16,8 @@ class TourPage extends PageWithActiveSkin
     }
     
     protected function getStylesheets() {
-        $stylesheets[] = 'styles/minimal_index.css';
-        $stylesheets[] = 'styles/YAML/screen/custom/tour.css';
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';
         return $stylesheets;
     }
     
@@ -61,11 +61,7 @@ class TourPage extends PageWithActiveSkin
     }
     
     protected function quicksearch() {
-/*
-        require SCRIPT_BASE . 'build/rox/templates/_languageselector.helper.php';
-        $languageSelectorDropDown = _languageSelectorDropDown();
-        echo '<div class="float_left" style="padding-left:15px">'.$languageSelectorDropDown.'</div>';
-*/
+        parent::quicksearch();
     }
     
 }

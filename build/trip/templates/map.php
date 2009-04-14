@@ -10,22 +10,20 @@ if (isset($request[1]) && $request[1] == 'show' && isset($request[2])) {
 ?>
 
 <div id="onmap">
-    <form method="get" action="trip/search">
     <h1 id="trip_name">
         <a href="trip">
         <?php echo $words->getFormatted('tripsTitle'); ?><?=$sub ? ' / ' : ''?> 
         </a>
         <?=$sub?>
     </h1>
-    <div class="trip_author"><a href="trip/search"><?=$words->get('TripsSearch')?> </a>
-        <input type="text" name="s" onfocus="this.value='';" value="<?=$words->getSilent('TripsSearchEnterLocation')?>">
+    <div class="trip_author">
+    	<a href="trip/search"><?=$words->get('TripsSearch')?> </a>
     </div>
-    </form>
 </div>
 <div class="popupmap" id="map_alltrips">
-    <div id="map" style="width:100%; height:250px; border-top: 2px solid #666; background-color: #333;"></div>
+    <div id="map" class="tripmap"></div>
 </div>
-<div id="handle2" style="width: 100%; height: 14px; cursor: s-resize; text-align: center"><a href="#" onclick="return false" title="Drag this bar to resize the map!"><img src="images/btns/resize_hor.png"></a></div>
+<div id="handle2" style="width: 100%; height: 14px; cursor: s-resize; text-align: center"><a href="#" onclick="return false" title="Drag this bar to resize the map!"><img src="images/btns/resize_hor.png" alt="resize" /></a></div>
 
 <?=$words->flushBuffer()?>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
@@ -151,8 +149,6 @@ function startRest() {
         map = new GMap2(document.getElementById("map"));
         var mapTypeControl = new GSmallMapControl();
         var topRight = new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(30,50));
-        map.addControl(mapTypeControl,topRight);
-        map.addControl(new GMapTypeControl());
         map.setCenter(new GLatLng(<?=$locations[$point]->lat?>, <?=$locations[$point]->lng?>), 5);
         map.addMapType(G_PHYSICAL_MAP);
         map.setMapType(G_PHYSICAL_MAP); 

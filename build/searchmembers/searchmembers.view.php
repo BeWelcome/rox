@@ -89,10 +89,17 @@ class SearchmembersView extends PAppView {
         require 'templates/userbar_quicksearch.php';
         }
     }
+	public function memberlist($mapstyle,$TabSortOrder, $quicksearch=0) {
+        if (!$quicksearch) {
+        require 'templates/memberlist.php';
+        } else {
+        require 'templates/memberlist_quicksearch.php';
+        }
+    }
     
 	/* This adds other custom styles to the page*/
 	public function customStyles($mapstyle,$quicksearch=0) {
-        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_search_'.$mapstyle.'.css" type="text/css"/>';
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/bw_basemod_search_'.$mapstyle.'.css" type="text/css"/>';
         $out .= '<link rel="stylesheet" type="text/css" href="styles/prototip/prototip.css" />';
 		return $out;
     }

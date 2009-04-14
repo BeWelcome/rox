@@ -25,14 +25,14 @@ require_once "footer.helper.php";
 ?>
 
 <div id="footer">
-  <p class="center"><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
-  <div id="flags" class="center">
+  <p><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
+  <div id="flags">
     <p><?php echo $languageSelector; ?></p>
-    <p>Translator:</p>
+
     <?php translator_block() ?>
   </div>
 
-  <p class="center">
+  <p>
     <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> • 
     <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> • 
     <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> • 
@@ -57,7 +57,7 @@ if (PVars::get()->debug) {
     $R = MOD_right::get();
     if($R->HasRight("Debug","DB_QUERY")) {
 ?>
-<p class="center">
+<p>
 <a style="cursor:pointer;" onClick="$('query_list').toggle();">DB queries</a>
 </p>
 <div id='query_list' style="display:none;">

@@ -24,67 +24,126 @@ Boston, MA  02111-1307, USA.
 ?>
 
 <div id="teaser" class="clearfix teaser_main">
-<h2><?=$ww->HelloUsername($_SESSION['Username'])?></h2>
+	<h1><?=$words->getSilent('HelloUsername',$_SESSION['Username'])?></h1>
+<!-- Status input field - maybe that's an option later...
+	<div class="floatbox" style="display:none;">
+		<h1 style="float:left">
+			<?=$words->getSilent('HelloUsername',$_SESSION['Username'])?>
+		</h1>
+		<form style="float:right" id="form1" name="form1" method="post" action="searchmembers/quicksearch">
+		<div >
+			<input border: 1px solid #f5f5f5" name="searchtext" type="text" class="search-style" id="searchq" size="30" onblur="if (this.value=='') {this.value=statusvalue}" value="" onfocus="statusvalue=this.value; this.value='';" />
+			<select name="top5">
+			<option name="whatever">I'm hosting</option>
+			<option name="asdfho">Can't host</option>
+			<option name="asdfho">Maybe</option>
+			<option name="asdfho">I'm travelling</option>
+			</select>
+		</div>
+		<input type="hidden" name="quicksearch_callbackId" value="1"/>
+		<input type="hidden" name="searchopt" id="searchopt" />
+		</form>
+	</div>
+-->
 <div class="subcolumns">
-    <div class="c50l">
+    <div class="c33l">
     <div class="subcl">
-    <div class="floatbox">
-        <img src="<?=$thumbPathMember?>" id="MainUserpic" class="float_left" alt="ProfilePicture" style="margin-right: 10px;" />
-        <div class="float_left">
-        <p>
-        <?php if (isset($_mainPageNewMessagesMessage)) { ?>
-            <a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a>
-        </p>
-        <?php } ?>
-        <?php
-        $notify_widget->render();
-        ?>
-        </div>
-    </div> <!-- floatbox -->
+    <ul id="personalmenu">
+        <li><a id="tablink1" class="active-tab first" href="#tab1">All that's happening</a></li>
+        <li><a id="tablink2" href="#tab2"><?=$words->getSilent('FindAHost')?></a></li>
+        <li><a id="tablink3" href="#tab3"><?=$words->getSilent('CreateATrip')?></a></li>
+        <li><a id="tablink4" href="#tab4"><?=$words->getSilent('CheckYourMessages')?>
+	        <?php if (isset($_mainPageNewMessagesMessage)) { ?>
+                (<img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/> <?=$_newMessagesNumber?>) 
+            <?php } ?>
+	    </a></li>
+    </ul>
     </div> <!-- subcl -->
     </div> <!-- c38l -->
 
-<?php
-    /*
-    **   deactivated for now
-    echo "                        <div id=\"mapsearch\">\n";
-    echo "                        <form>\n";
-    echo "                              <fieldset> \n";
-    echo "                              <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
-    echo "                              <input type=\"hidden\" name=\"action\" value=\"mapsearch\" />\n";
-    echo "                              <input type=\"button\" value=\"Search\" class=\"button\" id=\"submit-button\" /><br />\n";
-    echo "                              Search the map\n";
-    echo "                            </fieldset>\n";
-    echo "                        </form>\n";
-    echo "                        </div>\n";
-    */
-
-    /* Instead we use this temporary solution */
-?>
-<div class="c50r">
+<div class="c66r">
     <div class="subcr">
-    <div id="mapsearch">
-    <!--
-        <ul class="search-options">
-            <li id="tab1" class="selected"><a href="#" onclick="javascript:setSearchOptions(1);"><img src="images/icons/user.png" > Members</a></li>
-            <li id="tab2"><a href="#" onclick="javascript:setSearchOptions(2);"><img src="images/icons/group.png"> Groups</a></li>
-            <li id="tab3"><a href="#" onclick="javascript:setSearchOptions(3);"><img src="images/icons/world.png"> Places</a></li>
-        </ul> 
-    -->
-    <div id="search-bar">
-        <form id="form1" name="form1" method="post" action="searchmembers/quicksearch">
-        <div><input name="searchtext" type="text" class="search-style" id="searchq" size="30" value="Search for hosts, travellers..." onfocus="this.value='';" /></div>
-        <input type="hidden" name="quicksearch_callbackId" value="1"/>
-        <input type="hidden" name="searchopt" id="searchopt" /><br />
-        <input type="submit" value="Search" id="btn-create-location" class="button"/>
-        </form>
-    </div>
-    </div> <!-- mapsearch -->
+    
+			<div class="panel active-tab-body" id="tab1">
+                    <?php
+                    $notify_widget->render();
+                    ?>
+        			 <p>
+
+                    </p>
+                    
+			</div> <!-- tab1 -->
+			<div class="panel" id="tab2">
+
+                    <div id="mapsearch">
+	
+                    <h2><?=$words->get('StartFindingAHost')?></h2>
+                    <div id="search-bar">
+                        <form id="form1" name="form1" method="get" action="searchmembers">
+                        <input name="vars" type="text" class="search-style" id="searchq" size="30" onblur="if(this.value == '') this.value='Search for hosts, places...'" value="Search for hosts, places..." onfocus="this.value='';" />
+                        <input type="hidden" name="searchopt" id="searchopt" />
+                        <input type="submit" value="Search" id="btn-create-location" class="button"/>
+                        </form>
+                    </div>
+                    <div id="browsecities_dropdown" style="display:none;">
+                    <h3>Browse Countries</h3>
+                    <select onchange="window.location.href=this.value; return false">
+                    <?php foreach ($Countries as $continent => $countries_group) { ?>
+	                     <optgroup label="<?=$continent?>">
+	                    <?php foreach ($countries_group as $code => $country) { ?>  
+		                     <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
+		                <?php } ?>
+	                    </optgroup>
+                    <?php } ?>
+                    </select>
+                    </div>
+					<script type="text/javascript">
+					$('browsecities_dropdown').show();
+					</script>
+
+                    </div> <!-- mapsearch -->
+                    
+			</div> <!-- tab2 -->
+			<div class="panel" id="tab3">
+
+					<h2>Create a trip</h2>
+					<form method="post" action="trip/create" class="def-form">
+                            <div class="row">
+                                <label for="trip-name"><?=$words->get('TripLabel_name')?></label><br/>
+                                <input type="text" id="trip-name" name="n" class="long"<?php
+                    if (isset($vars['n']) && $vars['n'])
+                        echo ' value="'.htmlentities($vars['n'], ENT_COMPAT, 'utf-8').'"';
+                                ?>/>
+                                <p class="desc"></p>
+                            </div>
+                            <div class="row">
+                                <label for="trip-desc"><?=$words->get('TripLabel_desc')?></label><br/>
+                                <textarea id="trip-desc" name="d" cols="40" rows="4"><?php
+                    if (isset($vars['d']) && $vars['d'])
+                        echo htmlentities($vars['d'], ENT_COMPAT, 'utf-8');
+                                ?></textarea>
+                                <p class="desc"><?=$words->get('TripDesc_desc')?></p>
+                                
+                                <input type="hidden" name="<?=$TripcallbackId?>" value="1"/>
+                                <input type="submit" value="<?php echo $editing ? $words->get('TripSubmit_edit') : $words->get('TripSubmit_create');?>"/>
+                            </div>
+					</form>
+					
+			</div> <!-- tab3 -->
+			<div class="panel" id="tab4">
+
+                <?php $inbox_widget->render() ?>
+                <p><a href="messages">more...</a></p>
+					
+			</div> <!-- tab4 -->
+
     </div> <!-- subcr -->
 </div> <!-- c62r -->
 </div> <!-- subcolumns -->
+<div><?=$words->flushBuffer()?></div>
 </div> <!-- teaser -->
 
+<!--
 <style type="text/css">
     p{padding:6px 0 20px 0;}
     #search-bar{padding:0; clear:both;}
@@ -96,19 +155,20 @@ Boston, MA  02111-1307, USA.
     #teaser .selected a{background:#FFC04A; color:#fff;}
     #teaser ul.search-options li.selected a{background:#FFC04A; color:#fff;}
 </style>
+-->
 <script language="javascript">
-function setSearchOptions(idElement){
+
+function tabPersonal(idElement){
     /* Total Tabs above the input field (in this case there are 3 tabs: web, images, videos) */
-    tot_tab = 3;
-    tab     = document.getElementById('tab'+idElement);
-    search_option = document.getElementById('searchopt');
-    for(i=1; i<=3; i++){
-        if(i==idElement){
-            tab.setAttribute("class","selected");
-            search_option.value=idElement;
-        } else {
-            document.getElementById('tab'+i).setAttribute("class","");
-        }
-    }
+    $$('#personalmenu li').invoke('hide');
+    this.show();
 }
+
+function observeTabs(tab){
+    /* Total Tabs above the input field (in this case there are 3 tabs: web, images, videos) */
+    Event.observe(tab,'click',tabPersonal(tab));
+}
+
+//$$('#personalmenu li').each(Element,observeTabs);
+Event.observe(window,'load',function(){ new Fabtabs('personalmenu'); },false);
 </script>

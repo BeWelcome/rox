@@ -14,17 +14,18 @@ class LoginFormWidget extends RoxWidget
         
         $callback_tag = $formkit->setPostCallback('LoginController', 'loginCallback');
         $mem_recovery_tag = $formkit->setMemForRecovery();
-        
+
+	    $mem_redirect = $formkit->mem_from_redirect;
+		$err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
         $url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         if (!empty($_SERVER['QUERY_STRING'])) {
             $url .= '?'.$_SERVER['QUERY_STRING'];
         }
         
         // hack for HTTPS-Login
-        if (strrpos($url, 'test') === false && strrpos($url, 'bw') === false && 
-	    strrpos($url, 'alpha') === false && strrpos($url, 'local') === false) {
+        if (strrpos($url, 'test') === false && strrpos($url, 'bw') === false  && strrpos($url, 'alpha') === false && strrpos($url, 'localhost') === false)
             $url = str_replace('http://','https://',$url);
-	}
+        
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
         
         if ($logged_in) {
@@ -39,8 +40,7 @@ class LoginFormWidget extends RoxWidget
             <?php
             } else {
             ?>
-                <li style="float:right; margin-right: 30px"> 
-                <a href="user/logout" onclick="this.blur();"><span><?=$words->get('Logout')?></span></a></li>
+                <span id="logout"><a href="user/logout" ><?=$words->get('Logout')?></a></span>
             <?php
             }
             // for translators, we want links for all the translations,
@@ -55,13 +55,22 @@ class LoginFormWidget extends RoxWidget
         <form id="main-login-form" method="post" action="<?=$url ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
-          <label for="login-u"><?=$ww->Username ?></label><br />
-          <input type="text" id="login-u" name="u" />
-          <br />
-          <label for="login-p"><?=$ww->Password ?></label><br />
-          <input type="password" id="login-p" name="p" />
-          <br />
-          <input type="submit" value="Login" id="smallbutton" class="button"/>
+            <table>
+                <tr>
+                    <td>
+                        <label for="login-u"><?=$ww->Username ?></label><br />
+                        <input type="text" id="login-u" name="u" />
+                    </td>
+                    <td>
+                        <label for="login-p"><?=$ww->Password ?></label><br />
+                        <input type="password" id="login-p" name="p" />
+                    </td>
+                    <td>
+                        <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
+                    </td>
+                </tr>
+            </table>
+            
         </form>
         
         <script type="text/javascript">
@@ -72,20 +81,30 @@ class LoginFormWidget extends RoxWidget
         <?php } else { ?>
         <div class="info" id="login-widget">
         <h3><?=$ww->Login ?></h3>
+		<?if ($err) : ?>
+		<p class="note warning"><?=$err?></p>
+		<? endif ?>
         <form method="post" action="<?=$url ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
-          <label for="login-u"><?=$ww->Username ?></label><br />
-          <input type="text" id="login-u" name="u" />
-          <br />
-          <label for="login-p"><?=$ww->Password ?></label><br />
-          <input type="password" id="login-p" name="p" />
-          <br />
-          <input type="submit" value="Login" id="smallbutton" class="button"/>
-          <br />
+          
+          <table>
+          <tr><td align="right">
+            <label for="login-u"><?=$ww->Username ?></label>
+          </td><td>
+            <input type="text" id="login-u" name="u" />
+          </td></tr>
+          <tr><td align="right">
+            <label for="login-p"><?=$ww->Password ?></label>
+          </td><td>
+            <input type="password" id="login-p" name="p" />
+          </tr></td>
+          <tr><td>&nbsp;</td><td>
+            <input type="submit" value="Login" class="button"/>
+          </td></tr></table>
           <p><?=$ww->LoginformForgetPassword('<a href="bw/lostpassword.php">', '</a>') ?></p>
           <h3><?=$ww->SignupNow ?></h3>
-          <p><?=$ww->IndexPageWord17('<a href="signup">', '</a>') ?></p>
+          <p><?=$ww->IndexPageWord17('<a class="button" href="signup">', '</a>') ?></p>
         </form>
         <script type="text/javascript">document.getElementById("login-u").focus();</script>
         </div>

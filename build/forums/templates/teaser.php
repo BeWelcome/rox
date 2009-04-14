@@ -9,7 +9,7 @@ $User = APP_User::login();
         <!-- CategoryTitle in teaser -->
         <div class="forumtitle">
             <?php $title = $boards->getBoardName();
-            if ($title != 'Forums') {echo ' > <a href="forums/', $title ,'">', $title,'</a>';}
+            if ($title != 'Forums') {echo '<a href="forums/', $title ,'">', $title,'</a>';}
             ?>
         </div> <!-- forumtitle -->
     </div> <!-- title -->
@@ -27,6 +27,6 @@ $User = APP_User::login();
                 <input type="submit" name="sa" value="Search" />
             </div>
         </form>
-        <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+        <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&lang=en"></script>
     </div> <!-- float_right -->
 </div> <!-- teaser -->

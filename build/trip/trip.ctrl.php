@@ -183,7 +183,7 @@ class TripController extends PAppController {
 		$trip_data = $this->_model->getTripData();
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
-        $P->teaserBar = $vw->displayMap($trips, $trip_data);
+        $P->newBar = $vw->displayMap($trips, $trip_data);
         $P->content .= $vw->displayTrips($trips, $trip_data, $page);
         
         $User = APP_User::login();
@@ -197,7 +197,7 @@ class TripController extends PAppController {
         $vw = new ViewWrap($this->_view);
 //		$trips = $this->_model->getTrips($handle);
 		$trip_data = $this->_model->getTripsMarkers();
-        $P->teaserBar .= $vw->displayMap($trips = false, $trip_data = false);
+        $P->newBar .= $vw->displayMap($trips = false, $trip_data = false);
     }
 
     private function showTeaser($trip = false) {
@@ -223,18 +223,11 @@ class TripController extends PAppController {
             header("Location: " . PVars::getObj('env')->baseuri . "trip");
         }
         $P = PVars::getObj('page');
-        $vw = new ViewWrap($this->_view);
-        $P->teaserBar = $vw->displaySingleTrip_Map($trip, $trip_data);
+        $vw = new ViewWrap($this->_view);	
+        $P->content = $vw->heading_singleTrip($trip, $trip_data);
+        $P->newBar = $vw->displaySingleTrip_Map($trip, $trip_data);
         $P->newBar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
         $P->content .= $vw->displaySingleTrip($trip, $trip_data);
-        // modify the 2col stylesheet slightly - bigger sidebar
-        $style = '
-            <style type="text/css">
-                #col1 {width: 240px; }
-                #col3 {margin-left: 240px;}
-            </style>
-        ';
-        $P->addStyles .= $style;
     }
 }
 ?>

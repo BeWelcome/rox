@@ -24,7 +24,7 @@ class PlacesView extends PAppView {
     public function customStyles()
     {       
     // calls a 1column layout 
-         echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/places.css\" type=\"text/css\"/>";
+         echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/custom/places.css\" type=\"text/css\"/>";
     }
     public function teaserplaces($countrycode,$country,$region,$city) {
         require 'templates/teaserCountry.php';
@@ -115,18 +115,18 @@ class PlacesView extends PAppView {
     }   
 
     private function displayContinent($continent, $countries) {
-       $html = '';
-       $html .= '<ul>';
-       foreach ($countries as $code => $country) {
-           $html .= '<li><div class="sprite sprite-'.strtolower($code).'"><a href="places/'.$code.'"></a></div> <a href="places/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
-           if ($country['number']) {
+        $html = '';
+        $html .= '<ul>';
+        foreach ($countries as $code => $country) {
+           $html .= '<li class="spritecontainer"><div class="sprite sprite-'.strtolower($code).'"><a href="places/'.$code.'"></a></div> <a href="places/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
+            if ($country['number']) {
                $html .= '<span class="small grey"> ('.$country['number'].')</span>';
-           }
-           $html .= '</a></li>';
-       }
-       $html .= '</ul>';
-       return $html;   
-   }
+            }
+            $html .= '</a></li>';
+        }
+        $html .= '</ul>';
+        return $html;   
+    }
     
     public function placesNotFound($ss="") {
         echo '<h2>Places '.$ss.' not found</h2>'; // TODO

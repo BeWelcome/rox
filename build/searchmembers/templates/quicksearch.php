@@ -27,7 +27,7 @@ function DisplayResults($TList, $searchtext = "") {
     $words = new MOD_words();
 	$iiMax = count($TList);
 
-    ?><div class="info">
+    ?>
     <table border="0">
     <?php
 	if ($iiMax>0) { // only display results if they are found entries

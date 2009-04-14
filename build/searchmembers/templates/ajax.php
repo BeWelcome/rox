@@ -63,10 +63,10 @@ foreach($TList as $TL) {
     $Nr = $ii;
     $string = '';
 	$string .= "<table style=\"width: 300px\"><tr><td class=\"memberlist\">" ;
-	if (($TL->photo != "") and ($TL->photo != "NULL")) $string .= $TL->photo;
+	$string .= "<img src=\"members/avatar/".$TL->Username."?xs\" >";
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<a class="username" href="people/'.$TL->Username.'">'.$TL->Username.'</a><br />';
+	$string .= '<p><a href="javascript:newWindow(\''.$TL->Username.'\')"><b>'.$TL->Username.'</b></a><br />';
 	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TL->Age).", ". $words->getFormatted('from')." ".$TL->CityName.", ".$TL->CountryName."<br>".$TL->ProfileSummary;
 	$string .= "</span><br /><a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())+4);\">Zoom In</a> <a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())-4);\">Zoom Out</a></td></tr></table>" ;
     $summary = xml_prep($string);
@@ -121,11 +121,11 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 
 	$info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
-	$string .= "<td class=\"full\">" ;
-	if (($TM->photo != "") and ($TM->photo != "NULL")) $string .= $TM->photo;
+	$string .= "<td class=\"memberlist\">" ;
+	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" >";
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<a class="username" href="people/'.$TM->Username.'">'.$TM->Username.'</a>';
+	$string .= '<a href="javascript:newWindow(\''.$TM->Username.'\')">'.$TM->Username.'</a>';
 	$string .= "<br />".$TM->CountryName;
 	$string .= "<br />".$TM->CityName;
 	$string .= "</td>" ;
@@ -156,10 +156,10 @@ if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
 	$info_styles = array(0 => "<div class=\"blank floatbox\" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight floatbox\" align=\"left\" valign=\"center\">");
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
 	$string .= "<table><tr><td class=\"memberlist\">" ;
-	if (($TM->photo != "") and ($TM->photo != "NULL")) $string .= $TM->photo;
+	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" >";
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<a class="username" href="people/'.$TM->Username.'">'.$TM->Username.'</a><br />';
+	$string .= '<p><a href="javascript:newWindow(\''.$TM->Username.'\')"><b>'.$TM->Username.'</b></a><br />';
 	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName.", ". $words->getFormatted('LastLogin').": ".$TM->LastLogin;
 	$string .= "</span></td><td>";
     $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:GEvent.trigger(gmarkers[".$Nr."], 'click');\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";

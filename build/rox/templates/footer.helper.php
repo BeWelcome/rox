@@ -50,7 +50,7 @@ $query_list = PVars::get()->query_history;
 function translator_block() {
 
     if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
-        ?><div id="translator"><p><?php
+        ?><div id="translator"><?php
         $pagetotranslate = $_SERVER['PHP_SELF'];
         if ($pagetotranslate { 0 } == "/") {
             // funky array stuff
@@ -86,7 +86,7 @@ function translator_block() {
             <?php
             break;
         }
-        ?></p></div><?php
+        ?></div><?php
     }
 }
 

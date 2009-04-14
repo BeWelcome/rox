@@ -25,6 +25,27 @@ class Member extends RoxEntityBase
 
 
     /**
+     * Get the member's TB user id
+     */
+    public function get_userid() {
+        if(!isset($this->userId)) {
+	        $s = $this->singleLookup(
+	            "
+	SELECT SQL_CACHE
+	    user.id
+	FROM
+	    user
+	WHERE
+	    handle = '$this->Username'
+	            "
+	        );
+	        if ($s) $this->userId = $s->id;
+	        else return false;
+        }
+        return $this->userId;
+    }
+
+    /**
      * Checks which languages profile has been translated into
      */
     public function get_profile_languages() {

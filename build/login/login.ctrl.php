@@ -33,7 +33,9 @@ class LoginController
         } 
 
         if ($errmsg != '') {
-            echo '<div id="loginmessage" class="false">' . $errmsg . '</div>';
+			$mem_for_redirect->errmsg = $errmsg;
+			// error message on top disabled. We're using a div inside the login-form instead!
+            //echo '<div id="loginmessage" class="false">' . $errmsg . '</div>';
         } else {
             // bw member exists, and pw matches.
             

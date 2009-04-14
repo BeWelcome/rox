@@ -1,32 +1,8 @@
 <?php
 $words = new MOD_words();
-$CntSubtrips = 0;
-if ($trip_data) 
-    $CntSubtrips = count($trip_data[$trip->trip_id]);
-?>
-<h2><?=$words->get('TripAboutThisTrip')?></h2>
 
-<?php
-if (isset($trip->trip_descr) && $trip->trip_descr) {
-	echo '<p>'.$trip->trip_descr.'</p>';
-}
-if (isset($trip->trip_text) && $trip->trip_text) {
-	echo '<p>'.$trip->trip_text.'</p>';
-}
-?>
+// This trip's gallery  
 
-<p class="small">
-<?=$CntSubtrips ?> <?=$words->get('Trip_NumberofSubtrips')?>
-</p>
-
-<?php
-if ($isOwnTrip) {
-	echo '<p class="small"><a href="trip/edit/'.$trip->trip_id.'">Edit</a> | <a href="trip/del/'.$trip->trip_id.'">Delete</a></p><p></p>';
-}
-?>
-
-<!-- This trip's gallery -->  
-<?php
 if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
     $gallery = new Gallery;
     $statement = $gallery->getLatestItems('',$trip->gallery_id_foreign);

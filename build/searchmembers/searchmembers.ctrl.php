@@ -152,7 +152,7 @@ class SearchmembersController extends PAppController {
                 
                 // finally the content for col3
                 $TList = $this->_model->quicksearch($searchtext);
-                $P->newBar .= $vw->quicksearch($TList, $searchtext);
+                $P->content .= $vw->quicksearch($TList, $searchtext);
                 break;
                 
 
@@ -211,9 +211,9 @@ class SearchmembersController extends PAppController {
                     $sortorder
                 );
                 
-                $P->newBar = $vw->userBar($mapstyle,$sortorder);
+                $P->content = $vw->memberlist($mapstyle,$sortorder);
                 
-                $P->content = $vw->searchmembers(
+                $P->newBar .= $vw->searchmembers(
                     $queries,
                     $mapstyle,
                     $varsOnLoad,

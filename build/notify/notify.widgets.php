@@ -77,17 +77,34 @@ class NotifyMemberWidget extends ItemlistWithPagination
         $words = new MOD_words();
         extract(get_object_vars($item));
 //        print_r($item);
+        $member = MOD_member::getMember_userId($item->IdRelMember);
         ?>
         <div class="floatbox"">
-            <a target="notify-<?=$item->id?>" class="dynamic float_right" href="notify/<?=$item->id?>/check" alt="<?=$words->getSilent($item->WordCode,MOD_member::getUsername($item->IdRelMember))?>">
+            <a target="notify-<?=$item->id?>" class="dynamic float_right" href="notify/<?=$item->id?>/check" alt="<?=$words->getSilent($item->WordCode,$member->getUsername())?>">
                 <img src="images/icons/box-close.png">
             </a>
-            <div class="float_right"><?=MOD_layoutbits::ago(strtotime($item->created))?></div>
+            <div class="float_right small grey"><?=MOD_layoutbits::ago(strtotime($item->created))?></div>
+            <div class="float_left">
             <?php if ($item->Link != '') { 
-                echo '<a href="'.$item->Link.'" alt="'.$words->getSilent($item->WordCode,MOD_member::getUsername($item->IdRelMember)).'">';
+                echo '<a href="'.$item->Link.'" alt="'.$words->getSilent($item->WordCode,$member->getUsername()).'">';
             }
             ?>
-                <?=$words->getSilent($item->WordCode,MOD_member::getUsername($item->IdRelMember))?>
+			<?php if ($item->IdRelMember != '') { 
+                echo MOD_layoutbits::PIC_30_30($member->getUsername(),'',"framed");
+            }
+            ?>
+            <?php if ($item->Link != '') { 
+                echo '</a>';
+            }
+            ?>
+            </div>
+            <?php if ($item->Link != '') { 
+                echo '<a href="'.$item->Link.'" alt="'.$words->getSilent($item->WordCode,$member->getUsername()).'">';
+            }
+            ?>
+            <p class="notification_text">
+                <?=$words->getSilent($item->WordCode,'<span class="username" href="members/'.$member->getUsername().'" alt="'.$member->getUsername().'">'.$member->getUsername().'</span>')?>
+            </p>
             <?php if ($item->Link != '') { 
                 echo '</a>';
             }

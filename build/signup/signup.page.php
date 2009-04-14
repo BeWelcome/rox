@@ -10,9 +10,9 @@ class SignupPage extends PageWithRoxLayout
     
     protected function getStylesheets()
     {
-        $stylesheets[] = 'styles/minimal_index.css';
-        $stylesheets[] = 'styles/YAML/screen/custom/tour.css';
-        $stylesheets[] = "styles/YAML/screen/custom/signup.css";
+        $stylesheets[] = 'styles/css/minimal/minimal.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';
+        $stylesheets[] = "styles/css/minimal/screen/custom/signup.css";
         return $stylesheets;
     }
     

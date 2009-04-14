@@ -36,15 +36,17 @@ class Rox extends PAppModel {
 	/**
 	 * @see /htdocs/bw/lib/lang.php
 	 */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         
         // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
         // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
-		// TODO : improvment this will be better not to query for WelcomeToSignup word at each time this is constructed
-        $query = "SELECT `ShortCode` FROM `words`
-		WHERE code = 'WelcomeToSignup'";
+        $query = '
+SELECT `ShortCode`
+FROM `words`
+WHERE code = \'WelcomeToSignup\'';
         $result = $this->dao->query($query);
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $this->_langs[] = $row->ShortCode;
@@ -141,7 +143,6 @@ AND countries.id=cities.IdCountry ' . $InScope;
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
     }
-
     
     /**
      * Returns the number of people due to be checked to problems or what.

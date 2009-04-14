@@ -5,6 +5,7 @@ class MyVisitorsPage extends MemberPage
 {
     protected function leftSidebar()
     {
+	    parent::leftSidebar();
     	$member = $this->member;
     	//print_r($this->member);
     	//$lang = $this->model->get_profile_language();

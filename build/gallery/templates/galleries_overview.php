@@ -26,15 +26,20 @@ if ($galleries) {
         $num_rows = $s ;
         // Only show the galleries with pictures. The belonging user might see them anyway.
     	if ($d) {
-            echo '<div class="gallery_container float_left" style="margin: 10px; height: 170px; width: 150px; padding: 20px; text-align: center;">
-                <a href="gallery/show/sets/'.$g->id.'"><img class="framed" src="gallery/thumbimg?id='.$d.'" style="float:none; padding: 2px; padding-right: 10px; padding-bottom: 8px; background: #fff url(images/photoset_bg.png) bottom right no-repeat; border:2px solid #e5e5e5; border-bottom:0; border-right:0" alt="image"/></a>
-                ';
-            echo '<h4><a href="gallery/show/sets/'.$g->id.'">'.$g->title.'</a></h4>';
-            //echo '<p class="small">';
-            //if ($g->text) echo $g->text.'</p>';
-            echo '<p class="small">'.$words->get('by').' '.$member.'</p>';
-            echo '<p>'.$num_rows.' '.$words->get('pictures').'</p>';
-            echo '</div>';
+    	?>
+        <div class="gallery_container float_left" style="margin: 10px; height: 170px; width: 150px; padding: 20px; text-align: center;">
+            <a href="gallery/show/sets/<?=$g->id?>">
+                <img class="framed" src="gallery/thumbimg?id=<?=$d?>" alt="image"/>
+            </a>
+            <h4><a href="gallery/show/sets/<?=$g->id?>"><?=$g->title?></a></h4>
+            <p class="small">
+            <?php //if ($g->text) echo $g->text 
+            ?>
+            </p>
+            <p class="small"><?=$words->get('by')?> <?=$member?></p>
+            <p><?=$num_rows?> <?=$words->get('pictures')?></p>
+        </div>
+        <?php
         } else {
             if ($User->getId() == $g->user_id_foreign) {
             if (!isset($emptyPhotosets)) $emptyPhotosets = '<h3>'.$words->get('GalleryEmptyPhotosets').'</h3>';

@@ -142,7 +142,7 @@ switch (GetParam("action")) {
 		if ($IdAddress!=0) { // if the member already has an address
 			$iHouseNumber=NewReplaceInCrypted($pp->HouseNumber,"addresses.HouseNumber",$IdAddress, $rr->HouseNumber, $m->id) ;
 			$iStreetName=NewReplaceInCrypted($pp->StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) ;
-			$iZip=ReplaceInCrypted($pp->Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) ;
+			$iZip=NewReplaceInCrypted($pp->Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) ;
 			$str = "update addresses set IdCity=" . $pp->IdCity . ",HouseNumber=" . $iHouseNumber . ",StreetName=" . $iStreetName . ",Zip=" . $iZip . " where id=" . $IdAddress;
 			sql_query($str);
 		} else {

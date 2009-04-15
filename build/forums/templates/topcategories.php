@@ -46,7 +46,6 @@ $User = APP_User::login();
 	foreach ($this->_model->ListBoards as $list) {
 		if ($threads = $list->threads) {
 ?>
-			<br style="clear: both;" />
             <div class="row">
                 <h3>
                 <?php

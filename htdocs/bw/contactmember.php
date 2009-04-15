@@ -103,12 +103,15 @@ switch (GetParam("action")) {
 		if (($mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
 //		if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
 			if (GetStrParam("c_verification")!=$_SESSION['ExpectedCaptchaValue']) {
-				LogStr("Captcha failed ".GetStrParam("c_verification")."entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
+				LogStr("Captcha failed ".GetStrParam("c_verification")." entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
 				
 				$Warning = ww("MustProvideTheRightCaptcha");
 				DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
 				exit(0);
 			}
+		}
+		if (HasFlag("RequireCaptchaForContact")) {
+			LogStr("Captcha success ".GetStrParam("c_verification")." entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
 		}
 
 		$Status = "ToSend"; // todo compute a real status

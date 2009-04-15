@@ -462,6 +462,7 @@ class MOD_layoutbits
     {
         // test if the given timestamp could be a unix timestamp, otherwise try to make it one
         if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
+        
         $words = new MOD_words();
         $difference_in_seconds = time() - $timestamp;
         $period_in_seconds = 1;
@@ -489,8 +490,10 @@ class MOD_layoutbits
 */
         $periods = array('second','minute','hour','day','week','month','year','decade');
         $lengths = array("60","60","24","7","4.35","12","10");
-        for($j = 0; $difference >= $lengths[$j]; $j++)
+        for($j = 0; $difference >= $lengths[$j]; $j++) {
             $difference /= $lengths[$j];
+            if(!isset($lengths[$j+1])) break;
+        }
         $difference = round($difference);
         if($difference != 1) $periods[$j].= "s";
         $text = $difference.' '.$words->get($periods[$j]).' '.$words->get('ago');

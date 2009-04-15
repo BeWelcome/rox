@@ -76,7 +76,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
         
             </a><br />
             <span class="small grey"><?=$words->get('from')?> <a href="bw/member.php?cid=<?=$senderUsername?>"><?=$senderUsername?>: </a>
-            <?=MOD_layoutbits::ago($message->unixtime_created)?></span>
+            <?=MOD_layoutbits::ago($message->created);?></span>
         </div>
         
         <?php

@@ -38,7 +38,7 @@ class ForumsView extends RoxAppView {
         $groupsDropdowns = $this->getGroupsDropdowns($IdGroup);
         $edit = false;
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
-	    $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
+	    $AppropriatedLanguage=0 ; // By default english will be proposed as dÃ©fault language
 	    $LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
     }
@@ -257,7 +257,7 @@ class ForumsView extends RoxAppView {
     /* This adds custom styles to the page*/
     public function customStyles() {
         $out = '';
-        $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/forums.css" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css" type="text/css"/>';
         return $out;
     }
   

@@ -49,7 +49,7 @@ $threadsliced = array_slice($threads, 0, 5);
         
         ?>
             <tr>
-                <td class="forumsboardthreadtitle"><?php echo '<img src="styles/YAML/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
+                <td class="forumsboardthreadtitle"><?php echo '<img src="styles/css/minimal/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
                     <a href="<?php echo $url; ?>" class="news">
                     <?php 
                     echo $words->fTrad($thread->IdTitle); 
@@ -57,7 +57,7 @@ $threadsliced = array_slice($threads, 0, 5);
                     <span class="small grey">by <a href="people/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> - 
                     <?php echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?></span>
                     
-                    <a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
+                    <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
                 </td>
             </tr>
         <?php

@@ -110,7 +110,7 @@ switch (GetParam("action")) {
 				exit(0);
 			}
 		}
-		if (GetStrParam("c_verification","")=="") { // In case the member has filled a captcha with success, log it
+		if (GetStrParam("c_verification","")!="") { // In case the member has filled a captcha with success, log it
 			LogStr("Captcha success ".GetStrParam("c_verification")." entered", "contactmember") ;
 		}
 

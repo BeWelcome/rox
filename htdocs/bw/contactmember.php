@@ -110,8 +110,8 @@ switch (GetParam("action")) {
 				exit(0);
 			}
 		}
-		if (HasFlag("RequireCaptchaForContact")) {
-			LogStr("Captcha success ".GetStrParam("c_verification")." entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
+		if (GetStrParam("c_verification","")=="") { // In case the member has filled a captcha with success, log it
+			LogStr("Captcha success ".GetStrParam("c_verification")." entered", "contactmember") ;
 		}
 
 		$Status = "ToSend"; // todo compute a real status

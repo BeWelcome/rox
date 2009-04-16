@@ -46,7 +46,7 @@ if (!CheckStatus("Active")) { // only Active member can send a Message
 
 $m = prepareProfileHeader($IdMember,""); 
 $ss="select count(*) as NbTrust from comments where comments.Quality='Good' and comments.IdToMember=".$_SESSION["IdMember"];
-echo $ss,"<br />" ;
+// echo $ss,"<br />" ;
 $mSender=LoadRow($ss) ; 
 $m->mSender=$mSender ;
 
@@ -103,12 +103,15 @@ switch (GetParam("action")) {
 		if (($mSender->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
 //		if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
 			if (GetStrParam("c_verification")!=$_SESSION['ExpectedCaptchaValue']) {
-				LogStr("Captcha failed ".GetStrParam("c_verification")."entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
+				LogStr("Captcha failed ".GetStrParam("c_verification")." entered for ".$_SESSION['ExpectedCaptchaValue']." expected", "contactmember") ;
 				
 				$Warning = ww("MustProvideTheRightCaptcha");
 				DisplayContactMember($m, stripslashes($Message), $iMes, $Warning,GetStrParam("JoinMemberPict"));
 				exit(0);
 			}
+		}
+		if (GetStrParam("c_verification","")!="") { // In case the member has filled a captcha with success, log it
+			LogStr("Captcha success ".GetStrParam("c_verification")." entered", "contactmember") ;
 		}
 
 		$Status = "ToSend"; // todo compute a real status

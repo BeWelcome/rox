@@ -12,16 +12,12 @@ document.write('<script type="text/javascript" src="script/prototype162.js"></sc
 document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls"></script>');
 
 var req = new String(location.pathname).toLowerCase();
-if (req == http_baseuri || req.indexOf('') != -1) {
-	document.write('<script type="text/javascript" src="script/transition.js"></script>');
-	document.write('<script type="text/javascript" src="script/fabtabulous.js"></script>');
-}
-else if (req.indexOf('user/register') != -1) {
-//    document.write('<script type="text/javascript" src="script/scriptaculous.js"></script>');
-	document.write('<script type="text/javascript" src="script/register.js"></script>');
-	document.write('<script type="text/javascript" src="script/select_area.js"></script>');
-}
-else if (req.indexOf('signup') != -1) {
+var loc = new String(location);
+
+// Needed for the dynamic tabs on personal startpage, only 1KB:
+document.write('<script type="text/javascript" src="script/fabtabulous.js"></script>');
+
+if (req.indexOf('signup') != -1) {
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
     document.write('<script type="text/javascript" src="script/geo_suggest.js"></script>');
 }
@@ -37,6 +33,7 @@ if (
 		|| req.indexOf('trip/edit') != -1
 		|| req.indexOf('gallery/show/image') != -1
 		|| req.indexOf('message/write') != -1
+		|| req.indexOf('editmyprofile') != -1
 	) {
 	document.write('<script type="text/javascript" src="script/fieldset.js"></script>');
 }

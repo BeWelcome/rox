@@ -40,7 +40,7 @@ Boston, MA  02111-1307, USA.
     $f->enableCache(
         "fs",
         $phpflickr_conf->tmpfolder,
-        86400
+        864000
     ); 
     $i = 0;
         // bewelcome-org group: 771581@N21

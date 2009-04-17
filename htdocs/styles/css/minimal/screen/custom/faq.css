@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+@media all
+{
+  /**
+   * FAQ-pages
+   *
+   */
+
+	#main #col1 {
+	  width: 30%;
+	}
+
+	#main #col2, #main #col2_content{
+	    display: none;
+	}
+
+	#main #col3 {
+	  width: 70%;
+	  margin-right: 30%;
+	  margin-left: 0;
+	}
+	
+	.faqs ul li {
+	  padding: .3em 0;
+	}
+	
+	.faqs h3 a{
+		color: #333;
+	}
+	
+	.faqs_text {
+		color: #333;
+	}
+
+}

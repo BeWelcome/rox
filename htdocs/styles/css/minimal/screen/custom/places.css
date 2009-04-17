@@ -1,10 +1,22 @@
 
 /*
-*  Show css sprites for places
+* Places - the geo application - classes
 *
 */
 @media all
 {
+    .places li {
+        padding-right: 2em;
+    }
+	.places-heading	.small{
+        font-size: .5em;
+    }
+
+	.places ul.float_left {
+	  margin-right: 0.5em;
+	  padding-bottom: 4em;
+	}
+	
     .spritecontainer {
         clear:both;
     }

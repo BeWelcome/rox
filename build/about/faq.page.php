@@ -3,6 +3,13 @@
 
 class AboutFaqPage extends AboutBasePage
 {
+    protected function getStylesheets()
+    {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/faq.css';
+        return $stylesheets;
+    }
+    
     protected function leftSidebar()
     {
         $words = $this->getWords();

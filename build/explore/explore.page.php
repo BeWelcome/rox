@@ -21,11 +21,6 @@ class ExplorePage extends RoxPageView
         return 'Explore BeWelcome *';
     }
 
-    protected function topnav ()
-    {
-        require TEMPLATE_DIR . 'shared/roxpage/topnav.php';
-    }
-
     protected function teaserContent() {
         require 'templates/teaser_explore.php';
     }

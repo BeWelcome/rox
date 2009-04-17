@@ -7,7 +7,7 @@ $words = new MOD_words();
 
 //echo "count \$volunteers=",count($volunteers) ;
 if (empty($volunteers)) {
-    echo $words->getFormatted('no_localvolunteers_yet');
+    echo $words->getFormatted('no_localvolunteers_yet','<a href="about/feedback">','</a>');
 } else {
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);

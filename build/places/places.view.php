@@ -29,7 +29,7 @@ class PlacesView extends PAppView {
     public function teaserplaces($countrycode,$country,$region,$city) {
         require 'templates/teaserCountry.php';
     }
-    public function placesbar() {
+    public function placesbar($volunteers) {
         require 'templates/countrybar.php';
     }
     public function submenu($subTab) {

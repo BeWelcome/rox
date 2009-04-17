@@ -21,16 +21,6 @@ class ShopPage extends RoxPageView
         return 'Spread Bewelcome';
     }
 
-    protected function body()
-    {
-        require TEMPLATE_DIR . 'shared/roxpage/body_index.php';
-    }
-
-    protected function getStylesheets() {
-        $stylesheets[] = 'styles/minimal_index.css';
-        return $stylesheets;
-    }
-
     protected function teaserContent() {
         require 'templates/teaser_shop.php';
     }

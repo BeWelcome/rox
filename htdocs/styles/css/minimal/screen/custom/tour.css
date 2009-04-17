@@ -35,40 +35,38 @@
   color: #999;
   vertical-align: middle;
   clear:both;
-  padding: 5px 0;
+  padding: 1em 0;
 }
 
  #steps div.desc{
-  padding:5px 6px 5px 6px;
-  height: 30px;
+  padding:0 6px;
   vertical-align: middle;
 }
  #steps div.number{
   font-size: 1.6em;
-  padding:0 16px 5px 0;
-  text-align:right;
-  line-height: 30px;
+  margin:0 16px 5px 0;
+  text-align:center;
   width:20px;
-  height: 30px;
   float: left;
 }
  #steps li a{
   color: #999;
-  height: 30px;
+  font-size: 1em;
 }
  #steps li a:hover{
   color: #999;
   background: transparent;
 }
- #steps li.active, #tour #steps li.active a{
+ #steps li.active, #steps li.active a{
   color: #333;
   font-weight: bold;
 }
  #steps li.active .number {
-  font-size: 2em;
-  color: #ff8800;
+  font-size: 1.8em;
+  color: #333;
 }
  #steps li.active{
+	font-size: 1.5em;
 /*    background: transparent url(../images/arrow-right.gif) top right no-repeat; */
 }
 

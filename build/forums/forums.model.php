@@ -91,6 +91,163 @@ function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 } // end of ReplaceInFTrad
 
 
+
+/**
+* this function returns an structured array with the possible location the member is allow to send a message in
+* @$IdLocaVolMessage stands for the id of the local vol message
+**/
+function GetAffectedLocation($IdLocaVolMessage) { 
+	$tt=array() ;
+	$ss="Select IdLocation from localvolmessages_location where IdLocalVolMessage=".$IdLocaVolMessage ;
+	$q=mysql_query($ss) ;
+	while ($row=mysql_fetch_object($q)) { ;
+		$IdLoc=$row->IdLocation ;
+		$rr=$this->singleLookup("select id,Name,IdRegion,IdCountry from cities where id=".$IdLoc) ;
+		if (isset($rr->id)) {
+			$rCountry=$this->singleLookup("select id,Name,isoalpha2 from countries where id=".$rr->IdCountry) ;
+			$rRegion=$this->singleLookup("select id,Name from regions where id=".$rr->IdRegion) ;
+			$rr->Type="City" ;
+			$rr->Choice=" City: ".$rr->Name ;
+			$rr->Link="places/".$rCountry->isoalpha2."/" ;
+			if (isset($rRegion->Name)) {
+				$rr->Link.=$rRegion->Name ;
+			}
+			$rr->Link=$rr->Link."/".$rr->Name ;
+		}
+		else {
+			$rr=$this->singleLookup("select id,Name,IdCountry from regions where id=".$IdLoc) ;
+			if (isset($rr->id)) {
+				$rCountry=$this->singleLookup("select id,Name,isoalpha2 from countries where id=".$rr->IdCountry) ;
+				$rr->Type="Region" ;
+				$rr->Choice=" Region: ".$rr->Name ;
+				$rr->Link="places/".$rCountry->isoalpha2."/".$rr->Name ;
+			}
+			else {
+				$rr=$this->singleLookup("select id,Name,isoalpha2 from countries where id=".$IdLoc) ;
+				if (isset($rr->id)) {
+					$rr->Type="Country" ;
+					$rr->Choice=" Country: ".$rr->Name ;
+					$rr->Link="places/".$rr->isoalpha2 ;
+				}
+				else {
+					$ss="Found Location #".$IdLoc." in scope, does'nt match any city or region or country" ;
+				    MOD_log::get()->write($ss,"contactlocation") ; 				
+					die ($ss) ;
+				}
+			}
+			array_push($tt,$rr) ;
+		}
+	}
+	return($tt) ;
+} // end of GetAffectedLocation
+		
+/**
+* this function returns an structured  with the result of a vote for a given IdPost
+* according to the current logged member
+**/
+function GetPostVote($IdPost) { 
+	if (empty($_SESSION["IdMember"])) {
+		return ;
+	}
+	$IdMember=$_SESSION["IdMember"] ;
+	$Res->PossibleAction='none' ;
+	$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
+	$PossibleChoice=array('Yes','DontKnow','DontCare','No') ;
+	$Res->PossibleChoice=$PossibleChoice ;
+	if (!empty($MyVote->Choice) or ($_SESSION["MemberStatus"]!="Active")) { // Members who are not cative cannot vote (for example admin who has status ActiveHidden)
+		if (!empty($MyVote->Choice)) {
+			$Res->Choice=$MyVote->Choice ;
+		}
+		$Res->PossibleAction="ShowResult" ;
+		$Res->Total=0 ;
+		foreach ($PossibleChoice as $cc) {
+			$rr=$this->singleLookup("select count(*) as cnt from forums_posts_votes where IdPost=".$IdPost." and Choice='".$cc."'") ; 
+			$ss='Choice_'.$cc ;
+			$Res->$ss=$rr->cnt ;
+			$Res->Total=$Res->Total+$rr->cnt ;
+		}
+	}
+	else {
+		$Res->PossibleAction="ProposeVote" ;
+	}
+	
+//	print_r($Res) ; die(0) ;
+	return($Res) ;
+} // end of GetPostVote
+
+/**
+* this function returns teh Id of the thread corresponding to a certain $IdPost
+**/
+function GetIdThread($IdPost) {
+	$rr=$this->singleLookup("select threadid as IdThread from forums_posts where id=".$IdPost) ;
+	if (!empty($rr->IdThread)) {
+		return($rr->IdThread) ;
+	}
+	else {
+		return(0) ;
+	}
+} //GetIdThread
+
+/**
+* this function allows to vote for the given IdPost with teh value $Value
+**/
+function VoteForPost($IdPost,$Value) { 
+	if (empty($_SESSION["IdMember"])) {
+		return ;
+	}
+	
+	$IdMember=$_SESSION["IdMember"] ;
+	$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
+	if (!empty($MyVote->IdPost)) {
+		$ss="update forums_posts_votes set NbUpdates=NbUpdates+1,Choice='".$Value."' where IdPost=".$IdPost." and IdContributor=".$IdMember ;
+		$qq = $this->dao->query($ss);
+		if (!$qq) {
+            throw new PException('Update VoteForPost failed '.$ss.' !');
+		}
+	    MOD_log::get()->write("Updating vote for forum post #".$IdPost,"Forum") ; 				
+	}
+	else {
+		$ss="insert into forums_posts_votes(IdPost,IdContributor,Choice,created) values(".$IdPost.",".$IdMember.",'".$Value."',now())" ;
+		$qq = $this->dao->query($ss);
+		if (!$qq) {
+            throw new PException('Insert VoteForPost failed '.$ss.' !');
+		}
+	    MOD_log::get()->write("inserting vote for forum post #".$IdPost,"Forum") ; 				
+	}
+	
+	
+} // end of VoteForPost
+
+/**
+* this function allows to vote for the given IdPost with teh value $Value
+**/
+function DeleteVoteForPost($IdPost) { 
+	if (empty($_SESSION["IdMember"])) {
+		return ;
+	}
+	
+	$IdMember=$_SESSION["IdMember"] ;
+	$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
+	if (!empty($MyVote->IdPost)) {
+		$ss="delete from  forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember ;
+		$qq = $this->dao->query($ss);
+		if (!$qq) {
+            throw new PException('Delete VoteForPost failed '.$ss.' !');
+		}
+	    MOD_log::get()->write("Deleting vote for forum post #".$IdPost,"Forum") ; 				
+	}
+	
+} // end of DeleteVoteForPost
+
+/**
+*/
+function singleLookup($ss) { // Todo find a way to use the unique SingleLookup !
+	$q=mysql_query($ss) ;
+	$row=mysql_fetch_object($q) ;
+	return($row) ;
+}
+
+
 /**
 * FindAppropriatedLanguage function will retrieve the appropriated default language 
 * for a member who want to reply to a thread (started with the#@IdPost post)
@@ -1114,9 +1271,10 @@ WHERE `threadid` = '%d' ",
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
 		 	$OwnerCanStillEdit="'".$vars["OwnerCanStillEdit"]."'"  ;
+		 	$HasVotes="'".$vars["expiredate"]."'"  ;
 
-        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."]","ForumModerator");
-       	$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit." where id=".$IdPost);
+        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."] HasVotes=[".$HasVotes."]","ForumModerator");
+			$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit.",HasVotes=".$HasVotes." where id=".$IdPost);
 		 }
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated post")) { // if a new translation is to be added for a title
@@ -1729,7 +1887,7 @@ WHERE `threadid` = '$this->threadid' "
         
 				
         $query = sprintf("
-SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,
+SELECT `postid`,`forums_posts`.`id` as IdPost,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,
 `geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername,
 
     `HasVotes`,
@@ -1752,6 +1910,21 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
 										where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
 				while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 					$row->Trad[]=$roww ;
+				}
+				if ($row->IdLocalVolMessage!=0) { // If the post is connected to some local vol message, then we will load this message
+					$query="Select * from localvolmessages  where id=".$row->IdLocalVolMessage ;
+					$sLocalVolMessage = $this->dao->query($query);
+					if (!$sLocalVolMessage) {
+						throw new PException('Could not retrieve LocalVolMessage #'.$row->IdLocalVolMessage.' )!');
+					}
+					$LocalVolMessage=$sLocalVolMessage->fetch(PDB::FETCH_OBJ) ;
+					$row->LocalVolMessage=$LocalVolMessage ;
+					$row->Places=$this->GetAffectedLocation($row->IdLocalVolMessage) ;
+				
+				}
+				if ($row->HasVotes=="Yes") { // Id this post is connected to some opinion
+					$row->Vote=$this->GetPostVote($row->IdPost) ;
+//					print_r($row->Vote) ; die("0") ;
 				}
 			}
 			$this->topic->posts[] = $row;        

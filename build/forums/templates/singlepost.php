@@ -21,6 +21,9 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
+
+JeanYves notes : every display of a forum post content  goes trhu this template
+
 */
     $words = new MOD_words();
     $styles = array( 'highlight', 'blank' );
@@ -129,10 +132,61 @@ Boston, MA  02111-1307, USA.
             <?=$Sentence?>
          </div>
 		 <?php
-		 // Here add additional data from local volunteers messages if any
-		 if (isset($post->HasVotes) and ($post->HasVotes=='Yes')) {
-			echo "<div>"  ;
-			echo "Has votes for local events #".$post->IdLocalEvent ;
+
+		 // Here add additional data from local messages if any
+		 if (isset($post->LocalVolMessage)) {
+			$LocalVolMessage=$post->LocalVolMessage ;
+			$TitleText=$words->fTrad($LocalVolMessage->IdTitleText) ;
+			$MessageText=$words->fTrad($LocalVolMessage->IdMessageText) ;
+			
+			echo "<div>"  ; // Todo add a special div for a special layout
+			echo "<br /> ",$words->getFormatted('ForumPostWithLocalMessage') ;
+			echo "<table bgcolor=\"lightgray\">" ;
+			echo "<tr><th>",$TitleText,"</th></tr>\n" ;
+			echo "<tr><td>",$MessageText,"</td></tr>\n" ;
+			echo "<tr><td>" ;
+			foreach ($post->Places as $place) {
+				echo "<a href=\"",$place->Link,"\">",$place->Name,"</a> " ;
+			}
+			echo "</td></tr>" ;
+			echo "</table>\n" ;
+			echo "</div>" ;
+		 } 	// End of add additional data from local volunteers messages if any
+
+		 // Here add additional data from votes if any
+		 if (isset($post->Vote))  {
+			$Vote=$post->Vote ;
+
+			if ($Vote->PossibleAction=="ShowResult") { // If membe can see result, show them
+				echo "<div>" ;
+				echo $words->getFormatted("ForumPostCurrentResults") ;
+				echo "<ul>"  ;
+				foreach ($Vote->PossibleChoice as $cc) {
+					$ss='Choice_'.$cc ;
+					$count=$Vote->$ss ;
+					$countpercent="0%" ;
+					if ($Vote->Total>0) {
+						$countpercent=sprintf("%0.0f",($count/$Vote->Total)*100) ;
+					}
+					echo "<li>",$words->getFormatted('ForumResultForChoice','<b>'.$words->getFormatted('ForumVoteChoice_'.$cc).'</b>',$count,$countpercent.'%'),"</li>" ;
+				}	
+				echo "</ul></div>"  ;
+			}
+			
+			if (!empty($Vote->Choice)) { // If The current user has voted
+				echo "<div>" ;
+				echo "<a href=\"forums/deletevotepost/",$post->IdPost,"\">",$words->getFormatted('ForumDeleteVotePost'),"</a>" ;
+				echo "</div>" ;
+			}
+
+			if ($Vote->PossibleAction=="ProposeVote") { // If member can vote propose vote
+				echo $words->getFormatted("ForumPostMakeYourChoice"),":<br />" ;
+				foreach ($Vote->PossibleChoice as $cc) {
+					echo "<a href=\"forums/votepost/",$post->IdPost,"/",$cc,"\">",$words->getBuffered('ForumVoteChoice_'.$cc),"</a>&nbsp; &nbsp; &nbsp;" ;
+				}	
+			}
+
+
 			echo "</div>" ;
 		 } 	// End of add additional data from local volunteers messages if any
 

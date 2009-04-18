@@ -61,7 +61,7 @@ if (isset($DataPost->Thread->title))
                 expiration date (close the thread)
                 <input type="text" name="expiredate" value="<?=$DataPost->Thread->expiredate;?>" /><br />
                 <input type="hidden" name="<?=$callbackId;?>"  value="1" /><br />
-                <select name="IdGroup">
+                Group:<select name="IdGroup">
                     <option value="0"> no group</option>
                     <?
                     foreach ($DataPost->PossibleGroups as $Group) {
@@ -137,18 +137,31 @@ $max=count($DataPost->Post->Content) ;
 echo "<tr bgcolor=#663300 ><td colspan=3></td></tr>" ;
 if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td colspan=2>" ,$DataPost->Post->message,"</i></td>" ;
 
-    echo "<tr><td>" ;
+    echo "<tr>" ;
     echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
     echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
     echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-    echo "Can owner edit </td><td align=left><select type=\"text\" name=\"OwnerCanStillEdit\">" ;
+    echo "<td align=left colspan=2>Can Owner edit: <select type=\"text\" name=\"OwnerCanStillEdit\">" ;
     echo "<option value=\"Yes\"" ;
     if ($DataPost->Post->OwnerCanStillEdit=="Yes") echo " selected" ;
     echo ">Yes</option>" ;
     echo "<option value=\"No\"" ;
     if ($DataPost->Post->OwnerCanStillEdit=="No") echo " selected" ;
     echo ">No</option>" ;
-    echo "</select></td>"  ;
+    echo "</select>&nbsp;&nbsp;" ;
+	echo " Has Votes: <select name=\"HasVotes\">" ;
+    echo "<option value=\"Yes\"" ;
+	if ($DataPost->Post->HasVotes=="Yes") {
+		echo " \"selected\"" ;
+	}
+	echo ">Yes</Option>" ;				
+    echo "<option value=\"No\"" ;
+	if ($DataPost->Post->HasVotes=="No") {
+		echo " \"selected\"" ;
+	}
+	echo ">No</Option>" ;				
+    echo "</select> " ;
+	echo "</td>"  ;
     echo "<td><input name=\"submit\" type=\"submit\" value=\"update post\"></td>" ;
     echo "</form>\n" ;
 

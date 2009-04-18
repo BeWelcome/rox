@@ -741,7 +741,7 @@ WHERE `geonameid` = '%d'
         if ($vars_ok) {
             $topicid = $this->newTopic($vars);
             PPostHandler::clearVars();
-            return PVars::getObj('env')->baseuri.'forums/s'.$topicid;
+            return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$topicid;
         } else {
             return false;
         }
@@ -760,6 +760,10 @@ SELECT
     `postid`,
     `authorid`,
     `IdWriter`,
+    `HasVotes`,
+    `IdLocalVolMessage`,
+    `IdLocalEvent`,
+	
     `forums_posts`.`threadid` as `threadid`,
     `message` AS `topic_text`,
 		`OwnerCanStillEdit`,
@@ -833,6 +837,9 @@ SELECT
     `authorid`,
     `IdWriter`,
     `forums_posts`.`threadid`, 
+    `HasVotes`,
+    `IdLocalVolMessage`,
+    `IdLocalEvent`,
     `first_postid`,
 	`OwnerCanStillEdit`,
 	`forums_threads`.`IdGroup`,
@@ -868,7 +875,7 @@ WHERE `postid` = $this->messageId
                 $this->dao->query("COMMIT");
                 
                 PPostHandler::clearVars();
-                return PVars::getObj('env')->baseuri.'forums/s'.$postinfo->threadid;
+                return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$postinfo->threadid;
             } else {
                 return false;
             }
@@ -909,7 +916,11 @@ WHERE `postid` = $this->messageId
 */
     private function editPost($vars, $editorid) {
 	 
-        $query = "SELECT message,forums_posts.threadid,OwnerCanStillEdit,IdWriter,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = ".$this->messageId ;
+        $query = "SELECT message,forums_posts.threadid,
+    `HasVotes`,
+    `IdLocalVolMessage`,
+    `IdLocalEvent`,
+		OwnerCanStillEdit,IdWriter,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = ".$this->messageId ;
         $s=$this->dao->query($query);
         $rBefore=$s->fetch(PDB::FETCH_OBJ) ;
         
@@ -1028,7 +1039,7 @@ WHERE `threadid` = '%d' ",
 		 
         $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed from forums_threads,forums_posts where forums_threads.first_postid=forums_posts.id");
         if (!$s) {
-            throw new PException('editTopic:: previous infor for firtst post in the thread!');
+            throw new PException('editTopic:: previous info for firtst post in the thread!');
         }
         $rBefore = $s->fetch(PDB::FETCH_OBJ);
 		 
@@ -1057,7 +1068,7 @@ WHERE `threadid` = '%d' ",
         $this->replyTopic($vars);
     
         PPostHandler::clearVars();
-        return PVars::getObj('env')->baseuri.'forums/s'.$this->threadid;
+        return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
     } // end of replyProcess
     
 	 
@@ -1156,7 +1167,7 @@ WHERE `threadid` = '%d' ",
 			 
      PPostHandler::clearVars();
 		 
-     return PVars::getObj('env')->baseuri.'forums/modfulleditpost/'.$IdPost;
+     return PVars::getObj('env')->baseuri.$this->forums_uri.'modfulleditpost/'.$IdPost;
  		} // end of ModeratorEditPostProcess
     
 /*
@@ -1232,7 +1243,7 @@ WHERE `threadid` = '%d' ",
 	     $IdTag=$vars['IdTag'] ;
         PPostHandler::clearVars();
 		 
-        return PVars::getObj('env')->baseuri.'forums/modedittag/'.$IdTag;
+        return PVars::getObj('env')->baseuri.$this->forums_uri.'modedittag/'.$IdTag;
     } // end of ModeratorEditTagProcess
     
     public function delProcess() {
@@ -1247,6 +1258,9 @@ WHERE `threadid` = '%d' ",
                 "
 SELECT
     `forums_posts`.`threadid`,
+    `HasVotes`,
+    `IdLocalVolMessage`,
+    `IdLocalEvent`,
     `forums_threads`.`first_postid`,
     `forums_threads`.`last_postid`,
     `forums_threads`.`expiredate`,
@@ -1352,7 +1366,7 @@ WHERE `threadid` = '$topicinfo->threadid'
                 ;
                 $this->dao->query($query);
                 
-                $redir = 'forums/s'.$topicinfo->threadid;
+                $redir = $this->forums_uri.'s'.$topicinfo->threadid;
             }
             
             $this->dao->query("COMMIT");
@@ -1714,11 +1728,13 @@ WHERE `threadid` = '$this->threadid' "
         $from = $this->POSTS_PER_PAGE * ($this->getPage() - 1);
         
 				
-				// Todo here use IdWriter instead of authorid
         $query = sprintf("
 SELECT `postid`,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,
-`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername
+`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername,
 
+    `HasVotes`,
+    `IdLocalVolMessage`,
+    `IdLocalEvent`
 FROM `forums_posts`
 LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
 LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
@@ -1730,14 +1746,15 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
             throw new PException('Could not retrieve Posts)!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-		   if ($WithDetail) { // if details are required retrieve all thhe Posts of this thread
-          	  $sw = $this->dao->query("select  forum_trads.IdLanguage,forum_trads.created as trad_created, forum_trads.updated as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner, members as mTranslator
-			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
-        	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
-			    $row->Trad[]=$roww ;
-			  }
-		   }
-          $this->topic->posts[] = $row;        
+			if ($WithDetail) { // if details are required retrieve all the translated text for posts (sentence, owner, modification time and translator name) of this thread
+				$sw = $this->dao->query("select  forum_trads.IdLanguage,forum_trads.created as trad_created, forum_trads.updated as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername 
+										from forum_trads,languages,members as mOwner, members as mTranslator
+										where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
+				while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
+					$row->Trad[]=$roww ;
+				}
+			}
+			$this->topic->posts[] = $row;        
         } // end  // Now retrieve all the Posts of this thread
         
         
@@ -1824,7 +1841,10 @@ SELECT
     `IdWriter`,
 	 `threadid`,
 		`OwnerCanStillEdit`,
-    `geonames_cache`.`fk_countrycode`
+    `geonames_cache`.`fk_countrycode`,
+    `HasVotes`,
+    `IdLocalVolMessage`,
+    `IdLocalEvent`
 FROM `forums_posts`,`members`
 LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
 WHERE `threadid` = '%d' and `forums_posts`.`IdWriter` = `members`.`id`
@@ -2259,7 +2279,7 @@ AND IdTag=%d
 		$query = "insert into members_tags_subscribed(IdTag,IdSubscriber,UnSubscribeKey)  values(".$IdTag.",".$IdMember.",'".$this->dao->escape($key)."')" ; 
 		$s = $this->dao->query($query);
 		if (!$s) {
-            throw new PException('Forum->SubscribeTag IdTag=#'.$IdTag.'failed !');
+            throw new PException('Forum->SubscribeTag to IdTag=#'.$IdTag.' failed !');
 		}
 		$IdSubscribe=mysql_insert_id() ;
         MOD_log::get()->write("Subscribing to IdTag=#".$IdTag." IdSubscribe=#".$IdSubscribe, "Forum");
@@ -2292,6 +2312,9 @@ AND IdTag=%d
         $query = sprintf(
             "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
+    `HasVotes`,
+    `IdLocalVolMessage`,
+    `IdLocalEvent`,
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
 		FROM (`forums_posts`,`members`,`forums_threads`) 
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
@@ -2505,6 +2528,18 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         return $tags;    
     } // end of getTopCategoryLevelTags
     
+    
+    private function makeClickableLinks($text) 
+    {    
+        $text = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
+            '<a href="\\1">\\1</a>', $text);
+        $text = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
+            '\\1<a href="http://\\2">\\2</a>', $text);
+        $text = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})',
+            '<a href="mailto:\\1">\\1</a>', $text);
+        return $text;
+    }
+    
 /*
 * cleanupText
 *
@@ -2512,6 +2547,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 *
 */
     private function cleanupText($txt) {
+        $txt = $this->makeClickableLinks($txt);
         $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
         $doc = DOMDocument::loadHTML($str);
         if ($doc) {

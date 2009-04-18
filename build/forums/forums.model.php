@@ -1271,7 +1271,7 @@ WHERE `threadid` = '%d' ",
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
 		 	$OwnerCanStillEdit="'".$vars["OwnerCanStillEdit"]."'"  ;
-		 	$HasVotes="'".$vars["expiredate"]."'"  ;
+		 	$HasVotes="'".$vars["HasVotes"]."'"  ;
 
         	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."] HasVotes=[".$HasVotes."]","ForumModerator");
 			$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit.",HasVotes=".$HasVotes." where id=".$IdPost);

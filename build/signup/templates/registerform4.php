@@ -46,7 +46,7 @@ Boston, MA  02111-1307, USA.
     <!-- username -->
         <div class="signup-row-thin">
           <label for="register-username"><?php echo $words->get('SignupUsername'); ?>* </label>
-          <?=(in_array('SignupErrorWrongUsername', $vars['errors']) || in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) ? '' : '<p class="float_left entered">'.$vars['username'].'</p>'; ?>
+          <?=(in_array('SignupErrorWrongUsername', $vars['errors']) || in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) ? '' : '<p class="entered">'.$vars['username'].'</p>'; ?>
           <input <?=(in_array('SignupErrorWrongUsername', $vars['errors']) || in_array('SignupErrorUsernameAlreadyTaken', $vars['errors'])) ? '' : 'type="hidden"'?> id="register-username" name="username" <?php
             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
@@ -97,7 +97,7 @@ Boston, MA  02111-1307, USA.
           } else { ?>
         <div class="signup-row-thin">
           <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
-            <?php  echo '<p class="float_left entered">********</p>'; ?>
+            <?php  echo '<p class="entered">********</p>'; ?>
         </div>
 <?php          }
           ?>
@@ -126,6 +126,7 @@ Boston, MA  02111-1307, USA.
     <legend><?php echo $words->get('SignupName'); ?></legend>
 <?php
 if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
+      echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
 ?>
     <!-- First Name -->
         <div class="signup-row-thin">
@@ -133,11 +134,6 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
           <input id="firstname" name="firstname" <?php
           echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
-          <?php
-            if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
-                echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
-            }
-            ?>
 
         </div> <!-- signup-row-thin -->
 
@@ -362,10 +358,12 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
   <!-- feeback -->
   <fieldset>
     <legend><?php echo $words->get('SignupFeedback'); ?></legend>
-    <p><?php echo $words->get('SignupFeedbackDescription'); ?></p>
-    <textarea name="feedback" rows="10" cols="80"><?php
-    echo isset($vars['feedback']) ? htmlentities($vars['feedback'], ENT_COMPAT, 'utf-8') : '';
-    ?></textarea>
+    <div class="signup-row-thin">
+        <p><?php echo $words->get('SignupFeedbackDescription'); ?></p>
+        <textarea name="feedback" rows="10" cols="80"><?php
+        echo isset($vars['feedback']) ? htmlentities($vars['feedback'], ENT_COMPAT, 'utf-8') : '';
+        ?></textarea>
+    </div>
   </fieldset>
 
   <!-- terms -->

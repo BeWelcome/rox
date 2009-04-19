@@ -38,6 +38,17 @@ $words = new MOD_words();
     <p>
         <textarea name="text" rows="15" cols="80" ><?=$text ?></textarea>
     </p>
+	
+	<?php
+	if ($this->_model->CaptchaNeeded($_SESSION["IdMember"])) {
+		$CaptchaValue=rand(100000,999999) ;
+		echo "<p>" ;
+		$_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
+		echo $words->getFormatted("ContactCaptchaRequest",$this->_model->DisplayCaptcha($CaptchaValue))," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
+//		echo $words->get("ContactCaptchaRequest"," "),$this->_model->DisplayCaptcha($CaptchaValue)," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
+		echo "</p>" ;
+	}
+	?>
 
     <p>
         <input type="checkbox" name="agree_spam_policy" id="IamAwareOfSpamCheckingRules">

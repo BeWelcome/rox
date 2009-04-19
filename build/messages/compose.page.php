@@ -19,7 +19,7 @@ class ComposeMessagePage extends MessagesBasePage
         // get translation module
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-        $model = $this->getModel();
+        $this->_model=$model = $this->getModel();
 
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
 

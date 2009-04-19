@@ -221,7 +221,7 @@
 
   form {overflow:hidden;}
   fieldset {margin-top: 1.5em; margin-bottom: 1.5em;}
-  legend {font-size: 1.3em; }
+  legend {font-size: 1.5em; color: #ff8800; line-height: 2em;}
   select {
     margin-bottom: 0.5em;
     font-size: 0.9em;

@@ -132,18 +132,38 @@ WHERE
         }
     }
     
-    public function deleteMessage($message_id)
-    {
-        if (!is_numeric($message_id)) {
+    public function deleteMessage($message_id)     {
+		if (!is_numeric($message_id)) {
             return false;
         }
-        $this->dao->query(
-            "
-DELETE FROM messages
-WHERE id = $message_id
-            "
-        );
-    }
+		$oldmsg = singleLookup("SELECT DeleteRequest, IdSender, IdReceiver FROM messages WHERE id = '$message_id'");
+		$DeleteRequest=$oldmsg->DeleteRequest ;
+		
+		if ($oldmsg->IdSender==$_SESSION["IdMember"]) {
+			if ($DeleteRequest=="receiverdeleted") {
+				$DeleteRequest.="senderdeleted,receiverdeleted";
+			} else {
+   				$DeleteRequest="senderdeleted";
+			}
+		}
+		if ($oldmsg->IdReceiver==$_SESSION["IdMember"]) {
+			if ($DeleteRequest=="senderdeleted") {
+				$DeleteRequest.="senderdeleted,receiverdeleted";
+			} else {
+   				$DeleteRequest="receiverdeleted";
+			}
+		}
+		
+		if ($DeleteRequest==$oldmsg->DeleteRequest) {
+			MOD_log::get()->write("Weird: trying todelete message #$message_id in Tab: $DeleteRequest prévious value=[".$oldmsg->DeleteRequest."](MessagesModel::deleteMessage)", "hacking");
+		}
+		if ($oldmsg->DeleteRequest!=""){
+			$DeleteRequest.="," . $oldmsg->DeleteRequest;
+		}
+		$ss="UPDATE messages SET DeleteRequest='$DeleteRequest' WHERE id='$message_id'";
+		$this->dao->query($ss);
+        MOD_log::get()->write("Request to delete message #$message_id in Tab: $DeleteRequest del message  (MessagesModel::deleteMessage)", "message");
+    } // end of deleteMessage
     
     // Mark a message as "read" or "unread"
     public function markReadMessage($message_id, $read = true)
@@ -156,7 +176,8 @@ SET
 WHERE id = $message_id
             "
         );
-    }
+		MOD_log::get()->write("Has read message #" . $message_id."  (MessagesModel::markReadMessage)", "readmessage");
+    } // end of markReadMessage
     
     // Mark a message as "read" or "unread"
     public function moveMessage($message_id, $folder)
@@ -227,9 +248,9 @@ OR (messages.IdSender = $user_id AND messages.IdReceiver = $contact_id)
                 $input['receiver_id'] = $member->id;
             }
             // $problems['receiver_id'] = 'no receiver was specified.';
-        } else if (!$this->singleLookup(
+        } else if (!$rReceiver=$this->singleLookup(
             "
-SELECT id
+SELECT id,Username
 FROM members
 WHERE id = ".$input['receiver_id']."
             "
@@ -242,9 +263,10 @@ WHERE id = ".$input['receiver_id']."
             // sender is not set.
             $input['sender_id'] = $_SESSION['IdMember'];
             // $problems['sender_id'] = 'no sender was specified.';
-        } else if (!$input['sender_id'] != $_SESSION['IdMember']) {
+        } else if ($input['sender_id'] != $_SESSION['IdMember']) {
             // sender is not the person who is logged in.
             $problems['sender_id'] = 'you are not the sender.';
+			MOD_log::get()->write("Trying to send a message with IdMember #".$input['sender_id']." (MessagesModel::sendOrComplain)", "hacking");
         }
         
         if (empty($input['text'])) {
@@ -257,11 +279,22 @@ WHERE id = ".$input['receiver_id']."
             $message_id = false;
         } else if (!isset($input['draft_id'])) {
             // this was a new message
-            $message_id = $this->_createMessage($input);
+            if ($message_id = $this->_createMessage($input)) {
+				MOD_log::get()->write("Has sent message #" . $message_id." to ".$rReceiver->Username." (MessagesModel::sendOrComplain new message)", "contactmember");
+			}
+			else { // SOmething has failed
+				$problems['sender_id'] = MOD_words::getFormatted("MustProvideTheRightCaptcha");
+			}
         } else if (!$this->getMessage($draft_id = $input['message_id'] = $input['draft_id'])) {
             // draft id says this is a draft, but it doesn't exist in database.
             // this means, something stinks.
             // Anyway, we insert a new message.
+            if ($message_id = $this->_createMessage($input)) {
+				MOD_log::get()->write("Has sent message #" . $message_id." to ".$rReceiver->Username." (MessagesModel::sendOrComplain from draft)", "contactmember");
+			}
+			else { // SOmething has failed
+				$problems['sender_id'] = 'Bad Captcha';
+			}
             $message_id = $this->_createMessage($input);
         } else {
             // this was a draft, so we only have to change the status in DB
@@ -275,10 +308,45 @@ WHERE id = ".$input['receiver_id']."
         );
     }
     
+	/*
+	* This function compute a Captcha in bitmap
+	* It look a bit weird to have it in the model, but some day it might require additional data from database
+	*/
+	public function DisplayCaptcha($value) {
+		$_SESSION['TheCaptcha']=$value ;
+		$ss='<img src="bw/captcha.php?PHPSESSID='.session_id().'" alt="copy this captcha"/>';
+//		$ss='<img src="http://www.bewelcome.org/bw/captcha.php" alt="copy this captcha"/>';
+//		$ss=$_SESSION['TheCaptcha'] ;
+		return($ss) ;
+	} // end of DisplayCaptcha
+	
+	public function CaptchaNeeded($IdMember) {
+		// In case this member is submitted to Captcha
+		$ss="select count(*) as NbTrust from comments where comments.Quality='Good' and comments.IdToMember=".$IdMember;
+		$mSender=$this->singleLookup($ss) ; 
+        $BW_Rights = new MOD_right();
+        $BW_Flags = new MOD_flag();
+		return (($mSender->NbTrust<=0)or($BW_Flags->HasFlag("RequireCaptchaForContact"))) ;
+	}
+
+	private function CheckForCaptcha($fields) {
+		if ($this->CaptchaNeeded($fields['sender_id'])) {
+//		if (($m->NbTrust<=0)or(HasFlag("RequireCaptchaForContact"))) {
+			if ($fields["c_verification"]!=$_SESSION['ExpectedCaptchaValue']) {
+				MOD_log::get()->write("Captcha failed ".$fields["c_verification"]." entered for ".$_SESSION['ExpectedCaptchaValue']." expected (MessagesModel::CheckForCaptcha)", "contactmember") ;
+				return(false) ;
+			}
+		}
+		if ($fields["c_verification"]!="") { // In case the member has filled a captcha with success, log it
+			MOD_log::get()->write("Captcha success ".$fields["c_verification"]." entered (MessagesModel::CheckForCaptcha)", "contactmember") ;
+		}
+		return(true) ;
+	} // end of Check for Captcha
     
-    private function _createMessage($fields)
-    {
-        return $this->dao->query(
+    private function _createMessage($fields)    {
+	
+		if (!$this->CheckForCaptcha($fields)) return false ;
+        $iMes= $this->dao->query(
             "
 INSERT INTO messages
 SET
@@ -291,11 +359,13 @@ SET
     JoinMemberPict = '".(isset($fields['attach_picture']) ? ($fields['attach_picture'] ? 'yes' : 'no') : 'no')."'
             "
         )->insertId();
+		
+		return ($iMes) ;
     }
     
     
-    private function _updateMessage($message_id, $fields)
-    {
+    private function _updateMessage($message_id, $fields)  {
+
         $this->dao->query(
             "
 UPDATE messages

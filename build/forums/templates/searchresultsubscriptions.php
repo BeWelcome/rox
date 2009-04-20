@@ -28,7 +28,7 @@ Boston, MA  02111-1307, USA.
 	
 	echo "<table><tr><td colspan=3>" ;
 	
-	if (HasRight("ForumModerator","All")) {
+	if ($this->BW_Right->HasRight("ForumModerator","All")) {
 	   echo " as a forum moderator with right \"ForumModerator\",\"All\" you are automatically subscribed to everything in the forum<hr />" ; 
 	}
 	if (!empty($TResults->Username)) {

@@ -205,7 +205,7 @@ class GroupMembership extends RoxEntityBase
         }
 
         $words = $this->getWords();
-        $comment_id = ((!$this->Comment) ? $words->InsertInMTrad($comment, 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($comment, 'membersgroups.Comment', $this->getPKValue(), $this->Comment));
+        $comment_id = ((!$this->Comment) ? $words->InsertInMTrad($this->dao->escape($comment), 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($this->dao->escape($comment), 'membersgroups.Comment', $this->getPKValue(), $this->Comment));
 
         if ($comment_id != $this->Comment)
         {

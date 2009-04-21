@@ -1210,6 +1210,38 @@ where ((`gc`.`fcode` = `countries`.`FirstAdminLevel`) and (`geo_usage`.`geoId` =
 
 $updates[] = "ALTER TABLE `params` ADD `memcache` ENUM( 'False', 'True' ) NOT NULL DEFAULT 'False' COMMENT 'Used to enable the use of memcache'" ;
 
+$updates[] = "ALTER TABLE `forums_posts` ADD `IdLocalVolMessage` INT NOT NULL DEFAULT '0' COMMENT 'Connection with a possible Message to send to a location (to manage thump up/down)' AFTER `HasVotes` ";
+
+$updates[] = "ALTER TABLE `forums_posts` ADD INDEX ( `IdLocalVolMessage` ) ";
+
+$updates[] = "
+INSERT INTO `preferences` VALUES (20, 'PreferenceLocalTime', 'PreferenceLocalTimeDesc', 
+'This preference allows to choose a reference city for local time', '2009-04-21 21:20:37', '0', '', 
+'echo \"\\n<select name=\'PreferenceLocalTime\' class=\'prefsel\'>\" ;
+ echo \"<option value=\'-28800\'\"; if (\$Value==-28800) echo  \" selected \";echo \">Los Angeles</option>\\n\";
+ echo \"<option value=\'-25200\'\"; if (\$Value==-25200) echo  \" selected \";echo \">Calgari</option>\\n\";
+ echo \"<option value=\'-21600\'\"; if (\$Value==-21600) echo  \" selected \";echo \">Mexico</option>\\n\";
+ echo \"<option value=\'-18000\'\"; if (\$Value==-18000) echo  \" selected \";echo \">New York</option>\\n\";
+ echo \"<option value=\'-14400\'\"; if (\$Value==-14400) echo  \" selected \";echo \">Santiago</option>\\n\";
+ echo \"<option value=\'-10800\'\"; if (\$Value==-10800) echo  \" selected \";echo \">Sao Paulo</option>\\n\";
+ echo \"<option value=\'-7200\'\"; if (\$Value==-7200) echo  \" selected \";echo \">Fernando de Noronha</option>\\n\";
+ echo \"<option value=\'-3600\'\"; if (\$Value==-3600) echo  \" selected \";echo \">Cape Verde</option>\\n\";
+ echo \"<option value=\'0\'\"; if (\$Value==0) echo  \" selected \";echo \">London</option>\\n\";
+ echo \"<option value=\'3600\'\"; if (\$Value==3600) echo  \" selected \";echo \">Paris, Berlin</option>\\n\";
+ echo \"<option value=\'7200\'\"; if (\$Value==7200) echo  \" selected \";echo \">Cairo</option>\\n\";
+ echo \"<option value=\'10800\'\"; if (\$Value==10800) echo  \" selected \";echo \">Moscow</option>\\n\";
+ echo \"<option value=\'14400\'\"; if (\$Value==14400) echo  \" selected \";echo \">Dubai</option>\\n\";
+ echo \"<option value=\'18000\'\"; if (\$Value==18000) echo  \" selected \";echo \">Karachi</option>\\n\";
+ echo \"<option value=\'19800\'\"; if (\$Value==19800) echo  \" selected \";echo \">Mumbai</option>\\n\";
+ echo \"<option value=\'21600\'\"; if (\$Value==21600) echo  \" selected \";echo \">Dhaka</option>\\n\";
+ echo \"<option value=\'25200\'\"; if (\$Value==25200) echo  \" selected \";echo \">Jakarta</option>\\n\";
+ echo \"<option value=\'28800\'\"; if (\$Value==28800) echo  \" selected \";echo \">Hong Kong</option>\\n\";
+ echo \"<option value=\'32400\'\"; if (\$Value==32400) echo  \" selected \";echo \">Tokyo</option>\\n\";
+ echo \"<option value=\'36000\'\"; if (\$Value==36000) echo  \" selected \";echo \">Sydney</option>\\n\";
+ echo \"<option value=\'39600\'\"; if (\$Value==39600) echo  \" selected \";echo \">Noumea</option>\\n\";
+ echo \"<option value=\'43200\'\"; if (\$Value==43200) echo  \" selected \";echo \">Auckland</option>\\n\";
+ echo \"</select>\\n\" ;', 'Active'); 
+ " ;
 
     if (empty($res)) {
         $version = 0;

@@ -100,7 +100,7 @@ This File display a topic and the messages which are inside it
 <?php
 	  $topic->topicinfo->IsClosed=false ;
 	  if ($topic->topicinfo->expiredate!="0000-00-00 00:00:00") {
-	  	 echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :",$topic->topicinfo->expiredate,"</strong>" ; 
+	  	 echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :",ServerToLocalDateTime($topic->topicinfo->expiredate),"</strong>" ; 
 	  	 $topic->topicinfo->IsClosed=(strtotime($topic->topicinfo->expiredate)<=time()) ;
 	  } 
 

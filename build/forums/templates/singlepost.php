@@ -53,12 +53,12 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         <p class="forumstime">
             <?php
 //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
-            echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), $post->posttime);
+            echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));
             $max=count($post->Trad) ;
             for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                 if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
                     if ($post->Trad[$jj]->IdLanguage==$_SESSION["IdLanguage"]) {
-                        echo " by ",$post->Trad[$jj]->OwnerUsername,"<br /><em>last edited on ",$post->Trad[$jj]->trad_updated," by ",$post->Trad[$jj]->TranslatorUsername, "</em>";
+                        echo " by ",$post->Trad[$jj]->OwnerUsername,"<br /><em>last edited on ",date($words->getFormatted('DateHHMMShortFormat'),ServerToLocalDateTime($post->Trad[$jj]->trad_updated))," by ",$post->Trad[$jj]->TranslatorUsername, "</em>";
                     }
                 }
             }

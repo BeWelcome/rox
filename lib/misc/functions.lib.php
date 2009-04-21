@@ -285,5 +285,25 @@ class PFunctions {
         }
         return substr ($random, 0, $len);   
     }
-}
+} // end of PFunctions
+
+/*
+* The ServerToLocalDateTime() function allow to convert server time (whic is GMT) to local time
+* localtime will be computed according to preferences
+* it use $_SESSION["TimeOffset"] which is initialized according to current member preferences
+* @$EntryTimeStamp is the date (it must be a GMT time, taken for the database)to be converted in localtime
+* it returns a TimeStamp adjusted according to member local time
+*
+* WARNING: This function is only to be used in displays !
+*
+*/
+function ServerToLocalDateTime($EntryTimeStamp) {
+//	$_SESSION["TimeOffset"]=60*60*2 ; // only used for test at developemnt phase
+	if (empty($_SESSION["TimeOffset"])) {
+		return($EntryTimeStamp) ;
+	}
+	else {
+		return($EntryTimeStamp+$_SESSION["TimeOffset"]) ;
+	}
+} // end of LocaldateTime
 ?>

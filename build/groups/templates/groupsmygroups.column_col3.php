@@ -8,7 +8,7 @@
                 ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->id ?>">
-                        <img class="framed float_left"  width="80px" alt="Group" src="<?= ((strlen($group_data->picture) > 0) ? $group_data->picture : 'images/icons/group.png' ) ;?>"/>
+                        <img class="framed float_left"  width="80px" alt="Group" src="<?= ((strlen($group_data->Picture) > 0) ? $group_data->Picture : 'images/icons/group.png' ) ;?>"/>
                     </a>
                     <div class="groupinfo">
                     <h4><a href="groups/<?= $group_data->id ?>"><?= $group_data->Name ?></a></h4>

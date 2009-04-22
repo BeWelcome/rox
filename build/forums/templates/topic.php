@@ -45,25 +45,24 @@ This File display a topic and the messages which are inside it
 ?>
 <h2><?php 
 	
-	if ($User) {
-		$url=$_SERVER['REQUEST_URI'] ;
-		if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
-			$url.="/reverse"  ;
-		}
-		echo "<a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" /></a> " ;
-	}
 	if ($topic->topicinfo->IdGroup>0) {
 		echo $words->getFormatted("Group_" . $topic->topicinfo->GroupName),"::" ;
 	}
 // If the forum belongs to a group display the group name first
 // Display the title of the post
 	echo $words->fTrad($topic->topicinfo->IdTitle); 
-
+	if ($User) {
+		$url=$_SERVER['REQUEST_URI'] ;
+		if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
+			$url.="/reverse"  ;
+		}
+		echo " <a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" alt=\"reverse\" /></a> " ;
+	}
 ?></h2>
 
 <span class="forumsthreadtags"><strong>Tags:</strong> <?php
 
-    $url = 'forums/';
+    $url = ForumsView::getURI().'';
     $breadcrumb = '';
     if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
         $url = $url.'k'.$topic->topicinfo->continent.'-'.Forums::$continents[$topic->topicinfo->continent].'/';
@@ -101,7 +100,7 @@ This File display a topic and the messages which are inside it
 <?php
 	  $topic->topicinfo->IsClosed=false ;
 	  if ($topic->topicinfo->expiredate!="0000-00-00 00:00:00") {
-	  	 echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :",$topic->topicinfo->expiredate,"</strong>" ; 
+	  	 echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :",ServerToLocalDateTime($topic->topicinfo->expiredate),"</strong>" ; 
 	  	 $topic->topicinfo->IsClosed=(strtotime($topic->topicinfo->expiredate)<=time()) ;
 	  } 
 
@@ -121,10 +120,10 @@ if ($User) {
 	 <?php 
 
 	 	if (isset($topic->IdSubscribe)) {
-	 	   echo "forums/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
+	 	   echo ForumsView::getURI()."subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
 	 	}
 	 	else {
-	 	   echo "forums/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
+	 	   echo ForumsView::getURI()."subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
 	 	}  
 	 	?>
 	 	<span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>

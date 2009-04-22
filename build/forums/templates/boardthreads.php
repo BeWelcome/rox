@@ -61,7 +61,7 @@ Boston, MA  02111-1307, USA.
                         
                         // show tags if post is part of a group
                     if ($thread->IdGroup>0) {
-                            echo "<a href=\"groups/".$thread->IdGroup."\"><strong>Group: </strong>",$words->getFormatted("Group_" . $thread->GroupName),"</a><br >" ;
+                            echo "<a href=\"groups/".$thread->IdGroup."\"><strong>Group: </strong>",$words->getFormatted("Group_" . $thread->GroupName),"</a><br />" ;
                     }
                     
                         $breadcrumb = '';
@@ -144,13 +144,13 @@ Boston, MA  02111-1307, USA.
                     if ($breadcrumb) {
                         // we will later use the 'tags' word, but don't want an edit link inside the html tag!
                         if ($ShowHelp) {
-                        echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
+                        echo '<img src="styles/css/minimal/images/iconsfam/help.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
                         }
                         elseif (isset($thread->continent) && $thread->continent) {
-                        echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
+                        echo '<img src="styles/css/minimal/images/iconsfam/world.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
                         }
                         else {
-                        echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
+                        echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
                         }
                         echo $breadcrumb;
                     }
@@ -160,15 +160,15 @@ Boston, MA  02111-1307, USA.
                     ?></span>
                 </td>
                 <td class="forumsboardthreadreplies"><?php echo $thread->replies; ?></td>
-                <td class="forumsboardthreadauthor"><a href="bw/member.php?cid=<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
+                <td class="forumsboardthreadauthor"><a href="people/<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
                 <td class="forumsboardthreadviews"><?php echo number_format($thread->views); ?></td>
                 <td class="forumsboardthreadlastpost">
                     <span class="small grey"><?php 
 //                  echo "#### [",$thread->last_create_time,"] " ; 
-                    echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time);
+                    echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time));
                     ?></span><br />
-                    <a href="bw/member.php?cid=<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
-                    <a href="<?php echo $last_url; ?>"><img src="styles/YAML/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
+                    <a href="people/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
+                    <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
                      
                 </td>
             </tr>
@@ -195,17 +195,17 @@ require 'pages.php';
 
 ?>
 <div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
+    <?php echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
      = <?php echo $words->get('ForumLegendTagged');?>
 </div>
 <div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/world.png" alt="'. $words->getBuffered('geo') .'" title="'. $words->getBuffered('geo') .'" class="forum_icon" />' . $words->flushBuffer();
+    <?php echo '<img src="styles/css/minimal/images/iconsfam/world.png" alt="'. $words->getBuffered('geo') .'" title="'. $words->getBuffered('geo') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
      = <?php echo $words->get('ForumLegendTaggedGeo');?>
 </div>
 <div class="floatbox small float_left" style="width: 80%">
-    <?php echo '<img src="styles/YAML/images/iconsfam/help.png" alt="'. $words->getBuffered('help') .'" title="'. $words->getBuffered('help') .'" class="forum_icon" />' . $words->flushBuffer();
+    <?php echo '<img src="styles/css/minimal/images/iconsfam/help.png" alt="'. $words->getBuffered('help') .'" title="'. $words->getBuffered('help') .'" class="forum_icon" />' . $words->flushBuffer();
     ?>
      = <?php echo $words->get('ForumLegendTaggedHelp');?>
 </div>

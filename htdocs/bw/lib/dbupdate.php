@@ -1242,6 +1242,16 @@ INSERT INTO `preferences` VALUES (20, 'PreferenceLocalTime', 'PreferenceLocalTim
  echo \"<option value=\'43200\'\"; if (\$Value==43200) echo  \" selected \";echo \">Auckland</option>\\n\";
  echo \"</select>\\n\" ;', 'Active'); 
  " ;
+$updates[] = "
+INSERT INTO `preferences` VALUES (21, 'PreferenceDayLight', 'PreferenceDayLightDesc', 
+'This preference allows to choose if the member wants to use daylight saving orn not', '2009-04-22 15:20:37', 'Yes', 'Yes,No', 
+'echo \"\\n<select name=\'PreferenceDayLight\' class=\'prefsel\'>\" ;
+ echo \"<option value=\'Yes'\"; if (\$Value=='Yes') echo  \" selected \";echo \">\",ww(\"Yes\"),\"</option>\\n\";
+ echo \"<option value=\'No'\"; if (\$Value=='No') echo  \" selected \";echo \">\",ww(\"No\"),\"</option>\\n\";
+ echo \"</select>\\n\" ;', 'Active'); 
+ " ;
+ 
+ $updates[] = "ALTER TABLE `params` ADD `DayLightOffset` INT NOT NULL DEFAULT '0' COMMENT 'This is the Day light Offset to be added to display dates tiem for members who chose this preference'" ;
 
     if (empty($res)) {
         $version = 0;

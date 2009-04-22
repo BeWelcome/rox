@@ -424,7 +424,7 @@ WHERE
     IdPreference=preferences.id and preferences.CodeName='PreferenceDayLight'
             "
         )) {
-            $_SESSION['PreferenceDayLight'] = $preference_language->Value;
+            $_SESSION['PreferenceDayLight'] = $preference_PreferenceDayLight->Value;
         }
 
         if ($preference_PreferenceLocalTime = $this->singleLookup(
@@ -439,7 +439,7 @@ WHERE
     IdPreference=preferences.id and preferences.CodeName='PreferenceLocalTime'
             "
         )) {
-            $_SESSION["TimeOffset"] = $preference_language->Value;
+            $_SESSION["TimeOffset"] = $preference_PreferenceLocalTime->Value;
         }
 		
         // Process the login of the member according to his status

@@ -38,6 +38,10 @@ class GroupsController extends RoxControllerBase
                 // group does not exist. redirect to groups overview page or search
                 $this->_redirect('groups');
             }
+            elseif ($group->Type == 'NeedInvitation' && !$this->_model->getLoggedInMember())
+            {
+                $this->_redirect('groups');
+            }
             else
             {
                 $this->_model->setGroupVisit($group_id);

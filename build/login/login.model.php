@@ -400,18 +400,48 @@ SELECT
     ShortCode                 AS language_code
 FROM
     memberspreferences,
-    languages
+    languages,
+	preferences
 WHERE
     IdMember                 = $member_id    AND
     memberspreferences.Value = languages.id  AND
-    IdPreference             = 1
+    IdPreference=preferences.id and preferences.CodeName='PreferenceLanguage'
             "
         )) {
             $_SESSION['IdLanguage'] = $preference_language->language_id;
             $_SESSION['lang']       = $preference_language->language_code;
         }
 
-        
+        if ($preference_PreferenceDayLight = $this->singleLookup(
+            "
+SELECT
+    memberspreferences.Value  
+FROM
+    memberspreferences,
+	preferences
+WHERE
+    IdMember                 = $member_id    AND
+    IdPreference=preferences.id and preferences.CodeName='PreferenceDayLight'
+            "
+        )) {
+            $_SESSION['PreferenceDayLight'] = $preference_PreferenceDayLight->Value;
+        }
+
+        if ($preference_PreferenceLocalTime = $this->singleLookup(
+            "
+SELECT
+    memberspreferences.Value  
+FROM
+    memberspreferences,
+	preferences
+WHERE
+    IdMember                 = $member_id    AND
+    IdPreference=preferences.id and preferences.CodeName='PreferenceLocalTime'
+            "
+        )) {
+            $_SESSION["TimeOffset"] = $preference_PreferenceLocalTime->Value;
+        }
+		
         // Process the login of the member according to his status
         switch ($m->Status) {
             case "ChoiceInactive" :  // in case an inactive member comes back

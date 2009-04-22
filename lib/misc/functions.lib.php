@@ -285,7 +285,7 @@ class PFunctions {
         }
         return substr ($random, 0, $len);   
     }
-} // end of PFunctions
+}
 
 /*
 * The ServerToLocalDateTime() function allow to convert server time (whic is GMT) to local time
@@ -303,7 +303,12 @@ function ServerToLocalDateTime($EntryTimeStamp) {
 		return($EntryTimeStamp) ;
 	}
 	else {
-		return($EntryTimeStamp+$_SESSION["TimeOffset"]) ;
+		if (isset($_SESSION['PreferenceDayLight']) and ($_SESSION['PreferenceDayLight']=='Yes')) {
+			return($EntryTimeStamp+$_SESSION["TimeOffset"]+$_SESSION["Param"]->DayLightOffset) ;
+		}
+		else {
+			return($EntryTimeStamp+$_SESSION["TimeOffset"]) ;
+		}
 	}
 } // end of LocaldateTime
 ?>

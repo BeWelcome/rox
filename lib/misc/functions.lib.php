@@ -298,12 +298,17 @@ class PFunctions {
 *
 */
 function ServerToLocalDateTime($EntryTimeStamp) {
-	$_SESSION["TimeOffset"]=60*60*2 ; // only used for test at developemnt phase
+//	$_SESSION["TimeOffset"]=60*60*2 ; // only used for test at developemnt phase
 	if (empty($_SESSION["TimeOffset"])) {
 		return($EntryTimeStamp) ;
 	}
 	else {
-		return($EntryTimeStamp+$_SESSION["TimeOffset"]) ;
+		if (isset($_SESSION['PreferenceDayLight']) and ($_SESSION['PreferenceDayLight']=='Yes')) {
+			return($EntryTimeStamp+$_SESSION["TimeOffset"]+$_SESSION["Param"]->DayLightOffset) ;
+		}
+		else {
+			return($EntryTimeStamp+$_SESSION["TimeOffset"]) ;
+		}
 	}
 } // end of LocaldateTime
 ?>

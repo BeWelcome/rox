@@ -29,7 +29,9 @@
             
                 <h3><?= $words->get('GroupsList'); ?></h3>
                 <?php
-                foreach($this->featured_groups as $group_data) : ?>
+                foreach($this->featured_groups as $group_data) :
+                    if ($group_data->Type == 'NeedInvitation' && !$this->model->getLoggedInMember()) continue;
+                 ?>
                     <div class="groupbox clearfix">
                         <a href="groups/<?=$group_data->id ?>"> 
                             <img class="framed float_left"  width="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>

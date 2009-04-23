@@ -26,7 +26,7 @@
   #header { position: absolute; top: 0;}
   #topnav { float: right; margin: 0 2em 1em 2em}  
   #nav { background: transparent url(../images/header_index_960.png) no-repeat top left; height: 70px; top: 0; padding: 0 2em;}  
-  #teaser {margin: 0 2em 1em 2em; clear: both;}
+  #teaser {margin: 0 2em 1em 2em; clear:both;}
   #main { padding: 0 2em; }
   #footer { padding: 10px 20px; color:#666; background: #f9f9f9; border-top: 5px #efefef solid; }
 
@@ -40,6 +40,8 @@
 
   #col1 { float: right; width: 20%}
   #col2 { display:none}
+  #col2_content { display:none}
+
   #col3 { width: auto; margin: 0 20% 0 0}
   #col1_content { padding: 0 2em 0 2em }
   #col3_content { padding: 0 2em 0 2em }

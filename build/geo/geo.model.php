@@ -739,6 +739,21 @@ class GeoModel extends RoxModelBase {
         // } else #
         return $result;
     }
+    
+    /**
+    * Check if a geonameid exists, if not, add it to the DB.
+    **/
+    
+    public function checkGeonameId($geonameId,$usagetype = false)
+    {
+        //check wether we have that id in our DB
+        $location = $this->getDataById($geonameId);
+        if (!$location) {
+            //add it to the DB
+            return $this->addGeonameId($geonameId,$usagetype);
+        } else return true; 
+
+    }    
 
     
     

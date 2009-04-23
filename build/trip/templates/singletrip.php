@@ -45,7 +45,16 @@ if (isset($trip_data[$trip->trip_id])) {
         echo '<h3 class="borderless">';
         echo '<a href="blog/'.$trip->handle.'/'.$blogid.'">'.$blog->blog_title.'</a><br />';
 		if ($blog->name) {
-			echo '<span style="font-size: 14px;">'.$blog->name.'</span>';
+		    $geo = new GeoModel();
+		    $bloggeo = $geo->LoadLocation($blog->blog_geonameid);
+		    if (isset($bloggeo[0])) {
+		        $countryId = isset($bloggeo[0]->parentCountryId) ? $bloggeo[0]->parentCountryId : false;
+		        if ($countryId) {
+		            $countrygeo = $geo->LoadLocation($countryId);
+		            $countryname = $countrygeo[0]->name;
+	            }
+	        }
+			echo '<span style="font-size: 14px;">'.$blog->name.', '.(isset($countryname) ? $countryname : '').'</span>';
 		}
         echo '</h3>';
 		if ($blog->blog_text) {
@@ -98,9 +107,6 @@ Sortable.create('triplist', {
 } // end if is own trip
 
 } // end if tripdata
-else {
-    echo $words->get('Trip_SubtripsNone');
-}
 ?>
 </div>
 

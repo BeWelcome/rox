@@ -14,12 +14,6 @@
         $errors = array();
         $lang = array();
         $words = new MOD_words();
-        $i18n = new MOD_i18n('apps/blog/editcreate.php');
-        $errors = $i18n->getText('errors');
-        $lang = $i18n->getText('lang');
-        $monthNames = array();
-        $i18n = new MOD_i18n('date.php');
-        $monthNames = $i18n->getText('monthNames');
 
         $catIt = $Model->getCategoryFromUserIt($User->getId());
         $tripIt = $Model->getTripFromUserIt($User->getId());
@@ -55,26 +49,7 @@ if (!$User) {
 $words = new MOD_words();
 ?>
 
-<script type="text/javascript">//<!--
-tinyMCE.srcMode = '';
-tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
-tinyMCE.init({
-    mode: "exact",
-    elements: "create-txt",
-    plugins : "advimage",
-    theme: "advanced",
-    relative_urls:false,
-    convert_urls:false,
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,link,bullist,separator,justifyleft,justifycenter,justifyfull,bullist,numlist,forecolor,backcolor,image, charmap",
-    theme_advanced_buttons2 : "",
-    theme_advanced_buttons3 : "",
-    theme_advanced_toolbar_location: 'top',
-    theme_advanced_statusbar_location: 'bottom',
-    theme_advanced_resizing: true
 
-});
-//-->
-</script>
 
 <form method="post" action="<?=$actionUrl?>" class="def-form" id="blog-create-form">
 
@@ -90,132 +65,85 @@ if (in_array('upderror', $vars['errors'])) {
 if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_foreign'] = $trip->trip_id;
 ?>
 
-
-
-
-<fieldset id="blog-text">
-<legend><?=$words->get('BlogCreateLabelText')?></legend>
-    <div class="row">
-    <label for="create-title"><?=$words->get('BlogCreateLabelTitle')?>:</label><br/>
-        <input type="text" id="create-title" name="t" class="long" <?php
-        // the title may be set
-        echo isset($vars['t']) ? 'value="'.htmlentities($vars['t'], ENT_COMPAT, 'utf-8').'" ' : '';
-        ?>/>
-        <div id="bcreate-title" class="statbtn"></div>
-        <?php
-        if (in_array('title', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_title').'</span>';
-        }
-        ?>
-        <p class="desc"></p>
-    </div>
-    <div class="row">
-        <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
-        <textarea id="create-txt" name="txt" rows="10" cols="50"><?php
-        // the content may be set
-        echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
-        ?></textarea>
-        <div id="bcreate-c" class="statbtn"></div>
-        <?php
-        if (in_array('text', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_text').'</span>';
-        }
-        ?>
-        <p class="desc"></p>
-    </div>
-    <div class="row">
-        <label for="create-cat"><?=$words->get('BlogCreateLabelCategories')?>:</label><br />
-        <select id="create-cat" name="cat">
-            <option value="">-- <?=$words->get('BlogCreateNoCategories')?> --</option>
-        <?php
-            foreach ($catIt as $c) {
-                echo "<option value=\"".$c->blog_category_id."\" ";
-                if (isset($vars['cat']) && $c->blog_category_id == $vars['cat']) echo ' selected';
-                echo ">".htmlentities($c->name, ENT_COMPAT, 'utf-8')."</option>\n";
-            }
-        ?>
-        </select>
-        <?php
-        if (in_array('category', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_category').'</span>';
-        }
-        ?>
-        <p class="desc"></p>
-    </div>
-    <div class="row">
-        <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
-        <textarea id="create-tags" name="tags" cols="40" rows="1"><?php
-        // the tags may be set
-            echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : '';
-        ?></textarea>
-        <div id="suggestion"></div>
-        <p class="desc"><?=$words->get('BlogCreateLabelSublineTags')?></p>
-    </div>
-    <p>
-        <input type="submit" value="<?=$submitValue?>" class="submit"<?php
-        echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
-        ?> />
-        <input type="hidden" name="<?php
-        // IMPORTANT: callback ID for post data
-        echo $callbackId; ?>" value="1"/>
-<?php
-if (isset($vars['id']) && $vars['id']) {
-?>
-        <input type="hidden" name="id" value="<?=(int)$vars['id']?>"/>
-<?php
-}
-?>
-    </p>
-</fieldset>
-
 <fieldset id="blog-trip"><legend><?=$words->get('BlogCreate_LabelTrips')?></legend>
     <div class="row">
-        <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
-        <input type="text" id="create-sty" name="sty" style="width:3em" <?php
-        echo isset($vars['sty']) ? 'value="'.htmlentities($vars['sty'], ENT_COMPAT, 'utf-8').'" ' : '';
-        ?> onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);"/>
-        <select id="create-stm" name="stm" onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);">
-            <option value="">-</option>
-            <?php
-                foreach ($monthNames as $m=>$name) {
-                    echo '<option value="'.$m.'"';
-                    if (isset($vars['stm']) && (int)$vars['stm'] == $m) {
-                        echo ' selected="selected"';
-                    }
-                    echo '>'.$name.'</option>';
-                }
-            ?>
-        </select>
-        <input type="text" id="create-std" name="std" style="width:2em" <?php
-        echo isset($vars['std']) ? 'value="'.htmlentities($vars['std'], ENT_COMPAT, 'utf-8').'" ' : '';
-        ?> onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);"/>
-        <a href="#" id="create-stsel" onclick="Cal.aCalTarget('create-sty', 'create-stm', 'create-std');Cal.aCal('create-stsel');return false;">cal</a>
-        <?php
-        if (in_array('startdate', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_startdate').'</span>';
-        } elseif (in_array('duration', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_duration').'</span>';
-        }
-        ?>
-        <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
-    </div>
+        <div class="subcolumns" id="profile_subcolumns">
 
-    <div class="row">
-        <label for="create-trip"><?=$words->get('BlogCreateTrips_LabelTrip')?></')?>:</label><br />
-        <select id="create-trip" name="tr">
-            <option value="">-- <?=$words->get('BlogCreateTrips_NoTrip')?> --</option>
-        <?php
-            foreach ($tripIt as $t)
-                echo "<option value=\"".$t->trip_id."\"".($t->trip_id == $vars['trip_id_foreign'] ? ' selected="selected"' : '').">".htmlentities($t->trip_name, ENT_COMPAT, 'utf-8')."</option>\n";
-        ?>
-        </select>
-        <?php
-        if (in_array('trip', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
-        }
-        ?>
-        <p class="desc"></p>
-    </div>
+          <div class="c50l" >
+            <div class="subcl" >
+                
+                <div class="row">
+                <label for="create-title"><?=$words->get('BlogCreateLabelTitle')?>:</label><br/>
+                    <input type="text" id="create-title" name="t" class="long" <?php
+                    // the title may be set
+                    echo isset($vars['t']) ? 'value="'.htmlentities($vars['t'], ENT_COMPAT, 'utf-8').'" ' : '';
+                    ?>/>
+                    <div id="bcreate-title" class="statbtn"></div>
+                    <?php
+                    if (in_array('title', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_title').'</span>';
+                    }
+                    ?>
+                    <p class="desc"></p>
+                </div>
+                <div class="row">
+                    <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
+                    <textarea id="create-txt" name="txt" rows="10" cols="50"><?php
+                    // the content may be set
+                    echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
+                    ?></textarea>
+                    <div id="bcreate-c" class="statbtn"></div>
+                    <?php
+                    if (in_array('text', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_text').'</span>';
+                    }
+                    ?>
+                    <p class="desc"></p>
+                </div>
+                
+            </div> <!-- subcl -->
+          </div> <!-- c50l -->
+          <div class="c50r" >
+            <div class="subcr" >
+                
+                <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
+                <div class="floatbox">
+                    <input type="text" id="create-date" name="date" class="date" maxlength="10" style="width:9em" <?php
+                    echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
+                    ?> />
+                	<script type="text/javascript">
+                		/*<[CDATA[*/
+                		var datepicker	= new DatePicker({
+                		relative	: 'create-date',
+                		language	: '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
+                		current_date : '', 
+                		topOffset   : '25',
+                		relativeAppend : true
+                		});
+                		/*]]>*/
+                	</script>
+                </div>
+                    <?php
+                    if (in_array('startdate', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_startdate').'</span>';
+                    } elseif (in_array('duration', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_duration').'</span>';
+                    }
+                    ?>
+                    <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
+                    
+                    <input id="create-trip" name="tr" type="hidden" value="<?=$vars['trip_id_foreign'] ? $vars['trip_id_foreign'] : ''?>">
+                    <?php
+                    if (in_array('trip', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
+                    }
+                    ?>
+                    <p class="desc"></p>
+
+            </div> <!-- subcr -->
+          </div> <!-- c50r -->
+
+        </div> <!-- subcolumns -->
 <?php
 if ($google_conf && $google_conf->maps_api_key) {
 ?>
@@ -318,7 +246,7 @@ if ($google_conf && $google_conf->maps_api_key) {
 <?php
 }
 ?>
-    <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label>
+    <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label><br />
     <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
     <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
     <div class="subcolumns">
@@ -340,12 +268,49 @@ if ($google_conf && $google_conf->maps_api_key) {
     </p>
 </fieldset>
 
+<fieldset id="blog-text">
+<legend><?=$words->get('BlogCreateLabelText')?></legend>
+    
+    <div class="row">
+        <label for="create-cat"><?=$words->get('BlogCreateLabelCategories')?>:</label><br />
+        <select id="create-cat" name="cat">
+            <option value="">-- <?=$words->get('BlogCreateNoCategories')?> --</option>
+        <?php
+            foreach ($catIt as $c) {
+                echo "<option value=\"".$c->blog_category_id."\" ";
+                if (isset($vars['cat']) && $c->blog_category_id == $vars['cat']) echo ' selected';
+                echo ">".htmlentities($c->name, ENT_COMPAT, 'utf-8')."</option>\n";
+            }
+        ?>
+        </select>
+        <?php
+        if (in_array('category', $vars['errors'])) {
+            echo '<span class="error">'.$words->get('BlogErrors_category').'</span>';
+        }
+        ?>
+        <p class="desc"></p>
+    </div>
+    <div class="row">
+        <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
+        <textarea id="create-tags" name="tags" cols="40" rows="1"><?php
+        // the tags may be set
+            echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : '';
+        ?></textarea>
+        <div id="suggestion"></div>
+        <p class="desc"><?=$words->get('BlogCreateLabelSublineTags')?></p>
+    </div>
 
+        <input type="hidden" name="<?php
+        // IMPORTANT: callback ID for post data
+        echo $callbackId; ?>" value="1"/>
+<?php
+if (isset($vars['id']) && $vars['id']) {
+?>
+        <input type="hidden" name="id" value="<?=(int)$vars['id']?>"/>
+<?php
+}
+?>
 
-
-
-
-<fieldset id="blog-settings">
     <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
     <?php
     if ($User->hasRight('write_sticky@blog')) {
@@ -409,13 +374,9 @@ if ($google_conf && $google_conf->maps_api_key) {
 </form>
 <script type="text/javascript">//<!--
 $('blog-create-form').hide();
-new FieldsetMenu('blog-create-form', {<?php
-if (in_array('startdate', $vars['errors']) || in_array('duration', $vars['errors'])) {
-    echo 'active: "blog-trip"';
-} else {
-    echo 'active: "blog-text"';
-}
-?>});
+new FieldsetMenu('blog-create-form', {
+    active: "blog-trip"
+});
 BlogSuggest.initialize('blog-create-form');
 
 function eventHandlerFunction(e) {

@@ -58,7 +58,7 @@ if (!isset($vars['errors'])) {
 
 $comments = $Shouts->getShouts($table,$table_id);
 if (!$comments) {
-  echo '<p>'.$words->get('CommentsAdd').'</p>';
+    echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
 } else {
     $count = 0;
     $lastHandle = '';
@@ -67,10 +67,12 @@ if (!$comments) {
         ++$count;
         $lastHandle = $comment->username;
     }
+    echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
 }
 
 if (isset($_SESSION['IdMember']) && $_SESSION['IdMember']) {
 ?>
+<div id="comment-form">
 <form method="post" action="" class="def-form" id="blog-comment-form">
     <div class="row">
     <label for="comment-title"><?=$words->get('CommentsLabel')?>:</label><br/>
@@ -107,6 +109,12 @@ if (in_array('textlen', $vars['errors'])) {
 echo $callbackId; ?>" value="1"/>
     </p>
 </form>
+</div>
+<script type="text/javascript">//<!--
+$('comment-form').hide();
+$('commentadd').onclick = function (){ $('comment-form').toggle(); return false;}
+//-->
+</script>
 <?
 } else {
     // not logged in.
@@ -114,6 +122,7 @@ echo $callbackId; ?>" value="1"/>
 }
 ?>
 </div>
+
 <?php
 PPostHandler::clearVars($callbackId);
 ?>

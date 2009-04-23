@@ -13,25 +13,13 @@ class AboutFaqsectionPage extends AboutFaqPage
         
         $j = 0;
         foreach ($categories as $key => $category) {
+            if ($key == $this->key) {
+                $add = 'selected';
+            } else $add = '';
             echo '
-            <li><div class="'.($j%2 ? 'odd' : 'even').'"><h3><a href="about/faq/'.$key.'">
+            <li><div class="'.($j%2 ? 'odd' : 'even').'"><h3><a href="about/faq/'.$key.'" class="'.$add.'">
             '.$words->get($category->Description).'
             </a></h3>';
-            
-            if ($key == $this->key) {
-                echo '
-                <ul>';
-                foreach ($this->faq_section->faqs as $faq_key => &$faq) {
-                    $key_end = strlen($faq->words_Q[0]->Sentence) > 66 ? '...' : '';
-                    echo '
-                    <li><a href="'.$req.'#question'.$faq_key.'">'.substr($faq->words_Q[0]->Sentence, 0, 66).' '.$key_end.'</a></li>';
-                }
-                echo '
-                </ul>';
-            } else {
-                echo '';
-            }
-            
             echo '
             </div></li>
             <hr>';
@@ -53,7 +41,17 @@ class AboutFaqsectionPage extends AboutFaqPage
         $req = $_SERVER['REQUEST_URI'];
         echo '
         <h2>'.$words->get($this->faq_section->Description).'</h2>';
-        
+        echo '<div class="faqs">';
+        echo '
+        <ul>';
+        foreach ($this->faq_section->faqs as $faq_key => &$faq) {
+            echo '
+            <li><a href="'.$req.'#question'.$faq_key.'">'.$faq->words_Q[0]->Sentence.'</a></li>';
+        }
+        echo '
+        </ul>';
+        echo '</div>';
+
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
             echo '
             <div>

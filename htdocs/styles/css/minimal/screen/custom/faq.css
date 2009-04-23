@@ -8,7 +8,7 @@
    */
 
 	#main #col1 {
-	  width: 30%;
+	  width: 29%;
 	}
 
 	#main #col2, #main #col2_content{
@@ -17,12 +17,16 @@
 
 	#main #col3 {
 	  width: 70%;
-	  margin-right: 30%;
+	  margin-right: 29%;
 	  margin-left: 0;
 	}
 	
+	#main .faqs ul {
+	  margin-bottom: 2em;
+	}
+	
 	.faqs ul li {
-	  padding: .3em 0;
+	  padding: .2em 0;
 	}
 	
 	.faqs h3 a{

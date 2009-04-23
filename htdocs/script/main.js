@@ -9,7 +9,7 @@ var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
 document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls"></script>');
+document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder"></script>');
 
 var req = new String(location.pathname).toLowerCase();
 var loc = new String(location);
@@ -21,9 +21,13 @@ if (req.indexOf('signup') != -1) {
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
     document.write('<script type="text/javascript" src="script/geo_suggest.js"></script>');
 }
-else if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('message/write') != -1 ) {
+if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('forums') != -1 || req.indexOf('trip') != -1 ) {
     	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
+}
+if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('trip') != -1 ) {
         document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
+		document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=dragdrop"></script>');
+		document.write('<script type="text/javascript" src="script/datepicker.js"></script>');
 }
 if (
 		req.indexOf('blog/create') != -1

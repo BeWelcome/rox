@@ -369,19 +369,6 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
   <!-- terms -->
 
   <?php
-
-
-/*
- *  FIXME
- *
-    if (GetStrParam("Terms","")!="") echo " checked" ; // if user has already click, we will not bore him again
-    echo " />";
-
-
-  ?>
-  <?php echo $words->get('IAgreeWithTerms'); ?></p>
-  <?php
-  */
     if (in_array('SignupMustacceptTerms', $vars['errors'])) {
         // SignupMustacceptTerms contains unknown placeholder
         echo '<div class="error">'.$words->get('SignupTermsAndConditions').'</div>';
@@ -389,7 +376,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
     ?>
   <p class="checkbox"><input type="checkbox" name="terms"
   <?php
-    if (isset ($vars["terms"])) echo " checked=\"checked\"" ; // if user has already click, we will not bore him again
+    if (isset ($vars["terms"])) echo " checked=\"checked\"" ; // if user has already clicked, we will not bore him again
     echo " />";
   ?>
   <?php echo $words->get('IAgreeWithTerms'); ?></p>

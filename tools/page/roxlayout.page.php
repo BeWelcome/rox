@@ -72,7 +72,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheetPatches()
     {
         $stylesheet_patches = parent::getStylesheetPatches();
-        $stylesheet_patches[] = 'styles/css/minimal/patches/patch_2col_left_seo.css';
+        $stylesheet_patches[] = 'styles/css/minimal/patches/iehacks_3col_vlines.css';
         return $stylesheet_patches;
     }
 

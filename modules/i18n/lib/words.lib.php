@@ -357,7 +357,7 @@ class MOD_words
             $row = $this->_lookup_row($code, $lang);
             if ($row) {
                 $lookup_result = $this->_modified_sentence_from_row($row, $args);
-                if($lang == 'en') {
+                if (($lang == 'en')or($row->donottranslate=='Yes')) { // If language is english or if the word is not supposed to be translatable yet just consider display it
                     $tr_success = LookedUpWord::SUCCESSFUL;
                 } else {
                     $row_en = $this->_lookup_row($code, 'en');

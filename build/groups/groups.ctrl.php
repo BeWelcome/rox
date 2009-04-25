@@ -83,9 +83,7 @@ class GroupsController extends RoxControllerBase
                 else
                 {
                     // TODO: implement message about not being logged in
-                    $page = new GroupsOverviewPage();
-                    $page->featured_groups = $this->_model->findAllGroups(0,5);
-                    $page->my_groups = $this->_model->getMyGroups();
+                    $this->_redirect('#');
                 }
                 break;
             case 'mygroups':

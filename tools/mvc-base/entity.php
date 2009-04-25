@@ -252,7 +252,10 @@ SQL;
             return false;
         }
         $query = <<<SQL
-SELECT *FROM {$this->_table_name}WHERE {$where}SQL;
+SELECT *
+FROM {$this->_table_name}
+WHERE {$where}
+SQL;
         if (!empty($this->sql_order))
         {
             $query .= "\nORDER BY " . $this->sql_order;
@@ -293,7 +296,9 @@ SELECT *FROM {$this->_table_name}WHERE {$where}SQL;
             return false;
         }
         $query = <<<SQL
-SELECT *FROM {$this->_table_name}SQL;
+SELECT *
+FROM {$this->_table_name}
+SQL;
         if (!empty($this->sql_order))
         {
             $query .= "\nORDER BY " . $this->sql_order;
@@ -480,8 +485,13 @@ SQL;
         {
             return false;
         }
-        $column_string = implode(',', array_keys($this->_valid_fields));
-        $value_string = "'" . implode("','", array_values($this->_valid_fields)) . "'";
+        $column_string = '`' . implode('`,`', array_keys($this->_valid_fields)) . '`';
+        $fields = array();
+        foreach ($this->_valid_fields as $field)
+        {
+            $fields[] = $this->dao->escape($field);
+        }
+        $value_string = "'" . implode("','", array_values($fields)) . "'";
 
         $query = "INSERT INTO {$this->_table_name} ({$column_string}) VALUES ({$value_string})";
         $result = $this->dao->query($query);

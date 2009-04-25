@@ -9,6 +9,25 @@
 class Group extends RoxEntityBase
 {
 
+
+    /**
+     * overrides the __get method of Component
+     * in order fix the output
+     *
+     * @param string $key - variable to get
+     * @return mixed
+     * @access public
+     */
+    public function __get($key)
+    {
+        $result = parent::__get($key);
+        if (is_scalar($result))
+        {
+            $result = stripslashes($result);
+        }
+        return $result;
+    }
+
     public function __construct($ini_data, $group_id = false)
     {
         parent::__construct($ini_data);

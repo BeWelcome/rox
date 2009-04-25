@@ -54,16 +54,24 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         <?php endforeach; ?>
         </table>
         <script type='text/javascript'>
-        var memberlinks = $('current_members').getElementsByTagName('a');
-        for (var i=0; i<memberlinks.length; i++)
-        {
-            $(memberlinks[i]).observe('click', function(e){
+        var memberban = $('current_members').getElementsBySelector('a.ban');
+        var memberkick = $('current_members').getElementsBySelector('a.kick');
+        memberban.each(function(elem){
+            elem.observe('click', function(e){
                 if (!confirm('Are you sure you want to ban this member?'))
                 {
                     Event.stop(e);
                 }
-            });
-        }
+            })
+        });
+        memberkick.each(function(elem){
+            elem.observe('click', function(e){
+                if (!confirm('Are you sure you want to kick this member?'))
+                {
+                    Event.stop(e);
+                }
+            })
+        });
         </script>
             </div> <!-- subcl -->
         </div> <!-- c62l -->

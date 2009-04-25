@@ -487,7 +487,7 @@ class MOD_words
 			$query =
                 "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
                 "FROM `words` ".
-                "WHERE `code`='" . $code . "' and `ShortCode`='" . $lang . "'"
+                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
             ;
         }
         

@@ -515,4 +515,25 @@ class GroupsModel extends  RoxModelBase
         }
     }
 
+    /**
+     * accepts a member into a group
+     *
+     * @param object $group - group entity
+     * @param int $member_id
+     * @return bool
+     * @access public
+     */
+    public function acceptGroupMember($group, $member_id)
+    {
+        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
+        {
+            return false;
+        }
+
+        if ($membership = $this->createEntity('GroupMembership')->findByWhere('IdGroup = ' . $group->getPKValue() . ' AND IdMember = ' . $member->getPKValue()))
+        {
+            return $membership->updateStatus('In');
+        }
+        return false;
+    }
 }

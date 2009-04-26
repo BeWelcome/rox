@@ -82,13 +82,19 @@ class GroupsController extends RoxControllerBase
                 }
                 else
                 {
-                    // TODO: implement message about not being logged in
                     $this->_redirect('#');
                 }
                 break;
             case 'mygroups':
-                $page = new GroupsMyGroupsPage();
-                $page->search_result = $this->_model->getMyGroups();
+                if (isset($_SESSION['IdMember']))
+                {
+                    $page = new GroupsMyGroupsPage();
+                    $page->search_result = $this->_model->getMyGroups();
+                }
+                else
+                {
+                    $this->_redirect('#');
+                }
                 break;
             case 'featured':
                 $page = new GroupsFeaturedPage();
@@ -182,6 +188,26 @@ class GroupsController extends RoxControllerBase
         }
 
         $this->_model->banGroupMember($group, $request[3], false);
+
+        return new GroupStartPage();
+    }
+
+    /**
+     * accepts a member to group
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     * @return object $page
+     */
+    private function acceptmember($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group) || empty($request[3]))
+        {
+            $this->_redirect('groups/');
+        }
+
+        $this->_model->acceptGroupMember($group, $request[3], false);
 
         return new GroupStartPage();
     }

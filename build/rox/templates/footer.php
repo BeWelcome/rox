@@ -42,7 +42,7 @@ require_once "footer.helper.php";
   </p>
   <div class="floatbox">
   <p class="float_left">
-     &copy; 2007-2008 <strong>BeWelcome</strong> - <?php echo $words->get('TheHospitalityNetwork'); ?>
+     &copy; 2007-<?= date('Y'); ?> <strong>BeWelcome</strong> - <?php echo $words->get('TheHospitalityNetwork'); ?>
   </p>
   <p class="float_right">
      running on <a href="http://bevolunteer.org/trac">BW Rox <?php echo $versionInfo; ?></a>

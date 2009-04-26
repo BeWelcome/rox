@@ -1253,6 +1253,11 @@ INSERT INTO `preferences` VALUES (21, 'PreferenceDayLight', 'PreferenceDayLightD
  
  $updates[] = "ALTER TABLE `params` ADD `DayLightOffset` INT NOT NULL DEFAULT '0' COMMENT 'This is the Day light Offset to be added to display dates tiem for members who chose this preference'" ;
 
+$updates[] = <<<SQL
+ALTER TABLE membersgroups
+MODIFY COLUMN Status ENUM ('In', 'WantToBeIn', 'Kicked', 'Invited') NOT NULL DEFAULT 'WantToBeIn' COMMENT 'Describes the connection between a member and a group'
+SQL;
+
     if (empty($res)) {
         $version = 0;
     } else {

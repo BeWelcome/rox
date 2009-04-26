@@ -215,8 +215,9 @@ class MOD_layoutbits
     public static function smallUserPic_username($username)
     {
         $picfile = self::userPic_username($username);
-        $thumbfile = self::_getThumb($picfile, 100, 100, 100);
-        return $thumbfile;
+        //$thumbfile = self::_getThumb($picfile, 100, 100, 100);
+        //return $thumbfile;
+        return $picfile;
     }
 
 

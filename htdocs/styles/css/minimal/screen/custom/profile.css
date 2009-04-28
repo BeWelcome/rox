@@ -1,33 +1,16 @@
 @media all
 {
-#col3_content ul,  #col3_content .box p {
-	margin: 1em 1em;
+#col3_content ul, #col3_content dl,  #col3_content .box p {
+	margin: 1em 0;
 }
-#teaser {
-	margin-left: 0;
-}
-#teaser .subcolumns .c15l{
-    width: 15%;
-    background-color: transparent;
-	float: left;
-}
-#teaser .subcolumns .c85r{
-    width: 85%;
-    margin-left:-5px;
-}
-#teaser .subcolumns .subcl {
-	padding:0 1em 0 0;
-}
-#teaser .subcolumns .subcr {
-	padding:0 0 0 1em;
-}
-#profile-info {
-	padding-left: 5.5em;
-}
+
 #personalmenu.sm li {
 	font-size: 1em;
 }
 
+.activelanguage {
+	font-weight: bold;
+}
 #col1{
     float: left;
     width: 15%;
@@ -36,11 +19,13 @@
     margin: 0 0 0 15%;
 }
 #col3_content{
-    padding: 0 0em 0 4em;
+    padding: 0 0em 0 2em;
+	border-left: 1px solid #e5e5e5;
 }
 #col1 #col1_content{
-    padding: 0;
+    padding: 0 2em 0 0;
     background-color: transparent;
+	text-align: right;
 }
 /*
 #col3 #col3_content #profile{
@@ -53,14 +38,25 @@
     background: transparent url(../../images/shadowbox_top.png) no-repeat top left;
 }*/
 #teaser {
+	margin-left: 0;
 	padding-top: 2em;
-	padding-bottom: 2em;	
+	padding-bottom: 2em;
+}
+#teaser .subcolumns .c15l{
+    width: 15%;
+    background-color: transparent;
+	float: left;
+	text-align: right;
+}
+#teaser .subcolumns .c85r{
+    width: 85%;
+    margin-left:-5px;
 }
 #teaser #teaser_r {
 	width: 80%;	
 }
 #teaser #profile-info #username strong {
-	font-size:2.2em;
+	font-size:2.6em;
 	letter-spacing:-0.05em;
 	line-height:1.5em;
 	padding:10px 10px 10px 0;	
@@ -69,9 +65,32 @@
     float: left;
     
 }
+#middle_nav.clearfix {
+    clear:none;
+	display: inline;
+}
+#nav_sub li {
+    padding: 0;
+}
 #profile-info {
     width: 30em;
     float: left;
+	padding-top: 1em;
+	padding-left: 3em;
+}
+fieldset {
+    border: 1px solid #e5e5e5;
+	padding: 0 2em 2em 2em;
+}
+fieldset legend{
+	font-size: 1.8em;
+	font-weight: bold;
+	margin-left: -0.5em;
+	padding: 0 .6em;
+	color: #2184E8;
+}
+.row {
+	padding: 1em 0;
 }
 
 #profile dl, #preferences dl {
@@ -105,17 +124,19 @@
 #profile .box {
     background-image: none;
     border: none;
-    margin: 1em 0 2em 0;
-    background: transparent url(../../images/shadowbox_middle.png) repeat-y top left;
-    padding: 1em;
+    margin: 0 0 2em 0;
+    background: transparent none;
+    padding: 0 1em;
 }
-/*
+
 #profile .box h3{
+	background: none;
+	padding: .3em 0;
 }
 #profile h3{
     font-size: 1.5em;
-    margin: 0 1em;
-}*/
+    margin: 0;
+}
 
 /* list the spoken languages of a member */
 #profile .profile_languages li {

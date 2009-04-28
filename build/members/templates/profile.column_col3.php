@@ -1,10 +1,4 @@
 <div id="profile">
-    <div class="profile_translations">
-        <?php 
-        $urlstring = 'members/'.$member->Username;
-        require 'profileversion.php'; 
-        ?>
-    </div> <!-- profile_translations -->
     
   <div class="subcolumns" id="profile_subcolumns">
 

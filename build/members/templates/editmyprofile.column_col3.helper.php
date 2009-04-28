@@ -20,29 +20,7 @@ $vars = $this->editMyProfileFormPrepare($member);
 
 ?>
 <div id="profile">
-<?php
-// That's to switch the profile language/version
-$urlstring = 'editmyprofile';
-require 'profileversion.php';
-?>
-        &nbsp;  &nbsp;  &nbsp;  &nbsp;
-    <select id="add_language">
-        <option>- <?=$wwsilent->AddLanguage?> -</option>
-        <optgroup label="<?=$wwsilent->YourLanguages?>">
-          <?php
-          foreach ($languages_spoken as $lang) {
-          if (!in_array($lang->ShortCode,$languages))
-          echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
-          } ?>
-        </optgroup>
-        <optgroup label="<?=$wwsilent->AllLanguages?>">
-          <?php
-          foreach ($languages_all as $lang) {
-          if (!in_array($lang->ShortCode,$languages))
-          echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
-          } ?>
-        </optgroup>
-    </select>
+
 <?=$words->flushBuffer()?>
 <?php
 // Check for errors and update status and display a message

@@ -1,7 +1,7 @@
 <?php
 
 
-class MyPreferencesPage extends MemberPage
+class MyPreferencesPage extends ProfilePage
 {
 
 

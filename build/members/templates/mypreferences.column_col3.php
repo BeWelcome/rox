@@ -1,4 +1,6 @@
        <form method="post" id="preferences" >
+        <fieldset>
+            <legend>My Preferences</legend>
         <?=$callback_tag ?>
         <input type="hidden" name="memberid" value="<?=$this->member->id?>" />
         <h3><?=$words->get('PreferenceLanguage')?></h3>
@@ -81,5 +83,5 @@
         </dl>
 
         <p><input type="submit" id="submit"  value="Submit" /></p>
-        
+        </fieldset>
         </form>

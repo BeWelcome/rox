@@ -28,9 +28,8 @@ class MemberPage extends PageWithActiveSkin
         if ($this->myself) {
             return array(
                 array('profile', "members/$username", $ww->MemberPage),
-                array('visitors', "myvisitors", $ww->MyVisitors),
-                array('mypreferences', 'mypreferences', $ww->MyPreferences),
                 array('editmyprofile', 'editmyprofile', $ww->EditMyProfile),
+                array('mypreferences', 'mypreferences', $ww->MyPreferences),
                 array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
@@ -45,20 +44,49 @@ class MemberPage extends PageWithActiveSkin
                 array('gallery', "gallery/show/user/$username", 'Photo Gallery')
             );
         }
+    }  
+    
+    protected function columnsArea()
+    {
+        $side_column_names = parent::getColumnNames();
+        $mid_column_name = array_pop($side_column_names);
+        ?>
+        <?php foreach ($side_column_names as $column_name) { ?>
+
+          <div id="<?=$column_name ?>">
+            <div id="<?=$column_name ?>_content" class="clearfix">
+              <? $name = 'column_'.$column_name ?>
+              <?php $this->$name() ?>
+            </div> <!-- <?=$column_name ?>_content -->
+          </div> <!-- <?=$column_name ?> -->
+
+        <?php } ?>
+
+          <div id="<?=$mid_column_name ?>">
+            <div id="<?=$mid_column_name ?>_content" class="clearfix">
+              <?php parent::submenu(); ?>
+              <? $name = 'column_'.$mid_column_name; ?>
+                <?php $this->$name() ?>
+              <?php $this->$name ?>
+            </div> <!-- <?=$mid_column_name ?>_content -->
+            <!-- IE Column Clearing -->
+            <div id="ie_clearing">&nbsp;</div>
+            <!-- Ende: IE Column Clearing -->
+          </div> <!-- <?=$mid_column_name ?> -->
+        <?php
     }
 
-
-    protected function leftsidebar()
-    {
-	    ?>
-	    <div id="personalmenu" class="sm">
-	    <? parent::submenu() ?>
-	    </div>
-		<?php
-    }    
-
+/*
+    protected function leftsidebar() {
+        ?>
+        <div id="personalmenu" class="sm">
+        <?php parent::submenu(); ?>
+        </div>
+        <?php
+    }
+*/
     protected function submenu() {
-
+        //parent::submenu();
     }
 
     protected function getStylesheets() {

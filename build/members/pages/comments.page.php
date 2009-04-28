@@ -1,7 +1,7 @@
 <?php
 
 
-class CommentsPage extends MemberPage
+class CommentsPage extends ProfilePage
 {
     protected function getSubmenuActiveItem()
     {

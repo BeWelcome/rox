@@ -461,9 +461,9 @@ SQL;
      * will build a SQL query based on the set variables in the object
      *
      * @return bool
-     * @access protected
+     * @access public
      */
-    protected function insert()
+    public function insert()
     {
         if (!empty($this->_has_loaded) || empty($this->_primary_key) || empty($this->_fields_array))
         {
@@ -516,9 +516,9 @@ SQL;
      * will build a SQL query based on the set variables in the object
      *
      * @return bool
-     * @access protected
+     * @access public
      */
-    protected function update()
+    public function update()
     {
         if (empty($this->_has_loaded) || empty($this->_primary_key) || empty($this->_fields_array))
         {
@@ -572,10 +572,10 @@ SQL;
     /**
      * Delete a row from a table
      *
-     * @access protected
+     * @access public
      * @return bool
      */
-    protected function delete()
+    public function delete()
     {
         if (!$this->_has_loaded || !$this->isPKSet())
         {

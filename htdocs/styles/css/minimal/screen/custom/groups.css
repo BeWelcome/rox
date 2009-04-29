@@ -1,0 +1,31 @@
+@media all
+{
+
+#groups .groupbox {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+#groups .groupinfo {
+  margin-left: 100px;
+}
+#groups .groupinfo ul {
+  padding-top: 0; 
+}
+#groups .groupinfo li {
+  font-size: 0.8em;
+  color: #888;
+}
+#groups .groupinfo p {
+  clear: both;
+}
+
+#groups .groupmembers {
+  padding-right: 25px;
+  width: 60px;
+  overflow: hidden;
+}
+#groups fieldset {
+    margin-bottom: 1.5em;
+}
+
+}

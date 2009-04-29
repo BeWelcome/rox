@@ -1,0 +1,51 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** ######################################################################################################
+** 
+**  YAML Version: 2.5.2
+**  Dateiversion: 01.11.06  
+**  Datei       : iehacks_3col_vlines.css
+**  Funktion    : IE-Korrektur-Stylesheet für das Standard-Layout von YAML (3 Spalten ohne Spaltentrenner) 
+**
+*/
+
+/* LAYOUT-UNABHÄNGIGE ANPASSUNGEN -------------------------------------------------------------------- */
+@import url(../../../yaml/core/iehacks.css);
+
+/* LAYOUT-ABHÄNGIGE ANPASSUNGEN ---------------------------------------------------------------------- */
+@media screen
+{
+ /**
+  * Bugfix for IE 3-Pixel-Jog Bug
+  *
+  * @bugfix
+  * @affected   IE 5.x/Win, IE6
+  * @css-for    IE 5.x/Win, IE6
+  * @valid      yes
+  */
+
+  * html #col3 {height: 1%}
+  * html #col1 {margin-left: -3px}
+  * html #col3 {margin-right: 19%}
+
+ /**
+  * min-width/max-width workaround for IE
+  *
+  * @workaround
+  * @affected   IE 5.x/Win, IE6
+  * @css-for    IE 5.x/Win, IE6
+  * @valid      no
+  */
+
+  * html #page_margins {
+    /* Fallback if JavaScript is disabled */
+    width: auto;
+
+    /* JS-Expression for min-/max-width simulation */
+    width: expression((document.documentElement && document.documentElement.clientHeight) ? ((document.documentElement.clientWidth < 900) ? "900px" : ((document.documentElement.clientWidth > 960) ? "960px" : "auto" )) : ((document.body.clientWidth < 900) ? "900px" : ((document.body.clientWidth > 960) ? "960px" : "auto" )));
+  }
+	
+/* Bug: Korrektur der Breitenangaben der Listenelemente des Submenüs im Internet Explorer 5.x/Win */
+@import url(iehacks_vlist.css);
+
+}

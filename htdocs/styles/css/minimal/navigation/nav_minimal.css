@@ -1,0 +1,287 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+ *
+ * (en) Horizontal list navigation "Shiny Buttons"
+ * (de) Horizontale Navigationsliste "Shiny Buttons"
+ *
+ * @copyright       Copyright 2005-2007, Dirk Jesse
+ * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
+ *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
+ * @link            http://www.yaml.de
+ * @package         yaml
+ * @version         3.0.4
+ * @revision        $Revision: 130 $
+ * @lastmodified    $Date: 2007-10-05 19:05:21 +0200 (Fr, 05 Okt 2007) $
+ */
+
+@media all
+{
+
+#nav_main, #nav_main ul {
+    float: left;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 0;
+    margin: 0;
+    z-index: 999;
+}
+
+#nav_main #logo a {
+    padding: 0.3em 1em;
+}
+
+#nav_main a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    line-height: 1.2em;
+    padding: 1.25em 1em;
+}
+
+#nav_main li {
+    float: left;
+    padding: 0;
+    display: block;
+    border-left: 1px solid #ff9922;
+}
+
+#nav_main li ul {
+	position:absolute;
+    left: -999em;
+    height: auto;
+    margin: 0;
+    background: #333;
+    font-size: .8em;
+    width: 160px;
+    background: transparent url(images/nav_main_ul.png) no-repeat scroll left bottom;
+    padding: 1em 0;
+}
+
+
+#nav_main li li {
+    width: 140px;
+    border: none;
+}
+#nav_main li li.bottom {
+    width: 140px;
+}
+
+#nav_main li ul a {
+    width: 140px;
+    padding: 0.4em 1.6em;
+}
+
+#nav_main li:hover ul ul, #nav_main li:hover ul ul ul, #nav_main li.sfhover ul ul, #nav_main li.sfhover ul ul ul {
+    left: -999em;
+}
+
+#nav_main li:hover ul, #nav_main li li:hover ul, #nav_main li li li:hover ul, #nav_main li.sfhover ul, #nav_main li li.sfhover ul, #nav_main li li li.sfhover ul {
+    left: auto;
+}
+#nav_main li:hover, #nav_main li.sfhover {
+    background: #333;
+}
+#nav_main li#logo,#nav_main li#logo:hover {
+    background: transparent;
+    border: none;
+}
+#nav_main li ul li:hover, #nav_main li ul li.sfhover {
+    background: #454B54;
+}
+
+  /* css for menus insides applications */
+  #nav_sub {
+    margin-left: 0;
+    text-align:left;
+    margin-bottom: 2em;
+  }
+
+  #nav_sub ul{
+    /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
+    display: inline;
+    margin: .4em;
+   }
+
+  #nav_sub li {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #888;
+    display: inline;
+    padding: .5em .3em .3em .8em;
+  }
+
+  #nav_sub a {
+    color: #888;
+    padding: .5em .8em .5em .8em;
+    margin: 0;
+  }
+
+  #nav_sub li.active{
+    color: #333;
+  }
+  
+  #nav_sub li.active a {
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #f1f1f1;
+    padding-bottom: .6em;
+  }
+
+
+  #nav_breadcrumb {
+    padding-bottom: 1em;
+  }
+
+  /* positioning of the quicksearchbar in the main menu */
+  #form-quicksearch {
+    width: 15em;
+    margin-bottom: 2px;
+    position: relative;
+    top: 14px;
+    float: right;
+  }
+  #form-quicksearch input{
+    font-size: 1.1em;
+  }
+  #form-quicksearch a {
+    color: #fff;
+  }
+  #form-quicksearch #submit-button {
+  }
+
+  /* login-widget will be displayed instead of quicksearch on public pages */
+  .login-widget-small {
+    color: #fff;
+    font-size: 0.9em;
+    float: right;
+    margin-right: 10px;
+  }
+
+  .login-widget-small input {
+    width: 8em;
+  }
+
+  /* logout link */
+  #logout {margin-left: 75em;}
+
+
+  /* css for menus insides applications */
+  .tabs {
+    margin-left: 0;
+    text-align:left;
+    border-bottom: 1px solid #999;
+    margin-bottom: 1em;
+  }
+
+  ul.tabs{
+    /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
+    //display: inline;
+    margin: .4em;
+   }
+
+  .tabs li {
+    font-size: 1em;
+    color: #888;
+    display: inline;
+    padding: .5em .3em .3em .8em;
+  }
+
+  .tabs a {
+    color: #888;
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    padding: .5em .8em .5em .8em;
+    margin: 0;
+  }
+
+  .tabs li.active{
+    color: #333;
+  }
+  
+  .tabs li.active a {
+    color: #333;
+    background: #f5f5f5;
+    border: 1px solid #999;
+    border-bottom: none;
+    padding-bottom: .6em;
+  }
+
+
+  /* css for personal startpage menu */
+  
+	#personalmenu, #personalmenu ul { /* all lists */
+		padding: 0;
+		margin: 0;
+		list-style: none;
+		width : 100%;
+	}
+	
+	#personalmenu li { /* all list items */
+		display: inline;
+		position : relative;
+		line-height : 2.25em;
+        font-size: 1.4em;
+		width : 90%;
+		padding: 0;
+	}
+	
+	#personalmenu.sm li { /* all list items */
+		position : relative;
+		line-height : 2.25em;
+        font-size: 1.2em;
+		width : 90%;
+		padding: 0;
+	}
+
+	#personalmenu li a {
+		display : block;
+	    color:#999999;
+	    padding: 0 1em;
+		font-weight : bold;
+		text-decoration : none;
+		background-color : transparent;
+		border-left : none;
+		border-right : none;
+		border-bottom : none;
+		border-top : 1px solid #dddddd;
+	}
+	
+	#personalmenu li a.first,#personalmenu li#sub0 a {
+		border-top : 1px solid transparent;
+	}
+	
+	#personalmenu li a:hover {
+		background-color : #fff;
+	}
+	#personalmenu li a:focus {
+		outline-style:none;
+        outline-width:0;
+	}
+	
+	#personalmenu li a.active-tab,#personalmenu li.active a {
+	    background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
+	    border:none;
+	    color:#FFFFFF;
+	    padding: 1px .5em 1px 1em;
+	    margin-right: -1em;	
+	}
+	
+    .panel {
+	   clear: both;
+	   display: none;
+	   background-color: transparent;
+	   padding: 0 4em;
+    }
+    
+    .panel.active-tab-body {
+	   display: block;
+    }
+
+
+/* topnav menu (little greys) */
+	#topnav span {
+   	   margin: 0 .5em;
+	}
+}

@@ -1,0 +1,52 @@
+
+/*
+*  Show only column 3 for index page
+*
+*/
+@media all
+{
+
+#col2 { display: none;}
+#col1 { display: none;}
+
+#col3, #col3_content {
+    margin: 0; padding:0;
+}
+
+#index {
+    margin: 4em 2em;
+}
+
+.video-embedded {
+    padding: 2px;
+	border: 1px solid #ccc;
+	background-color: #f5f5f5;
+	width: 306px;
+	float:left;
+}
+.video-desc {
+    padding: 1em;
+	font-size: 11px;
+	float:left;
+}
+
+#teaser {
+    padding-bottom: 1em;
+    padding-top: 3em;
+    border-bottom: none;
+}
+
+h1.slogan {
+    font-size: 3.5em;
+   	padding-top: 0;
+    padding-bottom: 0;
+}
+h2 {
+    font-size: 1.3em;
+    font-weight: normal;
+    line-height: 1.5em;
+    padding-bottom: 1em;
+    letter-spacing: 0;
+}
+
+}

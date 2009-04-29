@@ -1,0 +1,194 @@
+@media all
+{
+#col3_content ul,  #col3_content .box p {
+	margin: 1em 1em;
+}
+#teaser {
+	margin-left: 0;
+}
+#teaser .subcolumns .c15l{
+    width: 15%;
+    background-color: transparent;
+	float: left;
+}
+#teaser .subcolumns .c85r{
+    width: 85%;
+    margin-left:-5px;
+}
+#teaser .subcolumns .subcl {
+	padding:0 1em 0 0;
+}
+#teaser .subcolumns .subcr {
+	padding:0 0 0 1em;
+}
+#profile-info {
+	padding-left: 5.5em;
+}
+#personalmenu.sm li {
+	font-size: 1em;
+}
+
+#col1{
+    float: left;
+    width: 15%;
+}
+#col3{
+    margin: 0 0 0 15%;
+}
+#col3_content{
+    padding: 0 0em 0 4em;
+}
+#col1 #col1_content{
+    padding: 0;
+    background-color: transparent;
+}
+/*
+#col3 #col3_content #profile{
+    padding: 2em;
+    background: transparent url(../../images/shadowbox_middle.png) repeat-y top left;
+    margin: none;
+}
+#col3 #col3_content #shadowbox_top{
+    padding: 2em;
+    background: transparent url(../../images/shadowbox_top.png) no-repeat top left;
+}*/
+#teaser {
+	padding-top: 2em;
+	padding-bottom: 2em;	
+}
+#teaser #teaser_r {
+	width: 80%;	
+}
+#teaser #profile-info #username strong {
+	font-size:2.2em;
+	letter-spacing:-0.05em;
+	line-height:1.5em;
+	padding:10px 10px 10px 0;	
+}	
+#linkpath {
+    float: left;
+    
+}
+#profile-info {
+    width: 30em;
+    float: left;
+}
+
+#profile dl, #preferences dl {
+    display: block;
+}
+#profile dt, #preferences dt {
+    line-height: 1.5em;
+    font-size: 1em;
+    font-weight: normal;
+    color: #888;
+    width: 12em;
+    float: left;
+    clear: left;
+    margin-bottom: 0.8em;
+}
+#profile dd, #preferences dd {    
+    margin-left: 12em;
+    line-height: 1.5em;
+    margin-bottom: 0.8em;
+}
+
+#profile .profile_translations {
+    padding: 0 0 1em 0;
+}
+
+#profile sup {
+    font-size: 0.8em;
+    color: #888;
+}
+
+#profile .box {
+    background-image: none;
+    border: none;
+    margin: 1em 0 2em 0;
+    background: transparent url(../../images/shadowbox_middle.png) repeat-y top left;
+    padding: 1em;
+}
+/*
+#profile .box h3{
+}
+#profile h3{
+    font-size: 1.5em;
+    margin: 0 1em;
+}*/
+
+/* list the spoken languages of a member */
+#profile .profile_languages li {
+    float: left;
+    display: inline;
+    margin-right: 1.5em;
+}
+
+/* for the active language the profileconten is shown */
+#profile .activelanguage {
+    font-weight: bold;
+    padding-right: 1em;
+}
+
+/* for the available languages of the profil content*/
+#profile .availablelanguages {
+    padding-right: 0.5em;
+    color: #888;
+}
+
+#preferences ul, #preferences select {
+    margin-bottom: 2em;
+}
+
+/* colors for comment quality */
+.neutral { color: #333; }
+.good { color: green; }
+.bad { color: red; }
+
+.neutral, .good, .bad { font-weight: bold; font-size: 1.1em; }
+
+/* comment content */
+.comment {
+    display: block;
+    float: left;
+    width: 70%;
+}
+
+
+/* space for the icons next to the headline */
+h3.icon  {
+  padding-left: 25px;
+  padding-bottom: 2px;
+}
+
+/* icon for "About me" */
+.info22 {
+  background: url(../../images/icons22/icon_info.png) top left no-repeat;
+ }
+
+/* icon for "Hobbies & Interests" */
+.sun22 {
+  background: url(../../images/icons22/icon_sun.png) top left no-repeat;
+ }
+
+/* icon for "Travel Experience" */
+.world22 {
+  background: url(../../images/icons22/icon_world.png) top left no-repeat;
+ }
+
+/* icon for "My Groups" */
+.groups22 {
+  background: url(../../images/icons22/icon_groups.png) top left no-repeat;
+ }
+
+/* icon for "Accommodation" */
+.accommodation22 {
+  background: url(../../images/icons22/icon_accommodation.png) top left no-repeat;
+ }
+
+/* icon for "Contact Info" */
+.contact22 {
+  background: url(../../images/icons22/icon_contact.png) top left no-repeat;
+ }
+
+}

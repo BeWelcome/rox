@@ -1,0 +1,93 @@
+
+/* ######################################################################################################
+** ### YAML Customizing for BW | File 1 ##################################################################
+** ######################################################################################################
+*/
+
+/* #################################################################
+** ### This is a modification on our layout CSS. We remove the left column and make the one in the middle wider #####
+** #################################################################
+*/
+
+@media all
+{
+#main #col1 {
+  width: 55%;
+}
+
+#main #col2, #main #col2_content{
+    display: none;
+}
+
+#main #col3 {
+  width: 45%;
+  margin-right: 55%;
+  margin-left: 2em;
+}
+
+#main #col3 #col3_content {
+	padding: 0 0 0 0;
+	border: none;
+}
+
+#main #col3 #col3_content .full,#main #col3 #col3_content .full .info{
+	padding: 0 0 0 0;
+	border: none;
+}
+
+#main #nextmap{
+    height: 400px;
+    overflow: auto;
+    z-index: 1;
+    border: 1px solid #eee;
+}
+
+#main #nextmap div.highlight{
+    margin: 0;
+}
+#help_and_markers {
+    padding: 20px;
+}
+
+div.markerLabel {
+	display: block;
+	padding-top: 9px;
+}
+
+div.markerLabel,
+#sidebar ul#sidebar-list li div.label {
+	text-align: center;
+	color: white;
+	width: 32px;
+	font-size: 12px;
+	font-family: Arial;
+    font-weight: bold;
+}
+div.markerLabelList {
+    width: 22px; 
+    height: 22px; 
+    text-align: center; 
+    color: white; 
+    font-size: 12px; 
+    font-weight: bold; 
+    margin: 5px 0;
+    padding: 0;
+}
+div.anytime { background: transparent url(../../../../../images/icons/gicon1_a.png) bottom left no-repeat; }
+div.dependonrequest { background: transparent url(../../../../../images/icons/gicon2_a.png) bottom left no-repeat; }
+div.neverask { background: transparent url(../../../../../images/icons/gicon3_a.png) bottom left no-repeat; }
+div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
+    display: block;
+    color: #fff;
+    background: transparent;
+    padding: 3px;
+    font-size: 12px; 
+}
+
+#SearchAdvanced {
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    margin-bottom: 2em;
+}
+
+}

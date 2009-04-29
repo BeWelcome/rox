@@ -21,6 +21,7 @@ class RoxEntityFactory
         'Note'              => 'build/notify/note.entity',
         'Group'             => 'build/groups/group.entity',
         'Member'            => 'build/members/member.entity',
+        'Message'           => 'build/messages/message.entity',
         'GroupMembership'   => 'build/groups/groupmembership.entity',
         'Role'              => 'build/rights/role.entity',
         'Privilege'         => 'build/rights/privilege.entity',

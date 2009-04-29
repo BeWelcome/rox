@@ -151,6 +151,96 @@ class GroupsController extends RoxControllerBase
         return new GroupAdminPage();
     }
 
+    /**
+     * ajax method for searching for members to send group invites to
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     */
+    private function membersearch($group, $request)
+    {
+        header('Content-Type: text/plain; encoding=utf-8');
+        if (isset($request[3]))
+        {
+            $members = $this->_model->findMembersByName($group, $request[3]);
+            $output = array();
+            foreach ($members as $member)
+            {
+                $output[$member->Username] = $member->getPKValue();
+            }
+            echo json_encode($output);
+            exit;
+        }
+        else
+        {
+            header('Status: 500 Fudged it');
+            exit;
+        }
+    }
+
+    /**
+     * ajax method for inviting a member
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     */
+    private function invitemember($group, $request)
+    {
+        header('Content-Type: text/plain; encoding=utf-8');
+        if (isset($request[3]))
+        {
+            if ($this->_model->inviteMember($group, $request[3]))
+            {
+                $this->_model->sendInvitation($group, $request[3], $this->_model->getLoggedInMember());
+                echo "success";
+            }
+            else
+            {
+                echo "fail";
+            }
+            exit;
+        }
+        else
+        {
+            header('Status: 500 Fudged it');
+            exit;
+        }
+    }
+
+    /**
+     * called when a member accepts an invitation to join a group
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     */
+    private function acceptinvitation($group, $request)
+    {
+        if (!$this->_model->getLoggedInMember() || !$this->_model->memberAcceptedInvitation($group, $request[3]))
+        {
+            $this->_redirect('groups/');
+        }
+        $page->setMessage('GroupsJoinSuccess');
+        return new GroupStartPage();
+    }
+
+    /**
+     * called when a member accepts an invitation to join a group
+     *
+     * @param object $group - group entity
+     * @param string $request - action to carry out
+     * @access private
+     */
+    private function declineinvitation($group, $request)
+    {
+        if ($this->_model->getLoggedInMember())
+        {
+            $this->_model->memberDeclinedInvitation($group, $request[3]);
+        }
+        $this->_redirect('groups/');
+    }
 
     /**
      * bans a member from a group, so they can't join up again

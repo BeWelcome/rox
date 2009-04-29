@@ -29,6 +29,43 @@ class GroupsModel extends  RoxModelBase
         }
     }
 
+    /**
+     * creates a membership for a member and sets the status to invited
+     *
+     * @param object $group - Group entity
+     * @param int $member_id - id of member to invite
+     * @access public
+     * @return bool
+     */
+    public function inviteMember($group, $member_id)
+    {
+        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $member_id)))
+        {
+            return false;
+        }
+        return (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, 'Invited');
+    }
+
+    /**
+     * searches for members, using username
+     *
+     * @param string $name
+     * @access public
+     * @return array
+     */
+    public function findMembersByName($group, $name)
+    {
+        $members = $this->createEntity('Member')->findByWhereMany("Username like '%" . $this->dao->escape($name) . "%'");
+        $result = array();
+        foreach ($members as $member)
+        {
+            if (!$member->getGroupMembership($group))
+            {
+                $result[] = $member;
+            }
+        }
+        return ((is_array($result)) ? $result : array());
+    }
 
     /**
      * Find and return groups, using search terms from search page
@@ -325,12 +362,17 @@ class GroupsModel extends  RoxModelBase
      */
     public function joinGroup($member, $group)
     {
-        if (!is_object($group) || !$group->isLoaded() || !is_object($member) || !$member->isLoaded())
+        if (!is_object($group) || !$group->isLoaded() || !is_object($member) || !$member->isLoaded() || $group->Type == 'NeedInvitation')
         {
             return false;
         }
-        $status = ((in_array($group->Type, array('NeedAcceptance', 'NeedInvitation'))) ? 'WantToBeIn' : 'In');
-        return (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
+        $status = (($group->Type == 'NeedAcceptance') ? 'WantToBeIn' : 'In');
+        $result = (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
+        if ($result && $status == 'WantToBeIn')
+        {
+            $this->notifyGroupAdmin($group, $member);
+        }
+        return $result;
     }
 
     /**
@@ -530,10 +572,111 @@ class GroupsModel extends  RoxModelBase
             return false;
         }
 
-        if ($membership = $this->createEntity('GroupMembership')->findByWhere('IdGroup = ' . $group->getPKValue() . ' AND IdMember = ' . $member->getPKValue()))
+        if (($membership = $this->createEntity('GroupMembership')->findByWhere('IdGroup = ' . $group->getPKValue() . ' AND IdMember = ' . $member->getPKValue())) && $membership->Status == 'WantToBeIn')
         {
             return $membership->updateStatus('In');
         }
         return false;
+    }
+
+    /**
+     * creates a message for the invited member
+     *
+     * @param object $group
+     * @param int $member_id
+     * @param object $from - member entity
+     * @access public
+     */
+    public function sendInvitation($group, $member_id, $from)
+    {
+        if ($group->isLoaded() && ($member = $this->createEntity('Member', $member_id)) && $from->isLoaded())
+        {
+            $msg = $this->createEntity('Message');
+            $msg->MessageType = 'MemberToMember';
+            $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
+            $msg->IdParent = 0;
+            $msg->IdReceiver = $member->getPKValue();
+            $msg->IdSender = $from->getPKValue();
+            $msg->SendConfirmation = 'No';
+            $msg->Status = 'ToSend';
+            $msg->Message = "Hi {$member->Username}<br/><br/>You&apos;ve been invited to the group {$group->Name}. If you would like to join the group, click the following link: <a href='http://{$_SERVER['SERVER_NAME']}/groups/{$group->getPKValue()}/acceptinvitation/{$member->getPKValue()}'>http://{$_SERVER['SERVER_NAME']}/groups/{$group->getPKValue()}/acceptinvitation/{$member->getPKValue()}</a>.<br/>If you wish to decline the invitation, please click this link instead: <a href='http://{$_SERVER['SERVER_NAME']}/groups/{$group->getPKValue()}/declineinvitation/{$member->getPKValue()}'>http://{$_SERVER['SERVER_NAME']}/groups/{$group->getPKValue()}/declineinvitation/{$member->getPKValue()}</a><br/><br/>Have a great time<br/>BeWelcome";
+            $msg->InFolder = 'Normal';
+            $msg->JoinMemberPict = 'no';
+            $msg->insert();
+        }
+    }
+
+    /**
+     * changes a membership from invited to in
+     *
+     * @param object $group
+     * @param int $member_id
+     * @access public
+     * @return bool
+     */
+    public function memberAcceptedInvitation($group, $member_id)
+    {
+        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $member_id)) || !($logged_in = $this->getLoggedInMember()) || $logged_in->getPKValue() != $member->getPKValue())
+        {
+            return false;
+        }
+        if ($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '{$group->getPKValue()}' AND IdMember = '{$member->getPKValue()}' AND Status = 'Invited'"))
+        {
+            return $membership->updateStatus('In');
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * deletes a membership
+     *
+     * @param object $group
+     * @param int $member_id
+     * @access public
+     * @return bool
+     */
+    public function memberDeclinedInvitation($group, $member_id)
+    {
+        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $member_id)) || !($logged_in = $this->getLoggedInMember()) || $logged_in->getPKValue() != $member->getPKValue())
+        {
+            return false;
+        }
+        if ($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '{$group->getPKValue()}' AND IdMember = '{$member->getPKValue()}' AND Status = 'Invited'"))
+        {
+            return $membership->delete();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * creates a message for the group admin, that a new member wants to join
+     *
+     * @param object $group
+     * @param object $member - member entity
+     * @access public
+     */
+    public function notifyGroupAdmin($group, $member)
+    {
+        if ($group->isLoaded() && $member->isLoaded() && ($admin = $group->getGroupOwner()))
+        {
+            $msg = $this->createEntity('Message');
+            $msg->MessageType = 'MemberToMember';
+            $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
+            $msg->IdParent = 0;
+            $msg->IdReceiver = $admin->getPKValue();
+            $msg->IdSender = 0;
+            $msg->SendConfirmation = 'No';
+            $msg->Status = 'ToSend';
+            $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='http://{$_SERVER['SERVER_NAME']}/groups/{$group->getPKValue()}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
+            $msg->InFolder = 'Normal';
+            $msg->JoinMemberPict = 'no';
+            $msg->insert();
+        }
     }
 }

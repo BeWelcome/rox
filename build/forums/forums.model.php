@@ -2720,7 +2720,9 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 *
 */
     private function cleanupText($txt) {
-        $txt = $this->makeClickableLinks($txt);
+		if (strpos($txt,"href=")===false)  { // We will only try to make clickable links if there is not yet a href= (ie already present clickable link) in the text
+			$txt = $this->makeClickableLinks($txt);
+		}
         $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
         $doc = DOMDocument::loadHTML($str);
         if ($doc) {

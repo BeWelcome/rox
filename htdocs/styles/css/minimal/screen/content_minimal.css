@@ -572,25 +572,11 @@ background: none;
 /*padding: 4px; */
 }
 
-#tagcloud  .tag_smallest {
-font-size: 0.8em;
-}
-
-#tagcloud  .tag_small {
-font-size: 1em;
-}
-
-#tagcloud  .tag_medium {
-font-size:1.5em;
-}
-
-#tagcloud  .tag_large {
-font-size:1.7;
-}
-
-#tagcloud  .tag_largest {
-font-size:2em;
-}
+#tagcloud .tag_smallest {font-size: 0.8em;}
+#tagcloud .tag_small {font-size: 1em;}
+#tagcloud .tag_medium {font-size:1.5em;}
+#tagcloud .tag_large {font-size:1.7em;}
+#tagcloud .tag_largest {font-size:2em;}
 
 
 /* Standard user boxes with pictures */
@@ -898,7 +884,7 @@ h1.search {padding-bottom: 0.3em; margin-bottom: 0;}
 }
 
     /* some Gallery classes */
-    .gallery_container {
+    .gallery_container {
         float:none;
         padding: 2px;
         padding-right: 10px;
@@ -906,7 +892,7 @@ h1.search {padding-bottom: 0.3em; margin-bottom: 0;}
     /*    background: #fff url(/images/photoset_bg.png) bottom right no-repeat;
         border:2px solid #e5e5e5;
         border-bottom:0;
-        border-right:0;
+        border-right:0;
     */
     }
 
@@ -1032,16 +1018,6 @@ a.tr_link:hover {
 }
 
 
-/* are those classes in use ? */
-body.wordclick_mode a.tr_link.successful_translation.tr_control {
-    font-size: 32px !important;
-    border:3px outset grey !important;
-}
-
-.wordclick_activation_link {
-    cursor:pointer;
-}
-
 /* Geo Selector */
 ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center}
 ol.plain{ margin-left: 0; }
@@ -1152,7 +1128,6 @@ div.datepicker-calendar table tbody tr td.today {
   background:#E9F5FF;
   background-image:url(../images/date_active.gif);
   background-repeat:no-repeat;
-  position:top left;
   width:21px;
   height:16px;
   line-height:16px;
@@ -1162,7 +1137,6 @@ div.datepicker-calendar table tbody tr td.today:hover {
   background:#E9F5FF;
   background-image:url(../images/date_active.gif);
   background-repeat:no-repeat;
-  position:top left;
 }
 div.datepicker-calendar table tbody tr td.nclick,
 div.datepicker-calendar table tbody tr td.nclick_outbound {

@@ -176,7 +176,7 @@
 
   ul.tabs{
     /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
-    //display: inline;
+    /* display: inline; */
     margin: .4em;
    }
 

@@ -44,6 +44,9 @@ class HellouniverseController extends RoxControllerBase   //HelloUniverseControl
                     case 'child':
                         $page = new HellouniverseChildPage();
                         break;
+                    case 'styles':
+                        $page = new HellouniverseStylesPage();
+                        break;
                     case 'wp':
                     case 'blog':
                     case 'wordpress':

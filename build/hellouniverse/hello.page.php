@@ -24,13 +24,14 @@ class HellouniversePage extends RoxPageView  /* HelloUniversePage doesn't work! 
         
         echo '
 <h3>The hello universe (advanced) middle column</h3>
-<p>
-Using the class "'.get_class($this).'".<br>
-Simple version in <a href="hellouniverse">hellouniverse</a>.<br>
-More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!<br>
-With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
-</p>
-<br>
+<h4>Using the class <em>"'.get_class($this).'"</em>.</h4>
+<ul>
+    <li>Simple version in <a href="hellouniverse">hellouniverse</a>.</li>
+    <li>More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!</li>
+    <li>With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a></li>
+    <li>See a page with all used css classes <a href="hellouniverse/styles">hellouniverse/styles</a></li>
+</ul>
+
 <p>
 A translated word (wordcode "Groups"):
 '.$words->getFormatted('Groups').'

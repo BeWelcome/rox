@@ -27,6 +27,9 @@
 	margin: 0;
 	text-align: right;
 }
+#col1 #col1_content .linklist{
+    margin-right: 0;
+}
 
 #teaser {
 	margin-left: 0;

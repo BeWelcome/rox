@@ -641,66 +641,6 @@ div.comment .author {background:#fff; padding:0.2em;}
 #SearchAdvanced a:hover {    background: transparent; }
 
 
-
-/*
-* messages (used in bw/layout/mymessages.php)
-*
-*/
-#messages {padding: 12px 30px 15px 30px;}
-#messages input {margin:0; padding: 0; }
-#messages a:hover {background-color: transparent; color: #333; text-decoration:none;}
-#messages a:focus {background-color: transparent; color: #333; text-decoration:none;}
-
-#messages .highlight{
-  background: #f5f5f5;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
-  }
-#messages .blank{
-  background: none;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
-  }
-#messages tr.highlight:hover {
-  background: #ffeebb;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
-  }
-#messages tr.blank:hover {
-  background: #ffeebb;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
-  }
-#messages p {padding-top: 1.5em; }
-#messageside {
-  width: 120px;
-  margin: 0 2em;
-  padding-left: 1em;
-  border-left: 1px solid #ccc;
-}
-#messageside .small{
-  display: block;
-  padding: .6em 0;
-}
-#messagecontent {
-  width: 400px;
-  padding-top: 1em;
-  background: #fff;
-  border-top: 1px dotted #ccc;
-  border-bottom: 1px dotted #ccc;
-  padding: 2em;
-  margin-bottom: 1em;
-  font-family: Verdana;
-  font-size: 1.2em;
-}
-#messagepagination {width: 500px; padding-left: 30px; padding-bottom: 3em;}
-/* Media screen end */
-}
-
 /*
 * Admin tools classes
 *
@@ -1203,4 +1143,5 @@ div.datepicker div.datepicker-footer {
 
 
 
+/* Media screen end */
 }

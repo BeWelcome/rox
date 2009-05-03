@@ -47,7 +47,7 @@
 }
 
 #nav_main li ul {
-	position:absolute;
+    position:absolute;
     left: -999em;
     height: auto;
     margin: 0;
@@ -211,77 +211,91 @@
 
   /* css for personal startpage menu */
   
-	#personalmenu, #personalmenu ul { /* all lists */
-		padding: 0;
-		margin: 0;
-		list-style: none;
-		width : 100%;
-	}
-	
-	#personalmenu li { /* all list items */
-		display: inline;
-		position : relative;
-		line-height : 2.25em;
+    #personalmenu, #personalmenu ul { /* all lists */
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        width : 100%;
+    }
+    
+    #personalmenu li { /* all list items */
+        display: inline;
+        position : relative;
+        line-height : 2.25em;
         font-size: 1.4em;
-		width : 90%;
-		padding: 0;
-	}
-	
-	#personalmenu.sm li { /* all list items */
-		position : relative;
-		line-height : 2.25em;
+        width : 90%;
+        padding: 0;
+    }
+    
+    #personalmenu.sm li { /* all list items */
+        position : relative;
+        line-height : 2.25em;
         font-size: 1.2em;
-		width : 90%;
-		padding: 0;
-	}
+        width : 90%;
+        padding: 0;
+    }
 
-	#personalmenu li a {
-		display : block;
-	    color:#999999;
-	    padding: 0 1em;
-		font-weight : bold;
-		text-decoration : none;
-		background-color : transparent;
-		border-left : none;
-		border-right : none;
-		border-bottom : none;
-		border-top : 1px solid #dddddd;
-	}
-	
-	#personalmenu li a.first,#personalmenu li#sub0 a {
-		border-top : 1px solid transparent;
-	}
-	
-	#personalmenu li a:hover {
-		background-color : #fff;
-	}
-	#personalmenu li a:focus {
-		outline-style:none;
+    #personalmenu li a {
+        display : block;
+        color:#999999;
+        padding: 0 1em;
+        font-weight : bold;
+        text-decoration : none;
+        background-color : transparent;
+        border-left : none;
+        border-right : none;
+        border-bottom : none;
+        border-top : 1px solid #dddddd;
+    }
+    
+    #personalmenu li a.first,#personalmenu li#sub0 a {
+        border-top : 1px solid transparent;
+    }
+    
+    #personalmenu li a:hover {
+        background-color : #fff;
+    }
+    #personalmenu li a:focus {
+        outline-style:none;
         outline-width:0;
-	}
-	
-	#personalmenu li a.active-tab,#personalmenu li.active a {
-	    background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
-	    border:none;
-	    color:#FFFFFF;
-	    padding: 1px .5em 1px 1em;
-	    margin-right: -1em;	
-	}
-	
+    }
+    
+    #personalmenu li a.active-tab,#personalmenu li.active a {
+        background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
+        border:none;
+        color:#FFFFFF;
+        padding: 1px .5em 1px 1em;
+        margin-right: -1em; 
+    }
+    
     .panel {
-	   clear: both;
-	   display: none;
-	   background-color: transparent;
-	   padding: 0 4em;
+       clear: both;
+       display: none;
+       background-color: transparent;
+       padding: 0 4em;
     }
     
     .panel.active-tab-body {
-	   display: block;
+       display: block;
     }
 
 
 /* topnav menu (little greys) */
-	#topnav span {
-   	   margin: 0 .5em;
-	}
+    #topnav span {
+       margin: 0 .5em;
+    }
+    #topnav a { color: #999; background:transparent; text-decoration:none; }
+    #topnav a:hover { text-decoration:underline; background-color: transparent;}
+    #topnav a:focus { text-decoration:underline; background-color: transparent;}
+    #topnav ul,#topnav li {
+        display:inline;
+        font-size:11px;
+        height:46px;
+        margin-left:2px;
+        padding:8px 10px 6px 12px;
+    }
+    #topnav img {
+        padding:0 4px 0 0;
+        vertical-align:middle;
+    }
 }

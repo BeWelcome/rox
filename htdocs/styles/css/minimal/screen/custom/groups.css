@@ -1,5 +1,6 @@
 @media all
 {
+#col1 {float: left; display: none; }
 
 #groups .groupbox {
   margin-top: 0.8em;

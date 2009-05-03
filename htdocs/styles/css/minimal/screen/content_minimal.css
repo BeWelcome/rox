@@ -40,7 +40,7 @@
 
 #main  h1 span, #main_top h1 span, #teaser h1 span.small { margin: 0; padding: 0; }
 .list h5 {  padding-top: 0;}
-  
+
 
   /* ### paragraphs ###*/
   p,ul,dd,dt { line-height: 1.5em; }
@@ -58,13 +58,13 @@
   }
 
   blockquote {
-  color: #444;
-  background: #f8f8f8;
-  border: 1px #ddd solid;
-  border-left: 8px #ddd solid;
-  padding: 1em 1em 0 1em;
-  margin: 0 0 1em 1em;
-}
+    color: #444;
+    background: #f8f8f8;
+    border: 1px #ddd solid;
+    border-left: 8px #ddd solid;
+    padding: 1em 1em 0 1em;
+    margin: 0 0 1em 1em;
+  }
 
   hr {
     color: #fff;
@@ -84,7 +84,7 @@
   .hidden {display: none;}
 
   .note {background: #FFF8C3; padding: 1em; border: 1px #888 solid;}
-  .note .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
+  .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
   .row { padding: 1em 0;}
@@ -120,12 +120,18 @@
   .big {font-size: 1.3em; }
 
 
-  /* ### image positioning ### */
+  /**
+   * Images
+   * (en) Generic classes for positiong and styling of images
+   *
+   * @section content-images
+   */
   img.float_left { float: left; margin-right: 1em; margin-top: 0.15em; margin-bottom: 0.15em; border:0; }
   img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
   img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
   img.framed {padding:1px; border: 1px #ddd solid; background: #f3f3f3 }
 
+  
   /**
    * Local and external Links
    *
@@ -135,22 +141,6 @@
   a, a em.file {color: #2184e8; text-decoration:none; background-color:transparent;}
   a:hover {text-decoration:underline;}
   a:focus {text-decoration:underline;}
-
-  #topnav a { color: #999; background:transparent; text-decoration:none; }
-  #topnav a:hover { text-decoration:underline; background-color: transparent;}
-  #topnav a:focus { text-decoration:underline; background-color: transparent;}
-  #topnav ul,#topnav li { 
-	display:inline;
-	font-size:11px;
-	height:46px;
-	margin-left:2px;
-	padding:8px 10px 6px 12px;
-  }
-  #topnav img { 
-	padding:0 4px 0 0;
-	vertical-align:middle;
-  }
-
 
   /*#main a[href^="http:"], #main a[href^="https:"]
     {
@@ -163,6 +153,48 @@
   #main a.imagelink {
     padding-left: 0;
     background: transparent;
+  }
+
+
+
+  /**
+   * Lists
+   * (en) Generic classes for ordered, unordered and definition lists
+   *
+   * @section content-lists
+   */
+
+  /* by default lists use no bullet point */
+  ul,li { margin:0; padding:0; list-style-type:none;}
+
+  /* in case we want bullet point */
+  .bullet {margin: 0 0 1em 1em;}
+  ul.bullet li { list-style-type: disc; margin-left: 0.8em}
+  ol.bullet li { list-style-type: decimal; margin-left: 0.8em; }
+
+  /* Unordered lists without bullets  */
+  ul.linklist { list-style-type: none; margin: 0 1em 1em 0; }
+  ul.linklist li { margin: 0 0 0.5em 0;}
+  ul.linklist li a { line-height: 1em;}
+  ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
+
+  /* CrossBrowser-Compatibility */
+  ul.browsers { margin: 0  0 .4em 0; }
+  ul.browsers li {
+    margin: 0;
+    list-style-type: none;
+    background: #f8f8f8; color: #444;
+    padding: 0.1em 0.1em 0.2em 0.5em;
+    font-weight: normal;
+    text-align: left;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
+  }
+  ul.browsers li img { vertical-align:bottom; }
+  ul.browsers li.title {
+    font-weight: bold;
+    background: #eee; color: #444;
+    padding: 0.2em 0.2em 0.2em 0.5em;
   }
 
   /**
@@ -184,28 +216,46 @@
 
   /* standard tablelist highlighting */
   tr.highlight{
-  background: #eeeeee;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
+    background: #eeeeee;
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
   }
   tr.blank {
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
   }
   tr.blank:hover,tr.highlight:hover {
-  background: #ffeebb;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
+    background: #ffeebb;
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
   }
   td.memberlist  {padding: 0.5em 0.5em 0.5em 0.5em;}
   td.connections  {text-align: center;}
 
   /* thick orange touch */
   tr.blank:hover,tr.highlight:hover {
-  background: #faf5dd;
+    background: #faf5dd;
+  }
+
+  /* table for bugs - where do we use that ? */
+  table.bugs { margin-bottom: 1em; margin-top: .5em; }
+  table.bugs th {
+    background: #444; color: #fff;
+    padding: 0.5em;
+    text-align: center;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
+  }
+
+  table.bugs td {
+    background: #888; color: #fff;
+    padding: 0.5em;
+    text-align: center;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
   }
 
 
@@ -220,17 +270,17 @@
   form {overflow:hidden;}
   fieldset {
     border: 1px solid #e5e5e5;
-	padding: 0 2em 2em 2em;
-	margin-top: 1.5em;
-	margin-bottom: 1.5em;
+    padding: 0 2em 2em 2em;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
   }
   legend{
-	line-height: 2em;
-	font-size: 1.8em;
-	font-weight: bold;
-	margin-left: -0.5em;
-	padding: 0 .6em;
-	color: #2184E8;
+    line-height: 2em;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-left: -0.5em;
+    padding: 0 .6em;
+    color: #2184E8;
   }
   select {
     margin-bottom: 0.5em;
@@ -297,17 +347,8 @@
     color: #333;
     border-color: #666;
   }
-  
-  
-  
-  
 
-  /* A <label> shouldn't really change the layout.
-  label {
-    color: #333;
-    font-weight: bold;
-  }
-  */
+
 
   /**
    * Pagination
@@ -316,122 +357,47 @@
    * @section content-pagination
    */
 
-   /* NEW by Lupochen */
-  div.pages {clear:both; padding-top:15px;   white-space: nowrap; }
+  div.pages {clear:both; padding-top:15px; white-space: nowrap; }
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
-  /*div.pages li.sep{border:0}
-  div.pages li a {  height: 18px; line-height: 16px; display:block; text-align: center; font-size: 11px; background: #fff;}
-  div.pages li.current {background:#ddd;}*/
   div.pages li.current a {color:#666;font-weight:bold; }
-  div.pages li a:hover { color: #fff; background: #ff9900; }
-  div.pages li a:active {  color: #fff; background: #ff9900;}
+  div.pages li a:hover {color: #333; background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%; text-decoration:none; }
+  div.pages li a.off:hover {background: none; color: #666; }
+  div.pages li a:active {color: #fff; background: #ff9900;}
+  div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
 
   /* give pagination our 'button' style */
- div.pages li a {
+  div.pages li a {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
     border-width:1px;
     font-size:11px;
     font-weight:bold;
+    text-decoration:none;
+    color: #ff8800;
     height:18px !important;
     line-height:16px !important;
     margin:.2em;
     padding:1px 5px;
     text-align:center;
     width:auto;
-}
-div.pages li a:hover {background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%;}
-div.pages li a.off:hover {background: none; color: #666; }
-div.pages li a {color: #ff8800; text-decoration:none; background-color:transparent;}
-div.pages li a:hover {background-color: transparent; color: #333; text-decoration:none;}
-div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
+  }
 
-  /*\*/
-   * html div.pages li a {
-       width: 10px; /* IE */
-   }
-   /**/
-
-
-  /* ### Teaser + Divs, lists, styles etc. in teaser ###*/
+    /*\*/
+     * html div.pages li a {
+         width: 10px; /* IE */
+     }
+     /**/
 
 
 
-
-
-/* ######################################################################################################
-** ### special rulesets of the YAML standard layout #####################################################
-** ######################################################################################################
-*/
-
-/* ###  formatting of text  ################################################################## */
-
-/* Navigation at the end of the page */
-p.navlink { background-color: #f4f8f4; border: 1px #aca dotted; padding: 6px; margin-bottom: 0.5em; }
-p.navlink a { color: #353;}
-p.navlink a:hover { font-weight: bold; background: transparent; }
-
-/* Unordered lists without bullets */
-ul.linklist { list-style-type: none; margin: 0 1em 1em 0; }
-ul.linklist li { margin: 0 0 0.5em 0;}
-ul.linklist li a { line-height: 1em;}
-ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
-/* CrossBrowser-Compatibility */
-ul.browsers { margin: 0  0 .4em 0; }
-
-ul.browsers li {
-  margin: 0;
-  list-style-type: none;
-  background: #f8f8f8; color: #444;
-  padding: 0.1em 0.1em 0.2em 0.5em;
-  font-weight: normal;
-  text-align: left;
-  border-bottom: 1px #fff solid;
-  border-right: 1px #fff solid;
-}
-
-ul.browsers li img { vertical-align:bottom;
-}
-
-ul.browsers li.title {
-  font-weight: bold;
-  background: #eee; color: #444;
-  padding: 0.2em 0.2em 0.2em 0.5em;
-}
-
-
-/* ### tables ################################################################## */
-
-table.bugs { margin-bottom: 1em; margin-top: .5em; }
-table.bugs th {
-  background: #444; color: #fff;
-  padding: 0.5em;
-  text-align: center;
-  border-bottom: 1px #fff solid;
-  border-right: 1px #fff solid;
-}
-
-table.bugs td {
-  background: #888; color: #fff;
-  padding: 0.5em;
-  text-align: center;
-  border-bottom: 1px #fff solid;
-  border-right: 1px #fff solid;
-}
-
-
-/* ###########################################
-** ### standdard formatting in main #################################
-** ###########################################
-*/
-
-#main ul,li { margin:0; padding:0; list-style-type:none;}
-
-
-
-  /* ### footer ###*/
+  /**
+   * Footer
+   * (en) Generic classes for footer
+   *
+   * @section content-footer
+   */
 
   #footer {
     border: none;
@@ -725,25 +691,25 @@ div.comment .author {background:#fff; padding:0.2em;}
   }
 #messages p {padding-top: 1.5em; }
 #messageside {
-	width: 120px;
-	margin: 0 2em;
-	padding-left: 1em;
-	border-left: 1px solid #ccc;
+  width: 120px;
+  margin: 0 2em;
+  padding-left: 1em;
+  border-left: 1px solid #ccc;
 }
 #messageside .small{
-	display: block;
-	padding: .6em 0;
+  display: block;
+  padding: .6em 0;
 }
 #messagecontent {
-	width: 400px;
-	padding-top: 1em;
-	background: #fff;
-	border-top: 1px dotted #ccc; 
-	border-bottom: 1px dotted #ccc;
-	padding: 2em;
-	margin-bottom: 1em;
-	font-family: Verdana;
-	font-size: 1.2em;
+  width: 400px;
+  padding-top: 1em;
+  background: #fff;
+  border-top: 1px dotted #ccc;
+  border-bottom: 1px dotted #ccc;
+  padding: 2em;
+  margin-bottom: 1em;
+  font-family: Verdana;
+  font-size: 1.2em;
 }
 #messagepagination {width: 500px; padding-left: 30px; padding-bottom: 3em;}
 /* Media screen end */
@@ -943,14 +909,14 @@ h1.search {padding-bottom: 0.3em; margin-bottom: 0;}
         border-right:0;
     */
     }
-    
+
     .message {
         font-weight: normal;
     }
     a.unread {
         font-weight: bold;
     }
-    
+
 /* Fieldset menu - creates a tab-menu from form fieldsets via fieldset.js */
 div.fieldset-menu{
     margin:0 1em 1em 0;
@@ -1012,8 +978,8 @@ div.fieldset-menu li.active a {
 }
 #language_select {
     color: #ffffff;
-	float: right;
-	padding: 1.3em;
+  float: right;
+  padding: 1.3em;
 }
 
 /**
@@ -1084,181 +1050,181 @@ ol.plain li{ list-style-type: none; margin-left: 0; }
 
 /* Datepicker classes */
 div.datepicker {
-	position:absolute;
-	text-align:center;
-	border: 1px #ccc solid;
-	font-family:arial;
-	background:#FFF;
-	font-size:10px;
-	padding:1px;
+  position:absolute;
+  text-align:center;
+  border: 1px #ccc solid;
+  font-family:arial;
+  background:#FFF;
+  font-size:10px;
+  padding:1px;
 }
 div.datepicker-calendar table {
-	font-size:10px;
-	border:1px solid #FFF;
-	margin:0;
-	padding:0;
-	text-align:center;
-	border-collapse: collapse;
+  font-size:10px;
+  border:1px solid #FFF;
+  margin:0;
+  padding:0;
+  text-align:center;
+  border-collapse: collapse;
 }
 div.datepicker div.datepicker-header {
-	font-size:11px;
-	font-weight:bold;
-	background: #2184E8 url(../images/cell_bg_orange.png) repeat scroll 0 0;
-	border-bottom:1px solid #666;
-	padding:2px;
-	text-align:center;
-	color: #fff;
+  font-size:11px;
+  font-weight:bold;
+  background: #2184E8 url(../images/cell_bg_orange.png) repeat scroll 0 0;
+  border-bottom:1px solid #666;
+  padding:2px;
+  text-align:center;
+  color: #fff;
 }
 div.datepicker table.header {
-	border:0;
-	padding:0;
-	text-align:center;
+  border:0;
+  padding:0;
+  text-align:center;
 }
 div.datepicker table td {
-	padding:0;
+  padding:0;
 }
 td.prev,
 td.prev_year,
 td.next,
 td.next_year {
-	width:8%;
-	color:#eee;
-	cursor:pointer;
-	font-weight:bold;
-	line-height:16px;
+  width:8%;
+  color:#eee;
+  cursor:pointer;
+  font-weight:bold;
+  line-height:16px;
 }
 td.prev:hover,
 td.prev_year:hover,
 td.next:hover,
 td.next_year:hover {
-	color:#fff;
+  color:#fff;
 }
 td.header {
-	text-align:center;
-	width:68%;
-	font-weight:bold;
-	line-height:16px;
-	padding: 0;
+  text-align:center;
+  width:68%;
+  font-weight:bold;
+  line-height:16px;
+  padding: 0;
 }
 div.datepicker-header {
-	height:16px;
+  height:16px;
 }
 div.datepicker-calendar table tbody tr {
-	border:1px solid #FFF;
-	margin:0;
-	padding:0;
+  border:1px solid #FFF;
+  margin:0;
+  padding:0;
 }
 div.datepicker-calendar table tbody tr td {
-	border:1px #ffffff solid;
-	margin:0;
-	padding:0;
-	text-align:center;
-	height:16px;
-	line-height:16px;
-	width:21px;
-	cursor:pointer;
+  border:1px #ffffff solid;
+  margin:0;
+  padding:0;
+  text-align:center;
+  height:16px;
+  line-height:16px;
+  width:21px;
+  cursor:pointer;
 }
 div.datepicker-calendar table tbody tr td:hover,
 div.datepicker-calendar table tbody tr td.outbound:hover,
 div.datepicker-calendar table tbody tr td.today:hover {
-	border:1px #ccc solid;
-	background:#ff8800;
-	cursor:pointer;
-	color: #fff;
+  border:1px #ccc solid;
+  background:#ff8800;
+  cursor:pointer;
+  color: #fff;
 }
 div.datepicker-calendar table tbody tr td.wday {
-	border:1px #ccc solid;
-	background:#ddd;
-	cursor:text;
-	width:21px;
-	height:16px;
-	line-height:16px;
-	font-weight:bold;
-	padding: 1px;
-	border-left: none;
+  border:1px #ccc solid;
+  background:#ddd;
+  cursor:text;
+  width:21px;
+  height:16px;
+  line-height:16px;
+  font-weight:bold;
+  padding: 1px;
+  border-left: none;
 }
 div.datepicker-calendar table tbody tr td.outbound {
-	background:#F4F3F3;
-	color: #999;
+  background:#F4F3F3;
+  color: #999;
 }
 div.datepicker-calendar table tbody tr td.today {
-	border:1px #CCE9FF solid;
-	background:#E9F5FF;
-	background-image:url(../images/date_active.gif);
-	background-repeat:no-repeat;
-	position:top left;
-	width:21px;
-	height:16px;
-	line-height:16px;
+  border:1px #CCE9FF solid;
+  background:#E9F5FF;
+  background-image:url(../images/date_active.gif);
+  background-repeat:no-repeat;
+  position:top left;
+  width:21px;
+  height:16px;
+  line-height:16px;
 }
 div.datepicker-calendar table tbody tr td.today:hover {
-	border:1px #CCE9FF solid;
-	background:#E9F5FF;
-	background-image:url(../images/date_active.gif);
-	background-repeat:no-repeat;
-	position:top left;
+  border:1px #CCE9FF solid;
+  background:#E9F5FF;
+  background-image:url(../images/date_active.gif);
+  background-repeat:no-repeat;
+  position:top left;
 }
 div.datepicker-calendar table tbody tr td.nclick,
 div.datepicker-calendar table tbody tr td.nclick_outbound {
-	cursor:default;
-	color:#aaa;
-	width:21px;
-	height:16px;
-	line-height:16px;
+  cursor:default;
+  color:#aaa;
+  width:21px;
+  height:16px;
+  line-height:16px;
 }
 div.datepicker-calendar table tbody tr td.nclick_outbound {
-	background:#E8E4E4;
-	width:21px;
-	height:16px;
-	line-height:16px;
+  background:#E8E4E4;
+  width:21px;
+  height:16px;
+  line-height:16px;
 }
 div.datepicker-calendar table tbody tr td.nclick:hover,
 div.datepicker-calendar table tbody tr td.nclick_outbound:hover {
-	border:1px #EAEAEA solid;
-	background:#FFF;
+  border:1px #EAEAEA solid;
+  background:#FFF;
 }
 div.datepicker-calendar table tbody tr td.nclick_outbound:hover {
-	background:#E8E4E4;
+  background:#E8E4E4;
 }
 div.datepicker div.datepicker-footer {
-	font-size:10px;
-	background:#eee;
-	border-top:1px solid #ccc;
-	cursor:pointer;
-	text-align:center;
-	padding:2px;
+  font-size:10px;
+  background:#eee;
+  border-top:1px solid #ccc;
+  cursor:pointer;
+  text-align:center;
+  padding:2px;
 }
 
 .date {
-	float:left;
-	margin-right: .5em;
+  float:left;
+  margin-right: .5em;
 }
 .datepicker-opener-table {
-	border:none;
-	padding:0;
-	border-spacing:0;
-	margin:0 0 0 3px;
-	background:transparent url(../images/datepicker.gif) no-repeat 0 0;
-	width:16px;
-	height:16px;
-	cursor:pointer;
+  border:none;
+  padding:0;
+  border-spacing:0;
+  margin:0 0 0 3px;
+  background:transparent url(../images/datepicker.gif) no-repeat 0 0;
+  width:16px;
+  height:16px;
+  cursor:pointer;
 }
 .Opera .datepicker-opener-table {
-	float:right;
+  float:right;
 }
 .IE7 .datepicker-opener-table {
-	position:relative;
-	top:0;
-	left:3px;
+  position:relative;
+  top:0;
+  left:3px;
 }
 .datepicker-opener-table:hover {
-	background:transparent url(../images/datepicker_ro.gif) no-repeat 0 0;
+  background:transparent url(../images/datepicker_ro.gif) no-repeat 0 0;
 }
 .datepicker-opener {
-	width:16px;
-	height:16px;
-	margin:0 0 0 3px;
-	cursor:pointer;
+  width:16px;
+  height:16px;
+  margin:0 0 0 3px;
+  cursor:pointer;
 }
 
 

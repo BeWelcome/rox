@@ -64,7 +64,7 @@ class MemberPage extends PageWithActiveSkin
 
           <div id="<?=$mid_column_name ?>">
             <div id="<?=$mid_column_name ?>_content" class="clearfix">
-              <?php parent::submenu(); ?>
+              <?php //parent::submenu(); ?>
               <? $name = 'column_'.$mid_column_name; ?>
                 <?php $this->$name() ?>
               <?php $this->$name ?>
@@ -76,17 +76,8 @@ class MemberPage extends PageWithActiveSkin
         <?php
     }
 
-/*
-    protected function leftsidebar() {
-        ?>
-        <div id="personalmenu" class="sm">
-        <?php parent::submenu(); ?>
-        </div>
-        <?php
-    }
-*/
     protected function submenu() {
-        //parent::submenu();
+        parent::submenu();
     }
 
     protected function getStylesheets() {
@@ -94,6 +85,17 @@ class MemberPage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css';
        return $stylesheets;
     }
+    
+    /*
+     * The idea was that stylesheetpatches was for MSIE
+     */
+    protected function getStylesheetPatches()
+    {
+        //$stylesheet_patches = parent::getStylesheetPatches();
+        $stylesheet_patches[] = 'styles/css/minimal/patches/patch_2col_left.css';
+        return $stylesheet_patches;
+    }
+
     
     
     protected function teaserContent()

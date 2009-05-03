@@ -16,7 +16,7 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->getInLang('ProfileSummary', $profile_language)?>:</td>
                   <td>
-                    <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="60"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
+                    <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -323,31 +323,31 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMaxLenghtOfStay')?>:</td>
                   <td colspan="2" >
-                    <textarea name="MaxLenghtOfStay" class="long"  cols="40" rows="4" ><?=$vars['MaxLenghtOfStay']?></textarea>
+                    <textarea name="MaxLenghtOfStay" class="long"  cols="50" rows="4" ><?=$vars['MaxLenghtOfStay']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileILiveWith')?>:</td>
                   <td colspan="2" >
-                    <textarea name="ILiveWith" class="long"  cols="40" rows="4" ><?=$vars['ILiveWith']?></textarea>
+                    <textarea name="ILiveWith" class="long"  cols="50" rows="4" ><?=$vars['ILiveWith']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePleaseBring')?>:</td>
                   <td colspan="2" >
-                    <textarea name="PleaseBring" class="long"  cols="40" rows="4" ><?=$vars['PleaseBring']?></textarea>
+                    <textarea name="PleaseBring" class="long"  cols="50" rows="4" ><?=$vars['PleaseBring']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOfferGuests')?>:</td>
                   <td colspan="2" >
-                    <textarea name="OfferGuests" class="long"  cols="60" rows="4" ><?=$vars['OfferGuests']?></textarea>
+                    <textarea name="OfferGuests" class="long"  cols="50" rows="4" ><?=$vars['OfferGuests']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOfferHosts')?>:</td>
                   <td colspan="2" >
-                    <textarea name="OfferHosts" class="long"  cols="60" rows="4" ><?=$vars['OfferHosts']?></textarea>
+                    <textarea name="OfferHosts" class="long"  cols="50" rows="4" ><?=$vars['OfferHosts']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -370,7 +370,7 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePublicTransport')?>:</td>
                   <td colspan="2" >
-                    <textarea name="PublicTransport" class="long"  cols="60" rows="4" ><?=$vars['PublicTransport']?></textarea>
+                    <textarea name="PublicTransport" class="long"  cols="50" rows="4" ><?=$vars['PublicTransport']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -393,13 +393,13 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOtherRestrictions')?>:</td>
                   <td colspan="2" >
-                    <textarea name="OtherRestrictions" class="long" cols="60" rows="4" ><?=$vars['OtherRestrictions']?></textarea>
+                    <textarea name="OtherRestrictions" class="long" cols="50" rows="4" ><?=$vars['OtherRestrictions']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileAdditionalAccomodationInfo')?>:</td>
                   <td colspan="2" >
-                    <textarea name="AdditionalAccomodationInfo" class="long" cols="60"  rows="4" ><?=$vars['AdditionalAccomodationInfo']?></textarea>
+                    <textarea name="AdditionalAccomodationInfo" class="long" cols="50"  rows="4" ><?=$vars['AdditionalAccomodationInfo']?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -416,31 +416,31 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileHobbies')?>:</td>
                   <td>
-                    <textarea name="Hobbies" class="long" cols="60"  rows="4" ><?=$vars['Hobbies']?></textarea>
+                    <textarea name="Hobbies" class="long" cols="50"  rows="4" ><?=$vars['Hobbies']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileBooks')?>:</td>
                   <td>
-                    <textarea name="Books" class="long" cols="60"  rows="4" ><?=$vars['Books']?></textarea>
+                    <textarea name="Books" class="long" cols="50"  rows="4" ><?=$vars['Books']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMusic')?>:</td>
                   <td>
-                    <textarea name="Music" class="long" cols="60"  rows="4" ><?=$vars['Music']?></textarea>
+                    <textarea name="Music" class="long" cols="50"  rows="4" ><?=$vars['Music']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMovies')?>:</td>
                   <td>
-                    <textarea name="Movies" class="long" cols="60"  rows="4" ><?=$vars['Movies']?></textarea>
+                    <textarea name="Movies" class="long" cols="50"  rows="4" ><?=$vars['Movies']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOrganizations')?>:</td>
                   <td>
-                    <textarea name="Organizations" class="long" cols="60"  rows="4" ><?=$vars['Organizations']?></textarea>
+                    <textarea name="Organizations" class="long" cols="50"  rows="4" ><?=$vars['Organizations']?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -457,13 +457,13 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePastTrips')?>:</td>
                   <td>
-                    <textarea name="PastTrips" class="long" cols="60"  rows="4" ><?=$vars['PastTrips']?></textarea>
+                    <textarea name="PastTrips" class="long" cols="50"  rows="4" ><?=$vars['PastTrips']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePlannedTrips')?>:</td>
                   <td>
-                    <textarea name="PlannedTrips" class="long" cols="60"  rows="4" ><?=$vars['PlannedTrips']?></textarea>
+                    <textarea name="PlannedTrips" class="long" cols="50"  rows="4" ><?=$vars['PlannedTrips']?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -489,7 +489,7 @@
                 <tr align="left" >
                   <td class="label" ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
                   <td colspan="2" >
-                    <textarea cols="40"  rows="6"  name="Group_<?=$group->Name?>" ><?=$group_comment_translated?></textarea>
+                    <textarea cols="50"  rows="6"  name="Group_<?=$group->Name?>" ><?=$group_comment_translated?></textarea>
                 <?php
                 if ($Rights->hasRight("Beta","GroupMessage")) {
                        echo "<br /> BETA ";

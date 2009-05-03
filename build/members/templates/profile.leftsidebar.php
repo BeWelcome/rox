@@ -82,6 +82,6 @@ $occupation = $member->get_trad("Occupation", $profile_language);
 <div class="profile_translations">
     <?php 
     $urlstring = 'members/'.$member->Username;
-    require 'profileversion.php'; 
+    //require 'profileversion.php'; 
     ?>
 </div> <!-- profile_translations -->

@@ -32,7 +32,7 @@ require_once 'editprofile_form.php';
     }
 
     document.observe("dom:loaded", function() {
-      new FieldsetMenu('profile-edit-form', {active: "profilesummary"});
+      //new FieldsetMenu('profile-edit-form', {active: "profilesummary"});
       $('langbutton').observe('click',insertNewTemplate);
       $('add_language').observe('change',linkDropDown);
     });

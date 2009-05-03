@@ -33,17 +33,18 @@
 	padding-bottom: 2em;
 }
 #teaser .subcolumns .c15l{
-    width: 15%;
+    width: 17%;
     background-color: transparent;
 	float: left;
 	text-align: right;
 }
 #teaser .subcolumns .c85r{
-    width: 85%;
+    width: 75%;
     margin-left:-5px;
+	float:left;
 }
 #teaser #teaser_r {
-	width: 80%;	
+	width: 80%;
 }
 #teaser #profile-info #username strong {
 	font-size:2.6em;
@@ -58,6 +59,10 @@
     clear:none;
 	display: inline;
 }
+#nav_sub {
+    margin: -4em 0 0 13em;
+	padding-bottom: 3em;
+}
 #nav_sub li {
     padding: 0;
 }
@@ -70,7 +75,7 @@ width:100px;
     width: 30em;
     float: left;
 	padding-top: 1em;
-	padding-left: 3em;
+	padding-left: 1em;
 }
 #pic_shadow {
     width: 30em;

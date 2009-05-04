@@ -38,8 +38,8 @@
   h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic;   padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
   h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
 
-#main  h1 span, #main_top h1 span, #teaser h1 span.small { margin: 0; padding: 0; }
-.list h5 {  padding-top: 0;}
+  #main  h1 span, #main_top h1 span, #teaser h1 span.small { margin: 0; padding: 0; }
+  .list h5 {  padding-top: 0;}
 
 
   /* ### paragraphs ###*/
@@ -87,7 +87,7 @@
   .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
-  .row { padding: 1em 0;}
+  .row { padding: .5em 0;}
   .warning {
     background: #fdd;
     padding: 1em;
@@ -112,13 +112,12 @@
     font-size: 0.9em;
     color: #888888;
     padding: 0;
-    margin: 0px;
+    /* margin: 0px; */
     font-weight: normal;
-    display: inline;
+    /* display: inline; */
   }
-
   .big {font-size: 1.3em; }
-
+  .flat {margin: 0; padding: 0;}
 
   /**
    * Images
@@ -130,7 +129,6 @@
   img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
   img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
   img.framed {padding:1px; border: 1px #ddd solid; background: #f3f3f3 }
-
   
   /**
    * Local and external Links
@@ -288,9 +286,6 @@
     background: #ffffff;
   }
 
-
-  .form li { padding: 1em 0; }
-
   textarea {
     font-size: 1.2em;
     font-family: Arial, Helvetica;
@@ -303,7 +298,6 @@
     background: #ffffff;
     color: #777;
     padding: 2px;
-/*    margin: 5px 0px; */
   }
   input[type=image] {
     border: 0;
@@ -348,8 +342,6 @@
     border-color: #666;
   }
 
-
-
   /**
    * Pagination
    * (en) Generic classes for pagination
@@ -357,7 +349,7 @@
    * @section content-pagination
    */
 
-  div.pages {clear:both; padding-top:15px; white-space: nowrap; }
+  div.pages {padding-top:15px; white-space: nowrap; }
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
   div.pages li.current a {color:#666;font-weight:bold; }
@@ -390,8 +382,6 @@
      }
      /**/
 
-
-
   /**
    * Footer
    * (en) Generic classes for footer
@@ -417,75 +407,18 @@
   #footer #flags a:focus {color: #333; text-decoration:underline; }
 
 
-
 /* ###########################################
 ** ### Custom classes for mainpage / user homepage #################################
 ** ###########################################
 */
 
-#main .main_preposts p {
-  font-size: 11px;
-
-}
-#main .main_preposts img {
-  font-size: 11px;
-  float: left;
-  margin: 0 1em 0.15em 0;
-  padding:4px;
-  border: 1px #ddd solid;
-  background: #f3f3f3;
-}
-#MainUserpic {
-  width: 50px;
-  height: 50px;
-  padding:4px;
-  border: 1px #888 solid;
-  margin-right: 0.8em;
-  margin-bottom: 0.8em;
-}
-.news {
+h4.news {
   font-size: 14px;
   font-weight: bold;
   line-height: 18px;
   padding: 3px 0;
   margin: 0px;
-}
-h4.news {
   padding: 13px 0 3px 0;
-}
-.posts p {
-  font-size: 11px;
-  line-height: 1em;
-  margin: 0px;
-  font-weight: normal;
-}
-div.posts {
-  float:left;
-  padding: 0 20px 0 0;
-}
-
-/* ### teaser on mainpage ### */
-#teaser.teaser_main {
-  padding-bottom: 3em;
-}
-#teaser.teaser_main p {
-  padding: 0.5em;
-  margin: 0px;
-  line-height: 1.7em;
-}
-#teaser.teaser_main #teaser_l {float:left; width: 84px; margin: 0 0 0 0; }
-#teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
-#teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
-
-.innerbox50l {
-  float: left;
-  width: 45%;
-    margin-right: 10px;
-}
-.inner50r {
-  float: left;
-  width: 45%;
-    margin-left: 10px;
 }
 
 /* ###########################################
@@ -495,6 +428,8 @@ div.posts {
 
 .titlelink {font-size: 14px; font-weight: bold; }
 .username {font-size: 14px; font-weight: bold; }
+.author {font-size: .9em; color: #888; padding: 0 0 1em 0;}
+.action {font-size: .9em; color: #888; padding: 1em 0 0 0;}
 .hr_div {padding: 5px 30px 0 30px;}
 
 .button, input.button, .control-links a, .control-links input, a.cancel {
@@ -527,33 +462,28 @@ a.bigbutton {
     padding-right: 18px; /* sliding doors padding */
     text-decoration: none;
 }
-
 a.bigbutton span {
     background: transparent url(../images/bg_bigbutton_span_w.gif) no-repeat;
     display: block;
     line-height: 14px;
     padding: 8px 0 8px 18px;
 }
-
 a.bigbutton:active {
     background-position: bottom right;
     color: #000;
     outline: none; /* hide dotted outline in Firefox */
 }
-
 a.bigbutton:active span {
     background-position: bottom left;
     padding: 9px 0 7px 18px; /* push text down 1px */
 }
 
 /* Searchmembers styles */
-
 #mapsearch {font-weight: bold;}
 #mapsearch fieldset {padding: 15px 0 0 20px;}
 #mapsearch label {font-size: 1.5em; color: #fff;}
 #mapsearch input {padding: 0.2em; font-size: 1.2em;}
-#mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
-
+#submit-button {vertical-align:middle; padding-bottom:4px}
 #loading_container {margin: 1em 0}
 
 /* Tagcloud */
@@ -566,10 +496,6 @@ background: none;
 text-decoration: underline;
 color: #000;
 background: none;
-}
-
-#tagcloud a {
-/*padding: 4px; */
 }
 
 #tagcloud .tag_smallest {font-size: 0.8em;}
@@ -602,30 +528,14 @@ background: none;
 /* Special classes for AboutUsPages*/
 #main li.userpicbox_big {
     padding: 20px;
-    width: 320px;
-}
-#main li.userpicbox_big:hover{
-    background-color: #f9f6f6;
-    border-color: #666;
+    width: 270px;
 }
 #main li.userpicbox_big h4 {
-    color: black;
-    font-weight: bold;
     font-size: 14px;
-}
-#main li.userpicbox_big p {
-    margin-top: 10px;
 }
 #main li.userpicbox_big img {
     margin-top: -10px;
 }
-#main #col3 h2.blogtitle {
-  font-size: 1.3em;
-  font-weight: bold;
-  color: #888;
-  padding: 0 0 0.3em 0;
-}
-
 
 /* blog & gallery comments */
 div.comment { padding:0; margin-bottom:1em; }
@@ -634,9 +544,6 @@ div.comment .text {padding:0.2em;}
 div.comment .author {background:#fff; padding:0.2em;}
 
 /* Default styles for the "precontent" area of the template */
-#precontent {
-    background: #e5e5e5;
-}
 #SearchAdvanced div {    padding: 10px 30px; }
 #SearchAdvanced a:hover {    background: transparent; }
 
@@ -663,15 +570,14 @@ div.admincomment {
 * css for gallery
 *
 */
-
-.gallerycontainer {width: 150px; float:left; margin-top: 1em; margin-bottom: 2em; margin-right: 2em;}
-.albumdescription {margin: 0; }
-
+.gallery_container {
+    padding: 2px;
+    padding-right: 10px;
+    padding-bottom: 8px;
+}
 
 /* --- Classes for "round boxes" --- */
 div.box {
-  border: none;
-  border-color: #ddd;
   margin: 1em 0.25em;
   padding: 0em;
 }
@@ -778,70 +684,11 @@ div.box div.boxbottom div.links {
 }
 */
 
-h1.search {padding-bottom: 0.3em; margin-bottom: 0;}
-
 #teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div,#teaser td {color: #333}
-
-#teaser .small {
-    line-height: normal;
-}
-#teaser .grey {
-    color: #999;
-}
-
+#teaser .grey { color: #888;}
 #teaser #title { float: left; margin-right: 0}
-/*
-#teaser a { color: #333; font-weight: bold; }
-#teaser a:hover {background-color: transparent; text-decoration:none; color: #999;}
-#teaser a:focus {background-color: transparent; text-decoration:none; color: #999;}
-*/
 #teaser #teaser_l {float:left; width: 120px; margin: 0 0 0 0; }
 #teaser #teaser_r {width: 70%; margin: 0 10px 0 0; }
-
-  #teaser #navigation-path{
-    color: #333;
-  }
-
-    #footer {
-    background: none;
-  }
-
-  /* teaser's shadow */
-#teaser_shadow {
-    background: transparent;
-}
-
-#teaser a.bigbutton {
-    color: #444;
-}
-
-#teaser a.bigbutton span {
-    color: #fff;
-}
-
-#teaser a.bigbutton:active {
-    color: #000;
-}
-
-    /* some Gallery classes */
-    .gallery_container {
-        float:none;
-        padding: 2px;
-        padding-right: 10px;
-        padding-bottom: 8px;
-    /*    background: #fff url(/images/photoset_bg.png) bottom right no-repeat;
-        border:2px solid #e5e5e5;
-        border-bottom:0;
-        border-right:0;
-    */
-    }
-
-    .message {
-        font-weight: normal;
-    }
-    a.unread {
-        font-weight: bold;
-    }
 
 /* Fieldset menu - creates a tab-menu from form fieldsets via fieldset.js */
 div.fieldset-menu{
@@ -961,7 +808,7 @@ a.tr_link:hover {
 /* Geo Selector */
 ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center}
 ol.plain{ margin-left: 0; }
-ol.plain li{ list-style-type: none; margin-left: 0; }
+ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
 
 
 /* Datepicker classes */
@@ -1141,7 +988,47 @@ div.datepicker div.datepicker-footer {
   cursor:pointer;
 }
 
-
+/* Messages */
+#message { /*
+  border: 1px solid #f5f5f5;
+  border-right: 2px solid #999;
+  border-bottom: 1px solid #888; */
+}
+#messageheader {
+  background-color: #fff;
+  padding: 2em 3em 1em 3em;
+  border-bottom: 1px solid #e5e5e5;
+}
+#messagecontent {
+  background-color: #fff;
+  padding: 2em 3em;
+}
+#messagecontent .text {
+  font-family: Georgia;
+  font-size: 1.3em;
+  font-style: italic;
+}
+#messageside {
+  width: 22em;
+  text-align: right;
+}
+#messagefooter {
+  background-color: #fff;
+  padding: 2em 3em;
+  border-top: 1px solid #e5e5e5;
+}
+#shade_top {
+background:transparent url(../images/shade-top-trans.png) no-repeat scroll 0 10px;
+height:20px;
+}
+#shade {
+background:transparent url(../images/shade-trans.png) no-repeat scroll 0 -10px;
+height:50px;
+}
+#shade-top {
+background:transparent url(../images/shade-trans.png) no-repeat scroll 0 0;
+height:50px;
+}
 
 /* Media screen end */
 }

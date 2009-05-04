@@ -23,47 +23,66 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
+<div class="floatbox">
+    <div id="message">
+    <div id="shade_top"> </div>
+    <div class="floatbox" id="messageheader">
+        <p class="float_left">
+        <?=MOD_layoutbits::PIC_50_50($receiver_username) ?>
+        </p>
+        <p class="">
+          <span class="grey"><?=$words->get('MessageTo','<a href="people/'.$receiver_username.'">'.$receiver_username.'</a>') ?> </span>
+        </p>
+        <p class="">
+          <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>
+        </p>
 
-<h3><?= $words->get('YourMessageFor'); ?><a href="bw/member.php?cid=<?=$receiver_username ?>"><?=$receiver_username ?></a></h3>
+    </div>
+    <form method="post" action="<?=$page_url ?>">
+        <?=$callback_tag ?>
+    <div id="messagecontent">
 
-<form method="post" action="<?=$page_url ?>">
-    <?=$callback_tag ?>
+            <?php if ($receiver_username) { ?>
+            <input type="hidden" name="receiver_id" value="<?=$receiver_id ?>"/>
+            <?php } else { ?>
+            <p>To: <input name="receiver_username"/></p>
+            <?php } ?>
 
-    <?php if ($receiver_username) { ?>
-    <input type="hidden" name="receiver_id" value="<?=$receiver_id ?>"/>
-    <?php } else { ?>
-    <p>To: <input name="receiver_username"/></p>
-    <?php } ?>
+            <p>
+                <textarea name="text" rows="15" cols="70" ><?=$text ?></textarea>
+            </p>
 
-    <p>
-        <textarea name="text" rows="15" cols="80" ><?=$text ?></textarea>
-    </p>
-	
-	<?php
-	if ($this->_model->CaptchaNeeded($_SESSION["IdMember"])) {
-		$CaptchaValue=rand(100000,999999) ;
-		echo "<p>" ;
-		$_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
-		echo $words->getFormatted("ContactCaptchaRequest",$this->_model->DisplayCaptcha($CaptchaValue))," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
-//		echo $words->get("ContactCaptchaRequest"," "),$this->_model->DisplayCaptcha($CaptchaValue)," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
-		echo "</p>" ;
-	}
-	?>
+        	<?php
+        	if ($this->_model->CaptchaNeeded($_SESSION["IdMember"])) {
+        		$CaptchaValue=rand(100000,999999) ;
+        		echo "<p>" ;
+        		$_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
+        		echo $words->getFormatted("ContactCaptchaRequest",$this->_model->DisplayCaptcha($CaptchaValue))," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
+        //		echo $words->get("ContactCaptchaRequest"," "),$this->_model->DisplayCaptcha($CaptchaValue)," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
+        		echo "</p>" ;
+        	}
+        	?>
 
-    <p>
-        <input type="checkbox" name="agree_spam_policy" id="IamAwareOfSpamCheckingRules">
-        <label for="IamAwareOfSpamCheckingRules"><?= $words->get('IamAwareOfSpamCheckingRules'); ?></label>
-    </p>
+    </div>
+    <div id="messagefooter">
+        <p>
+            <input type="checkbox" name="agree_spam_policy" id="IamAwareOfSpamCheckingRules">
+            <label for="IamAwareOfSpamCheckingRules"><?= $words->get('IamAwareOfSpamCheckingRules'); ?></label>
+        </p>
 
-    <p>
-        <input type="checkbox" name="attach_picture" id="JoinMemberPict"<?=$attach_picture ?>/>
-        <label for="JoinMemberPict"><?= $words->get('JoinMyPicture'); ?></label>
-    </p>
+        <p>
+            <input type="checkbox" name="attach_picture" id="JoinMemberPict"<?=$attach_picture ?>/>
+            <label for="JoinMemberPict"><?= $words->get('JoinMyPicture'); ?></label>
+        </p>
 
-    <p>
-        <input type="submit" value="send"/>
-    </p>
+        <p>
+            <input type="submit" value="send"/>
+        </p>
+    </div>
+    </form>
+    <div id="shade"> </div>
+</div>
 
-</form>
+
 
 

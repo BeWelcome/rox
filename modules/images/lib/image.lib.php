@@ -28,7 +28,7 @@ class MOD_images_Image {
         return true;
     }
     
-    public function createThumb($dir, $prefix, $max_x = false, $max_y = false, $prefixIsRealName = false, $mode = 'square') {
+    public function createThumb($dir, $prefix, $width = false, $height = false, $prefixIsRealName = false) {
         if (!isset ($this->hash))
             return FALSE;
         if (!$dir)
@@ -37,53 +37,20 @@ class MOD_images_Image {
             $prefix = 't';
         }
 
-        if ((!$max_x && !$max_y) || (intval ($max_x) <= 0 && intval ($max_y) <= 0) )
-            throw new PException('Neither thumbnail max-width nor max-height provided!');
-        $size_x = $this->imageSize[0];
-        $size_y = $this->imageSize[1];
-        
-        switch($mode){
-            case "ratio":
-                if (($max_x / $size_x) >= ($max_y / $size_y)){
-                    $ratio = $max_y / $size_y;
-                } else {
-                    $ratio = $max_x / $size_x;
-                }
-                $startx = 0;
-                $starty = 0;
-                break;
-            default:
-                if ($size_x >= $size_y){
-                    $startx = ($size_x - $size_y) / 2;
-                    $starty = 0;
-                    $size_x = $size_y;
-                } else {
-                    $starty = ($size_y - $size_x) / 2;
-                    $startx = 0;
-                    $size_y = $size_x;
-                }
-
-                if ($max_x >= $max_y){
-                    $ratio = $max_y / $size_y;
-                } else {
-                    $ratio = $max_x / $size_x;
-                }
-                break;
+        if ((!$width && !$height) || (intval ($width) <= 0 && intval ($height) <= 0) )
+            throw new PException('Neither thumbnail width nor height provided!');
+        $oldWidth = $this->imageSize[0];
+        $oldHeight = $this->imageSize[1];
+        if ($width && intval($width) > 0 && $oldWidth) {
+            $newWidth = intval($width);
+            $newHeight = intval($oldHeight*$newWidth/$oldWidth);
+            $oldWidth = $newWidth;
+            $oldHeight = $newHeight;
         }
-
-        $th_size_x = $size_x * $ratio;
-        $th_size_y = $size_y * $ratio;
-        
-        // if ($width && intval($width) > 0 && $oldWidth) {
-            // $newWidth = intval($width);
-            // $newHeight = intval($oldHeight*$newWidth/$oldWidth);
-            // $oldWidth = $newWidth;
-            // $oldHeight = $newHeight;
-        // }
-        // if ($height && intval($height) > 0 && $oldHeight > $height) {
-            // $newHeight = intval($height);
-            // $newWidth = intval($oldWidth*$newHeight/$oldHeight);
-        // }
+        if ($height && intval($height) > 0 && $oldHeight > $height) {
+            $newHeight = intval($height);
+            $newWidth = intval($oldWidth*$newHeight/$oldHeight);
+        }
 
         switch (intval($this->imageSize[2])) {
             case IMG_GIF:
@@ -103,8 +70,8 @@ class MOD_images_Image {
                 $e->addInfo(print_r($this->imageSize, TRUE));
                 break;
         }
-        $newImage = ImageCreateTrueColor($th_size_x, $th_size_y);
-        imageCopyResampled($newImage, $oldImage, 0, 0, $startx, $starty, $th_size_x, $th_size_y, $size_x, $size_y);
+        $newImage = ImageCreateTrueColor($newWidth, $newHeight);
+        imageCopyResampled($newImage, $oldImage, 0, 0, 0, 0, $newWidth, $newHeight, $this->imageSize[0], $this->imageSize[1]);
         $newFile = tempnam('Lorem ipsum dolor sit amet', 'thumb');
 
         switch ($this->imageSize[2]) {
@@ -156,6 +123,6 @@ class MOD_images_Image {
         if (!isset($this->file) || !isset($this->imageSize))
             return false;
         return true;
-    }    
+    }     
 }
 ?>

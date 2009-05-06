@@ -124,14 +124,14 @@ class GroupMembership extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function isMember($group, $member)
+    public function isMember($group, $member, $only_in = true)
     {
         if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
             return false;
         }
 
-        if ($yeah = $this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}' AND Status = 'In'"))
+        if ($this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'" . (($only_in) ? " AND Status = 'In'" : '')))
         {
             return true;
         }
@@ -157,7 +157,7 @@ class GroupMembership extends RoxEntityBase
         }
 
         // only bother if member is not already ... a member        
-        if (!$this->isMember($group, $member))
+        if (!$this->isMember($group, $member, false))
         {
             $this->Status = $this->dao->escape($status);
             $this->IdGroup = $group_id;

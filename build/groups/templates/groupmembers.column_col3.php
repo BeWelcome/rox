@@ -1,3 +1,11 @@
+<?php
+    if (!$this->isGroupMember() && $this->group->Type != 'Public')
+    {
+        echo "not public";
+    }
+    else
+    {
+?>
 <div id="groups">
     <h3><?= $words->get('GroupsMembers'); ?></h3>
 
@@ -26,3 +34,6 @@
     ?>
     </table>
 </div>
+<?php
+    }
+?>

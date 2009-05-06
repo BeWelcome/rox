@@ -53,6 +53,7 @@ class GroupMembership extends RoxEntityBase
      * return the members of the group
      *
      * @param object $group - Group entity object to get members for
+     * @param object $status - status to look for
      * @param string $where - Optional where clause to use when finding members
      * @access public
      * @return array
@@ -92,14 +93,14 @@ class GroupMembership extends RoxEntityBase
      * @access public
      * @return array
      */
-    public function getMemberGroups($member)
+    public function getMemberGroups($member, $status = null)
     {
         if (!is_object($member) || !($member_id = $member->getPKValue()))
         {
             return false;
         }
 
-        $links = $this->findByWhereMany("IdMember = '{$member_id}'");
+        $links = $this->findByWhereMany("IdMember = '{$member_id}'" . ((!empty($status)) ? " AND Status = '" . $this->dao->escape($status) . "'" : ''));
 
         $groups = array();
         foreach ($links as &$link)
@@ -130,7 +131,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        if ($yeah = $this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'"))
+        if ($yeah = $this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}' AND Status = 'In'"))
         {
             return true;
         }

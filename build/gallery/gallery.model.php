@@ -690,8 +690,8 @@ VALUES
                     continue;
                 if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
                     continue;
-                if ($size[1] > 550)
-                    $img->createThumb($userDir->dirName(), 'thumb2', 500);
+                if ($size[0] > 550)
+                    $img->createThumb($userDir->dirName(), 'thumb2', 500, false, false, "ratio");
                 $itemId = $this->dao->nextId('gallery_items');
                 $orig = $_FILES['gallery-file']['name'][$key];
                 $mimetype = image_type_to_mime_type($type);

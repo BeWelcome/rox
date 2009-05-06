@@ -297,7 +297,7 @@ class GroupsController extends RoxControllerBase
             $this->_redirect('groups/');
         }
 
-        $this->_model->acceptGroupMember($group, $request[3], false);
+        $this->_model->acceptGroupMember($group, $request[3]);
 
         return new GroupStartPage();
     }

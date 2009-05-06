@@ -572,7 +572,7 @@ class GroupsModel extends  RoxModelBase
             return false;
         }
 
-        if (($membership = $this->createEntity('GroupMembership')->findByWhere('IdGroup = ' . $group->getPKValue() . ' AND IdMember = ' . $member->getPKValue())) && $membership->Status == 'WantToBeIn')
+        if (($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '" . $group->getPKValue() . "' AND IdMember = '" . $member->getPKValue() . "'")) && $membership->Status == 'WantToBeIn')
         {
             return $membership->updateStatus('In');
         }

@@ -42,48 +42,54 @@ class MOD_images_Image {
         $size_x = $this->imageSize[0];
         $size_y = $this->imageSize[1];
         
-        switch($mode){
-            case "ratio":
-                if (($max_x / $size_x) >= ($max_y / $size_y)){
-                    $ratio = $max_y / $size_y;
-                } else {
-                    $ratio = $max_x / $size_x;
-                }
-                $startx = 0;
-                $starty = 0;
-                break;
-            default:
-                if ($size_x >= $size_y){
-                    $startx = ($size_x - $size_y) / 2;
-                    $starty = 0;
-                    $size_x = $size_y;
-                } else {
-                    $starty = ($size_y - $size_x) / 2;
+        // old school
+        if (!$max_x || !$max_y) {
+            if ($max_x && intval($max_x) > 0 && $size_x) {
+                $th_size_x = intval($max_x);
+                $th_size_y = intval($size_y*$th_size_x/$size_x);
+                $size_x = $th_size_x;
+                $size_y = $th_size_y;
+            }
+            if ($max_y && intval($max_y) > 0 && $size_y > $max_y) {
+                $th_size_y = intval($max_y);
+                $th_size_x = intval($size_x*$th_size_y/$size_y);
+            }
+            $startx = 0;
+            $starty = 0;
+            $size_x = $this->imageSize[0];
+            $size_y = $this->imageSize[1];
+        } else {
+            switch($mode){
+                case "ratio":
+                    if (($max_x / $size_x) >= ($max_y / $size_y)){
+                        $ratio = $max_y / $size_y;
+                    } else {
+                        $ratio = $max_x / $size_x;
+                    }
                     $startx = 0;
-                    $size_y = $size_x;
-                }
+                    $starty = 0;
+                    break;
+                default:
+                    if ($size_x >= $size_y){
+                        $startx = ($size_x - $size_y) / 2;
+                        $starty = 0;
+                        $size_x = $size_y;
+                    } else {
+                        $starty = ($size_y - $size_x) / 2;
+                        $startx = 0;
+                        $size_y = $size_x;
+                    }
 
-                if ($max_x >= $max_y){
-                    $ratio = $max_y / $size_y;
-                } else {
-                    $ratio = $max_x / $size_x;
-                }
-                break;
+                    if ($max_x >= $max_y){
+                        $ratio = $max_y / $size_y;
+                    } else {
+                        $ratio = $max_x / $size_x;
+                    }
+                    break;
+            }
+            $th_size_x = $size_x * $ratio;
+            $th_size_y = $size_y * $ratio;
         }
-
-        $th_size_x = $size_x * $ratio;
-        $th_size_y = $size_y * $ratio;
-        
-        // if ($width && intval($width) > 0 && $oldWidth) {
-            // $newWidth = intval($width);
-            // $newHeight = intval($oldHeight*$newWidth/$oldWidth);
-            // $oldWidth = $newWidth;
-            // $oldHeight = $newHeight;
-        // }
-        // if ($height && intval($height) > 0 && $oldHeight > $height) {
-            // $newHeight = intval($height);
-            // $newWidth = intval($oldWidth*$newHeight/$oldHeight);
-        // }
 
         switch (intval($this->imageSize[2])) {
             case IMG_GIF:

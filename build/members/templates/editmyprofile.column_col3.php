@@ -40,9 +40,9 @@ require_once 'editprofile_form.php';
 </script>
             
 <script type="text/javascript">//<!--
-bkLib.onDomLoaded(function() {
+/*bkLib.onDomLoaded(function() {
 	new nicEditor({iconsPath: 'script/nicEditorIcons.gif', buttonList: ['bold','italic','underline','left','center','right','ol','ul','strikethrough','removeformat','hr','forecolor','link','fontFamily','fontFormat','xhtml']}).panelInstance('ProfileSummary');
-});	
+});	*/
 //-->
 </script>
 </div>

@@ -82,7 +82,9 @@ class MembersController extends RoxControllerBase
         
         switch (isset($request[0]) ? $request[0] : false) {
             case 'updatemandatory':
-                $page = new UpdateMandatoryPage();
+                if (isset($request[1]) && $request[1] == 'finish')
+                    $page = new UpdateMandatoryFinishPage();
+                else $page = new UpdateMandatoryPage();
                 break;
             case 'setlocation':
                 $page = new SetLocationPage();
@@ -259,7 +261,7 @@ class MembersController extends RoxControllerBase
             foreach ($args->post as $key => $value) {
                 $vars[$key] = $value;
             }
-            $model = new Rox();
+            $model = new SignupModel();
             
             $errors = $model->checkUpdateMandatoryForm($vars);
             
@@ -269,15 +271,9 @@ class MembersController extends RoxControllerBase
                 $mem_redirect->post = $vars;
                 return false;
             }
-            $Signup = new SignupModel;
-            $Signup->polishFormValues($vars);
-            
-            // signup on MyTB successful, yeah.
-            $id = $model->registerBWMember($vars);
-            $_SESSION['IdMember'] = $id;
-            
-            unset($_SESSION['IdMember']);
-            return 'signup/finish';
+            $model->polishFormValues($vars);
+            $model->sendMandatoryForm($vars);
+            return 'updatemandatory/finish';
         }
         return false;        
     }

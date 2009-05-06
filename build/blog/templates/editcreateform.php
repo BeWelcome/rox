@@ -134,52 +134,62 @@ if (isset($vars['id']) && $vars['id']) {
 
 <fieldset id="blog-trip"><legend><?=$words->get('BlogCreate_LabelTrips')?></legend>
     <div class="row">
-        <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
-        <input type="text" id="create-sty" name="sty" style="width:3em" <?php
-        echo isset($vars['sty']) ? 'value="'.htmlentities($vars['sty'], ENT_COMPAT, 'utf-8').'" ' : '';
-        ?> onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);"/>
-        <select id="create-stm" name="stm" onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);">
-            <option value="">-</option>
-            <?php
-                foreach ($monthNames as $m=>$name) {
-                    echo '<option value="'.$m.'"';
-                    if (isset($vars['stm']) && (int)$vars['stm'] == $m) {
-                        echo ' selected="selected"';
-                    }
-                    echo '>'.$name.'</option>';
-                }
-            ?>
-        </select>
-        <input type="text" id="create-std" name="std" style="width:2em" <?php
-        echo isset($vars['std']) ? 'value="'.htmlentities($vars['std'], ENT_COMPAT, 'utf-8').'" ' : '';
-        ?> onblur="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);" onfocus="Cal.setDateSE('create-sty', 'create-stm', 'create-std', false, 'create-eny', 'create-enm', 'create-end', false);"/>
-        <a href="#" id="create-stsel" onclick="Cal.aCalTarget('create-sty', 'create-stm', 'create-std');Cal.aCal('create-stsel');return false;">cal</a>
-        <?php
-        if (in_array('startdate', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_startdate').'</span>';
-        } elseif (in_array('duration', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_duration').'</span>';
-        }
-        ?>
-        <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
-    </div>
+        <div class="subcolumns" id="profile_subcolumns">
 
-    <div class="row">
-        <label for="create-trip"><?=$words->get('BlogCreateTrips_LabelTrip')?></')?>:</label><br />
-        <select id="create-trip" name="tr">
-            <option value="">-- <?=$words->get('BlogCreateTrips_NoTrip')?> --</option>
-        <?php
-            foreach ($tripIt as $t)
-                echo "<option value=\"".$t->trip_id."\"".($t->trip_id == $vars['trip_id_foreign'] ? ' selected="selected"' : '').">".htmlentities($t->trip_name, ENT_COMPAT, 'utf-8')."</option>\n";
-        ?>
-        </select>
-        <?php
-        if (in_array('trip', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
-        }
-        ?>
-        <p class="desc"></p>
-    </div>
+          <div class="c50l" >
+            <div class="subcl" >
+                
+                <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
+                <div class="floatbox">
+                    <input type="text" id="create-date" name="date" class="date" maxlength="10" style="width:9em" <?php
+                    echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
+                    ?> />
+                	<script type="text/javascript">
+                		/*<[CDATA[*/
+                		var datepicker	= new DatePicker({
+                		relative	: 'create-date',
+                		language	: '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
+                		current_date: '', 
+                		topOffset   : '25',
+                		relativeAppend : true
+                		});
+                		/*]]>*/
+                	</script>
+                </div>
+                    <?php
+                    if (in_array('startdate', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_startdate').'</span>';
+                    } elseif (in_array('duration', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_duration').'</span>';
+                    }
+                    ?>
+                    <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
+                
+            </div> <!-- subcl -->
+          </div> <!-- c50l -->
+          <div class="c50r" >
+            <div class="subcr" >
+
+                    <label for="create-trip"><?=$words->get('BlogCreateTrips_LabelTrip')?></label><br />
+                    <select id="create-trip" name="tr">
+                        <option value="">-- <?=$words->get('BlogCreateTrips_NoTrip')?> --</option>
+                    <?php
+                        foreach ($tripIt as $t)
+                            echo "<option value=\"".$t->trip_id."\"".($t->trip_id == $vars['trip_id_foreign'] ? ' selected="selected"' : '').">".htmlentities($t->trip_name, ENT_COMPAT, 'utf-8')."</option>\n";
+                    ?>
+                    </select>
+                    <?php
+                    if (in_array('trip', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
+                    }
+                    ?>
+                    <p class="desc"></p>
+
+            </div> <!-- subcr -->
+          </div> <!-- c50r -->
+
+        </div> <!-- subcolumns -->
+        
 <?php
 if ($google_conf && $google_conf->maps_api_key) {
 ?>
@@ -282,7 +292,7 @@ if ($google_conf && $google_conf->maps_api_key) {
 <?php
 }
 ?>
-    <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label>
+    <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label><br />
     <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
     <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
     <div class="subcolumns">

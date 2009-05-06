@@ -22,21 +22,53 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$model = new MembersModel();
+$member = $model->getMemberWithUsername($receiver_username);
 ?>
 <div class="floatbox">
     <div id="message">
     <div id="shade_top"> </div>
     <div class="floatbox" id="messageheader">
-        <p class="float_left">
+        <div id="messageside" class="float_right">
+          <p class="small grey">
+              <?=$words->get('LivesIn')?> <?=$member->City?>, <?=$member->Country?>
+              <br />
+              <?=$words->get('Speaks')?> 
+              <?php
+              $languages = $member->get_languages_spoken(); 
+              if (count($languages) > 1) {
+              		$ii = 0;
+              		$max = count($languages);
+                      foreach($languages as $language) {
+              			$space = ($ii != $max -1) ? ', ' : '';
+                        ?><span title="<?=$words->get($language->Level) ?>"><?=$language->Name ?><?=$space?></span><?php
+              			$ii++;
+                      }
+              } ?>
+              </p>
+              <p class="small grey">
+                <a href="messages/with/<?=$receiver_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>"> <?=$words->getSilent('messages_allmessageswith',$receiver_username)?></a>
+              </p>
+        </div>
+        <div class="float_left">
         <?=MOD_layoutbits::PIC_50_50($receiver_username) ?>
-        </p>
+        </div>
+        <div class="float_left">
+        <?if (!isset($message->DateSent)) { ?>
+            <h3><?=$words->get('MessageCompose')?></h3>
+        <?php } ?>
+        <?if (isset($message->DateSent) && isset($this->edit)) { ?>
+            <h3><?=$words->get('MessageEdit')?></h3>
+        <?php } ?>
         <p class="">
           <span class="grey"><?=$words->get('MessageTo','<a href="people/'.$receiver_username.'">'.$receiver_username.'</a>') ?> </span>
         </p>
+        <?if (isset($message->DateSent) && !isset($this->edit)) { ?>
         <p class="">
           <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>
         </p>
-
+        <?php } ?>
+        </div>
     </div>
     <form method="post" action="<?=$page_url ?>">
         <?=$callback_tag ?>

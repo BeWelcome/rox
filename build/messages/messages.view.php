@@ -60,17 +60,17 @@ class ReadMessagePage extends MessagesBasePage
             <div class="floatbox" id="messageheader">
                 <div id="messageside" class="float_right">
                   <p class="small grey">
-                      From <?=$member->City?>, <?=$member->Country?>
+                      <?=$words->get('LivesIn')?> <?=$member->City?>, <?=$member->Country?>
                       <br />
-                      Speaks 
+                      <?=$words->get('Speaks')?> 
                       <?php
-                      $languages = $member->get_profile_languages(); 
+                      $languages = $member->get_languages_spoken(); 
                       if (count($languages) > 1) {
                       		$ii = 0;
                       		$max = count($languages);
                               foreach($languages as $language) {
                       			$space = ($ii != $max -1) ? ', ' : '';
-                              ?><span title="<?=$language->ShortCode ?>"><?=$language->Name ?><?=$space?></span><?php
+                              ?><span title="<?=$words->get($language->Level) ?>"><?=$language->Name ?><?=$space?></span><?php
                       			$ii++;
                               }
                       } ?>
@@ -138,7 +138,7 @@ class ReplyMessagePage extends ComposeMessagePage
 
 class EditMessagePage extends ComposeMessagePage
 {
-
+    public $edit = true;
 }
 
 class MessageSentPage extends ReadMessagePage

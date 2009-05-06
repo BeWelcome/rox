@@ -124,12 +124,11 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 var search_handler = {
                     display_result: function(member_object){
                         var search_div = $('search_result');
-                        search_div.childElements().each(function(elem){
-                            elem.remove();
-                        });
+                        search_div.innerHTML = '';
                         search_div.style.border = '1px solid black';
                         search_div.style.display = 'block';
                         search_div.style.backgroundColor = '#ffffff';
+                        var counter = 0;
                         for (var m in member_object)
                         {
                             var a = document.createElement('a');
@@ -144,6 +143,11 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             });
                             search_div.appendChild(a);
                             search_div.appendChild(document.createElement('br'));
+                            counter++;
+                        }
+                        if (counter == 0)
+                        {
+                            search_div.appendChild(document.createTextNode('Could not find any members with a username like that'));
                         }
                     },
                     add_invite: function(e){
@@ -182,7 +186,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                     var ajax = new Ajax.Request('groups/<?= $this->group->getPKValue(); ?>/membersearch/' + $('search_username').value, {
                         method: 'get',
                         onSuccess: function(transport){
-                            search_handler.display_result(transport.responseText.evalJSON());
+                            var result = ((transport.responseText != '[]') ? transport.responseText.evalJSON() : {});
+                            search_handler.display_result(result);
                         },
                         onFailure: function(transport){
                             alert('Failed to find members, technical error');

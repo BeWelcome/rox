@@ -64,7 +64,7 @@ class GroupsModel extends  RoxModelBase
                 $result[] = $member;
             }
         }
-        return ((is_array($result)) ? $result : array());
+        return $result;
     }
 
     /**

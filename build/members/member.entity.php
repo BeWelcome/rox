@@ -441,7 +441,7 @@ WHERE IdToMember = ".$this->id
             return false;
         }
 
-        return $this->createEntity('GroupMembership')->getMemberGroups($this);
+        return $this->createEntity('GroupMembership')->getMemberGroups($this, 'In');
     }
 
 

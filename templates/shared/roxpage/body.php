@@ -14,7 +14,9 @@
 
     <!-- #main: content begins here -->
     <div id="main">
+        <div id="teaser_bg">
       <?php $this->teaser() ?>
+      </div>
       <?php $this->columnsArea() ?>
     </div> <!-- main -->
 

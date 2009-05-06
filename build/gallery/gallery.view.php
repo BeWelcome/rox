@@ -23,12 +23,6 @@ class GalleryView extends PAppView {
     {
         require 'templates/teaser.php';
     }
-
-    /* This displays the optional precontent */
-    public function precontent($gallery = false)
-    {
-        require 'templates/precontent_gallery.php';
-    }
     
     public function customStyles2ColLeft()
 	{		

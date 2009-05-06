@@ -12,6 +12,16 @@ class PersonalStartpage extends RoxPageView
         $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
         return $stylesheets;
     }
+    
+    /*
+     * The idea was that stylesheetpatches was for MSIE
+     */
+    protected function getStylesheetPatches()
+    {
+        //$stylesheet_patches = parent::getStylesheetPatches();
+        $stylesheet_patches[] = 'styles/css/minimal/patches/patch_3col.css';
+        return $stylesheet_patches;
+    }
 
     protected function teaserContent()
     {

@@ -58,7 +58,7 @@ if (!isset($vars['errors'])) {
 
 $comments = $Shouts->getShouts($table,$table_id);
 if (!$comments) {
-    echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
+    echo '<p><a href="signup" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
 } else {
     $count = 0;
     $lastHandle = '';
@@ -67,7 +67,7 @@ if (!$comments) {
         ++$count;
         $lastHandle = $comment->username;
     }
-    echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
+    echo '<p><a href="signup" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
 }
 
 if (isset($_SESSION['IdMember']) && $_SESSION['IdMember']) {

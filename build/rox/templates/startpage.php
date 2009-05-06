@@ -31,13 +31,13 @@ $words = new MOD_words();
 	
 		  <div class="subcolumns">
 		    <div class="c25l">
-		      <div class="subcl" style="margin: 1em 2em 1em 0">
+		      <div class="subcl">
 			<a href="tour/share"><img src="images/tour/arrow_door_mini.png" alt="<?php echo $words->get('IndexPageWord_share');?>" /></a>
 		      </div> <!-- subcl -->
 		    </div> <!-- c50l -->
 
 		    <div class="c75r">
-		      <div class="subcr" style="margin: 1em 2em 1em 0">
+		      <div class="subcr">
 				<h3><?php echo $words->get('IndexPageWord_share');?></h3>
 	            <p><?php echo $words->get('IndexPageWord_shareText');?></p>
 			  </div>
@@ -45,13 +45,13 @@ $words = new MOD_words();
 		  </div>
 		  <div class="subcolumns">
 		    <div class="c25l">
-		      <div class="subcl" style="margin: 1em 2em 1em 0">
+		      <div class="subcl">
 			<a href="tour/trips"><img src="images/tour/arrow_plan_mini.png" alt="<?php echo $words->get('IndexPageWord_plan');?>" /></a>
 		      </div> <!-- subcl -->
 		    </div> <!-- c50l -->
 
 		    <div class="c75r">
-		      <div class="subcr" style="margin: 1em 2em 1em 0">
+		      <div class="subcr">
 				<h3><?php echo $words->get('IndexPageWord_plan');?></h3>
 	            <p><?php echo $words->get('IndexPageWord_planText');?></p>
 			  </div>
@@ -84,16 +84,7 @@ $words = new MOD_words();
 	  </div>
 	</div>
 </div>
-<!-->            <div class="floatbox">
-              <div class="float_left shadowframe">
-                <?php echo MOD_layoutbits::PIC_50_50($m->Username,'','') ?>
-              </div>
-              <p class="userinfo">
-                <span class="username"><?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'\'s place</a>' ?></span><br />
-                <span class="small grey">in <?php echo $m->cityname; ?>, <?php echo $m->countryname; ?></span>
-              </p>
-            </div> <!-- floatbox -->
--->
+
 <?php } ?>
 <div class="subcolumns">
   <div class="c25l">

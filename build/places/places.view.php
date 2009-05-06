@@ -93,7 +93,7 @@ class PlacesView extends PAppView {
                 $regionlist .= '<ul class="float_left">';
                 $ii = 0;
             }
-            $regionlist .= '<li><a href="places/'.$countrycode.'/'.$region['name'].'">'.$region['name'].' ['.$region['number'].']';
+            $regionlist .= '<li><a class="highlighted" href="places/'.$countrycode.'/'.$region['name'].'">'.$region['name'].' <span class="small grey">('.$region['number'].')</span>';
             $regionlist .= '</a></li>';
         }
         $regionlist .= '</ul>';
@@ -106,7 +106,7 @@ class PlacesView extends PAppView {
         $citylist = '<ul>';
         
         foreach ($cities as $city) {
-            $citylist .= '<li><a href="places/'.$countrycode.'/'.$region.'/'.$city->city.'">'.$city->city.' ['.$city->NbMember.']';
+            $citylist .= '<li><a class="highlighted" href="places/'.$countrycode.'/'.$region.'/'.$city->city.'">'.$city->city.' <span class="small grey">('.$city->NbMember.')</span>';
             $citylist .= '</a></li>';
         }
         $citylist .= '</ul>';        

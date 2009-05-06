@@ -97,22 +97,22 @@ class GroupMemberAdministrationPage extends GroupsBasePage
 
             </div> <!-- subcl -->
 <?php endif ;?>
-<?php if ($invited) : ?>
             <div class='subcl'>
                 <h4>Invited Members</h4>
                 <table id='invited_members'>
                     <tr>
                       <th colspan="2">Username</th>
                     </tr>
+<?php if ($invited) : ?>
     <?php foreach ($invited as $member) : ?>
                     <tr>
                         <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                         <td><a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
                     </tr>
     <?php endforeach; ?>
+<?php endif; ?>
                 </table>
             </div>
-<?php endif; ?>
             <div class='subcl'>
                 <h4><?= $words->get('GroupsInviteMember') ?></h4>
                 <div id='search_result' style='display: none;padding: 3px; margin-bottom: 3px'></div>
@@ -171,6 +171,13 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                         });
                     },
                     add_invite_callback: function(it){
+                        var invited = it.firstChild.data.substr(7);
+                        var tr = document.createElement('tr');
+                        var td = document.createElement('td');
+                        td.appendChild(document.createTextNode(invited + ' has been invited'));
+                        td.setAttribute('colspan', 2);
+                        tr.appendChild(td);
+                        $('invited_members').tBodies[0].appendChild(tr);
                         $(it).remove();
                     }
 

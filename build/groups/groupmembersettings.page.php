@@ -26,11 +26,12 @@ class GroupMemberSettingsPage extends GroupsBasePage
         {
             $membershipinfo = $this->member->getGroupMembership($this->group);
         ?>
-        <h3><?= $words->get('GroupsMemberSettings') ;?><?= $this->group->Name ?></h3>
         <?= $resultmsg; ?>
         <?= $problemmsg; ?>
         <form action="" method="post">
         <?= $callbacktag; ?>
+        <fieldset>
+            <legend><?= $words->get('GroupsMemberSettings') ;?><?= $this->group->Name ?></legend>
             <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
             <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
             <div class="row">
@@ -44,7 +45,8 @@ class GroupMemberSettingsPage extends GroupsBasePage
                 <input id='yes_option' type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>/>
                 <label for="yes_option"><?= $words->get('yes') ;?></label>
             </div> <!-- row -->
-            <input type='submit' value='<?= $words->get('GroupsUpdateMemberSettings') ;?>' />
+            <p style="padding-top: 2em"><input type='submit' value='<?= $words->get('GroupsUpdateMemberSettings') ;?>' /></p>
+            </fieldset>
         </form>
         <?php
         }

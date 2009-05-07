@@ -26,9 +26,10 @@
 
 ?>
     <div id="groups">
-        <h3><?= $words->get('GroupsNewHeading'); ?></h3>
         <form method="post" action="" enctype='multipart/form-data'>
         <?=$callback_tag ?>
+        <fieldset>
+            <legend><?= $words->get('GroupsNewHeading'); ?></legend>
             <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsCreationFailed') . "</p>" : '' ); ?>
             <label for="name">Name:</label><?= ((!empty($problems['Group_'])) ? "<span class='error'>" . $words->get('GroupsCreationNameMissing') . "</span>" : '' ); ?><br />
             <input type="text" id="name" name="Group_" class="long" value='<?=$Group_?>' />
@@ -43,6 +44,7 @@
             </ul>
             <h3><?= $words->get('GroupsAddImage'); ?></h3>
             <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
-            <p class="center"><input type="submit" value="Create Group" /></p>
+            <p style="padding-top: 2em"><input type="submit" value="Create Group" /></p>
+            </fieldset>
         </form>
     </div>

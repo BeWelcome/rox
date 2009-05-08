@@ -653,7 +653,6 @@ WHERE `iso_alpha2` = '%s'
 		$gtitle= $this->words->getFormatted("ForumGroupTitle",$this->words->getFormatted("Group_" . $group->Name)) ;
         if ($this->tags) {
             $taginfo = $this->getTagsNamed();
-            
             $url = 'forums';
             
             $subboards[$url] = 'Forums';
@@ -666,7 +665,7 @@ WHERE `iso_alpha2` = '%s'
             }
             
 						
-            if (count($this->tags)>0) {
+            if (count($this->tags)>0 && $this->tags[0]) {
                $title =$gtitle." ".$taginfo[$this->tags[count($this->tags) -1]];
                $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
             }

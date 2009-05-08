@@ -272,7 +272,7 @@
        clear: both;
        display: none;
        background-color: transparent;
-       padding: 0 4em;
+       padding: 0 2em;
     }
     
     .panel.active-tab-body {

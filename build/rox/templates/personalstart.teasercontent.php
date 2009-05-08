@@ -25,34 +25,16 @@ Boston, MA  02111-1307, USA.
 
 <div id="teaser" class="clearfix teaser_main">
 	<h1><?=$words->getSilent('HelloUsername',$_SESSION['Username'])?></h1>
-<!-- Status input field - maybe that's an option later...
-	<div class="floatbox" style="display:none;">
-		<h1 style="float:left">
-			<?=$words->getSilent('HelloUsername',$_SESSION['Username'])?>
-		</h1>
-		<form style="float:right" id="form1" name="form1" method="post" action="searchmembers/quicksearch">
-		<div >
-			<input border: 1px solid #f5f5f5" name="searchtext" type="text" class="search-style" id="searchq" size="30" onblur="if (this.value=='') {this.value=statusvalue}" value="" onfocus="statusvalue=this.value; this.value='';" />
-			<select name="top5">
-			<option name="whatever">I'm hosting</option>
-			<option name="asdfho">Can't host</option>
-			<option name="asdfho">Maybe</option>
-			<option name="asdfho">I'm travelling</option>
-			</select>
-		</div>
-		<input type="hidden" name="quicksearch_callbackId" value="1"/>
-		<input type="hidden" name="searchopt" id="searchopt" />
-		</form>
-	</div>
--->
-<div class="subcolumns">
+
+<div class="subcolumns" style="margin-bottom: 2em">
     <div class="c33l">
     <div class="subcl">
     <ul id="personalmenu">
         <li><a id="tablink1" class="active-tab first" href="#tab1">All that's happening</a></li>
         <li><a id="tablink2" href="#tab2"><?=$words->getSilent('FindAHost')?></a></li>
-        <li><a id="tablink3" href="#tab3"><?=$words->getSilent('CreateATrip')?></a></li>
-        <li><a id="tablink4" href="#tab4"><?=$words->getSilent('CheckYourMessages')?>
+        <li><a id="tablink3" href="#tab3"><?=$words->getSilent('OfferHosting')?></a></li>
+        <li><a id="tablink4" href="#tab4"><?=$words->getSilent('CreateATrip')?></a></li>
+        <li><a id="tablink5" href="#tab5"><?=$words->getSilent('CheckYourMessages')?>
 	        <?php if (isset($_mainPageNewMessagesMessage)) { ?>
                 (<img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/> <?=$_newMessagesNumber?>) 
             <?php } ?>
@@ -74,37 +56,75 @@ Boston, MA  02111-1307, USA.
                     
 			</div> <!-- tab1 -->
 			<div class="panel" id="tab2">
-
-                    <div id="mapsearch">
 	
-                    <h2><?=$words->get('StartFindingAHost')?></h2>
-                    <div id="search-bar">
-                        <form id="form1" name="form1" method="get" action="searchmembers">
-                        <input name="vars" type="text" class="search-style" id="searchq" size="30" onblur="if(this.value == '') this.value='Search for hosts, places...'" value="Search for hosts, places..." onfocus="this.value='';" />
-                        <input type="hidden" name="searchopt" id="searchopt" />
-                        <input type="submit" value="Search" id="btn-create-location" class="button"/>
-                        </form>
+                    <h3><?=$words->get('HowToFindAHost')?></h3>
+                    <p>At best, write down your expectations and travel plans first. People can then contact you directly and offer you accomodation. You can also search actively for a person and just combine your personal message to him with the travel description you created.</p>
+                    <div id="hostrequest">
+                        <a href="requesthosting" class="button">Blog your request</a>
                     </div>
-                    <div id="browsecities_dropdown" style="display:none;">
-                    <h3>Browse Countries</h3>
-                    <select onchange="window.location.href=this.value; return false">
-                    <?php foreach ($Countries as $continent => $countries_group) { ?>
-	                     <optgroup label="<?=$continent?>">
-	                    <?php foreach ($countries_group as $code => $country) { ?>  
-		                     <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
-		                <?php } ?>
-	                    </optgroup>
-                    <?php } ?>
-                    </select>
-                    </div>
-					<script type="text/javascript">
-					$('browsecities_dropdown').show();
-					</script>
+                    <p class="row"></p>
+                    <p class="row">after that</p>
+                    <div class="subcolumns">
+                        <div class="c50l">
+                        <div class="subcl">
+                            
+                            <h3>Search members</h3>
+                            <div id="search-bar">
+                                <form id="form1" name="form1" method="get" action="searchmembers">
+                                <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='Search for hosts, places...'" value="Search for hosts, places..." onfocus="this.value='';" />
+                                <input type="hidden" name="searchopt" id="searchopt" />
+                                <input type="submit" value="Search" id="btn-create-location" class="button"/>
+                                </form>
+                            </div>
+                            
+                        </div> <!-- subcl -->
+                        </div> <!-- c50l -->
 
-                    </div> <!-- mapsearch -->
+                        <div class="c50r">
+                            <div class="subcr">
+                                
+                                <div id="browsecities_dropdown" style="display:none;">
+                                <h3>Browse Countries</h3>
+                                <select onchange="window.location.href=this.value; return false" style="width: 100%">
+                                <?php foreach ($Countries as $continent => $countries_group) { ?>
+            	                     <optgroup label="<?=$continent?>">
+            	                    <?php foreach ($countries_group as $code => $country) { ?>  
+            		                     <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
+            		                <?php } ?>
+            	                    </optgroup>
+                                <?php } ?>
+                                </select>
+                                </div>
+            					<script type="text/javascript">
+            					$('browsecities_dropdown').show();
+            					</script>
+                            
+                            </div>
+                        </div>
+                    </div>
                     
 			</div> <!-- tab2 -->
 			<div class="panel" id="tab3">
+			    			
+			    <div class="floatbox">
+            		<form id="form1" name="form1" method="post" action="searchmembers/quicksearch">
+            		<div>
+            			<h3>YourHostingStatus</h3>
+            			<select name="top5">
+            			<option name="whatever">I'm hosting</option>
+            			<option name="asdfho">Can't host</option>
+            			<option name="asdfho">Maybe</option>
+            			<option name="asdfho">I'm travelling</option>
+            			</select>
+            		</div>
+            		<input type="hidden" name="quicksearch_callbackId" value="1"/>
+            		<input type="hidden" name="searchopt" id="searchopt" />
+            		</form>
+            	</div>
+            	
+        	</div> <!-- tab3 -->
+			
+			<div class="panel" id="tab4">
 
 					<h2>Create a trip</h2>
 					<form method="post" action="trip/create" class="def-form">
@@ -129,13 +149,13 @@ Boston, MA  02111-1307, USA.
                             </div>
 					</form>
 					
-			</div> <!-- tab3 -->
-			<div class="panel" id="tab4">
+			</div> <!-- tab4 -->
+			<div class="panel" id="tab5">
 
                 <?php $inbox_widget->render() ?>
                 <p><a href="messages">more...</a></p>
 					
-			</div> <!-- tab4 -->
+			</div> <!-- tab5 -->
 
     </div> <!-- subcr -->
 </div> <!-- c62r -->

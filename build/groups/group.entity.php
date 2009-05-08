@@ -195,6 +195,11 @@ class Group extends RoxEntityBase
         $type = $this->dao->escape($input['Type']);
         $picture = ((!empty($input['Picture'])) ? $this->dao->escape($input['Picture']) : '');
 
+        if (strlen($group_name) > 40)
+        {
+            return false;
+        }
+
         if ($this->createEntity('Group')->findByWhere("Name = '{$group_name}'"))
         {
             return false;

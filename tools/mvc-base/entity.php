@@ -403,7 +403,10 @@ SQL;
         while ($data = $result->fetch(PDB::FETCH_ASSOC))
         {
             $entity = $this->createEntity($entity_class);
-            $entities[] = $entity->loadFromArray($data);
+            if ($entity->loadFromArray($data))
+            {
+                $entities[] = $entity;
+            }
         }
         return $entities;
     }

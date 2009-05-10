@@ -338,6 +338,12 @@ WHERE
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
+
+
+		// Added by JeanYves to be able to manage in a dynamic way the changes in Param Table
+		$result = $localDao->query("SELECT * FROM  `params` limit 1");
+        $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
+
         if (isset($_SYSHCVOL['WhoIsOnlineDelayInMinutes'])) {
             $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'];
         } else {
@@ -396,9 +402,9 @@ WHERE
         $localDao =& $dao;
 
 
-				// Added by JeanYves to be able to manage in a dynamic way the changes in Param Table
-				$result = $localDao->query("SELECT * FROM  `params` limit 1");
-        $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
+//		// Added by JeanYves to be able to manage in a dynamic way the changes in Param Table
+//		$result = $localDao->query("SELECT * FROM  `params` limit 1");
+//        $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
 
         $ip_string="196.168.1.1";
         // prior to any updates, the entry in the table guestsonline 

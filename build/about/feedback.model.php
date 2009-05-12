@@ -16,7 +16,7 @@ class FeedbackModel extends RoxModelBase
     {
         $categories = $this->bulkLookup(
             "
-SELECT id, name
+SELECT *, id, name
 FROM feedbackcategories
             ",
             array('IdCategory', false)
@@ -25,31 +25,29 @@ FROM feedbackcategories
     }
 
 
-    public function sendFeedback($get) {
+    public function sendFeedback($vars)
+    {
+        $categories = $this->getFeedbackCategories();
 
-        require_once "bwlegacy.php";
-        var_dump($_POST);
-
-		$rCategory = LoadRow("SELECT * FROM feedbackcategories WHERE id=" . GetParam("IdCategory"));
+		$rCategory = $categories[$vars["IdCategory"]];
 		// feedbackcategory 3 = FeedbackAtSignup
-		$IdMember=0;
-		if (isset( $_SESSION['IdMember'] )) {
-		      $IdMember=$_SESSION['IdMember'];
-		}
-		$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . GetParam("FeedbackQuestion") . "'," . GetParam("IdCategory") . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
-		sql_query($str);
-		
-		$EmailSender=$_SYSHCVOL['FeedbackSenderMail'];
-		if (IsLoggedIn()) {
-		    $EmailSender=GetEmail($IdMember); // The mail address of the sender can be used for the reply
-		    $username = fUsername($_SESSION['IdMember']);
+		$IdMember = 0;
+		$EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
+		if (APP_User::isBWLoggedIn("NeedMore,Pending")) {
+		    $IdMember = $_SESSION['IdMember'];
+            $member = new MemberEntity();
+            $member = $member->getMember($_SESSION['IdMember']);
+		    $EmailSender = $member->email;
+		    $username = $member->username;
 		}
 		else {
-		    if (GetParam("Email")!="") {
-		        $EmailSender=GetParam("Email"); // todo check if this email is a good one !
+		    if (isset($vars["Email"]) && $vars["Email"]!="") {
+		        $EmailSender = $vars["Email"]; // todo check if this email is a good one !
 		    }
-		    $username="unknown user ";
+		    $username = "unknown user";
 		}
+		$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $vars["FeedbackQuestion"] . "'," . $vars["IdCategory"] . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
+		$this->dao->query($str);
 		
 		// Notify volunteers that a new feedback come in
 		// This also send the message to OTRS
@@ -58,19 +56,47 @@ FROM feedbackcategories
 		$text .= "Category " . $rCategory->Name . "\r\n";
 		$text .= "Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." (".$_SERVER["REMOTE_ADDR"].")\r\n";
 		// Feedback must not be slashes striped in case of \r\n so we can't use GetParam
-		if (empty($_POST["FeedbackQuestion"])) {
-			$text .= $_GET["FeedbackQuestion"] . "\r\n";
-		} else if (empty($_GET["FeedbackQuestion"])) {
-			$text .= $_POST["FeedbackQuestion"] . "\r\n";
+		if (empty($vars["FeedbackQuestion"])) {
+			$text .= $vars["FeedbackQuestion"] . "\r\n";
+		} else if (empty($vars["FeedbackQuestion"])) {
+			$text .= $vars["FeedbackQuestion"] . "\r\n";
 		}
-		if (GetParam("answerneededt")=="on") {
-		    $text .= "member requested for an answer (".$EmailSender.")\r\n";
+		if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
+		    $text .= "member requested an answer (".$EmailSender.")\r\n";
 		}
-		if (GetParam("urgent")=="on") {
+		if (isset($vars["urgent"]) && $vars["urgent"]=="on") {
 		    $text .= "member has ticked the urgent checkbox\r\n";
 		}
 
-		bw_mail($rCategory->EmailToNotify, $subj, $text, "", $EmailSender, 0, "nohtml", "", "");
+		$this->feedbackMail($rCategory->EmailToNotify, $subj, $text, $EmailSender);
+    }
+    
+    /**
+     * Sends a Feedback e-mail
+     *
+     * @param string $IdMember
+     */
+    public function feedbackMail($receiver, $message_subject, $message_text, $sender)
+    {
+        //Load the files we'll need
+        require_once "bw/lib/swift/Swift.php";
+        require_once "bw/lib/swift/Swift/Connection/SMTP.php";
+        require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        
+        //Start Swift
+        $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+                
+        //Create a message
+        $message =& new Swift_Message($message_subject);
+        $message->attach(new Swift_Message_Part($message_text));
+        
+        //Now check if Swift actually sends it
+        if ($swift->send($message, $receiver, $sender)) {
+            $status = true;
+        } else {
+            MOD_log::get()->write(" in feedback model $\swift->send: Failed to send a mail to [".$receiver."]", "feedback");
+            $status = false;
+        }
     }
     
 }

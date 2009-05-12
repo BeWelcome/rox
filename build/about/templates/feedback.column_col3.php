@@ -27,6 +27,7 @@ $words = new MOD_words();
 <?php echo $words->get("FeedBackDisclaimer") ?>
 
 <form action="about/feedback/submit" method="post">
+    <?=$callback_tag ?>
     <h4><label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label></h4>
     <p>
         <select id="IdCategory" name="IdCategory">

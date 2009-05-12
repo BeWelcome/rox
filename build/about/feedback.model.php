@@ -35,8 +35,8 @@ FROM feedbackcategories
 		$EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
 		if (APP_User::isBWLoggedIn("NeedMore,Pending")) {
 		    $IdMember = $_SESSION['IdMember'];
-            $member = new MemberEntity();
-            $member = $member->getMember($_SESSION['IdMember']);
+            $model = new MembersModel();
+            $member = $model->getMemberWithId($_SESSION['IdMember']);
 		    $EmailSender = $member->email;
 		    $username = $member->username;
 		}

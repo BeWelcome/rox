@@ -29,7 +29,8 @@
             
                 <h3><?= $words->get('GroupsList'); ?></h3>
                 <?php
-                foreach($this->featured_groups as $group_data) :
+                $featured_groups = $this->featured_groups;
+                foreach($featured_groups as $group_data) :
                     if ($group_data->Type == 'NeedInvitation' && !$this->model->getLoggedInMember()) continue;
                  ?>
                     <div class="groupbox clearfix">

@@ -9,10 +9,11 @@ class GroupSettingsPage extends GroupsBasePage
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
+        $words = $this->getWords();
         ?>
         <div id="teaser" class="clearfix">
         <div id="teaser_l1"> 
-        <h1><a href="groups">Groups</a> &raquo; <a href="">Admininstrate group</a></h1>
+        <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href=""><?= $words->get('GroupsAdministrateGroup');?></a></h1>
         </div>
         </div>
         <?php
@@ -61,7 +62,7 @@ class GroupSettingsPage extends GroupsBasePage
                             <legend><?= $words->get('GroupsAdminGroup'); ?></legend>
                             <input type='hidden' name='group_id' value='<?=$this->group->getPKValue(); ?>' />
                             <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsChangeFailed') . "</p>" : '' ); ?>
-                            <label for="description">Description:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
+                            <label for="description"><?= $words->get('Description');?>:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
                             <textarea  id="description" name="GroupDesc_" cols="36" rows="5" class="long" ><?=$GroupDesc_?></textarea><br /><br />
                             <h3><?= $words->get('GroupsPublicStatusHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
                             <ul>

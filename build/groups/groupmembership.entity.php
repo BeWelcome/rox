@@ -9,9 +9,11 @@
 class GroupMembership extends RoxEntityBase
 {
 
-    public function __construct($ini_data)
+    protected $_table_name = 'membersgroups';
+
+    public function __construct()
     {
-        parent::__construct($ini_data);
+        parent::__construct();
     }
 
 

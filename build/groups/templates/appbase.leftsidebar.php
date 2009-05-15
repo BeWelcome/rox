@@ -1,4 +1,4 @@
-<h3>Last visited groups</h3>
+<h3><?= $words->get('LastVisitedGroups');?></h3>
         <ul>
         <?php
         $last_visited = $this->getModel()->getLastVisited();
@@ -11,7 +11,7 @@
         }
         ?>
         </ul>
-        <h3>My groups</h3>
+        <h3><?= $words->get('MyGroups');?></h3>
             <ul>
         <?php
         $my_groups = $this->getModel()->getMyGroups();

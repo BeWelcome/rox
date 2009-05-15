@@ -3,15 +3,17 @@
 
 class Member extends RoxEntityBase
 {
+    protected $_table_name = 'members';
+
     private $trads = null;
     private $trads_by_tradid = null;
     public $address = null;
     private $profile_languages = null;
     private $edit_mode = false;
 
-    public function __construct($ini_data, $member_id = false)
+    public function __construct($member_id = false)
     {
-        parent::__construct($ini_data);
+        parent::__construct();
         if ($member_id)
         {
             $this->findById($member_id);
@@ -20,7 +22,7 @@ class Member extends RoxEntityBase
 
     public function init($values, $dao)
     {
-        parent::__construct($values, $dao);
+        parent::init($values, $dao);
     }
 
 

@@ -8,6 +8,7 @@
  */
 class Note extends RoxEntityBase
 {
+    protected $_table_name = 'notes';
 
     public function __construct($ini_data, $note_id = false)
     {

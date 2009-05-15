@@ -1,17 +1,15 @@
 <?php
 
-/**
- * represents a single group
- *
- */
 class Role extends RoxEntityBase
 {
-    public function __construct($ini_data, $group_id = false)
+    protected $_table_name = 'roles';
+
+    public function __construct($role_id = false)
     {
-        parent::__construct($ini_data);
-        if (intval($group_id))
+        parent::__construct();
+        if (intval($role_id))
         {
-            $this->findById($group_id);
+            $this->findById($role_id);
         }
     }
 

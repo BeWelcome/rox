@@ -8,11 +8,13 @@ class GroupMemberAdministrationPage extends GroupsBasePage
 {
     protected function teaserContent()
     {
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
         // &gt; or &raquo; ?
         ?>
         <div id="teaser" class="clearfix">
         <div id="teaser_l1"> 
-        <h1><a href="groups">Groups</a> &raquo; <a href="">Admininstrate groupmembers</a></h1>
+        <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href=""><?= $words->get('GroupsAdministrateMembers');?></a></h1>
         </div>
         </div>
         <?php
@@ -40,17 +42,17 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
         <div class="c50l">
             <div class="subcl">
-        <h4>Current Members</h4>
+        <h4><?= $words->get('GroupsCurrentMembers');?></h4>
         <table id='current_members'>
             <tr>
-              <th colspan="2">Username</th>
-              <th>Action</th>
+              <th colspan="2"><?= $words->get('Username');?></th>
+              <th><?= $words->get('Action');?></th>
             </tr>
         <?php foreach ($members as $member) : ?>
             <tr>
                 <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                 <td><a href="people/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
-                <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>Ban?</a> / <a class='kick' href='groups/{$this->group->getPKValue()}/kickmember/{$member->getPKValue()}'>Kick?</a>");?></td>
+                <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>{$words->get('GroupsBanMember')}</a> / <a class='kick' href='groups/{$this->group->getPKValue()}/kickmember/{$member->getPKValue()}'>{$words->get('GroupsKickMember')}</a>");?></td>
             </tr>
         <?php endforeach; ?>
         </table>
@@ -59,7 +61,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         var memberkick = $('current_members').getElementsBySelector('a.kick');
         memberban.each(function(elem){
             elem.observe('click', function(e){
-                if (!confirm('Are you sure you want to ban this member?'))
+                if (!confirm('<?= $words->get('GroupsConfirmMemberBan');?>'))
                 {
                     Event.stop(e);
                 }
@@ -67,7 +69,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         });
         memberkick.each(function(elem){
             elem.observe('click', function(e){
-                if (!confirm('Are you sure you want to kick this member?'))
+                if (!confirm('<?= $words->get('GroupsConfirmMemberKick');?>'))
                 {
                     Event.stop(e);
                 }
@@ -80,11 +82,11 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         <div class="c50r">
 <?php if ($this->group->Type != 'Public') :?>
             <div class="subcl">
-                <h4>Prospective Members</h4>
+                <h4><?= $words->get('GroupsProspectiveMembers');?></h4>
                 <table id='possible_members'>
                     <tr>
-                      <th colspan="2">Username</th>
-                      <th>Action</th>
+                      <th colspan="2"><?= $words->get('Username');?></th>
+                      <th><?= $words->get('Action');?></th>
                     </tr>
                 <?php foreach ($need_approval as $member) : ?>
                     <tr>
@@ -98,10 +100,10 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             </div> <!-- subcl -->
 <?php endif ;?>
             <div class='subcl'>
-                <h4>Invited Members</h4>
+                <h4><?= $words->get('GroupsInvitedMembers');?></h4>
                 <table id='invited_members'>
                     <tr>
-                      <th colspan="2">Username</th>
+                      <th colspan="2"><?= $words->get('Username');?></th>
                     </tr>
 <?php if ($invited) : ?>
     <?php foreach ($invited as $member) : ?>
@@ -134,8 +136,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             var a = document.createElement('a');
                             a.href = '';
                             a.id = 'invite_member_' + member_object[m];
-                            a.title = 'Click to send invite to ' + m;
-                            a.appendChild(document.createTextNode('Invite ' + m));
+                            a.title = '<?= $words->get('GroupsClickToSendInvite');?>' + m;
+                            a.appendChild(document.createTextNode('<?= $words->get('GroupsInvite');?>' + m));
                             $(a).observe('click',function(e){
                                 e = e || window.event;
                                 search_handler.add_invite(e);
@@ -147,7 +149,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                         }
                         if (counter == 0)
                         {
-                            search_div.appendChild(document.createTextNode('Could not find any members with a username like that'));
+                            search_div.appendChild(document.createTextNode('<?= $words->get('GroupsCouldNotFindMembers');?>'));
                         }
                     },
                     add_invite: function(e){
@@ -162,11 +164,11 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                                 }
                                 else
                                 {
-                                    alert('Could not invite member');
+                                    alert('<?= $words->get('GroupsCouldNotInvite');?>');
                                 }
                             },
                             onFailure: function(transport){
-                                alert('Failed to invite member, technical error');
+                                alert('<?= $words->get('GroupsInviteFailedTechError');?>');
                             }
                         });
                     },
@@ -174,7 +176,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                         var invited = it.firstChild.data.substr(7);
                         var tr = document.createElement('tr');
                         var td = document.createElement('td');
-                        td.appendChild(document.createTextNode(invited + ' has been invited'));
+                        td.appendChild(document.createTextNode(invited + '<?= $words->get('GroupsHasBeenInvited');?>'));
                         td.setAttribute('colspan', 2);
                         tr.appendChild(td);
                         $('invited_members').tBodies[0].appendChild(tr);
@@ -183,7 +185,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
 
                 };
                 $('search_username').observe('focus', function(e){
-                    if ($('search_username').value == 'Enter username')
+                    if ($('search_username').value == '<?= $words->get('GroupsEnterUsername');?>')
                     {
                         $('search_username').value = '';
                     }
@@ -197,7 +199,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             search_handler.display_result(result);
                         },
                         onFailure: function(transport){
-                            alert('Failed to find members, technical error');
+                            alert('<?= $words->get('GroupsInviteFailedTechError');?>');
                         }
                     });
                     Event.stop(e)

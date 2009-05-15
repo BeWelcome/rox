@@ -6,9 +6,11 @@
  */
 class Privilege extends RoxEntityBase
 {
-    public function __construct($ini_data, $privilege_id = false)
+    protected $_table_name = 'privileges';
+
+    public function __construct($privilege_id = false)
     {
-        parent::__construct($ini_data);
+        parent::__construct();
         if (intval($privilege_id))
         {
             $this->findById($privilege_id);

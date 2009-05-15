@@ -9,10 +9,11 @@ class GroupAdminPage extends GroupsBasePage
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
+        $words->getWords();
         ?>
         <div id="teaser" class="clearfix">
         <div id="teaser_l1"> 
-        <h1><a href="groups">Groups</a> &raquo; <a href="">Admininstrate group</a></h1>
+        <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href=""><?= $words->get('GroupsAdministrateGroup');?></a></h1>
         </div>
         </div>
         <?php

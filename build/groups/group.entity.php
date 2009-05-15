@@ -9,6 +9,9 @@
 class Group extends RoxEntityBase
 {
 
+    protected $_table_name = 'groups';
+
+    protected $_validations = array('Name', 'Type');
 
     /**
      * overrides the __get method of Component
@@ -28,9 +31,9 @@ class Group extends RoxEntityBase
         return $result;
     }
 
-    public function __construct($ini_data, $group_id = false)
+    public function __construct($group_id = false)
     {
-        parent::__construct($ini_data);
+        parent::__construct();
         if (intval($group_id))
         {
             $this->findById(intval($group_id));
@@ -194,11 +197,6 @@ class Group extends RoxEntityBase
         $group_name = $this->dao->escape($input['Group_']);
         $type = $this->dao->escape($input['Type']);
         $picture = ((!empty($input['Picture'])) ? $this->dao->escape($input['Picture']) : '');
-
-        if (strlen($group_name) > 40)
-        {
-            return false;
-        }
 
         if ($this->createEntity('Group')->findByWhere("Name = '{$group_name}'"))
         {

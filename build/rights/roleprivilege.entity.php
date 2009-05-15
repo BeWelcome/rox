@@ -1,14 +1,12 @@
 <?php
 
-/**
- * represents a single group
- *
- */
 class RolePrivilege extends RoxEntityBase
 {
-    public function __construct($ini_data)
+    protected $_table_name = 'roles_privileges';
+
+    public function __construct()
     {
-        parent::__construct($ini_data);
+        parent::__construct();
     }
 
     /**

@@ -35,7 +35,7 @@
                 <?php endif; ?>
                 <h3><?= $words->get('GroupOwner'); ?></h3>
                 <div class="row">
-                    <p><?= (($member =$this->group->getGroupOwner()) ? $member->Username : 'Group has no owner'); ?></p>
+                    <p><?= (($member =$this->group->getGroupOwner()) ? $member->Username : $words->get('GroupsNoOwner')); ?></p>
                 </div>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
@@ -47,8 +47,3 @@
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->
 </div> <!-- groups -->
-
-
-
-
-

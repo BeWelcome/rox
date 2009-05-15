@@ -31,10 +31,10 @@
         <fieldset>
             <legend><?= $words->get('GroupsNewHeading'); ?></legend>
             <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsCreationFailed') . "</p>" : '' ); ?>
-            <label for="name">Name:</label><?= ((!empty($problems['Group_'])) ? "<span class='error'>" . $words->get('GroupsCreationNameMissing') . "</span>" : '' ); ?><br />
+            <label for="name"><?= $words->get('Name');?>:</label><?= ((!empty($problems['Group_'])) ? "<span class='error'>" . $words->get('GroupsCreationNameMissing') . "</span>" : '' ); ?><br />
             <input type="text" id="name" name="Group_" class="long" value='<?=$Group_?>' />
             <br /><br />
-            <label for="description">Description:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
+            <label for="description"><?= $words->get('Description');?>:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
             <textarea  id="description" name="GroupDesc_" cols="60" rows="5" class="long" ><?=$GroupDesc_?></textarea><br /><br />
             <h3><?= $words->get('GroupsJoinHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
             <ul>

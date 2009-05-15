@@ -23,6 +23,13 @@ class RoxEntityBase extends RoxModelBase
      * @var string
      */
     protected $_table_name;
+
+    /**
+     * cache for list of columns
+     *
+     * @var array
+     */
+    protected $_columns_cache = array();
     
     /**
      * The primary key of the table, most likely id
@@ -33,30 +40,6 @@ class RoxEntityBase extends RoxModelBase
     protected $_primary_key;
 
     /**
-     * whether the table is using an auto incrementing primary key
-     *
-     * @var bool
-     */
-    protected $_auto_incrementing;
-
-
-    /**
-     * An array that details the database layout for the table
-     *
-     * @var array
-     */
-    protected $_fields_array;
-
-
-    /**
-     * validateSelf() stores the resulting valid keys => values here
-     * used by insert() and update() to construct a SQL query
-     *
-     * @var array
-     */
-    protected $_valid_fields;
-
-    /**
      * Determines whether a given entity has been loaded with data
      * Does not show whether or not the entity has manage to init correctly!
      *
@@ -64,22 +47,27 @@ class RoxEntityBase extends RoxModelBase
      */
     protected $_has_loaded = false;
 
-    protected $_validation_error = "";
+    /**
+     * contains validation errors after validation
+     * wiped on every validation
+     *
+     * @var array
+     */
+    protected $_validations = array();
+
+    /**
+     * contains validation errors after validation
+     * wiped on every validation
+     *
+     * @var array
+     */
+    protected $_validation_errors = array();
 
     private $_method_cache = array();
     
-    public function __construct($ini_data)
+    public function __construct()
     {
-        $this->_parse_ini_data($ini_data);
         parent::__construct();
-    }
-
-    protected function _parse_ini_data($ini_data)
-    {
-        $this->_table_name = $ini_data['table_name'];
-        $this->_primary_key = $ini_data['primary_key'];
-        $this->_auto_incrementing = $ini_data['auto_incrementing'];
-        $this->_fields_array = $ini_data['fields_array'];
     }
 
     /**
@@ -95,15 +83,151 @@ class RoxEntityBase extends RoxModelBase
         $this->_dao = $dao;
     }    
 
+    /** 
+     * returns an array of column names for the entity
+     *
+     * @access public
+     * @return array
+     */
+    public function getColumns()
+    {
+        if (empty($this->_columns_cache))
+        {
+            $this->_columns_cache = array_keys($this->getTableDescription());
+        }
+        return $this->_columns_cache;
+    }
 
-    /**
-     * returns the name of the primary key for the entity
+    /** 
+     * returns the table name for the entity
      *
      * @access public
      * @return string
      */
+    public function getTableName()
+    {
+        return $this->_table_name;
+    }
+
+    /** 
+     * returns an array describing the table of the entity
+     *
+     * @access public
+     * @return array
+     */
+    public function getTableDescription()
+    {
+        if (!($cached_version = $this->_entity_factory->getEntityTableDescription($this)))
+        {
+            $query = "DESCRIBE `{$this->getTableName()}`";
+            $this->dao->query($query);
+            if (!($result = $this->dao->query($query)))
+            {
+                throw new exception("Could not load information for {$this->getTableName()}");
+            }
+            $info = array();
+            while ($data = $result->fetch(PDB::FETCH_ASSOC))
+            {
+                $info[$data['Field']] = $this->parseDescribeResult($data);
+            }
+            if (empty($info))
+            {
+                throw new exception("Could not load information for {$this->getTableName()}");
+            }
+            $this->_entity_factory->storeTableDescription($info, $this);
+            $cached_version = $info;
+        }
+        return $cached_version;
+    }
+
+    /**
+     * parses an associative array result from a DESCRIBE TABLE call
+     * returns an array with more usable info
+     *
+     * @param array $data
+     * @access private
+     * @return array
+     */
+    private function parseDescribeResult($data)
+    {
+        $return = array();
+        $return['allow_null'] = ((strtolower($data['Null']) == 'no') ? false : true);
+        $return['default'] = ((!empty($data['Default']) && strtolower($data['Default']) != 'null') ? $data['Default'] : null);
+        $return['auto_increment'] = ((!empty($data['Extra']) && stristr($data['Extra'], 'auto_increment') !== false) ? true : false);
+        list($return['type'], $return['values'], $return['min'], $return['max'], $return['unsigned']) = $this->getDataType($data['Type']);
+        $return['keytype'] = '';
+        if (!empty($data['Key']))
+        {
+            switch(strtolower($data['Key']))
+            {
+                case "pri":
+                    $return['keytype'] = "primary";
+                    break;
+
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * returns the type of data and possible values if any
+     * values are only returned for enum and set
+     *
+     * @param string $type
+     * @access private
+     * @return array
+     */
+    private function getDataType($type)
+    {
+        if (false === ($pos = strpos($type, '(')))
+        {
+            $datatype = $type;
+            $values = $min = $max = null;
+        }
+        else
+        {
+            $datatype = substr($type, 0, $pos);
+            $value_string = substr($type, ($pos+1), -1);
+            if (in_array(strtolower($datatype), array('enum', 'set')))
+            {
+                $values = explode(',', str_replace("'",'',$value_string));
+                $min = $max = null;
+            }
+            else
+            {
+                $values = null;
+                $min = 0;
+                $max = $value_string;
+            }
+        }
+        $unsigned = ((stristr($type, 'unsigned')) ? true : false);
+        return array($datatype, $values, $min, $max, $unsigned);
+    }
+
+    /**
+     * returns the name of the primary key for the entity
+     * return val is string if primary key is single field
+     * array if primary key spans fields, and null
+     * for no primary key
+     *
+     * @access public
+     * @return string|array|null
+     */
     public function getPrimaryKey()
     {
+        if (empty($this->_primary_key))
+        {
+            $info = $this->getTableDescription();
+            $return = array();
+            foreach ($info as $key => $array)
+            {
+                if ($array['keytype'] == 'primary')
+                {
+                    $return[] = $key;
+                }
+            }
+            $this->_primary_key = ((count($return)) ? ((count($return) == 1) ? $return[0] : $return) : null);
+        }
         return $this->_primary_key;
     }
     
@@ -173,12 +297,12 @@ class RoxEntityBase extends RoxModelBase
      */
     public function findById($id)
     {
-        if (!($id = intval($id)) || empty($this->_table_name) || empty($this->_primary_key))
+        if (!($id = intval($id)) || !$this->getTableName() || !$this->getPrimaryKey())
         {
             return false;
         }
 
-        if (is_array($this->_primary_key))
+        if (is_array($this->getPrimaryKey()))
         {
             // function only works for single_column pk's atm
             return false;
@@ -186,8 +310,8 @@ class RoxEntityBase extends RoxModelBase
 
         $query = <<<SQL
 SELECT *
-FROM {$this->_table_name}
-WHERE {$this->_primary_key} = '{$id}'
+FROM `{$this->getTableName()}`
+WHERE `{$this->getPrimaryKey()}` = '{$id}'
 SQL;
         if (!($result = $this->dao->query($query)) || !($data = $result->fetch(PDB::FETCH_ASSOC)))
         {
@@ -196,7 +320,7 @@ SQL;
         }
         else
         {
-            $this->loadData($data);
+            $this->loadEntity($data);
             return $this;
         }
     }    
@@ -210,13 +334,13 @@ SQL;
      */
     public function findByWhere($where)
     {
-        if (empty($where) || empty($this->_table_name))
+        if (empty($where) || !$this->getTableName())
         {
             return false;
         }
         $query = <<<SQL
 SELECT *
-FROM {$this->_table_name}
+FROM `{$this->getTableName()}`
 WHERE {$where}
 SQL;
         if (!empty($this->sql_order))
@@ -230,7 +354,7 @@ SQL;
         }
         else
         {
-            $this->loadData($data);
+            $this->loadEntity($data);
             return $this;
         }
     }
@@ -247,13 +371,13 @@ SQL;
      */
     public function findByWhereMany($where, $offset = 0, $limit = 0)
     {
-        if (empty($where) || empty($this->_table_name))
+        if (empty($where) || !$this->getTableName())
         {
             return false;
         }
         $query = <<<SQL
 SELECT *
-FROM {$this->_table_name}
+FROM `{$this->getTableName()}`
 WHERE {$where}
 SQL;
         if (!empty($this->sql_order))
@@ -276,7 +400,7 @@ SQL;
         }
         else
         {
-            return $this->loadObjects($result);
+            return $this->loadEntities($result);
         }
     }
 
@@ -291,13 +415,13 @@ SQL;
      */
     public function findAll($offset = 0, $limit = 0)
     {
-        if (empty($this->_table_name))
+        if (!$this->getTableName())
         {
             return false;
         }
         $query = <<<SQL
 SELECT *
-FROM {$this->_table_name}
+FROM `{$this->getTableName()}`
 SQL;
         if (!empty($this->sql_order))
         {
@@ -319,7 +443,7 @@ SQL;
         }
         else
         {
-            return $this->loadObjects($result);
+            return $this->loadEntities($result);
         }
     }    
 
@@ -333,16 +457,16 @@ SQL;
      */
     public function countAll()
     {
-        if (!isset($this->_table_name))
+        if (!$this->getTableName())
         {
             return 0; // if there is no table there are no members. And zero doubles as false = fail
         }
 
-        $field = ((is_array($this->_primary_key)) ? '*' : $field = $this->_primary_key);
+        $field = ((is_array($this->getPrimaryKey())) ? '*' : $field = "`{$this->getPrimaryKey()}`");
 
         $query = <<<SQL
 SELECT COUNT({$field}) AS count
-FROM {$this->_table_name}
+FROM `{$this->getTableName()}`
 SQL;
         if (!($result = $this->dao->query($query)))
         {
@@ -363,16 +487,16 @@ SQL;
      */
     public function countWhere($where)
     {
-        if (!($table = $this->_table_name))
+        if (!($table = $this->getTableName()))
         {
             return 0; // if there is no table or primary key, there are no members. And zero doubles as false = fail
         }
 
-        $field = ((is_array($this->_primary_key)) ? '*' : $field = $this->_primary_key);
+        $field = ((is_array($this->getPrimaryKey())) ? '*' : $field = "`{$this->getPrimaryKey()}`");
 
         $query = <<<SQL
 SELECT COUNT({$field}) AS count
-FROM {$this->_table_name}
+FROM `{$this->getTableName()}`
 WHERE {$where}
 SQL;
         if (!($result = $this->dao->query($query)))
@@ -396,7 +520,7 @@ SQL;
      * @access protected
      * @return array
      */
-    protected function loadObjects($result)
+    protected function loadEntities($result)
     {
         $entities = array();
         $entity_class = get_class($this);
@@ -421,8 +545,7 @@ SQL;
      */
     public function loadFromArray($data)
     {
-        // TODO: validate array first
-        if ($this->loadData($data))
+        if ($this->loadEntity($data))
         {
             return $this;
         }
@@ -435,27 +558,45 @@ SQL;
     /**
      * Fills up an object with data
      *
-     * @param array $array - associative array used to fill object with data
+     * @param array $data - associative array used to fill object with data
      * @access protected
+     * @return bool
      */
-    protected function loadData($array)
+    protected function loadEntity($data)
     {
-        if (is_array($array) && $this->validateArray($array))
-        {
-            foreach ($array as $key => $value)
-            {
-                $this->$key = $value;
-            }
-            $this->_has_loaded = true;
-            return true;
-        }
-        else
+        if (!is_array($data))
         {
             $this->_has_loaded = false;
             return false;
         }
+        foreach ($this->getColumns() as $field)
+        {
+            if (isset($data[$field]))
+            {
+                $this->$field = $data[$field];
+            }
+        }
+        $this->_has_loaded = (($this->isPKSet()) ? true : false);
+        if (!$this->_has_loaded)
+        {
+            $this->wipeEntity();
+        }
+        return $this->_has_loaded;
     }
 
+    /**
+     * wipes an entity clean for data and resets the has_loaded flag
+     *
+     * @access public
+     */
+    public function wipeEntity()
+    {
+        foreach ($this->getColumns() as $field)
+        {
+            $this->$field = null;
+        }
+        $this->_has_loaded = false;
+    }
 
 /****************** INSERT, UPDATE, DELETE SQL functions ******************/
 
@@ -468,44 +609,37 @@ SQL;
      */
     public function insert()
     {
-        if (!empty($this->_has_loaded) || empty($this->_primary_key) || empty($this->_fields_array))
+        if (!empty($this->_has_loaded) || !$this->getPrimaryKey() || !$this->getColumns())
         {
             return false;
         }
         
-        // if auto increment is set, the primary key should be empty - if not, something's fishy
-        if (!empty($this->_auto_incrementing) && $this->isPKSet())
+        $fields = $values = array();
+        $description = $this->getTableDescription();
+        foreach ($this->getTableDescription() as $field => $info)
         {
-            return false;
-        }
-        // conversely, if auto increment is not set, the primary key had better be set
-        elseif(empty($this->_auto_incrementing) && !$this->isPKSet())
-        {
-            return false;
+            if ($info['keytype'] == 'primary' && $info['auto_increment'] == true && !$this->$field)
+            {
+                continue;
+            }
+            if (!$this->validateField($field, $description))
+            {
+                return false;
+            }
+            $fields[] = "`{$field}`";
+            $values[] = "'" . $this->dao->escape($this->$field). "'";
         }
 
-        if (!$this->validateSelf() || !is_array($this->_valid_fields) || count($this->_valid_fields) == 0)
-        {
-            return false;
-        }
-        $column_string = '`' . implode('`,`', array_keys($this->_valid_fields)) . '`';
-        $fields = array();
-        foreach ($this->_valid_fields as $field)
-        {
-            $fields[] = $this->dao->escape($field);
-        }
-        $value_string = "'" . implode("','", array_values($fields)) . "'";
-
-        $query = "INSERT INTO {$this->_table_name} ({$column_string}) VALUES ({$value_string})";
+        $query = "INSERT INTO {$this->getTableName()} (" . implode(',',$fields) . ") VALUES (" . implode(',',$values) . ")";
         $result = $this->dao->query($query);
         if (!$result)
         {
             return false;
         }
 
-        if (!empty($this->_auto_incrementing) && !is_array($this->_primary_key))
+        if (!is_array($this->getPrimaryKey()))
         {
-            $pk = $this->_primary_key;
+            $pk = $this->getPrimaryKey();
             $this->$pk = $result->insertId();
         }
 
@@ -523,7 +657,7 @@ SQL;
      */
     public function update()
     {
-        if (empty($this->_has_loaded) || empty($this->_primary_key) || empty($this->_fields_array))
+        if (empty($this->_has_loaded) || !$this->getPrimaryKey() || !$this->getColumns())
         {
             return false;
         }
@@ -547,26 +681,26 @@ SQL;
         $set_string = "";
         foreach ($this->_valid_fields as $key => $value)
         {
-            if (is_array($this->_primary_key))
+            if (is_array($this->getPrimaryKey()))
             {
-                if (in_array($key, $this->_primary_key))
+                if (in_array($key, $this->getPrimaryKey()))
                 {
                     continue;
                 }
             }
             else
             {
-                if ($key == $this->_primary_key)
+                if ($key == $this->getPrimaryKey())
                 {
                     continue;
                 }
             }
             $value = $this->dao->escape($value);
             $set_string .= (($set_string != '') ? ', ' : '');
-            $set_string .= "{$key} = '{$value}'";
+            $set_string .= "{$key} = '" . $this->dao->escape($value) . "'";
         }
 
-        $query = "UPDATE {$this->_table_name} SET {$set_string} WHERE {$where}";
+        $query = "UPDATE `{$this->getTableName()}` SET {$set_string} WHERE {$where}";
         return $this->dao->exec($query);
 
     }
@@ -592,7 +726,7 @@ SQL;
 
         $query = <<<SQL
 DELETE FROM
-    {$this->_table_name}
+    `{$this->getTableName()}`
 WHERE
     {$where}
 SQL;
@@ -600,10 +734,7 @@ SQL;
         $result = $this->dao->exec($query);
 
         // make sure entity can't be used after this
-        foreach ($this->_fields_array as $field => $val)
-        {
-            $this->$field = null;
-        }
+        $this->wipeEntity();
 
         // TODO: check result before returning it
         return (bool) $result;
@@ -611,41 +742,6 @@ SQL;
 
 
 /****************** Entity validation functions ******************/
-
-    /**
-     * Checks if an array is useable for loading an entity from
-     * basically compares it with the entities $_fields_array
-     *
-     * @param array $array - the array to check. Only associative (or both) arrays work
-     * @return bool
-     * @access public
-     */
-    public function validateArray($array)
-    {
-        // if $_fields_array isn't valid, it's an auto-fail
-        if (!isset($this->_fields_array) || !is_array($this->_fields_array))
-        {
-            return false;
-        }
-
-        $valid_array = array();
-        foreach ($array as $key => $value)
-        {
-            if (isset($this->_fields_array[$key]) && $this->validateField($key, $value))
-            {
-                $valid_array[$key] = $value;
-            }
-
-        }
-        if (count($valid_array) != count($this->_fields_array))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
 
     /**
      * Checks if the vars set in an entity are valid
@@ -656,212 +752,214 @@ SQL;
      * @return bool
      * @access public
      */
-    public function validateSelf($strict = false)
+    public function validateSelf()
     {
-        // if $_fields_array isn't valid, it's an auto-fail
-        if (!isset($this->_fields_array) || !is_array($this->_fields_array))
+        $this->_validation_errors = array();
+        $info = $this->getTableDescription();
+        foreach ($this->getColumns() as $field)
         {
-            return false;
-        }
-        
-        $this->_valid_fields = array();
-        foreach ($this->_fields_array as $key => $value)
-        {
-            if (false !== ($val = $this->$key) && $this->validateField($key, $this->$key))
+            if (!$this->validateField($field, $info))
             {
-                $this->_valid_fields[$key] = $this->$key;
+                return false;
             }
         }
-        if (($strict && count($this->_valid_fields) != count($this->_fields_array)) || count($this->_valid_fields) == 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return true;
     }
 
     /**
      * Checks a supplied key and value against the $_fields_array to check for validity
      *
      * @param string $key - the field to check
-     * @param mixed $value - the value to check
+     * @param array $info - table description
      * @access protected
      * @return bool
      */
-    protected function validateField($key, $value)
+    protected function validateField($key, $info)
     {
-        if (!strlen($key) || !isset($this->_fields_array[$key]))
+        if (!strlen($key) || !in_array($key, array_keys($info)))
         {
-            $this->_validation_error = "Field name to check not set in entity";
+            $this->_validation_errors[] = "Field name ({$key}) to check is not a column in entity table";
             return false;
         }
-
-        $lookupkey = $this->_fields_array[$key];
-
-        // if no type is set, accept any type
-        if (empty($lookupkey['type']))
+        $datatype = $info[$key]['type'];
+        $value = $this->$key;
+        if (in_array($key, $this->_validations))
         {
-            return true;
+            // perform strict validation on field
+            if (($value == null && !$info[$key]['allow_null']) || !$this->checkDataType($value, $datatype))
+            {
+                $type = gettype($value);
+                $this->_validation_errors[] = "Failed check for {$key} (type: {$datatype}) - value: {$value} / type: {$type}";
+                return false;
+            }
+            if (($value == null && $info[$key]['allow_null']) || $this->performStrictValueCheck($value, $info[$key]))
+            {
+                return true;
+            }
+            else
+            {
+                $type = gettype($value);
+                $this->_validation_errors[] = "Failed check for {$key} (type: {$datatype}) - value: {$value} / type: {$type}";
+                return false;
+            }
         }
-
-        if (isset($lookupkey['allow_null']) && $lookupkey['allow_null'] == true && (is_null($value) || $value == ''))
+        else
         {
-            return true;
+            // perform relaxed validation on field
+            if ($value == null || $this->checkDataType($value, $datatype))
+            {
+                return true;
+            }
+            else
+            {
+                $type = gettype($value);
+                $this->_validation_errors[] = "Failed check for {$key} (type: {$datatype}) - value: {$value} / type: {$type}";
+                return false;
+            }
         }
+    }
 
-        // TODO: implement checks for enums and dates
-        switch ($lookupkey['type'])
+    private function performStrictValueCheck($value, $field_info)
+    {
+        switch (strtolower($field_info['type']))
         {
-            case "string":
-                if (!is_string($value) ||
-                   (isset($lookupkey['min']) && strlen($value) < $lookupkey['min']) ||
-                   (isset($lookupkey['max']) && strlen($value) > $lookupkey['max']))
-                {
-                    $this->_validation_error = "Failed string value check for {$key}, value = {$value}";
-                    return false;
-                }
-                break;
-            case "number":
-                if (!is_numeric($value) ||
-                   (isset($lookupkey['min']) && $value < $lookupkey['min']) ||
-                   (isset($lookupkey['max']) && $value > $lookupkey['max']))
-                {
-                    $this->_validation_error = "Failed number value check for {$key}, value = {$value}";
-                    return false;
-                }
-                break;
-            case "bool":
-                if (!is_bool($value))
-                {
-                    $this->_validation_error = "Failed bool value check for {$key}, value = {$value}";
-                    return false;
-                }
-                break;
-            case "double":
-                if (!is_double($value) ||
-                   (isset($lookupkey['min']) && $value < $lookupkey['min']) ||
-                   (isset($lookupkey['max']) && $value > $lookupkey['max']))
-                {
-                    $this->_validation_error = "Failed double value check for {$key}, value = {$value}";
-                    return false;
-                }
+            case "tinyint":
+            case "smallint":
+            case "mediumint":
+            case "int":
+            case "bigint":
+                return (((!is_int($value) && intval($value) != $value) || ($field_info['unsigned'] && $value < 0) || (strlen($value) > 0 && intval($value) === 0)) ? false : true);
                 break;
             case "float":
-                if (!is_float($value) ||
-                   (isset($lookupkey['min']) && $value < $lookupkey['min']) ||
-                   (isset($lookupkey['max']) && $value > $lookupkey['max']))
-                {
-                    $this->_validation_error = "Failed float value check for {$key}, value = {$value}";
-                    return false;
-                }
+            case "double":
+            case "decimal":
+                return (((!is_float($value) && floatval($value) != $value) || ($field_info['unsigned'] && $value < 0) || (strlen($value) > 0 && intval($value) === 0)) ? false : true);
                 break;
-            case "int":
-                if (!(intval($value) == $value || is_int($value)) ||
-                   (isset($lookupkey['min']) && $value < $lookupkey['min']) ||
-                   (isset($lookupkey['max']) && $value > $lookupkey['max']))
-                {
-                    $this->_validation_error = "Failed int value check for {$key}, value = {$value}";
-                    return false;
-                }
-                break;
-            case "date":
-                // a hack, but might be needed - support setting time inside mysql
-                if ('now()' == strtolower($value))
+            case "char":
+            case "varchar":
+            case "binary":
+            case "varbinary":
+                if (empty($field_info['min']) || empty($field_info['max']))
                 {
                     return true;
                 }
-                // TODO: consider checking the time part too
-                if (preg_match('/[0-9]{4}[-.\/][0-9]{2}[-.\/][0-9]{2}/', $value, $matches))
+                elseif (strlen($value) >= $field_info['min'] && strlen($value) <= $field_info['max'])
                 {
-                    $year = substr($matches[0], 0, 4);
-                    $month = substr($matches[0], 5, 2);
-                    $day = substr($matches[0], 8, 2);
-                }
-                elseif (preg_match('/[0-9]{2}[-.\/][0-9]{2}[-.\/][0-9]{4}/', $value, $matches))
-                {
-                    $day = substr($matches[0], 0, 2);
-                    $month = substr($matches[0], 3, 2);
-                    $year = substr($matches[0], 6, 4);
+                    return true;
                 }
                 else
                 {
-                    $this->_validation_error = "Failed date value check for {$key}, value = {$value}, wrong date format";
                     return false;
                 }
-
-                // another hack: allow for 'blank' values
-                if ($year == '0000' && $month == '00' && $day == '00')
-                {
-                    return true;
-                }
-
-
-                if (!checkdate($month, $day, $year))
-                {
-                    $this->_validation_error = "Failed date value check for {$key}, value = {$value}";
-                    return false;
-                }
+                break;
+            case "tinyblob":
+            case "tinytext":
+                return ((strlen($value) <= 255) ? true : false);
+                break;
+            case "longblob":
+            case "longtext":
+                return ((strlen($value) <= 4294967295) ? true : false);
+                break;
+            case "mediumtext":
+            case "mediumblob":
+                return ((strlen($value) <= 16777215) ? true : false);
+                break;
+            case "text":
+            case "blob":
+                return ((strlen($value) <= 65535) ? true : false);
                 break;
             case "enum":
-                if (!isset($lookupkey['values']) || !is_array($lookupkey['values']) || !in_array($value, $lookupkey['values']))
-                {
-                    $this->_validation_error = "Failed enum value check for {$key}, value = {$value}";
-                    return false;
-                }
-                break;
             case "set":
-                if (!isset($lookupkey['values']) || !is_array($lookupkey['values']))
-                {
-                    $this->_validation_error = "Failed set value check for {$key}, value = {$value}";
-                    return false;
-                }
-                if ($value == "")
+                return ((in_array($value, $field_info['values'])) ? true : false);
+                break;
+            case "date":
+            case "datetime":
+            case "time":
+            case "timestamp":
+            case "year":
+                if (preg_match('/(now\(\)|interval|day|month|year)/i', $value) || strtotime($value) > 0)
                 {
                     return true;
-                }
-                $vals = explode(',', $value);
-                foreach ($vals as $val)
-                {
-                    if (!in_array($val, $lookupkey['values']))
-                    {
-                        $this->_validation_error = "Failed set value check for {$key}, value = {$value}";
-                        return false;
-                    }
                 }
                 break;
             default:
-                $this->_validation_error = "Type not defined for {$key}, value = {$value}";
                 return false;
         }
-        return true;
     }
+
+    private function checkDataType($value, $datatype)
+    {
+        switch (strtolower($datatype))
+        {
+            case "tinyint":
+            case "smallint":
+            case "mediumint":
+            case "int":
+            case "bigint":
+                return ((is_int($value) || intval($value) == $value) ? true : false);
+                break;
+            case "float":
+            case "double":
+            case "decimal":
+                return ((is_float($value) || floatval($value) == $value) ? true : false);
+                break;
+            case "char":
+            case "varchar":
+            case "text":
+            case "tinytext":
+            case "mediumtext":
+            case "longtext":
+            case "binary":
+            case "varbinary":
+            case "blob":
+            case "tinyblob":
+            case "mediumblob":
+            case "longblob":
+            case "enum":
+            case "set":
+            case "date":
+            case "datetime":
+            case "time":
+            case "timestamp":
+            case "year":
+                return ((is_string($value) || (string)$value == $value) ? true : false);
+                break;
+            default:
+                return false;
+        }
+    }
+
+    public function getValidationErrors()
+    {
+        return $this->_validation_errors;
+    }
+
+/**************** other stuff ***********************/
 
     /**
      * returns a string to serve as a where clause, uniquely specifying a row
      *
-     * @return mixed string or false on fail
+     * @return string|false
      * @access protected
      */
     protected function preparePKWhereString()
     {
-        if (empty($this->_primary_key))
+        if (!$this->getPrimaryKey())
         {
             return false;
         }
-        if (is_string($this->_primary_key))
+        if (is_string($this->getPrimaryKey()))
         {
-            $pk = $this->_primary_key;
-            return "{$this->_primary_key} = {$this->$pk}";
+            $pk = $this->getPrimaryKey();
+            return "`{$pk}` = '{$this->dao->escape($this->$pk)}'";
         }
-        elseif (is_array($this->_primary_key))
+        elseif (is_array($this->getPrimaryKey()))
         {
             $string = '';
-            foreach ($this->_primary_key as $key)
+            foreach ($this->getPrimaryKey() as $key)
             {
                 $string .= (($string) ? ' AND ' : '');
-                $string .= "{$key} = {$this->$key}";
+                $string .= "`{$key}` = '{$this->dao->escape($this->$key)}'";
             }
             return $string;
         }
@@ -879,7 +977,7 @@ SQL;
      */
     public function isPKSet()
     {
-        $pk = $this->_primary_key;
+        $pk = $this->getPrimaryKey();
         if (is_array($pk))
         {
             foreach ($pk as $field)

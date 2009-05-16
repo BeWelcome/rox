@@ -10,7 +10,7 @@
  */
 
 /* Layout independent adjustments | Layout-unabhängige Anpassungen  */
-@import url(../../../yaml/core/iehacks.css);
+@import url(../../../yaml/core/slim_iehacks.css);
 
 /* Layout-dependent adjustments | Layout-abhängige Anpassungen */
 @media screen, projection

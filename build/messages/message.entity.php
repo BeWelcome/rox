@@ -7,6 +7,7 @@
 class Message extends RoxEntityBase
 {
 
+    protected $_table_name = 'messages';
 
     /**
      * overrides the __get method of Component
@@ -33,9 +34,9 @@ class Message extends RoxEntityBase
      * @param int $message_id
      * @access public
      */
-    public function __construct($ini_data, $message_id = false)
+    public function __construct($message_id = false)
     {
-        parent::__construct($ini_data);
+        parent::__construct();
         if (intval($message_id))
         {
             $this->findById(intval($message_id));

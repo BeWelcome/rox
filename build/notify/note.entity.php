@@ -10,9 +10,9 @@ class Note extends RoxEntityBase
 {
     protected $_table_name = 'notes';
 
-    public function __construct($ini_data, $note_id = false)
+    public function __construct($note_id = false)
     {
-        parent::__construct($ini_data);
+        parent::__construct();
         if (intval($note_id))
         {
             $return = $this->findById(intval($note_id));

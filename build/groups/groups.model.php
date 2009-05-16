@@ -574,6 +574,14 @@ class GroupsModel extends  RoxModelBase
 
         if (($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '" . $group->getPKValue() . "' AND IdMember = '" . $member->getPKValue() . "'")) && $membership->Status == 'WantToBeIn')
         {
+            $note = $this->createEntity('Note');
+            $note->IdMember = $member->getPKValue();
+            $note->IdRelMember = $group->getGroupOwner()->getPKValue();
+            $note->Type = 'message';
+            $note->Link = "/groups/{$group->getPKValue()}";
+            $note->WordCode = '';
+            $note->FreeText = $this->getWords()->get('GroupsAcceptedIntoGroup', $group->Name);
+            $note->insert();
             return $membership->updateStatus('In');
         }
         return false;
@@ -603,6 +611,15 @@ class GroupsModel extends  RoxModelBase
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();
+
+            $note = $this->createEntity('Note');
+            $note->IdMember = $member->getPKValue();
+            $note->IdRelMember = $from->getPKValue();
+            $note->Type = 'message';
+            $note->Link = "/groups/{$group->getPKValue()}";
+            $note->WordCode = '';
+            $note->FreeText = $this->getWords()->get('GroupsInvitedNote', $groups->Name);
+            $note->insert();
         }
     }
 

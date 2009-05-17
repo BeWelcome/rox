@@ -70,7 +70,7 @@ class Member extends RoxEntityBase
           " AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
         $qry = mysql_query($str);
         while ($rr = mysql_fetch_object($qry)) {
-            if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
+            //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
             array_push($TLanguages, $rr);
         }
         return $TLanguages;
@@ -94,7 +94,7 @@ ORDER BY languages.id asc
             ";
         $s = $this->dao->query($str);
         while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
-            if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
+            //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
             array_push($AllLanguages, $rr);
         }
         return $AllLanguages;

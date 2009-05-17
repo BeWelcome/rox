@@ -6,7 +6,7 @@ class GroupForumPage extends GroupsBasePage
     {
         $words = $this->getWords();
         
-        if (!$this->isGroupMember() && $this->group->Type != 'Public')
+        if (!$this->isGroupMember() && $this->group->Type == 'NeedInvitation')
         {
             echo $words->get('GroupsNotPublic');
         }

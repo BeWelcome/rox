@@ -1,5 +1,5 @@
 <?php
-    if (!$this->isGroupMember() && $this->group->Type != 'Public')
+    if (!$this->isGroupMember() && $this->group->Type == 'NeedInvitation')
     {
         echo "not public";
     }

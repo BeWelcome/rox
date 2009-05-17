@@ -139,7 +139,7 @@ FROM params
             // check if this is a new record!
             if ($this->howManyMembersOnline() > $row->recordonline) {
                 // more members than ever before are online!!
-                MOD_log::write(
+                MOD_log::get()->write(
                    'New record established, '.$_SESSION['WhoIsOnlineCount'].' members online!',
                    'Record'
                 );

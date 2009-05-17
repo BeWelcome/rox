@@ -92,7 +92,7 @@ class RoxFrontRouter
         $request_router = new RequestRouter();
         
         $request = $args->request;
-        $classname = $request_router->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
+        list($classname, $method, $vars) = $request_router->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
         $this->runControllerAjaxMethod($classname, $keyword, $args);
     }
     
@@ -178,9 +178,9 @@ class RoxFrontRouter
             // in POST form submits with callback, that caused the redirect
             $this->memory_from_redirect = $session_memory->redirection_memory;
             
-            $classname = $request_router->controllerClassnameForString($keyword);
+            list($classname, $method, $vars) = $request_router->findRoute($request);
             // run the $controller->index() method, and render the page
-            $this->runControllerIndexMethod($classname, $args);
+            $this->runControllerMethod($classname, $method, $request, $args, $request_router, $vars);
             
             // forget the redirection memory,
             // so a reload will show an unmodified page
@@ -283,19 +283,24 @@ A TERRIBLE EXCEPTION
     }
     
     
-    protected function runControllerIndexMethod($classname, $args)
+    protected function runControllerMethod($classname, $method, $request, $args, $router, $route_vars)
     {
         // set the default page title
         // this should happen before the applications can overwrite it.
         // TODO: maybe there's a better place for this.
         PVars::getObj('page')->title='BeWelcome';
         
-        if (method_exists($classname, 'index')) {
+        if (method_exists($classname, $method)) {
             $controller = new $classname();
-            $page = $controller->index($args);
+            $controller->route_vars = $route_vars;
+            $controller->request = $request;
+            $controller->args = $args;
+            $controller->router = $router;
+            $page = call_user_func(array($controller, $method),$args);
             if (is_a($page, 'AbstractBasePage')) {
                 // used for a html comment
                 $page->controller_classname = $classname;
+                $page->router = $router;
             }
         } else {
             $page = false;

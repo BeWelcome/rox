@@ -17,6 +17,32 @@ class GroupsController extends RoxControllerBase
         unset($this->_model);
     }
 	
+    public function showGroup()
+    {
+        if (!($group_id = $this->route_vars['group_id']))
+        {
+            $this->_redirect('groups');
+        }
+        // by default, the $request[1] is the group id + name
+        if (!$group = $this->_model->findGroup($group_id))
+        {
+            // group does not exist. redirect to groups overview page or search
+            $this->_redirect('groups');
+        }
+        elseif ($group->Type == 'NeedInvitation' && !$this->_model->getLoggedInMember())
+        {
+            $this->_redirect('groups');
+        }
+        else
+        {
+            $this->_model->setGroupVisit($group_id);
+            $page = $this->_getGroupPage($group, $this->request);
+        }
+        $page->member = $this->_model->getLoggedInMember();
+        $page->model = $this->_model;
+        return $page;
+    }
+
     public function index()
     {
         $request = PRequest::get()->request;
@@ -30,15 +56,10 @@ class GroupsController extends RoxControllerBase
             return $page;
         }
         
-        if (is_numeric($group_id = array_shift(explode('-', $request[1]))))
+        if (is_numeric($group_id = array_shift(explode('-', $request[1]))) || ($group->Type == 'NeedInvitation' && !$this->_model->getLoggedInMember()))
         {
             // by default, the $request[1] is the group id + name
-            if (!$group = $this->_model->findGroup($group_id))
-            {
-                // group does not exist. redirect to groups overview page or search
-                $this->_redirect('groups');
-            }
-            elseif ($group->Type == 'NeedInvitation' && !$this->_model->getLoggedInMember())
+            if (!($group = $this->_model->findGroup($group_id)) )
             {
                 $this->_redirect('groups');
             }

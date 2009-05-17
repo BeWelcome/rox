@@ -30,6 +30,8 @@ FROM feedbackcategories
         $categories = $this->getFeedbackCategories();
 
 		$rCategory = $categories[$vars["IdCategory"]];
+        $receiver = explode(',', $rCategory->EmailToNotify);
+        
 		// feedbackcategory 3 = FeedbackAtSignup
 		$IdMember = 0;
 		$EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
@@ -46,7 +48,7 @@ FROM feedbackcategories
 		    }
 		    $username = "unknown user";
 		}
-		$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $vars["FeedbackQuestion"] . "'," . $vars["IdCategory"] . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
+		$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $this->dao->escape($vars["FeedbackQuestion"]) . "'," . $vars["IdCategory"] . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
 		$this->dao->query($str);
 		
 		// Notify volunteers that a new feedback come in
@@ -68,7 +70,7 @@ FROM feedbackcategories
 		    $text .= "member has ticked the urgent checkbox\r\n";
 		}
 
-		$this->feedbackMail($rCategory->EmailToNotify, $subj, $text, $EmailSender);
+		$this->feedbackMail($receiver, $subj, $text, $EmailSender);
     }
     
     /**

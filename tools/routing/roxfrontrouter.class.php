@@ -293,8 +293,8 @@ A TERRIBLE EXCEPTION
         if (method_exists($classname, $method)) {
             $controller = new $classname();
             $controller->route_vars = $route_vars;
-            $controller->request = $request;
-            $controller->args = $args;
+            $controller->request_vars = $request;
+            $controller->args_vars = $args;
             $controller->router = $router;
             $page = call_user_func(array($controller, $method),$args);
             if (is_a($page, 'AbstractBasePage')) {

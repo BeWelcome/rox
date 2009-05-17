@@ -454,14 +454,17 @@ class MOD_layoutbits
     }
 
     /**
-     * Returns the
-     * (which means, something has gone wrong)
+     * returns a sentence based on a given timestamp
+     * like: 20 minutes ago
      *
-     * @return string relative picture url
+     * @param int $timestamp unix timestamp
+     * @access public
+     * @return string
      */
     public function ago($timestamp)
     {
         // test if the given timestamp could be a unix timestamp, otherwise try to make it one
+        $timestamp = ((is_string($timestamp) && intval($timestamp) == $timestamp) ? intval($timestamp) : $timestamp);
         if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
         
         $words = new MOD_words();
@@ -491,9 +494,8 @@ class MOD_layoutbits
 */
         $periods = array('second','minute','hour','day','week','month','year','decade');
         $lengths = array("60","60","24","7","4.35","12","10");
-        for($j = 0; $difference >= $lengths[$j]; $j++) {
+        for($j = 0; $j < count($lengths) && $difference >= $lengths[$j]; $j++) {
             $difference /= $lengths[$j];
-            if(!isset($lengths[$j+1])) break;
         }
         $difference = round($difference);
         if($difference != 1) $periods[$j].= "s";

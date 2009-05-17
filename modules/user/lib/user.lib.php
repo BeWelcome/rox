@@ -548,7 +548,7 @@ FROM
                 );
                 $row = $result->fetch(PDB::FETCH_OBJ);
                 if ($_SESSION['WhoIsOnlineCount'] > $row->recordonline) {
-                    MOD_log::write(
+                    MOD_log::get()->write(
                        'New record established, '.$_SESSION['WhoIsOnlineCount'].' members online!',
                        'Record'
                     );

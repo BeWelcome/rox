@@ -226,11 +226,11 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 				echo "<td>" ;
 				if (HasRight("Admin")) { // Just to display a path to the url
 					echo "<a href=\"?action=execute&IdQuery=$rr->id" ;
-					if (!empty($r->param1)) {
-						echo "&param1=",$r->DefValueParam1 ;
+					if (!empty($rr->param1)) {
+						echo "&param1=",$rr->DefValueParam1 ;
 					}
-					if (!empty($r->param2)) {
-						echo "&param1=",$r->DefValueParam2 ;
+					if (!empty($rr->param2)) {
+						echo "&param2=",$rr->DefValueParam2 ;
 					}
 					echo "\">" ;
 					printf("#%02d",$rr->id) ;

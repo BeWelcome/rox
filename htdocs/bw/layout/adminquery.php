@@ -221,7 +221,7 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 		for ($ii=0;$ii<$max;$ii++) {
 				$rr=$TList[$ii] ;
 				echo "<form method=\"post\" action=\"adminquery.php\">" ;
-				if (HasrRight("Admin")) { // Just to display a path to the url
+				if (HasRight("Admin")) { // Just to display a path to the url
 					echo "<a href=\"?action=execute&IdQuery=$IdQuery" ;
 					if (!empty($r->param1)) {
 						echo "&param1=",$r->DefValueParam1 ;

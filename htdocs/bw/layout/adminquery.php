@@ -234,7 +234,7 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 					}
 					echo "\">" ;
 					printf("#%02d",$rr->id) ;
-					echo "</a> " ;
+					echo "</a><br />" ;
 				}
 				echo $rr->Name,"</td>" ;
 
@@ -243,7 +243,7 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 				if (!empty($rr->param1)) {
 					 	 echo "<td>" ;
 					 	 echo $rr->param1,":" ;
-						 switch($Param1Type) {
+						 switch($rr->Param1Type) {
 							case 'inputtext':
 								echo "<input type=\"texte\" name=\"param1\" value=\"$valparam1\">" ;
 								break ;
@@ -276,7 +276,7 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 				if (!empty($rr->param2)) {
 					 	 echo "<td>" ;
 					 	 echo $rr->param2,":" ;
-						 switch($Param2Type) {
+						 switch($rr->Param2Type) {
 							case 'inputtext':
 								echo "<input type=\"texte\" name=\"param2\" value=\"$valparam2\">" ;
 								break ;

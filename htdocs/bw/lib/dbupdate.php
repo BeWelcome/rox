@@ -1258,6 +1258,19 @@ ALTER TABLE membersgroups
 MODIFY COLUMN Status ENUM ('In', 'WantToBeIn', 'Kicked', 'Invited') NOT NULL DEFAULT 'WantToBeIn' COMMENT 'Describes the connection between a member and a group'
 SQL;
 
+$updates[] = <<<SQL
+ALTER TABLE `comments` ADD `DisplayableInCommentOfTheMonth` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'Yes' 
+ COMMENT 'State wether this comment can be allowed to be display in comment of the month'
+SQL;
+
+$updates[] = <<<SQL
+ALTER TABLE `sqlforvolunteers` 
+ADD `DefValueParam1` TEXT NOT NULL COMMENT 'The default value for param 1',
+ADD `DefValueParam2` TEXT NOT NULL COMMENT 'The default value for param 2',
+ADD `Param1Type` ENUM( 'inputtext', 'textarea', 'ListOfChoices' ) NOT NULL DEFAULT 'inputtext' COMMENT 'The form of display for param1',
+ADD `Param2Type` ENUM( 'inputtext', 'textarea', 'ListOfChoices' ) NOT NULL DEFAULT 'inputtext' COMMENT 'The form of display for param2'
+SQL;
+
     if (empty($res)) {
         $version = 0;
     } else {

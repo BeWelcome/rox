@@ -221,14 +221,50 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 		for ($ii=0;$ii<$max;$ii++) {
 				$rr=$TList[$ii] ;
 				echo "<form method=\"post\" action=\"adminquery.php\">" ;
+				if (HasrRight("Admin")) { // Just to display a path to the url
+					echo "<a href=\"?action=execute&IdQuery=$IdQuery" ;
+					if (!empty($r->param1)) {
+						echo "&param1=",$r->DefValueParam1 ;
+					}
+					if (!empty($r->param2)) {
+						echo "&param1=",$r->DefValueParam2 ;
+					}
+					echo "\">" ;
+					printf("#%02d",$IdQuery) ;
+					echo "</a> " ;
+					
+				}
 			    echo "<input type=\"hidden\" name=\"IdQuery\" value=\"".$rr->id."\">" ;
 				echo "<tr align=left valign=center bgcolor=\"".  $bgcolor[$ii%2]."\">" ;
 				echo "<td>",$rr->Name,"</td>" ;
 
+				$valparam1=GetStrParam("param1",$r->DefValueParam1) ;
+				$valparam2=GetStrParam("param2",$r->DefValueParam2) ;
 				if (!empty($rr->param1)) {
 					 	 echo "<td>" ;
 					 	 echo $rr->param1,":" ;
-						 echo "<input type=\"texte\" name=\"param1\">" ;
+						 switch(Param1Type) {
+							case 'inputtext':
+								echo "<input type=\"texte\" name=\"param1\" value=\"$valparam1\">" ;
+								break ;
+							case 'textarea':
+								echo "<textarea name=\"param1\">$valparam1</textarea>" ;
+								break ;
+							case 'ListOfChoices':
+								$tt=explode(",",$r->DefValueParam1) ;
+								$curval=GetStrParam("param1","") ;
+								echo "<select name=\"param1\">" ;
+								for ($ii=0;$$ii<count($tt);$ii++) {
+									echo "<option value=\"",$tt[$ii],"\""  ;
+									if ($tt[$ii]==$curval) echo " selected" ;
+									echo ">",$tt[$ii],"</option>" ;
+								}
+								echo "</select>" ;
+								break ;
+							default:
+								echo "-<input type=\"hidden\" name=\"param1\">" ;
+								break ;
+						}
 						 echo "</td>" ;
 				}
 				else {
@@ -240,7 +276,29 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 				if (!empty($rr->param2)) {
 					 	 echo "<td>" ;
 					 	 echo $rr->param2,":" ;
-						 echo "-<input type=\"texte\" name=\"param2\">" ;
+						 switch(Param2Type) {
+							case 'inputtext':
+								echo "<input type=\"texte\" name=\"param2\" value=\"$valparam2\">" ;
+								break ;
+							case 'textarea':
+								echo "<textarea name=\"param2\">$valparam2</textarea>" ;
+								break ;
+							case 'ListOfChoices':
+								$tt=explode(",",$r->DefValueParam2) ;
+								$curval=GetStrParam("param2","") ;
+								echo "<select name=\"param2\">" ;
+								for ($ii=0;$$ii<count($tt);$ii++) {
+									echo "<option value=\"",$tt[$ii],"\""  ;
+									if ($tt[$ii]==$curval) echo " selected" ;
+									echo ">",$tt[$ii],"</option>" ;
+								}
+								echo "</select>" ;
+								break ;
+							default:
+								echo "-<input type=\"hidden\" name=\"param2\">" ;
+								break ;
+						}
+
 						 echo "</td>" ;
 				}
 				else {

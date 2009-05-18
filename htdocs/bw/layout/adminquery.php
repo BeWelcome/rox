@@ -221,8 +221,11 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 		for ($ii=0;$ii<$max;$ii++) {
 				$rr=$TList[$ii] ;
 				echo "<form method=\"post\" action=\"adminquery.php\">" ;
+			    echo "<input type=\"hidden\" name=\"IdQuery\" value=\"".$rr->id."\">" ;
+				echo "<tr align=left valign=center bgcolor=\"".  $bgcolor[$ii%2]."\">" ;
+				echo "<td>" ;
 				if (HasRight("Admin")) { // Just to display a path to the url
-					echo "<a href=\"?action=execute&IdQuery=$IdQuery" ;
+					echo "<a href=\"?action=execute&IdQuery=$rr->id" ;
 					if (!empty($r->param1)) {
 						echo "&param1=",$r->DefValueParam1 ;
 					}
@@ -230,20 +233,17 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 						echo "&param1=",$r->DefValueParam2 ;
 					}
 					echo "\">" ;
-					printf("#%02d",$IdQuery) ;
+					printf("#%02d",$rr->id) ;
 					echo "</a> " ;
-					
 				}
-			    echo "<input type=\"hidden\" name=\"IdQuery\" value=\"".$rr->id."\">" ;
-				echo "<tr align=left valign=center bgcolor=\"".  $bgcolor[$ii%2]."\">" ;
-				echo "<td>",$rr->Name,"</td>" ;
+				echo $rr->Name,"</td>" ;
 
 				$valparam1=GetStrParam("param1",$r->DefValueParam1) ;
 				$valparam2=GetStrParam("param2",$r->DefValueParam2) ;
 				if (!empty($rr->param1)) {
 					 	 echo "<td>" ;
 					 	 echo $rr->param1,":" ;
-						 switch(Param1Type) {
+						 switch($Param1Type) {
 							case 'inputtext':
 								echo "<input type=\"texte\" name=\"param1\" value=\"$valparam1\">" ;
 								break ;
@@ -276,7 +276,7 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 				if (!empty($rr->param2)) {
 					 	 echo "<td>" ;
 					 	 echo $rr->param2,":" ;
-						 switch(Param2Type) {
+						 switch($Param2Type) {
 							case 'inputtext':
 								echo "<input type=\"texte\" name=\"param2\" value=\"$valparam2\">" ;
 								break ;

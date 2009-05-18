@@ -21,6 +21,13 @@ class RoxModelBase extends RoxComponentBase
     protected $_entity_factory;
 
     /**
+     * stores the currently logged in member
+     *
+     * @var object
+     */
+    private static $logged_in_member = false;
+
+    /**
      * used to instantiate an RoxEntityFactory - other than that, just calls the parent
      *
      * @access public
@@ -69,9 +76,9 @@ class RoxModelBase extends RoxComponentBase
      */
     public function getLoggedInMember()
     {
-        if ($this->loggedInMember)
+        if ($this->logged_in_member)
         {
-            return $this->loggedInMember;
+            return $this->logged_in_member;
         }
         
         if (!isset($_SESSION['IdMember']))
@@ -79,8 +86,8 @@ class RoxModelBase extends RoxComponentBase
             return false;
         }
 
-        $this->loggedInMember = $this->createEntity('Member')->findById($_SESSION['IdMember']);
-        return $this->loggedInMember;
+        $this->logged_in_member = $this->createEntity('Member')->findById($_SESSION['IdMember']);
+        return $this->logged_in_member;
     }
 
     /**

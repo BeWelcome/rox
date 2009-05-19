@@ -118,7 +118,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             <div class='subcl'>
                 <h4><?= $words->get('GroupsInviteMember') ?></h4>
                 <div id='search_result' style='display: none;padding: 3px; margin-bottom: 3px'></div>
-                <form method='post' action='groups/<?= $this->group->getPKValue(); ?>/invitemembers/search' id='invite_form'>
+                <form method='get' action='groups/<?= $this->group->getPKValue(); ?>/invitemembers/search' id='invite_form'>
                     <input type='text' value='Enter username' name='username' id='search_username'/><input type='submit' value='<?= $words->get('Search');?>' id='search_username_submit'/>
                 </form>
             </div>

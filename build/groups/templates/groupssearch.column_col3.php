@@ -9,7 +9,8 @@
     <div class="row">
         <h3><?= $words->get('GroupsSearchResult'); ?></h3>
         <?php
-        if ($this->search_result)
+        $search_result = $this->search_result;
+        if ($search_result)
         {
             $name_order = (($this->result_order == "nameasc") ? 'namedesc' : 'nameasc');
             $member_order = (($this->result_order == "membersasc") ? 'membersdesc' : 'membersasc');
@@ -31,7 +32,7 @@
     </div> <!-- row -->           
 <?
 
-            foreach ($this->search_result as $group_data) : ?>
+            foreach ($search_result as $group_data) : ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->id ?>">
                         <img class="framed float_left"  width="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>

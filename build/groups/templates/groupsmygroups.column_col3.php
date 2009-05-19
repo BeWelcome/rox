@@ -1,9 +1,10 @@
 <div id="groups">
         <h3><?= $words->get('GroupsMyGroups'); ?></h3>
         <?php
-        if ($this->search_result)
+        $search_result = $this->search_result;
+        if ($search_result)
         {
-            foreach($this->search_result as $group_data)
+            foreach($search_result as $group_data)
             {
                 ?>
                 <div class="groupbox clearfix">

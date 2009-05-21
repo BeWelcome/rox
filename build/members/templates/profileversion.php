@@ -8,29 +8,27 @@ $languages_spoken = $member->languages_spoken;
 $languages_all = $member->languages_all;
 
 $words = $this->getWords();
-
-if (count($languages) > 1) {
+$myself = $this->myself;
+if (count($languages) > 1 || $myself) {
 ?>      
-		<p>
-        <?=$words->get('ProfileVersion')?>:
-        <span class="activelanguage"><?=$profile_language_name ?> 
-        <? if ($this->myself) { ?>
-        <a class="button" href="editmyprofile/<?=$profile_language_code?>/delete"><?=$words->get('delete')?></a>
-        <? } ?>
-        </span>
- 		</p>
-        <p class="floatbox">
-		<span><?=$words->get('ProfileVersionIn')?>:</span>        
-        
+    <div class="profile_translations box">
+    	<h3><?=$words->get('ProfileTranslations')?>:</h3>
+        <p class="floatbox">  
         <?php
 		$ii = 0;
 		$max = count($languages);
         foreach($languages as $language) {
-            if ($language->ShortCode != $profile_language_code) {
-			$space = ($ii != $max -1) ? ', ' : '';
-        ?><a class="availablelanguages" href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?><?=$space?></a><?php
+            if ($language->ShortCode == $profile_language_code) {
+                
+?><span class="activelanguage"><?=$profile_language_name ?><? if ($this->myself) { ?><a class="button" href="editmyprofile/<?=$profile_language_code?>/delete"><?=$words->get('delete')?></a><? } ?></span><?
+
+            } else {
+                
+        ?><a class="availablelanguages" href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?></a><?
+
 			$ii++;
             }
+            echo '&nbsp;&nbsp;';
         } ?>
 		</p>
 <?php } ?>
@@ -54,3 +52,4 @@ if (count($languages) > 1) {
     </optgroup>
 </select>
 <?php } ?>
+</div> <!-- profile_translations -->

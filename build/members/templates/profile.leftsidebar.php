@@ -21,13 +21,7 @@ $languages = $member->get_profile_languages();
 $occupation = $member->get_trad("Occupation", $profile_language);
 ?>
 
-<p>
-<?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
-</p>
-<p>
-<?=$agestr ?>
-<?php if($occupation != null) echo ", ".$occupation; ?>
-</p>
+
 <!--
         <img src="images/icons/<?=($member->Accomodation) ? $member->Accomodation : 'neverask'?>.gif"  class="float_left"  title="<?=$member->Accomodation?>"  width="30"  height="30"  alt="<?=$member->Accomodation?>" />
         <?php
@@ -53,8 +47,7 @@ $occupation = $member->get_trad("Occupation", $profile_language);
 		echo $words->flushBuffer();
         ?>
     -->
-<h3>Actions</h3>
-<ul class="linklist" id="">
+<ul class="linklist" id="profile_linklist">
   <? if (!$myself) { ?>
   <li class="icon contactmember16">
     <a href="messages/compose/<?=$member->Username?>" ><?=$words->get('ContactMember');?></a>
@@ -66,9 +59,6 @@ $occupation = $member->get_trad("Occupation", $profile_language);
     <a href="members/<?=$member->Username?>/relations/add "><?=$words->get("addRelation");?></a>
   </li>
   <? } else { ?>
-      <li>
-        <a href="editmyprofile"><?=$words->get("EditMyProfile");?></a>
-      </li>    
       <li class="icon contactmember16">
         <a href="myvisitors" ><?=$words->get('MyVisitors');?></a>
       </li>
@@ -79,9 +69,4 @@ $occupation = $member->get_trad("Occupation", $profile_language);
 
 </ul>
 
-<div class="profile_translations">
-    <?php 
-    $urlstring = 'members/'.$member->Username;
-    //require 'profileversion.php'; 
-    ?>
-</div> <!-- profile_translations -->
+

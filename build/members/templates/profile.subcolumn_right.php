@@ -1,3 +1,23 @@
+<? // Profile translations ?>
+    <?php 
+    $urlstring = 'members/'.$member->Username;
+    require 'profileversion.php'; 
+    ?>
+
+<? 
+// TODO: Implement twitter as messenger in BW and then we can integrate feeds here.
+// Twitter updates 
+/*?>
+<div id="twitter_div">
+<h3>Twitter Updates</h3>
+<ul id="twitter_update_list"></ul>
+<a href="http://twitter.com/lupochen" id="twitter-link" style="display:block;text-align:right;">follow me on Twitter</a>
+</div>
+<script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+<script type="text/javascript" src="http://twitter.com/statuses/user_timeline/lupochen.json?callback=twitterCallback2&amp;count=3"></script>
+*/
+?>
+
 <? // Profile Relations ?>
 <?php 
 $relations = $member->relations;

@@ -37,11 +37,11 @@ class MemberPage extends PageWithActiveSkin
             );
         } else {
             return array(
-                array('profile', "members/$username", 'Profile'),
-                array('comments', "members/$username/comments", 'View Comments('.$comments_count['all'].')'),
+                array('profile', "members/$username", $ww->MemberPage),
+                array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
-                array('gallery', "gallery/show/user/$username", 'Photo Gallery')
+                array('gallery', "gallery/show/user/$username", $ww->Gallery)
             );
         }
     }  

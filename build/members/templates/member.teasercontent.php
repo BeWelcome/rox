@@ -40,6 +40,16 @@
                 <strong><a href="country/<?=$member->countryCode() ?>" ><?=$member->country() ?></a></strong></h3>
             </div> <!-- navigation-path -->
 
+            <div class="floatbox">
+            <p class="float_left grey" style="width: 45%">
+            <?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
+            </p>
+            <p class="float_left grey" style="width: 45%">
+            <?=$agestr ?>
+            <?php if($occupation != null) echo ", ".$occupation; ?>
+            </p>
+            </div>
+
             </div> <!-- profile-info -->
 
             <div id="linkpath">

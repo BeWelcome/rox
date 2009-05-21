@@ -1,6 +1,6 @@
        <form method="post" id="preferences" >
         <fieldset>
-            <legend>My Preferences</legend>
+            <legend><?=$words->get('MyPreferences')?></legend>
         <?=$callback_tag ?>
         <input type="hidden" name="memberid" value="<?=$this->member->id?>" />
         <h3><?=$words->get('PreferenceLanguage')?></h3>

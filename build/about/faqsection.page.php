@@ -9,7 +9,7 @@ class AboutFaqsectionPage extends AboutFaqPage
         $req = $_SERVER['REQUEST_URI'];
         $categories = $this->faq_categories;
         echo '
-        <ol class="faqs">';
+        <ol class="faq">';
         
         $j = 0;
         foreach ($categories as $key => $category) {
@@ -17,12 +17,11 @@ class AboutFaqsectionPage extends AboutFaqPage
                 $add = 'selected';
             } else $add = '';
             echo '
-            <li><div class="'.($j%2 ? 'odd' : 'even').'"><h3><a href="about/faq/'.$key.'" class="'.$add.'">
+            <li class="'.($j%2 ? 'odd' : 'even').'"><a href="about/faq/'.$key.'" class="'.$add.'">
             '.$words->get($category->Description).'
-            </a></h3>';
+            </a>';
             echo '
-            </div></li>
-            <hr>';
+            </li>';
             ++ $j;
         }
         
@@ -41,24 +40,20 @@ class AboutFaqsectionPage extends AboutFaqPage
         $req = $_SERVER['REQUEST_URI'];
         echo '
         <h2>'.$words->get($this->faq_section->Description).'</h2>';
-        echo '<div class="faqs">';
         echo '
-        <ul>';
+        <ol class="bullet">';
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
             echo '
             <li><a href="'.$req.'#question'.$faq_key.'">'.$faq->words_Q[0]->Sentence.'</a></li>';
         }
         echo '
-        </ul>';
-        echo '</div>';
+        </ol>';
 
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
             echo '
-            <div>
             <a name="question'.$faq_key.'"></a>
-            <h3>'.$faq->words_Q[0]->Sentence.' <a href="'.$req.'#question'.$faq_key.'">*</a></h3>
-            <p class="faqs_text">'.$faq->words_A[0]->Sentence.'</p>
-            </div>';
+            <h3>'.$faq->words_Q[0]->Sentence.' <a href="'.$req.'#question'.$faq_key.'"></a></h3>
+            <p class="faq_text">'.$faq->words_A[0]->Sentence.'</p>';
         }
     }
 }

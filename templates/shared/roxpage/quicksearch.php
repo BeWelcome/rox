@@ -18,7 +18,7 @@
 ?>
     
     
-    <input type="text" name="vars" size="15" maxlength="30" id="text-field" value="Search..." onClick="this.value=''"; onBlur="this.value='Search...';"/>
+    <input type="text" name="vars" size="15" maxlength="30" id="text-field" value="Search..." onclick="this.value='';" onblur="this.value='Search...';"/>
     <input type="hidden" name="quicksearch_callbackId" value="1"/>
     <input type="image" src="styles/css/minimal/images/icon_go.gif" id="submit-button" />
   

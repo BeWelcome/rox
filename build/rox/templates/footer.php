@@ -58,7 +58,7 @@ if (PVars::get()->debug) {
     if($R->HasRight("Debug","DB_QUERY")) {
 ?>
 <p>
-<a style="cursor:pointer;" onClick="$('query_list').toggle();">DB queries</a>
+<a style="cursor:pointer;" onclick="$('query_list').toggle();">DB queries</a>
 </p>
 <div id='query_list' style="display:none;">
 <?php

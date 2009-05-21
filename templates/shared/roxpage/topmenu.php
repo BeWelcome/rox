@@ -2,7 +2,7 @@
 <!-- #nav: main navigation -->
 <div id="nav">
 
-<!-- son of suckerfish navigation -->
+<!-- son of suckerfish navigation (script to teach IE hover class used in dropdown menu-->
   <script type="text/javascript"><!--//--><![CDATA[//><!--
 
     sfHover = function() {
@@ -27,85 +27,41 @@
           </a>
         </li>
   <?php if ($logged_in) { ?>
-      <li><a href="members/<?=$username?>">My Account</a>
+      <li><a href="members/<?=$username?>"><?=$words->get('MyProfile')?></a>
           <ul>
-              <li><a href="members/<?=$username?>">Profile</a></li>
-              <li><a href="editmyprofile">Edit Profile</a></li>
-              <li><a href="mypreferences">My Preferences</a></li>
-              <li><a href="messages">Messages</a></li>
+              <li><a href="members/<?=$username?>"><?=$words->get('Profile')?></a></li>
+              <li><a href="editmyprofile"><?=$words->get('EditMyProfile')?></a></li>
+              <li><a href="mypreferences"><?=$words->get('MyPreferences')?></a></li>
+              <li><a href="messages"><?=$words->get('MyMessages')?></a></li>
           </ul>
       </li>
   <?php } ?>
-        <li><a href="search">Find People</a>
+        <li><a href="search"><?=$words->get('FindMembers')?></a>
             <ul>
-                <li><a href="searchmembers">Map-search</a></li>
-                <li><a href="places">Browse Countries</a></li>
+                <li><a href="searchmembers"><?=$words->get('MapSearch')?></a></li>
+                <li><a href="places"><?=$words->get('BrowseCountries')?></a></li>
             </ul>
         </li>
-        <li><a href="explore">Explore</a>
+        <li><a href="explore"><?=$words->get('Explore')?></a>
             <ul>
-                <li><a href="forums">Forum</a></li>
-                <li><a href="groups">Groups</a></li>
-                <li><a href="trip">Trips</a></li>
-                <li><a href="gallery">Gallery</a></li>
-                <li><a href="blog">Blogs</a></li>
-                <li><a href="chat">Chat</a></li>
+                <li><a href="forums"><?=$words->get('Community')?></a></li>
+                <li><a href="groups"><?=$words->get('Groups')?></a></li>
+                <li><a href="trip"><?=$words->get('Trips')?></a></li>
+                <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
+                <li><a href="blog"><?=$words->get('Blogs')?></a></li>
+                <li><a href="chat"><?=$words->get('Chat')?></a></li>
             </ul>
         </li>
-        <li><a href="about">About BeWelcome</a>
+        <li><a href="about"><?=$words->get('GetAnswers')?></a>
             <ul>
-                <li><a href="faq">FAQ</a></li>
-                <li><a href="feedback">Contact Us</a></li>
-                <li><a href="about/getactive">Get Active</a></li>
+                <li><a href="faq"><?=$words->get('Faq')?></a></li>
+                <li><a href="feedback"><?=$words->get('ContactUs')?></a></li>
+                <li><a href="about/getactive"><?=$words->get('About_GetActive')?></a></li>
             </ul>
         </li>
     </ul>
-
-
-
-<!-- old navigation -
-    <ul>
-        <li id="logo">
-          <a href="<?=$active_menu_item == ('main' || '') ? 'main' : ''; ?>">
-            <img src="images/logo_index_top.png" alt="Be Welcome" />
-          </a>
-        </li>
-      <?php
-
-foreach ($menu_items as $item) {
-    $name = $item[0];
-    $url = $item[1];
-    $wordcode = $item[2];
-    $not_translatable = isset($item[3]) && $item[3];
-    if ($name === $active_menu_item) {
-        $attributes = ' class="active"';
-    } else {
-        $attributes = '';
-    }
-
-      ?>
-      <li<?=$attributes ?>>
-        <a href="<?=$url ?>">
-          <span><? if ($not_translatable) { echo $wordcode; } else { echo $words->getBuffered($wordcode); } ?></span>
-        </a>
-        <?=$words->flushBuffer(); ?>
-        <ul>
-            <li><a href="#">test</a></li>
-            <li><a href="#">test</a></li>
-            <li><a href="#">test</a></li>
-        </ul>
-      </li>
-      <?php
-
-}
-
-      ?>
-    </ul>
--->
-
-
+    
 <!-- show login fields or searchbox, depending if logged in or not-->
-
     <?php $this->quicksearch() ?>
 
 </div> <!-- nav -->

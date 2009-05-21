@@ -21,13 +21,13 @@ class LastCommentsController extends RoxControllerBase
     {
         $request = PRequest::get()->request;
         if (!isset($request[1]))         {
-			if( ($User = APP_User::login())) {
-				$page = new LastcommentsPage($this->_model->GetLastComments());
-				$page->model = $this->_model;
-			}
-			else {
-                $page = new MembersMustloginPage;
-			}
+		if( ($User = APP_User::login())) {
+			$page = new LastcommentsPage($this->_model->GetLastComments($_SESSION["Param"]->NbCommentsInLastComments));
+			$page->model = $this->_model;
+		}
+		else {
+			$page = new MembersMustloginPage;
+		}
 //            $page->member = $this->_model->getLoggedInMember();
             return $page;
         }

@@ -14,15 +14,18 @@ class LastcommentsModel extends  RoxModelBase
      * Find and returns the twenty last comments
 	 * @$limit optional parameter define the limits of nb of comments
      */    
-    public function GetLastComments($limit=20) {
-		$sql="select m1.Username as UsernameFrom,m2.Username as UsernameTo,comments.updated,TextWhere,TextFree,comments.Quality,
+    public function GetLastComments($limit=10) {
+		$sql="select m1.Username as UsernameFrom,m2.Username as UsernameTo,comments.updated,UNIX_TIMESTAMP(comments.updated) unix_updated,TextWhere,TextFree,comments.Quality,
 		country1.id as IdCountryFrom,city1.id as IdCityFrom,country1.Name as CountryNameFrom,
-		country2.id as IdCountryTo,city2.id as IdCityTo,country2.Name as CountryNameTo
+		country2.id as IdCountryTo,city2.id as IdCityTo,country2.Name as CountryNameTo,
+		'-' as ToNbComment,'-' as FromNbComment 
 from comments,members as m1,members as m2,cities as city1,countries as country1,cities as city2,countries as country2
 where m1.id=IdFromMember and m2.id=IdToMember and m1.Status='Active' and m2.Status='Active' and DisplayableInCommentOfTheMonth='Yes' 
 and city1.id=m1.IdCity and country1.id=city1.IdCountry
 and city2.id=m2.IdCity and country2.id=city2.IdCountry
 order by comments.id desc limit $limit" ;
+
+
 		$Data=$this->bulkLookup($sql) ;
 		return($Data) ;
     }

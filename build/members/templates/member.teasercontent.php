@@ -3,11 +3,9 @@
 
       <div class="c15l" >
         <div class="subcl" >
-            <div id="pic_main" >
-                <div id="img1">
+            <div id="profile_pic" >
                     <a href="gallery/show/user/<?=$member->Username?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" class="framed" /></a>
-                </div> <!-- img1 -->
-            </div> <!-- pic_main -->
+            </div> <!-- profile_pic -->
         </div> <!-- subcl -->
       </div> <!-- c50l -->
       <div class="c85r" >

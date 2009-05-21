@@ -16,7 +16,7 @@
                 <div class="row">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
-                    <a class="bigbutton" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                    <a class="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
                 </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->

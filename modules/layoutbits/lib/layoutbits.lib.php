@@ -499,7 +499,9 @@ class MOD_layoutbits
         }
         $difference = round($difference);
         if($difference != 1) $periods[$j].= "s";
-        $text = $difference.' '.$words->get($periods[$j]).' '.$words->get('ago');
+	$periods[$j]=$periods[$j]."_ago" ;
+	
+        $text = $words->get($periods[$j],$difference);
         return $text;
         
     }

@@ -18,22 +18,37 @@
     margin: 0 0 0 15%;
 }
 #col3_content{
-    padding: 0 0 0 2em;
+    padding: 0 0 4em 2em;
 	margin: 0;
-	border-left: 1px solid #e5e5e5;
+	background:transparent url(../../images/bg_col3.jpg) no-repeat scroll left top;
+/*	border-left: 1px solid #e5e5e5; */
 }
 #col1 #col1_content{
+	background:transparent url(../../images/bg_leftsidebar.jpg) no-repeat scroll right top;
     padding: 0 2em 0 0;
 	margin: 0;
-	text-align: right;
+/*	text-align: right; */
+	
 }
+
 #col1 #col1_content .linklist{
     margin-right: 0;
+}
+#profile_linklist li {
+	color: #333;
+	font-size: 1em;
+	border-bottom: 1px solid #e5e5e5;
+	padding: .5em 0;
+}
+#profile_linklist li a {
+	color: #333;
+	font-size: 1.2em;
 }
 
 #teaser {
 	margin-left: 0;
-	padding-bottom: 2em;
+	padding-bottom: 4em;
+/*	border-bottom: 1px solid #e5e5e5; */
 }
 #teaser .subcolumns .c15l{
     width: 17%;
@@ -52,27 +67,35 @@
 #teaser #profile-info #username strong {
 	font-size:2.6em;
 	line-height:1.5em;
-	padding:10px 10px 10px 0;	
+	padding:10px 10px 10px 0;
+	color: #000000;
 }	
 #linkpath {
     float: left;
-    
+    padding-top: 1em;
+	padding-left: 1em;
 }
 #middle_nav.clearfix {
     clear:none;
 	display: inline;
 }
 #nav_sub {
-    margin: -4em 0 0 13em;
+    margin: -3.5em 0 0 13em;
 	padding-bottom: 3em;
 }
 #nav_sub li {
     padding: 0;
 }
+#nav_sub li.active a{
+	background: transparent url(../../images/small_arrow_down_bg.gif) no-repeat center bottom;
+	padding-bottom: 1.6em;
+	border: none;
+}
 #img1 {
 background: transparent url(../../images/pic_shadow.png) no-repeat left top;
 padding:17px;
 width:100px;
+height: 100px;
 }
 #profile-info {
     width: 30em;
@@ -87,10 +110,10 @@ width:100px;
 	padding-left: 3em;
 }
 
-#profile dl, #preferences dl {
+#profile dl, #preferences dl, dl#profiletop {
     display: block;
 }
-#profile dt, #preferences dt {
+#profile dt, #preferences dt, #profiletop dt {
     line-height: 1.5em;
     font-size: 1em;
     font-weight: normal;
@@ -100,7 +123,7 @@ width:100px;
     clear: left;
     margin-bottom: 0.8em;
 }
-#profile dd, #preferences dd {    
+#profile dd, #preferences dd, #profiletop dd {    
     margin-left: 12em;
     line-height: 1.5em;
     margin-bottom: 0.8em;

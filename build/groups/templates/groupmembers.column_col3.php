@@ -15,10 +15,11 @@
           <th><?= $words->get('GroupsMemberComment'); ?></th>
         </tr>
     <?php
+    $count = 0;
     foreach ($this->group->getMembers() as $member) {
         $membershipinfo = $member->getGroupMembership($this->group);
         ?>
-        <tr>
+        <tr class="<?php echo $background = (($count % 2) ? 'highlight' : 'blank'); ?>">
             <td><?=MOD_layoutbits::PIC_50_50($member->Username) ?></td>
             <td>
                 <a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
@@ -29,7 +30,7 @@
             </td>
             <td><em><?php echo $words->mTrad($membershipinfo->Comment) ?></em></td>
         </tr>
-        <?php
+        <?php $count++;
     }
     ?>
     </table>

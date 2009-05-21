@@ -39,7 +39,7 @@ class GroupMemberSettingsPage extends GroupsBasePage
                 <textarea id="comment" name="membershipinfo_comment" cols="60" rows="5" class="long" ><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
             </div> <!-- row -->
             <div class="row">
-                <label for="acceptgroupmail"><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label>
+                <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label>
                 <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no') ? 'checked="checked" ' : '' ); ?>/>
                 <label for="no_option"><?= $words->get('no') ;?></label>
                 <input id='yes_option' type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>/>

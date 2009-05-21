@@ -28,7 +28,9 @@
                 <h3><?= $words->get('GroupsJoinNamedGroup', $this->getGroupTitle()); ?></h3>
                     <?= $words->get('GroupsJoinLoginFirst'); ?>
                 <?php else : ?>
+<!--
                 <h3><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinNamedGroup', $this->getGroupTitle()) : $words->get('GroupsLeaveNamedGroup', $this->getGroupTitle()) ) ?></h3>
+-->
                 <div class="row clearfix">
                     <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
                 </div>

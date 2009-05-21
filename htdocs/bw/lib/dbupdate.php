@@ -1271,6 +1271,47 @@ ADD `Param1Type` ENUM( 'inputtext', 'textarea', 'ListOfChoices' ) NOT NULL DEFAU
 ADD `Param2Type` ENUM( 'inputtext', 'textarea', 'ListOfChoices' ) NOT NULL DEFAULT 'inputtext' COMMENT 'The form of display for param2'
 SQL;
 
+$updates[] = <<<SQL
+CREATE TABLE `comments_ofthemomment_votes` (
+`IdMember` INT NOT NULL COMMENT 'id of the member',
+`IdComment` INT NOT NULL COMMENT 'Id of the comment',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the record was updated',
+`created` TIMESTAMP NOT NULL COMMENT 'when the record was created'
+) ENGINE = MYISAM COMMENT = 'Counts the votes for comments of the moment'
+SQL;
+
+$updates[] = <<<SQL
+ALTER TABLE `comments_ofthemomment_votes` ADD UNIQUE `Id_Member_Comment` ( `IdMember` , `IdComment` ) 
+SQL;
+
+$updates[] = <<<SQL
+ALTER TABLE `params` ADD `IdCommentOfTheMoment` INT NOT NULL DEFAULT '0' COMMENT 'Id of the comment of the month (updated by lastcomments votes)'
+SQL;
+
+$updates[] = <<<SQL
+ALTER TABLE `params` ADD `NbCommentsInLastComments` INT NOT NULL DEFAULT '20' COMMENT 'This is the number of comments to display in the lastcomments page' AFTER `DayLightOffset` 
+SQL;
+
+$updates[]="INSERT INTO `words` VALUES (0,'ago', 'en', 'ago', '2008-06-20 09:33:24', 'no', 0, '', 71, '2008-06-20 09:33:24', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'ago', 'fr', ' ', '2008-06-25 17:57:13', 'no', 1, '', 757, '2008-06-25 17:57:13', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'ago', 'cat', 'fa', '2008-06-30 16:12:26', 'no', 29, '', 3236, '2008-06-30 16:12:26', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'ago', 'de', 'her', '2008-07-09 11:09:45', 'no', 6, '', 3050, '2008-07-09 11:09:45', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'ago', 'pl', 'temu', '2008-08-27 22:47:45', 'no', 19, '', 392, '2008-08-27 22:47:45', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'ago', 'fi', 'sitten', '2009-05-18 21:22:46', 'no', 11, '', 72, '2009-05-18 21:22:46', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'seconds_ago', 'en', '%s seconds ago', '2009-05-21 12:56:10', 'no', 0, 'This is used to display x sconds ago\r\n\r\n%s stands for the number of second', 1, '2009-05-21 12:56:10', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'minutes_ago', 'en', '%s minutes ago', '2009-05-21 12:56:39', 'no', 0, 'This is used to display x minutes ago\r\n\r\n%s stands for the number of minutes', 1, '2009-05-21 12:56:39', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'minute_ago', 'en', '%s minute ago', '2009-05-21 12:57:07', 'no', 0, 'This is used to display 1 minute ago\r\n\r\n%s stands for the number of minutes (which can be 1 or 0)', 1, '2009-05-21 12:57:07', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'hour_ago', 'en', '%s hour ago', '2009-05-21 12:57:26', 'no', 0, 'This is used to display 1 hourago\r\n\r\n%s stands for the number of hour (which can be 1 or 0)', 1, '2009-05-21 12:57:26', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'hours_ago', 'en', '%s hours ago', '2009-05-21 12:57:43', 'no', 0, 'This is used to display x hours ago\r\n\r\n%s stands for the number of hour (which can be 1 or 0)', 1, '2009-05-21 12:57:43', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'days_ago', 'en', '%s days ago', '2009-05-21 12:58:40', 'no', 0, 'This is used to display x days ago\r\n\r\n%s stands for the number of days ', 1, '2009-05-21 12:58:06', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'day_ago', 'en', '%s day ago', '2009-05-21 12:58:24', 'no', 0, 'This is used to display 1 day ago\r\n\r\n%s stands for the number of day (which can be 1 or 0)', 1, '2009-05-21 12:58:24', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'weeks_ago', 'en', '%s weeks ago', '2009-05-21 12:58:59', 'no', 0, 'This is used to display x weeks ago\r\n\r\n%s stands for the number of weeks ', 1, '2009-05-21 12:58:59', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'years_ago', 'en', '%s years ago', '2009-05-21 12:59:22', 'no', 0, 'This is used to display x years ago\r\n\r\n%s stands for the number of years ', 1, '2009-05-21 12:59:22', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'year_ago', 'en', '%s year ago', '2009-05-21 12:59:47', 'no', 0, 'This is used to display 1 year ago\r\n\r\n%s stands for the number of year (1 or 0)', 1, '2009-05-21 12:59:47', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'week_ago', 'en', '%s week ago', '2009-05-21 13:00:16', 'no', 0, 'This is used to display 1 week ago\r\n\r\n%s stands for the number of week  (1 or 0)', 1, '2009-05-21 13:00:16', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'months_ago', 'en', '%s months ago', '2009-05-21 13:00:34', 'no', 0, 'This is used to display x months ago\r\n\r\n%s stands for the number of months', 1, '2009-05-21 13:00:34', 5)";
+$updates[]="INSERT INTO `words` VALUES (0,'month_ago', 'en', '%s month ago', '2009-05-21 13:01:00', 'no', 0, 'This is used to display 1 month ago\r\n\r\n%s stands for the number of month (1 or 0)', 1, '2009-05-21 13:01:00', 5)";
+
     if (empty($res)) {
         $version = 0;
     } else {

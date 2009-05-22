@@ -36,7 +36,7 @@ order by comments.id desc limit $limit" ;
      * function UpdateIdCommentOfTheMoment  recomputes the id of the comment of the moment
 	 */    
     public function UpdateIdCommentOfTheMoment() {
-		$rr=$this->bulkLookup("select comments.id as IdComment,CommentNbVotes(comments.id) as NbVotes from comments 
+		$tt=$this->bulkLookup("select comments.id as IdComment,CommentNbVotes(comments.id) as NbVotes from comments 
 		 order by comments.id limit ".$_SESSION["Param"]->NbCommentsInLastComments) ;
 		$Max=0 ;
 		$IdComment=0 ;
@@ -67,10 +67,10 @@ order by comments.id desc limit $limit" ;
 		$sql="replace into comments_ofthemomment_votes(IdMember,IdComment) values(".$_SESSION["IdMember"].",".$IdComment.")" ;
 		$qq = $this->dao->query($sql);
 		if (!$qq) {
-            throw new PException('AddVote failed for '.$sql.' !');
+			throw new PException('AddVote failed for '.$sql.' !');
 		}
 		$this->UpdateIdCommentOfTheMoment() ;
-	    MOD_log::get()->write("Add a vote for comment #".$IdComment,"comments") ; 				
+		MOD_log::get()->write("Add a vote for comment #".$IdComment,"comments") ; 				
 		return ;
     }
 

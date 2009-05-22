@@ -48,10 +48,10 @@
 		<td>
 		<?php
 		if (empty($c->IdCommentHasVote)) { // If there is not yet any vote from teh current member for this comment
-			echo "<a  href=\"lastcomments/vote/",$c->IdComment," title=\"".$words->getFormatted("VoteCommentIsSignificantExplanation")."\">",$words->getFormatted("VoteCommentIsSignificant"),"</a>" ; 
+			echo "<a  href=\"lastcomments/vote/",$c->IdComment," title=\"".$words->getBuffered("VoteCommentIsSignificantExplanation")."\">",$words->getBuffered("VoteCommentIsSignificant"),"</a>" ; 
 		}
 		else {
-			echo "<a  href=\"lastcomments/voteremove/",$c->IdComment," title=\"".$words->getFormatted("VoteCommentIsSignificantExplanation")."\">",$words->getFormatted("VoteCommentIsSignificantRemove"),"</a>" ; 
+			echo "<a  href=\"lastcomments/voteremove/",$c->IdComment," title=\"".$words->getBuffered("VoteCommentIsSignificantExplanation")."\">",$words->getBuffered("VoteCommentIsSignificantRemove"),"</a>" ; 
 		}
 		?>
 		

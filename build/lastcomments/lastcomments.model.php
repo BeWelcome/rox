@@ -18,7 +18,7 @@ class LastcommentsModel extends  RoxModelBase
 		$sql="select m1.Username as UsernameFrom,m2.Username as UsernameTo,comments.updated,UNIX_TIMESTAMP(comments.updated) unix_updated,TextWhere,TextFree,comments.Quality,
 		country1.id as IdCountryFrom,city1.id as IdCityFrom,country1.Name as CountryNameFrom,
 		country2.id as IdCountryTo,city2.id as IdCityTo,country2.Name as CountryNameTo,
-		MemberNbComments(m2.id) as ToNbComment,MemberNbComments(m2.id) as FromNbComment,
+		MemberNbComments(m2.id) as ToNbComment,MemberNbComments(m1.id) as FromNbComment,
 		comments_ofthemomment_votes.IdComment as IdCommentHasVote,comments.id as IdComment
 from (comments,members as m1,members as m2,cities as city1,countries as country1,cities as city2,countries as country2)
 left join comments_ofthemomment_votes on comments_ofthemomment_votes.IdMember=".$_SESSION["IdMember"]." and  comments_ofthemomment_votes.IdComment=comments.id 

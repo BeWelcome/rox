@@ -234,11 +234,14 @@ $word->            $text="Problem in forum notification Type=".$rr->Type."<br />
 	 $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
 	 $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'bw/member.php?cid='.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>' ;
 	 $text.='<tr><td valign="top">';
+/*
     if (isset($rImage->FilePath)) {
        $text .= '<img alt="picture of '.$rPost->Username.'" height="150px" src="'.$baseuri.$rImage->FilePath.'"/>';
     } else {
        $text .= '<img alt="Bewelcome" src="http://www.bewelcome.org/styles/YAML/images/logo.gif" />';
     }
+	*/
+	$text.=PictureInMail($rPost->Username) ;
     $text .= '</td><td>'.$rPost->message.'</td></tr>';
     if ($UnsubscribeLink!="") {
        $text .= '<tr><td colspan="2">'.$UnsubscribeLink.'</td></tr>';
@@ -336,7 +339,8 @@ WHERE
             <tr><td>
         ';
         if (isset($rImage->FilePath)) {
-            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+//            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+            $MessageFormatted .= PictureInMail($rr->Username);
         }
         $MessageFormatted .= '</td><td>';
 //      $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
@@ -458,7 +462,8 @@ WHERE
             <tr><td>
         ';
         if (isset($rImage->FilePath)) {
-            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+//            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+            $MessageFormatted .= PictureInMail($rr->Username);
         }
         $MessageFormatted .= '</td><td>';
         $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
@@ -612,4 +617,8 @@ if (IsLoggedIn()) {
 		return ($strerror); // If really nothing was found, return an empty string
 	} // end of fTrad
 
+	function PictureInMail($Username) {
+       $PictureFilePath='http://www.bewelcome.org/members/avatar/'.$Username ;
+	   $rval= '<img alt="picture of '.$Username.'" src="'.$PictureFilePath.'"/>';
+	} // End of PictureInMail
 ?>

@@ -53,6 +53,9 @@
 		else {
 			echo "<a  href=\"lastcomments/voteremove/",$c->IdComment,"\"title=\"".$words->getBuffered("VoteCommentIsSignificantExplanation")."\">",$words->getBuffered("VoteCommentIsSignificantRemove"),"</a>" ; 
 		}
+		if ( ($this->BW_Right->HasRight("Comments","UdpateComment"))  or ($this->BW_Right->HasRight("Comments","AdminComment"))){
+			echo "<a  href=\"bw/admin/admincomments.php?action=editonecomment&IdComment=",$c->IdComment."\">edit</a>" ; 
+		}
 		?>
 		
 		</td>

@@ -6,6 +6,7 @@ class LastcommentsModel extends  RoxModelBase
     
     public function __construct()
     {
+        $this->BW_Right = MOD_right::get();
         parent::__construct();
     }
 	
@@ -37,7 +38,7 @@ order by comments.id desc limit $limit" ;
 	 */    
     public function UpdateIdCommentOfTheMoment() {
 		$tt=$this->bulkLookup("select comments.id as IdComment,CommentNbVotes(comments.id) as NbVotes from comments 
-		 order by comments.id limit ".$_SESSION["Param"]->NbCommentsInLastComments) ;
+		 order by comments.id desc limit ".$_SESSION["Param"]->NbCommentsInLastComments) ;
 		$Max=0 ;
 		$IdComment=0 ;
 		for ($ii=0;$ii<$_SESSION["Param"]->NbCommentsInLastComments;$ii++) {

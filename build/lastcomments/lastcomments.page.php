@@ -10,6 +10,7 @@
 class LastCommentsPage extends PageWithActiveSkin {
 
     public function __construct($_Data) {
+        $this->BW_Right = MOD_right::get();
         $this->Data=$_Data;
     }
 

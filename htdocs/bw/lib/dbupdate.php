@@ -1312,6 +1312,24 @@ $updates[]="INSERT INTO `words` VALUES (0,'week_ago', 'en', '%s week ago', '2009
 $updates[]="INSERT INTO `words` VALUES (0,'months_ago', 'en', '%s months ago', '2009-05-21 13:00:34', 'no', 0, 'This is used to display x months ago\r\n\r\n%s stands for the number of months', 1, '2009-05-21 13:00:34', 5)";
 $updates[]="INSERT INTO `words` VALUES (0,'month_ago', 'en', '%s month ago', '2009-05-21 13:01:00', 'no', 0, 'This is used to display 1 month ago\r\n\r\n%s stands for the number of month (1 or 0)', 1, '2009-05-21 13:01:00', 5)";
 
+$updates[] = "CREATE FUNCTION MemberNbComments(v_IdMember INT)   
+	RETURNS INT  
+	DETERMINISTIC
+    BEGIN
+	  DECLARE iRes INT ;
+      select count(*) into iRes from comments where IdToMember=v_IdMember ;
+	 RETURN iRes ;
+    END" ;
+
+$updates[] = "CREATE FUNCTION CommentNbVotes(v_IdComment INT)   
+	RETURNS INT  
+	DETERMINISTIC
+    BEGIN
+	  DECLARE iRes INT ;
+      select count(*) into iRes from comments_ofthemomment_votes where IdComment=v_IdComment ;
+	 RETURN iRes ;
+    END" ;
+
     if (empty($res)) {
         $version = 0;
     } else {

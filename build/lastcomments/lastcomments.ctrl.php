@@ -21,16 +21,34 @@ class LastCommentsController extends RoxControllerBase
     {
         $request = PRequest::get()->request;
         if (!isset($request[1]))         {
-		if( ($User = APP_User::login())) {
-			$page = new LastcommentsPage($this->_model->GetLastComments($_SESSION["Param"]->NbCommentsInLastComments));
-			$page->model = $this->_model;
-		}
-		else {
-			$page = new MembersMustloginPage;
-		}
+			if( ($User = APP_User::login())) {
+				$page = new LastcommentsPage($this->_model->GetLastComments($_SESSION["Param"]->NbCommentsInLastComments));
+				$page->model = $this->_model;
+			}
+			else {
+				$page = new MembersMustloginPage;
+			}
 //            $page->member = $this->_model->getLoggedInMember();
             return $page;
         }
+		else if ($request[1]=="vote") {
+			$IdComment=0 ;
+			if (isset($request[2])) {
+				$IdComment=$request[2] ;
+			}
+			$this->_model->AddVote($IdComment) ;
+			$page = new LastcommentsPage($this->_model->GetLastComments($_SESSION["Param"]->NbCommentsInLastComments));
+			$page->model = $this->_model;
+		}
+		else if ($request[1]=="voteremove") {
+			$IdComment=0 ;
+			if (isset($request[2])) {
+				$IdComment=$request[2] ;
+			}
+			$this->_model->RemoveVote($IdComment) ;
+			$page = new LastcommentsPage($this->_model->GetLastComments($_SESSION["Param"]->NbCommentsInLastComments));
+			$page->model = $this->_model;
+		}
         $page->member = $this->_model->getLoggedInMember();
         $page->model = $this->_model;
         return $page;

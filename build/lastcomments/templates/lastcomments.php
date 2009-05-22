@@ -46,6 +46,14 @@
 		<?php  echo $c->TextWhere,"<br/>",$c->TextFree ; ?>
 		</td>
 		<td>
+		<?php
+		if (empty($c->IdCommentHasVote)) { // If there is not yet any vote from teh current member for this comment
+			echo "<a  href=\"lastcomments/vote/",$c->IdComment," title=\"".$words->getFormatted("VoteCommentIsSignificantExplanation")."\">",$words->getFormatted("VoteCommentIsSignificant"),"</a>" ; 
+		}
+		else {
+			echo "<a  href=\"lastcomments/voteremove/",$c->IdComment," title=\"".$words->getFormatted("VoteCommentIsSignificantExplanation")."\">",$words->getFormatted("VoteCommentIsSignificantRemove"),"</a>" ; 
+		}
+		?>
 		
 		</td>
 	</tr>

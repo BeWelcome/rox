@@ -141,9 +141,7 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 
 	$Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces 
 	if ($Scope != "") {
-		if ($Scope {
-			0 }
-		!= "\"")
+		if ($Scope {0} != "\"")
 		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing 
 	}
 
@@ -167,11 +165,13 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
 		$rlevel = $row->Level;
 		$rscope = ltrim(rtrim($row->Scope)); // remove extra space
 		if ($OptionalIdMember == 0) { // if its current member cache for next research 
+//			$_SESSION[$this->IdSession . $Name]="set" ;  // Caching is not enable if this line is commented (but test are needed before uncomenting it)
 			$_SESSION[$this->tablelevel . $Name] = $rlevel;
 			$_SESSION[$this->tablescope . $Name] = $rscope;
 		}
 	}
 	if ($Scope != "") { // if a specific scope is asked
+	echo "<br />testing \$Name=",$Name," \$Scope=$Scope \$rscope=",$rscope,"<br />\n" ;
 		if ($rscope == "\"All\"") {
 			if (($_SESSION["IdMember"]) == 1)
 				return (10); // Admin has all rights at level 10
@@ -210,7 +210,7 @@ public function hasRightAny()
 	// Test if in the session cache it is allready said that the member has no right
 	if ((isset($_SESSION['Param'])) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
 	     (isset($_SESSION['hasRightAny'])) and 
-		 ($_SESSION['hasRightAny']='no') ){
+		 ($_SESSION['hasRightAny']=='no') ){
 		 
 		 return(false) ;		 
 	} 

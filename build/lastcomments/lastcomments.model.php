@@ -47,7 +47,9 @@ order by comments.id desc limit $limit" ;
 				$IdComment=$tt[$ii]->IdComment ;
 			}
 		}
+
 		if (($IdComment>0) and (($_SESSION["Param"]->IdCommentOfTheMoment!=$IdComment)or ($_SESSION["Param"]->IdCommentOfTheMoment==0)))  {
+			$_SESSION["Param"]->IdCommentOfTheMoment=$IdComment ;
 			$sql="update params set IdCommentOfTheMoment=".$IdComment. " limit 1" ;
 			$qq = $this->dao->query($sql);
 			if (!$qq) {

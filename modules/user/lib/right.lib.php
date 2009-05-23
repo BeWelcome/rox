@@ -171,7 +171,6 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
 		}
 	}
 	if ($Scope != "") { // if a specific scope is asked
-	echo "<br />testing \$Name=",$Name," \$Scope=$Scope \$rscope=",$rscope,"<br />\n" ;
 		if ($rscope == "\"All\"") {
 			if (($_SESSION["IdMember"]) == 1)
 				return (10); // Admin has all rights at level 10

@@ -44,11 +44,11 @@ order by comments.id desc limit $limit" ;
 		for ($ii=0;$ii<$_SESSION["Param"]->NbCommentsInLastComments;$ii++) {
 			if ($tt[$ii]->NbVotes>$Max) {
 				$Max=$tt[$ii]->NbVotes ;
-				$IdComment^$tt[$ii]->IdComment ;
+				$IdComment=$tt[$ii]->IdComment ;
 			}
 		}
-		if ($IdComment>0) {
-			$sql="update params set IdCommentOfTheMoment=$IdComment limit 1" ;
+		if (($IdComment>0) and (($_SESSION["Param"]->IdCommentOfTheMoment!=$IdComment)or ($_SESSION["Param"]->IdCommentOfTheMoment==0)))  {
+			$sql="update params set IdCommentOfTheMoment=".$IdComment. " limit 1" ;
 			$qq = $this->dao->query($sql);
 			if (!$qq) {
 				throw new PException('UpdateIdCommentOfTheMoment failed for '.$sql.' !');

@@ -207,12 +207,15 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        $words = $this->getWords();
-        $comment_id = ((!$this->Comment) ? $words->InsertInMTrad($this->dao->escape($comment), 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($this->dao->escape($comment), 'membersgroups.Comment', $this->getPKValue(), $this->Comment));
-
-        if ($comment_id != $this->Comment)
+        if ($comment)
         {
-            $this->Comment = $comment_id;
+            $words = $this->getWords();
+            $comment_id = ((!$this->Comment) ? $words->InsertInMTrad($this->dao->escape($comment), 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($this->dao->escape($comment), 'membersgroups.Comment', $this->getPKValue(), $this->Comment));
+
+            if ($comment_id != $this->Comment)
+            {
+                $this->Comment = $comment_id;
+            }
         }
 
         $this->IacceptMassMailFromThisGroup = $acceptgroupmail;

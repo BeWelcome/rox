@@ -90,6 +90,7 @@ class RoxModelBase extends RoxComponentBase
         return $this->logged_in_member;
     }
 
+
     /**
      * This method fetches a bunch of rows from the database.
      * It has some funny mechanics, which you can usually just ignore.

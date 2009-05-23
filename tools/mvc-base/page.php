@@ -22,15 +22,6 @@ abstract class AbstractBasePage extends VisualComponent
         return $this->_model;
     }
     
-    protected function getWords()
-    {
-        if (!$this->_words) {
-            $this->_words = new MOD_words();
-        }
-        return $this->_words; 
-    }
-    
-    
     public function createWidget($classname)
     {
         $widget = new $classname();

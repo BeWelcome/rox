@@ -82,7 +82,21 @@ class RoxComponentBase
     function __toString() {
         return print_r($this, true);
     }
+
+
+    /**
+     * returns an instance of the MOD_words class
+     *
+     * @access protected
+     * @return object
+     */    
+    protected function getWords()
+    {
+        if (!$this->MOD_words)
+        {
+            $this->MOD_words = new MOD_words;
+        }
+        return $this->MOD_words;
+    }
 }
 
-
-?>

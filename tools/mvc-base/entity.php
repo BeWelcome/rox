@@ -661,14 +661,14 @@ SQL;
         {
             return false;
         }
-        
+
         // if primary key is not loaded with data, don't try to update anything
         if (!$this->isPKSet())
         {
             return false;
         }
         
-        if (!$this->validateSelf() || !is_array($this->_valid_fields) || count($this->_valid_fields) == 0)
+        if (!$this->validateSelf())
         {
             return false;
         }
@@ -679,7 +679,7 @@ SQL;
         }
 
         $set_string = "";
-        foreach ($this->_valid_fields as $key => $value)
+        foreach ($this->getColumns() as $key)
         {
             if (is_array($this->getPrimaryKey()))
             {
@@ -695,7 +695,7 @@ SQL;
                     continue;
                 }
             }
-            $value = $this->dao->escape($value);
+            $value = $this->dao->escape($this->$key);
             $set_string .= (($set_string != '') ? ', ' : '');
             $set_string .= "{$key} = '" . $this->dao->escape($value) . "'";
         }
@@ -1000,21 +1000,6 @@ SQL;
             return false;
         }
         return true;
-    }
-
-    /**
-     * returns an instance of the MOD_words class
-     *
-     * @access protected
-     * @return object
-     */    
-    protected function getWords()
-    {
-        if (!$this->MOD_words)
-        {
-            $this->MOD_words = new MOD_words;
-        }
-        return $this->MOD_words;
     }
 }
 

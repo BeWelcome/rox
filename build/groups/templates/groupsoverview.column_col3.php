@@ -29,7 +29,7 @@
             
                 <h3><?= $words->get('GroupsList'); ?></h3>
                 <?php
-                $featured_groups = $this->featured_groups;
+                $featured_groups = (($this->featured_groups) ? $this->featured_groups : array());
                 foreach($featured_groups as $group_data) :
                     if ($group_data->Type == 'NeedInvitation' && !$this->model->getLoggedInMember()) continue;
                  ?>

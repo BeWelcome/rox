@@ -48,13 +48,15 @@
 		<td>
 		<?php
 		if (empty($c->IdCommentHasVote)) { // If there is not yet any vote from teh current member for this comment
-			echo "<a  href=\"lastcomments/vote/",$c->IdComment,"\"itle=\"".$words->getBuffered("VoteCommentIsSignificantExplanation")."\">",$words->getBuffered("VoteCommentIsSignificant"),"</a>" ; 
+			echo "<a  href=\"lastcomments/vote/",$c->IdComment,"\" title=\"".$words->getBuffered("VoteCommentIsSignificantExplanation")."\">",$words->getBuffered("VoteCommentIsSignificant"),"</a>" ; 
 		}
 		else {
-			echo "<a  href=\"lastcomments/voteremove/",$c->IdComment,"\"title=\"".$words->getBuffered("VoteCommentIsSignificantExplanation")."\">",$words->getBuffered("VoteCommentIsSignificantRemove"),"</a>" ; 
+			echo "<a  href=\"lastcomments/voteremove/",$c->IdComment,"\" title=\"".$words->getBuffered("VoteCommentIsSignificantExplanation")."\">",$words->getBuffered("VoteCommentIsSignificantRemove"),"</a>" ; 
 		}
-		if ( ($this->BW_Right->HasRight("Comments","UdpateComment"))  or ($this->BW_Right->HasRight("Comments","AdminComment"))){
-			echo "<a  href=\"bw/admin/admincomments.php?action=editonecomment&IdComment=",$c->IdComment."\">edit</a>" ; 
+		
+//		echo " \$this->BW_Right->hasRight(\"Comments\")=",$this->BW_Right->hasRight("Comments") ;
+		if ( ($this->BW_Right->hasRight("Comments","UdpateComment"))  or ($this->BW_Right->hasRight("Comments","AdminComment"))){
+			echo "<br /><a  href=\"bw/admin/admincomments.php?action=editonecomment&IdComment=",$c->IdComment."\" title=\"modify this comment with admin rights\">edit</a>" ; 
 		}
 		?>
 		

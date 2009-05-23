@@ -23,7 +23,6 @@ class LastCommentsController extends RoxControllerBase
         if (!isset($request[1]))         {
 			if( ($User = APP_User::login())) {
 				$page = new LastcommentsPage($this->_model->GetLastComments($_SESSION["Param"]->NbCommentsInLastComments));
-				$page->model = $this->_model;
 			}
 			else {
 				$page = new MembersMustloginPage;
@@ -38,7 +37,9 @@ class LastCommentsController extends RoxControllerBase
 			}
 			$this->_model->AddVote($IdComment) ;
 			$page = new LastcommentsPage($this->_model->GetLastComments($_SESSION["Param"]->NbCommentsInLastComments));
-			$page->model = $this->_model;
+		}
+		else if ($request[1]=="commentofthemoment") {
+			$page = new LastcommentsPage($this->_model->GetCommentOfTheMoment(),$request[1]);
 		}
 		else if ($request[1]=="voteremove") {
 			$IdComment=0 ;
@@ -47,9 +48,7 @@ class LastCommentsController extends RoxControllerBase
 			}
 			$this->_model->RemoveVote($IdComment) ;
 			$page = new LastcommentsPage($this->_model->GetLastComments($_SESSION["Param"]->NbCommentsInLastComments));
-			$page->model = $this->_model;
 		}
-        $page->member = $this->_model->getLoggedInMember();
         $page->model = $this->_model;
         return $page;
     }

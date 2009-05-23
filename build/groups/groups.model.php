@@ -618,7 +618,7 @@ class GroupsModel extends  RoxModelBase
             $note->Type = 'message';
             $note->Link = "/groups/{$group->getPKValue()}";
             $note->WordCode = '';
-            $note->FreeText = $this->getWords()->get('GroupsInvitedNote', $groups->Name);
+            $note->FreeText = $this->getWords()->get('GroupsInvitedNote', $group->Name);
             $note->insert();
         }
     }

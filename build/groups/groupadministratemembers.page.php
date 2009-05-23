@@ -155,7 +155,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                     add_invite: function(e){
                         var it = e.target || e.srcElement;
                         var id = it.id.substr(14);
-                        var ajax = new Ajax.Request('groups/<?= $this->group->getPKValue(); ?>/invitemember/' + id, {
+                        var ajax = new Ajax.Request('groups/<?= $this->group->getPKValue(); ?>/invitememberajax/' + id, {
                             method: 'get',
                             onSuccess: function(transport){
                                 if (transport.responseText == 'success')

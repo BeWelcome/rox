@@ -23,6 +23,7 @@ Boston, MA  02111-1307, USA.
 */
 require "auth.lib.php";
 
+
 class MOD_bw_user_Auth extends MOD_user_Auth
 {
     private $_immediateRedirect = '';
@@ -77,6 +78,16 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 		return true;
     }
 
+/*
+
+Note from JeanYves:
+I think this routine doBWLogin is obsolete and that now`\build\login\login.model.php does the trick 
+I have added a Log line to see if it is really obsolete or not
+check the logs for "In doBWLogin, jy believe its obsolete"
+
+
+*/
+
     protected function doBWLogin( $handle, $password )
     {
     	global $_SYSHCVOL;
@@ -100,7 +111,10 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 //			}
 //		}
 		// End of while with the username which may have been reused
-	
+
+		MOD_log::get()->write("In doBWLogin, jy believe its obsolete, if this line appears in logs, it is not", "Login");
+
+		
 		$query = "SELECT id,Status,Username,PassWord FROM members WHERE Username='" . $Username."'" ;
 //		. "' AND PassWord = PASSWORD('".$this->dao->escape($password)."')   // note from jy : this I don't want because it can be logged in slow queries !		
 
@@ -140,6 +154,11 @@ class MOD_bw_user_Auth extends MOD_user_Auth
 			case "ChoiceInactive" :  // in case an inactive member comes back
 				MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='ChoiceInactive'") ;
+				$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status='Active' ;
+				break ;
+			case "OutOfRemind" :  // in case an inactive member comes back
+				MOD_log::get()->write("Successful login, becoming active again (Was OutOfRemind), with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='OutOfRemind'") ;
 				$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status='Active' ;
 				break ;
 			case "Active" :

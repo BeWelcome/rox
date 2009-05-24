@@ -297,15 +297,32 @@ WHERE   handle = '$esc_handle'
         switch ($m->Status) {
 
             case "ChoiceInactive" :  // in case an inactive member comes back
-                MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 $this->singleLookup(
                     "
 UPDATE  members
 SET     Status     = 'Active'
-WHERE   members.id = $member_id
+WHERE   members.id = $member_id and Status='ChoiceInactive'
                     "
                 );
+                // the following is needed for MOD_log::get,
+                // because otherwise it would not link the log with the right member
+                $_SESSION['IdMember'] = $m->id ;
                 $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status='Active' ;
+                MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
+                break ;
+            case "OutOfRemind" :  // in case an inactive member comes back
+                $this->singleLookup(
+                    "
+UPDATE  members
+SET     Status     = 'Active'
+WHERE   members.id = $member_id and Status='OutOfRemind'
+                    "
+                );
+                // the following is needed for MOD_log::get,
+                // because otherwise it would not link the log with the right member
+                $_SESSION['IdMember'] = $m->id ;
+                $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status='Active' ;
+                MOD_log::get()->write("Successful login, becoming active again (was OutOfRemind), with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 break ;
             case "Active" :
             case "ActiveHidden" :

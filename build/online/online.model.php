@@ -56,22 +56,14 @@ class OnlineModel extends PAppModel {
 
 	 
 	 // The GetTotMembers function will return the total number of members who can potentially fully use BW
-	 // This more or less does the same thing as $_SESSION['WhoIsOnlineCount']
     public function GetTotMembers() {
-		if (empty($_SESSION['WhoIsOnlineCount'])) {
-			MOD_user::updateSessionOnlineCounter();
-		}
-/*
 		$query = "select SQL_CACHE count(*) as cnt from members where (Status='Active' or Status='ChoiceInActive' or Status='OutOfRemind')";
 		$s = $this->dao->query($query);
 		if (!$s) {
 			throw new PException('Failed to get Tot Members!');
 		}
 		$row = $s->fetch(PDB::FETCH_OBJ) ;
-		$_SESSION['WhoIsOnlineCount']
 		return ($row->cnt) ;
-*/
-		return($_SESSION['WhoIsOnlineCount']) ;
 	 } // end of GetTotMembers
 
 }

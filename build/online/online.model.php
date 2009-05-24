@@ -34,7 +34,7 @@ class OnlineModel extends PAppModel {
 		 
 	 } // end of GetMembers
 	 
-	 // The GetGuests unction will return an array with guest online
+	 // The GetGuests function will return an array with guest online
 	 // Not a only people with righ ShowAdctivity or Admin will be able to see them
     public function GetGuests() {
 	 	global $_SYSHCVOL ; 
@@ -43,7 +43,7 @@ class OnlineModel extends PAppModel {
 		// Case of members who can see additional information about members last activity
 		if ($Rights->hasRight("Debug","ShowLastActivity")) {
 			$query = "select appearance,lastactivity,now()-updated as NbSec from guestsonline where guestsonline.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) order by guestsonline.updated  desc";
-       	$s = $this->dao->query($query);
+				$s = $this->dao->query($query);
 			if (!$s) {
 				throw new PException('Failed to get online guests!');
 			}
@@ -56,14 +56,22 @@ class OnlineModel extends PAppModel {
 
 	 
 	 // The GetTotMembers function will return the total number of members who can potentially fully use BW
+	 // This more or less does the same thing as $_SESSION['WhoIsOnlineCount']
     public function GetTotMembers() {
-			$query = "select SQL_CACHE count(*) as cnt from members where (Status='Active' or Status='InActive')";
-       	$s = $this->dao->query($query);
-			if (!$s) {
-				throw new PException('Failed to get Tot Members!');
-			}
-			$row = $s->fetch(PDB::FETCH_OBJ) ;
-			return ($row->cnt) ;
+		if (empty($_SESSION['WhoIsOnlineCount'])) {
+			MOD_user::updateSessionOnlineCounter();
+		}
+/*
+		$query = "select SQL_CACHE count(*) as cnt from members where (Status='Active' or Status='ChoiceInActive' or Status='OutOfRemind')";
+		$s = $this->dao->query($query);
+		if (!$s) {
+			throw new PException('Failed to get Tot Members!');
+		}
+		$row = $s->fetch(PDB::FETCH_OBJ) ;
+		$_SESSION['WhoIsOnlineCount']
+		return ($row->cnt) ;
+*/
+		return($_SESSION['WhoIsOnlineCount']) ;
 	 } // end of GetTotMembers
 
 }

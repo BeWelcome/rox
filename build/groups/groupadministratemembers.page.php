@@ -52,7 +52,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             <tr>
                 <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                 <td><a href="people/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
-                <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>{$words->get('GroupsBanMember')}</a> / <a class='kick' href='groups/{$this->group->getPKValue()}/kickmember/{$member->getPKValue()}'>{$words->get('GroupsKickMember')}</a>");?></td>
+                <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>{$words->getSilent('GroupsBanMember')}</a> / <a class='kick' href='groups/{$this->group->getPKValue()}/kickmember/{$member->getPKValue()}'>{$words->getSilent('GroupsKickMember')}</a>");?></td>
             </tr>
         <?php endforeach; ?>
         </table>
@@ -61,7 +61,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         var memberkick = $('current_members').getElementsBySelector('a.kick');
         memberban.each(function(elem){
             elem.observe('click', function(e){
-                if (!confirm('<?= $words->get('GroupsConfirmMemberBan');?>'))
+                if (!confirm('<?= $words->getSilent('GroupsConfirmMemberBan');?>'))
                 {
                     Event.stop(e);
                 }
@@ -69,13 +69,14 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         });
         memberkick.each(function(elem){
             elem.observe('click', function(e){
-                if (!confirm('<?= $words->get('GroupsConfirmMemberKick');?>'))
+                if (!confirm('<?= $words->getSilent('GroupsConfirmMemberKick');?>'))
                 {
                     Event.stop(e);
                 }
             })
         });
         </script>
+        <?=$words->flushBuffer()?>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
 
@@ -119,8 +120,9 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 <h4><?= $words->get('GroupsInviteMember') ?></h4>
                 <div id='search_result' style='display: none;padding: 3px; margin-bottom: 3px'></div>
                 <form method='get' action='groups/<?= $this->group->getPKValue(); ?>/invitemembers/search' id='invite_form'>
-                    <input type='text' value='Enter username' name='username' id='search_username'/><input type='submit' value='<?= $words->get('Search');?>' id='search_username_submit'/>
+                    <input type='text' value='Enter username' name='username' id='search_username'/><input type='submit' value='<?= $words->getSilent('Search');?>' id='search_username_submit'/>
                 </form>
+                <?=$words->flushBuffer()?>
             </div>
             <script type='text/javascript'>
                 var search_handler = {
@@ -137,7 +139,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             a.href = '';
                             a.id = 'invite_member_' + member_object[m];
                             a.title = '<?= $words->get('GroupsClickToSendInvite');?>' + m;
-                            a.appendChild(document.createTextNode('<?= $words->get('GroupsInvite');?>' + m));
+                            a.appendChild(document.createTextNode('<?= $words->getSilent('GroupsInvite');?>' + m));
                             $(a).observe('click',function(e){
                                 e = e || window.event;
                                 search_handler.add_invite(e);
@@ -149,7 +151,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                         }
                         if (counter == 0)
                         {
-                            search_div.appendChild(document.createTextNode('<?= $words->get('GroupsCouldNotFindMembers');?>'));
+                            search_div.appendChild(document.createTextNode('<?= $words->getSilent('GroupsCouldNotFindMembers');?>'));
                         }
                     },
                     add_invite: function(e){
@@ -164,11 +166,11 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                                 }
                                 else
                                 {
-                                    alert('<?= $words->get('GroupsCouldNotInvite');?>');
+                                    alert('<?= $words->getSilent('GroupsCouldNotInvite');?>');
                                 }
                             },
                             onFailure: function(transport){
-                                alert('<?= $words->get('GroupsInviteFailedTechError');?>');
+                                alert('<?= $words->getSilent('GroupsInviteFailedTechError');?>');
                             }
                         });
                     },
@@ -176,7 +178,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                         var invited = it.firstChild.data.substr(7);
                         var tr = document.createElement('tr');
                         var td = document.createElement('td');
-                        td.appendChild(document.createTextNode(invited + '<?= $words->get('GroupsHasBeenInvited');?>'));
+                        td.appendChild(document.createTextNode(invited + '<?= $words->getSilent('GroupsHasBeenInvited');?>'));
                         td.setAttribute('colspan', 2);
                         tr.appendChild(td);
                         $('invited_members').tBodies[0].appendChild(tr);
@@ -185,7 +187,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
 
                 };
                 $('search_username').observe('focus', function(e){
-                    if ($('search_username').value == '<?= $words->get('GroupsEnterUsername');?>')
+                    if ($('search_username').value == '<?= $words->getSilent('GroupsEnterUsername');?>')
                     {
                         $('search_username').value = '';
                     }
@@ -199,15 +201,15 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             search_handler.display_result(result);
                         },
                         onFailure: function(transport){
-                            alert('<?= $words->get('GroupsInviteFailedTechError');?>');
+                            alert('<?= $words->getSilent('GroupsInviteFailedTechError');?>');
                         }
                     });
                     Event.stop(e)
                 });
             </script>
+            <?=$words->flushBuffer()?>
         </div> <!-- c50r -->
     </div> <!-- subcolums -->
-
 </div>
     <?php
     }

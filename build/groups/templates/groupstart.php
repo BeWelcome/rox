@@ -13,9 +13,13 @@
                 </div> <!--row floatbox -->
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>
-                <div class="floatbox">
+                <div class="row floatbox">
                     <?= $Forums->showExternalGroupThreads($group_id); ?>
                 </div> <!-- floatbox -->
+                <?php
+                $shouts = new ShoutsController();
+    	        $shouts->shoutsList('groups',$group_id);
+                ?>
                 
             </div> <!-- subcl -->
         </div> <!-- c62l -->

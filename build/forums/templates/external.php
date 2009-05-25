@@ -44,7 +44,8 @@ $threadsliced = array_slice($threads, 0, 5);
         $max = $thread->replies + 1;
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
         
-        $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
+//        $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
+        $last_url = $uri.'s'.$thread->threadid.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
         
         
         ?>

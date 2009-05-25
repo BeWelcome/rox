@@ -21,7 +21,7 @@ if (count($languages) > 1 || $myself) {
             if ($language->ShortCode == $profile_language_code) {
                 
 ?><span class="activelanguage"><?=$profile_language_name ?><? if ($this->myself) { ?><a class="button" href="editmyprofile/<?=$profile_language_code?>/delete"><?=$words->get('delete')?></a><? } ?></span><?
-
+                $activelang_set = true;
             } else {
                 
         ?><a class="availablelanguages" href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?></a><?
@@ -29,7 +29,10 @@ if (count($languages) > 1 || $myself) {
 			$ii++;
             }
             echo '&nbsp;&nbsp;';
-        } ?>
+        } 
+        if (!isset($activelang_set)) echo '<span class="activelanguage">'.$profile_language_name.'</span>';
+        
+        ?>
 		</p>
 <?php } ?>
 <?php if ($myself) { ?>
@@ -51,5 +54,20 @@ if (count($languages) > 1 || $myself) {
       } ?>
     </optgroup>
 </select>
+<?=$words->flushBuffer()?>
 <?php } ?>
 </div> <!-- profile_translations -->
+
+<script type="text/javascript">//<!--
+    function linkDropDown(event){
+        var element = Event.element(event);
+        var index = element.selectedIndex;
+        var lang = element.options[index].value;
+        window.location.href = http_baseuri + 'editmyprofile/' + lang;
+    }
+
+    document.observe("dom:loaded", function() {
+      $('add_language').observe('change',linkDropDown);
+    });
+//-->
+</script>

@@ -1,3 +1,7 @@
+<?php
+$urlstring = 'editmyprofile';
+require_once 'profileversion.php';
+?>
 <form method="post" action="<?=$page_url?>" name="signup" id="profile" enctype="multipart/form-data">
 <input type="hidden"  name="memberid"  value="<?=$member->id?>" />
 <input type="hidden"  name="profile_language"  value="<?=$profile_language?>" />
@@ -10,13 +14,6 @@ require_once 'editprofile_form.php';
 ?>
 </form>
 <script type="text/javascript">//<!--
-    function linkDropDown(event){
-        var element = Event.element(event);
-        var index = element.selectedIndex;
-        var lang = element.options[index].value;
-        window.location.href = http_baseuri + 'editmyprofile/' + lang;
-    }
-
     var iterator = 1;
     function insertNewTemplate(event){
         var element = Event.element(event);
@@ -34,7 +31,6 @@ require_once 'editprofile_form.php';
     document.observe("dom:loaded", function() {
       //new FieldsetMenu('profile-edit-form', {active: "profilesummary"});
       $('langbutton').observe('click',insertNewTemplate);
-      $('add_language').observe('change',linkDropDown);
     });
 //-->
 </script>

@@ -29,7 +29,7 @@ require_once "layout/error.php";
 
 if (IsLoggedIn()) {
 	if (HasRight("Beta") <= 0) {
-		echo "This requires the <b>Beta</b> right";
+		echo "This need right <b>Beta</b> for using this alternatively";
 		exit (0);
 	}
 	$IdTriggerer = $_SESSION['IdMember'];
@@ -40,20 +40,17 @@ if (IsLoggedIn()) {
 } // not logged
 
 // Number of member
-$rr = LoadRow("SELECT COUNT(*) AS cnt FROM members WHERE Status='Active'");
+$rr = LoadRow("SELECT COUNT(*) AS cnt FROM members WHERE Status in ('Active','ChoiceInactive','OutOfRemind')");
 $NbActiveMembers=$rr->cnt;
 
 // Number of member with at least one positive comment
-//$rr=LoadRow("SELECT COUNT(*) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)");
-$rr = LoadRow("SELECT COUNT(DISTINCT(members.id)) AS cnt FROM members,comments WHERE Status='Active' AND members.id=comments.IdToMember AND comments.Quality='Good'");
+//$rr=LoadRow("SELECT COUNT(*) as cnt from members,comments where Status in ('Active','ChoiceInactive','OutOfRemind') and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)");
+$rr = LoadRow("SELECT COUNT(DISTINCT(members.id)) AS cnt FROM members,comments WHERE Status in ('Active','ChoiceInactive','OutOfRemind') AND members.id=comments.IdToMember AND comments.Quality='Good'");
 $NbMemberWithOneTrust=$rr->cnt;
 
 $d1=GetParam("d1",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"))));
 $d2=GetParam("d2",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d"), date("Y")))); 
 
-if (empty($_SYSHCVOL['ARCH_DB'])) {
-	$_SYSHCVOL['ARCH_DB']="BW_ARCH" ; // This patch will be to remove when a fix will be found for $_SYSHCVOL jy 24/5/2008
-}
 // Number of member who have logged
 $str="SELECT COUNT(distinct(members.id)) as cnt from members right join ".$_SYSHCVOL['ARCH_DB'].".logs on  members.id=".$_SYSHCVOL['ARCH_DB'].".logs.IdMember and ".$_SYSHCVOL['ARCH_DB'].".logs.type='Login' and ".$_SYSHCVOL['ARCH_DB'].".logs.created between '$d1' and '$d2' and ".$_SYSHCVOL['ARCH_DB'].".logs.Str like 'Successful login%' ";
 $rr=LoadRow($str);
@@ -69,7 +66,6 @@ $NbMessageRead=$rr->cnt;
 
 
 if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
-
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
@@ -86,7 +82,7 @@ if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 	
 	
 // members per countries
-	$str="select countries.Name as countryname,count(*) as cnt from members,countries,cities where members.Status='Active' and members.IdCity=cities.id and cities.IdCountry=countries.id group by countries.id order by cnt desc" ;
+	$str="select countries.Name as countryname,count(*) as cnt from members,countries,cities where members.Status in ('Active','ChoiceInactive','OutOfRemind') and members.IdCity=cities.id and cities.IdCountry=countries.id group by countries.id order by cnt desc" ;
 	$qry=sql_query($str) ;
 	echo "<table><tr><th>Members by countries</th><th>",$NbActiveMembers,"</th>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
@@ -111,7 +107,7 @@ if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 	echo "</table>\n";
 	
 // Members by sex
-  $str="SELECT COUNT(*) as cnt,Gender from members where Status='Active' group by Gender";
+  $str="SELECT COUNT(*) as cnt,Gender from members where Status in ('Active','ChoiceInactive','OutOfRemind') group by Gender";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=2>Members by Gender</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {
@@ -122,7 +118,7 @@ if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 	echo "</table>\n";
 
 // Members by byear
-  $str="SELECT COUNT(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status='Active' and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
+  $str="SELECT COUNT(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status in ('Active','ChoiceInactive','OutOfRemind') and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=3>Members by approximative Age</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {
@@ -137,10 +133,8 @@ if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 	echo "this is just a display, stats have not been updated";
 }
 elseif (!isset($showstats)) {
-	$str="INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )" ;
-	$str.= "VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday )";
+	$str="INSERT INTO stats ( id , created , NbActiveMembers , NbMessageSent , NbMessageRead , NbMemberWithOneTrust , NbMemberWhoLoggedToday )VALUES (NULL ,CURRENT_TIMESTAMP , $NbActiveMembers , $NbMessageSent , $NbMessageRead , $NbMemberWithOneTrust , $NbMemberWhoLoggedToday )";
 	sql_query($str);
-   
 }
 exit(0);
 ?>

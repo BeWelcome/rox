@@ -25,17 +25,18 @@ class StatsModel extends RoxModelBase
      * retrieve the number of members for each country
      */
     public function getMembersPerCountry() {
-        $query = '
+		// This query countes the number of members in the same way as HC or CS
+        $query = "
 SELECT
     countries.Name AS countryname,
     count(*) AS cnt
 FROM members,countries,cities
-WHERE members.Status="Active" 
+WHERE (members.Status in ('Active','ChoiceInactive','OutOfRemind'))  
 AND members.IdCity=cities.id 
 AND cities.IdCountry=countries.id
 GROUP BY countries.id
 ORDER BY cnt desc
-        ';
+        ";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve number of members per Country!');

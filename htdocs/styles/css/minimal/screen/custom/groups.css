@@ -24,8 +24,15 @@
   width: 60px;
   overflow: hidden;
 }
-#groups fieldset {
-    margin-bottom: 1.5em;
+
+#search_result {
+  padding: 3px;
+  margin-bottom: 1em;
+}
+
+#search_result a {
+  margin: 0.4em;
+  display: block;
 }
 
 }

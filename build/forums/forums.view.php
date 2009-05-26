@@ -38,16 +38,13 @@ class ForumsView extends RoxAppView {
         $groupsDropdowns = $this->getGroupsDropdowns($IdGroup);
         $edit = false;
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
-	    $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
+	    $AppropriatedLanguage=0 ; // By default english will be proposed as dÃ©fault language
 	    $LanguageChoices=$this->_model->LanguageChoices() ;
         require 'templates/editcreateform.php';    
     }
     
     public function getURI()
     {
-		if (empty($this->uri)) {
-			$this->uri='forums/' ; // This should be already initialized but it seems it is not
-		}
         return $this->uri;
     }
     
@@ -60,8 +57,7 @@ class ForumsView extends RoxAppView {
      */
     public function threadURL($thread)
     {
-//        return $this->uri.'s'.$thread->threadid.'-'.str_replace(
-        return 'forums/'.'s'.$thread->threadid.'-'.str_replace(
+        return $this->uri.'s'.$thread->threadid.'-'.str_replace(
            array('/', ' '),
            array('-', '-'),
            $thread->title
@@ -70,7 +66,7 @@ class ForumsView extends RoxAppView {
     
     public static function postURL($post)
     {
-        return 'forums/s'.$post->threadid.'-'.str_replace(
+        return $this->forums_uri.'s'.$post->threadid.'-'.str_replace(
             array('/', ' '),
             array('-', '-'),
             $post->title
@@ -261,7 +257,7 @@ class ForumsView extends RoxAppView {
     /* This adds custom styles to the page*/
     public function customStyles() {
         $out = '';
-        $out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/forums.css" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css" type="text/css"/>';
         return $out;
     }
   
@@ -353,9 +349,7 @@ class ForumsView extends RoxAppView {
     private function getBoardPageLinks() {
         $currentPage = $this->_model->getPage();
         $itemsPerPage = $this->_model->THREADS_PER_PAGE;
-        $max = $this->_model->getBoard()->getNumberOfThreads();
-		$max=1000 ;
-        
+        $max = $this->_model->getBoard()->getNumberOfThreads();        
         return $this->getPageLinks($currentPage, $itemsPerPage, $max);
     }
 

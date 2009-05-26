@@ -31,6 +31,7 @@ $words = new MOD_words();
 
 $request = PRequest::get()->request;
 $uri = implode('/', $request);
+$groupsforum = ($request[0] == 'groups' && is_numeric($request[1])) ? $request[1] : false;
 
 $vars =& PPostHandler::getVars($callbackId);
 
@@ -179,15 +180,18 @@ if ($allow_title) { // New Topic
         ?>
     </div> <!-- row -->
 
+    <?php if ($groupsforum) { ?>
+        <input type="hidden" name="IdGroup" value="<?=$groupsforum?>">
+    <?php } else { ?>
     <div class="row">
         <label for="IdGroup"><?php echo $words->getFormatted("forum_label_group"); ?></label><br />
         <p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
         <?php
             echo $groupsDropdowns;
         ?>
-    </div> <!-- row -->
-    
-    
+    </div> <!-- row -->    
+    <?php } ?>
+
     <script type="text/javascript">
         function updateContinent() {
             var urlbit = 'k'+$('d_continent').value;

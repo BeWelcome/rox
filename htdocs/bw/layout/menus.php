@@ -100,9 +100,9 @@ function Menu2($link = "", $tt = "") {
 	echo "          <li", factive($link, "../trip"), "><a href=\"../trip\"><span>".ww("Trips")."</span></a></li>\n";  
 	echo "          <li", factive($link, "../blog"), "><a href=\"../blog\"><span>".ww("Blogs")."</span></a></li>\n";  
 	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";  
-	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
+	echo "          <li", factive($link, "../groups"), "><a href=\"../groups\"><span>", ww('Groups'), "</span></a></li>\n";
   echo "          <li", factive($link, "../gallery"), "><a href=\"../gallery\"><span>".ww("Gallery")."</span></a></li>\n";
-	echo "          <li", factive($link, "aboutus.php"), "><a href=\"../about\"><span>", ww('GetAnswers'), "</span></a></li>\n";
+	echo "          <li", factive($link, "../about"), "><a href=\"../about\"><span>", ww('GetAnswers'), "</span></a></li>\n";
   echo "        </ul>\n";
 
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
@@ -159,7 +159,7 @@ function menugetanswers($link = "") {
 	echo "      <div id=\"middle_nav\" class=\"clearfix\">\n";
 	echo "        <div id=\"nav_sub\">\n";
 	echo "          <ul>\n";
-		echo "            <li ", factive($link, "aboutus.php"), "><a href=\"".bwlink("../about")."", "\"><span>", ww('AboutUs'), "</span></a></li>\n";
+		echo "            <li ", factive($link, "../about"), "><a href=\"".bwlink("../about")."", "\"><span>", ww('AboutUs'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "faq.php"), "><a href=\"".bwlink("faq.php")."", "\"><span>", ww('Faq'), "</span></a></li>\n";
 		echo "            <li ", factive($link, "feedback.php"), "><a href=\"".bwlink("feedback.php")."", "\"><span>", ww('ContactUs'), "</span></a></li>\n";
 	echo "          </ul>\n";

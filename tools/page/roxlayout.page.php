@@ -94,7 +94,7 @@ class PageWithRoxLayout extends PageWithHTML
         $items[] = array('trips', 'trip', 'Trips');
         $items[] = array('blogs', 'blog', 'Blogs');
         $items[] = array('forums', 'forums', 'Community');
-        $items[] = array('groups', 'bw/groups.php', 'Groups');
+        $items[] = array('groups', 'groups', 'Groups');
         $items[] = array('gallery', 'gallery', 'Gallery');
         $items[] = array('getanswers', 'about', 'GetAnswers');
 

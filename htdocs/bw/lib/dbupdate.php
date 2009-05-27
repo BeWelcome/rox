@@ -1346,6 +1346,20 @@ $updates[] = "CREATE TABLE `accepters_reports_schedule` (
 `DelayInHourForNextOne` INT NOT NULL DEFAULT '24' COMMENT 'datetime for the next delivery of the report'
 ) ENGINE = MYISAM COMMENT = 'List of accepters with the next time they should receive the accepters report'";
 
+
+$updates[] = "
+
+CREATE TRIGGER before_members_update BEFORE UPDATE ON members
+FOR EACH ROW
+BEGIN
+
+IF NEW.Status<>OLD.Status THEN
+	insert into members_updating_status(IdMember,updated,created,OldStatus,NewStatus) values (NEW.id,now(),now(),OLD.Status,NEW.Status);
+END IF ;
+END 
+
+";
+
     if (empty($res)) {
         $version = 0;
     } else {

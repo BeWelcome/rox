@@ -92,11 +92,11 @@ class RoxEntityFactory
      */
     public function storeTableDescription($info, RoxEntityBase $entity)
     {
-        if (!is_array($info) || !empty($this->_table_descriptions[get_class($entity)]))
+        if (!is_array($info) || !empty(self::$_table_descriptions[get_class($entity)]))
         {
             return;
         }
-        $this->_table_descriptions[get_class($entity)] = $info;
+        self::$_table_descriptions[get_class($entity)] = $info;
         return;
     }
 
@@ -110,7 +110,7 @@ class RoxEntityFactory
     public function getEntityTableDescription(RoxEntityBase $entity)
     {
         $class = get_class($entity);
-        return ((!empty($this->_table_descriptions[$class])) ? $this->_table_descriptions[$class] : false);
+        return ((!empty(self::$_table_descriptions[$class])) ? self::$_table_descriptions[$class] : false);
     }
 
 }

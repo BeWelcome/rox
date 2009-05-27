@@ -40,12 +40,12 @@ if (IsLoggedIn()) {
 } // not logged
 
 // Number of member
-$rr = LoadRow("SELECT COUNT(*) AS cnt FROM members WHERE Status='Active'");
+$rr = LoadRow("SELECT COUNT(*) AS cnt FROM members WHERE Status in ('Active','ChoiceInactive','OutOfRemind')");
 $NbActiveMembers=$rr->cnt;
 
 // Number of member with at least one positive comment
-//$rr=LoadRow("SELECT COUNT(*) as cnt from members,comments where Status='Active' and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)");
-$rr = LoadRow("SELECT COUNT(DISTINCT(members.id)) AS cnt FROM members,comments WHERE Status='Active' AND members.id=comments.IdToMember AND comments.Quality='Good'");
+//$rr=LoadRow("SELECT COUNT(*) as cnt from members,comments where Status in ('Active','ChoiceInactive','OutOfRemind') and members.id=comments.IdToMember and FIND_IN_SET('ITrusthim',Lenght)");
+$rr = LoadRow("SELECT COUNT(DISTINCT(members.id)) AS cnt FROM members,comments WHERE Status in ('Active','ChoiceInactive','OutOfRemind') AND members.id=comments.IdToMember AND comments.Quality='Good'");
 $NbMemberWithOneTrust=$rr->cnt;
 
 $d1=GetParam("d1",strftime("%Y-%m-%d 00:00:00",mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"))));
@@ -82,7 +82,7 @@ if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 	
 	
 // members per countries
-	$str="select countries.Name as countryname,count(*) as cnt from members,countries,cities where members.Status='Active' and members.IdCity=cities.id and cities.IdCountry=countries.id group by countries.id order by cnt desc" ;
+	$str="select countries.Name as countryname,count(*) as cnt from members,countries,cities where members.Status in ('Active','ChoiceInactive','OutOfRemind') and members.IdCity=cities.id and cities.IdCountry=countries.id group by countries.id order by cnt desc" ;
 	$qry=sql_query($str) ;
 	echo "<table><tr><th>Members by countries</th><th>",$NbActiveMembers,"</th>\n" ;
 	while ($rr=mysql_fetch_object($qry)) {
@@ -107,7 +107,7 @@ if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 	echo "</table>\n";
 	
 // Members by sex
-  $str="SELECT COUNT(*) as cnt,Gender from members where Status='Active' group by Gender";
+  $str="SELECT COUNT(*) as cnt,Gender from members where Status in ('Active','ChoiceInactive','OutOfRemind') group by Gender";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=2>Members by Gender</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {
@@ -118,7 +118,7 @@ if ((IsLoggedIn()) or ((isset($showstats)) and ($showstats==true))) {
 	echo "</table>\n";
 
 // Members by byear
-  $str="SELECT COUNT(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status='Active' and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
+  $str="SELECT COUNT(*) as cnt,YEAR(BirthDate) as byear,(YEAR(NOW())-YEAR(BirthDate)) as age from members where Status in ('Active','ChoiceInactive','OutOfRemind') and YEAR(BirthDate)>1920 and YEAR(BirthDate)<YEAR(NOW()) group by YEAR(BirthDate) order by byear desc";
   $qry=sql_query($str);
 	echo "<table><tr><th colspan=3>Members by approximative Age</th>\n" ;
   while ($rr=mysql_fetch_object($qry)) {

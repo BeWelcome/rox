@@ -685,7 +685,7 @@ class GroupsController extends RoxControllerBase
         }
 
         $post = $args->post;
-        if (empty($post['GroupDesc_']) || empty($post['Type']) || empty($post['group_id']) || empty($post['VisiblePosts']) || !($group = $this->_model->findGroup($post['group_id'])) || !$this->_model->canAccessGroupAdmin($group))
+        if (empty($post['Type']) || empty($post['group_id']) || empty($post['VisiblePosts']) || !($group = $this->_model->findGroup($post['group_id'])) || !$this->_model->canAccessGroupAdmin($group))
         {
             $mem_redirect->problems = array('General' => true);
             return $return;

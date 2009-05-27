@@ -1329,6 +1329,22 @@ $updates[] = "CREATE FUNCTION CommentNbVotes(v_IdComment INT)
       select count(*) into iRes from comments_ofthemomment_votes where IdComment=v_IdComment ;
 	 RETURN iRes ;
     END" ;
+	
+	
+$updates[] = "CREATE TABLE `members_updating_status` (
+`IdMember` INT NOT NULL COMMENT 'id of the members',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the record was updated',
+`created` TIMESTAMP NOT NULL COMMENT 'when the record was created',
+`OldStatus` TINYTEXT NOT NULL COMMENT 'The value of the status before',
+`NewStatus` TINYTEXT NOT NULL COMMENT 'the new value of the status',
+INDEX ( `IdMember` , `updated` )
+) ENGINE = MYISAM COMMENT = 'This table is used for reporting to accepters, it records members Status changes'" ;
+
+$updates[] = "CREATE TABLE `accepters_reports_schedule` (
+`IdAccepter` INT NOT NULL COMMENT 'Id of the accepter',
+`TimeToDeliver` TIMESTAMP NOT NULL COMMENT 'datetime for the next delivery of the report'
+`DelayInHourForNextOne` INT NOT NULL DEFAULT '24' COMMENT 'datetime for the next delivery of the report'
+) ENGINE = MYISAM COMMENT = 'List of accepters with the next time they should receive the accepters report'";
 
     if (empty($res)) {
         $version = 0;

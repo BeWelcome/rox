@@ -20,6 +20,7 @@ class ForumsView extends RoxAppView {
         $this->_model =& $model;
 		$this->words=$this->_model->words ;
 		$this->BW_Right=$this->_model->BW_Right ;
+		$this->uri=$this->getURI() ;
     }
     
 		
@@ -45,7 +46,7 @@ class ForumsView extends RoxAppView {
     
     public function getURI()
     {
-        return $this->uri;
+        return $this->_model->forums_uri;
     }
     
     /**
@@ -57,7 +58,7 @@ class ForumsView extends RoxAppView {
      */
     public function threadURL($thread)
     {
-        return $this->uri.'s'.$thread->threadid.'-'.str_replace(
+        return 'forums/s'.$thread->threadid.'-'.str_replace(
            array('/', ' '),
            array('-', '-'),
            $thread->title

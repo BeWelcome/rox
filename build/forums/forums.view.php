@@ -57,7 +57,7 @@ class ForumsView extends RoxAppView {
      */
     public function threadURL($thread)
     {
-        return $this->uri.'s'.$thread->threadid.'-'.str_replace(
+        return 'forums/s'.$thread->threadid.'-'.str_replace(
            array('/', ' '),
            array('-', '-'),
            $thread->title

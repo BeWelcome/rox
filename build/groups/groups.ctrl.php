@@ -174,6 +174,7 @@ class GroupsController extends RoxControllerBase
         {
             $this->_model->sendInvitation($group, $request[3], $this->_model->getLoggedInMember());
             $page->memberinvited = true;
+            $this->logWrite("Member #{$request[3]} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}", 'Group');
         }
         else
         {
@@ -225,6 +226,7 @@ class GroupsController extends RoxControllerBase
             if ($this->_model->inviteMember($group, $request[3]))
             {
                 $this->_model->sendInvitation($group, $request[3], $this->_model->getLoggedInMember());
+                $this->logWrite("Member #{$request[3]} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}", 'Group');
                 echo "success";
             }
             else
@@ -253,6 +255,7 @@ class GroupsController extends RoxControllerBase
         {
             $this->_redirect('groups/');
         }
+        $this->logWrite("Member #{$request[3]} accepted invitation to join group #{$group->getPKValue()}", 'Group');
         $page = new GroupStartPage();
         $page->setMessage('GroupsJoinSuccess');
         return $page;
@@ -270,6 +273,7 @@ class GroupsController extends RoxControllerBase
         if ($this->_model->getLoggedInMember())
         {
             $this->_model->memberDeclinedInvitation($group, $request[3]);
+            $this->logWrite("Member #{$request[3]} declined invitation to join group #{$group->getPKValue()}", 'Group');
         }
         $this->_redirect('groups/');
     }
@@ -290,6 +294,7 @@ class GroupsController extends RoxControllerBase
         }
 
         $this->_model->banGroupMember($group, $request[3], true);
+        $this->logWrite("Member #{$request[3]} was banned from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}", 'Group');
 
         return new GroupStartPage();
     }
@@ -310,6 +315,7 @@ class GroupsController extends RoxControllerBase
         }
 
         $this->_model->banGroupMember($group, $request[3], false);
+        $this->logWrite("Member #{$request[3]} was kicked from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}", 'Group');
 
         return new GroupStartPage();
     }
@@ -330,6 +336,7 @@ class GroupsController extends RoxControllerBase
         }
 
         $this->_model->acceptGroupMember($group, $request[3]);
+        $this->logWrite("Member #{$request[3]} was accepted into group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}", 'Group');
 
         return new GroupStartPage();
     }
@@ -373,7 +380,15 @@ class GroupsController extends RoxControllerBase
         {
             $page = new GroupStartPage();
 
-            (($this->_model->joinGroup($member, $group)) ? $page->setMessage('GroupsJoinSuccess') : $page->setMessage('GroupsJoinFail'));
+            if ($this->_model->joinGroup($member, $group))
+            {
+                $page->setMessage('GroupsJoinSuccess');
+                $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} joined group #{$group->getPKValue()}", 'Group');
+            }
+            else
+            {
+                $page->setMessage('GroupsJoinFail');
+            }
         }
         else
         {
@@ -400,7 +415,15 @@ class GroupsController extends RoxControllerBase
         if (isset($request[3]) && strtolower($request[3]) == 'true')
         {
             $page = new GroupStartPage();
-            (($this->_model->leaveGroup($member, $group)) ? $page->setMessage('GroupsLeaveSuccess') : $page->setMessage('GroupsLeaveFail'));
+            if ($this->_model->leaveGroup($member, $group))
+            {
+                $page->setMessage('GroupsLeaveSuccess');
+                $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} left group #{$group->getPKValue()}", 'Group');
+            }
+            else
+            {
+                $page->setMessage('GroupsLeaveFail');
+            }
         }
         else
         {
@@ -465,6 +488,7 @@ class GroupsController extends RoxControllerBase
         if (isset($request[3]) && strtolower($request[3]) == 'true')
         {
             $this->_model->deleteGroup($group);
+            $this->logWrite("Group #{$group->getPKValue()} was deleted by member #{$this->_model->getLoggedInMember()->getPKValue()}", 'Group');
             $this->_redirect('groups/');
         }
         else
@@ -593,6 +617,7 @@ class GroupsController extends RoxControllerBase
             // sending message was successful
 //            $mem_resend->already_sent_as = $result->message_id;
             // TODO: return message of success in creating a group
+            $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} created group #{$result['group_id']}", 'Group');
             return "groups/" . $result['group_id'];
         }
     }
@@ -647,6 +672,10 @@ class GroupsController extends RoxControllerBase
             $result = $this->_model->updateMembershipSettings($membership, $post['membershipinfo_acceptgroupmail'], $post['membershipinfo_comment']);
         }
 
+        if ($result)
+        {
+            $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} changed own member settings for group #{$post['group_id']}", 'Group');
+        }
         $mem_redirect->result = $result;
         return $return;
     }
@@ -693,6 +722,10 @@ class GroupsController extends RoxControllerBase
 
         $result = $this->_model->updateGroupSettings($group, $post['GroupDesc_'], $post['Type'], $post['VisiblePosts']);
 
+        if ($result)
+        {
+            $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} changed group settings for group #{$post['group_id']}", 'Group');
+        }
         $mem_redirect->result = $result;
         $mem_redirect->post = $post;
         return $return;

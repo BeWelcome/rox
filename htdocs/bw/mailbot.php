@@ -33,6 +33,22 @@ require_once "lib/init.php";
 require_once "lib/FunctionsMessages.php";
 require_once "layout/error.php";
 
+$_SESSION['Param']=LoadRow("select * from params limit 1") ;
+
+// First test if the MailBot param is in automode (cron or interactive runs it) or manual mode (only interactive mode is possible) or stopped
+if (!isset($_SESSION['Param']->MailBotMode)) {
+	die ('\$_SESSION[\'Param\']->MailBotMode is missing') ;
+}
+elseif ($_SESSION['Param']->MailBotMode=='Stop') {
+	die ('MailBot is stopped') ;
+}
+elseif (($_SESSION['Param']->MailBotMode=='Manual') and (!IsLoggedIn()) ) {
+	die ('MailBot is in Manual mode') ;
+}
+elseif ($_SESSION['Param']->MailBotMode!='Auto') {
+	die ('MailBot is in and unknown mode ('.$_SESSION['Param']->MailBotMode.')') ;
+}
+
 $baseuri = PVars::getObj('env')->baseuri;
 
 if (IsLoggedIn()) {
@@ -234,11 +250,14 @@ $word->            $text="Problem in forum notification Type=".$rr->Type."<br />
 	 $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
 	 $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'bw/member.php?cid='.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>' ;
 	 $text.='<tr><td valign="top">';
+/*
     if (isset($rImage->FilePath)) {
        $text .= '<img alt="picture of '.$rPost->Username.'" height="150px" src="'.$baseuri.$rImage->FilePath.'"/>';
     } else {
        $text .= '<img alt="Bewelcome" src="http://www.bewelcome.org/styles/YAML/images/logo.gif" />';
     }
+	*/
+	$text.=PictureInMail($rPost->Username) ;
     $text .= '</td><td>'.$rPost->message.'</td></tr>';
     if ($UnsubscribeLink!="") {
        $text .= '<tr><td colspan="2">'.$UnsubscribeLink.'</td></tr>';
@@ -336,7 +355,8 @@ WHERE
             <tr><td>
         ';
         if (isset($rImage->FilePath)) {
-            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+//            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+            $MessageFormatted .= PictureInMail($rr->Username);
         }
         $MessageFormatted .= '</td><td>';
 //      $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
@@ -458,7 +478,8 @@ WHERE
             <tr><td>
         ';
         if (isset($rImage->FilePath)) {
-            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+//            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+            $MessageFormatted .= PictureInMail($rr->Username);
         }
         $MessageFormatted .= '</td><td>';
         $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
@@ -516,6 +537,140 @@ if ($count>0) {
     $sResult=$sResult. " and ".$count. " localmember Messages sent" ;
 } 
 
+	
+	$str="select * from volunteers_reports_schedule where Type='Accepter' and TimeToDeliver<now() " ;
+	$qryV=sql_query($str);
+	while ($rrV = mysql_fetch_object($qryV)) {
+		$AccepterReport="<table>\n" ;
+		
+		$StrUpdate="update volunteers_reports_schedule set TimeToDeliver=date_add( TimeToDeliver, INTERVAL DelayInHourForNextOne hour) where id=".$rrV->id ;
+		sql_query($StrUpdate);
+		
+		$IdVolunteer=$rrV->IdVolunteer ;
+	
+		$rr=LoadRow("SELECT concat(concat('Number of confirmed signup members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+FROM `members_updating_status`,volunteers_reports_schedule
+where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
+and (OldStatus='mailtoconfirm' and NewStatus='Pending') group by NewStatus") ;	
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+	
+		$rr=LoadRow("SELECT concat(concat('Number of accepted members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+FROM `members_updating_status`,volunteers_reports_schedule
+where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
+and (OldStatus='Pending' and NewStatus='Active') group by NewStatus") ;	
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+
+		$rr=LoadRow("SELECT concat(concat('Number of members set to Needmore (may be duplicated) since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+FROM `members_updating_status`,volunteers_reports_schedule
+where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
+and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;	
+		if (isset($rr->Desc)) {
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+		}
+		else {
+			$AccepterReport=$AccepterReport."<tr><td>No needmore in the period</td><td></td></tr>\n" ;
+		}
+	
+		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=".$IdVolunteer." AND rights.id=rightsvolunteers.IdRight AND rights.Name='Accepter'";
+		$rr=LoadRow($str) ;
+	
+		if (isset($rr->Scope)and $rr->Level>1) {
+			$AccepterScope = $rr->Scope ;
+			$AccepterScope = str_replace("\"", "'", $AccepterScope); // replace all " with '
+			$AccepterScope = str_replace(";", ",", $AccepterScope); // replace all ; with ,
+			if (($AccepterScope=="All")or($AccepterScope=="'All'")) {
+				$rCount=LoadRow("select count(*)  as cnt from members where Status='Pending'") ;	
+				$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\">Your accepting Scope is for <b>all</b> countries</td></tr>" ;
+				if (!empty($rCount->cnt)) {
+					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"yellow\">They are ".$rCount->cnt." pending members <a href=\"http://www.bewelcome.org/bw/admin/adminaccepter.php\">you could accept</a></td></tr>\n" ;
+				}
+				else {
+					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"lime\"> No pending member you can accept</td></tr>\n" ;
+				}
+			}
+			else {
+				$rCount=LoadRow("select count(*)  as cnt from members,countries,cities where Status='Pending' and cities.id=members.IdCity and cities.IdCountry=countries.id and (cities.IdCountry in (".$AccepterScope.") or  countries.Name in (".$AccepterScope."))") ;	
+				$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\">Your accepting Scope is for ".$AccepterScope."</td></tr>" ;
+				if (!empty($rCount->cnt)) {
+					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"yellow\"> They are ".$rCount->cnt." pending members <a href=\"http://www.bewelcome.org/bw/admin/adminaccepter.php\">you could accept</a></td></tr>\n" ;
+				}
+				else {
+					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"lime\"> No pending member you can accept</td></tr>\n" ;
+				}
+			}
+		}
+	
+		$rPref=LoadRow("select memberspreferences.* from memberspreferences,preferences where preferences.codeName='PreferenceLocalTimeDesc' and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$IdVolunteer );
+		$iSecondOffset=0 ;
+		$iSecondOffset=$iSecondOffset+$_SESSION['Param']->DayLightOffset ; // We force the use of daylight offset
+		if (isset($rPref->Value)) {	
+			$iSecondOffset=$iSecondOffset+$rPref->Value ;
+		}
+		
+		$rr=LoadRow("select concat(' total members are waiting for accepting at ',date_add(now(), INTERVAL ".$iSecondOffset." second)) as 'Desc',count(*)  as cnt from members where Status='Pending'") ;	
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\"><b>".$rr->cnt."</b> ".$rr->Desc."</td></tr>\n" ;
+
+		$rr=LoadRow("SELECT concat(concat(' confirmed signup by mail since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+FROM `members_updating_status`,volunteers_reports_schedule
+where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
+and (OldStatus='MailToConfirm' and NewStatus='Pending') group by NewStatus") ;	
+		if (!empty($rr->cnt)) {
+			$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+		}
+		else {
+			$AccepterReport=$AccepterReport."<tr><td>No confirmed by mail signup in the period</td><td></td></tr>\n" ;
+		}
+	
+		$rr=LoadRow("SELECT concat(concat(' rejected members',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+FROM `members_updating_status`,volunteers_reports_schedule
+where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
+and (NewStatus='Rejected') group by NewStatus ") ;	
+		if (isset($rr->Desc)) {
+			$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+		}
+		else {
+			$AccepterReport=$AccepterReport."<tr><td>No member rejected in the period</td><td></td></tr>\n" ;
+		}
+	
+		$rr=LoadRow("SELECT concat(concat(' members have left by themself',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+FROM `members_updating_status`,volunteers_reports_schedule
+where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
+and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;	
+		if (isset($rr->Desc)) {
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+		}
+		else {
+			$AccepterReport=$AccepterReport."<tr><td>No member who have left by themself in the period</td><td></td></tr>\n" ;
+		}
+	
+		$rr=LoadRow("SELECT concat(concat('Number of members who have been TakenOut by support team because they requested it ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+FROM `members_updating_status`,volunteers_reports_schedule
+where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
+and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;	
+		if (isset($rr->Desc)) {
+			$AccepterReport=$AccepterReport."<tr><td>".$rr->Desc."</td><td>".$rr->cnt."</td></tr>\n" ;
+		}
+		else {
+			$AccepterReport=$AccepterReport."<tr><td>No member who have Been TakenOut by support team because they requested it in the period</td><td></td></tr>\n" ;
+		}
+		$AccepterReport=$AccepterReport."</table>" ;
+	
+		$SenderMail="noreply@bewelcome.org" ;
+		$subj="Accepter's report" ;
+		$Email = GetEmail($IdVolunteer);
+
+		$text=$AccepterReport ;
+		if (!bw_mail($Email, $subj, $text, "", $SenderMail, 0, "html", "", "", "<br /> This is an automatic email. Do not answer it but accept the pending members !")) {
+			LogStr("Cannot send report to IdVolunteer=#" . $IdVolunteer . " \$Email=[".$Email."]","mailbot");
+		}
+		else {
+			$sResult=$sResult."<br />Accepter report sent to ".$Email ;
+		}
+		if (IsLoggedIn()) { 
+			echo "to ".$Email."<br />".$AccepterReport ;
+		} 
+	} // end of while
+	
 
 if (IsLoggedIn()) {
     LogStr("Manual mail triggering " . $sResult, "mailbot");
@@ -612,4 +767,8 @@ if (IsLoggedIn()) {
 		return ($strerror); // If really nothing was found, return an empty string
 	} // end of fTrad
 
+	function PictureInMail($Username) {
+       $PictureFilePath='http://www.bewelcome.org/members/avatar/'.$Username ;
+	   $rval= '<img alt="picture of '.$Username.'" src="'.$PictureFilePath.'"/>';
+	} // End of PictureInMail
 ?>

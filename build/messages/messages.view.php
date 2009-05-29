@@ -59,22 +59,22 @@ class ReadMessagePage extends MessagesBasePage
             <div id="shade_top"> </div>
             <div class="floatbox" id="messageheader">
                 <div id="messageside" class="float_right">
-                  <p class="small grey">
-                      <?=$words->get('LivesIn')?> <?=$member->City?>, <?=$member->Country?>
-                      <br />
-                      <?=$words->get('Speaks')?> 
-                      <?php
-                      $languages = $member->get_languages_spoken(); 
-                      if (count($languages) > 1) {
-                      		$ii = 0;
-                      		$max = count($languages);
-                              foreach($languages as $language) {
-                      			$space = ($ii != $max -1) ? ', ' : '';
-                              ?><span title="<?=$words->get($language->Level) ?>"><?=$language->Name ?><?=$space?></span><?php
-                      			$ii++;
-                              }
-                      } ?>
-                      </p>
+                    <p class="small grey">
+                        <?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong>
+                        <br />
+                        <?=$words->get('Speaks')?> 
+                        <?php
+                        $languages = $member->get_languages_spoken(); 
+                        if (count($languages) > 1) {
+                        		$ii = 0;
+                        		$max = count($languages);
+                                foreach($languages as $language) {
+                        			$space = ($ii != $max -1) ? ', ' : '';
+                                  ?><strong><span title="<?=$words->get('LanguageLevel_'.$language->Level) ?>"><?=$language->Name ?><?=$space?></span></strong><?php
+                        			$ii++;
+                                }
+                        } ?>
+                        </p>
                       <p class="small grey">
                         <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>"> <?=$words->getSilent('messages_allmessageswith',$contact_username)?></a>
                       </p>

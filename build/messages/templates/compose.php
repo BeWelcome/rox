@@ -31,7 +31,7 @@ $member = $model->getMemberWithUsername($receiver_username);
     <div class="floatbox" id="messageheader">
         <div id="messageside" class="float_right">
           <p class="small grey">
-              <?=$words->get('LivesIn')?> <?=$member->City?>, <?=$member->Country?>
+              <?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong>
               <br />
               <?=$words->get('Speaks')?> 
               <?php
@@ -41,7 +41,7 @@ $member = $model->getMemberWithUsername($receiver_username);
               		$max = count($languages);
                       foreach($languages as $language) {
               			$space = ($ii != $max -1) ? ', ' : '';
-                        ?><span title="<?=$words->get($language->Level) ?>"><?=$language->Name ?><?=$space?></span><?php
+                        ?><strong><span title="<?=$words->get('LanguageLevel_'.$language->Level) ?>"><?=$language->Name ?><?=$space?></span></strong><?php
               			$ii++;
                       }
               } ?>

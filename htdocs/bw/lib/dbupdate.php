@@ -1369,6 +1369,8 @@ $updates[] = "ALTER TABLE `volunteers_reports_schedule` CHANGE `IdAccepter` `IdV
 
 $updates[] = "ALTER TABLE `volunteers_reports_schedule` ADD `Type` ENUM( 'Accepter', 'Group', 'Abuse' ) NOT NULL COMMENT 'Type of report'";
 
+$updates[] = "ALTER TABLE `volunteers_reports_schedule` ADD `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'primary key' FIRST ";
+
     if (empty($res)) {
         $version = 0;
     } else {

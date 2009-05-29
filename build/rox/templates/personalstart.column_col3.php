@@ -122,12 +122,18 @@ Boston, MA  02111-1307, USA.
                         $m=$latestmembers[$ii] ;
                 ?>
                 <div class="float_left" style="width: 40%; overflow: hidden;">
-                <p class="floatbox UserpicFloated">
-                    <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed'); ?>
-                    <?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?>
-                    <br/>
-                    <?php echo $m->countryname ?> 
-                </p> 
+                    <table>
+                        <tr>
+                        <td>
+                        <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?>
+                        </td>
+                        <td>
+                        <?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?>
+                        <br />
+                        <?php echo $m->countryname; ?>
+                        </td>
+                        </tr>
+                    </table>
                 </div>
                 <? } ?>
                 </div>
@@ -141,20 +147,24 @@ Boston, MA  02111-1307, USA.
                         $m=$last_visits[$ii] ;
                 ?>
                     <div class="float_left" style="width: 40%; overflow: hidden;">
-                        <p class="floatbox UserpicFloated">
-                            <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed') ?>
+                        <table>
+                            <tr>
+                            <td>
+                            <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?>
+                            </td>
+                            <td>
                             <?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?>
                             <br />
                             <?php echo $m->countryname; ?>
-                        </p> 
+                            </td>
+                            </tr>
+                        </table>
                     </div> 
                 <?php 
                     }
                 ?>
                 </div>
                 </div>
-           </div>
-
 		
 		            <!-- Another box -->
 		            <div class="box">
@@ -165,31 +175,34 @@ Boston, MA  02111-1307, USA.
 		                <?php echo $words->getFormatted('TripCity')  ?></a></h3>
 		                <div class="floatbox">
 		                <?php
-		                    $DivForVisit[0]='c33l' ;
-		                    $DivForVisit[1]='c33l' ;
-		                    $DivForVisit[2]='c33r' ;
 		                    $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 3) ;
 		                    for ($ii=0;$ii<count($next_trips);$ii++) {
 		                        $m=$next_trips[$ii] ;
 		                        $tripDate = explode(" ",$m->tripDate);
 		                ?>
-		                <div class="<?php echo $DivForVisit[$ii] ?>">
-		                    <div class="subr">
-		                        <p class="floatbox UserpicFloated">
-		                            <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed') ?>
-		                            <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
-		                            <br />
-		                            <?php echo $m->city; ?> / <?php echo $m->country; ?>
-		                            <br />
-		                            <? echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
-		                        </p>
-		                    </div>
-		                </div>
+                        <div class="float_left" style="width: 40%; overflow: hidden;">
+                            <table>
+                                <tr>
+                                <td>
+                                <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?>
+                                </td>
+                                <td>
+		                        <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
+                                <br />
+	                            <?php echo $m->city; ?> / <?php echo $m->country; ?>
+	                            <br />
+	                            <? echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
+                                </td>
+                                </tr>
+                            </table>
+                        </div>
 		                <?php
 		                    }
 		                ?>
 		                </div>
 		           </div>
+               </div>
+
 		    </div>
 		    <div class="c50r">
                 <div class="subcr">

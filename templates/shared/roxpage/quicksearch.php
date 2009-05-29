@@ -18,8 +18,8 @@
 ?>
     
     
-    <input type="text" name="vars" size="15" maxlength="30" id="text-field" value="Search..." onclick="this.value='';" onblur="this.value='Search...';"/>
+    <input type="text" name="vars" size="15" maxlength="30" id="text-field" value="<?echo htmlentities($words->getSilent('TopMenuSearchtext'));?>..." onclick="this.value='';" onblur="this.value='<?echo htmlentities($words->getSilent('TopMenuSearchtext'));?>...';"/>
     <input type="hidden" name="quicksearch_callbackId" value="1"/>
-    <input type="image" src="styles/css/minimal/images/icon_go.gif" id="submit-button" />
-  
+    <input type="image" src="images/icons/icon_searchtop.gif" id="submit-button" />
+    <?=$words->flushBuffer()?>
 </form>

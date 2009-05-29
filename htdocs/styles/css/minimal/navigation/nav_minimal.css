@@ -94,13 +94,14 @@
   #nav_sub {
     margin-left: 0;
     text-align:left;
-    margin-bottom: 2em;
+    margin-bottom: 3em;
   }
 
   #nav_sub ul{
     /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
     display: inline;
     margin: .4em;
+    padding-left: .8em;
    }
 
   #nav_sub li {
@@ -108,12 +109,24 @@
     font-weight: bold;
     color: #888;
     display: inline;
-    padding: .5em .3em .3em .8em;
+    padding: 0;
   }
+
+#nav_sub .active .nav_sub_start {
+  	height: 120px;
+  	border-right: 1px solid #ccc;
+	padding: 0;
+}
+
+#nav_sub .active .nav_sub_end {
+  	height: 120px;
+  	border-left: 1px solid #ccc;
+	padding: 0;
+}
 
   #nav_sub a {
     color: #888;
-    padding: .5em .8em .5em .8em;
+    padding: .5em .8em;
     margin: 0;
   }
 
@@ -123,9 +136,9 @@
   
   #nav_sub li.active a {
     color: #333;
-    background: #ffffff;
-    border: 1px solid #f1f1f1;
-    padding-bottom: .6em;
+	background: transparent url(../images/small_arrow_down_bg.gif) no-repeat center bottom;
+	padding-bottom: 1.4em;
+	border: none;
   }
 
 

@@ -1371,6 +1371,8 @@ $updates[] = "ALTER TABLE `volunteers_reports_schedule` ADD `Type` ENUM( 'Accept
 
 $updates[] = "ALTER TABLE `volunteers_reports_schedule` ADD `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'primary key' FIRST ";
 
+$updates[] = "ALTER TABLE `params` ADD `MailBotMode` ENUM( 'Auto','Manual','Stop' ) NOT NULL DEFAULT 'Auto' COMMENT 'State whether mail bot is running or not'";
+
     if (empty($res)) {
         $version = 0;
     } else {

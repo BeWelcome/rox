@@ -1360,6 +1360,15 @@ END
 
 ";
 
+
+$updates[] = "ALTER TABLE `volunteers_reports_schedule`  COMMENT = 'List of volunteers with the next time for receiveving report'" ;
+
+$updates[] = "RENAME TABLE `accepters_reports_schedule`  TO `volunteers_reports_schedule`" ;
+
+$updates[] = "ALTER TABLE `volunteers_reports_schedule` CHANGE `IdAccepter` `IdVolunteer` INT( 11 ) NOT NULL COMMENT 'Id of the accepter'" ;
+
+$updates[] = "ALTER TABLE `volunteers_reports_schedule` ADD `Type` ENUM( 'Accepter', 'Group', 'Abuse' ) NOT NULL COMMENT 'Type of report'";
+
     if (empty($res)) {
         $version = 0;
     } else {

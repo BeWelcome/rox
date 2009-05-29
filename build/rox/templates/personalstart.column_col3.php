@@ -117,7 +117,7 @@ Boston, MA  02111-1307, USA.
                 <div class="floatbox">
                 <?php
                     // Display the last created members with a picture
-                    $latestmembers=MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(3);
+                    $latestmembers=MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(4);
                     for ($ii=0;$ii<count($latestmembers);$ii++) {
                         $m=$latestmembers[$ii] ;
                 ?>
@@ -142,7 +142,7 @@ Boston, MA  02111-1307, USA.
                 <?php
                     
                     // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
-                    $last_visits=MOD_visits::get()->BuildLastVisits() ;
+                    $last_visits=MOD_visits::get()->BuildLastVisits(0, 4) ;
                     for ($ii=0;$ii<count($last_visits);$ii++) {
                         $m=$last_visits[$ii] ;
                 ?>
@@ -175,7 +175,7 @@ Boston, MA  02111-1307, USA.
 		                <?php echo $words->getFormatted('TripCity')  ?></a></h3>
 		                <div class="floatbox">
 		                <?php
-		                    $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 3) ;
+		                    $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4) ;
 		                    for ($ii=0;$ii<count($next_trips);$ii++) {
 		                        $m=$next_trips[$ii] ;
 		                        $tripDate = explode(" ",$m->tripDate);

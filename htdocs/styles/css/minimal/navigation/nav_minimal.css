@@ -261,11 +261,11 @@
     }
     
     #personalmenu li a.active-tab,#personalmenu li.active a {
-        background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
-        border:none;
-        color:#FFFFFF;
-        padding: 1px .5em 1px 1em;
-        margin-right: -1em; 
+        /*background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
+        border:none; */
+        color:#333;
+/*        padding: 1px .5em 1px 1em;
+        margin-right: -1em;  */
     }
     
     .panel {

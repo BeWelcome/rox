@@ -24,19 +24,9 @@ Boston, MA  02111-1307, USA.
 
 ?>
 <div class="subcolumns">
-<div class="c50l">
-<div class="subr" id="personallist">
-            <h3>What's the news?</h3>
-            <!-- Another box -->
-            <div class="box">
-                <div class="corner"></div>
-                
-                <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" style="cursor:pointer" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
-                <div class="floatbox">
-                    <?php echo $Forums->showExternalLatest(); ?>
-                </div>
-                <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
-           </div>
+<div class="c33l">
+<div class="subcl" id="personallist">
+            <h2>What's the news?</h2>
             <!-- Another box - Community news -->
             <div class="box">
                 <div class="corner"></div>
@@ -115,9 +105,10 @@ Boston, MA  02111-1307, USA.
            </div>
         </div>
     </div> 
-    <div class="c50r" > 
+    <div class="c66r" > 
+        <div class="c50l">
         <div class="subc" id="personallist2">
-            <h3>Who is who?</h3>
+            <h2>Who is who?</h2>
             <!-- Another box -->
             <div class="box">
                 <div class="corner"></div>
@@ -126,27 +117,30 @@ Boston, MA  02111-1307, USA.
                 <div class="floatbox">
                 <?php
                     // Display the last created members with a picture
-                    $m=MOD_visits::get()->RetrieveLastAcceptedProfileWithAPicture() ;
+                    $latestmembers=MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(3);
+                    for ($ii=0;$ii<count($latestmembers);$ii++) {
+                        $m=$latestmembers[$ii] ;
                 ?>
+                <div class="float_left" style="width: 40%; overflow: hidden;">
                 <p class="floatbox UserpicFloated">
                     <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed'); ?>
                     <?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?>
                     <br/>
                     <?php echo $m->countryname ?> 
                 </p> 
+                </div>
+                <? } ?>
+                </div>
                 <h3><a href="bw/myvisitors.php"><?php echo $words->get('RecentVisitsOfyourProfile') ?></a></h3> 
+                <div class="floatbox">
                 <?php
-                    $DivForVisit[0]='c33l' ;
-                    $DivForVisit[1]='c33l' ;
-                    $DivForVisit[2]='c33r' ;
                     
                     // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
                     $last_visits=MOD_visits::get()->BuildLastVisits() ;
                     for ($ii=0;$ii<count($last_visits);$ii++) {
                         $m=$last_visits[$ii] ;
                 ?>
-                <div class="<?php echo $DivForVisit[$ii] ?>"> 
-                    <div class="subr">
+                    <div class="float_left" style="width: 40%; overflow: hidden;">
                         <p class="floatbox UserpicFloated">
                             <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed') ?>
                             <?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?>
@@ -154,12 +148,11 @@ Boston, MA  02111-1307, USA.
                             <?php echo $m->countryname; ?>
                         </p> 
                     </div> 
-                </div>
                 <?php 
                     }
                 ?>
                 </div>
-                <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
+                </div>
            </div>
 
 		
@@ -175,7 +168,7 @@ Boston, MA  02111-1307, USA.
 		                    $DivForVisit[0]='c33l' ;
 		                    $DivForVisit[1]='c33l' ;
 		                    $DivForVisit[2]='c33r' ;
-		                    $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember']) ;
+		                    $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 3) ;
 		                    for ($ii=0;$ii<count($next_trips);$ii++) {
 		                        $m=$next_trips[$ii] ;
 		                        $tripDate = explode(" ",$m->tripDate);
@@ -196,57 +189,25 @@ Boston, MA  02111-1307, USA.
 		                    }
 		                ?>
 		                </div>
-		                <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
 		           </div>
-		
+		    </div>
+		    <div class="c50r">
+                <div class="subcr">
+        		    <h2>Who's talking?</h2>
+                     <!-- Another box -->
+                     <div class="box">
+                         <div class="corner"></div>
+
+                         <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" style="cursor:pointer" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
+                         <div class="floatbox">
+                             <?php echo $Forums->showExternalLatest(); ?>
+                         </div>
+                         <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
+                     </div>
+                </div>
+		    </div>
 		
         </div> 
     </div>
 </div>
-
-<script type="text/javascript">
-
-Sortable.create('personallist', {
-    tag:'div',
-    containment: ['personallist','personallist2'],
-    constraint: false,
-    dropOnEmpty: true /*,
-    onUpdate:function(){
-        new Ajax.Updater('list-info', 'trip/reorder/', {
-            onComplete:function(request){
-                new Effect.Highlight('triplist',{});
-                params = Sortable.serialize('triplist').toQueryParams();
-                points = Object.values(params).toString().split(',');
-                setPolyline();
-                
-            }, 
-            parameters:Sortable.serialize('triplist'), 
-            evalScripts:true, 
-            asynchronous:true,
-            method: 'get'
-        })
-    }*/
-})
-Sortable.create('personallist2', {
-    tag:'div',
-    containment: ['personallist','personallist2'],
-    constraint: false,
-    dropOnEmpty: true /*,
-    onUpdate:function(){
-        new Ajax.Updater('list-info', 'trip/reorder/', {
-            onComplete:function(request){
-                new Effect.Highlight('triplist',{});
-                params = Sortable.serialize('triplist').toQueryParams();
-                points = Object.values(params).toString().split(',');
-                setPolyline();
-                
-            }, 
-            parameters:Sortable.serialize('triplist'), 
-            evalScripts:true, 
-            asynchronous:true,
-            method: 'get'
-        })
-    }*/
-})
-</script>
 

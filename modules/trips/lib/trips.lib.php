@@ -66,7 +66,7 @@ class MOD_trips {
      /** Retrieve the last accepted profile in the city of the member with a picture 
 
      */
-    public function RetrieveVisitorsInCityWithAPicture($IdMember)
+    public function RetrieveVisitorsInCityWithAPicture($IdMember, $limit = 3)
     {
 		//retrieve City for $IdMember
         $query = '
@@ -94,7 +94,7 @@ class MOD_trips {
 				AND cities.id = members.IdCity
 				AND countries.id = cities.IdCountry
 				AND `bd`.`blog_start` >= CURDATE()
-			ORDER BY `bd`.`blog_start` asc limit 3'
+			ORDER BY `bd`.`blog_start` asc limit '. $limit
 			;
     		$s = $this->dao->query($query);
 				if (!$s) {

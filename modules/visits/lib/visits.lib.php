@@ -124,33 +124,38 @@ ORDER BY `profilesvisits`.`updated` desc limit '.$quantity;
 		
     /**
 		
-     * Retrieve the last accepted profile with a picture 
+     * Retrieve the 5 last accepted profiles with a picture 
 
      */
-    public function RetrieveLastAcceptedProfileWithAPicture()
+    public function RetrieveLastAcceptedProfilesWithAPicture($quantity = 5)
     {
-// retrieve the last member
+        $members=array() ;
+        
+// retrieve the last members
         $query = '
 SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` as photo,`membersphotos`.`id` as IdPhoto,`countries`.`Name` as countryname 
 FROM 	`members`,`membersphotos`,`cities`,`countries` 
 WHERE `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 and `members`.`Status`=\'Active\' and `members`.`IdCity`=`cities`.`id` and `countries`.`id`=`cities`.`IdCountry` 
-ORDER BY `members`.`id` desc limit 1'
+ORDER BY `members`.`id` desc limit '. $quantity
 ;
-    		$s = $this->dao->query($query);
-				if (!$s) {
-			 		 throw new PException('Cannot retrieve last member with photo!');
-				}
-
-				return($s->fetch(PDB::FETCH_OBJ)) ;
-		} // end of	RetrieveLastAcceptedProfileWithAPicture
+    	$s = $this->dao->query($query);
+		if (!$s) {
+	 		 throw new PException('Cannot retrieve last members with photo!');
+		}
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			array_push($members, $row);
+		} // end of while
+		return($members) ;
+	} // end of	RetrieveLastAcceptedProfileWithAPicture
 		
    /**
 		
      * Retrieve the last accepted profile in the city of the member with a picture 
 
      */
-    public function RetrieveLastAcceptedProfileInCityWithAPicture($IdMember)
+    public function RetrieveLastAcceptedProfilesInCityWithAPicture($IdMember, $quantity = 5)
     {
+        $members=array() ;
 		//retrieve City for $IdMember
         $query = '
 			SELECT SQL_CACHE `members`.`IdCity` 
@@ -168,14 +173,15 @@ ORDER BY `members`.`id` desc limit 1'
 			SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` as photo,`membersphotos`.`id` as IdPhoto,`countries`.`Name` as countryname 
 			FROM 	`members`,`membersphotos`,`cities`,`countries` 
 			WHERE `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 and `members`.`Status`=\'Active\' and `members`.`IdCity`=`cities`.`id` and `countries`.`id`=`cities`.`IdCountry` and `members`.`IdCity` = '.$result->IdCity.'
-			ORDER BY `members`.`id` desc limit 1'
+			ORDER BY `members`.`id` desc limit '.$quantity
 			;
-    		$s = $this->dao->query($query);
-				if (!$s) {
-			 		 throw new PException('Cannot retrieve last member with photo!');
-				}
-
-				return($s->fetch(PDB::FETCH_OBJ)) ;
-		} // end of	RetrieveLastAcceptedProfileInCityWithAPicture		
+		$s = $this->dao->query($query);
+		if (!$s) {
+	 		 throw new PException('Cannot retrieve last member with photo!');
+		}
+		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+			array_push($members, $row);
+		} // end of while
+    } // end of	RetrieveLastAcceptedProfileInCityWithAPicture		
 } // end of MOD_Visits
 ?>

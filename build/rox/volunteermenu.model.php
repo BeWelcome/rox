@@ -15,11 +15,13 @@ class VolunteermenuModel extends PAppModel
     public function getNumberPersonsToBeAccepted()
     {
         $R = MOD_right::get();
-        $AccepterScope = mysql_real_escape_string($R->RightScope('Accepter'));
-        if (count(explode('All', $AccepterScope)) > 1) {
+        $AccepterScope = $R->RightScope('Accepter');
+        $AccepterScope = str_replace("\"","'",$AccepterScope);
+        $AccepterScope = str_replace(";",",",$AccepterScope);
+        if ($AccepterScope=="'All'") {
             $InScope = " /* All countries */";
         } else {
-            $InScope = "AND countries.id IN ($AccepterScope)";
+            $InScope = "AND (countries.id IN ($AccepterScope) or countries.Name IN ($AccepterScope))";
         }
         $result = $this->dao->query(
             "
@@ -48,13 +50,16 @@ WHERE
      */
     public function getNumberPersonsToBeChecked($AccepterScope)
     {
-        // FIXME: this if clause indicates a problem, doesn't it???
-        // But you need database access to solve it.
-        $AccepterScope = mysql_real_escape_string($AccepterScope);
-        if (count(explode('All', $AccepterScope)) > 1) {
+        // FIXME: this if clause indicates a problem, doesn't it???   ---> JY: Not sure, DB is clean but, peopel can make mistakes 
+        // But you need database access to solve it.  
+        $R = MOD_right::get();
+        $AccepterScope = $R->RightScope('Accepter');
+        $AccepterScope = str_replace("\"","'",$AccepterScope);
+        $AccepterScope = str_replace(";",",",$AccepterScope);
+        if ($AccepterScope=="'All'") {
             $InScope = " /* All countries */";
         } else {
-            $InScope = "AND countries.id IN (" . $AccepterScope . ")";
+            $InScope = "AND (countries.id IN ($AccepterScope) or countries.Name IN ($AccepterScope))";
         }
         $result = $this->dao->query(
             "

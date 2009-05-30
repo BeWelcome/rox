@@ -541,36 +541,45 @@ if ($count>0) {
 	$str="select * from volunteers_reports_schedule where Type='Accepter' and TimeToDeliver<now() " ;
 	$qryV=sql_query($str);
 	while ($rrV = mysql_fetch_object($qryV)) {
-		$AccepterReport="<table>\n" ;
+		$AccepterReport="<table>" ;
 		
 		$StrUpdate="update volunteers_reports_schedule set TimeToDeliver=date_add( TimeToDeliver, INTERVAL DelayInHourForNextOne hour) where id=".$rrV->id ;
 		sql_query($StrUpdate);
 		
 		$IdVolunteer=$rrV->IdVolunteer ;
 	
-		$rr=LoadRow("SELECT concat(concat('Number of confirmed signup members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+		$rr=LoadRow("SELECT concat(concat(' confirmed signup members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
 and (OldStatus='mailtoconfirm' and NewStatus='Pending') group by NewStatus") ;	
-		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
 	
-		$rr=LoadRow("SELECT concat(concat('Number of accepted members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+		$rr=LoadRow("SELECT concat(concat(' accepted members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
 and (OldStatus='Pending' and NewStatus='Active') group by NewStatus") ;	
-		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
 
-		$rr=LoadRow("SELECT concat(concat('Number of members set to Needmore (may be duplicated) since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+		$rr=LoadRow("SELECT concat(concat(' members set to Needmore (may be duplicated) since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
 and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;	
 		if (isset($rr->Desc)) {
-		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
 		}
 		else {
-			$AccepterReport=$AccepterReport."<tr><td>No needmore in the period</td><td></td></tr>\n" ;
+			$AccepterReport=$AccepterReport."<tr><td>No needmore in the period</td><td></td></tr>" ;
 		}
-	
+
+		$rPref=LoadRow("select memberspreferences.* from memberspreferences,preferences where preferences.codeName='PreferenceLocalTimeDesc' and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$IdVolunteer );
+		$iSecondOffset=0 ;
+		$iSecondOffset=$iSecondOffset+$_SESSION['Param']->DayLightOffset ; // We force the use of daylight offset
+		if (isset($rPref->Value)) {	
+			$iSecondOffset=$iSecondOffset+$rPref->Value ;
+		}
+		
+		$rr=LoadRow("select concat(' total members are waiting for accepting at ',date_add(now(), INTERVAL ".$iSecondOffset." second)) as 'Desc',count(*)  as cnt from members where Status='Pending'") ;	
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\"><b>".$rr->cnt."</b> ".$rr->Desc."</td></tr>" ;
 		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=".$IdVolunteer." AND rights.id=rightsvolunteers.IdRight AND rights.Name='Accepter'";
 		$rr=LoadRow($str) ;
 	
@@ -582,54 +591,33 @@ and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;
 				$rCount=LoadRow("select count(*)  as cnt from members where Status='Pending'") ;	
 				$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\">Your accepting Scope is for <b>all</b> countries</td></tr>" ;
 				if (!empty($rCount->cnt)) {
-					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"yellow\">They are ".$rCount->cnt." pending members <a href=\"http://www.bewelcome.org/bw/admin/adminaccepter.php\">you could accept</a></td></tr>\n" ;
+					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"yellow\">They are ".$rCount->cnt." pending members <a href=\"http://www.bewelcome.org/bw/admin/adminaccepter.php\">you could accept</a></td></tr>" ;
 				}
 				else {
-					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"lime\"> No pending member you can accept</td></tr>\n" ;
+					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"lime\"> No pending member you can accept</td></tr>" ;
 				}
 			}
 			else {
 				$rCount=LoadRow("select count(*)  as cnt from members,countries,cities where Status='Pending' and cities.id=members.IdCity and cities.IdCountry=countries.id and (cities.IdCountry in (".$AccepterScope.") or  countries.Name in (".$AccepterScope."))") ;	
 				$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\">Your accepting Scope is for ".$AccepterScope."</td></tr>" ;
 				if (!empty($rCount->cnt)) {
-					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"yellow\"> They are ".$rCount->cnt." pending members <a href=\"http://www.bewelcome.org/bw/admin/adminaccepter.php\">you could accept</a></td></tr>\n" ;
+					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"yellow\"> They are ".$rCount->cnt." pending members <a href=\"http://www.bewelcome.org/bw/admin/adminaccepter.php\">you could accept</a></td></tr>" ;
 				}
 				else {
-					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"lime\"> No pending member you can accept</td></tr>\n" ;
+					$AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"lime\"> No pending member you can accept</td></tr>" ;
 				}
 			}
 		}
 	
-		$rPref=LoadRow("select memberspreferences.* from memberspreferences,preferences where preferences.codeName='PreferenceLocalTimeDesc' and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$IdVolunteer );
-		$iSecondOffset=0 ;
-		$iSecondOffset=$iSecondOffset+$_SESSION['Param']->DayLightOffset ; // We force the use of daylight offset
-		if (isset($rPref->Value)) {	
-			$iSecondOffset=$iSecondOffset+$rPref->Value ;
-		}
-		
-		$rr=LoadRow("select concat(' total members are waiting for accepting at ',date_add(now(), INTERVAL ".$iSecondOffset." second)) as 'Desc',count(*)  as cnt from members where Status='Pending'") ;	
-		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\"><b>".$rr->cnt."</b> ".$rr->Desc."</td></tr>\n" ;
-
-		$rr=LoadRow("SELECT concat(concat(' confirmed signup by mail since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
-FROM `members_updating_status`,volunteers_reports_schedule
-where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
-and (OldStatus='MailToConfirm' and NewStatus='Pending') group by NewStatus") ;	
-		if (!empty($rr->cnt)) {
-			$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
-		}
-		else {
-			$AccepterReport=$AccepterReport."<tr><td>No confirmed by mail signup in the period</td><td></td></tr>\n" ;
-		}
-	
-		$rr=LoadRow("SELECT concat(concat(' rejected members',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
+		$rr=LoadRow("SELECT concat(concat(' rejected members within the last ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
 and (NewStatus='Rejected') group by NewStatus ") ;	
 		if (isset($rr->Desc)) {
-			$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+			$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
 		}
 		else {
-			$AccepterReport=$AccepterReport."<tr><td>No member rejected in the period</td><td></td></tr>\n" ;
+			$AccepterReport=$AccepterReport."<tr><td>No member rejected in the period</td><td></td></tr>" ;
 		}
 	
 		$rr=LoadRow("SELECT concat(concat(' members have left by themself',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
@@ -637,10 +625,10 @@ FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
 and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;	
 		if (isset($rr->Desc)) {
-		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>\n" ;
+		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
 		}
 		else {
-			$AccepterReport=$AccepterReport."<tr><td>No member who have left by themself in the period</td><td></td></tr>\n" ;
+			$AccepterReport=$AccepterReport."<tr><td>No member who have left by themself in the period</td><td></td></tr>" ;
 		}
 	
 		$rr=LoadRow("SELECT concat(concat('Number of members who have been TakenOut by support team because they requested it ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
@@ -648,10 +636,10 @@ FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
 and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;	
 		if (isset($rr->Desc)) {
-			$AccepterReport=$AccepterReport."<tr><td>".$rr->Desc."</td><td>".$rr->cnt."</td></tr>\n" ;
+			$AccepterReport=$AccepterReport."<tr><td>".$rr->Desc."</td><td>".$rr->cnt."</td></tr>" ;
 		}
 		else {
-			$AccepterReport=$AccepterReport."<tr><td>No member who have Been TakenOut by support team because they requested it in the period</td><td></td></tr>\n" ;
+			$AccepterReport=$AccepterReport."<tr><td>No member who have Been TakenOut by support team because they requested it in the period</td><td></td></tr>" ;
 		}
 		$AccepterReport=$AccepterReport."</table>" ;
 	

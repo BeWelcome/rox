@@ -1373,6 +1373,8 @@ $updates[] = "ALTER TABLE `volunteers_reports_schedule` ADD `id` INT NOT NULL AU
 
 $updates[] = "ALTER TABLE `params` ADD `MailBotMode` ENUM( 'Auto','Manual','Stop' ) NOT NULL DEFAULT 'Auto' COMMENT 'State whether mail bot is running or not'";
 
+$updates[] = "ALTER TABLE `forums_posts` ADD `PostVisibility` ENUM( 'NoRestriction', 'MembersOnly', 'GroupOnly', 'ModeratorOnly' ) NOT NULL DEFAULT 'NoRestriction' COMMENT 'States who can read this post (usually same value as parent thread)' AFTER `threadid` ";
+
     if (empty($res)) {
         $version = 0;
     } else {

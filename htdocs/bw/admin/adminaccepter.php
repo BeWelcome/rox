@@ -55,7 +55,8 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	  	 $InScope = " and 1=0"; // no way, user has no scope
 	  }
 	  else {
-	  	 $InScope = "and countries.Name in (\"".$TheScope."\")";
+//	  	 $InScope = "and countries.Name in (\"".$TheScope."\")";
+	  	 $InScope = "and (countries.Name in (".$TheScope.") or countries.id in (".$TheScope."))";
 	  }
 	}
 	

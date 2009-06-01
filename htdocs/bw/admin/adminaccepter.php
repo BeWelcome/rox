@@ -56,7 +56,7 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	  }
 	  else {
 //	  	 $InScope = "and countries.Name in (\"".$TheScope."\")";
-	  	 $InScope = "and (countries.Name in (".$TheScope.") or countries.id in (".$TheScope."))";
+	  	 $InScope = "and (countries.Name in (".$AccepterScope.") or countries.id in (".$AccepterScope."))";
 	  }
 	}
 	

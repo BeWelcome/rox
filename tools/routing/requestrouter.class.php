@@ -10,6 +10,13 @@ class RequestRouter
      */
     private static $_routes = array();
 
+    /**
+     * stores the request uri and post and get args
+     *
+     * @var object
+     */
+    private static $_request_args = null;
+
     public function __construct()
     {
         $this->init();
@@ -24,7 +31,33 @@ class RequestRouter
 
             // group routes
             $this->addRoute('groups_overview','groups', 'GroupsController', 'index');
-            $this->addRoute('show_group','groups/:group_id:', 'GroupsController', 'showGroup');
+            $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
+            $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');
+            $this->addRoute('groups_new','groups/new', 'GroupsController', 'create');
+            $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
+            $this->addRoute('groups_realimg','groups/realimg/:group_id:', 'GroupsController', 'realImg');
+            $this->addRoute('groups_mygroups','groups/mygroups', 'GroupsController', 'myGroups');
+            $this->addRoute('group_start','groups/:group_id:', 'GroupsController', 'showGroup');
+            $this->addRoute('group_invitemember','groups/:group_id:/invitemember/:member_id:', 'GroupsController', 'inviteMember');
+            $this->addRoute('group_invitemember_ajax','groups/:group_id:/invitememberajax/:member_id:', 'GroupsController', 'inviteMemberAjax');
+            $this->addRoute('group_invitepage','groups/:group_id:/invitemember', 'GroupsController', 'inviteMembers');
+            $this->addRoute('group_membersearch_ajax','groups/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
+            $this->addRoute('group_acceptinvitation','groups/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
+            $this->addRoute('group_declineinvitation','groups/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
+            $this->addRoute('group_banmember','groups/:group_id:/banmember/:member_id:', 'GroupsController', 'banMember');
+            $this->addRoute('group_kickmember','groups/:group_id:/kickmember/:member_id:', 'GroupsController', 'kickMember');
+            $this->addRoute('group_acceptmember','groups/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
+            $this->addRoute('group_memberadministration','groups/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
+            $this->addRoute('group_join','groups/:group_id:/join', 'GroupsController', 'join');
+            $this->addRoute('group_leave','groups/:group_id:/leave', 'GroupsController', 'leave');
+            $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
+            $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');
+            $this->addRoute('group_members','groups/:group_id:/members', 'GroupsController', 'members');
+            $this->addRoute('group_members_paged','groups/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
+            $this->addRoute('group_wiki','groups/:group_id:/wiki', 'GroupsController', 'wiki');
+            $this->addRoute('group_membersettings','groups/:group_id:/membersettings', 'GroupsController', 'memberSettings');
+            $this->addRoute('group_groupsettings','groups/:group_id:/groupsettings', 'GroupsController', 'groupSettings');
+
         }
     }
 
@@ -84,7 +117,11 @@ class RequestRouter
             {
                 continue;
             }
-            if (empty($match) || count(explode('/', $route['url'])) >= count(explode('/', $match['url'])))
+            // conditions for accepting new match:
+            // - there isn't already one, or
+            // - the new route is more specific (contains more parts), or
+            // - the new route is more accurate (contains less variables)
+            if (empty($match) || count(explode('/', $route['url'])) > count(explode('/', $match['url'])) || (count(explode('/', $route['url'])) == count(explode('/', $match['url'])) && count($matches) <= count($matchvars)))
             {
                 $match = $route;
                 $matchvars = $matches;
@@ -274,6 +311,29 @@ class RequestRouter
             $str .= "$x = ".implode(' ', $y)."\n";
         }
         file_put_contents($file, $str);
+    }
+
+    /**
+     * returns the request uri plus arguments from get and post
+     *
+     * @access public
+     * @return object
+     */
+    public function getRequestAndArgs()
+    {
+        if (!self::$_request_args)
+        {
+            $args = new stdClass;
+            $args->request_uri = $_SERVER['REQUEST_URI'];
+            $args->request = PRequest::get()->request;
+            $args->req = implode('/', $args->request);
+            $args->get = $_GET;
+            $args->post = $_POST;
+            $args->get_or_post = array_merge($_POST, $_GET);
+            $args->post_or_get = array_merge($_GET, $_POST);
+            self::$_request_args = $args;
+        }
+        return self::$_request_args;
     }
 
     /**

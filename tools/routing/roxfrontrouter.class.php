@@ -3,25 +3,35 @@
 
 class RoxFrontRouter
 {
+
+    private $args;
+    private $router;
+
+    public function __construct()
+    {
+        $this->router = new RequestRouter();
+        $this->args = $this->router->getRequestAndArgs();
+    }
+
     /**
      * choose a controller and call the index() function.
      * If necessary, flush the buffered output.
      */
-    function route($args)
+    function route()
     {
         // retrieve user information,
         // and update statistics of being online
         $user = $this->initUser();
         
-        $request = $args->request;
+        $request = $this->args->request;
         switch ($keyword = isset($request[0]) ? $request[0] : false) {
             case 'ajax':
             case 'json':
             case 'xml':
-                $this->route_ajax($args, $keyword);
+                $this->route_ajax($keyword);
                 break;
             default:
-                $this->route_normal($args);
+                $this->route_normal();
         }
     }
     
@@ -84,20 +94,15 @@ class RoxFrontRouter
     }
     
     
-    protected function route_ajax($args, $keyword)
+    protected function route_ajax($keyword)
     {
-        // echo 'route_ajax';
-        
-        // find out what the request wants
-        $request_router = new RequestRouter();
-        
-        $request = $args->request;
-        list($classname, $method, $vars) = $request_router->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
-        $this->runControllerAjaxMethod($classname, $keyword, $args);
+        $request = $this->args->request;
+        list($classname, $method, $vars) = $this->router->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
+        $this->runControllerAjaxMethod($classname, $keyword);
     }
     
     
-    protected function route_normal($args)
+    protected function route_normal()
     {
         // alternative post handling !!
         $session_memory = $this->session_memory;
@@ -109,7 +114,7 @@ class RoxFrontRouter
         $this->posthandler = $posthandler;
         $posthandler->classes = $this->classes;
         
-        if ($action = $posthandler->getCallbackAction($args->post)) {
+        if ($action = $posthandler->getCallbackAction($this->args->post)) {
             
             // echo 'posthandler action';
             // PPHP::PExit();
@@ -122,7 +127,7 @@ class RoxFrontRouter
                 echo '
                 <p>'.__METHOD__.'</p>
                 <p>Method does not exist: '.$action->classname.'::'.$action->methodname.'</p>
-                <p>Please <a href="'.$args->url.'">reload</a></p>';
+                <p>Please <a href="'.$this->args->url.'">reload</a></p>';
                 
             } else {
                 
@@ -137,7 +142,7 @@ class RoxFrontRouter
                 
                 ob_start();
                 
-                $req = $controller->$methodname($args, $action, $mem_for_redirect, $mem_resend);
+                $req = $controller->$methodname($this->args, $action, $mem_for_redirect, $mem_resend);
                 
                 $mem_for_redirect->buffered_text = ob_get_contents();
                 ob_end_clean();
@@ -148,7 +153,7 @@ class RoxFrontRouter
                 // redirect
                 if (!is_string($req)) {
                     if (!is_string($req = $action->redirect_req)) {
-                        $req = implode('/', $args->request);
+                        $req = implode('/', $this->args->request);
                     }
                 }
                 header('Location: '.PVars::getObj('env')->baseuri.$req);
@@ -159,14 +164,11 @@ class RoxFrontRouter
             // echo 'no posthandler action';
             // PPHP::PExit();
             
-            // find out what the request wants
-            $request_router = new RequestRouter();
-            
-            $request = $args->request;
+            $request = $this->args->request;
             $keyword = isset($request[0]) ? $request[0] : false;
             
             // PT posthandling
-            if (isset($args->post['PPostHandlerShutUp'])) {
+            if (isset($this->args->post['PPostHandlerShutUp'])) {
                 // PPostHandler is disabled for this form.
                 // this hack is necessary.
             } else {
@@ -178,9 +180,9 @@ class RoxFrontRouter
             // in POST form submits with callback, that caused the redirect
             $this->memory_from_redirect = $session_memory->redirection_memory;
             
-            list($classname, $method, $vars) = $request_router->findRoute($request);
+            list($classname, $method, $vars) = $this->router->findRoute($request);
             // run the $controller->index() method, and render the page
-            $this->runControllerMethod($classname, $method, $request, $args, $request_router, $vars);
+            $this->runControllerMethod($classname, $method, $request, $vars);
             
             // forget the redirection memory,
             // so a reload will show an unmodified page
@@ -227,7 +229,7 @@ class RoxFrontRouter
     }
     
     
-    protected function runControllerAjaxMethod($classname, $keyword, $args)
+    protected function runControllerAjaxMethod($classname, $keyword)
     {
         $json_object = new stdClass();
         
@@ -237,7 +239,7 @@ class RoxFrontRouter
         
             if (method_exists($classname, $keyword)) {
                 $controller = new $classname();
-                $result = $controller->$keyword($args, $json_object);
+                $result = $controller->$keyword($this->args, $json_object);
                 // TODO: what should be the role of the return value?
             } else {
                 $json_object->alerts[] = 'PHP method "'.$classname.'::'.$keyword.'()" not found!';
@@ -283,7 +285,7 @@ A TERRIBLE EXCEPTION
     }
     
     
-    protected function runControllerMethod($classname, $method, $request, $args, $router, $route_vars)
+    protected function runControllerMethod($classname, $method, $request, $route_vars)
     {
         // set the default page title
         // this should happen before the applications can overwrite it.
@@ -294,13 +296,13 @@ A TERRIBLE EXCEPTION
             $controller = new $classname();
             $controller->route_vars = $route_vars;
             $controller->request_vars = $request;
-            $controller->args_vars = $args;
-            $controller->router = $router;
-            $page = call_user_func(array($controller, $method),$args);
+            $controller->args_vars = $this->args;
+            $controller->router = $this->router;
+            $page = call_user_func(array($controller, $method),$this->args);
             if (is_a($page, 'AbstractBasePage')) {
                 // used for a html comment
                 $page->controller_classname = $classname;
-                $page->router = $router;
+                $page->router = $this->router;
             }
         } else {
             $page = false;

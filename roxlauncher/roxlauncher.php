@@ -44,21 +44,12 @@ class RoxLauncher
      */
     protected function chooseAndRunApplication($env_explore)
     {
-        $args = new stdClass;
-        $args->request_uri = $_SERVER['REQUEST_URI'];
-        $args->request = PRequest::get()->request;
-        $args->req = implode('/', $args->request);
-        $args->get = $_GET;
-        $args->post = $_POST;
-        $args->get_or_post = array_merge($_POST, $_GET);
-        $args->post_or_get = array_merge($_GET, $_POST);
-        
         $router = new RoxFrontRouter();
         $router->classes = $env_explore->classes;
         $router->env = $env_explore;
         $router->session_memory = new SessionMemory('SessionMemory');
         
-        $router->route($args);
+        $router->route();
     }
     
     

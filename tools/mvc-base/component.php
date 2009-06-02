@@ -98,5 +98,28 @@ class RoxComponentBase
         }
         return $this->MOD_words;
     }
+
+    /**
+     * wrapper for calls to MOD_log::get->write()
+     *
+     * @param string $string
+     * @param string $type
+     * @access protected
+     */
+    protected function logWrite($string, $type = 'Log')
+    {
+        $this->getLog()->write($string, $type);
+    }
+
+    /**
+     * wrapper function for MOD_log::get()
+     *
+     * @access protected
+     * @return object
+     */
+    protected function getLog()
+    {
+        return MOD_log::get();
+    }
 }
 

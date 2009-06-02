@@ -84,7 +84,7 @@ class GroupMembership extends RoxEntityBase
         }
         unset($links);
         
-        $where = "id IN ('" . implode("','", $members) . "')";
+        $where = "Status IN ('Active', 'Pending') AND id IN ('" . implode("','", $members) . "')";
         return $this->createEntity('Member')->findByWhereMany($where);
     }
 

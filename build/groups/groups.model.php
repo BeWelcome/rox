@@ -43,7 +43,8 @@ class GroupsModel extends  RoxModelBase
         {
             return false;
         }
-        return (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, 'Invited');
+        $ms = $this->createEntity('GroupMembership');
+        return  $ms->memberJoin($group, $member, 'Invited');
     }
 
     /**

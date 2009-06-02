@@ -58,9 +58,9 @@
                 $my_groups = $this->my_groups;
                 if (!empty($my_groups)) :
                     echo "<h3>{$words->get('GroupsMyGroups')}</h3>";
-                    for($i = 0; $i < count($my_groups) && $i < 2; $i++) : ?>
+                    for($i = 0; $i < count($my_groups) && $i < 5; $i++) : ?>
                         <div class="groupbox clearfix">
-                            <a href="groups/<?=$group_data->id ?>">
+                            <a href="groups/<?=$my_groups[$i]->id ?>">
                                 <img class="framed float_left"  width="80px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                             </a>
                             <div class="groupinfo">

@@ -120,7 +120,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 <h4><?= $words->get('GroupsInviteMember') ?></h4>
                 <div id='search_result' style='display: none;padding: 3px; margin-bottom: 3px'></div>
                 <form method='get' action='groups/<?= $this->group->getPKValue(); ?>/invitemembers/search' id='invite_form'>
-                    <input type='text' value='Enter username' name='username' id='search_username'/><input type='submit' value='<?= $words->getSilent('Search');?>' id='search_username_submit'/>
+                    <input type='text' value='<?= $words->get('GroupsEnterUsername');?>' name='username' id='search_username'/><input type='submit' value='<?= $words->get('Search');?>' id='search_username_submit'/>
                 </form>
                 <?=$words->flushBuffer()?>
             </div>
@@ -194,7 +194,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 });
                 $('invite_form').observe('submit', function(e){
                     e = e || window.event;
-                    var ajax = new Ajax.Request('groups/<?= $this->group->getPKValue(); ?>/membersearch/' + $('search_username').value, {
+                    var ajax = new Ajax.Request('groups/<?= $this->group->getPKValue(); ?>/membersearchajax/' + $('search_username').value, {
                         method: 'get',
                         onSuccess: function(transport){
                             var result = ((transport.responseText != '[]') ? transport.responseText.evalJSON() : {});

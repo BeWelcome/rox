@@ -8,7 +8,8 @@
                         <strong><?=$member->Username ?></strong>
                         <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
                         <?=($member->Accomodation == 'anytime') ? '<img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="'.$member->Accomodation.'">': ''?>
-                        <br /><?=$member->name() ?>
+                        <br />
+                        <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>
 
         <?=$words->flushBuffer()?>
                     </div> <!-- username -->

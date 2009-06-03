@@ -96,7 +96,7 @@ class MemberPage extends PageWithActiveSkin
 
             <ul class="linklist" id="profile_linklist">
               <?php
-          parent::leftsidebar();
+          $this->__call('leftsidebar', array());
 
         $active_menu_item = $this->getSubmenuActiveItem();
         foreach ($this->getSubmenuItems() as $index => $item) {

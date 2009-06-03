@@ -3,6 +3,10 @@
 
 class AddRelationPage extends RelationsPage
 {    
+    protected function getSubmenuActiveItem()
+    {
+        return 'relationsadd';
+    }
 
     protected function column_col3()
     {

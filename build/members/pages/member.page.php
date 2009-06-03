@@ -27,9 +27,12 @@ class MemberPage extends PageWithActiveSkin
         $comments_count = $member->count_comments(); 
         if ($this->myself) {
             return array(
+                array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
+                array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
+                array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors'),
+                array('space', '', '', 'space'),
+
                 array('profile', "members/$username", $ww->MemberPage),
-                array('editmyprofile', 'editmyprofile', $ww->EditMyProfile),
-                array('mypreferences', 'mypreferences', $ww->MyPreferences),
                 array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
@@ -38,6 +41,11 @@ class MemberPage extends PageWithActiveSkin
             );
         } else {
             return array(
+                array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
+                array('commmentsadd', "members/$username/comments/add", $ww->addcomments, 'commentsadd'),
+                array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
+                array('space', '', '', 'space'),
+
                 array('profile', "members/$username", $ww->MemberPage),
                 array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
@@ -96,18 +104,19 @@ class MemberPage extends PageWithActiveSkin
 
             <ul class="linklist" id="profile_linklist">
               <?php
-          $this->__call('leftsidebar', array());
+          // $this->__call('leftsidebar', array());
 
         $active_menu_item = $this->getSubmenuActiveItem();
         foreach ($this->getSubmenuItems() as $index => $item) {
             $name = $item[0];
             $url = $item[1];
             $label = $item[2];
+            $class = isset($item[3]) ? $item[3] : '';
             if ($name === $active_menu_item) {
-                $attributes = ' class="active"';
+                $attributes = ' class="active '.$class.'"';
                 $around = '';
             } else {
-                $attributes = '';
+                $attributes = ' class="'.$class.'"';
                 $around = '';
             }
 

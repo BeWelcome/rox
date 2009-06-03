@@ -215,9 +215,34 @@ h3.icon  {
   background: url(../../images/icons22/icon_contact.png) top left no-repeat;
  }
 
-.color333 {
-	color: #333;
+#profile_linklist .space {
+	padding-top: 1em;
+	padding-bottom: 1em;
+	border: none;
 }
-
+#profile_linklist .messagesadd {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/email_open.png) 0 3px no-repeat;
+}
+#profile_linklist .commentsadd {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/comment_add.png) 0 3px no-repeat;
+}
+#profile_linklist .relationsadd {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/add.png) 0 3px no-repeat;
+}
+#profile_linklist .editmyprofile {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/pencil.png) 0 3px no-repeat;
+}
+#profile_linklist .mypreferences {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/wrench.png) 0 3px no-repeat;
+}
+#profile_linklist .myvisitors {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/group.png) 0 3px no-repeat;
+}
 
 }

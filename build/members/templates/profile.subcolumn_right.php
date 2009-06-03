@@ -4,6 +4,17 @@
     require 'profileversion.php'; 
     ?>
 
+<? // Linkpath widget ?>
+    <div id="linkpath" class="floatbox box">
+        <?
+            // display linkpath, only if not the members own profile
+            if (isset($_SESSION["IdMember"]) and strcmp($member->id,$_SESSION["IdMember"]) != 0) {
+                $linkwidget = new LinkSinglePictureLinkpathWidget();
+                $linkwidget->render($_SESSION["IdMember"],$member->id,'profile-picture-linkpath');
+            }
+         ?>
+    </div> <!-- linkpath -->
+
 <? 
 // TODO: Implement twitter as messenger in BW and then we can integrate feeds here.
 // Twitter updates 

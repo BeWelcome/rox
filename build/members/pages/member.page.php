@@ -33,7 +33,8 @@ class MemberPage extends PageWithActiveSkin
                 array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
-                array('gallery', "gallery/show/user/$username", $ww->Gallery)
+                array('gallery', "gallery/show/user/$username", $ww->Gallery),
+                array('forum', "forums/member/$username", $ww->ViewForumPosts)
             );
         } else {
             return array(
@@ -41,10 +42,11 @@ class MemberPage extends PageWithActiveSkin
                 array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
-                array('gallery', "gallery/show/user/$username", $ww->Gallery)
+                array('gallery', "gallery/show/user/$username", $ww->Gallery),
+                array('forum', "forums/member/$username", $ww->ViewForumPosts)
             );
         }
-    }  
+    }
     
     protected function columnsArea()
     {
@@ -64,7 +66,7 @@ class MemberPage extends PageWithActiveSkin
 
           <div id="<?=$mid_column_name ?>">
             <div id="<?=$mid_column_name ?>_content" class="clearfix">
-              <?php //parent::submenu(); ?>
+              <?php $this->teaserReplacement(); ?>
               <? $name = 'column_'.$mid_column_name; ?>
                 <?php $this->$name() ?>
               <?php $this->$name ?>
@@ -77,8 +79,50 @@ class MemberPage extends PageWithActiveSkin
     }
 
     protected function submenu() {
-        parent::submenu();
     }
+
+    protected function teaserReplacement() {
+        $this->__call('teaserContent', array());
+        //parent::submenu();
+    }
+
+    protected function leftsidebar() {
+        $member = $this->member;
+        $words = $this->getWords();
+        ?>
+        <div id="profile_pic" >
+                <a href="gallery/show/user/<?=$member->Username?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" class="framed" /></a>
+        </div> <!-- profile_pic -->                
+
+            <ul class="linklist" id="profile_linklist">
+              <?php
+          parent::leftsidebar();
+
+        $active_menu_item = $this->getSubmenuActiveItem();
+        foreach ($this->getSubmenuItems() as $index => $item) {
+            $name = $item[0];
+            $url = $item[1];
+            $label = $item[2];
+            if ($name === $active_menu_item) {
+                $attributes = ' class="active"';
+                $around = '';
+            } else {
+                $attributes = '';
+                $around = '';
+            }
+
+            ?><li id="sub<?=$index ?>" <?=$attributes ?>>
+              <?=$around?><a style="cursor:pointer;" href="<?=$url ?>"><span><?=$label ?></span></a><?=$around?>
+              <?=$words->flushBuffer(); ?>
+            </li>
+            <?php
+
+        }
+
+            ?></ul>
+<?php
+    }
+
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
@@ -100,7 +144,7 @@ class MemberPage extends PageWithActiveSkin
     
     protected function teaserContent()
     {
-        $this->__call('teaserContent', array());
+/*        $this->__call('teaserContent', array()); */
     }
 }
 

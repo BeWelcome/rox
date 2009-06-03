@@ -13,6 +13,20 @@ $profile_language_name = $lang->Name;
 $words = $this->getWords();		
 //$words->setLanguage('fr');
 
+$ww = $this->ww;
+$wwsilent = $this->wwsilent;
+$comments_count = $member->count_comments(); 
+
+$layoutbits = new MOD_layoutbits;
+$right = new MOD_right();
+
+$agestr = "";
+if ($member->age == "hidden") {
+    $agestr .= $ww->AgeHidden;
+} else {
+    $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate));
+}
+
 $messengers = $member->messengers();
 $website = $member->WebSite;
 

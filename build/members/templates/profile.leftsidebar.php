@@ -63,9 +63,6 @@ $occupation = $member->get_trad("Occupation", $profile_language);
         <a href="myvisitors" ><?=$words->get('MyVisitors');?></a>
       </li>
   <? } ?>
-  <li class="icon forumpost16">
-    <a href="forums/member/<?=$member->Username?>" ><?=$words->get('ViewForumPosts', 7);?></a>
-  </li>
 
 </ul>
 

@@ -1,3 +1,12 @@
+<div id="navigation-path" class="floatbox box">
+    <!--<a href="country/" >Country</a>-->
+    <h3><strong><a class="" href="country/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
+            (<a class="" href="country/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
+    <strong><a class="" href="country/<?=$member->countryCode() ?>" ><?=$member->country() ?></a></strong></h3>
+<p class="grey"><?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
+<br /><?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?>
+</p>
+</div> <!-- navigation-path -->
 
 <div id="profile_summary" class="floatbox box">
     <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>

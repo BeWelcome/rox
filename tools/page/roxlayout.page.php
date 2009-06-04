@@ -175,6 +175,8 @@ class PageWithRoxLayout extends PageWithHTML
         $active_menu_item = $this->getTopmenuActiveItem();
         $logged_in = APP_User::isBWLoggedIn();
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+        $rights = new MOD_right();
+        $volunteer = $rights->hasRightAny();
         require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
 
@@ -284,11 +286,9 @@ class PageWithRoxLayout extends PageWithHTML
     protected function column_col1()
     {
         $this->leftSidebar();
-        $this->volunteerBar();
     }
 
-
-    protected function volunteerBar()
+    protected function volunteerMenu()
     {
         $model = new VolunteerbarModel();
 
@@ -299,7 +299,7 @@ class PageWithRoxLayout extends PageWithHTML
         $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
         $numberPendingLocalMess = $model->getNumberPendingLocalMess() ;
 
-        $widget = $this->createWidget('VolunteerbarWidget');
+        $widget = $this->createWidget('VolunteermenuWidget');
         $widget->render();
     }
 

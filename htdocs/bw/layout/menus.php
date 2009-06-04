@@ -94,6 +94,24 @@ function Menu2_old($link = "", $tt = "") {
   <div id="page" class="hold_floats">
   <div id="header">
   </div>
+
+  <!-- son of suckerfish navigation (script to teach IE hover class used in dropdown menu-->
+    <script type="text/javascript"><!--//--><![CDATA[//><!--
+
+      sfHover = function() {
+          var sfEls = document.getElementById("nav_main").getElementsByTagName("li");
+          for (var i=0; i<sfEls.length; i++) {
+              sfEls[i].onmouseover=function() {
+                  this.className+=" sfhover";
+              }
+              sfEls[i].onmouseout=function() {
+                  this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+              }
+          }
+      }
+      if (window.attachEvent) window.attachEvent("onload", sfHover);
+
+  //--><!]]></script>
   <?php
   	// #nav: main navigation 
 	echo "    <div id=\"nav\">\n";
@@ -104,19 +122,49 @@ function Menu2_old($link = "", $tt = "") {
             <img src="../../images/logo_index_top.png" alt="Be Welcome" />
           </a>
         </li>
+        
+        <?php if (IsLoggedIn()) { ?>
+              <li><a href="/members/<?=$username?>"><?=ww('MyProfile')?></a>
+                  <ul>
+                      <li><a href="/../members/<?=$username?>"><?=ww('Profile')?></a></li>
+                      <li><a href="/editmyprofile"><?=ww('EditMyProfile')?></a></li>
+                      <li><a href="/mypreferences"><?=ww('MyPreferences')?></a></li>
+                      <li><a href="/messages"><?=ww('MyMessages')?></a></li>
+                  </ul>
+              </li>
+          <?php } ?>
+                <li><a href="/search"><?=ww('FindMembers')?></a>
+                    <ul>
+                        <li><a href="/searchmembers"><?=ww('MapSearch')?></a></li>
+                        <li><a href="/places"><?=ww('BrowseCountries')?></a></li>
+                    </ul>
+                </li>
+                <li><a href="/explore"><?=ww('Explore')?></a>
+                    <ul>
+                        <li><a href="/forums"><?=ww('Community')?></a></li>
+                        <li><a href="/groups"><?=ww('Groups')?></a></li>
+                        <li><a href="/trip"><?=ww('Trips')?></a></li>
+                        <li><a href="/gallery"><?=ww('Gallery')?></a></li>
+                        <li><a href="/blog"><?=ww('Blogs')?></a></li>
+                        <li><a href="/chat"><?=ww('Chat')?></a></li>
+                    </ul>
+                </li>
+                <li><a href="/about"><?=ww('GetAnswers')?></a>
+                    <ul>
+                        <li><a href="/faq"><?=ww('Faq')?></a></li>
+                        <li><a href="/feedback"><?=ww('ContactUs')?></a></li>
+                        <li><a href="/about/getactive"><?=ww('About_GetActive')?></a></li>
+                    </ul>
+                </li>
+                <? if (IsVol()) { ?>
+                <li><a href="/volunteer"><?=ww('Volunteer')?></a>
+                    <ul>
+                    <?=VolMenu() ?>
+                    </ul>
+                </li>
+                <? } ?>
+            </ul>
 <?php
-        if (IsLoggedIn()) {
-	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
-	}
-	echo "          <li", factive($link, "../searchmembers"), "><a href=\"".bwlink("searchmembers", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
-	echo "          <li", factive($link, "../trip"), "><a href=\"".bwlink("trip", true)."\"><span>".ww("Trips")."</span></a></li>\n";  
-	echo "          <li", factive($link, "../blog"), "><a href=\"".bwlink("blog", true)."\"><span>".ww("Blogs")."</span></a></li>\n";  
-	echo "          <li", factive($link, "../forums"), "><a href=\"".bwlink("forums", true)."\"><span>".ww("Community")."</span></a></li>\n";  
-	echo "          <li", factive($link, "groups.php"), "><a href=\"".bwlink("groups.php")."\"><span>", ww('Groups'), "</span></a></li>\n";
-  echo "          <li", factive($link, "../gallery"), "><a href=\"".bwlink("gallery", true)."\"><span>".ww("Gallery")."</span></a></li>\n";
-	echo "          <li", factive($link, "aboutus.php"), "><a href=\"".bwlink("about", true)."\"><span>", ww('GetAnswers'), "</span></a></li>\n";
-  echo "        </ul>\n";
-
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
     echo '      <form action="../searchmembers/quicksearch" method="post" id="form-quicksearch">
         <input type="text" name="searchtext" size="15" maxlength="30" id="text-field" value="Search...." onfocus="this.value=\'\';"/>
@@ -528,12 +576,6 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "        </div> <!-- teaser -->\n"; //end teaser
 	// no tabs >>
-	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			        <ul>\n";			
-	echo "			        </ul>\n";
-	echo "		        </div>\n";
-	echo "	        </div>\n";
 	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg
     
 	if ($MessageBeforeColumnLow != "")
@@ -562,12 +604,6 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "        </div> <!-- teaser -->\n"; //end teaser
 	// no tabs >>
-	echo "        <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "          <div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "            <ul>\n";
-	echo "            </ul>\n";
-	echo "          </div> <!-- nav_sub -->\n";
-	echo "        </div>\n";
 	echo "      </div> <!-- middle_nav -->\n"; //end teaser_bg
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions

@@ -59,6 +59,11 @@
                 <li><a href="about/getactive"><?=$words->get('About_GetActive')?></a></li>
             </ul>
         </li>
+        <? if (isset($volunteer) && $volunteer) { ?>
+        <li><a href="volunteer"><?=$words->get('Volunteer')?></a>
+            <?=$this->volunteerMenu() ?>
+        </li>
+        <? } ?>
     </ul>
     
 <!-- show login fields or searchbox, depending if logged in or not-->

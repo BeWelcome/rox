@@ -35,7 +35,7 @@
             foreach ($search_result as $group_data) : ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->id ?>">
-                        <img class="framed float_left"  width="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
+                        <img class="framed float_left"  width="80px" height='80px' alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                     </a>
                     <div class="groupinfo">
                         <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>

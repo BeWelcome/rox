@@ -35,7 +35,7 @@
                  ?>
                     <div class="groupbox clearfix">
                         <a href="groups/<?=$group_data->id ?>"> 
-                            <img class="framed float_left"  width="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
+                            <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                         </a>
                         <div class="groupinfo">
                             <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>
@@ -61,7 +61,7 @@
                     for($i = 0; $i < count($my_groups) && $i < 5; $i++) : ?>
                         <div class="groupbox clearfix">
                             <a href="groups/<?=$my_groups[$i]->id ?>">
-                                <img class="framed float_left"  width="80px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                                <img class="framed float_left"  width="80px" height="80px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                             </a>
                             <div class="groupinfo">
                             <h4><a href="groups/<?= $my_groups[$i]->id ?>"><?= $my_groups[$i]->Name ?></a></h4>

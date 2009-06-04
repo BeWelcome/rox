@@ -22,9 +22,71 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+
+$model = new VolunteerbarModel();
+
+$numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
+$numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
+$numberMessagesToBeChecked = $model->getNumberPersonsToAcceptInGroup() ;
+$numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
+$numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
+$numberPendingLocalMess = $model->getNumberPendingLocalMess() ;
+
+$R = MOD_right::get();
+
 ?>
 
 <ul>
+<?php
+
+    $res = "";
+    $request = PRequest::get()->request;
+    $link = ""; // FIXME: all link checks should be transfered to be "rox style"
+    if (count($request) > 1) {
+        $link = $request[0] . '/' . $request[1];
+    }
+
+    $array_of_items =
+        array(
+            array(
+                'Accepter',
+                'bw/admin/adminaccepter.php',
+                'AdminAccepter('.$numberPersonsToBeAccepted.')',
+                'accept new member accounts'
+            ),
+            array(
+                'Accepter',
+                'bw/admin/adminmandatory.php',
+                'AdminMandatory('.$numberPersonsToBeChecked.')',
+                'check member accounts'
+            ),
+            array(
+                'Group',
+                'bw/admin/admingroups.php',
+                'AdminGroups('.$numberPersonsToAcceptInGroup.')',
+                'manage groups'
+            ),
+            array(
+                'Checker',
+                'bw/admin/adminchecker.php',
+                'AdminSpam('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
+                'check spam reports'
+            )
+        )
+    ;
+    foreach($array_of_items as $item) {
+        if ($R->hasRight($item[0])) {
+            if ($link == $item[1]) {
+                echo '<li><strong>'.$item[2].'</strong></li>
+                ';
+            } else {
+                echo '<li><a href="'.$item[1].'" title="'.$item[3].'">'.$item[2].'</a></li>
+                ';
+            }
+        }
+    }
+?>
+
   <li><img src="styles/css/minimal/images/icon_grey_online.png" alt="onlinemembers" /> <a href="online" id="IdLoggedMembers"><?php echo $words->getBuffered('NbMembersOnline', $who_is_online_count); ?></a><?php echo $words->flushBuffer(); ?></li>
   <?php if ($logged_in) { ?>
   <li><img src="styles/css/minimal/images/icon_grey_mail.png" alt="mymessages"/><a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>

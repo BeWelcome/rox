@@ -119,14 +119,14 @@ function Menu2_old($link = "", $tt = "") {
 ?>
         <li id="logo">
           <a href="">
-            <img src="../../images/logo_index_top.png" alt="Be Welcome" />
+            <img src="/images/logo_index_top.png" alt="Be Welcome" />
           </a>
         </li>
         
         <?php if (IsLoggedIn()) { ?>
-              <li><a href="/members/<?=$username?>"><?=ww('MyProfile')?></a>
+              <li><a href="/members/<?=$_SESSION['Username']?>"><?=ww('MyProfile')?></a>
                   <ul>
-                      <li><a href="/../members/<?=$username?>"><?=ww('Profile')?></a></li>
+                      <li><a href="/members/<?=$_SESSION['Username']?>"><?=ww('Profile')?></a></li>
                       <li><a href="/editmyprofile"><?=ww('EditMyProfile')?></a></li>
                       <li><a href="/mypreferences"><?=ww('MyPreferences')?></a></li>
                       <li><a href="/messages"><?=ww('MyMessages')?></a></li>
@@ -521,8 +521,7 @@ google_ad_channel = "";
 // This function display the Actions
 // THis function is here for historical reason, it call in fact  ShowLeftColumn
 function ShowActions($Action = "", $VolMenu = false) {
-  if ($VolMenu) ShowLeftColumn($Action,VolMenu()) ;
-  else ShowLeftColumn($Action) ;
+   ShowLeftColumn($Action) ;
 } // end of Show Actions
 
 //------------------------------------------------------------------------------
@@ -546,13 +545,6 @@ function ShowLeftColumn($MemberAction = "",$VolunteerAction ="", $MyRelations=""
 		echo "          <h3>", ww("MyRelations"), "</h3>\n";
 		echo "          <ul class=\"linklist\">\n";
 		echo $MyRelations;
-    	echo "          </ul>\n";
-	}
-
-	if ($VolunteerAction != "")  {
-		echo "          <h3>", ww("VolunteerAction"), "</h3>\n";
-		echo "          <ul class=\"linklist\">\n";
-		echo $VolunteerAction;
     	echo "          </ul>\n";
 	}
 	echo "        </div>\n"; // col1_content

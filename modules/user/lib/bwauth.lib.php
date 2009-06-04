@@ -378,6 +378,10 @@ VALUES
 		unset($_SESSION["stylesheet"]) ;
 		if (isset($_SESSION['Param']))
 			unset($_SESSION["Param"]) ;
+		if (isset($_SESSION['TimeOffset']))
+			unset($_SESSION["TimeOffset"]) ;
+		if (isset($_SESSION['PreferenceDayLight']))
+			unset($_SESSION["PreferenceDayLight"]) ;
 		if (isset($_SESSION['MemberCryptKey']))
 			unset($_SESSION['MemberCryptKey']);		
 		if (isset($_SESSION['LogCheck']))

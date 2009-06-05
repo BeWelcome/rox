@@ -1,6 +1,7 @@
 
           <fieldset id="profilesummary">
             <legend><?=$words->getInLang('ProfileSummary', $profile_language)?></legend>
+            <a name="profilepic" />
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>

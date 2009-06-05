@@ -97,9 +97,10 @@ class MemberPage extends PageWithActiveSkin
     protected function leftsidebar() {
         $member = $this->member;
         $words = $this->getWords();
+        $piclink = $this->myself ? 'editmyprofile#profilepic':'gallery/show/user/'.$member->Username;
         ?>
         <div id="profile_pic" >
-                <a href="gallery/show/user/<?=$member->Username?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" class="framed" /></a>
+                <a href="<?=$piclink?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" class="framed" /></a>
         </div> <!-- profile_pic -->                
 
             <ul class="linklist" id="profile_linklist">

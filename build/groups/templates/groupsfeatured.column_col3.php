@@ -24,14 +24,11 @@
             $this->pager->render();
 
             echo <<<HTML
-<div class="subcolumns">
-    <div class="c50l">
-        <div class="subcl">
             <div>
 HTML;
 
-            for ($i = 0; $i < 10 && $i < count($search_result); $i++) :
-                $group_data = $search_result[$i];?>
+            foreach ($search_result as $group_data) : ?>
+                <div style='float: left; width: 50%'>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->getPKValue() ?>">
                         <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
@@ -45,35 +42,9 @@ HTML;
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox clearfix-->
-            <?php endfor ;?>
+                </div>
+            <?php endforeach ;?>
             </div>
-        </div>
-    </div>
-    <div class="c50r">
-        <div class="subcr">
-            <div>
-        <?php
-            for ($i = 10; $i < 20 && $i < count($search_result); $i++) :
-                $group_data = $search_result[$i];
-                ?>
-                <div class="groupbox clearfix">
-                    <a href="groups/<?=$group_data->getPKValue() ?>">
-                        <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
-                    </a>
-                    <div class="groupinfo">
-                        <h4><a href="groups/<?=$group_data->getPKValue() ?>"><?=$group_data->Name ?></a></h4>
-                        <ul>
-                            <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
-                            <li><?= $words->get('GroupsDateCreation');?>: <?=$group_data->created; ?></li>
-                            <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
-                        </ul>
-                    </div> <!-- groupinfo -->
-                </div> <!-- groupbox clearfix-->
-            <?php endfor; ?>
-            </div>
-        </div>
-    </div>
-</div>
         <?php else :
             echo <<<HTML
             <p class="note">

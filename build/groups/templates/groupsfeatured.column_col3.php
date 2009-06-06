@@ -9,7 +9,7 @@
         if ($search_result)
         {
             $name_order = (($this->result_order == "nameasc") ? 'namedesc' : 'nameasc');
-            $member_order = (($this->result_order == "membersasc") ? 'membersdesc' : 'membersasc');
+            $member_order = (($this->result_order == "membersdesc") ? 'membersasc' : 'membersdesc');
             $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
             $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
             ?>

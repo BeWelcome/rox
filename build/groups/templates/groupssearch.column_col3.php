@@ -45,6 +45,9 @@ HTML;
                 </div>
             <?php endforeach ; ?>
             </div>
+            <?php
+            $this->pager->render();
+            ?>
         <?php else :
             echo <<<HTML
             <p class="note">

@@ -23,6 +23,7 @@
                 </div> <!-- groupbox floatbox -->
                 </div>
             <?php endforeach;
+            $this->pager->render();
         }
         else
         {

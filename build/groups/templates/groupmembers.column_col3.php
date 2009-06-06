@@ -18,7 +18,7 @@
         </tr>
     <?php
         $count = 0;
-        foreach ($this->pager_widget->getActiveSubset($this->group->getMembers()) as $member)
+        foreach ($this->pager_widget->getActiveSubset($this->group->getMembers('In', $this->pager_widget->getActiveStart(), $this->pager_widget->getActiveLength())) as $member)
         {
             $membershipinfo = $member->getGroupMembership($this->group);
             ?>
@@ -37,5 +37,5 @@
             $count++;
         }
         echo "</table>";
+        $this->pager_widget->render();
     }
-?>

@@ -28,8 +28,8 @@
 <div>
 HTML;
             foreach ($search_result as $group_data) :?>
-                <div style='float: left; width: 50%'>
-                <div class="groupbox clearfix">
+                <div style='float: left; width: 48%'>
+                <div class="groupbox floatbox">
                     <a href="groups/<?=$group_data->getPKValue() ?>">
                         <img class="framed float_left"  width="80px" height='80px' alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                     </a>

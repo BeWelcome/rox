@@ -5,6 +5,13 @@ class HalfPagePager extends RoxWidget
 
     const block_links = 2;
 
+    private $style;
+
+    public function __construct($style = 'right')
+    {
+        $this->style = $style;
+    }
+
     /**
      * outputs a list of list links, to reflect paging
      *
@@ -17,7 +24,7 @@ class HalfPagePager extends RoxWidget
             return;
         }
         echo "<div class='pages'>\n";
-        echo "<ul>\n";
+        echo "<ul style='float: {$this->style}'>\n";
         if ($this->active_page > 1)
         {
             if ($this->pages > self::block_links)
@@ -93,6 +100,7 @@ class HalfPagePager extends RoxWidget
             }
         }
         echo "</ul>\n";
+        echo "<div style='margin-bottom:15px' class='clear;'>&nbsp;</div>\n";
         echo "</div>\n";
         return;
 

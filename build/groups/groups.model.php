@@ -106,10 +106,10 @@ class GroupsModel extends  RoxModelBase
                     $order = 'Name DESC';
                     break;
                 case "membersasc":
-                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = groups.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN ('Active','Pending') ASC, Name ASC";
+                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = groups.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN ('Active','Pending')) ASC, Name ASC";
                     break;
                 case "membersdesc":
-                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = groups.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN ('Active','Pending') DESC, Name ASC";
+                    $order = "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = groups.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN ('Active','Pending')) DESC, Name ASC";
                     break;
                 case "createdasc":
                     $order = 'created ASC, Name ASC';

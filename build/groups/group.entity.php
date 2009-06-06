@@ -100,7 +100,7 @@ class Group extends RoxEntityBase
      * @access public
      * @return array
      */
-    public function getMembers($status = false)
+    public function getMembers($status = false, $offset = 0, $limit = null)
     {
         if (!$this->_has_loaded)
         {
@@ -109,7 +109,7 @@ class Group extends RoxEntityBase
 
         $status = (($status) ? $status : 'In');
 
-        return $this->createEntity('GroupMembership')->getGroupMembers($this, $status);
+        return $this->createEntity('GroupMembership')->getGroupMembers($this, $status, '', $offset, $limit);
     }
 
     /**

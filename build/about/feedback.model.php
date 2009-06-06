@@ -79,26 +79,40 @@ FROM feedbackcategories
      * @param string $IdMember
      */
     public function feedbackMail($receiver, $message_subject, $message_text, $sender)
-    {
+    {        
         //Load the files we'll need
-        require_once "bw/lib/swift/Swift.php";
-        require_once "bw/lib/swift/Swift/Connection/SMTP.php";
-        require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        require_once SCRIPT_BASE.'lib/misc/swift-mailer/lib/swift_required.php';
         
-        //Start Swift
-        $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
-                
-        //Create a message
-        $message =& new Swift_Message($message_subject);
-        $message->attach(new Swift_Message_Part($message_text));
+        //Create the Transport
+        $transport = Swift_SmtpTransport::newInstance('localhost', 25);
+
+        //Create the Mailer using your created Transport
+        $mailer = Swift_Mailer::newInstance($transport);
+        
+        //Create the message
+        $message = Swift_Message::newInstance()
+
+          //Give the message a subject
+          ->setSubject($message_subject)
+
+          //Set the From address with an associative array
+          ->setFrom($sender)
+
+          //Set the To addresses with an associative array
+          ->setTo($receiver)
+
+          //Give it a body
+          ->setBody($message_text)
+          ;
         
         //Now check if Swift actually sends it
-        if ($swift->send($message, $receiver, $sender)) {
+        if ($mailer->send($message)) {
             $status = true;
         } else {
             MOD_log::get()->write(" in feedback model $\swift->send: Failed to send a mail to [".$receiver."]", "feedback");
             $status = false;
         }
+        return $status;
     }
     
 }

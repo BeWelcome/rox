@@ -70,14 +70,17 @@ class GroupsController extends RoxControllerBase
                 break;
 
             case 'search':
-                $terms = ((isset($_GET['GroupsSearchInput'])) ? $_GET['GroupsSearchInput'] : '');
-                $resultpage = ((isset($_GET['Page'])) ? $_GET['Page'] : 0);
-                $order = ((isset($_GET['Order'])) ? $_GET['Order'] : 'nameasc');
+                $terms = ((!empty($this->args_vars->get['GroupsSearchInput'])) ? $this->args_vars->get['GroupsSearchInput'] : '');
+                $order = ((!empty($this->args_vars->get['order'])) ? $this->args_vars->get['order'] : 'nameasc');
+                $params->strategy = new HalfPagePager('left');
+                $params->items = $this->_model->countGroupsBySearchterms($terms);
+                $params->items_per_page = 20;
+                $pager = new PagerWidget($params);
                 $page = new GroupsSearchPage();
-                $page->search_result = $this->_model->findGroups($terms, $resultpage, $order);
-                $page->result_page = $resultpage;
+                $page->search_result = $this->_model->findGroups($terms, $pager->active_page, $order, $pager->items_per_page);
                 $page->result_order = $order;
                 $page->search_terms = $terms;
+                $page->pager = $pager;
                 break;
             case 'new':
                 if (isset($_SESSION['IdMember']))
@@ -93,7 +96,12 @@ class GroupsController extends RoxControllerBase
                 if (isset($_SESSION['IdMember']))
                 {
                     $page = new GroupsMyGroupsPage();
+                    $params->strategy = new HalfPagePager('left');
+                    $params->items = $this->_model->countMyGroups();
+                    $params->items_per_page = 20;
+                    $pager = new PagerWidget($params);
                     $page->search_result = $this->_model->getMyGroups();
+                    $page->pager = $pager;
                 }
                 else
                 {
@@ -102,8 +110,13 @@ class GroupsController extends RoxControllerBase
                 break;
             case 'featured':
                 $page = new GroupsFeaturedPage();
-                $order = ((isset($_GET['Order'])) ? $_GET['Order'] : 'nameasc');
-                $page->search_result = $this->_model->findGroups(null,null,$order);
+                $order = ((!empty($this->args_vars->get['order'])) ? $this->args_vars->get['order'] : 'nameasc');
+                $params->strategy = new HalfPagePager('left');
+                $params->items = $this->_model->countGroupsBySearchterms(null);
+                $params->items_per_page = 20;
+                $pager = new PagerWidget($params);
+                $page->search_result = $this->_model->findGroups(null,$pager->active_page,$order, $pager->items_per_page);
+                $page->pager = $pager;
                 $page->result_order = $order;
                 break;
             default:
@@ -522,7 +535,14 @@ class GroupsController extends RoxControllerBase
      */
     private function members($group, $request)
     {
-        return new GroupMembersPage();
+        $page = new GroupMembersPage();
+        $page->group = $group;
+        $pager_params->strategy = new HalfPagePager('left');
+        $pager_params->page_method = 'url';
+        $pager_params->items = $page->group->getMemberCount();
+        $pager_params->items_per_page = 10;
+        $page->pager_widget = new PagerWidget($pager_params);
+        return $page;
     }
 
     /**

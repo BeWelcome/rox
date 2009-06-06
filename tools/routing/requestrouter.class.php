@@ -3,6 +3,12 @@
 
 class RequestRouter
 {
+    /**
+     * stores the request uri and post and get args
+     *
+     * @var object
+     */
+    private static $_request_args = null;
     
     /**
      * get the controller classname
@@ -154,6 +160,29 @@ class RequestRouter
             $str .= "$x = ".implode(' ', $y)."\n";
         }
         file_put_contents($file, $str);
+    }
+
+    /**
+     * returns the request uri plus arguments from get and post
+     *
+     * @access public
+     * @return object
+     */
+    public function getRequestAndArgs()
+    {
+        if (!self::$_request_args)
+        {
+            $args = new stdClass;
+            $args->request_uri = $_SERVER['REQUEST_URI'];
+            $args->request = PRequest::get()->request;
+            $args->req = implode('/', $args->request);
+            $args->get = $_GET;
+            $args->post = $_POST;
+            $args->get_or_post = array_merge($_POST, $_GET);
+            $args->post_or_get = array_merge($_GET, $_POST);
+            self::$_request_args = $args;
+        }
+        return self::$_request_args;
     }
 }
 

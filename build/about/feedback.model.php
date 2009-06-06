@@ -28,8 +28,8 @@ FROM feedbackcategories
     public function sendFeedback($vars)
     {
         $categories = $this->getFeedbackCategories();
-
-		$rCategory = $categories[$vars["IdCategory"]];
+var_dump($categories);
+		$rCategory = $categories[$vars["IdCategory"]-1];
 		$receiver_str = str_replace(";", ",", $rCategory->EmailToNotify);
         $receiver = explode(',', $receiver_str);
         

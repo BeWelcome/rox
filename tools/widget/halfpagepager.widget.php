@@ -23,7 +23,7 @@ class HalfPagePager extends RoxWidget
         {
             return;
         }
-        echo "<div class='pages'>\n";
+        echo "<div style='clear: both' class='pages'>\n";
         echo "<ul style='float: {$this->style}'>\n";
         if ($this->active_page > 1)
         {
@@ -100,7 +100,7 @@ class HalfPagePager extends RoxWidget
             }
         }
         echo "</ul>\n";
-        echo "<div style='margin-bottom:15px' class='clear;'>&nbsp;</div>\n";
+        echo "<div style='margin-bottom:15px; clear: both'>&nbsp;</div>\n";
         echo "</div>\n";
         return;
 

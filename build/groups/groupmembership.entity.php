@@ -60,7 +60,7 @@ class GroupMembership extends RoxEntityBase
      * @access public
      * @return array
      */
-    public function getGroupMembers($group, $status = '', $where = '')
+    public function getGroupMembers($group, $status = '', $where = '', $offset = 0, $limit = null)
     {
         if (!is_object($group) || !($group_id = $group->getPKValue()))
         {
@@ -72,6 +72,17 @@ class GroupMembership extends RoxEntityBase
         if (isset($where) && strlen($where))
         {
             $where_clause .= " AND {$where}";
+        }
+        $where_clause .= " ORDER BY created";
+
+        if ($limit)
+        {
+            $where_clause .= " LIMIT {$this->dao->escape($limit)}";
+        }
+
+        if ($offset)
+        {
+            $where_clause .= " OFFSET {$this->dao->escape($offset)}";
         }
 
         $links = $this->findByWhereMany($where_clause);

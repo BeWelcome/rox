@@ -30,7 +30,8 @@ FROM feedbackcategories
         $categories = $this->getFeedbackCategories();
 
 		$rCategory = $categories[$vars["IdCategory"]];
-        $receiver = explode(',', $rCategory->EmailToNotify);
+		$receiver_str = str_replace(";", ",", $rCategory->EmailToNotify);
+        $receiver = explode(',', $receiver_str);
         
 		// feedbackcategory 3 = FeedbackAtSignup
 		$IdMember = 0;

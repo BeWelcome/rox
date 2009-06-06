@@ -1,12 +1,9 @@
-<div id="groups">
-    <div class="row">
+<div class="subcolumns">
         <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
         <form action="groups/search" method="get">
             <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
         </form>
-    </div> <!-- row -->
     
-    <div class="row">
         <h3><?= $words->get('GroupsSearchResult'); ?></h3>
         <?php
         $search_result = $this->search_result;
@@ -28,11 +25,16 @@
 // Categories link disabled until we have categories
 //            |
 //            <a class="grey" href="groups/search?GroupsSearchInput={$this->search_terms}&amp;Order={$category_order}&Page={$this->result_page}">Category</a>
-?>
-    </div> <!-- row -->           
-<?
             $this->pager->render();
-            foreach ($search_result as $group_data) : ?>
+  ?>
+  <div class="c50l">
+    <div class="subcl">
+
+<div>
+<?php
+            for ($i = 0; $i < 10 && $i < count($search_result); $i++) :
+                $group_data = $search_result[$i];
+                ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->id ?>">
                         <img class="framed float_left"  width="80px" height='80px' alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
@@ -46,7 +48,7 @@
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox clearfix -->
-            <?php endforeach ; 
+            <?php endfor ; 
         }
         else
         {
@@ -54,8 +56,39 @@
             <p class="note">
             {$words->get('GroupSearchNoResults')}
             </p>
-</div>
-</div>
 HTML;
         }
         ?>
+</div>
+	</div>
+   </div>
+
+
+  <div class="c50r">
+    <div class="subcr">
+    <div>
+        <?php
+            if ($search_result) :
+            for ($i = 10; $i < 20 && $i < count($search_result); $i++) :
+                $group_data = $search_result[$i];
+                ?>
+                <div class="groupbox clearfix">
+                    <a href="groups/<?=$group_data->id ?>">
+                        <img class="framed float_left"  width="80px" height='80px' alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
+                    </a>
+                    <div class="groupinfo">
+                        <h4><a href="groups/<?=$group_data->id ?>"><?=$group_data->Name ?></a></h4>
+                        <ul>
+                            <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
+                            <li><?= $words->get('GroupsDateCreation');?>: <?=$group_data->created; ?></li>
+                            <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
+                        </ul>
+                    </div> <!-- groupinfo -->
+                </div> <!-- groupbox clearfix -->
+            <?php endfor ;
+            endif;
+            ?>
+        </div>
+    </div>
+</div>
+</div>

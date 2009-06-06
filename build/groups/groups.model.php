@@ -90,9 +90,12 @@ class GroupsModel extends  RoxModelBase
      * Find and return groups, using search terms from search page
      *
      * @param string $terms - search terms
+     * @param int $page - offset to start from
+     * @param string $order - sortorder
+     * @param int $amount how many results to find
      * @return mixed false or an array of Groups
      */    
-    public function findGroups($terms = '', $page = 1, $order = '')
+    public function findGroups($terms = '', $page = 1, $order = '', $amount = 10)
     {
     
         if (!empty($order))
@@ -132,7 +135,7 @@ class GroupsModel extends  RoxModelBase
 
         $group = $this->createEntity('Group');
         $group->sql_order = $order;
-        return $this->_group_list = $group->findBySearchTerms($terms_array, (($page - 1) * 10));
+        return $this->_group_list = $group->findBySearchTerms($terms_array, (($page - 1) * $amount), $amount);
     }
 
 

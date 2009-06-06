@@ -1,15 +1,17 @@
 <div class="subcolumns">
+        <h3><?= $words->get('GroupsMyGroups'); ?></h3>
   <div class="c50l">
     <div class="subcl">
-    <div id="groups">
-        <h3><?= $words->get('GroupsMyGroups'); ?></h3>
+        <div>
         <?php
         $search_result = $this->search_result;
         if ($search_result)
         {
+            $mygroups = $this->pager->getActiveSubset($search_result);
             $this->pager->render();
-            foreach($this->pager->getActiveSubset($search_result) as $group_data)
+            for ($i = 0; $i < 10 && $i < count($mygroups); $i++)
             {
+                $group_data = $mygroups[$i];
                 ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->id ?>">
@@ -43,14 +45,13 @@ HTML;
 
   <div class="c50r">
     <div class="subcr">
-    <div id="groups">
-    <h3>&nbsp;</h3>
+    <div>
         <?php
-        $search_result = $this->search_result;
         if ($search_result)
         {
-            foreach($search_result as $group_data)
+            for ($i = 10; $i < 20 && $i < count($mygroups); $i++)
             {
+                $group_data = $mygroups[$i];
                 ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->id ?>">
@@ -67,14 +68,6 @@ HTML;
                 </div> <!-- groupbox clearfix -->
 <?php
             }
-        }
-        else
-        {
-            echo <<<HTML
-            <p class="note">
-            {$words->get('GroupSearchNoResults')}
-            </p>
-HTML;
         }
         ?>
         </div>

@@ -127,13 +127,16 @@ class GroupsController extends RoxControllerBase
     public function search()
     {
         $terms = ((!empty($this->args_vars->get['GroupsSearchInput'])) ? $this->args_vars->get['GroupsSearchInput'] : '');
-        $resultpage = ((!empty($this->args_vars->get['Page'])) ? $this->args_vars->get['Page'] : 0);
-        $order = ((!empty($this->args_vars->get['Order'])) ? $this->args_vars->get['Order'] : 'nameasc');
+        $order = ((!empty($this->args_vars->get['order'])) ? $this->args_vars->get['order'] : 'nameasc');
+        $params->strategy = new HalfPagePager;
+        $params->items = $this->_model->countGroupsBySearchterms($terms);
+        $params->items_per_page = 10;
+        $pager = new PagerWidget($params);
         $page = new GroupsSearchPage();
-        $page->search_result = $this->_model->findGroups($terms, $resultpage, $order);
-        $page->result_page = $resultpage;
+        $page->search_result = $this->_model->findGroups($terms, $pager->active_page, $order);
         $page->result_order = $order;
         $page->search_terms = $terms;
+        $page->pager = $pager;
         $this->fillObject($page);
         return $page;
     }
@@ -157,7 +160,12 @@ class GroupsController extends RoxControllerBase
         }
 
         $page = new GroupsMyGroupsPage();
+        $params->strategy = new HalfPagePager;
+        $params->items = $this->_model->countMyGroups();
+        $params->items_per_page = 10;
+        $pager = new PagerWidget($params);
         $page->search_result = $this->_model->getMyGroups();
+        $page->pager = $pager;
         $this->fillObject($page);
         return $page;
     }
@@ -165,9 +173,13 @@ class GroupsController extends RoxControllerBase
     public function featured()
     {
         $page = new GroupsFeaturedPage();
-        $resultpage = ((!empty($this->args_vars->get['Page'])) ? $this->args_vars->get['Page'] : 0);
-        $order = ((!empty($this->args_vars->get['Order'])) ? $this->args_vars->get['Order'] : 'nameasc');
-        $page->search_result = $this->_model->findGroups(null,$resultpage,$order);
+        $order = ((!empty($this->args_vars->get['order'])) ? $this->args_vars->get['order'] : 'nameasc');
+        $params->strategy = new HalfPagePager;
+        $params->items = $this->_model->countGroupsBySearchterms(null);
+        $params->items_per_page = 10;
+        $pager = new PagerWidget($params);
+        $page->search_result = $this->_model->findGroups(null,$pager->active_page,$order);
+        $page->pager = $pager;
         $page->result_order = $order;
         $this->fillObject($page);
         return $page;
@@ -308,8 +320,7 @@ class GroupsController extends RoxControllerBase
     /**
      * called when a member accepts an invitation to join a group
      *
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      */
     public function declineInvitation()
     {
@@ -326,9 +337,7 @@ class GroupsController extends RoxControllerBase
     /**
      * bans a member from a group, so they can't join up again
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function banMember()
@@ -352,9 +361,7 @@ class GroupsController extends RoxControllerBase
     /**
      * kicks a member from a group, by just taking them out of the group
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function kickMember()
@@ -378,9 +385,7 @@ class GroupsController extends RoxControllerBase
     /**
      * accepts a member to group
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function acceptMember()
@@ -405,9 +410,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles member administration page
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function memberAdministration()
@@ -428,9 +431,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles member joining a group
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function join()
@@ -441,23 +442,36 @@ class GroupsController extends RoxControllerBase
             $this->_redirect($this->router->url('groups_overview'));
         }
 
-        if (isset($request[3]) && strtolower($request[3]) == 'true')
-        {
-            $page = new GroupStartPage();
+        $page = new GroupJoinPage();
+        $this->fillObject($page);
+        $page->group = $group;
+        return $page;
+    }
 
-            if ($this->_model->joinGroup($member, $group))
-            {
-                $page->setMessage('GroupsJoinSuccess');
-                $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} joined group #{$group->getPKValue()}");
-            }
-            else
-            {
-                $page->setMessage('GroupsJoinFail');
-            }
+    /**
+     * handles member joining a group
+     *
+     * @access public
+     * @return object $page
+     */
+    public function joined()
+    {
+        $group = $this->getGroupFromRequest();
+        if (!($member = $this->_model->getLoggedInMember()))
+        {
+            $this->_redirect($this->router->url('groups_overview'));
+        }
+
+        $page = new GroupStartPage();
+
+        if ($this->_model->joinGroup($member, $group))
+        {
+            $page->setMessage('GroupsJoinSuccess');
+            $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} joined group #{$group->getPKValue()}");
         }
         else
         {
-            $page = new GroupJoinPage();
+            $page->setMessage('GroupsJoinFail');
         }
         $this->fillObject($page);
         $page->group = $group;
@@ -467,9 +481,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles member leaving a group
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function leave()
@@ -480,22 +492,34 @@ class GroupsController extends RoxControllerBase
             $this->_redirect($this->router->url('groups_overview'));
         }
 
-        if (isset($request[3]) && strtolower($request[3]) == 'true')
+        $page = new GroupLeavePage();
+        $page->group = $group;
+        return $page;
+    }
+
+    /**
+     * handles member leaving a group
+     *
+     * @access public
+     * @return object $page
+     */
+    public function left()
+    {
+        $group = $this->getGroupFromRequest();
+        if (!($member = $this->_model->getLoggedInMember()))
         {
-            $page = new GroupStartPage();
-            if ($this->_model->leaveGroup($member, $group))
-            {
-                $page->setMessage('GroupsLeaveSuccess');
-                $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} left group #{$group->getPKValue()}");
-            }
-            else
-            {
-                $page->setMessage('GroupsLeaveFail');
-            }
+            $this->_redirect($this->router->url('groups_overview'));
+        }
+
+        $page = new GroupStartPage();
+        if ($this->_model->leaveGroup($member, $group))
+        {
+            $page->setMessage('GroupsLeaveSuccess');
+            $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} left group #{$group->getPKValue()}");
         }
         else
         {
-            $page = new GroupLeavePage();
+            $page->setMessage('GroupsLeaveFail');
         }
         $page->group = $group;
         return $page;
@@ -504,9 +528,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles member settings page
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function memberSettings()
@@ -526,9 +548,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles group settings page
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function groupSettings()
@@ -548,9 +568,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles group deletion page
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function delete()
@@ -580,9 +598,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles showing group forum page
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function forum()
@@ -596,9 +612,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles showing group members page
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function members()
@@ -608,7 +622,7 @@ class GroupsController extends RoxControllerBase
         $this->fillObject($page);
         $pager_params->strategy = new HalfPagePager;
         $pager_params->page_method = 'url';
-        $pager_params->items_count = count($page->group->getMembers());
+        $pager_params->items = count($page->group->getMembers());
         $pager_params->items_per_page = 10;
         $page->pager_widget = new PagerWidget($pager_params);
         return $page;
@@ -617,9 +631,7 @@ class GroupsController extends RoxControllerBase
     /**
      * handles showing group wiki page
      *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
+     * @access public
      * @return object $page
      */
     public function wiki()
@@ -631,6 +643,12 @@ class GroupsController extends RoxControllerBase
     }
 //}}}
 
+    /**
+     * redirects to the url provided
+     *
+     * @access private
+     * @todo move to controller base class
+     */
     private function _redirect($url)
     {
         header('Location: '.$url);

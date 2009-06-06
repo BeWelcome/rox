@@ -15,11 +15,11 @@
             ?>
             <h4><?= $words->get('GroupsSearchOrder');?></h4>
             <p class="grey">
-            <a class="grey" href="groups/featured?GroupsFeaturedInput=<?=$this->search_terms;?>&amp;Order=<?=$name_order;?>&Page=<?=$this->result_page;?>"><?= $words->get('GroupsOrderName'); ?></a>
+            <a class="grey" href="groups/featured?GroupsFeaturedInput=<?=$this->search_terms;?>&amp;order=<?=$name_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderName'); ?></a>
             |
-            <a class="grey" href="groups/featured?GroupsFeaturedInput=<?=$this->search_terms;?>&amp;Order=<?=$member_order;?>&Page=<?=$this->result_page;?>"><?= $words->get('GroupsOrderMembers'); ?></a>
+            <a class="grey" href="groups/featured?GroupsFeaturedInput=<?=$this->search_terms;?>&amp;order=<?=$member_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderMembers'); ?></a>
             |
-            <a class="grey" href="groups/featured?GroupsFeaturedInput=<?=$this->search_terms;?>&amp;Order=<?=$created_order;?>&Page=<?=$this->result_page;?>"><?= $words->get('GroupsOrderDate'); ?></a>
+            <a class="grey" href="groups/featured?GroupsFeaturedInput=<?=$this->search_terms;?>&amp;order=<?=$created_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate'); ?></a>
 <?
 // Categories link disabled until we have categories
 //            |
@@ -27,8 +27,8 @@
 ?>
     </div> <!-- row -->           
 <?
-
-            foreach ($search_result as $group_data) : ?>
+            $this->pager->render();
+                foreach ($search_result as $group_data) : ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->id ?>">
                         <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>

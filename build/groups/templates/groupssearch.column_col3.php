@@ -13,17 +13,17 @@
         if ($search_result)
         {
             $name_order = (($this->result_order == "nameasc") ? 'namedesc' : 'nameasc');
-            $member_order = (($this->result_order == "membersasc") ? 'membersdesc' : 'membersasc');
+            $member_order = (($this->result_order == "membersdesc") ? 'membersasc' : 'membersdesc');
             $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
             $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
             ?>
             <h4><?= $words->get('GroupsSearchOrder');?></h4>
             <p class="grey">
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;Order=<?=$name_order;?>&Page=<?=$this->result_page; ?>"><?= $words->get('GroupsOrderName'); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$name_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderName'); ?></a>
             |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;Order=<?=$member_order;?>&Page=<?$this->result_page; ?>"><?= $words->get('GroupsOrderMembers'); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$member_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderMembers'); ?></a>
             |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;Order=<?$created_order;?>&Page=<?$this->result_page;?>"><?= $words->get('GroupsOrderDate'); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$created_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate'); ?></a>
 <?
 // Categories link disabled until we have categories
 //            |
@@ -31,7 +31,7 @@
 ?>
     </div> <!-- row -->           
 <?
-
+            $this->pager->render();
             foreach ($search_result as $group_data) : ?>
                 <div class="groupbox clearfix">
                     <a href="groups/<?=$group_data->id ?>">

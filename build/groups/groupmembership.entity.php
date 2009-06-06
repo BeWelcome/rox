@@ -112,7 +112,7 @@ class GroupMembership extends RoxEntityBase
         }
         unset($links);
 
-        $where = "id IN ('" . implode("','", $groups) . "')";
+        $where = "id IN ('" . implode("','", $groups) . "') ORDER BY Name";
         return $this->createEntity('Group')->findByWhereMany($where);
     }
 

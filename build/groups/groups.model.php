@@ -68,13 +68,31 @@ class GroupsModel extends  RoxModelBase
         return $result;
     }
 
+    public function countGroupsBySearchterms($terms)
+    {
+        $group = $this->createEntity('Group');
+        if (empty($terms))
+        {
+            return $group->countAll();
+        }
+        $terms_array = explode(' ', $terms);
+        $strings = array();
+        
+        foreach ($terms_array as $term)
+        {
+            $strings[] = "Name LIKE '%" . $this->dao->escape($term) . "%'";
+        }
+        return $group->countWhere(implode(' OR ',$strings));
+
+    }
+
     /**
      * Find and return groups, using search terms from search page
      *
      * @param string $terms - search terms
      * @return mixed false or an array of Groups
      */    
-    public function findGroups($terms = '', $page = 0, $order = '')
+    public function findGroups($terms = '', $page = 1, $order = '')
     {
     
         if (!empty($order))
@@ -88,10 +106,10 @@ class GroupsModel extends  RoxModelBase
                     $order = 'Name DESC';
                     break;
                 case "membersasc":
-                    $order = '(SELECT SUM(IdMember) FROM membersgroups as mg WHERE IdGroup = groups.id) ASC, Name ASC';
+                    $order = "(SELECT SUM(IdMember) FROM membersgroups as mg WHERE IdGroup = groups.id AND Status = 'In') ASC, Name ASC";
                     break;
                 case "membersdesc":
-                    $order = '(SELECT SUM(IdMember) FROM membersgroups as mg WHERE IdGroup = groups.id) DESC, Name ASC';
+                    $order = "(SELECT SUM(IdMember) FROM membersgroups as mg WHERE IdGroup = groups.id AND Status = 'In') DESC, Name ASC";
                     break;
                 case "createdasc":
                     $order = 'created ASC, Name ASC';
@@ -114,7 +132,7 @@ class GroupsModel extends  RoxModelBase
 
         $group = $this->createEntity('Group');
         $group->sql_order = $order;
-        return $this->_group_list = $group->findBySearchTerms($terms_array, ($page * 10));
+        return $this->_group_list = $group->findBySearchTerms($terms_array, (($page - 1) * 10));
     }
 
 
@@ -134,6 +152,18 @@ class GroupsModel extends  RoxModelBase
         $group = $this->createEntity('Group');
         $group->sql_order = 'created DESC, Name ASC';
         return $this->_group_list = $group->findAll($offset, $limit);
+    }
+
+    /**
+     * returns a count of how many groups a member is in
+     *
+     * @access public
+     * @return int
+     */
+    public function countMyGroups()
+    {
+        $membership = $this->createEntity('GroupMembership');
+        return $membership->countWhere("IdMember = {$this->getLoggedInMember()->getPKValue()} AND Status = 'In'");
     }
     
     /**

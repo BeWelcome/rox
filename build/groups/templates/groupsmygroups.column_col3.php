@@ -4,7 +4,8 @@
         $search_result = $this->search_result;
         if ($search_result)
         {
-            foreach($search_result as $group_data)
+            $this->pager->render();
+            foreach($this->pager->getActiveSubset($search_result) as $group_data)
             {
                 ?>
                 <div class="groupbox clearfix">

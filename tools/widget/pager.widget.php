@@ -3,13 +3,18 @@
 class PagerWidget extends RoxWidget
 {
     private $_prepared = false;
-
+    private $pager_strategy;
+    private $page_url;
+    private $page_url_marker;
+    private $page_method;
+    private $items_total;
+    private $items_per_page;
+    private $active_page;
+    
     /**
      *
      * @param object $params_object - standard object filled with vars
      * @access public
-     * @todo use current url as default
-     * @todo grab active page from current url if not supplied - using page_url marker and page_method
      */
     public function __construct($params_object)
     {
@@ -18,11 +23,28 @@ class PagerWidget extends RoxWidget
         $this->page_url =  ((isset($params_object->page_url)) ? $params_object->page_url : null);
         $this->page_url_marker = ((isset($params_object->page_url_marker)) ? $params_object->page_url_marker : 'page');
         $this->page_method = ((isset($params_object->page_method)) ? strtolower($params_object->page_method) : 'get');
-        $this->items_total = $params_object->items_count;
+        if (is_array($params_object->items))
+        {
+            $this->items_total = count($params_object->items);
+        }
+        else
+        {
+            $this->items_total = $params_object->items;
+        }
         $this->items_per_page = ((isset($params_object->items_per_page)) ? $params_object->items_per_page : 15);
         $this->active_page = ((isset($params_object->active_page)) ? $params_object->active_page : null);
+        $this->prepare();
     }
 
+    public function __get($var)
+    {
+        if (isset($this->$var))
+        {
+            return $this->$var;
+        }
+        parent::__get($var);
+    }
+    
     public function render()
     {
         $this->prepare();
@@ -98,6 +120,7 @@ class PagerWidget extends RoxWidget
                 break;
         }
         $this->page_url = preg_replace("!{$term}!",'', $this->page_url);
+        $this->page_url = str_replace('&', '&amp;', $this->page_url);
     }
 
     /**
@@ -167,10 +190,23 @@ class PagerWidget extends RoxWidget
                 break;
             case 'get':
             default:
-                $url = $this->page_url . ((strstr($this->page_url, '?')) ? "&amp;": "?") . "{$this->page_url_marker}={$page}";
+                $url = $this->page_url . ((strstr($this->page_url, '?')) ? ((substr($this->page_url,-5) == '&amp;') ? '' : "&amp;"): "?") . "{$this->page_url_marker}={$page}";
                 break;
         }
         return "<a href='{$url}'" . (($title) ? " title='{$title}'" : '') . ">{$text}</a>";
+    }
+
+    /**
+     * returns a string formatted for the active page
+     * i.e. for GET: $page_url_marker=$active_page
+     * you can then stick this in links or urls as needed
+     *
+     * @access public
+     * @return string
+     */
+    public function getActivePageMarker()
+    {
+        return "{$this->page_url_marker}={$this->active_page}";
     }
 
     /**
@@ -189,11 +225,30 @@ class PagerWidget extends RoxWidget
         }
         $this->prepare();
 
-        $set_start = ((count($set) > (($this->active_page - 1)* $this->items_per_page)) ? ($this->active_page - 1) * $this->items_per_page : 0);
+        $set_start = ((count($set) > $this->getActiveStart()) ? $this->getActiveStart() : 0);
         $set_length = ((count($set) > ($set_start + $this->items_per_page)) ? $this->items_per_page : count($set) - $set_start);
         return array_slice($set, $set_start, $set_length);
     }
+
+    /**
+     * returns the first item number (zero-based)
+     *
+     * @access public
+     * @return int
+     */
+    public function getActiveStart()
+    {
+        return ($this->active_page - 1) * $this->items_per_page;
+    }
+
+    /**
+     * returns the length of the active subset
+     *
+     * @access public
+     * @return int
+     */
+    public function getActiveLength()
+    {
+        return ((($this->items_total - $this->getActiveStart()) > $this->items_per_page) ? $this->items_per_page: $this->items_total - $this->getActiveStart());
+    }
 }
-
-
-?>

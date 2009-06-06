@@ -49,7 +49,9 @@ class RequestRouter
             $this->addRoute('group_acceptmember','groups/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
             $this->addRoute('group_memberadministration','groups/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
             $this->addRoute('group_join','groups/:group_id:/join', 'GroupsController', 'join');
+            $this->addRoute('group_joined','groups/:group_id:/join/true', 'GroupsController', 'joined');
             $this->addRoute('group_leave','groups/:group_id:/leave', 'GroupsController', 'leave');
+            $this->addRoute('group_left','groups/:group_id:/leave/true', 'GroupsController', 'left');
             $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
             $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');
             $this->addRoute('group_members','groups/:group_id:/members', 'GroupsController', 'members');

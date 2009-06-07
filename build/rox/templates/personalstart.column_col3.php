@@ -25,15 +25,15 @@ Boston, MA  02111-1307, USA.
 ?>
 <div class="subcolumns">
 <div class="c33l">
-<div class="subcl" id="personallist">
+<div class="subcl personallist">
             <h2>What's the news?</h2>
             <!-- Another box - Community news -->
             <div class="box">
                 <div class="corner"></div>
 
-                <h3 class="first" id="two"><a>
+                <h3 class="first" id="two">
                 <!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="reduce" alt="reduce" src="images/icons/box-min1.png"/> -->
-                <?php echo $words->getFormatted('CommunityNews') ?></a></h3>
+                <?php echo $words->getFormatted('CommunityNews') ?></h3>
                 <div class="floatbox">
                     <?php
                     $i=1;
@@ -70,13 +70,13 @@ Boston, MA  02111-1307, USA.
     </div> 
     <div class="c66r" > 
         <div class="c50l">
-        <div class="subc" id="personallist2">
+        <div class="subc personallist">
             <h2>Who is who?</h2>
             <!-- Another box -->
             <div class="box">
                 <div class="corner"></div>
                 
-                <h3 class="first"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" style="cursor:pointer" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('RecentMember') ?></a></h3>
+                <h3 class="first"><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" style="cursor:pointer" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('RecentMember') ?></h3>
                 <div class="floatbox">
                 <?php
                     // Display the last created members with a picture
@@ -100,7 +100,7 @@ Boston, MA  02111-1307, USA.
                 </div>
                 <? } ?>
                 </div>
-                <h3><a href="bw/myvisitors.php"><?php echo $words->get('RecentVisitsOfyourProfile') ?></a></h3> 
+                <h3><a href="myvisitors"><?php echo $words->get('RecentVisitsOfyourProfile') ?></a></h3> 
                 <div class="floatbox">
                 <?php
                     
@@ -133,9 +133,9 @@ Boston, MA  02111-1307, USA.
 		            <div class="box">
 		                <div class="corner"></div>
 
-		                <h3 class="first"><a>
+		                <h3 class="first">
 		                <!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> -->
-		                <?php echo $words->getFormatted('TripCity')  ?></a></h3>
+		                <?php echo $words->getFormatted('TripCity')  ?></h3>
 		                <div class="floatbox">
 		                <?php
 		                    $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4) ;

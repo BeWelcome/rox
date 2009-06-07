@@ -296,6 +296,7 @@
 /* topnav menu (little greys) */
     #topnav span {
        margin: 0 .5em;
+       font-size:11px;
     }
     #topnav a { color: #999; background:transparent; text-decoration:none; }
     #topnav a:hover { text-decoration:underline; background-color: transparent;}

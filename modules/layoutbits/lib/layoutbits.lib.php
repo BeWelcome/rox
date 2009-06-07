@@ -280,7 +280,7 @@ class MOD_layoutbits
 
     public static function userPic_username($username)
     {
-        return self::member_pic_url().$username.'/';
+        return self::member_pic_url().$username;
     }
 
 

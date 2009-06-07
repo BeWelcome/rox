@@ -26,8 +26,6 @@ if (!$members) {
         if ($member->HideBirthDate=="No") $member->age = floor($layoutbits->fage_value($member->BirthDate));
         else $member->age = $words->get("Hidden");
         echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'bw/member.php?cid='.$member->username.'\'; return false"><a href="bw/member.php?cid='.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a><p><a href="bw/member.php?cid='.$member->username.'">'.$member->username.'</a>
-        <a href="blog/'.$member->username.'" title="Read blog by '.$member->username.'"><img src="images/icons/blog.gif" alt="" /></a>
-        <a href="trip/show/'.$member->username.'" title="Show trips by '.$member->username.'"><img src="images/icons/world.gif" alt="" /></a>
         <br /><span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span></p></li></a>';
     }
     ?>

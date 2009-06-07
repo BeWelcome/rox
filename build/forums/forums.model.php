@@ -142,7 +142,7 @@ function GetAffectedLocation($IdLocaVolMessage) {
 } // end of GetAffectedLocation
 		
 /**
-* this function returns an structured  with the result of a vote for a given IdPost
+* this function returns a structure with the result of a vote for a given IdPost
 * according to the current logged member
 **/
 function GetPostVote($IdPost) { 
@@ -179,6 +179,7 @@ function GetPostVote($IdPost) {
 * this function returns teh Id of the thread corresponding to a certain $IdPost
 **/
 function GetIdThread($IdPost) {
+// Todo Visibility
 	$rr=$this->singleLookup("select threadid as IdThread from forums_posts where id=".$IdPost) ;
 	if (!empty($rr->IdThread)) {
 		return($rr->IdThread) ;
@@ -287,7 +288,13 @@ function FindAppropriatedLanguage($IdPost=0) {
 
 } // end of FindAppropriatedLanguage
 
-    public function __construct() {
+    
+	/*
+	* Constructor of forum model, prepare manything
+	* and things relative to Visibility
+	*
+	*/
+	public function __construct() {
         parent::__construct();
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
@@ -317,7 +324,36 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$this->IdGroup=0 ; // By default no group
 		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
 		$this->ForumOrderList=$layoutbits->GetPreference("PreferenceForumOrderListAsc") ;
-    }
+
+		//	Decide if it is an active LoggeMember or not
+		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or (($_SESSION["MemberStatus"]!='Active') or $_SESSION["MemberStatus"]!='Hidden')) ) {
+			$this->PublicVisibility="Visibility='NoRestriction'" ;
+			$this->MyGroupsList="(0)" ;
+		}
+		else {
+			$this->PublicVisibility="Visibility in ('NoRestriction', 'MembersOnly','GroupOnly')" ;
+			$this->MyGroupsList="(0" ;
+			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
+			if (!$qry) {
+				throw new PException('Failde to retriev groups for member id =#'.$_SESSION["IdMember"].' !');
+			}
+			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
+				$this->MyGroupsList=$this->MyGroupsList.",".$rr->IdGroup ;
+			}	;
+			$this->MyGroupsList=$this->MyGroupsList.")" ;
+		}
+		
+		// Prepares visibility options for current member
+		if ($this->BW_Right->HasRight("ForumModerator")) {
+			$this->PostDeleteRestriction="" ;
+			$this->ThreadDeleteRestriction="" ;
+			$this->PublicVisibility="Visibility in ('NoRestriction', 'MembersOnly', 'GroupOnly','ModeratorsOnly')" ;
+		}
+		else {
+			$this->PostDeleteRestriction=" and (PostDeleted!='Deleted')" ;
+			$this->ThreadDeleteRestriction=" and (ThreadDeleted!='Deleted')" ;
+		}
+    } // __construct
 	
 	// This switch the preference ForumOrderList
 	public function SwitchForumOrderList() {
@@ -910,7 +946,7 @@ WHERE `geonameid` = '%d'
 	  * by the user
      */
     public function getEditData($callbackId) {
-        $query =
+        $query = // Todo Visibility
             "
 SELECT
     `postid`,
@@ -944,7 +980,8 @@ WHERE `postid` = $this->messageId
         $tags = array();
         
         // retrieve tags for the current post ($this->messageId)
-        $query =    "
+		// Todo Visibility
+        $query =    " 
 SELECT forums_tags.IdName
 FROM `tags_threads`,`forums_posts`,`forums_threads`,`forums_tags`
 WHERE `forums_posts`.`threadid` = `forums_threads`.`id`
@@ -986,7 +1023,7 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
         
         $vars =& PPostHandler::getVars();
         
-        $query =
+        $query = // Todo Visibility
             "
 SELECT
     `postid`,
@@ -1071,8 +1108,8 @@ WHERE `postid` = $this->messageId
 * this also write a log
 */
     private function editPost($vars, $editorid) {
-	 
-        $query = "SELECT message,forums_posts.threadid,
+	 // Todo Visibility
+        $query = "SELECT message,forums_posts.threadid,  
     `HasVotes`,
     `IdLocalVolMessage`,
     `IdLocalEvent`,
@@ -1193,7 +1230,9 @@ WHERE `threadid` = '%d' ",
             
         $this->dao->query($query);
 		 
-        $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed from forums_threads,forums_posts where forums_threads.first_postid=forums_posts.id");
+        $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed 
+		from forums_threads,forums_posts 
+		where forums_threads.first_postid=forums_posts.id and forums_threads.id=".$threadid);
         if (!$s) {
             throw new PException('editTopic:: previous info for firtst post in the thread!');
         }
@@ -1410,7 +1449,7 @@ WHERE `threadid` = '%d' ",
         
         if ($this->BW_Right->HasRight("ForumModerator","Delete")) {
             $this->dao->query("START TRANSACTION");
-            
+			// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -1495,6 +1534,7 @@ WHERE `postid` = '$this->messageId'
                 $this->dao->query($query);
 
                 if ($topicinfo->last_postid == $this->messageId) {
+// Todo Visibility
                     $query =
                         "
 SELECT `postid` 
@@ -1831,6 +1871,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
 		 
         $this->topic->WithDetail = $WithDetail;
 		 
+// Todo Visibility
         // Topic Data
         $query = "SELECT
     `forums_threads`.`title`,
@@ -1884,7 +1925,7 @@ WHERE `threadid` = '$this->threadid' "
         
         $from = $this->POSTS_PER_PAGE * ($this->getPage() - 1);
         
-				
+// Todo Visibility				
         $query = sprintf("
 SELECT `postid`,`forums_posts`.`id` as IdPost,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,
 `geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername,
@@ -1904,6 +1945,7 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			if ($WithDetail) { // if details are required retrieve all the translated text for posts (sentence, owner, modification time and translator name) of this thread
+// Todo Visibility
 				$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername 
 										from forum_trads,languages,members as mOwner, members as mTranslator
 										where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
@@ -1932,6 +1974,7 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
         
         // Check if the current user has subscribe to this thread or not (to display the proper option, subscribe or unsubscribe)
         if (isset($_SESSION["IdMember"])) {
+// Todo Visibility
             $query = sprintf( "
 SELECT
     `members_threads_subscribed`.`id` AS IdSubscribe,
@@ -1954,6 +1997,7 @@ AND IdSubscriber=%d
             }
         }
         
+// Todo Visibility
         $query = sprintf(  "
 SELECT
     `forums_threads`.`title`,
@@ -2002,7 +2046,7 @@ WHERE `threadid` = '$this->threadid' LIMIT 1
     } // end of prepareTopic
     
     public function initLastPosts() {
-				// Todo here use IdWriter instead of authorid
+// Todo Visibility
         $query = sprintf("
 SELECT
     `postid`,
@@ -2032,6 +2076,7 @@ LIMIT %d
         }
         $this->topic->posts = array();
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+// Todo Visibility
           	$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner, members as mTranslator
 			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
@@ -2093,6 +2138,7 @@ WHERE username='%s'
       
         if (!empty($IdThread) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
             // In this case we will browse all the threads
+// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -2114,6 +2160,7 @@ ORDER BY `subscribedtime` DESC
                 $IdThread
             );
         } else {
+// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -2156,6 +2203,7 @@ ORDER BY `subscribedtime` DESC
 
         if (!empty($IdTag) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
             // In this case we will browse all the tags
+// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -2177,6 +2225,7 @@ ORDER BY `subscribedtime` DESC
                 $IdThread
             );
         } else {
+// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -2481,6 +2530,7 @@ AND IdTag=%d
            }
         }
 
+// Todo Visibility
         $query = sprintf(
             "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
@@ -2957,6 +3007,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     public function prepareModeratorEditPost($IdPost) {
 	 	$DataPost->IdPost=$IdPost ;
 		$DataPost->Error="" ; // This will receive the error sentence if any
+// Todo Visibility
         $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
         $s = $this->dao->query($query);
 		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
@@ -3103,6 +3154,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
         
         
 		 // Check the user who have subscribed to one tag of this thread 
+// Todo Visibility
         $query = sprintf("select IdSubscriber,members_tags_subscribed.id as IdSubscription from members_tags_subscribed,tags_threads where tags_threads.IdTag=members_tags_subscribed.IdTag and tags_threads.IdThread=%d ",$rPost->IdThread) ;
         $s1 = $this->dao->query($query);
         if (!$s1) {
@@ -3112,6 +3164,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
             // we are going to check wether there is allready a pending notification for this post to avoid duplicated
 //            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
             $IdMember=$rSubscribed->IdSubscriber ;
+// Todo Visibility
             $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
             $s = $this->dao->query($query);
             if (!$s) {
@@ -3143,6 +3196,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
             // we are going to check wether there is allready a pending notification for this post to avoid duplicated
 //            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
             $IdMember=$rSubscribed->IdSubscriber ;
+// Todo Visibility 
             $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
             $s = $this->dao->query($query);
             if (!$s) {
@@ -3172,6 +3226,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
             // we are going to check wether there is allready a pending notification for this post to avoid duplicated
 //            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
             $IdMember=$rSubscribed->IdSubscriber ;
+// Todo Visibility
             $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
             $s = $this->dao->query($query);
             if (!$s) {
@@ -3203,6 +3258,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
        }
 
        // Check if there is a previous Subscription
+// Todo Visibility
        $query = sprintf("select members_groups_subscribed.id as IdSubscribe,IdThread,IdSubscriber from members_groups_subscribed where IdGroup=%d and IdSubscriber=%d",$IdGroup,$IdMember); 
        $s = $this->dao->query($query);
        if (!$s) {
@@ -3219,6 +3275,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
        }
 
        // Check if there is a previous Subscription
+// Todo Visibility
        $query = sprintf("select members_threads_subscribed.id as IdSubscribe,IdThread,IdSubscriber from members_threads_subscribed where IdThread=%d and IdSubscriber=%d",$IdThread,$IdMember); 
        $s = $this->dao->query($query);
        if (!$s) {
@@ -3238,6 +3295,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
        }
 
        // Check if there is a previous Subscription
+// Todo Visibility
        $query = sprintf("select members_tags_subscribed.id as IdSubscribe,IdTag,IdSubscriber from members_tags_subscribed where IdTag=%d and IdSubscriber=%d",$IdTag,$IdMember); 
        $s = $this->dao->query($query);
        if (!$s) {
@@ -3297,6 +3355,7 @@ class Board implements Iterator {
        }
 
        // Check if there is a previous Subscription
+// Todo Visibility
        $query = sprintf("select members_tags_subscribed.id as IdSubscribe,IdTag,IdSubscriber from members_tags_subscribed where IdTag=%d and IdSubscriber=%d",$IdTag,$IdMember); 
        $s = $this->dao->query($query);
        if (!$s) {
@@ -3355,6 +3414,7 @@ class Board implements Iterator {
 			}
 		}
         
+// Todo Visibility
 		$query = "SELECT COUNT(*) AS `number` FROM ".$tabletagthread."`forums_threads` WHERE 1 ".$wherethread;
 		$s = $this->dao->query($query);
 		if (!$s) {
@@ -3365,6 +3425,7 @@ class Board implements Iterator {
         
 		$from = ($this->THREADS_PER_PAGE * ($page - 1));
         
+// Todo Visibility
 		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
 				  `forums_threads`.`IdTitle`, 
@@ -3440,6 +3501,7 @@ class Board implements Iterator {
 		$threads=array() ;
 		
 		if ($NoInCategoryList!="") {
+// Todo Visibility
 			$query= "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
 				  `forums_threads`.`IdTitle`, 
@@ -3469,6 +3531,7 @@ class Board implements Iterator {
 			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.") group by `forums_threads`.`id` ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3 " ;
 		}
 		else {
+// Todo Visibility
 			$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
 				  `forums_threads`.`IdTitle`, 

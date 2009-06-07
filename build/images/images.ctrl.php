@@ -48,7 +48,7 @@ class ImagesController extends PAppController {
 	            break;
 	        default:
 	    }
-	    return SCRIPT_BASE.'htdocs/bw/memberphotos/et.jpg';
+	    return SCRIPT_BASE.'htdocs/images/misc/empty_avatar.png';
         //return 'C:/wamp/www/dossier.gif';
 	}
 }

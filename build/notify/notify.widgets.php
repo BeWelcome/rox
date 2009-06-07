@@ -103,7 +103,10 @@ class NotifyMemberWidget extends ItemlistWithPagination
             }
             ?>
             <p class="notification_text">
-                <?=$words->getSilent($item->WordCode,'<span class="username" href="members/'.$member->getUsername().'" alt="'.$member->getUsername().'">'.$member->getUsername().'</span>')?>
+                <?php if ($item->WordCode != '') { 
+                    echo $words->getSilent($item->WordCode,'<span class="username" href="members/'.$member->getUsername().'" alt="'.$member->getUsername().'">'.$member->getUsername().'</span>');
+                } else echo $item->VarText;
+                ?>
             </p>
             <?php if ($item->Link != '') { 
                 echo '</a>';

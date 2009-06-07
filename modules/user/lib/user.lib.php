@@ -299,6 +299,7 @@ WHERE
      */
     static function getDummyImage($Gender='IDontTell', $HideGender='Yes')
     {
+            return PVars::getObj('env')->baseuri . 'images/misc/empty_avatar.png';
            global $_SYSHCVOL ; // To be usable $_SYSHCVOL must be declared as global in functions 
         // TODO: skipped while porting code to platform PT (correct???):
         // global $_SYSHCVOL;

@@ -1375,6 +1375,10 @@ $updates[] = "ALTER TABLE `params` ADD `MailBotMode` ENUM( 'Auto','Manual','Stop
 
 $updates[] = "ALTER TABLE `forums_posts` ADD `PostVisibility` ENUM( 'NoRestriction', 'MembersOnly', 'GroupOnly', 'ModeratorOnly' ) NOT NULL DEFAULT 'NoRestriction' COMMENT 'States who can read this post (usually same value as parent thread)' AFTER `threadid` ";
 
+$updates[] = "ALTER TABLE `forums_posts` ADD `PostDeleted` ENUM( 'NotDeleted', 'Deleted' ) NOT NULL DEFAULT 'NotDeleted' COMMENT 'tells if the post was deleted'";
+
+$updates[] = "ALTER TABLE `forums_threads` ADD `ThreadDeleted` ENUM( 'NotDeleted', 'Deleted' ) NOT NULL DEFAULT 'NotDeleted' COMMENT 'tells if the thread was deleted'";
+
     if (empty($res)) {
         $version = 0;
     } else {

@@ -314,7 +314,8 @@ class MOD_layoutbits
         // TODO: error analysis of wrong paths
         // TODO: dynamic prefix (now: /th/)
 
-        if($file == "") return null;
+        // method appears to work in old memberphotos folder, so I'm disabling it for now
+        /* if($file == "") */ return null;
 
         $filename = basename($file);
         $filename_noext = substr($filename, 0, strrpos($filename, '.'));
@@ -407,6 +408,7 @@ class MOD_layoutbits
      */
     private static function _dummyPic_userId($userId)
     {
+        return 'images/misc/empty_avatar.png';
         $row = self::get()->dao->query(
             'SELECT SQL_CACHE Gender, HideGender '.
             'FROM members '.
@@ -430,6 +432,7 @@ class MOD_layoutbits
      */
     private static function _incognitoPic_userId($userId)
     {
+        return 'images/misc/empty_avatar.png';
         if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
             return '/memberphotos/incognito.jpg';
         } else {
@@ -446,6 +449,7 @@ class MOD_layoutbits
      */
     private static function _memberNotFoundPic()
     {
+        return 'images/misc/empty_avatar.png';
         if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
             return '/memberphotos/not_found.jpg';
         } else {

@@ -648,7 +648,7 @@ class GroupsModel extends  RoxModelBase
             $msg->SendConfirmation = 'No';
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
-            $url = PVars::getObj('env')->baseuri . '/groups/' . $group->getPKValue();
+            $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
             $msg->Message = "Hi {$member->Username}<br/><br/>You&apos;ve been invited to the group {$group->Name}. If you would like to join the group, click the following link: <a href='{$url}/acceptinvitation/{$member->getPKValue()}'>http://{$url}/acceptinvitation/{$member->getPKValue()}</a>.<br/>If you wish to decline the invitation, please click this link instead: <a href='http://{$url}/declineinvitation/{$member->getPKValue()}'>http://{$url}/declineinvitation/{$member->getPKValue()}</a><br/><br/>Have a great time<br/>BeWelcome";
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
@@ -734,7 +734,7 @@ class GroupsModel extends  RoxModelBase
             $msg->SendConfirmation = 'No';
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
-            $url = PVars::getObj('env')->baseuri . '/groups/' . $group->getPKValue();
+            $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
             $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='http://{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';

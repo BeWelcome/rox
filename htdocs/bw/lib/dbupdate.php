@@ -1383,6 +1383,10 @@ $updates[] = "ALTER TABLE `forums_threads` ADD `Visibility` ENUM( 'NoRestriction
 
 $updates[] = "ALTER TABLE `forums_posts` ADD `Visibility` ENUM( 'NoRestriction', 'MembersOnly', 'GroupOnly', 'ModeratorOnly' ) NOT NULL COMMENT 'Visibility for this post'" ;
 
+$updates[] = "ALTER TABLE `forums_posts` DROP `Visibility`" ; 
+
+$updates[] = "ALTER TABLE `forums_threads` CHANGE `Visibility` `ThreadVisibility` ENUM( 'NoRestriction', 'MembersOnly', 'GroupOnly', 'ModeratorOnly' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'NoRestriction' COMMENT 'Visibility for this thread'" ;
+
     if (empty($res)) {
         $version = 0;
     } else {

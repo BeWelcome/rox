@@ -56,12 +56,46 @@ if (isset($DataPost->Thread->title))
         <th>TB oldway Title <i><?=$DataPost->Thread->title;?></i>
             <form method="post" action="forums/modeditpost/<?=$DataPost->Post->id;?>" id="modpostforum">
                 <input type="hidden" name="<?=$callbackId;?>"  value="1" />
+
                 stickyvalue (default 0, the most negative will be the first visible)
                 <input type="text" name="stickyvalue" size="1" value="<?=$DataPost->Thread->stickyvalue;?>" /><br />
+
                 expiration date (close the thread)
                 <input type="text" name="expiredate" value="<?=$DataPost->Thread->expiredate;?>" /><br />
-                <input type="hidden" name="<?=$callbackId;?>"  value="1" /><br />
-                Group:<select name="IdGroup">
+
+                Thread Visibility: 
+                <select name="ThreadVisbility" >
+				<option value="NoRestriction"
+				<?php
+				if ($DataPost->Thread->Visibility=="NoRestriction") {
+					echo " selected" ;
+				}
+				?>
+				>Everybody (including google)</option>
+				<option value="MembersOnly"
+				<?php
+				if ($DataPost->Thread->Visibility=="MembersOnly") {
+					echo " selected" ;
+				}
+				?>
+				>BeWelcome Members only</option>
+				<option value="GroupOnly"
+				<?php
+				if ($DataPost->Thread->Visibility=="GroupOnly") {
+					echo " selected" ;
+				}
+				?>
+				>Members of group</option>
+				<option value="ModeratorOnly"
+				<?php
+				if ($DataPost->Thread->Visibility=="ModeratorOnly") {
+					echo " selected" ;
+				}
+				?>
+				>Moderators only</option>
+				</select> 
+
+                Group: <select name="IdGroup">
                     <option value="0"> no group</option>
                     <?
                     foreach ($DataPost->PossibleGroups as $Group) {
@@ -71,7 +105,51 @@ if (isset($DataPost->Thread->title))
                         }
                         echo ">",$Group->Name,"</option>\n" ;
                     };?>
-                </select>
+                </select><br />
+                Who can reply: 
+                <select name="WhoCanReply" >
+				<option value="MembersOnly"
+				<?php
+				if ($DataPost->Thread->WhoCanReply=="MembersOnly") {
+					echo " selected" ;
+				}
+				?>
+				>All members</option>
+				<option value="GroupMembersOnly"
+				<?php
+				if ($DataPost->Thread->WhoCanReply=="GroupMembersOnly") {
+					echo " selected" ;
+				}
+				?>
+				>Group Members only</option>
+				<option value="ModeratorsOnly"
+				<?php
+				if ($DataPost->Thread->WhoCanReply=="ModeratorsOnly") {
+					echo " selected" ;
+				}
+				?>
+				>Moderators only</option>
+				</select> <br />
+				
+                Thread deleted: 
+                <select name="ThreadDeleted">
+				<option value="Deleted"
+				<?php
+				if ($DataPost->Thread->ThreadDeleted=="Deleted") {
+					echo " selected" ;
+				}
+				?>
+				>Deleted</option>
+				<option value="NotDeleted"
+				<?php
+				if ($DataPost->Thread->ThreadDeleted=="NotDeleted") {
+					echo " selected" ;
+				}
+				?>
+				>Not Deleted</option>
+				</select><br />
+
+
                 <input type="hidden" name="IdThread"  value="<?=$DataPost->Thread->id;?>" /><br />
                 <input type="hidden" name="IdPost"  value="<?=$DataPost->Post->id;?>"/>
             </th>
@@ -160,7 +238,59 @@ if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td 
 		echo " \"selected\"" ;
 	}
 	echo ">No</Option>" ;				
-    echo "</select> " ;
+    echo "</select> <br />" ;
+
+	?>
+                Post Visibility: 
+                <select name="PostVisbility" >
+				<option value="NoRestriction"
+				<?php
+				if ($DataPost->Post->Visibility=="NoRestriction") {
+					echo " selected" ;
+				}
+				?>
+				>Everybody (including google)</option>
+				<option value="MembersOnly"
+				<?php
+				if ($DataPost->Post->Visibility=="MembersOnly") {
+					echo " selected" ;
+				}
+				?>
+				>BeWelcome Members only</option>
+				<option value="GroupOnly"
+				<?php
+				if ($DataPost->Post->Visibility=="GroupOnly") {
+					echo " selected" ;
+				}
+				?>
+				>Members of group</option>
+				<option value="ModeratorOnly"
+				<?php
+				if ($DataPost->Post->Visibility=="ModeratorOnly") {
+					echo " selected" ;
+				}
+				?>
+				>Moderators only</option>
+				</select>  
+				
+                Post deleted: 
+                <select name="PostDeleted">
+				<option value="Deleted"
+				<?php
+				if ($DataPost->Post->PostDeleted=="Deleted") {
+					echo " selected" ;
+				}
+				?>
+				>Deleted</option>
+				<option value="NotDeleted"
+				<?php
+				if ($DataPost->Post->PostDeleted=="NotDeleted") {
+					echo " selected" ;
+				}
+				?>
+				>Not Deleted</option>
+				</select><br />
+	<?php
 	echo "</td>"  ;
     echo "<td><input name=\"submit\" type=\"submit\" value=\"update post\"></td>" ;
     echo "</form>\n" ;

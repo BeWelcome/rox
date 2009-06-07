@@ -1266,7 +1266,71 @@ WHERE `threadid` = '%d' ",
         return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
     } // end of replyProcess
     
-	 
+
+	 /**	 
+    * This will prepare a post for a full edit moderator action
+    * @IdPost : Id of the post to process
+	 */
+    public function prepareModeratorEditPost($IdPost) {
+	 	$DataPost->IdPost=$IdPost ;
+		$DataPost->Error="" ; // This will receive the error sentence if any
+// Todo Visibility
+        $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
+        $s = $this->dao->query($query);
+		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
+
+		if (!isset($DataPost->Post)) {
+		 	$DataPost->Error="No Post for Post=#".$IdPost ;
+			return($DataPost) ;
+		}
+		 
+// retrieve all trads for content
+        $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
+        $s = $this->dao->query($query);
+		 $DataPost->Post->Content=array() ;
+		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		 	   $DataPost->Post->Content[]=$row ;
+		 }
+
+
+        $query = "select * from forums_threads where id=".$DataPost->Post->threadid ;
+        $s = $this->dao->query($query);
+		 if (!isset($DataPost->Post)) {
+		 	$DataPost->Error="No Thread=#".$DataPost->Post->threadid ;
+			return($DataPost) ;
+		 }
+		 $DataPost->Thread = $s->fetch(PDB::FETCH_OBJ) ;
+		 
+// retrieve all trads for Title
+        $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Thread->IdTitle." order by forum_trads.created asc" ;
+        $s = $this->dao->query($query);
+		 $DataPost->Thread->Title=array() ;
+		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		 	   array_push($DataPost->Thread->Title,$row) ;
+		 }
+		
+// retrieve all tags connected to this thread
+        $query = "select forums_tags.*,tags_threads.IdTag as IdTag  from forums_tags,tags_threads where tags_threads.IdTag=forums_tags.id and IdThread=".$DataPost->Thread->id ;
+        $s = $this->dao->query($query);
+		 $DataPost->Tags=array() ;
+		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		 	   $DataPost->Tags[]=$row ;
+		 }
+		 
+// retrieve alltag NOT connected to this thread (will be use to select the proposed tag to add)
+        $query = "SELECT forums_tags.id AS IdTag, forums_tags.IdName AS IdName,forums_tags.counter  as cnt 
+				FROM forums_tags
+RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThread =".$DataPost->Thread->id." order by cnt desc" ;
+        $s = $this->dao->query($query);
+		 $DataPost->AllNoneTags=array() ;
+		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		 	   $DataPost->AllNoneTags[]=$row ;
+		 }
+		$DataPost->PossibleGroups=$this->ModeratorGroupChoice() ;		
+		return ($DataPost) ;
+	 } // end of prepareModeratorEditPost
+
+	
 // This is what is called by the Full Moderator edit
 // ---> ($vars["submit"]=="update thread")) means the Stick Value or the expire date of the thread have been updated and also the Group
 // ---> ($vars["submit"]=="add translated title")) means that a new translated title is made available
@@ -1284,14 +1348,19 @@ WHERE `threadid` = '%d' ",
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
 		 	$IdThread=(int)$vars["IdThread"] ;
 		 	$IdGroup=(int)$vars["IdGroup"] ;
+		 	$Visibility=$vars["ThreadVisbility"] ;
+		 	$ThreadDeleted=$vars["ThreadDeleted"] ;
+		 	$WhoCanReply=$vars["WhoCanReply"] ;
 		 	$expiredate="'".$vars["expiredate"]."'"  ;
 		 	$stickyvalue=(int)$vars["stickyvalue"];
 			if (empty($expiredate)) {
 			   $expiredate="NULL" ;
 			}
-        	MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue,"ForumModerator");
-				$sql="update forums_threads set IdGroup=".$IdGroup.",stickyvalue=".$stickyvalue.",expiredate=".$expiredate." where id=".$IdThread ;
-					$this->dao->query($sql);
+        	MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue." ThreadDeleted=".$ThreadDeleted." Visibility=".$Visibility." WhoCanReply=".$WhoCanReply,"ForumModerator");
+			$sql="update forums_threads set IdGroup=".$IdGroup.",stickyvalue=".$stickyvalue.",expiredate=".$expiredate.",Visibility='".$Visibility."',ThreadDeleted='".$ThreadDeleted."',WhoCanReply='".$WhoCanReply."' where id=".$IdThread ;
+			
+//			die ($sql) ;
+			$this->dao->query($sql);
 		 }
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated title")) { // if a new translation is to be added for a title
@@ -1317,7 +1386,7 @@ WHERE `threadid` = '%d' ",
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated post")) { // if a new translation is to be added for a title
 		 		$IdPost=(int)$vars["IdPost"] ;
-        $qry=$this->dao->query("select * from forum_trads where IdTrad=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
+				$qry=$this->dao->query("select * from forum_trads where IdTrad=".$vars["IdTrad"]." and IdLanguage=".$vars["IdLanguage"]);
 				$rr=$qry->fetch(PDB::FETCH_OBJ) ;
 				if (empty($rr->id)) { // Only proceed if no such a post exists
 		 			$ss=$this->dao->escape($vars["NewTranslatedPost"])  ;
@@ -1329,10 +1398,12 @@ WHERE `threadid` = '%d' ",
 	   $IdPost=(int)$vars['IdPost'] ;
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
-		 	$OwnerCanStillEdit="'".$vars["OwnerCanStillEdit"]."'"  ;
+		 	$OwnerCanStillEdit=$vars["OwnerCanStillEdit"]  ;
+		 	$Visibility=$vars["PostVisbility"]  ;
+		 	$PostDeleted=$vars["PostDeleted"]  ;
 
-        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."]","ForumModerator");
-       	$this->dao->query("update forums_posts set OwnerCanStillEdit=".$OwnerCanStillEdit." where id=".$IdPost);
+        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."] Visibility=[".$Visibility."] PostDeleted=[".$PostDeleted."] ","ForumModerator");
+			$this->dao->query("update forums_posts set OwnerCanStillEdit='".$OwnerCanStillEdit."',Visibility='".$Visibility."',PostDeleted='".$PostDeleted."' where id=".$IdPost);
 		 }
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="delete Tag")) { // if an effective update was chosen for a forum trads
@@ -3000,69 +3071,6 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			
 	 } // end of GroupChoices 
 
-	 /**	 
-    * This will prepare a post for a full edit moderator action
-    * @IdPost : Id of the post to process
-	 */
-    public function prepareModeratorEditPost($IdPost) {
-	 	$DataPost->IdPost=$IdPost ;
-		$DataPost->Error="" ; // This will receive the error sentence if any
-// Todo Visibility
-        $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
-        $s = $this->dao->query($query);
-		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
-
-		if (!isset($DataPost->Post)) {
-		 	$DataPost->Error="No Post for Post=#".$IdPost ;
-			return($DataPost) ;
-		}
-		 
-// retrieve all trads for content
-        $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
-        $s = $this->dao->query($query);
-		 $DataPost->Post->Content=array() ;
-		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
-		 	   $DataPost->Post->Content[]=$row ;
-		 }
-
-		 
-
-        $query = "select * from forums_threads where id=".$DataPost->Post->threadid ;
-        $s = $this->dao->query($query);
-		 if (!isset($DataPost->Post)) {
-		 	$DataPost->Error="No Post for Thread=#".$DataPost->Post->threadid ;
-			return($DataPost) ;
-		 }
-		 $DataPost->Thread = $s->fetch(PDB::FETCH_OBJ) ;
-		 
-// retrieve all trads for Title
-        $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Thread->IdTitle." order by forum_trads.created asc" ;
-        $s = $this->dao->query($query);
-		 $DataPost->Thread->Title=array() ;
-		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
-		 	   array_push($DataPost->Thread->Title,$row) ;
-		 }
-		
-// retrieve all tags connected to this thread
-        $query = "select forums_tags.*,tags_threads.IdTag as IdTag  from forums_tags,tags_threads where tags_threads.IdTag=forums_tags.id and IdThread=".$DataPost->Thread->id ;
-        $s = $this->dao->query($query);
-		 $DataPost->Tags=array() ;
-		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
-		 	   $DataPost->Tags[]=$row ;
-		 }
-		 
-// retrieve alltag NOT connected to this thread
-        $query = "SELECT forums_tags.id AS IdTag, forums_tags.IdName AS IdName,forums_tags.counter  as cnt 
-				FROM forums_tags
-RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThread =".$DataPost->Thread->id." order by cnt desc" ;
-        $s = $this->dao->query($query);
-		 $DataPost->AllNoneTags=array() ;
-		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
-		 	   $DataPost->AllNoneTags[]=$row ;
-		 }
-		$DataPost->PossibleGroups=$this->ModeratorGroupChoice() ;		
-		return ($DataPost) ;
-	 } // end of prepareModeratorEditPost
 
 	 /**	 
     * This will prepare a post for a moderator action

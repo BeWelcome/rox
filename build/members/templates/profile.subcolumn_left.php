@@ -1,5 +1,4 @@
 <div id="navigation-path" class="floatbox box">
-    <!--<a href="country/" >Country</a>-->
     <h3><strong><a class="" href="country/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
             (<a class="" href="country/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
     <strong><a class="" href="country/<?=$member->countryCode() ?>" ><?=$member->country() ?></a></strong></h3>

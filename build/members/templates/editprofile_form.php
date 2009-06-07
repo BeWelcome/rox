@@ -9,7 +9,7 @@
               </colgroup>
               <tbody>
                 <tr align="left" >
-                  <td class="label" ><?=$words->getInLang('ProfilePicture', $profile_language)?>:</td>
+                  <td class="label" ><?=$words->getInLang('ProfilePicture', $profile_language)?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
                   <td>
                     <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br /><input id="profile_picture" name="profile_picture" type="file" />
                   </td>

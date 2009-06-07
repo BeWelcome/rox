@@ -26,144 +26,154 @@ This File display a topic and the messages which are inside it
 
 * @author     Original author unknown
 * @author     Michael Dettbarn (lupochen) <mail@lupochen.com>
+* @updated    JeanYves 
 
 */
-    //$i18n = new MOD_i18n('apps/forums/board.php');
-    //$boardText = $i18n->getText('boardText');
-    $words = new MOD_words();
 
-    $User = APP_User::login();
-    $can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)
-    $can_edit_own = $User ;
-//    $can_edit_own = $User && $User->hasRight('edit_own@forums');
-    $can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
-
-	 if (!isset($topic->topicinfo->IsClosed)) {
-	 	$topic->topicinfo->IsClosed=false ;
-	 }
-
-?>
-<h2><?php 
-	
-	if ($topic->topicinfo->IdGroup>0) {
-		echo $words->getFormatted("Group_" . $topic->topicinfo->GroupName),"::" ;
+	if ( (!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) { // This means no thread was fetch or taht it was outside visbility
+		echo "<h2>",$topic->topicinfo->title,"</h2>" ;
 	}
+	else  {
+		//$i18n = new MOD_i18n('apps/forums/board.php');
+		//$boardText = $i18n->getText('boardText');
+		$words = new MOD_words();
+
+		$User = APP_User::login();
+		$can_del = $User && $User->hasRight('delete@forums'); // Not to use anymore (JeanYves)
+		$can_edit_own = $User ;
+//    $can_edit_own = $User && $User->hasRight('edit_own@forums');
+		$can_edit_foreign = $User && $User->hasRight('edit_foreign@forums');
+
+		if (!isset($topic->topicinfo->IsClosed)) {
+			$topic->topicinfo->IsClosed=false ;
+		}
+		echo "<h2>" ;
+	
+		if ($topic->topicinfo->ThreadDeleted=='Deleted') {
+			echo "[Deleted]" ;
+		}
+
+		if ($topic->topicinfo->IdGroup>0) {
+			echo $words->getFormatted("Group_" . $topic->topicinfo->GroupName),"::" ;
+		}
 // If the forum belongs to a group display the group name first
 // Display the title of the post
-	echo $words->fTrad($topic->topicinfo->IdTitle); 
-	if ($User) {
-		$url=$_SERVER['REQUEST_URI'] ;
-		if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
-			$url.="/reverse"  ;
+		echo $words->fTrad($topic->topicinfo->IdTitle); 
+		if ($User) {
+			$url=$_SERVER['REQUEST_URI'] ;
+			if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
+				$url.="/reverse"  ;
+			}
+			echo " <a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" alt=\"reverse\" /></a> " ;
 		}
-		echo " <a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" alt=\"reverse\" /></a> " ;
-	}
-?></h2>
+		echo "</h2>" ;
 
-<span class="forumsthreadtags"><strong>Tags:</strong> <?php
+		?>
+		<span class="forumsthreadtags"><strong>Tags:</strong> <?php
 
-    $url = ForumsView::getURI().'';
-    $breadcrumb = '';
-    if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
-        $url = $url.'k'.$topic->topicinfo->continent.'-'.Forums::$continents[$topic->topicinfo->continent].'/';
-        $breadcrumb .= '<a href="'.$url.'">'.Forums::$continents[$topic->topicinfo->continent].'</a> ';
+		$url = ForumsView::getURI().'';
+		$breadcrumb = '';
+		if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
+			$url = $url.'k'.$topic->topicinfo->continent.'-'.Forums::$continents[$topic->topicinfo->continent].'/';
+			$breadcrumb .= '<a href="'.$url.'">'.Forums::$continents[$topic->topicinfo->continent].'</a> ';
         
-        if (isset($topic->topicinfo->countryname) && $topic->topicinfo->countryname) {
-            $url = $url.'c'.$topic->topicinfo->countrycode.'-'.$topic->topicinfo->countryname.'/';
-            $breadcrumb .= ':: <a href="'.$url.'">'.$topic->topicinfo->countryname.'</a> ';
+			if (isset($topic->topicinfo->countryname) && $topic->topicinfo->countryname) {
+				$url = $url.'c'.$topic->topicinfo->countrycode.'-'.$topic->topicinfo->countryname.'/';
+				$breadcrumb .= ':: <a href="'.$url.'">'.$topic->topicinfo->countryname.'</a> ';
 
-            if (isset($topic->topicinfo->adminname) && $topic->topicinfo->adminname) {
-                $url = $url.'a'.$topic->topicinfo->admincode.'-'.$topic->topicinfo->adminname.'/';
-                $breadcrumb .= ':: <a href="'.$url.'">'.$topic->topicinfo->adminname.'</a> ';
+				if (isset($topic->topicinfo->adminname) && $topic->topicinfo->adminname) {
+					$url = $url.'a'.$topic->topicinfo->admincode.'-'.$topic->topicinfo->adminname.'/';
+					$breadcrumb .= ':: <a href="'.$url.'">'.$topic->topicinfo->adminname.'</a> ';
                 
-                if (isset($topic->topicinfo->geonames_name) && $topic->topicinfo->geonames_name) {
-                    $url = $url.'g'.$topic->topicinfo->geonameid.'-'.$topic->topicinfo->geonames_name.'/';
-                    $breadcrumb .= ':: <a href="'.$url.'">'.$topic->topicinfo->geonames_name.'</a> ';
-                }
-            }
-        }
-    }
-
-
-	 for ($ii=0;$ii<$topic->topicinfo->NbTags;$ii++) {
-		$wordtag=$words->fTrad($topic->topicinfo->IdName[$ii]) ;
-		if ($breadcrumb) {
-		   $breadcrumb .= '|| ';
+					if (isset($topic->topicinfo->geonames_name) && $topic->topicinfo->geonames_name) {
+						$url = $url.'g'.$topic->topicinfo->geonameid.'-'.$topic->topicinfo->geonames_name.'/';
+						$breadcrumb .= ':: <a href="'.$url.'">'.$topic->topicinfo->geonames_name.'</a> ';
+					}
+				}
+			}
 		}
-       $url = $url.'t'.$topic->topicinfo->IdTag[$ii].'-'.$wordtag.'/';
-        $breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
-    } // end of for $ii
 
-    echo $breadcrumb;
 
-?></span>
-<?php
-	  $topic->topicinfo->IsClosed=false ;
-	  if ($topic->topicinfo->expiredate!="0000-00-00 00:00:00") {
-	  	 echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :",ServerToLocalDateTime($topic->topicinfo->expiredate),"</strong>" ; 
-	  	 $topic->topicinfo->IsClosed=(strtotime($topic->topicinfo->expiredate)<=time()) ;
-	  } 
+		for ($ii=0;$ii<$topic->topicinfo->NbTags;$ii++) {
+			$wordtag=$words->fTrad($topic->topicinfo->IdName[$ii]) ;
+			if ($breadcrumb) {
+				$breadcrumb .= '|| ';
+			}
+			$url = $url.'t'.$topic->topicinfo->IdTag[$ii].'-'.$wordtag.'/';
+			$breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
+		} // end of for $ii
 
-	  if ($topic->topicinfo->IsClosed) {
-	 	 echo " &nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> this thread is closed</strong>" ;
-	  }
-?>
-<?php
-if ($User) {
-?>
-
-    <div id="forumsthreadreplytop">
-	 <?php 
-	 if (!$topic->topicinfo->IsClosed) {
-	 ?>
-	 <span class="button"><a href="
-	 <?php 
-
-	 	if (isset($topic->IdSubscribe)) {
-	 	   echo ForumsView::getURI()."subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
-	 	}
-	 	else {
-	 	   echo ForumsView::getURI()."subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
-	 	}  
-	 	?>
-	 	<span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
-
-<?php
-	  }
-	 	?>
-	 	</div>
-<?php
-
-} // end if ($User)
-    
-    // counting for background switch trick
-    $cntx = '1';
+		echo $breadcrumb;
 	
-
-if ($this->_model->ForumOrderList=="No") {
-	for ($ii=count($topic->posts)-1;$ii>=0;$ii--) {
-		$post=$topic->posts[$ii] ;
-        $cnt = $ii + 1;
-        require 'singlepost.php';
-        $cntx = $cnt;
-    }
-}
-else { // Not logged member will always see the forum in ascending order
-	for ($ii=0;$ii<count($topic->posts);$ii++) {
-		$post=$topic->posts[$ii] ;
-        $cnt = $ii + 1;
-        require 'singlepost.php';
-        $cntx = $cnt;
-    }
-}
-        
-if ($User) {
-
-	 if (!$topic->topicinfo->IsClosed) {
-?>
-<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?></div>
-<?php
-	 }
-
+	?></span>
+	<?php
+		$topic->topicinfo->IsClosed=false ;
+		if ($topic->topicinfo->expiredate!="0000-00-00 00:00:00") {
+			echo "&nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> expiration date :",ServerToLocalDateTime($topic->topicinfo->expiredate),"</strong>" ; 
+			$topic->topicinfo->IsClosed=(strtotime($topic->topicinfo->expiredate)<=time()) ;
+		} 
+	
+		if ($topic->topicinfo->IsClosed) {
+			echo " &nbsp;&nbsp;&nbsp;<span class=\"forumsthreadtags\"><strong> this thread is closed</strong>" ;
+		}
+	?>
+	<?php
+	if ($User) {
+	?>
+	
+		<div id="forumsthreadreplytop">
+		<?php 
+		if (!$topic->topicinfo->IsClosed) {
+			?>
+			<span class="button"><a href="
+			<?php 
+	
+			if (isset($topic->IdSubscribe)) {
+				echo ForumsView::getURI()."subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
+			}
+			else {
+				echo ForumsView::getURI()."subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
+			}  
+			?>
+			<span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
+	
+	<?php
+		}
+			?>
+			</div>
+	<?php
+	
+	} // end if ($User)
+		
+	// counting for background switch trick
+	$cntx = '1';
+		
+	
+	if ($this->_model->ForumOrderList=="No") {
+		for ($ii=count($topic->posts)-1;$ii>=0;$ii--) {
+			$post=$topic->posts[$ii] ;
+			$cnt = $ii + 1;
+			require 'singlepost.php';
+			$cntx = $cnt;
+		}
+	}
+	else { // Not logged member will always see the forum in ascending order
+		for ($ii=0;$ii<count($topic->posts);$ii++) {
+			$post=$topic->posts[$ii] ;
+			$cnt = $ii + 1;
+			require 'singlepost.php';
+			$cntx = $cnt;
+		}
+	}
+			
+	if ($User) {
+	
+		if (!$topic->topicinfo->IsClosed) {
+	?>
+	<div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?></div>
+	<?php
+		}
+	
+	}
 }
 ?>

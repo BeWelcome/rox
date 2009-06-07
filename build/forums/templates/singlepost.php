@@ -54,6 +54,15 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             <?php
 //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
             echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));
+			if ($post->PostVisibility=='MembersOnly') {
+				echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:MembersOnly " ;
+			}
+			if ($post->PostVisibility=='GroupOnly') {
+				echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:GroupOnly " ;
+			}
+			if ($post->PostVisibility=='ModeratorOnly') {
+				echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:ModeratorOnly " ;
+			}
             $max=count($post->Trad) ;
             for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                 if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
@@ -100,68 +109,83 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         <?php
 // Todo : find a way to land here with a $topic variable well initialized
          if ($topic->WithDetail) { // If the details of trads are available, we will display them
-            $max=count($post->Trad) ;
-            if ($max>1) { // we will display the list of trads only if there is more than one trad
-              echo "<p class=\"small\">",$words->getFormatted("forum_available_trads"),":" ;
-//            print_r($post); echo"<br>" ;
-              for ($jj=0;$jj<$max;$jj++) {
-                $Trad=$post->Trad[$jj] ;
+			if ($post->PostDeleted=="Deleted") {
+				echo "[Deleted]" ;
+			}
+			// If current user has a moderator right, he can see the post
+			if (($post->PostDeleted!="Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) { 
+				$max=count($post->Trad) ;
+				if ($max>1) { // we will display the list of trads only if there is more than one trad
+					echo "<p class=\"small\">",$words->getFormatted("forum_available_trads"),":" ;
+//            		print_r($post); echo"<br>" ;
+					for ($jj=0;$jj<$max;$jj++) {
+						$Trad=$post->Trad[$jj] ;
 
 
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result
 
-              $ssSentence=str_replace("\"","&quot;",addslashes(strip_tags($Trad->Sentence,"<p><br /><br><strong><ul><li><a><img>")))  ;
-//                   $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
-                if ($jj==0) {
-                   echo "[Original <a  title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onmouseover=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
-                }
-                else {
-                   echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onmouseover=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] \n" ;
-                }
-              }
-              echo "</p>" ;
-            }
-         } // end If the details of trads are available, we will display them
-         ?>
+						$ssSentence=str_replace("\"","&quot;",addslashes(strip_tags($Trad->Sentence,"<p><br /><br><strong><ul><li><a><img>")))  ;
+//                   	$ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
+						if ($jj==0) {
+							echo "[Original <a  title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onmouseover=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
+						}
+						else {
+							echo "\n[<a title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onmouseover=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] \n" ;
+						}
+					}
+					echo "</p>" ;
+				}
+			} // end if not deleted
+		} // end If the details of trads are available, we will display them
+		// If current user has a moderator right, he can see the post
+		if (($post->PostDeleted!="Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) { 
+			?>
 
-        <hr />
-        <?php
-         $Sentence=$words->fTrad($post->IdContent) ;
-         ?>
-         <div id="d<?=$post->IdContent?>" class="text">
-            <?=$Sentence?>
-         </div>
-		 <?php
+			<hr />
+			<?php
+			$Sentence=$words->fTrad($post->IdContent) ;
+			?>
+			<div id="d<?=$post->IdContent?>" class="text">
+				<?php
+				if ($post->PostDeleted=="Deleted") {
+					echo "<s>",$Sentence,"</s>" ;
+				}
+				else {
+					echo $Sentence ;
+				}
+				?>
+			</div>
+			<?php
 
-		 // Here add additional data from local messages if any
-		 if (isset($post->LocalVolMessage)) {
-			$LocalVolMessage=$post->LocalVolMessage ;
-			$TitleText=$words->fTrad($LocalVolMessage->IdTitleText) ;
-			$MessageText=$words->fTrad($LocalVolMessage->IdMessageText) ;
+			// Here add additional data from local messages if any
+			if (isset($post->LocalVolMessage)) {
+				$LocalVolMessage=$post->LocalVolMessage ;
+				$TitleText=$words->fTrad($LocalVolMessage->IdTitleText) ;
+				$MessageText=$words->fTrad($LocalVolMessage->IdMessageText) ;
 			
-			echo "<div>"  ; // Todo add a special div for a special layout
-			echo "<br /> ",$words->getFormatted('ForumPostWithLocalMessage') ;
-			echo "<table bgcolor=\"lightgray\">" ;
-			echo "<tr><th>",$TitleText,"</th></tr>\n" ;
-			echo "<tr><td>",$MessageText,"</td></tr>\n" ;
-			echo "<tr><td>" ;
-			foreach ($post->Places as $place) {
-				echo "<a href=\"",$place->Link,"\">",$place->Name,"</a> " ;
-			}
-			echo "</td></tr>" ;
-			echo "</table>\n" ;
-			echo "</div>" ;
-		 } 	// End of add additional data from local volunteers messages if any
+				echo "<div>"  ; // Todo add a special div for a special layout
+				echo "<br /> ",$words->getFormatted('ForumPostWithLocalMessage') ;
+				echo "<table bgcolor=\"lightgray\">" ;
+				echo "<tr><th>",$TitleText,"</th></tr>\n" ;
+				echo "<tr><td>",$MessageText,"</td></tr>\n" ;
+				echo "<tr><td>" ;
+				foreach ($post->Places as $place) {
+					echo "<a href=\"",$place->Link,"\">",$place->Name,"</a> " ;
+				}
+				echo "</td></tr>" ;
+				echo "</table>\n" ;
+				echo "</div>" ;
+			} 	// End of add additional data from local volunteers messages if any
 
-		 // Here add additional data from votes if any
-		 if (isset($post->Vote))  {
-			$Vote=$post->Vote ;
+			// Here add additional data from votes if any
+			if (isset($post->Vote))  {
+				$Vote=$post->Vote ;
 
-			if ($Vote->PossibleAction=="ShowResult") { // If membe can see result, show them
-				echo "<div>" ;
-				echo $words->getFormatted("ForumPostCurrentResults") ;
-				echo "<ul>"  ;
-				foreach ($Vote->PossibleChoice as $cc) {
+				if ($Vote->PossibleAction=="ShowResult") { // If membe can see result, show them
+					echo "<div>" ;
+					echo $words->getFormatted("ForumPostCurrentResults") ;
+					echo "<ul>"  ;
+					foreach ($Vote->PossibleChoice as $cc) {
 					$ss='Choice_'.$cc ;
 					$count=$Vote->$ss ;
 					$countpercent="0%" ;
@@ -189,10 +213,11 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 
 			echo "</div>" ;
 		 } 	// End of add additional data from local volunteers messages if any
+	} // end if not deleted
 
-		 ?>
-         
-        </div> <!-- forumsmessage -->
+	?>
+       
+    </div> <!-- forumsmessage -->
 </div> <!-- forumspost -->
 
 <script type="text/javascript">

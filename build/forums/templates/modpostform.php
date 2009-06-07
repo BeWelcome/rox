@@ -67,28 +67,28 @@ if (isset($DataPost->Thread->title))
                 <select name="ThreadVisbility" >
 				<option value="NoRestriction"
 				<?php
-				if ($DataPost->Thread->Visibility=="NoRestriction") {
+				if ($DataPost->Thread->ThreadVisbility=="NoRestriction") {
 					echo " selected" ;
 				}
 				?>
 				>Everybody (including google)</option>
 				<option value="MembersOnly"
 				<?php
-				if ($DataPost->Thread->Visibility=="MembersOnly") {
+				if ($DataPost->Thread->ThreadVisbility=="MembersOnly") {
 					echo " selected" ;
 				}
 				?>
 				>BeWelcome Members only</option>
 				<option value="GroupOnly"
 				<?php
-				if ($DataPost->Thread->Visibility=="GroupOnly") {
+				if ($DataPost->Thread->ThreadVisbility=="GroupOnly") {
 					echo " selected" ;
 				}
 				?>
 				>Members of group</option>
 				<option value="ModeratorOnly"
 				<?php
-				if ($DataPost->Thread->Visibility=="ModeratorOnly") {
+				if ($DataPost->Thread->ThreadVisbility=="ModeratorOnly") {
 					echo " selected" ;
 				}
 				?>
@@ -245,28 +245,28 @@ if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td 
                 <select name="PostVisbility" >
 				<option value="NoRestriction"
 				<?php
-				if ($DataPost->Post->Visibility=="NoRestriction") {
+				if ($DataPost->Post->PostVisibility=="NoRestriction") {
 					echo " selected" ;
 				}
 				?>
 				>Everybody (including google)</option>
 				<option value="MembersOnly"
 				<?php
-				if ($DataPost->Post->Visibility=="MembersOnly") {
+				if ($DataPost->Post->PostVisibility=="MembersOnly") {
 					echo " selected" ;
 				}
 				?>
 				>BeWelcome Members only</option>
 				<option value="GroupOnly"
 				<?php
-				if ($DataPost->Post->Visibility=="GroupOnly") {
+				if ($DataPost->Post->PostVisibility=="GroupOnly") {
 					echo " selected" ;
 				}
 				?>
 				>Members of group</option>
 				<option value="ModeratorOnly"
 				<?php
-				if ($DataPost->Post->Visibility=="ModeratorOnly") {
+				if ($DataPost->Post->PostVisibility=="ModeratorOnly") {
 					echo " selected" ;
 				}
 				?>

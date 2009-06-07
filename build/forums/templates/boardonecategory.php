@@ -51,6 +51,9 @@ Boston, MA  02111-1307, USA.
                 <td class="forumsboardthreadtitle">
                     <?php 
                     
+					if ($thread->ThreadDeleted=="Deleted") {
+						echo "[Deleted]" ;
+					}
                     echo "<a href=\"",$url,"\">" ;
                     echo $words->fTrad($thread->IdTitle); 
                     ?></a>

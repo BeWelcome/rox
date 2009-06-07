@@ -176,10 +176,9 @@ function GetPostVote($IdPost) {
 } // end of GetPostVote
 
 /**
-* this function returns teh Id of the thread corresponding to a certain $IdPost
+* this function returns the Id of the thread corresponding to a certain $IdPost
 **/
 function GetIdThread($IdPost) {
-// Todo Visibility
 	$rr=$this->singleLookup("select threadid as IdThread from forums_posts where id=".$IdPost) ;
 	if (!empty($rr->IdThread)) {
 		return($rr->IdThread) ;
@@ -326,33 +325,39 @@ function FindAppropriatedLanguage($IdPost=0) {
 		$this->ForumOrderList=$layoutbits->GetPreference("PreferenceForumOrderListAsc") ;
 
 		//	Decide if it is an active LoggeMember or not
-		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or (($_SESSION["MemberStatus"]!='Active') or $_SESSION["MemberStatus"]!='Hidden')) ) {
-			$this->PublicVisibility="Visibility='NoRestriction'" ;
-			$this->MyGroupsList="(0)" ;
+		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"]=='Pending') or $_SESSION["MemberStatus"]=='NeedMore') ) {
+			$this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
+			$this->ThreadGroupsRestriction=" (IdGroup=0 and ThreadVisibility ='NoRestriction')" ;
+			$this->PostGroupsRestriction=" (IdGroup=0 and PostVisibility='NoRestriction')" ;
 		}
 		else {
-			$this->PublicVisibility="Visibility in ('NoRestriction', 'MembersOnly','GroupOnly')" ;
-			$this->MyGroupsList="(0" ;
+			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (PostDeleted!='Deleted')" ;
+			$this->PostGroupsRestriction=" (PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0," ;
+			$this->ThreadGroupsRestriction=" (PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0," ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
 			if (!$qry) {
-				throw new PException('Failde to retriev groups for member id =#'.$_SESSION["IdMember"].' !');
+				throw new PException('Failde to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
 			}
 			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
-				$this->MyGroupsList=$this->MyGroupsList.",".$rr->IdGroup ;
+				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
+				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
 			}	;
-			$this->MyGroupsList=$this->MyGroupsList.")" ;
+			$this->PostGroupsRestriction=$this->PostGroupsRestriction.")" ;
+			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.")" ;
 		}
 		
-		// Prepares visibility options for current member
+		// Prepares additional visibility options for moderator
 		if ($this->BW_Right->HasRight("ForumModerator")) {
-			$this->PostDeleteRestriction="" ;
-			$this->ThreadDeleteRestriction="" ;
-			$this->PublicVisibility="Visibility in ('NoRestriction', 'MembersOnly', 'GroupOnly','ModeratorsOnly')" ;
+			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorsOnly')" ;
+			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorsOnly')" ;
+			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
+				$this->PostGroupsRestriction=" (1=1)" ;
+				$this->ThreadGroupsRestriction=" (1=1)" ;
+			}
 		}
-		else {
-			$this->PostDeleteRestriction=" and (PostDeleted!='Deleted')" ;
-			$this->ThreadDeleteRestriction=" and (ThreadDeleted!='Deleted')" ;
-		}
+
     } // __construct
 	
 	// This switch the preference ForumOrderList
@@ -941,12 +946,12 @@ WHERE `geonameid` = '%d'
     }
     
     /*
-     * Fill the Vars in order to edit a post
+     * Fill the Vars in order to prepare edit a post
 	  * this fetch the data which are then going to be display and then change 
 	  * by the user
      */
     public function getEditData($callbackId) {
-        $query = // Todo Visibility
+        $query = 
             "
 SELECT
     `postid`,
@@ -955,12 +960,17 @@ SELECT
     `HasVotes`,
     `IdLocalVolMessage`,
     `IdLocalEvent`,
-	
+    `PostDeleted`,
+    `PostVisibility`,
+    `ThreadVisibility`,
+    `ThreadDeleted`,
     `forums_posts`.`threadid` as `threadid`,
     `message` AS `topic_text`,
 		`OwnerCanStillEdit`,
 	 `IdContent`,
     `title` AS `topic_title`, `first_postid`, `last_postid`, `IdTitle`,
+    `ThreadVisibility`,
+    `ThreadDeleted`,
     `forums_threads`.`continent`,
     `forums_threads`.`IdGroup`,
     `forums_threads`.`geonameid`,
@@ -969,6 +979,7 @@ SELECT
 FROM `forums_posts`
 LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
 WHERE `postid` = $this->messageId
+and ($this->PublicPostVisibility)
             "
         ;
         $s = $this->dao->query($query);
@@ -980,7 +991,6 @@ WHERE `postid` = $this->messageId
         $tags = array();
         
         // retrieve tags for the current post ($this->messageId)
-		// Todo Visibility
         $query =    " 
 SELECT forums_tags.IdName
 FROM `tags_threads`,`forums_posts`,`forums_threads`,`forums_tags`
@@ -1023,7 +1033,7 @@ AND `forums_posts`.`id` = $this->messageId and `forums_tags`.`id`=`tags_threads`
         
         $vars =& PPostHandler::getVars();
         
-        $query = // Todo Visibility
+        $query = 
             "
 SELECT
     `postid`,
@@ -1035,6 +1045,10 @@ SELECT
     `IdLocalEvent`,
     `first_postid`,
 	`OwnerCanStillEdit`,
+    `PostDeleted`,
+    `PostVisibility`,
+    `ThreadVisibility`,
+    `ThreadDeleted`,
 	`forums_threads`.`IdGroup`,
     `last_postid`
 FROM `forums_posts`
@@ -1108,10 +1122,10 @@ WHERE `postid` = $this->messageId
 * this also write a log
 */
     private function editPost($vars, $editorid) {
-	 // Todo Visibility
         $query = "SELECT message,forums_posts.threadid,  
     `HasVotes`,
     `IdLocalVolMessage`,
+    `PostVisibility`,
     `IdLocalEvent`,
 		OwnerCanStillEdit,IdWriter,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = ".$this->messageId ;
         $s=$this->dao->query($query);
@@ -1127,6 +1141,15 @@ WHERE `postid` = $this->messageId
 		 	$query="update forums_posts set message='".$this->dao->escape($this->cleanupText($vars['topic_text']))."' where postid=".$this->messageId ;
         	$s=$this->dao->query($query);
 		}
+		 
+		// case the visbility has changed
+		if ($rBefore->PostVisibility!=$vars['PostVisibility']) {
+		 	$query="update forums_posts set PostVisibility='".$vars['PostVisibility']."' where postid=".$this->messageId ;
+        	$s=$this->dao->query($query);
+			MOD_log::get()->write("Changing Post Visibility from <b>".$rBefore->PostVisibility."</b> to <b>".$vars['PostVisibility']."</b>", "Forum");
+		}
+		 
+		 
 		 
 		// If this is the first post, may be we can update the title
 		if ($rBefore->first_postid==$rBefore->id) {
@@ -1150,7 +1173,7 @@ WHERE `postid` = $this->messageId
                 $this->UnsubscribeThreadDirect($rBefore->threadid,$_SESSION["IdMember"]) ;
 			}
         }
-
+    
         $this->prepare_notification($this->messageId,"useredit") ; // Prepare a notification
         MOD_log::get()->write("Editing Post=#".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
     } // editPost
@@ -1274,7 +1297,6 @@ WHERE `threadid` = '%d' ",
     public function prepareModeratorEditPost($IdPost) {
 	 	$DataPost->IdPost=$IdPost ;
 		$DataPost->Error="" ; // This will receive the error sentence if any
-// Todo Visibility
         $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
         $s = $this->dao->query($query);
 		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
@@ -1348,7 +1370,7 @@ RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThre
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
 		 	$IdThread=(int)$vars["IdThread"] ;
 		 	$IdGroup=(int)$vars["IdGroup"] ;
-		 	$Visibility=$vars["ThreadVisbility"] ;
+		 	$ThreadVisibility=$vars["ThreadVisbility"] ;
 		 	$ThreadDeleted=$vars["ThreadDeleted"] ;
 		 	$WhoCanReply=$vars["WhoCanReply"] ;
 		 	$expiredate="'".$vars["expiredate"]."'"  ;
@@ -1356,8 +1378,8 @@ RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThre
 			if (empty($expiredate)) {
 			   $expiredate="NULL" ;
 			}
-        	MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue." ThreadDeleted=".$ThreadDeleted." Visibility=".$Visibility." WhoCanReply=".$WhoCanReply,"ForumModerator");
-			$sql="update forums_threads set IdGroup=".$IdGroup.",stickyvalue=".$stickyvalue.",expiredate=".$expiredate.",Visibility='".$Visibility."',ThreadDeleted='".$ThreadDeleted."',WhoCanReply='".$WhoCanReply."' where id=".$IdThread ;
+        	MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue." ThreadDeleted=".$ThreadDeleted." ThreadVisibility=".$ThreadVisibility." WhoCanReply=".$WhoCanReply,"ForumModerator");
+			$sql="update forums_threads set IdGroup=".$IdGroup.",stickyvalue=".$stickyvalue.",expiredate=".$expiredate.",ThreadVisibility='".$ThreadVisibility."',ThreadDeleted='".$ThreadDeleted."',WhoCanReply='".$WhoCanReply."' where id=".$IdThread ;
 			
 //			die ($sql) ;
 			$this->dao->query($sql);
@@ -1397,16 +1419,16 @@ RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThre
 
 	   $IdPost=(int)$vars['IdPost'] ;
 
-		 if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
+		if (isset($vars["submit"]) and ($vars["submit"]=="update post")) { // if an effective update was chosen for a forum trads
 		 	$OwnerCanStillEdit=$vars["OwnerCanStillEdit"]  ;
-		 	$Visibility=$vars["PostVisbility"]  ;
+		 	$PostVisibility=$vars["PostVisibility"]  ;
 		 	$PostDeleted=$vars["PostDeleted"]  ;
 
-        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."] Visibility=[".$Visibility."] PostDeleted=[".$PostDeleted."] ","ForumModerator");
-			$this->dao->query("update forums_posts set OwnerCanStillEdit='".$OwnerCanStillEdit."',Visibility='".$Visibility."',PostDeleted='".$PostDeleted."' where id=".$IdPost);
-		 }
+        	MOD_log::get()->write("Updating Post=#".$IdPost." Setting OwnerCanStillEdit=[".$OwnerCanStillEdit."] PostVisibility=[".$PostVisibility."] PostDeleted=[".$PostDeleted."] ","ForumModerator");
+			$this->dao->query("update forums_posts set OwnerCanStillEdit='".$OwnerCanStillEdit."',PostVisibility='".$PostVisibility."',PostDeleted='".$PostDeleted."' where id=".$IdPost);
+		}
 
-		 if (isset($vars["submit"]) and ($vars["submit"]=="delete Tag")) { // if an effective update was chosen for a forum trads
+		if (isset($vars["submit"]) and ($vars["submit"]=="delete Tag")) { // if an effective update was chosen for a forum trads
 		 	 $IdTag=(int)$vars["IdTag"] ;
 		 	 $IdThread=(int)$vars["IdThread"] ;
        MOD_log::get()->write("Updating thread=#".$IdThread." removing tag =[".$IdTag."]","ForumModerator");
@@ -1605,7 +1627,6 @@ WHERE `postid` = '$this->messageId'
                 $this->dao->query($query);
 
                 if ($topicinfo->last_postid == $this->messageId) {
-// Todo Visibility
                     $query =
                         "
 SELECT `postid` 
@@ -1683,18 +1704,24 @@ WHERE `threadid` = '$topicinfo->threadid'
         if (!($User = APP_User::login())) {
             throw new PException('User gone missing...');
         }
+
+        // Required because the post will herit from teh visibility of its thread
+		$qry = $this->dao->query("select ThreadVisibility from forums_threads where id=".$this->threadid);
+		$rThread=$qry->fetch(PDB::FETCH_OBJ) ;
+
+		
         
         $this->dao->query("START TRANSACTION");
         
         $query = sprintf(
             "
-INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`)
-VALUES ('%d', '%d', NOW(), '%s','%d',%d)
+INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
+VALUES ('%d', '%d', NOW(), '%s','%d',%d,'%s')
             ",
             $User->getId(),
             $this->threadid,
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $_SESSION["IdMember"],$this->GetLanguageChoosen()
+            $_SESSION["IdMember"],$this->GetLanguageChoosen(),$rThread->ThreadVisibility
         );
 		  
 
@@ -1759,12 +1786,12 @@ WHERE `threadid` = '$this->threadid'
         
         $query = sprintf(
             "
-INSERT INTO `forums_posts` (`authorid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`)
-VALUES ('%d', NOW(), '%s','%d',%d)
+INSERT INTO `forums_posts` (`authorid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
+VALUES ('%d', NOW(), '%s','%d',%d,'%s')
             ",
             $User->getId(),
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $_SESSION["IdMember"],$this->GetLanguageChoosen()
+            $_SESSION["IdMember"],$this->GetLanguageChoosen(),$vars['ThreadVisibility']
         );
         $result = $this->dao->query($query);
         
@@ -1819,8 +1846,8 @@ VALUES ('%d', NOW(), '%s','%d',%d)
         
         $query = sprintf(
             "
-INSERT INTO `forums_threads` (`title`, `first_postid`, `last_postid`, `geonameid`, `admincode`, `countrycode`, `continent`,`IdFirstLanguageUsed`,`IdGroup`)
-VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
+INSERT INTO `forums_threads` (`title`, `first_postid`, `last_postid`, `geonameid`, `admincode`, `countrycode`, `continent`,`IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`)
+VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
             ",
             $this->dao->escape(strip_tags($vars['topic_title'])),
             $postid,
@@ -1828,7 +1855,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
             "'".$d_geoname."'",
             "'".$d_admin."'",
             "'".$d_country."'",
-            "'".$d_continent."'",$this->GetLanguageChoosen(),$IdGroup
+            "'".$d_continent."'",$this->GetLanguageChoosen(),$IdGroup,$vars['ThreadVisibility'] 
         );
         $result = $this->dao->query($query);
         
@@ -1860,7 +1887,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
         }
 
         $this->prepare_notification($postid,"newthread") ; // Prepare a notification 
-        MOD_log::get()->write("New Thread new Tread=#".$threadid." Post=#". $postid." IdGroup=#".$IdGroup." NotifyMe=[".$vars['NotifyMe']."]", "Forum");
+        MOD_log::get()->write("New Thread new Tread=#".$threadid." Post=#". $postid." IdGroup=#".$IdGroup." NotifyMe=[".$vars['NotifyMe']."] initial Visibility=".$vars['ThreadVisibility'], "Forum");
         
         return $threadid;
     } // end of NewTopic
@@ -1942,7 +1969,6 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
 		 
         $this->topic->WithDetail = $WithDetail;
 		 
-// Todo Visibility
         // Topic Data
         $query = "SELECT
     `forums_threads`.`title`,
@@ -1950,6 +1976,9 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d)
     `forums_threads`.`replies`,
     `forums_threads`.`id` as IdThread,
     `forums_threads`.`views`,
+    `forums_threads`.`ThreadVisibility`,
+    `forums_threads`.`ThreadDeleted`,
+    `forums_threads`.`WhoCanReply`,
     `forums_threads`.`first_postid`,
     `forums_threads`.`expiredate`,
     `forums_threads`.`stickyvalue`,
@@ -1964,7 +1993,10 @@ LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`
 LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)
 LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-WHERE `threadid` = '$this->threadid' "
+WHERE `threadid` = '$this->threadid' 
+and ($this->PublicThreadVisibility)
+and ($this->ThreadGroupsRestriction)
+"
         ;
         $s = $this->dao->query($query);
         if (!$s) {
@@ -1976,8 +2008,16 @@ WHERE `threadid` = '$this->threadid' "
         
         // Now fetch the tags associated with this thread
         $topicinfo->NbTags=0 ;
-        $query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
+		if (!isset($topicinfo->IdThread)) {
+			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
+							  "WHERE IdThread=-1 and forums_tags.id=tags_threads.IdTag"; // This will return nothing
+			$topicinfo->title="No Such Thread" ;
+			$topicinfo->replies=0 ;
+		}
+		else {
+			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=".$topicinfo->IdThread." and forums_tags.id=tags_threads.IdTag";
+		}
 //								die("query2=".$query2) ;
         $s2 = $this->dao->query($query2);
         if (!$s2) {
@@ -1996,27 +2036,32 @@ WHERE `threadid` = '$this->threadid' "
         
         $from = $this->POSTS_PER_PAGE * ($this->getPage() - 1);
         
-// Todo Visibility				
         $query = sprintf("
 SELECT `postid`,`forums_posts`.`id` as IdPost,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,
-`geonames_cache`.`fk_countrycode`,`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername,
+`geonames_cache`.`fk_countrycode`,`forums_posts`.`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername,
 
     `HasVotes`,
     `IdLocalVolMessage`,
-    `IdLocalEvent`
-FROM `forums_posts`
+    `PostVisibility`,
+    `PostDeleted`,
+	
+    `IdLocalEvent`,
+	`forums_threads`.`IdGroup`
+FROM (`forums_posts`,`forums_threads`)
 LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
 LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
-WHERE `threadid` = '%d' 
+WHERE `forums_posts`.`threadid` = '%d'  and `forums_posts`.`threadid`=`forums_threads`.`id`
+and ($this->PublicPostVisibility)
+and ($this->ThreadGroupsRestriction)
 ORDER BY `posttime` ASC
 LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
+
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve Posts)!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			if ($WithDetail) { // if details are required retrieve all the translated text for posts (sentence, owner, modification time and translator name) of this thread
-// Todo Visibility
 				$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername 
 										from forum_trads,languages,members as mOwner, members as mTranslator
 										where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
@@ -2045,7 +2090,6 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
         
         // Check if the current user has subscribe to this thread or not (to display the proper option, subscribe or unsubscribe)
         if (isset($_SESSION["IdMember"])) {
-// Todo Visibility
             $query = sprintf( "
 SELECT
     `members_threads_subscribed`.`id` AS IdSubscribe,
@@ -2068,11 +2112,13 @@ AND IdSubscriber=%d
             }
         }
         
-// Todo Visibility
+/*
         $query = sprintf(  "
 SELECT
     `forums_threads`.`title`,
     `forums_threads`.`IdTitle`,
+    `ThreadVisibility`,
+    `ThreadDeleted`,
     `forums_threads`.`replies`,
     `forums_threads`.`views`,
     `forums_threads`.`first_postid`,
@@ -2105,7 +2151,7 @@ WHERE `threadid` = '%d'
         if (!$s) {
             throw new PException('Could not retrieve Thread=#".$this->threadid." !');
         }
-
+*/
         // Increase the number of views
         $query = "
 UPDATE `forums_threads`
@@ -2117,24 +2163,31 @@ WHERE `threadid` = '$this->threadid' LIMIT 1
     } // end of prepareTopic
     
     public function initLastPosts() {
-// Todo Visibility
         $query = sprintf("
 SELECT
     `postid`,
     UNIX_TIMESTAMP(`create_time`) AS `posttime`,
     `message`,
-	 `IdContent`,
+	`IdContent`,
     `members`.`Username` AS `OwnerUsername`,
     `IdWriter`,
-	 `threadid`,
-		`OwnerCanStillEdit`,
+	forums_threads.`threadid`,
+    `PostVisibility`,
+    `PostDeleted`,
+    `ThreadDeleted`,
+	`OwnerCanStillEdit`,
     `geonames_cache`.`fk_countrycode`,
     `HasVotes`,
     `IdLocalVolMessage`,
     `IdLocalEvent`
-FROM `forums_posts`,`members`
+    `IdGroup`
+FROM (`forums_posts`,`forums_threads`,`members`)
 LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
-WHERE `threadid` = '%d' and `forums_posts`.`IdWriter` = `members`.`id`
+WHERE `forums_posts`.`threadid` = '%d' and `forums_posts`.`IdWriter` = `members`.`id`
+ and `forums_posts`.`threadid`=`forums_threads`.`id`
+	and ($this->PublicPostVisibility)
+	and ($this->PublicThreadVisibility)
+	and ($this->PostGroupsRestriction)
 ORDER BY `posttime` DESC
 LIMIT %d
             ",
@@ -2147,7 +2200,6 @@ LIMIT %d
         }
         $this->topic->posts = array();
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-// Todo Visibility
           	$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner, members as mTranslator
 			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
@@ -2216,6 +2268,8 @@ SELECT
     `members_threads_subscribed`.`id` as IdSubscribe,
     `members_threads_subscribed`.`created` AS `subscribedtime`, 
     `forums_threads`.`threadid` as IdThread,
+    `ThreadVisibility`,
+    `ThreadDeleted`,
     `forums_threads`.`title`,
     `forums_threads`.`IdTitle`,
     `forums_threads`.`IdGroup`,
@@ -2237,6 +2291,8 @@ ORDER BY `subscribedtime` DESC
 SELECT
     `members_threads_subscribed`.`id` as IdSubscribe,
     `members_threads_subscribed`.`created` AS `subscribedtime`, 
+    `ThreadVisibility`,
+    `ThreadDeleted`,
     `forums_threads`.`threadid` as IdThread,
     `forums_threads`.`title`,
     `forums_threads`.`IdTitle`,
@@ -2606,6 +2662,11 @@ AND IdTag=%d
             "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
     `HasVotes`,
+    `ThreadVisibility`,
+    `ThreadDeleted`,
+    `PostVisibility`,
+    `PostDeleted`,
+    `ThreadDeleted`,
     `IdLocalVolMessage`,
     `IdLocalEvent`,
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
@@ -2614,6 +2675,8 @@ LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
 LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 
 AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
+and ($this->PublicPostVisibility)
+and ($this->PostGroupsRestriction)
 ORDER BY `posttime` DESC    ",    $IdMember   );
         $s = $this->dao->query($query);
         if (!$s) {
@@ -3204,7 +3267,6 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
             // we are going to check wether there is allready a pending notification for this post to avoid duplicated
 //            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
             $IdMember=$rSubscribed->IdSubscriber ;
-// Todo Visibility 
             $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
             $s = $this->dao->query($query);
             if (!$s) {
@@ -3234,7 +3296,6 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
             // we are going to check wether there is allready a pending notification for this post to avoid duplicated
 //            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
             $IdMember=$rSubscribed->IdSubscriber ;
-// Todo Visibility
             $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
             $s = $this->dao->query($query);
             if (!$s) {
@@ -3329,6 +3390,8 @@ class Board implements Iterator {
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 		
+		$this->BW_Right = MOD_right::get();
+
 		if (!isset($_SESSION['IdMember'])) {
 			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
 			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
@@ -3346,6 +3409,40 @@ class Board implements Iterator {
         $this->navichain = $navichain;
         $this->IdGroup = $IdGroup;
         $this->tags = $tags;
+
+		//	Decide if it is an active LoggeMember or not
+		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"]=='Pending') or $_SESSION["MemberStatus"]=='NeedMore') ) {
+			$this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
+			$this->ThreadGroupsRestriction=" (IdGroup=0 and ThreadVisibility ='NoRestriction')" ;
+			$this->PostGroupsRestriction=" (IdGroup=0 and PostVisibility='NoRestriction')" ;
+		}
+		else {
+			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (PostDeleted!='Deleted')" ;
+			$this->PostGroupsRestriction=" (PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0," ;
+			$this->ThreadGroupsRestriction=" (PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0," ;
+			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
+			if (!$qry) {
+				throw new PException('Failde to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
+			}
+			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
+				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
+				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
+			}	;
+			$this->PostGroupsRestriction=$this->PostGroupsRestriction.")" ;
+			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.")" ;
+		}
+		
+		// Prepares additional visibility options for moderator
+		if ($this->BW_Right->HasRight("ForumModerator")) {
+			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorsOnly')" ;
+			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorsOnly')" ;
+			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
+				$this->PostGroupsRestriction=" (1=1)" ;
+				$this->ThreadGroupsRestriction=" (1=1)" ;
+			}
+		}
     }
     
     private $dao;
@@ -3418,11 +3515,14 @@ class Board implements Iterator {
 				}
 				$tabletagthread.="`tags_threads` as `tags_threads".$ii."`," ;
 				$wherethread=$wherethread." and `tags_threads".$ii."`.`IdTag`=".$tag." and `tags_threads".$ii."`.`IdThread`=`forums_threads`.`id` "  ;
+				$wherethread=$wherethread."and (".$this->PublicThreadVisibility.")" ;
+				$wherethread=$wherethread."and (".$this->ThreadGroupsRestriction.")" ;
+
 				$ii++ ;
 			}
 		}
         
-// Todo Visibility
+
 		$query = "SELECT COUNT(*) AS `number` FROM ".$tabletagthread."`forums_threads` WHERE 1 ".$wherethread;
 		$s = $this->dao->query($query);
 		if (!$s) {
@@ -3433,13 +3533,14 @@ class Board implements Iterator {
         
 		$from = ($this->THREADS_PER_PAGE * ($page - 1));
         
-// Todo Visibility
 		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
 				  `forums_threads`.`IdTitle`, 
 				  `forums_threads`.`IdGroup`, 
 				  `forums_threads`.`replies`, 
 				  `groups`.`Name` as `GroupName`, 
+					`ThreadVisibility`,
+					`ThreadDeleted`,
 				  `forums_threads`.`views`, 
 				  `forums_threads`.`continent`,
 				  `first`.`postid` AS `first_postid`, 
@@ -3501,7 +3602,7 @@ class Board implements Iterator {
     
 	/**
 		This load the treads for a category or which does not belong to a category list
-		first case : IdTagCategory is teh category the thread  must be declared in
+		first case : IdTagCategory is the category the thread  must be declared in
 		second case : $NoInCategoryList a string with the list of idCategorr the search thread must not be in
 	*/
     public function LoadThreads($IdTagCategory,$NoInCategoryList="") {
@@ -3509,13 +3610,14 @@ class Board implements Iterator {
 		$threads=array() ;
 		
 		if ($NoInCategoryList!="") {
-// Todo Visibility
 			$query= "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
-		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
-				  `forums_threads`.`IdTitle`, 
-				  `forums_threads`.`IdGroup`, 
-				  `forums_threads`.`replies`, 
-				  `groups`.`Name` as `GroupName`, 
+		 		`forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
+				`forums_threads`.`IdTitle`, 
+				`forums_threads`.`IdGroup`, 
+				`forums_threads`.`replies`, 
+				`groups`.`Name` as `GroupName`, 
+				`ThreadVisibility`,
+				`ThreadDeleted`,
 				  `forums_threads`.`views`, 
 				  `forums_threads`.`continent`,
 				  99999 as IdTagCategory,
@@ -3536,15 +3638,19 @@ class Board implements Iterator {
 			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
 			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
 			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.") group by `forums_threads`.`id` ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3 " ;
+			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.") group by `forums_threads`.`id`" ;
+			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
+			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;
+			$query .= " ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3 " ;
 		}
 		else {
-// Todo Visibility
 			$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
-		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
-				  `forums_threads`.`IdTitle`, 
-				  `forums_threads`.`IdGroup`, 
-				  `forums_threads`.`replies`, 
+		 		`forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
+				`forums_threads`.`IdTitle`, 
+				`forums_threads`.`IdGroup`, 
+				`forums_threads`.`replies`, 
+				`ThreadVisibility`,
+				`ThreadDeleted`,
 				  `groups`.`Name` as `GroupName`, 
 				  `forums_threads`.`views`, 
 				  `forums_threads`.`continent`,
@@ -3566,7 +3672,10 @@ class Board implements Iterator {
 			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
 			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
 			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag`=".$IdTagCategory." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
+			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag`=".$IdTagCategory ;
+			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
+			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;
+			$query = $query ." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
 		}
 
 

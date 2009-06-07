@@ -104,14 +104,16 @@ class MOD_layoutbits
     public static function linkWithPicture($username, $picfile="", $mode="")
     {
         $words = new MOD_words();
-
+/* disabling references to memberphotos
         if(!is_file(getcwd().'/bw'.$picfile)) {
-            // get a picture by username
+            // get a picture by username */
             $thumburl = self::smallUserPic_username($username);
+/*
         } else {
             $thumburl = self::_getThumb($picfile, 100, 100);
             if ($thumburl === null) $thumburl = "bw/";
         }
+        */
         if ($mode == 'map_style') {
             // TODO: why return a window with "$username" ??
             return
@@ -200,7 +202,7 @@ class MOD_layoutbits
             return 'members/avatar/'.$userId.'/?xs';
         
         $picfile = self::userPic_userId($userId);
-        $thumbfile = self::_getThumb($picfile, 100, 100, 100);
+        //$thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
     }
 
@@ -215,8 +217,9 @@ class MOD_layoutbits
     public static function smallUserPic_username($username)
     {
         $picfile = self::userPic_username($username);
-        $thumbfile = self::_getThumb($picfile, 100, 100, 100);
-        return $thumbfile;
+        //$thumbfile = self::_getThumb($picfile, 100, 100, 100);
+        //return $thumbfile;
+        return $picfile;
     }
 
 
@@ -277,7 +280,7 @@ class MOD_layoutbits
 
     public static function userPic_username($username)
     {
-        return self::member_pic_url().$username.'/';
+        return self::member_pic_url().$username;
     }
 
 
@@ -313,7 +316,8 @@ class MOD_layoutbits
         // TODO: error analysis of wrong paths
         // TODO: dynamic prefix (now: /th/)
 
-        if($file == "") return null;
+        // method appears to work in old memberphotos folder, so I'm disabling it for now
+        /* if($file == "") */ return null;
 
         $filename = basename($file);
         $filename_noext = substr($filename, 0, strrpos($filename, '.'));
@@ -406,6 +410,7 @@ class MOD_layoutbits
      */
     private static function _dummyPic_userId($userId)
     {
+        return 'images/misc/empty_avatar.png';
         $row = self::get()->dao->query(
             'SELECT SQL_CACHE Gender, HideGender '.
             'FROM members '.
@@ -429,6 +434,7 @@ class MOD_layoutbits
      */
     private static function _incognitoPic_userId($userId)
     {
+        return 'images/misc/empty_avatar.png';
         if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
             return '/memberphotos/incognito.jpg';
         } else {
@@ -445,6 +451,7 @@ class MOD_layoutbits
      */
     private static function _memberNotFoundPic()
     {
+        return 'images/misc/empty_avatar.png';
         if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
             return '/memberphotos/not_found.jpg';
         } else {
@@ -465,6 +472,7 @@ class MOD_layoutbits
         // test if the given timestamp could be a unix timestamp, otherwise try to make it one
         $timestamp = ((is_string($timestamp) && intval($timestamp) == $timestamp) ? intval($timestamp) : $timestamp);
         if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
+        
         $words = new MOD_words();
         $difference_in_seconds = time() - $timestamp;
         $period_in_seconds = 1;

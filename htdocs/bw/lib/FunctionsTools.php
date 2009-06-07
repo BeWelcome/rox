@@ -508,6 +508,8 @@ function LinkWithGroup($groupname, $Status = "") {
 function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 	
 	global $_SYSHCVOL;
+    return "<a href='/members/{$Username} title='" . ww("SeeProfileOf", $Username) . "'><img class='framed' ".($Status == 'map_style' ? "style=\"float: left; margin: 4px\" " : "") . "src='/members/avatar/{$Username}' height=\"50px\" width=\"50px\" alt='Profile'/></a>";
+    die();
 
 //	echo "\$Username=",$Username." \$ParamPhoto=",$ParamPhoto ;
 	$Photo=$ParamPhoto ;
@@ -1026,6 +1028,8 @@ function CheckStatus($Status,$paramIdMember=0) {
 function DummyPict($Gender="IDontTell",$HideGender="Yes") {
 	global $_SYSHCVOL;
 
+    // return this automatically, because memberphotos won't be available
+  return "http://www.bewelcome.org/images/misc/empty_avatar_30_30.png" ;
 /*	
   if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "et.jpg") ;
   if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "et_male.jpg") ;

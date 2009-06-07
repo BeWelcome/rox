@@ -58,22 +58,21 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
   // main picture
   echo "          <div id=\"pic_main\"> \n";
   echo "            <div id=\"img1\">";
-  if (!empty($m->IdPhoto)){
+/* taking image links out for now - switching to new profile soon anyway
+if (!empty($m->IdPhoto)){
     echo "<a href=\"myphotos.php?action=viewphoto&amp;IdPhoto=".$m->IdPhoto."\" title=\"", str_replace("\r\n", " ", $m->phototext), "\">";
-  }
-  if (empty($m->photo)) {
+  } */
 
-    echo "<img src=\"" . DummyPict($m->Gender,$m->HideGender) . "\"  alt=\"no ProfilePicture\"/>";
-  }
-  else {
-    echo "<img src=\"" . $m->photo . "\"  alt=\"ProfilePicture\"/>";
-  }
+    echo "<img src='/members/avatar/{$m->Username}'  alt='ProfilePicture'/>";
+/*
   if (!empty($m->IdPhoto)){
     echo "</a>";
   }
+  */
   echo "</div>\n";
 
   // --- small pictures ---
+  /* taking small pictures off of profile - switching to new layout soon
   if (!empty($m->IdPhoto)){
   echo "    <div id=\"pic_sm1\">\n";
   echo "      <a href=\"member.php?action=previouspicture&photorank=" . $m->photorank . "&cid=" . $m->id . "\">";
@@ -90,6 +89,7 @@ function DisplayProfilePageHeader( $m,$profilewarning="" )
   echo "</a>\n";
   echo "      </div>\n";
   }
+  */
   echo "          </div>\n"; // end pic_main
 
   // future flickr/gallery support

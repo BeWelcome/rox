@@ -74,7 +74,7 @@ function DisplayMyPhotos($m,$TData, $lastaction) {
 		if ($ii > 0)
 			echo "                <a href=\"", $_SERVER["PHP_SELF"], "?action=moveup&iPos=", $ii, "&IdPhoto=", $rr->id, "&cid=", $m->id, "\" title=\"move picture up \"><img border=0 height=10 src=\"images/up.gif\" alt=\"move picture up \"></a>\n";
 		echo "                  <br>\n";
-		echo "                  <img src=\"" . $rr->FilePath . "\" height=50 alt=\"", $text, "\">\n";
+		echo "                  <img src='/members/avatar/{$rr->Username}' height=50 alt=\"", $text, "\">\n";
 		echo "                  <br>\n";
 		if (($ii +1) < $max)
 			echo "                <a href=\"", $_SERVER["PHP_SELF"], "?action=movedown&iPos=", $ii, "&IdPhoto=", $rr->id, "&cid=", $m->id, "\" title=\"move picture down \"><img border=0 height=10 src=\"images/down.gif\" alt=\"move picture down \"></a>";
@@ -165,7 +165,7 @@ function DisplayPhoto($Photo) {
     echo LinkWithUsername($Photo->Username);
 	echo "</td>\n";
 	echo "<tr><td align=center>";
-	echo "<img class=\"framed\" width=\"250px\" src=\"" . $Photo->FilePath . "\" />";
+	echo "<img class=\"framed\" width=\"250px\" src='/members/avatar/{$Photo->Username}' />";
 	echo "</td>\n";
 	echo "<tr><td align=center>";
     echo $Photo->Comment;

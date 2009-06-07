@@ -33,7 +33,7 @@ class PlacesView extends PAppView {
         require 'templates/countrybar.php';
     }
     public function submenu($subTab) {
-        require 'templates/submenu.php';
+        //require 'templates/submenu.php';
     }
     public function displayPlacesInfo($countryinfo, $members,$volunteers) {
         $memberlist = $this->generateMemberList($members);

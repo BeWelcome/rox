@@ -37,9 +37,9 @@ class EditProfilePage extends ProfilePage
         $vars['FirstName'] = ($member->FirstName > 0) ? MOD_crypt::MemberReadCrypted($member->FirstName) : '';
         $vars['SecondName'] = ($member->SecondName > 0) ? MOD_crypt::MemberReadCrypted($member->SecondName) : '';
         $vars['LastName'] = ($member->LastName > 0) ? MOD_crypt::MemberReadCrypted($member->LastName) : '';
-        $vars['HouseNumber'] = ($member->address->HouseNumber > 0) ? MOD_crypt::MemberReadCrypted($member->address->HouseNumber) : '';
-        $vars['Street'] = ($member->address->StreetName > 0) ? MOD_crypt::MemberReadCrypted($member->address->StreetName) : '';
-        $vars['Zip'] = ($member->address->Zip > 0) ? MOD_crypt::MemberReadCrypted($member->address->Zip) : '';
+        $vars['HouseNumber'] = (is_object($member->address) && $member->address->HouseNumber > 0) ? MOD_crypt::MemberReadCrypted(is_object($member->address) && $member->address->HouseNumber) : '';
+        $vars['Street'] = (is_object($member->address) && $member->address->StreetName > 0) ? MOD_crypt::MemberReadCrypted($member->address->StreetName) : '';
+        $vars['Zip'] = (is_object($member->address) && $member->address->Zip > 0) ? MOD_crypt::MemberReadCrypted($member->address->Zip) : '';
         $vars['IsHidden_FirstName'] = MOD_crypt::IsCrypted($member->FirstName);
         $vars['IsHidden_SecondName'] = MOD_crypt::IsCrypted($member->SecondName);
         $vars['IsHidden_LastName'] = MOD_crypt::IsCrypted($member->LastName);

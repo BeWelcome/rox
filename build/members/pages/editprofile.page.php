@@ -83,7 +83,8 @@ class EditProfilePage extends ProfilePage
         } else {
             // from previous form
             if ($memory->post) {
-                foreach ($memory->post as $key => $value) {
+                $post = $memory->post;
+                foreach ($post as $key => $value) {
                     $vars[$key] = $value;
                 }
                 // update $vars for messengers

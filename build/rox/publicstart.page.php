@@ -29,10 +29,12 @@ class PublicStartpage extends RoxPageView
     }
 
     protected function getPageTitle() {
+        $words = new MOD_words();
         if (isset($_SESSION['Username'])) {
-            return 'Welcome, '.$_SESSION['Username'].'!';
+            return $words->getFormatted('WelcomeUsername',$_SESSION['Username']);
         } else {
-            return 'Be Welcome!';
+            // this should not happen actually!
+            return $words->getFormatted('WelcomeGuest');
         }
     }
 

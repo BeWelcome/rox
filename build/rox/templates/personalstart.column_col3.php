@@ -128,21 +128,21 @@ Boston, MA  02111-1307, USA.
                 ?>
                 </div>
                 </div>
-		
-		            <!-- Another box -->
-		            <div class="box">
-		                <div class="corner"></div>
+        
+                    <!-- Another box -->
+                    <div class="box">
+                        <div class="corner"></div>
 
-		                <h3 class="first">
-		                <!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> -->
-		                <?php echo $words->getFormatted('TripCity')  ?></h3>
-		                <div class="floatbox">
-		                <?php
-		                    $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4) ;
-		                    for ($ii=0;$ii<count($next_trips);$ii++) {
-		                        $m=$next_trips[$ii] ;
-		                        $tripDate = explode(" ",$m->tripDate);
-		                ?>
+                        <h3 class="first">
+                        <!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> -->
+                        <?php echo $words->getFormatted('TripCity')  ?></h3>
+                        <div class="floatbox">
+                        <?php
+                            $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4) ;
+                            for ($ii=0;$ii<count($next_trips);$ii++) {
+                                $m=$next_trips[$ii] ;
+                                $tripDate = explode(" ",$m->tripDate);
+                        ?>
                         <div class="float_left" style="width: 40%; overflow: hidden;">
                             <table>
                                 <tr>
@@ -150,26 +150,26 @@ Boston, MA  02111-1307, USA.
                                 <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?>
                                 </td>
                                 <td>
-		                        <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
+                                <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
                                 <br />
-	                            <?php echo $m->city; ?> / <?php echo $m->country; ?>
-	                            <br />
-	                            <? echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
+                                <?php echo $m->city; ?> / <?php echo $m->country; ?>
+                                <br />
+                                <? echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
                                 </td>
                                 </tr>
                             </table>
                         </div>
-		                <?php
-		                    }
-		                ?>
-		                </div>
-		           </div>
+                        <?php
+                            }
+                        ?>
+                        </div>
+                   </div>
                </div>
 
-		    </div>
-		    <div class="c50r">
+            </div>
+            <div class="c50r">
                 <div class="subcr">
-        		    <h2>Who's talking?</h2>
+                    <h2>Who's talking?</h2>
                      <!-- Another box -->
                      <div class="box">
                          <div class="corner"></div>
@@ -181,8 +181,8 @@ Boston, MA  02111-1307, USA.
                          <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
                      </div>
                 </div>
-		    </div>
-		
+            </div>
+        
         </div> 
     </div>
 </div>

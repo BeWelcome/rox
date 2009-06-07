@@ -28,35 +28,35 @@ $words = new MOD_words();
   <div class="subcolumns">
     <div class="c50l">
       <div class="subcl">
-	
-		  <div class="subcolumns">
-		    <div class="c25l">
-		      <div class="subcl">
-			<a href="tour/share"><img src="images/tour/arrow_door_mini.png" alt="<?php echo $words->get('IndexPageWord_share');?>" /></a>
-		      </div> <!-- subcl -->
-		    </div> <!-- c50l -->
+    
+          <div class="subcolumns">
+            <div class="c25l">
+              <div class="subcl">
+            <a href="tour/share"><img src="images/tour/arrow_door_mini.png" alt="<?php echo $words->get('IndexPageWord_share');?>" /></a>
+              </div> <!-- subcl -->
+            </div> <!-- c50l -->
 
-		    <div class="c75r">
-		      <div class="subcr">
-				<h3><?php echo $words->get('IndexPageWord_share');?></h3>
-	            <p><?php echo $words->get('IndexPageWord_shareText');?></p>
-			  </div>
-			</div>
-		  </div>
-		  <div class="subcolumns">
-		    <div class="c25l">
-		      <div class="subcl">
-			<a href="tour/trips"><img src="images/tour/arrow_plan_mini.png" alt="<?php echo $words->get('IndexPageWord_plan');?>" /></a>
-		      </div> <!-- subcl -->
-		    </div> <!-- c50l -->
+            <div class="c75r">
+              <div class="subcr">
+                <h3><?php echo $words->get('IndexPageWord_share');?></h3>
+                <p><?php echo $words->get('IndexPageWord_shareText');?></p>
+              </div>
+            </div>
+          </div>
+          <div class="subcolumns">
+            <div class="c25l">
+              <div class="subcl">
+            <a href="tour/trips"><img src="images/tour/arrow_plan_mini.png" alt="<?php echo $words->get('IndexPageWord_plan');?>" /></a>
+              </div> <!-- subcl -->
+            </div> <!-- c50l -->
 
-		    <div class="c75r">
-		      <div class="subcr">
-				<h3><?php echo $words->get('IndexPageWord_plan');?></h3>
-	            <p><?php echo $words->get('IndexPageWord_planText');?></p>
-			  </div>
-			</div>
-		  </div>
+            <div class="c75r">
+              <div class="subcr">
+                <h3><?php echo $words->get('IndexPageWord_plan');?></h3>
+                <p><?php echo $words->get('IndexPageWord_planText');?></p>
+              </div>
+            </div>
+          </div>
 
       </div> <!-- subcl -->
     </div> <!-- c50l -->
@@ -65,24 +65,24 @@ $words = new MOD_words();
       <div class="subcr">
           <div class="floatbox">
 <?php for ($ii=0;$ii<count($members);$ii++) {
-		if ($ii >1) break;
+        if ($ii >1) break;
         $m=$members[$ii] ;
 ?>
 <div class="subcolumns">
   <div class="c25l">
     <div class="subcl" style="margin: 1em 0 1em 0">
-	<?php echo MOD_layoutbits::PIC_50_50($m->Username,'','float_right framed') ?>
+    <?php echo MOD_layoutbits::PIC_50_50($m->Username,'','float_right framed') ?>
     </div> <!-- subcl -->
   </div> <!-- c50l -->
 
   <div class="c75r">
     <div class="subcr" style="margin: 1em 2em 1em 0">
-		<div class="userinfo">
+        <div class="userinfo">
             <h3><?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$words->get('IndexPageWord_shareplace',$m->Username).'</a>' ?></h3>
             <p>in <?php echo $m->cityname; ?>, <?php echo $m->countryname; ?></p>
           </div>
-	  </div>
-	</div>
+      </div>
+    </div>
 </div>
 
 <?php } ?>
@@ -95,8 +95,8 @@ $words = new MOD_words();
   <div class="c75r">
     <div class="subcr" style="margin: 1em 2em 1em 0">
         <p style="padding-top: 5px"><?=$words->get('IndexPageWord_MembersText','<a href="searchmembers">','</a>')?></p>
-	  </div>
-	</div>
+      </div>
+    </div>
 </div>
       </div> <!-- subcr -->
     </div> <!-- c50r -->

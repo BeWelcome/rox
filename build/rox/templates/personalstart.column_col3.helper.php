@@ -12,4 +12,3 @@ $format = array('short'=>$words->getSilent('DateFormatShort'));
 
 //magpierss support for BV Blog
 require_once SCRIPT_BASE.'htdocs/script/magpierss/rss_fetch.inc';
-?>

@@ -117,7 +117,7 @@ if ($allow_title) { // New Topic
 		
 		<?php if (!empty($vars['PostVisibility'])) { ?>
 			<br /><?php echo $words->getBuffered("forum_ChooseVisibilty") ?>
-			<select name="PostVisibility" id="PostVisbility">
+			<select name="PostVisibility" id="PostVisibility">
 			<?php
 			$CurValue=$vars['PostVisibility'] ;
 			echo "<option value='NoRestriction'" ;

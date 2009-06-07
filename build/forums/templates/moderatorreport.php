@@ -1,7 +1,6 @@
 <?php
-/*
 
-This is the form which manage the MODERATOR FULL EDIT POST
+/*
 
 Copyright (c) 2007 BeVolunteer
 
@@ -22,18 +21,14 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
-*/
 
+JeanYves notes : This is what is used to manage the report to moderators
+
+*/
 $words = new MOD_words();
 
 ?>
-<h2>Full Moderator Editing post #m
-<?php
-echo $DataPost->IdPost ;
-echo " Thread #s" ;
-echo $DataPost->Thread->id ;
-?>
-</h2>
+<h2>Report to moderator</h2>
 
 <?php
 if (!empty($DataPost->Error)) {
@@ -50,105 +45,9 @@ $uri = implode('/', $request);
 if (isset($DataPost->Thread->title))
 ?>
     <tr bgcolor="#ccffff">
-        <th><a href="forums/s<?=$DataPost->Thread->id;?>">go to thread</a></th>
-        <?       
-        if (isset($DataPost->Thread->title));?>
-        <th>TB oldway Title <i><?=$DataPost->Thread->title;?></i>
+        <th><a href="forums/s<?=$DataPost->Thread->id;?>/#<?$DataPost->Report->IdPost?>">go to post</a></th>
             <form method="post" action="forums/modeditpost/<?=$DataPost->Post->id;?>" id="modpostforum">
                 <input type="hidden" name="<?=$callbackId;?>"  value="1" />
-
-                stickyvalue (default 0, the most negative will be the first visible)
-                <input type="text" name="stickyvalue" size="1" value="<?=$DataPost->Thread->stickyvalue;?>" /><br />
-
-                expiration date (close the thread)
-                <input type="text" name="expiredate" value="<?=$DataPost->Thread->expiredate;?>" /><br />
-
-                Thread Visibility: 
-                <select name="ThreadVisibility" >
-				<option value="NoRestriction"
-				<?php
-				if ($DataPost->Thread->ThreadVisibility=="NoRestriction") {
-					echo " selected" ;
-				}
-				?>
-				>Everybody (including google)</option>
-				<option value="MembersOnly"
-				<?php
-				if ($DataPost->Thread->ThreadVisibility=="MembersOnly") {
-					echo " selected" ;
-				}
-				?>
-				>BeWelcome Members only</option>
-				<option value="GroupOnly"
-				<?php
-				if ($DataPost->Thread->ThreadVisibility=="GroupOnly") {
-					echo " selected" ;
-				}
-				?>
-				>Members of group</option>
-				<option value="ModeratorOnly"
-				<?php
-				if ($DataPost->Thread->ThreadVisibility=="ModeratorOnly") {
-					echo " selected" ;
-				}
-				?>
-				>Moderators only</option>
-				</select> 
-
-                Group: <select name="IdGroup">
-                    <option value="0"> no group</option>
-                    <?
-                    foreach ($DataPost->PossibleGroups as $Group) {
-                        echo "<option value=\"".$Group->IdGroup."\"" ;
-                        if ($Group->IdGroup==$DataPost->Thread->IdGroup) {
-                            echo " selected" ;
-                        }
-                        echo ">",$Group->Name,"</option>\n" ;
-                    };?>
-                </select><br />
-                Who can reply: 
-                <select name="WhoCanReply" >
-				<option value="MembersOnly"
-				<?php
-				if ($DataPost->Thread->WhoCanReply=="MembersOnly") {
-					echo " selected" ;
-				}
-				?>
-				>All members</option>
-				<option value="GroupMembersOnly"
-				<?php
-				if ($DataPost->Thread->WhoCanReply=="GroupMembersOnly") {
-					echo " selected" ;
-				}
-				?>
-				>Group Members only</option>
-				<option value="ModeratorsOnly"
-				<?php
-				if ($DataPost->Thread->WhoCanReply=="ModeratorsOnly") {
-					echo " selected" ;
-				}
-				?>
-				>Moderators only</option>
-				</select> <br />
-				
-                Thread deleted: 
-                <select name="ThreadDeleted">
-				<option value="Deleted"
-				<?php
-				if ($DataPost->Thread->ThreadDeleted=="Deleted") {
-					echo " selected" ;
-				}
-				?>
-				>Deleted</option>
-				<option value="NotDeleted"
-				<?php
-				if ($DataPost->Thread->ThreadDeleted=="NotDeleted") {
-					echo " selected" ;
-				}
-				?>
-				>Not Deleted</option>
-				</select><br />
-
 
                 <input type="hidden" name="IdThread"  value="<?=$DataPost->Thread->id;?>" /><br />
                 <input type="hidden" name="IdPost"  value="<?=$DataPost->Post->id;?>"/>

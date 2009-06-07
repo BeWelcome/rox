@@ -334,11 +334,11 @@ function FindAppropriatedLanguage($IdPost=0) {
 		else {
 			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (PostDeleted!='Deleted')" ;
-			$this->PostGroupsRestriction=" (PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0," ;
-			$this->ThreadGroupsRestriction=" (PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0," ;
+			$this->PostGroupsRestriction=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
+			$this->ThreadGroupsRestriction=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
 			if (!$qry) {
-				throw new PException('Failde to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
+				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
 			}
 			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
 				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
@@ -1142,7 +1142,7 @@ WHERE `postid` = $this->messageId
         	$s=$this->dao->query($query);
 		}
 		 
-		// case the visbility has changed
+		// case the visibility has changed
 		if ($rBefore->PostVisibility!=$vars['PostVisibility']) {
 		 	$query="update forums_posts set PostVisibility='".$vars['PostVisibility']."' where postid=".$this->messageId ;
         	$s=$this->dao->query($query);
@@ -1289,7 +1289,42 @@ WHERE `threadid` = '%d' ",
         return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
     } // end of replyProcess
     
+    public function reportpostProcess() {
+        if (!($User = APP_User::login())) {
+            return false;
+        }
+        
+        $vars =& PPostHandler::getVars();
 
+        PPostHandler::clearVars();
+        return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
+    } // end of reportpostProcess
+    
+	 /**	 
+    * This will return the list of reports for a given post
+    * @IdPost : Id of the post to process  with their status
+	*/
+	public function GetReports($IdPost) {
+		$tt=array() ;
+        $ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where IdPost=".$IdPost." and members.id=IdReporter" ;
+        $s = $this->dao->query($ss);
+		while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
+			array_push($tt,$rr) ;
+		}
+		return($tt) ;
+	} // end of GetReports
+	 /**	 
+    * This will prepare the additional data to process a report
+    * @IdPost : Id of the post to process
+	* @IdWriter is the id of the writer
+	 */
+    public function prepareReportPost($IdPost,$IdWriter) {
+        $query = "select * from reports_to_moderators where IdPost=".$IdPost." and IdReporter=".$IdWriter ;
+        $s = $this->dao->query($query);
+		$Report = $s->fetch(PDB::FETCH_OBJ) ;
+		return($Report) ;
+	}	// end of prepareReportPost
+		 
 	 /**	 
     * This will prepare a post for a full edit moderator action
     * @IdPost : Id of the post to process
@@ -1322,6 +1357,7 @@ WHERE `threadid` = '%d' ",
 			return($DataPost) ;
 		 }
 		 $DataPost->Thread = $s->fetch(PDB::FETCH_OBJ) ;
+		 
 		 
 // retrieve all trads for Title
         $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Thread->IdTitle." order by forum_trads.created asc" ;
@@ -1370,7 +1406,7 @@ RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThre
 		 if (isset($vars["submit"]) and ($vars["submit"]=="update thread")) { // if an effective update was chosen for a forum trads
 		 	$IdThread=(int)$vars["IdThread"] ;
 		 	$IdGroup=(int)$vars["IdGroup"] ;
-		 	$ThreadVisibility=$vars["ThreadVisbility"] ;
+		 	$ThreadVisibility=$vars["ThreadVisibility"] ;
 		 	$ThreadDeleted=$vars["ThreadDeleted"] ;
 		 	$WhoCanReply=$vars["WhoCanReply"] ;
 		 	$expiredate="'".$vars["expiredate"]."'"  ;
@@ -1705,7 +1741,7 @@ WHERE `threadid` = '$topicinfo->threadid'
             throw new PException('User gone missing...');
         }
 
-        // Required because the post will herit from teh visibility of its thread
+        // Required because the post will herit from the visibility of its thread
 		$qry = $this->dao->query("select ThreadVisibility from forums_threads where id=".$this->threadid);
 		$rThread=$qry->fetch(PDB::FETCH_OBJ) ;
 

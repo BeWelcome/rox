@@ -30,7 +30,7 @@ This File display a topic and the messages which are inside it
 
 */
 
-	if ( (!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) { // This means no thread was fetch or taht it was outside visbility
+	if ( (!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) { // This means no thread was fetch or taht it was outside visibility
 		echo "<h2>",$topic->topicinfo->title,"</h2>" ;
 	}
 	else  {

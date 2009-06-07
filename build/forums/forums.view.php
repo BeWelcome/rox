@@ -29,6 +29,7 @@ class ForumsView extends RoxAppView {
 		public function SetPageTitle($Title) {
 			$this->page->title=$Title ;
 		}
+
     /**
     * Create a new topic in the current forum
     */
@@ -104,7 +105,7 @@ class ForumsView extends RoxAppView {
         require 'templates/replyLastPosts.php';
     }
     
-// THis si the normal edit/translate post by a member
+// This is the normal edit/translate post by a member
     public function editPost(&$callbackId,$translate=false) {
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
@@ -126,7 +127,7 @@ class ForumsView extends RoxAppView {
 			$IdContent=$this->_model->getIdContent();
 			global $fTradIdLastUsedLanguage ; $fTradIdLastUsedLanguage=1 ; // willbe change by ftrad
 			$word = new MOD_words();
-			// This function is just called for findinf the language in which one the post will be displayed
+			// This function is just called for finding the language in which one the post will be displayed
 			$void_string=$word->ftrad($IdContent) ;
 			$AppropriatedLanguage=$fTradIdLastUsedLanguage ;
 		}
@@ -135,7 +136,7 @@ class ForumsView extends RoxAppView {
     
 
     
-// THis si the Moderator edit/translate
+// This si the Moderator edit/translate
     public function ModeditPost(&$callbackId) {
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
@@ -210,13 +211,20 @@ class ForumsView extends RoxAppView {
 	 * This is the form with the list of all available translations for a given post
     */    
     public function showModeratorEditPost(&$callbackId,$DataPost)     {
-//        PVars::getObj('page')->title = "Moderator Edit Post";
-				$this->SetPageTitle("Moderator Edit Post") ;
+		$this->SetPageTitle("Moderator Edit Post") ;
         $vars =& PPostHandler::getVars($callbackId);
         $groupsDropdowns = $this->getModeratorGroupsDropdowns($this->_model->IdGroup);
         require 'templates/modpostform.php';
     } // end of showModeratorEditPost
 
+// This is the normal view to display moderator report
+    public function showReportPost(&$callbackId,$DataPost) {
+		$this->SetPageTitle("Report To Moderator") ;
+        $vars =& PPostHandler::getVars($callbackId);
+        require 'templates/moderatorreport.php';
+    } // end of showReportPost
+    
+	
     /**
     * Display the form for a Moderator edit
     */    

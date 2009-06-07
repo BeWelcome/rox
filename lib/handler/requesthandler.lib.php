@@ -102,7 +102,7 @@ class PRequest {
         $c = PVars::getObj('config_request');
         if (!$c)
             throw new PException('Config error!');
-        $req = parse_url($_SERVER['REQUEST_URI']);
+        $req = @parse_url($_SERVER['REQUEST_URI']);
         if (isset($req['query'])) unset($req['query']);
         if (isset($req['fragment'])) unset($req['fragment']);
         $req = PFunctions::glueParsedUrl($req);

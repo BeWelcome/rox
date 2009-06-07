@@ -121,14 +121,15 @@ class NotifyMemberWidget extends ItemlistWithPagination
     
     protected function showItems_list()
     {
-        echo '
-        <div class="itemlist">';
         // table rows with items
         $items = $this->getItems();
         if (!is_array($items)) {
             echo 'not an array.<br>';
             print_r($items);
+        } elseif (empty($items)) {
+            $this->showDefaultText();
         } else {
+            echo '<div class="itemlist">';
             $i_row = 0;
             if ($item = array_shift($items)) {
                 echo '
@@ -150,9 +151,17 @@ class NotifyMemberWidget extends ItemlistWithPagination
                     $prev_item = $item;
                 }
             }
+            echo '
+            </div>';
         }
-        echo '
-        </div>';
+    }
+    
+    protected function showDefaultText()
+    {
+        $words = $this->getWords();
+        echo '<p>';
+        echo $words->get('NotifyDefaultText');
+        echo '</p>';
     }
 
 }

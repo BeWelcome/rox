@@ -709,6 +709,7 @@ LIMIT 1
     // THis function return a picture according to member gender if (any)
     private function DummyPict($Gender="IDontTell",$HideGender="Yes")
     {
+        return 'images/misc/empty_avatar_30_30.png';
         if ($HideGender=="Yes") return ('/memberphotos/et.jpg') ;
         if ($Gender=="male") return ('/memberphotos/et_male.jpg') ;
         if ($Gender=="female") return ('/memberphotos/et_female.jpg') ;

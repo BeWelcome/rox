@@ -104,14 +104,16 @@ class MOD_layoutbits
     public static function linkWithPicture($username, $picfile="", $mode="")
     {
         $words = new MOD_words();
-
+/* disabling references to memberphotos
         if(!is_file(getcwd().'/bw'.$picfile)) {
-            // get a picture by username
+            // get a picture by username */
             $thumburl = self::smallUserPic_username($username);
+/*
         } else {
             $thumburl = self::_getThumb($picfile, 100, 100);
             if ($thumburl === null) $thumburl = "bw/";
         }
+        */
         if ($mode == 'map_style') {
             // TODO: why return a window with "$username" ??
             return

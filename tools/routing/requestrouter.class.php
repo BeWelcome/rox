@@ -24,42 +24,9 @@ class RequestRouter
 
     public function init()
     {
-        if (empty($this->_routes))
+        if (empty(self::$_routes))
         {
-            // general routes
-            $this->addRoute('main_page','', 'RoxController', 'index');
-
-            // group routes
-            $this->addRoute('groups_overview','groups', 'GroupsController', 'index');
-            $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
-            $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');
-            $this->addRoute('groups_new','groups/new', 'GroupsController', 'create');
-            $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
-            $this->addRoute('groups_realimg','groups/realimg/:group_id:', 'GroupsController', 'realImg');
-            $this->addRoute('groups_mygroups','groups/mygroups', 'GroupsController', 'myGroups');
-            $this->addRoute('group_start','groups/:group_id:', 'GroupsController', 'showGroup');
-            $this->addRoute('group_invitemember','groups/:group_id:/invitemember/:member_id:', 'GroupsController', 'inviteMember');
-            $this->addRoute('group_invitemember_ajax','groups/:group_id:/invitememberajax/:member_id:', 'GroupsController', 'inviteMemberAjax');
-            $this->addRoute('group_invitepage','groups/:group_id:/invitemember', 'GroupsController', 'inviteMembers');
-            $this->addRoute('group_membersearch_ajax','groups/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
-            $this->addRoute('group_acceptinvitation','groups/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
-            $this->addRoute('group_declineinvitation','groups/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
-            $this->addRoute('group_banmember','groups/:group_id:/banmember/:member_id:', 'GroupsController', 'banMember');
-            $this->addRoute('group_kickmember','groups/:group_id:/kickmember/:member_id:', 'GroupsController', 'kickMember');
-            $this->addRoute('group_acceptmember','groups/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
-            $this->addRoute('group_memberadministration','groups/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
-            $this->addRoute('group_join','groups/:group_id:/join', 'GroupsController', 'join');
-            $this->addRoute('group_joined','groups/:group_id:/join/true', 'GroupsController', 'joined');
-            $this->addRoute('group_leave','groups/:group_id:/leave', 'GroupsController', 'leave');
-            $this->addRoute('group_left','groups/:group_id:/leave/true', 'GroupsController', 'left');
-            $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
-            $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');
-            $this->addRoute('group_members','groups/:group_id:/members', 'GroupsController', 'members');
-            $this->addRoute('group_members_paged','groups/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
-            $this->addRoute('group_wiki','groups/:group_id:/wiki', 'GroupsController', 'wiki');
-            $this->addRoute('group_membersettings','groups/:group_id:/membersettings', 'GroupsController', 'memberSettings');
-            $this->addRoute('group_groupsettings','groups/:group_id:/groupsettings', 'GroupsController', 'groupSettings');
-
+            require_once(SCRIPT_BASE . 'routes.php');
         }
     }
 
@@ -75,11 +42,11 @@ class RequestRouter
      */
     public function addRoute($name, $url, $controller, $method = 'index')
     {
-        if (!is_string($name) || !empty($this->_routes[$name]) || !is_string($url) || !is_string($controller))
+        if (!is_string($name) || !empty(self::$_routes[$name]) || !is_string($url) || !is_string($controller))
         {
             return false;
         }
-        $this->_routes[$name] = array('url' => $url, 'controller' => $controller, 'method' => $method);
+        self::$_routes[$name] = array('url' => $url, 'controller' => $controller, 'method' => $method);
         return true;
     }
 
@@ -93,11 +60,11 @@ class RequestRouter
      */
     public function getRoute($name)
     {
-        if (!is_string($name) || empty($this->_routes[$name]))
+        if (!is_string($name) || empty(self::$_routes[$name]))
         {
             return array();
         }
-        return $this->_routes[$name];
+        return self::$_routes[$name];
     }
 
     /**
@@ -111,7 +78,7 @@ class RequestRouter
     {
         $match = array();
         $matchvars = array();
-        foreach ($this->_routes as $route)
+        foreach (self::$_routes as $route)
         {
             $url = preg_replace(array('/\//','/\*/','/:[^:]+:/','/\\?\/$/'), array('\/','.*','([^\/]+)',''),   $route['url']);
             $url = "/^{$url}\\/?$/i";

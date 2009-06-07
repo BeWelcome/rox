@@ -249,7 +249,7 @@ class GroupsController extends RoxControllerBase
     public function memberSearchAjax()
     {
         header('Content-Type: text/plain; encoding=utf-8');
-        if (empty($this->route_vars['search_term']) || empty($this->route_vars['group_id']) || !($group = $this->_model->findGroup($this->route_vars['group_id'])) || ($group->Status != 'Public' && $this->_model->getLoggedInMember()->getPKValue() != $group->getGroupOwner()->getPkValue()))
+        if (empty($this->route_vars['search_term']) || empty($this->route_vars['group_id']) || !($group = $this->_model->findGroup($this->route_vars['group_id'])) || ($group->Status != 'Public' && $this->_model->getLoggedInMember()->getPKValue() != $group->getGroupOwner()->getPKValue()))
         {
             header('Status: 500 Fudged it');
             exit;

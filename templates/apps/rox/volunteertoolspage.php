@@ -49,11 +49,11 @@ switch($currentSubPage) {
 	?>
 	<h3><?php echo $words->get('VolunteerCoordinators'); ?></h3>
 	<ul class="floatbox">
-		<li class="userpicbox_big float_left"><h4><a href="user/kiwiflave"><img src="http://www.bewelcome.org/memberphotos/thumbs/kiwiflave_1171823734.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Florian</a><br /></h4>
+		<li class="userpicbox_big float_left"><h4><a href="user/kiwiflave"><img src="http://www.bewelcome.org/members/avatar/kiwiflave" class="framed float_left" style="height:70px; width: 70px;">Florian</a><br /></h4>
 		</li>
 		<li class="userpicbox_big float_left">
 			<h4>
-				<a href="user/claudiaab"><img src="http://www.bewelcome.org/memberphotos/thumbs/claudiaab_1169485927.square.80x80.jpg" class="framed float_left" style="height:70px; width: 70px;">Claudia</a><br />
+				<a href="user/claudiaab"><img src="http://www.bewelcome.org/members/avatar/claudiaab" class="framed float_left" style="height:70px; width: 70px;">Claudia</a><br />
 			</h4>
 		</li>
 		<li class="userpicbox_big float_left">

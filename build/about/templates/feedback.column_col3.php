@@ -22,6 +22,8 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$IdCategory = '';
+if (isset($_GET['IdCategory']) && $_GET['IdCategory']) $IdCategory = $_GET['IdCategory'];
 ?>
 
 <?php echo $words->get("FeedBackDisclaimer") ?>
@@ -32,7 +34,7 @@ $words = new MOD_words();
     <p>
         <select id="IdCategory" name="IdCategory">
             <?php foreach ($categories as $cat) { ?>
-            <option value="<?php echo $cat->id ?>"><?php echo $words->get("FeedBackName_" . $cat->name) ?></option>
+            <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected': '' ?>><?php echo $words->get("FeedBackName_" . $cat->name) ?></option>
             <?php } ?>
         </select>
     </p>

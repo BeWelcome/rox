@@ -21,7 +21,17 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.   
 
 */
+
 require_once "lib/init.php";
+
+if (is_numeric(GetParam("IdCategory", ""))) { // redirects to new rox member if the cid is the username
+	$url="../feedback/?IdCategory=".GetParam("IdCategory", "") ;
+//	die ("<a href='".$url."'>here</a><br>") ;
+	header ("location: $url") ;
+	LogStr("redirection of ".$url, "old BW");
+	exit(0) ;
+}
+
 require_once "layout/feedback.php";
 
 $Message="";

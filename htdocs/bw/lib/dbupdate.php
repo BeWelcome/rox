@@ -1379,6 +1379,10 @@ $updates[] = "ALTER TABLE `forums_posts` ADD `PostDeleted` ENUM( 'NotDeleted', '
 
 $updates[] = "ALTER TABLE `forums_threads` ADD `ThreadDeleted` ENUM( 'NotDeleted', 'Deleted' ) NOT NULL DEFAULT 'NotDeleted' COMMENT 'tells if the thread was deleted'";
 
+$updates[] = "ALTER TABLE `forums_threads` ADD `Visibility` ENUM( 'NoRestriction', 'MembersOnly', 'GroupOnly', 'ModeratorOnly' ) NOT NULL COMMENT 'Visibility for this thread'" ;
+
+$updates[] = "ALTER TABLE `forums_posts` ADD `Visibility` ENUM( 'NoRestriction', 'MembersOnly', 'GroupOnly', 'ModeratorOnly' ) NOT NULL COMMENT 'Visibility for this post'" ;
+
     if (empty($res)) {
         $version = 0;
     } else {

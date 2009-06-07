@@ -78,6 +78,12 @@ class NotifyMemberWidget extends ItemlistWithPagination
         extract(get_object_vars($item));
 //        print_r($item);
         $member = MOD_member::getMember_userId($item->IdRelMember);
+        if ($this->WordCode == '' && $this->FreeText != '') {
+           $text = $this->FreeText;
+        } else {
+            $member = MOD_member::getMember_userId($item->IdRelMember);
+            $text = $words->get($this->WordCode,$member->getUsername());
+        }
         ?>
         <div class="floatbox"">
             <a target="notify-<?=$item->id?>" class="dynamic float_right" href="notify/<?=$item->id?>/check" alt="<?=$words->getSilent($item->WordCode,$member->getUsername())?>">
@@ -86,7 +92,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
             <div class="float_right small grey"><?=MOD_layoutbits::ago(strtotime($item->created))?></div>
             <div class="float_left">
             <?php if ($item->Link != '') { 
-                echo '<a href="'.$item->Link.'" alt="'.$words->getSilent($item->WordCode,$member->getUsername()).'">';
+                echo '<a href="'.$item->Link.'" alt="'.htmlentities($text).'">';
             }
             ?>
 			<?php if ($item->IdRelMember != '') { 
@@ -99,13 +105,13 @@ class NotifyMemberWidget extends ItemlistWithPagination
             ?>
             </div>
             <?php if ($item->Link != '') { 
-                echo '<a href="'.$item->Link.'" alt="'.$words->getSilent($item->WordCode,$member->getUsername()).'">';
+                echo '<a href="'.$item->Link.'" alt="'.htmlentities($text).'">';
             }
             ?>
             <p class="notification_text">
                 <?php if ($item->WordCode != '') { 
                     echo $words->getSilent($item->WordCode,'<span class="username" href="members/'.$member->getUsername().'" alt="'.$member->getUsername().'">'.$member->getUsername().'</span>');
-                } else echo $item->VarText;
+                } else echo $item->FreeText;
                 ?>
             </p>
             <?php if ($item->Link != '') { 

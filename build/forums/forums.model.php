@@ -1193,7 +1193,7 @@ WHERE `threadid` = '%d' ",
             
         $this->dao->query($query);
 		 
-        $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed from forums_threads,forums_posts where forums_threads.first_postid=forums_posts.id");
+        $s=$this->dao->query("select IdWriter,forums_threads.id as IdThread,forums_threads.IdTitle,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed from forums_threads,forums_posts where forums_threads.first_postid=forums_posts.id and forums_threads.id=".$threadid);
         if (!$s) {
             throw new PException('editTopic:: previous info for firtst post in the thread!');
         }

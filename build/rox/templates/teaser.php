@@ -119,7 +119,7 @@ $words = new MOD_words();
 		</td>
 		<td style="vertical-align: top">
 		  <div class="video-desc">
-		  	<p><?=$words->get('IndexPageVideoDesc','username') //TODO: Fix the 'username' to something dynamic ?></p>
+		  	<p><?//=$words->get('IndexPageVideoDesc','username') //TODO: Fix the 'username' to something dynamic ?></p>
             <p class="small photodesc" style="color: #999;">
                 all pictures (cc) 
                 <?=$words->get('StartPageListofPhotographers');?>

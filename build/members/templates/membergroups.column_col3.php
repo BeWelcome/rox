@@ -6,8 +6,8 @@
     ?>
     <div id="profile_groups" class="floatbox box">
         <?php // display my groups, if there are any
-        $this->pager->render(); 
             echo "<h3>{$words->getInLang('ProfileGroups', $profile_language_code)}</h3>";
+            $this->pager->render(); 
             foreach ($this->pager->getActiveSubset($my_groups) as $group)  : ?>
                 <div class="groupbox floatbox">
                     <a href="groups/<?=$group->id ?>">

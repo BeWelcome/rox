@@ -91,7 +91,7 @@ if (!empty($my_groups)) :
                     </div>  <!-- groupinfo -->
                 </div> <!-- groupbox clearfix -->
             <?php endfor; ?>
-            <p><strong><a href="groups/mygroups"><?= $words->get('GroupsAllMyLink'); ?></a></strong></p>
+            <p><strong><a href="members/<?=$member->Username?>/groups"><?= $words->get('GroupsAllMyLink'); ?></a></strong></p>
 </div> <!-- profile_groups -->
 <?php endif ; ?>
 

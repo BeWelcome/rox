@@ -455,6 +455,7 @@ WHERE IdToMember = ".$this->id
      */
     public function get_group_memberships()
     {
+        throw new Exception("don't use this function, use getGroups() instead!");
                 $TGroups=array() ;
         $query = "select SQL_CACHE membersgroups.id as IdMemberShip, membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" .$this->id;
         $s = $this->dao->query($query);

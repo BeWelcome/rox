@@ -70,30 +70,30 @@ if ($member->get_trad("PastTrips", $profile_language) != "" or $member->get_trad
 </div>
 <?
 }
-  
-  
-if ($sections->ProfileGroups != 0) {
+
+// display my groups, if there are any
+$my_groups = $member->getGroups();
+if (!empty($my_groups)) :
 ?>
 <div id="profile_groups" class="floatbox box">
-    <h3 class="icon groups22" ><?=$words->getInLang('ProfileGroups', $profile_language_code);?></h3>
-    <dl id="mygroups" >
-    <?php
-    foreach($groups as $group) {
-        $group_id = $group->IdGroup;
-        $group_name_translated = $words->getInLang($group->Name, $profile_language_code);
-        $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
-        ?>
-        <dt>
-            <a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a>
-        </dt>
-        <dd><?php echo $group_comment_translated ; ?></dd>
-        <?php
-    } ?>
-    </dl>
+        <?php // display my groups, if there are any
+            echo "<h3>{$words->getInLang('ProfileGroups', $profile_language_code)}</h3>";
+            for($i = 0; $i < count($my_groups) && $i < 3; $i++) : ?>
+                <div class="groupbox floatbox">
+                    <a href="groups/<?=$my_groups[$i]->id ?>">
+                        <img class="framed float_left"  width="50px" height="50px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                    </a>
+                    <div class="groupinfo">
+                    <h4><a href="groups/<?= $my_groups[$i]->id ?>"><?=$words->getInLang($my_groups[$i]->Name, $profile_language_code)?></a></h4>
+                    <p>
+                        <?=$member->get_trad_by_tradid($my_groups[$i]->IdDescription, $profile_language)?>
+                    </p>
+                    </div>  <!-- groupinfo -->
+                </div> <!-- groupbox clearfix -->
+            <?php endfor; ?>
+            <p><strong><a href="groups/mygroups"><?= $words->get('GroupsAllMyLink'); ?></a></strong></p>
 </div> <!-- profile_groups -->
-<?
-}
-?>
+<?php endif ; ?>
 
 <div id="profile_accommodation" class="floatbox box">
     <h3 class="icon accommodation22" ><?=$words->getInLang('ProfileAccommodation', $profile_language_code);?></h3>

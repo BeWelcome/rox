@@ -22,6 +22,7 @@ class ForumsView extends RoxAppView {
 		$this->words=$this->_model->words ;
 		$this->BW_Right=$this->_model->BW_Right ;
 		$this->uri=$this->getURI() ;
+		$this->forum_uri='forums' ;
     }
     
 		

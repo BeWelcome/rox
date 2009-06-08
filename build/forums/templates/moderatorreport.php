@@ -40,254 +40,75 @@ $uri = implode('/', $request);
 
 ?>
 
-<table bgcolor="lightgray" align="left" border="3">"
+<table bgcolor="lightgray" align="left" border="3">
 <?
 if (isset($DataPost->Thread->title))
 ?>
-    <tr bgcolor="#ccffff">
-        <th><a href="forums/s<?=$DataPost->Thread->id;?>/#<?$DataPost->Report->IdPost?>">go to post</a></th>
-            <form method="post" action="forums/modeditpost/<?=$DataPost->Post->id;?>" id="modpostforum">
-                <input type="hidden" name="<?=$callbackId;?>"  value="1" />
-
-                <input type="hidden" name="IdThread"  value="<?=$DataPost->Thread->id;?>" /><br />
-                <input type="hidden" name="IdPost"  value="<?=$DataPost->Post->id;?>"/>
-            </th>
+        <form method="post" action="forums/modeditpost/<?=$DataPost->Post->id;?>" id="modpostforum">
+        <input type="hidden" name="<?=$callbackId;?>"  value="1" />
+        <input type="hidden" name="IdThread"  value="<?=$DataPost->Thread->id;?>" /><br />
+        <input type="hidden" name="IdPost"  value="<?=$DataPost->Post->id;?>"/>
 <?
-echo "<th valign=center align=center><input type=\"submit\" name=\"submit\" value=\"update thread\"><br/>(thread id #s".$DataPost->Thread->id.")</th>" ;
+		echo "<tr><td>" ;
+		if (isset($DataPost->UserNameStarter)) echo "thread started by member ".$DataPost->UserNameStarter;
+		echo "</td>" ;
+		echo "<td>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td><td><a href=\"forums/s<",$DataPost->Thread->id,"/#",$DataPost->Report->IdPost,"\">go to post</a></td>" ;
+		echo "</tr>" ;
+		echo "<tr><td colspan=\"3\">",$DataPost->Thread->Title[0]->Sentence,"</td></tr>" ;
+		echo "<tr><td colspan=\"3\">",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
+		if (isset($DataPost->Report->PostComment))  {
+			echo "<tr><td colspan=\"3\">",$DataPost->Report->PostComment,"</td></tr>" ;
+			$PostComment=$DataPost->Report->PostComment ;
+		}
+		echo "<tr><td colspan=\"3\"><textarea name='PostComment' cols=120 rows=8></textarea>",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
+		echo "<tr><td colspan=\"1\">" ;
+		echo "Status <select Name='Status'>" ;
+		if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status ; else $Status="" ;
+		echo "<option value='Open'" ;
+		if ($Status=='Open') echo " selected" ;
+		echo ">Open</option>" ;
+		echo "<option value='OnDiscussion'" ;
+		if ($Status=='OnDiscussion') echo " selected" ;
+		echo ">OnDiscussion</option>" ;
+		echo "<option value='Closed'" ;
+		if ($Status=='Closed') echo " selected" ;
+		echo ">Closed</option>" ;
+		echo "</select></td>" ;
+		$IdReporter=0 ;
+		if (isset($DataPost->Report->IdReporter)) $IdReporter=$DataPost->Report->IdReporter ; 
+		echo "<input type='hidden' name='IdReporter' value='".$IdReporter."'>" ;
+		if ($this->BW_Right->HasRight("ForumModerator")) {
+			echo "<td colspan=\"1\">" ;
+			echo "Type <select Name='Type'>" ;
+			if (isset($DataPost->Report->Type)) $Type=$DataPost->Report->Type ; else $Type="" ;
+			echo "<option value='SeeText'" ;
+			if ($Status=='SeeText') echo " selected" ;
+			echo ">SeeText</option>" ;
+			echo "<option value='AllowMeToEdit'" ;
+			if ($Status=='AllowMeToEdit') echo " selected" ;
+			echo ">AllowMeToEdit</option>" ;
+			echo "<option value='Insults'" ;
+			if ($Status=='Insults') echo " selected" ;
+			echo ">Insults</option>" ;
+			echo "<option value='RemoveMyPost'" ;
+			if ($Status=='RemoveMyPost') echo " selected" ;
+			echo ">RemoveMyPost</option>" ;
+			echo "<option value='Others'" ;
+			if ($Status=='Others') echo " selected" ;
+			echo ">Others</option>" ;
+			echo "</select></td>" ;
+			echo "<td colspan=\"1\"></td></tr>" ;
+		}
+		else {
+			echo "<td></td>" ;
+		}
+		echo "</tr>" ;
+		
+
+echo "<th valign=center align=center colspan=3><input type=\"submit\" name=\"submit\" value=\"add to report\"></th>" ;
 
 
 echo "</form>" ;
-
-echo "</th>" ;
-
-if (isset($DataPost->UserNameStarter)) echo "<tr><td colspan=3>thread started by member ".$DataPost->UserNameStarter,"</td>" ;
-echo "<tr><td colspan=3>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a> [".$DataPost->Post->memberstatus."]</td>" ;
-
-
-// Display the various title for this post in various languages
-$max=count($DataPost->Thread->Title) ;
-echo "<tr><th colspan=3 align=left>Title of thread ($max translations)</th>" ;
-foreach ($DataPost->Thread->Title as $Title) {
-    echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
-    echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-    $ArrayLanguage=$this->_model->LanguageChoices($Title->IdLanguage) ;
-    echo "<tr><td>" ;
-    echo "<select Name=\"IdLanguage\">" ;
-//  echo "<option value=\"-1\">-</option>" ;
-
-    foreach ($ArrayLanguage as $Choices) {
-            echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            if ($Choices->IdLanguage==$Title->IdLanguage) echo " selected ";
-            echo "\">",$Choices->EnglishName,"</option>" ;
-    }
-    echo "</select>" ;
-    echo "</td><td><textarea class=\"long\" name=\"Sentence\" cols=\"60\" rows=\"5\">",$Title->Sentence,"</textarea><input type=\"hidden\" name=\"IdForumTrads\" value=\"".$Title->IdForumTrads."\"></td><td><input type=\"submit\" value=\"update\"></td>" ;
-    echo "</form>" ;
-}
-
-// Display a subform to allow to insert a new translation for the title
-echo "<tr><th colspan=3 align=left>Title of thread ($max translations)</th>" ;
-    echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
-    echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
-    echo "<input type=\"hidden\" name=\"IdTrad\"  value=\"".$DataPost->Thread->IdTitle."\"/><br />" ;
-
-    $ArrayLanguage=$this->_model->LanguageChoices(0) ;
-    echo "<tr><td>" ;
-    echo "<select Name=\"IdLanguage\">" ;
-//  echo "<option value=\"-1\">-</option>" ;
-
-    foreach ($ArrayLanguage as $Choices) {
-            echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            if ($Choices->IdLanguage==$Title->IdLanguage) echo " selected ";
-            echo "\">",$Choices->EnglishName,"</option>" ;
-    }
-    echo "</select>" ;
-    echo "</td><td>New Title<br /><textarea class=\"long\" name=\"NewTranslatedTitle\" cols=\"60\" rows=\"5\"></textarea>" ;
-    echo "<td><input type=\"submit\" name=\"submit\" value=\"add translated title\"></td>" ;
-    echo "</form>" ;
-
-// Display the main properties for this post (and allow to change them)
-$max=count($DataPost->Post->Content) ;
-echo "<tr bgcolor=#663300 ><td colspan=3></td></tr>" ;
-if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td colspan=2>" ,$DataPost->Post->message,"</i></td>" ;
-
-    echo "<tr>" ;
-    echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
-    echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-    echo "<td align=left colspan=2>Can Owner edit: <select type=\"text\" name=\"OwnerCanStillEdit\">" ;
-    echo "<option value=\"Yes\"" ;
-    if ($DataPost->Post->OwnerCanStillEdit=="Yes") echo " selected" ;
-    echo ">Yes</option>" ;
-    echo "<option value=\"No\"" ;
-    if ($DataPost->Post->OwnerCanStillEdit=="No") echo " selected" ;
-    echo ">No</option>" ;
-    echo "</select>&nbsp;&nbsp;" ;
-	echo " Has Votes: <select name=\"HasVotes\">" ;
-    echo "<option value=\"Yes\"" ;
-	if ($DataPost->Post->HasVotes=="Yes") {
-		echo " \"selected\"" ;
-	}
-	echo ">Yes</Option>" ;				
-    echo "<option value=\"No\"" ;
-	if ($DataPost->Post->HasVotes=="No") {
-		echo " \"selected\"" ;
-	}
-	echo ">No</Option>" ;				
-    echo "</select> <br />" ;
-
-	?>
-                Post Visibility: 
-                <select name="PostVisibility" >
-				<option value="NoRestriction"
-				<?php
-				if ($DataPost->Post->PostVisibility=="NoRestriction") {
-					echo " selected" ;
-				}
-				?>
-				>Everybody (including google)</option>
-				<option value="MembersOnly"
-				<?php
-				if ($DataPost->Post->PostVisibility=="MembersOnly") {
-					echo " selected" ;
-				}
-				?>
-				>BeWelcome Members only</option>
-				<option value="GroupOnly"
-				<?php
-				if ($DataPost->Post->PostVisibility=="GroupOnly") {
-					echo " selected" ;
-				}
-				?>
-				>Members of group</option>
-				<option value="ModeratorOnly"
-				<?php
-				if ($DataPost->Post->PostVisibility=="ModeratorOnly") {
-					echo " selected" ;
-				}
-				?>
-				>Moderators only</option>
-				</select>  
-				
-                Post deleted: 
-                <select name="PostDeleted">
-				<option value="Deleted"
-				<?php
-				if ($DataPost->Post->PostDeleted=="Deleted") {
-					echo " selected" ;
-				}
-				?>
-				>Deleted</option>
-				<option value="NotDeleted"
-				<?php
-				if ($DataPost->Post->PostDeleted=="NotDeleted") {
-					echo " selected" ;
-				}
-				?>
-				>Not Deleted</option>
-				</select><br />
-	<?php
-	echo "</td>"  ;
-    echo "<td><input name=\"submit\" type=\"submit\" value=\"update post\"></td>" ;
-    echo "</form>\n" ;
-
-
-
-// Display the various content for this post in various languages
-echo "<tr><th colspan=3  align=left>Content of post ($max translations) beware of html inside !</th>" ;
-foreach ($DataPost->Post->Content as $Content) {
-
-    echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
-    echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-    $ArrayLanguage=$this->_model->LanguageChoices($Content->IdLanguage) ;
-
-
-    echo "<tr><td>" ;
-    echo "<select Name=\"IdLanguage\">" ;
-//  echo "<option value=\"-1\">-</option>" ;
-
-    foreach ($ArrayLanguage as $Choices) {
-            echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
-            echo "\">",$Choices->EnglishName,"</option>" ;
-    }
-    echo "</select>\n" ;
-
-
-    echo "</td><td><textarea class=\"long\" name=\"Sentence\" cols=\"60\" rows=\"5\">",$Content->Sentence,"</textarea>\n<input id=\"IdForumTrads\" type=\"hidden\" name=\"IdForumTrads\" value=\"".$Content->IdForumTrads."\"></td><td><input type=\"submit\" value=\"update\"></td>" ;
-    echo "</form>\n" ;
-}
-
-
-// Display the form to propose to create a new translation for the post
-
-    echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
-    echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdTrad\"  value=\"".$DataPost->Post->IdContent."\"/><br />" ;
-    $ArrayLanguage=$this->_model->LanguageChoices($Content->IdLanguage) ;
-
-
-    echo "<tr><td>" ;
-    echo "<select Name=\"IdLanguage\">" ;
-//  echo "<option value=\"-1\">-</option>" ;
-
-    foreach ($ArrayLanguage as $Choices) {
-            echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
-            echo "\">",$Choices->EnglishName,"</option>" ;
-    }
-    echo "</select>\n" ;
-
-
-    echo "</td><td>new translation<br /><textarea class=\"long\" name=\"NewTranslatedPost\" cols=\"60\" rows=\"5\"></textarea>\n</td><td><input type=\"submit\" value=\"add translated post\" name=\"submit\"></td>" ;
-echo "</form>" ;
-
-
-
-$max=count($DataPost->Tags) ;
-echo "<tr bgcolor=\"#ffcc99\"><th colspan=\"3\"  align=left>Used tags (".$max.")</th></tr>" ;
-
-
-echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
-echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-
-foreach ($DataPost->Tags as $Tag) {
-
-    echo "<tr bgcolor=\"#ffcc99\">" ;
-    echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
-    echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-    echo "<input type=\"hidden\" name=\"IdTag\"  value=\"".$Tag->IdTag."\"/>" ;
-    echo "<td><a href=\"forums/t".$Tag->IdTag."-".$words->fTrad($Tag->IdName)."\">",$words->fTrad($Tag->IdName),"</a></td>" ;
-    echo "<td align=\"left\"><input type=\"submit\"  Name=\"submit\" value=\"delete Tag\"></td>" ;
-    echo "<td><a href=\"forums/modedittag/".$Tag->IdTag."\">edit tag #t".$Tag->IdTag."</a></td>" ;
-    echo "</form>\n" ;
-    echo "</tr>\n" ;
-}
-
-echo "<tr bgcolor=\"#ffcc99\"><td>Select a Tag</td>"  ;
-echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
-echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
-echo "<input type=\"hidden\" name=\"IdThread\"  value=\"".$DataPost->Thread->id."\"/><br />" ;
-echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-echo "<td>" ;
-echo "<select Name=\"IdTag\">" ;
-echo "<option value=\"0\">Choose a Tag to add</option>" ;
-foreach ($DataPost->AllNoneTags as $Tag) {
-    echo "<option value=\"".$Tag->IdTag."\">",$words->fTrad($Tag->IdName)."(".$Tag->cnt.")","</option>\n" ;
-}
-
-echo "</select>" ;
-echo "</td>" ;
-echo "<td><input type=\"submit\" Name=\"submit\" value=\"Add Tag\"></td>" ;
-echo "</form>\n" ;
-
 echo "</table>" ;
 ?>
 

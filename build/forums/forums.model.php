@@ -1295,7 +1295,45 @@ WHERE `threadid` = '%d' ",
         }
         
         $vars =& PPostHandler::getVars();
+		
+		$PostComment=$vars['PostComment'] ;
+		$IdPost=$vars['IdPost'] ;
+		$Status=$vars['Status'] ;
+		if (isset($vars['Type'])) $Type=$vars['Type'] ;
+		if (!empty($vars['IdReporter'])) {
+			$IdReporter=$vars['IdReporter'] ;
+		}
+		else {
+			$IdReporter=$_SESSION["IdMember"] ;
+		}
 
+        $ss = "select reports_to_moderators.* from reports_to_moderators where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+        $s = $this->dao->query($ss);
+		$OldReport = $s->fetch(PDB::FETCH_OBJ) ;
+		
+
+		$UsernameAddTime='at '.date("d-m-Y").' '.date("H:i").'(server time) <a href="'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a> wrote:<br/>' ;
+		if ($this->BW_Right->HasRight("ForumModerator")) {
+			$PostComment=$this->cleanupText($UsernameAddTime.$vars['OldReport'])."<hr />\n".$OldReport->PostComment ;
+			$ss="update reports_to_moderators set PostComment='".$this->dao->escape($PostComment)."',Status='".$this->dao->escape($Status)."',Type='".$this->dao->escape($Type)."',IdModerator=".$_SESSION['IdMember']." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+		}
+		else {
+			if ($IdReporter!=$_SESSION["IdMember"]) {
+			    MOD_log::get()->write("Trying to trick report to moderator for post #".$IdPost,"Forum") ; 				
+				die("Failed to report to moderator") ;
+			}
+			if (isset($OldReport->IdReporter)) {
+				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment'])."<hr />\n".$OldReport->PostComment ;
+				$ss="update reports_to_moderators set PostComment='".$this->dao->escape($PostComment)."',Status='".$this->dao->escape($Status)."'"." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+			}
+			else {
+				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
+				$ss="insert into reports_to_moderators(PostComment,created,IdReporter,Status) " ;
+				$ss=$ss." values('".$this->dao->escape($PostComment)."',now(),'".$Status."' where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+			}
+		}
+		$this->dao->query($ss);
+	    MOD_log::get()->write("Adding to report for post #".$IdPost."<br />".$PostComment."<br />Status=".$Status,"Forum") ; 				
         PPostHandler::clearVars();
         return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
     } // end of reportpostProcess

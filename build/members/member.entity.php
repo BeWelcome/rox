@@ -534,6 +534,10 @@ WHERE
             $a[0]->IdCity = 'Unknown';
             $a[0]->CityName = 'Unknown';
             $a[0]->CountryName = 'Unknown';
+            $a[0]->HouseNumber = 'Unknown';
+            $a[0]->StreetName = 'Unknown';
+            $a[0]->Zip = 'Unknown';
+            $a[0]->CountryCode = 'Unknown';
         }
         $this->address = $a[0];
     }

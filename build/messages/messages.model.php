@@ -136,7 +136,7 @@ WHERE
 		if (!is_numeric($message_id)) {
             return false;
         }
-		$oldmsg = singleLookup("SELECT DeleteRequest, IdSender, IdReceiver FROM messages WHERE id = '$message_id'");
+		$oldmsg = $this->singleLookup("SELECT DeleteRequest, IdSender, IdReceiver FROM messages WHERE id = '$message_id'");
 		$DeleteRequest=$oldmsg->DeleteRequest ;
 		
 		if ($oldmsg->IdSender==$_SESSION["IdMember"]) {

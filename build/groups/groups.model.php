@@ -401,9 +401,13 @@ class GroupsModel extends  RoxModelBase
      */
     public function joinGroup($member, $group)
     {
-        if (!is_object($group) || !$group->isLoaded() || !is_object($member) || !$member->isLoaded() || $group->Type == 'NeedInvitation')
+        if (!is_object($group) || !$group->isLoaded() || !is_object($member) || !$member->isLoaded())
         {
             return false;
+        }
+        if ($membership = $this->createEntity('GroupMembership')->findByWhere("IdMember = '{$member->getPKValue()}' AND IdGroup = '{$group->getPKValue()}' AND Status = 'Invited'"))
+        {
+            return $membership->updateStatus('In');
         }
         $status = (($group->Type == 'NeedAcceptance') ? 'WantToBeIn' : 'In');
         $result = (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);

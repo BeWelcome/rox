@@ -409,6 +409,10 @@ class GroupsModel extends  RoxModelBase
         {
             return $membership->updateStatus('In');
         }
+        elseif ($group->Type == 'NeedInvitation')
+        {
+            return false;
+        }
         $status = (($group->Type == 'NeedAcceptance') ? 'WantToBeIn' : 'In');
         $result = (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
         if ($result && $status == 'WantToBeIn')

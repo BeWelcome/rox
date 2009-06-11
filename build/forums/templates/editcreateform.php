@@ -120,6 +120,9 @@ if ($allow_title) { // New Topic
 			<select name="PostVisibility" id="PostVisibility">
 			<?php
 			$CurValue=$vars['PostVisibility'] ;
+//			echo "<option value='Default'" ;
+//			echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
+
 			echo "<option value='NoRestriction'" ;
 			if ($CurValue=="NoRestriction") echo " selected" ;
 			echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
@@ -161,6 +164,10 @@ if ($allow_title) { // New Topic
 			<select name="ThreadVisibility" id="ThreadVisibility">
 			<?php
 			$CurValue=$vars['ThreadVisibility'] ;
+
+			echo "<option value='Default'" ;
+			echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
+
 			echo "<option value='NoRestriction'" ;
 			if ($CurValue=="NoRestriction") echo " selected" ;
 			echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;

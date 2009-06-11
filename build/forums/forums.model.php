@@ -1898,9 +1898,23 @@ WHERE `threadid` = '$this->threadid'
             throw new PException('User gone missing...');
         }
         $IdGroup=0 ;
-				if (isset($vars['IdGroup'])) {
-				  $IdGroup=$vars['IdGroup'] ;
+		$ThreadVisibility=$vars['ThreadVisibility'] ;
+		if (isset($vars['IdGroup'])) {
+			$IdGroup=$vars['IdGroup'] ;
+			if (!empty($IdGroup)) {
+				$ss="select * from groups where id=".$IdGroup ;
+                $s = $this->dao->query($ss);
+                $rGroup = $s->fetch(PDB::FETCH_OBJ);
+			}
+			if ($vars['ThreadVisibility']=='Default') {
+				if ($rGroup->VisiblePosts=='no') {
+					$ThreadVisibility='GroupOnly' ;
 				}
+			}
+		}
+		if ($ThreadVisibility=='Default') {
+			$ThreadVisibility='NoRestriction' ;
+		}
 				
         $this->dao->query("START TRANSACTION");
         
@@ -1911,7 +1925,7 @@ VALUES ('%d', NOW(), '%s','%d',%d,'%s')
             ",
             $User->getId(),
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $_SESSION["IdMember"],$this->GetLanguageChoosen(),$vars['ThreadVisibility']
+            $_SESSION["IdMember"],$this->GetLanguageChoosen(),$ThreadVisibility
         );
         $result = $this->dao->query($query);
         
@@ -1962,7 +1976,7 @@ VALUES ('%d', NOW(), '%s','%d',%d,'%s')
 		$query="update `forums_posts` set `id`=`postid` where id=0" ;		 
         $result = $this->dao->query($query);
 
- 		 $this->InsertInFTrad($this->dao->escape($this->cleanupText($vars['topic_text'])),"forums_posts.IdContent",$postid) ;
+ 		$this->InsertInFTrad($this->dao->escape($this->cleanupText($vars['topic_text'])),"forums_posts.IdContent",$postid) ;
         
         $query = sprintf(
             "
@@ -1975,7 +1989,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
             "'".$d_geoname."'",
             "'".$d_admin."'",
             "'".$d_country."'",
-            "'".$d_continent."'",$this->GetLanguageChoosen(),$IdGroup,$vars['ThreadVisibility'] 
+            "'".$d_continent."'",$this->GetLanguageChoosen(),$IdGroup,$ThreadVisibility 
         );
         $result = $this->dao->query($query);
         
@@ -1986,7 +2000,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
         $result = $this->dao->query($query);
 
 		$ss=$this->dao->escape(strip_tags(($vars['topic_title']))) ;
- 		 $this->InsertInFTrad($ss,"forums_threads.IdTitle",$threadid) ;
+ 		$this->InsertInFTrad($ss,"forums_threads.IdTitle",$threadid) ;
         
         $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $threadid, $postid);
         $result = $this->dao->query($query);
@@ -2615,7 +2629,7 @@ AND IdThread=%d
        }
        
        // Check if there is a previous Subscription
-       if ($this->²($IdThread,$_SESSION["IdMember"])) {
+       if ($this->IsThreadSubscribed($IdThread,$_SESSION["IdMember"])) {
              MOD_log::get()->write("Allready subscribed to Thread=#".$IdThread, "Forum");
           return(false) ;
        }
@@ -2630,10 +2644,7 @@ AND IdThread=%d
     } // end of UnsubscribeThread
 
 
-
-	 
-	 
-	 
+ 
 	 
     /**
      * This function remove the subscription marked by IdSubscribe

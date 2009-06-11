@@ -1,7 +1,4 @@
-<?php
-$urlstring = 'editmyprofile';
-require_once 'profileversion.php';
-?>
+
 <form method="post" action="<?=$page_url?>" name="signup" id="profile" enctype="multipart/form-data">
 <input type="hidden"  name="memberid"  value="<?=$member->id?>" />
 <input type="hidden"  name="profile_language"  value="<?=$profile_language?>" />

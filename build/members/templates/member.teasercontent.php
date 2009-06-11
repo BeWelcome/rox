@@ -32,8 +32,8 @@
     <div class="subcr" >
         <? // Profile translations ?>
             <?php
-            if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'members/'.$member->Username;
-            if (get_class($this) == 'ProfilePage' || get_class($this) == 'MyProfilePage') $urlstring = 'editmyprofile';
+            if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'editmyprofile';
+            if (get_class($this) == 'ProfilePage' || get_class($this) == 'MyProfilePage') $urlstring = 'members/'.$member->Username;
             if (isset($urlstring)) {
                 require 'profileversion.php'; 
             }

@@ -168,7 +168,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
     protected function showDefaultText()
     {
         $words = $this->getWords();
-        echo '<p>';
+        echo '<p class="big">';
         echo $words->get('NotifyDefaultText');
         echo '</p>';
     }

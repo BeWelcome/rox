@@ -44,7 +44,7 @@ Boston, MA  02111-1307, USA.
 					<img title="<?php echo implode(' - ',$e['totype']); ?>" src="images/icons/arrow_right.png" /><br />
 				<?php }?>
 				<?php if (isset($e['reversetype']) && $e['reversetype'][0] != '0') {?> 
-					<img title="<?php echo implode(' - ',$e['reversetype']); ?>" src="images/icons/icons1616/arrow_left.png" />
+					<img title="<?php echo implode(' - ',$e['reversetype']); ?>" src="images/icons/arrow_left.png" />
 				<?php }?>
 				</p>	
 			</div> <!-- float_left -->

@@ -76,7 +76,7 @@
     height: 100px;
 }
 #profile-info {
-	padding: 0 0 3em 0;
+	padding: 0 0 2em 0;
 }
 #profile-info #navigation-path{
 	padding: 2em 0;
@@ -129,7 +129,7 @@
     padding-right: 1em;
 }
 
-#profile .box {
+#profile .box, #profile #linkpath {
     background-image: none;
     border: none;
     margin: 0 0 2em 0;
@@ -137,10 +137,13 @@
     padding: 0;
 }
 
-#profile .box h3{
+#profile .box h3, #profile #linkpath h3, #profile-info .box h3{
 	background: none;
 	padding: .3em 0;
 	color: #2184E8;
+}
+#profile #navigation-path h3,#profile #navigation-path h3 a {
+	color: #333;
 }
 
 /* list the spoken languages of a member */
@@ -155,7 +158,7 @@
 }
 
 /* for the available languages of the profil content*/
-#profile .availablelanguages {
+#profile .availablelanguages,#profile-info .availablelanguages {
     padding-right: 0.5em;
     color: #888;
 }

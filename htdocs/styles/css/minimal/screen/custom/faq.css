@@ -31,12 +31,19 @@
     }
 
     .faq li a{
-        color: #333;
         font-size: 1.3em;
         line-height: 1.5em;
         font-weight: bold;
     }
-
+    
+   .faq li a.selected{
+        color: #333;
+    }
+    
+   .faq li a.selected:hover{
+        text-decoration:none;
+    }
+    
     .bullet li {
         padding: 0.3em 0;
     }

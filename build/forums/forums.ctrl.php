@@ -228,16 +228,33 @@ class ForumsController extends PAppController
                 PRequest::home();
             }
             $callbackId = $this->reportpostProcess();
-            $IdPost=$request[2] ;
-			$IdWriter=$_SESSION["IdMember"] ;
-			if ((!empty($request[3])) and ($this->BW_Right->HasRight("ForumModerator"))) {
-				$IdWriter=$request[3] ;
-			}
+			
+			if (isset($request[2])) {
+				if ($request[2]=='AllMyReport') {
+					$DataPost=$this->_model->prepareReportList($_SESSION["IdMember"],""); // This retrieve all the reports for the current member
+					$this->_view->showReportList($callbackId,$DataPost);
+				}
+				elseif ($request[2]=='MyReportActive') {
+					$DataPost=$this->_model->prepareReportList($_SESSION["IdMember"],"('Open','OnDiscussion')"); // This retrieve the Active current pending report for the current member
+					$this->_view->showReportList($callbackId,$DataPost);
+				}
+				elseif ($request[2]=='AllActiveReports') {
+					$DataPost=$this->_model->prepareReportList(0,"('Open','OnDiscussion')"); // This retrieve all the current Active pending report 
+					$this->_view->showReportList($callbackId,$DataPost);
+				}
+				else {
+					$IdPost=$request[2] ;
+					$IdWriter=$_SESSION["IdMember"] ;
+					if ((!empty($request[3])) and ($this->BW_Right->HasRight("ForumModerator"))) {
+						$IdWriter=$request[3] ;
+					}
 
-			$DataPost=$this->_model->prepareModeratorEditPost($IdPost); // We will use the same data has teh one used for Moderator edit
-			$DataPost->Report=$this->_model->prepareReportPost($IdPost,$IdWriter) ;
-            $this->_view->showReportPost($callbackId,$DataPost);
-            PPostHandler::clearVars($callbackId);
+					$DataPost=$this->_model->prepareModeratorEditPost($IdPost); // We will use the same data has teh one used for Moderator edit
+					$DataPost->Report=$this->_model->prepareReportPost($IdPost,$IdWriter) ;
+					$this->_view->showReportPost($callbackId,$DataPost);
+				}
+				PPostHandler::clearVars($callbackId);
+			}
 		}
         else if ($this->action == self::ACTION_REPLY) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit

@@ -55,12 +55,12 @@ if (isset($DataPost->Thread->title))
 		echo "<td>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td><td><a href=\"forums/s<",$DataPost->Thread->id,"/#",$DataPost->Report->IdPost,"\">go to post</a></td>" ;
 		echo "</tr>" ;
 		echo "<tr><td colspan=\"3\">",$DataPost->Thread->Title[0]->Sentence,"</td></tr>" ;
-		echo "<tr><td colspan=\"3\">",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
+		echo "<tr><td colspan=\"3\" >",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
 		if (isset($DataPost->Report->PostComment))  {
-			echo "<tr><td colspan=\"3\">",$DataPost->Report->PostComment,"</td></tr>" ;
+			echo "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\">",$DataPost->Report->PostComment,"</td></tr>" ;
 			$PostComment=$DataPost->Report->PostComment ;
 		}
-		echo "<tr><td colspan=\"3\"><textarea name='PostComment' cols=120 rows=8></textarea>",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
+		echo "<tr><td colspan=\"3\"><textarea name='PostComment' cols=80 rows=8></textarea>",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
 		echo "<tr><td colspan=\"1\">" ;
 		echo "Status <select Name='Status'>" ;
 		if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status ; else $Status="" ;

@@ -122,9 +122,6 @@ This File display a topic and the messages which are inside it
 	?>
 	
 		<div id="forumsthreadreplytop">
-		<?php 
-		if (!$topic->topicinfo->IsClosed) {
-			?>
 			<span class="button"><a href="
 			<?php 
 	
@@ -134,13 +131,14 @@ This File display a topic and the messages which are inside it
 			else {
 				echo ForumsView::getURI()."subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
 			}  
-			?>
-			<span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
+			if ((!$topic->topicinfo->IsClosed)and($topic->topicinfo->CanReply)) {
+				?>
+				<span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
 	
-	<?php
-		}
+			<?php
+			}
 			?>
-			</div>
+		</div>
 	<?php
 	
 	} // end if ($User)

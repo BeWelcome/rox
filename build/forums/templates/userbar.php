@@ -48,6 +48,11 @@ if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
     <li><a href="http://www.bevolunteer.org/wiki/forumdoc"><?php echo $this->words->get('ForumLinkToDoc'); ?></a></li>
 <?php  if (isset($_SESSION["IdMember"])) {
 			echo "<li><a href=\"forums/subscriptions\">",$this->words->get('forum_YourSubscription'),"</a></li>"; 
+			if ($this->BW_Right->HasRight("ForumModerator")) {
+				echo '<li><a href="forums/reporttomod/AllMyReport">All reports for me</a></li>' ;
+				echo '<li><a href="forums/reporttomod/MyReportActive">Pending reports for me ('.$this->_model->countReportList($_SESSION["IdMember"],"('Open','OnDiscussion')").')</a></li>' ;
+				echo '<li><a href="forums/reporttomod/AllActiveReports">All pending reports ('.$this->_model->countReportList(0,"('Open','OnDiscussion')").')</a></li>' ;
+			}
 		}
 		?>
 </ul>

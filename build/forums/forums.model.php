@@ -1315,7 +1315,7 @@ WHERE `threadid` = '%d' ",
 		$UsernameAddTime='at '.date("d-m-Y").' '.date("H:i").'(server time) <a href="'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a> wrote:<br/>' ;
 		if ($this->BW_Right->HasRight("ForumModerator")) {
 			$PostComment=$this->cleanupText($UsernameAddTime.$vars['OldReport'])."<hr />\n".$OldReport->PostComment ;
-			$ss="update reports_to_moderators set PostComment='".$this->dao->escape($PostComment)."',Status='".$this->dao->escape($Status)."',Type='".$this->dao->escape($Type)."',IdModerator=".$_SESSION['IdMember']." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+			$ss="update reports_to_moderators set  LastWhoSpoke='Moderator',PostComment='".$this->dao->escape($PostComment)."',IdModerator=".$_SESSION["IdMember"].",Status='".$this->dao->escape($Status)."',Type='".$this->dao->escape($Type)."',IdModerator=".$_SESSION['IdMember']." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 		}
 		else {
 			if ($IdReporter!=$_SESSION["IdMember"]) {
@@ -1324,7 +1324,7 @@ WHERE `threadid` = '%d' ",
 			}
 			if (isset($OldReport->IdReporter)) {
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment'])."<hr />\n".$OldReport->PostComment ;
-				$ss="update reports_to_moderators set PostComment='".$this->dao->escape($PostComment)."',Status='".$this->dao->escape($Status)."'"." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+				$ss="update reports_to_moderators set LastWhoSpoke='Member',PostComment='".$this->dao->escape($PostComment)."',Status='".$this->dao->escape($Status)."'"." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 			}
 			else {
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
@@ -1363,7 +1363,53 @@ WHERE `threadid` = '%d' ",
 		return($Report) ;
 	}	// end of prepareReportPost
 		 
-	 /**	 
+	/**
+		This function loads the list of links to reports
+		@IdMember : if to 0 it means for all moderators, if not 0 it mean for a given moderator
+		@StatusList : is the list of reports status to consider, if empty it means all status
+		
+		returns an array
+	*/
+	public function prepareReportList($IdMember,$StatusList) { // This retrieve all the reports for the a member or all members
+
+		$ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where members.id=IdReporter " ;
+		if (!empty($StatusList)) {
+			$ss=$ss." and reports_to_moderators.Status in ".$StatusList ;
+		}
+		
+		$tt=array() ;
+		if (!empty($IdMember)) {
+			$ss=$ss." and reports_to_moderators.IdModerator=".$IdMember ;
+		}
+		$ss=$ss." order by reports_to_moderators.updated" ;
+        $s = $this->dao->query($ss);
+		while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
+			array_push($tt,$rr) ;
+		}
+		return($tt) ;
+	} // end of prepareReportList
+
+	/**
+		This function count the list of links to reports
+		@IdMember : if to 0 it means for all moderators, if not 0 it mean for a given moderator
+		@StatusList : is the list of reports status to consider, if empty it means all status
+		returns and integer
+	*/
+	public function countReportList($IdMember,$StatusList) { // This count all the reports for and optional members or all members according to their styatus
+		$ss = "select count(*) as cnt from reports_to_moderators,members where members.id=IdReporter " ;
+		if (!empty($StatusList)) {
+			$ss=$ss." and reports_to_moderators.Status in ".$StatusList ;
+		}
+        $s = $this->dao->query($ss);
+		if ($rr = $s->fetch(PDB::FETCH_OBJ)) {
+			return($rr->cnt) ;
+		}
+		return(0) ;
+	} // end of countReportList
+
+
+
+	/**	 
     * This will prepare a post for a full edit moderator action
     * @IdPost : Id of the post to process
 	 */
@@ -1616,7 +1662,6 @@ RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThre
         
         if ($this->BW_Right->HasRight("ForumModerator","Delete")) {
             $this->dao->query("START TRANSACTION");
-			// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -1638,6 +1683,7 @@ WHERE `forums_posts`.`postid` = '%d'
             if (!$s) {
                 throw new PException('Could not retrieve Threadinfo!');
             }
+		// Todo : ensure that $topicinfo->CanReply is properly set
             $topicinfo = $s->fetch(PDB::FETCH_OBJ);
             
             if ($topicinfo->first_postid == $this->messageId) { // Delete the complete topic
@@ -2076,6 +2122,8 @@ and ($this->ThreadGroupsRestriction)
         if (!$s) {
             throw new PException('Could not retrieve Thread=#".$this->threadid." !');
         }
+		
+		// Todo : ensure that $topicinfo->CanReply is properly set
         $topicinfo = $s->fetch(PDB::FETCH_OBJ);
 				
 //				echo "\$topicinfo->IdGroup=",$topicinfo->IdGroup ;
@@ -2335,7 +2383,6 @@ WHERE username='%s'
       
         if (!empty($IdThread) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
             // In this case we will browse all the threads
-// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -2359,7 +2406,6 @@ ORDER BY `subscribedtime` DESC
                 $IdThread
             );
         } else {
-// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -2404,7 +2450,6 @@ ORDER BY `subscribedtime` DESC
 
         if (!empty($IdTag) and ($this->BW_Right->HasRight("ForumModerator","SeeSubscriptions"))) {
             // In this case we will browse all the tags
-// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -2426,7 +2471,6 @@ ORDER BY `subscribedtime` DESC
                 $IdThread
             );
         } else {
-// Todo Visibility
             $query = sprintf(
                 "
 SELECT
@@ -2571,7 +2615,7 @@ AND IdThread=%d
        }
        
        // Check if there is a previous Subscription
-       if ($this->IsThreadSubscribed($IdThread,$_SESSION["IdMember"])) {
+       if ($this->²($IdThread,$_SESSION["IdMember"])) {
              MOD_log::get()->write("Allready subscribed to Thread=#".$IdThread, "Forum");
           return(false) ;
        }
@@ -2731,7 +2775,6 @@ AND IdTag=%d
            }
         }
 
-// Todo Visibility
         $query = sprintf(
             "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
@@ -3254,16 +3297,63 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     public function getAllContinents() {
         return self::$continents;
     }
-    // This will compute the needed notification and will prepare enqueing
+
+
+	/**
+	Return true if the Member is not allowed to see the given post because of groups restrictions
+	@$IdMember : Id of the member
+	@$rPost data about the post (Thread and Post visibility, id of the group and delettion status)
+	return true or false
+	!! Becareful, in case the member has moderator right, his moderator rights will not be considerated
+	*/
+	function NotAllowedForGroup($IdMember,$rPost) {
+		if ($rPost->ThreadDeleted=='Deleted') return (true) ; //Deleted thread: no notifications
+		if ($rPost->PostDeleted=='Deleted') return (true) ; //Deleted post: no notifications
+		if ($rPost->IdGroup==0) return(false) ; // No group defined, noification can be allowed
+
+		// In case there is a restriction to moderator, check if the member is a moderator
+		if (($rPost->PostVisibility=='ModeratorOnly') or ($rPost->ThreadVisibility=='ModeratorOnly')) 
+			if ($this->BW_Right->HasRight("ForumModerator"))  {
+				return (false) ; // Moderator are allowed
+			}
+			else {
+				return(true) ;
+			}
+			
+		if (($rPost->PostVisibility=='GroupOnly') or ($rPost->ThreadVisibility=='GroupOnly')) { // If there is a group restriction, we need to check the membership of the member
+			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and IdGroup=".$rPost->IdGroup." and Status='In'");
+			if (!$qry) {
+				throw new PException('Failed to retrieve groupsmembership for member id =#'.$IdMember.'  !');
+			}
+			$rr=$qry->fetch(PDB::FETCH_OBJ) ;
+			if (isset($rr->IdGroup)) {	// If the guy is member of the group
+				return(false) ; // He is allowed to see
+			}
+			else {
+				return(true) ;
+			}
+		}
+		
+		// Other cases no reason to restrict because of some group restriction
+		return (false) ;
+	} // end of NotAllowedForGroup
+	
+	
+	
+	/**
+    // This will compute the needed notifications and will prepare enqueing
     // @IdPost : Id of the post to notify about
     // @Type : Type of notification "newthread", "reply","moderatoraction","deletepost","deletethread","useredit","translation"
+	// It also consider the visibility of the post before deciding to send the message or not
     // Nota this private function must not make any transaction since it can be called from within a transaction
     // it is not a very big deal if a notification is lost so no need to worry about transations here
+	*/
+	
     private function prepare_notification($IdPost,$Type) {
         $alwaynotified = array() ;// This will be the list of people who will be notified about every forum activity
 
         // retrieve the post data
-        $query = sprintf("select forums_posts.threadid as IdThread from forums_posts where  forums_posts.postid=%d",$IdPost) ;
+        $query = sprintf("select forums_posts.threadid as IdThread,forums_thread.IdGroup as IdGroup,PostVilibility,PostDeleted,ThreadVisibility,ThreadDeleted from forums_posts,forums_threads where forums_posts.IdThread=forums_threads.id and forums_posts.postid=%d",$IdPost) ;
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('prepare_notification Could not retrieve the post data!');
@@ -3275,9 +3365,12 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         // retrieve the forummoderator with Scope ALL
         $query = sprintf("
 SELECT `rightsvolunteers`.`IdMember` 
-FROM `rightsvolunteers`,`rights` 
+FROM `rightsvolunteers`,`rights` ,`members`
 WHERE `rightsvolunteers`.`IdRight`=`rights`.`id` and `rights`.`Name`= 'ForumModerator' 
-AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 " 
+AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 
+AND `members`.`id`=`rightsvolunteers`.`IdMember` 
+AND `members`.`Status` in ('Active','ActiveHidden')
+" 
         );
         $s = $this->dao->query($query);
         if (!$s) {
@@ -3299,17 +3392,18 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
         
         
 		 // Check the user who have subscribed to one tag of this thread 
-// Todo Visibility
         $query = sprintf("select IdSubscriber,members_tags_subscribed.id as IdSubscription from members_tags_subscribed,tags_threads where tags_threads.IdTag=members_tags_subscribed.IdTag and tags_threads.IdThread=%d ",$rPost->IdThread) ;
         $s1 = $this->dao->query($query);
         if (!$s1) {
             throw new PException('prepare_notification Could not retrieve the members_tags_subscribed !');
         }
         while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ)) { // for each subscriber to this thread
-            // we are going to check wether there is allready a pending notification for this post to avoid duplicated
+
+			if ($this->NotAllowedForGroup($rSubscribed->IdSubscriber,$rPost)) continue; // Don't notifiy a member if they are group restiction applying to him 
+
+		// we are going to check wether there is allready a pending notification for this post to avoid duplicated
 //            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
             $IdMember=$rSubscribed->IdSubscriber ;
-// Todo Visibility
             $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
             $s = $this->dao->query($query);
             if (!$s) {
@@ -3317,7 +3411,7 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
             }
             $rAllreadySubscribe = $s->fetch(PDB::FETCH_OBJ) ;
             if (isset($rAllreadySubscribe->id)) {
-               continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
+               continue ; // We don't introduce another subscription if there is allready a pending one for this post for this member
             }
 
             $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_tags_subscribed',".$rSubscribed->IdSubscription.")" ;
@@ -3338,6 +3432,9 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
             throw new PException('prepare_notification Could not retrieve the members_threads_subscribed !');
         }
         while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ)) { // for each subscriber to this thread
+
+			if ($this->NotAllowedForGroup($rSubscribed->IdSubscriber,$rPost)) continue; // Don't notifiy a member if they are group restiction applying to him 
+
             // we are going to check wether there is allready a pending notification for this post to avoid duplicated
 //            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
             $IdMember=$rSubscribed->IdSubscriber ;
@@ -3367,6 +3464,9 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
             throw new PException('prepare_notification Could not retrieve the members_tags_subscribed !');
         }
         while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ)) { // for each subscriber to this thread Group
+
+			if ($this->NotAllowedForGroup($rSubscribed->IdSubscriber,$rPost)) continue; // Don't notifiy a member if they are group restiction applying to him 
+
             // we are going to check wether there is allready a pending notification for this post to avoid duplicated
 //            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
             $IdMember=$rSubscribed->IdSubscriber ;
@@ -3401,7 +3501,6 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
        }
 
        // Check if there is a previous Subscription
-// Todo Visibility
        $query = sprintf("select members_groups_subscribed.id as IdSubscribe,IdThread,IdSubscriber from members_groups_subscribed where IdGroup=%d and IdSubscriber=%d",$IdGroup,$IdMember); 
        $s = $this->dao->query($query);
        if (!$s) {
@@ -3418,7 +3517,6 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
        }
 
        // Check if there is a previous Subscription
-// Todo Visibility
        $query = sprintf("select members_threads_subscribed.id as IdSubscribe,IdThread,IdSubscriber from members_threads_subscribed where IdThread=%d and IdSubscriber=%d",$IdThread,$IdMember); 
        $s = $this->dao->query($query);
        if (!$s) {
@@ -3438,7 +3536,6 @@ AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1 "
        }
 
        // Check if there is a previous Subscription
-// Todo Visibility
        $query = sprintf("select members_tags_subscribed.id as IdSubscribe,IdTag,IdSubscriber from members_tags_subscribed where IdTag=%d and IdSubscriber=%d",$IdTag,$IdMember); 
        $s = $this->dao->query($query);
        if (!$s) {
@@ -3494,11 +3591,11 @@ class Board implements Iterator {
 		else {
 			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (PostDeleted!='Deleted')" ;
-			$this->PostGroupsRestriction=" (PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0," ;
-			$this->ThreadGroupsRestriction=" (PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0," ;
+			$this->PostGroupsRestriction=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
+			$this->ThreadGroupsRestriction=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
 			if (!$qry) {
-				throw new PException('Failde to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
+				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
 			}
 			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
 				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
@@ -3534,7 +3631,6 @@ class Board implements Iterator {
        }
 
        // Check if there is a previous Subscription
-// Todo Visibility
        $query = sprintf("select members_tags_subscribed.id as IdSubscribe,IdTag,IdSubscriber from members_tags_subscribed where IdTag=%d and IdSubscriber=%d",$IdTag,$IdMember); 
        $s = $this->dao->query($query);
        if (!$s) {
@@ -3570,6 +3666,8 @@ class Board implements Iterator {
         if ($this->geonameid) {
             $wherethread .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
         }
+		$wherethread=$wherethread."and (".$this->PublicThreadVisibility.")" ;
+		$wherethread=$wherethread."and (".$this->ThreadGroupsRestriction.")" ;
 		return($wherethread) ;
 	} // end of FilterThreadListResultsWithIdCriteria
 	
@@ -3589,8 +3687,6 @@ class Board implements Iterator {
 				}
 				$tabletagthread.="`tags_threads` as `tags_threads".$ii."`," ;
 				$wherethread=$wherethread." and `tags_threads".$ii."`.`IdTag`=".$tag." and `tags_threads".$ii."`.`IdThread`=`forums_threads`.`id` "  ;
-				$wherethread=$wherethread."and (".$this->PublicThreadVisibility.")" ;
-				$wherethread=$wherethread."and (".$this->ThreadGroupsRestriction.")" ;
 
 				$ii++ ;
 			}

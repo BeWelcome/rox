@@ -224,6 +224,13 @@ class ForumsView extends RoxAppView {
         require 'templates/moderatorreport.php';
     } // end of showReportPost
     
+// This is the normal view to display list to accessto reports
+    public function showReportList(&$callbackId,$DataPost) {
+		$this->SetPageTitle("List of reports") ;
+        $vars =& PPostHandler::getVars($callbackId);
+        require 'templates/reportslist.php';
+    } // end of showReportList
+    
 	
     /**
     * Display the form for a Moderator edit

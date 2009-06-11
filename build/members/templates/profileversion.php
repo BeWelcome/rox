@@ -12,7 +12,7 @@ $myself = $this->myself;
 if (count($languages) > 1 || $myself) {
 ?>      
     <div class="profile_translations box">
-    	<h3><?=$words->get('ProfileTranslations')?>:</h3>
+    	<h3><?=$words->get('ProfileTranslations')?></h3>
         <p class="floatbox">  
         <?php
 		$ii = 0;

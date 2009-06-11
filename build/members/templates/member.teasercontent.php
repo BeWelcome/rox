@@ -30,7 +30,14 @@
   </div> <!-- c50l -->
   <div class="c50r" >
     <div class="subcr" >
-
+        <? // Profile translations ?>
+            <?php
+            if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'members/'.$member->Username;
+            if (get_class($this) == 'ProfilePage' || get_class($this) == 'MyProfilePage') $urlstring = 'editmyprofile';
+            if (isset($urlstring)) {
+                require 'profileversion.php'; 
+            }
+            ?>
     </div> <!-- subcr -->
   </div> <!-- c50r -->
 

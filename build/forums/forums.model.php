@@ -316,6 +316,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
 			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
 		}
+		
+		$this->MyGroups=array() ;
 
 		
 		$this->words= new MOD_words();
@@ -343,6 +345,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
 				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
 				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
+				array_push($this->MyGroups,$rr->IdGroup) ; // Save the group list
 			}	;
 			$this->PostGroupsRestriction=$this->PostGroupsRestriction.")" ;
 			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.")" ;
@@ -1683,7 +1686,6 @@ WHERE `forums_posts`.`postid` = '%d'
             if (!$s) {
                 throw new PException('Could not retrieve Threadinfo!');
             }
-		// Todo : ensure that $topicinfo->CanReply is properly set
             $topicinfo = $s->fetch(PDB::FETCH_OBJ);
             
             if ($topicinfo->first_postid == $this->messageId) { // Delete the complete topic
@@ -2137,8 +2139,30 @@ and ($this->ThreadGroupsRestriction)
             throw new PException('Could not retrieve Thread=#".$this->threadid." !');
         }
 		
-		// Todo : ensure that $topicinfo->CanReply is properly set
         $topicinfo = $s->fetch(PDB::FETCH_OBJ);
+
+		if ($topicinfo->WhoCanReply=="MembersOnly") {
+			$topicinfo->CanReply=true ;
+		}
+		else if ($topicinfo->WhoCanReply=="GroupsMembersOnly") {
+			if ($topicinfo->IdGroup==0) {
+				$topicinfo->CanReply=true ;
+			}
+			else {
+				$topicinfo->CanReply=in_array($topicinfo->IdGroup,$this->MyGroups) ; // Set to true only if current member is member of the group
+			}
+		}
+		else if ($topicinfo->WhoCanReply=="ModeratorsOnly") {
+			if ($this->BW_Right->HasRight("ForumModerator")) {
+				$topicinfo->CanReply=true ;
+			}
+			else {
+				$topicinfo->CanReply=false ;
+			}
+		}
+		else {
+			$topicinfo->CanReply=false ;
+		}
 				
 //				echo "\$topicinfo->IdGroup=",$topicinfo->IdGroup ;
         

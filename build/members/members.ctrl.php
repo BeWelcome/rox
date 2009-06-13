@@ -374,7 +374,7 @@ class MembersController extends RoxControllerBase
     public function editMyProfileCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post)) {
-            $vars = $args->post;
+            $vars = $this->cleanVars($args->post);
             $request = $args->request;
             $errors = $this->model->checkProfileForm($vars);
             $vars['errors'] = array();
@@ -387,7 +387,7 @@ class MembersController extends RoxControllerBase
             $vars['member'] = $this->getMember($vars['memberid']);
             $vars = $this->model->polishProfileFormValues($vars);
             $success = $this->model->updateProfile($vars);
-            if (!$success) $mem_redirect->problems = array(0 => 'Could not update profile');
+            if (!$success) $mem_redirect->problems = array('Could not update profile');
             
             // Redirect to a nice location like editmyprofile/finish
             $str = implode('/',$request);
@@ -465,6 +465,26 @@ class MembersController extends RoxControllerBase
         }
     }
 
+    /**
+     * trims all values posted back to controller
+     *
+     * @param array $post_vars
+     * @access private
+     * @return array
+     */
+    private function cleanVars($post_vars)
+    {
+        $vars = array();
+        foreach ($post_vars as $key => $var)
+        {
+            if (is_string($var))
+            {
+                $var = trim($var);
+            }
+            $vars[$key] = $var;
+        }
+        return $vars;
+    }
 }
 
 /* htdocs/bw/updatemandatory.php

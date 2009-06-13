@@ -624,34 +624,40 @@ ORDER BY
     public function checkProfileForm(&$vars)
     {
         $errors = array();
-        $log = MOD_log::get();
         
         // email (e-mail duplicates in BW database allowed)
         if (!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) {
             $errors[] = 'SignupErrorInvalidEmail';
-            $log->write("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
+            $this->logWrite("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
         }
         if (empty($vars['FirstName']) || empty($vars['LastName']))
         {
             $errors[] = 'SignupErrorInvalidName';
-            $log->write("Editmyprofile: Invalid name update with value {$vars['FirstName']} and {$vars['LastName']}", "Name Update");
+            $this->logWrite("Editmyprofile: Invalid name update with value {$vars['FirstName']} and {$vars['LastName']}", "Name Update");
         }
         if (empty($vars['Street']) || empty($vars['Zip']))
         {
             $errors[] = 'SignupErrorInvalidAddress';
-            $log->write("Editmyprofile: Invalid address update with value {$vars['Street']} and {$vars['Zip']}", "Address Update");
+            $this->logWrite("Editmyprofile: Invalid address update with value {$vars['Street']} and {$vars['Zip']}", "Address Update");
         }
 
         if (empty($vars['BirthDate']) || !preg_match('/^([1-2]\d\d\d)-([0-1]?[0-9])-([0-3]?[0-9])$/', $vars['BirthDate'], $matches))
         {
-            $errors[] = 'SignupErrorInvalidAddress';
+            $errors[] = 'SignupErrorInvalidBirthDate';
+            $this->logWrite("Editmyprofile: Invalid birthdate update with value {$vars['BirthDate']}", "Birthdate Update");
         }
         else
         {
-            if (intval($matches[1]) > intval(date('Y', strtotime('-100 years'))) || date('Y-m-d', strtotime($vars['BirthDate'])) != $vars['BirthDate'])
+            if (intval($matches[1]) > intval(date('Y', strtotime('-100 years'))) || date('Y-m-d', strtotime($vars['BirthDate'])) != trim($vars['BirthDate']))
             {
                 $errors[] = 'SignupErrorInvalidBirthDate';
+                $this->logWrite("Editmyprofile: Invalid birthdate update with value {$vars['BirthDate']}", "Birthdate Update");
             }
+        }
+        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','IDontTell')))
+        {
+            $errors[] = 'SignupErrorInvalidGender';
+            $this->logWrite("Editmyprofile: Invalid gender update with value {$vars['gender']}", "Gender Update");
         }
 
         return $errors;

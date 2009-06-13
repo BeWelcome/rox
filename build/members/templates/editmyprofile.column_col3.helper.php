@@ -25,7 +25,12 @@ $vars = $this->editMyProfileFormPrepare($member);
 <?php
 // Check for errors and update status and display a message
 if (isset($vars['errors']) and count($vars['errors']) > 0) {
-      echo '<div class="error">'.$ww->EditmyprofileError.'</div>';
+    echo '<div class="error">'.$ww->EditmyprofileError.'<br/>';
+    foreach ($vars['errors'] as $error)
+    {
+        echo "{$error}<br/>";
+    }
+    echo "</div>";
 } else {
     if ($this->status == 'finish') {
           echo '<div class="note check">'.$ww->EditmyprofileFinish.'</div>';

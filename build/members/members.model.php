@@ -631,6 +631,28 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidEmail';
             $log->write("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
         }
+        if (empty($vars['FirstName']) || empty($vars['LastName']))
+        {
+            $errors[] = 'SignupErrorInvalidName';
+            $log->write("Editmyprofile: Invalid name update with value {$vars['FirstName']} and {$vars['LastName']}", "Name Update");
+        }
+        if (empty($vars['Street']) || empty($vars['Zip']))
+        {
+            $errors[] = 'SignupErrorInvalidAddress';
+            $log->write("Editmyprofile: Invalid address update with value {$vars['Street']} and {$vars['Zip']}", "Address Update");
+        }
+
+        if (empty($vars['BirthDate']) || !preg_match('/^([1-2]\d\d\d)-([0-1]?[0-9])-([0-3]?[0-9])$/', $vars['BirthDate'], $matches))
+        {
+            $errors[] = 'SignupErrorInvalidAddress';
+        }
+        else
+        {
+            if (intval($matches[1]) > intval(date('Y', strtotime('-100 years'))) || date('Y-m-d', strtotime($vars['BirthDate'])) != $vars['BirthDate'])
+            {
+                $errors[] = 'SignupErrorInvalidBirthDate';
+            }
+        }
 
         return $errors;
     }

@@ -1,4 +1,3 @@
-
           <fieldset id="profilesummary">
             <legend><?=$words->getInLang('ProfileSummary', $profile_language)?></legend>
             <a name="profilepic" />
@@ -23,7 +22,7 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SignupBirthDate')?>:</td>
                   <td colspan="2" >
-                        <?=$vars['BirthDate']?>
+                        <input type='text' value='<?=$vars['BirthDate']?>' name='BirthDate'/>
                         &nbsp;&nbsp;&nbsp;&nbsp; 
                         <input name="HideBirthDate" value="Yes" type="checkbox"
                         <?php
@@ -33,6 +32,16 @@
                     ?>
                   </td>
                 </tr>
+
+                <tr align='left'>
+                    <td class='label'><?= $words->get('Gender'); ?></td>
+                    <td colspan='2'>
+                        <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'><?= $words->get('female'); ?></label>
+                    <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'><?= $words->get('male'); ?></label>
+                    <input class="radio" type="radio" id='genderX' name="gender" value="IDontTell" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'IDontTell') ? ' checked="checked"' : '');?>/><label for='genderX'><?= $words->get('IDontTell'); ?></label>
+                        <input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'><?= $words->get("Hidden");?></label>
+                </tr>
+
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOccupation')?>:</td>
                   <td>
@@ -128,7 +137,7 @@
 ?>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('FirstName')?>:</td>
-                  <td><?=$vars['FirstName']?></td>
+                  <td><input type='text' name='FirstName' value='<?=$vars['FirstName']?>'/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_FirstName"
                     <?php if ($vars['IsHidden_FirstName'])
@@ -139,7 +148,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SecondName')?>:</td>
-                  <td><?=$vars['SecondName']?></td>
+                  <td><input name='SecondName' type='text' value='<?=$vars['SecondName']?>'/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_SecondName"
                     <?php if ($vars['IsHidden_SecondName'])
@@ -150,7 +159,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('LastName')?>:</td>
-                  <td><?=$vars['LastName']?></td>
+                  <td><input type='text' name='LastName' value='<?=$vars['LastName']?>'/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_LastName"
                     <?php if ($vars['IsHidden_LastName'])
@@ -161,7 +170,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Address')?>:</td>
-                  <td><?=$vars['HouseNumber']?> <?=$vars['Street']?></td>
+                  <td><input type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>'/> <label for='HouseNumber'>Housenumber</label> <input type='text' name='Street' id='Street' value='<?=$vars['Street']?>'/><label for='Street'>Street</label></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_Address"
                     <?php if ($vars['IsHidden_Address'])
@@ -172,7 +181,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" >Zip:</td>
-                  <td><?=$vars['Zip']?></td>
+                  <td><input type='text' name='Zip' value='<?=$vars['Zip']?>'/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_Zip"
                     <?php if ($vars['IsHidden_Zip'])
@@ -181,7 +190,7 @@
                     <?=$words->get('hidden')?>
                   </td>
                   <td>
-                    <a href="bw/updatemandatory.php" ><?=$words->get('UpdateMyNameAndAddressAndBirthdate')?></a>
+                    &nbsp;
                   </td>
                 </tr>
                 <tr align="left" >

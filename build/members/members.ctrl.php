@@ -3,15 +3,29 @@
 
 class MembersController extends RoxControllerBase
 {
-    function index($args = false)
+
+    public function __construct()
     {
-        $model = new MembersModel;
-        if (isset($_SESSION['Username'])) {
-            // logged in
-            $username_self = $_SESSION['Username'];
-            $member_self = $model->getMemberWithUsername($username_self);
-            return $this->index_loggedIn($args, $member_self);
-        } else {
+        parent::__construct();
+        $this->model = new MembersModel;
+    }
+
+    /**
+     * still main function called by router
+     *
+     * @todo split controller up to use routing, when proper routing is working
+     * @param object $args
+     * @access public
+     * @return object
+     */
+    public function index($args = false)
+    {
+        if ($member = $this->model->getLoggedInMember())
+        {
+            return $this->index_loggedIn($args, $member);
+        }
+        else
+        {
             return $this->index_loggedOut($args);
         }
     }
@@ -19,7 +33,6 @@ class MembersController extends RoxControllerBase
     protected function index_loggedOut($args)
     {
         $request = $args->request;
-        $model = new MembersModel();
         
         switch (isset($request[0]) ? $request[0] : false) {
             case 'updatemandatory':
@@ -42,7 +55,7 @@ class MembersController extends RoxControllerBase
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
                         PPHP::PExit();
                     PRequest::ignoreCurrentRequest();
-                    $model->showAvatar($member->id);
+                    $this->model->showAvatar($member->id);
                     break;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
@@ -63,29 +76,23 @@ class MembersController extends RoxControllerBase
                             break;
                         default:
                             $page = new ProfilePage();
-                            $model->set_profile_language($request[2]);
+                            $this->model->set_profile_language($request[2]);
                             break;
                     }
                     $page->member = $member;
                 }
         }
-        $page->model = $model;
+        $page->model = $this->model;
         return $page;
     }
     
     protected function index_loggedIn($args, $member_self)
     {
         $request = $args->request;
-        $model = new MembersModel();
         
         $myself = true;
         
         switch (isset($request[0]) ? $request[0] : false) {
-            case 'updatemandatory':
-                if (isset($request[1]) && $request[1] == 'finish')
-                    $page = new UpdateMandatoryFinishPage();
-                else $page = new UpdateMandatoryPage();
-                break;
             case 'setlocation':
                 $page = new SetLocationPage();
                 break;
@@ -96,7 +103,7 @@ class MembersController extends RoxControllerBase
                 $page = new EditMyProfilePage();
                 // $member->edit_mode = true;
                 if (isset($request[1]))
-                    $model->set_profile_language($request[1]);
+                    $this->model->set_profile_language($request[1]);
 				if (isset($request[2]) && $request[2] == 'delete')
 					$page = new DeleteTranslationPage();
                 if (in_array('finish',$request))
@@ -136,7 +143,7 @@ class MembersController extends RoxControllerBase
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
                         PPHP::PExit();
                     PRequest::ignoreCurrentRequest();
-                    $model->showAvatar($member->id);
+                    $this->model->showAvatar($member->id);
                     break;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
@@ -186,7 +193,7 @@ class MembersController extends RoxControllerBase
                             break;
                         default:
                             $page = new ProfilePage();
-                            $model->set_profile_language($request[2]);
+                            $this->model->set_profile_language($request[2]);
                             break;
                     }
                 }
@@ -196,10 +203,10 @@ class MembersController extends RoxControllerBase
         } else if (is_object($member)) {
             $page->member = $member;
         }
-        if (isset($myself) && $myself) {
+        if (!empty($myself)) {
             $page->myself = true;
         }
-        $page->model = $model;
+        $page->model = $this->model;
         return $page;
     }
     
@@ -252,10 +259,9 @@ class MembersController extends RoxControllerBase
                 $mem_redirect->post = $vars;
                 return false;
             }
-            $Member = new MembersModel;
             
             // set the location
-            $result = $Member->setLocation($vars['id'],$vars['geonameid']);
+            $result = $this->model->setLocation($vars['id'],$vars['geonameid']);
             $errors['Geonameid'] = 'Geoname not set';
             if (count($result['errors']) > 0) {
                 $mem_redirect->errors = $result['errors'];
@@ -266,15 +272,15 @@ class MembersController extends RoxControllerBase
 
     public function updateMandatoryCallback($args, $action, $mem_redirect, $mem_resend)
     {
+        throw new Exception('This should not be used - mandatory details are taken care of in edit my profile');
         $request = $args->request;
         if (isset($args->post)) {
             foreach ($args->post as $key => $value) {
                 $vars[$key] = $value;
             }
-            $model = new SignupModel();
             
-            $errors = $model->checkUpdateMandatoryForm($vars);
-            
+            $errors = $this->model->checkUpdateMandatory($vars);
+
             if (count($errors) > 0) {
                 // show form again
                 $vars['errors'] = $errors;
@@ -282,6 +288,7 @@ class MembersController extends RoxControllerBase
                 return false;
             }
             $model->polishFormValues($vars);
+            $model->setPendingMandatory($vars);
             $model->sendMandatoryForm($vars);
             return 'updatemandatory/finish';
         }
@@ -292,8 +299,7 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $request = $args->request;
-        $model = new MembersModel;
-        $errors = $model->checkMyPreferences($vars);
+        $errors = $this->model->checkMyPreferences($vars);
         
         if (count($errors) > 0) {
             // show form again
@@ -305,16 +311,16 @@ class MembersController extends RoxControllerBase
         if( !($User = APP_User::login()))
             return false;
         
-        $model->editPreferences($vars);
+        $this->model->editPreferences($vars);
         
         // set profile as public
         if( isset($vars['PreferencePublicProfile']) && $vars['PreferencePublicProfile'] != '') {   
-            $model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);
+            $this->model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);
         }
         // set new password
         if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
             $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['passwordnew']).'\') WHERE `id` = '.$_SESSION['IdMember'];
-            if( $model->dao->exec($query)) {
+            if( $this->model->dao->exec($query)) {
                 $messages[] = 'ChangePasswordUpdated';
                 $L = MOD_log::get();
                 $L->write("Password changed", "change password");
@@ -338,8 +344,7 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $request = $args->request;
-        $model = new MembersModel;
-        $errors = $model->checkCommentForm($vars);
+        $errors = $this->model->checkCommentForm($vars);
         
         if (count($errors) > 0) {
             // show form again
@@ -350,19 +355,28 @@ class MembersController extends RoxControllerBase
         $member = $this->getMember($request[1]);
         $TCom = $member->get_comments_commenter($_SESSION['IdMember']);
         // add the comment!
-        if (!$model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
+        if (!$this->model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
         
         return 'members/'.$request[1].'/comments';
     }
     
     
+    /**
+     * handles edit profile form post - profile updating
+     *
+     * @param object $args
+     * @param object $action
+     * @param object $mem_redirect
+     * @param object $mem_resend
+     * @access public
+     * @return string
+     */
     public function editMyProfileCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post)) {
             $vars = $args->post;
             $request = $args->request;
-            $model = new MembersModel;
-            $errors = $model->checkProfileForm($vars);
+            $errors = $this->model->checkProfileForm($vars);
             $vars['errors'] = array();
             if (count($errors) > 0) {
                 // show form again
@@ -371,15 +385,14 @@ class MembersController extends RoxControllerBase
                 return false;
             }
             $vars['member'] = $this->getMember($vars['memberid']);
-            $vars = $model->polishProfileFormValues($vars);
-            $success = $model->updateProfile($vars);
+            $vars = $this->model->polishProfileFormValues($vars);
+            $success = $this->model->updateProfile($vars);
             if (!$success) $mem_redirect->problems = array(0 => 'Could not update profile');
             
             // Redirect to a nice location like editmyprofile/finish
             $str = implode('/',$request);
             if (in_array('finish',$request)) return $str;
             return $str.'/finish';
-            
         }
     }
 	
@@ -388,7 +401,6 @@ class MembersController extends RoxControllerBase
         if (isset($args->post)) {
             $vars = $args->post;
             $request = $args->request;
-            $model = new MembersModel;
 			if (isset($vars['choice']) && $vars['choice'] == 'yes' && isset($vars['memberid'])) {
 				if (!isset($vars['profile_language'])) return false;
 				$member = $this->getMember($vars['memberid']);
@@ -396,7 +408,7 @@ class MembersController extends RoxControllerBase
 				$trad_ids = array();
 				foreach ($fields as $field)
 					$trad_ids[] = $member->$field;
-				$model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
+				$this->model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
 				// Redirect to a nice location like editmyprofile/finish
 				return 'editmyprofile/finish';
             } else {
@@ -410,7 +422,6 @@ class MembersController extends RoxControllerBase
         if (isset($args->post)) {
             $vars = $args->post;
             $request = $args->request;
-            $model = new MembersModel;
 
 			if (isset($vars['IdOwner']) && $vars['IdOwner'] == $_SESSION['IdMember'] && isset($vars['IdRelation'])) {
 				if (isset($vars['action'])) {
@@ -432,15 +443,15 @@ class MembersController extends RoxControllerBase
 					}
 					switch ($vars['action']) {
 					case 'add':
-						$blub = $model->addRelation($vars);
+						$blub = $this->model->addRelation($vars);
 						break;
 					case 'update':
-						$model->updateRelation($vars);
+						$this->model->updateRelation($vars);
 						break;
 					case 'confirm':
 						$vars['confirm'] = 'Yes';
-						$blub = $model->addRelation($vars);
-						$model->confirmRelation($vars);
+						$blub = $this->model->addRelation($vars);
+						$this->model->confirmRelation($vars);
 						break;
 					default:
 					}
@@ -455,5 +466,298 @@ class MembersController extends RoxControllerBase
     }
 
 }
+
+/* htdocs/bw/updatemandatory.php
+
+
+require_once "lib/init.php";
+require_once "lib/FunctionsLogin.php";
+require_once "layout/error.php";
+require_once "layout/updatemandatory.php";
+?>
+<?php
+
+if (!IsLoggedIn("Pending,NeedMore")) {
+	MustLogIn();
+}
+
+// Find parameters
+$IdMember = $_SESSION['IdMember'];
+
+if ((HasRight("Accepter")) or ((HasRight("SafetyTeam"))) and (GetStrParam("cid") != "")) { // Accepter or SafetyTeam can alter these data
+	$IdMember = IdMember(GetStrParam("cid", $_SESSION['IdMember']));
+	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
+	// Restriction an accepter can only see/update mandatory data of someone in his Scope country
+	$AccepterScope = RightScope('Accepter');
+	$AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
+	if (($AccepterScope != "\"All\"")and($IdMember!=$_SESSION['IdMember'])) {
+	   $rr=LoadRow("select IdCountry,countries.Name as CountryName,Username from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
+	   if (isset($rr->IdCountry)) {
+	   	  $tt=explode(",",$AccepterScope) ;
+		  	if ((!in_array($rr->IdCountry,$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
+					 $ss=$AccepterScope ;
+					 for ($ii=0;$ii<sizeof($tt);$ii++) {
+					 		 if (is_numeric($tt[$ii])) {
+							 		$ss=$ss.",".getcountryname($tt[$ii]) ;
+							 }
+					 }				 
+		  	 	 die ("sorry Your accepter Scope is only for ".$ss." This member is in ".$rr->CountryName) ;
+		  	} 
+	   }
+	}
+	$StrLog="Viewing member [<b>".fUsername($IdMember)."</b>] data with right [".$AccepterScope."]" ;
+	if (HasRight("SafetyTeam")) {
+		 		$StrLog=$StrLog." <b>With SafetyTeam Right</b>" ;
+	}
+	LogStr($StrLog,"updatemandatory") ; 
+	$IsVolunteerAtWork = true;
+} else {
+	$IsVolunteerAtWork = false;
+	$ReadCrypted = "AdminReadCrypted"; // In this case the MemberReadCrypted will be used (only owner can decrypt)
+}
+$m = LoadRow("select * from members where id=" . $IdMember);
+
+// ************************************************
+// RF notes: $m = row from db loaded with member_id
+// first, check if we're returning from a post, set
+// variables accordingly (typically named as their
+// fields)
+// ************************************************
+
+if (isset ($_POST['FirstName'])) { // If return from form
+	$Username = $m->Username;
+	$SecondName = GetStrParam("SecondName");
+	$FirstName = GetStrParam("FirstName");
+	$LastName = GetStrParam("LastName");
+	$StreetName = GetStrParam("StreetName");
+	$Zip = GetStrParam("Zip");
+	$HouseNumber = GetStrParam("HouseNumber");
+	$IdCountry = GetParam("IdCountry");
+	$IdCity = GetParam("IdCity",0);
+	$IdRegion = GetParam("IdRegion");
+	$Gender = GetStrParam("Gender");
+	$BirthDate = GetStrParam("BirthDate");
+	$MemberStatus = GetStrParam("Status");
+	if (GetStrParam("HideBirthDate") == "on") {
+		$HideBirthDate = "Yes";
+	} else {
+		$HideBirthDate = "No";
+	}
+	if (GetStrParam("HideGender") == "on") {
+		$HideGender = "Yes";
+	} else {
+		$HideGender = "No";
+	}
+} // end if return from form
+else {
+
+// ************************************************
+// if not returning from post, fill same variables
+// with data from loaded DB row
+// ************************************************
+
+	$Username = $m->Username;
+	$MemberStatus = $m->Status;
+	$FirstName = $ReadCrypted ($m->FirstName);
+	$SecondName = $ReadCrypted ($m->SecondName);
+	$LastName = $ReadCrypted ($m->LastName);
+
+	$StreetName = "";
+	$Zip = "";
+	$HouseNumber = "";
+	$IdCountry = 0;
+	$IdCity = 0;
+	$IdRegion = 0;
+	$rAdresse = LoadRow("select StreetName,Zip,HouseNumber,countries.id as IdCountry,cities.IdRegion as IdRegion,cities.Name as CityName,cities.id as IdCity from addresses,countries,cities where IdMember=" . $IdMember . " and addresses.IdCity=cities.id  and countries.id=cities.IdCountry");
+	if (isset ($rAdresse->IdCity)) {
+		$IdCountry = $rAdresse->IdCountry;
+		$IdCity = $rAdresse->IdCity;
+		$IdRegion = $rAdresse->IdRegion;
+
+		$CityName=$rAdresse->CityName;
+
+		$StreetName = $ReadCrypted ($rAdresse->StreetName);
+		$Zip = $ReadCrypted ($rAdresse->Zip);
+		$HouseNumber = $ReadCrypted ($rAdresse->HouseNumber);
+	}
+
+	$Gender = $m->Gender;
+	$HideGender = $m->HideGender;
+
+	$ttdate = explode("-", $m->BirthDate);
+	$BirthDate = $ttdate[2] . "-" . $ttdate[1] . "-" . $ttdate[0]; // resort BirthDate
+
+	$HideBirthDate = $m->HideBirthDate;
+}
+
+$MessageError = "";
+
+// ************************************************
+// where things get ugly - take action based on ...
+// probably post variable
+// ************************************************
+
+switch (GetParam("action")) {
+	case "needmore" : // check parameters
+	case "updatemandatory" : // check parameters
+
+// ************************************************
+// validate input vars (and load username once more
+// just for kicks)
+// ************************************************
+
+		$Username = $m->Username; // retrieve Username
+			$IdCity = 0;
+			$IdRegion = 0;
+			$MessageError .= ww('SignupErrorProvideCountry') . "<br />";
+		}
+		if ($IdCity <= 0) {
+			$MessageError .= ww('SignupErrorProvideCity') . "<br />";
+		}
+		if (strlen($StreetName) <= 1) {
+			$MessageError .= ww('SignupErrorProvideStreetName') . "<br />";
+		}
+		if (strlen($Zip) < 1) {
+			$MessageError .= ww('SignupErrorProvideZip') . "<br />";
+		}
+		if (strlen($HouseNumber) < 1) {
+			$MessageError .= ww('SignupErrorProvideHouseNumber') . "<br />";
+		}
+		if (strlen($Gender) < 1) {
+			$MessageError .= ww('SignupErrorProvideGender', ww('IdontSay')) . "<br />";
+		}
+
+		$ttdate = explode("-", $BirthDate);
+		$DB_BirthDate = $ttdate[2] . "-" . $ttdate[1] . "-" . $ttdate[0]; // resort BirthDate
+		if (!checkdate($ttdate[1], $ttdate[0], $ttdate[2])) {
+			$MessageError .= ww('SignupErrorBirthDate') . "<br />";
+		}
+		elseif (fage_value($DB_BirthDate) < $_SYSHCVOL['AgeMinForApplying']) {
+			//			  echo "fage_value(",$DB_BirthDate,")=",fage_value($DB_BirthDate),"<br />";
+			$MessageError .= ww('SignupErrorBirthDateToLow', $_SYSHCVOL['AgeMinForApplying']) . "<br />";
+		}
+
+		if (empty($IdCity)) { // if there was no city return by the form because of some bug
+		   if (!empty($rr->IdCity)) $IdCity=$rr->IdCity ; // try with the one of the address if any
+		   else {
+		   	  $IdCity=$m->IdCity ; // or try with the prévious one
+		   }
+		}
+		if (empty($IdCity)) { 
+			$MessageError .= ww('SignupErrorProvideCity') . "<br />";
+		}
+
+
+// ************************************************
+// if there was an error validating fields, display
+// updatemandatory form once more, along with errors
+// and the exit
+// ************************************************
+
+		if ($MessageError != "") {
+			DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetStrParam("CityName","")));
+			exit (0);
+		}
+
+
+     	$IdAddress=0;
+		// in case the update is made by a volunteer
+		$rr = LoadRow("select * from addresses where IdMember=" . $m->id." and Rank=0");
+		if (isset ($rr->id)) { // if the member already has an address
+			$IdAddress=$rr->id;
+		}
+		if (($IsVolunteerAtWork)or($m->Status=='NeedMore')or($m->Status=='Pending')) {
+			// todo store previous values
+			if ($IdAddress!=0) { // if the member already has an address
+				$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . NewReplaceInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress,$rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . NewReplaceInCrypted($Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;
+				sql_query($str);
+			} else {
+				$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted("addresses.HouseNumber",0,$HouseNumber) . "," . NewInsertInCrypted("addresses.StreetNamer",0,$StreetName) . "," . NewInsertInCrypted("addresses.Zip",0,$Zip) . ",now(),\"Address created by volunteer\")";
+				sql_query($str);
+			    $IdAddress=mysql_insert_id();
+				LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
+			}
+			$m->FirstName = NewReplaceInCrypted($FirstName,"members.FirstName",$m->id, $m->FirstName, $m->id,IsCryptedValue($m->FirstName));
+			$m->SecondName = NewReplaceInCrypted($SecondName,"members.SecondName",$m->id, $m->SecondName, $m->id,IsCryptedValue($m->SecondName));
+			$m->LastName = NewReplaceInCrypted(stripslashes($LastName),"members.LastName",$m->id, $m->LastName, $m->id,IsCryptedValue($m->LastName));
+
+			$str = "update members set FirstName=" . $m->FirstName . ",SecondName=" . $m->SecondName . ",LastName=" . $m->LastName . ",Gender='" . $Gender . "',HideGender='" . $HideGender . "',BirthDate='" . $DB_BirthDate . "',HideBirthDate='" . $HideBirthDate . "',IdCity=" . $IdCity . " where id=" . $m->id;
+			sql_query($str);
+			$slog = "Doing a mandatoryupdate on <b>" . $Username . "</b>";
+			if (($IsVolunteerAtWork) and ($MemberStatus != $m->Status)) {
+				$str = "update members set Status='" . $MemberStatus . "' where id=" . $m->id;
+				sql_query($str);
+				LogStr("Changing Status from " . $m->Status . " to " . $MemberStatus . " for member <b>" . $Username . "</b>", "updatemandatory");
+			}
+			elseif ($m->Status=='NeedMore') {
+				$str = "update members set Status='Pending' where id=" . $m->id;
+				sql_query($str);
+				$slog=" Completing profile after NeedMore ";
+				if (GetStrParam("Comment") != "") {
+				   $slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
+				}
+				LogStr($slog, "updatemandatory");
+				DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $m->Username));
+				exit (0);
+			}
+			
+
+			if (GetStrParam("Comment") != "") {
+				$slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
+			}
+			LogStr($slog, "updatemandatory");
+		} else { // not volunteer action
+
+
+// ************************************************
+// in case it's not a volunteer doing the update,
+// change it to a request for updating details instead
+// by sticking the data into pendingmandatory table
+// ************************************************
+
+			$Email = GetEmail();
+
+// a member can only choose to hide or to show his gender / birth date and have it to take action immediately
+	  		if (($HideGender!=$m->HideGender) or ($HideBirthDate!=$m->HideBirthDate)) { 
+			   $str = "update members set HideGender='" . $HideGender . "',HideBirthDate='" . $HideBirthDate . "' where id=" . $m->id;
+			   LogStr("mandatoryupdate changing Hide Gender (".$HideGender."/".$m->HideGender.") or HideBirthDate (".$HideBirthDate."/".$m->HideBirthDate.")", "updatemandatory");
+			   sql_query($str);
+			}
+			
+			$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress,IdMember) ";
+			$str .= " values(" . GetParam("IdCity") . ",'" . GetStrParam("FirstName") . "','" . GetStrParam("SecondName") . "','" . GetStrParam("LastName") . "','" . GetStrParam("HouseNumber") . "','" . GetStrParam("StreetName") . "','" . GetStrParam("Zip") . "','" . GetStrParam("Comment") . "',".$IdAddress.",".$IdMember.")";
+			sql_query($str);
+			LogStr("Adding a mandatoryupdate request", "updatemandatory");
+
+			$subj = ww("UpdateMantatorySubj", $_SYSHCVOL['SiteName']);
+			$text = ww("UpdateMantatoryMailConfirm", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName']);
+			$defLanguage = $_SESSION['IdLanguage'];
+			bw_mail($Email, $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], $defLanguage, "yes", "", "");
+
+			// Notify volunteers that an updater has updated
+			$subj = "Update mandatory " . $Username . " from " . getcountryname($IdCountry) . " has updated";
+			$text = " updater is " . $FirstName . " " . strtoupper($LastName) . "\n";
+			$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
+			if (GetStrParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . GetStrParam("Comment") . "</font></b>\n";
+			else $text .= "No Feedback \n";
+			$text .= GetStrParam("ProfileSummary");
+			$text .= "<a href=\"https:/".$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
+			bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
+			DisplayUpdateMandatoryDone(ww('UpdateMantatoryConfirm', $Email));
+			exit (0);
+		}
+
+	case "change_country" :
+	case ww('SubmitChooseRegion') :
+		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetStrParam("CityName","")));
+		exit (0);
+	case "change_region" :
+	case ww('SubmitChooseCity') :
+		DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,stripslashes(GetStrParam("CityName","")));
+		exit (0);
+}
+DisplayUpdateMandatory($Username, $FirstName, $SecondName, $LastName, $IdCountry, $IdRegion, $IdCity, $HouseNumber, $StreetName, $Zip, $Gender, $MessageError, $BirthDate, $HideBirthDate, $HideGender, $MemberStatus,$CityName);
+*/
+
 
 ?>

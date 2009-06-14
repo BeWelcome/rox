@@ -43,7 +43,7 @@ if ($member->get_trad("Hobbies", $profile_language) != "" or $member->get_trad("
     
     <?php if ($member->get_trad("Movies", $profile_language) != "") { ?>
             <dt class="label" ><?=$words->getInLang('ProfileMovies', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("Hobbies", $profile_language); ?></dd>
+            <dd><?php echo $member->get_trad("Movies", $profile_language); ?></dd>
         <? } ?>
         
     <?php if ($member->get_trad("Organizations", $profile_language) != "") { ?>

@@ -175,10 +175,10 @@ if (!empty($my_groups)) :
             <?php echo $member->country ?>
         </dd>
         
-        <?php if ($member->phone) { ?>
+        <?php if ($phones = $member->phone) { ?>
             <dt><?=$words->getInLang('ProfilePhone', $profile_language_code);?>:</dt>
             <?php
-            foreach ($member->phone as $phone => $value) {
+            foreach ($phones as $phone => $value) {
                 echo "<dd>", $words->get('Profile'.$phone), ": ", $value, "</dd>\n";
             }
         ?>

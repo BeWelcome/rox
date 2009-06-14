@@ -28,7 +28,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     echo '<div class="error">'.$ww->EditmyprofileError.'<br/>';
     foreach ($vars['errors'] as $error)
     {
-        echo "{$error}<br/>";
+        echo $words->getInLang($error,$profile_language) ."<br/>";
     }
     echo "</div>";
 } else {

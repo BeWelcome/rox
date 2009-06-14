@@ -29,6 +29,10 @@
                         if ($vars['HideBirthDate'] == "Yes")
                             echo ' checked="checked"';
                         echo ' /> ', $words->get("Hidden");
+                        if (in_array('SignupErrorInvalidBirthDate', $vars['errors']))
+                        {
+                            echo '<div class="error">'.$words->get('SignupErrorInvalidBirthDate').'</div>';
+                        }
                     ?>
                   </td>
                 </tr>
@@ -40,6 +44,12 @@
                     <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'><?= $words->get('male'); ?></label>
                     <input class="radio" type="radio" id='genderX' name="gender" value="IDontTell" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'IDontTell') ? ' checked="checked"' : '');?>/><label for='genderX'><?= $words->get('IDontTell'); ?></label>
                         <input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'><?= $words->get("Hidden");?></label>
+                    <?php
+                        if (in_array('SignupErrorInvalidGender', $vars['errors']))
+                        {
+                            echo '<div class="error">'.$words->get('SignupErrorInvalidGender').'</div>';
+                        }
+                    ?>
                 </tr>
 
                 <tr align="left" >
@@ -173,6 +183,12 @@
                   <td>
                       <input type='text' name='Street' id='Street' value='<?=$vars['Street']?>'/>
                       <input type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>' size="5" />     
+                    <?php
+                        if (in_array('SignupErrorInvalidAddress', $vars['errors']))
+                        {
+                            echo '<div class="error">'.$words->get('SignupErrorInvalidAddress').'</div>';
+                        }
+                    ?>
                   </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_Address"

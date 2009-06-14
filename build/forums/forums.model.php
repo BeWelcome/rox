@@ -3388,7 +3388,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         $alwaynotified = array() ;// This will be the list of people who will be notified about every forum activity
 
         // retrieve the post data
-        $query = sprintf("select forums_posts.threadid as IdThread,forums_threads.IdGroup as IdGroup,PostVisibility,PostDeleted,ThreadVisibility,ThreadDeleted from forums_posts,forums_threads where forums_posts.IdThread=forums_threads.id and forums_posts.postid=%d",$IdPost) ;
+        $query = sprintf("select forums_posts.threadid as IdThread,forums_threads.IdGroup as IdGroup,PostVisibility,PostDeleted,ThreadVisibility,ThreadDeleted from forums_posts,forums_threads where forums_posts.threadid=forums_threads.id and forums_posts.postid=%d",$IdPost) ;
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('prepare_notification Could not retrieve the post data!');

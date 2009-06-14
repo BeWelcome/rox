@@ -738,6 +738,13 @@ ORDER BY
         $words->setlangWrite($vars['profile_language']);
 
         // refactoring to use member entity
+        $m->Gender = $vars['gender'];
+        $m->HideGender = $vars['HideGender'];
+        $m->BirthDate = $vars['BirthDate'];
+        $birthdate = $this->validateBirthdate($vars['BirthDate']);
+        $m->bday = substr($birthdate, -2);
+        $m->bmonth = substr($birthdate, 5,2);
+        $m->byear = substr($birthdate, 0,4);
         $m->HideBirthDate = $vars['HideBirthDate'];
         $m->HideGender = $vars['HideGender'];
         $m->ProfileSummary = $words->ReplaceInMTrad($this->cleanupText($vars['ProfileSummary']),"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);

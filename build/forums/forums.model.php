@@ -1332,7 +1332,7 @@ WHERE `threadid` = '%d' ",
 			else {
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
 				$ss="insert into reports_to_moderators(PostComment,created,IdPost,IdReporter,Status) " ;
-				$ss=$ss." values('".$this->dao->escape($PostComment)."',now(),".$IdPost.",IdReporter,'".$Status."')" ;
+				$ss=$ss." values('".$this->dao->escape($PostComment)."',now(),".$IdPost.",".$_SESSION["IdMember"].",".$Status."')" ;
 			}
 		}
 		$this->dao->query($ss);

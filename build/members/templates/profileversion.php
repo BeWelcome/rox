@@ -55,8 +55,10 @@ if (count($languages) > 1 || $myself) {
     </optgroup>
 </select>
 <?=$words->flushBuffer()?>
-<?php } ?>
-</div> <!-- profile_translations -->
+<?php }
+if (count($languages) > 1 || $myself) {
+echo "</div> <!-- profile_translations -->";
+} ?>
 
 <script type="text/javascript">//<!--
     function linkDropDown(event){

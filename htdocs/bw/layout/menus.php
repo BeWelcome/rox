@@ -29,6 +29,11 @@ require_once("layouttools.php");
 
 // This menu is the top menu
 function Menu1($link = "", $tt = "") {
+	$_SESSION['Menu1_link'] = $link;
+	$_SESSION['Menu1_tt'] = $tt;
+}
+
+function Menu1_old($link = "", $tt = "") {
 	
 	if (isset($_SESSION['IdMember']))
 		$IdMember = $_SESSION['IdMember'];
@@ -36,46 +41,44 @@ function Menu1($link = "", $tt = "") {
 		$IdMember = "";	
 	
 	?>
-  <div id="page_margins">
-  <div id="page" class="hold_floats">
-  <div id="header">
-          
     <div id="topnav">
-      <ul>
 <?php
 	function menu_link($link, $to, $msg, $src) {
     	/* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
-    	echo "        <li", factive($link, $to), ">";
+    	echo "        <span", factive($link, $to), ">";
     	if (!empty($src)) {
     	    echo "<img src=\"" . PVars::getObj('env')->baseuri . $src;
     	}
-    	echo "<a href='".bwlink($to)."'>", $msg, "</a></li>\n";
+    	echo "<a href='".bwlink($to)."'>", $msg, "</a></span>\n";
 	}
     if (isset($_SESSION['WhoIsOnlineCount'])) {
-        echo "<li", factive($link, "online"), ">";
-        echo "<img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_online.png\" alt=\"onlinemembers\" />";
-        echo '<a href="'.PVars::getObj('env')->baseuri.'online">', ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></li>\n";
+        echo "<span", factive($link, "online"), ">";
+        echo "<img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_online.png\" alt=\"onlinemembers\" /> ";
+        echo '<a href="'.PVars::getObj('env')->baseuri.'online">', ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></span>\n";
     }
 	
 	if (IsLoggedIn()) {
-	    menu_link($link, "mymessages.php", ww("Mymessages"), "styles/YAML/images/icon_grey_mail.png\" alt=\"mymessages\" />");
-	    menu_link($link, "mypreferences.php", ww("MyPreferences"), "styles/YAML/images/icon_grey_pref.png\" alt=\"mypreferencess\" />");
-	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></li>\n";
+	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_mail.png\" alt=\"mymessages\" /><a href=\"" . PVars::getObj('env')->baseuri . "messages\">" . ww("Mymessages") . "</a></span>\n";
+	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_pref.png\" alt=\"mypreferences\" /><a href=\"" . PVars::getObj('env')->baseuri . "mypreferences\">" . ww("MyPreferences") . "</a></span>\n";
+	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></span>\n";
 	} else {
 	    // menu_link($link, "index.php", ww("Login"));
-	    echo "        <li><img src=\"" . PVars::getObj('env')->baseuri . "styles/YAML/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . PVars::getObj('env')->baseuri . "\">" . ww("Login") . "</a></li>\n";
-	    menu_link($link, "signup.php", ww("Signup"), "");
+	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . PVars::getObj('env')->baseuri . "logout\">" . ww("Login") . "</a></span>\n";
+	    echo "<span><a href=\"" . PVars::getObj('env')->baseuri . "signup\">", ww("Signup"), "</a></span>\n";
 	}
 ?>
-      </ul>
     </div> <!-- topnav -->
-    <a href="/"><img id="logo" class="float_left overflow" src="images/logo.gif" width="250" height="48" alt="Be Welcome" /></a>
-  </div> <!-- header -->
+
      <?php
 
 } // end of Menu1
 
 function Menu2($link = "", $tt = "") {
+	Menu2_old($link, $tt);
+	Menu1_old($_SESSION['Menu1_link'],$_SESSION['Menu1_tt']);
+}
+
+function Menu2_old($link = "", $tt = "") {
 	
 	if (isset($_SESSION['IdMember']))
 		$IdMember = $_SESSION['IdMember'];
@@ -86,36 +89,90 @@ function Menu2($link = "", $tt = "") {
 		$Username = $_SESSION['Username'];
 	else
 		$Username = "";
+	?>
+  <div id="page_margins">
+  <div id="page" class="hold_floats">
+  <div id="header">
+  </div>
 
-	// #nav: main navigation 
+  <!-- son of suckerfish navigation (script to teach IE hover class used in dropdown menu-->
+    <script type="text/javascript"><!--//--><![CDATA[//><!--
+
+      sfHover = function() {
+          var sfEls = document.getElementById("nav_main").getElementsByTagName("li");
+          for (var i=0; i<sfEls.length; i++) {
+              sfEls[i].onmouseover=function() {
+                  this.className+=" sfhover";
+              }
+              sfEls[i].onmouseout=function() {
+                  this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+              }
+          }
+      }
+      if (window.attachEvent) window.attachEvent("onload", sfHover);
+
+  //--><!]]></script>
+  <?php
+  	// #nav: main navigation 
 	echo "    <div id=\"nav\">\n";
-	echo "      <div id=\"nav_main\">\n";
-	echo "        <ul>\n";
-    
-    if (IsLoggedIn()) {
-        echo "          <li", factive($link, "../main"), "><a href=\"../main\"><span>", ww("Menu"), "</span></a></li>\n";
-	   echo "          <li", factive($link, "member.php?cid=".$Username), "><a href=\"".bwlink("member.php?cid=".$Username)."\"><span>", ww("MyProfile"), "</span></a></li>\n";
-	}
-	echo "          <li", factive($link, "../searchmembers"), "><a href=\"".bwlink("searchmembers", true)."\"><span>", ww('FindMembers'), "</span></a></li>\n";
-	echo "          <li", factive($link, "../trip"), "><a href=\"../trip\"><span>".ww("Trips")."</span></a></li>\n";  
-	echo "          <li", factive($link, "../blog"), "><a href=\"../blog\"><span>".ww("Blogs")."</span></a></li>\n";  
-	echo "          <li", factive($link, "../forums"), "><a href=\"../forums\"><span>".ww("Community")."</span></a></li>\n";  
-	echo "          <li", factive($link, "../groups"), "><a href=\"../groups\"><span>", ww('Groups'), "</span></a></li>\n";
-  echo "          <li", factive($link, "../gallery"), "><a href=\"../gallery\"><span>".ww("Gallery")."</span></a></li>\n";
-	echo "          <li", factive($link, "../about"), "><a href=\"../about\"><span>", ww('GetAnswers'), "</span></a></li>\n";
-  echo "        </ul>\n";
-
+	echo "      <ul id=\"nav_main\">\n";
+?>
+        <li id="logo">
+          <a href="">
+            <img src="/images/logo_index_top.png" alt="Be Welcome" />
+          </a>
+        </li>
+        
+        <?php if (IsLoggedIn()) { ?>
+              <li><a href="/members/<?=$_SESSION['Username']?>"><?=ww('MyProfile')?></a>
+                  <ul>
+                      <li><a href="/members/<?=$_SESSION['Username']?>"><?=ww('Profile')?></a></li>
+                      <li><a href="/editmyprofile"><?=ww('EditMyProfile')?></a></li>
+                      <li><a href="/mypreferences"><?=ww('MyPreferences')?></a></li>
+                      <li><a href="/messages"><?=ww('MyMessages')?></a></li>
+                  </ul>
+              </li>
+          <?php } ?>
+                <li><a href="/search"><?=ww('FindMembers')?></a>
+                    <ul>
+                        <li><a href="/searchmembers"><?=ww('MapSearch')?></a></li>
+                        <li><a href="/places"><?=ww('BrowseCountries')?></a></li>
+                    </ul>
+                </li>
+                <li><a href="/explore"><?=ww('Explore')?></a>
+                    <ul>
+                        <li><a href="/forums"><?=ww('Community')?></a></li>
+                        <li><a href="/groups"><?=ww('Groups')?></a></li>
+                        <li><a href="/trip"><?=ww('Trips')?></a></li>
+                        <li><a href="/gallery"><?=ww('Gallery')?></a></li>
+                        <li><a href="/blog"><?=ww('Blogs')?></a></li>
+                        <li><a href="/chat"><?=ww('Chat')?></a></li>
+                    </ul>
+                </li>
+                <li><a href="/about"><?=ww('GetAnswers')?></a>
+                    <ul>
+                        <li><a href="/faq"><?=ww('Faq')?></a></li>
+                        <li><a href="/feedback"><?=ww('ContactUs')?></a></li>
+                        <li><a href="/about/getactive"><?=ww('About_GetActive')?></a></li>
+                    </ul>
+                </li>
+                <? if (IsVol()) { ?>
+                <li><a href="/volunteer"><?=ww('Volunteer')?></a>
+                    <ul>
+                    <?=VolMenu() ?>
+                    </ul>
+                </li>
+                <? } ?>
+            </ul>
+<?php
 	// #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly		
-	echo "          <div id=\"nav_flowright\">\n";
     echo '      <form action="../searchmembers/quicksearch" method="post" id="form-quicksearch">
         <input type="text" name="searchtext" size="15" maxlength="30" id="text-field" value="Search...." onfocus="this.value=\'\';"/>
         <input type="hidden" name="quicksearch_callbackId" value="1"/>
         <input type="image" src="'.bwlink("images/icon_go.png").'" id="submit-button" />
       </form>';
 
-	echo "          </div> <!-- nav_flowright -->\n";
 	// #nav_flowright: end
-	echo "      </div> <!-- nav_main -->\n"; // end nav_main
 	echo "    </div> <!-- nav -->\n"; // end nav
 } // end of Menu2
 
@@ -464,8 +521,7 @@ google_ad_channel = "";
 // This function display the Actions
 // THis function is here for historical reason, it call in fact  ShowLeftColumn
 function ShowActions($Action = "", $VolMenu = false) {
-  if ($VolMenu) ShowLeftColumn($Action,VolMenu()) ;
-  else ShowLeftColumn($Action) ;
+   ShowLeftColumn($Action) ;
 } // end of Show Actions
 
 //------------------------------------------------------------------------------
@@ -491,13 +547,6 @@ function ShowLeftColumn($MemberAction = "",$VolunteerAction ="", $MyRelations=""
 		echo $MyRelations;
     	echo "          </ul>\n";
 	}
-
-	if ($VolunteerAction != "")  {
-		echo "          <h3>", ww("VolunteerAction"), "</h3>\n";
-		echo "          <ul class=\"linklist\">\n";
-		echo $VolunteerAction;
-    	echo "          </ul>\n";
-	}
 	echo "        </div>\n"; // col1_content
 	echo "      </div>\n"; // col1
 } // end of ShowLeftColumn
@@ -519,12 +568,6 @@ function DisplayHeaderWithColumns($TitleTopContent = "", $MessageBeforeColumnLow
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "        </div> <!-- teaser -->\n"; //end teaser
 	// no tabs >>
-	echo "	        <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "		        <div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "			        <ul>\n";			
-	echo "			        </ul>\n";
-	echo "		        </div>\n";
-	echo "	        </div>\n";
 	echo "      </div> <!-- teaser_bg -->\n"; //end teaser_bg
     
 	if ($MessageBeforeColumnLow != "")
@@ -553,12 +596,6 @@ function DisplayHeaderShortUserContent($TitleTopContent = "") {
 	echo "          <h1>", $TitleTopContent, "</h1>\n"; // title in the Teaser (coloured bar)
 	echo "        </div> <!-- teaser -->\n"; //end teaser
 	// no tabs >>
-	echo "        <div id=\"middle_nav\" class=\"clearfix\">\n";
-	echo "          <div id=\"nav_sub\" class=\"notabs\">\n";
-	echo "            <ul>\n";
-	echo "            </ul>\n";
-	echo "          </div> <!-- nav_sub -->\n";
-	echo "        </div>\n";
 	echo "      </div> <!-- middle_nav -->\n"; //end teaser_bg
 	
 //	ShowLeftColumn($ActionList,VolMenu())  ; // Show the Actions

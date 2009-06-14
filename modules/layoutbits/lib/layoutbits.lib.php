@@ -202,7 +202,7 @@ class MOD_layoutbits
             return 'members/avatar/'.$userId.'/?xs';
         
         $picfile = self::userPic_userId($userId);
-        //$thumbfile = self::_getThumb($picfile, 100, 100, 100);
+        $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
     }
 
@@ -505,7 +505,9 @@ class MOD_layoutbits
         }
         $difference = round($difference);
         if($difference != 1) $periods[$j].= "s";
-        $text = $difference.' '.$words->get($periods[$j]).' '.$words->get('ago');
+	$periods[$j]=$periods[$j]."_ago" ;
+	
+        $text = $words->get($periods[$j],$difference);
         return $text;
         
     }

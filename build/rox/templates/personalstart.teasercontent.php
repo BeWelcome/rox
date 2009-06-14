@@ -24,67 +24,398 @@ Boston, MA  02111-1307, USA.
 ?>
 
 <div id="teaser" class="clearfix teaser_main">
-<h2><?=$ww->HelloUsername($_SESSION['Username'])?></h2>
-<div class="subcolumns">
-    <div class="c50l">
+	<h1><?=$words->getSilent('HelloUsername',$_SESSION['Username'])?></h1>
+
+<div class="subcolumns" style="margin-bottom: 2em">
+    <div class="c33l">
     <div class="subcl">
-    <div class="floatbox">
-        <img src="<?=$thumbPathMember?>" id="MainUserpic" class="float_left" alt="ProfilePicture" style="margin-right: 10px;" />
-        <div class="float_left">
-        <p>
-        <?php if (isset($_mainPageNewMessagesMessage)) { ?>
-            <a href="bw/mymessages.php"><img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/><?=$_mainPageNewMessagesMessage?></a>
-        </p>
-        <?php } ?>
-        <?php
-        $notify_widget->render();
-        ?>
-        </div>
-    </div> <!-- floatbox -->
+    <ul id="personalmenu">
+        <li><a id="tablink1" class="active-tab first" href="#tab1"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
+        <li><a id="tablink2" href="#tab2"><?=$words->getSilent('FindAHost')?></a></li>
+        <?php /* NOTREADY <li><a id="tablink3" href="#tab3"><?=$words->getSilent('OfferHosting')?></a></li> */ ?>
+        <?php /* NOTREADY<li><a id="tablink4" href="#tab4"><?=$words->getSilent('SetLocation')?></a></li> */ ?>
+        <li><a id="tablink5" href="#tab5"><?=$words->getSilent('CheckYourMessages')?>
+	        <?php if (isset($_mainPageNewMessagesMessage)) { ?>
+                (<img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/> <?=$_newMessagesNumber?>) 
+            <?php } ?>
+	    </a></li>
+    </ul>
     </div> <!-- subcl -->
     </div> <!-- c38l -->
 
-<?php
-    /*
-    **   deactivated for now
-    echo "                        <div id=\"mapsearch\">\n";
-    echo "                        <form>\n";
-    echo "                              <fieldset> \n";
-    echo "                              <input type=\"text\" name=\"searchtext\" size=\"10\" maxlength=\"30\" id=\"text-field\" />\n";
-    echo "                              <input type=\"hidden\" name=\"action\" value=\"mapsearch\" />\n";
-    echo "                              <input type=\"button\" value=\"Search\" class=\"button\" id=\"submit-button\" /><br />\n";
-    echo "                              Search the map\n";
-    echo "                            </fieldset>\n";
-    echo "                        </form>\n";
-    echo "                        </div>\n";
-    */
-
-    /* Instead we use this temporary solution */
-?>
-<div class="c50r">
+<div class="c66r">
     <div class="subcr">
-    <div id="mapsearch">
-    <!--
-        <ul class="search-options">
-            <li id="tab1" class="selected"><a href="#" onclick="javascript:setSearchOptions(1);"><img src="images/icons/user.png" > Members</a></li>
-            <li id="tab2"><a href="#" onclick="javascript:setSearchOptions(2);"><img src="images/icons/group.png"> Groups</a></li>
-            <li id="tab3"><a href="#" onclick="javascript:setSearchOptions(3);"><img src="images/icons/world.png"> Places</a></li>
-        </ul> 
-    -->
-    <div id="search-bar">
-        <form id="form1" name="form1" method="post" action="searchmembers/quicksearch">
-        <div><input name="searchtext" type="text" class="search-style" id="searchq" size="30" value="Search for hosts, travellers..." onfocus="this.value='';" /></div>
-        <input type="hidden" name="quicksearch_callbackId" value="1"/>
-        <input type="hidden" name="searchopt" id="searchopt" /><br />
-        <input type="submit" value="Search" id="btn-create-location" class="button"/>
-        </form>
-    </div>
-    </div> <!-- mapsearch -->
+    
+			<div class="panel active-tab-body" id="tab1">
+                    <?php
+                    $notify_widget->render();
+                    ?>
+        			 <p>
+
+                    </p>
+                    
+			</div> <!-- tab1 -->
+			<div class="panel" id="tab2">
+	<?php /* NOTREADY: complete the stuff below
+                    <h3><?=$words->get('HowToFindAHost')?></h3>
+                    
+                    <p>At best, write down your expectations and travel plans first. People can then contact you directly and offer you accomodation. You can also search actively for a person and just combine your personal message to him with the travel description you created.</p>
+                    <div id="hostrequest">
+                        <a href="requesthosting" class="button">Blog your request</a>
+                    </div>
+                    <p class="row"></p>
+                    <p class="row">after that</p>
+    */ ?>
+                    <div class="subcolumns">
+                        <div class="c50l">
+                        <div class="subcl">
+                            
+                            <h3>Search members</h3>
+                            <div id="search-bar">
+                                <form id="form1" name="form1" method="get" action="searchmembers">
+                                <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='Search for hosts, places...'" value="Search for hosts, places..." onfocus="this.value='';" />
+                                <input type="hidden" name="searchopt" id="searchopt" />
+                                <input type="submit" value="Search" class="button"/>
+                                </form>
+                            </div>
+                            
+                        </div> <!-- subcl -->
+                        </div> <!-- c50l -->
+
+                        <div class="c50r">
+                            <div class="subcr">
+                                
+                                <div id="browsecities_dropdown" style="display:none;">
+                                <h3>Browse Countries</h3>
+                                <select onchange="window.location.href=this.value; return false" style="width: 100%">
+                                <?php foreach ($Countries as $continent => $countries_group) { ?>
+            	                     <optgroup label="<?=$continent?>">
+            	                    <?php foreach ($countries_group as $code => $country) { ?>  
+            		                     <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
+            		                <?php } ?>
+            	                    </optgroup>
+                                <?php } ?>
+                                </select>
+                                </div>
+            					<script type="text/javascript">
+            					$('browsecities_dropdown').show();
+            					</script>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+			</div> <!-- tab2 -->
+			<div class="panel" id="tab3">
+                <div class="subcolumns">
+                    <div class="c50l">
+                    <div class="subcl">
+                        
+            			<h3>YourHostingStatus</h3>
+                		<form id="form1" name="form1" method="post" action="searchmembers/quicksearch">
+                			<select name="top5">
+                			<option name="whatever">I'm hosting</option>
+                			<option name="asdfho">Can't host</option>
+                			<option name="asdfho">Maybe</option>
+                			<option name="asdfho">I'm travelling</option>
+                			</select>
+                		<input type="hidden" name="quicksearch_callbackId" value="1"/>
+                		<input type="hidden" name="searchopt" id="searchopt" />
+                		</form>
+                        
+                    </div> <!-- subcl -->
+                    </div> <!-- c50l -->
+
+                    <div class="c50r">
+                        <div class="subcr">
+                            
+                            <h3>Edit your profile</h3>
+                            <p>Edit your profile now and describe in detail what you can offer, where you live, etc.</p>
+                            <div id="hostrequest">
+                                <a href="requesthosting" class="button">EditMyProfile</a>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            	
+        	</div> <!-- tab3 -->
+			
+			<div class="panel" id="tab4">
+
+					<h2>Where are you now?</h2>
+					
+                    <?php
+                    /* NOTREADY
+                    $Member = new MembersModel;    
+                    // Overwrite SetLocation-Geo-Info with GeoVars-Session (used for non-js users), afterwards unset it again.
+                    if (isset($_SESSION['GeoVars']) && isset($_SESSION['GeoVars']['id']) && isset($_SESSION['GeoVars']['geonameid'])) {
+                        foreach ($_SESSION['GeoVars'] as $key => $value) {
+                            $vars[$key] = $value;
+                        }
+                        // set the location
+                        $result = $Member->setLocation($vars['id'],$vars['geonameid']);
+                        $errors['Geonameid'] = 'Geoname not set';
+                        if (count($result['errors']) > 0) {
+                            $vars['errors'] = $result['errors'];
+                        }
+                        // unset($_SESSION['GeoVars']);
+                    } 
+                    $callback_tag = $this->layoutkit->formkit->setPostCallback('MembersController', 'setLocationCallback');
+                    $member = $Member->getMemberWithId($_SESSION['IdMember']);
+                    $m->geonameid = $member->IdCity;
+                    $m->id = $member->id;
+                    $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
+
+                    // values from previous form submit
+                    if (!$mem_redirect || !isset($mem_redirect->post['id'])) {
+                        // this is a fresh form
+                        foreach ($m as $key => $value) {
+                            $vars[$key] = $value;
+                        }
+                        $Geo = new GeoModel;
+                        if (isset($vars['geonameid']) && !isset($vars['geonamename']))
+                            $vars['geonamename'] = $Geo->getDataById($vars['geonameid'])->name;
+                            $vars['geonamecountry'] = '';
+                    } else {
+                        $vars = $mem_redirect->post;
+                        $vars['errors'] = $mem_redirect->errors;
+                    }
+                    if (!isset($vars['errors']) || empty($vars['errors']))
+                        $vars['errors'] = array();
+                    // Overwrite Signup-Geo-Info with GeoVars-Session (used for non-js users), afterwards unset it again.
+                    if (isset($_SESSION['GeoVars'])) {
+                        foreach ($_SESSION['GeoVars'] as $key => $value) {
+                        $vars[$key] = $value;
+                        }
+                    }
+
+                    ?>
+					
+                    <form method="post" name="geo-form-js" id="geo-form-js">
+                        <input type="hidden" name="javascriptactive" value="false" />
+                     <?php
+                            if (in_array('inserror', $vars['errors'])) {
+                                echo '<p class="error">'.$words->get('inserror').'</p>';
+                            }
+                            ?>
+                    <?php
+                            if (in_array('SignupErrorProvideLocation', $vars['errors'])) {
+                                echo '<p class="error">'.$words->get('SignupErrorProvideLocation').'</p>';
+                            }
+                            ?>
+
+                            <div class="floatbox" id="geoselectorjs" style="display: none;" >
+
+                                <div class="subcolumns">
+                                  <div class="c50l">
+                                    <div class="subcl">
+                                      <!-- Content of left block -->
+
+                                        <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
+                                        <input type="text" name="create-location" id="create-location" <?php
+                                        echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
+                                        ?>
+                                         />
+                                         <input id="btn-create-location" class="button" onclick="javascript:return false;" type="submit" value="<?=$words->get('label_search_location')?>" />
+                                        <p class="desc"><?=$words->get('subline_location')?></p>
+
+                                        <div id="location-status"></div>
+                                <div id="location-suggestion">
+                                <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
+                                    <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
+                                    <ol id="locations" class="plain">
+                                        <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
+                                        <?=$vars['geonamename']?><br/>
+                                        <?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
+                                            <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
+                                            <span class="small"><?=$vars['countryname']?> / <?=$vars['admincode']?></span>
+                                        <?php } ?>
+                                        </a></li>
+                                    </ol>
+                                <?php } ?>
+                            </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="c50r">
+                                    <div class="subcr">
+                                      <!-- Content of right block -->
+                                        <div id="spaf_map" style="width:240px; height:180px; border: 2px solid #333; display:none;">
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                </div> <!-- geoselectorjs -->
+
+                    </form>
+
+                        <?php
+                            $Geo = new GeoController;
+                            $Geo->layoutkit = $this->layoutkit;
+                            $Geo->SelectorInclude(array('id' => $vars['id']));
+                        ?>
+
+
+                    <form method="post" action="setlocation" name="signup" id="user-register-form">
+                      <?=$callback_tag ?>
+                      <input type="hidden" name="javascriptactive" value="false" />
+
+                      <?php
+                            if (in_array('inserror', $vars['errors'])) {
+                                echo '<p class="error">'.$errors['inserror'].'</p>';
+                            }
+                            ?>
+
+                        <input type="hidden" name="id" id="id" value="<?php
+                                echo isset($vars['id']) ? htmlentities($vars['id'], ENT_COMPAT, 'utf-8') : '';
+                            ?>" />
+                        <input type="hidden" name="geonameid" id="geonameid" value="<?php
+                                echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
+                            ?>" />
+                        <input type="hidden" name="latitude" id="latitude" value="<?php
+                                echo isset($vars['latitude']) ? htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8') : '';
+                            ?>" />
+                        <input type="hidden" name="longitude" id="longitude" value="<?php
+                                echo isset($vars['longitude']) ? htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8') : '';
+                            ?>" />
+                        <input type="hidden" name="geonamename" id="geonamename" value="<?php
+                                echo isset($vars['geonamename']) ? htmlentities($vars['geonamename'], ENT_COMPAT, 'utf-8') : '';
+                            ?>" />
+                        <input type="hidden" name="countryname" id="countryname" value="<?php
+                                echo isset($vars['countryname']) ? htmlentities($vars['countryname'], ENT_COMPAT, 'utf-8') : '';
+                            ?>" />
+                        <input type="hidden" name="geonamecountrycode" id="geonamecountrycode" value="<?php
+                                echo isset($vars['geonamecountrycode']) ? htmlentities($vars['geonamecountrycode'], ENT_COMPAT, 'utf-8') : '';
+                            ?>" />
+                        <input type="hidden" name="admincode" id="admincode" value="<?php
+                                echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
+                            ?>" />
+                        <input type="hidden" name="newgeo" id="newgeo" value="0" />
+
+
+                      <div id="submit_button" style="display: none;">
+                        <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
+                        onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
+                        />
+                      </div>
+
+                    </form>
+
+                    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
+                        $google_conf = PVars::getObj('config_google');
+                        if (!$google_conf || !$google_conf->maps_api_key) {
+                            throw new PException('Google config error!');
+                        }
+                        echo $google_conf->maps_api_key;
+
+                    ?>" type="text/javascript"></script>
+                    <script src="script/geo_suggest.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                             var map = null;
+
+                        function createMarker(point, descr) {
+                             var marker = new GMarker(point);
+                             GEvent.addListener(marker, "click", function() {
+                                marker.openInfoWindowHtml(descr);
+                             });
+                             return marker;
+                        }
+
+                        var loaded = false;
+                        function SPAF_Maps_load() {
+                             if (!loaded && GBrowserIsCompatible()) {
+
+                                map = new GMap2(document.getElementById("spaf_map"));
+                    <?php
+                        if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
+                            echo 'map.setCenter(new GLatLng('.htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
+                            if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
+                                $desc = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
+                                echo 'var marker = new GMarker(new GLatLng('.$vars['latitude'].', '.$vars['longitude'].'), '.$desc.');
+                                    map.addOverlay(marker);
+                                    GEvent.addListener(marker, "click", function() {
+                                        marker.openInfoWindowHtml('.$desc.');
+                                    });
+                                    marker.openInfoWindowHtml('.$desc.');';
+                            }
+                        } else {
+                            echo 'map.setCenter(new GLatLng(47.3666667, 8.55), 8);';
+                        } ?>
+                                map.addControl(new GSmallMapControl());
+                                //map.addControl(new GMapTypeControl());
+                            }
+                            loaded = true;
+                        }
+
+                        function changeMarker(lat, lng, zoom, descr) {
+                            if (!loaded) {
+                                SPAF_Maps_load();
+                                loaded = true;
+                            }
+                            map.panTo(new GLatLng(lat, lng));
+                            map.setZoom(zoom);
+                            map.clearOverlays();
+                            map.addOverlay(createMarker(new GLatLng(lat, lng), descr));
+                        }
+
+                        function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode) {
+                            $('geonameid').value = geonameid;
+                            $('latitude').value = latitude;
+                            $('longitude').value = longitude;
+                            $('geonamename').value = geonamename;
+                            $('countryname').value = countryname;
+                            $('geonamecountrycode').value = countrycode;
+                            $('admincode').value = admincode;
+                            $('countryname').value = countryname;
+                            $('newgeo').value = 1;
+                        }
+
+                        function removeHighlight() {
+                            var lis = $A($('locations').childNodes);
+                            lis.each(function(li) {
+                                Element.setStyle(li, {fontWeight:'',backgroundColor:'#fff',backgroundImage:''});
+                            });
+                        }
+
+                        function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
+                            setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
+                            changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
+                            removeHighlight();
+                            Element.setStyle($('li_'+geonameid), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
+                        }
+
+                        function init(){
+                            $('submit_button').style.display = 'block';
+                            $('geoselector').style.display = 'none';
+                            $('geoselectorjs').style.display = 'block';
+                            $('spaf_map').style.display = 'block';
+                            GeoSuggest.initialize('geo-form');
+                            SPAF_Maps_load();
+                        }
+
+                        window.onunload = GUnload;
+
+                        Event.observe(window, 'load', init, false);
+
+                    </script>
+					*/ ?>
+			</div> <!-- tab4 -->
+			<div class="panel" id="tab5">
+
+                <?php $inbox_widget->render() ?>
+                <p><a href="messages">more...</a></p>
+					
+			</div> <!-- tab5 -->
+
     </div> <!-- subcr -->
 </div> <!-- c62r -->
 </div> <!-- subcolumns -->
+<div><?=$words->flushBuffer()?></div>
 </div> <!-- teaser -->
 
+<!--
 <style type="text/css">
     p{padding:6px 0 20px 0;}
     #search-bar{padding:0; clear:both;}
@@ -96,19 +427,20 @@ Boston, MA  02111-1307, USA.
     #teaser .selected a{background:#FFC04A; color:#fff;}
     #teaser ul.search-options li.selected a{background:#FFC04A; color:#fff;}
 </style>
+-->
 <script language="javascript">
-function setSearchOptions(idElement){
+
+function tabPersonal(idElement){
     /* Total Tabs above the input field (in this case there are 3 tabs: web, images, videos) */
-    tot_tab = 3;
-    tab     = document.getElementById('tab'+idElement);
-    search_option = document.getElementById('searchopt');
-    for(i=1; i<=3; i++){
-        if(i==idElement){
-            tab.setAttribute("class","selected");
-            search_option.value=idElement;
-        } else {
-            document.getElementById('tab'+i).setAttribute("class","");
-        }
-    }
+    $$('#personalmenu li').invoke('hide');
+    this.show();
 }
+
+function observeTabs(tab){
+    /* Total Tabs above the input field (in this case there are 3 tabs: web, images, videos) */
+    Event.observe(tab,'click',tabPersonal(tab));
+}
+
+//$$('#personalmenu li').each(Element,observeTabs);
+Event.observe(window,'load',function(){ new Fabtabs('personalmenu'); },false);
 </script>

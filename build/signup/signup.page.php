@@ -3,23 +3,13 @@
 
 class SignupPage extends PageWithRoxLayout
 {
-    protected function body()
-    {
-        require TEMPLATE_DIR . 'shared/roxpage/body_index.php';
-    }
     
     protected function getStylesheets()
     {
-        $stylesheets[] = 'styles/minimal_index.css';
-        $stylesheets[] = 'styles/YAML/screen/custom/tour.css';
-        $stylesheets[] = "styles/YAML/screen/custom/signup.css";
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';
+        $stylesheets[] = "styles/css/minimal/screen/custom/signup.css";
         return $stylesheets;
-    }
-    
-    protected function getStylesheetPatches()
-    {
-        $stylesheet_patches[] = 'styles/YAML/patches/patch_2col_left_seo.css';
-        return $stylesheet_patches;
     }
     
     protected function teaserHeadline()
@@ -44,9 +34,6 @@ class SignupPage extends PageWithRoxLayout
     
     protected function column_col3()
     {
-        // retrieve the callback ID
-        $callbackId = $this->model->registerProcess();
-        
         // default values
         $selCountry = 0;
         $javascript = false;
@@ -76,6 +63,14 @@ class SignupPage extends PageWithRoxLayout
             if (isset($vars['country'])) {
                 $selCountry = $vars['country'];
             }
+            
+            if (isset($vars['city'])) {
+                $selCity = $vars['city'];
+            }
+            
+            if (isset($vars['admincode'])) {
+                $selCity = $vars['admincode'];
+            }
     
             if (isset($vars['javascriptactive'])) {
                 // nothing?
@@ -84,18 +79,13 @@ class SignupPage extends PageWithRoxLayout
             if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
                 $javascript = true;
             }
-            if (isset($vars['city'])) {
-                $selCity = $vars['city'];
-            }
-    
+
             if (isset($vars['birthyear'])) {
                 $selYear = $vars['birthyear'];
             }
         }
         
-        $countries = $this->getAllCountriesSelectOption($selCountry);
         $birthYearOptions = $this->buildBirthYearOptions($selYear);
-        $city = $this->getCityElement($selCity, $javascript);
         
         // get current request
         $request = PRequest::get()->request;
@@ -134,17 +124,6 @@ Related pages:
         echo '<p class="small">* '.$words->get('SignupMandatoryFields').'</p>';
     }
     
-    protected function quicksearch()
-    {
-    }
-    
-    protected function topnav() {
-        parent::topnav();
-        // require SCRIPT_BASE . 'build/rox/templates/_languageselector.helper.php';
-        // $languageSelectorDropDown = _languageSelectorDropDown();
-        // echo '<div class="float_left" style="padding-left:15px">'.$languageSelectorDropDown.'</div>';
-    }
-    
 // END OF LAYOUT FUNCTIONS
     
     
@@ -164,64 +143,6 @@ Related pages:
         return $out;
     }
     
-    
-    /**
-     * @see geo.lib.php method guessCity
-     * @see signup.model.php method checkRegistrationForm
-     * @param object $city either empty or empty or string or array
-     * @param boolean $javascript true or false
-     * @return string displaying the city selection, either an
-     *                   input text field or a select option box;
-     *                   possibly accompanied by additional fields
-     *                   needed
-     */
-    public function getCityElement($city, $javascript)
-    {
-        if (empty($city)) {
-            return '<input type="text" id="city" name="city"  />'."\n";
-        } else if (!is_array($city)) {
-            return '<input type="text" id="city" name="city"
-                value="' . htmlentities($city, ENT_COMPAT, 'utf-8') . '"  />'."\n";
-        } else {
-
-            $html = '';
-            if (!$javascript) {
-                // TODO: needs an explanation in the page (words()...)
-                $html .= '<input type="text" id="city" name="city" />'."\n";
-            }
-            $html .= '<select name="city_id" />';
-            foreach ($city as $id => $arr) {
-                $text = $arr[0] . " --- " . $arr[1];
-                $html .= '<option value="' . $id . '">' . $text . '</option>';
-            }
-
-            $html .= "</select>\n";
-            return $html;
-        }
-    }
-    
-    
-    /**
-     * @param string $selCountry the selected country
-     */
-    private function getAllCountriesSelectOption($selCountry) {
-        $countries = MOD_geo::get()->getAllCountries();
-        $out = '<select id="country" name="country" onchange="change_country(\'formname\');">'."\n";
-        $out .= '<option value="0">';
-        $words = new MOD_words();
-        $out .= $words->get('MakeAChoice');
-        $out .= '</option>'."\n";
-        foreach ($countries as $countryId => $country) {
-            $out .= '<option value="' . $countryId . '"';
-            if ($countryId == $selCountry)
-                $out .= ' selected';
-            $out .= '>';
-            $out .= $country;
-            $out .= "</option>\n";
-        }
-        $out .= "</select>\n";
-        return $out;
-    }
     
 }
 

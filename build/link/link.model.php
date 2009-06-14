@@ -308,7 +308,7 @@ class LinkModel extends RoxModelBase
 			`members`.`id`, `members`.`status`
 			FROM `comments`, `members` 
 			WHERE `IdToMember` = `members`.`id` 
-			AND (`members`.`status` = 'active' or `members`.`status` = 'ChoiceInactive')
+			AND (`members`.`Status` = 'Active' or `members`.`Status` = 'ChoiceInactive')
 			AND NOT FIND_IN_SET('NeverMetInRealLife',`comments`.`Lenght`) 
 			AND (FIND_IN_SET('hewasmyguest',`comments`.`Lenght`) or 
 					 FIND_IN_SET('hehostedme',`comments`.`Lenght`) or  
@@ -331,7 +331,7 @@ class LinkModel extends RoxModelBase
 			SELECT `IdOwner`,`IdRelation`,`Type`, `members`.`id`, `members`.`status`
 			FROM `specialrelations` , `members`
 			WHERE `IdRelation` = `members`.`id` 
-			AND (`members`.`status` = 'active' or `members`.`status` = 'ChoiceInactive') 
+			AND (`members`.`Status` = 'Active' or `members`.`Status` = 'ChoiceInactive') 
 			ORDER BY `IdOwner`,`IdRelation` Asc
             "
         );

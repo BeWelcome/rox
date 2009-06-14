@@ -24,16 +24,16 @@ class PlacesView extends PAppView {
     public function customStyles()
     {       
     // calls a 1column layout 
-         echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/places.css\" type=\"text/css\"/>";
+         echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/custom/places.css\" type=\"text/css\"/>";
     }
     public function teaserplaces($countrycode,$country,$region,$city) {
         require 'templates/teaserCountry.php';
     }
-    public function placesbar() {
+    public function placesbar($volunteers) {
         require 'templates/countrybar.php';
     }
     public function submenu($subTab) {
-        require 'templates/submenu.php';
+        //require 'templates/submenu.php';
     }
     public function displayPlacesInfo($countryinfo, $members,$volunteers) {
         $memberlist = $this->generateMemberList($members);
@@ -93,7 +93,7 @@ class PlacesView extends PAppView {
                 $regionlist .= '<ul class="float_left">';
                 $ii = 0;
             }
-            $regionlist .= '<li><a href="places/'.$countrycode.'/'.$region['name'].'">'.$region['name'].' ['.$region['number'].']';
+            $regionlist .= '<li><a class="highlighted" href="places/'.$countrycode.'/'.$region['name'].'">'.$region['name'].' <span class="small grey">('.$region['number'].')</span>';
             $regionlist .= '</a></li>';
         }
         $regionlist .= '</ul>';
@@ -106,7 +106,7 @@ class PlacesView extends PAppView {
         $citylist = '<ul>';
         
         foreach ($cities as $city) {
-            $citylist .= '<li><a href="places/'.$countrycode.'/'.$region.'/'.$city->city.'">'.$city->city.' ['.$city->NbMember.']';
+            $citylist .= '<li><a class="highlighted" href="places/'.$countrycode.'/'.$region.'/'.$city->city.'">'.$city->city.' <span class="small grey">('.$city->NbMember.')</span>';
             $citylist .= '</a></li>';
         }
         $citylist .= '</ul>';        
@@ -115,18 +115,18 @@ class PlacesView extends PAppView {
     }   
 
     private function displayContinent($continent, $countries) {
-       $html = '';
-       $html .= '<ul>';
-       foreach ($countries as $code => $country) {
-           $html .= '<li><div class="sprite sprite-'.strtolower($code).'"><a href="places/'.$code.'"></a></div> <a href="places/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
-           if ($country['number']) {
+        $html = '';
+        $html .= '<ul>';
+        foreach ($countries as $code => $country) {
+           $html .= '<li class="spritecontainer"><div class="sprite sprite-'.strtolower($code).'"><a href="places/'.$code.'"></a></div> <a href="places/'.$code.'" class="'.($country['number'] ? 'highlighted' : 'grey').'">'.$country['name'];
+            if ($country['number']) {
                $html .= '<span class="small grey"> ('.$country['number'].')</span>';
-           }
-           $html .= '</a></li>';
-       }
-       $html .= '</ul>';
-       return $html;   
-   }
+            }
+            $html .= '</a></li>';
+        }
+        $html .= '</ul>';
+        return $html;   
+    }
     
     public function placesNotFound($ss="") {
         echo '<h2>Places '.$ss.' not found</h2>'; // TODO

@@ -6,7 +6,7 @@ class AddCommentPage extends ProfilePage
     
     protected function getSubmenuActiveItem()
     {
-        return 'comments';
+        return 'commmentsadd';
     }
     
     // checkCommentForm - NOT FINISHED YET !

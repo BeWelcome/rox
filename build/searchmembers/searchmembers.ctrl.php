@@ -152,7 +152,7 @@ class SearchmembersController extends PAppController {
                 
                 // finally the content for col3
                 $TList = $this->_model->quicksearch($searchtext);
-                $P->newBar .= $vw->quicksearch($TList, $searchtext);
+                $P->content .= $vw->quicksearch($TList, $searchtext);
                 break;
                 
 
@@ -169,8 +169,18 @@ class SearchmembersController extends PAppController {
             default:    
                 
                 // Check wether there are search variables set as GET-parameters
-                if (isset($_GET['vars']) ) {
-                    $varsGet = true;
+                if (isset($_GET['vars'])) {
+                    $geo = MOD_geo::get();	// get the singleton instance
+                    $id = $geo->getCityID($_GET['vars'], true);
+                    if (!$id) {
+                        // if there's not city with that name, redirect to a member's profile if there is one
+                        $m = MOD_member::getMember_username($_GET['vars']);
+                        if ($m) {
+                            $loc = PVars::getObj('env')->baseuri.'bw/member.php?cid='.$_GET['vars'];
+                            header('Location: '.$loc);
+                        }
+                    }
+                    $varsGet = $_GET['vars'];
                     $varsOnLoad = false;
                 }
                 
@@ -201,9 +211,9 @@ class SearchmembersController extends PAppController {
                     $sortorder
                 );
                 
-                $P->newBar = $vw->userBar($mapstyle,$sortorder);
+                $P->content = $vw->memberlist($mapstyle,$sortorder);
                 
-                $P->content = $vw->searchmembers(
+                $P->newBar .= $vw->searchmembers(
                     $queries,
                     $mapstyle,
                     $varsOnLoad,

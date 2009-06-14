@@ -3,6 +3,10 @@
 
 class AddRelationPage extends RelationsPage
 {    
+    protected function getSubmenuActiveItem()
+    {
+        return 'relationsadd';
+    }
 
     protected function column_col3()
     {
@@ -27,10 +31,11 @@ class AddRelationPage extends RelationsPage
            	<p class="note"><?=$words->get('RelationWaitConfirmed',$member->Username)?></p>
          <? endif ?>
         <form method="post" action="<?=$page_url?>" name="relation" id="relation" enctype="multipart/form-data">
+        <fieldset>
             <input type="hidden"  name="IdRelation"  value="<?=$member->id?>" />
             <input type="hidden"  name="IdOwner"  value="<?=$_SESSION['IdMember']?>" />
             <?=$callback_tag?>
-            <h3><?=$words->get($action.'Relation')?></h3>
+            <legend><?=$words->get($action.'Relation')?></legend>
             <p><?=$words->get('MyRelationListExplanation',$member->Username,$member->Username)?></p>
             <? if (count($relation['member']) <= 0) : ?>
             <div class="row">
@@ -71,8 +76,11 @@ class AddRelationPage extends RelationsPage
             else {
                echo '<input type="hidden" name="action" value="add">';
             }
-            ?><br />
-               <input type="submit" name="submit" value="<?=$words->get($action.'Relation')?>" />
+            ?>
+            <br />
+            <input type="submit" name="submit" value="<?=$words->get($action.'Relation')?>" />
+            <br />
+        </fieldset>
         </form>
         <?php
     

@@ -19,7 +19,6 @@
     $comments = $member->get_comments_commenter($_SESSION['IdMember']);
     ?>
     
-    <h2><?=$words->get("AddComments")?></h2>
     
     <?php
     // Display the previous comment if any
@@ -29,6 +28,8 @@
     ?>
     <form method="post" name="addcomment" OnSubmit="return DoVerifSubmit('addcomment');">
     <?=$callback_tag ?>
+    <fieldset>
+    <legend><?=$words->get("AddComments")?></legend>
     <input name="IdMember" value="<?=$member->id?>" type="hidden" />
         <table valign="center" >
           <tr>
@@ -62,7 +63,7 @@
     ?>
         <tr>
         <td colspan=2>
-            <h3><?$words->get("CommentLength")?></h3>
+            <h3><?=$words->get("CommentLength")?></h3>
         </td>
         </tr>
         <tr>
@@ -98,11 +99,13 @@
         <td><textarea name="TextFree" id="TextFree" cols="40" rows="8"></textarea></td>
         <td style="vertical-align=top"><p class="grey"><?php echo $words->get("CommentsCommenterDescription", $Username) ?></p></td>
     </tr>
-    <tr><td align="center" colspan="2"><input type="hidden" value="<?php echo $IdMember?>" name="cid">
+    <tr><td colspan="2">
+        <input type="hidden" value="<?php echo $IdMember?>" name="cid">
         <input type="hidden" name="action" value="add">
         <input type="submit" id="submit" name="valide" value="submit"></td>
     </tr>
     </table>
+    </fieldset>
     </form>
 
     <script type="text/javascript">

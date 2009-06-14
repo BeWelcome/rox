@@ -27,61 +27,134 @@ class MemberPage extends PageWithActiveSkin
         $comments_count = $member->count_comments(); 
         if ($this->myself) {
             return array(
+                array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
+                array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
+                array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors'),
+                array('space', '', '', 'space'),
+
                 array('profile', "members/$username", $ww->MemberPage),
-                array('visitors', "myvisitors", $ww->MyVisitors),
-                array('mypreferences', 'mypreferences', $ww->MyPreferences),
-                array('editmyprofile', 'editmyprofile', $ww->EditMyProfile),
                 array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
-                array('gallery', "gallery/show/user/$username", $ww->Gallery)
+                array('gallery', "gallery/show/user/$username", $ww->Gallery),
+                array('forum', "forums/member/$username", $ww->ViewForumPosts)
             );
         } else {
             return array(
-                array('profile', "members/$username", 'Profile'),
-                array('comments', "members/$username/comments", 'View Comments('.$comments_count['all'].')'),
+                array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
+                array('commmentsadd', "members/$username/comments/add", $ww->addcomments, 'commentsadd'),
+                array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
+                array('space', '', '', 'space'),
+
+                array('profile', "members/$username", $ww->MemberPage),
+                array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
-                array('gallery', "gallery/show/user/$username", 'Photo Gallery')
+                array('gallery', "gallery/show/user/$username", $ww->Gallery),
+                array('forum', "forums/member/$username", $ww->ViewForumPosts)
             );
         }
     }
     
+    protected function columnsArea()
+    {
+        $side_column_names = parent::getColumnNames();
+        $mid_column_name = array_pop($side_column_names);
+        ?>
+        <?php foreach ($side_column_names as $column_name) { ?>
+
+          <div id="<?=$column_name ?>">
+            <div id="<?=$column_name ?>_content" class="clearfix">
+              <? $name = 'column_'.$column_name ?>
+              <?php $this->$name() ?>
+            </div> <!-- <?=$column_name ?>_content -->
+          </div> <!-- <?=$column_name ?> -->
+
+        <?php } ?>
+
+          <div id="<?=$mid_column_name ?>">
+            <div id="<?=$mid_column_name ?>_content" class="clearfix">
+              <?php $this->teaserReplacement(); ?>
+              <? $name = 'column_'.$mid_column_name; ?>
+                <?php $this->$name() ?>
+              <?php $this->$name ?>
+            </div> <!-- <?=$mid_column_name ?>_content -->
+            <!-- IE Column Clearing -->
+            <div id="ie_clearing">&nbsp;</div>
+            <!-- Ende: IE Column Clearing -->
+          </div> <!-- <?=$mid_column_name ?> -->
+        <?php
+    }
+
+    protected function submenu() {
+    }
+
+    protected function teaserReplacement() {
+        $this->__call('teaserContent', array());
+        //parent::submenu();
+    }
+
+    protected function leftsidebar() {
+        $member = $this->member;
+        $words = $this->getWords();
+        $piclink = $this->myself ? 'editmyprofile#profilepic':'gallery/show/user/'.$member->Username;
+        ?>
+        <div id="profile_pic" >
+                <a href="<?=$piclink?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" class="framed" /></a>
+        </div> <!-- profile_pic -->                
+
+            <ul class="linklist" id="profile_linklist">
+              <?php
+          // $this->__call('leftsidebar', array());
+
+        $active_menu_item = $this->getSubmenuActiveItem();
+        foreach ($this->getSubmenuItems() as $index => $item) {
+            $name = $item[0];
+            $url = $item[1];
+            $label = $item[2];
+            $class = isset($item[3]) ? $item[3] : '';
+            if ($name === $active_menu_item) {
+                $attributes = ' class="active '.$class.'"';
+                $around = '';
+            } else {
+                $attributes = ' class="'.$class.'"';
+                $around = '';
+            }
+
+            ?><li id="sub<?=$index ?>" <?=$attributes ?>>
+              <?=$around?><a style="cursor:pointer;" href="<?=$url ?>"><span><?=$label ?></span></a><?=$around?>
+              <?=$words->flushBuffer(); ?>
+            </li>
+            <?php
+
+        }
+
+            ?></ul>
+<?php
+    }
+
+
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/YAML/screen/custom/profile.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css';
        return $stylesheets;
     }
+    
+    /*
+     * The idea was that stylesheetpatches was for MSIE
+     */
+    protected function getStylesheetPatches()
+    {
+        //$stylesheet_patches = parent::getStylesheetPatches();
+        $stylesheet_patches[] = 'styles/css/minimal/patches/patch_2col_left.css';
+        return $stylesheet_patches;
+    }
+
     
     
     protected function teaserContent()
     {
-        $this->__call('teaserContent', array());
-        /*
-        $member = $this->member;
-	
-        $lang = $this->model->get_profile_language();
-        $profile_language = $lang->id;
-        $profile_language_code = $lang->ShortCode;
-
-        $words = $this->getWords();
-        $ww = $this->ww;
-        $wwsilent = $this->wwsilent;
-        $comments_count = $member->count_comments(); 
-
-        $agestr = "";
-        if ($member->age == "hidden") {
-            $agestr .= $ww->AgeHidden;
-        } else {
-            $agestr= $ww->AgeEqualX("hidden");
-        }
-        $languages = $member->get_profile_languages(); 
-        $occupation = $member->get_trad("Occupation", $profile_language);        
-
-        //$profile_language = $_SESSION['IdLanguage'];
-            
-        include "x/../../templates/profile_teaser.php";
-        */
+/*        $this->__call('teaserContent', array()); */
     }
 }
 

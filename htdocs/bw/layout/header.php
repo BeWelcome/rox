@@ -53,7 +53,7 @@ else {
 }
 echo "  <link rel=\"shortcut icon\" href=\"".PVars::getObj("env")->baseuri."favicon.ico\" />\n";
 
-$stylesheet = "YAML"; // this is the default style sheet
+$stylesheet = "minimal"; // this is the default style sheet
 
 // If is logged try to load appropriated style sheet
 if (IsLoggedIn()) {
@@ -63,14 +63,11 @@ if (IsLoggedIn()) {
 		 		$_SESSION["stylesheet"]=$stylesheet = $rrstylesheet->Value;
 		 }
 	}
-	else {
-		 $stylesheet=$_SESSION["stylesheet"] ;
-	}
-	$stylesheet = "YAML"; // force YAML also for logged member (for now, todo several layout)
+	$stylesheet = "minimal"; // force YAML also for logged member (for now, todo several layout)
 }
-echo "  <link href=\"".bwlink("styles/" . $stylesheet. "/bw_yaml.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"".bwlink("styles/css/" . $stylesheet. "/minimal.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<!--[if lte IE 7]>";
-echo "  <link href=\"".bwlink("styles/" . $stylesheet. "/patches/iehacks_3col_vlines.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
+echo "  <link href=\"".bwlink("styles/css/" . $stylesheet. "/patches/iehacks_3col_vlines.css\"", true)." rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />\n";
 echo "<![endif]-->\n";
 echo "</head>";
 

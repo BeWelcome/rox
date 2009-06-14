@@ -1,13 +1,8 @@
 <?php
 
 
-class MyPreferencesPage extends MemberPage
+class MyPreferencesPage extends ProfilePage
 {
-
-    protected function leftSidebar()
-    {
-        return '';
-    }
 
 
     protected function getSubmenuActiveItem()

@@ -47,7 +47,11 @@ class TripView extends PAppView {
     }
     
 	public function displayMap($trips, $trip_data) {
+	?>
+        <?php
 		require 'templates/map.php';
+		?>
+        <?php
 	}
 	public function displaySingleTrip($trip, $trip_data) {
 		$User = APP_User::login();
@@ -71,19 +75,26 @@ class TripView extends PAppView {
 		require 'templates/singletrip_sidebar.php';
 	}
 	public function displaySingleTrip_Map($trip, $trip_data) {
-		$User = APP_User::login();
-		if (!$User) {
-			$isOwnTrip = false;
-		} else {
-			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
-		}
 		require 'templates/singletrip_map.php';
 	}
     
     public function teaser($trip = false) {
         require 'templates/teaser.php';
     }
-    
+	
+    public function teaser_singleTrip($trip = false) {
+        require 'templates/singletrip_teaser.php';
+    }
+	
+    public function heading_singleTrip($trip = false, $trip_data = false) {
+		$User = APP_User::login();
+		if (!$User) {
+			$isOwnTrip = false;
+		} else {
+			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
+		}
+		require 'templates/singletrip_heading.php';
+    }        
 	public function editTrip($callbackId) {
 		$editing = true;
     	require 'templates/createform.php';
@@ -100,7 +111,7 @@ class TripView extends PAppView {
     
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
-        $out = '<link rel="stylesheet" href="styles/YAML/screen/custom/trip.css" type="text/css"/>';
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/trip.css" type="text/css"/>';
 		echo $out;
     }
 }

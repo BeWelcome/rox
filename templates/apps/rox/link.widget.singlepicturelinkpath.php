@@ -28,27 +28,28 @@ Boston, MA  02111-1307, USA.
  */
  
 	$words = new MOD_words();
+	$ii = 0;
 ?>
 	<div class="picture-linkpath" id="<?php echo $cssID ?>">
-        <h3><?php  echo $words->get('HowDoIKnow');?></h3>
 			<?php foreach ($linkpath as $row) {
 			?>		
         <div class="floatbox">			
-			<?php	if (count($row) > 2) { 
-				foreach ($row as $e) {
-			?>
-			<div class="float_left" style="padding: 15px 5px 0 0; vertical-align: middle">
+			<?php if (count($row) > 2) { ?>
+			<h3><?php  echo $words->get('HowDoIKnow');?></h3>
+			<?php foreach ($row as $e) { ?>
+			<?php if ($ii_new = $ii++ && ($ii_new != 0 || $ii++ != count($row))) {?> 
+			<div class="float_left" style="margin: 15px 5px 0 0; vertical-align: middle">
 				<p class="small grey">
 				<?php if (isset($e['totype']) && $e['totype'][0] != '0') {?> 
 					<img title="<?php echo implode(' - ',$e['totype']); ?>" src="images/icons/arrow_right.png" /><br />
 				<?php }?>
 				<?php if (isset($e['reversetype']) && $e['reversetype'][0] != '0') {?> 
-					<img title="<?php echo implode(' - ',$e['reversetype']); ?>" src="images/icons/icons1616/arrow_left.png" />
+					<img title="<?php echo implode(' - ',$e['reversetype']); ?>" src="images/icons/arrow_left.png" />
 				<?php }?>
 				</p>	
 			</div> <!-- float_left -->
-            
-            <div class="float_left" style="padding-right: 5px">
+			<?php }?>
+            <div class="float_left" style="margin-right: 5px">
                 <p class="center">
                 <?php
 				if (isset($_SESSION['Username']) && $e['memberdata']->Username == $_SESSION['Username']) {
@@ -59,7 +60,7 @@ Boston, MA  02111-1307, USA.
 					$myself = false;
 				}
 				?>
-                    <?php echo !$myself ? MOD_layoutbits::PIC_30_30($e['memberdata']->Username,'',$style='') : ''?><br />
+                    <?php echo MOD_layoutbits::PIC_30_30($e['memberdata']->Username,'',$style='') ?><br />
                     <span title="<?php echo $e['memberdata']->City; ?>, <?php echo $e['memberdata']->Country; ?>" class="username"><?php echo '<a href="members/'.$e['memberdata']->Username.'">'.$username.'</a>' ?></span>
                 </p>
             </div> <!-- float_left -->

@@ -37,7 +37,7 @@ class AboutBasePage extends PageWithActiveSkin
         return array(
             array('about', 'about', $words->getBuffered('AboutUsSubmenu')),
             array('faq', 'about/faq', $words->getBuffered('Faq')),
-            array('contactus', 'bw/feedback.php', $words->getBuffered('ContactUs')),
+            array('contactus', 'about/feedback', $words->getBuffered('ContactUs')),
         );
     }
     

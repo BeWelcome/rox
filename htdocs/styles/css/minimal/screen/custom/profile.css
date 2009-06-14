@@ -1,83 +1,107 @@
 @media all
 {
-#col3_content ul,  #col3_content .box p {
-	margin: 1em 1em;
+#col3_content ul, #col3_content dl,  #col3_content .box p {
+	margin: 1em 0;
 }
-#teaser {
-	margin-left: 0;
-}
-#teaser .subcolumns .c15l{
-    width: 15%;
-    background-color: transparent;
-	float: left;
-}
-#teaser .subcolumns .c85r{
-    width: 85%;
-    margin-left:-5px;
-}
-#teaser .subcolumns .subcl {
-	padding:0 1em 0 0;
-}
-#teaser .subcolumns .subcr {
-	padding:0 0 0 1em;
-}
-#profile-info {
-	padding-left: 5.5em;
-}
+
 #personalmenu.sm li {
 	font-size: 1em;
 }
-
+.activelanguage {
+	font-weight: bold;
+}
 #col1{
     float: left;
-    width: 15%;
+    width: 18%;
 }
 #col3{
-    margin: 0 0 0 15%;
+    margin: 0 0 0 18%;
 }
 #col3_content{
-    padding: 0 0em 0 4em;
+    padding: 2em 0 4em 4em;
+	margin: 0;
+	background:transparent url(../../images/bg_col3.png) no-repeat scroll 0 0;
 }
 #col1 #col1_content{
-    padding: 0;
-    background-color: transparent;
-}
-/*
-#col3 #col3_content #profile{
-    padding: 2em;
-    background: transparent url(../../images/shadowbox_middle.png) repeat-y top left;
-    margin: none;
-}
-#col3 #col3_content #shadowbox_top{
-    padding: 2em;
-    background: transparent url(../../images/shadowbox_top.png) no-repeat top left;
-}*/
-#teaser {
-	padding-top: 2em;
-	padding-bottom: 2em;	
-}
-#teaser #teaser_r {
-	width: 80%;	
-}
-#teaser #profile-info #username strong {
-	font-size:2.2em;
-	letter-spacing:-0.05em;
-	line-height:1.5em;
-	padding:10px 10px 10px 0;	
-}	
-#linkpath {
-    float: left;
-    
-}
-#profile-info {
-    width: 30em;
-    float: left;
+/*	background:transparent url(../../images/bg_leftsidebar.jpg) no-repeat scroll right top; */
+    padding: 0 2em 0 0;
+	margin: 0;	
 }
 
-#profile dl, #preferences dl {
+#col1 #col1_content .linklist{
+    margin-right: 0;
+}
+#col3_content h1 {
+    padding: 0 0 .4em 0;
+}
+#profile_linklist {
+	padding: 2em 0;
+}
+#profile_linklist li {
+	color: #333;
+	font-size: 1em;
+	border-bottom: 1px solid #e5e5e5;
+	padding: 0.5em 1em;
+}
+#profile_linklist li a {
+	color: #333;
+	font-size: 1.2em;
+}
+#profile_linklist li.active a {
+	font-weight: bold;
+}	
+#middle_nav.clearfix {
+    clear:none;
+	display: inline;
+}
+#nav_sub {
+    margin-top: 2em;
+}
+#nav_sub ul {
+	display: block;
+	padding-left: 0;
+}
+#nav_sub li {
+    padding: 0;
+}
+#nav_sub li.active a{
+	background: transparent url(../../images/small_arrow_down_bg.gif) no-repeat center bottom;
+	padding-bottom: 1.4em;
+	border: none;
+}
+#profile_pic {
+    background: transparent url(../../images/pic_shadow.png) no-repeat left top;
+    padding:17px;
+    width:100px;
+    height: 100px;
+}
+#profile-info {
+	padding: 0 0 2em 0;
+}
+#profile-info #navigation-path{
+	padding: 2em 0;
+}
+#profile-info #username {
+	padding: 0;
+	line-height: 1.6em;
+	font-size: 1.6em;
+}
+#profile-info #username strong {
+	font-size:1.6em;
+	line-height:1.5em;
+	padding:10px 10px 10px 0;
+	color: #000000;
+}
+#pic_shadow {
+    width: 30em;
+    float: left;
+	padding-top: 1em;
+	padding-left: 3em;
+}
+#profile dl, #preferences dl, dl#profiletop {
     display: block;
 }
-#profile dt, #preferences dt {
+#profile dt, #preferences dt, #profiletop dt {
     line-height: 1.5em;
     font-size: 1em;
     font-weight: normal;
@@ -87,7 +111,7 @@
     clear: left;
     margin-bottom: 0.8em;
 }
-#profile dd, #preferences dd {    
+#profile dd, #preferences dd, #profiletop dd {    
     margin-left: 12em;
     line-height: 1.5em;
     margin-bottom: 0.8em;
@@ -101,27 +125,30 @@
     font-size: 0.8em;
     color: #888;
 }
+#profile_subcolumns .subcl {
+    padding-right: 1em;
+}
 
-#profile .box {
+#profile .box, #profile #linkpath {
     background-image: none;
     border: none;
-    margin: 1em 0 2em 0;
-    background: transparent url(../../images/shadowbox_middle.png) repeat-y top left;
-    padding: 1em;
+    margin: 0 0 2em 0;
+    background: transparent none;
+    padding: 0;
 }
-/*
-#profile .box h3{
+
+#profile .box h3, #profile #linkpath h3, #profile-info .box h3{
+	background: none;
+	padding: .3em 0;
+	color: #2184E8;
 }
-#profile h3{
-    font-size: 1.5em;
-    margin: 0 1em;
-}*/
+#profile #navigation-path h3,#profile #navigation-path h3 a {
+	color: #333;
+}
 
 /* list the spoken languages of a member */
 #profile .profile_languages li {
-    float: left;
-    display: inline;
-    margin-right: 1.5em;
+    margin-right: .5em;
 }
 
 /* for the active language the profileconten is shown */
@@ -131,7 +158,7 @@
 }
 
 /* for the available languages of the profil content*/
-#profile .availablelanguages {
+#profile .availablelanguages,#profile-info .availablelanguages {
     padding-right: 0.5em;
     color: #888;
 }
@@ -190,5 +217,35 @@ h3.icon  {
 .contact22 {
   background: url(../../images/icons22/icon_contact.png) top left no-repeat;
  }
+
+#profile_linklist .space {
+	padding-top: 1em;
+	padding-bottom: 1em;
+	border: none;
+}
+#profile_linklist .messagesadd {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/email_open.png) 0 3px no-repeat;
+}
+#profile_linklist .commentsadd {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/comment_add.png) 0 3px no-repeat;
+}
+#profile_linklist .relationsadd {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/add.png) 0 3px no-repeat;
+}
+#profile_linklist .editmyprofile {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/pencil.png) 0 3px no-repeat;
+}
+#profile_linklist .mypreferences {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/wrench.png) 0 3px no-repeat;
+}
+#profile_linklist .myvisitors {
+	padding-left: 2em;
+	background: transparent url(../../images/iconsfam/group.png) 0 3px no-repeat;
+}
 
 }

@@ -6,33 +6,26 @@ class PersonalStartpage extends RoxPageView
     protected function getTopmenuActiveItem() {
         return 'main';
     }
+    
+    protected function getStylesheets() {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+        return $stylesheets;
+    }
+    
+    /*
+     * The idea was that stylesheetpatches was for MSIE
+     */
+    protected function getStylesheetPatches()
+    {
+        //$stylesheet_patches = parent::getStylesheetPatches();
+        $stylesheet_patches[] = 'styles/css/minimal/patches/patch_3col.css';
+        return $stylesheet_patches;
+    }
 
     protected function teaserContent()
     {
-        $words = new MOD_words();
-		$thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
-		
-		// We will mark the fact the member has or has no picture here, this is based on the returned default picture et something
-		if ((strpos($thumbPathMember,"et_male.square")!==false) or
-			(strpos($thumbPathMember,"et.square")!==false) or
-			(strpos($thumbPathMember,"et_female.square")!==false) ) {
-			$_SESSION['MemberHasNoPicture']=1 ;
-		}
-		else {
-			if (isset($_SESSION['MemberHasNoPicture'])) {
-				unset ($_SESSION['MemberHasNoPicture']) ;
-			}
-		}
-        //$imagePathMember = MOD_user::getImage();
-        
-        $_newMessagesNumber = $this->model->getNewMessagesNumber($_SESSION['IdMember']);
-        
-        if ($_newMessagesNumber > 0) {
-            $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
-        } else {
-            $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNoNewMessages');
-        }
-        require TEMPLATE_DIR.'apps/rox/teaser_main.php';
+        $this->__call('teaserContent', array());
     }
     
     protected function getPageTitle() {
@@ -44,33 +37,27 @@ class PersonalStartpage extends RoxPageView
             return $words->getFormatted('WelcomeGuest');
         }
     }
-    
-    protected function leftSidebar()
+
+    protected function column_col1()
     {
-        require TEMPLATE_DIR.'apps/rox/userbar.php';
-    }
-    
-    protected function column_col3()
-    {
-        // echo '<h3>Your messages</h3>';
-        /*
-        $inbox_widget = new MailboxWidget_Personalstart;
-        $inbox_widget->model = new MessagesModel;
-        $inbox_widget->items_per_page = 4;
-        */
-        // $inbox_widget->render();
-        // echo '<a href="bw/mymessages.php">more...</a>';
-        
-        $Forums = new ForumsController;
-        $citylatlong = $this->model->getAllCityLatLong();
-        $google_conf = PVars::getObj('config_google');  
-        require TEMPLATE_DIR.'apps/rox/mainpage.php';
+
     }
 }
 
-/*
+
 class MailboxWidget_Personalstart extends MailboxWidget_Received
 {
+    protected function getMessages()
+    {
+        if (!isset($_SESSION['IdMember'])) {
+            // not logged in - no messages
+            return array();
+        } else {
+            $member_id = $_SESSION['IdMember'];
+            return $this->model->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal"','messages.WhenFirstRead');
+        }
+    }	
+	
     protected function showItems()
     {
         // don't need a table - a simple list is enough.
@@ -79,32 +66,44 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
     
     protected function showListItem($message, $i_row)
     {
+        $words = new MOD_words();
         extract(get_object_vars($message));
-        // print_r($message);
-        echo '<a class="float_right" href="bw/contactmember.php?action=reply&cid='.$senderUsername . '&iMes='.$i_row .'">';
-        echo '<img src="images/icons/icons1616/icon_reply.png"></a> ';
-        echo '<a href="bw/member.php?cid='.$senderUsername.'">'.$senderUsername.': </a> ';
-        if (strlen($Message) >= 50)
-            echo substr($Message, 0, 50).'... ';
-        else 
-            echo $Message;
+        $readstyle = '';
+        if ($message->unixtime_WhenFirstRead == false) $readstyle = 'message unread';
+        //print_r($message);
+        ?>
+        
+        <div class="floatbox">
+            <a class="float_right" href="messages/<?=$i_row?>/reply" alt="Reply">
+                <img src="images/icons/email_go.png">
+            </a>
+            <?= MOD_layoutbits::PIC_30_30($senderUsername,'','float_left framed')?>
+            <a href="messages/<?=$id?>" class="<?=$readstyle?>">
+        
+            <?php
+            if (strlen($Message) >= 61) echo substr($Message, 0, 58).'... ';
+            else echo $Message;
+            ?>
+        
+            </a><br />
+            <span class="small grey"><?=$words->get('from')?> <a href="bw/member.php?cid=<?=$senderUsername?>"><?=$senderUsername?>: </a>
+            <?=MOD_layoutbits::ago($message->created);?></span>
+        </div>
+        
+        <?php
     }
     
     
     protected function showBetweenListItems($prev_item, $item, $i_row)
     {
-        // $time_difference = $item->unixtime_created - $prev_item->unixtime_created;
-        // $seconds = $time_difference % 60;
-        // $time_difference = (int)($time_difference/60);
-        // $minutes = $time_difference % 60;
-        // $time_difference = (int)($time_difference/60);
-        // $hours = $time_difference % 24;
-        // $time_difference = (int)($time_difference/24);
-        // $days = $time_difference;
-        // echo '<div style="color:#ccc;">'.$days.' days and '.$hours.':'.$minutes.':'.$seconds.' between messages</div>';
-        echo '<p class="small">'.MOD_layoutbits::ago($item->unixtime_created).'</p>';
+        echo '<hr style="border-color: #dddddd" />';
     }
 }
-*/
+
+class NotifyMemberWidget_Personalstart extends NotifyMemberWidget
+{
+    // currently no modifications here
+}
+
 
 ?>

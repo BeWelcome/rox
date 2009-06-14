@@ -64,7 +64,7 @@ $words = new MOD_words();
         /*$startdate   = $item['date'];
         $type   = $item['type'];
         $author   = $item['author'];     */
-        echo "<h2 class=\"blogtitle\"><a href=\"",$url,"\">",$title,"</a></h2>
+        echo "<h3><a href=\"",$url,"\">",$title,"</a></h3>
         <p>",$description,"</p>
 
     ";

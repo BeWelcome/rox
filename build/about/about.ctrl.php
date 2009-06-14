@@ -15,14 +15,6 @@ class AboutController extends RoxControllerBase
     {
         $request = $args->request;
 
-        if (isset($request[2]) && $request[2] == "submit"
-            && $request[1] == "feedback") {
-
-            $model = new FeedbackModel();
-            $model->sendFeedback($_POST);
-            return new FeedbackSentPage();
-        }
-
         if (!isset($request[0])) {
             // then who activated the about controller?
             $page = new AboutTheideaPage();
@@ -63,6 +55,9 @@ class AboutController extends RoxControllerBase
             case 'contact':
             case 'contactus':
             case 'support':
+                if (isset($keyword_2) && $keyword_2 == "submit") {
+                    return new FeedbackSentPage;
+                }
                 return new FeedbackPage();
             case 'faq':
             case 'faqs':
@@ -83,6 +78,24 @@ class AboutController extends RoxControllerBase
                 return new AboutTheideaPage();
         }
     }
+    
+    public function feedbackCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        if (isset($args->post)) {
+            $vars = $args->post;
+            $request = $args->request;
+            $model = new FeedbackModel;
+            $categories = $model->getFeedbackCategories();
+			if (isset($vars['IdCategory']) && $vars['FeedbackQuestion'] != '') {
+				$model->sendFeedback($vars);
+				return 'feedback/submit';
+            } else {
+                
+				return 'feedback';
+			}
+        }
+    }
+    
 }
 
 

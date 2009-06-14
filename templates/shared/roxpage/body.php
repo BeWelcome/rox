@@ -4,22 +4,19 @@
 <div id="page_margins">
   <!-- #page: Used to hold the floats -->
   <div id="page" class="hold_floats">
-    
-    <div id="header">
-      <div id="topnav">
+  
+    <div id="header">      
+    </div> <!-- header -->
+    <?php $this->topmenu() ?>
+    <div id="topnav">
         <?php $this->topnav() ?>
       </div> <!-- topnav -->
-      <a href="start">
-        <img id="logo" class="float_left overflow" src="styles/YAML/images/logo.gif"
-          width="250" height="48" alt="Be Welcome" />
-      </a>
-    </div> <!-- header -->
-    
-    <?php $this->topmenu() ?>
-    
+
     <!-- #main: content begins here -->
     <div id="main">
+        <div id="teaser_bg">
       <?php $this->teaser() ?>
+      </div>
       <?php $this->columnsArea() ?>
     </div> <!-- main -->
     <?php $this->footer() ?>

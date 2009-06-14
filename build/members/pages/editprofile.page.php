@@ -12,6 +12,7 @@ class EditProfilePage extends ProfilePage
 
     protected function editMyProfileFormPrepare($member)
     {
+        $member->setEditMode(true);
         $Rights = MOD_right::get();
         $lang = $this->model->get_profile_language();
         $profile_language = $lang->id;
@@ -28,18 +29,19 @@ class EditProfilePage extends ProfilePage
         $vars['BirthDate'] = $member->BirthDate;
         $vars['HideBirthDate'] = $member->HideBirthDate;
         $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('Occupation', $profile_language) : '';
+        $vars['Gender'] = $member->Gender;
+        $vars['HideGender'] = $member->HideGender;
 
         $vars['language_levels'] = $member->language_levels;
         $vars['languages_all'] = $member->languages_all;
         $vars['languages_selected'] = $member->languages_spoken;
 
-        $address = $member->address;
-        $vars['FirstName'] = ($member->FirstName > 0) ? MOD_crypt::MemberReadCrypted($member->FirstName) : '';
-        $vars['SecondName'] = ($member->SecondName > 0) ? MOD_crypt::MemberReadCrypted($member->SecondName) : '';
-        $vars['LastName'] = ($member->LastName > 0) ? MOD_crypt::MemberReadCrypted($member->LastName) : '';
-        $vars['HouseNumber'] = ($member->address->HouseNumber > 0) ? MOD_crypt::MemberReadCrypted($member->address->HouseNumber) : '';
-        $vars['Street'] = ($member->address->StreetName > 0) ? MOD_crypt::MemberReadCrypted($member->address->StreetName) : '';
-        $vars['Zip'] = ($member->address->Zip > 0) ? MOD_crypt::MemberReadCrypted($member->address->Zip) : '';
+        $vars['FirstName'] = $member->get_firstname();
+        $vars['SecondName'] = $member->get_secondname();
+        $vars['LastName'] = $member->get_lastname();
+        $vars['HouseNumber'] = $member->get_housenumber();
+        $vars['Street'] = $member->get_street();
+        $vars['Zip'] = $member->get_zip();
         $vars['IsHidden_FirstName'] = MOD_crypt::IsCrypted($member->FirstName);
         $vars['IsHidden_SecondName'] = MOD_crypt::IsCrypted($member->SecondName);
         $vars['IsHidden_LastName'] = MOD_crypt::IsCrypted($member->LastName);

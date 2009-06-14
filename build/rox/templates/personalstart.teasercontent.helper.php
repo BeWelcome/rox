@@ -1,5 +1,5 @@
 <?php
-
+$words = new MOD_words();
 $thumbPathMember = MOD_layoutbits::smallUserPic_userId($_SESSION['IdMember']);
 //$imagePathMember = MOD_user::getImage();
 
@@ -9,14 +9,19 @@ if ($_newMessagesNumber > 0) {
     $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
 }
 
-
-
-$notify_widget = new NotifyMemberWidget_Personalstart;
+$notify_widget = new NotifyMemberWidget;
 $notify_widget->model = new NotifyModel;
-$notify_widget->delegate = $this;  // delegate
-$notify_widget->delegate_prefix = 'notes';
 $notify_widget->items_per_page = 4;
-$notify_widget->active_page = $this->active_page;
-$notify_widget->visible_range = 2;
+
+$inbox_widget = new MailboxWidget_Personalstart;
+$inbox_widget->model = new MessagesModel;
+$inbox_widget->items_per_page = 4;
+
+$Trip = new Trip;
+$TripcallbackId = $Trip->createProcess();
+$editing = false;
+
+$Places = new Places;
+$Countries = $Places->getAllCountries();
 
 ?>

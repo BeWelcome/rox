@@ -4,21 +4,7 @@ $words = new MOD_words();
 
 ?>
 
-<h2><?php echo $countryinfo->name; 
-// This is only visible to people with debug rights
-	if (MOD_right::get()->HasRight('Debug')) {
-		echo " <a href=\"geo/displaylocation/".$countryinfo->IdCountry."\" title=\" specific debug right view database records\">view geo record #".$countryinfo->IdCountry."</a>" ;
-	}
-?></h2>
-<h3><?php echo $words->get('localvolunteers'); ?></h3>
-<?php
-
-require 'localvolunteerslist.php';
-
-if ((MOD_right::get()->HasRight('ContactLocation',$countryinfo->IdCountry)) or (MOD_right::get()->HasRight('ContactLocation','All'))) {
-	echo " <a href=\"contactlocal/preparenewmessage/".$countryinfo->IdCountry."\" title=\" prepare a local volunteer message for this country\">write a local vol message</a>" ;
-}
-?>
+<? $this->displayRegions($this->regions, $this->regions_req); ?>
 
 <h3><?=$words->get('members') ?></h3>
 <?php 
@@ -30,4 +16,6 @@ require 'memberlist.php';
 ?>
 
 <h3><?php echo $words->get('wiki'); ?></h3>
-<?php echo $wiki->getWiki($wikipage); ?>
+<div class="wiki">
+<?php echo $wiki->getWiki($wikipage,false); ?>
+</div>

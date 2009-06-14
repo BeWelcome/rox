@@ -16,7 +16,7 @@
  */
 
 /* import core styles | Basis-Stylesheets einbinden */
-@import url(../../yaml/core/base.css);
+@import url(../../yaml/core/slim_base.css);
 
 /* import screen layout | Screen-Layout einbinden */
 /* #### BW Costumizing #### */

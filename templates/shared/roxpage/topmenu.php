@@ -3,50 +3,76 @@
 
 <!-- #nav: main navigation -->
 <div id="nav">
-  <div id="nav_main">
-    <ul>
-    
-<!-- Disabled until we have a new topnaviagtion design
-        <li>
-          <a href="<?=$active_menu_item == ('main' || '') ? 'start' : ''; ?>">
-            <img id="logo" class="float_right overflow" src="images/logo_index_top.png" alt="Be Welcome" />
+
+<!-- son of suckerfish navigation (script to teach IE hover class used in dropdown menu-->
+  <script type="text/javascript"><!--//--><![CDATA[//><!--
+
+    sfHover = function() {
+        var sfEls = document.getElementById("nav_main").getElementsByTagName("li");
+        for (var i=0; i<sfEls.length; i++) {
+            sfEls[i].onmouseover=function() {
+                this.className+=" sfhover";
+            }
+            sfEls[i].onmouseout=function() {
+                this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+            }
+        }
+    }
+    if (window.attachEvent) window.attachEvent("onload", sfHover);
+
+//--><!]]></script>
+
+    <ul id="nav_main">
+        <li id="logo">
+          <a href="<?=$active_menu_item == ('main' || '') ? 'main' : ''; ?>">
+            <img src="images/logo_index_top.png" alt="Be Welcome" />
           </a>
         </li>
--->
-      <?php
-
-foreach ($menu_items as $item) {
-    $name = $item[0];
-    $url = $item[1];
-    $wordcode = $item[2];
-    $not_translatable = isset($item[3]) && $item[3];
-    if ($name === $active_menu_item) {
-        $attributes = ' class="active"';
-    } else {
-        $attributes = '';
-    }
-        
-      ?>
-      <li<?=$attributes ?>>
-        <a href="<?=$url ?>">
-          <span><? if ($not_translatable) { echo $wordcode; } else { echo $words->getBuffered($wordcode); } ?></span>
-        </a>
-        <?=$words->flushBuffer(); ?>
+  <?php if ($logged_in) { ?>
+      <li><a href="members/<?=$username?>"><?=$words->get('MyProfile')?></a>
+          <ul>
+              <li><a href="members/<?=$username?>"><?=$words->get('Profile')?></a></li>
+              <li><a href="editmyprofile"><?=$words->get('EditMyProfile')?></a></li>
+              <li><a href="mypreferences"><?=$words->get('MyPreferences')?></a></li>
+              <li><a href="messages"><?=$words->get('MyMessages')?></a></li>
+              <li><a href="groups/mygroups"><?=$words->get('MyGroups')?></a></li>
+          </ul>
       </li>
-      <?php
-      
-}
-
-      ?>
+  <?php } ?>
+        <li><a href="search"><?=$words->get('FindMembers')?></a>
+            <ul>
+                <li><a href="searchmembers"><?=$words->get('MapSearch')?></a></li>
+                <li><a href="places"><?=$words->get('BrowseCountries')?></a></li>
+            </ul>
+        </li>
+        <li><a href="explore"><?=$words->get('Explore')?></a>
+            <ul>
+                <li><a href="forums"><?=$words->get('Community')?></a></li>
+                <li><a href="groups"><?=$words->get('Groups')?></a></li>
+                <li><a href="trip"><?=$words->get('Trips')?></a></li>
+                <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
+                <li><a href="blog"><?=$words->get('Blogs')?></a></li>
+                <li><a href="chat"><?=$words->get('Chat')?></a></li>
+            </ul>
+        </li>
+        <li><a href="about"><?=$words->get('GetAnswers')?></a>
+            <ul>
+                <li><a href="faq"><?=$words->get('Faq')?></a></li>
+                <li><a href="feedback"><?=$words->get('ContactUs')?></a></li>
+                <li><a href="about/getactive"><?=$words->get('About_GetActive')?></a></li>
+            </ul>
+        </li>
+        <? if (isset($volunteer) && $volunteer) { ?>
+        <li><a href="volunteer"><?=$words->get('Volunteer')?></a>
+            <?=$this->volunteerMenu() ?>
+        </li>
+        <? } ?>
     </ul>
     
-    <!-- #nav_flowright: This part of the main navigation floats to the right. The items have to be listed in reversed order to float properly-->         
-    <div id="nav_flowright">
-      <?php $this->quicksearch() ?>
-    </div> <!-- nav_flowright -->
-  </div>
-</div>
-<!-- #nav: - end -->
+<!-- show login fields or searchbox, depending if logged in or not-->
+    <?php $this->quicksearch() ?>
+
+</div> <!-- nav -->
 
 
 

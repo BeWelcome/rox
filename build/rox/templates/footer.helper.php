@@ -82,7 +82,7 @@ function translator_block() {
             ?>
             <strong>browse</strong>
             <a href="<?=$rox_tr?>/translate/<?php echo $request_string ?>">translate</a>
-            <a href="<?=$rox_tr?>/edit/<?php echo $request_tring ?>">edit</a>
+            <a href="<?=$rox_tr?>/edit/<?php echo $request_string ?>">edit</a>
             <?php
             break;
         }

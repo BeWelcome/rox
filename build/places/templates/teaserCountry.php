@@ -46,7 +46,15 @@ $words = new MOD_words();
                 echo '</span>';
             }
             ?>
-        </h1>    
+        </h1> 
+        <? if (isset($title)) { ?>
+            <? if (MOD_right::get()->HasRight('Debug')) {  ?>
+                <h2><?php echo $title; 
+                    // This is only visible to people with debug rights
+        		    echo " <a href=\"geo/displaylocation/".$countryinfo->IdCountry."\" title=\" specific debug right view database records\">view geo record #".$countryinfo->IdCountry."</a>" ;
+        ?></h2>
+            <? } ?>
+        <? } ?>
 
 
 </div>

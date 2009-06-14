@@ -38,28 +38,28 @@ if (!isset($daterange)){
 <h2 class="trip_title"><a href="trip/<?=$trip->trip_id; ?>"><?=$trip->trip_name; ?></a></h2>
 <div class="trip_author">
         <span class="trip_daterange"><?=$daterange?></span>
-		<a href="trip/<?=$trip->trip_id; ?>"><img src="styles/YAML/images/iconsfam/map.png" alt="Trip Map & Details"> </a> 
-         &mdash; 
+        <a href="trip/<?=$trip->trip_id; ?>"><img src="styles/css/minimal/images/iconsfam/map.png" alt="Trip Map &amp; Details" /> </a>
+         &mdash;
         <?=$words->get('by');?> <a href="user/<?=$trip->handle; ?>"><?=$trip->handle; ?></a>
 <?php
 // show flags for a trip that is about a specific country !?
 if ($trip->fk_countrycode) {
-	echo ' <a href="country/'.$trip->fk_countrycode.'"><img src="images/icons/flags/'.strtolower($trip->fk_countrycode).'.png" alt="" /></a>';
+    echo ' <a href="country/'.$trip->fk_countrycode.'"><img src="images/icons/flags/'.strtolower($trip->fk_countrycode).'.png" alt="" /></a>';
 }
 ?>
         <a href="blog/<?=$trip->handle; ?>" title="Read blog by <?=$trip->handle; ?>"><img src="images/icons/blog.gif" alt="" /></a>
         <a href="trip/show/<?=$trip->handle; ?>" title="Show trips by <?=$trip->handle; ?>"><img src="images/icons/world.gif" alt="" /></a>
-        
-        </div>
+
+</div> <!-- trip_author -->
 
 <div class="floatbox">
 <?php
 if (!isset($trip_data[$trip->trip_id])) {
     if (isset($trip->trip_descr) && $trip->trip_descr) {
-    	echo '<p>'.$trip->trip_descr.'</p>';
+        echo '<p>'.$trip->trip_descr.'</p>';
     }
     if (isset($trip->trip_text) && $trip->trip_text) {
-    	echo '<p>'.$trip->trip_text.'</p>';
+        echo '<p>'.$trip->trip_text.'</p>';
     }
     if ($galleryitem) {
        echo '<div class="gallery-item">'.$galleryitem.'</div>';
@@ -73,29 +73,29 @@ if (!isset($trip_data[$trip->trip_id])) {
     <div class="subcl">
 <?php
     if (isset($trip->trip_descr) && $trip->trip_descr) {
-    	echo '<p>'.$trip->trip_descr.'</p>';
+        echo '<p>'.$trip->trip_descr.'</p>';
     }
     if (isset($trip->trip_text) && $trip->trip_text) {
-    	echo '<p>'.$trip->trip_text.'</p>';
+        echo '<p>'.$trip->trip_text.'</p>';
     }
     if ($galleryitem) {
        echo '<div class="gallery-item">'.$galleryitem.'</div>';
     }
 ?>
 <!-- End of contents for left subtemplate -->
-    </div>
-  </div>
-  
+    </div> <!-- subcl -->
+  </div> <!-- c50l -->
+
   <div class="c50r">
     <div class="subcr">
       <!-- Contents for right subtemplate -->
 <?php
-	echo '<ul>';
+    echo '<ul>';
     $counter = 0;
-	foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
-        
-        echo '<li style="line-height: 2.2em; border-bottom: 1px solid #e5e5e5"><span style="">';
-		echo '<a href="blog/'.$trip->handle.'/'.$blogid.'" style="color: #333">';
+    foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
+
+        echo '<li style="line-height: 2.2em; border-bottom: 1px solid #e5e5e5"><span>';
+        echo '<a href="blog/'.$trip->handle.'/'.$blogid.'" style="color: #333">';
         switch (++$counter) {
             case 1:
             case $trip->count:
@@ -105,29 +105,30 @@ if (!isset($trip_data[$trip->trip_id])) {
                 $flag = 'bullet_go.png';
                 break;
         }
-		if ($blog->name) {
-			echo '<img src="styles/YAML/images/iconsfam/'.$flag.'"> ';
-			echo '<b>'.$blog->name.'</b>';
-		} elseif ($blog->blog_title) {
-			echo '<b><i>'.$blog->blog_title.'</i></b>';
-		}
-        echo '</span> ';
+        if ($blog->name) {
+            echo '<img src="styles/css/minimal/images/iconsfam/'.$flag.'" alt="flag" /> ';
+            echo '<b>'.$blog->name.'</b>';
+        } elseif ($blog->blog_title) {
+            echo '<b><i>'.$blog->blog_title.'</i></b>';
+        }
         echo '</a>';
+        echo '</span>';
 
-		if ($blog->blog_start) {
-			echo ', ';
-			echo date("M d Y", strtotime($blog->blog_start));
-		}
-		echo '</li>';
-			
-	}
-	echo '</ul>';
-}
+        if ($blog->blog_start) {
+            echo ', ';
+            echo date("M d Y", strtotime($blog->blog_start));
+        }
+        echo '</li>';
+
+    }
+    echo '</ul>';
 ?>
 <!-- End of contents for right subtemplate -->
-    </div>
-  </div>
-</div>
-
+    </div> <!-- subcr -->
+  </div> <!-- c50r -->
+</div> <!-- subcolumns -->
+<?
+}
+?>
 
 </div>

@@ -24,16 +24,15 @@ $m->firstname = MOD_crypt::MemberReadCrypted($member->FirstName,'');
 $m->secondname = MOD_crypt::MemberReadCrypted($member->SecondName,'');
 $m->lastname = MOD_crypt::MemberReadCrypted($member->LastName,'');
 $m->geonameid = $member->IdCity;
-$m->street = MOD_crypt::MemberReadCrypted($member->street);
-$m->housenumber = MOD_crypt::MemberReadCrypted($member->HouseNumber);
-$m->zip = MOD_crypt::MemberReadCrypted($member->Zip);
+$m->street = MOD_crypt::MemberReadCrypted($member->address->StreetName);
+$m->housenumber = MOD_crypt::MemberReadCrypted($member->address->HouseNumber);
+$m->zip = MOD_crypt::MemberReadCrypted($member->address->Zip);
 $m->birthday = date("d",strtotime($member->BirthDate));
 $m->birthmonth = date("m",strtotime($member->BirthDate));
 $selYear = date("Y",strtotime($member->BirthDate));
 $birthYearOptions = buildBirthYearOptions($selYear);
 $m->gender = $member->Gender;
 
-var_dump($member->address);
 // values from previous form submit
 if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
     // this is a fresh form
@@ -60,6 +59,6 @@ $website = $member->WebSite;
 
 $groups = $member->get_group_memberships();
 
-var_dump($member);
+//var_dump($member);
 
 ?>

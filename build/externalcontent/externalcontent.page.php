@@ -31,17 +31,33 @@ class ExternalContentPage extends RoxPageView
         // echo '<pre>'; print_r($widget); echo '</pre>';
         $this->ecwidget = $widget;
     }
-    
+
+    protected function getStylesheets() {
+        $stylesheets[] = 'styles/css/minimal/minimal.css';
+        $stylesheets[] = 'styles/css/minimal/screen/bw_basemod_2col_right_31.css';
+        return $stylesheets;
+    }
+
+    protected function teaserHeadline()
+    {
+
+    }
+
+    protected function column_col2()
+    {
+
+    }
+
     protected function column_col3()
     {
         $this->ecwidget->render('#content #loop_articles #loop_single');
     }
-    
+
     protected function leftSidebar()
     {
         $this->ecwidget->render('#sidebar #post_meta #widgets #CommentForm');
     }
-    
+
     function replaceLink($href) {
         $parsed = explode('?', $href);
         return

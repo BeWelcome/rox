@@ -38,6 +38,8 @@ require_once "swift/Swift/Message/Encoder.php";
 
 // -----------------------------------------------------------------------------
 // bw_mail is a function to centralise all mail send thru BW
+// it returns true if the mail was processed by swith in a correct way
+// this doesn't mean that the receiver will have it, it just means that the parameters look OK
 function bw_mail($to, 
                  $subject, 
                  $text, 
@@ -48,7 +50,19 @@ function bw_mail($to,
                  $LogInfo = "", 
                  $replyto = "",
                  $Greetings="") {
-	return bw_sendmail($to, $subject, $text, "", $extra_headers, $from, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
+	try {
+		$iStatus= bw_sendmail($to, $subject, $text, "", $extra_headers, $from, $IdLanguage, $PreferenceHtmlEmail, $LogInfo, $replyto,$Greetings);
+		if (!$iStatus) {
+			throw new Exception("And Exception occured with bw_sendmail") ;
+		}
+		else {
+			return($iStatus) ; // Successful exit
+		}
+	}
+	catch (Exception $e) {
+		LogStr("Problem with bw_mail".$e->getMessage()." to [".$to."]","bw_mail") ;
+		return(false) ;
+	}
 } // end of bw_mail
 
 // -----------------------------------------------------------------------------

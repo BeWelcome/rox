@@ -31,19 +31,16 @@
   /* ### headings ### */
   h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; line-height: 1.5em; }
 
-  h1 {font-size: 2.4em; color: #333; margin: 0 0 0.25em 0; padding-top: .6em; padding-bottom: 0.5em;letter-spacing: -0.05em; font-weight:bold; }
-  h2 {font-size: 1.8em; color: #333; margin: 0 0 0.5em 0; padding-top: .6em; letter-spacing: -0.05em; font-weight:bold; }
-  h3 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; padding-top: .6em; letter-spacing: -0.05em; font-weight:bold; }
-  h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; padding-top: .6em; font-weight:bold; border-bottom: none;}
+  h1 {font-size: 2.4em; color: #333; margin: 0 0 0.25em 0; padding-bottom: 0.5em; font-weight:bold; }
+  h2 {font-size: 1.8em; color: #333; margin: 0 0 0.50em 0; font-weight:bold; }
+  h3 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; font-weight:bold; }
+  h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; font-weight:bold; border-bottom: none;}
   h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic;   padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
   h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
 
-#main  h1 span, #main_top h1 span, #teaser h1 span.small { letter-spacing: normal; margin: 0; padding: 0; }
-  h2 span{ letter-spacing: normal;}
-  h3 span { letter-spacing: normal;}
-  h4 span{ letter-spacing: normal;}
+  #main  h1 span, #main_top h1 span, #teaser h1 span.small { margin: 0; padding: 0; }
   .list h5 {  padding-top: 0;}
-  
+
 
   /* ### paragraphs ###*/
   p,ul,dd,dt { line-height: 1.5em; }
@@ -56,19 +53,18 @@
   address { font-style:normal; line-height: 1.5em; margin: 0 0 1em 0; }
 
   acronym, abbr {
-    letter-spacing: .07em;
     border-bottom: 1px dashed #c00;
     cursor: help;
   }
 
   blockquote {
-  color: #444;
-  background: #f8f8f8;
-  border: 1px #ddd solid;
-  border-left: 8px #ddd solid;
-  padding: 1em 1em 0 1em;
-  margin: 0 0 1em 1em;
-}
+    color: #444;
+    background: #f8f8f8;
+    border: 1px #ddd solid;
+    border-left: 8px #ddd solid;
+    padding: 1em 1em 0 1em;
+    margin: 0 0 1em 1em;
+  }
 
   hr {
     color: #fff;
@@ -88,10 +84,10 @@
   .hidden {display: none;}
 
   .note {background: #FFF8C3; padding: 1em; border: 1px #888 solid;}
-  .note .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
+  .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
-
+  .row { padding: .5em 0;}
   .warning {
     background: #fdd;
     padding: 1em;
@@ -116,20 +112,24 @@
     font-size: 0.9em;
     color: #888888;
     padding: 0;
-    margin: 0px;
+    /* margin: 0px; */
     font-weight: normal;
-    display: inline;
+    /* display: inline; */
   }
-
   .big {font-size: 1.3em; }
+  .flat {margin: 0; padding: 0;}
 
-
-  /* ### image positioning ### */
+  /**
+   * Images
+   * (en) Generic classes for positiong and styling of images
+   *
+   * @section content-images
+   */
   img.float_left { float: left; margin-right: 1em; margin-top: 0.15em; margin-bottom: 0.15em; border:0; }
   img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
   img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
   img.framed {padding:1px; border: 1px #ddd solid; background: #f3f3f3 }
-
+  
   /**
    * Local and external Links
    *
@@ -139,22 +139,6 @@
   a, a em.file {color: #2184e8; text-decoration:none; background-color:transparent;}
   a:hover {text-decoration:underline;}
   a:focus {text-decoration:underline;}
-
-  #topnav a { color: #999; background:transparent; text-decoration:none; }
-  #topnav a:hover { text-decoration:underline; background-color: transparent;}
-  #topnav a:focus { text-decoration:underline; background-color: transparent;}
-  #topnav ul,#topnav li { 
-	display:inline;
-	font-size:11px;
-	height:46px;
-	margin-left:2px;
-	padding:8px 10px 6px 12px;
-  }
-  #topnav img { 
-	padding:0 4px 0 0;
-	vertical-align:middle;
-  }
-
 
   /*#main a[href^="http:"], #main a[href^="https:"]
     {
@@ -167,6 +151,50 @@
   #main a.imagelink {
     padding-left: 0;
     background: transparent;
+  }
+
+
+
+  /**
+   * Lists
+   * (en) Generic classes for ordered, unordered and definition lists
+   *
+   * @section content-lists
+   */
+
+  /* by default lists use no bullet point */
+  ul,li { margin:0; padding:0; list-style-type:none;}
+  
+  ul,ol {margin-bottom: 1.5em;}
+
+  /* in case we want bullet point */
+  .bullet {margin: 0 0 1em 1em;}
+  ul.bullet li { list-style-type: disc; margin-left: 0.8em}
+  ol.bullet li { list-style-type: decimal; margin-left: 0.8em; }
+
+  /* Unordered lists without bullets  */
+  ul.linklist { list-style-type: none; margin: 0 1em 1em 0; }
+  ul.linklist li { margin: 0 0 0.5em 0;}
+  ul.linklist li a { line-height: 1em;}
+  ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
+
+  /* CrossBrowser-Compatibility */
+  ul.browsers { margin: 0  0 .4em 0; }
+  ul.browsers li {
+    margin: 0;
+    list-style-type: none;
+    background: #f8f8f8; color: #444;
+    padding: 0.1em 0.1em 0.2em 0.5em;
+    font-weight: normal;
+    text-align: left;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
+  }
+  ul.browsers li img { vertical-align:bottom; }
+  ul.browsers li.title {
+    font-weight: bold;
+    background: #eee; color: #444;
+    padding: 0.2em 0.2em 0.2em 0.5em;
   }
 
   /**
@@ -188,28 +216,46 @@
 
   /* standard tablelist highlighting */
   tr.highlight{
-  background: #eeeeee;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
+    background: #eceff5;
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
   }
   tr.blank {
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
   }
   tr.blank:hover,tr.highlight:hover {
-  background: #ffeebb;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
+    background: #ffeebb;
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
   }
   td.memberlist  {padding: 0.5em 0.5em 0.5em 0.5em;}
   td.connections  {text-align: center;}
 
   /* thick orange touch */
   tr.blank:hover,tr.highlight:hover {
-  background: #faf5dd;
+    background: #faf5dd;
+  }
+
+  /* table for bugs - where do we use that ? */
+  table.bugs { margin-bottom: 1em; margin-top: .5em; }
+  table.bugs th {
+    background: #444; color: #fff;
+    padding: 0.5em;
+    text-align: center;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
+  }
+
+  table.bugs td {
+    background: #888; color: #fff;
+    padding: 0.5em;
+    text-align: center;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
   }
 
 
@@ -222,16 +268,24 @@
    */
 
   form {overflow:hidden;}
-  fieldset {margin-top: 1.5em; margin-bottom: 1.5em;}
-  legend {font-size: 1.5em; color: #ff8800; line-height: 2em;}
+  fieldset {
+    border: 1px solid #e5e5e5;
+    padding: 2em;
+    margin-bottom: 1.5em;
+  }
+  legend{
+    line-height: 1.5em;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-left: -0.5em;
+    padding: 0 .6em;
+    color: #2184E8;
+  }
   select {
     margin-bottom: 0.5em;
     font-size: 0.9em;
     background: #ffffff;
   }
-
-
-  .form li { padding: 1em 0; }
 
   textarea {
     font-size: 1.2em;
@@ -245,7 +299,6 @@
     background: #ffffff;
     color: #777;
     padding: 2px;
-/*    margin: 5px 0px; */
   }
   input[type=image] {
     border: 0;
@@ -289,17 +342,6 @@
     color: #333;
     border-color: #666;
   }
-  
-  
-  
-  
-
-  /* A <label> shouldn't really change the layout.
-  label {
-    color: #333;
-    font-weight: bold;
-  }
-  */
 
   /**
    * Pagination
@@ -308,122 +350,45 @@
    * @section content-pagination
    */
 
-   /* NEW by Lupochen */
-  div.pages {clear:both; padding-top:15px;   white-space: nowrap; }
+  div.pages {padding-top:15px; white-space: nowrap; }
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
-  /*div.pages li.sep{border:0}
-  div.pages li a {  height: 18px; line-height: 16px; display:block; text-align: center; font-size: 11px; background: #fff;}
-  div.pages li.current {background:#ddd;}*/
   div.pages li.current a {color:#666;font-weight:bold; }
-  div.pages li a:hover { color: #fff; background: #ff9900; }
-  div.pages li a:active {  color: #fff; background: #ff9900;}
+  div.pages li a:hover {color: #333; background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%; text-decoration:none; }
+  div.pages li a.off:hover {background: none; color: #666; }
+  div.pages li a:active {color: #fff; background: #ff9900;}
+  div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
 
   /* give pagination our 'button' style */
- div.pages li a {
+  div.pages li a {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
     border-width:1px;
     font-size:11px;
     font-weight:bold;
+    text-decoration:none;
+    color: #ff8800;
     height:18px !important;
     line-height:16px !important;
     margin:.2em;
     padding:1px 5px;
     text-align:center;
     width:auto;
-}
-div.pages li a:hover {background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%;}
-div.pages li a.off:hover {background: none; color: #666; }
-div.pages li a {color: #ff8800; text-decoration:none; background-color:transparent;}
-div.pages li a:hover {background-color: transparent; color: #333; text-decoration:none;}
-div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
+  }
 
-  /*\*/
-   * html div.pages li a {
-       width: 10px; /* IE */
-   }
-   /**/
+    /*\*/
+     * html div.pages li a {
+         width: 10px; /* IE */
+     }
+     /**/
 
-
-  /* ### Teaser + Divs, lists, styles etc. in teaser ###*/
-
-
-
-
-
-/* ######################################################################################################
-** ### special rulesets of the YAML standard layout #####################################################
-** ######################################################################################################
-*/
-
-/* ###  formatting of text  ################################################################## */
-
-/* Navigation at the end of the page */
-p.navlink { background-color: #f4f8f4; border: 1px #aca dotted; padding: 6px; margin-bottom: 0.5em; }
-p.navlink a { color: #353;}
-p.navlink a:hover { font-weight: bold; background: transparent; }
-
-/* Unordered lists without bullets */
-ul.linklist { list-style-type: none; margin: 0 1em 1em 0; }
-ul.linklist li { margin: 0 0 0.5em 0;}
-ul.linklist li a { line-height: 1em;}
-ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
-/* CrossBrowser-Compatibility */
-ul.browsers { margin: 0  0 .4em 0; }
-
-ul.browsers li {
-  margin: 0;
-  list-style-type: none;
-  background: #f8f8f8; color: #444;
-  padding: 0.1em 0.1em 0.2em 0.5em;
-  font-weight: normal;
-  text-align: left;
-  border-bottom: 1px #fff solid;
-  border-right: 1px #fff solid;
-}
-
-ul.browsers li img { vertical-align:bottom;
-}
-
-ul.browsers li.title {
-  font-weight: bold;
-  background: #eee; color: #444;
-  padding: 0.2em 0.2em 0.2em 0.5em;
-}
-
-
-/* ### tables ################################################################## */
-
-table.bugs { margin-bottom: 1em; margin-top: .5em; }
-table.bugs th {
-  background: #444; color: #fff;
-  padding: 0.5em;
-  text-align: center;
-  border-bottom: 1px #fff solid;
-  border-right: 1px #fff solid;
-}
-
-table.bugs td {
-  background: #888; color: #fff;
-  padding: 0.5em;
-  text-align: center;
-  border-bottom: 1px #fff solid;
-  border-right: 1px #fff solid;
-}
-
-
-/* ###########################################
-** ### standdard formatting in main #################################
-** ###########################################
-*/
-
-#main ul,li { margin:0; padding:0; list-style-type:none;}
-
-
-
-  /* ### footer ###*/
+  /**
+   * Footer
+   * (en) Generic classes for footer
+   *
+   * @section content-footer
+   */
 
   #footer {
     border: none;
@@ -443,76 +408,22 @@ table.bugs td {
   #footer #flags a:focus {color: #333; text-decoration:underline; }
 
 
-
 /* ###########################################
 ** ### Custom classes for mainpage / user homepage #################################
 ** ###########################################
 */
 
-#main .main_preposts p {
-  font-size: 11px;
-
-}
-#main .main_preposts img {
-  font-size: 11px;
-  float: left;
-  margin: 0 1em 0.15em 0;
-  padding:4px;
-  border: 1px #ddd solid;
-  background: #f3f3f3;
-}
-#MainUserpic {
-  width: 50px;
-  height: 50px;
-  padding:4px;
-  border: 1px #888 solid;
-  margin-right: 0.8em;
-  margin-bottom: 0.8em;
-}
-.news {
+h4.news {
   font-size: 14px;
   font-weight: bold;
   line-height: 18px;
   padding: 3px 0;
   margin: 0px;
-  letter-spacing: -1px;
-}
-h4.news {
   padding: 13px 0 3px 0;
 }
-.posts p {
-  font-size: 11px;
-  line-height: 1em;
-  margin: 0px;
-  font-weight: normal;
-}
-div.posts {
-  float:left;
-  padding: 0 20px 0 0;
-}
 
-/* ### teaser on mainpage ### */
-#teaser.teaser_main {
-  padding-bottom: 3em;
-}
-#teaser.teaser_main p {
-  padding: 0.5em;
-  margin: 0px;
-  line-height: 1.7em;
-}
-#teaser.teaser_main #teaser_l {float:left; width: 84px; margin: 0 0 0 0; }
-#teaser.teaser_main h2 {font-size: 1.6em; padding-bottom: 5px; }
-#teaser.teaser_main #teaser_r {width: 70%; margin: 0 10px 0 0; }
-
-.innerbox50l {
-  float: left;
-  width: 45%;
-    margin-right: 10px;
-}
-.inner50r {
-  float: left;
-  width: 45%;
-    margin-left: 10px;
+.personallist .box h3 {
+	color: #2184e8;
 }
 
 /* ###########################################
@@ -520,8 +431,10 @@ div.posts {
 ** ###########################################
 */
 
-.titlelink {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
-.username {font-size: 14px; font-weight: bold; letter-spacing: -1px;}
+.titlelink {font-size: 14px; font-weight: bold; }
+.username {font-size: 14px; font-weight: bold; }
+.author {font-size: .9em; color: #888; padding: 0 0 1em 0;}
+.action {font-size: .9em; color: #888; padding: 1em 0 0 0;}
 .hr_div {padding: 5px 30px 0 30px;}
 
 .button, input.button, .control-links a, .control-links input, a.cancel {
@@ -533,7 +446,7 @@ div.posts {
     font-size:1.1em;
     font-weight:bold;
     height:24px !important;
-    line-height:18px !important;
+    line-height:24px !important;
     margin:1px;
     padding:3px 8px;
     text-align:center;
@@ -554,33 +467,28 @@ a.bigbutton {
     padding-right: 18px; /* sliding doors padding */
     text-decoration: none;
 }
-
 a.bigbutton span {
     background: transparent url(../images/bg_bigbutton_span_w.gif) no-repeat;
     display: block;
     line-height: 14px;
     padding: 8px 0 8px 18px;
 }
-
 a.bigbutton:active {
     background-position: bottom right;
     color: #000;
     outline: none; /* hide dotted outline in Firefox */
 }
-
 a.bigbutton:active span {
     background-position: bottom left;
     padding: 9px 0 7px 18px; /* push text down 1px */
 }
 
 /* Searchmembers styles */
-
 #mapsearch {font-weight: bold;}
 #mapsearch fieldset {padding: 15px 0 0 20px;}
 #mapsearch label {font-size: 1.5em; color: #fff;}
 #mapsearch input {padding: 0.2em; font-size: 1.2em;}
-#mapsearch #submit-button {vertical-align:middle; padding-bottom:4px}
-
+#submit-button {vertical-align:middle; padding-bottom:4px}
 #loading_container {margin: 1em 0}
 
 /* Tagcloud */
@@ -595,29 +503,11 @@ color: #000;
 background: none;
 }
 
-#tagcloud a {
-/*padding: 4px; */
-}
-
-#tagcloud  .tag_smallest {
-font-size: 0.8em;
-}
-
-#tagcloud  .tag_small {
-font-size: 1em;
-}
-
-#tagcloud  .tag_medium {
-font-size:1.5em;
-}
-
-#tagcloud  .tag_large {
-font-size:1.7;
-}
-
-#tagcloud  .tag_largest {
-font-size:2em;
-}
+#tagcloud .tag_smallest {font-size: 0.8em;}
+#tagcloud .tag_small {font-size: 1em;}
+#tagcloud .tag_medium {font-size:1.5em;}
+#tagcloud .tag_large {font-size:1.7em;}
+#tagcloud .tag_largest {font-size:2em;}
 
 
 /* Standard user boxes with pictures */
@@ -643,30 +533,14 @@ font-size:2em;
 /* Special classes for AboutUsPages*/
 #main li.userpicbox_big {
     padding: 20px;
-    width: 320px;
-}
-#main li.userpicbox_big:hover{
-    background-color: #f9f6f6;
-    border-color: #666;
+    width: 270px;
 }
 #main li.userpicbox_big h4 {
-    color: black;
-    font-weight: bold;
     font-size: 14px;
-}
-#main li.userpicbox_big p {
-    margin-top: 10px;
 }
 #main li.userpicbox_big img {
     margin-top: -10px;
 }
-#main #col3 h2.blogtitle {
-  font-size: 1.3em;
-  font-weight: bold;
-  color: #888;
-  padding: 0 0 0.3em 0;
-}
-
 
 /* blog & gallery comments */
 div.comment { padding:0; margin-bottom:1em; }
@@ -675,72 +549,9 @@ div.comment .text {padding:0.2em;}
 div.comment .author {background:#fff; padding:0.2em;}
 
 /* Default styles for the "precontent" area of the template */
-#precontent {
-    background: #e5e5e5;
-}
 #SearchAdvanced div {    padding: 10px 30px; }
 #SearchAdvanced a:hover {    background: transparent; }
 
-
-
-/*
-* messages (used in bw/layout/mymessages.php)
-*
-*/
-#messages {padding: 12px 30px 15px 30px;}
-#messages input {margin:0; padding: 0; }
-#messages a:hover {background-color: transparent; color: #333; text-decoration:none;}
-#messages a:focus {background-color: transparent; color: #333; text-decoration:none;}
-
-#messages .highlight{
-  background: #f5f5f5;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
-  }
-#messages .blank{
-  background: none;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
-  }
-#messages tr.highlight:hover {
-  background: #ffeebb;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
-  }
-#messages tr.blank:hover {
-  background: #ffeebb;
-  border: none 0pt;
-  border-top: 1px solid #e5e5e5;
-  margin-right: 4px;
-  }
-#messages p {padding-top: 1.5em; }
-#messageside {
-	width: 120px;
-	margin: 0 2em;
-	padding-left: 1em;
-	border-left: 1px solid #ccc;
-}
-#messageside .small{
-	display: block;
-	padding: .6em 0;
-}
-#messagecontent {
-	width: 400px;
-	padding-top: 1em;
-	background: #fff;
-	border-top: 1px dotted #ccc; 
-	border-bottom: 1px dotted #ccc;
-	padding: 2em;
-	margin-bottom: 1em;
-	font-family: Verdana;
-	font-size: 1.2em;
-}
-#messagepagination {width: 500px; padding-left: 30px; padding-bottom: 3em;}
-/* Media screen end */
-}
 
 /*
 * Admin tools classes
@@ -764,23 +575,20 @@ div.admincomment {
 * css for gallery
 *
 */
-
-.gallerycontainer {width: 150px; float:left; margin-top: 1em; margin-bottom: 2em; margin-right: 2em;}
-.albumdescription {margin: 0; }
-
+.gallery_container {
+    padding: 2px;
+    padding-right: 10px;
+    padding-bottom: 8px;
+}
 
 /* --- Classes for "round boxes" --- */
 div.box {
-  border: none;
-  border-color: #ddd;
   margin: 1em 0.25em;
   padding: 0em;
 }
 
 div.box h3 {
-  padding: 0.3em;
   margin: 0;
-  background: #eee;
   color: #000;
   font-size: 1.3em;
   font-weight: bold;
@@ -879,77 +687,17 @@ div.box div.boxbottom div.links {
 }
 */
 
-h1.search {padding-bottom: 0.3em; margin-bottom: 0;}
-
 #teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div,#teaser td {color: #333}
-
-#teaser .small {
-    line-height: normal;
-}
-#teaser .grey {
-    color: #999;
-}
-
+#teaser .grey { color: #888;}
+#teaser a.button { color: #ff8800;}
+#teaser a:hover.button { color: #333;}
 #teaser #title { float: left; margin-right: 0}
-/*
-#teaser a { color: #333; font-weight: bold; }
-#teaser a:hover {background-color: transparent; text-decoration:none; color: #999;}
-#teaser a:focus {background-color: transparent; text-decoration:none; color: #999;}
-*/
 #teaser #teaser_l {float:left; width: 120px; margin: 0 0 0 0; }
 #teaser #teaser_r {width: 70%; margin: 0 10px 0 0; }
 
-  #teaser #navigation-path{
-    color: #333;
-  }
-
-    #footer {
-    background: none;
-  }
-
-  /* teaser's shadow */
-#teaser_shadow {
-    background: transparent;
-}
-
-#teaser a.bigbutton {
-    color: #444;
-}
-
-#teaser a.bigbutton span {
-    color: #fff;
-}
-
-#teaser a.bigbutton:active {
-    color: #000;
-}
-
-    /* some Gallery classes */
-    .gallery_container {
-        float:none;
-        padding: 2px;
-        padding-right: 10px;
-        padding-bottom: 8px;
-    /*    background: #fff url(/images/photoset_bg.png) bottom right no-repeat;
-        border:2px solid #e5e5e5;
-        border-bottom:0;
-        border-right:0;
-    */
-    }
-    
-    .message {
-        font-weight: normal;
-    }
-    a.unread {
-        font-weight: bold;
-    }
-    
 /* Fieldset menu - creates a tab-menu from form fieldsets via fieldset.js */
 div.fieldset-menu{
     margin:0 1em 1em 0;
-}
-fieldset{
-    padding:0 1em 0 1em;
 }
 div.fieldset-menu ul{
     margin: 0;
@@ -1008,8 +756,8 @@ div.fieldset-menu li.active a {
 }
 #language_select {
     color: #ffffff;
-	float: right;
-	padding: 1.3em;
+  float: right;
+  padding: 1.3em;
 }
 
 /**
@@ -1036,7 +784,6 @@ a.tr_link {
 a.tr_link.missing_word {
     background-color: #FF69B4 !important;
     color: #000 !important;
-    letter-spacing:0 !important;
 }
 a.tr_link.missing_translation {
     background-color:#FF69B4 !important;
@@ -1063,201 +810,230 @@ a.tr_link:hover {
 }
 
 
-/* are those classes in use ? */
-body.wordclick_mode a.tr_link.successful_translation.tr_control {
-    font-size: 32px !important;
-    border:3px outset grey !important;
-}
-
-.wordclick_activation_link {
-    cursor:pointer;
-}
-
 /* Geo Selector */
 ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center}
 ol.plain{ margin-left: 0; }
-ol.plain li{ list-style-type: none; margin-left: 0; }
+ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
 
 
 /* Datepicker classes */
 div.datepicker {
-	position:absolute;
-	text-align:center;
-	border: 1px #ccc solid;
-	font-family:arial;
-	background:#FFF;
-	font-size:10px;
-	padding:1px;
+  position:absolute;
+  text-align:center;
+  border: 1px #ccc solid;
+  font-family:arial;
+  background:#FFF;
+  font-size:10px;
+  padding:1px;
 }
 div.datepicker-calendar table {
-	font-size:10px;
-	border:1px solid #FFF;
-	margin:0;
-	padding:0;
-	text-align:center;
-	border-collapse: collapse;
+  font-size:10px;
+  border:1px solid #FFF;
+  margin:0;
+  padding:0;
+  text-align:center;
+  border-collapse: collapse;
 }
 div.datepicker div.datepicker-header {
-	font-size:11px;
-	font-weight:bold;
-	background: #2184E8 url(../images/cell_bg_orange.png) repeat scroll 0 0;
-	border-bottom:1px solid #666;
-	padding:2px;
-	text-align:center;
-	color: #fff;
+  font-size:11px;
+  font-weight:bold;
+  background: #2184E8 url(../images/cell_bg_orange.png) repeat scroll 0 0;
+  border-bottom:1px solid #666;
+  padding:2px;
+  text-align:center;
+  color: #fff;
 }
 div.datepicker table.header {
-	border:0;
-	padding:0;
-	text-align:center;
+  border:0;
+  padding:0;
+  text-align:center;
 }
 div.datepicker table td {
-	padding:0;
+  padding:0;
 }
 td.prev,
 td.prev_year,
 td.next,
 td.next_year {
-	width:8%;
-	color:#eee;
-	cursor:pointer;
-	font-weight:bold;
-	line-height:16px;
+  width:8%;
+  color:#eee;
+  cursor:pointer;
+  font-weight:bold;
+  line-height:16px;
 }
 td.prev:hover,
 td.prev_year:hover,
 td.next:hover,
 td.next_year:hover {
-	color:#fff;
+  color:#fff;
 }
 td.header {
-	text-align:center;
-	width:68%;
-	font-weight:bold;
-	line-height:16px;
-	padding: 0;
+  text-align:center;
+  width:68%;
+  font-weight:bold;
+  line-height:16px;
+  padding: 0;
 }
 div.datepicker-header {
-	height:16px;
+  height:16px;
 }
 div.datepicker-calendar table tbody tr {
-	border:1px solid #FFF;
-	margin:0;
-	padding:0;
+  border:1px solid #FFF;
+  margin:0;
+  padding:0;
 }
 div.datepicker-calendar table tbody tr td {
-	border:1px #ffffff solid;
-	margin:0;
-	padding:0;
-	text-align:center;
-	height:16px;
-	line-height:16px;
-	width:21px;
-	cursor:pointer;
+  border:1px #ffffff solid;
+  margin:0;
+  padding:0;
+  text-align:center;
+  height:16px;
+  line-height:16px;
+  width:21px;
+  cursor:pointer;
 }
 div.datepicker-calendar table tbody tr td:hover,
 div.datepicker-calendar table tbody tr td.outbound:hover,
 div.datepicker-calendar table tbody tr td.today:hover {
-	border:1px #ccc solid;
-	background:#ff8800;
-	cursor:pointer;
-	color: #fff;
+  border:1px #ccc solid;
+  background:#ff8800;
+  cursor:pointer;
+  color: #fff;
 }
 div.datepicker-calendar table tbody tr td.wday {
-	border:1px #ccc solid;
-	background:#ddd;
-	cursor:text;
-	width:21px;
-	height:16px;
-	line-height:16px;
-	font-weight:bold;
-	padding: 1px;
-	border-left: none;
+  border:1px #ccc solid;
+  background:#ddd;
+  cursor:text;
+  width:21px;
+  height:16px;
+  line-height:16px;
+  font-weight:bold;
+  padding: 1px;
+  border-left: none;
 }
 div.datepicker-calendar table tbody tr td.outbound {
-	background:#F4F3F3;
-	color: #999;
+  background:#F4F3F3;
+  color: #999;
 }
 div.datepicker-calendar table tbody tr td.today {
-	border:1px #CCE9FF solid;
-	background:#E9F5FF;
-	background-image:url(../images/date_active.gif);
-	background-repeat:no-repeat;
-	position:top left;
-	width:21px;
-	height:16px;
-	line-height:16px;
+  border:1px #CCE9FF solid;
+  background:#E9F5FF;
+  background-image:url(../images/date_active.gif);
+  background-repeat:no-repeat;
+  width:21px;
+  height:16px;
+  line-height:16px;
 }
 div.datepicker-calendar table tbody tr td.today:hover {
-	border:1px #CCE9FF solid;
-	background:#E9F5FF;
-	background-image:url(../images/date_active.gif);
-	background-repeat:no-repeat;
-	position:top left;
+  border:1px #CCE9FF solid;
+  background:#E9F5FF;
+  background-image:url(../images/date_active.gif);
+  background-repeat:no-repeat;
 }
 div.datepicker-calendar table tbody tr td.nclick,
 div.datepicker-calendar table tbody tr td.nclick_outbound {
-	cursor:default;
-	color:#aaa;
-	width:21px;
-	height:16px;
-	line-height:16px;
+  cursor:default;
+  color:#aaa;
+  width:21px;
+  height:16px;
+  line-height:16px;
 }
 div.datepicker-calendar table tbody tr td.nclick_outbound {
-	background:#E8E4E4;
-	width:21px;
-	height:16px;
-	line-height:16px;
+  background:#E8E4E4;
+  width:21px;
+  height:16px;
+  line-height:16px;
 }
 div.datepicker-calendar table tbody tr td.nclick:hover,
 div.datepicker-calendar table tbody tr td.nclick_outbound:hover {
-	border:1px #EAEAEA solid;
-	background:#FFF;
+  border:1px #EAEAEA solid;
+  background:#FFF;
 }
 div.datepicker-calendar table tbody tr td.nclick_outbound:hover {
-	background:#E8E4E4;
+  background:#E8E4E4;
 }
 div.datepicker div.datepicker-footer {
-	font-size:10px;
-	background:#eee;
-	border-top:1px solid #ccc;
-	cursor:pointer;
-	text-align:center;
-	padding:2px;
+  font-size:10px;
+  background:#eee;
+  border-top:1px solid #ccc;
+  cursor:pointer;
+  text-align:center;
+  padding:2px;
 }
 
 .date {
-	float:left;
-	margin-right: .5em;
+  float:left;
+  margin-right: .5em;
 }
 .datepicker-opener-table {
-	border:none;
-	padding:0;
-	border-spacing:0;
-	margin:0 0 0 3px;
-	background:transparent url(../images/datepicker.gif) no-repeat 0 0;
-	width:16px;
-	height:16px;
-	cursor:pointer;
+  border:none;
+  padding:0;
+  border-spacing:0;
+  margin:0 0 0 3px;
+  background:transparent url(../images/datepicker.gif) no-repeat 0 0;
+  width:16px;
+  height:16px;
+  cursor:pointer;
 }
 .Opera .datepicker-opener-table {
-	float:right;
+  float:right;
 }
 .IE7 .datepicker-opener-table {
-	position:relative;
-	top:0;
-	left:3px;
+  position:relative;
+  top:0;
+  left:3px;
 }
 .datepicker-opener-table:hover {
-	background:transparent url(../images/datepicker_ro.gif) no-repeat 0 0;
+  background:transparent url(../images/datepicker_ro.gif) no-repeat 0 0;
 }
 .datepicker-opener {
-	width:16px;
-	height:16px;
-	margin:0 0 0 3px;
-	cursor:pointer;
+  width:16px;
+  height:16px;
+  margin:0 0 0 3px;
+  cursor:pointer;
 }
 
+/* Messages */
+#message { /*
+  border: 1px solid #f5f5f5;
+  border-right: 2px solid #999;
+  border-bottom: 1px solid #888; */
+}
+#messageheader {
+  background-color: #fff;
+  padding: 2em 3em 1em 3em;
+  border-bottom: 1px solid #e5e5e5;
+}
+#messagecontent {
+  background-color: #fff;
+  padding: 2em 3em;
+}
+#messagecontent .text {
+  font-family: Georgia;
+  font-size: 1.3em;
+  font-style: italic;
+}
+#messageside {
+  width: 22em;
+  text-align: right;
+}
+#messagefooter {
+  background-color: #fff;
+  padding: 2em 3em;
+  border-top: 1px solid #e5e5e5;
+}
+#shade_top {
+background:transparent url(../images/shade-top-trans.png) no-repeat scroll 0 10px;
+height:20px;
+}
+#shade {
+background:transparent url(../images/shade-trans.png) no-repeat scroll 0 -10px;
+height:50px;
+}
+#shade-top {
+background:transparent url(../images/shade-trans.png) no-repeat scroll 0 0;
+height:50px;
+}
 
-
+/* Media screen end */
 }

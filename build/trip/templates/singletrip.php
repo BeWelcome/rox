@@ -1,6 +1,8 @@
 <?php
 $words = new MOD_words();
+$i = 1;
 ?>
+<div class="floatbox">
 
 <?php
 if (isset($trip_data[$trip->trip_id])) {
@@ -12,21 +14,22 @@ if (isset($trip_data[$trip->trip_id])) {
 	echo '<ul id="triplist">';
 	foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
 		
-		echo '<li id="tripitem_'.$blogid.'"'.($isOwnTrip ? ' style="cursor:move;"' : '').'>';
-		echo '<div class="floatbox">';
+		echo '<li id="tripitem_'.$blogid.'"'.($isOwnTrip ? ' class="edit" style="cursor:move;"' : '').'>';
 ?>
 <!-- Subtemplate: 2 columns 50/50 size -->
 <div class="subcolumns">
   <div class="c25l" style="width: 15%">
     <div class="subcl">
+<!--	<div class="trip_flag"><?=$i++?></div>-->
 <?php
         if ($blog->blog_start) {
             ?>
-            <h2 class="trip_date"><?php echo date("M d", strtotime($blog->blog_start)) ?><br />
-            <span style="font-size: 14px;"><?php echo date("Y", strtotime($blog->blog_start)) ?></span></h2>
-            <!--<div class="calendar calendar-icon-<?php echo date("m", strtotime($blog->blog_start)) ?>">
+            <!--<h2 class="trip_date"><?php echo date("M d", strtotime($blog->blog_start)) ?><br />
+            <span style="font-size: 14px;"><?php echo date("Y", strtotime($blog->blog_start)) ?></span></h2>-->
+            <div class="calendar calendar-icon-<?php echo date("m", strtotime($blog->blog_start)) ?>">
               <div class="calendar-day"><?php echo date("j", strtotime($blog->blog_start)) ?></div>
-            </div> -->
+              <div class="calendar-year"><?php echo date("Y", strtotime($blog->blog_start)) ?></div>
+            </div>
             <?php
 		}
 ?>
@@ -41,7 +44,16 @@ if (isset($trip_data[$trip->trip_id])) {
         echo '<h3 class="borderless">';
         echo '<a href="blog/'.$trip->handle.'/'.$blogid.'">'.$blog->blog_title.'</a><br />';
 		if ($blog->name) {
-			echo '<span style="font-size: 14px;">'.$blog->name.'</span>';
+		    $geo = new GeoModel();
+		    $bloggeo = $geo->LoadLocation($blog->blog_geonameid);
+		    if (isset($bloggeo[0])) {
+		        $countryId = isset($bloggeo[0]->parentCountryId) ? $bloggeo[0]->parentCountryId : false;
+		        if ($countryId) {
+		            $countrygeo = $geo->LoadLocation($countryId);
+		            $countryname = $countrygeo[0]->name;
+	            }
+	        }
+			echo '<span style="font-size: 14px;">'.$blog->name.', '.(isset($countryname) ? $countryname : '').'</span>';
 		}
         echo '</h3>';
 		if ($blog->blog_text) {
@@ -94,10 +106,8 @@ Sortable.create('triplist', {
 } // end if is own trip
 
 } // end if tripdata
-else {
-    echo $words->get('Trip_SubtripsNone');
-}
 ?>
+</div>
 
 <?php
 	if ($isOwnTrip) {

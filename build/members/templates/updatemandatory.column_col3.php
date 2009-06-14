@@ -28,7 +28,7 @@ Boston, MA  02111-1307, USA.
  ?>
 
 <div id="signuprox">
-
+<h2><?=$ww->UpdateMandatoryPage?></h2>
 <form method="post" action="updatemandatory" name="geo-form-js" id="geo-form-js">
     <?=$callback_tag ?>
     <input type="hidden" name="javascriptactive" value="false" />
@@ -42,116 +42,134 @@ Boston, MA  02111-1307, USA.
   <fieldset>
     <legend><?php echo $words->get('SignupName'); ?></legend>
 
-    <!-- First Name -->
-        <div class="signup-row floatbox">
-          <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
-          <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
-          echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
-          <?php
-            if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
-                echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
-            }
-            ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupNameDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupFirstNameShortDesc'); ?></span>
-          -->
-        </div> <!-- signup-row -->
+    <div class="subcolumns">
+      <div class="c50l">
+        <div class="subcl">
+          <!-- Content of left block -->
 
-    <!-- Second Name -->
-        <div class="signup-row floatbox">
-          <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
-          <input type="text" id="secondname" name="secondname" class="float_left" <?php
-          echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
-          <!--
-          <span class="small"><?php echo $words->get('SignupSecondNameShortDesc'); ?></span>
-          -->
-        </div> <!-- signup-row -->
+          <!-- First Name -->
+              <div class="signup-row floatbox">
+                <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
+                <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
+                echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
+                ?> />
+                <?php
+                  if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
+                      echo '<div class="error">'.$words->get('SignupErrorFullNameRequired').'</div>';
+                  }
+                  ?>
+                <!--
+                <a href="#" onclick="return false;" >
+                <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+                <span><?php echo $words->get('SignupNameDescription'); ?></span></a><br />
+                <span class="small"><?php echo $words->get('SignupFirstNameShortDesc'); ?></span>
+                -->
+              </div> <!-- signup-row -->
 
-    <!-- Last Name -->
-        <div class="signup-row floatbox">
-          <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
-          <input type="text" id="lastname" name="lastname" class="float_left" <?php
-          echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?>/>
-          <!--
-          <span class="small"><?php echo $words->get('SignupLastNameShortDesc'); ?></span>
-          -->
-        </div> <!-- signup-row -->
+          <!-- Second Name -->
+              <div class="signup-row floatbox">
+                <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
+                <input type="text" id="secondname" name="secondname" class="float_left" <?php
+                echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
+                ?> />
+                <!--
+                <span class="small"><?php echo $words->get('SignupSecondNameShortDesc'); ?></span>
+                -->
+              </div> <!-- signup-row -->
 
-    <!-- Birthdate -->
-        <div class="signup-row floatbox">
-          <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
-          <select id="BirthDate" name="birthyear">
-            <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
-            <?php echo $birthYearOptions; ?>
-          </select>
-          <select name="birthmonth">
-            <option value=""><?php echo $words->get('SignupBirthMonth'); ?></option>
-            <?php for ($i=1; $i<=12; $i++) { ?>
-            <option value="<?php echo $i; ?>"<?php
-            if (isset($vars['birthmonth']) && $vars['birthmonth'] == $i) {
-                echo ' selected="selected"';
-            }
-            ?>><?php echo $i; ?></option>
-            <?php } ?>
-          </select>
-          <select name="birthday">
-            <option value=""><?php echo $words->get('SignupBirthDay'); ?></option>
-            <?php for ($i=1; $i<=31; $i++) { ?>
-            <option value="<?php echo $i; ?>"<?php
-            if (isset($vars['birthday']) && $vars['birthday'] == $i) {
-                echo ' selected="selected"';
-            }
-            ?>><?php echo $i; ?></option>
-            <?php } ?>
-            </select>
-            <?php
-          if (in_array('SignupErrorBirthDate', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
-          }
-          if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorBirthDateToLow').'</div>';
-          }
-          ?>
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupBirthDateDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupBirthDateShape'); ?></span>
-          -->
-        </div> <!-- signup-row -->
+          <!-- Last Name -->
+              <div class="signup-row floatbox">
+                <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
+                <input type="text" id="lastname" name="lastname" class="float_left" <?php
+                echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
+                ?>/>
+                <!--
+                <span class="small"><?php echo $words->get('SignupLastNameShortDesc'); ?></span>
+                -->
+              </div> <!-- signup-row -->
 
-    <!-- Gender -->
-        <div class="signup-row">
-          <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-          <input class="radio" style="float: left" type="radio" id="gender" name="gender" value="female"<?php
-             if (isset($vars['gender']) && $vars['gender'] == 'female') {
-                 echo ' checked="checked"';
-              }
-              ?> />
-              <?php echo $words->get('female'); ?>
-              <input class="radio" type="radio" name="gender" value="male"<?php
-              if (isset($vars['gender']) && $vars['gender'] == 'male') {
-                  echo ' checked="checked"';
-              }
-              ?> />
-              <?php echo $words->get('male'); ?>
-              <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
-                  echo '<div class="error">'.$words->get('SignupErrorProvideGender').'</div>';
-                      }
-          ?>
+        </div>
+      </div>
 
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupGenderDescription'); ?></span></a><br />
-          -->
-        </div> <!-- signup-row -->
+      <div class="c50r">
+        <div class="subcr">
+          <!-- Content of right block -->
+
+          <!-- Birthdate -->
+              <div class="signup-row floatbox">
+                <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label><br />
+                <select id="BirthDate" name="birthyear">
+                  <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
+                  <?php echo $birthYearOptions; ?>
+                </select>
+                <select name="birthmonth">
+                  <option value=""><?php echo $words->get('SignupBirthMonth'); ?></option>
+                  <?php for ($i=1; $i<=12; $i++) { ?>
+                  <option value="<?php echo $i; ?>"<?php
+                  if (isset($vars['birthmonth']) && $vars['birthmonth'] == $i) {
+                      echo ' selected="selected"';
+                  }
+                  ?>><?php echo $i; ?></option>
+                  <?php } ?>
+                </select>
+                <select name="birthday">
+                  <option value=""><?php echo $words->get('SignupBirthDay'); ?></option>
+                  <?php for ($i=1; $i<=31; $i++) { ?>
+                  <option value="<?php echo $i; ?>"<?php
+                  if (isset($vars['birthday']) && $vars['birthday'] == $i) {
+                      echo ' selected="selected"';
+                  }
+                  ?>><?php echo $i; ?></option>
+                  <?php } ?>
+                  </select>
+                  <?php
+                if (in_array('SignupErrorBirthDate', $vars['errors'])) {
+                    echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
+                }
+                if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
+                    echo '<div class="error">'.$words->get('SignupErrorBirthDateToLow').'</div>';
+                }
+                ?>
+                <!--
+                <a href="#" onclick="return false;" >
+                <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+                <span><?php echo $words->get('SignupBirthDateDescription'); ?></span></a><br />
+                <span class="small"><?php echo $words->get('SignupBirthDateShape'); ?></span>
+                -->
+              </div> <!-- signup-row -->
+
+          <!-- Gender -->
+              <div class="signup-row">
+                <label for="gender"><?php echo $words->get('Gender'); ?>*</label><br />
+                <input class="radio" type="radio" id="gender" name="gender" value="female"<?php
+                   if (isset($vars['gender']) && $vars['gender'] == 'female') {
+                       echo ' checked="checked"';
+                    }
+                    ?> />
+                    <?php echo $words->get('female'); ?>
+                    <input class="radio" type="radio" name="gender" value="male"<?php
+                    if (isset($vars['gender']) && $vars['gender'] == 'male') {
+                        echo ' checked="checked"';
+                    }
+                    ?> />
+                    <?php echo $words->get('male'); ?>
+                    <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
+                        echo '<div class="error">'.$words->get('SignupErrorProvideGender').'</div>';
+                            }
+                ?>
+
+                <!--
+                <a href="#" onclick="return false;" >
+                <img src="../images/icons/help.png" alt="?" height="16" width="16" />
+                <span><?php echo $words->get('SignupGenderDescription'); ?></span></a><br />
+                -->
+              </div> <!-- signup-row -->
+
+        </div>
+      </div>
+    </div>
+
+
   </fieldset>
 
     <fieldset>
@@ -205,7 +223,6 @@ Boston, MA  02111-1307, USA.
         </div>
 
     </fieldset>
-</form>
 
     <?php
         $Geo = new GeoController;
@@ -215,8 +232,6 @@ Boston, MA  02111-1307, USA.
         isset($mem_redirect->location);
     ?>
 
-
-<form method="post" action="signup/4" name="signup" id="user-register-form">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
 
@@ -227,12 +242,13 @@ Boston, MA  02111-1307, USA.
         ?>
 
   <fieldset id="location">
+      <legend><?php echo $words->get('Address'); ?></legend>
 
           <ul class="floatbox input_float">
-        <li>
+        <li style="float: left">
 
           <label for="register-street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
-          <input type="text" id="register-street" name="street" style="float: left" <?php
+          <input type="text" id="register-street" name="street" <?php
             echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
           <!--
@@ -242,9 +258,9 @@ Boston, MA  02111-1307, USA.
           <span class="small"><?php echo $words->get('SignupStreetNameDescription'); ?></span>
           -->
         </li>
-        <li class="number">
+        <li class="number" style="float: left">
           <label for="register-housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
-          <input type="text" id="register-housenumber" name="housenumber" style="float: left" <?php
+          <input type="text" id="register-housenumber" name="housenumber" <?php
           echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <!--
@@ -255,9 +271,9 @@ Boston, MA  02111-1307, USA.
           -->
         </li>
 
-        <li class="number">
+        <li class="number" style="float: left">
           <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
-          <input type="text" id="zip" name="zip" style="float: left" <?php
+          <input type="text" id="zip" name="zip" <?php
             echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
           <!--
@@ -396,7 +412,7 @@ Boston, MA  02111-1307, USA.
         $('geoselector').style.display = 'none';
         $('geoselectorjs').style.display = 'block';
         $('spaf_map').style.display = 'block';
-        GeoSuggest.initialize('geo-form');
+        GeoSuggest.initialize('geo-form-js');
         SPAF_Maps_load();
     }
 

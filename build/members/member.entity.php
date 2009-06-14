@@ -27,6 +27,27 @@ class Member extends RoxEntityBase
 
 
     /**
+     * Get the member's TB user id
+     */
+    public function get_userid() {
+        if(!isset($this->userId)) {
+	        $s = $this->singleLookup(
+	            "
+	SELECT SQL_CACHE
+	    user.id
+	FROM
+	    user
+	WHERE
+	    handle = '$this->Username'
+	            "
+	        );
+	        if ($s) $this->userId = $s->id;
+	        else return false;
+        }
+        return $this->userId;
+    }
+
+    /**
      * Checks which languages profile has been translated into
      */
     public function get_profile_languages() {
@@ -49,7 +70,7 @@ class Member extends RoxEntityBase
           " AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
         $qry = mysql_query($str);
         while ($rr = mysql_fetch_object($qry)) {
-            //$rr->Level = ("LanguageLevel_".$rr->Level);
+            //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
             array_push($TLanguages, $rr);
         }
         return $TLanguages;
@@ -73,7 +94,7 @@ ORDER BY languages.id asc
             ";
         $s = $this->dao->query($str);
         while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
-            //$rr->Level = ("LanguageLevel_".$rr->Level);
+            //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
             array_push($AllLanguages, $rr);
         }
         return $AllLanguages;
@@ -249,10 +270,7 @@ WHERE IdMember = ".$this->id
      * TODO: get name from crypted fields in an architecturally sane place (to be determined)
      */
     public function get_name() {
-        $name1 = $this->get_crypted($this->FirstName, "");
-        $name2 = $this->get_crypted($this->SecondName, "");
-        $name3 = $this->get_crypted($this->LastName, "");
-        $name = $name1." " . $name2 . " " . $name3;
+        $name = "{$this->get_firstname()} {$this->get_secondname()} {$this->get_lastname()}";
         return $name;
     }
 
@@ -302,14 +320,40 @@ WHERE IdMember = ".$this->id
     }
 
 
-    public function get_street() {
+    /**
+     * returns 'unencrypted' housenumber
+     *
+     * @access public
+     * @return string
+     */
+    public function get_housenumber()
+    {
+        if(!isset($this->address)) {
+            $this->get_address();
+        }
+        return $this->get_crypted($this->address->HouseNumber, '');
+    }
+
+    /**
+     * returns 'unencrypted' street
+     *
+     * @access public
+     * @return string
+     */
+    public function get_street()
+    {
         if(!isset($this->address)) {
             $this->get_address();
         }
         return $this->get_crypted($this->address->StreetName, '');
     }
 
-
+    /**
+     * returns 'unencrypted' zip
+     *
+     * @access public
+     * @return string
+     */
     public function get_zip() {
         if(!isset($this->address)) {
             $this->get_address();
@@ -317,7 +361,12 @@ WHERE IdMember = ".$this->id
         return $this->get_crypted($this->address->Zip, '');
     }
 
-
+    /**
+     * returns city
+     *
+     * @access public
+     * @return string
+     */
     public function get_city() {
         if(!isset($this->address)) {
             $this->get_address();
@@ -325,33 +374,39 @@ WHERE IdMember = ".$this->id
         return $this->address->CityName;
     }
 
-
+    /**
+     * returns region
+     *
+     * @access public
+     * @return string
+     */
     public function get_region() {
-        //echo "address: " . $this->address;
         if(!isset($this->address)) {
             $this->get_address();
         }
-        //echo "address: " . $this->address;
         return $this->address->RegionName;
     }
 
-
+    /**
+     * returns country
+     *
+     * @access public
+     * @return string
+     */
     public function get_country() {
-        //echo "address: " + $this->address;
-        //return ""
-
         if(!isset($this->address)) {
-            //echo "No address set, getting it!";
             $this->get_address();
         }
-        $r = $this->address->CountryName;
-        //echo "r: " + $r;
-        return $r;
+        return $this->address->CountryName;
     }
 
-
+    /**
+     * returns countrycode
+     *
+     * @access public
+     * @return int
+     */
     public function get_countrycode() {
-        //echo "address: " + $this->address;
         if(!isset($this->address)) {
             $this->get_address();
         }
@@ -434,6 +489,7 @@ WHERE IdToMember = ".$this->id
      */
     public function get_group_memberships()
     {
+        throw new Exception("don't use this function, use getGroups() instead!");
                 $TGroups=array() ;
         $query = "select SQL_CACHE membersgroups.id as IdMemberShip, membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" .$this->id;
         $s = $this->dao->query($query);
@@ -484,28 +540,23 @@ WHERE IdToMember = ".$this->id
      * Member address lookup
      */
     protected function get_address() {
-        $sql =
-           "
+        $sql = <<<SQL
 SELECT
-    SQL_CACHE a.*,
-    ci.Name      AS CityName,
-    co.Name      AS CountryName,
-    co.isoalpha2 AS CountryCode
+    SQL_CACHE a.*
 FROM
-    addresses    AS a,
-    cities       AS ci,
-    countries    AS co
+    addresses AS a
 WHERE
-    a.IdMember  = $this->id  AND
-    a.IdCity    = ci.id      AND
-    ci.IdCountry = co.id
-            "
+    a.IdMember = {$this->id}
+SQL;
         ;
         $a = $this->bulkLookup($sql);
         if($a != null && sizeof($a) > 0) {
             $Geo = new GeoModel();
+            $a[0]->CityName = $Geo->getDataById($a[0]->IdCity)->name;
             $IdRegion = $Geo->getDataById($a[0]->IdCity)->parentAdm1Id;
             $a[0]->RegionName = $Geo->getDataById($IdRegion)->name;
+            $country_id = $Geo->getDataById($IdRegion)->parentCountryId;
+            $a[0]->CountryName = $Geo->getDataById($country_id)->name;
         } else {
             $a[0] = new stdClass();
             $a[0]->RegionName = 'Unknown';
@@ -737,6 +788,10 @@ WHERE
         }
     }
 
+    public function setEditMode($state = false)
+    {
+        $this->edit_mode = $state;
+    }
 
     /**
      * This needs to go someplace else,

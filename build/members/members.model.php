@@ -535,102 +535,6 @@ WHERE
         return $return;
     }
 	
-    /**
-     * Check form values of Mandatory form,
-     * should always be analog to /build/signup/signup.model.php !!
-     *
-     * @param unknown_type $vars
-     * @return unknown
-     */
-    public function checkUpdateMandatoryForm(&$vars)
-    {
-        $errors = array();
-
-        // geonameid
-        if (empty($vars['geonameid']) || empty($vars['countryname'])) {
-            $errors[] = 'SignupErrorProvideLocation';
-            unset($vars['geonameid']);
-        }
-            
-        // housenumber
-        if (!isset($vars['housenumber']) || 
-            !preg_match(self::HANDLE_PREGEXP_HOUSENUMBER, $vars['housenumber'])) {
-            $errors[] = 'SignupErrorProvideHouseNumber';
-        }
-        
-        // street
-        if (empty($vars['street']) || 
-            !preg_match(self::HANDLE_PREGEXP_STREET, $vars['street'])) {
-            $errors[] = 'SignupErrorProvideStreetName';
-        }
-        
-        // zip
-        if (!isset($vars['zip'])) {
-            $errors[] = 'SignupErrorProvideZip';
-        }
-        
-        // username
-        if (!isset($vars['username']) || 
-                !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
-                strpos($vars['username'], 'xn--') !== false) {
-            $errors[] = 'SignupErrorWrongUsername';
-        } elseif (MOD_member::getMember_username($vars['username']) != 0) {
-            $errors[] = 'SignupErrorUsernameAlreadyTaken';
-        }
-        
-        // email (e-mail duplicates in BW database allowed)
-        if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email'])) {
-            $errors[] = 'SignupErrorInvalidEmail';
-        }
-        
-        // password
-        if (!isset($vars['password']) || !isset($vars['passwordcheck']) ||
-                strlen($vars['password']) < 6 || 
-                strcmp($vars['password'], $vars['passwordcheck']) != 0
-        ) {
-            $errors[] = 'SignupErrorPasswordCheck';
-        }
-        
-        // firstname, lastname
-        if (empty($vars['firstname']) || !preg_match(self::HANDLE_PREGEXP_FIRSTNAME, $vars['firstname']) ||
-            empty($vars['lastname']) || !preg_match(self::HANDLE_PREGEXP_LASTNAME, $vars['lastname'])
-        ) {
-            $errors[] = 'SignupErrorFullNameRequired';
-        }
-             
-        // (skipped:) secondname
-
-        // gender
-        if (empty($vars['gender']) || ($vars['gender']!='female' && $vars['gender']!='male')) {
-            $errors[] = 'SignupErrorProvideGender';
-        }
-        
-        // birthyear
-        $birthmonth = 12;
-        if (!empty($vars['birthmonth'])) {
-            $birthmonth = $vars['birthmonth'];
-        }
-        $birthday = 28;    // TODO: could sometimes be 29, 30, 31
-        if (!empty($vars['birthday'])) {
-            $birthday = $vars['birthday'];
-        }
-        if (empty($vars['birthyear']) || !checkdate($birthmonth, $birthday, $vars['birthyear'])) {
-            $errors[] = 'SignupErrorBirthDate';
-        } else {
-            $vars['iso_date'] =  $vars['birthyear'] . "-" . $birthmonth . "-" . $birthday;
-            if ($this->ageValue($vars['iso_date']) < self::YOUNGEST_MEMBER) {
-                $errors[] = 'SignupErrorBirthDateToLow';
-            }
-        }
-        
-        // (skipped:) birthmonth
-
-        // (skipped:) birthday
-
-        // (skipped:) age hidden
-        
-        return $errors;
-    }
 
     /**
      * Check form values of MyPreferences form,
@@ -720,20 +624,90 @@ ORDER BY
     public function checkProfileForm(&$vars)
     {
         $errors = array();
-        $log = MOD_log::get();
         
         // email (e-mail duplicates in BW database allowed)
         if (!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) {
+            $Email = ((!empty($vars['Email'])) ? $vars['Email'] : '-empty-');
             $errors[] = 'SignupErrorInvalidEmail';
-            $log->write("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
+            $this->logWrite("Editmyprofile: Invalid Email update with value " .$Email, "Email Update");
+        }
+        if (empty($vars['Street']) || empty($vars['Zip']))
+        {
+            $Street = ((!empty($vars['Street'])) ? $vars['Street'] : '-empty-');
+            $Zip = ((!empty($vars['Zip'])) ? $vars['Zip'] : '-empty-');
+            $errors[] = 'SignupErrorInvalidAddress';
+            $this->logWrite("Editmyprofile: Invalid address update with value {$Street} and {$Zip}", "Address Update");
         }
 
-        // (skipped:) birthday
+        $birthdate_error = false;
+        if (empty($vars['BirthDate']) || false === $this->validateBirthdate($vars['BirthDate']))
+        {
+            $birthdate_error = true;
+        }
 
-        // (skipped:) age hidden
+        if ($birthdate_error)
+        {
+            $birthdate = ((!empty($vars['BirthDate'])) ? $vars['BirthDate'] : '-empty-');
+            $errors[] = 'SignupErrorInvalidBirthDate';
+            $this->logWrite("Editmyprofile: Invalid birthdate update with value {$vars['BirthDate']}", "Birthdate Update");
+        }
+
+        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','IDontTell')))
+        {
+            $gender = ((!empty($vars['gender'])) ? $vars['gender'] : '-empty-');
+            $errors[] = 'SignupErrorInvalidGender';
+            $this->logWrite("Editmyprofile: Invalid gender update with value {$gender}", "Gender Update");
+        }
+
         return $errors;
     }
-    
+
+    /**
+     * validates a date and outputs valid date or false
+     * checks if the age of the person is 17 > x > 100
+     *
+     * @param string $birthdate
+     * @access public
+     * @return string|bool
+     */
+    public function validateBirthdate($birthdate)
+    {
+        $birthdate = str_replace(array('/','.'),'-',$birthdate);
+        if (preg_match('/^([1-2]\d\d\d)-([0-1]?[0-9])-([0-3]?[0-9])$/', $birthdate, $matches) || preg_match('/^([0-3]?[0-9])-([0-1]?[0-9])-([1-2]\d\d\d)$/', $birthdate, $matches))
+        {
+            if (strlen($matches[1]) == 4)
+            {
+                $year = $matches[1];
+                $month = $matches[2];
+                $day = $matches[3];
+            }
+            else
+            {
+                $year = $matches[3];
+                $month = $matches[2];
+                $day = $matches[1];
+            }
+            // fair chance date is american, so switch day and month
+            if ($month > 12 && $day < 12)
+            {
+                $temp = $day;
+                $day = $month;
+                $month = $temp;
+            }
+            if (intval($year) < intval(date('Y', strtotime('-100 years'))) || intval($year) > intval(date('Y', strtotime('-17 years'))) || !checkdate($month, $day, $year))
+            {
+                return false;
+            }
+            else
+            {
+                return "{$year}-{$month}-{$day}";
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     /**
      * Update Member's Profile
@@ -748,6 +722,8 @@ ORDER BY
         $rights = new MOD_right();
         $log = MOD_log::get();
         $m = $vars['member'];
+
+        // fantastic ... love the implementation. Fake
         $CanTranslate = false;
         // $CanTranslate = CanTranslate($vars["memberid"], $_SESSION['IdMember']);
         $ReadCrypted = "AdminReadCrypted"; // This might be changed in the future
@@ -761,124 +737,76 @@ ORDER BY
         // Set the language that ReplaceinMTrad uses for writing
         $words->setlangWrite($vars['profile_language']);
 
-        // Mostly copied from old BW editmyprofile.php:        
-        // $str = "HideGender='" . $vars['HideGender'] . "'";
-        $str = ",ProfileSummary=" . $words->ReplaceInMTrad($this->cleanupText($vars['ProfileSummary']),"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
-        $str .= ",WebSite='" . $vars['WebSite'] . "'";
-        $str .= ",Accomodation='" . $vars['Accomodation'] . "'";
-        $str .= ",Organizations=" . $words->ReplaceInMTrad($vars['Organizations'],"members.Organizations", $IdMember, $m->Organizations, $IdMember);
-        $str .= ",Occupation=" . $words->ReplaceInMTrad($vars['Occupation'],"members.Occupation", $IdMember, $m->Occupation, $IdMember);
-        $str .= ",ILiveWith=" . $words->ReplaceInMTrad($vars['ILiveWith'],"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
-        $str .= ",MaxGuest=" . $vars['MaxGuest'];
-        $str .= ",MaxLenghtOfStay=" . $words->ReplaceInMTrad($vars['MaxLenghtOfStay'],"members.MaxLenghtOfStay", $IdMember, $m->MaxLenghtOfStay, $IdMember);
-        $str .= ",AdditionalAccomodationInfo=" . $words->ReplaceInMTrad($vars['AdditionalAccomodationInfo'],"members.AdditionalAccomodationInfo", $IdMember, $m->AdditionalAccomodationInfo, $IdMember);
-        $str .= ",TypicOffer='" . $vars['TypicOffer'] . "'";
-        $str .= ",Restrictions='" . $vars['Restrictions'] . "'";
-        $str .= ",OtherRestrictions=" . $words->ReplaceInMTrad($vars['OtherRestrictions'],"members.OtherRestrictions", $IdMember, $m->OtherRestrictions, $IdMember);
-        $str .= ",Hobbies=" . $words->ReplaceInMTrad($vars['Hobbies'],"members.Hobbies", $IdMember, $m->Hobbies, $IdMember);
-        $str .= ",Books=" . $words->ReplaceInMTrad($vars['Books'],"members.Books", $IdMember, $m->Books, $IdMember);
-        $str .= ",Music=" . $words->ReplaceInMTrad($vars['Music'],"members.Music", $IdMember, $m->Music, $IdMember);
-        $str .= ",Movies=" . $words->ReplaceInMTrad($vars['Movies'],"members.Movies", $IdMember, $m->Movies, $IdMember);
-        $str .= ",PastTrips=" . $words->ReplaceInMTrad($vars['PastTrips'],"members.PastTrips", $IdMember, $m->PastTrips, $IdMember);
-        $str .= ",PlannedTrips=" . $words->ReplaceInMTrad($vars['PlannedTrips'],"members.PlannedTrips", $IdMember, $m->PlannedTrips, $IdMember);
-        $str .= ",PleaseBring=" . $words->ReplaceInMTrad($vars['PleaseBring'],"members.PleaseBring", $IdMember, $m->PleaseBring, $IdMember);
-        $str .= ",OfferGuests=" . $words->ReplaceInMTrad($vars['OfferGuests'],"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
-        $str .= ",OfferHosts=" . $words->ReplaceInMTrad($vars['OfferHosts'],"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
-        $str .= ",PublicTransport=" . $words->ReplaceInMTrad($vars['PublicTransport'],"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
+        // refactoring to use member entity
+        $m->Gender = $vars['gender'];
+        $m->HideGender = $vars['HideGender'];
+        $m->BirthDate = $vars['BirthDate'];
+        $birthdate = $this->validateBirthdate($vars['BirthDate']);
+        $m->bday = substr($birthdate, -2);
+        $m->bmonth = substr($birthdate, 5,2);
+        $m->byear = substr($birthdate, 0,4);
+        $m->HideBirthDate = $vars['HideBirthDate'];
+        $m->HideGender = $vars['HideGender'];
+        $m->ProfileSummary = $words->ReplaceInMTrad($this->cleanupText($vars['ProfileSummary']),"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
+        $m->WebSite = $vars['WebSite'];
+        $m->Accomodation = $vars['Accomodation'];
+        $m->Organizations = $words->ReplaceInMTrad($vars['Organizations'],"members.Organizations", $IdMember, $m->Organizations, $IdMember);
+        $m->Occupation = $words->ReplaceInMTrad($vars['Occupation'],"members.Occupation", $IdMember, $m->Occupation, $IdMember);
+        $m->ILiveWith = $words->ReplaceInMTrad($vars['ILiveWith'],"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
+        $m->MaxGuest = $vars['MaxGuest'];
+        $m->MaxLenghtOfStay = $words->ReplaceInMTrad($vars['MaxLenghtOfStay'],"members.MaxLenghtOfStay", $IdMember, $m->MaxLenghtOfStay, $IdMember);
+        $m->AdditionalAccomodationInfo = $words->ReplaceInMTrad($vars['AdditionalAccomodationInfo'],"members.AdditionalAccomodationInfo", $IdMember, $m->AdditionalAccomodationInfo, $IdMember);
+        $m->TypicOffer = $vars['TypicOffer'];
+        $m->Restrictions = $vars['Restrictions'];
+        $m->OtherRestrictions = $words->ReplaceInMTrad($vars['OtherRestrictions'],"members.OtherRestrictions", $IdMember, $m->OtherRestrictions, $IdMember);
+        $m->Hobbies = $words->ReplaceInMTrad($vars['Hobbies'],"members.Hobbies", $IdMember, $m->Hobbies, $IdMember);
+        $m->Books = $words->ReplaceInMTrad($vars['Books'],"members.Books", $IdMember, $m->Books, $IdMember);
+        $m->Music = $words->ReplaceInMTrad($vars['Music'],"members.Music", $IdMember, $m->Music, $IdMember);
+        $m->Movies = $words->ReplaceInMTrad($vars['Movies'],"members.Movies", $IdMember, $m->Movies, $IdMember);
+        $m->PastTrips = $words->ReplaceInMTrad($vars['PastTrips'],"members.PastTrips", $IdMember, $m->PastTrips, $IdMember);
+        $m->PlannedTrips = $words->ReplaceInMTrad($vars['PlannedTrips'],"members.PlannedTrips", $IdMember, $m->PlannedTrips, $IdMember);
+        $m->PleaseBring = $words->ReplaceInMTrad($vars['PleaseBring'],"members.PleaseBring", $IdMember, $m->PleaseBring, $IdMember);
+        $m->OfferGuests = $words->ReplaceInMTrad($vars['OfferGuests'],"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
+        $m->OfferHosts = $words->ReplaceInMTrad($vars['OfferHosts'],"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
+        $m->PublicTransport = $words->ReplaceInMTrad($vars['PublicTransport'],"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
         
-        if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data        
-            $str .= ",Email='" . MOD_crypt::NewReplaceInCrypted($vars['Email'],"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
-            $str .= "',HomePhoneNumber='" . MOD_crypt::NewReplaceInCrypted($vars['HomePhoneNumber'],"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
-            $str .= "',CellPhoneNumber='" . MOD_crypt::NewReplaceInCrypted($vars['CellPhoneNumber'],"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
-            $str .= "',WorkPhoneNumber='" . MOD_crypt::NewReplaceInCrypted($vars['WorkPhoneNumber'],"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
-            $str .= "',chat_SKYPE='" . MOD_crypt::NewReplaceInCrypted($vars['chat_SKYPE'],"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
-            $str .= "',chat_MSN='" . MOD_crypt::NewReplaceInCrypted($vars['chat_MSN'],"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
-            $str .= "',chat_AOL='" . MOD_crypt::NewReplaceInCrypted($vars['chat_AOL'],"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
-            $str .= "',chat_YAHOO='" . MOD_crypt::NewReplaceInCrypted($vars['chat_YAHOO'],"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
-            $str .= "',chat_ICQ='" . MOD_crypt::NewReplaceInCrypted($vars['chat_ICQ'],"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
-            $str .= "',chat_Others='" . MOD_crypt::NewReplaceInCrypted($vars['chat_Others'],"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
-            $str .= "',chat_GOOGLE='" . MOD_crypt::NewReplaceInCrypted($vars['chat_GOOGLE'],"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
-            $str .= "'";        
-        }
+        // as $CanTranslate is set explicitly above, this is disabled
+        // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data        
 
-// Endcopy
-        
-        $query = '
-UPDATE `members`
-SET
-    `HideBirthDate` = \'' . $vars['HideBirthDate'] . '\'';
+        if ($vars["Email"] != $m->email) {
+            $log->write("Email updated (previous was " . $m->email . ")", "Email Update");
+        }                
+        if ($vars["HouseNumber"] != $m->get_housenumber()) {
+            $log->write("Housenumber updated (previous was {$m->get_housenumber()})", "Address Update");
+        }                
+        if ($vars["Street"] != $m->get_street()) {
+            $log->write("Street updated (previous was {$m->get_street()})", "Address Update");
+        }                
+        if ($vars["Zip"] != $m->get_zip()) {
+            $log->write("Zip updated (previous was {$m->get_zip()})", "Address Update");
+        }                
 
-$query .= $str;
-$query .= '
-WHERE
-    `id` = \'' . $IdMember . '\'
-';
-        $status = $this->dao->query($query);
-        
-        if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data        
-            // Only update hide/unhide for identity fields
-            MOD_crypt::NewReplaceInCrypted(addslashes(MOD_crypt::$ReadCrypted($m->FirstName)),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
-            MOD_crypt::NewReplaceInCrypted(addslashes(MOD_crypt::$ReadCrypted($m->SecondName)),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
-            MOD_crypt::NewReplaceInCrypted(addslashes(MOD_crypt::$ReadCrypted($m->LastName)),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
-            
-            //MOD_crypt::NewReplaceInCrypted(addslashes($m->Zip),"addresses.Zip",$rAdresse->IdAddress,$m->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
-            //MOD_crypt::NewReplaceInCrypted(addslashes($m->HouseNumber),"addresses.HouseNumber",$m->IdAddress,$rAdresse->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
-            //MOD_crypt::NewReplaceInCrypted(addslashes($m->StreetName),"addresses.StreetName",$m->IdAddress,$rAdresse->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+        $m->Email = MOD_crypt::NewReplaceInCrypted($vars['Email'],"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
+        $m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted($vars['HomePhoneNumber'],"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
+        $m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted($vars['CellPhoneNumber'],"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+        $m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted($vars['WorkPhoneNumber'],"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
+        $m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted($vars['chat_SKYPE'],"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
+        $m->chat_MSN = MOD_crypt::NewReplaceInCrypted($vars['chat_MSN'],"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
+        $m->chat_AOL = MOD_crypt::NewReplaceInCrypted($vars['chat_AOL'],"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
+        $m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted($vars['chat_YAHOO'],"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
+        $m->chat_ICQ = MOD_crypt::NewReplaceInCrypted($vars['chat_ICQ'],"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
+        $m->chat_Others = MOD_crypt::NewReplaceInCrypted($vars['chat_Others'],"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
+        $m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted($vars['chat_GOOGLE'],"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
 
+        // Only update hide/unhide for identity fields
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->FirstName)),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->SecondName)),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->LastName)),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape($vars['Zip']),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape($vars['HouseNumber']),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape($vars['Street']),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
 
-            // if email has changed
-            if ($vars["Email"] != $m->email) {
-                $log->write("Email updated (previous was " . $m->email . ")", "Email Update");
-            }                
-        }
-        
-        // ********************************************************************
-        // address/addresses
-        // ********************************************************************
-        // $query = '
-// INSERT INTO addresses
-// (
-    // `IdMember`,
-    // `IdCity`,
-    // `HouseNumber`,
-    // `StreetName`,
-    // `Zip`,
-    // `created`,
-    // `Explanation`
-// )
-// VALUES
-// (
-    // ' . $memberID . ',
-    // ' . $vars['geonameid'] . ',
-    // 0,
-    // 0,
-    // 0,
-    // now(),
-    // "Signup addresse")';
-        // $s = $this->dao->query($query);
-        // if( !$s->insertId()) {
-            // $vars['errors'] = array('inserror');
-            // return false;
-        // }
-        // $IdAddress = $s->insertId();
-        // $cryptedfieldsHousenumber = MOD_crypt::insertCrypted($vars['housenumber'], "addresses.HouseNumber", $IdAddress, $memberID);
-        // $cryptedfieldsStreet = MOD_crypt::insertCrypted($vars['street'], "addresses.StreetName", $IdAddress, $memberID);
-        // $cryptedfieldsZip = MOD_crypt::insertCrypted($vars['zip'], "addresses.Zip", $IdAddress, $memberID);
-        // $query = '
-// UPDATE addresses
-// SET
-    // `HouseNumber` = ' . $cryptedfieldsHousenumber . ',
-    // `StreetName` = ' . $cryptedfieldsStreet . ',
-    // `Zip` = ' . $cryptedfieldsZip . '
-// WHERE `id` = ' . $IdAddress . '
-        // ';
-        // $s = $this->dao->query($query);
-        // if( !$s->insertId()) {
-            // $vars['errors'] = array('inserror');
-            // return false;
-        // }
-
-        // MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
+        $status = $m->update();
 
         if (!empty($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['tmp_name']))
         {
@@ -889,13 +817,20 @@ WHERE
         return $status;
     }
     
+    /**
+     * prettify values from post request
+     *
+     * @param array $vars
+     * @access public
+     * @return array
+     */
     public function polishProfileFormValues($vars)
     {
         $m = $vars['member'];
         
         // Prepare $vars
         $vars['ProfileSummary'] = $this->dao->escape($vars['ProfileSummary']);
-        // $vars['BirthDate'] = $member->BirthDate;
+        $vars['BirthDate'] = (($date = $this->validateBirthdate($vars['BirthDate'])) ? $date : $vars['BirthDate']);
         if (!isset($vars['HideBirthDate'])) $vars['HideBirthDate'] = 'No';
         // $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('ProfileOccupation', $profile_language) : '';
         
@@ -921,14 +856,11 @@ WHERE
         if (!isset($vars['IsHidden_LastName'])) $vars['IsHidden_LastName'] = 'No';
         if (!isset($vars['IsHidden_Address'])) $vars['IsHidden_Address'] = 'No';
         if (!isset($vars['IsHidden_Zip'])) $vars['IsHidden_Zip'] = 'No';
+        if (!isset($vars['HideGender'])) $vars['HideGender'] = 'No';
         if (!isset($vars['IsHidden_HomePhoneNumber'])) $vars['IsHidden_HomePhoneNumber'] = 'No';
         if (!isset($vars['IsHidden_CellPhoneNumber'])) $vars['IsHidden_CellPhoneNumber']  = 'No';
         if (!isset($vars['IsHidden_WorkPhoneNumber'])) $vars['IsHidden_WorkPhoneNumber'] = 'No';
         
-        // $vars['Email'] = $member->email;
-        // $vars['WebSite'] = $member->WebSite;
-        
-        // $vars['messengers'] = $member->messengers();
         $vars['Accomodation'] = $this->dao->escape($vars['Accomodation']);
         $vars['MaxLenghtOfStay'] = $this->dao->escape($vars['MaxLenghtOfStay']);
         $vars['ILiveWith'] = $this->dao->escape($vars['ILiveWith']);
@@ -974,6 +906,118 @@ WHERE
         $vars['PlannedTrips'] = $this->dao->escape($vars['PlannedTrips']);
 
         return $vars;
+    }
+    
+    public function sendMandatoryForm($vars)
+    {
+        $rights = new MOD_rights();
+        $right_Accepter = $rights->hasRight("Accepter");
+        $right_SafetyTeam = $rights->hasRight("SafetyTeam");
+
+        if (($right_Accepter) or ($right_SafetyTeam) and ($vars["cid"] != "")) { // Accepter or SafetyTeam can alter these data
+        	$IdMember = $vars["cid"];
+        	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
+        	// Restriction an accepter can only see/update mandatory data of someone in his Scope country
+        	$AccepterScope = RightScope('Accepter');
+        	$AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
+        	if (($AccepterScope != "\"All\"")and($IdMember!=$_SESSION['IdMember'])) {
+        	   $rr=LoadRow("select IdCountry,countries.Name as CountryName,Username from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
+        	   if (isset($rr->IdCountry)) {
+        	   	  $tt=explode(",",$AccepterScope) ;
+        		  	if ((!in_array($rr->IdCountry,$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
+        					 $ss=$AccepterScope ;
+        					 for ($ii=0;$ii<sizeof($tt);$ii++) {
+        					 		 if (is_numeric($tt[$ii])) {
+        							 		$ss=$ss.",".getcountryname($tt[$ii]) ;
+        							 }
+        					 }				 
+        		  	 	 die ("sorry Your accepter Scope is only for ".$ss." This member is in ".$rr->CountryName) ;
+        		  	} 
+        	   }
+        	}
+        	$StrLog="Viewing member [<b>".fUsername($IdMember)."</b>] data with right [".$AccepterScope."]" ;
+        	if (HasRight("SafetyTeam")) {
+        		 		$StrLog=$StrLog." <b>With SafetyTeam Right</b>" ;
+        	}
+        	LogStr($StrLog,"updatemandatory") ; 
+        	$IsVolunteerAtWork = true;
+        } else {
+        	$IsVolunteerAtWork = false;
+        	$ReadCrypted = "AdminReadCrypted"; // In this case the MemberReadCrypted will be used (only owner can decrypt)
+        }
+        
+        if (($IsVolunteerAtWork)or($m->Status=='NeedMore')or($m->Status=='Pending')) {
+		    // todo store previous values
+		    $this->setlocation($IdMember,$vars['geonameid'] = false);
+    		if ($IdAddress!=0) { // if the member already has an address
+    			$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . NewReplaceInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress,$rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . NewReplaceInCrypted($Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;
+    			sql_query($str);
+    		} else {
+    			$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted("addresses.HouseNumber",0,$HouseNumber) . "," . NewInsertInCrypted("addresses.StreetNamer",0,$StreetName) . "," . NewInsertInCrypted("addresses.Zip",0,$Zip) . ",now(),\"Address created by volunteer\")";
+    			sql_query($str);
+    		    $IdAddress=mysql_insert_id();
+    			LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
+    		}
+    		$m->FirstName = NewReplaceInCrypted($FirstName,"members.FirstName",$m->id, $m->FirstName, $m->id,IsCryptedValue($m->FirstName));
+    		$m->SecondName = NewReplaceInCrypted($SecondName,"members.SecondName",$m->id, $m->SecondName, $m->id,IsCryptedValue($m->SecondName));
+    		$m->LastName = NewReplaceInCrypted(stripslashes($LastName),"members.LastName",$m->id, $m->LastName, $m->id,IsCryptedValue($m->LastName));
+
+    		$str = "update members set FirstName=" . $m->FirstName . ",SecondName=" . $m->SecondName . ",LastName=" . $m->LastName . ",Gender='" . $Gender . "',HideGender='" . $HideGender . "',BirthDate='" . $DB_BirthDate . "',HideBirthDate='" . $HideBirthDate . "',IdCity=" . $IdCity . " where id=" . $m->id;
+    		sql_query($str);
+    		$slog = "Doing a mandatoryupdate on <b>" . $Username . "</b>";
+    		if (($IsVolunteerAtWork) and ($MemberStatus != $m->Status)) {
+    			$str = "update members set Status='" . $MemberStatus . "' where id=" . $m->id;
+    			sql_query($str);
+    			LogStr("Changing Status from " . $m->Status . " to " . $MemberStatus . " for member <b>" . $Username . "</b>", "updatemandatory");
+    		}
+    		elseif ($m->Status=='NeedMore') {
+    			$str = "update members set Status='Pending' where id=" . $m->id;
+    			sql_query($str);
+    			$slog=" Completing profile after NeedMore ";
+    			if (GetStrParam("Comment") != "") {
+    			   $slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
+    			}
+    			LogStr($slog, "updatemandatory");
+    			DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $m->Username));
+    			exit (0);
+    		}
+
+
+    		if (GetStrParam("Comment") != "") {
+    			$slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
+    		}
+    		LogStr($slog, "updatemandatory");
+    	} else { // not volunteer action
+
+    		$Email = GetEmail();
+
+            // a member can only choose to hide or to show his gender / birth date and have it to take action immediately
+      		if (($HideGender!=$m->HideGender) or ($HideBirthDate!=$m->HideBirthDate)) { 
+    		   $str = "update members set HideGender='" . $HideGender . "',HideBirthDate='" . $HideBirthDate . "' where id=" . $m->id;
+    		   LogStr("mandatoryupdate changing Hide Gender (".$HideGender."/".$m->HideGender.") or HideBirthDate (".$HideBirthDate."/".$m->HideBirthDate.")", "updatemandatory");
+    		   sql_query($str);
+    		}
+
+    		$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress,IdMember) ";
+    		$str .= " values(" . GetParam("IdCity") . ",'" . GetStrParam("FirstName") . "','" . GetStrParam("SecondName") . "','" . GetStrParam("LastName") . "','" . GetStrParam("HouseNumber") . "','" . GetStrParam("StreetName") . "','" . GetStrParam("Zip") . "','" . GetStrParam("Comment") . "',".$IdAddress.",".$IdMember.")";
+    		sql_query($str);
+    		LogStr("Adding a mandatoryupdate request", "updatemandatory");
+
+    		$subj = ww("UpdateMantatorySubj", $_SYSHCVOL['SiteName']);
+    		$text = ww("UpdateMantatoryMailConfirm", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName']);
+    		$defLanguage = $_SESSION['IdLanguage'];
+    		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], $defLanguage, "yes", "", "");
+
+    		// Notify volunteers that an updater has updated
+    		$subj = "Update mandatory " . $Username . " from " . getcountryname($IdCountry) . " has updated";
+    		$text = " updater is " . $FirstName . " " . strtoupper($LastName) . "\n";
+    		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
+    		if (GetStrParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . GetStrParam("Comment") . "</font></b>\n";
+    		else $text .= "No Feedback \n";
+    		$text .= GetStrParam("ProfileSummary");
+    		$text .= "<a href=\"https:/".$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
+    		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
+        }
     }
     
     // Return the crypting criteria according of IsHidden_* field of a checkbox
@@ -1071,11 +1115,36 @@ ORDER BY membersphotos.SortOrder
             $max_x = 100;
         // if( $max_y > 100)
             // $max_y = 100;
+        $this->writeMemberphoto($memberid);
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
         $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_30_30', 30, 30, true, 'square');
         return true;
+    }
+
+    public function writeMemberphoto($memberid)
+    {
+		$s = $this->dao->exec("
+INSERT INTO 
+    `membersphotos`
+	(
+		FilePath,
+		IdMember,
+		created,
+		SortOrder,
+		Comment
+	) 
+VALUES
+	(
+		'" . $this->avatarDir->dirName() ."/". $memberid . "',
+		" . $memberid . ",
+		now(),
+		-1,
+		''
+	)
+");
+        return $s;
     }
 
     public function bootstrap()

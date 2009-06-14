@@ -5,16 +5,13 @@ if (strlen($trip->trip_name) >= 20) $styleadd = 'font-size: 22px';
 if (!$trip_data) $trip_data[$trip->trip_id] = false;
 ?>
 <div id="onmap">
-    <h1 id="trip_name" style="<?=$styleadd?>">
-        <a href="trip">
-        <?php echo $words->getFormatted('tripsTitle'); ?> / 
-        </a>
+    <h3 id="trip_name" style="<?=$styleadd?>">
         <a href="trip/<?=$trip->trip_id ?>" style="padding-right: 10px;">
         <?=$trip->trip_name ?>
         </a>
-    </h1>
+    </h3>
 
-    <div class="trip_author"><?=$words->get('by')?> <a href="bw/member.php?cid=/<?php echo $trip->handle; ?>"><?php echo $trip->handle; ?></a>
+    <div class="trip_author"><?=$words->get('by')?> <a href="people/<?php echo $trip->handle; ?>"><?php echo $trip->handle; ?></a>
         <a href="blog/<?php echo $trip->handle; ?>" title="Read blog by <?php echo $trip->handle; ?>"><img src="images/icons/blog.gif" alt="" /></a>
         <a href="trip/show/<?php echo $trip->handle; ?>" title="Show trips by <?php echo $trip->handle; ?>"><img src="images/icons/world.gif" alt="" /></a>
     </div>
@@ -24,7 +21,9 @@ if (!$trip_data) $trip_data[$trip->trip_id] = false;
 </div>
 <div id="map_corner_bottom" style="width: 100px; height: 100px; background: transparent url(images/misc/col1_replacer2.gif) top left no-repeat; position: relative; top: 100px; margin-bottom: -100px">
 </div>-->
-<div id="map_<?php echo $trip->trip_id; ?>" class="trip_map"></div>
+<div id="map_alltrips">
+<div id="map_<?php echo $trip->trip_id; ?>" class="tripmap"></div>
+</div>
 <div id="handle2" style="width: 100%; height: 14px; cursor: s-resize; text-align: center"><a href="#" onclick="return false" title="Drag this bar to resize the map!"><img src="images/btns/resize_hor.png"></a></div>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
     $google_conf = PVars::getObj('config_google');
@@ -54,8 +53,6 @@ function load_map() {
 		map_<?php echo $trip->trip_id; ?> = new GMap2($('map_<?php echo $trip->trip_id; ?>'));
         var mapTypeControl = new GSmallMapControl();
         var topRight = new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(30,50));
-		map_<?php echo $trip->trip_id; ?>.addControl(mapTypeControl,topRight);
-		map_<?php echo $trip->trip_id; ?>.addControl(new GMapTypeControl());
 		map_<?php echo $trip->trip_id; ?>.setCenter(new GLatLng(15, 10), 2);
 
 <?php

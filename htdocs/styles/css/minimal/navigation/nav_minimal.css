@@ -47,7 +47,7 @@
 }
 
 #nav_main li ul {
-	position:absolute;
+    position:absolute;
     left: -999em;
     height: auto;
     margin: 0;
@@ -94,13 +94,14 @@
   #nav_sub {
     margin-left: 0;
     text-align:left;
-    margin-bottom: 2em;
+    margin-bottom: 3em;
   }
 
   #nav_sub ul{
     /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
     display: inline;
     margin: .4em;
+    padding-left: .8em;
    }
 
   #nav_sub li {
@@ -108,12 +109,24 @@
     font-weight: bold;
     color: #888;
     display: inline;
-    padding: .5em .3em .3em .8em;
+    padding: 0;
   }
+
+#nav_sub .active .nav_sub_start {
+  	height: 120px;
+  	border-right: 1px solid #ccc;
+	padding: 0;
+}
+
+#nav_sub .active .nav_sub_end {
+  	height: 120px;
+  	border-left: 1px solid #ccc;
+	padding: 0;
+}
 
   #nav_sub a {
     color: #888;
-    padding: .5em .8em .5em .8em;
+    padding: .5em .8em;
     margin: 0;
   }
 
@@ -123,9 +136,9 @@
   
   #nav_sub li.active a {
     color: #333;
-    background: #ffffff;
-    border: 1px solid #f1f1f1;
-    padding-bottom: .6em;
+	background: transparent url(../images/small_arrow_down_bg.gif) no-repeat center bottom;
+	padding-bottom: 1.4em;
+	border: none;
   }
 
 
@@ -176,7 +189,7 @@
 
   ul.tabs{
     /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
-    //display: inline;
+    /* display: inline; */
     margin: .4em;
    }
 
@@ -211,77 +224,92 @@
 
   /* css for personal startpage menu */
   
-	#personalmenu, #personalmenu ul { /* all lists */
-		padding: 0;
-		margin: 0;
-		list-style: none;
-		width : 100%;
-	}
-	
-	#personalmenu li { /* all list items */
-		display: inline;
-		position : relative;
-		line-height : 2.25em;
+    #personalmenu, #personalmenu ul { /* all lists */
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        width : 100%;
+    }
+    
+    #personalmenu li { /* all list items */
+        display: inline;
+        position : relative;
+        line-height : 2.25em;
         font-size: 1.4em;
-		width : 90%;
-		padding: 0;
-	}
-	
-	#personalmenu.sm li { /* all list items */
-		position : relative;
-		line-height : 2.25em;
+        width : 90%;
+        padding: 0;
+    }
+    
+    #personalmenu.sm li { /* all list items */
+        position : relative;
+        line-height : 2.25em;
         font-size: 1.2em;
-		width : 90%;
-		padding: 0;
-	}
+        width : 90%;
+        padding: 0;
+    }
 
-	#personalmenu li a {
-		display : block;
-	    color:#999999;
-	    padding: 0 1em;
-		font-weight : bold;
-		text-decoration : none;
-		background-color : transparent;
-		border-left : none;
-		border-right : none;
-		border-bottom : none;
-		border-top : 1px solid #dddddd;
-	}
-	
-	#personalmenu li a.first,#personalmenu li#sub0 a {
-		border-top : 1px solid transparent;
-	}
-	
-	#personalmenu li a:hover {
-		background-color : #fff;
-	}
-	#personalmenu li a:focus {
-		outline-style:none;
+    #personalmenu li a {
+        display : block;
+        color:#999999;
+        padding: 0 1em;
+        font-weight : bold;
+        text-decoration : none;
+        background-color : transparent;
+        border-left : none;
+        border-right : none;
+        border-bottom : none;
+        border-top : 1px solid #dddddd;
+    }
+    
+    #personalmenu li a.first,#personalmenu li#sub0 a {
+        border-top : 1px solid transparent;
+    }
+    
+    #personalmenu li a:hover {
+        background-color : #fff;
+    }
+    #personalmenu li a:focus {
+        outline-style:none;
         outline-width:0;
-	}
-	
-	#personalmenu li a.active-tab,#personalmenu li.active a {
-	    background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
-	    border:none;
-	    color:#FFFFFF;
-	    padding: 1px .5em 1px 1em;
-	    margin-right: -1em;	
-	}
-	
+    }
+    
+    #personalmenu li a.active-tab,#personalmenu li.active a {
+        /*background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
+        border:none; */
+        color:#333;
+/*        padding: 1px .5em 1px 1em;
+        margin-right: -1em;  */
+    }
+    
     .panel {
-	   clear: both;
-	   display: none;
-	   background-color: transparent;
-	   padding: 0 4em;
+       clear: both;
+       display: none;
+       background-color: transparent;
+       padding: 0 2em;
     }
     
     .panel.active-tab-body {
-	   display: block;
+       display: block;
     }
 
 
 /* topnav menu (little greys) */
-	#topnav span {
-   	   margin: 0 .5em;
-	}
+    #topnav span {
+       margin: 0 .5em;
+       font-size:11px;
+    }
+    #topnav a { color: #999; background:transparent; text-decoration:none; }
+    #topnav a:hover { text-decoration:underline; background-color: transparent;}
+    #topnav a:focus { text-decoration:underline; background-color: transparent;}
+    #topnav ul,#topnav li {
+        display:inline;
+        font-size:11px;
+        height:46px;
+        margin-left:2px;
+        padding:8px 10px 6px 12px;
+    }
+    #topnav img {
+        padding:0 4px 0 0;
+        vertical-align:middle;
+    }
 }

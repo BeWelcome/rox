@@ -30,7 +30,7 @@ $words = new MOD_words();
         <p><?php echo $words->getFormatted('tour_maps_text1')?></p>
 
         <div class="floatbox">
-            <img src="images/tour/map2.jpg" class="float_left">
+            <img src="images/tour/map2.png" class="float_left">
             <h2><?php echo $words->getFormatted('tour_maps_title2')?></h2>
             <p><?php echo $words->getFormatted('tour_maps_text2')?></p>
         </div>

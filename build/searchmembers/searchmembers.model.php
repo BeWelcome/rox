@@ -949,13 +949,13 @@ FROM
     public function get_sort_order()
     {
         return array(
-            'Accomodation' => 'Accomodation',
+            'members.created' => 'FindPeopleNewMembers',
             'BirthDate' => 'Age',
             'LastLogin' => 'Lastlogin',
-            'countries.Name' => 'Country',
             'NbComment' => 'Comments',
-            'members.created' => 'FindPeopleNewMembers',
-            'cities.Name' => 'City'
+            'Accomodation' => 'Accomodation',
+            'cities.Name' => 'City',
+            'countries.Name' => 'Country'
         );
     }
 }

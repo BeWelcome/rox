@@ -31,6 +31,17 @@ require_once "lib/prepare_profile_header.php";
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
 
+// Find parameters
+$IdMember = IdMember(GetParam("cid", ""));
+
+if (!is_numeric(GetParam("cid", ""))) { // redirects to new rox member if the cid is the username
+	$url="../member/".GetParam("cid", "") ;
+//	die ("<a href='".$url."'>here</a><br>") ;
+	header ("location: $url") ;
+	LogStr("redirection of ".$url, "old BW");
+	exit(0) ;
+}
+
 // find out if member exists
 if (empty($IdMember)) {
     if (IsLoggedIn("Pending")) {

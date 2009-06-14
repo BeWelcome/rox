@@ -1,5 +1,5 @@
 <?php
-    $iiMax = count($comments);
+    $iiMax = (isset($max) && count($comments) > $max) ? $max : count($comments);
     $tt = array ();
     for ($ii = 0; $ii < $iiMax; $ii++) {
         $c = $comments[$ii];

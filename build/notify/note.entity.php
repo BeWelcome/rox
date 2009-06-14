@@ -56,24 +56,6 @@ class Note extends RoxEntityBase
 
 
     /**
-     * Check if a member id is connected with a group
-     *
-     * @param int $member_id - id of the member to check
-     * @access public
-     * @return bool
-     */
-    public function isMember($member)
-    {
-        if (!$this->_has_loaded)
-        {
-            return false;
-        }
-
-        return $this->createEntity('GroupMembership')->isMember($this, $member);
-    }
-
-
-    /**
      * Create a note given some input
      *
      * @param array $input - array containing IdMember, IdRelMember and Type
@@ -87,14 +69,14 @@ class Note extends RoxEntityBase
         $idrelmember = ((!empty($input['IdRelMember'])) ? $this->dao->escape($input['IdRelMember']) : '');
         $wordcode = ((!empty($input['WordCode'])) ? $this->dao->escape($input['WordCode']) : '');
         $link = ((!empty($input['Link'])) ? $this->dao->escape($input['Link']) : '');
-        $vartext = ((!empty($input['VarText'])) ? $this->dao->escape($input['VarText']) : '');
+        $freetext = ((!empty($input['FreeText'])) ? $this->dao->escape($input['FreeText']) : '');
 
         $this->IdMember = $idmember;
         $this->IdRelMember = $idrelmember;
         $this->Type = $type;
         $this->Link = $link;
         $this->WordCode = $wordcode;
-        $this->VarText = $vartext;
+        $this->FreeText = $freetext;
         return $this->insert();
     }
 
@@ -164,13 +146,13 @@ class Note extends RoxEntityBase
      * @access public
      * @return string
      */
-    public function getVarText()
+    public function getFreeText()
     {
-        if (!$this->isLoaded() || !$this->VarText)
+        if (!$this->isLoaded() || !$this->FreeText)
         {
             return '';
         }   
-        return $this->VarText;
+        return $this->FreeText;
     }
 
     /**
@@ -189,7 +171,7 @@ class Note extends RoxEntityBase
     }
     
         /**
-     * returns the full note for a group
+     * returns the notification's text
      *
      * @access public
      * @return string
@@ -200,8 +182,12 @@ class Note extends RoxEntityBase
         if (!$this->isLoaded() || !$this->WordCode)
         {
             return '';
-        }   
-        return $words->get($this->WordCode,$this->VarText);
+        } elseif ($this->WordCode == '' && $this->FreeText != '') {
+           return $this->FreeText;
+        } else {
+            $member = MOD_member::getMember_userId($item->IdRelMember);
+            return $words->get($this->WordCode,$member->getUsername());
+        }
     }
 
 }

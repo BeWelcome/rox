@@ -4,7 +4,7 @@ $words = new MOD_words();
 
 ?>
 <div class="info">
-	<?php echo $words->get("Forum_SearchIntro");?>
+	<?php echo $words->get("Volunteer_SearchIntro");?>
 </div>
 <!-- Google CSE Search Box Begins  -->
 <form action="volunteer/search" id="searchbox_003793464580395137050:uwli_johi5g">

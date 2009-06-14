@@ -25,25 +25,55 @@ $words = new MOD_words();
 ?>
 
 <h2><?php echo $words->get('GetActive') ?></h2>
+<p><?php echo $words->get('GetActiveIntro') ?></p>
+
+<h3><?php echo $words->get('GetActiveTitle1') ?></h3>
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
-            <h3><?php echo $words->get('GetActive_title1') ?></h3>
-            <p><?php echo $words->get('GetActive_text1')?></p>
+        <div class="floatbox">
+            <img class="float_left" src="images/icons/tango/32x32/application-x-php.png" alt="development" />
+            <h4><?php echo $words->get('GetActiveDevTitle')?></h4>
+            <p><?php echo $words->get('GetActiveDevText')?></p>
+        </div> <!-- floatbox -->
+        
+        <div class="floatbox">
+            <img class="float_left" src="images/icons/tango/32x32/applications-graphics.png" alt="design" />
+            <h4><?php echo $words->get('GetActiveDesignTitle')?></h4>
+            <p><?php echo $words->get('GetActiveDesignText')?></p>
+        </div> <!-- floatbox -->
+        
+        <div class="floatbox">
+            <img class="float_left" src="images/icons/tango/32x32/applications-science.png" alt="testing" />
+            <h4><?php echo $words->get('GetActiveTestingTitle')?></h4>
+            <p><?php echo $words->get('GetActiveTestingText')?></p>
+        </div> <!-- floatbox -->
     </div>
    </div>
 
   <div class="c50r">
     <div class="subcr">
-	
-            <h3><?php echo $words->get('GetActive_title2') ?></h3>
-            <p><?php echo $words->get('GetActive_text2')?></p>
-		  
+        <div class="floatbox">
+            <img class="float_left" src="images/icons/tango/32x32/help-browser.png" alt="support" />
+            <h4><?php echo $words->get('GetActiveSupportTitle')?></h4>
+            <p><?php echo $words->get('GetActiveSupportText')?></p>
+        </div> <!-- floatbox -->
+        
+        <div class="floatbox">
+            <img class="float_left" src="images/icons/tango/32x32/languages.png" alt="translate" />
+            <h4><?php echo $words->get('GetActiveTranslateTitle')?></h4>
+            <p><?php echo $words->get('GetActiveTranslateText')?></p>
+        </div> <!-- floatbox -->
+        
+        <div class="floatbox">
+            <img class="float_left" src="images/icons/tango/32x32/system-users.png" alt="local" />
+            <h4><?php echo $words->get('GetActiveLocalTitle')?></h4>
+            <p><?php echo $words->get('GetActiveLocalText')?></p>
+        </div> <!-- floatbox -->
     </div>
   </div>
 </div>
-	
-<h3><?php echo $words->get('GetActive_title3') ?></h3>
-<p><?php echo $words->get('GetActive_text3')?></p>
 
-	 
+<h3><?php echo $words->get('GetActiveTitle3') ?></h3>
+<p><?php echo $words->get('GetActiveText3')?></p>
+

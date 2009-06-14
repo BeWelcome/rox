@@ -3,15 +3,29 @@
 
 class MembersController extends RoxControllerBase
 {
-    function index($args = false)
+
+    public function __construct()
     {
-        $model = new MembersModel;
-        if (isset($_SESSION['Username'])) {
-            // logged in
-            $username_self = $_SESSION['Username'];
-            $member_self = $model->getMemberWithUsername($username_self);
-            return $this->index_loggedIn($args, $member_self);
-        } else {
+        parent::__construct();
+        $this->model = new MembersModel;
+    }
+
+    /**
+     * still main function called by router
+     *
+     * @todo split controller up to use routing, when proper routing is working
+     * @param object $args
+     * @access public
+     * @return object
+     */
+    public function index($args = false)
+    {
+        if ($member = $this->model->getLoggedInMember())
+        {
+            return $this->index_loggedIn($args, $member);
+        }
+        else
+        {
             return $this->index_loggedOut($args);
         }
     }
@@ -19,7 +33,6 @@ class MembersController extends RoxControllerBase
     protected function index_loggedOut($args)
     {
         $request = $args->request;
-        $model = new MembersModel();
         
         switch (isset($request[0]) ? $request[0] : false) {
             case 'updatemandatory':
@@ -42,7 +55,7 @@ class MembersController extends RoxControllerBase
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
                         PPHP::PExit();
                     PRequest::ignoreCurrentRequest();
-                    $model->showAvatar($member->id);
+                    $this->model->showAvatar($member->id);
                     break;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
@@ -63,27 +76,23 @@ class MembersController extends RoxControllerBase
                             break;
                         default:
                             $page = new ProfilePage();
-                            $model->set_profile_language($request[2]);
+                            $this->model->set_profile_language($request[2]);
                             break;
                     }
                     $page->member = $member;
                 }
         }
-        $page->model = $model;
+        $page->model = $this->model;
         return $page;
     }
     
     protected function index_loggedIn($args, $member_self)
     {
         $request = $args->request;
-        $model = new MembersModel();
         
         $myself = true;
         
         switch (isset($request[0]) ? $request[0] : false) {
-            case 'updatemandatory':
-                $page = new UpdateMandatoryPage();
-                break;
             case 'setlocation':
                 $page = new SetLocationPage();
                 break;
@@ -94,7 +103,7 @@ class MembersController extends RoxControllerBase
                 $page = new EditMyProfilePage();
                 // $member->edit_mode = true;
                 if (isset($request[1]))
-                    $model->set_profile_language($request[1]);
+                    $this->model->set_profile_language($request[1]);
 				if (isset($request[2]) && $request[2] == 'delete')
 					$page = new DeleteTranslationPage();
                 if (in_array('finish',$request))
@@ -134,7 +143,7 @@ class MembersController extends RoxControllerBase
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
                         PPHP::PExit();
                     PRequest::ignoreCurrentRequest();
-                    $model->showAvatar($member->id);
+                    $this->model->showAvatar($member->id);
                     break;
                 } else if (!$member = $this->getMember($request[1])) {
                     // did not find such a member
@@ -164,6 +173,16 @@ class MembersController extends RoxControllerBase
                                 $page = new CommentsPage();
                             }
                             break;
+                        case 'groups':
+                            $my_groups = $member->getGroups();
+                            $params->strategy = new HalfPagePager('left');
+                            $params->items = $my_groups;
+                            $params->items_per_page = 10;
+                            $pager = new PagerWidget($params);
+                            $page = new MemberGroupsPage();
+                            $page->my_groups = $my_groups;
+                            $page->pager = $pager;
+                            break;
                         case 'redesign':
                             $page = new ProfileRedesignPage();
                             break;
@@ -174,7 +193,7 @@ class MembersController extends RoxControllerBase
                             break;
                         default:
                             $page = new ProfilePage();
-                            $model->set_profile_language($request[2]);
+                            $this->model->set_profile_language($request[2]);
                             break;
                     }
                 }
@@ -184,10 +203,10 @@ class MembersController extends RoxControllerBase
         } else if (is_object($member)) {
             $page->member = $member;
         }
-        if (isset($myself) && $myself) {
+        if (!empty($myself)) {
             $page->myself = true;
         }
-        $page->model = $model;
+        $page->model = $this->model;
         return $page;
     }
     
@@ -240,10 +259,9 @@ class MembersController extends RoxControllerBase
                 $mem_redirect->post = $vars;
                 return false;
             }
-            $Member = new MembersModel;
             
             // set the location
-            $result = $Member->setLocation($vars['id'],$vars['geonameid']);
+            $result = $this->model->setLocation($vars['id'],$vars['geonameid']);
             $errors['Geonameid'] = 'Geoname not set';
             if (count($result['errors']) > 0) {
                 $mem_redirect->errors = $result['errors'];
@@ -254,14 +272,12 @@ class MembersController extends RoxControllerBase
 
     public function updateMandatoryCallback($args, $action, $mem_redirect, $mem_resend)
     {
+        throw new Exception('This should not be used - mandatory details are taken care of in edit my profile');
         $request = $args->request;
         if (isset($args->post)) {
             foreach ($args->post as $key => $value) {
                 $vars[$key] = $value;
             }
-            $model = new Rox();
-            
-            $errors = $model->checkUpdateMandatoryForm($vars);
             
             if (count($errors) > 0) {
                 // show form again
@@ -269,15 +285,9 @@ class MembersController extends RoxControllerBase
                 $mem_redirect->post = $vars;
                 return false;
             }
-            $Signup = new SignupModel;
-            $Signup->polishFormValues($vars);
-            
-            // signup on MyTB successful, yeah.
-            $id = $model->registerBWMember($vars);
-            $_SESSION['IdMember'] = $id;
-            
-            unset($_SESSION['IdMember']);
-            return 'signup/finish';
+            $model->polishFormValues($vars);
+            $model->sendMandatoryForm($vars);
+            return 'updatemandatory/finish';
         }
         return false;        
     }
@@ -286,8 +296,7 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $request = $args->request;
-        $model = new MembersModel;
-        $errors = $model->checkMyPreferences($vars);
+        $errors = $this->model->checkMyPreferences($vars);
         
         if (count($errors) > 0) {
             // show form again
@@ -299,16 +308,16 @@ class MembersController extends RoxControllerBase
         if( !($User = APP_User::login()))
             return false;
         
-        $model->editPreferences($vars);
+        $this->model->editPreferences($vars);
         
         // set profile as public
         if( isset($vars['PreferencePublicProfile']) && $vars['PreferencePublicProfile'] != '') {   
-            $model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);
+            $this->model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);
         }
         // set new password
         if( isset($vars['passwordnew']) && strlen($vars['passwordnew']) > 0) {
             $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($vars['passwordnew']).'\') WHERE `id` = '.$_SESSION['IdMember'];
-            if( $model->dao->exec($query)) {
+            if( $this->model->dao->exec($query)) {
                 $messages[] = 'ChangePasswordUpdated';
                 $L = MOD_log::get();
                 $L->write("Password changed", "change password");
@@ -332,8 +341,7 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $request = $args->request;
-        $model = new MembersModel;
-        $errors = $model->checkCommentForm($vars);
+        $errors = $this->model->checkCommentForm($vars);
         
         if (count($errors) > 0) {
             // show form again
@@ -344,19 +352,28 @@ class MembersController extends RoxControllerBase
         $member = $this->getMember($request[1]);
         $TCom = $member->get_comments_commenter($_SESSION['IdMember']);
         // add the comment!
-        if (!$model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
+        if (!$this->model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
         
         return 'members/'.$request[1].'/comments';
     }
     
     
+    /**
+     * handles edit profile form post - profile updating
+     *
+     * @param object $args
+     * @param object $action
+     * @param object $mem_redirect
+     * @param object $mem_resend
+     * @access public
+     * @return string
+     */
     public function editMyProfileCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post)) {
-            $vars = $args->post;
+            $vars = $this->cleanVars($args->post);
             $request = $args->request;
-            $model = new MembersModel;
-            $errors = $model->checkProfileForm($vars);
+            $errors = $this->model->checkProfileForm($vars);
             $vars['errors'] = array();
             if (count($errors) > 0) {
                 // show form again
@@ -365,15 +382,14 @@ class MembersController extends RoxControllerBase
                 return false;
             }
             $vars['member'] = $this->getMember($vars['memberid']);
-            $vars = $model->polishProfileFormValues($vars);
-            $success = $model->updateProfile($vars);
-            if (!$success) $mem_redirect->problems = array(0 => 'Could not update profile');
+            $vars = $this->model->polishProfileFormValues($vars);
+            $success = $this->model->updateProfile($vars);
+            if (!$success) $mem_redirect->problems = array('Could not update profile');
             
             // Redirect to a nice location like editmyprofile/finish
             $str = implode('/',$request);
             if (in_array('finish',$request)) return $str;
             return $str.'/finish';
-            
         }
     }
 	
@@ -382,7 +398,6 @@ class MembersController extends RoxControllerBase
         if (isset($args->post)) {
             $vars = $args->post;
             $request = $args->request;
-            $model = new MembersModel;
 			if (isset($vars['choice']) && $vars['choice'] == 'yes' && isset($vars['memberid'])) {
 				if (!isset($vars['profile_language'])) return false;
 				$member = $this->getMember($vars['memberid']);
@@ -390,7 +405,7 @@ class MembersController extends RoxControllerBase
 				$trad_ids = array();
 				foreach ($fields as $field)
 					$trad_ids[] = $member->$field;
-				$model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
+				$this->model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
 				// Redirect to a nice location like editmyprofile/finish
 				return 'editmyprofile/finish';
             } else {
@@ -404,7 +419,6 @@ class MembersController extends RoxControllerBase
         if (isset($args->post)) {
             $vars = $args->post;
             $request = $args->request;
-            $model = new MembersModel;
 
 			if (isset($vars['IdOwner']) && $vars['IdOwner'] == $_SESSION['IdMember'] && isset($vars['IdRelation'])) {
 				if (isset($vars['action'])) {
@@ -426,15 +440,15 @@ class MembersController extends RoxControllerBase
 					}
 					switch ($vars['action']) {
 					case 'add':
-						$blub = $model->addRelation($vars);
+						$blub = $this->model->addRelation($vars);
 						break;
 					case 'update':
-						$model->updateRelation($vars);
+						$this->model->updateRelation($vars);
 						break;
 					case 'confirm':
 						$vars['confirm'] = 'Yes';
-						$blub = $model->addRelation($vars);
-						$model->confirmRelation($vars);
+						$blub = $this->model->addRelation($vars);
+						$this->model->confirmRelation($vars);
 						break;
 					default:
 					}
@@ -448,6 +462,24 @@ class MembersController extends RoxControllerBase
         }
     }
 
+    /**
+     * trims all values posted back to controller
+     *
+     * @param array $post_vars
+     * @access private
+     * @return array
+     */
+    private function cleanVars($post_vars)
+    {
+        $vars = array();
+        foreach ($post_vars as $key => $var)
+        {
+            if (is_string($var))
+            {
+                $var = trim($var);
+            }
+            $vars[$key] = $var;
+        }
+        return $vars;
+    }
 }
-
-?>

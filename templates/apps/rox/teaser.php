@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -25,70 +25,55 @@ $words = new MOD_words();
 
 ?>
 
-<div id="teaser" class="clearfix" style="padding-top: 0">
-
-    <table style="margin: 0 20px; padding: 0;">
-        <tr>
-        <td>
-        <h1 style="font-size: 40px;"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
+<div id="teaser" class="clearfix">
+  <div class="subcolumns">
+    <div class="c62l">
+      <div class="subcl">
+        <h1 class="slogan"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
         <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
-        <div class="floatbox" style="padding: 2em 0">
-        <a class="bigbutton" href="bw/signup.php" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a> <a class="bigbutton" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
-        </div>
-        </td>
-        <td  style="padding: 0; margin: 0;">
-<style>
-.slide {
-	width: 350px;
-	height: 230px;
-    margin: 0;
-    padding: 0;
-    text-align: right;
-}
-.slide img{
-    margin: 0;
-    padding: 0;
-}
-#teaser .photodesc a{
-    color: #bbb;
-    font-weight: normal;
-}
-</style>
-        <div id="slideshow-content"  style="margin-top: 10px; margin-bottom: 10px; width: 370px; height: 240px">
+        <a class="bigbutton float_left" href="signup" onclick="this.blur();"><span><?php echo $words->get('signup_now');?></span></a>
+        <a class="bigbutton float_left" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
+      </div> <!-- subcl -->
+    </div> <!-- c50l -->
+
+    <div class="c38r">
+      <div class="subcr">
+        <div id="slideshow-content">
             <div class="slide" id="slide1">
-            <img src="images/tour/share4_small.jpg">
+            <img src="images/tour/share4_small.jpg" alt="share" />
             </div>
             <div class="slide" id="slide2" style="display: none;">
-            <img src="images/tour/syrien.jpg">
+            <img src="images/tour/syrien.jpg" alt="syria" />
             </div>
             <div class="slide" id="slide3" style="display: none;">
-            <img src="images/tour/mountain1.jpg">
+            <img src="images/tour/mountain1.jpg" alt="mountain" />
             </div>
             <div class="slide" id="slide4" style="display: none;">
-            <img src="images/tour/river.jpg">
+            <img src="images/tour/river.jpg" alt="river" />
             </div>
             <div class="slide" id="slide5" style="display: none;">
-            <img src="images/tour/dancing2.jpg">
+            <img src="images/tour/dancing2.jpg" alt="dancing" />
             </div>
             <div class="slide" id="slide6" style="display: none;">
-            <img src="images/tour/mountain2.jpg">
+            <img src="images/tour/mountain2.jpg" alt="river" />
             </div>
             <div class="slide" id="slide7" style="display: none;">
-            <img src="images/tour/people.jpg">
+            <img src="images/tour/people.jpg" alt="river" />
             </div>
             <div class="slide" id="slide8" style="display: none;">
-            <img src="images/tour/people2.jpg">
+            <img src="images/tour/people2.jpg" alt="river" />
             </div>
-            <p class="small photodesc" style="color: #999; position: relative; top: -30px; left: 50px;">
-                (cc) 
+            <p class="small photodesc">
+                (cc)
                 <?=$words->get('StartPageListofPhotographers');?>
             </p>
             </div>
+        </div> <!-- subcr -->
+      </div> <!-- c50r -->
+    </div> <!-- subcolumns -->
 
-        </td>
-        </tr>
-    </table> 
-        
+
+
 <script type="text/javascript">
     <!--
     function realeffect() {

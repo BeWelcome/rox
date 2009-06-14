@@ -1,6 +1,6 @@
-
           <fieldset id="profilesummary">
             <legend><?=$words->getInLang('ProfileSummary', $profile_language)?></legend>
+            <a name="profilepic" />
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
@@ -8,7 +8,7 @@
               </colgroup>
               <tbody>
                 <tr align="left" >
-                  <td class="label" ><?=$words->getInLang('ProfilePicture', $profile_language)?>:</td>
+                  <td class="label" ><?=$words->getInLang('ProfilePicture', $profile_language)?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
                   <td>
                     <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br /><input id="profile_picture" name="profile_picture" type="file" />
                   </td>
@@ -16,22 +16,42 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->getInLang('ProfileSummary', $profile_language)?>:</td>
                   <td>
-                    <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="60"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
+                    <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SignupBirthDate')?>:</td>
                   <td colspan="2" >
-                        <?=$vars['BirthDate']?>
+                        <input type='text' value='<?=$vars['BirthDate']?>' name='BirthDate'/>
                         &nbsp;&nbsp;&nbsp;&nbsp; 
                         <input name="HideBirthDate" value="Yes" type="checkbox"
                         <?php
                         if ($vars['HideBirthDate'] == "Yes")
                             echo ' checked="checked"';
                         echo ' /> ', $words->get("Hidden");
+                        if (in_array('SignupErrorInvalidBirthDate', $vars['errors']))
+                        {
+                            echo '<div class="error">'.$words->get('SignupErrorInvalidBirthDate').'</div>';
+                        }
                     ?>
                   </td>
                 </tr>
+
+                <tr align='left'>
+                    <td class='label'><?= $words->get('Gender'); ?></td>
+                    <td colspan='2'>
+                        <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'><?= $words->get('female'); ?></label>
+                    <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'><?= $words->get('male'); ?></label>
+                    <input class="radio" type="radio" id='genderX' name="gender" value="IDontTell" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'IDontTell') ? ' checked="checked"' : '');?>/><label for='genderX'><?= $words->get('IDontTell'); ?></label>
+                        <input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'><?= $words->get("Hidden");?></label>
+                    <?php
+                        if (in_array('SignupErrorInvalidGender', $vars['errors']))
+                        {
+                            echo '<div class="error">'.$words->get('SignupErrorInvalidGender').'</div>';
+                        }
+                    ?>
+                </tr>
+
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOccupation')?>:</td>
                   <td>
@@ -159,8 +179,17 @@
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('Address')?>:</td>
-                  <td><?=$vars['HouseNumber']?> <?=$vars['Street']?></td>
+                  <td class="label" ><?=$words->get('Street')?> / <?=$words->get('HouseNumber')?>:</td>
+                  <td>
+                      <input type='text' name='Street' id='Street' value='<?=$vars['Street']?>'/>
+                      <input type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>' size="5" />     
+                    <?php
+                        if (in_array('SignupErrorInvalidAddress', $vars['errors']))
+                        {
+                            echo '<div class="error">'.$words->get('SignupErrorInvalidAddress').'</div>';
+                        }
+                    ?>
+                  </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_Address"
                     <?php if ($vars['IsHidden_Address'])
@@ -171,7 +200,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" >Zip:</td>
-                  <td><?=$vars['Zip']?></td>
+                  <td><input type='text' name='Zip' value='<?=$vars['Zip']?>'/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_Zip"
                     <?php if ($vars['IsHidden_Zip'])
@@ -180,7 +209,7 @@
                     <?=$words->get('hidden')?>
                   </td>
                   <td>
-                    <a href="bw/updatemandatory.php" ><?=$words->get('UpdateMyNameAndAddressAndBirthdate')?></a>
+                    &nbsp;
                   </td>
                 </tr>
                 <tr align="left" >
@@ -323,31 +352,31 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMaxLenghtOfStay')?>:</td>
                   <td colspan="2" >
-                    <textarea name="MaxLenghtOfStay" class="long"  cols="40" rows="4" ><?=$vars['MaxLenghtOfStay']?></textarea>
+                    <textarea name="MaxLenghtOfStay" class="long"  cols="50" rows="4" ><?=$vars['MaxLenghtOfStay']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileILiveWith')?>:</td>
                   <td colspan="2" >
-                    <textarea name="ILiveWith" class="long"  cols="40" rows="4" ><?=$vars['ILiveWith']?></textarea>
+                    <textarea name="ILiveWith" class="long"  cols="50" rows="4" ><?=$vars['ILiveWith']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePleaseBring')?>:</td>
                   <td colspan="2" >
-                    <textarea name="PleaseBring" class="long"  cols="40" rows="4" ><?=$vars['PleaseBring']?></textarea>
+                    <textarea name="PleaseBring" class="long"  cols="50" rows="4" ><?=$vars['PleaseBring']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOfferGuests')?>:</td>
                   <td colspan="2" >
-                    <textarea name="OfferGuests" class="long"  cols="60" rows="4" ><?=$vars['OfferGuests']?></textarea>
+                    <textarea name="OfferGuests" class="long"  cols="50" rows="4" ><?=$vars['OfferGuests']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOfferHosts')?>:</td>
                   <td colspan="2" >
-                    <textarea name="OfferHosts" class="long"  cols="60" rows="4" ><?=$vars['OfferHosts']?></textarea>
+                    <textarea name="OfferHosts" class="long"  cols="50" rows="4" ><?=$vars['OfferHosts']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -370,7 +399,7 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePublicTransport')?>:</td>
                   <td colspan="2" >
-                    <textarea name="PublicTransport" class="long"  cols="60" rows="4" ><?=$vars['PublicTransport']?></textarea>
+                    <textarea name="PublicTransport" class="long"  cols="50" rows="4" ><?=$vars['PublicTransport']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -393,13 +422,13 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOtherRestrictions')?>:</td>
                   <td colspan="2" >
-                    <textarea name="OtherRestrictions" class="long" cols="60" rows="4" ><?=$vars['OtherRestrictions']?></textarea>
+                    <textarea name="OtherRestrictions" class="long" cols="50" rows="4" ><?=$vars['OtherRestrictions']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileAdditionalAccomodationInfo')?>:</td>
                   <td colspan="2" >
-                    <textarea name="AdditionalAccomodationInfo" class="long" cols="60"  rows="4" ><?=$vars['AdditionalAccomodationInfo']?></textarea>
+                    <textarea name="AdditionalAccomodationInfo" class="long" cols="50"  rows="4" ><?=$vars['AdditionalAccomodationInfo']?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -416,31 +445,31 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileHobbies')?>:</td>
                   <td>
-                    <textarea name="Hobbies" class="long" cols="60"  rows="4" ><?=$vars['Hobbies']?></textarea>
+                    <textarea name="Hobbies" class="long" cols="50"  rows="4" ><?=$vars['Hobbies']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileBooks')?>:</td>
                   <td>
-                    <textarea name="Books" class="long" cols="60"  rows="4" ><?=$vars['Books']?></textarea>
+                    <textarea name="Books" class="long" cols="50"  rows="4" ><?=$vars['Books']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMusic')?>:</td>
                   <td>
-                    <textarea name="Music" class="long" cols="60"  rows="4" ><?=$vars['Music']?></textarea>
+                    <textarea name="Music" class="long" cols="50"  rows="4" ><?=$vars['Music']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileMovies')?>:</td>
                   <td>
-                    <textarea name="Movies" class="long" cols="60"  rows="4" ><?=$vars['Movies']?></textarea>
+                    <textarea name="Movies" class="long" cols="50"  rows="4" ><?=$vars['Movies']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOrganizations')?>:</td>
                   <td>
-                    <textarea name="Organizations" class="long" cols="60"  rows="4" ><?=$vars['Organizations']?></textarea>
+                    <textarea name="Organizations" class="long" cols="50"  rows="4" ><?=$vars['Organizations']?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -457,13 +486,13 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePastTrips')?>:</td>
                   <td>
-                    <textarea name="PastTrips" class="long" cols="60"  rows="4" ><?=$vars['PastTrips']?></textarea>
+                    <textarea name="PastTrips" class="long" cols="50"  rows="4" ><?=$vars['PastTrips']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePlannedTrips')?>:</td>
                   <td>
-                    <textarea name="PlannedTrips" class="long" cols="60"  rows="4" ><?=$vars['PlannedTrips']?></textarea>
+                    <textarea name="PlannedTrips" class="long" cols="50"  rows="4" ><?=$vars['PlannedTrips']?></textarea>
                   </td>
                 </tr>
               </tbody>
@@ -489,7 +518,7 @@
                 <tr align="left" >
                   <td class="label" ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
                   <td colspan="2" >
-                    <textarea cols="40"  rows="6"  name="Group_<?=$group->Name?>" ><?=$group_comment_translated?></textarea>
+                    <textarea cols="50"  rows="6"  name="Group_<?=$group->Name?>" ><?=$group_comment_translated?></textarea>
                 <?php
                 if ($Rights->hasRight("Beta","GroupMessage")) {
                        echo "<br /> BETA ";

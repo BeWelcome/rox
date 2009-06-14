@@ -39,31 +39,31 @@ Boston, MA  02111-1307, USA.
   * reversetype: type of connection from the right to the left member
   **/
  
-	$words = new MOD_words();
+    $words = new MOD_words();
 ?>
-	<div class="float_right">
+    <div class="float_right">
       <div class="info">
         <h3><?php  echo $words->get('HowDoIKnow');?></h3>
-			<?php foreach ($link->linkpath as $row) {
-			?>		
-        <div class="floatbox">			
-			<?php	foreach ($row as $e) {
-			?>
-			<div class="float_left" style="padding-right: 15px">
-				<p>
-				<?php if (isset($e['totype']) && $e['totype'][0] != '0') {?> 
-					<img src="images/icons/icons1616/icon_next.png" /><br>
-					<?php echo implode(' - ',$e['totype']); ?>
-				<?php }?>
-				</p>
-				<p>
-				<?php if (isset($e['reversetype']) && $e['reversetype'][0] != '0') {?> 
-					<img src="images/icons/icons1616/icon_previous.png" /><br>
-					<?php echo implode(' - ',$e['reversetype']); ?>
-				<?php }?>
-				</p>
-				
-			</div> <!-- float_left -->
+            <?php foreach ($link->linkpath as $row) {
+            ?>      
+        <div class="floatbox">          
+            <?php   foreach ($row as $e) {
+            ?>
+            <div class="float_left" style="padding-right: 15px">
+                <p>
+                <?php if (isset($e['totype']) && $e['totype'][0] != '0') {?> 
+                    <img src="images/icons/icons1616/icon_next.png" /><br>
+                    <?php echo implode(' - ',$e['totype']); ?>
+                <?php }?>
+                </p>
+                <p>
+                <?php if (isset($e['reversetype']) && $e['reversetype'][0] != '0') {?> 
+                    <img src="images/icons/icons1616/icon_previous.png" /><br>
+                    <?php echo implode(' - ',$e['reversetype']); ?>
+                <?php }?>
+                </p>
+                
+            </div> <!-- float_left -->
             <div class="float_left" style="padding-right: 15px">
                 <p class="center">
                     <span class="username"><?php echo '<a href="bw/member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span><br />
@@ -72,8 +72,8 @@ Boston, MA  02111-1307, USA.
                 </p>
             </div> <!-- float_left -->
 
-	<?php } ?>
+    <?php } ?>
         </div> <!-- floatbox -->
-<?php } ?>		
+<?php } ?>      
       </div> <!-- info index -->
   </div> <!-- index row2 -->

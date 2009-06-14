@@ -609,9 +609,10 @@ WHERE `id` = ' . $IdAddress . '
         // but for now it's to get nearer to the BW style
         $query = '
 INSERT INTO `user`
-(`auth_id`, `handle`, `email`, `pw`, `active`)
+(`id`, `auth_id`, `handle`, `email`, `pw`, `active`)
 VALUES
 (
+    '.$this->dao->nextId('user').',
     '.(int)$authId.',
     \'' . $vars['username'] . '\',
     \'' . $vars['email'] . '\',

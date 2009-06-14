@@ -7,12 +7,22 @@ if (isset($_GET['s']) && $_GET['s'])
 ?>
 
 <div id="teaser" class="clearfix">
-    <h1 style="width: 200px; float:left;"><a href="trip"><?php echo $words->getFormatted('tripsTitle'); ?></a></h1>
-    <div id="searchteaser" style="width: 40%; float: left;">
-    <form method="get" action="trip/search">
-    <div class="trip_author" style="padding: 10px 10px 8px 10px"><a href="trip/search"><?php echo $words->getFormatted('TripsSearch'); ?> </a>
-        <input type="text" style="font-size: 12px" name="s" value="<?=$search?>">
-    </div>
-    </form>
+	<div class="subcolumns">
+    	<div class="c50l">
+			<div class="subr">
+    			<h1><a href="trip"><?php echo $words->getFormatted('tripsTitle'); ?></a></h1>
+        	</div>
+    	</div> 
+    	<div class="c50r" > 
+        	<div class="subc">
+            	<div id="searchteaser" >
+                <form method="get" action="trip/search">
+                    <input type="text" name="s" value="<?=$search?>" />
+                    <input class="button" type="submit" name="submit" value="<?php echo $words->getFormatted('TripsSearch'); ?>" />
+                </div>
+                </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

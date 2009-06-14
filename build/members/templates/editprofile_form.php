@@ -169,8 +169,11 @@
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('Address')?>:</td>
-                  <td><input type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>'/> <label for='HouseNumber'>Housenumber</label> <input type='text' name='Street' id='Street' value='<?=$vars['Street']?>'/><label for='Street'>Street</label></td>
+                  <td class="label" ><?=$words->get('Street')?> / <?=$words->get('HouseNumber')?>:</td>
+                  <td>
+                      <input type='text' name='Street' id='Street' value='<?=$vars['Street']?>'/>
+                      <input type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>' size="5" />     
+                  </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_Address"
                     <?php if ($vars['IsHidden_Address'])

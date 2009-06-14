@@ -392,7 +392,7 @@ WHERE id = ".$input['receiver_id']."
 				return(false) ;
 			}
 		}
-		if ($fields["c_verification"]!="") { // In case the member has filled a captcha with success, log it
+		if (!empty($fields["c_verification"])) { // In case the member has filled a captcha with success, log it
 			MOD_log::get()->write("Captcha success ".$fields["c_verification"]." entered (MessagesModel::CheckForCaptcha)", "contactmember") ;
 		}
 		return(true) ;

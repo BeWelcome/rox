@@ -268,7 +268,7 @@
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SignupEmail')?>:</td>
                   <td>
-                    <input type="text" size="25" name="Email"  value="<?=$vars['Email']?>" />
+                    <input type="text" size="25" name="Email"  value="<?=str_replace('%40', '@', $vars['Email'])?>" />
                     <?php
                       if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                           echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';

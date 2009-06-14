@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * defines an exception class for entities
+ * so, any EntityExceptions caught anywhere will
+ * come from one place only - guess where
+ */
+class EntityException extends PException {}
 
 /**
  * Unlike an application model,
@@ -114,16 +120,23 @@ class RoxEntityBase extends RoxModelBase
      *
      * @access public
      * @return array
+     * @throws EntityException
      */
     public function getTableDescription()
     {
         if (!($cached_version = $this->_entity_factory->getEntityTableDescription($this)))
         {
             $query = "DESCRIBE `{$this->getTableName()}`";
-            $this->dao->query($query);
-            if (!($result = $this->dao->query($query)))
+            try
             {
-                throw new exception("Could not load information for {$this->getTableName()}");
+                if (!($result = $this->dao->query($query)))
+                {
+                    throw new Exception("");
+                }
+            }
+            catch (Exception $e)
+            {
+                throw new EntityException("Could not load information for {$this->getTableName()}");
             }
             $info = array();
             while ($data = $result->fetch(PDB::FETCH_ASSOC))
@@ -132,7 +145,7 @@ class RoxEntityBase extends RoxModelBase
             }
             if (empty($info))
             {
-                throw new exception("Could not load information for {$this->getTableName()}");
+                throw new EntityException("Could not load information for {$this->getTableName()}");
             }
             $this->_entity_factory->storeTableDescription($info, $this);
             $cached_version = $info;
@@ -313,16 +326,7 @@ SELECT *
 FROM `{$this->getTableName()}`
 WHERE `{$this->getPrimaryKey()}` = '{$id}'
 SQL;
-        if (!($result = $this->dao->query($query)) || !($data = $result->fetch(PDB::FETCH_ASSOC)))
-        {
-            $this->_has_loaded = false;
-            return false;
-        }
-        else
-        {
-            $this->loadEntity($data);
-            return $this;
-        }
+        return $this->queryForEntity($query);
     }    
 
     /**
@@ -347,18 +351,76 @@ SQL;
         {
             $query .= "\nORDER BY " . $this->sql_order;
         }
-        if (!($result = $this->dao->query($query)) || !($data = $result->fetch(PDB::FETCH_ASSOC)))
+
+        return $this->queryForEntity($query);
+
+    }
+
+
+    /**
+     * runs an SQL query to find an entity, loads the current
+     * entity with data if it finds it
+     *
+     * @param string $query
+     * @access protected
+     * @return object|bool
+     * @throws EntityException
+     */
+    protected function queryForEntity($query)
+    {
+        try
         {
-            $this->_has_loaded = false;
-            return false;
+            if (!($result = $this->dao->query($query)) || !($data = $result->fetch(PDB::FETCH_ASSOC)))
+            {
+                $this->_has_loaded = false;
+                return false;
+            }
+            else
+            {
+                $this->loadEntity($data);
+                return $this;
+            }
         }
-        else
+        catch (Exception $e)
         {
-            $this->loadEntity($data);
-            return $this;
+            if (PVars::get()->debug)
+            {
+                throw new EntityException("Failed to load entity with sql: {$query}");
+            }
+            return false;
         }
     }
 
+    /**
+     * runs an SQL query to find several entities
+     *
+     * @param string $query
+     * @access protected
+     * @return object|bool
+     * @throws EntityException
+     */
+    protected function queryForEntities($query)
+    {
+        try
+        {
+            if (!($result = $this->dao->query($query)))
+            {
+                return false;
+            }
+            else
+            {
+                return $this->loadEntities($result);
+            }
+        }
+        catch (Exception $e)
+        {
+            if (PVars::get()->debug)
+            {
+                throw new EntityException("Failed to load entity with sql: {$query}");
+            }
+            return false;
+        }
+    }
 
     /**
      * load an object by a specified sql WHERE clause
@@ -394,14 +456,7 @@ SQL;
             $query .= "\nLIMIT " . intval($limit);
         }
 
-        if (!($result = $this->dao->query($query)))
-        {
-            return false;
-        }
-        else
-        {
-            return $this->loadEntities($result);
-        }
+        return $this->queryForEntities($query);
     }
 
 
@@ -437,14 +492,7 @@ SQL;
             $query .= "\nLIMIT " . intval($limit);
         }
 
-        if (!($result = $this->dao->query($query)))
-        {
-            return false;
-        }
-        else
-        {
-            return $this->loadEntities($result);
-        }
+        return $this->queryForEntities($query);
     }    
 
 /****************** SQL COUNT() functions ******************/
@@ -468,15 +516,7 @@ SQL;
 SELECT COUNT({$field}) AS count
 FROM `{$this->getTableName()}`
 SQL;
-        if (!($result = $this->dao->query($query)))
-        {
-            return 0;
-        }
-        else
-        {
-            $data = $result->fetch(PDB::FETCH_ASSOC);
-            return $data['count'];
-        }
+        return $this->sqlCount($query);
     }
      
     /**
@@ -499,17 +539,41 @@ SELECT COUNT({$field}) AS count
 FROM `{$this->getTableName()}`
 WHERE {$where}
 SQL;
-        if (!($result = $this->dao->query($query)))
-        {
-            return 0;
-        }
-        else
-        {
-            $data = $result->fetch(PDB::FETCH_ASSOC);
-            return $data['count'];
-        }
+        return $this->sqlCount($query);
     }
 
+    /**
+     * executes sql to count rows in a table
+     *
+     * @param string $query
+     * @access protected
+     * @return int
+     * @throws EntityException
+     */
+    protected function sqlCount($query)
+    {
+        try
+        {
+            if (!($result = $this->dao->query($query)))
+            {
+                return 0;
+            }
+            else
+            {
+                $data = $result->fetch(PDB::FETCH_ASSOC);
+                return $data['count'];
+            }
+        }
+        catch (Exception $e)
+        {
+            if (PVars::get()->debug)
+            {
+                throw new EntityException("Failed to count rows with sql: {$query}");
+            }
+            return 0;
+        }
+
+    }
 
 /****************** Object load functions ******************/
 
@@ -606,6 +670,7 @@ SQL;
      *
      * @return bool
      * @access public
+     * @throws EntityException
      */
     public function insert()
     {
@@ -631,9 +696,19 @@ SQL;
         }
 
         $query = "INSERT INTO {$this->getTableName()} (" . implode(',',$fields) . ") VALUES (" . implode(',',$values) . ")";
-        $result = $this->dao->query($query);
-        if (!$result)
+        try
         {
+            if (!($result = $this->dao->query($query)))
+            {
+                return false;
+            }
+        }
+        catch (Exception $e)
+        {
+            if (PVars::get()->debug)
+            {
+                throw new EntityException("Failed to insert row into {$this->getTableName()} with sql: {$query}");
+            }
             return false;
         }
 
@@ -654,6 +729,7 @@ SQL;
      *
      * @return bool
      * @access public
+     * @throws EntityException
      */
     public function update()
     {
@@ -701,8 +777,20 @@ SQL;
         }
 
         $query = "UPDATE `{$this->getTableName()}` SET {$set_string} WHERE {$where}";
-        return $this->dao->exec($query);
+        try
+        {
+            $this->dao->exec($query);
+            return true;
 
+        }
+        catch (Exception $e)
+        {
+            if (PVars::get()->debug)
+            {
+                throw new EntityException("Failed to update row in {$this->getTableName()} with sql: {$query}");
+            }
+            return false;
+        }
     }
 
 
@@ -711,6 +799,7 @@ SQL;
      *
      * @access public
      * @return bool
+     * @throws EntityException
      */
     public function delete()
     {
@@ -731,13 +820,24 @@ WHERE
     {$where}
 SQL;
 
-        $result = $this->dao->exec($query);
+        try
+        {
+            $this->dao->exec($query);
+        }
+        catch (Exception $e)
+        {
+            if (PVars::get()->debug)
+            {
+                throw new EntityException("Failed to delete row from {$this->getTableName()} with sql: {$query}");
+            }
+            return false;
+        }
 
         // make sure entity can't be used after this
         $this->wipeEntity();
 
         // TODO: check result before returning it
-        return (bool) $result;
+        return true;
     }
 
 
@@ -1001,6 +1101,7 @@ SQL;
         }
         return true;
     }
+
 }
 
 ?>

@@ -7,7 +7,7 @@ $google_conf = PVars::getObj('config_google');
 
 //Blog model to fetch the Community News
 $Blog = new Blog();
-$postIt      = $Blog->getTaggedPostsIt('Community News for the frontpage');
+$postIt      = $Blog->getTaggedPostsIt('Community News for the frontpage', true);
 $format = array('short'=>$words->getSilent('DateFormatShort'));
 
 //magpierss support for BV Blog

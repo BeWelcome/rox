@@ -588,7 +588,7 @@ ORDER BY `usecount` DESC
         return $s;
     }
 
-    public function getTaggedPostsIt($like)
+    public function getTaggedPostsIt($like, $latest = false)
     {
         $query = Blog::SQL_BLOGPOST.'
 LEFT JOIN `blog_to_tag` b2t ON b.`blog_id` = b2t.`blog_id_foreign`
@@ -618,6 +618,10 @@ WHERE bt.`name` LIKE \'%'.$this->dao->escape($like).'%\'';
     )
 GROUP BY b.`blog_id`
 ';
+        if ($latest)
+        {
+            $query .= ' ORDER BY blog_created DESC';
+        }
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve posts matching tag!');

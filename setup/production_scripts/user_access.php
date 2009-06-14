@@ -78,6 +78,8 @@ foreach ($homes as $home)
     }
 }
 
+$scream = false;
+
 foreach ($current_users as $user)
 {
     foreach ($wiki_array as $line)
@@ -88,6 +90,7 @@ foreach ($current_users as $user)
         }
     }
     echo "{$user} has login access to {$_SERVER['argv'][1]} but is not listed in the BV wiki.\n";
+    $scream = true;
 }
 
 foreach ($wiki_array as $user)
@@ -100,4 +103,17 @@ foreach ($wiki_array as $user)
         }
     }
     echo "{$user[0]} is listed in BV wiki but has no login access to {$_SERVER['argv'][1]}.\n";
+    $scream = true;
+}
+if ($scream)
+{
+    $location = realpath(dirname($_SERVER['PHP_SELF'])) . '/' . basename($_SERVER['PHP_SELF']);
+    echo <<<TXT
+Script uses the following input:
+- wiki: http://www.bevolunteer.org/wiki/Accounts_and_groups_on_our_servers
+- server: {$_SERVER['argv'][1]}
+
+Script is running from: {$location}
+
+TXT;
 }

@@ -1387,6 +1387,8 @@ $updates[] = "ALTER TABLE `forums_posts` DROP `Visibility`" ;
 
 $updates[] = "ALTER TABLE `forums_threads` CHANGE `Visibility` `ThreadVisibility` ENUM( 'NoRestriction', 'MembersOnly', 'GroupOnly', 'ModeratorOnly' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'NoRestriction' COMMENT 'Visibility for this thread'" ;
 
+$updates[] = "ALTER TABLE `reports_to_moderators` CHANGE `ReporterComment` `PostComment` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'Comment of the reporter'" ;
+
     if (empty($res)) {
         $version = 0;
     } else {

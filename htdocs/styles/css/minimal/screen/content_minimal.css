@@ -118,6 +118,8 @@
   }
   .big {font-size: 1.3em; }
   .flat {margin: 0; padding: 0;}
+  .text { line-height: 1.5em; }
+
 
   /**
    * Images
@@ -994,6 +996,9 @@ div.datepicker div.datepicker-footer {
 }
 
 /* Messages */
+.unread { 
+  font-weight: bold;
+}
 #message { /*
   border: 1px solid #f5f5f5;
   border-right: 2px solid #999;

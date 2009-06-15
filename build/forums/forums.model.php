@@ -1317,7 +1317,7 @@ WHERE `threadid` = '%d' ",
 
 		$UsernameAddTime='at '.date("d-m-Y").' '.date("H:i").'(server time) <a href="'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a> wrote:<br/>' ;
 		if ($this->BW_Right->HasRight("ForumModerator")) {
-			$PostComment=$this->cleanupText($UsernameAddTime.$vars['OldReport'])."<hr />\n".$OldReport->PostComment ;
+			$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment'])."<hr />\n".$OldReport->PostComment ;
 			$ss="update reports_to_moderators set  LastWhoSpoke='Moderator',PostComment='".$this->dao->escape($PostComment)."',IdModerator=".$_SESSION["IdMember"].",Status='".$this->dao->escape($Status)."',Type='".$this->dao->escape($Type)."',IdModerator=".$_SESSION['IdMember']." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 		}
 		else {

@@ -27,7 +27,7 @@ class PersonalStartpage extends RoxPageView
     {
         $this->__call('teaserContent', array());
     }
-    
+
     protected function getPageTitle() {
         $words = new MOD_words();
         if (isset($_SESSION['Username'])) {
@@ -54,16 +54,17 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
             return array();
         } else {
             $member_id = $_SESSION['IdMember'];
-            return $this->model->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal"','messages.WhenFirstRead');
+            $sort_string = '(case when unixtime_whenfirstread = 0 then 1 else 0 end) desc, unixtime_datesent desc, senderusername desc';
+            return $this->model->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND DeleteRequest != "receiverdeleted"',$sort_string);
         }
-    }	
+    }
 	
     protected function showItems()
     {
         // don't need a table - a simple list is enough.
         $this->showItems_list();
     }
-    
+
     protected function showListItem($message, $i_row)
     {
         $words = new MOD_words();
@@ -86,14 +87,14 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
             ?>
         
             </a><br />
-            <span class="small grey"><?=$words->get('from')?> <a href="bw/member.php?cid=<?=$senderUsername?>"><?=$senderUsername?>: </a>
-            <?=MOD_layoutbits::ago($message->created);?></span>
+            <span class="small grey" title="<?=date('d. m. Y',$message->unixtime_created)?>"><?=$words->get('from')?> <a href="bw/member.php?cid=<?=$senderUsername?>"><?=$senderUsername?>: </a>
+            <?=MOD_layoutbits::ago($message->unixtime_created);?></span>
         </div>
         
         <?php
     }
-    
-    
+
+
     protected function showBetweenListItems($prev_item, $item, $i_row)
     {
         echo '<hr style="border-color: #dddddd" />';

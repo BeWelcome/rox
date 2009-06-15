@@ -27,7 +27,7 @@ $words = new MOD_words();
 
 <div id="teaser" class="clearfix">
   <div class="subcolumns">
-    <div class="c62l">
+    <div class="c66l">
       <div class="subcl">
         <h1 class="slogan"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
         <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
@@ -119,7 +119,11 @@ $words = new MOD_words();
 		</td>
 		<td style="vertical-align: top">
 		  <div class="video-desc">
-		  	<p><?=$words->get('IndexPageVideoDesc','username') //TODO: Fix the 'username' to something dynamic ?></p>
+		  	<p><?//=$words->get('IndexPageVideoDesc','username') //TODO: Fix the 'username' to something dynamic ?>
+		  	<a class="button" href="tour" onclick="this.blur();"><?php echo $words->get('tour_take');?></a>    
+		  	<br /><br />
+		  	</p>
+		  	
             <p class="small photodesc" style="color: #999;">
                 all pictures (cc) 
                 <?=$words->get('StartPageListofPhotographers');?>
@@ -131,7 +135,7 @@ $words = new MOD_words();
       </div> <!-- subcl -->
     </div> <!-- c50l -->
 
-    <div class="c38r">
+    <div class="c33r">
       <div class="subcr">
       <?php
              $login_widget = $this->createWidget('LoginFormWidget');

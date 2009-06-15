@@ -91,7 +91,7 @@ class MessagesController extends RoxControllerBase
                         // no message with that id found
                         $page = new MessagesInboxPage();
                     } else {
-                        if (isset($message->WhenFirstRead) && $message->WhenFirstRead == '')
+                        if (empty($message->WhenFirstRead) || $message->WhenFirstRead == '0000-00-00 00:00:00')
                             $model->markReadMessage($message->id);
                         if (!isset($request[2])) {
                             $page = new ReadMessagePage();

@@ -82,7 +82,7 @@ ORDER BY
 			if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
 			else $sort_string = false;
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal"');
+            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND DeleteRequest != "receiverdeleted"');
         }
     }
     
@@ -93,7 +93,7 @@ ORDER BY
             return array();
         } else {
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('messages.InFolder = "Spam"');
+            return $this->filteredMailbox('messages.InFolder = "Spam" AND DeleteRequest != "receiverdeleted"');
         }
     }
     
@@ -207,8 +207,9 @@ WHERE Username = '$username'
         $user_id = $_SESSION['IdMember'];
         return $this->filteredMailbox(
             "
-(messages.IdSender = $contact_id AND messages.IdReceiver = $user_id AND messages.Status = \"Sent\")
-OR (messages.IdSender = $user_id AND messages.IdReceiver = $contact_id)
+((messages.IdSender = $contact_id AND messages.IdReceiver = $user_id AND messages.Status = \"Sent\")
+OR (messages.IdSender = $user_id AND messages.IdReceiver = $contact_id))
+AND DeleteRequest != 'receiverdeleted'
             "
         );
     }

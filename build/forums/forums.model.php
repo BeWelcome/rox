@@ -1344,15 +1344,24 @@ WHERE `threadid` = '%d' ",
 	 /**	 
     * This will return the list of reports for a given post
     * @IdPost : Id of the post to process  with their status
+    * @IdReporter : OPtional id of teh member for a specific report, in this case a record is returned7
+	*				in other case an array of reports is returned
 	*/
-	public function GetReports($IdPost) {
-		$tt=array() ;
-        $ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where IdPost=".$IdPost." and members.id=IdReporter" ;
-        $s = $this->dao->query($ss);
-		while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
-			array_push($tt,$rr) ;
+	public function GetReports($IdPost,$IdReporter=0) {
+		if (!empty($IdReporter)) {
+			$tt=array() ;
+			$ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where IdPost=".$IdPost." and members.id=IdReporter" ;
+			$s = $this->dao->query($ss);
+			while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
+				array_push($tt,$rr) ;
+			}
+			return($tt) ;
 		}
-		return($tt) ;
+		else {
+			$ss = "select IdReporter from reports_to_moderators where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+			$s = $this->dao->query($ss);
+			return($s->fetch(PDB::FETCH_OBJ))  ;
+		}
 	} // end of GetReports
 	 /**	 
     * This will prepare the additional data to process a report

@@ -220,13 +220,17 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     </div> <!-- forumsmessage -->
 	<?php 
 	if (isset($_SESSION["IdMember"])) {
-		echo "<a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumReportToMod'),"</a>" ;
 		if ($this->BW_Right->HasRight("ForumModerator")) {
 			$Reports=$this->_model->GetReports($post->IdPost) ;
 			foreach ($Reports as $report) {
 				echo "<br />report from ",$report->Username," [".$report->Status."] " ;
 				echo "<a href='forums/reporttomod/",$post->IdPost,"/".$report->IdReporter."'>view report</a>" ;
 			}
+		}
+		else {
+			$Reports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
+			if (isset($Reports->IdReporter))
+				echo "<a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a>" ;
 		}
 	}
 	

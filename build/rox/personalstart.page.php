@@ -84,6 +84,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
             <?php
             /* Remove XHTML linebreak tags. */
             $Message = str_replace("<br />"," ",$Message);
+            $Message = str_replace("<br/>"," ",$Message);
             /* Remove HTML 4.01 linebreak tags. */
             $Message = str_replace("<br>"," ",$Message);
             if (strlen($Message) >= 61) echo substr($Message, 0, 58).'... ';

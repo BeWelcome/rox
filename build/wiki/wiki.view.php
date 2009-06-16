@@ -22,12 +22,7 @@ class WikiView extends PAppView {
         $words = new MOD_words();
 ?>
         <div id="teaser" class="clearfix">
-              <div id="teaser_l">
-                <h1><a href="wiki"><?php echo $words->getFormatted('WikiTitle'); ?></a></h1>
-              </div>
-              <div id="teaser_r">
-                <p><?php echo $words->getFormatted('WikiIntroduction'); ?></p>
-              </div>
+            <h1><a href="wiki"><?php echo $words->getFormatted('WikiTitle'); ?></a></h1>
         </div>
 <?php
     }
@@ -44,6 +39,8 @@ class WikiView extends PAppView {
                 <a href="wiki/NewestPages"><?php echo $words->getFormatted('WikiNewestPages'); ?></a>
               </li>
         </ul>
+        <p><?php echo $words->getFormatted('WikiIntroduction'); ?></p>
+
 <?php
     }
 

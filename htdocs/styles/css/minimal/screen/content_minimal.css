@@ -83,7 +83,7 @@
    */
   .hidden {display: none;}
 
-  .note {background: #FFF8C3; padding: 1em; border: 1px #888 solid;}
+  .note,.system-message {background: #FFF8C3; padding: 1em; border: 1px #888 solid; margin: 1em;}
   .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
@@ -1060,6 +1060,9 @@ height:50px;
   or even page names
 */
 .wiki.edit {
+}
+
+.wiki.info {
 }
 
 .wiki.info {

@@ -41,7 +41,6 @@ if (!$User) {
 } // end if User
 ?>
 <!-- Now displays the recent post list -->	
-<br style="clear: both;" />
 <?php
     $uri = 'forums/';
     if ($threads = $boards->getThreads()) {

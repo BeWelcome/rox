@@ -4,23 +4,19 @@ $User = APP_User::login();
 
 <div id="teaser" class="clearfix">
     <div id="title" class="float_left">
-        <h1><?php echo $this->_model->words->getFormatted('ForumTitle'); ?></h1>
-		
+        <h1><a href="forums"><?php echo $this->_model->words->getFormatted('ForumTitle'); ?></a></h1>
+
         <!-- CategoryTitle in teaser -->
         <div class="forumtitle">
-            <a href="forums">
-			<?php 
-			echo $this->_model->words->getFormatted('ForumOverviewLink') 
-			?></a>
             <?php $title = $boards->getBoardName();
-            if ($title != 'Forums') {echo ' > <a href="forums/', $title ,'">', $title,'</a>';}
+            if ($title != 'Forums') {echo '<a href="forums/', $title ,'">', $title,'</a>';}
             ?>
         </div> <!-- forumtitle -->
     </div> <!-- title -->
-	
-	
+
+
     <div class="float_right">
-		<!-- Google froum search bar -->
+        <!-- Google froum search bar -->
         <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
         <form action="http://www.google.com/cse" id="cse-search-box">
             <div>

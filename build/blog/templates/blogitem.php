@@ -89,7 +89,7 @@ if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blo
 }
 $User = APP_User::login();
 if ($User && $User->getId() == $blog->user_id) {
-?> &nbsp;&nbsp;<a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a> &nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a><?php
+?> &nbsp;&nbsp;<a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a> &nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a><?php
 }
 ?>
     </p>
@@ -105,8 +105,7 @@ if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blo
 
 
 ?>
-<div class="boxbottom"><div class="author"></div><div class="links"></div></div>
-</div>
+
 <?php if (!isset($gmap_script)) { ?>
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
     $google_conf = PVars::getObj('config_google');

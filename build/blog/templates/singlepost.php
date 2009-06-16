@@ -129,7 +129,7 @@ echo $txt[0];
 $User = APP_User::login();
 if ($User && $User->getId() == $blog->user_id) {
 ?>
-        <a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a>&nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/YAML/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a>
+        <a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a>&nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a>
 <?php
 }
 ?>

@@ -331,10 +331,12 @@ class BlogController extends PAppController {
             $vars['sty'] = '';
             $vars['stm'] = '';
             $vars['std'] = '';
+            $vars['date'] = '';
         } else {
             $vars['sty'] = date('Y', strtotime($b->blog_start));
             $vars['stm'] = idate('m', strtotime($b->blog_start));
             $vars['std'] = date('d', strtotime($b->blog_start));
+            $vars['date'] = date('d.m.Y', strtotime($b->blog_start));
         }
         if ($b->latitude) {
             $vars['latitude'] = $b->latitude;
@@ -484,17 +486,19 @@ class BlogController extends PAppController {
             $trip = (isset($vars['tr']) && strcmp($vars['tr'],'')!=0) ? (int)$vars['tr'] : false;
             $blogId = $this->_model->createEntry($flags, $userId, $trip);
 
-            // to sql datetime format.
-            if ((isset($vars['sty']) && (int)$vars['sty'] != 0) || (isset($vars['stm']) && (int)$vars['stm'] != 0) || (isset($vars['std']) && (int)$vars['std'] != 0)) {
-                $start = mktime(0, 0, 0, (int)$vars['stm'], (int)$vars['std'], (int)$vars['sty']);
+            if (isset($vars['date']) && (strlen($vars['date']) <= 10 && strlen($vars['date']) > 8)) {
+                list($day, $month, $year) = split('[/.-]', $vars['date']);
+                if (substr($month,0,1) == '0') $month = substr($month,1,2);
+                if (substr($day,0,1) == '0') $day = substr($day,1,2);
+                $start = mktime(0, 0, 0, (int)$month, (int)$day, (int)$year);
                 $start = date('YmdHis', $start);
             } else {
-                $start = null;
+                $start = false;
             }
 
             // Check if the location already exists in our DB and add it if necessary
             if ($vars['geonameid'] && $vars['latitude'] && $vars['longitude'] && $vars['geonamename'] && $vars['geonamecountrycode'] && $vars['admincode']) {
-                $geoname_ok = $this->_model->checkGeonamesCache($vars['geonameid'], $vars['latitude'], $vars['longitude'], $vars['geonamename'], $vars['geonamecountrycode'], $vars['admincode']);
+                $geoname_ok = $this->_model->checkGeonamesCache($vars['geonameid']);
             } else {
                 $geoname_ok = false;
             }
@@ -639,17 +643,27 @@ class BlogController extends PAppController {
                 $TripModel->touchTrip($tripId);
             }
 
-            // to sql datetime format.
+            /*// to sql datetime format.
             if ((isset($vars['sty']) && (int)$vars['sty'] != 0) || (isset($vars['stm']) && (int)$vars['stm'] != 0) || (isset($vars['std']) && (int)$vars['std'] != 0)) {
                 $start = mktime(0, 0, 0, (int)$vars['stm'], (int)$vars['std'], (int)$vars['sty']);
                 $start = date('YmdHis', $start);
             } else {
                 $start = false;
+            } */
+            // to sql datetime format.
+            if (isset($vars['date']) && (strlen($vars['date']) <= 10 && strlen($vars['date']) > 8)) {
+                list($day, $month, $year) = split('[/.-]', $vars['date']);
+                if (substr($month,0,1) == '0') $month = substr($month,1,2);
+                if (substr($day,0,1) == '0') $day = substr($day,1,2);
+                $start = mktime(0, 0, 0, (int)$month, (int)$day, (int)$year);
+                $start = date('YmdHis', $start);
+            } else {
+                $start = false;
             }
-
+            
             // Check if the location already exists in our DB and add it if necessary
             if ($vars['geonameid'] && $vars['latitude'] && $vars['longitude'] && $vars['geonamename'] && $vars['geonamecountrycode'] && $vars['admincode']) {
-                $geoname_ok = $this->_model->checkGeonamesCache($vars['geonameid'], $vars['latitude'], $vars['longitude'], $vars['geonamename'], $vars['geonamecountrycode'], $vars['admincode']);
+                $geoname_ok = $this->_model->checkGeonamesCache($vars['geonameid']);
             } else {
                 $geoname_ok = false;
             }

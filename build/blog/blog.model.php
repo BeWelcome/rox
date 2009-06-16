@@ -1071,8 +1071,7 @@ SET
 	**/
 	public function checkGeonamesCache($geonameId) {
 		$geomodel = new GeoModel();
-		if(!$geomodel->addGeonameId($geonameId,'trip')) {
-			throw new PException('LocationDatabaseUpdateError');
+		if(!$geomodel->checkGeonameId($geonameId,'trip')) {
 			return false;
 		} else {
 			return true;

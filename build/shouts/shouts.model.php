@@ -59,7 +59,12 @@ ORDER BY c.`created` DESC
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
-        return $s;
+        $s_links = array();
+        foreach ($s as $s1) {
+            $s1->text = $this->cleanupText($s1->text);
+            array_push($s_links, $s1);
+        }
+        return $s_links;
     }
 
     public function deleteShouts($table,$table_id = 0) {
@@ -121,6 +126,80 @@ SET
             return $callbackId;
         }
     }
+    
+        private function makeClickableLinks($text) 
+        {    
+            $text = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
+                '<a href="\\1">\\1</a>', $text);
+            $text = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
+                '\\1<a href="http://\\2">\\2</a>', $text);
+            $text = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})',
+                '<a href="mailto:\\1">\\1</a>', $text);
+            return $text;
+        }
+
+/*
+* cleanupText
+*
+*
+*
+*/
+    private function cleanupText($txt) {
+		if (strpos($txt,"href=")===false)  { // We will only try to make clickable links if there is not yet a href= (ie already present clickable link) in the text
+			$txt = $this->makeClickableLinks($txt);
+		}
+        $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
+        $doc = DOMDocument::loadHTML($str);
+        if ($doc) {
+            $sanitize = new PSafeHTML($doc);
+            $sanitize->allow('html');
+            $sanitize->allow('body');
+            $sanitize->allow('p');
+            $sanitize->allow('div');
+            $sanitize->allow('b');
+            $sanitize->allow('i');
+            $sanitize->allow('u');
+            $sanitize->allow('a');
+            $sanitize->allow('img');
+            $sanitize->allow('em');
+            $sanitize->allow('strong');
+            $sanitize->allow('hr');
+            $sanitize->allow('span');
+            $sanitize->allow('ul');
+            $sanitize->allow('li');
+            $sanitize->allow('font');
+            $sanitize->allow('strike');
+            $sanitize->allow('br');
+            $sanitize->allow('blockquote');
+            $sanitize->allow('h1');
+            $sanitize->allow('h2');
+            $sanitize->allow('h3');
+            $sanitize->allow('h4');
+            $sanitize->allow('h5');
+
+            $sanitize->allowAttribute('color');    
+            $sanitize->allowAttribute('bgcolor');            
+            $sanitize->allowAttribute('href');
+            $sanitize->allowAttribute('style');
+            $sanitize->allowAttribute('class');
+            $sanitize->allowAttribute('width');
+            $sanitize->allowAttribute('height');
+            $sanitize->allowAttribute('src');
+            $sanitize->allowAttribute('alt');
+            $sanitize->allowAttribute('title');
+            $sanitize->clean();
+            $doc = $sanitize->getDoc();
+            $nodes = $doc->x->query('/html/body/node()');
+            $ret = '';
+            foreach ($nodes as $node) {
+                $ret .= $doc->saveXML($node);
+            }
+            return $ret;
+        } else {
+            // invalid HTML
+            return '';
+        }
+    } // end of cleanupText
 
 }
 ?>

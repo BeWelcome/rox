@@ -68,7 +68,7 @@ class MOD_htmlpure
      */
     public function getPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/html/htmlpurifier/library/HTMLPurifier.standalone.php');
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier/library/HTMLPurifier.standalone.php');
         return new HTMLPurifier();
     }
 

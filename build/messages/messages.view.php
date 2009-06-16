@@ -45,6 +45,7 @@ class ReadMessagePage extends MessagesBasePage
     {
         $words = new MOD_words();
         $message = $this->message;
+        $purifier = MOD_htmlpure::get()->getPurifier();
         $contact_username = $message->senderUsername;
         $model = new MembersModel();
         $member = $model->getMemberWithUsername($contact_username);
@@ -92,7 +93,7 @@ class ReadMessagePage extends MessagesBasePage
             </div>
             <div id="messagecontent">
                 <p class="text">
-                <?echo str_replace("\n","<br />",$message->Message) ; ?>
+                <?echo $purifier->purify(str_replace("\n","<br />",$message->Message)) ; ?>
                 </p>
             </div>
             <div id="messagefooter">

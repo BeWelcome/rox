@@ -154,37 +154,15 @@ SET
             $sanitize = new PSafeHTML($doc);
             $sanitize->allow('html');
             $sanitize->allow('body');
-            $sanitize->allow('p');
-            $sanitize->allow('div');
             $sanitize->allow('b');
             $sanitize->allow('i');
-            $sanitize->allow('u');
             $sanitize->allow('a');
-            $sanitize->allow('img');
-            $sanitize->allow('em');
             $sanitize->allow('strong');
-            $sanitize->allow('hr');
-            $sanitize->allow('span');
-            $sanitize->allow('ul');
-            $sanitize->allow('li');
-            $sanitize->allow('font');
-            $sanitize->allow('strike');
-            $sanitize->allow('br');
-            $sanitize->allow('blockquote');
-            $sanitize->allow('h1');
-            $sanitize->allow('h2');
-            $sanitize->allow('h3');
-            $sanitize->allow('h4');
-            $sanitize->allow('h5');
-
-            $sanitize->allowAttribute('color');    
-            $sanitize->allowAttribute('bgcolor');            
+            
             $sanitize->allowAttribute('href');
-            $sanitize->allowAttribute('style');
             $sanitize->allowAttribute('class');
             $sanitize->allowAttribute('width');
             $sanitize->allowAttribute('height');
-            $sanitize->allowAttribute('src');
             $sanitize->allowAttribute('alt');
             $sanitize->allowAttribute('title');
             $sanitize->clean();

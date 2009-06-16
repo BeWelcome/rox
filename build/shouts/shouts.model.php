@@ -149,7 +149,7 @@ SET
 			$txt = $this->makeClickableLinks($txt);
 		}
         $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
-        $doc = DOMDocument::loadHTML($str);
+        $doc = @DOMDocument::loadHTML($str);
         if ($doc) {
             $sanitize = new PSafeHTML($doc);
             $sanitize->allow('html');

@@ -83,7 +83,7 @@
    */
   .hidden {display: none;}
 
-  .note {background: #FFF8C3; padding: 1em; border: 1px #888 solid;}
+  .note,.system-message {background: #FFF8C3; padding: 1em; border: 1px #888 solid; margin: 1em;}
   .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
@@ -118,6 +118,8 @@
   }
   .big {font-size: 1.3em; }
   .flat {margin: 0; padding: 0;}
+  .text { line-height: 1.5em; }
+
 
   /**
    * Images
@@ -994,6 +996,9 @@ div.datepicker div.datepicker-footer {
 }
 
 /* Messages */
+.unread { 
+  font-weight: bold;
+}
 #message { /*
   border: 1px solid #f5f5f5;
   border-right: 2px solid #999;
@@ -1034,6 +1039,149 @@ height:50px;
 background:transparent url(../images/shade-trans.png) no-repeat scroll 0 0;
 height:50px;
 }
+
+
+/*
+  Wiki Styles:
+   
+*/
+
+/* ----------------------------------------------
+  every page that comes thru
+  ewiki is wrapped into:
+*/
+.wiki  {
+   background: url("wikibg.png") repeat-y;
+}
+
+
+/* ----------------------------------------------
+  then you can select on $actions
+  or even page names
+*/
+.wiki.edit {
+}
+
+.wiki.info {
+}
+
+.wiki.info {
+}
+
+.wiki.view.PageIndex {			/* "PageIndex" when "view"ed */
+   background-color: #ffee55;
+}
+
+.wiki.SiteOverview {			/* "SiteOverview" regardless of $action */
+   font-family: "Lucida Bright";
+}
+
+
+
+/* -----------------------------------------------
+  every page has a title now, always <h2>,
+  some of them enclose links (when "view"ed)
+*/
+.wiki h2.page.title {
+   color: #333;
+   border-bottom: 2px #eedddd solid;
+}
+
+.wiki h2.page.title a {
+   color: #5555cc;
+   text-decoration: none;
+}
+
+
+/* -----------------------------------------------
+  the ".action-links" or ".control-links" are the
+  list of links below every wiki page ('PageInfo'
+  and 'EditThisPage' ...)
+*/
+.wiki.view .action-links {
+	padding: 1em 0;
+}
+
+.wiki.view .action-links hr,  .wiki .action-links br {
+   display: none;
+}
+
+.wiki.view .action-links a {
+}
+
+.wiki.view .action-links a:hover {
+}
+
+
+/* -----------------------------------------------
+  the "info" pages result list is often
+  chunked into parts
+*/
+.wiki.info .chunked-result a {
+   text-decoration: underline;
+   basckground-color: #ddbb55;
+}
+
+
+/* -----------------------------------------------
+  the "edit" pages form elements are grouped
+*/
+.wiki.edit .edit-box {
+   /* usually encloses a textarea and two submit buttons */
+}
+
+.wiki.edit .edit-box textarea {
+   border: 2px solid #000000;
+   background-color: #ffffff;
+}
+
+.wiki.edit form[name=ewiki] {
+   /* old way, doesn't work with good old IE reliable */
+}
+
+.wiki.edit .image-upload {
+   background: url("image-upload.jpeg") no-repeat;
+}
+
+.wiki.edit .preview {
+   background-image: url("dashed.png");
+   font-size:50%;
+}
+
+
+/*
+  for the complete list of available class names
+  please always visit the README and the plugins
+  which also provide documentation of any such
+  features
+*/
+
+
+
+/* -----------------------------------------------
+  inside of rendered pages, there is only little
+  CSS, if you do not utilize plugins/markup_css
+  and create some of your own
+*/
+
+.wiki .indent {                   /* space-indentation */
+   margin-left: 5px;
+}
+
+.wiki em {
+  color:#331111;
+}
+.wiki li {
+  padding-left: .5em;
+  margin-left: 2em;
+}
+.wiki ul li {
+  list-style-type: disc;
+}
+.wiki ol li {
+  list-style-type: decimal;
+}
+
 
 /* Media screen end */
 }

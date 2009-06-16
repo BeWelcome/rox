@@ -1391,6 +1391,8 @@ $updates[] = "ALTER TABLE `reports_to_moderators` CHANGE `ReporterComment` `Post
 
 $updates[] = "ALTER TABLE `reports_to_moderators` ADD `LastWhoSpoke`  ENUM( 'Member', 'Moderator' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Member' COMMENT 'This field says if it is the member or the moderator who spoke in last'" ;
 
+$updates[] = "ALTER TABLE `words` CHANGE `code` `code` VARCHAR( 256 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL " ;
+
     if (empty($res)) {
         $version = 0;
     } else {

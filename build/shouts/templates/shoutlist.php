@@ -122,6 +122,7 @@ $('commentadd').onclick = function (){ $('comment-form').toggle(); return false;
 }
 ?>
 </div>
+
 <?php
 PPostHandler::clearVars($callbackId);
 ?>

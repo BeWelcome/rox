@@ -143,11 +143,11 @@
               </colgroup>
               <tbody>
 <?php
-    if (!$CanTranslate) { // member translator is not allowed to update crypted data
+    if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data
 ?>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('FirstName')?>:</td>
-                  <td><?=$vars['FirstName']?></td>
+                  <td><?php (($this->adminedit) ? "<input type='text' name='FirstName' value='{$vars['FirstName']}'/>" : $vars['FirstName']); ?></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_FirstName"
                     <?php if ($vars['IsHidden_FirstName'])
@@ -158,7 +158,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SecondName')?>:</td>
-                  <td><?=$vars['SecondName']?></td>
+                  <td><?php (($this->adminedit) ? "<input type='text' name='SecondName' value='{$vars['SecondName']}'/>" : $vars['SecondName']); ?></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_SecondName"
                     <?php if ($vars['IsHidden_SecondName'])
@@ -169,7 +169,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('LastName')?>:</td>
-                  <td><?=$vars['LastName']?></td>
+                  <td><?php (($this->adminedit) ? "<input type='text' name='LastName' value='{$vars['LastName']}'/>" : $vars['LastName']); ?></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_LastName"
                     <?php if ($vars['IsHidden_LastName'])

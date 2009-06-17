@@ -186,6 +186,23 @@ class MembersController extends RoxControllerBase
                         case 'redesign':
                             $page = new ProfileRedesignPage();
                             break;
+                        case 'adminedit':
+                            $rights = new MOD_right();
+                            if ($rights->hasRight('Admin'))
+                            {
+                                $page = new EditMyProfilePage();
+                                $page->adminedit = true;
+                                // $member->edit_mode = true;
+                                if (isset($request[3]) && $request[3] == 'delete')
+                                    $page = new DeleteTranslationPage();
+                                if (in_array('finish',$request))
+                                    $page->status = "finish";
+                            }
+                            else
+                            {
+                                $page = new MembersMembernotfoundPage;
+                            }
+                            break;
                         case 'profile':
                         case '':
                         case false:

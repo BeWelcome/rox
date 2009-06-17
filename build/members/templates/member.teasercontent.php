@@ -14,22 +14,26 @@
         <?=$words->flushBuffer()?>
                     </div> <!-- username -->
                     
-                    <?php
-                      if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
-                        if ($member->Status!="Active") {
-                            echo "<br /><span class=\"memberstatus\"> ",$member->Status," </span>\n";
-                        }
-                      } // end of for people with right dsiplay real status of the member
-                      if ($member->Status=="ChoiceInactive") {
-                            echo "<br /><span class=\"memberinactive\"> ",$ww->WarningTemporayInactive," </span>\n";
-                      }
-                    ?>
-                    </p>
                     
     </div> <!-- subcl -->
   </div> <!-- c50l -->
   <div class="c50r" >
     <div class="subcr" >
+        
+        <?php
+          if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
+            echo "<div class=\"note big\">";
+            if ($member->Status!="Active") {
+                echo "Status: <b>",$member->Status," </b><br /><br />\n";
+            }
+                echo "<a href=\"bw/updatemandatory.php?cid=",$member->id,"\">Update mandatory data</a>\n";
+            echo "</div>";
+          } // end of for people with right dsiplay real status of the member
+          if ($member->Status=="ChoiceInactive") {
+                echo "<div class=\"note big\"> ",$ww->WarningTemporayInactive," </div>\n";
+          }
+        ?>
+        
         <? // Profile translations ?>
             <?php
             if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'editmyprofile';

@@ -24,9 +24,8 @@
           if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
             echo "<div class=\"note big\">";
             if ($member->Status!="Active") {
-                echo "Status: <b>",$member->Status," </b><br /><br />\n";
+                echo "Status: <b>",$member->Status," </b>\n";
             }
-                echo "<a href=\"bw/updatemandatory.php?cid=",$member->id,"\">Update mandatory data</a>\n";
             echo "</div>";
           } // end of for people with right dsiplay real status of the member
           if ($member->Status=="ChoiceInactive") {

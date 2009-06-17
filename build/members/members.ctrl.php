@@ -398,6 +398,11 @@ class MembersController extends RoxControllerBase
                 $mem_redirect->post = $vars;
                 return false;
             }
+            $rights = new MOD_right;
+            if (!$rights->hasRight('Admin'))
+            {
+                $vars['memberid'] = $this->model->getLoggedInMember()->getPKValue();
+            }
             $vars['member'] = $this->getMember($vars['memberid']);
             $vars = $this->model->polishProfileFormValues($vars);
             $success = $this->model->updateProfile($vars);

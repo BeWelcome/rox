@@ -2820,7 +2820,7 @@ AND IdTag=%d
         }
 
         $query = sprintf(
-            "SELECT    `postid`, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
+            "SELECT    `postid`,`forums_posts`.`postid` as IdPost, UNIX_TIMESTAMP(`create_time`) AS `posttime`,  `message`,
     `OwnerCanStillEdit`,`IdContent`,  `forums_threads`.`threadid`,   `forums_threads`.`title`,
     `HasVotes`,
     `ThreadVisibility`,

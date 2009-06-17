@@ -68,8 +68,9 @@ class ForumsView extends RoxAppView {
         );
     }
     
-    public static function postURL($post)
+    public  function postURL($post)
     {
+	
         return $this->uri.'s'.$post->threadid.'-'.str_replace(
             array('/', ' '),
             array('-', '-'),

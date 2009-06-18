@@ -49,7 +49,7 @@
   /* ### text formatting  ### */
   strong,b {font-weight: bold; }
   em,i { font-style:italic; }
-  pre, code {  font-family: "Courier New", Courier, monospace; }
+  pre, code {  font-family: "Courier New", Courier, monospace; padding: 1em; color: #ffffff; background-color: #333333;}
   address { font-style:normal; line-height: 1.5em; margin: 0 0 1em 0; }
 
   acronym, abbr {

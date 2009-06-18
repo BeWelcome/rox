@@ -15,6 +15,7 @@ class EuropeShopPage extends ShopPage
     protected function column_col3() {
         require 'templates/europe_body_shop.php';
     }
+    
 }
 
 

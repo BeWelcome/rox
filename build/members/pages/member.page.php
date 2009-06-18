@@ -25,6 +25,7 @@ class MemberPage extends PageWithActiveSkin
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
         $comments_count = $member->count_comments(); 
+		$ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
         if ($this->myself) {
             return array(
                 array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
@@ -37,7 +38,7 @@ class MemberPage extends PageWithActiveSkin
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", $ww->Gallery),
-                array('forum', "forums/member/$username", $ww->ViewForumPosts)
+                array('forum', "forums/member/$username", $ViewForumPosts)
             );
         } else {
             return array(
@@ -51,7 +52,7 @@ class MemberPage extends PageWithActiveSkin
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", $ww->Gallery),
-                array('forum', "forums/member/$username", $ww->ViewForumPosts)
+                array('forum', "forums/member/$username", $ViewForumPosts)
             );
         }
     }

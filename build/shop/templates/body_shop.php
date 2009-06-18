@@ -28,15 +28,15 @@ $words = new MOD_words();
 <form>
 <select name="menu" onChange="javascript:parent.location = this.form.menu.options[this.form.menu.selectedIndex].value;">
   <option>select your shipping country</option>
-<option value="shop/europe">Australia</option
+<option value="shop/world">Australia</option
 <option value="shop/europe">Austria</option>
 <option value="shop/europe">Belgium</option>
-<option value="shop/europe">Canada</option>
-<option>China</option>
+<option value="shop/world">Canada</option>
+<option value="shop/world">China</option>
 <option value="shop/europe">Cyprus</option>
 <option value="shop/europe">Czech Republic</option>
 <option value="shop/europe">Denmark</option>
-<option value="shop/europe" value="shop/europe">Estonia</option>
+<option value="shop/europe">Estonia</option>
 <option value="shop/europe">Finland</option>
 <option value="shop/europe">France</option>
 <option value="shop/europe">Germany</option>
@@ -45,21 +45,21 @@ $words = new MOD_words();
 <option value="shop/europe">Iceland</option>
 <option value="shop/europe">Ireland</option>
 <option value="shop/europe">Italy</option>
-<option value="JP">Japan</option>
-<option value="KR">Korea (Republic)</option>
+<option value="shop/world">Japan</option>
+<option value="shop/world">Korea (Republic)</option>
 <option value="shop/europe">Latvia</option>
 <option value="shop/europe">Liechtenstein</option>
 <option value="shop/europe">Lithuania</option>
 <option value="shop/europe">Luxemburg</option>
 <option value="shop/europe">Malta</option>
-<option value="MX">Mexico</option>
+<option value="shop/world">Mexico</option>
 <option value="shop/europe">Monaco</option>
-<option value="NZ">New Zealand</option>
+<option value="shop/world">New Zealand</option>
 <option value="shop/europe">Norway</option>
 <option value="shop/europe">Poland</option>
 <option value="shop/europe">Portugal</option>
-<option value="PR">Puerto Rico</option>
-<option value="SG">Singapore</option>
+<option value="shop/world">Puerto Rico</option>
+<option value="shop/world">Singapore</option>
 <option value="shop/europe">Slovakia</option>
 <option value="shop/europe">Slovenia</option>
 <option value="shop/europe">Spain</option>
@@ -67,7 +67,7 @@ $words = new MOD_words();
 <option value="shop/europe">Switzerland</option>
 <option value="shop/europe">The Netherlands</option>
 <option value="shop/europe">United Kingdom</option>
-<option value="US">United States</option>
+<option value="shop/world">United States</option>
  </select>
 
 </form>

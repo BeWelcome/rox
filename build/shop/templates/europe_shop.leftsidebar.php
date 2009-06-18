@@ -26,7 +26,7 @@ $words = new MOD_words();
 
 <h2>Shopping Time!</h2>
 
-        <p><?php echo $words->getBuffered('ShopNotInList'); ?></p>
+        <p><?php echo $words->get('ShopIntroduction'); ?></p>
 
 <h2>New BW goodies?</h2>
         <p><li><a href="http://382518.spreadshirt.net/en/DE/Shop/Index/rss"><img alt="Get RSS feed" class="float_right" src="images/icons/feed.png"/></a> <a href="http://382518.spreadshirt.net/en/DE/Shop/Index/rss">RSS feed</a></li></p>

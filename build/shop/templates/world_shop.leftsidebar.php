@@ -25,7 +25,7 @@ $words = new MOD_words();
 ?>
 
 <h2>Shopping Time!</h2>
-    <p><?php echo $words->getBuffered('ShopIntroduction'); ?></p>
+    <p><?php echo $words->get('ShopIntroduction'); ?></p>
 
 <h2>New BW goodies ?</h2>
         <p><li><a href="http://229494.spreadshirt.com/us/US/Shop/Index/rss"><img alt="Get RSS feed" class="float_right" src="images/icons/feed.png"/></a> <a href="http://229494.spreadshirt.com/us/US/Shop/Index/rss">RSS feed</a></li></p>

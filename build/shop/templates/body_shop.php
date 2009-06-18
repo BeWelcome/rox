@@ -23,54 +23,53 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
-old idea could be removed
 
 <div class="subcolumns">
-
+<form>
 <select name="menu" onChange="javascript:parent.location = this.form.menu.options[this.form.menu.selectedIndex].value;">
   <option>select your shipping country</option>
-<option value="http://localhost/bewelcome/htdocs/shop/europe">Australia</option
-<option>Austria</option>
-<option>Belgium</option>
-<option>Canada</option>
+<option value="shop/europe">Australia</option
+<option value="shop/europe">Austria</option>
+<option value="shop/europe">Belgium</option>
+<option value="shop/europe">Canada</option>
 <option>China</option>
-<option>Cyprus</option>
-<option>Czech Republic</option>
-<option>Denmark</option>
-<option>Estonia</option>
-<option>Finland</option>
-<option>France</option>
-<option>Germany</option>
-<option>Greece</option>
-<option>Hungary</option>
-<option>Iceland</option>
-<option>Ireland</option>
-<option>Italy</option>
+<option value="shop/europe">Cyprus</option>
+<option value="shop/europe">Czech Republic</option>
+<option value="shop/europe">Denmark</option>
+<option value="shop/europe" value="shop/europe">Estonia</option>
+<option value="shop/europe">Finland</option>
+<option value="shop/europe">France</option>
+<option value="shop/europe">Germany</option>
+<option value="shop/europe">Greece</option>
+<option value="shop/europe">Hungary</option>
+<option value="shop/europe">Iceland</option>
+<option value="shop/europe">Ireland</option>
+<option value="shop/europe">Italy</option>
 <option value="JP">Japan</option>
 <option value="KR">Korea (Republic)</option>
-<option>Latvia</option>
-<option>Liechtenstein</option>
-<option>Lithuania</option>
-<option>Luxemburg</option>
-<option>Malta</option>
+<option value="shop/europe">Latvia</option>
+<option value="shop/europe">Liechtenstein</option>
+<option value="shop/europe">Lithuania</option>
+<option value="shop/europe">Luxemburg</option>
+<option value="shop/europe">Malta</option>
 <option value="MX">Mexico</option>
-<option>Monaco</option>
+<option value="shop/europe">Monaco</option>
 <option value="NZ">New Zealand</option>
-<option>Norway</option>
-<option>Poland</option>
-<option>Portugal</option>
+<option value="shop/europe">Norway</option>
+<option value="shop/europe">Poland</option>
+<option value="shop/europe">Portugal</option>
 <option value="PR">Puerto Rico</option>
 <option value="SG">Singapore</option>
-<option>Slovakia</option>
-<option>Slovenia</option>
-<option>Spain</option>
-<option>Sweden</option>
-<option>Switzerland</option>
-<option>The Netherlands</option>
-<option>United Kingdom</option>
+<option value="shop/europe">Slovakia</option>
+<option value="shop/europe">Slovenia</option>
+<option value="shop/europe">Spain</option>
+<option value="shop/europe">Sweden</option>
+<option value="shop/europe">Switzerland</option>
+<option value="shop/europe">The Netherlands</option>
+<option value="shop/europe">United Kingdom</option>
 <option value="US">United States</option>
  </select>
 
-
+</form>
 
 </div>

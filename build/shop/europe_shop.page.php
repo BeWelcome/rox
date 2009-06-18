@@ -15,7 +15,10 @@ class EuropeShopPage extends ShopPage
     protected function column_col3() {
         require 'templates/europe_body_shop.php';
     }
-    
+
+    protected function column_col1() {
+        require 'templates/europe_shop.leftsidebar.php';
+    }    
 }
 
 

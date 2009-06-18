@@ -34,6 +34,9 @@ class ShopPage extends RoxPageView
     protected function column_col3() {
         require 'templates/body_shop.php';
     }
+    
+    protected function column_col1() {
+    }
 }
 
 

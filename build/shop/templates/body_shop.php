@@ -27,7 +27,7 @@ $words = new MOD_words();
 <div class="subcolumns">
 <form>
 <select name="menu" onChange="javascript:parent.location = this.form.menu.options[this.form.menu.selectedIndex].value;">
-  <option>select your shipping country</option>
+  <option><?php echo $words->getBuffered('ShopSelectCountry'); ?></option>
 <option value="shop/world">Australia</option
 <option value="shop/europe">Austria</option>
 <option value="shop/europe">Belgium</option>
@@ -71,5 +71,6 @@ $words = new MOD_words();
  </select>
 
 </form>
-
+<p><?php echo $words->getBuffered('ShopNotInList'); ?></p>
+<?php echo $words->flushBuffer(); ?>
 </div>

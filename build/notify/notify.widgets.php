@@ -78,7 +78,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
         extract(get_object_vars($item));
 //        print_r($item);
         $member = MOD_member::getMember_userId($item->IdRelMember);
-        if ($this->WordCode == '' && ($text_params = unserialize($this->TranslateParams)) !== false) {
+        if ($this->WordCode == '' && ($text_params = unserialize($this->TranslationParams)) !== false) {
            $text = call_user_func_array(array($words, 'get'), $text_params);
         } else {
             $member = MOD_member::getMember_userId($item->IdRelMember);
@@ -266,9 +266,9 @@ class NotifyAdminWidget extends ItemlistWithPagination
         echo $note->WordCode;
     }
 
-    protected function tableCell_translateparams($note)
+    protected function tableCell_translationparams($note)
     {
-        if ($params = unserialize($note->TranslateParams))
+        if ($params = unserialize($note->TranslationParams))
         {
             $words = new MOD_words;
             echo call_user_func_array(array($words, 'get'), $params);

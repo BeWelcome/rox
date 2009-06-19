@@ -64,19 +64,13 @@ class Note extends RoxEntityBase
      */
     public function createNote($input)
     {
-        $idmember = $this->dao->escape($input['IdMember']);
-        $type = $this->dao->escape($input['Type']);
-        $idrelmember = ((!empty($input['IdRelMember'])) ? $this->dao->escape($input['IdRelMember']) : '');
-        $wordcode = ((!empty($input['WordCode'])) ? $this->dao->escape($input['WordCode']) : '');
-        $link = ((!empty($input['Link'])) ? $this->dao->escape($input['Link']) : '');
-        $TranslateParams = ((!empty($input['TranslateParams'])) ? serialize($input['TranslateParams']) : '');
-
-        $this->IdMember = $idmember;
-        $this->IdRelMember = $idrelmember;
-        $this->Type = $type;
-        $this->Link = $link;
-        $this->WordCode = $wordcode;
-        $this->TranslateParams = $TranslateParams;
+        $this->IdMember = $this->dao->escape($input['IdMember']);
+        $this->IdRelMember = ((!empty($input['IdRelMember'])) ? $this->dao->escape($input['IdRelMember']) : '');
+        $this->Type = $this->dao->escape($input['Type']);
+        $this->Link = ((!empty($input['Link'])) ? $this->dao->escape($input['Link']) : '');
+        $this->WordCode = ((!empty($input['WordCode'])) ? $this->dao->escape($input['WordCode']) : '');
+        $this->TranslationParams = ((!empty($input['TranslationParams'])) ? serialize($this->sanitizeTranslationParams($input['TranslationParams'])) : '');
+        $this->created = date('Y-m-d H:i:s');
         return $this->insert();
     }
 
@@ -114,7 +108,7 @@ class Note extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function updateNote($check = false, $type = false, $visible = false, $translateparams = false)
+    public function updateNote($check = false, $type = false, $visible = false, $translationparams = false)
     {
         if (!$this->isLoaded())
         {
@@ -132,11 +126,36 @@ class Note extends RoxEntityBase
         {
             $this->Visible = $this->dao->escape($visible);
         }
-        if ($translateparams)
+        if ($translationparams && is_array($translationparams))
         {
-            $this->TranslateParams = $this->dao->escape($translateparams);
-        }                
+            $this->TranslationParams = serialize($this->sanitizeTranslationParams($translateparams));
+        }
         return $this->update();
+    }
+
+    /**
+     * sanitizes translation params before anything is done to them
+     *
+     * @param array $params
+     * @access private
+     * @return array
+     */
+    private function sanitizeTranslationParams($params)
+    {
+        $return = array();
+        foreach ($params as $param)
+        {
+            if (is_array($param))
+            {
+                $array = $this->sanitize($param);
+                $return[] = serialize($array);
+            }
+            else
+            {
+                $return[] = $this->dao->escape($param);
+            }
+        }
+        return $return;
     }
 
 

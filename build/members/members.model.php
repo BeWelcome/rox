@@ -726,7 +726,7 @@ ORDER BY
         // fantastic ... love the implementation. Fake
         $CanTranslate = false;
         // $CanTranslate = CanTranslate($vars["memberid"], $_SESSION['IdMember']);
-        $ReadCrypted = "AdminReadCrypted"; // This might be changed in the future
+        $ReadCrypted = "MemberReadCrypted"; // This might be changed in the future
         if ($rights->hasRight('Admin') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles 
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
         }

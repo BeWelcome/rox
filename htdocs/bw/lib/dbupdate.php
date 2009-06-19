@@ -1393,6 +1393,8 @@ $updates[] = "ALTER TABLE `reports_to_moderators` ADD `LastWhoSpoke`  ENUM( 'Mem
 
 $updates[] = "ALTER TABLE `words` CHANGE `code` `code` VARCHAR( 256 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL " ;
 
+$updates[] = "ALTER TABLE notes DROP COLUMN FreeText, ADD COLUMN TranslationParams TEXT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Serialised array of wordcode and params for translation'";
+
     if (empty($res)) {
         $version = 0;
     } else {

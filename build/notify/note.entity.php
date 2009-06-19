@@ -69,14 +69,14 @@ class Note extends RoxEntityBase
         $idrelmember = ((!empty($input['IdRelMember'])) ? $this->dao->escape($input['IdRelMember']) : '');
         $wordcode = ((!empty($input['WordCode'])) ? $this->dao->escape($input['WordCode']) : '');
         $link = ((!empty($input['Link'])) ? $this->dao->escape($input['Link']) : '');
-        $freetext = ((!empty($input['FreeText'])) ? $this->dao->escape($input['FreeText']) : '');
+        $TranslateParams = ((!empty($input['TranslateParams'])) ? serialize($input['TranslateParams']) : '');
 
         $this->IdMember = $idmember;
         $this->IdRelMember = $idrelmember;
         $this->Type = $type;
         $this->Link = $link;
         $this->WordCode = $wordcode;
-        $this->FreeText = $freetext;
+        $this->TranslateParams = $TranslateParams;
         return $this->insert();
     }
 
@@ -114,46 +114,31 @@ class Note extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function updateNote($check = false, $type = false, $visible = false, $freetext = false)
+    public function updateNote($check = false, $type = false, $visible = false, $translateparams = false)
     {
         if (!$this->isLoaded())
         {
             return false;
         }
-        if (isset($check))
+        if ($check)
         {
             $this->Checked = intval($check);
         }
-        if (isset($type))
+        if ($type)
         {
             $this->Type = $this->dao->escape($type);
         }
-        if (isset($visible))
+        if ($visible)
         {
             $this->Visible = $this->dao->escape($visible);
         }
-        if (isset($freetext))
+        if ($translateparams)
         {
-            $this->FreeText = $this->dao->escape($freetext);
+            $this->TranslateParams = $this->dao->escape($translateparams);
         }                
         return $this->update();
     }
 
-
-    /**
-     * returns the variable text for a note
-     *
-     * @access public
-     * @return string
-     */
-    public function getFreeText()
-    {
-        if (!$this->isLoaded() || !$this->FreeText)
-        {
-            return '';
-        }   
-        return $this->FreeText;
-    }
 
     /**
      * returns the description for a group
@@ -182,8 +167,8 @@ class Note extends RoxEntityBase
         if (!$this->isLoaded() || !$this->WordCode)
         {
             return '';
-        } elseif ($this->WordCode == '' && $this->FreeText != '') {
-           return $this->FreeText;
+        } elseif ($this->WordCode == '' && ($text_params = unserialize($this->TranslateParams)) !== false) {
+           return call_user_func_array(array($words, 'get'), $text_params);
         } else {
             $member = MOD_member::getMember_userId($item->IdRelMember);
             return $words->get($this->WordCode,$member->getUsername());

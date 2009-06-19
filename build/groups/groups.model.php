@@ -627,7 +627,7 @@ class GroupsModel extends  RoxModelBase
             $note->Type = 'message';
             $note->Link = "/groups/{$group->getPKValue()}";
             $note->WordCode = '';
-            $note->FreeText = $this->getWords()->get('GroupsAcceptedIntoGroup', $group->Name);
+            $note->TranslateParams = serialize(array('GroupsAcceptedIntoGroup', $group->Name));
             $note->created = date('Y-m-d H:i:s');
             $note->insert();
             return $membership->updateStatus('In');
@@ -668,7 +668,7 @@ class GroupsModel extends  RoxModelBase
             $note->Type = 'message';
             $note->Link = "/groups/{$group->getPKValue()}";
             $note->WordCode = '';
-            $note->FreeText = $this->getWords()->get('GroupsInvitedNote', $group->Name);
+            $note->TranslateParams = serialize(array('GroupsInvitedNote', $group->Name));
             $note->created = date('Y-m-d H:i:s');
             $note->insert();
         }

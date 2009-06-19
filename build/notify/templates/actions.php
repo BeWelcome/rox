@@ -22,10 +22,6 @@
     <input type="text" name="WordCode" type="text" size="10" value="" /> 
     </div>
     <div class="float_left">
-    <label>FreeText</label><br />
-    <input type="text" name="FreeText" type="text" size="10" value="" />
-    </div>
-    <div class="float_left">
     <label>Checked</label><br />
     <input type="text" name="Checked" type="text" size="1" maxlength="1" value="" /> 
     </div>

@@ -75,20 +75,17 @@ class NotifyMemberWidget extends ItemlistWithPagination
     protected function showListItem($item, $i_row)
     {
         $words = new MOD_words();
-        extract(get_object_vars($item));
-//        print_r($item);
-        $member = MOD_member::getMember_userId($item->IdRelMember);
-        if ($this->WordCode == '' && ($text_params = unserialize($this->TranslationParams)) !== false) {
+        $member = $this->createEntity('Member')->findById($item->IdRelMember);
+        if ($item->WordCode == '' && ($text_params = unserialize($item->TranslationParams)) !== false) {
            $text = call_user_func_array(array($words, 'get'), $text_params);
         } else {
-            $member = MOD_member::getMember_userId($item->IdRelMember);
-            $text = $words->get($this->WordCode,$member->getUsername());
+            $text = $words->get($item->WordCode,$member->Username);
         }
         $text = ((!empty($item->Link)) ? htmlentities($text) : $text);
         $created = MOD_layoutbits::ago(strtotime($item->created));
         echo <<<HTML
         <div class="floatbox">
-            <a target="notify-{$item->id}" class="dynamic float_right" href="notify/{$item->id}/check" alt="{$words->getSilent($item->WordCode,$member->getUsername())}">
+            <a target="notify-{$item->id}" class="dynamic float_right" href="notify/{$item->id}/check" alt="{$words->getSilent($item->WordCode,$member->Username)}">
                 <img src="images/icons/box-close.png">
             </a>
             <div class="float_right small grey">{$created}</div>
@@ -98,7 +95,7 @@ HTML;
                 echo "<a href='{$item->Link}'>";
             }
 			if ($item->IdRelMember != '') { 
-                echo MOD_layoutbits::PIC_30_30($member->getUsername(),'',"framed");
+                echo MOD_layoutbits::PIC_30_30($member->Username,'',"framed");
             }
             if ($item->Link != '') { 
                 echo '</a>';

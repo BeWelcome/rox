@@ -1395,6 +1395,17 @@ $updates[] = "ALTER TABLE `words` CHANGE `code` `code` VARCHAR( 256 ) CHARACTER 
 
 $updates[] = "ALTER TABLE notes DROP COLUMN FreeText, ADD COLUMN TranslationParams TEXT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT 'Serialised array of wordcode and params for translation'";
 
+$updates[] = <<<SQL
+CREATE TABLE forums_threads_votes (
+    id INT(11) NOT NULL PRIMARY KEY,
+    `IdThread` INT(11) NOT NULL COMMENT 'id of the corresponding thread',
+    `IdMember` INT(11) NOT NULL COMMENT 'id of the voting member',
+    `Vote` enum('positive','negative','neutral') default 'negative' COMMENT 'result of vote',
+    `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP COMMENT 'time of voting',
+    CONSTRAINT UNIQUE (`IdThread`,`IdMember`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT 'Stores votes from members on individual forum threads';
+SQL;
+
     if (empty($res)) {
         $version = 0;
     } else {

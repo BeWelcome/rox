@@ -1916,10 +1916,10 @@ WHERE `threadid` = '$this->threadid'
 				$ss="select * from groups where id=".$IdGroup ;
                 $s = $this->dao->query($ss);
                 $rGroup = $s->fetch(PDB::FETCH_OBJ);
-			}
-			if ($vars['ThreadVisibility']=='Default') {
-				if ($rGroup->VisiblePosts=='no') {
-					$ThreadVisibility='GroupOnly' ;
+				if ($vars['ThreadVisibility']=='Default') {
+					if ($rGroup->VisiblePosts=='no') {
+						$ThreadVisibility='GroupOnly' ;
+					}
 				}
 			}
 		}

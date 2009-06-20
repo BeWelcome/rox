@@ -224,16 +224,16 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 			$TheReports=$this->_model->GetReports($post->IdPost) ;
 			$max=count($TheReports) ;
 			foreach ($TheReports as $report) {
-				echo "<br />report ",$report->IdPost." from ",$report->Username," [".$report->Status."] " ;
+				echo "<br />report from ",$report->Username," [".$report->Status."] " ;
 				echo "<a href='forums/reporttomod/",$report->IdPost,"/".$report->IdReporter."'>view report</a>" ;
 			}
 		}
 		$TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
 		if (isset($TheReports[0]->IdReporter)) {
-			echo "<a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a>" ;
+			echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a>" ;
 		}
 		else {
-			echo "<a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a>" ;
+			echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a>" ;
 		}
 	}
 	

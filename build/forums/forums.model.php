@@ -1298,9 +1298,15 @@ WHERE `threadid` = '%d' ",
         }
         
         $vars =& PPostHandler::getVars();
+		$IdPost=$vars['IdPost'] ;
+		
+        $ss = "select threadid from forums_posts where id=".$IdPost ;
+        $s = $this->dao->query($ss);
+		$rr = $s->fetch(PDB::FETCH_OBJ) ;
+		
+		$this->threadid=$rr->threadid ;
 		
 		$PostComment=$vars['PostComment'] ;
-		$IdPost=$vars['IdPost'] ;
 		$Status=$vars['Status'] ;
 		if (isset($vars['Type'])) $Type=$vars['Type'] ;
 		if (!empty($vars['IdReporter'])) {
@@ -1339,7 +1345,7 @@ WHERE `threadid` = '%d' ",
 		$this->dao->query($ss);
 	    MOD_log::get()->write("Adding to report for post #".$IdPost."<br />".$PostComment."<br />Status=".$Status,"Forum") ; 				
         PPostHandler::clearVars();
-        return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
+        return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid.'/#'.$IdPost;
     } // end of reportpostProcess
     
 	 /**	 

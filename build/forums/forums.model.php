@@ -2158,27 +2158,29 @@ and ($this->ThreadGroupsRestriction)
 		
         $topicinfo = $s->fetch(PDB::FETCH_OBJ);
 
-		if ($topicinfo->WhoCanReply=="MembersOnly") {
-			$topicinfo->CanReply=true ;
-		}
-		else if ($topicinfo->WhoCanReply=="GroupsMembersOnly") {
-			if ($topicinfo->IdGroup==0) {
+		if (isset($topicinfo->WhoCanReply)) {
+			if ($topicinfo->WhoCanReply=="MembersOnly") {
 				$topicinfo->CanReply=true ;
 			}
-			else {
-				$topicinfo->CanReply=in_array($topicinfo->IdGroup,$this->MyGroups) ; // Set to true only if current member is member of the group
+			else if ($topicinfo->WhoCanReply=="GroupsMembersOnly") {
+				if ($topicinfo->IdGroup==0) {
+					$topicinfo->CanReply=true ;
+				}
+				else {
+					$topicinfo->CanReply=in_array($topicinfo->IdGroup,$this->MyGroups) ; // Set to true only if current member is member of the group
+				}
 			}
-		}
-		else if ($topicinfo->WhoCanReply=="ModeratorsOnly") {
-			if ($this->BW_Right->HasRight("ForumModerator")) {
-				$topicinfo->CanReply=true ;
+			else if ($topicinfo->WhoCanReply=="ModeratorsOnly") {
+				if ($this->BW_Right->HasRight("ForumModerator")) {
+					$topicinfo->CanReply=true ;
+				}
+				else {
+					$topicinfo->CanReply=false ;
+				}
 			}
 			else {
 				$topicinfo->CanReply=false ;
 			}
-		}
-		else {
-			$topicinfo->CanReply=false ;
 		}
 				
 //				echo "\$topicinfo->IdGroup=",$topicinfo->IdGroup ;

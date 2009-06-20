@@ -222,9 +222,11 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 	if (isset($_SESSION["IdMember"])) {
 		if ($this->BW_Right->HasRight("ForumModerator")) {
 			$Reports=$this->_model->GetReports($post->IdPost) ;
-			foreach ($Reports as $report) {
-				echo "<br />report from ",$report->Username," [".$report->Status."] " ;
-				echo "<a href='forums/reporttomod/",$post->IdPost,"/".$report->IdReporter."'>view report</a>" ;
+			if (isset($Reports)) {
+				foreach ($Reports as $report) {
+					echo "<br />report from ",$report->Username," [".$report->Status."] " ;
+					echo "<a href='forums/reporttomod/",$post->IdPost,"/".$report->IdReporter."'>view report</a>" ;
+				}
 			}
 		}
 		else {

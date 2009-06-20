@@ -135,14 +135,6 @@ class GroupsBasePage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css';
        return $stylesheets;
     }
-    
-    protected function getStylesheetPatches() {
-       $stylesheets[] = 'styles/css/minimal/screen/patches/patch_3col.css';
-       return $stylesheets;
-    }
-
-
-
 
 }
 

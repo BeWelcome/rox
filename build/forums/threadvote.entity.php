@@ -9,6 +9,7 @@ class ThreadVote extends RoxEntityBase
 
     protected $_table_name = 'forums_threads_votes';
 
+    protected $_validations = array('Vote');
 
     public function __construct($vote_id = false)
     {
@@ -19,40 +20,165 @@ class ThreadVote extends RoxEntityBase
         }
     }
 
+    /**
+     * fetches all votes for a thread
+     *
+     * @param object $thread
+     * @access public
+     * @return array
+     */
+    public function getVotesForThread(Thread $thread)
+    {
+        if (!$thread->isLoaded())
+        {
+            return array();
+        }
+        return $this->findByWhereMany("Idthread = '{$thread->getPKValue()}'");
+    }
 
     /**
-     * Uses an array of terms to create a create to search for groups with
-     * simple or search on names for now
+     * fetches all thread votes for a member
      *
-     * @todo implement proper group search - this will wait on various db implementations
-     * @param array $terms - array of strings to be used in search
-     * @return mixed false or group of arrays that match any of the terms
+     * @param object $member
      * @access public
+     * @return array
      */
-    public function findBySearchTerms($terms = array(), $page = 0)
+    public function getVotesForMember(Member $member)
     {
-        if (empty($terms))
+        if (!$member->isLoaded())
         {
-            return $this->findAll($page, 10);
+            return array();
         }
-        
-        foreach ($terms as &$term)
-        {
-            if (is_string($term))
-            {
-                $term = "{$this->_table_name}.Name LIKE '%" . $this->dao->escape($term) . "%'";
-            }
-            else
-            {
-                unset($term);
-            }
-        }
-        
-        $clause = implode(' or ', $terms);
+        return $this->findByWhereMany("IdMember = '{$member->getPKValue()}'");
+    }
 
-        return $this->findByWhereMany($clause, $page, 10);
+    /**
+     * returns array of positive, negative and neutral votes
+     *
+     * @param object $thread
+     * @access public
+     * @return array
+     */
+    public function getResultForThread(Thread $thread)
+    {
+        if (!$thread->isLoaded())
+        {
+            return array();
+        }
+        if (!($result = $this->dao->query("SELECT SUM(positive) AS positive, SUM(negative) AS negative, SUM(neutral) AS neutral FROM (SELECT (CASE WHEN Vote = 'positive' THEN 1 ELSE 0 END) AS positive, (CASE WHEN Vote = 'negative' THEN 1 ELSE 0 END) AS negative, (CASE WHEN Vote = 'neutral' THEN 1 ELSE 0 END) AS neutral FROM {$this->getTableName()} WHERE IdThread = '{$thread->getPKValue()}') AS temp")))
+        {
+            return array();
+        }
+        $data = $result->fetch();
+        return array('positive' => $data['positive'], 'negative' => $data['negative'], 'neutral' => $data['neutral']);
 
     }
 
+    /**
+     * returns the number of positive votes for the thread
+     *
+     * @param object $thread
+     * @access public
+     * @return array
+     */
+    public function getPositiveForThread(Thread $thread)
+    {
+        if (!$thread->isLoaded())
+        {
+            return array();
+        }
+        list($positive, $negative, $neutral) = $this->getResultForThread($thread);
+        return $positive;
+    }
 
+    /**
+     * returns the number of negative votes for the thread
+     *
+     * @param object $thread
+     * @access public
+     * @return int
+     */
+    public function getNegativeForThread(Thread $thread)
+    {
+        if (!$thread->isLoaded())
+        {
+            return array();
+        }
+        list($positive, $negative, $neutral) = $this->getResultForThread($thread);
+        return $negative;
+    }
+
+    /**
+     * returns the number of neutral votes for the thread
+     *
+     * @param object $thread
+     * @access public
+     * @return int
+     */
+    public function getNeutralForThread(Thread $thread)
+    {
+        if (!$thread->isLoaded())
+        {
+            return array();
+        }
+        list($positive, $negative, $neutral) = $this->getResultForThread($thread);
+        return $neutral;
+    }
+
+    /**
+     * returns the vote that a given member made for a given thread
+     *
+     * @param object $thread
+     * @param object $member
+     * @access public
+     * @return object|bool
+     */
+    public function findVote(Thread $thread, Member $member)
+    {
+        if (!$thread->isLoaded() || !$member->isLoaded())
+        {
+            return false;
+        }
+        return $this->findByWhere("IdThread = '{$thread->getPKValue()}' AND IdMember = '{$member->getPKValue()}'");
+    }
+
+    /**
+     * sets a vote for a given member
+     *
+     * @param object $thread
+     * @param object $member
+     * @param string $vote
+     * @access public
+     * @return bool
+     */
+    public function castVote(Thread $thread, Member $member, $vote = null)
+    {
+        if ($this->isLoaded() || !$thread->isLoaded() || !$member->isLoaded())
+        {
+            return false;
+        }
+        $this->IdThread = $thread->getPKValue();
+        $this->IdMember = $member->getPKValue();
+        $this->Vote = ((!empty($vote)) ? $vote : 'neutral');
+        $this->created = date('Y-m-d H:i:s');
+        return $this->insert();
+    }
+
+    /**
+     * updates a vote for a given member
+     *
+     * @param string $vote
+     * @access public
+     * @return bool
+     */
+    public function updateVote($vote = null)
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $this->Vote = ((!empty($vote)) ? $vote : 'neutral');
+        $this->updated = date('Y-m-d H:i:s');
+        return $this->update();
+    }
 }

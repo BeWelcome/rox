@@ -15,44 +15,82 @@ class Thread extends RoxEntityBase
         parent::__construct();
         if (intval($thread_id))
         {
-            $this->findById(intval($thread_id));
+            $this->findByThreadId(intval($thread_id));
         }
     }
-
 
     /**
-     * Uses an array of terms to create a create to search for groups with
-     * simple or search on names for now
+     * fetches a thread by threadid
      *
-     * @todo implement proper group search - this will wait on various db implementations
-     * @param array $terms - array of strings to be used in search
-     * @return mixed false or group of arrays that match any of the terms
+     * @param int $id
      * @access public
+     * @return object|bool
      */
-    public function findBySearchTerms($terms = array(), $page = 0)
+    public function findByThreadId($id)
     {
-        if (empty($terms))
-        {
-            return $this->findAll($page, 10);
-        }
-        
-        foreach ($terms as &$term)
-        {
-            if (is_string($term))
-            {
-                $term = "{$this->_table_name}.Name LIKE '%" . $this->dao->escape($term) . "%'";
-            }
-            else
-            {
-                unset($term);
-            }
-        }
-        
-        $clause = implode(' or ', $terms);
-
-        return $this->findByWhereMany($clause, $page, 10);
-
+        return $this->findByWhere("threadid = '{$this->dao->escape($id)}'");
     }
 
+    /**
+     * returns array of thread votes that member has made
+     *
+     * @access public
+     * @return array
+     */
+    public function getVotes()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+        return $this->createEntity('ThreadVote')->getVotesForThread($this);
+    }
 
+    /**
+     * returns array of thread votes that member has made
+     *
+     * @access public
+     * @return array
+     */
+    public function getVoteResult()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+        return $this->createEntity('ThreadVote')->getResultForThread($this);
+    }
+
+    /**
+     * returns the count of positive votes for the thread
+     *
+     * @access public
+     * @result int
+     */
+    public function getPositiveVoteCount()
+    {
+        return getPositiveForThread($this);
+    }
+
+    /**
+     * returns the count of negative votes for the thread
+     *
+     * @access public
+     * @result int
+     */
+    public function getNegativeVoteCount()
+    {
+        return getNegativeForThread($this);
+    }
+
+    /**
+     * returns the count of neutral votes for the thread
+     *
+     * @access public
+     * @result int
+     */
+    public function getNeutralVoteCount()
+    {
+        return getNeutralForThread($this);
+    }
 }

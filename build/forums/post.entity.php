@@ -19,39 +19,16 @@ class Post extends RoxEntityBase
         }
     }
 
-
     /**
-     * Uses an array of terms to create a create to search for groups with
-     * simple or search on names for now
+     * fetches a post by postid
      *
-     * @todo implement proper group search - this will wait on various db implementations
-     * @param array $terms - array of strings to be used in search
-     * @return mixed false or group of arrays that match any of the terms
+     * @param int $id
      * @access public
+     * @return object|bool
      */
-    public function findBySearchTerms($terms = array(), $page = 0)
+    public function findByPostId($id)
     {
-        if (empty($terms))
-        {
-            return $this->findAll($page, 10);
-        }
-        
-        foreach ($terms as &$term)
-        {
-            if (is_string($term))
-            {
-                $term = "{$this->_table_name}.Name LIKE '%" . $this->dao->escape($term) . "%'";
-            }
-            else
-            {
-                unset($term);
-            }
-        }
-        
-        $clause = implode(' or ', $terms);
-
-        return $this->findByWhereMany($clause, $page, 10);
-
+        return $this->findByWhere("postid = '{$this->dao->escape($id)}'");
     }
 
     /**
@@ -68,5 +45,68 @@ class Post extends RoxEntityBase
             return 0;
         }
         return $this->countWhere("IdWriter = '{$member->getPKValue()}'");
+    }
+
+    /**
+     * returns array of post votes that member has made
+     *
+     * @access public
+     * @return array
+     */
+    public function getVotes()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+        return $this->createEntity('PostVote')->getVotesForPost($this);
+    }
+
+    /**
+     * returns array of post votes that member has made
+     *
+     * @access public
+     * @return array
+     */
+    public function getVoteResult()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+        return $this->createEntity('PostVote')->getResultForPost($this);
+    }
+
+    /**
+     * returns the count of positive votes for the post
+     *
+     * @access public
+     * @result int
+     */
+    public function getPositiveVoteCount()
+    {
+        return getPositiveForPost($this);
+    }
+
+    /**
+     * returns the count of negative votes for the post
+     *
+     * @access public
+     * @result int
+     */
+    public function getNegativeVoteCount()
+    {
+        return getNegativeForPost($this);
+    }
+
+    /**
+     * returns the count of neutral votes for the post
+     *
+     * @access public
+     * @result int
+     */
+    public function getNeutralVoteCount()
+    {
+        return getNeutralForPost($this);
     }
 }

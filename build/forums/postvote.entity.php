@@ -9,6 +9,7 @@ class PostVote extends RoxEntityBase
 
     protected $_table_name = 'forums_posts_votes';
 
+    protected $_validations = array('Choice');
 
     public function __construct()
     {
@@ -17,7 +18,7 @@ class PostVote extends RoxEntityBase
 
 
     /**
-     * fetches all votes for a post
+     * fetches all post votes for a post
      *
      * @param object $post
      * @access public

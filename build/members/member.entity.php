@@ -989,6 +989,27 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return preg_split("/','/", $set); // Split into and array
     }
 
+    /**
+     * returns array of all post votes the member has cast
+     *
+     * @access public
+     * @return array
+     */
+    public function getAllPostVotes()
+    {
+        return $this->createEntity('PostVote')->getVotesForMember($this);
+    }
+
+    /**
+     * returns array of all thread votes the member has cast
+     *
+     * @access public
+     * @return array
+     */
+    public function getAllThreadVotes()
+    {
+        return $this->createEntity('ThreadVote')->getVotesForMember($this);
+    }
+
 }
 
-?>

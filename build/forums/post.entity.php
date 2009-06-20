@@ -54,5 +54,19 @@ class Post extends RoxEntityBase
 
     }
 
-
+    /**
+     * returns a count of how many posts a member has made
+     *
+     * @param object $member - Member entity
+     * @access public
+     * @return int
+     */
+    public function getMemberPostCount(Member $member)
+    {
+        if (!$member->isLoaded())
+        {
+            return 0;
+        }
+        return $this->countWhere("IdWriter = '{$member->getPKValue()}'");
+    }
 }

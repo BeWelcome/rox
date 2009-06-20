@@ -18,16 +18,20 @@ class RoxEntityFactory
      * @var array
      */
     private $_entities = array(
-        'Note'              => 'build/notify/note.entity',
         'Group'             => 'build/groups/group.entity',
-        'Member'            => 'build/members/member.entity',
-        'Message'           => 'build/messages/message.entity',
         'GroupMembership'   => 'build/groups/groupmembership.entity',
-        'Role'              => 'build/rights/role.entity',
-        'Privilege'         => 'build/rights/privilege.entity',
-        'RolePrivilege'     => 'build/rights/roleprivilege.entity',
+        'Member'            => 'build/members/member.entity',
         'MemberRole'        => 'build/rights/memberrole.entity',
-        'PrivilegeScope'    => 'build/rights/privilegescope.entity'
+        'Message'           => 'build/messages/message.entity',
+        'Note'              => 'build/notify/note.entity',
+        'Post'              => 'build/forums/post.entity',
+        'PostVote'          => 'build/forums/postvote.entity',
+        'Privilege'         => 'build/rights/privilege.entity',
+        'PrivilegeScope'    => 'build/rights/privilegescope.entity',
+        'Role'              => 'build/rights/role.entity',
+        'RolePrivilege'     => 'build/rights/roleprivilege.entity',
+        'Thread'            => 'build/forums/thread.entity',
+        'ThreadVote'        => 'build/forums/threadvote.entity',
         );
 
     /**

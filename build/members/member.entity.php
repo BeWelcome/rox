@@ -577,20 +577,11 @@ SQL;
 	*/
 	public function forums_posts_count() {
 		// Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
-		if (isset($this->ForumPostCount)) {
-			return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
+		if (!$this->ForumPostCount)
+        {
+            $this->ForumPostCount = $this->createEntity('Post')->getMemberPostCount($this);
 		}
-		else {
-			$sql = "SELECT count(*) as cnt from forums_posts where IdWriter=".$this->id ;
-			$rr = $this->singleLookup($sql);
-			if ($rr) {
-				$this->ForumPostCount=$rr->cnt;
-			}
-			else {
-				$this->ForumPostCount=0 ;
-			}
-			return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
-		}
+        return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
 	} // forums_posts_count
 	
     public function get_verification_status()

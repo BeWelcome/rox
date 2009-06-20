@@ -40,7 +40,7 @@ $uri = implode('/', $request);
 
 ?>
 
-<table bgcolor="lightgray" align="left" border="3">
+<table class="full" bgcolor="lightgray" align="left" border="3">
 <?
 if (isset($DataPost->Thread->title))
 ?>
@@ -49,62 +49,62 @@ if (isset($DataPost->Thread->title))
         <input type="hidden" name="IdThread"  value="<?=$DataPost->Thread->id;?>" /><br />
         <input type="hidden" name="IdPost"  value="<?=$DataPost->Post->id;?>"/>
 <?
-		echo "<tr><td>" ;
-		if (isset($DataPost->UserNameStarter)) echo "thread started by member ".$DataPost->UserNameStarter;
-		echo "</td>" ;
-		echo "<td>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td>";
-		echo "<td><a href=\"forums/s",$DataPost->Thread->id,"/#",$DataPost->Post->id,"\">go to post</a></td>" ;
-		echo "</tr>" ;
-		echo "<tr><td colspan=\"3\">",$DataPost->Thread->Title[0]->Sentence,"</td></tr>" ;
-		echo "<tr><td colspan=\"3\" >",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
-		if (isset($DataPost->Report->PostComment))  {
-			echo "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\">",$DataPost->Report->PostComment,"</td></tr>" ;
-			$PostComment=$DataPost->Report->PostComment ;
-		}
-		echo "<tr><td colspan=\"3\"><textarea name='PostComment' cols=80 rows=8></textarea>",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
-		echo "<tr><td colspan=\"1\">" ;
-		echo "Status <select Name='Status'>" ;
-		if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status ; else $Status="" ;
-		echo "<option value='Open'" ;
-		if ($Status=='Open') echo " selected" ;
-		echo ">Open</option>" ;
-		echo "<option value='OnDiscussion'" ;
-		if ($Status=='OnDiscussion') echo " selected" ;
-		echo ">OnDiscussion</option>" ;
-		echo "<option value='Closed'" ;
-		if ($Status=='Closed') echo " selected" ;
-		echo ">Closed</option>" ;
-		echo "</select></td>" ;
-		$IdReporter=0 ;
-		if (isset($DataPost->Report->IdReporter)) $IdReporter=$DataPost->Report->IdReporter ; 
-		echo "<input type='hidden' name='IdReporter' value='".$IdReporter."'>" ;
-		if ($this->BW_Right->HasRight("ForumModerator")) {
-			echo "<td colspan=\"1\">" ;
-			echo "Type <select Name='Type'>" ;
-			if (isset($DataPost->Report->Type)) $Type=$DataPost->Report->Type ; else $Type="" ;
-			echo "<option value='SeeText'" ;
-			if ($Status=='SeeText') echo " selected" ;
-			echo ">SeeText</option>" ;
-			echo "<option value='AllowMeToEdit'" ;
-			if ($Status=='AllowMeToEdit') echo " selected" ;
-			echo ">AllowMeToEdit</option>" ;
-			echo "<option value='Insults'" ;
-			if ($Status=='Insults') echo " selected" ;
-			echo ">Insults</option>" ;
-			echo "<option value='RemoveMyPost'" ;
-			if ($Status=='RemoveMyPost') echo " selected" ;
-			echo ">RemoveMyPost</option>" ;
-			echo "<option value='Others'" ;
-			if ($Status=='Others') echo " selected" ;
-			echo ">Others</option>" ;
-			echo "</select></td>" ;
-			echo "<td colspan=\"1\"></td></tr>" ;
-		}
-		else {
-			echo "<td></td>" ;
-		}
-		echo "</tr>" ;
-		
+        echo "<tr><td>" ;
+        if (isset($DataPost->UserNameStarter)) echo "thread started by member ".$DataPost->UserNameStarter;
+        echo "</td>" ;
+        echo "<td>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td>";
+        echo "<td><a href=\"forums/s",$DataPost->Thread->id,"/#",$DataPost->Post->id,"\">go to post</a></td>" ;
+        echo "</tr>" ;
+        echo "<tr><td colspan=\"3\">",$DataPost->Thread->Title[0]->Sentence,"</td></tr>" ;
+        echo "<tr><td colspan=\"3\" >",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
+        if (isset($DataPost->Report->PostComment))  {
+            echo "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\">",$DataPost->Report->PostComment,"</td></tr>" ;
+            $PostComment=$DataPost->Report->PostComment ;
+        }
+        echo "<tr><td colspan=\"3\"><textarea name='PostComment' class=\"long\" rows=8></textarea>",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
+        echo "<tr><td colspan=\"1\">" ;
+        echo "Status <select Name='Status'>" ;
+        if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status ; else $Status="" ;
+        echo "<option value='Open'" ;
+        if ($Status=='Open') echo " selected" ;
+        echo ">Open</option>" ;
+        echo "<option value='OnDiscussion'" ;
+        if ($Status=='OnDiscussion') echo " selected" ;
+        echo ">OnDiscussion</option>" ;
+        echo "<option value='Closed'" ;
+        if ($Status=='Closed') echo " selected" ;
+        echo ">Closed</option>" ;
+        echo "</select></td>" ;
+        $IdReporter=0 ;
+        if (isset($DataPost->Report->IdReporter)) $IdReporter=$DataPost->Report->IdReporter ; 
+        echo "<input type='hidden' name='IdReporter' value='".$IdReporter."'>" ;
+        if ($this->BW_Right->HasRight("ForumModerator")) {
+            echo "<td colspan=\"1\">" ;
+            echo "Type <select Name='Type'>" ;
+            if (isset($DataPost->Report->Type)) $Type=$DataPost->Report->Type ; else $Type="" ;
+            echo "<option value='SeeText'" ;
+            if ($Status=='SeeText') echo " selected" ;
+            echo ">SeeText</option>" ;
+            echo "<option value='AllowMeToEdit'" ;
+            if ($Status=='AllowMeToEdit') echo " selected" ;
+            echo ">AllowMeToEdit</option>" ;
+            echo "<option value='Insults'" ;
+            if ($Status=='Insults') echo " selected" ;
+            echo ">Insults</option>" ;
+            echo "<option value='RemoveMyPost'" ;
+            if ($Status=='RemoveMyPost') echo " selected" ;
+            echo ">RemoveMyPost</option>" ;
+            echo "<option value='Others'" ;
+            if ($Status=='Others') echo " selected" ;
+            echo ">Others</option>" ;
+            echo "</select></td>" ;
+            echo "<td colspan=\"1\"></td></tr>" ;
+        }
+        else {
+            echo "<td></td>" ;
+        }
+        echo "</tr>" ;
+        
 
 echo "<th valign=center align=center colspan=3><input type=\"submit\" name=\"submit\" value=\"add to report\"></th>" ;
 

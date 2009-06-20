@@ -1316,8 +1316,9 @@ WHERE `threadid` = '%d' ",
 		
 
 		$UsernameAddTime='at '.date("d-m-Y").' '.date("H:i").'(server time) <a href="'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a> wrote:<br/>' ;
-		if ($this->BW_Right->HasRight("ForumModerator")) {
-			$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment'])."<hr />\n".$OldReport->PostComment ;
+		if (($this->BW_Right->HasRight("ForumModerator")) and (isset($OldReport->IdReporter))) {
+			$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
+			if (isset($OldReport->PostComment)) $PostComment=$PostComment."<hr />\n".$OldReport->PostComment ;
 			$ss="update reports_to_moderators set  LastWhoSpoke='Moderator',PostComment='".$this->dao->escape($PostComment)."',IdModerator=".$_SESSION["IdMember"].",Status='".$this->dao->escape($Status)."',Type='".$this->dao->escape($Type)."',IdModerator=".$_SESSION['IdMember']." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 		}
 		else {
@@ -1348,8 +1349,8 @@ WHERE `threadid` = '%d' ",
 	*				in other case an array of reports is returned
 	*/
 	public function GetReports($IdPost,$IdReporter=0) {
-		if (!empty($IdReporter)) {
-			$tt=array() ;
+		$tt=array() ;
+		if (empty($IdReporter)) {
 			$ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where IdPost=".$IdPost." and members.id=IdReporter" ;
 			$s = $this->dao->query($ss);
 			while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
@@ -1360,7 +1361,8 @@ WHERE `threadid` = '%d' ",
 		else {
 			$ss = "select IdReporter from reports_to_moderators where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 			$s = $this->dao->query($ss);
-			return($s->fetch(PDB::FETCH_OBJ))  ;
+			array_push($tt,$s->fetch(PDB::FETCH_OBJ)) ;
+			return($tt)  ;
 		}
 	} // end of GetReports
 	 /**	 

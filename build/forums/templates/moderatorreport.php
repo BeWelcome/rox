@@ -52,7 +52,8 @@ if (isset($DataPost->Thread->title))
 		echo "<tr><td>" ;
 		if (isset($DataPost->UserNameStarter)) echo "thread started by member ".$DataPost->UserNameStarter;
 		echo "</td>" ;
-		echo "<td>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td><td><a href=\"forums/s<",$DataPost->Thread->id,"/#",$DataPost->Report->IdPost,"\">go to post</a></td>" ;
+		echo "<td>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td>";
+		echo "<td><a href=\"forums/s",$DataPost->Thread->id,"/#",$DataPost->Post->id,"\">go to post</a></td>" ;
 		echo "</tr>" ;
 		echo "<tr><td colspan=\"3\">",$DataPost->Thread->Title[0]->Sentence,"</td></tr>" ;
 		echo "<tr><td colspan=\"3\" >",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;

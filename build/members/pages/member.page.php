@@ -25,8 +25,9 @@ class MemberPage extends PageWithActiveSkin
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
         $comments_count = $member->count_comments(); 
+		$ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
         if ($this->myself) {
-            return array(
+			$tt=array(
                 array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
                 array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors'),
@@ -37,10 +38,10 @@ class MemberPage extends PageWithActiveSkin
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", $ww->Gallery),
-                array('forum', "forums/member/$username", $ww->ViewForumPosts)
+                array('forum', "forums/member/$username", $ViewForumPosts) 
             );
         } else {
-            return array(
+            $tt= array(
                 array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
                 array('commmentsadd', "members/$username/comments/add", $ww->addcomments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
@@ -51,9 +52,28 @@ class MemberPage extends PageWithActiveSkin
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", $ww->Gallery),
-                array('forum', "forums/member/$username", $ww->ViewForumPosts)
+                array('forum', "forums/member/$username", $ViewForumPosts),
+				array('notes','bw/mycontacts.php?IdContact='.$this->member->id,$words->get('ViewMyNotesForThisMember'))
             );
         }
+		if (MOD_right::get()->HasRight('SafetyTeam')) {
+			array_push($tt,array('admin','bw/updatemandatory.php?cid='.$username,'Update Mandatory(SD)') ) ;
+		}
+		if (MOD_right::get()->HasRight('Rights')) {
+			array_push($tt,array('admin','bw/admin/adminrights.php?username='.$username,'AdminRights') ) ;
+		}
+		if (MOD_right::get()->HasRight('Flags')) {
+			array_push($tt,array('admin','bw/admin/adminflags.php?username='.$username,'AdminFlags') ) ;
+		}
+		if (MOD_right::get()->HasRight('Accepter','All')) {
+			array_push($tt,array('admin','bw/editmyptofile.php?cid='.$username,'BW Edit Profile #'.$this->member->id) ) ;
+		}
+		if (MOD_right::get()->HasRight('Logs')) {
+			array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,'See Logs') ) ;
+		}
+
+
+		return($tt) ;
     }
     
     protected function columnsArea()

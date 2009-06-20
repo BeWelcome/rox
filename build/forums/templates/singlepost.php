@@ -219,7 +219,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
        
     </div> <!-- forumsmessage -->
 	<?php 
-	if (isset($_SESSION["IdMember"])) {
+	if (isset($_SESSION["IdMember"]) and (isset($post->IdPost))) {
 		if ($this->BW_Right->HasRight("ForumModerator")) {
 			$TheReports=$this->_model->GetReports($post->IdPost) ;
 			$max=count($TheReports) ;

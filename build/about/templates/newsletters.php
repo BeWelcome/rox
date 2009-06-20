@@ -29,7 +29,10 @@ if (APP_user::isBWLoggedIn('NeedMore,Pending')) {
 else { 
     $Username = "guest";
 }
-$news_items = array("June2008",
+$news_items = array(
+					"June2009",
+					"February2009",
+					"September2008",
                     "April2008",
                     "February2008",
                     "October2007",

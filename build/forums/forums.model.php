@@ -4067,6 +4067,7 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
 		$text=$text."<hr />".$message ;
 		$mReceiver=new Member($IdReporter) ;
 		$Email=$mReceiver->get_email() ;
+		$sender = "noreply@bewelcome.org" ;
 	}
 	else {
 		$subject = "moderator report from ".$UsernameReporter." for the post #".$IdPost." written by ".$UsernamePostWriter ;

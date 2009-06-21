@@ -1156,6 +1156,9 @@ WHERE `postid` = $this->messageId
 			if ($d_country=='none') {
 				$d_country='NULL' ;
 			}
+			else {
+				$d_country="'".$d_country."'" ;
+			}
 		}
 
 		if(empty($vars['d_admin'])) {
@@ -1165,6 +1168,9 @@ WHERE `postid` = $this->messageId
 			$d_admin=$vars['d_admin'] ;
 			if ($d_admin=='none') {
 				$d_admin='NULL' ;
+			}
+			else {
+				$d_admin="'".$d_admin."'" ;
 			}
 		}
 
@@ -1185,8 +1191,8 @@ SET `title` = '%s',`geonameid` = %s, `admincode` = %s, `countrycode` = %s, `cont
 WHERE `threadid` = '%d' ", 
             $this->dao->escape(strip_tags($vars['topic_title'])), 
             "'".$d_geoname."'" ,
-            "'".$d_admin."'" ,
-            "'".$d_country."'" ,
+            $d_admin ,
+            $d_country ,
             "'".$d_continent."'" ,
             $threadid
         );

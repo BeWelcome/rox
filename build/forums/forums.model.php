@@ -1973,6 +1973,9 @@ VALUES ('%d', NOW(), '%s','%d',%d,'%s')
 			if ($d_country=='none') {
 				$d_country='NULL' ;
 			}
+			else {
+				$d_country="'".$d_country."'" ;
+			}
 		}
 
 		if(empty($vars['d_admin'])) {
@@ -1982,6 +1985,9 @@ VALUES ('%d', NOW(), '%s','%d',%d,'%s')
 			$d_admin=$vars['d_admin'] ;
 			if ($d_admin=='none') {
 				$d_admin='NULL' ;
+			}
+			else {
+				$d_admin="'".$d_admin."'" ;
 			}
 		}
 
@@ -2011,8 +2017,8 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
             $postid,
             $postid, 
             "'".$d_geoname."'",
-            "'".$d_admin."'",
-            "'".$d_country."'",
+            $d_admin,
+            $d_country,
             "'".$d_continent."'",$this->GetLanguageChoosen(),$IdGroup,$ThreadVisibility 
         );
         $result = $this->dao->query($query);
@@ -4081,10 +4087,10 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
 		$Email=$mModerator->get_email() ;
 		$mReporter=new Member($IdReporter) ;
 		// set the sender
-		$sender = $mReporter->get_email() ;
+		$sender = strip_tags(str_replace("%40","@",$mReporter->get_email())) ;
 	}
-	$t_receiver=array() ;
-	$t_receiver[0]=$Email ;
+	$Email=strip_tags(str_replace("%40","@",$Email)) ;
+	
                 
 	
 /*
@@ -4094,32 +4100,34 @@ echo "text=".$text,"<br />" ;
 die("force stop") ;
 */
 	
-			
-	if (count($t_receiver)<=0)  {
-		die("Problem, invalid email for sending a moderator report notification") ;
-	}
-				
-	$recipients  =& new Swift_RecipientList();
-	foreach ($t_receiver as $receiver) { // send to each valid receiver        
-		$recipients ->addTo($receiver); // add the recipent
-	} // end of send to to each valid receiver
-				
+
     //Start Swift
     $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
-        
-         
+				
     //Create a message
     $message =& new Swift_Message($subject);
         
     //Add some "parts"
     $message->attach(new Swift_Message_Part($text));
 
+    // Using a html-template
+    ob_start();
+    require 'templates/mail/mail_html.php';
+    $message_html = ob_get_contents();
+    ob_end_clean();
+    $message->attach(new Swift_Message_Part($message_html, "text/html"));
+
     //Now check if Swift actually sends it
-    if ($swift->send($message, $recipients , $sender)) {
-        MOD_log::get()->write("report for post #".$IdPost." sent to ".$recipents[0]." from ".$sender, "Forum");
+     MOD_log::get()->write("about sending report for post #".$IdPost." message=<br />".$text."<br /> sent to [".$Email."] from [".$sender."] for post #".$IdPost, "Forum");
+    if ($swift->send($message, $Email , $sender)) {
+        MOD_log::get()->write("report for post #".$IdPost." sent to ".$Email." from ".$sender." for post #".$IdPost, "Forum");
         $status = true;
     } else {
-        MOD_log::get()->write("moderator report for post #".$IdPost, "Forum");
+/*
+	print_r($recipients) ;
+	die(0) ;
+	*/
+        MOD_log::get()->write("<b>FAILURE</b> to report for post #".$IdPost." sent to ".$recipents[0]." from ".$sender." for post #".$IdPost, "Forum");
         $status = false;
     }
 } // end of MailTheReport

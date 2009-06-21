@@ -396,11 +396,6 @@ WHERE
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
 
-
-				// Added by JeanYves to be able to manage in a dynamic way the changes in Param Table
-				$result = $localDao->query("SELECT * FROM  `params` limit 1");
-        $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
-
         $ip_string="196.168.1.1";
         // prior to any updates, the entry in the table guestsonline 
         // is always deleted
@@ -462,20 +457,12 @@ WHERE
             // for not logged members or bots activity will be displayable in whoisonline
 						
 						
-						// Added by JeanYves to be able to manage in a dynamic way the status of a member and teh changes in Param Table
+			// Added by JeanYves to be able to manage in a dynamic way the status of a member and teh changes in Param Table
 						
-$result = $localDao->query(
-                    "
-SELECT
-    * 
-FROM
-    params
-                    "
-                );
-                $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
+
 								
-								if (isset($_SESSION["IdMember"])) { // if the user is a known member
-$result = $localDao->query(
+			if (isset($_SESSION["IdMember"])) { // if the user is a known member
+				$result = $localDao->query(
                     "
 SELECT
     Username,Status 

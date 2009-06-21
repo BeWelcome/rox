@@ -414,6 +414,7 @@ class ForumsController extends PAppController
     public function showExternalLatest() { 
         $request = $this->request;    
         $this->parseRequest();    
+        $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
         $this->_model->prepareForum();
         $this->_view->uri ='forums/';  
         $this->_view->showExternal();

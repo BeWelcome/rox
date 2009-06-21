@@ -4116,6 +4116,7 @@ die("force stop") ;
 
     //Now check if Swift actually sends it
     if ($swift->send($message, $recipients , $sender)) {
+        MOD_log::get()->write("report for post #".$IdPost." sent to ".$recipents[0]." from ".$sender, "Forum");
         $status = true;
     } else {
         MOD_log::get()->write("moderator report for post #".$IdPost, "Forum");

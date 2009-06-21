@@ -4080,7 +4080,6 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
 		$mModerator=new Member($IdModerator) ;
 		$Email=$mModerator->get_email() ;
 		$mReporter=new Member($IdReporter) ;
-		$Email=$mReceiver->get_email() ;
 		// set the sender
 		$sender = $mReporter->get_email() ;
 	}

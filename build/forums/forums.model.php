@@ -898,12 +898,14 @@ WHERE `geonameid` = '%d'
     */
     public function prepareForum() {
         if (!$this->geonameid && !$this->countrycode && !$this->continent && !$this->IdGroup) {
-
-			if ($this->TopMode==Forums::CV_TOPMODE_LASTPOSTS) {
+			if($this->TopMode==Forums::CV_TOPMODE_CATEGORY) {
+				$this->boardTopLevelCategories();
+			}
+			elseif ($this->TopMode==Forums::CV_TOPMODE_LASTPOSTS) {
 				$this->boardTopLevelLastPosts();
 			}
-			else if($this->TopMode==Forums::CV_TOPMODE_CATEGORY) {
-				$this->boardTopLevelCategories();
+			else {
+				$this->boardTopLevelLastPosts();
 			}
 		} else if ($this->continent && !$this->geonameid && !$this->countrycode) { 
             $this->boardContinent();

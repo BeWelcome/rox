@@ -54,11 +54,13 @@ $threadsliced = array_slice($threads, 0, 5);
         ?>
             <tr>
                 <td class="forumsboardthreadtitle"><?php echo '<img src="styles/css/minimal/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
-                    <a href="<?php echo $url; ?>" class="news">
                     <?php
 					if ($thread->ThreadDeleted=='Deleted') {
 						echo "[Deleted]" ;
 					}
+					?>
+                    <a href="<?php echo $url; ?>" class="news">
+                    <?php
                     echo $words->fTrad($thread->IdTitle);
                     ?></a><br />
                     <span class="small grey">by <a href="people/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> -

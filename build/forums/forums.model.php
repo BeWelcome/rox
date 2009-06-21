@@ -1326,6 +1326,9 @@ WHERE `threadid` = '%d' ",
 			$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
 			if (isset($OldReport->PostComment)) $PostComment=$PostComment."<hr />\n".$OldReport->PostComment ;
 			$ss="update reports_to_moderators set  LastWhoSpoke='Moderator',PostComment='".$this->dao->escape($PostComment)."',IdModerator=".$_SESSION["IdMember"].",Status='".$this->dao->escape($Status)."',Type='".$this->dao->escape($Type)."',IdModerator=".$_SESSION['IdMember']." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+			$this->dao->query($ss);
+			MailTheReport($IdPost,$IdReporter,$PostComment,0,$Status,1) ;
+
 		}
 		else {
 			if ($IdReporter!=$_SESSION["IdMember"]) {
@@ -1335,14 +1338,16 @@ WHERE `threadid` = '%d' ",
 			if (isset($OldReport->IdReporter)) {
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment'])."<hr />\n".$OldReport->PostComment ;
 				$ss="update reports_to_moderators set LastWhoSpoke='Member',PostComment='".$this->dao->escape($PostComment)."',Status='".$this->dao->escape($Status)."'"." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
+				$this->dao->query($ss);
+				MailTheReport($IdPost,$OldReport->IdReporter,$PostComment,$OldReport->IdModerator,$Status,0) ;
 			}
 			else {
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
 				$ss="insert into reports_to_moderators(PostComment,created,IdPost,IdReporter,Status) " ;
 				$ss=$ss." values('".$this->dao->escape($PostComment)."',now(),".$IdPost.",".$_SESSION["IdMember"].",'".$Status."')" ;
+				$this->dao->query($ss);
 			}
 		}
-		$this->dao->query($ss);
 	    MOD_log::get()->write("Adding to report for post #".$IdPost."<br />".$PostComment."<br />Status=".$Status,"Forum") ; 				
         PPostHandler::clearVars();
         return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid.'/#'.$IdPost;
@@ -4019,5 +4024,103 @@ class Board implements Iterator {
 
 }
 
+/**
+     * Notify volunteers
+     * // TODO: create appropriate template
+     * @param array $vars with username
+*/
+
+function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus,$ToMember=0)    {
+    //Load the files we'll need
+    require_once "bw/lib/swift/Swift.php";
+    require_once "bw/lib/swift/Swift/Connection/SMTP.php";
+    require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        
+		
+	$ss=" select forums_threads.title as ThreadTitle,forums_threads.id as IdThread,writer.Username as UsernamePostWriter,reporter.Username as UsernameReporter " ;
+	$ss=$ss." from forums_posts,members as writer,members as reporter,forums_threads where writer.id=forums_posts.IdWriter and reporter.id=".$IdReporter." and forums_posts.id=".$IdPost." and forums_threads.id=forums_posts.threadid" ; 
+	$qry=mysql_query($ss) ;
+    if (!$qry) {
+        throw new PException('Could not retrieve '.$ss);
+    }
+	$rPost=mysql_fetch_object($qry) ;
+	$IdThread=$rPost->IdThread ;
+	$UsernamePostWriter=$rPost->UsernamePostWriter ;
+	$UsernameReporter=$rPost->UsernameReporter ;
+        
+    // FOR TESTING ONLY (using Gmail SMTP Connection for example):
+    // $smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
+    // $smtp->setUsername("YOURUSERNAME");
+    // $smtp->setpassword("YOURPASSWORD");
+    // $swift =& new Swift($smtp);
+        
+    $language = $_SESSION['lang'];    // TODO: convert to something readable
+		
+	$reportlink="http://www.bewelcome.org/forums/reporttomod/".$IdPost ;
+	$postlink="http://www.bewelcome.org/forums/s".$IdThread."/#".$IdPost ;
+	if ($ToMember==1) {
+		$subject = "Forum moderator report for post #".$IdPost." to ".$UsernameReporter ;
+		$text="A BeWelcome moderator has answered your request<br />" ;
+		$text=$text."Thread: <b>".$rPost->ThreadTitle."</b><br />" ;
+		$text=$text."The status of this report is ".$ReportStatus ;
+		$text=$text."You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;
+		$text=$text."<hr />".$message ;
+		$mReceiver=new Member($IdReporter) ;
+		$Email=$mReceiver->get_email() ;
+	}
+	else {
+		$subject = "moderator report from ".$UsernameReporter." for the post #".$IdPost." written by ".$UsernamePostWriter ;
+		$text="member <a href=\"http://www.bewelcome.org/member/".$UsernameReporter."\">".$UsernameReporter."</a>" ;
+		$text=$text." has written a report about member <a href=\"http://www.bewelcome.org/member/".$UsernamePostWriter."\">".$UsernamePostWriter."</a> for post <a href=\"".$postlink."\">".$postlink."</a>" ;
+		$text=$text."Thread: <b>".$rPost->ThreadTitle."</b><br />" ;
+		$text.="The status of this report is ".$ReportStatus ;
+		$text.="You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;
+		$text.="<hr />".$message ;
+		$mModerator=new Member($IdModerator) ;
+		$Email=$mModerator->get_email() ;
+		$mReporter=new Member($IdReporter) ;
+		$Email=$mReceiver->get_email() ;
+		// set the sender
+		$sender = $mReporter->get_email() ;
+	}
+	$t_receiver=array() ;
+	$t_receiver[0]=$Email ;
+                
+	
+/*
+echo "Email=".$Email,"<br />" ; ;
+echo "Subject=".$subject,"<br />" ;
+echo "text=".$text,"<br />" ;
+die("force stop") ;
+*/
+	
+			
+	if (count($t_receiver)<=0)  {
+		die("Problem, invalid email for sending a moderator report notification") ;
+	}
+				
+	$recipients  =& new Swift_RecipientList();
+	foreach ($t_receiver as $receiver) { // send to each valid receiver        
+		$recipients ->addTo($receiver); // add the recipent
+	} // end of send to to each valid receiver
+				
+    //Start Swift
+    $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+        
+         
+    //Create a message
+    $message =& new Swift_Message($subject);
+        
+    //Add some "parts"
+    $message->attach(new Swift_Message_Part($text));
+
+    //Now check if Swift actually sends it
+    if ($swift->send($message, $recipients , $sender)) {
+        $status = true;
+    } else {
+        MOD_log::get()->write("moderator report for post #".$IdPost, "Forum");
+        $status = false;
+    }
+} // end of MailTheReport
 
 ?>

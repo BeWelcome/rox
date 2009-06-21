@@ -40,6 +40,9 @@ $threadsliced = array_slice($threads, 0, 5);
     //[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
         //$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
         $url = ForumsView::threadURL($thread);
+		if ($url{0}=='s') { // JeanYves Hack/Fix to be sure that forums/ is written in the beginning of the links !
+			$url="forums/".$url ;
+		}
 
         $max = $thread->replies + 1;
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);

@@ -57,11 +57,8 @@ if (isset($DataPost->Thread->title))
         echo "</tr>" ;
         echo "<tr><td colspan=\"3\">",$DataPost->Thread->Title[0]->Sentence,"</td></tr>" ;
         echo "<tr><td colspan=\"3\" >",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
-        if (isset($DataPost->Report->PostComment))  {
-            echo "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\">",$DataPost->Report->PostComment,"</td></tr>" ;
-            $PostComment=$DataPost->Report->PostComment ;
-        }
         echo "<tr><td colspan=\"3\"><textarea name='PostComment' class=\"long\" rows=8></textarea>",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
+		
         echo "<tr><td colspan=\"1\">" ;
         echo "Status <select Name='Status'>" ;
         if (isset($DataPost->Report->Status)) $Status=$DataPost->Report->Status ; else $Status="" ;
@@ -107,7 +104,11 @@ if (isset($DataPost->Thread->title))
         
 
 echo "<th valign=center align=center colspan=3><input type=\"submit\" name=\"submit\" value=\"add to report\"></th>" ;
-
+if (isset($DataPost->Report->PostComment))  {
+    echo "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\">",$DataPost->Report->PostComment,"</td></tr>" ;
+    $PostComment=$DataPost->Report->PostComment ;
+}
+        
 
 echo "</form>" ;
 echo "</table>" ;

@@ -557,6 +557,7 @@ SQL;
             $a[0]->RegionName = $Geo->getDataById($IdRegion)->name;
             $country_id = $Geo->getDataById($IdRegion)->parentCountryId;
             $a[0]->CountryName = $Geo->getDataById($country_id)->name;
+            $a[0]->CountryCode = $Geo->getDataById($country_id)->fk_countrycode;
         } else {
             $a[0] = new stdClass();
             $a[0]->RegionName = 'Unknown';

@@ -68,10 +68,11 @@ class GroupsBasePage extends PageWithActiveSkin
     }
     
 
-    protected function getGroupTitle() {
-        return $this->getWords()->getBuffered(
-            'Group_'.$this->group->Name
-        );
+    protected function getPageTitle() {
+        $words = $this->getWords();
+        if (is_object($this->group)) {
+            return  $words->getBuffered('Group') . " '".$this->group->Name . "' | BeWelcome";
+        } else return $words->getBuffered('Groups') . ' | BeWelcome';
     }
     
     protected function isGroupMember() {

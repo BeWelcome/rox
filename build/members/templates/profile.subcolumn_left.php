@@ -1,7 +1,7 @@
 <div id="navigation-path" class="floatbox box">
-    <h3><strong><a class="" href="country/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
-            (<a class="" href="country/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
-    <strong><a class="" href="country/<?=$member->countryCode() ?>" ><?=$member->country() ?></a></strong></h3>
+    <h3><strong><a class="" href="places/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
+            (<a class="" href="places/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
+    <strong><a class="" href="places/<?=$member->countryCode() ?>" ><?=$member->country() ?></a></strong></h3>
 <p class="grey"><?=$ww->NbComments($comments_count['all'])." (".$ww->NbTrusts($comments_count['positive']).")" ?>
 <br /><?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?>
 </p>

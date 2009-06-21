@@ -4064,8 +4064,8 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
         
     $language = $_SESSION['lang'];    // TODO: convert to something readable
 		
-	$reportlink="http://".PVars::getObj('env')->sitename."/forums/reporttomod/".$IdPost ;
-	$postlink="http://".PVars::getObj('env')->sitename."/forums/s".$IdThread."/#".$IdPost ;
+	$reportlink="http://".PVars::getObj('env')->baseuri."/forums/reporttomod/".$IdPost ;
+	$postlink="http://".PVars::getObj('env')->baseuri."/forums/s".$IdThread."/#".$IdPost ;
 	if ($ToMember==1) {
 		$subject = "Forum moderator report for post #".$IdPost." to ".$UsernameReporter ;
 		$text="A BeWelcome moderator has answered your request<br />" ;
@@ -4079,8 +4079,8 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
 	}
 	else {
 		$subject = "moderator report from ".$UsernameReporter." for the post #".$IdPost." written by ".$UsernamePostWriter ;
-		$text="member <a href=\"".PVars::getObj('env')->sitename."/member/".$UsernameReporter."\">".$UsernameReporter."</a>" ;
-		$text=$text." has written a report about member <a href=\"http://".PVars::getObj('env')->sitename."/member/".$UsernamePostWriter."\">".$UsernamePostWriter."</a> for post <a href=\"".$postlink."\">".$postlink."</a>" ;
+		$text="member <a href=\"".PVars::getObj('env')->baseuri."/member/".$UsernameReporter."\">".$UsernameReporter."</a>" ;
+		$text=$text." has written a report about member <a href=\"http://".PVars::getObj('env')->baseuri."/member/".$UsernamePostWriter."\">".$UsernamePostWriter."</a> for post <a href=\"".$postlink."\">".$postlink."</a>" ;
 		$text=$text."Thread: <b>".$rPost->ThreadTitle."</b><br />" ;
 		$text.="The status of this report is ".$ReportStatus ;
 		$text.="You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;

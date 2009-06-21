@@ -34,7 +34,7 @@ $words = new MOD_words();
 
 <table class="forumsboardthreads floatbox">
 
-<?php
+<?php 
 $threadsliced = array_slice($threads, 0, 5);
     foreach ($threadsliced as $cnt =>  $thread) {
     //[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
@@ -56,6 +56,9 @@ $threadsliced = array_slice($threads, 0, 5);
                 <td class="forumsboardthreadtitle"><?php echo '<img src="styles/css/minimal/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
                     <a href="<?php echo $url; ?>" class="news">
                     <?php
+					if ($thread->ThreadDeleted=='Deleted') {
+						echo "[Deleted]" ;
+					}
                     echo $words->fTrad($thread->IdTitle);
                     ?></a><br />
                     <span class="small grey">by <a href="people/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> -

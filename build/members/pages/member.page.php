@@ -66,7 +66,7 @@ class MemberPage extends PageWithActiveSkin
 			array_push($tt,array('admin','bw/admin/adminflags.php?username='.$username,'AdminFlags') ) ;
 		}
 		if (MOD_right::get()->HasRight('Accepter','All')) {
-			array_push($tt,array('admin','bw/editmyptofile.php?cid='.$username,'BW Edit Profile #'.$this->member->id) ) ;
+			array_push($tt,array('admin','bw/editmyprofile.php?cid='.$this->member->id,'BW Edit Profile #'.$this->member->id) ) ;
 		}
 		if (MOD_right::get()->HasRight('Logs')) {
 			array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,'See Logs') ) ;

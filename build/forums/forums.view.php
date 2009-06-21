@@ -70,11 +70,17 @@ class ForumsView extends RoxAppView {
     
     public static function postURL($post)
     {
+		$vv=$this->uri.'s' ;
+		$vv=$vv.$post->threadid.'-' ;
+		$vv=$vv.str_replace(array('/', ' '), array('-', '-'),$post->title) ;
+/*
         return $this->uri.'s'.$post->threadid.'-'.str_replace(
             array('/', ' '),
             array('-', '-'),
             $post->title
         );
+		*/
+		return($vv) ;
     }
     
     

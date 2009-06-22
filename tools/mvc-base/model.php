@@ -34,6 +34,7 @@ class RoxModelBase extends RoxComponentBase
      */
     public function __construct()
     {
+        MOD_params::loadParams();
         $this->_entity_factory = new RoxEntityFactory;
         parent::__construct();
     }

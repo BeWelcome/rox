@@ -12,6 +12,12 @@
  */
 class ShopPage extends RoxPageView
 {
+    
+    protected function getStylesheets() {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3_75percent.css';
+        return $stylesheets;
+    }
 
     protected function getTopmenuActiveItem() {
         return 'explore';
@@ -25,13 +31,11 @@ class ShopPage extends RoxPageView
         require 'templates/teaser_shop.php';
     }
 
-    protected function getColumnNames ()
-    {
-        return array('col3');
-    }
-
     protected function column_col3() {
         require 'templates/body_shop.php';
+    }
+    
+    protected function column_col1() {
     }
 }
 

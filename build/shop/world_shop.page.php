@@ -15,6 +15,10 @@ class WorldShopPage extends ShopPage
     protected function column_col3() {
         require 'templates/world_body_shop.php';
     }
+    
+    protected function column_col1() {
+        require 'templates/world_shop.leftsidebar.php';
+    }
 }
 
 

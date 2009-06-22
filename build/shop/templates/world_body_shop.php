@@ -24,37 +24,5 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<div class="subcolumns">
-  <div class="c25l">
-    <div class="subcl">
-        <h2>Shopping Time!</h2>
-
-                <p>Sharing, meeting and spreading the world about BeWelcome will be even easier with our merchandising partner Spreadshirt. You even can support BeVolunteer which runs BeWelcome. There will be max. of &euro; 2,- donation for each product for BeVolunteer. Please consider <a href="donate">making a donation</a> to support our work!</p>
-
-        <h2>New BW goodies ?</h2>
-                <p><li><a href="http://229494.spreadshirt.com/us/US/Shop/Index/rss"><img alt="Get RSS feed" class="float_right" src="images/icons/feed.png"/></a> <a href="http://229494.spreadshirt.com/us/US/Shop/Index/rss">RSS feed</a></li></p>
-
-         <h2>Featured Product</h2>
-
-                <p><a class="boxl" href="shop/world" onClick="window.open('http://229494.spreadshirt.com','shopfenster','scrollbars=yes,width=650,height=450')"><img src="http://cache.spreadshirt.com/users/625000/624422/products/264/624422_3893264_1_big.jpg" width="190" height="190" border="0" alt="test" title="3512314-3893264" /></a>
-               <label>
-HTML Code for your website/blog
-<textarea rows="11" cols="24" readonly="readonly" class="single-and-a-half-col code"><a class="boxl" href="#" onClick="window.open('http://229494.spreadshirt.com','shopfenster','scrollbars=yes,width=650,height=450')"><img src="http://cache.spreadshirt.com/users/625000/624422/products/264/624422_3893264_1_big.jpg" width="190" height="190" border="0" alt="test" title="3512314-3893264" /></a></textarea>
-</label>
-
-                </p>
-
-    </div>
-  </div>
-
-  <div class="c75r">
-    <div class="subcr">
 
 <iframe height="1677" width="601" src="http://229494.spreadshirt.com" name="Spreadshop" id="Spreadshop" frameborder="0" scrolling="no" target="_self" border="0" marginheight="2" marginwidth="2"></iframe>
-
-    </div>
-  </div>
-
-
-
-</div>

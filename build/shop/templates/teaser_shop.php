@@ -24,6 +24,6 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 
-<div id="shopteaser" class="clearfix">
+<div id="teaser" class="clearfix">
     <h1><?php echo $words->getBuffered('Spreading BeWelcome!'); ?></h1>
 </div>

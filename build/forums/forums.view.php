@@ -22,7 +22,7 @@ class ForumsView extends RoxAppView {
 		$this->words=$this->_model->words ;
 		$this->BW_Right=$this->_model->BW_Right ;
 		$this->uri=$this->getURI() ;
-		$this->forum_uri='forums/' ;
+		$this->forum_uri='forums' ;
     }
     
 		
@@ -68,19 +68,14 @@ class ForumsView extends RoxAppView {
         );
     }
     
-    public function postURL($post)
+    public  function postURL($post)
     {
-		$vv=$this->uri.'s' ;
-		$vv=$vv.$post->threadid.'-' ;
-		$vv=$vv.str_replace(array('/', ' '), array('-', '-'),$post->title) ;
-/*
+	
         return $this->uri.'s'.$post->threadid.'-'.str_replace(
             array('/', ' '),
             array('-', '-'),
             $post->title
         );
-		*/
-		return($vv) ;
     }
     
     
@@ -229,6 +224,13 @@ class ForumsView extends RoxAppView {
         $vars =& PPostHandler::getVars($callbackId);
         require 'templates/moderatorreport.php';
     } // end of showReportPost
+    
+// This is the normal view to display list to accessto reports
+    public function showReportList(&$callbackId,$DataPost) {
+		$this->SetPageTitle("List of reports") ;
+        $vars =& PPostHandler::getVars($callbackId);
+        require 'templates/reportslist.php';
+    } // end of showReportList
     
 	
     /**

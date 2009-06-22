@@ -113,6 +113,34 @@ if ($allow_title) { // New Topic
                     echo ">",$Choices->Name,"</option>" ;
             }
         ?></select>
+		
+		
+		<?php if (!empty($vars['PostVisibility'])) { ?>
+			<br /><?php echo $words->getBuffered("forum_ChooseVisibilty") ?>
+			<select name="PostVisibility" id="PostVisibility">
+			<?php
+			$CurValue=$vars['PostVisibility'] ;
+//			echo "<option value='Default'" ;
+//			echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
+
+			echo "<option value='NoRestriction'" ;
+			if ($CurValue=="NoRestriction") echo " selected" ;
+			echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
+
+			echo "<option value='MembersOnly'" ;
+			if ($CurValue=="MembersOnly") echo " selected" ;
+			echo ">",$words->getFormatted("forum_edit_vis_MembersOnly"),"</option>" ;
+
+			if ($vars['IdGroup']!=0) {
+				echo "<option value='GroupOnly'" ;
+				if ($CurValue=="GroupOnly") echo " selected" ;
+				echo ">",$words->getFormatted("forum_edit_vis_GroupOnly"),"</option>" ;
+			}
+
+		?>
+		</select>
+		<br />
+		<?php } // end if (!empty($vars['PostVisibility'])) ?>
     </div> <!-- row -->
 
 <?php
@@ -124,13 +152,36 @@ if ($allow_title) { // New Topic
             }
         }
 ?>
-    <div class="row">
-        <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
-        <input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php
-        echo isset($vars['topic_title']) ? $words->fTrad($vars['IdTitle']) : '';
-        ?>" />
-    </div> <!-- row -->
-<?php
+		<div class="row">
+			<label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
+			<input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php
+			echo isset($vars['topic_title']) ? $words->fTrad($vars['IdTitle']) : '';
+			?>" />
+		</div> <!-- row -->
+<?php	
+		if (!$edit) {
+			echo $words->getBuffered("forum_ChooseVisibilty") ;?>
+			<select name="ThreadVisibility" id="ThreadVisibility">
+			<?php
+			$CurValue=$vars['ThreadVisibility'] ;
+
+			echo "<option value='Default'" ;
+			echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
+
+			echo "<option value='NoRestriction'" ;
+			if ($CurValue=="NoRestriction") echo " selected" ;
+			echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
+
+			echo "<option value='MembersOnly'" ;
+			if ($CurValue=="MembersOnly") echo " selected" ;
+			echo ">",$words->getFormatted("forum_edit_vis_MembersOnly"),"</option>" ;
+
+			echo "<option value='GroupOnly'" ;
+			if ($CurValue=="GroupOnly") echo " selected" ;
+			echo ">",$words->getFormatted("forum_edit_vis_GroupOnly"),"</option>" ;
+			echo "</select>" ;
+		}
+
     }
 
     if (isset($vars['errors']) && is_array($vars['errors'])) {

@@ -219,6 +219,43 @@ class ForumsController extends PAppController
             $this->_view->createTopic($callbackId,$IdGroup);
             PPostHandler::clearVars($callbackId);
         } 
+        else if ($this->action == self::ACTION_REPORT_TO_MOD) {
+            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if the user has right for this, if not rough exit
+                MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
+                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+            }
+            if (!$User) {
+                PRequest::home();
+            }
+            $callbackId = $this->reportpostProcess();
+			
+			if (isset($request[2])) {
+				if ($request[2]=='AllMyReport') {
+					$DataPost=$this->_model->prepareReportList($_SESSION["IdMember"],""); // This retrieve all the reports for the current member
+					$this->_view->showReportList($callbackId,$DataPost);
+				}
+				elseif ($request[2]=='MyReportActive') {
+					$DataPost=$this->_model->prepareReportList($_SESSION["IdMember"],"('Open','OnDiscussion')"); // This retrieve the Active current pending report for the current member
+					$this->_view->showReportList($callbackId,$DataPost);
+				}
+				elseif ($request[2]=='AllActiveReports') {
+					$DataPost=$this->_model->prepareReportList(0,"('Open','OnDiscussion')"); // This retrieve all the current Active pending report 
+					$this->_view->showReportList($callbackId,$DataPost);
+				}
+				else {
+					$IdPost=$request[2] ;
+					$IdWriter=$_SESSION["IdMember"] ;
+					if ((!empty($request[3])) and ($this->BW_Right->HasRight("ForumModerator"))) {
+						$IdWriter=$request[3] ;
+					}
+
+					$DataPost=$this->_model->prepareModeratorEditPost($IdPost); // We will use the same data has teh one used for Moderator edit
+					$DataPost->Report=$this->_model->prepareReportPost($IdPost,$IdWriter) ;
+					$this->_view->showReportPost($callbackId,$DataPost);
+				}
+				PPostHandler::clearVars($callbackId);
+			}
+		}
         else if ($this->action == self::ACTION_REPLY) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
@@ -264,7 +301,7 @@ class ForumsController extends PAppController
             }
             $this->delProcess();
         } else if ($this->action == self::ACTION_EDIT) {
-            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
                 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
             }
@@ -277,7 +314,7 @@ class ForumsController extends PAppController
             $this->_view->editPost($callbackId,false);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_TRANSLATE) {
-            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
+            if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
                 die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
             }
@@ -415,8 +452,7 @@ class ForumsController extends PAppController
         $request = $this->request;    
         $this->parseRequest();    
         $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
-        $this->_model->prepareForum();
-        $this->_view->uri ='forums/';  
+        $this->_model->prepareForum();     
         $this->_view->showExternal();
     }  // end of showExternalLatest
     
@@ -450,6 +486,18 @@ class ForumsController extends PAppController
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
             return $this->_model->replyProcess();
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
+    
+    public function reportpostProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        
+        if (PPostHandler::isHandling()) {
+            $this->parseRequest();
+            return $this->_model->reportpostProcess();
         } else {
             PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
             return $callbackId;
@@ -509,6 +557,7 @@ class ForumsController extends PAppController
     const ACTION_VIEW_LASTPOSTS = 16;
     const ACTION_VOTE_POST = 17;
 	const ACTION_DELETEVOTE_POST = 18 ;
+	const ACTION_REPORT_TO_MOD = 19 ;
     
     /**
     * Parses a request
@@ -564,6 +613,8 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_MODEDIT;
                 } else if ($r == 'reply') {
                     $this->action = self::ACTION_REPLY;
+                } else if ($r == 'reporttomod') {
+                    $this->action = self::ACTION_REPORT_TO_MOD;
                 } else if ($r == 'modefullditpost') {
                     $this->action = self::ACTION_MODERATOR_FULLEDITPOST;
                 } else if ($r == 'votepost') {

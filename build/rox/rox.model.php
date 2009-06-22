@@ -40,11 +40,6 @@ class Rox extends PAppModel {
     {
         parent::__construct();
         
-        // load the default current param values from the database
-		$result = $this->dao->query("SELECT * FROM  `params` limit 1");
-        $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
-
-
         // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
         // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?

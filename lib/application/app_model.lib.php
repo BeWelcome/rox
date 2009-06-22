@@ -44,6 +44,15 @@ abstract class PAppModel
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
+
+        // load the default current param values from the database
+		// This must be done at each page reload, but only once, because Session["Param"] might need to be updated
+		// It could also be a good idea to make some $this->BW_Param thing with it instead of using SESSION, but there is already many code with session
+		$result = $dao->query("SELECT * FROM  `params` limit 1");
+        if (!$result) {
+                throw new PException('Failed to retrieve \$_SESSION["Param"]!');
+        }
+        $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
     }
     
     /**

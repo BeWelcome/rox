@@ -694,7 +694,7 @@ WHERE `iso_alpha2` = '%s'
         $group = $gr->fetch(PDB::FETCH_OBJ);
 
         $subboards = array();
-		$gtitle= $this->words->getFormatted("ForumGroupTitle",$this->words->getFormatted("Group_" . $group->Name)) ;
+		$gtitle= $this->words->getFormatted("ForumGroupTitle", $this->getGroupName($group->Name)) ;
         if ($this->tags) {
             $taginfo = $this->getTagsNamed();
             $url = 'forums';
@@ -788,7 +788,7 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
             
             $title = $taginfo[$this->tags[count($this->tags) -1]];
         } else {
-          $title = $this->words->getFormatted("Group_" . $group->Name) ;
+          $title =  $this->getGroupName($group->Name) ;
         }
         
         $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->IdGroup);
@@ -796,6 +796,15 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
         $this->board->initThreads($this->getPage());
     } // end of boardGroup
 
+	/*
+	@ $Name name of the group (direct from groups.Name
+	*/
+    public function getGroupName($Name) {
+//		return($this->words->getFormatted("Group_" . $Name)) ;
+		return($Name) ;
+	
+	}
+	
     public function getAllAdmincodes($country_code)
     {
         $query = sprintf(
@@ -3294,7 +3303,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-				$row->GroupName=$this->words->getFormatted("Group_" . $row->Name);
+				$row->GroupName=$row->Name=$this->getGroupName($row->Name);
 	  	  array_push($tt,$row) ;
 			}
 			return($tt) ; // returs the array of structures
@@ -3311,7 +3320,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 										  members.Status in ('Active','ChoiceInactive','ActiveHidden') and members.id=".$_SESSION['IdMember']." and membersgroups.Status='In' group by groups.id order by groups.id ";
      	$s = $this->dao->query($query);
      	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-				$row->GroupName=$this->words->getFormatted("Group_" . $row->Name) ;
+				$row->GroupName=$this->getGroupName($row->Name);
 			array_push($tt,$row) ;
 		}
 		return($tt) ; // returs the array of structures

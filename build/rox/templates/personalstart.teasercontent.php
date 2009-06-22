@@ -32,7 +32,10 @@ Boston, MA  02111-1307, USA.
     <ul id="personalmenu">
         <li><a id="tablink1" class="active-tab first" href="#tab1"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
         <li><a id="tablink2" href="#tab2"><?=$words->getSilent('FindAHost')?></a></li>
-        <?php /* NOTREADY <li><a id="tablink3" href="#tab3"><?=$words->getSilent('OfferHosting')?></a></li> */ ?>
+        <? if (isset($_SESSION['Param']) && ($_SESSION['Param']->ToggleDonateBar)) { ?>
+            <li><a id="tablink3" href="#tab3"><?=$words->getSilent('HelpTheProject')?></a></li>
+        <? } ?>
+        <?php /* NOTREADY <li><a id="tablink3a" href="#tab3a"><?=$words->getSilent('OfferHosting')?></a></li> */ ?>
         <?php /* NOTREADY<li><a id="tablink4" href="#tab4"><?=$words->getSilent('SetLocation')?></a></li> */ ?>
         <li><a id="tablink5" href="#tab5"><?=$words->getSilent('CheckYourMessages')?>
 	        <?php if (isset($_mainPageNewMessagesMessage)) { ?>
@@ -106,7 +109,31 @@ Boston, MA  02111-1307, USA.
                     </div>
                     
 			</div> <!-- tab2 -->
+			
 			<div class="panel" id="tab3">
+                        
+                <div class="subcolumns">
+                    <div class="c50l">
+                    <div class="subcl">
+                        
+                        <? include 'userbar_donate.php' ; // the Donation bar ?>
+                        
+                    </div> <!-- subcl -->
+                    </div> <!-- c50l -->
+
+                    <div class="c50r">
+                        <div class="subcr">
+                            
+                            <h3>Volunteer</h3>
+                            <p><?=$words->get('GetActiveIntro')?></p>
+                            <a href="getactive" class="button" title="getactive"><?=$words->get('GetActive')?></a>
+                        
+                        </div>
+                    </div>
+                </div>
+            	
+        	</div> <!-- tab3 -->
+			<div class="panel" id="tab3a">
                 <div class="subcolumns">
                     <div class="c50l">
                     <div class="subcl">

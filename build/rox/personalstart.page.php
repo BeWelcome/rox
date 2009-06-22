@@ -31,10 +31,10 @@ class PersonalStartpage extends RoxPageView
     protected function getPageTitle() {
         $words = new MOD_words();
         if (isset($_SESSION['Username'])) {
-            return $words->getFormatted('WelcomeUsername',$_SESSION['Username']);
+            return $words->getSilent('HelloUsername',$_SESSION['Username']) . ' | BeWelcome';
         } else {
             // this should not happen actually!
-            return $words->getFormatted('WelcomeGuest');
+            return $words->getSilent('WelcomeGuest');
         }
     }
 

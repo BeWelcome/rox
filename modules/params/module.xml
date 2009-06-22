@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <moduleName>params</moduleName>
+  <moduleVersion>0.0</moduleVersion>
+  <moduleDescription>Wrapper for loading params</moduleDescription>
+  <moduleFiles>
+    <lib>
+      <file class="MOD_params">params.lib.php</file>
+    </lib>
+  </moduleFiles>
+</module>

@@ -54,7 +54,7 @@ This File display a topic and the messages which are inside it
 		}
 
 		if ($topic->topicinfo->IdGroup>0) {
-			echo $words->getFormatted("Group_" . $topic->topicinfo->GroupName),"::" ;
+			echo $this->_model->getGroupName($topic->topicinfo->GroupName),"::" ;
 		}
 // If the forum belongs to a group display the group name first
 // Display the title of the post

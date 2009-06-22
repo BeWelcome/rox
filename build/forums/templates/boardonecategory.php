@@ -62,7 +62,7 @@ Boston, MA  02111-1307, USA.
                         
                         // show tags if post is part of a group
                     if ($thread->IdGroup>0) {
-                            echo "<a href=\"groups/".$thread->IdGroup."\"><strong>Group: </strong>",$words->getFormatted("Group_" . $thread->GroupName),"</a><br >" ;
+                            echo "<a href=\"groups/".$thread->IdGroup."\"><strong>Group: </strong>",$this->_model->getGroupName( $thread->GroupName),"</a><br >" ;
                     }
                     
                         $breadcrumb = '';

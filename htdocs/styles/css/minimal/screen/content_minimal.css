@@ -49,7 +49,7 @@
   /* ### text formatting  ### */
   strong,b {font-weight: bold; }
   em,i { font-style:italic; }
-  pre, code {  font-family: "Courier New", Courier, monospace; }
+  pre, code {  font-family: "Courier New", Courier, monospace; padding: 1em; color: #ffffff; background-color: #333333;}
   address { font-style:normal; line-height: 1.5em; margin: 0 0 1em 0; }
 
   acronym, abbr {
@@ -131,7 +131,7 @@
   img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
   img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
   img.framed {padding:1px; border: 1px #ddd solid; background: #f3f3f3 }
-  
+
   /**
    * Local and external Links
    *
@@ -166,7 +166,7 @@
 
   /* by default lists use no bullet point */
   ul,li { margin:0; padding:0; list-style-type:none;}
-  
+
   ul,ol {margin-bottom: 1.5em;}
 
   /* in case we want bullet point */
@@ -294,6 +294,8 @@
     font-family: Arial, Helvetica;
     padding: 5px;
   }
+
+  textarea.long {width: 99%; }
 
   input, textarea {
     font-size: 1.3em;
@@ -425,7 +427,7 @@ h4.news {
 }
 
 .personallist .box h3 {
-	color: #2184e8;
+    color: #2184e8;
 }
 
 /* ###########################################
@@ -996,7 +998,7 @@ div.datepicker div.datepicker-footer {
 }
 
 /* Messages */
-.unread { 
+.unread {
   font-weight: bold;
 }
 #message { /*
@@ -1043,7 +1045,7 @@ height:50px;
 
 /*
   Wiki Styles:
-   
+
 */
 
 /* ----------------------------------------------
@@ -1068,11 +1070,11 @@ height:50px;
 .wiki.info {
 }
 
-.wiki.view.PageIndex {			/* "PageIndex" when "view"ed */
+.wiki.view.PageIndex {          /* "PageIndex" when "view"ed */
    background-color: #ffee55;
 }
 
-.wiki.SiteOverview {			/* "SiteOverview" regardless of $action */
+.wiki.SiteOverview {            /* "SiteOverview" regardless of $action */
    font-family: "Lucida Bright";
 }
 
@@ -1099,7 +1101,7 @@ height:50px;
   and 'EditThisPage' ...)
 */
 .wiki.view .action-links {
-	padding: 1em 0;
+    padding: 1em 0;
 }
 
 .wiki.view .action-links hr,  .wiki .action-links br {
@@ -1119,7 +1121,7 @@ height:50px;
 */
 .wiki.info .chunked-result a {
    text-decoration: underline;
-   basckground-color: #ddbb55;
+   background-color: #ddbb55;
 }
 
 

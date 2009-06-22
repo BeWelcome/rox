@@ -34,6 +34,8 @@ $words = new MOD_words();
         <p><?php echo $words->get('ExploreBlogsDescription') ?></p>
         <h2><a href="chat"><?php echo $words->get('Chat') ?></a></h2>
         <p><?php echo $words->get('ExploreChatDescription') ?></p>
+        <h2><a href="forums"><?php echo $words->get('Shop') ?></a></h2>
+        <p><?php echo $words->get('ExploreShopDescription') ?></p>
     </div> <!-- subcl -->
   </div> <!-- c50l -->
 

@@ -87,7 +87,7 @@ function chat_update_callback(transport) {
             }
 						
 			if (HasFocus) {
-				TriggerBlinkTitle('<?=$words->getFormatted('Chat_NewMessage')?>') ; // Make the title blink
+				TriggerBlinkTitle('<?=$wwscript->Chat_NewMessage ?>'); // Make the title blink
 			}
 			else {
 				StopBlinkTitle();
@@ -190,7 +190,7 @@ function update_json_context(json) {
 	}
 
 	if (json.ListOfPrivateLink.length>0) {
-		document.getElementById('PrivateRoomHeaderTitle').innerHTML='<?=$words->getFormatted('ChatPrivateRooms')?>'+'('+json.ListOfPrivateLink.length+')' ;
+		document.getElementById('PrivateRoomHeaderTitle').innerHTML='<?=$wwscript->ChatPrivateRooms ?>'+'('+json.ListOfPrivateLink.length+')' ;
 	}
 	else {
 		document.getElementById('PrivateRoomHeaderTitle').innerHTML='' ;
@@ -435,9 +435,9 @@ function parse_smilies(a) {
 function insert_bbtags(aTag, eTag) {
   var input = document.forms['ajaxchat_form'].elements['chat_textarea'];
   input.focus();
-  /* für Internet Explorer */
+  /* fÃ¼r Internet Explorer */
   if(typeof document.selection != 'undefined') {
-    /* Einfügen des Formatierungscodes */
+    /* EinfÃ¼gen des Formatierungscodes */
     var range = document.selection.createRange();
     var insText = range.text;
     range.text = aTag + insText + eTag;
@@ -450,10 +450,10 @@ function insert_bbtags(aTag, eTag) {
     }
     range.select();
   }
-  /* für neuere auf Gecko basierende Browser */
+  /* fÃ¼r neuere auf Gecko basierende Browser */
   else if(typeof input.selectionStart != 'undefined')
   {
-    /* Einfügen des Formatierungscodes */
+    /* EinfÃ¼gen des Formatierungscodes */
     var start = input.selectionStart;
     var end = input.selectionEnd;
     var insText = input.value.substring(start, end);
@@ -468,19 +468,19 @@ function insert_bbtags(aTag, eTag) {
     input.selectionStart = pos;
     input.selectionEnd = pos;
   }
-  /* für die übrigen Browser */
+  /* fÃ¼r die Ã¼brigen Browser */
   else
   {
-    /* Abfrage der Einfügeposition */
+    /* Abfrage der EinfÃ¼geposition */
     var pos;
     var re = new RegExp('^[0-9]{0,3}$');
     while(!re.test(pos)) {
-      pos = prompt("Einfügen an Position (0.." + input.value.length + "):", "0");
+      pos = prompt("EinfÃ¼gen an Position (0.." + input.value.length + "):", "0");
     }
     if(pos > input.value.length) {
       pos = input.value.length;
     }
-    /* Einfügen des Formatierungscodes */
+    /* EinfÃ¼gen des Formatierungscodes */
     var insText = prompt("Bitte geben Sie den zu formatierenden Text ein:");
     input.value = input.value.substr(0, pos) + aTag + insText + eTag + input.value.substr(pos);
   }
@@ -498,8 +498,7 @@ function insert_bbtags(aTag, eTag) {
 // <p><span id="update_button" class="button" style="cursor: pointer">update</span></p> 
 ?>
 
-<div class="floatbox">
-<div style="float: left; overflow:auto; border:1px solid grey; height:200px; width:460px;" id="chat_scroll_box" onscroll="on_manual_scroll()">
+<div style="overflow:auto; border:1px solid grey; height:200px; width:100%;" id="chat_scroll_box" onscroll="on_manual_scroll()">
 <p class="note" style="padding-top: 0.6em">
 <img src="images/icons/information.png">
 <?=$ww->Chat_ShowHistory ?> 
@@ -514,9 +513,7 @@ function insert_bbtags(aTag, eTag) {
 <div style="color:#666" id="waiting_update"></div>
 <div style="color:#aaa" id="waiting_send"></div>
 </div>
-<div id="handle1" style="float: left; width: 10px; height: 200px; cursor: e-resize;" onmouseover="highlightMe('handle1',1)" onmouseout="highlightMe('handle1')"></div>
-</div>
-<div id="handle2" style="width: 460px; height: 10px; cursor: s-resize; " onmouseover="highlightMe('handle2',1)" onmouseout="highlightMe('handle2')"></div>
+<div id="handle2" style="width: 100%; height: 10px; cursor: s-resize; " onmouseover="highlightMe('handle2',1)" onmouseout="highlightMe('handle2')"></div>
 <br>
 <?=$words->flushBuffer() ?>
 <div id="error-display"></div>
@@ -524,7 +521,7 @@ function insert_bbtags(aTag, eTag) {
 <br>
 <form id="ajaxchat_form" method="POST" action="ajaxchat">
 <input id="id_IdRoom" type="hidden" name="IdRoom" value="<?=$this->_model->IdRoom ?>">
-<div style="height: 110px; width: 40em;" class="floatbox" id="chat_entry_div">
+<div style="height: 110px; width: 100%;" class="floatbox" id="chat_entry_div">
         <textarea id="chat_textarea" name="chat_message_text" style="float:left; height: 96px; width: 90%; margin: 0;" onclick="StopBlinkTitle();"></textarea>
 
         <a id="send_button" style="cursor: pointer; background: transparent url(images/misc/chat-sendbutton.png) top right no-repeat; text-decoration: none; float:left; display: block; height: 100px; width: 8%; margin-left: 5px; padding: 0;"><span style="display: block; margin-right: 20px; height: 100%; background: transparent url(images/misc/chat-sendbutton.png) top left no-repeat"><img src="images/misc/chat-sendbuttoninner.gif" style="padding-left: 5px;padding-top: 28px;"></span></a>

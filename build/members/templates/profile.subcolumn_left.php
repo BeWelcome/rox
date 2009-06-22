@@ -13,7 +13,7 @@
 </div> <!-- profile_summary -->
 
 <div id="profile_languages" class="floatbox box">
-    <h3><?=$words->getInLang('Languages', $profile_language_code);?></h3>
+    <h3><?=$words->getInLang('ProfileLanguagesSpoken', $profile_language_code);?></h3>
     <ul class="icon profile_languages">
         <?php foreach ($member->get_languages_spoken() as $lang)
         { echo '<li>' . $lang->Name . ' <sup>' . $words->getInLang("LanguageLevel_" . $lang->Level, $profile_language_code) . '</sup></li>'; } ?>

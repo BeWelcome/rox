@@ -45,12 +45,7 @@ abstract class PAppModel
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
 
-        // load the default current param values from the database
-		$result = $dao->query("SELECT * FROM  `params` limit 1");
-        if (!$result) {
-                throw new PException('Failed to retrieve \$_SESSION["Param"]!');
-        }
-        $_SESSION["Param"] = $result->fetch(PDB::FETCH_OBJ);
+        MOD_params::get()->loadParams();
     }
     
     /**
@@ -63,4 +58,3 @@ abstract class PAppModel
         unset($this->dao);
     }
 }
-?>

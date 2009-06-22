@@ -45,7 +45,7 @@ abstract class PAppModel
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
 
-        MOD_params::loadParams();
+        MOD_params::get()->loadParams();
     }
     
     /**

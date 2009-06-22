@@ -40,7 +40,7 @@ class MOD_params
      * @access private
      */
     private static $_instance;
-    private $dao;
+    private static $dao;
 
     public function __construct()
     {
@@ -49,7 +49,7 @@ class MOD_params
             throw new PException('DB config error!');
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
-        $this->dao =& $dao;
+        self::$dao =& $dao;
     }
 
     /**

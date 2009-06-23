@@ -31,10 +31,10 @@ class PersonalStartpage extends RoxPageView
     protected function getPageTitle() {
         $words = new MOD_words();
         if (isset($_SESSION['Username'])) {
-            return $words->getFormatted('WelcomeUsername',$_SESSION['Username']);
+            return $words->getSilent('HelloUsername',$_SESSION['Username']) . ' | BeWelcome';
         } else {
             // this should not happen actually!
-            return $words->getFormatted('WelcomeGuest');
+            return $words->getSilent('WelcomeGuest');
         }
     }
 
@@ -75,8 +75,8 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
         ?>
         
         <div class="floatbox">
-            <a class="float_right" href="messages/<?=$i_row?>/reply" alt="Reply">
-                <img src="images/icons/email_go.png">
+            <a class="float_right" href="messages/<?=$i_row?>/reply" >
+                <img src="images/icons/email_go.png" alt="Reply" />
             </a>
             <?= MOD_layoutbits::PIC_30_30($senderUsername,'','float_left framed')?>
             <a href="messages/<?=$id?>" class="<?=$readstyle?>">

@@ -24,16 +24,11 @@ Boston, MA  02111-1307, USA.
 
 ?>
 <div class="subcolumns">
-<div class="c33l">
-<div class="subcl personallist">
-            <h2>What's the news?</h2>
-            <!-- Another box - Community news -->
-            <div class="box">
-                <div class="corner"></div>
-
-                <h3 class="first" id="two">
-                <!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="reduce" alt="reduce" src="images/icons/box-min1.png"/> -->
-                <?php echo $words->getFormatted('CommunityNews') ?></h3>
+    <div class="c33l">
+        <div class="subcl personallist">
+            <h2><?php echo $words->getFormatted('StartpageNews') ?></h2>
+            <!-- Community news -->
+                <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a></h3>
                 <div class="floatbox">
                     <?php
                     $i=1;
@@ -60,130 +55,99 @@ Boston, MA  02111-1307, USA.
                     }
                     ?>
 
-                <a href="blog/tags/Community News for the frontpage"><?echo $words->get('ReadMore');?></a>
-                </div>
-
-                <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
-           </div>
-
-        </div>
-    </div> 
+                    <a href="blog/tags/Community News for the frontpage"><?echo $words->get('ReadMore');?></a>
+                </div> <!-- floatbox -->
+        </div> <!-- subcl -->
+    </div> <!-- c33l -->
+    
     <div class="c66r" > 
         <div class="c50l">
-        <div class="subc personallist">
-            <h2>Who is who?</h2>
-            <!-- Another box -->
-            <div class="box">
-                <div class="corner"></div>
-                
-                <h3 class="first"><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" style="cursor:pointer" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('RecentMember') ?></h3>
+            <div class="subcl personallist">
+                <h2><?php echo $words->getFormatted('StartpageWhoiswho') ?></h2>
+                <h3 class="first"><?php echo $words->getFormatted('RecentMember') ?></h3>
                 <div class="floatbox">
-                <?php
-                    // Display the last created members with a picture
-                    $latestmembers=MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(4);
-                    for ($ii=0;$ii<count($latestmembers);$ii++) {
-                        $m=$latestmembers[$ii] ;
-                ?>
-                <div class="float_left" style="width: 40%; overflow: hidden;">
-                    <table>
-                        <tr>
-                        <td>
-                        <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?>
-                        </td>
-                        <td>
-                        <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
-                        <br />
-                        <?php echo $m->countryname; ?>
-                        </td>
-                        </tr>
-                    </table>
-                </div>
-                <? } ?>
-                </div>
-                <h3><a href="myvisitors"><?php echo $words->get('RecentVisitsOfyourProfile') ?></a></h3> 
-                <div class="floatbox">
-                <?php
-                    
-                    // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
-                    $last_visits=MOD_visits::get()->BuildLastVisits(0, 4) ;
-                    for ($ii=0;$ii<count($last_visits);$ii++) {
-                        $m=$last_visits[$ii] ;
-                ?>
+                    <?php
+                        // Display the last created members with a picture
+                        $latestmembers=MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(4);
+                        for ($ii=0;$ii<count($latestmembers);$ii++) {
+                            $m=$latestmembers[$ii] ;
+                    ?>
                     <div class="float_left" style="width: 40%; overflow: hidden;">
                         <table>
                             <tr>
-                            <td>
-                            <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?>
-                            </td>
-                            <td>
-                            <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
-                            <br />
-                            <?php echo $m->countryname; ?>
-                            </td>
+                                <td><?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?></td>
+                                <td>
+                                    <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
+                                    <?php echo $m->countryname; ?>
+                                </td>
                             </tr>
                         </table>
-                    </div> 
-                <?php 
-                    }
-                ?>
-                </div>
-                </div>
-        
-                    <!-- Another box -->
-                    <div class="box">
-                        <div class="corner"></div>
-
-                        <h3 class="first">
-                        <!--<img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" src="images/icons/box-min1.png"/> -->
-                        <?php echo $words->getFormatted('TripCity')  ?></h3>
-                        <div class="floatbox">
-                        <?php
-                            $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4) ;
-                            for ($ii=0;$ii<count($next_trips);$ii++) {
-                                $m=$next_trips[$ii] ;
-                                $tripDate = explode(" ",$m->tripDate);
-                        ?>
-                        <div class="float_left" style="width: 40%; overflow: hidden;">
-                            <table>
-                                <tr>
+                    </div> <!-- float_left -->
+                    <? } ?>
+                </div> <!-- floatbox -->
+                
+                <h3><a href="myvisitors"><?php echo $words->get('RecentVisitsOfyourProfile') ?></a></h3> 
+                <div class="floatbox">
+                    <?php
+                        
+                        // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
+                        $last_visits=MOD_visits::get()->BuildLastVisits(0, 4) ;
+                        for ($ii=0;$ii<count($last_visits);$ii++) {
+                            $m=$last_visits[$ii] ;
+                    ?>
+                    <div class="float_left" style="width: 40%; overflow: hidden;">
+                        <table>
+                            <tr>
+                                <td><?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?></td>
                                 <td>
-                                <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?>
+                                    <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
+                                    <?php echo $m->countryname; ?>
                                 </td>
+                            </tr>
+                        </table>
+                    </div> <!-- float_left -->
+                    <?php 
+                        }
+                    ?>
+                </div> <!-- floatbox -->
+       
+                <h3 class="first"><?php echo $words->getFormatted('TripCity')  ?></h3>
+                <div class="floatbox">
+                    <?php
+                        $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4) ;
+                        for ($ii=0;$ii<count($next_trips);$ii++) {
+                            $m=$next_trips[$ii] ;
+                            $tripDate = explode(" ",$m->tripDate);
+                    ?>
+                    <div class="float_left" style="width: 40%; overflow: hidden;">
+                        <table>
+                            <tr>
+                                <td><?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?></td>
                                 <td>
-                                <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
-                                <br />
-                                <?php echo $m->city; ?> / <?php echo $m->country; ?>
-                                <br />
-                                <? echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
+                                    <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
+                                    <?php echo $m->city; ?> / <?php echo $m->country; ?><br />
+                                    <? echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
                                 </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <?php
-                            }
-                        ?>
-                        </div>
-                   </div>
-               </div>
+                            </tr>
+                        </table>
+                    </div> <!-- float_left -->
+                    <?php
+                        }
+                    ?>
+                </div> <!-- floatbox -->
+            </div> <!-- subc -->
+        </div> <!-- c50l -->
 
-            </div>
-            <div class="c50r">
-                <div class="subcr">
-                    <h2>Who's talking?</h2>
-                     <!-- Another box -->
-                     <div class="box">
-                         <div class="corner"></div>
-
-                         <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" style="cursor:pointer" src="images/icons/box-min1.png"/></a><a href="/forums"><?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
-                         <div class="floatbox">
-                             <?php echo $Forums->showExternalLatest(); ?>
-                         </div>
-                         <div class="boxbottom"><div class="author"></div><div class="links"></div></div>
-                     </div>
-                </div>
-            </div>
+        <div class="c50r">
+            <div class="subcr personallist">
+                <h2><?php echo $words->getFormatted('StartpageWhoistalking') ?></h2>
+                <h3 class="first" ><a href="forums"><?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
+                <div class="floatbox">
+                    <?php echo $Forums->showExternalLatest(); ?>
+                </div> <!-- floatbox -->
+            </div> <!-- subcr -->
+        </div> <!-- c50r -->
         
-        </div> 
-    </div>
-</div>
+    </div> <!-- c66r -->
+</div> <!--subcolumns -->
 

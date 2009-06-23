@@ -24,130 +24,152 @@ Boston, MA  02111-1307, USA.
 ?>
 
 <div id="teaser" class="clearfix teaser_main">
-	<h1><?=$words->getSilent('HelloUsername',$_SESSION['Username'])?></h1>
+    <h1><?=$words->getSilent('HelloUsername',$_SESSION['Username'])?></h1>
 
-<div class="subcolumns" style="margin-bottom: 2em">
-    <div class="c33l">
-    <div class="subcl">
-    <ul id="personalmenu">
-        <li><a id="tablink1" class="active-tab first" href="#tab1"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
-        <li><a id="tablink2" href="#tab2"><?=$words->getSilent('FindAHost')?></a></li>
-        <?php /* NOTREADY <li><a id="tablink3" href="#tab3"><?=$words->getSilent('OfferHosting')?></a></li> */ ?>
-        <?php /* NOTREADY<li><a id="tablink4" href="#tab4"><?=$words->getSilent('SetLocation')?></a></li> */ ?>
-        <li><a id="tablink5" href="#tab5"><?=$words->getSilent('CheckYourMessages')?>
-	        <?php if (isset($_mainPageNewMessagesMessage)) { ?>
-                (<img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/> <?=$_newMessagesNumber?>) 
-            <?php } ?>
-	    </a></li>
-    </ul>
-    </div> <!-- subcl -->
-    </div> <!-- c38l -->
+    <div class="subcolumns" style="margin-bottom: 2em">
+        <div class="c33l">
+            <div class="subcl">
+                <ul id="personalmenu">
+                    <li><a id="tablink1" class="active-tab first" href="#tab1"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
+                    <li><a id="tablink2" href="#tab2"><?=$words->getSilent('FindAHost')?></a></li>
+                    <? if (isset($_SESSION['Param']) && ($_SESSION['Param']->ToggleDonateBar)) { ?>
+                        <li><a id="tablink3" href="#tab3"><?=$words->getSilent('HelpTheProject')?></a></li>
+                    <? } ?>
+                    <?php /* NOTREADY <li><a id="tablink3a" href="#tab3a"><?=$words->getSilent('OfferHosting')?></a></li> */ ?>
+                    <?php /* NOTREADY<li><a id="tablink4" href="#tab4"><?=$words->getSilent('SetLocation')?></a></li> */ ?>
+                    <li><a id="tablink5" href="#tab5"><?=$words->getSilent('CheckYourMessages')?>
+                    <?php if (isset($_mainPageNewMessagesMessage)) { ?>
+                        (<img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/> <?=$_newMessagesNumber?>)
+                    <?php } ?>
+                    </a></li>
+                </ul>
+            </div> <!-- subcl -->
+        </div> <!-- c33l -->
 
-<div class="c66r">
-    <div class="subcr">
-    
-			<div class="panel active-tab-body" id="tab1">
+        <div class="c66r">
+            <div class="subcr">
+
+                <div class="panel active-tab-body" id="tab1">
                     <?php
                     $notify_widget->render();
                     ?>
-        			 <p>
+                </div> <!-- tab1 -->
+                
+                <div class="panel" id="tab2">
+                    <?php /* NOTREADY: complete the stuff below
+                                    <h3><?=$words->get('HowToFindAHost')?></h3>
 
-                    </p>
-                    
-			</div> <!-- tab1 -->
-			<div class="panel" id="tab2">
-	<?php /* NOTREADY: complete the stuff below
-                    <h3><?=$words->get('HowToFindAHost')?></h3>
-                    
-                    <p>At best, write down your expectations and travel plans first. People can then contact you directly and offer you accomodation. You can also search actively for a person and just combine your personal message to him with the travel description you created.</p>
-                    <div id="hostrequest">
-                        <a href="requesthosting" class="button">Blog your request</a>
-                    </div>
-                    <p class="row"></p>
-                    <p class="row">after that</p>
-    */ ?>
+                                    <p>At best, write down your expectations and travel plans first. People can then contact you directly and offer you accomodation. You can also search actively for a person and just combine your personal message to him with the travel description you created.</p>
+                                    <div id="hostrequest">
+                                        <a href="requesthosting" class="button">Blog your request</a>
+                                    </div>
+                                    <p class="row"></p>
+                                    <p class="row">after that</p>
+                    */ ?>
                     <div class="subcolumns">
                         <div class="c50l">
-                        <div class="subcl">
-                            
-                            <h3>Search members</h3>
-                            <div id="search-bar">
-                                <form id="form1" name="form1" method="get" action="searchmembers">
-                                <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='Search for hosts, places...'" value="Search for hosts, places..." onfocus="this.value='';" />
-                                <input type="hidden" name="searchopt" id="searchopt" />
-                                <input type="submit" value="Search" class="button"/>
-                                </form>
-                            </div>
-                            
-                        </div> <!-- subcl -->
+                            <div class="subcl">
+
+                                <h3><?php echo $words->getFormatted('StartpageSearchMember') ?></h3>
+                                <div id="search-bar">
+                                    <form id="form1" name="form1" method="get" action="searchmembers">
+                                        <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='Search for hosts, places...'" value="Search for hosts, places..." onfocus="this.value='';" />
+                                        <input type="hidden" name="searchopt" id="searchopt" />
+                                        <input type="submit" value="Search" class="button"/>
+                                    </form>
+                                </div>
+
+                            </div> <!-- subcl -->
                         </div> <!-- c50l -->
 
                         <div class="c50r">
                             <div class="subcr">
-                                
+
                                 <div id="browsecities_dropdown" style="display:none;">
-                                <h3>Browse Countries</h3>
-                                <select onchange="window.location.href=this.value; return false" style="width: 100%">
-                                <?php foreach ($Countries as $continent => $countries_group) { ?>
-            	                     <optgroup label="<?=$continent?>">
-            	                    <?php foreach ($countries_group as $code => $country) { ?>  
-            		                     <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
-            		                <?php } ?>
-            	                    </optgroup>
-                                <?php } ?>
-                                </select>
+                                    <h3><?php echo $words->getFormatted('StartpageBrowseCountries') ?></h3>
+                                    <select onchange="window.location.href=this.value; return false" style="width: 100%">
+                                    <?php foreach ($Countries as $continent => $countries_group) { ?>
+                                         <optgroup label="<?=$continent?>">
+                                        <?php foreach ($countries_group as $code => $country) { ?>
+                                             <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
+                                        <?php } ?>
+                                        </optgroup>
+                                    <?php } ?>
+                                    </select>
+                                </div> <!-- browsecities_dropdown -->
+                                <script type="text/javascript">
+                                $('browsecities_dropdown').show();
+                                </script>
+
+                            </div> <!-- subcr -->
+                        </div> <!--c50r -->
+                    </div> <!-- subclumns -->
+                </div> <!-- tab2 -->
+
+                <div class="panel" id="tab3">
+
+                    <div class="subcolumns">
+                        <div class="c50l">
+                            <div class="subcl">
+
+                                <? include 'userbar_donate.php' ; // the Donation bar ?>
+
+                            </div> <!-- subcl -->
+                        </div> <!-- c50l -->
+
+                        <div class="c50r">
+                            <div class="subcr">
+
+                                <h3><?=$words->get('StartpageVolunteer')?></h3>
+                                <p><?=$words->get('GetActiveIntro')?></p>
+                                <a href="getactive" class="button" title="getactive"><?=$words->get('GetActive')?></a>
+
+                            </div> <!-- subcr -->
+                        </div> <!-- c50r -->
+                    </div> <!-- subcolumns -->
+                </div> <!-- tab3 -->
+                
+                <div class="panel" id="tab3a">
+                    <div class="subcolumns">
+                        <div class="c50l">
+                            <div class="subcl">
+
+                                <h3><?=$words->get('HostingStatus')?></h3>
+                                <form id="hostingstatus" name="hostingstatus" method="post" action="searchmembers/quicksearch">
+                                    <select name="top5">
+                                        <option>I'm hosting</option>
+                                        <option>Can't host</option>
+                                        <option>Maybe</option>
+                                        <option>I'm travelling</option>
+                                    </select>
+                                    <input type="hidden" name="quicksearch_callbackId" value="1"/>
+                                    <input type="hidden" name="searchoptstatus" id="searchoptstatus" />
+                                </form>
+
+                            </div> <!-- subcl -->
+                        </div> <!-- c50l -->
+
+                        <div class="c50r">
+                            <div class="subcr">
+
+                                <h3>Edit your profile</h3>
+                                <p>Edit your profile now and describe in detail what you can offer, where you live, etc.</p>
+                                <div id="hostrequest">
+                                    <a href="requesthosting" class="button">EditMyProfile</a>
                                 </div>
-            					<script type="text/javascript">
-            					$('browsecities_dropdown').show();
-            					</script>
-                            
-                            </div>
-                        </div>
-                    </div>
-                    
-			</div> <!-- tab2 -->
-			<div class="panel" id="tab3">
-                <div class="subcolumns">
-                    <div class="c50l">
-                    <div class="subcl">
-                        
-            			<h3>YourHostingStatus</h3>
-                		<form id="form1" name="form1" method="post" action="searchmembers/quicksearch">
-                			<select name="top5">
-                			<option name="whatever">I'm hosting</option>
-                			<option name="asdfho">Can't host</option>
-                			<option name="asdfho">Maybe</option>
-                			<option name="asdfho">I'm travelling</option>
-                			</select>
-                		<input type="hidden" name="quicksearch_callbackId" value="1"/>
-                		<input type="hidden" name="searchopt" id="searchopt" />
-                		</form>
-                        
-                    </div> <!-- subcl -->
-                    </div> <!-- c50l -->
 
-                    <div class="c50r">
-                        <div class="subcr">
-                            
-                            <h3>Edit your profile</h3>
-                            <p>Edit your profile now and describe in detail what you can offer, where you live, etc.</p>
-                            <div id="hostrequest">
-                                <a href="requesthosting" class="button">EditMyProfile</a>
-                            </div>
-                        
-                        </div>
-                    </div>
-                </div>
-            	
-        	</div> <!-- tab3 -->
-			
-			<div class="panel" id="tab4">
+                            </div> <!-- subcr -->
+                        </div> <!-- c50r -->
+                    </div> <!-- subclumns -->
+                </div> <!-- tab3a -->
 
-					<h2>Where are you now?</h2>
-					
+                <div class="panel" id="tab4">
+
+                    <h2>Where are you now?</h2>
+
                     <?php
                     /* NOTREADY
-                    $Member = new MembersModel;    
+                    $Member = new MembersModel;
                     // Overwrite SetLocation-Geo-Info with GeoVars-Session (used for non-js users), afterwards unset it again.
                     if (isset($_SESSION['GeoVars']) && isset($_SESSION['GeoVars']['id']) && isset($_SESSION['GeoVars']['geonameid'])) {
                         foreach ($_SESSION['GeoVars'] as $key => $value) {
@@ -160,7 +182,7 @@ Boston, MA  02111-1307, USA.
                             $vars['errors'] = $result['errors'];
                         }
                         // unset($_SESSION['GeoVars']);
-                    } 
+                    }
                     $callback_tag = $this->layoutkit->formkit->setPostCallback('MembersController', 'setLocationCallback');
                     $member = $Member->getMemberWithId($_SESSION['IdMember']);
                     $m->geonameid = $member->IdCity;
@@ -191,7 +213,7 @@ Boston, MA  02111-1307, USA.
                     }
 
                     ?>
-					
+
                     <form method="post" name="geo-form-js" id="geo-form-js">
                         <input type="hidden" name="javascriptactive" value="false" />
                      <?php
@@ -400,19 +422,20 @@ Boston, MA  02111-1307, USA.
                         Event.observe(window, 'load', init, false);
 
                     </script>
-					*/ ?>
-			</div> <!-- tab4 -->
-			<div class="panel" id="tab5">
+                    */ ?>
+            </div> <!-- tab4 -->
+                <div class="panel" id="tab5">
 
                 <?php $inbox_widget->render() ?>
                 <p><a href="messages">more...</a></p>
-					
-			</div> <!-- tab5 -->
 
-    </div> <!-- subcr -->
-</div> <!-- c62r -->
-</div> <!-- subcolumns -->
-<div><?=$words->flushBuffer()?></div>
+                </div> <!-- tab5 -->
+
+            </div> <!-- subcr -->
+        </div> <!-- c66r -->
+    </div> <!-- subcolumns -->
+
+    <div><?=$words->flushBuffer()?></div>
 </div> <!-- teaser -->
 
 <!--
@@ -428,7 +451,7 @@ Boston, MA  02111-1307, USA.
     #teaser ul.search-options li.selected a{background:#FFC04A; color:#fff;}
 </style>
 -->
-<script language="javascript">
+<script type="text/javascript">
 
 function tabPersonal(idElement){
     /* Total Tabs above the input field (in this case there are 3 tabs: web, images, videos) */

@@ -330,8 +330,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"]=='Pending') or $_SESSION["MemberStatus"]=='NeedMore') ) {
 			$this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
-			$this->ThreadGroupsRestriction=" (IdGroup=0 and ThreadVisibility ='NoRestriction')" ;
-			$this->PostGroupsRestriction=" (IdGroup=0 and PostVisibility='NoRestriction')" ;
+			$this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
+			$this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
 		}
 		else {
 			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;

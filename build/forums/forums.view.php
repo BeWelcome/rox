@@ -173,7 +173,7 @@ class ForumsView extends RoxAppView {
 		else {
 			$this->SetPageTitle($topic->topicinfo->title. ' - BeWelcome '.$this->words->getBuffered('Forum'));
 		}
-		if (empty($_SESSION['IdMember']))  {
+		if ((!isset($_SESSION['IdMember'])) or (empty($_SESSION['IdMember'])))  {
 			$this->page->SetMetaDescription(strip_tags($this->_model->words->fTrad(($topic->posts[0]->IdContent)))) ; ;
 			$wordtag="" ;
 			

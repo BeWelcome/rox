@@ -691,7 +691,7 @@ div.box div.boxbottom div.links {
 }
 */
 
-#teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser a,#teaser span,#teaser div,#teaser td {color: #333}
+#teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser span,#teaser div,#teaser td {color: #333}
 #teaser .grey { color: #888;}
 #teaser a.button { color: #ff8800;}
 #teaser a:hover.button { color: #333;}

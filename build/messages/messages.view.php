@@ -48,12 +48,13 @@ class ReadMessagePage extends MessagesBasePage
         $purifier = MOD_htmlpure::get()->getPurifier();
         $contact_username = $message->senderUsername;
         $model = new MembersModel();
-        $member = $model->getMemberWithUsername($contact_username);
         $direction_in = true;
         if ($contact_username == $_SESSION['Username']) {
             $contact_username = $message->receiverUsername;
             $direction_in = false;
         }
+        $member = $model->getMemberWithUsername($contact_username);
+
         ?>
         <div class="floatbox">
             <div id="message">

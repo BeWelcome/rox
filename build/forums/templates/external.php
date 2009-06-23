@@ -81,7 +81,7 @@ $threadsliced = array_slice($threads, 0, 5);
 <?php
     if ($User && $uri != 'forums/') {
     ?>
-    <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo ($uri !='') ? $uri : 'forums/'; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
+    <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo ($uri !='') ? $uri : 'forums'; ?>/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
     <?php
     }
 

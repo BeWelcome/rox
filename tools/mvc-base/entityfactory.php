@@ -21,6 +21,8 @@ class RoxEntityFactory
         'Geo'               => 'build/geo/geo.entity',
         'GeoHierarchy'      => 'build/geo/geohierarchy.entity',
         'GeoAlternateName'  => 'build/geo/geoaltname.entity',
+        'GeoUse'            => 'build/geo/geouse.entity',
+        'GeoType'           => 'build/geo/geotype.entity',
         'Group'             => 'build/groups/group.entity',
         'GroupMembership'   => 'build/groups/groupmembership.entity',
         'Member'            => 'build/members/member.entity',

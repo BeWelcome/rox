@@ -174,7 +174,7 @@ Boston, MA  02111-1307, USA.
                      <div class="box">
                          <div class="corner"></div>
 
-                         <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" style="cursor:pointer" src="images/icons/box-min1.png"/> <?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
+                         <h3 class="first" id="two"><a><img class="float_right" onclick="this.parentNode.parentNode.parentNode.childNodes.item(5).toggle()" title="go to last post" alt="go to last post" style="cursor:pointer" src="images/icons/box-min1.png"/></a><a href="/forums"><?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
                          <div class="floatbox">
                              <?php echo $Forums->showExternalLatest(); ?>
                          </div>

@@ -1,6 +1,4 @@
 
-
-
 <!-- #nav: main navigation -->
 <div id="nav">
 
@@ -53,6 +51,7 @@
                 <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
                 <li><a href="blog"><?=$words->get('Blogs')?></a></li>
                 <li><a href="chat"><?=$words->get('Chat')?></a></li>
+                <li><a href="shop"><?=$words->get('Shop')?></a></li>
             </ul>
         </li>
         <li><a href="about"><?=$words->get('GetAnswers')?></a>
@@ -73,6 +72,4 @@
     <?php $this->quicksearch() ?>
 
 </div> <!-- nav -->
-
-
 

@@ -1406,6 +1406,8 @@ CREATE TABLE forums_threads_votes (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT 'Stores votes from members on individual forum threads';
 SQL;
 
+$updates[] = "ALTER TABLE `geo_usage` CHANGE `typeId` `typeId` INT( 11 ) NOT NULL COMMENT 'id specifying the usage type, eg member, blog or gallery, its a foreign key to geo_types'" ;
+
     if (empty($res)) {
         $version = 0;
     } else {

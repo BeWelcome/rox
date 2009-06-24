@@ -140,12 +140,15 @@ class GeoController extends PAppController {
                     header("Location: http://www.bewelcome.org");
                     exit(0);
                 }
+                ob_start();
                 if (MOD_geonames::get()->getUpdate() && MOD_geonames::get()->getAltnamesUpdate())
                 {
+                    ob_end_clean();
                     echo "success";
                 }
                 else
                 {
+                    ob_end_clean();
                     echo "failure";
                 }
                 exit(0);

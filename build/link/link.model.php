@@ -112,7 +112,7 @@ class LinkModel extends RoxModelBase
 		$directlinks = $this->createLinkList();
 
 		$count = 0;
-		$depth= 1;
+		$maxdepth= 1;
 		$branch = array();
 		$oldid = 0;
 
@@ -127,7 +127,7 @@ class LinkModel extends RoxModelBase
 			echo"<br> matrix:";
 			//var_dump($matrix);
 			$newlist = $nolist;
-			while($new == 1 && $count < 50) {
+			while($new == 1 && $count < $maxdepth) {
 				echo "<br> --- newstep ".$count."<br>";
 				$new = 0;
 				$count++;

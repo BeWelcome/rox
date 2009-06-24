@@ -35,9 +35,7 @@ $words = new MOD_words();
         <p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
 <?php   } ?>
 
-<div class="subcolumns">
-  <div class="c50l">
-    <div class="subcl">
+
 <?php
 // deactivated for now, we use the vertical one instead
 // display the horizontal donation bar if the parameters are set
@@ -79,21 +77,8 @@ if ($TDonationArray) {
         <a name="why"></a>
     	<h3><?php echo $words->get('Donate_Why');?></h3>
     	<p><?php echo $words->getFormatted('Donate_WhyText','<a href="/bw/feedback.php">','</a>')?></p>
-
-        <a name="tax"></a>
-        <h3><?php echo $words->get('Donate_Tax'); ?></h3>
-        <p><?php echo $words->get('Donate_TaxText'); ?></p>
-        
-        <a name="transparency"></a>
-        <h3><?php echo $words->get('Donate_Transparency'); ?></h3>
-        <p><?php echo $words->getFormatted('Donate_TransparencyText','<a href="http://www.bevolunteer.org/joomla/index.php/Donate!?Itemid=54&option=com_civicrm">','</a>'); ?></p>
-        
-    </div>
-   </div>
-
-  <div class="c50r">
-    <div class="subcr">
-        <div class="row">                    
+    	
+ 		<div class="row">                    
                     <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                     <fieldset id="donate-paypal" style="border: 1px solid #999; display:block; padding: 10px 20px; margin-top: 20px; background-color: #f5f5f5;">
                     <legend><?=$words->get('Donate_Paypal_Legend')?></legend>
@@ -162,9 +147,19 @@ if ($TDonationArray) {
             </form>
         </div>
         
-    </div>
-  </div>
-</div>
+        <a name="tax"></a>
+        <h3><?php echo $words->get('Donate_Tax'); ?></h3>
+        <p><?php echo $words->get('Donate_TaxText'); ?></p>
+        
+        <a name="transparency"></a>
+        <h3><?php echo $words->get('Donate_Transparency'); ?></h3>
+        <p><?php echo $words->getFormatted('Donate_TransparencyText','<a href="http://www.bevolunteer.org/joomla/index.php/Donate!?Itemid=54&option=com_civicrm">','</a>'); ?></p>
+        
+
+
+       
+        
+
 
 <h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
 <p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>

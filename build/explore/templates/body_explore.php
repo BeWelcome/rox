@@ -46,7 +46,7 @@ $words = new MOD_words();
         <p><?php echo $words->get('ExploreGalleryDescription') ?></p>
         <h2><a href="forums"><?php echo $words->get('Forum') ?></a></h2>
         <p><?php echo $words->get('ExploreForumDescription') ?></p>
-        <h2><a href="forums"><?php echo $words->get('Groups') ?></a></h2>
+        <h2><a href="groups"><?php echo $words->get('Groups') ?></a></h2>
         <p><?php echo $words->get('ExploregroupsDescription') ?></p>
     </div> <!-- subcr -->
   </div> <!-- c50r -->

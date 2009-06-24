@@ -554,21 +554,25 @@ SQL;
             $Geo = new GeoModel();
             $a[0]->CityName = $Geo->getDataById($a[0]->IdCity)->name;
             $IdRegion = $Geo->getDataById($a[0]->IdCity)->parentAdm1Id;
-            $a[0]->RegionName = $Geo->getDataById($IdRegion)->name;
-            $country_id = $Geo->getDataById($IdRegion)->parentCountryId;
-            $a[0]->CountryName = $Geo->getDataById($country_id)->name;
-            $a[0]->CountryCode = $Geo->getDataById($country_id)->fk_countrycode;
+            if ($IdRegion)
+            {
+                $a[0]->RegionName = $Geo->getDataById($IdRegion)->name;
+                $country_id = $Geo->getDataById($IdRegion)->parentCountryId;
+                $a[0]->CountryName = $Geo->getDataById($country_id)->name;
+                $a[0]->CountryCode = $Geo->getDataById($country_id)->fk_countrycode;
+            }
         } else {
             $a[0] = new stdClass();
-            $a[0]->RegionName = 'Unknown';
             $a[0]->IdCity = 'Unknown';
             $a[0]->CityName = 'Unknown';
-            $a[0]->CountryName = 'Unknown';
             $a[0]->HouseNumber = 'Unknown';
             $a[0]->StreetName = 'Unknown';
             $a[0]->Zip = 'Unknown';
-            $a[0]->CountryCode = 'Unknown';
         }
+        $a[0]->RegionName = ((!empty($a[0]->RegionName)) ? $a[0]->RegionName : 'Unknown');
+        $a[0]->CountryName = ((!empty($a[0]->CountryName)) ? $a[0]->CountryName : 'Unknown');
+        $a[0]->CountryCode = ((!empty($a[0]->CountryCode)) ? $a[0]->CountryCode : 'Unknown');
+
         $this->address = $a[0];
     }
 

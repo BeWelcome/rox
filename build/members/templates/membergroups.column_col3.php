@@ -16,7 +16,7 @@
                     <div class="groupinfo">
                     <h4><a href="groups/<?= $group->id ?>"><?=$words->getInLang($group->Name, $profile_language_code)?></a></h4>
                     <p>
-                        <?= htmlspecialchars($words->mTrad($member->getGroupMembership($my_groups[$i])->Comment), ENT_QUOTES);?>
+                        <?= htmlspecialchars($words->mTrad($member->getGroupMembership($group)->Comment), ENT_QUOTES);?>
                     </p>
                     </div>  <!-- groupinfo -->
                 </div> <!-- groupbox clearfix -->

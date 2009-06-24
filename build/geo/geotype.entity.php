@@ -16,11 +16,18 @@ class GeoType extends RoxEntityBase
         }
     }
 
+    /**
+     * returns array of all geo usage types
+     *
+     * @access public static
+     * @return array
+     */
     public static function getAllTypes()
     {
         if (empty(self::$geo_types))
         {
-            $me = new get_class($this);
+            $class = __CLASS__;
+            $me = new $class;
             self::$geo_types = $me->findAll();
             unset($me);
         }

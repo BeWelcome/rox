@@ -27,6 +27,43 @@ class Geo extends RoxEntityBase
         return $this->parent;
     }
 
+    public function getAncestorLine()
+    {
+        $result = array();
+        if (!$this->isLoaded())
+        {
+            return $result;
+        }
+        if (!$this->ancestor_line)
+        {
+            $it = $this;
+            while ($parent = $it->getParent())
+            {
+                $result[] = $parent;
+                $it = $parent;
+            }
+            $result[] = $this->getCountry();
+            $this->ancestor_line = $result;
+        }
+        return $this->ancestor_line;
+    }
+
+    public function getCountry()
+    {
+        if (!$this->isLoaded() || !$this->parentCountryId)
+        {
+            return false;
+        }
+        if (!$this->country)
+        {
+            if ($geo = $this->createEntity('Geo')->findById($this->parentCountryId))
+            {
+                $this->country = $geo;
+            }
+        }
+        return $this->country;
+    }
+
     public function getChildren()
     {
         if (!$this->isLoaded())
@@ -99,5 +136,31 @@ class Geo extends RoxEntityBase
         {
             return $this->getAlternateName($lang);
         }
+    }
+
+    public function getUsageForAllTypes()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+        if (!$this->usage_by_type)
+        {
+            $this->usage_by_type = $this->createEntity('GeoUse')->getUsageForGeoByType($this);
+        }
+        return $this->usage_by_type;
+    }
+
+    public function getTotalUsage()
+    {
+        if (!$this->isLoaded())
+        {
+            return 0;
+        }
+        if (!$this->total_usage)
+        {
+            $this->total_usage = $this->createEntity('GeoUse')->getAllUsageForGeo($this);
+        }
+        return $this->total_usage;
     }
 }

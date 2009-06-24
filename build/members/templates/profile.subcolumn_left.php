@@ -86,7 +86,7 @@ if (!empty($my_groups)) :
                     <div class="groupinfo">
                     <h4><a href="groups/<?= $my_groups[$i]->id ?>"><?=$words->getInLang($my_groups[$i]->Name, $profile_language_code)?></a></h4>
                     <p>
-                        <?=$words->mTrad($member->getGroupMembership($my_groups[$i]->group)->Comment);?>
+                        <?=$words->mTrad($member->getGroupMembership($my_groups[$i])->Comment);?>
                     </p>
                     </div>  <!-- groupinfo -->
                 </div> <!-- groupbox clearfix -->

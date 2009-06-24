@@ -37,7 +37,7 @@ class LinkModel extends RoxModelBase
 	function createLinkList() 	{
 		$preferences = $this->getLinkPreferences();
 		echo "createLinkList getpreference ".count($preferences)." values created<br>" ;			
-//		var_dump($preferences);
+
 		$comments = $this->getComments();
 		echo "createLinkList comments ".count($comments)." values created<br>" ;			
 		$specialrelation = $this->getSpecialRelation();
@@ -84,24 +84,7 @@ class LinkModel extends RoxModelBase
 		}
 
 		echo "createLinkList done ".count($directlinks)." values created<br>" ;			
-/*
-		foreach ($directlinks as $key1 => $value1) {
-			foreach ($value1 as $key2 => $value2) {
-				echo $key1." -> ".$key2." : ";
-					foreach ($value2['totype'] as $totype) {
-						echo $totype." ; ";
-					}
-					echo " // ";
-					if(isset($value2['reversetype'])){
-						foreach ($value2['reversetype'] as $reversetype) {
-							echo $reversetype." ; ";
-						}
-					}
-				echo "<br>";
-			}
-			echo "---------<br>";
-		}
-*/			
+		
 	return $directlinks;
 		
 		
@@ -112,7 +95,7 @@ class LinkModel extends RoxModelBase
 		$directlinks = $this->createLinkList();
 
 		$count = 0;
-		$maxdepth= 1;
+		$maxdepth= 3;
 		$branch = array();
 		$oldid = 0;
 
@@ -132,18 +115,18 @@ class LinkModel extends RoxModelBase
 				$new = 0;
 				$count++;
 				foreach ($matrix as $key => $value) {
-					//var_dump($value);
+
 					$last = $value[count($value)-1];
-//					echo "<br> ";
+
 					if (array_key_exists($last,$directlinks)) {
 						$added = array();
 						foreach($directlinks[$last] as $key1 => $value1) {
 							if (!in_array($key1,$nolist)) {
 								$temparray = $value;
 								array_push($temparray,$key1);
-//								print_r($temparray);
+
 								$matrix[] = $temparray;
-//								echo "<br>";
+
 								array_push($added,$key1);
 							}
 						}
@@ -178,89 +161,7 @@ class LinkModel extends RoxModelBase
 
 		
 		
-	// function extendBranch($id,&$matrix,$array,$nolist,$directlinks) {
-		// if (array_key_exists($id,$directlinks)) {
-			// $added = array();
-			// foreach($directlinks[$id] as $key => $value) {
-				// if (!in_array($key,$nolist)) {
-					// $temparray = $array;
-					// array_push($temparray,$key);
-					// print_r($temparray);
-					// $matrix[] = $temparray;
-					// echo "<br>";
-					// array_push($added,$key);
-				// }
-			// }
-				// //var_dump($matrix);
-			// echo "<br>--";
-			// return $added;
-		// }
-	// }
-			
-	
-	
-	// function getBranches($id,$directlinks,&$inlist,&$count,$depth,$branch,$oldid) {
 
-		// if ($count <= 50000) {
-			// array_push($branch,$id); 
-			// $oldid = $id;
-			// $count++;
-			// $depth++;
-			// array_push($inlist,$oldid);
-			// if (array_key_exists($id,$directlinks)) {
-				// foreach ($directlinks[$id] as $key => $val) {
-					//if (!in_array($key,$inlist)) {
-						// $this->getBranches ($key,$directlinks,$inlist,$count,$depth,$branch,$oldid);
-					// }
-				// }
-			// }
-			// if ($depth>=2) {
-			// //print_r($branch);
-			// $path = $this->createPath($branch,$depth-1,$directlinks);
-			// $lastid = count($branch)-1;
-			// $serpath = "'".serialize($path)."'";
-			// $fields = array('fromID' => "$branch[0]", 'toID' => "$branch[$lastid]", 'degree' => $depth-1, 'rank' => 'rank', 'path' => "$serpath"	);
-			// $this->writeLinkList($fields);
-			// }
-		// } else {
-			// echo "ende ".$count;
-		// }
-		// }
-	// function getBranches($id,$directlinks,$inlist,&$count,$depth,$branch,$oldid,&$inlist2) {
-
-		// if ($count <= 50000) {
-						// $temparray = array();
-			// array_push($branch,$id);
-			// $oldid = $id;
-			// $count++;
-			// $depth++;
-			// array_push($inlist,$oldid);
-			// if (array_key_exists($id,$directlinks)) {
-				// foreach ($directlinks[$id] as $key => $val) {
-					// if (!in_array($key,$inlist) && !in_array($key,$inlist2)) {
-						// $this->getBranches ($key,$directlinks,$inlist,$count,$depth,$branch,$oldid,$inlist2);
-						// array_push($temparray,$key);
-					// } 
-				// }
-			// }
-			// array_push($inlist2,$temparray);
-			// if ($depth>=2) {
-			// print_r($branch);
-			// print_r($inlist);
-			// $path = $this->createPath($branch,$depth-1,$directlinks);
-			// $lastid = count($branch)-1;
-			// $serpath = "'".serialize($path)."'";
-			// $fields = array('fromID' => "$branch[0]", 'toID' => "$branch[$lastid]", 'degree' => $depth-1, 'rank' => 'rank', 'path' => "$serpath"	);
-			// $this->writeLinkList($fields);
-			// }
-		// } else {
-			// echo "ende ".$count;
-		// }
-		// }		
-		
-		
-		
-		
 	/** 
 	* write / flush database
 	**/

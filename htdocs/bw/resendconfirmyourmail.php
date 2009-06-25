@@ -53,8 +53,9 @@ if (empty($rr->id)) {
    die("No Such username <b>".$Username."</b> with mailtoconfirm") ;
 }
 
+
 $Email = GetEmail($rr->id);
-$MemberIdLanguage = GetDefaultLanguage($rr->id);
+/*$MemberIdLanguage = GetDefaultLanguage($rr->id);
 
 
 $FirstName = $ReadCrypted ($rr->FirstName);
@@ -68,6 +69,14 @@ $urltoconfirm = "www.bewelcome.org/bw/main.php?action=confirmsignup&username=$Us
 $text = ww("SignupTextRegistrationAgain", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName'],$rr->created, $urltoconfirm, $urltoconfirm, $urltoconfirm."&StopBoringMe=1");
 $defLanguage = $MemberIdLanguage;
 bw_mail($Email, $subj, $text, "", $_SYSHCVOL['SignupSenderMail'],$defLanguage, "html", "", "");
+
+*/
+$MODMember = MOD_member::getMember_userId($rr->id);
+$userId = $MODMember->getTBuserId();
+$SignupModel = new SignupModel();
+$SignupView = new SignupView($SignupModel);
+$SignupView->registerMail($userId);
+
 LogStr("Requesting again for confimation mail for <b>".$Username."</b> ","resendconfirmyourmail");
 
 DisplayResendConfirmYourMail($rr->id,$Email);

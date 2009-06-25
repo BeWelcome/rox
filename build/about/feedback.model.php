@@ -58,10 +58,13 @@ FROM feedbackcategories
 		$text .= "Category " . $rCategory->Name . "\r\n";
 		$text .= "Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." (".$_SERVER["REMOTE_ADDR"].")\r\n";
 		// Feedback must not be slashes striped in case of \r\n so we can't use GetParam
-		if (empty($vars["FeedbackQuestion"])) {
+		if (!empty($vars["FeedbackQuestion"]))
+        {
 			$text .= $vars["FeedbackQuestion"] . "\r\n";
-		} else if (empty($vars["FeedbackQuestion"])) {
-			$text .= $vars["FeedbackQuestion"] . "\r\n";
+		}
+        else if (empty($vars["FeedbackQuestion"]))
+        {
+			$text .= "Feedback text not filled in.\r\n";
 		}
 		if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
 		    $text .= "member requested an answer (".$EmailSender.")\r\n";
@@ -116,7 +119,4 @@ FROM feedbackcategories
     }
     
 }
-
-
-?>
 

@@ -133,7 +133,25 @@ class GeoController extends PAppController {
                 echo $this->_view->generateLocationOverview($locations);
                 PPHP::PExit();
                 break;
-                
+
+            case 'refreshgeo':
+                if ($_SERVER['REMOTE_ADDR'] !== '127.0.0.1')
+                {
+                    header("Location: http://www.bewelcome.org");
+                    exit(0);
+                }
+                ob_start();
+                if (MOD_geonames::get()->getUpdate() && MOD_geonames::get()->getAltnamesUpdate())
+                {
+                    ob_end_clean();
+                    echo "success";
+                }
+                else
+                {
+                    ob_end_clean();
+                    echo "failure";
+                }
+                exit(0);
             case 'admin':
                 $R = MOD_right::get();
                 if ($R->hasRight('Debug')) {

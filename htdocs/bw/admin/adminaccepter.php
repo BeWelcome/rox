@@ -68,10 +68,12 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	   $emailtable=",".$_SYSHCVOL['Crypted']."cryptedfields" ;
 	   $emailwhere=" and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and ".$_SYSHCVOL['Crypted']."cryptedfields.AdminCryptedValue='".$Email."'" ;
 	   $lastaction=$lastaction." Seek all members with a duplicated email" ;
-	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope .$emailwhere;
+	   $str = "SELECT countries.Name AS countryname,geonames_cache.parentAdm1Id AS IdRegion,geonames_cache.name AS cityname,members.* FROM members,countries,geonames_cache".$emailtable." WHERE members.IdCity=geonames_cache.geonameid AND countries.id=geonames_cache.parentCountryId " . $InScope .$emailwhere;
+//	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE //members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope .$emailwhere;
 	}
 	else {
-	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope . " AND Status='" . $Status . "'".$emailwhere;
+	   $str = "SELECT countries.Name AS countryname,geonames_cache.parentAdm1Id AS IdRegion,geonames_cache.name AS cityname,members.* FROM members,countries,geonames_cache".$emailtable." WHERE members.IdCity=geonames_cache.geonameid AND countries.id=geonames_cache.parentCountryId " . $InScope . " AND Status='" . $Status . "'".$emailwhere;
+//	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE //members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope . " AND Status='" . $Status . "'".$emailwhere;
 	}
 
 	if ($RestrictToIdMember != "") {
@@ -90,7 +92,7 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 		$StreetName = "";
 		$Zip = "";
 		$HouseNumber = "";
-		$rAddress = LoadRow("SELECT StreetName,Zip,HouseNumber,countries.id AS IdCountry,cities.id AS IdCity,cities.Name AS cityname,cities.IdRegion AS IdRegion from addresses,countries,cities WHERE IdMember=" . $m->id . " AND addresses.IdCity=cities.id AND countries.id=cities.IdCountry");
+		$rAddress = LoadRow("SELECT StreetName,Zip,HouseNumber,countries.id AS IdCountry,geonames_cache.geonameid AS IdCity,geonames_cache.name AS cityname,geonames_cache.parentAdm1Id AS IdRegion from addresses,countries,geonames_cache WHERE IdMember=" . $m->id . " AND addresses.IdCity=geonames_cache.geonameid AND countries.id=geonames_cache.parentCountryId");
 		if (isset ($rAddress->IdCity)) {
 			$m->StreetName = AdminReadCrypted($rAddress->StreetName);
 			$m->Zip = AdminReadCrypted($rAddress->Zip);

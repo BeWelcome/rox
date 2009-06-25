@@ -233,9 +233,9 @@ class SignupView extends PAppView
     public function registerMail($userId)
     {
         //Load the files we'll need
-        require_once "bw/lib/swift/Swift.php";
-        require_once "bw/lib/swift/Swift/Connection/SMTP.php";
-        require_once "bw/lib/swift/Swift/Message/Encoder.php";
+        require_once SCRIPT_BASE."htdocs/bw/lib/swift/Swift.php";
+        require_once SCRIPT_BASE."htdocs/bw/lib/swift/Swift/Connection/SMTP.php";
+        require_once SCRIPT_BASE."htdocs/bw/lib/swift/Swift/Message/Encoder.php";
         
         //Start Swift
         $swift =& new Swift(new Swift_Connection_SMTP("localhost"));

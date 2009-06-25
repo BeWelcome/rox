@@ -17,4 +17,4 @@ then
 else
     error="Geo update failed on $1"
 fi
-echo $error | mail -s "Geo update failed" bw-admin-discussion@bewelcome.org bw-dev-svn@bewelcome.org
+echo $error | mail -s "Geo update failed" bw-admin-discussion@bewelcome.org

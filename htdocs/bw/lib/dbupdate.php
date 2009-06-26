@@ -1408,6 +1408,8 @@ SQL;
 
 $updates[] = "ALTER TABLE `geo_usage` CHANGE `typeId` `typeId` INT( 11 ) NOT NULL COMMENT 'id specifying the usage type, eg member, blog or gallery, its a foreign key to geo_types'" ;
 
+$updates[] = "ALTER TABLE `linklist` ADD `updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ";
+
     if (empty($res)) {
         $version = 0;
     } else {

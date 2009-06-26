@@ -41,7 +41,8 @@ class LinkModel extends RoxModelBase
 		$comments = $this->getComments();
 		echo "createLinkList comments ".count($comments)." values created<br>" ;			
 		$specialrelation = $this->getSpecialRelation();
-		echo "createLinkList specialrelation ".count($specialrelation)." values created<br>" ;			
+		echo "createLinkList specialrelation ".count($specialrelation)." values created<br>" ;
+
 		
 		
 		foreach ($comments as $comment) {
@@ -90,16 +91,15 @@ class LinkModel extends RoxModelBase
 		
 	} // end of createLinkList
 	
-	function getTree() {
-//		echo "<br>in getTree<br>";
-		$directlinks = $this->createLinkList();
+	function getTree($directlinks,$startids) {
+
 
 		$count = 0;
 		$maxdepth= 3;
 		$branch = array();
 		$oldid = 0;
 
-		foreach ($directlinks as $key => $value) {
+		foreach ($startids as $key) {
 			echo "<br> ### ". $key ." ####<br>";
 			$matrix = array();
 			$matrix[0] = array($key);
@@ -144,7 +144,7 @@ class LinkModel extends RoxModelBase
 
 			echo "<br> ".count($matrix). " values to write in link list<br>";
 			foreach ($matrix as $key => $value) {
-				//var_dump($value);
+				var_dump($value);
 				$path = $this->createPath($value,$directlinks);
 				$lastid = count($value)-1;
 				$degree = count($value)-1;
@@ -159,8 +159,34 @@ class LinkModel extends RoxModelBase
 	
 	
 
-		
-		
+	/**
+	/ rebuild the link database
+	**/
+	function rebuildLinks() {
+	    $this->deleteLinkList();
+		$directlinks = $this->createLinkList();
+		foreach ($directlinks as $key => $value) {
+		    $startids[] = $key;
+		 }
+		 $this->getTree($directlinks,$startids);
+     }
+     
+     /**
+     / update the link database to integrate links changed since last called
+     **/
+     function updateLinks() {
+        $changed_ids = $this->getChanges();
+        $directlinks= $this->createLinkList();
+        if ($changed_ids != '') {
+        var_dump($changed_ids);
+            foreach ($changed_ids as $id) {
+                $this->removeLink($id);
+            }
+            $this->getTree($directlinks,$changed_ids);
+        }
+     }
+    
+    
 
 	/** 
 	* write / flush database
@@ -189,6 +215,15 @@ class LinkModel extends RoxModelBase
 		);
 	}
 	
+	function removeLink($id) {
+	    return $this->dao->query(
+	        "
+	        DELETE FROM linklist
+	        WHERE fromID = ".$id
+	        );
+	}
+	
+	
 	/**
 	* functions collecting connection data from other parts of the system
 	* - comments
@@ -200,6 +235,45 @@ class LinkModel extends RoxModelBase
 	/** 
 	* retrieve link information from the comment system
 	**/
+	
+	function getChanges() {
+	    $lastupdate = $this->singleLookup(
+	        "SELECT UNIX_TIMESTAMP(`updated`) as updated FROM `linklist` ORDER BY `updated` DESC LIMIT 1"
+	        );
+	     var_dump($lastupdate);
+	     
+	    $comments= $this->bulkLookup(
+	        "
+	        SELECT `IdFromMember` FROM `comments` WHERE UNIX_TIMESTAMP(`updated`) >= ".$lastupdate->updated."-120"
+	        );
+	    $relations=$this->bulkLookup(
+	        "
+	        SELECT `IdOwner` FROM `specialrelations` WHERE UNIX_TIMESTAMP(`updated`) >= ".$lastupdate->updated."-120"
+	        );
+	    $ids=array();
+    
+	    foreach($comments as $comment) {
+	        $ids[] = $comment->IdFromMember;
+        }
+	    foreach($relations as $relation) {
+	        $ids[] = $relation->IdOwner;
+        }
+        $changed_ids = array_unique($ids);
+        foreach ($changed_ids as $id) {
+            $links = $this->bulkLookup(
+                "
+                SELECT `fromID`,path FROM `linklist` WHERE `path` LIKE '%{i:0;i:".$id.";%' AND (`toID` != ".$id." AND fromID != ".$id.")
+                ");
+            if ($links) {
+                foreach($links as $link) {
+                    $ids[] = $link->fromID;
+                }   
+            }
+        }
+
+        return(array_unique($ids));
+        
+    }
 	
 	function getComments()
     {
@@ -505,7 +579,6 @@ class LinkModel extends RoxModelBase
 	
 
 	 
-
 
 }
 

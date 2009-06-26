@@ -81,8 +81,15 @@ class LinkController extends RoxControllerBase
                         break;
                     case 'update':
                         // fully decorated page
+  
                         set_time_limit(0);
                         $page = new LinkUpdatePage($request[1]);
+                        break;
+                    case 'rebuild':
+                        // fully decorated page
+  
+                        set_time_limit(0);
+                        $page = new LinkRebuildPage($request[1]);
                         break;
                     case 'showlink':
                         // page with submenu

@@ -12,7 +12,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class LinkUpdatePage extends LinkPage  /* HelloUniversePage doesn't work! */
+class LinkRebuildPage extends LinkPage  /* HelloUniversePage doesn't work! */
 {
     /**
      * content of the middle column - this is the most important part
@@ -26,7 +26,7 @@ class LinkUpdatePage extends LinkPage  /* HelloUniversePage doesn't work! */
 <h3>Admin Links</h3>
 
 <p>
-Updating Tree of links
+Rebuildin the Tree of links
 </p>
         ';
     
@@ -36,7 +36,7 @@ Updating Tree of links
 		// var_dump($listitem);
 	// $model->createLinkList($listitem);
 
-	$model->updateLinks();
+	$model->rebuildLinks();
 	//$flush = $model->deleteLinkList();
 	//$model->getTree();
 

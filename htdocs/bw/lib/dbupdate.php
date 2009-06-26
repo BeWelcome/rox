@@ -1410,6 +1410,9 @@ $updates[] = "ALTER TABLE `geo_usage` CHANGE `typeId` `typeId` INT( 11 ) NOT NUL
 
 $updates[] = "ALTER TABLE `linklist` ADD `updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ";
 
+$updates[] = "ALTER TABLE `params` ADD `FeatureSearchPageIsClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'allow to disbale the main search page' AFTER `FeatureSignupClose` ,
+ADD `FeatureQuickSearchIsClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'allows to disable the quick search feature' AFTER `FeatureSearchPageIsClosed`" ;
+
     if (empty($res)) {
         $version = 0;
     } else {

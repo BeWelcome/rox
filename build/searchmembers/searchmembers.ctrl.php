@@ -38,6 +38,7 @@ class SearchmembersController extends PAppController {
         parent::__construct();
         $this->_model = new Searchmembers();
         $this->_view  = new SearchmembersView($this->_model);
+		
 
         // if a stylesheet is requested (in subdir style), pipe it through
         $request = PRequest::get()->request;
@@ -61,6 +62,13 @@ class SearchmembersController extends PAppController {
         $vw = new ViewWrap($this->_view);
         $P = PVars::getObj('page');
         
+        // First check if the feature is closed
+        if ($_SESSION["Param"]->FeatureSearchPageIsClosed!='No') {
+            $this->_view->showFeatureIsClosed();
+            PPHP::PExit();
+             break ;
+        } // end of test "if feature is closed" 
+
         
         if(PPostHandler::isHandling()) return;
         $request = PRequest::get()->request;
@@ -81,7 +89,9 @@ class SearchmembersController extends PAppController {
         $varsGet = '';
         if(isset($request[1])) {
             switch ($request[1]) {
-                case 'quicksearch': $mapstyle = "mapoff"; break;
+                case 'quicksearch': 
+					$mapstyle = "mapoff"; 
+					break;
                 case 'mapoff': $mapstyle = "mapoff"; break;
                 case 'mapon': $mapstyle = "mapon"; break;
                 case 'queries': {
@@ -176,7 +186,7 @@ class SearchmembersController extends PAppController {
                         // if there's not city with that name, redirect to a member's profile if there is one
                         $m = MOD_member::getMember_username($_GET['vars']);
                         if ($m) {
-                            $loc = PVars::getObj('env')->baseuri.'bw/member.php?cid='.$_GET['vars'];
+                            $loc = PVars::getObj('env')->baseuri.'people/member/'.$_GET['vars'];
                             header('Location: '.$loc);
                         }
                     }

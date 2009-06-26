@@ -38,6 +38,7 @@ class Searchmembers extends PAppModel {
      */
     public function __construct() {
         parent::__construct();
+		
         
         // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
@@ -93,11 +94,10 @@ WHERE   ShortCode IN ($l)
         return $langNames;
     }
     
-    public function quicksearch($searchtext)
-    {
+    public function quicksearch($searchtext)     {
         $TList = array ();
         $dblink="" ; // This will be used one day to query on another replicated database
-        
+//        die('quicksearch') ;
         if(strlen($searchtext) < 2) return $TList;
         
         // search for username
@@ -134,14 +134,14 @@ LIMIT 20
                 "
 SELECT
     countries.Name AS CountryName,
-    cities.Name as CityName
+    geonames_cache.name as CityName
 FROM
     countries,
     members,
-    cities
+    geonames_cache
 WHERE
-    members.IdCity=cities.id AND
-    countries.id=cities.IdCountry AND
+    members.IdCity=geonames_cache.geonameid AND
+    countries.id=geonames_cache.parentCountryId AND
     members.id = $rr->IdMember
                 "
             ;
@@ -198,14 +198,14 @@ LIMIT 20
                 "
 SELECT
     countries.Name AS CountryName,
-    cities.Name AS CityName
+    geonames_cache.name AS CityName
 FROM
     countries,
     members,
-    cities
+    geonames_cache
 WHERE
-    members.IdCity=cities.id AND
-    countries.id=cities.IdCountry AND
+    members.IdCity=geonames_cache.geonameid AND
+    countries.id=geonames_cache.parentCountryId AND
     members.id= $rr->IdMember
                 "
             ;
@@ -235,7 +235,7 @@ WHERE
             array_push($TList, $rr);
         }
         return $TList;
-    }
+    } // end of quicksearch
     
     private function ellipsis($str, $len)
     {
@@ -245,6 +245,8 @@ WHERE
     }
     
     public function searchmembers(&$vars) {
+//        die('searchmembers') ;
+
         $TMember=array() ;
     
         $limitcount=$this->GetParam($vars, "limitcount",10); // Number of records per page
@@ -268,14 +270,12 @@ ORDER BY members.created"
         }
     
         $dblink="" ; // This will be used one day to query on another replicated database
-        $tablelist=$dblink."members,".$dblink."cities,".$dblink."countries" ;
+        $tablelist=$dblink."members,".$dblink."geonames_cache,".$dblink."geonames_alternate_names,".$dblink."countries" ;
     
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1") {
             $where = "
 WHERE (
-    members.Status='Active' OR
-    members.Status='ChoiceInActive' OR
-    members.Status='OutOfRemind'
+    members.Status in ('Active','ChoiceInActive','OutOfRemind')
 )"
             ; // only active and inactive members
         }
@@ -353,7 +353,7 @@ AND memberstrads.IdOwner=members.id"
         // Process IdRegion parameter if any
         if ($this->GetParam($vars, "IdRegion","")!="") {
             $IdRegion=GetParam($vars, "IdRegion") ;
-            $where=$where." AND cities.IdRegion=".$IdRegion ;
+            $where=$where." AND geonames_cache.parentAdm1Id=".$IdRegion ;
         }
     
         // Process Gender parameter if any
@@ -396,66 +396,67 @@ AND memberspublicprofiles.IdMember=members.id"
             if($this->GetParam($vars, "bounds_sw_lng") > $this->GetParam($vars, "bounds_ne_lng")) {
                 $where .= "
 AND ((
-    cities.longitude >= ".$this->GetParam($vars, "bounds_sw_lng")."
+    geonames_cache.longitude >= ".$this->GetParam($vars, "bounds_sw_lng")."
     AND
-    cities.longitude <= 180
+    geonames_cache.longitude <= 180
 ) OR (
-    cities.longitude >= -180
+    geonames_cache.longitude >= -180
     AND
-    cities.longitude <= ".$this->GetParam($vars, "bounds_ne_lng")."
+    geonames_cache.longitude <= ".$this->GetParam($vars, "bounds_ne_lng")."
 ))"
                 ;
             } else {
                 $where .= "
 AND (
-    cities.longitude > ".$this->GetParam($vars, "bounds_sw_lng")."
+    geonames_cache.longitude > ".$this->GetParam($vars, "bounds_sw_lng")."
     AND
-    cities.longitude < ".$this->GetParam($vars, "bounds_ne_lng")."
+    geonames_cache.longitude < ".$this->GetParam($vars, "bounds_ne_lng")."
 )"
                 ;
             }
             if($this->GetParam($vars, "bounds_sw_lat") > $this->GetParam($vars, "bounds_ne_lat")) {
                 $where .= "
 AND ((
-    cities.latitude >= ".$this->GetParam($vars, 'bounds_sw_lat')."
+    geonames_cache.latitude >= ".$this->GetParam($vars, 'bounds_sw_lat')."
     AND
-    cities.latitude <= 90
+    geonames_cache.latitude <= 90
 ) OR (
-    cities.latitude >= -90
+    geonames_cache.latitude >= -90
     AND
-    cities.latitude <= ".$this->GetParam($vars, "bounds_ne_lat")."
+    geonames_cache.latitude <= ".$this->GetParam($vars, "bounds_ne_lat")."
 ))"
                 ;
             } else {
                 $where .= "
 AND (
-    cities.latitude > ".$this->GetParam($vars, "bounds_sw_lat")."
+    geonames_cache.latitude > ".$this->GetParam($vars, "bounds_sw_lat")."
     AND
-    cities.latitude < ".$this->GetParam($vars, "bounds_ne_lat")."
+    geonames_cache.latitude < ".$this->GetParam($vars, "bounds_ne_lat")."
 )"
                 ;
             }
         }
         $where.="
-AND cities.id=members.IdCity
-AND countries.id=cities.IdCountry"
+AND geonames_cache.geonameid=members.IdCity
+AND countries.id=geonames_cache.parentCountryId"
         ;
     
         if ($this->GetParam($vars, "IdCountry",0)!= '0') {
             $where.=" AND countries.isoalpha2='".$this->GetParam($vars, "IdCountry")."'" ;
         }
         if ($this->GetParam($vars, "IdCity",0)!=0) {
-           $where.=" AND cities.id=".$this->GetParam($vars, "IdCity") ;
+           $where.=" AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
         }
         if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
             $where.="
 AND (
-    cities.Name='".$this->GetParam($vars, "CityName")."'
-    OR
-    cities.OtherNames LIKE '%". $this->GetParam($vars, "CityName")."%'
-)"
-            ;
+    geonames_cache.name='".$this->GetParam($vars, "CityName")."'" ;
+//    geonames_cache.name='".$this->GetParam($vars, "CityName")."'" ;
+	$where=$where." OR (geonames_alternate_names.alternateName = '". $this->GetParam($vars, "CityName")."' and geonames_alternate_names.geonameId=geonames_cache.geonameId))" ;
         }
+		else {
+//			$where=" WHERE 1=0" ; // If there is no city, no search, This is temporary
+		}
         // if a group is chosen
         if ($this->GetParam($vars, "IdGroup",0)!=0) {
             $tablelist=$tablelist.",".$dblink."membersgroups" ;
@@ -476,9 +477,9 @@ SELECT SQL_CALC_FOUND_ROWS
     members.Accomodation,
     members.Username AS Username,
     date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,
-    cities.latitude AS Latitude,
-    cities.longitude AS Longitude,
-    cities.Name AS CityName,
+    geonames_cache.latitude AS Latitude,
+    geonames_cache.longitude AS Longitude,
+    geonames_cache.name AS CityName,
     countries.Name AS CountryName,
     ProfileSummary,
     Gender,
@@ -492,8 +493,12 @@ $OrderBy
 LIMIT $start_rec,$limitcount
             "
         ;
+		
+		
+        MOD_log::get()->write("doing a [".$str."]", "Serach");
+
     
-        //echo $str;
+        // echo $str;
     
         $qry = $this->dao->query($str);
         $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
@@ -529,7 +534,7 @@ WHERE
         }
         
         return($TMember);
-    }
+    } // end of searchmembers
     
     private static function test() {}
     
@@ -954,7 +959,7 @@ FROM
             'LastLogin' => 'Lastlogin',
             'NbComment' => 'Comments',
             'Accomodation' => 'Accomodation',
-            'cities.Name' => 'City',
+            'geonames_cache.name' => 'City',
             'countries.Name' => 'Country'
         );
     }

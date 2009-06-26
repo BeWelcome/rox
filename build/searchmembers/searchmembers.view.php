@@ -110,12 +110,5 @@ class SearchmembersView extends PAppView {
     public function topMenu($currentTab) {
         require TEMPLATE_DIR.'shared/roxpage/topmenu.php';
     }
-
-    public function showFeatureIsClosed()		{
-//        PVars::getObj('page')->title = 'Feature Closed - Bewelcome';
-		$this->page->title='Feature Closed - Bewelcome' ;
-        require 'templates/featureclosed.php';
-	} // end of showFeatureIsClosed()
-
 }
 ?>

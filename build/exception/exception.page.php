@@ -56,7 +56,7 @@ class ExceptionPage
           font-family:monospace;
         }
         </style>
-        <h2>'.htmlentities($e->getMessage(), ENT_COMPAT, 'utf-8').'</h2>
+        <h2>'.htmlentities($e->getMessage(), ENT_QUOTES, 'utf-8').'</h2>
         <p>'.get_class($e).'</p>
         <table>
         <tr><td>code: </td><td>'.$e->getCode().'</td></tr>
@@ -65,20 +65,20 @@ class ExceptionPage
         <tr><td>line: </td><td>'.$e->getLine().'</td></tr>
         </table>
         <br>';
-        foreach ($e->getInfo() as $i => $inf) {
-            echo 'info['.$i.']: '.htmlentities($inf, ENT_COMPAT, 'utf-8').'<br>';
+        if (method_exists($e, 'getInfo'))
+        {
+            foreach ($e->getInfo() as $i => $inf)
+            {
+                echo 'info['.$i.']: '.htmlentities($inf, ENT_QUOTES, 'utf-8').'<br>';
+            }
         }
-        foreach ($e->getTrace() as $i => $step) {
-            $this->showTraceStep($step, $i);
+        if (method_exists($e, 'getTrace'))
+        {
+            foreach ($e->getTrace() as $i => $step)
+            {
+                $this->showTraceStep($step, $i);
+            }
         }
-        /*
-        $stacktrace_widget = new StackTraceWidget;
-        $stacktrace_widget->items = $e->getTrace();
-        echo '<style> th {text-align:left;}';
-        $stacktrace_widget->printCSS();
-        echo '</style>';
-        $stacktrace_widget->render();
-        */
     }
     
     protected function showTraceStep($step, $i_step)
@@ -93,8 +93,7 @@ class ExceptionPage
         $showargs = array();
         
         // TODO: this should happen in a smarter way.
-        if (isset($this->debug)) $debug = $this->debug;
-        else $debug = false;
+        $debug = ((isset($this->debug)) ? $debug = $this->debug : $debug = false);
         
         if ($debug || true) {
             foreach ($args as $i => $arg) {
@@ -135,45 +134,3 @@ class ExceptionPage
     }
 }
 
-/*
-class StackTraceWidget extends ScrolltableWidget
-{
-    protected function getTableColumns()
-    {
-        return array(
-            'file' => 'file',
-            'line' => 'line',
-            'function' => 'function',
-            'class' => 'class',
-            'type' => 'type',
-            'args' => 'args',
-        );
-    }
-    
-    protected function tableCell($key, $trace_step) {
-        if (isset($trace_step[$key])) {
-            echo '<pre>'; print_r($trace_step[$key]); echo '</pre>';
-        } else {
-            echo '-';
-        }
-    }
-    
-    protected function tableCell_args($trace_step)
-    {
-        echo '<div style="overflow:auto; width:50em; height:6em;">';
-        // print_r($trace_step['args']);
-        
-        echo '<table>';
-        foreach ($trace_step['args'] as $i => $arg) {
-            echo '<tr><th>arg['.$i.']</th><td><pre>';
-            print_r($arg);
-            echo '</pre></td></tr>';
-        }
-        echo '</table>';
-        
-        echo '</div>';
-    }
-}
-*/
-
-?>

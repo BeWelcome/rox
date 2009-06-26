@@ -1413,6 +1413,8 @@ $updates[] = "ALTER TABLE `linklist` ADD `updated` TIMESTAMP NOT NULL DEFAULT CU
 $updates[] = "ALTER TABLE `params` ADD `FeatureSearchPageIsClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'allow to disbale the main search page' AFTER `FeatureSignupClose` ,
 ADD `FeatureQuickSearchIsClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'allows to disable the quick search feature' AFTER `FeatureSearchPageIsClosed`" ;
 
+$updates[] = "ALTER TABLE `geonames_alternate_names` ADD INDEX ( `alternateName` ) " ; 
+
     if (empty($res)) {
         $version = 0;
     } else {

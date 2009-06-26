@@ -70,10 +70,14 @@ $words = new MOD_words();
             <h4><?php echo $words->get('GetActiveLocalTitle')?></h4>
             <p><?php echo $words->get('GetActiveLocalText')?></p>
         </div> <!-- floatbox -->
+        
+        <div class="floatbox">
+            <img class="float_left" src="images/icons/tango/32x32/megaphone.png" alt="PR" />
+            <h4><?php echo $words->get('GetActivePRTitle')?></h4>
+            <p><?php echo $words->get('GetActivePRText')?></p>
+        </div> <!-- floatbox -->
     </div>
   </div>
 </div>
 
-<h3><?php echo $words->get('GetActiveTitle3') ?></h3>
-<p><?php echo $words->get('GetActiveText3')?></p>
 

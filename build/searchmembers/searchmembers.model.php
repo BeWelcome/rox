@@ -448,9 +448,9 @@ AND countries.id=geonames_cache.parentCountryId"
            $where.=" AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
         }
         if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
-            $where.=" AND (geonames_alternate_names.alternateName='".$this->GetParam($vars, "CityName")."'" ;
+            $where.=" AND geonames_alternate_names.alternateName='".$this->GetParam($vars, "CityName")."'" ;
 //    geonames_cache.name='".$this->GetParam($vars, "CityName")."'" ;
-	$where=$where." and geonames_alternate_names.geonameId=geonames_cache.geonameId))" ;
+	$where=$where." AND geonames_alternate_names.geonameId=geonames_cache.geonameId" ;
         }
 		else {
 //			$where=" WHERE 1=0" ; // If there is no city, no search, This is temporary

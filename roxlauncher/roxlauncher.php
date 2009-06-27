@@ -21,6 +21,7 @@ class RoxLauncher
             // find an app and run it.
             $this->chooseAndRunApplication($env_explore);
         } catch (Exception $e) {
+            ExceptionLogger::logException($e);
             $debug = true;
             if (class_exists('PVars') && !($debug = PVars::get()->debug))
             {
@@ -86,7 +87,42 @@ HTML;
     }
 }
 
+class ExceptionLogger
+{
+    public static function logException($e)
+    {
+        if ($handle = fopen('exception.log', 'at'))
+        {
+            $string = "Exception occurred at " . date('Y-m-d H:i:s') . ". Here are the details:" . PHP_EOL;
+            $string .= "* Exception message: {$e->getMessage()}" . PHP_EOL;
+            $string .= "* Exception class: " . get_class($e) . PHP_EOL;
+            $string .= "* Exception code: {$e->getCode()}" . PHP_EOL;
+            $string .= "* Exception line: {$e->getLine()}" . PHP_EOL;
+            $string .= "* Exception file: {$e->getFile()}" . PHP_EOL;
 
-
-
-?>
+            if (method_exists($e, 'getInfo'))
+            {
+                $string .= "* Exception info:" . PHP_EOL;
+                foreach ($e->getInfo() as $i => $inf)
+                {
+                    $string .= "  * info[{$i}]: {$inf}" . PHP_EOL;
+                }
+            }
+            if (method_exists($e, 'getTrace'))
+            {
+                $string .= "* Exception trace:" . PHP_EOL;
+                foreach ($e->getTrace() as $i => $step)
+                {
+                    $string .= "  * Step {$i}:" . PHP_EOL;
+                    foreach ($step as $key => $value)
+                    {
+                        $string .= "    * {$key} = {$value}" . PHP_EOL;
+                    }
+                }
+            }
+            $string .= PHP_EOL . PHP_EOL;
+            fwrite($handle, $string);
+            fclose($handle);
+        }
+    }
+}

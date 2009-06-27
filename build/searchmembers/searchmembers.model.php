@@ -273,16 +273,11 @@ ORDER BY members.created"
         $tablelist=$dblink."members,".$dblink."geonames_cache,".$dblink."geonames_alternate_names,".$dblink."countries" ;
     
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1") {
-            $where = "
-WHERE (
-    members.Status in ('Active','ChoiceInActive','OutOfRemind')
-)"
+            $where = "WHERE (  members.Status in ('Active','ChoiceInActive','OutOfRemind'))"
             ; // only active and inactive members
         }
         else {
-            $where = "
-WHERE members.Status='Active'"
-            ; // only active members
+            $where = "WHERE members.Status='Active'" ; // only active members
         }
     
         // Process Accomodation
@@ -298,9 +293,7 @@ WHERE members.Status='Active'"
                 }
             }
         }
-        if($where_accomodation) $where .= "
-AND (".implode(" OR ", $where_accomodation).") "
-        ;
+        if($where_accomodation) $where = $where." AND (".implode(" OR ", $where_accomodation).") " ;
     
         // Process typic Offer
         $where_typicoffer = array();
@@ -315,22 +308,17 @@ AND (".implode(" OR ", $where_accomodation).") "
                 }
             }
         }
-        if($where_typicoffer) $where .= "
-AND (".implode(" AND ", $where_typicoffer).")";
+        if($where_typicoffer) $where = $where. " AND (".implode(" AND ", $where_typicoffer).")";
     
         // Process Username parameter if any
         if ($this->GetParam($vars, "Username","")!="") {
             $Username=$this->GetParam($vars, "Username") ; //
             if (strpos($Username,"*")!==false) {
                 $Username=str_replace("*","%",$Username) ;
-                $where.="
-AND Username LIKE '".mysql_real_escape_string($Username)."'"
-                ;
+                $where = $where." AND Username LIKE '".mysql_real_escape_string($Username)."'" ;
             } else {
                 $Username=$this->fUserName($this->IdMember($this->GetParam($vars, "Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
-                $where.="
-AND Username ='".mysql_real_escape_string($Username)."'"
-                ;
+                $where = $where." AND Username ='".mysql_real_escape_string($Username)."'" ;
             }
         }
     
@@ -343,10 +331,7 @@ AND Username ='".mysql_real_escape_string($Username)."'"
                 $where=$where." AND Username='".mysql_real_escape_string($TextToFind)."'" ;
             } else {
                 $tablelist=$tablelist.",".$dblink."memberstrads";
-                $where .= "
-AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%'
-AND memberstrads.IdOwner=members.id"
-                ;
+                $where = $where. " AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%' AND memberstrads.IdOwner=members.id" ;
             }
         }
     
@@ -359,9 +344,7 @@ AND memberstrads.IdOwner=members.id"
         // Process Gender parameter if any
         if ($this->GetParam($vars, "Gender","0")!="0") {
             $Gender=$this->GetParam($vars, "Gender") ;
-            $where .= "
-AND Gender='".mysql_real_escape_string($Gender)."'
-AND HideGender='No'" ;
+            $where = $where. " AND Gender='".mysql_real_escape_string($Gender)."' AND HideGender='No'" ;
         }
     
         // Process Age parameters
@@ -376,25 +359,22 @@ AND members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge").
 AND members.BirthDate >= (NOW() - INTERVAL ".$this->GetParam($vars, "MaximumAge")." YEAR)"
             ;
         }
-        if($operation) $where .= "
-$operation AND members.HideBirthDate='No'"
+        if($operation) $where = $where. $operation." AND members.HideBirthDate='No'"
         ;
         
         // If the SortOrder is "BirthDate", hide the members that don't want to show their age.
-        if($order_by == 'BirthDate') $where .= "
-AND members.HideBirthDate='No'"
+        if($order_by == 'BirthDate') $where = $where. " AND members.HideBirthDate='No'"
         ;
         
         if (!APP_User::login()) { // case user is not logged in
-            $where .= "
-AND memberspublicprofiles.IdMember=members.id"
+            $where = $where. " AND memberspublicprofiles.IdMember=members.id"
             ; // must be in the public profile list
             $tablelist=$tablelist.",".$dblink."memberspublicprofiles" ;
         }
         
         if($this->GetParam($vars, "mapsearch")) {
             if($this->GetParam($vars, "bounds_sw_lng") > $this->GetParam($vars, "bounds_ne_lng")) {
-                $where .= "
+                $where = $where. "
 AND ((
     geonames_cache.longitude >= ".$this->GetParam($vars, "bounds_sw_lng")."
     AND
@@ -406,7 +386,7 @@ AND ((
 ))"
                 ;
             } else {
-                $where .= "
+                $where = $where. "
 AND (
     geonames_cache.longitude > ".$this->GetParam($vars, "bounds_sw_lng")."
     AND
@@ -415,7 +395,7 @@ AND (
                 ;
             }
             if($this->GetParam($vars, "bounds_sw_lat") > $this->GetParam($vars, "bounds_ne_lat")) {
-                $where .= "
+                $where = $where. "
 AND ((
     geonames_cache.latitude >= ".$this->GetParam($vars, 'bounds_sw_lat')."
     AND
@@ -427,7 +407,7 @@ AND ((
 ))"
                 ;
             } else {
-                $where .= "
+                $where = $where. "
 AND (
     geonames_cache.latitude > ".$this->GetParam($vars, "bounds_sw_lat")."
     AND
@@ -436,35 +416,38 @@ AND (
                 ;
             }
         }
-        $where.="
-AND geonames_cache.geonameid=members.IdCity
-AND countries.id=geonames_cache.parentCountryId"
-        ;
+        $where = $where." AND geonames_cache.geonameid=members.IdCity AND countries.id=geonames_cache.parentCountryId" ;
     
         if ($this->GetParam($vars, "IdCountry",0)!= '0') {
-            $where.=" AND countries.isoalpha2='".$this->GetParam($vars, "IdCountry")."'" ;
+            $where = $where." AND countries.isoalpha2='".$this->GetParam($vars, "IdCountry")."'" ;
         }
         if ($this->GetParam($vars, "IdCity",0)!=0) {
-           $where.=" AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
+           $where = $where." AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
         }
         if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
-            $where.=" AND geonames_alternate_names.alternateName='".$this->GetParam($vars, "CityName")."'" ;
+            $where = $where." AND geonames_alternate_names.alternateName='".$this->GetParam($vars, "CityName")."'" ;
 //    geonames_cache.name='".$this->GetParam($vars, "CityName")."'" ;
-	$where=$where." AND geonames_alternate_names.geonameId=geonames_cache.geonameId" ;
+			$where=$where." AND geonames_alternate_names.geonameId=geonames_cache.geonameId" ;
         }
 		else {
 //			$where=" WHERE 1=0" ; // If there is no city, no search, This is temporary
 		}
+		
         // if a group is chosen
         if ($this->GetParam($vars, "IdGroup",0)!=0) {
             $tablelist=$tablelist.",".$dblink."membersgroups" ;
-            $where.="
+            $where = $where."
 AND membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")."
 AND membersgroups.Status='In'
 AND membersgroups.IdMember=members.id"
             ;
         }
     
+		if (empty($where)) {
+			MOD_log::get()->write("empty where : todo: find the reason", "Search");
+			$where=" WHERE (1=0)" ;
+		}
+
         $str=
            "
 SELECT SQL_CALC_FOUND_ROWS
@@ -492,9 +475,7 @@ LIMIT $start_rec,$limitcount
             "
         ;
 		
-		
-        MOD_log::get()->write("doing a [".$str."]", "Serach");
-
+        MOD_log::get()->write("doing a [".$str."]", "Search");
     
         // echo $str;
     
@@ -503,6 +484,8 @@ LIMIT $start_rec,$limitcount
         $row = $result->fetch(PDB::FETCH_OBJ);
         $rCount= $row->cnt;
     
+        MOD_log::get()->write("founds:".$rCount, "Search");
+
         $vars['rCount'] = $rCount;
         
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {

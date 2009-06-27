@@ -155,7 +155,8 @@ class MOD_words
     public function getSilent($code)
     {
         // if it DOES the same, then make sure it ACTUALLY does the same instead of duplicating the code
-        return call_user_func_array(array($this, 'getBuffered'), func_get_args());
+        $args = func_get_args();
+        return call_user_func_array(array($this, 'getBuffered'), $args);
     }
 
 
@@ -198,7 +199,8 @@ class MOD_words
     public function get($code)
     {
         // if it DOES the same, then make sure it ACTUALLY does the same instead of duplicating the code
-        return call_user_func_array(array($this, 'getFormatted'), func_get_args());
+        $args = func_get_args();
+        return call_user_func_array(array($this, 'getFormatted'), $args);
     }
     
     /**

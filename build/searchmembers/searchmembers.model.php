@@ -142,9 +142,7 @@ FROM
 WHERE
     members.IdCity=geonames_cache.geonameid AND
     countries.id=geonames_cache.parentCountryId AND
-    members.id = $rr->IdMember
-                "
-            ;
+    members.id = $rr->IdMember" ;
             $result = $this->dao->query($str);
             $cc = $result->fetch(PDB::FETCH_OBJ);
             $rr->CountryName=$cc->CountryName ;
@@ -246,6 +244,7 @@ WHERE
     
     public function searchmembers(&$vars) {
 //        die('searchmembers') ;
+		$nowhere=true ; // Use to see if it is an empty query or not
 
         $TMember=array() ;
     
@@ -260,17 +259,13 @@ WHERE
         $order_by_direction = $this->GetParam($vars, "OrderByDirection",0);
         
         if($order_by) {
-            $OrderBy = "
-ORDER BY $order_by $order_by_direction"
-            ;
+            $OrderBy = "ORDER BY $order_by $order_by_direction" ;
         } else {
-            $OrderBy = "
-ORDER BY members.created"
-            ;
+            $OrderBy = "ORDER BY members.created" ;
         }
     
         $dblink="" ; // This will be used one day to query on another replicated database
-        $tablelist=$dblink."members,".$dblink."geonames_cache,".$dblink."geonames_alternate_names,".$dblink."countries" ;
+        $tablelist=$dblink."members,".$dblink."geonames_cache,".$dblink."countries" ;
     
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1") {
             $where = "WHERE (  members.Status in ('Active','ChoiceInActive','OutOfRemind'))"
@@ -290,6 +285,7 @@ ORDER BY members.created"
                     $vars['Accomodation'] = $value;
                     $value = $this->GetParam($vars, 'Accomodation');
                     $where_accomodation[] = "Accomodation='$value'" ;
+					$nowhere=false ;
                 }
             }
         }
@@ -305,6 +301,7 @@ ORDER BY members.created"
                     $vars['TypicOffer'] = $value;
                     $value = $this->GetParam($vars, 'TypicOffer');
                     $where_typicoffer[] = "FIND_IN_SET('$value',TypicOffer)" ;
+					$nowhere=false ; 
                 }
             }
         }
@@ -320,6 +317,7 @@ ORDER BY members.created"
                 $Username=$this->fUserName($this->IdMember($this->GetParam($vars, "Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
                 $where = $where." AND Username ='".mysql_real_escape_string($Username)."'" ;
             }
+			$nowhere=false ;
         }
     
         // Process TextToFind parameter if any
@@ -333,38 +331,37 @@ ORDER BY members.created"
                 $tablelist=$tablelist.",".$dblink."memberstrads";
                 $where = $where. " AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%' AND memberstrads.IdOwner=members.id" ;
             }
+			$nowhere=false ;
         }
     
         // Process IdRegion parameter if any
         if ($this->GetParam($vars, "IdRegion","")!="") {
             $IdRegion=GetParam($vars, "IdRegion") ;
             $where=$where." AND geonames_cache.parentAdm1Id=".$IdRegion ;
+			$nowhere=false ;
         }
     
         // Process Gender parameter if any
         if ($this->GetParam($vars, "Gender","0")!="0") {
             $Gender=$this->GetParam($vars, "Gender") ;
             $where = $where. " AND Gender='".mysql_real_escape_string($Gender)."' AND HideGender='No'" ;
+			$nowhere=false ;
         }
     
         // Process Age parameters
         $operation = '';
         if ($this->GetParam($vars, "MinimumAge","0")!=0) {
-            $operation .= "
-AND members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge")." YEAR)"
-            ;
+            $operation .= " AND members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge")." YEAR)"  ;
+			$nowhere=false ;
         }
         if ($this->GetParam($vars, "MaximumAge","0")!=0) {
-            $operation .= "
-AND members.BirthDate >= (NOW() - INTERVAL ".$this->GetParam($vars, "MaximumAge")." YEAR)"
-            ;
+            $operation .= "AND members.BirthDate >= (NOW() - INTERVAL ".$this->GetParam($vars, "MaximumAge")." YEAR)" ;
+			$nowhere=false ;
         }
-        if($operation) $where = $where. $operation." AND members.HideBirthDate='No'"
-        ;
+        if($operation) $where = $where. $operation." AND members.HideBirthDate='No'" ;
         
         // If the SortOrder is "BirthDate", hide the members that don't want to show their age.
-        if($order_by == 'BirthDate') $where = $where. " AND members.HideBirthDate='No'"
-        ;
+        if($order_by == 'BirthDate') $where = $where. " AND members.HideBirthDate='No'"  ;
         
         if (!APP_User::login()) { // case user is not logged in
             $where = $where. " AND memberspublicprofiles.IdMember=members.id"
@@ -382,17 +379,15 @@ AND ((
 ) OR (
     geonames_cache.longitude >= -180
     AND
-    geonames_cache.longitude <= ".$this->GetParam($vars, "bounds_ne_lng")."
-))"
-                ;
+    geonames_cache.longitude <= ".$this->GetParam($vars, "bounds_ne_lng")."))"  ;
+			$nowhere=false ;
             } else {
                 $where = $where. "
 AND (
     geonames_cache.longitude > ".$this->GetParam($vars, "bounds_sw_lng")."
     AND
-    geonames_cache.longitude < ".$this->GetParam($vars, "bounds_ne_lng")."
-)"
-                ;
+    geonames_cache.longitude < ".$this->GetParam($vars, "bounds_ne_lng").")" ;
+			$nowhere=false ;
             }
             if($this->GetParam($vars, "bounds_sw_lat") > $this->GetParam($vars, "bounds_ne_lat")) {
                 $where = $where. "
@@ -403,35 +398,56 @@ AND ((
 ) OR (
     geonames_cache.latitude >= -90
     AND
-    geonames_cache.latitude <= ".$this->GetParam($vars, "bounds_ne_lat")."
-))"
-                ;
+    geonames_cache.latitude <= ".$this->GetParam($vars, "bounds_ne_lat")."))"  ;
+			$nowhere=false ;
             } else {
                 $where = $where. "
 AND (
     geonames_cache.latitude > ".$this->GetParam($vars, "bounds_sw_lat")."
     AND
     geonames_cache.latitude < ".$this->GetParam($vars, "bounds_ne_lat")."
-)"
-                ;
+)"   ;
+			$nowhere=false ;
             }
         }
         $where = $where." AND geonames_cache.geonameid=members.IdCity AND countries.id=geonames_cache.parentCountryId" ;
     
         if ($this->GetParam($vars, "IdCountry",0)!= '0') {
             $where = $where." AND countries.isoalpha2='".$this->GetParam($vars, "IdCountry")."'" ;
+//			$nowhere=false ;
         }
         if ($this->GetParam($vars, "IdCity",0)!=0) {
            $where = $where." AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
+			$nowhere=false ;
         }
-        if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
-            $where = $where." AND geonames_alternate_names.alternateName='".$this->GetParam($vars, "CityName")."'" ;
+		if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
+			// First find the city name candidate
+			$sData="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$this->GetParam($vars, "CityName")."'" ;
+			$qryData = $this->dao->query($sData);
+			$WhereCity="" ;
+			while ($rData = $qryData->fetch(PDB::FETCH_OBJ)) {
+				if ($WhereCity=="")  {
+					$WhereCity=" geonameid in(".$rData->geonameid ;
+				}
+				else {
+					$WhereCity=$WhereCity.",".$rData->geonameid ;
+				}
+			}
+
+			if ($WhereCity!="")  {
+				$WhereCity=$WhereCity.")" ;
+			}
+			else {
+				$WhereCity=" 1=0";
+			}
+			
+			
+			MOD_log::get()->write("CityName=".$this->GetParam($vars, "CityName","")." ".$WhereCity, "Search");
+			$nowhere=false ;
+            $where = $where." AND ".$WhereCity;
 //    geonames_cache.name='".$this->GetParam($vars, "CityName")."'" ;
-			$where=$where." AND geonames_alternate_names.geonameId=geonames_cache.geonameId" ;
         }
-		else {
-//			$where=" WHERE 1=0" ; // If there is no city, no search, This is temporary
-		}
+
 		
         // if a group is chosen
         if ($this->GetParam($vars, "IdGroup",0)!=0) {
@@ -439,8 +455,8 @@ AND (
             $where = $where."
 AND membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")."
 AND membersgroups.Status='In'
-AND membersgroups.IdMember=members.id"
-            ;
+AND membersgroups.IdMember=members.id"  ;
+			$nowhere=false ;
         }
     
 		if (empty($where)) {
@@ -448,32 +464,48 @@ AND membersgroups.IdMember=members.id"
 			$where=" WHERE (1=0)" ;
 		}
 
-        $str=
-           "
+		if ($nowhere) {
+			$where=" WHERE (1=0)" ;
+		}
+
+/*
+        $str=     "
 SELECT SQL_CALC_FOUND_ROWS
-    count(comments.id) AS NbComment,
     members.id AS IdMember,
+    count(comments.id) AS NbComment,
     members.BirthDate,
     members.HideBirthDate,
     members.Accomodation,
+    ProfileSummary,
+    Gender,
+    HideGender
     members.Username AS Username,
     date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,
     geonames_cache.latitude AS Latitude,
     geonames_cache.longitude AS Longitude,
     geonames_cache.name AS CityName,
     countries.Name AS CountryName,
-    ProfileSummary,
-    Gender,
-    HideGender
 FROM
     ($tablelist)
-    LEFT JOIN $dblink comments ON (members.id=comments.IdToMember)
+//    LEFT JOIN $dblink comments ON (members.id=comments.IdToMember)
 $where
 GROUP BY members.id
 $OrderBy
-LIMIT $start_rec,$limitcount
-            "
-        ;
+LIMIT $start_rec,$limitcount " ;
+*/		
+
+		// This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
+        $str=     "
+SELECT SQL_CALC_FOUND_ROWS
+    members.id AS IdMember,
+	Username,
+    geonames_cache.name AS CityName,
+    countries.Name AS CountryName
+FROM
+    ($tablelist)
+$where
+$OrderBy
+LIMIT $start_rec,$limitcount " ;
 		
         MOD_log::get()->write("doing a [".$str."]", "Search");
     
@@ -484,23 +516,39 @@ LIMIT $start_rec,$limitcount
         $row = $result->fetch(PDB::FETCH_OBJ);
         $rCount= $row->cnt;
     
-        MOD_log::get()->write("founds:".$rCount, "Search");
+        MOD_log::get()->write("founds:".$rCount." \$nowhere=[".$nowhere."]", "Search");
 
         $vars['rCount'] = $rCount;
         
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-            
-            $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rr->ProfileSummary,true), 200);
-            $query = $this->dao->query("
-SELECT SQL_CACHE
-    *
-FROM
-    ".$dblink."membersphotos
-WHERE
-    IdMember=" . $rr->IdMember . " AND
-    SortOrder=0
-                "
-            );
+			$sData="select BirthDate,HideBirthDate,Accomodation,ProfileSummary,Gender,HideGender,date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,    geonames_cache.latitude AS Latitude,    geonames_cache.longitude AS Longitude
+			from ".$dblink."members,".$dblink."geonames_cache where members.IdCity=geonames_cache.geonameid and members.id=".$rr->IdMember ;
+
+//			MOD_log::get()->write("Log sData=[".$sData."]", "Search");
+
+			$qryData = $this->dao->query($sData);
+			$rData = $qryData->fetch(PDB::FETCH_OBJ) ;
+			
+		    $rr->BirthDate=$rData->BirthDate;
+		    $rr->HideBirthDate=$rData->HideBirthDate;
+		    $rr->HideBirthDate=$rData->HideBirthDate;
+		    $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rData->ProfileSummary,true), 200);
+		    $rr->Gender=$rData->Gender;
+		    $rr->HideGender=$rData->HideGender;
+		    $rr->LastLogin=$rData->LastLogin;
+		    $rr->Latitude=$rData->Latitude;
+		    $rr->Longitude=$rData->Longitude;
+
+			$sData="select count(*) As NbComment from ".$dblink."comments where IdToMember=".$rr->IdMember ;
+
+//			MOD_log::get()->write("Log sData=[".$sData."]", "Search");
+			
+
+			$qryData = $this->dao->query($sData);
+			$rData = $qryData->fetch(PDB::FETCH_OBJ) ;
+			$rr->NbComment=$rData->NbComment ;
+
+            $query = $this->dao->query("SELECT SQL_CACHE * FROM  ".$dblink."membersphotos WHERE IdMember=". $rr->IdMember . " AND SortOrder=0");
             $photo = $query->fetch(PDB::FETCH_OBJ);
             
             if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;

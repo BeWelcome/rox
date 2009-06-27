@@ -14,6 +14,7 @@ if (isset($vars['errors']) && is_array($vars['errors']))
     $errors = $vars['errors'];
 else
     $errors = array();
+$gallery_selected = false;
 $User = new APP_User;
 $words = new MOD_words();    
 $createText = array();

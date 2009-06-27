@@ -107,6 +107,7 @@ class MOD_images_Image {
             default:
                 $e = new PException('Image type not supported!');
                 $e->addInfo(print_r($this->imageSize, TRUE));
+                throw $e;
                 break;
         }
         $newImage = ImageCreateTrueColor($th_size_x, $th_size_y);

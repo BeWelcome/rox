@@ -118,24 +118,11 @@ class ExceptionLogger
                     {
                         if (is_array($value))
                         {
-                            $string .= "    * {$key} = ";
-                            foreach ($value as $item)
+                            if (is_object($key))
                             {
-                                $args = array();
-                                if (is_scalar($item))
-                                {
-                                    $args[] = $item;
-                                }
-                                elseif (is_object($item))
-                                {
-                                    $args[] = get_class($item);
-                                }
-                                else
-                                {
-                                    $args[] = gettype($item);
-                                }
-                                $string .= "(" . implode(' - ', $args) . ")";
+                                $key = get_class($key);
                             }
+                            $string .= "    * {$key} = " . self::getArgsVal($value) . PHP_EOL;
                         }
                         else
                         {
@@ -144,9 +131,34 @@ class ExceptionLogger
                     }
                 }
             }
-            $string .= PHP_EOL . PHP_EOL;
+            $string .= PHP_EOL;
             fwrite($handle, $string);
             fclose($handle);
         }
+    }
+
+    private static function getArgsVal($args)
+    {
+        $store = array();
+        foreach ($args as $item)
+        {
+            if (is_scalar($item))
+            {
+                $store[] = $item;
+            }
+            elseif (is_object($item))
+            {
+                $store[] = get_class($item);
+            }
+            elseif (is_array($item))
+            {
+                $store[] = "array" . self::getArgsVal($item);
+            }
+            else
+            {
+                $store[] = gettype($item);
+            }
+        }
+        return "(" . implode(' - ', $store) . ")";
     }
 }

@@ -118,7 +118,24 @@ class ExceptionLogger
                     {
                         if (is_array($value))
                         {
-                            $string .= "    * {$key} = ". implode(', ', $value) . PHP_EOL;
+                            $string .= "    * {$key} = ";
+                            foreach ($value as $item)
+                            {
+                                $args = array();
+                                if (is_scalar($item))
+                                {
+                                    $args[] = $item;
+                                }
+                                elseif (is_object($item))
+                                {
+                                    $args[] = get_class($item);
+                                }
+                                else
+                                {
+                                    $args[] = gettype($item);
+                                }
+                                $string .= "(" . implode(' - ', $args) . ")";
+                            }
                         }
                         else
                         {

@@ -97,7 +97,7 @@ class MOD_images_Image {
             case IMAGETYPE_GIF:
                 $oldImage = ImageCreateFromGIF($this->file);
                 break;
-            case IMAGETYPE_JPG:
+            case IMAGETYPE_JPEG:
                 $oldImage = ImageCreateFromJPEG($this->file);
                 break;
             case IMAGETYPE_PNG:
@@ -122,7 +122,7 @@ class MOD_images_Image {
                 ImageGIF ($newImage, $newFile);
                 $mimetype = 'image/gif';
                 break;
-            case IMAGETYPE_JPG:
+            case IMAGETYPE_JPEG:
                 ImageJPEG ($newImage, $newFile);
                 $mimetype = 'image/jpeg';
                 break;

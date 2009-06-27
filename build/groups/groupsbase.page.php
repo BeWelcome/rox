@@ -74,7 +74,27 @@ class GroupsBasePage extends PageWithActiveSkin
             return  $words->getBuffered('Group') . " '".$this->group->Name . "' | BeWelcome";
         } else return $words->getBuffered('Groups') . ' | BeWelcome';
     }
-    
+
+    /**
+     * returns the name of the group
+     *
+     * @todo return translated name
+     * @access protected
+     * @return string
+     */
+    protected function getGroupTitle()
+    {
+        if (!$this->group)
+        {
+            return '';
+        }
+        else
+        {
+            // use translation ... return $words->get($this->group->Name);
+            return $this->group->Name;
+        }
+    }
+
     protected function isGroupMember() {
         if (!$this->group || !$this->member)
         {

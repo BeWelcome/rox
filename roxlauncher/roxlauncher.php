@@ -116,7 +116,14 @@ class ExceptionLogger
                     $string .= "  * Step {$i}:" . PHP_EOL;
                     foreach ($step as $key => $value)
                     {
-                        $string .= "    * {$key} = {$value}" . PHP_EOL;
+                        if (is_array($value))
+                        {
+                            $string .= "    * {$key} = ". implode(', ', $value) . PHP_EOL;
+                        }
+                        else
+                        {
+                            $string .= "    * {$key} = {$value}" . PHP_EOL;
+                        }
                     }
                 }
             }

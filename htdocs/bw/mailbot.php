@@ -648,7 +648,7 @@ and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;
 		$Email = GetEmail($IdVolunteer);
 
 		$text=$AccepterReport ;
-		if (!bw_mail($Email, $subj, $text, "", $SenderMail, 0, "html", "", "", "<br /> This is an automatic email. Do not answer it but accept the pending members !")) {
+		if (!bw_mail($Email, $subj, $text, "", $SenderMail, 0, "html", "", "", "<br /><a href='http://www.bewelcome.org'>BeWelcome site</a><br/> This is an automatic email. Do not answer it but accept the pending members !")) {
 			LogStr("Cannot send report to IdVolunteer=#" . $IdVolunteer . " \$Email=[".$Email."]","mailbot");
 		}
 		else {

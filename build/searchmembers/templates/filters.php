@@ -84,6 +84,13 @@ Boston, MA  02111-1307, USA.
     <option value="<?php echo $TGroup[$ii]->id; ?>"><?php echo $TGroup[$ii]->Name; ?></option>
     <?php } ?>
 </select><?php echo $words->flushBuffer(); ?>
+</td><td>
+<strong class="small"><?php echo $words->getFormatted('Friends'); ?></strong><br />
+<select name="RestrictFriends" class="sval">
+    <option value="0"><?php echo $words->getBuffered('All'); ?></option>
+    <option value="1"><?php echo $words->getBuffered('MyFriends'); ?></option>
+    <option value="1"><?php echo $words->getBuffered('FriendsOfFriends'); ?></option>
+</select><?php echo $words->flushBuffer(); ?>
 </td></tr></table>
 
 <table class="float_left" style="padding-bottom: 10px"><tr><td valign="top">

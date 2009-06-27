@@ -35,7 +35,7 @@ Rebuildin the Tree of links
 	$model = new LinkModel();
 	switch($type[1]) {
 	    case 'rebuild':	
-            //$model->rebuildLinks();
+            $model->rebuildLinks();
             break;
         case 'rebuildmissing':
             $model->rebuildMissingLinks();

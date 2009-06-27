@@ -192,6 +192,9 @@ class LinkModel extends RoxModelBase
 		echo"<br> processing members:".implode(',',$startids)." <br>";
         $this->getTree($directlinks,$startids);    
       }
+      
+      
+      
      /**
      / update the link database to integrate links changed since last called
      **/

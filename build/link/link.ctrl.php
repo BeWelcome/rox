@@ -86,11 +86,18 @@ class LinkController extends RoxControllerBase
                         $page = new LinkUpdatePage($request[1]);
                         break;
                     case 'rebuild':
+                    case 'rebuildmissing':
                         // fully decorated page
   
                         set_time_limit(0);
                         $page = new LinkRebuildPage($request[1]);
                         break;
+                    //case 'rebuildmissing':
+                    //    set_time_limit(0);
+                    //    $this->_model->rebuildMissingLinks();
+                    //    $page = new LinkUpdatePage();
+                    //    break;
+                        
                     case 'showlink':
                         // page with submenu
                         $page = new LinkShowPage($request[1]);

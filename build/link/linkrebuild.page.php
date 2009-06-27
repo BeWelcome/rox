@@ -30,15 +30,18 @@ Rebuildin the Tree of links
 </p>
         ';
     
+	$type = PRequest::get()->request;
 	
-		$model = new LinkModel();
-		// $listitem = array('fromID' => '10', 'toID' => '11', 'degree' => '1', 'rank' => '1', 'path' => '2');
-		// var_dump($listitem);
-	// $model->createLinkList($listitem);
+	$model = new LinkModel();
+	switch($type[1]) {
+	    case 'rebuild':	
+            //$model->rebuildLinks();
+            break;
+        case 'rebuildmissing':
+            $model->rebuildMissingLinks();
+            break;
+    }
 
-	$model->rebuildLinks();
-	//$flush = $model->deleteLinkList();
-	//$model->getTree();
 
 	
 	}

@@ -171,6 +171,27 @@ class LinkModel extends RoxModelBase
 		 $this->getTree($directlinks,$startids);
      }
      
+     function rebuildMissingLinks() {
+        $directlinks = $this->createLinkList();
+        $existing_ids = $this->bulkLookup(
+            "
+            SELECT fromID FROM linklist GROUP BY fromID
+            ");
+       $e_ids = array();     
+       foreach ($existing_ids as $v) {
+		    $e_ids[] = $v->fromID;
+		}
+		//var_dump($e_ids);
+		$startids = array();
+	    foreach ($directlinks as $key => $value) {
+		    if(!in_array($key,$e_ids)) {
+		        $startids[] = $key;
+		    }
+        }
+		$startids = array_slice($startids,0,100);
+		echo"<br> processing members:".implode(',',$startids)." <br>";
+        $this->getTree($directlinks,$startids);    
+      }
      /**
      / update the link database to integrate links changed since last called
      **/

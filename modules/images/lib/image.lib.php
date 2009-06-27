@@ -92,16 +92,18 @@ class MOD_images_Image {
         }
 
         switch (intval($this->imageSize[2])) {
-            case IMG_GIF:
+            // note: fixed this to use the proper constants. IMG_*** are GD constants, IMAGETYPE_*** are PHP constants.
+            // The two DO NOT mix
+            case IMAGETYPE_GIF:
                 $oldImage = ImageCreateFromGIF($this->file);
                 break;
-            case IMG_JPG:
+            case IMAGETYPE_JPG:
                 $oldImage = ImageCreateFromJPEG($this->file);
                 break;
-            case IMG_PNG:
+            case IMAGETYPE_PNG:
                 $oldImage = ImageCreateFromPNG($this->file);
                 break;
-            case IMG_WBMP:
+            case IMAGETYPE_WBMP:
                 $oldImage = ImageCreateFromWBMP($this->file);
                 break;
             default:
@@ -115,20 +117,20 @@ class MOD_images_Image {
         $newFile = tempnam('Lorem ipsum dolor sit amet', 'thumb');
 
         switch ($this->imageSize[2]) {
-            case IMG_GIF:
+            case IMAGETYPE_GIF:
                 ImageTrueColorToPalette ($newImage, TRUE, 256);
                 ImageGIF ($newImage, $newFile);
                 $mimetype = 'image/gif';
                 break;
-            case IMG_JPG:
+            case IMAGETYPE_JPG:
                 ImageJPEG ($newImage, $newFile);
                 $mimetype = 'image/jpeg';
                 break;
-            case IMG_PNG:
+            case IMAGETYPE_PNG:
                 ImagePNG ($newImage, $newFile);
                 $mimetype = 'image/png';
                 break;
-            case IMG_WBMP:
+            case IMAGETYPE_WBMP:
                 ImageWBMP ($newImage, $newFile);
                 $mimetype = 'image/wbmp';
                 break;

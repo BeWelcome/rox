@@ -20,7 +20,7 @@ class QuicksearchView extends PAppView
 
     public function quicksearch_results($TReturn)
     {
-		$TReturn=$this->_model->quicksearch($_GET["vars"]) ;
+
 		$this->page->title='Search Results - Bewelcome' ;
         require 'templates/quicksearch.php';
     }

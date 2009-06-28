@@ -50,7 +50,23 @@ class QuicksearchController extends PAppController
                 break;
         }
         
-        $P->content .= $vw->quicksearch_results(null) ;
+		$TReturn=$this->_model->quicksearch($_GET["vars"]) ;
+		if ((count($TReturn->TMembers)==1) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==0)) {
+			$loc="members/".$TReturn->TMembers[0]->Username ;
+			header('Location: '.$loc);
+            PPHP::PExit();
+		}
+		else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==1)  and  (count($TReturn->TForumTags)==0)) {
+			$loc=$TReturn->TPlaces[0]->link ;
+			header('Location: '.$loc);
+            PPHP::PExit();
+		}
+		else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==1)) {
+			$loc="forums/t".$TReturn->TForumTags[0]->IdTag ;
+			header('Location: '.$loc);
+            PPHP::PExit();
+		}
+        $P->content .= $vw->quicksearch_results($TReturn);
         
         // teaser content
 //        $P->teaserBar .= $vw->ShowSimpleTeaser('Donate',$TDonationArray);

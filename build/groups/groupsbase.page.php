@@ -135,17 +135,17 @@ class GroupsBasePage extends PageWithActiveSkin
         if ($this->group)
         {
             $group_id = $this->group->id;
-            $items[] = array('start', 'groups/'.$group_id, $words->get('GroupOverview'));
-            $items[] = array('forum', 'groups/'.$group_id.'/forum', $words->get('GroupDiscussions'));
-            $items[] = array('wiki', 'groups/'.$group_id.'/wiki', $words->get('GroupWiki'));
-            $items[] = array('members', 'groups/'.$group_id.'/members', $words->get('GroupMembers'));
+            $items[] = array('start', 'groups/'.$group_id, $words->getSilent('GroupOverview'));
+            $items[] = array('forum', 'groups/'.$group_id.'/forum', $words->getSilent('GroupDiscussions'));
+            $items[] = array('wiki', 'groups/'.$group_id.'/wiki', $words->getSilent('GroupWiki'));
+            $items[] = array('members', 'groups/'.$group_id.'/members', $words->getSilent('GroupMembers'));
             if ($this->isGroupMember())
             {
-                $items[] = array('membersettings', 'groups/'.$group_id.'/membersettings', $words->get('GroupMembersettings'));
+                $items[] = array('membersettings', 'groups/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings'));
             }
             if ($this->member && $this->member->hasPrivilege('GroupsController', 'GroupSettings', $this->group))
             {
-                $items[] = array('admin', "groups/{$this->group->getPKValue()}/groupsettings", $words->get('GroupGroupsettings'));
+                $items[] = array('admin', "groups/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings'));
             }
 
         }

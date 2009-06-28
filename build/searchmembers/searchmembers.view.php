@@ -114,11 +114,12 @@ class SearchmembersView extends PAppView {
         require TEMPLATE_DIR.'shared/roxpage/topmenu.php';
     }
 
-    public function showFeatureIsClosed()		{
-//        PVars::getObj('page')->title = 'Feature Closed - Bewelcome';
-		$this->page->title='Feature Closed - Bewelcome' ;
+    public function showFeatureIsClosed()
+    {
+        $this->page->title='Feature Closed - Bewelcome' ;
+        ob_start();
         require 'templates/featureclosed.php';
-	} // end of showFeatureIsClosed()
+        return ob_get_clean();
+    } // end of showFeatureIsClosed()
 
 }
-?>

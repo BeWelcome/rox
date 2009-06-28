@@ -61,12 +61,11 @@ class SearchmembersController extends PAppController {
     {
         $vw = new ViewWrap($this->_view);
         $P = PVars::getObj('page');
-        
+
         // First check if the feature is closed
         if ($_SESSION["Param"]->FeatureSearchPageIsClosed!='No') {
-            $this->_view->showFeatureIsClosed();
-            PPHP::PExit();
-             break ;
+            $P->content = $this->_view->showFeatureIsClosed();
+            return;
         } // end of test "if feature is closed" 
 
         
@@ -258,4 +257,3 @@ class SearchmembersController extends PAppController {
         $this->_view->footer();
     }
 }
-?>

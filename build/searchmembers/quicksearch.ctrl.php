@@ -38,18 +38,19 @@ class QuicksearchController extends PAppController
             $request[1] = '';
         }
         $error = false;
+        $sub = '';
+        $sub = $request[1];
         // static pages
         switch($request[1]) {
-            case '':
-				$searchtext=$_GET["vars"] ; // Because of old way to use the QuickSearch with a get
+            case 'done':
+                break;
+            case 'cancel':
                 break;
             default:
-				$searchtext=$request[1] ;
                 break;
         }
         
-		
-		$TReturn=$this->_model->quicksearch($searchtext) ;
+		$TReturn=$this->_model->quicksearch($_GET["vars"]) ;
 		if ((count($TReturn->TMembers)==1) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==0)) {
 			$loc="members/".$TReturn->TMembers[0]->Username ;
 			header('Location: '.$loc);
@@ -70,6 +71,8 @@ class QuicksearchController extends PAppController
         // teaser content
 //        $P->teaserBar .= $vw->ShowSimpleTeaser('Donate',$TDonationArray);
 
+        // submenu
+        $P->subMenu .= $vw->submenu($sub);
         
         // User bar on the left
 //        $P->newBar .= $vw->donateBar($TDonationArray);

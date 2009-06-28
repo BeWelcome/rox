@@ -80,12 +80,12 @@ echo "search results for <b>",$TReturn->searchtext,"</b><br />" ;
 			?>
 			<tr class="<?=$styles[$ii%2] ?>">
 			<td align="center">
-				<?php echo "<a href=\"",$p->link,"\">",$p->name,"</a>" ;
+				<?php echo "<a href=\"",$p->link,"\">",$p->CountryName,"::",$p->RegionName,"::",$p->name,"</a>" ;
 				if ($p->NbMembers>1) {
-					echo " (",$p->NbMembers,$words->getFormatted("Members"),")" ;
+					echo " (",$p->NbMembers," ",$words->getFormatted("Members"),")" ;
 				}
 				else {
-					echo " (",$p->NbMembers,$words->getFormatted("Member"),")" ;
+					echo " (",$p->NbMembers," ",$words->getFormatted("Member"),")" ;
 				}
 				
 				?>

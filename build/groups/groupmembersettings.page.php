@@ -40,7 +40,7 @@ class GroupMemberSettingsPage extends GroupsBasePage
             </div> <!-- row -->
             <div class="row">
                 <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label>
-                <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no') ? 'checked="checked" ' : '' ); ?>/>
+                <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>/>
                 <label for="no_option"><?= $words->get('no') ;?></label>
                 <input id='yes_option' type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>/>
                 <label for="yes_option"><?= $words->get('yes') ;?></label>

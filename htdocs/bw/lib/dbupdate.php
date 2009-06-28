@@ -1416,6 +1416,7 @@ ADD `FeatureQuickSearchIsClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMME
 $updates[] = "ALTER TABLE `geonames_alternate_names` ADD INDEX ( `alternateName` ) " ; 
 
 $updates[] = "ALTER TABLE `countries` ADD INDEX ( `isoalpha2` ) " ;
+$updates[] = "ALTER TABLE `params` ADD `RssFeedIsClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'Allow to disable the RSS feature' AFTER `FeatureQuickSearchIsClosed` ";
 
     if (empty($res)) {
         $version = 0;

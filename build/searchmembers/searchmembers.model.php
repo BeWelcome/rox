@@ -488,7 +488,7 @@ AND (
     
         if ($this->GetParam($vars, "IdCountry",0)!= '0') {
             $where = $where." AND countries.isoalpha2='".$this->GetParam($vars, "IdCountry")."'" ;
-//			$nowhere=false ;
+			$nowhere=false ;
         }
         if ($this->GetParam($vars, "IdCity",0)!=0) {
            $where = $where." AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;

@@ -195,7 +195,7 @@ WHERE
 				$str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
 				$result = $this->dao->query($str);
 				$cc = $result->fetch(PDB::FETCH_OBJ);
-				if ($cc->fcode=='PPLI') {
+				if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')){
 					$cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
 					$cc->link="places/".$cc->fk_countrycode ;
 				}

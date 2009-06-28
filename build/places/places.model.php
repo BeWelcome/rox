@@ -42,6 +42,7 @@ class Places extends PAppModel {
 	public function getCityInfo($cityname,$regionname="",$countrycode="") {
 		$query = sprintf("SELECT geonames_cache.name AS city, geonames_cache.geonameid AS IdCity FROM geonames_cache WHERE geonames_cache.name = '%s' and geonames_cache.fk_countrycode='%s'",
 			$this->dao->escape($cityname),$this->dao->escape($countrycode));
+			
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve the city.');
@@ -91,10 +92,10 @@ class Places extends PAppModel {
 		return $this->getMembersAll($query);
         }	
 
-	public function getMembersOfCity($citycode) {
-        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,cities.name AS city FROM members,cities 
-                    WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.name='%s'", 
-                    $this->dao->escape($citycode));
+	public function getMembersOfCity($cityname,$regionname="",$countrycode="") {
+        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,geonames_cache.name AS city FROM members,geonames_cache 
+                    WHERE `Status`='Active' AND members.IdCity=geonames_cache.geonameid AND geonames_cache.name='%s'  and geonames_cache.fk_countrycode='%s'", 
+                    $this->dao->escape($cityname),$this->dao->escape($countrycode));
 		return $this->getMembersAll($query);
 	}	
     

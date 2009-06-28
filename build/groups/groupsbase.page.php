@@ -108,21 +108,23 @@ class GroupsBasePage extends PageWithActiveSkin
     {
         $items = array();
         
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
 
         if ($this->group)
         {
             $group_id = $this->group->id;
-            $items[] = array('start', 'groups/'.$group_id, 'Overview');
-            $items[] = array('forum', 'groups/'.$group_id.'/forum', 'Discussions');
-            $items[] = array('wiki', 'groups/'.$group_id.'/wiki', 'Wiki');
-            $items[] = array('members', 'groups/'.$group_id.'/members', 'Members');
+            $items[] = array('start', 'groups/'.$group_id, $words->getSilent('GroupOverview'));
+            $items[] = array('forum', 'groups/'.$group_id.'/forum', $words->getSilent('GroupDiscussions'));
+            $items[] = array('wiki', 'groups/'.$group_id.'/wiki', $words->getSilent('GroupWiki'));
+            $items[] = array('members', 'groups/'.$group_id.'/members', $words->getSilent('GroupMembers'));
             if ($this->isGroupMember())
             {
-                $items[] = array('membersettings', 'groups/'.$group_id.'/membersettings', 'Member settings');
+                $items[] = array('membersettings', 'groups/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings'));
             }
             if ($this->member && $this->member->hasPrivilege('GroupsController', 'GroupSettings', $this->group))
             {
-                $items[] = array('admin', "groups/{$this->group->getPKValue()}/groupsettings", 'Group settings');
+                $items[] = array('admin', "groups/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings'));
             }
 
         }

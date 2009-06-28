@@ -35,6 +35,8 @@ FROM
 WHERE
     p.threadid = t.threadid AND
     p.IdWriter = m.id
+	AND t.ThreadVisibility='NoRestriction'
+	AND p.PostVisibility='NoRestriction'
 ORDER BY
     p.create_time DESC 
 LIMIT 15
@@ -75,6 +77,8 @@ WHERE
     $condition   AND
     p.threadId = t.threadid AND
     p.IdWriter = m.id
+	AND t.ThreadVisibility='NoRestriction'
+	AND p.PostVisibility='NoRestriction'
 ORDER BY
     p.create_time DESC 
 LIMIT 15
@@ -216,6 +220,8 @@ WHERE
     tt.IdThread  = ft.id      AND
     ft.id     	 = p.threadid AND
 	m.id		 = p.IdWriter
+	AND t.ThreadVisibility='NoRestriction'
+	AND p.PostVisibility='NoRestriction'
 ORDER BY
     p.create_time DESC 
 LIMIT 0,30

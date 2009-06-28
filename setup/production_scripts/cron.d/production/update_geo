@@ -1,0 +1,1 @@
+5 2 * * * /home/bwrox/www.bewelcome.org/setup/production_scripts/update_geo.sh www.bewelcome.org

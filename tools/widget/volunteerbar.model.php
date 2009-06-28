@@ -52,7 +52,7 @@ class VolunteerbarModel extends PAppModel
         if ($R->hasRight('Accepter','All'))  {
            $InScope = " /* All countries */";
         } else {
-          $InScope = "AND (countries.id IN (" . $AccepterScope . ") or countries.Name IN (" . $AccepterScope . "))";
+          $InScope = " AND (countries.id IN (" . $AccepterScope . ") or countries.Name IN (" . $AccepterScope . "))";
         }
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt
@@ -87,7 +87,7 @@ AND cities.id=members.IdCity and countries.id=cities.IdCountry' . $InScope.' /* 
         if ($R->hasRight('Accepter','All'))  {
            $InScope = " /* All countries */";
         } else {
-          $InScope = "AND (countries.id IN (" . $AccepterScope . ") or countries.Name IN (" . $AccepterScope . "))";
+          $InScope = " AND (countries.id IN (" . $AccepterScope . ") or countries.Name IN (" . $AccepterScope . "))";
         }
         $query = '
 SELECT SQL_CACHE COUNT(*) AS cnt

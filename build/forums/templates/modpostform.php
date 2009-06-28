@@ -219,7 +219,7 @@ if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td 
     echo "<form method=\"post\" action=\"forums/modeditpost/".$DataPost->Post->id."\" id=\"modpostforum\">" ;
     echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
     echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
-    echo "<td align=left colspan=2>Can Owner edit: <select type=\"text\" name=\"OwnerCanStillEdit\">" ;
+    echo "<td align=left colspan=2>Can Owner edit: \n<select type=\"text\" name=\"OwnerCanStillEdit\">" ;
     echo "<option value=\"Yes\"" ;
     if ($DataPost->Post->OwnerCanStillEdit=="Yes") echo " selected" ;
     echo ">Yes</option>" ;
@@ -227,7 +227,8 @@ if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td 
     if ($DataPost->Post->OwnerCanStillEdit=="No") echo " selected" ;
     echo ">No</option>" ;
     echo "</select>&nbsp;&nbsp;" ;
-	echo " Has Votes: <select name=\"HasVotes\">" ;
+	
+	echo " Has Votes: \n<select type=\"text\"  name=\"HasVotes\">\n" ;
     echo "<option value=\"Yes\"" ;
 	if ($DataPost->Post->HasVotes=="Yes") {
 		echo " \"selected\"" ;
@@ -235,7 +236,7 @@ if (isset($DataPost->Post->message)) echo "<tr><td>message (old TB way)</td><td 
 	echo ">Yes</Option>" ;				
     echo "<option value=\"No\"" ;
 	if ($DataPost->Post->HasVotes=="No") {
-		echo " \"selected\"" ;
+		echo " selected" ;
 	}
 	echo ">No</Option>" ;				
     echo "</select> <br />" ;

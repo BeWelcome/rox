@@ -418,7 +418,7 @@ function FindAppropriatedLanguage($IdPost=0) {
             }
             
             if (count($this->tags)>0) {
-               $title = $taginfo[$this->tags[count($this->tags) -1]];
+               $title = $this->words->getFormatted("Forum_label_tag").":".$taginfo[$this->tags[count($this->tags) -1]];
                $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
             }
             else {
@@ -605,7 +605,7 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
             $this->board->add(new Board($this->dao, $name, 'g'.$geonameid.'-'.$name));
         }
         $this->board->initThreads($this->getPage());
-    }
+    } // end of boardAdminCode
     
     public function getAllLocations($countrycode, $admincode)
     {
@@ -827,8 +827,7 @@ ORDER BY `name` ASC
         return $admincodes;
     }
     
-    private function boardLocation()
-    {
+    private function boardLocation()    {
         $query = sprintf(
             "
 SELECT `name`, `continent` 
@@ -899,7 +898,7 @@ WHERE `geonameid` = '%d'
         
         $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->admincode, $this->geonameid);
         $this->board->initThreads($this->getPage());
-    }
+    } // end of boardLocation
     
     /**
     * Fetch all required data for the view to display a forum

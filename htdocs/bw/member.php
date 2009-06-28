@@ -21,15 +21,8 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
 require_once "lib/init.php";
-require_once "layout/error.php";
-require_once "lib/prepare_profile_header.php";
-
-
-
-
-// Find parameters
-$IdMember = IdMember(GetParam("cid", ""));
 
 // Find parameters
 $IdMember = IdMember(GetParam("cid", ""));
@@ -41,6 +34,13 @@ if (!is_numeric(GetParam("cid", ""))) { // redirects to new rox member if the ci
 	LogStr("redirection of ".$url, "old BW");
 	exit(0) ;
 }
+
+require_once "layout/error.php";
+require_once "lib/prepare_profile_header.php";
+
+
+
+
 
 // find out if member exists
 if (empty($IdMember)) {

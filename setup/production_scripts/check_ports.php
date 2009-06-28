@@ -53,34 +53,40 @@ foreach ($wiki_array as $line)
     foreach ($ports as $port)
     {
 
-        if ($line[0] == $port[2] && $line[1] == $port[4] && in_array($port[1], explode(',', $line[2])) && (($port[0] == '127.0.0.1' && strtolower($line[3]) == 'internal') ||($port[0] != '127.0.0.1' && strtolower($line[3]) == 'external')))
+        if ($line[0] == $port[2] && $line[1] == $port[4] && in_array($port[1], explode(',', $line[2])) && ((strtolower($line[3]) == 'yes') ||($port[0] == '127.0.0.1' && strtolower($line[3]) == 'no')))
         {
             continue 2;
         }
     }
-    echo "{$line[0]} is supposed to be running {$line[1]} (listening {$line[3]} on port {$line[2]}) on {$table}.bewelcome.org but the process does not appear in netstat.\n";
+    echo "{$line[0]} is supposed to be running {$line[1]} (listening on port {$line[2]}) on {$table}.bewelcome.org but the process does not appear in netstat.\n";
     $scream = true;
+}
+
+foreach ($wiki_array as $key => $line)
+{
+    if (count(explode(',', $line[2])) > 1)
+    {
+        $p = explode(',', $line[2]);
+        foreach ($p as $pea)
+        {
+            array_push($wiki_array, array($line[0], $line[1], trim($pea), $line[3]));
+        }
+        unset($wiki_array[$key]);
+        continue;
+    }
 }
 
 foreach ($ports as $port)
 {
-    foreach ($wiki_array as $line)
+    $count = 0;
+    foreach ($wiki_array as $key => $line)
     {
-        if (count(explode(',', $line[2])) > 1)
-        {
-            $p = explode(',', $line[2]);
-            foreach ($p as $pea)
-            {
-                array_push($wiki_array, array($line[0], $line[1], $pea, $line[3]));
-            }
-            continue;
-        }
-        if ($line[0] == $port[2] && $line[1] == $port[4] && in_array($port[1], explode(',', $line[2])) && (($port[0] == '127.0.0.1' && strtolower($line[3]) == 'internal') ||($port[0] != '127.0.0.1' && strtolower($line[3]) == 'external')))
+        if ($line[0] == $port[2] && $line[1] == $port[4] && in_array($port[1], explode(',', $line[2])) && ($port[0] == '127.0.0.1' ||($port[0] != '127.0.0.1' && strtolower($line[3]) == 'yes')))
         {
             continue 2;
         }
     }
-    echo "{$port[2]} is running {$port[4]} (listening on {$port[0]}.{$port[1]}) on {$table}.bewelcome.org but the process is not listed in the wiki.\n";
+    echo "{$port[2]} is running {$port[4]} (listening on {$port[0]}:{$port[1]}) on {$table}.bewelcome.org but the process is not listed in the wiki.\n";
     $scream = true;
 }
 if ($scream)

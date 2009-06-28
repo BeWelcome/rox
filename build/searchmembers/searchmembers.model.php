@@ -198,20 +198,20 @@ WHERE
 				if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
 					$cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
 					$cc->link="places/".$cc->fk_countrycode ;
-					$rr->CountryName="" ;
-					$rr->RegionName="" ;
+					$cc->CountryName="" ;
+					$cc->RegionName="" ;
 				}
 				elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')) {
 					$cc->TypePlace='City' ; // Becareful this will be use as a word, take care with lowercase, don't change
 					$sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
 					$qryRegion = $this->dao->query($sRegion);
 					$Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
-					$rr->RegionName=$Region->name ;
+					$cc->RegionName=$Region->name ;
 					
 					$sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
 					$qryCountry = $this->dao->query($sCountry);
 					$Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
-					$rr->CountryName=$Country->name ;
+					$cc->CountryName=$Country->name ;
 
 					if (isset($Region->name)) {
 						$cc->link="places/".$cc->fk_countrycode."/".$Region->name."/".$cc->name ;
@@ -224,9 +224,9 @@ WHERE
 					$sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
 					$qryCountry = $this->dao->query($sCountry);
 					$Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
-					$rr->CountryName=$Country->name ;
+					$cc->CountryName=$Country->name ;
 
-					$rr->RegionName="" ;
+					$cc->RegionName="" ;
 					$cc->TypePlace='Region' ; // Becareful this will be use as a word, take care with lowercase, don't change
 					$cc->link="places/".$cc->fk_countrycode."/".$cc->name ;
 				}

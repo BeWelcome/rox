@@ -94,23 +94,24 @@ WHERE   ShortCode IN ($l)
         return $langNames;
     }
     
-    public function quicksearch($searchtext)     {
-        $TList = array ();
+    public function quicksearch($_searchtext)     {
+		
+        $TMembers = array ();
+		$TReturn->searchtext=$_searchtext ;
+		
         $dblink="" ; // This will be used one day to query on another replicated database
-//        die('quicksearch') ;
-        if(strlen($searchtext) < 2) return $TList;
+        if(strlen($_searchtext) > 2) { // Needs to give more that two chars for username
+			$searchtext=str_replace('*','%',$_searchtext) ; // Allows for wildcard
+			$searchtext=mysql_real_escape_string($searchtext) ;
         
-        // search for username
-        $where = '';
-        $tablelist = '';
-        if (!APP_User::login()) { // case user is not logged in
-            $where = "
-AND memberspublicprofiles.IdMember=members.id"
-            ; // must be in the public profile list
-            $tablelist = ",memberspublicprofiles" ;
-        }
-        $str =
-            "
+			// search for username
+			$where = '';
+			$tablelist = '';
+			if (!APP_User::login()) { // case user is not logged in
+				$where = "AND memberspublicprofiles.IdMember=members.id"; // must be in the public profile list
+				$tablelist = ",memberspublicprofiles" ;
+			}
+			$str ="
 SELECT
     members.id AS IdMember,
     Username,
@@ -121,20 +122,22 @@ FROM
     members $tablelist
 WHERE
     Status = 'Active'   AND
-    (Username LIKE '%" . mysql_real_escape_string($searchtext). "%')
+    (Username LIKE '" . $searchtext. "')
     $where
 LIMIT 20
-            "
-        ;
-        $qry = $this->dao->query($str);
+            " ;
+			
+//			die($str) ;
+			$qry = $this->dao->query($str);
     
     
-        while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-            $str =
-                "
-SELECT
+			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+				$str ="SELECT
     countries.Name AS CountryName,
-    geonames_cache.name as CityName
+    geonames_cache.name as CityName,
+	geonameid as IdCity,
+	parentAdm1Id as IdRegion,
+	fk_countrycode
 FROM
     countries,
     members,
@@ -143,32 +146,99 @@ WHERE
     members.IdCity=geonames_cache.geonameid AND
     countries.id=geonames_cache.parentCountryId AND
     members.id = $rr->IdMember" ;
-            $result = $this->dao->query($str);
-            $cc = $result->fetch(PDB::FETCH_OBJ);
-            $rr->CountryName=$cc->CountryName ;
-            $rr->CityName=$cc->CityName ;
-            $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
-            $rr->result = '';
+				$result = $this->dao->query($str);
+				$cc = $result->fetch(PDB::FETCH_OBJ);
+				$rr->CountryName=$cc->CountryName ;
+				$rr->CityName=$cc->CityName ;
+				$rr->fk_countrycode=$cc->fk_countrycode ;
+				$rr->CityName=$cc->CityName ;
+
+				$sRegion="select name from geonames_cache where geonameid=".$cc->IdRegion;
+				$qryRegion = $this->dao->query($sRegion);
+				$Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
+				if (isset($Region->name)) {
+					$rr->RegionName=$Region->name ;
+				}
+				else {
+					$rr->RegionName="" ;
+				}
+
+				$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
+				$rr->result = '';
     
-            $query = $this->dao->query(
-                "
-SELECT SQL_CACHE
-    *
+				$query = $this->dao->query("SELECT SQL_CACHE    *
 FROM
     ".$dblink."membersphotos
 WHERE
     IdMember=" . $rr->IdMember . " AND
     SortOrder=0
                 "
-            );
-            $photo = $query->fetch(PDB::FETCH_OBJ);
+				);
+				$photo = $query->fetch(PDB::FETCH_OBJ);
     
-            if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
-            else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-            $rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
-            array_push($TList, $rr);
-        }
-    
+				if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
+				else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
+				$rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
+				array_push($TMembers, $rr);
+			}
+		} // end of search for username
+		$TReturn->TMembers=$TMembers ;
+
+// Now search in places
+		$TPlaces=array() ;
+		
+        if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
+			$searchtext=mysql_real_escape_string($_searchtext) ;
+			$str="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$searchtext."'";
+			$qry = $this->dao->query($str);
+			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+				$str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
+				$result = $this->dao->query($str);
+				$cc = $result->fetch(PDB::FETCH_OBJ);
+				if ($cc->fcode=='PPLI') {
+					$cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
+					$cc->link="places/".$cc->fk_countrycode ;
+				}
+				elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')) {
+					$cc->TypePlace='City' ; // Becareful this will be use as a word, take care with lowercase, don't change
+					$sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
+					$qryRegion = $this->dao->query($sRegion);
+					$Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
+					if (isset($Region->name)) {
+						$cc->link="places/".$cc->fk_countrycode."/".$Region->name."/".$cc->name ;
+					}
+					else {
+						$cc->link="places/".$cc->fk_countrycode."//".$cc->name ;
+					}
+				}
+				elseif (($cc->fcode=='ADM1') or ($cc->fcode=='ADM2')or ($cc->fcode=='ADMD')) {
+					$cc->TypePlace='Region' ; // Becareful this will be use as a word, take care with lowercase, don't change
+					$cc->link="places/".$cc->fk_countrycode."/".$cc->name ;
+				}
+				$cc->searchtext=$searchtext ;
+				array_push($TPlaces, $cc);
+
+			}
+		}// end of search for Places
+		$TReturn->TPlaces=$TPlaces ;
+		
+		
+// Now search in forums tags
+		$TForumTags=array() ;
+		
+        if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
+			$searchtext=mysql_real_escape_string($_searchtext) ;
+			$str="select forums_tags.id as IdTag,counter as NbThreads 
+			from forums_tags,translations
+			where forums_tags.IdName=translations.IdTrad and Sentence='".$searchtext."'" ;
+			$qry = $this->dao->query($str);
+			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+				$rr->link="forums/t".$rr->IdTag ;
+				array_push($TForumTags, $rr);
+			}
+		}// end of search for forums tags
+		$TReturn->TForumTags=$TForumTags ;
+/* search in members trads is disabled		
         // search in MembersTrads
         $str =
             "
@@ -233,6 +303,10 @@ WHERE
             array_push($TList, $rr);
         }
         return $TList;
+		
+end of  search in members trads is disabled		 */
+		return($TReturn) ;
+		
     } // end of quicksearch
     
     private function ellipsis($str, $len)

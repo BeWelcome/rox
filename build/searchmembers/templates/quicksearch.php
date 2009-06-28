@@ -20,54 +20,112 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
+Refactoried by JeanYvea after the first move to Rox
+
 */
 
-function DisplayResults($TList, $searchtext = "") {
+$words = new MOD_words();
+$styles = array( 'highlight', 'blank' ); // alternating background for table rows
 
-    $words = new MOD_words();
-
-	$iiMax = count($TList);
-
-    ?>
-    <table border="0">
-    <?php
-	if ($iiMax>0) { // only display results if they are found entries
-		 echo "<tr valign=\"center\">\n";
-		 echo "<th align=\"left\">".$words->getFormatted("Username")."</th>\n";
-		 echo "<th>".$words->getFormatted("ProfileSummary")."</th>\n";
-		 echo "<th>".$words->getFormatted("quicksearchresults", $searchtext)."</th>\n";
-		 echo "</tr>\n";
-	}
-        $info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
-	for ($ii = 0; $ii < $iiMax; $ii++) {
-    	static $ii2 = 0;
-		if (($ii==0) or ($TList[$ii]->Username!=$TList[$ii-1]->Username)) {  // don't display list with everytime the same username
-        	 echo $info_styles[($ii2++%2)]; // this display the <tr>
-			 echo "                <td class=\"memberlist\" align=left>\n" ;
-             echo "                  ".$TList[$ii]->photo.'<a href="bw/member.php?cid='.$TList[$ii]->Username.'">'.$TList[$ii]->Username.'</a>';
-             echo "                  <br />".$TList[$ii]->CityName.'<br />'.$TList[$ii]->CountryName.'<br />';
-			 echo "\n";
-			 echo "                </td>\n";
-             echo "                <td>";
-    		 echo $TList[$ii]->ProfileSummary;
-    		 echo "                </td>\n";
-		}
-		else {
-             ?><tr>
-			 <td></td>
-             <td></td>
-             <?php
-		}
-		echo "<td>", $TList[$ii]->result;
-		echo "</td></tr>";
-	}
-    ?></table><?php
-
-	if ($iiMax==0) {
-		echo "<p>",$words->getFormatted("SorryNoresults", $searchtext,"</p>");
-	}
-	echo '<hr /><p><a href="searchmembers/mapon">'.$words->getFormatted('TryMapSearch').'</a></p>';
-}
-DisplayResults($TList, $searchtext); // call the layout with all countries
+echo "search results for <b>",$TReturn->searchtext,"</b><br />" ;
 ?>
 
+<?php
+	$iCountMemberFound=count($TReturn->TMembers) ;
+	if ($iCountMemberFound>0) {
+?>
+        <h2><?=$words->getFormatted("Username") ?></h2>
+		<table class="full">
+
+
+<?php
+		$ii=0 ;
+		$icol=0 ;
+		foreach($TReturn->TMembers as $m) {
+			if ($icol % 3==0) {
+				$ii++ ;
+				?><tr class="<?=$styles[$ii%2] ?>"><?php
+			}
+			?>
+			<td align="center">
+				<?=MOD_layoutbits::PIC_50_50($m->Username) ;?>
+				<br />
+				<a class="username" href="member/=<?=$m->Username ?>"><?=$m->Username ?></a><br />
+			<a href="<?="places/".$m->fk_countrycode."/".$m->RegionName."/".$m->CityName ?>"> <?=$m->CountryName."/".$m->RegionName."/".$m->CityName?></a>
+			</td>
+			<?php 
+			$icol++ ;
+			if ($icol%3==0) { 
+				echo "</tr>" ;
+			}
+			?>
+		<?php
+		}
+		?>
+		</table>
+	<?php
+	} // end of if they are members found
+	
+	$iCountPlacesFound=count($TReturn->TPlaces) ;
+	if ($iCountPlacesFound>0) {
+?>
+        <h2><?=$words->getFormatted("Location") ?></h2>
+		<table class="full">
+
+
+<?php
+		$ii=0 ;
+		foreach($TReturn->TPlaces as $p) {
+			$ii++ ;
+			?>
+			<tr class="<?=$styles[$ii%2] ?>">
+			<td align="center">
+				<?php echo "<a href=\"",$p->link,"\">",$p->name,"</a>" ;
+				if ($p->NbMembers>1) {
+					echo " (",$p->NbMembers,$words->getFormatted("Members"),")" ;
+				}
+				else {
+					echo " (",$p->NbMembers,$words->getFormatted("Member"),")" ;
+				}
+				
+				?>
+			</td>
+			
+			</tr>
+		<?php
+		}
+		?>
+		</table>
+	<?php
+	} // end of if they are places found
+
+	$iCountForumTags=count($TReturn->TForumTags) ;
+	if ($iCountForumTags>0) {
+?>
+        <h2><?=$words->getFormatted("tags") ?></h2>
+		<table class="full">
+
+
+<?php
+		$ii=0 ;
+		foreach($TReturn->TForumTags as $p) {
+			$ii++ ;
+			?>
+			<tr class="<?=$styles[$ii%2] ?>">
+			<td align="center">
+				<?php echo "<a href=\"","forums/t".$p->IdTag,"\">" ?>
+				(<?=$p->NbThreads?> <?=$words->getFormatted("Threads")?>)</a>
+			</td>
+			
+			</tr>
+		<?php
+		}
+		?>
+		</table>
+	<?php
+	} // end of if they are forum tags found
+	
+	if (($iCountMemberFound<=0) and ($iCountPlacesFound<=0)  and ($iCountForumTags<=0)) {
+		echo $words->getFormatted("QuickSearchMembersNoResults",$TReturn->searchtext,"<a href=\"searchmembers\">".$words->getFormatted("MapSearch")."</a>") ;
+	}
+	?>

@@ -30,6 +30,7 @@ Boston, MA  02111-1307, USA.
 class SearchmembersView extends PAppView {
     
     private $_model;
+	public $page ;
             
     public function __construct(Searchmembers $model) {
         $this->_model = $model;
@@ -68,10 +69,12 @@ class SearchmembersView extends PAppView {
         include 'templates/ajax.php';
     }
 	
+/*
     public function quicksearch($TList, $searchtext)
     {
         require 'templates/quicksearch.php';
     }
+	*/
 
     public function teaser($mapstyle) {
         require 'templates/teaser.php';

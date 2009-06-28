@@ -62,20 +62,25 @@ foreach ($wiki_array as $line)
     $scream = true;
 }
 
+foreach ($wiki_array as $key => $line)
+{
+    if (count(explode(',', $line[2])) > 1)
+    {
+        $p = explode(',', $line[2]);
+        foreach ($p as $pea)
+        {
+            array_push($wiki_array, array($line[0], $line[1], trim($pea), $line[3]));
+        }
+        unset($wiki_array[$key]);
+        continue;
+    }
+}
+
 foreach ($ports as $port)
 {
+    $count = 0;
     foreach ($wiki_array as $key => $line)
     {
-        if (count(explode(',', $line[2])) > 1)
-        {
-            $p = explode(',', $line[2]);
-            foreach ($p as $pea)
-            {
-                array_push($wiki_array, array($line[0], $line[1], trim($pea), $line[3]));
-            }
-            unset($wiki_array[$key]);
-            continue;
-        }
         if ($line[0] == $port[2] && $line[1] == $port[4] && in_array($port[1], explode(',', $line[2])) && ($port[0] == '127.0.0.1' ||($port[0] != '127.0.0.1' && strtolower($line[3]) == 'yes')))
         {
             continue 2;

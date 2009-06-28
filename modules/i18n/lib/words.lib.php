@@ -883,7 +883,9 @@ SQL;
     * 
     */ 
     function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
-    //    $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string
+        $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string.
+        // judging from the exception logs this is NOT TRUE. Instead we now have a massive sql injection exploit vector
+
         if ($IdOwner == 0) {
             $IdMember = $_SESSION['IdMember'];
         } else {

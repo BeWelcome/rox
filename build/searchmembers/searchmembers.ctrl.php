@@ -88,6 +88,16 @@ class SearchmembersController extends PAppController {
         $varsOnLoad = '';
         $varsGet = '';
         if(isset($request[1])) {
+			
+			// Here intercetpion of the quicksearch
+			if ((isset($_GET["quicksearch_callbackId"])) and ($_GET["quicksearch_callbackId"]==1)) {
+				$TReturn=$this->_model->quicksearch($_GET["vars"]) ;
+                $this->_view->quickearch_results($TReturn);
+//                PPostHandler::clearVars($quicksearch_callbackId);
+//                PPostHandler::setCallback($quicksearch_callbackId, "SearchmembersController", "index");
+                PPHP::PExit();
+			} // end of  interception of the quicksearch
+			
             switch ($request[1]) {
                 case 'quicksearch': 
 					$mapstyle = "mapoff"; 

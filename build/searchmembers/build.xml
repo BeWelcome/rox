@@ -5,5 +5,7 @@
     <file class="SearchmembersController">searchmembers.ctrl.php</file>
     <file class="Searchmembers">searchmembers.model.php</file>
     <file class="SearchmembersView">searchmembers.view.php</file>
+    <file class="QuicksearchController">quicksearch.ctrl.php</file>
+    <file class="QuicksearchView">quicksearch.view.php</file>
   </files>
 </build>

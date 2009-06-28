@@ -883,6 +883,12 @@ SQL;
     * 
     */ 
     function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
+        // temporary hack to undo the damage done by escaping in other places
+        // todo: find all references to ReplaceInMTrad and fix them
+        while ($ss != stripslashes($ss))
+        {
+            $ss = stripslashes($ss);
+        }
         $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string.
         // judging from the exception logs this is NOT TRUE. Instead we now have a massive sql injection exploit vector
 

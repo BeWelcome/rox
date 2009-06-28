@@ -9,7 +9,9 @@ $User = APP_User::login();
         <!-- CategoryTitle in teaser -->
         <div class="forumtitle">
             <?php $title = $boards->getBoardName();
-            if ($title != 'Forums') {echo '<a href="forums/', $title ,'">', $title,'</a>';}
+            if (($title != 'Forums')and(!(empty($title)))) {
+			//	echo '<a href="forums/', $title ,'">', $title,'</a>';
+			}
             ?>
         </div> <!-- forumtitle -->
     </div> <!-- title -->

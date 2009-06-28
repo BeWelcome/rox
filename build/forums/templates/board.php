@@ -42,10 +42,9 @@ if ($navichain_items = $boards->getNaviChain()) {
 
 ?>
 
-<h2><?php 
+<?php 
 	 
-	echo $boards->getBoardName(); 
-	echo "</h2>" ;
+	echo "<h2 style=\"Display:inline\">",$boards->getBoardName(),"</h2> " ;
 
 	if (($this->BW_Right->HasRight("ForumModerator","Edit")) ||($this->BW_Right->HasRight("ForumModerator","All")) ) {
 	   if (isset($boards->IdTag)) echo " <a href=\"forums/modedittag/".$boards->IdTag."\">Edit Tag</a>" ;

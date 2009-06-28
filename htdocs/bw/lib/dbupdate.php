@@ -1415,6 +1415,8 @@ ADD `FeatureQuickSearchIsClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMME
 
 $updates[] = "ALTER TABLE `geonames_alternate_names` ADD INDEX ( `alternateName` ) " ; 
 
+$updates[] = "ALTER TABLE `countries` ADD INDEX ( `isoalpha2` ) " ;
+
     if (empty($res)) {
         $version = 0;
     } else {

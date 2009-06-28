@@ -3835,9 +3835,10 @@ class Board implements Iterator {
 			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
 			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
 			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.") group by `forums_threads`.`id`" ;
+			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id`  and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.")" ;
 			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
 			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;
+			$query .= " group by `forums_threads`.`id`" ;
 			$query .= " ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3 " ;
 		}
 		else {
@@ -3869,7 +3870,7 @@ class Board implements Iterator {
 			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
 			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
 			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag`=".$IdTagCategory ;
+			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag`=".$IdTagCategory ;
 			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
 			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;
 			$query = $query ." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;

@@ -1418,6 +1418,16 @@ $updates[] = "ALTER TABLE `geonames_alternate_names` ADD INDEX ( `alternateName`
 $updates[] = "ALTER TABLE `countries` ADD INDEX ( `isoalpha2` ) " ;
 $updates[] = "ALTER TABLE `params` ADD `RssFeedIsClosed` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'Allow to disable the RSS feature' AFTER `FeatureQuickSearchIsClosed` ";
 
+$updates[] = "CREATE FUNCTION NbMembers () returns int
+DETERMINISTIC
+
+    BEGIN
+       DECLARE iRes INT ;
+       SELECT COUNT(*) into iRes from members where Status in('Active','Inactive','OutOfRemind');
+       RETURN iRes ;
+     END" ;
+
+
     if (empty($res)) {
         $version = 0;
     } else {

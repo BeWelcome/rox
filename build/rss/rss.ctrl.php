@@ -13,13 +13,36 @@ class RssController extends RoxControllerBase
 {
     public function index($args = false)
     {
+        // First check if the feature is closed
+        if ($_SESSION["Param"]->RssFeedIsClosed!='No') {
+            PPHP::PExit(); // To do find a better exit
+            break ;
+        } // end of test "if feature is closed" 
+
+
         $request = $args->request;
         
         $model = new RssModel();
         
         // $request[0] is 'rss', anyway. Don't need to do any ifs and switches for that.
         
-        switch (isset($request[1]) ? $request[1] : false) {
+		if (isset($request[1])) {
+			$ss="Querying RSS with " ;
+			$ss=$ss."[".$request[1]."]" ;
+			if (isset($request[2])) {
+				$ss=$ss."[".$request[2]."]" ;
+				if (isset($request[3])) {
+					$ss=$ss."[".$request[3]."]" ;
+					if (isset($request[4])) {
+						$ss=$ss."[".$request[4]."]" ;
+					}
+				}
+			}
+			MOD_log::get()->write($ss,"rss") ; 				
+		}
+
+		switch (isset($request[1]) ? $request[1] : false) {
+		
         
             /**
              * thread/tagid

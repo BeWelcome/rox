@@ -96,4 +96,3 @@ $R = MOD_right::get();
   <li><a href="bw/signup.php"><?php echo $words->getBuffered('Signup'); ?></a><?php echo $words->flushBuffer(); ?></li>
 <?php } ?>
 </ul>
-

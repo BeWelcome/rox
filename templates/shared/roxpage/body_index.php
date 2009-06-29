@@ -17,8 +17,10 @@
       <?php $this->teaser() ?>
       <?php $this->columnsArea() ?>
     </div> <!-- main -->
+
     <?php $this->footer() ?>
     <?php $this->leftoverTranslationLinks() ?>
+
   </div> <!-- page -->
 </div> <!-- page_margins-->
 <?php $this->debugInfo() ?>

@@ -346,7 +346,7 @@ end of  search in members trads is disabled		 */
     
         $order_by = $this->GetParam($vars, "OrderBy",0);
         $order_by_direction = $this->GetParam($vars, "OrderByDirection",0);
-        
+
         if($order_by) {
             $OrderBy = "ORDER BY $order_by $order_by_direction" ;
         } else {
@@ -377,8 +377,8 @@ end of  search in members trads is disabled		 */
 					$nowhere=false ;
                 }
             }
+			if($where_accomodation) $where = $where." AND (".implode(" OR ", $where_accomodation).") " ;
         }
-        if($where_accomodation) $where = $where." AND (".implode(" OR ", $where_accomodation).") " ;
     
         // Process typic Offer
         $where_typicoffer = array();
@@ -523,12 +523,13 @@ AND (
 				}
 			}
 
-			if ($WhereCity!="")  {
+			if ($WhereCity!="") {
 				$WhereCity=$WhereCity.")" ;
 			}
 			else {
 				$WhereCity=" 1=0";
 			}
+			
 			
 			
 			MOD_log::get()->write("CityName=".$this->GetParam($vars, "CityName","")." ".$WhereCity, "Search");
@@ -553,8 +554,8 @@ AND membersgroups.IdMember=members.id"  ;
 			$where=" WHERE (1=0)" ;
 		}
 
-		if ($nowhere) {
-			$where=" WHERE (1=0)" ;
+		if ($nowhere)  {
+ 			$where=" WHERE (1=0)" ;
 		}
 
 /*
@@ -584,8 +585,7 @@ LIMIT $start_rec,$limitcount " ;
 */		
 
 		// This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
-        $str=     "
-SELECT SQL_CALC_FOUND_ROWS
+        $str=     "SELECT SQL_CALC_FOUND_ROWS
     members.id AS IdMember,
 	Username,
     geonames_cache.name AS CityName,
@@ -620,7 +620,7 @@ LIMIT $start_rec,$limitcount " ;
 			
 		    $rr->BirthDate=$rData->BirthDate;
 		    $rr->HideBirthDate=$rData->HideBirthDate;
-		    $rr->HideBirthDate=$rData->HideBirthDate;
+			$rr->Accomodation=$rData->Accomodation;
 		    $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rData->ProfileSummary,true), 200);
 		    $rr->Gender=$rData->Gender;
 		    $rr->HideGender=$rData->HideGender;

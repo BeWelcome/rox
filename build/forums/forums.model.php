@@ -577,6 +577,11 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
             throw new PException('No such Admincode');
         }
         $admincode = $s->fetch(PDB::FETCH_OBJ);
+		if (empty($admincode->name)) {
+		    MOD_log::get()->write("Forum bug (warning but it is to figure out) with ".$query,"Bug") ; 				
+			$admincode->name="" ;
+		}
+		
 
         $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name;
         $href = $url;

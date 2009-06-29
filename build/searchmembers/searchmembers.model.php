@@ -195,15 +195,24 @@ WHERE
 				$str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
 				$result = $this->dao->query($str);
 				$cc = $result->fetch(PDB::FETCH_OBJ);
-				if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')){
+				if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
 					$cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
 					$cc->link="places/".$cc->fk_countrycode ;
+					$cc->CountryName="" ;
+					$cc->RegionName="" ;
 				}
 				elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')) {
 					$cc->TypePlace='City' ; // Becareful this will be use as a word, take care with lowercase, don't change
 					$sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
 					$qryRegion = $this->dao->query($sRegion);
 					$Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
+					$cc->RegionName=$Region->name ;
+					
+					$sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
+					$qryCountry = $this->dao->query($sCountry);
+					$Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
+					$cc->CountryName=$Country->name ;
+
 					if (isset($Region->name)) {
 						$cc->link="places/".$cc->fk_countrycode."/".$Region->name."/".$cc->name ;
 					}
@@ -212,6 +221,12 @@ WHERE
 					}
 				}
 				elseif (($cc->fcode=='ADM1') or ($cc->fcode=='ADM2')or ($cc->fcode=='ADMD')) {
+					$sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
+					$qryCountry = $this->dao->query($sCountry);
+					$Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
+					$cc->CountryName=$Country->name ;
+
+					$cc->RegionName="" ;
 					$cc->TypePlace='Region' ; // Becareful this will be use as a word, take care with lowercase, don't change
 					$cc->link="places/".$cc->fk_countrycode."/".$cc->name ;
 				}
@@ -331,7 +346,7 @@ end of  search in members trads is disabled		 */
     
         $order_by = $this->GetParam($vars, "OrderBy",0);
         $order_by_direction = $this->GetParam($vars, "OrderByDirection",0);
-        
+
         if($order_by) {
             $OrderBy = "ORDER BY $order_by $order_by_direction" ;
         } else {
@@ -362,8 +377,8 @@ end of  search in members trads is disabled		 */
 					$nowhere=false ;
                 }
             }
+			if($where_accomodation) $where = $where." AND (".implode(" OR ", $where_accomodation).") " ;
         }
-        if($where_accomodation) $where = $where." AND (".implode(" OR ", $where_accomodation).") " ;
     
         // Process typic Offer
         $where_typicoffer = array();
@@ -508,12 +523,13 @@ AND (
 				}
 			}
 
-			if ($WhereCity!="")  {
+			if ($WhereCity!="") {
 				$WhereCity=$WhereCity.")" ;
 			}
 			else {
 				$WhereCity=" 1=0";
 			}
+			
 			
 			
 			MOD_log::get()->write("CityName=".$this->GetParam($vars, "CityName","")." ".$WhereCity, "Search");
@@ -538,8 +554,8 @@ AND membersgroups.IdMember=members.id"  ;
 			$where=" WHERE (1=0)" ;
 		}
 
-		if ($nowhere) {
-			$where=" WHERE (1=0)" ;
+		if ($nowhere)  {
+ 			$where=" WHERE (1=0)" ;
 		}
 
 /*
@@ -569,8 +585,7 @@ LIMIT $start_rec,$limitcount " ;
 */		
 
 		// This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
-        $str=     "
-SELECT SQL_CALC_FOUND_ROWS
+        $str=     "SELECT SQL_CALC_FOUND_ROWS
     members.id AS IdMember,
 	Username,
     geonames_cache.name AS CityName,
@@ -605,7 +620,7 @@ LIMIT $start_rec,$limitcount " ;
 			
 		    $rr->BirthDate=$rData->BirthDate;
 		    $rr->HideBirthDate=$rData->HideBirthDate;
-		    $rr->HideBirthDate=$rData->HideBirthDate;
+			$rr->Accomodation=$rData->Accomodation;
 		    $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rData->ProfileSummary,true), 200);
 		    $rr->Gender=$rData->Gender;
 		    $rr->HideGender=$rData->HideGender;

@@ -122,6 +122,9 @@ class MOD_log {
 	  	 global $_SYSHCVOL; // will be needed to retrieve the database used for logs
 
         $message = addslashes($message);
+		if ($type=="Bug") {
+			$message=$message." <font color=\"red\">".__FILE__ ." Line <b>".__LINE__."</b></font>" ;
+		}
         
         $idMember = 0;
         if (isset($_SESSION['IdMember'])) {

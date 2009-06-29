@@ -117,6 +117,7 @@ SELECT
     Username,
     Gender,
     HideGender,
+	IdCity,
     ProfileSummary
 FROM
     members $tablelist
@@ -140,14 +141,15 @@ LIMIT 20
 	fk_countrycode
 FROM
     countries,
-    members,
     geonames_cache
 WHERE
-    members.IdCity=geonames_cache.geonameid AND
-    countries.id=geonames_cache.parentCountryId AND
-    members.id = $rr->IdMember" ;
+    geonames_cache.geonameid=".$rr->IdCity." AND
+    countries.id=geonames_cache.parentCountryId" ;
 				$result = $this->dao->query($str);
 				$cc = $result->fetch(PDB::FETCH_OBJ);
+				if (empty($cc->CountryName)) {
+					MOD_log::get()->write("FindMember(<b>".$rr->Username."</b>: Missing result with[".$str."] IdCity=".$rr->IdCity, "Bug");
+				}
 				$rr->CountryName=$cc->CountryName ;
 				$rr->CityName=$cc->CityName ;
 				$rr->fk_countrycode=$cc->fk_countrycode ;

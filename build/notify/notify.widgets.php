@@ -77,9 +77,9 @@ class NotifyMemberWidget extends ItemlistWithPagination
         $words = new MOD_words();
         $member = $this->createEntity('Member')->findById($item->IdRelMember);
         if ($item->WordCode == '' && ($text_params = unserialize($item->TranslationParams)) !== false) {
-           $text = call_user_func_array(array($words, 'get'), $text_params);
+           $text = call_user_func_array(array($words, 'getSilent'), $text_params);
         } else {
-            $text = $words->get($item->WordCode,$member->Username);
+            $text = $words->getSilent($item->WordCode,$member->Username);
         }
         $text = ((!empty($item->Link)) ? htmlentities($text) : $text);
         $created = MOD_layoutbits::ago(strtotime($item->created));
@@ -88,7 +88,7 @@ class NotifyMemberWidget extends ItemlistWithPagination
             <a target="notify-{$item->id}" class="dynamic float_right" href="notify/{$item->id}/check" alt="{$words->getSilent($item->WordCode,$member->Username)}">
                 <img src="images/icons/box-close.png">
             </a>
-            <div class="float_right small grey">{$created}</div>
+            <div class="float_right small grey" title="{$item->created}">{$created}</div>
             <div class="float_left">
 HTML;
             if ($item->Link != '') { 

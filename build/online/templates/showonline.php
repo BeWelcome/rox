@@ -47,7 +47,7 @@ $iiMax = count($TMembers)
     $m = $TMembers[$ii];
 ?>
     <tr class="<?php echo $styles[$ii%2]; ?>">
-        <td align="center"><a class="username" href="bw/member.php?cid=<?php echo $m->Username; ?>"><?php echo $m->Username; ?></a>
+        <td align="center"><a class="username" href="people/"<?php echo $m->Username; ?>"><?php echo $m->Username; ?></a>
 						<?php if ($m->MemberStatus=='Pending' or $m->MemberStatus=='NeedMore') echo " [<i>",$m->MemberStatus,"</i>]" ; ?> 
 						<br />
             <?php echo MOD_layoutbits::PIC_50_50($m->Username); ?>

@@ -143,6 +143,9 @@ function startRest() {
     var mgr;
     <?php
     $point = rand(1,count($locations));
+	if ($point>=count($locations)) {
+	    MOD_log::get()->write("Problem with rand result it goes above the array size","Bug") ; 				
+	}
     ?>
     function load() {
       if (GBrowserIsCompatible()) {

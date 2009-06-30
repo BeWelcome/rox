@@ -417,7 +417,7 @@ function FindAppropriatedLanguage($IdPost=0) {
                 }
             }
             
-            if (count($this->tags)>0) {
+            if ((count($this->tags)>0)and isset($taginfo[0])) {
                $title = $this->words->getFormatted("Forum_label_tag").":".$taginfo[$this->tags[count($this->tags) -1]];
                $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
             }

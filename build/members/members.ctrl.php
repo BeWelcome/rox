@@ -326,7 +326,12 @@ class MembersController extends RoxControllerBase
             return false;
         
         $this->model->editPreferences($vars);
-        
+
+        if (isset($vars['PreferenceLanguage']) && $_SESSION['IdLanguage'] != $vars['PreferenceLanguage'])
+        {
+            $this->model->setSessionLanguage($vars['PreferenceLanguage']);
+        }
+
         // set profile as public
         if( isset($vars['PreferencePublicProfile']) && $vars['PreferencePublicProfile'] != '') {   
             $this->model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);

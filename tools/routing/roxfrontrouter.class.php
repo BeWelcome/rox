@@ -55,6 +55,7 @@ class RoxFrontRouter
     }
     
     // This detects and sets a language
+	// 1/7/2009 Jeanyves is working on this (and writing a doc)
     protected function setLanguage()
     {
         if (!isset($_SESSION['IdMember'])) {
@@ -68,10 +69,10 @@ class RoxFrontRouter
                         // Try to look in the default browser settings
                         $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
                         for ($ii=0;$ii<count($TLang);$ii++) {
-                            $trylang = $Model->getLanguage($TLang[$ii]);
+						$ShortCode=explode(";",$TLang[$ii]) ;
+//						echo "try ".$TLang[$ii]."  [".$ShortCode[0]."]<br />" ;
+                            $trylang = $Model->getLanguage($ShortCode[0]);
                             if (isset($trylang->id)) { // if valid language found
-                                $langcode = $trylang->ShortCode;
-                                setcookie('LastLang',$langcode,time()+3600*24*300); // store it as a cookie for 300 days
                                 break;
                             }
         				}

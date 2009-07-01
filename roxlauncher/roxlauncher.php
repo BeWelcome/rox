@@ -94,6 +94,7 @@ class ExceptionLogger
         if ($handle = fopen('exception.log', 'at'))
         {
             $string = "Exception occurred at " . date('Y-m-d H:i:s') . ". Here are the details:" . PHP_EOL;
+            $string .= "* Request url: {$_SERVER['REQUEST_URI']}" . PHP_EOL;
             $string .= "* Exception message: {$e->getMessage()}" . PHP_EOL;
             $string .= "* Exception class: " . get_class($e) . PHP_EOL;
             $string .= "* Exception code: {$e->getCode()}" . PHP_EOL;

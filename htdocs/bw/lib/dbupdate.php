@@ -1426,6 +1426,8 @@ DETERMINISTIC
        SELECT COUNT(*) into iRes from members where Status in('Active','Inactive','OutOfRemind');
        RETURN iRes ;
      END" ;
+	 
+$updates[] = "ALTER TABLE `languages` ADD `UrlHeader` VARCHAR( 4 ) NULL COMMENT 'If set it means that the value if found in the url, will force this language (like fr.bewelcome.org)'  " ;
 
 
     if (empty($res)) {

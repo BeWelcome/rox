@@ -229,43 +229,42 @@ VALUES
         
     /**
      * Set the preferred language for a member
+     *
+     * @todo make sure that places that call this function uses the return code
+     * @param int $IdMember
+     * @param int $IdPreference
+     * @param string $Value
+     * @access public
+     * @return bool
      */
     public function set_preference($IdMember,$IdPreference,$Value) 
     {
-        $rr = $this->singleLookup("select memberspreferences.id as id from memberspreferences,preferences where IdMember=" . $IdMember . " and IdPreference=preferences.id and preferences.id=" . $IdPreference );
-        if (isset ($rr->id)) {
-        // LogStr("updating one preference " . $rPref->codeName . "To Value <b>/" . $Value . " </b>", "Update Preference");
-        $s = $this->dao->query("
+        $IdMember = $this->dao->escape($IdMember);
+        $IdPreference = $this->dao->escape($IdPreference);
+        $Value = $this->dao->escape($Value);
+        $rr = $this->singleLookup("select memberspreferences.id as id from memberspreferences,preferences where IdMember='{$IdMember}' and IdPreference=preferences.id and preferences.id='{$IdPreference}'");
+        if (isset ($rr->id))
+        {
+            $query = <<<SQL
 UPDATE
     memberspreferences
 SET
-    Value = '".$this->dao->escape($Value)."'
+    Value = '{$Value}'
 WHERE
-    id = ". $rr->id
-        );
-        if(!$s) var_dump('AAARGH 2 ');
+    id = {$rr->id}
+SQL;
 
-        } else {
-        $s = $this->dao->query("
-INSERT INTO
-    memberspreferences
-    (
-    IdMember,
-    IdPreference,
-    Value,
-    created
-    )
-VALUES
-    (
-    '$IdMember',
-    '$IdPreference',
-    '$Value',
-    NOW()
-    )
-        ");
-        // LogStr("inserting one preference " . $rPref->codeName . "To Value <b>/" . $Value . " </b>", "Update Preference");
-    if(!$s) var_dump('AAARGH 2 ');
         }
+        else
+        {
+            $query = <<<SQL
+INSERT INTO
+    memberspreferences (IdMember, IdPreference, Value, created)
+VALUES
+    ('{$IdMember}', '{$IdPreference}', '{$Value}', NOW())
+SQL;
+        }
+        return ((!$this->dao->query($query)) ? true : false);
     }
     
     /**

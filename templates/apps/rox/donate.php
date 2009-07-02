@@ -46,20 +46,20 @@ $words = new MOD_words();
     		<div class="subcr">
     			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                     <h3><?=$words->get('Donate_Paypal_Legend')?></h3>
-                    <p><img src="images/misc/paymethods.gif"></p>
+                    <p><img src="images/misc/paymethods.gif" alt="methods of payment"></p>
                     <p><?=$words->get('Donate_Process')?></p>
                     <p>
                     <input type="hidden" name="cmd" value="_xclick">
                     <input type="hidden" name="business" value="treasurer@bevolunteer.org">
-                    <select name="amountSelect" id="amountSelect" onChange="changeAmount(this.value); clearForm('amountSelectText');">
+                    <select name="amountSelect" id="amountSelect" onchange="changeAmount(this.value); clearForm('amountSelectText');">
                     <option value=""></option>
                     <option value="10">10 &#8364;</option>
-                    <option value="25" selected>25 &#8364;</option>
+                    <option value="25" selected="selected">25 &#8364;</option>
                     <option value="50">50 &#8364;</option>
                     <option value="100">100 &#8364;</option>
                     <option value="200">200 &#8364;</option>
                     </select> <?=$words->get('Donate_Paypal_OrChooseYourself')?> 
-                    <input type="text" size="6" name="amountSelectText" id="amountSelectText" onChange="changeAmount(this.value);" onClick="clearForm('amountSelect');">  &#8364;                    </p>
+                    <input type="text" size="6" name="amountSelectText" id="amountSelectText" onchange="changeAmount(this.value);" onclick="clearForm('amountSelect');">  &#8364;                    </p>
                     <p>
                     <input type="hidden" id="amount" name="amount" value="25.00">
                     <input type="hidden" name="item_name" value="BeVolunteer donation">
@@ -97,7 +97,7 @@ $words = new MOD_words();
                     <input type="hidden" name="tax" value="0">
                     <input type="hidden" name="bn" value="PP-DonationsBF">
                     <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>">
-                    <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    <img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
                     </p>
             	</form>
                 <?php echo $words->flushBuffer() ?>  

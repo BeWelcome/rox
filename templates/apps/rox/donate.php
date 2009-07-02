@@ -29,7 +29,7 @@ $words = new MOD_words();
 
     	<p class="warning"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
 <?php   } else { ?>
-    	<p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="/bw/feedback.php">','</a>')?></p>
+    	<p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="feedback">','</a>')?></p>
 <?php } 
 } elseif ($sub == 'cancel') { ?>
         <p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
@@ -39,7 +39,7 @@ $words = new MOD_words();
     		<div class="subcl">
     			<a name="why"></a>
     			<h3><?php echo $words->get('Donate_Why');?></h3>
-    			<p><?php echo $words->getFormatted('Donate_WhyText','<a href="/bw/feedback.php">','</a>')?></p>
+    			<p><?php echo $words->getFormatted('Donate_WhyText','<a href="feedback">','</a>')?></p>
     		</div>
    		</div>
 		<div class="c50r">
@@ -47,10 +47,10 @@ $words = new MOD_words();
     			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                     <h3><?=$words->get('Donate_Paypal_Legend')?></h3>
                     <p><img src="images/misc/paymethods.gif" alt="methods of payment" /></p>
+                    <p><?=$words->get('Donate_Process')?></p>
                     <p>
                         <input type="hidden" name="cmd" value="_xclick" />
                         <input type="hidden" name="business" value="treasurer@bevolunteer.org" />
-                        <label for="amountSelect"><?=$words->get('Donate_Process')?></label><br />
                         <select name="amountSelect" id="amountSelect" onchange="changeAmount(this.value); clearForm('amountSelectText');">
                             <option value=""></option>
                             <option value="10">10 &#8364;</option>

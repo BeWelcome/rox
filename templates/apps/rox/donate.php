@@ -46,25 +46,29 @@ $words = new MOD_words();
     		<div class="subcr">
     			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                     <h3><?=$words->get('Donate_Paypal_Legend')?></h3>
-                    <p><img src="images/misc/paymethods.gif" alt="methods of payment"></p>
-                    <p><?=$words->get('Donate_Process')?></p>
+                    <p><img src="images/misc/paymethods.gif" alt="methods of payment" /></p>
                     <p>
-                    <input type="hidden" name="cmd" value="_xclick">
-                    <input type="hidden" name="business" value="treasurer@bevolunteer.org">
-                    <select name="amountSelect" id="amountSelect" onchange="changeAmount(this.value); clearForm('amountSelectText');">
-                    <option value=""></option>
-                    <option value="10">10 &#8364;</option>
-                    <option value="25" selected="selected">25 &#8364;</option>
-                    <option value="50">50 &#8364;</option>
-                    <option value="100">100 &#8364;</option>
-                    <option value="200">200 &#8364;</option>
-                    </select> <?=$words->get('Donate_Paypal_OrChooseYourself')?> 
-                    <input type="text" size="6" name="amountSelectText" id="amountSelectText" onchange="changeAmount(this.value);" onclick="clearForm('amountSelect');">  &#8364;                    </p>
+                        <input type="hidden" name="cmd" value="_xclick" />
+                        <input type="hidden" name="business" value="treasurer@bevolunteer.org" />
+                        <label for="amountSelect"><?=$words->get('Donate_Process')?></label><br />
+                        <select name="amountSelect" id="amountSelect" onchange="changeAmount(this.value); clearForm('amountSelectText');">
+                            <option value=""></option>
+                            <option value="10">10 &#8364;</option>
+                            <option value="25" selected="selected">25 &#8364;</option>
+                            <option value="50">50 &#8364;</option>
+                            <option value="100">100 &#8364;</option>
+                            <option value="200">200 &#8364;</option>
+                        </select>
+                     </p>
                     <p>
-                    <input type="hidden" id="amount" name="amount" value="25.00">
-                    <input type="hidden" name="item_name" value="BeVolunteer donation">
-                    <input type="hidden" name="page_style" value="Primary">
-                    <input type="hidden" name="no_shipping" value="1">
+                        <label for="amountSelectText"><?=$words->get('Donate_Paypal_OrChooseYourself')?></label><br />
+                        <input type="text" size="4" name="amountSelectText" id="amountSelectText" onchange="changeAmount(this.value);" onclick="clearForm('amountSelect');" />  &#8364;
+                    </p>
+                    <p>
+                    <input type="hidden" id="amount" name="amount" value="25.00" />
+                    <input type="hidden" name="item_name" value="BeVolunteer donation" />
+                    <input type="hidden" name="page_style" value="Primary" />
+                    <input type="hidden" name="no_shipping" value="1" />
                     <input type="hidden" name="lc" value="<?php 
                      if (isset($_SESSION["lang"]) ) {
                      		switch ($_SESSION["lang"]){
@@ -88,16 +92,16 @@ $words = new MOD_words();
                      else {
                        echo "US" ;
                      }
-                     ?>">
+                     ?>" />
                       
-                    <input type="hidden" name="return" value="<?=PVars::getObj('env')->baseuri?>donate/done">
-                    <input type="hidden" name="cancel_return" value="<?=PVars::getObj('env')->baseuri?>donate/cancel">
-                    <input type="hidden" name="cn" value="comment">
-                    <input type="hidden" name="currency_code" value="EUR">
-                    <input type="hidden" name="tax" value="0">
-                    <input type="hidden" name="bn" value="PP-DonationsBF">
-                    <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>">
-                    <img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    <input type="hidden" name="return" value="<?=PVars::getObj('env')->baseuri?>donate/done" />
+                    <input type="hidden" name="cancel_return" value="<?=PVars::getObj('env')->baseuri?>donate/cancel" />
+                    <input type="hidden" name="cn" value="comment" />
+                    <input type="hidden" name="currency_code" value="EUR" /> 
+                    <input type="hidden" name="tax" value="0" />
+                    <input type="hidden" name="bn" value="PP-DonationsBF" />
+                    <input type="submit" class="button" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
+                    <img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
                     </p>
             	</form>
                 <?php echo $words->flushBuffer() ?>  
@@ -114,11 +118,9 @@ $words = new MOD_words();
    		</div>
 		<div class="c50r">
     		<div class="subcr">
-    		 	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="def-form" id="donate-options-form">
-                	<h3><?=$words->get('Donate_Account_Legend')?></h3>
-                    <p><?=$words->get('Donate_Account')?></p>
-                    <p><?=$words->get('Donate_Account2')?></p>
-            	</form>
+                <h3><?=$words->get('Donate_Account_Legend')?></h3>
+                <p><?=$words->get('Donate_Account')?></p>
+                <p><?=$words->get('Donate_Account2')?></p>
     		</div>
   		</div>
 </div>

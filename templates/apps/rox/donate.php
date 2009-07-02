@@ -34,55 +34,19 @@ $words = new MOD_words();
 } elseif ($sub == 'cancel') { ?>
         <p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
 <?php   } ?>
-
-
-<?php
-// deactivated for now, we use the vertical one instead
-// display the horizontal donation bar if the parameters are set
-if ($TDonationArray) {
-    $TotalDonations = 0;
-    $max=count($TDonationArray) ;
-    for ($ii=0;$ii<$max;$ii++) {
-    $info_styles = array(0 => "class=\"blank\"", 1 => "class=\"highlight\"");
-        static $iii = 0;
-        $T=$TDonationArray[$ii] ;
-        $string = $info_styles[($iii++%2)]; // this displays the <tr>
-        $TotalDonations = $TotalDonations + $T->Amount;
-    }
-    $TotalDonationsNeeded = 1000;
-    $Percent = $TotalDonations *100/$TotalDonationsNeeded;
-    $BarState = 202 *$Percent/100 - 202;
-?>
-<!--
-    <div class="row">
-        <table><tr><td style="padding-left:0">
-        <img src="images/misc/donationbar_hor.png" alt="<?=$Percent?>%" class="percentImage" style="
-         background: white url(images/misc/donationbar_hor_bg.png) top left no-repeat;
-         padding: 0;
-         margin: 5px 0 0 0;
-         background-position: <?=$BarState?>px 0pt;"
-        />
-        </td>
-        </tr>
-        <tr>
-        <td style="vertical-align: top">
-        <div style="position: relative; top:-40px; font-weight: bold; font-size: 14px; color: white;"><?=$TotalDonations?> EUR</div>
-        <p class="small" style="position: relative; top: -20px"><b><?=$TotalDonations?> EUR</b> raised of <b><?=$TotalDonationsNeeded?> EUR</b> needed</p>
-        </td>
-        </tr>
-        </table>
-        </div>
--->
-<?php } ?>
-        <a name="why"></a>
-    	<h3><?php echo $words->get('Donate_Why');?></h3>
-    	<p><?php echo $words->getFormatted('Donate_WhyText','<a href="/bw/feedback.php">','</a>')?></p>
-    	
- 		<div class="row">                    
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-                    <fieldset id="donate-paypal" style="border: 1px solid #999; display:block; padding: 10px 20px; margin-top: 20px; background-color: #f5f5f5;">
-                    <legend><?=$words->get('Donate_Paypal_Legend')?></legend>
-                    <img src="images/misc/paymethods.gif">
+<div class="subcolumns">
+  		<div class="c50l">
+    		<div class="subcl">
+    			<a name="why"></a>
+    			<h3><?php echo $words->get('Donate_Why');?></h3>
+    			<p><?php echo $words->getFormatted('Donate_WhyText','<a href="/bw/feedback.php">','</a>')?></p>
+    		</div>
+   		</div>
+		<div class="c50r">
+    		<div class="subcr">
+    			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                    <h3><?=$words->get('Donate_Paypal_Legend')?></h3>
+                    <p><img src="images/misc/paymethods.gif"></p>
                     <p><?=$words->get('Donate_Process')?></p>
                     <p>
                     <input type="hidden" name="cmd" value="_xclick">
@@ -135,35 +99,44 @@ if ($TDonationArray) {
                     <input type="submit" class="button" border="0" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>">
                     <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
                     </p>
-                    </form>
-                    <?php echo $words->flushBuffer() ?>
-                </div>
-        <div class="row"> 
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="def-form" id="donate-options-form">               
-                <fieldset id="donate-account" style="border: 1px solid #999; display:block; padding: 20px; margin-top: 20px; background-color: #f5f5f5;"><legend><?=$words->get('Donate_Account_Legend')?></legend>
+            	</form>
+                <?php echo $words->flushBuffer() ?>  
+    		</div>
+  		</div>
+</div>
+<div class="subcolumns">
+  		<div class="c50l">
+    		<div class="subcl">
+    			<a name="tax"></a>
+        		<h3><?php echo $words->get('Donate_Tax'); ?></h3>
+        		<p><?php echo $words->get('Donate_TaxText'); ?></p>
+    		</div>
+   		</div>
+		<div class="c50r">
+    		<div class="subcr">
+    		 	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="def-form" id="donate-options-form">
+                	<h3><?=$words->get('Donate_Account_Legend')?></h3>
                     <p><?=$words->get('Donate_Account')?></p>
                     <p><?=$words->get('Donate_Account2')?></p>
-                </fieldset>
-            </form>
-        </div>
-        
-        <a name="tax"></a>
-        <h3><?php echo $words->get('Donate_Tax'); ?></h3>
-        <p><?php echo $words->get('Donate_TaxText'); ?></p>
-        
-        <a name="transparency"></a>
-        <h3><?php echo $words->get('Donate_Transparency'); ?></h3>
-        <p><?php echo $words->getFormatted('Donate_TransparencyText','<a href="http://www.bevolunteer.org/joomla/index.php/Donate!?Itemid=54&option=com_civicrm">','</a>'); ?></p>
-        
-
-
-       
-        
-
-
-<h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
-<p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
-
+            	</form>
+    		</div>
+  		</div>
+</div>
+<div class="subcolumns">
+  		<div class="c50l">
+    		<div class="subcl">
+    			<a name="transparency"></a>
+        		<h3><?php echo $words->get('Donate_Transparency'); ?></h3>
+        		<p><?php echo $words->getFormatted('Donate_TransparencyText','<a href="http://www.bevolunteer.org/joomla/index.php/Donate!?Itemid=54&option=com_civicrm">','</a>'); ?></p>
+    		</div>
+   		</div>
+		<div class="c50r">
+    		<div class="subcr">
+    			<h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
+				<p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
+    		</div>
+  		</div>
+</div>
 <script type="text/javascript">
 
 /* update the amount-field in the donation form when an option is selected/ an amount is entered */

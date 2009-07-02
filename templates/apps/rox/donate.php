@@ -127,7 +127,7 @@ $words = new MOD_words();
     		<div class="subcl">
     			<a name="transparency"></a>
         		<h3><?php echo $words->get('Donate_Transparency'); ?></h3>
-        		<p><?php echo $words->getFormatted('Donate_TransparencyText','<a href="http://www.bevolunteer.org/joomla/index.php/Donate!?Itemid=54&option=com_civicrm">','</a>'); ?></p>
+        		<p><?php echo $words->getFormatted('Donate_TransparencyText'); ?></p>
     		</div>
    		</div>
 		<div class="c50r">

@@ -1,5 +1,24 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
 /**
  * This controller is called when the request is 'groups/...'
  */
@@ -16,7 +35,13 @@ class GroupsController extends RoxControllerBase
     {
         unset($this->_model);
     }
-	
+
+    /**
+     * displays a group overview page for a group
+     *
+     * @access public
+     * @return object
+     */
     public function showGroup()
     {
         $group = $this->getGroupFromRequest();
@@ -99,6 +124,12 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
+    /**
+     * sets the proper header for outputting a binary image and sends the image
+     * shows a thumbnail
+     *
+     * @access public
+     */
     public function thumbImg()
     {
         PRequest::ignoreCurrentRequest();
@@ -111,6 +142,12 @@ class GroupsController extends RoxControllerBase
         exit;
     }
 
+    /**
+     * sets the proper header for outputting a binary image and sends the image
+     * shows a proper sized image
+     *
+     * @access public
+     */
     public function realImg()
     {
         PRequest::ignoreCurrentRequest();
@@ -123,7 +160,12 @@ class GroupsController extends RoxControllerBase
         exit;
     }
 
-
+    /**
+     *  searches for groups using GET vars
+     *
+     * @access public
+     * @return object
+     */
     public function search()
     {
         $terms = ((!empty($this->args_vars->get['GroupsSearchInput'])) ? $this->args_vars->get['GroupsSearchInput'] : '');
@@ -141,6 +183,12 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
+    /**
+     *  shows a group creation page
+     *
+     * @access public
+     * @return object
+     */
     public function create()
     {
         if (!$this->_model->getLoggedInMember())
@@ -152,6 +200,62 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
+    /**
+     *  shows a group messaging page
+     *
+     * @access public
+     * @return object
+     */
+    public function groupMessage()
+    {
+        $group = $this->getGroupFromRequest($this->router->url('groups_overview'));
+        if (!($member = $this->_model->getLoggedInMember()) || !$member->getGroupMembership($group))
+        {
+            $this->_redirect($this->router->url('groups_overview'));
+        }
+        $page = new GroupSendMessagePage();
+        $this->fillObject($page);
+        $page->group = $this->getGroupFromRequest($this->router->url('groups_overview'));
+        return $page;
+    }
+
+   /**
+     * Callback function for createGroup page
+     * will send a message to all the groups members
+     *
+     * @param Object $args
+     * @param Object $action 
+     * @param Object $mem_redirect memory for the page after redirect
+     * @param Object $mem_resend memory for resending the form
+     * @return string relative request for redirect
+     */
+    public function groupSendMessage($args, $action, $mem_redirect, $mem_resend)
+    {
+        $group = $this->getGroupFromRequest($this->router->url('groups_overview'));
+        if (!($member = $this->_model->getLoggedInMember()) || !$member->isActive() || !$member->getGroupMembership($group))
+        {
+            return $this->router->url('groups_overview');
+        }
+
+        if ($this->_model->sendGroupMessage($group, $args->post['subject'], $args->post['message']))
+        {
+            $mem_redirect->status = true;
+        }
+        else
+        {
+            $mem_redirect->status = false;
+            $mem_redirect->post = $args->post;
+        }
+
+        return $this->router->url('group_posting', array('group_id' => $group->getPKValue()), false);
+    }
+
+    /**
+     * fetches the groups for the logged in member and shows them
+     *
+     * @access public
+     * @return object
+     */
     public function myGroups()
     {
         if (!$this->_model->getLoggedInMember())
@@ -170,6 +274,12 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
+    /**
+     * fetches featured groups and shows them
+     *
+     * @access public
+     * @return object
+     */
     public function featured()
     {
         $page = new GroupsFeaturedPage();

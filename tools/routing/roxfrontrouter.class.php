@@ -131,9 +131,15 @@ class RoxFrontRouter
                 <p>Please <a href="'.$this->args->url.'">reload</a></p>';
                 
             } else {
-                
                 // run the posthandler callback defined in $action
                 $controller = new $action->classname();
+                $request = $this->args->request;
+                list($classname, $method, $vars) = $this->router->findRoute($request);
+                $controller->route_vars = $vars;
+                $controller->request_vars = $request;
+                $controller->args_vars = $this->args;
+                $controller->router = $this->router;
+
                 $methodname = $action->methodname;
                 if (!$mem_for_redirect = $action->mem_from_recovery) {
                     $mem_for_redirect = new ReadWriteObject();

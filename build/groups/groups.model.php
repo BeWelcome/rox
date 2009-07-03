@@ -1,5 +1,24 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
 
 class GroupsModel extends  RoxModelBase
 {
@@ -73,6 +92,13 @@ class GroupsModel extends  RoxModelBase
         return $result;
     }
 
+    /**
+     * returns count of groups that match the provided term(s)
+     *
+     * @param array $terms
+     * @acccess public
+     * @return int
+     */
     public function countGroupsBySearchterms($terms)
     {
         $group = $this->createEntity('Group');
@@ -744,5 +770,51 @@ class GroupsModel extends  RoxModelBase
             $msg->JoinMemberPict = 'no';
             $msg->insert();
         }
+    }
+
+    /**
+     * sends a message to the members of a group, apart from the logged in member
+     *
+     * @param object $group
+     * @param string $subject
+     * @param string $message
+     * @access public
+     * @return bool
+     */
+    public function sendGroupMessage($group, $subject, $message)
+    {
+        if (!$group->isLoaded() || empty($subject) || empty($message))
+        {
+            return bool;
+        }
+        $member = $this->getLoggedInMember();
+        $members = $group->getEmailAcceptingMembers();
+
+        $purifier = MOD_htmlpure::getPurifier();
+        $subject = $purifier->purify(strip_tags($subject));
+        $message = $purifier->purify($message);
+
+        foreach ($members as $recipient)
+        {
+            if ($member->getPKValue() == $recipient->getPKValue())
+            {
+                continue;
+            }
+            $msg = $this->createEntity('Message');
+            $msg->MessageType = 'MemberToMember';
+            $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
+            $msg->IdParent = 0;
+            $msg->IdReceiver = $recipient->getPKValue();
+            $msg->IdSender = $member->getPKValue();
+            $msg->SendConfirmation = 'No';
+            $msg->Status = 'ToSend';
+            $msg->SpamInfo = 'NotSpam';
+            $msg->Message = "{$subject}<br/><br/>{$message}";
+            $msg->InFolder = 'Normal';
+            $msg->JoinMemberPict = 'no';
+            $msg->insert();
+            unset($msg);
+        }
+        return true;
     }
 }

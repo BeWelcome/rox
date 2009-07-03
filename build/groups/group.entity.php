@@ -1,6 +1,25 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
-//todo: base group atom on different class
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
+
 
 /**
  * represents a single group
@@ -97,6 +116,8 @@ class Group extends RoxEntityBase
      * return the members of the group
      *
      * @param string $status - which status to check for (In, WantToBeIn, Kicked)
+     * @param int $offset
+     * @param int $limit
      * @access public
      * @return array
      */
@@ -110,6 +131,23 @@ class Group extends RoxEntityBase
         $status = (($status) ? $status : 'In');
 
         return $this->createEntity('GroupMembership')->getGroupMembers($this, $status, '', $offset, $limit);
+    }
+
+    /**
+     * return the members of the group accepting email from the other group members
+     *
+     * @param string $status - which status to check for (In, WantToBeIn, Kicked)
+     * @access public
+     * @return array
+     */
+    public function getEmailAcceptingMembers()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+
+        return $this->createEntity('GroupMembership')->getGroupMembers($this, 'In', 'IacceptMassMailFromThisGroup = "yes"');
     }
 
     /**
@@ -354,6 +392,13 @@ class Group extends RoxEntityBase
         return $this->createEntity('Member', $priv_scope->IdMember);
     }
 
+    /**
+     * sets ownership for a group - owner has admin powers + more for a group
+     *
+     * @param object $member
+     * @access public
+     * @return bool
+     */
     public function setGroupOwner($member)
     {
         if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')))
@@ -369,35 +414,6 @@ class Group extends RoxEntityBase
 
         return $role->addForMember($member, array('Group' => $this->getPKValue()));
     }
-
-
-    /*  THIS IS POSSIBLY DEFINITELY NOT WORKING YET 
-    // TODO: fix this mess
-    // This function notify immediately by mail the accepter in charge of a group $TGroup
-    // than there is one more pending member to accept 
-    */
-    function NotifyGroupAccepter($TGroup,$IdMember,$Comment)
-    {
-        function wwinlang($val, $lang)
-        {
-            return $val;  //needs to do something better
-        }
-        $rMember = $this->dao->query("Select members.*,cities.Name as CityName,countries.Name as CountryName from members,cities,countries where cities.id=members.IdCity and countries.id=cities.IdCountry and members.id=".$IdMember);
-        $text="" ;
-        
-        //var_dump($rMember);
-        $subj="New Member ".$rMember->Username." to accept in group ".wwinlang("Group_".$TGroup->Name,0) ;
-        
-        $query = "SELECT `rightsvolunteers`.`IdMember`,`members`.`Username` from `members`,`rightsvolunteers` WHERE `rightsvolunteers`.`IdRight`=8 and (`rightsvolunteers`.`Scope` like  '%\"All\"%' or `rightsvolunteers`.`Scope` like '%\"".$TGroup->Name."\"%') and Level>0 and `rightsvolunteers`.`IdMember`=`members`.`id` and (`members`.`Status`='Active' or `members`.`Status`='ActiveHidden')" ;
-        $qry = sql_query($query);
-        while ($rr = mysql_fetch_object($qry))
-        {
-            $text=" hello, ".$rr->Username." member ".LinkWithUsername($rMember->Username)." from (".$rMember->CountryName."/".$rMember->CityName.") wants to join group <b>".wwinlang("Group_".$TGroup->Name,0)."</b></br>" ;
-            $text=$text." he wrote :<p>".stripslashes($Comment)."</p><br /> to accept this membership click on <a href=\"http://www.bewelcome.org/bw/admin/admingroups.php\">AdminGroup</a> (do not forget to log before !)" ;
-            bw_mail(GetEmail($rr->IdMember), $subj, $text, "", "noreply@bewelcome.org", 0, "html", "", "");
-        }
-    }
-    
 
 }
 

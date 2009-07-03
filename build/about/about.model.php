@@ -16,23 +16,23 @@ class AboutModel extends RoxModelBase
     // needed for affiliations page
     //---------------------------------
     
-    public function isVolunteer($idUser)
+    /**
+     * checks if the given member is part of the bevolunteer group
+     *
+     * @param object $member
+     * @access public
+     * @return bool
+     */
+    public function isVolunteer($member)
     {
-        return !$this->singleLookup(
-            "
-SELECT
-    *
-FROM
-    membersgroups
-WHERE
-    membersgroups.IdGroup   =  17       AND
-    membersgroups.Status    =  'In'     AND
-    membersgroups.IdMember  =  $idUser
-            "
-        );
+        if (!$member->isLoaded())
+        {
+            return false;
+        }
+        $group = $this->createEntity('Group', 17);
+        return (bool)$member->getGroupMembership($group);
     }
-    
-    
+
     public function getFaqsCategorized()
     {
         /*
@@ -139,7 +139,3 @@ FROM faqcategories
     }
 }
 
-
-
-
-?>

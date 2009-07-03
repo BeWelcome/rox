@@ -64,5 +64,3 @@ class AboutFaqsectionPage extends AboutFaqPage
     }
 }
 
-
-?>

@@ -8,10 +8,9 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: trip.model.php 233 2007-02-28 13:37:19Z marco $
  */
-class Trip extends PAppModel {
-    protected $dao;
-    
-    public function __construct() {
+class Trip extends RoxModelBase {
+    public function __construct()
+    {
         parent::__construct();
     }
     
@@ -30,39 +29,28 @@ INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
         return ($s->affectedRows() != -1);
     }
     
-    public function createProcess()
+    public function createTrip($vars, $user)
     {
-        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-    	if (PPostHandler::isHandling()) {
-            if (!$User = APP_User::login())
-                return false;
-            $vars =& PPostHandler::getVars();
-            $errors = array();
-            if (!isset($vars['n']) || !$vars['n'])
-                $errors[] = 'name';
-            $vars['errors'] = $errors;
-            if (count($errors) > 0)
-              return false;
-
-            $tripId = $this->insertTrip($vars['n'], $vars['d'], (int)$User->getId());
-            if (!$tripId) {
-            	$vars['errors'][] = 'not_created';
-                return false;
+        $tripId = $this->insertTrip($vars['n'], $vars['d'], (int)$user->getId());
+        if (!$tripId)
+        {
+            $vars['errors'][] = 'not_created';
+            return false;
+        }
+        if (isset($vars['cg']) && $vars['cg'])
+        {
+            $Gallery = new Gallery;
+            $galleryId = $Gallery->createGallery($vars['n']);
+            if (!$galleryId)
+            {
+                $vars['errors'][] = 'gallery_not_created';
             }
-            if (isset($vars['cg']) && $vars['cg']) {
-                $Gallery = new Gallery;
-                $galleryId = $Gallery->createGallery($vars['n']);
-                if (!$galleryId) {
-                    $vars['errors'][] = 'gallery_not_created';
-                } else {
-                	$this->assignGallery($tripId, $galleryId);
-                }
+            else
+            {
+                $this->assignGallery($tripId, $galleryId);
             }
-    		return PVars::getObj('env')->baseuri.'trip/'.$tripId;
-    	} else {
-    		PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
-    	}
+        }
+        return PVars::getObj('env')->baseuri.'trip/'.$tripId;
     }
     
     /**

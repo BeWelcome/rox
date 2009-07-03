@@ -126,7 +126,7 @@ class RequestRouter
      * @access public
      * @return string
      */
-    public function url($route, $vars = array())
+    public function url($route, $vars = array(), $add_base = true)
     {
         $route = $this->getRoute($route);
         if (empty($route))
@@ -151,7 +151,11 @@ class RequestRouter
                 return '';
             }
         }
-        return PVars::getObj('env')->baseuri . $url;
+        if ($add_base)
+        {
+            $url = PVars::getObj('env')->baseuri . $url;
+        }
+        return $url;
     }
 
 

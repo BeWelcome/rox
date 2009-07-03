@@ -97,6 +97,3 @@ class AboutController extends RoxControllerBase
     }
     
 }
-
-
-?>

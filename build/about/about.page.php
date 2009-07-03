@@ -45,6 +45,3 @@ class AboutBasePage extends PageWithActiveSkin
         return 'about';
     }
 }
-
-
-?>

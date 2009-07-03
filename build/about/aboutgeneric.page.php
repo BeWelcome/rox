@@ -38,17 +38,15 @@ class AboutGenericPage extends AboutBasePage
     }
     
     protected function column_col3() {
-        if (!$model = $this->getModel()) {
-            echo 'no model in AboutGenericView';
+        if (!($model = $this->getModel()) || !($member = $model->getLoggedInMember()))
+        {
             $isvolunteer = false;
-        } else if (!isset($_SESSION['IdMember'])) {
-            $isvolunteer = false;
-        } else {
-            $isvolunteer = $this->getModel()->isVolunteer($_SESSION['IdMember']);
+        }
+        else
+        {
+            $isvolunteer = $model->isVolunteer($member);
         }
         require 'templates/'.$this->_pagename.'.php';
     }
 }
 
-
-?>

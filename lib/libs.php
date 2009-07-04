@@ -69,4 +69,3 @@ $Classes->addClass('PSafeHTML', SCRIPT_BASE.'lib/xml/safehtml.lib.php');
 // PEAR
 //***************************************************************
 $Classes->addClass('Mail', 'Mail.php');
-?>

@@ -57,4 +57,3 @@ abstract class PAppController implements PApplication
         unset($this->dao);
     }
 } 
-?>

@@ -58,4 +58,3 @@ abstract class PAppModel
         unset($this->dao);
     }
 }
-?>

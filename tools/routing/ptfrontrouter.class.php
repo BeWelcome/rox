@@ -1,7 +1,7 @@
 <?php
 
 // seems to me this class is not used - disabling it now, to make sure it won't ever be again
-die('dont use this class');
+throw new Exception('dont use this class');
 
 class PTFrontRouter extends ObjectWithInjection
 {

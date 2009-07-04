@@ -40,13 +40,13 @@ class RequestRouter
      * @access public
      * @return bool
      */
-    public function addRoute($name, $url, $controller, $method = 'index')
+    public function addRoute($name, $url, $controller, $method = 'index', $callback = false)
     {
         if (!is_string($name) || !empty(self::$_routes[$name]) || !is_string($url) || !is_string($controller))
         {
             return false;
         }
-        self::$_routes[$name] = array('url' => $url, 'controller' => $controller, 'method' => $method);
+        self::$_routes[$name] = array('url' => $url, 'controller' => $controller, 'method' => $method, 'callback' => $callback);
         return true;
     }
 
@@ -74,7 +74,7 @@ class RequestRouter
      * @access public
      * @return array - empty if nothing found, otherwise full of good stuff
      */
-    public function matchRoute($uri)
+    public function matchRoute($uri, $matchcallbacks = false)
     {
         $match = array();
         $matchvars = array();
@@ -82,7 +82,7 @@ class RequestRouter
         {
             $url = preg_replace(array('/\//','/\*/','/:[^:]+:/','/\\?\/$/'), array('\/','.*','([^\/]+)',''),   $route['url']);
             $url = "/^{$url}\\/?$/i";
-            if (!preg_match($url, $uri, $matches))
+            if (!preg_match($url, $uri, $matches) || (!$matchcallbacks && !empty($route['callback'])))
             {
                 continue;
             }

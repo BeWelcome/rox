@@ -237,7 +237,7 @@ class GroupsController extends RoxControllerBase
             return $this->router->url('groups_overview');
         }
 
-        if ($this->_model->sendGroupMessage($group, $args->post['subject'], $args->post['message']))
+        if (!empty($args->post['subject']) && !empty($args->post['message']) && $this->_model->sendGroupMessage($group, $args->post['subject'], $args->post['message']))
         {
             $mem_redirect->status = true;
         }

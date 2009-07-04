@@ -1439,6 +1439,8 @@ $updates[] = "CREATE TABLE `urlheader_languages` (
 
 $updates[] = "ALTER TABLE `languages` DROP `UrlHeader` " ;
 
+$updates[] = "ALTER TABLE `params` ADD `IsRealProductionDatabase` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'Says if it is the real database or not' AFTER `updated` ";
+
     if (empty($res)) {
         $version = 0;
     } else {

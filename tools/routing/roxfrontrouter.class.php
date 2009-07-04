@@ -7,7 +7,8 @@ class RoxFrontRouter
     private $args;
     private $router;
 
-    public function __construct()  {
+    public function __construct()
+    {
         $this->router = new RequestRouter();
         $this->args = $this->router->getRequestAndArgs();
     }
@@ -16,7 +17,8 @@ class RoxFrontRouter
      * choose a controller and call the index() function.
      * If necessary, flush the buffered output.
      */
-    function route()    {
+    function route()
+    {
         // retrieve user information,
         // and update statistics of being online
         $user = $this->initUser();
@@ -43,7 +45,8 @@ class RoxFrontRouter
      * return a user object representing all user-related data.
      * 
      */
-    protected function initUser()    {
+    protected function initUser()
+    {
         $this->setLanguage();
         PVars::register('lang', $_SESSION['lang']);
         
@@ -67,7 +70,8 @@ class RoxFrontRouter
 		
 		
 	*/
-    protected function setLanguage() {
+    protected function setLanguage()
+    {
 	
         if ((!isset($_SESSION['IdMember'])) and  (!isset ($_SESSION['lang']))) {
 			$Model = new RoxFrontRouterModel;
@@ -115,7 +119,8 @@ class RoxFrontRouter
 		return ;
     } // end of setLanguage
     
-    protected function setSessionLanguage() {
+    protected function setSessionLanguage()
+    {
 	}
     
     protected function route_ajax($keyword)
@@ -189,7 +194,9 @@ class RoxFrontRouter
                 header('Location: '.PVars::getObj('env')->baseuri.$req);
                 
             }
-        } else {
+        }
+        else
+        {
             
             // echo 'no posthandler action';
             // PPHP::PExit();

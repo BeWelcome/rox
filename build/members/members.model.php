@@ -614,6 +614,22 @@ ORDER BY
     }
 
     /**
+     * sets the language of the current session
+     *
+     * @param int $language_id
+     * @access public
+     * @return bool
+     */
+    public function setSessionLanguage($language_id)
+    {
+        if (($lang = $this->createEntity('Language', $language_id)) && $lang->isLoaded())
+        {
+            return $lang->setLanguage();
+        }
+        return false;
+    }
+
+    /**
      * Check form values of Mandatory form,
      * should always be analog to /build/signup/signup.model.php !!
      *

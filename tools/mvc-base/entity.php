@@ -310,10 +310,11 @@ class RoxEntityBase extends RoxModelBase
      */
     public function findById($id)
     {
-        if (!($id = intval($id)) || !$this->getTableName() || !$this->getPrimaryKey())
+        if (!$this->getTableName() || !$this->getPrimaryKey())
         {
             return false;
         }
+        $id = $this->dao->escape($id);
 
         if (is_array($this->getPrimaryKey()))
         {
@@ -1090,7 +1091,7 @@ SQL;
         }
         elseif (is_string($pk))
         {
-            if (!($val = $this->$pk))
+            if (!($val = $this->$pk) && $val !== 0 && $val !== '0')
             {
                 return false;
             }

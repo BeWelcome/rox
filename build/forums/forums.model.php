@@ -3088,19 +3088,22 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         return $text;
     }
     
-/*
-* cleanupText
-*
-*
-*
-*/
-    private function cleanupText($txt) {
-		if (strpos($txt,"href=")===false)  { // We will only try to make clickable links if there is not yet a href= (ie already present clickable link) in the text
+    /*
+     * cleanupText
+     *
+     * @param string $txt
+     * @access private
+     * @return string
+     */
+    private function cleanupText($txt)
+    {
+		if (strpos($txt,"href=") === false)
+        {
+            // We will only try to make clickable links if there is not yet a href= (ie already present clickable link) in the text
 			$txt = $this->makeClickableLinks($txt);
 		}
         $purifier = MOD_htmlpure::get()->getPurifier();
-        $txt = $purifier->purify($txt);
-        return $txt;
+        return $purifier->purify($txt);
     } // end of cleanupText
     
     public function suggestTags($search) {

@@ -38,7 +38,7 @@
     $this->addRoute('group_membersearch_ajax','groups/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
     $this->addRoute('group_membersettings','groups/:group_id:/membersettings', 'GroupsController', 'memberSettings');
     $this->addRoute('group_posting','groups/:group_id:/message', 'GroupsController', 'groupMessage');
-    $this->addRoute('group_send_message','groups/:group_id:/sendmessage', 'GroupsController', 'groupSendMessage');
+    $this->addRoute('group_send_message','groups/:group_id:/sendmessage', 'GroupsController', 'groupSendMessage', true);
     $this->addRoute('group_start','groups/:group_id:', 'GroupsController', 'showGroup');
     $this->addRoute('group_wiki','groups/:group_id:/wiki', 'GroupsController', 'wiki');
     $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');

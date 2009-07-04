@@ -104,8 +104,8 @@ class RoxFrontRouter
                     }
   				}
    			}
-			$_SESSION['lang'] = $trylang->ShortCode;
-			$_SESSION['IdLanguage'] = $trylang->id;
+			$_SESSION['lang'] = 'en';
+			$_SESSION['IdLanguage'] = 0;
 			return ;
 		}
        	if (!isset ($_SESSION['lang'])) {

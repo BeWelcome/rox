@@ -421,6 +421,11 @@ A TERRIBLE EXCEPTION
 class RoxFrontRouterModel extends RoxModelBase {
 
     function getPossibleUrlLanguage($urlheadercode = false) {
+	
+		// Uncomment briefly this line in case you have problem with it, save, log in BeWelcome, and add again the comment in this line
+		
+		// return false ; 
+		
 		return $this->singleLookup("select languages.id,ShortCode from urlheader_languages,languages
 		 where urlheader='".$urlheadercode."' and languages.id=urlheader_languages.IdLanguage") ;
 	} // end of getPossibleUrlLanguage

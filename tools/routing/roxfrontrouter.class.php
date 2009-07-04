@@ -7,7 +7,8 @@ class RoxFrontRouter
     private $args;
     private $router;
 
-    public function __construct()  {
+    public function __construct()
+    {
         $this->router = new RequestRouter();
         $this->args = $this->router->getRequestAndArgs();
     }
@@ -16,7 +17,8 @@ class RoxFrontRouter
      * choose a controller and call the index() function.
      * If necessary, flush the buffered output.
      */
-    function route()    {
+    function route()
+    {
         // retrieve user information,
         // and update statistics of being online
         $user = $this->initUser();
@@ -43,7 +45,8 @@ class RoxFrontRouter
      * return a user object representing all user-related data.
      * 
      */
-    protected function initUser()    {
+    protected function initUser()
+    {
         $this->setLanguage();
         PVars::register('lang', $_SESSION['lang']);
         
@@ -51,72 +54,45 @@ class RoxFrontRouter
         MOD_user::updateSessionOnlineCounter();    // update session environment
     }
     
+    // This detects and sets a language
+    protected function setLanguage()
+    {
+        if (!isset($_SESSION['IdMember'])) {
+        	if (!isset ($_SESSION['lang'])) {
+                $Model = new RoxFrontRouterModel;
+        		if (!empty($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
+                    $langcode = $_COOKIE['LastLang'];
+        		} else {
+        			$langcode = 'en'; // use the default one
+        			if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error
+                        // Try to look in the default browser settings
+                        $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+                        for ($ii=0;$ii<count($TLang);$ii++) {
+                            $trylang = $Model->getLanguage($TLang[$ii]);
+                            if (isset($trylang->id)) { // if valid language found
+                                $langcode = $trylang->ShortCode;
+                                setcookie('LastLang',$langcode,time()+3600*24*300); // store it as a cookie for 300 days
+                                break;
+                            }
+        				}
+        			}
+        		}
+                $newlang = $Model->getLanguage($langcode);
+                $_SESSION['lang'] = $newlang->ShortCode;
+                $_SESSION['IdLanguage'] = $newlang->id;
+        	} elseif (!empty($_COOKIE['LastLang']) && $_COOKIE['LastLang'] != $_SESSION['lang']) { // If the cookie is not set or is different to the Session lang, set it now!
+                $Model = new RoxFrontRouterModel;
+                $newlang = $Model->getLanguage($_SESSION['lang']);
+                $_SESSION['lang'] = $newlang->ShortCode;
+                $_SESSION['IdLanguage'] = $newlang->id;
+                setcookie('LastLang',$_SESSION['lang'],time()+3600*24*300); // store it as a cookie for 300 days
+            }
+        } else {
+            $request = PRequest::get()->request;
+            if (!empty($_COOKIE['LastLang']) && in_array('logout',$request)) $_SESSION['lang'] = $_COOKIE['LastLang'];
+        }
+    }
     
-	/*
-	setLanguage() allows to chose a language in case the user is a not logged one
-	it works as follow
-	if the url is www.bw
-		First a cookie LastLang is search for, if found, this language is used
-		if not, the web browser capability and first available langaue is seard for,  if found, this language is used
-		if not, the default language (english is used)
-	if the url is xxx.bw (xxx defining the forced language like fr, de ...)
-		First depending of the value of xxx, if something match for it in the urlheader_languages table, this langauge is used
-		If not, try with a cookie LastLang is search for, if found, this language is used
-		if not, the web browser capability and first available langaue is seard for,  if found, this language is used
-		if not, the default language (english is used)
-		
-		
-	*/
-    protected function setLanguage() {
-	
-        if ((!isset($_SESSION['IdMember'])) and  (!isset ($_SESSION['lang']))) {
-			$Model = new RoxFrontRouterModel;
-			$tt=explode(".",$_SERVER['HTTP_HOST']) ;
-			if (count($tt)>0) {
-				$urlheader=$tt[0] ;
-			}
-			else {
-				$urlheader="www" ;
-			}
-			if ($urlheader!='wwww') {
-				if ($trylang = $Model->getPossibleUrlLanguage($urlheader) ) {
-					$_SESSION['lang'] = $trylang->ShortCode;
-					$_SESSION['IdLanguage'] = $trylang->id;
-					return ;
-				}
-			}
-			if (!empty($_COOKIE['LastLang']) and $trylang = $Model->getLanguage($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
-				$langcode = $_COOKIE['LastLang'];
-				$_SESSION['lang'] = $trylang->ShortCode;
-				$_SESSION['IdLanguage'] = $trylang->id;
-				return ;
-			}
-       		if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error
-                // Try to look in the default browser settings
-                $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-                for ($ii=0;$ii<count($TLang);$ii++) {
-                    $trylang = $Model->getLanguage($TLang[$ii]);
-                    if (isset($trylang->id)) { // if valid language found
-                        $langcode = $trylang->ShortCode;
-						$_SESSION['lang'] = $trylang->ShortCode;
-						$_SESSION['IdLanguage'] = $trylang->id;
-						return ;
-                    }
-  				}
-   			}
-			$_SESSION['lang'] = $trylang->ShortCode;
-			$_SESSION['IdLanguage'] = $trylang->id;
-			return ;
-		}
-       	if (!isset ($_SESSION['lang'])) {
-			$_SESSION['lang'] = $trylang->ShortCode;
-			$_SESSION['IdLanguage'] = $trylang->id;
-		}
-		return ;
-    } // end of setLanguage
-    
-    protected function setSessionLanguage() {
-	}
     
     protected function route_ajax($keyword)
     {
@@ -407,24 +383,15 @@ A TERRIBLE EXCEPTION
     }
 }
 
-class RoxFrontRouterModel extends RoxModelBase {
-
-    function getPossibleUrlLanguage($urlheadercode = false) {
-	
-		// Uncomment briefly this line in case you have problem with it, save, log in BeWelcome, and add again the comment in this line
-		// return false ; 
-		
-		return $this->singleLookup("select languages.id,ShortCode from urlheader_languages,languages
-		 where urlheader='".$this->dao->escape($urlheadercode)."' and languages.id=urlheader_languages.IdLanguage") ;
-	} // end of getPossibleUrlLanguage
-	
-	
-    function getLanguage($langcode = false) {
+class RoxFrontRouterModel extends RoxModelBase
+{
+    function getLanguage($langcode = false)
+    {
         if (!$langcode){ 
             return false;
         } else {
-			if (is_numeric($langcode)) {
-				return $this->singleLookup('
+            return $this->singleLookup(
+                '
 SELECT
     languages.id AS id,
     languages.ShortCode AS ShortCode
@@ -432,23 +399,11 @@ FROM
     languages,
     words
 WHERE
-    languages.id = "'.$this->dao->escape($langcode).'" AND
+    languages.ShortCode = "'.$langcode.'" AND
     languages.id = words.Idlanguage AND
-    words.code = "WelcomeToSignup"');
-			}
-			else {
-				return $this->singleLookup('
-SELECT
-    languages.id AS id,
-    languages.ShortCode AS ShortCode
-FROM
-    languages,
-    words
-WHERE
-    languages.ShortCode = "'.$this->dao->escape($langcode).'" AND
-    languages.id = words.Idlanguage AND
-    words.code = "WelcomeToSignup"');
-			}
+    words.code = "WelcomeToSignup"
+                '
+            );
         }
     }
 }

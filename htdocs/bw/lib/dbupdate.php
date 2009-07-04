@@ -1430,6 +1430,15 @@ DETERMINISTIC
 $updates[] = "ALTER TABLE `languages` ADD `UrlHeader` VARCHAR( 4 ) NULL COMMENT 'If set it means that the value if found in the url, will force this language (like fr.bewelcome.org)'  " ;
 
 
+$updates[] = "CREATE TABLE `urlheader_languages` (
+`urlheader` VARCHAR( 10 ) NOT NULL COMMENT 'url header (www / fr / de ...)',
+`IdLanguage` INT NOT NULL COMMENT 'Id of the language',
+`updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'when the record was updated',
+`created` TIMESTAMP NOT NULL COMMENT 'when the record was created'
+) ENGINE = MYISAM COMMENT = 'allows to choose a default labguage for a specific url header'";
+
+$updates[] = "ALTER TABLE `languages` DROP `UrlHeader` " ;
+
     if (empty($res)) {
         $version = 0;
     } else {

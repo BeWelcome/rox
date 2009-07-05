@@ -37,11 +37,12 @@ class LinkModel extends RoxModelBase
 	function createLinkList() 	{
 		$preferences = $this->getLinkPreferences();
 		echo "createLinkList getpreference ".count($preferences)." values created<br>" ;			
-//		var_dump($preferences);
+
 		$comments = $this->getComments();
 		echo "createLinkList comments ".count($comments)." values created<br>" ;			
 		$specialrelation = $this->getSpecialRelation();
-		echo "createLinkList specialrelation ".count($specialrelation)." values created<br>" ;			
+		echo "createLinkList specialrelation ".count($specialrelation)." values created<br>" ;
+
 		
 		
 		foreach ($comments as $comment) {
@@ -84,39 +85,21 @@ class LinkModel extends RoxModelBase
 		}
 
 		echo "createLinkList done ".count($directlinks)." values created<br>" ;			
-/*
-		foreach ($directlinks as $key1 => $value1) {
-			foreach ($value1 as $key2 => $value2) {
-				echo $key1." -> ".$key2." : ";
-					foreach ($value2['totype'] as $totype) {
-						echo $totype." ; ";
-					}
-					echo " // ";
-					if(isset($value2['reversetype'])){
-						foreach ($value2['reversetype'] as $reversetype) {
-							echo $reversetype." ; ";
-						}
-					}
-				echo "<br>";
-			}
-			echo "---------<br>";
-		}
-*/			
+		
 	return $directlinks;
 		
 		
 	} // end of createLinkList
 	
-	function getTree() {
-//		echo "<br>in getTree<br>";
-		$directlinks = $this->createLinkList();
+	function getTree($directlinks,$startids) {
+
 
 		$count = 0;
-		$depth= 1;
+		$maxdepth= 3;
 		$branch = array();
 		$oldid = 0;
 
-		foreach ($directlinks as $key => $value) {
+		foreach ($startids as $key) {
 			echo "<br> ### ". $key ." ####<br>";
 			$matrix = array();
 			$matrix[0] = array($key);
@@ -127,23 +110,23 @@ class LinkModel extends RoxModelBase
 			echo"<br> matrix:";
 			//var_dump($matrix);
 			$newlist = $nolist;
-			while($new == 1 && $count < 50) {
+			while($new == 1 && $count < $maxdepth) {
 				echo "<br> --- newstep ".$count."<br>";
 				$new = 0;
 				$count++;
 				foreach ($matrix as $key => $value) {
-					//var_dump($value);
+
 					$last = $value[count($value)-1];
-//					echo "<br> ";
+
 					if (array_key_exists($last,$directlinks)) {
 						$added = array();
 						foreach($directlinks[$last] as $key1 => $value1) {
 							if (!in_array($key1,$nolist)) {
 								$temparray = $value;
 								array_push($temparray,$key1);
-//								print_r($temparray);
+
 								$matrix[] = $temparray;
-//								echo "<br>";
+
 								array_push($added,$key1);
 							}
 						}
@@ -161,7 +144,7 @@ class LinkModel extends RoxModelBase
 
 			echo "<br> ".count($matrix). " values to write in link list<br>";
 			foreach ($matrix as $key => $value) {
-				//var_dump($value);
+				var_dump($value);
 				$path = $this->createPath($value,$directlinks);
 				$lastid = count($value)-1;
 				$degree = count($value)-1;
@@ -176,91 +159,59 @@ class LinkModel extends RoxModelBase
 	
 	
 
-		
-		
-	// function extendBranch($id,&$matrix,$array,$nolist,$directlinks) {
-		// if (array_key_exists($id,$directlinks)) {
-			// $added = array();
-			// foreach($directlinks[$id] as $key => $value) {
-				// if (!in_array($key,$nolist)) {
-					// $temparray = $array;
-					// array_push($temparray,$key);
-					// print_r($temparray);
-					// $matrix[] = $temparray;
-					// echo "<br>";
-					// array_push($added,$key);
-				// }
-			// }
-				// //var_dump($matrix);
-			// echo "<br>--";
-			// return $added;
-		// }
-	// }
-			
-	
-	
-	// function getBranches($id,$directlinks,&$inlist,&$count,$depth,$branch,$oldid) {
+	/**
+	/ rebuild the link database
+	**/
+	function rebuildLinks() {
+	    $this->deleteLinkList();
+		$directlinks = $this->createLinkList();
+		foreach ($directlinks as $key => $value) {
+		    $startids[] = $key;
+		 }
+		 $this->getTree($directlinks,$startids);
+     }
+     
+     function rebuildMissingLinks() {
+        $directlinks = $this->createLinkList();
+        $existing_ids = $this->bulkLookup(
+            "
+            SELECT fromID FROM linklist GROUP BY fromID
+            ");
+       $e_ids = array();     
+       foreach ($existing_ids as $v) {
+		    $e_ids[] = $v->fromID;
+		}
+		//var_dump($e_ids);
+		$startids = array();
+	    foreach ($directlinks as $key => $value) {
+		    if(!in_array($key,$e_ids)) {
+		        $startids[] = $key;
+		    }
+        }
+		$startids = array_slice($startids,0,100);
+		echo"<br> processing members:".implode(',',$startids)." <br>";
+        $this->getTree($directlinks,$startids);    
+      }
+      
+      
+      
+     /**
+     / update the link database to integrate links changed since last called
+     **/
+     function updateLinks() {
+        $changed_ids = $this->getChanges();
+        $directlinks= $this->createLinkList();
+        if ($changed_ids != '') {
+        var_dump($changed_ids);
+            foreach ($changed_ids as $id) {
+                $this->removeLink($id);
+            }
+            $this->getTree($directlinks,$changed_ids);
+        }
+     }
+    
+    
 
-		// if ($count <= 50000) {
-			// array_push($branch,$id); 
-			// $oldid = $id;
-			// $count++;
-			// $depth++;
-			// array_push($inlist,$oldid);
-			// if (array_key_exists($id,$directlinks)) {
-				// foreach ($directlinks[$id] as $key => $val) {
-					//if (!in_array($key,$inlist)) {
-						// $this->getBranches ($key,$directlinks,$inlist,$count,$depth,$branch,$oldid);
-					// }
-				// }
-			// }
-			// if ($depth>=2) {
-			// //print_r($branch);
-			// $path = $this->createPath($branch,$depth-1,$directlinks);
-			// $lastid = count($branch)-1;
-			// $serpath = "'".serialize($path)."'";
-			// $fields = array('fromID' => "$branch[0]", 'toID' => "$branch[$lastid]", 'degree' => $depth-1, 'rank' => 'rank', 'path' => "$serpath"	);
-			// $this->writeLinkList($fields);
-			// }
-		// } else {
-			// echo "ende ".$count;
-		// }
-		// }
-	// function getBranches($id,$directlinks,$inlist,&$count,$depth,$branch,$oldid,&$inlist2) {
-
-		// if ($count <= 50000) {
-						// $temparray = array();
-			// array_push($branch,$id);
-			// $oldid = $id;
-			// $count++;
-			// $depth++;
-			// array_push($inlist,$oldid);
-			// if (array_key_exists($id,$directlinks)) {
-				// foreach ($directlinks[$id] as $key => $val) {
-					// if (!in_array($key,$inlist) && !in_array($key,$inlist2)) {
-						// $this->getBranches ($key,$directlinks,$inlist,$count,$depth,$branch,$oldid,$inlist2);
-						// array_push($temparray,$key);
-					// } 
-				// }
-			// }
-			// array_push($inlist2,$temparray);
-			// if ($depth>=2) {
-			// print_r($branch);
-			// print_r($inlist);
-			// $path = $this->createPath($branch,$depth-1,$directlinks);
-			// $lastid = count($branch)-1;
-			// $serpath = "'".serialize($path)."'";
-			// $fields = array('fromID' => "$branch[0]", 'toID' => "$branch[$lastid]", 'degree' => $depth-1, 'rank' => 'rank', 'path' => "$serpath"	);
-			// $this->writeLinkList($fields);
-			// }
-		// } else {
-			// echo "ende ".$count;
-		// }
-		// }		
-		
-		
-		
-		
 	/** 
 	* write / flush database
 	**/
@@ -288,6 +239,15 @@ class LinkModel extends RoxModelBase
 		);
 	}
 	
+	function removeLink($id) {
+	    return $this->dao->query(
+	        "
+	        DELETE FROM linklist
+	        WHERE fromID = ".$id
+	        );
+	}
+	
+	
 	/**
 	* functions collecting connection data from other parts of the system
 	* - comments
@@ -300,6 +260,45 @@ class LinkModel extends RoxModelBase
 	* retrieve link information from the comment system
 	**/
 	
+	function getChanges() {
+	    $lastupdate = $this->singleLookup(
+	        "SELECT UNIX_TIMESTAMP(`updated`) as updated FROM `linklist` ORDER BY `updated` DESC LIMIT 1"
+	        );
+	     var_dump($lastupdate);
+	     
+	    $comments= $this->bulkLookup(
+	        "
+	        SELECT `IdFromMember` FROM `comments` WHERE UNIX_TIMESTAMP(`updated`) >= ".$lastupdate->updated."-120"
+	        );
+	    $relations=$this->bulkLookup(
+	        "
+	        SELECT `IdOwner` FROM `specialrelations` WHERE UNIX_TIMESTAMP(`updated`) >= ".$lastupdate->updated."-120"
+	        );
+	    $ids=array();
+    
+	    foreach($comments as $comment) {
+	        $ids[] = $comment->IdFromMember;
+        }
+	    foreach($relations as $relation) {
+	        $ids[] = $relation->IdOwner;
+        }
+        $changed_ids = array_unique($ids);
+        foreach ($changed_ids as $id) {
+            $links = $this->bulkLookup(
+                "
+                SELECT `fromID`,path FROM `linklist` WHERE `path` LIKE '%{i:0;i:".$id.";%' AND (`toID` != ".$id." AND fromID != ".$id.")
+                ");
+            if ($links) {
+                foreach($links as $link) {
+                    $ids[] = $link->fromID;
+                }   
+            }
+        }
+
+        return(array_unique($ids));
+        
+    }
+	
 	function getComments()
     {
 		return $this->bulkLookup(
@@ -308,7 +307,7 @@ class LinkModel extends RoxModelBase
 			`members`.`id`, `members`.`status`
 			FROM `comments`, `members` 
 			WHERE `IdToMember` = `members`.`id` 
-			AND (`members`.`Status` = 'Active' or `members`.`Status` = 'ChoiceInactive')
+			AND (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind','ActiveHidden'))
 			AND NOT FIND_IN_SET('NeverMetInRealLife',`comments`.`Lenght`) 
 			AND (FIND_IN_SET('hewasmyguest',`comments`.`Lenght`) or 
 					 FIND_IN_SET('hehostedme',`comments`.`Lenght`) or  
@@ -331,7 +330,7 @@ class LinkModel extends RoxModelBase
 			SELECT `IdOwner`,`IdRelation`,`Type`, `members`.`id`, `members`.`status`
 			FROM `specialrelations` , `members`
 			WHERE `IdRelation` = `members`.`id` 
-			AND (`members`.`Status` = 'Active' or `members`.`Status` = 'ChoiceInactive') 
+			AND (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind') )
 			ORDER BY `IdOwner`,`IdRelation` Asc
             "
         );
@@ -401,7 +400,7 @@ class LinkModel extends RoxModelBase
 			LEFT JOIN cities AS city ON members.IdCity =  city.id 
 			LEFT JOIN countries AS country ON city.IdCountry = country.id 
 			LEFT JOIN memberspreferences ON  `memberspreferences`.`IdPreference`=".$rPref->id." and `memberspreferences`.`IdMember`=`members`.`id` 
-			WHERE `members`.`id` in ($idquery) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive')
+			WHERE `members`.`id` in ($idquery) and (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind','ActiveHidden'))
 			"
 			);
 		foreach ($result as $value) {
@@ -604,7 +603,6 @@ class LinkModel extends RoxModelBase
 	
 
 	 
-
 
 }
 

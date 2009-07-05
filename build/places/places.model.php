@@ -9,8 +9,7 @@
 * @version $Id$
 */
 
-class Places extends PAppModel {
-	private $_dao;
+class Places extends RoxModelBase {
 	
 	public function __construct() {
 		parent::__construct();
@@ -199,5 +198,3 @@ class Places extends PAppModel {
         return $cities;
 	}  // end of getAllCities
 }
-	
-?>

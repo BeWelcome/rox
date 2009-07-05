@@ -4,13 +4,14 @@
      * it is require_once()'d in that class
      *
      * to add a route, just add a line as follows:
-     *     $this->addRoute(route_name, route_url, controller, method);
+     *     $this->addRoute(route_name, route_url, controller, method, callback);
      *         |               |            |         |           |
      * RequestRouter method    |            |         |           |
      *       unique name of yor route       |         |           |
      *                      the url you want to map   |           |
      *                              the controller to map to      |
      *                                   the method in the controller to map to
+     *                                              if the method to call is a post callback
      */
 
     // general routes
@@ -28,7 +29,7 @@
     $this->addRoute('group_invitemember_ajax','groups/:group_id:/invitememberajax/:member_id:', 'GroupsController', 'inviteMemberAjax');
     $this->addRoute('group_invitepage','groups/:group_id:/invitemember', 'GroupsController', 'inviteMembers');
     $this->addRoute('group_join','groups/:group_id:/join', 'GroupsController', 'join');
-    $this->addRoute('group_joined','groups/:group_id:/join/true', 'GroupsController', 'joined');
+    $this->addRoute('group_joined','groups/:group_id:/join/true', 'GroupsController', 'joined', true);
     $this->addRoute('group_kickmember','groups/:group_id:/kickmember/:member_id:', 'GroupsController', 'kickMember');
     $this->addRoute('group_leave','groups/:group_id:/leave', 'GroupsController', 'leave');
     $this->addRoute('group_left','groups/:group_id:/leave/true', 'GroupsController', 'left');

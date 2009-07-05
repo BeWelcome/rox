@@ -307,7 +307,7 @@ class LinkModel extends RoxModelBase
 			`members`.`id`, `members`.`status`
 			FROM `comments`, `members` 
 			WHERE `IdToMember` = `members`.`id` 
-			AND (`members`.`Status` = 'Active' or `members`.`Status` = 'ChoiceInactive')
+			AND (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind','ActiveHidden'))
 			AND NOT FIND_IN_SET('NeverMetInRealLife',`comments`.`Lenght`) 
 			AND (FIND_IN_SET('hewasmyguest',`comments`.`Lenght`) or 
 					 FIND_IN_SET('hehostedme',`comments`.`Lenght`) or  
@@ -330,7 +330,7 @@ class LinkModel extends RoxModelBase
 			SELECT `IdOwner`,`IdRelation`,`Type`, `members`.`id`, `members`.`status`
 			FROM `specialrelations` , `members`
 			WHERE `IdRelation` = `members`.`id` 
-			AND (`members`.`Status` = 'Active' or `members`.`Status` = 'ChoiceInactive') 
+			AND (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind') )
 			ORDER BY `IdOwner`,`IdRelation` Asc
             "
         );
@@ -400,7 +400,7 @@ class LinkModel extends RoxModelBase
 			LEFT JOIN cities AS city ON members.IdCity =  city.id 
 			LEFT JOIN countries AS country ON city.IdCountry = country.id 
 			LEFT JOIN memberspreferences ON  `memberspreferences`.`IdPreference`=".$rPref->id." and `memberspreferences`.`IdMember`=`members`.`id` 
-			WHERE `members`.`id` in ($idquery) and (`members`.`Status`='Active' or `members`.`Status`='ChoiceInactive')
+			WHERE `members`.`id` in ($idquery) and (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind','ActiveHidden'))
 			"
 			);
 		foreach ($result as $value) {

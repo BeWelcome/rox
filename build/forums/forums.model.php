@@ -334,10 +334,10 @@ function FindAppropriatedLanguage($IdPost=0) {
 			$this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
 		}
 		else {
-			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (PostDeleted!='Deleted')" ;
-			$this->PostGroupsRestriction=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
-			$this->ThreadGroupsRestriction=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
+			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
+			$this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
+			$this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
@@ -347,8 +347,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
 				array_push($this->MyGroups,$rr->IdGroup) ; // Save the group list
 			}	;
-			$this->PostGroupsRestriction=$this->PostGroupsRestriction.")" ;
-			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.")" ;
+			$this->PostGroupsRestriction=$this->PostGroupsRestriction."))" ;
+			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction."))" ;
 		}
 		
 		// Prepares additional visibility options for moderator

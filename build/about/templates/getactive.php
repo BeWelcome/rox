@@ -48,6 +48,12 @@ $words = new MOD_words();
             <h4><?php echo $words->get('GetActiveTestingTitle')?></h4>
             <p><?php echo $words->get('GetActiveTestingText')?></p>
         </div> <!-- floatbox -->
+        
+        <div class="floatbox">
+          	<img class="float_left" src="images/icons/tango/32x32/donatek.png" alt="donation" />
+            <h4><?php echo $words->get('GetActiveDonationTitle')?></h4>
+            <p><?php echo $words->get('GetActiveDonationText')?></p>
+        </div> <!-- floatbox -->
     </div>
    </div>
 

@@ -59,6 +59,7 @@
                 <li><a href="faq"><?=$words->get('Faq')?></a></li>
                 <li><a href="feedback"><?=$words->get('ContactUs')?></a></li>
                 <li><a href="about/getactive"><?=$words->get('About_GetActive')?></a></li>
+                <li><a href="donate"><?=$words->get('DonateLink')?></a></li>
             </ul>
         </li>
         <? if (isset($volunteer) && $volunteer) { ?>

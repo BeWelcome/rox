@@ -25,7 +25,7 @@ class LoginFormWidget extends RoxWidget
         // hack for HTTPS-Login
         if (strrpos($url, 'test') === false && strrpos($url, 'bw') === false  && strrpos($url, 'alpha') === false && strrpos($url, 'localhost') === false)
             $url = str_replace('http://','https://',$url);
-        
+
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
         
         if ($logged_in) {
@@ -49,29 +49,47 @@ class LoginFormWidget extends RoxWidget
             ob_start();
             $ww = $this->wwsilent;
         }
+
+
+		// Adds for subdomain to forward login (not definitive, under discussions), jy 5/7/2009
+		$ItIsNotASubDomain=true ;
+		$url_login=$url ;
+		
+		
+		// Test if it is a knowm subdomain, and if so change prepare forwarding to a login widget on www
+		if 	(  (strrpos($url_login, 'fr.') !== false) 
+			or (strrpos($url_login, 'de.') !== false) 
+//			or (strrpos($url_login, 'localhost') !== false)
+		) {
+			$ItIsNotASubDomain=false ;
+			$url_login="http://www.bewelcome.org/login#login-widget" ;
+		} // end of adds for subdomains
+		
+        
         ?>
         <?php if ($small == true) { ?>
         <div class="login-widget-small" >
-        <form id="main-login-form" method="post" action="<?=$url ?>">
+        <form id="main-login-form" method="post" action="<?=$url_login ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
-            <table>
-                <tr>
-                    <td>
-                        <label for="login-u"><?=$ww->Username ?></label><br />
-                        <input type="text" id="login-u" name="u" />
-                    </td>
-                    <td>
-                        <label for="login-p"><?=$ww->Password ?></label><br />
-                        <input type="password" id="login-p" name="p" />
-                    </td>
-                    <td>
-                        <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
-                    </td>
-                </tr>
-            </table>
-            
-        </form>
+			<?php if ($ItIsNotASubDomain) { // Added because this is hidden for subdomain ?>
+				<table>
+					<tr>
+						<td>
+							<label for="login-u"><?=$ww->Username ?></label><br />
+							<input type="text" id="login-u" name="u" />
+						</td>
+						<td>
+							<label for="login-p"><?=$ww->Password ?></label><br />
+							<input type="password" id="login-p" name="p" />
+						</td>
+						<td>
+							<br /><input type="submit" value="Login" id="smallbutton" class="button"/>
+						</td>
+					</tr>
+				</table>
+        <?php }  // Added because this is hidden for subdomain ?>    
+		</form>
         
         <script type="text/javascript">
             document.getElementById("login-u").focus();
@@ -84,22 +102,24 @@ class LoginFormWidget extends RoxWidget
 		<?if ($err) : ?>
 		<p class="note warning"><?=$err?></p>
 		<? endif ?>
-        <form method="post" action="<?=$url ?>">
+        <form method="post" action="<?=$url_login ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
           
-          <table>
-          <tr><td align="right">
-            <label for="login-u"><?=$ww->Username ?></label>
-          </td><td>
-            <input type="text" id="login-u" name="u" />
-          </td></tr>
-          <tr><td align="right">
-            <label for="login-p"><?=$ww->Password ?></label>
-          </td><td>
-            <input type="password" id="login-p" name="p" />
-          </tr></td>
-          <tr><td>&nbsp;</td><td>
+			<?php if ($ItIsNotASubDomain) {  // Added because this is hidden for subdomain ?>
+				<table>
+				<tr><td align="right">
+				<label for="login-u"><?=$ww->Username ?></label>
+				</td><td>
+				<input type="text" id="login-u" name="u" />
+				</td></tr>
+				<tr><td align="right">
+				<label for="login-p"><?=$ww->Password ?></label>
+				</td><td>
+				<input type="password" id="login-p" name="p" />
+				</tr></td>
+				<tr><td>&nbsp;</td><td>
+			<?php }  // Added because this is hidden for subdomain ?>    
             <input type="submit" value="Login" class="button"/>
           </td></tr></table>
           <p><?=$ww->LoginformForgetPassword('<a href="bw/lostpassword.php">', '</a>') ?><br /><br /></p>

@@ -559,33 +559,41 @@ class GroupsController extends RoxControllerBase
     }
 
     /**
-     * handles member joining a group
+     * Callback function for joining a group
      *
-     * @access public
-     * @return object $page
+     * @param Object $args
+     * @param Object $action 
+     * @param Object $mem_redirect memory for the page after redirect
+     * @param Object $mem_resend memory for resending the form
+     * @return string relative request for redirect
      */
-    public function joined()
+    public function joined($args, $action, $mem_redirect, $mem_resend)
     {
         $group = $this->getGroupFromRequest();
         if (!($member = $this->_model->getLoggedInMember()))
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            return false;
         }
 
-        $page = new GroupStartPage();
+        $post = $args->post;
+        if (empty($post) || empty($post['membershipinfo_acceptgroupmail']) || empty($post['join']))
+        {
+            $mem_redirect->post = $post;
+            return false;
+        }
+
 
         if ($this->_model->joinGroup($member, $group))
         {
-            $page->setMessage('GroupsJoinSuccess');
+            $this->_model->updateMembershipSettings($member->id, $group->getPKValue(), $post['membershipinfo_acceptgroupmail'], !empty($post['membershipinfo_comment']) ? $post['membershipinfo_comment']:'');
             $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} joined group #{$group->getPKValue()}");
         }
         else
         {
-            $page->setMessage('GroupsJoinFail');
+            $mem_redirect->post = $post;
+            return false;
         }
-        $this->fillObject($page);
-        $page->group = $group;
-        return $page;
+        return $this->router->url('group_start', array('group_id' => $group->getPKValue()), false);
     }
 
     /**

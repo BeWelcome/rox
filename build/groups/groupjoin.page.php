@@ -37,29 +37,39 @@ class GroupJoinPage extends GroupsBasePage
         else
         {
         //crumbking: this is just a copy/paste of the membersettings layout with small changes in some words, needs a coder ;)
- 
-        ?>
+    
+            $layoutkit = $this->layoutkit;
+            $words = $layoutkit->getWords();
+
+            $formkit = $layoutkit->formkit;
+            $callback_tag = $formkit->setPostCallback('GroupsController', 'joined');
+
+            $error = $formkit->mem_from_redirect ? $words->get('GroupsErrorJoiningGroup') : '';
+
+            echo <<<HTML
+        {$error}
         <form action="" method="post">
-        <fieldset>
-            <legend><?= $words->get('GroupsJoinTheGroup') ;?><?= $this->group->Name ?></legend>
-            <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
-            <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
-                <label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br />
+            {$callback_tag}
+            <fieldset>
+                <legend>{$words->get('GroupsJoinTheGroup')}{$this->group->Name}</legend>
+                <input type='hidden' name='member_id' value='{$this->member->id}' />
+                <input type='hidden' name='group_id' value='{$this->group->id}' />
+                <label for="comment">{$words->get('GroupsMemberComments')}</label><br />
                 <textarea id="comment" name="membershipinfo_comment" cols="60" rows="5" class="long" ></textarea>
-            <div class="row">
-                <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label>
-                <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" />
-                <label for="no_option"><?= $words->get('no') ;?></label>
-                <input id='yes_option' type="radio" value="yes" name="membershipinfo_acceptgroupmail" />
-                <label for="yes_option"><?= $words->get('yes') ;?></label><br /><br />
-                <?= $words->get('ValuesCanBeChangedLaterInMemberSettings') ;?>
-            </div> <!-- row -->
-                    <h3><?= $words->get('GroupsJoinNamedGroup', $this->getGroupTitle()); ?></h3>
-        <span class="button"><a href="groups/<?=$this->group->id ?>/join/true"><?= $words->get('GroupsGetMeIn'); ?></a></span>
-        <span class="button"><a href="groups/<?=$this->group->id ?>"><?= $words->get('GroupsDontGetMeIn'); ?></a></span>
+                <div class="row">
+                    <label>{$words->get('GroupsMemberAcceptMail')}:</label>
+                    <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" />
+                    <label for="no_option">{$words->get('no')}</label>
+                    <input id='yes_option' type="radio" value="yes" checked='checked' name="membershipinfo_acceptgroupmail" />
+                    <label for="yes_option">{$words->get('yes')}</label><br /><br />
+                    {$words->get('ValuesCanBeChangedLaterInMemberSettings')}
+                </div> <!-- row -->
+                <h3>{$words->get('GroupsJoinNamedGroup', $this->getGroupTitle())}</h3>
+                <input type='submit' value='{$words->getSilent('GroupsGetMeIn')}' name='join'/>
+                <span class="button"><a href="groups/{$this->group->id}">{$words->get('GroupsDontGetMeIn')}</a></span>
             </fieldset>           
         </form>
-        <?php
+HTML;
         }
     }
     

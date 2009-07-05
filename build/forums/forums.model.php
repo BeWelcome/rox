@@ -3632,8 +3632,8 @@ class Board implements Iterator {
 				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
 				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
 			}	;
-			$this->PostGroupsRestriction=$this->PostGroupsRestriction.")" ;
-			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.")" ;
+			$this->PostGroupsRestriction=$this->PostGroupsRestriction."))" ;
+			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction."))" ;
 		}
 		
 		// Prepares additional visibility options for moderator

@@ -2394,6 +2394,7 @@ LIMIT %d
             $this->threadid,
             Forums::NUMBER_LAST_POSTS_PREVIEW
         );
+
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve Posts!');
@@ -3619,10 +3620,10 @@ class Board implements Iterator {
 			$this->PostGroupsRestriction=" (IdGroup=0 and PostVisibility='NoRestriction')" ;
 		}
 		else {
-			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (PostDeleted!='Deleted')" ;
-			$this->PostGroupsRestriction=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
-			$this->ThreadGroupsRestriction=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
+			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
+			$this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
+			$this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');

@@ -23,8 +23,8 @@
 #signuprox .signup-row-thin { text-align: left; padding: 0; margin: 1em;}
 #signuprox .checkbox input { padding: 2px; width: auto; border: 0;}
 #signuprox .input_float li{ width: 19em; float:left; }
-#signuprox .input_float input{ width: 15em; float:left; }
-#signuprox .input_float li.number  { width: 5em; float:left; }
+#signuprox .input_float input{ width: 13em; float:left; }
+#signuprox .input_float li.number  { width: 10em; float:left; }
 #signuprox .input_float .number input { padding: 2px; width: 3em; float:left; margin-right: 0.3em;}
 #signuprox .small { font-size: 0.9em; color: #888;}
 #signuprox .error {font-size: 11px; clear:both; width: 30em; }

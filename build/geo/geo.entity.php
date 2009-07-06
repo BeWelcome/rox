@@ -24,6 +24,7 @@ class Geo extends RoxEntityBase
         {
             $this->parent = $this->createEntity('Geo', $this->parentAdm1Id);
         }
+// todo here to setup the place type, a call to $this->PlaceType($fcode) ; 
         return $this->parent;
     }
 
@@ -163,4 +164,45 @@ class Geo extends RoxEntityBase
         }
         return $this->total_usage;
     }
+	
+	/*
+	* this is function returns the type of the place
+	* @$param  is a a geoname record  or a fcode (ascii)
+	* Rules can change, but these are the currently used one (jy 6/7/2009)
+	*/
+	private function PlaceType($param) {
+		if (isset($param->fcode)) {
+			$fcode=$param->fcode ;
+		}
+		else {
+			$fcode=$param ;
+		}
+		switch($fcode) {
+			case 'PPL':
+			case 'PPLA':
+			case 'PPLC':
+			case 'PPLG':
+			case 'PPLS':
+			case 'PPLS':
+				return("City") ;
+				break ;
+			case 'PCLI':
+			case 'PCLS':
+			case 'PCLIX':
+				return("Country") ;
+				break ;
+			case 'ADM1':
+				return("Region") ;
+				break ;
+		}
+		$strlog="" ;
+		if (isset($param->name))  {
+			$strlog=$strlog." \$$param->name=[".$param->name."] " ;
+		}
+		if (isset($param->geonameid))  {
+			$strlog=$strlog." \$param->geonameid=[".$param->geonameid."] " ;
+		}
+		MOD_log::get()->write("Database Bug : ".$strlog." fcode=".$fcode." which is unknown", "Bug");
+		return("Unknow") ;
+	} // end of PlaceType
 }

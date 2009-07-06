@@ -44,13 +44,14 @@ class AboutFaqsectionPage extends AboutFaqPage
 		else {
 			$IdLanguage=0 ;
 		}
+		
         echo '
         <h2>'.$words->get($this->faq_section->Description).'</h2>';
         echo '
         <ol class="bullet">';
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
             echo '
-            <li><a href="'.$req.'#question'.$faq_key.'">'.$faq->words_Q[$IdLanguage]->Sentence.'</a></li>';
+            <li><a href="'.$req.'#question'.$faq_key.'">'.$words->get("FaqQ_".$faq->QandA).'</a></li>';
         }
         echo '
         </ol>';
@@ -58,8 +59,8 @@ class AboutFaqsectionPage extends AboutFaqPage
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
             echo '
             <a name="question'.$faq_key.'"></a>
-            <h3>'.$faq->words_Q[$IdLanguage]->Sentence.' <a href="'.$req.'#question'.$faq_key.'"></a></h3>
-            <p class="faq_text">'.$faq->words_A[$IdLanguage]->Sentence.'</p>';
+            <h3>'.$words->get("FaqQ_".$faq->QandA).' <a href="'.$req.'#question'.$faq_key.'"></a></h3>
+            <p class="faq_text">'.$words->get("FaqA_".$faq->QandA).'</p>';
         }
     }
 }

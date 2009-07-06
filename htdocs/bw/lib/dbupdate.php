@@ -1444,6 +1444,16 @@ $updates[] = "ALTER TABLE `params` ADD `IsRealProductionDatabase` ENUM( 'Yes', '
 $updates[] = "ALTER TABLE `addresses` ADD INDEX ( `IdMember` )  ";
 $updates[] = "ALTER TABLE `addresses` ADD INDEX ( `IdCity` ) " ; 
 
+
+$updates[] = "drop view regions ";
+$updates[] = "CREATE ALGORITHM=MERGE VIEW `regions` 
+AS select `gc`.`geonameid` AS `id`,`gc`.`name` AS `Name`,`gc`.`name` AS `ansiname`,`gc`.`name` AS `OtherNames`,`gc`.`latitude` AS `latitude`,`gc`.`longitude` AS `longitude`,`gc`.`fclass` AS `feature_class`,`gc`.`fcode` AS `feature_code`,`gc`.`fk_countrycode` AS `country_code`,`gc`.`population` AS `population`,_utf8'0' AS `citiesopen`,`gc`.`parentCountryId` AS `IdCountry`,`counters_regions_nbcities`.`NbCities` AS `NbCities`,`geo_usage`.`count` AS `NbMembers` 
+from ((`geonames_cache` `gc` join (`countries` join `geo_usage`)) 
+join `counters_regions_nbcities`) 
+where ((`gc`.`fcode` = `countries`.`FirstAdminLevel`) and (`geo_usage`.`geoId` = `gc`.`geonameid`) and (`geo_usage`.`typeId` = 1)  and 
+(`counters_regions_nbcities`.`IdRegion` = `gc`.`geonameid`) and (`gc`.`parentCountryId` = `countries`.`id`))";
+
+
     if (empty($res)) {
         $version = 0;
     } else {

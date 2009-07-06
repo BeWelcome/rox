@@ -130,7 +130,7 @@ function ShowList($TData,$bgcolor="white",$title="") {
     echo "            <br />\n";
   if ($m->FeedBack!="") echo "             <p>Feedback : <font color=green><b><i>", str_replace("\n","<br>",$m->FeedBack), "</i></b></font></p>\n";
     echo "             <p>\n";
-    if ($m->Status == "Pending") {
+    if ($m->Status == "Pending" || $m->Status == "NeedMore") {
        echo "               <input type=radio name=action_".$global_count." value=accept> accept<br>\n";
     }
     echo "               <input type=radio name=action_".$global_count." value=reject> reject<br>\n";

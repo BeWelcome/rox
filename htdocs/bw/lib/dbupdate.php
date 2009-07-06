@@ -1441,6 +1441,9 @@ $updates[] = "ALTER TABLE `languages` DROP `UrlHeader` " ;
 
 $updates[] = "ALTER TABLE `params` ADD `IsRealProductionDatabase` ENUM( 'Yes', 'No' ) NOT NULL DEFAULT 'No' COMMENT 'Says if it is the real database or not' AFTER `updated` ";
 
+$updates[] = "ALTER TABLE `addresses` ADD INDEX ( `IdMember` )  ";
+$updates[] = "ALTER TABLE `addresses` ADD INDEX ( `IdCity` ) " ; 
+
     if (empty($res)) {
         $version = 0;
     } else {

@@ -14,7 +14,7 @@ function load() {
             map.addControl(new GLargeMapControl());
             map.addControl(new GHierarchicalMapTypeControl());
             map.enableDoubleClickZoom();
-            map.setCenter(new GLatLng(15, 10), 2);
+            map.setCenter(new GLatLng(15, 10), 1);
             map.addMapType(G_PHYSICAL_MAP);
             map.setMapType(G_PHYSICAL_MAP);
             GEvent.addListener(map, "click", function(overlay, point)	{
@@ -23,15 +23,15 @@ function load() {
         }
     }
     // if we have vars stored in the session or given by a GET-parameter, perform a search to show the last results
-    if (varsOnLoad || varsGet) {
-        put_html('loading', loading);
-        if (varsGet) searchByText(varsGet, 0);
-        else loadMap(0);
-    }
-    else
-        put_html('help_and_markers', searchHelp);
+    // if (varsOnLoad || varsGet) {
+        // put_html('loading', loading);
+        // if (varsGet) searchByText(varsGet, 0);
+        // else loadMap(0);
+    // }
+    // else
+        // put_html('help_and_markers', searchHelp);
 
-    varsOnLoad = '';
+    // varsOnLoad = '';
 }
 
 function searchGlobal(i) {

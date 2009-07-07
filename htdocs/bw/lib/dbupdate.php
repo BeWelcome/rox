@@ -1453,6 +1453,9 @@ join `counters_regions_nbcities`)
 where ((`gc`.`fcode` = `countries`.`FirstAdminLevel`) and (`geo_usage`.`geoId` = `gc`.`geonameid`) and (`geo_usage`.`typeId` = 1)  and 
 (`counters_regions_nbcities`.`IdRegion` = `gc`.`geonameid`) and (`gc`.`parentCountryId` = `countries`.`id`))";
 
+$updates[] = <<<SQL
+ALTER TABLE groups ADD IdGeoname INT UNSIGNED, ADD IsLocal TINYINT UNSIGNED NOT NULL DEFAULT FALSE
+SQL;
 
     if (empty($res)) {
         $version = 0;

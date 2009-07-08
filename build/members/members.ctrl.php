@@ -50,7 +50,7 @@ class MembersController extends RoxControllerBase
             default:
                 if (!isset($request[1]) || empty($request[1])) {
                     // no member specified
-                    $page = new MembersMembernotspecifiedPage;
+                    $this->redirect("places");
                 } else if ($request[1] == 'avatar') {
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
                         PPHP::PExit();
@@ -137,8 +137,7 @@ class MembersController extends RoxControllerBase
             default:
                 if (!isset($request[1])) {
                     // no member specified
-                    $page = new MembersMembernotspecifiedPage;
-                    $member = false;
+                    $this->redirect("places");
                 } else if ($request[1] == 'avatar') {
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
                         PPHP::PExit();

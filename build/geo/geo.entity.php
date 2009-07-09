@@ -14,6 +14,12 @@ class Geo extends RoxEntityBase
         }
     }
 
+    /**
+     * returns the parent geo entity of this one
+     *
+     * @access public
+     * @return object
+     */
     public function getParent()
     {
         if (!$this->isLoaded() || $this->parentAdm1Id == 0)
@@ -25,9 +31,16 @@ class Geo extends RoxEntityBase
             $this->parent = $this->createEntity('Geo', $this->parentAdm1Id);
         }
 // todo here to setup the place type, a call to $this->PlaceType($fcode) ; 
+// that seems a very strange thing to do. Why would you want to do that?
         return $this->parent;
     }
 
+    /**
+     * returns the line of ancestors in an array
+     *
+     * @access public
+     * @return array
+     */
     public function getAncestorLine()
     {
         $result = array();
@@ -49,6 +62,12 @@ class Geo extends RoxEntityBase
         return $this->ancestor_line;
     }
 
+    /**
+     * returns the geo object for the country
+     *
+     * @access public
+     * @return object
+     */
     public function getCountry()
     {
         if (!$this->isLoaded() || !$this->parentCountryId)
@@ -65,6 +84,13 @@ class Geo extends RoxEntityBase
         return $this->country;
     }
 
+    /**
+     * returns array of all children locations of the current geo entity
+     * uses geo_hierarchy to find the children
+     *
+     * @access public
+     * @return array
+     */
     public function getChildren()
     {
         if (!$this->isLoaded())
@@ -84,6 +110,13 @@ class Geo extends RoxEntityBase
         return $this->children;
     }
 
+    /**
+     * returns array of all parent locations of the current geo entity
+     * uses geo_hierarchy to find the parents
+     *
+     * @access public
+     * @return array
+     */
     public function getAllParents()
     {
         if (!$this->isLoaded())
@@ -103,6 +136,14 @@ class Geo extends RoxEntityBase
         return $this->all_parents;
     }
 
+    /**
+     * returns alternate name for the location in the language provided
+     * if no alternate name can be found for that language, uses the default
+     *
+     * @param string @lang
+     * @access public
+     * @return string
+     */
     public function getAlternateName($lang)
     {
         if (!$this->isLoaded())
@@ -123,6 +164,13 @@ class Geo extends RoxEntityBase
         return $this->alt_names[$lang];
     }
 
+    /**
+     * returns the name of the location
+     *
+     * @param string $lang - if provided, the name in this language is tried
+     * @access public
+     * @return string
+     */
     public function getName($lang = null)
     {
         if (!$this->isLoaded())
@@ -139,6 +187,12 @@ class Geo extends RoxEntityBase
         }
     }
 
+    /**
+     * returns array of usage counters for location
+     *
+     * @access public
+     * @return array
+     */
     public function getUsageForAllTypes()
     {
         if (!$this->isLoaded())
@@ -152,6 +206,12 @@ class Geo extends RoxEntityBase
         return $this->usage_by_type;
     }
 
+    /**
+     * returns total usage count for location
+     *
+     * @access public
+     * @return int
+     */
     public function getTotalUsage()
     {
         if (!$this->isLoaded())
@@ -165,19 +225,25 @@ class Geo extends RoxEntityBase
         return $this->total_usage;
     }
 	
-	/*
-	* this is function returns the type of the place
-	* @$param  is a a geoname record  or a fcode (ascii)
-	* Rules can change, but these are the currently used one (jy 6/7/2009)
-	*/
+	/**
+	 * returns the type of the place
+	 * Rules can change, but these are the currently used one (jy 6/7/2009)
+     *
+	 * @param object|string $param  is a a geoname record  or a fcode (ascii)
+     * @access private
+     * @return string
+	 */
 	private function PlaceType($param) {
-		if (isset($param->fcode)) {
+		if (isset($param->fcode))
+        {
 			$fcode=$param->fcode ;
 		}
-		else {
+		else
+        {
 			$fcode=$param ;
 		}
-		switch($fcode) {
+		switch($fcode)
+        {
 			case 'PPL':
 			case 'PPLA':
 			case 'PPLC':
@@ -196,13 +262,15 @@ class Geo extends RoxEntityBase
 				break ;
 		}
 		$strlog="" ;
-		if (isset($param->name))  {
+		if (isset($param->name))
+        {
 			$strlog=$strlog." \$$param->name=[".$param->name."] " ;
 		}
-		if (isset($param->geonameid))  {
+		if (isset($param->geonameid))
+        {
 			$strlog=$strlog." \$param->geonameid=[".$param->geonameid."] " ;
 		}
 		MOD_log::get()->write("Database Bug : ".$strlog." fcode=".$fcode." which is unknown", "Bug");
-		return("Unknow") ;
-	} // end of PlaceType
+		return("Unknown") ;
+	}
 }

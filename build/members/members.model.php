@@ -186,35 +186,6 @@ WHERE
         }
     }
     
-    /**
-     * Set the languages spoken by member
-     */
-    public function set_language_spoken($IdLanguage,$Level,$IdMember) 
-    {
-        $lang = $this->dao->query("
-DELETE 
-FROM
-    memberslanguageslevel
-WHERE
-    IdLanguage = '$IdLanguage' AND
-    IdMember = '$IdMember'
-        ");
-        $s = $this->dao->query("
-REPLACE INTO
-    memberslanguageslevel
-    (
-    IdLanguage,
-    Level,
-    IdMember
-    )
-VALUES
-    (
-    '$IdLanguage',
-    '$Level',
-    '$IdMember'
-    )
-        ");
-    }
     
     /**
      * Delete a profile translation for a member
@@ -745,8 +716,14 @@ ORDER BY
         if ($rights->hasRight('Admin') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles 
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
         }
-        foreach ($vars['languages_selected'] as $lang) {
-            $this->set_language_spoken($lang->IdLanguage,$lang->Level,$IdMember);
+        $m->removeLanguages();;
+        foreach ($vars['languages_selected'] as $lang)
+        {
+            if ($language = $this->createEntity('Language')->findById($lang->IdLanguage))
+            {
+                $ml = $this->createEntity('MemberLanguage');
+                $ml->setSpokenLanguage($m, $language, $lang->Level);
+            }
         }
         
         // Set the language that ReplaceinMTrad uses for writing

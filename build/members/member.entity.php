@@ -626,8 +626,9 @@ ORDER BY Value asc
       }
 
 
-        public function get_visitors_raw() {
-            $sql = "
+        public function get_visitors() 
+        {
+            $sql = <<<SQL
 SELECT
     members.BirthDate,
     members.HideBirthDate,
@@ -637,25 +638,23 @@ SELECT
 FROM
     profilesvisits,
     members,
-    geonames_cache
+    geonames_cache,
+    addresses
 WHERE
     profilesvisits.IdMember  = $this->id  AND
     profilesvisits.IdVisitor = members.Id AND
-    geonames_cache.geonameid = members.IdCity
-            ";
-
-            // FIXME: Not the best way to provide pagination. But for now there's not better choice.
-            $visitors = $this->dao->query($sql);
-            return $visitors;
-        }
-
-        public function get_visitors() 
-        {
-            $s = $this->get_visitors_raw();
-			if (!$s) return false;
+    geonames_cache.geonameid = addresses.IdCity AND
+    addresses.IdMember = members.id AND
+    addresses.Rank = 0
+SQL;
+			if (!($s = $this->dao->query($sql)))
+            {
+                return false;
+            }
 			$visitors = array();
-	        while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
-	            array_push($visitors, $rr);
+	        while ($rr = $s->fetch(PDB::FETCH_OBJ))
+            {
+	            $visitors [] = $rr;
 	        }
             return $visitors;
         }
@@ -987,6 +986,21 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             return true;
         }
         return false;
+    }
+
+    /**
+     * deletes all a members languages
+     *
+     * @access public
+     * @return bool
+     */
+    public function removeLanguages()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('MemberLanguage')->deleteMembersLanguages($this);
     }
 }
 

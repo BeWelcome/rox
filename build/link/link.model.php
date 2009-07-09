@@ -395,12 +395,13 @@ class LinkModel extends RoxModelBase
 		}
 
         $result = $this->bulkLookup( "
-			SELECT SQL_CACHE members.Username, 'NbComment',memberspreferences.Value as PreferenceLinkPrivacy,'NbTrust','Verified',members.id, members.id as IdMember, city.Name AS City, country.Name AS Country,`members`.`Status`
-			FROM (`members`) 
-			LEFT JOIN cities AS city ON members.IdCity =  city.id 
-			LEFT JOIN countries AS country ON city.IdCountry = country.id 
+			SELECT SQL_CACHE members.Username, 'NbComment',memberspreferences.Value as PreferenceLinkPrivacy,'NbTrust','Verified',members.id, members.id as IdMember, g1.Name AS City, g2.Name AS Country,`members`.`Status`
+			FROM `members`, addresses 
+			LEFT JOIN geonames_cache AS g1 ON addresses.IdCity =  g1.geonameid 
+			LEFT JOIN geonames_cache AS g2 ON g1.parentCountryId = g2.geonameid 
 			LEFT JOIN memberspreferences ON  `memberspreferences`.`IdPreference`=".$rPref->id." and `memberspreferences`.`IdMember`=`members`.`id` 
-			WHERE `members`.`id` in ($idquery) and (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind','ActiveHidden'))
+			WHERE `members`.`id` in ($idquery) and (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind'))
+            AND addresses.IdMember = members.id AND addresses.rank = 0
 			"
 			);
 		foreach ($result as $value) {

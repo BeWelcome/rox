@@ -18,7 +18,7 @@ class Geo extends RoxEntityBase
      * returns the parent geo entity of this one
      *
      * @access public
-     * @return object
+     * @return object|false
      */
     public function getParent()
     {
@@ -28,10 +28,20 @@ class Geo extends RoxEntityBase
         }
         if (!$this->parent)
         {
-            $this->parent = $this->createEntity('Geo', $this->parentAdm1Id);
+            if ($this->parentAdm1Id)
+            {
+                $id = $this->parentAdm1Id;
+            }
+            elseif ($this->parentCountryId)
+            {
+                $id = $this->parentCountryId;
+            }
+            else
+            {
+                return false;
+            }
+            $this->parent = $this->createEntity('Geo', $id);
         }
-// todo here to setup the place type, a call to $this->PlaceType($fcode) ; 
-// that seems a very strange thing to do. Why would you want to do that?
         return $this->parent;
     }
 
@@ -226,23 +236,17 @@ class Geo extends RoxEntityBase
     }
 	
 	/**
-	 * returns the type of the place
-	 * Rules can change, but these are the currently used one (jy 6/7/2009)
+	 * returns the type of the object
      *
-	 * @param object|string $param  is a a geoname record  or a fcode (ascii)
-     * @access private
+     * @access public
      * @return string
 	 */
-	private function PlaceType($param) {
-		if (isset($param->fcode))
+	public function placeType() {
+        if (!$this->isLoaded())
         {
-			$fcode=$param->fcode ;
-		}
-		else
-        {
-			$fcode=$param ;
-		}
-		switch($fcode)
+            return '';
+        }
+		switch($this->fcode)
         {
 			case 'PPL':
 			case 'PPLA':
@@ -250,27 +254,18 @@ class Geo extends RoxEntityBase
 			case 'PPLG':
 			case 'PPLS':
 			case 'PPLS':
-				return("City") ;
-				break ;
+				return "City";
+				break;
 			case 'PCLI':
 			case 'PCLS':
 			case 'PCLIX':
-				return("Country") ;
-				break ;
+				return "Country";
+				break;
 			case 'ADM1':
-				return("Region") ;
-				break ;
+				return "Region";
+				break;
 		}
-		$strlog="" ;
-		if (isset($param->name))
-        {
-			$strlog=$strlog." \$$param->name=[".$param->name."] " ;
-		}
-		if (isset($param->geonameid))
-        {
-			$strlog=$strlog." \$param->geonameid=[".$param->geonameid."] " ;
-		}
-		MOD_log::get()->write("Database Bug : ".$strlog." fcode=".$fcode." which is unknown", "Bug");
+		$this->logWrite("Database Bug: geonames_cache ({$this->getPKValue()}) fcode={$this->fcode} which is unknown", "Bug");
 		return("Unknown") ;
 	}
 }

@@ -133,12 +133,14 @@ AND `WhenFirstRead` = 0';
         } else {
           $InScope = "AND countries.id IN (" . $AccepterScope . ")";
         }
-        $query = '
+        $query = <<<SQL
 SELECT SQL_CACHE COUNT(*) AS cnt
-FROM members, countries, cities
-WHERE members.Status=\'Pending\'
-AND cities.id=members.IdCity
-AND countries.id=cities.IdCountry ' . $InScope;
+FROM members, addresses, geonames_cache AS g1, geonames_cache AS g2
+WHERE members.Status='Pending'
+AND addresses.IdMember = members.id AND addresses.rank = 0
+AND g1.geonameid=addresses.IdCity
+AND g2.geonameid=g1.parentCountryId {$InScope};
+SQL;
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
@@ -159,12 +161,13 @@ AND countries.id=cities.IdCountry ' . $InScope;
         } else {
             $InScope = "AND countries.id IN (" . $AccepterScope . ")";
         }
-        $query = '
+        $query = <<<SQL
 SELECT SQL_CACHE COUNT(*) AS cnt
-FROM pendingmandatory, countries, cities
-WHERE pendingmandatory.Status=\'Pending\'
-AND cities.id=pendingmandatory.IdCity
-AND countries.id=cities.IdCountry ' . $InScope;
+FROM pendingmandatory, geonames_cache AS g1, geonames_cache AS g2
+WHERE pendingmandatory.Status='Pending'
+AND g1.geonameid=pendingmandatory.IdCity
+AND g2.geonameid=g1.parentCountryId {$InScope};
+SQL;
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
@@ -246,39 +249,37 @@ AND mSender.Status=\'Active\'';
 	**/
 	public function getAllCityLatLong()
 	{
-	/*
-	$query= ' 
-		SELECT latitude,longitude
-		FROM members, cities
-		WHERE cities.id=members.IdCity
-		GROUP BY members.IdCity
-		limit 20';
-*/
 
-	$query= ' 
-		SELECT latitude,longitude
-		FROM members, cities
-		WHERE cities.id=members.IdCity and members.Status=\'Active\'
-		ORDER BY members.id DESC
-		LIMIT 20';
-	$s = $this->dao->query($query);
-	if (!$s) {
-            throw new PException('Could not retrieve lat/long for cities!');
-	}
-	$result = array();
-	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-		$result[] = $row;
-	}
-	return $result;		
+        $query= <<<SQL
+            SELECT latitude,longitude
+            FROM members, geonames_cache, addresses
+            WHERE geonames_cache.geonameid=addresses.IdCity AND members.Status='Active'
+            AND addresses.IdMember = members.id AND addresses.rank = 0
+            ORDER BY members.id DESC
+            LIMIT 20
+SQL;
+        $s = $this->dao->query($query);
+        if (!$s) {
+                throw new PException('Could not retrieve lat/long for cities!');
+        }
+        $result = array();
+        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            $result[] = $row;
+        }
+        return $result;		
 	}
 	
 // retrieve the number of members for each country
 	public function getMembersPerCountry() {
-            $query = 'SELECT countries.Name 
-		AS countryname,COUNT(*) 
-		AS cnt FROM members,countries,cities WHERE members.Status="Active" 
-		AND members.IdCity=cities.id 
-		AND cities.IdCountry=countries.id GROUP BY countries.id  ORDER BY cnt DESC';
+            $query = <<<SQL
+        SELECT g2.name AS countryname,
+          COUNT(*) AS cnt
+        FROM members, addresses, geonames_cache AS g1, geonames_cache AS g2 WHERE members.Status="Active" 
+		AND members.id = addresses.IdMember
+        AND addresses.rank = 0
+        AND addresses.IdCity = g1.geonameid 
+		AND g1.parentCountryId = g2.geonameid GROUP BY g2.geonameid  ORDER BY cnt DESC
+SQL;
             $s = $this->dao->query($query);
             if (!$s) {
                 throw new PException('Could not retrieve number of members per Country!');
@@ -440,16 +441,18 @@ AND membersgroups.IdMember='. $_idUser;
     public function getMembersStartpage($limit = 0,$sortOrder = false)
     {
 // retrieve the last member
-        $query = '
-SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` AS photo,`membersphotos`.`id` AS IdPhoto,`countries`.`Name` AS countryname,`cities`.`Name` AS cityname 
-FROM 	`members`,`memberspublicprofiles`,`membersphotos`,`cities`,`countries` 
-WHERE `membersphotos`.`IdMember`=`members`.`id`
-AND `membersphotos`.`SortOrder`=0
-AND `members`.`Status` = "Active"
-AND `memberspublicprofiles`.`IdMember`= `members`.`id`
-AND `members`.`IdCity`=`cities`.`id`
-AND `countries`.`id`=`cities`.`IdCountry` 
-';
+        $query = <<<SQL
+SELECT SQL_CACHE members.*, membersphotos.FilePath AS photo, membersphotos.id AS IdPhoto, g2.Name AS countryname, g1.Name AS cityname 
+FROM members, memberspublicprofiles, membersphotos, geonames_cache AS g1, geonames_cache AS g2, addresses 
+WHERE membersphotos.IdMember = members.id
+AND membersphotos.SortOrder = 0
+AND members.Status = "Active"
+AND memberspublicprofiles.IdMember = members.id
+AND members.id = addresses.IdMember
+AND addresses.rank = 0
+AND addresses.IdCity = g1.geonameid
+AND g2.geonameid = g1.parentCountryId 
+SQL;
         if ($sortOrder == 'random')
         $query .= '
 ORDER BY RAND()
@@ -600,11 +603,14 @@ http://www.bewelcome.org/bw/donations2.php?action=done&tx=0ME24142PE152304A&st=C
                 $IdMember=0 ; $IdCountry=0 ; // This values will remain if the user was not logged
                 if (isset($_SESSION["IdMember"])) {
                     $IdMember=$_SESSION["IdMember"] ;
-                    $query = '
-SELECT IdCountry
-FROM  members,cities
-WHERE members.id='.$IdMember.'
-AND cities.id=members.IdCity';
+                    $query = <<<SQL
+SELECT geonames_cache.parentCountryId AS IdCountry
+FROM  members, addresses, geonames_cache
+WHERE members.id={$IdMember}
+AND geonames_cache.geonameid = addresses.IdCity
+AND members.id = addresses.IdMember
+AND addresses.rank = 0
+SQL;
                     $result = $this->dao->query($query);
             		$m = $result->fetch(PDB::FETCH_OBJ);
                     $IdCountry=$m->IdCountry ; 

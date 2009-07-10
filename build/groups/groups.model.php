@@ -621,15 +621,13 @@ class GroupsModel extends  RoxModelBase
 
         if (($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '" . $group->getPKValue() . "' AND IdMember = '" . $member->getPKValue() . "'")) && $membership->Status == 'WantToBeIn')
         {
-            $note = $this->createEntity('Note');
-            $note->IdMember = $member->getPKValue();
-            $note->IdRelMember = $group->getGroupOwner()->getPKValue();
-            $note->Type = 'message';
-            $note->Link = "/groups/{$group->getPKValue()}";
-            $note->WordCode = '';
-            $note->FreeText = $this->getWords()->get('GroupsAcceptedIntoGroup', $group->Name);
-            $note->created = date('Y-m-d H:i:s');
-            $note->insert();
+            $param['IdMember'] = $member->getPKValue();
+            $param['IdRelMember'] = $group->getGroupOwner()->getPKValue();
+            $param['Type'] = 'message';
+            $param['Link'] = "/groups/{$group->getPKValue()}";
+            $param['WordCode'] = '';
+            $param['TranslationParams'] = array('GroupsAcceptedIntoGroup', $group->Name);
+            $note = $this->createEntity('Note')->createNote($param);
             return $membership->updateStatus('In');
         }
         return false;
@@ -662,15 +660,13 @@ class GroupsModel extends  RoxModelBase
             $msg->JoinMemberPict = 'no';
             $msg->insert();
 
-            $note = $this->createEntity('Note');
-            $note->IdMember = $member->getPKValue();
-            $note->IdRelMember = $from->getPKValue();
-            $note->Type = 'message';
-            $note->Link = "/groups/{$group->getPKValue()}";
-            $note->WordCode = '';
-            $note->FreeText = $this->getWords()->get('GroupsInvitedNote', $group->Name);
-            $note->created = date('Y-m-d H:i:s');
-            $note->insert();
+            $param['IdMember'] = $member->getPKValue();
+            $param['IdRelMember'] = $from->getPKValue();
+            $param['Type'] = 'message';
+            $param['Link'] = "/groups/{$group->getPKValue()}";
+            $param['WordCode'] = '';
+            $param['TranslationParams'] = array('GroupsInvitedNote', $group->Name);
+            $note = $this->createEntity('Note')->createNote($param);
         }
     }
 

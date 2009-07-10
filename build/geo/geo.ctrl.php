@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  * @package geo
  * @author Felix van Hove <fvanhove@gmx.de>
  */
-class GeoController extends PAppController {
+class GeoController extends RoxController {
 
     private $_model;
     private $_view;
@@ -66,6 +66,11 @@ class GeoController extends PAppController {
         $request = PRequest::get()->request;
         if (!isset($request[1])) {
             $request[1] = '';
+        }
+        if (isset($request[0]) && $request[0] == 'places' || $request[1] == 'places') {
+            $page = new PlacesPage();
+            $page->continents = $this->_model->getContinents();
+            return $page;
         }
         $matches = array();
         switch ($request[1]) {

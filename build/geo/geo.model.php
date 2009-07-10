@@ -754,6 +754,18 @@ class GeoModel extends RoxModelBase {
         } else return true; 
 
     }    
+    
+    
+    /**
+    * Check if a geonameid exists, if not, add it to the DB.
+    **/
+    
+    public function getContinents()
+    {
+        //get all countries from the geo countries table
+        $continents = $this->createEntity('Geo')->findByWhereMany("fcode = 'cont'"); 
+        return $continents;
+    }
 
     
     

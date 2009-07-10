@@ -763,8 +763,7 @@ class GeoModel extends RoxModelBase {
     public function getContinents()
     {
         //get all countries from the geo countries table
-        $continents = $this->createEntity('Geo')->findByWhereMany("fcode = 'cont'"); 
-        return $continents;
+        return $this->createEntity('Geo')->findByWhereMany("fcode = 'cont'"); 
     }
 
     

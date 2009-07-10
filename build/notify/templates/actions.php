@@ -1,4 +1,3 @@
-<?php ?>
 <div class="floatbox small">
     <img src="images/icons/add.png" class="float_left">
     <div class="float_left">
@@ -20,10 +19,6 @@
     <div class="float_left">
     <label>WordCode</label><br />
     <input type="text" name="WordCode" type="text" size="10" value="" /> 
-    </div>
-    <div class="float_left">
-    <label>FreeText</label><br />
-    <input type="text" name="FreeText" type="text" size="10" value="" />
     </div>
     <div class="float_left">
     <label>Checked</label><br />

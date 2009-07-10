@@ -75,51 +75,44 @@ class NotifyMemberWidget extends ItemlistWithPagination
     protected function showListItem($item, $i_row)
     {
         $words = new MOD_words();
-        extract(get_object_vars($item));
-//        print_r($item);
-        $member = MOD_member::getMember_userId($item->IdRelMember);
-        if ($this->WordCode == '' && $this->FreeText != '') {
-           $text = $this->FreeText;
+        $member = $this->createEntity('Member')->findById($item->IdRelMember);
+        if ($item->WordCode == '' && ($text_params = unserialize($item->TranslationParams)) !== false) {
+           $text = call_user_func_array(array($words, 'getSilent'), $text_params);
         } else {
-            $member = MOD_member::getMember_userId($item->IdRelMember);
-            $text = $words->get($this->WordCode,$member->getUsername());
+            $text = $words->getSilent($item->WordCode,$member->Username);
         }
-        ?>
-        <div class="floatbox"">
-            <a target="notify-<?=$item->id?>" class="dynamic float_right" href="notify/<?=$item->id?>/check" alt="<?=$words->getSilent($item->WordCode,$member->getUsername())?>">
+        $text = ((!empty($item->Link)) ? htmlentities($text) : $text);
+        $created = MOD_layoutbits::ago(strtotime($item->created));
+        echo <<<HTML
+        <div class="floatbox">
+            <a target="notify-{$item->id}" class="dynamic float_right" href="notify/{$item->id}/check" alt="{$words->getSilent($item->WordCode,$member->Username)}">
                 <img src="images/icons/box-close.png">
             </a>
-            <div class="float_right small grey"><?=MOD_layoutbits::ago(strtotime($item->created))?></div>
+            <div class="float_right small grey" title="{$item->created}">{$created}</div>
             <div class="float_left">
-            <?php if ($item->Link != '') { 
-                echo '<a href="'.$item->Link.'" alt="'.htmlentities($text).'">';
+HTML;
+            if ($item->Link != '') { 
+                echo "<a href='{$item->Link}'>";
             }
-            ?>
-			<?php if ($item->IdRelMember != '') { 
-                echo MOD_layoutbits::PIC_30_30($member->getUsername(),'',"framed");
+			if ($item->IdRelMember != '') { 
+                echo MOD_layoutbits::PIC_30_30($member->Username,'',"framed");
             }
-            ?>
-            <?php if ($item->Link != '') { 
+            if ($item->Link != '') { 
                 echo '</a>';
             }
-            ?>
-            </div>
-            <?php if ($item->Link != '') { 
-                echo '<a href="'.$item->Link.'" alt="'.htmlentities($text).'">';
+            echo "</div>";
+            if ($item->Link != '') { 
+                echo "<a href='{$item->Link}'>";
             }
-            ?>
+            echo <<<HTML
             <p class="notification_text">
-                <?php if ($item->WordCode != '') { 
-                    echo $words->getSilent($item->WordCode,'<span class="username" href="members/'.$member->getUsername().'" alt="'.$member->getUsername().'">'.$member->getUsername().'</span>');
-                } else echo $item->FreeText;
-                ?>
+                {$text}
             </p>
-            <?php if ($item->Link != '') { 
+HTML;
+            if ($item->Link != '') { 
                 echo '</a>';
             }
-            ?>
-        </div>
-        <?php
+            echo "</div>";
     }
     
     
@@ -216,21 +209,11 @@ class NotifyAdminWidget extends ItemlistWithPagination
      */
     protected function getTableColumns()
     {
-        return array(
-            'select' => '',
-            // 'contact' => 'From/To',
-            'id' => 'Id',
-            'idmember' => 'IdMember',
-            'idrelmember' => 'IdRelMember',
-            'type' => 'Type',
-            'link' => 'Link',
-            'wordcode' => 'WordCode',
-            'freetext' => 'FreeText',
-            'checked' => 'Checked',
-            'sendmail' => 'SendMail',
-            'created' => 'Created',
-
-        );
+        foreach ($this->createEntity('Note')->getColumns() as $col)
+        {
+            $result[strtolower($col)] = $col;
+        }
+        return $result;
     }
     
     /**
@@ -280,9 +263,17 @@ class NotifyAdminWidget extends ItemlistWithPagination
         echo $note->WordCode;
     }
 
-    protected function tableCell_freetext($note)
+    protected function tableCell_translationparams($note)
     {
-        echo $note->FreeText;
+        if ($params = unserialize($note->TranslationParams))
+        {
+            $words = new MOD_words;
+            echo call_user_func_array(array($words, 'get'), $params);
+        }
+        else
+        {
+            return '';
+        }
     }
 
     protected function tableCell_checked($note)
@@ -301,10 +292,3 @@ class NotifyAdminWidget extends ItemlistWithPagination
     }
     
 }
-
-
-
-
-
-
-?>

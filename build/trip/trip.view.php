@@ -17,7 +17,7 @@ class TripView extends PAppView {
 
     public function createForm()
     {
-    	$Trip = new Trip;
+    	$Trip = new TripController;
 		$callbackId = $Trip->createProcess();
     	$editing = false;
     	require 'templates/createform.php';

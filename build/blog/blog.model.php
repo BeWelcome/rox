@@ -699,8 +699,8 @@ WHERE b2t.`blog_id_foreign` = '.(int)$postId;
      * inserror     - db error while inserting.
      */
     public function commentProcess($blogId = false) {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));        
+        if (PPostHandler::isHandling()) {        	
             if (!$User = APP_User::login())
                 return false;
             $vars =& PPostHandler::getVars();

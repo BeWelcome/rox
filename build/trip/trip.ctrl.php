@@ -125,6 +125,37 @@ class TripController extends PAppController {
     }
 
 
+    /**
+     * creates a trip, or sets a callback
+     *
+     * @access public
+     * @return mixed
+     */
+    public function createProcess()
+    {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+    	if (PPostHandler::isHandling())
+        {
+            if (!$user = APP_User::login())
+            {
+                return false;
+            }
+            $vars =& PPostHandler::getVars();
+            $vars['errors'] = array();
+            if (!isset($vars['n']) || !$vars['n'])
+            {
+                $vars['errors'][] = 'name';
+                return false;
+            }
+            return $this->_model->createTrip(&$vars, $user);
+    	}
+        else
+        {
+    		PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+    	}
+    }
+
     private function editTrip($tripId) {
 		$callbackId = $this->editProcess();
 		PPostHandler::clearVars($callbackId);

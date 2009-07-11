@@ -16,6 +16,7 @@ if (isset($trip_data[$trip->trip_id])) {
 		
 		echo '<li id="tripitem_'.$blogid.'"'.($isOwnTrip ? ' class="edit" style="cursor:move;"' : '').'>';
 ?>
+
 <!-- Subtemplate: 2 columns 50/50 size -->
 <div class="subcolumns">
   <div class="c25l" style="width: 15%">

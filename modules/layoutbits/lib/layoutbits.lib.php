@@ -180,7 +180,7 @@ class MOD_layoutbits
                 '<a '.
                     'href="people/'.$username.'" '.
                     'title="'.$words->getBuffered('SeeProfileOf', $username).'" '.
-                '><img '.
+                '><img height="'.$height.'" width="'.$width.'" '.
                     'class="'.$style.'" '.
                     'src="'.$thumburl.'" '.
                     'alt="Profile" '.

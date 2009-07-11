@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id:blog.model.php 201 2007-02-11 14:07:56Z marco $
  */
-class Blog extends PAppModel 
+class Blog extends RoxModelBase 
 {
     private $_dao;
     private $_namespace;
@@ -699,8 +699,8 @@ WHERE b2t.`blog_id_foreign` = '.(int)$postId;
      * inserror     - db error while inserting.
      */
     public function commentProcess($blogId = false) {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));        
+        if (PPostHandler::isHandling()) {        	
             if (!$User = APP_User::login())
                 return false;
             $vars =& PPostHandler::getVars();

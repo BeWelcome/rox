@@ -84,7 +84,7 @@ class VerifiedMembersViewPage extends RoxPageView {
     protected function teaserHeadline() {
 	 	 $words = new MOD_words();
 		 if ($this->VerifierUsername!="") {
-		 	echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),"<a href=\"bw/members.php?cid=".$this->VerifierUsername."\">".$this->VerifierUsername."</a>") ;
+		 	echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),"<a href=\"people/".$this->VerifierUsername."\">".$this->VerifierUsername."</a>") ;
 		}
 		 if ($this->VerifiedUsername!="") {
 		 	echo count($this->list)," have been verified by ",$this->VerifiedUsername ;

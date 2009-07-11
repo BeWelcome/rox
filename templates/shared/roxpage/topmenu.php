@@ -52,6 +52,7 @@
                 <li><a href="blog"><?=$words->get('Blogs')?></a></li>
                 <li><a href="chat"><?=$words->get('Chat')?></a></li>
                 <li><a href="shop"><?=$words->get('Shop')?></a></li>
+                <li><a href="wiki"><?=$words->get('Wiki')?></a></li>
             </ul>
         </li>
         <li><a href="about"><?=$words->get('GetAnswers')?></a>

@@ -829,12 +829,13 @@ WHERE
         if ($crypted_id == "" or $crypted_id == 0) return "";
         // check for Admin
         $right = new MOD_right();
-        if ($right->hasRight('Admin'))
-            return MOD_crypt::AdminReadCrypted($crypted_id);
+        if ($right->hasRight('Admin')) {
+            return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($crypted_id)));
+		}
         // check for Member's own data
         if ($this->edit_mode) {
             if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
-                return $mCrypt;
+                return urldecode(strip_tags($mCrypt));
         }
         return MOD_crypt::get_crypted($crypted_id, $return_value);
     }
@@ -1005,4 +1006,3 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
 }
 
-?>

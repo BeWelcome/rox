@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id:blog.model.php 201 2007-02-11 14:07:56Z marco $
  */
-class Blog extends RoxModelBase 
+class Blog extends PAppModel 
 {
     private $_dao;
     private $_namespace;

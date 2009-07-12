@@ -13,19 +13,14 @@
 
 
 /**
-This page prepare the verification
+* This page prepares the verification
 **/
 class VerifyMembersPage extends RoxPageView {
     /**
      * content of the middle column - this is the most important part
      */
 
-    private $_error;
-    
-    public function __construct($error) {
-        $this->_error = $error;
-    }    
-    
+    private $_error;    
 	  
     protected function column_col3()    {
 	  	 
@@ -33,7 +28,7 @@ class VerifyMembersPage extends RoxPageView {
         $words = $this->getWords();
         $errormessage=$this->_error ;
 		 
-        require 'templates/showexplanation.php';    
+        require 'templates/verify_step1.column_col3.php';    
     }
     
     /**

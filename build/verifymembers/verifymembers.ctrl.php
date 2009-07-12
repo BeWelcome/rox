@@ -4,14 +4,11 @@
  * verifymembers controller
  *
  * @package verifymembers
- * @author JeanYves
+ * @author JeanYves, Micha
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-require_once("../htdocs/bw/lib/rights.php") ; // Requiring BW right 
-require_once("../htdocs/bw/lib/FunctionsCrypt.php") ; // Requiring BW right
-// TODO: use the MyTB right.. (MOD_right)
-// no, not for now
+
 class VerifymembersController extends RoxControllerBase
 {
     /**
@@ -35,11 +32,6 @@ class VerifymembersController extends RoxControllerBase
         
         // look at the request.
         switch (isset($request[1]) ? $request[1] : false) {
-            case false:
-            case '':
-                // no request[1] was specified
-                $page = new VerifyMembersPage(""); // Without error
-                break;
             case 'prepareverifymember':
                 // a nice trick to get all the post args as local variables...
                 // they will all be prefixed by 'post_'
@@ -87,13 +79,43 @@ class VerifymembersController extends RoxControllerBase
                 }
                 break ;
             default :
-                die();
-                // TODO: please, no dying... show a default instead!
-                // especially don't die by giving back the request!
+                $member_self = $this->getMember(isset($_SESSION['IdMember']) ? $_SESSION['IdMember'] : false);
+                if (!isset($member_self)) {
+                    // no member specified
+                    $page = new VerifyNoMemberSpecifiedPage();
+                } else if (!isset($request[1])) {
+                    // no member specified
+                    $page = new VerifyNoMemberSpecifiedPage();
+                } else if (!$member_other = $this->getMember($request[1])) {
+                    // did not find such a member
+                    $page = new MembersMembernotfoundPage;
+                } else {
+                    // found a member with given id or username
+                    $myself = false;
+                    if ($member_other->id == $member_self->id) {
+                        // user is watching her own profile
+                        $myself = true;
+                    }
+                    $page = new VerifyMembersPage();
+                    $page->member1 = $member_self;
+                    $page->member2 = $member_other;
+                }
         }
         // return the $page object,
         // so the framework can call the "$page->render()" function.
         return $page;
+    }
+    
+    protected function getMember($cid)
+    {
+        $model = new MembersModel;
+        if (is_numeric($cid)) {
+            return $model->getMemberWithId($cid);
+        } else if (!empty($cid)) {
+            return $model->getMemberWithUsername($cid);
+        } else {
+            return false;
+        }
     }
 }
 

@@ -189,5 +189,4 @@ SQL;
 			array_push($members, $row);
 		} // end of while
     } // end of	RetrieveLastAcceptedProfileInCityWithAPicture		
-} // end of MOD_Visits
-?>
+}

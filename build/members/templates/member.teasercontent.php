@@ -23,13 +23,11 @@
         <?php
           if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
             if ($member->Status!="Active") {
-				echo "<div class=\"note big\">";
-                echo "Status: <strong>",$member->Status," </strong>\n";
+                echo "<p class=\"note big\">Status: <strong>",$member->Status," </strong></p>";
             }
-            echo "</div>";
           } // end of for people with right dsiplay real status of the member
           if ($member->Status=="ChoiceInactive") {
-                echo "<div class=\"note big\"> ",$ww->WarningTemporayInactive," </div>\n";
+                echo "<div class=\"note big\">",$ww->WarningTemporayInactive," </div>\n";
           }
         ?>
         

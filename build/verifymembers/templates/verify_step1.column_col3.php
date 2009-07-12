@@ -44,6 +44,8 @@ if (!empty($errormessage)) {
 
             <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ 
             $m = $this->member1;
+            $verification_status = $m->verification_status;
+            if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
             ?>
 
             <div class="row">
@@ -51,7 +53,9 @@ if (!empty($errormessage)) {
                     <tr>
                         <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
                         <td>
-                            <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
+                            <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
+                            <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
+                            <br />
                             <?php echo $m->country; ?>
                         </td>
                     </tr>
@@ -73,6 +77,8 @@ if (!empty($errormessage)) {
 
             <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ 
             $m = $this->member2;
+            $verification_status = $m->verification_status;
+            if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
             ?>
 
             <div class="row">
@@ -80,7 +86,9 @@ if (!empty($errormessage)) {
                     <tr>
                         <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
                         <td>
-                            <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
+                            <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
+                            <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
+                            <br />
                             <?php echo $m->country; ?>
                         </td>
                     </tr>

@@ -24,7 +24,7 @@ class VerifymembersController extends RoxControllerBase
 
         
         if (!isset($_SESSION['IdMember'])) {
-            $page = new MessagesMustloginPage();
+            $page = new VerifyMustLoginPage();
             $page->setRedirectURL(implode('/',$request));
         		return $page;
         } 
@@ -95,6 +95,8 @@ class VerifymembersController extends RoxControllerBase
                     if ($member_other->id == $member_self->id) {
                         // user is watching her own profile
                         $myself = true;
+                         // no member specified
+                        return new VerifyMyselfPage();
                     }
                     $page = new VerifyMembersPage();
                     $page->member1 = $member_self;

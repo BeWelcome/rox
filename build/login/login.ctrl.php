@@ -58,7 +58,7 @@ class LoginController
             }
 
             if (!$tb_user = $model->getTBUserForBWMember($bw_member)) {
-                echo "<div id='loginmessage'>still no tb user found with handle = '$bw_member->Username'. Giving up.</div>";
+                echo "<div id='loginmessage' class='false'>still no tb user found with handle = '$bw_member->Username'. Giving up.</div>";
             } else {
                 if (!$model->checkTBPassword($tb_user, $password)) {
                     // tb password didn't match. well, who cares.
@@ -69,9 +69,21 @@ class LoginController
                 }
                 if (!$model->setBWMemberAsLoggedIn($bw_member)) {
                     // something in the status was not ok.
-                    echo "<div id='loginmessage'>Your status is '$bw_member->Status'. No chance to log in.. we are sorry!</div>";
+                    echo '<div id="loginmessage" class="false">Your status is "'.$bw_member->Status.'". No chance to log in.. we are sorry!</div>';
                 } else {
+                    echo '<div id="loginmessage_wrapper">';
                     echo '<div id="loginmessage">login successful</div>';
+                    echo '</div>';
+
+                    ?>
+                    <script type="text/javascript">
+                        document.observe("dom:loaded", function() {
+                          // initially hide the login message after a few seconds
+                          Effect.BlindUp('loginmessage_wrapper',{delay: 1.5});
+                        });
+                    </script>
+                    
+                    <?
                     $model->setupBWSession($bw_member);
                     $model->setTBUserAsLoggedIn($tb_user);
                     if (isset($request[0]) && 'login' == $request[0]) {

@@ -22,9 +22,9 @@
         
         <?php
           if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
-            echo "<div class=\"note big\">";
             if ($member->Status!="Active") {
-                echo "Status: <b>",$member->Status," </b>\n";
+				echo "<div class=\"note big\">";
+                echo "Status: <strong>",$member->Status," </strong>\n";
             }
             echo "</div>";
           } // end of for people with right dsiplay real status of the member

@@ -57,7 +57,7 @@ function Menu1_old($link = "", $tt = "") {
         echo '<a href="'.PVars::getObj('env')->baseuri.'online">', ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></span>\n";
     }
 	
-	if (IsLoggedIn()) {
+	if (IsLoggedIn('NeedMore,Pending')) {
 	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_mail.png\" alt=\"mymessages\" /><a href=\"" . PVars::getObj('env')->baseuri . "messages\">" . ww("Mymessages") . "</a></span>\n";
 	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_pref.png\" alt=\"mypreferences\" /><a href=\"" . PVars::getObj('env')->baseuri . "mypreferences\">" . ww("MyPreferences") . "</a></span>\n";
 	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></span>\n";
@@ -118,7 +118,7 @@ function Menu2_old($link = "", $tt = "") {
 	echo "      <ul id=\"nav_main\">\n";
 ?>
         <li id="logo">
-          <a href="">
+          <a href="/">
             <img src="/images/logo_index_top.png" alt="Be Welcome" />
           </a>
         </li>

@@ -173,7 +173,7 @@ class PageWithRoxLayout extends PageWithHTML
         $words = $this->getWords();
         $menu_items = $this->getTopmenuItems();
         $active_menu_item = $this->getTopmenuActiveItem();
-        $logged_in = APP_User::isBWLoggedIn();
+        $logged_in = APP_User::isBWLoggedIn('NeedMore,Pending');
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
         $rights = new MOD_right();
         $volunteer = $rights->hasRightAny();

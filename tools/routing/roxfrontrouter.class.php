@@ -173,6 +173,8 @@ class RoxFrontRouter
                     $mem_for_redirect = new ReadWriteObject();
                 }
                 
+                $controller->mem_redirect = $mem_for_redirect;
+
                 $mem_resend = $action->mem_resend;
                 
                 ob_start();
@@ -335,6 +337,7 @@ A TERRIBLE EXCEPTION
             $controller->request_vars = $request;
             $controller->args_vars = $this->args;
             $controller->router = $this->router;
+            $controller->mem_redirect = $this->memory_from_redirect;
             $page = call_user_func(array($controller, $method),$this->args);
             if (is_a($page, 'AbstractBasePage')) {
                 // used for a html comment

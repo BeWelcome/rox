@@ -135,7 +135,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function topnav()
     {
         $words = $this->getWords();
-        $logged_in = APP_User::isBWLoggedIn();
+        $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
         if (!$logged_in) {
             $request = PRequest::get()->request;
             if (!isset($request[0])) {

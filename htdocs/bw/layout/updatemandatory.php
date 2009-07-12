@@ -44,7 +44,6 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
   $stitle .= " - " . $Username;
 
   DisplayHeaderShortUserContent($stitle);
-  ShowLeftColumn($MenuAction,VolMenu());
 
   $IdCountry = $pIdCountry;
   $IdCity = $pIdCity;
@@ -56,7 +55,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
   }
   $scountry = ProposeCountry($IdCountry, "updatemandatory");
 
-  echo "    <div id=\"col3\"> \n";
+  echo "    <div id=\"col3\" style=\"margin:0;\"> \n";
   echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
   echo "        <div class=\"info clearfix\">\n";
 
@@ -84,7 +83,7 @@ function DisplayUpdateMandatory($Username = "", $FirstName = "", $SecondName = "
   echo "\n<tr><td>", ww('SignupIdCity'), "</td><td>";
   echo "<a href=\"../setlocation\">",ww("UpdateMyLocation"),"</a></td><td></td>";
   echo "\n<tr><td>", ww('SignupHouseNumber'), "</td><td><input name=HouseNumber type=text value=\"$HouseNumber\" size=8></td><td>", ww('SignupHouseNumberDescription'), "</td>";
-  echo "\n<tr><td>", ww('SignupStreetName'), "</td><td><input name=StreetName type=text value=\"$StreetName\" size=60></td><td>", ww('SignupStreetNameDescription'), "</td>";
+  echo "\n<tr><td>", ww('SignupStreetName'), "</td><td><input name=StreetName type=text value=\"$StreetName\" size=30></td><td>", ww('SignupStreetNameDescription'), "</td>";
   echo "\n<tr><td>", ww('SignupZip'), "</td><td><input name=Zip type=text value=\"$Zip\"></td><td>", ww('SignupZipDescription'), "</td>";
   echo "\n<tr><td colspan=3 align=center><hr /></td>";
 

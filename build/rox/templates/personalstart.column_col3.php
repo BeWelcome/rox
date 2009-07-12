@@ -68,27 +68,31 @@ Boston, MA  02111-1307, USA.
                 <div class="floatbox">
                     <?php
                         // Display the last created members with a picture
-                        $latestmembers=MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(4);
-                        for ($ii=0;$ii<count($latestmembers);$ii++) {
-                            $m=$latestmembers[$ii] ;
-                    ?>
+                        $latestmembers = MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(4);
+                        for ($ii=0;$ii<count($latestmembers);$ii++)
+                        {
+                            $m=$latestmembers[$ii];
+                            $img = MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed');
+                            echo <<<HTML
                     <div class="float_left" style="width: 40%; overflow: hidden;">
                         <table>
                             <tr>
-                                <td><?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?></td>
+                                <td>{$img}</td>
                                 <td>
-                                    <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
-                                    <?php echo $m->countryname; ?>
+                                    <a href="people/{$m->Username}">{$m->Username}</a><br />
+                                    {$m->countryname}
                                 </td>
                             </tr>
                         </table>
                     </div> <!-- float_left -->
-                    <? } ?>
+HTML;
+                        }
+                        echo <<<HTML
                 </div> <!-- floatbox -->
                 
-                <h3><a href="myvisitors"><?php echo $words->get('RecentVisitsOfyourProfile') ?></a></h3> 
+                <h3><a href="myvisitors">{$words->get('RecentVisitsOfyourProfile')}</a></h3> 
                 <div class="floatbox">
-                    <?php
+HTML;
                         
                         // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
                         $last_visits=MOD_visits::get()->BuildLastVisits(0, 4) ;

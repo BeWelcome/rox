@@ -132,12 +132,18 @@ ORDER BY `profilesvisits`.`updated` desc limit '.$quantity;
         $members=array() ;
         
 // retrieve the last members
-        $query = '
-SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` as photo,`membersphotos`.`id` as IdPhoto,`countries`.`Name` as countryname 
-FROM 	`members`,`membersphotos`,`cities`,`countries` 
-WHERE `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 and `members`.`Status`=\'Active\' and `members`.`IdCity`=`cities`.`id` and `countries`.`id`=`cities`.`IdCountry` 
-ORDER BY `members`.`id` desc limit '. $quantity
-;
+        $query = <<<SQL
+SELECT SQL_CACHE
+    members.id, members.Username, MAX(g2.name) AS countryname
+FROM
+    members, membersphotos, addresses, geonames_cache AS g1, geonames_cache AS g2  
+WHERE
+    membersphotos.IdMember = members.id AND members.Status='Active' AND members.id = addresses.IdMember AND addresses.IdCity = g1.geonameid AND g2.geonameid = g1.parentCountryId 
+GROUP BY
+    members.id, members.Username
+ORDER BY
+    members.id DESC LIMIT {$this->dao->escape($quantity)}
+SQL;
     	$s = $this->dao->query($query);
 		if (!$s) {
 	 		 throw new PException('Cannot retrieve last members with photo!');

@@ -1133,8 +1133,7 @@ height:50px;
 }
 
 .wiki.edit .edit-box textarea {
-   border: 2px solid #000000;
-   background-color: #ffffff;
+   width: auto;
 }
 
 .wiki.edit form[name=ewiki] {

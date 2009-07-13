@@ -39,6 +39,27 @@ abstract class RoxControllerBase extends RoxComponentBase
         $words = new MOD_words;
         $this->setTitle($words->getBuffered($title));
     }
+    
+    /**
+     * trims all values posted back to controller
+     *
+     * @param array $post_vars
+     * @access private
+     * @return array
+     */
+    protected function cleanVars($post_vars)
+    {
+        $vars = array();
+        foreach ($post_vars as $key => $var)
+        {
+            if (is_string($var))
+            {
+                $var = trim($var);
+            }
+            $vars[$key] = $var;
+        }
+        return $vars;
+    }
 }
 
 

@@ -23,9 +23,10 @@ Boston, MA  02111-1307, USA.
 */
 
 $words = $this->getWords();
+$ww = $words;
 $layoutkit = $this->layoutkit;
 $formkit = $layoutkit->formkit;
-$callback_tag = $formkit->setPostCallback('VerifymembersController', 'verifyCallback');
+$callback_tag = $formkit->setPostCallback('VerifymembersController', 'checkPasswordCallback');
 
 $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
 
@@ -34,43 +35,41 @@ if (!empty($errormessage)) {
     <p><b>$errormessage</b></p>";
 }
 
+if (!$memory = $formkit->getMemFromRedirect()) {
+    // no memory
+    // echo 'no memory';
+} else {
+    // from previous form
+    if ($memory->post) {
+        $post = $memory->post;
+        foreach ($post as $key => $value) {
+            $vars[$key] = $value;
+        }
+    }
+}
+
+// Check for errors and update status and display a message
+if (isset($vars['errors']) and count($vars['errors']) > 0) {
+    echo '<div class="error">'.$ww->FormError.'<br/>';
+    foreach ($vars['errors'] as $error)
+    {
+        echo $words->get($error) ."<br/>";
+    }
+    echo "</div>";
+} else {
+    if ($this->status == 'proceed') {
+          echo '<div class="note check">'.$ww->VerifyProceed.'</div>';
+    }
+    $vars['errors'] = array();
+}
 ?>
 <p>
-<?=$words->getFormatted("verifymembers_proceedexplanation",$_SESSION["Username"],$m->Username) ?>
+<?=$words->getFormatted("verifymembers_explanation",$_SESSION["Username"]) ?>
 </p>
 <p>
-<form name="proceedtoverify" action="verify/<?=$this->member2?>/proceed"  id="idproceedtoverify" method="post">
-    
-    <?=$callback_tag?>
-    <input type="hidden" name="IdMemberToVerify"  value="<?=$m->id ?>"/>
-    
-    <table border="0">
-    <tr><td align=center>
-	 		 <?  MOD_layoutbits::PIC_50_50($m->Username); ?>
-    </td></tr>
-    <tr><td>
-        <?=$words->getFormatted("verifymembers_name_to_check", $m->FirstName, "<i>".$m->SecondName."</i>", $m->LastName) ?>
-    </td></tr>
-    <tr><td>
-        <?=$words->getFormatted("verifymembers_address_to_check", $m->HouseNumber, $m->StreetName,$m->Zip, $m->CityName) ?>
-    </td></tr>
-    <tr><td>
-        <input type="checkbox" name="NameConfirmed">
-        <?=$words->getFormatted("verifymembers_IdoConfirmTheName", $m->Username) ?>
-    </td></tr>
-    <tr><td>
-        <input type="checkbox" name="AddressConfirmed">
-        <?=$words->getFormatted("verifymembers_IdoConfirmTheAdress", $m->Username) ?>
-    </td></tr>
-    <tr><td align="left">
-        <?=$words->getFormatted("verifymembers_Comment") ?>
-        <br>
-        <textarea name="comment" cols="50" rows="5"></textarea>
-    </td></tr>
-    <tr><td align="center">
-        <input type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
-    </td></tr>
-    </table>
+    <form name="entermembertoverify" action=""  id="prepareverifymember" method="post">
+
+        <?=$callback_tag?>
     
     <div class="subcolumns" id="profile_subcolumns">
 
@@ -97,8 +96,7 @@ if (!empty($errormessage)) {
                 </table>
             </div>
 
-            <!-- The following will disable the nasty PPostHandler -->
-            <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+            <input type="hidden" name="cid1" value="<?=$m->id?>">
             <input type="hidden" name="username1" value="<?=$m->Username?>">
             <div class="row">
             <label for="password1"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
@@ -130,20 +128,20 @@ if (!empty($errormessage)) {
                 </table>
             </div>
 
-            <!-- The following will disable the nasty PPostHandler -->
-            <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
+            <input type="hidden" name="cid2" value="<?=$m->id?>">
             <input type="hidden" name="username2" value="<?=$m->Username?>">
             <div class="row">
             <label for="password2"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
-            <input type="password"  name="password2"><br />
+            <input type="password"  name="password2">
             </div>
 
         </div> <!-- subcr -->
       </div> <!-- c50r -->
 
     </div> <!-- subcolumns -->
-    
+
+    <input  type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
+
 </form>
 </p>
-
 

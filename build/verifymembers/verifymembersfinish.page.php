@@ -2,7 +2,7 @@
 
 
 /**
- * verifymembers page
+ * verifymembersfinish page
  *
  * @package verifymembers
  * @author jeanyves
@@ -12,7 +12,7 @@
 
 
 
-class VerifyMembersProceedPage extends VerifyMembersPage 
+class VerifyMembersFinishPage extends VerifyMembersPage 
 {
     
     /**

@@ -15,21 +15,8 @@
 /**
 * This page prepares the verification
 **/
-class VerifyMembersPage extends RoxPageView {
-    /**
-     * content of the middle column - this is the most important part
-     */
-
-    private $_error;    
-	  
-    protected function column_col3()    {
-	  	 
-        // get the translation module
-        $words = $this->getWords();
-        $errormessage=$this->_error ;
-		 
-        require 'templates/verify_step1.column_col3.php';    
-    }
+class VerifyMembersPage extends RoxPageView 
+{
     
     /**
      * which item in the top menu should be activated when showing this page?

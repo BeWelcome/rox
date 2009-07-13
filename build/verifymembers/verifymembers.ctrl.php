@@ -11,6 +11,13 @@
 
 class VerifymembersController extends RoxControllerBase
 {
+    
+    public function __construct()
+    {
+        parent::__construct();
+        $this->model = new VerifyMembersModel;
+    }
+    
     /**
      * decide which page to show.
      * This method is called automatically
@@ -20,7 +27,8 @@ class VerifymembersController extends RoxControllerBase
         $User = APP_User::login(); // The user must be logged in
 
         $request = $args->request;
-        $model = new VerifyMembersModel;
+        $mem_redirect = $this->mem_redirect;
+        $model = $this->model;
 
         
         if (!isset($_SESSION['IdMember'])) {
@@ -32,31 +40,6 @@ class VerifymembersController extends RoxControllerBase
         
         // look at the request.
         switch (isset($request[1]) ? $request[1] : false) {
-            case 'prepareverifymember':
-                // a nice trick to get all the post args as local variables...
-                // they will all be prefixed by 'post_'
-                extract($args->post, EXTR_PREFIX_ALL, 'post');
-                if (!isset($post_username_to_verify) || !isset($post_member_to_check_pw)) {
-                    // the post args you need are not set. what happened?
-                    // show a page with error
-                    //
-                    //     note by Andreas:
-                    //     the problem is when the PPostHandler from PT framework makes a redirect.
-                    //     I really don't know why it does. I am trying to find out.
-                    //     Obviously, all the POST values are lost after a redirect.
-                    //
-                    $page = new VerifyMembersPage("insufficient POST arguments.");
-                } else if (!$m = $model->LoadPrivateData(
-                    $post_username_to_verify,
-                    $post_member_to_check_pw
-                )) {
-                    // $m not found... 
-                    // show a page with error
-                    $page = new VerifyMembersPage("no member with username '$post_username_to_verify' found (or more probably <b>bad password</b>).");
-                } else {
-                    $page = new VerifyMembersProceedPage($m);
-                }
-                break;
             case 'verifiersof':
                 $VerifierList=$model->LoadVerifiers($request[2]) ;
                 $page = new VerifiedMembersViewPage($request[2],"",$VerifierList);
@@ -98,7 +81,18 @@ class VerifymembersController extends RoxControllerBase
                          // no member specified
                         return new VerifyMyselfPage();
                     }
-                    $page = new VerifyMembersPage();
+                    if (isset($request[2]) && $request[2] == 'proceed') {
+                        if ($mem_redirect && ($mem_redirect->member_data || $mem_redirect->post)) {                            
+                            $page = new VerifyMembersProceedPage($request[1]);
+                        } else {
+                            $request[2] = '';
+                            $this->redirect(implode('/',$request));
+                        }
+                    } elseif (isset($request[2]) && $request[2] == 'finish') {
+                        $page = new VerifyMembersFinishPage($request[1]);
+                    } else {
+                        $page = new VerifyMembersPage();
+                    }
                     $page->member1 = $member_self;
                     $page->member2 = $member_other;
                 }
@@ -117,6 +111,76 @@ class VerifymembersController extends RoxControllerBase
             return $model->getMemberWithUsername($cid);
         } else {
             return false;
+        }
+    }
+    
+    /**
+     * handles edit profile form post - profile updating
+     *
+     * @param object $args
+     * @param object $action
+     * @param object $mem_redirect
+     * @param object $mem_resend
+     * @access public
+     * @return string
+     */
+    public function checkPasswordCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        if (isset($args->post)) {
+            $vars = $this->cleanVars($args->post);
+            $request = $args->request;
+            $errors = $this->model->checkPasswordsOfMembers($args->post);
+            if (count($errors) > 0) {
+                // show form again
+                $vars['errors'] = $errors;
+                $mem_redirect->problems = $errors;
+                $mem_redirect->post = $vars;
+                return false;
+            }
+                        
+            $member_data = array();
+            $member_data[1] = $this->model->LoadPrivateData($vars['cid1'], $vars['password1']);
+            $member_data[2] = $this->model->LoadPrivateData($vars['cid2'], $vars['password2']);
+            $mem_redirect->member_data = $member_data;
+            
+            $str = $request[0].'/'.$request[1];
+            if (in_array('proceed',$request)) return implode($request,'/');
+            return $str.'/proceed';
+        }
+    }
+    
+    /**
+     * handles verification form post
+     *
+     * @param object $args
+     * @param object $action
+     * @param object $mem_redirect
+     * @param object $mem_resend
+     * @access public
+     * @return string
+     */
+    public function verifyCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        if (isset($args->post)) {
+            $vars = $this->cleanVars($args->post);
+            $vars_old = $mem_redirect->post;
+            
+            $request = $args->request;
+            $errors = $this->model->checkVerificationForm($args->post);
+            if (count($errors) > 0) {
+                // show form again
+                $vars['errors'] = $errors;
+                $mem_redirect->problems = $errors;
+                $mem_redirect->post = $vars;
+                return false;
+            }
+            
+            $success = $this->model->AddNewVerified($vars);
+            if (!$success) $mem_redirect->problems = array('Could not update profile');
+                        
+            // Redirect to a nice location like editmyprofile/finish
+            $str = implode('/',$request);
+            return $request[0].'/'.$request[1].'/finish';
         }
     }
 }

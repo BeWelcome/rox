@@ -1204,7 +1204,7 @@ function ewiki_page_info($id, &$data, $action) {
    $show = array(
       "version", "author",
       "lastmodified",  "created", "hits", "refs",
-      "flags", "meta", "content"
+      "flags", "content"
    );
    $no_refs = (boolean)$ewiki_config["info_refs_once"];
 
@@ -1229,7 +1229,7 @@ function ewiki_page_info($id, &$data, $action) {
          continue;
       }
 
-      $o .= '<table class="version-info" border="1" cellpadding="2" cellspacing="1">' . "\n";
+      $o .= '<table class="version-info"  cellpadding="2" cellspacing="1">' . "\n";
 
       #-- additional info-actions
       $o .= '<tr><td></td><td class="action-links">';
@@ -3185,7 +3185,7 @@ function ewiki_author($defstr="") {
 /*
    decodes {author} field for display in pages
 */
-function ewiki_author_html($orig, $tail=1) {
+function ewiki_author_html($orig, $tail=0) {
    $str = strtok($orig, " (|,;/[{<+");
    $tail = $tail ? " " . strtok("\000") : "";
    #-- only IP

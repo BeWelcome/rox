@@ -199,6 +199,25 @@
     padding: 0.2em 0.2em 0.2em 0.5em;
   }
 
+dl.list {
+    display: block;
+}
+.list dt {
+    line-height: 1.5em;
+    font-size: 1em;
+    font-weight: normal;
+    color: #888;
+    width: 12em;
+    float: left;
+    clear: left;
+    margin-bottom: 0.8em;
+}
+.list dd {    
+    margin-left: 12em;
+    line-height: 1.5em;
+    margin-bottom: 0.8em;
+}
+
   /**
    * Tables
    * (en) Generic classes for table-width and design definition
@@ -815,7 +834,7 @@ a.tr_link:hover {
 
 
 /* Geo Selector */
-ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center}
+ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center; cursor: pointer;}
 ol.plain{ margin-left: 0; }
 ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
 

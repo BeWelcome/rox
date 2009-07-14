@@ -1457,6 +1457,10 @@ $updates[] = <<<SQL
 ALTER TABLE groups ADD IdGeoname INT UNSIGNED, ADD IsLocal TINYINT UNSIGNED NOT NULL DEFAULT FALSE
 SQL;
 
+    $updates[] = <<<SQL
+ALTER TABLE groups DROP HasMembers
+SQL;
+
     if (empty($res)) {
         $version = 0;
     } else {

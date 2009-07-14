@@ -86,7 +86,8 @@ function ewiki_toc_view_prepend(&$html) {
     $words = new MOD_words();
     $html_new = "<div class=\"page-toc\">\n";
     $html_new .= '
-        <a href="wiki">'. $words->getFormatted('WikiFrontPage') .'</a>
+        <div class="page-toc-caption">'. $words->getFormatted('WikiPages') .'</div>
+        <a href="wiki">'. $words->getFormatted('WikiFrontPage') .'</a><br />
         <a href="wiki/NewestPages">'. $words->getFormatted('WikiNewestPages') .'</a>
         
         <p>'. $words->getFormatted('WikiIntroduction') .'</p>

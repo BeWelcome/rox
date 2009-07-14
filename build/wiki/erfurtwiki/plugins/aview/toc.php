@@ -49,11 +49,12 @@ function ewiki_toc_format_source(&$src) {
          }
       }
    }
+   
    // Also search MediaWiki headlines
    foreach ($src as $i=>$line) {
-      if ($line[0] == "=" && $line[count($line)] == "=") {
+      if ($line[0] == "=" && $line[strlen($line)-1] == "=") {
          $n = strspn($line, "=");
-         if (($n <= 3) and ($line[$n]==" ")) {
+         if (($n <= 3)) {
 
             $text = substr($line, $n,-$n);
             $toc[$i] = str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')

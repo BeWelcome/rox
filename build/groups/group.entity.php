@@ -226,7 +226,7 @@ class Group extends RoxEntityBase
     /**
      * Create a group given some input
      *
-     * @param array $input - array containing Group_, HasMembers and Type
+     * @param array $input - array containing Group_  and Type
      * @access public
      * @return mixed Will return the insert id of the operation or false
      */
@@ -415,6 +415,22 @@ class Group extends RoxEntityBase
         }
 
         return $role->addForMember($member, array('Group' => $this->getPKValue()));
+    }
+
+    /**
+     * finds a local group for a geo location
+     *
+     * @param object $geo
+     * @access public
+     * @return object|false
+     */
+    public function getGroupForGeo(Geo $geo, $local = false)
+    {
+        if (!$geo->isLoaded())
+        {
+            return false;
+        }
+        return $this->findByWhere("IdGeoname = '{$geo->getPKValue()}'" . (($local) ? " AND IsLocal = TRUE" : ''));
     }
 
 }

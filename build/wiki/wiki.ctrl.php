@@ -126,9 +126,7 @@ class WikiController extends PAppController {
            ";)" => "emoticon_grin.png",
         );
         
-        echo '<div class="floatbox">';
         echo ewiki_page($page);
-        echo '</div>';
     }
 
     private function parseRequest() {

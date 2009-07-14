@@ -26,7 +26,7 @@ require_once 'editprofile_form.php';
             var langval = sel1.options[sel1.selectedIndex].value;
             
             var removelink = document.createElement('a');
-            removelink.appendChild(document.createTextNode('-'));
+            removelink.appendChild(document.createTextNode('Remove'));
             removelink.setAttribute('href','#');
             $(removelink).observe('click', removeLang);
             var langid = document.createElement('input');

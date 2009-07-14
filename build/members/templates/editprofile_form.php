@@ -4,26 +4,27 @@
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
-                <col width="75%" ></col>
+                <col width="25%" ></col>
+                <col width="35%" ></col>
+                <col width="15%" ></col>
               </colgroup>
               <tbody>
                 <tr align="left" >
                   <td class="label" ><?=$words->getInLang('ProfilePicture', $profile_language)?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
-                  <td>
+                  <td colspan="3" >
                     <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br /><input id="profile_picture" name="profile_picture" type="file" />
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->getInLang('ProfileSummary', $profile_language)?>:</td>
-                  <td>
+                  <td colspan="3" >
                     <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SignupBirthDate')?>:</td>
-                  <td colspan="2" >
-                        <input type='text' value='<?=$vars['BirthDate']?>' name='BirthDate'/>
-                        &nbsp;&nbsp;&nbsp;&nbsp; 
+                  <td colspan="2" ><input type='text' value='<?=$vars['BirthDate']?>' name='BirthDate'/></td>
+                  <td>   
                         <input name="HideBirthDate" value="Yes" type="checkbox"
                         <?php
                         if ($vars['HideBirthDate'] == "Yes")
@@ -39,11 +40,12 @@
 
                 <tr align='left'>
                     <td class='label'><?= $words->get('Gender'); ?></td>
-                    <td colspan='2'>
-                        <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'><?= $words->get('female'); ?></label>
-                    <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'><?= $words->get('male'); ?></label>
-                    <input class="radio" type="radio" id='genderX' name="gender" value="IDontTell" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'IDontTell') ? ' checked="checked"' : '');?>/><label for='genderX'><?= $words->get('IDontTell'); ?></label>
-                        <input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'><?= $words->get("Hidden");?></label>
+                    <td colspan='2' >
+                        <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'><?= $words->get('female'); ?></label>&nbsp;&nbsp;
+                    	<input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'><?= $words->get('male'); ?></label>&nbsp;&nbsp;
+                    	<input class="radio" type="radio" id='genderX' name="gender" value="IDontTell" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'IDontTell') ? ' checked="checked"' : '');?>/><label for='genderX'><?= $words->get('IDontTell'); ?></label></td>
+                        
+                     <td><input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'><?= $words->get("Hidden");?></label></td>
                     <?php
                         if (in_array('SignupErrorInvalidGender', $vars['errors']))
                         {
@@ -54,13 +56,13 @@
 
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOccupation')?>:</td>
-                  <td>
+                  <td colspan="2" >
                     <input type="text"  name="Occupation" value="<?=$vars['Occupation']?>" />
                   </td>
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileLanguagesSpoken')?>:</td>
-                  <td>
+                  <td colspan="3" >
                     <table>
                       <tbody>
                       <?php
@@ -70,8 +72,8 @@
                             $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage;
                             echo <<<HTML
                         <tr>
-                          <td>
-                            <a href='#' class='remove_lang'>-</a>
+                        <td>
+
                             <input type='hidden' name='memberslanguages[]' value='{$vars['languages_selected'][$ii]->IdLanguage}'/>
                             <input type='text' disabled='disabled' value='{$vars['languages_selected'][$ii]->Name}'/>
                           </td>
@@ -87,6 +89,8 @@ HTML;
                                 }
                             echo <<<HTML
                             </select>
+                          </td>
+                          <td><a href='#' class='remove_lang'>Remove</a>
                           </td>
                         </tr>
 HTML;

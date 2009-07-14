@@ -1084,7 +1084,8 @@ height:50px;
 }
 .wiki .page-toc-caption {
    background: transparent;
-font-size: 1.2em;
+   font-size: 1.2em;
+   padding: 1em 0;
 }
 
 
@@ -1213,7 +1214,18 @@ font-size: 1.2em;
 .wiki ol li {
   list-style-type: decimal;
 }
-
+.wiki .page-toc ol ol {
+  margin-left: 0.8em;
+  padding: 0 .5em;
+}
+.wiki .page-toc li {
+  line-height: 1.2em;
+  padding: .2em .5em;
+  margin: 0 .5em;
+}
+.wiki .page-toc ol ol li {
+  list-style-type: lower-roman;
+}
 
 /* Media screen end */
 }

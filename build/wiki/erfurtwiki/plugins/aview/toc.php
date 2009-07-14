@@ -33,36 +33,43 @@ function ewiki_toc_format_source(&$src) {
    $toc = array();
 
    $src = explode("\n", $src);
+   $n_last = 0;
    foreach ($src as $i=>$line) {
 
       if ($line[0] == "!") {
          $n = strspn($line, "!");
          if (($n <= 3) and ($line[$n]==" ")) {
-
+             if ($n < $n_last) $add[0] = '</ol>';
+             if ($n > $n_last) $add[1] = '<ol>';
             $text = substr($line, $n);
-            $toc[$i] = /*str_repeat("&nbsp;", 3-$n) . "·"
+            $toc[$i] =  $add[0].$add[1] . /*str_repeat("&nbsp;", 3-$n) . "·"
                      .*/ '<li><a href="#line'.$i.'">'
                      . trim($text) . "</a></li>";
 
             $src[$i] = str_repeat("!", $n) . $text . " [#line$i]";
-
+            $n_last = $n;
+            $add = array('','');
          }
       }
    }
    
    // Also search MediaWiki headlines
+   $n_last = 0;
+
    foreach ($src as $i=>$line) {
       if ($line[0] == "=" && $line[strlen($line)-1] == "=") {
          $n = strspn($line, "=");
          if (($n <= 3)) {
-
+             if ($n < $n_last) $add[0] = '</ol>';
+             if ($n > $n_last) $add[1] = '<ol>';
             $text = substr($line, $n,-$n);
-            $toc[$i] = /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
+            $toc[$i] = $add[0].$add[1] . /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
                      . */'<li><a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
                      . trim($text) . "</a></li>";
 
             $src[$i] = str_repeat("=", $n) . " [#line$i]" . $text . str_repeat("=", $n);
-
+            $n_last = $n;
+            $add = array('','');
          }
       }
    }
@@ -87,7 +94,7 @@ function ewiki_toc_view_prepend(&$html) {
     
     if (count($ewiki_page_toc) >= 3) {
         $html_new .= ( EWIKI_TOC_CAPTION ? '<div class="page-toc-caption">'.ewiki_t("toc")."</div>\n" : '')
-        . '<ol>'.implode("<br />\n", $ewiki_page_toc) . '</ol>';
+        . '<ol>'.implode("", $ewiki_page_toc) . '</ol>';
     }
    
     $html_new .= "</div>\n";

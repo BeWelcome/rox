@@ -2249,7 +2249,7 @@ SELECT `postid`,`forums_posts`.`id` as IdPost,UNIX_TIMESTAMP(`create_time`) AS `
 	`forums_threads`.`IdGroup`
 FROM (`forums_posts`,`forums_threads`)
 LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
-LEFT JOIN addresses AS a ON a.IdMember = members.id AND addresses.rank = 0
+LEFT JOIN addresses AS a ON a.IdMember = members.id AND a.rank = 0
 LEFT JOIN `geonames_cache` ON a.IdCity = geonames_cache.geonameid)
 WHERE `forums_posts`.`threadid` = '%d'  and `forums_posts`.`threadid`=`forums_threads`.`id`
 and ($this->PublicPostVisibility)

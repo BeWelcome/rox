@@ -731,7 +731,7 @@ function ewiki_make_title($id='', $title='', $class=3, $action="view", $go_actio
    $o = $title;
 
    // h2.page.title is obsolete; h2.text-title recommended
-   return('<h2 class="text-title page title">' . $o . '</h2>');
+   return('<h1 class="text-title page title">' . $o . '</h1>');
 }
 
 

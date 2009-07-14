@@ -88,9 +88,9 @@ function ewiki_toc_view_prepend(&$html) {
     $html_new .= '
         <div class="page-toc-caption">'. $words->getFormatted('WikiPages') .'</div>
         <a href="wiki">'. $words->getFormatted('WikiFrontPage') .'</a><br />
-        <a href="wiki/NewestPages">'. $words->getFormatted('WikiNewestPages') .'</a>
-        
-        <p>'. $words->getFormatted('WikiIntroduction') .'</p>
+        <a href="wiki/NewestPages">'. $words->getFormatted('WikiNewestPages') .'</a><br />
+        <a href="wiki/WikiMarkup">'. $words->getFormatted('WikiMarkup') .'</a>
+
     ';
     
     if (count($ewiki_page_toc) >= 3) {

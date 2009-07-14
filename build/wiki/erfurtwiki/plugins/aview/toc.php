@@ -43,7 +43,7 @@ function ewiki_toc_format_source(&$src) {
              if ($n > $n_last) $add[1] = '<ol>';
             $text = substr($line, $n);
             $toc[$i] =  $add[0].$add[1] . /*str_repeat("&nbsp;", 3-$n) . "·"
-                     .*/ '<li><a href="#line'.$i.'">'
+                . */'<li><a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
                      . trim($text) . "</a></li>";
 
             $src[$i] = str_repeat("!", $n) . $text . " [#line$i]";

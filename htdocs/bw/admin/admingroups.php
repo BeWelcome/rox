@@ -156,7 +156,7 @@ switch (GetParam("action")) {
 		   		echo "group ",GetStrParam("Name"), " allready exist" ;
 		   		break ;
 			}
-			$str = "insert into groups(Picture,MoreInfo,HasMembers,Type,Name) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("HasMember") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
+			$str = "insert into groups(Picture,MoreInfo,Type,Name) values('" . GetStrParam("Picture") . "','". GetStrParam("MoreInfo") . "','" . GetParam("Type") . "','" . GetParam("Name") . "')";
 			sql_query($str);
 			$IdGroup = mysql_insert_id();
 			$str = "insert into words(code,ShortCode,IdLanguage,Sentence,updated,IdMember) values('Group_" . GetStrParam("Name"). "','en',0,'" . addslashes(GetStrParam("Group_")) . "',now(),".$_SESSION['IdMember'].")";
@@ -165,7 +165,7 @@ switch (GetParam("action")) {
 			sql_query($str);
 			LogStr("Creating group <b>".GetStrParam(Name)."</b>","admingroup") ;
 		} else { // case update
-			$str = "update groups set HasMembers='" . GetParam("HasMember") . "',Type='" . GetParam("Type") . "',Picture='".GetStrParam("Picture")."',MoreInfo='".GetStrParam("MoreInfo")."' where id=" . $IdGroup;
+			$str = "update groups set Type='" . GetParam("Type") . "',Picture='".GetStrParam("Picture")."',MoreInfo='".GetStrParam("MoreInfo")."' where id=" . $IdGroup;
 			sql_query($str);
 			$str = "update words set Sentence='".GetStrParam("Group_")."',updated=now(),IdMember=".$_SESSION['IdMember']." where code='Group_" . GetStrParam("Name"). "' and IdLanguage=0";
 			sql_query($str);
@@ -210,7 +210,6 @@ switch (GetParam("action")) {
 		if ($IdGroup != 0) {
 			$rr = LoadRow("select * from groups where id=" . $IdGroup);
 			$Name = $rr->Name;
-			$HasMember = $rr->HasMember;
 			$Type = $rr->Type;
 			$Group_=ww("Group_".$Name);
 			$GroupDesc_=ww("GroupDesc_".$Name) ;
@@ -218,7 +217,7 @@ switch (GetParam("action")) {
 			$MoreInfo=$rr->MoreInfo ;
 		}
 		sql_query("update groups set NbChilds=(select count(*) from groupshierarchy where IdGroupParent=groups.id)"); // update hierachy counters
-		DisplayFormCreateGroups($IdGroup, $Name, $IdParent, $Type, $HasMember, $TGroupList,$Group_,$GroupDesc_,$MoreInfo,$Picture);
+		DisplayFormCreateGroups($IdGroup, $Name, $IdParent, $Type, $TGroupList,$Group_,$GroupDesc_,$MoreInfo,$Picture);
 		exit (0);
 
 	case "updategroupscounter" :

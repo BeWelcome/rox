@@ -225,23 +225,21 @@ function DisplayGroupHierarchyList($TGroup) {
 		//		echo "(",$TGroup[$ii]->NbChilds," sub groups) ";
 		echo "</td>\n";
 		echo "<td>";
-		if ($TGroup[$ii]->HasMembers == 'HasMember') {
-			if (IsLoggedIn()) { // Logged people can join the group
-		 		if ($TGroup[$ii]->IdMemberShip==0) { // If member not already in this group propose to join 
-					$wwmsg = "jointhisgroup";
-					$joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup[$ii]->IdGroup;
-				} else {
-					$joinlink = "groups.php?action=LeaveGroup&IdGroup=" . $TGroup[$ii]->IdGroup . "\" onclick=\"return confirm('" . ww("confirmleavethisgroup") . "');";
-					$wwmsg = "leavehisgroup";
-				}
-			} else {
-				$wwmsg = "SignupNow";
-				$joinlink = "signup.php";
-			}
-			echo "<a href=\"groups.php?action=ShowMembers&IdGroup=" . $TGroup[$ii]->IdGroup . "\">" . ww("viewthisgroup") . " (" . $TGroup[$ii]->NbMembers . ")</a>&nbsp;&nbsp;&nbsp;\n";
-			// todo not display join this group if member is already in
-			echo "<a href=\"", $joinlink, "\">", ww($wwmsg), "</a>\n";
-		}
+        if (IsLoggedIn()) { // Logged people can join the group
+            if ($TGroup[$ii]->IdMemberShip==0) { // If member not already in this group propose to join 
+                $wwmsg = "jointhisgroup";
+                $joinlink = "groups.php?action=ShowJoinGroup&IdGroup=" . $TGroup[$ii]->IdGroup;
+            } else {
+                $joinlink = "groups.php?action=LeaveGroup&IdGroup=" . $TGroup[$ii]->IdGroup . "\" onclick=\"return confirm('" . ww("confirmleavethisgroup") . "');";
+                $wwmsg = "leavehisgroup";
+            }
+        } else {
+            $wwmsg = "SignupNow";
+            $joinlink = "signup.php";
+        }
+        echo "<a href=\"groups.php?action=ShowMembers&IdGroup=" . $TGroup[$ii]->IdGroup . "\">" . ww("viewthisgroup") . " (" . $TGroup[$ii]->NbMembers . ")</a>&nbsp;&nbsp;&nbsp;\n";
+        // todo not display join this group if member is already in
+        echo "<a href=\"", $joinlink, "\">", ww($wwmsg), "</a>\n";
 		echo "</td>";
 	}
 	//	echo "\n<tr><td align=center colspan=3><input type=submit id=submit name=submit></td>";

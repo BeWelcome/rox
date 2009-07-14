@@ -2255,8 +2255,8 @@ SELECT
     IdLocalEvent,
 	forums_threads.IdGroup
 FROM
-    forums_posts,
-    forums_threads
+    forums_threads,
+    forums_posts
 LEFT
     JOIN members ON forums_posts.IdWriter = members.id
 LEFT JOIN

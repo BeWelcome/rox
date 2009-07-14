@@ -40,9 +40,9 @@ function ewiki_toc_format_source(&$src) {
          if (($n <= 3) and ($line[$n]==" ")) {
 
             $text = substr($line, $n);
-            $toc[$i] = str_repeat("&nbsp;", 3-$n) . "·"
-                     . '<a href="#line'.$i.'">'
-                     . trim($text) . "</a>";
+            $toc[$i] = /*str_repeat("&nbsp;", 3-$n) . "·"
+                     .*/ '<li><a href="#line'.$i.'">'
+                     . trim($text) . "</a></li>";
 
             $src[$i] = str_repeat("!", $n) . $text . " [#line$i]";
 
@@ -57,9 +57,9 @@ function ewiki_toc_format_source(&$src) {
          if (($n <= 3)) {
 
             $text = substr($line, $n,-$n);
-            $toc[$i] = str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
-                     . '<a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
-                     . trim($text) . "</a>";
+            $toc[$i] = /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
+                     . */'<li><a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
+                     . trim($text) . "</a></li>";
 
             $src[$i] = str_repeat("=", $n) . " [#line$i]" . $text . str_repeat("=", $n);
 
@@ -75,16 +75,25 @@ function ewiki_toc_format_source(&$src) {
 #-- injects toc above page
 function ewiki_toc_view_prepend(&$html) {
 
-   global $ewiki_page_toc;
-
-   if (count($ewiki_page_toc) >= 3) {
-
-      $html = "<div class=\"page-toc\">\n"
-         . ( EWIKI_TOC_CAPTION ? '<div class="page-toc-caption">'.ewiki_t("toc")."</div>\n" : '')
-         . implode("<br />\n", $ewiki_page_toc) . "</div>\n"
-         . str_replace('&lt;br/&gt;', "\n", $html); // Added by lupochen to remove all escaped BR-tags from the Page
-   }
-
+    global $ewiki_page_toc;
+    $words = new MOD_words();
+    $html_new = "<div class=\"page-toc\">\n";
+    $html_new .= '
+        <a href="wiki">'. $words->getFormatted('WikiFrontPage') .'</a>
+        <a href="wiki/NewestPages">'. $words->getFormatted('WikiNewestPages') .'</a>
+        
+        <p>'. $words->getFormatted('WikiIntroduction') .'</p>
+    ';
+    
+    if (count($ewiki_page_toc) >= 3) {
+        $html_new .= ( EWIKI_TOC_CAPTION ? '<div class="page-toc-caption">'.ewiki_t("toc")."</div>\n" : '')
+        . '<ol>'.implode("<br />\n", $ewiki_page_toc) . '</ol>';
+    }
+   
+    $html_new .= "</div>\n";
+    $html_new .= str_replace('&lt;br/&gt;', "\n", $html); // Added by lupochen to remove all escaped BR-tags from the Page
+    
+    $html = $html_new;
    // $ewiki_page_toc = NULL;
 }
 

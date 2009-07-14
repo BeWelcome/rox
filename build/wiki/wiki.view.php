@@ -26,21 +26,9 @@ class WikiView extends PAppView {
         </div>
 <?php
     }
-    public function userbar()
+    public function stylesFullWidth()
     {
-        $words = new MOD_words();
-?>
-        <ul>
-              <li>
-                <a href="wiki"><?php echo $words->getFormatted('WikiFrontPage'); ?></a>
-              </li>
-              <li>
-                <a href="wiki/NewestPages"><?php echo $words->getFormatted('WikiNewestPages'); ?></a>
-              </li>
-        </ul>
-        <p><?php echo $words->getFormatted('WikiIntroduction'); ?></p>
-
-<?php
+		 echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/basemod_minimal_col3.css\" type=\"text/css\"/>";
     }
 
 }

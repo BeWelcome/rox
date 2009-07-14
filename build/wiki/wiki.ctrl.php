@@ -70,11 +70,11 @@ class WikiController extends PAppController {
         ob_end_clean();
 
         ob_start();
-        $this->_view->userbar();
+        $this->_view->stylesFullWidth();
         $str = ob_get_contents();
         ob_end_clean();
         $P = PVars::getObj('page');
-        $P->newBar .= $str;
+        $P->addStyles .= $str;
 
         ob_start();
 

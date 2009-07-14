@@ -334,10 +334,10 @@ function FindAppropriatedLanguage($IdPost=0) {
 			$this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
 		}
 		else {
-			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (PostDeleted!='Deleted')" ;
-			$this->PostGroupsRestriction=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
-			$this->ThreadGroupsRestriction=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
+			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
+			$this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
+			$this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
@@ -347,8 +347,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
 				array_push($this->MyGroups,$rr->IdGroup) ; // Save the group list
 			}	;
-			$this->PostGroupsRestriction=$this->PostGroupsRestriction.")" ;
-			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.")" ;
+			$this->PostGroupsRestriction=$this->PostGroupsRestriction."))" ;
+			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction."))" ;
 		}
 		
 		// Prepares additional visibility options for moderator
@@ -577,11 +577,6 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
             throw new PException('No such Admincode');
         }
         $admincode = $s->fetch(PDB::FETCH_OBJ);
-		if (empty($admincode->name)) {
-		    MOD_log::get()->write("Forum bug (warning but it is to figure out) with ".$query,"Bug") ; 				
-			$admincode->name="" ;
-		}
-		
 
         $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name;
         $href = $url;
@@ -3620,14 +3615,14 @@ class Board implements Iterator {
 		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"]=='Pending') or $_SESSION["MemberStatus"]=='NeedMore') ) {
 			$this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
-			$this->ThreadGroupsRestriction=" (IdGroup=0 and ThreadVisibility ='NoRestriction')" ;
-			$this->PostGroupsRestriction=" (IdGroup=0 and PostVisibility='NoRestriction')" ;
+			$this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
+			$this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
 		}
 		else {
-			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and (PostDeleted!='Deleted')" ;
-			$this->PostGroupsRestriction=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
-			$this->ThreadGroupsRestriction=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly') and IdGroup in(0" ;
+			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
+			$this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
+			$this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
@@ -3636,8 +3631,8 @@ class Board implements Iterator {
 				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
 				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
 			}	;
-			$this->PostGroupsRestriction=$this->PostGroupsRestriction.")" ;
-			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.")" ;
+			$this->PostGroupsRestriction=$this->PostGroupsRestriction."))" ;
+			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction."))" ;
 		}
 		
 		// Prepares additional visibility options for moderator

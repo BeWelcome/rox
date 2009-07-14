@@ -117,21 +117,21 @@ WHERE   IdVerified = $member_id
      * @return a structure with the data, or false if password/Username dont match
      **/
     function LoadPrivateData($cid, $given_password)   {
-        // jeanYves : there is a TODO to avoid this query if slow to go in logs with a plain text password
         // comment by lemon-head: I think we should encrypt the pw on PHP side, not in SQL.
         // It is said in MySQL documentation
         // that the PASSWORD() function is not recommended to be used by applications.
+        // - correct, but as long as we're stuck with the mysql password function (and for now
+        //   we are, then we either have to replicate the password function [it doesn't exist in php]
+        //   or rely on mysql. Sucks to be us.
         
         // accept both 
         $where_cid = is_numeric($cid) ? 'id='.(int)$cid : 'Username="'.mysql_real_escape_string($cid).'"';
         
-        // TODO: What does this "password=PassWord=PASSWORD(...)" mean?  --lemon-head 
-		 // it was a bug -- jeanyves
 		 $ss="
 SELECT  *
 FROM    members
 WHERE   $where_cid
-AND     PassWord=PASSWORD('".trim($given_password)."')" ;
+AND     PassWord=PASSWORD('{$this->dao->escape($given_password)}')" ;
         if (!$m = $this->singleLookup($ss)) {
             // user not found! explain something?
 			 
@@ -156,7 +156,7 @@ FROM
     regions,
     cities
 WHERE
-    IdMember = $m->id              AND
+    IdMember = {$m->id}            AND
     addresses.IdCity = cities.id   AND
     regions.id = cities.IdRegion   AND
     countries.id = cities.IdCountry
@@ -280,8 +280,3 @@ WHERE
 	 } // end of CheckAndGetUsername
 
 }
-
-
-
-
-?>

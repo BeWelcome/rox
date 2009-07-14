@@ -1078,6 +1078,7 @@ height:50px;
 .wiki .page-toc {
    	background-color: #f5f5f5;
 	padding: 1em;
+	margin: 0 1em 2em 2em;
 	width: 30%;
 	float: right;
 	border: 1px solid #ccc;

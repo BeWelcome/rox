@@ -69,7 +69,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_RESOLVE_DNS", 1);		# gethostbyaddr() when editing
 	define("UNIX_MILLENNIUM", 1000000000);
         #- rendering
-	define("EWIKI_ALLOW_HTML", 0);		# often a very bad idea
+	define("EWIKI_ALLOW_HTML", 1);		# often a very bad idea
 	define("EWIKI_HTML_CHARS", 1);		# allows for &#200;
 	define("EWIKI_ESCAPE_AT", 1);		# "@" -> "&#x40;"
         #- http/urls
@@ -750,7 +750,7 @@ function ewiki_page_view($id, &$data, $action, $all=1) {
       "scan_links" => 1,
       "html" => (EWIKI_ALLOW_HTML||(@$data["flags"]&EWIKI_DB_F_HTML)),
    );
-   $o .= '<div class="text-body">' . "\n"
+   $o .= '<div class="text-body text">' . "\n"
       //. $ewiki_plugins["render"][0] ($data["content"], $render_args)
       . ewiki_format($data["content"], $render_args) // -dh
       . "</div>\n";

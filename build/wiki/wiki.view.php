@@ -30,7 +30,6 @@ class WikiView extends PAppView {
     {
         $words = new MOD_words();
 ?>
-        <h3><?php echo $words->getFormatted('Actions'); ?></h3>
         <ul>
               <li>
                 <a href="wiki"><?php echo $words->getFormatted('WikiFrontPage'); ?></a>

@@ -22,7 +22,7 @@
 #-- reg
 $ewiki_plugins["format_source"][] = "ewiki_toc_format_source";
 $ewiki_plugins["format_final"][] = "ewiki_toc_view_prepend";
-define("EWIKI_TOC_CAPTION", 0);
+define("EWIKI_TOC_CAPTION", 3);
 $ewiki_t["en"]["toc"] = "Content";
 $ewiki_t["de"]["toc"] = "Inhalt";
 
@@ -40,7 +40,7 @@ function ewiki_toc_format_source(&$src) {
          if (($n <= 3) and ($line[$n]==" ")) {
 
             $text = substr($line, $n);
-            $toc[$i] = str_repeat("&nbsp;", 3-$n) . "�"
+            $toc[$i] = str_repeat("&nbsp;", 3-$n) . "·"
                      . '<a href="#line'.$i.'">'
                      . trim($text) . "</a>";
 
@@ -49,8 +49,24 @@ function ewiki_toc_format_source(&$src) {
          }
       }
    }
-   $src = implode("\n", $src);
+   // Also search MediaWiki headlines
+   foreach ($src as $i=>$line) {
+      if ($line[0] == "=" && $line[count($line)] == "=") {
+         $n = strspn($line, "=");
+         if (($n <= 3) and ($line[$n]==" ")) {
 
+            $text = substr($line, $n,-$n);
+            $toc[$i] = str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
+                     . '<a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
+                     . trim($text) . "</a>";
+
+            $src[$i] = str_repeat("=", $n) . " [#line$i]" . $text . str_repeat("=", $n);
+
+         }
+      }
+   }
+
+   $src = implode("\n", $src);
    $GLOBALS["ewiki_page_toc"] = &$toc;
 }
 
@@ -65,7 +81,7 @@ function ewiki_toc_view_prepend(&$html) {
       $html = "<div class=\"page-toc\">\n"
          . ( EWIKI_TOC_CAPTION ? '<div class="page-toc-caption">'.ewiki_t("toc")."</div>\n" : '')
          . implode("<br />\n", $ewiki_page_toc) . "</div>\n"
-         . $html;
+         . str_replace('&lt;br/&gt;', "\n", $html); // Added by lupochen to remove all escaped BR-tags from the Page
    }
 
    // $ewiki_page_toc = NULL;

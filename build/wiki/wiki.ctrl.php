@@ -95,26 +95,40 @@ class WikiController extends PAppController {
             $ewiki_errmsg, $ewiki_data, $ewiki_title, $ewiki_id,
             $ewiki_action, $ewiki_config, $ewiki_author;
 
+        // Some settings
+        define("EWIKI_NAME", "BeWelcome Wiki");
         define('EWIKI_SCRIPT', 'wiki/');
         define("EWIKI_SCRIPT_BINARY", 0);
         define("EWIKI_PROTECTED_MODE", 1);
         if (!$title) define("EWIKI_PRINT_TITLE", 0);        # <h2>WikiPageName</h2> on top
+        
+        // Authentification
         require_once("erfurtwiki/plugins/auth/auth_perm_ring.php");
-
         $User = APP_User::login();
-
         if ($User) {
             $ewiki_author = $User->getHandle();
             define("EWIKI_AUTH_DEFAULT_RING", 2);    //  2 = edit allowed
         } else {
             define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
         }
+        
+        // More plugins
+        require_once("erfurtwiki/plugins/filter/f_fixhtml.php"); // smilies ;)
+        require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
+        require_once("erfurtwiki/plugins/markup/bbcode.php"); // BBcode plugin
+        require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
+
+        $ewiki_config = $this->defineMarkup();
 
         require_once('erfurtwiki/ewiki.php');
-
-        define("EWIKI_NAME", "BeWelcome Rox Wiki");
-
+        $ewiki_config["smilies"] = array(
+           ":)" => "emoticon_happy.png",
+           ";)" => "emoticon_grin.png",
+        );
+        
+        echo '<div class="floatbox">';
         echo ewiki_page($page);
+        echo '</div>';
     }
 
     private function parseRequest() {
@@ -130,7 +144,55 @@ class WikiController extends PAppController {
 
         return $request;
     }
+    
+    /**
+    * defineMarkup tunes the ewiki's default markup my custom values
+    */
+    public function defineMarkup() 
+    {    
+        /*
+        * MediaWiki Markup
+        */
+        
+        // allows nowiki-tags from wikipedia, changed by lupochen
+        $ewiki_config["format_block"]['nowiki'] = array(
+            "&lt;nowiki&gt;","&lt;/nowiki&gt;",
+            false, 0x0030
+        );
+    // allows nowiki-tags from wikipedia, changed by lupochen
+    $ewiki_config["format_block"]['brackets'] = array(
+        "{","}",
+        false, 0x0030
+    );
+        $ewiki_config["wm_start_end"][] = array(
+            "&lt;br&gt;","&lt;/br&gt;",
+            "", ""
+        );
+        $ewiki_config["wm_start_end"][] = array(
+            "{{","}}",
+            "",""
+        );
+    $ewiki_config["wm_start_end"][] = array(
+        "{","}",
+        "",""
+    );
+    
+        $ewiki_config["wm_style"]['<br/>'] = array("", "\n");
 
+        $ewiki_config["wm_style"]["&rarr;"] = array("", "");
+        
+        $ewiki_config["wm_style"]["'''"] = array("<strong>", "</strong>");
+        $ewiki_config["wm_style"]["''"] = array("<em>", "</em>");
+        
+        // Headings
+        $ewiki_config["wm_style"]["======"] = array("<h6>", "</h6>");
+        $ewiki_config["wm_style"]["====="] = array("<h5>", "</h5>");
+        $ewiki_config["wm_style"]["===="] = array("<h4>", "</h4>");
+        $ewiki_config["wm_style"]["==="] = array("<h3>", "</h3>");
+        $ewiki_config["wm_style"]["=="] = array("<h2>", "</h2>");        
+
+        return $ewiki_config;
+    }    
 
 }
 ?>

@@ -2249,7 +2249,8 @@ SELECT `postid`,`forums_posts`.`id` as IdPost,UNIX_TIMESTAMP(`create_time`) AS `
 	`forums_threads`.`IdGroup`
 FROM (`forums_posts`,`forums_threads`)
 LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
-LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
+LEFT JOIN addresses AS a ON a.IdMember = members.id AND addresses.rank = 0
+LEFT JOIN `geonames_cache` ON a.IdCity = geonames_cache.geonameid)
 WHERE `forums_posts`.`threadid` = '%d'  and `forums_posts`.`threadid`=`forums_threads`.`id`
 and ($this->PublicPostVisibility)
 and ($this->ThreadGroupsRestriction)
@@ -2381,13 +2382,14 @@ SELECT
     `IdLocalVolMessage`,
     `IdLocalEvent`
     `IdGroup`
-FROM (`forums_posts`,`forums_threads`,`members`)
-LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
-WHERE `forums_posts`.`threadid` = '%d' and `forums_posts`.`IdWriter` = `members`.`id`
- and `forums_posts`.`threadid`=`forums_threads`.`id`
-	and ($this->PublicPostVisibility)
-	and ($this->PublicThreadVisibility)
-	and ($this->PostGroupsRestriction)
+FROM forums_posts, forums_threads, members, addresses
+LEFT JOIN `geonames_cache` ON (addresses.IdCity = `geonames_cache`.`geonameid`)
+WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `members`.`id`
+AND addresses.IdMember = members.id AND addresses.rank = 0
+ AND `forums_posts`.`threadid`=`forums_threads`.`id`
+	and ({$this->PublicPostVisibility})
+	and ({$this->PublicThreadVisibility})
+	and ({$this->PostGroupsRestriction})
 ORDER BY `posttime` DESC
 LIMIT %d
             ",
@@ -2863,11 +2865,12 @@ AND IdTag=%d
     `IdLocalVolMessage`,
     `IdLocalEvent`,
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
-		FROM (`forums_posts`,`members`,`forums_threads`) 
+		FROM forums_posts, members, forums_threads, addresses 
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
+LEFT JOIN `geonames_cache` ON (addresses.IdCity = geonames_cache.geonameid)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 
 AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
+AND addresses.IdMember = members.id AND addresses.rank = 0
 and ($this->PublicPostVisibility)
 and ($this->PostGroupsRestriction)
 ORDER BY `posttime` DESC    ",    $IdMember   );
@@ -3255,7 +3258,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	 		$tt=array() ;
 
 			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
-										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
+										 WHERE membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$row->Name=$this->getGroupName($row->Name);
@@ -3271,7 +3274,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
  		$tt=array() ;
 
 		$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
-										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
+										 WHERE membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
 										  members.Status in ('Active','ChoiceInactive','ActiveHidden') and members.id=".$_SESSION['IdMember']." and membersgroups.Status='In' group by groups.id order by groups.id ";
      	$s = $this->dao->query($query);
      	while ($row = $s->fetch(PDB::FETCH_OBJ)) {

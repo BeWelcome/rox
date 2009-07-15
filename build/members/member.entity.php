@@ -1,6 +1,36 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
+This file is part of BW Rox.
 
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
+
+    /**
+     * @author Lemon-Head
+     * @author Fake51
+     */
+
+    /**
+     * ORM for members table
+     *
+     * @package Apps
+     * @subpackage Entities
+     */
 class Member extends RoxEntityBase
 {
     protected $_table_name = 'members';
@@ -507,26 +537,30 @@ WHERE
 SQL;
         ;
         $a = $this->bulkLookup($sql);
-        if($a != null && sizeof($a) > 0) {
-            $Geo = new GeoModel();
-            $a[0]->CityName = $Geo->getDataById($a[0]->IdCity)->name;
-            $IdRegion = $Geo->getDataById($a[0]->IdCity)->parentAdm1Id;
-            if ($IdRegion)
+        if($a != null && sizeof($a) > 0)
+        {
+            $city = $this->createEntity('Geo')->findById($a[0]->IdCity);
+            if ($city)
             {
-                $a[0]->RegionName = $Geo->getDataById($IdRegion)->name;
-                $country_id = $Geo->getDataById($IdRegion)->parentCountryId;
-                $a[0]->CountryName = $Geo->getDataById($country_id)->name;
-                $a[0]->CountryCode = $Geo->getDataById($country_id)->fk_countrycode;
+                $a[0]->CityName = $city->getName();
             }
-        } else {
+            $region = $city->getParent();
+            $country = $city->getCountry();
+            $a[0]->RegionName = $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
+            $a[0]->CountryName = $country->getName();
+            $a[0]->CountryCode = $country->fk_countrycode();
+        }
+        else
+        {
             $a[0] = new stdClass();
-            $a[0]->IdCity = 'Unknown';
+            $a[0]->IdCity = '';
             $a[0]->CityName = 'Unknown';
             $a[0]->HouseNumber = 'Unknown';
             $a[0]->StreetName = 'Unknown';
             $a[0]->Zip = 'Unknown';
         }
-        $a[0]->RegionName = ((!empty($a[0]->RegionName)) ? $a[0]->RegionName : 'Unknown');
+        $a[0]->CityName = ((!empty($a[0]->CityName)) ? $a[0]->CityName : '');
+        $a[0]->RegionName = ((!empty($a[0]->RegionName)) ? $a[0]->RegionName : '');
         $a[0]->CountryName = ((!empty($a[0]->CountryName)) ? $a[0]->CountryName : 'Unknown');
         $a[0]->CountryCode = ((!empty($a[0]->CountryCode)) ? $a[0]->CountryCode : 'Unknown');
 

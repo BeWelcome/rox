@@ -125,6 +125,7 @@ HTML;
                             echo <<<HTML
                             </select>
                           </td>
+                          <td>&nbsp;</td>
                         </tr>
                       </tbody>
                       </table>

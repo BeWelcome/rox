@@ -9,7 +9,10 @@
 
 <div id="profile_summary" class="floatbox box">
     <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>
-    <p><?=$member->get_trad("ProfileSummary", $profile_language); ?></p>
+    <?php
+    $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+    echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language)));
+    ?>
 </div> <!-- profile_summary -->
 
 <div id="profile_languages" class="floatbox box">

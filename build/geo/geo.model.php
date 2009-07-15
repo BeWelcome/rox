@@ -430,6 +430,13 @@ class GeoModel extends RoxModelBase {
 
         //retrieve all information from geonames
         $data = $this->getGeonamesHierarchy($geonameId,'FULL');
+        
+        //retireve all GeonameIds we already have in geonames_cache and only add new ones.
+        $result = $this->getAllGeonameIds();
+        $storedGeonameIds = array();
+        foreach($result as $key => $value) {
+            array_push($storedGeonameIds,$value->geonameid);
+        }
 
         //retireve info currently sotred in DB for specific  GeonameIds
         $result = $this->singleLookup(
@@ -474,9 +481,8 @@ class GeoModel extends RoxModelBase {
         
 
          foreach ($data as $level => $dataset) {
-            if ($dataset['geonameId'] == $geonameId) {
-                echo "<br> dataset <br> ";
-//                var_dump($dataset);    
+            if (!in_array($dataset['geonameId'],$storedGeonameIds) OR $dataset['geonameId'] == $geonameId) {
+    
                 //initialize empty values:
                 if (!isset($dataset['lat'])) $dataset['lat'] = '';
                 if (!isset($dataset['lng'])) $dataset['lng'] = '';    

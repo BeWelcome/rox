@@ -1077,9 +1077,9 @@ height:50px;
 
 .wiki .page-toc {
    	background-color: #f5f5f5;
-	padding: 1em;
-	margin: 0 1em 2em 2em;
-	width: 30%;
+	padding: 2em;
+	margin: 0 0 2em 2em;
+	width: 25%;
 	float: right;
 	border: 1px solid #ccc;
 }
@@ -1203,13 +1203,18 @@ height:50px;
 }
 
 .wiki table {                   /* space-indentation */
-margin: 1em 0;
+	margin: 1em 0;
+	overflow:hidden;
+	width: 100%;
+	display:block;
+	background-color: #f5f5f5;
+	border: 1px solid #ccc;
 }
 
 .wiki table td {                   /* space-indentation */
-   vertical-align: top;
-	padding: 0 2em;
-	border-right: 1px solid #e5e5e5;
+    vertical-align: top;
+	padding: 2em 2em;
+	border: 1px solid #e5e5e5;
 }
 
 .wiki em {
@@ -1241,9 +1246,9 @@ margin: 1em 0;
 /* Add an external-link icon to absolute links */
 
 .wiki a[href^="http:"] {
-        background: url(/images/icons/icon_external.gif) right center no-repeat;
-        padding-right: 15px;
-		border-bottom: 1px dotted #ccc;
+	background: url(/images/icons/icon_external.gif) right center no-repeat;
+	padding-right: 15px;
+	border-bottom: 1px dotted #ccc;
 }
 
 .wiki a[href^="http:"]:hover {
@@ -1253,12 +1258,12 @@ margin: 1em 0;
 /* ...but not to absolute links in this domain... */
 
 .wiki a[href^="http://www.bewelcome.org"] {
-        background: transparent;
-        padding-right: 0px;
+	background: transparent;
+	padding-right: 0px;
 }
 
 .wiki a[href^="http://www.bewelcome.org"]:hover {
-        background: transparent;
+	background: transparent;
 }
 
 /* Media screen end */

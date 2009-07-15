@@ -72,5 +72,13 @@ class MOD_htmlpure
         return new HTMLPurifier();
     }
 
+    public function getBasicHtmlPurifier()
+    {
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier/library/HTMLPurifier.standalone.php');
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd');
+        $config->set('AutoFormat.AutoParagraph', true);
+        return new HTMLPurifier($config);
+    }
 
 }

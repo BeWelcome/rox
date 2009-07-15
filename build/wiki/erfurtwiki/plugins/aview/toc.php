@@ -99,7 +99,7 @@ function ewiki_toc_view_prepend(&$html) {
     }
    
     $html_new .= "</div>\n";
-    $html_new .= str_replace('&lt;br/&gt;', "\n", $html); // Added by lupochen to remove all escaped BR-tags from the Page
+    $html_new .= $html; // str_replace('&lt;br/&gt;', "\n", $html); // Added by lupochen to remove all escaped BR-tags from the Page
     
     $html = $html_new;
    // $ewiki_page_toc = NULL;

@@ -100,6 +100,8 @@ class WikiController extends PAppController {
         define('EWIKI_SCRIPT', 'wiki/');
         define("EWIKI_SCRIPT_BINARY", 0);
         define("EWIKI_PROTECTED_MODE", 1);
+        define("EWIKI_RESCUE_HTML", 1);
+        
         if (!$title) define("EWIKI_PRINT_TITLE", 0);        # <h2>WikiPageName</h2> on top
         
         // Authentification
@@ -113,10 +115,10 @@ class WikiController extends PAppController {
         }
         
         // More plugins
-        require_once("erfurtwiki/plugins/filter/f_fixhtml.php"); // smilies ;)
         require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
         require_once("erfurtwiki/plugins/markup/bbcode.php"); // BBcode plugin
         require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
+        require_once("erfurtwiki/plugins/markup/rescuehtml.php"); // safe html tags ;)
 
         $ewiki_config = $this->defineMarkup();
 

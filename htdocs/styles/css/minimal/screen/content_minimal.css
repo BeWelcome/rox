@@ -1228,5 +1228,28 @@ height:50px;
   list-style-type: lower-roman;
 }
 
+/* Add an external-link icon to absolute links */
+
+.wiki a[href^="http:"] {
+        background: url(/images/icons/icon_external.gif) right center no-repeat;
+        padding-right: 15px;
+		border-bottom: 1px dotted #ccc;
+}
+
+.wiki a[href^="http:"]:hover {
+    background: url(/images/icons/icon_external.gif) right center no-repeat;
+}
+
+/* ...but not to absolute links in this domain... */
+
+.wiki a[href^="http://www.bewelcome.org"] {
+        background: transparent;
+        padding-right: 0px;
+}
+
+.wiki a[href^="http://www.bewelcome.org"]:hover {
+        background: transparent;
+}
+
 /* Media screen end */
 }

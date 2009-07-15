@@ -1202,6 +1202,16 @@ height:50px;
    margin-left: 5px;
 }
 
+.wiki table {                   /* space-indentation */
+margin: 1em 0;
+}
+
+.wiki table td {                   /* space-indentation */
+   vertical-align: top;
+	padding: 0 2em;
+	border-right: 1px solid #e5e5e5;
+}
+
 .wiki em {
   color:#331111;
 }

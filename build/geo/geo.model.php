@@ -430,6 +430,13 @@ class GeoModel extends RoxModelBase {
 
         //retrieve all information from geonames
         $data = $this->getGeonamesHierarchy($geonameId,'FULL');
+        
+        //retireve all GeonameIds we already have in geonames_cache and only add new ones.
+        $result = $this->getAllGeonameIds();
+        $storedGeonameIds = array();
+        foreach($result as $key => $value) {
+            array_push($storedGeonameIds,$value->geonameid);
+        }
 
         //retireve info currently sotred in DB for specific  GeonameIds
         $result = $this->singleLookup(
@@ -474,9 +481,8 @@ class GeoModel extends RoxModelBase {
         
 
          foreach ($data as $level => $dataset) {
-            if ($dataset['geonameId'] == $geonameId) {
-                echo "<br> dataset <br> ";
-//                var_dump($dataset);    
+            if (!in_array($dataset['geonameId'],$storedGeonameIds) OR $dataset['geonameId'] == $geonameId) {
+    
                 //initialize empty values:
                 if (!isset($dataset['lat'])) $dataset['lat'] = '';
                 if (!isset($dataset['lng'])) $dataset['lng'] = '';    
@@ -738,6 +744,32 @@ class GeoModel extends RoxModelBase {
             // return false;
         // } else #
         return $result;
+    }
+    
+    /**
+    * Check if a geonameid exists, if not, add it to the DB.
+    **/
+    
+    public function checkGeonameId($geonameId,$usagetype = false)
+    {
+        //check wether we have that id in our DB
+        $location = $this->getDataById($geonameId);
+        if (!$location) {
+            //add it to the DB
+            return $this->addGeonameId($geonameId,$usagetype);
+        } else return true; 
+
+    }    
+    
+    
+    /**
+    * Check if a geonameid exists, if not, add it to the DB.
+    **/
+    
+    public function getContinents()
+    {
+        //get all countries from the geo countries table
+        return $this->createEntity('Geo')->findByWhereMany("fcode = 'cont'"); 
     }
 
     

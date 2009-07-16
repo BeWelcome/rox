@@ -818,7 +818,7 @@ WHERE
             if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
                 return $mCrypt;
         }
-        return MOD_crypt::get_crypted($crypted_id, $return_value);
+        return urldecode(MOD_crypt::get_crypted($crypted_id, $return_value));
     }
 
 

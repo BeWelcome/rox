@@ -50,7 +50,7 @@ echo "search results for <b>",$TReturn->searchtext,"</b><br />" ;
 			<td align="center">
 				<?=MOD_layoutbits::PIC_50_50($m->Username) ;?>
 				<br />
-				<a class="username" href="member/=<?=$m->Username ?>"><?=$m->Username ?></a><br />
+				<a class="username" href="member/<?=$m->Username ?>"><?=$m->Username ?></a><br />
 			<a href="<?="places/".$m->fk_countrycode."/".$m->RegionName."/".$m->CityName ?>"> <?=$m->CountryName."/".$m->RegionName."/".$m->CityName?></a>
 			</td>
 			<?php 

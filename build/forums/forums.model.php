@@ -3095,18 +3095,6 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         return $tags;    
     } // end of getTopCategoryLevelTags
     
-    
-    private function makeClickableLinks($text) 
-    {    
-        $text = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
-            '<a href="\\1">\\1</a>', $text);
-        $text = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
-            '\\1<a href="http://\\2">\\2</a>', $text);
-        $text = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})',
-            '<a href="mailto:\\1">\\1</a>', $text);
-        return $text;
-    }
-    
     /*
      * cleanupText
      *
@@ -3116,12 +3104,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
      */
     private function cleanupText($txt)
     {
-		if (strpos($txt,"href=") === false)
-        {
-            // We will only try to make clickable links if there is not yet a href= (ie already present clickable link) in the text
-			$txt = $this->makeClickableLinks($txt);
-		}
-        $purifier = MOD_htmlpure::get()->getPurifier();
+        $purifier = MOD_htmlpure::get()->getAdvancedHtmlPurifier();
         return $purifier->purify($txt);
     } // end of cleanupText
     

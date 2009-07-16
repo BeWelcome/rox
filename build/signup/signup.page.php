@@ -103,7 +103,7 @@ class SignupPage extends PageWithRoxLayout
             // redirect should happen in the controller.
             // but for translators show the page.
             echo '
-<div style="background:yellow; border:1px solid black; padding:10px; width: 44em; margin-left:10em;">
+<div style="background:yellow; border:1px solid black; padding:10px; width: 44em; margin-bottom: 2em;">
 <div style="font-size:160%;">
 You can see the signup page because you are a translator.<br>
 Normally you cannot see it when logged in.<br>

@@ -475,6 +475,12 @@ h4.news {
     text-align:center;
     width:auto;
 }
+input.button, .control-links input { /* Only for inputs. Otherwise we have problems in Safari and IE */
+    height:24px !important;
+    line-height:22px !important;
+    margin:0;
+    padding:0 8px;
+}
 .button a, input.button{color: #ff8800; text-decoration:none; background-color:transparent;}
 .button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
 .button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}

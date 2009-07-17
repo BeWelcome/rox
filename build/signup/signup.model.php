@@ -43,25 +43,25 @@ class SignupModel extends RoxModelBase
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
-    const HANDLE_PREGEXP_STREET = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    const HANDLE_PREGEXP_STREET = '%^[^Â°!"Â§\$\%\}\#\{<>_=]{1,}$%i';
     
     /**
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
-    const HANDLE_PREGEXP_HOUSENUMBER = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    const HANDLE_PREGEXP_HOUSENUMBER = '%^[^Â°!"Â§\$\%\}\#\{<>_=]{1,}$%i';
     
     /**
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
-    const HANDLE_PREGEXP_FIRSTNAME = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    const HANDLE_PREGEXP_FIRSTNAME = '%^[^Â°!"Â§\$\%\}\#\{<>_=]{1,}$%i';
 
     /**
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
-    const HANDLE_PREGEXP_LASTNAME = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    const HANDLE_PREGEXP_LASTNAME = '%^[^Â°!"Â§\$\%\}\#\{<>_=]{1,}$%i';
     
     /**
      * TODO: check, if this is indeed the best form; I don't believe it (steinwinde, 2008-08-04)
@@ -342,7 +342,6 @@ FROM `user` WHERE
         if (PPostHandler::isHandling()) {
             $vars =& PPostHandler::getVars();
             $errors = $this->checkRegistrationForm($vars);
-            var_dump($vars);
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;
                 return false;
@@ -352,28 +351,25 @@ FROM `user` WHERE
             
             $idTB = $this->registerTBMember($vars);
             if (!$idTB) {
-							MOD_log::get()->write("user_sequence suck again","Signup") ;
-							return false;
+				MOD_log::get()->write("TB registration failed","Signup") ;
+				return false;
             }
             
             $id = $this->registerBWMember($vars);
             $_SESSION['IdMember'] = $id;
             
-            $vars['feedback'] .= 
-                $this->takeCareForNonUniqueEmailAddress($vars['email']);
-
-            $vars['feedback'] .=
-                $this->takeCareForComputerUsedByBWMember();
+            $vars['feedback'] .= $this->takeCareForNonUniqueEmailAddress($vars['email']);
+            $vars['feedback'] .= $this->takeCareForComputerUsedByBWMember();
             
             $this->writeFeedback($vars['feedback']);
-						if (!empty($vars['feedback'])) {
-							MOD_log::get()->write("feedback[<b>".stripslashes($vars['feedback'])."</b>] IdMember=#".$_SESSION['IdMember']." (With New Signup !)","Signup");
-						}
+			if (!empty($vars['feedback'])) {
+				MOD_log::get()->write("feedback[<b>".stripslashes($vars['feedback'])."</b>] IdMember=#".$_SESSION['IdMember']." (With New Signup !)","Signup");
+			}
                                     
             $View = new SignupView($this);
             // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
             define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-            $View->registerMail($idTB);
+            $View->registerMail($id,$idTB);
             $View->signupTeamMail($vars);
             // PPostHandler::clearVars();
             return PVars::getObj('env')->baseuri.'signup/register/finish';

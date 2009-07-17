@@ -86,26 +86,12 @@ class SignupView extends PAppView
         // get the saved post vars
         $vars =& PPostHandler::getVars($callbackId);
 
-        
-		// probably not needed anymore
-		// $selCountry = 0;
-        // if (isset($vars['country'])) {
-            // $selCountry = $vars['country'];
-        // }
-        // $countries = $this->getAllCountriesSelectOption($selCountry);
-
         $javascript = false;
         if (isset($vars['javascriptactive'])) {
 }
         if (isset($vars['javascriptactive']) && $vars['javascriptactive'] === 'true') {
             $javascript = true;
         }
-        // probably not needed anymore
-		// $selCity = null;
-        // if (isset($vars['city'])) {
-            // $selCity = $vars['city'];
-        // }
-        // $city = $this->getCityElement($selCity, $javascript);
 
         $selYear = 0;
         if (isset($vars['birthyear'])) {
@@ -117,41 +103,6 @@ class SignupView extends PAppView
         PPostHandler::clearVars($callbackId);
     }
 
-    /**
-	* probably not needed anymore but need to set city and country from geonames result to have it at hand when writing mails
-     * @see geo.lib.php method guessCity
-     * @see signup.model.php method checkRegistrationForm
-     * @param object $city either empty or empty or string or array
-     * @param boolean $javascript true or false
-     * @return string displaying the city selection, either an
-     *                   input text field or a select option box;
-     *                   possibly accompanied by additional fields
-     *                   needed
-     */
-    // public function getCityElement($city, $javascript)
-    // {
-        // if (empty($city)) {
-            // return '<input type="text" id="city" name="city"  />'."\n";
-        // } else if (!is_array($city)) {
-            // return '<input type="text" id="city" name="city"
-                // value="' . htmlentities($city, ENT_COMPAT, 'utf-8') . '"  />'."\n";
-        // } else {
-
-            // $html = '';
-            // if (!$javascript) {
-                // // TODO: needs an explanation in the page (words()...)
-                // $html .= '<input type="text" id="city" name="city" />'."\n";
-            // }
-            // $html .= '<select name="city_id" />';
-            // foreach ($city as $id => $arr) {
-                // $text = $arr[0] . " --- " . $arr[1];
-                // $html .= '<option value="' . $id . '">' . $text . '</option>';
-            // }
-
-            // $html .= "</select>\n";
-            // return $html;
-        // }
-    // }
 
     /**
      * Notify volunteers
@@ -159,70 +110,45 @@ class SignupView extends PAppView
      * @param array $vars with username
      */
     public function signupTeamMail($vars)
-    {
-        //Load the files we'll need
-        require_once "bw/lib/swift/Swift.php";
-        require_once "bw/lib/swift/Swift/Connection/SMTP.php";
-        require_once "bw/lib/swift/Swift/Message/Encoder.php";
-        
-        //Start Swift
-        $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
-        
-        // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-        // $smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
-        // $smtp->setUsername("YOURUSERNAME");
-        // $smtp->setpassword("YOURPASSWORD");
-        // $swift =& new Swift($smtp);
-        
+    {   
         $language = $_SESSION['lang'];    // TODO: convert to something readable
-        $subject = "New member " . $vars['username'] . " from " .
+        $subject = "[BW Signup Volunteer] New member " . $vars['username'] . " from " .
                    $vars['countryname'] .
                    " has signed up at" . PVars::getObj('env')->sitename;
-        $text = "Candidate: " . $vars['firstname'] . " " . $vars['lastname'] . "\n" .
-                "country: " . $vars['countryname'] . "\n" .
-                "city: " . $vars['geonamename'] . "\n" ;
-        $text = $text."e-mail: " . $vars['email'] . "\n"  ; // Todo remove the email from this place when teh signup will be stable
-        $text = $text."used language: " . $language . "\n\n" .
-                "Feedback: " . $vars['feedback'] . "\n\n" .
-                "<a href=\"" .PVars::getObj('env')->baseuri .
-                "bw/admin/adminaccepter.php\">go to accepting</a>\n";
+
+        ob_start();
+        require 'templates/teammail.php';
+        $body = ob_get_contents();
+        ob_end_clean();
                 
         // set the receiver
-//        $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
-				$MailToNotifyWhenNewMemberSignup=$_SESSION["Param"]->MailToNotifyWhenNewMemberSignup ;
-				$MailToNotifyWhenNewMemberSignup=str_replace(" ",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
-				$MailToNotifyWhenNewMemberSignup=str_replace(",",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
-        $t_receiver = explode(";",$MailToNotifyWhenNewMemberSignup) ;
+        // $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
+		$MailToNotifyWhenNewMemberSignup=$_SESSION["Param"]->MailToNotifyWhenNewMemberSignup ;
+		$MailToNotifyWhenNewMemberSignup=str_replace(" ",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
+		$MailToNotifyWhenNewMemberSignup=str_replace(",",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
+        $to = explode(";",$MailToNotifyWhenNewMemberSignup) ;
 				
-
-				
-				if (count($t_receiver)<=0)  {
-					die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
-					$MailToNotifyWhenNewMemberSignup."]") ;
-				}
-				
-				$recipients  =& new Swift_RecipientList();
-				foreach ($t_receiver as $receiver) { // send to each valid receiver        
-					$recipients ->addTo($receiver); // add the recipent
-				} // end of send to to each valid receiver
-				
+		$to = array('lupochen@gmx.de','micha@dettbarn.net'); // TESTING ONLY
+		if (count($to)<=0)  {
+			die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
+			$MailToNotifyWhenNewMemberSignup."]") ;
+		}
         
         // set the sender
-        $sender = PVars::getObj('mailAddresses')->registration;
-         
-        //Create a message
-        $message =& new Swift_Message($subject);
+        $from = PVars::getObj('mailAddresses')->registration;
         
-        //Add some "parts"
-        $message->attach(new Swift_Message_Part($text));
+        // Use MOD_mail to create and send a message
+        $mail = new MOD_mail();
+        $message = $mail->getMessageHTML($subject, $from, $to, $title = $subject, $body);
 
         //Now check if Swift actually sends it
-        if ($swift->send($message, $recipients , $sender)) {
+        if ($mail->send($message)) {
             $status = true;
         } else {
             MOD_log::get()->write("in signup view \$swift->send: Failed to send a mail to [".$MailToNotifyWhenNewMemberSignup."]", "signup");
             $status = false;
         }
+        return $status;
 } // end of signupTeamMail
 
     /**
@@ -230,105 +156,51 @@ class SignupView extends PAppView
      *
      * @param string $userId
      */
-    public function registerMail($userId)
-    {
-        //Load the files we'll need
-        require_once SCRIPT_BASE."htdocs/bw/lib/swift/Swift.php";
-        require_once SCRIPT_BASE."htdocs/bw/lib/swift/Swift/Connection/SMTP.php";
-        require_once SCRIPT_BASE."htdocs/bw/lib/swift/Swift/Message/Encoder.php";
-        
-        //Start Swift
-        $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
-        
-        // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-        // $smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
-        // $smtp->setUsername("YOURUSERNAME");
-        // $smtp->setpassword("YOURPASSWORD");
-        // $swift =& new Swift($smtp);
-        
-        $User = $this->_model->getUser($userId);
-        if (!$User)
+    public function registerMail($vars, $IdMember, $idTB)
+    {   
+        $MembersModel = new MembersModel();
+        $member = $MembersModel->getMemberWithId($IdMember);
+        if (!$member)
             return false;
-        $handle = $User->handle;
+        $words = new MOD_words();
         
         // KEY-GENERATION the TB Way
-        $key    = APP_User::getSetting($userId, 'regkey');
+        $key    = APP_User::getSetting($idTB, 'regkey');
         if (!$key)
             return false;
         $key = $key->value;
-        
-        $words = new MOD_words();
-        
-        // set the receiver
-        $receiver  = $User->email;
-        
-        $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$handle.'/'.$key;
-				$confirmUrl ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>" ; // fix by jean yves to make the url clickable
-				
-        
-        // TODO: Change to real values FirstName, SecondName,LastName
-        $FirstName = $handle;
-        $SecondName = '';
-        $LastName = '';
-        
-        $message_title = $words->get("Welcome").'!';
-        $message_text = $words->get("SignupTextRegistration", $FirstName, $SecondName, $LastName, PVars::getObj('env')->sitename, $confirmUrl);
+        $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$member->Username.'/'.$key;
+		$confirmUrl_html ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>";
+		
+        $title = $words->get("Welcome").'!';
+        $body = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl);
+        $body_html = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl_html);
 
-        // set the sender
-        $sender    = PVars::getObj('mailAddresses')->registration;
+        // set the sender & receiver
+        $from    = PVars::getObj('mailAddresses')->registration;
+        $to  = $vars['email'];
         
         // set the subject
-        $message_subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
+        $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
         
-        //Create a message
-        $message =& new Swift_Message($message_subject);
-        
-        // Using a html-template
-        ob_start();
-        require 'templates/mail/mail_html.php';
-        $message_html = ob_get_contents();
-        ob_end_clean();
-        
-        //Add some "parts"
-        $message->attach(new Swift_Message_Part($message_text));
-        $message->attach(new Swift_Message_Part($message_html, "text/html"));
-        
+        // Use MOD_mail to create and send a message
+        $mail = new MOD_mail();
+        $message = $mail->getMessageHTML($subject, $from, $to, $title, $body, $body_html, $attach = array());
+
         //Now check if Swift actually sends it
-        if ($swift->send($message, $receiver, $sender)) {
+        if ($mail->send($message)) {
             $status = true;
         } else {
-            MOD_log::get()->write(" in signup view $\swift->send: Failed to send a mail to [".$receiver."]", "signup");
+            MOD_log::get()->write(" in signup view $\swift->send: Failed to send a mail to [".$to."]", "signup");
             $status = false;
         }
+        return $status;
     }
 
     public function showTermsAndConditions()
     {
         require 'templates/termsandconditions.php';
     }
-
-    /**
-	*probably not needed anymore
-     * @param string $selCountry the selected country
-     */
-    // private function getAllCountriesSelectOption($selCountry) {
-        // $countries = MOD_geo::get()->getAllCountries();
-        // $out = '<select id="country" name="country" onchange="change_country(\'formname\');">'."\n";
-        // $out .= '<option value="0">';
-        // $words = new MOD_words();
-        // $out .= $words->get('MakeAChoice');
-        // $out .= '</option>'."\n";
-        // foreach ($countries as $countryId => $country) {
-            // $out .= '<option value="' . $countryId . '"';
-            // if ($countryId == $selCountry)
-                // $out .= ' selected';
-            // $out .= '>';
-            // $out .= $country;
-            // $out .= "</option>\n";
-        // }
-        // $out .= "</select>\n";
-        // return $out;
-    // }
 
     private function buildBirthYearOptions($selYear = 0) {
 

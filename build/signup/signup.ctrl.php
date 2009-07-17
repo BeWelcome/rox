@@ -38,15 +38,19 @@ class SignupController extends RoxControllerBase {
      *
      * @param void
      */
-    public function index($args = false) {
-		
-				if ($_SESSION['Param']->FeatureSignupClose=="Yes") {
-					// Todo : provide some nice view instead of this rough message
-					die ("Sorry this feature is under maintenance. Volunteers are working on it, Please come back later") ; 
-				}
+    public function index($args = false) 
+    {	
+        // In case Signup is closed
+		if (isset($_SESSION['Param']->FeatureSignupClose) && $_SESSION['Param']->FeatureSignupClose=="Yes") {
+            return new SignupClosedPage();
+		}
 
         $request = $args->request;
         $model = new SignupModel();
+		// TESTING
+        // $View = new SignupView($model);
+        //         $View->registerMail(161,752);
+        // ENDTESTING
         //ini_set("session.gc_maxlifetime", "20");
         
         if (isset($_SESSION['IdMember']) && !MOD_right::get()->hasRight('words')) {
@@ -263,7 +267,7 @@ class SignupController extends RoxControllerBase {
                 $View = new SignupView($model);
                 // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-                $View->registerMail($idTB);
+                $View->registerMail($vars, $id, $idTB);
                 $View->signupTeamMail($vars);
                 unset($_SESSION['IdMember']);
                 return 'signup/finish';

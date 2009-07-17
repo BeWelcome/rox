@@ -159,11 +159,10 @@ class WikiController extends PAppController {
             "&lt;nowiki&gt;","&lt;/nowiki&gt;",
             false, 0x0030
         );
-    // allows nowiki-tags from wikipedia, changed by lupochen
-    $ewiki_config["format_block"]['brackets'] = array(
-        "{","}",
-        false, 0x0030
-    );
+        $ewiki_config["format_block"]['brackets'] = array(
+            "{","}",
+            true, 0x0030
+        );
         $ewiki_config["wm_start_end"][] = array(
             "&lt;br&gt;","&lt;/br&gt;",
             "", ""
@@ -172,10 +171,10 @@ class WikiController extends PAppController {
             "{{","}}",
             "",""
         );
-    $ewiki_config["wm_start_end"][] = array(
-        "{","}",
-        "",""
-    );
+        $ewiki_config["wm_start_end"][] = array(
+            "{","}",
+            "",""
+        );
     
         $ewiki_config["wm_style"]['<br/>'] = array("", "\n");
 

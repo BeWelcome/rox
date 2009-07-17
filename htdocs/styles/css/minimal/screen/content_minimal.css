@@ -1081,7 +1081,10 @@ height:50px;
 	margin: 0 0 2em 2em;
 	width: 25%;
 	float: right;
-	border: 1px solid #ccc;
+	border-top: 1px solid #e5e5e5;
+	border-left: 1px solid #e5e5e5;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 }
 .wiki .page-toc-caption {
    background: transparent;
@@ -1213,14 +1216,17 @@ height:50px;
 	overflow:hidden;
 	width: 100%;
 	display:block;
-	background-color: #f5f5f5;
-	border: 1px solid #ccc;
+	clear: both;
+	border-top: 1px solid #e5e5e5;
+	border-left: 1px solid #e5e5e5;
 }
 
 .wiki table td {                   /* space-indentation */
+	background-color: #f5f5f5;
     vertical-align: top;
 	padding: 2em 2em;
-	border: 1px solid #e5e5e5;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 }
 
 .wiki em {
@@ -1237,12 +1243,12 @@ height:50px;
   list-style-type: decimal;
 }
 .wiki .page-toc ol ol {
-  margin-left: 0.8em;
+  margin: 0 0.8em .5em 0;
   padding: 0 .5em;
 }
 .wiki .page-toc li {
-  line-height: 1.2em;
-  padding: .2em .5em;
+  line-height: 1em;
+  padding: .1em .5em;
   margin: 0 .5em;
 }
 .wiki .page-toc ol ol li {

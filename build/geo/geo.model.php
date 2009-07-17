@@ -512,6 +512,8 @@ class GeoModel extends RoxModelBase {
                         fk_countrycode = '".$this->dao->escape($dataset['countryCode'])."',
                         fk_admincode = '".$this->dao->escape($dataset['adminCode1'])."',
                         timezone = '".$this->dao->escape($dataset['timezone'])."'
+                        parentAdm1Id = '".$this->dao->escape($parentAdm1Id)."',
+                        parentCountryId = '".$this->dao->escape($parentCountryId)."'
                         "
                     );
                     if(!$insert) {

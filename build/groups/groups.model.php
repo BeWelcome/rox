@@ -681,7 +681,7 @@ class GroupsModel extends  RoxModelBase
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
             $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-            $msg->Message = "Hi {$member->Username}<br/><br/>You&apos;ve been invited to the group {$group->Name}. If you would like to join the group, click the following link: <a href='{$url}/acceptinvitation/{$member->getPKValue()}'>http://{$url}/acceptinvitation/{$member->getPKValue()}</a>.<br/>If you wish to decline the invitation, please click this link instead: <a href='http://{$url}/declineinvitation/{$member->getPKValue()}'>http://{$url}/declineinvitation/{$member->getPKValue()}</a><br/><br/>Have a great time<br/>BeWelcome";
+            $msg->Message = "Hi {$member->Username}<br/><br/>You have been invited to the group {$group->Name}. If you would like to join the group, click the following link: <a href='{$url}/acceptinvitation/{$member->getPKValue()}'>{$url}/acceptinvitation/{$member->getPKValue()}</a>.<br/>If you wish to decline the invitation, please click this link instead: <a href='{$url}/declineinvitation/{$member->getPKValue()}'>{$url}/declineinvitation/{$member->getPKValue()}</a><br/><br/>Have a great time<br/>BeWelcome";
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();
@@ -765,56 +765,10 @@ class GroupsModel extends  RoxModelBase
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
             $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-            $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='http://{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
+            $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();
         }
-    }
-
-    /**
-     * sends a message to the members of a group, apart from the logged in member
-     *
-     * @param object $group
-     * @param string $subject
-     * @param string $message
-     * @access public
-     * @return bool
-     */
-    public function sendGroupMessage($group, $subject, $message)
-    {
-        if (!$group->isLoaded() || empty($subject) || empty($message))
-        {
-            return bool;
-        }
-        $member = $this->getLoggedInMember();
-        $members = $group->getEmailAcceptingMembers();
-
-        $purifier = MOD_htmlpure::getPurifier();
-        $subject = $purifier->purify(strip_tags($subject));
-        $message = $purifier->purify($message);
-
-        foreach ($members as $recipient)
-        {
-            if ($member->getPKValue() == $recipient->getPKValue())
-            {
-                continue;
-            }
-            $msg = $this->createEntity('Message');
-            $msg->MessageType = 'MemberToMember';
-            $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
-            $msg->IdParent = 0;
-            $msg->IdReceiver = $recipient->getPKValue();
-            $msg->IdSender = $member->getPKValue();
-            $msg->SendConfirmation = 'No';
-            $msg->Status = 'ToSend';
-            $msg->SpamInfo = 'NotSpam';
-            $msg->Message = "{$subject}<br/><br/>{$message}";
-            $msg->InFolder = 'Normal';
-            $msg->JoinMemberPict = 'no';
-            $msg->insert();
-            unset($msg);
-        }
-        return true;
     }
 }

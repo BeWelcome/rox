@@ -47,7 +47,7 @@ class GroupsController extends RoxControllerBase
         $group = $this->getGroupFromRequest();
         if ($group->Type == 'NeedInvitation' && !$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();
@@ -84,7 +84,7 @@ class GroupsController extends RoxControllerBase
             {
                 $redirect = $this->router->url('groups_overview');
             }
-            $this->_redirect($redirect);
+            $this->redirectAbsolute($redirect);
         }
         return $vars['member_id'];
     }
@@ -104,7 +104,7 @@ class GroupsController extends RoxControllerBase
             {
                 $redirect = $this->router->url('groups_overview');
             }
-            $this->_redirect($redirect);
+            $this->redirectAbsolute($redirect);
         }
         return $group;
     }
@@ -193,61 +193,11 @@ class GroupsController extends RoxControllerBase
     {
         if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('groups_new', null, false));
         }
         $page = new GroupsCreationPage();
         $this->fillObject($page);
         return $page;
-    }
-
-    /**
-     *  shows a group messaging page
-     *
-     * @access public
-     * @return object
-     */
-    public function groupMessage()
-    {
-        $group = $this->getGroupFromRequest($this->router->url('groups_overview'));
-        if (!($member = $this->_model->getLoggedInMember()) || !$member->getGroupMembership($group))
-        {
-            $this->_redirect($this->router->url('groups_overview'));
-        }
-        $page = new GroupSendMessagePage();
-        $this->fillObject($page);
-        $page->group = $this->getGroupFromRequest($this->router->url('groups_overview'));
-        return $page;
-    }
-
-   /**
-     * Callback function for createGroup page
-     * will send a message to all the groups members
-     *
-     * @param Object $args
-     * @param Object $action 
-     * @param Object $mem_redirect memory for the page after redirect
-     * @param Object $mem_resend memory for resending the form
-     * @return string relative request for redirect
-     */
-    public function groupSendMessage($args, $action, $mem_redirect, $mem_resend)
-    {
-        $group = $this->getGroupFromRequest($this->router->url('groups_overview'));
-        if (!($member = $this->_model->getLoggedInMember()) || !$member->isActive() || !$member->getGroupMembership($group))
-        {
-            return $this->router->url('groups_overview');
-        }
-
-        if (!empty($args->post['subject']) && !empty($args->post['message']) && $this->_model->sendGroupMessage($group, $args->post['subject'], $args->post['message']))
-        {
-            $mem_redirect->status = true;
-        }
-        else
-        {
-            $mem_redirect->status = false;
-            $mem_redirect->post = $args->post;
-        }
-
-        return $this->router->url('group_posting', array('group_id' => $group->getPKValue()), false);
     }
 
     /**
@@ -260,7 +210,7 @@ class GroupsController extends RoxControllerBase
     {
         if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('groups_mygroups', null, false));
         }
 
         $page = new GroupsMyGroupsPage();
@@ -310,7 +260,7 @@ class GroupsController extends RoxControllerBase
         $args = $this->args_vars;
         if (empty($args->get['username']))
         {
-            $this->_redirect($this->router->url('group_start', array('group_id' => $group->getPKValue())));
+            $this->redirectAbsolute($this->router->url('group_start', array('group_id' => $group->getPKValue())));
         }
         $members = $this->_model->findMembersByName($group, $args->get['username']);
         $page = new GroupInvitePage;
@@ -415,9 +365,13 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->getGroupFromRequest();
         $member_id = $this->getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember() || $this->_model->getLoggedInMember()->getPkValue() != $member_id || !$this->_model->memberAcceptedInvitation($group, $member_id))
+        if (!$this->_model->getLoggedInMember() )
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_acceptinvitation', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
+        }
+        elseif ($this->_model->getLoggedInMember()->getPkValue() != $member_id || !$this->_model->memberAcceptedInvitation($group, $member_id))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
         $this->logWrite("Member #{$member_id} accepted invitation to join group #{$group->getPKValue()}");
         $page = new GroupStartPage();
@@ -441,7 +395,11 @@ class GroupsController extends RoxControllerBase
             $this->_model->memberDeclinedInvitation($group, $member_id);
             $this->logWrite("Member #{$member_id} declined invitation to join group #{$group->getPKValue()}");
         }
-        $this->_redirect($this->router->url('groups_overview'));
+        else
+        {
+            $this->redirectToLogin($this->router->url('group_declineinvitation', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
+        }
+        $this->redirectAbsolute($this->router->url('groups_overview'));
     }
 
     /**
@@ -454,9 +412,13 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->getGroupFromRequest();
         $member_id = $this->getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group) || empty($member_id))
+        if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_banmember', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
+        }
+        elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
         $this->_model->banGroupMember($group, $member_id, true);
@@ -478,9 +440,13 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->getGroupFromRequest();
         $member_id = $this->getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group) || empty($member_id))
+        if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_kickmember', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
+        }
+        elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
         $this->_model->banGroupMember($group, $member_id, false);
@@ -502,9 +468,13 @@ class GroupsController extends RoxControllerBase
     {
         $group = $this->getGroupFromRequest();
         $member_id = $this->getMemberIdFromRequest();
-        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group) || empty($member_id))
+        if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_acceptmember', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
+        }
+        elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
         $this->_model->acceptGroupMember($group, $member_id);
@@ -526,9 +496,13 @@ class GroupsController extends RoxControllerBase
     public function memberAdministration()
     {
         $group = $this->getGroupFromRequest();
-        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group))
+        if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_memberadministration', array('group_id' => $group->getPKValue()), false));
+        }
+        elseif (!$this->_model->canAccessGroupAdmin($group))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
         $page = new GroupMemberAdministrationPage;
@@ -549,7 +523,7 @@ class GroupsController extends RoxControllerBase
         $group = $this->getGroupFromRequest();
         if (!($member = $this->_model->getLoggedInMember()))
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_join', array('group_id' => $group->getPKValue()), false));
         }
 
         $page = new GroupJoinPage();
@@ -607,7 +581,7 @@ class GroupsController extends RoxControllerBase
         $group = $this->getGroupFromRequest();
         if (!($member = $this->_model->getLoggedInMember()))
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_leave', array('group_id' => $group->getPKValue()), false));
         }
 
         $page = new GroupLeavePage();
@@ -626,7 +600,7 @@ class GroupsController extends RoxControllerBase
         $group = $this->getGroupFromRequest();
         if (!($member = $this->_model->getLoggedInMember()))
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_leave', array('group_id' => $group->getPKValue()), false));
         }
 
         $page = new GroupStartPage();
@@ -654,7 +628,7 @@ class GroupsController extends RoxControllerBase
         $group = $this->getGroupFromRequest();
         if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_membersettings', array('group_id' => $group->getPKValue()), false));
         }
 
         $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupMemberSettingsPage());
@@ -672,9 +646,13 @@ class GroupsController extends RoxControllerBase
     public function groupSettings()
     {
         $group = $this->getGroupFromRequest();
-        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group))
+        if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_groupsettings', array('group_id' => $group->getPKValue()), false));
+        }
+        elseif (!$this->_model->canAccessGroupAdmin($group))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
         $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupSettingsPage());
@@ -692,16 +670,20 @@ class GroupsController extends RoxControllerBase
     public function delete()
     {
         $group = $this->getGroupFromRequest();
-        if (!$this->_model->getLoggedInMember()  || !$this->_model->canAccessGroupDelete($group))
+        if (!$this->_model->getLoggedInMember())
         {
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectToLogin($this->router->url('group_delete', array('group_id' => $group->getPKValue()), false));
+        }
+        elseif (!$this->_model->canAccessGroupDelete($group))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
         if (isset($request[3]) && strtolower($request[3]) == 'true')
         {
             $this->_model->deleteGroup($group);
             $this->logWrite("Group #{$group->getPKValue()} was deleted by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-            $this->_redirect($this->router->url('groups_overview'));
+            $this->redirectAbsolute($this->router->url('groups_overview'));
         }
         else
         {
@@ -761,17 +743,6 @@ class GroupsController extends RoxControllerBase
     }
 //}}}
 
-    /**
-     * redirects to the url provided
-     *
-     * @access private
-     * @todo move to controller base class
-     */
-    private function _redirect($url)
-    {
-        header('Location: '.$url);
-        PPHP::PExit();
-    }
 
    /**
      * Callback function for createGroup page

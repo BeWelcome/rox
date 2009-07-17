@@ -128,7 +128,6 @@ class SignupView extends PAppView
 		$MailToNotifyWhenNewMemberSignup=str_replace(",",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
         $to = explode(";",$MailToNotifyWhenNewMemberSignup) ;
 				
-		$to = array('lupochen@gmx.de','micha@dettbarn.net'); // TESTING ONLY
 		if (count($to)<=0)  {
 			die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
 			$MailToNotifyWhenNewMemberSignup."]") ;

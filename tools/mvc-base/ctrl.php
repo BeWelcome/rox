@@ -60,7 +60,16 @@ abstract class RoxControllerBase extends RoxComponentBase
         }
         return $vars;
     }
+
+    /**
+     * redirects to a login screen, returning the user to where it was afterwards
+     *
+     * @param string $url_part - relative url
+     * @access protected
+     */
+    protected function redirectToLogin($url_part)
+    {
+        $this->redirectAbsolute($this->router->url('login_helper', array('url' => $url_part)));
+        PPHP::PExit();
+    }
 }
-
-
-?>

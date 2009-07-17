@@ -198,6 +198,26 @@ class Geo extends RoxEntityBase
     }
 
     /**
+     * returns array of all alternate names for a location
+     *
+     * @access public
+     * @return array
+     */
+    public function getAllAlternateNames()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+        $names = $this->createEntity('GeoAlternateName')->findByWhereMany("geonameId = '{$this->getPKValue()}");
+        foreach ($names as $name)
+        {
+            $this->alt_names[$name->isoLanguage] = $name->alternateName;
+        }
+        return $names;
+    }
+
+    /**
      * returns array of usage counters for location
      *
      * @access public

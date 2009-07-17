@@ -47,16 +47,14 @@ class SignupController extends RoxControllerBase {
 
         $request = $args->request;
         $model = new SignupModel();
-		// TESTING
-        // $View = new SignupView($model);
-        //         $View->registerMail(161,752);
-        // ENDTESTING
-        //ini_set("session.gc_maxlifetime", "20");
         
         if (isset($_SESSION['IdMember']) && !MOD_right::get()->hasRight('words')) {
-            
-            $this->redirect('bw/member.php?cid='.$_SESSION['Username']);
-            
+            if (!isset($_SESSION['Username'])) {
+                unset($_SESSION['IdMember']);
+                $page = new SignupProblemPage();
+            } else {
+                $this->redirect('members/'.$_SESSION['Username']);
+            }
         } else switch (isset($request[1]) ? $request[1] : '') {
         
             // copied from TB:
@@ -104,41 +102,6 @@ class SignupController extends RoxControllerBase {
                 PPHP::PExit();
             }
             
-            /**
-            * probably not needed at this place?
-            **/
-            //$Geo = new GeoController;
-            //echo "<br>model: ";
-            //echo get_class($model);
-
-            // $locations = $model->getRegions($country);
-            // $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-                // <option value="">None</option>';
-            // foreach ($locations as $code => $location) {
-                // $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-            // }
-            // $out .= '</select>';
-            // return $out;
-            // PPHP::PExit();
-            // break;
-                
-            // case 'locationdropdowns':
-            // // ignore current request, so we can use the last request
-            // PRequest::ignoreCurrentRequest();
-            // if (!isset($request[2])) {
-                // PPHP::PExit();
-            // }
-            // $locations = $model->getAllLocations($country, $areacode);
-            // $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-                // <option value="">None</option>';
-            // foreach ($locations as $code => $location) {
-                // $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-            // }
-            // $out .= '</select>';
-            // return $out;
-            // PPHP::PExit();
-            // break;
-            
             case 'terms':
 				MOD_log::get()->write("Viewing terms","Signup") ;
                 // the termsandconditions popup
@@ -183,27 +146,11 @@ class SignupController extends RoxControllerBase {
                 break;
                 
             default:
-                
                 $page = new SignupPage();
-
                 $page->step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
 				$StrLog="Entering Signup step: #".$page->step ;
 				MOD_log::get()->write($StrLog,"Signup") ;
                 $page->model = $model;
-                
-
-            /*
-                case 'confirm':
-                ob_start();
-                $username = "";
-                $email = "";
-                $this->_view->confirmation($username, $email);
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
-                break;
-            */
         }
         
         return $page;

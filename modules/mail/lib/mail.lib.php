@@ -75,10 +75,7 @@ class MOD_mail
         // $transport = Swift_SmtpTransport::newInstance("smtp.gmail.com", 465, 'tls');
         // $transport->setUsername("USERNAME");
         // $transport->setPassword("PASSWORD");
-        $transport = Swift_SmtpTransport::newInstance("smtp.gmail.com", 465, 'tls');
-        $transport->setUsername("micha.dettbarn");
-        $transport->setPassword("muck2...");
-        
+
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);
         

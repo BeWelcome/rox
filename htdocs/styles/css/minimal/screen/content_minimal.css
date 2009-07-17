@@ -1148,6 +1148,12 @@ height:50px;
 }
 
 
+/* links to unknown page get a different color */
+
+.wiki.view .NotFound a {
+    color: #ff8800;
+}
+
 /* -----------------------------------------------
   the "info" pages result list is often
   chunked into parts

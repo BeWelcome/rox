@@ -42,7 +42,7 @@ if (!isset($vars['errors'])) {
   <div class="corner"></div>
     <h3><span><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></span></h3>
     <div class="author">
-        <?=$words->get('written_by')?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
+        <?=$words->get('written_by')?> <a href="member/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
 <?php
 if ($blog->fk_countrycode) {
 ?>

@@ -117,9 +117,10 @@ class MembersModel extends RoxModelBase
         // get Member's current Location
         $result = $this->singleLookup(
             "
-SELECT  members.IdCity
-FROM    members
-WHERE   members.id = $IdMember
+SELECT  a.IdCity
+FROM    addresses AS a
+WHERE   a.IdMember = '{$IdMember}'
+    AND a.rank = 0
             "
         );
         if (!isset($result) || $result->IdCity != $geonameid) {

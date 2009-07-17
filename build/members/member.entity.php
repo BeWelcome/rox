@@ -816,7 +816,7 @@ WHERE
         // check for Member's own data
         if ($this->edit_mode) {
             if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
-                return $mCrypt;
+                return urldecode(strip_tags($mCrypt));
         }
         return urldecode(MOD_crypt::get_crypted($crypted_id, $return_value));
     }

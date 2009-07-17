@@ -17,6 +17,9 @@
     // general routes
     $this->addRoute('main_page','', 'RoxController', 'index');
 
+    // login routes
+    $this->addRoute('login_helper','login/:url:#login-widget', 'LoginController', 'login_helper', true);
+
     // group routes
     $this->addRoute('group_acceptinvitation','groups/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
     $this->addRoute('group_acceptmember','groups/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
@@ -40,8 +43,6 @@
     $this->addRoute('group_members_paged','groups/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
     $this->addRoute('group_membersearch_ajax','groups/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
     $this->addRoute('group_membersettings','groups/:group_id:/membersettings', 'GroupsController', 'memberSettings');
-    $this->addRoute('group_posting','groups/:group_id:/message', 'GroupsController', 'groupMessage');
-    $this->addRoute('group_send_message','groups/:group_id:/sendmessage', 'GroupsController', 'groupSendMessage', true);
     $this->addRoute('group_start','groups/:group_id:', 'GroupsController', 'showGroup');
     $this->addRoute('group_wiki','groups/:group_id:/wiki', 'GroupsController', 'wiki');
     $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');

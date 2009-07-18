@@ -1,4 +1,3 @@
-<?php ?>
 <div class="floatbox small">
     <img src="images/icons/add.png" class="float_left">
     <div class="float_left">

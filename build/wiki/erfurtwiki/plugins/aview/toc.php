@@ -40,7 +40,7 @@ function ewiki_toc_format_source(&$src) {
          $n = strspn($line, "!");
          if (($n <= 3) and ($line[$n]==" ")) {
              if ($n < $n_last) $add[0] = '</ol>';
-             if ($n > $n_last) $add[1] = '<ol>';
+             if ($n > $n_last && $n_last != 0) $add[1] = '<ol>';
             $text = substr($line, $n);
             $toc[$i] =  $add[0].$add[1] . /*str_repeat("&nbsp;", 3-$n) . "·"
                 . */'<li><a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
@@ -61,11 +61,11 @@ function ewiki_toc_format_source(&$src) {
          $n = strspn($line, "=");
          if (($n <= 3)) {
              if ($n < $n_last) $add[0] = '</ol>';
-             if ($n > $n_last) $add[1] = '<ol>';
+             if ($n > $n_last && $n_last != 0) $add[1] = '<ol>';
             $text = substr($line, $n,-$n);
             $toc[$i] = $add[0].$add[1] . /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
-                     . */'<li><a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
-                     . trim($text) . "</a></li>";
+                     . */'<li>'.(($n <= 2) ? '<b>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
+                     . trim($text) . '</a>'.(($n <= 2) ? '</b>' : '').'</li>';
 
             $src[$i] = str_repeat("=", $n) . " [#line$i]" . $text . str_repeat("=", $n);
             $n_last = $n;

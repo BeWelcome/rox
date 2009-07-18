@@ -107,19 +107,26 @@ class WikiController extends PAppController {
         // Authentification
         require_once("erfurtwiki/plugins/auth/auth_perm_ring.php");
         $User = APP_User::login();
-        if ($User) {
+        $Right = new MOD_right();
+        if ($User && $Right->hasRight('Admin','Wiki')) {
+            $ewiki_author = $User->getHandle();
+            define("EWIKI_AUTH_DEFAULT_RING", 0);    //  1 = edit allowed
+        } elseif ($User) {
             $ewiki_author = $User->getHandle();
             define("EWIKI_AUTH_DEFAULT_RING", 2);    //  2 = edit allowed
         } else {
             define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
         }
+        require_once("erfurtwiki/plugins/markup/mediawiki.php"); // load our own mediawiki plugin
         
         // More plugins
         require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
         require_once("erfurtwiki/plugins/markup/bbcode.php"); // BBcode plugin
         require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
         require_once("erfurtwiki/plugins/markup/rescuehtml.php"); // safe html tags ;)
+        require_once("erfurtwiki/plugins/admin/control.php"); // load some plugins
 
+        require_once("erfurtwiki/plugins/pluginloader.php"); // load some plugins
         $ewiki_config = $this->defineMarkup();
 
         require_once('erfurtwiki/ewiki.php');
@@ -159,26 +166,9 @@ class WikiController extends PAppController {
             "&lt;nowiki&gt;","&lt;/nowiki&gt;",
             false, 0x0030
         );
-        $ewiki_config["format_block"]['brackets'] = array(
-            "{","}",
-            true, 0x0030
-        );
-        $ewiki_config["wm_start_end"][] = array(
-            "&lt;br&gt;","&lt;/br&gt;",
-            "", ""
-        );
-        $ewiki_config["wm_start_end"][] = array(
-            "{{","}}",
-            "",""
-        );
-        $ewiki_config["wm_start_end"][] = array(
-            "{","}",
-            "",""
-        );
     
-        $ewiki_config["wm_style"]['<br/>'] = array("", "\n");
-
         $ewiki_config["wm_style"]["&rarr;"] = array("", "");
+
         
         $ewiki_config["wm_style"]["'''"] = array("<strong>", "</strong>");
         $ewiki_config["wm_style"]["''"] = array("<em>", "</em>");

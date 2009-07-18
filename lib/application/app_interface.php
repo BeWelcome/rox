@@ -28,4 +28,3 @@ interface PApplication
      */
     public function index();
 }
-?>

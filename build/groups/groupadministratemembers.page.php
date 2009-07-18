@@ -1,4 +1,24 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
 
 /**
  * This page allows to create a new group
@@ -50,7 +70,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             </tr>
         <?php foreach ($members as $member) : ?>
             <tr>
-                <td><?=MOD_layoutbits::PIC_50_50($member->Username) ?></td>
+                <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                 <td><a href="people/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
                 <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>{$words->getSilent('GroupsBanMember')}</a> / <a class='kick' href='groups/{$this->group->getPKValue()}/kickmember/{$member->getPKValue()}'>{$words->getSilent('GroupsKickMember')}</a>");?></td>
             </tr>
@@ -91,7 +111,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                     </tr>
                 <?php foreach ($need_approval as $member) : ?>
                     <tr>
-                        <td><?=MOD_layoutbits::PIC_50_50($member->Username) ?></td>
+                        <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                         <td><a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
                         <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='accept' href='groups/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'>Accept?</a>");?></td>
                     </tr>
@@ -109,7 +129,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
 <?php if ($invited) : ?>
     <?php foreach ($invited as $member) : ?>
                     <tr>
-                        <td><?=MOD_layoutbits::PIC_50_50($member->Username) ?></td>
+                        <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                         <td><a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
                     </tr>
     <?php endforeach; ?>
@@ -118,7 +138,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             </div>
             <div class='subcl'>
                 <h4><?= $words->get('GroupsInviteMember') ?></h4>
-                <div id='search_result' style='display: none;'></div>
+                <div id='search_result' style='display: none;padding: 3px; margin-bottom: 3px'></div>
                 <form method='get' action='groups/<?= $this->group->getPKValue(); ?>/invitemembers/search' id='invite_form'>
                     <input type='text' value='<?= $words->getSilent('GroupsEnterUsername');?>' name='username' id='search_username'/><input type='submit' value='<?= $words->getSilent('Search');?>' id='search_username_submit'/>
                 </form>
@@ -129,10 +149,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                     display_result: function(member_object){
                         var search_div = $('search_result');
                         search_div.innerHTML = '';
-                        search_div.style.border = '1px solid #eee';
+                        search_div.style.border = '1px solid black';
                         search_div.style.display = 'block';
-                        search_div.style.padding = '0.5em';
-                        search_div.style.margin = '1em 0';
                         search_div.style.backgroundColor = '#ffffff';
                         var counter = 0;
                         for (var m in member_object)
@@ -148,6 +166,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                                 Event.stop(e);
                             });
                             search_div.appendChild(a);
+                            search_div.appendChild(document.createElement('br'));
                             counter++;
                         }
                         if (counter == 0)

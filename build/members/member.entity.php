@@ -1,6 +1,36 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
+This file is part of BW Rox.
 
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
+
+    /**
+     * @author Lemon-Head
+     * @author Fake51
+     */
+
+    /**
+     * ORM for members table
+     *
+     * @package Apps
+     * @subpackage Entities
+     */
 class Member extends RoxEntityBase
 {
     protected $_table_name = 'members';
@@ -490,51 +520,8 @@ WHERE IdToMember = ".$this->id
     public function get_group_memberships()
     {
         throw new Exception("don't use this function, use getGroups() instead!");
-                $TGroups=array() ;
-        $query = "select SQL_CACHE membersgroups.id as IdMemberShip, membersgroups.Comment as Comment,groups.Name as Name,groups.id as IdGroup from groups,membersgroups where membersgroups.IdGroup=groups.id and membersgroups.Status='In' and membersgroups.IdMember=" .$this->id;
-        $s = $this->dao->query($query);
 
-        if( !$s) {
-            throw new PException('Could not retrieve Groups!');
-        }
-        $TGroups = array();
-        while( $rr = $s->fetch(PDB::FETCH_OBJ)) {
-            //$TGroups[$row->id] = $row->name;
-            $rr->Location="" ;
-            $str="select IdLocation,countries.Name as CountryName,regions.Name as RegionName,cities.Name as CityName from groups_locations ";
-            $str.=" left join  countries on countries.id=IdLocation" ;
-            $str.=" left join  regions on regions.id=IdLocation" ;
-            $str.=" left join  cities on cities.id=IdLocation" ;
-            $str=   $str."  where IdGroupMemberShip=".$rr->IdMemberShip ;
-            $qry_rLocation=$this->dao->query($str) ;
-            while( $rrLocation = $qry_rLocation->fetch(PDB::FETCH_OBJ)) {
-                if ($rr->Location=="") {
-                    $rr->Location="(" ;
-                }
-                else {
-                    $rr->Location.="," ;
-                }
-                if (isset($rrLocation->CountryName)) {
-                    $rr->Location=$rr->Location.$rrLocation->CountryName ;
-                }
-                else if (isset($rrLocation->RegionName)) {
-                    $rr->Location=$rr->Location.$rrLocation->RegionName ;
-                }
-                else if (isset($rrLocation->CityName)) {
-                    $rr->Location=$rr->Location.$rrLocation->CityName ;
-                }
-            }
-            if ($rr->Location!="") {
-                $rr->Location.=")" ;
-            }
-
-      array_push($TGroups, $rr);
-        }
-        return $TGroups;
-
-} // end of get_group_memberships
-
-
+    }
 
     /**
      * Member address lookup
@@ -550,26 +537,30 @@ WHERE
 SQL;
         ;
         $a = $this->bulkLookup($sql);
-        if($a != null && sizeof($a) > 0) {
-            $Geo = new GeoModel();
-            $a[0]->CityName = $Geo->getDataById($a[0]->IdCity)->name;
-            $IdRegion = $Geo->getDataById($a[0]->IdCity)->parentAdm1Id;
-            if ($IdRegion)
+        if($a != null && sizeof($a) > 0)
+        {
+            $city = $this->createEntity('Geo')->findById($a[0]->IdCity);
+            if ($city)
             {
-                $a[0]->RegionName = $Geo->getDataById($IdRegion)->name;
-                $country_id = $Geo->getDataById($IdRegion)->parentCountryId;
-                $a[0]->CountryName = $Geo->getDataById($country_id)->name;
-                $a[0]->CountryCode = $Geo->getDataById($country_id)->fk_countrycode;
+                $a[0]->CityName = $city->getName();
             }
-        } else {
+            $region = $city->getParent();
+            $country = $city->getCountry();
+            $a[0]->RegionName = $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
+            $a[0]->CountryName = $country->getName();
+            $a[0]->CountryCode = $country->fk_countrycode();
+        }
+        else
+        {
             $a[0] = new stdClass();
-            $a[0]->IdCity = 'Unknown';
+            $a[0]->IdCity = '';
             $a[0]->CityName = 'Unknown';
             $a[0]->HouseNumber = 'Unknown';
             $a[0]->StreetName = 'Unknown';
             $a[0]->Zip = 'Unknown';
         }
-        $a[0]->RegionName = ((!empty($a[0]->RegionName)) ? $a[0]->RegionName : 'Unknown');
+        $a[0]->CityName = ((!empty($a[0]->CityName)) ? $a[0]->CityName : '');
+        $a[0]->RegionName = ((!empty($a[0]->RegionName)) ? $a[0]->RegionName : '');
         $a[0]->CountryName = ((!empty($a[0]->CountryName)) ? $a[0]->CountryName : 'Unknown');
         $a[0]->CountryCode = ((!empty($a[0]->CountryCode)) ? $a[0]->CountryCode : 'Unknown');
 
@@ -837,7 +828,7 @@ WHERE
             if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
                 return urldecode(strip_tags($mCrypt));
         }
-        return MOD_crypt::get_crypted($crypted_id, $return_value);
+        return urldecode(MOD_crypt::get_crypted($crypted_id, $return_value));
     }
 
 
@@ -1004,5 +995,35 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return preg_split("/','/", $set); // Split into and array
     }
 
+
+    /**
+     * returns true if the member is Active or ActiveHidden
+     *
+     * @access public
+     * @return bool
+     */
+    public function isActive()
+    {
+        if ($this->isLoaded() && in_array($this->Status, array('Active', 'ActiveHidden')))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * deletes all a members languages
+     *
+     * @access public
+     * @return bool
+     */
+    public function removeLanguages()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('MemberLanguage')->deleteMembersLanguages($this);
+    }
 }
 

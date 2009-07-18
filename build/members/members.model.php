@@ -1,6 +1,38 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
 
 
+    /**
+     * @author Lemon-Head
+     * @author Lupochen
+     * @author Fake51
+     */
+
+    /**
+     * members app model
+     *
+     * @package Apps
+     * @subpackage Members
+     */
 class MembersModel extends RoxModelBase
 {
     
@@ -85,9 +117,10 @@ class MembersModel extends RoxModelBase
         // get Member's current Location
         $result = $this->singleLookup(
             "
-SELECT  members.IdCity
-FROM    members
-WHERE   members.id = $IdMember
+SELECT  a.IdCity
+FROM    addresses AS a
+WHERE   a.IdMember = '{$IdMember}'
+    AND a.rank = 0
             "
         );
         if (!isset($result) || $result->IdCity != $geonameid) {
@@ -186,35 +219,6 @@ WHERE
         }
     }
     
-    /**
-     * Set the languages spoken by member
-     */
-    public function set_language_spoken($IdLanguage,$Level,$IdMember) 
-    {
-        $lang = $this->dao->query("
-DELETE 
-FROM
-    memberslanguageslevel
-WHERE
-    IdLanguage = '$IdLanguage' AND
-    IdMember = '$IdMember'
-        ");
-        $s = $this->dao->query("
-REPLACE INTO
-    memberslanguageslevel
-    (
-    IdLanguage,
-    Level,
-    IdMember
-    )
-VALUES
-    (
-    '$IdLanguage',
-    '$Level',
-    '$IdMember'
-    )
-        ");
-    }
     
     /**
      * Delete a profile translation for a member
@@ -409,7 +413,7 @@ WHERE
         $words = new MOD_words();
         $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
         
-        if (!isset ($TData->id)) {
+        if (!isset ($TData->id) && !$TData->id) {
             $str = "
 INSERT INTO
     specialrelations (
@@ -741,12 +745,18 @@ ORDER BY
         // fantastic ... love the implementation. Fake
         $CanTranslate = false;
         // $CanTranslate = CanTranslate($vars["memberid"], $_SESSION['IdMember']);
-        $ReadCrypted = "AdminReadCrypted"; // This might be changed in the future
+        $ReadCrypted = "MemberReadCrypted"; // This might be changed in the future
         if ($rights->hasRight('Admin') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles 
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
         }
-        foreach ($vars['languages_selected'] as $lang) {
-            $this->set_language_spoken($lang->IdLanguage,$lang->Level,$IdMember);
+        $m->removeLanguages();;
+        foreach ($vars['languages_selected'] as $lang)
+        {
+            if ($language = $this->createEntity('Language')->findById($lang->IdLanguage))
+            {
+                $ml = $this->createEntity('MemberLanguage');
+                $ml->setSpokenLanguage($m, $language, $lang->Level);
+            }
         }
         
         // Set the language that ReplaceinMTrad uses for writing
@@ -762,64 +772,64 @@ ORDER BY
         $m->byear = substr($birthdate, 0,4);
         $m->HideBirthDate = $vars['HideBirthDate'];
         $m->HideGender = $vars['HideGender'];
-        $m->ProfileSummary = $words->ReplaceInMTrad($this->cleanupText($vars['ProfileSummary']),"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
-        $m->WebSite = $vars['WebSite'];
+        $m->ProfileSummary = $words->ReplaceInMTrad($vars['ProfileSummary'],"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
+        $m->WebSite = strip_tags($vars['WebSite']);
         $m->Accomodation = $vars['Accomodation'];
-        $m->Organizations = $words->ReplaceInMTrad($vars['Organizations'],"members.Organizations", $IdMember, $m->Organizations, $IdMember);
-        $m->Occupation = $words->ReplaceInMTrad($vars['Occupation'],"members.Occupation", $IdMember, $m->Occupation, $IdMember);
-        $m->ILiveWith = $words->ReplaceInMTrad($vars['ILiveWith'],"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
-        $m->MaxGuest = $vars['MaxGuest'];
-        $m->MaxLenghtOfStay = $words->ReplaceInMTrad($vars['MaxLenghtOfStay'],"members.MaxLenghtOfStay", $IdMember, $m->MaxLenghtOfStay, $IdMember);
-        $m->AdditionalAccomodationInfo = $words->ReplaceInMTrad($vars['AdditionalAccomodationInfo'],"members.AdditionalAccomodationInfo", $IdMember, $m->AdditionalAccomodationInfo, $IdMember);
-        $m->TypicOffer = $vars['TypicOffer'];
-        $m->Restrictions = $vars['Restrictions'];
-        $m->OtherRestrictions = $words->ReplaceInMTrad($vars['OtherRestrictions'],"members.OtherRestrictions", $IdMember, $m->OtherRestrictions, $IdMember);
-        $m->Hobbies = $words->ReplaceInMTrad($vars['Hobbies'],"members.Hobbies", $IdMember, $m->Hobbies, $IdMember);
-        $m->Books = $words->ReplaceInMTrad($vars['Books'],"members.Books", $IdMember, $m->Books, $IdMember);
-        $m->Music = $words->ReplaceInMTrad($vars['Music'],"members.Music", $IdMember, $m->Music, $IdMember);
-        $m->Movies = $words->ReplaceInMTrad($vars['Movies'],"members.Movies", $IdMember, $m->Movies, $IdMember);
-        $m->PastTrips = $words->ReplaceInMTrad($vars['PastTrips'],"members.PastTrips", $IdMember, $m->PastTrips, $IdMember);
-        $m->PlannedTrips = $words->ReplaceInMTrad($vars['PlannedTrips'],"members.PlannedTrips", $IdMember, $m->PlannedTrips, $IdMember);
-        $m->PleaseBring = $words->ReplaceInMTrad($vars['PleaseBring'],"members.PleaseBring", $IdMember, $m->PleaseBring, $IdMember);
-        $m->OfferGuests = $words->ReplaceInMTrad($vars['OfferGuests'],"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
-        $m->OfferHosts = $words->ReplaceInMTrad($vars['OfferHosts'],"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
-        $m->PublicTransport = $words->ReplaceInMTrad($vars['PublicTransport'],"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
+        $m->Organizations = $words->ReplaceInMTrad(strip_tags($vars['Organizations']),"members.Organizations", $IdMember, $m->Organizations, $IdMember);
+        $m->Occupation = $words->ReplaceInMTrad(strip_tags($vars['Occupation']),"members.Occupation", $IdMember, $m->Occupation, $IdMember);
+        $m->ILiveWith = $words->ReplaceInMTrad(strip_tags($vars['ILiveWith']),"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
+        $m->MaxGuest = strip_tags($vars['MaxGuest']);
+        $m->MaxLenghtOfStay = $words->ReplaceInMTrad(strip_tags($vars['MaxLenghtOfStay']),"members.MaxLenghtOfStay", $IdMember, $m->MaxLenghtOfStay, $IdMember);
+        $m->AdditionalAccomodationInfo = $words->ReplaceInMTrad(strip_tags($vars['AdditionalAccomodationInfo']),"members.AdditionalAccomodationInfo", $IdMember, $m->AdditionalAccomodationInfo, $IdMember);
+        $m->TypicOffer = strip_tags($vars['TypicOffer']);
+        $m->Restrictions = strip_tags($vars['Restrictions']);
+        $m->OtherRestrictions = $words->ReplaceInMTrad(strip_tags($vars['OtherRestrictions']),"members.OtherRestrictions", $IdMember, $m->OtherRestrictions, $IdMember);
+        $m->Hobbies = $words->ReplaceInMTrad(strip_tags($vars['Hobbies']),"members.Hobbies", $IdMember, $m->Hobbies, $IdMember);
+        $m->Books = $words->ReplaceInMTrad(strip_tags($vars['Books']),"members.Books", $IdMember, $m->Books, $IdMember);
+        $m->Music = $words->ReplaceInMTrad(strip_tags($vars['Music']),"members.Music", $IdMember, $m->Music, $IdMember);
+        $m->Movies = $words->ReplaceInMTrad(strip_tags($vars['Movies']),"members.Movies", $IdMember, $m->Movies, $IdMember);
+        $m->PastTrips = $words->ReplaceInMTrad(strip_tags($vars['PastTrips']),"members.PastTrips", $IdMember, $m->PastTrips, $IdMember);
+        $m->PlannedTrips = $words->ReplaceInMTrad(strip_tags($vars['PlannedTrips']),"members.PlannedTrips", $IdMember, $m->PlannedTrips, $IdMember);
+        $m->PleaseBring = $words->ReplaceInMTrad(strip_tags($vars['PleaseBring']),"members.PleaseBring", $IdMember, $m->PleaseBring, $IdMember);
+        $m->OfferGuests = $words->ReplaceInMTrad(strip_tags($vars['OfferGuests']),"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
+        $m->OfferHosts = $words->ReplaceInMTrad(strip_tags($vars['OfferHosts']),"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
+        $m->PublicTransport = $words->ReplaceInMTrad(strip_tags($vars['PublicTransport']),"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
         
         // as $CanTranslate is set explicitly above, this is disabled
         // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data        
 
         if ($vars["Email"] != $m->email) {
-            $log->write("Email updated (previous was " . $m->email . ")", "Email Update");
+            $log->write("Email updated", "Email Update");
         }                
         if ($vars["HouseNumber"] != $m->get_housenumber()) {
-            $log->write("Housenumber updated (previous was {$m->get_housenumber()})", "Address Update");
+            $log->write("Housenumber updated", "Address Update");
         }                
         if ($vars["Street"] != $m->get_street()) {
-            $log->write("Street updated (previous was {$m->get_street()})", "Address Update");
+            $log->write("Street updated", "Address Update");
         }                
         if ($vars["Zip"] != $m->get_zip()) {
-            $log->write("Zip updated (previous was {$m->get_zip()})", "Address Update");
+            $log->write("Zip updated", "Address Update");
         }                
 
-        $m->Email = MOD_crypt::NewReplaceInCrypted($vars['Email'],"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
-        $m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted($vars['HomePhoneNumber'],"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
-        $m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted($vars['CellPhoneNumber'],"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
-        $m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted($vars['WorkPhoneNumber'],"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
-        $m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted($vars['chat_SKYPE'],"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
-        $m->chat_MSN = MOD_crypt::NewReplaceInCrypted($vars['chat_MSN'],"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
-        $m->chat_AOL = MOD_crypt::NewReplaceInCrypted($vars['chat_AOL'],"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
-        $m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted($vars['chat_YAHOO'],"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
-        $m->chat_ICQ = MOD_crypt::NewReplaceInCrypted($vars['chat_ICQ'],"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
-        $m->chat_Others = MOD_crypt::NewReplaceInCrypted($vars['chat_Others'],"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
-        $m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted($vars['chat_GOOGLE'],"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
+        $m->Email = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
+        $m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['HomePhoneNumber']),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
+        $m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['CellPhoneNumber']),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+        $m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['WorkPhoneNumber']),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
+        $m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_SKYPE']),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
+        $m->chat_MSN = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_MSN']),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
+        $m->chat_AOL = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_AOL']),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
+        $m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_YAHOO']),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
+        $m->chat_ICQ = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_ICQ']),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
+        $m->chat_Others = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_Others']),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
+        $m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_GOOGLE']),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
 
         // Only update hide/unhide for identity fields
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->FirstName)),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->SecondName)),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->LastName)),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape($vars['Zip']),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape($vars['HouseNumber']),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape($vars['Street']),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
 
         $status = $m->update();
 
@@ -1167,65 +1177,4 @@ VALUES
         $this->avatarDir = new PDataDir('user/avatars');
     }
     
-/*
-* cleanupText
-*
-*
-*
-*/
-    private function cleanupText($txt) {
-        $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
-        $doc = DOMDocument::loadHTML($str);
-        if ($doc) {
-            $sanitize = new PSafeHTML($doc);
-            $sanitize->allow('html');
-            $sanitize->allow('body');
-            $sanitize->allow('p');
-            $sanitize->allow('div');
-            $sanitize->allow('b');
-            $sanitize->allow('i');
-            $sanitize->allow('u');
-            $sanitize->allow('a');
-            $sanitize->allow('em');
-            $sanitize->allow('strong');
-            $sanitize->allow('hr');
-            $sanitize->allow('span');
-            $sanitize->allow('ul');
-            $sanitize->allow('li');
-            $sanitize->allow('font');
-            $sanitize->allow('strike');
-            $sanitize->allow('br');
-            $sanitize->allow('blockquote');
-            $sanitize->allow('h1');
-            $sanitize->allow('h2');
-            $sanitize->allow('h3');
-            $sanitize->allow('h4');
-            $sanitize->allow('h5');
-        
-            $sanitize->allowAttribute('color');    
-            $sanitize->allowAttribute('bgcolor');            
-            $sanitize->allowAttribute('href');
-            $sanitize->allowAttribute('style');
-            $sanitize->allowAttribute('class');
-            $sanitize->allowAttribute('width');
-            $sanitize->allowAttribute('height');
-            $sanitize->allowAttribute('src');
-            $sanitize->allowAttribute('alt');
-            $sanitize->allowAttribute('title');
-            $sanitize->clean();
-            $doc = $sanitize->getDoc();
-            $nodes = $doc->x->query('/html/body/node()');
-            $ret = '';
-            foreach ($nodes as $node) {
-                $ret .= $doc->saveXML($node);
-            }
-            return $ret;
-        } else {
-            // invalid HTML
-            return '';
-        }
-    } // end of cleanupText
 }
-
-
-?>

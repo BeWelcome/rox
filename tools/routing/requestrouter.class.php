@@ -4,38 +4,184 @@
 class RequestRouter
 {
     /**
+     * where the routes are stored
+     *
+     * @var array
+     */
+    private static $_routes = array();
+
+    /**
      * stores the request uri and post and get args
      *
      * @var object
      */
     private static $_request_args = null;
+
+    public function __construct()
+    {
+        $this->init();
+    }
+
+    public function init()
+    {
+        if (empty(self::$_routes))
+        {
+            require_once(SCRIPT_BASE . 'routes.php');
+        }
+    }
+
+    /**
+     * adds a temporary route to the routes
+     *
+     * @param string $name - name of the route
+     * @param string $url - the route itself
+     * @param string $controller - name of the controller
+     * @param string $method - name of the method to call
+     * @access public
+     * @return bool
+     */
+    public function addRoute($name, $url, $controller, $method = 'index', $callback = false)
+    {
+        if (!is_string($name) || !empty(self::$_routes[$name]) || !is_string($url) || !is_string($controller))
+        {
+            return false;
+        }
+        self::$_routes[$name] = array('url' => $url, 'controller' => $controller, 'method' => $method, 'callback' => $callback);
+        return true;
+    }
+
+
+    /**
+     * returns a given route if it is set
+     *
+     * @param string $name - name of the route to return
+     * @access public
+     * @return array
+     */
+    public function getRoute($name)
+    {
+        if (!is_string($name) || empty(self::$_routes[$name]))
+        {
+            return array();
+        }
+        return self::$_routes[$name];
+    }
+
+    /**
+     * looks for a matching route in the set routes
+     *
+     * @param string $uri - uri to check
+     * @access public
+     * @return array - empty if nothing found, otherwise full of good stuff
+     */
+    public function matchRoute($uri, $matchcallbacks = false)
+    {
+        $match = array();
+        $matchvars = array();
+        foreach (self::$_routes as $route)
+        {
+            $url = preg_replace(array('/\//','/\*/','/:[^:]+:/','/\\?\/$/'), array('\/','.*','([^\/]+)',''),   $route['url']);
+            $url = "/^{$url}\\/?$/i";
+            if (!preg_match($url, $uri, $matches) || (!$matchcallbacks && !empty($route['callback'])))
+            {
+                continue;
+            }
+            // conditions for accepting new match:
+            // - there isn't already one, or
+            // - the new route is more specific (contains more parts), or
+            // - the new route is more accurate (contains less variables)
+            if (empty($match) || count(explode('/', $route['url'])) > count(explode('/', $match['url'])) || (count(explode('/', $route['url'])) == count(explode('/', $match['url'])) && count($matches) <= count($matchvars)))
+            {
+                $match = $route;
+                $matchvars = $matches;
+            }
+        }
+
+        // check if any vars were sent through the request
+        if (!empty($match) && preg_match_all('/:([^:]+?):/', $match['url'], $vars, PREG_SET_ORDER))
+        {
+            if (count($vars) == (count($matchvars) - 1))
+            {
+                $i = 1;
+                $match['vars'] = array();
+                foreach ($vars as $varname)
+                {
+                    $match['vars'][$varname[1]] = $matchvars[$i];
+                    $i++;
+                }
+            }
+        }
+        if (!empty($match) && empty($match['vars']))
+        {
+            $match['vars'] = array();
+        }
+        return $match;
+    }
+
+    /**
+     * returns a url string, based on the routes url but with with placeholders replaced
+     *
+     * @param string $route - name of route to get url for
+     * @param array $vars - vars to use instead of placeholders
+     * @access public
+     * @return string
+     */
+    public function url($route, $vars = array(), $add_base = true)
+    {
+        $route = $this->getRoute($route);
+        if (empty($route))
+        {
+            return '';
+        }
+        $url = $route['url'];
+        $placeholders = preg_match_all('/:([^:]+?):/', $url, $matches, PREG_SET_ORDER);
+        if ($placeholders)
+        {
+            $keys = array_keys($vars);
+            foreach ($matches as $match)
+            {
+                if (in_array($match[1], $keys))
+                {
+                    $url = str_replace($match[0], $vars[$match[1]], $url);
+                }
+                $placeholders--;
+            }
+            if ($placeholders != 0)
+            {
+                return '';
+            }
+        }
+        if ($add_base)
+        {
+            $url = PVars::getObj('env')->baseuri . $url;
+        }
+        return $url;
+    }
+
+
+
     
     /**
-     * get the controller classname
+     * checks to see if a route matches the incoming request
+     * checks through the _routes array, to see if something matches
      *
-     * @return classname of the controller that should be run
+     * @access public
+     * @param array $request
+     * @return array
      */
-    public function chooseControllerClassnameAndMethodname($request)
+    public function findRoute($request)
     {
-        if (!isset($request[0])) {
-            $classname = $this->controllerClassnameForString(false);
-            $methodname = 'index';
-        } else switch($request[0]) {
-            case 'ajax':
-            case 'json':
-            case 'xml':
-                $classname = $this->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
-                $methodname = $request[0];
-                break;
-            default:
-                $classname = $this->controllerClassnameForString($request[0]);
-                $methodname = 'index';
+        $route = $this->matchRoute(implode('/',$request));
+        if (!empty($route))
+        {
+            return array($route['controller'], $route['method'], $route['vars']);
         }
-        
-        return array($classname, $methodname);
+        else
+        {
+            return $this->controllerClassnameForString(isset($request[0]) ? $request[0] : '');
+        }
     }
-    
-    
+
     /**
      * find the name of the controller to be called,
      * given the first part of the request string
@@ -45,17 +191,17 @@ class RequestRouter
      */
     public function controllerClassnameForString($name)
     {
-        $name = $this->translate($name);
-        if ($name) {
-            $classname = ucfirst($name).'Controller';
+        $controller = $this->translate($name);
+        if ($controller) {
+            $classname = ucfirst($controller).'Controller';
             if (class_exists($classname) && (
                 is_subclass_of($classname, 'PAppController') ||
                 is_subclass_of($classname, 'RoxControllerBase')
             )) {
-                return $classname;
+                return array($classname, 'index', null);
             }
         }
-        return $this->defaultControllerClassname();
+        return array($this->defaultControllerClassname(), 'index', null);
     }
     
     
@@ -71,31 +217,9 @@ class RequestRouter
         
         $key = strtolower($name);
         
-        $adhoc_alias_table = array(
-            // the following requests can all be handled by the 'about' application!
-            // other strings can be added!
-            /*
-             * disabled, because we now have build/about/alias.ini !
-             * 
-            'theidea' => 'about',
-            'thepeople' => 'about',
-            'getactive' => 'about',
-            'terms' => 'about',
-            'bod' => 'about',
-            'help' => 'about',
-            'terms' => 'about',
-            'impressum' => 'about',
-            'affiliations' => 'about',
-            'privacy' => 'about',
-            'stats' => 'about'
-             */
-        );
-        
         $ini_alias_table = $this->loadRoutingAliasTable();
         
-        if (array_key_exists($key, $adhoc_alias_table)) {
-            return $adhoc_alias_table[$key];
-        } else if (array_key_exists($key, $ini_alias_table)) {
+        if (array_key_exists($key, $ini_alias_table)) {
             return $ini_alias_table[$key];
         } else {
             return $key;
@@ -184,6 +308,35 @@ class RequestRouter
         }
         return self::$_request_args;
     }
+
+    /**
+     * get the controller classname
+     *
+     * @return classname of the controller that should be run
+     */
+/* seemingly not used anymore - cut off, pending deletion
+
+    public function chooseControllerClassnameAndMethodname($request)
+    {
+        if (!isset($request[0])) {
+            $classname = $this->controllerClassnameForString(false);
+            $methodname = 'index';
+        } else switch($request[0]) {
+            case 'ajax':
+            case 'json':
+            case 'xml':
+                $classname = $this->controllerClassnameForString(isset($request[1]) ? $request[1] : false);
+                $methodname = $request[0];
+                break;
+            default:
+                $classname = $this->controllerClassnameForString($request[0]);
+                $methodname = 'index';
+        }
+        
+        return array($classname, $methodname);
+    }
+*/    
+
 }
 
 

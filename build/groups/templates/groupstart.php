@@ -13,7 +13,7 @@
                 </div> <!--row floatbox -->
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>
-                <div class="floatbox">
+                <div class="row floatbox">
                     <?= $Forums->showExternalGroupThreads($group_id); ?>
                 </div> <!-- floatbox -->
                 <?php

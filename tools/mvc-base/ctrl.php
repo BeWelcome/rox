@@ -39,7 +39,37 @@ abstract class RoxControllerBase extends RoxComponentBase
         $words = new MOD_words;
         $this->setTitle($words->getBuffered($title));
     }
+    
+    /**
+     * trims all values posted back to controller
+     *
+     * @param array $post_vars
+     * @access private
+     * @return array
+     */
+    protected function cleanVars($post_vars)
+    {
+        $vars = array();
+        foreach ($post_vars as $key => $var)
+        {
+            if (is_string($var))
+            {
+                $var = trim($var);
+            }
+            $vars[$key] = $var;
+        }
+        return $vars;
+    }
+
+    /**
+     * redirects to a login screen, returning the user to where it was afterwards
+     *
+     * @param string $url_part - relative url
+     * @access protected
+     */
+    protected function redirectToLogin($url_part)
+    {
+        $this->redirectAbsolute($this->router->url('login_helper', array('url' => $url_part)));
+        PPHP::PExit();
+    }
 }
-
-
-?>

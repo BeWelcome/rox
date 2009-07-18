@@ -45,8 +45,8 @@ class EditProfilePage extends ProfilePage
         $vars['IsHidden_FirstName'] = MOD_crypt::IsCrypted($member->FirstName);
         $vars['IsHidden_SecondName'] = MOD_crypt::IsCrypted($member->SecondName);
         $vars['IsHidden_LastName'] = MOD_crypt::IsCrypted($member->LastName);
-        $vars['IsHidden_Address'] = MOD_crypt::IsCrypted($member->Address);
-        $vars['IsHidden_Zip'] = MOD_crypt::IsCrypted($member->zip);
+        $vars['IsHidden_Address'] = MOD_crypt::IsCrypted($member->address->StreetName);
+        $vars['IsHidden_Zip'] = MOD_crypt::IsCrypted($member->address->Zip);
         $vars['IsHidden_HomePhoneNumber'] = MOD_crypt::IsCrypted($member->HomePhoneNumber);
         $vars['IsHidden_CellPhoneNumber'] = MOD_crypt::IsCrypted($member->CellPhoneNumber);
         $vars['IsHidden_WorkPhoneNumber'] = MOD_crypt::IsCrypted($member->WorkPhoneNumber);

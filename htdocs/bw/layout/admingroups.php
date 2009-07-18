@@ -143,7 +143,7 @@ function DisplayGroupList($TPending, $Message) {
 } // end of DisplayGroupList($TPending,$Message)
 
 // This function propose to create a group
-function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = "", $HasMember = "", $TGroupList,$Group_="",$GroupDesc_="",$MoreInfo,$Picture) {
+function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = "", $TGroupList,$Group_="",$GroupDesc_="",$MoreInfo,$Picture) {
   global $title;
   $title = "Create a new group";
   require_once "header.php";
@@ -196,19 +196,6 @@ function DisplayFormCreateGroups($IdGroup, $Name = "", $IdParent = 0, $Type = ""
   echo "<td align=left><textarea name=Group_ cols=60 rows=1>",$Group_,"</textarea></td>" ;
   echo "<tr><td>Group Description  (in English)</td>";
   echo "<td align=left><textarea name=GroupDesc_ cols=60 rows=5>",$GroupDesc_,"</textarea></td>" ;
-  echo "<tr><td>Does this group has members ?</td>";
-  echo "<td>";
-  echo "\n<select name=HasMember>\n";
-  echo "<option value=HasMember ";
-  if ($HasMember == "HasMember")
-    echo " selected ";
-  echo ">HasMember</option>\n";
-  echo "<option value=HasNotMember ";
-  if ($HasMember == "HasNotMember")
-    echo " selected ";
-  echo ">HasNotMember</option>\n";
-  echo " \n</select>\n";
-  echo "</td>\n";
 
   echo "<tr><td>Does this group is public ?</b></td>";
   echo "<td>";

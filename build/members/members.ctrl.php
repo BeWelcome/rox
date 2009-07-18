@@ -472,24 +472,4 @@ class MembersController extends RoxControllerBase
         }
     }
 
-    /**
-     * trims all values posted back to controller
-     *
-     * @param array $post_vars
-     * @access private
-     * @return array
-     */
-    private function cleanVars($post_vars)
-    {
-        $vars = array();
-        foreach ($post_vars as $key => $var)
-        {
-            if (is_string($var))
-            {
-                $var = trim($var);
-            }
-            $vars[$key] = $var;
-        }
-        return $vars;
-    }
 }

@@ -117,7 +117,6 @@ function AddGroups(&$TGroup, $IdMember,$IdGroup, $depht = 0)
 SELECT SQL_CACHE
     groups.id          AS IdGroup,
     NbChilds,
-    groups.HasMembers  AS HasMembers,
     groups.Name        AS Name,
     $depht             AS Depht,
     0 AS NbMembers

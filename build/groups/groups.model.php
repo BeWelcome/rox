@@ -1,5 +1,24 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
 
 class GroupsModel extends  RoxModelBase
 {
@@ -73,6 +92,13 @@ class GroupsModel extends  RoxModelBase
         return $result;
     }
 
+    /**
+     * returns count of groups that match the provided term(s)
+     *
+     * @param array $terms
+     * @acccess public
+     * @return int
+     */
     public function countGroupsBySearchterms($terms)
     {
         $group = $this->createEntity('Group');
@@ -655,7 +681,7 @@ class GroupsModel extends  RoxModelBase
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
             $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-            $msg->Message = "Hi {$member->Username}<br/><br/>You&apos;ve been invited to the group {$group->Name}. If you would like to join the group, click the following link: <a href='{$url}/acceptinvitation/{$member->getPKValue()}'>http://{$url}/acceptinvitation/{$member->getPKValue()}</a>.<br/>If you wish to decline the invitation, please click this link instead: <a href='http://{$url}/declineinvitation/{$member->getPKValue()}'>http://{$url}/declineinvitation/{$member->getPKValue()}</a><br/><br/>Have a great time<br/>BeWelcome";
+            $msg->Message = "Hi {$member->Username}<br/><br/>You have been invited to the group {$group->Name}. If you would like to join the group, click the following link: <a href='{$url}/acceptinvitation/{$member->getPKValue()}'>{$url}/acceptinvitation/{$member->getPKValue()}</a>.<br/>If you wish to decline the invitation, please click this link instead: <a href='{$url}/declineinvitation/{$member->getPKValue()}'>{$url}/declineinvitation/{$member->getPKValue()}</a><br/><br/>Have a great time<br/>BeWelcome";
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();
@@ -739,7 +765,7 @@ class GroupsModel extends  RoxModelBase
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
             $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-            $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='http://{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
+            $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();

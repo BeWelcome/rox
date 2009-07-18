@@ -1,12 +1,25 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
+This file is part of BW Rox.
 
-//------------------------------------------------------------------------------------
-/**
- * base class for all pages in the groups system,
- * which don't belong to one specific group.
- *
- */
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
+
 
 class GroupsBasePage extends PageWithActiveSkin
 {
@@ -68,12 +81,33 @@ class GroupsBasePage extends PageWithActiveSkin
     }
     
 
-    protected function getGroupTitle() {
-        return $this->getWords()->getBuffered(
-            'Group_'.$this->group->Name
-        );
+    protected function getPageTitle() {
+        $words = $this->getWords();
+        if (is_object($this->group)) {
+            return  $words->getBuffered('Group') . " '".$this->group->Name . "' | BeWelcome";
+        } else return $words->getBuffered('Groups') . ' | BeWelcome';
     }
-    
+
+    /**
+     * returns the name of the group
+     *
+     * @todo return translated name
+     * @access protected
+     * @return string
+     */
+    protected function getGroupTitle()
+    {
+        if (!$this->group)
+        {
+            return '';
+        }
+        else
+        {
+            // use translation ... return $words->get($this->group->Name);
+            return $this->group->Name;
+        }
+    }
+
     protected function isGroupMember() {
         if (!$this->group || !$this->member)
         {

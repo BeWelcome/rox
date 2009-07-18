@@ -64,65 +64,66 @@
                     <table>
                       <tbody>
                       <?php
-                        $tt = $vars['language_levels'];
-                        $maxtt = count($tt);
-                        $ll = $vars['languages_all'];
-                        $maxll = count($ll);
-                        $max = count($vars['languages_selected']);
-                        for ($ii = 0; $ii < $max; $ii++) {
-                        ?>
+                        $lang_ids = array();
+                        for ($ii = 0; $ii < count($vars['languages_selected']); $ii++)
+                        {
+                            $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage;
+                            echo <<<HTML
                         <tr>
-                          <td>
-                            <select name="memberslanguages[]" >
-                            <option>-<?=$words->get("ChooseNewLanguage")?>-</option>
-                            <?php
-                                for ($jj = 0; $jj < $maxll; $jj++) {
-                                    echo "<option value=\"" . $ll[$jj]->id . "\"";
-                                    if ($ll[$jj]->id == $vars['languages_selected'][$ii]->IdLanguage)
-                                        echo " selected=\"selected\"";
-                                    echo ">".$ll[$jj]->Name."</option>\n";
-                                }
-                            ?>
-                            </select>
+                        <td>
+
+                            <input type='hidden' name='memberslanguages[]' value='{$vars['languages_selected'][$ii]->IdLanguage}'/>
+                            <input type='text' disabled='disabled' value='{$vars['languages_selected'][$ii]->Name}'/>
                           </td>
                           <td>
-                            <select name="memberslanguageslevel[]" >
-                            <?php
-                                for ($jj = 0; $jj < $maxtt; $jj++) {
-                                    echo "                              <option value=\"" . $tt[$jj] . "\"";
-                                    if ($tt[$jj] == $vars['languages_selected'][$ii]->Level)
-                                        echo " selected=\"selected\"";
-                                    echo ">", $words->get("LanguageLevel_" . $tt[$jj]), "</option>\n";
+                              <select name="memberslanguageslevel[]" >
+HTML;
+                                for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
+                                {
+                                    $selected = $vars['language_levels'][$jj] == $vars['languages_selected'][$ii]->Level? ' selected="selected"': '';
+                                    echo <<<HTML
+                                    <option value='{$vars['language_levels'][$jj]}'{$selected}>{$words->get("LanguageLevel_" . $vars['language_levels'][$jj])}</option>
+HTML;
                                 }
-                            ?>
+                            echo <<<HTML
                             </select>
+                          </td>
+                          <td><a href='#' class='remove_lang'>Remove</a>
                           </td>
                         </tr>
-                      <?php
+HTML;
                         }
-                      ?>
+                      echo <<<HTML
                         <tr id="lang1">
-                          <td>
-                            <select name="memberslanguages[]" >
-                            <option selected="selected">-<?=$words->get("ChooseNewLanguage")?>-</option>
-                            <?php
-                                for ($jj = 0; $jj < $maxll; $jj++) {
-                                    echo "<option value=\"" . $ll[$jj]->id . "\"";
-                                    echo ">".$ll[$jj]->Name."</option>\n";
+                          <td><select class='lang_selector' name="memberslanguages[]" >
+                            <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
+HTML;
+                                for ($jj = 0; $jj < count($vars['languages_all']); $jj++)
+                                {
+                                    if (in_array($vars['languages_all'][$jj]->id, $lang_ids))
+                                    {
+                                        continue;
+                                    }
+                                    echo <<<HTML
+                                    <option value="{$vars['languages_all'][$jj]->id}">{$vars['languages_all'][$jj]->Name}</option>
+HTML;
                                 }
-                            ?>
+                            echo <<<HTML
                             </select>
                           </td>
                           <td>
                             <select name="memberslanguageslevel[]" >
-                            <?php
-                                for ($jj = 0; $jj < $maxtt; $jj++) {
-                                    echo "                              <option value=\"" . $tt[$jj] . "\"";
-                                    echo ">", $words->get("LanguageLevel_" . $tt[$jj]), "</option>\n";
+HTML;
+                                for ($jj = 0; $jj < count($vars['language_levels']); $jj++)
+                                {
+                                    echo <<<HTML
+                                    <option value="{$vars['language_levels'][$jj]}">{$words->get("LanguageLevel_" . $vars['language_levels'][$jj])}</option>
+HTML;
                                 }
-                            ?>
+                            echo <<<HTML
                             </select>
                           </td>
+                          <td>&nbsp;</td>
                         </tr>
                       </tbody>
                       </table>
@@ -133,7 +134,7 @@
             </table>
           </fieldset>
           <fieldset id="contactinfo">
-            <legend><?=$words->get('ContactInfo')?></legend>
+            <legend>{$words->get('ContactInfo')}</legend>
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
@@ -142,12 +143,12 @@
                 <col width="35%" ></col>
               </colgroup>
               <tbody>
-<?php
-    if (!$CanTranslate) { // member translator is not allowed to update crypted data
+HTML;
+    if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data
 ?>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('FirstName')?>:</td>
-                  <td><?=$vars['FirstName']?></td>
+                  <td><?= (($this->adminedit) ? "<input type='text' name='FirstName' value='{$vars['FirstName']}'/>" : $vars['FirstName']); ?></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_FirstName"
                     <?php if ($vars['IsHidden_FirstName'])
@@ -158,7 +159,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SecondName')?>:</td>
-                  <td><?=$vars['SecondName']?></td>
+                  <td><?= (($this->adminedit) ? "<input type='text' name='SecondName' value='{$vars['SecondName']}'/>" : $vars['SecondName']); ?></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_SecondName"
                     <?php if ($vars['IsHidden_SecondName'])
@@ -169,7 +170,7 @@
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('LastName')?>:</td>
-                  <td><?=$vars['LastName']?></td>
+                  <td><?= (($this->adminedit) ? "<input type='text' name='LastName' value='{$vars['LastName']}'/>" : $vars['LastName']); ?></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_LastName"
                     <?php if ($vars['IsHidden_LastName'])

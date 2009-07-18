@@ -4,6 +4,8 @@
     $formkit = $layoutkit->formkit;
     $callback_tag = $formkit->setPostCallback('MembersController', 'myPreferencesCallback');
     $languages = $this->member->get_languages_all();
+    $value = $this->member->get_publicProfile();
+    $pref_publicprofile = (isset($value) && $value) ? true : false;
     $p = $this->member->preferences;
     // var_dump ($p);
     $ii = 1;

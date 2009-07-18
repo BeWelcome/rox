@@ -9,92 +9,124 @@
 
 <div id="profile_summary" class="floatbox box">
     <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>
-    <p><?=$member->get_trad("ProfileSummary", $profile_language); ?></p>
+    <?php
+    $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+    echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language)));
+    echo <<<HTML
 </div> <!-- profile_summary -->
 
 <div id="profile_languages" class="floatbox box">
-    <h3><?=$words->getInLang('ProfileLanguagesSpoken', $profile_language_code);?></h3>
+    <h3>{$words->getInLang('ProfileLanguagesSpoken', $profile_language_code)}</h3>
     <ul class="icon profile_languages">
-        <?php foreach ($member->get_languages_spoken() as $lang)
-        { echo '<li>' . $lang->Name . ' <sup>' . $words->getInLang("LanguageLevel_" . $lang->Level, $profile_language_code) . '</sup></li>'; } ?>
+HTML;
+        foreach ($member->get_languages_spoken() as $lang)
+        {
+            echo <<<HTML
+            <li>{$lang->Name} <sup>{$words->getInLang("LanguageLevel_" . $lang->Level, $profile_language_code)}</sup></li>
+HTML;
+        }
+        echo <<<HTML
     </ul>
 </div> <!-- profile_languages -->
 
-<?
-if ($member->get_trad("Hobbies", $profile_language) != "" or $member->get_trad("Organizations", $profile_language) != "" or $member->get_trad("Books", $profile_language) != "" or $member->get_trad("Music", $profile_language) != "" or $member->get_trad("Movies", $profile_language) != "") { 
-?>
+HTML;
+        if ($member->get_trad("Hobbies", $profile_language) != "" || $member->get_trad("Organizations", $profile_language) != "" || $member->get_trad("Books", $profile_language) != "" || $member->get_trad("Music", $profile_language) != "" || $member->get_trad("Movies", $profile_language) != "")
+        { 
+            echo <<<HTML
 <div id="profile_interests" class="floatbox box">
-    <h3 class="icon sun22" ><?=$words->getInLang('ProfileInterests', $profile_language_code);?></h3>
+    <h3 class="icon sun22">{$words->getInLang('ProfileInterests', $profile_language_code)}</h3>
     <dl id="interests" >
-    <?php if ($member->get_trad("Hobbies", $profile_language) != "") { ?>
-            <dt class="label" ><?=$words->getInLang('ProfileHobbies', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("Hobbies", $profile_language); ?></dd>
-        <? } ?>
+HTML;
+            if ($member->get_trad("Hobbies", $profile_language) != "")
+            {
+                echo <<<HTML
+            <dt class="label">{$words->getInLang('ProfileHobbies', $profile_language_code)}:</dt>
+            <dd>{$member->get_trad("Hobbies", $profile_language)}</dd>
+HTML;
+            }
+            
+            if ($member->get_trad("Books", $profile_language) != "")
+            { 
+                echo <<<HTML
+            <dt class="label">{$words->getInLang('ProfileBooks', $profile_language_code)}:</dt>
+            <dd>{$member->get_trad("Books", $profile_language)}</dd>
+HTML;
+            }
         
-    <?php if ($member->get_trad("Books", $profile_language) != "") { ?>
-            <dt class="label" ><?=$words->getInLang('ProfileBooks', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("Books", $profile_language); ?></dd>
-        <? } ?>
-    
-    <?php if ($member->get_trad("Music", $profile_language) != "") { ?>
-            <dt class="label" ><?=$words->getInLang('ProfileMusic', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("Music", $profile_language); ?></dd>
-        <? } ?>
-    
-    <?php if ($member->get_trad("Movies", $profile_language) != "") { ?>
-            <dt class="label" ><?=$words->getInLang('ProfileMovies', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("Movies", $profile_language); ?></dd>
-        <? } ?>
+            if ($member->get_trad("Music", $profile_language) != "")
+            {
+                echo <<<HTML
+            <dt class="label">{$words->getInLang('ProfileMusic', $profile_language_code)}:</dt>
+            <dd>{$member->get_trad("Music", $profile_language)}</dd>
+HTML;
+            }
         
-    <?php if ($member->get_trad("Organizations", $profile_language) != "") { ?>
-            <dt class="label" ><?=$words->getInLang('ProfileOrganizations', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("Organizations", $profile_language); ?></dd>
-        <? } ?>
-    </dl>
+            if ($member->get_trad("Movies", $profile_language) != "")
+            {
+                echo <<<HTML
+            <dt class="label">{$words->getInLang('ProfileMovies', $profile_language_code)}:</dt>
+            <dd>{$member->get_trad("Movies", $profile_language)}</dd>
+HTML;
+            }
+            
+            if ($member->get_trad("Organizations", $profile_language) != "")
+            {
+                echo <<<HTML
+            <dt class="label" >{$words->getInLang('ProfileOrganizations', $profile_language_code)}:</dt>
+            <dd>{$member->get_trad("Organizations", $profile_language)}</dd>
+HTML;
+            }
+            echo <<<HTML
+            </dl>
+    </div>
+HTML;
+        }
 
-</div>
-<?
-}
 
-
-if ($member->get_trad("PastTrips", $profile_language) != "" or $member->get_trad("PlannedTrips", $profile_language) != "") { 
-?>
+        if ($member->get_trad("PastTrips", $profile_language) != "" || $member->get_trad("PlannedTrips", $profile_language) != "")
+        { 
+            echo <<<HTML
 <div id="profile_travel" class="floatbox box">
-    <h3 class="icon world22" ><?=$words->getInLang('ProfileTravelExperience', $profile_language_code);?></h3>
+    <h3 class="icon world22" >{$words->getInLang('ProfileTravelExperience', $profile_language_code)}</h3>
     <dl id="travelexperience">
-        <dt><?=$words->getInLang('ProfilePastTrips', $profile_language_code);?>:</dt>
-        <dd><?php echo $member->get_trad("PastTrips", $profile_language); ?></dd>
-        <dt><?=$words->getInLang('ProfilePlannedTrips', $profile_language_code);?>:</dt>
-        <dd><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></dd>
+        <dt>{$words->getInLang('ProfilePastTrips', $profile_language_code)}:</dt>
+        <dd>{$member->get_trad("PastTrips", $profile_language)}</dd>
+        <dt>{$words->getInLang('ProfilePlannedTrips', $profile_language_code)}:</dt>
+        <dd>{$member->get_trad("PlannedTrips", $profile_language)}</dd>
     </dl>
 </div>
-<?
-}
+HTML;
+        }
 
-// display my groups, if there are any
-$my_groups = $member->getGroups();
-if (!empty($my_groups)) :
-?>
+        // display my groups, if there are any
+        $my_groups = $member->getGroups();
+        if (!empty($my_groups)) :
+            echo <<<HTML
 <div id="profile_groups" class="floatbox box">
-        <?php // display my groups, if there are any
+HTML;
+            // display my groups, if there are any
             echo "<h3>{$words->getInLang('ProfileGroups', $profile_language_code)}</h3>";
-            for($i = 0; $i < count($my_groups) && $i < 3; $i++) : ?>
+            for ($i = 0; $i < count($my_groups) && $i < 3; $i++) :
+                $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' );
+                $comment = htmlspecialchars($words->mTrad($member->getGroupMembership($my_groups[$i])->Comment), ENT_QUOTES);
+                echo <<<HTML
                 <div class="groupbox floatbox">
-                    <a href="groups/<?=$my_groups[$i]->id ?>">
-                        <img class="framed float_left"  width="50px" height="50px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                    <a href="groups/{$my_groups[$i]->id}">
+                        <img class="framed float_left"  width="50px" height="50px" alt="Group" src="{$group_img}"/>
                     </a>
                     <div class="groupinfo">
-                    <h4><a href="groups/<?= $my_groups[$i]->id ?>"><?=$words->getInLang($my_groups[$i]->Name, $profile_language_code)?></a></h4>
-                    <p>
-                        <?= htmlspecialchars($words->mTrad($member->getGroupMembership($my_groups[$i])->Comment), ENT_QUOTES);?>
-                    </p>
+                    <h4><a href="groups/{$my_groups[$i]->id}">{$words->getInLang($my_groups[$i]->Name, $profile_language_code)}</a></h4>
+                    <p>{$comment}</p>
                     </div>  <!-- groupinfo -->
                 </div> <!-- groupbox clearfix -->
-            <?php endfor; ?>
-            <p><strong><a href="members/<?=$member->Username?>/groups"><?= $words->get('GroupsAllMyLink'); ?></a></strong></p>
+HTML;
+            endfor;
+            echo <<<HTML
+            <p><strong><a href="members/{$member->Username}/groups">{$words->get('GroupsAllMyLink')}</a></strong></p>
 </div> <!-- profile_groups -->
-<?php endif ; ?>
-
+HTML;
+            endif;
+?>
 <div id="profile_accommodation" class="floatbox box">
     <h3 class="icon accommodation22" ><?=$words->getInLang('ProfileAccommodation', $profile_language_code);?></h3>
     <dl id="accommodation" >
@@ -175,22 +207,34 @@ if (!empty($my_groups)) :
             <?php echo $member->country ?>
         </dd>
         
-        <?php if ($phones = $member->phone) { ?>
-            <dt><?=$words->getInLang('ProfilePhone', $profile_language_code);?>:</dt>
-            <?php
-            foreach ($phones as $phone => $value) {
-                echo "<dd>", $words->get('Profile'.$phone), ": ", $value, "</dd>\n";
-            }
-        ?>
-        
         <?php
+        if ($phones = $member->phone)
+        {
+            echo <<<HTML
+            <dt>{$words->getInLang('ProfilePhone', $profile_language_code)}:</dt>
+HTML;
+            foreach ($phones as $phone => $value)
+            {
+                echo <<<HTML
+                <dd>{$words->get('Profile'.$phone)}: {$value}</dd>
+HTML;
+            }
+        }
+        
         if (isset($website))
-        { ?>
-            <dt><?=$words->getInLang('Website', $profile_language_code);?>:</dt>
-            <dd><a href="http://<?php echo $member->WebSite ?>" ><?php echo $member->WebSite ?></a></dd>
-        <?php } ?>
-        <?php } ?>
-            <?php
+        {
+            $sites = explode(" ", str_replace(array("\r\n", "\r", "\n"), " ", $member->WebSite));
+            echo <<<HTML
+            <dt>{$words->getInLang('Website', $profile_language_code)}:</dt>
+HTML;
+            foreach ($sites as $site)
+            {
+                $site = str_replace(array('http://','https://'), '', $site);
+                echo <<<HTML
+            <dd><a href="http://{$site}">{$site}</a></dd>
+HTML;
+            }
+        }
             if(isset($messengers))
             { ?>
             <dt><?=$words->getInLang('Messenger', $profile_language_code);?>:</dt>

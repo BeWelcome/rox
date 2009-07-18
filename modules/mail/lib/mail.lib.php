@@ -37,17 +37,7 @@ class MOD_mail
      * @access private
      */
     private static $_instance;
-    private $message;
-    private $from;
 
-    public function __construct()
-    {
-        // Load the files we'll need
-        require_once SCRIPT_BASE."lib/misc/swift-mailer/lib/swift_required.php";
-        
-        // Add some email addresses
-        $this->from = PVars::getObj('mailAddresses')->default;
-    }
 
     /**
      * singleton getter
@@ -55,7 +45,7 @@ class MOD_mail
      * @param void
      * @return PApps
      */
-    public static function get()
+    private static function get()
     {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
@@ -64,13 +54,28 @@ class MOD_mail
         return self::$_instance;
     }
     
-    public function send()
+    private function __construct()
     {
-        if (!isset($this->message)) return false;
-
+        // Load the files we'll need
+        require_once SCRIPT_BASE."lib/misc/swift-mailer/lib/swift_required.php";
+    }
+        
+    private function __clone() {}
+    
+    public static function getSwift()
+    {        
+        self::get();
+        
+        return Swift_Message::newInstance();
+    }
+    
+    public static function sendSwift($message)
+    {
+        self::get();
+        
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25);
-        
+
         // FOR TESTING ONLY (using Gmail SMTP Connection for example):
         // $transport = Swift_SmtpTransport::newInstance("smtp.gmail.com", 465, 'tls');
         // $transport->setUsername("USERNAME");
@@ -78,22 +83,24 @@ class MOD_mail
 
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);
-        
+
         // FOR TESTING ONLY
         // $logger = new Swift_Plugins_Loggers_EchoLogger();
         // $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
-        
-        return $mailer->send($this->message);
+
+        return $mailer->send($message);
     }
     
-    public function getMessageHTML($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 
+    public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 
     {
+        self::get();
+        
         // Check that $to/$from are both arrays
         $from = (is_array($from)) ? $from : explode(',', $from);        
         $to = (is_array($to)) ? $to : explode(',', $to);
         
         //Create the message
-        $message = Swift_Message::newInstance()
+        $message = self::getSwift()
 
           //Give the message a subject
           ->setSubject($subject)
@@ -123,7 +130,8 @@ class MOD_mail
                 $message->attach(Swift_Attachment::fromPath($path));
             }
         }
-        $this->message = $message;
+        
+        self::sendSwift($message);
     }
 
 }

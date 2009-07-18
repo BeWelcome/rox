@@ -63,7 +63,6 @@ class WikiController extends PAppController {
         $User = APP_User::login();
 
         ob_start();
-        $this->_view->teaser();
         $str = ob_get_contents();
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
@@ -125,6 +124,15 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
         require_once("erfurtwiki/plugins/markup/rescuehtml.php"); // safe html tags ;)
         require_once("erfurtwiki/plugins/admin/control.php"); // load some plugins
+        require_once("erfurtwiki/plugins/feature/searchform.php"); // load some plugins
+    	
+        // Static pages
+        require_once("erfurtwiki/plugins/page/wikinews.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/powersearch.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/wantedpages.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/orphanedpages.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
 
         require_once("erfurtwiki/plugins/pluginloader.php"); // load some plugins
         $ewiki_config = $this->defineMarkup();
@@ -179,6 +187,7 @@ class WikiController extends PAppController {
         $ewiki_config["wm_style"]["===="] = array("<h4>", "</h4>");
         $ewiki_config["wm_style"]["==="] = array("<h3>", "</h3>");
         $ewiki_config["wm_style"]["=="] = array("<h2>", "</h2>");        
+        $ewiki_config["wm_style"]["="] = array('<h2 class="first">', "</h2>");        
 
         return $ewiki_config;
     }    

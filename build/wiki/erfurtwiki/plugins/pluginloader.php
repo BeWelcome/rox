@@ -1,7 +1,7 @@
 <?php
 /*
    dynamic plugin loading
-   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+   Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯Â¯
    Will load plugins on demand, so they must not be included() one by one
    together with the core script. This is what commonly the "plugin idea"
    suggests, and only has minimal disadvantages.
@@ -55,7 +55,7 @@ $ewiki_plugins["dl"]["page"] = array(
 #	"SearchCache" => array("admin/page_searchcache.php", "ewiki_cache_generated_pages", 0),
 #	"ImageGallery" => array("aview/aedit_pageimage.php", "ewiki_page_image_gallery", 0),
 #	"MainGallery" => array("aview/aedit_pageimage.php", "ewiki_page_image_gallery", 0),
-	"LinkDatabase" => array("linking/linkdatabase.php", "ewiki_linkdatabase", 0),
+	"LinkDatabase" => array("linking/linkdatabase.php", "ewiki_linkdatabase", 1),
 #	"PageCalendar" => array("module/calendar.php", "ewiki_page_calendar", 0),
 #	"PageYearCalendar" => array("module/calendar.php", "ewiki_page_year_calendar", 0),
 #	"FileUpload" => array("module/downloads.php", "ewiki_page_fileupload", 0),
@@ -68,22 +68,22 @@ $ewiki_plugins["dl"]["page"] = array(
 #	"Fortune" => array("page/fortune.php", "ewiki_page_fortune", 0),
 	"HitCounter" => array("page/hitcounter.php", "ewiki_page_hitcounter", 0),
 	"InterWikiMap" => array("page/interwikimap.php", "ewiki_page_interwikimap", 0),
-	"OrphanedPages" => array("page/orphanedpages.php", "ewiki_page_orphanedpages", 0),
-#	"PageIndex" => array("page/pageindex.php", "ewiki_page_index", 0),
+	"OrphanedPages" => array("page/orphanedpages.php", "ewiki_page_orphanedpages", 1),
+	"PageIndex" => array("page/pageindex.php", "ewiki_page_index", 1),
 #	"PhpInfo" => array("page/phpinfo.php", "ewiki_page_phpinfo", 0),
-	"PowerSearch" => array("page/powersearch.php", "ewiki_page_powersearch", 0),
+	"PowerSearch" => array("page/powersearch.php", "ewiki_page_powersearch", 1),
 	"RandomPage" => array("page/randompage.php", "ewiki_page_random", 0),
 #	"ScanDisk" => array("page/scandisk.php", "ewiki_page_scandisk", 0),
 #	"SinceUpdatedPages" => array("page/since_updates.php", "ewiki_page_since_updates", 0),
 #	"TextUpload" => array("page/textupload.php", "ewiki_page_textupload", 0),
-	"WantedPages" => array("page/wantedpages.php", "ewiki_page_wantedpages", 0),
+	"WantedPages" => array("page/wantedpages.php", "ewiki_page_wantedpages", 1),
 #	"WikiDump" => array("page/wikidump.php", "ewiki_page_wiki_dump_tarball", 0),
-#	"WikiNews" => array("page/wikinews.php", "ewiki_page_wikinews", 0),
+	"WikiNews" => array("page/wikinews.php", "ewiki_page_wikinews", 1),
 #	"WikiUserLogin" => array("page/wikiuserlogin.php", "ewiki_page_wikiuserlogin", 0),
-	"WordIndex" => array("page/wordindex.php", "ewiki_page_wordindex", 0),
+	"WordIndex" => array("page/wordindex.php", "ewiki_page_wordindex", 1),
 #	"AddNewPage" => array("page/addnewpage.php", "ewiki_addpage", 0),
 #	"CreatePage" => array("page/addnewpage.php", "ewiki_addpage", 0),
-#	"EineSeiteHinzufügen" => array("page/addnewpage.php", "ewiki_addpage", 0),
+#	"EineSeiteHinzufÃ¼gen" => array("page/addnewpage.php", "ewiki_addpage", 0),
 #	"CreateNewPage" => array("page/createnewpage.php", "ewiki_createpage", 0),
 	"RecentChanges" => array("page/recentchanges.php", "ewiki_page_recentchanges", 0),
 #	"ExAllTodo" => array("page/extractall.php", "ewiki_page_exall", 0),

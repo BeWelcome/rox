@@ -16,12 +16,16 @@
    - indention swapped (biggest headlines are now left,
      and smaller ones are indented to the right)
    - added some \n for more readable html
+   
+   Modified 20090717 by Micha (bw: lupochen)
+   - added quite some own functionality
 */
 
 
 #-- reg
 $ewiki_plugins["format_source"][] = "ewiki_toc_format_source";
-$ewiki_plugins["format_final"][] = "ewiki_toc_view_prepend";
+$ewiki_plugins["page_final"][] = "ewiki_toc_view_prepend"; //show on every page
+
 define("EWIKI_TOC_CAPTION", 3);
 $ewiki_t["en"]["toc"] = "Content";
 $ewiki_t["de"]["toc"] = "Inhalt";
@@ -89,17 +93,28 @@ function ewiki_toc_view_prepend(&$html) {
         <div class="page-toc-caption">'. $words->getFormatted('WikiPages') .'</div>
         <a href="wiki">'. $words->getFormatted('WikiFrontPage') .'</a><br />
         <a href="wiki/NewestPages">'. $words->getFormatted('WikiNewestPages') .'</a><br />
+        <a href="wiki/RecentChanges">'. $words->getFormatted('RecentChanges') .'</a><br />
         <a href="wiki/WikiMarkup">'. $words->getFormatted('WikiMarkup') .'</a>
 
     ';
-    
+$html_new .= '<div class="search-form">
+<form name="powersearch" action="' . ewiki_script("", "PowerSearch") . '" method="GET">
+<input type="hidden" name="id" value="'.$id.'">
+<input type="text" id="q" name="q" size="15" style="width: 95%"><br />
+in <select name="where"><option value="content">'. $words->getSilent('WikiSearch_PageTexts') .'</option><option value="id">'. $words->getSilent('WikiSearch_Titles') .'</option><option value="author">'. $words->getSilent('WikiSearch_AuthorNames') .'</option></select>
+<input type="submit" value="'. $words->getSilent('Search') .'">
+</form></div>
+<script type="text/javascript"><!--
+document.powersearch.q.focus();
+//--></script>'. $words->flushBuffer();
+
     if (count($ewiki_page_toc) >= 3) {
         $html_new .= ( EWIKI_TOC_CAPTION ? '<div class="page-toc-caption">'.ewiki_t("toc")."</div>\n" : '')
         . '<ol>'.implode("", $ewiki_page_toc) . '</ol>';
     }
    
     $html_new .= "</div>\n";
-    $html_new .= $html; // str_replace('&lt;br/&gt;', "\n", $html); // Added by lupochen to remove all escaped BR-tags from the Page
+    $html_new .= $html;
     
     $html = $html_new;
    // $ewiki_page_toc = NULL;

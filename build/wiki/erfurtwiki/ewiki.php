@@ -66,7 +66,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_DEFAULT_ACTION", "view"); # (keep!)
 	define("EWIKI_CASE_INSENSITIVE", 1);	# wikilink case sensitivity
 	define("EWIKI_HIT_COUNTING", 1);
-	define("EWIKI_RESOLVE_DNS", 1);		# gethostbyaddr() when editing
+	define("EWIKI_RESOLVE_DNS", 0);		# gethostbyaddr() when editing
 	define("UNIX_MILLENNIUM", 1000000000);
         #- rendering
 	define("EWIKI_ALLOW_HTML", 1);		# often a very bad idea

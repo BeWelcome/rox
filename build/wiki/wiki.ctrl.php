@@ -116,7 +116,6 @@ class WikiController extends PAppController {
         } else {
             define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
         }
-        require_once("erfurtwiki/plugins/markup/mediawiki.php"); // load our own mediawiki plugin
         
         // More plugins
         require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
@@ -124,8 +123,8 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
         require_once("erfurtwiki/plugins/markup/rescuehtml.php"); // safe html tags ;)
         require_once("erfurtwiki/plugins/admin/control.php"); // load some plugins
-        require_once("erfurtwiki/plugins/feature/searchform.php"); // load some plugins
-    	
+        require_once("erfurtwiki/plugins/markup/mediawiki.php"); // load our own mediawiki plugin
+
         // Static pages
         require_once("erfurtwiki/plugins/page/wikinews.php"); // load some plugins
         require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins

@@ -83,7 +83,7 @@ $threadsliced = array_slice($threads, 0, 5);
     ?>
     <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo ($uri !='') ? $uri : 'forums'; ?>/new
 	<?php 
-	if (isset($this->_model->IdGroup)) echo "/u".$this->_model->IdGroup ;
+	if (!empty($this->_model->IdGroup)) echo "/u".$this->_model->IdGroup ;
 	echo "\">",$words->getBuffered('ForumNewTopic'); 
 	?></a></span><?php echo $words->flushBuffer(); ?></div>
     <?php

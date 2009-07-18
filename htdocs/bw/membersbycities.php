@@ -21,7 +21,13 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-require_once "lib/init.php";
+	$url="../places" ;
+//	die ("<a href='".$url."'>here</a><br>") ;
+	header ("location: $url") ;
+	LogStr("redirection of ".$url, "old BW");
+	exit(0) ;
+
+	require_once "lib/init.php";
 
 $action = GetParam("action");
 

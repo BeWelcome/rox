@@ -546,9 +546,9 @@ SQL;
             }
             $region = $city->getParent();
             $country = $city->getCountry();
-            $a[0]->RegionName = $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
-            $a[0]->CountryName = $country->getName();
-            $a[0]->CountryCode = $country->fk_countrycode;
+            $a[0]->RegionName = $region && $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
+            $a[0]->CountryName = $country && $country->getName();
+            $a[0]->CountryCode = $country && $country->fk_countrycode;
         }
         else
         {

@@ -119,6 +119,7 @@ class WikiController extends PAppController {
         
         // More plugins
         require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
+        require_once("erfurtwiki/plugins/aview/fpage_copyright.php"); // Copyleft Info
         require_once("erfurtwiki/plugins/markup/bbcode.php"); // BBcode plugin
         require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
         require_once("erfurtwiki/plugins/markup/rescuehtml.php"); // safe html tags ;)

@@ -107,16 +107,10 @@ class RoxModelBase extends RoxComponentBase
         if (!is_array($keynames)) {
             $keynames = array($keynames);
         }
-        try {
-            $sql_result = $this->dao->query($query_string);
-        } catch (PException $e) {
-            echo '<pre>'; print_r($e); echo '</pre>';
-            $sql_result = false;
-            // die ('SQL Error');
-        }
+        $sql_result = $this->dao->query($query_string);
         if (!$sql_result) {
             // sql problem
-            echo '<div>sql error</div>';
+            return array();
         } else while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
             $insertion_point = &$rows;
             $i=0;

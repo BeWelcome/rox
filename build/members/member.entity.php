@@ -473,6 +473,10 @@ WHERE IdMember = ".$this->id
 
     public function count_comments()
     {
+        if (!$this->isLoaded())
+        {
+            return array('positive' => 0, 'all' => 0);
+        }
         $positive = $this->bulkLookup(
             "
 SELECT COUNT(*) AS positive

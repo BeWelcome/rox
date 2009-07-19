@@ -44,6 +44,10 @@ function DisplayNews() {
 	}
 	echo "<div class=\"info\">\n";
 	
+	
+
+	echo ww("BroadCast_Title_July2009NewBod",$Username),"<br>\n"  ;
+	echo ww("BroadCast_Body_July2009NewBod",$Username),"<hr>\n"  ;
 
 	echo ww("BroadCast_Title_NewsJune2009",$Username),"<br>\n"  ;
 	echo ww("BroadCast_Body_NewsJune2009",$Username),"<hr>\n"  ;

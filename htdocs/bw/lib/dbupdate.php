@@ -1461,6 +1461,10 @@ SQL;
 ALTER TABLE groups DROP HasMembers
 SQL;
 
+    $updates[] = <<<SQL
+ALTER TABLE memberslanguageslevel CHANGE Level Level ENUM('MotherLanguage', 'Expert', 'Fluent', 'Intermediate', 'Beginner', 'HelloOnly') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Beginner' COMMENT 'language level'
+SQL;
+
     if (empty($res)) {
         $version = 0;
     } else {

@@ -1219,6 +1219,8 @@ height:50px;
 }
 .wiki #copyright a {
     border-bottom: none;
+    background: transparent;
+    padding-right: 0;    
 }
 
 /* -----------------------------------------------

@@ -27,7 +27,8 @@ Refactoried by JeanYvea after the first move to Rox
 $words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 
-echo "search results for <b>",$TReturn->searchtext,"</b><br />" ;
+
+echo $words->getFormatted("SearchResultsFor","<b>".$TReturn->searchtext."</b>"),"<br />" ;
 ?>
 
 <?php

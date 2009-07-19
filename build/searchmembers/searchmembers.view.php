@@ -55,6 +55,13 @@ class SearchmembersView extends PAppView {
         exit();
     }
 
+    public function quicksearch_results($TReturn)
+    {
+
+		$this->page->title='Search Results - Bewelcome' ;
+        require 'templates/quicksearch.php';
+    }
+
     public function searchmembers($queries, $mapstyle, $varsOnLoad, $varsGet, $TabAccomodation)
     {
         $google_conf = PVars::getObj('config_google');
@@ -69,12 +76,14 @@ class SearchmembersView extends PAppView {
         include 'templates/ajax.php';
     }
 	
-/*
-    public function quicksearch($TList, $searchtext)
+
+    public function quicksearch_form()
     {
-        require 'templates/quicksearch.php';
+		$TList=array() ;
+		$searchtext="" ;
+		$mapstyle="mapoff";
+        require 'templates/memberlist_quicksearch.php';
     }
-	*/
 
     public function teaser($mapstyle) {
         require 'templates/teaser.php';

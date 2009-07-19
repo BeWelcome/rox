@@ -10,7 +10,7 @@ $words = new MOD_words();
     <div id="searchteaser" style="width: 40%"  class="float_left">
         <fieldset id="searchtop" name="searchtop">
         <strong class="small"><?php echo $words->getFormatted('FindPeopleEnterSomething'); ?></strong><br />
-        <form action="searchmembers/quicksearch" method="post">
+        <form action="searchmembers/quicksearch" method="get">
         <input type="text" name="searchtext" size="25" maxlength="30" id="text-field" value="Search...." onfocus="this.value='';"/>
         <?php PPostHandler::setCallback('quicksearch_callbackId', 'SearchmembersController', 'index'); ?>
         <input type="hidden" name="quicksearch_callbackId" value="1"/>

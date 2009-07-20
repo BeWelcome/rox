@@ -1,4 +1,5 @@
-<?php/*
+<?php
+/*
 
 Copyright (c) 2007 BeVolunteer
 

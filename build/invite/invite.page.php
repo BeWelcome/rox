@@ -112,6 +112,11 @@ class InviteSentPage extends RoxPageView
 {
 
     protected function teaserContent() {
+    
+        // get translation module
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+        
         // &gt; or &raquo; ?
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : 'Nobody';
         ?>

@@ -61,7 +61,7 @@ class MembersModel extends RoxModelBase
             return false;
         }
 
-        return $this->createEntity('Member', $id);
+        return $this->createEntity('Member')->findById($id);
     }
 
 

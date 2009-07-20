@@ -128,7 +128,6 @@ WHERE
 LIMIT 20
             " ;
 			
-//			die($str) ;
 			$qry = $this->dao->query($str);
     
     
@@ -147,23 +146,32 @@ WHERE
     countries.id=geonames_cache.parentCountryId" ;
 				$result = $this->dao->query($str);
 				$cc = $result->fetch(PDB::FETCH_OBJ);
-				if (empty($cc->CountryName)) {
-					MOD_log::get()->write("FindMember(<b>".$rr->Username."</b>: Missing result with[".$str."] IdCity=".$rr->IdCity, "Bug");
+				if (empty($cc->CountryName))
+                {
+					MOD_log::get()->write("FindMember(<b>{$rr->Username}</b>: Missing result with[{$str}] IdCity={$rr->IdCity}", "Bug");
+                    $rr->RegionName="";
+                    $rr->CountryName='';
+                    $rr->CityName = '';
+                    $rr->fk_countrycode = '';
+                    $rr->CityName = '';
 				}
-				$rr->CountryName=$cc->CountryName ;
-				$rr->CityName=$cc->CityName ;
-				$rr->fk_countrycode=$cc->fk_countrycode ;
-				$rr->CityName=$cc->CityName ;
+                else
+                {
+                    $rr->CountryName=$cc->CountryName ;
+                    $rr->CityName=$cc->CityName ;
+                    $rr->fk_countrycode=$cc->fk_countrycode ;
+                    $rr->CityName=$cc->CityName ;
 
-				$sRegion="select name from geonames_cache where geonameid=".$cc->IdRegion;
-				$qryRegion = $this->dao->query($sRegion);
-				$Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
-				if (isset($Region->name)) {
-					$rr->RegionName=$Region->name ;
-				}
-				else {
-					$rr->RegionName="" ;
-				}
+                    $sRegion="SELECT name FROM geonames_cache WHERE geonameid = '{$cc->IdRegion}'";
+                    $qryRegion = $this->dao->query($sRegion);
+                    $Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
+                    if (isset($Region->name)) {
+                        $rr->RegionName=$Region->name ;
+                    }
+                    else {
+                        $rr->RegionName="" ;
+                    }
+                }
 
 				$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
 				$rr->result = '';
@@ -347,7 +355,7 @@ end of  search in members trads is disabled		 */
         $vars['start_rec'] = $start_rec;
     
         $order_by = $this->GetParam($vars, "OrderBy",0);
-        $order_by_direction = $this->GetParam($vars, "OrderByDirection",0);
+        $order_by_direction = $this->GetParam($vars, "OrderByDirection",'DESC');
 
         if($order_by) {
             $OrderBy = "ORDER BY $order_by $order_by_direction" ;

@@ -427,6 +427,9 @@ class GeoModel extends RoxModelBase {
     **/
     
     public function updateGeonameId($geonameId) {
+    
+        $parentAdm1Id = 0;
+        $parentCountryId = 0;
 
         //retrieve all information from geonames
         $data = $this->getGeonamesHierarchy($geonameId,'FULL');
@@ -511,9 +514,9 @@ class GeoModel extends RoxModelBase {
                         fcode = '".$this->dao->escape($dataset['fcode'])."',
                         fk_countrycode = '".$this->dao->escape($dataset['countryCode'])."',
                         fk_admincode = '".$this->dao->escape($dataset['adminCode1'])."',
-                        timezone = '".$this->dao->escape($dataset['timezone'])."'
+                        timezone = '".$this->dao->escape($dataset['timezone'])."',
                         parentAdm1Id = '".$this->dao->escape($parentAdm1Id)."',
-                        parentCountryId = '".$this->dao->escape($parentCountryId)."'
+                        parentCountryId = '".$this->dao->escape($parentCountryId)."'                        
                         "
                     );
                     if(!$insert) {
@@ -537,9 +540,15 @@ class GeoModel extends RoxModelBase {
                 }
             
             }
-
             //set the parentId for next level
-            $parentId = $dataset['geonameId'];            
+            if ($dataset['fcode'] == 'ADM1') {
+                $parentAdm1Id = $dataset['geonameId'];
+            }
+            if ($dataset['fcode'] == 'PCLI') {
+                $parentCountryId = $dataset['geonameId'];
+            }
+            $parentId = $dataset['geonameId'];
+         
         }
 
     }

@@ -146,7 +146,7 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
 
         require_once("erfurtwiki/plugins/pluginloader.php"); // load some plugins
-        $this->defineMarkup();
+        $this->defineMarkup(&$ewiki_config);
 
         require_once('erfurtwiki/ewiki.php');
         $ewiki_config["smilies"] = array(
@@ -174,7 +174,7 @@ class WikiController extends PAppController {
     /**
     * defineMarkup tunes the ewiki's default markup my custom values
     */
-    public function defineMarkup() 
+    public function defineMarkup($ewiki_config) 
     {    
         /*
         * MediaWiki Markup

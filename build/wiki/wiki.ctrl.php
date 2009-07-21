@@ -100,6 +100,10 @@ class WikiController extends PAppController {
         define("EWIKI_SCRIPT_BINARY", 0);
         define("EWIKI_PROTECTED_MODE", 1);
         define("EWIKI_RESCUE_HTML", 1);
+        define("EWIKI_DESC", "Document and share content about hospitality exchange and travel on bewelcome.org");  # site description
+        define("EWIKI_COPY", "PrimarilyPublicDomain");      # site copyright
+        define("EWIKI_CATEGORY", "Hospitality Exchange");              # site subject
+        define("EWIKI_LOGO_URL", "http://www.bewelcome.org/images/logo_index_top.png");
         
         if (!$title) define("EWIKI_PRINT_TITLE", 0);        # <h2>WikiPageName</h2> on top
         
@@ -125,6 +129,13 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/markup/rescuehtml.php"); // safe html tags ;)
         require_once("erfurtwiki/plugins/admin/control.php"); // load some plugins
         require_once("erfurtwiki/plugins/markup/mediawiki.php"); // load our own mediawiki plugin
+        require_once("erfurtwiki/plugins/action/diff.php"); // stupid diff ;)
+        require_once("erfurtwiki/plugins/action/info_qdiff.php"); // quick diff
+        // require_once("erfurtwiki/plugins/action/verdiff.php"); // version diff - not needed right now!?
+        
+        // RSS support
+        require_once("erfurtwiki/plugins/lib/feed.php"); // load our own mediawiki plugin
+        require_once("erfurtwiki/plugins/action/rss.php"); // load our own mediawiki plugin
 
         // Static pages
         require_once("erfurtwiki/plugins/page/wikinews.php"); // load some plugins
@@ -135,7 +146,7 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
 
         require_once("erfurtwiki/plugins/pluginloader.php"); // load some plugins
-        $ewiki_config = $this->defineMarkup();
+        $this->defineMarkup();
 
         require_once('erfurtwiki/ewiki.php');
         $ewiki_config["smilies"] = array(
@@ -188,8 +199,6 @@ class WikiController extends PAppController {
         $ewiki_config["wm_style"]["==="] = array("<h3>", "</h3>");
         $ewiki_config["wm_style"]["=="] = array("<h2>", "</h2>");        
         $ewiki_config["wm_style"]["="] = array('<h2 class="first">', "</h2>");        
-
-        return $ewiki_config;
     }    
 
 }

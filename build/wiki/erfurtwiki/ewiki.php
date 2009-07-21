@@ -66,7 +66,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_DEFAULT_ACTION", "view"); # (keep!)
 	define("EWIKI_CASE_INSENSITIVE", 1);	# wikilink case sensitivity
 	define("EWIKI_HIT_COUNTING", 1);
-	define("EWIKI_RESOLVE_DNS", 0);		# gethostbyaddr() when editing
+	define("EWIKI_RESOLVE_DNS", 1);		# gethostbyaddr() when editing
 	define("UNIX_MILLENNIUM", 1000000000);
         #- rendering
 	define("EWIKI_ALLOW_HTML", 1);		# often a very bad idea
@@ -1695,7 +1695,7 @@ function ewiki_control_links_list($id, &$data, $action_links, $version=0) {
       if (EWIKI_PROTECTED_MODE && EWIKI_PROTECTED_MODE_HIDING && !ewiki_auth($id, $data, $action)) {
          continue;
       }
-      $o .= $ins[1] . '<a href="' .
+      $o .= $ins[1] . '<a class="button" href="' .
          ( strpos($action, "://")
             ? $action   # an injected "action" URL
             : ewiki_script($action, $id, $version?array("version"=>$version):NULL)

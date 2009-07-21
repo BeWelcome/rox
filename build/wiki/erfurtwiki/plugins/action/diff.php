@@ -29,7 +29,7 @@
        $data0 = ewiki_db::GET($id, $old_ver);
     }
 
-    $o = ewiki_make_title($id, "Differences between version $new_ver and $old_ver of »{$id}«");
+    $o = ewiki_make_title($id, "Differences between version $new_ver and $old_ver of Â»{$id}Â«");
 
     $o .= ewiki_stupid_diff($data["content"], $data0["content"]);
 
@@ -62,21 +62,21 @@
     
        $i2 = $i;
        while ($rm = $diff_rm[$i2++]) {
-          $o .= '<div class="del"><b>-</b><font color="#990000"> <tt>' . htmlentities($rm) . "</tt></font></div>\n";
+          $o .= '<div class="del"><b>-</b><font color="#990000"> <tt>' . $rm . "</tt></font></div>\n";
           unset($diff_rm[$i2-1]);
        }
 
        if (in_array($line, $diff_add)) {
-          $o .= '<div class="add"><b>+</b><font color="#009900"> <tt>' . htmlentities($line) . "</tt></font></div>\n";
+          $o .= '<div class="add"><b>+</b><font color="#009900"> <tt>' . $line . "</tt></font></div>\n";
        }
        elseif ($show_unchanged) {
-          $o .= "<div><b>&nbsp;</b> " . htmlentities($line) . "</div>\n";
+          $o .= "<div><b>&nbsp;</b> " . $line . "</div>\n";
        }
 
     }
 
     foreach ($diff_rm as $rm) {
-       $o .= '<div class="del"><b>-</b><font color="#990000"> <tt>' . htmlentities($rm) . "</tt></font></div>\n";
+       $o .= '<div class="del"><b>-</b><font color="#990000"> <tt>' . $rm . "</tt></font></div>\n";
     }
     
     return('<div class="diff">' . $o . '</div>');

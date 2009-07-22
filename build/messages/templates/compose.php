@@ -81,7 +81,7 @@ $member = $model->getMemberWithUsername($receiver_username);
             <?php } ?>
 
             <p>
-                <textarea name="text" rows="15" cols="70" ><?=$text ?></textarea>
+                <textarea name="text" rows="15"><?=$text ?></textarea>
             </p>
 
         	<?php

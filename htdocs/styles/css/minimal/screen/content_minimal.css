@@ -1054,6 +1054,11 @@ form .date {
   padding: 2em 3em;
   border-top: 1px solid #e5e5e5;
 }
+
+div#message div#messagecontent p textarea {
+    width: 100%
+}
+
 #shade_top {
 background:transparent url(../images/shade-top-trans.png) no-repeat scroll 0 10px;
 height:20px;

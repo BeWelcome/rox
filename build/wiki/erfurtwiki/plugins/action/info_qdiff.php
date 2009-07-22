@@ -46,5 +46,29 @@ function ewiki_action_info_qdiff($id, &$data, $action) {
    return($o);   
 }
 
+function ewiki_action_infoqdiff_plain($id, $data, $prev, $ver) {
+    $CLK = "%c";
+    #-- get
+    if ($d = ewiki_db::GET($id, $ver-1)) {
+      $curr = $prev;
+      $prev = $d;
+      $d = NULL;
+    }
+    else {
+      continue;
+    }
+
+    #-- info header
+    $o .= '<p>';
+    $o .= 'Version: <b><a href="' . ewiki_script_url("", $id, "version=$ver") . "\">version $ver</a></b> / "
+      . 'Author: <b>' . ewiki_author_html($curr["author"]) ."</b> / "
+      . 'Time: <b>' . strftime($CLK, $curr["lastmodified"]) ."</b>";
+    $o .= '</p>';
+    #-- diff part
+    $diff = ewiki_stupid_diff($curr["content"], $prev["content"], $show_unchanged=0, $magic_notes=1);
+    $o .= '<p>' . $diff .'</p>';
+    return $o;
+}
+
 
 ?>

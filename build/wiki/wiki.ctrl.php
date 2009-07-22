@@ -97,6 +97,7 @@ class WikiController extends PAppController {
         // Some settings
         define("EWIKI_NAME", "BeWelcome Wiki");
         define('EWIKI_SCRIPT', 'wiki/');
+        define("EWIKI_SCRIPT_URL", PVars::getObj("env")->baseuri.'wiki/');	# absolute URL
         define("EWIKI_SCRIPT_BINARY", 0);
         define("EWIKI_PROTECTED_MODE", 1);
         define("EWIKI_RESCUE_HTML", 1);

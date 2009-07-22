@@ -3203,7 +3203,7 @@ function ewiki_author_html($orig, $tail=0) {
    }
    #-- eventually an AuthorName
    else {
-      return('<a href="' . ewiki_script("", $str) . '">' . $str . '</a>' . $tail);
+      return('<a href="'.PVars::getObj("env")->baseuri.'members/' . $str . '">' . $str . '</a>' . $tail);
    }
    return($orig);
 }

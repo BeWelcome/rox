@@ -107,18 +107,21 @@ class WikiController extends PAppController {
         define("EWIKI_LOGO_URL", "http://www.bewelcome.org/images/logo_index_top.png");
         
         if (!$title) define("EWIKI_PRINT_TITLE", 0);        # <h2>WikiPageName</h2> on top
-        
+
         // Authentification
         require_once("erfurtwiki/plugins/auth/auth_perm_ring.php");
+        $ewiki_perm_rings['rss'] = 3;
+
         $User = APP_User::login();
         $Right = new MOD_right();
         if ($User && $Right->hasRight('Admin','Wiki')) {
             $ewiki_author = $User->getHandle();
-            define("EWIKI_AUTH_DEFAULT_RING", 0);    //  1 = edit allowed
+            define("EWIKI_AUTH_DEFAULT_RING", 0);    //  0 = admin
         } elseif ($User) {
             $ewiki_author = $User->getHandle();
             define("EWIKI_AUTH_DEFAULT_RING", 2);    //  2 = edit allowed
         } else {
+            $ewiki_author = 'guest';
             define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
         }
         
@@ -137,7 +140,7 @@ class WikiController extends PAppController {
         // RSS support
         require_once("erfurtwiki/plugins/lib/feed.php"); // load our own mediawiki plugin
         require_once("erfurtwiki/plugins/action/rss.php"); // load our own mediawiki plugin
-
+        
         // Static pages
         require_once("erfurtwiki/plugins/page/wikinews.php"); // load some plugins
         require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
@@ -146,7 +149,6 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/page/orphanedpages.php"); // load some plugins
         require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
 
-        require_once("erfurtwiki/plugins/pluginloader.php"); // load some plugins
         $this->defineMarkup(&$ewiki_config);
 
         require_once('erfurtwiki/ewiki.php');

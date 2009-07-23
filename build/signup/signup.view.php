@@ -144,7 +144,7 @@ class SignupView extends PAppView
         if ($mail->send($message)) {
             $status = true;
         } else {
-            MOD_log::get()->write("in signup view \$swift->send: Failed to send a mail to [".$MailToNotifyWhenNewMemberSignup."]", "signup");
+            MOD_log::get()->write("in signup view signupTeamMail: Failed to send a mail to [".$MailToNotifyWhenNewMemberSignup."]", "signup");
             $status = false;
         }
         return $status;
@@ -183,17 +183,13 @@ class SignupView extends PAppView
         $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
         
         // Use MOD_mail to create and send a message
-        $mail = new MOD_mail();
-        $message = $mail->getMessageHTML($subject, $from, $to, $title, $body, $body_html, $attach = array());
+        $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body, $body_html, $attach = array());
 
         //Now check if Swift actually sends it
-        if ($mail->send($message)) {
-            $status = true;
-        } else {
-            MOD_log::get()->write(" in signup view $\swift->send: Failed to send a mail to [".$to."]", "signup");
-            $status = false;
-        }
-        return $status;
+        if (!$result)
+            MOD_log::get()->write(" in signup view registerMail: Failed to send a mail to [".$to."]", "signup");
+            
+        return $result;
     }
 
     public function showTermsAndConditions()

@@ -38,7 +38,7 @@ class GalleryView extends PAppView {
 	{		
 	// calls a 1column layout 
 		echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2col_wide.css\" type=\"text/css\"/>";
-        echo "<link rel=\"stylesheet\" href=\"styles/lightview.css\" type=\"text/css\"/>";
+        echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/custom/lightview.css\" type=\"text/css\"/>";
 	}        
     public function image($image) 
     {

@@ -365,6 +365,21 @@ SET
                 $vars['errors'] = array('inserror');
                 return false;
             }
+            
+            // Create notification
+            // $data = $this->imageData($image);
+            // if ($data->user_handle != $_SESSION['Username']) {
+            //     $model = new MembersModel();
+            //     $member = $model->createEntity('Member')->FindByUsername($data->user_handle);
+            //     $param['IdMember'] = $member->getPKValue();
+            //     $param['IdRelMember'] = $_SESSION['IdMember'];
+            //     $param['Type'] = 'picture_comment';
+            //     $param['Link'] = "/gallery/show/image/{$image}";
+            //     $param['WordCode'] = '';
+            //     $param['TranslationParams'] = array('GroupsAcceptedIntoGroup', $_SESSION['Username']);
+            //     $note = $model->createEntity('Note')->createNote($param);
+            // }
+            
             PPostHandler::clearVars();
             return PVars::getObj('env')->baseuri.implode('/', $request).'#c'.$commentId;
         } else {

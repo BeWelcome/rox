@@ -132,34 +132,32 @@ class GalleryController extends RoxControllerBase {
                 switch ($request[2]) {
                     case 'image':
                         if (!isset($request[3])) {
-                            $statement = $this->_model->getLatestItems();
-                            $P->content .= $vw->latestOverview($statement);
-                            break;
+                            $this->redirect('gallery');
                         }
-                        $image = $this->_model->imageData($request[3]);
-                        if (!$image) {
-                            $statement = $this->_model->getLatestItems();
-                            $P->content .= $vw->latestOverview($statement);
-                            break;
+                        if (!$image = $this->_model->imageData($request[3])) {
+                            return new GalleryImageNotFoundPage();
                         }
-                        if (isset($request[4])) {
-                            switch ($request[4]) {
-                                case 'delete':
-                                    $deleted = $this->_model->deleteOneProcess($image);
-                                    $P->content .= $vw->imageDeleteOne($image,$deleted);
-                                    $statement = $this->_model->getLatestItems();
-                                    $P->content .= $vw->latestOverview($statement);
-                                    break;
-                                case 'edit':
-                                    $this->_model->editProcess($image);
-                                    break;
-                                case 'comment':
-                                    $this->_model->commentProcess($image);
-                                    break;
-                                }
-                            if ($request[4] == 'delete')
-                            break;                            
-                        } 
+                        switch (isset($request[4]) ? $request[4] : '') {
+                            case 'delete':
+                                $deleted = $this->_model->deleteOneProcess($image);
+                                $P->content .= $vw->imageDeleteOne($image,$deleted);
+                                $statement = $this->_model->getLatestItems();
+                                $P->content .= $vw->latestOverview($statement);
+                                break;
+                            case 'edit':
+                                $this->_model->editProcess($image);
+                                break;
+                            case 'comment':
+                                $this->_model->commentProcess($image);
+                            default:
+                                $page = new GalleryImagePage();
+                                $page->image = $image;
+                                $page->previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
+                                $page->next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
+                                return $page;
+                            }
+                        if (isset($request[4]) && $request[4] == 'delete')
+                            break;
                         $P->addStyles .= $vw->customStyles2ColLeft();
                         $Previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
                         $Next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
@@ -274,23 +272,17 @@ class GalleryController extends RoxControllerBase {
                         
                     default:
                         if (isset($_SESSION['Username'])) {
+                            $page = new GalleryOverviewPage();
                             $userId = $_SESSION['Username'];
-                            $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
-                            $galleries = $this->_model->getUserGalleries($userId);
-                            $P->newBar .= $vw->userInfo($_SESSION['Username'],$galleries,$cnt_pictures);
+                            $page->cnt_pictures = $this->_model->getLatestItems($userId,'',1);
+                            $page->galleries = $this->_model->getUserGalleries($userId);
                         } else {
-                            // Doesn't work yet
-                            //$loginWidget = $this->layoutkit;
-                            //$loginWidget->createWidget('LoginFormWidget');
-                            //$loginWidget->render();
-                            
                             // Make the sidebar bigger
-                            $P->addStyles .= $vw->customStyles2ColLeft();
-                            $galleries = $this->_model->getUserGalleries();
-                            $P->newBar .= $vw->allGalleries($galleries);
+                            $page->galleries = $this->_model->getUserGalleries();                            
+                            $page = new GalleryOverviewPage();
                         }
-                        $statement = $this->_model->getLatestItems();
-                        $P->content .= $vw->latestOverview($statement);
+                        $page->statement = $this->_model->getLatestItems();
+                        return $page;
                         break;
                 }
         }

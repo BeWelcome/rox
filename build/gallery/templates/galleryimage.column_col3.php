@@ -1,31 +1,17 @@
 <?php
-$words = new MOD_words();
-$User = APP_User::login();
-$request = PRequest::get()->request;
-$Gallery = new Gallery;
-if ($User) {
-    $callbackId = $Gallery->editProcess($image);
-    $vars =& PPostHandler::getVars($callbackId);
-    $callbackIdCom = $Gallery->commentProcess($image);
-    $varsCom =& PPostHandler::getVars($callbackIdCom);
+
+/* Template for showing a single image */
+
+$desc = $d->description;
+if ($d->description == '' && $canEdit) {
+    $desc = $words->getBuffered("GalleryAddDescription");
 }
-$GalleryRight = MOD_right::get()->hasRight('Gallery');
-$d = $image;
-$d->user_handle = MOD_member::getUsername($d->user_id_foreign);
-$canEdit = ($User && $User->getId() == $d->user_id_foreign) ? true : false;
-
-if (!isset($vars['errors'])) {
-    $vars['errors'] = array();
-}
-
-echo '
-<h2 id="g-title">'.$d->title.'</h2>';
-
-    if (!$d->description == 0) {echo '<p id="g-text">'.$d->description.'</p>';}
-    elseif ($canEdit) {
-        echo '<p id="g-text">'.$words->getBuffered("GalleryAddDescription").'</p>'.$words->flushBuffer();
-    }
-    if ($canEdit  || ($GalleryRight > 1)) {
+?>
+<h2 id="g-title"><?=$d->title?></h2>
+<p id="g-text"><?=$desc?></p>
+<?php
+$words->flushBuffer();
+if ($canEdit  || ($GalleryRight > 1)) {
 ?>
 
     <a href="gallery/show/image/<?=$d->id?>" id="g-title-edit" class="button" style="display:none;"><?= $words->getSilent("EditTitle")?></a>
@@ -108,52 +94,8 @@ if (!$comments) {
         $lastHandle = $comment->user_handle;
     }
 }
-?>
 
-<h3><?php echo $words->getFormatted('CommentsAdd'); ?></h3>
-
-<?php
-if ($User) {
-?>
-<form method="post" action="gallery/show/image/<?=$d->id?>/comment" class="def-form" id="gallery-comment-form">
-    <div class="row">
-    <label for="comment-title"><?php echo $words->getFormatted('CommentsLabel'); ?>:</label><br/>
-        <input type="text" id="comment-title" name="ctit" class="long" <?php 
-echo isset($varsCom['ctit']) ? 'value="'.htmlentities($varsCom['ctit'], ENT_COMPAT, 'utf-8').'" ' : ''; 
-?>/>
-        <div id="bcomment-title" class="statbtn"></div>
-<?
-if (in_array('title', $vars['errors'])) {
-    echo '<span class="error">'.$commentsError['title'].'</span>';
-}
-?>
-        <p class="desc"></p>
-    </div>
-    <div class="row">
-        <label for="comment-text"><?php echo $words->getFormatted('CommentsTextLabel'); ?>:</label><br />
-        <textarea id="comment-text" name="ctxt" cols="40" rows="5"><?php 
-echo isset($varsCom['ctxt']) ? htmlentities($varsCom['ctxt'], ENT_COMPAT, 'utf-8') : ''; 
-      ?></textarea>
-        <div id="bcomment-text" class="statbtn"></div>
-<?
-if (in_array('textlen', $vars['errors'])) {
-    echo '<span class="error">'.$commentsError['textlen'].'</span>';
-}
-?>
-        <p class="desc"><?php echo $words->getFormatted('CommentsSublineText'); ?></p>
-    </div>
-    <p>
-        <input type="submit" value="<?php echo $words->getFormatted('SubmitForm'); ?>" class="submit" />
-        <input type="hidden" name="<?php
-// IMPORTANT: callback ID for post data 
-echo $callbackIdCom; ?>" value="1"/>
-    </p>
-</form>
-<?
-} else {
-    // not logged in.
-    echo '<p>'. $words->getFormatted('PleaseRegister') .'</p>';
-}
+if ($User) require_once 'commentform.php';
 ?>
 </div>
 <?php

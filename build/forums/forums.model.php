@@ -9,7 +9,7 @@
 * @version $Id: forums.model.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
-class Forums extends PAppModel {
+class Forums extends RoxModelBase {
     const CV_THREADS_PER_PAGE = 15;
     const CV_POSTS_PER_PAGE = 20;
     const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
@@ -66,6 +66,7 @@ function GetLanguageChoosen() {
 * 
 */ 
 function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
+    $this->words = new MOD_words;
 	return ($this->words->InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember, $_IdLanguage, $IdTrad)) ;
 } // end of InsertInFTrad
 
@@ -87,6 +88,7 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 * 
 */ 
 function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
+    $this->words = new MOD_words;
 	return ($this->words->ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad, $IdOwner )) ;
 } // end of ReplaceInFTrad
 
@@ -151,20 +153,23 @@ function GetPostVote($IdPost) {
 	}
 	$IdMember=$_SESSION["IdMember"] ;
 	$Res->PossibleAction='none' ;
-	$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
+    $member = $this->getLoggedInMember();
+    $post = $this->createEntity('Post',$IdPost);
+    $MyVote = $this->createEntity('PostVote')->findVote($post, $member);
+	//$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
 	$PossibleChoice=array('Yes','DontKnow','DontCare','No') ;
 	$Res->PossibleChoice=$PossibleChoice ;
-	if (!empty($MyVote->Choice) or ($_SESSION["MemberStatus"]!="Active")) { // Members who are not cative cannot vote (for example admin who has status ActiveHidden)
-		if (!empty($MyVote->Choice)) {
+	if ($MyVote or ($_SESSION["MemberStatus"]!="Active")) { // Members who are not cative cannot vote (for example admin who has status ActiveHidden)
+		if ($MyVote->Choice) {
 			$Res->Choice=$MyVote->Choice ;
 		}
 		$Res->PossibleAction="ShowResult" ;
 		$Res->Total=0 ;
-		foreach ($PossibleChoice as $cc) {
-			$rr=$this->singleLookup("select count(*) as cnt from forums_posts_votes where IdPost=".$IdPost." and Choice='".$cc."'") ; 
-			$ss='Choice_'.$cc ;
-			$Res->$ss=$rr->cnt ;
-			$Res->Total=$Res->Total+$rr->cnt ;
+        $votes = $this->createEntity('PostVote')->getResultForPost($post);
+		foreach ($PossibleChoice as $cc)
+        {
+            $Res->$cc = $votes[$cc];
+			$Res->Total += $votes[$cc] ;
 		}
 	}
 	else {
@@ -240,15 +245,6 @@ function DeleteVoteForPost($IdPost) {
 } // end of DeleteVoteForPost
 
 /**
-*/
-function singleLookup($ss) { // Todo find a way to use the unique SingleLookup !
-	$q=mysql_query($ss) ;
-	$row=mysql_fetch_object($q) ;
-	return($row) ;
-}
-
-
-/**
 * FindAppropriatedLanguage function will retrieve the appropriated default language 
 * for a member who want to reply to a thread (started with the#@IdPost post)
 * this retriewal is made according to the language of the post, the current language of the user
@@ -317,7 +313,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
 		}
 		
-		$this->MyGroups=array() ;
+		$MyGroups=array() ;
 
 		
 		$this->words= new MOD_words();
@@ -345,7 +341,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
 				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
 				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
-				array_push($this->MyGroups,$rr->IdGroup) ; // Save the group list
+				array_push($MyGroups,$rr->IdGroup) ; // Save the group list
 			}	;
 			$this->PostGroupsRestriction=$this->PostGroupsRestriction."))" ;
 			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction."))" ;
@@ -360,7 +356,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 				$this->ThreadGroupsRestriction=" (1=1)" ;
 			}
 		}
-
+        $this->MyGroups = $MyGroups;
     } // __construct
 	
 	// This switch the preference ForumOrderList
@@ -3490,33 +3486,45 @@ AND `members`.`Status` in ('Active','ActiveHidden')
 
         
 		 // Check the user who have subscribed to one group of this thread 
+         /*
         $query = sprintf("select IdSubscriber,members_groups_subscribed.id as IdSubscription from members_groups_subscribed,forums_threads where forums_threads.IdGroup=members_groups_subscribed.IdGroup and forums_threads.threadid=%d ",$rPost->IdThread) ;
         $s1 = $this->dao->query($query);
         if (!$s1) {
             throw new PException('prepare_notification Could not retrieve the members_tags_subscribed !');
         }
-        while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ)) { // for each subscriber to this thread Group
+        */
+        $thread = $this->createEntity('Thread')->findByThreadId($rPost->IdThread);
+        if ($thread->IdGroup)
+        {
+            $group = $this->createEntity('Group')->findById($thread->IdGroup);
+            $subscribers = $group->getEmailAcceptingMembers();
+            foreach ($subscribers as $subscriber)
+            {
+        //while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ))  // for each subscriber to this thread Group
 
-			if ($this->NotAllowedForGroup($rSubscribed->IdSubscriber,$rPost)) continue; // Don't notifiy a member if they are group restiction applying to him 
+                if ($this->NotAllowedForGroup($subscriber->getPKValue(),$rPost)) continue; // Don't notifiy a member if they are group restiction applying to him 
 
-            // we are going to check wether there is allready a pending notification for this post to avoid duplicated
-//            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
-            $IdMember=$rSubscribed->IdSubscriber ;
-            $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
-            $s = $this->dao->query($query);
-            if (!$s) {
-               throw new PException('prepare_notification Could not retrieve the posts_notificationqueue(1) !');
-            }
-            $rAllreadySubscribe = $s->fetch(PDB::FETCH_OBJ) ;
-            if (isset($rAllreadySubscribe->id)) {
-               continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
-            }
+                // we are going to check wether there is allready a pending notification for this post to avoid duplicated
+                $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$subscriber->getPKValue()) ;
+                $s = $this->dao->query($query);
+                if (!$s) {
+                   throw new PException('prepare_notification Could not retrieve the posts_notificationqueue(1) !');
+                }
+                $rAllreadySubscribe = $s->fetch(PDB::FETCH_OBJ) ;
+                if (isset($rAllreadySubscribe->id)) {
+                   continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
+                }
 
-            $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_groups_subscribed',".$rSubscribed->IdSubscription.")" ;
-            $result = $this->dao->query($query);
-                   
-            if (!$result) {
-               throw new PException('prepare_notification  for group for Thread=#'.$rPost->IdThread.' failed : for Type='.$Type);
+                $query = <<<SQL
+INSERT INTO posts_notificationqueue (IdMember, IdPost, created, `Type`, TableSubscription, IdSubscription)
+VALUES ('{$subscriber->getPKValue()}','{$IdPost}',now(),'{$Type}','membersgroups',0)
+SQL;
+                $result = $this->dao->query($query);
+                       
+                if (!$result)
+                {
+                    $this->logWrite("prepare_notification  for group for Thread=#{$rPost->IdThread} failed : for Type={$Type}", 'bug');
+                }
             }
         } // end for each subscriber to this group
         
@@ -4100,4 +4108,3 @@ die("force stop") ;
     }
 } // end of MailTheReport
 
-?>

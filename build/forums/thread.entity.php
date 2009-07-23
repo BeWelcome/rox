@@ -32,6 +32,17 @@ class Thread extends RoxEntityBase
     }
 
     /**
+     * returns true if the thread was deleted
+     *
+     * @access public
+     * @return bool
+     */
+    public function isDeleted()
+    {
+        return (!$this->isLoaded || $this->ThreadDeleted == 'Deleted');
+    }
+
+    /**
      * returns array of thread votes that member has made
      *
      * @access public

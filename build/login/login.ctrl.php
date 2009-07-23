@@ -79,7 +79,7 @@ class LoginController
                     <script type="text/javascript">
                         document.observe("dom:loaded", function() {
                           // initially hide the login message after a few seconds
-                          Effect.BlindUp('loginmessage_wrapper',{delay: 1.5});
+                          Effect.SlideUp('loginmessage_wrapper',{delay: 1.5});
                         });
                     </script>
                     

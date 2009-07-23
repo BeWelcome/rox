@@ -29,7 +29,7 @@ class NotifyController extends RoxControllerBase
         {
             case 'admin':
                 $BW_Rights = new MOD_right();
-                if (!$BW_Rights->hasRight('Admin')) 
+                if (!$BW_Rights->hasRight('Admin') || !$BW_Rights->hasRight('Notify')) 
                     $this->_redirect(''); 
                 $page = new NotifyAdminPage();
                 $page->setModel($this->_model);

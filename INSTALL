@@ -36,8 +36,8 @@ OVERVIEW
   2. Make sure PHP has GD lib enabled
  (3. Make sure PHP has short opening tags (needed currently for TB))
   4. Make sure that Apache has mod_rewrite enabled
-  5. Make sure .htaccess works, i.e. no AllowOverride Node
-  6. Be sure to PHP magic quotes gpc turned off
+  5. Make sure .htaccess is allowed to work
+  6. Be sure to have PHP magic quotes gpc turned off
   7. An SMTP server must be available
  
 In recent versions of Debian and Ubuntu (Fedora (8)):
@@ -54,6 +54,7 @@ In recent versions of Debian and Ubuntu (Fedora (8)):
   5:  Comment out (put # in front of the rest) or remove all lines with
       "AllowOverride None" in: /etc/apache2/sites-enabled/000-default
       (Comment out at least the ones that apply to /var/www)
+      Or you can change it to AllowOverride All
 
   6:  Set magic_quotes_gpc to Off in /etc/php5/apache2/php.ini
 
@@ -89,6 +90,8 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
       
 
   2.  Geographical data
+
+    *This step is outdated - the testdb will hold geo data*
 
     This step is (only?) necessary to be able to create new profiles
     and users with your local website. Import the following files from

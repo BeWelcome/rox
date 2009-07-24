@@ -43,7 +43,7 @@ class Group extends RoxEntityBase
     public function __get($key)
     {
         $result = parent::__get($key);
-        if (is_scalar($result))
+        if (is_scalar($result) && $result !== false)
         {
             $result = stripslashes($result);
         }

@@ -684,7 +684,7 @@ SQL;
         $description = $this->getTableDescription();
         foreach ($this->getTableDescription() as $field => $info)
         {
-            if ($info['keytype'] == 'primary' && $info['auto_increment'] == true && !$this->$field)
+            if (($info['keytype'] == 'primary' && $info['auto_increment'] == true && !$this->$field) || $this->$field === false)
             {
                 continue;
             }

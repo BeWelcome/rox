@@ -1465,6 +1465,10 @@ SQL;
 ALTER TABLE memberslanguageslevel CHANGE Level Level ENUM('MotherLanguage', 'Expert', 'Fluent', 'Intermediate', 'Beginner', 'HelloOnly') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Beginner' COMMENT 'language level'
 SQL;
 
+    $updates[] = <<<SQL
+ALTER TABLE membersgroups ADD column IsLocal BOOL DEFAULT false NOT NULL COMMENT 'Determines if the member is a local member of a geo group'
+SQL;
+
     if (empty($res)) {
         $version = 0;
     } else {

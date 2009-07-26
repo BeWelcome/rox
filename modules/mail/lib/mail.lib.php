@@ -21,11 +21,17 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
+/**
+ * @author Micha (bw/cs:lupochen)
+ */
+
 /**
  * MOD_mails lets you create & send mails using our default template
  * + It gives you access to SWIFT too
  *
- * @author Micha (bw/cs:lupochen)
+ * @package Modules
+ * @subpackage Mail
  */
 class MOD_mail
 {
@@ -45,7 +51,7 @@ class MOD_mail
      * @param void
      * @return PApps
      */
-    private static function get()
+    private static function init()
     {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
@@ -64,14 +70,14 @@ class MOD_mail
     
     public static function getSwift()
     {        
-        self::get();
+        self::init();
         
         return Swift_Message::newInstance();
     }
     
     public static function sendSwift($message)
     {
-        self::get();
+        self::init();
         
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25);
@@ -93,7 +99,7 @@ class MOD_mail
     
     public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 
     {
-        self::get();
+        self::init();
         
         // Check that $to/$from are both arrays
         $from = (is_array($from)) ? $from : explode(',', $from);        

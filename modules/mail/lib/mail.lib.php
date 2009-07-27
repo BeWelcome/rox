@@ -137,7 +137,7 @@ class MOD_mail
             }
         }
         
-        self::sendSwift($message);
+        return self::sendSwift($message);
     }
 
 }

@@ -244,13 +244,14 @@ class SearchmembersController extends PAppController {
                 $P->currentSubTab = 'searchmembers';
                 
                 $subTab='index';
-                $P->teaserBar = $vw->teaser($mapstyle);
-                
-                // submenu
-                //$P->subMenu = $vw->submenu($subTab);
                 
                 // prepare sort order for both the filters and the userbar
                 $sortorder = $this->_model->get_sort_order();
+                
+                $P->teaserBar = $vw->teaser($mapstyle,$sortorder);
+                
+                // submenu
+                //$P->subMenu = $vw->submenu($subTab);
                 
                 $P->teaserBar .= $vw->searchmembersFilters(
                     $this->_model->sql_get_groups(),
@@ -258,7 +259,8 @@ class SearchmembersController extends PAppController {
                     $this->_model->sql_get_set("members", "TypicOffer"),
                     $sortorder
                 );
-                
+
+                // $P->content = $vw->search_default($mapstyle);                
                 $P->content = $vw->memberlist($mapstyle,$sortorder);
                 
                 $P->newBar .= $vw->searchmembers(

@@ -85,9 +85,14 @@ class SearchmembersView extends PAppView {
         require 'templates/memberlist_quicksearch.php';
     }
 
-    public function teaser($mapstyle) {
+    public function teaser($mapstyle, $TabSortOrder) {
         require 'templates/teaser.php';
     }
+    
+    public function search_default($mapstyle) {
+        require 'templates/search.column_col3.php';
+    }
+    
     public function teaserquicksearch($mapstyle) {
         require 'templates/teaser_quicksearch.php';
     }
@@ -112,7 +117,7 @@ class SearchmembersView extends PAppView {
 	/* This adds other custom styles to the page*/
 	public function customStyles($mapstyle,$quicksearch=0) {
         $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/bw_basemod_search_'.$mapstyle.'.css" type="text/css"/>';
-        $out .= '<link rel="stylesheet" type="text/css" href="styles/prototip/prototip.css" />';
+        $out .= '<link rel="stylesheet" type="text/css" href="styles/css/minimal/screen/custom/prototip.css" />';
 		return $out;
     }
     public function rightContent() {

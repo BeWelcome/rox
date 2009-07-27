@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
 
 <?php if ($mapstyle == "mapon") { ?>
 <div id="MapDisplay">
-<div id="map" style="height:440px;width:100%;border-left: 2px solid #999"></div>
+<div id="map" style="height:440px;width:100%; border: 1px solid #888; padding: 1px;"></div>
 
 <div id="legend" class="floatbox" style="padding: 20px;">
 <table><tr>
@@ -46,10 +46,45 @@ $words->flushBuffer();
 </div>
 <?php } ?>
 
-
 <script type="text/javascript">
+// build regular expression object to find empty string or any number of spaces
+var blankRE=/^\s*$/;
+function CheckEmpty(TextObject)
+{
+if(blankRE.test(TextObject.value))
+{
+return true;}
+if (TextObject.value == '<?php echo $words->getBuffered('searchmembersAllOver');?>')
+{
+return true}
+else return false;
+}
+
+/* BTchange is the small view-menu in searchmembers */
+
+ViewImg1 = "images/misc/one.gif";
+ViewImg1_f2 = "images/misc/one_f2.gif";
+
+ViewImg2 = "images/misc/two.gif";
+ViewImg2_f2 = "images/misc/two_f2.gif";
+
+ViewImg3 = "images/misc/three.gif";
+ViewImg3_f2 = "images/misc/three_f2.gif";
+
+function BTchange (IdImg, ImgObj) {
+  document.getElementById(IdImg).src = ImgObj;
+}
+function changeSortOrder (SortOrder) {
+  varsOnLoad = '/varsonload';
+  varSortOrder = '/'+SortOrder;
+  document.getElementById('filterorder').value = SortOrder;
+  searchGlobal(0);
+  varsOnLoad = '';
+}
+
 // other stuff
 var varSortOrder = '';
+var searchInDivText = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleSubmitMapSearch')); ?>');
 var searchHelp = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('searchHelp')); ?>');
 var fieldHelpAddress = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpAddress')); ?>');
 var fieldHelpUsername = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpUsername')); ?>');
@@ -57,7 +92,7 @@ var fieldHelpTextToFind = decodeURIComponent('<?php echo rawurlencode($words->ge
 var fieldHelpMapBoundaries = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHelpMapBoundaries')); ?>');
 var mapoff = <?php echo ($mapstyle == "mapoff") ? 'true' : 'false'; ?>;
 var varsOnLoad = '<?php echo $varsOnLoad ? '/varsonload' : ''; ?>';
-var varsGet = '<?php echo isset($_GET['vars']) ? $_GET['vars'] : 0; ?>';
+var varsGet = <?php echo isset($_GET['vars']) ? $_GET['vars'] : 0; ?>;
 var queries = '<?php echo $queries ? '/queries' : ''; ?>';
 var hideShowMap = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleHideShowMap')); ?>');
 var loading = '<img src="images/misc/loading_orange.gif"> ' + decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleIndicateLoading')); ?>');
@@ -67,11 +102,16 @@ var noMembersFound = decodeURIComponent('<?php echo rawurlencode($words->getBuff
 var wordOf = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordOf')); ?>');
 var wordFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordFound')); ?>');
 
+function addTips() {
 // prototip tips
 new Tip('Address', fieldHelpAddress,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 new Tip('map_search', fieldHelpMapBoundaries,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 new Tip('UsernameField', fieldHelpUsername,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 new Tip('TextToFindField', fieldHelpTextToFind,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
+}
 </script>
 <script src="script/searchmembers.js" type="text/javascript"></script>
+<script type="text/javascript">
+Event.observe(window, "load", addTips); 
+</script>
 <?php echo $words->flushBuffer() ?>

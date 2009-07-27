@@ -10,9 +10,11 @@ function load() {
     if (GBrowserIsCompatible()) {
         geocoder = new GClientGeocoder();
         if(!mapoff) {
+			loadSearchMapButton();
             map = new GMap2(document.getElementById("map"));
             map.addControl(new GLargeMapControl());
-            map.addControl(new GHierarchicalMapTypeControl());
+            map.addControl(new GHierarchicalMapTypeControl(), new GControlPosition(G_ANCHOR_BOTTOM_RIGHT, new GSize(7, 10)));
+		    map.addControl(new SearchMapButton());
             map.enableDoubleClickZoom();
             map.setCenter(new GLatLng(15, 10), 1);
             map.addMapType(G_PHYSICAL_MAP);
@@ -23,15 +25,15 @@ function load() {
         }
     }
     // if we have vars stored in the session or given by a GET-parameter, perform a search to show the last results
-    // if (varsOnLoad || varsGet) {
-        // put_html('loading', loading);
-        // if (varsGet) searchByText(varsGet, 0);
-        // else loadMap(0);
-    // }
-    // else
-        // put_html('help_and_markers', searchHelp);
+    if (varsOnLoad || varsGet) {
+        put_html('loading', loading);
+        if (varsGet) searchByText(varsGet, 0);
+        else loadMap(0);
+    }
+    else
+        put_html('help_and_markers', searchHelp);
 
-    // varsOnLoad = '';
+    varsOnLoad = '';
 }
 
 function searchGlobal(i) {
@@ -42,6 +44,52 @@ function searchGlobal(i) {
     put_val('IdCountry', '');
     loadMap(i);
 }
+
+// A TextualZoomControl is a GControl that displays textual "Zoom In"
+// and "Zoom Out" buttons (as opposed to the iconic buttons used in
+// Google Maps).
+function SearchMapButton() {
+}
+
+function loadSearchMapButton() {
+	SearchMapButton.prototype = new GControl();
+
+	// Creates a one DIV for each of the buttons and places them in a container
+	// DIV which is returned as our control element. We add the control to
+	// to the map container and return the element for the map class to
+	// position properly.
+	SearchMapButton.prototype.initialize = function(map) {
+	  var container = document.createElement("a");
+
+	  var searchInDiv = document.createElement("a");
+	  this.setButtonStyle_(searchInDiv);
+	  container.appendChild(searchInDiv);
+	  searchInDiv.appendChild(document.createTextNode(searchInDivText));
+	  GEvent.addDomListener(searchInDiv, "click", function() {
+	    searchByMap(0);
+	  });
+
+	  map.getContainer().appendChild(container);
+	  return container;
+	}
+
+	// By default, the control will appear in the top left corner of the
+	// map with 7 pixels of padding.
+	SearchMapButton.prototype.getDefaultPosition = function() {
+	  return new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(7, 17));
+	}
+
+	// Sets the proper CSS for the given button element.
+	SearchMapButton.prototype.setButtonStyle_ = function(button) {
+	  button.style.paddingTop = "2px";
+	  button.style.marginBottom = "3px";
+	  button.style.textAlign = "center";
+	  button.style.cursor = "pointer";
+	  button.className = "button";
+	  button.id = "map_search";
+	}
+}
+
 
 function searchByMap(i) {
     state = 'map';
@@ -402,4 +450,4 @@ var index = i;
 }
 */
 
-window.onload = load();
+Event.observe(window, "load", load); 

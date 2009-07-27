@@ -93,7 +93,7 @@ if ($ShowMemberFunction == 'ShowMembersAjaxShort') {
 } else {        
     if(sizeof($TList) > 0) echo "<header header='".
         xml_prep("<h2>".$words->getFormatted("searchResults")."</h2>").
-        xml_prep("<table><tr><th></th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
+        xml_prep("<table  style=\"width: 100%\"><tr><th>".$words->getFormatted('Member')."</th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
         "'/>";
     else echo "<header header='".
         xml_prep($words->getFormatted("searchmembersNoSearchResults")).
@@ -122,7 +122,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	$info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
 	$string .= "<td class=\"memberlist\">" ;
-	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" >";
+	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
 	$string .= '<a href="javascript:newWindow(\''.$TM->Username.'\')">'.$TM->Username.'</a>';
@@ -156,7 +156,7 @@ if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
 	$info_styles = array(0 => "<div class=\"blank floatbox\" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight floatbox\" align=\"left\" valign=\"center\">");
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
 	$string .= "<table><tr><td class=\"memberlist\">" ;
-	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" >";
+	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
 	$string .= '<p><a href="javascript:newWindow(\''.$TM->Username.'\')"><b>'.$TM->Username.'</b></a><br />';

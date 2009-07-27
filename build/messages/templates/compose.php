@@ -25,51 +25,50 @@ $words = new MOD_words();
 $model = new MembersModel();
 $member = $model->getMemberWithUsername($receiver_username);
 ?>
-<div class="floatbox">
-    <div id="message">
-    <div id="shade_top"> </div>
-    <div class="floatbox" id="messageheader">
+<div id="message" class="floatbox">
+    <div id="shade_top"></div>
+    <div id="messageheader" class="floatbox">
         <div id="messageside" class="float_right">
-          <p class="small grey">
-              <?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong>
-              <br />
-              <?=$words->get('Speaks')?> 
-              <?php
-              $languages = $member->get_languages_spoken(); 
-              if (count($languages) > 1) {
-              		$ii = 0;
+			<p class="small grey">
+				<?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong><br />
+				<?=$words->get('Speaks')?> 
+				<?php
+				$languages = $member->get_languages_spoken(); 
+				if (count($languages) > 1) {
+					$ii = 0;
               		$max = count($languages);
-                      foreach($languages as $language) {
+					foreach($languages as $language) {
               			$space = ($ii != $max -1) ? ', ' : '';
                         ?><strong><span title="<?=$words->get('LanguageLevel_'.$language->Level) ?>"><?=$language->Name ?><?=$space?></span></strong><?php
               			$ii++;
-                      }
-              } ?>
-              </p>
-              <p class="small grey">
-                <a href="messages/with/<?=$receiver_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>"> <?=$words->getSilent('messages_allmessageswith',$receiver_username)?></a>
-              </p>
+                    }
+				} ?>
+             </p>
+             <p class="small grey">
+				<a href="messages/with/<?=$receiver_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>" /> <?=$words->getSilent('messages_allmessageswith',$receiver_username)?></a>
+             </p>
+		</div> <!-- messageside -->
+		
+        <div class="float_left">
+			<?=MOD_layoutbits::PIC_50_50($receiver_username) ?>
         </div>
         <div class="float_left">
-        <?=MOD_layoutbits::PIC_50_50($receiver_username) ?>
+			<?if (!isset($message->DateSent)) { ?>
+				<h3><?=$words->get('MessageCompose')?></h3>
+			<?php } ?>
+			<?if (isset($message->DateSent) && isset($this->edit)) { ?>
+				<h3><?=$words->get('MessageEdit')?></h3>
+			<?php } ?>
+			<p class="">
+			  <span class="grey"><?=$words->get('MessageTo','<a href="people/'.$receiver_username.'">'.$receiver_username.'</a>') ?> </span>
+			</p>
+			<?if (isset($message->DateSent) && !isset($this->edit)) { ?>
+			<p class="">
+			  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>
+			</p>
+			<?php } ?>
         </div>
-        <div class="float_left">
-        <?if (!isset($message->DateSent)) { ?>
-            <h3><?=$words->get('MessageCompose')?></h3>
-        <?php } ?>
-        <?if (isset($message->DateSent) && isset($this->edit)) { ?>
-            <h3><?=$words->get('MessageEdit')?></h3>
-        <?php } ?>
-        <p class="">
-          <span class="grey"><?=$words->get('MessageTo','<a href="people/'.$receiver_username.'">'.$receiver_username.'</a>') ?> </span>
-        </p>
-        <?if (isset($message->DateSent) && !isset($this->edit)) { ?>
-        <p class="">
-          <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>
-        </p>
-        <?php } ?>
-        </div>
-    </div>
+    </div> <!-- messageheader -->
     <form method="post" action="<?=$page_url ?>">
         <?=$callback_tag ?>
     <div id="messagecontent">
@@ -81,7 +80,7 @@ $member = $model->getMemberWithUsername($receiver_username);
             <?php } ?>
 
             <p>
-                <textarea name="text" rows="15"><?=$text ?></textarea>
+                <textarea name="text" rows="15" cols="60" ><?=$text ?></textarea>
             </p>
 
         	<?php
@@ -95,10 +94,10 @@ $member = $model->getMemberWithUsername($receiver_username);
         	}
         	?>
 
-    </div>
+    </div> <!-- messageconent -->
     <div id="messagefooter">
         <p>
-            <input type="checkbox" name="agree_spam_policy" id="IamAwareOfSpamCheckingRules">
+            <input type="checkbox" name="agree_spam_policy" id="IamAwareOfSpamCheckingRules" />
             <label for="IamAwareOfSpamCheckingRules"><?= $words->get('IamAwareOfSpamCheckingRules'); ?></label>
         </p>
 
@@ -110,10 +109,10 @@ $member = $model->getMemberWithUsername($receiver_username);
         <p>
             <input type="submit" value="send"/>
         </p>
-    </div>
+    </div> <!-- messagefooter -->
     </form>
     <div id="shade"> </div>
-</div>
+</div> <!-- message -->
 
 
 

@@ -40,7 +40,7 @@ class MailboxWidget_Sent extends MailboxWidget
 		$request_str = implode('/',PRequest::get()->request);
 		$dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
 		$words = new MOD_words();
-		$columns['from'] = '<a href="'.$request_str.'?sort=receiver&dir='.$dir_str.'">'.$words->getSilent('To').'</a> / <a href="'.$request_str.'?sort=date&dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer();
+		$columns['from'] = '<a href="'.$request_str.'?sort=receiver&amp;dir='.$dir_str.'">'.$words->getSilent('To').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer();
 		return $columns;
     }
     

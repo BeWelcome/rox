@@ -31,6 +31,11 @@ class MessagesBasePage extends RoxPageView
     {
 
     }
+	
+	public function column_col2()
+    {
+        
+	}
     
     protected function getSubmenuItems()
     {

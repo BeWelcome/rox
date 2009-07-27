@@ -43,18 +43,25 @@ WHERE Username = '$username'
         // check fields
         
         $problems = array();
-        
-        if (!isset($input['email'])) {
+        // Maximum 50 emails can be send using the Invitation-Form
+        if (isset($_SESSION['InviteCount']) && $_SESSION['InviteCount'] > 50) {
+            $problems['email'] = 'You already sent more than 50 invitations. Maybe that is enough for now?';
+        }
+        elseif (!isset($input['email'])) {
             // $problems['receiver'] = 'no receiver was specified.';
             // receiver does not exist.
             $problems['email'] = 'No receiver set.';
         } else {
             // receiver is set, let's check the email addresses:
             $input['email'] = strtolower($input['email']);
-            if (!isset($input['email']) || !$this->isEmailAddress($input['email'])) {
-            // $problems['receiver'] = 'no correct email addresses.';
-            // receiver addresses not correct.
-                $problems['email'] = 'no correct email addresses.';
+            $input['email'] = str_replace(';',',',$input['email']);
+            $input['email'] = str_replace(';',',',$input['email']);
+            $input['email'] = str_replace(' ','',$input['email']);
+            $email_array = explode(',', $input['email']);
+            foreach ($email_array as $email) {
+                if (!isset($email) || !$this->isEmailAddress($email)) {
+                    $problems['email'] = 'no correct email addresses.';
+                }
             }
         }
         
@@ -70,45 +77,30 @@ WHERE Username = '$username'
         if (empty($input['text'])) {
             $problems['text'] = 'text is empty.';
         }
+        if (!isset($input['attach_picture']))
+            $input['attach_picture'] = false;
         
         $input['status'] = 'ToSend';
         
         if (!empty($problems)) {
             $status = false;
         } else {
-            // partly copied from htdocs/bw/lib/mailer.php
-            //Load the files we'll need
-            require_once "bw/lib/swift/Swift.php";
-            require_once "bw/lib/swift/Swift/Connection/SMTP.php";
-            require_once "bw/lib/swift/Swift/Message/Encoder.php";
-        
-            //Start Swift
-            $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
-            
-            // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-            //$smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
-            //$smtp->setUsername("YOURUSERNAME");
-            //$smtp->setpassword("YOURPASSWORD");
-        	//$swift =& new Swift($smtp);
-        	 
-            //Create a message
-        	$message =& new Swift_Message($input['subject']);
-            
-        	//Add some "parts"
-        	$message->attach(new Swift_Message_Part($input['text']));
-        	$message->attach(new Swift_Message_Part($this->style(stripslashes(str_replace("\n","<br \>",$input['text'])),$input['attach_picture']), "text/html"));
             
             // set the sender
             // FIXME: Read & Uncrypt member's email address from the DB and make it the sender-address
-            //$sender_uncrypted = new MOD_member->getFromMembersTable('email');
-            //$sender = ???
-            $sender = PVars::getObj('syshcvol')->MessageSenderMail;
+            //$sender_uncrypted = new MOD_member()->getFromMembersTable('email');
+            $member = $this->createEntity('Member')->findById($_SESSION['IdMember']);
+            $sender = MOD_crypt::MemberReadCrypted($member->Email);
+            //$sender = PVars::getObj('syshcvol')->MessageSenderMail;
+
+            $result = MOD_mail::sendEmail($input['subject'],$sender,$email_array,false,$input['text'],$this->style(stripslashes(str_replace("\n","<br \>",$input['text'])),$input['attach_picture']));
             
         	//Now check if Swift actually sends it
-        	if ($swift->send($message, $input['email'], $sender)) {
+        	if ($result) {
                 $status = true;
+                $_SESSION['InviteCount'] = isset($_SESSION['InviteCount']) ? ($_SESSION['InviteCount'] + count($email_array)) : count($email_array);
         	} else {
-        		LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
+        		MOD_log::write("MOD_mail: Failed to send a mail to ".implode(',',$email_array), "MOD_mail");
                 $status = false;
         	}
         }

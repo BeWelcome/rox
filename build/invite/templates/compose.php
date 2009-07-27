@@ -28,19 +28,19 @@ Boston, MA  02111-1307, USA.
     <?=$callback_tag ?>
     <div class="row">
         <h3><label for="email"><?php echo $words->getFormatted("InviteEmailLabel"); ?></label></h3>
-        <p><input name="email" id="email" value="<?=$email?>" size="80" /></p>
+        <p><input name="email" id="email" value="<?=$email?>" size="60" /></p>
         <?php if (isset($problems['email']) && $problems['email']) echo '<p class="error">'.$problems['email'].'</p>';?>
         <span class="desc"><?php echo $words->getFormatted("InviteEmailDesc"); ?></span>
     </div>
     
     <div class="row">
         <h3><label for="name"><?php echo $words->getFormatted("InviteSubjectLabel"); ?></label></h3>
-        <p><input name="subject" id="name" value="<?=$subject?>" size="80" /></p>
+        <p><input name="subject" id="name" value="<?=$subject?>" size="60" /></p>
     </div>
     
     <div class="row">
         <h3><label for="text"><?php echo $words->getFormatted("InviteTextLabel"); ?></label></h3>
-        <p><textarea name="text" id="text" rows="13" cols="80"><?=$text ?></textarea></p>
+        <p><textarea name="text" id="text" rows="13" cols="60"><?=$text ?></textarea></p>
         <span class="desc"><?php echo $words->getFormatted("InviteSubjectDesc"); ?></span>
     </div>
     

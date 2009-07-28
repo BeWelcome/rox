@@ -94,7 +94,7 @@ class MOD_mail
         // $logger = new Swift_Plugins_Loggers_EchoLogger();
         // $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
 
-        return $mailer->send($message);
+        return $mailer->batchSend($message);
     }
     
     public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 

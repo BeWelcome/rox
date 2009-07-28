@@ -1,8 +1,8 @@
+<!-- Disabled until it's working. Do we want that at all ? -->
+
+<!--
 <h3>Invite from other sources</h3>
-        <ul>
-        <?php
-        ?></ul><?php
-        ?><a href="">From google</a>
-        <ul>
-        <?php
-        ?></ul>
+<ul>
+    <li><a href="">From google</a></li>
+</ul>
+-->

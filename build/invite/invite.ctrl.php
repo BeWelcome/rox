@@ -109,6 +109,8 @@ class InviteController extends RoxControllerBase
             
             if (count($result->problems) > 0) {
                 $mem_redirect->problems = $result->problems;
+            } elseif (!$result->status){
+                $mem_redirect->problems = array('email','Unknown error - Invitation not sent.');
             } else {
                 // sending message was successful
                 $mem_resend->already_sent_as = $result->message_id;

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
   <moduleName>mail</moduleName>
-  <moduleVersion>0.0</moduleVersion>
+  <moduleVersion>0.2</moduleVersion>
   <moduleDescription>Mail handling</moduleDescription>
   <moduleFiles>
     <lib>
       <file class="MOD_mail_Multipart">multipart.lib.php</file>
+      <file class="MOD_mail">mail.lib.php</file>
     </lib>
   </moduleFiles>
 </module>

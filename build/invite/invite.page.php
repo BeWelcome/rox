@@ -13,12 +13,14 @@ class InvitePage extends RoxPageView
 {
 
     protected function teaserContent() {
-        // &gt; or &raquo; ?
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : 'Nobody';
-        ?><div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
-        <h1>Invite a friend</h1>
-        </div>
+        ?>
+        <div id="teaser" class="clearfix">
+            <div id="teaser_l1"> 
+                <h1><?php echo $words->getFormatted("InviteAFriend"); ?></h1>
+            </div>
         </div><?php
     }
 
@@ -31,17 +33,16 @@ class InvitePage extends RoxPageView
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
         $model = $this->getModel();
-        
+        $member = $model->getMember($_SESSION['IdMember']);
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
-        
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('InviteController', 'InviteCallback');
         
         // defaults
         $email = '';
-        $subject = $words->get("MailInviteAFriendSubject", 'FULL NAME',$_SESSION['Username']);
-        $urltosignup = PVars::getObj('env')->baseuri.'bw/signup.php';
-        $text = str_replace('<br />','',$words->getFormatted('InviteAFriendStandardText','<a href="http://www.bewelcome.org/bw/member.php?cid='.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a>',$urltosignup));
+        $subject = $words->get("MailInviteAFriendSubject", $member->name(),$_SESSION['Username']);
+        $urltosignup = PVars::getObj('env')->baseuri.'signup';
+        $text = str_replace('<br />','',$words->getFormatted('InviteAFriendStandardText','&lt;a href="'.PVars::getObj('env')->baseuri.'members/'.$_SESSION["Username"].'"&gt;'.$_SESSION["Username"].'&lt;/a&gt;',$urltosignup));
         $attach_picture = '';
         
         if (!$memory = $formkit->getMemFromRedirect()) {
@@ -64,15 +65,15 @@ class InvitePage extends RoxPageView
             }
             
             if ($memory->expired) {
-                ?>your session has expired while you were typing. Try again?<?php
+                ?><p><?php echo $words->getFormatted("InviteSessionExpired"); ?></p><?php
             } else if ($memory->already_sent_as) {
                 if ($message = $this->getModel()->getMessage($memory->already_sent_as)) {
-                    ?><p>Looks like you've already sent this message as</p>
+                    ?><p><?php echo $words->getFormatted("InviteMessageAlreadySent"); ?></p>
                     <p><i><?=$message->Message ?></i></p>
-                    <p>Do you want to send again with the modified text below?</p>
+                    <p><?php echo $words->getFormatted("InviteMessageSendAgain"); ?></p>
                     <?php
                 } else {
-                    ?>looks like you've already sent this message, but system can't find it. Send again?<?php
+                    ?><p><?php echo $words->getFormatted("InviteMessageNotFound"); ?><?php
                 }
             }
             
@@ -109,13 +110,20 @@ class InviteSentPage extends RoxPageView
 {
 
     protected function teaserContent() {
+    
+        // get translation module
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+        
         // &gt; or &raquo; ?
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : 'Nobody';
-        ?><div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
-        <h1>Invite a friend</h1>
+        ?>
+        <div id="teaser" class="clearfix">
+            <div id="teaser_l1"> 
+                <h1><?php echo $words->getFormatted("InviteAFriend"); ?></h1>
+            </div>
         </div>
-        </div><?php
+        <?php
     }
 
     /**
@@ -126,13 +134,14 @@ class InviteSentPage extends RoxPageView
         // get translation module
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-        echo '
-        <p class="note big"><img src="images/icons/accept.png" class="float_left"> Your invitation has been sent. Do you want to <a href="invite">invite more friends</a>?
-        
-        </p>'
-        ;
+        ?>
+        <p class="note big">
+            <img src="images/icons/accept.png" class="float_left"><?php echo $words->getFormatted("InviteMoreFriends"); ?></a>
+        </p>
+        <?
         
     }
+
     
 }
 

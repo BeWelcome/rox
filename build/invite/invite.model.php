@@ -46,15 +46,13 @@ WHERE Username = '$username'
         // Maximum 50 emails can be send using the Invitation-Form
         if (isset($_SESSION['InviteCount']) && $_SESSION['InviteCount'] > 50) {
             $problems['email'] = 'You already sent more than 50 invitations. Maybe that is enough for now?';
-        }
-        elseif (!isset($input['email'])) {
+        } elseif (!isset($input['email'])) {
             // $problems['receiver'] = 'no receiver was specified.';
             // receiver does not exist.
             $problems['email'] = 'No receiver set.';
         } else {
             // receiver is set, let's check the email addresses:
             $input['email'] = strtolower($input['email']);
-            $input['email'] = str_replace(';',',',$input['email']);
             $input['email'] = str_replace(';',',',$input['email']);
             $input['email'] = str_replace(' ','',$input['email']);
             $email_array = explode(',', $input['email']);

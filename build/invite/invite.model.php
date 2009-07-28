@@ -14,14 +14,8 @@ class InviteModel extends RoxModelBase
         parent::__construct();
     }
     
-    public function getMember($username) {
-        return $this->singleLookup(
-            "
-SELECT *
-FROM members
-WHERE Username = '$username'
-            "
-        );
+    public function getMember($id) {
+        return $this->createEntity('Member')->findById($id);
     }
     
     

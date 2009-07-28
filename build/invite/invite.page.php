@@ -15,7 +15,6 @@ class InvitePage extends RoxPageView
     protected function teaserContent() {
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-        // &gt; or &raquo; ?
         $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : 'Nobody';
         ?>
         <div id="teaser" class="clearfix">
@@ -34,15 +33,14 @@ class InvitePage extends RoxPageView
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
         $model = $this->getModel();
-        
+        $member = $model->getMember($_SESSION['IdMember']);
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
-        
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('InviteController', 'InviteCallback');
         
         // defaults
         $email = '';
-        $subject = $words->get("MailInviteAFriendSubject", 'FULL NAME',$_SESSION['Username']);
+        $subject = $words->get("MailInviteAFriendSubject", $member->name(),$_SESSION['Username']);
         $urltosignup = PVars::getObj('env')->baseuri.'signup';
         $text = str_replace('<br />','',$words->getFormatted('InviteAFriendStandardText','&lt;a href="http://www.bewelcome.org/members/'.$_SESSION["Username"].'"&gt;'.$_SESSION["Username"].'&lt;/a&gt;',$urltosignup));
         $attach_picture = '';

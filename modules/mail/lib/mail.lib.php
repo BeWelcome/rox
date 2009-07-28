@@ -126,7 +126,6 @@ class MOD_mail
         require SCRIPT_BASE.'templates/shared/mail_html.php';
         $mail_html = ob_get_contents();
         ob_end_clean();
-
         // Add the html-body
         $message->addPart($mail_html, 'text/html');
 

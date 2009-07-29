@@ -66,10 +66,10 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
 	define("EWIKI_DEFAULT_ACTION", "view"); # (keep!)
 	define("EWIKI_CASE_INSENSITIVE", 1);	# wikilink case sensitivity
 	define("EWIKI_HIT_COUNTING", 1);
-	define("EWIKI_RESOLVE_DNS", 1);		# gethostbyaddr() when editing
+	define("EWIKI_RESOLVE_DNS", 0);		# gethostbyaddr() when editing
 	define("UNIX_MILLENNIUM", 1000000000);
         #- rendering
-	define("EWIKI_ALLOW_HTML", 0);		# often a very bad idea
+	define("EWIKI_ALLOW_HTML", 1);		# often a very bad idea
 	define("EWIKI_HTML_CHARS", 1);		# allows for &#200;
 	define("EWIKI_ESCAPE_AT", 1);		# "@" -> "&#x40;"
         #- http/urls
@@ -731,7 +731,7 @@ function ewiki_make_title($id='', $title='', $class=3, $action="view", $go_actio
    $o = $title;
 
    // h2.page.title is obsolete; h2.text-title recommended
-   return('<h2 class="text-title page title">' . $o . '</h2>');
+   return('<h1 class="text-title page title">' . $o . '</h1>');
 }
 
 
@@ -750,7 +750,7 @@ function ewiki_page_view($id, &$data, $action, $all=1) {
       "scan_links" => 1,
       "html" => (EWIKI_ALLOW_HTML||(@$data["flags"]&EWIKI_DB_F_HTML)),
    );
-   $o .= '<div class="text-body">' . "\n"
+   $o .= '<div class="text-body text">' . "\n"
       //. $ewiki_plugins["render"][0] ($data["content"], $render_args)
       . ewiki_format($data["content"], $render_args) // -dh
       . "</div>\n";
@@ -1204,7 +1204,7 @@ function ewiki_page_info($id, &$data, $action) {
    $show = array(
       "version", "author",
       "lastmodified",  "created", "hits", "refs",
-      "flags", "meta", "content"
+      "flags", "content"
    );
    $no_refs = (boolean)$ewiki_config["info_refs_once"];
 
@@ -1229,7 +1229,7 @@ function ewiki_page_info($id, &$data, $action) {
          continue;
       }
 
-      $o .= '<table class="version-info" border="1" cellpadding="2" cellspacing="1">' . "\n";
+      $o .= '<table class="version-info"  cellpadding="2" cellspacing="1">' . "\n";
 
       #-- additional info-actions
       $o .= '<tr><td></td><td class="action-links">';
@@ -1695,7 +1695,7 @@ function ewiki_control_links_list($id, &$data, $action_links, $version=0) {
       if (EWIKI_PROTECTED_MODE && EWIKI_PROTECTED_MODE_HIDING && !ewiki_auth($id, $data, $action)) {
          continue;
       }
-      $o .= $ins[1] . '<a href="' .
+      $o .= $ins[1] . '<a class="button" href="' .
          ( strpos($action, "://")
             ? $action   # an injected "action" URL
             : ewiki_script($action, $id, $version?array("version"=>$version):NULL)
@@ -3185,7 +3185,7 @@ function ewiki_author($defstr="") {
 /*
    decodes {author} field for display in pages
 */
-function ewiki_author_html($orig, $tail=1) {
+function ewiki_author_html($orig, $tail=0) {
    $str = strtok($orig, " (|,;/[{<+");
    $tail = $tail ? " " . strtok("\000") : "";
    #-- only IP
@@ -3203,7 +3203,7 @@ function ewiki_author_html($orig, $tail=1) {
    }
    #-- eventually an AuthorName
    else {
-      return('<a href="' . ewiki_script("", $str) . '">' . $str . '</a>' . $tail);
+      return('<a href="'.PVars::getObj("env")->baseuri.'members/' . $str . '">' . $str . '</a>' . $tail);
    }
    return($orig);
 }

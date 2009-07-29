@@ -56,10 +56,9 @@ class ReadMessagePage extends MessagesBasePage
         $member = $model->getMemberWithUsername($contact_username);
 
         ?>
-        <div class="floatbox">
-            <div id="message">
+        <div id="message" class="floatbox">
             <div id="shade_top"> </div>
-            <div class="floatbox" id="messageheader">
+            <div id="messageheader" class="floatbox">
                 <div id="messageside" class="float_right">
                     <p class="small grey">
                         <?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong>
@@ -78,9 +77,9 @@ class ReadMessagePage extends MessagesBasePage
                         } ?>
                         </p>
                       <p class="small grey">
-                        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>"> <?=$words->getSilent('messages_allmessageswith',$contact_username)?></a>
+                        <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>" /> <?=$words->getSilent('messages_allmessageswith',$contact_username)?></a>
                       </p>
-                </div>
+                </div> <!-- messageside -->
                 <p class="float_left">
                 <?=MOD_layoutbits::PIC_50_50($contact_username) ?>
                 </p>
@@ -96,7 +95,7 @@ class ReadMessagePage extends MessagesBasePage
                 <p class="text">
                 <?echo $purifier->purify(str_replace("\n","<br />",$message->Message)) ; ?>
                 </p>
-            </div>
+            </div> <!-- messagecontent -->
             <div id="messagefooter">
                 <p>
                   <?php if ($direction_in) { ?>
@@ -105,9 +104,9 @@ class ReadMessagePage extends MessagesBasePage
                   <a class="button" href="messages/<?=$message->id ?>/edit"><?=$words->get('editmessage')?></a>
                   <?php } ?>
                 </p>
-            </div>
+            </div> <!-- messagefooter -->
             <div id="shade"> </div>
-        </div>
+        </div> <!-- message -->
         <?=$words->flushBuffer()?>
 
         <?php

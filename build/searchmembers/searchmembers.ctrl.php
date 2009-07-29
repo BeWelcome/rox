@@ -67,13 +67,49 @@ class SearchmembersController extends PAppController {
             $P->content = $this->_view->showFeatureIsClosed();
             return;
         } // end of test "if feature is closed" 
-
         
         if(PPostHandler::isHandling()) return;
         $request = PRequest::get()->request;
-
         if (!isset($request[1])) {
             $request[1] = '';
+        }
+        
+        // Route quicksearch
+        if ($request[0] == 'quicksearch') {
+            $error = false;
+            // static pages
+            switch($request[1]) {
+                case '':
+    				$searchtext=$_GET["vars"] ; // Because of old way to use the QuickSearch with a get
+                    break;
+                default:
+    				$searchtext=$request[1] ;
+                    break;
+            }
+		
+    		$TReturn=$this->_model->quicksearch($searchtext) ;
+    		if ((count($TReturn->TMembers)==1) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==0)) {
+    			$loc="members/".$TReturn->TMembers[0]->Username ;
+    			header('Location: '.$loc);
+                PPHP::PExit();
+    		}
+    		else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==1)  and  (count($TReturn->TForumTags)==0)) {
+    			$loc=$TReturn->TPlaces[0]->link ;
+    			header('Location: '.$loc);
+                PPHP::PExit();
+    		}
+    		else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==1)) {
+    			$loc="forums/t".$TReturn->TForumTags[0]->IdTag ;
+    			header('Location: '.$loc);
+                PPHP::PExit();
+    		}
+            $P->content .= $vw->quicksearch_results($TReturn);
+            return $P;
+        }
+
+        if ($request[0] != 'searchmembers') {
+            header('Location: searchmembers');
+            PPHP::PExit();
         }
 
         // fix a problem with Opera javascript, which sends a 'searchmembers/searchmembers/ajax' request
@@ -114,7 +150,7 @@ class SearchmembersController extends PAppController {
         
         // Check wether there are latest search results and variables from the session
         if (!$queries && isset($_SESSION['SearchMembersTList'])) {
-            if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = true;
+            if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = $_SESSION['SearchMembersVars'];
         }
 
         switch ($request[1]) {
@@ -134,7 +170,7 @@ class SearchmembersController extends PAppController {
                 else {
                     $vars = &PPostHandler::getVars($callbackId);
                     if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
-                    $TList = $this->_model->searchmembers($vars);
+                    if (!isset($TList)) $TList = $this->_model->searchmembers($vars);
                 }
                 $this->_view->searchmembers_ajax($TList, $vars, $mapstyle);
                 // Store latest search results and variables in session
@@ -162,9 +198,7 @@ class SearchmembersController extends PAppController {
 				}
 				if (isset($_POST['searchtext'])) { // The parameter can come from the quicksearch form
 					$searchtext = $_POST['searchtext'];
-				}
-
-				
+				}				
 				
 //				die('here searchtext={'.$searchtext.'}') ;
 				if (!empty($searchtext)) {
@@ -248,10 +282,7 @@ class SearchmembersController extends PAppController {
                 // prepare sort order for both the filters and the userbar
                 $sortorder = $this->_model->get_sort_order();
                 
-                $P->teaserBar = $vw->teaser($mapstyle,$sortorder);
-                
-                // submenu
-                //$P->subMenu = $vw->submenu($subTab);
+                $P->teaserBar = $vw->teaser($mapstyle,$sortorder,$varsOnLoad);
                 
                 $P->teaserBar .= $vw->searchmembersFilters(
                     $this->_model->sql_get_groups(),
@@ -260,31 +291,28 @@ class SearchmembersController extends PAppController {
                     $sortorder
                 );
 
-                // $P->content = $vw->search_default($mapstyle);                
-                $P->content = $vw->memberlist($mapstyle,$sortorder);
-                
-                $P->newBar .= $vw->searchmembers(
+                $P->content = $vw->search_column_col3(
+                    $sortorder,
                     $queries,
                     $mapstyle,
                     $varsOnLoad,
                     $varsGet,
                     $this->_model->sql_get_set("members", "Accomodation")
                 );
+                /*$P->content = $vw->memberlist($mapstyle,$sortorder);
+                
+                $P->content .= $vw->searchmembers(
+                    $queries,
+                    $mapstyle,
+                    $varsOnLoad,
+                    $varsGet,
+                    $this->_model->sql_get_set("members", "Accomodation")
+                );
+                */
                 
                 $P->show_volunteerbar = false;
                 break;
         }
     }
-
-    public function buildContent() {
-        return true;
-    }
-
-    public function topMenu($currentTab) {
-        $this->_view->topMenu($currentTab);
-    }
     
-    public function footer() {
-        $this->_view->footer();
-    }
 }

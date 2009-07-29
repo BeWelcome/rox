@@ -16,9 +16,9 @@ function load() {
             map.addControl(new GHierarchicalMapTypeControl(), new GControlPosition(G_ANCHOR_BOTTOM_RIGHT, new GSize(7, 10)));
 		    map.addControl(new SearchMapButton());
             map.enableDoubleClickZoom();
-            map.setCenter(new GLatLng(15, 10), 1);
             map.addMapType(G_PHYSICAL_MAP);
             map.setMapType(G_PHYSICAL_MAP);
+            map.setCenter(new GLatLng(25, 10), 1);
             GEvent.addListener(map, "click", function(overlay, point)	{
                 if (overlay && overlay.summary) overlay.openInfoWindowHtml(overlay.summary);
             });         

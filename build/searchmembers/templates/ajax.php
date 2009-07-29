@@ -62,11 +62,11 @@ foreach($TList as $TL) {
     $ii++;
     $Nr = $ii;
     $string = '';
-	$string .= "<table style=\"width: 300px\"><tr><td class=\"memberlist\">" ;
+	$string .= "<table style=\"width: 200px\"><tr><td class=\"memberlist\">" ;
 	$string .= "<img src=\"members/avatar/".$TL->Username."?xs\" >";
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<p><a href="javascript:newWindow(\''.$TL->Username.'\')"><b>'.$TL->Username.'</b></a><br />';
+	$string .= '<p><a href="members/\''.$TL->Username.'\'" target="_blank"><b>'.$TL->Username.'</b></a><br />';
 	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TL->Age).", ". $words->getFormatted('from')." ".$TL->CityName.", ".$TL->CountryName."<br>".$TL->ProfileSummary;
 	$string .= "</span><br /><a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())+4);\">Zoom In</a> <a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())-4);\">Zoom Out</a></td></tr></table>" ;
     $summary = xml_prep($string);
@@ -77,15 +77,15 @@ foreach($TList as $TL) {
 ";
 }
 
-$string = "<br /><center>" ;
+$string = "<div class='pages center'><ul style='float:none'>" ;
 for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
+    $rr++;
 	$i1=$ii ;
 	$i2= min($ii + $width,$maxpos);
-	if (($curpos>=$i1) and ($curpos<$i2)) $string .=  "<b>" ;
-		$string .= "<a href=\"javascript: page_navigate($i1);\">".($i1+1)."..$i2</a> " ;
-	if (($curpos>=$i1) and ($curpos<$i2)) $string .= "</b>" ;
+	$add = (($curpos>=$i1) and ($curpos<$i2)) ? 'current' : '';
+    $string .= "<li class=\"$add\"><a href=\"javascript: page_navigate($i1);\" class=\"off\">".$rr."</a></li> " ;
 }
-$string .= "</center>" ;
+$string .= "</ul></div>" ;
 if ($ShowMemberFunction == 'ShowMembersAjaxShort') {
     echo "<header header='".
     xml_prep('').
@@ -125,7 +125,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<a href="javascript:newWindow(\''.$TM->Username.'\')">'.$TM->Username.'</a>';
+	$string .= '<a href="members/\''.$TM->Username.'\'" target="_blank">'.$TM->Username.'</a>';
 	$string .= "<br />".$TM->CountryName;
 	$string .= "<br />".$TM->CityName;
 	$string .= "</td>" ;
@@ -151,16 +151,19 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 }
 function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
 	static $ii = 0;
-$words = new MOD_words();
-if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
-	$info_styles = array(0 => "<div class=\"blank floatbox\" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight floatbox\" align=\"left\" valign=\"center\">");
+    $words = new MOD_words();
+    $layoutbits = new MOD_layoutbits();
+    
+    $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',$TM->LastLogin))));
+    if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
+	$info_styles = array(0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">");
 	$string = $info_styles[($ii++%2)]; // this display the <tr>
-	$string .= "<table><tr><td class=\"memberlist\">" ;
+	$string .= "<table style='width:100%'><tr><td class=\"memberlist\">" ;
 	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
 	$string .= "</td>" ;
 	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<p><a href="javascript:newWindow(\''.$TM->Username.'\')"><b>'.$TM->Username.'</b></a><br />';
-	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName.", ". $words->getFormatted('LastLogin').": ".$TM->LastLogin;
+	$string .= '<p><a href="members/\''.$TM->Username.'\'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
+	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName."<br /> ". $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span>";
 	$string .= "</span></td><td>";
     $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:GEvent.trigger(gmarkers[".$Nr."], 'click');\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";
     $string .= "<span class=\"small\">".$Accomodation[$TM->Accomodation]."</span>";

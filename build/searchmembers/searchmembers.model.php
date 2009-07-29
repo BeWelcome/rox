@@ -201,6 +201,7 @@ WHERE
 			$searchtext=mysql_real_escape_string($_searchtext) ;
 			$str="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$searchtext."'";
 			$qry = $this->dao->query($str);
+			
 			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
 				$str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
 				$result = $this->dao->query($str);

@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 ?>
 
 <div id="SearchAdvanced" class="clearfix NotDisplayed" style="background-color: #e5e5e5; border-top: 1px solid #999;">
-<form id="searchmembers" name="searchmembers" action="javascript: {}" />
+<form id="searchmembers" name="searchmembers" action="javascript: {}">
 <input type="hidden" name="mapsearch" id="mapsearch" value="0" />
 <input type="hidden" name="bounds_zoom" id="bounds_zoom" />
 <input type="hidden" name="bounds_center_lat" id="bounds_center_lat" />
@@ -41,22 +41,22 @@ Boston, MA  02111-1307, USA.
 <div id="FindPeopleFilter">
 <table class="float_left"><tr><td>
 <strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
-<input type="text" name="Username" id="UsernameField" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+<input type="text" name="Username" id="UsernameField" size="30" maxlength="30" value="" onfocus="getFieldHelp(this.name);" onkeypress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
-<input type="text" name="TextToFind" id="TextToFindField" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+<input type="text" name="TextToFind" id="TextToFindField" size="30" maxlength="30" value="" onfocus="getFieldHelp(this.name);" onkeypress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td></tr></table>
 <table class="float_left">
 <tr><td>
 <strong class="small"><?php echo $words->getFormatted('Gender'); ?></strong><br />
-<select Name="Gender">
+<select name="Gender">
     <option value="0"></option>
     <option value="male"><?php echo $words->getBuffered('Male'); ?></option>
     <option value="female"><?php echo $words->getBuffered('Female'); ?></option>
 </select><?php echo $words->flushBuffer(); ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleMinimumAge'); ?></strong><br />
-<select Name="MinimumAge">
+<select name="MinimumAge">
     <option value="0"></option>
     <?php foreach(range(18, 90, 2) as $age) { ?>
     <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
@@ -64,7 +64,7 @@ Boston, MA  02111-1307, USA.
 </select><?php echo $words->flushBuffer(); ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleMaximumAge'); ?></strong><br />
-<select Name="MaximumAge">
+<select name="MaximumAge">
     <option value="0"></option>
     <?php foreach(range(18, 90, 2) as $age) { ?>
     <option value="<?php echo $age; ?>"><?php echo $age; ?></option>
@@ -96,7 +96,7 @@ Boston, MA  02111-1307, USA.
 <table class="float_left" style="padding-bottom: 10px"><tr><td valign="top">
 <strong class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></strong><br />
 <?php foreach($TabAccomodation as $TabAcc) { ?>
-<input type="checkbox" name="Accomodation[]" id="<?php echo "Accomodation_$TabAcc"; ?>" value="<?php echo $TabAcc; ?>" class="sval">&nbsp;<span onclick="document.getElementById('<?php echo "Accomodation_$TabAcc"; ?>').click();"><?php echo $words->getFormatted('Accomodation_'.$TabAcc); ?></span><br />
+<input type="checkbox" name="Accomodation[]" id="<?php echo "Accomodation_$TabAcc"; ?>" value="<?php echo $TabAcc; ?>" class="sval" />&nbsp;<span onclick="document.getElementById('<?php echo "Accomodation_$TabAcc"; ?>').click();"><?php echo $words->getFormatted('Accomodation_'.$TabAcc); ?></span><br />
 <?php } ?>
 <strong class="small">
 <?php echo $words->getFormatted('FindPeopleAccomodationTip'); ?>
@@ -104,7 +104,7 @@ Boston, MA  02111-1307, USA.
 </td><td valign="top">
 <strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br />
 <?php foreach($TabTypicOffer as $TabTyp) { ?>
-<input type="checkbox" name="TypicOffer[]" id="<?php echo "TypicOffer_$TabTyp"; ?>" value="<?php echo $TabTyp; ?>" class="sval">&nbsp;<span onclick="document.getElementById('<?php echo "TypicOffer_$TabTyp"; ?>').click();"><?php echo $words->getFormatted('TypicOffer_'.$TabTyp); ?></span><br />
+<input type="checkbox" name="TypicOffer[]" id="<?php echo "TypicOffer_$TabTyp"; ?>" value="<?php echo $TabTyp; ?>" class="sval" />&nbsp;<span onclick="document.getElementById('<?php echo "TypicOffer_$TabTyp"; ?>').click();"><?php echo $words->getFormatted('TypicOffer_'.$TabTyp); ?></span><br />
 <?php } ?>
 <strong class="small">
 <?php echo $words->getFormatted('FindPeopleTypicOfferTip'); ?>
@@ -115,24 +115,24 @@ Boston, MA  02111-1307, USA.
 <div id="FindPeopleResults">
 <table class="float_left"><tr><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
-<select Name="OrderBy" id="filterorder" onChange="document.getElementById('thisorder').value = this.value;">
+<select name="OrderBy" id="filterorder" onchange="document.getElementById('thisorder').value = this.value;">
     <?php foreach($TabSortOrder as $key=>$val) { ?>
     <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>
 </select>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrderDirection'); ?></strong><br />
-<select Name="OrderByDirection">
+<select name="OrderByDirection">
     <option value="desc"><?php echo $words->getBuffered('Forward'); ?></option>
     <option value="asc"><?php echo $words->getBuffered('Reverse'); ?></option>
 </select>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
-<select Name="limitcount" class="sval">
+<select name="limitcount" class="sval">
     <option value="10">10</option>
-    <option value="25" <?=isset($_GET['vars']) ? '' : 'selected'; ?>>25</option>
+    <option value="25" <?=isset($_GET['vars']) ? '' : 'selected="selected"'; ?>>25</option>
     <option value="50">50</option>
-    <option value="100"<?=isset($_GET['vars']) ? 'selected' : ''; ?>>100</option>
+    <option value="100"<?=isset($_GET['vars']) ? 'selected="selected"' : ''; ?>>100</option>
 </select>
 </td></tr></table>
 </div>

@@ -135,6 +135,8 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/markup/mediawiki.php"); // load our own mediawiki plugin
         require_once("erfurtwiki/plugins/action/diff.php"); // stupid diff ;)
         require_once("erfurtwiki/plugins/action/info_qdiff.php"); // quick diff
+        require_once("erfurtwiki/plugins/linking/titlefix.php"); // quick diff
+
         // require_once("erfurtwiki/plugins/action/verdiff.php"); // version diff - not needed right now!?
         
         // RSS support

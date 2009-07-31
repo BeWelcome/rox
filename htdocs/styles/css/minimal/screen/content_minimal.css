@@ -772,6 +772,10 @@ div.fieldset-menu li.active a {
 #login-widget input#login-u, #login-widget input#login-p {
     width: 8em;
 }
+#login-widget label, #login-widget label {
+    width: 8em;
+	display:block;
+}
 #loginmessage {
     width: 100%;
     padding: 1em 1em 1em 3em;
@@ -1088,9 +1092,9 @@ height:50px;
 
 .wiki .page-toc {
    	background-color: #f5f5f5;
-	padding: 2em;
+	padding: 0 2em;
 	margin: 1em 0 2em 2em;
-	width: 25%;
+	width: 22%;
 	float: right;
 	border-top: 1px solid #e5e5e5;
 	border-left: 1px solid #e5e5e5;
@@ -1101,6 +1105,16 @@ height:50px;
    background: transparent;
    font-size: 1.2em;
    padding: 1em 0;
+}
+.wiki .page-toc.contracted{
+   padding: 0 2em;
+   margin: 1em 0 0 2em;
+   cursor: s-resize;
+}
+.wiki .page-toc.expanded{
+   padding: 2em;
+   margin: 1em 0 2em 2em;
+   cursor: n-resize;
 }
 
 .wiki .search-form {

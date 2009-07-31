@@ -88,12 +88,13 @@ function ewiki_toc_view_prepend(&$html) {
 
     global $ewiki_page_toc;
     $words = new MOD_words();
-    $html_new = "<div class=\"page-toc\">\n";
+    $html_new = "<div class=\"page-toc expanded\" id=\"wiki-page-toc\">\n";
     $html_new .= '
-        <div class="page-toc-caption">'. $words->getFormatted('WikiPages') .'</div>
+        <div class="page-toc-caption" id="WikiToggleLink">'. $words->getFormatted('WikiPages') .' <a id="foldWikiLink1">(-)</a><a id="foldWikiLink2" style="display:none;">(+)</a></div>
+        <div id="foldWikiMenu">
         <a href="wiki">'. $words->getFormatted('WikiFrontPage') .'</a><br />
         <a href="wiki/NewestPages">'. $words->getFormatted('WikiNewestPages') .'</a><br />
-        <a href="wiki/RecentChanges">'. $words->getFormatted('RecentChanges') .'</a><br />
+        <a href="wiki/RecentChanges">'. $words->getFormatted('RecentChanges') .'</a> <a href="wiki/rss"><img src="images/icons/feed.png" alt="RSS Feed" /></a><br />
         <a href="wiki/WikiMarkup">'. $words->getFormatted('WikiMarkup') .'</a>
 
     ';
@@ -106,6 +107,16 @@ in <select name="where"><option value="content">'. $words->getSilent('WikiSearch
 </form></div>
 <script type="text/javascript"><!--
 document.powersearch.q.focus();
+function wikiClassChange() {
+    el = $(\'wiki-page-toc\');
+    Effect.toggle($(\'foldWikiMenu\'),\'blind\');
+    $(\'foldWikiLink1\').toggle();
+    $(\'foldWikiLink2\').toggle();
+    el.className = (el.className.indexOf(\'expanded\') != -1) ? el.className.replace(/expanded/,\'contracted\') : el.className.replace(/contracted/,\'expanded\');
+    return false;
+}
+$(\'WikiToggleLink\').onclick = wikiClassChange;
+
 //--></script>'. $words->flushBuffer();
 
     if (count($ewiki_page_toc) >= 3) {
@@ -113,7 +124,7 @@ document.powersearch.q.focus();
         . '<ol>'.implode("", $ewiki_page_toc) . '</ol>';
     }
    
-    $html_new .= "</div>\n";
+    $html_new .= "</div></div>\n";
     $html_new .= $html;
     
     $html = $html_new;

@@ -31,6 +31,15 @@ function ewiki_linking_titlefix(&$title, &$href, &$href2, &$type) {
            . '">' . $title . '</a>';
       $type = array("wikipage", "title-swapped");
       return($str);
+   } else {
+       $uu = $href;
+       $href = $title;
+       $title = $uu;
+
+       $str = '<span class="NotFound"><a href="' . ewiki_script("", $href) . htmlentities($href2)
+            . '">' . $title . '</a></span>';
+       $type = array("wikipage", "title-swapped");
+       return($str);
    }
 
 }

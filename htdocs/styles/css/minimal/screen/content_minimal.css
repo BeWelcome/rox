@@ -772,10 +772,6 @@ div.fieldset-menu li.active a {
 #login-widget input#login-u, #login-widget input#login-p {
     width: 8em;
 }
-#login-widget label, #login-widget label {
-    width: 8em;
-	display:block;
-}
 #loginmessage {
     width: 100%;
     padding: 1em 1em 1em 3em;

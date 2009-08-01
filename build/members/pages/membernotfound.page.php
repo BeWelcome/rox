@@ -1,7 +1,7 @@
 <?php
 
 
-class MembersMembernotfoundPage extends MemberPage
+class MembersMembernotfoundPage extends PageWithActiveSkin
 {
     protected function getPageTitle()
     {
@@ -25,8 +25,8 @@ class MembersMembernotfoundPage extends MemberPage
     
     protected function column_col3()
     {
-        echo "
-        Did not find this member. We are not amused.";
+        echo '
+        <p class="note">Did not find this member. We are not amused.</p>';
     }
 }
 

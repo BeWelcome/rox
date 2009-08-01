@@ -125,6 +125,8 @@ class WikiController extends PAppController {
             define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
         }
         
+        $this->defineMarkup(&$ewiki_config);
+        
         // More plugins
         require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
         require_once("erfurtwiki/plugins/aview/fpage_copyright.php"); // Copyleft Info
@@ -136,6 +138,7 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/action/diff.php"); // stupid diff ;)
         require_once("erfurtwiki/plugins/action/info_qdiff.php"); // quick diff
         require_once("erfurtwiki/plugins/linking/titlefix.php"); // quick diff
+        require_once("erfurtwiki/plugins/markup/htmltable.php"); // quick diff
 
         // require_once("erfurtwiki/plugins/action/verdiff.php"); // version diff - not needed right now!?
         
@@ -150,8 +153,6 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/page/wantedpages.php"); // load some plugins
         require_once("erfurtwiki/plugins/page/orphanedpages.php"); // load some plugins
         require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
-
-        $this->defineMarkup(&$ewiki_config);
 
         require_once('erfurtwiki/ewiki.php');
         $ewiki_config["smilies"] = array(

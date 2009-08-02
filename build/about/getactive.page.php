@@ -25,5 +25,3 @@ class AboutGetactivePage extends AboutBasePage
     }
 }
 
-
-?>

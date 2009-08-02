@@ -87,7 +87,8 @@ class ReadMessagePage extends MessagesBasePage
                   <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="people/'.$contact_username.'">'.$contact_username.'</a>') : $words->get('MessageTo','<a href="people/'.$contact_username.'">'.$contact_username.'</a>')) ?> </span>
                 </p>
                 <p class="">
-                  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>
+                  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->created)) ?>
+
                 </p>
 
             </div>
@@ -113,7 +114,12 @@ class ReadMessagePage extends MessagesBasePage
     }
 
     protected function getSubmenuActiveItem() {
-        return 'received';
+        $active_item = 'received';
+        $contact_username = $this->message->senderUsername;
+        if ($contact_username == $_SESSION['Username']) {
+            $active_item = 'sent';
+        }
+        return $active_item;
     }
 }
 
@@ -149,6 +155,10 @@ class MessageSentPage extends ReadMessagePage
         $words = new MOD_words();
         echo '<p class="note">'.$words->get('Message_hasbeensent').'</p>';
         parent::column_col3();
+    }
+    
+    protected function getSubmenuActiveItem() {
+        return 'sent';
     }
 }
 

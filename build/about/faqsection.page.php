@@ -39,12 +39,11 @@ class AboutFaqsectionPage extends AboutFaqPage
         $words = $this->getWords();
         $req = $_SERVER['REQUEST_URI'];
         if (isset($_SESSION["IdLanguage"])) {
-			$IdLanguage=$_SESSION["IdLanguage"] ;
-		}
-		else {
-			$IdLanguage=0 ;
-		}
-		
+            $IdLanguage=$_SESSION["IdLanguage"] ;
+        }
+        else {
+            $IdLanguage=0 ;
+        }
         echo '
         <h2>'.$words->get($this->faq_section->Description).'</h2>';
         echo '

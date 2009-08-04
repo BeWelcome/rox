@@ -58,7 +58,7 @@ class MemberPage extends PageWithActiveSkin
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Accepter','All')) {
             // array_push($tt,array('admin',"members/{$username}/adminedit",'Admin: Edit Profile') ) ;
-            array_push($tt,array('admin',"bw/admin/updatemandatory.php?username={$username}",'Admin: Edit Profile') ) ;
+            array_push($tt,array('admin',"bw/updatemandatory.php?username={$username}",'Admin: Edit Profile') ) ;
         }
         if (MOD_right::get()->HasRight('Rights')) {
             array_push($tt,array('admin','bw/admin/adminrights.php?username='.$username,'AdminRights') ) ;
@@ -70,7 +70,7 @@ class MemberPage extends PageWithActiveSkin
             array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,'See Logs') ) ;
         }
         if (MOD_right::get()->HasRight('Accepter','All')) {
-            array_push($tt,array('admin','bw/editmyprofile.php?cid='.$username,'BW Edit Profile #'.$this->member->id) ) ;
+            array_push($tt,array('admin','bw/editmyprofile.php?cid='.$this->member->id,'BW Edit Profile #'.$this->member->id) ) ;
         }
         return($tt) ;
     }

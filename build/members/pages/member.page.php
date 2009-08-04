@@ -25,9 +25,9 @@ class MemberPage extends PageWithActiveSkin
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
         $comments_count = $member->count_comments(); 
-		$ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
+        $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
         if ($this->myself) {
-			$tt=array(
+            $tt=array(
                 array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
                 array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors'),
@@ -53,24 +53,26 @@ class MemberPage extends PageWithActiveSkin
                 array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", $ww->Gallery),
                 array('forum', "forums/member/$username", $ViewForumPosts),
-				array('notes','bw/mycontacts.php?IdContact='.$this->member->id,$words->get('ViewMyNotesForThisMember'))
+                array('notes','bw/mycontacts.php?IdContact='.$this->member->id,$words->get('ViewMyNotesForThisMember'))
             );
         }
-		if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Accepter','All')) {
-			array_push($tt,array('admin',"members/{$username}/adminedit",'Admin: Edit Profile') ) ;
-		}
-		if (MOD_right::get()->HasRight('Rights')) {
-			array_push($tt,array('admin','bw/admin/adminrights.php?username='.$username,'AdminRights') ) ;
-		}
-		if (MOD_right::get()->HasRight('Flags')) {
-			array_push($tt,array('admin','bw/admin/adminflags.php?username='.$username,'AdminFlags') ) ;
-		}
-		if (MOD_right::get()->HasRight('Logs')) {
-			array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,'See Logs') ) ;
-		}
-
-
-		return($tt) ;
+        if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Accepter','All')) {
+            // array_push($tt,array('admin',"members/{$username}/adminedit",'Admin: Edit Profile') ) ;
+            array_push($tt,array('admin',"bw/admin/updatemandatory.php?username={$username}",'Admin: Edit Profile') ) ;
+        }
+        if (MOD_right::get()->HasRight('Rights')) {
+            array_push($tt,array('admin','bw/admin/adminrights.php?username='.$username,'AdminRights') ) ;
+        }
+        if (MOD_right::get()->HasRight('Flags')) {
+            array_push($tt,array('admin','bw/admin/adminflags.php?username='.$username,'AdminFlags') ) ;
+        }
+        if (MOD_right::get()->HasRight('Logs')) {
+            array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,'See Logs') ) ;
+        }
+        if (MOD_right::get()->HasRight('Accepter','All')) {
+            array_push($tt,array('admin','bw/editmyprofile.php?cid='.$username,'BW Edit Profile #'.$this->member->id) ) ;
+        }
+        return($tt) ;
     }
     
     protected function columnsArea()

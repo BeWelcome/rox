@@ -578,6 +578,10 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
         }
         $admincode = $s->fetch(PDB::FETCH_OBJ);
 
+		if (!isset($admincode->name)) { // Added by JeanYves to trap what might be a geoname problem which creates phperrorlogs
+		    MOD_log::get()->write("Forum::boardAdminCode Problem with geo [".$query."] as faile for country [".$countrycode->name."]","Bug") ; 				
+		}
+
         $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name;
         $href = $url;
         if ($this->tags) {

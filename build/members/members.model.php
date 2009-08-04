@@ -413,7 +413,7 @@ WHERE
         $words = new MOD_words();
         $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
         
-        if (!isset ($TData->id) && !$TData->id) {
+        if (!isset ($TData->id) ) {
             $str = "
 INSERT INTO
     specialrelations (

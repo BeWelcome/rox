@@ -104,7 +104,7 @@ if (count($relations) > 0) { ?>
 	    if ($statement) {
 		?>
 	        <div class="floatbox box">
-	        <h3><a href="gallery/show/user/<?=$userid?>" title="<?=$words->getSilent('GalleryTitleLatest')?>"> <?=$words->get('GalleryTitleLatest')?></a></h3>
+	        <h3><a href="gallery/show/user/<?=$member->Username?>" title="<?=$words->getSilent('GalleryTitleLatest')?>"> <?=$words->get('GalleryTitleLatest')?></a></h3>
 	    <?php
 	        // if the gallery is NOT empty, go show it
 	        $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);

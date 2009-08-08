@@ -589,12 +589,23 @@ class MOD_layoutbits
     // COPIED FROM OLD BW
     function getParams($Param) {
 
+//		echo "$Param=".$_SESSION["Param"]->$Param ;
+//		die(0) ;
+		return($_SESSION["Param"]->$Param) ;
+	/* 
+	
+	// Removed by JeanYves Params are to be retrieve in $_SESSION["Param"]
+	// which is only to be fetched from database only once but at EACH page refresh
+	
+	
         // get the user id
         $row = self::get()->dao->query(
             "SELECT *".
             'FROM params '
         )->fetch(PDB::FETCH_OBJ);
         return $row->$Param;
+	*/
+	
     }
     
     // COPIED FROM OLD BW

@@ -596,28 +596,25 @@ SQL;
 
     /**
      * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
+	 * @param $IdLanguage, prefered language to use, beware if ommitted, english is used !
 	 * @param $ReplaceWithBr allows 
      * @return string translated according to the best language find
      */
-    public function mTrad($IdTrad,$ReplaceWithBr=false) {
+    public function mInTrad($IdTrad,$IdLanguage=0,$ReplaceWithBr=false) {
 
-	 		$AllowedTags = "<b><i><br><br/><p>"; // This define the tags wich are not stripped inside a membertrad
+	 		$AllowedTags = "<b><i><br><br/><p><u>"; // This define the tags wich are not stripped inside a membertrad
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return an empty string
 			}
 			else  {
-			   if (!is_numeric($IdTrad)) {
-			   	  die ("it look like you are using MOD_WORD::mTrad with and allready translated word, a memberstrads.IdTrad is expected and it should be numeric !") ;
+			   if (!is_numeric($IdTrad)) { // Logging anomalie things to detect database problem if any
+					$sBug="it look like you are using MOD_WORD::mInTrad with and allready translated word [".$IdTrad."], a memberstrads.IdTrad is expected and it should be numeric !" ;
+					MOD_log::get()->write($sBug,"Bug");
+					die ($sBug) ;
 			   }
 			}
 		
-			if (isset($_SESSION['IdLanguage'])) {
-		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
-			}
-			else {
-		 		$IdLanguage=0 ; // by default language 0
-			} 
-			// Try default language
+			// Try default chosen language
         	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
@@ -629,7 +626,7 @@ SQL;
 			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
-			// Try default eng
+			// Try default en
         	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
@@ -651,8 +648,23 @@ SQL;
 				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
-			MOD_log::get()->write("mTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
+			MOD_log::get()->write("mInTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
 			return (""); // If really nothing was found, return an empty string
+	 } // end of mInTrad
+	 
+    /**
+     * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
+	 * @param $ReplaceWithBr allows 
+     * @return string translated according to the best language find
+     */
+    public function mTrad($IdTrad,$ReplaceWithBr=false) {
+		if (isset($_SESSION['IdLanguage'])) {
+	 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+		}
+		else {
+	 		$IdLanguage=0 ; // by default language 0
+		} 
+		return ($this->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
 	 } // end of mTrad
 	 
     /**

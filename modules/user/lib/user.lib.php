@@ -323,6 +323,9 @@ WHERE
      * Updates environment variables: WhoIsOnlineCount, GuestOnlineCount
      * WhoIsOnlineCount: number according to table online
      * GuestOnlineCount: number according to table guestsonline minus WhoIsOnlineCount
+	 *
+	 * Important this function also refresh the $_SESSION["MemberStatus"] variable and 
+	 * test it against Rejected and Banned status
      */
     public static function updateSessionOnlineCounter()
     {
@@ -339,6 +342,32 @@ WHERE
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $localDao =& $dao;
+
+		// Added by JeanYves to be able to manage in a dynamic way the status of a member 
+		if (isset($_SESSION["IdMember"])) { // if the user is a known member
+			$result = $localDao->query("SELECT Username,Status FROM members WHERE id=".$_SESSION["IdMember"]);
+			$row=$result->fetch(PDB::FETCH_OBJ);
+			$_SESSION["MemberStatus"]=$row->Status ;
+					
+			// If the user has just been set to Rejected or Banned immediately exclude him and clear the session
+			if (($_SESSION["MemberStatus"]=='Banned') or ($_SESSION["MemberStatus"]=='Rejected')) {
+				$PrevStatus=$_SESSION["MemberStatus"] ;
+				if (isset($_SESSION["Username"])) {
+					$PrevUsername=$_SESSION["Username"] ;
+				}
+				else {
+					$PrevUsername="Unknown" ;
+				}
+				MOD_log::get()->write("Forcing Logout for a user [".$PrevUsername."] the status just set to ".$_SESSION["MemberStatus"],"Login") ;
+//				logout() ; // I hope this clear the session variable
+		        session_regenerate_id();
+				$_SESSION=array() ; // This raz all session data but doesn't destroy cookie (which we don't want)
+				die(" Game Over <b>".$PrevUsername."</b>, your status is set to ".$PrevStatus) ; // It is a rough exit but kicking is rough isn't it ?
+			} // End of  Rejected/Banned checking
+		} // End if the user is a known member
+        
+
+
         if (isset($_SYSHCVOL['WhoIsOnlineDelayInMinutes'])) {
             $interval = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'];
         } else {
@@ -380,7 +409,8 @@ WHERE
      * Update table guestsonline, used for counting
      * guests (and logged in members?) of the website
      * "now".
-     * 
+     *
+	 *
      * FIXME: do I need to mysql_escape_string($_SERVER["PHP_SELF"]) ???
      * FIXME: method is at least called twice with every request to Rox
      * TODO: it's probably not making sense to use $_SERVER['PHP_SELF']
@@ -418,7 +448,6 @@ WHERE
             "
         );
 
-        
         // TODO: check for logged in user should be accomplished somewhere else
         // in a unified manner
         if ((
@@ -429,37 +458,6 @@ WHERE
         )) {
 						
 						
-				// Added by JeanYves to be able to manage in a dynamic way the status of a member 
-								
-				if (isset($_SESSION["IdMember"])) { // if the user is a known member
-$result = $localDao->query(
-                    "
-SELECT
-    Username,Status 
-FROM
-    members
-WHERE
-		id=".$_SESSION["IdMember"]
-                );
-					$row=$result->fetch(PDB::FETCH_OBJ);
-					$_SESSION["MemberStatus"]=$row->Status ;
-					
-					// If the user has just been set to Rejected or Banned immediately exclude him and clear the session
-					if (($_SESSION["MemberStatus"]=='Banned') or ($_SESSION["MemberStatus"]=='Rejected')) {
-						$PrevStatus=$_SESSION["MemberStatus"] ;
-						if (isset($_SESSION["Username"])) {
-							$PrevUsername=$_SESSION["Username"] ;
-						}
-						else {
-							$PrevUsername="Unknown" ;
-						}
-						MOD_log::get()->write("Forcing Logout for a user [".$PrevUsername."] the status just set to ".$_SESSION["MemberStatus"],"Login") ;
-						$this->logout() ; // I hope this clear the session variable
-				        session_regenerate_id();
-						die(" Game Over <b>".$PrevUsername."</b>, your status is set to ".$PrevStatus) ; // It is a rough exit but kicking is rough isn't it ?
-					} // End of  Rejected/Banned checking
-							
-				} // End if the user is a known member
 								
 								             
             /*

@@ -441,8 +441,23 @@ FROM
 WHERE
 		id=".$_SESSION["IdMember"]
                 );
-										$row=$result->fetch(PDB::FETCH_OBJ);
-										$_SESSION["MemberStatus"]=$row->Status ;
+					$row=$result->fetch(PDB::FETCH_OBJ);
+					$_SESSION["MemberStatus"]=$row->Status ;
+					
+					// If the user has just been set to Rejected or Banned immediately exclude him and clear the session
+					if (($_SESSION["MemberStatus"]=='Banned') or ($_SESSION["MemberStatus"]=='Rejected')) {
+						$PrevStatus=$_SESSION["MemberStatus"] ;
+						if (isset($_SESSION["Username"])) {
+							$PrevUsername=$_SESSION["Username"] ;
+						}
+						else {
+							$PrevUsername="Unknown" ;
+						}
+						MOD_log::get()->write("Forcing Logout for a user [".$PrevUsername."] the status just set to ".$_SESSION["MemberStatus"],"Login") ;
+						$this->logout() ; // I hope this clear the session variable
+				        session_regenerate_id();
+						die(" Game Over <b>".$PrevUsername."</b>, your status is set to ".$PrevStatus) ; // It is a rough exit but kicking is rough isn't it ?
+					} // End of  Rejected/Banned checking
 							
 				} // End if the user is a known member
 								

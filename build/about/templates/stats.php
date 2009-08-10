@@ -351,7 +351,7 @@ MochiKit.DOM.addLoadEvent(drawGraph3);
 
 var opt3 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[5]),
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
    "padding":{left: 30, right: 45, top: 20, bottom: 60},
    "xTicks": [
 <?
@@ -496,7 +496,7 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
 // 4 - last login
 // var opt4 = {
    // "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   // "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0])
+   // "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2])
 // };
 
 // function drawGraph4() {
@@ -514,7 +514,7 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
  var opt4 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
-   "padding": {left: 30, right: 30, top: 20, bottom: 60},
+   "padding": {left: 20, right: 20, top: 20, bottom: 60},
    "xTicks": [{v:0, label:lastlogingrouped[0]}, 
           {v:1, label:lastlogingrouped[1]}, 
           {v:2, label:lastlogingrouped[2]},
@@ -541,7 +541,7 @@ MochiKit.DOM.addLoadEvent(drawGraph4);
  var opt2 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
-   "padding": {left: 30, right: 45, top: 20, bottom: 60},
+   "padding": {left: 20, right: 20, top: 20, bottom: 60},
    "xTicks": [{v:0, label:country[0]}, 
           {v:1, label:country[1]}, 
           {v:2, label:country[2]},

@@ -33,26 +33,26 @@ $words = new MOD_words();
 		<div><canvas id="members-alltime" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsNewMembersAlltime") ?></h3>
-		<div><canvas id="newmembers-alltime" height="200" width="300" ></canvas></div>
+		<div><canvas id="newmembers-alltime" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsPercentNewMembersAlltime") ?></h3>
-		<div><canvas id="percentnewmembers-alltime" height="200" width="300" ></canvas></div>
+		<div><canvas id="percentnewmembers-alltime" height="200" width="350" ></canvas></div>
 
 
 		<h3><?php echo $words->get("StatsLoginAlltime") ?></h3>
-		<div><canvas id="loginperday-alltime" height="200" width="300" ></canvas></div>
+		<div><canvas id="loginperday-alltime" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsPercentLoginAlltime") ?></h3>
-		<div><canvas id="percentloginperday-alltime" height="200" width="300" ></canvas></div>
+		<div><canvas id="percentloginperday-alltime" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsTrustAlltime") ?></h3>
-		<div><canvas id="onetrust-alltime" height="200" width="300" ></canvas></div>
+		<div><canvas id="onetrust-alltime" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsPercentTrustAlltime") ?></h3>
-		<div><canvas id="percentonetrust-alltime" height="200" width="300" ></canvas></div>
+		<div><canvas id="percentonetrust-alltime" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsMessagesAlltime") ?></h3>
-		<div><canvas id="messages-alltime" height="200" width="300" ></canvas></div>		
+		<div><canvas id="messages-alltime" height="200" width="350" ></canvas></div>		
 
 		<h3><?php echo $words->get("StatsLastLogin") ?></h3>
 		<div><canvas id="lastlogin" height="300" width="350" ></canvas></div>
@@ -67,26 +67,26 @@ $words = new MOD_words();
 		<div><canvas id="members-last" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsNewMembersLast") ?></h3>
-		<div><canvas id="newmembers-last" height="200" width="300" ></canvas></div>
+		<div><canvas id="newmembers-last" height="200" width="350" ></canvas></div>
 		
 		<h3><?php echo $words->get("StatsPercentNewMembersLast") ?></h3>
-		<div><canvas id="percentnewmembers-last" height="200" width="300" ></canvas></div>
+		<div><canvas id="percentnewmembers-last" height="200" width="350" ></canvas></div>
 
 		
 		<h3><?php echo $words->get("StatsLoginLast") ?></h3>
-		<div><canvas id="loginperday-last" height="200" width="300" ></canvas></div>
+		<div><canvas id="loginperday-last" height="200" width="350" ></canvas></div>
 		
 		<h3><?php echo $words->get("StatsPercentLoginLast") ?></h3>
-		<div><canvas id="percentloginperday-last" height="200" width="300" ></canvas></div>
+		<div><canvas id="percentloginperday-last" height="200" width="350" ></canvas></div>
 		
 		<h3><?php echo $words->get("StatsTrustLast") ?></h3>
-		<div><canvas id="onetrust-last" height="200" width="300" ></canvas></div>
+		<div><canvas id="onetrust-last" height="200" width="350" ></canvas></div>
 		
 		<h3><?php echo $words->get("StatsPercentTrustLast") ?></h3>
-		<div><canvas id="percentonetrust-last" height="200" width="300" ></canvas></div>
+		<div><canvas id="percentonetrust-last" height="200" width="350" ></canvas></div>
 		
 		<h3><?php echo $words->get("StatsMessagesLast") ?></h3>
-		<div><canvas id="messages-last" height="200" width="300" ></canvas></div>		
+		<div><canvas id="messages-last" height="200" width="350" ></canvas></div>		
 		
 		<h3><?php echo $words->get("StatsMemberCountry") ?></h3>
 		<div><canvas id="countryranking" height="300" width="350" ></canvas></div>	
@@ -244,8 +244,8 @@ foreach ($statslast as $val) {
 
 var opt1 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 40, right:40, top: 20, bottom: 60},
+   "officeBaseStyle": officeOrange(),
+   "padding":{left: 30, right: 30, top: 20, bottom: 60},
    "xTicks": [
 <?
 	foreach ($xtick as $val) {
@@ -258,7 +258,7 @@ var opt1 = {
 // number of members, weekly average all time
 
 function drawGraph1() {
-    var layout = new PlotKit.Layout("line", opt1, officeOrange());
+    var layout = new PlotKit.Layout("line", opt1);
 	layout.addDataset("db",NbActiveMembers);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("members-alltime");

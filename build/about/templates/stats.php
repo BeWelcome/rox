@@ -351,8 +351,8 @@ MochiKit.DOM.addLoadEvent(drawGraph3);
 
 var opt3 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[1]),
+   "padding":{left: 30, right:30, top: 20, bottom: 60},
    "xTicks": [
 <?
 	foreach ($lastxtick as $val) {
@@ -369,8 +369,8 @@ var opt3 = {
 // number of members,last two months
 var opt11 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[1]),
+   "padding":{left: 30, right: 30, top: 20, bottom: 60},
 <? $ylow = $MembersLastTmp[0] - ($MembersLastTmp[0]/10);
 	$yhigh = $MembersLastTmp[$i-1] + ($MembersLastTmp[$i-1]/10);
 	echo "\"yAxis\":[".$ylow.",".$yhigh."],";

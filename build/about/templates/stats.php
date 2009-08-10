@@ -244,7 +244,6 @@ foreach ($statslast as $val) {
 
 var opt1 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-//    "officeBaseStyle": officeOrange(),
    "padding":{left: 20, right: 20, top: 20, bottom: 60},
    "xTicks": [
 <?
@@ -258,8 +257,7 @@ var opt1 = {
 // number of members, weekly average all time
 
 function drawGraph1() {
-//    var layout = new PlotKit.Layout("line", opt1);
-    var layout = PlotKit.Layout("bar", officeOrange());
+    var layout = new PlotKit.Layout("bar", officeOrange());
 	layout.addDataset("db",NbActiveMembers);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("members-alltime");

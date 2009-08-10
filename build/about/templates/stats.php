@@ -442,8 +442,8 @@ MochiKit.DOM.addLoadEvent(drawGraph18);
 // number of members who have at least one comment,last two months.
 var opt19 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "padding":{left: 40, right:45, top: 20, bottom: 60},
 <? $ylow = $NbMemberWithOneTrustTmpLast[0] - ($NbMemberWithOneTrustTmpLast[0]/10);
 	$yhigh = $NbMemberWithOneTrustTmpLast[$i-1] + ($NbMemberWithOneTrustTmpLast[$i-1]/10);
 	echo "\"yAxis\":[".$ylow.",".$yhigh."],";

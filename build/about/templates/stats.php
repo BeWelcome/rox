@@ -244,7 +244,7 @@ foreach ($statslast as $val) {
 
 var opt1 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": officeOrange(),
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
    "padding":{left: 30, right: 45, top: 20, bottom: 60},
    "xTicks": [
 <?
@@ -369,7 +369,7 @@ var opt3 = {
 // number of members,last two months
 var opt11 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[4]),
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
    "padding":{left: 30, right: 45, top: 20, bottom: 60},
 <? $ylow = $MembersLastTmp[0] - ($MembersLastTmp[0]/10);
 	$yhigh = $MembersLastTmp[$i-1] + ($MembersLastTmp[$i-1]/10);
@@ -443,7 +443,7 @@ MochiKit.DOM.addLoadEvent(drawGraph18);
 // number of members who have at least one comment,last two months.
 var opt19 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[3]),
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
    "padding":{left: 30, right: 45, top: 20, bottom: 60},
 <? $ylow = $NbMemberWithOneTrustTmpLast[0] - ($NbMemberWithOneTrustTmpLast[0]/10);
 	$yhigh = $NbMemberWithOneTrustTmpLast[$i-1] + ($NbMemberWithOneTrustTmpLast[$i-1]/10);
@@ -513,7 +513,7 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
 // country rank
  var opt4 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
    "padding": {left: 30, right: 30, top: 20, bottom: 60},
    "xTicks": [{v:0, label:lastlogingrouped[0]}, 
           {v:1, label:lastlogingrouped[1]}, 
@@ -540,8 +540,8 @@ MochiKit.DOM.addLoadEvent(drawGraph4);
 // country rank
  var opt2 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding": {left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "padding": {left: 30, right: 45, top: 20, bottom: 60},
    "xTicks": [{v:0, label:country[0]}, 
           {v:1, label:country[1]}, 
           {v:2, label:country[2]},

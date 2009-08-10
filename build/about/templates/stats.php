@@ -30,7 +30,7 @@ $words = new MOD_words();
 		<h3><?php echo $words->get("StatsHeadCol1") ?></h3>
 
 		<h3><?php echo $words->get("StatsMembersAlltime") ?></h3>
-		<div><canvas id="members-alltime" height="200" width="345" ></canvas></div>
+		<div><canvas id="members-alltime" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsNewMembersAlltime") ?></h3>
 		<div><canvas id="newmembers-alltime" height="200" width="350" ></canvas></div>
@@ -64,7 +64,7 @@ $words = new MOD_words();
 		<h3><?php echo $words->get("StatsHeadCol2") ?></h3>	
 
 		<h3><?php echo $words->get("StatsMembersLast") ?></h3>
-		<div><canvas id="members-last" height="200" width="345" ></canvas></div>
+		<div><canvas id="members-last" height="200" width="350" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsNewMembersLast") ?></h3>
 		<div><canvas id="newmembers-last" height="200" width="350" ></canvas></div>
@@ -244,7 +244,7 @@ foreach ($statslast as $val) {
 
 var opt1 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "padding":{left: 30, right: 30, top: 20, bottom: 60},
+   "padding":{left: 30, right: 45, top: 20, bottom: 60},
    "xTicks": [
 <?
 	foreach ($xtick as $val) {
@@ -257,7 +257,7 @@ var opt1 = {
 // number of members, weekly average all time
 
 function drawGraph1() {
-    var layout = new PlotKit.Layout("line", officeOrange());
+    var layout = PlotKit.Layout("line", officeOrange());
 	layout.addDataset("db",NbActiveMembers);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("members-alltime");
@@ -350,8 +350,8 @@ MochiKit.DOM.addLoadEvent(drawGraph3);
 
 var opt3 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[1]),
-   "padding":{left: 30, right:30, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[5]),
+   "padding":{left: 30, right: 45, top: 20, bottom: 60},
    "xTicks": [
 <?
 	foreach ($lastxtick as $val) {
@@ -368,8 +368,8 @@ var opt3 = {
 // number of members,last two months
 var opt11 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[1]),
-   "padding":{left: 30, right: 30, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[4]),
+   "padding":{left: 30, right: 45, top: 20, bottom: 60},
 <? $ylow = $MembersLastTmp[0] - ($MembersLastTmp[0]/10);
 	$yhigh = $MembersLastTmp[$i-1] + ($MembersLastTmp[$i-1]/10);
 	echo "\"yAxis\":[".$ylow.",".$yhigh."],";
@@ -442,7 +442,7 @@ MochiKit.DOM.addLoadEvent(drawGraph18);
 // number of members who have at least one comment,last two months.
 var opt19 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[3]),
    "padding":{left: 30, right: 45, top: 20, bottom: 60},
 <? $ylow = $NbMemberWithOneTrustTmpLast[0] - ($NbMemberWithOneTrustTmpLast[0]/10);
 	$yhigh = $NbMemberWithOneTrustTmpLast[$i-1] + ($NbMemberWithOneTrustTmpLast[$i-1]/10);

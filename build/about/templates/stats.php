@@ -30,7 +30,7 @@ $words = new MOD_words();
 		<h3><?php echo $words->get("StatsHeadCol1") ?></h3>
 
 		<h3><?php echo $words->get("StatsMembersAlltime") ?></h3>
-		<div><canvas id="members-alltime" height="200" width="300" ></canvas></div>
+		<div><canvas id="members-alltime" height="200" width="390" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsNewMembersAlltime") ?></h3>
 		<div><canvas id="newmembers-alltime" height="200" width="300" ></canvas></div>
@@ -64,7 +64,7 @@ $words = new MOD_words();
 		<h3><?php echo $words->get("StatsHeadCol2") ?></h3>	
 
 		<h3><?php echo $words->get("StatsMembersLast") ?></h3>
-		<div><canvas id="members-last" height="200" width="300" ></canvas></div>
+		<div><canvas id="members-last" height="200" width="390" ></canvas></div>
 
 		<h3><?php echo $words->get("StatsNewMembersLast") ?></h3>
 		<div><canvas id="newmembers-last" height="200" width="300" ></canvas></div>

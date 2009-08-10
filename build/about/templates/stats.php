@@ -244,8 +244,8 @@ foreach ($statslast as $val) {
 
 var opt1 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "officeBaseStyle": officeOrange(),
-   "padding":{left: 30, right: 30, top: 20, bottom: 60},
+//    "officeBaseStyle": officeOrange(),
+   "padding":{left: 20, right: 20, top: 20, bottom: 60},
    "xTicks": [
 <?
 	foreach ($xtick as $val) {
@@ -258,7 +258,8 @@ var opt1 = {
 // number of members, weekly average all time
 
 function drawGraph1() {
-    var layout = new PlotKit.Layout("line", opt1);
+//    var layout = new PlotKit.Layout("line", opt1);
+    var layout = PlotKit.Layout("bar", officeOrange());
 	layout.addDataset("db",NbActiveMembers);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("members-alltime");
@@ -514,7 +515,7 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
  var opt4 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding": {left: 40, right:40, top: 20, bottom: 60},
+   "padding": {left: 30, right: 30, top: 20, bottom: 60},
    "xTicks": [{v:0, label:lastlogingrouped[0]}, 
           {v:1, label:lastlogingrouped[1]}, 
           {v:2, label:lastlogingrouped[2]},

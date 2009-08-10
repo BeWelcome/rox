@@ -515,7 +515,7 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
    "padding": {left: 20, right: 20, top: 20, bottom: 60},
-   "pieRadius": 0.6,
+   "pieRadius": 0.55,
    "xTicks": [{v:0, label:lastlogingrouped[0]}, 
           {v:1, label:lastlogingrouped[1]}, 
           {v:2, label:lastlogingrouped[2]},

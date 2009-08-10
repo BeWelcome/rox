@@ -443,7 +443,7 @@ MochiKit.DOM.addLoadEvent(drawGraph18);
 var opt19 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
-   "padding":{left: 40, right:45, top: 20, bottom: 60},
+   "padding":{left: 30, right: 45, top: 20, bottom: 60},
 <? $ylow = $NbMemberWithOneTrustTmpLast[0] - ($NbMemberWithOneTrustTmpLast[0]/10);
 	$yhigh = $NbMemberWithOneTrustTmpLast[$i-1] + ($NbMemberWithOneTrustTmpLast[$i-1]/10);
 	echo "\"yAxis\":[".$ylow.",".$yhigh."],";

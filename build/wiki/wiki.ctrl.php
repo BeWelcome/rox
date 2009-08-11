@@ -136,12 +136,12 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
         $ewiki_plugins["view_final"][] = "ewiki_add_title";
 
+        require_once("erfurtwiki/plugins/markup/mediawiki.php"); // load our own mediawiki plugin
         require_once("erfurtwiki/plugins/aview/fpage_copyright.php"); // Copyleft Info
         require_once("erfurtwiki/plugins/markup/bbcode.php"); // BBcode plugin
         require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
         require_once("erfurtwiki/plugins/markup/rescuehtml.php"); // safe html tags ;)
         require_once("erfurtwiki/plugins/admin/control.php"); // load some plugins
-        require_once("erfurtwiki/plugins/markup/mediawiki.php"); // load our own mediawiki plugin
         require_once("erfurtwiki/plugins/action/diff.php"); // stupid diff ;)
         require_once("erfurtwiki/plugins/action/info_qdiff.php"); // quick diff
         require_once("erfurtwiki/plugins/linking/titlefix.php"); // quick diff
@@ -198,7 +198,6 @@ class WikiController extends PAppController {
         */
     
         $ewiki_config["wm_style"]["&rarr;"] = array("", "");
-
         
         $ewiki_config["wm_style"]["'''"] = array("<strong>", "</strong>");
         $ewiki_config["wm_style"]["''"] = array("<em>", "</em>");

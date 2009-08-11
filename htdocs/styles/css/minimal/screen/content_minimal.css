@@ -1172,7 +1172,6 @@ height:50px;
 */
 .wiki.info .chunked-result a {
    text-decoration: underline;
-   background-color: #ddbb55;
 }
 
 
@@ -1257,17 +1256,23 @@ height:50px;
   padding-left: .5em;
   margin-left: 2em;
 }
+.wiki ol, .wiki ul {
+  margin: .5em 0;
+}
 .wiki ul li {
   list-style-type: disc;
 }
 .wiki ol li {
-  list-style-type: none;
+  list-style-type: decimal;
 }
 .wiki ol span.number {
   margin-right: .3em;
 }
 .wiki .page-toc ol {
   margin: 0 0 1em 0;
+}
+.wiki .page-toc ol li {
+  list-style-type: none;
 }
 .wiki .page-toc ol ol {
   margin: 0 0.8em .5em .3em;

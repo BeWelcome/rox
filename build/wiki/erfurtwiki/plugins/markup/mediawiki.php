@@ -42,7 +42,7 @@ $ewiki_config["format_block"]["mediawiki_image_tag"] = array("[[Image:", "]]", f
  }
  
  function ewiki_format_mediawiki_nowiki_tag(&$str, &$in, &$iii, &$s, $btype) {
-     $str = "<p class=\"markup $btype\">" . htmlentities($str) . "</p>";
+     $str = "<p class=\"markup $btype\">" . $str . "</p>";
   }
  
  function ewiki_format_emulate_doublebrackets(&$o, &$line, &$post) {
@@ -50,6 +50,9 @@ $ewiki_config["format_block"]["mediawiki_image_tag"] = array("[[Image:", "]]", f
      // Now let's switch all the rest to simple erfurtwiki style
      $line = str_replace('[[','[',$line);
      $line = str_replace(']]',']',$line);
+     if (($pos = stripos($line, '   ')) === 0) {
+         $line = "<tt>".substr($line,$pos,strlen($line))."</tt>";
+    }
  }
 
  function ewiki_format_emulate_mediawiki_table(&$line, &$ooo, &$s) {

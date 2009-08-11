@@ -24,7 +24,7 @@
 
 #-- reg
 $ewiki_plugins["format_source"][] = "ewiki_toc_format_source";
-$ewiki_plugins["page_final"][] = "ewiki_toc_view_prepend"; //show on every page
+$ewiki_plugins["view_final"][] = "ewiki_toc_view_prepend"; //show on every page
 
 define("EWIKI_TOC_CAPTION", 3);
 $ewiki_t["en"]["toc"] = "Content";
@@ -59,16 +59,30 @@ function ewiki_toc_format_source(&$src) {
    
    // Also search MediaWiki headlines
    $n_last = 0;
-
+   $n_number = 1;
+   $iii = 0;
    foreach ($src as $i=>$line) {
       if ($line[0] == "=" && $line[strlen($line)-1] == "=") {
          $n = strspn($line, "=");
          if (($n <= 3)) {
-             if ($n < $n_last) $add[0] = '</ol>';
-             if ($n > $n_last && $n_last != 0) $add[1] = '<ol>';
+             if ($n < $n_last) {
+                 $n_number = (strrpos($n_number,".")) ? substr($n_number,0,strrpos($n_number,".")) : $n_number;
+                 $iii = (strrpos($n_number,".")) ? substr($n_number,strrpos($n_number,".")+1,strlen($n_number)-1)+1 : $n_number+1;
+                 $n_number = (strrpos($n_number,".")) ? substr($n_number,0,strrpos($n_number,".")).'.'.$iii : $iii;                 
+                 $add[0] .= '</ol>';
+             }
+             if ($n > $n_last && $n_last != 0) {
+                 $iii = 1;
+                 $n_number = $n_number.'.'.$iii;
+                 $add[1] = '<ol>';
+             }
+             if ($n == $n_last) {
+                 $iii++;
+                 $n_number = (strrpos($n_number,".")) ? substr($n_number,0,strrpos($n_number,".")).'.'.$iii : $iii;                 
+             }
             $text = substr($line, $n,-$n);
             $toc[$i] = $add[0].$add[1] . /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
-                     . */'<li>'.(($n <= 2) ? '<b>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
+                     . */'<li>'.(($n <= 2) ? '<b>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'"><span class="number">'.$n_number.'</span>'
                      . trim($text) . '</a>'.(($n <= 2) ? '</b>' : '').'</li>';
 
             $src[$i] = str_repeat("=", $n) . " [#line$i]" . $text . str_repeat("=", $n);
@@ -77,57 +91,31 @@ function ewiki_toc_format_source(&$src) {
          }
       }
    }
+   $GLOBALS["ewiki_page_toc"] = &$toc;
 
    $src = implode("\n", $src);
-   $GLOBALS["ewiki_page_toc"] = &$toc;
 }
-
 
 #-- injects toc above page
 function ewiki_toc_view_prepend(&$html) {
 
     global $ewiki_page_toc;
     $words = new MOD_words();
-    $html_new = "<div class=\"page-toc expanded\" id=\"wiki-page-toc\">\n";
-    $html_new .= '
-        <div class="page-toc-caption" id="WikiToggleLink">'. $words->getFormatted('WikiPages') .' <a id="foldWikiLink1">(-)</a><a id="foldWikiLink2" style="display:none;">(+)</a></div>
-        <div id="foldWikiMenu">
-        <a href="wiki">'. $words->getFormatted('WikiFrontPage') .'</a><br />
-        <a href="wiki/NewestPages">'. $words->getFormatted('WikiNewestPages') .'</a><br />
-        <a href="wiki/RecentChanges">'. $words->getFormatted('RecentChanges') .'</a> <a href="wiki/rss"><img src="images/icons/feed.png" alt="RSS Feed" /></a><br />
-        <a href="wiki/WikiMarkup">'. $words->getFormatted('WikiMarkup') .'</a>
-
-    ';
-$html_new .= '<div class="search-form">
-<form name="powersearch" action="' . ewiki_script("", "PowerSearch") . '" method="GET">
-<input type="hidden" name="id" value="'.$id.'">
-<input type="text" id="q" name="q" size="15" style="width: 95%"><br />
-in <select name="where"><option value="content">'. $words->getSilent('WikiSearch_PageTexts') .'</option><option value="id">'. $words->getSilent('WikiSearch_Titles') .'</option><option value="author">'. $words->getSilent('WikiSearch_AuthorNames') .'</option></select>
-<input type="submit" value="'. $words->getSilent('Search') .'">
-</form></div>
-<script type="text/javascript"><!--
-document.powersearch.q.focus();
-function wikiClassChange() {
-    el = $(\'wiki-page-toc\');
-    Effect.toggle($(\'foldWikiMenu\'),\'blind\');
-    $(\'foldWikiLink1\').toggle();
-    $(\'foldWikiLink2\').toggle();
-    el.className = (el.className.indexOf(\'expanded\') != -1) ? el.className.replace(/expanded/,\'contracted\') : el.className.replace(/contracted/,\'expanded\');
-    return false;
-}
-$(\'WikiToggleLink\').onclick = wikiClassChange;
-
-//--></script>'. $words->flushBuffer();
 
     if (count($ewiki_page_toc) >= 3) {
-        $html_new .= ( EWIKI_TOC_CAPTION ? '<div class="page-toc-caption">'.ewiki_t("toc")."</div>\n" : '')
-        . '<ol>'.implode("", $ewiki_page_toc) . '</ol>';
+       $html = '<table summary="Table of Contents" class="toc" id="toc">
+                 <tbody><tr>
+                  <td>'
+          . "<div class=\"page-toc\" id=\"wiki-page-toc\">\n"
+          . ( EWIKI_TOC_CAPTION ? '<div class="page-toc-caption">'.ewiki_t("toc")."</div>\n" : '')
+          . '<ol>'. implode("", $ewiki_page_toc) . '</ol>'
+          . "\n</div>\n"
+          . "</td>
+          </tr></tbody>
+          </table>"
+          . $html;
     }
-   
-    $html_new .= "</div></div>\n";
-    $html_new .= $html;
     
-    $html = $html_new;
    // $ewiki_page_toc = NULL;
 }
 

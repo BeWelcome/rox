@@ -169,7 +169,6 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
         $ewiki_plugins["handler"][-105] = "ewiki_eventually_initialize";
         $ewiki_plugins["handler"][] = "ewiki_intermap_walking";
 	$ewiki_plugins["view_append"][-1] = "ewiki_control_links";
-        $ewiki_plugins["view_final"][-1] = "ewiki_add_title";
         $ewiki_plugins["page_final"][] = "ewiki_http_headers";
         $ewiki_plugins["page_final"][99115115] = "ewiki_page_css_container";
 	$ewiki_plugins["edit_form_final"][] = "ewiki_page_edit_form_final_imgupload";
@@ -1811,16 +1810,15 @@ function ewiki_format (
    #-- separate input into blocks ------------------------------------------
    if ($ewiki_config["format_block"])
    foreach ($ewiki_config["format_block"] as $btype=>$binfo) {
-
       #-- disabled block plugin?
       if ($binfo[2] && !$params[$binfo[2]])  {
          continue;
       }
+      $i = 0;
 
       #-- traverse $iii[]
       $in = -1;
       while ((++$in) < count($iii)) {
-
          #-- search fragment delimeters
          if ($iii[$in][1] & 0x0100)
          while (
@@ -1836,10 +1834,12 @@ function ewiki_format (
             if (($l > 0) && trim($text = substr($c, 0, $l))) {
                $repl[] = array($text, $core_flags, "core");
             }
+            
             // the extracted part
             if (trim($text = substr($c, $l+$l_len, $r-$l-$l_len))) {
                $repl[] = array($text, $binfo[3], "$btype");
             }
+            
             // rest
             if (($r+$r_len < strlen($c)) && trim($text = substr($c, $r+$r_len))) {
                $repl[] = array($text, $core_flags, "core");
@@ -2466,7 +2466,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
             $str = "<a href=\"$str\">" . $title . "</a>";
             if ($t<0) { $str .= "?"; }
          }
-         $str = '<span class="NotFound">' . $str . '</span>';
+         $str = '<span class="NotFound">' . $title . '</span>';
       }
    }
 

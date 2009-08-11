@@ -68,12 +68,12 @@ class WikiController extends PAppController {
         $P->teaserBar .= $str;
         ob_end_clean();
 
-        ob_start();
-        $this->_view->stylesFullWidth();
-        $str = ob_get_contents();
-        ob_end_clean();
-        $P = PVars::getObj('page');
-        $P->addStyles .= $str;
+        // ob_start();
+        // $this->_view->stylesFullWidth();
+        // $str = ob_get_contents();
+        // ob_end_clean();
+        // $P = PVars::getObj('page');
+        // $P->addStyles .= $str;
 
         ob_start();
 
@@ -86,7 +86,13 @@ class WikiController extends PAppController {
         $Page->content .= ob_get_contents();
         $P->title = "Wiki - BeWelcome";
         ob_end_clean();
-
+        
+        ob_start();
+        $this->_view->userbar();
+        $str = ob_get_contents();
+        ob_end_clean();
+        $P = PVars::getObj('page');
+        $P->newBar .= $str;
     }
 
     public function getWiki($page,$title = true) {
@@ -124,11 +130,12 @@ class WikiController extends PAppController {
             $ewiki_author = 'guest';
             define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
         }
-        
         $this->defineMarkup(&$ewiki_config);
-        
+                
         // More plugins
         require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
+        $ewiki_plugins["view_final"][] = "ewiki_add_title";
+
         require_once("erfurtwiki/plugins/aview/fpage_copyright.php"); // Copyleft Info
         require_once("erfurtwiki/plugins/markup/bbcode.php"); // BBcode plugin
         require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
@@ -138,7 +145,7 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/action/diff.php"); // stupid diff ;)
         require_once("erfurtwiki/plugins/action/info_qdiff.php"); // quick diff
         require_once("erfurtwiki/plugins/linking/titlefix.php"); // quick diff
-        require_once("erfurtwiki/plugins/markup/htmltable.php"); // quick diff
+        // require_once("erfurtwiki/plugins/markup/htmltable.php"); // quick diff
 
         // require_once("erfurtwiki/plugins/action/verdiff.php"); // version diff - not needed right now!?
         
@@ -186,12 +193,6 @@ class WikiController extends PAppController {
         /*
         * MediaWiki Markup
         */
-        
-        // allows nowiki-tags from wikipedia, changed by lupochen
-        $ewiki_config["format_block"]['nowiki'] = array(
-            "&lt;nowiki&gt;","&lt;/nowiki&gt;",
-            false, 0x0030
-        );
     
         $ewiki_config["wm_style"]["&rarr;"] = array("", "");
 
@@ -205,7 +206,8 @@ class WikiController extends PAppController {
         $ewiki_config["wm_style"]["===="] = array("<h4>", "</h4>");
         $ewiki_config["wm_style"]["==="] = array("<h3>", "</h3>");
         $ewiki_config["wm_style"]["=="] = array("<h2>", "</h2>");        
-        $ewiki_config["wm_style"]["="] = array('<h2 class="first">', "</h2>");        
+        $ewiki_config["wm_style"]["="] = array('<h2 class="first">', "</h2>");
+        return $ewiki_config;     
     }    
 
 }

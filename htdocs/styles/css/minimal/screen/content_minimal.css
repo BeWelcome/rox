@@ -1091,14 +1091,8 @@ height:50px;
 .wiki .page-toc {
     background-color: #f5f5f5;
     padding: 1em 2em;
-    width: auto;
-    border-top: 1px solid #e5e5e5;
-    border-left: 1px solid #e5e5e5;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
 }
 .wiki .page-toc-caption {
-   background: transparent;
    font-size: 1.2em;
    padding: 1em 0;
    cursor: pointer;
@@ -1237,13 +1231,13 @@ height:50px;
    margin-left: 5px;
 }
 
-.wiki .text-body table {                   /* space-indentation */
+.wiki table {                   /* space-indentation */
     margin: 1em 0;
     overflow:hidden;
     border-color: #e5e5e5;
 }
 
-.wiki .text-body table td {                   /* space-indentation */
+.wiki table td {                   /* space-indentation */
     background-color: #f5f5f5;
     vertical-align: top;
     padding: .5em 1em;

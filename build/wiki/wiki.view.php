@@ -52,9 +52,6 @@ class WikiView extends PAppView {
               <li>
                 <a href="wiki/WikiMarkup"><?php echo $words->getFormatted('WikiMarkup'); ?></a>
               </li>
-              <li>
-                <a href="wiki/NewestPages"><?php echo $words->getFormatted('WikiNewestPages'); ?></a>
-              </li>
         </ul>
 </div>
         <div class="search-form row">

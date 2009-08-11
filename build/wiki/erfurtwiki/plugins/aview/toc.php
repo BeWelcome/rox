@@ -37,30 +37,31 @@ function ewiki_toc_format_source(&$src) {
    $toc = array();
 
    $src = explode("\n", $src);
-   $n_last = 0;
-   foreach ($src as $i=>$line) {
-
-      if ($line[0] == "!") {
-         $n = strspn($line, "!");
-         if (($n <= 3) and ($line[$n]==" ")) {
-             if ($n < $n_last) $add[0] = '</ol>';
-             if ($n > $n_last && $n_last != 0) $add[1] = '<ol>';
-            $text = substr($line, $n);
-            $toc[$i] =  $add[0].$add[1] . /*str_repeat("&nbsp;", 3-$n) . "·"
-                . */'<li><a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
-                     . trim($text) . "</a></li>";
-
-            $src[$i] = str_repeat("!", $n) . $text . " [#line$i]";
-            $n_last = $n;
-            $add = array('','');
-         }
-      }
-   }
+   /* Don't make use of ErfurtWiki headlines for now */
+   // $n_last = 0;
+   // foreach ($src as $i=>$line) {
+   // 
+   //    if ($line[0] == "!") {
+   //       $n = strspn($line, "!");
+   //       if (($n <= 3) and ($line[$n]==" ")) {
+   //           if ($n < $n_last) $add[0] = '</ol>';
+   //           if ($n > $n_last && $n_last != 0) $add[1] = '<ol>';
+   //          $text = substr($line, $n);
+   //          $toc[$i] =  $add[0].$add[1] . /*str_repeat("&nbsp;", 3-$n) . "·"
+   //              . */'<li><a href="'.implode('/', PRequest::get()->request).'#line'.$i.'">'
+   //                   . trim($text) . "</a></li>";
+   // 
+   //          $src[$i] = str_repeat("!", $n) . $text . " [#line$i]";
+   //          $n_last = $n;
+   //          $add = array('','');
+   //       }
+   //    }
+   // }
    
    // Also search MediaWiki headlines
    $n_last = 0;
    $n_number = 1;
-   $iii = 0;
+   $iii = 1;
    foreach ($src as $i=>$line) {
       if ($line[0] == "=" && $line[strlen($line)-1] == "=") {
          $n = strspn($line, "=");
@@ -78,7 +79,7 @@ function ewiki_toc_format_source(&$src) {
              }
              if ($n == $n_last) {
                  $iii++;
-                 $n_number = (strrpos($n_number,".")) ? substr($n_number,0,strrpos($n_number,".")).'.'.$iii : $iii;                 
+                 $n_number = (strrpos($n_number,".")) ? substr($n_number,0,strrpos($n_number,".")).'.'.$iii : $iii; 
              }
             $text = substr($line, $n,-$n);
             $toc[$i] = $add[0].$add[1] . /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')

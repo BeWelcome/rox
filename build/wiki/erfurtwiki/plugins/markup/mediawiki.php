@@ -82,7 +82,7 @@ $ewiki_config["format_block"]["mediawiki_image_tag"] = array("[[Image:", "]]", f
  function ewiki_format_emulate_mediawiki_edit(&$data, &$old_data) {
     global $ewiki_author;
     $repl = array(
-       '~~~~' => '['.PVars::getObj('env')->baseuri.'members/'.$ewiki_author.' '.$ewiki_author.'] - '.date(DATE_RFC822,$data['created']),
+       '~~~~' => '['.PVars::getObj('env')->baseuri.'members/'.$ewiki_author.' '.$ewiki_author.'] - '.date(DATE_RFC822),
     );
     // $data = $old_data;
     foreach ($repl as $from => $to) {

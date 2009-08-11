@@ -1252,6 +1252,14 @@ height:50px;
 .wiki em {
   color:#331111;
 }
+.wiki dl {
+  margin-bottom: .2em;
+  margin-top: 0.5em;
+}
+.wiki dd {
+  margin-bottom: .1em;
+  line-height: 1.5em;
+}
 .wiki li {
   padding-left: .5em;
   margin-left: 2em;

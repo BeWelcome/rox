@@ -145,6 +145,7 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/action/diff.php"); // stupid diff ;)
         require_once("erfurtwiki/plugins/action/info_qdiff.php"); // quick diff
         require_once("erfurtwiki/plugins/linking/titlefix.php"); // quick diff
+
         // require_once("erfurtwiki/plugins/markup/htmltable.php"); // quick diff
 
         // require_once("erfurtwiki/plugins/action/verdiff.php"); // version diff - not needed right now!?
@@ -160,6 +161,8 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/page/wantedpages.php"); // load some plugins
         require_once("erfurtwiki/plugins/page/orphanedpages.php"); // load some plugins
         require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
+
+//        require_once("erfurtwiki/plugins/aview/control2.php"); // quick diff
 
         require_once('erfurtwiki/ewiki.php');
         $ewiki_config["smilies"] = array(

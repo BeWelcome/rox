@@ -480,12 +480,11 @@ WHERE
      */
     private function GetDeCryptA($ss)
     { 
-        if (strstr($ss,"<admincrypted>") !== false)
+        if (strstr($ss,"<admincrypted>") === false)
             return($ss);
         $res = strip_tags($ss);
-        
         // TODO: Add a test for a specific right
-        return(self::enc(DecryptA,$res));
+        return(self::enc('DeCryptA',$res));
     }
 
     /**

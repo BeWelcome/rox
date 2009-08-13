@@ -175,7 +175,7 @@
   ol.bullet li { list-style-type: decimal; margin-left: 0.8em; }
 
   /* Unordered lists without bullets  */
-  ul.linklist { list-style-type: none; margin: 0 1em 1em 0; }
+  ul.linklist { list-style-type: none; }
   ul.linklist li { margin: 0 0 0.5em 0;}
   ul.linklist li a { line-height: 1em;}
   ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
@@ -1183,7 +1183,7 @@ height:50px;
 }
 
 .wiki.edit .edit-box textarea {
-   width: auto;
+   width: 99%;
 }
 
 .wiki.edit form[name=ewiki] {

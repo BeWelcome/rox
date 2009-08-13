@@ -144,7 +144,7 @@ class Group extends RoxEntityBase
     {
         if (!$this->_has_loaded)
         {
-            return false;
+            return array();
         }
 
         return $this->createEntity('GroupMembership')->getGroupMembers($this, 'In', 'IacceptMassMailFromThisGroup = "yes"');
@@ -155,13 +155,13 @@ class Group extends RoxEntityBase
      *
      * @param string $status - which status to check for (In, WantToBeIn, Kicked)
      * @access public
-     * @return array
+     * @return int
      */
     public function getMemberCount($status = false)
     {
         if (!$this->_has_loaded)
         {
-            return false;
+            return 0;
         }
 
         $status = (($status) ? $status : 'In');
@@ -213,11 +213,16 @@ class Group extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function memberLeave($member)
+    public function memberLeave(Member $member)
     {
         if ($this->_has_loaded === false)
         {
             return false;
+        }
+
+        if ($this->isGroupOwner($member))
+        {
+            $this->removeGroupOwner($member);
         }
 
         return $this->createEntity('GroupMembership')->memberLeave($this, $member);
@@ -401,9 +406,9 @@ class Group extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function setGroupOwner($member)
+    public function setGroupOwner(Member $member)
     {
-        if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')))
+        if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')) || !$this->isMember($member))
         {
             return false;
         }
@@ -411,10 +416,27 @@ class Group extends RoxEntityBase
         // if any previous owner is set, remove previous owner first
         if ($prev_owner = $this->getGroupOwner())
         {
-            $role->removeFromMember($prev_owner, $role->getScopesForMemberRole($prev_owner, $this->getPKValue()));
+            $this->removeGroupOwner($prev_owner);
         }
 
         return $role->addForMember($member, array('Group' => $this->getPKValue()));
+    }
+
+    /**
+     * removes ownership of group from member
+     *
+     * @param object $member
+     * @access public
+     * @return bool
+     */
+    public function removeGroupOwner(Member $member)
+    {
+        if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')) || !$this->isMember($member))
+        {
+            return false;
+        }
+
+        return $role->removeFromMember($prev_owner, $role->getScopesForMemberRole($prev_owner, $this->getPKValue()));
     }
 
     /**

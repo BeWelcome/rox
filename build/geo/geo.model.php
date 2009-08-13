@@ -461,17 +461,17 @@ class GeoModel extends RoxModelBase {
             INSERT INTO geonames_cache_backup
                 SET
                 id = NULL,
-                geonameid = '".$result->geonameid."',
-                latitude = '".$result->latitude."',
-                longitude = '".$result->longitude."',
-                name = '".$result->name."',
-                population = '".$result->population."',
-                fclass = '".$result->fclass."',
-                fcode = '".$result->fcode."',
-                fk_countrycode = '".$result->fk_countrycode."',
-                fk_admincode = '".$result->fk_admincode."',
-                timezone = '".$result->timezone."',
-                parentid = '".$result->parentid."',
+                geonameid = '".$this->dao->escape($result->geonameid)."',
+                latitude = '".$this->dao->escape($result->latitude)."',
+                longitude = '".$this->dao->escape($result->longitude)."',
+                name = '".$this->dao->escape($result->name)."',
+                population = '".$this->dao->escape($result->population)."',
+                fclass = '".$this->dao->escape($result->fclass)."',
+                fcode = '".$this->dao->escape($result->fcode)."',
+                fk_countrycode = '".$this->dao->escape($result->fk_countrycode)."',
+                fk_admincode = '".$this->dao->escape($result->fk_admincode)."',
+                timezone = '".$this->dao->escape($result->timezone)."',
+                parentid = '".$this->dao->escape($result->parentid)."',
                 date_updated = NOW()
                 "
             );
@@ -540,6 +540,9 @@ class GeoModel extends RoxModelBase {
                 }
             
             }
+
+            // hack to make sure we're dealing with useful data - should be fixed later
+            $dataset['fcode'] = ((!empty($dataset['fcode'])) ? $dataset['fcode'] : '');
             //set the parentId for next level
             if ($dataset['fcode'] == 'ADM1') {
                 $parentAdm1Id = $dataset['geonameId'];

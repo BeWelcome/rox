@@ -540,6 +540,9 @@ class GeoModel extends RoxModelBase {
                 }
             
             }
+
+            // hack to make sure we're dealing with useful data - should be fixed later
+            $dataset['fcode'] = ((!empty($dataset['fcode'])) ? $dataset['fcode'] : '');
             //set the parentId for next level
             if ($dataset['fcode'] == 'ADM1') {
                 $parentAdm1Id = $dataset['geonameId'];

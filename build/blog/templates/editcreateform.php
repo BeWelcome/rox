@@ -32,13 +32,12 @@ tinyMCE.init({
     theme: "advanced",
     relative_urls:false,
     convert_urls:false,
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,link,bullist,separator,justifyleft,justifycenter,justifyfull,bullist,numlist,forecolor,backcolor,image, charmap",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,justifyleft,justifycenter,justifyfull,separator,forecolor,backcolor,separator,link,image,charmap",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location: 'top',
     theme_advanced_statusbar_location: 'bottom',
-    theme_advanced_resizing: true
-
+    theme_advanced_resizing: true,
 });
 //-->
 </script>
@@ -61,7 +60,7 @@ if (in_array('upderror', $vars['errors'])) {
 <legend><?=$words->get('BlogCreateLabelText')?></legend>
     <div class="row">
     <label for="create-title"><?=$words->get('BlogCreateLabelTitle')?>:</label><br/>
-        <input type="text" id="create-title" name="t" class="long" <?php
+        <input type="text" id="create-title" name="t" class="long" size="50" <?php
         // the title may be set
         echo isset($vars['t']) ? 'value="'.htmlentities($vars['t'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?>/>
@@ -75,7 +74,7 @@ if (in_array('upderror', $vars['errors'])) {
     </div>
     <div class="row">
         <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
-        <textarea id="create-txt" name="txt" rows="10" cols="50"><?php
+        <textarea id="create-txt" name="txt" rows="10" cols="55"><?php
         // the content may be set
         echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
         ?></textarea>
@@ -144,17 +143,15 @@ if (isset($vars['id']) && $vars['id']) {
                     <input type="text" id="create-date" name="date" class="date" maxlength="10" style="width:9em" <?php
                     echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
                     ?> />
-                	<script type="text/javascript">
-                		/*<[CDATA[*/
-                		var datepicker	= new DatePicker({
-                		relative	: 'create-date',
-                		language	: '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
-                		current_date: '', 
-                		topOffset   : '25',
-                		relativeAppend : true
-                		});
-                		/*]]>*/
-                	</script>
+                    <script type="text/javascript">
+                        var datepicker  = new DatePicker({
+                        relative    : 'create-date',
+                        language    : '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
+                        current_date: '', 
+                        topOffset   : '25',
+                        relativeAppend : true
+                        });
+                    </script>
                 </div>
                     <?php
                     if (in_array('startdate', $vars['errors'])) {

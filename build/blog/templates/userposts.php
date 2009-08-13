@@ -26,7 +26,6 @@ if (!$titleSetting) {
 <?php
 }
 ?>
-<a href="rss/blog/author/<?=$userId?>" alt="Get the RSS-Feed of this page" class="float_right"><img src="images/icons/feed.png"></a>
 <?php
 foreach($blogIt as $blog) {
     require 'blogitem.php';

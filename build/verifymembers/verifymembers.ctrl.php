@@ -74,12 +74,11 @@ class VerifymembersController extends RoxControllerBase
                     $page = new MembersMembernotfoundPage;
                 } else {
                     // found a member with given id or username
-                    $myself = false;
                     if ($member_other->id == $member_self->id) {
                         // user is watching her own profile
-                        $myself = true;
-                         // no member specified
                         return new VerifyMyselfPage();
+                    } elseif ($member_self->Status != 'Active' || $member_other->Status != 'Active') {
+                        return new VerifyMembersNotActivePage();
                     }
                     if (isset($request[2]) && $request[2] == 'proceed') {
                         if ($mem_redirect && ($mem_redirect->member_data || $mem_redirect->post)) {                            
@@ -141,6 +140,13 @@ class VerifymembersController extends RoxControllerBase
             $member_data = array();
             $member_data[1] = $this->model->LoadPrivateData($vars['cid1'], $vars['password1']);
             $member_data[2] = $this->model->LoadPrivateData($vars['cid2'], $vars['password2']);
+            if (!$member_data[1] || !$member_data[2]) {
+                // show form again
+                $vars['errors'] = array('no_member_data');
+                $mem_redirect->problems = $vars['errors'];
+                $mem_redirect->post = $vars;
+                return false;
+            }
             $mem_redirect->member_data = $member_data;
             
             $str = $request[0].'/'.$request[1];

@@ -127,34 +127,6 @@ WHERE   IdVerified = $member_id
         if (!$m = $this->checkPassword($cid,$given_password)) {
             // user not found! explain something?
             return array(); // Returns empty array if no value found
-		}
-        
-        // Retrieve the addresse		
-        if (!$rAddresse = $this->singleLookup(
-            "
-SELECT
-    addresses.id   AS IdAddress,
-    StreetName,
-    Zip,
-    HouseNumber,
-    countries.id   AS IdCountry,
-    cities.id      AS IdCity,
-    regions.id     AS IdRegion,
-    cities.Name    AS CityName
-FROM
-    addresses,
-    countries,
-    regions,
-    cities
-WHERE
-    IdMember = {$m->id}            AND
-    addresses.IdCity = cities.id   AND
-    regions.id = cities.IdRegion   AND
-    countries.id = cities.IdCountry
-            "
-        )) {
-            // address not found -> we are not amused.
-            return false;
         }
         
         // Password has been verified, load the encrypted data
@@ -162,12 +134,12 @@ WHERE
             $m->$key = MOD_crypt::AdminReadCrypted($m->$key);
         }
         foreach (array('HouseNumber', 'StreetName', 'Zip') as $key) {
-            $m->$key = MOD_crypt::AdminReadCrypted($rAddresse->$key);
+            $m->$key = MOD_crypt::AdminReadCrypted($m->$key);
         }
         
-        $m->CityName = $rAddresse->CityName ;
+        $m->CityName = $m->get_city();
         
-        return $m ;
+        return $m;
         
     } // LoadPrivateData
     
@@ -202,6 +174,7 @@ WHERE
      **/
     public function LoadApprovedVerifiers() 
     {
+        $layoutbits = new MOD_layoutbits();
         $ss="select m1.*,cities.Name as CityName,countries.Name as CountryName". 
 		 	 " from members m1,cities,rightsvolunteers,rights,countries ".
 			 " where m1.id=rightsvolunteers.IdMember and cities.IdCountry=countries.id and rights.id=rightsvolunteers.IdRight and rights.Name='Verifier' and rightsvolunteers.Level>0 and cities.id=m1.IdCity and (m1.Status='Active') order by CityName" ;
@@ -218,7 +191,7 @@ WHERE
 		
 			$rr->MemberSince=strftime('%d/%m/%Y',strtotime($rr->created)) ;
 			// Load Age
-			$rr->age = fage($rr->BirthDate, $rr->HideBirthDate);
+			$rr->age = $layoutbits->fage_value($rr->BirthDate, $rr->HideBirthDate);
 			$rr->NbComments=$rComment->cnt ;
 
 			// Load full name
@@ -293,6 +266,8 @@ WHERE
          
          $m1 = $this->checkPassword($vars['cid1'],$vars['password1']);
          $m2 = $this->checkPassword($vars['cid2'],$vars['password2']);
+         if ($m1 && $m1->Status != 'Active') $errors[] .=  'member1_notactive';
+         if ($m2 && $m2->Status != 'Active') $errors[] .=  'member2_notactive';
          if (empty($m1)) $errors[] .=  'password1_wrong';
          if (empty($m2)) $errors[] .=  'password2_wrong';
          return $errors;
@@ -306,14 +281,11 @@ WHERE
      protected function checkPassword($cid,$given_password)   {
 
           // accept both 
-          $where_cid = is_numeric($cid) ? 'id='.(int)$cid : 'Username="'.mysql_real_escape_string($cid).'"';
+          $where_cid = is_numeric($cid) ? 'id='.(int)$cid : 'Username="'.$this->dao->escape($cid).'"';
+          $password = $this->dao->escape($given_password);
 
-  		 $ss="
-  SELECT  *
-  FROM    members
-  WHERE   $where_cid
-  AND     PassWord=PASSWORD('{$this->dao->escape($given_password)}')" ;
-          if (!$m = $this->singleLookup($ss)) {
+          $where = $where_cid. " AND PassWord=PASSWORD('{$password}')" ;
+          if (!$m = $this->createEntity('Member')->findByWhere($where)) {
               // user not found! explain something?
               return array(); // Returns empty array if no value found
   		 } else return $m;

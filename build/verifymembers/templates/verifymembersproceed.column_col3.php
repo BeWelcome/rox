@@ -46,7 +46,7 @@ if (!$memory = $formkit->getMemFromRedirect()) {
         }
     }
     
-    if ($member_data = $memory->member_data) {
+    if ($member_data = $memory->member_data && $memory->member_data[1] && $memory->member_data[2]) {
         $this->member1->member_data = $member_data[1];
         $this->member2->member_data = $member_data[2];
     }
@@ -89,7 +89,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
             $n = 1;
             require 'verifydata.template.php';
             ?>
-                        
+
         </div> <!-- subcl -->
       </div> <!-- c50l -->
       <div class="c50r" >

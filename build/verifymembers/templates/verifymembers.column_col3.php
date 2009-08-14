@@ -76,6 +76,8 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
       <div class="c50l" >
         <div class="subcl" >
 
+            <div class="box-bg">
+            <div class="box">
             <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ 
             $m = $this->member1;
             $verification_status = $m->verification_status;
@@ -102,12 +104,14 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
             <label for="password1"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
             <input type="password"  name="password1">
             </div>
-            
+           </div>
+           </div>
         </div> <!-- subcl -->
       </div> <!-- c50l -->
       <div class="c50r" >
         <div class="subcr" >
-
+            <div class="box-bg">
+            <div class="box">
             <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ 
             $m = $this->member2;
             $verification_status = $m->verification_status;
@@ -134,7 +138,8 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
             <label for="password2"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
             <input type="password"  name="password2">
             </div>
-
+           </div>
+           </div>
         </div> <!-- subcr -->
       </div> <!-- c50r -->
 

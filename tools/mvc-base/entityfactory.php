@@ -82,7 +82,7 @@ class RoxEntityFactory
             return false;
         }
 
-        if (!class_exists($entity_name, false))
+        if (empty(self::$_entity_classes[$entity_name]))
         {
             require_once(SCRIPT_BASE . $this->_entities[$entity_name] . '.php');
 

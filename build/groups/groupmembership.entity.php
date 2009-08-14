@@ -41,9 +41,9 @@ class GroupMembership extends RoxEntityBase
      * @param object $group - Group to look in
      * @param object $member - Member to look for
      * @access public
-     * @return object
+     * @return object|false
      */
-    public function getMembership($group, $member)
+    public function getMembership(Group $group, Member $member)
     {
         if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
@@ -61,7 +61,7 @@ class GroupMembership extends RoxEntityBase
      * @access public
      * @return array
      */
-    public function getNewGroupMembers($group)
+    public function getNewGroupMembers(Group $group)
     {
         $where = "created >= CURDATE() - INTERVAL 2 week";
 
@@ -82,9 +82,8 @@ class GroupMembership extends RoxEntityBase
     {
         if (!is_object($group) || !($group_id = $group->getPKValue()))
         {
-            return false;
+            return array();
         }
-
 
         $where_clause = "IdGroup = '{$group_id}'" . (($status = $this->dao->escape($status)) ? " AND Status = '{$status}'" : '');
         if (isset($where) && strlen($where))
@@ -113,8 +112,8 @@ class GroupMembership extends RoxEntityBase
         }
         unset($links);
         
-        $where = "Status IN ('Active', 'Pending') AND id IN ('" . implode("','", $members) . "') ORDER BY (SELECT created FROM {$this->getTableName()} WHERE {$this->getTableName()}.IdMember = members.id AND {$this->getTableName()}.IdGroup = {$group_id} LIMIT 1) ASC";
-        return $this->createEntity('Member')->findByWhereMany($where);
+        $sql = "SELECT m.* FROM members AS m, {$this->getTableName()} AS mg WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id} ORDER BY mg.created ASC";
+        return $this->createEntity('Member')->findBySQLMany($sql);
     }
 
     /**
@@ -128,7 +127,7 @@ class GroupMembership extends RoxEntityBase
     {
         if (!is_object($member) || !($member_id = $member->getPKValue()))
         {
-            return false;
+            return array();
         }
 
         $links = $this->findByWhereMany("IdMember = '{$member_id}'" . ((!empty($status)) ? " AND Status = '" . $this->dao->escape($status) . "'" : ''));
@@ -140,6 +139,10 @@ class GroupMembership extends RoxEntityBase
             unset($link);
         }
         unset($links);
+        if (empty($groups))
+        {
+            return array();
+        }
 
         $where = "id IN ('" . implode("','", $groups) . "') ORDER BY Name";
         return $this->createEntity('Group')->findByWhereMany($where);
@@ -155,7 +158,7 @@ class GroupMembership extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function isMember($group, $member, $only_in = true)
+    public function isMember(Group $group, Member $member, $only_in = true)
     {
         if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
@@ -180,7 +183,7 @@ class GroupMembership extends RoxEntityBase
      * @param string $status - string containing the membership state, defaults to 'In'
      * @access public
      */
-    public function memberJoin($group, $member, $status = 'In')
+    public function memberJoin(Group $group, Member $member, $status = 'In')
     {
         if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
@@ -211,7 +214,7 @@ class GroupMembership extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function memberLeave($group, $member)
+    public function memberLeave(Group $group, Member $member)
     {
         if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()) || !$this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'"))
         {

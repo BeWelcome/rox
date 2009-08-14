@@ -397,7 +397,7 @@ SQL;
      *
      * @param string $query
      * @access protected
-     * @return object|bool
+     * @return array
      * @throws EntityException
      */
     protected function queryForEntities($query)
@@ -406,7 +406,7 @@ SQL;
         {
             if (!($result = $this->dao->query($query)))
             {
-                return false;
+                return array();
             }
             else
             {
@@ -419,7 +419,7 @@ SQL;
             {
                 throw new EntityException("Failed to load entity with sql: {$query}");
             }
-            return false;
+            return array();
         }
     }
 
@@ -460,6 +460,39 @@ SQL;
         return $this->queryForEntities($query);
     }
 
+    /**
+     * lets you load a single entity using an sql query
+     * should only be used in cases where the other find methods won't work
+     *
+     * @param string $sql
+     * @access public
+     * @return object
+     */
+    public function findBySQL($sql)
+    {
+        if (empty($sql))
+        {
+            return false;
+        }
+        return $this->queryForEntity($sql);
+    }
+
+    /**
+     * lets you load an array of entities using an sql query
+     * should only be used in cases where the other find methods won't work
+     *
+     * @param string $sql
+     * @access public
+     * @return array
+     */
+    public function findBySQLMany($sql)
+    {
+        if (empty($sql))
+        {
+            return array();
+        }
+        return $this->queryForEntities($sql);
+    }
 
     /**
      * loads all rows from a table and returns them as an array of class $this

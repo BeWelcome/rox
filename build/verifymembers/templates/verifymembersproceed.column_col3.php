@@ -46,7 +46,7 @@ if (!$memory = $formkit->getMemFromRedirect()) {
         }
     }
     
-    if ($member_data = $memory->member_data && $memory->member_data[1] && $memory->member_data[2]) {
+    if ($member_data = $memory->member_data) {
         $this->member1->member_data = $member_data[1];
         $this->member2->member_data = $member_data[2];
     }

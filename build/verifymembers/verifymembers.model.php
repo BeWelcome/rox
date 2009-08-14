@@ -123,23 +123,27 @@ WHERE   IdVerified = $member_id
         // - correct, but as long as we're stuck with the mysql password function (and for now
         //   we are, then we either have to replicate the password function [it doesn't exist in php]
         //   or rely on mysql. Sucks to be us.
+
+        $data = new stdClass();
                 
         if (!$m = $this->checkPassword($cid,$given_password)) {
             // user not found! explain something?
             return array(); // Returns empty array if no value found
         }
-        
         // Password has been verified, load the encrypted data
         foreach (array('FirstName', 'SecondName', 'LastName') as $key) {
-            $m->$key = MOD_crypt::AdminReadCrypted($m->$key);
+            $data->$key = MOD_crypt::AdminReadCrypted($m->$key);
         }
         foreach (array('HouseNumber', 'StreetName', 'Zip') as $key) {
-            $m->$key = MOD_crypt::AdminReadCrypted($m->$key);
+            if(!isset($m->address)) {
+                $housenumber = $m->get_housenumber();
+            }
+            $data->$key = MOD_crypt::AdminReadCrypted($m->address->$key);
         }
         
-        $m->CityName = $m->get_city();
+        $data->CityName = $m->get_city();
         
-        return $m;
+        return $data;
         
     } // LoadPrivateData
     

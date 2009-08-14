@@ -34,7 +34,7 @@ class VerifymembersController extends RoxControllerBase
         if (!isset($_SESSION['IdMember'])) {
             $page = new VerifyMustLoginPage();
             $page->setRedirectURL(implode('/',$request));
-        		return $page;
+                return $page;
         } 
 //        print_r($args->post);
         
@@ -44,7 +44,7 @@ class VerifymembersController extends RoxControllerBase
                 $VerifierList=$model->LoadVerifiers($request[2]) ;
                 $page = new VerifiedMembersViewPage($request[2],"",$VerifierList);
                 break ;
-						case 'approvedverifiers':
+            case 'approvedverifiers':
                 $ApprovedVerifiers=$model->LoadApprovedVerifiers() ;
                 $page = new VerifiedApprovedVerifiers($ApprovedVerifiers);
                 break ;
@@ -81,7 +81,7 @@ class VerifymembersController extends RoxControllerBase
                         return new VerifyMembersNotActivePage();
                     }
                     if (isset($request[2]) && $request[2] == 'proceed') {
-                        if ($mem_redirect && ($mem_redirect->member_data || $mem_redirect->post)) {                            
+                        if ($mem_redirect && ($mem_redirect->member_data || $mem_redirect->post)) {
                             $page = new VerifyMembersProceedPage($request[1]);
                         } else {
                             $request[2] = '';

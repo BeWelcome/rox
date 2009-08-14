@@ -26,6 +26,7 @@ $verification_status = $m->verification_status;
 if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
 
 ?>
+
 <div class="box-bg">
 <div class="box">
 
@@ -45,12 +46,11 @@ if ($verification_status) $verification_text = $words->getSilent('verifymembers_
 
 <div class="row">
     <dl class="list">
-        <? var_dump($m->member_data) ?>
         <dt><?=$words->getFormatted("FullName")?></dt><dd><?=$m->member_data->FirstName?> <i><?=$m->member_data->SecondName?></i> <?=$m->member_data->LastName?></dd>
         <dt><?=$words->getFormatted("HouseNumber")?></dt><dd><?=$m->member_data->HouseNumber?></dd>
         <dt><?=$words->getFormatted("StreetName")?></dt><dd><?=$m->member_data->StreetName?></dd>
         <dt><?=$words->getFormatted("Zip")?></dt><dd><?=$m->member_data->Zip?></dd>
-        <dt><?=$words->getFormatted("CityName")?></dt><dd><?=$m->City?></dd>
+        <dt><?=$words->getFormatted("CityName")?></dt><dd><?=$m->member_data->CityName?></dd>
     </dl>
 </div>
 

@@ -246,7 +246,8 @@ WHERE
         $IdMember = $this->dao->escape($IdMember);
         $IdPreference = $this->dao->escape($IdPreference);
         $Value = $this->dao->escape($Value);
-        $rr = $this->singleLookup("select memberspreferences.id as id from memberspreferences,preferences where IdMember='{$IdMember}' and IdPreference=preferences.id and preferences.id='{$IdPreference}'");
+        $rr = $this->singleLookup("select memberspreferences.id as id,Value from memberspreferences,preferences where IdMember='{$IdMember}' and IdPreference=preferences.id and preferences.id='{$IdPreference}'");
+        $rPref = $this->singleLookup("select preferences.codeName from preferences where  id='{$IdPreference}'");
         if (isset ($rr->id))
         {
             $query = <<<SQL
@@ -255,9 +256,12 @@ UPDATE
 SET
     Value = '{$Value}'
 WHERE
-    id = {$rr->id}
+    id = {$rr->id} and Value!='{$Value}'
 SQL;
 
+            if ($Value!=$rr->Value) {
+                MOD_log::get()->write("updating  preference " . $rPref->codeName . " (previous value=<b>".$rr->Value."</b>) To Value <b>" . $Value . "</b>", "Update Preference");
+            }
         }
         else
         {
@@ -267,6 +271,7 @@ INSERT INTO
 VALUES
     ('{$IdMember}', '{$IdPreference}', '{$Value}', NOW())
 SQL;
+		    MOD_log::get()->write("inserting one preference " . $rPref->codeName . " To Value <b>" . $Value . "</b>", "Update Preference");
         }
         return ((!$this->dao->query($query)) ? true : false);
     }
@@ -298,6 +303,7 @@ VALUES
     'normal'
     )
         ");
+            MOD_log::get()->write("Set public profile", "Update Preference");
         } elseif ($rr && $Public == false) {
         $s = $this->dao->query("
 DELETE FROM
@@ -305,6 +311,7 @@ DELETE FROM
 WHERE
     id = ". $rr->id
         );
+            MOD_log::get()->write("Remove public profile", "Update Preference");
         }
     }
     

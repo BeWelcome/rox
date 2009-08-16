@@ -928,6 +928,7 @@ class HTTP_Request
             (HTTP_REQUEST_METHOD_POST != $this->_method && 0 == strlen($this->_body))) {
 
             $request .= "\r\n";
+
         // Post data if it's an array
         } elseif (HTTP_REQUEST_METHOD_POST == $this->_method && 
                   (!empty($this->_postData) || !empty($this->_postFiles))) {

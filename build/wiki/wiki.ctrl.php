@@ -68,7 +68,7 @@ class WikiController extends PAppController {
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean();
-        
+
         ob_start();
         $this->_view->userbar();
         $str = ob_get_contents();

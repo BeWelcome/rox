@@ -66,7 +66,7 @@ class ReadMessagePage extends MessagesBasePage
                         <?=$words->get('Speaks')?> 
                         <?php
                         $languages = $member->get_languages_spoken(); 
-                        if (count($languages) > 1) {
+                        if (count($languages) > 0) {
                         		$ii = 0;
                         		$max = count($languages);
                                 foreach($languages as $language) {

@@ -547,14 +547,14 @@ SQL;
             if ($city)
             {
                 $a[0]->CityName = $city->getName();
-            }
-            $region = $city->getParent();
-            $country = $city->getCountry();
-            if ($region && $country)
-            {
-                $a[0]->RegionName = $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
-                $a[0]->CountryName = $country->getName();
-                $a[0]->CountryCode = $country->fk_countrycode;
+                $region = $city->getParent();
+                $country = $city->getCountry();
+                if ($region && $country)
+                {
+                    $a[0]->RegionName = $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
+                    $a[0]->CountryName = $country->getName();
+                    $a[0]->CountryCode = $country->fk_countrycode;
+                }
             }
         }
         else

@@ -91,11 +91,11 @@ $words = new MOD_words();
 </script>
 
 <script type="text/javascript">
-    
+
     function start_slideshow(start_frame, end_frame, delay) {
         setTimeout(switch_slides(start_frame,start_frame,end_frame, delay), delay);
     }
-                            
+
     function switch_slides(frame, start_frame, end_frame, delay) {
         return (function() {
             Effect.Fade('slide' + frame);
@@ -106,5 +106,4 @@ $words = new MOD_words();
     }
 
 </script>
-    
 </div>

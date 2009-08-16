@@ -426,7 +426,7 @@ c[12] = "<img src=\"images/icons/emoticon_surprised.png\" title=\"Surprised\">";
 c[13] = "<p style=\"background-color: #eee; text-align: center\"><i>USERNAME $3</i></p>"; // this will be constantly overwritten by parse_smilies(a)
 
 function parse_smilies(a) {
-    c[13] = "<p style=\"background-color: #eee; padding: 5px 0; text-align: center\"><i><a href=\"bw/members.php?cid=" + a.username + "\">" + a.username + "</a> $3</i></p>";
+    c[13] = "<p style=\"background-color: #eee; padding: 5px 0; text-align: center\"><i><a href=\"people/" + a.username + "\">" + a.username + "</a> $3</i></p>";
     for (var j = 0 ; j < b.length ; j ++) {
         a.text = a.text.replace(b[j],c[j]); 
     }

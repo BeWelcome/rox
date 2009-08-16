@@ -453,6 +453,7 @@ class ForumsController extends PAppController
         $this->parseRequest();    
         $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
         $this->_model->prepareForum();     
+        $this->_view->uri = 'forums/';
         $this->_view->showExternal();
     }  // end of showExternalLatest
     

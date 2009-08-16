@@ -86,7 +86,7 @@ $threadsliced = array_slice($threads, 0, 5);
     }
     if ($User && $uri != 'forums/') {
     ?>
-    <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo ($this->_model->forums_uri != '/') ? $this->_model->forums_uri . 'forum' : 'forums'; ?>/new
+    <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $this->uri; ?>new
 	<?php 
 	if (!empty($this->_model->IdGroup)) echo "/u".$this->_model->IdGroup ;
 	echo "\">",$words->getBuffered('ForumNewTopic'); 

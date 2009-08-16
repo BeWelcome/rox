@@ -9,7 +9,7 @@
                 <div class="row floatbox">
                     <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
                     <h3><?= $words->get('GroupDescription'); ?></h3>
-                    <p><?=$this->group->getDescription() ?></p>
+                    <p><?=nl2br($this->group->getDescription()) ?></p>
                 </div> <!--row floatbox -->
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>

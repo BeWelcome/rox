@@ -79,11 +79,19 @@ $threadsliced = array_slice($threads, 0, 5);
 </table>
 
 <?php
+}
+    else
+    {
+        echo $words->getBuffered('GroupsNoForumPosts');
+    }
     if ($User && $uri != 'forums/') {
     ?>
-    <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo ($uri !='') ? $uri : 'forums'; ?>/new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
+    <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $this->uri; ?>new
+	<?php 
+	if (!empty($this->_model->IdGroup)) echo "/u".$this->_model->IdGroup ;
+	echo "\">",$words->getBuffered('ForumNewTopic'); 
+	?></a></span><?php echo $words->flushBuffer(); ?></div>
     <?php
     }
 
-}
 ?>

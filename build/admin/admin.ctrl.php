@@ -38,19 +38,16 @@ class AdminController extends RoxControllerBase
 {
 
     private $_model;
-    private $_view;
     
     public function __construct()
     {        
         parent::__construct();
         $this->_model = new AdminModel();
-        $this->_view  = new AdminView($this->_model);
     }
     
     public function __destruct() 
     {
         unset($this->_model);
-        unset($this->_view);
     }
 
     /**
@@ -60,14 +57,14 @@ class AdminController extends RoxControllerBase
      * @access private
      * @return array
      */
-    private function checkRights()
+    private function checkRights($right = '')
     {
         if (!$member = $this->_model->getLoggedInMember())
         {
             $this->redirectAbsolute($this->router->url('main_page'));
         }
         $rights = $member->getOldRights();
-        if (empty($rights))
+        if (empty($rights) || (!empty($right) && !in_array($right, array_keys($rights))))
         {
             $this->redirectAbsolute($this->router->url('admin_norights'));
         }
@@ -115,7 +112,7 @@ class AdminController extends RoxControllerBase
      */
     public function phpLogs()
     {
-        list($member, $rights) = $this->checkRights();
+        list($member, $rights) = $this->checkRights('Debug');
         $page = new AdminLogsPage('errors');
         $page->member = $member;
         $page->rights = $rights;
@@ -131,7 +128,7 @@ class AdminController extends RoxControllerBase
      */
     public function exceptionLogs()
     {
-        list($member, $rights) = $this->checkRights();
+        list($member, $rights) = $this->checkRights('Debug');
         $page = new AdminLogsPage('exceptions');
         $page->member = $member;
         $page->rights = $rights;
@@ -147,7 +144,7 @@ class AdminController extends RoxControllerBase
      */
     public function mysqlLogs()
     {
-        list($member, $rights) = $this->checkRights();
+        list($member, $rights) = $this->checkRights('Debug');
         $page = new AdminLogsPage('mysql');
         $page->member = $member;
         $page->rights = $rights;
@@ -156,6 +153,19 @@ class AdminController extends RoxControllerBase
     }
 
 //}}} Debug right methods
+
+//{{{ Accepter right methods
+    public function accepter()
+    {
+        list($member, $rights) = $this->checkRights('Accepter');
+        $page = new AdminAccepterPage;
+        $page->member = $member;
+        $page->scope = explode(',', str_replace('"', '', $rights['Accepter']['Scope']));
+        $page->status = ((!empty($this->args_vars->get['status'])) ? $this->args_vars->get['status'] : 'Pending');
+        return $page;
+    }
+
+//}}}
 
     public function activityLogs()
     {

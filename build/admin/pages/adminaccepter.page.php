@@ -24,17 +24,17 @@ Boston, MA  02111-1307, USA.
      */
 
     /** 
-     * base page for the admin app
-     * all admin pages are extended from this
+     * accepter overview page
      * 
      * @package Apps
      * @subpackage Admin
      */
 
-class AdminBasePage extends PageWithActiveSkin
+class AdminAccepterPage extends AdminBasePage
 {
+
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a>";
+        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminAccepter')}</a>";
     }
 }

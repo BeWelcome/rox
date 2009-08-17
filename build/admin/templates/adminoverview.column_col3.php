@@ -15,6 +15,20 @@
 </li>
 HTML;
     }
+
+    if (in_array('Accepter', $right_names))
+    {
+        $description = htmlspecialchars($this->rights['Accepter']['Description'], ENT_NOQUOTES);
+        echo <<<HTML
+<li class='{$expand_class}'><a href='#' title='{$description}' class='header'>+/- Accepter</a>
+    <ul>
+        <li><a href='{$this->router->url('admin_debug_php')}' title='Check the PHP error logs'>PHP error logs</a></li>
+        <li><a href='{$this->router->url('admin_debug_exception')}' title='Check the Exception logs'>Exception logs</a></li>
+        <li><a href='{$this->router->url('admin_debug_mysql')}' title='Check the MySQL logs'>MySQL logs</a></li>
+    </ul>
+</li>
+HTML;
+    }
 ?>
 </ul>
 

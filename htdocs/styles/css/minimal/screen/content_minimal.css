@@ -599,6 +599,18 @@ div.admincomment {
   background-color: #FF6;
 }
 
+/**
+ * admin app styles
+ */
+
+ul li.expandable ul {
+    display: none;
+}
+
+ul li.expanded a.header {
+    font-weight: bold;
+}
+
 
 /*
 * css for gallery

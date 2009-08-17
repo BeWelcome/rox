@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright (c) 2007 BeVolunteer
+Copyright (c) 2007-2009 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -21,15 +21,20 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-/**
- * admin controller
- * 
- * @package admin
- * @author Felix <fvanhove@gmx.de>
- * 
- * Channels all requests, which are available exclusively for administrators
- */
-class AdminController extends PAppController
+
+    /**
+     * @author Felix <fvanhove@gmx.de>
+     * @author Fake51
+     */
+
+    /**
+     * admin controller
+     * deals with actions that are available exclusively for administrators
+     * 
+     * @package apps
+     * @subpackage Admin
+     */
+class AdminController extends RoxControllerBase
 {
 
     private $_model;
@@ -38,7 +43,7 @@ class AdminController extends PAppController
     public function __construct()
     {        
         parent::__construct();
-        $this->_model = new Admin();
+        $this->_model = new AdminModel();
         $this->_view  = new AdminView($this->_model);
     }
     
@@ -47,25 +52,110 @@ class AdminController extends PAppController
         unset($this->_model);
         unset($this->_view);
     }
-    
+
     /**
-     * @param void
+     * redirects if the member has got no business
+     * otherwise returns member entity and array of rights
+     *
+     * @access private
+     * @return array
+     */
+    private function checkRights()
+    {
+        if (!$member = $this->_model->getLoggedInMember())
+        {
+            $this->redirectAbsolute($this->router->url('main_page'));
+        }
+        $rights = $member->getOldRights();
+        if (empty($rights))
+        {
+            $this->redirectAbsolute($this->router->url('admin_norights'));
+        }
+        return array($member, $rights);
+    }
+
+    /**
+     * displays message about not having any admin rights
+     *
+     * @access public
+     * @return object
+     */
+    public function noRights()
+    {
+        if (!$member = $this->_model->getLoggedInMember())
+        {
+            $this->redirectAbsolute($this->router->url('main_page'));
+        }
+        $page = new AdminNoRightsPage;
+        $page->member = $member;
+        return $page;
+    }
+
+    /**
+     * overview page, displays tools for admins
+     *
+     * @access public
+     * @return object
      */
     public function index()
     {
- //       throw new PException("Not ready for use yet.");
-        
-        // FIXME: check, if requester is admin; shouldn't we?
-        
-        $request = PRequest::get()->request;
-        if (!isset($request[1])) {
-            $request[1] = '';
-        }
-        
-        $R = MOD_right::get();
-                
-        switch ($request[1]) {
-	        
+        list($member, $rights) = $this->checkRights();
+        $page = new AdminOverviewPage;
+        $page->member = $member;
+        $page->rights = $rights;
+        return $page;
+    }
+
+//{{{ Debug right methods
+    /**
+     * displays the php error logs
+     *
+     * @access public
+     * @return object
+     */
+    public function phpLogs()
+    {
+        list($member, $rights) = $this->checkRights();
+        $page = new AdminLogsPage('errors');
+        $page->member = $member;
+        $page->rights = $rights;
+        return $page;
+    }
+
+    /**
+     * displays the exception logs
+     *
+     * @access public
+     * @return object
+     */
+    public function exceptionLogs()
+    {
+        list($member, $rights) = $this->checkRights();
+        $page = new AdminLogsPage('exceptions');
+        $page->member = $member;
+        $page->rights = $rights;
+        return $page;
+    }
+
+    /**
+     * displays the mysql logs
+     *
+     * @access public
+     * @return object
+     */
+    public function mysqlLogs()
+    {
+        list($member, $rights) = $this->checkRights();
+        $page = new AdminLogsPage('mysql');
+        $page->member = $member;
+        $page->rights = $rights;
+        return $page;
+    }
+
+//}}} Debug right methods
+
+    public function activityLogs()
+    {
 /*
                 case 'activitylogs':
 
@@ -84,8 +174,10 @@ class AdminController extends PAppController
 	            break;
 */
 
-            case 'wordsdownload':
+    }
 
+    public function wordsDownload()
+    {
                 $level = $R->hasRight('Words');
                 if (!$level || $level < 1) {
                     PPHP::PExit(); // TODO: redirect or display message?
@@ -104,19 +196,5 @@ class AdminController extends PAppController
                 $Page->teaserBar .= $str;
                 ob_end_clean();
 
-                break;
-
-	        case 'test':
-	            
-	            throw new PException("No tests implemented yet.");
-	            break;
-	            
-	        default:
-	            
-	            throw new PException("No default implemented yet.");
-	            break;
-	            
-	    }
     }
 }
-?>

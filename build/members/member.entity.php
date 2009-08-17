@@ -1043,5 +1043,32 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return $this->createEntity('MemberLanguage')->deleteMembersLanguages($this);
     }
+
+    /**
+     * returns array of the old style rights
+     *
+     * @access public
+     * @return array
+     */
+    public function getOldRights()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+
+        if (!$this->old_rights)
+        {
+            $query = "SELECT * FROM rightsvolunteers AS rv, rights AS r WHERE rv.IdMember = {$this->getPKValue()} AND rv.IdRight = r.id";
+            $result = $this->dao->query($query);
+            $return = array();
+            while ($row = $result->fetch(PDB::FETCH_ASSOC))
+            {
+                $return[$row['Name']] = $row;
+            }
+            $this->old_rights = $return;
+        }
+        return $this->old_rights;
+    }
 }
 

@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright (c) 2007 BeVolunteer
+Copyright (c) 2007-2009 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -21,16 +21,20 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-/**
- * admin model
- *
- * @package admin
- * @author Felix van Hove <fvanhove@gmx.de>
- */
-class Admin extends PAppModel
+
+    /**
+     * @author Felix van Hove <fvanhove@gmx.de>
+     * @author Fake51
+     */
+
+    /**
+     * admin model
+     *
+     * @package Apps
+     * @subpackage Admin
+     */
+class AdminModel extends RoxModelBase
 {
-    
-    protected $dao;
     
     public function __construct()
     {

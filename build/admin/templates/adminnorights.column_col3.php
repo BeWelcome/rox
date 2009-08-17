@@ -1,0 +1,1 @@
+<?= $this->words->get('AdminNoRights');?>

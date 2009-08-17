@@ -43,16 +43,66 @@ class AdminLogsPage extends AdminBasePage
     private $type;
 
     /**
+     * name of log file to read from
+     *
+     * @var string
+     */
+    protected $logfile;
+
+    /**
+     * base name of log file to read from
+     *
+     * @var string
+     */
+    protected $logname;
+
+    /**
      * this page needs a type, determining what it'll display
      *
      * @param string $type - see above for possible values
      * @access public
+     * @throws Exception
      */
     public function __construct($type)
     {
         parent::__construct();
         $this->type = $type;
+
+        switch (strtolower($type))
+        {
+            case 'errors':
+                $this->logfile = '../../logs/php_errors.log';
+                break;
+            case 'exceptions':
+                $this->logfile = '../../logs/exception.log';
+                break;
+            case 'mysql':
+                $this->logfile = '../../logs/mysql/mysql-slow.log';
+                break;
+            default:
+                throw new Exception('Bad type specified for log in AdminLogsPage');
+        }
+        $this->logname = basename($this->logfile);
     }
 
+    /**
+     * attempts to open a log file file
+     *
+     * @param int $lines - number of lines to read from tail
+     * @access private
+     * @return array
+     * @throws Exception
+     */
+    protected function tailLogFile($lines = 100)
+    {
+        if (empty($lines) || !is_file($this->logfile))
+        {
+            throw new Exception("Could not open file: {$this->logfile}");
+        }
+        $filename = escapeshellarg($this->logfile);
+        $lines = intval($lines);
+        exec("tail -n {$lines} '{$filename}'", $return);
+        return $return;
+    }
 }
 

@@ -1,11 +1,12 @@
 <ul>
 <?php
     $right_names = array_keys($this->rights);
+    $expand_class = count($right_names) == 1 ? 'expanded' : 'expandable';
     if (in_array('Debug', $right_names))
     {
         $description = htmlspecialchars($this->rights['Debug']['Description'], ENT_NOQUOTES);
         echo <<<HTML
-<li class='expandable'><a href='#' title='{$description}' class='header'>+/- Debug</a>
+<li class='{$expand_class}'><a href='#' title='{$description}' class='header'>+/- Debug</a>
     <ul>
         <li><a href='{$this->router->url('admin_debug_php')}' title='Check the PHP error logs'>PHP error logs</a></li>
         <li><a href='{$this->router->url('admin_debug_exception')}' title='Check the Exception logs'>Exception logs</a></li>

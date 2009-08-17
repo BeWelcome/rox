@@ -119,6 +119,7 @@ class AdminController extends RoxControllerBase
         $page = new AdminLogsPage('errors');
         $page->member = $member;
         $page->rights = $rights;
+        $page->lines = ((!empty($this->args_vars->get['lines']) && intval($this->args_vars->get['lines'])) ? $this->args_vars->get['lines'] : 100);
         return $page;
     }
 
@@ -134,6 +135,7 @@ class AdminController extends RoxControllerBase
         $page = new AdminLogsPage('exceptions');
         $page->member = $member;
         $page->rights = $rights;
+        $page->lines = ((!empty($this->args_vars->get['lines']) && intval($this->args_vars->get['lines'])) ? $this->args_vars->get['lines'] : 100);
         return $page;
     }
 
@@ -149,6 +151,7 @@ class AdminController extends RoxControllerBase
         $page = new AdminLogsPage('mysql');
         $page->member = $member;
         $page->rights = $rights;
+        $page->lines = ((!empty($this->args_vars->get['lines']) && intval($this->args_vars->get['lines'])) ? $this->args_vars->get['lines'] : 100);
         return $page;
     }
 

@@ -507,5 +507,16 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
             return false;
         return $d->fk_countrycode;
     }
+
+    /**
+     * sets the loggedIn variable to false
+     * hack to be able to log out not using this class
+     *
+     * @todo get rid of this whole class
+     */
+    public function setLogout()
+    {
+        $me = self::get();
+        $me->loggedIn = false;
+    }
 }
-?>

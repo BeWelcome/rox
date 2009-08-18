@@ -63,18 +63,18 @@ class Member extends RoxEntityBase
      */
     public function get_userid() {
         if(!isset($this->userId)) {
-	        $s = $this->singleLookup(
-	            "
-	SELECT SQL_CACHE
-	    user.id
-	FROM
-	    user
-	WHERE
-	    handle = '$this->Username'
-	            "
-	        );
-	        if ($s) $this->userId = $s->id;
-	        else return false;
+            $s = $this->singleLookup(
+                "
+    SELECT SQL_CACHE
+        user.id
+    FROM
+        user
+    WHERE
+        handle = '$this->Username'
+                "
+            );
+            if ($s) $this->userId = $s->id;
+            else return false;
         }
         return $this->userId;
     }
@@ -596,18 +596,18 @@ SQL;
     }
 
     
-	/*
-	* this function get the number of post of the current member
-	*/
-	public function forums_posts_count() {
-		// Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
-		if (!$this->ForumPostCount)
+    /*
+    * this function get the number of post of the current member
+    */
+    public function forums_posts_count() {
+        // Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
+        if (!$this->ForumPostCount)
         {
             $this->ForumPostCount = $this->createEntity('Post')->getMemberPostCount($this);
-		}
+        }
         return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
-	} // forums_posts_count
-	
+    } // forums_posts_count
+    
     public function get_verification_status()
     {
         // Loads the vérification level of the member (if any) 
@@ -709,15 +709,15 @@ WHERE
     addresses.IdMember = members.id AND
     addresses.Rank = 0
 SQL;
-			if (!($s = $this->dao->query($sql)))
+            if (!($s = $this->dao->query($sql)))
             {
                 return false;
             }
-			$visitors = array();
-	        while ($rr = $s->fetch(PDB::FETCH_OBJ))
+            $visitors = array();
+            while ($rr = $s->fetch(PDB::FETCH_OBJ))
             {
-	            $visitors [] = $rr;
-	        }
+                $visitors [] = $rr;
+            }
             return $visitors;
         }
 
@@ -810,7 +810,7 @@ WHERE
         $words = $this->getWords();
         $ss=$words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr) ;
 //        if (strpos($ss,'Australia')>0) die ($fieldname."=".$this->$fieldname." [".$ss."] IdLanguage=".$IdLanguage." \$ReplaceWIthBr=".$ReplaceWithBr) ;
-		return ($words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
+        return ($words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
 
         if(!isset($this->trads)) {
             $this->get_trads();
@@ -848,7 +848,7 @@ WHERE
         $right = new MOD_right();
         if ($right->hasRight('Admin')) {
             return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($crypted_id)));
-		}
+        }
         // check for Member's own data
         if ($this->edit_mode) {
             if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
@@ -1098,6 +1098,84 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             $this->old_rights = $return;
         }
         return $this->old_rights;
+    }
+
+    /**
+     * logs a member out and deletes the session for the member
+     *
+     * @access public
+     * @return bool
+     */
+    public function logOut()
+    {
+        if (!isset($_SESSION) || !$this->isLoaded())
+        {
+            return false;
+        }
+
+        $keys_to_delete = array(
+            'IdMember',
+            'MemberStatus',
+            'Status',
+            'lang',
+            'IdLang',
+            'IsVol',
+            'UserName',
+            'stylesheet',
+            'Param',
+            'TimeOffset',
+            'PreferenceDayLight',
+            'MemberCryptKey',
+            'LogCheck',
+            'RightLevel',
+            'RightScope',
+            'FlagLevel',
+            );
+        foreach ($keys_to_delete as $key)
+        {
+            if (isset($_SESSION[$key]))
+            {
+                unset($_SESSION[$key]);
+            }
+        }
+                
+        /**
+         old stuff from TB - we don't rely on this
+        if (!isset($this->sessionName))
+            return false;
+        if (!isset($_SESSION[$this->sessionName]))
+            return false;
+        $this->loggedIn = false;
+        unset($_SESSION[$this->sessionName]);
+        */
+
+        $query = "delete from online where IdMember={$this->getPKValue()}";
+        $this->dao->query($query);
+
+        if(isset($_COOKIE) && is_array($_COOKIE))
+        {
+            $env = PVars::getObj('env');
+            if( isset($_COOKIE[$env->cookie_prefix.'userid'])) {
+                self::addSetting($_COOKIE[$env->cookie_prefix.'userid'], 'skey');
+                setcookie($env->cookie_prefix.'userid', '', time()-3600, '/');
+            }
+            if( isset($_COOKIE[$env->cookie_prefix.'userkey'])) {
+                setcookie($env->cookie_prefix.'userkey', '', time()-3600, '/');
+            }
+            if( isset($_COOKIE[$env->cookie_prefix.'ep'])) {
+                setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
+            }
+        }
+
+        // todo: remove this when app_user is finally removed
+        APP_User::get()->setLogout();
+
+        session_unset() ;
+        session_destroy() ;
+        $this->wipeEntity();
+        session_regenerate_id();
+
+        return true;
     }
 }
 

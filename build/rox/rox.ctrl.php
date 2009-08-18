@@ -108,7 +108,6 @@ class RoxController extends RoxControllerBase
             case 'main':
             case 'home':
             case 'index':
-            case 'login':
             case '':
             default:
                 if (APP_User::isBWLoggedIn("NeedMore,Pending")) {

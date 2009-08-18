@@ -1,5 +1,34 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
+
+    /**
+     * @author Lupochen
+     */
+    /**
+     * model of the login MVC
+     *
+     * @package Apps
+     * @subpackage Login
+     */
 
 class LoginModel extends RoxModelBase
 {
@@ -409,7 +438,9 @@ WHERE
         ); // update the LastLogin date
     
         // Load language prederence (IdPreference=1)
-        
+
+        // todo: come up with interesting idea like ... using just ONE query to load preferences
+
         if ($preference_language = $this->singleLookup(
             "
 SELECT
@@ -506,14 +537,6 @@ WHERE   id = $tb_user_id
     }
     
     
-    //-----------------------------------------------------------------------
-    
-    
-    function setBWMemberAsLoggedOut($member)
-    {
-        
-    }
-    
     
     function setTBUserAsLoggedOut($tb_user)
     {
@@ -521,29 +544,12 @@ WHERE   id = $tb_user_id
     }
     
     
-    function logout()
+    public function logout()
     {
-		
-		
-				// Added by JeanYves to be sure of the Logout
-				if (isset($_SESSION["IdMember"])) unset($_SESSION["IdMember"]) ;
-				if (isset($_SESSION["MemberStatus"])) unset($_SESSION["MemberStatus"]) ;
-				if (isset($_SESSION["Status"])) unset($_SESSION["Status"]) ;
-				if (isset($_SESSION["lang"])) unset($_SESSION["lang"]) ;
-				if (isset($_SESSION["IdLang"])) unset($_SESSION["IdLang"]) ;
-				
-        if (!isset($this->sessionName))
+        if (!$member = $this->getLoggedInMember())
+        {
             return false;
-        if (!isset($_SESSION[$this->sessionName]))
-            return false;
-        $this->loggedIn = false;
-        unset($_SESSION[$this->sessionName]);
-				session_unset() ;
-				session_destroy() ;
-        session_regenerate_id();
-        return true;
+        }
+        return $member->logOut();
     }
 }
-
-
-?>

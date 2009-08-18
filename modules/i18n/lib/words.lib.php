@@ -589,8 +589,18 @@ SQL;
      *       THEN DONT CALL THE FUNCTION!!!
      */
 	 private function ReplaceWithBr($ss,$ReplaceWith=false) {
-		if (!$ReplaceWith) return ($ss);
-		return(str_replace("\n","<br \>",$ss));
+		if ($ReplaceWith) {
+            $sRet=str_replace("\\r\\n","<br \>",$ss) ; 
+            $sRet=str_replace("\r\n","<br \>",$sRet) ; 
+//            if (strpos($ss,'Australia')>0) die ("\$ss= [".$ss."] <br />\$sRet=[<b>".$sRet."</b>] \$ReplaceWithBR=".$ReplaceWith) ;
+            $sRet=str_replace("\\n","<br \>",$sRet) ; 
+            return(str_replace("\n","<br \>",$sRet));
+        }
+        else {
+            $sRet=str_replace("\\r\\n","\n",$ss) ; 
+//        if (strpos($ss,'Australia')>0) die ("\$ss= [".$ss."] <br />\$sRet=[<b>".$sRet."</b>]") ;
+            return(str_replace("\\n","\n",$sRet)) ; 
+        }
 	 }
 
 
@@ -623,7 +633,7 @@ SQL;
 					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
 				} 
 				else {
-			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try default en
@@ -634,7 +644,7 @@ SQL;
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
 				} else {
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try first language available
@@ -645,7 +655,7 @@ SQL;
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
 				} else {
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			MOD_log::get()->write("mInTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
@@ -897,10 +907,11 @@ SQL;
     function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
         // temporary hack to undo the damage done by escaping in other places
         // todo: find all references to ReplaceInMTrad and fix them
-        while ($ss != stripslashes($ss))
-        {
-            $ss = stripslashes($ss);
+        // Change by jeanyves on AUgust 18 2009: \r\n are kept, but \' are replaced by '
+        while (strpos($ss,"\\'")!==false) {
+            $ss=str_replace("\\'","'",$ss) ;
         }
+        $ss=str_replace("\r\n","\n",$ss) ;
         $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string.
         // judging from the exception logs this is NOT TRUE. Instead we now have a massive sql injection exploit vector
 

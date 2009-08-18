@@ -20,10 +20,16 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
-/**
- * represents membership of a group
- *
- */
+    /**
+     * @author Fake51
+     */
+
+    /**
+     * represents membership of a group
+     *
+     * @package Apps
+     * @subpackage Entities
+     */
 class GroupMembership extends RoxEntityBase
 {
 

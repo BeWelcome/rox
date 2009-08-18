@@ -20,11 +20,19 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
+    /**
+     * @author Lemon-Head
+     * @author Micha
+     * @author Globetrotter_tt
+     */
 
-/**
- * This widget shows the forum for a group page
- *
- */
+    /**
+     * This widget shows the forum for a group page
+     *
+     * @package Apps
+     * @subpackage Widgets
+     */
+
 class GroupForumWidget  // extends ForumBoardWidget
 {
     public function render()
@@ -39,9 +47,12 @@ class GroupForumWidget  // extends ForumBoardWidget
 }
 
 //------------------------------------------------------------------------------------
-/**
- * This widget shows a list of members with pictures.
- */
+    /**
+     * This widget shows a list of members with pictures.
+     *
+     * @package Apps
+     * @subpackage Widgets
+     */
 class GroupMemberlistWidget  // extends MemberlistWidget?
 {
     private $_group;
@@ -71,8 +82,3 @@ HTML;
     }
 }
 
-
-
-
-
-?>

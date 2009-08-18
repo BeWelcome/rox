@@ -20,11 +20,16 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
+    /**
+     * @author Fake51
+     */
 
-/**
- * represents a single group
- *
- */
+    /**
+     * represents a single group
+     *
+     * @package Apps
+     * @subpackage Entities
+     */
 class Group extends RoxEntityBase
 {
 

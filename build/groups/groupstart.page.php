@@ -19,10 +19,16 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 */
-/**
- * This page shows an overview of the group
- *
- */
+    /**
+     * @author Fake51
+     */
+
+    /**
+     * This page shows details for a given group
+     *
+     * @package Apps
+     * @subpackage Groups
+     */
 class GroupStartPage extends GroupsBasePage
 {
     protected function column_col3()

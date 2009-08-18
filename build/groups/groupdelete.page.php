@@ -20,10 +20,16 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
-/**
- * This page asks if the user wants to join the group
- *
- */
+    /**
+     * @author Fake51
+     */
+
+    /**
+     * This page asks if the user wants to join the group
+     *
+     * @package Apps
+     * @package Groups
+     */
 class GroupDeletePage extends GroupsBasePage
 {
     protected function column_col3()

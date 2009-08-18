@@ -21,10 +21,16 @@ Boston, MA  02111-1307, USA.
 */
 
 
-/**
- * This page asks if the user wants to leave the group
- *
- */
+    /**
+     * @author Fake51
+     */
+
+    /**
+     * This page asks if the user wants to leave the group
+     *
+     * @package Apps
+     * @subpackage Groups
+     */
 class GroupLeavePage extends GroupsBasePage
 {
     protected function column_col3()

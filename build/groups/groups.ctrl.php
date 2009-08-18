@@ -19,9 +19,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 */
-/**
- * This controller is called when the request is 'groups/...'
- */
+    /**
+     * @author Fake51
+     */
+
+    /**
+     * groups controller
+     * handles all requests that have to do with groups
+     * 
+     * @package Apps
+     * @subpackage Groups
+     */
 class GroupsController extends RoxControllerBase   
 {
 

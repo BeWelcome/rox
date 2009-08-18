@@ -590,16 +590,10 @@ SQL;
      */
 	 private function ReplaceWithBr($ss,$ReplaceWith=false) {
 		if ($ReplaceWith) {
-            $sRet=str_replace("\\r\\n","<br \>",$ss) ; 
-            $sRet=str_replace("\r\n","<br \>",$sRet) ; 
-//            if (strpos($ss,'Australia')>0) die ("\$ss= [".$ss."] <br />\$sRet=[<b>".$sRet."</b>] \$ReplaceWithBR=".$ReplaceWith) ;
-            $sRet=str_replace("\\n","<br \>",$sRet) ; 
-            return(str_replace("\n","<br \>",$sRet));
+            return(str_replace(array("\\r\\n","\r\n","\\n","\n"),"<br />",$ss)) ; 
         }
         else {
-            $sRet=str_replace("\\r\\n","\n",$ss) ; 
-//        if (strpos($ss,'Australia')>0) die ("\$ss= [".$ss."] <br />\$sRet=[<b>".$sRet."</b>]") ;
-            return(str_replace("\\n","\n",$sRet)) ; 
+            return(str_replace(array("\\r\\n","\r\n","\\n","\n"),"\n",$ss)) ; 
         }
 	 }
 

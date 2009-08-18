@@ -759,12 +759,7 @@ WHERE
      *     and empty string if field has no content
      */
     public function get_trad($fieldname, $IdLanguage,$ReplaceWithBr=False) {
-    
-        $words = $this->getWords();
-        $IdTrad=$this->$fieldname ;
-        $ss=$words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr) ;
-//        if (strpos($ss,'Australia')>0) die ("get_trad:: ".$fieldname."=".$this->$fieldname." [".$ss."] IdLanguage=".$IdLanguage." \$ReplaceWIthBr=".$ReplaceWithBr) ;
-		return ($words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
+		return ($this->get_trad_by_tradid($this->$fieldname,$IdLanguage,$ReplaceWithBr)) ;
         
         // Code after this is obsolete (JY)
           if(!isset($this->trads)) {

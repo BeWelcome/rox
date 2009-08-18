@@ -83,8 +83,8 @@ class Member extends RoxEntityBase
      * Checks which languages profile has been translated into
      */
     public function get_profile_languages() {
-        if(!isset($this->trads)) {
-            $this->trads = $this->get_trads();
+        if(!isset($this->profile_languages)) {
+            $this->set_profile_languages();
         }
         return $this->profile_languages;
     }
@@ -173,9 +173,8 @@ ORDER BY languages.id asc
     }
 
     /**
-     * automatically called by __get('trads'),
-     * when someone writes '$member->trads'
-     *
+     * Use to retrieve all the fields in members table which are a a foreign key to memberstrads
+     * This is typically neded when you want to delete a a given translation
      * @return unknown
      */
     public function get_trads_fields()
@@ -208,10 +207,30 @@ ORDER BY languages.id asc
      * automatically called by __get('trads'),
      * when someone writes '$member->trads'
      *
+     * @return nothing but $this->profile_languages is set
+     * cave at : base on the existence of a ProfileSummary  for the current member
+     */
+    protected function set_profile_languages()
+    {
+        $trads_for_member = $this->bulkLookup("SELECT SQL_CACHE languages.id,ShortCode,Name from memberstrads,languages 
+        where languages.id=memberstrads.IdLanguage and IdOwner = $this->id and IdTrad=$this->ProfileSummary") ;
+        $this->profile_languages = array();
+
+        foreach ($trads_for_member as $trad) {
+            $this->profile_languages[$trad->id] = $trad;
+        }
+    }
+
+
+     /**
+     * automatically called by __get('trads'),
+     * when someone writes '$member->trads'
+     *
      * @return unknown
      */
     protected function get_trads()
     {
+        // This code is obsolete (jy) 
         $trads_for_member = $this->bulkLookup(
             "
 SELECT SQL_CACHE

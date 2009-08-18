@@ -23,6 +23,7 @@ Boston, MA  02111-1307, USA.
     /**
      * @author Lemon-Head
      * @author Fake51
+     * @Fixer for membertrads : jeanyves
      */
 
     /**
@@ -48,6 +49,7 @@ class Member extends RoxEntityBase
         {
             $this->findById($member_id);
         }
+        $this->words=new MOD_words ;
     }
 
     public function init($values, $dao)
@@ -751,13 +753,21 @@ WHERE
      * initialized already.
      *
      * @param fieldname name of the profile field
-     * @param language required translation
+     * @param IdLanguage required translation
      *
      * @return text of $fieldname if available, English otherwise,
      *     and empty string if field has no content
      */
-    public function get_trad($fieldname, $language) {
-        if(!isset($this->trads)) {
+    public function get_trad($fieldname, $IdLanguage,$ReplaceWithBr=False) {
+    
+        $words = $this->getWords();
+        $IdTrad=$this->$fieldname ;
+        $ss=$words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr) ;
+//        if (strpos($ss,'Australia')>0) die ("get_trad:: ".$fieldname."=".$this->$fieldname." [".$ss."] IdLanguage=".$IdLanguage." \$ReplaceWIthBr=".$ReplaceWithBr) ;
+		return ($words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
+        
+        // Code after this is obsolete (JY)
+          if(!isset($this->trads)) {
             $this->trads = $this->get_trads();
         }
 
@@ -765,9 +775,9 @@ WHERE
             return "";
         else {
             $field = $this->trads->$fieldname;
-            if(!array_key_exists($language, $field)) {
+            if(!array_key_exists($IdLanguage, $field)) {
                 // echo "Not translated";
-                if($language != 0 && isset($field[0]))
+                if($IdLanguage != 0 && isset($field[0]))
                     return $field[0]->Sentence;
                 foreach ($field as $field_single) {
                     if ($field_single->Sentence != "")
@@ -776,29 +786,34 @@ WHERE
                 return "";
             }
             else {
-                return $field[$language]->Sentence;
+                return $field[$IdLanguage]->Sentence;
             }
         }
     }
 
 
-    public function get_trad_by_tradid($tradid, $language) {
+    public function get_trad_by_tradid($IdTrad, $IdLanguage,$ReplaceWithBr=False) {
+        $words = $this->getWords();
+        $ss=$words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr) ;
+//        if (strpos($ss,'Australia')>0) die ($fieldname."=".$this->$fieldname." [".$ss."] IdLanguage=".$IdLanguage." \$ReplaceWIthBr=".$ReplaceWithBr) ;
+		return ($words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
+
         if(!isset($this->trads)) {
             $this->get_trads();
         }
 
-        if(!isset($this->trads_by_tradid[$tradid]))
+        if(!isset($this->trads_by_tradid[$IdTrad]))
             return "";
         else {
-            $trad = $this->trads_by_tradid[$tradid];
-            if(!array_key_exists($language, $trad)) {
+            $trad = $this->trads_by_tradid[$IdTrad];
+            if(!array_key_exists($IdLanguage, $trad)) {
                 //echo "Not translated";
-                if($language != 0)
+                if($IdLanguage != 0)
                     return $trad[0]->Sentence;
                 else return "";
             }
             else {
-                return $trad[$language]->Sentence;
+                return $trad[$IdLanguage]->Sentence;
             }
         }
     }

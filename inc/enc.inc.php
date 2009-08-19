@@ -39,7 +39,7 @@ function DeCryptA($ss)
 
 function DeCryptM($ss)
 {
-	return (stripslashes(urldecode($ss)));
+	return ($ss);
 }
 
 ?>

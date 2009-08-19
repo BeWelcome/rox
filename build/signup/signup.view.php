@@ -123,25 +123,22 @@ class SignupView extends PAppView
                 
         // set the receiver
         // $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
-		$MailToNotifyWhenNewMemberSignup=$_SESSION["Param"]->MailToNotifyWhenNewMemberSignup ;
-		$MailToNotifyWhenNewMemberSignup=str_replace(" ",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
-		$MailToNotifyWhenNewMemberSignup=str_replace(",",";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
+        $MailToNotifyWhenNewMemberSignup=$_SESSION["Param"]->MailToNotifyWhenNewMemberSignup ;
+        $MailToNotifyWhenNewMemberSignup=str_replace(array(" ",","),";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
         $to = explode(";",$MailToNotifyWhenNewMemberSignup) ;
-				
-		if (count($to)<=0)  {
-			die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
-			$MailToNotifyWhenNewMemberSignup."]") ;
-		}
+                
+        if (count($to)<=0)  {
+            die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
+            $MailToNotifyWhenNewMemberSignup."]") ;
+        }
         
         // set the sender
         $from = PVars::getObj('mailAddresses')->registration;
         
         // Use MOD_mail to create and send a message
-        $mail = new MOD_mail();
-        $message = $mail->getMessageHTML($subject, $from, $to, $title = $subject, $body);
-
+        $result = MOD_mail::sendEmail($subject,$from,$to,$subject,$body, false, array());
         //Now check if Swift actually sends it
-        if ($mail->send($message)) {
+        if ($result) {
             $status = true;
         } else {
             MOD_log::get()->write("in signup view signupTeamMail: Failed to send a mail to [".$MailToNotifyWhenNewMemberSignup."]", "signup");
@@ -169,8 +166,8 @@ class SignupView extends PAppView
             return false;
         $key = $key->value;
         $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$member->Username.'/'.$key;
-		$confirmUrl_html ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>";
-		
+        $confirmUrl_html ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>";
+        
         $title = $words->get("Welcome").'!';
         $body = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl);
         $body_html = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl_html);
@@ -213,7 +210,7 @@ class SignupView extends PAppView
         return $out;
     }
     
-	public function style($text,$photo = false) {
+    public function style($text,$photo = false) {
         $html = '<p style="font-family: Arial; font-size: 12px; line-height: 1.5em">';
         if ($photo) {
             $src = MOD_layoutbits::smallUserPic_username($_SESSION['Username']);

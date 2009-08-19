@@ -31,7 +31,7 @@
                         <li><span class="small"><?= $member->cityname; ?></span></li>
                     </ul>
                 </td>
-                <td><em><?php echo $words->mTrad($membershipinfo->Comment) ?></em></td>
+                <td><em><?php echo $words->mTrad($membershipinfo->Comment,true) ?></em></td>
             </tr>
             <?php
             $count++;

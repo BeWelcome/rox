@@ -29,7 +29,7 @@ function CryptA($ss)
 
 function CryptM($ss)
 {
-	return (urlencode($ss));
+	return $ss;
 }
 
 function DeCryptA($ss)
@@ -39,7 +39,6 @@ function DeCryptA($ss)
 
 function DeCryptM($ss)
 {
-	return ($ss);
+	return $ss;
 }
 
-?>

@@ -34,12 +34,12 @@ function CryptM($ss)
 
 function DeCryptA($ss)
 {
-	return (urldecode($ss));
+	return (stripslashes(urldecode($ss)));
 }
 
 function DeCryptM($ss)
 {
-	return (urldecode($ss));
+	return (stripslashes(urldecode($ss)));
 }
 
 ?>

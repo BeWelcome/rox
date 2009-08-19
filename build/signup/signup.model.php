@@ -588,7 +588,7 @@ WHERE `id` = ' . $IdAddress . '
         $vars['email'] = strtolower($vars['email']);
         
         $escapeList = array('username', 'email', 'password', 'gender',
-                            'feedback', 'housenumber', 'street', 'zip');
+                            'feedback', 'housenumber', 'street','FirstName','SecondName','LastName', 'zip');
         foreach($escapeList as $formfield) {
             if(!empty($vars[$formfield])) {  // e.g. feedback...
                 $vars[$formfield] = $this->dao->escape($vars[$formfield]);

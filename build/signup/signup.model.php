@@ -470,10 +470,10 @@ VALUES
         // ********************************************************************
         // e-mail, names/members
         // ********************************************************************
-        $cryptedfieldsEmail = MOD_crypt::insertCrypted($vars['email'],"members.Email", $memberID, $memberID, "always") ;
-        $cryptedfieldsFirstname =  MOD_crypt::insertCrypted($vars['firstname'],"members.FirstName", $memberID, $memberID) ;
-        $cryptedfieldsSecondname  =  MOD_crypt::insertCrypted($vars['secondname'],"members.SecondName", $memberID, $memberID) ;
-        $cryptedfieldsLastname =  MOD_crypt::insertCrypted($vars['lastname'],"members.LastName", $memberID, $memberID) ;
+        $cryptedfieldsEmail = MOD_crypt::insertCrypted($this->dao->escape($vars['email'],"members.Email"), $memberID, $memberID, "always") ;
+        $cryptedfieldsFirstname =  MOD_crypt::insertCrypted($this->dao->escape($vars['firstname']),"members.FirstName", $memberID, $memberID) ;
+        $cryptedfieldsSecondname  =  MOD_crypt::insertCrypted($this->dao->escape($vars['secondname']),"members.SecondName", $memberID, $memberID) ;
+        $cryptedfieldsLastname =  MOD_crypt::insertCrypted($this->dao->escape($vars['lastname']),"members.LastName", $memberID, $memberID) ;
         $query = '
 UPDATE
 	`members`
@@ -516,9 +516,9 @@ VALUES
             return false;
         }
         $IdAddress = $s->insertId();
-        $cryptedfieldsHousenumber = MOD_crypt::insertCrypted($vars['housenumber'], "addresses.HouseNumber", $IdAddress, $memberID);
-        $cryptedfieldsStreet = MOD_crypt::insertCrypted($vars['street'], "addresses.StreetName", $IdAddress, $memberID);
-        $cryptedfieldsZip = MOD_crypt::insertCrypted($vars['zip'], "addresses.Zip", $IdAddress, $memberID);
+        $cryptedfieldsHousenumber = MOD_crypt::insertCrypted($this->dao->escape($vars['housenumber']), "addresses.HouseNumber", $IdAddress, $memberID);
+        $cryptedfieldsStreet = MOD_crypt::insertCrypted($this->dao->escape($vars['street']), "addresses.StreetName", $IdAddress, $memberID);
+        $cryptedfieldsZip = MOD_crypt::insertCrypted($this->dao->escape($vars['zip']), "addresses.Zip", $IdAddress, $memberID);
         $query = '
 UPDATE addresses
 SET
@@ -841,7 +841,7 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Pending
 	    $vars['city'] = "Magdeburg";
 	    //$vars['city_id'] = "2155571";
 	    $vars['housenumber'] = "0";
-	    $vars['street'] = "Schanzenstrasse";
+	    $vars['street'] = "houdini's street";
 	    $vars['zip'] = "20357";
 	    $vars['username'] = "Felixo";
 	    $vars['email'] = "quatsch@kannweg.de";
@@ -849,7 +849,7 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Pending
 	    $vars['password'] = 'tschangtschang';
 	    $vars['passwordcheck'] = 'tschangtschang';
 	    $vars['firstname'] = 'Felixaa';
-	    $vars['lastname'] = 'van So';
+	    $vars['lastname'] = "van So d'alemani";
 	    $vars['gender'] = 'female';
 	    $vars['birthyear'] = '1900';
 	    $vars['terms'] = 'Yes';

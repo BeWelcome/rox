@@ -61,22 +61,13 @@ class ForumsView extends RoxAppView {
      */
     public function threadURL($thread)
     {
-        return $this->uri.'s'.$thread->threadid.'-'.str_replace(
-           array('/', ' ','?','>',':','!'),
-           array('-', '-','-','-','-','-'),
-           $this->words->fTrad($thread->IdTitle)
-        );
-    
+        return $this->uri.'s'.$thread->threadid.'-'.ereg_replace('[^A-Za-z0-9]', '_',$this->words->fTrad($thread->IdTitle) ) ;
     }
     
     public  function postURL($post)
     {
 	
-        return $this->uri.'s'.$post->threadid.'-'.str_replace(
-           array('/', ' ','?','>',':','!'),
-           array('-', '-','-','-','-','-'),
-           $this->words->fTrad($post->title)
-        );
+        return $this->uri.'s'.$post->threadid.'-'.ereg_replace('[^A-Za-z0-9]', '_',$this->words->fTrad($post->IdTitle) ) ;
     }
     
     

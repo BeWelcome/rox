@@ -879,7 +879,8 @@ ORDER BY
         $m = $vars['member'];
         
         // Prepare $vars
-        $vars['ProfileSummary'] = $this->dao->escape($vars['ProfileSummary']);
+        // JY fix, the escaping will be done from ReplaceInMTrad so I remove it
+//        $vars['ProfileSummary'] = $this->dao->escape($vars['ProfileSummary']);
         $vars['BirthDate'] = (($date = $this->validateBirthdate($vars['BirthDate'])) ? $date : $vars['BirthDate']);
         if (!isset($vars['HideBirthDate'])) $vars['HideBirthDate'] = 'No';
         // $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('ProfileOccupation', $profile_language) : '';
@@ -911,11 +912,11 @@ ORDER BY
         if (!isset($vars['IsHidden_CellPhoneNumber'])) $vars['IsHidden_CellPhoneNumber']  = 'No';
         if (!isset($vars['IsHidden_WorkPhoneNumber'])) $vars['IsHidden_WorkPhoneNumber'] = 'No';
         
-        $vars['Accomodation'] = $this->dao->escape($vars['Accomodation']);
-        $vars['MaxLenghtOfStay'] = $this->dao->escape($vars['MaxLenghtOfStay']);
-        $vars['ILiveWith'] = $this->dao->escape($vars['ILiveWith']);
-        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
-        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
+//        $vars['Accomodation'] = $this->dao->escape($vars['Accomodation']);
+//        $vars['MaxLenghtOfStay'] = $this->dao->escape($vars['MaxLenghtOfStay']);
+//        $vars['ILiveWith'] = $this->dao->escape($vars['ILiveWith']);
+//        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
+//        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
         
         // Analyse TypicOffer list
         $TypicOffer = $m->TabTypicOffer;
@@ -941,19 +942,19 @@ ORDER BY
             }
         } // end of for $ii
             
-        $vars['PublicTransport'] = $this->dao->escape($vars['PublicTransport']);
-        $vars['Restrictions'] = $this->dao->escape($vars['Restrictions']);
-        $vars['OtherRestrictions'] = $this->dao->escape($vars['OtherRestrictions']);
-        $vars['AdditionalAccomodationInfo'] = $this->dao->escape($vars['AdditionalAccomodationInfo']);
-        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
-        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
-        $vars['Hobbies'] = $this->dao->escape($vars['Hobbies']);
-        $vars['Books'] = $this->dao->escape($vars['Books']);
-        $vars['Music'] = $this->dao->escape($vars['Music']);
-        $vars['Movies'] = $this->dao->escape($vars['Movies']);
-        $vars['Organizations'] = $this->dao->escape($vars['Organizations']);
-        $vars['PastTrips'] = $this->dao->escape($vars['PastTrips']);
-        $vars['PlannedTrips'] = $this->dao->escape($vars['PlannedTrips']);
+//        $vars['PublicTransport'] = $this->dao->escape($vars['PublicTransport']);
+//        $vars['Restrictions'] = $this->dao->escape($vars['Restrictions']);
+//        $vars['OtherRestrictions'] = $this->dao->escape($vars['OtherRestrictions']);
+//        $vars['AdditionalAccomodationInfo'] = $this->dao->escape($vars['AdditionalAccomodationInfo']);
+//        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
+//        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
+//        $vars['Hobbies'] = $this->dao->escape($vars['Hobbies']);
+//        $vars['Books'] = $this->dao->escape($vars['Books']);
+//        $vars['Music'] = $this->dao->escape($vars['Music']);
+//        $vars['Movies'] = $this->dao->escape($vars['Movies']);
+//        $vars['Organizations'] = $this->dao->escape($vars['Organizations']);
+//        $vars['PastTrips'] = $this->dao->escape($vars['PastTrips']);
+//        $vars['PlannedTrips'] = $this->dao->escape($vars['PlannedTrips']);
 
         return $vars;
     }

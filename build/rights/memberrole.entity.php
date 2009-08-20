@@ -36,9 +36,9 @@ class MemberRole extends RoxEntityBase
     }
 
     /**
-     * returns members that have a given role
+     * returns a member's roles
      *
-     * @param object $role - the role to find members for
+     * @param object $role - the member to find roles for
      * @access public
      * @return array
      */

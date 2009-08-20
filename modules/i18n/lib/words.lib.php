@@ -627,7 +627,8 @@ SQL;
 					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
 				} 
 				else {
-                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try default en
@@ -638,7 +639,8 @@ SQL;
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
 				} else {
-                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try first language available
@@ -649,7 +651,8 @@ SQL;
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
 				} else {
-                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			MOD_log::get()->write("mInTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
@@ -714,7 +717,8 @@ SQL;
 				} 
 				else {
 							$fTradIdLastUsedLanguage=$row->IdLanguage ;
-			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try default eng
@@ -726,7 +730,8 @@ SQL;
 					MOD_log::get()->write("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try first language available
@@ -738,7 +743,8 @@ SQL;
 					MOD_log::get()->write("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;

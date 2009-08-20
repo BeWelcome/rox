@@ -185,7 +185,6 @@ HTML;
                     echo "</dd>\n";
                 }
             ?>
-            <dd><?php echo $member->get_trad("Restrictions", $profile_language,true); ?></dd>
             
             <dt class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</dt>
             <dd><?php echo $member->get_trad("OtherRestrictions", $profile_language,true); ?></dd>

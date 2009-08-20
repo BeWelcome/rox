@@ -41,7 +41,7 @@ HTML;
             {
                 echo <<<HTML
             <dt class="label">{$words->getInLang('ProfileHobbies', $profile_language_code)}:</dt>
-            <dd>{$member->get_trad("Hobbies", $profile_language,true)}</dd>
+            <dd>{$purifier->purify($member->get_trad("Hobbies", $profile_language,true))}</dd>
 HTML;
             }
             
@@ -49,7 +49,7 @@ HTML;
             { 
                 echo <<<HTML
             <dt class="label">{$words->getInLang('ProfileBooks', $profile_language_code)}:</dt>
-            <dd>{$member->get_trad("Books", $profile_language,true)}</dd>
+            <dd>{$purifier->purify($member->get_trad("Books", $profile_language,true))}</dd>
 HTML;
             }
         
@@ -57,7 +57,7 @@ HTML;
             {
                 echo <<<HTML
             <dt class="label">{$words->getInLang('ProfileMusic', $profile_language_code)}:</dt>
-            <dd>{$member->get_trad("Music", $profile_language,true)}</dd>
+            <dd>{$purifier->purify($member->get_trad("Music", $profile_language,true))}</dd>
 HTML;
             }
         
@@ -65,7 +65,7 @@ HTML;
             {
                 echo <<<HTML
             <dt class="label">{$words->getInLang('ProfileMovies', $profile_language_code)}:</dt>
-            <dd>{$member->get_trad("Movies", $profile_language,true)}</dd>
+            <dd>{$purifier->purify($member->get_trad("Movies", $profile_language,true))}</dd>
 HTML;
             }
             
@@ -73,7 +73,7 @@ HTML;
             {
                 echo <<<HTML
             <dt class="label" >{$words->getInLang('ProfileOrganizations', $profile_language_code)}:</dt>
-            <dd>{$member->get_trad("Organizations", $profile_language,true)}</dd>
+            <dd>{$purifier->purify($member->get_trad("Organizations", $profile_language,true))}</dd>
 HTML;
             }
             echo <<<HTML
@@ -90,9 +90,9 @@ HTML;
     <h3 class="icon world22" >{$words->getInLang('ProfileTravelExperience', $profile_language_code)}</h3>
     <dl id="travelexperience">
         <dt>{$words->getInLang('ProfilePastTrips', $profile_language_code)}:</dt>
-        <dd>{$member->get_trad("PastTrips", $profile_language,true)}</dd>
+        <dd>{$purifier->purify($member->get_trad("PastTrips", $profile_language,true))}</dd>
         <dt>{$words->getInLang('ProfilePlannedTrips', $profile_language_code)}:</dt>
-        <dd>{$member->get_trad("PlannedTrips", $profile_language,true)}</dd>
+        <dd>{$purifier->purify($member->get_trad("PlannedTrips", $profile_language,true))}</dd>
     </dl>
 </div>
 HTML;
@@ -137,35 +137,35 @@ HTML;
         
         <?php if ($member->get_trad("MaxLenghtOfStay", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language,true); ?></dd>
+            <dd><?php echo $purifier->purify($member->get_trad("MaxLenghtOfStay", $profile_language,true)); ?></dd>
         <? } ?>
         
         <?php if ($member->get_trad("ILiveWith", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->getInLang('ProfileILiveWith', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("ILiveWith", $profile_language,true); ?></dd>
+            <dd><?php echo $purifier->purify($member->get_trad("ILiveWith", $profile_language,true)); ?></dd>
         <? } ?>
         
         <?php if ($member->get_trad("PleaseBring", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->getInLang('ProfilePleaseBring', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("PleaseBring", $profile_language,true); ?></dd>
+            <dd><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></dd>
         <? } ?>
         
         <?php
         if ($member->get_trad("OfferGuests", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->getInLang('ProfileOfferGuests', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("OfferGuests", $profile_language,true); ?></dd>
+            <dd><?php echo $purifier->purify($member->get_trad("OfferGuests", $profile_language,true)); ?></dd>
         <? } ?>
         
         <?php if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->getInLang('ProfileOfferHosts', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("OfferHosts", $profile_language,true); ?></dd>
+            <dd><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></dd>
         <? } ?>
         
         <?php if ($member->get_trad("AdditionalAccomodationInfo", $profile_language,true) != "" or $member->get_trad("InformationToGuest", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->getInLang('OtherInfosForGuest', $profile_language_code);?>:</dt>
             <dd>
-                <?php echo $member->get_trad("AdditionalAccomodationInfo", $profile_language,true); ?>
-                <?php echo $member->get_trad("InformationToGuest", $profile_language,true); ?>
+                <?php echo $purifier->purify($member->get_trad("AdditionalAccomodationInfo", $profile_language,true)); ?>
+                <?php echo $purifier->purify($member->get_trad("InformationToGuest", $profile_language,true)); ?>
             </dd>
         <? } ?>
         
@@ -187,7 +187,7 @@ HTML;
             ?>
             
             <dt class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</dt>
-            <dd><?php echo $member->get_trad("OtherRestrictions", $profile_language,true); ?></dd>
+            <dd><?php echo $purifier->purify($member->get_trad("OtherRestrictions", $profile_language,true)); ?></dd>
             
         <? } ?>
     </dl>

@@ -173,6 +173,14 @@ ORDER BY languages.id asc
     }
 
     /**
+     * Check if a property of a member is filled or not (ie: if the owner has filled something)
+     * for exemple if ->IsFilled("Hobbies")  will return true if teh member has some Hobbies declared
+     */
+    public function IsFilled($fieldname) {
+        return($this->$fieldname!=0) ;
+    }
+
+    /**
      * Use to retrieve all the fields in members table which are a a foreign key to memberstrads
      * This is typically neded when you want to delete a a given translation
      * @return unknown
@@ -370,7 +378,15 @@ WHERE IdMember = ".$this->id
         return $age;
     }
 
-
+    /*
+    return the gender in plain text (to trasnlate) if it is public
+    */
+    public function get_gender_for_public() {
+        if ($this->HideGender=='No') {
+            return($this->Gender) ;
+        }
+        else return('IDontTell') ;
+    }
     /**
      * returns 'unencrypted' housenumber
      *

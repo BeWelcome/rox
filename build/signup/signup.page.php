@@ -130,7 +130,7 @@ Related pages:
     protected function buildBirthYearOptions($selYear = 0) {
 
         $old_member_born = date('Y') - 100;
-        $young_member_born = date('Y') - SignupModel::YOUNGEST_MEMBER;
+        $young_member_born = date('Y') - SignupModel::YOUNGEST_MEMBER-5;
 
         $out = '';
         for ($i=$young_member_born; $i>$old_member_born; $i--) {

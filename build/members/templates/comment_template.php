@@ -34,7 +34,7 @@
               <?=$c->TextFree?>
             </p>
             <p>
-              <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->updated)?></em>
+              <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->unix_updated)?></em>
             </p>
             <hr />
         </div> <!-- comment -->
@@ -52,7 +52,7 @@
                 ?>
             </li>
             <li>
-                <a href="feedback.php?IdCategory=4" class="small grey"><img src="images/icons/error.png" alt="<?=$words->get('ReportCommentProblem')?>" /><?=$words->get('ReportCommentProblem')?></a>
+                <a href="feedback?IdCategory=4" ><img src="images/icons/error.png" alt="<?=$words->get('ReportCommentProblem')?>" /> <?=$words->get('ReportCommentProblem')?></a>
             </li>
         </ul>
       </div> <!-- subcr -->

@@ -10,14 +10,15 @@
     <?php $this->topmenu() ?>
     <div id="topnav">
         <?php $this->topnav() ?>
-      </div> <!-- topnav -->
+    </div> <!-- topnav -->
 
     <!-- #main: content begins here -->
     <div id="main">
+        <?php $this->statusMessage() ?>
         <div id="teaser_bg">
-      <?php $this->teaser() ?>
-      </div>
-      <?php $this->columnsArea() ?>
+            <?php $this->teaser() ?>
+        </div>
+        <?php $this->columnsArea() ?>
     </div> <!-- main -->
 
     <?php $this->footer() ?>
@@ -33,7 +34,7 @@ var pkBaseURL = (("https:" == document.location.protocol) ? "https://www.bevolun
 document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
 </script><script type="text/javascript">
 try {
-var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
 piwikTracker.trackPageView();
 piwikTracker.enableLinkTracking();
 } catch( err ) {}

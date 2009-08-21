@@ -166,6 +166,18 @@ class PageWithHTML extends AbstractBasePage
     protected function getPagePermalink() {
         return 'index';
     }
+    
+    protected function statusMessage() 
+    {
+        $words = new MOD_words();
+        // messages about the member's status preceed the info messages
+        $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
+        if ($logged_in && $_SESSION['Status'] != 'Active') echo '<p class="status note big">'.$words->get('StatusMessage_'.$_SESSION['Status']).'</p>';
+        
+        // infoMessage should be used by other Pages to show post-form-messages and other status-messages to the member
+        $class = (isset($this->infoMessageClass) && $this->infoMessageClass != '') ? $this->infoMessageClass : '';
+        if (isset($this->infoMessage) && $this->infoMessage != '') echo '<p class="note big '.$class.'">'.$this->infoMessage.'</p>';
+    }
 }
 
 

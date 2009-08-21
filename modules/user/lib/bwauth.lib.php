@@ -147,7 +147,10 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 		   MOD_log::get()->write($strlog, "Login");
 		   return(false) ;
 		}
-					
+		
+		// Write the member's status to the session
+		$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status;
+
 		// Process the login of the member according to his status
 		switch ($m->Status) {
 
@@ -173,7 +176,7 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 				header("Location: " . PVars::getObj('env')->baseuri . "bw/completeprofile.php");
 				exit(0);
 	
-			case "MailToConfirm" :  // I just add this here in case someone try to log with maul to confirm
+			case "MailToConfirm" :  // I just add this here in case someone try to log with mail to confirm
 				MOD_log::get()->write("Login with (MailToConfirm)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				return false ;
 				// exit(0);
@@ -181,6 +184,7 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 	
 			case "NeedMore" :
                 $_SESSION['IdMember']=$m->id ;
+                $_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status='NeedMore' ;
 				MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 			    $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
 				// exit(0);

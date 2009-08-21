@@ -118,7 +118,7 @@ Boston, MA  02111-1307, USA.
               echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
           }
           if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
-              echo '<div class="error">'.$words->get('SignupErrorBirthDateToLow').'</div>';
+              echo '<div class="error">'.$words->getFormatted('SignupErrorBirthDateToLow',SignupModel::YOUNGEST_MEMBER).'</div>';
           }
           ?>
           <!--

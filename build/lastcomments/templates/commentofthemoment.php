@@ -11,11 +11,13 @@
     </tr>
     <?php
     $c=$data ;
+    if (isset($c->UsernameFrom )) {
     ?>
     <tr class="<?php $styles[0] ?>">
         <td>
             <a href="members/<?php echo $c->UsernameFrom ?>"><img src="members/avatar/<?php echo $c->UsernameFrom ?>"></a>
-            <a class="username" href="members/<?php echo $c->UsernameFrom ?>"><?php echo $c->UsernameFrom ?></a><br />
+            <a class="username" href="members/<?php echo $c->UsernameFrom ?>">
+            <?php echo $c->UsernameFrom ?></a><br />
             <a href="members/<?php echo $c->UsernameFrom ?>/comments"><?php echo $words->getFormatted('ViewComments') ?></a><br />
             <?php echo $c->CountryNameFrom; ?>
         </td>
@@ -38,4 +40,6 @@
         <td>
         </td>
     </tr>
+    <?php } ?>
 </table>
+<?php echo "<a href='lastcomments'>",$words->getFormatted('LastCommentsLink'),"</a>"; ?>

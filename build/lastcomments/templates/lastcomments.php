@@ -21,7 +21,7 @@ Boston, MA  02111-1307, USA.
 */
 ?>
 
-<p><?php echo $words->getFormatted("LastCommentsExplanation",$iiMax) ; ?></p>
+<p><?php echo $words->getFormatted("LastCommentsExplanation",$iiMax,"<a href='lastcomments/commentofthemoment'>".$words->getFormatted("LinkToCommentOfTheMoment")."</a>") ; ?></p>
 
 <table class="full">
     <colgroup>
@@ -39,7 +39,7 @@ Boston, MA  02111-1307, USA.
     <tr class="<?php echo $styles[$ii%2] ?>">
         <td>
             <a href="members/<?php echo $c->UsernameFrom ?>">
-                <img src="members/avatar/<?php echo $c->UsernameFrom ?>" class="framed" height="50px" width="50px" alt="<?php echo $c->UsernameFrom?>" />
+                <?php echo MOD_layoutbits::PIC_100_100($c->UsernameFrom); ?>
             </a><br />
             <a class="username" href="members/<?php echo $c->UsernameFrom ?>"><?php echo $c->UsernameFrom ?></a>
             <a  href="members/<?php echo $c->UsernameFrom ?>/comments" title="<?php echo $words->getFormatted('ViewComments'); ?>">(<?php echo $c->FromNbComment ?>)</a><br />
@@ -52,7 +52,7 @@ Boston, MA  02111-1307, USA.
             <span class="small"><?php echo MOD_layoutbits::ago($c->unix_updated);?></span>
         </td>
         <td>
-            <a href="members/<?php echo $c->UsernameTo ?>"><img src="members/avatar/<?php echo $c->UsernameTo?>" class="framed" height="50px" width="50px" alt="<?php echo $c->UsernameTo ?>" /></a><br />
+            <?php echo MOD_layoutbits::PIC_100_100($c->UsernameTo); ?>
             <a class="username" href="members/<?php echo $c->UsernameTo ?>"><?php echo $c->UsernameTo ?></a>
             <a href="members/<?php echo $c->UsernameTo ?>/comments" title="<?php echo $words->getFormatted('ViewComments'); ?>">(<?php echo $c->ToNbComment ?>)</a><br />
             <?php echo $c->CountryNameTo ?>

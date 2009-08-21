@@ -612,18 +612,27 @@ SQL;
     }
 
     
-    /*
-    * this function get the number of post of the current member
-    */
-    public function forums_posts_count() {
-        // Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
-        if (!$this->ForumPostCount)
-        {
-            $this->ForumPostCount = $this->createEntity('Post')->getMemberPostCount($this);
-        }
-        return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
-    } // forums_posts_count
-    
+	/*
+	* this function get the number of post of the current member
+	*/
+	public function forums_posts_count() {
+		// Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
+		if (isset($this->ForumPostCount)) {
+			return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
+		}
+		else {
+			$sql = "SELECT count(*) as cnt from forums_posts where IdWriter=".$this->id ;
+			$rr = $this->singleLookup($sql);
+			if ($rr) {
+				$this->ForumPostCount=$rr->cnt;
+			}
+			else {
+				$this->ForumPostCount=0 ;
+			}
+			return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
+		}
+	} // forums_posts_count
+	
     public function get_verification_status()
     {
         // Loads the vérification level of the member (if any) 
@@ -1037,27 +1046,6 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return preg_split("/','/", $set); // Split into and array
     }
 
-    /**
-     * returns array of all post votes the member has cast
-     *
-     * @access public
-     * @return array
-     */
-    public function getAllPostVotes()
-    {
-        return $this->createEntity('PostVote')->getVotesForMember($this);
-    }
-
-    /**
-     * returns array of all thread votes the member has cast
-     *
-     * @access public
-     * @return array
-     */
-    public function getAllThreadVotes()
-    {
-        return $this->createEntity('ThreadVote')->getVotesForMember($this);
-    }
 
     /**
      * returns true if the member is Active or ActiveHidden

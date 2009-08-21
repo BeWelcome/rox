@@ -13,7 +13,7 @@
     ?>
     <tr>
         <td>
-            <?php echo MOD_layoutbits::PIC_50_50($c->UsernameFrom); ?>
+            <?php echo MOD_layoutbits::PIC_50_50($c->UsernameFrom); ?><br />
             <a class="username" href="members/<?php echo $c->UsernameFrom ?>"><?php echo $c->UsernameFrom ?></a>
             <a  href="members/<?php echo $c->UsernameFrom ?>/comments" title="<?php echo $words->getFormatted('ViewComments'); ?>"></a><br />
             <?php echo $c->CountryNameFrom ?>
@@ -25,7 +25,7 @@
             <span class="small"><?php echo MOD_layoutbits::ago($c->unix_updated);?></span>
         </td>
         <td>
-            <?php echo MOD_layoutbits::PIC_50_50($c->UsernameTo); ?>
+            <?php echo MOD_layoutbits::PIC_50_50($c->UsernameTo); ?><br />
             <a class="username" href="members/<?php echo $c->UsernameTo ?>"><?php echo $c->UsernameTo ?></a>
             <a href="members/<?php echo $c->UsernameTo ?>/comments" title="<?php echo $words->getFormatted('ViewComments'); ?>"></a><br />
             <?php echo $c->CountryNameTo ?>

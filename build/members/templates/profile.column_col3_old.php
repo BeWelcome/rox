@@ -6,7 +6,7 @@
     </div>
 <div class="inner_info" >
   <h3 class="icon info22" ><?=$words->getInLang('ProfileSummary', $profile_language_code);?></h3>
-  <?=$member->get_trad("ProfileSummary", $profile_language); ?>
+  <?=$member->get_trad("ProfileSummary", $profile_language,true); ?>
   <?php 
   if (count($member->get_languages_spoken()) > 0) {
   ?>
@@ -28,14 +28,14 @@
   <div class="subcolumns" >
     <div class="c50l" >
       <div class="subcl" >
-      	<?php echo $member->get_trad("Hobbies", $profile_language); ?></div>
+      	<?php echo $member->get_trad("Hobbies", $profile_language,true); ?></div>
     </div>
     <div class="c50r" >
       <div class="subcr" ></div>
     </div>
   </div>
   <h4><?=$words->getInLang('ProfileOrganizations', $profile_language_code);?></h4>
-  <p><?php echo $member->get_trad("Organizations", $profile_language); ?></p>
+  <p><?php echo $member->get_trad("Organizations", $profile_language,true); ?></p>
 </div>
 <? 
 // } 
@@ -44,9 +44,9 @@
 <div class="inner_info" >
   <h3 class="icon world22" ><?=$words->getInLang('ProfileTravelExperience', $profile_language_code);?></h3>
   <h4><?=$words->getInLang('ProfilePastTrips', $profile_language_code);?></h4>
-  <p><?php echo $member->get_trad("PastTrips", $profile_language); ?></p>
+  <p><?php echo $member->get_trad("PastTrips", $profile_language,true); ?></p>
   <h4><?=$words->getInLang('ProfilePlannedTrips', $profile_language_code);?></h4>
-  <p><?php echo $member->get_trad("PlannedTrips", $profile_language); ?></p>
+  <p><?php echo $member->get_trad("PlannedTrips", $profile_language,true); ?></p>
 </div>
 <?
  } 
@@ -58,7 +58,7 @@
   foreach($groups as $group) {
   	 $group_id = $group->IdGroup;
   	 $group_name_translated = $words->getInLang($group->Name, $profile_language_code);
-  	 $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
+  	 $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language,true);
 			?>
 	  <h4>
 	    <a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></A>
@@ -88,44 +88,44 @@
       <?php if (!empty($member->MaxLenghtOfStay)) { ?>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileMaxLenghtOfStay', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language); ?></td>
+        <td><?php echo $member->get_trad("MaxLenghtOfStay", $profile_language,true); ?></td>
       </tr>
       <?php } ?>
       <?php if (!empty($member->ILiveWith)) { ?>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileILiveWith', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("ILiveWith", $profile_language); ?></td>
+        <td><?php echo $member->get_trad("ILiveWith", $profile_language,true); ?></td>
       </tr>
       <?php } ?>
       <?php if (!empty($member->PleaseBring)) { ?>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfilePleaseBring', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("PleaseBring", $profile_language); ?></td>
+        <td><?php echo $member->get_trad("PleaseBring", $profile_language,true); ?></td>
       </tr>
       <?php } ?>
       <?php if (!empty($member->OfferGuests)) { ?>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileOfferGuests', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("OfferGuests", $profile_language); ?></td>
+        <td><?php echo $member->get_trad("OfferGuests", $profile_language,true); ?></td>
       </tr>
       <?php } ?>
       <?php if (!empty($member->OfferHosts)) { ?>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileOfferHosts', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("OfferHosts", $profile_language); ?></td>
+        <td><?php echo $member->get_trad("OfferHosts", $profile_language,true); ?></td>
       </tr>
       <?php } ?>
       <?php if (!empty($member->PublicTransport)) { ?>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfilePublicTransport', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("PublicTransport", $profile_language); ?></td>
+        <td><?php echo $member->get_trad("PublicTransport", $profile_language,true); ?></td>
       </tr>
       <?php } ?>
       <?php if ($member->AdditionalAccomodationInfo or $member->InformationToGuest) { ?>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('OtherInfosForGuest', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("AdditionalAccomodationInfo", $profile_language); ?> 
-            <?php echo $member->get_trad("inner_informationToGuest", $profile_language); ?>
+        <td><?php echo $member->get_trad("AdditionalAccomodationInfo", $profile_language,true); ?> 
+            <?php echo $member->get_trad("inner_informationToGuest", $profile_language,true); ?>
         </td>
       </tr>
       <?php } ?>
@@ -145,11 +145,11 @@
                 echo "              </td>\n";
             }
         ?>
-        <td><?php echo $member->get_trad("Restrictions", $profile_language); ?></td>
+        <td><?php echo $member->get_trad("Restrictions", $profile_language,true); ?></td>
       </tr>
       <tr align="left" >
         <td class="label" ><?=$words->getInLang('ProfileOtherRestrictions', $profile_language_code);?>:</td>
-        <td><?php echo $member->get_trad("OtherRestrictions", $profile_language); ?></td>
+        <td><?php echo $member->get_trad("OtherRestrictions", $profile_language,true); ?></td>
       </tr>
       <?php } ?>
     </TBODY>

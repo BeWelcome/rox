@@ -31,6 +31,6 @@ $messengers = $member->messengers();
 $website = $member->WebSite;
 
 $languages = $member->get_profile_languages(); 
-$occupation = $member->get_trad("Occupation", $profile_language);        
+$occupation = $member->get_trad("Occupation", $profile_language,true);        
 
 ?>

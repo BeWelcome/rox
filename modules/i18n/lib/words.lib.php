@@ -52,6 +52,8 @@ class MOD_words
     /*private $_prepared = array();*/
     static private $_buffer = array();
     private $_dao;  // database access object
+	
+	private $WordMemcache ;
     
     
     /**
@@ -62,6 +64,8 @@ class MOD_words
     public function __construct($category=null)
     {
         $this->_lang = PVars::get()->lang;
+
+		$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
 
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
@@ -77,6 +81,8 @@ class MOD_words
         $dao = PDB::get($db_vars->dsn, $db_vars->user, $db_vars->password);
         $this->_dao =& $dao;
 
+
+			
         $R = MOD_right::get();
         if ($R->hasRight("Words", $this->_lang)) {
             $this->_offerTranslationLink = true;
@@ -341,7 +347,7 @@ class MOD_words
             $row = $this->_lookup_row($code, $lang);
             if ($row) {
                 $lookup_result = $this->_modified_sentence_from_row($row, $args);
-                if($lang == 'en') {
+                if (($lang == 'en')or($row->donottranslate=='Yes')) { // If language is english or if the word is not supposed to be translatable yet just consider display it
                     $tr_success = LookedUpWord::SUCCESSFUL;
                 } else {
                     $row_en = $this->_lookup_row($code, 'en');
@@ -458,7 +464,17 @@ class MOD_words
             ;
         } else {
         	// TODO: store translation quality in database!
-            $query =
+			
+			// First try in memcache
+			if ($value=$this->WordMemcache->GetValue($code,$lang)) {
+				$row->Sentence=$value ;
+				$row->donottranslate='No' ;
+				$row->updated="2015-01-01 00:00:00" ;
+//				print_r($row) ; die(" here" ) ;
+				return($row) ;
+			} 
+
+			$query =
                 "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
                 "FROM `words` ".
                 "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
@@ -573,35 +589,36 @@ SQL;
      *       THEN DONT CALL THE FUNCTION!!!
      */
 	 private function ReplaceWithBr($ss,$ReplaceWith=false) {
-		if (!$ReplaceWith) return ($ss);
-		return(str_replace("\n","<br \>",$ss));
+		if ($ReplaceWith) {
+            return(str_replace(array("\\r\\n","\r\n","\\n","\n"),"<br />",$ss)) ; 
+        }
+        else {
+            return(str_replace(array("\\r\\n","\r\n","\\n","\n"),"\n",$ss)) ; 
+        }
 	 }
 
 
     /**
      * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
+	 * @param $IdLanguage, prefered language to use, beware if ommitted, english is used !
 	 * @param $ReplaceWithBr allows 
      * @return string translated according to the best language find
      */
-    public function mTrad($IdTrad,$ReplaceWithBr=false) {
+    public function mInTrad($IdTrad,$IdLanguage=0,$ReplaceWithBr=false) {
 
-	 		$AllowedTags = "<b><i><br><br/><p>"; // This define the tags wich are not stripped inside a membertrad
+	 		$AllowedTags = "<b><i><br><br/><p><u>"; // This define the tags wich are not stripped inside a membertrad
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return an empty string
 			}
 			else  {
-			   if (!is_numeric($IdTrad)) {
-			   	  die ("it look like you are using MOD_WORD::mTrad with and allready translated word, a memberstrads.IdTrad is expected and it should be numeric !") ;
+			   if (!is_numeric($IdTrad)) { // Logging anomalie things to detect database problem if any
+					$sBug="it look like you are using MOD_WORD::mInTrad with and allready translated word [".$IdTrad."], a memberstrads.IdTrad is expected and it should be numeric !" ;
+					MOD_log::get()->write($sBug,"Bug");
+					die ($sBug) ;
 			   }
 			}
 		
-			if (isset($_SESSION['IdLanguage'])) {
-		 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
-			}
-			else {
-		 		$IdLanguage=0 ; // by default language 0
-			} 
-			// Try default language
+			// Try default chosen language
         	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
@@ -610,10 +627,11 @@ SQL;
 					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
 				} 
 				else {
-			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
-			// Try default eng
+			// Try default en
         	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
@@ -621,7 +639,8 @@ SQL;
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
 				} else {
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try first language available
@@ -632,11 +651,27 @@ SQL;
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
 				} else {
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
-			MOD_log::get()->write("mTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
+			MOD_log::get()->write("mInTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
 			return (""); // If really nothing was found, return an empty string
+	 } // end of mInTrad
+	 
+    /**
+     * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
+	 * @param $ReplaceWithBr allows 
+     * @return string translated according to the best language find
+     */
+    public function mTrad($IdTrad,$ReplaceWithBr=false) {
+		if (isset($_SESSION['IdLanguage'])) {
+	 	   	$IdLanguage=$_SESSION['IdLanguage'] ;
+		}
+		else {
+	 		$IdLanguage=0 ; // by default language 0
+		} 
+		return ($this->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
 	 } // end of mTrad
 	 
     /**
@@ -682,7 +717,8 @@ SQL;
 				} 
 				else {
 							$fTradIdLastUsedLanguage=$row->IdLanguage ;
-			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try default eng
@@ -694,7 +730,8 @@ SQL;
 					MOD_log::get()->write("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try first language available
@@ -706,7 +743,8 @@ SQL;
 					MOD_log::get()->write("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+//				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
@@ -869,10 +907,11 @@ SQL;
     function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
         // temporary hack to undo the damage done by escaping in other places
         // todo: find all references to ReplaceInMTrad and fix them
-        while ($ss != stripslashes($ss))
-        {
-            $ss = stripslashes($ss);
+        // Change by jeanyves on AUgust 18 2009: \r\n are kept, but \' are replaced by '
+        while (strpos($ss,"\\'")!==false) {
+            $ss=str_replace("\\'","'",$ss) ;
         }
+        $ss=str_replace("\r\n","\n",$ss) ;
         $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string.
         // judging from the exception logs this is NOT TRUE. Instead we now have a massive sql injection exploit vector
 

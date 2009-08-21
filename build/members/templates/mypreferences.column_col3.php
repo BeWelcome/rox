@@ -140,7 +140,7 @@
 ?>
 
         <h3><?=$words->get('PreferencesPassword')?></h3>
-        <p><?=$words->get('PreferencesPassword')?></p>
+        <p><?=$words->get('PreferencesPasswordDescription')?></p>
         <dl>
             <dt><?=$words->get('PreferencesPasswordOld')?></dt>
             <dd><input type="password" name="passwordold" /></dd>

@@ -157,7 +157,7 @@ WHERE   id = $IdMember
                 "
             );
             if (!empty($result)) $errors['Geonameid'] = 'Member IdCity not set';
-            else MOD_log::get()->write("The Member with the Id: ".$IdMember." changed his location to Geo-Id: ".$geonameid, "Members");
+            else $this->logWrite ("The Member with the Id: ".$IdMember." changed his location to Geo-Id: ".$geonameid, "Members");
             return array(
                 'errors' => $errors,
                 'IdMember' => $result
@@ -226,9 +226,12 @@ WHERE
     public function delete_translation_multiple($trad_ids = array(),$IdOwner, $lang_id) 
     {
         $words = new MOD_words();
+        $count=0 ;
         foreach ($trad_ids as $trad_id){
             $words->deleteMTrad($trad_id, $IdOwner, $lang_id);
+            $count++ ;
         }
+        $this->logWrite("Deleting translation for language " .$lang_id." ".$count." translations deleted", "Update profile") ;
     }
         
     /**
@@ -246,7 +249,8 @@ WHERE
         $IdMember = $this->dao->escape($IdMember);
         $IdPreference = $this->dao->escape($IdPreference);
         $Value = $this->dao->escape($Value);
-        $rr = $this->singleLookup("select memberspreferences.id as id from memberspreferences,preferences where IdMember='{$IdMember}' and IdPreference=preferences.id and preferences.id='{$IdPreference}'");
+        $rr = $this->singleLookup("select memberspreferences.id as id,Value from memberspreferences,preferences where IdMember='{$IdMember}' and IdPreference=preferences.id and preferences.id='{$IdPreference}'");
+        $rPref = $this->singleLookup("select preferences.codeName from preferences where  id='{$IdPreference}'");
         if (isset ($rr->id))
         {
             $query = <<<SQL
@@ -255,9 +259,12 @@ UPDATE
 SET
     Value = '{$Value}'
 WHERE
-    id = {$rr->id}
+    id = {$rr->id} and Value!='{$Value}'
 SQL;
 
+            if ($Value!=$rr->Value) {
+                $this->logWrite("updating  preference " . $rPref->codeName . " (previous value=<b>".$rr->Value."</b>) To Value <b>" . $Value . "</b>", "Update Preference");
+            }
         }
         else
         {
@@ -267,6 +274,7 @@ INSERT INTO
 VALUES
     ('{$IdMember}', '{$IdPreference}', '{$Value}', NOW())
 SQL;
+		    $this->logWrite("inserting one preference " . $rPref->codeName . " To Value <b>" . $Value . "</b>", "Update Preference");
         }
         return ((!$this->dao->query($query)) ? true : false);
     }
@@ -298,6 +306,7 @@ VALUES
     'normal'
     )
         ");
+            $this->logWrite("Set public profile", "Update Preference");
         } elseif ($rr && $Public == false) {
         $s = $this->dao->query("
 DELETE FROM
@@ -305,6 +314,7 @@ DELETE FROM
 WHERE
     id = ". $rr->id
         );
+            $this->logWrite("Remove public profile", "Update Preference");
         }
     }
     
@@ -354,6 +364,7 @@ WHERE
                 $LenghtComments = $LenghtComments . $var;
             }
         }
+        $mReceiver=$this->getMemberWithId($vars["IdMember"]) ;
         if (!isset ($TCom->id)) {
             $str = "
 INSERT INTO
@@ -378,6 +389,7 @@ INSERT INTO
     ;
             $qry = $this->dao->query($str);
             if(!$qry) $return = false;
+            $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         } else {
             $textfree_add = ($vars['TextFree'] != '') ? ('<hr>' . $vars['TextFree']) : '';
             $str = "
@@ -395,6 +407,7 @@ WHERE
     id=" . $TCom->id;
             $qry = $this->dao->exec($str);
             if(!$qry) $return = false;
+            $this->logWrite("Updating a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         }
         if ($return != false) {
             // Create a note (member-notification) for this action
@@ -411,7 +424,9 @@ WHERE
     {
         $return = true;
         $words = new MOD_words();
+        $mReceiver=
         $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
+        $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
         
         if (!isset ($TData->id) ) {
             $str = "
@@ -433,6 +448,7 @@ INSERT INTO
     ;
             $qry = $this->dao->query($str);
             if(!$qry) $return = false;
+            $this->logWrite("Adding relation for ".$mReceiver->Username,"MyRelations");
         } else $return = false;
         if ($return != false) {
             // Create a note (member-notification) for this action
@@ -449,7 +465,7 @@ INSERT INTO
         $return = true;
         $words = new MOD_words();
         $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
-        
+        $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
         if (isset ($TData->id)) {
             $str = "
 UPDATE
@@ -463,6 +479,7 @@ WHERE
             ";
             $qry = $this->dao->query($str);
             if(!$qry) $return = false;
+            $this->logWrite("Updating relation for ".$mReceiver->Username,"MyRelations");
         } else $return = false;
         if ($return != false) {
             // Create a note (member-notification) for this action
@@ -548,7 +565,6 @@ WHERE
     public function checkMyPreferences(&$vars)
     {
         $errors = array();
-        $log = MOD_log::get();
 
         // Password Check
         if (isset($vars['passwordnew']) && $vars['passwordnew'] != '') {
@@ -596,7 +612,7 @@ ORDER BY
         // email (e-mail duplicates in BW database allowed)
         // if (!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) {
             // $errors[] = 'SignupErrorInvalidEmail';
-            // $log->write("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
+            // $this->logWrite("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
         // }
         
         return $errors;
@@ -739,7 +755,6 @@ ORDER BY
         $IdMember = (int)$vars['memberid'];
         $words = new MOD_words();
         $rights = new MOD_right();
-        $log = MOD_log::get();
         $m = $vars['member'];
 
         // fantastic ... love the implementation. Fake
@@ -799,16 +814,19 @@ ORDER BY
         // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data        
 
         if ($vars["Email"] != $m->email) {
-            $log->write("Email updated", "Email Update");
+			$this->logWrite("Email updated (previous was " . $m->email . ")", "Email Update"); // Sticking to old BW, the previous email is stored in logs,
+                                                                                               // this might be discussed, but if the member fills a bad email, 
+                                                                                               // there is no more way to retrieve him
+                                                                                               // Todo : get rid with this, but implement a confimmation mail
         }                
         if ($vars["HouseNumber"] != $m->get_housenumber()) {
-            $log->write("Housenumber updated", "Address Update");
+            $this->logWrite("Housenumber updated", "Address Update");
         }                
         if ($vars["Street"] != $m->get_street()) {
-            $log->write("Street updated", "Address Update");
+            $this->logWrite("Street updated", "Address Update");
         }                
         if ($vars["Zip"] != $m->get_zip()) {
-            $log->write("Zip updated", "Address Update");
+            $this->logWrite("Zip updated", "Address Update");
         }                
 
         $m->Email = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
@@ -838,6 +856,13 @@ ORDER BY
             if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0)
                 $this->avatarMake($vars['memberid'],$_FILES['profile_picture']['tmp_name']);
         }
+
+		if ($IdMember == $_SESSION['IdMember']) {
+			$this->logWrite("Profil update by member himself [Status=<b>".$m->Status."</b>]", "Profil update");
+		}
+		else {
+			$this->logWrite("update of another profil", "Profil update"); // Not sure this is possible, any way, if it is, it really desserves a log !
+		}
         
         return $status;
     }
@@ -854,7 +879,8 @@ ORDER BY
         $m = $vars['member'];
         
         // Prepare $vars
-        $vars['ProfileSummary'] = $this->dao->escape($vars['ProfileSummary']);
+        // JY fix, the escaping will be done from ReplaceInMTrad so I remove it
+//        $vars['ProfileSummary'] = $this->dao->escape($vars['ProfileSummary']);
         $vars['BirthDate'] = (($date = $this->validateBirthdate($vars['BirthDate'])) ? $date : $vars['BirthDate']);
         if (!isset($vars['HideBirthDate'])) $vars['HideBirthDate'] = 'No';
         // $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('ProfileOccupation', $profile_language) : '';
@@ -886,11 +912,11 @@ ORDER BY
         if (!isset($vars['IsHidden_CellPhoneNumber'])) $vars['IsHidden_CellPhoneNumber']  = 'No';
         if (!isset($vars['IsHidden_WorkPhoneNumber'])) $vars['IsHidden_WorkPhoneNumber'] = 'No';
         
-        $vars['Accomodation'] = $this->dao->escape($vars['Accomodation']);
-        $vars['MaxLenghtOfStay'] = $this->dao->escape($vars['MaxLenghtOfStay']);
-        $vars['ILiveWith'] = $this->dao->escape($vars['ILiveWith']);
-        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
-        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
+//        $vars['Accomodation'] = $this->dao->escape($vars['Accomodation']);
+//        $vars['MaxLenghtOfStay'] = $this->dao->escape($vars['MaxLenghtOfStay']);
+//        $vars['ILiveWith'] = $this->dao->escape($vars['ILiveWith']);
+//        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
+//        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
         
         // Analyse TypicOffer list
         $TypicOffer = $m->TabTypicOffer;
@@ -916,19 +942,19 @@ ORDER BY
             }
         } // end of for $ii
             
-        $vars['PublicTransport'] = $this->dao->escape($vars['PublicTransport']);
-        $vars['Restrictions'] = $this->dao->escape($vars['Restrictions']);
-        $vars['OtherRestrictions'] = $this->dao->escape($vars['OtherRestrictions']);
-        $vars['AdditionalAccomodationInfo'] = $this->dao->escape($vars['AdditionalAccomodationInfo']);
-        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
-        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
-        $vars['Hobbies'] = $this->dao->escape($vars['Hobbies']);
-        $vars['Books'] = $this->dao->escape($vars['Books']);
-        $vars['Music'] = $this->dao->escape($vars['Music']);
-        $vars['Movies'] = $this->dao->escape($vars['Movies']);
-        $vars['Organizations'] = $this->dao->escape($vars['Organizations']);
-        $vars['PastTrips'] = $this->dao->escape($vars['PastTrips']);
-        $vars['PlannedTrips'] = $this->dao->escape($vars['PlannedTrips']);
+//        $vars['PublicTransport'] = $this->dao->escape($vars['PublicTransport']);
+//        $vars['Restrictions'] = $this->dao->escape($vars['Restrictions']);
+//        $vars['OtherRestrictions'] = $this->dao->escape($vars['OtherRestrictions']);
+//        $vars['AdditionalAccomodationInfo'] = $this->dao->escape($vars['AdditionalAccomodationInfo']);
+//        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
+//        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
+//        $vars['Hobbies'] = $this->dao->escape($vars['Hobbies']);
+//        $vars['Books'] = $this->dao->escape($vars['Books']);
+//        $vars['Music'] = $this->dao->escape($vars['Music']);
+//        $vars['Movies'] = $this->dao->escape($vars['Movies']);
+//        $vars['Organizations'] = $this->dao->escape($vars['Organizations']);
+//        $vars['PastTrips'] = $this->dao->escape($vars['PastTrips']);
+//        $vars['PlannedTrips'] = $this->dao->escape($vars['PlannedTrips']);
 
         return $vars;
     }

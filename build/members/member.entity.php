@@ -23,6 +23,7 @@ Boston, MA  02111-1307, USA.
     /**
      * @author Lemon-Head
      * @author Fake51
+     * @Fixer for membertrads : jeanyves
      */
 
     /**
@@ -48,6 +49,7 @@ class Member extends RoxEntityBase
         {
             $this->findById($member_id);
         }
+        $this->words=new MOD_words ;
     }
 
     public function init($values, $dao)
@@ -61,18 +63,18 @@ class Member extends RoxEntityBase
      */
     public function get_userid() {
         if(!isset($this->userId)) {
-	        $s = $this->singleLookup(
-	            "
-	SELECT SQL_CACHE
-	    user.id
-	FROM
-	    user
-	WHERE
-	    handle = '$this->Username'
-	            "
-	        );
-	        if ($s) $this->userId = $s->id;
-	        else return false;
+            $s = $this->singleLookup(
+                "
+    SELECT SQL_CACHE
+        user.id
+    FROM
+        user
+    WHERE
+        handle = '$this->Username'
+                "
+            );
+            if ($s) $this->userId = $s->id;
+            else return false;
         }
         return $this->userId;
     }
@@ -81,8 +83,8 @@ class Member extends RoxEntityBase
      * Checks which languages profile has been translated into
      */
     public function get_profile_languages() {
-        if(!isset($this->trads)) {
-            $this->trads = $this->get_trads();
+        if(!isset($this->profile_languages)) {
+            $this->set_profile_languages();
         }
         return $this->profile_languages;
     }
@@ -171,9 +173,16 @@ ORDER BY languages.id asc
     }
 
     /**
-     * automatically called by __get('trads'),
-     * when someone writes '$member->trads'
-     *
+     * Check if a property of a member is filled or not (ie: if the owner has filled something)
+     * for exemple if ->IsFilled("Hobbies")  will return true if teh member has some Hobbies declared
+     */
+    public function IsFilled($fieldname) {
+        return($this->$fieldname!=0) ;
+    }
+
+    /**
+     * Use to retrieve all the fields in members table which are a a foreign key to memberstrads
+     * This is typically neded when you want to delete a a given translation
      * @return unknown
      */
     public function get_trads_fields()
@@ -206,10 +215,30 @@ ORDER BY languages.id asc
      * automatically called by __get('trads'),
      * when someone writes '$member->trads'
      *
+     * @return nothing but $this->profile_languages is set
+     * cave at : base on the existence of a ProfileSummary  for the current member
+     */
+    protected function set_profile_languages()
+    {
+        $trads_for_member = $this->bulkLookup("SELECT SQL_CACHE languages.id,ShortCode,Name from memberstrads,languages 
+        where languages.id=memberstrads.IdLanguage and IdOwner = $this->id and IdTrad=$this->ProfileSummary") ;
+        $this->profile_languages = array();
+
+        foreach ($trads_for_member as $trad) {
+            $this->profile_languages[$trad->id] = $trad;
+        }
+    }
+
+
+     /**
+     * automatically called by __get('trads'),
+     * when someone writes '$member->trads'
+     *
      * @return unknown
      */
     protected function get_trads()
     {
+        // This code is obsolete (jy) 
         $trads_for_member = $this->bulkLookup(
             "
 SELECT SQL_CACHE
@@ -349,7 +378,15 @@ WHERE IdMember = ".$this->id
         return $age;
     }
 
-
+    /*
+    return the gender in plain text (to trasnlate) if it is public
+    */
+    public function get_gender_for_public() {
+        if ($this->HideGender=='No') {
+            return($this->Gender) ;
+        }
+        else return('IDontTell') ;
+    }
     /**
      * returns 'unencrypted' housenumber
      *
@@ -547,14 +584,14 @@ SQL;
             if ($city)
             {
                 $a[0]->CityName = $city->getName();
-            }
-            $region = $city->getParent();
-            $country = $city->getCountry();
-            if ($region && $country)
-            {
-                $a[0]->RegionName = $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
-                $a[0]->CountryName = $country->getName();
-                $a[0]->CountryCode = $country->fk_countrycode;
+                $region = $city->getParent();
+                $country = $city->getCountry();
+                if ($region && $country)
+                {
+                    $a[0]->RegionName = $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
+                    $a[0]->CountryName = $country->getName();
+                    $a[0]->CountryCode = $country->fk_countrycode;
+                }
             }
         }
         else
@@ -575,27 +612,18 @@ SQL;
     }
 
     
-	/*
-	* this function get the number of post of the current member
-	*/
-	public function forums_posts_count() {
-		// Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
-		if (isset($this->ForumPostCount)) {
-			return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
-		}
-		else {
-			$sql = "SELECT count(*) as cnt from forums_posts where IdWriter=".$this->id ;
-			$rr = $this->singleLookup($sql);
-			if ($rr) {
-				$this->ForumPostCount=$rr->cnt;
-			}
-			else {
-				$this->ForumPostCount=0 ;
-			}
-			return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
-		}
-	} // forums_posts_count
-	
+    /*
+    * this function get the number of post of the current member
+    */
+    public function forums_posts_count() {
+        // Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
+        if (!$this->ForumPostCount)
+        {
+            $this->ForumPostCount = $this->createEntity('Post')->getMemberPostCount($this);
+        }
+        return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
+    } // forums_posts_count
+    
     public function get_verification_status()
     {
         // Loads the vérification level of the member (if any) 
@@ -676,8 +704,9 @@ ORDER BY Value asc
       }
 
 
-        public function get_visitors_raw() {
-            $sql = "
+        public function get_visitors() 
+        {
+            $sql = <<<SQL
 SELECT
     members.BirthDate,
     members.HideBirthDate,
@@ -687,26 +716,24 @@ SELECT
 FROM
     profilesvisits,
     members,
-    geonames_cache
+    geonames_cache,
+    addresses
 WHERE
     profilesvisits.IdMember  = $this->id  AND
     profilesvisits.IdVisitor = members.Id AND
-    geonames_cache.geonameid = members.IdCity
-            ";
-
-            // FIXME: Not the best way to provide pagination. But for now there's not better choice.
-            $visitors = $this->dao->query($sql);
-            return $visitors;
-        }
-
-        public function get_visitors() 
-        {
-            $s = $this->get_visitors_raw();
-			if (!$s) return false;
-			$visitors = array();
-	        while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
-	            array_push($visitors, $rr);
-	        }
+    geonames_cache.geonameid = addresses.IdCity AND
+    addresses.IdMember = members.id AND
+    addresses.Rank = 0
+SQL;
+            if (!($s = $this->dao->query($sql)))
+            {
+                return false;
+            }
+            $visitors = array();
+            while ($rr = $s->fetch(PDB::FETCH_OBJ))
+            {
+                $visitors [] = $rr;
+            }
             return $visitors;
         }
 
@@ -761,13 +788,16 @@ WHERE
      * initialized already.
      *
      * @param fieldname name of the profile field
-     * @param language required translation
+     * @param IdLanguage required translation
      *
      * @return text of $fieldname if available, English otherwise,
      *     and empty string if field has no content
      */
-    public function get_trad($fieldname, $language) {
-        if(!isset($this->trads)) {
+    public function get_trad($fieldname, $IdLanguage,$ReplaceWithBr=False) {
+		return ($this->get_trad_by_tradid($this->$fieldname,$IdLanguage,$ReplaceWithBr)) ;
+        
+        // Code after this is obsolete (JY)
+          if(!isset($this->trads)) {
             $this->trads = $this->get_trads();
         }
 
@@ -775,9 +805,9 @@ WHERE
             return "";
         else {
             $field = $this->trads->$fieldname;
-            if(!array_key_exists($language, $field)) {
+            if(!array_key_exists($IdLanguage, $field)) {
                 // echo "Not translated";
-                if($language != 0 && isset($field[0]))
+                if($IdLanguage != 0 && isset($field[0]))
                     return $field[0]->Sentence;
                 foreach ($field as $field_single) {
                     if ($field_single->Sentence != "")
@@ -786,29 +816,34 @@ WHERE
                 return "";
             }
             else {
-                return $field[$language]->Sentence;
+                return $field[$IdLanguage]->Sentence;
             }
         }
     }
 
 
-    public function get_trad_by_tradid($tradid, $language) {
+    public function get_trad_by_tradid($IdTrad, $IdLanguage,$ReplaceWithBr=False) {
+        $words = $this->getWords();
+        $ss=$words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr) ;
+//        if (strpos($ss,'Australia')>0) die ($fieldname."=".$this->$fieldname." [".$ss."] IdLanguage=".$IdLanguage." \$ReplaceWIthBr=".$ReplaceWithBr) ;
+        return ($words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
+
         if(!isset($this->trads)) {
             $this->get_trads();
         }
 
-        if(!isset($this->trads_by_tradid[$tradid]))
+        if(!isset($this->trads_by_tradid[$IdTrad]))
             return "";
         else {
-            $trad = $this->trads_by_tradid[$tradid];
-            if(!array_key_exists($language, $trad)) {
+            $trad = $this->trads_by_tradid[$IdTrad];
+            if(!array_key_exists($IdLanguage, $trad)) {
                 //echo "Not translated";
-                if($language != 0)
+                if($IdLanguage != 0)
                     return $trad[0]->Sentence;
                 else return "";
             }
             else {
-                return $trad[$language]->Sentence;
+                return $trad[$IdLanguage]->Sentence;
             }
         }
     }
@@ -829,7 +864,7 @@ WHERE
         $right = new MOD_right();
         if ($right->hasRight('Admin')) {
             return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($crypted_id)));
-		}
+        }
         // check for Member's own data
         if ($this->edit_mode) {
             if (($mCrypt = MOD_crypt::MemberReadCrypted($crypted_id)) != "cryptedhidden")
@@ -1002,6 +1037,27 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return preg_split("/','/", $set); // Split into and array
     }
 
+    /**
+     * returns array of all post votes the member has cast
+     *
+     * @access public
+     * @return array
+     */
+    public function getAllPostVotes()
+    {
+        return $this->createEntity('PostVote')->getVotesForMember($this);
+    }
+
+    /**
+     * returns array of all thread votes the member has cast
+     *
+     * @access public
+     * @return array
+     */
+    public function getAllThreadVotes()
+    {
+        return $this->createEntity('ThreadVote')->getVotesForMember($this);
+    }
 
     /**
      * returns true if the member is Active or ActiveHidden
@@ -1031,6 +1087,111 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             return false;
         }
         return $this->createEntity('MemberLanguage')->deleteMembersLanguages($this);
+    }
+
+    /**
+     * returns array of the old style rights
+     *
+     * @access public
+     * @return array
+     */
+    public function getOldRights()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+
+        if (!$this->old_rights)
+        {
+            $query = "SELECT * FROM rightsvolunteers AS rv, rights AS r WHERE rv.IdMember = {$this->getPKValue()} AND rv.IdRight = r.id";
+            $result = $this->dao->query($query);
+            $return = array();
+            while ($row = $result->fetch(PDB::FETCH_ASSOC))
+            {
+                $return[$row['Name']] = $row;
+            }
+            $this->old_rights = $return;
+        }
+        return $this->old_rights;
+    }
+
+    /**
+     * logs a member out and deletes the session for the member
+     *
+     * @access public
+     * @return bool
+     */
+    public function logOut()
+    {
+        if (!isset($_SESSION) || !$this->isLoaded())
+        {
+            return false;
+        }
+
+        $keys_to_delete = array(
+            'IdMember',
+            'MemberStatus',
+            'Status',
+            'lang',
+            'IdLang',
+            'IsVol',
+            'UserName',
+            'stylesheet',
+            'Param',
+            'TimeOffset',
+            'PreferenceDayLight',
+            'MemberCryptKey',
+            'LogCheck',
+            'RightLevel',
+            'RightScope',
+            'FlagLevel',
+            );
+        foreach ($keys_to_delete as $key)
+        {
+            if (isset($_SESSION[$key]))
+            {
+                unset($_SESSION[$key]);
+            }
+        }
+                
+        /**
+         old stuff from TB - we don't rely on this
+        if (!isset($this->sessionName))
+            return false;
+        if (!isset($_SESSION[$this->sessionName]))
+            return false;
+        $this->loggedIn = false;
+        unset($_SESSION[$this->sessionName]);
+        */
+
+        $query = "delete from online where IdMember={$this->getPKValue()}";
+        $this->dao->query($query);
+
+        if(isset($_COOKIE) && is_array($_COOKIE))
+        {
+            $env = PVars::getObj('env');
+            if( isset($_COOKIE[$env->cookie_prefix.'userid'])) {
+                self::addSetting($_COOKIE[$env->cookie_prefix.'userid'], 'skey');
+                setcookie($env->cookie_prefix.'userid', '', time()-3600, '/');
+            }
+            if( isset($_COOKIE[$env->cookie_prefix.'userkey'])) {
+                setcookie($env->cookie_prefix.'userkey', '', time()-3600, '/');
+            }
+            if( isset($_COOKIE[$env->cookie_prefix.'ep'])) {
+                setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
+            }
+        }
+
+        // todo: remove this when app_user is finally removed
+        APP_User::get()->setLogout();
+
+        session_unset() ;
+        session_destroy() ;
+        $this->wipeEntity();
+        session_regenerate_id();
+
+        return true;
     }
 }
 

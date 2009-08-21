@@ -18,7 +18,7 @@ if ($member->age == "hidden") {
     $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate));
 }
 $languages = $member->get_profile_languages(); 
-$occupation = $member->get_trad("Occupation", $profile_language);
+$occupation = $member->get_trad("Occupation", $profile_language,true);
 ?>
 
 

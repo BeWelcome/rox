@@ -30,7 +30,6 @@ Boston, MA  02111-1307, USA.
         <col width="12%" />
     </colgroup>
 
-
     <?php
     for ($ii = 0; $ii < $iiMax; $ii++) {
         $c = $data[$ii];
@@ -38,9 +37,7 @@ Boston, MA  02111-1307, USA.
     
     <tr class="<?php echo $styles[$ii%2] ?>">
         <td>
-            <a href="members/<?php echo $c->UsernameFrom ?>">
-                <?php echo MOD_layoutbits::PIC_100_100($c->UsernameFrom); ?>
-            </a><br />
+            <?php echo MOD_layoutbits::PIC_50_50($c->UsernameFrom); ?>
             <a class="username" href="members/<?php echo $c->UsernameFrom ?>"><?php echo $c->UsernameFrom ?></a>
             <a  href="members/<?php echo $c->UsernameFrom ?>/comments" title="<?php echo $words->getFormatted('ViewComments'); ?>">(<?php echo $c->FromNbComment ?>)</a><br />
             <?php echo $c->CountryNameFrom ?>
@@ -52,7 +49,7 @@ Boston, MA  02111-1307, USA.
             <span class="small"><?php echo MOD_layoutbits::ago($c->unix_updated);?></span>
         </td>
         <td>
-            <?php echo MOD_layoutbits::PIC_100_100($c->UsernameTo); ?>
+            <?php echo MOD_layoutbits::PIC_50_50($c->UsernameTo); ?>
             <a class="username" href="members/<?php echo $c->UsernameTo ?>"><?php echo $c->UsernameTo ?></a>
             <a href="members/<?php echo $c->UsernameTo ?>/comments" title="<?php echo $words->getFormatted('ViewComments'); ?>">(<?php echo $c->ToNbComment ?>)</a><br />
             <?php echo $c->CountryNameTo ?>

@@ -1,38 +1,36 @@
 <p><?php echo $words->getFormatted("CommentOfTheMomentExplanation",$iiMax) ; ?></p>
 
 <table class="full">
+    <colgroup>
+        <col width="12%" />
+        <col width="12%" />
+        <col width="12%" />
+    </colgroup>
 
-    <tr>
-        <th><?=$words->getFormatted("CommentFrom","") ?></th>
-        <th><?=$words->getFormatted("CommentTo") ?></th>
-        <th><?=$words->getFormatted("CommentWhen") ?></th>
-        <th><?=$words->getFormatted("CommentText") ?></th>
-        <th></th>
-    </tr>
     <?php
     $c=$data ;
     if (isset($c->UsernameFrom )) {
     ?>
-    <tr class="<?php $styles[0] ?>">
+    <tr>
         <td>
-            <a href="members/<?php echo $c->UsernameFrom ?>"><img src="members/avatar/<?php echo $c->UsernameFrom ?>"></a>
-            <a class="username" href="members/<?php echo $c->UsernameFrom ?>">
-            <?php echo $c->UsernameFrom ?></a><br />
-            <a href="members/<?php echo $c->UsernameFrom ?>/comments"><?php echo $words->getFormatted('ViewComments') ?></a><br />
-            <?php echo $c->CountryNameFrom; ?>
+            <?php echo MOD_layoutbits::PIC_50_50($c->UsernameFrom); ?>
+            <a class="username" href="members/<?php echo $c->UsernameFrom ?>"><?php echo $c->UsernameFrom ?></a>
+            <a  href="members/<?php echo $c->UsernameFrom ?>/comments" title="<?php echo $words->getFormatted('ViewComments'); ?>"></a><br />
+            <?php echo $c->CountryNameFrom ?>
         </td>
         <td>
-            <a href="members/<?php echo $c->UsernameTo ?>"><img src="members/avatar/<?php echo $c->UsernameTo ?>"></a>
-            <a class="username" href="members/<?php echo $c->UsernameTo ?>"><?php echo $c->UsernameTo ?></a><br />
-            <a href="members/<?php echo $c->UsernameTo ?>/comments"><?php echo $words->getFormatted('ViewComments') ?></a><br />
-            <?php echo $c->CountryNameTo; ?>
-        </td>
-        <td>
-            <strong class="<?php echo $c->Quality ?>">
+            <p class="<?php echo $c->Quality ?>"><img src="images/icons/tango/22x22/go-next.png" alt="comment to" /><br />
                 <?php echo $words->getFormatted('CommentQuality_'.$c->Quality); ?>
-            </strong><br /><br />
-            <?php echo MOD_layoutbits::ago($c->unix_updated); ?>
+            </p>
+            <span class="small"><?php echo MOD_layoutbits::ago($c->unix_updated);?></span>
         </td>
+        <td>
+            <?php echo MOD_layoutbits::PIC_50_50($c->UsernameTo); ?>
+            <a class="username" href="members/<?php echo $c->UsernameTo ?>"><?php echo $c->UsernameTo ?></a>
+            <a href="members/<?php echo $c->UsernameTo ?>/comments" title="<?php echo $words->getFormatted('ViewComments'); ?>"></a><br />
+            <?php echo $c->CountryNameTo ?>
+        </td>
+
         <td>
             <p><?php echo $c->TextWhere ?></p>
             <p><?php echo $c->TextFree ?></p>
@@ -42,4 +40,4 @@
     </tr>
     <?php } ?>
 </table>
-<?php echo "<a href='lastcomments'>",$words->getFormatted('LastCommentsLink'),"</a>"; ?>
+<p><?php echo "<a href='lastcomments'>",$words->getFormatted('LastCommentsLink'),"</a>"; ?></p>

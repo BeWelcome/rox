@@ -7,7 +7,7 @@
 </form>
 </div>
 <div>
-<b>Displaying last {$this->lines} of {$this->logname}:</b><br/>
+<b>Displaying last {$this->lines} lines of {$this->logname}:</b><br/>
 <hr/>
 <pre>
 HTML;

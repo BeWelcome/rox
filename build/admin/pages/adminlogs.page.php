@@ -37,6 +37,7 @@ class AdminLogsPage extends AdminBasePage
      * errors       = php error log
      * exceptions   = exception log
      * mysql        = mysql log
+     * apache       = apache error log
      *
      * @var string
      */
@@ -70,14 +71,17 @@ class AdminLogsPage extends AdminBasePage
 
         switch (strtolower($type))
         {
-            case 'errors':
+            case 'php':
                 $this->logfile = '../../logs/php_errors.log';
                 break;
-            case 'exceptions':
+            case 'exception':
                 $this->logfile = '../../logs/exception.log';
                 break;
             case 'mysql':
                 $this->logfile = '../../logs/mysql/mysql-slow.log';
+                break;
+            case 'apache':
+                $this->logfile = '../../logs/www.bewelcome.org-error.log';
                 break;
             default:
                 throw new Exception('Bad type specified for log in AdminLogsPage');

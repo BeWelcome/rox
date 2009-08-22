@@ -110,42 +110,10 @@ class AdminController extends RoxControllerBase
      * @access public
      * @return object
      */
-    public function phpLogs()
+    public function debugLogs()
     {
         list($member, $rights) = $this->checkRights('Debug');
-        $page = new AdminLogsPage('errors');
-        $page->member = $member;
-        $page->rights = $rights;
-        $page->lines = ((!empty($this->args_vars->get['lines']) && intval($this->args_vars->get['lines'])) ? $this->args_vars->get['lines'] : 100);
-        return $page;
-    }
-
-    /**
-     * displays the exception logs
-     *
-     * @access public
-     * @return object
-     */
-    public function exceptionLogs()
-    {
-        list($member, $rights) = $this->checkRights('Debug');
-        $page = new AdminLogsPage('exceptions');
-        $page->member = $member;
-        $page->rights = $rights;
-        $page->lines = ((!empty($this->args_vars->get['lines']) && intval($this->args_vars->get['lines'])) ? $this->args_vars->get['lines'] : 100);
-        return $page;
-    }
-
-    /**
-     * displays the mysql logs
-     *
-     * @access public
-     * @return object
-     */
-    public function mysqlLogs()
-    {
-        list($member, $rights) = $this->checkRights('Debug');
-        $page = new AdminLogsPage('mysql');
+        $page = new AdminLogsPage($this->route_vars['log_type']);
         $page->member = $member;
         $page->rights = $rights;
         $page->lines = ((!empty($this->args_vars->get['lines']) && intval($this->args_vars->get['lines'])) ? $this->args_vars->get['lines'] : 100);

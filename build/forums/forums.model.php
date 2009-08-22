@@ -2880,7 +2880,7 @@ AND IdTag=%d
     `IdLocalVolMessage`,
     `IdLocalEvent`,
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
-		FROM forums_posts, members, forums_threads, addresses 
+		FROM (forums_posts, members, forums_threads, addresses)  
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
 LEFT JOIN `geonames_cache` ON (addresses.IdCity = geonames_cache.geonameid)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 

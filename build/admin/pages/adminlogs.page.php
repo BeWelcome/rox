@@ -101,7 +101,7 @@ class AdminLogsPage extends AdminBasePage
         }
         $filename = escapeshellarg($this->logfile);
         $lines = intval($lines);
-        exec("tail -n {$lines} '{$filename}'", $return);
+        exec("tail -n {$lines} '{$filename}' 2>&1", $return);
         return $return;
     }
 }

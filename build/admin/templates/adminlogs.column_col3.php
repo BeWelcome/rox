@@ -9,13 +9,15 @@
 <div>
 <b>Displaying last {$this->lines} of {$this->logname}:</b><br/>
 <hr/>
+<pre>
 HTML;
 
 $count = 1;
 foreach ($this->tailLogFile($this->lines) as $line)
 {
-    echo "<b>{$count}:</b> {$line}<br/>";
+    echo "{$count}: {$line}\n";
     $count++;
 }
 ?>
+</pre>
 </div>

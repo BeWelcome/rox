@@ -4048,7 +4048,7 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
 		$text=$text."The status of this report is ".$ReportStatus ;
 		$text=$text."You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;
 		$text=$text."<hr />".$message ;
-		$mReceiver=new Member($IdReporter) ;
+		$mReceiver= $this->createEntity('Member',$IdReporter) ;
 		$Email=$mReceiver->get_email() ;
 		$sender = "noreply@bewelcome.org" ;
 	}
@@ -4060,9 +4060,9 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
 		$text.="The status of this report is ".$ReportStatus ;
 		$text.="You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;
 		$text.="<hr />".$message ;
-		$mModerator=new Member($IdModerator) ;
+		$mModerator= $this->createEntity('Member',$IdModerator) ;
 		$Email=$mModerator->get_email() ;
-		$mReporter=new Member($IdReporter) ;
+		$mReporter= $this->createEntity('Member',$IdReporter) ;
 		// set the sender
 		$sender = strip_tags(str_replace("%40","@",$mReporter->get_email())) ;
 	}

@@ -59,8 +59,6 @@
     $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
     $this->addRoute('admin_norights', 'admin/norights', 'AdminController', 'noRights');
     // admin debug routes
-    $this->addRoute('admin_debug_php', 'admin/debug/php', 'AdminController', 'phpLogs');
-    $this->addRoute('admin_debug_exception', 'admin/debug/exception', 'AdminController', 'exceptionLogs');
-    $this->addRoute('admin_debug_mysql', 'admin/debug/mysql', 'AdminController', 'mysqlLogs');
+    $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminController', 'debugLogs');
     // admin accepter routes
     $this->addRoute('admin_accepter', 'admin/accepter', 'AdminController', 'accepter');

@@ -95,7 +95,7 @@ class AdminLogsPage extends AdminBasePage
      */
     protected function tailLogFile($lines = 100)
     {
-        if (empty($lines) || !is_file($this->logfile))
+        if (empty($lines))
         {
             throw new Exception("Could not open file: {$this->logfile}");
         }

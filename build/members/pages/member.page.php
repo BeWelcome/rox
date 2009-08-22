@@ -41,6 +41,15 @@ class MemberPage extends PageWithActiveSkin
                 array('forum', "forums/member/$username", $ViewForumPosts) 
             );
         } else {
+            $mynotes_count = $member->count_mynotes(); 
+            if ($mynotes_count>0) {
+                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id ;
+                $mynotelinkname=$words->get('ViewMyNotesForThisMember') ;
+            }
+            else {
+                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id.'&action=add' ;
+                $mynotelinkname=$words->get('AddToMyNotes') ;
+            }
             $tt= array(
                 array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
                 array('commmentsadd', "members/$username/comments/add", $ww->addcomments, 'commentsadd'),
@@ -53,12 +62,12 @@ class MemberPage extends PageWithActiveSkin
                 array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", $ww->Gallery),
                 array('forum', "forums/member/$username", $ViewForumPosts),
-                array('notes','bw/mycontacts.php?IdContact='.$this->member->id,$words->get('ViewMyNotesForThisMember'))
+                array('notes',$mynotelink,$mynotelinkname)
             );
         }
-        if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Accepter','All')) {
-            // array_push($tt,array('admin',"members/{$username}/adminedit",'Admin: Edit Profile') ) ;
-            array_push($tt,array('admin',"bw/updatemandatory.php?username={$username}",'Admin: Edit Profile') ) ;
+        if (MOD_right::get()->HasRight('SafetyTeam'))  {
+//            array_push($tt,array('admin',"members/{$username}/adminedit",'Admin: Edit Profile') ) ;
+            array_push($tt,array('admin',"bw/updatemandatory.php?cid={$username}",'Admin: updatemandatory (Safety Team)') ) ;
         }
         if (MOD_right::get()->HasRight('Rights')) {
             array_push($tt,array('admin','bw/admin/adminrights.php?username='.$username,'AdminRights') ) ;

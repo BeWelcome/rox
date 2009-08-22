@@ -509,7 +509,18 @@ WHERE IdMember = ".$this->id
 
     }
 
-    public function count_comments()
+    /*
+    returns the number of notes the current logged in user has with  this member
+    return : int or 0 if current user is not logged
+    */
+    public function count_mynotes()
+    {
+        if  (empty($_SESSION['IdMember'])) return (0) ;
+        $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$this->id);
+        return($rr->cnt) ;
+    } // end of count_mynotes
+
+        public function count_comments()
     {
         if (!$this->isLoaded())
         {

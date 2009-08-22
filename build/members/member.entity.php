@@ -41,6 +41,7 @@ class Member extends RoxEntityBase
     public $address = null;
     private $profile_languages = null;
     private $edit_mode = false;
+    private $trad_by_tradid_inlang ; // Used to cache mTrad values
 
     public function __construct($member_id = false)
     {
@@ -797,6 +798,7 @@ WHERE
      *     and empty string if field has no content
      */
     public function get_trad($fieldname, $IdLanguage,$ReplaceWithBr=False) {
+        if (!$this->IsFilled($fieldname)) return("") ;
 		return ($this->get_trad_by_tradid($this->$fieldname,$IdLanguage,$ReplaceWithBr)) ;
         
         // Code after this is obsolete (JY)
@@ -826,11 +828,15 @@ WHERE
 
 
     public function get_trad_by_tradid($IdTrad, $IdLanguage,$ReplaceWithBr=False) {
-        $words = $this->getWords();
-        $ss=$words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr) ;
-//        if (strpos($ss,'Australia')>0) die ($fieldname."=".$this->$fieldname." [".$ss."] IdLanguage=".$IdLanguage." \$ReplaceWIthBr=".$ReplaceWithBr) ;
-        return ($words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
+        if (!isset($this->trad_by_tradid_inlang[$ReplaceWithBr][$IdTrad][$IdLanguage])) {
+            $words = $this->getWords();
+            $this->trad_by_tradid_inlang[$ReplaceWithBr][$IdTrad][$IdLanguage]=$words->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr) ;
+        }
+        return($this->trad_by_tradid_inlang[$ReplaceWithBr][$IdTrad][$IdLanguage]) ;
 
+    
+        // Following code is obsolete
+        
         if(!isset($this->trads)) {
             $this->get_trads();
         }

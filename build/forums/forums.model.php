@@ -2856,16 +2856,13 @@ AND IdTag=%d
         if (is_numeric($cid)) {
            $IdMember=$cid ;
         }
-        else {
-           $query = "select id from members where username='".$this->dao->escape($cid)."'" ; 
-           $s = $this->dao->query($query);
-           if (!$s) {
-              throw new PException('Could not retrieve members id via username !');
-           }
-           $row = $s->fetch(PDB::FETCH_OBJ) ;
-           if (isset($row->id)) {
-                 $IdMember=$row->id ;
-           }
+        else
+        {
+            if (!($member = $this->createEntity('Member')->findByUsername($cid)))
+            {
+                throw new PException('Could not retrieve members id via username !');
+            }
+            $IdMember = $member->id;
         }
 
         $query = sprintf(

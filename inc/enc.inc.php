@@ -29,17 +29,16 @@ function CryptA($ss)
 
 function CryptM($ss)
 {
-    return $ss ;
+	return (urlencode($ss));
 }
 
 function DeCryptA($ss)
 {
-	return (urldecode($ss));
+	return (stripslashes(urldecode($ss)));
 }
 
 function DeCryptM($ss)
 {
-    return $ss;
+	return (stripslashes(urldecode($ss)));
 }
 
-?>

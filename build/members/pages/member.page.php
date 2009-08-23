@@ -78,7 +78,7 @@ class MemberPage extends PageWithActiveSkin
         if (MOD_right::get()->HasRight('Logs')) {
             array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,'See Logs') ) ;
         }
-        if (MOD_right::get()->HasRight('Accepter','All')) {
+        if (MOD_right::get()->HasRight('Admin')) {
             array_push($tt,array('admin','bw/editmyprofile.php?cid='.$this->member->id,'BW Edit Profile #'.$this->member->id) ) ;
         }
         return($tt) ;

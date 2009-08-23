@@ -43,9 +43,9 @@ Boston, MA  02111-1307, USA.
                         <span class="small grey"><?=$words->get('written_by')?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a> - <?=date($format['short'], $blog->unix_created)?></span>
                         <p>
                         <?php
+                            $snippet = ((strlen($txt[0]) > 200) ? substr($txt[0], 0, 200) . '...': $txt[0]);
                             $purifier = MOD_htmlpure::get()->getPurifier();
-                            echo $purifier->purify(substr($txt[0], 0, 200));
-                            if (strlen($txt[0]) > 200) echo '...';
+                            echo $purifier->purify($snippet);
                             if ($txt[1]) {
                               echo '<p> <a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$words->get('BlogItemContinued').'</a></p>';
                             }

@@ -58,7 +58,7 @@ if (!isset($headingLevel)) {
                 echo '&nbsp;<a href="blog/tags/'.rawurlencode($tag->name).'">'.htmlentities($tag->name, ENT_COMPAT, 'utf-8').'</a>&nbsp;';
             }
         ?>
-            </div> <!-- tags -->>
+            </div> <!-- tags -->
         <?php
         }
         echo $txt[0];

@@ -43,6 +43,7 @@ $iiMax = count($TMembers)
     </tr>
 <?php
 }
+$purifier = MOD_htmlpure::get()->getPurifier();
   for ($ii = 0; $ii < $iiMax; $ii++) {
     $m = $TMembers[$ii];
 ?>
@@ -53,7 +54,7 @@ $iiMax = count($TMembers)
             <?php echo MOD_layoutbits::PIC_50_50($m->Username); ?>
         </td>
         <td><?php echo $m->countryname; ?></td>
-        <td><?php echo $words->mTrad($m->ProfileSummary,true); ?></td>
+        <td><?php echo htmlentities(strip_tags($words->mTrad($m->ProfileSummary,true)), ENT_NOQUOTES); ?></td>
         <td><?php
                 // Deactivated on our servers. Only used for testing locally.
                 /*

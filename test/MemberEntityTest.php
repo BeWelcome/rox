@@ -63,14 +63,7 @@ class MemberEntityTest extends PHPUnit_Framework_TestCase
         }
         catch (Exception $e)
         {
-            if (substr($e->getMessage(), 0, 21) == 'session_regenerate_id')
-            {
-                $this->assertTrue(true);
-            }
-            else
-            {
-                $this->assertTrue(false);
-            }
+            $this->assertTrue(substr($e->getMessage(), 0, 21) == 'session_regenerate_id');
         }
     }
 }

@@ -22,7 +22,7 @@ if (!isset($headingLevel)) {
     <div class="text"><?=nl2br(htmlentities($comment->text, ENT_COMPAT, 'utf-8'))?></div>
     <div class="author small">  
         <?php echo $words->getFormatted('written_by'); ?> <a href="user/<?=$comment->user_handle?>"><?=$comment->user_handle?></a>
-         :: <?php echo MOD_layoutbits::ago($comment->unix_created)?> <a href="#" title="<?=date($format['short'], $comment->unix_created)?>">(i)</a>
+         :: <?php echo MOD_layoutbits::ago($comment->unix_created)?> <a href="#" title="<?=date($words->get('DateFormatShort'),$comment->unix_created)?>">(i)</a>
     </div>
 </td>
 </tr>

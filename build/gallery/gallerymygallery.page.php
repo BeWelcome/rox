@@ -8,7 +8,7 @@
  *
  */
 
-class GalleryOverviewPage extends GalleryBasePage
+class GalleryUserPage extends GalleryPage
 {
 
     protected function getSubmenuActiveItem()
@@ -17,7 +17,7 @@ class GalleryOverviewPage extends GalleryBasePage
     }
 
     protected function teaserHeadline() {
-        return $this->getWords()->getBuffered('GalleryOverview');
+        return $this->getWords()->getBuffered('GalleryMyGallery');
     }
     
     public function leftSidebar()

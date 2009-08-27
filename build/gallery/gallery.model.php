@@ -457,8 +457,6 @@ ORDER BY `created` DESC
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
-        if ($numRows)
-            return $s->numRows();
         return $s;
     }
 

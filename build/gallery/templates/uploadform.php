@@ -2,12 +2,10 @@
 $Gallery = new Gallery;
 $callbackId = $Gallery->uploadProcess();
 $vars = PPostHandler::getVars($callbackId);
-$words = new MOD_words();
-
+$galleryId = isset($this->galleryId) ? $this->galleryId : false;
+$words = $this->words;
 // If the upload-form is NOT hidden, show it!
 ?>
-
-<h2><?=$words->getFormatted('Gallery_UploadTitle')?></h2>
 
 <?php
 if (!$User = APP_User::login()) {

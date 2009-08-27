@@ -77,30 +77,12 @@ echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->titl
 ?>
 </div>
 </div>
-
-<div id="comments" style="padding: 10px 0px">
-    <h3><?php echo $words->getFormatted('CommentsTitle'); ?></h3>
     
 <?php
-$comments = $Gallery->getComments($image->id);
-if (!$comments) {
-	echo '<p>'.$words->getFormatted('NoComments').'</p>';
-} else {
-    $count = 0;
-    $lastHandle = '';
-    foreach ($comments as $comment) {
-        require 'comment.php';
-        ++$count;
-        $lastHandle = $comment->user_handle;
-    }
-}
+$shoutsCtrl = new ShoutsController;
+$shoutsCtrl->shoutsList('gallery_items', $d->id);
 
-if ($User) require_once 'commentform.php';
-?>
-</div>
-<?php
 if ($User) { 
 PPostHandler::clearVars($callbackId); 
-PPostHandler::clearVars($callbackIdCom); 
 }
 ?>

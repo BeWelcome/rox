@@ -7,8 +7,6 @@ $image = $this->image;
 if ($User) {
     $callbackId = $Gallery->editProcess($image);
     $vars =& PPostHandler::getVars($callbackId);
-    $callbackIdCom = $Gallery->commentProcess($image);
-    $varsCom =& PPostHandler::getVars($callbackIdCom);
 }
 $GalleryRight = MOD_right::get()->hasRight('Gallery');
 $d = $image;

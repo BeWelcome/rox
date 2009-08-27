@@ -1576,6 +1576,8 @@ function ewiki_page_edit_form(&$id, &$data, &$hidden_postdata) {
    
    // Callback-ID -dh
    $o .= '<input type="hidden" name="'.$callbackId.'" value="1"/>';
+   // Callback-tag
+   // $o .= $callback_tag;
 
    if (EWIKI_CHARSET=="UTF-8") {
       $data["content"] = utf8_encode($data["content"]);
@@ -2434,6 +2436,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    }
    #-- ordinary internal WikiLinks
    elseif (($ewiki_links === true) || @$ewiki_links[$href_i]) {
+      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without from working
       $type = array("wikipage");
       $str = '<a href="' . ewiki_script("", $href) . htmlentities($href2)
            . '">' . $title . '</a>';
@@ -2446,6 +2449,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    #-- not found fallback
    else {
       $str = "";
+      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without from working
       #-- a plugin may take care
       if ($pf_a = @$ewiki_plugins["link_notfound"]) {
          foreach ($pf_a as $pf) {
@@ -3373,7 +3377,7 @@ function ewiki_form($name, $value, $label="", $_text="| |\n", $inj="") {
    if ($fid++ && $label) {
       $o .= "<label for=\"ff$fid\">$label</label>";
    }
-   echo "$_text[1]";
+   $o .= "$_text[1]";
 
    #-- submit (as "button")
    if (!$name || ($type=="b")) {

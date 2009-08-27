@@ -30,6 +30,21 @@ class WikiView extends PAppView {
     {
          echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/basemod_minimal_col3.css\" type=\"text/css\"/>";
     }
+    
+    public function indicateRSS()
+    {
+        global $ewiki_id;
+        $non_pages = array(
+            'NewestPages',
+            'SearchPages',
+            'PageIndex',
+            'MostVisitedPages',
+            'MostOftenChangedPages',
+            'UpdatedPages',
+        );
+         echo "<link rel=\"alternate\" type=\"application/atom+xml\" title=\"BeWelcome Wiki RSS\" href=\"wiki/rss\" />";
+         if (isset($ewiki_id) && $ewiki_id && !in_array($ewiki_id,$non_pages)) echo "<link rel=\"alternate\" type=\"application/atom+xml\" title=\"".$ewiki_id." | BeWelcome Wiki RSS\" href=\"wiki/rss/".$ewiki_id."\" />";
+    }
 
     public function userbar()
     {

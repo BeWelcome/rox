@@ -86,6 +86,12 @@ class WikiController extends PAppController {
         $Page->content .= ob_get_contents();
         $P->title = "Wiki - BeWelcome";
         ob_end_clean();
+        ob_start();
+        $this->_view->indicateRSS();
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->addStyles .= $str;
+        ob_end_clean();
         
         ob_start();
         $this->_view->userbar();

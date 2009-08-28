@@ -30,7 +30,8 @@ if (!isset($vars['errors']) || !is_array($vars['errors'])) {
 
 $words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
-$iiMax = count($TMembers)
+$iiMax = count($TMembers) ;
+$purifier = MOD_htmlpure::getBasicHtmlPurifier();
 ?>
 <p><?php echo $words->getFormatted("WeAreTotNumber",$TotMembers); ?></p>
 
@@ -43,7 +44,6 @@ $iiMax = count($TMembers)
     </tr>
 <?php
 }
-$purifier = MOD_htmlpure::get()->getPurifier();
   for ($ii = 0; $ii < $iiMax; $ii++) {
     $m = $TMembers[$ii];
 ?>
@@ -54,8 +54,7 @@ $purifier = MOD_htmlpure::get()->getPurifier();
             <?php echo MOD_layoutbits::PIC_50_50($m->Username); ?>
         </td>
         <td><?php echo $m->countryname; ?></td>
-        <td><?php $purifier = MOD_htmlpure::getBasicHtmlPurifier();
-			echo $purifier->purify(stripslashes($words->mTrad($m->ProfileSummary,true))); ?></td>
+        <td><?php echo $purifier->purify(stripslashes($words->mTrad($m->ProfileSummary,true))); ?></td>
         <td><?php
                 // Deactivated on our servers. Only used for testing locally.
                 /*

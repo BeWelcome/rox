@@ -54,7 +54,8 @@ $purifier = MOD_htmlpure::get()->getPurifier();
             <?php echo MOD_layoutbits::PIC_50_50($m->Username); ?>
         </td>
         <td><?php echo $m->countryname; ?></td>
-        <td><?php echo htmlentities(strip_tags($words->mTrad($m->ProfileSummary,true)), ENT_NOQUOTES); ?></td>
+        <td><?php $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+			echo $purifier->purify(stripslashes($words->mTrad($m->ProfileSummary,true))); ?></td>
         <td><?php
                 // Deactivated on our servers. Only used for testing locally.
                 /*

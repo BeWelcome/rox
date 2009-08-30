@@ -174,26 +174,27 @@ WHERE   id = $IdMember
      * than member object? As it's more of a business of this
      * model to know about different states of the member 
      * object to be displayed..
+	 *
+	 * JY: not sure neither, anyway, I change the $langcode parameter to be either a numeric (languages.id, or a not numeric languages.ShortCode)
+	 * Nota no need to test if the profile exist in the language, since this setting is used for the sub-headers of the page (profile content is something else than headers)
      */
-    public function set_profile_language($langcode)
-    {
-        //TODO: check that 
-        //1) this is a language recognized by the bw system
-        //2) there's content for this member in this language
-        //else: use english = the default already set
+    public function set_profile_language($langcode){
         $langcode = mysql_real_escape_string($langcode);
-        if ($language = $this->singleLookup(
-            "
-SELECT SQL_CACHE
-    id,
-    ShortCode,
-    Name
+		if (is_numeric($langcode)) {
+			$ss=  "SELECT SQL_CACHE     id,ShortCode, Name
 FROM
     languages
 WHERE
-    shortcode = '$langcode'
-            "
-        )) {
+    id = '$langcode'" ;
+		}
+		else {
+			$ss=  "SELECT SQL_CACHE     id,ShortCode, Name
+FROM
+    languages
+WHERE
+    shortcode = '$langcode'" ;
+		}
+		if ($language = $this->singleLookup($ss)) {
             $this->profile_language = $language;
         } else {
             $l = new stdClass;
@@ -210,11 +211,7 @@ WHERE
         if(isset($this->profile_language)) {
             return $this->profile_language;
         } else {
-            $l = new stdClass;
-            $l->id = 0;
-            $l->ShortCode = 'en';
-            $l->Name = 'English';
-            $this->profile_language = $l;
+			$this->set_profile_language($_SESSION["IdLanguage"]) ;
             return $this->profile_language;
         }
     }

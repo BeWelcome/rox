@@ -181,18 +181,24 @@ WHERE   id = $IdMember
     public function set_profile_language($langcode){
         $langcode = mysql_real_escape_string($langcode);
 		if (is_numeric($langcode)) {
-			$ss=  "SELECT SQL_CACHE     id,ShortCode, Name
+			$ss=  "
+SELECT SQL_CACHE
+    id,ShortCode, Name
 FROM
     languages
 WHERE
-    id = '$langcode'" ;
+    id = '$langcode'
+			" ;
 		}
 		else {
-			$ss=  "SELECT SQL_CACHE     id,ShortCode, Name
+			$ss=  "
+SELECT SQL_CACHE
+    id,ShortCode, Name
 FROM
     languages
 WHERE
-    shortcode = '$langcode'" ;
+    shortcode = '$langcode'
+" ;
 		}
 		if ($language = $this->singleLookup($ss)) {
             $this->profile_language = $language;
@@ -204,7 +210,6 @@ WHERE
             $this->profile_language = $l;
         }
     }
-    
     
     public function get_profile_language()
     {

@@ -854,10 +854,28 @@ ORDER BY
 		// Check relations, and update them if they have changed
 		$Relations=$m->get_all_relations() ;
         foreach($Relations as $Relation) {
-			if ($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id]) {
+			if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id]) 
+				and (!empty($vars["RelationComment_".$Relation->id])))  {
 //				echo "Relation #".$Relation->id,"<br />", $words->mInTrad($Relation->Comment,$vars['profile_language']),"<br />",$vars['RelationComment_'.$Relation->id],"<br />" ;
 				$words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
 				$this->logWrite("updating relation #".$Relation->id." Relation Confirmed=".$Relation->Confirmed, "Profil update");
+			}
+		}
+
+		// Check groups membership description, and update them if they have changed
+		// Tod od with Peter: check if there is other feature to update a group membership (a groupmembership model for example, or entity)
+		$Groups=$m->getGroups() ;
+		for ($i = 0; $i < count($Groups) ; $i++) {
+			$group=$Groups[$i] ;
+            $group_id = $group->getPKValue() ;
+            $group_name_translated = $words->get("Group_".$group->Name);
+            $group_comment_translated = htmlspecialchars($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']), ENT_QUOTES);
+			$IdMemberShip=$m->getGroupMembership($group)->id ;
+			if (($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language'])!=$vars["GroupMembership_".$IdMemberShip]) 
+				and (!empty($vars["GroupMembership_".$IdMemberShip])))  {
+				echo "Group #".$group_id,"<br />",$words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']),"<br />",$vars["GroupMembership_".$IdMemberShip],"<br />" ;
+				$words->ReplaceInMTrad(strip_tags($vars["GroupMembership_".$IdMemberShip]),"membersgroups.Comment", $IdMemberShip, $m->getGroupMembership($group)->Comment, $IdMember);
+				$this->logWrite("updating membership description in group #".$group_id." Group name=".$group->name, "Profil update");
 			}
 		}
 

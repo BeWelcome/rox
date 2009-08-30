@@ -545,9 +545,13 @@ HTML;
               </tbody>
             </table>
           </fieldset>
-          <?php
-          // Groups are out of editmyprofile now!
-          /*
+
+          <? // Groups (restored by JeanYves) ?>
+			<?php
+			$my_groups =$vars['Groups']; 
+			// $my_groups=array() ; // uncomment this line if you don't want to have groups inside edit profile
+			if (!empty($my_groups)) {
+			?>
           <fieldset>
             <legend class="icon groups22" ><?=$words->get('MyGroups')?></legend>
             <table border="0" >
@@ -557,26 +561,31 @@ HTML;
               </colgroup>
               <tbody>
                 <?php
-                foreach($groups as $group) {
-                    $group_id = $group->IdGroup;
-                    $group_name_translated = $words->getInLang($group->Name, $profile_language_code);
-                    $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
+				for ($i = 0; $i < count($my_groups) ; $i++) {
+					$group=$my_groups[$i] ;
+					$group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$group->getPKValue()}" : 'images/icons/group.png' );
+                    $group_id = $group->getPKValue() ;
+                    $group_name_translated = $words->get("Group_".$group->Name);
+                    $group_comment_translated = htmlspecialchars($words->mInTrad($member->getGroupMembership($group)->Comment,$profile_language), ENT_QUOTES);
                 ?>
                 <tr align="left" >
                   <td class="label" ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
                   <td colspan="2" >
-                    <textarea cols="50"  rows="6"  name="Group_<?=$group->Name?>" ><?=$group_comment_translated?></textarea>
+					<input type="hidden" Name="Group_id<?=$group->id?>" value="<?=$group->id?>">
+                    <textarea cols="50"  rows="6"  name="GroupMembership_<?=$member->getGroupMembership($group)->id?>" ><?=$group_comment_translated?></textarea>
                 <?php
+				/*
                 if ($Rights->hasRight("Beta","GroupMessage")) {
                        echo "<br /> BETA ";
-                       echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$group->Name."\" ";
+                       echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$group->od."\" ";
                        if ($group->IacceptMassMailFromThisGroup=="yes") echo "checked";
                        echo " />\n";
                        echo $words->get('AcceptMessageFromThisGroup');
                     }
                     else {
-                       echo "<input type=\"hidden\" name=\"AcceptMessage_".$group->Name."\" value=\"".$group->IacceptMassMailFromThisGroup."\" />\n";
+                       echo "<input type=\"hidden\" name=\"AcceptMessage_".$group->od."\" value=\"".$group->IacceptMassMailFromThisGroup."\" />\n";
                     }
+				*/
                 ?>
                   </td>
                 </tr>
@@ -586,7 +595,10 @@ HTML;
               </tbody>
             </table>
           </fieldset>
-           */ ?>
+			<?php
+			} // end if (!empty($my_groups) 
+			?>
+           
           <table>
             <tbody>
               <tr>

@@ -680,7 +680,8 @@ FROM
     members
 WHERE
     specialrelations.IdOwner = $this->id  AND
-    specialrelations.IdRelation = members.Id 
+    specialrelations.IdRelation = members.Id AND
+	members.Status in ('Active','ActiveHidden','ChoiceInactive') 
           ";
           $s = $this->dao->query($sql);
           $Relations = array();

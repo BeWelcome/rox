@@ -501,6 +501,50 @@ HTML;
               </tbody>
             </table>
           </fieldset>
+          <fieldset id="specialrealtions">
+            <legend><?=$words->get('MyRelations')?></legend>
+            <table border="0" >
+              <colgroup>
+                <col width="25%" ></col>
+                <col width="60%" ></col>
+                <col width="15%" ></col>
+              </colgroup>
+              <tbody>
+				<?php
+				$Relations=$vars['Relations'];
+                foreach($Relations as $Relation) {
+				?>
+                <tr align="left" >
+                  <td class="label" >
+				  <?php
+				  if ($Relation->Confirmed=='Yes') {
+					echo "<b>",$Relation->Username,"</b>" ;
+				  }
+				  else {
+					echo $Relation->Username ;
+				  }
+				  ?><br />
+					<img class="framed"  src="members/avatar/<?=$Relation->Username?>?xs"  height="50px"  width="50px"  alt="Profile" >
+				  </td>
+                  <td>
+					<?php 
+					echo "<textarea cols=40 rows=6 name=\"", "RelationComment_" . $Relation->id, "\">";
+					echo $words->mInTrad($Relation->Comment,$profile_language) ;
+					echo "</textarea>\n";
+					?>
+                  </td>
+				  <td>
+				  <?php 
+				  echo "<a href=\"bw/editmyprofile.php?action=delrelation&Username=",$Relation->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",$words->getFormatted("delrelation",$Relation->Username),"</a>\n";
+				  ?>
+				  </td>
+                </tr>
+				<?php
+				}
+				?>
+              </tbody>
+            </table>
+          </fieldset>
           <?php
           // Groups are out of editmyprofile now!
           /*

@@ -79,6 +79,7 @@ class EditProfilePage extends ProfilePage
         $vars['PastTrips'] = $member->get_trad("PastTrips", $profile_language);
         $vars['PlannedTrips'] = $member->get_trad("PlannedTrips", $profile_language);
 
+        $vars['Relations'] = $member->get_all_relations() ;
         if (!$memory = $formkit->getMemFromRedirect()) {
             // no memory
             // echo 'no memory';

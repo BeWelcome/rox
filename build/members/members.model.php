@@ -850,6 +850,16 @@ ORDER BY
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+		
+		// Check relations, and update them if they have changed
+		$Relations=$m->get_all_relations() ;
+        foreach($Relations as $Relation) {
+			if ($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id]) {
+//				echo "Relation #".$Relation->id,"<br />", $words->mInTrad($Relation->Comment,$vars['profile_language']),"<br />",$vars['RelationComment_'.$Relation->id],"<br />" ;
+				$words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
+				$this->logWrite("updating relation #".$Relation->id." Relation Confirmed=".$Relation->Confirmed, "Profil update");
+			}
+		}
 
         $status = $m->update();
 

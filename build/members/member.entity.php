@@ -685,7 +685,8 @@ WHERE
           $s = $this->dao->query($sql);
           $Relations = array();
           while( $rr = $s->fetch(PDB::FETCH_OBJ)) {
-              $rr->Comment = $words->mTrad($rr->Comment);
+              $rr->IdTradComment = $rr->Comment;
+//              $rr->Comment = $words->mTrad($rr->Comment);
               array_push($Relations, $rr);
           }
           return $Relations;

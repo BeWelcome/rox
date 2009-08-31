@@ -284,7 +284,7 @@ class RoxView extends PAppView {
         
         $pair = $this->_model->getLangNames();
         $flaglist = '';
-        $request_string = implode('/',PVars::__get('request'));
+        $request_string = implode('/',PVars::get()->request);
 		foreach($pair as $abbr => $title) {
 		    $png = $abbr.'.png';
 		    if ($_SESSION['lang'] == $abbr) {		        

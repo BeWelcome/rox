@@ -41,7 +41,7 @@ if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
     }
     echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
 
-    $request_string = implode('/',PVars::__get('request'));
+    $request_string = implode('/',PVars::get()->request);
     switch ($words->getTrMode()) {
         case 'translate':
             ?>

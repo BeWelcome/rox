@@ -45,7 +45,7 @@ class PVars {
         $c->_vars[$name] = $value;
     }
     
-    public static function __get($name) {
+    public function __get($name) {
         if (!isset(self::$_instance)) {
             $c = self::get();
         } else {

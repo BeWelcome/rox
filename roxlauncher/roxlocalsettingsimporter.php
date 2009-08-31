@@ -61,10 +61,10 @@ but "'.SCRIPT_BASE.'inc/config.inc.php" is missing
                 } else if (!isset($default_settings[$sectionname])) {
                     // ehm.. no idea.
                 } else foreach ($default_settings[$sectionname] as $key => $value) {
-                    if (!$object->__get($key)) {
+                    if (!$object->$key) {
                         // do nothing
-                    } else if ($default_settings[$sectionname][$key] != $object->__get($key)) {
-                        $differences[$sectionname][$key] = $object->__get($key);
+                    } else if ($default_settings[$sectionname][$key] != $object->$key) {
+                        $differences[$sectionname][$key] = $object->$key;
                     }
                     echo '.';
                 }

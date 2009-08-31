@@ -51,7 +51,7 @@ class PPostHandler {
             self::$_instance->save();
             $_SESSION['PostHandler'] = serialize(self::$_instance);
             $req = $_SERVER['REQUEST_URI'];
-            if (!PVars::__get('cookiesAccepted')) {
+            if (!PVars::get()->cookiesAccepted) {
                 $req = parse_url($req);
                 $query = array();
                 if (isset($request['query'])) {

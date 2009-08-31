@@ -33,39 +33,39 @@ class NotifyMemberWidget extends ItemlistWithPagination
         ?>
         <script type="text/javascript">
                     
-	var DynamicExtensions = {
-	    dynamicize: function(element){
-	        element.dHref = element.href;
-			element.dTarget = element.target;
-			element.href = "#";
-			element.target = "";
-			element.dynamic = dynamicallyLoad.bindAsEventListener(element);
-			Event.observe(element, 'click', element.dynamic);
-			return element;
-	    }
-	}
+    var DynamicExtensions = {
+        dynamicize: function(element){
+            element.dHref = element.href;
+            element.dTarget = element.target;
+            element.href = "#";
+            element.target = "";
+            element.dynamic = dynamicallyLoad.bindAsEventListener(element);
+            Event.observe(element, 'click', element.dynamic);
+            return element;
+        }
+    }
 
-	Element.addMethods(DynamicExtensions);
+    Element.addMethods(DynamicExtensions);
 
-	function dynamicallyLoad(e) {
-		element = Event.element(e);
-		if (!element.dHref) element = element.parentNode;
-		new Ajax.Updater(element.dTarget, element.dHref, {
-			method: 'get',
-			onComplete: function() {
-				setLinks(element,element.dTarget);
-				new Effect.Highlight(element.dTarget, {duration: 1});
-				return false;
-			}
-		});
-	}
+    function dynamicallyLoad(e) {
+        element = Event.element(e);
+        if (!element.dHref) element = element.parentNode;
+        new Ajax.Updater(element.dTarget, element.dHref, {
+            method: 'get',
+            onComplete: function() {
+                setLinks(element,element.dTarget);
+                new Effect.Highlight(element.dTarget, {duration: 1});
+                return false;
+            }
+        });
+    }
 
-	function setLinks(e, target) {
-		(target) ? selector = '#'+target+' ' : selector = '';
-		$$(selector+'a.dynamic').invoke('dynamicize');
-	}
+    function setLinks(e, target) {
+        (target) ? selector = '#'+target+' ' : selector = '';
+        $$(selector+'a.dynamic').invoke('dynamicize');
+    }
 
-	Event.observe(window, 'load', setLinks);
+    Event.observe(window, 'load', setLinks);
 
         </script>
         
@@ -81,27 +81,23 @@ class NotifyMemberWidget extends ItemlistWithPagination
         } else {
             $text = $words->getSilent($item->WordCode,$member->Username);
         }
-        $text = ((!empty($item->Link)) ? htmlentities($text) : $text);
+        $text_params = isset($text_params) ? $text_params : false;
         $created = MOD_layoutbits::ago(strtotime($item->created));
         echo <<<HTML
         <div class="floatbox">
-            <a target="notify-{$item->id}" class="dynamic float_right" href="notify/{$item->id}/check" alt="{$words->getSilent($item->WordCode,$member->Username)}">
+            <a target="notify-{$item->id}" class="dynamic float_right" href="notify/{$item->id}/check" title="Remove">
                 <img src="images/icons/box-close.png">
             </a>
             <div class="float_right small grey" title="{$item->created}">{$created}</div>
             <div class="float_left">
 HTML;
-            if ($item->Link != '') { 
-                echo "<a href='{$item->Link}'>";
-            }
-			if ($item->IdRelMember != '') { 
+            if ($item->IdRelMember != '') { 
+                echo "<a href='members/{$member->Username}'>";
                 echo MOD_layoutbits::PIC_30_30($member->Username,'',"framed");
-            }
-            if ($item->Link != '') { 
                 echo '</a>';
             }
             echo "</div>";
-            if ($item->Link != '') { 
+            if ($item->Link != '' && !$text_params) { 
                 echo "<a href='{$item->Link}'>";
             }
             echo <<<HTML
@@ -109,7 +105,7 @@ HTML;
                 {$text}
             </p>
 HTML;
-            if ($item->Link != '') { 
+            if ($item->Link != '' && !$text_params) { 
                 echo '</a>';
             }
             echo "</div>";

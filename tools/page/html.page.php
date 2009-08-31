@@ -17,6 +17,17 @@ class PageWithHTML extends AbstractBasePage
         // the idea of this function is to set some values,
         // such as page title, meta keyword, meta description
     }
+
+    /**
+     * skeleton method of getCustomElements
+     *
+     * @access protected
+     * @return array
+     */
+    protected function getCustomElements()
+    {
+        return array();
+    }
     
     /**
      * don't forget to call
@@ -131,7 +142,23 @@ class PageWithHTML extends AbstractBasePage
             <?php
         }
     }
-    
+
+    /**
+     * allows for outputting custom elements in the page <head> element
+     *
+     * @access protected
+     */
+    protected function includeCustomElements()
+    {
+        if ($elements = $this->getCustomElements())
+        {
+            foreach($elements as $element)
+            {
+                echo $element . PHP_EOL;
+            }
+        }
+    }
+
     protected function includeScriptfiles()
     {
         ?>
@@ -157,9 +184,7 @@ class PageWithHTML extends AbstractBasePage
         <meta name="robots" content="<?=$this->getPage_meta_robots()?>" />        
         <?php
         $this->includeStylesheets();
-        ?>
-        
-        <?php
+        $this->includeCustomElements();
         $this->_tr_buffer_header = $this->getWords()->flushBuffer();
     }
     

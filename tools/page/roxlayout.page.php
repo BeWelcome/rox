@@ -303,7 +303,38 @@ class PageWithRoxLayout extends PageWithHTML
         $widget->render();
     }
 
+    /**
+     * shortcut to get callback variables for form
+     *
+     * @param string $controller controller to callback to
+     * @param string $method method in controller
+     *
+     * @access protected
+     * @return string
+     */
+    protected function getCallbackOutput($controller, $method)
+    {
+        return $this->layoutkit->formkit->setPostCallback($controller, $method);
+    }
+
+    /**
+     * returns the redirected post vars, if any
+     *
+     * @param string $array which saved array to return from the redirected mem
+     *
+     * @access protected
+     * @return array
+     */
+    protected function getRedirectedMem($array)
+    {
+        if (($redirected = $this->layoutkit->formkit->mem_from_redirect) && $redirected->$array)
+        {
+            return $redirected->$array;
+        }
+        else
+        {
+            return array();
+        }
+    }
+
 }
-
-
-?>

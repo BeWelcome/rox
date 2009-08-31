@@ -265,7 +265,7 @@ class RequestRouter
         if (!is_array($ini_settings = parse_ini_file($file))) {
             return false;
         } else foreach ($ini_settings as $key => $value) {
-            $aliases = split("[,\n\r\t ]+", $value);
+            $aliases = preg_split("/[,\n\r\t ]+/", $value);
             foreach ($aliases as $alias) {
                 $alias_table[$alias] = $key;
             }

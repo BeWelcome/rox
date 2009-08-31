@@ -175,7 +175,7 @@
   ol.bullet li { list-style-type: decimal; margin-left: 0.8em; }
 
   /* Unordered lists without bullets  */
-  ul.linklist { list-style-type: none; margin: 0 1em 1em 0; }
+  ul.linklist { list-style-type: none; }
   ul.linklist li { margin: 0 0 0.5em 0;}
   ul.linklist li a { line-height: 1em;}
   ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
@@ -198,6 +198,25 @@
     background: #eee; color: #444;
     padding: 0.2em 0.2em 0.2em 0.5em;
   }
+
+dl.list {
+    display: block;
+}
+.list dt {
+    line-height: 1.5em;
+    font-size: 1em;
+    font-weight: normal;
+    color: #888;
+    width: 12em;
+    float: left;
+    clear: left;
+    margin-bottom: 0.8em;
+}
+.list dd {    
+    margin-left: 12em;
+    line-height: 1.5em;
+    margin-bottom: 0.8em;
+}
 
   /**
    * Tables
@@ -456,6 +475,12 @@ h4.news {
     text-align:center;
     width:auto;
 }
+input.button, .control-links input { /* Only for inputs. Otherwise we have problems in Safari and IE */
+    height:24px !important;
+    line-height:22px !important;
+    margin:0;
+    padding:0 8px;
+}
 .button a, input.button{color: #ff8800; text-decoration:none; background-color:transparent;}
 .button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
 .button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
@@ -572,6 +597,18 @@ div.admincomment {
 /* css for adminmandatory */
 .update {
   background-color: #FF6;
+}
+
+/**
+ * admin app styles
+ */
+
+ul li.expandable ul {
+    display: none;
+}
+
+ul li.expanded a.header {
+    font-weight: bold;
 }
 
 
@@ -815,7 +852,7 @@ a.tr_link:hover {
 
 
 /* Geo Selector */
-ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center}
+ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center; cursor: pointer;}
 ol.plain{ margin-left: 0; }
 ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
 
@@ -965,7 +1002,7 @@ div.datepicker div.datepicker-footer {
   padding:2px;
 }
 
-.date {
+form .date {
   float:left;
   margin-right: .5em;
 }
@@ -1029,6 +1066,11 @@ div.datepicker div.datepicker-footer {
   padding: 2em 3em;
   border-top: 1px solid #e5e5e5;
 }
+
+div#message div#messagecontent p textarea {
+    width: 100%
+}
+
 #shade_top {
 background:transparent url(../images/shade-top-trans.png) no-repeat scroll 0 10px;
 height:20px;
@@ -1054,6 +1096,21 @@ height:50px;
 */
 .wiki  {
    background: url("wikibg.png") repeat-y;
+}
+.wiki #toc td{
+    padding: 0;
+}
+.wiki .page-toc {
+    background-color: #f5f5f5;
+    padding: 1em 2em;
+}
+.wiki .page-toc-caption {
+   font-size: 1.2em;
+   padding: 1em 0;
+   cursor: pointer;
+}
+.wiki .search-form {
+   padding: 2em 0;
 }
 
 
@@ -1115,13 +1172,18 @@ height:50px;
 }
 
 
+/* links to unknown page get a different color */
+
+.wiki.view .NotFound a {
+    color: #ff8800;
+}
+
 /* -----------------------------------------------
   the "info" pages result list is often
   chunked into parts
 */
 .wiki.info .chunked-result a {
    text-decoration: underline;
-   background-color: #ddbb55;
 }
 
 
@@ -1133,8 +1195,7 @@ height:50px;
 }
 
 .wiki.edit .edit-box textarea {
-   border: 2px solid #000000;
-   background-color: #ffffff;
+   width: 99%;
 }
 
 .wiki.edit form[name=ewiki] {
@@ -1159,6 +1220,17 @@ height:50px;
 */
 
 
+/* copyright info */
+.wiki #copyright {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid #ddd;
+}
+.wiki #copyright a {
+    border-bottom: none;
+    background: transparent;
+    padding-right: 0;    
+}
 
 /* -----------------------------------------------
   inside of rendered pages, there is only little
@@ -1170,12 +1242,42 @@ height:50px;
    margin-left: 5px;
 }
 
+.wiki table {                   /* space-indentation */
+    margin: 1em 0;
+    overflow:hidden;
+    border-color: #e5e5e5;
+}
+
+.wiki table td {                   /* space-indentation */
+    background-color: #f5f5f5;
+    vertical-align: top;
+    padding: .5em 1em;
+    border-left: 1px solid #e5e5e5;
+    border-bottom: 1px solid #cccccc;
+    border-top: 1px solid #e5e5e5;
+    border-right: 1px solid #cccccc;
+}
+.wiki .text-body table td {                   /* space-indentation */
+    padding: 2em 2em;
+}
+
 .wiki em {
   color:#331111;
+}
+.wiki dl {
+  margin-bottom: .2em;
+  margin-top: 0.5em;
+}
+.wiki dd {
+  margin-bottom: .1em;
+  line-height: 1.5em;
 }
 .wiki li {
   padding-left: .5em;
   margin-left: 2em;
+}
+.wiki ol, .wiki ul {
+  margin: .5em 0;
 }
 .wiki ul li {
   list-style-type: disc;
@@ -1183,7 +1285,50 @@ height:50px;
 .wiki ol li {
   list-style-type: decimal;
 }
+.wiki ol span.number {
+  margin-right: .3em;
+}
+.wiki .page-toc ol {
+  margin: 0 0 1em 0;
+}
+.wiki .page-toc ol li {
+  list-style-type: none;
+}
+.wiki .page-toc ol ol {
+  margin: 0 0.8em .5em .3em;
+  padding: 0 .5em;
+}
+.wiki .page-toc li {
+  line-height: 1em;
+  padding: .3em 0;
+  margin: 0 0;
+}
+.wiki .page-toc ol ol li {
+  list-style-type: none;
+}
 
+/* Add an external-link icon to absolute links */
+
+.wiki a[href^="http:"] {
+    background: url(/images/icons/icon_external.gif) right center no-repeat;
+    padding-right: 15px;
+    border-bottom: 1px dotted #ccc;
+}
+
+.wiki a[href^="http:"]:hover {
+    background: url(/images/icons/icon_external.gif) right center no-repeat;
+}
+
+/* ...but not to absolute links in this domain... */
+
+.wiki a[href^="http://www.bewelcome.org"] {
+    background: transparent;
+    padding-right: 0px;
+}
+
+.wiki a[href^="http://www.bewelcome.org"]:hover {
+    background: transparent;
+}
 
 /* Media screen end */
 }

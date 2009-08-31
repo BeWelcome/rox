@@ -63,18 +63,17 @@ class WikiController extends PAppController {
         $User = APP_User::login();
 
         ob_start();
-        $this->_view->teaser();
         $str = ob_get_contents();
         $P = PVars::getObj('page');
         $P->teaserBar .= $str;
         ob_end_clean();
 
-        ob_start();
-        $this->_view->userbar();
-        $str = ob_get_contents();
-        ob_end_clean();
-        $P = PVars::getObj('page');
-        $P->newBar .= $str;
+        // ob_start();
+        // $this->_view->stylesFullWidth();
+        // $str = ob_get_contents();
+        // ob_end_clean();
+        // $P = PVars::getObj('page');
+        // $P->addStyles .= $str;
 
         ob_start();
 
@@ -87,7 +86,19 @@ class WikiController extends PAppController {
         $Page->content .= ob_get_contents();
         $P->title = "Wiki - BeWelcome";
         ob_end_clean();
-
+        ob_start();
+        $this->_view->indicateRSS();
+        $str = ob_get_contents();
+        $P = PVars::getObj('page');
+        $P->addStyles .= $str;
+        ob_end_clean();
+        
+        ob_start();
+        $this->_view->userbar();
+        $str = ob_get_contents();
+        ob_end_clean();
+        $P = PVars::getObj('page');
+        $P->newBar .= $str;
     }
 
     public function getWiki($page,$title = true) {
@@ -95,26 +106,78 @@ class WikiController extends PAppController {
             $ewiki_errmsg, $ewiki_data, $ewiki_title, $ewiki_id,
             $ewiki_action, $ewiki_config, $ewiki_author;
 
+        // Some settings
+        define("EWIKI_NAME", "BeWelcome Wiki");
         define('EWIKI_SCRIPT', 'wiki/');
+        define("EWIKI_SCRIPT_URL", PVars::getObj("env")->baseuri.'wiki/');	# absolute URL
         define("EWIKI_SCRIPT_BINARY", 0);
         define("EWIKI_PROTECTED_MODE", 1);
+        define("EWIKI_RESCUE_HTML", 1);
+        define("EWIKI_DESC", "Document and share content about hospitality exchange and travel on bewelcome.org");  # site description
+        define("EWIKI_COPY", "PrimarilyPublicDomain");      # site copyright
+        define("EWIKI_CATEGORY", "Hospitality Exchange");              # site subject
+        define("EWIKI_LOGO_URL", "http://www.bewelcome.org/images/logo_index_top.png");
+        
         if (!$title) define("EWIKI_PRINT_TITLE", 0);        # <h2>WikiPageName</h2> on top
+
+        // Authentification
         require_once("erfurtwiki/plugins/auth/auth_perm_ring.php");
+        $ewiki_perm_rings['rss'] = 3;
 
         $User = APP_User::login();
-
-        if ($User) {
+        $Right = new MOD_right();
+        if ($User && $Right->hasRight('Admin','Wiki')) {
+            $ewiki_author = $User->getHandle();
+            define("EWIKI_AUTH_DEFAULT_RING", 0);    //  0 = admin
+        } elseif ($User) {
             $ewiki_author = $User->getHandle();
             define("EWIKI_AUTH_DEFAULT_RING", 2);    //  2 = edit allowed
         } else {
+            $ewiki_author = 'guest';
             define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
         }
+        $this->defineMarkup(&$ewiki_config);
+                
+        // More plugins
+        require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
+        $ewiki_plugins["view_final"][] = "ewiki_add_title";
+
+        require_once("erfurtwiki/plugins/markup/mediawiki.php"); // load our own mediawiki plugin
+        require_once("erfurtwiki/plugins/aview/fpage_copyright.php"); // Copyleft Info
+        require_once("erfurtwiki/plugins/markup/bbcode.php"); // BBcode plugin
+        require_once("erfurtwiki/plugins/markup/smilies.php"); // smilies ;)
+        require_once("erfurtwiki/plugins/markup/rescuehtml.php"); // safe html tags ;)
+        require_once("erfurtwiki/plugins/admin/control.php"); // load some plugins
+        require_once("erfurtwiki/plugins/action/diff.php"); // stupid diff ;)
+        require_once("erfurtwiki/plugins/action/info_qdiff.php"); // quick diff
+        require_once("erfurtwiki/plugins/linking/titlefix.php"); // quick diff
+
+        // require_once("erfurtwiki/plugins/markup/htmltable.php"); // quick diff
+
+        // require_once("erfurtwiki/plugins/action/verdiff.php"); // version diff - not needed right now!?
+        
+        // RSS support
+        require_once("erfurtwiki/plugins/lib/feed.php"); // load our own mediawiki plugin
+        require_once("erfurtwiki/plugins/action/rss.php"); // load our own mediawiki plugin
+        
+        // Static pages
+        require_once("erfurtwiki/plugins/page/wikinews.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/powersearch.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/wantedpages.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/orphanedpages.php"); // load some plugins
+        require_once("erfurtwiki/plugins/page/recentchanges.php"); // load some plugins
+
+//        require_once("erfurtwiki/plugins/aview/control2.php"); // quick diff
 
         require_once('erfurtwiki/ewiki.php');
-
-        define("EWIKI_NAME", "BeWelcome Rox Wiki");
-
-        echo ewiki_page($page);
+        $ewiki_config["smilies"] = array(
+           ":)" => "emoticon_happy.png",
+           ";)" => "emoticon_grin.png",
+        );
+        
+        $wiki = ewiki_page($page);
+        echo $wiki;
     }
 
     private function parseRequest() {
@@ -130,7 +193,30 @@ class WikiController extends PAppController {
 
         return $request;
     }
-
+    
+    /**
+    * defineMarkup tunes the ewiki's default markup my custom values
+    */
+    public function defineMarkup($ewiki_config) 
+    {    
+        /*
+        * MediaWiki Markup
+        */
+    
+        $ewiki_config["wm_style"]["&rarr;"] = array("", "");
+        
+        $ewiki_config["wm_style"]["'''"] = array("<strong>", "</strong>");
+        $ewiki_config["wm_style"]["''"] = array("<em>", "</em>");
+        
+        // Headings
+        $ewiki_config["wm_style"]["======"] = array("<h6>", "</h6>");
+        $ewiki_config["wm_style"]["====="] = array("<h5>", "</h5>");
+        $ewiki_config["wm_style"]["===="] = array("<h4>", "</h4>");
+        $ewiki_config["wm_style"]["==="] = array("<h3>", "</h3>");
+        $ewiki_config["wm_style"]["=="] = array("<h2>", "</h2>");        
+        $ewiki_config["wm_style"]["="] = array('<h2 class="first">', "</h2>");
+        return $ewiki_config;     
+    }    
 
 }
 ?>

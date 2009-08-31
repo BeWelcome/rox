@@ -15,12 +15,13 @@
 */
 
 
-define("SMILIES_DIR", "./img/smilies/");
-define("SMILIES_BASE_HREF", "/img/smilies/");
+define("SMILIES_DIR", HTDOCS_BASE."images/icons/");
+define("SMILIES_BASE_HREF", "/images/icons/");
 $ewiki_config["smilies"] = array(
-   ":)" => "cap.gif",
+   ":)" => "emoticon_smile.png",
+   ";)" => "emoticon_wink.png",
+   ":D" => "emoticon_grin.png",
 );
-
 
 $ewiki_plugins["format_final"][] = "smilies_format_final";
 

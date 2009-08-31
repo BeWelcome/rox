@@ -24,17 +24,18 @@ function ewiki_format_rescue_html(&$wiki_source) {
 
    $rescue_html = array(
       "br", "tt", "b", "i", "strong", "em", "s", "kbd", "var", "xmp", "sup", "sub",
-      "q", "h2", "h3", "h4", "h5", "h6", "cite",  "u"
+      "q", "h2", "h3", "h4", "h5", "h6", "cite",  "u", "table", "tr", "td"
    );
 
    #-- unescape allowed html
    if ($safe_html) {
-    /*
+    
       foreach ($rescue_html as $tag) {
          foreach(array($tag, "/$tag", ($tag=strtoupper($tag)), "/$tag") as $tag) {
             $wiki_source = str_replace('&lt;'.$tag.'&gt;', "<".$tag.">", $wiki_source);
+            $wiki_source = str_replace('&lt;'.$tag.'/&gt;', "<".$tag.">", $wiki_source);
       }  }
-    */
+    
       $wiki_source = preg_replace('#&lt;(/?('.implode("|",$rescue_html).'))&gt;#i', '<$1>', $wiki_source);
    }
 

@@ -48,7 +48,9 @@ function ewiki_feed($pages, $type="AUTO")
          if (empty($data["uri"])) { $pages[$i]["uri"] = "x-wiki:".EWIKI_NAME.":".ewiki_xmlentities(urlencode($data["id"])); }
          if (empty($data["guid"])) { $pages[$i]["guid"] = ewiki_script_url("", $data["id"], "version=$data[version]"); }
       }
-      $pages[$i]["content"] = strtr(ewiki_xmlentities(substr($data["content"], 0, 300)), "\r\n\t\f", "    ");
+      $diff_content = ewiki_action_infoqdiff_plain($data["id"],$data,$prev = (array)$data, $ver = $data["version"]);
+      $pages[$i]["content"] = strtr(ewiki_xmlentities($diff_content), "\r\n\t\f", "    ");
+      // $pages[$i]["content"] = strtr(ewiki_xmlentities(substr($data["content"], 0, 300)), "\r\n\t\f", "    ");
       $pages[$i]["pdate"] = gmstrftime("%a, %d %b %G %T %Z", $data["lastmodified"]);
       $pages[$i]["idate"] = gmstrftime("%G%m%dT%TZ", $data["lastmodified"]);
       $pages[$i]["icdate"] = gmstrftime("%G%m%dT%TZ", $data["created"]);

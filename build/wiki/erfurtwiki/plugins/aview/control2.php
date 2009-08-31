@@ -5,19 +5,11 @@
 # line is disabled to achieve this.
 # ... as seen on a system, which appeared to be some CVS frontend.
 
-
-define("EWIKI_CONTROL_LINE", 0);
-define("EWIKI_PRINT_TITLE", 1);
-
-
 $ewiki_plugins["view_final"][] = "ewiki_print_control_line_fancy2";
 
 
 function ewiki_print_control_line_fancy2(&$html, $id,$data,$action) {
-   global $ewiki_plugins, $ewiki_t;
-
-   #-- extract <h2> with info/ link
-   list($h2, $html) = explode("\n", $html, 2);
+   global $ewiki_plugins, $ewiki_t, $ewiki_config;
 
    #-- produce control links
    $cl = "";
@@ -28,22 +20,25 @@ function ewiki_print_control_line_fancy2(&$html, $id,$data,$action) {
    }
    else {
       foreach ($ewiki_config["action_links"]["view"] as $action => $title) if (!empty($ewiki_plugins["action"][$action])) {
-         if (EWIKI_PROTECTED_MODE && (!ewiki_auth($uu, $uu, $action) || EWIKI_PROTECTED_MODE_HIDING && empty($ewiki_ring))) { continue; }
-         $cl .= '<a href="'.ewiki_script($action,$id).'">'.$title.'</a> ';
+         if (EWIKI_PROTECTED_MODE && EWIKI_PROTECTED_MODE_HIDING && !ewiki_auth($id, $data, $action)) {
+             continue; 
+         }
+           $cl .= $ins[1] . '<a href="' .
+              ( strpos($action, "://")
+                 ? $action   # an injected "action" URL
+                 : ewiki_script($action, $id, $version?array("version"=>$version):NULL)
+              ) . '">[' . ewiki_t($title) . ']</a> ' . $ins[2];
       }
    }
 
    if ($data["lastmodified"] >= UNIX_MILLENNIUM) { 
-      $cl .= '<br /><small>' . strftime(ewiki_t("LASTCHANGED"), @$data["lastmodified"]) . '</small>';
+      $cl .= '<br />' . strftime(ewiki_t("LASTCHANGED"), @$data["lastmodified"]);
    }
 
-   #-- change <h2>
-   $h2 = str_replace("<h2>", '<h2 style="float:left; margin:5pt;">', $h2);
-
    #-- output
-   $html = '<div class="controlbox" style="border:2px #333377 solid; background-color:#555599;">'.
+   $html = '<div class="controlbox float_right small">'.
            "$h2\n".
-           '<div style="text-align:right;">'.$cl.'</div>'.
+           '<div style="text-align:right">'.$cl.'</div>'.
            "</div>\n".
            $html;
 

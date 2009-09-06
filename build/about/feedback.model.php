@@ -36,8 +36,8 @@ FROM feedbackcategories
 		$EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
 		if ($member = $this->getLoggedInMember())
         {
-		    $EmailSender = $member->email;
-		    $username = $member->username;
+		    $EmailSender = $member->get_email;
+		    $username = $member->Username;
 		}
 		else
         {

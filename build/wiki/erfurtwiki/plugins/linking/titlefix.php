@@ -19,7 +19,7 @@ $ewiki_plugins["link_notfound"][] = "ewiki_linking_titlefix";
 function ewiki_linking_titlefix(&$title, &$href, &$href2, &$type) {
 
    global $ewiki_links;
-
+   $title = str_replace(array("  "," "),"+",$title); // replace spaces with "+" as we do in linking
    $find = ewiki_db::FIND(array($title));
    if ($find[$title]) {
 
@@ -45,4 +45,3 @@ function ewiki_linking_titlefix(&$title, &$href, &$href2, &$type) {
 }
 
 
-?>

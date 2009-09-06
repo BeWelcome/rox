@@ -83,6 +83,19 @@ FROM feedbackcategories
      */
     public function feedbackMail($receiver, $message_subject, $message_text, $sender)
     {        
+        // check if the receiver email address is good
+        if (!$this->validateEmail($receiver))
+        {
+            $this->logWrite("In feedback model swift::send: bad email [{$receiver}]", "feedback");
+            return false;
+        }
+
+        // check if the sender email address is good
+        if (!$this->validateEmail($sender))
+        {
+            $sender = 'dummy_address@bewelcome.org';
+        }
+
         //Load the files we'll need
         require_once SCRIPT_BASE.'lib/misc/swift-mailer/lib/swift_required.php';
         
@@ -109,14 +122,48 @@ FROM feedbackcategories
           ;
         
         //Now check if Swift actually sends it
-        if ($mailer->send($message)) {
-            $status = true;
-        } else {
-            MOD_log::get()->write(" in feedback model $\swift->send: Failed to send a mail to [".$receiver."]", "feedback");
-            $status = false;
+        if ($mailer->send($message))
+        {
+            return true;
         }
-        return $status;
+        else
+        {
+            $this->logWrite("In feedback model swift::send: Failed to send a mail to [{$receiver}]", "feedback");
+            return false;
+        }
     }
     
+    /**
+     * checks whether the supplied email address(es) are valid
+     *
+     * @param string|array $email - email address or array of addresses
+     *
+     * @access private
+     * @return bool
+     */
+    private function validateEmail($email)
+    {
+        $return = true;
+        if (is_array($email))
+        {
+            foreach ($email as $e)
+            {
+                if (!filter_var($e, FILTER_VALIDATE_EMAIL))
+                {
+                    $return = false;
+                }
+                
+            }
+        }
+        else
+        {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+            {
+                $return = false;
+            }
+
+        }
+        return $return;
+    }
 }
 

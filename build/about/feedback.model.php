@@ -32,18 +32,18 @@ FROM feedbackcategories
 		$receiver_str = str_replace(";", ",", $rCategory->EmailToNotify);
         $receiver = explode(',', $receiver_str);
         
-		// feedbackcategory 3 = FeedbackAtSignup
 		$IdMember = 0;
 		$EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
-		if (APP_User::isBWLoggedIn("NeedMore,Pending")) {
-		    $IdMember = $_SESSION['IdMember'];
-            $model = new MembersModel();
-            $member = $model->getMemberWithId($_SESSION['IdMember']);
-		    $EmailSender = $member->email;
-		    $username = $member->username;
+		if ($member = $this->getLoggedInMember())
+        {
+		    $EmailSender = $member->get_email;
+		    $username = $member->Username;
+            $IdMember = $member->id;
 		}
-		else {
-		    if (isset($vars["Email"]) && $vars["Email"]!="") {
+		else
+        {
+		    if (isset($vars["Email"]) && $vars["Email"]!="")
+            {
 		        $EmailSender = $vars["Email"]; // todo check if this email is a good one !
 		    }
 		    $username = "unknown user";
@@ -83,6 +83,19 @@ FROM feedbackcategories
      */
     public function feedbackMail($receiver, $message_subject, $message_text, $sender)
     {        
+        // check if the receiver email address is good
+        if (!$this->validateEmail($receiver))
+        {
+            $this->logWrite("In feedback model swift::send: bad email [{$receiver}]", "feedback");
+            return false;
+        }
+
+        // check if the sender email address is good
+        if (!$this->validateEmail($sender))
+        {
+            $sender = 'dummy_address@bewelcome.org';
+        }
+
         //Load the files we'll need
         require_once SCRIPT_BASE.'lib/misc/swift-mailer/lib/swift_required.php';
         
@@ -92,31 +105,73 @@ FROM feedbackcategories
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);
         
-        //Create the message
-        $message = Swift_Message::newInstance()
+        try
+        {
+            //Create the message
+            $message = Swift_Message::newInstance()
 
-          //Give the message a subject
-          ->setSubject($message_subject)
+              //Give the message a subject
+              ->setSubject($message_subject)
 
-          //Set the From address with an associative array
-          ->setFrom($sender)
+              //Set the From address with an associative array
+              ->setFrom($sender)
 
-          //Set the To addresses with an associative array
-          ->setTo($receiver)
+              //Set the To addresses with an associative array
+              ->setTo($receiver)
 
-          //Give it a body
-          ->setBody($message_text)
-          ;
+              //Give it a body
+              ->setBody($message_text)
+              ;
+        }
+        catch (Exception $e)
+        {
+            $this->logWrite("In feedback model swift::send: caught exception try to send email to [{$receiver}]", "feedback");
+            return false;
+        }
         
         //Now check if Swift actually sends it
-        if ($mailer->send($message)) {
-            $status = true;
-        } else {
-            MOD_log::get()->write(" in feedback model $\swift->send: Failed to send a mail to [".$receiver."]", "feedback");
-            $status = false;
+        if ($mailer->send($message))
+        {
+            return true;
         }
-        return $status;
+        else
+        {
+            $this->logWrite("In feedback model swift::send: Failed to send a mail to [{$receiver}]", "feedback");
+            return false;
+        }
     }
     
+    /**
+     * checks whether the supplied email address(es) are valid
+     *
+     * @param string|array $email - email address or array of addresses
+     *
+     * @access private
+     * @return bool
+     */
+    private function validateEmail($email)
+    {
+        $return = true;
+        if (is_array($email))
+        {
+            foreach ($email as $e)
+            {
+                if (!filter_var($e, FILTER_VALIDATE_EMAIL))
+                {
+                    $return = false;
+                }
+                
+            }
+        }
+        else
+        {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL))
+            {
+                $return = false;
+            }
+
+        }
+        return $return;
+    }
 }
 

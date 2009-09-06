@@ -1,9 +1,9 @@
 #!/usr/bin/php
 <?php
 
-if (count($_SERVER['argv']) < 2 || !in_array(strtolower($_SERVER['argv'][1]), array('bull', 'mule')))
+if (count($_SERVER['argv']) < 2 || !in_array(strtolower($_SERVER['argv'][1]), array('bull', 'mule', 'deer')))
 {
-    die("Script needs input - call as follows: <script> mule|bull\n");
+    die("Script needs input - call as follows: <script> mule|bull|deer\n");
 }
 
 $table = strtoupper($_SERVER['argv'][1]);

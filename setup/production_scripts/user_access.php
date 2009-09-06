@@ -3,7 +3,7 @@
 
 if (count($_SERVER['argv']) < 2)
 {
-    die("Script needs input - call as follows: <script> mule|bull\n");
+    die("Script needs input - call as follows: <script> mule|bull|deer\n");
 }
 
 switch(strtolower($_SERVER['argv'][1]))
@@ -14,8 +14,11 @@ switch(strtolower($_SERVER['argv'][1]))
     case "bull":
         $column = 3;
         break;
+    case "deer":
+        $column = 3;
+        break;
     default:
-        die('Bad input. Call with mule|bull');
+        die('Bad input. Call with mule|bull|deer');
 }
 
 $wiki_page = file_get_contents('http://www.bevolunteer.org/wiki/Accounts_and_groups_on_our_servers');

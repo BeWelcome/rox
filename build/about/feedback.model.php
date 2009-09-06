@@ -38,6 +38,7 @@ FROM feedbackcategories
         {
 		    $EmailSender = $member->get_email;
 		    $username = $member->Username;
+            $IdMember = $member->id;
 		}
 		else
         {

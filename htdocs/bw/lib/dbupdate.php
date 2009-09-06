@@ -1469,6 +1469,19 @@ SQL;
 ALTER TABLE membersgroups ADD column IsLocal BOOL DEFAULT false NOT NULL COMMENT 'Determines if the member is a local member of a geo group'
 SQL;
 
+
+    $updates[] = <<<SQL
+CREATE TABLE IF NOT EXISTS `volunteers_reports_schedule` (
+  `id` int(11) NOT NULL auto_increment COMMENT 'primary key',
+  `IdVolunteer` int(11) NOT NULL COMMENT 'Id of the accepter',
+  `TimeToDeliver` timestamp NOT NULL default '0000-00-00 00:00:00' COMMENT 'datetime for the next delivery of teh report',
+  `DelayInHourForNextOne` int(11) NOT NULL default '24' COMMENT 'delay to schedule the next report',
+  `Type` enum('Accepter','Group','Abuse') NOT NULL COMMENT 'Type of report',
+  PRIMARY KEY  (`id`),
+  KEY `IdAccepter` (`IdVolunteer`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='List of volunteerswith the next time they should receive the'
+SQL;
+
     if (empty($res)) {
         $version = 0;
     } else {

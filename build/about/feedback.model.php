@@ -105,21 +105,29 @@ FROM feedbackcategories
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);
         
-        //Create the message
-        $message = Swift_Message::newInstance()
+        try
+        {
+            //Create the message
+            $message = Swift_Message::newInstance()
 
-          //Give the message a subject
-          ->setSubject($message_subject)
+              //Give the message a subject
+              ->setSubject($message_subject)
 
-          //Set the From address with an associative array
-          ->setFrom($sender)
+              //Set the From address with an associative array
+              ->setFrom($sender)
 
-          //Set the To addresses with an associative array
-          ->setTo($receiver)
+              //Set the To addresses with an associative array
+              ->setTo($receiver)
 
-          //Give it a body
-          ->setBody($message_text)
-          ;
+              //Give it a body
+              ->setBody($message_text)
+              ;
+        }
+        catch (Exception $e)
+        {
+            $this->logWrite("In feedback model swift::send: caught exception try to send email to [{$receiver}]", "feedback");
+            return false;
+        }
         
         //Now check if Swift actually sends it
         if ($mailer->send($message))

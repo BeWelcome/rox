@@ -32,18 +32,17 @@ FROM feedbackcategories
 		$receiver_str = str_replace(";", ",", $rCategory->EmailToNotify);
         $receiver = explode(',', $receiver_str);
         
-		// feedbackcategory 3 = FeedbackAtSignup
 		$IdMember = 0;
 		$EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
-		if (APP_User::isBWLoggedIn("NeedMore,Pending")) {
-		    $IdMember = $_SESSION['IdMember'];
-            $model = new MembersModel();
-            $member = $model->getMemberWithId($_SESSION['IdMember']);
+		if ($member = $this->getLoggedInMember())
+        {
 		    $EmailSender = $member->email;
 		    $username = $member->username;
 		}
-		else {
-		    if (isset($vars["Email"]) && $vars["Email"]!="") {
+		else
+        {
+		    if (isset($vars["Email"]) && $vars["Email"]!="")
+            {
 		        $EmailSender = $vars["Email"]; // todo check if this email is a good one !
 		    }
 		    $username = "unknown user";

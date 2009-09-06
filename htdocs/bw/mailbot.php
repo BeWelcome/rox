@@ -552,13 +552,23 @@ if ($count>0) {
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
 and (OldStatus='mailtoconfirm' and NewStatus='Pending') group by NewStatus") ;	
-		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
+		if (isset($rr->Desc)) {
+			$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
+		}
+		else {
+			$AccepterReport=$AccepterReport."<tr><td>No confirmed signup</td><td></td></tr>" ;
+		}
 	
 		$rr=LoadRow("SELECT concat(concat(' accepted members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
 and (OldStatus='Pending' and NewStatus='Active') group by NewStatus") ;	
-		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
+		if (isset($rr->Desc)) {
+			$AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
+		}
+		else {
+			$AccepterReport=$AccepterReport."<tr><td>No accepted</td><td></td></tr>" ;
+		}
 
 		$rr=LoadRow("SELECT concat(concat(' members set to Needmore (may be duplicated) since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
@@ -579,7 +589,12 @@ and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;
 		}
 		
 		$rr=LoadRow("select concat(' total members are waiting for accepting at ',date_add(now(), INTERVAL ".$iSecondOffset." second)) as 'Desc',count(*)  as cnt from members where Status='Pending'") ;	
-		$AccepterReport=$AccepterReport."<tr><td colspan=\"2\"><b>".$rr->cnt."</b> ".$rr->Desc."</td></tr>" ;
+		if (isset($rr->Desc)) {
+			$AccepterReport=$AccepterReport."<tr><td colspan=\"2\"><b>".$rr->cnt."</b> ".$rr->Desc."</td></tr>" ;
+		}
+		else {
+			$AccepterReport=$AccepterReport."<tr><td>No one waiting for accepting in the period</td><td></td></tr>" ;
+		}
 		$str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=".$IdVolunteer." AND rights.id=rightsvolunteers.IdRight AND rights.Name='Accepter'";
 		$rr=LoadRow($str) ;
 	

@@ -2181,6 +2181,7 @@ function ewiki_format (
       $html .= $ooo[$in][0] . "\n";
       $ooo[$in] = 0;
    }
+   
    #-- call post processing plugins
    if ($pf_final = $ewiki_plugins["format_final"]) {
       foreach ($pf_final as $pf) $pf($html);
@@ -2436,7 +2437,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    }
    #-- ordinary internal WikiLinks
    elseif (($ewiki_links === true) || @$ewiki_links[$href_i]) {
-      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without from working
+      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without brackets from working
       $type = array("wikipage");
       $str = '<a href="' . ewiki_script("", $href) . htmlentities($href2)
            . '">' . $title . '</a>';
@@ -2449,7 +2450,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    #-- not found fallback
    else {
       $str = "";
-      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without from working
+      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without brackets from working
       #-- a plugin may take care
       if ($pf_a = @$ewiki_plugins["link_notfound"]) {
          foreach ($pf_a as $pf) {
@@ -3839,7 +3840,8 @@ class ewiki_database_mysql {
          }
          $a = ($sql1 ? ', ' : '');
          $sql1 .= $a . $index;
-         $sql2 .= $a . "'" . mysql_escape_string($value) . "'";
+         // HACK BY LUPOCHEN Sept/2009: without the utf8_encode() we run into problems with special characters
+         $sql2 .= $a . "'" . mysql_escape_string(utf8_encode($value)) . "'";
       }
 
       $result = mysql_query("$COMMAND INTO {$this->table} ($sql1) VALUES ($sql2)");

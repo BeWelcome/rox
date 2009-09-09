@@ -412,7 +412,7 @@ WHERE
         if (!is_int($ip_int = ip2long($ip_string))) {
             // grmmm
             // ip -1 means that we could not determine the ip
-            $ip = -1;
+            $ip_int = -1;
         }      
         @$localDao->query(
             "

@@ -750,7 +750,7 @@ if (IsLoggedIn()) {
 				LogStr("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
 			} else {
 				 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-				return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+				return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 			}
 		}
 		// Try first language available

@@ -1482,6 +1482,69 @@ CREATE TABLE IF NOT EXISTS `volunteers_reports_schedule` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='List of volunteerswith the next time they should receive the'
 SQL;
 
+	$updates[]= "
+	 ALTER TABLE `memberstrads` ADD UNIQUE `Unique_entry` ( 
+	 `IdTrad` , `
+	 IdOwner` , 
+	 `IdLanguage` )  
+";
+
+	$updates[]= "
+ ALTER TABLE `translations` ADD UNIQUE `unique_entry` ( 
+ `IdTrad` , 
+ `IdOwner` , 
+ `IdLanguage` )  
+";
+
+	$updates[] = "DROP FUNCTION IF EXISTS fUserName";
+	$updates[]="
+CREATE or REPLACE FUNCTION fUserName (s VARCHAR(32)) RETURNS VARCHAR(32) DETERMINISTIC
+/* this function allows to retrieve a Username from the IdMember */ 
+begin
+declare sResult VARCHAR(32) ;
+if ( s REGEXP ('[0-9]')) then
+	select Username from members where members.id=s into sResult ;
+else
+	set sResult:=s ;
+end if ;
+return sResult ;
+end " ;
+
+	$updates[] = "DROP FUNCTION IF EXISTS mInTrad";
+	$updates[]="
+CREATE FUNCTION mInTrad (iTrad INT,iLang int) RETURNS VARCHAR(1024) DETERMINISTIC
+/* 
+this function allows to retrieve the data behind a members trad in a given language
+if this language is not found, the english language will be tried, and if still nothing is found, teh first available language will be used 
+*/ 
+begin
+declare sResult VARCHAR(1024) ;
+declare v_id INT ;
+select Sentence,id from memberstrads where IdTrad=ITrad and  memberstrads.IdLanguage=iLang into sResult,v_id ;
+
+if ( v_id IS NULL) then
+	if (iLang<>0) then
+		select Sentence,id from memberstrads where IdTrad=ITrad and  memberstrads.IdLanguage=0 into sResult,v_id ;
+		if ( v_id IS NULL) then
+			select Sentence,id from memberstrads where IdTrad=ITrad order by id asc limit 1 into sResult,v_id ;
+			if ( v_id IS NULL) then
+				return('') ;
+			else
+				return(sResult) ;
+			end if ;
+		else 
+			return(sResult) ;
+		end if ;
+	else
+		return('') ;
+	end if ;
+else
+	return (sResult);
+end if ;
+end " ;
+
+
+
     if (empty($res)) {
         $version = 0;
     } else {

@@ -1,0 +1,1 @@
+0 * * * * bwscripts /home/bwrox/www.bewelcome.org/setup/production_scripts/cronscripts/clean_guestsonline.sh

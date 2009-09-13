@@ -13,7 +13,8 @@ for file in `find .`
 do
     if [[ $file != *.svn/* ]]
     then
-        [ `chown bwrox:bwrox $file` ] || { echo "Failed to change owner of $file"; exit 255; }
+        chown bwrox:bwrox $file
+        [ $? == 0 ] || { echo "Failed to change owner of $file"; exit 255; }
     fi
 done
 echo "Shell scripts folder unlocked"

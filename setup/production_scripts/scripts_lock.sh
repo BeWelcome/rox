@@ -13,8 +13,10 @@ for file in `find .`
 do
     if [[ $file != *.svn/* ]]
     then
-        [ `chown root:bwrox $file` ] || { echo "Failed to change owner of $file"; exit 255; }
-        [ `chmod 0755 $file` ] || { echo "Failed to change permissions on $file"; exit 255; }
+        chown root:bwrox $file
+        [ $? == 0 ] || { echo "Failed to change owner of $file"; exit 255; }
+        chmod 0755 $file
+        [ $? == 0 ] || { echo "Failed to change permissions on $file"; exit 255; }
     fi
 done
 

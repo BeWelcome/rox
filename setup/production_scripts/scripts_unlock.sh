@@ -9,8 +9,11 @@ then
     exit 255
 fi
 
-find . -maxdepth 1 -type f -exec chown 'bwrox:bwrox' '{}' \;
-find . -maxdepth 1 -type f -exec chmod 0755 '{}' \;
-chown bwrox:bwrox .
-chmod 0755 .
+for file in `find .`
+do
+    if [[ $file != *.svn/* ]]
+    then
+        [ `chown bwrox:bwrox $file` ] || { echo "Failed to change owner of $file"; exit 255; }
+    fi
+done
 echo "Shell scripts folder unlocked"

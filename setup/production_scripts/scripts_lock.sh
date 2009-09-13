@@ -9,16 +9,14 @@ then
     exit 255
 fi
 
-tmpfile=tempsvn.$$
-
-`find . -maxdepth 1 -type f -exec chown 'root:bwrox' '{}' \;`
-[ $? == 0 ] || { echo "Failed to change owner of files"; exit 255; }
-find . -maxdepth 1 -type f -exec chmod 0755 '{}' \;
-[ $? == 0 ] || { echo "Failed to change permissions on files"; exit 255; }
-chown root:bwrox .
-[ $? == 0 ] || { echo "Failed to change owner of files"; exit 255; }
-chmod 0755 .
-[ $? == 0 ] || { echo "Failed to change permissions on files"; exit 255; }
+for file in `find .`
+do
+    if [[ $file != *.svn/* ]]
+    then
+        [ `chown root:bwrox $file` ] || { echo "Failed to change owner of $file"; exit 255; }
+        [ `chmod 0755 $file` ] || { echo "Failed to change permissions on $file"; exit 255; }
+    fi
+done
 
 svnoutput=`svn st . 2>&1`
 if [ -z "$svnoutput" ]

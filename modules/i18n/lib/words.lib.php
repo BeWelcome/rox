@@ -771,11 +771,21 @@ SQL;
         $count = mysql_num_fields($qry);
         $rr = mysql_fetch_object($qry);
 
+		if (!isset($rr->id)) {
+			return ; // No need to try to make a revision if the record was empty
+		}
+		
+
         $XMLstr = "";
-        for ($ii = 0; $ii < $count; $ii++) {
+        for ($ii = 0; ($ii < $count); $ii++) {
             $field = mysql_field_name($qry, $ii);
             $XMLstr .= "<field>" . $field . "</field>\n";
-            $XMLstr .= "<value>" . $rr-> $field . "</value>\n";
+//			if (!isset($rr->$field)) {
+//				print_r($rr) ;
+//				echo "<br />/$TableName=<b>$TableName</b> IdRecord=<b>$Id</b> nothing for <b>",$field,"</b><br />" ;
+//				die(0) ;
+//			}
+            $XMLstr .= "<value>" . $rr->$field . "</value>\n";
         }
         $str = "INSERT INTO " . $_SYSHCVOL['ARCH_DB'] . ".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) VALUES(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . mysql_real_escape_string($XMLstr) . "','" . $DoneBy . "')";
         if (!$qry) {
@@ -823,7 +833,7 @@ SQL;
         else
             $IdLanguage = $_IdLanguage;
 
-        if ($IdTrad <=0) { // if a new IdTrad is needed
+        if ($IdTrad <=0) {
 			if ($ss=="") { // No need to insert an empty record in memberstrads
 				return(0) ;
 			}
@@ -867,7 +877,6 @@ SQL;
         if (!$s) {
             throw new PException('Failed in InsertInMTrad inserting in membertrads');
         }
-        $rr=$s->fetch(PDB::FETCH_OBJ) ;
 
         // update the IdTrad in the original table (if the TableColumn was given properly and the IdRecord too)
         if (!empty($TableColumn) and !empty($Idrecord)) {
@@ -985,9 +994,6 @@ SQL;
             $IdLanguage = $_IdLanguage;
         }
 
-		if ($ss=="") { // No need to insert an empty record in translations
-			return(0) ;
-		}
 
         if ($IdTrad <=0) { // if a new IdTrad is needed
 			if ($ss=="") { // No need to insert an empty record in translations

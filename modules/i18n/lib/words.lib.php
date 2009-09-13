@@ -823,10 +823,10 @@ SQL;
         else
             $IdLanguage = $_IdLanguage;
 
-		if ($ss="") { // No need to insert an empty record in memberstrads
-			return(0) ;
-		}
-        if ($IdTrad == -1) { // if a new IdTrad is needed
+        if ($IdTrad <=0) { // if a new IdTrad is needed
+			if ($ss=="") { // No need to insert an empty record in memberstrads
+				return(0) ;
+			}
             // Compute a new IdTrad
             $s = $this->_dao->query("Select max(IdTrad) as maxi from memberstrads");
             if (!$s) {
@@ -985,11 +985,14 @@ SQL;
             $IdLanguage = $_IdLanguage;
         }
 
-		if ($ss="") { // No need to insert an empty record in translations
+		if ($ss=="") { // No need to insert an empty record in translations
 			return(0) ;
 		}
 
         if ($IdTrad <=0) { // if a new IdTrad is needed
+			if ($ss=="") { // No need to insert an empty record in translations
+				return(0) ;
+			}
             // Compute a new IdTrad
             $s = $this->_dao->query("SELECT Next_Forum_trads_IdTrad() AS maxi");
             if (!$s) {

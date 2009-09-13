@@ -1543,7 +1543,12 @@ else
 end if ;
 end " ;
 
-
+	$updates[]="
+ ALTER TABLE `previousversion` 
+ CHANGE `Type` `Type` ENUM( 'DoneByMember', 'DoneByOtherMember', 'DoneByVolunteer', 'DoneByAdmin', 'DoneByModerator' ) 
+ CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DoneByMember' 
+ COMMENT 'Here are stored the previous version of updated translation (this can help to rollback problem -mannually- if need)' 
+ " ;
 
     if (empty($res)) {
         $version = 0;

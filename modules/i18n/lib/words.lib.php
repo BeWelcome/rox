@@ -524,25 +524,11 @@ class MOD_words
     /**
     * deleteMTrad function
     *
-    * This InsertInFTrad create a new translatable text in forum_trads
-    * @$ss is for the content of the text
-    * @$TableColumn refers to the table and coilumn the trad is associated to
-    * @$IdRecord is the num of the record in this table
-    * @$_IdMember ; is the id of the member who own the record
-    * @$_IdLanguage
-    * @$IdTrad  is probably useless (I don't remmber why I defined it)
-    * 
-    * 
-    * Warning : as default language this function will use by priority :
-    * 1) the content of $_IdLanguage if it is set to something else than -1
-    * 2) the content of an optional $_POST[IdLanguage] if it is set
-    * 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
-    * 4) The default language (0)
-    *
-    * returns the id of the created trad
+	* This delete a translations
     * 
     */ 
     public function deleteMTrad($IdTrad, $IdOwner, $IdLanguage) {
+        $this->MakeRevision($IdTrad, "memberstrads"); // create revision befor the delete
         $IdMember = $_SESSION['IdMember'];
 
         $str = <<<SQL
@@ -675,7 +661,7 @@ SQL;
 	 } // end of mTrad
 	 
     /**
-	 * @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
+	 * @param $IdTrad the id of a translations.IdTrad record to retrieve
 	 * @param $ReplaceWithBr allows 
 	 * @parame $IdForceLanguage optional can be use to force the routine to try to choose a specific language
 	 * @return string translated according to the best language find
@@ -686,13 +672,13 @@ SQL;
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 																					// Will receive the choosen language
 
-	 		$AllowedTags = "<b><i><br><br/><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a forum_trads
+	 		$AllowedTags = "<b><i><br><br/><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a translations
 			if (empty($IdTrad)) {
 			   return (""); // in case there is nothing, return and empty string
 			}
 			else  {
 			   if (!is_numeric($IdTrad)) {
-			   	  die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric ! IdTrad=[".$IdTrad."]") ;
+			   	  die ("it look like you are using forum::fTrad with and allready translated word, a translations.IdTrad is expected and it should be numeric ! IdTrad=[".$IdTrad."]") ;
 			   }
 			}
 		
@@ -708,26 +694,26 @@ SQL;
 				$IdLanguage=$IdForceLanguage ;
 			}
 			// Try default language
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `translations` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {
 				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
+					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with translations.IdTrad=" . $IdTrad, "Bug");
 				} 
 				else {
-							$fTradIdLastUsedLanguage=$row->IdLanguage ;
+					$fTradIdLastUsedLanguage=$row->IdLanguage ;
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
 //			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try default eng
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
+        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `translations` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {
 				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence for language 1 (eng) with forum_trads.IdTrad=" . $IdTrad, "Bug");
+					MOD_log::get()->write("Blank Sentence for language 1 (eng) with translations.IdTrad=" . $IdTrad, "Bug");
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
@@ -735,12 +721,12 @@ SQL;
 				}
 			}
 			// Try first language available
-            $query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+            $query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `translations` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {
 				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence (any language) forum_trads.IdTrad=" . $IdTrad, "Bug");
+					MOD_log::get()->write("Blank Sentence (any language) translations.IdTrad=" . $IdTrad, "Bug");
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
@@ -819,6 +805,10 @@ SQL;
      * 4) The default language (0)
      *
      * returns the id of the created trad
+	 *
+	 * Improvment: if the value is empty then nothing is inserted but 0 is returned
+	 *
+	 *
      * 
      */ 
     function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
@@ -833,6 +823,9 @@ SQL;
         else
             $IdLanguage = $_IdLanguage;
 
+		if ($ss="") { // No need to insert an empty record in memberstrads
+			return(0) ;
+		}
         if ($IdTrad == -1) { // if a new IdTrad is needed
             // Compute a new IdTrad
             $s = $this->_dao->query("Select max(IdTrad) as maxi from memberstrads");
@@ -950,14 +943,14 @@ SQL;
             }
         }
         return ($IdTrad);
-    } // end of NewReplaceInMTrad
+    } // end of ReplaceInMTrad
 
 
 
     /**
     * InsertInfTrad function
     *
-    * This InsertInFTrad create a new translatable text in forum_trads
+    * This InsertInFTrad create a new translatable text in translations
     * @$ss is for the content of the text
     * @$TableColumn refers to the table and coilumn the trad is associated to
     * @$IdRecord is the num of the record in this table
@@ -973,7 +966,9 @@ SQL;
     * 4) The default language (0)
     *
     * returns the id of the created trad
-    * 
+    *
+	* improvment if the text value is empty, nothing is inserte din the table, and 0 is retruned as an IdTrad
+	*
     */ 
     function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
         $DefLanguage=$this->GetLanguageChoosen() ;
@@ -989,6 +984,10 @@ SQL;
         else {
             $IdLanguage = $_IdLanguage;
         }
+
+		if ($ss="") { // No need to insert an empty record in translations
+			return(0) ;
+		}
 
         if ($IdTrad <=0) { // if a new IdTrad is needed
             // Compute a new IdTrad
@@ -1007,11 +1006,11 @@ SQL;
         $IdOwner = $IdMember;
         $IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
         $Sentence = $ss;
-        $str = "insert into forum_trads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
+        $str = "insert into translations(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
         $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
         $s = $this->_dao->query($str);
         if (!$s) {
-            throw new PException('Failed in InsertInFTrad for inserting in forum_trads!');
+            throw new PException('Failed in InsertInFTrad for inserting in translations!');
         }
         // update the IdTrad in the original table (if the TableColumn was given properly and the IdRecord too)
         if (($IdRecord>0) and (!empty($TableColumn))) {
@@ -1048,11 +1047,11 @@ SQL;
     /**
     * ReplaceInFTrad function
     *
-    * This ReplaceInFTrad replace or create translatable text in forum_trads
+    * This ReplaceInFTrad replace or create translatable text in translations
     * @$ss is for the content of the text
     * @$TableColumn refers to the table and column the trad is associated to
     * @$IdRecord is the num of the record in this table
-    * $IdTrad is the record in forum_trads to replace (unique for each IdLanguage)
+    * $IdTrad is the record in translations to replace (unique for each IdLanguage)
     * @$Owner ; is the id of the member who own the record
     * 
     * Warning : as default language this function will use by priority :
@@ -1074,7 +1073,7 @@ SQL;
             return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember,$DefLanguage)); // Create a full new translation
         }
         $IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
-        $s = $this->_dao->query("SELECT * FROM forum_trads WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
+        $s = $this->_dao->query("SELECT * FROM translations WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
         if (!$s) {
            throw new PException('Failed in ReplaceInFTrad searching previous IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);
         }
@@ -1084,11 +1083,11 @@ SQL;
             return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember, $DefLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
         } else {
             if ($ss != addslashes($rr->Sentence)) { // Update only if sentence has changed
-                $this->MakeRevision($rr->id, "forum_trads"); // create revision
-                $str = "UPDATE forum_trads SET TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' WHERE id=" . $rr->id;
+                $this->MakeRevision($rr->id, "translations"); // create revision
+                $str = "UPDATE translations SET TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' WHERE id=" . $rr->id;
             $s = $this->_dao->query($str);
             if (!$s) {
-                   throw new PException('Failed in ReplaceInFTrad for updating in forum_trads!');
+                   throw new PException('Failed in ReplaceInFTrad for updating in translations!');
             }
             }
         }

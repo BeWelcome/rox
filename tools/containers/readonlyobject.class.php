@@ -19,4 +19,8 @@ class ReadOnlyObject
         }
     }
     
+    public function __set($key, $val)
+    {
+        return;
+    }
 }

@@ -2,12 +2,16 @@
 <script type="text/javascript" src="script/blog_suggest.js"></script>
 <div id="blog-create-form" class="NotDisplayed">
 <?php
-        $User = APP_User::login();
-        $Blog = new BlogController;
+        //$User = A PP_User::login();
+        $member = $this->model->getLoggedInMember();
+
         $Model = new Blog;
-        $callbackId = $Blog->createProcess();
+
+        $callback = $this->getCallbackOutput('BlogController', 'createProcess');
+
         // get the saved post vars
-        $vars =& PPostHandler::getVars($callbackId);
+        // todo: grab from page model
+        $vars = array();
         // get current request
         $request = PRequest::get()->request;
         
@@ -15,10 +19,12 @@
         $lang = array();
         $words = new MOD_words();
 
-        $catIt = $Model->getCategoryFromUserIt($User->getId());
-        $tripIt = $Model->getTripFromUserIt($User->getId());
+        $catIt = $Model->getCategoryArray(false, $member);
+        $tripIt = $Model->getTripFromUserIt($member->id);
         $google_conf = PVars::getObj('config_google');
-        $defaultVis = APP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
+        //$defaultVis = A PP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
+        // defaults to public then
+        $defaultVis = false;
         
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();
@@ -42,7 +48,7 @@
  * for documentation look at build/blog/editcreateform.php
  * @author: Michael Dettbarn (bw: lupochen)
  */
-if (!$User) {
+if (!$member) {
     echo '<p class="error">'.$words->get('BlogErrors_not_logged_in').'</p>';
     return false;
 }
@@ -300,9 +306,7 @@ if ($google_conf && $google_conf->maps_api_key) {
         <p class="desc"><?=$words->get('BlogCreateLabelSublineTags')?></p>
     </div>
 
-        <input type="hidden" name="<?php
-        // IMPORTANT: callback ID for post data
-        echo $callbackId; ?>" value="1"/>
+    <?php echo $callback; ?>
 <?php
 if (isset($vars['id']) && $vars['id']) {
 ?>
@@ -313,6 +317,7 @@ if (isset($vars['id']) && $vars['id']) {
 
     <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
     <?php
+    /* removed pending deletiong
     if ($User->hasRight('write_sticky@blog')) {
     ?>
         <div class="row">
@@ -325,6 +330,7 @@ if (isset($vars['id']) && $vars['id']) {
         </div>
     <?php
     }
+    */
     ?>
     <label><?=$words->get('label_vis')?></label>
     <div class="row">

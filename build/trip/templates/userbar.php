@@ -1,8 +1,9 @@
 <?php
 $words = new MOD_words();
 
-$User = APP_User::login();
-if ($User && $User->loggedIn()) {
+$member = $this->_model->getLoggedInMember();
+if ($member)
+{
 ?>
           <h3>Actions</h3>
           <ul class="linklist">

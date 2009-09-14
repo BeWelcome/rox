@@ -12,10 +12,9 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-$Blog = new Blog;
-$callbackId = $Blog->commentProcess($blog->blog_id);
-$vars =& PPostHandler::getVars($callbackId);
+$callback = $this->getCallbackOutput('BlogController', 'CommentProcess');
 $request = PRequest::get()->request;
+$vars = $this->getRedirectedMem('vars');
 
 
 $blogitemText = array();
@@ -64,6 +63,7 @@ if ($blog->fk_countrycode) {
     <div class="floatbox">
     <div class="text">
 <?php
+$Blog = new Blog;
 $View = new BlogView($Blog);
 $txt = $View->blogText($blog->blog_text, false);
 
@@ -126,8 +126,8 @@ echo $txt[0];
 
     <p class="action">
 <?php
-$User = APP_User::login();
-if ($User && $User->getId() == $blog->user_id) {
+$member = $this->_model->getLoggedInMember();
+if ($member && $member->id == $blog->IdMember) {
 ?>
         <a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a>&nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a>
 <?php
@@ -158,7 +158,7 @@ if (!$comments) {
     }
 }
 
-if ($User) {
+if ($member) {
 ?>
 <form method="post" action="" class="def-form" id="blog-comment-form">
     <div class="row">
@@ -189,9 +189,7 @@ if (in_array('textlen', $vars['errors'])) {
     </div>
     <p>
         <input type="submit" value="<?=$words->get('CommentsSubmitForm')?>" class="submit" />
-        <input type="hidden" name="<?php
-// IMPORTANT: callback ID for post data
-echo $callbackId; ?>" value="1"/>
+    <?= $callback;?>
     </p>
 </form>
 <?
@@ -203,5 +201,3 @@ echo $callbackId; ?>" value="1"/>
 </div>
 <?php
 }
-PPostHandler::clearVars($callbackId);
-?>

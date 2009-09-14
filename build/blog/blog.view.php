@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id: blog.view.php 186 2006-12-11 13:37:47Z david $
  */
-class BlogView extends PAppView 
+class BlogView extends RoxAppView 
 {
     private $_model;
     
@@ -51,12 +51,12 @@ class BlogView extends PAppView
         
     // default blog view-functions:
         
-    public function createForm($callbackId) 
+    public function createForm() 
     {
-        $User = APP_User::login();
+        $member = $this->_model->getLoggedInMember();
         $Blog = new Blog;
         // get the saved post vars
-        $vars =& PPostHandler::getVars($callbackId);
+
         // get current request
         $request = PRequest::get()->request;
         
@@ -70,10 +70,11 @@ class BlogView extends PAppView
         $i18n = new MOD_i18n('date.php');
         $monthNames = $i18n->getText('monthNames');
 
-        $catIt = $this->_model->getCategoryFromUserIt($User->getId());
-        $tripIt = $this->_model->getTripFromUserIt($User->getId());
+        $catIt = $this->_model->getCategoryFromUserIt($member->id);
+        $tripIt = $this->_model->getTripFromUserIt($member->id);
         $google_conf = PVars::getObj('config_google');
-        $defaultVis = APP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
+        $defaultVis->valueint = 2; // hack: TB settings are disabled as they reference app_user - default visibility is public
+        //$defaultVis = A PP_User::getSetting($member->id, 'APP_blog_defaultVis');
         
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();
@@ -94,7 +95,7 @@ class BlogView extends PAppView
 
     public function editForm($blogId, $callbackId)
     {
-        $User = APP_User::login();
+        $member = $this->_model->getLoggedInMember();
         // get the saved post vars
         $vars =& PPostHandler::getVars($callbackId);
         
@@ -108,10 +109,11 @@ class BlogView extends PAppView
         $i18n = new MOD_i18n('date.php');
         $monthNames = $i18n->getText('monthNames');
 
-        $catIt = $this->_model->getCategoryFromUserIt($User->getId());
-        $tripIt = $this->_model->getTripFromUserIt($User->getId());
+        $catIt = $this->_model->getCategoryFromUserIt($member->id);
+        $tripIt = $this->_model->getTripFromUserIt($member->id);
         $google_conf = PVars::getObj('config_google');
-        $defaultVis = APP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
+        $defaultVis->valueint = 2; // hack: TB settings are disabled as they reference app_user - default visibility is public
+        //$defaultVis = A PP_User::getSetting($member->id, 'APP_blog_defaultVis');
 
         if (!isset($request[3]) || $request[3] != 'finish') {
             echo '<h2>'.$words->get('BlogEditTitle').'</h2>';
@@ -175,9 +177,9 @@ class BlogView extends PAppView
      */
     public function userPosts($userHandle, $page = 1)
     {
-        if (!$userId = APP_User::userId($userHandle))
+        if (!$member = $this->_model->getMemberByUsername($userHandle))
             return false;
-        $blogIt = $this->_model->getRecentPostIt($userId);
+        $blogIt = $this->_model->getRecentPostIt($member->id);
         $pages       = PFunctions::paginate($blogIt, $page);
         $blogIt      = $pages[0];
         $maxPage     = $pages[2];
@@ -234,7 +236,7 @@ class BlogView extends PAppView
 
     public function userbar()
     {
-    	if (!APP_User::login())
+    	if (!$this->_model->getLoggedInMember())
             return false;
         require 'templates/userbar.php';
     }
@@ -243,10 +245,12 @@ class BlogView extends PAppView
         require 'templates/sidebar_rss.php';
     }
 
+    /* removed - referencing app_user which has been removed
     public function userSettingsForm()
     {
     	require 'templates/usersettings.php';
     }
+    */
 
     public function categories() {
         require 'templates/categories.php';
@@ -306,4 +310,3 @@ class BlogView extends PAppView
         return '';
     }
 }
-?>

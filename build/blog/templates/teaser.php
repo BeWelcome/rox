@@ -1,5 +1,5 @@
 <?php
-$User = APP_User::login();
+$member = $this->_model->getLoggedInMember();
 
 $words = new MOD_words();
 ?>
@@ -20,7 +20,7 @@ $words = new MOD_words();
 <?php
 $titleSetting = false;
 /* TODO: Create a user-setting for a blog-title
-$titleSetting = APP_User::getSetting($userId, 'blog_title'); */
+$titleSetting = A PP_User::getSetting($userId, 'blog_title'); */
 
 if ($userHandle) {
     if (!$titleSetting) {

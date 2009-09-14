@@ -96,14 +96,14 @@ LIMIT 15
 SELECT
     b.*, 
     bd.*, 
-   	u.handle AS author
+   	m.Username AS author
 FROM 
     blog       AS b,
     blog_data  AS bd, 
-   	user	   AS u
+   	members	   AS m
 WHERE
     b.blog_id = bd.blog_id AND
-   	b.user_id_foreign = u.id
+   	b.IdMember = m.id
 ORDER BY
     bd.edited DESC
 LIMIT 0, 30
@@ -124,16 +124,16 @@ LIMIT 0, 30
 SELECT
     b.*, 
     bd.*, 
-    u.handle AS author, 
-    u.id	 AS uid
+    m.Username AS author, 
+    m.id	   AS uid
 FROM
-    blog      AS b,
-    blog_data AS bd,
-    user      AS u
+    blog       AS b,
+    blog_data  AS bd,
+    members    AS m
 WHERE
-    u.handle  = '$author'          AND
-    u.id      = b.user_id_foreign  AND
-    b.blog_id = bd.blog_id
+    m.Username  = '{$this->dao->escape($author)}' AND
+    m.id        = b.IdMember AND
+    b.blog_id   = bd.blog_id
 ORDER BY
     bd.edited DESC
             "
@@ -162,19 +162,19 @@ SELECT
     bd.*,
     btt.*,
     bt.*, 
-    u.handle AS author
+    m.Username  AS author
 FROM
     blog        AS b,
     blog_data   AS bd,
     blog_to_tag AS btt,
     blog_tags   AS bt,
-    user 		AS u
+    members     AS m
 WHERE
     $condition                                     AND
     b.blog_id               = bd.blog_id           AND
     bd.blog_id              = btt.blog_id_foreign  AND
     btt.blog_tag_id_foreign = bt.blog_tag_id	   AND
-    b.user_id_foreign 		= u.id      
+    b.IdMember              = m.id      
 ORDER BY
     bd.edited DESC
             "

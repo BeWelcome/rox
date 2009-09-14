@@ -1,19 +1,4 @@
 <?
-/**
- * user blog page template controller
- *
- * defined vars:
- * $blogIt     - iterator over the Trips to display.
- * $userId     - user ID
- * $userHandle - handle of the user.
- *
- * @package blog
- * @subpackage template
- * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
- * @copyright Copyright (c) 2005-2006, myTravelbook Team
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
- * @version $Id$
- */
 $words = new MOD_words();
 $search = $_GET['s'];
 

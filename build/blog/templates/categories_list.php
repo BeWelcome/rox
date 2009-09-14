@@ -12,12 +12,6 @@
 
 $Blog = new Blog;
 $words = new MOD_words();
-// get current request
-$request = PRequest::get()->request;
-
-if (!$username) $username = $request[1];
-$member = APP_User::userId($username);
-$catIt = $Blog->getCategoryFromUserIt($member);
 
 ?>
 <div id="blog-category">
@@ -25,10 +19,13 @@ $catIt = $Blog->getCategoryFromUserIt($member);
 
 <ul>
 <?
-foreach ($catIt as $cat) {
-    echo '    <li>
-        <a href="blog/'.$username.'/cat/'.$cat->blog_category_id.'">'.$cat->name.'</a>
-        </li>';
+foreach ($catIt as $cat)
+{
+    echo <<<HTML
+        <li>
+        <a href="blog/{$member->Username}/cat/{$cat->blog_category_id}">{$cat->name}</a>
+        </li>
+HTML;
 }
 ?>
 </ul>

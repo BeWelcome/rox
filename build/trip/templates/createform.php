@@ -15,7 +15,7 @@ if (isset($vars['errors']) && is_array($vars['errors']))
 else
     $errors = array();
 $gallery_selected = false;
-$User = new APP_User;
+$member = $this->_model->getLoggedInMember();
 $words = new MOD_words();    
 $createText = array();
 $errorText = array();
@@ -60,7 +60,7 @@ if (isset($vars['d']) && $vars['d'])
 <?php
 
 $Gallery = new Gallery;
-$galleries = $Gallery->getUserGalleries($User->getId());
+$galleries = $Gallery->getUserGalleries($member->get_userid());
 ?>
     <fieldset id="trip-options">
         <legend><?=$words->get('TripLegend_options')?></legend>

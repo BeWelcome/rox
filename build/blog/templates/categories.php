@@ -11,9 +11,11 @@
  */
 $words = new MOD_words();
 $Blog = new Blog;
-$callbackId = $Blog->categoryProcess();
+$callback = $this->getCallbackOutput('BlogController', 'categoryProcess');
+
+
 // get the saved post vars
-$vars =& PPostHandler::getVars($callbackId);
+$vars = $this->getRedirectedMem('vars');
 // get current request
 $request = PRequest::get()->request;
 
@@ -31,12 +33,12 @@ if (!isset($vars['errors'])) {
 <h2><?=$words->get('BlogManageCategories')?></h2>
 <?
 
-if (!$User = APP_User::login()) {
+if (!$member = $this->_model->getLoggedInMember()) {
     echo '<p class="error">'.$words->get('not_logged_in').'</p>';
     return false;
 }
 
-$catIt = $Blog->getCategoryFromUserIt($User->getId());
+$catIt = $Blog->getCategoryFromUserIt($member->id);
 if (in_array('upderror', $vars['errors'])) {
     echo '<span class="error">'.$words->get('upderror').'</span>';
 }
@@ -70,7 +72,8 @@ if (isset($request[2]) && $request[2] == 'del') {
     <div class="row">
         <p><?=$words->get('ask_delete')?></p>
         <input type="submit" name="yes" value="<?=$words->get('yes')?>" class="submit" />
-        <input type="button" name="no" value="<?=$words->get('no')?>" onclick="javascript:window.location.href='blog/cat'" />
+        <input type="submit" name="no" value="<?=$words->get('no')?>" class="submit"/>
+        <?= $callback;?>
     </div>
 </form>
 <?php
@@ -101,15 +104,12 @@ if (in_array('nameempty', $vars['errors'])) {
     <p>
         <input type="submit" value="<?php
 echo (isset($request[2]) && $request[2] == 'edit' ? $words->getBuffered('Category_submit_edit') : $words->getBuffered('Category_submit_add')); ?>" class="submit" />
-        <input type="hidden" name="<?php
-// IMPORTANT: callback ID for post data 
-echo $callbackId; ?>" value="1"/>
+    <?=$callback;?>
     </p>
 </form>
 
 </div>
 <?
 }
-PPostHandler::clearVars($callbackId);
 echo $words->flushBuffer();
 ?>

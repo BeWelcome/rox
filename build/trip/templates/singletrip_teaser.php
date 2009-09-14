@@ -1,5 +1,4 @@
 <?php
-$User = APP_User::login();
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits();
 $search = '';

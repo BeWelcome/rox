@@ -1,6 +1,6 @@
 <?php
-$Blog = new Blog;
-$callbackId = $Blog->settingsProcess();
+$ctrl = new BlogController;
+$callbackId = $ctrl->settingsProcess();
 $vars =& PPostHandler::getVars($callbackId);
 
 $settingsText = array();

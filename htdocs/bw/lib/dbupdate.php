@@ -1469,7 +1469,6 @@ SQL;
 ALTER TABLE membersgroups ADD column IsLocal BOOL DEFAULT false NOT NULL COMMENT 'Determines if the member is a local member of a geo group'
 SQL;
 
-
     $updates[] = <<<SQL
 CREATE TABLE IF NOT EXISTS `volunteers_reports_schedule` (
   `id` int(11) NOT NULL auto_increment COMMENT 'primary key',
@@ -1549,6 +1548,102 @@ end " ;
  CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'DoneByMember' 
  COMMENT 'Here are stored the previous version of updated translation (this can help to rollback problem -mannually- if need)' 
  " ;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog ADD COLUMN IdMember INT COMMENT 'References members table'
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_categories ADD COLUMN IdMember INT COMMENT 'References members table'
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_comments ADD COLUMN IdMember INT COMMENT 'References members table'
+SQL;
+
+    $updates[] = <<<SQL
+UPDATE blog, (SELECT user.id AS user_id, members.id AS member_id FROM user, members WHERE user.handle = members.username) AS temp SET blog.IdMember = temp.member_id WHERE temp.user_id = blog.user_id_foreign;
+SQL;
+
+    $updates[] = <<<SQL
+UPDATE blog_categories, (SELECT user.id AS user_id, members.id AS member_id FROM user, members WHERE user.handle = members.username) AS temp SET blog_categories.IdMember = temp.member_id WHERE temp.user_id = blog_categories.user_id_foreign;
+SQL;
+
+    $updates[] = <<<SQL
+UPDATE blog_comments, (SELECT user.id AS user_id, members.id AS member_id FROM user, members WHERE user.handle = members.username) AS temp SET blog_comments.IdMember = temp.member_id WHERE temp.user_id = blog_comments.user_id_foreign;
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_comments DROP FOREIGN KEY `blog_comments_ibfk_2`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_categories DROP FOREIGN KEY `blog_categories_ibfk_1`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_categories DROP KEY `user_id_foreign`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_comments DROP KEY `user_id_foreign`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog ADD KEY (IdMember)
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_categories ADD KEY (IdMember)
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_comments ADD KEY (IdMember)
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog DROP COLUMN user_id_foreign
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_categories DROP COLUMN user_id_foreign
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog_comments DROP COLUMN user_id_foreign
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog DROP FOREIGN KEY `blog_ibfk_1`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE blog DROP KEY `user_id_foreign`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE trip ADD COLUMN IdMember INT COMMENT 'References members table'
+SQL;
+
+    $updates[] = <<<SQL
+UPDATE trip, (SELECT user.id AS user_id, members.id AS member_id FROM user, members WHERE user.handle = members.username) AS temp SET trip.IdMember = temp.member_id WHERE temp.user_id = trip.user_id_foreign;
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE trip DROP FOREIGN KEY `trip_ibfk_1`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE trip DROP KEY `user_id_foreign`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE trip DROP COLUMN user_id_foreign
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE trip ADD KEY (IdMember)
+SQL;
 
     if (empty($res)) {
         $version = 0;

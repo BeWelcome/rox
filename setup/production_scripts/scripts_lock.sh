@@ -11,7 +11,7 @@ fi
 
 for file in `find .`
 do
-    if [[ $file != *.svn/* ]] && [[ $file != *.svn ]
+    if [[ $file != *.svn/* ]] && [[ $file != *.svn ]]
     then
         chown root:bwrox $file
         [ $? == 0 ] || { echo "Failed to change owner of $file"; exit 255; }

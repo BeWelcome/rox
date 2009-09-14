@@ -19,11 +19,4 @@ class ReadOnlyObject
         }
     }
     
-    public function __set($key, $value)
-    {
-        $this->_values[$key] = $value;
-    }
 }
-
-
-?>

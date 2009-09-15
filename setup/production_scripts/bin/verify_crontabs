@@ -1,0 +1,49 @@
+## load configuration files, if applicable
+for file in $HOME/server_config.sh /home/bwscripts/server_config.sh /home/bwscripts/server_config.sh /home/*.bewelcome.org/server_config.sh /home/*.bewelcome.org/setup/production_scripts/lib/server_config.sh
+do
+   [ -r $file ] && . $file
+done
+
+error() { echo $1 >&2 ; exit 255 ; }
+
+[ -n "$SCRIPTS_DIR" ] || error "SCRIPTS_DIR config variable not set ... make sure the server_config.sh file can be found, preferably under $HOME"
+[ -d $SCRIPTS_DIR ] || error "$SCRIPTS_DIR not found"
+
+cd $SCRIPTS_DIR || error "could not chdir to $SCRIPTS_DIR"
+
+
+## TODO: RFC: unlock, svn up and lock from this script?
+
+# to avoid duplicates, delete eventual garbage files
+find . '(' -name '*.pyc' -o -name '*~' -o -name '*.orig' -o -name '*~' ')' -a -exec 'rm' -f '{}' ';'
+
+## hm ... maybe this script rather should have been done in python/perl/php
+## ... ;-)
+obs=`mktemp` ## file for observed crontabs
+tmp=`mktemp`
+
+# find what cronscripts are installed
+find /etc/cron.d/ -type l -lname '$SCRIPTS_DIR/*' | sort > $obs
+
+for dir in $HOST_TAGS; do
+  for src_path in `echo $scripts_dir/cron.d/$dir/*` ; do
+    file=`basename "$src_path"`
+    if find /etc/cron.d -maxdepth 1 -name "$file" -lpath "$src_path"
+        echo "# $src_path is installed"
+	grep -vx "/etc/cron.d/${file}" $obs > $tmp
+	mv $tmp $obs
+    else
+        echo "ln -s $src_path /etc/cron.d/ # missing symlink"
+    fi
+  done
+  for link in `cat $obs`;
+  do
+      echo "rm $link # this crontab should not be?"
+  done
+  #for file in `echo $scripts_dir/munin-plugins.d/$dir/*` ; do
+      ## same stuff here
+  #done
+done
+
+#sudo /etc/init.d/munin-node restart | grep -v starting | grep -v stopping
+

@@ -100,7 +100,7 @@
         <td style="vertical-align=top"><p class="grey"><?php echo $words->get("CommentsCommenterDescription", $Username) ?></p></td>
     </tr>
     <tr><td colspan="2">
-        <input type="hidden" value="<?php echo $IdMember?>" name="cid">
+        <input type="hidden" value="<?php echo $member->id?>" name="cid">
         <input type="hidden" name="action" value="add">
         <input type="submit" id="submit" name="valide" value="submit"></td>
     </tr>

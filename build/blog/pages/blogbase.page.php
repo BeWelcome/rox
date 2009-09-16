@@ -64,9 +64,8 @@ class BlogBasePage extends PageWithActiveSkin
         require SCRIPT_BASE . 'build/blog/templates/userbar.php';
     }
 
-    protected function teaserHeadline()
+    protected function teaserContent()
     {
-        ob_start();
         if (!$this->member)
         {
             require SCRIPT_BASE . "build/blog/templates/teaser_public.php";
@@ -76,9 +75,6 @@ class BlogBasePage extends PageWithActiveSkin
             $userHandle = $this->member->Username;
             require SCRIPT_BASE . "build/blog/templates/teaser.php";
         }
-        $c = ob_get_contents();
-        ob_end_clean();
-        return $c;
     }
 
     protected function categories_list($categoryId, $username = false) {

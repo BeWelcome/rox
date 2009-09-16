@@ -34,7 +34,7 @@ class AddCommentPage extends ProfilePage
         
         $TCom = $this->member->get_comments_commenter($_SESSION['IdMember']);
 		
-		$mReceiver= $this->getMemberWithId($vars['IdMember']);
+		$mReceiver= $this->model->getMemberWithId($vars['IdMember']);
 
         // Mark if an admin's check is needed for this comment (in case it is "bad")
 		$AdminAction = "NothingNeeded";

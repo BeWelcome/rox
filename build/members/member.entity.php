@@ -781,7 +781,8 @@ ORDER BY
 SELECT *,
     comments.Quality AS comQuality,
     comments.id AS id,
-    comments.created    
+    comments.created,
+    UNIX_TIMESTAMP(comments.updated) unix_updated
 FROM
     comments,
     members

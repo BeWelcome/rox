@@ -135,7 +135,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
     define("EWIKI_DBFILES_GZLEVEL", "2");
 
     #-- internal, auto-discovered
-     define("EWIKI_ADDPARAMDELIM", (strstr(EWIKI_SCRIPT,"?") ? "&" : "?"));
+    define("EWIKI_ADDPARAMDELIM", (strstr(EWIKI_SCRIPT,"?") ? "&" : "?"));
     define("EWIKI_SERVER", ($_SERVER["HTTP_HOST"] ? $_SERVER["HTTP_HOST"] : $_SERVER["SERVER_NAME"]) . ( ($_SERVER["SERVER_PORT"] != "80") ? (":" . $_SERVER["SERVER_PORT"]) : ""));
     define("EWIKI_BASE_URL", (@$_SERVER["HTTPS"] ? "https" : "http") . "://" . EWIKI_SERVER . substr(realpath(dirname(__FILE__)), strlen(realpath($_SERVER["DOCUMENT_ROOT"]))) . "/");    # URL to ewiki dir
     define("EWIKI_BASE_DIR", dirname(__FILE__));
@@ -954,7 +954,7 @@ function ewiki_script_url($asid="", $id="", $params="") {
  
    $url = (@$_SERVER["HTTPS"] ? "https" : "http") . "://"
         . EWIKI_SERVER . $url; 
-       
+
    return($ewiki_config["script_url"] = $url);
 }
 
@@ -1836,12 +1836,10 @@ function ewiki_format (
             if (($l > 0) && trim($text = substr($c, 0, $l))) {
                $repl[] = array($text, $core_flags, "core");
             }
-            
             // the extracted part
             if (trim($text = substr($c, $l+$l_len, $r-$l-$l_len))) {
                $repl[] = array($text, $binfo[3], "$btype");
             }
-            
             // rest
             if (($r+$r_len < strlen($c)) && trim($text = substr($c, $r+$r_len))) {
                $repl[] = array($text, $core_flags, "core");
@@ -2079,7 +2077,7 @@ function ewiki_format (
 
             }#--if $s["bmarkup"] --------------------------------------------
 
-            
+
             #-- text style triggers
             foreach ($wm_style as $find=>$replace) {
                $find_len = strlen($find);
@@ -2436,7 +2434,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    }
    #-- ordinary internal WikiLinks
    elseif (($ewiki_links === true) || @$ewiki_links[$href_i]) {
-      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without from working
+      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without brackets from working
       $type = array("wikipage");
       $str = '<a href="' . ewiki_script("", $href) . htmlentities($href2)
            . '">' . $title . '</a>';
@@ -2449,7 +2447,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    #-- not found fallback
    else {
       $str = "";
-      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without from working
+      if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without brackets from working
       #-- a plugin may take care
       if ($pf_a = @$ewiki_plugins["link_notfound"]) {
          foreach ($pf_a as $pf) {
@@ -3839,7 +3837,8 @@ class ewiki_database_mysql {
          }
          $a = ($sql1 ? ', ' : '');
          $sql1 .= $a . $index;
-         $sql2 .= $a . "'" . mysql_escape_string($value) . "'";
+         // HACK BY LUPOCHEN Sept/2009: without the utf8_encode() we run into problems with special characters
+         $sql2 .= $a . "'" . mysql_escape_string(utf8_encode($value)) . "'";
       }
 
       $result = mysql_query("$COMMAND INTO {$this->table} ($sql1) VALUES ($sql2)");

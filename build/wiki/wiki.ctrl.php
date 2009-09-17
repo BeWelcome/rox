@@ -113,6 +113,10 @@ class WikiController extends PAppController {
         define("EWIKI_SCRIPT_BINARY", 0);
         define("EWIKI_PROTECTED_MODE", 1);
         define("EWIKI_RESCUE_HTML", 1);
+        define("EWIKI_URLENCODE", 0);
+        define("EWIKI_URLDECODE", 0);
+        define("EWIKI_ALLOW_HTML", 1);
+
         define("EWIKI_DESC", "Document and share content about hospitality exchange and travel on bewelcome.org");  # site description
         define("EWIKI_COPY", "PrimarilyPublicDomain");      # site copyright
         define("EWIKI_CATEGORY", "Hospitality Exchange");              # site subject

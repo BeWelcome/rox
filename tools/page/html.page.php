@@ -5,6 +5,12 @@ class PageWithHTML extends AbstractBasePage
 {
     private $_widgets = array();  // will be asked for stylesheet and scriptfile information
 
+    private $_early_scriptfiles = array(
+        'script/main.js'
+    );
+
+    private $_late_scriptfiles = array();
+
     public function render() {
         $this->init();
         header('Content-type: text/html;charset="utf-8"');
@@ -55,12 +61,17 @@ class PageWithHTML extends AbstractBasePage
         }
         return $stylesheet_patches;
     }
-    
+
+    /**
+     * returns all registered early load scripts
+     * these are the scripts to be loaded in the html head element
+     *
+     * @access protected
+     * @return array
+     */
     protected function getScriptfiles()
     {
-        $scriptfiles = array(
-            'script/main.js'
-        );
+        $scriptfiles = $this->_early_scriptfiles;
         foreach ($this->_widgets as $widget) {
             foreach ($widget->getScriptfiles() as $scriptfile) {
                 $scriptfiles[] = $scriptfile;
@@ -68,7 +79,45 @@ class PageWithHTML extends AbstractBasePage
         }
         return $scriptfiles;
     }
-    
+
+    /**
+     * returns all registered late load scripts
+     * these are the scripts to be loaded at the end of the page
+     *
+     * @access protected
+     * @return array
+     */
+    protected function getLateLoadScriptfiles()
+    {
+        return $this->_late_scriptfiles;
+    }
+
+    /**
+     * registers a script for early loading
+     *
+     * @param string $file - js file to early load
+     *
+     * @access protected
+     * @return void
+     */
+    protected function addEarlyLoadScriptFile($file)
+    {
+        $this->_early_scriptfiles[] = 'script/' . $file;
+    }
+
+    /**
+     * registers a script for late loading
+     *
+     * @param string $file - js file to early load
+     *
+     * @access protected
+     * @return void
+     */
+    protected function addLateLoadScriptFile($file)
+    {
+        $this->_late_scriptfiles[] = 'script/' . $file;
+    }
+
     protected function getPageTitle() {
         return 'BeWelcome';
     }
@@ -118,6 +167,7 @@ class PageWithHTML extends AbstractBasePage
         
         $this->body();
         
+        $this->includeLateScriptfiles();
         ?>
         </body>
         </html><?php
@@ -169,6 +219,24 @@ class PageWithHTML extends AbstractBasePage
         } else foreach($scriptfiles as $url) {
             ?><script type="text/javascript" src="<?=$url ?>"></script>
             <?php
+        }
+    }
+
+    /**
+     * outputs script tags that include script files
+     * called at the end of pages
+     *
+     * @access protected
+     * @return void
+     */
+    protected function includeLateScriptfiles()
+    {
+        if ($scriptfiles = $this->getLateLoadScriptfiles())
+        {
+            foreach($scriptfiles as $url)
+            {
+                echo "<script type='text/javascript' src='{$url}'></script>";
+            }
         }
     }
     

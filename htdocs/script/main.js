@@ -11,6 +11,9 @@ var is_kq = (agt.indexOf("konqueror") != -1);
 document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
 document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder"></script>');
 
+// load common stuff, like small shared functions + the late load object
+document.write('<script type="text/javascript" src="script/common.js"></script>');
+
 var req = new String(location.pathname).toLowerCase();
 var loc = new String(location);
 

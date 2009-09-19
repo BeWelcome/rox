@@ -88,7 +88,7 @@ class BlogController extends RoxControllerBase {
                 {
                     $p = new BlogSinglePostPage($this->_model);
                     $p->member = $member;
-					$page->post = $this->_model->getPost($request[3]);
+					$p->post = $this->_model->getPost($request[3]);
                 }
                 else
                 {

@@ -6,7 +6,8 @@ class PageWithHTML extends AbstractBasePage
     private $_widgets = array();  // will be asked for stylesheet and scriptfile information
 
     private $_early_scriptfiles = array(
-        'script/main.js'
+        'script/main.js',
+        'script/common.js',
     );
 
     private $_late_scriptfiles = array();
@@ -77,7 +78,7 @@ class PageWithHTML extends AbstractBasePage
                 $scriptfiles[] = $scriptfile;
             }
         }
-        return $scriptfiles;
+        return array_unique($scriptfiles);
     }
 
     /**
@@ -89,7 +90,7 @@ class PageWithHTML extends AbstractBasePage
      */
     protected function getLateLoadScriptfiles()
     {
-        return $this->_late_scriptfiles;
+        return array_diff(array_unique($this->_late_scriptfiles), $this->_early_scriptfiles);
     }
 
     /**

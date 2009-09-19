@@ -84,10 +84,15 @@ class BlogController extends RoxControllerBase {
                 {
                     PRequest::home();
                 }
-                $page = new BlogCreatePage($this->_model);
                 if (isset($request[2]) && $request[2] == 'finish' && isset($request[3]) && $this->_model->isPostId($request[3]))
                 {
+                    $p = new BlogSinglePostPage($this->_model);
+                    $p->member = $member;
 					$page->post = $this->_model->getPost($request[3]);
+                }
+                else
+                {
+                    $page = new BlogCreatePage($this->_model);
                 }
                 return $page;
             case 'del':

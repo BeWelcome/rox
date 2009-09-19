@@ -28,19 +28,5 @@ HTML;
 </ul>
 
 <script type='text/javascript'>
-    $$('li.expandable a.header').each(function(it){
-        it.observe('click', function(e){
-            var e = e || window.event;
-            var target = e.target || e.srcElement;
-            if (target.parentNode.className == 'expandable')
-            {
-                target.parentNode.className = 'expanded';
-            }
-            else
-            {
-                target.parentNode.className = 'expandable';
-            }
-            Event.stop(e);
-        });
-    });
+late_loader.queueObjectMethod('common', 'makeExpandableLinks');
 </script>

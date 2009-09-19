@@ -86,9 +86,9 @@ class BlogController extends RoxControllerBase {
                 }
                 if (isset($request[2]) && $request[2] == 'finish' && isset($request[3]) && $this->_model->isPostId($request[3]))
                 {
-                    $p = new BlogSinglePostPage($this->_model);
-                    $p->member = $member;
-					$p->post = $this->_model->getPost($request[3]);
+                    $page = new BlogSinglePostPage($this->_model);
+                    $page->member = $member;
+                    $page->post = $this->_model->getPost($request[3]);
                 }
                 else
                 {

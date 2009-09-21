@@ -28,52 +28,52 @@ FROM feedbackcategories
     public function sendFeedback($vars)
     {
         $categories = $this->getFeedbackCategories();
-		$rCategory = $categories[$vars["IdCategory"]-1];
-		$receiver_str = str_replace(";", ",", $rCategory->EmailToNotify);
+        $rCategory = $categories[$vars["IdCategory"]-1];
+        $receiver_str = str_replace(";", ",", $rCategory->EmailToNotify);
         $receiver = explode(',', $receiver_str);
         
-		$IdMember = 0;
-		$EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
-		if ($member = $this->getLoggedInMember())
+        $IdMember = 0;
+        $EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
+        if ($member = $this->getLoggedInMember())
         {
-		    $EmailSender = $member->get_email();
-		    $username = $member->Username;
+            $EmailSender = $member->get_email();
+            $username = $member->Username;
             $IdMember = $member->id;
-		}
-		else
+        }
+        else
         {
-		    if (isset($vars["Email"]) && $vars["Email"]!="")
+            if (isset($vars["Email"]) && $vars["Email"]!="")
             {
-		        $EmailSender = $vars["Email"]; // todo check if this email is a good one !
-		    }
-		    $username = "unknown user";
-		}
-		$str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $this->dao->escape($vars["FeedbackQuestion"]) . "'," . $vars["IdCategory"] . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
-		$this->dao->query($str);
-		
-		// Notify volunteers that a new feedback come in
-		// This also send the message to OTRS
-		$subj = "New feedback from " . $username . " - Category: " . $rCategory->Name;
-		$text = " Feedback from " . $username . "\r\n";
-		$text .= "Category " . $rCategory->Name . "\r\n";
-		$text .= "Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." (".$_SERVER["REMOTE_ADDR"].")\r\n";
-		// Feedback must not be slashes striped in case of \r\n so we can't use GetParam
-		if (!empty($vars["FeedbackQuestion"]))
+                $EmailSender = $vars["Email"]; // todo check if this email is a good one !
+            }
+            $username = "unknown user";
+        }
+        $str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $this->dao->escape($vars["FeedbackQuestion"]) . "'," . $vars["IdCategory"] . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
+        $this->dao->query($str);
+        
+        // Notify volunteers that a new feedback come in
+        // This also send the message to OTRS
+        $subj = "New feedback from " . $username . " - Category: " . $rCategory->Name;
+        $text = " Feedback from " . $username . "\r\n";
+        $text .= "Category " . $rCategory->Name . "\r\n";
+        $text .= "Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." (".$_SERVER["REMOTE_ADDR"].")\r\n";
+        // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
+        if (!empty($vars["FeedbackQuestion"]))
         {
-			$text .= $vars["FeedbackQuestion"] . "\r\n";
-		}
+            $text .= $vars["FeedbackQuestion"] . "\r\n";
+        }
         else if (empty($vars["FeedbackQuestion"]))
         {
-			$text .= "Feedback text not filled in.\r\n";
-		}
-		if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
-		    $text .= "member requested an answer (".$EmailSender.")\r\n";
-		}
-		if (isset($vars["urgent"]) && $vars["urgent"]=="on") {
-		    $text .= "member has ticked the urgent checkbox\r\n";
-		}
+            $text .= "Feedback text not filled in.\r\n";
+        }
+        if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
+            $text .= "member requested an answer (".$EmailSender.")\r\n";
+        }
+        if (isset($vars["urgent"]) && $vars["urgent"]=="on") {
+            $text .= "member has ticked the urgent checkbox\r\n";
+        }
 
-		$this->feedbackMail($receiver, $subj, $text, $EmailSender);
+        $this->feedbackMail($receiver, $subj, $text, $EmailSender);
     }
     
     /**

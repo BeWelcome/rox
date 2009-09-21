@@ -36,9 +36,15 @@ FROM feedbackcategories
         $EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
         if ($member = $this->getLoggedInMember())
         {
+            // nasty hack: 'encrypted' values are not accessible unless they're not 'encrypted'
+            // or the user is editing it's profile. Hence, get the email address by setting
+            // the edit mode. This is nasty and should be removed ... when the 'encryption'
+            // system is gone
+            $member->setEditMode(true);
             $EmailSender = $member->get_email();
             $username = $member->Username;
             $IdMember = $member->id;
+            $member->setEditMode(false);
         }
         else
         {

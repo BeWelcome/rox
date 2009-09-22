@@ -11,6 +11,7 @@
     
 */
 
+
 $ewiki_perm_rings = array_merge(
    array(
    	"rss"		=> 3,
@@ -28,6 +29,7 @@ $ewiki_perm_rings = array_merge(
    ),
    (array)@$ewiki_perm_rings
 );
+
 
 
 $ewiki_plugins["auth_perm"][0] = "ewiki_auth_handler_ring_permissions";

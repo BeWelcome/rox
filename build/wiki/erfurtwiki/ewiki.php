@@ -135,7 +135,7 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
     define("EWIKI_DBFILES_GZLEVEL", "2");
 
     #-- internal, auto-discovered
-     define("EWIKI_ADDPARAMDELIM", (strstr(EWIKI_SCRIPT,"?") ? "&" : "?"));
+    define("EWIKI_ADDPARAMDELIM", (strstr(EWIKI_SCRIPT,"?") ? "&" : "?"));
     define("EWIKI_SERVER", ($_SERVER["HTTP_HOST"] ? $_SERVER["HTTP_HOST"] : $_SERVER["SERVER_NAME"]) . ( ($_SERVER["SERVER_PORT"] != "80") ? (":" . $_SERVER["SERVER_PORT"]) : ""));
     define("EWIKI_BASE_URL", (@$_SERVER["HTTPS"] ? "https" : "http") . "://" . EWIKI_SERVER . substr(realpath(dirname(__FILE__)), strlen(realpath($_SERVER["DOCUMENT_ROOT"]))) . "/");    # URL to ewiki dir
     define("EWIKI_BASE_DIR", dirname(__FILE__));
@@ -954,7 +954,7 @@ function ewiki_script_url($asid="", $id="", $params="") {
  
    $url = (@$_SERVER["HTTPS"] ? "https" : "http") . "://"
         . EWIKI_SERVER . $url; 
-       
+
    return($ewiki_config["script_url"] = $url);
 }
 
@@ -1836,12 +1836,10 @@ function ewiki_format (
             if (($l > 0) && trim($text = substr($c, 0, $l))) {
                $repl[] = array($text, $core_flags, "core");
             }
-            
             // the extracted part
             if (trim($text = substr($c, $l+$l_len, $r-$l-$l_len))) {
                $repl[] = array($text, $binfo[3], "$btype");
             }
-            
             // rest
             if (($r+$r_len < strlen($c)) && trim($text = substr($c, $r+$r_len))) {
                $repl[] = array($text, $core_flags, "core");
@@ -2079,7 +2077,7 @@ function ewiki_format (
 
             }#--if $s["bmarkup"] --------------------------------------------
 
-            
+
             #-- text style triggers
             foreach ($wm_style as $find=>$replace) {
                $find_len = strlen($find);
@@ -2349,7 +2347,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    #-- explicit title given via [ title | WikiLink ]
    $href = $title = strtok($str, "|");
    if ($uu = strtok("|")) {
-      $href = $uu;
+      $title = $uu;
       $states["titled"] = 1;
    }
    #-- title and href swapped: swap back
@@ -2407,7 +2405,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    $href_i = EWIKI_CASE_INSENSITIVE ? strtolower($href) : ($href);
 
    #-- injected URLs
-   if (isset($ewiki_links[$href_i]) && strpos($inj_url = $ewiki_links[$href_i], "://")) {
+   if (isset($ewiki_links[$href_i]) && !is_array($ewiki_links[$href_i]) && strpos($inj_url = $ewiki_links[$href_i], "://")) {
       if ($href==$title) { $href = $inj_url; }
    }
    $states["title"] = &$title;

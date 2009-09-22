@@ -97,6 +97,7 @@ function ewiki_toc_format_source(&$src) {
    $src = implode("\n", $src);
 }
 
+
 #-- injects toc above page
 function ewiki_toc_view_prepend(&$html) {
 

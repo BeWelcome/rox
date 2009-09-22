@@ -2179,7 +2179,6 @@ function ewiki_format (
       $html .= $ooo[$in][0] . "\n";
       $ooo[$in] = 0;
    }
-   
    #-- call post processing plugins
    if ($pf_final = $ewiki_plugins["format_final"]) {
       foreach ($pf_final as $pf) $pf($html);

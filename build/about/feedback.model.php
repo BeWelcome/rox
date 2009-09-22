@@ -31,7 +31,7 @@ FROM feedbackcategories
         $rCategory = $categories[$vars["IdCategory"]-1];
         $receiver_str = str_replace(";", ",", $rCategory->EmailToNotify);
         $receiver = explode(',', $receiver_str);
-        
+
         $IdMember = 0;
         $EmailSender = PVars::getObj('syshcvol')->FeedbackSenderMail;
         if ($member = $this->getLoggedInMember())
@@ -56,39 +56,40 @@ FROM feedbackcategories
         }
         $str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $this->dao->escape($vars["FeedbackQuestion"]) . "'," . $vars["IdCategory"] . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
         $this->dao->query($str);
-        
+
         // Notify volunteers that a new feedback come in
         // This also send the message to OTRS
         $subj = "New feedback from " . $username . " - Category: " . $rCategory->Name;
-        $text = " Feedback from " . $username . "\r\n";
-        $text .= "Category " . $rCategory->Name . "\r\n";
-        $text .= "Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." (".$_SERVER["REMOTE_ADDR"].")\r\n";
+        $text = "Feedback from " . $username . "\r\n";
+        $text .= "Category " . $rCategory->Name . "\r\n\r\n";
         // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
         if (!empty($vars["FeedbackQuestion"]))
         {
-            $text .= $vars["FeedbackQuestion"] . "\r\n";
+            $text .= $vars["FeedbackQuestion"] . "\r\n\r\n";
         }
         else if (empty($vars["FeedbackQuestion"]))
         {
-            $text .= "Feedback text not filled in.\r\n";
+            $text .= "Feedback text not filled in.\r\n\r\n";
         }
         if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
-            $text .= "member requested an answer (".$EmailSender.")\r\n";
+            $text .= "- member requested an answer (".$EmailSender.")\r\n";
         }
         if (isset($vars["urgent"]) && $vars["urgent"]=="on") {
-            $text .= "member has ticked the urgent checkbox\r\n";
+            $text .= "- member has ticked the urgent checkbox\r\n";
         }
+        $text .= "\n\r Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." \r\n";
+
 
         $this->feedbackMail($receiver, $subj, $text, $EmailSender);
     }
-    
+
     /**
      * Sends a Feedback e-mail
      *
      * @param string $IdMember
      */
     public function feedbackMail($receiver, $message_subject, $message_text, $sender)
-    {        
+    {
         // check if the receiver email address is good
         if (!$this->validateEmail($receiver))
         {
@@ -104,13 +105,13 @@ FROM feedbackcategories
 
         //Load the files we'll need
         require_once SCRIPT_BASE.'lib/misc/swift-mailer/lib/swift_required.php';
-        
+
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25);
 
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);
-        
+
         try
         {
             //Create the message
@@ -134,7 +135,7 @@ FROM feedbackcategories
             $this->logWrite("In feedback model swift::send: caught exception try to send email to [{$receiver}]", "feedback");
             return false;
         }
-        
+
         //Now check if Swift actually sends it
         if ($mailer->send($message))
         {
@@ -146,7 +147,7 @@ FROM feedbackcategories
             return false;
         }
     }
-    
+
     /**
      * checks whether the supplied email address(es) are valid
      *
@@ -166,7 +167,7 @@ FROM feedbackcategories
                 {
                     $return = false;
                 }
-                
+
             }
         }
         else

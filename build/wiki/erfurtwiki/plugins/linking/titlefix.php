@@ -18,7 +18,7 @@ $ewiki_plugins["link_notfound"][] = "ewiki_linking_titlefix";
 
 function ewiki_linking_titlefix(&$title, &$href, &$href2, &$type) {
    global $ewiki_links;
-   $href_mod = str_replace(array("  "," "),"+",$href); // replace spaces with "+" as we do in linking
+   $href_mod = rawurlencode(str_replace("  "," ",$href));
    $find = ewiki_db::FIND(array($href_mod));
    if ($find[$href_mod])
    {

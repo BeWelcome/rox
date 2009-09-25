@@ -575,7 +575,7 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
         $admincode = $s->fetch(PDB::FETCH_OBJ);
 		
 		if (!isset($admincode->name)) { // Added by JeanYves to trap what might be a geoname problem which creates phperrorlogs
-		    MOD_log::get()->write("Forum::boardAdminCode Problem with geo [".$query."] as faile for country [".$countrycode->name."]","Bug") ; 				
+		    MOD_log::get()->write("Forum::boardAdminCode Problem with geo [".$query."] as failed for country [".$countrycode->name."]","Bug") ; 				
 		}
 
         $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name;
@@ -730,72 +730,6 @@ WHERE `iso_alpha2` = '%s'
         }
     } // end of boardGroup
     
-    private function pboardGroup()    {
-        $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
-        $gr = $this->dao->query($query);
-        if (!$gr) {
-            throw new PException('No such IdGroup=#'.$this->IdGroup);
-        }
-        $group = $gr->fetch(PDB::FETCH_OBJ);
-
-        $query = sprintf(
-            "
-SELECT `name`, `continent` 
-FROM `geonames_countries` 
-WHERE `iso_alpha2` = '%s'
-            ",
-            $this->countrycode
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('No such Country');
-        }
-        $countrycode = $s->fetch(PDB::FETCH_OBJ);
-        
-        $navichain = array('forums/' => 'Forums', 
-            'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/' => Forums::$continents[$this->continent],
-            'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/' => $countrycode->name);
-    
-        $query = sprintf(
-            "
-SELECT `name`
-FROM `geonames_admincodes` 
-WHERE `country_code` = '%s' AND `admin_code` = '%s'
-            ",
-            $this->countrycode,
-            $this->admincode
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('No such Admincode');
-        }
-        $admincode = $s->fetch(PDB::FETCH_OBJ);
-
-        $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name;
-        $href = $url;
-        if ($this->tags) {
-            $taginfo = $this->getTagsNamed();
-            
-            
-            $navichain[$url] = $admincode->name;
-            
-            for ($i = 0; $i < count($this->tags) - 1; $i++) {
-                if (isset($taginfo[$this->tags[$i]])) {
-                    $url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
-                    $navichain[$url] = $taginfo[$this->tags[$i]];
-                }
-            }
-            
-            $title = $taginfo[$this->tags[count($this->tags) -1]];
-        } else {
-          $title =  $this->getGroupName($group->Name) ;
-        }
-        
-        $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->IdGroup);
-        
-        $this->board->initThreads($this->getPage());
-    } // end of boardGroup
-
 	/*
 	@ $Name name of the group (direct from groups.Name
 	*/

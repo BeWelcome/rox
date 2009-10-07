@@ -12,7 +12,8 @@
     $max = count($ttc);
     $comments = $member->get_comments_commenter($this->loggedInMember->id);
     $TCom = (isset($comments[0])) ? $comments[0] : false;
-
+    $edit_mode = $TCom;
+    
     // values from previous form submit
     if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
         // this is a fresh form
@@ -70,7 +71,7 @@
     <form method="post" name="addcomment" OnSubmit="return DoVerifySubmit('addcomment');">
     <?=$callback_tag ?>
     <fieldset>
-    <legend><?=$words->get("AddComments")?></legend>
+    <legend><?=(!$edit_mode) ? $words->get("AddComments") : $words->get("EditComments")?></legend>
     <input name="IdMember" value="<?=$member->id?>" type="hidden" />
         <table valign="center" >
           <tr>

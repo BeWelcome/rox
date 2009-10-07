@@ -335,7 +335,7 @@ WHERE
     $Email = GetEmail($rr->IdReceiver);
     $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
     $subj = ww("YouveGotAMail", $rr->Username);
-    $urltoreply = $baseuri."bw/contactmember.php?action=reply&cid=".$rr->Username."&iMes=".$rr->id;
+    $urltoreply = $baseuri."messages/{$rr->id}/reply";
     $MessageFormatted=$rr->Message;
     if ($rr->JoinMemberPict=="yes") {
         $rImage=LoadRow("
@@ -458,7 +458,7 @@ WHERE
     $Email = GetEmail($rr->IdReceiver);
     $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
     $subj = ww("YouveGotAMail", $rr->Username);
-    $urltoreply = $baseuri."bw/contactmember.php?action=reply&cid=".$rr->Username."&iMes=".$rr->id;
+    $urltoreply = $baseuri."messages/{$rr->id}/reply";
     $MessageFormatted=$rr->Message;
     if ($rr->JoinMemberPict=="yes") {
         $rImage=LoadRow("
@@ -774,4 +774,3 @@ if (IsLoggedIn()) {
        $PictureFilePath='http://www.bewelcome.org/members/avatar/'.$Username ;
 	   $rval= '<img alt="picture of '.$Username.'" src="'.$PictureFilePath.'"/>';
 	} // End of PictureInMail
-?>

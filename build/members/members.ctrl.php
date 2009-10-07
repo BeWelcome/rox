@@ -104,8 +104,8 @@ class MembersController extends RoxControllerBase
                 // $member->edit_mode = true;
                 if (isset($request[1]))
                     $this->model->set_profile_language($request[1]);
-				if (isset($request[2]) && $request[2] == 'delete')
-					$page = new DeleteTranslationPage();
+                if (isset($request[2]) && $request[2] == 'delete')
+                    $page = new DeleteTranslationPage();
                 if (in_array('finish',$request))
                     $page->status = "finish";
                 break;
@@ -155,18 +155,21 @@ class MembersController extends RoxControllerBase
                         $myself = true;
                     }
                     switch (isset($request[2]) ? $request[2] : false) {
-						case 'relations':
+                        case 'relations':
                             if (!$myself && isset($request[3]) && $request[3] == 'add') {
                                 $page = new AddRelationPage();
-								if (isset($request[4]) && $request[4] == 'finish') {
-									$page->relation_wait = true;
-								}
-	                        } else {
+                                if (isset($request[4]) && $request[4] == 'finish') {
+                                    $page->relation_wait = true;
+                                }
+                            } else {
                                 $page = new RelationsPage();
                             }
-							break;
+                            break;
                         case 'comments':
-                            if (!$myself && isset($request[3]) && $request[3] == 'add') {
+                            if (!$myself && isset($request[3]) && $request[3] == 'adminedit') {
+                                $page = new AddCommentPage();
+                                $page->adminedit;
+                            } elseif (!$myself && isset($request[3]) && $request[3] == 'add') {
                                 $page = new AddCommentPage();
                             } else {
                                 $page = new CommentsPage();
@@ -222,6 +225,7 @@ class MembersController extends RoxControllerBase
         if (!empty($myself)) {
             $page->myself = true;
         }
+        $page->loggedInMember = $this->model->getLoggedInMember();
         $page->model = $this->model;
         return $page;
     }
@@ -350,7 +354,7 @@ class MembersController extends RoxControllerBase
     }
     
     /**
-     * commentCallback - NOT FINISHED YET !
+     * commentCallback
      *
      * @param Object $args
      * @param Object $action 
@@ -362,16 +366,17 @@ class MembersController extends RoxControllerBase
     {
         $vars = $args->post;
         $request = $args->request;
-        $errors = $this->model->checkCommentForm($vars);
+        $errors = $this->model->checkCommentForm($vars); // TODO: checkCommentForm still needs more finetuning
         
         if (count($errors) > 0) {
             // show form again
+            $vars['errors'] = $errors;
             $mem_redirect->post = $vars;
             return false;
         }
         
         $member = $this->getMember($request[1]);
-        $TCom = $member->get_comments_commenter($_SESSION['IdMember']);
+        $TCom = $member->get_comments_commenter($this->model->getLoggedInMember()->id);
         // add the comment!
         if (!$this->model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
         
@@ -418,73 +423,73 @@ class MembersController extends RoxControllerBase
             return $str.'/finish';
         }
     }
-	
+    
     public function deleteTranslationCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post)) {
             $vars = $args->post;
             $request = $args->request;
-			if (isset($vars['choice']) && $vars['choice'] == 'yes' && isset($vars['memberid'])) {
-				if (!isset($vars['profile_language'])) return false;
-				$member = $this->getMember($vars['memberid']);
-				$fields = $member->get_trads_fields();
-				$trad_ids = array();
-				foreach ($fields as $field)
-					$trad_ids[] = $member->$field;
-				$this->model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
-				// Redirect to a nice location like editmyprofile/finish
-				return 'editmyprofile/finish';
+            if (isset($vars['choice']) && $vars['choice'] == 'yes' && isset($vars['memberid'])) {
+                if (!isset($vars['profile_language'])) return false;
+                $member = $this->getMember($vars['memberid']);
+                $fields = $member->get_trads_fields();
+                $trad_ids = array();
+                foreach ($fields as $field)
+                    $trad_ids[] = $member->$field;
+                $this->model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
+                // Redirect to a nice location like editmyprofile/finish
+                return 'editmyprofile/finish';
             } else {
-				return 'editmyprofile';
-			}
+                return 'editmyprofile';
+            }
         }
     }
-	
+    
     public function RelationCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post)) {
             $vars = $args->post;
             $request = $args->request;
 
-			if (isset($vars['IdOwner']) && $vars['IdOwner'] == $_SESSION['IdMember'] && isset($vars['IdRelation'])) {
-				if (isset($vars['action'])) {
-					$member = $this->getMember($vars['IdRelation']);
-					if (isset($vars['Type'])) $vars['stype'] = $vars['Type'];
-					else {
-						$TabRelationsType = $member->get_TabRelationsType();
-						$stype=""; 
-						$tt=$TabRelationsType;
-						$max=count($tt);
-						for ($ii = 0; $ii < $max; $ii++) {
-							if (isset($vars["Type_" . $tt[$ii]]) && $vars["Type_" . $tt[$ii]] == "on") {
-							  if ($stype!="") $stype.=",";
-							  $stype.=$tt[$ii];
-							}
-						}
-						$relations = $member->get_relations();
-						$vars['stype'] = $stype;
-					}
-					switch ($vars['action']) {
-					case 'add':
-						$blub = $this->model->addRelation($vars);
-						break;
-					case 'update':
-						$this->model->updateRelation($vars);
-						break;
-					case 'confirm':
-						$vars['confirm'] = 'Yes';
-						$blub = $this->model->addRelation($vars);
-						$this->model->confirmRelation($vars);
-						break;
-					default:
-					}
-				}
-				// Redirect to a nice location like editmyprofile/finish
-				$str = implode('/',$request);
-				if (in_array('finish',$request)) return $str;
-				return $str.'/finish';
+            if (isset($vars['IdOwner']) && $vars['IdOwner'] == $_SESSION['IdMember'] && isset($vars['IdRelation'])) {
+                if (isset($vars['action'])) {
+                    $member = $this->getMember($vars['IdRelation']);
+                    if (isset($vars['Type'])) $vars['stype'] = $vars['Type'];
+                    else {
+                        $TabRelationsType = $member->get_TabRelationsType();
+                        $stype=""; 
+                        $tt=$TabRelationsType;
+                        $max=count($tt);
+                        for ($ii = 0; $ii < $max; $ii++) {
+                            if (isset($vars["Type_" . $tt[$ii]]) && $vars["Type_" . $tt[$ii]] == "on") {
+                              if ($stype!="") $stype.=",";
+                              $stype.=$tt[$ii];
+                            }
+                        }
+                        $relations = $member->get_relations();
+                        $vars['stype'] = $stype;
+                    }
+                    switch ($vars['action']) {
+                    case 'add':
+                        $blub = $this->model->addRelation($vars);
+                        break;
+                    case 'update':
+                        $this->model->updateRelation($vars);
+                        break;
+                    case 'confirm':
+                        $vars['confirm'] = 'Yes';
+                        $blub = $this->model->addRelation($vars);
+                        $this->model->confirmRelation($vars);
+                        break;
+                    default:
+                    }
+                }
+                // Redirect to a nice location like editmyprofile/finish
+                $str = implode('/',$request);
+                if (in_array('finish',$request)) return $str;
+                return $str.'/finish';
             }
-			return false;
+            return false;
         }
     }
 

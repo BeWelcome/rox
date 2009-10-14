@@ -34,7 +34,6 @@ $words = new MOD_words();
         France<br />
         <br />
         <?php $words->get("SignupEmail") ?>: info@bevolunteer.org<br />
-    </p>
 		<p>
 		BeWelcome is the property of the BeVolunteer non profit organization (see <a href="http://www.bevolunteer.org/wiki/Main_Page">BeVolunteer Wiki</a>)
 		</p>

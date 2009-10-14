@@ -28,7 +28,9 @@ $ewiki_plugins["view_final"][] = "ewiki_toc_view_prepend"; //show on every page
 
 define("EWIKI_TOC_CAPTION", 3);
 $ewiki_t["en"]["toc"] = "Content";
-$ewiki_t["de"]["toc"] = "Inhalt";
+// Toc caption showed always German, even if I was reading/surfing site in English. crumbking
+// $ewiki_t["de"]["toc"] = "Inhalt";
+
 
 
 #-- wiki page source rewriting
@@ -83,8 +85,8 @@ function ewiki_toc_format_source(&$src) {
              }
             $text = substr($line, $n,-$n);
             $toc[$i] = $add[0].$add[1] . /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
-                     . */'<li>'.(($n <= 2) ? '<b>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'"><span class="number">'.$n_number.'</span>'
-                     . trim($text) . '</a>'.(($n <= 2) ? '</b>' : '').'</li>';
+                     . */'<li>'.(($n <= 2) ? '<h2>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'"><span class="number">'.$n_number.'</span>'
+                     . trim($text) . '</a>'.(($n <= 2) ? '</h2>' : '').'</li>';
 
             $src[$i] = str_repeat("=", $n) . " [#line$i]" . $text . str_repeat("=", $n);
             $n_last = $n;

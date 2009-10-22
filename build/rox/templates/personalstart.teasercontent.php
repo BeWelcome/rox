@@ -30,10 +30,10 @@ Boston, MA  02111-1307, USA.
         <div class="c33l">
             <div class="subcl">
                 <ul id="personalmenu">
-                    <li><a id="tablink1" class="active-tab first" href="#tab1"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
+                    <li><a id="tablink1" class="<?php echo (isset($_SESSION['Param']) && ($_SESSION['Param']->ToggleDonateBar)) ? '' : 'active-tab first'?>first" href="#tab1"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
                     <li><a id="tablink2" href="#tab2"><?=$words->getSilent('FindAHost')?></a></li>
                     <? if (isset($_SESSION['Param']) && ($_SESSION['Param']->ToggleDonateBar)) { ?>
-                        <li><a id="tablink3" href="#tab3"><?=$words->getSilent('HelpTheProject')?></a></li>
+                        <li><a id="tablink3" class="active-tab"  href="#tab3"><?=$words->getSilent('HelpTheProject')?></a></li>
                     <? } ?>
                     <?php /* NOTREADY <li><a id="tablink3a" href="#tab3a"><?=$words->getSilent('OfferHosting')?></a></li> */ ?>
                     <?php /* NOTREADY<li><a id="tablink4" href="#tab4"><?=$words->getSilent('SetLocation')?></a></li> */ ?>
@@ -49,7 +49,7 @@ Boston, MA  02111-1307, USA.
         <div class="c66r">
             <div class="subcr">
 
-                <div class="panel active-tab-body" id="tab1">
+                <div class="panel<?php echo (isset($_SESSION['Param']) && ($_SESSION['Param']->ToggleDonateBar)) ? '' : ' active-tab-body' ?>" id="tab1">
                     <?php
                     $notify_widget->render();
                     ?>
@@ -106,7 +106,7 @@ Boston, MA  02111-1307, USA.
                     </div> <!-- subclumns -->
                 </div> <!-- tab2 -->
 
-                <div class="panel" id="tab3">
+                <div class="panel<?php echo (isset($_SESSION['Param']) && ($_SESSION['Param']->ToggleDonateBar)) ? ' active-tab-body' : '' ?>" id="tab3">
 
                     <div class="subcolumns">
                         <div class="c50l">

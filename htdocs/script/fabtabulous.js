@@ -12,7 +12,7 @@ Fabtabs.prototype = {
 		this.element = $(element);
 		var options = Object.extend({}, arguments[1] || {});
 		this.menu = $A(this.element.getElementsByTagName('a'));
-		this.show(this.getInitialTab());
+		//this.show(this.getInitialTab());
 		this.menu.each(this.setupTab.bind(this));
 	},
 	setupTab : function(elm) {

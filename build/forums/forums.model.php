@@ -9,7 +9,7 @@
 * @version $Id: forums.model.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
-class Forums extends PAppModel {
+class Forums extends RoxModelBase {
     const CV_THREADS_PER_PAGE = 15;
     const CV_POSTS_PER_PAGE = 20;
     const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
@@ -66,6 +66,7 @@ function GetLanguageChoosen() {
 * 
 */ 
 function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
+    $this->words = new MOD_words;
 	return ($this->words->InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember, $_IdLanguage, $IdTrad)) ;
 } // end of InsertInFTrad
 
@@ -87,6 +88,7 @@ function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage 
 * 
 */ 
 function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
+    $this->words = new MOD_words;
 	return ($this->words->ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad, $IdOwner )) ;
 } // end of ReplaceInFTrad
 
@@ -240,15 +242,6 @@ function DeleteVoteForPost($IdPost) {
 } // end of DeleteVoteForPost
 
 /**
-*/
-function singleLookup($ss) { // Todo find a way to use the unique SingleLookup !
-	$q=mysql_query($ss) ;
-	$row=mysql_fetch_object($q) ;
-	return($row) ;
-}
-
-
-/**
 * FindAppropriatedLanguage function will retrieve the appropriated default language 
 * for a member who want to reply to a thread (started with the#@IdPost post)
 * this retriewal is made according to the language of the post, the current language of the user
@@ -317,7 +310,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
 		}
 		
-		$this->MyGroups=array() ;
+		$MyGroups=array() ;
 
 		
 		$this->words= new MOD_words();
@@ -345,7 +338,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
 				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
 				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
-				array_push($this->MyGroups,$rr->IdGroup) ; // Save the group list
+				array_push($MyGroups,$rr->IdGroup) ; // Save the group list
 			}	;
 			$this->PostGroupsRestriction=$this->PostGroupsRestriction."))" ;
 			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction."))" ;
@@ -360,7 +353,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 				$this->ThreadGroupsRestriction=" (1=1)" ;
 			}
 		}
-
+        $this->MyGroups = $MyGroups;
     } // __construct
 	
 	// This switch the preference ForumOrderList
@@ -2241,23 +2234,39 @@ and ($this->ThreadGroupsRestriction)
         $from = $this->POSTS_PER_PAGE * ($this->getPage() - 1);
         
         $query = sprintf("
-SELECT `postid`,`forums_posts`.`id` as IdPost,UNIX_TIMESTAMP(`create_time`) AS `posttime`,`message`,`IdContent`,`IdWriter`,
-`geonames_cache`.`fk_countrycode`,`forums_posts`.`threadid`,`OwnerCanStillEdit`,`members`.`Username` as OwnerUsername,
-
-    `HasVotes`,
-    `IdLocalVolMessage`,
-    `PostVisibility`,
-    `PostDeleted`,
-	
-    `IdLocalEvent`,
-	`forums_threads`.`IdGroup`
-FROM (`forums_posts`,`forums_threads`)
-LEFT JOIN `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
-LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
-WHERE `forums_posts`.`threadid` = '%d'  and `forums_posts`.`threadid`=`forums_threads`.`id`
-and ($this->PublicPostVisibility)
-and ($this->ThreadGroupsRestriction)
-ORDER BY `posttime` ASC
+SELECT
+    postid,
+    forums_posts.id as IdPost,
+    UNIX_TIMESTAMP(create_time) AS posttime,
+    message,
+    IdContent,
+    IdWriter,
+    geonames_cache.fk_countrycode,
+    forums_posts.threadid,
+    OwnerCanStillEdit,
+    members.Username as OwnerUsername,
+    HasVotes,
+    IdLocalVolMessage,
+    PostVisibility,
+    PostDeleted,
+    IdLocalEvent,
+	forums_threads.IdGroup
+FROM
+    forums_threads,
+    forums_posts
+LEFT
+    JOIN members ON forums_posts.IdWriter = members.id
+LEFT JOIN
+    addresses AS a ON a.IdMember = members.id AND a.rank = 0
+LEFT JOIN
+    geonames_cache ON a.IdCity = geonames_cache.geonameid
+WHERE
+    forums_posts.threadid = '%d'
+    AND forums_posts.threadid=forums_threads.id
+    AND ({$this->PublicPostVisibility})
+    AND ({$this->ThreadGroupsRestriction})
+ORDER BY
+    posttime ASC
 LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
 
         $s = $this->dao->query($query);
@@ -2385,19 +2394,21 @@ SELECT
     `IdLocalVolMessage`,
     `IdLocalEvent`
     `IdGroup`
-FROM (`forums_posts`,`forums_threads`,`members`)
-LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
-WHERE `forums_posts`.`threadid` = '%d' and `forums_posts`.`IdWriter` = `members`.`id`
- and `forums_posts`.`threadid`=`forums_threads`.`id`
-	and ($this->PublicPostVisibility)
-	and ($this->PublicThreadVisibility)
-	and ($this->PostGroupsRestriction)
+FROM forums_posts, forums_threads, members, addresses
+LEFT JOIN `geonames_cache` ON (addresses.IdCity = `geonames_cache`.`geonameid`)
+WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `members`.`id`
+AND addresses.IdMember = members.id AND addresses.rank = 0
+ AND `forums_posts`.`threadid`=`forums_threads`.`id`
+	and ({$this->PublicPostVisibility})
+	and ({$this->PublicThreadVisibility})
+	and ({$this->PostGroupsRestriction})
 ORDER BY `posttime` DESC
 LIMIT %d
             ",
             $this->threadid,
             Forums::NUMBER_LAST_POSTS_PREVIEW
         );
+
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve Posts!');
@@ -2866,11 +2877,12 @@ AND IdTag=%d
     `IdLocalVolMessage`,
     `IdLocalEvent`,
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
-		FROM (`forums_posts`,`members`,`forums_threads`) 
+		FROM (forums_posts, members, forums_threads, addresses)  
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-LEFT JOIN `geonames_cache` ON (`members`.`IdCity` = `geonames_cache`.`geonameid`)
+LEFT JOIN `geonames_cache` ON (addresses.IdCity = geonames_cache.geonameid)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 
 AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
+AND addresses.IdMember = members.id AND addresses.rank = 0
 and ($this->PublicPostVisibility)
 and ($this->PostGroupsRestriction)
 ORDER BY `posttime` DESC    ",    $IdMember   );
@@ -3101,12 +3113,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
      */
     private function cleanupText($txt)
     {
-		if (strpos($txt,"href=") === false)
-        {
-            // We will only try to make clickable links if there is not yet a href= (ie already present clickable link) in the text
-			$txt = $this->makeClickableLinks($txt);
-		}
-        $purifier = MOD_htmlpure::get()->getPurifier();
+        $purifier = MOD_htmlpure::get()->getAdvancedHtmlPurifier();
         return $purifier->purify($txt);
     } // end of cleanupText
     
@@ -3258,7 +3265,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	 		$tt=array() ;
 
 			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
-										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
+										 WHERE membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$row->Name=$this->getGroupName($row->Name);
@@ -3274,7 +3281,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
  		$tt=array() ;
 
 		$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members 
-										 where HasMembers='HasMember' and membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
+										 WHERE membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
 										  members.Status in ('Active','ChoiceInactive','ActiveHidden') and members.id=".$_SESSION['IdMember']." and membersgroups.Status='In' group by groups.id order by groups.id ";
      	$s = $this->dao->query($query);
      	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
@@ -3492,33 +3499,45 @@ AND `members`.`Status` in ('Active','ActiveHidden')
 
         
 		 // Check the user who have subscribed to one group of this thread 
+         /*
         $query = sprintf("select IdSubscriber,members_groups_subscribed.id as IdSubscription from members_groups_subscribed,forums_threads where forums_threads.IdGroup=members_groups_subscribed.IdGroup and forums_threads.threadid=%d ",$rPost->IdThread) ;
         $s1 = $this->dao->query($query);
         if (!$s1) {
             throw new PException('prepare_notification Could not retrieve the members_tags_subscribed !');
         }
-        while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ)) { // for each subscriber to this thread Group
+        */
+        $thread = $this->createEntity('Thread')->findByThreadId($rPost->IdThread);
+        if ($thread->IdGroup)
+        {
+            $group = $this->createEntity('Group')->findById($thread->IdGroup);
+            $subscribers = $group->getEmailAcceptingMembers();
+            foreach ($subscribers as $subscriber)
+            {
+        //while ($rSubscribed = $s1->fetch(PDB::FETCH_OBJ))  // for each subscriber to this thread Group
 
-			if ($this->NotAllowedForGroup($rSubscribed->IdSubscriber,$rPost)) continue; // Don't notifiy a member if they are group restiction applying to him 
+                if ($this->NotAllowedForGroup($subscriber->getPKValue(),$rPost)) continue; // Don't notifiy a member if they are group restiction applying to him 
 
-            // we are going to check wether there is allready a pending notification for this post to avoid duplicated
-//            die ("\$row->IdSubscriber=".$row->IdSubscriber) ;
-            $IdMember=$rSubscribed->IdSubscriber ;
-            $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$IdMember) ;
-            $s = $this->dao->query($query);
-            if (!$s) {
-               throw new PException('prepare_notification Could not retrieve the posts_notificationqueue(1) !');
-            }
-            $rAllreadySubscribe = $s->fetch(PDB::FETCH_OBJ) ;
-            if (isset($rAllreadySubscribe->id)) {
-               continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
-            }
+                // we are going to check wether there is allready a pending notification for this post to avoid duplicated
+                $query = sprintf("select id from posts_notificationqueue where IdPost=%d and IdMember=%d and Status='ToSend'",$IdPost,$subscriber->getPKValue()) ;
+                $s = $this->dao->query($query);
+                if (!$s) {
+                   throw new PException('prepare_notification Could not retrieve the posts_notificationqueue(1) !');
+                }
+                $rAllreadySubscribe = $s->fetch(PDB::FETCH_OBJ) ;
+                if (isset($rAllreadySubscribe->id)) {
+                   continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
+                }
 
-            $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_groups_subscribed',".$rSubscribed->IdSubscription.")" ;
-            $result = $this->dao->query($query);
-                   
-            if (!$result) {
-               throw new PException('prepare_notification  for group for Thread=#'.$rPost->IdThread.' failed : for Type='.$Type);
+                $query = <<<SQL
+INSERT INTO posts_notificationqueue (IdMember, IdPost, created, `Type`, TableSubscription, IdSubscription)
+VALUES ('{$subscriber->getPKValue()}','{$IdPost}',now(),'{$Type}','membersgroups',0)
+SQL;
+                $result = $this->dao->query($query);
+                       
+                if (!$result)
+                {
+                    $this->logWrite("prepare_notification  for group for Thread=#{$rPost->IdThread} failed : for Type={$Type}", 'bug');
+                }
             }
         } // end for each subscriber to this group
         
@@ -3842,9 +3861,10 @@ class Board implements Iterator {
 			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
 			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
 			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.") group by `forums_threads`.`id`" ;
+			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id`  and  `tags_threads`.`IdTag` not in (".$NoInCategoryList.")" ;
 			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
 			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;
+			$query .= " group by `forums_threads`.`id`" ;
 			$query .= " ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3 " ;
 		}
 		else {
@@ -3876,7 +3896,7 @@ class Board implements Iterator {
 			$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
 			$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
 			$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag` and  `tags_threads`.`IdTag`=".$IdTagCategory ;
+			$query .= " where `tags_threads`.`IdThread`=`forums_threads`.`id` and  `tags_threads`.`IdTag`=".$IdTagCategory ;
 			$query = $query ." and (".$this->PublicThreadVisibility.")" ;
 			$query = $query ." and (".$this->ThreadGroupsRestriction.")" ;
 			$query = $query ." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT 3" ;
@@ -4101,4 +4121,3 @@ die("force stop") ;
     }
 } // end of MailTheReport
 
-?>

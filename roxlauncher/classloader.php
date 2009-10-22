@@ -76,7 +76,7 @@ class ClassLoader
                             // this is a command to scan subdirectories for more ini files,
                             // $vv denotes the search depth
                             $scan_subdirectories[$rel_path.$k.'/'.$kk] = $vv;
-                        } else foreach (split("[,\n\r\t ]+", $vv) as $classname) {
+                        } else foreach (preg_split("/[,\n\r\t ]+/", $vv) as $classname) {
                             @$settings[$rel_path.$k][$kk][] = $classname;
                         }
                     }
@@ -85,7 +85,7 @@ class ClassLoader
                         // this is a command to scan subdirectories for more ini files,
                         // $vv denotes the search depth
                         $scan_subdirectories[$rel_path.$k] = $v;
-                    } else foreach (split("[,\n\r\t ]+", $v) as $classname) {
+                    } else foreach (preg_split("/[,\n\r\t ]+/", $v) as $classname) {
                         @$settings[$rel_path][$k][] = $classname;
                     }
                 }

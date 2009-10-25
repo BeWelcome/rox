@@ -406,7 +406,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
      */
     public function removeCookie() 
     {
-        if( !PVars::__get('cookiesAccepted'))
+        if( !PVars::get()->cookiesAccepted)
             return false;
         if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;

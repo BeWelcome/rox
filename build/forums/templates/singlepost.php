@@ -73,7 +73,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
         ?>
         </p> <!-- forumstime -->
-
+        
         <p class="forumsedit">
         <?php
 
@@ -162,7 +162,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 $LocalVolMessage=$post->LocalVolMessage ;
                 $TitleText=$words->fTrad($LocalVolMessage->IdTitleText) ;
                 $MessageText=$words->fTrad($LocalVolMessage->IdMessageText) ;
-
+            
                 echo "<div>"  ; // Todo add a special div for a special layout
                 echo "<br /> ",$words->getFormatted('ForumPostWithLocalMessage') ;
                 echo "<table bgcolor=\"lightgray\">" ;
@@ -186,7 +186,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                     echo $words->getFormatted("ForumPostCurrentResults") ;
                     echo "<ul>"  ;
                     foreach ($Vote->PossibleChoice as $cc) {
-                    $ss='Choice_'.$cc ;
+                    $ss=$cc ;
                     $count=$Vote->$ss ;
                     $countpercent="0%" ;
                     if ($Vote->Total>0) {
@@ -216,27 +216,30 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     } // end if not deleted
 
     ?>
+
+    </div> <!-- forumsmessage -->
     <?php
-    if (isset($_SESSION["IdMember"]) and (isset($post->IdPost))) {
+    if (isset($_SESSION["IdMember"])) {
         if ($this->BW_Right->HasRight("ForumModerator")) {
             $TheReports=$this->_model->GetReports($post->IdPost) ;
             $max=count($TheReports) ;
             foreach ($TheReports as $report) {
-                echo "<p class=\"forumsedit\">report from ",$report->Username," [".$report->Status."] " ;
-                echo "<a href='forums/reporttomod/",$report->IdPost,"/".$report->IdReporter."'>view report</a></p>" ;
+                echo "<br />report from ",$report->Username," [".$report->Status."] " ;
+                echo "<a href='forums/reporttomod/",$report->IdPost,"/".$report->IdReporter."'>view report</a>" ;
             }
         }
+        /*
         $TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
         if (isset($TheReports[0]->IdReporter)) {
-            echo "<p class=\"forumsedit\"><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a></p>" ;
+            echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a>" ;
         }
         else {
-            echo "<p class=\"forumsedit\"><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a></p>" ;
+            echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a>" ;
         }
+        */
     }
 
     ?>
-    </div> <!-- forumsmessage -->
 </div> <!-- forumspost -->
 
 <script type="text/javascript">

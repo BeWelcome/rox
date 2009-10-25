@@ -112,5 +112,3 @@ class VisualComponent extends RoxComponentBase
     }
 }
 
-
-?>

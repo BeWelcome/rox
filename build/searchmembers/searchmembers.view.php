@@ -106,3 +106,11 @@ class SearchmembersView extends PAppView {
     } // end of showFeatureIsClosed()
 
 }
+/* removed functions referencing user - pending deletiong
+
+    public function rightContent() {
+	$User = new UserController;
+		$User->displayLoginForm();
+	}
+
+*/

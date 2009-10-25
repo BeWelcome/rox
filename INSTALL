@@ -36,7 +36,7 @@ OVERVIEW
   2. Make sure PHP has GD lib enabled
  (3. Make sure PHP has short opening tags (needed currently for TB))
   4. Make sure that Apache has mod_rewrite enabled
-  5. Make sure .htaccess is allowed to work
+  5. Make sure .htaccess works, i.e. no AllowOverride Node
   6. Be sure to have PHP magic quotes gpc turned off
   7. An SMTP server must be available
  

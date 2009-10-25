@@ -37,7 +37,7 @@ class GalleryController extends RoxControllerBase {
         $Page->currentTab = 'gallery';
         $subTab = 'browse';
         $name = false;
-        
+
         $loggedInMember = $this->loggedInMember;
 
         $request = PRequest::get()->request;
@@ -457,5 +457,104 @@ class GalleryController extends RoxControllerBase {
         echo 'Error!';
         PPHP::PExit();
     }
+
+    // callback processes moved from the model
+
+    /**
+     * xxx
+     *
+     * @access public
+     */
+    public function editProcess()
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling())
+        {
+            if (!$this->_model->getLoggedInMember())
+            {
+                return false;
+            }
+
+            $vars = &PPostHandler::getVars($callbackId);
+            return $this->_model->editProcess($vars);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    /**
+     * xxx
+     *
+     * @access public
+     */
+    public function editGalleryProcess()
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling())
+        {
+            if (!$this->_model->getLoggedInMember())
+            {
+                return false;
+            }
+
+            $vars = &PPostHandler::getVars($callbackId);
+            return $this->_model->editGalleryProcess($vars);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    public function updateGalleryProcess()
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling())
+        {
+            $vars =& PPostHandler::getVars($callbackId);
+            return $this->_model->updateGalleryProcess($vars);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    public function commentProcess($image = false)
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling()) {
+            if (!$this->_model->getLoggedInMember())
+            {
+                return false;
+            }
+            $vars =& PPostHandler::getVars();
+            return $this->_model->commentProcess($vars, $image);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    public function uploadProcess()
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        $vars = &PPostHandler::getVars($callbackId);
+        if (PPostHandler::isHandling())
+        {
+            return $this->_model->uploadProcess($vars);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
 }
-?>

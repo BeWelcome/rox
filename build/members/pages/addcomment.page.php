@@ -9,6 +9,3 @@ class AddCommentPage extends ProfilePage
         return 'commmentsadd';
     }
 }
-
-
-?>

@@ -79,6 +79,8 @@ class GroupsModel extends  RoxModelBase
 
     /**
      * searches for members, using username
+     * if group is provided, any members found that are in that
+     * group will not be returned
      *
      * @param string $name
      * @access public

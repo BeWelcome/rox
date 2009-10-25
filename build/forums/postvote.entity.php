@@ -58,16 +58,17 @@ class PostVote extends RoxEntityBase
      */
     public function getResultForPost(Post $post)
     {
+        $return = array('Yes' => 0, 'No' => 0, 'DontCare' => 0, 'DontKnow' => 0);
         if (!$post->isLoaded())
         {
-            return array();
+            return $return;
         }
-        if (!($result = $this->dao->query("SELECT SUM(positive) AS positive, SUM(negative) AS negative, SUM(neutral) AS neutral FROM (SELECT (CASE WHEN Choice = 'Yes' THEN 1 ELSE 0 END) AS positive, (CASE WHEN Choice = 'No' THEN 1 ELSE 0 END) AS negative, (CASE WHEN Choice IN ('DontKnow','DontCare') THEN 1 ELSE 0 END) AS neutral FROM {$this->getTableName()} WHERE IdPost = '{$post->getPKValue()}') AS temp")))
+        if (!($result = $this->dao->query("SELECT SUM(yes) AS yes, SUM(no) AS no, SUM(dontcare) AS dontcare, SUM(dontknow) AS dontknow FROM (SELECT (CASE WHEN Choice = 'Yes' THEN 1 ELSE 0 END) AS yes, (CASE WHEN Choice = 'No' THEN 1 ELSE 0 END) AS no, (CASE WHEN Choice = 'DontCare' THEN 1 ELSE 0 END) AS dontcare, (CASE WHEN Choice = 'DontKnow' THEN 1 ELSE 0 END) AS dontknow FROM {$this->getTableName()} WHERE IdPost = '{$post->getPKValue()}') AS temp")))
         {
-            return array();
+            return $return;
         }
         $data = $result->fetch();
-        return array('positive' => $data['positive'], 'negative' => $data['negative'], 'neutral' => $data['neutral']);
+        return array('Yes' => $data['yes'], 'No' => $data['no'], 'DontCare' => $data['dontcare'], 'DontKnow' => $data['dontknow']);
 
     }
 

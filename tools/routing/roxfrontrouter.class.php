@@ -434,9 +434,6 @@ class RoxFrontRouterModel extends RoxModelBase {
 	
 		// Uncomment briefly this line in case you have problem with it, save, log in BeWelcome, and add again the comment in this line
 		// return false ; 
-		if (strpos('_'.$_SERVER['HTTP_HOST'],'localhost')>0) { // This is to avoid problem with dbupdate refering something not yet existing (the add of the table urlheader_languages)
-			return(false) ;										// I guess that by December 2009, this will be useless to test this anymore, everybody will have updated
-		}
 		
 		return $this->singleLookup("select languages.id,ShortCode from urlheader_languages,languages
 		 where urlheader='".$this->dao->escape($urlheadercode)."' and languages.id=urlheader_languages.IdLanguage") ;

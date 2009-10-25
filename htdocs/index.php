@@ -76,5 +76,3 @@ function main() {
     session_write_close();
 }
 main();
-
-?>

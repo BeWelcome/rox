@@ -152,6 +152,3 @@ class RoxLoader
         }
     }
 }
-
-
-?>

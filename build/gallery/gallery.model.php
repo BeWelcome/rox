@@ -8,7 +8,8 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class Gallery extends PAppModel {
+class Gallery extends RoxModelBase
+{
     const FLAG_VIEW_PRIVATE   = 1;
     const FLAG_VIEW_PROTECTED = 2;
     
@@ -72,27 +73,21 @@ VALUES
         } else return false;
     }
     
-    public function editProcess()
+    public function editProcess($vars)
     {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
-            if (!$User = APP_User::login())
-                return false;
-            $vars = &PPostHandler::getVars($callbackId);
-            $this->dao->exec("UPDATE `gallery_items` SET `title` = '".$vars['t']."' , `description` = '".$vars['txt']."' WHERE `id`= ".$vars['id']);
-            if (isset($vars['gallery'])) {
-                if ($this->getImageGallery($vars['id'])) {
-                    $this->dao->exec("UPDATE `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."' WHERE `item_id_foreign`= ".$vars['id']);
-                } else {
-                    $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."', `item_id_foreign`= ".$vars['id']);
-                }
+        $this->dao->exec("UPDATE `gallery_items` SET `title` = '".$vars['t']."' , `description` = '".$vars['txt']."' WHERE `id`= ".$vars['id']);
+        if (isset($vars['gallery'])) {
+            if ($this->getImageGallery($vars['id'])) {
+                $this->dao->exec("UPDATE `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."' WHERE `item_id_foreign`= ".$vars['id']);
             } else {
-                PPostHandler::clearVars($callbackId);
-        	return false;
+                $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['gallery']."', `item_id_foreign`= ".$vars['id']);
             }
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
+            return true;
+        }
+        else
+        {
+            PPostHandler::clearVars($callbackId);
+            return false;
         }
     }
     public function ajaxModImage($id, $title = false, $text = false)
@@ -129,26 +124,19 @@ VALUES
 		$this->dao->query("COMMIT");
     }
     
-    public function editGalleryProcess()
+    public function editGalleryProcess($vars)
     {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
-            if (!$User = APP_User::login())
-                return false;
-            $vars = &PPostHandler::getVars($callbackId);
-            $this->dao->exec("UPDATE `gallery` SET `title` = '".$vars['t']."' , `description` = '".$vars['txt']."' WHERE `id`= ".$vars['id']);
-            PPostHandler::clearVars($callbackId);
-        	return false;
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
-        }
+        $this->dao->exec("UPDATE `gallery` SET `title` = '".$vars['t']."' , `description` = '".$vars['txt']."' WHERE `id`= ".$vars['id']);
+        PPostHandler::clearVars($callbackId);
+        return false;
     }
 
     public function deleteMultiple($images)
     {
         if (!$User = APP_User::login())
+        {
             return false;
+        }
         $R = MOD_right::get();
         $GalleryRight = $R->hasRight('Gallery');
         foreach ($images as $image) {
@@ -172,47 +160,40 @@ VALUES
         }
     }    
     
-    public function updateGalleryProcess()
+    public function updateGalleryProcess($vars)
     {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
-            $vars =& PPostHandler::getVars($callbackId);
-            if (isset($vars)) {
-                if (isset ($vars['new']) && $vars['new'] == 1 && !$vars['deleteOnly']) {
-                    if (isset($vars['g-title'])) {
-                            $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
-                    } else {
-                        $vars['errors'] = array('gallery');
-                        return false;
-                    }
+        if (isset($vars)) {
+            if (isset ($vars['new']) && $vars['new'] == 1 && !$vars['deleteOnly']) {
+                if (isset($vars['g-title'])) {
+                        $vars['gallery'] = $this->createGallery($vars['g-title'], $desc = false);
+                } else {
+                    $vars['errors'] = array('gallery');
+                    return false;
                 }
-                if (array_key_exists('imageId', $vars)) {
-                    $images = ($vars['imageId']);
-                    if (!isset($images[0]) || !$images[0]) {
-                        $vars['errors'] = array('images');
-                        return false;
-                    }
-                    if (!$User = APP_User::login())
-                        return false;
-                    if ($vars['deleteOnly'])
-                        return $this->deleteMultiple($images);
-                    foreach ($images as $d) {
-                        $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
-                        if (!isset($vars['removeOnly']) || !$vars['removeOnly']) {
-                            $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$this->dao->escape($vars['gallery'])."',`item_id_foreign`= ".$d);
-                        } else {
-                            return PVars::getObj('env')->baseuri.'gallery/show/user/'.$User->getHandle();
-                        }
-                    }
-                }
-                return PVars::getObj('env')->baseuri.'gallery/show/sets/'.$vars['gallery'];
-            } else {
-                PPostHandler::clearVars($callbackId);
-                return false;
             }
+            if (array_key_exists('imageId', $vars)) {
+                $images = ($vars['imageId']);
+                if (!isset($images[0]) || !$images[0]) {
+                    $vars['errors'] = array('images');
+                    return false;
+                }
+                if (!$User = APP_User::login())
+                    return false;
+                if ($vars['deleteOnly'])
+                    return $this->deleteMultiple($images);
+                foreach ($images as $d) {
+                    $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
+                    if (!isset($vars['removeOnly']) || !$vars['removeOnly']) {
+                        $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$this->dao->escape($vars['gallery'])."',`item_id_foreign`= ".$d);
+                    } else {
+                        return PVars::getObj('env')->baseuri.'gallery/show/user/'.$User->getHandle();
+                    }
+                }
+            }
+            return PVars::getObj('env')->baseuri.'gallery/show/sets/'.$vars['gallery'];
         } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
+            PPostHandler::clearVars($callbackId);
+            return false;
         }
     }
     
@@ -334,24 +315,22 @@ ORDER BY `id` DESC';
      * textlen      - too short or long text.
      * inserror     - db error while inserting.
      */
-    public function commentProcess($image = false) {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
-            if (!$User = APP_User::login())
-                return false;
-            $vars =& PPostHandler::getVars();
-            $request = PRequest::get()->request;
-            if (!$image)
-                $image = (int)$request[3];
+    public function commentProcess($vars, $image)
+    {
+        $request = PRequest::get()->request;
+        if (!$image)
+            $image = (int)$request[3];
 
-            // validate
-            if (!isset($vars['ctxt']) || strlen($vars['ctxt']) == 0 || strlen($vars['ctxt']) > 5000) {
-                $vars['errors'] = array('textlen');
-                return false;
-            }
+        // validate
+        if (!isset($vars['ctxt']) || strlen($vars['ctxt']) == 0 || strlen($vars['ctxt']) > 5000) {
+            $vars['errors'] = array('textlen');
+            return false;
+        }
 
-            $commentId = $this->dao->nextId('gallery_comments');
-            $query = '
+        $User = APP_User::login();
+
+        $commentId = $this->dao->nextId('gallery_comments');
+        $query = '
 INSERT INTO `gallery_comments`
 SET
     `id`='.$commentId.',
@@ -360,32 +339,28 @@ SET
     `title`=\''.(isset($vars['ctit'])?$this->dao->escape($vars['ctit']):'').'\',
     `text`=\''.$this->dao->escape($vars['ctxt']).'\',
     `created`=NOW()';
-            $s = $this->dao->query($query);
-            if (!$s) {
-                $vars['errors'] = array('inserror');
-                return false;
-            }
-            
-            // Create notification
-            // $data = $this->imageData($image);
-            // if ($data->user_handle != $_SESSION['Username']) {
-            //     $model = new MembersModel();
-            //     $member = $model->createEntity('Member')->FindByUsername($data->user_handle);
-            //     $param['IdMember'] = $member->getPKValue();
-            //     $param['IdRelMember'] = $_SESSION['IdMember'];
-            //     $param['Type'] = 'picture_comment';
-            //     $param['Link'] = "/gallery/show/image/{$image}";
-            //     $param['WordCode'] = '';
-            //     $param['TranslationParams'] = array('GroupsAcceptedIntoGroup', $_SESSION['Username']);
-            //     $note = $model->createEntity('Note')->createNote($param);
-            // }
-            
-            PPostHandler::clearVars();
-            return PVars::getObj('env')->baseuri.implode('/', $request).'#c'.$commentId;
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
+        $s = $this->dao->query($query);
+        if (!$s) {
+            $vars['errors'] = array('inserror');
+            return false;
         }
+        
+        // Create notification
+        // $data = $this->imageData($image);
+        // if ($data->user_handle != $_SESSION['Username']) {
+        //     $model = new MembersModel();
+        //     $member = $model->createEntity('Member')->FindByUsername($data->user_handle);
+        //     $param['IdMember'] = $member->getPKValue();
+        //     $param['IdRelMember'] = $_SESSION['IdMember'];
+        //     $param['Type'] = 'picture_comment';
+        //     $param['Link'] = "/gallery/show/image/{$image}";
+        //     $param['WordCode'] = '';
+        //     $param['TranslationParams'] = array('GroupsAcceptedIntoGroup', $_SESSION['Username']);
+        //     $note = $model->createEntity('Note')->createNote($param);
+        // }
+        
+        PPostHandler::clearVars();
+        return PVars::getObj('env')->baseuri.implode('/', $request).'#c'.$commentId;
     }
 
     
@@ -627,105 +602,97 @@ WHERE
      */
     public function uploadProcess()
     {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        $vars = &PPostHandler::getVars($callbackId);
-        if (PPostHandler::isHandling()) {
-            if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0)
-                return false;
-            if (!$User = APP_User::login())
-                return false;
-            // NEW CHECKS
-            if (!$User = APP_User::login()) {
-                 $vars['error'] = 'Gallery_NotLoggedIn';
-                 return false;
-            }
-            if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0) {
-                //$vars['error'] = 'Gallery_UploadError';
-                return false;
-            }
-            $userDir = new PDataDir('gallery/user'.$User->getId());
-            $insert = $this->dao->prepare('
+        if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0)
+            return false;
+        if (!$User = APP_User::login())
+            return false;
+        // NEW CHECKS
+        if (!$User = APP_User::login()) {
+             $vars['error'] = 'Gallery_NotLoggedIn';
+             return false;
+        }
+        if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0) {
+            //$vars['error'] = 'Gallery_UploadError';
+            return false;
+        }
+        $userDir = new PDataDir('gallery/user'.$User->getId());
+        $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
 (`id`, `user_id_foreign`, `file`, `original`, `flags`, `mimetype`, `width`, `height`, `title`, `created`)
 VALUES
 (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
             ');
-            $itemId = false;
-            $insert->bindParam(0, $itemId);
-            $userId = $User->getId();
-            $insert->bindParam(1, $userId);
-            $hash = false;
-            $insert->bindParam(2, $hash);
-            $orig = false;
-            $insert->bindParam(3, $orig);
-            $flags = 0;
-            $insert->bindParam(4, $flags);
-            $mimetype = false;
-            $insert->bindParam(5, $mimetype);
-            $width = false;
-            $insert->bindParam(6, $width);
-            $height = false;
-            $insert->bindParam(7, $height);
-            $title = false;
-            $insert->bindParam(8, $title);
-            foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
-            	if ($error != UPLOAD_ERR_OK)
-                    continue;
+        $itemId = false;
+        $insert->bindParam(0, $itemId);
+        $userId = $User->getId();
+        $insert->bindParam(1, $userId);
+        $hash = false;
+        $insert->bindParam(2, $hash);
+        $orig = false;
+        $insert->bindParam(3, $orig);
+        $flags = 0;
+        $insert->bindParam(4, $flags);
+        $mimetype = false;
+        $insert->bindParam(5, $mimetype);
+        $width = false;
+        $insert->bindParam(6, $width);
+        $height = false;
+        $insert->bindParam(7, $height);
+        $title = false;
+        $insert->bindParam(8, $title);
+        foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
+            if ($error != UPLOAD_ERR_OK)
+                continue;
 
-            	if (
-                    $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
-                    $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
-                ) {
-                    $vars['error'] = 'Gallery_UploadFileTooLarge';
-                    return false;
-                }
-                if ($_FILES['gallery-file']['error'] == UPLOAD_ERR_OK) {
-                    $vars['error'] = 'Gallery_UploadError';
-                    return false;
-                } 
-                // END
-                $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
-                if (!$img->isImage()) {
-                    $vars['error'] = 'Gallery_UploadNotImage';
-                    return false;
-                }
-                $size = $img->getImageSize();
-                $type = $size[2];
-                // maybe this should be changed by configuration
-                if ($type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG) {
-                     $vars['error'] = 'Gallery_UploadInvalidFileType';
-                     return false;
-                }
-                $hash = $img->getHash();
-                if ($userDir->fileExists($img->getHash()))
-                    continue;
-                if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
-                    continue;
-                if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
-                    continue;
-                if ($size[0] > 550)
-                    $img->createThumb($userDir->dirName(), 'thumb2', 500);
-                $itemId = $this->dao->nextId('gallery_items');
-                $orig = $_FILES['gallery-file']['name'][$key];
-                $mimetype = image_type_to_mime_type($type);
-                $width = $size[0];
-                $height = $size[1];
-                $title = $orig;
-                try {
-                	$insert->execute();
-                } catch (PException $e) {
-                	error_log($e->__toString());
-                }
-                if ($vars['galleryId']) {
-                    $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
-                }
+            if (
+                $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
+                $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
+            ) {
+                $vars['error'] = 'Gallery_UploadFileTooLarge';
+                return false;
             }
-        	return false;
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
+            if ($_FILES['gallery-file']['error'] == UPLOAD_ERR_OK) {
+                $vars['error'] = 'Gallery_UploadError';
+                return false;
+            } 
+            // END
+            $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
+            if (!$img->isImage()) {
+                $vars['error'] = 'Gallery_UploadNotImage';
+                return false;
+            }
+            $size = $img->getImageSize();
+            $type = $size[2];
+            // maybe this should be changed by configuration
+            if ($type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG) {
+                 $vars['error'] = 'Gallery_UploadInvalidFileType';
+                 return false;
+            }
+            $hash = $img->getHash();
+            if ($userDir->fileExists($img->getHash()))
+                continue;
+            if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
+                continue;
+            if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
+                continue;
+            if ($size[0] > 550)
+                $img->createThumb($userDir->dirName(), 'thumb2', 500);
+            $itemId = $this->dao->nextId('gallery_items');
+            $orig = $_FILES['gallery-file']['name'][$key];
+            $mimetype = image_type_to_mime_type($type);
+            $width = $size[0];
+            $height = $size[1];
+            $title = $orig;
+            try {
+                $insert->execute();
+            } catch (PException $e) {
+                error_log($e->__toString());
+            }
+            if ($vars['galleryId']) {
+                $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
+            }
         }
+        return false;
     }
 
 }
-?>

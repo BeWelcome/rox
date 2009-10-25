@@ -78,10 +78,9 @@ class GeoView extends PAppView {
     public function GeoDisplayLocation($name)
     {
         $words = new MOD_words();
-		$data=$this->_model->LoadLocation($name) ;
+		$data=$this->_model->loadLocation($name) ;
         require 'templates/displaylocation.php';
-        $out = '';
-        return $out;
+        return '';
 	}
     
     /**

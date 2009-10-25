@@ -777,14 +777,9 @@ SQL;
 		
 
         $XMLstr = "";
-        for ($ii = 0; ($ii < $count); $ii++) {
+        for ($ii = 0; $ii < $count; $ii++) {
             $field = mysql_field_name($qry, $ii);
             $XMLstr .= "<field>" . $field . "</field>\n";
-//			if (!isset($rr->$field)) {
-//				print_r($rr) ;
-//				echo "<br />/$TableName=<b>$TableName</b> IdRecord=<b>$Id</b> nothing for <b>",$field,"</b><br />" ;
-//				die(0) ;
-//			}
             $XMLstr .= "<value>" . $rr->$field . "</value>\n";
         }
         $str = "INSERT INTO " . $_SYSHCVOL['ARCH_DB'] . ".previousversion(IdMember,TableName,IdInTable,XmlOldVersion,Type) VALUES(" . $IdMember . ",'" . $TableName . "'," . $Id . ",'" . mysql_real_escape_string($XMLstr) . "','" . $DoneBy . "')";
@@ -993,7 +988,6 @@ SQL;
         else {
             $IdLanguage = $_IdLanguage;
         }
-
 
         if ($IdTrad <=0) { // if a new IdTrad is needed
 			if ($ss=="") { // No need to insert an empty record in translations

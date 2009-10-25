@@ -21,73 +21,59 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-/**
-  * display the content of the record of the database for a location
- * @author JeanYves
- */
+    /**
+     * display the content of the record of the database for a location
+     *
+     * @author JeanYves
+     * @author Fake51
+     */
 		
-// get current request
-$request = PRequest::get()->request;
-
-/**
- * Get texts from table "words" to speak to the user.
- * @see /modules/i18n/lib/words.lib.php
- */
-$words = new MOD_words();
 ?>
 
 
 <h2>Location records description</h2>
 <p>
 <?php
-    if (count($data)<=0) {
+    if (empty($data))
+    {
 		echo "sorry no record found" ;
 	}
-	else {
+	else
+    {
 		echo "<table align=\"left\"><tr><th>id</th><th>name</th><th>bw geo Type</th><th>Class</th><th>admincode</th><th>usage</th><th>Other names</th></tr>\n" ;
-		foreach ($data as $loc) {
-			echo "<tr>" ;
-			echo "<td>",$loc->geonameid,"</td>" ;
-			echo "<td>",$loc->name,"</td>" ;
-			echo "<td>",$loc->TypeLocation,"</td>" ;
-			echo "<td>",$loc->fclass." ".$loc->fcode,"</td>" ;
-			echo "<td>",$loc->fk_admincode,"</td>" ;
-			echo "<td>" ;
-			foreach ($loc->usage  as $usage) {
-				if ($usage->typeId==1) {
-					echo "members ";
+		foreach ($data as $loc)
+        {
+			echo <<<HTML
+            <tr>
+                <td>{$loc->geonameid}</td>
+                <td>{$loc->name}</td>
+                <td>{$loc->fclass} {$loc->fcode}</td>
+                <td>{$loc->fk_admincode}</td>
+                <td>
+HTML;
+			foreach ($loc->getUsageForAllTypes()  as $usage)
+            {
+                switch($usage->typeId)
+                {
+                    case 1:
+                        echo "members ";
+                        break;
+                    case 2:
+                        echo "blogs ";
+                        break;
+                    case 3:
+                        echo "galleries ";
+                        break;
+                    default:
+                        echo $usage->typeId ;
 				}
-				elseif ($usage->typeId==2) {
-					echo "blogs ";
-				}
-				elseif ($usage->typeId==3) {
-					echo "galleries ";
-				}
-				else {
-					echo $usage->typeId ;
-				}
-				echo " - " ;
-				echo $usage->count," user(s)<br />" ;
+				echo " - {$usage->count}<br />";
 			}
 			echo "</td>" ;
 			echo "<td>" ;
-			foreach ($loc->alternate_names  as $alternate_names) {
-				echo $alternate_names->alternateName," (",$alternate_names->isoLanguage,")<br />" ;
-				
-				if ($usage->typeId==1) {
-					echo "members ";
-				}
-				elseif ($usage->typeId==2) {
-					echo "blogs ";
-				}
-				elseif ($usage->typeId==3) {
-					echo "galleries ";
-				}
-				else {
-					echo $usage->typeId ;
-				}
-				echo " - " ;
-				echo $usage->count," user(s)<br />" ;
+			foreach ($loc->alternate_names as $alternate_name)
+            {
+				echo $alternate_name->alternateName," (",$alternate_name->isoLanguage,")<br />" ;
 			}
 			echo "</td>" ;
 			echo "</tr>" ;

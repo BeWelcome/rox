@@ -1,11 +1,11 @@
 <?php
 $words = new MOD_words();
-$User = APP_User::login();
 $request = PRequest::get()->request;
-$Gallery = new Gallery;
+$gallery_ctrl = new GalleryController;
 $image = $this->image;
-if ($User) {
-    $callbackId = $Gallery->editProcess($image);
+if ($this->_model->getLoggedInMember())
+{
+    $callbackId = $gallery_ctrl->editProcess($image);
     $vars =& PPostHandler::getVars($callbackId);
 }
 $GalleryRight = MOD_right::get()->hasRight('Gallery');

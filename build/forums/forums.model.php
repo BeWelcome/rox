@@ -573,7 +573,7 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
             throw new PException('No such Admincode');
         }
         $admincode = $s->fetch(PDB::FETCH_OBJ);
-		
+
 		if (!isset($admincode->name)) { // Added by JeanYves to trap what might be a geoname problem which creates phperrorlogs
 		    MOD_log::get()->write("Forum::boardAdminCode Problem with geo [".$query."] as failed for country [".$countrycode->name."]","Bug") ; 				
 		}
@@ -4013,10 +4013,10 @@ die("force stop") ;
 	
 
     //Start Swift
-    $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+    $swift = new Swift(new Swift_Connection_SMTP("localhost"));
 				
     //Create a message
-    $message =& new Swift_Message($subject);
+    $message = new Swift_Message($subject);
         
     //Add some "parts"
     $message->attach(new Swift_Message_Part($text));

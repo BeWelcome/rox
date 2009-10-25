@@ -409,8 +409,7 @@ WHERE
      * Update table guestsonline, used for counting
      * guests (and logged in members?) of the website
      * "now".
-     *
-	 *
+     * 
      * FIXME: do I need to mysql_escape_string($_SERVER["PHP_SELF"]) ???
      * FIXME: method is at least called twice with every request to Rox
      * TODO: it's probably not making sense to use $_SERVER['PHP_SELF']

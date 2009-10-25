@@ -1,15 +1,16 @@
 <?php
 $words = new MOD_words();
-$User = APP_User::login();
 $request = PRequest::get()->request;
 $layoutbits = new MOD_layoutbits();
 $d = $image = $this->image;
 
 $Gallery = new Gallery;
-if ($User) {
-    $callbackId = $Gallery->editProcess($image);
+$gallery_ctrl = new GalleryController;
+if ($this->_model->getLoggedInMember())
+{
+    $callbackId = $gallery_ctrl->editProcess($image);
     $vars =& PPostHandler::getVars($callbackId);
-    $callbackIdCom = $Gallery->commentProcess($image);
+    $callbackIdCom = $gallery_ctrl->commentProcess($image);
     $varsCom =& PPostHandler::getVars($callbackIdCom);
     $R = MOD_right::get();
     $GalleryRight = $R->hasRight('Gallery');
@@ -40,6 +41,3 @@ $d = $image;
     <p class="small" title="'.$d->created.'">'.$words->get('created').': '.$layoutbits->ago(strtotime($d->created)).'</p>
     <p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'</p>
     <p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$words->getFormatted('GalleryDownload').'" title="'.$words->getFormatted('GalleryDownload').'"/> </a> </p>';
-    ?>
-
-

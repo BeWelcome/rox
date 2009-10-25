@@ -423,7 +423,7 @@ class MembersController extends RoxControllerBase
             return $str.'/finish';
         }
     }
-    
+
     public function deleteTranslationCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post)) {
@@ -444,7 +444,7 @@ class MembersController extends RoxControllerBase
             }
         }
     }
-    
+
     public function RelationCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post)) {

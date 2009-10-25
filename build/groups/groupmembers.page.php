@@ -37,5 +37,3 @@ class GroupMembersPage extends GroupsBasePage
     }
     
 }
-
-?>

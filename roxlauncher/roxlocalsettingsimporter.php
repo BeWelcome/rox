@@ -198,6 +198,3 @@ See <a href="http://www.bevolunteer.org/trac/ticket/481">Trac Ticket #481: serve
         }
     }
 }
-
-
-?>

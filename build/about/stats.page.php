@@ -36,5 +36,3 @@ class AboutStatisticsPage extends AboutBasePage
     }
 }
 
-
-?>

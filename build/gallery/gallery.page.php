@@ -25,6 +25,14 @@ class GalleryPage extends GalleryBasePage
         return 'overview';
     }
     
+    public function leftSidebar()
+    {
+        $gallery = $this->gallery;
+        $cnt_pictures = $this->cnt_pictures;
+        $username = $this->username;
+        require 'templates/userinfo.php';
+    }
+
     protected function column_col3() {
         $words = $this->words;
         $cnt_pictures = $this->cnt_pictures;

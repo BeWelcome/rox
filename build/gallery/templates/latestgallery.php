@@ -1,6 +1,6 @@
 <?php
 $request = PRequest::get()->request;
-$Gallery = new Gallery;
+$Gallery = new GalleryController;
 $callbackId = $Gallery->updateGalleryProcess();
 $vars = PPostHandler::getVars($callbackId);
 $words = new MOD_words();

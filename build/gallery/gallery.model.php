@@ -160,7 +160,7 @@ VALUES
         }
     }    
     
-    public function updateGalleryProcess($vars)
+    public function updateGalleryProcess($vars = null)
     {
         if (isset($vars)) {
             if (isset ($vars['new']) && $vars['new'] == 1 && !$vars['deleteOnly']) {
@@ -191,9 +191,6 @@ VALUES
                 }
             }
             return PVars::getObj('env')->baseuri.'gallery/show/sets/'.$vars['gallery'];
-        } else {
-            PPostHandler::clearVars($callbackId);
-            return false;
         }
     }
     

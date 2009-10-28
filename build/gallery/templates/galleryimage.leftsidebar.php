@@ -6,7 +6,7 @@ $d = $image = $this->image;
 
 $Gallery = new Gallery;
 $gallery_ctrl = new GalleryController;
-if ($this->_model->getLoggedInMember())
+if ($this->model->getLoggedInMember())
 {
     $callbackId = $gallery_ctrl->editProcess($image);
     $vars =& PPostHandler::getVars($callbackId);

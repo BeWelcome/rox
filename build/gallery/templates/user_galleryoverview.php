@@ -1,6 +1,6 @@
 <?php
 $words = new MOD_words();
-$Gallery = new Gallery;
+$Gallery = new GalleryController;
 $callbackId = $Gallery->updateGalleryProcess();
 $vars = PPostHandler::getVars($callbackId);
 $User = new APP_User;

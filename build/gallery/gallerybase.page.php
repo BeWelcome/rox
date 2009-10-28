@@ -14,8 +14,6 @@ class GalleryBasePage extends PageWithActiveSkin
     {
         $this->page_title = 'Gallery | BeWelcome';
         $this->model = new Gallery();
-        $MemberModel = new MembersModel();
-        $this->loggedInMember = $MemberModel->loggedInMember;
     }
 
     protected function teaserHeadline() {

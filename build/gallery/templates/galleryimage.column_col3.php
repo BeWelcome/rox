@@ -82,7 +82,6 @@ echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->titl
 $shoutsCtrl = new ShoutsController;
 $shoutsCtrl->shoutsList('gallery_items', $d->id);
 
-if ($User) { 
+if ($member) { 
 PPostHandler::clearVars($callbackId); 
 }
-?>

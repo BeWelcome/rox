@@ -20,7 +20,7 @@ if ($this->myself || ($GalleryRight > 1) ) {
 /* If the controls handle galleries
 */ 
 
-$Gallery = new Gallery;
+$Gallery = new GalleryController;
 $callbackId = $Gallery->updateGalleryProcess();
 $vars = PPostHandler::getVars($callbackId);
 ?>

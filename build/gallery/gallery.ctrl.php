@@ -16,8 +16,7 @@ class GalleryController extends RoxControllerBase {
         parent::__construct();
         $this->_model = new Gallery();
         $this->_view  = new GalleryView($this->_model);
-        $MemberModel = new MembersModel();
-        $this->loggedInMember = $MemberModel->getLoggedInMember();
+        $this->loggedInMember = $this->_model->getLoggedInMember();
     }
     
     public function __destruct() {
@@ -201,7 +200,7 @@ class GalleryController extends RoxControllerBase {
                                 }
                             }
                             $vars = PPostHandler::getVars($this->_model->uploadProcess());
-                            if(isset($vars) && array_key_exists('error', $vars)) {
+                            if(isset($vars) && is_array($vars) && array_key_exists('error', $vars)) {
                                 return $P->content .= $vw->uploadForm();
                             } else return $this->useroverview($userId);
                             break;
@@ -232,6 +231,7 @@ class GalleryController extends RoxControllerBase {
         } else {
             $page->galleries = $this->_model->getUserGalleries();                            
         }
+        $page->loggedInMember = $this->_model->getLoggedInMember();
         $page->statement = $this->_model->getLatestItems();
         return $page;
     }
@@ -300,7 +300,7 @@ class GalleryController extends RoxControllerBase {
         $page->infoMessage = $words->get($this->message);
         $page->galleries = $this->_model->getUserGalleries($userId);
         $page->statement = $this->_model->getLatestItems($userId);
-        $page->cnt_pictures = $page->statement->numRows();
+        $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->loggedInMember = $this->loggedInMember;
         return $page;        
     }
@@ -317,7 +317,7 @@ class GalleryController extends RoxControllerBase {
         $page->username = $this->username;
         $page->galleries = $this->_model->getUserGalleries($userId);
         $page->statement = $this->_model->getLatestItems($userId);
-        $page->cnt_pictures = $page->statement->numRows();
+        $page->cnt_pictures = $page->statement? $page->statement->numRows() : 0;
         // $P->content .= $vw->allGalleries($galleries);
         // $P->content .= $vw->userControls($request[3], 'galleries');
         // $P->content .= $vw->userOverviewSimple($statement, $request[3], '');
@@ -337,7 +337,7 @@ class GalleryController extends RoxControllerBase {
         $page->username = $this->username;
         $page->galleries = $this->_model->getUserGalleries($userId);
         $page->statement = $this->_model->getLatestItems($userId);
-        $page->cnt_pictures = $page->statement->numRows();
+        $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->loggedInMember = $this->loggedInMember;
         return $page;        
     }

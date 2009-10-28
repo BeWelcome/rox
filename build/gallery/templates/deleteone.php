@@ -1,5 +1,5 @@
 <?php
-if ($this->_model->getLoggedInMember())
+if ($this->model->getLoggedInMember())
 {
     $Gallery = new GalleryController;
     $callbackId = $Gallery->editProcess();

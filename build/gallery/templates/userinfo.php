@@ -1,20 +1,15 @@
 ﻿<?php
-$User = APP_User::login();
 $words = new MOD_words();
 
-?>
-
-<?php
 echo '
     <div class="floatbox">
         '.MOD_layoutbits::PIC_50_50($username,'',$style='float_left framed').'
         <h2>'.$username.'</h2>
         <p>'.$cnt_pictures.' '.$words->getFormatted('Images').'</p>
     </div>';
-?>
 
-<?php    
-if ($User && $User->getId() == APP_User::userId($username)) {
+if ($this->loggedInMember && $this->loggedInMember->Username == $username)
+{
 ?>
 <div style="padding-top: 20px">
     <ul>

@@ -21,4 +21,3 @@ class GalleryAvatarsPage extends GalleryBasePage
     }
 }
 
-?>

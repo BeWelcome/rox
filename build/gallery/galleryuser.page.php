@@ -24,7 +24,7 @@ class GalleryUserPage extends GalleryBasePage
     {
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures;
-        $username = ($member = $this->loggedInMember) ? $member->username : '';
+        $username = ($member = $this->loggedInMember) ? $member->Username : '';
         require 'templates/userinfo.php';
     }
 

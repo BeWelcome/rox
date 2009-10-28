@@ -16,8 +16,7 @@ class GalleryController extends RoxControllerBase {
         parent::__construct();
         $this->_model = new Gallery();
         $this->_view  = new GalleryView($this->_model);
-        $MemberModel = new MembersModel();
-        $this->loggedInMember = $MemberModel->getLoggedInMember();
+        $this->loggedInMember = $this->_model->getLoggedInMember();
     }
     
     public function __destruct() {

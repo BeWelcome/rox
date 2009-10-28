@@ -160,7 +160,7 @@ VALUES
         }
     }    
     
-    public function updateGalleryProcess($vars)
+    public function updateGalleryProcess($vars = null)
     {
         if (isset($vars)) {
             if (isset ($vars['new']) && $vars['new'] == 1 && !$vars['deleteOnly']) {

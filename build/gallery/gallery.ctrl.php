@@ -201,7 +201,7 @@ class GalleryController extends RoxControllerBase {
                                 }
                             }
                             $vars = PPostHandler::getVars($this->_model->uploadProcess());
-                            if(isset($vars) && array_key_exists('error', $vars)) {
+                            if(isset($vars) && is_array($vars) && array_key_exists('error', $vars)) {
                                 return $P->content .= $vw->uploadForm();
                             } else return $this->useroverview($userId);
                             break;

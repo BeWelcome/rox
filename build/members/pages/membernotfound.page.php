@@ -5,12 +5,14 @@ class MembersMembernotfoundPage extends PageWithActiveSkin
 {
     protected function getPageTitle()
     {
-        return "Member not Found - BeWelcome";
+        $words = new MOD_words;
+        return $words->getSilent('MemberNotFound') . " - BeWelcome";
     }
     
     protected function teaserContent()
     {
-        echo '<div id="teaser"><h1>Member not found</h1></div>';
+        $words = new MOD_words;
+        echo "<div id='teaser'><h1>{$words->get('MemberNotFound')}</h1></div>";
     }
     
     protected function leftSidebar()
@@ -25,8 +27,8 @@ class MembersMembernotfoundPage extends PageWithActiveSkin
     
     protected function column_col3()
     {
-        echo '
-        <p class="note">Did not find this member. We are not amused.</p>';
+        $words = new MOD_words;
+        echo "<p class='note'>{$words->get('MemberNotFoundDescription')}</p>";
     }
 }
 

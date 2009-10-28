@@ -3,7 +3,7 @@ $words = new MOD_words();
 $request = PRequest::get()->request;
 $Gallery = new Gallery;
 $Gallery_ctrl = new GalleryController;
-if ($member = $this->_model->getLoggedInMember())
+if ($member = $this->model->getLoggedInMember())
 {
     $callbackId = $Gallery_ctrl->editProcess($image);
     $vars =& PPostHandler::getVars($callbackId);
@@ -171,7 +171,7 @@ else
 }
     echo "</div>";
 
-if ($this->_model->getLoggedInMember())
+if ($this->model->getLoggedInMember())
 { 
     PPostHandler::clearVars($callbackId); 
     PPostHandler::clearVars($callbackIdCom); 

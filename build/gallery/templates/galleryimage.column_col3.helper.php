@@ -3,7 +3,7 @@ $words = new MOD_words();
 $request = PRequest::get()->request;
 $gallery_ctrl = new GalleryController;
 $image = $this->image;
-if ($this->_model->getLoggedInMember())
+if ($this->model->getLoggedInMember())
 {
     $callbackId = $gallery_ctrl->editProcess($image);
     $vars =& PPostHandler::getVars($callbackId);

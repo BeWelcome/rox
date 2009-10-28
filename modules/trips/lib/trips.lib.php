@@ -106,6 +106,3 @@ class MOD_trips {
 			
 		} // end of	RetrieveLastAcceptedProfileInCityWithAPicture		
 } // end of MOD_Trips
-?>
-
-

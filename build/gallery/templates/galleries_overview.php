@@ -1,7 +1,6 @@
 <?php
 $words = new MOD_words();
 $Gallery = new Gallery;
-$User = new APP_User;
 
 // Show the galleries/photosets
 if ($galleries) {
@@ -41,7 +40,7 @@ if ($galleries) {
         </div>
         <?php
         } else {
-            if ($User->getId() == $g->user_id_foreign) {
+            if ($this->username == $member) {
             if (!isset($emptyPhotosets)) $emptyPhotosets = '<h3>'.$words->get('GalleryEmptyPhotosets').'</h3>';
             $emptyPhotosets .= '<div class="gallery_container" style="margin: 10px; padding: 5px 0 0 5px;) no-repeat;">';
             $emptyPhotosets .= '<h4><a href="gallery/show/sets/'.$g->id.'">'.$g->title.'</a></h4>

@@ -300,7 +300,7 @@ class GalleryController extends RoxControllerBase {
         $page->infoMessage = $words->get($this->message);
         $page->galleries = $this->_model->getUserGalleries($userId);
         $page->statement = $this->_model->getLatestItems($userId);
-        $page->cnt_pictures = $page->statement->numRows();
+        $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->loggedInMember = $this->loggedInMember;
         return $page;        
     }
@@ -317,7 +317,7 @@ class GalleryController extends RoxControllerBase {
         $page->username = $this->username;
         $page->galleries = $this->_model->getUserGalleries($userId);
         $page->statement = $this->_model->getLatestItems($userId);
-        $page->cnt_pictures = $page->statement->numRows();
+        $page->cnt_pictures = $page->statement? $page->statement->numRows() : 0;
         // $P->content .= $vw->allGalleries($galleries);
         // $P->content .= $vw->userControls($request[3], 'galleries');
         // $P->content .= $vw->userOverviewSimple($statement, $request[3], '');

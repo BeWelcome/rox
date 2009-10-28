@@ -12,7 +12,6 @@
         }
 
     $tt = explode(",", $comments[$ii]->Lenght);
-    //var_dump($c);
 ?>
 
   <div class="subcolumns profilecomment">

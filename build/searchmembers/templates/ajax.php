@@ -77,6 +77,7 @@ foreach($TList as $TL) {
 ";
 }
 
+$rr=0;
 $string = "<div class='pages center'><ul style='float:none'>" ;
 for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
     $rr++;

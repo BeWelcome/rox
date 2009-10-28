@@ -115,7 +115,7 @@ Boston, MA  02111-1307, USA.
 <div id="FindPeopleResults">
 <table class="float_left"><tr><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
-<select name="OrderBy" id="filterorder" onchange="document.getElementById('thisorder').value = this.value;">
+<select name="OrderBy" id="filterorder" onChange="document.getElementById('thisorder').value = this.value;">
     <?php foreach($TabSortOrder as $key=>$val) { ?>
     <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>

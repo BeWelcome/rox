@@ -191,9 +191,6 @@ VALUES
                 }
             }
             return PVars::getObj('env')->baseuri.'gallery/show/sets/'.$vars['gallery'];
-        } else {
-            PPostHandler::clearVars($callbackId);
-            return false;
         }
     }
     

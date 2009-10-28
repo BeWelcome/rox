@@ -147,7 +147,7 @@ class GalleryView extends PAppView {
     public function userOverviewSimple($statement, $userHandle, $galleries = false) 
     {
         $words = new MOD_words();
-        $Gallery = new Gallery;
+        $Gallery = new GalleryController;
         $callbackId = $Gallery->updateGalleryProcess();
         $vars =& PPostHandler::getVars($callbackId);
         if (!isset($vars['errors']))

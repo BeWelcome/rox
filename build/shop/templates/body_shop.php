@@ -28,7 +28,7 @@ $words = new MOD_words();
 <form>
 <select name="menu" onChange="javascript:parent.location = this.form.menu.options[this.form.menu.selectedIndex].value;">
   <option><?php echo $words->getBuffered('ShopSelectCountry'); ?></option>
-<option value="shop/world">Australia</option
+<option value="shop/world">Australia</option>
 <option value="shop/europe">Austria</option>
 <option value="shop/europe">Belgium</option>
 <option value="shop/world">Canada</option>
@@ -73,4 +73,17 @@ $words = new MOD_words();
 </form>
 <p><?php echo $words->getBuffered('ShopNotInList'); ?></p>
 <?php echo $words->flushBuffer(); ?>
+</div>
+<div class="subcolumns">
+  		<div class="c50l">
+    		<div class="subcl">
+    		Spreading the word about BeWelcome is a great oppertunity 
+    		
+    		</div>
+   		</div>
+		<div class="c50r">
+    		<div class="subcr">
+    		We can do this together by joining the word about all the wonderful projects we have all over the place.
+    		</div>
+  		</div>
 </div>

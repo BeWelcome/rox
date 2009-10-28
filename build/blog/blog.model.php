@@ -8,18 +8,17 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id:blog.model.php 201 2007-02-11 14:07:56Z marco $
  */
-class Blog extends PAppModel 
+class Blog extends RoxModelBase 
 {
-    private $_dao;
     private $_namespace;
 
     const SQL_BLOGPOST = '
 SELECT
     b.`blog_id`,
-    b.`user_id_foreign` AS `user_id`,
+    b.IdMember,
     b.`flags` AS `flags`,
     bd.`blog_title`, bd.`blog_text`,
-    u.`handle` AS `user_handle`,
+    m.Username AS `user_handle`,
     UNIX_TIMESTAMP(`blog_created`) AS `unix_created`,
     COUNT(c.`id`) AS comments,
     `geonames_cache`.`latitude`, `geonames_cache`.`longitude`, `geonames_cache`.`name` AS `geonamesname`, `geonames_countries`.`name` AS `geonamescountry`,
@@ -27,11 +26,12 @@ SELECT
 FROM `blog` b
 JOIN `blog_data` bd ON b.`blog_id` = bd.`blog_id`
 LEFT JOIN `trip_data` td ON b.`trip_id_foreign` = td.`trip_id`
-LEFT JOIN `user` u ON b.`user_id_foreign` = u.`id`
+LEFT JOIN members m ON b.IdMember = m.id
 LEFT JOIN `blog_comments` AS c ON c.`blog_id_foreign` = b.`blog_id`
 LEFT JOIN `geonames_cache` AS `geonames_cache` ON (`bd`.`blog_geonameid` = `geonames_cache`.`geonameid`)
 LEFT JOIN `geonames_countries` ON (`geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)
-LEFT JOIN `geonames_cache` AS `user_geonames_cache` ON (`u`.`location` = `user_geonames_cache`.`geonameid`)';
+LEFT JOIN addresses AS a ON a.IdMember = m.id
+LEFT JOIN `geonames_cache` AS `user_geonames_cache` ON (a.IdCity = `user_geonames_cache`.`geonameid`)';
 
     /*
      * Blogentry flags
@@ -77,7 +77,7 @@ VALUES
     {
         $query = '
 INSERT INTO `blog`
-(`blog_id`, `flags`, `blog_created`, `user_id_foreign`, `trip_id_foreign`)
+(`blog_id`, `flags`, `blog_created`, IdMember, `trip_id_foreign`)
 VALUES
 (
     '.$this->dao->nextId('blog').',
@@ -318,13 +318,14 @@ WHERE b2t.`blog_id_foreign` = '.(int)$blogId.'
     /**
      * @return True if the blog category belongs to the user.
      */
-    public function isUserBlogCategory($userId, $blogcatId) {
+    public function isUserBlogCategory($userId, $blogcatId)
+    {
 
-        $query = '
+        $query = <<<SQL
 SELECT COUNT(*) AS num
-FROM `blog_categories`
-WHERE `user_id_foreign` = \''.(int)$userId.'\' AND `blog_category_id` = \''.(int)$blogcatId.'\'
-';
+FROM blog_categories
+WHERE IdMember = '{$this->dao->escape($userId)}' AND blog_category_id = '{$this->dao->escape($blogcatId)}'
+SQL;
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not validate blog category id!');
@@ -339,7 +340,7 @@ SELECT
     `blog_id`
 FROM `blog`
 WHERE
-    `user_id_foreign` = '.(int)$userId.'
+    IdMember = '.(int)$userId.'
     AND
     `blog_id` = '.(int)$postId.'
         ';
@@ -352,11 +353,11 @@ WHERE
      */
     public function isUserTrip($userId, $tripId) {
 
-        $query = '
+        $query = <<<SQL
 SELECT COUNT(*) AS num
-FROM `trip`
-WHERE `user_id_foreign` = \''.(int)$userId.'\' AND `trip_id` = \''.(int)$tripId.'\'
-';
+FROM trip
+WHERE IdMember = '{$this->dao->escape($userId)}' AND trip_id = '{$this->dao->escape($tripId)}'
+SQL;
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not validate trip id!');
@@ -367,14 +368,14 @@ WHERE `user_id_foreign` = \''.(int)$userId.'\' AND `trip_id` = \''.(int)$tripId.
     public function getComments($blogId) {
     	$query = '
 SELECT
-    c.`id` AS `comment_id`,
-    c.`user_id_foreign` AS `user_id`,
-    u.`handle` AS `user_handle`,
-    UNIX_TIMESTAMP(c.`created`) AS `unix_created`,
-    c.`title`,
-    c.`text`
-FROM `blog_comments` c
-LEFT JOIN `user` u ON c.`user_id_foreign`=u.`id`
+    c.id AS comment_id,
+    c.IdMember AS IdMember,
+    m.Username AS `user_handle`,
+    UNIX_TIMESTAMP(c.created) AS unix_created,
+    c.title,
+    c.text
+FROM blog_comments c
+LEFT JOIN members m ON c.IdMember =m.id
 WHERE c.`blog_id_foreign` = '.(int)$blogId.'
         ';
         $s = $this->dao->query($query);
@@ -399,8 +400,8 @@ WHERE c.`blog_id_foreign` = '.(int)$blogId.'
         $query = '
 SELECT `blog_category_id`, `name` 
 FROM `blog_categories` ';
-        if ($userid) $query .= '
-WHERE `user_id_foreign` = \''.(int)$userid.'\'';
+        if ($userid) $query .= "
+WHERE IdMember = '" .(int)$userid. "'";
         elseif ($galleryid) $query .= '
 WHERE `blog_category_id` = \''.(int)$galleryid.'\'';
         else throw new PException('Could not retrieve blog categories! '.$userid);
@@ -413,14 +414,47 @@ ORDER BY `name` ASC';
         return $s;
     }
 
+    /**
+     * returns array of categories
+     *
+     * @param int $category_id
+     * @param object $member
+     * @access public
+     * @return array
+     * @throws PException
+     */
+    public function getCategoryArray($category_id = false, $member = false)
+    {
+        if (intval($category_id))
+        {
+            $where = "blog_category_id = {$this->dao->escape($category_id)}";
+        }
+        elseif ($member && $member instanceof Member)
+        {
+            $where = "IdMember = {$member->id}";
+        }
+        else
+        {
+            return array();
+        }
+        $query = <<<SQL
+SELECT blog_category_id, name 
+FROM blog_categories
+WHERE {$where}
+ORDER BY name ASC
+SQL;
+        return $this->bulkLookup($query);
+    }
+
     public function getTripFromUserIt($userid)
     {
-        $query = '
-SELECT t.`trip_id`, td.`trip_name`
-FROM `trip` t
-JOIN `trip_data` td ON t.`trip_id` = td.`trip_id`
-WHERE t.`user_id_foreign` = \''.$userid.'\'
-ORDER BY td.`trip_name` ASC';
+        $query = <<<SQL
+SELECT t.trip_id, td.trip_name
+FROM trip AS t, trip_data AS td
+WHERE t.IdMember = '{$this->dao->escape($userid)}'
+AND t.trip_id = td.trip_id
+ORDER BY td.trip_name ASC
+SQL;
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve trips!');
@@ -445,7 +479,7 @@ JOIN `blog_to_category` bc ON (b.`blog_id` = bc.`blog_id_foreign`)
 WHERE bc.`blog_category_id_foreign` = '.(int)$categoryId;
         } elseif ($userId) {
             $query .= '
-WHERE b.`user_id_foreign` = '.$userId;
+WHERE b.IdMember = '.intval($userId);
         } else {
             $query .= '
 WHERE 1';
@@ -461,16 +495,19 @@ WHERE 1';
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
-        if ($User = APP_User::login()) {
+        if ($member = $this->getLoggedInMember()) {
         	$query .= '
-        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.`user_id_foreign` = '.(int)$User->getId().')
-        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.`user_id_foreign` = '.(int)$User->getId().')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.IdMember = '.(int)$member->id.')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.IdMember = '.(int)$member->id.')
+        ';
+        /** temporarily removed, pending check on whether it's used - then needs refactoring
         OR (
             `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
             AND
-            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
+            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
             ';
+            */
         }
         $query .= '
     )
@@ -481,6 +518,121 @@ ORDER BY b.`blog_created` DESC';
             throw new PException('Could not retrieve blog posts.');
         }
         return $s;
+    }
+
+
+    /**
+     * Returns a statement iterator of all posts
+     * or if $userId is given only those that belong
+     * to that user. Sorted by created DESC.
+     *
+     * @arg int $userId Filters for posts having this user_id.
+     */
+    public function countRecentPosts($userId = false, $categoryId = false)
+    {
+        $query = Blog::SQL_BLOGPOST;
+        if ($categoryId)
+        {
+            $query .= '
+JOIN `blog_to_category` bc ON (b.`blog_id` = bc.`blog_id_foreign`)
+WHERE bc.`blog_category_id_foreign` = '.(int)$categoryId;
+        }
+        elseif ($userId)
+        {
+            $query .= '
+WHERE b.IdMember = '.intval($userId);
+        }
+        else
+        {
+            $query .= '
+WHERE 1';
+        }
+
+        // visibility
+        $query .= '
+    AND
+    (
+        (
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
+        )
+        ';
+        if ($member = $this->getLoggedInMember())
+        {
+        	$query .= '
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.IdMember = '.(int)$member->id.')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.IdMember = '.(int)$member->id.')
+        ';
+        }
+        $query .= '
+    )
+GROUP BY b.`blog_id`
+ORDER BY b.`blog_created` DESC';
+        $query = "SELECT COUNT(blog_id) AS posts FROM ({$query}) AS temp";
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not retrieve blog posts.');
+        }
+        $res = $s->fetch(PDB::FETCH_OBJ);
+        return $res->posts;
+    }
+
+    /**
+     * Returns a statement iterator of all posts
+     * or if $userId is given only those that belong
+     * to that user. Sorted by created DESC.
+     *
+     * @arg int $userId Filters for posts having this user_id.
+     */
+    public function getRecentPostsArray($userId = false, $categoryId = false, $page = 1)
+    {
+        $query = Blog::SQL_BLOGPOST;
+        if ($categoryId) {
+            $query .= '
+JOIN `blog_to_category` bc ON (b.`blog_id` = bc.`blog_id_foreign`)
+WHERE bc.`blog_category_id_foreign` = '.(int)$categoryId;
+        } elseif ($userId) {
+            $query .= '
+WHERE b.IdMember = '.intval($userId);
+        } else {
+            $query .= '
+WHERE 1';
+// do not include sticky posts
+//            $query .= 'WHERE b.`flags` & '.(int)Blog::FLAG_STICKY.' = 0';
+        }
+        // visibility
+        $query .= '
+    AND
+    (
+        (
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
+        )
+        ';
+        if ($member = $this->getLoggedInMember()) {
+        	$query .= '
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.IdMember = '.(int)$member->id.')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.IdMember = '.(int)$member->id.')
+        ';
+        /** temporarily removed, pending check on whether it's used - then needs refactoring
+        OR (
+            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+            AND
+            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
+        )
+            ';
+            */
+        }
+        $query .= '
+    )
+GROUP BY b.`blog_id`
+ORDER BY b.`blog_created` DESC';
+
+        $page = (($page < 1) ? 1 : $page);
+        $offset = ($page - 1) * 5;
+        $query .= " LIMIT {$offset}, 5";
+
+        return $this->bulkLookup($query);
     }
 
     /**
@@ -513,16 +665,18 @@ GROUP BY b.`blog_id`
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
-        if ($User = APP_User::login()) {
+        if ($member = $this->getLoggedInMember()) {
             $query .= '
-        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.`user_id_foreign` = '.(int)$User->getId().')
-        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.`user_id_foreign` = '.(int)$User->getId().')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.IdMember = '.(int)$member->id.')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.IdMember = '.(int)$member->id.')
+        ';
+        /** temporarily removed, pending check on whether it's used - then needs refactoring
         OR (
             `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
             AND
-            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
+            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
-            ';
+            */
         }
         $query .= '
     )
@@ -561,16 +715,18 @@ LEFT JOIN `blog` AS `bl` ON';
             AND bl.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
-        if ($User = APP_User::login()) {
+        if ($member = $this->getLoggedInMember()) {
             $query .= '
-        OR (bl.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND bl.`user_id_foreign` = '.(int)$User->getId().')
-        OR (bl.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND bl.`user_id_foreign` = '.(int)$User->getId().')
+        OR (bl.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND bl.IdMember = '.(int)$member->id.')
+        OR (bl.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND bl.IdMember = '.(int)$member->id.')
+            ';
+           /** taken out pending refactoring and removal of user table 
         OR (
             bl.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
             AND
-            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = bl.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
+            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = bl.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
-            ';
+            */
         }
         $query .= '
     )
@@ -603,16 +759,18 @@ WHERE bt.`name` LIKE \'%'.$this->dao->escape($like).'%\'';
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
-        if ($User = APP_User::login()) {
+        if ($member = $this->getLoggedInMember()) {
             $query .= '
-        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.`user_id_foreign` = '.(int)$User->getId().')
-        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.`user_id_foreign` = '.(int)$User->getId().')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.IdMember = '.(int)$member->id.')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.IdMember = '.(int)$member->id.')
+        ';
+        /* taken out, pending refactoring
         OR (
             `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
             AND
-            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
+            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
-            ';
+            */
         }
         $query .= '
     )
@@ -659,34 +817,28 @@ WHERE b2t.`blog_id_foreign` = '.(int)$postId;
         return ($s->numRows() !== 0);
     }
 
-    public function settingsProcess() {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
-            if (!$User = APP_User::login())
-                return false;
-            $vars =& PPostHandler::getVars();
-            if (!isset($vars['vis']))
-                $vars['vis'] = 'v';
-            switch($vars['vis']) {
-                // public
-            	case 'p':
-                    APP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 2);
-                    break;
-                
-                case 'r':
-                    APP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 1);
-                    break;
-                
-                default:
-                    APP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 0);
-                    break;
-            }
-        	return false;
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
+    /* removed - referencing app_user which is being deleted
+    public function settingsProcess($vars)
+    {
+        if (!isset($vars['vis']))
+            $vars['vis'] = 'v';
+        switch($vars['vis']) {
+            // public
+            case 'p':
+                A PP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 2);
+                break;
+            
+            case 'r':
+                A PP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 1);
+                break;
+            
+            default:
+                A PP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 0);
+                break;
         }
+        return false;
     }
+    */
 
     /**
      * Processing creation of a comment
@@ -698,43 +850,31 @@ WHERE b2t.`blog_id_foreign` = '.(int)$postId;
      * textlen      - too short or long text.
      * inserror     - db error while inserting.
      */
-    public function commentProcess($blogId = false) {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));        
-        if (PPostHandler::isHandling()) {        	
-            if (!$User = APP_User::login())
-                return false;
-            $vars =& PPostHandler::getVars();
-            $request = PRequest::get()->request;
-            if (!$blogId)
-                $blogId = (int)$request[2];
+    public function commentProcess($vars, $request, $blogId)
+    {
+        // validate
+        if (!isset($vars['ctxt']) || strlen($vars['ctxt']) == 0 || strlen($vars['ctxt']) > 5000) {
+            $vars['errors'] = array('textlen');
+            return false;
+        }
+        $member = $this->getLoggedInMember();
 
-            // validate
-            if (!isset($vars['ctxt']) || strlen($vars['ctxt']) == 0 || strlen($vars['ctxt']) > 5000) {
-                $vars['errors'] = array('textlen');
-                return false;
-            }
-
-            $commentId = $this->dao->nextId('blog_comments');
-            $query = '
+        $commentId = $this->dao->nextId('blog_comments');
+        $query = '
 INSERT INTO `blog_comments`
 SET
     `id`='.$commentId.',
     `blog_id_foreign`='.(int)$blogId.',
-    `user_id_foreign`='.$User->getId().',
+    IdMember ='.$member->id.',
     `title`=\''.(isset($vars['ctit'])?$this->dao->escape($vars['ctit']):'').'\',
     `text`=\''.$this->dao->escape($vars['ctxt']).'\',
     `created`=NOW()';
-            $s = $this->dao->query($query);
-            if (!$s) {
-                $vars['errors'] = array('inserror');
-                return false;
-            }
-            PPostHandler::clearVars();
-            return PVars::getObj('env')->baseuri.implode('/', $request).'#c'.$commentId;
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
+        $s = $this->dao->query($query);
+        if (!$s) {
+            $vars['errors'] = array('inserror');
+            return false;
         }
+        return $commentId;
     }
 
     /**
@@ -750,81 +890,28 @@ SET
      * upderror     - db error while updating.
      * delerror     - db error while deleting.
      */
-    public function categoryProcess() {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling()) {
-            if (!$User = APP_User::login())
-                return false;
-            $vars =& PPostHandler::getVars();
-            $request = PRequest::get()->request;
-            if (isset($request[2])) {
-                switch ($request[2]) {
-                case 'edit':
-                    if (!$this->isUserBlogCategory($User->getId(), $request[3])) {
-                        $vars['errors'] = array('nameinvalid');
-                        return false;
-                    }
-                    if (!isset($vars['n']) || strcmp($vars['n'], '')==0) {
-                        $vars['errors'] = array('nameempty');
-                        return false;
-                    }
-                    $query = '
-SELECT COUNT(*)
-FROM `blog_categories`
-WHERE `user_id_foreign` = '.$User->getId().' AND `name` = \''.$this->dao->escape($vars['n']).'\'
-';
-                    $s = $this->dao->query($query);
-                    if (!$s) {
-                        $vars['errors'] = array('upderror');
-                        return false;
-                    }
-                    if ($s->fetchColumn(0) != 0) {
-                        $vars['errors'] = array('namedupe');
-                        return false;
-                    }
-
-                    $query = '
-    UPDATE `blog_categories`
-    SET `name` = \''.$this->dao->escape($vars['n']).'\'
-    WHERE `blog_category_id` = '.(int)$request[3].'
-    ';
-                    $s = $this->dao->query($query);
-                    if (!$s) {
-                        $vars['errors'] = array('upderror');
-                        return false;
-                    }
-                    break;
-
-
-                case 'del':
-                    if (!$this->isUserBlogCategory($User->getId(), $request[3])) {
-                        $vars['errors'] = array('invalid');
-                        return false;
-                    }
-                    $query = '
-    DELETE FROM `blog_categories`
-    WHERE `blog_category_id` = '.(int)$request[3].'
-    ';
-                    $s = $this->dao->query($query);
-                    if (!$s) {
-                        $vars['errors'] = array('delerror');
-                        return false;
-                    }
-                    break;
+    public function categoryProcess($vars, $request)
+    {
+        $member = $this->getLoggedInMember();
+        if (isset($request[2])) {
+            switch ($request[2]) {
+            case 'edit':
+                if (!$this->isUserBlogCategory($member->id, $request[3])) {
+                    $vars['errors'] = array('nameinvalid');
+                    return false;
                 }
-            } else { // !isset($request[2])
                 if (!isset($vars['n']) || strcmp($vars['n'], '')==0) {
-                    $vars['errors'] = array('name');
+                    $vars['errors'] = array('nameempty');
                     return false;
                 }
                 $query = '
 SELECT COUNT(*)
 FROM `blog_categories`
-WHERE `user_id_foreign` = '.$User->getId().' AND `name` = \''.$this->dao->escape($vars['n']).'\'
+WHERE IdMember = '.$member->id.' AND `name` = \''.$this->dao->escape($vars['n']).'\'
 ';
                 $s = $this->dao->query($query);
                 if (!$s) {
-                    $vars['errors'] = array('inserror');
+                    $vars['errors'] = array('upderror');
                     return false;
                 }
                 if ($s->fetchColumn(0) != 0) {
@@ -833,25 +920,73 @@ WHERE `user_id_foreign` = '.$User->getId().' AND `name` = \''.$this->dao->escape
                 }
 
                 $query = '
+    UPDATE `blog_categories`
+    SET `name` = \''.$this->dao->escape($vars['n']).'\'
+    WHERE `blog_category_id` = '.(int)$request[3].'
+    ';
+                $s = $this->dao->query($query);
+                if (!$s) {
+                    $vars['errors'] = array('upderror');
+                    return false;
+                }
+                break;
+
+
+            case 'del':
+                if (isset($vars['no']))
+                {
+                    return true;
+                }
+                if (!$this->isUserBlogCategory($member->id, $request[3])) {
+                    $vars['errors'] = array('invalid');
+                    return false;
+                }
+                $query = '
+    DELETE FROM `blog_categories`
+    WHERE `blog_category_id` = '.(int)$request[3].'
+    ';
+                $s = $this->dao->query($query);
+                if (!$s) {
+                    $vars['errors'] = array('delerror');
+                    return false;
+                }
+                break;
+            }
+        } else { // !isset($request[2])
+            if (!isset($vars['n']) || strcmp($vars['n'], '')==0) {
+                $vars['errors'] = array('name');
+                return false;
+            }
+            $query = '
+SELECT COUNT(*)
+FROM `blog_categories`
+WHERE IdMember = '.$member->id.' AND `name` = \''.$this->dao->escape($vars['n']).'\'
+';
+            $s = $this->dao->query($query);
+            if (!$s) {
+                $vars['errors'] = array('inserror');
+                return false;
+            }
+            if ($s->fetchColumn(0) != 0) {
+                $vars['errors'] = array('namedupe');
+                return false;
+            }
+
+            $query = '
 INSERT INTO `blog_categories`
 SET
 `blog_category_id` = '.$this->dao->nextId('blog_categories').',
     `name` = \''.$this->dao->escape($vars['n']).'\',
-    `user_id_foreign` = '.$User->getId().'
+    IdMember = '.$member->id.'
     ';
-                $s = $this->dao->query($query);
-                if (!$s) {
-                    $vars['errors'] = array('inserror');
-                    return false;
-                }
+            $s = $this->dao->query($query);
+            if (!$s) {
+                $vars['errors'] = array('inserror');
+                return false;
             }
-
-            PPostHandler::clearVars($callbackId);
-            return PVars::getObj('env')->baseuri.'blog/cat/';
-        } else {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
         }
+
+        return true;
     }
     
     /**
@@ -937,34 +1072,6 @@ SET
         return array();
     }
 
-  
-  //replaced by very similar function in geo , could be deleted
-  /**
-    * Search for locations in the geonames database using the SPAF-Webservice
-    *
-    * @param search The location to search for
-    * @return The matching locations
-    */
-    // public function suggestLocation($search)
-    // {
-        // if (strlen($search) <= 1) { // Ignore too small queries
-            // return '';
-        // }
-        // $google_conf = PVars::getObj('config_google');
-        // if (!$google_conf || !$google_conf->geonames_webservice || !$google_conf->maps_api_key) {
-            // throw new PException('Google config error!');
-        // }
-        // require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
-        // $spaf = new SPAF_Maps($search);
-        
-        // $spaf->setConfig('geonames_url', $google_conf->geonames_webservice);
-        // $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
-        // $results = $spaf->getResults();
-        // foreach ($results as &$res) {
-            // $res['zoom'] = $spaf->calcZoom($res);
-        // }
-        // return $results;
-    // }
     
     public function updatePost($blogId, $flags, $tripId = false)
     {
@@ -1080,19 +1187,20 @@ SET
 	
 	
     /**
-    * Search for blog posts
-    *
-    * @param string $search plus(+)-delimited search words
-    * @return posts
-    */
-    
+     * Search for blog posts
+     *
+     * @param string $search plus(+)-delimited search words
+     * @access public
+     * @return array
+     * @throws PException
+     */
     public function searchPosts($search_for) 
     {
         $query = Blog::SQL_BLOGPOST;
 /*        $query .= "JOIN `blog_tags`.`name` AS `tags` ON (`blog_tags` LIKE '".$this->dao->escape($search_for)."%')"; */
-        $query .= "WHERE `blog_title` LIKE '%".$this->dao->escape($search_for)."%'
-                    OR `blog_text` LIKE '%".$this->dao->escape($search_for)."%'
-                    OR `handle` LIKE '%".$this->dao->escape($search_for)."%'
+        $query .= "WHERE `blog_title` LIKE '%{$this->dao->escape($search_for)}%'
+                    OR `blog_text` LIKE '%{$this->dao->escape($search_for)}%'
+                    OR m.Username LIKE '%{$this->dao->escape($search_for)}%'
                     ";
                     
         // visibility
@@ -1104,60 +1212,21 @@ SET
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
-        if ($User = APP_User::login()) {
+        if ($member = $this->getLoggedInMember()) {
             $query .= '
-        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.`user_id_foreign` = '.(int)$User->getId().')
-        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.`user_id_foreign` = '.(int)$User->getId().')
-        OR (
-            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
-            AND
-            (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
-        )
-            ';
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND b.IdMember = '.(int)$member->id.')
+        OR (`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND b.IdMember = '.(int)$member->id.')
+        ';
         }
         $query .= '
     )
 GROUP BY b.`blog_id`
 ORDER BY b.`blog_created` DESC LIMIT 20';
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve blog posts.');
-        }
-        return $s;
-    
-    /*
-        // Split words
-        $words = explode(',', $search);
-        $cleaned = array();
-        // Clean up
-        foreach ($words as $word) {
-            $word = trim($word);
-            if ($word) {
-                $cleaned[] = $word;
-            }
-        }
-        $words = $cleaned;
-        $search_for = $search;
-        
-        if ($search_for) {
-        
-            $query = "SELECT `blog_id`,
-                FROM `blog_data`,`blog_tags`
-                WHERE `blog_title` LIKE '".$this->dao->escape($search_for)."%'
-                OR `blog_text` LIKE '".$this->dao->escape($search_for)."%'
-                OR `name` LIKE '".$this->dao->escape($search_for)."%'";
-            $s = $this->dao->query($query);
-            if (!$s) {
-                throw new PException('Could not find search terms');
-            }
-            $posts = array();
-            while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-                $posts[] = $row->blog_id;
-            }
-            
-        }
-        return array(); */
+        return $this->bulkLookup($query);
     }
 
+    public function getMemberByUsername($username)
+    {
+        return $this->createEntity('Member')->findByUsername($username);
+    }
 }
-?>

@@ -36,23 +36,11 @@ class SearchmembersView extends PAppView {
         $this->_model = $model;
     }
 
-    public function passthroughCSS($req) {
-        $loc = PApps::getBuildDir().'searchmembers/'.$req;
-        if (!file_exists($loc))
-            exit();
-        $headers = apache_request_headers();
-        // Checking if the client is validating his cache and if it is current.
-        if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($loc))) {
-            // Client's cache IS current, so we just respond '304 Not Modified'.
-            header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($loc)).' GMT', true, 304);
-        } else {
-            // File not cached or cache outdated, we respond '200 OK' and output the image.
-            header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($loc)).' GMT', true, 200);
-            header('Content-Length: '.filesize($loc));
-        }
-        header('Content-type: text/css');
-        @copy($loc, 'php://output'); // better to avoid @;
-        exit();
+    public function quicksearch_results($TReturn)
+    {
+
+		$this->page->title='Search Results - Bewelcome' ;
+        require 'templates/quicksearch.php';
     }
 
     public function searchmembers($queries, $mapstyle, $varsOnLoad, $varsGet, $TabAccomodation)
@@ -69,29 +57,29 @@ class SearchmembersView extends PAppView {
         include 'templates/ajax.php';
     }
 	
-/*
-    public function quicksearch($TList, $searchtext)
-    {
-        require 'templates/quicksearch.php';
-    }
-	*/
 
-    public function teaser($mapstyle) {
+    public function quicksearch_form()
+    {
+		$TList=array() ;
+		$searchtext="" ;
+		$mapstyle="mapoff";
+        require 'templates/memberlist_quicksearch.php';
+    }
+
+    public function teaser($mapstyle, $TabSortOrder, $vars = false) {
         require 'templates/teaser.php';
     }
+    
+    public function search_column_col3($sortorder, $queries, $mapstyle, $varsOnLoad, $varsGet, $TabAccomodation) {
+        $google_conf = PVars::getObj('config_google');
+        if ($mapstyle == "mapoff") require 'templates/search_nomap.column_col3.php';
+        else require 'templates/search.column_col3.php';
+    }
+    
     public function teaserquicksearch($mapstyle) {
         require 'templates/teaser_quicksearch.php';
     }
-    public function submenu($subTab) {
-        require 'templates/submenu.php';        
-    }    
-	public function userBar($mapstyle,$TabSortOrder, $quicksearch=0) {
-        if (!$quicksearch) {
-        require 'templates/userbar.php';
-        } else {
-        require 'templates/userbar_quicksearch.php';
-        }
-    }
+
 	public function memberlist($mapstyle,$TabSortOrder, $quicksearch=0) {
         if (!$quicksearch) {
         require 'templates/memberlist.php';
@@ -102,16 +90,11 @@ class SearchmembersView extends PAppView {
     
 	/* This adds other custom styles to the page*/
 	public function customStyles($mapstyle,$quicksearch=0) {
-        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/bw_basemod_search_'.$mapstyle.'.css" type="text/css"/>';
-        $out .= '<link rel="stylesheet" type="text/css" href="styles/prototip/prototip.css" />';
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/basemod_minimal_col3.css" type="text/css"/>';
+        $out .= '<!--[if lte IE 7]><link rel="stylesheet" href="styles/css/minimal/patches/patch_3col.css" type="text/css"/><![endif]-->';
+        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/searchmembers.css" type="text/css"/>';
+        $out .= '<link rel="stylesheet" type="text/css" href="styles/css/minimal/screen/custom/prototip.css" />';
 		return $out;
-    }
-    public function rightContent() {
-	$User = new UserController;
-		$User->displayLoginForm();
-	}
-    public function topMenu($currentTab) {
-        require TEMPLATE_DIR.'shared/roxpage/topmenu.php';
     }
 
     public function showFeatureIsClosed()
@@ -123,3 +106,11 @@ class SearchmembersView extends PAppView {
     } // end of showFeatureIsClosed()
 
 }
+/* removed functions referencing user - pending deletiong
+
+    public function rightContent() {
+	$User = new UserController;
+		$User->displayLoginForm();
+	}
+
+*/

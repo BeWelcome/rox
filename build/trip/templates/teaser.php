@@ -1,5 +1,4 @@
 <?php
-$User = APP_User::login();
 $words = new MOD_words();
 $search = '';
 if (isset($_GET['s']) && $_GET['s'])

@@ -3,15 +3,13 @@
 /* user controls for use with a list of pictures
 /* */
 $words = new MOD_words();
-$User = APP_User::login();
+$username = $this->Username;
+$loggedInMember = $this->loggedInMember;
 $R = MOD_right::get();
 $GalleryRight = $R->hasRight('Gallery');
 if (isset($this->current_set)) $current_set = $this->current_set;
 
-if ($User && (($User->getHandle() == $userHandle) || ($GalleryRight > 1)) ) {
-
-if (!isset($galleries))
-$galleries = $this->_model->getUserGalleries($User->getId());
+if ($this->myself || ($GalleryRight > 1) ) {
 
 ?>
     <div class="floatbox">
@@ -55,7 +53,7 @@ $vars = PPostHandler::getVars($callbackId);
 
     <input name="removeOnly" type="hidden" value="1">
     <input type="submit" name="button" value="<?=$words->getBuffered('GalleryRemoveImagesFromPhotoset')?>" class="button" style="cursor:pointer"/>
-    <a href="gallery/show/sets/<?=$this->current_set?>/upload" class="button" /><img src="images/icons/picture_add.png"><?=$words->get('GalleryUploadPhotos')?></a>
+    <a href="gallery/show/sets/<?=$this->gallery->id?>/upload" class="button" /><img src="images/icons/picture_add.png"><?=$words->get('GalleryUploadPhotos')?></a>
 
 </p>
 
@@ -78,7 +76,7 @@ $vars = PPostHandler::getVars($callbackId);
     <br />
     <br />
 <?php
-if ($galleries) { ?>
+if (isset($galleries) && $galleries) { ?>
 <img src="images/icons/picture_go.png"> <?=$words->get('GalleryAddToPhotoset')?>
 <br />
 <input type="radio" name="new" id="oldGallery" value="0">&nbsp;&nbsp;

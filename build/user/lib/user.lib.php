@@ -107,7 +107,7 @@ class APP_User extends MOD_bw_user_Auth
     }
     
 
- private function _BWcookieLogin() 
+    private function _BWcookieLogin() 
     {
         if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;
@@ -342,7 +342,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
 
         // give up
         if( !$c->loggedIn) {
-			 if (!empty($handle)) MOD_log::get()->write("Login Failed for <b>".$handle."</b>","Login") ; // This is needed for debugging !
+//			 MOD_log::get()->write("Login Failed for <b>".$handle."</b>","Login") ; // This is needed for debugging !
             return false;
         }
         // depending on load...
@@ -406,7 +406,7 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
      */
     public function removeCookie() 
     {
-        if( !PVars::__get('cookiesAccepted'))
+        if( !PVars::get()->cookiesAccepted)
             return false;
         if( !isset($_COOKIE) || !is_array($_COOKIE))
             return false;
@@ -465,6 +465,25 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
             return false;
         return $d->id;
     }
+
+    /**
+     * returns the member id for given handle
+     * 
+     * may be called statically
+     * 
+     * @param string $handle
+     * @return mixed int or false
+     */
+    public static function memberId($handle) 
+    {
+        $c = self::get();
+        $query = 'SELECT `id` FROM `members` WHERE `username` = \''.$c->dao->escape($handle).'\'';
+        $q = $c->dao->query($query);
+        $d = $q->fetch(PDB::FETCH_OBJ);
+        if( !$d)
+            return false;
+        return $d->id;
+    }    
     
     /**
      * returns the country code for given handle
@@ -487,6 +506,18 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         if( !$d || !$d->fk_countrycode)
             return false;
         return $d->fk_countrycode;
+    }
+
+    /**
+     * sets the loggedIn variable to false
+     * hack to be able to log out not using this class
+     *
+     * @todo get rid of this whole class
+     */
+    public function setLogout()
+    {
+        $me = self::get();
+        $me->loggedIn = false;
     }
 }
 ?>

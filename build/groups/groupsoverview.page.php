@@ -20,11 +20,17 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
-/**
- * This page shows an overview of the groups in bw,
- * with search, my groups, etc
- *
- */
+    /**
+     * @author Fake51
+     */
+
+    /**
+     * This page shows an overview of the groups in bw,
+     * with search, my groups, etc
+     *
+     * @package Apps
+     * @subpackage Groups
+     */
 class GroupsOverviewPage extends GroupsBasePage
 {
     

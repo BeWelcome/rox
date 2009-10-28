@@ -1,14 +1,14 @@
 <?php
 $words = new MOD_words();
 
-$User = APP_User::login();
-if ($User && $User->loggedIn()) {
+$member = $this->_model->getLoggedInMember();
+if ($member)
+{
 ?>
           <h3>Actions</h3>
           <ul class="linklist">
 			<li><a href="trip/show/my"><img src="images/icons/world.png" alt="my trips" /></a> <a href="trip/show/my"><?=$words->get('TripsShowMy')?></a></li>
             <li><a href="trip/create"><img src="images/icons/world_add.png" alt="new trip" /></a> <a href="trip/create"><?=$words->get('TripTitle_create')?></a></li>
-            <li><a href="blog/create"><img src="images/icons/note_add.png" alt="new blogentry" /></a> <a href="blog/create"><?=$words->get('Trip_SubtripsCreate')?></a></li>
 		  </ul>
             <?php
                 // ###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###

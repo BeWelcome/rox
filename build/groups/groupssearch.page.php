@@ -20,11 +20,15 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /**
-     *
-     *
      * @author Fake51
      */
 
+    /**
+     * This page allows for searching for groups
+     *
+     * @package Apps
+     * @subpackage Groups
+     */
 
 class GroupsSearchPage extends GroupsBasePage
 {

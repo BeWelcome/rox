@@ -2346,7 +2346,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    #-- explicit title given via [ title | WikiLink ]
    $href = $title = strtok($str, "|");
    if ($uu = strtok("|")) {
-      $href = $uu;
+      $title = $uu;
       $states["titled"] = 1;
    }
    #-- title and href swapped: swap back
@@ -2404,7 +2404,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    $href_i = EWIKI_CASE_INSENSITIVE ? strtolower($href) : ($href);
 
    #-- injected URLs
-   if (isset($ewiki_links[$href_i]) && strpos($inj_url = $ewiki_links[$href_i], "://")) {
+   if (isset($ewiki_links[$href_i]) && !is_array($ewiki_links[$href_i]) && strpos($inj_url = $ewiki_links[$href_i], "://")) {
       if ($href==$title) { $href = $inj_url; }
    }
    $states["title"] = &$title;

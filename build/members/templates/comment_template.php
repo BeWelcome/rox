@@ -12,7 +12,6 @@
         }
 
     $tt = explode(",", $comments[$ii]->Lenght);
-    // var_dump($c);
 ?>
 
   <div class="subcolumns profilecomment">
@@ -23,7 +22,8 @@
            <img class="float_left framed"  src="members/avatar/<?=$c->Username?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
-            <p>
+            <p class="floatbox">
+              <? if ($c->IdFromMember == $this->loggedInMember->Id) echo '<a href="members/'.$member->username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?>
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
               <span class="small grey"><?=$words->get('CommentFrom','<a href="people/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
             </p>
@@ -36,7 +36,6 @@
             <p>
               <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->unix_updated)?></em>
             </p>
-            <hr />
         </div> <!-- comment -->
       </div> <!-- subcl -->
     </div> <!-- c75l -->
@@ -58,6 +57,8 @@
       </div> <!-- subcr -->
     </div> <!-- c25r -->
   </div> <!-- subcolumns -->
+  <?=($ii == $iiMax-1) ? '' : '<hr/>' ?>
+
 <?php
 }
 ?>

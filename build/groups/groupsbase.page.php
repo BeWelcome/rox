@@ -21,6 +21,16 @@ Boston, MA  02111-1307, USA.
 */
 
 
+    /**
+     * @author Fake51
+     */
+
+    /**
+     * base class for all groups pages
+     *
+     * @package Apps
+     * @subpackage Groups
+     */
 class GroupsBasePage extends PageWithActiveSkin
 {
 
@@ -174,4 +184,3 @@ class GroupsBasePage extends PageWithActiveSkin
 
 }
 
-?>

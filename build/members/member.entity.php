@@ -624,27 +624,18 @@ SQL;
     }
 
     
-	/*
-	* this function get the number of post of the current member
-	*/
-	public function forums_posts_count() {
-		// Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
-		if (isset($this->ForumPostCount)) {
-			return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
-		}
-		else {
-			$sql = "SELECT count(*) as cnt from forums_posts where IdWriter=".$this->id ;
-			$rr = $this->singleLookup($sql);
-			if ($rr) {
-				$this->ForumPostCount=$rr->cnt;
-			}
-			else {
-				$this->ForumPostCount=0 ;
-			}
-			return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
-		}
-	} // forums_posts_count
-	
+    /*
+    * this function get the number of post of the current member
+    */
+    public function forums_posts_count() {
+        // Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
+        if (!$this->ForumPostCount)
+        {
+            $this->ForumPostCount = $this->createEntity('Post')->getMemberPostCount($this);
+        }
+        return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
+    } // forums_posts_count
+    
     public function get_verification_status()
     {
         // Loads the vérification level of the member (if any) 
@@ -689,12 +680,14 @@ FROM
     members
 WHERE
     specialrelations.IdOwner = $this->id  AND
-    specialrelations.IdRelation = members.Id 
+    specialrelations.IdRelation = members.Id AND
+	members.Status in ('Active','ActiveHidden','ChoiceInactive') 
           ";
           $s = $this->dao->query($sql);
           $Relations = array();
           while( $rr = $s->fetch(PDB::FETCH_OBJ)) {
-              $rr->Comment = $words->mTrad($rr->Comment);
+              $rr->IdTradComment = $rr->Comment;
+//              $rr->Comment = $words->mTrad($rr->Comment);
               array_push($Relations, $rr);
           }
           return $Relations;

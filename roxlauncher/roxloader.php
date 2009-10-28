@@ -102,12 +102,12 @@ class RoxLoader
                 ) {
                     $settings_pvars[$section] = array();
                     foreach (self::$_ini_settings[$section] as $key => $value) {
-                        $settings_pvars[$section][$key] = $object->__get($key);
-                        if (self::$_ini_settings[$section][$key] != $object->__get($key)) {
+                        $settings_pvars[$section][$key] = $object->$key;
+                        if (self::$_ini_settings[$section][$key] != $object->$key) {
                             if (!isset($differences[$section])) {
                                 $differences[$section] = array(); 
                             }
-                            $differences[$section][$key] = $object->__get($key);
+                            $differences[$section][$key] = $object->$key;
                         }
                         echo '.';
                     }
@@ -152,6 +152,3 @@ class RoxLoader
         }
     }
 }
-
-
-?>

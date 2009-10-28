@@ -42,19 +42,22 @@ if (isset($trip_data[$trip->trip_id])) {
     <div class="subcr">
       <!-- Contents for right subtemplate -->
 <?php
-        echo '<h3 class="borderless">';
-        echo '<a href="blog/'.$trip->handle.'/'.$blogid.'">'.$blog->blog_title.'</a><br />';
-		if ($blog->name) {
-		    $geo = new GeoModel();
-		    $bloggeo = $geo->LoadLocation($blog->blog_geonameid);
-		    if (isset($bloggeo[0])) {
-		        $countryId = isset($bloggeo[0]->parentCountryId) ? $bloggeo[0]->parentCountryId : false;
-		        if ($countryId) {
-		            $countrygeo = $geo->LoadLocation($countryId);
-		            $countryname = $countrygeo[0]->name;
-	            }
+        echo <<<HTML
+        <h3 class="borderless">
+        <a href="blog/{$trip->handle}/{$blogid}">{$blog->blog_title}</a><br />
+HTML;
+		if ($blog->name)
+        {
+		    if ($bloggeo = $this->model->getBlogGeo($blog->blog_geonameid))
+            {
+                $country = $bloggeo->getCountry();
+                $countryname = $country->name;
 	        }
-			echo '<span style="font-size: 14px;">'.$blog->name.', '.(isset($countryname) ? $countryname : '').'</span>';
+            else
+            {
+                $countryname = '';
+            }
+			echo "<span style='font-size: 14px;'>{$blog->name}, {$countryname}</span>";
 		}
         echo '</h3>';
 		if ($blog->blog_text) {

@@ -20,6 +20,17 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
+    /**
+     * @author Fake51
+     */
+    /**
+     * the model of the groups mvc
+     *
+     * @package Apps
+     * @subpackage Groups
+     */
+     
+
 class GroupsModel extends  RoxModelBase
 {
     private $_group_list = 0;
@@ -68,6 +79,8 @@ class GroupsModel extends  RoxModelBase
 
     /**
      * searches for members, using username
+     * if group is provided, any members found that are in that
+     * group will not be returned
      *
      * @param string $name
      * @access public

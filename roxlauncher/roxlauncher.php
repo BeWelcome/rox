@@ -93,7 +93,21 @@ class ExceptionLogger
     {
         if ($handle = fopen('exception.log', 'at'))
         {
-            $string = "Exception occurred at " . date('Y-m-d H:i:s') . ". Here are the details:" . PHP_EOL;
+            $string = "Exception occurred at " . date('Y-m-d H:i:s') . ". Here are the details:". PHP_EOL;
+
+			if (isset($_SESSION["IdMember"])) {
+				$string .= "Session data: IdMember=" . $_SESSION["IdMember"] ;
+				if (isset($_SESSION["Username"])) {
+					$string .= " Username=" . $_SESSION["Username"] ;
+				}
+				if (isset($_SESSION["MemberStatus"])) {
+					$string .= " MemberStatus=" . $_SESSION["MemberStatus"] ;
+				}
+				$string .=	PHP_EOL;
+			}
+			else {
+				$string .=	"No session data for log members".PHP_EOL;
+			}
             $string .= "* Request url: {$_SERVER['REQUEST_URI']}" . PHP_EOL;
             $string .= "* Exception message: {$e->getMessage()}" . PHP_EOL;
             $string .= "* Exception class: " . get_class($e) . PHP_EOL;

@@ -5,6 +5,13 @@ class PageWithHTML extends AbstractBasePage
 {
     private $_widgets = array();  // will be asked for stylesheet and scriptfile information
 
+    private $_early_scriptfiles = array(
+        'script/main.js',
+        'script/common.js',
+    );
+
+    private $_late_scriptfiles = array();
+
     public function render() {
         $this->init();
         header('Content-type: text/html;charset="utf-8"');
@@ -16,6 +23,17 @@ class PageWithHTML extends AbstractBasePage
         // by default, nothing happens.
         // the idea of this function is to set some values,
         // such as page title, meta keyword, meta description
+    }
+
+    /**
+     * skeleton method of getCustomElements
+     *
+     * @access protected
+     * @return array
+     */
+    protected function getCustomElements()
+    {
+        return array();
     }
     
     /**
@@ -44,20 +62,63 @@ class PageWithHTML extends AbstractBasePage
         }
         return $stylesheet_patches;
     }
-    
+
+    /**
+     * returns all registered early load scripts
+     * these are the scripts to be loaded in the html head element
+     *
+     * @access protected
+     * @return array
+     */
     protected function getScriptfiles()
     {
-        $scriptfiles = array(
-            'script/main.js'
-        );
+        $scriptfiles = $this->_early_scriptfiles;
         foreach ($this->_widgets as $widget) {
             foreach ($widget->getScriptfiles() as $scriptfile) {
                 $scriptfiles[] = $scriptfile;
             }
         }
-        return $scriptfiles;
+        return array_unique($scriptfiles);
     }
-    
+
+    /**
+     * returns all registered late load scripts
+     * these are the scripts to be loaded at the end of the page
+     *
+     * @access protected
+     * @return array
+     */
+    protected function getLateLoadScriptfiles()
+    {
+        return array_diff(array_unique($this->_late_scriptfiles), $this->_early_scriptfiles);
+    }
+
+    /**
+     * registers a script for early loading
+     *
+     * @param string $file - js file to early load
+     *
+     * @access protected
+     * @return void
+     */
+    protected function addEarlyLoadScriptFile($file)
+    {
+        $this->_early_scriptfiles[] = 'script/' . $file;
+    }
+
+    /**
+     * registers a script for late loading
+     *
+     * @param string $file - js file to early load
+     *
+     * @access protected
+     * @return void
+     */
+    protected function addLateLoadScriptFile($file)
+    {
+        $this->_late_scriptfiles[] = 'script/' . $file;
+    }
+
     protected function getPageTitle() {
         return 'BeWelcome';
     }
@@ -107,6 +168,7 @@ class PageWithHTML extends AbstractBasePage
         
         $this->body();
         
+        $this->includeLateScriptfiles();
         ?>
         </body>
         </html><?php
@@ -131,7 +193,23 @@ class PageWithHTML extends AbstractBasePage
             <?php
         }
     }
-    
+
+    /**
+     * allows for outputting custom elements in the page <head> element
+     *
+     * @access protected
+     */
+    protected function includeCustomElements()
+    {
+        if ($elements = $this->getCustomElements())
+        {
+            foreach($elements as $element)
+            {
+                echo $element . PHP_EOL;
+            }
+        }
+    }
+
     protected function includeScriptfiles()
     {
         ?>
@@ -142,6 +220,24 @@ class PageWithHTML extends AbstractBasePage
         } else foreach($scriptfiles as $url) {
             ?><script type="text/javascript" src="<?=$url ?>"></script>
             <?php
+        }
+    }
+
+    /**
+     * outputs script tags that include script files
+     * called at the end of pages
+     *
+     * @access protected
+     * @return void
+     */
+    protected function includeLateScriptfiles()
+    {
+        if ($scriptfiles = $this->getLateLoadScriptfiles())
+        {
+            foreach($scriptfiles as $url)
+            {
+                echo "<script type='text/javascript' src='{$url}'></script>";
+            }
         }
     }
     
@@ -157,9 +253,7 @@ class PageWithHTML extends AbstractBasePage
         <meta name="robots" content="<?=$this->getPage_meta_robots()?>" />        
         <?php
         $this->includeStylesheets();
-        ?>
-        
-        <?php
+        $this->includeCustomElements();
         $this->_tr_buffer_header = $this->getWords()->flushBuffer();
     }
     

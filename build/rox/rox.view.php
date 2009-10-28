@@ -274,26 +274,6 @@ class RoxView extends PAppView {
 		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/index.css\" type=\"text/css\"/>";
 	}
     
-    public function rightContentIn()
-    {
-	// Space for advertisement
-    //    require TEMPLATE_DIR.'apps/rox/ads.php';
-	}
-    public function rightContentOut()
-    {
-        $request = PRequest::get()->request;
-        if(!isset($request[0])) {
-            $redirect_url = false;
-        } else if ($request[0]=='login') {
-            $redirect_url = implode('/', array_slice($request, 1));
-            $redirect_url .= (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
-        } else {
-            $redirect_url = false;
-        }
-        $User = new UserController;
-		$User->displayLoginForm($redirect_url);
-	}
-	
     public function topMenu($currentTab)
     {
 	require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
@@ -304,7 +284,7 @@ class RoxView extends PAppView {
         
         $pair = $this->_model->getLangNames();
         $flaglist = '';
-        $request_string = implode('/',PVars::__get('request'));
+        $request_string = implode('/',PVars::get()->request);
 		foreach($pair as $abbr => $title) {
 		    $png = $abbr.'.png';
 		    if ($_SESSION['lang'] == $abbr) {		        
@@ -327,4 +307,27 @@ class RoxView extends PAppView {
     }
 
 }
-?>
+/* removed functions referencing app user - pending deletion
+
+    public function rightContentIn()
+    {
+	// Space for advertisement
+    //    require TEMPLATE_DIR.'apps/rox/ads.php';
+	}
+	
+    public function rightContentOut()
+    {
+        $request = PRequest::get()->request;
+        if(!isset($request[0])) {
+            $redirect_url = false;
+        } else if ($request[0]=='login') {
+            $redirect_url = implode('/', array_slice($request, 1));
+            $redirect_url .= (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
+        } else {
+            $redirect_url = false;
+        }
+        $User = new UserController;
+		$User->displayLoginForm($redirect_url);
+	}
+
+*/

@@ -34,7 +34,7 @@ class TripController extends PAppController {
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
         
-        $User = APP_User::login();
+        $member = $this->_model->getLoggedInMember();
         
         // Show the teaser
         $this->showTeaser();
@@ -44,7 +44,7 @@ class TripController extends PAppController {
         
         switch($request[1]) {
         	case 'create':
-                if (!$User)
+                if (!$member)
                     return false;
                 $P->content .= $vw->createForm();
                 break;
@@ -89,8 +89,8 @@ class TripController extends PAppController {
 					break;
 				}
             default:
-				if (eregi('^[0-9]+$', $request[1])) {
-					$this->showTrip($request[1]);
+				if (intval($request[1])) {
+					return $this->showTrip($request[1]);
 				} else {
 	            	$this->showAllTrips();
 	                break;
@@ -136,7 +136,7 @@ class TripController extends PAppController {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
     	if (PPostHandler::isHandling())
         {
-            if (!$user = APP_User::login())
+            if (!$member = $this->_model->getLoggedInMember())
             {
                 return false;
             }
@@ -147,7 +147,11 @@ class TripController extends PAppController {
                 $vars['errors'][] = 'name';
                 return false;
             }
-            return $this->_model->createTrip(&$vars, $user);
+            if ($trip_id = $this->_model->createTrip(&$vars, $member))
+            {
+                return 'trip/' . $trip_id;
+            }
+            return false;
     	}
         else
         {
@@ -156,7 +160,8 @@ class TripController extends PAppController {
     	}
     }
 
-    private function editTrip($tripId) {
+    private function editTrip($tripId)
+    {
 		$callbackId = $this->editProcess();
 		PPostHandler::clearVars($callbackId);
 		
@@ -169,46 +174,57 @@ class TripController extends PAppController {
 		PPostHandler::clearVars($callbackId);
     }
     
-    public function editProcess() {
+    public function editProcess()
+    {
 		$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
 		
 		if (PPostHandler::isHandling()) {
 			return $this->_model->editProcess($callbackId);
-		} else {
+		}
+        else
+        {
 			PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
 			return $callbackId;
 		}
     }
     
-    private function reorder($items) {
+    private function reorder($items)
+    {
     	// Validate the array
-    	foreach ($items as &$item) {
+    	foreach ($items as &$item)
+        {
     		$item = (int) $item;
     	}
     	$this->_model->reorderTripItems($items);
     }
     
-    private function getPage() {
+    private function getPage()
+    {
         // track pages
         $request = PRequest::get()->request;
         $requestStr = implode('/', $request);
         $matches = array();
-        if (preg_match('%/page(\d+)%', $requestStr, $matches)) {
+        if (preg_match('%/page(\d+)%', $requestStr, $matches))
+        {
             $page = $matches[1];
-        } else {
+        }
+        else
+        {
             $page = 1;
         }
         return $page;
     }
     
-    private function showMyTrips() {
-        $User = APP_User::login();
-        if ($User && $handle = $User->getHandle()) {
+    private function showMyTrips()
+    {
+        if (($member = $this->_model->getLoggedInMember()) && ($handle = $member->Username))
+        {
     		$this->showTrips($handle);
     	}
     }
     
-    private function showTrips($handle) {
+    private function showTrips($handle)
+    {
         $page = $this->getPage();
 		$trips = $this->_model->getTrips($handle);
 		$trip_data = $this->_model->getTripData();
@@ -217,13 +233,14 @@ class TripController extends PAppController {
         $P->newBar = $vw->displayMap($trips, $trip_data);
         $P->content .= $vw->displayTrips($trips, $trip_data, $page);
         
-        $User = APP_User::login();
-        if ($User && $handle = $User->getHandle() && !$trips) {
+        if (($member = $this->_model->getLoggedInMember()) && ($handle = $member->Username) && !$trips)
+        {
             $P->content .= $vw->createForm();
     	}
     }
 
-    private function showMap($trip) {
+    private function showMap($trip)
+    {
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
 //		$trips = $this->_model->getTrips($handle);
@@ -231,7 +248,8 @@ class TripController extends PAppController {
         $P->newBar .= $vw->displayMap($trips = false, $trip_data = false);
     }
 
-    private function showTeaser($trip = false) {
+    private function showTeaser($trip = false)
+    {
 //		$trips = $this->_model->getTrips($handle);
 //		$trip_data = $this->_model->getTripData();
         $P = PVars::getObj('page');
@@ -239,7 +257,8 @@ class TripController extends PAppController {
         $P->teaserBar .= $vw->teaser($trip);
     }
     
-    private function showAllTrips() {
+    private function showAllTrips()
+    {
     	$this->showTrips(false);
         //$this->showMap(false);
     }
@@ -247,18 +266,29 @@ class TripController extends PAppController {
     /*
     * Show a single trip (details, map, possibiltiy to reorder)
     */
-    private function showTrip($tripid) {
+    private function showTrip($tripid)
+    {
     	$trip = $this->_model->getTrip($tripid);
     	$trip_data = $this->_model->getTripData();
-        if (!$trip) {
+        if (!$trip)
+        {
             header("Location: " . PVars::getObj('env')->baseuri . "trip");
         }
-        $P = PVars::getObj('page');
+        $page = new TripSingleTripPage();
+        $page->trip = $trip;
+        $page->trip_data = $trip_data;
+
+        // hack to display sidebar without too much refactoring for now
+        // todo: remove this when/if trips are actually refactored
         $vw = new ViewWrap($this->_view);	
-        $P->content = $vw->heading_singleTrip($trip, $trip_data);
-        $P->newBar = $vw->displaySingleTrip_Map($trip, $trip_data);
-        $P->newBar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
-        $P->content .= $vw->displaySingleTrip($trip, $trip_data);
+        $bar = $vw->displaySingleTrip_Map($trip, $trip_data);
+        $bar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
+        $bar .= $vw->userbar();
+        $bar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
+        $page->sidebar = $bar;
+        $page->heading = $vw->heading_singleTrip($trip, $trip_data);
+        $page->model = $this->_model;
+        return $page;
+        //$P->content .= $vw->displaySingleTrip($trip, $trip_data);
     }
 }
-?>

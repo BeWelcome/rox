@@ -109,7 +109,7 @@ HTML;
             echo "<h3>{$words->get('ProfileGroups')}</h3>";
             for ($i = 0; $i < count($my_groups) && $i < 3; $i++) :
                 $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' );
-                $comment = htmlspecialchars($words->mTrad($member->getGroupMembership($my_groups[$i])->Comment), ENT_QUOTES);
+                $comment = htmlspecialchars($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment,$profile_language), ENT_QUOTES);
                 echo <<<HTML
                 <div class="groupbox floatbox">
                     <a href="groups/{$my_groups[$i]->id}">

@@ -1,5 +1,0 @@
-
-This application contains a new login widget.
-It's a refactored version of the login found in build/user, which was/is a mess.
-
-Next step will be to use this login widget on the startpage.

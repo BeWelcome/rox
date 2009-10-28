@@ -16,13 +16,6 @@ class PublicStartpage extends RoxPageView
         if(!isset($request[0])) {
             $redirect_url = false;
             require 'templates/teaser.php';
-        } else if ($request[0]=='login') {
-            $redirect_url = implode('/', array_slice($request, 1));
-            if (!empty($_SERVER['QUERY_STRING'])) {
-                $redirect_url .= '?'.$_SERVER['QUERY_STRING'];
-            }
-            $login_widget = $this->createWidget('LoginFormWidget');
-            $login_widget->render();
         } else {
             require 'templates/teaser.php';
         }
@@ -44,7 +37,6 @@ class PublicStartpage extends RoxPageView
         if(!isset($request[0])) {
             $redirect_url = false;
             require 'templates/startpage.php';
-        } else if ($request[0]=='login') {
         } else {
             $redirect_url = false;
             require 'templates/startpage.php';
@@ -64,7 +56,3 @@ class PublicStartpage extends RoxPageView
     }
 
 }
-
-
-
-?>

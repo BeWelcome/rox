@@ -1,39 +1,79 @@
 <?php
-$User = APP_User::login();
+$words = new MOD_words();
 $request = PRequest::get()->request;
 $Gallery = new Gallery;
-if ($User) {
-    $callbackId = $Gallery->editProcess($image);
+$Gallery_ctrl = new GalleryController;
+if ($member = $this->_model->getLoggedInMember())
+{
+    $callbackId = $Gallery_ctrl->editProcess($image);
     $vars =& PPostHandler::getVars($callbackId);
-    $callbackIdCom = $Gallery->commentProcess($image);
+    $callbackIdCom = $Gallery_ctrl->commentProcess($image);
     $varsCom =& PPostHandler::getVars($callbackIdCom);
-    $R = MOD_right::get();
-    $GalleryRight = $R->hasRight('Gallery');
 }
-    $d = $image;
-    $d->user_handle = MOD_member::getUsername($d->user_id_foreign);
-if (!isset($vars['errors'])) {
+$GalleryRight = MOD_right::get()->hasRight('Gallery');
+$d = $image;
+$d->user_handle = MOD_member::getUsername($d->user_id_foreign);
+$canEdit = ($User && $User->getId() == $d->user_id_foreign) ? true : false;
+
+if (!isset($vars['errors']))
+{
     $vars['errors'] = array();
 }
-// $i18n = new MOD_i18n('date.php');
-// $format = $i18n->getText('format');
-$words = new MOD_words();
 
-echo '
-<h2 id="g-title">'.$d->title.'</h2>';
+echo <<<HTML
+<h2 id="g-title">{$d->title}</h2>
+HTML;
 
-    if (!$d->description == 0) {echo '<p id="g-text">'.$d->description.'</p>';}
-    else {
-        echo '<p id="g-text">'.$words->getBuffered("GalleryAddDescription").'</p>'.$words->flushBuffer();
+    if (!$d->description == 0)
+    {
+        echo <<<HTML
+        <p id="g-text">{$d->description}</p>
+HTML;
     }
-    if ($User && $User->getId() == $d->user_id_foreign) {
-?>
-<a href="gallery/show/sets/" id="g-title-edit" class="button">Edit title</a>
-<a href="gallery/show/sets/" id="g-text-edit" class="button">Edit text</a><br />
+    elseif ($canEdit)
+    {
+        echo <<<HTML
+        <p id="g-text">{$words->getBuffered("GalleryAddDescription")}</p>{$words->flushBuffer()}
+HTML;
+    }
+    if ($canEdit  || ($GalleryRight > 1))
+    {
+        $title = htmlentities($d->title, ENT_COMPAT, 'utf-8');
+        $description = htmlentities($d->description, ENT_COMPAT, 'utf-8');
+        echo <<<HTML
+    <a href="gallery/show/image/{$d->id}" id="g-title-edit" class="button" style="display:none;">{$words->getSilent("EditTitle")}</a>
+    <a href="gallery/show/image/{$d->id}" id="g-text-edit" class="button" style="display:none;">{$words->getSilent("EditDescription")}</a>
+    <a style="cursor:pointer" href="gallery/show/image/<?=$d->id?>/delete" class="button" onclick="return confirm('{$words->getFormatted("confirmdeletepicture")}')">{$words->getSilent("Delete")}</a>
+    {$words->flushBuffer()}
+
+<form method="post" action="gallery/show/image/{$d->id}/edit" class="def-form">
+    <fieldset id="image-edit" class="inline NotDisplayed">
+    <legend>{$words->getFormatted('GalleryTitleEdit')}</legend>
+    
+        <div class="row">
+            <label for="image-edit-t">{$words->getFormatted('GalleryLabelTitle')}</label><br/>
+            <input type="text" id="image-edit-t" name="t" class="short" value="{$title}" />
+            <br/><br/>
+            <label for="image-edit-txt">{$words->getFormatted('GalleryLabelText')}</label><br/>
+            <textarea id="image-edit-txt" name="txt" cols="30" rows="4">{$description}</textarea>
+            <div id="bcomment-text" class="statbtn"></div>
+	        <input type="hidden" name="{$callbackId}" value="1"/>
+	        <input type="hidden" name="id" value="{$d->id}"/>
+            <p class="desc">{$words->getFormatted('GalleryDescTitle')}</p>
+            <input type="submit" name="button" value="submit" id="button" />
+        </div>
+        <div class="row">
+        </div>    
+</fieldset>
+</form>
     <script type="text/javascript">
+    $('image-edit').hide();
+    $('g-title-edit').show();
+    $('g-text-edit').show();
+
     new Ajax.InPlaceEditor('g-title', 'gallery/ajax/image/', {
             callback: function(form, value) {
-                return '?item=<?=$d->id?>&title=' + decodeURIComponent(value)
+                return '?item={$d->id}&title=' + decodeURIComponent(value)
             },
             externalControl: 'g-title-edit',
             formClassName: 'inplaceeditor-form-big',
@@ -43,7 +83,7 @@ echo '
 
     new Ajax.InPlaceEditor('g-text', 'gallery/ajax/image/', {
             callback: function(form, value) {
-                return '?item=<?=$d->id?>&text=' + decodeURIComponent(value)
+                return '?item={$d->id}&text=' + decodeURIComponent(value)
             },
             externalControl: 'g-text-edit',
             rows: '5',
@@ -51,10 +91,13 @@ echo '
             ajaxOptions: {method: 'get'}
         })
     </script>
-<?php } ?>
+HTML;
+}
+echo <<<HTML
 <div class="floatbox">
 <div class="img">
-<?php
+HTML;
+
 echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->title.' :: '.$d->description.'" class="lightview" rel="image">
     <img id="thumb_'.$d->id.'" src="gallery/thumbimg?id='.$d->id.'&amp;t=2" class="framed big" alt="image"/>
 </a>';
@@ -120,15 +163,16 @@ echo $callbackIdCom; ?>" value="1"/>
     </p>
 </form>
 <?
-} else {
+}
+else
+{
     // not logged in.
     echo '<p>'. $words->getFormatted('PleaseRegister') .'</p>';
 }
-?>
-</div>
-<?php
-if ($User) { 
-PPostHandler::clearVars($callbackId); 
-PPostHandler::clearVars($callbackIdCom); 
+    echo "</div>";
+
+if ($this->_model->getLoggedInMember())
+{ 
+    PPostHandler::clearVars($callbackId); 
+    PPostHandler::clearVars($callbackIdCom); 
 }
-?>

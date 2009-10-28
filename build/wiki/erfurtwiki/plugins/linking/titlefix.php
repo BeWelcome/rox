@@ -17,30 +17,20 @@ $ewiki_plugins["link_notfound"][] = "ewiki_linking_titlefix";
 
 
 function ewiki_linking_titlefix(&$title, &$href, &$href2, &$type) {
-
    global $ewiki_links;
-   $title2 = str_replace(array("  "," "),"+",$title); // replace spaces with "+" as we do in linking
-   $find = ewiki_db::FIND(array($title2));
-   if ($find[$title2]) {
-
-      $uu = $href;
-      $href = $title;
-      $title = $uu;
-
-      $str = '<a href="' . ewiki_script("", $href) . htmlentities($href2)
-           . '">' . $title . '</a>';
+   $href_mod = str_replace("  "," ",$href);
+   $find = ewiki_db::FIND(array($href_mod));
+   if ($find[$href_mod])
+   {
+      $str = '<a href="' . ewiki_script("", rawurlencode($href_mod)) . htmlentities($href2) . '">' . $title . '</a>';
       $type = array("wikipage", "title-swapped");
-      return($str);
-   } else {
-       
-       $uu = $href;
-       $href = $title;
-       $title = $uu;
-       $str = '<span class="NotFound"><a href="' . ewiki_script("", $href) . htmlentities($href2)
-            . '">' . $title . '</a></span>';       
-       $type = array("wikipage", "title-swapped");
-       return($str);
    }
+   else
+   {
+       $str = '<span class="NotFound"><a href="' . ewiki_script("", rawurlencode($href_mod)) . htmlentities($href2) . '">' . $title . '</a></span>';
+       $type = array("wikipage", "title-swapped");
+   }
+   return($str);
 
 }
 

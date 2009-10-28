@@ -18,7 +18,6 @@ class WikiView extends PAppView {
         /* This displays the custom teaser */
     public function teaser()
     {
-        $User = APP_User::login();
         $words = new MOD_words();
 ?>
         <div id="teaser" class="clearfix">

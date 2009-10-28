@@ -23,12 +23,6 @@ class GalleryView extends PAppView {
     {
         require 'templates/teaser.php';
     }
-
-    /* This displays the optional precontent */
-    public function precontent($gallery = false)
-    {
-        require 'templates/precontent_gallery.php';
-    }
     
     public function customStyles2ColLeft()
 	{		
@@ -44,7 +38,7 @@ class GalleryView extends PAppView {
 	{		
 	// calls a 1column layout 
 		echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2col_wide.css\" type=\"text/css\"/>";
-        echo "<link rel=\"stylesheet\" href=\"styles/lightview.css\" type=\"text/css\"/>";
+        echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/custom/lightview.css\" type=\"text/css\"/>";
 	}        
     public function image($image) 
     {
@@ -110,6 +104,12 @@ class GalleryView extends PAppView {
         $shoutsCtrl = new ShoutsController;
         $request = PRequest::get()->request;
         $shoutsCtrl->shoutsList('gallery', $request[3]);
+    }
+    public function avatars($statement) 
+    {
+		$words = new MOD_words();
+		if (!$statement) echo $words->get('Gallery_NoAvatarsYet','<a href="editmyprofile">','</a>');
+        require 'templates/overview.php';
     }
     public function allGalleries($galleries) 
     {

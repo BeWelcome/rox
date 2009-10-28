@@ -22,6 +22,7 @@
 
 <? // Profile Relations ?>
 <?php 
+$purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $relations = $member->relations;
 if (count($relations) > 0) { ?>
 	    <div class="floatbox box">
@@ -37,7 +38,7 @@ if (count($relations) > 0) { ?>
 		    </a>
 			<a class="float_left" href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
 		    <br />
-		    <?=$rel->Comment?>
+		    <?php echo $purifier->purify($words->mInTrad($rel->IdTradComment,$profile_language,true)) ; ?>
 		  </li>
 		  <?php } ?>
 		</ul>

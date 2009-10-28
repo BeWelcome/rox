@@ -190,7 +190,7 @@ class PagerWidget extends RoxWidget
                 break;
             case 'get':
             default:
-                $url = $this->page_url . ((strstr($this->page_url, '?')) ? ((substr($this->page_url,-5) == '&amp;') ? '' : "&amp;"): "?") . "{$this->page_url_marker}={$page}";
+                $url = $this->page_url . ((strstr($this->page_url, '?')) ? ((substr($this->page_url,-5) == '&amp;' || substr($this->page_url,-1) == '?') ? '' : "&amp;"): "?") . "{$this->page_url_marker}={$page}";
                 break;
         }
         return "<a href='{$url}'" . (($title) ? " title='{$title}'" : '') . ">{$text}</a>";

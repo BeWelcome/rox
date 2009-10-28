@@ -15,7 +15,8 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-if (!$User) {
+
+if (!$member) {
     echo '<p class="error">'.$words->get('BlogErrors_not_logged_in').'</p>';
     return false;
 }
@@ -118,10 +119,8 @@ if (in_array('upderror', $vars['errors'])) {
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
-        <input type="hidden" name="<?php
-        // IMPORTANT: callback ID for post data
-        echo $callbackId; ?>" value="1"/>
 <?php
+echo $callback;
 if (isset($vars['id']) && $vars['id']) {
 ?>
         <input type="hidden" name="id" value="<?=(int)$vars['id']?>"/>
@@ -319,6 +318,7 @@ if ($google_conf && $google_conf->maps_api_key) {
 <fieldset id="blog-settings">
     <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
     <?php
+    /* removed, referencing user app
     if ($User->hasRight('write_sticky@blog')) {
     ?>
         <div class="row">
@@ -331,6 +331,7 @@ if ($google_conf && $google_conf->maps_api_key) {
         </div>
     <?php
     }
+    */
     ?>
     <label><?=$words->get('label_vis')?></label>
     <div class="row">

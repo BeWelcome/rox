@@ -328,12 +328,22 @@ WHERE
     {
         $errors = array();
         
-        
-        // sample!
-        if (empty($vars['geonameid']) || empty($vars['countryname'])) {
-            $errors[] = 'SignupErrorProvideLocation';
+        $syshcvol = PVars::getObj('syshcvol');
+        $max = count($syshcvol->LenghtComments);
+        $tt = $syshcvol->LenghtComments;
+        for ($ii = 0; $ii < $max; $ii++) {
+            $chkName = "Comment_" . $tt[$ii];
+            if (isset($vars[$chkName])) {
+                $one_selected = true;
+            }
         }
-        
+        if (!isset($one_selected)) {
+            $errors[] = 'Comment_NoCommentLengthSelected';
+        }
+        if ($vars['Quality'] != "Negative" && isset ($vars["Comment_NeverMetInRealLife"])) {
+            $errors[] = 'NoPositiveComment_if_NeverMetInRealLife';
+        }        
+        return $errors;
     }
     
     public function addComment($TCom,&$vars)

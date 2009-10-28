@@ -323,6 +323,9 @@ WHERE
      * Updates environment variables: WhoIsOnlineCount, GuestOnlineCount
      * WhoIsOnlineCount: number according to table online
      * GuestOnlineCount: number according to table guestsonline minus WhoIsOnlineCount
+	 *
+	 * Important this function also refresh the $_SESSION["MemberStatus"] variable and 
+	 * test it against Rejected and Banned status
      */
     public static function updateSessionOnlineCounter()
     {

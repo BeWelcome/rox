@@ -71,26 +71,26 @@ if (!isset($headingLevel)) {
     </div> <!-- floatbox -->
 
     <p class="action">
-        <?php
-        echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
-        if ($blog->comments) {
-          if ($blog->comments == 1) {
-            echo '<img src="images/icons/comment.png" alt="'.$words->get('CommentsSingular').'"/> 1 '.$words->get('CommentsSingular');
-          } else {
-            echo '<img src="images/icons/comments.png" alt="'.$words->get('CommentsPlural').'"/> '.(int)$blog->comments.' '.$words->get('CommentsPlural');
-          }
-        } else {
-          echo '<img src="images/icons/comment_add.png" alt="'.$words->get('CommentsAdd').'"/> '.$words->get('CommentsAdd');
-        }
-        echo '</a>';
-        if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
-            echo ' | <a href="" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
-        }
-        $User = APP_User::login();
-        if ($User && $User->getId() == $blog->user_id) {
-        ?> &nbsp;&nbsp;<a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a> &nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a><?php
-        }
-        ?>
+<?php
+echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
+if ($blog->comments) {
+  if ($blog->comments == 1) {
+    echo '<img src="images/icons/comment.png" alt="'.$words->get('CommentsSingular').'"/> 1 '.$words->get('CommentsSingular');
+  } else {
+    echo '<img src="images/icons/comments.png" alt="'.$words->get('CommentsPlural').'"/> '.(int)$blog->comments.' '.$words->get('CommentsPlural');
+  }
+} else {
+  echo '<img src="images/icons/comment_add.png" alt="'.$words->get('CommentsAdd').'"/> '.$words->get('CommentsAdd');
+}
+echo '</a>';
+if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
+    echo ' | <a href="" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
+}
+$member = $this->_model->getLoggedInMember();
+if ($member && $member->id == $blog->IdMember) {
+?> &nbsp;&nbsp;<a href="blog/edit/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" alt="edit" /><?=$words->get('edit')?></a> &nbsp;&nbsp;<a href="blog/del/<?=$blog->blog_id?>"><img src="styles/css/minimal/images/iconsfam/delete.png" alt="delete" /><?=$words->get('delete')?></a><?php
+}
+?>
     </p>
     <?php
     if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {

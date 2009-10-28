@@ -15,8 +15,10 @@
  * @version $Id$
  */
 
-$titleSetting = APP_User::getSetting($userId, 'blog_title');
-if (!$titleSetting) {
+/* removed - referencing app_user
+$titleSetting = A PP_User::getSetting($userId, 'blog_title');
+*/
+if (!isset($titleSetting)) {
 ?>
 <!--<h2><?=$titleSetting?></h2> -->
 <?php
@@ -26,8 +28,8 @@ if (!$titleSetting) {
 <?php
 }
 ?>
+<a href="rss/blog/author/<?=$member->id?>" alt="Get the RSS-Feed of this page" class="float_right"><img src="images/icons/feed.png"></a>
 <?php
 foreach($blogIt as $blog) {
     require 'blogitem.php';
 }
-?>

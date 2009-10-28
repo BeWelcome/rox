@@ -19,6 +19,8 @@
 
     // login routes
     $this->addRoute('login_helper','login/:url:#login-widget', 'LoginController', 'login_helper', true);
+    $this->addRoute('logout', 'logout', 'LoginController', 'logOut');
+    $this->addRoute('login', 'login*', 'LoginController', 'logIn');
 
     // group routes
     $this->addRoute('group_acceptinvitation','groups/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
@@ -53,3 +55,10 @@
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
 
+    // admin app routes
+    $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
+    $this->addRoute('admin_norights', 'admin/norights', 'AdminController', 'noRights');
+    // admin debug routes
+    $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminController', 'debugLogs');
+    // admin accepter routes
+    $this->addRoute('admin_accepter', 'admin/accepter', 'AdminController', 'accepter');

@@ -27,7 +27,8 @@ Refactoried by JeanYvea after the first move to Rox
 $words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 
-echo "search results for <b>",$TReturn->searchtext,"</b><br />" ;
+
+echo $words->getFormatted("SearchResultsFor","<b>".$TReturn->searchtext."</b>"),"<br />" ;
 ?>
 
 <?php
@@ -80,12 +81,19 @@ echo "search results for <b>",$TReturn->searchtext,"</b><br />" ;
 			?>
 			<tr class="<?=$styles[$ii%2] ?>">
 			<td align="center">
-				<?php echo "<a href=\"",$p->link,"\">",$p->name,"</a>" ;
+				<?php echo "<a href=\"",$p->link,"\">" ;
+				if (!empty($p->CountryName)) {
+					echo $p->CountryName,"::" ;
+				}
+				if (!empty($p->RegionName)) {
+					echo $p->RegionName,"::" ;
+				}
+				echo $p->name,"</a>" ;
 				if ($p->NbMembers>1) {
-					echo " (",$p->NbMembers,$words->getFormatted("Members"),")" ;
+					echo " (",$p->NbMembers," ",$words->getFormatted("Members"),")" ;
 				}
 				else {
-					echo " (",$p->NbMembers,$words->getFormatted("Member"),")" ;
+					echo " (",$p->NbMembers," ",$words->getFormatted("Member"),")" ;
 				}
 				
 				?>

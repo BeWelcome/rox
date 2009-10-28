@@ -13,6 +13,7 @@ $words = new MOD_words();
     </a>
 
 </p>
+<!--
     <div id="searchinfo">
         <h3><?php echo $words->getFormatted('quicksearchIntro'); ?></h3>
         <?php echo $words->getFormatted('quicksearchIntroText'); ?>
@@ -20,4 +21,5 @@ $words = new MOD_words();
         <h3><?php echo $words->getFormatted('quicksearchIntro2'); ?></h3>
         <?php echo $words->getFormatted('quicksearchIntroText2'); ?>
     </div>
+-->
 </div>

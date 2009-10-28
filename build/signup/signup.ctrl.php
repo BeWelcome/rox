@@ -38,21 +38,23 @@ class SignupController extends RoxControllerBase {
      *
      * @param void
      */
-    public function index($args = false) {
-		
-				if ($_SESSION['Param']->FeatureSignupClose=="Yes") {
-					// Todo : provide some nice view instead of this rough message
-					die ("Sorry this feature is under maintenance. Volunteers are working on it, Please come back later") ; 
-				}
+    public function index($args = false) 
+    {	
+        // In case Signup is closed
+		if (isset($_SESSION['Param']->FeatureSignupClose) && $_SESSION['Param']->FeatureSignupClose=="Yes") {
+            return new SignupClosedPage();
+		}
 
         $request = $args->request;
         $model = new SignupModel();
-        //ini_set("session.gc_maxlifetime", "20");
         
         if (isset($_SESSION['IdMember']) && !MOD_right::get()->hasRight('words')) {
-            
-            $this->redirect('bw/member.php?cid='.$_SESSION['Username']);
-            
+            if (!isset($_SESSION['Username'])) {
+                unset($_SESSION['IdMember']);
+                $page = new SignupProblemPage();
+            } else {
+                $this->redirect('members/'.$_SESSION['Username']);
+            }
         } else switch (isset($request[1]) ? $request[1] : '') {
         
             // copied from TB:
@@ -100,41 +102,6 @@ class SignupController extends RoxControllerBase {
                 PPHP::PExit();
             }
             
-            /**
-            * probably not needed at this place?
-            **/
-            //$Geo = new GeoController;
-            //echo "<br>model: ";
-            //echo get_class($model);
-
-            // $locations = $model->getRegions($country);
-            // $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-                // <option value="">None</option>';
-            // foreach ($locations as $code => $location) {
-                // $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-            // }
-            // $out .= '</select>';
-            // return $out;
-            // PPHP::PExit();
-            // break;
-                
-            // case 'locationdropdowns':
-            // // ignore current request, so we can use the last request
-            // PRequest::ignoreCurrentRequest();
-            // if (!isset($request[2])) {
-                // PPHP::PExit();
-            // }
-            // $locations = $model->getAllLocations($country, $areacode);
-            // $out = '<select name="d_geoname" id="d_geoname" onchange="javascript: updateGeonames();">
-                // <option value="">None</option>';
-            // foreach ($locations as $code => $location) {
-                // $out .= '<option value="'.$code.'"'.($code == "$preselect" ? ' selected="selected"' : '').'>'.$location.'</option>';
-            // }
-            // $out .= '</select>';
-            // return $out;
-            // PPHP::PExit();
-            // break;
-            
             case 'terms':
 				MOD_log::get()->write("Viewing terms","Signup") ;
                 // the termsandconditions popup
@@ -179,27 +146,11 @@ class SignupController extends RoxControllerBase {
                 break;
                 
             default:
-                
                 $page = new SignupPage();
-
                 $page->step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
 				$StrLog="Entering Signup step: #".$page->step ;
 				MOD_log::get()->write($StrLog,"Signup") ;
                 $page->model = $model;
-                
-
-            /*
-                case 'confirm':
-                ob_start();
-                $username = "";
-                $email = "";
-                $this->_view->confirmation($username, $email);
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
-                break;
-            */
         }
         
         return $page;
@@ -263,7 +214,7 @@ class SignupController extends RoxControllerBase {
                 $View = new SignupView($model);
                 // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
-                $View->registerMail($idTB);
+                $View->registerMail($vars, $id, $idTB);
                 $View->signupTeamMail($vars);
                 unset($_SESSION['IdMember']);
                 return 'signup/finish';

@@ -11,15 +11,15 @@ if (isset($vars['errors']) && in_array('gallery', $vars['errors'])) {
     echo '<span class="error">'.$words->get('GalleryErrorsPhotoset').'</span>';
 }
 ?>
-<h2><a href="gallery/show/user/<?=$userHandle?>/sets" alt="GalleryTitleSets"><?php echo $words->getFormatted('GalleryTitleSets'); ?></a></h2>
+<h2><a href="gallery/show/user/<?=$username?>/sets" alt="GalleryTitleSets"><?php echo $words->getFormatted('GalleryTitleSets'); ?></a></h2>
 <?php
 $itemsPerPage = 3;
 require 'galleries_overview.php';
 ?>
 
-<h2><a href="gallery/show/user/<?=$userHandle?>/pictures" alt="GalleryTitleLatest"><?php echo $words->getFormatted('GalleryTitleLatest'); ?></a></h2>
+<h2><a href="gallery/show/user/<?=$username?>/pictures" alt="GalleryTitleLatest"><?php echo $words->getFormatted('GalleryTitleLatest'); ?></a></h2>
 
-<form method="post" action="gallery/show/user/<?=$userHandle?>/sets" name="mod-images" class="def-form">
+<form method="post" action="gallery/show/user/<?=$username?>/sets" name="mod-images" class="def-form">
     <input type="hidden" name="<?=$callbackId?>" value="1"/>
   
 <?php

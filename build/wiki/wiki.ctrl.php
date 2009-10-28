@@ -60,7 +60,6 @@ class WikiController extends PAppController {
     */
     public function index() {
         $request = PRequest::get()->request;
-        $User = APP_User::login();
 
         ob_start();
         $str = ob_get_contents();
@@ -128,7 +127,8 @@ class WikiController extends PAppController {
         require_once("erfurtwiki/plugins/auth/auth_perm_ring.php");
         $ewiki_perm_rings['rss'] = 3;
 
-        $User = APP_User::login();
+        $model = new MembersModel;
+        $User = $model->getLoggedInMember();
         $Right = new MOD_right();
         if ($User && $Right->hasRight('Admin','Wiki')) {
             $ewiki_author = $User->getHandle();

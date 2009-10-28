@@ -58,7 +58,7 @@ function translator_block() {
         }
         echo "<a href='bw/admin/adminwords.php?showtransarray=1&amp;pagetotranslate=" . $pagetotranslate . "' target='_blank'><img height='11px' width='16px' src='bw/images/switchtrans.gif' alt='go to current translation list for " . $_SERVER['PHP_SELF'] . "' title='go to current translation list for " . $_SERVER['PHP_SELF'] . "' /></a>\n";
         
-        $request_string = implode('/',PVars::__get('request'));
+        $request_string = implode('/',PVars::get()->request);
         $rox_tr = PVars::getObj("env")->baseuri . "rox/tr_mode";
         $words = new MOD_words();
     

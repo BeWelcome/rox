@@ -148,35 +148,9 @@ SET
 		if (strpos($txt,"href=")===false)  { // We will only try to make clickable links if there is not yet a href= (ie already present clickable link) in the text
 			$txt = $this->makeClickableLinks($txt);
 		}
-        $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
-        $doc = @DOMDocument::loadHTML($str);
-        if ($doc) {
-            $sanitize = new PSafeHTML($doc);
-            $sanitize->allow('html');
-            $sanitize->allow('body');
-            $sanitize->allow('b');
-            $sanitize->allow('i');
-            $sanitize->allow('a');
-            $sanitize->allow('strong');
-            
-            $sanitize->allowAttribute('href');
-            $sanitize->allowAttribute('class');
-            $sanitize->allowAttribute('width');
-            $sanitize->allowAttribute('height');
-            $sanitize->allowAttribute('alt');
-            $sanitize->allowAttribute('title');
-            $sanitize->clean();
-            $doc = $sanitize->getDoc();
-            $nodes = $doc->x->query('/html/body/node()');
-            $ret = '';
-            foreach ($nodes as $node) {
-                $ret .= $doc->saveXML($node);
-            }
-            return $ret;
-        } else {
-            // invalid HTML
-            return '';
-        }
+        $purifier = MOD_htmlpure::get()->getPurifier();
+        $txt = $purifier->purify($txt);
+        return $txt;
     } // end of cleanupText
 
 }

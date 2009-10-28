@@ -149,14 +149,15 @@ function startRest() {
         map = new GMap2(document.getElementById("map"));
         var mapTypeControl = new GSmallMapControl();
         var topRight = new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(30,50));
+        <? if ($locations) { ?>
         map.setCenter(new GLatLng(<?=$locations[$point]->lat?>, <?=$locations[$point]->lng?>), 5);
+        <? } ?>
         map.addMapType(G_PHYSICAL_MAP);
         map.setMapType(G_PHYSICAL_MAP); 
         map.enableDoubleClickZoom();
         mgr = new MarkerManager(map, {trackMarkers:true});
         window.setTimeout(setupOfficeMarkers, 0);
         // zoomfit(map);
-
       }
     }
 

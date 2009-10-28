@@ -4,6 +4,7 @@ $Gallery = new Gallery;
 $callbackId = $Gallery->updateGalleryProcess();
 $vars = PPostHandler::getVars($callbackId);
 $words = new MOD_words();
+$type = 'gallery';
 ?>
 
 <form method="post" action="gallery/show/sets/<?=$request[3]?>/edit/images" name="mod-images" class="def-form">

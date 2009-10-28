@@ -77,7 +77,7 @@ class VisualComponent extends RoxComponentBase
             $appname = 'yummygummy';
         } else {
             // using a heuristic to guess which is the correct application directory name
-            $subdirs = split('[/\\]', dirname($file));
+            $subdirs = preg_split('/[\\/\\\]/', dirname($file));
             if ($subdirs[count($subdirs)-2] != 'build') {
                 array_pop($subdirs);
             }
@@ -99,7 +99,7 @@ class VisualComponent extends RoxComponentBase
             return 'yummygummy';
         } else {
             // using a heuristic to guess which is the correct application directory name
-            $subdirs = split('[/\\]', dirname($file));
+            $subdirs = preg_split('/[\\/\\\]/', dirname($file));
             $subdir_count = count($subdirs);
             if ($subdirs[$subdir_count-2] != 'build') {
                 array_pop($subdirs);
@@ -112,5 +112,3 @@ class VisualComponent extends RoxComponentBase
     }
 }
 
-
-?>

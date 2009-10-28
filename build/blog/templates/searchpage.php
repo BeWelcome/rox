@@ -15,7 +15,6 @@
  * @version $Id$
  */
 $words = new MOD_words();
-$search = $_GET['s'];
 
 if (!$search) {}
 else {

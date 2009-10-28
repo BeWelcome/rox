@@ -16,6 +16,8 @@ class GalleryController extends RoxControllerBase {
         parent::__construct();
         $this->_model = new Gallery();
         $this->_view  = new GalleryView($this->_model);
+        $MemberModel = new MembersModel();
+        $this->loggedInMember = $MemberModel->getLoggedInMember();
     }
     
     public function __destruct() {
@@ -29,14 +31,14 @@ class GalleryController extends RoxControllerBase {
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
         $cw = new ViewWrap($this);
-        
+
         $P->addStyles .= $vw->customStylesLightview();
         
         $Page->currentTab = 'gallery';
         $subTab = 'browse';
         $name = false;
 
-        $this->setTitleTranslate("GalleryTitle");
+        $loggedInMember = $this->loggedInMember;
 
         $request = PRequest::get()->request;
         if (!isset($request[1]))
@@ -54,14 +56,6 @@ class GalleryController extends RoxControllerBase {
                         break;
                 }
                 break;
-        
-            case 'deleteall':
-                if (!PVars::get()->debug)
-                    PPHP::PExit();
-                $this->_model->deleteAll();
-                echo 'deleted.';
-                PPHP::PExit();
-                break;
                 
             case 'thumbimg':
                 PRequest::ignoreCurrentRequest();
@@ -78,12 +72,10 @@ class GalleryController extends RoxControllerBase {
                 break;
                 
             case 'upload':
-                $subTab = 'upload';
-                $P->content .= $vw->uploadForm();
-                break;
+                return new GalleryUploadPage();
             
             case 'uploaded':
-                if (!$User = APP_User::login())
+                if (!$loggedInMember)
                     return false;
                 $this->uploadedProcess();
                 break;
@@ -93,11 +85,30 @@ class GalleryController extends RoxControllerBase {
                 break;
                 
             case 'flickr':
-                $subTab = 'flickr';
-                $P->content .= $vw->latestFlickr();
-                break;         
+                return new GalleryAvatarsPage();
+
+            case 'avatars': 
+                if ($loggedInMember) {
+                    $page = new GalleryAvatarsPage();
+                    $userId = $loggedInMember->get_userid();
+                    $page->statement = $this->_model->getLatestItems($userId);
+                    return $page;
+                } else $this->redirect('gallery');
 
             case 'create':
+                if (!$loggedInMember)
+                    return false;
+                $username = $loggedInMember->Username;
+                if (isset($request[2])) {
+                    $vars['gallery'] = $this->_model->updateGalleryProcess();
+                }
+                $insertId = isset($vars['gallery']) ? $vars['gallery'] : mysql_insert_id();
+                $loc_rel = 'gallery/show/sets/'.$insertId;
+                header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
+                PVars::getObj('page')->output_done = true;
+                break;              
+                
+            case 'manage':
                 if (!$User = APP_User::login())
                     return false;
                 $username = $User->getHandle();
@@ -110,8 +121,8 @@ class GalleryController extends RoxControllerBase {
                 $loc_rel = 'gallery/show/sets/'.$insertId;
                 header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
                 PVars::getObj('page')->output_done = true;
-                break;              
-                
+                break;
+
             case 'show':
             default:
                 if (!isset($request[2]))
@@ -120,71 +131,42 @@ class GalleryController extends RoxControllerBase {
                 switch ($request[2]) {
                     case 'image':
                         if (!isset($request[3])) {
-                            $statement = $this->_model->getLatestItems();
-                            $P->content .= $vw->latestOverview($statement);
-                            break;
+                            $this->redirect('gallery');
                         }
-                        $image = $this->_model->imageData($request[3]);
-                        if (!$image) {
-                            $statement = $this->_model->getLatestItems();
-                            $P->content .= $vw->latestOverview($statement);
-                            break;
+                        if (!$image = $this->_model->imageData($request[3])) {
+                            return new GalleryImageNotFoundPage();
                         }
-                        if (isset($request[4])) {
-                            switch ($request[4]) {
-                                case 'delete':
-                                    $deleted = $this->_model->deleteOneProcess($image);
-                                    $P->content .= $vw->imageDeleteOne($image,$deleted);
-                                    $statement = $this->_model->getLatestItems();
-                                    $P->content .= $vw->latestOverview($statement);
-                                    break;
-                                case 'edit':
-                                    $this->_model->editProcess($image);
-                                    break;
-                                case 'comment':
-                                    $this->_model->commentProcess($image);
-                                    break;
+                        switch (isset($request[4]) ? $request[4] : '') {
+                            case 'delete':
+                                if ($deleted = $this->_model->deleteOneProcess($image)) {
+                                    $this->message = 'Gallery_ImageDeleted';
+                                    return $this->useroverview($loggedInMember->get_userId());
+                                } else {
+                                    $this->message = 'Gallery_ImageNotDeleted';
+                                    return $this->image($image->id);
                                 }
-                            if ($request[4] == 'delete')
-                            break;                            
-                        } 
-                        $P->addStyles .= $vw->customStyles2ColLeft();
-                        $Previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
-                        $Next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
-                        $P->newBar .= $vw->imageInfo($image);
-                        $P->newBar .= $vw->imageSurroundItemsSmall($image,$Previous,$Next,1);
-                        $P->newBar .= $vw->imageAddInfo($image);
-                        $P->content .= $vw->image($image);
-                        
+                            case 'edit':
+                                $this->_model->editProcess($image);
+                            case 'comment':
+                                $this->_model->commentProcess($image);
+                            default:
+                                return $this->image($image);
+                        }
                         break;
                         
                     case 'galleries':
                     case 'sets':
-                        if (!isset($request[3])) {
-                            $galleries = $this->_model->getUserGalleries();
-                            $P->content .= $vw->allGalleries($galleries);
-                            break;
-                        }
-                        $gallery = $this->_model->getGallery($request[3]);
-                        if (!$gallery) {
-                            $galleries = $this->_model->getUserGalleries();
-                            $P->content .= $vw->allGalleries($galleries);
-                            break;
-                        }
-                        $this->_view->current_set = $request[3];
-                        
+                        if (!isset($request[3]) || !$gallery = $this->_model->getGallery($request[3])) {
+                            return $this->galleries();
+                        }                        
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
-                                    $deleted = $this->_model->deleteGalleryProcess($request[3]);
-                                    $P->content .= $vw->galleryDeleteOne($gallery,$deleted);
-                                    $statement = $this->_model->getUserGalleries();
-                                    $P->content .= $vw->allGalleries($statement);
-                                    break;
+                                    $this->deleteGallery($gallery);
                                 case 'edit':
                                     if (isset($request[5]) && $request[5] == 'images') {
                                         // update/remove the pictures that belong to a gallery
-                                        $this->_model->updateGalleryProcess();
+                                        $result = $this->_model->updateGalleryProcess();
                                     } else {
                                         // edit the gallery information
                                         $this->_model->editGalleryProcess();
@@ -196,32 +178,14 @@ class GalleryController extends RoxControllerBase {
                                 default:
                             }                      
                         } 
-                        if (!isset($statement)) {
-                            $cnt_pictures = $this->_model->getLatestItems('',$gallery->id,1);
-                            $P->newBar .= $vw->galleryInfo($gallery,$cnt_pictures);
-                            // Make the sidebar bigger
-                            $P->addStyles .= $vw->customStyles2ColLeft();
-                            
-                            //Check if current TB-user-id and Gallery-user-id are the same
-                            $User = APP_User::login();
-                            $user_id_foreign = $gallery->user_id_foreign;
-                            $username = ($User && ($User->getId() == $user_id_foreign)) ? $User->getHandle() : false;
-                            
-                            if ($cnt_pictures) {
-                            $statement = $this->_model->getLatestItems('',$gallery->id);
-                            $P->content .= $vw->latestGallery($statement,$username, 'gallery');
-                            }
-                            if ((isset($request[4]) && $request[4] == 'upload') or !$cnt_pictures) {
-                                // Display the upload form
-                                $P->content = $vw->uploadForm($gallery->id,false);  
-                            }
-                            $name = $gallery->title;
-                        }
-                        break;
-                        
+                        return $this->gallery($gallery);
+                                                
                     case 'user':
                         $subTab = 'user';
-                        if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && $userId = APP_User::userId($request[3])) {
+                        $membersmodel = new MembersModel();
+                        if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && ($member = $membersmodel->getMemberWithUsername($request[3])) && $userId = $member->get_userid()) {
+                            $this->username = $member->Username;
+                            $this->userId = $userId;
                             if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {
                                     // case 'sets':
@@ -229,56 +193,22 @@ class GalleryController extends RoxControllerBase {
                                         // break;
                                     case 'galleries':
                                     case 'sets':
-                                        $galleries = $this->_model->getUserGalleries($userId);
-                                        $P->content .= $vw->allGalleries($galleries);
-                                        $P->content .= $vw->userControls($request[3], 'galleries');
-                                        break;
+                                        return $this->usergalleries($userId);
                                     case 'pictures':
                                     case 'images':
-                                        $statement = $this->_model->getLatestItems($userId);
-                                        $P->content .= $vw->userOverviewSimple($statement, $request[3], '');
-                                        break;
-                                    default: 
-                                        break;
+                                    default:
+                                        return $this->userimages($userId);
                                 }
-                                $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
-                                $galleries = $this->_model->getUserGalleries($userId);
-                                $P->newBar .= $vw->userInfo($request[3],$galleries,$cnt_pictures);
-                            break;
-                            }    
+                            }
                             $vars = PPostHandler::getVars($this->_model->uploadProcess());
                             if(isset($vars) && array_key_exists('error', $vars)) {
-                                $P->content .= $vw->uploadForm();
-                            }
-                            else {
-                                $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
-                                $galleries = $this->_model->getUserGalleries($userId);
-                                $P->newBar .= $vw->userInfo($request[3],$galleries,$cnt_pictures);
-                                $statement = $this->_model->getLatestItems($userId);
-                                $P->content .= $vw->userOverview($statement, $request[3], $galleries);
-                            }
+                                return $P->content .= $vw->uploadForm();
+                            } else return $this->useroverview($userId);
                             break;
                         }
                         
                     default:
-                        if (isset($_SESSION['Username'])) {
-                            $userId = $_SESSION['Username'];
-                            $cnt_pictures = $this->_model->getLatestItems($userId,'',1);
-                            $galleries = $this->_model->getUserGalleries($userId);
-                            $P->newBar .= $vw->userInfo($_SESSION['Username'],$galleries,$cnt_pictures);
-                        } else {
-                            // Doesn't work yet
-                            //$loginWidget = $this->layoutkit;
-                            //$loginWidget->createWidget('LoginFormWidget');
-                            //$loginWidget->render();
-                            
-                            // Make the sidebar bigger
-                            $P->addStyles .= $vw->customStyles2ColLeft();
-                            $galleries = $this->_model->getUserGalleries();
-                            $P->newBar .= $vw->allGalleries($galleries);
-                        }
-                        $statement = $this->_model->getLatestItems();
-                        $P->content .= $vw->latestOverview($statement);
+                        return $this->overview();
                         break;
                 }
         }
@@ -286,54 +216,195 @@ class GalleryController extends RoxControllerBase {
         // submenu
         $P->subMenu .= $vw->showsubmenu($subTab);
     }
-    
-    public function topMenu($currentTab) {
-        $P->subMenu .= $vw->topMenu($currentTab);
+
+    /**
+     * handles showing gallery overview page
+     *
+     * @access public
+     * @return object $page
+     */
+    public function overview()
+    {
+        $page = new GalleryOverviewPage();
+        if (isset($_SESSION['Username'])) {
+            $page->cnt_pictures = $this->_model->getLatestItems($_SESSION['Username'],'',1);
+            $page->galleries = $this->_model->getUserGalleries($_SESSION['Username']);
+        } else {
+            $page->galleries = $this->_model->getUserGalleries();                            
+        }
+        $page->statement = $this->_model->getLatestItems();
+        return $page;
     }
     
-    public function LatestGalleryItem($galleryId) {
-        $this->_model->getLatestGalleryItem($galleryId);
-    }
-    public function getItems($userId,$galleryId) {
-        $this->_model->getLatestItems($userId,$galleryId);
+    /**
+     * handles showing a page for a single gallery
+     *
+     * @access public
+     * @return object $page
+     */
+    public function gallery($gallery)
+    {
+        $page = new GalleryPage();        
+        //Check if current TB-user-id and Gallery-user-id are the same
+        $loggedInMember = $this->loggedInMember;
+        $user_id_foreign = $gallery->user_id_foreign;
+        $myself = ($loggedInMember && ($loggedInMember->get_userId() == $user_id_foreign)) ? $loggedInMember->Username : false;
+        $page->gallery = $gallery;
+        $page->statement = $this->_model->getLatestItems('',$gallery->id);
+        $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
+        $page->upload = ((isset($request[4]) && $request[4] == 'upload') or !$page->cnt_pictures) ? true : false;
+        $page->myself = $myself;
+        return $page;
     }
     
-    public function latestOverview($userId,$galleryId) {
-        $this->_model->getLatestItems($userId,$galleryId);
+    /**
+     * handles the deletion of a gallery
+     *
+     * @access public
+     * @return object $page
+     */
+    public function deleteGallery($image)
+    {
+        $page = new DeleteGalleryPage();
+        $page->deleted = $this->_model->deleteGalleryProcess($gallery->id);
+        return $page;
     }
+    
+    
+    /**
+     * handles showing all galleries available
+     *
+     * @access public
+     * @return object $page
+     */
+    public function galleries()
+    {
+        $page = new GalleryGalleriesPage();
+        $page->username = $this->username;
+        $page->galleries = $this->_model->getUserGalleries();
+        $page->loggedInMember = $this->loggedInMember;
+        return $page;
+    }
+    
+    /**
+     * handles showing an overview of images and galleries of a user
+     *
+     * @access public
+     * @return object $page
+     */
+    public function useroverview($userId)
+    {
+        $words = $this->getWords();
+        $page = new GalleryUserOverviewPage();
+        $page->username = $this->username;
+        $page->infoMessage = $words->get($this->message);
+        $page->galleries = $this->_model->getUserGalleries($userId);
+        $page->statement = $this->_model->getLatestItems($userId);
+        $page->cnt_pictures = $page->statement->numRows();
+        $page->loggedInMember = $this->loggedInMember;
+        return $page;        
+    }
+    
+    /**
+     * handles showing all galleries of a user
+     *
+     * @access public
+     * @return object $page
+     */
+    public function usergalleries($userId)
+    {
+        $page = new GalleryUserGalleriesPage();
+        $page->username = $this->username;
+        $page->galleries = $this->_model->getUserGalleries($userId);
+        $page->statement = $this->_model->getLatestItems($userId);
+        $page->cnt_pictures = $page->statement->numRows();
+        // $P->content .= $vw->allGalleries($galleries);
+        // $P->content .= $vw->userControls($request[3], 'galleries');
+        // $P->content .= $vw->userOverviewSimple($statement, $request[3], '');
+        $page->loggedInMember = $this->loggedInMember;
+        return $page;
+    }
+    
+    /**
+     * handles showing all images of a user
+     *
+     * @access public
+     * @return object $page
+     */
+    public function userimages($userId)
+    {
+        $page = new GalleryUserImagesPage();
+        $page->username = $this->username;
+        $page->galleries = $this->_model->getUserGalleries($userId);
+        $page->statement = $this->_model->getLatestItems($userId);
+        $page->cnt_pictures = $page->statement->numRows();
+        $page->loggedInMember = $this->loggedInMember;
+        return $page;        
+    }
+    
+    /**
+     * handles showing a page for a single image
+     *
+     * @access public
+     * @return object $page
+     */
+    public function image($image)
+    {
+        $page = new GalleryImagePage();
+        $page->image = $image;
+        $page->infoMessage = $this->message;
+        $page->previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
+        $page->next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
+        return $page;
+    }
+    
+    /**
+     * OLD STUFF:
+     * 
+     */
     
     private function uploadedProcess() {
-        if (!$User = APP_User::login())
+        if (!$member = $this->loggedInMember)
             return false;
-    	// Process the uploaded pictures, display errors
-        $userId = $User->getId();
+        // Process the uploaded pictures, display errors
+        $userId = $member->get_userid();
         $statement = $this->_model->getLatestItems($userId);
         $callbackId = $this->_model->uploadProcess();
         $vars = PPostHandler::getVars($callbackId);
-        ob_start();
         if(isset($vars['error'])) {
-        $this->_view->errorReport($vars['error'],$callbackId);
+            $this->message = $words->get($vars['error']);
+            PPostHandler::clearVars($callbackId);
         }
-        $this->_view->userOverviewSimple($statement, $User->getHandle());
-        $str = ob_get_contents();
-        ob_end_clean();
+        $page = $this->userimages($userId);
         if (isset($_GET['raw'])) {
-            echo $str;
+            $this->ajaxlatestimages();
             PPHP::PExit();
         }
-        $Page = PVars::getObj('page');
-        $Page->content .= $str;
+        return $page;
+    }
+    
+    /**
+     * handles showing all images of a user
+     *
+     * @access public
+     * @return string $str
+     */
+    public function ajaxlatestimages()
+    {
+        $loggedInMember = $this->loggedInMember;
+        $statement = $this->_model->getLatestItems($loggedInMember->get_userId());
+        require_once 'templates/overview.php';
     }
 
     private function ajaxImage() {
         // Modifying a PHOTOSET(GALLERY) using an ajax-request
         PRequest::ignoreCurrentRequest();
-        if (!$User = APP_User::login())
+        if (!$member = $this->loggedInMember)
             return false;
     	// Modifying an IMAGE using an ajax-request
         if( isset($_GET['item']) ) {
             $id = $_GET['item'];
-            if ($User->getId() == $this->_model->imageOwner($id)) {
+            if ($member->get_userId() == $this->_model->imageOwner($id)) {
                 if( isset($_GET['title']) ) {
                     $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
                     if (!empty($str)) {
@@ -360,11 +431,11 @@ class GalleryController extends RoxControllerBase {
     private function ajaxGallery() {
         // Modifying a PHOTOSET(GALLERY) using an ajax-request
         PRequest::ignoreCurrentRequest();
-        if (!$User = APP_User::login())
+        if (!$member = $this->loggedInMember)
             return false;
         if (isset($_GET['item']) ) {
             $id = $_GET['item'];
-            if ($User->getId() == $this->_model->galleryOwner($id)) {
+            if ($member->get_userId() == $this->_model->galleryOwner($id)) {
                 if( isset($_GET['title']) ) {
                     $str = htmlentities($_GET['title'], ENT_QUOTES, "UTF-8");
                     if (!empty($str)) {
@@ -386,5 +457,104 @@ class GalleryController extends RoxControllerBase {
         echo 'Error!';
         PPHP::PExit();
     }
+
+    // callback processes moved from the model
+
+    /**
+     * xxx
+     *
+     * @access public
+     */
+    public function editProcess()
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling())
+        {
+            if (!$this->_model->getLoggedInMember())
+            {
+                return false;
+            }
+
+            $vars = &PPostHandler::getVars($callbackId);
+            return $this->_model->editProcess($vars);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    /**
+     * xxx
+     *
+     * @access public
+     */
+    public function editGalleryProcess()
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling())
+        {
+            if (!$this->_model->getLoggedInMember())
+            {
+                return false;
+            }
+
+            $vars = &PPostHandler::getVars($callbackId);
+            return $this->_model->editGalleryProcess($vars);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    public function updateGalleryProcess()
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling())
+        {
+            $vars =& PPostHandler::getVars($callbackId);
+            return $this->_model->updateGalleryProcess($vars);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    public function commentProcess($image = false)
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        if (PPostHandler::isHandling()) {
+            if (!$this->_model->getLoggedInMember())
+            {
+                return false;
+            }
+            $vars =& PPostHandler::getVars();
+            return $this->_model->commentProcess($vars, $image);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
+
+    public function uploadProcess()
+    {
+    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        $vars = &PPostHandler::getVars($callbackId);
+        if (PPostHandler::isHandling())
+        {
+            return $this->_model->uploadProcess($vars);
+        }
+        else
+        {
+        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+            return $callbackId;
+        }
+    }
 }
-?>

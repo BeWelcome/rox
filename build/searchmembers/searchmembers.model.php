@@ -201,6 +201,7 @@ WHERE
 			$searchtext=mysql_real_escape_string($_searchtext) ;
 			$str="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$searchtext."'";
 			$qry = $this->dao->query($str);
+			
 			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
 				$str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
 				$result = $this->dao->query($str);
@@ -521,7 +522,19 @@ AND (
         }
 		if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
 			// First find the city name candidate
-			$sData="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$this->GetParam($vars, "CityName")."'" ;
+			// comment by lupochen: Obviously this query couldn't get the appropriate results because it only checks the "alternate" names, not the real ones..
+			// $sData="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$this->GetParam($vars, "CityName")."'" ;
+			
+			// Use this one instead:
+			$sData="
+SELECT
+    distinct(geonames_cache.geonameid) AS geonameid 
+FROM
+    geonames_cache,geonames_alternate_names
+WHERE
+    geonames_cache.name='".$this->GetParam($vars, "CityName")."' 
+OR
+    (geonames_alternate_names.alternateName='".$this->GetParam($vars, "CityName")."' AND geonames_cache.geonameid=geonames_alternate_names.geonameId)" ;
 			$qryData = $this->dao->query($sData);
 			$WhereCity="" ;
 			while ($rData = $qryData->fetch(PDB::FETCH_OBJ)) {
@@ -565,7 +578,7 @@ AND membersgroups.IdMember=members.id"  ;
 		}
 
 		if ($nowhere)  {
- 			$where=" WHERE (1=0)" ;
+// 			$where=" WHERE (1=0)" ;
 		}
 
 /*

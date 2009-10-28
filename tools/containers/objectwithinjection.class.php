@@ -11,7 +11,7 @@ class ObjectWithInjection
     }
     
     
-    protected function __get($key)
+    public function __get($key)
     {
         return $this->get($key);
     }

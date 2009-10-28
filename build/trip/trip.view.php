@@ -53,24 +53,32 @@ class TripView extends PAppView {
 		?>
         <?php
 	}
-	public function displaySingleTrip($trip, $trip_data) {
-		$User = APP_User::login();
-		if (!$User) {
+	public function displaySingleTrip($trip, $trip_data)
+    {
+        $member = $this->_model->getLoggedInMember();
+		if (!$member)
+        {
 			$isOwnTrip = false;
-		} else {
-			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
+		}
+        else
+        {
+			$isOwnTrip = ($trip->IdMember == $member->id);
 		}
 		require 'templates/singletrip.php';
         
         $shoutsCtrl = new ShoutsController;
         $shoutsCtrl->shoutsList('trip', $trip->trip_id);
 	}
-	public function displaySingleTrip_Sidebar($trip, $trip_data) {
-		$User = APP_User::login();
-		if (!$User) {
+	public function displaySingleTrip_Sidebar($trip, $trip_data)
+    {
+        $member = $this->_model->getLoggedInMember();
+		if (!$member = $this->_model->getLoggedInMember())
+        {
 			$isOwnTrip = false;
-		} else {
-			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
+		}
+        else
+        {
+			$isOwnTrip = ($trip->IdMember == $member->id);
 		}
 		require 'templates/singletrip_sidebar.php';
 	}
@@ -86,12 +94,15 @@ class TripView extends PAppView {
         require 'templates/singletrip_teaser.php';
     }
 	
-    public function heading_singleTrip($trip = false, $trip_data = false) {
-		$User = APP_User::login();
-		if (!$User) {
+    public function heading_singleTrip($trip = false, $trip_data = false)
+    {
+		if (!$member = $this->_model->getLoggedInMember())
+        {
 			$isOwnTrip = false;
-		} else {
-			$isOwnTrip = ($trip->user_id_foreign == $User->getId());
+		}
+        else
+        {
+			$isOwnTrip = ($trip->IdMember == $member->id);
 		}
 		require 'templates/singletrip_heading.php';
     }        
@@ -115,4 +126,3 @@ class TripView extends PAppView {
 		echo $out;
     }
 }
-?>

@@ -38,7 +38,7 @@ class GalleryManagePage extends GalleryBasePage
     {
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures;
-        $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+        $username = $this->loggedInMember ? $this->loggedInMember->Username : '';
         require 'templates/userinfo.php';
     }
 

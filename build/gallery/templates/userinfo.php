@@ -1,5 +1,4 @@
 ﻿<?php
-$User = APP_User::login();
 $words = new MOD_words();
 
 ?>
@@ -14,7 +13,8 @@ echo '
 ?>
 
 <?php    
-if ($User && $User->getId() == APP_User::userId($username)) {
+if ($this->loggedInMember && $this->loggedInMember->Username == $username)
+{
 ?>
 <div style="padding-top: 20px">
     <ul>

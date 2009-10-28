@@ -413,7 +413,7 @@ SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, mem
     LEFT JOIN members ON members.id = trip.IdMember
     LEFT JOIN addresses ON addresses.IdMember = members.id
     LEFT JOIN geonames_cache ON addresses.IdCity = geonames_cache.geonameid
-    LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)";
+    LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)"
     ORDER BY trip_touched DESC
 SQL;
 		return $this->bulkLookup($query);

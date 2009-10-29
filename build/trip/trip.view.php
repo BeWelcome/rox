@@ -94,18 +94,6 @@ class TripView extends PAppView {
         require 'templates/singletrip_teaser.php';
     }
 	
-    public function heading_singleTrip($trip = false, $trip_data = false)
-    {
-		if (!$member = $this->_model->getLoggedInMember())
-        {
-			$isOwnTrip = false;
-		}
-        else
-        {
-			$isOwnTrip = ($trip->IdMember == $member->id);
-		}
-		require 'templates/singletrip_heading.php';
-    }        
 	public function editTrip($callbackId) {
 		$editing = true;
     	require 'templates/createform.php';

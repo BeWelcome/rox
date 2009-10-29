@@ -16,6 +16,7 @@ class TripSingleTripPage extends PageWithActiveSkin
         {   
             $isOwnTrip = ($trip->IdMember == $member->id);
         }   
+        require 'templates/singletrip_details.php';
         require 'templates/singletrip.php';
             
         $shoutsCtrl = new ShoutsController;
@@ -25,7 +26,16 @@ class TripSingleTripPage extends PageWithActiveSkin
 
     protected function teaserHeadline()
     {
-        return $this->heading;
+        $trip = $this->trip;
+        $layoutbits = new MOD_layoutbits();
+
+        $return = <<<HTML
+        <div class="float_left">
+            {$layoutbits->PIC_50_50($trip->handle)}
+        </div>
+            {$trip->trip_name}
+HTML;
+        return $return;
     }
 
     protected function leftSideBar()

@@ -1,7 +1,7 @@
 ﻿<?php
 $words = new MOD_words();
 
-if ($username !== '')
+if (isset($username) && $username !== '')
 {
 echo '
     <div class="floatbox">

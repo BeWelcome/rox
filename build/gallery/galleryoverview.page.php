@@ -23,8 +23,8 @@ class GalleryOverviewPage extends GalleryBasePage
     public function leftSidebar()
     {
         $galleries = $this->galleries;
-        $cnt_pictures = $this->cnt_pictures;
-        $username = $this->username;
+        $cnt_pictures = $this->cnt_pictures ? $this->cnt_pictures : 0;
+        $username = $this->loggedInMember ? $this->loggedInMember->Username : '';
         require 'templates/userinfo.php';
     }
 

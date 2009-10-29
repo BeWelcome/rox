@@ -225,9 +225,9 @@ class GalleryController extends RoxControllerBase {
     public function overview()
     {
         $page = new GalleryOverviewPage();
-        if (isset($_SESSION['Username'])) {
-            $page->cnt_pictures = $this->_model->getLatestItems($_SESSION['Username'],'',1);
-            $page->galleries = $this->_model->getUserGalleries($_SESSION['Username']);
+        if ($this->_model->getLoggedInMember()) {
+            $page->cnt_pictures = $this->_model->getLatestItems($this->_model->getLoggedInMember()->Username,'',1);
+            $page->galleries = $this->_model->getUserGalleries($this->_model->getLoggedInMember()->Username);
         } else {
             $page->galleries = $this->_model->getUserGalleries();                            
         }

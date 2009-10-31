@@ -3,7 +3,6 @@ $words = new MOD_words();
 $Gallery = new GalleryController;
 $callbackId = $Gallery->updateGalleryProcess();
 $vars = PPostHandler::getVars($callbackId);
-$User = new APP_User;
 $type = "images";
 ?>
 <?

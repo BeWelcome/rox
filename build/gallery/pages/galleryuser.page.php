@@ -3,12 +3,12 @@
 
 //------------------------------------------------------------------------------------
 /**
- * base class for all pages in the groups system,
- * which don't belong to one specific group.
+ * page showing latest images and albums of a user
+ * 
  *
  */
 
-class GalleryUserPage extends GalleryPage
+class GalleryUserPage extends GalleryBasePage
 {
 
     protected function getSubmenuActiveItem()
@@ -17,15 +17,15 @@ class GalleryUserPage extends GalleryPage
     }
 
     protected function teaserHeadline() {
-        return $this->getWords()->getBuffered('GalleryMyGallery');
+        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryUserPage');
     }
     
     public function leftSidebar()
     {
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures;
-        $username = $this->loggedInMember ? $this->loggedInMember->Username : '';
-        require 'templates/userinfo.php';
+        $username = $this->username;
+        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
     protected function column_col3() {
@@ -34,9 +34,7 @@ class GalleryUserPage extends GalleryPage
         ?>
         <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
         <?php
-        require 'templates/overview.php';
+        require SCRIPT_BASE . 'build/gallery/templates/overview.php';
     }
 
 }
-
-?>

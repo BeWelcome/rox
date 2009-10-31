@@ -1,5 +1,5 @@
 <?php
-$Gallery = new Gallery;
+$Gallery = new GalleryController;
 $callbackId = $Gallery->uploadProcess();
 $vars = PPostHandler::getVars($callbackId);
 $galleryId = isset($this->galleryId) ? $this->galleryId : false;
@@ -8,7 +8,7 @@ $words = $this->words;
 ?>
 
 <?php
-if (!$User = APP_User::login()) {
+if (!$member = $this->model->getLoggedInMember()) {
     echo '<p class="error">'.$words->getFormatted('Gallery_NotLoggedIn').'</p>';
     return;
 }
@@ -16,7 +16,7 @@ if(isset($vars['error'])) {
     echo '<p class="error">'.$words->getFormatted($vars['error']).'</p>';
 }
 if (isset($_GET['g'])) $galleryId = (int)$_GET['g']; 
-$postURL = 'gallery/show/user/'.$User->getHandle();
+$postURL = 'gallery/uploaded';
 if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
 
 // If the upload-form IS hidden, display a link to show it

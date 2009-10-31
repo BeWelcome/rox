@@ -6,6 +6,7 @@ $words = new MOD_words();
 $username = $this->Username;
 $loggedInMember = $this->loggedInMember;
 $R = MOD_right::get();
+$User = new APP_User;
 $GalleryRight = $R->hasRight('Gallery');
 if (isset($this->current_set)) $current_set = $this->current_set;
 
@@ -129,4 +130,3 @@ function submitStuff() {
 if ($User) { 
 PPostHandler::clearVars($callbackId); 
 }
-?>

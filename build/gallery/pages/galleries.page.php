@@ -16,11 +16,9 @@ class GalleryGalleriesPage extends GalleryBasePage
         return 'overview';
     }
 
-    protected function teaserHeadline() {
-        $headline = '<a href="gallery" title="Gallery">' .$this->words->getBuffered('Gallery'). '</a>';
-        $headline.= '<span class="small"> > <a href="gallery/show/sets" title="All Galleries">'.$this->words->getBuffered("Photosets").'</a></span>';
-        return $headline;
-        return $this->words->getBuffered('Gallery'). ' > <a href="gallery/show/sets">'.$this->words->getBuffered("Gallery_MemberGalleries",$this->username).'</a>';
+    protected function teaserHeadline()
+    {
+        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->words->getBuffered("Photosets");
     }
     
     public function leftSidebar()
@@ -35,7 +33,7 @@ class GalleryGalleriesPage extends GalleryBasePage
         ?>
         <h2><?php echo $words->getFormatted('Photosets'); ?></h2>
         <?php
-        require 'templates/galleries_overview.php';
+        require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 
 }

@@ -31,7 +31,7 @@ class GalleryManagePage extends GalleryBasePage
     }
 
     protected function teaserHeadline() {
-        return $this->getWords()->getBuffered('GalleryManage');
+        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryManage');
     }
     
     public function leftSidebar()
@@ -39,7 +39,7 @@ class GalleryManagePage extends GalleryBasePage
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures;
         $username = $this->loggedInMember ? $this->loggedInMember->Username : '';
-        require 'templates/userinfo.php';
+        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
     protected function column_col3() {
@@ -48,9 +48,7 @@ class GalleryManagePage extends GalleryBasePage
         ?>
         <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
         <?php
-        require 'templates/overview.php';
+        require SCRIPT_BASE . 'build/gallery/templates/overview.php';
     }
 
 }
-
-?>

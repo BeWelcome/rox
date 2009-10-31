@@ -17,7 +17,7 @@ class GalleryImagePage extends GalleryBasePage
     }
 
     protected function teaserHeadline() {
-        return '<a href="gallery">'.$this->getWords()->getBuffered('Gallery').'</a>';
+        return parent::teaserHeadline();
     }
     
     protected function userControls() {
@@ -63,5 +63,3 @@ class GalleryImagePage extends GalleryBasePage
 <?php
     }
 }
-
-?>

@@ -14,7 +14,7 @@ class GalleryController extends RoxControllerBase {
     
     public function __construct() {
         parent::__construct();
-        $this->_model = new Gallery();
+        $this->_model = new GalleryModel();
         $this->_view  = new GalleryView($this->_model);
         $this->loggedInMember = $this->_model->getLoggedInMember();
     }
@@ -108,13 +108,14 @@ class GalleryController extends RoxControllerBase {
                 break;              
                 
             case 'manage':
-                if (!$User = APP_User::login())
+                if (!$member = $this->_model->getLoggedInMember())
                     return false;
-                $username = $User->getHandle();
+                $username = $member->Username;
                 if (isset($request[2])) {
                     $vars['gallery'] = $this->_model->updateGalleryProcess();
                 }
-                $insertId = mysql_insert_id();
+                // wtf???
+                //$insertId = mysql_insert_id();
                 if (isset($vars['gallery'])) 
                     $insertId = $vars['gallery'];
                 $loc_rel = 'gallery/show/sets/'.$insertId;
@@ -245,10 +246,11 @@ class GalleryController extends RoxControllerBase {
     public function gallery($gallery)
     {
         $page = new GalleryPage();        
+        // TB user id's and member id's do not coincide
+        // this will most likely lead to problems ...
         //Check if current TB-user-id and Gallery-user-id are the same
-        $loggedInMember = $this->loggedInMember;
         $user_id_foreign = $gallery->user_id_foreign;
-        $myself = ($loggedInMember && ($loggedInMember->get_userId() == $user_id_foreign)) ? $loggedInMember->Username : false;
+        $myself = ($this->loggedInMember && $this->loggedInMember->get_userId() == $user_id_foreign) ? $this->loggedInMember->Username : false;
         $page->gallery = $gallery;
         $page->statement = $this->_model->getLatestItems('',$gallery->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
@@ -364,12 +366,9 @@ class GalleryController extends RoxControllerBase {
      */
     
     private function uploadedProcess() {
-        if (!$member = $this->loggedInMember)
-            return false;
         // Process the uploaded pictures, display errors
         $userId = $member->get_userid();
-        $statement = $this->_model->getLatestItems($userId);
-        $callbackId = $this->_model->uploadProcess();
+        $callbackId = $this->uploadProcess();
         $vars = PPostHandler::getVars($callbackId);
         if(isset($vars['error'])) {
             $this->message = $words->get($vars['error']);
@@ -549,7 +548,7 @@ class GalleryController extends RoxControllerBase {
         $vars = &PPostHandler::getVars($callbackId);
         if (PPostHandler::isHandling())
         {
-            return $this->_model->uploadProcess($vars);
+            $this->_model->uploadProcess($vars);
         }
         else
         {

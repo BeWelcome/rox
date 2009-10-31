@@ -1,9 +1,8 @@
 ﻿<?php
 $words = new MOD_words();
-$User = APP_User::login();
 $request = PRequest::get()->request;
-$Gallery = new Gallery;
-if ($User) {
+$Gallery = new GalleryModel;
+if ($Gallery->getLoggedInMember()) {
     $callbackId = $Gallery->editProcess($image);
     $vars =& PPostHandler::getVars($callbackId);
     $callbackIdCom = $Gallery->commentProcess($image);

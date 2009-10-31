@@ -1,18 +1,18 @@
 ﻿<?php
-$User = APP_User::login();
 $request = PRequest::get()->request;
+$member = $this->model->getLoggedInMember();
 
 $g = $gallery;
 $g->user_handle = MOD_member::getUsername($g->user_id_foreign);
 
 // Set variable own (if own gallery)
 $Own = false;
-if ($User) {
+if ($member) {
     //$callbackId = $Gallery->editGalleryProcess($gallery);
     //$vars =& PPostHandler::getVars($callbackId);
     $R = MOD_right::get();
     $GalleryRight = $R->hasRight('Gallery');
-    $Own = ($User->getId() == $g->user_id_foreign) ? true : false;
+    $Own = ($member->Username == $g->user_handle) ? true : false;
 }
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
@@ -66,7 +66,7 @@ echo '
     </div>
     ';
 
-if ($Own || ($User && ($GalleryRight > 1)) ) {
+if ($Own || ($member && ($GalleryRight > 1)) ) {
     echo '
     <div class="floatbox" style="padding-top: 30px;">
     <p><a style="cursor:pointer" href="gallery/show/sets/'.$g->id.'/delete" class="button" onclick="return confirm(\''. $words->getSilent("confirmdeletegallery").'\')"><img src="images/icons/delete.png"> '.$words->getSilent("GalleryDelete").' </a></p>

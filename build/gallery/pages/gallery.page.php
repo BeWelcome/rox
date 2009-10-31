@@ -12,7 +12,7 @@ class GalleryPage extends GalleryBasePage
 {
 
     protected function teaserHeadline() {
-        return '<a href="gallery">'.$this->getWords()->getBuffered('Gallery').'</a>';
+        return parent::teaserHeadline();
     }
     
     protected function getTopmenuActiveItem()
@@ -30,7 +30,7 @@ class GalleryPage extends GalleryBasePage
         $gallery = $this->gallery;
         $cnt_pictures = $this->cnt_pictures;
         $username = $this->username;
-        require 'templates/userinfo.php';
+        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
     protected function column_col3() {
@@ -43,10 +43,10 @@ class GalleryPage extends GalleryBasePage
         echo '</span>';
         if ($this->myself && $this->upload) {
             // Display the upload form
-            require 'templates/uploadform.php';
+            require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
         }
         
-        require 'templates/latestgallery.php';
+        require SCRIPT_BASE . 'build/gallery/templates/latestgallery.php';
         $shoutsCtrl = new ShoutsController;
         $shoutsCtrl->shoutsList('gallery', $gallery->id);
     }
@@ -58,5 +58,3 @@ class GalleryPage extends GalleryBasePage
 
 
 }
-
-?>

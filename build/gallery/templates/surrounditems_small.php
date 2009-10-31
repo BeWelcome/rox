@@ -1,7 +1,6 @@
 <?php
 
 $words = new MOD_words();
-$User = new APP_User;
 
 if ($UserId) {
     echo '<h3>'. $words->getFormatted('galleryUserOthers','<a href="gallery/show/user/'. $image->user_handle .'">',$image->user_handle,'</a>').' </h3>';
@@ -34,4 +33,3 @@ if ($Next) {
 if ($UserId) {
     echo '<span class="small"> <a href="gallery/show/user/'. $image->user_handle .'">See all</a></span>';
 }
-?>

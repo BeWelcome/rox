@@ -1,6 +1,6 @@
 <?php
 $words = new MOD_words();
-$Gallery = new Gallery;
+$Gallery = new GalleryModel;
 
 // Show the galleries/photosets
 if ($galleries) {

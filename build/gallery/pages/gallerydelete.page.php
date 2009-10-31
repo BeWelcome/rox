@@ -28,8 +28,9 @@ class GalleryDeletePage extends GalleryBasePage
         return 'overview';
     }
 
-    protected function teaserHeadline() {
-        return $this->getWords()->getBuffered('GalleryDelete');
+    protected function teaserHeadline()
+    {
+        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryDelete');
     }
     
     public function leftSidebar()
@@ -37,7 +38,7 @@ class GalleryDeletePage extends GalleryBasePage
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures;
         $username = isset($this->loggedInMember->Username) ? $this->loggedInMember->Username : '';
-        require 'templates/userinfo.php';
+        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
     protected function column_col3() {
@@ -46,9 +47,7 @@ class GalleryDeletePage extends GalleryBasePage
         ?>
         <h2><?php echo $words->getFormatted('GalleryDelete'); ?></h2>
         <?php
-        require 'templates/overview.php';
+        require SCRIPT_BASE . 'build/gallery/templates/overview.php';
     }
 
 }
-
-?>

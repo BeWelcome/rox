@@ -24,5 +24,3 @@ if ($this->loggedInMember && $this->loggedInMember->Username == $username)
 <?php
 
 }
-
-?>

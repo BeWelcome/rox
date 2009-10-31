@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class Gallery extends RoxModelBase
+class GalleryModel extends RoxModelBase
 {
     const FLAG_VIEW_PRIVATE   = 1;
     const FLAG_VIEW_PROTECTED = 2;
@@ -597,12 +597,8 @@ WHERE
      * 
      * @todo sizes should be customizable
      */
-    public function uploadProcess()
+    public function uploadProcess(&$vars)
     {
-        if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0)
-            return false;
-        if (!$User = APP_User::login())
-            return false;
         // NEW CHECKS
         if (!$User = APP_User::login()) {
              $vars['error'] = 'Gallery_NotLoggedIn';
@@ -689,7 +685,7 @@ VALUES
                 $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
             }
         }
-        return false;
+        return true;
     }
 
 }

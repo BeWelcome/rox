@@ -4,7 +4,7 @@ $words = new MOD_words();
 // This trip's gallery  
 
 if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
-    $gallery = new Gallery;
+    $gallery = new GalleryModel;
     $statement = $gallery->getLatestItems('',$trip->gallery_id_foreign);
     if ($statement) {
         echo '<h3>Pictures of this trip</h3>';

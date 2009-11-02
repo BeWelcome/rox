@@ -1,4 +1,4 @@
-<?php
+'<?php
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -114,6 +114,150 @@ class MOD_words
         }
     }
     
+    /**
+     * Add a new word and log this action
+	 * @code: code of the new word
+	 * @Sentence : sentence of the word
+	 * @IdLanguage : language
+	 * @Description: This is meaningfull for english words only, this is the description of the words, it is mandatory if the words is in english
+	 * @donottranslate: by default, this is no, but you can force it to yes
+	 * @Translation priority: the priority of the translation, its default to 5
+     */
+	public function AddWord($code,$Sentence,$p_IdLanguage,$Description,$donottranslate='no',$TranslationPriority=5) {
+		// check the proposed language
+		if  (!(is_numeric($p_IdLanguage))) {
+            $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where ShortCode='".$p_IdLangauge."'");
+            if (!$s) {
+                throw new PException('MOD_Word::AddWord Failed query to find language '.$p_IdLanguage);
+            }
+            $rLang=$s->fetch(PDB::FETCH_OBJ) ;
+			if (isset($rLang->IdLanguage)) {
+				$IdLanguage=$rLang->IdLanguage ;
+			}
+			else {
+                throw new PException('MOD_Word::AddWord Failed  to find language ['.$p_IdLanguage.']');
+			}
+		}
+		else {
+            $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where IdLanguage='".$p_IdLangauge."'");
+            if (!$s) {
+                throw new PException('MOD_Word::AddWord Failed query to find language '.$p_IdLanguage);
+            }
+            $rLang=$s->fetch(PDB::FETCH_OBJ) ;
+			if (isset($rLang->IdLanguage)) {
+				$IdLanguage=$rLang->IdLanguage ;
+			}
+			else {
+                throw new PException('MOD_Word::AddWord Failed  to find IdLanguage=#'.$p_IdLanguage);
+			}
+		}
+		
+		if (($IdLanguage==0) and empty($Description)) {
+           throw new PException('MOD_Word::AddWord Failed  to insert word ['.$code.'] in '.
+		   $rLang->ShortCode.' because for an english word it is mandatory to provide a description');
+		}
+		
+		$sQuery="
+		insert into words(code,ShortCode,Sentence,created,donottranslate,IdLanguage,Description,IdMember,TranslationPriority)
+		values('".$this->_dao->escape($code)."','".
+		$rLang->ShortCode."',now(),'".
+		$this->_dao->escape($donottranslate)."',".$this->_dao->escape($IdLanguage).",'".
+		$this->_dao->escape($Description)."',".$_SESSION["IdMember"].",".$this->_dao->escape($TranslationPriority).")" ;
+		$s = $this->_dao->query(sQuery);
+        if (!$s) {
+            throw new PException('MOD_Word::AddWord Failed to insert words ['.$code.'] in '.$rLang->ShortCode);
+        }
+	
+		MOD_log::get()->write("inserting ".$code." in ".$rLang->ShortCode,"words");
+		
+	} // end of AddWords
+	
+    /**
+     * Update a  word and log this action
+	 * @code: code of the new word
+	 * @Sentence : sentence of the word
+	 * @IdLanguage : language
+	 * @Description: It is optional, and empty description will not overwrite an existing one
+	 * @donottranslate: by default, this is no, but you can force it to yes
+	 * @Translation priority: the priority of the translation, its default to 5
+     * @return string the translated word
+     */
+	public function UpdateWord($code,$Sentence,$p_IdLanguage,$p_Description='',$p_donottranslate='',$p_TranslationPriority=-1) {
+	
+		// check the proposed language
+		if  (!(is_numeric($p_IdLanguage))) {
+            $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where ShortCode='".$p_IdLangauge."'");
+            if (!$s) {
+                throw new PException('MOD_Word::UpdateWord Failed query to find language '.$p_IdLanguage);
+            }
+            $rLang=$s->fetch(PDB::FETCH_OBJ) ;
+			if (isset($rLang->IdLanguage)) {
+				$IdLanguage=$rLang->IdLanguage ;
+			}
+			else {
+                throw new PException('MOD_Word::UpdateWord Failed  to find language ['.$p_IdLanguage.']');
+			}
+		}
+		else {
+            $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where IdLanguage='".$p_IdLangauge."'");
+            if (!$s) {
+                throw new PException('MOD_Word::UpdateWord Failed query to find language '.$p_IdLanguage);
+            }
+            $rLang=$s->fetch(PDB::FETCH_OBJ) ;
+			if (isset($rLang->IdLanguage)) {
+				$IdLanguage=$rLang->IdLanguage ;
+			}
+			else {
+                throw new PException('MOD_Word::UpdateWord Failed  to find IdLanguage=#'.$p_IdLanguage);
+			}
+		}
+		
+		$sQuery="select * from words where code='".$this->_dao->escape($code)."' and IdLanguage=".$IdLanguage ;
+        $s = $this->_dao->query($sQuery);
+        if (!$s) {
+            throw new PException('MOD_Word::UpdateWord Failed for ['.$code."'] for language ". $rLang->ShortCode);
+        }
+        $rWord=$s->fetch(PDB::FETCH_OBJ) ;
+		if (empty($rWord->Sentence)) {
+            throw new PException("MOD_Word::UpdateWord  no such code ['".$code."'] for language ". $rLang->ShortCode);
+		}
+		
+		if (($IdLanguage==0) and (empty($p_Description))) {
+			$Description=$rWord->Description ;
+		}
+		else {
+			$Description=$p_Description ;
+		}
+		
+		if (empty($p_donottranslate)) {
+			$donottranslate=$rWord->donottranslate ;
+		}
+		else {
+			$donottranslate=$p_donottranslate;
+		}
+
+		if (empty($p_TranslationPriority)) {
+			$donottranslate=$rWord->TranslationPriority ;
+		}
+		else {
+			$TranslationPriority=$p_TranslationPriority ;
+		}
+
+		MakeRevision($rWord->id, "words"); // create revision
+
+	  $sQuery="update words 
+		set Sentence='".$this->_dao->escape($Sentence)."',donottranslate='".$this->_dao->escape($donottranslate).
+		"',Description='".$this->_dao->escape($Description)."',TranslationPriority='".$this->_dao->escape($TranslationPriority)."'
+		where code='".$code."' and IdLanguage=".$IdLanguage ;
+		$s = $this->_dao->query(sQuery);
+        if (!$s) {
+            throw new PException('MOD_Word::UpdareWord Failed to update word ['.$code.'] in '.$rLang->ShortCode);
+        }
+	
+		MOD_log::get()->write("updating " . $code . " in " . $rlang->ShortCode, "AdminWord");
+		
+	} // end of AddWords
+	
     public function setlangWrite($IdLanguage) {
         $this->_langWrite = $IdLanguage;
     }
@@ -458,7 +602,7 @@ class MOD_words
         
         if (is_numeric($code)) {
             $query =
-                "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
+                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
                 "FROM `words` ".
                 "WHERE `id`=" . $this->_dao->escape($code)
             ;
@@ -475,13 +619,23 @@ class MOD_words
 			} 
 
 			$query =
-                "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
+                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
                 "FROM `words` ".
                 "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
             ;
         }
         
         $q = $this->_dao->query($query);
+		// update the statistic about the use of this word only if the option ToggleStatsForWordsUsage is active
+		if ((isset($_SESSION['Param']->ToggleStatsForWordsUsage) 
+		&& ($_SESSION['Param']->ToggleStatsForWordsUsage=="Yes") 
+		&& (isset($row->code)))) {
+			$query ="CALL IncWordUse('".$row->code."')" ;
+			$s=$this->_dao->query($query);
+            if (!$s) {
+                throw new PException('Failed to IncWordUse for code ['.$row->code.']');
+            }
+		}
         $row = $q->fetch(PDB::FETCH_OBJ);
         
         return $row;
@@ -508,7 +662,7 @@ class MOD_words
     	// we assume we have only word keycodes, no word IDs
         // TODO: store translation quality in database!
         $query =
-            "SELECT SQL_CACHE `Sentence`, `donottranslate`, `updated` ".
+            "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
             "FROM `words` ".
             "WHERE `code` IN ('" . implode($array_of_codes, "', '") . "') ".
             "AND `ShortCode`='" . $lang . "'"
@@ -517,6 +671,18 @@ class MOD_words
         $q = $this->_dao->query($query);
         $row = $q->fetch(PDB::FETCH_OBJ);
         
+		// update the statistic about the use of this word only if the option ToggleStatsForWordsUsage is active
+		if ((isset($_SESSION['Param']->ToggleStatsForWordsUsage) 
+		&& ($_SESSION['Param']->ToggleStatsForWordsUsage=="Yes") and (!empty($row)))) {
+			foreach($row as $rr) {
+				$query ="CALL IncWordUse('".$rr->code."')" ;
+				$s=$this->_dao->query($query);
+				if (!$s) {
+					throw new PException('Failed to IncWordUse for code ['.$rr->code.']');
+				}
+			}
+		}
+
         return $row;
     }
 

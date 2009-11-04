@@ -18,6 +18,9 @@ class RoxEntityFactory
      * @var array
      */
     private $_entities = array(
+        'Gallery'           => 'build/gallery/gallery.entity',
+        'GalleryComment'    => 'build/gallery/gallerycomment.entity',
+        'GalleryItem'       => 'build/gallery/galleryitem.entity',
         'Geo'               => 'build/geo/geo.entity',
         'GeoHierarchy'      => 'build/geo/geohierarchy.entity',
         'GeoAlternateName'  => 'build/geo/geoaltname.entity',

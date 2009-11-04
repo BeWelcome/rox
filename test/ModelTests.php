@@ -12,6 +12,7 @@ class ModelTests extends PHPUnit_Framework_TestSuite
         $suite->addTestFile('BlogModelTest.php');
         $suite->addTestFile('TripModelTest.php');
         $suite->addTestFile('GroupsModelTest.php');
+        $suite->addTestFile('GalleryModelTest.php');
         return $suite;
     }
 }

@@ -240,10 +240,12 @@ class GalleryController extends RoxControllerBase {
     /**
      * handles showing a page for a single gallery
      *
+     * @param Gallery $gallery - gallery to work on
+     *
      * @access public
      * @return object $page
      */
-    public function gallery($gallery)
+    public function gallery(Gallery $gallery)
     {
         $page = new GalleryPage();        
         // TB user id's and member id's do not coincide
@@ -262,10 +264,12 @@ class GalleryController extends RoxControllerBase {
     /**
      * handles the deletion of a gallery
      *
+     * @param Gallery $gallery - gallery to delete
+     *
      * @access public
      * @return object $page
      */
-    public function deleteGallery($image)
+    public function deleteGallery(Gallery $gallery)
     {
         $page = new DeleteGalleryPage();
         $page->deleted = $this->_model->deleteGalleryProcess($gallery->id);

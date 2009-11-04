@@ -212,29 +212,18 @@ WHERE `id` = '.(int)$galleryId.'
 
     }
     
-    public function getGallery($galleryId = false)
+    /**
+     * returns a single gallery entity
+     *
+     * @param int $galleryId - id of gallery to fetch
+     *
+     * @access public
+     * @return Gallery|false
+     */
+    public function getGallery($galleryId)
     {
-    	$query = '
-SELECT
-    i.`id`, 
-    i.`user_id_foreign`, 
-    i.`flags`,
-    i.`title`, 
-    i.`text` 
-FROM `gallery` AS i
-        ';
-        if ($galleryId) {
-        $query .= '
-WHERE i.`id` = '.(int)$galleryId.'
-        ';
-        }
-        $query .= '
-ORDER BY `id` ASC';
-        $s = $this->dao->query($query);
-        if ($s->numRows() == 0)
-            return false;
-        return $s->fetch(PDB::FETCH_OBJ);
-    }        
+        return $this->createEntity('Gallery')->findById($galleryId);
+    }
 
     public function getGalleryItems($galleryId,$count=false)
     {

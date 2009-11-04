@@ -109,7 +109,7 @@ echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->titl
     <h3><?php echo $words->getFormatted('CommentsTitle'); ?></h3>
     
 <?php
-$comments = $Gallery->getComments($image->id);
+$comments = $this->model->getComments($image->id);
 if (!$comments) {
 	echo '<p>'.$words->getFormatted('NoComments').'</p>';
 } else {

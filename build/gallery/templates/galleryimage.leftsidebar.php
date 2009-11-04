@@ -4,7 +4,7 @@ $request = PRequest::get()->request;
 $layoutbits = new MOD_layoutbits();
 $d = $image = $this->image;
 
-$Gallery = new Gallery;
+$Gallery = new GalleryModel;
 $gallery_ctrl = new GalleryController;
 if ($this->model->getLoggedInMember())
 {

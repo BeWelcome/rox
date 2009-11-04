@@ -25,7 +25,10 @@ class MemberPage extends PageWithActiveSkin
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
         $comments_count = $member->count_comments();
-        $TCom = $member->get_comments_commenter($this->model->getLoggedInMember()->id);
+        if ($logged_user = $this->model->getLoggedInMember())
+        {
+            $TCom = $member->get_comments_commenter($logged_user->id);
+        }
         $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
         if ($this->myself) {
             $tt=array(

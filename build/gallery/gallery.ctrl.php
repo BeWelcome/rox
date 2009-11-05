@@ -249,16 +249,13 @@ class GalleryController extends RoxControllerBase {
     public function gallery(Gallery $gallery)
     {
         $page = new GalleryPage();        
-        // TB user id's and member id's do not coincide
-        // this will most likely lead to problems ...
-        //Check if current TB-user-id and Gallery-user-id are the same
         $user_id_foreign = $gallery->user_id_foreign;
-        $myself = ($this->loggedInMember && $this->loggedInMember->get_userId() == $user_id_foreign) ? $this->loggedInMember->Username : false;
+        $page->myself = ($this->loggedInMember && $this->loggedInMember->get_userId() == $user_id_foreign) ? $this->loggedInMember->Username : false;
+        $page->username = MOD_member::getUserHandle($user_id_foreign);
         $page->gallery = $gallery;
         $page->statement = $this->_model->getLatestItems('',$gallery->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->upload = ((isset($request[4]) && $request[4] == 'upload') or !$page->cnt_pictures) ? true : false;
-        $page->myself = $myself;
         return $page;
     }
     

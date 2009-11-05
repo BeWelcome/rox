@@ -67,7 +67,8 @@ if ($statement) {
     <a href="gallery/show/image/'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.'" alt="image" style="margin: 5px 0; float:none;" /></a>';
 
     echo '<h4>';
-if ($this->model->getLoggedInMember() && $this->model->getLoggedInMember()->Username == $d->user_handle) {
+$loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
+if ($loggedmember && $loggedmember->Username == $d->user_handle) {
     echo '<input type="checkbox" class="thumb_check" name="imageId[]" onchange="highlightMe(this.parentNode.parentNode,this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
 }
 ?>

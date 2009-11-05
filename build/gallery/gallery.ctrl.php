@@ -78,7 +78,11 @@ class GalleryController extends RoxControllerBase {
                     return false;
                 $this->uploadedProcess();
                 break;
-                
+
+            case 'uploaded_done':
+                $this->ajaxlatestimages();
+                PPHP::PExit();
+
             case 'xppubwiz':
                 $this->_view->xpPubWiz();
                 break;
@@ -200,10 +204,7 @@ class GalleryController extends RoxControllerBase {
                                         return $this->userimages($userId);
                                 }
                             }
-                            $vars = PPostHandler::getVars($this->_model->uploadProcess());
-                            if(isset($vars) && is_array($vars) && array_key_exists('error', $vars)) {
-                                return $P->content .= $vw->uploadForm();
-                            } else return $this->useroverview($userId);
+                            return $this->useroverview($userId);
                             break;
                         }
                         
@@ -369,21 +370,13 @@ class GalleryController extends RoxControllerBase {
      * 
      */
     
-    private function uploadedProcess() {
+    public function uploadedProcess($args, $action, $mem_redirect, $mem_resend)
+    {
         // Process the uploaded pictures, display errors
-        $userId = $member->get_userid();
-        $callbackId = $this->uploadProcess();
-        $vars = PPostHandler::getVars($callbackId);
-        if(isset($vars['error'])) {
-            $this->message = $words->get($vars['error']);
-            PPostHandler::clearVars($callbackId);
-        }
-        $page = $this->userimages($userId);
-        if (isset($_GET['raw'])) {
-            $this->ajaxlatestimages();
-            PPHP::PExit();
-        }
-        return $page;
+        $userId = $this->_model->getLoggedInMember()->id;
+        $vars = $args->post;
+        $this->_model->uploadProcess($vars);
+        die();
     }
     
     /**

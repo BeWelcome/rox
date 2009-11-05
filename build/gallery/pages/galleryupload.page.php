@@ -32,9 +32,9 @@ class GalleryUploadPage extends GalleryBasePage
 
     protected function column_col3() {
         $words = $this->words;
-        ?>
-        <h2><?php echo $words->getFormatted('Gallery_UploadTitle'); ?></h2>
-        <?php
+        echo <<<HTML
+        <h2>{$words->getFormatted('Gallery_UploadTitle')}</h2>
+HTML;
         require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
     }
 

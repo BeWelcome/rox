@@ -77,7 +77,7 @@ if ($loggedmember && $loggedmember->Username == $d->user_handle) {
 echo '
     <p class="small">
         '.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by').'
-        <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>. 
+        <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>. 
         <a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'>
         <img src="styles/YAML/images/iconsfam/pictures.png" style="float: none">
         </a>

@@ -61,7 +61,7 @@ echo '<p class="small"> '.$cnt_pictures.' '.$words->getFormatted('GalleryImagesT
 echo '
     <div class="floatbox" style="padding-top: 30px;">
         '.MOD_layoutbits::PIC_30_30($g->user_handle,'',$style='float_left').'
-    <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="bw/member.php?cid='.$g->user_handle.'">'.$g->user_handle.'</a>.<br /></p>
+    <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="members/'.$g->user_handle.'">'.$g->user_handle.'</a>.<br /></p>
     <p class="small"><a href="gallery/show/user/'.$g->user_handle.'/sets">'.$words->getFormatted('GalleryAllGalleriesBy').' <img src="images/icons/images.png"></a></p>
     </div>
     ';

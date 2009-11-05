@@ -21,7 +21,7 @@ $d = $image;
 echo '
     <div class="floatbox" style="padding-top: 30px;">
         '.MOD_layoutbits::PIC_30_30($d->user_handle,'',$style='float_left').'
-    <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
+    <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
     </div>';
     ?>
 

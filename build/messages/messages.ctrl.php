@@ -272,6 +272,3 @@ class MessagesController extends RoxControllerBase
         return $return;
     }
 }
-
-
-?>

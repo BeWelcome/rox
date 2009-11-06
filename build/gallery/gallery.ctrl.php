@@ -115,6 +115,7 @@ class GalleryController extends RoxControllerBase {
                 if (!$member = $this->_model->getLoggedInMember())
                     return false;
                 $username = $member->Username;
+                /*
                 if (isset($request[2])) {
                     $vars['gallery'] = $this->_model->updateGalleryProcess();
                 }
@@ -125,7 +126,9 @@ class GalleryController extends RoxControllerBase {
                 $loc_rel = 'gallery/show/sets/'.$insertId;
                 header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
                 PVars::getObj('page')->output_done = true;
-                break;
+                    */
+                $page = new GalleryManagePage;
+                return $page;
 
             case 'show':
             default:

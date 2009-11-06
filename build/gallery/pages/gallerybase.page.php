@@ -70,7 +70,7 @@ class GalleryBasePage extends PageWithActiveSkin
             $words = $this->words;
             $ww = $this->ww;
             $items = array();
-//            $items[] = array('user', 'gallery/manage', $ww->GalleryManage);
+            $items[] = array('user', 'gallery/manage', $ww->GalleryManage);
             $items[] = array('user', 'gallery/show/user/'.$member->Username, $ww->GalleryMy);
             $items[] = array('upload', 'gallery/upload', $ww->GalleryUpload);
             return $items;

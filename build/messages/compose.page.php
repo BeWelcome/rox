@@ -89,8 +89,3 @@ class ComposeMessagePage extends MessagesBasePage
         return $field_values;
     }
 }
-
-
-
-
-?>

@@ -3,7 +3,7 @@ $request = PRequest::get()->request;
 $member = $this->model->getLoggedInMember();
 
 $g = $gallery;
-$g->user_handle = MOD_member::getUsername($g->user_id_foreign);
+$g->user_handle = MOD_member::getUserHandle($g->user_id_foreign);
 
 // Set variable own (if own gallery)
 $Own = false;

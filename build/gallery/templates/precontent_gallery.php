@@ -7,4 +7,4 @@ $User = APP_User::login();
 $words = new MOD_words();
 
 $g = $gallery;
-$g->user_handle = MOD_member::getUsername($g->user_id_foreign);
+$g->user_handle = MOD_member::getUserHandle($g->user_id_foreign);

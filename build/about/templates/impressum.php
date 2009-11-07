@@ -39,7 +39,3 @@ $words = new MOD_words();
 		</p>
     <p>The layout is based on <a href="http://www.yaml.de/">YAML</a> &copy; 2005-2006 by <a href="http://www.highresolution.info">Dirk Jesse</a>
     </p>
-
-		
-
-	 

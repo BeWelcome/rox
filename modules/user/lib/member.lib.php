@@ -235,9 +235,3 @@ class MOD_member
         }
     }
 }
-
-
-
-
-
-?>

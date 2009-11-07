@@ -190,6 +190,7 @@ class GalleryController extends RoxControllerBase {
                         $subTab = 'user';
                         $membersmodel = new MembersModel();
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && ($member = $membersmodel->getMemberWithUsername($request[3])) && $userId = $member->get_userid()) {
+                            $this->username = $member->Username;
                             $this->userId = $userId;
                             if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {

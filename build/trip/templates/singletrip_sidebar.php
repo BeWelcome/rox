@@ -20,4 +20,3 @@ if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
     }
     echo $words->flushBuffer();
 }
-?>

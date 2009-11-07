@@ -520,4 +520,3 @@ WHERE `user_id` = '.(int)$userId.' AND `setting` = \''.$c->dao->escape($setting)
         $me->loggedIn = false;
     }
 }
-?>

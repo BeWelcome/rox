@@ -8,7 +8,7 @@
  *
  */
 
-class GalleryUserImagesPage extends GalleryUserPage
+class GalleryUserOverviewPage extends GalleryUserPage
 {
 
     protected function getSubmenuActiveItem()
@@ -17,18 +17,18 @@ class GalleryUserImagesPage extends GalleryUserPage
     }
 
     protected function teaserHeadline() {
-        return $this->getWords()->getBuffered('GalleryUserPage');
+        return parent::teaserHeadline();
     }
 
     protected function column_col3() {
         $statement = $this->statement;
+        $galleries = $this->galleries;
         $words = new MOD_words();
+        $username = $this->username;
         ?>
         <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
         <?php
-        require 'templates/overview.php';
+        require SCRIPT_BASE . 'build/gallery/templates/user_galleryoverview.php';
     }
 
 }
-
-?>

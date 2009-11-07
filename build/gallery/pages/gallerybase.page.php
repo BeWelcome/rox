@@ -13,11 +13,11 @@ class GalleryBasePage extends PageWithActiveSkin
     protected function init()
     {
         $this->page_title = 'Gallery | BeWelcome';
-        $this->model = new Gallery();
+        $this->model = new GalleryModel();
     }
 
     protected function teaserHeadline() {
-        return '<a href="gallery">'.$this->getWords()->getBuffered('Gallery').'</a>';
+        return $this->getWords()->getBuffered('Gallery');
     }
 
     protected function teaser() {
@@ -70,7 +70,7 @@ class GalleryBasePage extends PageWithActiveSkin
             $words = $this->words;
             $ww = $this->ww;
             $items = array();
-            $items[] = array('user', 'gallery/manage', $ww->GalleryManage);
+//            $items[] = array('user', 'gallery/manage', $ww->GalleryManage);
             $items[] = array('user', 'gallery/show/user/'.$member->Username, $ww->GalleryMy);
             $items[] = array('upload', 'gallery/upload', $ww->GalleryUpload);
             return $items;
@@ -79,5 +79,3 @@ class GalleryBasePage extends PageWithActiveSkin
 
 
 }
-
-?>

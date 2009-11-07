@@ -1,7 +1,6 @@
 <?php
 
 $words = new MOD_words();
-$User = new APP_User;
 $layoutbits = new MOD_layoutbits();
 ?>
 <script type="text/javascript">
@@ -68,7 +67,8 @@ if ($statement) {
     <a href="gallery/show/image/'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.'" alt="image" style="margin: 5px 0; float:none;" /></a>';
 
     echo '<h4>';
-if ($User && $User->getHandle() == $d->user_handle) {
+$loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
+if ($loggedmember && $loggedmember->Username == $d->user_handle) {
     echo '<input type="checkbox" class="thumb_check" name="imageId[]" onchange="highlightMe(this.parentNode.parentNode,this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
 }
 ?>
@@ -77,7 +77,7 @@ if ($User && $User->getHandle() == $d->user_handle) {
 echo '
     <p class="small">
         '.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by').'
-        <a href="bw/member.php?cid='.$d->user_handle.'">'.$d->user_handle.'</a>. 
+        <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>. 
         <a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'>
         <img src="styles/YAML/images/iconsfam/pictures.png" style="float: none">
         </a>
@@ -91,4 +91,3 @@ echo '
     $request = $requestStr.'/=page%d';
     require TEMPLATE_DIR.'misc/pages.php';
 }
-?>

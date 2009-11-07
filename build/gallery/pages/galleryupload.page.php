@@ -22,9 +22,7 @@ class GalleryUploadPage extends GalleryBasePage
     }
 
     protected function teaserHeadline() {
-        $headline = '<a href="gallery" title="Gallery">' .$this->words->getBuffered('Gallery'). '</a>';
-        $headline.= '<span class="small"> > <a href="gallery/show/sets" title="All Galleries">'.$this->words->getBuffered("Gallery_UploadTitle").'</a></span>';
-        return $headline;
+        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->words->getBuffered("Gallery_UploadTitle");
     }
     
     public function leftSidebar()
@@ -34,12 +32,10 @@ class GalleryUploadPage extends GalleryBasePage
 
     protected function column_col3() {
         $words = $this->words;
-        ?>
-        <h2><?php echo $words->getFormatted('Gallery_UploadTitle'); ?></h2>
-        <?php
-        require 'templates/uploadform.php';
+        echo <<<HTML
+        <h2>{$words->getFormatted('Gallery_UploadTitle')}</h2>
+HTML;
+        require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
     }
 
 }
-
-?>

@@ -57,7 +57,7 @@ INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
         }
         if (isset($vars['cg']) && $vars['cg'])
         {
-            $Gallery = new Gallery;
+            $Gallery = new GalleryModel;
             $galleryId = $Gallery->createGallery($vars['n']);
             if (!$galleryId)
             {
@@ -309,7 +309,7 @@ SQL;
 			$this->dao->query($query);
             
             if (isset($vars['cg']) && $vars['cg']) {
-                $Gallery = new Gallery;
+                $Gallery = new GalleryModel;
                 $galleryId = $Gallery->createGallery($vars['n']);
                 if (!$galleryId) {
                     $vars['errors'][] = 'gallery_not_created';

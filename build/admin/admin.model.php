@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright (c) 2007 BeVolunteer
+Copyright (c) 2007-2009 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -21,20 +21,49 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-/**
- * admin model
- *
- * @package admin
- * @author Felix van Hove <fvanhove@gmx.de>
- */
-class Admin extends PAppModel
+
+    /**
+     * @author Felix van Hove <fvanhove@gmx.de>
+     * @author Fake51
+     */
+
+    /**
+     * admin model
+     *
+     * @package Apps
+     * @subpackage Admin
+     */
+class AdminModel extends RoxModelBase
 {
-    
-    protected $dao;
     
     public function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * gets an array of members with a given status
+     *
+     * @param stsring $status
+     * @access public
+     * @return array
+     */
+    public function getMembersWithStatus($status, $pager)
+    {
+        $offset = ($pager->active_page - 1) * $pager->items_per_page;
+        return $this->createEntity('Member')->findByWhereMany("Status = '{$this->dao->escape($status)}' ORDER BY id LIMIT {$offset}, {$pager->items_per_page}");
+    }
+
+    /**
+     * counts members with a given status
+     *
+     * @param stsring $status
+     * @access public
+     * @return int
+     */
+    public function countMembersWithStatus($status)
+    {
+        return $this->createEntity('Member')->countWhere("Status = '{$this->dao->escape($status)}'");
     }
 
     public function procActivitylogs($vars, $level = 0)
@@ -118,111 +147,4 @@ class Admin extends PAppModel
 		return array($altogether->n => $resultRecords);
     }
 
-    /**
-     * FIXME: more or less a copy from method IdMember($username) - improve!
-     * 
-     * FIXME: move to dedicated module
-     *
-     * @see FunctionsTools.php
-     * @param unknown_type $username
-     * @return unknown
-     */
-    //------------------------------------------------------------------------------ 
-// function IdMember return the numeric id of the member according to its username
-// This function will TRANSLATE the username if the profile has been renamed.
-// Note that a numeric username is provided no Username trnslation will be made
-function _idMember($username) {
-	if (is_numeric($username)) { // if already numeric just return it
-		return ($username);
-	}
-	$query = "SELECT SQL_CACHE id,ChangedId,Username,Status FROM members WHERE Username='" . mysql_real_escape_string($username) . "'";
-	$rr = LoadRow($query);
-	if (!isset($rr->id)) return(0) ; // Return 0 if no username match
-	if ($rr->ChangedId > 0) { // if it is a renamed profile
-		$rRenamed = LoadRow("select SQL_CACHE id,Username from members where id=" . $rr->ChangedId);
-		$rr->id = IdMember($rRenamed->Username); // try until a not renamde profile is found
-	}
-	if (isset ($rr->id)) {
-	    // test if the member is the current member and has just bee rejected (security trick to immediately remove the current member in such a case)
-		if (array_key_exists("IdMember", $_SESSION) and $rr->id==$_SESSION["IdMember"]) $this->_testIfIsToReject($rr->Status) ;
-		return ($rr->id);
-	}
-	return (0);
-} // end of IdMember
-
-/**
- * FIXME: more or less a copy from method TestIfIsToReject($Status) - improve!
- * 
- * FIXME: move to dedicated module
- * 
- * @see FunctionsTools.php
- */
-
-// THis TestIfIsToReject function check wether the status of the members imply an immediate logoff
-// This for the case a member has just been banned
-// the $Status of the member is the current status from the database
-function _testIfIsToReject($Status) {
-	 if (($Status=='Rejected ')or($Status=='Banned')) { 
-		$L = MOD_log::get();
-		$L->write("Force Logout GAMEOVER", "Login");
-		APP_User::get()->logout();
-		die(" You can't use this site anymore") ;
-	 }
-} // end of funtion IsToReject
-
-public function wordsdownload() {
-    $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-    PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-    if (!PPostHandler::isHandling())
-        return $callbackId;
-
-    $vars = &PPostHandler::getVars($callbackId);
-
-    if(array_key_exists('SubmitUpload', $vars)) $upload = true;
-    else $upload = false;
-
-    if(array_key_exists('importfilename', $vars)) $importfilename = $vars['importfilename'];
-
-    if(array_key_exists('Replace', $vars)) $replace = true;
-    else $replace = false;
-
-    PPostHandler::clearVars($callbackId);
-
-    if($upload) {
-        exec("mysql.exe -u root bewelcome < \"$importfilename\"");
-        echo "<H3>Import complete</H3>";
-        PPHP::PExit();
-    }
-    $fields = "";
-    $qry = $this->dao->query("describe words");
-	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-        $name = $rr->Field;
-        $fields .= "`$name`, ";
-    }
-    $fields = substr($fields, 0, strlen($fields)-2);
-    if($replace) $results = "REPLACE";
-    else $results = "INSERT";
-    $results .= " INTO `words` ($fields) VALUES \r\n";
-    $qry = $this->dao->query("select $fields from words");
-	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-        $results .= "(";
-        $line = "";
-        foreach($rr as $key => $r) {
-            if(substr($key, 0, 2) == "Id")
-                $line .= "$r, ";
-            else
-                $line .= "'".mysql_real_escape_string($r)."', ";
-        }
-        $results .= substr($line, 0, strlen($line)-2)."),\r\n";
-    }
-    $results = substr($results, 0, strlen($results)-3).";\r\n";
-    $results = gzencode($results);
-
-    header("Content-length: ".strlen($results));
-    header("Content-type: application/x-gzip");
-    header("Content-Disposition: attachment; filename=words.sql.gzip");
-    echo $results;
-    PPHP::PExit();
 }
-}
-?>

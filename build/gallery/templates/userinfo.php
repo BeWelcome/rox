@@ -6,9 +6,12 @@ if (isset($username) && $username !== '')
 echo '
     <div class="floatbox">
         '.MOD_layoutbits::PIC_50_50($username,'',$style='float_left framed').'
-        <h2>'.$username.'</h2>
-        <p>'.$cnt_pictures.' '.$words->getFormatted('Images').'</p>
-    </div>';
+        <h2>'.$username.'</h2>';
+        if (isset($cnt_pictures))
+        {
+            echo '<p>'.$cnt_pictures.' '.$words->getFormatted('Images').'</p>';
+        }
+        echo '</div>';
 }
 
 if ($this->loggedInMember && $this->loggedInMember->Username == $username)
@@ -24,5 +27,3 @@ if ($this->loggedInMember && $this->loggedInMember->Username == $username)
 <?php
 
 }
-
-?>

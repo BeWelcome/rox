@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class Gallery extends RoxModelBase
+class GalleryModel extends RoxModelBase
 {
     const FLAG_VIEW_PRIVATE   = 1;
     const FLAG_VIEW_PROTECTED = 2;
@@ -212,29 +212,18 @@ WHERE `id` = '.(int)$galleryId.'
 
     }
     
-    public function getGallery($galleryId = false)
+    /**
+     * returns a single gallery entity
+     *
+     * @param int $galleryId - id of gallery to fetch
+     *
+     * @access public
+     * @return Gallery|false
+     */
+    public function getGallery($galleryId)
     {
-    	$query = '
-SELECT
-    i.`id`, 
-    i.`user_id_foreign`, 
-    i.`flags`,
-    i.`title`, 
-    i.`text` 
-FROM `gallery` AS i
-        ';
-        if ($galleryId) {
-        $query .= '
-WHERE i.`id` = '.(int)$galleryId.'
-        ';
-        }
-        $query .= '
-ORDER BY `id` ASC';
-        $s = $this->dao->query($query);
-        if ($s->numRows() == 0)
-            return false;
-        return $s->fetch(PDB::FETCH_OBJ);
-    }        
+        return $this->createEntity('Gallery')->findById($galleryId);
+    }
 
     public function getGalleryItems($galleryId,$count=false)
     {
@@ -597,12 +586,8 @@ WHERE
      * 
      * @todo sizes should be customizable
      */
-    public function uploadProcess()
+    public function uploadProcess(&$vars)
     {
-        if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0)
-            return false;
-        if (!$User = APP_User::login())
-            return false;
         // NEW CHECKS
         if (!$User = APP_User::login()) {
              $vars['error'] = 'Gallery_NotLoggedIn';
@@ -689,7 +674,7 @@ VALUES
                 $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
             }
         }
-        return false;
+        return true;
     }
 
 }

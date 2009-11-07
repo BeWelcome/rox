@@ -1,7 +1,7 @@
 <?php
 $words = new MOD_words();
 $request = PRequest::get()->request;
-$Gallery = new Gallery;
+$Gallery = new GalleryModel;
 $Gallery_ctrl = new GalleryController;
 if ($member = $this->model->getLoggedInMember())
 {
@@ -12,8 +12,8 @@ if ($member = $this->model->getLoggedInMember())
 }
 $GalleryRight = MOD_right::get()->hasRight('Gallery');
 $d = $image;
-$d->user_handle = MOD_member::getUsername($d->user_id_foreign);
-$canEdit = ($User && $User->getId() == $d->user_id_foreign) ? true : false;
+$d->user_handle = MOD_member::getUserHandle($d->user_id_foreign);
+$canEdit = ($member && $member->Username == $d->user_handle) ? true : false;
 
 if (!isset($vars['errors']))
 {
@@ -109,7 +109,7 @@ echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->titl
     <h3><?php echo $words->getFormatted('CommentsTitle'); ?></h3>
     
 <?php
-$comments = $Gallery->getComments($image->id);
+$comments = $this->model->getComments($image->id);
 if (!$comments) {
 	echo '<p>'.$words->getFormatted('NoComments').'</p>';
 } else {
@@ -126,7 +126,7 @@ if (!$comments) {
 <h3><?php echo $words->getFormatted('CommentsAdd'); ?></h3>
 
 <?php
-if ($User) {
+if ($member) {
 ?>
 <form method="post" action="gallery/show/image/<?=$d->id?>/comment" class="def-form" id="gallery-comment-form">
     <div class="row">

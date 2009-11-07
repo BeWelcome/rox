@@ -48,7 +48,7 @@ function window.onload() {
         </script>
 <?php
 } else {
-    $Gallery = new Gallery;
+    $Gallery = new GalleryModel;
     $callbackId = $Gallery->uploadProcess();
 ?>
         <script type="text/javascript">//<!--

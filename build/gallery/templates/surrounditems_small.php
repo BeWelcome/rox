@@ -1,10 +1,9 @@
 <?php
 
 $words = new MOD_words();
-$User = new APP_User;
 
 if ($UserId) {
-    echo '<h3>'. $words->getFormatted('galleryUserOthers','<a href="gallery/show/user/'. $image->user_handle .'">',$image->user_handle,'</a>').' </h3>';
+    echo "<h3><a href='gallery/show/user/{$image->user_handle}'>{$words->getFormatted('galleryUserOthers',$image->user_handle)}</a></h3>";
 }
 if ($SetId) {
     echo '<h3>'. $words->getFormatted('gallerySetOthers').' </span></h3>';
@@ -31,7 +30,3 @@ if ($Next) {
 }
 
 ?></td></tr></table><?php
-if ($UserId) {
-    echo '<span class="small"> <a href="gallery/show/user/'. $image->user_handle .'">See all</a></span>';
-}
-?>

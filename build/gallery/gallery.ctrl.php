@@ -14,9 +14,10 @@ class GalleryController extends RoxControllerBase {
     
     public function __construct() {
         parent::__construct();
-        $this->_model = new Gallery();
+        $this->_model = new GalleryModel();
         $this->_view  = new GalleryView($this->_model);
         $this->loggedInMember = $this->_model->getLoggedInMember();
+        $this->username = $this->loggedInMember ? $this->loggedInMember->Username : false;
     }
     
     public function __destruct() {
@@ -78,7 +79,11 @@ class GalleryController extends RoxControllerBase {
                     return false;
                 $this->uploadedProcess();
                 break;
-                
+
+            case 'uploaded_done':
+                $this->ajaxlatestimages();
+                PPHP::PExit();
+
             case 'xppubwiz':
                 $this->_view->xpPubWiz();
                 break;
@@ -97,7 +102,6 @@ class GalleryController extends RoxControllerBase {
             case 'create':
                 if (!$loggedInMember)
                     return false;
-                $username = $loggedInMember->Username;
                 if (isset($request[2])) {
                     $vars['gallery'] = $this->_model->updateGalleryProcess();
                 }
@@ -108,13 +112,13 @@ class GalleryController extends RoxControllerBase {
                 break;              
                 
             case 'manage':
-                if (!$User = APP_User::login())
+                if (!$member = $this->_model->getLoggedInMember())
                     return false;
-                $username = $User->getHandle();
                 if (isset($request[2])) {
                     $vars['gallery'] = $this->_model->updateGalleryProcess();
                 }
-                $insertId = mysql_insert_id();
+                // wtf???
+                //$insertId = mysql_insert_id();
                 if (isset($vars['gallery'])) 
                     $insertId = $vars['gallery'];
                 $loc_rel = 'gallery/show/sets/'.$insertId;
@@ -199,10 +203,7 @@ class GalleryController extends RoxControllerBase {
                                         return $this->userimages($userId);
                                 }
                             }
-                            $vars = PPostHandler::getVars($this->_model->uploadProcess());
-                            if(isset($vars) && is_array($vars) && array_key_exists('error', $vars)) {
-                                return $P->content .= $vw->uploadForm();
-                            } else return $this->useroverview($userId);
+                            return $this->useroverview($userId);
                             break;
                         }
                         
@@ -239,31 +240,33 @@ class GalleryController extends RoxControllerBase {
     /**
      * handles showing a page for a single gallery
      *
+     * @param Gallery $gallery - gallery to work on
+     *
      * @access public
      * @return object $page
      */
-    public function gallery($gallery)
+    public function gallery(Gallery $gallery)
     {
         $page = new GalleryPage();        
-        //Check if current TB-user-id and Gallery-user-id are the same
-        $loggedInMember = $this->loggedInMember;
         $user_id_foreign = $gallery->user_id_foreign;
-        $myself = ($loggedInMember && ($loggedInMember->get_userId() == $user_id_foreign)) ? $loggedInMember->Username : false;
+        $page->myself = ($this->loggedInMember && $this->loggedInMember->get_userId() == $user_id_foreign) ? $this->loggedInMember->Username : false;
+        $page->username = MOD_member::getUserHandle($user_id_foreign);
         $page->gallery = $gallery;
         $page->statement = $this->_model->getLatestItems('',$gallery->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->upload = ((isset($request[4]) && $request[4] == 'upload') or !$page->cnt_pictures) ? true : false;
-        $page->myself = $myself;
         return $page;
     }
     
     /**
      * handles the deletion of a gallery
      *
+     * @param Gallery $gallery - gallery to delete
+     *
      * @access public
      * @return object $page
      */
-    public function deleteGallery($image)
+    public function deleteGallery(Gallery $gallery)
     {
         $page = new DeleteGalleryPage();
         $page->deleted = $this->_model->deleteGalleryProcess($gallery->id);
@@ -358,36 +361,20 @@ class GalleryController extends RoxControllerBase {
         return $page;
     }
     
-    /**
-     * OLD STUFF:
-     * 
-     */
-    
-    private function uploadedProcess() {
-        if (!$member = $this->loggedInMember)
-            return false;
+    public function uploadedProcess($args, $action, $mem_redirect, $mem_resend)
+    {
         // Process the uploaded pictures, display errors
-        $userId = $member->get_userid();
-        $statement = $this->_model->getLatestItems($userId);
-        $callbackId = $this->_model->uploadProcess();
-        $vars = PPostHandler::getVars($callbackId);
-        if(isset($vars['error'])) {
-            $this->message = $words->get($vars['error']);
-            PPostHandler::clearVars($callbackId);
-        }
-        $page = $this->userimages($userId);
-        if (isset($_GET['raw'])) {
-            $this->ajaxlatestimages();
-            PPHP::PExit();
-        }
-        return $page;
+        $userId = $this->_model->getLoggedInMember()->id;
+        $vars = $args->post;
+        $this->_model->uploadProcess($vars);
+        die();
     }
     
     /**
      * handles showing all images of a user
      *
      * @access public
-     * @return string $str
+     * @return string
      */
     public function ajaxlatestimages()
     {
@@ -549,7 +536,7 @@ class GalleryController extends RoxControllerBase {
         $vars = &PPostHandler::getVars($callbackId);
         if (PPostHandler::isHandling())
         {
-            return $this->_model->uploadProcess($vars);
+            $this->_model->uploadProcess($vars);
         }
         else
         {

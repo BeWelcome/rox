@@ -1,6 +1,6 @@
 <?php
 $words = new MOD_words();
-$Gallery = new Gallery;
+$Gallery = new GalleryModel;
 
 // Show the galleries/photosets
 if ($galleries) {
@@ -21,7 +21,7 @@ if ($galleries) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);
         $s = $Gallery->getGalleryItems($g->id,1);
-        $member = MOD_member::getUsername($g->user_id_foreign);
+        $member = MOD_member::getUserHandle($g->user_id_foreign);
         $num_rows = $s ;
         // Only show the galleries with pictures. The belonging user might see them anyway.
     	if ($d) {
@@ -59,4 +59,3 @@ if ($galleries) {
     $request = $requestStr.'/=page%d';
     require TEMPLATE_DIR.'misc/pages.php';
 }
-?>

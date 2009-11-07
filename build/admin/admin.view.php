@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright (c) 2007 BeVolunteer
+Copyright (c) 2007-2009 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -21,17 +21,23 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-/**
- * admin view
- *
- * @package admin
- * @author Felix van Hove <fvanhove@gmx.de>
- */
-class AdminView extends PAppView
+
+    /**
+     * @author Felix van Hove <fvanhove@gmx.de>
+     * @author Fake51
+     */
+
+    /**
+     * admin view
+     *
+     * @package Apps
+     * @subpackage Admin
+     */
+class AdminView extends RoxAppView
 {
     private $_model;
     
-    public function __construct(Admin $model)
+    public function __construct(AdminModel $model)
     {
         $this->_model = $model;
     }

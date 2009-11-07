@@ -72,6 +72,32 @@ class MOD_member
         $this->_userId = $userId;
         $this->_username = $username;
     }
+
+    /**
+     * returns the handle from a TB user, given tb user id
+     *
+     * @param int $user_id id of user
+     *
+     * @access public
+     * @return string
+     */
+    public static function getUserHandle($user_id)
+    {
+        // insanity lies in the details. Any design where you have to do
+        // boilerplate code like this should be thrown out immediately
+        // after design
+        $db = PVars::getObj('config_rdbms');
+        if (!$db) {
+            throw new PException('DB config error!');
+        }
+        $dao = PDB::get($db->dsn, $db->user, $db->password);
+        $result = $dao->query("SELECT handle FROM user WHERE id = ". intval($user_id));
+        if ($result && $fetched = $result->fetch(PDB::FETCH_OBJ))
+        {
+            return $fetched->handle;
+        }
+        return '';
+    }
     
     /**
      * Creates a member object for a given username.
@@ -209,9 +235,3 @@ class MOD_member
         }
     }
 }
-
-
-
-
-
-?>

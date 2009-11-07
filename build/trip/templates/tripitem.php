@@ -4,7 +4,7 @@ $words = new MOD_words();
 // show the first image if there is a photoset assigned to the trip
 $galleryitem = '';
 if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
-    $gallery = new Gallery;
+    $gallery = new GalleryModel;
     $d = $gallery->getLatestGalleryItem($trip->gallery_id_foreign);
     if ($d) {
         $galleryitem = '<a href="gallery/show/image/'.$d.'"><img src="gallery/thumbimg?id='.$d.'" alt="image" style="margin:10px;" class="framed" /></a>';

@@ -35,4 +35,3 @@ class AboutStatisticsPage extends AboutBasePage
         require 'templates/stats.php';
     }
 }
-

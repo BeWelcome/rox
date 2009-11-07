@@ -12,7 +12,7 @@ class GalleryView extends PAppView {
     private $_model;
 
 
-    public function __construct(Gallery $model) 
+    public function __construct(GalleryModel $model) 
     {
         $this->_model = $model;
     }
@@ -218,4 +218,3 @@ class GalleryView extends PAppView {
         require TEMPLATE_DIR.'shared/roxpage/topmenu.php';
     }
 }
-?>

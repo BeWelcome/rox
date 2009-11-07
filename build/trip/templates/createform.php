@@ -59,7 +59,7 @@ if (isset($vars['d']) && $vars['d'])
     </fieldset>
 <?php
 
-$Gallery = new Gallery;
+$Gallery = new GalleryModel;
 $galleries = $Gallery->getUserGalleries($member->get_userid());
 ?>
     <fieldset id="trip-options">

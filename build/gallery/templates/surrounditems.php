@@ -1,7 +1,6 @@
 <?php
 
 $words = new MOD_words();
-$User = new APP_User;
 ?>
 
 <h3><?php echo $words->getFormatted('gallerySetOthers')?></h3>
@@ -19,5 +18,5 @@ if ($Next) {
     	echo '<div class="imgnext float_left" style="border: 1px solid #999; margin: 5px; background: #fff url('.PVars::getObj('env')->baseuri.'gallery/thumbimg?id='.$e->id.') bottom right no-repeat; width: 80px; height: 70px;"><a href="gallery/show/image/'.$e->id.'"><img src="images/misc/imgnext.gif" alt="image"/></a></div>';
     }
 }
-echo '</div>';
 ?>
+</div>

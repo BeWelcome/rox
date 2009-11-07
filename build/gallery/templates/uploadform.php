@@ -1,14 +1,19 @@
 <?php
-$Gallery = new Gallery;
-$callbackId = $Gallery->uploadProcess();
-$vars = PPostHandler::getVars($callbackId);
+$layoutkit = $this->layoutkit;
+$formkit = $layoutkit->formkit;
+$vars = $formkit->mem_from_redirect;
+$callbacktag = $formkit->setPostCallback('GalleryController', 'uploadedProcess');
+
+//$Gallery = new GalleryController;
+//$callbackId = $Gallery->uploadProcess();
+//$vars = PPostHandler::getVars($callbackId);
 $galleryId = isset($this->galleryId) ? $this->galleryId : false;
 $words = $this->words;
 // If the upload-form is NOT hidden, show it!
 ?>
 
 <?php
-if (!$User = APP_User::login()) {
+if (!$member = $this->model->getLoggedInMember()) {
     echo '<p class="error">'.$words->getFormatted('Gallery_NotLoggedIn').'</p>';
     return;
 }
@@ -16,7 +21,7 @@ if(isset($vars['error'])) {
     echo '<p class="error">'.$words->getFormatted($vars['error']).'</p>';
 }
 if (isset($_GET['g'])) $galleryId = (int)$_GET['g']; 
-$postURL = 'gallery/show/user/'.$User->getHandle();
+$postURL = 'gallery/uploaded';
 if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
 
 // If the upload-form IS hidden, display a link to show it
@@ -45,7 +50,7 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
     </div>
     <p>
         <input type="hidden" name="galleryId" value="<?=$galleryId;?>"/>
-        <input type="hidden" name="<?=$callbackId?>" value="1"/>
+        <?php echo $callbacktag; ?>
         <input type="submit" value="<?=$words->getSilent('Gallery_UploadSubmit')?>"/>
         <?=$words->flushBuffer()?>
     </p>
@@ -62,8 +67,3 @@ var GalleryImg = new Uploader('gallery-img-upload', {
 //-->
     </script>
 </div>
-<?php
-PPostHandler::clearVars($callbackId);
-
-// If $hide is true, hide the form!
-?>

@@ -1,18 +1,18 @@
 ﻿<?php
-$User = APP_User::login();
 $request = PRequest::get()->request;
+$member = $this->model->getLoggedInMember();
 
 $g = $gallery;
-$g->user_handle = MOD_member::getUsername($g->user_id_foreign);
+$g->user_handle = MOD_member::getUserHandle($g->user_id_foreign);
 
 // Set variable own (if own gallery)
 $Own = false;
-if ($User) {
+if ($member) {
     //$callbackId = $Gallery->editGalleryProcess($gallery);
     //$vars =& PPostHandler::getVars($callbackId);
     $R = MOD_right::get();
     $GalleryRight = $R->hasRight('Gallery');
-    $Own = ($User->getId() == $g->user_id_foreign) ? true : false;
+    $Own = ($member->Username == $g->user_handle) ? true : false;
 }
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
@@ -61,12 +61,12 @@ echo '<p class="small"> '.$cnt_pictures.' '.$words->getFormatted('GalleryImagesT
 echo '
     <div class="floatbox" style="padding-top: 30px;">
         '.MOD_layoutbits::PIC_30_30($g->user_handle,'',$style='float_left').'
-    <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="bw/member.php?cid='.$g->user_handle.'">'.$g->user_handle.'</a>.<br /></p>
+    <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="members/'.$g->user_handle.'">'.$g->user_handle.'</a>.<br /></p>
     <p class="small"><a href="gallery/show/user/'.$g->user_handle.'/sets">'.$words->getFormatted('GalleryAllGalleriesBy').' <img src="images/icons/images.png"></a></p>
     </div>
     ';
 
-if ($Own || ($User && ($GalleryRight > 1)) ) {
+if ($Own || ($member && ($GalleryRight > 1)) ) {
     echo '
     <div class="floatbox" style="padding-top: 30px;">
     <p><a style="cursor:pointer" href="gallery/show/sets/'.$g->id.'/delete" class="button" onclick="return confirm(\''. $words->getSilent("confirmdeletegallery").'\')"><img src="images/icons/delete.png"> '.$words->getSilent("GalleryDelete").' </a></p>

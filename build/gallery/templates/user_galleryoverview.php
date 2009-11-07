@@ -4,8 +4,7 @@ $Gallery = new GalleryController;
 $callbackId = $Gallery->updateGalleryProcess();
 $vars = PPostHandler::getVars($callbackId);
 $type = "images";
-?>
-<?
+
 if (isset($vars['errors']) && in_array('gallery', $vars['errors'])) {
     echo '<span class="error">'.$words->get('GalleryErrorsPhotoset').'</span>';
 }
@@ -24,8 +23,7 @@ require 'galleries_overview.php';
 <?php
 $itemsPerPage = 5;
 require 'overview.php';
-?>
-<?php
+
 require 'user_controls.php';
 ?>
 

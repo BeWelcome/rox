@@ -17,6 +17,7 @@ class GalleryController extends RoxControllerBase {
         $this->_model = new GalleryModel();
         $this->_view  = new GalleryView($this->_model);
         $this->loggedInMember = $this->_model->getLoggedInMember();
+        $this->username = $this->loggedInMember ? $this->loggedInMember->Username : false;
     }
     
     public function __destruct() {
@@ -101,7 +102,6 @@ class GalleryController extends RoxControllerBase {
             case 'create':
                 if (!$loggedInMember)
                     return false;
-                $username = $loggedInMember->Username;
                 if (isset($request[2])) {
                     $vars['gallery'] = $this->_model->updateGalleryProcess();
                 }
@@ -114,7 +114,6 @@ class GalleryController extends RoxControllerBase {
             case 'manage':
                 if (!$member = $this->_model->getLoggedInMember())
                     return false;
-                $username = $member->Username;
                 /*
                 if (isset($request[2])) {
                     $vars['gallery'] = $this->_model->updateGalleryProcess();
@@ -191,7 +190,6 @@ class GalleryController extends RoxControllerBase {
                         $subTab = 'user';
                         $membersmodel = new MembersModel();
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && ($member = $membersmodel->getMemberWithUsername($request[3])) && $userId = $member->get_userid()) {
-                            $this->username = $member->Username;
                             $this->userId = $userId;
                             if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {
@@ -365,11 +363,6 @@ class GalleryController extends RoxControllerBase {
         return $page;
     }
     
-    /**
-     * OLD STUFF:
-     * 
-     */
-    
     public function uploadedProcess($args, $action, $mem_redirect, $mem_resend)
     {
         // Process the uploaded pictures, display errors
@@ -383,7 +376,7 @@ class GalleryController extends RoxControllerBase {
      * handles showing all images of a user
      *
      * @access public
-     * @return string $str
+     * @return string
      */
     public function ajaxlatestimages()
     {

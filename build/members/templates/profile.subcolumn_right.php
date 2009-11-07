@@ -100,7 +100,7 @@ if (count($relations) > 0) { ?>
 <? // This member's gallery ?>
         <?php        
 	    $userid = $member->userid;
-	    $gallery = new Gallery;
+	    $gallery = new GalleryModel;
 	    $statement = $userid ? $gallery->getLatestItems($userid) : false;
 	    if ($statement) {
 		?>
@@ -115,5 +115,3 @@ if (count($relations) > 0) { ?>
 	        }
 		    echo $words->flushBuffer();
 	    }
-
-        ?>

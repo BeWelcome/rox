@@ -211,6 +211,10 @@ WHERE
             $UnsubscribeLink = '<a href="'.$baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.wwinlang('ForumUnSubscribe',$MemberIdLanguage).'</a>';
         }
     }
+    elseif ($rr->TableSubscription == 'membersgroups')
+    {
+        $UnsubscribeLink = wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
+    }
 
 		// Rewrite the title and the message to the corresponding default language for this member if any
 		$rPost->thread_title=fTrad($rPost->IdTitle) ;

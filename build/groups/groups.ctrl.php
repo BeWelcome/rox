@@ -696,6 +696,8 @@ class GroupsController extends RoxControllerBase
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
+        $request = $this->request_vars;
+
         if (isset($request[3]) && strtolower($request[3]) == 'true')
         {
             $this->_model->deleteGroup($group);

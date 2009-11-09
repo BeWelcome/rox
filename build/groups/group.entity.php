@@ -441,7 +441,7 @@ class Group extends RoxEntityBase
             return false;
         }
 
-        return $role->removeFromMember($prev_owner, $role->getScopesForMemberRole($prev_owner, $this->getPKValue()));
+        return $role->removeFromMember($member, $role->getScopesForMemberRole($member, $this->getPKValue()));
     }
 
     /**

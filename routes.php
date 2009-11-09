@@ -28,6 +28,7 @@
     $this->addRoute('group_banmember','groups/:group_id:/banmember/:member_id:', 'GroupsController', 'banMember');
     $this->addRoute('group_declineinvitation','groups/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
     $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
+    $this->addRoute('group_deleted','groups/:group_id:/delete/true', 'GroupsController', 'delete');
     $this->addRoute('group_forum','groups/:group_id:/forum', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread','groups/:group_id:/forum/:thread:', 'GroupsController', 'forum');
     $this->addRoute('group_forum_action','groups/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');

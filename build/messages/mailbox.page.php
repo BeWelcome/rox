@@ -9,8 +9,8 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $widget->delegate = $this;  // delegate
         $widget->delegate_prefix = 'mailbox';
         $widget->model = $this->getModel();
-		$widget->model->sort_element = $this->sort_element;
-		$widget->model->sort_dir = $this->sort_dir;
+        $widget->model->sort_element = $this->sort_element;
+        $widget->model->sort_dir = $this->sort_dir;
         $widget->items_per_page = 7;
         $widget->active_page = $this->active_page;
         $widget->visible_range = 2;
@@ -64,7 +64,3 @@ class MessagesPageWithMailbox extends MessagesBasePage
     }
       
 }
-
-
-
-?>

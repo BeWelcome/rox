@@ -67,12 +67,12 @@ class ReadMessagePage extends MessagesBasePage
                         <?php
                         $languages = $member->get_languages_spoken(); 
                         if (count($languages) > 0) {
-                        		$ii = 0;
-                        		$max = count($languages);
+                                $ii = 0;
+                                $max = count($languages);
                                 foreach($languages as $language) {
-                        			$space = ($ii != $max -1) ? ', ' : '';
+                                    $space = ($ii != $max -1) ? ', ' : '';
                                   ?><strong><span title="<?=$words->get('LanguageLevel_'.$language->Level) ?>"><?=$language->Name ?><?=$space?></span></strong><?php
-                        			$ii++;
+                                    $ii++;
                                 }
                         } ?>
                         </p>
@@ -171,8 +171,3 @@ class MessageSentPage extends ReadMessagePage
         return 'sent';
     }
 }
-
-
-
-
-?>

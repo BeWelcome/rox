@@ -32,6 +32,3 @@ class MailboxWidget_Received extends MailboxWidget
         return 'messages/received/'.$i_page.'?'.$_SERVER['QUERY_STRING'] ;
     }
 }
-
-
-?>

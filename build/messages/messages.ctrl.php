@@ -63,7 +63,10 @@ class MessagesController extends RoxControllerBase
                     $page->active_page = $this->getPageNumber($request, 2);
                     break;
                 case 'compose':
-                    if (!isset($request[2])) {
+					if ($_SESSION["MemberStatus"]!='Active') { // Ticket #1327, only active members shoudl be allowed to send message
+                        $page = new ContactNotPossible();
+					}
+					else if (!isset($request[2])) {
                         $page = new MessagesInboxPage();
                     } else if (!$member = $model->getMember($request[2])) {
                         $page = new MessagesInboxPage();

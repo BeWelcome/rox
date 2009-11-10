@@ -63,10 +63,10 @@ class MessagesController extends RoxControllerBase
                     $page->active_page = $this->getPageNumber($request, 2);
                     break;
                 case 'compose':
-					if ($_SESSION["MemberStatus"]!='Active') { // Ticket #1327, only active members shoudl be allowed to send message
+                    if (!($logged_member = $model->getLoggedInMember()) || !$logged_member->isActive()) { // Ticket #1327, only active members should be allowed to send message
                         $page = new ContactNotPossible();
-					}
-					else if (!isset($request[2])) {
+                    }
+                    else if (!isset($request[2])) {
                         $page = new MessagesInboxPage();
                     } else if (!$member = $model->getMember($request[2])) {
                         $page = new MessagesInboxPage();
@@ -99,11 +99,11 @@ class MessagesController extends RoxControllerBase
                         if (!isset($request[2])) {
                             $page = new ReadMessagePage();
                         } else switch ($request[2]) { 
-			    //message action
-			    case 'delete':
-			      $model->deleteMessage($request[1]);
-			      $page = new MessagesInboxPage();
-			      break;
+                //message action
+                case 'delete':
+                  $model->deleteMessage($request[1]);
+                  $page = new MessagesInboxPage();
+                  break;
                             case 'edit':
                                 $page = new EditMessagePage();
                                 break;
@@ -122,10 +122,10 @@ class MessagesController extends RoxControllerBase
             }
             
             $page->setModel($model);
-			if (isset($_GET['sort']))
-				$page->sort_element = $_GET['sort'];
-			if (isset($_GET['dir']))
-				$page->sort_dir = $_GET['dir'];
+            if (isset($_GET['sort']))
+                $page->sort_element = $_GET['sort'];
+            if (isset($_GET['dir']))
+                $page->sort_dir = $_GET['dir'];
         }
         // finally display the page.
         // the render() method will call other methods to render the page.

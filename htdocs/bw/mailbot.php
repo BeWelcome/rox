@@ -319,7 +319,7 @@ $qry = sql_query($str);
 
 $count = 0;
 while ($rr = mysql_fetch_object($qry)) {
-    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned
+    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
         if (IsLoggedIn()) {
             echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
         }
@@ -329,7 +329,7 @@ UPDATE
 SET
     Status = 'Freeze'
 WHERE
-    id = $rr->id
+    id = $rr->id and IParent=0
         "; 
         sql_query($str);
         LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
@@ -452,7 +452,7 @@ UPDATE
 SET
     Status = 'Freeze'
 WHERE
-    id = $rr->id
+    id = $rr->id and IParent=0
         "; 
         sql_query($str);
         LogStr("Mailbot refuse to send localvolunteer message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");

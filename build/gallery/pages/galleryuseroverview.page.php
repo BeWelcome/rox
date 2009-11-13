@@ -16,10 +16,6 @@ class GalleryUserOverviewPage extends GalleryUserPage
         return 'overview';
     }
 
-    protected function teaserHeadline() {
-        return parent::teaserHeadline();
-    }
-
     protected function column_col3() {
         $statement = $this->statement;
         $galleries = $this->galleries;
@@ -32,3 +28,5 @@ class GalleryUserOverviewPage extends GalleryUserPage
     }
 
 }
+
+?>

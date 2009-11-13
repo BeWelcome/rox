@@ -3,8 +3,7 @@
 
 //------------------------------------------------------------------------------------
 /**
- * base class for all pages in the groups system,
- * which don't belong to one specific group.
+ * overview of the gallery, including latest pictures, most important links etc.
  *
  */
 
@@ -17,24 +16,32 @@ class GalleryOverviewPage extends GalleryBasePage
     }
 
     protected function teaserHeadline() {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryOverview');
+        return $this->getWords()->getBuffered('GalleryOverview');
     }
     
     public function leftSidebar()
     {
-        $galleries = $this->galleries;
-        $cnt_pictures = $this->cnt_pictures ? $this->cnt_pictures : 0;
-        $username = $this->loggedInMember ? $this->loggedInMember->Username : '';
-        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
+        $loggedInMember = $this->loggedInMember;
+        $words = $this->words;
+        if ($loggedInMember) {
+            $galleries = $this->galleries;
+            $cnt_pictures = $this->cnt_pictures ? $this->cnt_pictures : 0;
+            $username = $loggedInMember->Username;
+            require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
+        } else {
+            //require SCRIPT_BASE . 'build/gallery/templates/galleryoverview_nonlogged.php';
+        }
     }
 
     protected function column_col3() {
         $statement = $this->statement;
-        $words = new MOD_words();
+        $words = $this->words;
         ?>
-        <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
+        <h3><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h3>
         <?php
         require SCRIPT_BASE . 'build/gallery/templates/overview.php';
     }
 
 }
+
+?>

@@ -1,6 +1,6 @@
 <?php
 
-/* Template for showing the content of a gallery */
+/* Template for showing the col3-content of a single gallery */
 
 if ($d) {
 ?>
@@ -36,18 +36,10 @@ if ($d) {
     </div>
   </div>
 </div>
+<hr/>
 <?php
 }
 
-if ($this->myself) {
-?>
-<hr/>
-<div class="floatbox"><a href="gallery/show/sets/<?=$gallery->id?>/delete" class="bigbuttongrey"><span><?=$words->get('GalleryDelete')?></span></a></div>
-<?
-}
-?>
-<hr/>
-<?
 $shoutsCtrl = new ShoutsController;
 $shoutsCtrl->shoutsList('gallery', $gallery->id);
 

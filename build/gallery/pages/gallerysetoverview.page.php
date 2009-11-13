@@ -8,7 +8,7 @@
  *
  */
 
-class GalleryPage extends GalleryBasePage
+class GallerySetOverviewPage extends GalleryBasePage
 {
 
     protected function teaserHeadline() {
@@ -34,12 +34,15 @@ class GalleryPage extends GalleryBasePage
         $d = $this->d;
         $num_rows = $this->num_rows;
         echo '<h2><a href="gallery/show/sets/'.$gallery->id.'">'.$gallery->title.'</a></h2>';
+        if ($this->myself) { echo '<p><a href="gallery/show/sets/'.$gallery->id.'/delete">Delete this gallery</a></p>'; }
         if ($this->myself && $this->upload) {
             // Display the upload form
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
         }
-        require SCRIPT_BASE . 'build/gallery/templates/gallery.column_col3.php';
+        require SCRIPT_BASE . 'build/gallery/templates/gallerysetoverview.column_col3.php';
     }
+    
+    public function leftSidebar() {}
     
     /*
     *  Custom functions

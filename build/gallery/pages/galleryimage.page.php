@@ -20,6 +20,10 @@ class GalleryImagePage extends GalleryBasePage
         return parent::teaserHeadline();
     }
     
+    public function leftSidebar() {
+        require SCRIPT_BASE . 'build/gallery/templates/galleryimage.leftsidebar.php';
+    }
+    
     protected function userControls() {
 ?>
         <p class="small">

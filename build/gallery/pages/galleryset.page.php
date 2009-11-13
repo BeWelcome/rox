@@ -3,12 +3,11 @@
 
 //------------------------------------------------------------------------------------
 /**
- * base class for all pages in the groups system,
- * which don't belong to one specific group.
+ * class for showing all images within a single gallery
  *
  */
 
-class GalleryPage extends GalleryBasePage
+class GallerySetPage extends GalleryBasePage
 {
 
     protected function teaserHeadline() {
@@ -31,14 +30,16 @@ class GalleryPage extends GalleryBasePage
         $cnt_pictures = $this->cnt_pictures;
         $statement = $this->statement;
         $gallery = $this->gallery;
-        $d = $this->d;
-        $num_rows = $this->num_rows;
         echo '<h2><a href="gallery/show/sets/'.$gallery->id.'">'.$gallery->title.'</a></h2>';
+        if ($this->myself) { echo '<p><a href="gallery/show/sets/'.$gallery->id.'">Delete this gallery</a></p>'; }
         if ($this->myself && $this->upload) {
             // Display the upload form
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
         }
-        require SCRIPT_BASE . 'build/gallery/templates/gallery.column_col3.php';
+        
+        require SCRIPT_BASE . 'build/gallery/templates/latestgallery.php';
+        $shoutsCtrl = new ShoutsController;
+        $shoutsCtrl->shoutsList('gallery', $gallery->id);
     }
     
     /*

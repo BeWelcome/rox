@@ -21,14 +21,15 @@ class GalleryUserGalleriesPage extends GalleryUserPage
     }
 
     protected function teaserHeadline() {
-        return '<a href="gallery">'.$this->getWords()->getBuffered('Gallery') . '</a> &gt; '. $this->words->getBuffered("Photosets");
+        return $this->words->getBuffered('Gallery'). ' &gt; <a href="gallery/show/sets">'.$this->words->getBuffered("Gallery_MemberGalleries",$this->username).'</a>';
     }
     
     public function leftSidebar()
     {
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures;
-        $username = $this->username;
+        $username = ($member = $this->loggedInMember) ? $member->username : '';
+        $loggedInMember = $this->loggedInMember;
         require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 

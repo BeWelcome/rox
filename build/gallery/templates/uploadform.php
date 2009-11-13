@@ -17,7 +17,7 @@ if (!$member = $this->model->getLoggedInMember()) {
     echo '<p class="error">'.$words->getFormatted('Gallery_NotLoggedIn').'</p>';
     return;
 }
-if(isset($vars['error'])) {
+if(isset($vars->error)) {
     echo '<p class="error">'.$words->getFormatted($vars['error']).'</p>';
 }
 if (isset($_GET['g'])) $galleryId = (int)$_GET['g']; 

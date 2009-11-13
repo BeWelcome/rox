@@ -239,7 +239,7 @@ WHERE i.`gallery_id_foreign` = '.(int)$galleryId.'
         if ($count == true) 
             return $s->numRows();
         return $s;
-    }        
+    }
 
     public function getLatestGalleryItem($galleryId)
     {
@@ -255,7 +255,7 @@ ORDER BY `item_id_foreign` DESC LIMIT 1
             return false;
         //$img = $this->imageData((int)$s);
         return $s->fetch(PDB::FETCH_OBJ)->item_id;
-    }            
+    }
     
     public function getItemGallery($imageId)
     {
@@ -270,7 +270,7 @@ WHERE i.`item_id_foreign` = '.(int)$imageId.'
         if ($s->numRows() == 0)
             return false;
         return $s;
-    }        
+    }
 
     public function getUserGalleries($UserId = false)
     {
@@ -288,97 +288,16 @@ ORDER BY `id` DESC';
         if ($s->numRows() == 0)
             return false;
         return $s;
-    }        
+    }
     
-    
-    /**
-     * Processing creation of a comment
-     *
-     * This is a POST callback function.
-     *
-     * Sets following errors in POST vars:
-     * title        - invalid(empty) title.
-     * textlen      - too short or long text.
-     * inserror     - db error while inserting.
-     */
-    public function commentProcess($vars, $image)
+    public function getMemberWithUserId($userId)
     {
-        $request = PRequest::get()->request;
-        if (!$image)
-            $image = (int)$request[3];
-
-        // validate
-        if (!isset($vars['ctxt']) || strlen($vars['ctxt']) == 0 || strlen($vars['ctxt']) > 5000) {
-            $vars['errors'] = array('textlen');
+        if (!($userId = intval($userId)))
+        {
             return false;
         }
-
-        $User = APP_User::login();
-
-        $commentId = $this->dao->nextId('gallery_comments');
-        $query = '
-INSERT INTO `gallery_comments`
-SET
-    `id`='.$commentId.',
-    `gallery_items_id_foreign`='.$image.',
-    `user_id_foreign`='.$User->getId().',
-    `title`=\''.(isset($vars['ctit'])?$this->dao->escape($vars['ctit']):'').'\',
-    `text`=\''.$this->dao->escape($vars['ctxt']).'\',
-    `created`=NOW()';
-        $s = $this->dao->query($query);
-        if (!$s) {
-            $vars['errors'] = array('inserror');
-            return false;
-        }
-        
-        // Create notification
-        // $data = $this->imageData($image);
-        // if ($data->user_handle != $_SESSION['Username']) {
-        //     $model = new MembersModel();
-        //     $member = $model->createEntity('Member')->FindByUsername($data->user_handle);
-        //     $param['IdMember'] = $member->getPKValue();
-        //     $param['IdRelMember'] = $_SESSION['IdMember'];
-        //     $param['Type'] = 'picture_comment';
-        //     $param['Link'] = "/gallery/show/image/{$image}";
-        //     $param['WordCode'] = '';
-        //     $param['TranslationParams'] = array('GroupsAcceptedIntoGroup', $_SESSION['Username']);
-        //     $note = $model->createEntity('Note')->createNote($param);
-        // }
-        
-        PPostHandler::clearVars();
-        return PVars::getObj('env')->baseuri.implode('/', $request).'#c'.$commentId;
-    }
-
-    
-    /*
-         Adding comments
-        */
-    public function getComments($image) {
-    	$query = '
-SELECT
-    c.`id` AS `comment_id`,
-    c.`user_id_foreign` AS `user_id`,
-    u.`handle` AS `user_handle`,
-    UNIX_TIMESTAMP(c.`created`) AS `unix_created`,
-    c.`title`,
-    c.`created`,
-    c.`text`
-FROM `gallery_comments` c
-LEFT JOIN `user` u ON c.`user_id_foreign`=u.`id`
-WHERE c.`gallery_items_id_foreign` = '.(int)$image.'
-        ';
-        $s = $this->dao->query($query);
-        if ($s->numRows() == 0)
-            return false;
-        return $s;
-    }
-
-    public function deleteComments($image) {
-    	$query = '
-DELETE FROM `gallery_comments`
-WHERE `gallery_items_id_foreign` = '.(int)$image.'
-        ';
-        return $this->dao->exec($query);
+        $s = $this->singleLookup('SELECT handle FROM user WHERE id = '.(int)$userId);
+        return $this->createEntity('Member')->findByUsername($s->handle);
     }
 
     public function getLatestItems($userId = false,$galleryId = false, $numRows = false)

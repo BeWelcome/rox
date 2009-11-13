@@ -22,9 +22,11 @@ class GalleryUserPage extends GalleryBasePage
     
     public function leftSidebar()
     {
+        $words = $this->words;
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures;
-        $username = $this->username;
+        $username = ($member = $this->loggedInMember) ? $member->username : '';
+        $loggedInMember = $this->loggedInMember;
         require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 

@@ -47,7 +47,8 @@ class GalleryDeletePage extends GalleryBasePage
         ?>
         <h2><?php echo $words->getFormatted('GalleryDelete'); ?></h2>
         <?php
-        require SCRIPT_BASE . 'build/gallery/templates/overview.php';
+        if ($this->deleted) echo 'Gallery successfully deleted.';
+        else require SCRIPT_BASE . 'build/gallery/templates/gallerydelete.column_col3.php';
     }
 
 }

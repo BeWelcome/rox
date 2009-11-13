@@ -160,8 +160,8 @@ class SearchmembersController extends PAppController {
                 if((isset($request[2]) and $request[2] == "varsonload")) {
                     $vars['varsOnLoad'] = true;
                     // Read the latest search results and variables from the session
-                    if ($_SESSION['SearchMembersTList'] != '') $TList = $_SESSION['SearchMembersTList'];
-                    if ($_SESSION['SearchMembersVars'] != '') $vars = $_SESSION['SearchMembersVars'];
+                    if (!empty($_SESSION['SearchMembersTList'])) $TList = $_SESSION['SearchMembersTList'];
+                    if (!empty($_SESSION['SearchMembersVars'])) $vars = $_SESSION['SearchMembersVars'];
                     if (isset($request[3])) {
                         $vars['OrderBy'] = $request[3];
                         $TList = $this->_model->searchmembers($vars);

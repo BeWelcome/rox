@@ -525,16 +525,18 @@ AND (
 			// comment by lupochen: Obviously this query couldn't get the appropriate results because it only checks the "alternate" names, not the real ones..
 			// $sData="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$this->GetParam($vars, "CityName")."'" ;
 			
-			// Use this one instead:
-			$sData="
+			$city = $this->dao->escape($this->GetParam($vars, "CityName"));
+			$sData=<<<SQL
 SELECT
-    distinct(geonames_cache.geonameid) AS geonameid 
+    distinct(gc.geonameid) AS geonameid 
 FROM
-    geonames_cache,geonames_alternate_names
+    geonames_cache AS gc
+LEFT JOIN geonames_alternate_names AS gan ON gan.geonameid = gc.geonameid
 WHERE
-    geonames_cache.name='".$this->GetParam($vars, "CityName")."' 
+    gc.name='{$city}' 
 OR
-    (geonames_alternate_names.alternateName='".$this->GetParam($vars, "CityName")."' AND geonames_cache.geonameid=geonames_alternate_names.geonameId)" ;
+    gan.alternateName='{$city}'
+SQL;
 			$qryData = $this->dao->query($sData);
 			$WhereCity="" ;
 			while ($rData = $qryData->fetch(PDB::FETCH_OBJ)) {
@@ -555,7 +557,7 @@ OR
 			
 			
 			
-			MOD_log::get()->write("CityName=".$this->GetParam($vars, "CityName","")." ".$WhereCity, "Search");
+			MOD_log::get()->write("CityName={$city} {$WhereCity}", "Search");
 			$nowhere=false ;
             $where = $where." AND ".$WhereCity;
 //    geonames_cache.name='".$this->GetParam($vars, "CityName")."'" ;

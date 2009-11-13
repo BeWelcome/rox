@@ -533,9 +533,9 @@ FROM
     geonames_cache AS gc
 LEFT JOIN geonames_alternate_names AS gan ON gan.geonameid = gc.geonameid
 WHERE
-    geonames_cache.name='{$city}' 
+    gc.name='{$city}' 
 OR
-    geonames_alternate_names.alternateName='{$city}'
+    gan.alternateName='{$city}'
 SQL;
 			$qryData = $this->dao->query($sData);
 			$WhereCity="" ;

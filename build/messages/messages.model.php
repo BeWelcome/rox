@@ -400,20 +400,26 @@ WHERE id = ".$input['receiver_id']."
     } // end of Check for Captcha
     
     private function _createMessage($fields)    {
-    
-        if (!$this->CheckForCaptcha($fields)) return false ;
+        //if (!$this->CheckForCaptcha($fields)) return false ;
+        $attach_picture = (isset($fields['attach_picture']) ? ($fields['attach_picture'] ? 'yes' : 'no') : 'no');
+        $status = $this->dao->escape($fields['status']);
+        $sender = intval($fields['sender_id']);
+        $receiver = intval($fields['receiver_id']);
+        $text = $this->dao->escape($fields['text']);
+        $parent = !empty($fields['reply_to_id']) ? intval($fields['reply_to_id']) : 0;
         $iMes= $this->dao->query(
-            "
+            <<<SQL
 INSERT INTO messages
 SET
     created = NOW(),
-    Message = '".mysql_real_escape_string($fields['text'])."',
-    IdReceiver = ".$fields['receiver_id'].",
-    IdSender = ".$fields['sender_id'].",
+    Message = '{$text}',
+    IdReceiver = {$receiver},
+    IdSender = {$sender},
     InFolder = 'Normal',
-    Status = '".$fields['status']."',
-    JoinMemberPict = '".(isset($fields['attach_picture']) ? ($fields['attach_picture'] ? 'yes' : 'no') : 'no')."'
-            "
+    Status = '{$status}',
+    JoinMemberPict = '{$attach_picture}',
+    IdParent = {$parent}
+SQL
         )->insertId();
         
         return ($iMes) ;

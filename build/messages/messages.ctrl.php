@@ -193,8 +193,13 @@ class MessagesController extends RoxControllerBase
             }
             
             // now finally try to send it.
+            $vars = $args->post;
+            if (!empty($args->request[1]))
+            {
+                $vars['reply_to_id'] = $args->request[1];
+            }
             $model = new MessagesModel();
-            $result = new ReadOnlyObject($model->sendOrComplain($args->post));
+            $result = new ReadOnlyObject($model->sendOrComplain($vars));
             
             if (count($result->problems) > 0) {
                 $mem_redirect->problems = $result->problems;

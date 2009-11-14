@@ -48,12 +48,13 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 $maxpos = $vars['rCount'];
 
 // Check wether there is a specific list type set or not
-if ($mapstyle == 'mapoff') {
-$ShowMemberFunction = 'ShowMembersAjax';
-} elseif ($mapstyle == 'mapon') {
-$ShowMemberFunction = 'ShowMembersAjaxShort';
-} else {
-$ShowMemberFunction = 'ShowMembersAjax';
+if ($mapstyle == 'mapon')
+{
+    $ShowMemberFunction = 'ShowMembersAjaxShort';
+}
+else
+{
+    $ShowMemberFunction = 'ShowMembersAjax';
 }
 $ii = 0;
 $curpos = $vars['start_rec'];
@@ -61,17 +62,24 @@ $width = $vars['limitcount'];
 foreach($TList as $TL) {
     $ii++;
     $Nr = $ii;
+    $string = <<<HTML
+<table style="width: 200px">
+    <tr>
+        <td class="memberlist">
+            <img src="members/avatar/{$TL->Username}?xs"/>
+        </td>
+        <td class="memberlist" valign="top">
+            <p><a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a><br />
+            <span class="small">{$words->getFormatted('YearsOld',$TL->Age)}, {$words->getFormatted('from')} {$TL->CityName}, {$TL->CountryName}<br/>{$TL->ProfileSummary}
+            </span><br />
+            <a class="button" href="javascript: map.setZoom((map.getZoom())+4);">Zoom In</a> <a class="button" href="javascript: map.setZoom((map.getZoom())-4);">Zoom Out</a>
+        </td>
+    </tr>
+</table>
+HTML;
+    $summary = htmlspecialchars($string, ENT_QUOTES);
     $string = '';
-	$string .= "<table style=\"width: 200px\"><tr><td class=\"memberlist\">" ;
-	$string .= "<img src=\"members/avatar/".$TL->Username."?xs\" >";
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<p><a href="members/'.$TL->Username.'" target="_blank"><b>'.$TL->Username.'</b></a><br />';
-	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TL->Age).", ". $words->getFormatted('from')." ".$TL->CityName.", ".$TL->CountryName."<br>".$TL->ProfileSummary;
-	$string .= "</span><br /><a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())+4);\">Zoom In</a> <a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())-4);\">Zoom Out</a></td></tr></table>" ;
-    $summary = xml_prep($string);
-    $string = '';
-	$detail = xml_prep($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr));
+	$detail = htmlspecialchars($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr), ENT_QUOTES);
     
 	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
 ";
@@ -87,21 +95,23 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
     $string .= "<li class=\"$add\"><a href=\"javascript: page_navigate($i1);\" class=\"off\">".$rr."</a></li> " ;
 }
 $string .= "</ul></div>" ;
-if ($ShowMemberFunction == 'ShowMembersAjaxShort') {
+if ($ShowMemberFunction == 'ShowMembersAjaxShort')
+{
     echo "<header header='".
-    xml_prep('').
     "'/>";
-} else {        
+}
+else 
+{        
     if(sizeof($TList) > 0) echo "<header header='".
-        xml_prep("<h2>".$words->getFormatted("searchResults")."</h2>").
-        xml_prep("<table  style=\"width: 100%\"><tr><th>".$words->getFormatted('Member')."</th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
+        htmlspecialchars("<h2>".$words->getFormatted("searchResults")."</h2>", ENT_QUOTES).
+        htmlspecialchars("<table  style=\"width: 100%\"><tr><th>".$words->getFormatted('Member')."</th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>", ENT_QUOTES).
         "'/>";
     else echo "<header header='".
-        xml_prep($words->getFormatted("searchmembersNoSearchResults")).
+        htmlspecialchars($words->getFormatted("searchmembersNoSearchResults"), ENT_QUOTES).
         "'/>";
 }
-echo "<footer footer='".xml_prep("".$words->flushBuffer())."'/>";
-echo "<page page='".xml_prep($string)."'/>";
+echo "<footer footer='".htmlspecialchars("".$words->flushBuffer(), ENT_QUOTES)."'/>";
+echo "<page page='".htmlspecialchars($string, ENT_QUOTES)."'/>";
 echo "<num_results num_results='".$maxpos."'/>";
 echo "</markers>
 ";
@@ -111,11 +121,6 @@ echo "</markers>
 $_SESSION['SearchMapStyle'] = $mapstyle;
 $_SESSION['SearchMembersVars'] = $vars;
 $_SESSION['SearchMembersTList'] = $TList;
-
-function xml_prep($string)
-{
-	return preg_replace(array("/&/", '/</', '/>/', "/'/"), array("&amp;", '&lt;', '&gt;', "&apos;"), $string);
-}
 
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {
 	static $ii = 0;

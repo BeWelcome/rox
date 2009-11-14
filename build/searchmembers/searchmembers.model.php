@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
  * @package searchmembers
  * @author matrixpoint
  */
-class Searchmembers extends PAppModel {
+class Searchmembers extends RoxModelBase {
     
     protected $dao;
     
@@ -39,7 +39,7 @@ class Searchmembers extends PAppModel {
     public function __construct() {
         parent::__construct();
 		
-        
+        $this->dao = $this->get_dao();
         // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
         // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
@@ -107,7 +107,8 @@ WHERE   ShortCode IN ($l)
 			// search for username
 			$where = '';
 			$tablelist = '';
-			if (!APP_User::login()) { // case user is not logged in
+			if (!$this->getLoggedInMember())
+            { // case user is not logged in
 				$where = "AND memberspublicprofiles.IdMember=members.id"; // must be in the public profile list
 				$tablelist = ",memberspublicprofiles" ;
 			}
@@ -342,11 +343,17 @@ end of  search in members trads is disabled		 */
         return substr($str, 0, $len).'...';
     }
     
-    public function searchmembers(&$vars) {
-//        die('searchmembers') ;
-		$nowhere=true ; // Use to see if it is an empty query or not
-
-        $TMember=array() ;
+    /**
+     * monstrous beast of a method to search for members by various input
+     *
+     * @param array $vars - POST array
+     *
+     * @access public
+     * @return array
+     */
+    public function searchmembers(&$vars)
+    {
+        $TMember=array();
     
         $limitcount=$this->GetParam($vars, "limitcount",10); // Number of records per page
         if($limitcount > 100) $limitcount = 100;
@@ -355,23 +362,22 @@ end of  search in members trads is disabled		 */
         $start_rec=$this->GetParam($vars, "start_rec",0); // Number of records per page
         $vars['start_rec'] = $start_rec;
     
-        $order_by = $this->GetParam($vars, "OrderBy",0);
-        $order_by_direction = $this->GetParam($vars, "OrderByDirection",'DESC');
+        $order_by = $this->GetParam($vars, "OrderBy", 'members.created');
+        $direction = $this->getOrderDirection($order_by, $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
 
-        if($order_by) {
-            $OrderBy = "ORDER BY $order_by $order_by_direction" ;
-        } else {
-            $OrderBy = "ORDER BY members.created" ;
-        }
+        $OrderBy = "ORDER BY {$order_by} {$direction}";
+        $vars['OrderBy'] = $order_by;
     
+        // Todo: no, it won't, and will be taken out soon
         $dblink="" ; // This will be used one day to query on another replicated database
         $tablelist=$dblink."members,".$dblink."geonames_cache,".$dblink."countries" ;
     
-        if ($this->GetParam($vars, "IncludeInactive", "0") == "1") {
-            $where = "WHERE (  members.Status in ('Active','ChoiceInActive','OutOfRemind'))"
-            ; // only active and inactive members
+        if ($this->GetParam($vars, "IncludeInactive", "0") == "1")
+        {
+            $where = "WHERE (  members.Status in ('Active','ChoiceInActive','OutOfRemind'))";
         }
-        else {
+        else
+        {
             $where = "WHERE members.Status='Active'" ; // only active members
         }
     
@@ -385,10 +391,9 @@ end of  search in members trads is disabled		 */
                     $vars['Accomodation'] = $value;
                     $value = $this->GetParam($vars, 'Accomodation');
                     $where_accomodation[] = "Accomodation='$value'" ;
-					$nowhere=false ;
                 }
             }
-			if($where_accomodation) $where = $where." AND (".implode(" OR ", $where_accomodation).") " ;
+			if($where_accomodation) $where .= " AND (".implode(" OR ", $where_accomodation).") " ;
         }
     
         // Process typic Offer
@@ -401,23 +406,21 @@ end of  search in members trads is disabled		 */
                     $vars['TypicOffer'] = $value;
                     $value = $this->GetParam($vars, 'TypicOffer');
                     $where_typicoffer[] = "FIND_IN_SET('$value',TypicOffer)" ;
-					$nowhere=false ; 
                 }
             }
         }
-        if($where_typicoffer) $where = $where. " AND (".implode(" AND ", $where_typicoffer).")";
+        if($where_typicoffer) $where .= " AND (".implode(" AND ", $where_typicoffer).")";
     
         // Process Username parameter if any
         if ($this->GetParam($vars, "Username","")!="") {
             $Username=$this->GetParam($vars, "Username") ; //
             if (strpos($Username,"*")!==false) {
                 $Username=str_replace("*","%",$Username) ;
-                $where = $where." AND Username LIKE '".mysql_real_escape_string($Username)."'" ;
+                $where .= " AND Username LIKE '".mysql_real_escape_string($Username)."'" ;
             } else {
                 $Username=$this->fUserName($this->IdMember($this->GetParam($vars, "Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
-                $where = $where." AND Username ='".mysql_real_escape_string($Username)."'" ;
+                $where .= " AND Username ='".mysql_real_escape_string($Username)."'" ;
             }
-			$nowhere=false ;
         }
     
         // Process TextToFind parameter if any
@@ -426,52 +429,47 @@ end of  search in members trads is disabled		 */
             // Special case where from the quicksearch the user is looking for a username
             // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
             if (($this->GetParam($vars, "OrUsername",0)==1)and($this->IdMember($TextToFind)!=0)) { // in
-                $where=$where." AND Username='".mysql_real_escape_string($TextToFind)."'" ;
+                $where .= " AND Username='".mysql_real_escape_string($TextToFind)."'" ;
             } else {
                 $tablelist=$tablelist.",".$dblink."memberstrads";
-                $where = $where. " AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%' AND memberstrads.IdOwner=members.id" ;
+                $where .= " AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%' AND memberstrads.IdOwner=members.id" ;
             }
-			$nowhere=false ;
         }
     
         // Process IdRegion parameter if any
         if ($this->GetParam($vars, "IdRegion","")!="") {
             $IdRegion=GetParam($vars, "IdRegion") ;
-            $where=$where." AND geonames_cache.parentAdm1Id=".$IdRegion ;
-			$nowhere=false ;
+            $where .= " AND geonames_cache.parentAdm1Id=".$IdRegion ;
         }
     
         // Process Gender parameter if any
         if ($this->GetParam($vars, "Gender","0")!="0") {
             $Gender=$this->GetParam($vars, "Gender") ;
-            $where = $where. " AND Gender='".mysql_real_escape_string($Gender)."' AND HideGender='No'" ;
-			$nowhere=false ;
+            $where .= " AND Gender='".mysql_real_escape_string($Gender)."' AND HideGender='No'" ;
         }
     
         // Process Age parameters
         $operation = '';
         if ($this->GetParam($vars, "MinimumAge","0")!=0) {
             $operation .= " AND members.BirthDate<=(NOW() - INTERVAL ".$this->GetParam($vars, "MinimumAge")." YEAR)"  ;
-			$nowhere=false ;
         }
         if ($this->GetParam($vars, "MaximumAge","0")!=0) {
             $operation .= "AND members.BirthDate >= (NOW() - INTERVAL ".$this->GetParam($vars, "MaximumAge")." YEAR)" ;
-			$nowhere=false ;
         }
-        if($operation) $where = $where. $operation." AND members.HideBirthDate='No'" ;
+        if($operation) $where .=  $operation." AND members.HideBirthDate='No'" ;
         
         // If the SortOrder is "BirthDate", hide the members that don't want to show their age.
-        if($order_by == 'BirthDate') $where = $where. " AND members.HideBirthDate='No'"  ;
+        if($order_by == 'BirthDate') $where .= " AND members.HideBirthDate='No'"  ;
         
-        if (!APP_User::login()) { // case user is not logged in
-            $where = $where. " AND memberspublicprofiles.IdMember=members.id"
-            ; // must be in the public profile list
-            $tablelist=$tablelist.",".$dblink."memberspublicprofiles" ;
+        if (!$this->getLoggedInMember())
+        {
+            $where .= " AND memberspublicprofiles.IdMember=members.id";
+            $tablelist=$tablelist.", memberspublicprofiles" ;
         }
         
         if($this->GetParam($vars, "mapsearch")) {
             if($this->GetParam($vars, "bounds_sw_lng") > $this->GetParam($vars, "bounds_ne_lng")) {
-                $where = $where. "
+                $where .= "
 AND ((
     geonames_cache.longitude >= ".$this->GetParam($vars, "bounds_sw_lng")."
     AND
@@ -480,17 +478,18 @@ AND ((
     geonames_cache.longitude >= -180
     AND
     geonames_cache.longitude <= ".$this->GetParam($vars, "bounds_ne_lng")."))"  ;
-			$nowhere=false ;
-            } else {
-                $where = $where. "
+            }
+            else
+            {
+                $where .= "
 AND (
     geonames_cache.longitude > ".$this->GetParam($vars, "bounds_sw_lng")."
     AND
     geonames_cache.longitude < ".$this->GetParam($vars, "bounds_ne_lng").")" ;
-			$nowhere=false ;
             }
-            if($this->GetParam($vars, "bounds_sw_lat") > $this->GetParam($vars, "bounds_ne_lat")) {
-                $where = $where. "
+            if($this->GetParam($vars, "bounds_sw_lat") > $this->GetParam($vars, "bounds_ne_lat"))
+            {
+                $where .= "
 AND ((
     geonames_cache.latitude >= ".$this->GetParam($vars, 'bounds_sw_lat')."
     AND
@@ -499,33 +498,30 @@ AND ((
     geonames_cache.latitude >= -90
     AND
     geonames_cache.latitude <= ".$this->GetParam($vars, "bounds_ne_lat")."))"  ;
-			$nowhere=false ;
-            } else {
-                $where = $where. "
+            }
+            else
+            {
+                $where .= "
 AND (
     geonames_cache.latitude > ".$this->GetParam($vars, "bounds_sw_lat")."
     AND
     geonames_cache.latitude < ".$this->GetParam($vars, "bounds_ne_lat")."
 )"   ;
-			$nowhere=false ;
             }
         }
         $where = $where." AND geonames_cache.geonameid=members.IdCity AND countries.id=geonames_cache.parentCountryId" ;
     
-        if ($this->GetParam($vars, "IdCountry",0)!= '0') {
-            $where = $where." AND countries.isoalpha2='".$this->GetParam($vars, "IdCountry")."'" ;
-			$nowhere=false ;
+        if ($this->GetParam($vars, "IdCountry",0)!= '0')
+        {
+            $where .= " AND countries.isoalpha2='".$this->GetParam($vars, "IdCountry")."'" ;
         }
         if ($this->GetParam($vars, "IdCity",0)!=0) {
-           $where = $where." AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
-			$nowhere=false ;
+           $where .= " AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
         }
-		if ($this->GetParam($vars, "CityName","")!="") { // Case where a text field for CityName is provided
-			// First find the city name candidate
-			// comment by lupochen: Obviously this query couldn't get the appropriate results because it only checks the "alternate" names, not the real ones..
-			// $sData="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$this->GetParam($vars, "CityName")."'" ;
+		if ($this->GetParam($vars, "CityName","")!="")
+        {
 			
-			$city = $this->dao->escape($this->GetParam($vars, "CityName"));
+			$city = $this->GetParam($vars, "CityName");
 			$sData=<<<SQL
 SELECT
     distinct(gc.geonameid) AS geonameid 
@@ -558,8 +554,7 @@ SQL;
 			
 			
 			MOD_log::get()->write("CityName={$city} {$WhereCity}", "Search");
-			$nowhere=false ;
-            $where = $where." AND ".$WhereCity;
+            $where .= " AND ".$WhereCity;
 //    geonames_cache.name='".$this->GetParam($vars, "CityName")."'" ;
         }
 
@@ -567,21 +562,17 @@ SQL;
         // if a group is chosen
         if ($this->GetParam($vars, "IdGroup",0)!=0) {
             $tablelist=$tablelist.",".$dblink."membersgroups" ;
-            $where = $where."
+            $where .= "
 AND membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")."
 AND membersgroups.Status='In'
 AND membersgroups.IdMember=members.id"  ;
-			$nowhere=false ;
         }
     
 		if (empty($where)) {
 			MOD_log::get()->write("empty where : todo: find the reason", "Search");
-			$where=" WHERE (1=0)" ;
+			$where = " WHERE (1=0)" ;
 		}
 
-		if ($nowhere)  {
-// 			$where=" WHERE (1=0)" ;
-		}
 
 /*
         $str=     "
@@ -623,22 +614,16 @@ LIMIT $start_rec,$limitcount " ;
 		
         MOD_log::get()->write("doing a [".$str."]", "Search");
     
-        // echo $str;
-    
         $qry = $this->dao->query($str);
         $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
         $row = $result->fetch(PDB::FETCH_OBJ);
         $rCount= $row->cnt;
     
-        MOD_log::get()->write("founds:".$rCount." \$nowhere=[".$nowhere."]", "Search");
-
         $vars['rCount'] = $rCount;
         
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
 			$sData="select BirthDate,HideBirthDate,Accomodation,ProfileSummary,Gender,HideGender,date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,    geonames_cache.latitude AS Latitude,    geonames_cache.longitude AS Longitude
 			from ".$dblink."members,".$dblink."geonames_cache where members.IdCity=geonames_cache.geonameid and members.id=".$rr->IdMember ;
-
-//			MOD_log::get()->write("Log sData=[".$sData."]", "Search");
 
 			$qryData = $this->dao->query($sData);
 			$rData = $qryData->fetch(PDB::FETCH_OBJ) ;
@@ -654,9 +639,6 @@ LIMIT $start_rec,$limitcount " ;
 		    $rr->Longitude=$rData->Longitude;
 
 			$sData="select count(*) As NbComment from ".$dblink."comments where IdToMember=".$rr->IdMember ;
-
-//			MOD_log::get()->write("Log sData=[".$sData."]", "Search");
-			
 
 			$qryData = $this->dao->query($sData);
 			$rData = $qryData->fetch(PDB::FETCH_OBJ) ;
@@ -677,30 +659,30 @@ LIMIT $start_rec,$limitcount " ;
         }
         
         return($TMember);
-    } // end of searchmembers
+    }
     
     private static function test() {}
     
     //------------------------------------------------------------------------------
     // Get param returns the param value if any
-    private function GetParam($vars, $param, $defaultvalue = "") {
-    
-        if (isset ($vars[$param])) $m=$vars[$param];
-        if (!isset($m)) return $defaultvalue;
-    
-        $m=mysql_real_escape_string($m);
-        $m=str_replace("\\n","\n",$m);
-        $m=str_replace("\\r","\r",$m);
-        if ((stripos($m," or ")!==false)or (stripos($m," | ")!==false)) {
-                //LogStr("Warning !  GetParam trying to use a <b>".addslashes($m)."</b> in a param $param for ".$_SERVER["PHP_SELF"], "alarm");
+    private function GetParam($vars, $param, $defaultvalue = "")
+    {
+        if (!isset($vars[$param]))
+        {
+            return $defaultvalue;
         }
-        if (empty($m) and ($m!="0")){    // a "0" string must return 0 for the House Number for exemple
-            return ($defaultvalue); // Return defaultvalue if none
-        } else {
-            return ($m);        // Return translated value
+
+        $m = $this->dao->escape($vars[$param]);
+        if (empty($m) and ($m!="0"))
+        {
+            return ($defaultvalue);
         }
-    } // end of GetParam
-    
+        else
+        {
+            return ($m);
+        }
+    }
+
     //------------------------------------------------------------------------------
     // function IdMember return the numeric id of the member according to its username
     // This function will TARNSLATE the username if the profile has been renamed.
@@ -1100,11 +1082,33 @@ FROM
             'members.created' => 'FindPeopleNewMembers',
             'BirthDate' => 'Age',
             'LastLogin' => 'Lastlogin',
-            'NbComment' => 'Comments',
+            'Comments' => 'Comments',
             'Accomodation' => 'Accomodation',
-            'geonames_cache.name' => 'City',
-            'countries.Name' => 'Country'
         );
+    }
+
+    /**
+     * return a proper direction, given order column and input
+     *
+     * @param string $column - name of order column
+     * @param int    $bool   - 0 for default, 1 for revers
+     *
+     * @access private
+     * @return string
+     */
+    public function getOrderDirection($column, $bool = 0)
+    {
+        $reverse = array('ASC' => 'DESC', 'DESC' => 'ASC');
+        $columns = array(
+            'members.created' => 'DESC',
+            'BirthDate'       => 'DESC',
+            'Lastlogin'       => 'DESC',
+            'Comments'        => 'DESC',
+            'Accomodation'    => 'DESC',
+        );
+        $return = isset($columns[$column]) ? $columns[$column] : 'ASC';
+        if ($bool) $return = $reverse[$return];
+        return $return;
     }
 }
 

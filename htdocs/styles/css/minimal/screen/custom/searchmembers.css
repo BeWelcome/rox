@@ -64,6 +64,11 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
     padding: 3px;
     font-size: 12px; 
 }
+#searchteaser {width: 100%;}
+
+#searchmore {margin-left: 2em;}
+
+#searchoptions {margin-top: 1em;}
 
 #SearchAdvanced {
     border-top: 1px solid #999;

@@ -156,7 +156,8 @@ class SearchmembersController extends PAppController {
         switch ($request[1])
         {
             case 'ajax':
-                if((isset($request[2]) and $request[2] == "varsonload")) {
+                if((isset($request[2]) and $request[2] == "varsonload"))
+                {
                     $vars['varsOnLoad'] = true;
                     // Read the latest search results and variables from the session
                     if (!empty($_SESSION['SearchMembersTList'])) $TList = $_SESSION['SearchMembersTList'];
@@ -166,9 +167,10 @@ class SearchmembersController extends PAppController {
                         $TList = $this->_model->searchmembers($vars);
                     }
                 }
-                else {
-                    $vars = $_GET;
-                    if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
+                else
+                {
+                    $vars = isset($_GET) ? $_GET : array();
+                    if(isset($request[2]) && $request[2] == "queries") $vars['queries'] = true;
                     if (!isset($TList)) $TList = $this->_model->searchmembers($vars);
                 }
                 $this->_view->searchmembers_ajax($TList, $vars, $mapstyle);

@@ -43,7 +43,7 @@ $mapstyle = $_SESSION['SearchMapStyle'];
 
 header('Content-type: text/xml');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<markers>
+<content>
 ";
 $maxpos = $vars['rCount'];
 
@@ -84,7 +84,8 @@ HTML;
     echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
 ";
 }
-
+/* pagination should NOT be inside the results sent back
+   as they won't be visible until scrolled to
 $rr=0;
 $string = "<div class='pages center'><ul style='float:none'>" ;
 for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
@@ -95,6 +96,21 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
     $string .= "<li class=\"$add\"><a href=\"javascript: page_navigate($i1);\" class=\"off\">".$rr."</a></li> " ;
 }
 $string .= "</ul></div>" ;
+*/
+$pagination = '';
+if (count($TList))
+{
+    $start = isset($vars['start_rec']) ? $vars['start_rec'] : 0;
+    $params->strategy = new HalfPagePager('left');
+    $params->items_per_page = $vars['limitcount'];
+    $params->items = $maxpos;
+    $params->active_page = floor($start / $vars['limitcount']) + 1;
+    $pager = new PagerWidget($params);
+    $pagination = htmlspecialchars($pager->getHtml(), ENT_QUOTES);
+}
+echo <<<XML
+<pager paging='{$pagination}' per_page='{$vars['limitcount']}'/>
+XML;
 if ($ShowMemberFunction == 'ShowMembersAjaxShort')
 {
     echo "<header header='".
@@ -113,7 +129,7 @@ else
 echo "<footer footer='".htmlspecialchars("".$words->flushBuffer(), ENT_QUOTES)."'/>";
 echo "<page page='".htmlspecialchars($string, ENT_QUOTES)."'/>";
 echo "<num_results num_results='".$maxpos."'/>";
-echo "</markers>
+echo "</content>
 ";
 
 

@@ -1,6 +1,4 @@
 <?php
-$User = APP_User::login();
-
 $words = new MOD_words();
 $address = (isset($vars) && $vars && isset($vars['CityName'])) ? $vars['CityName'] : $words->getBuffered('searchmembersAllOver');
 if (isset($_GET['vars'])) $address = $_GET['vars'];
@@ -37,25 +35,25 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
     </div> <!-- searchbox -->
     
 <!-- NEXT ROW -->
-<div id="searchoptions" class="floatbox">
+    <div id="searchoptions" class="floatbox">
 
-	<div id="searchorder" class="floatbox float_left" >
-		<span class="small"><label for="thisorder"><?php echo $words->getFormatted('Orderby'); ?>:</label></span>
-		<form class="float_right" id="changethisorder" style="overflow: visible;" action="">
-		<select name="OrderBy" id="thisorder" onchange="changeSortOrder(this.value);">
-			<?php foreach($TabSortOrder as $key=>$val) { ?>
-			<option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
-			<?php } ?>
-		</select>
-		</form>
-    </div>
-    
-    <p class="float_left"><span id="loading" class="small"></span></p>
-    
-    <div id="mapswitch" class="float_left" >
-		<?php if ($mapstyle == 'mapoff') echo '<a href="searchmembers/mapon" />Mapview</a>';
-		else
-			echo '<a href="searchmembers/mapoff" />Textview</a>'; ?>
+        <div id="searchorder" class="floatbox float_left" >
+            <span class="small"><label for="thisorder"><?php echo $words->getFormatted('Orderby'); ?>:</label></span>
+            <form class="float_right" id="changethisorder" style="overflow: visible;" action="">
+            <select name="OrderBy" id="thisorder" onchange="changeSortOrder(this.value);">
+                <?php foreach($TabSortOrder as $key=>$val) { ?>
+                <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
+                <?php } ?>
+            </select>
+            </form>
+        </div>
+        
+        <p class="float_left"><span id="loading" class="small"></span></p>
+        
+        <div id="mapswitch" class="float_left" >
+            <?php if ($mapstyle == 'mapoff') echo '<a href="searchmembers/mapon" />Mapview</a>';
+            else
+                echo '<a href="searchmembers/mapoff" />Textview</a>'; ?>
 		<!--
 		<table border="0" cellpadding="0" cellspacing="0" width="63" >
       <tr>
@@ -67,7 +65,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
       </tr>
     </table>
    -->
+        </div>
     </div>
-</div>
-
+    <div id="paging-div"></div>
 </div>

@@ -185,6 +185,20 @@ function loadMap(i)
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");
             var markers = getxmlEl(xmlDoc, "marker");
+            var pager = getxmlEl(xmlDoc, "pager");
+            var per_page = pager[0].getAttribute('per_page');
+            $('paging-div').innerHTML = pager[0].getAttribute('paging');
+            var pager_links = $('paging-div').getElementsByTagName('a');
+            for (var a = 0; a < pager_links.length; a++)
+            {
+                pager_links[a].observe('click', function(e){
+                    var ev = e || windows.event;
+                    reg = /page=(\d)+/;
+                    var page = (this.href.match(reg)[1] - 1) * per_page;
+                    loadMap(page);
+                    Event.stop(ev);
+                });
+            }
             var i, j, marker;
             var point = new Array();
             var accomodation = new Array();

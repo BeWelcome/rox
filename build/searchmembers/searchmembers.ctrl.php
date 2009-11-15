@@ -153,10 +153,9 @@ class SearchmembersController extends PAppController {
             if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = $_SESSION['SearchMembersVars'];
         }
 
-        switch ($request[1]) {
-
+        switch ($request[1])
+        {
             case 'ajax':
-                $callbackId = "searchmembers_callbackId";
                 if((isset($request[2]) and $request[2] == "varsonload")) {
                     $vars['varsOnLoad'] = true;
                     // Read the latest search results and variables from the session
@@ -168,7 +167,7 @@ class SearchmembersController extends PAppController {
                     }
                 }
                 else {
-                    $vars = &PPostHandler::getVars($callbackId);
+                    $vars = $_GET;
                     if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
                     if (!isset($TList)) $TList = $this->_model->searchmembers($vars);
                 }
@@ -176,11 +175,9 @@ class SearchmembersController extends PAppController {
                 // Store latest search results and variables in session
                 $_SESSION['SearchMembersTList'] = $TList;
                 $_SESSION['SearchMembersVars'] = $vars;
-                PPostHandler::clearVars($callbackId);
-                PPostHandler::setCallback($callbackId, "SearchmembersController", "index");
                 PPHP::PExit();
                 break;
-
+/* quicksearch shouldn't go through this route
             case 'quicksearch':
                 $mapstyle = "mapoff"; 
                 // First check if the QuickSearch feature is closed
@@ -235,7 +232,6 @@ class SearchmembersController extends PAppController {
                 }
                 break;
                 
-
             // Backwards compatibility
             case 'index':
                 $loc = PVars::getObj('env')->baseuri;
@@ -245,27 +241,8 @@ class SearchmembersController extends PAppController {
                 header('Location: '.$loc);
                 PPHP::PExit();
                 break;
-                
+*/
             default:    
-                
-                // Check wether there are search variables set as GET-parameters
-                /* obsolete replaced by the quicksearch
-                if (isset($_GET['vars'])) {
-                    $geo = MOD_geo::get();  // get the singleton instance
-                    $id = $geo->getCityID($_GET['vars'], true);
-                    if (!$id) {
-                        // if there's not city with that name, redirect to a member's profile if there is one
-                        $m = MOD_member::getMember_username($_GET['vars']);
-                        if ($m) {
-                            $loc = PVars::getObj('env')->baseuri.'people/member/'.$_GET['vars'];
-                            header('Location: '.$loc);
-                        }
-                    }
-                    $varsGet = $_GET['vars'];
-                    $varsOnLoad = false;
-                }
-                */
-                
                 $words = new MOD_words();
                 
                 $P->addStyles = $this->_view->customStyles($mapstyle);

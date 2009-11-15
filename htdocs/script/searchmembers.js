@@ -172,6 +172,7 @@ function loadMap(i)
     put_val('start_rec', i);
     new Ajax.Request('searchmembers/ajax'+varsOnLoad+varSortOrder+queries, {
         parameters: $('searchmembers').serialize(true),
+        method: 'get',
         onSuccess: function(req) {
             //alert(req.responseText);return;
             if(queries != '') {

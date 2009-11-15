@@ -76,7 +76,7 @@ class Geo extends RoxEntityBase
      * returns the geo object for the country
      *
      * @access public
-     * @return object
+     * @return Geo
      */
     public function getCountry()
     {

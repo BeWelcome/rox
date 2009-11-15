@@ -96,17 +96,12 @@ class LoginController extends RoxControllerBase
             if (!$tb_user = $this->model->getTBUserForBWMember($bw_member)) {
                 echo "<div id='loginmessage' class='false'>still no tb user found with handle = '$bw_member->Username'. Giving up.</div>";
             } else {
-                if (!$this->model->checkTBPassword($tb_user, $password)) {
-                    // tb password didn't match. well, who cares.
-                    // TODO: change TB password
-                } else {
-                    // tb pw does match! yeah.
-                    // can now change the tables and session so that user is logged in.
-                }
                 if (!$this->model->setBWMemberAsLoggedIn($bw_member)) {
                     // something in the status was not ok.
                     echo '<div id="loginmessage" class="false">Your status is "'.$bw_member->Status.'". No chance to log in.. we are sorry!</div>';
                 } else {
+                    if ($bw_member->Status != 'Active')
+                    {
                     echo '<div id="loginmessage_wrapper">';
                     echo '<div id="loginmessage">login successful</div>';
                     echo '</div>';
@@ -120,6 +115,7 @@ class LoginController extends RoxControllerBase
                     </script>
                     
                     <?
+                    }
                     $this->model->setupBWSession($bw_member);
                     $this->model->setTBUserAsLoggedIn($tb_user);
                     if (isset($request[0]) && 'login' == $request[0]) {

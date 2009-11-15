@@ -32,108 +32,107 @@ echo $words->getFormatted("SearchResultsFor","<b>".$TReturn->searchtext."</b>"),
 ?>
 
 <?php
-	$iCountMemberFound=count($TReturn->TMembers) ;
-	if ($iCountMemberFound>0) {
+    $iCountMemberFound=count($TReturn->TMembers) ;
+    if ($iCountMemberFound>0) {
 ?>
         <h2><?=$words->getFormatted("Username") ?></h2>
-		<table class="full">
+        <table class="full">
 
 
 <?php
-		$ii=0 ;
-		$icol=0 ;
-		foreach($TReturn->TMembers as $m) {
-			if ($icol % 3==0) {
-				$ii++ ;
-				?><tr class="<?=$styles[$ii%2] ?>"><?php
-			}
-			?>
-			<td align="center">
-				<?=MOD_layoutbits::PIC_50_50($m->Username) ;?>
-				<br />
-				<a class="username" href="member/<?=$m->Username ?>"><?=$m->Username ?></a><br />
-			<a href="<?="places/".$m->fk_countrycode."/".$m->RegionName."/".$m->CityName ?>"> <?=$m->CountryName."/".$m->RegionName."/".$m->CityName?></a>
-			</td>
-			<?php 
-			$icol++ ;
-			if ($icol%3==0) { 
-				echo "</tr>" ;
-			}
-			?>
-		<?php
-		}
-		?>
-		</table>
-	<?php
-	} // end of if they are members found
-	
-	$iCountPlacesFound=count($TReturn->TPlaces) ;
-	if ($iCountPlacesFound>0) {
+        $ii=0 ;
+        $icol=0 ;
+        foreach($TReturn->TMembers as $m) {
+            if ($icol % 3==0) {
+                $ii++ ;
+                ?><tr class="<?=$styles[$ii%2] ?>"><?php
+            }
+            ?>
+            <td align="center">
+                <?=MOD_layoutbits::PIC_50_50($m->Username) ;?>
+                <br />
+                <a class="username" href="member/<?=$m->Username ?>"><?=$m->Username ?></a><br />
+            <a href="<?="places/".$m->fk_countrycode."/".$m->RegionName."/".$m->CityName ?>"> <?=$m->CountryName."/".$m->RegionName."/".$m->CityName?></a>
+            </td>
+            <?php 
+            $icol++ ;
+            if ($icol%3==0) { 
+                echo "</tr>" ;
+            }
+            ?>
+        <?php
+        }
+        ?>
+        </table>
+    <?php
+    } // end of if they are members found
+    
+    $iCountPlacesFound=count($TReturn->TPlaces) ;
+    if ($iCountPlacesFound>0) {
 ?>
         <h2><?=$words->getFormatted("Location") ?></h2>
-		<table class="full">
+        <table class="full">
 
 
 <?php
-		$ii=0 ;
-		foreach($TReturn->TPlaces as $p) {
-			$ii++ ;
-			?>
-			<tr class="<?=$styles[$ii%2] ?>">
-			<td align="center">
-				<?php echo "<a href=\"",$p->link,"\">" ;
-				if (!empty($p->CountryName)) {
-					echo $p->CountryName,"::" ;
-				}
-				if (!empty($p->RegionName)) {
-					echo $p->RegionName,"::" ;
-				}
-				echo $p->name,"</a>" ;
-				if ($p->NbMembers>1) {
-					echo " (",$p->NbMembers," ",$words->getFormatted("Members"),")" ;
-				}
-				else {
-					echo " (",$p->NbMembers," ",$words->getFormatted("Member"),")" ;
-				}
-				
-				?>
-			</td>
-			
-			</tr>
-		<?php
-		}
-		?>
-		</table>
-	<?php
-	} // end of if they are places found
+        $ii=0 ;
+        foreach($TReturn->TPlaces as $p) {
+            $ii++ ;
+            ?>
+            <tr class="<?=$styles[$ii%2] ?>">
+            <td align="center">
+                <?php echo "<a href=\"",$p->link,"\">" ;
+                if (!empty($p->CountryName)) {
+                    echo $p->CountryName,"::" ;
+                }
+                if (!empty($p->RegionName)) {
+                    echo $p->RegionName,"::" ;
+                }
+                echo $p->name,"</a>" ;
+                if ($p->NbMembers>1) {
+                    echo " (",$p->NbMembers," ",$words->getFormatted("Members"),")" ;
+                }
+                else {
+                    echo " (",$p->NbMembers," ",$words->getFormatted("Member"),")" ;
+                }
+                
+                ?>
+            </td>
+            
+            </tr>
+        <?php
+        }
+        ?>
+        </table>
+    <?php
+    } // end of if they are places found
 
-	$iCountForumTags=count($TReturn->TForumTags) ;
-	if ($iCountForumTags>0) {
+    $iCountForumTags=count($TReturn->TForumTags) ;
+    if ($iCountForumTags>0) {
 ?>
         <h2><?=$words->getFormatted("tags") ?></h2>
-		<table class="full">
+        <table class="full">
 
 
 <?php
-		$ii=0 ;
-		foreach($TReturn->TForumTags as $p) {
-			$ii++ ;
-			?>
-			<tr class="<?=$styles[$ii%2] ?>">
-			<td align="center">
-				<?php echo "<a href=\"","forums/t".$p->IdTag,"\">" ?>
-				(<?=$p->NbThreads?> <?=$words->getFormatted("Threads")?>)</a>
-			</td>
-			
-			</tr>
-		<?php
-		}
-		?>
-		</table>
-	<?php
-	} // end of if they are forum tags found
-	
-	if (($iCountMemberFound<=0) and ($iCountPlacesFound<=0)  and ($iCountForumTags<=0)) {
-		echo $words->getFormatted("QuickSearchMembersNoResults",$TReturn->searchtext,"<a href=\"searchmembers\">".$words->getFormatted("MapSearch")."</a>") ;
-	}
-	?>
+        $ii=0 ;
+        foreach($TReturn->TForumTags as $p) {
+            $ii++ ;
+            ?>
+            <tr class="<?=$styles[$ii%2] ?>">
+            <td align="center">
+                <?php echo "<a href=\"","forums/t".$p->IdTag,"\">" ?>
+                (<?=$p->NbThreads?> <?=$words->getFormatted("Threads")?>)</a>
+            </td>
+            
+            </tr>
+        <?php
+        }
+        ?>
+        </table>
+    <?php
+    } // end of if they are forum tags found
+    
+    if (($iCountMemberFound<=0) and ($iCountPlacesFound<=0)  and ($iCountForumTags<=0)) {
+        echo $words->getFormatted("QuickSearchMembersNoResults",$TReturn->searchtext,"<a href=\"searchmembers\">".$words->getFormatted("MapSearch")."</a>") ;
+    }

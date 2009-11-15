@@ -79,9 +79,9 @@ foreach($TList as $TL) {
 HTML;
     $summary = htmlspecialchars($string, ENT_QUOTES);
     $string = '';
-	$detail = htmlspecialchars($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr), ENT_QUOTES);
+    $detail = htmlspecialchars($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr), ENT_QUOTES);
     
-	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
+    echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
 ";
 }
 
@@ -89,9 +89,9 @@ $rr=0;
 $string = "<div class='pages center'><ul style='float:none'>" ;
 for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
     $rr++;
-	$i1=$ii ;
-	$i2= min($ii + $width,$maxpos);
-	$add = (($curpos>=$i1) and ($curpos<$i2)) ? 'current' : '';
+    $i1=$ii ;
+    $i2= min($ii + $width,$maxpos);
+    $add = (($curpos>=$i1) and ($curpos<$i2)) ? 'current' : '';
     $string .= "<li class=\"$add\"><a href=\"javascript: page_navigate($i1);\" class=\"off\">".$rr."</a></li> " ;
 }
 $string .= "</ul></div>" ;
@@ -123,61 +123,61 @@ $_SESSION['SearchMembersVars'] = $vars;
 $_SESSION['SearchMembersTList'] = $TList;
 
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {
-	static $ii = 0;
+    static $ii = 0;
 
-	$info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
-	$string = $info_styles[($ii++%2)]; // this display the <tr>
-	$string .= "<td class=\"memberlist\">" ;
-	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<a href="members/'.$TM->Username.'" target="_blank">'.$TM->Username.'</a>';
-	$string .= "<br />".$TM->CountryName;
-	$string .= "<br />".$TM->CityName;
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= $TM->ProfileSummary ;
-	$string .= "</td>";
-	$string .= "<td class=\"memberlist\" align=\"center\">" ;
-	$string .= ShowAccomodation($TM->Accomodation, $Accomodation);
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\">" ;
-	$string .= $TM->LastLogin ;
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" align=center>" ;
-	$string .= $TM->NbComment ;
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" align=\"right\">" ;
-	$string .= $TM->Age ;
-	$string .= "</td>" ;
-	$string .="</tr>" ;
+    $info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
+    $string = $info_styles[($ii++%2)]; // this display the <tr>
+    $string .= "<td class=\"memberlist\">" ;
+    $string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" valign=\"top\">" ;
+    $string .= '<a href="members/'.$TM->Username.'" target="_blank">'.$TM->Username.'</a>';
+    $string .= "<br />".$TM->CountryName;
+    $string .= "<br />".$TM->CityName;
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" valign=\"top\">" ;
+    $string .= $TM->ProfileSummary ;
+    $string .= "</td>";
+    $string .= "<td class=\"memberlist\" align=\"center\">" ;
+    $string .= ShowAccomodation($TM->Accomodation, $Accomodation);
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\">" ;
+    $string .= $TM->LastLogin ;
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" align=center>" ;
+    $string .= $TM->NbComment ;
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" align=\"right\">" ;
+    $string .= $TM->Age ;
+    $string .= "</td>" ;
+    $string .="</tr>" ;
 
     
-	return $string;
+    return $string;
 }
 function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
-	static $ii = 0;
+    static $ii = 0;
     $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
     
     $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',$TM->LastLogin))));
     if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
-	$info_styles = array(0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">");
-	$string = $info_styles[($ii++%2)]; // this display the <tr>
-	$string .= "<table style='width:100%'><tr><td class=\"memberlist\">" ;
-	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
-	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName."<br /> ". $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span>";
-	$string .= "</span></td><td>";
+    $info_styles = array(0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">");
+    $string = $info_styles[($ii++%2)]; // this display the <tr>
+    $string .= "<table style='width:100%'><tr><td class=\"memberlist\">" ;
+    $string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" valign=\"top\">" ;
+    $string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
+    $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName."<br /> ". $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span>";
+    $string .= "</span></td><td>";
     $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:GEvent.trigger(gmarkers[".$Nr."], 'click');\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";
     $string .= "<span class=\"small\">".$Accomodation[$TM->Accomodation]."</span>";
     $string .= "</td></tr></table>" ;
-	$string .="</div>" ;
+    $string .="</div>" ;
 
     
-	return $string;
+    return $string;
 }
 
 // Not needed anymore...
@@ -190,5 +190,3 @@ function ShowAccomodation($accom, $Accomodation)
     if ($accom == "neverask")
        return "<img src=\"images/icons/gicon2.png\" title=\"".$Accomodation['neverask']."\"  alt=\"neverask\" />";
 }
-
-?>

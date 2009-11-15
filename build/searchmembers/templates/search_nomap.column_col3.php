@@ -3,4 +3,3 @@
 <?php
     include 'map.php';
     include 'scripts.php';
-?>

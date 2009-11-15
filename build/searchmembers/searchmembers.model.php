@@ -38,7 +38,7 @@ class Searchmembers extends RoxModelBase {
      */
     public function __construct() {
         parent::__construct();
-		
+        
         $this->dao = $this->get_dao();
         // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
@@ -96,27 +96,27 @@ WHERE   ShortCode IN ($l)
     public function quicksearch($_searchtext)
     {
         $TMembers = array ();
-		$TReturn->searchtext = $_searchtext ;
-		
+        $TReturn->searchtext = $_searchtext ;
+        
         if(strlen($_searchtext) > 2)
         {
-			$searchtext = $this->dao->escape(str_replace('*','%',$_searchtext)); // Allows for wildcard
+            $searchtext = $this->dao->escape(str_replace('*','%',$_searchtext)); // Allows for wildcard
         
-			// search for username
-			$where = '';
-			$tablelist = '';
-			if (!$this->getLoggedInMember())
+            // search for username
+            $where = '';
+            $tablelist = '';
+            if (!$this->getLoggedInMember())
             {
-				$where = "AND memberspublicprofiles.IdMember = members.id"; // must be in the public profile list
-				$tablelist = ",memberspublicprofiles";
-			}
-			$str =<<<SQL
+                $where = "AND memberspublicprofiles.IdMember = members.id"; // must be in the public profile list
+                $tablelist = ",memberspublicprofiles";
+            }
+            $str =<<<SQL
 SELECT
     members.id AS IdMember,
     Username,
     Gender,
     HideGender,
-	IdCity,
+    IdCity,
     ProfileSummary
 FROM
     members {$tablelist}
@@ -126,15 +126,15 @@ WHERE
     $where
 LIMIT 20
 SQL;
-			
-			$qry = $this->dao->query($str);
+            
+            $qry = $this->dao->query($str);
 
-			while ($rr = $qry->fetch(PDB::FETCH_OBJ))
+            while ($rr = $qry->fetch(PDB::FETCH_OBJ))
             {
                 $geo = $this->createEntity('Geo')->findById($rr->IdCity);
                 if (!($country = $geo->getCountry()) || !($parent = $geo->getParent()))
                 {
-					$this->logWrite("FindMember(Missing country result for geonames_cache - id = {$rr->IdCity}", "Bug");
+                    $this->logWrite("FindMember(Missing country result for geonames_cache - id = {$rr->IdCity}", "Bug");
                     $rr->RegionName="";
                     $rr->CountryName='';
                     $rr->CityName = '';
@@ -148,99 +148,99 @@ SQL;
                     $rr->RegionName = $parent->name;
                 }
 
-				$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
-				$rr->result = '';
+                $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
+                $rr->result = '';
     
-				$query = $this->dao->query("SELECT SQL_CACHE    *
+                $query = $this->dao->query("SELECT SQL_CACHE    *
 FROM
     membersphotos
 WHERE
     IdMember=" . $rr->IdMember . " AND
     SortOrder=0
                 "
-				);
-				$photo = $query->fetch(PDB::FETCH_OBJ);
+                );
+                $photo = $query->fetch(PDB::FETCH_OBJ);
     
-				if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
-				else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-				$rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
-				array_push($TMembers, $rr);
-			}
-		} // end of search for username
-		$TReturn->TMembers=$TMembers ;
+                if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
+                else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
+                $rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
+                array_push($TMembers, $rr);
+            }
+        } // end of search for username
+        $TReturn->TMembers=$TMembers ;
 
 // Now search in places
-		$TPlaces=array() ;
-		
+        $TPlaces=array() ;
+        
         if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
-			$searchtext = $this->dao->escape($_searchtext) ;
-			$str = "SELECT DISTINCT(geonameId) AS geonameid FROM geonames_alternate_names WHERE alternateName='{$searchtext}'";
-			$qry = $this->dao->query($str);
-			
-			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-				$str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
-				$result = $this->dao->query($str);
-				$cc = $result->fetch(PDB::FETCH_OBJ);
-				if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
-					$cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
-					$cc->link="places/".$cc->fk_countrycode ;
-					$cc->CountryName="" ;
-					$cc->RegionName="" ;
-				}
-				elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')) {
-					$cc->TypePlace='City' ; // Becareful this will be use as a word, take care with lowercase, don't change
-					$sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
-					$qryRegion = $this->dao->query($sRegion);
-					$Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
-					$cc->RegionName=$Region->name ;
-					
-					$sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
-					$qryCountry = $this->dao->query($sCountry);
-					$Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
-					$cc->CountryName=$Country->name ;
+            $searchtext = $this->dao->escape($_searchtext) ;
+            $str = "SELECT DISTINCT(geonameId) AS geonameid FROM geonames_alternate_names WHERE alternateName='{$searchtext}'";
+            $qry = $this->dao->query($str);
+            
+            while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+                $str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
+                $result = $this->dao->query($str);
+                $cc = $result->fetch(PDB::FETCH_OBJ);
+                if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
+                    $cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
+                    $cc->link="places/".$cc->fk_countrycode ;
+                    $cc->CountryName="" ;
+                    $cc->RegionName="" ;
+                }
+                elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')) {
+                    $cc->TypePlace='City' ; // Becareful this will be use as a word, take care with lowercase, don't change
+                    $sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
+                    $qryRegion = $this->dao->query($sRegion);
+                    $Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
+                    $cc->RegionName=$Region->name ;
+                    
+                    $sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
+                    $qryCountry = $this->dao->query($sCountry);
+                    $Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
+                    $cc->CountryName=$Country->name ;
 
-					if (isset($Region->name)) {
-						$cc->link="places/".$cc->fk_countrycode."/".$Region->name."/".$cc->name ;
-					}
-					else {
-						$cc->link="places/".$cc->fk_countrycode."//".$cc->name ;
-					}
-				}
-				elseif (($cc->fcode=='ADM1') or ($cc->fcode=='ADM2')or ($cc->fcode=='ADMD')) {
-					$sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
-					$qryCountry = $this->dao->query($sCountry);
-					$Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
-					$cc->CountryName=$Country->name ;
+                    if (isset($Region->name)) {
+                        $cc->link="places/".$cc->fk_countrycode."/".$Region->name."/".$cc->name ;
+                    }
+                    else {
+                        $cc->link="places/".$cc->fk_countrycode."//".$cc->name ;
+                    }
+                }
+                elseif (($cc->fcode=='ADM1') or ($cc->fcode=='ADM2')or ($cc->fcode=='ADMD')) {
+                    $sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
+                    $qryCountry = $this->dao->query($sCountry);
+                    $Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
+                    $cc->CountryName=$Country->name ;
 
-					$cc->RegionName="" ;
-					$cc->TypePlace='Region' ; // Becareful this will be use as a word, take care with lowercase, don't change
-					$cc->link="places/".$cc->fk_countrycode."/".$cc->name ;
-				}
-				$cc->searchtext=$searchtext ;
-				array_push($TPlaces, $cc);
+                    $cc->RegionName="" ;
+                    $cc->TypePlace='Region' ; // Becareful this will be use as a word, take care with lowercase, don't change
+                    $cc->link="places/".$cc->fk_countrycode."/".$cc->name ;
+                }
+                $cc->searchtext=$searchtext ;
+                array_push($TPlaces, $cc);
 
-			}
-		}// end of search for Places
-		$TReturn->TPlaces=$TPlaces ;
-		
-		
+            }
+        }// end of search for Places
+        $TReturn->TPlaces=$TPlaces ;
+        
+        
 // Now search in forums tags
-		$TForumTags=array() ;
-		
+        $TForumTags=array() ;
+        
         if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
-			$searchtext=mysql_real_escape_string($_searchtext) ;
-			$str="select forums_tags.id as IdTag,counter as NbThreads 
-			from forums_tags,translations
-			where forums_tags.IdName=translations.IdTrad and Sentence='".$searchtext."'" ;
-			$qry = $this->dao->query($str);
-			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-				$rr->link="forums/t".$rr->IdTag ;
-				array_push($TForumTags, $rr);
-			}
-		}// end of search for forums tags
-		$TReturn->TForumTags = $TForumTags;
-		return($TReturn) ;
-		
+            $searchtext=mysql_real_escape_string($_searchtext) ;
+            $str="select forums_tags.id as IdTag,counter as NbThreads 
+            from forums_tags,translations
+            where forums_tags.IdName=translations.IdTrad and Sentence='".$searchtext."'" ;
+            $qry = $this->dao->query($str);
+            while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+                $rr->link="forums/t".$rr->IdTag ;
+                array_push($TForumTags, $rr);
+            }
+        }// end of search for forums tags
+        $TReturn->TForumTags = $TForumTags;
+        return($TReturn) ;
+        
     }
     
     private function ellipsis($str, $len)
@@ -300,7 +300,7 @@ WHERE
                     $where_accomodation[] = "Accomodation='$value'" ;
                 }
             }
-			if($where_accomodation) $where .= " AND (".implode(" OR ", $where_accomodation).") " ;
+            if($where_accomodation) $where .= " AND (".implode(" OR ", $where_accomodation).") " ;
         }
     
         // Process typic Offer
@@ -437,11 +437,11 @@ AND (
         if ($this->GetParam($vars, "IdCity",0)!=0) {
            $where .= " AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
         }
-		if ($this->GetParam($vars, "CityName","")!="")
+        if ($this->GetParam($vars, "CityName","")!="")
         {
-			
-			$city = $this->GetParam($vars, "CityName");
-			$sData=<<<SQL
+            
+            $city = $this->GetParam($vars, "CityName");
+            $sData=<<<SQL
 SELECT
     distinct(gc.geonameid) AS geonameid 
 FROM
@@ -452,27 +452,27 @@ WHERE
 OR
     gan.alternateName='{$city}'
 SQL;
-			$qryData = $this->dao->query($sData);
-			$WhereCity="" ;
-			while ($rData = $qryData->fetch(PDB::FETCH_OBJ))
+            $qryData = $this->dao->query($sData);
+            $WhereCity="" ;
+            while ($rData = $qryData->fetch(PDB::FETCH_OBJ))
             {
-				if ($WhereCity=="")
+                if ($WhereCity=="")
                 {
-					$WhereCity=" geonameid in(".$rData->geonameid ;
-				}
-				else {
-					$WhereCity=$WhereCity.",".$rData->geonameid ;
-				}
-			}
+                    $WhereCity=" geonameid in(".$rData->geonameid ;
+                }
+                else {
+                    $WhereCity=$WhereCity.",".$rData->geonameid ;
+                }
+            }
 
-			if ($WhereCity!="")
+            if ($WhereCity!="")
             {
-				$WhereCity=$WhereCity.")" ;
-			}
-			else
+                $WhereCity=$WhereCity.")" ;
+            }
+            else
             {
-				$WhereCity=" 1=0";
-			}
+                $WhereCity=" 1=0";
+            }
 
             $where .= " AND ".$WhereCity;
         }
@@ -486,16 +486,16 @@ AND membersgroups.Status='In'
 AND membersgroups.IdMember=members.id"  ;
         }
     
-		if (empty($where))
+        if (empty($where))
         {
-			$this->logWrite("empty where. input: " . print_r($vars, true), "Search");
-			$where = " WHERE (1=0)" ;
-		}
+            $this->logWrite("empty where. input: " . print_r($vars, true), "Search");
+            $where = " WHERE (1=0)" ;
+        }
 
-		// This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
+        // This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
         $str=     "SELECT SQL_CALC_FOUND_ROWS
     members.id AS IdMember,
-	Username,
+    Username,
     geonames_cache.name AS CityName,
     countries.Name AS CountryName
 FROM
@@ -503,7 +503,7 @@ FROM
 $where
 $OrderBy
 LIMIT $start_rec,$limitcount " ;
-		
+        
         $qry = $this->dao->query($str);
         $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
         $row = $result->fetch(PDB::FETCH_OBJ);
@@ -512,27 +512,27 @@ LIMIT $start_rec,$limitcount " ;
         $vars['rCount'] = $rCount;
         
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-			$sData="select BirthDate,HideBirthDate,Accomodation,ProfileSummary,Gender,HideGender,date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,    geonames_cache.latitude AS Latitude,    geonames_cache.longitude AS Longitude
-			from ".$dblink."members,".$dblink."geonames_cache where members.IdCity=geonames_cache.geonameid and members.id=".$rr->IdMember ;
+            $sData="select BirthDate,HideBirthDate,Accomodation,ProfileSummary,Gender,HideGender,date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,    geonames_cache.latitude AS Latitude,    geonames_cache.longitude AS Longitude
+            from ".$dblink."members,".$dblink."geonames_cache where members.IdCity=geonames_cache.geonameid and members.id=".$rr->IdMember ;
 
-			$qryData = $this->dao->query($sData);
-			$rData = $qryData->fetch(PDB::FETCH_OBJ) ;
-			
-		    $rr->BirthDate=$rData->BirthDate;
-		    $rr->HideBirthDate=$rData->HideBirthDate;
-			$rr->Accomodation=$rData->Accomodation;
-		    $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rData->ProfileSummary,true), 200);
-		    $rr->Gender=$rData->Gender;
-		    $rr->HideGender=$rData->HideGender;
-		    $rr->LastLogin=$rData->LastLogin;
-		    $rr->Latitude=$rData->Latitude;
-		    $rr->Longitude=$rData->Longitude;
+            $qryData = $this->dao->query($sData);
+            $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
+            
+            $rr->BirthDate=$rData->BirthDate;
+            $rr->HideBirthDate=$rData->HideBirthDate;
+            $rr->Accomodation=$rData->Accomodation;
+            $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rData->ProfileSummary,true), 200);
+            $rr->Gender=$rData->Gender;
+            $rr->HideGender=$rData->HideGender;
+            $rr->LastLogin=$rData->LastLogin;
+            $rr->Latitude=$rData->Latitude;
+            $rr->Longitude=$rData->Longitude;
 
-			$sData="select count(*) As NbComment from ".$dblink."comments where IdToMember=".$rr->IdMember ;
+            $sData="select count(*) As NbComment from ".$dblink."comments where IdToMember=".$rr->IdMember ;
 
-			$qryData = $this->dao->query($sData);
-			$rData = $qryData->fetch(PDB::FETCH_OBJ) ;
-			$rr->NbComment=$rData->NbComment ;
+            $qryData = $this->dao->query($sData);
+            $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
+            $rr->NbComment=$rData->NbComment ;
 
             $query = $this->dao->query("SELECT SQL_CACHE * FROM  ".$dblink."membersphotos WHERE IdMember=". $rr->IdMember . " AND SortOrder=0");
             $photo = $query->fetch(PDB::FETCH_OBJ);

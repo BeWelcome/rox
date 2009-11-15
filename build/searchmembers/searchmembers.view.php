@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
 class SearchmembersView extends PAppView {
     
     private $_model;
-	public $page ;
+    public $page ;
             
     public function __construct(Searchmembers $model) {
         $this->_model = $model;
@@ -39,7 +39,7 @@ class SearchmembersView extends PAppView {
     public function quicksearch_results($TReturn)
     {
 
-		$this->page->title='Search Results - Bewelcome' ;
+        $this->page->title='Search Results - Bewelcome' ;
         require 'templates/quicksearch.php';
     }
 
@@ -56,13 +56,13 @@ class SearchmembersView extends PAppView {
     {
         include 'templates/ajax.php';
     }
-	
+    
 
     public function quicksearch_form()
     {
-		$TList=array() ;
-		$searchtext="" ;
-		$mapstyle="mapoff";
+        $TList=array() ;
+        $searchtext="" ;
+        $mapstyle="mapoff";
         require 'templates/memberlist_quicksearch.php';
     }
 
@@ -80,7 +80,7 @@ class SearchmembersView extends PAppView {
         require 'templates/teaser_quicksearch.php';
     }
 
-	public function memberlist($mapstyle,$TabSortOrder, $quicksearch=0) {
+    public function memberlist($mapstyle,$TabSortOrder, $quicksearch=0) {
         if (!$quicksearch) {
         require 'templates/memberlist.php';
         } else {
@@ -88,13 +88,13 @@ class SearchmembersView extends PAppView {
         }
     }
     
-	/* This adds other custom styles to the page*/
-	public function customStyles($mapstyle,$quicksearch=0) {
+    /* This adds other custom styles to the page*/
+    public function customStyles($mapstyle,$quicksearch=0) {
         $out = '<link rel="stylesheet" href="styles/css/minimal/screen/basemod_minimal_col3.css" type="text/css"/>';
         $out .= '<!--[if lte IE 7]><link rel="stylesheet" href="styles/css/minimal/patches/patch_3col.css" type="text/css"/><![endif]-->';
         $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/searchmembers.css" type="text/css"/>';
         $out .= '<link rel="stylesheet" type="text/css" href="styles/css/minimal/screen/custom/prototip.css" />';
-		return $out;
+        return $out;
     }
 
     public function showFeatureIsClosed()

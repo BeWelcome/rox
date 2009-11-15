@@ -24,4 +24,3 @@
 
 <?php
     include 'scripts.php';
-?>

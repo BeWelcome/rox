@@ -80,10 +80,10 @@ class SearchmembersController extends PAppController {
             // static pages
             switch($request[1]) {
                 case '':
-    				$searchtext=$_GET["vars"] ; // Because of old way to use the QuickSearch with a get
+    				$searchtext = isset($_GET["vars"]) ? $_GET['vars'] : ''; // Because of old way to use the QuickSearch with a get
                     break;
                 default:
-    				$searchtext=$request[1] ;
+    				$searchtext = $request[1] ;
                     break;
             }
 		

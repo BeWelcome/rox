@@ -54,7 +54,6 @@ WHERE   code = 'WelcomeToSignup'
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $this->_langs[] = $row->ShortCode;
         }
-        
     }
     
     /**
@@ -94,25 +93,24 @@ WHERE   ShortCode IN ($l)
         return $langNames;
     }
     
-    public function quicksearch($_searchtext)     {
-		
+    public function quicksearch($_searchtext)
+    {
         $TMembers = array ();
-		$TReturn->searchtext=$_searchtext ;
+		$TReturn->searchtext = $_searchtext ;
 		
-        $dblink="" ; // This will be used one day to query on another replicated database
-        if(strlen($_searchtext) > 2) { // Needs to give more that two chars for username
-			$searchtext=str_replace('*','%',$_searchtext) ; // Allows for wildcard
-			$searchtext=mysql_real_escape_string($searchtext) ;
+        if(strlen($_searchtext) > 2)
+        {
+			$searchtext = $this->dao->escape(str_replace('*','%',$_searchtext)); // Allows for wildcard
         
 			// search for username
 			$where = '';
 			$tablelist = '';
 			if (!$this->getLoggedInMember())
-            { // case user is not logged in
-				$where = "AND memberspublicprofiles.IdMember=members.id"; // must be in the public profile list
-				$tablelist = ",memberspublicprofiles" ;
+            {
+				$where = "AND memberspublicprofiles.IdMember = members.id"; // must be in the public profile list
+				$tablelist = ",memberspublicprofiles";
 			}
-			$str ="
+			$str =<<<SQL
 SELECT
     members.id AS IdMember,
     Username,
@@ -121,57 +119,33 @@ SELECT
 	IdCity,
     ProfileSummary
 FROM
-    members $tablelist
+    members {$tablelist}
 WHERE
-    Status = 'Active'   AND
-    (Username LIKE '" . $searchtext. "')
+    Status = 'Active' AND
+    Username LIKE '{$searchtext}'
     $where
 LIMIT 20
-            " ;
+SQL;
 			
 			$qry = $this->dao->query($str);
-    
-    
-			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-				$str ="SELECT
-    countries.Name AS CountryName,
-    geonames_cache.name as CityName,
-	geonameid as IdCity,
-	parentAdm1Id as IdRegion,
-	fk_countrycode
-FROM
-    countries,
-    geonames_cache
-WHERE
-    geonames_cache.geonameid=".$rr->IdCity." AND
-    countries.id=geonames_cache.parentCountryId" ;
-				$result = $this->dao->query($str);
-				$cc = $result->fetch(PDB::FETCH_OBJ);
-				if (empty($cc->CountryName))
+
+			while ($rr = $qry->fetch(PDB::FETCH_OBJ))
+            {
+                $geo = $this->createEntity('Geo')->findById($rr->IdCity);
+                if (!($country = $geo->getCountry()) || !($parent = $geo->getParent()))
                 {
-					MOD_log::get()->write("FindMember(<b>{$rr->Username}</b>: Missing result with[{$str}] IdCity={$rr->IdCity}", "Bug");
+					$this->logWrite("FindMember(Missing country result for geonames_cache - id = {$rr->IdCity}", "Bug");
                     $rr->RegionName="";
                     $rr->CountryName='';
                     $rr->CityName = '';
                     $rr->fk_countrycode = '';
-                    $rr->CityName = '';
-				}
+                }
                 else
                 {
-                    $rr->CountryName=$cc->CountryName ;
-                    $rr->CityName=$cc->CityName ;
-                    $rr->fk_countrycode=$cc->fk_countrycode ;
-                    $rr->CityName=$cc->CityName ;
-
-                    $sRegion="SELECT name FROM geonames_cache WHERE geonameid = '{$cc->IdRegion}'";
-                    $qryRegion = $this->dao->query($sRegion);
-                    $Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
-                    if (isset($Region->name)) {
-                        $rr->RegionName=$Region->name ;
-                    }
-                    else {
-                        $rr->RegionName="" ;
-                    }
+                    $rr->CountryName = $country->name ;
+                    $rr->CityName = $geo->name ;
+                    $rr->fk_countrycode = $geo->fk_countrycode ;
+                    $rr->RegionName = $parent->name;
                 }
 
 				$rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
@@ -179,7 +153,7 @@ WHERE
     
 				$query = $this->dao->query("SELECT SQL_CACHE    *
 FROM
-    ".$dblink."membersphotos
+    membersphotos
 WHERE
     IdMember=" . $rr->IdMember . " AND
     SortOrder=0
@@ -199,8 +173,8 @@ WHERE
 		$TPlaces=array() ;
 		
         if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
-			$searchtext=mysql_real_escape_string($_searchtext) ;
-			$str="select distinct(geonameId) as geonameid from geonames_alternate_names where alternateName='".$searchtext."'";
+			$searchtext = $this->dao->escape($_searchtext) ;
+			$str = "SELECT DISTINCT(geonameId) AS geonameid FROM geonames_alternate_names WHERE alternateName='{$searchtext}'";
 			$qry = $this->dao->query($str);
 			
 			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
@@ -264,77 +238,10 @@ WHERE
 				array_push($TForumTags, $rr);
 			}
 		}// end of search for forums tags
-		$TReturn->TForumTags=$TForumTags ;
-/* search in members trads is disabled		
-        // search in MembersTrads
-        $str =
-            "
-SELECT
-    members.id AS IdMember,
-    Username,
-    Gender,
-    HideGender,
-    memberstrads.Sentence AS result,
-    ProfileSummary
-FROM
-    members,
-    memberstrads
-WHERE
-    memberstrads.IdOwner=members.id AND
-    Status = 'Active' AND
-    memberstrads.Sentence LIKE '%" . mysql_real_escape_string($searchtext) . "%'
-ORDER BY username
-LIMIT 20
-            "
-        ;
-        $qry = $this->dao->query($str);
-        while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-            $str =
-                "
-SELECT
-    countries.Name AS CountryName,
-    geonames_cache.name AS CityName
-FROM
-    countries,
-    members,
-    geonames_cache
-WHERE
-    members.IdCity=geonames_cache.geonameid AND
-    countries.id=geonames_cache.parentCountryId AND
-    members.id= $rr->IdMember
-                "
-            ;
-            $result = $this->dao->query($str);
-            $cc = $result->fetch(PDB::FETCH_OBJ);
-            $rr->CountryName=$cc->CountryName ;
-            $rr->CityName=$cc->CityName ;
-            $rr->result = $this->ellipsis($rr->result, 100);
-            $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
-    
-            $query = $this->dao->query(
-                "
-SELECT SQL_CACHE
-    *
-FROM
-    ".$dblink."membersphotos
-WHERE
-    IdMember  = $rr->IdMember  AND
-    SortOrder = 0
-                "
-            );
-            $photo = $query->fetch(PDB::FETCH_OBJ);
-    
-            if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
-            else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
-            $rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
-            array_push($TList, $rr);
-        }
-        return $TList;
-		
-end of  search in members trads is disabled		 */
+		$TReturn->TForumTags = $TForumTags;
 		return($TReturn) ;
 		
-    } // end of quicksearch
+    }
     
     private function ellipsis($str, $len)
     {
@@ -374,7 +281,7 @@ end of  search in members trads is disabled		 */
     
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1")
         {
-            $where = "WHERE (  members.Status in ('Active','ChoiceInActive','OutOfRemind'))";
+            $where = "WHERE (members.Status in ('Active','ChoiceInActive','OutOfRemind'))";
         }
         else
         {
@@ -398,10 +305,13 @@ end of  search in members trads is disabled		 */
     
         // Process typic Offer
         $where_typicoffer = array();
-        if(array_key_exists('TypicOffer', $vars)) {
+        if(array_key_exists('TypicOffer', $vars))
+        {
             $TypicOffer = $vars['TypicOffer'];
-            if(is_array($TypicOffer)) {
-                foreach($TypicOffer as $value) {
+            if(is_array($TypicOffer))
+            {
+                foreach($TypicOffer as $value)
+                {
                     if($value == '') continue;
                     $vars['TypicOffer'] = $value;
                     $value = $this->GetParam($vars, 'TypicOffer');
@@ -412,40 +322,49 @@ end of  search in members trads is disabled		 */
         if($where_typicoffer) $where .= " AND (".implode(" AND ", $where_typicoffer).")";
     
         // Process Username parameter if any
-        if ($this->GetParam($vars, "Username","")!="") {
-            $Username=$this->GetParam($vars, "Username") ; //
-            if (strpos($Username,"*")!==false) {
-                $Username=str_replace("*","%",$Username) ;
-                $where .= " AND Username LIKE '".mysql_real_escape_string($Username)."'" ;
-            } else {
+        if ($this->GetParam($vars, "Username","")!="")
+        {
+            $Username=$this->GetParam($vars, "Username");
+            if (strpos($Username,"*") !== false)
+            {
+                $Username=str_replace("*","%",$Username);
+                $where .= " AND Username LIKE '{$this->dao->escape($Username)}'";
+            }
+            else
+            {
                 $Username=$this->fUserName($this->IdMember($this->GetParam($vars, "Username"))) ; // in case username was renamed, we do it only here to avoid problems with renamed people
-                $where .= " AND Username ='".mysql_real_escape_string($Username)."'" ;
+                $where .= " AND Username ='{$this->dao->escape($Username)}'";
             }
         }
     
         // Process TextToFind parameter if any
-        if ($this->GetParam($vars, "TextToFind","")!="") {
+        if ($this->GetParam($vars, "TextToFind","")!="")
+        {
             $TextToFind=$this->GetParam($vars, "TextToFind") ;
             // Special case where from the quicksearch the user is looking for a username
             // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
-            if (($this->GetParam($vars, "OrUsername",0)==1)and($this->IdMember($TextToFind)!=0)) { // in
-                $where .= " AND Username='".mysql_real_escape_string($TextToFind)."'" ;
-            } else {
-                $tablelist=$tablelist.",".$dblink."memberstrads";
-                $where .= " AND memberstrads.Sentence LIKE '%".mysql_real_escape_string($TextToFind)."%' AND memberstrads.IdOwner=members.id" ;
+            if (($this->GetParam($vars, "OrUsername",0)==1) && ($this->IdMember($TextToFind)!=0))
+            {
+                $where .= " AND Username='{$this->dao->escape($TextToFind)}'";
+            }
+            else
+            {
+                $tablelist=$tablelist.", memberstrads";
+                $where .= " AND memberstrads.Sentence LIKE '%{$this->dao->escape($TextToFind)}%' AND memberstrads.IdOwner=members.id";
             }
         }
     
         // Process IdRegion parameter if any
-        if ($this->GetParam($vars, "IdRegion","")!="") {
-            $IdRegion=GetParam($vars, "IdRegion") ;
-            $where .= " AND geonames_cache.parentAdm1Id=".$IdRegion ;
+        if ($this->GetParam($vars, "IdRegion","") != "")
+        {
+            $IdRegion = GetParam($vars, "IdRegion");
+            $where .= " AND geonames_cache.parentAdm1Id = ".$IdRegion ;
         }
     
         // Process Gender parameter if any
         if ($this->GetParam($vars, "Gender","0")!="0") {
             $Gender=$this->GetParam($vars, "Gender") ;
-            $where .= " AND Gender='".mysql_real_escape_string($Gender)."' AND HideGender='No'" ;
+            $where .= " AND Gender='{$this->dao->escape($Gender)}' AND HideGender='No'";
         }
     
         // Process Age parameters
@@ -535,8 +454,10 @@ OR
 SQL;
 			$qryData = $this->dao->query($sData);
 			$WhereCity="" ;
-			while ($rData = $qryData->fetch(PDB::FETCH_OBJ)) {
-				if ($WhereCity=="")  {
+			while ($rData = $qryData->fetch(PDB::FETCH_OBJ))
+            {
+				if ($WhereCity=="")
+                {
 					$WhereCity=" geonameid in(".$rData->geonameid ;
 				}
 				else {
@@ -544,21 +465,18 @@ SQL;
 				}
 			}
 
-			if ($WhereCity!="") {
+			if ($WhereCity!="")
+            {
 				$WhereCity=$WhereCity.")" ;
 			}
-			else {
+			else
+            {
 				$WhereCity=" 1=0";
 			}
-			
-			
-			
-			MOD_log::get()->write("CityName={$city} {$WhereCity}", "Search");
+
             $where .= " AND ".$WhereCity;
-//    geonames_cache.name='".$this->GetParam($vars, "CityName")."'" ;
         }
 
-		
         // if a group is chosen
         if ($this->GetParam($vars, "IdGroup",0)!=0) {
             $tablelist=$tablelist.",".$dblink."membersgroups" ;
@@ -568,37 +486,11 @@ AND membersgroups.Status='In'
 AND membersgroups.IdMember=members.id"  ;
         }
     
-		if (empty($where)) {
-			MOD_log::get()->write("empty where : todo: find the reason", "Search");
+		if (empty($where))
+        {
+			$this->logWrite("empty where. input: " . print_r($vars, true), "Search");
 			$where = " WHERE (1=0)" ;
 		}
-
-
-/*
-        $str=     "
-SELECT SQL_CALC_FOUND_ROWS
-    members.id AS IdMember,
-    count(comments.id) AS NbComment,
-    members.BirthDate,
-    members.HideBirthDate,
-    members.Accomodation,
-    ProfileSummary,
-    Gender,
-    HideGender
-    members.Username AS Username,
-    date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,
-    geonames_cache.latitude AS Latitude,
-    geonames_cache.longitude AS Longitude,
-    geonames_cache.name AS CityName,
-    countries.Name AS CountryName,
-FROM
-    ($tablelist)
-//    LEFT JOIN $dblink comments ON (members.id=comments.IdToMember)
-$where
-GROUP BY members.id
-$OrderBy
-LIMIT $start_rec,$limitcount " ;
-*/		
 
 		// This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
         $str=     "SELECT SQL_CALC_FOUND_ROWS
@@ -612,8 +504,6 @@ $where
 $OrderBy
 LIMIT $start_rec,$limitcount " ;
 		
-        MOD_log::get()->write("doing a [".$str."]", "Search");
-    
         $qry = $this->dao->query($str);
         $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
         $row = $result->fetch(PDB::FETCH_OBJ);
@@ -660,8 +550,6 @@ LIMIT $start_rec,$limitcount " ;
         
         return($TMember);
     }
-    
-    private static function test() {}
     
     //------------------------------------------------------------------------------
     // Get param returns the param value if any
@@ -729,6 +617,7 @@ WHERE
         return (0);
     } // end of IdMember
     
+    // todo: remove this code. A method like this SHOULD NEVER BE PLACED IN AN APP!
     // THis TestIfIsToReject function check wether the status of the members imply an immediate logoff
     // This for the case a member has just been banned
     // the $Status of the member is the current status from the database
@@ -815,7 +704,7 @@ LIMIT 1
         }
         return ("");
     } // end of FindTrad
-    
+
     private function ReplaceWithBR($ss,$ReplaceWith=false) {
             if (!$ReplaceWith) return ($ss);
             return(str_replace("\n","<br>",$ss));
@@ -835,16 +724,21 @@ LIMIT 1
         return $year_diff;
     } // end of fage_value
     
-    //------------------------------------------------------------------------------
-    // THis function return a picture according to member gender if (any)
-    private function DummyPict($Gender="IDontTell",$HideGender="Yes")
+    /**
+     * returns path to a dummy picture
+     * function doesn't care about params
+     *
+     * @param string $Gender -     gender to show
+     * @param string $HideGender - whether to hide gender
+     *
+     * @todo   remove method and call a library instead
+     * @access private
+     * @return string
+     */
+    private function DummyPict($Gender="IDontTell", $HideGender="Yes")
     {
         return 'images/misc/empty_avatar_30_30.png';
-        if ($HideGender=="Yes") return ('/memberphotos/et.jpg') ;
-        if ($Gender=="male") return ('/memberphotos/et_male.jpg') ;
-        if ($Gender=="female") return ('/memberphotos/et_female.jpg') ;
-        return ('/memberphotos/et.gif') ;
-    } // end of DummyPict
+    }
     
     //------------------------------------------------------------------------------
     // function LinkWithPicture build a link with picture and Username to the member profile
@@ -1058,21 +952,17 @@ LIKE '$column'
         return preg_split("/','/", $set); // Split into and array
     } // end of sql_get_set($table,$column)
     
-    // rebuild the group list
-    public function sql_get_groups() {
-        $query = $this->dao->query(
-            "
-SELECT SQL_CACHE
-    *
-FROM
-    groups
-            "
-        );
-        $TGroup = array ();
-        while ($rr = $query->fetch(PDB::FETCH_OBJ)) {
-            array_push($TGroup, $rr);
-        }
-        return $TGroup;
+    /**
+     * useless function that will with 100% certainty cause many problems later
+     * returning a complete a table with unknown rows in it is just not a good
+     * idea.
+     *
+     * @access public
+     * @return array
+     */
+    public function sql_get_groups()
+    {
+        return $this->createEntity('Group')->findAll(); 
     }
     
     // result sort order == array of codes in the words table, keyed by sort field.
@@ -1111,4 +1001,3 @@ FROM
         return $return;
     }
 }
-

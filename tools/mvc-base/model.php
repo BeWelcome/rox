@@ -192,6 +192,3 @@ class RoxModelBase extends RoxComponentBase
         }
     }
 }
-
-
-?>

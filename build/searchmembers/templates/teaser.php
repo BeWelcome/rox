@@ -37,7 +37,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
 <!-- NEXT ROW -->
     <div id="searchoptions" class="floatbox">
 
-        <div id="searchorder" class="floatbox float_left" >
+        <div id="searchorder" class="float_left" >
             <span class="small"><label for="thisorder"><?php echo $words->getFormatted('Orderby'); ?>:</label></span>
             <form class="float_right" id="changethisorder" style="overflow: visible;" action="">
             <select name="OrderBy" id="thisorder" onchange="changeSortOrder(this.value);">
@@ -46,14 +46,16 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
                 <?php } ?>
             </select>
             </form>
-        </div>
+        </div> <!-- searchorder -->
         
-        <p class="float_left"><span id="loading" class="small"></span></p>
+        <div id="sortorder" class="float_left">
+			<a href="#"><img src="images/icons/reverse_order.png" align="top" alt="changeorder" /><?php echo $words->getFormatted('changeSortOrder'); ?></a>
+		</div>
         
         <div id="mapswitch" class="float_left" >
-            <?php if ($mapstyle == 'mapoff') echo '<a href="searchmembers/mapon" />Mapview</a>';
+            <?php if ($mapstyle == 'mapoff') echo '<img src="images/icons/map.png" align="top" alt="mapvieww" /><a href="searchmembers/mapon"> Mapview</a>';
             else
-                echo '<a href="searchmembers/mapoff" />Textview</a>'; ?>
+                echo '<img src="images/icons/vcard.png" align="top" alt="textview" /> <a href="searchmembers/mapoff"> Textview</a>'; ?>
 		<!--
 		<table border="0" cellpadding="0" cellspacing="0" width="63" >
       <tr>
@@ -65,7 +67,9 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
       </tr>
     </table>
    -->
-        </div>
-    </div>
+        </div> <!-- mapswitch -->
+    </div> <!-- searchoptions -->
+    <div id="loading" class="small"></div>
     <div id="paging-div"></div>
-</div>
+        
+</div> <!-- teaser -->

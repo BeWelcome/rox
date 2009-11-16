@@ -12,6 +12,8 @@
 @media all
 {
 
+#teaser { margin-bottom: 0;}
+
 #main #col3 #col3_content .full,#main #col3 #col3_content .full .info{
 	padding: 0 0 0 0;
 	border: none;

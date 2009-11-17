@@ -29,6 +29,16 @@ Boston, MA  02111-1307, USA.
 class Searchmembers extends RoxModelBase {
     
     protected $dao;
+
+    private $columnSortOrder = array(
+            'members.created' => 'FindPeopleNewMembers',
+            'BirthDate'       => 'Age',
+            'LastLogin'       => 'Lastlogin',
+            'Comments'        => 'Comments',
+            'Accomodation'    => 'Accomodation',
+        );
+
+    private $default_column = 'members.created';
     
     // supported languages for translations; basis for flags in the footer
     private $_langs = array();
@@ -269,8 +279,7 @@ WHERE
         $start_rec=$this->GetParam($vars, "start_rec",0); // Number of records per page
         $vars['start_rec'] = $start_rec;
     
-        $order_by = $this->GetParam($vars, "OrderBy", 'members.created');
-        $direction = $this->getOrderDirection($order_by, $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
+        list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, "OrderBy", 'members.created'), $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
 
         $OrderBy = "ORDER BY {$order_by} {$direction}";
         $vars['OrderBy'] = $order_by;
@@ -503,7 +512,7 @@ FROM
 $where
 $OrderBy
 LIMIT $start_rec,$limitcount " ;
-        
+$this->logWrite($str, 'query');
         $qry = $this->dao->query($str);
         $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
         $row = $result->fetch(PDB::FETCH_OBJ);
@@ -528,7 +537,7 @@ LIMIT $start_rec,$limitcount " ;
             $rr->Latitude=$rData->Latitude;
             $rr->Longitude=$rData->Longitude;
 
-            $sData="select count(*) As NbComment from ".$dblink."comments where IdToMember=".$rr->IdMember ;
+            $sData="select count(*) As NbComment from comments where IdToMember=".$rr->IdMember ;
 
             $qryData = $this->dao->query($sData);
             $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
@@ -543,7 +552,7 @@ LIMIT $start_rec,$limitcount " ;
             $rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo, 'map_style');
             
             if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)) ;
-            else $rr->Age=$this->ww("Hidden") ;
+            else $rr->Age= "Hidden";
             
             array_push($TMember, $rr);
         }
@@ -931,12 +940,6 @@ WHERE
         return ("");
     } // end of fUsername
     
-    
-    private function ww($str)
-    {
-        return $str;
-    }
-    
     // sql_get_set returns in an array the possible set values of the colum of table name
     public function sql_get_set($table, $column) {
         $query = $this->dao->query(
@@ -965,16 +968,16 @@ LIKE '$column'
         return $this->createEntity('Group')->findAll(); 
     }
     
-    // result sort order == array of codes in the words table, keyed by sort field.
+    /**
+     * returns an array of columns that can be sorted by
+     * as well as the word codes for them
+     * 
+     * @access public
+     * @return array
+     */
     public function get_sort_order()
     {
-        return array(
-            'members.created' => 'FindPeopleNewMembers',
-            'BirthDate' => 'Age',
-            'LastLogin' => 'Lastlogin',
-            'Comments' => 'Comments',
-            'Accomodation' => 'Accomodation',
-        );
+        return $this->columnSortOrder;
     }
 
     /**
@@ -984,20 +987,24 @@ LIKE '$column'
      * @param int    $bool   - 0 for default, 1 for revers
      *
      * @access private
-     * @return string
+     * @return array
      */
     public function getOrderDirection($column, $bool = 0)
     {
         $reverse = array('ASC' => 'DESC', 'DESC' => 'ASC');
-        $columns = array(
-            'members.created' => 'DESC',
-            'BirthDate'       => 'DESC',
-            'Lastlogin'       => 'DESC',
-            'Comments'        => 'DESC',
-            'Accomodation'    => 'DESC',
-        );
-        $return = isset($columns[$column]) ? $columns[$column] : 'ASC';
-        if ($bool) $return = $reverse[$return];
-        return $return;
+        $columns = array();
+        foreach ($this->get_sort_order() as $key => $val)
+        {
+            $columns[$key] = 'DESC';
+        }
+        $direction = isset($columns[$column]) ? $columns[$column] : 'ASC';
+        $order = isset($columns[$column]) ? $column : $this->default_column;
+        // hack to sort by number of comments
+        if ($order == 'Comments')
+        {
+            $order = "(SELECT COUNT(id) FROM comments WHERE IdMember = comments.IdToMember)";
+        }
+        if ($bool) $direction = $reverse[$direction];
+        return array($order, $direction);
     }
 }

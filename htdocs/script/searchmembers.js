@@ -166,6 +166,15 @@ function scanObject(object)
     }
 }
 
+function flipSortDirection(e)
+{
+    var e = e || window.event;
+    Event.stop(e);
+    var newstate = ($('filterDirection').selectedIndex + 1) % 2;
+    $('filterDirection').selectedIndex = newstate;
+    loadMap(0);
+}
+
 function loadMap(i)
 {
     if(!mapoff) map.clearOverlays();

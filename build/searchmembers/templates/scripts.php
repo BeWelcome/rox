@@ -27,11 +27,12 @@ function BTchange (IdImg, ImgObj) {
   document.getElementById(IdImg).src = ImgObj;
 }
 function changeSortOrder (SortOrder) {
-  varsOnLoad = '/varsonload';
+//  varsOnLoad = '/varsonload';
   varSortOrder = '/'+SortOrder;
   document.getElementById('filterorder').value = SortOrder;
-  searchGlobal(0);
-  varsOnLoad = '';
+  loadMap(0);
+//  searchGlobal(0);
+//  varsOnLoad = '';
 }
 
 // other stuff
@@ -65,4 +66,5 @@ new Tip('TextToFindField', fieldHelpTextToFind,{className: 'clean', hook: {targe
 <script src="script/searchmembers.js" type="text/javascript"></script>
 <script type="text/javascript">
 Event.observe(window, "load", addTips); 
+$('flip-sort-direction-button').observe('click', flipSortDirection);
 </script>

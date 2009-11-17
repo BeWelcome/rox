@@ -120,7 +120,15 @@ Boston, MA  02111-1307, USA.
     <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>
 </select>
-</td><td>
+</td>
+<td>
+<strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrderDirection'); ?></strong><br />
+<select name="OrderByDirection" id="filterDirection">
+    <option value="0"><?php echo $words->getSilent('Forward'); ?></option>
+    <option value="1"><?php echo $words->getSilent('Reverse'); ?></option>
+</select>
+</td>
+<td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
 <select name="limitcount" class="sval">
     <option value="10">10</option>

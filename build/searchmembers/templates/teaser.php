@@ -49,7 +49,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
         </div> <!-- searchorder -->
         
         <div id="sortorder" class="float_left">
-			<a href="#"><img src="images/icons/reverse_order.png" align="top" alt="changeorder" /><?php echo $words->getFormatted('changeSortOrder'); ?></a>
+			<a href="#" id='flip-sort-direction-button'><img src="images/icons/reverse_order.png" align="top" alt="changeorder" /><?php echo $words->getFormatted('ChangeSortDirection'); ?></a>
 		</div>
         
         <div id="mapswitch" class="float_left" >

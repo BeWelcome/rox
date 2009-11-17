@@ -48,7 +48,7 @@ Boston, MA  02111-1307, USA.
         </a>
         <div class="comment">
             <p class="floatbox">
-              <? if ($c->IdFromMember == $this->loggedInMember->Id) echo '<a href="members/'.$member->username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?>
+              <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->Id) echo '<a href="members/'.$member->username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?>
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
               <span class="small grey"><?=$words->get('CommentFrom','<a href="people/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
             </p>
@@ -76,7 +76,7 @@ Boston, MA  02111-1307, USA.
                 ?>
             </li>
             <li>
-                <a href="feedback?IdCategory=4" ><?=$words->get('ReportCommentProblem')?></a>
+                <?php if ($this->loggedInMember) :?> <a href="feedback?IdCategory=4" ><?=$words->get('ReportCommentProblem')?><?php endif;?></a>
             </li>
             <li>
             <?php if (MOD_right::get()->HasRight('Comments'))  { ?>

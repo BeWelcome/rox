@@ -102,9 +102,9 @@ function ShowList($TData) {
     echo "                </div> <!-- c50r -->\n";
     echo "              </div> <!-- subcolumns -->\n";
     echo "              <h4>Where ?</h4>\n";
-    echo "              <p><textarea name=\"TextWhere\" cols=\"80\" rows=\"5\">", $c->TextWhere, "</textarea></p>\n";
+    echo "              <p><textarea name=\"TextWhere\" cols=\"70\" rows=\"5\">", $c->TextWhere, "</textarea></p>\n";
     echo "              <h4>Comment:</h4>\n";
-    echo "              <p><textarea name=\"TextFree\" cols=\"80\" rows=\"8\">", $c->TextFree, "</textarea></p>\n";
+    echo "              <p><textarea name=\"TextFree\" cols=\"70\" rows=\"8\">", $c->TextFree, "</textarea></p>\n";
     echo "              <p class=\"center\">\n";
     echo "                <input type=\"hidden\" value=\"" . $c->id . "\" name=\"IdComment\" />\n";
     echo "                <input type=\"hidden\" value=\"" . $IdMember . "\" name=cid />\n";

@@ -383,7 +383,7 @@ dl.list {
   div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
 
   /* give pagination our 'button' style */
-  div.pages li {
+  div.pages li a{
     background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
@@ -590,7 +590,6 @@ div.comment .author {background:#fff; padding:0.2em;}
 /* css for admincomment */
 
 div.admincomment {
-  width: 65%;
   padding-bottom: 4em;
 }
 

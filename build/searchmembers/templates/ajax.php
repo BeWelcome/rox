@@ -106,10 +106,11 @@ if (count($TList))
     $params->items = $maxpos;
     $params->active_page = floor($start / $vars['limitcount']) + 1;
     $pager = new PagerWidget($params);
-    $pagination = htmlspecialchars($pager->getHtml(), ENT_QUOTES);
+    $pagination = str_replace('&nbsp;', ' ', $pager->getHtml());
+    $pagination_attr = htmlspecialchars($pager->getHtml(), ENT_QUOTES);
 }
 echo <<<XML
-<pager paging='{$pagination}' per_page='{$vars['limitcount']}'/>
+<pager per_page='{$vars['limitcount']}' paging='{$pagination_attr}'>{$pagination}</pager>
 XML;
 if ($ShowMemberFunction == 'ShowMembersAjaxShort')
 {

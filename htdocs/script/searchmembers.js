@@ -187,11 +187,22 @@ function loadMap(i)
             var markers = getxmlEl(xmlDoc, "marker");
             var pager = getxmlEl(xmlDoc, "pager");
             var per_page = pager[0].getAttribute('per_page');
-            $('paging-div').innerHTML = pager[0].getAttribute('paging');
+            var removed = pager[0].removeChild(pager[0].firstChild);
+            var tempdiv = document.createElement('div');
+            try
+            {
+                // will fail in IE
+                tempdiv.appendChild(removed);
+            }
+            catch (e)
+            {
+                tempdiv.innerHTML = pager[0].getAttribute('paging');
+            }
+            $('paging-div').innerHTML = tempdiv.innerHTML;
             var pager_links = $('paging-div').getElementsByTagName('a');
             for (var a = 0; a < pager_links.length; a++)
             {
-                pager_links[a].observe('click', function(e){
+                $(pager_links[a]).observe('click', function(e){
                     var ev = e || windows.event;
                     reg = /page=(\d)+/;
                     var page = (this.href.match(reg)[1] - 1) * per_page;

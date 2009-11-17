@@ -95,8 +95,8 @@ function ShowList($TData) {
       echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=del\" onclick=\"return('Confirm delete ?');")."\">del</a></li>\n";
     echo "                      <li><a href=\"".bwlink("admin/admincomments.php?FromIdMember=" . $c->UsernameWriterMember )."&amp;action=All\">Other comments written by ", $c->UsernameWriterMember, "</a></li>\n";
     echo "                      <li><a href=\"".bwlink("admin/admincomments.php?ToIdMember=" . $c->UsernameReceiverMember )."&amp;action=All\">Other comments written about ", $c->UsernameReceiverMember, "</a></li>\n";
-    echo "                      <li><a href=\"".bwlink("contactmember.php?cid=". $c->IdWriterMember)."\">contact writer (". $c->UsernameWriterMember.")</a></li>\n";
-    echo "                      <li><a href=\"".bwlink("contactmember.php?cid=". $c->IdReceiverMember)."\">contact receiver (". $c->UsernameReceiverMember.")</a></li>\n";
+    echo "                      <li><a href=\"".bwlink("messages/compose/". $c->UsernameWriterMember, true)."\">contact writer (". $c->UsernameWriterMember.")</a></li>\n";
+    echo "                      <li><a href=\"".bwlink("messages/compose/". $c->UsernameReceiverMember, true)."\">contact receiver (". $c->UsernameReceiverMember.")</a></li>\n";
     echo "                    </ul>\n";
     echo "                  </div> <!-- subcr -->\n";
     echo "                </div> <!-- c50r -->\n";

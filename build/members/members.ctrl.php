@@ -64,6 +64,7 @@ class MembersController extends RoxControllerBase
                     // this profile is not public
                     $page = new MembersMustloginPage;
                 } else {
+				
                     // found a member with given id or username. juhu
                     switch (isset($request[2]) ? $request[2] : false) {
                         case 'comments':
@@ -135,6 +136,7 @@ class MembersController extends RoxControllerBase
             case 'people':
             case 'members':
             default:
+
                 if (!isset($request[1])) {
                     // no member specified
                     $this->redirect("places");
@@ -154,6 +156,12 @@ class MembersController extends RoxControllerBase
                         // user is watching her own profile
                         $myself = true;
                     }
+					else {
+						if (($logged_member = $this->model->getLoggedInMember()) and $logged_member->isNotActiveHidden()) { // ticket #1289
+							$logged_member->RecordVisitOn($member->id) ;
+						}	// Ticket #1327, only active members should be allowed to send message
+
+					}
                     switch (isset($request[2]) ? $request[2] : false) {
                         case 'relations':
                             if (!$myself && isset($request[3]) && $request[3] == 'add') {

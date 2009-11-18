@@ -174,24 +174,24 @@ WHERE   id = $IdMember
      * than member object? As it's more of a business of this
      * model to know about different states of the member 
      * object to be displayed..
-	 *
-	 * JY: not sure neither, anyway, I change the $langcode parameter to be either a numeric (languages.id, or a not numeric languages.ShortCode)
-	 * Nota no need to test if the profile exist in the language, since this setting is used for the sub-headers of the page (profile content is something else than headers)
+     *
+     * JY: not sure neither, anyway, I change the $langcode parameter to be either a numeric (languages.id, or a not numeric languages.ShortCode)
+     * Nota no need to test if the profile exist in the language, since this setting is used for the sub-headers of the page (profile content is something else than headers)
      */
     public function set_profile_language($langcode){
         $langcode = mysql_real_escape_string($langcode);
-		if (is_numeric($langcode)) {
-			$ss=  "
+        if (is_numeric($langcode)) {
+            $ss=  "
 SELECT SQL_CACHE
     id,ShortCode, Name
 FROM
     languages
 WHERE
     id = '$langcode'
-			" ;
-		}
-		else {
-			$ss=  "
+            " ;
+        }
+        else {
+            $ss=  "
 SELECT SQL_CACHE
     id,ShortCode, Name
 FROM
@@ -199,8 +199,8 @@ FROM
 WHERE
     shortcode = '$langcode'
 " ;
-		}
-		if ($language = $this->singleLookup($ss)) {
+        }
+        if ($language = $this->singleLookup($ss)) {
             $this->profile_language = $language;
         } else {
             $l = new stdClass;
@@ -216,7 +216,7 @@ WHERE
         if(isset($this->profile_language)) {
             return $this->profile_language;
         } else {
-			$this->set_profile_language($_SESSION["IdLanguage"]) ;
+            $this->set_profile_language($_SESSION["IdLanguage"]) ;
             return $this->profile_language;
         }
     }
@@ -276,7 +276,7 @@ INSERT INTO
 VALUES
     ('{$IdMember}', '{$IdPreference}', '{$Value}', NOW())
 SQL;
-		    $this->logWrite("inserting one preference " . $rPref->codeName . " To Value <b>" . $Value . "</b>", "Update Preference");
+            $this->logWrite("inserting one preference " . $rPref->codeName . " To Value <b>" . $Value . "</b>", "Update Preference");
         }
         return ((!$this->dao->query($query)) ? true : false);
     }
@@ -535,7 +535,7 @@ WHERE
         } else $return = false;
         return $return;
     }    
-	
+    
     public function deleteRelation(&$vars)
     {
         $return = false;
@@ -566,7 +566,7 @@ WHERE
         } else $return = false;
         return $return;
     }
-	
+    
 
     /**
      * Check form values of MyPreferences form,
@@ -826,7 +826,7 @@ ORDER BY
         // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data        
 
         if ($vars["Email"] != $m->email) {
-			$this->logWrite("Email updated (previous was " . $m->email . ")", "Email Update"); // Sticking to old BW, the previous email is stored in logs,
+            $this->logWrite("Email updated (previous was " . $m->email . ")", "Email Update"); // Sticking to old BW, the previous email is stored in logs,
                                                                                                // this might be discussed, but if the member fills a bad email, 
                                                                                                // there is no more way to retrieve him
                                                                                                // Todo : get rid with this, but implement a confimmation mail
@@ -860,34 +860,34 @@ ORDER BY
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
-		
-		// Check relations, and update them if they have changed
-		$Relations=$m->get_all_relations() ;
+        
+        // Check relations, and update them if they have changed
+        $Relations=$m->get_all_relations() ;
         foreach($Relations as $Relation) {
-			if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id]) 
-				and (!empty($vars["RelationComment_".$Relation->id])))  {
-//				echo "Relation #".$Relation->id,"<br />", $words->mInTrad($Relation->Comment,$vars['profile_language']),"<br />",$vars['RelationComment_'.$Relation->id],"<br />" ;
-				$words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
-				$this->logWrite("updating relation #".$Relation->id." Relation Confirmed=".$Relation->Confirmed, "Profil update");
-			}
-		}
+            if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id]) 
+                and (!empty($vars["RelationComment_".$Relation->id])))  {
+//              echo "Relation #".$Relation->id,"<br />", $words->mInTrad($Relation->Comment,$vars['profile_language']),"<br />",$vars['RelationComment_'.$Relation->id],"<br />" ;
+                $words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
+                $this->logWrite("updating relation #".$Relation->id." Relation Confirmed=".$Relation->Confirmed, "Profil update");
+            }
+        }
 
-		// Check groups membership description, and update them if they have changed
-		// Tod od with Peter: check if there is other feature to update a group membership (a groupmembership model for example, or entity)
-		$Groups=$m->getGroups() ;
-		for ($i = 0; $i < count($Groups) ; $i++) {
-			$group=$Groups[$i] ;
+        // Check groups membership description, and update them if they have changed
+        // Tod od with Peter: check if there is other feature to update a group membership (a groupmembership model for example, or entity)
+        $Groups=$m->getGroups() ;
+        for ($i = 0; $i < count($Groups) ; $i++) {
+            $group=$Groups[$i] ;
             $group_id = $group->getPKValue() ;
             $group_name_translated = $words->get("Group_".$group->Name);
             $group_comment_translated = htmlspecialchars($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']), ENT_QUOTES);
-			$IdMemberShip=$m->getGroupMembership($group)->id ;
-			if (($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language'])!=$vars["GroupMembership_".$IdMemberShip]) 
-				and (!empty($vars["GroupMembership_".$IdMemberShip])))  {
-				echo "Group #".$group_id,"<br />",$words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']),"<br />",$vars["GroupMembership_".$IdMemberShip],"<br />" ;
-				$words->ReplaceInMTrad(strip_tags($vars["GroupMembership_".$IdMemberShip]),"membersgroups.Comment", $IdMemberShip, $m->getGroupMembership($group)->Comment, $IdMember);
-				$this->logWrite("updating membership description in group #".$group_id." Group name=".$group->name, "Profil update");
-			}
-		}
+            $IdMemberShip=$m->getGroupMembership($group)->id ;
+            if (($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language'])!=$vars["GroupMembership_".$IdMemberShip]) 
+                and (!empty($vars["GroupMembership_".$IdMemberShip])))  {
+                echo "Group #".$group_id,"<br />",$words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']),"<br />",$vars["GroupMembership_".$IdMemberShip],"<br />" ;
+                $words->ReplaceInMTrad(strip_tags($vars["GroupMembership_".$IdMemberShip]),"membersgroups.Comment", $IdMemberShip, $m->getGroupMembership($group)->Comment, $IdMember);
+                $this->logWrite("updating membership description in group #".$group_id." Group name=".$group->name, "Profil update");
+            }
+        }
 
         $status = $m->update();
 
@@ -897,12 +897,12 @@ ORDER BY
                 $this->avatarMake($vars['memberid'],$_FILES['profile_picture']['tmp_name']);
         }
 
-		if ($IdMember == $_SESSION['IdMember']) {
-			$this->logWrite("Profil update by member himself [Status=<b>".$m->Status."</b>]", "Profil update");
-		}
-		else {
-			$this->logWrite("update of another profil", "Profil update"); // Not sure this is possible, any way, if it is, it really desserves a log !
-		}
+        if ($IdMember == $_SESSION['IdMember']) {
+            $this->logWrite("Profil update by member himself [Status=<b>".$m->Status."</b>]", "Profil update");
+        }
+        else {
+            $this->logWrite("update of another profil", "Profil update"); // Not sure this is possible, any way, if it is, it really desserves a log !
+        }
         
         return $status;
     }
@@ -1006,108 +1006,108 @@ ORDER BY
         $right_SafetyTeam = $rights->hasRight("SafetyTeam");
 
         if (($right_Accepter) or ($right_SafetyTeam) and ($vars["cid"] != "")) { // Accepter or SafetyTeam can alter these data
-        	$IdMember = $vars["cid"];
-        	$ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
-        	// Restriction an accepter can only see/update mandatory data of someone in his Scope country
-        	$AccepterScope = RightScope('Accepter');
-        	$AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
-        	if (($AccepterScope != "\"All\"")and($IdMember!=$_SESSION['IdMember'])) {
-        	   $rr=LoadRow("select IdCountry,countries.Name as CountryName,Username from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
-        	   if (isset($rr->IdCountry)) {
-        	   	  $tt=explode(",",$AccepterScope) ;
-        		  	if ((!in_array($rr->IdCountry,$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
-        					 $ss=$AccepterScope ;
-        					 for ($ii=0;$ii<sizeof($tt);$ii++) {
-        					 		 if (is_numeric($tt[$ii])) {
-        							 		$ss=$ss.",".getcountryname($tt[$ii]) ;
-        							 }
-        					 }				 
-        		  	 	 die ("sorry Your accepter Scope is only for ".$ss." This member is in ".$rr->CountryName) ;
-        		  	} 
-        	   }
-        	}
-        	$StrLog="Viewing member [<b>".fUsername($IdMember)."</b>] data with right [".$AccepterScope."]" ;
-        	if (HasRight("SafetyTeam")) {
-        		 		$StrLog=$StrLog." <b>With SafetyTeam Right</b>" ;
-        	}
-        	LogStr($StrLog,"updatemandatory") ; 
-        	$IsVolunteerAtWork = true;
+            $IdMember = $vars["cid"];
+            $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
+            // Restriction an accepter can only see/update mandatory data of someone in his Scope country
+            $AccepterScope = RightScope('Accepter');
+            $AccepterScope = str_replace("'", "\"", $AccepterScope); // To be sure than nobody used ' instead of " (todo : this test will be to remoev some day)
+            if (($AccepterScope != "\"All\"")and($IdMember!=$_SESSION['IdMember'])) {
+               $rr=LoadRow("select IdCountry,countries.Name as CountryName,Username from members,cities,countries where cities.id=members.IdCity and cities.IdCountry=countries.id and members.id=".$IdMember) ;
+               if (isset($rr->IdCountry)) {
+                  $tt=explode(",",$AccepterScope) ;
+                    if ((!in_array($rr->IdCountry,$tt)) and (!in_array("\"".$rr->CountryName."\"",$tt))) {
+                             $ss=$AccepterScope ;
+                             for ($ii=0;$ii<sizeof($tt);$ii++) {
+                                     if (is_numeric($tt[$ii])) {
+                                            $ss=$ss.",".getcountryname($tt[$ii]) ;
+                                     }
+                             }               
+                         die ("sorry Your accepter Scope is only for ".$ss." This member is in ".$rr->CountryName) ;
+                    } 
+               }
+            }
+            $StrLog="Viewing member [<b>".fUsername($IdMember)."</b>] data with right [".$AccepterScope."]" ;
+            if (HasRight("SafetyTeam")) {
+                        $StrLog=$StrLog." <b>With SafetyTeam Right</b>" ;
+            }
+            LogStr($StrLog,"updatemandatory") ; 
+            $IsVolunteerAtWork = true;
         } else {
-        	$IsVolunteerAtWork = false;
-        	$ReadCrypted = "AdminReadCrypted"; // In this case the MemberReadCrypted will be used (only owner can decrypt)
+            $IsVolunteerAtWork = false;
+            $ReadCrypted = "AdminReadCrypted"; // In this case the MemberReadCrypted will be used (only owner can decrypt)
         }
         
         if (($IsVolunteerAtWork)or($m->Status=='NeedMore')or($m->Status=='Pending')) {
-		    // todo store previous values
-		    $this->setlocation($IdMember,$vars['geonameid'] = false);
-    		if ($IdAddress!=0) { // if the member already has an address
-    			$str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . NewReplaceInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress,$rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . NewReplaceInCrypted($Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;
-    			sql_query($str);
-    		} else {
-    			$str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted("addresses.HouseNumber",0,$HouseNumber) . "," . NewInsertInCrypted("addresses.StreetNamer",0,$StreetName) . "," . NewInsertInCrypted("addresses.Zip",0,$Zip) . ",now(),\"Address created by volunteer\")";
-    			sql_query($str);
-    		    $IdAddress=mysql_insert_id();
-    			LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
-    		}
-    		$m->FirstName = NewReplaceInCrypted($FirstName,"members.FirstName",$m->id, $m->FirstName, $m->id,IsCryptedValue($m->FirstName));
-    		$m->SecondName = NewReplaceInCrypted($SecondName,"members.SecondName",$m->id, $m->SecondName, $m->id,IsCryptedValue($m->SecondName));
-    		$m->LastName = NewReplaceInCrypted(stripslashes($LastName),"members.LastName",$m->id, $m->LastName, $m->id,IsCryptedValue($m->LastName));
+            // todo store previous values
+            $this->setlocation($IdMember,$vars['geonameid'] = false);
+            if ($IdAddress!=0) { // if the member already has an address
+                $str = "update addresses set IdCity=" . $IdCity . ",HouseNumber=" . NewReplaceInCrypted($HouseNumber,"addresses.HouseNumber",$IdAddress,$rr->HouseNumber, $m->id) . ",StreetName=" . NewReplaceInCrypted($StreetName,"addresses.StreetName",$IdAddress, $rr->StreetName, $m->id) . ",Zip=" . NewReplaceInCrypted($Zip,"addresses.Zip",$IdAddress, $rr->Zip, $m->id) . " where id=" . $IdAddress;
+                sql_query($str);
+            } else {
+                $str = "insert into addresses(IdMember,IdCity,HouseNumber,StreetName,Zip,created,Explanation) Values(" . $_SESSION['IdMember'] . "," . $IdCity . "," . NewInsertInCrypted("addresses.HouseNumber",0,$HouseNumber) . "," . NewInsertInCrypted("addresses.StreetNamer",0,$StreetName) . "," . NewInsertInCrypted("addresses.Zip",0,$Zip) . ",now(),\"Address created by volunteer\")";
+                sql_query($str);
+                $IdAddress=mysql_insert_id();
+                LogStr("Doing a mandatoryupdate on <b>" . $Username . "</b> creating address", "updatemandatory");
+            }
+            $m->FirstName = NewReplaceInCrypted($FirstName,"members.FirstName",$m->id, $m->FirstName, $m->id,IsCryptedValue($m->FirstName));
+            $m->SecondName = NewReplaceInCrypted($SecondName,"members.SecondName",$m->id, $m->SecondName, $m->id,IsCryptedValue($m->SecondName));
+            $m->LastName = NewReplaceInCrypted(stripslashes($LastName),"members.LastName",$m->id, $m->LastName, $m->id,IsCryptedValue($m->LastName));
 
-    		$str = "update members set FirstName=" . $m->FirstName . ",SecondName=" . $m->SecondName . ",LastName=" . $m->LastName . ",Gender='" . $Gender . "',HideGender='" . $HideGender . "',BirthDate='" . $DB_BirthDate . "',HideBirthDate='" . $HideBirthDate . "',IdCity=" . $IdCity . " where id=" . $m->id;
-    		sql_query($str);
-    		$slog = "Doing a mandatoryupdate on <b>" . $Username . "</b>";
-    		if (($IsVolunteerAtWork) and ($MemberStatus != $m->Status)) {
-    			$str = "update members set Status='" . $MemberStatus . "' where id=" . $m->id;
-    			sql_query($str);
-    			LogStr("Changing Status from " . $m->Status . " to " . $MemberStatus . " for member <b>" . $Username . "</b>", "updatemandatory");
-    		}
-    		elseif ($m->Status=='NeedMore') {
-    			$str = "update members set Status='Pending' where id=" . $m->id;
-    			sql_query($str);
-    			$slog=" Completing profile after NeedMore ";
-    			if (GetStrParam("Comment") != "") {
-    			   $slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
-    			}
-    			LogStr($slog, "updatemandatory");
-    			DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $m->Username));
-    			exit (0);
-    		}
+            $str = "update members set FirstName=" . $m->FirstName . ",SecondName=" . $m->SecondName . ",LastName=" . $m->LastName . ",Gender='" . $Gender . "',HideGender='" . $HideGender . "',BirthDate='" . $DB_BirthDate . "',HideBirthDate='" . $HideBirthDate . "',IdCity=" . $IdCity . " where id=" . $m->id;
+            sql_query($str);
+            $slog = "Doing a mandatoryupdate on <b>" . $Username . "</b>";
+            if (($IsVolunteerAtWork) and ($MemberStatus != $m->Status)) {
+                $str = "update members set Status='" . $MemberStatus . "' where id=" . $m->id;
+                sql_query($str);
+                LogStr("Changing Status from " . $m->Status . " to " . $MemberStatus . " for member <b>" . $Username . "</b>", "updatemandatory");
+            }
+            elseif ($m->Status=='NeedMore') {
+                $str = "update members set Status='Pending' where id=" . $m->id;
+                sql_query($str);
+                $slog=" Completing profile after NeedMore ";
+                if (GetStrParam("Comment") != "") {
+                   $slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
+                }
+                LogStr($slog, "updatemandatory");
+                DisplayUpdateMandatoryDone(ww('UpdateAfterNeedmoreConfirmed', $m->Username));
+                exit (0);
+            }
 
 
-    		if (GetStrParam("Comment") != "") {
-    			$slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
-    		}
-    		LogStr($slog, "updatemandatory");
-    	} else { // not volunteer action
+            if (GetStrParam("Comment") != "") {
+                $slog .= "<br /><i>" . stripslashes(GetStrParam("Comment")) . "</i>";
+            }
+            LogStr($slog, "updatemandatory");
+        } else { // not volunteer action
 
-    		$Email = GetEmail();
+            $Email = GetEmail();
 
             // a member can only choose to hide or to show his gender / birth date and have it to take action immediately
-      		if (($HideGender!=$m->HideGender) or ($HideBirthDate!=$m->HideBirthDate)) { 
-    		   $str = "update members set HideGender='" . $HideGender . "',HideBirthDate='" . $HideBirthDate . "' where id=" . $m->id;
-    		   LogStr("mandatoryupdate changing Hide Gender (".$HideGender."/".$m->HideGender.") or HideBirthDate (".$HideBirthDate."/".$m->HideBirthDate.")", "updatemandatory");
-    		   sql_query($str);
-    		}
+            if (($HideGender!=$m->HideGender) or ($HideBirthDate!=$m->HideBirthDate)) { 
+               $str = "update members set HideGender='" . $HideGender . "',HideBirthDate='" . $HideBirthDate . "' where id=" . $m->id;
+               LogStr("mandatoryupdate changing Hide Gender (".$HideGender."/".$m->HideGender.") or HideBirthDate (".$HideBirthDate."/".$m->HideBirthDate.")", "updatemandatory");
+               sql_query($str);
+            }
 
-    		$str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress,IdMember) ";
-    		$str .= " values(" . GetParam("IdCity") . ",'" . GetStrParam("FirstName") . "','" . GetStrParam("SecondName") . "','" . GetStrParam("LastName") . "','" . GetStrParam("HouseNumber") . "','" . GetStrParam("StreetName") . "','" . GetStrParam("Zip") . "','" . GetStrParam("Comment") . "',".$IdAddress.",".$IdMember.")";
-    		sql_query($str);
-    		LogStr("Adding a mandatoryupdate request", "updatemandatory");
+            $str = "insert into pendingmandatory(IdCity,FirstName,SecondName,LastName,HouseNumber,StreetName,Zip,Comment,IdAddress,IdMember) ";
+            $str .= " values(" . GetParam("IdCity") . ",'" . GetStrParam("FirstName") . "','" . GetStrParam("SecondName") . "','" . GetStrParam("LastName") . "','" . GetStrParam("HouseNumber") . "','" . GetStrParam("StreetName") . "','" . GetStrParam("Zip") . "','" . GetStrParam("Comment") . "',".$IdAddress.",".$IdMember.")";
+            sql_query($str);
+            LogStr("Adding a mandatoryupdate request", "updatemandatory");
 
-    		$subj = ww("UpdateMantatorySubj", $_SYSHCVOL['SiteName']);
-    		$text = ww("UpdateMantatoryMailConfirm", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName']);
-    		$defLanguage = $_SESSION['IdLanguage'];
-    		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], $defLanguage, "yes", "", "");
+            $subj = ww("UpdateMantatorySubj", $_SYSHCVOL['SiteName']);
+            $text = ww("UpdateMantatoryMailConfirm", $FirstName, $SecondName, $LastName, $_SYSHCVOL['SiteName']);
+            $defLanguage = $_SESSION['IdLanguage'];
+            bw_mail($Email, $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], $defLanguage, "yes", "", "");
 
-    		// Notify volunteers that an updater has updated
-    		$subj = "Update mandatory " . $Username . " from " . getcountryname($IdCountry) . " has updated";
-    		$text = " updater is " . $FirstName . " " . strtoupper($LastName) . "\n";
-    		$text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
-    		if (GetStrParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . GetStrParam("Comment") . "</font></b>\n";
-    		else $text .= "No Feedback \n";
-    		$text .= GetStrParam("ProfileSummary");
-    		$text .= "<a href=\"https:/".$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
-    		bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
+            // Notify volunteers that an updater has updated
+            $subj = "Update mandatory " . $Username . " from " . getcountryname($IdCountry) . " has updated";
+            $text = " updater is " . $FirstName . " " . strtoupper($LastName) . "\n";
+            $text .= "using language " . LanguageName($_SESSION['IdLanguage']) . "\n";
+            if (GetStrParam("Comment")!="") $text .= "Feedback :<font color=green><b>" . GetStrParam("Comment") . "</font></b>\n";
+            else $text .= "No Feedback \n";
+            $text .= GetStrParam("ProfileSummary");
+            $text .= "<a href=\"https:/".$_SYSHCVOL['MainDir']."admin/adminmandatory.php\">go to update</a>\n";
+            bw_mail($_SYSHCVOL['MailToNotifyWhenNewMemberSignup'], $subj, $text, "", $_SYSHCVOL['UpdateMandatorySenderMail'], 0, "html", "", "");
         }
     }
     
@@ -1216,24 +1216,24 @@ ORDER BY membersphotos.SortOrder
 
     public function writeMemberphoto($memberid)
     {
-		$s = $this->dao->exec("
+        $s = $this->dao->exec("
 INSERT INTO 
     `membersphotos`
-	(
-		FilePath,
-		IdMember,
-		created,
-		SortOrder,
-		Comment
-	) 
+    (
+        FilePath,
+        IdMember,
+        created,
+        SortOrder,
+        Comment
+    ) 
 VALUES
-	(
-		'" . $this->avatarDir->dirName() ."/". $memberid . "',
-		" . $memberid . ",
-		now(),
-		-1,
-		''
-	)
+    (
+        '" . $this->avatarDir->dirName() ."/". $memberid . "',
+        " . $memberid . ",
+        now(),
+        -1,
+        ''
+    )
 ");
         return $s;
     }

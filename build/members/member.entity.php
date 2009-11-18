@@ -681,7 +681,7 @@ FROM
 WHERE
     specialrelations.IdOwner = $this->id  AND
     specialrelations.IdRelation = members.Id AND
-	members.Status in ('Active','ActiveHidden','ChoiceInactive') 
+    members.Status in ('Active','ActiveHidden','ChoiceInactive') 
           ";
           $s = $this->dao->query($sql);
           $Relations = array();
@@ -813,7 +813,7 @@ WHERE
      */
     public function get_trad($fieldname, $IdLanguage,$ReplaceWithBr=False) {
         if (!$this->IsFilled($fieldname)) return("") ;
-		return ($this->get_trad_by_tradid($this->$fieldname,$IdLanguage,$ReplaceWithBr)) ;
+        return ($this->get_trad_by_tradid($this->$fieldname,$IdLanguage,$ReplaceWithBr)) ;
         
         // Code after this is obsolete (JY)
           if(!isset($this->trads)) {
@@ -1118,18 +1118,18 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * @access public
      * @return bool
      */
-	
-	public function RecordVisitOn($IdOfVisitedMember) {
+    
+    public function RecordVisitOn($IdOfVisitedMember) {
         if (!$this->isLoaded() ) {
             return false;
         }
-		$sql="replace into profilesvisits(IdMember,IdVisitor,updated) values(".$IdOfVisitedMember.",".$this->id.",now())" ;
+        $sql="replace into profilesvisits(IdMember,IdVisitor,updated) values(".$IdOfVisitedMember.",".$this->id.",now())" ;
         $result = $this->dao->query($sql);
-	
-	} // end of RecordVisitOn
+    
+    } // end of RecordVisitOn
 
 
-						/**
+                        /**
      * deletes all a members languages
      *
      * @access public

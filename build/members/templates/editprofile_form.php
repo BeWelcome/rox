@@ -510,48 +510,48 @@ HTML;
                 <col width="15%" ></col>
               </colgroup>
               <tbody>
-				<?php
-				$Relations=$vars['Relations'];
+                <?php
+                $Relations=$vars['Relations'];
                 foreach($Relations as $Relation) {
-				?>
+                ?>
                 <tr align="left" >
                   <td class="label" >
-				  <?php
-				  if ($Relation->Confirmed=='Yes') {
-					echo "<b>",$Relation->Username,"</b>" ;
-				  }
-				  else {
-					echo $Relation->Username ;
-				  }
-				  ?><br />
-					<img class="framed"  src="members/avatar/<?=$Relation->Username?>?xs"  height="50px"  width="50px"  alt="Profile" >
-				  </td>
-                  <td>
-					<?php 
-					echo "<textarea cols=40 rows=6 name=\"", "RelationComment_" . $Relation->id, "\">";
-					echo $words->mInTrad($Relation->Comment,$profile_language) ;
-					echo "</textarea>\n";
-					?>
+                  <?php
+                  if ($Relation->Confirmed=='Yes') {
+                    echo "<b>",$Relation->Username,"</b>" ;
+                  }
+                  else {
+                    echo $Relation->Username ;
+                  }
+                  ?><br />
+                    <img class="framed"  src="members/avatar/<?=$Relation->Username?>?xs"  height="50px"  width="50px"  alt="Profile" >
                   </td>
-				  <td>
-				  <?php 
-				  echo "<a href=\"bw/editmyprofile.php?action=delrelation&Username=",$Relation->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",$words->getFormatted("delrelation",$Relation->Username),"</a>\n";
-				  ?>
-				  </td>
+                  <td>
+                    <?php 
+                    echo "<textarea cols=40 rows=6 name=\"", "RelationComment_" . $Relation->id, "\">";
+                    echo $words->mInTrad($Relation->Comment,$profile_language) ;
+                    echo "</textarea>\n";
+                    ?>
+                  </td>
+                  <td>
+                  <?php 
+                  echo "<a href=\"bw/editmyprofile.php?action=delrelation&Username=",$Relation->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",$words->getFormatted("delrelation",$Relation->Username),"</a>\n";
+                  ?>
+                  </td>
                 </tr>
-				<?php
-				}
-				?>
+                <?php
+                }
+                ?>
               </tbody>
             </table>
           </fieldset>
 
           <? // Groups (restored by JeanYves) ?>
-			<?php
-			$my_groups =$vars['Groups']; 
-			// $my_groups=array() ; // uncomment this line if you don't want to have groups inside edit profile
-			if (!empty($my_groups)) {
-			?>
+            <?php
+            $my_groups =$vars['Groups']; 
+            // $my_groups=array() ; // uncomment this line if you don't want to have groups inside edit profile
+            if (!empty($my_groups)) {
+            ?>
           <fieldset>
             <legend class="icon groups22" ><?=$words->get('MyGroups')?></legend>
             <table border="0" >
@@ -561,9 +561,9 @@ HTML;
               </colgroup>
               <tbody>
                 <?php
-				for ($i = 0; $i < count($my_groups) ; $i++) {
-					$group=$my_groups[$i] ;
-					$group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$group->getPKValue()}" : 'images/icons/group.png' );
+                for ($i = 0; $i < count($my_groups) ; $i++) {
+                    $group=$my_groups[$i] ;
+                    $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$group->getPKValue()}" : 'images/icons/group.png' );
                     $group_id = $group->getPKValue() ;
                     $group_name_translated = $words->get("Group_".$group->Name);
                     $group_comment_translated = htmlspecialchars($words->mInTrad($member->getGroupMembership($group)->Comment,$profile_language), ENT_QUOTES);
@@ -571,10 +571,10 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
                   <td colspan="2" >
-					<input type="hidden" Name="Group_id<?=$group->id?>" value="<?=$group->id?>">
+                    <input type="hidden" Name="Group_id<?=$group->id?>" value="<?=$group->id?>">
                     <textarea cols="50"  rows="6"  name="GroupMembership_<?=$member->getGroupMembership($group)->id?>" ><?=$group_comment_translated?></textarea>
                 <?php
-				/*
+                /*
                 if ($Rights->hasRight("Beta","GroupMessage")) {
                        echo "<br /> BETA ";
                        echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$group->od."\" ";
@@ -585,7 +585,7 @@ HTML;
                     else {
                        echo "<input type=\"hidden\" name=\"AcceptMessage_".$group->od."\" value=\"".$group->IacceptMassMailFromThisGroup."\" />\n";
                     }
-				*/
+                */
                 ?>
                   </td>
                 </tr>
@@ -595,9 +595,9 @@ HTML;
               </tbody>
             </table>
           </fieldset>
-			<?php
-			} // end if (!empty($my_groups) 
-			?>
+            <?php
+            } // end if (!empty($my_groups) 
+            ?>
            
           <table>
             <tbody>

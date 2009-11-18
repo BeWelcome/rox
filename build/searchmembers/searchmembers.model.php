@@ -1012,8 +1012,10 @@ LIKE '$column'
     public function getOrderDirection($column, $bool = 0)
     {
         $reverse = array('ASC' => 'DESC', 'DESC' => 'ASC');
-        $direction = isset($this->getDefaultSortDirection[$column]) ? $this->getDefaultSortDirection[$column] : 'ASC';
-        $order = isset($this->getSortOrder[$column]) ? $column : $this->default_column;
+        $directions = $this->getDefaultSortDirection();
+        $columns = $this->get_sort_order();
+        $direction = isset($directions[$column]) ? $directions[$column] : 'ASC';
+        $order = isset($columns[$column]) ? $column : $this->default_column;
         // hack to sort by number of comments
         if ($order == 'Comments')
         {

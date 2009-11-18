@@ -20,7 +20,7 @@ $city_count = count($cities);
 $i = 1;
 while ($line = fgetcsv($file))
 {
-    if ($i++ < 3115) continue;
+    if ($i++ < 5965) continue;
     $random_city = $cities[mt_rand(0, $city_count - 1)]->geonameid;
     $array = array(
         'username'      => 'testuser' . $line[$headers['Username']],
@@ -71,5 +71,9 @@ while ($line = fgetcsv($file))
         echo "Could not enter {$array['username']} into database" . PHP_EOL;
         echo $e->getMessage() . PHP_EOL;
         echo mysql_error();
+    }
+    if (!($i % 100))
+    {
+        sleep(5);
     }
 }

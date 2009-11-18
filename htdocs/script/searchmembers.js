@@ -196,28 +196,31 @@ function loadMap(i)
             var markers = getxmlEl(xmlDoc, "marker");
             var pager = getxmlEl(xmlDoc, "pager");
             var per_page = pager[0].getAttribute('per_page');
-            var removed = pager[0].removeChild(pager[0].firstChild);
-            var tempdiv = document.createElement('div');
-            try
+            if (pager[0].firstChild)
             {
-                // will fail in IE
-                tempdiv.appendChild(removed);
-            }
-            catch (e)
-            {
-                tempdiv.innerHTML = pager[0].getAttribute('paging');
-            }
-            $('paging-div').innerHTML = tempdiv.innerHTML;
-            var pager_links = $('paging-div').getElementsByTagName('a');
-            for (var a = 0; a < pager_links.length; a++)
-            {
-                $(pager_links[a]).observe('click', function(e){
-                    var ev = e || windows.event;
-                    reg = /page=(\d)+/;
-                    var page = (this.href.match(reg)[1] - 1) * per_page;
-                    loadMap(page);
-                    Event.stop(ev);
-                });
+                var removed = pager[0].removeChild(pager[0].firstChild);
+                var tempdiv = document.createElement('div');
+                try
+                {
+                    // will fail in IE
+                    tempdiv.appendChild(removed);
+                }
+                catch (e)
+                {
+                    tempdiv.innerHTML = pager[0].getAttribute('paging');
+                }
+                $('paging-div').innerHTML = tempdiv.innerHTML;
+                var pager_links = $('paging-div').getElementsByTagName('a');
+                for (var a = 0; a < pager_links.length; a++)
+                {
+                    $(pager_links[a]).observe('click', function(e){
+                        var ev = e || windows.event;
+                        reg = /page=(\d)+/;
+                        var page = (this.href.match(reg)[1] - 1) * per_page;
+                        loadMap(page);
+                        Event.stop(ev);
+                    });
+                }
             }
             var i, j, marker;
             var point = new Array();
@@ -313,7 +316,6 @@ function loadMap(i)
                     gmarkers[index] = marker;
                 }
             }
-            
             if(!mapoff && state == 'global' && markers.length) {
                 var minLat = 90, maxLat = -90;
                 var aveLat = 0, delLat, lat, lng;
@@ -362,11 +364,8 @@ function loadMap(i)
                 point = new GLatLng(aveLat, aveLng);
                	map.setCenter(point, map_scale);
             }
-          
             var footer = getxmlEl(xmlDoc, "footer");
             detail += footer[0].getAttribute("footer");
-            var page = getxmlEl(xmlDoc, "page");
-            detail += page[0].getAttribute("page");
             put_html('member_list', detail);
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");

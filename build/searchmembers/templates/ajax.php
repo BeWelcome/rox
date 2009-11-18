@@ -97,7 +97,7 @@ for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
 }
 $string .= "</ul></div>" ;
 */
-$pagination = '';
+$pagination = $pagination_attr = '';
 if (count($TList))
 {
     $start = isset($vars['start_rec']) ? $vars['start_rec'] : 0;
@@ -128,7 +128,6 @@ else
         "'/>";
 }
 echo "<footer footer='".htmlspecialchars("".$words->flushBuffer(), ENT_QUOTES)."'/>";
-echo "<page page='".htmlspecialchars($string, ENT_QUOTES)."'/>";
 echo "<num_results num_results='".$maxpos."'/>";
 echo "</content>
 ";

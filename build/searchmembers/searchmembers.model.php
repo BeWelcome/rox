@@ -30,12 +30,20 @@ class Searchmembers extends RoxModelBase {
     
     protected $dao;
 
-    private $columnSortOrder = array(
+    private $column_sort_order = array(
             'members.created' => 'FindPeopleNewMembers',
             'BirthDate'       => 'Age',
             'LastLogin'       => 'Lastlogin',
             'Comments'        => 'Comments',
             'Accomodation'    => 'Accomodation',
+        );
+
+    private $default_sort_direction = array(
+            'members.created' => 'DESC',
+            'BirthDate'       => 'DESC',
+            'LastLogin'       => 'DESC',
+            'Comments'        => 'DESC',
+            'Accomodation'    => 'ASC',
         );
 
     private $default_column = 'members.created';
@@ -977,7 +985,19 @@ LIKE '$column'
      */
     public function get_sort_order()
     {
-        return $this->columnSortOrder;
+        return $this->column_sort_order;
+    }
+
+    /**
+     * returns an array of columns that can be sorted by
+     * and the default direction to use
+     * 
+     * @access public
+     * @return array
+     */
+    public function getDefaultSortDirection()
+    {
+        return $this->default_sort_direction;
     }
 
     /**
@@ -992,13 +1012,8 @@ LIKE '$column'
     public function getOrderDirection($column, $bool = 0)
     {
         $reverse = array('ASC' => 'DESC', 'DESC' => 'ASC');
-        $columns = array();
-        foreach ($this->get_sort_order() as $key => $val)
-        {
-            $columns[$key] = 'DESC';
-        }
-        $direction = isset($columns[$column]) ? $columns[$column] : 'ASC';
-        $order = isset($columns[$column]) ? $column : $this->default_column;
+        $direction = isset($this->getDefaultSortDirection[$column]) ? $this->getDefaultSortDirection[$column] : 'ASC';
+        $order = isset($this->getSortOrder[$column]) ? $column : $this->default_column;
         // hack to sort by number of comments
         if ($order == 'Comments')
         {

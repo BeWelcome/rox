@@ -1661,6 +1661,13 @@ SQL;
 ALTER TABLE `gallery_comments` DROP INDEX `id`
 SQL;
 
+    $updates[] = <<<SQL
+ALTER TABLE `trip_data` ADD PRIMARY KEY ( `trip_id` )
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE `trip_data` DROP INDEX `trip_id`
+SQL;
 
     if (empty($res)) {
         $version = 0;

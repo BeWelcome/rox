@@ -20,7 +20,7 @@ $city_count = count($cities);
 $i = 1;
 while ($line = fgetcsv($file))
 {
-    if ($i++ < 5965) continue;
+    if ($i++ < 14936) continue;
     $random_city = $cities[mt_rand(0, $city_count - 1)]->geonameid;
     $array = array(
         'username'      => 'testuser' . $line[$headers['Username']],

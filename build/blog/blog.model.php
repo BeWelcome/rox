@@ -56,6 +56,19 @@ LEFT JOIN `geonames_cache` AS `user_geonames_cache` ON (a.IdCity = `user_geoname
     {
         parent::__construct();
     }
+
+    /**
+     * fetches a blog post entity
+     *
+     * @param int $blog_id
+     *
+     * @access public
+     * @return false|BlogEntity
+     */
+    public function getBlogPost($blog_id)
+    {
+        return $this->createEntity('BlogEntity')->findById($blog_id);
+    }
     
     public function createData($blogId, $title, $text, $start = false, $geonameId = false)
     {

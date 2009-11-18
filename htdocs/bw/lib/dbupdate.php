@@ -1645,6 +1645,23 @@ SQL;
 ALTER TABLE trip ADD KEY (IdMember)
 SQL;
 
+    $updates[] = <<<SQL
+ALTER TABLE `blog_data` ADD PRIMARY KEY ( `blog_id` )
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE `blog_data` DROP INDEX `blog_id`
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE `gallery_comments` ADD PRIMARY KEY ( `id` )
+SQL;
+
+    $updates[] = <<<SQL
+ALTER TABLE `gallery_comments` DROP INDEX `id`
+SQL;
+
+
     if (empty($res)) {
         $version = 0;
     } else {

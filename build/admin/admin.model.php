@@ -66,6 +66,17 @@ class AdminModel extends RoxModelBase
         return $this->createEntity('Member')->countWhere("Status = '{$this->dao->escape($status)}'");
     }
 
+    /**
+     * returns all comments marked bad
+     *
+     * @access public
+     * @return array
+     */
+    public function getBadComments()
+    {
+        return $this->createEntity('Comment')->findByWhereMany("AdminAction NOT IN ('NothingNeeded', 'Checked')");
+    }
+
     public function procActivitylogs($vars, $level = 0)
     {
         

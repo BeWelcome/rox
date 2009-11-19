@@ -45,4 +45,33 @@ class Comment extends RoxEntityBase
         }
     }
 
+    /**
+     * returns member entity for the commenting member
+     *
+     * @access public
+     * @return member|false
+     */
+    public function getFromMember()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('Member')->findById($this->IdFromMember);
+    }
+
+    /**
+     * returns member entity for the commented upon member
+     *
+     * @access public
+     * @return member|false
+     */
+    public function getToMember()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('Member')->findById($this->IdToMember);
+    }
 }

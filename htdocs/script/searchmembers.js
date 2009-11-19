@@ -215,7 +215,7 @@ function loadMap(i)
                 {
                     $(pager_links[a]).observe('click', function(e){
                         var ev = e || windows.event;
-                        reg = /page=(\d)+/;
+                        reg = /page=(\d+)/;
                         var page = (this.href.match(reg)[1] - 1) * per_page;
                         loadMap(page);
                         Event.stop(ev);

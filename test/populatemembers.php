@@ -1,4 +1,17 @@
 <?php
+
+/*
+ * this script is one giant hack. It will import member data from a .csv file, if present
+ * it utilizes the signup code in /build/signup/ - which is incredibly slow
+ * most likely due to the very shitty 'encryption' stuff used
+ *
+ * there is little error checking, just some rudimentary stuff
+ * if we ever need to import more members, a better script should be done
+ *
+ * @author Fake51
+ */
+
+
 require 'core_includes.php';
 
 if (!($file = fopen('profiledata.csv', 'r')))
@@ -20,7 +33,6 @@ $city_count = count($cities);
 $i = 1;
 while ($line = fgetcsv($file))
 {
-    if ($i++ < 14936) continue;
     $random_city = $cities[mt_rand(0, $city_count - 1)]->geonameid;
     $array = array(
         'username'      => 'testuser' . $line[$headers['Username']],
@@ -71,9 +83,5 @@ while ($line = fgetcsv($file))
         echo "Could not enter {$array['username']} into database" . PHP_EOL;
         echo $e->getMessage() . PHP_EOL;
         echo mysql_error();
-    }
-    if (!($i % 100))
-    {
-        sleep(5);
     }
 }

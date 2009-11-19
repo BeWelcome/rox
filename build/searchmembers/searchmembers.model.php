@@ -529,21 +529,22 @@ LIMIT $start_rec,$limitcount " ;
         $vars['rCount'] = $rCount;
         
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-            $sData="select BirthDate,HideBirthDate,Accomodation,ProfileSummary,Gender,HideGender,date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,    geonames_cache.latitude AS Latitude,    geonames_cache.longitude AS Longitude
-            from ".$dblink."members,".$dblink."geonames_cache where members.IdCity=geonames_cache.geonameid and members.id=".$rr->IdMember ;
+            $sData="select members.created, BirthDate,HideBirthDate,Accomodation,ProfileSummary,Gender,HideGender,date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,    geonames_cache.latitude AS Latitude,    geonames_cache.longitude AS Longitude
+            from members, geonames_cache where members.IdCity=geonames_cache.geonameid and members.id=".$rr->IdMember ;
 
             $qryData = $this->dao->query($sData);
             $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
             
-            $rr->BirthDate=$rData->BirthDate;
-            $rr->HideBirthDate=$rData->HideBirthDate;
-            $rr->Accomodation=$rData->Accomodation;
-            $rr->ProfileSummary=$this->ellipsis($this->FindTrad($rData->ProfileSummary,true), 200);
-            $rr->Gender=$rData->Gender;
-            $rr->HideGender=$rData->HideGender;
-            $rr->LastLogin=$rData->LastLogin;
-            $rr->Latitude=$rData->Latitude;
-            $rr->Longitude=$rData->Longitude;
+            $rr->created        = $rData->created;
+            $rr->BirthDate      = $rData->BirthDate;
+            $rr->HideBirthDate  = $rData->HideBirthDate;
+            $rr->Accomodation   = $rData->Accomodation;
+            $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rData->ProfileSummary,true), 200);
+            $rr->Gender         = $rData->Gender;
+            $rr->HideGender     = $rData->HideGender;
+            $rr->LastLogin      = $rData->LastLogin;
+            $rr->Latitude       = $rData->Latitude;
+            $rr->Longitude      = $rData->Longitude;
 
             $sData="select count(*) As NbComment from comments where IdToMember=".$rr->IdMember ;
 
@@ -561,7 +562,7 @@ LIMIT $start_rec,$limitcount " ;
             
             if ($rr->HideBirthDate=="No") $rr->Age=floor($this->fage_value($rr->BirthDate)) ;
             else $rr->Age= "Hidden";
-            
+
             array_push($TMember, $rr);
         }
         

@@ -58,6 +58,7 @@ class MemberPage extends PageWithActiveSkin
                 array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
+                array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),
                 array('space', '', '', 'space'),
 
                 array('profile', "members/$username", $ww->MemberPage),

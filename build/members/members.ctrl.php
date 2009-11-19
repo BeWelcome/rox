@@ -64,7 +64,6 @@ class MembersController extends RoxControllerBase
                     // this profile is not public
                     $page = new MembersMustloginPage;
                 } else {
-				
                     // found a member with given id or username. juhu
                     switch (isset($request[2]) ? $request[2] : false) {
                         case 'comments':
@@ -136,7 +135,6 @@ class MembersController extends RoxControllerBase
             case 'people':
             case 'members':
             default:
-
                 if (!isset($request[1]))
                 {
                     // no member specified

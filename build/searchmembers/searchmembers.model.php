@@ -520,7 +520,7 @@ FROM
 $where
 $OrderBy
 LIMIT $start_rec,$limitcount " ;
-$this->logWrite($str, 'query');
+
         $qry = $this->dao->query($str);
         $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
         $row = $result->fetch(PDB::FETCH_OBJ);

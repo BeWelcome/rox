@@ -65,6 +65,37 @@ class MembersModel extends RoxModelBase
     }
 
 
+    /**
+     * retrieves a specific comment
+     *
+     * @param int $id
+     *
+     * @access public
+     * @return Comment
+     */
+    public function getComment($id)
+    {
+        return $this->createEntity('Comment')->findById($id);
+    }
+
+    /**
+     * marks a comment as problematic
+     *
+     * @param string $username   - username of member with comment
+     * @param int    @comment_id - id of comment to mark
+     *
+     * @access public
+     * @return bool
+     */
+    public function reportBadComment($username, $comment_id)
+    {
+        if (!($member = $this->getMemberWithUsername($username)) || !($comment = $this->getComment($comment_id)) || $member->id != $comment->IdToMember)
+        {
+            return false;
+        }
+        $comment->AdminAction = 'AdminCommentMustCheck';
+        return $comment->update();
+    }
 
       public function get_relation_between_members($IdMember_rel) 
       {

@@ -19,6 +19,7 @@ class RoxEntityFactory
      */
     private $_entities = array(
         'BlogEntity'        => 'build/blog/blog.entity',
+        'Comment'           => 'build/members/comment.entity',
         'Gallery'           => 'build/gallery/gallery.entity',
         'GalleryComment'    => 'build/gallery/gallerycomment.entity',
         'GalleryItem'       => 'build/gallery/galleryitem.entity',

@@ -137,19 +137,36 @@ class MembersController extends RoxControllerBase
             case 'members':
             default:
 
-                if (!isset($request[1])) {
+                if (!isset($request[1]))
+                {
                     // no member specified
                     $this->redirect("places");
-                } else if ($request[1] == 'avatar') {
+                }
+                elseif ($request[1] == 'reportcomment')
+                {
+                    if (!isset($request[2]) || !isset($request[3]) || !$this->model->getLoggedInMember() || !$this->model->reportBadComment($request[2], $request[3]))
+                    {
+                        $this->redirect('');
+                    }
+                    $member = $this->model->getLoggedInMember();
+                    $this->logWrite("{$member->Username} has reported comment ID: {$request[3]} on user {$request[2]} as problematic", 'comments');
+                    $this->redirect('feedback?IdCategory=4');
+                }
+                else if ($request[1] == 'avatar')
+                {
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
                         PPHP::PExit();
                     PRequest::ignoreCurrentRequest();
                     $this->model->showAvatar($member->id);
                     break;
-                } else if (!$member = $this->getMember($request[1])) {
+                }
+                else if (!$member = $this->getMember($request[1]))
+                {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
-                } else {
+                }
+                else
+                {
                     // found a member with given id or username
                     $myself = false;
                     if ($member->id == $member_self->id) {

@@ -9,6 +9,3 @@ class CommentsPage extends ProfilePage
     }
     
 }
-
-
-?>

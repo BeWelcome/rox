@@ -5,7 +5,7 @@ echo <<<HTML
 <p>
 Hi {$this->member->Username}.<br/>
 </p>
-<p>Displaying comments marked problematic: 
+<p>Displaying comments marked problematic ({$total_bad_comments}): 
 
 {$this->pager->render()}
 HTML;

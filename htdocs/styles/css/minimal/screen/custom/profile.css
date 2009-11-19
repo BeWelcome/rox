@@ -235,6 +235,10 @@ h3.icon  {
 	padding-left: 2em;
 	background: transparent url(../../images/iconsfam/add.png) 0 3px no-repeat;
 }
+#profile_linklist .verificationadd {
+	padding-left: 2em;
+	background: transparent url('../../../../../images/icons/shield.png') 0 3px no-repeat;
+}
 #profile_linklist .editmyprofile {
 	padding-left: 2em;
 	background: transparent url(../../images/iconsfam/pencil.png) 0 3px no-repeat;

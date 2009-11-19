@@ -26,11 +26,11 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
         <input type="reset" id="advancedbuttons" class="NotDisplayed float_left button" value="<?php echo $words->getBuffered('SearchClearValues'); ?>" />
         
         <div id="searchmore" class="float_left">
-			<span class="small">
-			<a style="cursor:pointer;" id="linkadvanced"><img id="linkadvancedimage" alt="<?php echo $words->getBuffered('AdvancedOptions'); ?>" src="images/icons/add.png" /> <?php echo $words->getFormatted('searchmembersAdvanced'); ?></a>
-			&nbsp; &nbsp; &nbsp;
-			<a href="places"><img src="images/icons/world.png" alt="<?php echo $words->getBuffered('BrowseCountries'); ?>" /> <?php echo $words->getFormatted('BrowseCountries'); ?></a>
-			</span>
+            <span class="small">
+            <a style="cursor:pointer;" id="linkadvanced"><img id="linkadvancedimage" align="top" alt="<?php echo $words->getBuffered('AdvancedOptions'); ?>" src="images/icons/add.png" /> <?php echo $words->getFormatted('searchmembersAdvanced'); ?></a>
+            &nbsp; &nbsp; &nbsp;
+            <a href="places"><img src="images/icons/world.png" align="top" alt="<?php echo $words->getBuffered('BrowseCountries'); ?>" /> <?php echo $words->getFormatted('BrowseCountries'); ?></a>
+            </span>
         </div> <!-- searchmore -->
     </div> <!-- searchbox -->
     
@@ -39,7 +39,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
 
         <div id="searchorder" class="float_left" >
             <span class="small"><label for="thisorder"><?php echo $words->getFormatted('Orderby'); ?>:</label></span>
-            <form class="float_right" id="changethisorder" style="overflow: visible;" action="">
+            <form id="changethisorder" style="overflow: visible;" action="">
             <select name="OrderBy" id="thisorder" onchange="changeSortOrder(this.value);">
                 <?php foreach($TabSortOrder as $key=>$val) { ?>
                 <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
@@ -49,15 +49,15 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
         </div> <!-- searchorder -->
         
         <div id="sortorder" class="float_left">
-			<a href="#" id='flip-sort-direction-button'><img src="images/icons/reverse_order.png" align="top" alt="changeorder" /><?php echo $words->getFormatted('ChangeSortDirection'); ?></a>
-		</div>
+            <a href="#" id='flip-sort-direction-button'><img src="images/icons/reverse_order.png" align="top" alt="changeorder" /><?php echo $words->getFormatted('ChangeSortDirection'); ?></a>
+        </div>
         
         <div id="mapswitch" class="float_left" >
-            <?php if ($mapstyle == 'mapoff') echo '<img src="images/icons/map.png" align="top" alt="mapvieww" /><a href="searchmembers/mapon"> Mapview</a>';
+            <?php if ($mapstyle == 'mapoff') echo '<img src="images/icons/map.png" align="top" alt="mapvieww" /><a href="searchmembers/mapon"> ' .$words->getFormatted('Mapview').'</a>';
             else
-                echo '<img src="images/icons/vcard.png" align="top" alt="textview" /> <a href="searchmembers/mapoff"> Textview</a>'; ?>
-		<!--
-		<table border="0" cellpadding="0" cellspacing="0" width="63" >
+                echo '<img src="images/icons/vcard.png" align="top" alt="textview" /> <a href="searchmembers/mapoff">' .$words->getFormatted('Textview').'</a>'; ?>
+        <!--
+        <table border="0" cellpadding="0" cellspacing="0" width="63" >
       <tr>
        <td style="padding: 0;"><a <?php if ($mapstyle != 'mapon') echo 'href="searchmembers/mapon"'; ?> title="Map view" style="background-color: #fff;" onmouseover="BTchange('IdImg1', ViewImg1_f2)" onmouseout="BTchange('IdImg1', ViewImg1<?php if ($mapstyle=='mapon') echo '_f2'; ?>)"><img name="one" src="images/misc/one<?php if ($mapstyle=='mapon') echo '_f2'; ?>.gif" width="30" height="24" border="0" alt="" id="IdImg1" /></a></td>
     <?php /*   THIRD 'MIXED' VIEW - DEACTIVATED FOR NOW
@@ -69,7 +69,9 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
    -->
         </div> <!-- mapswitch -->
     </div> <!-- searchoptions -->
-    <div id="loading" class="small"></div>
-    <div id="paging-div"></div>
+    <div class="floatbox">
+        <div id="loading" class="small float_left"></div>
+        <div id="paging-div" ></div>
+    </div>
         
 </div> <!-- teaser -->

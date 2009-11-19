@@ -231,7 +231,8 @@ class PagerWidget extends RoxWidget
      * returns the subset of an array that represents the currently active page of the pager
      * in case of arrays that are too small, it returns the start of the array
      *
-     * @param array $set
+     * @param array $set - array of items to page
+     *
      * @access public
      * @return array
      */

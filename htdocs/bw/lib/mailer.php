@@ -77,10 +77,10 @@ function bw_sendmail_swift($to,
                            $ParamGreetings=""
                           ) {	
 	//Start Swift
-	$swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+	$swift = new Swift(new Swift_Connection_SMTP("localhost"));
 	 
 	 //Create a message
-	$message =& new Swift_Message("My subject");
+	$message = new Swift_Message("My subject");
 	//Add some "parts"
 	$message->attach(new Swift_Message_Part($text));
 	$message->attach(new Swift_Message_Part($textinhtml, "text/html"));

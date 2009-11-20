@@ -9,9 +9,6 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-
-
-
 class VerifyMembersProceedPage extends RoxPageView {
     /**
      * content of the middle column - this is the most important part
@@ -29,7 +26,7 @@ class VerifyMembersProceedPage extends RoxPageView {
 
         // get the translation module
         $words = $this->getWords();
-		 $m=$this->membertoverify ;
+		$m = $this->membertoverify ;
         require 'templates/proceedtoverification.php';    
     }
     
@@ -72,8 +69,3 @@ class VerifyMembersProceedPage extends RoxPageView {
     }
 	 
 } // end of VerifyMembersProceedPage
-
-
-
-
-?>

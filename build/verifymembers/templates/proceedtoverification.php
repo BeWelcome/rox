@@ -35,7 +35,6 @@ $words = $this->getWords();
     <!-- The following will disable the nasty PPostHandler -->
     <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
     
-    <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
     <input type="hidden" name="IdMemberToVerify"  value="<?=$m->id ?>"/>
     
     <table border="0">

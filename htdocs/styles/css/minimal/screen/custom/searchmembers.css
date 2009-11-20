@@ -12,7 +12,7 @@
 @media all
 {
 
-#teaser { margin-bottom: 0;}
+#teaser { margin-bottom: 0.5em;}
 
 #main #col3 #col3_content .full,#main #col3 #col3_content .full .info{
     padding: 0 0 0 0;
@@ -57,7 +57,8 @@ div.markerLabelList {
     padding: 0;
 }
 
-td.accommodation { padding-right: 1em; } 
+td.accommodation { padding-right: 1em; }
+
 
 div.anytime { background: transparent url(../../../../../images/icons/gicon1_a.png) bottom left no-repeat; }
 div.dependonrequest { background: transparent url(../../../../../images/icons/gicon2_a.png) bottom left no-repeat; }
@@ -76,6 +77,8 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
 #searchoptions {margin-top: 1em;}
 
 #changethisorder {display: inline;}
+
+#loading {margin-left: 1em; }
 
 #SearchAdvanced {
     border-top: 1px solid #999;

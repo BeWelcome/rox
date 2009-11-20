@@ -373,7 +373,7 @@ dl.list {
    * @section content-pagination
    */
 
-  div.pages {padding-top:15px; white-space: nowrap; }
+  div.pages {padding-top:10px; white-space: nowrap; }
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
   div.pages li.current a {color:#666;font-weight:bold; }

@@ -56,7 +56,7 @@ class HalfPagePager extends RoxWidget
     public function getHtml()
     {
         $return =<<<HTML
-<div style='clear: both' class='pages'>
+<div class='pages'>
     <ul style='float: {$this->style}'>
 HTML;
         if ($this->active_page > 1)
@@ -71,9 +71,9 @@ HTML;
         {
             if ($this->pages > self::block_links)
             {
-                $return .= "<li>&lt;&lt;</li>\n";
+                $return .= "<li><a class=\"off\">&lt;&lt;</a></li>\n";
             }
-            $return .= "<li>&lt;</li>\n";
+            $return .= "<li><a class=\"off\">&lt;</a></li>\n";
         }
         for ($i = 1; $i <= self::block_links && $i <= $this->pages; $i++)
         {
@@ -127,15 +127,14 @@ HTML;
         }
         else
         {
-            $return .= "<li>&gt;</li>\n";
+            $return .= "<li><a class=\"off\">&gt;</a></li>\n";
             if ($this->pages > self::block_links)
             {
-                $return .= "<li>&gt;&gt;</li>\n";
+                $return .= "<li><a class=\"off\">&gt;&gt;</a></li>\n";
             }
         }
         $return .= <<<HTML
         </ul>
-    <div style='margin-bottom:15px; clear: both'>&nbsp;</div>
 </div>
 HTML;
         return $return;

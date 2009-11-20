@@ -120,8 +120,16 @@ if ($ShowMemberFunction == 'ShowMembersAjaxShort')
 else 
 {        
     if(sizeof($TList) > 0) echo "<header header='".
-        htmlspecialchars("<h2>".$words->getFormatted("searchResults")."</h2>", ENT_QUOTES).
-        htmlspecialchars("<table style=\"width: 100%\"><tr><th>".$words->getFormatted('Member')."</th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>", ENT_QUOTES).
+        htmlspecialchars("<table class=\"full\">
+            <tr>
+                <th colspan=\"2\">".$words->getFormatted('Member')."</th>
+                <th>".$words->getFormatted('ProfileSummary')."</th>
+                <th>".$words->getFormatted('Host')."</th>
+                <th>".$words->getFormatted('MemberSince')."</th>
+                <th>".$words->getFormatted('LastLogin')."</th>
+                <th>".$words->getFormatted('Comments')."</th>
+                <th align=\"right\">".$words->getFormatted('Age')."</th>
+            </tr>", ENT_QUOTES).
         "'/>";
     else echo "<header header='".
         htmlspecialchars($words->getFormatted("searchmembersNoSearchResults"), ENT_QUOTES).
@@ -156,6 +164,9 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     $string .= "</td>";
     $string .= "<td class=\"memberlist\" align=\"center\">" ;
     $string .= ShowAccomodation($TM->Accomodation, $Accomodation);
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\">" ;
+    $string .= $TM->created ;
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\">" ;
     $string .= $TM->LastLogin ;

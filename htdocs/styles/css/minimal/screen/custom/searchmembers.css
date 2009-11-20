@@ -15,8 +15,8 @@
 #teaser { margin-bottom: 0;}
 
 #main #col3 #col3_content .full,#main #col3 #col3_content .full .info{
-	padding: 0 0 0 0;
-	border: none;
+    padding: 0 0 0 0;
+    border: none;
 }
 
 #main #nextmap{
@@ -29,21 +29,21 @@
     margin: 0;
 }
 #help_and_markers {
-	padding: 1em 0;
+    padding: 1em 0;
 }
 
 div.markerLabel {
-	display: block;
-	padding-top: 9px;
+    display: block;
+    padding-top: 9px;
 }
 
 div.markerLabel,
 #sidebar ul#sidebar-list li div.label {
-	text-align: center;
-	color: white;
-	width: 32px;
-	font-size: 12px;
-	font-family: Arial;
+    text-align: center;
+    color: white;
+    width: 32px;
+    font-size: 12px;
+    font-family: Arial;
     font-weight: bold;
 }
 div.markerLabelList {
@@ -56,6 +56,9 @@ div.markerLabelList {
     margin: 5px 0;
     padding: 0;
 }
+
+td.accommodation { padding-right: 1em; } 
+
 div.anytime { background: transparent url(../../../../../images/icons/gicon1_a.png) bottom left no-repeat; }
 div.dependonrequest { background: transparent url(../../../../../images/icons/gicon2_a.png) bottom left no-repeat; }
 div.neverask { background: transparent url(../../../../../images/icons/gicon3_a.png) bottom left no-repeat; }
@@ -72,6 +75,8 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
 
 #searchoptions {margin-top: 1em;}
 
+#changethisorder {display: inline;}
+
 #SearchAdvanced {
     border-top: 1px solid #999;
     border-bottom: 1px solid #999;
@@ -81,5 +86,5 @@ img.legend_icon {
     padding-left: .5em;
 }
 
-#changethisorder: {display: inline;}
+
 }

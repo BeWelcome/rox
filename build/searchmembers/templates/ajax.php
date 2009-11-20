@@ -148,6 +148,7 @@ $_SESSION['SearchMembersTList'] = $TList;
 
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     static $ii = 0;
+    $layoutbits = new MOD_layoutbits();
 
     $info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
     $string = $info_styles[($ii++%2)]; // this display the <tr>
@@ -166,10 +167,10 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     $string .= ShowAccomodation($TM->Accomodation, $Accomodation);
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\">" ;
-    $string .= $TM->created ;
+    $string .= date('d M y', strtotime($TM->created));
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\">" ;
-    $string .= $TM->LastLogin ;
+    $string .= $TM->LastLogin == '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin));
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\" align=center>" ;
     $string .= $TM->NbComment ;

@@ -63,7 +63,10 @@ class MessagesController extends RoxControllerBase
                     $page->active_page = $this->getPageNumber($request, 2);
                     break;
                 case 'compose':
-                    if (!isset($request[2])) {
+                    if (!($logged_member = $model->getLoggedInMember()) || !$logged_member->isActive()) { // Ticket #1327, only active members should be allowed to send message
+                        $page = new ContactNotPossible();
+                    }
+                    else if (!isset($request[2])) {
                         $page = new MessagesInboxPage();
                     } else if (!$member = $model->getMember($request[2])) {
                         $page = new MessagesInboxPage();
@@ -96,11 +99,11 @@ class MessagesController extends RoxControllerBase
                         if (!isset($request[2])) {
                             $page = new ReadMessagePage();
                         } else switch ($request[2]) { 
-			    //message action
-			    case 'delete':
-			      $model->deleteMessage($request[1]);
-			      $page = new MessagesInboxPage();
-			      break;
+                //message action
+                case 'delete':
+                  $model->deleteMessage($request[1]);
+                  $page = new MessagesInboxPage();
+                  break;
                             case 'edit':
                                 $page = new EditMessagePage();
                                 break;
@@ -119,10 +122,10 @@ class MessagesController extends RoxControllerBase
             }
             
             $page->setModel($model);
-			if (isset($_GET['sort']))
-				$page->sort_element = $_GET['sort'];
-			if (isset($_GET['dir']))
-				$page->sort_dir = $_GET['dir'];
+            if (isset($_GET['sort']))
+                $page->sort_element = $_GET['sort'];
+            if (isset($_GET['dir']))
+                $page->sort_dir = $_GET['dir'];
         }
         // finally display the page.
         // the render() method will call other methods to render the page.
@@ -190,8 +193,13 @@ class MessagesController extends RoxControllerBase
             }
             
             // now finally try to send it.
+            $vars = $args->post;
+            if (!empty($args->request[1]))
+            {
+                $vars['reply_to_id'] = $args->request[1];
+            }
             $model = new MessagesModel();
-            $result = new ReadOnlyObject($model->sendOrComplain($args->post));
+            $result = new ReadOnlyObject($model->sendOrComplain($vars));
             
             if (count($result->problems) > 0) {
                 $mem_redirect->problems = $result->problems;

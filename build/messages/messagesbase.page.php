@@ -31,11 +31,11 @@ class MessagesBasePage extends RoxPageView
     {
 
     }
-	
-	public function column_col2()
+    
+    public function column_col2()
     {
         
-	}
+    }
     
     protected function getSubmenuItems()
     {
@@ -49,9 +49,3 @@ class MessagesBasePage extends RoxPageView
         return $items; 
     }
 }
-
-
-
-
-
-?>

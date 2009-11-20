@@ -88,9 +88,3 @@ class MailboxWidget_WithMember extends MailboxWidget
         return 'messages/with/'.$this->contact_member->Username.'/'.$i_page;
     }
 }
-
-
-
-
-
-?>

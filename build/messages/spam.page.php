@@ -35,7 +35,3 @@ class MailboxWidget_Spam extends MailboxWidget
     }
     
 }
-
-
-
-?>

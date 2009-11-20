@@ -44,8 +44,3 @@ class MailboxWidget_Drafts extends MailboxWidget
         return 'messages/drafts/'.$i_page;
     }
 }
-
-
-
-
-?>

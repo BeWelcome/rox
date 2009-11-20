@@ -445,7 +445,6 @@ WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
 INSERT INTO `members`
 (
 	`Username`,
-	`IdCity`,
 	`Gender`,
 	`HideGender`,
 	`created`,
@@ -456,7 +455,6 @@ INSERT INTO `members`
 VALUES
 (
 	\'' . $vars['username'] . '\',
-	' . $vars['geonameid'] . ',
 	\'' . $vars['gender'] . '\',
 	\'' . $vars['genderhidden'] . '\',
 	now(),

@@ -210,17 +210,12 @@ function loadMap(i)
                     tempdiv.innerHTML = pager[0].getAttribute('paging');
                 }
                 $('paging-div').innerHTML = tempdiv.innerHTML;
-                var pager_links = $('paging-div').getElementsByTagName('a');
-                for (var a = 0; a < pager_links.length; a++)
+                if (mapoff)
                 {
-                    $(pager_links[a]).observe('click', function(e){
-                        var ev = e || windows.event;
-                        reg = /page=(\d+)/;
-                        var page = (this.href.match(reg)[1] - 1) * per_page;
-                        loadMap(page);
-                        Event.stop(ev);
-                    });
+                    $('second_pager').innerHTML = tempdiv.innerHTML;
+                    hookUpPager('second_pager', per_page);
                 }
+                hookUpPager('paging-div', per_page);
             }
             var i, j, marker;
             var point = new Array();
@@ -381,6 +376,21 @@ function loadMap(i)
             }
         }
     });
+}
+
+function hookUpPager(container_id, per_page)
+{
+    var pager_links = $(container_id).getElementsByTagName('a');
+    for (var a = 0; a < pager_links.length; a++)
+    {
+        $(pager_links[a]).observe('click', function(e){
+            var ev = e || windows.event;
+            Event.stop(ev);
+            var reg = /page=(\d+)/;
+            var page = (this.href.match(reg)[1] - 1) * per_page;
+            loadMap(page);
+        });
+    }
 }
 
 function toggle_map()

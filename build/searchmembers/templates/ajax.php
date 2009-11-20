@@ -121,13 +121,13 @@ else
 {        
     if(sizeof($TList) > 0) echo "<header header='".
         htmlspecialchars("<h2>".$words->getFormatted("searchResults")."</h2>", ENT_QUOTES).
-        htmlspecialchars("<table  style=\"width: 100%\"><tr><th>".$words->getFormatted('Member')."</th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>", ENT_QUOTES).
+        htmlspecialchars("<table style=\"width: 100%\"><tr><th>".$words->getFormatted('Member')."</th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>", ENT_QUOTES).
         "'/>";
     else echo "<header header='".
         htmlspecialchars($words->getFormatted("searchmembersNoSearchResults"), ENT_QUOTES).
         "'/>";
 }
-echo "<footer footer='".htmlspecialchars("".$words->flushBuffer(), ENT_QUOTES)."'/>";
+echo "<footer footer='".htmlspecialchars("".$words->flushBuffer() ."</table>" , ENT_QUOTES)."'/>";
 echo "<num_results num_results='".$maxpos."'/>";
 echo "</content>
 ";

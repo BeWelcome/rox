@@ -25,6 +25,7 @@ chdir("..") ;
 require_once "lib/init.php";
 $title = "Words management";
 require_once "layout/menus.php";
+require_once "lib/f_volunteer_boards.php" ;
 
 function CheckRLang( $rlang )
 {
@@ -133,8 +134,11 @@ function showmemcache($IdLanguage = null) {
 } // end of showmemcache
 
 
+
 DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
 ShowLeftColumn($MenuAction,VolMenu());
+
+DisplayVolunteer_Board("translator_board") ; 
 
 $scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
@@ -164,6 +168,8 @@ if ((isset ($_POST['id'])) and ($_POST['id'] != ""))
   $id = $_POST['id'];
 if (isset ($_POST['lang']))
   $lang = $_POST['lang'];
+
+
 
 // if it was a show translation on page request
 if (isset ($_GET['showstats'])) {
@@ -495,7 +501,7 @@ if ($code != "") {
 
   }
 }
-
+UpdateVolunteer_Board("translator_board") ;
 ?>
 <form method="post">
 <table class="admin" border="0"><tr>

@@ -64,7 +64,9 @@ class EnvironmentExplorer
     function loadBaseXML()
     {
         // load base.xml document
-        if (!$B = DOMDocument::load(SCRIPT_BASE.'base.xml')) {
+        $B = new DOMDocument();
+        if (!$B->load(SCRIPT_BASE.'base.xml'))
+        {
             die('base.xml error!');
         }
         // $B->x = new DOMXPath($B);

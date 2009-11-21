@@ -64,7 +64,10 @@ function ewiki_toc_format_source(&$src) {
    $n_last = 0;
    $n_number = 1;
    $iii = 1;
+   if (strstr($src[0],"[TOC]")) {
+   $src[0] = str_replace("[TOC]", "", $src[0]);
    foreach ($src as $i=>$line) {
+
       if ($line[0] == "=" && $line[strlen($line)-1] == "=") {
          $n = strspn($line, "=");
          if (($n <= 3)) {
@@ -95,7 +98,7 @@ function ewiki_toc_format_source(&$src) {
       }
    }
    $GLOBALS["ewiki_page_toc"] = &$toc;
-
+    }
    $src = implode("\n", $src);
 }
 

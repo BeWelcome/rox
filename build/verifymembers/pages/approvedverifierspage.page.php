@@ -66,7 +66,7 @@ class VerifiedApprovedVerifiers extends RoxPageView {
      * @return string the page title
      */
     protected function getPageTitle() {
-        return 'Approved verifiers page!';
+        return $this->words->getFormatted("ApprovedVerififiersLink");
     }
     
     /**

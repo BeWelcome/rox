@@ -30,6 +30,17 @@ class VerifiedMembersViewPage extends RoxPageView {
          $this->list=$MyList ;
     }
 
+    /**
+     * verification level
+     * @return string name of the menu
+     */
+    protected function pagename() {
+        if ($this->VerifierUsername!="") {
+            return "MyVerifier";
+        } elseif ($this->VerifiedUsername!="") {
+            return "MyVerified";
+        } else return "ListofVerification";
+    }
 
     protected function column_col3()    {
 
@@ -42,29 +53,20 @@ class VerifiedMembersViewPage extends RoxPageView {
          if ($this->VerifierUsername!="") {
 
             // Try to find the max level of verification for this member
-            $VerificationMaxLevel="verifymembers_NotYetVerified" ;
-            for ($ii=0;$ii<count($list);$ii++) {
-                if ($list[$ii]->VerificationType=="VerifiedByNormal") {
-                    $VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType ;
-                    break ;
-                }
-            }
-            for ($ii=0;$ii<count($list);$ii++) {
-                if ($list[$ii]->VerificationType=="VerifiedByVerified") {
-                    $VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType ;
-                    break ;
-                }
-            }
+            $VerificationMaxLevel="verifymembers_NotYetVerified";
             for ($ii=0;$ii<count($list);$ii++) {
                 if ($list[$ii]->VerificationType=="VerifiedByApproved") {
-                    $VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType ;
-                    break ;
+                    $VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType;
+                    break;
+                } elseif ($list[$ii]->VerificationType=="VerifiedByVerified") {
+                    $VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType;
+                } elseif ($list[$ii]->VerificationType=="VerifiedByNormal" && $VerificationMaxLevel != "VerifiedByVerified") {
+                    $VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType;
                 }
             }
             $Username=$this->VerifierUsername ;
             require SCRIPT_BASE . 'build/verifymembers/templates/showverifiers.php';
-         }
-         if ($this->VerifiedUsername!="") {
+         } elseif ($this->VerifiedUsername!="") {
             $Username=$this->VerifiedUsername ;
             require SCRIPT_BASE . 'build/verifymembers/templates/showverified.php';
          }
@@ -75,14 +77,14 @@ class VerifiedMembersViewPage extends RoxPageView {
      * @return string name of the menu
      */
     protected function getTopmenuActiveItem() {
-        return '';
+        return "";
     }
 
     /**
      * configure the teaser (the content of the orange bar)
      */
     protected function teaserHeadline() {
-         $words = new MOD_words();
+         $words = $this->getWords();
          if ($this->VerifierUsername!="") {
             echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),"<a href=\"people/".$this->VerifierUsername."\">".$this->VerifierUsername."</a>") ;
         }
@@ -96,7 +98,7 @@ class VerifiedMembersViewPage extends RoxPageView {
      * @return string the page title
      */
     protected function getPageTitle() {
-        return 'Verify members page!';
+        return $this->getWords()->getFormatted($this->pagename());
     }
 
     /**

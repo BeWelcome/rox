@@ -76,7 +76,7 @@ Boston, MA  02111-1307, USA.
                 ?>
             </li>
             <li>
-                <?php if ($this->loggedInMember) :?> <a href="feedback?IdCategory=4" ><?=$words->get('ReportCommentProblem')?><?php endif;?></a>
+                <?php if ($this->loggedInMember) :?> <a href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $comments[$ii]->id;?>" ><?=$words->get('ReportCommentProblem')?><?php endif;?></a>
             </li>
             <li>
             <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
@@ -93,4 +93,3 @@ Boston, MA  02111-1307, USA.
 
 <?php
 }
-?>

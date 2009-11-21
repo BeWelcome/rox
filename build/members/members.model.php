@@ -189,6 +189,17 @@ WHERE   id = $IdMember
             );
             if (!empty($result)) $errors['Geonameid'] = 'Member IdCity not set';
             else $this->logWrite ("The Member with the Id: ".$IdMember." changed his location to Geo-Id: ".$geonameid, "Members");
+
+            if (empty($errors) && ($m = $this->createEntity('Member')->findById($IdMember)))
+            {
+                // if a member with status NeedMore updates her/his profile, moving them back to pending
+                if ($m->Status == 'NeedMore')
+                {
+                    $m->Status = 'Pending';
+                    $m->update();
+                }
+            }
+
             return array(
                 'errors' => $errors,
                 'IdMember' => $result
@@ -891,6 +902,9 @@ ORDER BY
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+
+        // if a member with status NeedMore updates her/his profile, moving them back to pending
+        if ($m->Status == 'NeedMore') $m->Status = 'Pending';
 
         $status = $m->update();
 

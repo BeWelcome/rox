@@ -139,7 +139,19 @@ class MembersController extends RoxControllerBase
                 {
                     // no member specified
                     $this->redirect("places");
-                } else if ($request[1] == 'avatar') {
+                }
+                elseif ($request[1] == 'reportcomment')
+                {
+                    if (!isset($request[2]) || !isset($request[3]) || !$this->model->getLoggedInMember() || !$this->model->reportBadComment($request[2], $request[3]))
+                    {
+                        $this->redirect('');
+                    }
+                    $member = $this->model->getLoggedInMember();
+                    $this->logWrite("{$member->Username} has reported comment ID: {$request[3]} on user {$request[2]} as problematic", 'comments');
+                    $this->redirect('feedback?IdCategory=4');
+                }
+                else if ($request[1] == 'avatar')
+                {
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
                         PPHP::PExit();
                     PRequest::ignoreCurrentRequest();

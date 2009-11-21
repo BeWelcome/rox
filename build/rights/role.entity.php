@@ -73,7 +73,7 @@ class Role extends RoxEntityBase
             return false;
         }
         
-        return (($this->createEntity('RolePrivilege')->findById($this, $privilege)) ? true : false);
+        return (($this->createEntity('RolePrivilege')->findByComplexId($this, $privilege)) ? true : false);
      }
 
     /**
@@ -90,7 +90,7 @@ class Role extends RoxEntityBase
             return false;
         }
 
-        if ($priv = $this->createEntity('RolePrivilege')->findById($this, $privilege))
+        if ($priv = $this->createEntity('RolePrivilege')->findByComplexId($this, $privilege))
         {
             return $priv->getPrivilege();
         }
@@ -161,7 +161,7 @@ class Role extends RoxEntityBase
 
         // if the user already has this role, no need to reassign it
         $mr = $this->createEntity('MemberRole');
-        if (!$mr->findById($member, $this) && !$mr->createMemberRoleLink($member, $this))
+        if (!$mr->findByComplexId($member, $this) && !$mr->createMemberRoleLink($member, $this))
         {
             foreach ($scopes as $scope)
             {
@@ -223,7 +223,7 @@ class Role extends RoxEntityBase
             return true;
         }
 
-        if (!($mr = $this->createEntity('MemberRole')->findById($member, $this)))
+        if (!($mr = $this->createEntity('MemberRole')->findByComplexId($member, $this)))
         {
             return false;
         }

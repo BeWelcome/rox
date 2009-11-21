@@ -118,12 +118,13 @@ class RolePrivilege extends RoxEntityBase
      * tries to load this entity using a role and a privilege entity
      * overloads RoxEntityBase::findById
      *
-     * @param object $role - the role part
-     * @param object $privilege - the privilege part
+     * @param Role      $role      - the role part
+     * @param Privilege $privilege - the privilege part
+     *
      * @access public
      * @return mixed - the loaded entity or false
      */
-    public function findById($role, $privilege)
+    public function findByComplexId($role, $privilege)
     {
         if (!is_object($role) || !is_object($privilege) || !$role->isPKSet() || !$privilege->isPKSet())
         {

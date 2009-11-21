@@ -11,7 +11,6 @@ class PrivilegeScope extends RoxEntityBase
 
     /**
      * tries to load this entity using a member, role privilege entity
-     * overloads RoxEntityBase::findById
      *
      * @param object $member - the member part
      * @param object $role - the role part
@@ -19,7 +18,7 @@ class PrivilegeScope extends RoxEntityBase
      * @access public
      * @return mixed - the loaded entity or false
      */
-    public function findById($member, $role, $privilege)
+    public function findByComplexId($member, $role, $privilege)
     {
         if (!is_object($role) || !is_object($privilege) || !is_object($member) || !$role->isPKSet() || !$privilege->isPKSet() || !$member->isPKSet())
         {

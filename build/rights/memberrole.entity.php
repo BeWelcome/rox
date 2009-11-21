@@ -84,12 +84,13 @@ class MemberRole extends RoxEntityBase
      * tries to load this entity using a member and a role entity
      * overloads RoxEntityBase::findById
      *
-     * @param object $member - the member part
-     * @param object $role - the role part
+     * @param Member $member - the member part
+     * @param Role   $role   - the role part
+     *
      * @access public
      * @return mixed - the loaded entity or false
      */
-    public function findById($member, $role)
+    public function findByComplexId($member, $role)
     {
         if (!is_object($role) || !$role->isPKSet() || !is_object($member) || !$member->isPKSet())
         {

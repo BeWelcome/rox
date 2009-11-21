@@ -6,7 +6,7 @@ class MyVisitorsPage extends ProfilePage
     
     protected function getSubmenuActiveItem()
     {
-        return 'profile';
+        return 'visitors';
     }
     
     
@@ -14,10 +14,13 @@ class MyVisitorsPage extends ProfilePage
     {
         $words = $this->getWords();
     	$member = $this->member;
-    	$visitors = $member->visitors_raw;
+//		print_r($member) ; die (0) ;
+    	$visitors = $this->member->get_visitors() ;
+//		print_r($visitors) ; die (0) ;
         $layoutbits = new MOD_layoutbits();
         // FIXME: Not the best way to provide pagination. But for now there's not better choice.
         if (!$visitors) {
+			echo "no visitors" ;
             return false;
         } else {
             $request = PRequest::get()->request;
@@ -29,12 +32,13 @@ class MyVisitorsPage extends ProfilePage
             } else {
                 $page = 1;
             }
-            $p = PFunctions::paginate($visitors, $page, $itemsPerPage = 15);
-            $visitors = $p[0];
+			// TODO : visitors must be in the proper format for the paginate page
+//            $p = PFunctions::paginate($visitors, $page, $itemsPerPage = 15);
+//            $visitors = $p[0];
         }
 
         ?>
-        <h3><?=$words->get('')?></h3>
+        <h3></h3>
         <?php
 
     foreach ($visitors as $member) {
@@ -47,12 +51,14 @@ class MyVisitorsPage extends ProfilePage
         <br /><span class="small">'.$words->getFormatted("yearsold",$member->age).'<br />'.$member->city.'</span></p></li></a>';
     }
 
-    $pages = $p[1];
-    $maxPage = $p[2];
-    $currentPage = $page;
-    if (isset($requestStrNew)) $requestStr = $requestStrNew;
-    $request = $requestStr.'/=page%d';
-    require TEMPLATE_DIR.'misc/pages.php';
+	if (isset($p)) { // only call this if pagination has been repaired
+		$pages = $p[1];
+		$maxPage = $p[2];
+		$currentPage = $page;
+		if (isset($requestStrNew)) $requestStr = $requestStrNew;
+		$request = $requestStr.'/=page%d';
+		require TEMPLATE_DIR.'misc/pages.php';
+	}
 
     }
 }

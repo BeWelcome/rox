@@ -314,7 +314,7 @@ dl.list {
     padding: 5px;
   }
 
-  textarea.long {width: 99%; }
+  textarea.long {width: 95%; }
 
   input, textarea {
     font-size: 1.3em;

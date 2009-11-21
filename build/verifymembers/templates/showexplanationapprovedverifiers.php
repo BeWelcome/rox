@@ -58,10 +58,10 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             <br /><?=$m->FullName ?>
             <br /><?=$m->age ?>
         </td>
-        <td><?=$m->CountryName ?>/<?=$m->CityName ?></td>
+        <td><?=$m->country ?>/<?=$m->city ?></td>
         <td>
         <?=$words->getFormatted("MemberSince",$m->MemberSince)?>
-        <br /><a href="members/<?=$m->Username ?>/comments>"<?=$words->getFormatted("ViewComments")."(".$m->NbComments.")"?></a>
+        <br /><a href="members/<?=$m->Username ?>/comments"><?=$words->getFormatted("ViewComments")."(".$m->NbComments.")"?></a>
         <br /><?=$words->mTrad($m->ProfileSummary) ?>
         </td>
     </tr>

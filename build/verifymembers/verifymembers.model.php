@@ -182,25 +182,25 @@ WHERE   IdVerified = $member_id
         $ss="select m1.*,cities.Name as CityName,countries.Name as CountryName". 
 		 	 " from members m1,cities,rightsvolunteers,rights,countries ".
 			 " where m1.id=rightsvolunteers.IdMember and cities.IdCountry=countries.id and rights.id=rightsvolunteers.IdRight and rights.Name='Verifier' and rightsvolunteers.Level>0 and cities.id=m1.IdCity and (m1.Status='Active') order by CityName" ;
-      	$qry = $this->dao->query($ss);
-      	if (!$qry) {
+      	$mm = $this->createEntity('Member')->findBySQLMany($ss);
+      	if (!$mm) {
             throw new PException('verifymembers::LoadApprovedVerifiers Could not retrieve the verifiers list!');
       	}
 
 		$tt=array() ;
 
 		// for all the records
-      	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-			$rComment=$this->singleLookup("select count(*) as cnt from comments where IdToMember=".$rr->id) ;
+      	foreach ($mm as $m) {
+			$rComment=$this->singleLookup("select count(*) as cnt from comments where IdToMember=".$m->id) ;
 		
-			$rr->MemberSince=strftime('%d/%m/%Y',strtotime($rr->created)) ;
+			$m->MemberSince=strftime('%d/%m/%Y',strtotime($m->created)) ;
 			// Load Age
-			$rr->age = $layoutbits->fage_value($rr->BirthDate, $rr->HideBirthDate);
-			$rr->NbComments=$rComment->cnt ;
+			$m->age = $layoutbits->fage_value($m->BirthDate, $m->HideBirthDate);
+			$m->NbComments=$rComment->cnt ;
 
 			// Load full name
-			$rr->FullName = fFullName($rr);
-			array_push( $tt,$rr) ;
+			$m->FullName = ($m->name);
+			array_push( $tt,$m) ;
 		}
 
         

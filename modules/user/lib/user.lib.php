@@ -113,42 +113,6 @@ WHERE
     }
 
 
-    protected function doBWLogin($handle, $password = null) {
-        if (!isset($this->tableName) || !isset($this->sessionName))
-            return false;
-        if (empty($handle))
-            return false;
-        $handle = $this->dao->escape($handle);
-        $q = $this->dao->query(
-            "
-SELECT
-    id,
-    auth_id
-FROM
-    `$this->tableName`
-WHERE
-    handle = '$handle'  AND
-    active = 1
-            "
-        );
-        $d = $q->fetch(PDB::FETCH_OBJ);
-       
-        if (!$d)
-            return false;
-          
-        $this->setAuth($d->auth_id);
-        session_regenerate_id();
-        $_SESSION[$this->sessionName] = (int)$d->id;
-        $this->loggedIn = true;
-
-        $s = $this->dao->prepare('UPDATE `'.$this->tableName.'` SET `lastlogin` = NOW() WHERE `id` = ?');
-        $s->bindParam(0, $d->id);
-        $s->execute();
-        
-        return true;
-    }
-    
-
 
     
     protected function getAuthId($userId) {

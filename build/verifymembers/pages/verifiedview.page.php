@@ -104,12 +104,16 @@ class VerifiedMembersViewPage extends RoxPageView {
      */
     protected function leftSidebar() {
         $words = $this->getWords();
-        echo '<ul>' ;
-        echo '<li><a href="wiki/Verification">',$words->getFormatted("VerifyDoc"),'</a></li>';
+        echo '<h3>',$words->getFormatted("MyVerifyTools"),'</h3>';
+		echo '<ul class="linklist">' ;
         echo '<li><a href="verifymembers/verifiersof/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerifier"),'</a></li>';
         echo '<li><a href="verifymembers/verifiersby/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerified"),'</a></li>';
-        echo '<li><a href="verifymembers/approvedverifiers">',$words->getFormatted("ApprovedVerififiersLink"),'</a></li>';
         echo '</ul>' ;
+        echo '<h3>',$words->getFormatted("MoreInfo"),'</h3>';
+        echo '<ul class="linklist">' ;
+        echo '<li><a href="verifymembers/approvedverifiers">',$words->getFormatted("ApprovedVerififiersLink"),'</a></li>';
+        echo '<li><a href="wiki/Verification">',$words->getFormatted("VerifyDoc"),'</a></li>';
+		echo '</ul>' ;
     }
 
 } // end of VerifyMembersPage

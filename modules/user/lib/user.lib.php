@@ -113,7 +113,7 @@ WHERE
     }
 
 
-    protected function doBWLogin($handle) {
+    protected function doBWLogin($handle, $password = null) {
         if (!isset($this->tableName) || !isset($this->sessionName))
             return false;
         if (empty($handle))

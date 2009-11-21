@@ -293,8 +293,7 @@ WHERE
         $vars['OrderBy'] = $order_by;
     
         // Todo: no, it won't, and will be taken out soon
-        $dblink="" ; // This will be used one day to query on another replicated database
-        $tablelist=$dblink."members,".$dblink."geonames_cache,".$dblink."countries" ;
+        $tablelist ="members, geonames_cache, countries, addresses";
     
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1")
         {
@@ -445,7 +444,7 @@ AND (
 )"   ;
             }
         }
-        $where = $where." AND geonames_cache.geonameid=members.IdCity AND countries.id=geonames_cache.parentCountryId" ;
+        $where = $where." AND geonames_cache.geonameid=addresses.IdCity AND addresses.IdMember = members.id AND countries.id=geonames_cache.parentCountryId" ;
     
         if ($this->GetParam($vars, "IdCountry",0)!= '0')
         {
@@ -478,7 +477,7 @@ SQL
 
             if (!empty($cities))
             {
-                $WhereCity = ' (' . implode(',', $cities) . ')';
+                $WhereCity = ' geonames_cache.geonameid IN (' . implode(',', $cities) . ')';
             }
             else
             {
@@ -490,7 +489,7 @@ SQL
 
         // if a group is chosen
         if ($this->GetParam($vars, "IdGroup",0)!=0) {
-            $tablelist=$tablelist.",".$dblink."membersgroups" ;
+            $tablelist=$tablelist.", membersgroups" ;
             $where .= "
 AND membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")."
 AND membersgroups.Status='In'
@@ -546,7 +545,7 @@ LIMIT $start_rec,$limitcount " ;
             $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
             $rr->NbComment=$rData->NbComment ;
 
-            $query = $this->dao->query("SELECT SQL_CACHE * FROM  ".$dblink."membersphotos WHERE IdMember=". $rr->IdMember . " AND SortOrder=0");
+            $query = $this->dao->query("SELECT SQL_CACHE * FROM  membersphotos WHERE IdMember=". $rr->IdMember . " AND SortOrder=0");
             $photo = $query->fetch(PDB::FETCH_OBJ);
             
             if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;

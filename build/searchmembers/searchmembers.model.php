@@ -125,22 +125,24 @@ WHERE   ShortCode IN ($l)
             $tablelist = '';
             if (!$this->getLoggedInMember())
             {
-                $where = "AND memberspublicprofiles.IdMember = members.id"; // must be in the public profile list
+                $where = "AND memberspublicprofiles.IdMember = m.id"; // must be in the public profile list
                 $tablelist = ",memberspublicprofiles";
             }
             $str =<<<SQL
 SELECT
-    members.id AS IdMember,
-    Username,
-    Gender,
-    HideGender,
-    IdCity,
-    ProfileSummary
+    m.id AS IdMember,
+    m.Username,
+    m.Gender,
+    m.HideGender,
+    a.IdCity,
+    m.ProfileSummary
 FROM
-    members {$tablelist}
+    members AS m,
+    addresses AS a
+    {$tablelist}
 WHERE
-    Status = 'Active' AND
-    Username LIKE '{$searchtext}'
+    m.Status = 'Active' AND
+    m.Username LIKE '{$searchtext}'
     $where
 LIMIT 20
 SQL;

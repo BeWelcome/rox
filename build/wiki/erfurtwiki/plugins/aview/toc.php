@@ -85,8 +85,8 @@ function ewiki_toc_format_source(&$src) {
              }
             $text = substr($line, $n,-$n);
             $toc[$i] = $add[0].$add[1] . /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
-                     . */'<li>'.(($n <= 2) ? '<h2>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'"><span class="number">'.$n_number.'</span>'
-                     . trim($text) . '</a>'.(($n <= 2) ? '</h2>' : '').'</li>';
+                     . */'<li>'.(($n <= 2) ? '<b>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'"><span class="number">'.$n_number.'</span>'
+                     . trim($text) . '</a>'.(($n <= 2) ? '</b>' : '').'</li>';
 
             $src[$i] = str_repeat("=", $n) . " [#line$i]" . $text . str_repeat("=", $n);
             $n_last = $n;

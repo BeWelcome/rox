@@ -97,7 +97,7 @@ class TripModelTest extends PHPUnit_Framework_TestCase
         $model = new Trip;
 
         $this->assertFalse($model->checkTripItemOwnerShip());
-        $this->assertTrue($model->checkTripItemOwnerShip(array(1,2)));
+        $this->assertFalse($model->checkTripItemOwnerShip(array(1,2)));
     }
 
     public function getTripsForLocation()

@@ -154,13 +154,13 @@ class GroupEntityTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($member instanceof Member);
         $this->assertTrue($member->isLoaded());
         $this->assertTrue($group->setGroupOwner($member));
-
     }
 
     public function testIsGroupOwner2()
     {
         $group = $this->entity_factory->create('Group')->findByWhere("Name = 'phpunit test group" . date('Y-m-d') ."'");
         $this->assertTrue($group instanceof Group);
+        $this->assertTrue($group->isLoaded());
         $member = $this->entity_factory->create('Member')->findById(1);
         $this->assertTrue($member instanceof Member);
         $this->assertTrue($member->isLoaded());

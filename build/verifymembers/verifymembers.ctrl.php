@@ -24,19 +24,16 @@ class VerifymembersController extends RoxControllerBase
      */
     public function index($args=false)
     {
-        $User = APP_User::login(); // The user must be logged in
-
         $request = $args->request;
         $mem_redirect = $this->mem_redirect;
         $model = $this->model;
 
-        
-        if (!isset($_SESSION['IdMember'])) {
+        if (!$this->model->getLoggedInMember())
+        {
             $page = new VerifyMustLoginPage();
             $page->setRedirectURL(implode('/',$request));
-                return $page;
+            return $page;
         } 
-//        print_r($args->post);
         
         // look at the request.
         switch (isset($request[1]) ? $request[1] : false) {

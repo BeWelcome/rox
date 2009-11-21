@@ -190,10 +190,14 @@ WHERE   id = $IdMember
             if (!empty($result)) $errors['Geonameid'] = 'Member IdCity not set';
             else $this->logWrite ("The Member with the Id: ".$IdMember." changed his location to Geo-Id: ".$geonameid, "Members");
 
-            if (empty($errors))
+            if (empty($errors) && ($m = $this->createEntity('Member')->findById($IdMember)))
             {
                 // if a member with status NeedMore updates her/his profile, moving them back to pending
-                if ($m->Status == 'NeedMore') $m->Status = 'Pending';
+                if ($m->Status == 'NeedMore')
+                {
+                    $m->Status = 'Pending';
+                    $m->update();
+                }
             }
 
             return array(

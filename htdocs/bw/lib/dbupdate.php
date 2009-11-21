@@ -1668,7 +1668,7 @@ SQL;
 ALTER TABLE `trip_data` DROP INDEX `trip_id`
 SQL;
 
-    $updates[] = "INSERT INTO `bewelcome`.`volunteer_boards` (
+    $updates[] = "INSERT INTO `volunteer_boards` (
 `id` ,
 `Name` ,
 `updated` ,

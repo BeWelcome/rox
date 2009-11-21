@@ -130,7 +130,8 @@ class PApps
             if (!file_exists($buildDir->path.'/'.$d.'/build.xml'))
                 continue;
             $path = $buildDir->path.'/'.$d.'/';
-            $build = DOMDocument::load($path.'build.xml');
+            $build = new DOMDocument();
+            $build->load($path.'build.xml');
             $this->_doBuild($path, $build);
         }
         return true;

@@ -40,13 +40,13 @@ if (!empty($errormessage)) {
 </p>
 <p>
 <form name="proceedtoverify" action="verify/<?=$this->member2?>/proceed"  id="idproceedtoverify" method="post">
-    
+
     <?=$callback_tag?>
     <input type="hidden" name="IdMemberToVerify"  value="<?=$m->id ?>"/>
-    
+
     <table border="0">
     <tr><td align=center>
-	 		 <?  MOD_layoutbits::PIC_50_50($m->Username); ?>
+             <?  MOD_layoutbits::PIC_50_50($m->Username); ?>
     </td></tr>
     <tr><td>
         <?=$words->getFormatted("verifymembers_name_to_check", $m->FirstName, "<i>".$m->SecondName."</i>", $m->LastName) ?>
@@ -71,13 +71,13 @@ if (!empty($errormessage)) {
         <input type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
     </td></tr>
     </table>
-    
+
     <div class="subcolumns" id="profile_subcolumns">
 
       <div class="c50l" >
         <div class="subcl" >
 
-            <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ 
+            <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */
             $m = $this->member1;
             $verification_status = $m->verification_status;
             if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
@@ -104,13 +104,13 @@ if (!empty($errormessage)) {
             <label for="password1"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
             <input type="password"  name="password1">
             </div>
-            
+
         </div> <!-- subcl -->
       </div> <!-- c50l -->
       <div class="c50r" >
         <div class="subcr" >
 
-            <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ 
+            <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */
             $m = $this->member2;
             $verification_status = $m->verification_status;
             if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
@@ -142,7 +142,7 @@ if (!empty($errormessage)) {
       </div> <!-- c50r -->
 
     </div> <!-- subcolumns -->
-    
+
 </form>
 </p>
 

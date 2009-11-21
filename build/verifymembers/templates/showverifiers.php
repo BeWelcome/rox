@@ -36,7 +36,7 @@ $iiMax = count($list) ; // This retrieve the list of the verifiers
 <table class="full">
 <tr class="<?=$styles[1] ?>">
 <td colspan="4">
- <?=$words->getFormatted("MemberHasVerificationLevel","<a class=\"username\" href=\"bw/member.php?cid=".$this->VerifierUsername."\">".$this->VerifierUsername."</a>", "<b>".$words->getFormatted($VerificationMaxLevel)."</b>") ?>
+ <?=$words->getFormatted("MemberHasVerificationLevel","<a class=\"username\" href=\"members/".$this->VerifierUsername."\">".$this->VerifierUsername."</a>", "<b>".$words->getFormatted($VerificationMaxLevel)."</b>") ?>
 </td></tr>
 
 <?php if ($list != false) { ?>
@@ -62,23 +62,23 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
         </td>
         <td><?=$m->CityName ?></td>
         <td align="center"><? if ($m->NameVerified=="True") {
-		 	 					   echo $words->getFormatted("Yes") ;
-								}
-								else {
-								   echo $words->getFormatted("No") ; 
-								}?>
-		 </td>
+                                   echo $words->getFormatted("Yes") ;
+                                }
+                                else {
+                                   echo $words->getFormatted("No") ;
+                                }?>
+         </td>
         <td align="center"><? if ($m->AddressVerified=="True") {
-		 	 					   echo $words->getFormatted("Yes") ;
-								}
-								else {
-								   echo $words->getFormatted("No") ; 
-								}?>
-		 </td>
+                                   echo $words->getFormatted("Yes") ;
+                                }
+                                else {
+                                   echo $words->getFormatted("No") ;
+                                }?>
+         </td>
         <td align="left">
 
-		<? echo strftime('%d/%m/%Y',strtotime($m->VerificationDate)) ; ?>:<br />
-		<? echo $m->Comment; ?></td>
+        <? echo strftime('%d/%m/%Y',strtotime($m->VerificationDate)) ; ?>:<br />
+        <? echo $m->Comment; ?></td>
         <td align="left"><?=$words->getFormatted("verifymembers_".$m->VerificationType) ; ?></td>
     </tr>
     <?php

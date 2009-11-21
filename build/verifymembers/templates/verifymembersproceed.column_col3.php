@@ -31,7 +31,7 @@ $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->reques
 
 if (!empty($errormessage)) {
     echo "
-    <p><b>$errormessage</b></p>";
+    <p class=\"error\">$errormessage</p>";
 }
 
 if (!$memory = $formkit->getMemFromRedirect()) {
@@ -45,7 +45,7 @@ if (!$memory = $formkit->getMemFromRedirect()) {
             $vars[$key] = $value;
         }
     }
-    
+
     if ($member_data = $memory->member_data) {
         $this->member1->member_data = $member_data[1];
         $this->member2->member_data = $member_data[2];
@@ -70,21 +70,21 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     $vars['errors'] = array();
 }
 ?>
-<p>
-<?=$words->getFormatted("verifymembers_proceedexplanation",$this->member1->Username,$this->member2->Username) ?>
-</p>
-<p>
+
+<p><?=$words->getFormatted("verifymembers_proceedexplanation",$this->member1->Username,$this->member2->Username) ?></p>
+
+
 <form name="proceedtoverify" action="<?=$page_url?>"  id="idproceedtoverify" method="post">
-    
+
     <?=$callback_tag?>
     <?=$memory_tag?>
-    
+
     <div class="subcolumns" id="profile_subcolumns">
 
       <div class="c50l" >
         <div class="subcl" >
 
-            <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ 
+            <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */
             $m = $this->member1;
             $n = 1;
             require 'verifydata.template.php';
@@ -95,7 +95,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
       <div class="c50r" >
         <div class="subcr" >
 
-            <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */ 
+            <?php /*<input type="hidden" name="<?=$callbackId ?>"  value="1"/> */
             $m = $this->member2;
             $n = 2;
             require 'verifydata.template.php';
@@ -105,12 +105,11 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
       </div> <!-- c50r -->
 
     </div> <!-- subcolumns -->
-    
+
     <div class="row">
-        <input type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
+        <input type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>" />
     </div>
-    
+
 </form>
-</p>
 
 

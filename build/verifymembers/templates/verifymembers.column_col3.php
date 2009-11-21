@@ -32,7 +32,7 @@ $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->reques
 
 if (!empty($errormessage)) {
     echo "
-    <p><b>$errormessage</b></p>";
+    <p class=\"error\">$errormessage</p>";
 }
 
 if (!$memory = $formkit->getMemFromRedirect()) {
@@ -66,8 +66,8 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
 <p>
 <?=$words->getFormatted("verifymembers_explanation",$_SESSION["Username"]) ?>
 </p>
-<p>
-    <form name="entermembertoverify" action=""  id="prepareverifymember" method="post">
+
+<form name="entermembertoverify" action="" id="prepareverifymember" method="post">
 
         <?=$callback_tag?>
     
@@ -98,11 +98,11 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
                 </table>
             </div>
 
-            <input type="hidden" name="cid1" value="<?=$m->id?>">
-            <input type="hidden" name="username1" value="<?=$m->Username?>">
+            <input type="hidden" name="cid1" value="<?=$m->id?>" />
+            <input type="hidden" name="username1" value="<?=$m->Username?>" />
             <div class="row">
             <label for="password1"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
-            <input type="password"  name="password1">
+            <input id="password1" type="password"  name="password1" />
             </div>
            </div>
            </div>
@@ -132,11 +132,11 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
                 </table>
             </div>
 
-            <input type="hidden" name="cid2" value="<?=$m->id?>">
-            <input type="hidden" name="username2" value="<?=$m->Username?>">
+            <input type="hidden" name="cid2" value="<?=$m->id?>" />
+            <input type="hidden" name="username2" value="<?=$m->Username?>" />
             <div class="row">
             <label for="password2"><?=$words->getFormatted("verifymembers_member_pw", $m->Username) ?></label>
-            <input type="password"  name="password2">
+            <input id="password2" type="password"  name="password2" />
             </div>
            </div>
            </div>
@@ -145,8 +145,8 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
 
     </div> <!-- subcolumns -->
 
-    <input  type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>">
+    <input  type="submit" value="<?=$words->getFormatted("verifymembers_proceedtocheck") ?>" />
 
 </form>
-</p>
+
 

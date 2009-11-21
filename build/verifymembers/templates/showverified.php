@@ -54,23 +54,23 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
         <td align="center">
             <?=MOD_layoutbits::PIC_50_50($m->Username) ;?>
             <br />
-            <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
+            <a class="username" href="members/<?=$m->Username ?>"><?=$m->Username ?></a>
         </td>
         <td><?=$m->CityName ?></td>
         <td align="center"><? if ($m->NameVerified=="True") {
-		 	 					   echo $words->getFormatted("Yes") ;
-								}
-								else {
-								   echo $words->getFormatted("No") ; 
-								}?>
-		 </td>
+                                   echo $words->getFormatted("Yes") ;
+                                }
+                                else {
+                                   echo $words->getFormatted("No") ;
+                                }?>
+         </td>
         <td align="center"><? if ($m->AddressVerified=="True") {
-		 	 					   echo $words->getFormatted("Yes") ;
-								}
-								else {
-								   echo $words->getFormatted("No") ; 
-								}?>
-		 </td>
+                                   echo $words->getFormatted("Yes") ;
+                                }
+                                else {
+                                   echo $words->getFormatted("No") ;
+                                }?>
+         </td>
         <td align="left"><? echo $m->Comment; ?></td>
         <td align="center"><?=$words->getFormatted("verifymembers_".$m->VerificationType) ; ?></td>
     </tr>

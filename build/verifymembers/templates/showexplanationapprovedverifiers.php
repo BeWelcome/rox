@@ -54,16 +54,16 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
 
         </td>
         <td align="left">
-            <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
-			<br /><?=$m->FullName ?>
-			<br /><?=$m->age ?>
+            <a class="username" href="members/<?=$m->Username ?>"><?=$m->Username ?></a>
+            <br /><?=$m->FullName ?>
+            <br /><?=$m->age ?>
         </td>
         <td><?=$m->CountryName ?>/<?=$m->CityName ?></td>
         <td>
-		<?=$words->getFormatted("MemberSince",$m->MemberSince)?>
-		<br /><a href="bw/viewcomments.php?cid=<?=$m->id?>"><?=$words->getFormatted("ViewComments")."(".$m->NbComments.")"?></a>
-		<br /><?=$words->mTrad($m->ProfileSummary) ?>
-		</td>
+        <?=$words->getFormatted("MemberSince",$m->MemberSince)?>
+        <br /><a href="members/<?=$m->Username ?>/comments>"<?=$words->getFormatted("ViewComments")."(".$m->NbComments.")"?></a>
+        <br /><?=$words->mTrad($m->ProfileSummary) ?>
+        </td>
     </tr>
     <?php
 }

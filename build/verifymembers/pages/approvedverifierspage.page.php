@@ -36,7 +36,7 @@ class VerifiedApprovedVerifiers extends RoxPageView {
         $words = $this->getWords();
 		 
 		 		$list=$this->list ;
-        require 'templates/showexplanationapprovedverifiers.php';    
+        require SCRIPT_BASE . 'build/verifymembers/templates/showexplanationapprovedverifiers.php';    
     }
     
     /**

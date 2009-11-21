@@ -62,11 +62,11 @@ class VerifiedMembersViewPage extends RoxPageView {
                 }
             }
             $Username=$this->VerifierUsername ;
-            require 'templates/showverifiers.php';
+            require SCRIPT_BASE . 'build/verifymembers/templates/showverifiers.php';
          }
          if ($this->VerifiedUsername!="") {
             $Username=$this->VerifiedUsername ;
-            require 'templates/showverified.php';
+            require SCRIPT_BASE . 'build/verifymembers/templates/showverified.php';
          }
     }
 

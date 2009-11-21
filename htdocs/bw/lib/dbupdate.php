@@ -194,19 +194,6 @@ KEY `user_id_foreign` ( `user_id_foreign` )
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8";
 	$updates[51] ="ALTER TABLE `gallery_items`
   ADD `description` text NOT NULL ";
-    $updates[52] = "INSERT INTO `bewelcome`.`volunteer_boards` (
-`id` ,
-`Name` ,
-`updated` ,
-`PurposeComment` ,
-`TextContent` ,
-`created`
-)
-VALUES (
-'2', 'translator_board',
-CURRENT_TIMESTAMP , 'This is the shared board for translation volunteers. Feel free to add some note here, your username and a date stamp will be added automatically, previous versions are logged', '', '2009-11-21 00:00:00'
-);
-    ";
 	$updates[] ="ALTER TABLE `forums_posts` ADD `IdWriter` INT NOT NULL DEFAULT '0' COMMENT 'This is the member who write the post, this is th index to use to retrieve the member data in Members table' AFTER `authorid`" ;
 	$updates[] ="ALTER TABLE `forums_posts` ADD INDEX ( `IdWriter` )" ;
 	$updates[] ="update forums_posts,user,members set forums_posts.IdWriter=members.id  where forums_posts.authorid=user.id and members.Username=user.handle" ;
@@ -1680,6 +1667,20 @@ SQL;
     $updates[] = <<<SQL
 ALTER TABLE `trip_data` DROP INDEX `trip_id`
 SQL;
+
+    $updates[] = "INSERT INTO `bewelcome`.`volunteer_boards` (
+`id` ,
+`Name` ,
+`updated` ,
+`PurposeComment` ,
+`TextContent` ,
+`created`
+)
+VALUES (
+'2', 'translator_board',
+CURRENT_TIMESTAMP , 'This is the shared board for translation volunteers. Feel free to add some note here, your username and a date stamp will be added automatically, previous versions are logged', '', '2009-11-21 00:00:00'
+);
+    ";
 
     if (empty($res)) {
         $version = 0;

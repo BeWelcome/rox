@@ -599,6 +599,7 @@ ORDER BY b.`blog_created` DESC';
      */
     public function getRecentPostsArray($userId = false, $categoryId = false, $page = 1)
     {
+        $categoryId = is_numeric($categoryId) ? $categoryId : false;
         $query = Blog::SQL_BLOGPOST;
         if ($categoryId) {
             $query .= '

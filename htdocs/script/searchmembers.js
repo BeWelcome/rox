@@ -126,7 +126,7 @@ function searchByText(address, i) {
                     put_val('CityName', '');
                     put_val('IdCountry', '');
                     map_scale = 3;
-                    scanObject(place);
+                    extractLocationData(place);
                     if(!mapoff) {
                     	map.setCenter(point, map_scale);
                     	map.addOverlay(new GMarker(point));
@@ -135,6 +135,55 @@ function searchByText(address, i) {
                 }
             }
         );
+    }
+}
+
+function extractLocationData(geo_object)
+{
+    if(typeof(geo_object) == 'object' && geo_object.AddressDetails && geo_object.AddressDetails.Accuracy && geo_object.AddressDetails.Country && geo_object.AddressDetails.Country.CountryNameCode && geo_object.Point && geo_object.Point.coordinates)
+    {
+        $('accuracy_level').value = geo_object.AddressDetails.Accuracy;
+        $('place_coordinates').value = geo_object.Point.coordinates;
+        $('IdCountry').value = geo_object.AddressDetails.Country.CountryNameCode;
+    }
+    else
+    {
+        $('accuracy_level').value = '';
+        $('place_coordinates').value = '';
+        $('IdCountry').value = '';
+    }
+    switch (parseInt($('accuracy_level').value))
+    {
+        case 0:
+            map_scale = 3;
+            break;
+        case 1:
+            switch ($('IdCountry').value)
+            {
+                case 'RU':
+                case 'US':
+                case 'CA':
+                case 'CN':
+                case 'BR':
+                case 'AU':
+                    map_scale = 3;
+                    break;
+                default:
+                    map_scale = 5;
+            }
+            break;
+        case 2:
+            map_scale = 7;
+            break;
+        case 3:
+            map_scale = 9;
+            break;
+        case 4:
+            map_scale = 10;
+            break;
+        default:
+            map_scale = 11;
+            break;
     }
 }
 

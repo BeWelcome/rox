@@ -34,6 +34,8 @@ Boston, MA  02111-1307, USA.
 <input type="hidden" name="bounds_sw_lng" id="bounds_sw_lng" />
 <input type="hidden" name="bounds_ne_lng" id="bounds_ne_lng" />
 <input type="hidden" name="CityName" id="CityName" />
+<input type="hidden" name="accuracy_level" id="accuracy_level" />
+<input type="hidden" name="place_coordinates" id="place_coordinates" />
 <input type="hidden" name="IdCountry" id="IdCountry" />
 <input type="hidden" name="start_rec" id="start_rec" />
 <?php PPostHandler::setCallback("searchmembers_callbackId", "SearchmembersController", "index"); ?>

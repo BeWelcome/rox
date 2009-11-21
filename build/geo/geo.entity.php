@@ -288,4 +288,49 @@ class Geo extends RoxEntityBase
 		$this->logWrite("Database Bug: geonames_cache ({$this->getPKValue()}) fcode={$this->fcode} which is unknown", "Bug");
 		return("Unknown") ;
 	}
+
+    /**
+     * returns true if the entity is a city
+     *
+     * @access public
+     * @return bool
+     */
+    public function isCity()
+    {
+        if ($this->isLoaded() && $this->placeType() == 'City')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * returns true if the entity is a region
+     *
+     * @access public
+     * @return bool
+     */
+    public function isRegion()
+    {
+        if ($this->isLoaded() && $this->placeType() == 'Region')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * returns true if the entity is a country
+     *
+     * @access public
+     * @return bool
+     */
+    public function isCountry()
+    {
+        if ($this->isLoaded() && $this->placeType() == 'Country')
+        {
+            return true;
+        }
+        return false;
+    }
 }

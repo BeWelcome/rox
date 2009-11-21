@@ -454,37 +454,31 @@ AND (
         if ($this->GetParam($vars, "IdCity",0)!=0) {
            $where .= " AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
         }
-        if ($this->GetParam($vars, "CityName","")!="")
+        if (($coordinates = $this->GetParam($vars, "place_coordinates","")) && ($accuracy = $this->GetParam($vars, "accuracy_level")) && intval($accuracy) > 1)
         {
-            
-            $city = $this->GetParam($vars, "CityName");
-            $sData=<<<SQL
-SELECT
-    distinct(gc.geonameid) AS geonameid 
-FROM
-    geonames_cache AS gc
-LEFT JOIN geonames_alternate_names AS gan ON gan.geonameid = gc.geonameid
-WHERE
-    gc.name='{$city}' 
-OR
-    gan.alternateName='{$city}'
-SQL;
-            $qryData = $this->dao->query($sData);
-            $WhereCity="" ;
-            while ($rData = $qryData->fetch(PDB::FETCH_OBJ))
+            list($long, $lat, $alt) = explode(',', $coordinates);
+            $min_long = round($long, 2) < $long ? round($long, 2) : round($long, 2) - 0.01;
+            $max_long = round($long, 2) > $long ? round($long, 2) : round($long, 2) + 0.01;
+            $min_lat = round($lat, 2) < $lat ? round($lat, 2) : round($lat, 2) - 0.01;
+            $max_lat = round($lat, 2) > $lat ? round($lat, 2) : round($lat, 2) + 0.01;
+
+            $places = $this->createEntity('Geo')->findByWhereMany(<<<SQL
+longitude BETWEEN {$min_long} AND {$max_long}
+AND latitude BETWEEN {$min_lat} AND {$max_lat}
+SQL
+);
+            $cities = array();
+            foreach ($places as $geo)
             {
-                if ($WhereCity=="")
+                if ($geo->isCity())
                 {
-                    $WhereCity=" geonameid in(".$rData->geonameid ;
-                }
-                else {
-                    $WhereCity=$WhereCity.",".$rData->geonameid ;
+                    $cities[] = $geo->geonameid;
                 }
             }
 
-            if ($WhereCity!="")
+            if (!empty($cities))
             {
-                $WhereCity=$WhereCity.")" ;
+                $WhereCity = ' (' . implode(',', $cities) . ')';
             }
             else
             {

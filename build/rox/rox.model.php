@@ -39,7 +39,7 @@ class Rox extends PAppModel {
     public function __construct()
     {
         parent::__construct();
-		
+        
         // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
         // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
         // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?

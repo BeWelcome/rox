@@ -251,39 +251,30 @@ SELECT  PASSWORD('$password')  AS  PassMysqlEncrypted
     }
 
     
-    //-----------------------------------------------------------------------
-    
         
-    function getBWMemberByUsername($Username)
+    /**
+     * gets a BW member by username
+     *
+     * @param string $username - user handle
+     *
+     * @access public
+     * @return false|Member
+     */
+    public function getBWMemberByUsername($username)
     {
-        $Username=$this->dao->escape($Username);
-        
-        if (!$m = $this->singleLookup(
-            "
-SELECT  *
-FROM    members
-WHERE   Username = '$Username'
-            "
-        )) {
-            // no member found
+        if (!$m = $this->createEntity('Member')->findByUsername($username))
+        {
             return false;
-        } else {
-            // member found,
-            // but look for alias (in case username was changed)
-            while ($m->ChangedId > 0) {
-                $changed_id = (int)$m->ChangedId;
-                if (!$m = $this->singleLookup(
-                    "
-SELECT  *
-FROM    members
-WHERE   id = $changed_id
-                    "
-                )) {
-                    return false;
-                }
-            }
-            return $m;
         }
+
+        // member found,
+        // but look for alias (in case username was changed)
+        while ($m->ChangedId > 0)
+        {
+            $m = $this->createEntity('Member')->findById($m->ChangedId);
+            if (!$m) return false;
+        }
+        return $m;
     }
     
     
@@ -317,7 +308,8 @@ WHERE   handle = '$esc_handle'
         $member_id = (int)$m->id;
 				unset($_SESSION['MemberStatus']) ; // For the case where it is set to empty
 				unset($_SESSION['Status']) ;  // For the case where it is set to empty
-				if (empty($m->Status)) {
+				if (!$m->Status)
+                {
 					die ("Alarm : in setBWMemberAsLoggedIn with empty \$m->Status") ;
 				}
 				else {
@@ -535,15 +527,7 @@ WHERE   id = $tb_user_id
             "
         );
     }
-    
-    
-    
-    function setTBUserAsLoggedOut($tb_user)
-    {
-        
-    }
-    
-    
+
     public function logout()
     {
         if (!$member = $this->getLoggedInMember())

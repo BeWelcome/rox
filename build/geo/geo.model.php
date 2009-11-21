@@ -40,107 +40,63 @@ class GeoModel extends RoxModelBase {
  ** will return the name (if available in the requested language i, else in english), the parent region (adm1) and country
 **/
  
- public function getDataById($geonameId,$lang = false) {
-    $resultset =  $this->singleLookup( 
-        "
-        SELECT * 
-        FROM `geonames_cache`
-        WHERE `geonameid` = '".$geonameId."' 
-        ");
-    
-    if ($lang) {
-        $alternateName = $this->singleLookup(
+     public function getDataById($geonameId,$lang = false)
+     {
+        $resultset =  $this->singleLookup( 
             "
-            SELECT *
-            FROM `geonames_alternate_names`
-            WHERE `geonameId` = '".$geonameId."'
-            AND `isoLanguage` = '".$lang."'
-            ORDER BY `isPreferredName`
+            SELECT * 
+            FROM `geonames_cache`
+            WHERE `geonameid` = '".$geonameId."' 
             ");
-    }
-    // var_dump ($alternateName);
-    // var_dump ($resultset);
-    if (isset($alternateName) && $alternateName) $resultset['alternateName'] = $alternateName;
-    // $adm1 = $this->getAdm1($geonameId);
-    // if (isset($adm1) && $adm1) $resultset->adm1 = $adm1;
-    return $resultset;
-}
-    
-    public function getAdm1($geonameId, $name = false) {
-            $parentid = $this->singleLookup (
-            "
-                SELECT `parentId`, `fcode`
-                FROM `geo_hierarchy` AS `gh`
-                LEFT JOIN `geonames_cache` AS gc ON `gc`.`geonameid` = `gh`.`geoId`
-                WHERE `gh`.`geoId` = ".$geonameId."
-                AND `gc`.`fcode` = 'adm1'
-            ");
-        if ($parentid) {
-            if ($name) return $parentid->parentId;
-            return $parentid->fcode;
-        } else return false;
-    }
         
+        if ($lang) {
+            $alternateName = $this->singleLookup(
+                "
+                SELECT *
+                FROM `geonames_alternate_names`
+                WHERE `geonameId` = '".$geonameId."'
+                AND `isoLanguage` = '".$lang."'
+                ORDER BY `isPreferredName`
+                ");
+        }
+        // var_dump ($alternateName);
+        // var_dump ($resultset);
+        if (isset($alternateName) && $alternateName) $resultset['alternateName'] = $alternateName;
+        return $resultset;
+    }
+    
 
     /**
-    * Loads all info about a location
-    * @Name : if it is a int specify a specific IdLocation, if it is a string the alternatenames are searc
-	* * are considerated as wild card in Name and will be replaced by a like %
-    * @returns an array descringing the location(s)
+    * searches for geo entities, based on either id or name
+    *
+    * @param int|string $name - strange mixed param ... there are methods for loading locations by id, use them!
+	* @access public
+    * @return array
     */
-    public function LoadLocation($name)  {
-		$tt=array() ;
-		if (is_numeric($name)) {
-			$ss="SELECT * FROM `geonames_cache` where `geonameid`=".$name ;
+    public function loadLocation($name)
+    {
+		$result = array();
+		if (is_numeric($name))
+        {
+            if ($geo = $this->createEntity('Geo')->findById($name))
+            {
+                $result[] = $geo;
+            }
 		}
-		else {
-			$ss="SELECT * FROM `geonames_cache` where `name` like '".str_replace("*","%",$name)."'";
+		else
+        {
+			$result = $this->createEntity('Geo')->findByNameWildcard($name);
 		}
-//		echo $ss ;
-		$query = $this->dao->query($ss);
-		if (!$query) {
-            throw new PException('LoadLocation::failed with location ['.$name.']') ;
-		}
-		while ($rr = $query->fetch(PDB::FETCH_OBJ)) {
-			$rr->TypeLocation="" ;
-			$Country=$this->singleLookup ("select * from countries where countries.id=".$rr->geonameid) ;
-			if (isset($Country->id)) {
-				$rr->TypeLocation=$rr->TypeLocation."Country (<a href=\"places/".$Country->isoalpha2."\">".$Country->Name."</a>)" ;
-			}
-			$Region=$this->singleLookup ("select regions.*,countries.Name as CountryName,countries.isoalpha2 as isoalpha2 from regions left join countries on countries.id=regions.IdCountry where regions.id=".$rr->geonameid) ;
-			if (isset($Region->id)) {
-				if (!empty($rr->TypeLocation)) {
-					$rr->TypeLocation.="<br />\n" ;
-				}
-				$rr->TypeLocation=$rr->TypeLocation."Region (<a href=\"places/".$Region->isoalpha2."\">".$Region->CountryName."</a>" ;
-				$rr->TypeLocation=$rr->TypeLocation." / <a href=\"places/".$Region->isoalpha2."/".$Region->Name."\">".$Region->Name."</a>)" ;
-			}
-			$City=$this->singleLookup ("select cities.*,regions.Name as RegionName,countries.Name as CountryName,countries.isoalpha2 as isoalpha2 from (cities) 
-						left join regions on regions.id=cities.IdRegion 
-						left join countries on countries.id=cities.IdCountry 
-						where cities.id=".$rr->geonameid) ;
-			if (isset($City->id)) {
-				if (!empty($rr->TypeLocation)) {
-					$rr->TypeLocation.="<br />\n" ;
-				}
-				$rr->TypeLocation=$rr->TypeLocation."City (<a href=\"places/".$City->isoalpha2."\">".$City->CountryName."</a>" ;
-				$rr->TypeLocation=$rr->TypeLocation." / <a href=\"places/".$City->isoalpha2."/".$City->RegionName."\">".$City->RegionName."</a>" ;
-				$rr->TypeLocation=$rr->TypeLocation." / <a href=\"places/".$City->isoalpha2."/".$City->RegionName."/".$City->Name."\">".$City->Name."</a>)" ;
-			}
-			$rr->usage=$this->bulkLookup ("select * from geo_usage  where geoid=".$rr->geonameid );
-			$rr->alternate_names=$this->bulkLookup ("select * from geonames_alternate_names  where geonameId=".$rr->geonameid );
-			array_push($tt,$rr) ;
-		}
-		return($tt) ;
+        return $result;
 	}
 	
 
- /**
-    * Search for locations in the geonames database using the SPAF-Webservice
-    *
-    * @param search The location to search for
-    * @return The matching locations
-    */
+    /**
+     * Search for locations in the geonames database using the SPAF-Webservice
+     *
+     * @param search The location to search for
+     * @return The matching locations
+     */
     public function suggestLocation($search, $max = false,$fcode = '')
     {
         if (strlen($search) <= 1) { // Ignore too small queries

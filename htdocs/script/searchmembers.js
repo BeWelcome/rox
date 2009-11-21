@@ -39,6 +39,8 @@ function load() {
 function searchGlobal(i) {
     state = 'global';
     put_html('loading', loading);
+    $('paging-div').innerHTML = '';
+    if ($('second_pager')) $('second_pager').innerHTML = '';
     put_val('mapsearch', 0);
     put_val('CityName', '');
     put_val('IdCountry', '');
@@ -94,6 +96,8 @@ function loadSearchMapButton() {
 function searchByMap(i) {
     state = 'map';
     put_html('loading', loading);
+    $('paging-div').innerHTML = '';
+    if ($('second_pager')) $('second_pager').innerHTML = '';
     put_val('mapsearch', 1);
     var bounds = map.getBounds();
     put_val('bounds_zoom', map.getZoom());
@@ -119,14 +123,20 @@ function searchByText(address, i) {
         geocoder.getLocations(
             address,
             function(response) {
-                if(!response || response.Status.code != 200) put_html('loading', addressNotFound);
-                else {
+                if(!response || response.Status.code != 200)
+                {
+                    put_html('loading', addressNotFound);
+                    $('paging-div').innerHTML = '';
+                    if ($('second_pager')) $('second_pager').innerHTML = '';
+                }
+                else
+                {
                     var place = response.Placemark[0];
                     var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
                     put_val('CityName', '');
                     put_val('IdCountry', '');
                     map_scale = 3;
-                    scanObject(place);
+                    extractLocationData(place);
                     if(!mapoff) {
                     	map.setCenter(point, map_scale);
                     	map.addOverlay(new GMarker(point));
@@ -135,6 +145,55 @@ function searchByText(address, i) {
                 }
             }
         );
+    }
+}
+
+function extractLocationData(geo_object)
+{
+    if(typeof(geo_object) == 'object' && geo_object.AddressDetails && geo_object.AddressDetails.Accuracy && geo_object.AddressDetails.Country && geo_object.AddressDetails.Country.CountryNameCode && geo_object.Point && geo_object.Point.coordinates)
+    {
+        $('accuracy_level').value = geo_object.AddressDetails.Accuracy;
+        $('place_coordinates').value = geo_object.Point.coordinates;
+        $('IdCountry').value = geo_object.AddressDetails.Country.CountryNameCode;
+    }
+    else
+    {
+        $('accuracy_level').value = '';
+        $('place_coordinates').value = '';
+        $('IdCountry').value = '';
+    }
+    switch (parseInt($('accuracy_level').value))
+    {
+        case 0:
+            map_scale = 3;
+            break;
+        case 1:
+            switch ($('IdCountry').value)
+            {
+                case 'RU':
+                case 'US':
+                case 'CA':
+                case 'CN':
+                case 'BR':
+                case 'AU':
+                    map_scale = 3;
+                    break;
+                default:
+                    map_scale = 5;
+            }
+            break;
+        case 2:
+            map_scale = 7;
+            break;
+        case 3:
+            map_scale = 9;
+            break;
+        case 4:
+            map_scale = 10;
+            break;
+        default:
+            map_scale = 11;
+            break;
     }
 }
 
@@ -166,12 +225,22 @@ function scanObject(object)
     }
 }
 
+function flipSortDirection(e)
+{
+    var e = e || window.event;
+    Event.stop(e);
+    var newstate = ($('filterDirection').selectedIndex + 1) % 2;
+    $('filterDirection').selectedIndex = newstate;
+    loadMap(0);
+}
+
 function loadMap(i)
 {
     if(!mapoff) map.clearOverlays();
     put_val('start_rec', i);
     new Ajax.Request('searchmembers/ajax'+varsOnLoad+varSortOrder+queries, {
         parameters: $('searchmembers').serialize(true),
+        method: 'get',
         onSuccess: function(req) {
             //alert(req.responseText);return;
             if(queries != '') {
@@ -184,6 +253,29 @@ function loadMap(i)
             var header = getxmlEl(xmlDoc, "header");
             var detail = header[0].getAttribute("header");
             var markers = getxmlEl(xmlDoc, "marker");
+            var pager = getxmlEl(xmlDoc, "pager");
+            var per_page = pager[0].getAttribute('per_page');
+            if (pager[0].firstChild)
+            {
+                var removed = pager[0].removeChild(pager[0].firstChild);
+                var tempdiv = document.createElement('div');
+                try
+                {
+                    // will fail in IE
+                    tempdiv.appendChild(removed);
+                }
+                catch (e)
+                {
+                    tempdiv.innerHTML = pager[0].getAttribute('paging');
+                }
+                $('paging-div').innerHTML = tempdiv.innerHTML;
+                if (mapoff)
+                {
+                    $('second_pager').innerHTML = tempdiv.innerHTML;
+                    hookUpPager('second_pager', per_page);
+                }
+                hookUpPager('paging-div', per_page);
+            }
             var i, j, marker;
             var point = new Array();
             var accomodation = new Array();
@@ -278,7 +370,6 @@ function loadMap(i)
                     gmarkers[index] = marker;
                 }
             }
-            
             if(!mapoff && state == 'global' && markers.length) {
                 var minLat = 90, maxLat = -90;
                 var aveLat = 0, delLat, lat, lng;
@@ -327,11 +418,8 @@ function loadMap(i)
                 point = new GLatLng(aveLat, aveLng);
                	map.setCenter(point, map_scale);
             }
-          
             var footer = getxmlEl(xmlDoc, "footer");
             detail += footer[0].getAttribute("footer");
-            var page = getxmlEl(xmlDoc, "page");
-            detail += page[0].getAttribute("page");
             put_html('member_list', detail);
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
@@ -347,6 +435,21 @@ function loadMap(i)
             }
         }
     });
+}
+
+function hookUpPager(container_id, per_page)
+{
+    var pager_links = $(container_id).getElementsByTagName('a');
+    for (var a = 0; a < pager_links.length; a++)
+    {
+        $(pager_links[a]).observe('click', function(e){
+            var ev = e || windows.event;
+            Event.stop(ev);
+            var reg = /page=(\d+)/;
+            var page = (this.href.match(reg)[1] - 1) * per_page;
+            loadMap(page);
+        });
+    }
 }
 
 function toggle_map()

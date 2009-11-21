@@ -38,7 +38,7 @@ class SearchmembersController extends PAppController {
         parent::__construct();
         $this->_model = new Searchmembers();
         $this->_view  = new SearchmembersView($this->_model);
-		
+        
 
         // if a stylesheet is requested (in subdir style), pipe it through
         $request = PRequest::get()->request;
@@ -80,29 +80,29 @@ class SearchmembersController extends PAppController {
             // static pages
             switch($request[1]) {
                 case '':
-    				$searchtext=$_GET["vars"] ; // Because of old way to use the QuickSearch with a get
+                    $searchtext = isset($_GET["vars"]) ? $_GET['vars'] : ''; // Because of old way to use the QuickSearch with a get
                     break;
                 default:
-    				$searchtext=$request[1] ;
+                    $searchtext = $request[1] ;
                     break;
             }
-		
-    		$TReturn=$this->_model->quicksearch($searchtext) ;
-    		if ((count($TReturn->TMembers)==1) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==0)) {
-    			$loc="members/".$TReturn->TMembers[0]->Username ;
-    			header('Location: '.$loc);
+        
+            $TReturn=$this->_model->quicksearch($searchtext) ;
+            if ((count($TReturn->TMembers)==1) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==0)) {
+                $loc="members/".$TReturn->TMembers[0]->Username ;
+                header('Location: '.$loc);
                 PPHP::PExit();
-    		}
-    		else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==1)  and  (count($TReturn->TForumTags)==0)) {
-    			$loc=$TReturn->TPlaces[0]->link ;
-    			header('Location: '.$loc);
+            }
+            else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==1)  and  (count($TReturn->TForumTags)==0)) {
+                $loc=$TReturn->TPlaces[0]->link ;
+                header('Location: '.$loc);
                 PPHP::PExit();
-    		}
-    		else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==1)) {
-    			$loc="forums/t".$TReturn->TForumTags[0]->IdTag ;
-    			header('Location: '.$loc);
+            }
+            else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==1)) {
+                $loc="forums/t".$TReturn->TForumTags[0]->IdTag ;
+                header('Location: '.$loc);
                 PPHP::PExit();
-    		}
+            }
             $P->content .= $vw->quicksearch_results($TReturn);
             return $P;
         }
@@ -116,7 +116,7 @@ class SearchmembersController extends PAppController {
         if($request[1]==='searchmembers') {
             $request = array_slice($request, 1);
         }
-		
+        
         
         // default mapstyle:
         $mapstyle = 'mapon';
@@ -153,89 +153,87 @@ class SearchmembersController extends PAppController {
             if (($_SESSION['SearchMembersTList']) && ($_SESSION['SearchMembersVars'])) $varsOnLoad = $_SESSION['SearchMembersVars'];
         }
 
-        switch ($request[1]) {
-
+        switch ($request[1])
+        {
             case 'ajax':
-                $callbackId = "searchmembers_callbackId";
-                if((isset($request[2]) and $request[2] == "varsonload")) {
+                if((isset($request[2]) and $request[2] == "varsonload"))
+                {
                     $vars['varsOnLoad'] = true;
                     // Read the latest search results and variables from the session
-                    if ($_SESSION['SearchMembersTList'] != '') $TList = $_SESSION['SearchMembersTList'];
-                    if ($_SESSION['SearchMembersVars'] != '') $vars = $_SESSION['SearchMembersVars'];
+                    if (!empty($_SESSION['SearchMembersTList'])) $TList = $_SESSION['SearchMembersTList'];
+                    if (!empty($_SESSION['SearchMembersVars'])) $vars = $_SESSION['SearchMembersVars'];
                     if (isset($request[3])) {
                         $vars['OrderBy'] = $request[3];
                         $TList = $this->_model->searchmembers($vars);
                     }
                 }
-                else {
-                    $vars = &PPostHandler::getVars($callbackId);
-                    if(isset($request[2]) and $request[2] == "queries") $vars['queries'] = true;
+                else
+                {
+                    $vars = isset($_GET) ? $_GET : array();
+                    if(isset($request[2]) && $request[2] == "queries") $vars['queries'] = true;
                     if (!isset($TList)) $TList = $this->_model->searchmembers($vars);
                 }
                 $this->_view->searchmembers_ajax($TList, $vars, $mapstyle);
                 // Store latest search results and variables in session
                 $_SESSION['SearchMembersTList'] = $TList;
                 $_SESSION['SearchMembersVars'] = $vars;
-                PPostHandler::clearVars($callbackId);
-                PPostHandler::setCallback($callbackId, "SearchmembersController", "index");
                 PPHP::PExit();
                 break;
-
+/* quicksearch shouldn't go through this route
             case 'quicksearch':
-				$mapstyle = "mapoff"; 
-				// First check if the QuickSearch feature is closed
-				if ($_SESSION["Param"]->FeatureQuickSearchIsClosed!='No') {
-					$this->_view->showFeatureIsClosed();
-					PPHP::PExit();
-					break ;
-				} // end of test "if QuickSearch feature is closed" 
-				if (isset($request[2])) { // The parameter to search for can be for the form searchmember/quicksearch/ value
-					$searchtext=$request[2] ;
-				}
+                $mapstyle = "mapoff"; 
+                // First check if the QuickSearch feature is closed
+                if ($_SESSION["Param"]->FeatureQuickSearchIsClosed!='No') {
+                    $this->_view->showFeatureIsClosed();
+                    PPHP::PExit();
+                    break ;
+                } // end of test "if QuickSearch feature is closed" 
+                if (isset($request[2])) { // The parameter to search for can be for the form searchmember/quicksearch/ value
+                    $searchtext=$request[2] ;
+                }
 
-				if (isset($_GET['searchtext'])) { // The parameter can come from the main menu
-					$searchtext = $_GET['searchtext'];
-				}
-				if (isset($_POST['searchtext'])) { // The parameter can come from the quicksearch form
-					$searchtext = $_POST['searchtext'];
-				}				
-				
-//				die('here searchtext={'.$searchtext.'}') ;
-				if (!empty($searchtext)) {
-					$TReturn=$this->_model->quicksearch($searchtext) ;
-					if ((count($TReturn->TMembers)==1) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==0)) {
-						$loc="members/".$TReturn->TMembers[0]->Username ;
-						header('Location: '.$loc);
-						PPHP::PExit();
-					}
-					else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==1)  and  (count($TReturn->TForumTags)==0)) {
-						$loc=$TReturn->TPlaces[0]->link ;
-						header('Location: '.$loc);
-						PPHP::PExit();
-					}
-					else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==1)) {
-						$loc="forums/t".$TReturn->TForumTags[0]->IdTag ;
-						header('Location: '.$loc);
-						PPHP::PExit();
-					}
-					$P->content .= $vw->quicksearch_results($TReturn);
-				}
-				else {
-
-					$vars = PPostHandler::getVars('quicksearch_callbackId');
-					PPostHandler::clearVars('quicksearch_callbackId');
-
-					// first include the col2-stylesheet
-					$P->addStyles .= $this->_view->customStyles($mapstyle,$quicksearch=1);
+                if (isset($_GET['searchtext'])) { // The parameter can come from the main menu
+                    $searchtext = $_GET['searchtext'];
+                }
+                if (isset($_POST['searchtext'])) { // The parameter can come from the quicksearch form
+                    $searchtext = $_POST['searchtext'];
+                }               
                 
-					// now the teaser content
-					$P->teaserBar .= $vw->teaserquicksearch($mapstyle);
-                
-					$P->content .= $vw->quicksearch_form();
-				}
-				break;
-                
+//              die('here searchtext={'.$searchtext.'}') ;
+                if (!empty($searchtext)) {
+                    $TReturn=$this->_model->quicksearch($searchtext) ;
+                    if ((count($TReturn->TMembers)==1) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==0)) {
+                        $loc="members/".$TReturn->TMembers[0]->Username ;
+                        header('Location: '.$loc);
+                        PPHP::PExit();
+                    }
+                    else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==1)  and  (count($TReturn->TForumTags)==0)) {
+                        $loc=$TReturn->TPlaces[0]->link ;
+                        header('Location: '.$loc);
+                        PPHP::PExit();
+                    }
+                    else if ((count($TReturn->TMembers)==0) and  (count($TReturn->TPlaces)==0)  and  (count($TReturn->TForumTags)==1)) {
+                        $loc="forums/t".$TReturn->TForumTags[0]->IdTag ;
+                        header('Location: '.$loc);
+                        PPHP::PExit();
+                    }
+                    $P->content .= $vw->quicksearch_results($TReturn);
+                }
+                else {
 
+                    $vars = PPostHandler::getVars('quicksearch_callbackId');
+                    PPostHandler::clearVars('quicksearch_callbackId');
+
+                    // first include the col2-stylesheet
+                    $P->addStyles .= $this->_view->customStyles($mapstyle,$quicksearch=1);
+                
+                    // now the teaser content
+                    $P->teaserBar .= $vw->teaserquicksearch($mapstyle);
+                
+                    $P->content .= $vw->quicksearch_form();
+                }
+                break;
+                
             // Backwards compatibility
             case 'index':
                 $loc = PVars::getObj('env')->baseuri;
@@ -245,27 +243,8 @@ class SearchmembersController extends PAppController {
                 header('Location: '.$loc);
                 PPHP::PExit();
                 break;
-                
+*/
             default:    
-                
-                // Check wether there are search variables set as GET-parameters
-				/* obsolete replaced by the quicksearch
-                if (isset($_GET['vars'])) {
-                    $geo = MOD_geo::get();	// get the singleton instance
-                    $id = $geo->getCityID($_GET['vars'], true);
-                    if (!$id) {
-                        // if there's not city with that name, redirect to a member's profile if there is one
-                        $m = MOD_member::getMember_username($_GET['vars']);
-                        if ($m) {
-                            $loc = PVars::getObj('env')->baseuri.'people/member/'.$_GET['vars'];
-                            header('Location: '.$loc);
-                        }
-                    }
-                    $varsGet = $_GET['vars'];
-                    $varsOnLoad = false;
-                }
-				*/
-                
                 $words = new MOD_words();
                 
                 $P->addStyles = $this->_view->customStyles($mapstyle);
@@ -314,5 +293,4 @@ class SearchmembersController extends PAppController {
                 break;
         }
     }
-    
 }

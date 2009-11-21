@@ -76,7 +76,7 @@ class Geo extends RoxEntityBase
      * returns the geo object for the country
      *
      * @access public
-     * @return object
+     * @return Geo
      */
     public function getCountry()
     {
@@ -253,5 +253,84 @@ class Geo extends RoxEntityBase
             $this->total_usage = $this->createEntity('GeoUse')->getAllUsageForGeo($this);
         }
         return $this->total_usage;
+    }
+	
+	/**
+	 * returns the type of the object
+     *
+     * @access public
+     * @return string
+	 */
+	public function placeType() {
+        if (!$this->isLoaded())
+        {
+            return '';
+        }
+		switch($this->fcode)
+        {
+			case 'PPL':
+			case 'PPLA':
+			case 'PPLC':
+			case 'PPLG':
+			case 'PPLS':
+			case 'PPLS':
+				return "City";
+				break;
+			case 'PCLI':
+			case 'PCLS':
+			case 'PCLIX':
+				return "Country";
+				break;
+			case 'ADM1':
+				return "Region";
+				break;
+		}
+		$this->logWrite("Database Bug: geonames_cache ({$this->getPKValue()}) fcode={$this->fcode} which is unknown", "Bug");
+		return("Unknown") ;
+	}
+
+    /**
+     * returns true if the entity is a city
+     *
+     * @access public
+     * @return bool
+     */
+    public function isCity()
+    {
+        if ($this->isLoaded() && $this->placeType() == 'City')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * returns true if the entity is a region
+     *
+     * @access public
+     * @return bool
+     */
+    public function isRegion()
+    {
+        if ($this->isLoaded() && $this->placeType() == 'Region')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * returns true if the entity is a country
+     *
+     * @access public
+     * @return bool
+     */
+    public function isCountry()
+    {
+        if ($this->isLoaded() && $this->placeType() == 'Country')
+        {
+            return true;
+        }
+        return false;
     }
 }

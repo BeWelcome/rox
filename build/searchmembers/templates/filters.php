@@ -34,6 +34,8 @@ Boston, MA  02111-1307, USA.
 <input type="hidden" name="bounds_sw_lng" id="bounds_sw_lng" />
 <input type="hidden" name="bounds_ne_lng" id="bounds_ne_lng" />
 <input type="hidden" name="CityName" id="CityName" />
+<input type="hidden" name="accuracy_level" id="accuracy_level" />
+<input type="hidden" name="place_coordinates" id="place_coordinates" />
 <input type="hidden" name="IdCountry" id="IdCountry" />
 <input type="hidden" name="start_rec" id="start_rec" />
 <?php PPostHandler::setCallback("searchmembers_callbackId", "SearchmembersController", "index"); ?>
@@ -41,10 +43,10 @@ Boston, MA  02111-1307, USA.
 <div id="FindPeopleFilter">
 <table class="float_left"><tr><td>
 <strong class="small"><?php echo $words->getFormatted('Username'); ?></strong><br />
-<input type="text" name="Username" id="UsernameField" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+<input type="text" name="Username" id="UsernameField" size="30" maxlength="30" value="" onfocus="getFieldHelp(this.name);" onkeypress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('TextToFind'); ?></strong><br />
-<input type="text" name="TextToFind" id="TextToFindField" size="30" maxlength="30" value="" onFocus="getFieldHelp(this.name);" onKeyPress="if(chkEnt(this, event)) searchGlobal(0);" />
+<input type="text" name="TextToFind" id="TextToFindField" size="30" maxlength="30" value="" onfocus="getFieldHelp(this.name);" onkeypress="if(chkEnt(this, event)) searchGlobal(0);" />
 </td></tr></table>
 <table class="float_left">
 <tr><td>
@@ -115,18 +117,20 @@ Boston, MA  02111-1307, USA.
 <div id="FindPeopleResults">
 <table class="float_left"><tr><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
-<select name="OrderBy" id="filterorder" onChange="document.getElementById('thisorder').value = this.value;">
+<select name="OrderBy" id="filterorder" onchange="document.getElementById('thisorder').value = this.value;">
     <?php foreach($TabSortOrder as $key=>$val) { ?>
     <option value="<?php echo $key; ?>"><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>
 </select>
-</td><td>
+</td>
+<td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrderDirection'); ?></strong><br />
-<select name="OrderByDirection">
-    <option value="desc"><?php echo $words->getBuffered('Forward'); ?></option>
-    <option value="asc"><?php echo $words->getBuffered('Reverse'); ?></option>
+<select name="OrderByDirection" id="filterDirection">
+    <option value="0"><?php echo $words->getSilent('Forward'); ?></option>
+    <option value="1"><?php echo $words->getSilent('Reverse'); ?></option>
 </select>
-</td><td>
+</td>
+<td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleLimitCount'); ?></strong><br />
 <select name="limitcount" class="sval">
     <option value="10">10</option>

@@ -39,4 +39,4 @@ Boston, MA  02111-1307, USA.
     </div>
 <?php } ?>
 
-<?php echo $words->flushBuffer() ?>
+<?php echo $words->flushBuffer();

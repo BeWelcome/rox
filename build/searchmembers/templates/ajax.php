@@ -43,17 +43,18 @@ $mapstyle = $_SESSION['SearchMapStyle'];
 
 header('Content-type: text/xml');
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<markers>
+<content>
 ";
 $maxpos = $vars['rCount'];
 
 // Check wether there is a specific list type set or not
-if ($mapstyle == 'mapoff') {
-$ShowMemberFunction = 'ShowMembersAjax';
-} elseif ($mapstyle == 'mapon') {
-$ShowMemberFunction = 'ShowMembersAjaxShort';
-} else {
-$ShowMemberFunction = 'ShowMembersAjax';
+if ($mapstyle == 'mapon')
+{
+    $ShowMemberFunction = 'ShowMembersAjaxShort';
+}
+else
+{
+    $ShowMemberFunction = 'ShowMembersAjax';
 }
 $ii = 0;
 $curpos = $vars['start_rec'];
@@ -61,49 +62,82 @@ $width = $vars['limitcount'];
 foreach($TList as $TL) {
     $ii++;
     $Nr = $ii;
+    $string = <<<HTML
+<table style="width: 200px">
+    <tr>
+        <td class="memberlist">
+            <img src="members/avatar/{$TL->Username}?xs"/>
+        </td>
+        <td class="memberlist" valign="top">
+            <p><a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a><br />
+            <span class="small">{$words->getFormatted('YearsOld',$TL->Age)}, {$words->getFormatted('from')} {$TL->CityName}, {$TL->CountryName}<br/>{$TL->ProfileSummary}
+            </span><br />
+            <a class="button" href="javascript: map.setZoom((map.getZoom())+4);">Zoom In</a> <a class="button" href="javascript: map.setZoom((map.getZoom())-4);">Zoom Out</a>
+        </td>
+    </tr>
+</table>
+HTML;
+    $summary = htmlspecialchars($string, ENT_QUOTES);
     $string = '';
-	$string .= "<table style=\"width: 200px\"><tr><td class=\"memberlist\">" ;
-	$string .= "<img src=\"members/avatar/".$TL->Username."?xs\" >";
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<p><a href="members/'.$TL->Username.'" target="_blank"><b>'.$TL->Username.'</b></a><br />';
-	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TL->Age).", ". $words->getFormatted('from')." ".$TL->CityName.", ".$TL->CountryName."<br>".$TL->ProfileSummary;
-	$string .= "</span><br /><a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())+4);\">Zoom In</a> <a class=\"button\" href=\"javascript: map.setZoom((map.getZoom())-4);\">Zoom Out</a></td></tr></table>" ;
-    $summary = xml_prep($string);
-    $string = '';
-	$detail = xml_prep($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr));
+    $detail = htmlspecialchars($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr), ENT_QUOTES);
     
-	echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
+    echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
 ";
 }
-
+/* pagination should NOT be inside the results sent back
+   as they won't be visible until scrolled to
 $rr=0;
 $string = "<div class='pages center'><ul style='float:none'>" ;
 for ($ii=0; $ii<$maxpos; $ii=$ii+$width) {
     $rr++;
-	$i1=$ii ;
-	$i2= min($ii + $width,$maxpos);
-	$add = (($curpos>=$i1) and ($curpos<$i2)) ? 'current' : '';
+    $i1=$ii ;
+    $i2= min($ii + $width,$maxpos);
+    $add = (($curpos>=$i1) and ($curpos<$i2)) ? 'current' : '';
     $string .= "<li class=\"$add\"><a href=\"javascript: page_navigate($i1);\" class=\"off\">".$rr."</a></li> " ;
 }
 $string .= "</ul></div>" ;
-if ($ShowMemberFunction == 'ShowMembersAjaxShort') {
+*/
+$pagination = $pagination_attr = '';
+if (count($TList))
+{
+    $start = isset($vars['start_rec']) ? $vars['start_rec'] : 0;
+    $params->strategy = new HalfPagePager('left');
+    $params->items_per_page = $vars['limitcount'];
+    $params->items = $maxpos;
+    $params->active_page = floor($start / $vars['limitcount']) + 1;
+    $pager = new PagerWidget($params);
+    $pagination = str_replace('&nbsp;', ' ', $pager->getHtml());
+    $pagination_attr = htmlspecialchars($pager->getHtml(), ENT_QUOTES);
+}
+echo <<<XML
+<pager per_page='{$vars['limitcount']}' paging='{$pagination_attr}'>{$pagination}</pager>
+XML;
+if ($ShowMemberFunction == 'ShowMembersAjaxShort')
+{
     echo "<header header='".
-    xml_prep('').
     "'/>";
-} else {        
+}
+else 
+{        
     if(sizeof($TList) > 0) echo "<header header='".
-        xml_prep("<h2>".$words->getFormatted("searchResults")."</h2>").
-        xml_prep("<table  style=\"width: 100%\"><tr><th>".$words->getFormatted('Member')."</th><th></th><th>".$words->getFormatted('ProfileSummary')."</th><th>".$words->getFormatted('Host')."</th><th>".$words->getFormatted('LastLogin')."</th><th>".$words->getFormatted('Comments')."</th><th align=\"right\">".$words->getFormatted('Age')."</th></tr>").
+        htmlspecialchars("<table class=\"full\">
+            <tr>
+                <th colspan=\"2\">".$words->getFormatted('Member')."</th>
+                <th>".$words->getFormatted('ProfileSummary')."</th>
+                <th>".$words->getFormatted('Host')."</th>
+                <th>".$words->getFormatted('MemberSince')."</th>
+                <th>".$words->getFormatted('LastLogin')."</th>
+                <th>".$words->getFormatted('Comments')."</th>
+                <th align=\"right\">".$words->getFormatted('Age')."</th>
+            </tr>", ENT_QUOTES).
         "'/>";
     else echo "<header header='".
-        xml_prep($words->getFormatted("searchmembersNoSearchResults")).
+        htmlspecialchars($words->getFormatted("searchmembersNoSearchResults"), ENT_QUOTES).
         "'/>";
 }
-echo "<footer footer='".xml_prep("".$words->flushBuffer())."'/>";
-echo "<page page='".xml_prep($string)."'/>";
+echo "<footer footer='".htmlspecialchars("".$words->flushBuffer() ."</table>" , ENT_QUOTES)."'/>";
 echo "<num_results num_results='".$maxpos."'/>";
-echo "</markers>
+echo "</content>
 ";
 
 
@@ -112,67 +146,68 @@ $_SESSION['SearchMapStyle'] = $mapstyle;
 $_SESSION['SearchMembersVars'] = $vars;
 $_SESSION['SearchMembersTList'] = $TList;
 
-function xml_prep($string)
-{
-	return preg_replace(array("/&/", '/</', '/>/', "/'/"), array("&amp;", '&lt;', '&gt;', "&apos;"), $string);
-}
-
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {
-	static $ii = 0;
+    static $ii = 0;
+    $layoutbits = new MOD_layoutbits();
 
-	$info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
-	$string = $info_styles[($ii++%2)]; // this display the <tr>
-	$string .= "<td class=\"memberlist\">" ;
-	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<a href="members/'.$TM->Username.'" target="_blank">'.$TM->Username.'</a>';
-	$string .= "<br />".$TM->CountryName;
-	$string .= "<br />".$TM->CityName;
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= $TM->ProfileSummary ;
-	$string .= "</td>";
-	$string .= "<td class=\"memberlist\" align=\"center\">" ;
-	$string .= ShowAccomodation($TM->Accomodation, $Accomodation);
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\">" ;
-	$string .= $TM->LastLogin ;
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" align=center>" ;
-	$string .= $TM->NbComment ;
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" align=\"right\">" ;
-	$string .= $TM->Age ;
-	$string .= "</td>" ;
-	$string .="</tr>" ;
+    $info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
+    $string = $info_styles[($ii++%2)]; // this display the <tr>
+    $string .= "<td class=\"memberlist\">" ;
+    $string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" valign=\"top\">" ;
+    $string .= '<a href="members/'.$TM->Username.'" target="_blank">'.$TM->Username.'</a>';
+    $string .= "<br />".$TM->CountryName;
+    $string .= "<br />".$TM->CityName;
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" valign=\"top\">" ;
+    $string .= $TM->ProfileSummary ;
+    $string .= "</td>";
+    $string .= "<td class=\"memberlist\" align=\"center\">" ;
+    $string .= ShowAccomodation($TM->Accomodation, $Accomodation);
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\">" ;
+    $string .= date('d M y', strtotime($TM->created));
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\">" ;
+    $string .= $TM->LastLogin == '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin));
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" align=center>" ;
+    $string .= $TM->NbComment ;
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" align=\"right\">" ;
+    $string .= $TM->Age ;
+    $string .= "</td>" ;
+    $string .="</tr>" ;
 
     
-	return $string;
+    return $string;
 }
 function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
-	static $ii = 0;
+    static $ii = 0;
     $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
     
     $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',$TM->LastLogin))));
     if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
-	$info_styles = array(0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">");
-	$string = $info_styles[($ii++%2)]; // this display the <tr>
-	$string .= "<table style='width:100%'><tr><td class=\"memberlist\">" ;
-	$string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
-	$string .= "</td>" ;
-	$string .= "<td class=\"memberlist\" valign=\"top\">" ;
-	$string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
-	$string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName."<br /> ". $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span>";
-	$string .= "</span></td><td>";
+    $info_styles = array(0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">");
+    $string = $info_styles[($ii++%2)]; // this display the <tr>
+    $string .= "<table class=\"full\"><tr><td valign=\"top\" class=\"memberlist\">" ;
+    $string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
+    $string .= "</td>" ;
+    $string .= "<td class=\"memberlist\" valign=\"top\">" ;
+    $string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
+    $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ". $words->getFormatted('from')." ".$TM->CityName.", ".$TM->CountryName."<br /> ". $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span><br />";
+    $string .= $words->getFormatted('MemberSince').": <span title=".$TM->created."><strong>".date('d M y', strtotime($TM->created))."</strong><br />";
+    $string .= $words->getFormatted('Comments').": <span title=".$TM->NbComment."><strong>".$TM->NbComment."</strong><br />";
+    $string .= "</span></td><td align=\"right\" class=\"accommodation\">";
     $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:GEvent.trigger(gmarkers[".$Nr."], 'click');\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";
     $string .= "<span class=\"small\">".$Accomodation[$TM->Accomodation]."</span>";
     $string .= "</td></tr></table>" ;
-	$string .="</div>" ;
+    $string .="</div>" ;
 
     
-	return $string;
+    return $string;
 }
 
 // Not needed anymore...
@@ -185,5 +220,3 @@ function ShowAccomodation($accom, $Accomodation)
     if ($accom == "neverask")
        return "<img src=\"images/icons/gicon2.png\" title=\"".$Accomodation['neverask']."\"  alt=\"neverask\" />";
 }
-
-?>

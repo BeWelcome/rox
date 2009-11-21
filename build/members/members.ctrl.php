@@ -135,7 +135,8 @@ class MembersController extends RoxControllerBase
             case 'people':
             case 'members':
             default:
-                if (!isset($request[1])) {
+                if (!isset($request[1]))
+                {
                     // no member specified
                     $this->redirect("places");
                 } else if ($request[1] == 'avatar') {
@@ -144,10 +145,14 @@ class MembersController extends RoxControllerBase
                     PRequest::ignoreCurrentRequest();
                     $this->model->showAvatar($member->id);
                     break;
-                } else if (!$member = $this->getMember($request[1])) {
+                }
+                else if (!$member = $this->getMember($request[1]))
+                {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
-                } else {
+                }
+                else
+                {
                     // found a member with given id or username
                     $myself = false;
                     if ($member->id == $member_self->id) {

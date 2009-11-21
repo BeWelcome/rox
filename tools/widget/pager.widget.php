@@ -45,10 +45,28 @@ class PagerWidget extends RoxWidget
         parent::__get($var);
     }
     
+    /**
+     * outputs a list of list links, to reflect paging
+     *
+     * @access public
+     * @return void
+     */
     public function render()
     {
         $this->prepare();
         $this->pager_strategy->render();
+    }
+
+    /**
+     * returns rather than renders the pager
+     *
+     * @access public
+     * @return string
+     */
+    public function getHtml()
+    {
+        $this->prepare();
+        return $this->pager_strategy->getHtml();
     }
 
     /**
@@ -213,7 +231,8 @@ class PagerWidget extends RoxWidget
      * returns the subset of an array that represents the currently active page of the pager
      * in case of arrays that are too small, it returns the start of the array
      *
-     * @param array $set
+     * @param array $set - array of items to page
+     *
      * @access public
      * @return array
      */

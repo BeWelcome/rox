@@ -456,10 +456,10 @@ AND (
         if (($coordinates = $this->GetParam($vars, "place_coordinates","")) && ($accuracy = $this->GetParam($vars, "accuracy_level")) && intval($accuracy) > 1)
         {
             list($long, $lat, $alt) = explode(',', $coordinates);
-            $min_long = round($long, 2) < $long ? round($long, 2) : round($long, 2) - 0.01;
-            $max_long = round($long, 2) > $long ? round($long, 2) : round($long, 2) + 0.01;
-            $min_lat = round($lat, 2) < $lat ? round($lat, 2) : round($lat, 2) - 0.01;
-            $max_lat = round($lat, 2) > $lat ? round($lat, 2) : round($lat, 2) + 0.01;
+            $min_long = $long - 0.02;
+            $max_long = $long + 0.02;
+            $min_lat = $lat - 0.02;
+            $max_lat = $lat + 0.02;
 
             $places = $this->createEntity('Geo')->findByWhereMany(<<<SQL
 longitude BETWEEN {$min_long} AND {$max_long}
@@ -522,12 +522,31 @@ LIMIT $start_rec,$limitcount " ;
         $vars['rCount'] = $rCount;
         
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
-            $sData="select members.created, BirthDate,HideBirthDate,Accomodation,ProfileSummary,Gender,HideGender,date_format(members.LastLogin,'%Y-%m-%d') AS LastLogin,    geonames_cache.latitude AS Latitude,    geonames_cache.longitude AS Longitude
-            from members, geonames_cache where members.IdCity=geonames_cache.geonameid and members.id=".$rr->IdMember ;
+            $sData = <<<SQL
+SELECT
+    m.created,
+    m.BirthDate,
+    m.HideBirthDate,
+    m.Accomodation,
+    m.ProfileSummary,
+    m.Gender,
+    m.HideGender,
+    date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
+    gc.latitude AS Latitude,
+    gc.longitude AS Longitude
+FROM
+    members AS m,
+    geonames_cache AS gc,
+    addresses AS a
+WHERE
+    a.IdCity = gc.geonameid
+    AND m.id = {$rr->IdMember}
+    AND m.id = a.IdMember
+SQL;
 
             $qryData = $this->dao->query($sData);
             $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
-            
+
             $rr->created        = $rData->created;
             $rr->BirthDate      = $rData->BirthDate;
             $rr->HideBirthDate  = $rData->HideBirthDate;

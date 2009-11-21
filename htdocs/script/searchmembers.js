@@ -39,6 +39,8 @@ function load() {
 function searchGlobal(i) {
     state = 'global';
     put_html('loading', loading);
+    $('paging-div').innerHTML = '';
+    if ($('second_pager')) $('second_pager').innerHTML = '';
     put_val('mapsearch', 0);
     put_val('CityName', '');
     put_val('IdCountry', '');
@@ -94,6 +96,8 @@ function loadSearchMapButton() {
 function searchByMap(i) {
     state = 'map';
     put_html('loading', loading);
+    $('paging-div').innerHTML = '';
+    if ($('second_pager')) $('second_pager').innerHTML = '';
     put_val('mapsearch', 1);
     var bounds = map.getBounds();
     put_val('bounds_zoom', map.getZoom());
@@ -119,8 +123,14 @@ function searchByText(address, i) {
         geocoder.getLocations(
             address,
             function(response) {
-                if(!response || response.Status.code != 200) put_html('loading', addressNotFound);
-                else {
+                if(!response || response.Status.code != 200)
+                {
+                    put_html('loading', addressNotFound);
+                    $('paging-div').innerHTML = '';
+                    if ($('second_pager')) $('second_pager').innerHTML = '';
+                }
+                else
+                {
                     var place = response.Placemark[0];
                     var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
                     put_val('CityName', '');

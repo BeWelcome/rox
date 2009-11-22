@@ -1173,6 +1173,10 @@ height:50px;
     padding-right: 0;
 }
 
+.wiki .wiki_image {
+    float: right;
+    margin: .5em;
+}
 
 .wiki .indent {
    margin-left: 5px;
@@ -1207,7 +1211,7 @@ height:50px;
 }
 
 .wiki li {
-  padding-left: .5em;
+  padding-left: 0;
   margin-left: 2em;
 }
 .wiki ol, .wiki ul {

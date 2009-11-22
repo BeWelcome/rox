@@ -164,14 +164,14 @@ class SearchmembersController extends PAppController {
                     if (!empty($_SESSION['SearchMembersVars'])) $vars = $_SESSION['SearchMembersVars'];
                     if (isset($request[3])) {
                         $vars['OrderBy'] = $request[3];
-                        $TList = $this->_model->searchmembers($vars);
+                        $TList = $this->_model->search($vars);
                     }
                 }
                 else
                 {
                     $vars = isset($_GET) ? $_GET : array();
                     if(isset($request[2]) && $request[2] == "queries") $vars['queries'] = true;
-                    if (!isset($TList)) $TList = $this->_model->searchmembers($vars);
+                    if (!isset($TList)) $TList = $this->_model->search($vars);
                 }
                 $this->_view->searchmembers_ajax($TList, $vars, $mapstyle);
                 // Store latest search results and variables in session

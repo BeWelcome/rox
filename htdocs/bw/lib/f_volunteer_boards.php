@@ -47,7 +47,7 @@ function DisplayVolunteer_Board($BoardName) {
 	echo "<tr><th align=\"center\">";
 	echo $rr->PurposeComment,"</th></tr>\n" ;
 	echo "<tr><td align=\"center\">";
-	echo "<textarea name=\"content_".$BoardName."\" rows=\"5\" cols=\"80\" style=\"font-size:8pt;\">",$rr->TextContent,"</textarea>" ;
+	echo "<textarea name=\"content_".$BoardName."\" rows=\"5\" cols=\"100\" style=\"font-size:8pt;\">",$rr->TextContent,"</textarea>" ;
 	echo "</td></tr>\n" ;
 	echo "<tr><td align=\"center\">";
 	echo "<input type=hidden name=\"action\" value=\"UpdateBoard_".$BoardName."\"><input type=\"submit\" name=\"Update Board\" value=\"Update Board\">" ;
@@ -61,8 +61,13 @@ function DisplayVolunteer_Board($BoardName) {
 // This does the update of the board BoardName if needed
 // it return true if the board was updated
 function UpdateVolunteer_Board($BoardName) {
+//die("here $BoardName") ;
+
+
 	if ((isset($_POST["action"])) and ($_POST["action"]=="UpdateBoard_".$BoardName)) {
-	   $TextContent="updated by ".fUsername($_SESSION["IdMember"])." on  ".date("l jS \of F Y h:i:s A")." (server time)\n :".$_POST["content_".$BoardName] ;
+	
+//	   $TextContent="updated by ".fUsername($_SESSION["IdMember"])." on  ".date("l jS \of F Y h:i:s A")." (server time)\n :".$_POST["content_".$BoardName] ;
+	   $TextContent=date("Y/n/j Hhi,").fUsername($_SESSION["IdMember"])." said:".$_POST["content_".$BoardName] ;
 	
 	   $str="select * from volunteer_boards where Name='".$BoardName."'" ;
 	   $qry=mysql_query($str) ;

@@ -128,16 +128,19 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 {
 	global $_SYSHCVOL;
 
-	//if (!IsLoggedIn())
-	$A = new MOD_bw_user_Auth();
-	if (!$A->isBWLoggedIn()) {
-		return (0); // No need to search for right if no member logged, he has no right
-	}
-	if ($OptionalIdMember != 0) { // In case we want to test for the rigt of a specific member, who is not the logged
+	if ($OptionalIdMember != 0)
+    {
+        // In case we want to test for the rigt of a specific member, who is not the logged
 		$IdMember = $OptionalIdMember;
-	} else {
+	}
+    elseif (isset($_SESSION['IdMember']))
+    {
 		$IdMember = $_SESSION['IdMember'];
 	}
+    else
+    {
+        return 0;
+    }
 
 	$Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces 
 	if ($Scope != "") {
@@ -172,7 +175,7 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
 	}
 	if ($Scope != "") { // if a specific scope is asked
 		if ($rscope == "\"All\"") {
-			if (($_SESSION["IdMember"]) == 1)
+			if (isset($_SESSION['IdMember']) && ($_SESSION["IdMember"]) == 1)
 				return (10); // Admin has all rights at level 10
 			return ($rlevel);
 		} else {
@@ -182,7 +185,7 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
 				return (0);
 		}
 	} else {
-		if (($_SESSION["IdMember"]) == 1)
+		if (isset($_SESSION['IdMember']) && ($_SESSION["IdMember"]) == 1)
 			return (10); // Admin has all rights at level 10
 		return ($rlevel);
 	}

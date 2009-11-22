@@ -28,16 +28,18 @@ class WikiController extends PAppController {
         global $callbackId;
         if (PPostHandler::isHandling()) {
             $vars =& PPostHandler::getVars();
-
+            if ($vars) {
             // Populate the _REQUEST array with the Post-Vars, so the wiki can use them :-/
             foreach ($vars as $key => $value) {
                 $_REQUEST[$key] = $value;
             }
+            }
 
             $url = $this->parseRequest();
             $this->no_output = true;
+            ob_start();
             $this->getWiki($url);
-
+            ob_end_clean();
             PPostHandler::clearVars();
 
             $url = str_replace('edit/', '', $url);

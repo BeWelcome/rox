@@ -164,7 +164,7 @@ switch (GetParam("action")) {
 
 				   $Email = AdminReadCrypted($m->Email);
 				   $subj = wwinlang("SignupSubjAccepted",$defaultlanguage, "http://".$_SYSHCVOL['SiteName']);
-				   $loginurl = $_SYSHCVOL['baseuri']."/login";
+				   $loginurl = PVars::getObj('env')->baseuri."login";
 				   $text = wwinlang("SignupYouHaveBeenAccepted",$defaultlanguage, $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
 				   bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
 				   $StrAccept=$StrAccept.$m->Username." ";
@@ -196,7 +196,7 @@ switch (GetParam("action")) {
 				case "needmore" :
 				   $m = LoadRow("select * from members where id=" . $IdMember);
 				   $needmoretext=GetStrParam("needmoretext_".$ii);
-				   $urltoreply = $_SYSHCVOL['baseuri']."/login";
+				   $urltoreply = PVars::getObj('env')->baseuri."login";
 				   $m = LoadRow("select * from members where id=" . $IdMember);
 				   $str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
 				   $qry = sql_query($str);
@@ -238,7 +238,7 @@ switch (GetParam("action")) {
 		$Email = AdminReadCrypted($m->Email);
 		// todo change what need to be change to answer in member default language
 		$subj = ww("SignupSubjAccepted", "http://".$_SYSHCVOL['SiteName']);
-		$loginurl = $_SYSHCVOL['baseuri']."/login";
+		$loginurl = PVars::getObj('env')->baseuri."login";
 		$text = ww("SignupYouHaveBeenAccepted", $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
 		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
 

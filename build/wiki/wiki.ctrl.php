@@ -128,13 +128,13 @@ class WikiController extends PAppController {
         $ewiki_perm_rings['rss'] = 3;
 
         $model = new MembersModel;
-        $User = $model->getLoggedInMember();
+        $member = $model->getLoggedInMember();
         $Right = new MOD_right();
-        if ($User && $Right->hasRight('Admin','Wiki')) {
-            $ewiki_author = $User->getHandle();
+        if ($member && $Right->hasRight('Admin','Wiki')) {
+            $ewiki_author = $member->Username;
             define("EWIKI_AUTH_DEFAULT_RING", 0);    //  0 = admin
-        } elseif ($User) {
-            $ewiki_author = $User->getHandle();
+        } elseif ($member) {
+            $ewiki_author = $member->Username;
             define("EWIKI_AUTH_DEFAULT_RING", 2);    //  2 = edit allowed
         } else {
             $ewiki_author = 'guest';

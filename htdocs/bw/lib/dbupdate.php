@@ -1668,19 +1668,14 @@ SQL;
 ALTER TABLE `trip_data` DROP INDEX `trip_id`
 SQL;
 
-    $updates[] = "INSERT INTO `volunteer_boards` (
-`id` ,
-`Name` ,
-`updated` ,
-`PurposeComment` ,
-`TextContent` ,
-`created`
-)
-VALUES (
-'2', 'translator_board',
-CURRENT_TIMESTAMP , 'This is the shared board for translation volunteers. Feel free to add some note here, your username and a date stamp will be added automatically, previous versions are logged', '', '2009-11-21 00:00:00'
-);
-    ";
+    $updates[] = "select now() ";
+    $updates[] = "select now() ";
+    $updates[] = "select now() ";
+	
+    $updates[] = "deleted from `volunteer_boards` where Name='translator_board'" ;
+
+    $updates[] = "INSERT INTO `bewelcome`.`volunteer_boards` (`id`, `Name`, `updated`, `PurposeComment`, `TextContent`, `created`) 
+	VALUES (NULL, 'translator_board', CURRENT_TIMESTAMP, 'used for admin words', '', '0000-00-00 00:00:00')" ;
 
     if (empty($res)) {
         $version = 0;

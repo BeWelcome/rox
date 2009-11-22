@@ -138,6 +138,7 @@ function showmemcache($IdLanguage = null) {
 DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
 ShowLeftColumn($MenuAction,VolMenu());
 
+UpdateVolunteer_Board("translator_board") ;
 DisplayVolunteer_Board("translator_board") ; 
 
 $scope = RightScope('Words');
@@ -501,7 +502,7 @@ if ($code != "") {
 
   }
 }
-UpdateVolunteer_Board("translator_board") ;
+
 ?>
 <form method="post">
 <table class="admin" border="0"><tr>

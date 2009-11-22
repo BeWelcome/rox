@@ -66,4 +66,25 @@ class MemberEntityTest extends PHPUnit_Framework_TestCase
             $this->assertTrue(substr($e->getMessage(), 0, 21) == 'session_regenerate_id');
         }
     }
+
+    public function testHasOldRight1()
+    {
+        $m = $this->entity_factory->create('Member')->findByUsername('Admin');
+        $this->assertTrue($m->isLoaded());
+        $this->assertTrue($m->hasOldRight(array('Admin')));
+    }
+
+    public function testHasOldRight2()
+    {
+        $m = $this->entity_factory->create('Member')->findByUsername('Admin');
+        $this->assertTrue($m->isLoaded());
+        $this->assertFalse($m->hasOldRight(array('blahblah')));
+    }
+
+    public function testHasOldRight3()
+    {
+        $m = $this->entity_factory->create('Member')->findByUsername('Fake51');
+        $this->assertTrue($m->isLoaded());
+        $this->assertFalse($m->hasOldRight(array('Admin')));
+    }
 }

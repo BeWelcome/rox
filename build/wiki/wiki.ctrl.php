@@ -196,6 +196,8 @@ class WikiController extends PAppController {
         $request = implode('/', $request);
 
         $request = str_replace('wiki/', '', $request);
+        // $request = str_replace('  ', ' ', $request);
+        // $request = str_replace(' ', '_', $request);
 
         return $request;
     }

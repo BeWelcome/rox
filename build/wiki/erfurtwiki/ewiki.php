@@ -2256,6 +2256,7 @@ function ewiki_scan_wikiwords(&$wiki_source, &$ewiki_links, $se=0) {
    #-- clean up list, trim() spaces (allows more unclean regex) - page id unification
    foreach ($uu as $i=>$id) {
       $uu[$i] = trim($id);
+      $uu[$i] = str_replace(' ','_',$uu[$i]); // Edit 'Nov09: replace spaces with underscores
    }
    unset($uu[""]);
    $uu = array_unique($uu);
@@ -2402,6 +2403,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
 
    #-- for case-insensitivines
    $href_i = EWIKI_CASE_INSENSITIVE ? strtolower($href) : ($href);
+   $href_i = str_replace(' ','_',$href_i); // Edit 'Nov09: replace spaces with underscores
 
    #-- injected URLs
    if (isset($ewiki_links[$href_i]) && !is_array($ewiki_links[$href_i]) && strpos($inj_url = $ewiki_links[$href_i], "://")) {
@@ -2435,6 +2437,7 @@ function ewiki_link_regex_callback($ii, $force_noimg=0) {
    #-- ordinary internal WikiLinks
    elseif (($ewiki_links === true) || @$ewiki_links[$href_i]) {
       if (!$states["brackets"]) return $ii[0]; // BW Rox hack by lupochen: This prevents CamelCaseLinks without brackets from working
+      $href = str_replace(' ','_',$href); // Edit 'Nov09: replace spaces with underscores
       $type = array("wikipage");
       $str = '<a href="' . ewiki_script("", $href) . htmlentities($href2)
            . '">' . $title . '</a>';

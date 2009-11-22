@@ -141,8 +141,9 @@ FROM
     addresses AS a
     {$tablelist}
 WHERE
-    m.Status = 'Active' AND
-    m.Username LIKE '{$searchtext}'
+    m.Status = 'Active'
+    AND m.Username LIKE '{$searchtext}'
+    AND a.IdMember = m.id
     $where
 LIMIT 20
 SQL;

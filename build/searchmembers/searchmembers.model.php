@@ -279,7 +279,7 @@ WHERE
      * @access public
      * @return array
      */
-    public function searchmembers(&$vars)
+    public function search(&$vars)
     {
         $TMember=array();
     

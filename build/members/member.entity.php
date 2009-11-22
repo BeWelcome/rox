@@ -1248,5 +1248,28 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
         return true;
     }
+
+    /**
+     * checks if a member has a certain old-type right
+     * if member has one of the asked for rights returns true
+     *
+     * @param array $rights - array of right/scope pairs to check for
+     *
+     * @access public
+     * @return bool
+     */
+    public function hasOldRight(array $rights)
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $mod_right = new MOD_right;
+        foreach ($rights as $right => $scope)
+        {
+            if ($mod_right->hasRight($right, $scope, $this->getPKValue())) return true;
+        }
+        return false;
+    }
 }
 

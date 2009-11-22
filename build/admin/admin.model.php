@@ -66,6 +66,18 @@ class AdminModel extends RoxModelBase
         return $this->createEntity('Member')->countWhere("Status = '{$this->dao->escape($status)}'");
     }
 
+    public function getStatusOverview()
+    {
+        $result = array();
+        $array = $this->createEntity('Member')->getPossibleStatusArray();
+        sort($array);
+        foreach ($array as $status)
+        {
+            $result[$status] = $this->countMembersWithStatus($status);
+        }
+        return $result;
+    }
+
     /**
      * returns all comments marked bad
      *

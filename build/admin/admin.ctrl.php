@@ -136,6 +136,8 @@ class AdminController extends RoxControllerBase
         $params->items_per_page = 25; 
         $page->pager = new PagerWidget($params);
         $page->members = $this->_model->getMembersWithStatus($page->status, $page->pager);
+        $page->members_count = $page->pager->getTotalCount();
+        $page->model = $this->_model;
         return $page;
     }
 

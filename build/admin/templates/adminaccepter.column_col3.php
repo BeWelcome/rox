@@ -20,13 +20,8 @@ else
 <input size="20" />
 <input type="submit" value="search" />
 
-<form action='' method='get'>
-<label for='status_switch'>Select status:</label> <select name='status'></select><br/>
-<input type='submit' value='Update'/>
 
-<p>Displaying members with status: <b><?=$this->status;?></b> (<?= count($this->members);?> members in total with that status). Select which status to display below.</p>
-
-</form>
+<p>Displaying members with status: <b><?=$this->status;?></b> (<?= $this->members_count;?> members in total with that status). Select which status to display below.</p>
 
 <?php
 $this->pager->render();

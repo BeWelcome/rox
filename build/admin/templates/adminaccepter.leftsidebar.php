@@ -27,23 +27,23 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 $title = "Admin logs";
 
-?>
+    echo <<<HTML
 
 <table>
     <tr>
         <th>Staus</th>
         <th>Waiting</th>
     </tr>
+HTML;
+    foreach ($this->model->getStatusOverview() as $status => $count) 
+    {
+        echo <<<HTML
     <tr>
-        <td><a href="#">Pending</a></td>
-        <td><a href="#">123</a></td>
+        <td><a href="{$this->router->url('admin_accepter')}?status={$status}">{$status}</a></td>
+        <td>{$count}</td>
     </tr>
-    <tr>
-        <td><a href="#">Needmore</a></td>
-        <td><a href="#">12</a></td>
-    </tr>
-    <tr>
-        <td><a href="#">etc ...</a></td>
-        <td><a href="#">12</a></td>
-    </tr>
+HTML;
+    }
+    echo <<<HTML
 </table>
+HTML;

@@ -13,6 +13,10 @@
 
         <?=$words->flushBuffer()?>
                     </div> <!-- username -->
+                    <?php if (($logged_member = $this->model->getLoggedInMember()) && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => ''))) : ?>
+                    <div id='member-status'><?= $words->get('MemberStatus') . ': ' . $member->Status; ?>
+                    </div>
+                    <?php endif ;?>
                     
                     
     </div> <!-- subcl -->
@@ -21,18 +25,10 @@
     <div class="subcr" >
         
         <?php
-          if (($right->hasRight("Accepter"))or($right->hasRight("SafetyTeam"))) { // for people with right display real status of the member
-            if ($member->Status!="Active") {
-                echo "<p class=\"note big\">Status: <strong>",$member->Status," </strong></p>";
-            }
-          } // end of for people with right dsiplay real status of the member
           if ($member->Status=="ChoiceInactive") {
                 echo "<div class=\"note big\">",$ww->WarningTemporayInactive," </div>\n";
           }
-        ?>
         
-        <? // Profile translations ?>
-            <?php
             if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'editmyprofile';
             if (get_class($this) == 'ProfilePage' || get_class($this) == 'MyProfilePage') $urlstring = 'members/'.$member->Username;
             if (isset($urlstring)) {

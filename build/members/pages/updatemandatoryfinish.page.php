@@ -18,5 +18,3 @@ class UpdateMandatoryFinishPage extends EditMyProfilePage
         <?php
     }
 }
-
-?>

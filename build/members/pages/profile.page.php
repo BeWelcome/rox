@@ -7,5 +7,3 @@ class ProfilePage extends MemberPage
         return 'profile';
     }
 }
-
-?>

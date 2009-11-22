@@ -29,6 +29,3 @@ class MembersMustloginPage extends RoxPageView
         $loginWidget->render();
     }
 }
-
-
-?>

@@ -28,8 +28,3 @@ class DeleteTranslationPage extends EditProfilePage
 		
 	}
 }
-
-
-
-
-?>

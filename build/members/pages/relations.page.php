@@ -40,8 +40,3 @@ class RelationsPage extends ProfilePage
 		<?php
 	}
 }
-
-
-
-
-?>

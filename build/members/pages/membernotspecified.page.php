@@ -27,6 +27,3 @@ class MembersMembernotspecifiedPage extends RoxPageView
         </ul>';
     }
 }
-
-
-?>

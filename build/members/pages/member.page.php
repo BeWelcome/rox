@@ -190,6 +190,3 @@ class MemberPage extends PageWithActiveSkin
 /*        $this->__call('teaserContent', array()); */
     }
 }
-
-
-?>

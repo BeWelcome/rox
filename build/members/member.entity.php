@@ -1271,5 +1271,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return false;
     }
+
+    public function getPossibleStatusArray()
+    {
+        $info = $this->getTableDescription();
+        return $info['Status']['values'];
+    }
 }
 

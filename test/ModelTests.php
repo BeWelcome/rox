@@ -8,6 +8,8 @@ class ModelTests extends PHPUnit_Framework_TestSuite
     public static function suite()
     {
         $suite = new ModelTests;
+        $suite->addTestFile('AdminModelTest.php');
+        $suite->addTestFile('FeedbackModelTest.php');
         $suite->addTestFile('ForumsModelTest.php');
         $suite->addTestFile('BlogModelTest.php');
         $suite->addTestFile('TripModelTest.php');

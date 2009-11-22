@@ -1137,7 +1137,7 @@ height:50px;
 
 
 /* links to unknown page get a different color */
-.wiki.view .NotFound a { color: #ff8800;}
+.wiki.view .NotFound a { color: #999;}
 
 /* -----------------------------------------------
   the "info" pages result list is often
@@ -1245,6 +1245,12 @@ height:50px;
 
 .wiki a[href^="http://www.bewelcome.org"]:hover {
     background: transparent;
+}
+
+/* User:user links */
+.wiki a.user,.wiki a.user:hover {
+    background: url(/images/icons/user.png) left center no-repeat;
+    padding-left: 20px;
 }
 
 /* Media screen end */

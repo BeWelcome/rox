@@ -38,16 +38,16 @@ class MOD_right_flag {
 
     
 
-		 
+         
     private $tableName;
-		
-		// These variables are uesed to save the context
-		public $nomtable ;
-		private $nomtablevolunteer ;
-		private $tablescope ;
-		private $tablelevel ;
-		private $IdSession ;
-		private $IdName ;
+        
+        // These variables are uesed to save the context
+        public $nomtable ;
+        private $nomtablevolunteer ;
+        private $tablescope ;
+        private $tablelevel ;
+        private $IdSession ;
+        private $IdName ;
 
     protected $dao;
     
@@ -55,7 +55,7 @@ class MOD_right_flag {
 *  By default it will be considerated that we are building a "rights"
 *
 */
-    function __construct()     {		 		
+    function __construct()     {                
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
@@ -126,69 +126,69 @@ public function hasFlag($Name, $_Scope = "", $OptionalIdMember = 0) {
 */
 public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0) 
 {
-	global $_SYSHCVOL;
+    global $_SYSHCVOL;
 
-	if ($OptionalIdMember != 0)
+    if ($OptionalIdMember != 0)
     {
         // In case we want to test for the rigt of a specific member, who is not the logged
-		$IdMember = $OptionalIdMember;
-	}
+        $IdMember = $OptionalIdMember;
+    }
     elseif (isset($_SESSION['IdMember']))
     {
-		$IdMember = $_SESSION['IdMember'];
-	}
+        $IdMember = $_SESSION['IdMember'];
+    }
     else
     {
         return 0;
     }
 
-	$Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces 
-	if ($Scope != "") {
-		if ($Scope {0} != "\"")
-		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing 
-	}
+    $Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces 
+    if ($Scope != "") {
+        if ($Scope {0} != "\"")
+        $Scope = "\"" . $Scope . "\""; // add the " " if they are missing 
+    }
 
-	// First test if this is the logged in member, and if by luck his right is allready cached in his session variable
-	if ((!isset ($_SESSION[$this->IdSession . $Name])) or 
-		($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') or 
-		($OptionalIdMember != 0)) {
-		    
-		    $str = '
+    // First test if this is the logged in member, and if by luck his right is allready cached in his session variable
+    if ((!isset ($_SESSION[$this->IdSession . $Name])) or 
+        ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') or 
+        ($OptionalIdMember != 0)) {
+            
+            $str = '
 SELECT SQL_CACHE Scope as Scope, Level
 FROM '.$this->nomtablevolunteer.', '.$this->nomtable.'
 WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.$this->nomtable.'.Name=\'' . $Name . '\'';
-		
-		//$query = mysql_query($str) or bw_error("function HasRight");
-		//$row = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
-		$qry = $this->dao->query($str);
-		$row = $qry->fetch(PDB::FETCH_OBJ);
-		if (!isset ($row->Level)) {
-			return (0); // Return false if the Right does'nt exist for this member in the DB
-		}
-		$rlevel = $row->Level;
-		$rscope = ltrim(rtrim($row->Scope)); // remove extra space
-		if ($OptionalIdMember == 0) { // if its current member cache for next research 
-//			$_SESSION[$this->IdSession . $Name]="set" ;  // Caching is not enable if this line is commented (but test are needed before uncomenting it)
-			$_SESSION[$this->tablelevel . $Name] = $rlevel;
-			$_SESSION[$this->tablescope . $Name] = $rscope;
-		}
-	}
-	if ($Scope != "") { // if a specific scope is asked
-		if ($rscope == "\"All\"") {
-			if (isset($_SESSION['IdMember']) && ($_SESSION["IdMember"]) == 1)
-				return (10); // Admin has all rights at level 10
-			return ($rlevel);
-		} else {
-			if ((!(strpos($rscope, $Scope) === false)) or ($Scope == $rscope)) {
-				return ($rlevel);
-			} else
-				return (0);
-		}
-	} else {
-		if (isset($_SESSION['IdMember']) && ($_SESSION["IdMember"]) == 1)
-			return (10); // Admin has all rights at level 10
-		return ($rlevel);
-	}
+        
+        //$query = mysql_query($str) or bw_error("function HasRight");
+        //$row = mysql_fetch_object(mysql_query($str)); // LoadRow not possible because of recusivity
+        $qry = $this->dao->query($str);
+        $row = $qry->fetch(PDB::FETCH_OBJ);
+        if (!isset ($row->Level)) {
+            return (0); // Return false if the Right does'nt exist for this member in the DB
+        }
+        $rlevel = $row->Level;
+        $rscope = ltrim(rtrim($row->Scope)); // remove extra space
+        if ($OptionalIdMember == 0) { // if its current member cache for next research 
+//          $_SESSION[$this->IdSession . $Name]="set" ;  // Caching is not enable if this line is commented (but test are needed before uncomenting it)
+            $_SESSION[$this->tablelevel . $Name] = $rlevel;
+            $_SESSION[$this->tablescope . $Name] = $rscope;
+        }
+    }
+    if ($Scope != "") { // if a specific scope is asked
+        if ($rscope == "\"All\"") {
+            if (isset($_SESSION['IdMember']) && ($_SESSION["IdMember"]) == 1)
+                return (10); // Admin has all rights at level 10
+            return ($rlevel);
+        } else {
+            if ((!(strpos($rscope, $Scope) === false)) or ($Scope == $rscope)) {
+                return ($rlevel);
+            } else
+                return (0);
+        }
+    } else {
+        if (isset($_SESSION['IdMember']) && ($_SESSION["IdMember"]) == 1)
+            return (10); // Admin has all rights at level 10
+        return ($rlevel);
+    }
 }
 
 
@@ -204,15 +204,15 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
  */
 public function hasRightAny()
 {
-	global $_SYSHCVOL;
-	
-	// Test if in the session cache it is allready said that the member has no right
-	if ((isset($_SESSION['Param'])) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
-	     (isset($_SESSION['hasRightAny'])) and 
-		 ($_SESSION['hasRightAny']=='no') ){
-		 
-		 return(false) ;		 
-	} 
+    global $_SYSHCVOL;
+    
+    // Test if in the session cache it is allready said that the member has no right
+    if ((isset($_SESSION['Param'])) and ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes') and 
+         (isset($_SESSION['hasRightAny'])) and 
+         ($_SESSION['hasRightAny']=='no') ){
+         
+         return(false) ;         
+    } 
 
     $A = new MOD_bw_user_Auth();
     if (!$A->isBWLoggedIn()) {
@@ -226,7 +226,7 @@ WHERE IdMember=' . $_SESSION['IdMember'];
     $qry = $this->dao->query($query);
     $row = $qry->fetch(PDB::FETCH_OBJ);
     if (!isset ($row->Level)) {
-	 	 $_SESSION["hasRightAny"]="no" ; // Put is session the info that the member has no right
+         $_SESSION["hasRightAny"]="no" ; // Put is session the info that the member has no right
         return false;
     }
     
@@ -236,11 +236,11 @@ WHERE IdMember=' . $_SESSION['IdMember'];
 
 // These are alias name for function for compatibility
 public function rightScope($Name, $Scope = "") {
-			 return $this->TheScope($Name,$Scope) ;
+             return $this->TheScope($Name,$Scope) ;
 }
 
 public function flagScope($Name, $Scope = "") {
-			 return $this->TheScope($Name,$Scope) ;
+             return $this->TheScope($Name,$Scope) ;
 }
 
 
@@ -258,32 +258,32 @@ public function flagScope($Name, $Scope = "") {
 // the $Scope parameter
 public function TheScope($Name, $Scope = "")
 {
-	global $_SYSHCVOL;
+    global $_SYSHCVOL;
 
-	//if (!IsLoggedIn())
-	$A = new MOD_bw_user_Auth();
-	if (!$A->isBWLoggedIn()) {
-		return false;
-	}
-	
-	$IdMember = $_SESSION['IdMember'];
-	if ((!isset ($_SESSION[$this->IdSession . $Name])) or ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes')) {
-		$str = '
+    //if (!IsLoggedIn())
+    $A = new MOD_bw_user_Auth();
+    if (!$A->isBWLoggedIn()) {
+        return false;
+    }
+    
+    $IdMember = $_SESSION['IdMember'];
+    if ((!isset ($_SESSION[$this->IdSession . $Name])) or ($_SESSION['Param']->ReloadRightsAndFlags == 'Yes')) {
+        $str = '
 SELECT SQL_CACHE Scope, Level
 FROM '.$this->nomtablevolunteer.','.$this->nomtable.'
 WHERE IdMember=' . $IdMember . '
 AND '.$this->nomtable.'.id='.$this->nomtablevolunteer.'.'.$this->IdName.' AND '.$this->nomtable.'.Name=\'' . $Name . '\'';
-		
-		$qry = $this->dao->query($str);
-		$row = $qry->fetch(PDB::FETCH_OBJ);
-		
-		if (!isset ($row->Level)) {
-			return false;
-		}
-		$_SESSION[$this->tablelevel . $Name] = $row->Level;
-		$_SESSION[$this->tablescope . $Name] = $row->Scope;
-	}
-	return ($_SESSION[$this->tablescope . $Name]);
+        
+        $qry = $this->dao->query($str);
+        $row = $qry->fetch(PDB::FETCH_OBJ);
+        
+        if (!isset ($row->Level)) {
+            return false;
+        }
+        $_SESSION[$this->tablelevel . $Name] = $row->Level;
+        $_SESSION[$this->tablescope . $Name] = $row->Scope;
+    }
+    return ($_SESSION[$this->tablescope . $Name]);
 } // end of TheScope
 
     
@@ -319,10 +319,10 @@ class MOD_flag extends MOD_right_flag {
     private static $_instance_flag;
 
     function __construct() {
-						 parent::__construct();
-						 parent::initialize("flags") ;
-						 
-		}
+                         parent::__construct();
+                         parent::initialize("flags") ;
+                         
+        }
     /**
      * singleton getter
      * 

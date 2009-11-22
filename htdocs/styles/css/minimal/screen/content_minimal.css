@@ -212,7 +212,7 @@ dl.list {
     clear: left;
     margin-bottom: 0.8em;
 }
-.list dd {    
+.list dd {
     margin-left: 12em;
     line-height: 1.5em;
     margin-bottom: 0.8em;
@@ -314,7 +314,7 @@ dl.list {
     padding: 5px;
   }
 
-  textarea.long {width: 99%; }
+  textarea.long {width: 95%; }
 
   input, textarea {
     font-size: 1.3em;
@@ -373,7 +373,7 @@ dl.list {
    * @section content-pagination
    */
 
-  div.pages {padding-top:15px; white-space: nowrap; }
+  div.pages {padding-top:10px; white-space: nowrap; }
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
   div.pages li.current a {color:#666;font-weight:bold; }
@@ -1084,57 +1084,33 @@ height:50px;
 }
 
 
-/*
-  Wiki Styles:
 
-*/
-
-/* ----------------------------------------------
-  every page that comes thru
-  ewiki is wrapped into:
-*/
-.wiki  {
-   background: url("wikibg.png") repeat-y;
-}
-.wiki #toc td{
-    padding: 0;
-}
-.wiki .page-toc {
-    background-color: #f5f5f5;
-    padding: 1em 2em;
-}
-.wiki .page-toc-caption {
-   font-size: 1.2em;
-   padding: 1em 0;
-   cursor: pointer;
-}
-.wiki .search-form {
-   padding: 2em 0;
-}
+  /**
+   * Wiki
+   * (en) Generic classes for the BeWelcome Wiki
+   *
+   * @section content-wiki
+   */
 
 
-/* ----------------------------------------------
-  then you can select on $actions
-  or even page names
-*/
-.wiki.edit {
-}
+/* toc - table of contents */
+.wiki #toc td{ padding: 0; }
+.wiki .page-toc { background-color: #f5f5f5; padding: 1em 2em; }
+.wiki .page-toc-caption { font-size: 1.2em; padding: 1em 0; cursor: pointer; }
+.wiki .page-toc ol { margin: 0 0 1em 0; }
+.wiki .page-toc ol li { list-style-type: none; }
+.wiki .page-toc ol ol { margin: 0 0.8em .5em .3em; padding: 0 .5em; }
+.wiki .page-toc li { line-height: 1em; padding: .3em 0; margin: 0 0; }
+.wiki .page-toc ol ol li { list-style-type: none; }
 
-.wiki.info {
-}
+.wiki .search-form { padding: 2em 0; }
 
-.wiki.info {
-}
+.wiki.NewestPages a , br {margin-bottom: 0.8em;}
 
-.wiki.view.PageIndex {          /* "PageIndex" when "view"ed */
-   background-color: #ffee55;
-}
-
-.wiki.SiteOverview {            /* "SiteOverview" regardless of $action */
-   font-family: "Lucida Bright";
-}
-
-
+/* wiki headlines */
+.wiki h1 {padding: 0;}
+.wiki h2 {border-bottom: 1px solid #aaa; margin-top: 0.7em;}
+.wiki h3 {color: #333;}
 
 /* -----------------------------------------------
   every page has a title now, always <h2>,
@@ -1156,46 +1132,20 @@ height:50px;
   list of links below every wiki page ('PageInfo'
   and 'EditThisPage' ...)
 */
-.wiki.view .action-links {
-    padding: 1em 0;
-}
-
-.wiki.view .action-links hr,  .wiki .action-links br {
-   display: none;
-}
-
-.wiki.view .action-links a {
-}
-
-.wiki.view .action-links a:hover {
-}
+.wiki.view .action-links { padding: 1em 0; }
+.wiki.view .action-links hr,  .wiki .action-links br { display: none;}
 
 
 /* links to unknown page get a different color */
-
-.wiki.view .NotFound a {
-    color: #ff8800;
-}
+.wiki.view .NotFound a { color: #999;}
 
 /* -----------------------------------------------
   the "info" pages result list is often
   chunked into parts
 */
-.wiki.info .chunked-result a {
-   text-decoration: underline;
-}
+.wiki.info .chunked-result a { text-decoration: underline; }
 
-
-/* -----------------------------------------------
-  the "edit" pages form elements are grouped
-*/
-.wiki.edit .edit-box {
-   /* usually encloses a textarea and two submit buttons */
-}
-
-.wiki.edit .edit-box textarea {
-   width: 99%;
-}
+.wiki.edit .edit-box textarea {  width: 99%; }
 
 .wiki.edit form[name=ewiki] {
    /* old way, doesn't work with good old IE reliable */
@@ -1211,14 +1161,6 @@ height:50px;
 }
 
 
-/*
-  for the complete list of available class names
-  please always visit the README and the plugins
-  which also provide documentation of any such
-  features
-*/
-
-
 /* copyright info */
 .wiki #copyright {
     margin-top: 2em;
@@ -1228,26 +1170,25 @@ height:50px;
 .wiki #copyright a {
     border-bottom: none;
     background: transparent;
-    padding-right: 0;    
+    padding-right: 0;
 }
 
-/* -----------------------------------------------
-  inside of rendered pages, there is only little
-  CSS, if you do not utilize plugins/markup_css
-  and create some of your own
-*/
+.wiki .wiki_image {
+    float: right;
+    margin: .5em;
+}
 
-.wiki .indent {                   /* space-indentation */
+.wiki .indent {
    margin-left: 5px;
 }
 
-.wiki table {                   /* space-indentation */
+.wiki table {
     margin: 1em 0;
     overflow:hidden;
     border-color: #e5e5e5;
 }
 
-.wiki table td {                   /* space-indentation */
+.wiki table td {
     background-color: #f5f5f5;
     vertical-align: top;
     padding: .5em 1em;
@@ -1256,13 +1197,10 @@ height:50px;
     border-top: 1px solid #e5e5e5;
     border-right: 1px solid #cccccc;
 }
-.wiki .text-body table td {                   /* space-indentation */
+.wiki .text-body table td {
     padding: 2em 2em;
 }
 
-.wiki em {
-  color:#331111;
-}
 .wiki dl {
   margin-bottom: .2em;
   margin-top: 0.5em;
@@ -1271,15 +1209,16 @@ height:50px;
   margin-bottom: .1em;
   line-height: 1.5em;
 }
+
 .wiki li {
-  padding-left: .5em;
+  padding-left: 0;
   margin-left: 2em;
 }
 .wiki ol, .wiki ul {
   margin: .5em 0;
 }
 .wiki ul li {
-  list-style-type: disc;
+  list-style-type: square;
 }
 .wiki ol li {
   list-style-type: decimal;
@@ -1287,24 +1226,7 @@ height:50px;
 .wiki ol span.number {
   margin-right: .3em;
 }
-.wiki .page-toc ol {
-  margin: 0 0 1em 0;
-}
-.wiki .page-toc ol li {
-  list-style-type: none;
-}
-.wiki .page-toc ol ol {
-  margin: 0 0.8em .5em .3em;
-  padding: 0 .5em;
-}
-.wiki .page-toc li {
-  line-height: 1em;
-  padding: .3em 0;
-  margin: 0 0;
-}
-.wiki .page-toc ol ol li {
-  list-style-type: none;
-}
+
 
 /* Add an external-link icon to absolute links */
 
@@ -1327,6 +1249,13 @@ height:50px;
 
 .wiki a[href^="http://www.bewelcome.org"]:hover {
     background: transparent;
+}
+
+/* User:user links */
+.wiki a.user,.wiki a.user:hover {
+    background: url(/images/icons/user.png) left center no-repeat;
+    padding-left: 18px;
+    padding-right: 0px;
 }
 
 /* Media screen end */

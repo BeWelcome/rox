@@ -24,7 +24,6 @@ $ewiki_config["format_block"]["mediawiki_image_tag"] = array("[[Image:", "]]", f
 
  function ewiki_format_mediawiki_image_tag(&$str, &$in, &$iii, &$s, $btype) {
      if (strpos($str, "Media:") === false) {
-         $str = str_replace(' ','',$str);
          $l = strpos($str, "|");
          if ($l !== false) {
              $title = substr($str, strripos($str,"|")+1);
@@ -38,7 +37,7 @@ $ewiki_config["format_block"]["mediawiki_image_tag"] = array("[[Image:", "]]", f
          if (strpos($str, "|framed|")) {
              $class = 'framed ';
          }
-         $str = '<img src="'.$src.'" '.(isset($title) ? 'alt="'.$title.'"' : $src).' '.(isset($class) ? 'class="'.$class.'"' : '').' />';
+         $str = '<img src="'.$src.'" '.(isset($title) ? 'alt="'.$title.'" title="'.$title.'"' : $src).' '.(isset($class) ? 'class="wiki_image '.$class.'"' : '').' />';
     }
      //var_dump($str);
  }

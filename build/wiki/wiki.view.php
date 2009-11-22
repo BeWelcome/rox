@@ -16,18 +16,18 @@ class WikiView extends PAppView {
         $this->_model =& $model;
     }
         /* This displays the custom teaser */
-    public function teaser()
-    {
-        $words = new MOD_words();
-?>
-        <div id="teaser" class="clearfix">
-            <h1><a href="wiki"><?php echo $words->getFormatted('WikiTitle'); ?></a></h1>
-        </div>
-<?php
+    public function teaser() {
+        require 'templates/teaser.php';
     }
-    public function stylesFullWidth()
-    {
-         echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/basemod_minimal_col3.css\" type=\"text/css\"/>";
+    
+    public function stylesFullWidth() {
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/basemod_minimal_col3.css" type="text/css"/>';
+    }
+    
+    /* This adds other custom styles to the page*/
+    public function customStyles() {
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/wiki.css" type="text/css"/>';        
+        return $out;
     }
     
     public function indicateRSS()

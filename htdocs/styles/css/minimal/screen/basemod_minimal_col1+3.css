@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+@media screen, projection
+{
+
+ /*------------------------------------------------------------------------------------------------------*/
+
+ /*
+   * (en) Formatting content container
+   * (de) Formatierung der Inhalts-Container
+   *
+   */
+  #col1 { float: left; width: 20%}
+  #col1_content { padding: 0 2em 0 2em }
+  
+  #col2 { display:none}
+  #col2_content { display:none}
+  
+  #col3 { width: auto; margin: 0 0 0 20%}
+  #col3_content { padding: 0 2em 0 2em }
+
+}

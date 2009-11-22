@@ -1251,6 +1251,7 @@ height:50px;
 .wiki a.user,.wiki a.user:hover {
     background: url(/images/icons/user.png) left center no-repeat;
     padding-left: 20px;
+    padding-right: 0px;
 }
 
 /* Media screen end */

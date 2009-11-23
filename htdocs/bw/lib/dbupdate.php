@@ -1674,8 +1674,15 @@ SQL;
 	
     $updates[] = "deleted from `volunteer_boards` where Name='translator_board'" ;
 
-    $updates[] = "INSERT INTO `bewelcome`.`volunteer_boards` (`id`, `Name`, `updated`, `PurposeComment`, `TextContent`, `created`) 
+    $updates[] = "INSERT INTO `volunteer_boards` (`id`, `Name`, `updated`, `PurposeComment`, `TextContent`, `created`) 
 	VALUES (NULL, 'translator_board', CURRENT_TIMESTAMP, 'used for admin words', '', '0000-00-00 00:00:00')" ;
+	
+    $updates[] = "CREATE TABLE `sqlforgroupsmembers` (
+`IdGroup` INT NOT NULL COMMENT 'Id of the group ',
+`IdQuery` INT NOT NULL COMMENT 'Id of the corresponding query',
+`created` timestamp NOT NULL default '0000-00-00 00:00:00' on update CURRENT_TIMESTAMP,
+INDEX ( `IdGroup` , `IdQuery` )
+) ENGINE = MYISAM COMMENT = 'Allows to define that some groups members will be allowed to run a specifc query'" ; 
 
     if (empty($res)) {
         $version = 0;

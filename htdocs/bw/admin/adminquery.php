@@ -43,15 +43,12 @@ if ($RightLevel < 1) {
 $IdQueryScope = RightScope('SqlForVolunteers');
 
 $membergrouplist="" ; // receive the list of groups the member belongs to
-$ttIdGroup=array() ;
 $qry=sql_query("select IdGroup from membersgroups where Status='In' and IdMember=".$_SESSION["IdMember"]) ;
 while ($rr=mysql_fetch_object($qry)) {
 	if ($membergrouplist!="") {
 		$membergrouplist.="," ;
 	}
 	$membergrouplist=$membergrouplist.$rr->IdGroup ;
-
-	array_push($ttIdGroup, $rr->IdGroup);
 
 }
 $TList = array ();
@@ -223,7 +220,9 @@ switch (GetParam("action")) {
 		   break ;
 		}
 		
-		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) and (!in_array($IdGroup,$ttIdGroup)) ) {
+		
+		$IsQueryAllowedInGroup=LoadRow("select count(*) as cnt  from sqlforgroupsmembers where IdGroup in (".$membergrouplist.") and IdQuery=".$IdQuery) ;
+		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) and ($$IsQueryAllowedInGroup->cnt==0) ) {
 		   DisplayMyResults(array(),array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>",$TList) ;
 		   LogStr("Trying to use a not allowed query (".$rrQuery->Name.")","adminquery") ;
 		   break ;

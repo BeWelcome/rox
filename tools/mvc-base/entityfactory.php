@@ -44,6 +44,7 @@ class RoxEntityFactory
         'RolePrivilege'     => 'build/rights/roleprivilege.entity',
         'Thread'            => 'build/forums/thread.entity',
         'ThreadVote'        => 'build/forums/threadvote.entity',
+        'VolunteerBoard'    => 'build/admin/volunteerboard.entity',
         );
 
     /**

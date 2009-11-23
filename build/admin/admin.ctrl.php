@@ -138,6 +138,7 @@ class AdminController extends RoxControllerBase
         $page->members = $this->_model->getMembersWithStatus($page->status, $page->pager);
         $page->members_count = $page->pager->getTotalCount();
         $page->model = $this->_model;
+        $page->board = $this->_model->getAccepterBoard();
         return $page;
     }
 

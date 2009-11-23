@@ -12,6 +12,7 @@ class EntityTests extends PHPUnit_Framework_TestSuite
         $suite->addTestFile('GroupEntityTest.php');
         $suite->addTestFile('GroupMembershipEntityTest.php');
         $suite->addTestFile('MemberEntityTest.php');
+        $suite->addTestFile('VolunteerBoardEntityTest.php');
         return $suite;
     }
 }

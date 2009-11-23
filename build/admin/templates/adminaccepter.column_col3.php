@@ -10,20 +10,19 @@ else
     echo "You can accept members from the following countries:";
     echo '- ' . implode('<br/>- ', $this->scope);
 }
-?>
+echo <<<HTML
 </p>
 
 <h4>The Message board</h4>
-<textarea cols="60" rows="8"></textarea>
+<textarea cols="60" rows="8">{$this->board->TextContent}</textarea>
 
 <h4>Search for members</h4>
 <input size="20" />
 <input type="submit" value="search" />
 
+<p>Displaying members with status: <b>{$this->status}</b> ({$this->members_count} members in total with that status). Select which status to display below.</p>
 
-<p>Displaying members with status: <b><?=$this->status;?></b> (<?= $this->members_count;?> members in total with that status). Select which status to display below.</p>
-
-<?php
+HTML;
 $this->pager->render();
 $members = $this->members;
 foreach ($members as $member)

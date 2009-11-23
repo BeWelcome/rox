@@ -69,13 +69,39 @@ class AdminModel extends RoxModelBase
     public function getStatusOverview()
     {
         $result = array();
-        $array = $this->createEntity('Member')->getPossibleStatusArray();
-        sort($array);
-        foreach ($array as $status)
+        $query = "SELECT status, count(id) AS count FROM members GROUP BY status ORDER BY status";
+        if ($results = $this->dao->query($query))
         {
-            $result[$status] = $this->countMembersWithStatus($status);
+            while ($row = $results->fetch(PDB::FETCH_OBJ))
+            {
+                $result[$row->status] = $row->count;
+            }
         }
         return $result;
+    }
+
+    /**
+     * returns the text glob object for accepters
+     *
+     * @access public
+     * @return VolunteerBoard
+     */
+    public function getAccepterBoard()
+    {
+        return $this->getBoard('Accepters_board');
+    }
+
+    /**
+     * returns a board given it's name
+     *
+     * @param string $name
+     *
+     * @access public
+     * @return VolunteerBoard
+     */
+    public function getBoard($name)
+    {
+        return $this->createEntity('VolunteerBoard')->findByName($name);
     }
 
     /**

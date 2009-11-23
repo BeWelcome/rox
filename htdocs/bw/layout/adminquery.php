@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
 require_once ("menus.php");
 
 // This form displays the list of the possible user for a specific query 
-function DisplayUsers($rQuery,$TResult,$Message="") {
+function DisplayUsers($rQuery,$TResult,$TAllowedGroups,$Message="") {
 
   global $title;
   if (isset($rQuery->Name)) { // If the query was successfull and if it has a name
@@ -64,7 +64,7 @@ function DisplayUsers($rQuery,$TResult,$Message="") {
   $max=count($TResult) ;
   if ($max>0) {
   	  echo "<tr bgcolor=\"#ff9966\">" ;
-  	  echo "<th colspan=3>" ;
+  	  echo "<th colspan=3 width='100%'>" ;
   	  echo "Users able to execute : ",$rQuery->Name ;
   	  echo "</th>" ;
   	  echo "<tr bgcolor=\"#ff9966\">" ;
@@ -79,7 +79,7 @@ function DisplayUsers($rQuery,$TResult,$Message="") {
   	  for ($ii=0;$ii<$max;$ii++) {
 		echo "<tr align=left valign=center bgcolor=\"".  $bgcolor[$ii%2]."\">" ;
 		$rr=$TResult[$ii] ;
-		echo "<td>",LinkWithUsername($rr->Username),"</td>" ;
+		echo "<td><a href=\"./../../members/",$rr->Username,"\">",$rr->Username,"</a></td>" ;
 		echo "<td>",$rr->Scope,"</td>" ;
 		echo "<td>" ;
 	  	if (HasRight("Rights","SqlForVolunteers")) {
@@ -88,7 +88,22 @@ function DisplayUsers($rQuery,$TResult,$Message="") {
 		echo "</td>" ;
 		echo "</tr>" ;
 	  } // end of for $ii
-	  echo "</table></p>\n" ;
+
+	$max=count($TAllowedGroups) ;
+	if ($max>0) {
+		echo "<tr bgcolor=\"#ff9966\">" ;
+		echo "<th colspan=3>" ;
+		echo "Groups able to execute : ",$rQuery->Name ;
+		echo "</th>" ;
+		for ($ii=0;$ii<$max;$ii++) {
+			echo "<tr align=left valign=center bgcolor=\"".  $bgcolor[$ii%2]."\">" ;
+			$rr=$TAllowedGroups[$ii] ;
+			echo "<td colspan=3><a href=\"./../../groups/".$rr->IdGroup."\">",$rr->Name,"</a></td>" ;
+		}
+	}
+	echo "</table></p>\n" ;
+	  
+
 	  if (HasRight("Rights","SqlForVolunteers")) {
 	  	 echo "<br /><p>" ;
 	  	 echo "<table>" ;
@@ -172,10 +187,10 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
   if (!empty($Message)) {
     echo "<h2>$Message</h2>";
   }
-  for ($kk=0;$kk<count($_TTsqry);$kk++) {
-		$TResult=$_TResult[$kk] ;
-		$TTitle=$_TTitle[$kk] ;
-		$sqry=$_TTsqry[$kk] ;
+  for ($kk=0;($_TTsqry!=NULL) and ($kk<count($_TTsqry));$kk++) {
+	$TResult=$_TResult[$kk] ;
+	$TTitle=$_TTitle[$kk] ;
+	$sqry=$_TTsqry[$kk] ;
   	$iCount=count($TTitle) ;
 
   	$bgcolor[0]="#ffffcc" ;
@@ -183,7 +198,9 @@ function DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rQuery,$Message,$TList) {
 
 		echo "<p><table>\n" ;
 		$max=count($TResult) ;
-		echo "<tr bgcolor=\"#ff9966\"><th colspan=\"".$iCount."\">",$sqry,"</th></tr>" ;
+		if (HasRight("Admin") ) {
+			echo "<tr bgcolor=\"#ff9966\"><th colspan=\"".$iCount."\">",$sqry,"</th></tr>" ;
+		}
 		echo "<tr bgcolor=\"#ff9966\">" ;
 		for ($ii=0;$ii<$iCount;$ii++) {
 			echo "<th>",$TTitle[$ii],"</th>" ;

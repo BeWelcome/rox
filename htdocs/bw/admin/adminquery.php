@@ -36,23 +36,40 @@ MustLogIn(); // need to be log
 
 $RightLevel = HasRight('SqlForVolunteers'); // Check the rights
 if ($RightLevel < 1) {
-	echo "This Need the suffcient <b>SqlForVolunteers</b> rights<br>";
+	echo "This Need the sufficient <b>SqlForVolunteers</b> rights<br>";
 	exit (0);
 }
 
-$GroupeScope = RightScope('SqlForVolunteers');
+$IdQueryScope = RightScope('SqlForVolunteers');
 
+$membergrouplist="" ; // receive the list of groups the member belongs to
+$ttIdGroup=array() ;
+$qry=sql_query("select IdGroup from membersgroups where Status='In' and IdMember=".$_SESSION["IdMember"]) ;
+while ($rr=mysql_fetch_object($qry)) {
+	if ($membergrouplist!="") {
+		$membergrouplist.="," ;
+	}
+	$membergrouplist=$membergrouplist.$rr->IdGroup ;
+
+	array_push($ttIdGroup, $rr->IdGroup);
+
+}
 $TList = array ();
-if ($GroupeScope=="\"All\"") {
-			 $swhere="" ;
+$table="sqlforvolunteers" ;
+
+if ($IdQueryScope=="\"All\"") {
+	$swhere="" ;
 }
 else {
-		  $sList=str_replace("\"","",$GroupeScope) ;
-		  $sList=str_replace("'","",$sList) ;
-		  $sList=str_replace(";",",",$sList) ;
-			$swhere=" where sqlforvolunteers.id in (".$sList.")" ;
+		$table="sqlforvolunteers,sqlforgroupsmembers" ;
+		$sList=str_replace("\"","",$IdQueryScope) ;
+		$sList=str_replace("'","",$sList) ;
+		$sList=str_replace(";",",",$sList) ;
+		$swhere=" where ( (sqlforvolunteers.id in (".$sList.")) or (sqlforvolunteers.id=sqlforgroupsmembers.IdQuery and sqlforgroupsmembers.IdGroup in (".$membergrouplist.")))" ;
 }
-$ss="select * from sqlforvolunteers ".$swhere." order by id" ;
+$ss="select sqlforvolunteers.* from ".$table." " ;
+$ss=
+$ss=$ss.$swhere."  group by sqlforvolunteers.id order by sqlforvolunteers.id" ;
 //		echo "\$ss=",$ss,"<br>\n" ; ;
 $qry=sql_query($ss) ;
 while ($rr = mysql_fetch_object($qry)) {
@@ -63,15 +80,11 @@ while ($rr = mysql_fetch_object($qry)) {
 
 $lastaction = "";
 switch (GetParam("action")) {
-	case "logout" :
-		Logout();
-		exit (0);
-		break;
 	case "See Users" :
 		$IdQuery=(int)GetParam("IdQuery",0) ;
 		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
 //		print_r($rrQuery) ;
-		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
+		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.Status as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
 //		echo "ss=",$ss ;
 		$TResult=array() ; 
 
@@ -80,7 +93,15 @@ switch (GetParam("action")) {
 		   array_push($TResult, $rr);
 		}
 		
- 	    DisplayUsers($rrQuery,$TResult) ;
+		$ss="select groups.Name,groups.id as IdGroup from groups,sqlforgroupsmembers where sqlforgroupsmembers.IdGroup=groups.id and sqlforgroupsmembers.IdQuery=".$IdQuery ;
+		$TAllowedGroups=array() ; 
+
+		$qry=sql_query($ss) ;
+		while ($rr=mysql_fetch_object($qry)) {
+		   array_push($TAllowedGroups, $rr);
+		}
+		
+ 	    DisplayUsers($rrQuery,$TResult,$TAllowedGroups) ;
 		break ;
 		
    case "grant query" :
@@ -130,7 +151,7 @@ switch (GetParam("action")) {
 	
 		// Reload the data
 		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
-		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
+		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.Status as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
 		$TResult=array() ; 
 
 		$qry=sql_query($ss) ;
@@ -138,7 +159,7 @@ switch (GetParam("action")) {
 		   array_push($TResult, $rr);
 		}
 		
- 	    DisplayUsers($rrQuery,$TResult,$Message) ;
+ 	    DisplayUsers($rrQuery,$TResult,NULL,$Message) ;
 		break ;
 	
    case "remove access" :
@@ -179,7 +200,7 @@ switch (GetParam("action")) {
 		   array_push($TResult, $rr);
 		}
 		
- 	    DisplayUsers($rrQuery,$TResult,$Message) ;
+ 	    DisplayUsers($rrQuery,$TResult,NULL,$Message) ;
 		break ;
 	
 	case "execute" :
@@ -187,12 +208,13 @@ switch (GetParam("action")) {
 		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
 		
 		if (!isset($rrQuery->id)) {
-		   DisplayMyResults(array(),array(),$rrQuery,"Sorry your query has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
+		   DisplayMyResults(array(),array(),array(),$rrQuery,"Sorry your query has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
 		   break ;
 		}
 		
-		if (!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) {
-		   DisplayMyResults(array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>",$TList) ;
+//		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) and (!in_array($IdGroup,$ttIdGroup)) ) {
+		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"'))  ) {
+		   DisplayMyResults(array(),array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>",$TList) ;
 		   LogStr("Trying to use a not allowed query (".$rrQuery->Name.")","adminquery") ;
 		   break ;
 		}
@@ -215,14 +237,14 @@ switch (GetParam("action")) {
 			 $sQuery=sprintf($sQry,$Param1,$Param2) ;
 			}
 			else if (!empty($Param1)) {
-			 $sQuery=sprintf($sQry,$Param1) ;
+				$sQuery=sprintf($sQry,$Param1) ;
 			}
 			else {
 			 $sQuery=$sQry ;
 			}
 	
 			if ($rrQuery->LogMe=="True") {
-		   LogStr("Doing query [".$sQuery."]","adminquery") ;
+				LogStr("Doing query [".$sQuery."]","adminquery") ;
 			}
 		
 //			echo "\$sQuery=",stripslashes($sQuery),"<br>\n"  ;
@@ -232,9 +254,9 @@ switch (GetParam("action")) {
 			$qry=sql_query(stripslashes($sQuery)) ;
 
 			if (!$qry) {
-			die ( "Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
-		   DisplayMyResults(array(),array(),array(),null,"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
-		   break ;
+				die ( "Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
+				DisplayMyResults(array(),array(),array(),null,"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
+				break ;
 			}
 
 
@@ -243,30 +265,30 @@ switch (GetParam("action")) {
 			 	$_TTitle[]=$sQuery ;
 			} 
 			elseif ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or 								(stripos ($sQuery,"insert")===0) ){
-		   $AffectedRows=mysql_affected_rows() ;
-		   $Message=$AffectedRows." affected rows<br />" ;
-		   $iCount=0 ;
-		   LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery." /#".$jj,"adminquery") ;
+				$AffectedRows=mysql_affected_rows() ;
+				$Message=$AffectedRows." affected rows<br />" ;
+				$iCount=0 ;
+				LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery." /#".$jj,"adminquery") ;
 			 
-			 $TTitle[]="Affected rows" ;
-			 $TResult[]=sprintf("%d",$AffectedRows) ;
+				$TTitle[]="Affected rows" ;
+				$TResult[]=sprintf("%d",$AffectedRows) ;
 			 
-			 $_TResult[]=$TResult ;
-			 $_TTitle[]=$TTitle ;
+				$_TResult[]=$TResult ;
+				$_TTitle[]=$TTitle ;
 			}
 			else {
-		   $AffectedRows=0 ;
-		   $iCount=mysql_num_fields($qry) ;
+				$AffectedRows=0 ;
+				$iCount=mysql_num_fields($qry) ;
 		
-		   for ($ii=0;$ii<$iCount;$ii++) {
+				for ($ii=0;$ii<$iCount;$ii++) {
 					$TTitle[$ii]=mysql_field_name($qry,$ii) ;
-		   }
+				}
 		
-		   while ($rr=mysql_fetch_array($qry)) {
-			 	array_push($TResult, $rr);
-		   }
-			 $_TResult[]=$TResult ;
-			 $_TTitle[]=$TTitle ;
+				while ($rr=mysql_fetch_array($qry)) {
+					array_push($TResult, $rr);
+				}
+				$_TResult[]=$TResult ;
+				$_TTitle[]=$TTitle ;
 			}
 		}
 		DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rrQuery,$Message,$TList) ;

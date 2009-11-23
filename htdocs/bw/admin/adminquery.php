@@ -223,8 +223,7 @@ switch (GetParam("action")) {
 		   break ;
 		}
 		
-//		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) and (!in_array($IdGroup,$ttIdGroup)) ) {
-		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"'))  ) {
+		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) and (!in_array($IdGroup,$ttIdGroup)) ) {
 		   DisplayMyResults(array(),array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>",$TList) ;
 		   LogStr("Trying to use a not allowed query (".$rrQuery->Name.")","adminquery") ;
 		   break ;

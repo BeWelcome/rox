@@ -122,7 +122,18 @@ switch (GetParam("action")) {
 			 $ss="select rightsvolunteers.*,rightsvolunteers.id as IdRightForVol,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and members.id=rightsvolunteers.IdMember and members.Username='".$Username."'" ;
 			 $rRight=LoadRow($ss) ;
 			 if (!isset($rRight->Scope))  {
+				$TheRight=LoadRow("select * from rights where Name='SqlForVolunteers'") ;
+		   	 	echo "creating right SqlForVolunteers for ".$Username,"<br>" ;
+				$ss="insert into rightsvolunteers(IdMember,IdRight,Level,Comment,created) values(".$rUser->id.",".$TheRight->id.",1,'Granted via adminquery interface',now())" ;
+				LogStr("Adding rights <i>SqlForVolunteers</i> for <b>$rUser->Username</b>","Adminrights") ;
+				sql_query($ss) ;
+				
+			 }
+			 $ss="select rightsvolunteers.*,rightsvolunteers.id as IdRightForVol,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and members.id=rightsvolunteers.IdMember and members.Username='".$Username."'" ;
+			 $rRight=LoadRow($ss) ;
+			 if (!isset($rRight->Scope))  {
 		   	 	$Message="You first need to grant ".$Username. " with right <b>SqlForVolunteers</b>" ;
+				
 			 }
 			 else {
 			 	  if ($rRight->Scope=="\"All\"") {

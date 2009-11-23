@@ -222,7 +222,7 @@ switch (GetParam("action")) {
 		
 		
 		$IsQueryAllowedInGroup=LoadRow("select count(*) as cnt  from sqlforgroupsmembers where IdGroup in (".$membergrouplist.") and IdQuery=".$IdQuery) ;
-		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) and ($$IsQueryAllowedInGroup->cnt==0) ) {
+		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) and ($IsQueryAllowedInGroup->cnt==0) ) {
 		   DisplayMyResults(array(),array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>",$TList) ;
 		   LogStr("Trying to use a not allowed query (".$rrQuery->Name.")","adminquery") ;
 		   break ;

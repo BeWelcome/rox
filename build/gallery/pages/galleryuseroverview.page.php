@@ -20,10 +20,7 @@ class GalleryUserOverviewPage extends GalleryUserPage
         $statement = $this->statement;
         $galleries = $this->galleries;
         $words = new MOD_words();
-        $username = $this->username;
-        ?>
-        <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
-        <?php
+        $username = $this->member->Username;
         require SCRIPT_BASE . 'build/gallery/templates/user_galleryoverview.php';
     }
 

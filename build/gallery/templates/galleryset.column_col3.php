@@ -9,7 +9,7 @@
       <!-- Content left block -->
 <?php if ($d) { ?>
       <a href="gallery/show/sets/<?=$gallery->id?>">
-          <img class="framed" src="gallery/thumbimg?id=<?=$d?>" style="background-color: #fff; padding: 1em; text-align: center" alt="image"/>
+          <img class="gallery_first" src="gallery/thumbimg?id=<?=$d?>&amp;t=1" alt="image"/>
       </a>
 <? } ?>
       <p class="description">

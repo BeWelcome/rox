@@ -13,7 +13,7 @@ class GallerySetPage extends GalleryBasePage
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/sets">'.$words->get("Photosets").'</a>';
+        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> > <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$words->get("Photosets").'</a>';
     }
     
     protected function getTopmenuActiveItem()
@@ -41,8 +41,8 @@ class GallerySetPage extends GalleryBasePage
             $tt[]= array('thumbnails', 'gallery/show/sets/'.$gallery->id.'/'.$this->page.'', $ww->GalleryThumbnails);
             $tt[]= array('details', 'gallery/show/sets/'.$gallery->id.'/details/'.$this->page.'', $ww->GalleryDetails);
         if ($this->myself) {
-            $tt[]= array("upload", 'gallery/show/sets/'.$gallery->id.'/upload', $ww->GalleryUpload);
-            $tt[]= array("delete", 'gallery/show/sets/'.$gallery->id.'/delete', $ww->GalleryDelete);
+            $tt[]= array("upload", 'gallery/show/sets/'.$gallery->id.'/upload', $ww->GalleryUpload, 'upload');
+            $tt[]= array("delete", 'gallery/show/sets/'.$gallery->id.'/delete', $ww->GalleryDelete, 'delete');
         }
         return($tt) ;
     }

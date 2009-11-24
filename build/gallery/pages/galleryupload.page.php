@@ -8,7 +8,7 @@
  *
  */
 
-class GalleryUploadPage extends GalleryBasePage
+class GalleryUploadPage extends GalleryUserPage
 {
     protected function init()
     {
@@ -18,16 +18,7 @@ class GalleryUploadPage extends GalleryBasePage
 
     protected function getSubmenuActiveItem()
     {
-        return 'overview';
-    }
-
-    protected function teaserHeadline() {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->words->getBuffered("Gallery_UploadTitle");
-    }
-    
-    public function leftSidebar()
-    {
-
+        return 'upload';
     }
 
     protected function column_col3() {

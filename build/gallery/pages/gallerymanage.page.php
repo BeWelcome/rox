@@ -8,30 +8,17 @@
  *
  */
 
-class GalleryManagePage extends GalleryBasePage
+class GalleryManagePage extends GalleryUserPage
 {
-    
-    protected function getSubmenuItems()
-    {
-        $words = $this->getWords();
-        $member = $this->loggedInMember;
-        $items = array();
-        $items[] = array('overview', 'gallery', $words->get('GalleryAllPhotos'));
-        if ($member->Status == ("Active" || "NeedMore" || "Pending")) {
-            $items[] = array('user', 'gallery/show/user/'.APP_User::get()->getHandle(), $words->get('GalleryMy'));
-            $items[] = array('upload', 'gallery/upload', $words->get('GalleryUpload'));
-        }
-        $items[] = array('flickr', 'gallery/flickr', $words->get('GalleryFlickr'));
-        return $items; 
+    protected function getStylesheets() {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3_75percent.css';
+        return $stylesheets;
     }
 
     protected function getSubmenuActiveItem()
     {
-        return 'overview';
-    }
-
-    protected function teaserHeadline() {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryManage');
+        return 'manage';
     }
     
     public function leftSidebar()

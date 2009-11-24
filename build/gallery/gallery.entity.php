@@ -34,13 +34,31 @@ class Gallery extends RoxEntityBase
 {
     protected $_table_name = 'gallery';
 
-    public function __construct($group_id = false)
+    public function __construct($gallery_id = false)
     {
         parent::__construct();
-        if (intval($group_id))
+        if (intval($gallery_id))
         {
-            $this->findById(intval($group_id));
+            $this->findById(intval($gallery_id));
         }
+    }
+    
+    public function getNotEmpty()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        $sql = <<<SQL
+            SELECT DISTINCT
+            `id`, `user_id_foreign`, `flags`, `title`, `text`
+            FROM `gallery`
+            LEFT JOIN `gallery_items_to_gallery` AS `g` ON
+                g.`gallery_id_foreign` = g.`gallery_id_foreign`
+            WHERE g.`gallery_id_foreign` = gallery.`id`
+            ORDER BY `id` DESC
+SQL;
+        return $this->findBySQLMany($sql);
     }
 
 }

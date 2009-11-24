@@ -290,6 +290,41 @@ ORDER BY `id` DESC';
         return $s;
     }
     
+    public function getGalleriesNotEmpty($UserId = false)
+    {
+    	$query = '
+SELECT DISTINCT
+`id`, `user_id_foreign`, `flags`, `title`, `text`
+FROM `gallery`
+LEFT JOIN `gallery_items_to_gallery` AS `g` ON
+    g.`gallery_id_foreign` = g.`gallery_id_foreign`
+WHERE g.`gallery_id_foreign` = gallery.`id`';
+if ($UserId) {
+    	$query .= '
+AND gallery.`user_id_foreign` = '.(int)$UserId;
+}
+    	$query .= '
+ORDER BY `id` DESC';
+        $s = $this->dao->query($query);
+        if ($s->numRows() == 0)
+            return false;
+        return $s;
+    }
+    
+    public function getGalleriesNotEmptyEntities()
+    {
+        $sql = <<<SQL
+            SELECT DISTINCT
+            `id`, `user_id_foreign`, `flags`, `title`, `text`
+            FROM `gallery`
+            LEFT JOIN `gallery_items_to_gallery` AS `g` ON
+                g.`gallery_id_foreign` = g.`gallery_id_foreign`
+            WHERE g.`gallery_id_foreign` = gallery.`id`
+            ORDER BY `id` DESC
+SQL;
+        return $this->createEntity('Gallery')->findBySQLMany($sql);
+    }
+    
     public function getMemberWithUserId($userId)
     {
         if (!($userId = intval($userId)))
@@ -576,6 +611,8 @@ VALUES
                 continue;
             if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
                 continue;
+            if ($size[0] > 240)
+                $img->createThumb($userDir->dirName(), 'thumb1', 240, 240, false ,'ratio');
             if ($size[0] > 550)
                 $img->createThumb($userDir->dirName(), 'thumb2', 500);
             $itemId = $this->dao->nextId('gallery_items');

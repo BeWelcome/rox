@@ -9,11 +9,6 @@
 
 class GallerySetDetailsPage extends GallerySetPage
 {
-
-    protected function teaserHeadline() {
-        $words = $this->words;
-        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/sets">'.$words->get("Photosets").'</a>';
-    }
     
     protected function getTopmenuActiveItem()
     {
@@ -37,8 +32,8 @@ class GallerySetDetailsPage extends GallerySetPage
             // Display the upload form
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
         }
-        
-        require SCRIPT_BASE . 'build/gallery/templates/latestgallery.php';
+        $this->thumbsize = 1;
+        require SCRIPT_BASE . 'build/gallery/templates/imagefixedcolumns.list.php';
         $shoutsCtrl = new ShoutsController;
         $shoutsCtrl->shoutsList('gallery', $gallery->id);
     }

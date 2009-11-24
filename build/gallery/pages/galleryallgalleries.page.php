@@ -20,7 +20,7 @@ class GalleryAllGalleriesPage extends GalleryBasePage
         $headline = '<a href="gallery" title="Gallery">' .$this->words->getBuffered('Gallery'). '</a>';
         $headline.= '<span class="small"> > <a href="gallery/show/sets" title="All Galleries">'.$this->words->getBuffered("Photosets").'</a></span>';
         return $headline;
-        return $this->words->getBuffered('Gallery'). ' > <a href="gallery/show/sets">'.$this->words->getBuffered("Gallery_MemberGalleries",$this->username).'</a>';
+        return $this->words->getBuffered('Gallery'). ' > <a href="gallery/show/sets">'.$this->words->getBuffered("Gallery_MemberGalleries",$this->member->username).'</a>';
     }
     
     public function leftSidebar()
@@ -31,7 +31,7 @@ class GalleryAllGalleriesPage extends GalleryBasePage
     protected function column_col3() {
         $statement = $this->statement;
         $galleries = $this->galleries;
-        $words = new MOD_words();
+        $words = $this->getWords();
         ?>
         <h2><?php echo $words->getFormatted('Photosets'); ?></h2>
         <?php

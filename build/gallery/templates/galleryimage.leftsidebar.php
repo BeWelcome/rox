@@ -39,5 +39,5 @@ $d = $image;
 
     echo '
     <p class="small" title="'.$d->created.'">'.$words->get('created').': '.$layoutbits->ago(strtotime($d->created)).'</p>
-    <p class="small">'.$d->width.'x'.$d->height.'; '.$d->mimetype.'</p>
-    <p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$words->getFormatted('GalleryDownload').'" title="'.$words->getFormatted('GalleryDownload').'"/> </a> </p>';
+    <p class="small"><a href="gallery/img?id='.$d->id.'&amp;t=1" title="'.$words->getFormatted('GalleryOriginal').'" />'.$d->width.'x'.$d->height.'</a>; '.$d->mimetype.'</p>
+    <p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$words->getFormatted('GalleryDownload').'" title="'.$words->getFormatted('GalleryDownload').'"/> </a>  </a></p>';

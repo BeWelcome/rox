@@ -12,7 +12,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
 {
     protected function init()
     {
-        $this->page_title = $this->words->getBuffered("Photosets");
+        $this->page_title = $this->words->getBuffered("GalleryTitleSets");
     }
 
     protected function getSubmenuActiveItem()
@@ -20,8 +20,9 @@ class GalleryUserGalleriesPage extends GalleryUserPage
         return 'overview';
     }
 
-    protected function teaserHeadline() {
-        return $this->words->getBuffered('Gallery'). ' &gt; <a href="gallery/show/sets">'.$this->words->getBuffered("Gallery_MemberGalleries",$this->username).'</a>';
+    protected function breadcrumbs() {
+        $words = $this->words;
+        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a>';
     }
     
     public function leftSidebar()
@@ -38,7 +39,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
         $galleries = $this->galleries;
         $words = new MOD_words();
         ?>
-        <h2><?php echo $words->getFormatted('Photosets'); ?></h2>
+        <h2><?php echo $words->getFormatted('GalleryTitleSets'); ?></h2>
         <?php
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }

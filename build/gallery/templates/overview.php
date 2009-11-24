@@ -2,7 +2,7 @@
 
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits();
-
+$thumbsize = $this->thumbsize;
 if ($statement) {
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);
@@ -17,11 +17,11 @@ if ($statement) {
     $p = PFunctions::paginate($statement, $page, $itemsPerPage);
     $statement = $p[0];
 
-    echo '<div class="floatbox">';
+    echo '<div class="floatbox thumb_wrapper">';
     foreach ($statement as $d) {
     	echo '
-<div class="img thumb float_left" style="width: 160px; height: 180px; margin: 0; padding: 10px">
-    <a href="gallery/show/image/'.$d->id.'" id="image_link_'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.'" alt="image" style="margin: 5px 0; float:none;" /></a>';
+<div class="img thumb float_left size'.$thumbsize.'">
+    <a href="gallery/show/image/'.$d->id.'" id="image_link_'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image" style="margin: 5px 0; float:none;" /></a>';
 
     echo '<h4>';
     $loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
@@ -42,11 +42,13 @@ echo '
     </div>';
     }
     echo '</div>';
+    echo '<div class="floatbox">';
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;
     $request = $requestStr.'/=page%d';
     require TEMPLATE_DIR.'misc/pages.php';
+    echo '</div>';
 }
 ?>
 <script type="text/javascript">

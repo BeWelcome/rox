@@ -1,5 +1,4 @@
 ﻿<?php
-$request = PRequest::get()->request;
 $member = $this->model->getLoggedInMember();
 
 $g = $gallery;
@@ -8,8 +7,6 @@ $g->user_handle = MOD_member::getUserHandle($g->user_id_foreign);
 // Set variable own (if own gallery)
 $Own = false;
 if ($member) {
-    //$callbackId = $Gallery->editGalleryProcess($gallery);
-    //$vars =& PPostHandler::getVars($callbackId);
     $R = MOD_right::get();
     $GalleryRight = $R->hasRight('Gallery');
     $Own = ($member->Username == $g->user_handle) ? true : false;
@@ -17,8 +14,6 @@ if ($member) {
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
-// $i18n = new MOD_i18n('date.php');
-// $format = $i18n->getText('format');
 $words = new MOD_words();
 
 ?>

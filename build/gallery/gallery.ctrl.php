@@ -81,7 +81,8 @@ class GalleryController extends RoxControllerBase {
                 break;
 
             case 'uploaded_done':
-                $this->ajaxlatestimages();
+                $galleryId = (isset($_GET['id'])) ? $_GET['id'] : false;
+                $this->ajaxlatestimages($galleryId);
                 PPHP::PExit();
 
             case 'xppubwiz':
@@ -171,12 +172,12 @@ class GalleryController extends RoxControllerBase {
                                 case 'remove':
                                     $this->_model->editGalleryProcess();
                                     break;
-                                case 'images':
-                                    return $this->galleryimages($gallery);
+                                case 'details':
+                                    return $this->gallerydetails($gallery);
                                 default:
                             }                      
                         } 
-                        return $this->gallery($gallery);
+                        return $this->gallery($gallery,(isset($request[4]) && $request[4] == 'upload'));
                                                 
                     case 'user':
                         $subTab = 'user';
@@ -241,9 +242,9 @@ class GalleryController extends RoxControllerBase {
      * @access public
      * @return object $page
      */
-    public function gallery(Gallery $gallery)
+    public function gallery(Gallery $gallery,$upload = false)
     {
-        $page = new GallerySetOverviewPage(); // TODO: Deal with the PageNames. We could easily name this GalleryPage but this reminds of the name of the app itself. How to proceed with this?
+        $page = new GallerySetPage(); // TODO: Deal with the PageNames. We could easily name this GalleryPage but this reminds of the name of the app itself. How to proceed with this?
         
         $user_id_foreign = $gallery->user_id_foreign;
         $page->myself = ($this->loggedInMember && $this->loggedInMember->get_userId() == $user_id_foreign) ? $this->loggedInMember->Username : false;
@@ -251,7 +252,7 @@ class GalleryController extends RoxControllerBase {
         $page->gallery = $gallery;
         $page->statement = $this->_model->getLatestItems('',$gallery->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
-        $page->upload = ((isset($request[4]) && $request[4] == 'upload') or !$page->cnt_pictures) ? true : false;
+        $page->upload = ($upload or !$page->cnt_pictures) ? true : false;        
         $page->member = $this->_model->getMemberWithUserId($gallery->user_id_foreign);
         $page->d = $this->_model->getLatestGalleryItem($gallery->id);
         $page->num_rows = $this->_model->getGalleryItems($gallery->id,1);
@@ -269,6 +270,7 @@ class GalleryController extends RoxControllerBase {
     public function deleteGallery(Gallery $gallery, $status)
     {
         $page = new GalleryDeletePage();
+        $page->member = $this->_model->getMemberWithUserId($gallery->user_id_foreign);
         $page->loggedInMember = $this->loggedInMember;
         $user_id_foreign = $gallery->user_id_foreign;
         $page->myself = ($this->loggedInMember && ($this->loggedInMember->get_userId() == $user_id_foreign)) ? $this->loggedInMember->Username : false;
@@ -283,9 +285,9 @@ class GalleryController extends RoxControllerBase {
      * @access public
      * @return object $page
      */
-    public function galleryimages(Gallery $gallery)
+    public function gallerydetails(Gallery $gallery)
     {
-        $page = new GallerySetPage();
+        $page = new GallerySetDetailsPage();
         
         //Check if current TB-user-id and Gallery-user-id are the same
         $loggedInMember = $this->loggedInMember;
@@ -407,10 +409,11 @@ class GalleryController extends RoxControllerBase {
      * @access public
      * @return string
      */
-    public function ajaxlatestimages()
+    public function ajaxlatestimages($galleryId = false)
     {
         $loggedInMember = $this->loggedInMember;
-        $statement = $this->_model->getLatestItems($loggedInMember->get_userId());
+        if ($galleryId) $statement = $this->_model->getLatestItems(false,$galleryId);
+        else $statement = $this->_model->getLatestItems($loggedInMember->get_userId());
         require_once 'templates/overview.php';
     }
 

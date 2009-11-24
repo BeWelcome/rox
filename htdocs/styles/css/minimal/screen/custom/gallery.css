@@ -1,0 +1,26 @@
+@media all
+{
+
+.gallery_overview {
+    padding: 1em 0;
+}
+.gallery_overview .thumb_container,.gallery_overview .thumb_container img {
+    width: 75px;
+    height: 75px;
+}
+.gallery_overview .thumb_container {
+    margin: 0 6px 6px 0;
+    border: 0;
+    background-color: 0;
+}
+.gallery_overview .description {
+    margin: 1em 0;
+}
+.gallery_menu a.active {
+    color: #000;
+    font-weight: bold;
+}
+.gallery_menu {
+    margin-bottom: 1em;
+}
+}

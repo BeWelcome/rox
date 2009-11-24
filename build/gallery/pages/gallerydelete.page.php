@@ -7,46 +7,27 @@
  *
  */
 
-class GalleryDeletePage extends GalleryBasePage
+class GalleryDeletePage extends GallerySetPage
 {       
-    protected function getSubmenuItems()
-    {
-        $words = $this->getWords();
-        $member = $this->loggedInMember;
-        $items = array();
-        $items[] = array('overview', 'gallery', $words->get('GalleryAllPhotos'));
-        if ($member->Status == ("Active" || "NeedMore" || "Pending")) {
-            $items[] = array('user', 'gallery/show/user/'.APP_User::get()->getHandle(), $words->get('GalleryMy'));
-            $items[] = array('upload', 'gallery/upload', $words->get('GalleryUpload'));
-        }
-        $items[] = array('flickr', 'gallery/flickr', $words->get('GalleryFlickr'));
-        return $items; 
-    }
 
     protected function getSubmenuActiveItem()
     {
-        return 'overview';
+        return 'delete';
     }
 
     protected function teaserHeadline()
     {
         return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryDelete');
     }
-    
-    public function leftSidebar()
-    {
-        $galleries = $this->galleries;
-        $cnt_pictures = $this->cnt_pictures;
-        $username = isset($this->loggedInMember->Username) ? $this->loggedInMember->Username : '';
-        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
-    }
 
     protected function column_col3() {
+        $gallery = $this->gallery;
         $statement = $this->statement;
-        $words = new MOD_words();
-        ?>
-        <h2><?php echo $words->getFormatted('GalleryDelete'); ?></h2>
-        <?php
+        $words = $this->getWords();
+        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'" class="black">'.$gallery->title.'</a></h2>';
+        echo '<div class="gallery_menu">';
+        echo $this->submenu().'</div>';
+
         if ($this->deleted) echo 'Gallery successfully deleted.';
         else require SCRIPT_BASE . 'build/gallery/templates/gallerydelete.column_col3.php';
     }

@@ -38,6 +38,7 @@ class GalleryBasePage extends PageWithActiveSkin
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3_75percent.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/lightview.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/gallery.css';
         return $stylesheets;
     }
     

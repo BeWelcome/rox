@@ -8,6 +8,7 @@ $callbacktag = $formkit->setPostCallback('GalleryController', 'uploadedProcess')
 //$callbackId = $Gallery->uploadProcess();
 //$vars = PPostHandler::getVars($callbackId);
 $galleryId = isset($this->galleryId) ? $this->galleryId : false;
+$galleryId = ($this->gallery) ? $this->gallery->id : $galleryId;
 $words = $this->words;
 // If the upload-form is NOT hidden, show it!
 ?>
@@ -57,6 +58,16 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
     </form>
     <iframe id="gallery-img-upload-getter" name="gallery-img-upload-getter" class="hidden"></iframe>
     <script type="text/javascript">//<!--
+    <? if (isset($uploaderUrl)) { ?>
+    var Gallery = {
+    	imageUploaded: function() {
+    		if($('gallery-upload-content')) {
+    			var url = http_baseuri+'<?=$uploaderUrl?>';
+    			new Ajax.Updater('gallery-upload-content', url, {method:'get', parameters:'raw=1'});
+    		}
+    	}
+    }
+    <? } ?>
 var GalleryImg = new Uploader('gallery-img-upload', {
     iframeAfter:'gallery-upload-content',
     oncomplete:Gallery.imageUploaded,

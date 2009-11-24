@@ -6,7 +6,7 @@
     <div class="subcl" >
                     <div id="username" >
                         <strong><?=$member->Username ?></strong>
-                        <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
+                        <?=($verification_status) ? '<a href="verifymembers/verifiersof/'.$member->Username.'"><img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'"></a>': ''?>
                         <?=($member->Accomodation == 'anytime') ? '<img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="'.$member->Accomodation.'">': ''?>
                         <br />
                         <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>

@@ -50,7 +50,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
     ?>
     <tr class="<?=$styles[$ii%2] ?>">
         <td align="center">
-            <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
+            <a class="username" href="members/<?=$m->Username ?>"><?=$m->Username ?></a>
             <br />
             <?=MOD_layoutbits::PIC_50_50($m->Username) ?>
         </td>

@@ -1099,9 +1099,12 @@ height:50px;
 .wiki .page-toc-caption { font-size: 1.2em; padding: 1em 0; cursor: pointer; }
 .wiki .page-toc ol { margin: 0 0 1em 0; }
 .wiki .page-toc ol li { list-style-type: none; }
-.wiki .page-toc ol ol { margin: 0 0.8em .5em .3em; padding: 0 .5em; }
-.wiki .page-toc li { line-height: 1em; padding: .3em 0; margin: 0 0; }
-.wiki .page-toc ol ol li { list-style-type: none; }
+.wiki .page-toc ol .toc_1 { margin: 0; padding: .3em 0; }
+.wiki .page-toc ol .toc_2 { margin: 0; padding: .3em 0; }
+.wiki .page-toc ol .toc_3 { margin: 0 0.8em .5em .3em; padding: 0 .5em; }
+.wiki .page-toc ol .toc_4 { margin: 0 0.8em .5em .3em; padding: 0 .5em; font-style: italic; }
+
+.wiki .page-toc li { line-height: 1em;  }
 
 .wiki .search-form { padding: 2em 0; }
 

@@ -9,13 +9,21 @@ var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
 document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder"></script>');
 
 var req = new String(location.pathname).toLowerCase();
 var loc = new String(location);
 
+if (req.indexOf('trip') != -1 ) {
+	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"></script>');
+} else {
+	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder"></script>');
+}
+
 // Needed for the dynamic tabs on personal startpage, only 1KB:
 document.write('<script type="text/javascript" src="script/fabtabulous.js"></script>');
+
+// Fix PNG transparency for IE6
+//document.write(' <!--[if lt IE 7]><script type="text/javascript" src="script/unitpngfix.js"></script><![endif]--> ');
 
 if (req.indexOf('signup') != -1) {
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
@@ -24,9 +32,8 @@ if (req.indexOf('signup') != -1) {
 if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('forums') != -1 || req.indexOf('trip') != -1 ) {
     	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
 }
-if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('trip') != -1 ) {
+if (req.indexOf('blog') != -1 || req.indexOf('blog/create') != -1 || req.indexOf('trip') != -1 ) {
         document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
-		document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=dragdrop"></script>');
 		document.write('<script type="text/javascript" src="script/datepicker.js"></script>');
 }
 if (
@@ -41,12 +48,12 @@ if (
 	) {
 	document.write('<script type="text/javascript" src="script/fieldset.js"></script>');
 }
+if (req.indexOf('gallery') != -1) {
+	document.write('<script type="text/javascript" src="script/gallery.js"></script>');
+	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
+}
 if (req.indexOf('gallery') != -1 || req.indexOf('tour/meet') != -1) {
 	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
-}
-if (req.indexOf('gallery/upload') != -1) {
-	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
-	document.write('<script type="text/javascript" src="script/gallery.js"></script>');
 }
 if (req.indexOf('thepeople') != -1) {
 	document.write('<script type="text/javascript" src="script/transition.js"></script>');

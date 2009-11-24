@@ -35,10 +35,12 @@ $countmatch = 0;
 MustLogIn(); // need to be log
 
 $RightLevel = HasRight('SqlForVolunteers'); // Check the rights
+/*
 if ($RightLevel < 1) {
 	echo "This Need the sufficient <b>SqlForVolunteers</b> rights<br>";
 	exit (0);
 }
+*/
 
 $IdQueryScope = RightScope('SqlForVolunteers');
 

@@ -47,7 +47,7 @@ function DisplayVolunteer_Board($BoardName) {
 	echo "<tr><th align=\"center\">";
 	echo $rr->PurposeComment,"</th></tr>\n" ;
 	echo "<tr><td align=\"center\">";
-	echo "<textarea name=\"content_".$BoardName."\" rows=\"8\" cols=\"60\" >",$rr->TextContent,"</textarea>" ;
+	echo "<textarea name=\"content_".$BoardName."\" rows=\"8\" cols=\"90\" >",$rr->TextContent,"</textarea>" ;
 	echo "</td></tr>\n" ;
 	echo "<tr><td align=\"center\">";
 	echo "<input type=hidden name=\"action\" value=\"UpdateBoard_".$BoardName."\"><input type=\"submit\" name=\"Update Board\" value=\"Update Board\">" ;
@@ -67,7 +67,7 @@ function UpdateVolunteer_Board($BoardName) {
 	if ((isset($_POST["action"])) and ($_POST["action"]=="UpdateBoard_".$BoardName)) {
 	
 //	   $TextContent="updated by ".fUsername($_SESSION["IdMember"])." on  ".date("l jS \of F Y h:i:s A")." (server time)\n :".$_POST["content_".$BoardName] ;
-	   $TextContent=date("Y/n/j H:i ").fUsername($_SESSION["IdMember"])." said:".$_POST["content_".$BoardName] ;
+	   $TextContent=date("Y/n/j H:i ").fUsername($_SESSION["IdMember"])." said: ".$_POST["content_".$BoardName] ;
 	
 	   $str="select * from volunteer_boards where Name='".$BoardName."'" ;
 	   $qry=mysql_query($str) ;

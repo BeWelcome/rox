@@ -66,6 +66,7 @@ VALUES
             $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
             $userDir->delFile($filename);
             $userDir->delFile('thumb'.$filename);
+            $userDir->delFile('thumb1'.$filename);
             $userDir->delFile('thumb2'.$filename);
             $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
             $this->deleteComments($image->id);
@@ -151,6 +152,7 @@ VALUES
                 $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
                 $userDir->delFile($filename);
                 $userDir->delFile('thumb'.$filename);
+                $userDir->delFile('thumb1'.$filename);
                 $userDir->delFile('thumb2'.$filename);
                 $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
                 $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$image->id);

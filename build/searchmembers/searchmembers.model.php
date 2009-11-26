@@ -459,10 +459,10 @@ AND (
         if (($coordinates = $this->GetParam($vars, "place_coordinates","")) && ($accuracy = $this->GetParam($vars, "accuracy_level")) && intval($accuracy) > 1)
         {
             list($long, $lat, $alt) = explode(',', $coordinates);
-            $min_long = $long - 0.02;
-            $max_long = $long + 0.02;
-            $min_lat = $lat - 0.02;
-            $max_lat = $lat + 0.02;
+            $min_long = $long - 0.04;
+            $max_long = $long + 0.04;
+            $min_lat = $lat - 0.04;
+            $max_lat = $lat + 0.04;
 
             $places = $this->createEntity('Geo')->findByWhereMany(<<<SQL
 longitude BETWEEN {$min_long} AND {$max_long}

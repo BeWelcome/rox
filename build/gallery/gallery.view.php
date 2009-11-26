@@ -48,30 +48,10 @@ class GalleryView extends PAppView {
     {
         require 'templates/imageinfo.php';
     }
-    public function galleryInfo($gallery,$cnt_pictures) 
-    {
-        require 'templates/galleryinfo.php';
-    }
-    public function galleryDeleteOne($gallery,$deleted)
-    {
-        require 'templates/gallery_deleteone.php';
-    }
-    public function imageAddInfo($image) 
-    {
-        require 'templates/imageaddinfo.php';
-    }
     public function userInfo($username,$galleries,$cnt_pictures) 
     {
         require 'templates/userinfo.php';
     }
-    public function commentForm($image,$callbackId)
-    {
-        require 'templates/deleteone.php';
-    }
-    public function showsubmenu($subTab)
-    {
-        require 'templates/submenu.php';
-    }    
     public function imageDeleteOne($image,$deleted)
     {
         require 'templates/deleteone.php';
@@ -88,11 +68,6 @@ class GalleryView extends PAppView {
     public function imageSurroundItemsSmall($image,$Previous = false, $Next = false, $UserId = false, $SetId = false)
     {
         require 'templates/surrounditems_small.php';
-    }
-
-    public function latestOverview($statement) 
-    {
-        require 'templates/latestoverview.php';
     }
     public function latestFlickr($statement = false) 
     {
@@ -202,19 +177,4 @@ class GalleryView extends PAppView {
             require 'templates/uploadform.php';
     }
 
-    public function userBar()
-    {
-        require 'templates/userbar.php';
-    }
-
-    public function xpPubWiz()
-    {
-        header('Content-type: text/html;charset="utf-8"');
-        require 'templates/xppubwiz.php';
-        PPHP::PExit();
-    }
-    
-    public function topMenu($currentTab) {
-        require TEMPLATE_DIR.'shared/roxpage/topmenu.php';
-    }
 }

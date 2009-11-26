@@ -32,8 +32,10 @@ if ($galleries) {
                 <img class="framed" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
             </a>
             <h4><a href="gallery/show/sets/<?=$g->id?>"><?=$g->title?></a></h4>
-            <p class="small"><?=$words->get('by')?> <?=$username?></p>
-            <p><?=$num_rows?> <?=$words->get('pictures')?></p>
+            <p>
+            <?=$num_rows?> <?=$words->get('pictures')?>
+            <span class="small"><?=$words->get('by')?> <?=$username?></span>
+            </p>
         </div>
         <?php
         }

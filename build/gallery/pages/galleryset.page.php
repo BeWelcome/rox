@@ -69,6 +69,8 @@ class GallerySetPage extends GalleryBasePage
     }
     
     protected function column_col3() {
+        // $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
+        //         if ($mem_redirect) $this->message = $mem_redirect->message_gallery;
         $words = $this->words;
         $cnt_pictures = $this->cnt_pictures;
         $statement = $this->statement;
@@ -76,7 +78,7 @@ class GallerySetPage extends GalleryBasePage
         $uploaderUrl = 'gallery/uploaded_done/?id='.$gallery->id;
         $d = $this->d;
         $num_rows = ($this->num_rows) ? $this->num_rows : 0;
-        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'" class="black">'.$gallery->title.'</a></h2>';
+        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'" class="black" id="g-title">'.$gallery->title.'</a></h2>';
         echo '<div class="gallery_menu">';
         echo $this->submenu().'</div>';
         require SCRIPT_BASE . 'build/gallery/templates/galleryset.column_col3.php';

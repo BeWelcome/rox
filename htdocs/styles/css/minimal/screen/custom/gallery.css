@@ -57,15 +57,17 @@
     padding-bottom: 0;
 }
 .gallery_container {
-    margin: 10px;
+    margin: 0 20px 20px 0;
     height: 170px;
-    width: 150px;
-    padding: 20px;
+    width: 170px;
+    padding: 17px 10px 8px 8px;
     text-align: center;
+    background: transparent url(../../images/pic_shadow.png) no-repeat scroll center top;
 }
 .gallery_container .framed{
     height: 100px;
     width: 100px;
+    margin-bottom: 20px;
 }
 
 }

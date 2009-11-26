@@ -177,20 +177,21 @@ VALUES
                     $vars['errors'] = array('images');
                     return false;
                 }
-                if (!$User = APP_User::login())
+                if (!$member = $this->getLoggedInMember())
                     return false;
-                if ($vars['deleteOnly'])
+                if (isset($vars['deleteOnly']) && $vars['deleteOnly'])
                     return $this->deleteMultiple($images);
                 foreach ($images as $d) {
                     $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
                     if (!isset($vars['removeOnly']) || !$vars['removeOnly']) {
                         $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$this->dao->escape($vars['gallery'])."',`item_id_foreign`= ".$d);
-                    } else {
-                        return PVars::getObj('env')->baseuri.'gallery/show/user/'.$User->getHandle();
-                    }
+                    } 
+                    // else {
+                    //                         return 'gallery/show/user/'.$User->getHandle();
+                    //                     }
                 }
             }
-            return PVars::getObj('env')->baseuri.'gallery/show/sets/'.$vars['gallery'];
+            return 'gallery/show/sets/'.$vars['gallery'];
         }
     }
     

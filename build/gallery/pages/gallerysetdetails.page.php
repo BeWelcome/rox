@@ -25,6 +25,12 @@ class GallerySetDetailsPage extends GallerySetPage
         $cnt_pictures = $this->cnt_pictures;
         $statement = $this->statement;
         $gallery = $this->gallery;
+
+        $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
+        $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
+        $formkit = $this->layoutkit->formkit;
+        $callback_tag = $formkit->setPostCallback('GalleryController', 'updateGalleryCallback');
+
         echo '<h2><a href="gallery/show/sets/'.$gallery->id.'" class="black">'.$gallery->title.'</a></h2>';
         echo '<div class="gallery_menu">';
         echo $this->submenu().'</div>';
@@ -33,9 +39,23 @@ class GallerySetDetailsPage extends GallerySetPage
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
         }
         $this->thumbsize = 1;
+        echo '<form method="POST" action="">'.$callback_tag;
         require SCRIPT_BASE . 'build/gallery/templates/imagefixedcolumns.list.php';
-        $shoutsCtrl = new ShoutsController;
-        $shoutsCtrl->shoutsList('gallery', $gallery->id);
+        echo <<<HTML
+        <p class="small">
+            <input type="checkbox" name="selectAllRadio" class="checker" onclick="common.selectAll(this);">
+            &nbsp;&nbsp;{$words->get('SelectAll')}
+            &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;
+            {$words->get('GalleryWithSelected')}: &nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input name="gallery" type="hidden" value="{$gallery->id}">
+            <input name="removeOnly" type="hidden" value="1">
+            <input type="submit" name="button" value="{$words->getBuffered('GalleryRemoveImagesFromPhotoset')}" class="button" style="cursor:pointer"/>
+            <a href="gallery/show/sets/{$this->gallery->id}/upload" class="button" /><img src="images/icons/picture_add.png">{$words->get('GalleryUploadPhotos')}</a>
+
+        </p>
+        </form>
+HTML;
     }
     
     /*

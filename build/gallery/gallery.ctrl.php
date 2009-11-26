@@ -235,11 +235,10 @@ class GalleryController extends RoxControllerBase {
      */
     public function gallery(Gallery $gallery,$upload = false)
     {
-        $page = new GallerySetPage(); // TODO: Deal with the PageNames. We could easily name this GalleryPage but this reminds of the name of the app itself. How to proceed with this?
-        
-        $user_id_foreign = $gallery->user_id_foreign;
-        $page->myself = ($this->loggedInMember && $this->loggedInMember->get_userId() == $user_id_foreign) ? $this->loggedInMember->Username : false;
-        $page->username = MOD_member::getUserHandle($user_id_foreign);
+        $page = new GallerySetPage(); // TODO: Deal with the PageNames. We could easily name this GalleryPage but this reminds of the name of the app itself. How to proceed with this?        
+        $page->loggedInMember = $this->loggedInMember;
+        $page->myself = ($this->loggedInMember && $this->loggedInMember->get_userId() == $gallery->user_id_foreign) ? $this->loggedInMember->Username : false;
+        $page->username = MOD_member::getUserHandle($gallery->user_id_foreign);
         $page->gallery = $gallery;
         $page->statement = $this->_model->getLatestItems('',$gallery->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
@@ -281,14 +280,12 @@ class GalleryController extends RoxControllerBase {
         $page = new GallerySetDetailsPage();
         
         //Check if current TB-user-id and Gallery-user-id are the same
-        $loggedInMember = $this->loggedInMember;
-        $user_id_foreign = $gallery->user_id_foreign;
-        $myself = ($loggedInMember && ($loggedInMember->get_userId() == $user_id_foreign)) ? $loggedInMember->Username : false;
+        $page->loggedInMember = $this->loggedInMember;
+        $page->myself = ($this->loggedInMember && ($this->loggedInMember->get_userId() == $gallery->user_id_foreign)) ? $this->loggedInMember->Username : false;
         $page->gallery = $gallery;
         $page->statement = $this->_model->getLatestItems('',$gallery->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->upload = ((isset($request[4]) && $request[4] == 'upload') or !$page->cnt_pictures) ? true : false;
-        $page->myself = $myself;
         $page->member = $this->_model->getMemberWithUserId($gallery->user_id_foreign);
         $page->d = $this->_model->getLatestGalleryItem($gallery->id);
         $page->num_rows = $this->_model->getGalleryItems($gallery->id,1);
@@ -617,19 +614,16 @@ class GalleryController extends RoxControllerBase {
         }
     }
 
-    public function updateGalleryProcess()
+    public function updateGalleryCallback($args, $action, $mem_redirect, $mem_resend)
     {
-    	$callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        if (PPostHandler::isHandling())
-        {
-            $vars =& PPostHandler::getVars($callbackId);
-            return $this->_model->updateGalleryProcess($vars);
+        if (!$this->_model->getLoggedInMember()){
+            return false;
         }
-        else
-        {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
-            return $callbackId;
-        }
+        $vars = $args->post;
+        $request = $args->request;
+        if (array_key_exists('imageId', $vars))
+            $mem_redirect->message_gallery = count($vars['imageId']);
+        return $this->_model->updateGalleryProcess($vars);
     }
 
     public function commentProcess($image = false)

@@ -57,7 +57,7 @@ class ProfileVisit extends RoxEntityBase
         {
             return array();
         }
-        return $this->createEntity('Member')->findByWhereMany("id IN (SELECT id FROM {$this->getTableName()} WHERE IdMember = {$member->getPKValue()} ORDER BY updated DESC) LIMIT {$pager->getActiveStart()}, {$pager->getActiveLength()}");
+        return $this->createEntity('Member')->findBySQLMany("SELECT m.* FROM members AS m, {$this->getTableName()} AS p WHERE m.id = p.IdVisitor AND p.IdMember = {$member->getPKValue()} AND m.Status = 'Active' ORDER BY p.updated DESC LIMIT {$pager->getActiveStart()}, {$pager->getActiveLength()}");
     }
 
     /**

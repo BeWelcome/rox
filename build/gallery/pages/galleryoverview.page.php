@@ -19,32 +19,28 @@ class GalleryOverviewPage extends GalleryBasePage
     {
         return 'overview';
     }
+    
+    protected function teaser() {
+        echo '<div id="teaser" class="clearfix">'.$this->teaserHeadline().'</div>';
+    }
 
     protected function teaserHeadline() {
-        return '<h1>'.$this->getWords()->getBuffered('Gallery').'</h1>';
+        return '<h1>'.$this->getWords()->get('Gallery').'</h1>';
     }
     
     public function leftSidebar()
     {
         $loggedInMember = $this->loggedInMember;
         $words = $this->words;
-        if ($loggedInMember) {
-            $galleries = $this->galleries;
-            $cnt_pictures = $this->cnt_pictures ? $this->cnt_pictures : 0;
-            $username = $loggedInMember->Username;
-            require SCRIPT_BASE . 'build/gallery/templates/galleryoverview.leftsidebar.php';
-        } else {
-            //require SCRIPT_BASE . 'build/gallery/templates/galleryoverview_nonlogged.php';
-        }
+        $galleries = $this->galleries;
+        $cnt_pictures = $this->cnt_pictures ? $this->cnt_pictures : 0;
+        require SCRIPT_BASE . 'build/gallery/templates/galleryoverview.leftsidebar.php';
     }
 
     protected function column_col3() {
         $statement = $this->statement;
         $galleries = $this->galleries;
         $words = $this->words;
-        ?>
-        <h3><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h3>
-        <?php
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 

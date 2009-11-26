@@ -61,4 +61,51 @@ SQL;
         return $this->findBySQLMany($sql);
     }
 
+    public function getLatestGalleryItem()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        $sql = <<<SQL
+            SELECT DISTINCT
+            `id`, `user_id_foreign`, `flags`, `title`, `text`
+            FROM `gallery`
+            LEFT JOIN `gallery_items_to_gallery` AS `g` ON
+                g.`gallery_id_foreign` = g.`gallery_id_foreign`
+            WHERE g.`gallery_id_foreign` = gallery.`id`
+            ORDER BY `id` DESC
+SQL;
+        return $this->findBySQLMany($sql);
+    }
+
+    public function getItems()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        $sql = <<<SQL
+            SELECT `gallery_items_to_gallery`.*
+            FROM `gallery`
+            LEFT JOIN `gallery_items_to_gallery` AS `g` ON
+                g.`gallery_id_foreign` = g.`gallery_id_foreign`
+            WHERE g.`gallery_id_foreign` = gallery.`id`
+            ORDER BY `id` DESC
+SQL;
+        return $this->createEntity('GalleryItem')->findBySQLMany($sql);
+    }
+    
+    public function getItems2($status = false, $offset = 0, $limit = null)
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+
+        $status = (($status) ? $status : 'In');
+
+        return $this->createEntity('GalleryItem')->getGalleryItems($this, $status, '', $offset, $limit);
+    }
+
 }

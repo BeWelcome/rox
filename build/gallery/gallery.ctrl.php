@@ -72,6 +72,12 @@ class GalleryController extends RoxControllerBase {
                 $this->_view->realImg((int)$_GET['id']);
                 break;
                 
+            case 'images':
+                $page = new GalleryAllImagesPage();
+                $page->statement = $this->_model->getLatestItems();
+                $page->loggedInMember = $loggedInMember;
+                return $page;
+                
             case 'upload':
                 return $this->upload();
                 break;
@@ -92,7 +98,9 @@ class GalleryController extends RoxControllerBase {
                 break;
                 
             case 'flickr':
-                return new GalleryAvatarsPage();
+                $page = new GalleryFlickrPage();
+                $page->loggedInMember = $loggedInMember;
+                return $page;
 
             case 'avatars': 
                 if ($loggedInMember) {

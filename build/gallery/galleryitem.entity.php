@@ -42,6 +42,53 @@ class GalleryItem extends RoxEntityBase
             $this->findById(intval($group_id));
         }
     }
+    
+    /**
+     * return the items of a gallery
+     *
+     * @param object $gallery - Gallery entity object to get items for
+     * @param object $status - status to look for
+     * @param string $where - Optional where clause to use when finding items
+     * @access public
+     * @return array
+     */
+    public function getGalleryItems($gallery, $status = '', $where = '', $offset = 0, $limit = null)
+    {
+        if (!is_object($gallery) || !($group_id = $group->getPKValue()))
+        {
+            return array();
+        }
+
+        $where_clause = "IdGroup = '{$group_id}'" . (($status = $this->dao->escape($status)) ? " AND Status = '{$status}'" : '');
+        if (isset($where) && strlen($where))
+        {
+            $where_clause .= " AND {$where}";
+        }
+        $where_clause .= " ORDER BY created";
+
+        if ($limit)
+        {
+            $where_clause .= " LIMIT {$this->dao->escape($limit)}";
+        }
+
+        if ($offset)
+        {
+            $where_clause .= " OFFSET {$this->dao->escape($offset)}";
+        }
+
+        $links = $this->findByWhereMany($where_clause);
+
+        $members = array();
+        foreach ($links as &$link)
+        {
+            $members[] = $link->IdMember;
+            unset($link);
+        }
+        unset($links);
+        
+        $sql = "SELECT m.* FROM members AS m, {$this->getTableName()} AS mg WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id} ORDER BY mg.created ASC";
+        return $this->createEntity('Member')->findBySQLMany($sql);
+    }
 
 }
 

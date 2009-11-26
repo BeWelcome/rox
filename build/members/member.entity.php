@@ -718,9 +718,34 @@ ORDER BY Value asc
       }
 
 
-        public function get_visitors() 
+
+    /**
+     * returns count of profile visitors
+     *
+     * @access public
+     * @return int
+     */
+    public function getVisitorCount()
+    {
+        if (!$this->isLoaded())
         {
-            $sql = <<<SQL
+            return 0;
+        }
+        return $this->createEntity('ProfileVisit')->getVisitCountForMember($this);
+    }
+
+    /**
+     * returns array of members that have visited this profile
+     *
+     * @param PagerWidget $pager - pager containing details of visitor subset to fetch
+     *
+     * @access public
+     * @return array
+     */
+    public function getVisitorsSubset(PagerWidget $pager) 
+    {
+        return $this->createEntity('ProfileVisit')->getVisitingMembersSubset($this, $pager);
+        $sql = <<<SQL
 SELECT
     members.BirthDate,
     members.HideBirthDate,

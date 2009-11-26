@@ -39,6 +39,41 @@ class ProfileVisit extends RoxEntityBase
         {
             return array();
         }
-        return $this->findByWhereMany("IdMember = $member->getPKValue() ORDER BY updated DESC");
+        return $this->findByWhereMany("IdMember = {$member->getPKValue()} ORDER BY updated DESC");
+    }
+
+    /**
+     * returns a subset of the profile visits for a member
+     *
+     * @param Member      $member - profile to check
+     * @param PagerWidget $pager  - pager containing data on subset
+     *
+     * @access public
+     * @return array
+     */
+    public function getVisitingMembersSubset(Member $member, PagerWidget $pager)
+    {
+        if (!$member->isLoaded())
+        {
+            return array();
+        }
+        return $this->createEntity('Member')->findByWhereMany("id IN (SELECT id FROM {$this->getTableName()} WHERE IdMember = {$member->getPKValue()} ORDER BY updated DESC) LIMIT {$pager->getActiveStart()}, {$pager->getActiveLength()}");
+    }
+
+    /**
+     * returns number of members visiting $member
+     *
+     * @param Member $member - profile to check count for
+     *
+     * @access public
+     * @return int
+     */
+    public function getVisitCountForMember(Member $member)
+    {
+        if (!$member->isLoaded())
+        {
+            return 0;
+        }
+        return $this->countWhere("IdMember = {$member->getPKValue()}");
     }
 }

@@ -14,51 +14,43 @@ class MyVisitorsPage extends ProfilePage
     {
         $words = $this->getWords();
     	$member = $this->member;
-//		print_r($member) ; die (0) ;
-    	$visitors = $this->member->get_visitors() ;
-//		print_r($visitors) ; die (0) ;
+    	$visitor_count = $this->member->getVisitorCount() ;
         $layoutbits = new MOD_layoutbits();
-        // FIXME: Not the best way to provide pagination. But for now there's not better choice.
-        if (!$visitors) {
-			echo "no visitors" ;
-            return false;
-        } else {
-            $request = PRequest::get()->request;
-            $requestStr = implode('/', $request);
-            $matches = array();
-            if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
-                $page = $matches[1];
-                $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);
-            } else {
-                $page = 1;
-            }
-			// TODO : visitors must be in the proper format for the paginate page
-//            $p = PFunctions::paginate($visitors, $page, $itemsPerPage = 15);
-//            $visitors = $p[0];
+
+        if (!$visitor_count)
+        {
+			echo $words->get("ProfileNoVisitors");
+            return;
         }
 
-        ?>
-        <h3></h3>
-        <?php
+        $params->strategy = new HalfPagePager('right');
+        $params->items = $visitor_count;
+        $params->items_per_page = 20;
+        $pager = new PagerWidget($params);
 
-    foreach ($visitors as $member) {
-        $image = new MOD_images_Image('',$member->Username);
-        if ($member->HideBirthDate=="No") $member->age = floor($layoutbits->fage_value($member->BirthDate));
-        else $member->age = $words->get("Hidden");
-        echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'members/'.$member->Username.'\'; return false"><a href="bw/member.php?cid='.$member->Username.'">'.MOD_layoutbits::PIC_50_50($member->Username,'',$style='float_left framed').'</a><p><a href="bw/member.php?cid='.$member->Username.'">'.$member->Username.'</a>
-        <a href="blog/'.$member->Username.'" title="Read blog by '.$member->Username.'"><img src="images/icons/blog.gif" alt="" /></a>
-        <a href="trip/show/'.$member->Username.'" title="Show trips by '.$member->Username.'"><img src="images/icons/world.gif" alt="" /></a>
-        <br /><span class="small">'.$words->getFormatted("yearsold",$member->age).'<br />'.$member->city.'</span></p></li></a>';
-    }
+        $pager->render();
 
-	if (isset($p)) { // only call this if pagination has been repaired
-		$pages = $p[1];
-		$maxPage = $p[2];
-		$currentPage = $page;
-		if (isset($requestStrNew)) $requestStr = $requestStrNew;
-		$request = $requestStr.'/=page%d';
-		require TEMPLATE_DIR.'misc/pages.php';
-	}
+        echo "<div style='clear:right'>";
 
+        foreach ($member->getVisitorsSubset($pager) as $m)
+        {
+            $image = new MOD_images_Image('',$m->Username);
+            $image = MOD_layoutbits::PIC_50_50($m->Username,'',$style='float_left framed');
+            if ($m->HideBirthDate=="No") $m->age = floor($layoutbits->fage_value($m->BirthDate));
+            else $m->age = $words->get("Hidden");
+            echo <<<HTML
+<li class="userpicbox float_left">
+    <a href="members/{$m->Username}">{$image}</a>
+    <p>
+        <a href="members/{$m->Username}">{$m->Username}</a>
+        <a href="blog/{$m->Username}" title="Read blog by {$m->Username}"><img src="images/icons/blog.gif" alt="" /></a>
+        <a href="trip/show/{$m->Username}" title="Show trips by {$m->Username}"><img src="images/icons/world.gif" alt="" /></a>
+        <br />
+        <span class="small">{$words->getFormatted("yearsold",$m->age)}<br />{$m->city}</span>
+    </p>
+</li>
+HTML;
+        }
+        echo "</div>";
     }
 }

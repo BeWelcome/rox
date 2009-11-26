@@ -1112,24 +1112,24 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     }
 
     /**
-     * recors a visit of current member on member #id
+     * records a visit of current member on member #id
      *
-     * @param IdMember : id of the visited member
+     * @param Member $member - member entity
+     *
      * @access public
      * @return bool
      */
     
-    public function RecordVisitOn($IdOfVisitedMember) {
-        if (!$this->isLoaded() ) {
+    public function recordVisit(Member $member)
+    {
+        if (!$this->isLoaded() || !$member->isLoaded())
+        {
             return false;
         }
-        $sql="replace into profilesvisits(IdMember,IdVisitor,updated) values(".$IdOfVisitedMember.",".$this->id.",now())" ;
-        $result = $this->dao->query($sql);
-    
-    } // end of RecordVisitOn
+        return $this->createEntity('ProfileVisit')->recordVisit($this, $member);
+    }
 
-
-                        /**
+    /**
      * deletes all a members languages
      *
      * @access public

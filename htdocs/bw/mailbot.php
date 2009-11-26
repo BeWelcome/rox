@@ -252,7 +252,7 @@ $word->            $text="Problem in forum notification Type=".$rr->Type."<br />
     $text = '<html><head><title>'.$subj.'</title></head>' ;
      $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
      $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
-     $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'bw/member.php?cid='.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>' ;
+     $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>' ;
      $text.='<tr><td valign="top">';
 /*
     if (isset($rImage->FilePath)) {
@@ -509,7 +509,7 @@ WHERE
     $_SERVER['SERVER_NAME'] = 'www.bewelcome.org';
 
     $SenderMail="localevent@bewelcome.org" ;
-    $text=$text."<br />".ww("mailbot_localvol_info","<a href=\"http://www.bewelcome.org/bw/member.php?cid=".$rr->Username."\">".$rr->Username."</a>",$rCount->Cnt,"<a href=\"http://www.bewelcome.org/bw/mypreferences.php\">".ww("MyPreferences")."</a>","<b>".ww("PreferenceLocalEvent")."</b>" );
+    $text=$text."<br />".ww("mailbot_localvol_info","<a href=\"{$baseuri}members/".$rr->Username."\">".$rr->Username."</a>",$rCount->Cnt,"<a href=\"http://www.bewelcome.org/bw/mypreferences.php\">".ww("MyPreferences")."</a>","<b>".ww("PreferenceLocalEvent")."</b>" );
     if (!bw_mail($Email, $subj, $text, "", $SenderMail, $MemberIdLanguage, "html", "", "")) {
         LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
         $str = "

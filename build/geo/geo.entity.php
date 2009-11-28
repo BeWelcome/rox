@@ -18,7 +18,7 @@ class Geo extends RoxEntityBase
      * returns the parent geo entity of this one
      *
      * @access public
-     * @return object|false
+     * @return Geo|false
      */
     public function getParent()
     {
@@ -151,6 +151,7 @@ class Geo extends RoxEntityBase
      * if no alternate name can be found for that language, uses the default
      *
      * @param string @lang
+     *
      * @access public
      * @return string
      */
@@ -158,7 +159,7 @@ class Geo extends RoxEntityBase
     {
         if (!$this->isLoaded())
         {
-            return false;
+            return '';
         }
         if (empty($this->alt_names[$lang]))
         {
@@ -178,6 +179,7 @@ class Geo extends RoxEntityBase
      * returns the name of the location
      *
      * @param string $lang - if provided, the name in this language is tried
+     *
      * @access public
      * @return string
      */
@@ -185,7 +187,7 @@ class Geo extends RoxEntityBase
     {
         if (!$this->isLoaded())
         {
-            return false;
+            return '';
         }
         if (!$lang)
         {
@@ -332,5 +334,84 @@ class Geo extends RoxEntityBase
             return true;
         }
         return false;
+    }
+
+    /**
+     * looks for a location by name and alternate name
+     *
+     * @param string $name - name to look for
+     *
+     * @access public
+     * @return array
+     */
+    public function findLocationsByName($name)
+    {
+        if (!($place_name = $this->dao->escape($name)))
+        {
+            return array();
+        }
+        $query = <<<SQL
+SELECT
+    geonameid
+FROM
+    geonames_cache
+WHERE
+    name = '{$place_name}'
+UNION
+SELECT
+    geonameid
+FROM
+    geonames_alternate_names
+WHERE
+    alternateName = '{$place_name}'
+SQL;
+        if (!($result = $this->dao->query($query)))
+        {
+            return array();
+        }
+        $ids = array();
+        while ($row = $result->fetch(PDB::FETCH_OBJ))
+        {
+            $ids[] = $row->geonameid;
+        }
+        if (empty($ids)) return array();
+        return $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+    }
+
+    /**
+     * returns of array of Geo entities
+     *
+     * @param array $coordinates
+     *
+     * @throws Exception
+     * @access public
+     * @return array
+     */
+    public function findLocationsByCoordinates(array $coordinates)
+    {
+        if (!isset($coordinates['long']) || !is_numeric($coordinates['long']) || !isset($coordinates['lat']) || !is_numeric($coordinates['lat']))
+        {
+            throw new Exception("Bad input for Geo::findLocationsByCoordinates. Expected array, got " . gettype($coordinates));
+        }
+        $result = array();
+        $bound = 0.02;
+        while (empty($result))
+        {
+            $min_long = $coordinates['long'] - $bound;
+            $max_long = $coordinates['long'] + $bound;
+            $min_lat = $coordinates['lat'] - $bound;
+            $max_lat = $coordinates['lat'] + $bound;
+            $result = $this->findByWhereMany(<<<SQL
+longitude BETWEEN {$min_long} AND {$max_long}
+AND latitude BETWEEN {$min_lat} AND {$max_lat}
+SQL
+);
+            if ($bound > 0.1)
+            {
+                break;
+            }
+            $bound += 0.02;
+        }
+        return $result;
     }
 }

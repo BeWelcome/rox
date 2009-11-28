@@ -26,10 +26,8 @@ Boston, MA  02111-1307, USA.
  * @package searchmembers
  * @author matrixpoint
  */
-class Searchmembers extends RoxModelBase {
-    
-    protected $dao;
-
+class Searchmembers extends RoxModelBase
+{
     private $column_sort_order = array(
             'members.created' => 'FindPeopleNewMembers',
             'BirthDate'       => 'Age',
@@ -47,47 +45,53 @@ class Searchmembers extends RoxModelBase {
         );
 
     private $default_column = 'members.created';
-    
+
     // supported languages for translations; basis for flags in the footer
-    private $_langs = array();
-    
-    /**
-     * @see /htdocs/bw/lib/lang.php
-     */
-    public function __construct() {
-        parent::__construct();
-        
-        $this->dao = $this->get_dao();
-        // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
-        // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
-        // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
-        $query =
-            "
-SELECT  ShortCode
-FROM    words
-WHERE   code = 'WelcomeToSignup'
-            "
-        ;
-        $result = $this->dao->query($query);
-        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-            $this->_langs[] = $row->ShortCode;
-        }
-    }
-    
+    private $_langs;
+
     /**
      * @param string $lang short identifier (2 or 3 characters) for language
      * @return boolean if language is supported true, otherwise false
      */
-    public function isValidLang($lang) {
+    public function isValidLang($lang)
+    {
+        $this->getLangs();
         return in_array($lang, $this->_langs);
     }
-    
+
+    /**
+     * fills the _langs array with data
+     *
+     * @access private
+     * @return void
+     */
+    private function getLangs()
+    {
+        if (!isset($this->_langs) || !is_array($this->_langs))
+        {
+            // TODO: it is fun to offer the members the language of the volunteers, i.e. 'prog',
+            // so I don't make any exceptions here; but we miss the flag - the BV flag ;-)
+            // TODO: is it consensus we use "WelcomeToSignup" as the decision maker for languages?
+            $query =<<<SQL
+SELECT  ShortCode
+FROM    words
+WHERE   code = 'WelcomeToSignup'
+SQL;
+            $result = $this->dao->query($query);
+            while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+                $this->_langs[] = $row->ShortCode;
+            }
+        }
+    }
+
     /**
      * @param
      * @return associative array mapping language abbreviations to 
      *             long, English names of the language
      */
-    public function getLangNames() {
+    public function getLangNames()
+    {
+        $this->getLangs();
         
         $l =  '';
         foreach ($this->_langs as $lang) {
@@ -95,13 +99,11 @@ WHERE   code = 'WelcomeToSignup'
         }
         $l = substr($l, 0, (strlen($l)-1));
         
-        $query =
-            "
+        $query =<<<SQL
 SELECT  EnglishName, ShortCode
 FROM    languages
 WHERE   ShortCode IN ($l)
-            "
-        ;
+SQL;
         $result = $this->dao->query($query);
         
         $langNames = array();
@@ -283,11 +285,11 @@ WHERE
     {
         $TMember=array();
     
-        $limitcount=$this->GetParam($vars, "limitcount",10); // Number of records per page
-        if($limitcount > 100) $limitcount = 100;
+        $limitcount = $this->GetParam($vars, "limitcount", 10); // Number of records per page
+        if ($limitcount > 100) $limitcount = 100;
         $vars['limitcount'] = $limitcount;
     
-        $start_rec=$this->GetParam($vars, "start_rec",0); // Number of records per page
+        $start_rec = $this->GetParam($vars, "start_rec", 0); // Number of records per page
         $vars['start_rec'] = $start_rec;
     
         list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, "OrderBy", 'members.created'), $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
@@ -295,12 +297,11 @@ WHERE
         $OrderBy = "ORDER BY {$order_by} {$direction}";
         $vars['OrderBy'] = $order_by;
     
-        // Todo: no, it won't, and will be taken out soon
         $tablelist ="members, geonames_cache, countries, addresses";
     
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1")
         {
-            $where = "WHERE (members.Status in ('Active','ChoiceInActive','OutOfRemind'))";
+            $where = "WHERE (members.Status in ('Pending', 'Active', 'ChoiceInActive', 'OutOfRemind'))";
         }
         else
         {
@@ -309,17 +310,20 @@ WHERE
     
         // Process Accomodation
         $where_accomodation = array();
-        if(array_key_exists('Accomodation', $vars)) {
+        if(array_key_exists('Accomodation', $vars))
+        {
             $Accomodation = $vars['Accomodation'];
-            if(is_array($Accomodation)) {
-                foreach($Accomodation as $value) {
+            if(is_array($Accomodation))
+            {
+                foreach ($Accomodation as $value)
+                {
                     if($value == '') continue;
                     $vars['Accomodation'] = $value;
                     $value = $this->GetParam($vars, 'Accomodation');
-                    $where_accomodation[] = "Accomodation='$value'" ;
+                    $where_accomodation[] = "Accomodation='{$value}'";
                 }
             }
-            if($where_accomodation) $where .= " AND (".implode(" OR ", $where_accomodation).") " ;
+            if ($where_accomodation) $where .= " AND (".implode(" OR ", $where_accomodation).")";
         }
     
         // Process typic Offer
@@ -456,21 +460,25 @@ AND (
         if ($this->GetParam($vars, "IdCity",0)!=0) {
            $where .= " AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
         }
-        if (($coordinates = $this->GetParam($vars, "place_coordinates","")) && ($accuracy = $this->GetParam($vars, "accuracy_level")) && intval($accuracy) > 1)
+        if (($g_city = $this->GetParam($vars, "CityName", '')) || ($g_city = $this->GetParam($vars, "CityNameOrg", '')))
+        {
+            if ($places = $this->createEntity('Geo')->findLocationsByName($g_city))
+            {
+                foreach ($places as $geo)
+                {
+                    if ($geo->isCity())
+                    {
+                        $WhereCity = "geonames_cache.geonameid = {$geo->getPKValue()}";
+                        break;
+                    }
+                }
+            }
+        }
+        if (($coordinates = $this->GetParam($vars, "place_coordinates","")) && ($accuracy = $this->GetParam($vars, "accuracy_level")) && intval($accuracy) > 1 && !isset($WhereCity))
         {
             list($long, $lat, $alt) = explode(',', $coordinates);
-            $min_long = $long - 0.04;
-            $max_long = $long + 0.04;
-            $min_lat = $lat - 0.04;
-            $max_lat = $lat + 0.04;
 
-            $places = $this->createEntity('Geo')->findByWhereMany(<<<SQL
-longitude BETWEEN {$min_long} AND {$max_long}
-AND latitude BETWEEN {$min_lat} AND {$max_lat}
-SQL
-);
-            $cities = array();
-            foreach ($places as $geo)
+            foreach ($this->createEntity('Geo')->findLocationsByCoordinates(array('long' => $long, 'lat' => $lat)) as $geo)
             {
                 if ($geo->isCity())
                 {
@@ -480,18 +488,21 @@ SQL
 
             if (!empty($cities))
             {
-                $WhereCity = ' geonames_cache.geonameid IN (' . implode(',', $cities) . ')';
+                $WhereCity = 'geonames_cache.geonameid IN (' . implode(',', $cities) . ')';
             }
             else
             {
-                $WhereCity=" 1=0";
+                $WhereCity = "1 = 0";
             }
-
-            $where .= " AND ".$WhereCity;
+        }
+        if (isset($WhereCity))
+        {
+            $where .= " AND {$WhereCity}";
         }
 
         // if a group is chosen
-        if ($this->GetParam($vars, "IdGroup",0)!=0) {
+        if ($this->GetParam($vars, "IdGroup",0)!=0)
+        {
             $tablelist=$tablelist.", membersgroups" ;
             $where .= "
 AND membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")."

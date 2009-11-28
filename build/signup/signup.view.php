@@ -221,4 +221,3 @@ class SignupView extends PAppView
         return $html;
     }
 }
-?>

@@ -20,6 +20,3 @@ class SignupProblemPage extends SignupPage
         echo '<p class="big error">'.$words->get('SignupProblemText','<a href="feedback">','</a>').'</p>';
     }
 }
-
-
-?>

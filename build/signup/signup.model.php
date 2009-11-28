@@ -872,4 +872,3 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Pending
 	}
 	
 }
-?>

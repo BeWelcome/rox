@@ -53,14 +53,22 @@ if (empty($rr->id)) {
    die("No Such username <b>".$Username."</b> with mailtoconfirm") ;
 }
 
-
 $Email = GetEmail($rr->id);
+
 /*$MemberIdLanguage = GetDefaultLanguage($rr->id);
+*/
 
-
+$vars = array(
+    'email'         => $Email,
+    'firstname'     => $ReadCrypted($rr->FirstName),
+    'secondname'    => $ReadCrypted($rr->SecondName),
+    'lastname'      => $ReadCrypted($rr->LastName),
+);
+/*
 $FirstName = $ReadCrypted ($rr->FirstName);
 $SecondName = $ReadCrypted ($rr->SecondName);
 $LastName = $ReadCrypted ($rr->LastName);
+
 $key = CreateKey($Username, $LastName, $rr->id, "registration"); // compute a nearly unique key for cross checking
 
 $subj = ww("SignupSubjRegistration", $_SYSHCVOL['SiteName']);
@@ -75,11 +83,9 @@ $MODMember = MOD_member::getMember_userId($rr->id);
 $userId = $MODMember->getTBuserId();
 $SignupModel = new SignupModel();
 $SignupView = new SignupView($SignupModel);
-$SignupView->registerMail($userId);
+$SignupView->registerMail($vars, $rr->id, $userId);
 
 LogStr("Requesting again for confimation mail for <b>".$Username."</b> ","resendconfirmyourmail");
 
-DisplayResendConfirmYourMail($rr->id,$Email);
+DisplayResendConfirmYourMail($rr->id, $Email);
 exit (0);
-
-?>

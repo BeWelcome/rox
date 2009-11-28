@@ -213,6 +213,8 @@ class SignupController extends RoxControllerBase {
                 
                 $View = new SignupView($model);
                 // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
+                // look at that ... a two years plus old todo :)
+
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
                 $View->registerMail($vars, $id, $idTB);
                 $View->signupTeamMail($vars);
@@ -223,4 +225,3 @@ class SignupController extends RoxControllerBase {
         return false;        
     }
 }
-?>

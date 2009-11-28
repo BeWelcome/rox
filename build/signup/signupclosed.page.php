@@ -20,6 +20,3 @@ class SignupClosedPage extends SignupPage
         echo '<p class="note big">'.$words->get('SignupClosedText').'</p>';
     }
 }
-
-
-?>

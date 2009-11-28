@@ -9,6 +9,3 @@ class SignupPrivacyPopup extends PageWithHTML
         echo $words->get('PrivacyStatement');
     }
 }
-
-
-?>

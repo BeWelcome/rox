@@ -252,6 +252,37 @@ class GeoEntityTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($test);
     }
 
+    public function testFindLocationsByName1()
+    {
+        $geo = $this->newGeo();
+        $result = $geo->findLocationsByName('');
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(empty($result));
+    }
+
+    public function testFindLocationsByName2()
+    {
+        $geo = $this->newGeo();
+        $result = $geo->findLocationsByName('Berlin');
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(!empty($result));
+        $test = false;
+        foreach ($result as $geo)
+        {
+            $this->assertTrue($geo->isLoaded());
+            if ($geo->getName() == 'Berlin') $test = true;
+        }
+        $this->assertTrue($test);
+    }
+
+    public function testFindLocationsByName3()
+    {
+        $geo = $this->newGeo();
+        $result = $geo->findLocationsByName('blahblahblah');
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(empty($result));
+    }
+
     private function newGeo()
     {
         return $this->entity_factory->create('Geo');

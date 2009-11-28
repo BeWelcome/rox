@@ -44,6 +44,9 @@ function searchGlobal(i) {
     put_val('mapsearch', 0);
     put_val('CityName', '');
     put_val('IdCountry', '');
+    $('accuracy_level').value = '';
+    $('CityNameOrg').value = '';
+    $('place_coordinates').value = '';
     loadMap(i);
 }
 
@@ -99,6 +102,9 @@ function searchByMap(i) {
     $('paging-div').innerHTML = '';
     if ($('second_pager')) $('second_pager').innerHTML = '';
     put_val('mapsearch', 1);
+    $('accuracy_level').value = '';
+    $('place_coordinates').value = '';
+    $('CityNameOrg').value = '';
     var bounds = map.getBounds();
     put_val('bounds_zoom', map.getZoom());
     var bounds_center = bounds.getCenter();
@@ -116,6 +122,7 @@ function searchByMap(i) {
 }
 
 function searchByText(address, i) {
+    $('CityNameOrg').value = address;
     state = 'text';
     put_html('loading', loading);
     put_val('mapsearch', 0);
@@ -135,6 +142,8 @@ function searchByText(address, i) {
                     var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
                     put_val('CityName', '');
                     put_val('IdCountry', '');
+                    $('accuracy_level').value = '';
+                    $('place_coordinates').value = '';
                     map_scale = 3;
                     extractLocationData(place);
                     if(!mapoff) {
@@ -155,6 +164,11 @@ function extractLocationData(geo_object)
         $('accuracy_level').value = geo_object.AddressDetails.Accuracy;
         $('place_coordinates').value = geo_object.Point.coordinates;
         $('IdCountry').value = geo_object.AddressDetails.Country.CountryNameCode;
+        var location = '';
+        if (geo_object.AddressDetails.Country.AdministrativeArea) location = geo_object.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
+        if (geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea) location = geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName;
+        if (geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality) location = geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName;
+        $('CityName').value = location;
     }
     else
     {

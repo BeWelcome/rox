@@ -48,6 +48,3 @@ Related pages:
         require 'templates/finish.php';
     }
 }
-
-
-?>

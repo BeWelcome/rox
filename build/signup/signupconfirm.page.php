@@ -30,6 +30,3 @@ class SignupMailConfirmPage extends SignupPage
         $widg->render();
     }
 }
-
-
-?>

@@ -9,6 +9,3 @@ class SignupTermsPopup extends PageWithHTML
         echo $words->get('SignupTerms');
     }
 }
-
-
-?>

@@ -172,6 +172,12 @@ class AdminView extends RoxAppView
 			return ($m);		// Return translated value
 		}
     }
+    
+    protected function getStylesheets() {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
+       return $stylesheets;
+    }
 
     
 }

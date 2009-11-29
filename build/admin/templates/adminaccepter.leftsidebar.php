@@ -25,14 +25,13 @@ Boston, MA  02111-1307, USA.
  * @author Matthias Heß <globetrotter_tt>
  */
 $words = new MOD_words();
-$title = "Admin logs";
 
     echo <<<HTML
 
 <table>
     <tr>
-        <th>Staus</th>
-        <th>Waiting</th>
+        <th>Status</th>
+        <th>Members</th>
     </tr>
 HTML;
     foreach ($this->model->getStatusOverview() as $status => $count) 

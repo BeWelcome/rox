@@ -1,0 +1,16 @@
+@media all
+{
+
+/* colors for comment quality */
+.Neutral { color: #333; }
+.Good { color: green; }
+.Bad { color: red; }
+
+.Neutral, .Good, .Bad { font-weight: bold; font-size: 1.1em; margin:0; padding:0;}
+
+.checkcomment {margin-bottom: 2em;}
+.small {margin-bottom: 0.1em;}
+.checkcomment h4 {margin-bottom: 0.1em;}
+.commentto {padding-bottom: 15px;}
+
+}

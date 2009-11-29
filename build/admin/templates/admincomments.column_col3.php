@@ -1,11 +1,9 @@
 <?php
 $total_bad_comments = count($this->bad_comments);
 $words = $this->getWords();
+$styles = array( 'highlight', 'blank' ); // alternating background for table rows
 echo <<<HTML
-<p>
-Hi {$this->member->Username}.<br/>
-</p>
-<p>Displaying comments marked problematic ({$total_bad_comments}): 
+<p>Displaying comments marked problematic ({$total_bad_comments}):</p>
 
 {$this->pager->render()}
 HTML;
@@ -15,32 +13,42 @@ foreach ($this->pager->getActiveSubset($this->bad_comments) as $comment)
     $from = ($member = $comment->getFromMember()) ? $member->Username : '';
     $to = ($member = $comment->getToMember()) ? $member->Username : '';
     echo <<<HTML
-<div>
-    <table style='width: 100%; border: 1px solid black'>
-        <tbody>
-            <tr>
-                <td>To: <b><a href="members/{$from}">{$from}</a></b></td>
-                <td>From: <b><a href="members/{$to}">{$to}</a></b></td>
-            </tr>
-            <tr>
-                <td>Experience: <b>{$comment->Quality}</b></td>
-                <td>Meeting type: <b>{$comment->Lenght}</b></td>
-            </tr>
-            <tr>
-                <td>Created: <b>{$comment->created}</b></td>
-                <td>Updated: <b>{$comment->updated}</b></td>
-            </tr>
-            <tr>
-                <td colspan='2'>Comment mark: <b>{$comment->AdminAction}</b></td>
-            </tr>
-            <tr>
-                <td colspan='2'><i>Meeting place</i>: {$comment->TextWhere}</td>
-            </tr>
-            <tr>
-                <td colspan='2'><i>Comment text</i>: {$comment->TextFree}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="checkcomment {$styles[$total_bad_comments%2]}">
+    <p><b>{$comment->AdminAction}</b></p>
+    <div class="floatbox">
+        <div class="float_left">
+            <a href="people/{$from}">
+                <img class="framed"  src="members/avatar/{$from}/?xs"  height="50px"  width="50px"  alt="Profile" />
+            </a>
+            <img class="commentto" src="images/icons/tango/22x22/go-next.png" alt="comment to" />
+            <a href="people/{$to}">
+                <img class="framed"  src="members/avatar/{$to}/?xs"  height="50px"  width="50px"  alt="Profile" />
+            </a>
+        </div>
+            <p class="{$comment->Quality}">{$comment->Quality}</p>
+            <p class="small">
+                From: <a href="members/{$from}"><b>{$from}</b></a>
+                To: <a href="members/{$to}"><b>{$to}</b></a>&nbsp;
+                |&nbsp;Created: <b>{$comment->created}</b> | Updated: <b>{$comment->updated}</b>
+            </p>
+            <p class="small">Meeting type: <b>{$comment->Lenght}</b></p>
+           
+    </div>    
+    
+    <h4>Meeting place:</h4>
+    <p>{$comment->TextWhere}</p>   
+       
+    <h4>Comment text:</h4>
+    <p>{$comment->TextFree}</p>    
+    
+    <h4>Feedback:</h4>
+    <p>FIXME: Insert Feedback message from reporter</p>  
+    
+    <h4>Action:</h4>
+    <a href="#">Mark comment as checked</a> | 
+    <a href="#">Edit Comment</a> |
+    <a href="#">Delete Comment</a>
+    
 </div>
 HTML;
 }

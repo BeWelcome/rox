@@ -37,4 +37,11 @@ class AdminBasePage extends PageWithActiveSkin
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a>";
     }
+    
+    /**
+     * configure the sidebar
+     */
+    protected function leftSidebar() {
+        
+    }
 }

@@ -35,12 +35,12 @@ $countmatch = 0;
 MustLogIn(); // need to be log
 
 $RightLevel = HasRight('SqlForVolunteers'); // Check the rights
-/*
+
 if ($RightLevel < 1) {
 	echo "This Need the sufficient <b>SqlForVolunteers</b> rights<br>";
 	exit (0);
 }
-*/
+
 
 $IdQueryScope = RightScope('SqlForVolunteers');
 
@@ -60,12 +60,22 @@ if ($IdQueryScope=="\"All\"") {
 	$swhere="" ;
 }
 else {
-		$table="sqlforvolunteers,sqlforgroupsmembers" ;
-		$sList=str_replace("\"","",$IdQueryScope) ;
-		$sList=str_replace("'","",$sList) ;
-		$sList=str_replace(";",",",$sList) ;
-		$swhere=" where ( (sqlforvolunteers.id in (".$sList.")) or (sqlforvolunteers.id=sqlforgroupsmembers.IdQuery and sqlforgroupsmembers.IdGroup in (".$membergrouplist.")))" ;
+	/* Group option Disabled -because this is not a good one (better write real features)
+	$table="sqlforvolunteers,sqlforgroupsmembers" ;
+	$sList=str_replace("\"","",$IdQueryScope) ;
+	$sList=str_replace("'","",$sList) ;
+	$sList=str_replace(";",",",$sList) ;
+	$swhere=" where ( (sqlforvolunteers.id in (".$sList.")) or (sqlforvolunteers.id=sqlforgroupsmembers.IdQuery and sqlforgroupsmembers.IdGroup in (".$membergrouplist.")))" ;
+	*/
+	$table="sqlforvolunteers" ;
+	$sList=str_replace("\"","",$IdQueryScope) ;
+	$sList=str_replace("'","",$sList) ;
+	$sList=str_replace(";",",",$sList) ;
+	$swhere=" where  (sqlforvolunteers.id in (".$sList.")) " ;
 }
+
+
+
 $ss="select sqlforvolunteers.* from ".$table." " ;
 $ss=
 $ss=$ss.$swhere."  group by sqlforvolunteers.id order by sqlforvolunteers.id" ;
@@ -275,17 +285,22 @@ switch (GetParam("action")) {
 			 	$_TResult[]=$sQuery ;
 			 	$_TTitle[]=$sQuery ;
 			} 
-			elseif ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or 								(stripos ($sQuery,"insert")===0) ){
-				$AffectedRows=mysql_affected_rows() ;
-				$Message=$AffectedRows." affected rows<br />" ;
-				$iCount=0 ;
-				LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery." /#".$jj,"adminquery") ;
+			elseif ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"truncate")===0) or (stripos ($sQuery,"replace")===0) or 								(stripos ($sQuery,"insert")===0) ){
+				if (!$qry) {
+					$Message=$sQuery."<br><b>".mysql_error()."</b>" ;
+				}
+				else {
+					$AffectedRows=mysql_affected_rows() ;
+					$Message=$AffectedRows." affected rows<br />" ;
+					$iCount=0 ;
+					LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery." /#".$jj,"adminquery") ;
 			 
-				$TTitle[]="Affected rows" ;
-				$TResult[]=sprintf("%d",$AffectedRows) ;
+					$TTitle[]="Affected rows" ;
+					$TResult[]=sprintf("%d",$AffectedRows) ;
 			 
-				$_TResult[]=$TResult ;
-				$_TTitle[]=$TTitle ;
+					$_TResult[]=$TResult ;
+					$_TTitle[]=$TTitle ;
+				}
 			}
 			else {
 				$AffectedRows=0 ;

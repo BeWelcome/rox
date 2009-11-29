@@ -1,5 +1,6 @@
 @media all
 {
+textarea {margin-bottom: 1em;}
 
 /* colors for comment quality */
 .Neutral { color: #333; }
@@ -13,4 +14,6 @@
 .checkcomment h4 {margin-bottom: 0.1em;}
 .commentto {padding-bottom: 15px;}
 
+.adminmembers{margin-bottom: 3em;}
+.memberinfo p{margin-bottom: 0.1em;}
 }

@@ -159,14 +159,16 @@ switch (GetParam("action")) {
 			switch (GetParam("action_".$ii)) {
 				case "accept" :
 				   $m = LoadRow("SELECT * FROM members WHERE id=" . $IdMember);
-				   $str = "UPDATE members SET Status='Active' WHERE (Status='Pending' OR Status='NeedMore' OR Status='CompletedPending') AND id=" . $IdMember;
-				   $qry = sql_query($str);
 
 				   $Email = AdminReadCrypted($m->Email);
 				   $subj = wwinlang("SignupSubjAccepted",$defaultlanguage, "http://".$_SYSHCVOL['SiteName']);
 				   $loginurl = PVars::getObj('env')->baseuri."login";
 				   $text = wwinlang("SignupYouHaveBeenAccepted",$defaultlanguage, $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
 				   bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
+
+				   $str = "UPDATE members SET Status='Active' WHERE (Status='Pending' OR Status='NeedMore' OR Status='CompletedPending') AND id=" . $IdMember;
+				   $qry = sql_query($str);
+				   
 				   $StrAccept=$StrAccept.$m->Username." ";
 				   $CountAccept++;
 				   break;
@@ -181,16 +183,16 @@ switch (GetParam("action")) {
 				   break;
 				case "reject" :
 				   $m = LoadRow("select * from members where id=" . $IdMember);
-				   $str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
-				   $qry = sql_query($str);
-
 				   $Email = AdminReadCrypted($m->Email);
 				   $subj = wwinlang("SignupSubjRejected",$defaultlanguage,$_SYSHCVOL['SiteName']);
 				   $text = wwinlang("SignupYouHaveBeenRejected",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName']);
 				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
 					 
-					 $StrReject=$StrReject.$m->Username." ";
-				   $CountReject++;
+				   $str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
+				   $qry = sql_query($str);
+
+					$StrReject=$StrReject.$m->Username." ";
+					$CountReject++;
 
 				   break;
 				case "needmore" :
@@ -198,12 +200,14 @@ switch (GetParam("action")) {
 				   $needmoretext=GetStrParam("needmoretext_".$ii);
 				   $urltoreply = PVars::getObj('env')->baseuri."login";
 				   $m = LoadRow("select * from members where id=" . $IdMember);
-				   $str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
-				   $qry = sql_query($str);
 				   $Email = AdminReadCrypted($m->Email);
 				   $subj = wwinlang("SignupNeedmoreTitle",$defaultlanguage,$_SYSHCVOL['SiteName']);
 				   $text = wwinlang("SignupNeedMoreText",$defaultlanguage, $m->Username,$_SYSHCVOL['SiteName'],$needmoretext,$urltoreply);
 				   bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
+
+				   $str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
+				   $qry = sql_query($str);
+
 				   $StrNeedMore=$StrNeedMore.$m->Username." ";
 				   $CountNeedMore++;
 		   	  	   break;
@@ -227,45 +231,13 @@ switch (GetParam("action")) {
 		$lasaction=$Strlog;
 		LogStr($StrLog,"accepting");
 		break;
-	case "accept" :
-		$m = LoadRow("select * from members where id=" . $IdMember);
-		// todo change what need to be change to answer in member default language
-		$defLanguage=0;
-		$lastaction = "accepting " . $m->Username;
-		$str = "update members set Status='Active' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
-		$qry = sql_query($str);
 
-		$Email = AdminReadCrypted($m->Email);
-		// todo change what need to be change to answer in member default language
-		$subj = ww("SignupSubjAccepted", "http://".$_SYSHCVOL['SiteName']);
-		$loginurl = PVars::getObj('env')->baseuri."login";
-		$text = ww("SignupYouHaveBeenAccepted", $m->Username, "http://".$_SYSHCVOL['SiteName'], $loginurl);
-		bw_mail($Email, $subj, $text, "", $_SYSHCVOL['AccepterSenderMail'], $defLanguage, "yes", "", "");
-
-		break;
 	case "reject" :
-		$m = LoadRow("select * from members where id=" . $IdMember);
-		// todo change what need to be change to answer in member default language
-		$defLanguage=0;
-		$lastaction = "rejecting " . $m->Username;
-		$str = "update members set Status='Rejected' where (Status='Pending' or Status='NeedMore' or Status='CompletedPending') and id=" . $IdMember;
-		$qry = sql_query($str);
-
-		$Email = AdminReadCrypted($m->Email);
-		$subj = ww("SignupSubjRejected",$_SYSHCVOL['SiteName']);
-		$text = ww("SignupYouHaveBeenRejected", $m->Username,$_SYSHCVOL['SiteName']);
-//		echo "$subj<br>$text<br> sent to $Email<br> from ".$_SYSHCVOL['AccepterSenderMail'];
-//		bw_mail($Email,$subj,"text as test   ", "", $_SYSHCVOL['TestMail'], 0, "yes", "", "");
-		bw_mail($Email,$subj, $text, "", $_SYSHCVOL['AccepterSenderMail'],0, "yes", "", "");
-
-		break;
 	case "needmore" :
-		$m = LoadRow("select * from members where id=" . $IdMember);
-		$lastaction = "setting profile of  " . $m->Username . " from " . $m->Status . " to NeedMore";
-
-		$str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending') and id=" . $IdMember;
-		$qry = sql_query($str);
-		// to do manage the need more
+	case "accept" :
+		LogStr($StrLog,"deadcode") ;
+		echo "If you read this please report to JeanYves, no dammage occured but you are running some dead code<br>" ;
+		die ("this is deadcode") ;
 		break;
 
 	case "ShowOneMember" :

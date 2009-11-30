@@ -165,9 +165,18 @@ function extractLocationData(geo_object)
         $('place_coordinates').value = geo_object.Point.coordinates;
         $('IdCountry').value = geo_object.AddressDetails.Country.CountryNameCode;
         var location = '';
-        if (geo_object.AddressDetails.Country.AdministrativeArea) location = geo_object.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
-        if (geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea) location = geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName;
-        if (geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality) location = geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName;
+        if (geo_object.AddressDetails.Country.AdministrativeArea)
+        {
+            location = geo_object.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
+            if (geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea)
+            {
+                location = geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.SubAdministrativeAreaName;
+                if (geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality)
+                {
+                    location = geo_object.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName;
+                }
+            }
+        }
         $('CityName').value = location;
     }
     else

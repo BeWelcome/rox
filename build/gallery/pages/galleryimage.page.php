@@ -11,6 +11,12 @@
 class GalleryImagePage extends GalleryBasePage
 {
 
+    protected function getStylesheets() {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3_75percent.css';
+        return $stylesheets;
+    }
+
     protected function getSubmenuActiveItem()
     {
         return 'overview';

@@ -674,20 +674,22 @@ class GalleryController extends RoxControllerBase {
         $tmpDir = new PDataDir('gallery/user'.$d->user_id_foreign);
         if (isset($_GET['t'])) {
             $thumbFile = 'thumb'.(int)$_GET['t'].$d->file;
-            if ($_GET['t'] == 1 && !$tmpDir->fileExists($thumbFile))
-                $thumbFile = 'thumb'.$d->file;
         } else {
             $thumbFile = 'thumb'.$d->file;
         }
-        if (!$tmpDir->fileExists($thumbFile))
-            $thumbFile = $d->file;
-        if (!$tmpDir->fileExists($thumbFile) || ($tmpDir->file_Size($thumbFile) == 0)) {
+        if (!$tmpDir->fileExists($thumbFile) || $tmpDir->file_Size($thumbFile) == 0) {
+            if ($img = new MOD_images_Image($tmpDir->dirName().'/'.$d->file)) {
+                if (!$this->_model->createThumbnails($tmpDir,$img) || (isset($_GET['t']) && $_GET['t'] == '2'))
+                    $thumbFile = $d->file;
+            }
+        }
+        if (!$tmpDir->fileExists($thumbFile))  {
             $tmpDir = new PDataDir('gallery');
             $thumbFile = 'nopic.gif';
             $d->mimetype = 'image/gif';
         }
         header('Content-type: '.$d->mimetype);
         $tmpDir->readFile($thumbFile);
-        PPHP::PExit();            
+        PPHP::PExit();
     }
 }

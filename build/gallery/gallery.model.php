@@ -298,14 +298,14 @@ ORDER BY `id` DESC';
     	$query = '
 SELECT DISTINCT
 `id`, `user_id_foreign`, `flags`, `title`, `text`
-FROM `gallery`
-LEFT JOIN `gallery_items_to_gallery` AS `g` ON
-    g.`gallery_id_foreign` = g.`gallery_id_foreign`
-WHERE g.`gallery_id_foreign` = gallery.`id`';
-if ($UserId) {
+FROM `gallery` AS g
+LEFT JOIN `gallery_items_to_gallery` AS gi ON
+    g.`id` = gi.`gallery_id_foreign`
+WHERE g.`id` = gi.`gallery_id_foreign`';
+        if ($UserId) {
     	$query .= '
-AND gallery.`user_id_foreign` = '.(int)$UserId;
-}
+AND g.`user_id_foreign` = '.(int)$UserId;
+        }
     	$query .= '
 ORDER BY `id` DESC';
         $s = $this->dao->query($query);
@@ -316,6 +316,17 @@ ORDER BY `id` DESC';
     
     public function getGalleriesNotEmptyEntities()
     {
+        /* Different way of getting the galleries
+        $galleries = array();
+        $allgalleries = $this->createEntity('Gallery')->findAll();
+        if (!empty($allgalleries))
+        foreach ($allgalleries as $gallery)
+        {
+            if ($gallery->countItems())
+            $galleries[] = $gallery;
+        }
+        return $galleries;
+        */
         $sql = <<<SQL
             SELECT DISTINCT
             `id`, `user_id_foreign`, `flags`, `title`, `text`
@@ -582,7 +593,6 @@ VALUES
         foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
             if ($error != UPLOAD_ERR_OK)
                 continue;
-
             if (
                 $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
                 $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
@@ -593,7 +603,7 @@ VALUES
             if ($_FILES['gallery-file']['error'] == UPLOAD_ERR_OK) {
                 $vars['error'] = 'Gallery_UploadError';
                 return false;
-            } 
+            }
             // END
             $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
             if (!$img->isImage()) {
@@ -608,16 +618,11 @@ VALUES
                  return false;
             }
             $hash = $img->getHash();
-            if ($userDir->fileExists($img->getHash()))
+            if ($userDir->fileExists($hash))
                 continue;
             if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
                 continue;
-            if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
-                continue;
-            if ($size[0] > 240)
-                $img->createThumb($userDir->dirName(), 'thumb1', 240, 240, false ,'ratio');
-            if ($size[0] > 550)
-                $img->createThumb($userDir->dirName(), 'thumb2', 500);
+            if (!$result = $this->createThumbnails($userDir,$img)) return false;
             $itemId = $this->dao->nextId('gallery_items');
             $orig = $_FILES['gallery-file']['name'][$key];
             $mimetype = image_type_to_mime_type($type);
@@ -633,6 +638,18 @@ VALUES
                 $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
             }
         }
+        return true;
+    }
+    
+    public function createThumbnails ($dataDir, $img)
+    {
+        $size = $img->getImageSize();
+        if (!$img->createThumb($dataDir->dirName(), 'thumb', 100, 100))
+            return false;
+        if ($size[0] > 240)
+            $img->createThumb($dataDir->dirName(), 'thumb1', 240, 240, false ,'ratio');
+        if ($size[0] > 500 || $size[1] > 500)
+            $img->createThumb($dataDir->dirName(), 'thumb2', 500, 500, true);
         return true;
     }
 

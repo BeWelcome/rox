@@ -42,6 +42,7 @@ class MyVisitorsPage extends ProfilePage
 <li class="userpicbox float_left">
     <a href="members/{$m->Username}">{$image}</a>
     <p>
+        Visited: {$layoutbits->ago(strtotime($m->visited))}
         <a href="members/{$m->Username}">{$m->Username}</a>
         <a href="blog/{$m->Username}" title="Read blog by {$m->Username}"><img src="images/icons/blog.gif" alt="" /></a>
         <a href="trip/show/{$m->Username}" title="Show trips by {$m->Username}"><img src="images/icons/world.gif" alt="" /></a>

@@ -123,6 +123,13 @@ class AdminController extends RoxControllerBase
 //}}} Debug right methods
 
 //{{{ Accepter right methods
+    /**
+     * displays members not yet accepted into bw
+     * or in various other statuses ...
+     *
+     * @access public
+     * @return object
+     */
     public function accepter()
     {
         list($member, $rights) = $this->checkRights('Accepter');
@@ -142,8 +149,34 @@ class AdminController extends RoxControllerBase
         return $page;
     }
 
+     /**
+     * updates members, primarily their status
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff stuff
+     * @param stuff stuff
+     *
+     * @access public
+     * @return string return url
+     */
+    public function accepterProcessMembers(stdClass $args, ReadOnlyObject $memory, $stuff3, $stuff4)
+    {
+        list($member, $rights) = $this->checkRights('Accepter');
+        if (empty($args->post))
+        {
+            return false;
+        }
+        if (!$this->_model->processMembers($args->post))
+        {
+            return false;
+        }
+        return false;
+    }
+
 //}}}
 
+//{{{ admin comments stuff
     /**
      * comments overview method
      *
@@ -163,7 +196,32 @@ class AdminController extends RoxControllerBase
         $page->pager = new PagerWidget($params);
         return $page;
     }
+//}}}
 
+    /**
+     * generic board update function
+     * post callback
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff stuff
+     * @param stuff stuff
+     *
+     * @access public
+     * @return string return url
+     */
+    public function updateVolunteerBoard(stdClass $args, $memory, $stuff3, $stuff4)
+    {
+        if (empty($args->post) || empty($args->post['boardname']) || empty($args->post['tool_url']) || empty($args->post['TextContent']))
+        {
+            return false;
+        }
+        if (!$this->_model->updateVolunteerBoard($args->post['boardname'], $args->post['TextContent']))
+        {
+            return false;
+        }
+        return false;
+    }
 
     public function activityLogs()
     {

@@ -36,11 +36,7 @@ Boston, MA  02111-1307, USA.
 class AdminModel extends RoxModelBase
 {
     
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
+//{{{ accepter stuff
     /**
      * gets an array of members with a given status
      *
@@ -81,6 +77,77 @@ class AdminModel extends RoxModelBase
     }
 
     /**
+     * updates member statuses according to a post array
+     *
+     * @param array $post
+     *
+     * @access public
+     * @return bool
+     */
+    public function processMembers(array $post)
+    {
+        if (empty($post) || empty($post['accept_action']))
+        {
+            return false;
+        }
+        $errors = array();
+        foreach ($post['accept_action'] as $id => $action)
+        {
+            if (!($member = $this->createEntity('Member')->findById($id)))
+            {
+                continue;
+            }
+            switch (strtolower($action))
+            {
+                case 'accept':
+                    $member->Status = 'Active';
+                    if (!$this->sendAcceptedEmail($member) || !$member->update())
+                    {
+                        $errors[] = array('id' => $member->id, 'action' => 'accept');
+                        $this->logWrite("Accepting of {$member->Username} - {$member->id} failed. Accepter: {$this->getLoggedInMember()->Username}", 'bug');
+                    }
+                    break;
+                case 'reject':
+                case 'needmore':
+                case 'duplicated':
+            }
+        }
+    }
+
+    /**
+     * sends out an email containing a welcoming message
+     * to a newly accepted member
+     *
+     * @param Member $member - member to welcome
+     *
+     * @todo move this into a dedicated mail class - make this a subclass of a dedicated mail class, in fact
+     * @access public
+     * @return bool
+     */
+    public function sendAcceptedEmail(Member $member)
+    {
+        $site    = PVars::getObj('env')->baseuri;
+        $words   = new MOD_words;
+        $email   = MOD_crypt::AdminReadCrypted($member->Email);
+        $subject = $words->get("SignupSubjAccepted", $member->Username);
+        $text    = $words->get("SignupYouHaveBeenAccepted", $member->Username, $site, $site . "login");
+        try
+        {
+            if (MOD_mail::sendEmail($subject, PVars::getObj('syshcvol')->AccepterSenderMail, $email, '', $text))
+            {
+                return true;
+            }
+        }
+        catch (Exception $e)
+        {
+        }
+        $this->logWrite("Sending welcoming email to {$member->Username} failed with message: {$e->getMessage()}", "bug");
+        return false;
+    }
+//}}}
+
+//{{{ volunteer board
+    /**
      * returns the text glob object for accepters
      *
      * @access public
@@ -105,6 +172,27 @@ class AdminModel extends RoxModelBase
     }
 
     /**
+     * updates a given volunteer board
+     *
+     * @param string $boardname - name of board to update
+     * @param string $text      - text to update with
+     *
+     * @access public
+     * @return bool
+     */
+    public function updateVolunteerBoard($boardname, $text)
+    {
+        if (!($board = $this->createEntity('VolunteerBoard')->findByName($boardname)) || !($member = $this->getLoggedInMember()))
+        {
+            return false;
+        }
+        return $board->updateText($text, $member);
+    }
+
+//}}}
+
+//{{{ comments
+    /**
      * returns all comments marked bad
      *
      * @access public
@@ -114,6 +202,7 @@ class AdminModel extends RoxModelBase
     {
         return $this->createEntity('Comment')->findByWhereMany("AdminAction NOT IN ('NothingNeeded', 'Checked')");
     }
+//}}}
 
     public function procActivitylogs($vars, $level = 0)
     {

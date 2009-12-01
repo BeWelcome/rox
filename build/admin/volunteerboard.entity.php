@@ -25,4 +25,19 @@ class VolunteerBoard extends RoxEntityBase
     {
         return $this->findByWhere("name = '{$this->dao->escape($name)}'");
     }
+
+    /**
+     * updates the text of the board
+     *
+     * @param string $text
+     * @param Member $member
+     *
+     * @access public
+     * @return bool
+     */
+    public function updateText($text, Member $member)
+    {
+        $this->TextContent = date("Y/n/j H:i ") . "{$member->Username} wrote:\n{$text}";
+        return $this->update();
+    }
 }

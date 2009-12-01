@@ -130,11 +130,11 @@ function searchByText(address, i) {
         geocoder.getLocations(
             address,
             function(response) {
+                $('paging-div').innerHTML = '';
+                if ($('second_pager')) $('second_pager').innerHTML = '';
                 if(!response || response.Status.code != 200)
                 {
                     put_html('loading', addressNotFound);
-                    $('paging-div').innerHTML = '';
-                    if ($('second_pager')) $('second_pager').innerHTML = '';
                 }
                 else
                 {

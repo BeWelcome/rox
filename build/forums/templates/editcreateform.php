@@ -44,6 +44,7 @@ if (isset($vars['tags']) && $vars['tags']) {
 }
 
 ?>
+<script type="text/javascript" src="script/blog_suggest.js"></script>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
 <script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript">//<!--
@@ -53,6 +54,7 @@ tinyMCE.init({
     theme_advanced_resize_horizontal : false,
     mode: "exact",
     elements: "topic_text",
+    content_css : "styles/css/minimal/screen/content_minimal.css",
     theme: "advanced",
     relative_urls:false,
     convert_urls:false,
@@ -94,54 +96,8 @@ if ($allow_title) { // New Topic
 }
 ?></h2>
 
-<form method="post"  onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform" id="forumsform">
+<form method="post"  onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform" class="fieldset_toggles" id="forumsform">
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
-    
-    <div class="row">
-        <label for="IdLanguage"><?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>:</label>&nbsp;&nbsp;
-        <select name="IdLanguage" id="IdLanguage"><?php
-        // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
-            if (!isset($AppropriatedLanguage)) {
-               echo "<option value=\"-1\">-</option>";
-            }
-
-            foreach ($LanguageChoices as $Choices) {
-                    echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-                    if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
-                       echo " selected='selected'" ;
-                    }
-                    echo ">",$Choices->Name,"</option>" ;
-            }
-        ?></select>
-		
-		
-		<?php if (!empty($vars['PostVisibility'])) { ?>
-			<br /><?php echo $words->getBuffered("forum_ChooseVisibilty") ?>
-			<select name="PostVisibility" id="PostVisibility">
-			<?php
-			$CurValue=$vars['PostVisibility'] ;
-//			echo "<option value='Default'" ;
-//			echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
-
-			echo "<option value='NoRestriction'" ;
-			if ($CurValue=="NoRestriction") echo " selected" ;
-			echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
-
-			echo "<option value='MembersOnly'" ;
-			if ($CurValue=="MembersOnly") echo " selected" ;
-			echo ">",$words->getFormatted("forum_edit_vis_MembersOnly"),"</option>" ;
-
-			if ($vars['IdGroup']!=0) {
-				echo "<option value='GroupOnly'" ;
-				if ($CurValue=="GroupOnly") echo " selected" ;
-				echo ">",$words->getFormatted("forum_edit_vis_GroupOnly"),"</option>" ;
-			}
-
-		?>
-		</select>
-		<br />
-		<?php } // end if (!empty($vars['PostVisibility'])) ?>
-    </div> <!-- row -->
 
 <?php
     if (isset($allow_title) && $allow_title) {
@@ -154,42 +110,10 @@ if ($allow_title) { // New Topic
 ?>
 		<div class="row">
 			<label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
-			<input type="text" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php
+			<input type="text" style="width: 95%" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php
 			echo isset($vars['topic_title']) ? $words->fTrad($vars['IdTitle']) : '';
 			?>" />
 		</div> <!-- row -->
-<?php	
-		if (!$edit) {
-			echo $words->getBuffered("forum_ChooseVisibilty") ;?>
-			<select name="ThreadVisibility" id="ThreadVisibility">
-			<?php
-			$CurValue=$vars['ThreadVisibility'] ;
-
-			echo "<option value='Default'" ;
-			echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
-
-			echo "<option value='NoRestriction'" ;
-			if ($CurValue=="NoRestriction") echo " selected" ;
-			echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
-
-			echo "<option value='MembersOnly'" ;
-			if ($CurValue=="MembersOnly") echo " selected" ;
-			echo ">",$words->getFormatted("forum_edit_vis_MembersOnly"),"</option>" ;
-
-			echo "<option value='GroupOnly'" ;
-			if ($CurValue=="GroupOnly") echo " selected" ;
-			echo ">",$words->getFormatted("forum_edit_vis_GroupOnly"),"</option>" ;
-			echo "</select>" ;
-		}
-
-    }
-
-    if (isset($vars['errors']) && is_array($vars['errors'])) {
-        if (in_array('text', $vars['errors'])) {
-            echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
-        }
-    }
-?>
 
     <div class="row">
         <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br />
@@ -207,8 +131,9 @@ if ($allow_title) { // New Topic
 <?php
     if (isset($allow_title) && $allow_title) {
 ?>
-    <div class="row">
-        <label for="create-tags"><?php echo $words->getFormatted("forum_label_tags"); ?></label><br />
+    <fieldset class="row collapsed" id="fpost_tags_fieldset">
+        <legend for="create-tags" onclick="toggleFieldsets('fpost_tags');"><?php echo $words->getFormatted("forum_label_tags"); ?></label><br />
+        <div id="fpost_tags"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
         <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
         <?php
@@ -221,26 +146,71 @@ if ($allow_title) { // New Topic
             echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : '';
         ?></textarea>
         <div id="suggestion"></div>
-    </div> <!-- row -->
+        </div></div>
+    </fieldset> <!-- row -->
 
-    <div class="row">
-        <label for="d_continent"><?php echo $words->getFormatted("forum_label_place"); ?></label><br />
+    <fieldset class="row collapsed" id="fpost_place_fieldset">
+        <legend for="d_continent" onclick="toggleFieldsets('fpost_place');"><?php echo $words->getFormatted("forum_label_place"); ?></label><br />
+        <div id="fpost_place"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
+        <div id="dropdowns">
         <?php
             echo $locationDropdowns;
         ?>
-    </div> <!-- row -->
+        </div>
+    </div></div>
+    </fieldset> <!-- row -->
+
+    <fieldset class="row collapsed" id="fpost_vis_fieldset">
+        <legend for="fpost_vis" onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_ChooseVisibilty"); ?></label><br />
+        <div id="fpost_vis"><div>
+    <?php	
+    		if (!$edit) {
+    			echo $words->getBuffered("forum_ChooseVisibilty") ;?>
+    			<select name="ThreadVisibility" id="ThreadVisibility">
+    			<?php
+    			$CurValue=$vars['ThreadVisibility'] ;
+
+    			echo "<option value='Default'" ;
+    			echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
+
+    			echo "<option value='NoRestriction'" ;
+    			if ($CurValue=="NoRestriction") echo " selected" ;
+    			echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
+
+    			echo "<option value='MembersOnly'" ;
+    			if ($CurValue=="MembersOnly") echo " selected" ;
+    			echo ">",$words->getFormatted("forum_edit_vis_MembersOnly"),"</option>" ;
+
+    			echo "<option value='GroupOnly'" ;
+    			if ($CurValue=="GroupOnly") echo " selected" ;
+    			echo ">",$words->getFormatted("forum_edit_vis_GroupOnly"),"</option>" ;
+    			echo "</select>" ;
+    		}
+
+        }
+
+        if (isset($vars['errors']) && is_array($vars['errors'])) {
+            if (in_array('text', $vars['errors'])) {
+                echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
+            }
+        }
+    ?>
+    </div></div>
+    </fieldset>
 
     <?php if ($groupsforum) { ?>
         <input type="hidden" name="IdGroup" value="<?=$groupsforum?>">
     <?php } else { ?>
-    <div class="row">
-        <label for="IdGroup"><?php echo $words->getFormatted("forum_label_group"); ?></label><br />
+        <fieldset class="row collapsed" id="fpost_group_fieldset">
+        <legend for="IdGroup" onclick="toggleFieldsets('fpost_group');"><?php echo $words->getFormatted("forum_label_group"); ?></label><br />
+        <div id="fpost_group"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
         <?php
             echo $groupsDropdowns;
         ?>
-    </div> <!-- row -->    
+        </div></div>
+    </fieldset> <!-- row -->    
     <?php } ?>
 
     <script type="text/javascript">
@@ -286,16 +256,69 @@ if ($allow_title) { // New Topic
         function updateDropdowns(text) {
             Element.update('dropdowns', text);
         }
+
+        function toggleFieldsets(el_name) {
+            Effect.toggle(el_name,'slide',{ duration: 0.2 });
+            Element.toggleClassName($(el_name+'_fieldset'), 'collapsed');
+        }
     </script>
 <?php
     }
 ?>
 
+    <fieldset class="row" id="fpost_lang_fieldset">
+        <legend for="IdLanguage"onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>:</label>&nbsp;&nbsp;
+        <div id="fpost_lang"><div>
+        <select name="IdLanguage" id="IdLanguage"><?php
+        // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
+            if (!isset($AppropriatedLanguage)) {
+               echo "<option value=\"-1\">-</option>";
+            }
+
+            foreach ($LanguageChoices as $Choices) {
+                    echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+                    if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
+                       echo " selected='selected'" ;
+                    }
+                    echo ">",$Choices->Name,"</option>" ;
+            }
+        ?></select>
+
+
+		<?php if (!empty($vars['PostVisibility'])) { ?>
+			<br /><?php echo $words->getBuffered("forum_ChooseVisibilty") ?>
+			<select name="PostVisibility" id="PostVisibility">
+			<?php
+			$CurValue=$vars['PostVisibility'] ;
+//			echo "<option value='Default'" ;
+//			echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
+
+			echo "<option value='NoRestriction'" ;
+			if ($CurValue=="NoRestriction") echo " selected" ;
+			echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
+
+			echo "<option value='MembersOnly'" ;
+			if ($CurValue=="MembersOnly") echo " selected" ;
+			echo ">",$words->getFormatted("forum_edit_vis_MembersOnly"),"</option>" ;
+
+			if ($vars['IdGroup']!=0) {
+				echo "<option value='GroupOnly'" ;
+				if ($CurValue=="GroupOnly") echo " selected" ;
+				echo ">",$words->getFormatted("forum_edit_vis_GroupOnly"),"</option>" ;
+			}
+
+		?>
+		</select>
+		<br />
+		<?php } // end if (!empty($vars['PostVisibility'])) ?>
+		</div></div>
+    </fieldset> <!-- row -->
+    
     <div class="row">
         <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck?>>
         <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
     </div> <!-- row -->
-
+    
     <div class="row">
         <input type="submit" value="<?php
         if ($allow_title) { // New Topic
@@ -319,9 +342,8 @@ if ($allow_title) { // New Topic
 
 
 <script type="text/javascript">
-ForumsSuggest.initialize();
-</script>
-<script type="text/javascript">
+document.observe("dom:loaded", forumOnload);
+
 // purpose here is to force the user to select a language
 function check_SelectedLanguage() {
 if (document.editform.IdLanguage.value==-1) {
@@ -330,4 +352,13 @@ if (document.editform.IdLanguage.value==-1) {
     return(false);
 }
 }
+function forumOnload() {
+    ForumsSuggest.initialize();
+    //$('fpost_lang').setStyle({ display: 'none' });
+    $('fpost_tags').setStyle({ display: 'none' });
+    $('fpost_place').setStyle({ display: 'none' });
+    $('fpost_group').setStyle({ display: 'none' });
+    $('fpost_vis').setStyle({ display: 'none' });
+}
+
 </script>

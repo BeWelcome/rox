@@ -3,7 +3,6 @@
 
 body, td, pre {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
-	font-size: 12px;
 }
 
 body {
@@ -27,6 +26,10 @@ div.mceVisualAid {
 	background-image: url('../images/anchor_symbol.gif');
 	background-position: bottom;
 	background-repeat: no-repeat;
+}
+.mceEditor td { padding: 0; }
+.mceContentBody {
+    padding: 2px;
 }
 
 /* Important is needed in Gecko browsers inorder to style links */

@@ -15,7 +15,7 @@
   #col2 { display:none}
   #col3 { width: auto; margin: 0 25% 0 0}
   #col1_content { display: block }
-  #col3_content { padding: 0 2em 0 2em }
+  #col3_content { padding: 0 2em 0 0 }
 
 
 }

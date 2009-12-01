@@ -7,6 +7,7 @@
 .mceLabel {color: #000000;}
 .mceLabelDisabled {cursor: text; color: #999999;}
 .mceEditor {background: #F0F0EE; border: 1px solid #cccccc; padding: 0; margin: 0;}
+.mceEditor td { padding: 0; }
 .mceEditorArea { font-family: 'MS Sans Serif', sans-serif, Verdana, Arial; background: #FFFFFF; padding: 0; margin: 0; }
 .mceToolbarTop, .mceToolbarBottom {background: #F0F0EE; line-height: 1px; font-size: 1px;}
 .mceToolbarTop {border-bottom: 1px solid #cccccc; padding-bottom: 1px;}

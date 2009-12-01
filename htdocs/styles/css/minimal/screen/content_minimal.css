@@ -88,6 +88,7 @@
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
   .row { padding: .5em 0;}
+  .row_nav { display: block; border-bottom: 1px solid #e5e5e5;}
   .warning {
     background: #fdd;
     padding: 1em;
@@ -294,6 +295,20 @@ dl.list {
     padding: 2em;
     margin-bottom: 1.5em;
   }
+  .fieldset_toggles fieldset {
+    border: 1px solid #e5e5e5;
+    margin-bottom: 1em;
+    margin-right: 2em;
+    padding: .5em 1em;
+  }
+  .fieldset_toggles fieldset.collapsed {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    padding: 0 1em;
+    margin-bottom: 0;
+  }
   legend{
     line-height: 1.5em;
     font-size: 1.8em;
@@ -301,6 +316,12 @@ dl.list {
     margin-left: -0.5em;
     padding: 0 .6em;
     color: #2184E8;
+  }
+  .fieldset_toggles fieldset legend {
+    font-size: 1em;
+    margin-left: -0.5em;
+    cursor: pointer;
+    font-weight: normal;
   }
   select {
     margin-bottom: 0.5em;
@@ -425,7 +446,6 @@ dl.list {
   #footer {
     border: none;
     text-align: left;
-    margin: 0; padding: 2.5em 2em;
     color: #6A6A5B;
   }
   #footer p {font-size: 0.9em;}

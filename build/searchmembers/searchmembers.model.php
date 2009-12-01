@@ -1046,7 +1046,7 @@ LIKE '$column'
         // hack to sort by number of comments
         if ($order == 'Comments')
         {
-            $order = "(SELECT COUNT(id) FROM comments WHERE IdMember = comments.IdToMember)";
+            $order = "(SELECT COUNT(id) FROM comments WHERE members.id = comments.IdToMember)";
         }
         if ($bool) $direction = $reverse[$direction];
         return array($order, $direction);

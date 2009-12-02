@@ -124,29 +124,17 @@ class AdminModel extends RoxModelBase
      *
      * @param Member $member - member to welcome
      *
-     * @todo move this into a dedicated mail class - make this a subclass of a dedicated mail class, in fact
      * @access public
      * @return bool
      */
     public function sendAcceptedEmail(Member $member)
     {
-        $site    = PVars::getObj('env')->baseuri;
-        $words   = new MOD_words;
-        $email   = MOD_crypt::AdminReadCrypted($member->Email);
-        $subject = $words->get("SignupSubjAccepted", $member->Username);
-        $text    = $words->get("SignupYouHaveBeenAccepted", $member->Username, $site, $site . "login");
-        try
+        $email = new EmailTemplate('SignupAccepted');
+        if (!$email->init(array('member' => $member)))
         {
-            if (MOD_mail::sendEmail($subject, PVars::getObj('syshcvol')->AccepterSenderMail, $email, '', $text))
-            {
-                return true;
-            }
+            return false;
         }
-        catch (Exception $e)
-        {
-        }
-        $this->logWrite("Sending welcoming email to {$member->Username} failed with message: {$e->getMessage()}", "bug");
-        return false;
+        return $email->send();
     }
 //}}}
 

@@ -693,7 +693,7 @@ class GalleryController extends RoxControllerBase {
         }
         if (!$tmpDir->fileExists($thumbFile) || $tmpDir->file_Size($thumbFile) == 0) {
             if ($img = new MOD_images_Image($tmpDir->dirName().'/'.$d->file)) {
-                if (!$this->_model->createThumbnails($tmpDir,$img) || (isset($_GET['t']) && $_GET['t'] == '2'))
+                if (!$this->_model->createThumbnails($tmpDir,$img) && (isset($_GET['t']) && $_GET['t'] == '2'))
                     $thumbFile = $d->file;
             }
         }

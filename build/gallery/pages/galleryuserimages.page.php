@@ -19,10 +19,10 @@ class GalleryUserImagesPage extends GalleryUserPage
     protected function column_col3() {
         $statement = $this->statement;
         $words = $this->getWords();
-        ?>
-        <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
-        <?php
-        require SCRIPT_BASE . 'build/gallery/templates/overview.php';
+        $this->thumbsize = 1;
+
+        echo '<h2>'.$words->getFormatted('GalleryTitleLatest').'</h2>';        
+        require SCRIPT_BASE . 'build/gallery/templates/imagefixedcolumns.list.php';
     }
 
 }

@@ -26,7 +26,7 @@ if ($statement) {
 
     echo '<h4>';
 if ($User && $User->getHandle() == $d->user_handle) {
-    echo '<input type="checkbox" class="thumb_check" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
+    echo '<input type="checkbox" class="input_check" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
 }
 ?>
     <a href="gallery/show/image/<?=$d->id ?>" title="<?=$d->title ?>"><?php if (strlen($d->title) >= 20) echo substr($d->title,0,15).'...'; else echo $d->title; ?></a></h4>

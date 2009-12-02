@@ -87,10 +87,10 @@ SQL;
         }
         $sql = <<<SQL
             SELECT `gallery_items_to_gallery`.*
-            FROM `gallery`
-            LEFT JOIN `gallery_items_to_gallery` AS `g` ON
-                g.`gallery_id_foreign` = g.`gallery_id_foreign`
-            WHERE g.`gallery_id_foreign` = gallery.`id`
+            FROM `gallery` AS `g`
+            LEFT JOIN `gallery_items_to_gallery` AS `gi` ON
+                g.`id` = gi.`gallery_id_foreign`
+            WHERE g.`id` = gi.`gallery_id_foreign`
             ORDER BY `id` DESC
 SQL;
         return $this->createEntity('GalleryItem')->findBySQLMany($sql);
@@ -106,6 +106,17 @@ SQL;
         $status = (($status) ? $status : 'In');
 
         return $this->createEntity('GalleryItem')->getGalleryItems($this, $status, '', $offset, $limit);
+    }
+    
+    public function countItems()
+    {
+        if (!$this->isLoaded()) return 0;
+        $query = <<<SQL
+            SELECT count(item_id_foreign)
+            FROM gallery_items_to_gallery
+            WHERE gallery_id_foreign = {$this->id}
+SQL;
+        return $this->singleLookup($query);
     }
 
 }

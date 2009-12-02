@@ -41,6 +41,7 @@ class GallerySetDetailsPage extends GallerySetPage
         $this->thumbsize = 1;
         echo '<form method="POST" action="">'.$callback_tag;
         require SCRIPT_BASE . 'build/gallery/templates/imagefixedcolumns.list.php';
+        if ($this->myself) {
         echo <<<HTML
         <p class="small">
             <input type="checkbox" name="selectAllRadio" class="checker" onclick="common.selectAll(this);">
@@ -56,6 +57,7 @@ class GallerySetDetailsPage extends GallerySetPage
         </p>
         </form>
 HTML;
+        }
     }
     
     /*

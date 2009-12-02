@@ -429,6 +429,8 @@ class GalleryController extends RoxControllerBase {
         $page->infoMessage = $this->message;
         $page->previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
         $page->next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
+        $galleryid = $this->_model->getItemGallery($image->id)->fetch(PDB::FETCH_OBJ)->gallery_id_foreign;
+        $page->gallery = $this->_model->getGallery($galleryid);
         return $page;
     }
     
@@ -620,6 +622,18 @@ class GalleryController extends RoxControllerBase {
         	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
             return $callbackId;
         }
+    }
+
+    public function manageCallback($args, $action, $mem_redirect, $mem_resend)
+    {
+        if (!$this->_model->getLoggedInMember()){
+            return false;
+        }
+        $vars = $args->post;
+        $request = $args->request;
+        if (array_key_exists('imageId', $vars))
+            $mem_redirect->message_gallery = count($vars['imageId']);
+        return $this->_model->updateGalleryProcess($vars);
     }
 
     public function updateGalleryCallback($args, $action, $mem_redirect, $mem_resend)

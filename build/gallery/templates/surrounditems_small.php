@@ -2,14 +2,6 @@
 
 $words = new MOD_words();
 
-if ($UserId) {
-    echo "<h3><a href='gallery/show/user/{$image->user_handle}'>{$words->getFormatted('galleryUserOthers',$image->user_handle)}</a></h3>";
-}
-if ($SetId) {
-    echo '<h3>'. $words->getFormatted('gallerySetOthers').' </span></h3>';
-} 
-
-
 ?>
 <table><tr><td>
 <?php

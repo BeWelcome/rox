@@ -47,9 +47,9 @@
         }
         ?>
         <input name="new" type="hidden" value="1">
-        <input id="deleteonly" name="deleteOnly" type="hidden" value="0">
+        <input name="deleteOnly" type="hidden" value="0">
         <br />
-        <input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
+        <input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="return submitStuff();"/>
         </form>
     </p>
 

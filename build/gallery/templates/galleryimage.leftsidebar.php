@@ -21,23 +21,28 @@ if (!isset($vars['errors'])) {
 
 $Previous = $this->previous;
 $Next = $this->next;
-echo '
+$userpic = MOD_layoutbits::PIC_30_30($d->user_handle,'',$style='float_left');
+echo <<<HTML
     <div class="floatbox" style="padding-top: 30px;">
-        '.MOD_layoutbits::PIC_30_30($d->user_handle,'',$style='float_left').'
-    <p class="small">'.$words->getFormatted('GalleryUploadedBy').': <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>.</p>
-    </div>';
+        {$userpic}
+        <h3><a href="gallery/show/user/{$image->user_handle}">{$words->getFormatted('galleryUserOthers',$image->user_handle)}</a></h3>
+    </div>
+HTML;
 $UserId = 1;
 $SetId = false;
 
 require_once 'surrounditems_small.php';
 
+if ($this->gallery) {
+    echo '<div class="floatbox" style="padding-top: 30px;"><h3 class="borderless">'.$words->getFormatted('Belongs to album').'</h3>';
+    echo '<a href="gallery/show/sets/'.$this->gallery->id.'">'.$this->gallery->title.'</a>
+    </div>';
+}
 $d = $image;
-    ?>
-    
-    <h3 class="borderless"><?php echo $words->getFormatted('GalleryImageAdditionalInfo'); ?></h3>
-    <?php
-
-    echo '
+echo '    <div class="floatbox" style="padding-top: 30px;">
+<h3 class="borderless">'.$words->getFormatted('GalleryImageAdditionalInfo').'</h3>';
+echo '
     <p class="small" title="'.$d->created.'">'.$words->get('created').': '.$layoutbits->ago(strtotime($d->created)).'</p>
     <p class="small"><a href="gallery/img?id='.$d->id.'&amp;t=1" title="'.$words->getFormatted('GalleryOriginal').'" />'.$d->width.'x'.$d->height.'</a>; '.$d->mimetype.'</p>
-    <p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$words->getFormatted('GalleryDownload').'" title="'.$words->getFormatted('GalleryDownload').'"/> </a>  </a></p>';
+    <p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$words->getFormatted('GalleryDownload').'" title="'.$words->getFormatted('GalleryDownload').'"/> </a>  </a></p>
+    </div>';

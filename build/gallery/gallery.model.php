@@ -134,7 +134,7 @@ VALUES
 
     public function deleteMultiple($images)
     {
-        if (!$User = APP_User::login())
+        if (!$member = $this->getLoggedInMember())
         {
             return false;
         }
@@ -143,7 +143,7 @@ VALUES
         foreach ($images as $image) {
             if (!$image)
                 return false;
-            if (($User->getId() == $this->imageOwner($image)) || ($GalleryRight > 1)) {
+            if (($member->get_userid() == $this->imageOwner($image)) || ($GalleryRight > 1)) {                
                 $image = $this->imageData($image);
                 // Log the deletion to prevent admin abuse
                 MOD_log::get()->write("Deleting multiple gallery items #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
@@ -157,7 +157,7 @@ VALUES
                 $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
                 $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$image->id);
                 $this->deleteComments($image->id);
-                return PVars::getObj('env')->baseuri.'gallery/show/user/'.$User->getHandle().'/pictures';
+                return 'gallery/manage';
             } else return false;
         }
     }    
@@ -649,7 +649,7 @@ VALUES
         if ($size[0] > 240)
             $img->createThumb($dataDir->dirName(), 'thumb1', 240, 240, false ,'ratio');
         if ($size[0] > 500 || $size[1] > 500)
-            $img->createThumb($dataDir->dirName(), 'thumb2', 500, 500, true);
+            $img->createThumb($dataDir->dirName(), 'thumb2', 500, 500, false, 'ratio');
         return true;
     }
 

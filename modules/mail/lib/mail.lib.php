@@ -97,7 +97,7 @@ class MOD_mail
         return $mailer->batchSend($message);
     }
     
-    public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 
+    public static function sendEmail($subject, $from, $to, $title, $body, $body_html = false, $attach = array()) 
     {
         self::init();
         

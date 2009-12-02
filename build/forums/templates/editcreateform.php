@@ -131,8 +131,8 @@ if ($allow_title) { // New Topic
 <?php
     if (isset($allow_title) && $allow_title) {
 ?>
-    <fieldset class="row collapsed" id="fpost_tags_fieldset">
-        <legend for="create-tags" onclick="toggleFieldsets('fpost_tags');"><?php echo $words->getFormatted("forum_label_tags"); ?></label><br />
+    <fieldset class="row" id="fpost_tags_fieldset">
+        <legend for="create-tags" onclick="toggleFieldsets('fpost_tags');"><?php echo $words->getFormatted("forum_label_tags"); ?></legend>
         <div id="fpost_tags"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
         <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
@@ -149,8 +149,8 @@ if ($allow_title) { // New Topic
         </div></div>
     </fieldset> <!-- row -->
 
-    <fieldset class="row collapsed" id="fpost_place_fieldset">
-        <legend for="d_continent" onclick="toggleFieldsets('fpost_place');"><?php echo $words->getFormatted("forum_label_place"); ?></label><br />
+    <fieldset class="row" id="fpost_place_fieldset">
+        <legend for="d_continent" onclick="toggleFieldsets('fpost_place');"><?php echo $words->getFormatted("forum_label_place"); ?></legend>
         <div id="fpost_place"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
         <div id="dropdowns">
@@ -161,12 +161,12 @@ if ($allow_title) { // New Topic
     </div></div>
     </fieldset> <!-- row -->
 
-    <fieldset class="row collapsed" id="fpost_vis_fieldset">
-        <legend for="fpost_vis" onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_ChooseVisibilty"); ?></label><br />
+    <fieldset class="row" id="fpost_vis_fieldset">
+        <legend for="fpost_vis" onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_ChooseVisibilty"); ?></legend>
         <div id="fpost_vis"><div>
     <?php	
     		if (!$edit) {
-    			echo $words->getBuffered("forum_ChooseVisibilty") ;?>
+    		    ?>
     			<select name="ThreadVisibility" id="ThreadVisibility">
     			<?php
     			$CurValue=$vars['ThreadVisibility'] ;
@@ -202,8 +202,8 @@ if ($allow_title) { // New Topic
     <?php if ($groupsforum) { ?>
         <input type="hidden" name="IdGroup" value="<?=$groupsforum?>">
     <?php } else { ?>
-        <fieldset class="row collapsed" id="fpost_group_fieldset">
-        <legend for="IdGroup" onclick="toggleFieldsets('fpost_group');"><?php echo $words->getFormatted("forum_label_group"); ?></label><br />
+        <fieldset class="row" id="fpost_group_fieldset">
+        <legend for="IdGroup" onclick="toggleFieldsets('fpost_group');"><?php echo $words->getFormatted("forum_label_group"); ?></legend>
         <div id="fpost_group"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
         <?php
@@ -257,8 +257,9 @@ if ($allow_title) { // New Topic
             Element.update('dropdowns', text);
         }
 
-        function toggleFieldsets(el_name) {
-            Effect.toggle(el_name,'slide',{ duration: 0.2 });
+        function toggleFieldsets(el_name, instantly) {
+            if (instantly) $(el_name).toggle();
+            else Effect.toggle(el_name,'slide',{ duration: 0.2 });
             Element.toggleClassName($(el_name+'_fieldset'), 'collapsed');
         }
     </script>
@@ -267,7 +268,7 @@ if ($allow_title) { // New Topic
 ?>
 
     <fieldset class="row" id="fpost_lang_fieldset">
-        <legend for="IdLanguage"onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>:</label>&nbsp;&nbsp;
+        <legend for="IdLanguage"onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
         <div id="fpost_lang"><div>
         <select name="IdLanguage" id="IdLanguage"><?php
         // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
@@ -283,7 +284,7 @@ if ($allow_title) { // New Topic
                     echo ">",$Choices->Name,"</option>" ;
             }
         ?></select>
-
+<?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
 
 		<?php if (!empty($vars['PostVisibility'])) { ?>
 			<br /><?php echo $words->getBuffered("forum_ChooseVisibilty") ?>
@@ -314,10 +315,15 @@ if ($allow_title) { // New Topic
 		</div></div>
     </fieldset> <!-- row -->
     
-    <div class="row">
-        <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck?>>
-        <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
-    </div> <!-- row -->
+    <fieldset class="row" id="fpost_note_fieldset">
+        <legend for="NotifyMe" onclick="toggleFieldsets('fpost_note');"><?php echo $words->getFormatted("forum_Notify") ?></legend>
+        <div id="fpost_note"><div>
+                <input type="checkbox" name="NotifyMe" id="NotifyMe" <?php echo $notifymecheck?>>
+                <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
+		</div></div>
+    </fieldset> <!-- row -->
+    
+
     
     <div class="row">
         <input type="submit" value="<?php
@@ -354,11 +360,12 @@ if (document.editform.IdLanguage.value==-1) {
 }
 function forumOnload() {
     ForumsSuggest.initialize();
-    //$('fpost_lang').setStyle({ display: 'none' });
-    $('fpost_tags').setStyle({ display: 'none' });
-    $('fpost_place').setStyle({ display: 'none' });
-    $('fpost_group').setStyle({ display: 'none' });
-    $('fpost_vis').setStyle({ display: 'none' });
+    toggleFieldsets('fpost_tags',1);
+    toggleFieldsets('fpost_vis',1);
+    toggleFieldsets('fpost_note',1);
+    toggleFieldsets('fpost_place',1);
+    toggleFieldsets('fpost_group',1);
+    // toggleFieldsets('fpost_lang',1);
 }
 
 </script>

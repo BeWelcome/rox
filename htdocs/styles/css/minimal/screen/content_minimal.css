@@ -314,7 +314,7 @@ dl.list {
     font-size: 1.8em;
     font-weight: bold;
     margin-left: -0.5em;
-    padding: 0 .6em;
+    padding: .6em;
     color: #2184E8;
   }
   .fieldset_toggles fieldset legend {
@@ -322,6 +322,10 @@ dl.list {
     margin-left: -0.5em;
     cursor: pointer;
     font-weight: normal;
+    color: #000;
+  }
+  .fieldset_toggles fieldset.collapsed legend {
+    color: #999;
   }
   select {
     margin-bottom: 0.5em;

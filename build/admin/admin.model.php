@@ -106,6 +106,10 @@ class AdminModel extends RoxModelBase
                         $errors[] = array('id' => $member->id, 'action' => 'accept');
                         $this->logWrite("Accepting of {$member->Username} - {$member->id} failed. Accepter: {$this->getLoggedInMember()->Username}", 'bug');
                     }
+                    else
+                    {
+                        $this->logWrite("{$member->Username} - {$member->id} was accepted. Accepter: {$this->getLoggedInMember()->Username}", 'bug');
+                    }
                     break;
                 case 'reject':
                 case 'needmore':

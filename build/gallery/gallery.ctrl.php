@@ -405,7 +405,8 @@ class GalleryController extends RoxControllerBase {
         $page->infoMessage = $this->message;
         $page->previous = $this->_model->getPreviousItems($image->id,$limit=1,$image->user_id_foreign);
         $page->next = $this->_model->getNextItems($image->id,$limit=1,$image->user_id_foreign);
-        $galleryid = $this->_model->getItemGallery($image->id)->fetch(PDB::FETCH_OBJ)->gallery_id_foreign;
+        $gallery_obj = $this->_model->getItemGallery($image->id);
+        $galleryid = ($gallery_obj) ? $gallery_obj->fetch(PDB::FETCH_OBJ)->gallery_id_foreign : false;
         $page->gallery = $this->_model->getGallery($galleryid);
         return $page;
     }

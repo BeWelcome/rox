@@ -56,7 +56,6 @@ class GallerySetPage extends GalleryBasePage
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
 
-        $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
         $tt = array();
             $tt[]= array('thumbnails', 'gallery/show/sets/'.$gallery->id.'/'.$this->page.'', $ww->GalleryThumbnails);
             $tt[]= array('details', 'gallery/show/sets/'.$gallery->id.'/details/'.$this->page.'', $ww->GalleryDetails);
@@ -65,27 +64,6 @@ class GallerySetPage extends GalleryBasePage
             $tt[]= array("delete", 'gallery/show/sets/'.$gallery->id.'/delete', $ww->GalleryDelete, 'delete');
         }
         return($tt) ;
-    }
-    
-    protected function submenu() {
-        $active_menu_item = $this->getSubmenuActiveItem();
-        $cnt = count($this->getSubmenuItems());
-        $ii = 1;
-        foreach ($this->getSubmenuItems() as $index => $item) {
-            $name = $item[0];
-            $url = $item[1];
-            $label = $item[2];
-            $class = isset($item[3]) ? $item[3] : '';
-            if ($name === $active_menu_item) {
-                $attributes = ' class="active '.$class.'"';
-            } else {
-                $attributes = ' class="'.$class.'"';
-            }
-
-            ?><a <?=$attributes ?> style="cursor:pointer;" href="<?=$url ?>"><span><?=$label ?></span></a> <?=($ii++ != $cnt) ? '|': '' ?>
-            <?php
-
-        }
     }
     
     protected function column_col3() {

@@ -7,7 +7,6 @@ if ($d->description == '' && $canEdit) {
     $desc = $words->getBuffered("GalleryAddDescription");
 }
 ?>
-<h2 id="g-title"><?=$d->title?></h2>
 <p id="g-text"><?=$desc?></p>
 <?php
 $words->flushBuffer();
@@ -53,7 +52,7 @@ if ($canEdit  || ($GalleryRight > 1)) {
             },
             externalControl: 'g-title-edit',
             formClassName: 'inplaceeditor-form-big',
-            cols: '25',
+            cols: '35',
             ajaxOptions: {method: 'get'}
         })
 
@@ -62,8 +61,8 @@ if ($canEdit  || ($GalleryRight > 1)) {
                 return '?item=<?=$d->id?>&text=' + decodeURIComponent(value)
             },
             externalControl: 'g-text-edit',
-            rows: '5',
-            cols: '25',
+            rows: '4',
+            cols: '35',
             ajaxOptions: {method: 'get'}
         })
     </script>

@@ -15,13 +15,29 @@ class GalleryBasePage extends PageWithActiveSkin
         $this->page_title = 'Gallery | BeWelcome';
         $this->model = new GalleryModel();
     }
+    
+    protected function teaser() {
+        ?>
+        <div id="teaser">
+        <div class="breadcrumbs">
+        <?=$this->breadcrumbs()?>
+        </div>
+        <div class="floatbox">
+            <?=$this->teaserHeadline()?>
+            <div class="gallery_menu">
+            <?=$this->submenu()?>
+            </div>
+        </div>
+        </div>
+        <?
+    }
 
-    protected function teaserHeadline() {
+    protected function breadcrumbs() {
         return '<a href="gallery">'.$this->getWords()->getBuffered('Gallery').'</a>';
     }
 
-    protected function teaser() {
-        echo '<div id="teaser" class="clearfix">'.$this->teaserHeadline().'</div>';
+    protected function teaserHeadline() {
+        echo $this->getWords()->getBuffered('Gallery');
     }
     
     protected function getTopmenuActiveItem()
@@ -51,6 +67,32 @@ class GalleryBasePage extends PageWithActiveSkin
     *  Custom functions
     *
     */
+    
+    protected function getSubmenuItems()
+    {
+        return array();
+    }
+
+    protected function submenu() {
+        $active_menu_item = $this->getSubmenuActiveItem();
+        $cnt = count($this->getSubmenuItems());
+        $ii = 1;
+        foreach ($this->getSubmenuItems() as $index => $item) {
+            $name = $item[0];
+            $url = $item[1];
+            $label = $item[2];
+            $class = isset($item[3]) ? $item[3] : '';
+            if ($name === $active_menu_item) {
+                $attributes = ' class="active '.$class.'"';
+            } else {
+                $attributes = ' class="'.$class.'"';
+            }
+
+            ?><a <?=$attributes ?> style="cursor:pointer;" href="<?=$url ?>"><span><?=$label ?></span></a> <?=($ii++ != $cnt) ? '|': '' ?>
+            <?php
+
+        }
+    }
     
     protected function userLinks()
     {

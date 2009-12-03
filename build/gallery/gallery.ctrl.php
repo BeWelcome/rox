@@ -224,7 +224,7 @@ class GalleryController extends RoxControllerBase {
         if ($this->loggedInMember) {
             $page->images = $this->_model->getLatestItems($this->loggedInMember->get_userId());
             $page->galleries = $this->_model->getGalleriesNotEmpty();
-            $page->cnt_pictures = $page->images->numRows();
+            $page->cnt_pictures = $page->images ? $page->images->numRows() : 0;
         } else {
             $page->galleries = $this->_model->getGalleriesNotEmpty();                            
         }

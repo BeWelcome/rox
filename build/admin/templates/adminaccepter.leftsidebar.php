@@ -31,7 +31,7 @@ $words = new MOD_words();
 <table>
     <tr>
         <th>Status</th>
-        <th>Members</th>
+        <th>#</th>
     </tr>
 HTML;
     foreach ($this->model->getStatusOverview() as $status => $count) 

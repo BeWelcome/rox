@@ -2,6 +2,9 @@
 {
 textarea {margin-bottom: 1em;}
 
+#messageboard {margin: 2em 0;}
+#acceptmembers {margin: 2em 0;}
+
 /* colors for comment quality */
 .Neutral { color: #333; }
 .Good { color: green; }
@@ -15,5 +18,8 @@ textarea {margin-bottom: 1em;}
 .commentto {padding-bottom: 15px;}
 
 .adminmembers{margin-bottom: 3em;}
+.memberinfo {margin-bottom: 0.5em;}
 .memberinfo p{margin-bottom: 0.1em;}
+
+.pagination {margin-bottom: 1em;}
 }

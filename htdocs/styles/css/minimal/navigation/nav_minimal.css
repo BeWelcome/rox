@@ -100,15 +100,15 @@
   #nav_sub ul{
     /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
     display: inline;
-    margin: .4em;
-    padding-left: .8em;
+    margin: 0;
+    padding-left: 0;
    }
 
   #nav_sub li {
     font-size: 1.2em;
     font-weight: bold;
     color: #888;
-    display: inline;
+    display: inline-block;
     padding: 0;
   }
 

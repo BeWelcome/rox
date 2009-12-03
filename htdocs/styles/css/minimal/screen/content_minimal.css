@@ -398,7 +398,8 @@ dl.list {
    * @section breadcrumbs
    */
 
-  div.breadcrumbs {padding:10px 0; }
+  div.breadcrumbs {padding:10px 0; color: #888;}
+  div.breadcrumbs a { color: #888; }
 
   /**
    * Pagination
@@ -657,7 +658,9 @@ ul li.expanded a.header {
 /* --- Classes for "round boxes" --- */
 div.box {
   margin: 1em 0.25em;
-  padding: 0em;
+  padding: 1em;
+  background-color: #EBF2F8;
+  border: 1px solid #BFD1E1;
 }
 
 div.box h3 {
@@ -759,7 +762,8 @@ div.box div.boxbottom div.links {
   padding:0pt 20px 0pt 0pt;
 }
 */
-
+#teaser h1,#teaser h1 a { color: #333;}
+#teaser h1 a:hover, #teaser h1 a:focus { color: #888; text-decoration: none;}
 #teaser a.button { color: #ff8800;}
 #teaser a:hover.button { color: #333;}
 #teaser #title { float: left; margin-right: 0}

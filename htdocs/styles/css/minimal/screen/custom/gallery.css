@@ -50,9 +50,9 @@
     font-weight: bold;
 }
 .gallery_menu {
-    margin-bottom: 1em;
+    margin-bottom: 2em;
 }
-#teaser h1 {
+#teaser h1.userpage {
     margin-bottom: 0;
     padding-bottom: 0;
 }

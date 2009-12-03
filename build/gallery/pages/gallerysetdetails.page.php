@@ -31,9 +31,6 @@ class GallerySetDetailsPage extends GallerySetPage
         $formkit = $this->layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('GalleryController', 'updateGalleryCallback');
 
-        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'" class="black">'.$gallery->title.'</a></h2>';
-        echo '<div class="gallery_menu">';
-        echo $this->submenu().'</div>';
         if ($this->myself && $this->upload) {
             // Display the upload form
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';

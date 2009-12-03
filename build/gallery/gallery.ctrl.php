@@ -27,17 +27,8 @@ class GalleryController extends RoxControllerBase {
     
     public function index() 
     {
-        // that will shrink our code
-        $P = PVars::getObj('page');
-        $vw = new ViewWrap($this->_view);
-        $cw = new ViewWrap($this);
-
-        $P->addStyles .= $vw->customStylesLightview();
-        
-        $Page->currentTab = 'gallery';
         $subTab = 'browse';
         $name = false;
-
         $loggedInMember = $this->loggedInMember;
         $membersmodel = $this->membersmodel = new MembersModel();
 
@@ -80,7 +71,6 @@ class GalleryController extends RoxControllerBase {
                 
             case 'upload':
                 return $this->upload();
-                break;
             
             case 'uploaded':
                 if (!$loggedInMember)
@@ -92,10 +82,6 @@ class GalleryController extends RoxControllerBase {
                 $galleryId = (isset($_GET['id'])) ? $_GET['id'] : false;
                 $this->ajaxlatestimages($galleryId);
                 PPHP::PExit();
-
-            case 'xppubwiz':
-                $this->_view->xpPubWiz();
-                break;
                 
             case 'flickr':
                 $page = new GalleryFlickrPage();
@@ -144,8 +130,6 @@ class GalleryController extends RoxControllerBase {
                                 return $this->deleteImage($image);
                             case 'edit':
                                 $this->_model->editProcess($image);
-                            case 'comment':
-                                // $this->_model->commentProcess($image);
                             default:
                                 return $this->image($image);
                         }
@@ -186,9 +170,6 @@ class GalleryController extends RoxControllerBase {
                             $this->member = $member;
                             if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {
-                                    // case 'sets':
-                                        // $this->_model->updateGalleryProcess();
-                                        // break;
                                     case 'galleries':
                                     case 'sets':
                                         return $this->user($userId);
@@ -199,17 +180,12 @@ class GalleryController extends RoxControllerBase {
                                 }
                             }
                             return $this->user($userId);
-                            break;
                         }
                         
                     default:
                         return $this->overview();
-                        break;
                 }
         }
-        $P->teaserBar .= $vw->teaser($name);
-        // submenu
-        $P->subMenu .= $vw->showsubmenu($subTab);
     }
 
     /**

@@ -10,10 +10,30 @@
 
 class GallerySetPage extends GalleryBasePage
 {
+    protected function breadcrumbs() {
+        $words = $this->words;
+        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> > <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$words->get("Photosets").'</a>';
+    }
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> > <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$words->get("Photosets").'</a>';
+        return '<h2><a href="gallery/show/sets/'.$this->gallery->id.'" class="black" id="g-title">'.$this->gallery->title.'</a></h2>';
+    }
+    
+    protected function teaser() {
+        ?>
+        <div id="teaser">
+        <div class="breadcrumbs">
+        <?=$this->breadcrumbs()?>
+        </div>
+        <div class="floatbox">
+            <?=$this->teaserHeadline()?>
+            <div class="gallery_menu">
+            <?=$this->submenu()?>
+            </div>
+        </div>
+        </div>
+        <?
     }
     
     protected function getTopmenuActiveItem()
@@ -78,9 +98,6 @@ class GallerySetPage extends GalleryBasePage
         $uploaderUrl = 'gallery/uploaded_done/?id='.$gallery->id;
         $d = $this->d;
         $num_rows = ($this->num_rows) ? $this->num_rows : 0;
-        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'" class="black" id="g-title">'.$gallery->title.'</a></h2>';
-        echo '<div class="gallery_menu">';
-        echo $this->submenu().'</div>';
         require SCRIPT_BASE . 'build/gallery/templates/galleryset.column_col3.php';
     }
     

@@ -1,0 +1,321 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+ *
+ * (en) Horizontal list navigation "Shiny Buttons"
+ * (de) Horizontale Navigationsliste "Shiny Buttons"
+ *
+ * @copyright       Copyright 2005-2007, Dirk Jesse
+ * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
+ *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
+ * @link            http://www.yaml.de
+ * @package         yaml
+ * @version         3.0.4
+ * @revision        $Revision: 130 $
+ * @lastmodified    $Date: 2007-10-05 19:05:21 +0200 (Fr, 05 Okt 2007) $
+ */
+
+@media all
+{
+
+#nav_main, #nav_main ul {
+    float: left;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    z-index: 999;
+}
+
+#nav_main #logo a {
+    padding: 0.3em 1em 0 0;
+}
+
+#nav_main a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    line-height: 1.2em;
+    padding: 1.25em 1em;
+}
+
+#nav_main li {
+    float: left;
+    padding: 0;
+    display: block;
+    border: none;
+}
+
+#nav_main li ul {
+    position:absolute;
+    left: -999em;
+    height: auto;
+    margin: 0;
+    background: #fff url(../images/bg_menu_white.jpg) no-repeat top left;
+    border-bottom: 1px solid #0F1E3D;
+    border-right: 1px solid #0F1E3D;
+    font-size: .9em;
+    width: 160px;
+    padding: 1em 0;
+}
+
+
+#nav_main li li {
+    width: 160px;
+    border: none;
+}
+#nav_main li li.bottom {
+    width: 160px;
+}
+
+#nav_main li ul a {
+    color: #333;
+    width: 160px;
+    padding: 0.4em 1.6em;
+}
+
+#nav_main li:hover ul ul, #nav_main li:hover ul ul ul, #nav_main li.sfhover ul ul, #nav_main li.sfhover ul ul ul {
+    left: -999em;
+}
+
+#nav_main li:hover ul, #nav_main li li:hover ul, #nav_main li li li:hover ul, #nav_main li.sfhover ul, #nav_main li li.sfhover ul, #nav_main li li li.sfhover ul {
+    left: auto;
+}
+#nav_main li:hover, #nav_main li.sfhover {
+    background: #fff;
+    border-right: 1px solid #0F1E3D;
+}
+#nav_main li:hover a, #nav_main li.sfhover a {
+    color: #333;
+}
+#nav_main li#logo,#nav_main li#logo:hover {
+    background: transparent;
+    border: none;
+}
+#nav_main li ul li:hover, #nav_main li ul li.sfhover {
+    background: #454B54;
+}
+
+  /* css for menus insides applications */
+  #nav_sub {
+    margin-left: 0;
+    text-align:left;
+    margin-bottom: 6px;
+    padding-top: 5px;
+  }
+
+  #nav_sub ul{
+    /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
+    display: inline;
+    margin: 0;
+   }
+
+  #nav_sub li {
+    font-weight: bold;
+    color: #e5e5e5;
+    display: inline-block;
+    padding: 0;
+    text-align: center;
+  }
+
+#nav_sub .active .nav_sub_start {
+  	height: 120px;
+  	border-right: 1px solid #ccc;
+	padding: 0;
+}
+
+#nav_sub .active .nav_sub_end {
+  	height: 120px;
+  	border-left: 1px solid #ccc;
+	padding: 0;
+}
+
+  #nav_sub a {
+    color: #e5e5e5;
+    padding: .5em .8em;
+    margin: 0;
+  }
+
+  #nav_sub li.active{
+    color: #333;
+  }
+  
+  #nav_sub li.active a {
+    color: #333;
+	background: transparent url(../images/small_arrow_down_bg.gif) no-repeat center bottom;
+	padding-bottom: 1.4em;
+	border: none;
+  }
+
+
+  #nav_breadcrumb {
+    padding-bottom: 1em;
+  }
+
+  /* positioning of the quicksearchbar in the main menu */
+  #form-quicksearch {
+    width: 15em;
+    margin-bottom: 2px;
+    position: relative;
+    top: 14px;
+    float: right;
+  }
+  #form-quicksearch input{
+    font-size: 1.1em;
+  }
+  #form-quicksearch a {
+    color: #fff;
+  }
+  #form-quicksearch #submit-button {
+  }
+
+  /* login-widget will be displayed instead of quicksearch on public pages */
+  .login-widget-small {
+    color: #fff;
+    font-size: 0.9em;
+    float: right;
+    margin-right: 10px;
+  }
+
+  .login-widget-small input {
+    width: 8em;
+  }
+
+  /* logout link */
+  #logout {margin-left: 75em;}
+
+
+  /* css for menus insides applications */
+  .tabs {
+    margin-left: 0;
+    text-align:left;
+    border-bottom: 1px solid #999;
+    margin-bottom: 1em;
+  }
+
+  ul.tabs{
+    /* (en|de) Bugfix: IE - Doubled Float Margin Bug */
+    /* display: inline; */
+    margin: .4em;
+   }
+
+  .tabs li {
+    font-size: 1em;
+    color: #888;
+    display: inline;
+    padding: .5em .3em .3em .8em;
+  }
+
+  .tabs a {
+    color: #888;
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    padding: .5em .8em .5em .8em;
+    margin: 0;
+  }
+
+  .tabs li.active{
+    color: #333;
+  }
+  
+  .tabs li.active a {
+    color: #333;
+    background: #f5f5f5;
+    border: 1px solid #999;
+    border-bottom: none;
+    padding-bottom: .6em;
+  }
+
+
+  /* css for personal startpage menu */
+  
+    #personalmenu, #personalmenu ul { /* all lists */
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        width : 100%;
+    }
+    
+    #personalmenu li { /* all list items */
+        display: inline;
+        position : relative;
+        line-height : 2.25em;
+        font-size: 1.4em;
+        width : 90%;
+        padding: 0;
+    }
+    
+    #personalmenu.sm li { /* all list items */
+        position : relative;
+        line-height : 2.25em;
+        font-size: 1.2em;
+        width : 90%;
+        padding: 0;
+    }
+
+    #personalmenu li a {
+        display : block;
+        color:#9BB4E6;
+        text-shadow: 0 1px 3px #1659AC;
+        padding: 0 1em;
+        font-weight : bold;
+        text-decoration : none;
+        background-color : transparent;
+        border-left : none;
+        border-right : none;
+        border-bottom : none;
+        border-top : 1px solid #dddddd;
+    }
+    
+    #personalmenu li a.first,#personalmenu li#sub0 a {
+        border-top : 1px solid transparent;
+    }
+    
+    #personalmenu li a:hover {
+        background-color : #4876D1;
+    }
+    #personalmenu li a:focus {
+        outline-style:none;
+        outline-width:0;
+    }
+    
+    #personalmenu li a.active-tab,#personalmenu li.active a {
+        /*background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
+        border:none; */
+        color:#fff;
+/*        padding: 1px .5em 1px 1em;
+        margin-right: -1em;  */
+    }
+    
+    .panel {
+       clear: both;
+       display: none;
+       background-color: transparent;
+       padding: 0 2em;
+    }
+    
+    .panel.active-tab-body {
+       display: block;
+    }
+
+
+/* topnav menu (little greys) */
+    #topnav span {
+       margin: 0 .5em;
+       font-size:11px;
+    }
+    #topnav a { color: #999; background:transparent; text-decoration:none; }
+    #topnav a:hover { text-decoration:underline; background-color: transparent;}
+    #topnav a:focus { text-decoration:underline; background-color: transparent;}
+    #topnav ul,#topnav li {
+        display:inline;
+        font-size:11px;
+        height:46px;
+        margin-left:2px;
+        padding:8px 10px 6px 12px;
+    }
+    #topnav img {
+        padding:0 4px 0 0;
+        vertical-align:middle;
+    }
+}

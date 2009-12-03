@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+@media all
+{
+  /**
+   * FAQ-pages
+   *
+   */
+
+    #col1 {
+      width: 29%;
+    }
+
+    #col2, #main #col2_content{
+        display: none;
+    }
+
+    #col3 {
+        width: 70%;
+        margin-right: 29%;
+        margin-left: 0;
+    }
+
+    .faq ul {
+        margin-bottom: 2em;
+    }
+
+    .faq li {
+        padding: 0.7em 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .faq li a{
+        font-size: 1.3em;
+        line-height: 1.5em;
+        font-weight: bold;
+    }
+    
+   .faq li a.selected{
+        color: #333;
+    }
+    
+   .faq li a.selected:hover{
+        text-decoration:none;
+    }
+    
+    .bullet li {
+        padding: 0.3em 0;
+    }
+
+    .faq_text {
+        color: #333;
+    }
+
+}

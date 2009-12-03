@@ -1,0 +1,265 @@
+@media all
+{
+#col3_content ul, #col3_content dl,  #col3_content .box p {
+/*	margin: 1em 0; */
+}
+
+#personalmenu.sm li {
+	font-size: 1em;
+}
+.activelanguage {
+	font-weight: bold;
+}
+#col1{
+    float: left;
+    width: 17%;
+}
+#col3{
+    margin: 0 0 0 17%;
+}
+#col3_content{
+    padding: 2em 4em;
+	margin: 0;
+/*	background:#fff url(../../images/bg_col3.png) no-repeat scroll 0 0; */
+}
+#col1 #col1_content{
+	background:transparent url(../../images/bg_leftsidebar2.png) no-repeat scroll right top;
+    padding: 0 0;
+	margin: 0;	
+}
+
+#col1 #col1_content .linklist{
+    margin-right: 0;
+}
+#col3_content h1 {
+    padding: 0 0 .4em 0;
+}
+#profile_linklist {
+	padding: 2em 0;
+}
+#profile_linklist li {
+	color: #333;
+	font-size: 1em;
+	border-bottom: 1px solid #e5e5e5;
+	padding: 0.7em 1em;
+	margin: 0;
+}
+#profile_linklist li.active {
+	background-color: #F7F7F7;
+}
+#profile_linklist li a {
+	color: #333;
+	font-size: 1.2em;
+}
+#profile_linklist li.active a {
+	font-weight: bold;
+}	
+#middle_nav.clearfix {
+    clear:none;
+	display: inline;
+}
+#nav_sub {
+    margin-top: 2em;
+}
+#nav_sub ul {
+	display: block;
+	padding-left: 0;
+}
+#nav_sub li {
+    padding: 0;
+}
+#nav_sub li.active a{
+	background: transparent url(../../images/small_arrow_down_bg.gif) no-repeat center bottom;
+	padding-bottom: 1.4em;
+	border: none;
+}
+#profile_pic {
+    background: transparent url(../../images/pic_shadow.png) no-repeat left top;
+    padding:17px;
+    width:100px;
+    height: 100px;
+    float:left;
+    margin-right: 40px;
+}
+#profile-info {
+	padding: 0;
+}
+#profile-info #navigation-path{
+	padding: 2em 0;
+}
+#profile-info #username {
+	padding: 1.4em 0 0 0;
+	line-height: 1.6em;
+	font-size: 1.6em;
+}
+#profile-info #username strong {
+	font-size:1.6em;
+	line-height:1.5em;
+	padding:10px 10px 10px 0;
+	color: #fff;
+}
+#pic_shadow {
+    width: 30em;
+    float: left;
+	padding-top: 1em;
+	padding-left: 3em;
+}
+#profile dl, #preferences dl, dl#profiletop {
+    display: block;
+}
+#profile dt, #preferences dt, #profiletop dt {
+    line-height: 1.5em;
+    font-size: 1em;
+    font-weight: normal;
+    color: #888;
+    width: 12em;
+    float: left;
+    clear: left;
+    margin-bottom: 0.8em;
+}
+#profile dd, #preferences dd, #profiletop dd {    
+    margin-left: 12em;
+    line-height: 1.5em;
+    margin-bottom: 0.8em;
+}
+
+#profile .profile_translations {
+    padding: 0 0 1em 0;
+}
+
+#profile sup {
+    font-size: 0.8em;
+    color: #888;
+}
+#profile_subcolumns .subcl {
+    padding-right: 1em;
+}
+
+#profile .box, #profile #linkpath {
+    background-image: none;
+    border: none;
+    margin: 0 0 2em 0;
+    background: transparent none;
+    padding: 0;
+}
+
+#profile .box h3, #profile #linkpath h3, #profile-info .box h3{
+	background: none;
+	padding: 1em 0;
+	color: #2184E8;
+}
+#profile #navigation-path h3,#profile #navigation-path h3 a {
+	color: #333;
+}
+
+/* list the spoken languages of a member */
+#profile .profile_languages li {
+    margin-right: .5em;
+}
+
+/* for the active language the profileconten is shown */
+#profile .activelanguage {
+    font-weight: bold;
+    padding-right: 1em;
+}
+
+/* for the available languages of the profil content*/
+#profile .availablelanguages,#profile-info .availablelanguages {
+    padding-right: 0.5em;
+    color: #888;
+}
+
+#preferences ul, #preferences select {
+    margin-bottom: 2em;
+}
+
+/* colors for comment quality */
+.neutral .comment_quality { color: #333; }
+.positive .comment_quality { color: green; }
+.negative .comment_quality { color: red; }
+.neutral .comment_icon { background: transparent url(../../images/comment_neutral.png) top left no-repeat; }
+.positive .comment_icon { background: transparent url(../../images/comment_positive.png) top left no-repeat; }
+.negative .comment_icon { background: transparent url(../../images/comment_negative.png) top left no-repeat; }
+
+.comment_icon { height: 25px; width: 25px; padding: 1em; float: left;}
+.comment_quality { font-weight: bold; font-size: 1.1em; }
+
+/* comment content */
+.comment {
+    display: block;
+    float: left;
+    width: 70%;
+}
+
+
+/* space for the icons next to the headline */
+h3.icon  {
+  padding-left: 25px;
+  padding-bottom: 2px;
+}
+
+/* icon for "About me" */
+.info22 {
+  background: url(../../images/icons22/icon_info.png) top left no-repeat;
+ }
+
+/* icon for "Hobbies & Interests" */
+.sun22 {
+  background: url(../../images/icons22/icon_sun.png) top left no-repeat;
+ }
+
+/* icon for "Travel Experience" */
+.world22 {
+  background: url(../../images/icons22/icon_world.png) top left no-repeat;
+ }
+
+/* icon for "My Groups" */
+.groups22 {
+  background: url(../../images/icons22/icon_groups.png) top left no-repeat;
+ }
+
+/* icon for "Accommodation" */
+.accommodation22 {
+  background: url(../../images/icons22/icon_accommodation.png) top left no-repeat;
+ }
+
+/* icon for "Contact Info" */
+.contact22 {
+  background: url(../../images/icons22/icon_contact.png) top left no-repeat;
+ }
+
+#profile_linklist .space {
+	padding-top: 1em;
+	padding-bottom: 1em;
+	border: none;
+}
+#profile_linklist .messagesadd {
+	padding-left: 2.4em;
+	background: transparent url(../../images/iconsfam/email_open.png) 6px 6px no-repeat;
+}
+#profile_linklist .commentsadd {
+	padding-left: 2.4em;
+	background: transparent url(../../images/iconsfam/comment_add.png) 6px 6px no-repeat;
+}
+#profile_linklist .relationsadd {
+	padding-left: 2.4em;
+	background: transparent url(../../images/iconsfam/add.png) 6px 6px no-repeat;
+}
+#profile_linklist .verificationadd {
+	padding-left: 2em;
+	background: transparent url('../../../../../images/icons/shield.png') 0 3px no-repeat;
+}
+#profile_linklist .editmyprofile {
+	padding-left: 2.4em;
+	background: transparent url(../../images/iconsfam/pencil.png) 6px 6px no-repeat;
+}
+#profile_linklist .mypreferences {
+	padding-left: 2.4em;
+	background: transparent url(../../images/iconsfam/wrench.png) 6px 6px no-repeat;
+}
+#profile_linklist .myvisitors {
+	padding-left: 2.4em;
+	background: transparent url(../../images/iconsfam/group.png) 6px 6px no-repeat;
+}
+
+}

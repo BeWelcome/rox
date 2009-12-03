@@ -1,0 +1,73 @@
+@media all
+{
+
+/*
+*  Show col2 on the right side for the tour-menu
+*
+*/
+#col2 { width: 25%; float: right; display: block;}
+#col2_content {display: block;}
+#col1 { width: 0; display: none;}
+
+#col3 {
+    margin-left: 0; padding:0;
+    margin-right:25%;
+    width: 75%;
+}
+
+/* modification for tour pages */
+
+#tour {
+    max-width: 800px;
+}
+#tour h1{
+  padding: 0;
+  font-size: 4em;
+}
+
+ ul#steps{
+  margin: 1px;
+  padding: 0;
+  display:block;
+}
+
+ ul#steps li{
+  color: #999;
+  vertical-align: middle;
+  clear:both;
+  padding: 1em 0;
+}
+
+ #steps div.desc{
+  padding:0 6px;
+  vertical-align: middle;
+}
+ #steps div.number{
+  font-size: 1.6em;
+  margin:0 16px 5px 0;
+  text-align:center;
+  width:20px;
+  float: left;
+}
+ #steps li a{
+  color: #999;
+  font-size: 1em;
+}
+ #steps li a:hover{
+  color: #999;
+  background: transparent;
+}
+ #steps li.active, #steps li.active a{
+  color: #333;
+  font-weight: bold;
+}
+ #steps li.active .number {
+  font-size: 1.8em;
+  color: #333;
+}
+ #steps li.active{
+    font-size: 1.5em;
+/*    background: transparent url(../images/arrow-right.gif) top right no-repeat; */
+}
+
+}

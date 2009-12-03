@@ -1,0 +1,41 @@
+@media all
+{
+#col1,#col1_content {display: none; }
+#col2,#col2_content {display: none; }
+#col3,#col3_content {margin: 0; }
+
+#groups .groupbox {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+#groups .groupinfo {
+  margin-left: 100px;
+}
+#groups .groupinfo ul {
+  padding-top: 0; 
+}
+#groups .groupinfo li {
+  font-size: 0.8em;
+  color: #888;
+}
+#groups .groupinfo p {
+  clear: both;
+}
+
+#groups .groupmembers {
+  padding-right: 25px;
+  width: 60px;
+  overflow: hidden;
+}
+
+#search_result {
+  padding: 3px;
+  margin-bottom: 1em;
+}
+
+#search_result a {
+  margin: 0.4em;
+  display: block;
+}
+
+}

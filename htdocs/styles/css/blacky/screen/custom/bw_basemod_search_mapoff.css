@@ -1,0 +1,41 @@
+
+/* ######################################################################################################
+** ### YAML Customizing for BW | File 1 ##################################################################
+** ######################################################################################################
+*/
+
+/* #################################################################
+** ### This is a modification on our layout CSS. We remove the left column and make the one in the middle wider #####
+** #################################################################
+*/
+
+@media all
+{
+#main #col1 {
+  display: block;
+  width: 0;
+}
+#main #col1_content {display:block;}
+#main #col2, #main #col2_content{
+    display: none;
+}
+
+#main #col3 {
+	margin-left: 2em;
+	margin-right: 0;
+	border-left: none;
+	border-right: 2px solid #e5e5e5;
+}
+
+#main #col3 #col3_content {
+	padding: 0 0 0 0;
+	border: none;
+}
+
+#SearchAdvanced {
+    border-top: 1px solid #999;
+    border-bottom: 1px solid #999;
+    margin-bottom: 2em;
+}
+
+}

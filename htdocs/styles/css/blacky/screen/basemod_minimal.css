@@ -1,0 +1,54 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS framework
+ * (en) stylesheet for screen layout
+ * (de) Stylesheet für das Bildschirm-Layout
+ *
+ * @creator       YAML Builder V1.2b (http://builder.yaml.de)
+ * @file          basemod.css
+ * @-yaml-minver  3.1
+ */
+
+@media screen, projection
+{
+  /*-------------------------------------------------------------------------*/
+
+  /* (en) Marginal areas & page background */
+  /* (de) Randbereiche & Seitenhintergrund */
+  body { background: none; }
+
+  /* Layout Alignment | Layout-Ausrichtung */
+  #page_margins { min-width: 960px; margin: 0 auto; width: auto; }
+  #page { padding: 0 }
+  .wrapper {width: 100%;}
+  .inner_wrapper {width: 960px; margin: 0 auto;}
+  
+  /* Layout Properties | Layout-Eigenschaften */
+  #header_wrapper { background: #CDD7E1 url(../images/header_bg1.png) top left repeat-x;}
+  #header { padding-top: 17px; height: 60px;}
+  #topnav { float: right; margin: 0 2em 1em 2em}
+  #nav { background: transparent url(../images/..) no-repeat top left; top: 0; padding: 0;}  
+  #teaser { padding: 2em 0 0 0; background: transparent url(../images/teaser_bg1.png) top left no-repeat; }
+  #teaser_wrapper { padding: 0; background: #3366CC url(../images/teaser_wrapper_bg.png) top left repeat-x; }
+  #main_wrapper { padding: 2em 0; background: #fff url(../images/main_wrapper_bg.png) top left repeat-x; }
+  #main { padding: 0; }
+  #footer { padding: 4em 0; color:#666; border-top: 5px #efefef solid; }
+
+ /*------------------------------------------------------------------------------------------------------*/
+
+ /**
+   * (en) Formatting content container
+   * (de) Formatierung der Inhalts-Container
+   *
+   */
+
+  #col1 { float: right; width: 20%}
+  #col2 { display:none}
+  #col2_content { display:none}
+
+  #col3 { width: auto; margin: 0 20% 0 0}
+  #col1_content { padding: 0 0 0 2em }
+  #col3_content { padding: 0 2em 0 0 }
+
+
+}

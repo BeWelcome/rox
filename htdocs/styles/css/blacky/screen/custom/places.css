@@ -1,0 +1,281 @@
+
+/*
+* Places - the geo application - classes
+*
+*/
+@media all
+{
+    .places li {
+        padding-right: 2em;
+    }
+	.places-heading	.small{
+        font-size: .5em;
+    }
+
+	.places ul.float_left {
+	  margin-right: 0.5em;
+	  padding-bottom: 4em;
+	}
+	
+    .spritecontainer {
+        clear:both;
+    }
+    .sprite {
+        background: url(../../images/places-sprites.png) no-repeat top left;
+        width:16px;height:11px;
+        margin-top: 3px;
+        margin-right: 5px;
+        float:left;
+    }
+    
+    .sprite-cu { background-position: 0 -30px; } 
+    .sprite-in { background-position: 0 -71px; } 
+    .sprite-gf { background-position: 0 -112px; } 
+    .sprite-lb { background-position: 0 -153px; } 
+    .sprite-sh { background-position: 0 -194px; } 
+    .sprite-mz { background-position: 0 -235px; } 
+    .sprite-bd { background-position: 0 -276px; } 
+    .sprite-ar { background-position: 0 -317px; } 
+    .sprite-ba { background-position: 0 -358px; } 
+    .sprite-cx { background-position: 0 -399px; } 
+    .sprite-im { background-position: 0 -440px; } 
+    .sprite-cl { background-position: 0 -481px; } 
+    .sprite-pt { background-position: 0 -522px; } 
+    .sprite-nu { background-position: 0 -563px; } 
+    .sprite-pk { background-position: 0 -604px; } 
+    .sprite-rw { background-position: 0 -645px; } 
+    .sprite-so { background-position: 0 -686px; } 
+    .sprite-yt { background-position: 0 -727px; } 
+    .sprite-jp { background-position: 0 -768px; } 
+    .sprite-cn { background-position: 0 -809px; } 
+    .sprite-ie { background-position: 0 -850px; } 
+    .sprite-sn { background-position: 0 -891px; } 
+    .sprite-ck { background-position: 0 -932px; } 
+    .sprite-no { background-position: 0 -973px; } 
+    .sprite-it { background-position: 0 -1014px; } 
+    .sprite-vu { background-position: 0 -1055px; } 
+    .sprite-be { background-position: 0 -1096px; } 
+    .sprite-do { background-position: 0 -1137px; } 
+    .sprite-to { background-position: 0 -1178px; } 
+    .sprite-az { background-position: 0 -1219px; } 
+    .sprite-kn { background-position: 0 -1260px; } 
+    .sprite-nc { background-position: 0 -1301px; } 
+    .sprite-sa { background-position: 0 -1342px; } 
+    .sprite-nl { background-position: 0 -1383px; } 
+    .sprite-qa { background-position: 0 -1424px; } 
+    .sprite-kr { background-position: 0 -1465px; } 
+    .sprite-ws { background-position: 0 -1506px; } 
+    .sprite-cy { background-position: 0 -1547px; } 
+    .sprite-gh { background-position: 0 -1588px; } 
+    .sprite-an { background-position: 0 -1629px; } 
+    .sprite-ee { background-position: 0 -1670px; } 
+    .sprite-za { background-position: 0 -1711px; } 
+    .sprite-gr { background-position: 0 -1752px; } 
+    .sprite-mw { background-position: 0 -1793px; } 
+    .sprite-ht { background-position: 0 -1834px; } 
+    .sprite-ni { background-position: 0 -1875px; } 
+    .sprite-pa { background-position: 0 -1916px; } 
+    .sprite-nr { background-position: 0 -1957px; } 
+    .sprite-nz { background-position: -46px -30px; } 
+    .sprite-sd { background-position: -46px -71px; } 
+    .sprite-td { background-position: -46px -112px; } 
+    .sprite-es { background-position: -46px -153px; } 
+    .sprite-pf { background-position: -46px -194px; } 
+    .sprite-mp { background-position: -46px -235px; } 
+    .sprite-ky { background-position: -46px -276px; } 
+    .sprite-re { background-position: -46px -317px; } 
+    .sprite-bm { background-position: -46px -358px; } 
+    .sprite-vi { background-position: -46px -399px; } 
+    .sprite-uy { background-position: -46px -440px; } 
+    .sprite-au { background-position: -46px -481px; } 
+    .sprite-lt { background-position: -46px -522px; } 
+    .sprite-kp { background-position: -46px -563px; } 
+    .sprite-bg { background-position: -46px -604px; } 
+    .sprite-kz { background-position: -46px -645px; } 
+    .sprite-bw { background-position: -46px -686px; } 
+    .sprite-mq { background-position: -46px -727px; } 
+    .sprite-vc { background-position: -46px -768px; } 
+    .sprite-vn { background-position: -46px -809px; } 
+    .sprite-gy { background-position: -46px -850px; } 
+    .sprite-fam { background-position: -46px -891px; } 
+    .sprite-ke { background-position: -46px -932px; } 
+    .sprite-hk { background-position: -46px -973px; } 
+    .sprite-gl { background-position: -46px -1014px; } 
+    .sprite-as { background-position: -46px -1055px; } 
+    .sprite-gq { background-position: -46px -1096px; } 
+    .sprite-et { background-position: -46px -1137px; } 
+    .sprite-nf { background-position: -46px -1178px; } 
+    .sprite-hn { background-position: -46px -1219px; } 
+    .sprite-py { background-position: -46px -1260px; } 
+    .sprite-wf { background-position: -46px -1301px; } 
+    .sprite-gp { background-position: -46px -1342px; } 
+    .sprite-sl { background-position: -46px -1383px; } 
+    .sprite-bh { background-position: -46px -1424px; } 
+    .sprite-la { background-position: -46px -1465px; } 
+    .sprite-lc { background-position: -46px -1506px; } 
+    .sprite-aw { background-position: -46px -1547px; } 
+    .sprite-sy { background-position: -46px -1588px; } 
+    .sprite-jo { background-position: -46px -1629px; } 
+    .sprite-si { background-position: -46px -1670px; } 
+    .sprite-gt { background-position: -46px -1711px; } 
+    .sprite-mm { background-position: -46px -1752px; } 
+    .sprite-ax { background-position: -46px -1793px; } 
+    .sprite-my { background-position: -46px -1834px; } 
+    .sprite-cv { background-position: -46px -1875px; } 
+    .sprite-tw { background-position: -46px -1916px; } 
+    .sprite-je { background-position: -46px -1957px; } 
+    .sprite-il { background-position: -92px -30px; } 
+    .sprite-hm { background-position: -92px -71px; } 
+    .sprite-at { background-position: -92px -112px; } 
+    .sprite-us { background-position: -92px -153px; } 
+    .sprite-st { background-position: -92px -194px; } 
+    .sprite-ms { background-position: -92px -235px; } 
+    .sprite-fk { background-position: -92px -276px; } 
+    .sprite-mg { background-position: -92px -317px; } 
+    .sprite-mv { background-position: -92px -358px; } 
+    .sprite-ru { background-position: -92px -399px; } 
+    .sprite-ir { background-position: -92px -440px; } 
+    .sprite-dj { background-position: -92px -481px; } 
+    .sprite-kh { background-position: -92px -522px; } 
+    .sprite-bb { background-position: -92px -563px; } 
+    .sprite-fi { background-position: -92px -604px; } 
+    .sprite-bt { background-position: -92px -645px; } 
+    .sprite-sz { background-position: -92px -686px; } 
+    .sprite-iq { background-position: -92px -727px; } 
+    .sprite-fr { background-position: -92px -768px; } 
+    .sprite-mx { background-position: -92px -809px; } 
+    .sprite-va { background-position: -92px -850px; } 
+    .sprite-bn { background-position: -92px -891px; } 
+    .sprite-ma { background-position: -92px -932px; } 
+    .sprite-ca { background-position: -92px -973px; } 
+    .sprite-pe { background-position: -92px -1014px; } 
+    .sprite-mh { background-position: -92px -1055px; } 
+    .sprite-br { background-position: -92px -1096px; } 
+    .sprite-np { background-position: -92px -1137px; } 
+    .sprite-gu { background-position: -92px -1178px; } 
+    .sprite-eg { background-position: -92px -1219px; } 
+    .sprite-mo { background-position: -92px -1260px; } 
+    .sprite-cg { background-position: -92px -1301px; } 
+    .sprite-sk { background-position: -92px -1342px; } 
+    .sprite-tf { background-position: -92px -1383px; } 
+    .sprite-io { background-position: -92px -1424px; } 
+    .sprite-gm { background-position: -92px -1465px; } 
+    .sprite-hu { background-position: -92px -1506px; } 
+    .sprite-tl { background-position: -92px -1547px; } 
+    .sprite-sr { background-position: -92px -1588px; } 
+    .sprite-bj { background-position: -92px -1629px; } 
+    .sprite-sg { background-position: -92px -1670px; } 
+    .sprite-om { background-position: -92px -1711px; } 
+    .sprite-gn { background-position: -92px -1752px; } 
+    .sprite-th { background-position: -92px -1793px; } 
+    .sprite-sb { background-position: -92px -1834px; } 
+    .sprite-ua { background-position: -92px -1875px; } 
+    .sprite-zm { background-position: -92px -1916px; } 
+    .sprite-lk { background-position: -92px -1957px; } 
+    .sprite-pm { background-position: -138px -30px; } 
+    .sprite-cd { background-position: -138px -71px; } 
+    .sprite-mr { background-position: -138px -112px; } 
+    .sprite-ge { background-position: -138px -153px; } 
+    .sprite-england { background-position: -138px -194px; } 
+    .sprite-ly { background-position: -138px -235px; } 
+    .sprite-er { background-position: -138px -276px; } 
+    .sprite-mu { background-position: -138px -317px; } 
+    .sprite-sj { background-position: -138px -358px; } 
+    .sprite-tg { background-position: -138px -399px; } 
+    .sprite-zw { background-position: -138px -440px; } 
+    .sprite-jm { background-position: -138px -481px; } 
+    .sprite-eh { background-position: -138px -522px; } 
+    .sprite-fj { background-position: -138px -563px; } 
+    .sprite-ng { background-position: -138px -604px; } 
+    .sprite-tm { background-position: -138px -645px; } 
+    .sprite-ro { background-position: -138px -686px; } 
+    .sprite-ai { background-position: -138px -727px; } 
+    .sprite-hr { background-position: -138px -768px; } 
+    .sprite-fm { background-position: -138px -809px; } 
+    .sprite-cs { background-position: -138px -850px; } 
+    .sprite-pr { background-position: -138px -891px; } 
+    .sprite-tk { background-position: -138px -932px; } 
+    .sprite-gd { background-position: -138px -973px; } 
+    .sprite-aq { background-position: -138px -1014px; } 
+    .sprite-gw { background-position: -138px -1045px; } 
+    .sprite-bi { background-position: -138px -1086px; } 
+    .sprite-co { background-position: -138px -1127px; } 
+    .sprite-ao { background-position: -138px -1168px; } 
+    .sprite-al { background-position: -138px -1209px; } 
+    .sprite-cr { background-position: -138px -1250px; } 
+    .sprite-cm { background-position: -138px -1291px; } 
+    .sprite-ad { background-position: -138px -1332px; } 
+    .sprite-gb { background-position: -138px -1373px; } 
+    .sprite-mt { background-position: -138px -1414px; } 
+    .sprite-sc { background-position: -138px -1455px; } 
+    .sprite-mk { background-position: -138px -1496px; } 
+    .sprite-fo { background-position: -138px -1537px; } 
+    .sprite-id { background-position: -138px -1578px; } 
+    .sprite-pg { background-position: -138px -1619px; } 
+    .sprite-ne { background-position: -138px -1660px; } 
+    .sprite-cc { background-position: -138px -1701px; } 
+    .sprite-tv { background-position: -138px -1742px; } 
+    .sprite-lr { background-position: -138px -1783px; } 
+    .sprite-bv { background-position: -138px -1824px; } 
+    .sprite-bf { background-position: -138px -1865px; } 
+    .sprite-en { background-position: -138px -1906px; } 
+    .sprite-ls { background-position: -138px -1947px; } 
+    .sprite-sv { background-position: -184px -30px; } 
+    .sprite-md { background-position: -184px -71px; } 
+    .sprite-sm { background-position: -184px -112px; } 
+    .sprite-ch { background-position: -184px -153px; } 
+    .sprite-uz { background-position: -184px -194px; } 
+    .sprite-kg { background-position: -184px -235px; } 
+    .sprite-tz { background-position: -184px -276px; } 
+    .sprite-wales { background-position: -184px -317px; } 
+    .sprite-lv { background-position: -184px -358px; } 
+    .sprite-by { background-position: -184px -399px; } 
+    .sprite-tn { background-position: -184px -440px; } 
+    .sprite-is { background-position: -184px -481px; } 
+    .sprite-ye { background-position: -184px -522px; } 
+    .sprite-km { background-position: -184px -563px; } 
+    .sprite-pn { background-position: -184px -604px; } 
+    .sprite-cf { background-position: -184px -645px; } 
+    .sprite-pl { background-position: -184px -686px; } 
+    .sprite-mn { background-position: -184px -727px; } 
+    .sprite-ml { background-position: -184px -768px; } 
+    .sprite-vg { background-position: -184px -809px; } 
+    .sprite-um { background-position: -184px -850px; } 
+    .sprite-ps { background-position: -184px -891px; } 
+    .sprite-dk { background-position: -184px -932px; } 
+    .sprite-cz { background-position: -184px -973px; } 
+    .sprite-scotland { background-position: -184px -1014px; } 
+    .sprite-de { background-position: -184px -1055px; } 
+    .sprite-gg { background-position: -184px -1096px; } 
+    .sprite-kw { background-position: -184px -1136px; } 
+    .sprite-af { background-position: -184px -1177px; } 
+    .sprite-bo { background-position: -184px -1218px; } 
+    .sprite-mc { background-position: -184px -1259px; } 
+    .sprite-gi { background-position: -184px -1300px; } 
+    .sprite-ga { background-position: -184px -1341px; } 
+    .sprite-gs { background-position: -184px -1382px; } 
+    .sprite-pw { background-position: -184px -1423px; } 
+    .sprite-ki { background-position: -184px -1464px; } 
+    .sprite-ci { background-position: -184px -1505px; } 
+    .sprite-na { background-position: -184px -1546px; } 
+    .sprite-dm { background-position: -184px -1587px; } 
+    .sprite-tt { background-position: -184px -1628px; } 
+    .sprite-am { background-position: -184px -1669px; } 
+    .sprite-tc { background-position: -184px -1710px; } 
+    .sprite-dz { background-position: -184px -1751px; } 
+    .sprite-ag { background-position: -184px -1792px; } 
+    .sprite-li { background-position: -184px -1833px; } 
+    .sprite-ve { background-position: -184px -1874px; } 
+    .sprite-bz { background-position: -184px -1915px; } 
+    .sprite-ug { background-position: -184px -1956px; } 
+    .sprite-ae { background-position: -230px -30px; } 
+    .sprite-tj { background-position: -230px -71px; } 
+    .sprite-bs { background-position: -230px -112px; } 
+    .sprite-ph { background-position: -230px -153px; } 
+    .sprite-se { background-position: -230px -194px; } 
+    .sprite-lu { background-position: -230px -235px; } 
+    .sprite-tr { background-position: -230px -276px; } 
+    .sprite-ec { background-position: -230px -317px; } 
+
+
+}

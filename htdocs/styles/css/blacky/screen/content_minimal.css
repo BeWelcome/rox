@@ -1,0 +1,1310 @@
+@charset "UTF-8";
+/**
+* "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+*
+*  YAML Version: 3.0.2
+*  file       : bw_content.css
+*  function   : formatting  of content (text, graphics, links, lists, tables, etc.)
+*
+*  last modification: 38.09.07 by Matthias Hess (BW: matthias)
+*
+*/
+
+@media all
+{
+  /**
+   * Fonts
+   * (en) font-family and font-size selection for headings and standard text elements
+   *
+   * @section content-fonts
+   */
+
+  /* (en) reset font size for all elements to standard (16 Pixel) */
+  html * { font-size: 100.01% }
+
+  /* (en) base layout gets standard font size 12px */
+  body {
+    font-family: Helvetica,Arial,'Trebuchet MS', Verdana, sans-serif;
+    font-size: 14px;
+  }
+
+  /* ### headings ### */
+  h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; line-height: 1.5em; }
+
+  h1 {font-size: 2.4em; color: #333; margin: 0 0 0.25em 0; padding-bottom: 0.5em; font-weight:bold; }
+  h2 {font-size: 1.8em; color: #333; margin: 0 0 0.50em 0; font-weight:bold; }
+  h3 {font-size: 1.3em; color: #000; margin: 0 0 0.25em 0; font-weight:bold; }
+  h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; font-weight:bold; border-bottom: none;}
+  h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic;   padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
+  h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
+
+  #main  h1 span, #main_top h1 span, #teaser h1 span.small { margin: 0; padding: 0; }
+  .list h5 {  padding-top: 0;}
+
+
+  /* ### paragraphs ###*/
+  p,ul,dd,dt { line-height: 1.5em; }
+  p { line-height: 1.5em; margin: 0 0 0.8em 0; }
+
+  /* ### text formatting  ### */
+  strong,b {font-weight: bold; }
+  em,i { font-style:italic; }
+  pre, code {  font-family: "Courier New", Courier, monospace; padding: 1em; color: #ffffff; background-color: #333333;}
+  address { font-style:normal; line-height: 1.5em; margin: 0 0 1em 0; }
+
+  acronym, abbr {
+    border-bottom: 1px dashed #c00;
+    cursor: help;
+  }
+
+  blockquote {
+    color: #444;
+    background: #f8f8f8;
+    border: 1px #ddd solid;
+    border-left: 8px #ddd solid;
+    padding: 1em 1em 0 1em;
+    margin: 0 0 1em 1em;
+  }
+
+  hr {
+    color: #fff;
+    background:transparent;
+    margin: 0 0 0.5em 0;
+    padding: 0 0 0.5em 0;
+    border:0;
+    border-bottom: 1px #eee solid;
+  }
+
+   /**
+   * Generic Content Classes
+   * (en) standard classes for positioning and highlighting
+   *
+   * @section content-generic-classes
+   */
+  .hidden {display: none;}
+
+  .note,.system-message {background: #FFF8C3; padding: 1em; border: 1px #888 solid; margin: 1em;}
+  .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
+  .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
+  .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
+  .row { padding: .5em 0;}
+  .row_nav { display: block; border-bottom: 1px solid #e5e5e5;}
+  .warning {
+    background: #fdd;
+    padding: 1em;
+    border: 1px solid;
+    border-color: #ff0800;
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
+  .highlight {background-color: #eeeeee; border:1px solid #E5E5E5; margin-right:4px;}
+
+  .grey {color: #AFABA3; }
+  .black  {color: #000; }
+  .highlighted, a.highlighted  {color: #000; font-weight: bold}
+
+  .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em;  }
+  .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em;  }
+  .center { text-align:center; margin: 0.5em auto }
+
+  .small {
+    font-size: 0.9em;
+    color: #888888;
+    padding: 0;
+    /* margin: 0px; */
+    font-weight: normal;
+    /* display: inline; */
+  }
+  .big {font-size: 1.3em; }
+  .flat {margin: 0; padding: 0;}
+  .text { line-height: 1.5em; }
+
+
+  /**
+   * Images
+   * (en) Generic classes for positiong and styling of images
+   *
+   * @section content-images
+   */
+  img.float_left { float: left; margin-right: 1em; margin-top: 0.15em; margin-bottom: 0.15em; border:0; }
+  img.float_right { float: right; margin-left: 1em; margin-bottom: 0.15em; border:0; }
+  img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
+  img.framed {padding:1px; border: 1px #ddd solid; background: #f3f3f3 }
+
+  /**
+   * Local and external Links
+   *
+   * (en) Formatting of hyperlinks
+   *
+   */
+  a, a em.file {color: #2184e8; text-decoration:none; background-color:transparent;}
+  a:hover {text-decoration:underline;}
+  a:focus {text-decoration:underline;}
+  #teaser {color: #e5e5e5;}
+  #teaser a {color: #fff;}
+
+  /*#main a[href^="http:"], #main a[href^="https:"]
+    {
+      padding-left: 12px;
+      background-image: url('../../img/icons/ext_link.gif');
+      background-repeat: no-repeat;
+      background-position: 0 0.45em;
+    }
+    */
+  #main a.imagelink {
+    padding-left: 0;
+    background: transparent;
+  }
+
+
+
+  /**
+   * Lists
+   * (en) Generic classes for ordered, unordered and definition lists
+   *
+   * @section content-lists
+   */
+
+  /* by default lists use no bullet point */
+  ul,li { margin:0; padding:0; list-style-type:none;}
+
+  ul,ol {margin-bottom: 1.5em;}
+
+  /* in case we want bullet point */
+  .bullet {margin: 0 0 1em 1em;}
+  ul.bullet li { list-style-type: disc; margin-left: 0.8em}
+  ol.bullet li { list-style-type: decimal; margin-left: 0.8em; }
+
+  /* Unordered lists without bullets  */
+  ul.linklist { list-style-type: none; }
+  ul.linklist li { margin: 0 0 0.5em 0;}
+  ul.linklist li a { line-height: 1em;}
+  ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
+
+  /* CrossBrowser-Compatibility */
+  ul.browsers { margin: 0  0 .4em 0; }
+  ul.browsers li {
+    margin: 0;
+    list-style-type: none;
+    background: #f8f8f8; color: #444;
+    padding: 0.1em 0.1em 0.2em 0.5em;
+    font-weight: normal;
+    text-align: left;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
+  }
+  ul.browsers li img { vertical-align:bottom; }
+  ul.browsers li.title {
+    font-weight: bold;
+    background: #eee; color: #444;
+    padding: 0.2em 0.2em 0.2em 0.5em;
+  }
+
+dl.list {
+    display: block;
+}
+.list dt {
+    line-height: 1.5em;
+    font-size: 1em;
+    font-weight: normal;
+    color: #888;
+    width: 12em;
+    float: left;
+    clear: left;
+    margin-bottom: 0.8em;
+}
+.list dd {
+    margin-left: 12em;
+    line-height: 1.5em;
+    margin-bottom: 0.8em;
+}
+
+  /**
+   * Tables
+   * (en) Generic classes for table-width and design definition
+   *
+   * @section content-tables
+   */
+
+  table { width: auto; border-collapse:collapse; margin-bottom: 0.5em; }
+  table.full { width: 100%; }
+  table.fixed { table-layout:fixed }
+  table.framed {border: 1px solid;   border: none 0pt;  border-bottom: 1px solid #e5e5e5; }
+
+  th,td { padding: 0.5em; }
+  thead th { background: #444; color: #fff }
+  tbody th { color: #333;}
+  tbody th.sub { background: #ddd; color: #333 }
+
+  /* standard tablelist highlighting */
+  tr.highlight{
+    background: #eceff5;
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
+  }
+  tr.blank {
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
+  }
+  tr.blank:hover,tr.highlight:hover {
+    background: #ffeebb;
+    border: none 0pt;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 4px;
+  }
+  td.memberlist  {padding: 0.5em 0.5em 0.5em 0.5em;}
+  td.connections  {text-align: center;}
+
+  /* thick orange touch */
+  tr.blank:hover,tr.highlight:hover {
+    background: #faf5dd;
+  }
+
+  /* table for bugs - where do we use that ? */
+  table.bugs { margin-bottom: 1em; margin-top: .5em; }
+  table.bugs th {
+    background: #444; color: #fff;
+    padding: 0.5em;
+    text-align: center;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
+  }
+
+  table.bugs td {
+    background: #888; color: #fff;
+    padding: 0.5em;
+    text-align: center;
+    border-bottom: 1px #fff solid;
+    border-right: 1px #fff solid;
+  }
+
+
+
+  /**
+   * Forms
+   * (en) Generic classes for forms, inputs and textareas
+   *
+   * @section content-forms
+   */
+
+  form {overflow:hidden;}
+  fieldset {
+    border: 1px solid #e5e5e5;
+    padding: 2em;
+    margin-bottom: 1.5em;
+  }
+  .fieldset_toggles fieldset {
+    border: 1px solid #e5e5e5;
+    margin-bottom: 1em;
+    margin-right: 2em;
+    padding: .5em 1em;
+  }
+  .fieldset_toggles fieldset.collapsed {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    padding: 0 1em;
+    margin-bottom: 0;
+  }
+  legend{
+    line-height: 1.5em;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-left: -0.5em;
+    padding: .6em;
+    color: #2184E8;
+  }
+  .fieldset_toggles fieldset legend {
+    font-size: 1em;
+    margin-left: -0.5em;
+    cursor: pointer;
+    font-weight: normal;
+    color: #000;
+  }
+  .fieldset_toggles fieldset.collapsed legend {
+    color: #999;
+  }
+  select {
+    margin-bottom: 0.5em;
+    font-size: 0.9em;
+    background: #ffffff;
+  }
+
+  textarea {
+    font-size: 1.2em;
+    font-family: Arial, Helvetica;
+    padding: 5px;
+  }
+
+  textarea.long {width: 95%; }
+
+  input, textarea {
+    font-size: 1.3em;
+    border: 1px #ccc solid;
+    background: #ffffff;
+    color: #777;
+    padding: 2px;
+  }
+  input[type=image] {
+    border: 0;
+    background: transparent;
+  }
+  input[type=submit] {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:1.1em;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto !important;
+    cursor: pointer;
+  }
+
+  input[type=reset] {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:11px;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto !important;
+  }
+
+  input:focus, textarea:focus {
+    background: #ffffff;
+    color: #333;
+    border-color: #666;
+  }
+
+  /**
+   * breadcrumbs
+   * (en) Generic classes for breadcrumbs
+   *
+   * @section breadcrumbs
+   */
+
+  div.breadcrumbs {padding:10px 0; }
+
+  /**
+   * Pagination
+   * (en) Generic classes for pagination
+   *
+   * @section content-pagination
+   */
+
+  div.pages {padding-top:10px; white-space: nowrap; }
+  div.pages ul{float:right; margin:0;padding:0;}
+  div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
+  div.pages li.current a {color:#666;font-weight:bold; }
+  div.pages li a:hover {color: #333; background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%; text-decoration:none; }
+  div.pages li a.off:hover {background: none; color: #666; }
+  div.pages li a:active {color: #fff; background: #ff9900;}
+  div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
+
+  /* give pagination our 'button' style */
+  div.pages li a{
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    font-size:11px;
+    font-weight:bold;
+    text-decoration:none;
+    color: #ff8800;
+    height:18px !important;
+    line-height:16px !important;
+    margin:.2em;
+    padding:1px 5px;
+    text-align:center;
+    width:auto;
+  }
+
+    /*\*/
+     * html div.pages li a {
+         width: 10px; /* IE */
+     }
+     /**/
+
+  /**
+   * Footer
+   * (en) Generic classes for footer
+   *
+   * @section content-footer
+   */
+
+  #footer {
+    border: none;
+    text-align: left;
+    color: #6A6A5B;
+  }
+  #footer p {font-size: 0.9em;}
+
+  #footer a {margin: 0.1em 0.2em; padding: 0.2em 0.3em; color:#999; font-weight: normal; text-align: left;}
+  #footer a:hover { text-decoration:underline; }
+  #footer a:focus { text-decoration:underline; }
+
+  #footer #flags {padding: 0 0 2.5em 0; line-height: 1em; }
+  #footer #flags a {color: #333; }
+  #footer #flags a:hover {color: #333; text-decoration:underline; }
+  #footer #flags a:focus {color: #333; text-decoration:underline; }
+
+
+/* ###########################################
+** ### Custom classes for mainpage / user homepage #################################
+** ###########################################
+*/
+
+h4.news {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 18px;
+  padding: 3px 0;
+  margin: 0px;
+  padding: 13px 0 3px 0;
+}
+
+.personallist .box h3 {
+    color: #2184e8;
+}
+
+/* ###########################################
+** ### Other classes & IDs #############################
+** ###########################################
+*/
+
+.titlelink {font-size: 14px; font-weight: bold; }
+.username {font-size: 14px; font-weight: bold; }
+.author {font-size: .9em; color: #888; padding: 0 0 1em 0;}
+.action {font-size: .9em; color: #888; padding: 1em 0 0 0;}
+.hr_div {padding: 5px 30px 0 30px;}
+
+.button, input.button, .control-links a, .control-links input, a.cancel {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:1.1em;
+    font-weight:bold;
+    height:24px !important;
+    line-height:24px !important;
+    margin:1px;
+    padding:3px 8px;
+    text-align:center;
+    width:auto;
+}
+input.button, .control-links input { /* Only for inputs. Otherwise we have problems in Safari and IE */
+    height:24px !important;
+    line-height:22px !important;
+    margin:0;
+    padding:0 8px;
+}
+.button a, input.button{color: #ff8800; text-decoration:none; background-color:transparent;}
+.button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+.button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+
+a.bigbutton {
+    background: transparent url(../images/bg_bigbutton_a_w.gif) no-repeat scroll top right;
+    color: #fff;
+    display: block;
+    float: left;
+    font: normal 12px arial, sans-serif;
+    height: 30px;
+    margin-right: 6px;
+    padding-right: 18px; /* sliding doors padding */
+    text-decoration: none;
+}
+a.bigbutton span {
+    background: transparent url(../images/bg_bigbutton_span_w.gif) no-repeat;
+    display: block;
+    line-height: 14px;
+    padding: 8px 0 8px 18px;
+}
+a.bigbutton:active {
+    background-position: bottom right;
+    color: #000;
+    outline: none; /* hide dotted outline in Firefox */
+}
+a.bigbutton:active span {
+    background-position: bottom left;
+    padding: 9px 0 7px 18px; /* push text down 1px */
+}
+
+/* Searchmembers styles */
+#mapsearch {font-weight: bold;}
+#mapsearch fieldset {padding: 15px 0 0 20px;}
+#mapsearch label {font-size: 1.5em; color: #fff;}
+#mapsearch input {padding: 0.2em; font-size: 1.2em;}
+#submit-button {vertical-align:middle; padding-bottom:4px}
+#loading_container {margin: 1em 0}
+
+/* Tagcloud */
+#tagcloud a:link, #tagcloud a:visited {
+text-decoration:none;
+background: none;
+}
+
+#tagcloud a:hover, #tagcloud a:active {
+text-decoration: underline;
+color: #000;
+background: none;
+}
+
+#tagcloud .tag_smallest {font-size: 0.8em;}
+#tagcloud .tag_small {font-size: 1em;}
+#tagcloud .tag_medium {font-size:1.5em;}
+#tagcloud .tag_large {font-size:1.7em;}
+#tagcloud .tag_largest {font-size:2em;}
+
+
+/* Standard user boxes with pictures */
+#main li.userpicbox {
+    padding: 10px;
+    width: 180px;
+    /* if we want vcard-like member-display then we have to uncomment the following lines*/
+      border: 1px solid transparent;
+}
+#main li.userpicbox:hover{
+    background-color: #f5f5f5;
+    border-top:1px solid #ccc;
+    border-right:1px solid #999;
+    border-bottom:1px solid #999;
+    border-left:1px solid #ccc;
+}
+#main li.userpicbox a {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* Special classes for AboutUsPages*/
+#main li.userpicbox_big {
+    padding: 20px;
+    width: 270px;
+}
+#main li.userpicbox_big h4 {
+    font-size: 14px;
+}
+#main li.userpicbox_big img {
+    margin-top: -10px;
+}
+
+/* blog & gallery comments */
+div.comment { padding:0; margin-bottom:1em; }
+div.comment h4 {padding:0.2em; margin:0; }
+div.comment .text {padding:0.2em;}
+div.comment .author {background:#fff; padding:0.2em;}
+
+/* Default styles for the "precontent" area of the template */
+#SearchAdvanced div {    padding: 10px 30px; }
+#SearchAdvanced a:hover {    background: transparent; }
+
+
+/*
+* Admin tools classes
+*
+*/
+
+/* css for admincomment */
+
+div.admincomment {
+  padding-bottom: 4em;
+}
+
+/* css for adminmandatory */
+.update {
+  background-color: #FF6;
+}
+
+/**
+ * admin app styles
+ */
+
+ul li.expandable ul {
+    display: none;
+}
+
+ul li.expanded a.header {
+    font-weight: bold;
+}
+
+
+/*
+* css for gallery
+*
+*/
+.gallery_container {
+    padding: 2px;
+    padding-right: 10px;
+    padding-bottom: 8px;
+}
+
+/* --- Classes for "round boxes" --- */
+div.box {
+  margin: 1em 0.25em;
+  padding: 0em;
+}
+
+div.box h3 {
+  margin: 0;
+  color: #000;
+  font-size: 1.3em;
+  font-weight: bold;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/*
+div.box {
+  background-color: transparent;
+  background-image:url(../images/box-right.png);
+  background-position:right center;
+  background-repeat:repeat-y;
+  margin:10px 10px 0pt;
+}
+
+div.box .first {
+  background-color: transparent;
+  background-image:url(../images/box-top-left.png);
+  background-repeat:no-repeat;
+  display:block;
+  line-height:20px;
+  padding:0;
+  margin: 0;
+  border: none;
+}
+
+div.box .first span,div.box .first a {
+  background-color: transparent;
+  background-image:url(../images/box-top.png);
+  background-repeat:repeat-x;
+  display:block;
+  line-height:30px;
+  margin:0pt 10px 0pt 20px;
+  text-decoration:none;
+  padding-top: 10px;
+  cursor: move;
+}
+
+div.box .first a img,div.box .first span img{
+  cursor: pointer;
+}
+
+div.box div.floatbox {
+  background-color: transparent;
+  background-image:url(../images/box-left.png);
+  background-position:left top;
+  background-repeat:repeat-y;
+  min-height:30px;
+  padding:10px 20px 10px 20px;
+  margin-right: 20px;
+}
+
+
+div.box div.corner {
+  background-color: transparent;
+  background-image:url(../images/box-top-right.png);
+  background-position:right top;
+  background-repeat:no-repeat;
+  float:right;
+  height:30px;
+  line-height:30px;
+  margin:0pt;
+  padding:0pt 15px 0pt 0pt;
+}
+
+div.box div.boxbottom {
+  background-color: transparent;
+  background-image:url(../images/box-bottom.png);
+  background-position:left bottom;
+  background-repeat:repeat-x;
+  color:#888888;
+  font-size:0.9em;
+  height:15px;
+  line-height:15px;
+}
+
+div.box div.boxbottom div.author {
+  background-color: transparent;
+  background-image:url(../images/box-bottom-left.png);
+  background-position:left bottom;
+  background-repeat:no-repeat;
+  float:left;
+  height:15px;
+  line-height:15px;
+  padding:0pt 0pt 0pt 20px;
+}
+
+div.box div.boxbottom div.links {
+  background-color: transparent;
+  background-image:url(../images/box-bottom-right.png);
+  background-position:right bottom;
+  background-repeat:no-repeat;
+  float:right;
+  height:15px;
+  line-height:15px;
+  padding:0pt 20px 0pt 0pt;
+}
+*/
+.slide img {border: 1px solid #e5e5e5;}
+#teaser h1, #teaser h1 a { color: #fff; text-shadow: 0 1px 3px #1659AC;}
+#teaser h2, #teaser h2 a { color: #fff; }
+#teaser h3, #teaser h3 a { color: #fff; }
+#teaser .small { color: #e5e5e5; }
+
+#teaser a.button { color: #ff8800;}
+#teaser a:hover.button { color: #333;}
+#teaser #title { float: left; margin-right: 0}
+#teaser #teaser_l {float:left; width: 120px; margin: 0 0 0 0; }
+#teaser #teaser_r {width: 70%; margin: 0 10px 0 0; }
+
+#main h3 {  border-bottom: 1px solid #e5e5e5; }
+
+/* Fieldset menu - creates a tab-menu from form fieldsets via fieldset.js */
+div.fieldset-menu{
+    margin:0 1em 1em 0;
+}
+div.fieldset-menu ul{
+    margin: 0;
+    padding:0;
+    list-style-type:none;
+    border-bottom: 1px solid #ccc;
+}
+div.fieldset-menu li{
+    padding-left:1em;
+    padding-right:1em;
+    padding-top: 0.25em;
+    padding-bottom: 0.4em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    display:inline;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    line-height: 2em;
+    background-color: #eee;
+}
+div.fieldset-menu li.active {
+    border-bottom: 1px solid white;
+    font-weight: bold;
+    background-color: #fff;
+}
+div.fieldset-menu li a{
+    color: #333;
+}
+div.fieldset-menu li a:hover{
+    color: #333;
+}
+div.fieldset-menu li.active a {
+    color: #333;
+}
+
+/* Login Widget */
+#login-widget {
+    padding: 2em;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    color: #333;
+}
+#login-widget h3 {
+    color: #333;
+}
+#login-widget input#login-u, #login-widget input#login-p {
+    width: 8em;
+}
+#loginmessage {
+    width: 100%;
+    padding: 1em 1em 1em 3em;
+    color: #ffffff;
+    background: #222222 url(../images/iconsfam/accept.png) no-repeat scroll 1em 1em;
+    border-bottom: 2px solid #000000;
+}
+#loginmessage.false {
+    background: #222222 url(../images/iconsfam/exclamation.png) no-repeat scroll 1em 1em;
+    border-bottom: 4px solid #ff0000;
+}
+#language_select {
+    color: #ffffff;
+  float: right;
+  padding: 1.3em;
+}
+
+/**
+ *
+ * (en) wordclick.css for translation links (adminword)
+ *
+ */
+
+
+/* basic class for translation link */
+a.tr_link {
+    background:#ddeeff none !important;
+    border:1px solid #888 !important;
+    font-weight:normal !important;
+    display:inline !important;
+    color: #333 !important;
+    padding-left:4px !important;
+    padding-right:4px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* "Hotpink" for missing words + translations */
+a.tr_link.missing_word {
+    background-color: #FF69B4 !important;
+    color: #000 !important;
+}
+a.tr_link.missing_translation {
+    background-color:#FF69B4 !important;
+    color: #000 !important;
+}
+
+/* "Aquamarine" for missing words + translations */
+a.tr_link.obsolete {
+    background-color:#7FFFD4 !important;
+}
+
+/* "GreenYellow" for editing existing translation */
+a.tr_link.successful_translation {
+    background-color:#ADFF2F !important;
+}
+
+/* "LemonChiffon" for hovering */
+a.tr_link:hover {
+    background: #FFFACD !important;
+    color: #333 !important;
+    border:1px solid #888 !important;
+    font-weight: normal !important;
+    text-decoration: none !important;
+}
+
+
+/* Geo Selector */
+ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center; cursor: pointer;}
+ol.plain{ margin-left: 0; }
+ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
+
+
+/* Datepicker classes */
+div.datepicker {
+  position:absolute;
+  text-align:center;
+  border: 1px #ccc solid;
+  font-family:arial;
+  background:#FFF;
+  font-size:10px;
+  padding:1px;
+}
+div.datepicker-calendar table {
+  font-size:10px;
+  border:1px solid #FFF;
+  margin:0;
+  padding:0;
+  text-align:center;
+  border-collapse: collapse;
+}
+div.datepicker div.datepicker-header {
+  font-size:11px;
+  font-weight:bold;
+  background: #2184E8 url(../images/cell_bg_orange.png) repeat scroll 0 0;
+  border-bottom:1px solid #666;
+  padding:2px;
+  text-align:center;
+  color: #fff;
+}
+div.datepicker table.header {
+  border:0;
+  padding:0;
+  text-align:center;
+}
+div.datepicker table td {
+  padding:0;
+}
+td.prev,
+td.prev_year,
+td.next,
+td.next_year {
+  width:8%;
+  color:#eee;
+  cursor:pointer;
+  font-weight:bold;
+  line-height:16px;
+}
+td.prev:hover,
+td.prev_year:hover,
+td.next:hover,
+td.next_year:hover {
+  color:#fff;
+}
+td.header {
+  text-align:center;
+  width:68%;
+  font-weight:bold;
+  line-height:16px;
+  padding: 0;
+}
+div.datepicker-header {
+  height:16px;
+}
+div.datepicker-calendar table tbody tr {
+  border:1px solid #FFF;
+  margin:0;
+  padding:0;
+}
+div.datepicker-calendar table tbody tr td {
+  border:1px #ffffff solid;
+  margin:0;
+  padding:0;
+  text-align:center;
+  height:16px;
+  line-height:16px;
+  width:21px;
+  cursor:pointer;
+}
+div.datepicker-calendar table tbody tr td:hover,
+div.datepicker-calendar table tbody tr td.outbound:hover,
+div.datepicker-calendar table tbody tr td.today:hover {
+  border:1px #ccc solid;
+  background:#ff8800;
+  cursor:pointer;
+  color: #fff;
+}
+div.datepicker-calendar table tbody tr td.wday {
+  border:1px #ccc solid;
+  background:#ddd;
+  cursor:text;
+  width:21px;
+  height:16px;
+  line-height:16px;
+  font-weight:bold;
+  padding: 1px;
+  border-left: none;
+}
+div.datepicker-calendar table tbody tr td.outbound {
+  background:#F4F3F3;
+  color: #999;
+}
+div.datepicker-calendar table tbody tr td.today {
+  border:1px #CCE9FF solid;
+  background:#E9F5FF;
+  background-image:url(../images/date_active.gif);
+  background-repeat:no-repeat;
+  width:21px;
+  height:16px;
+  line-height:16px;
+}
+div.datepicker-calendar table tbody tr td.today:hover {
+  border:1px #CCE9FF solid;
+  background:#E9F5FF;
+  background-image:url(../images/date_active.gif);
+  background-repeat:no-repeat;
+}
+div.datepicker-calendar table tbody tr td.nclick,
+div.datepicker-calendar table tbody tr td.nclick_outbound {
+  cursor:default;
+  color:#aaa;
+  width:21px;
+  height:16px;
+  line-height:16px;
+}
+div.datepicker-calendar table tbody tr td.nclick_outbound {
+  background:#E8E4E4;
+  width:21px;
+  height:16px;
+  line-height:16px;
+}
+div.datepicker-calendar table tbody tr td.nclick:hover,
+div.datepicker-calendar table tbody tr td.nclick_outbound:hover {
+  border:1px #EAEAEA solid;
+  background:#FFF;
+}
+div.datepicker-calendar table tbody tr td.nclick_outbound:hover {
+  background:#E8E4E4;
+}
+div.datepicker div.datepicker-footer {
+  font-size:10px;
+  background:#eee;
+  border-top:1px solid #ccc;
+  cursor:pointer;
+  text-align:center;
+  padding:2px;
+}
+
+form .date {
+  float:left;
+  margin-right: .5em;
+}
+.datepicker-opener-table {
+  border:none;
+  padding:0;
+  border-spacing:0;
+  margin:0 0 0 3px;
+  background:transparent url(../images/datepicker.gif) no-repeat 0 0;
+  width:16px;
+  height:16px;
+  cursor:pointer;
+}
+.Opera .datepicker-opener-table {
+  float:right;
+}
+.IE7 .datepicker-opener-table {
+  position:relative;
+  top:0;
+  left:3px;
+}
+.datepicker-opener-table:hover {
+  background:transparent url(../images/datepicker_ro.gif) no-repeat 0 0;
+}
+.datepicker-opener {
+  width:16px;
+  height:16px;
+  margin:0 0 0 3px;
+  cursor:pointer;
+}
+
+/* Messages */
+.unread {
+  font-weight: bold;
+}
+#message { /*
+  border: 1px solid #f5f5f5;
+  border-right: 2px solid #999;
+  border-bottom: 1px solid #888; */
+}
+#messageheader {
+  background-color: #fff;
+  padding: 2em 3em 1em 3em;
+  border-bottom: 1px solid #e5e5e5;
+}
+#messagecontent {
+  background-color: #fff;
+  padding: 2em 3em;
+}
+#messagecontent .text {
+  font-family: Georgia;
+  font-size: 1.3em;
+  font-style: italic;
+}
+#messageside {
+  width: 22em;
+  text-align: right;
+}
+#messagefooter {
+  background-color: #fff;
+  padding: 2em 3em;
+  border-top: 1px solid #e5e5e5;
+}
+
+div#message div#messagecontent p textarea {
+    width: 100%
+}
+
+#shade_top {
+background:transparent url(../images/shade-top-trans.png) no-repeat scroll 0 10px;
+height:20px;
+}
+#shade {
+background:transparent url(../images/shade-trans.png) no-repeat scroll 0 -10px;
+height:50px;
+}
+#shade-top {
+background:transparent url(../images/shade-trans.png) no-repeat scroll 0 0;
+height:50px;
+}
+
+
+
+  /**
+   * Wiki
+   * (en) Generic classes for the BeWelcome Wiki
+   *
+   * @section content-wiki
+   */
+
+
+/* toc - table of contents */
+.wiki #toc td{ padding: 0; }
+.wiki .page-toc { background-color: #f5f5f5; padding: 1em 2em; }
+.wiki .page-toc-caption { font-size: 1.2em; padding: 1em 0; cursor: pointer; }
+.wiki .page-toc ol { margin: 0 0 1em 0; }
+.wiki .page-toc ol li { list-style-type: none; }
+.wiki .page-toc ol .toc_1 { margin: 0; padding: .3em 0; }
+.wiki .page-toc ol .toc_2 { margin: 0; padding: .3em 0; }
+.wiki .page-toc ol .toc_3 { margin: 0 0.8em .5em .3em; padding: 0 .5em; }
+.wiki .page-toc ol .toc_4 { margin: 0 0.8em .5em .3em; padding: 0 .5em; font-style: italic; }
+
+.wiki .page-toc li { line-height: 1em;  }
+
+.wiki .search-form { padding: 2em 0; }
+
+.wiki.NewestPages a , br {margin-bottom: 0.8em;}
+
+/* wiki headlines */
+.wiki h1 {padding: 0;}
+.wiki h2 {border-bottom: 1px solid #aaa; margin-top: 0.7em;}
+.wiki h3 {color: #333;}
+
+/* -----------------------------------------------
+  every page has a title now, always <h2>,
+  some of them enclose links (when "view"ed)
+*/
+.wiki h2.page.title {
+   color: #333;
+   border-bottom: 2px #eedddd solid;
+}
+
+.wiki h2.page.title a {
+   color: #5555cc;
+   text-decoration: none;
+}
+
+
+/* -----------------------------------------------
+  the ".action-links" or ".control-links" are the
+  list of links below every wiki page ('PageInfo'
+  and 'EditThisPage' ...)
+*/
+.wiki.view .action-links { padding: 1em 0; }
+.wiki.view .action-links hr,  .wiki .action-links br { display: none;}
+
+
+/* links to unknown page get a different color */
+.wiki.view .NotFound a { color: #999;}
+
+/* -----------------------------------------------
+  the "info" pages result list is often
+  chunked into parts
+*/
+.wiki.info .chunked-result a { text-decoration: underline; }
+
+.wiki.edit .edit-box textarea {  width: 99%; }
+
+.wiki.edit form[name=ewiki] {
+   /* old way, doesn't work with good old IE reliable */
+}
+
+.wiki.edit .image-upload {
+   background: url("image-upload.jpeg") no-repeat;
+}
+
+.wiki.edit .preview {
+   background-image: url("dashed.png");
+   font-size:50%;
+}
+
+
+/* copyright info */
+.wiki #copyright {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid #ddd;
+}
+.wiki #copyright a {
+    border-bottom: none;
+    background: transparent;
+    padding-right: 0;
+}
+
+.wiki .wiki_image {
+    float: right;
+    margin: .5em;
+}
+
+.wiki .indent {
+   margin-left: 5px;
+}
+
+.wiki table {
+    margin: 1em 0;
+    overflow:hidden;
+    border-color: #e5e5e5;
+}
+
+.wiki table td {
+    background-color: #f5f5f5;
+    vertical-align: top;
+    padding: .5em 1em;
+    border-left: 1px solid #e5e5e5;
+    border-bottom: 1px solid #cccccc;
+    border-top: 1px solid #e5e5e5;
+    border-right: 1px solid #cccccc;
+}
+.wiki .text-body table td {
+    padding: 2em 2em;
+}
+
+.wiki dl {
+  margin-bottom: .2em;
+  margin-top: 0.5em;
+}
+.wiki dd {
+  margin-bottom: .1em;
+  line-height: 1.5em;
+}
+
+.wiki li {
+  padding-left: 0;
+  margin-left: 2em;
+}
+.wiki ol, .wiki ul {
+  margin: .5em 0;
+}
+.wiki ul li {
+  list-style-type: square;
+}
+.wiki ol li {
+  list-style-type: decimal;
+}
+.wiki ol span.number {
+  margin-right: .3em;
+}
+
+
+/* Add an external-link icon to absolute links */
+
+.wiki a[href^="http:"] {
+    background: url(/images/icons/icon_external.gif) right center no-repeat;
+    padding-right: 15px;
+    border-bottom: 1px dotted #ccc;
+}
+
+.wiki a[href^="http:"]:hover {
+    background: url(/images/icons/icon_external.gif) right center no-repeat;
+}
+
+/* ...but not to absolute links in this domain... */
+
+.wiki a[href^="http://www.bewelcome.org"] {
+    background: transparent;
+    padding-right: 0px;
+}
+
+.wiki a[href^="http://www.bewelcome.org"]:hover {
+    background: transparent;
+}
+
+/* User:user links */
+.wiki a.user,.wiki a.user:hover {
+    background: url(/images/icons/user.png) left center no-repeat;
+    padding-left: 18px;
+    padding-right: 0px;
+}
+
+/* Media screen end */
+}

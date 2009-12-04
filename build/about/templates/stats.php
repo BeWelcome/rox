@@ -30,13 +30,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
-            <div><canvas id="members-alltime" height="200" width="300" ></canvas></div>
+            <div><canvas id="members-alltime" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            <div><canvas id="members-last" height="200" width="300" ></canvas></div>
+            <div><canvas id="members-last" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -46,13 +46,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
-            <div><canvas id="newmembers-alltime" height="200" width="300" ></canvas></div>
+            <div><canvas id="newmembers-alltime" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            <div><canvas id="newmembers-last" height="200" width="300" ></canvas></div>
+            <div><canvas id="newmembers-last" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -62,13 +62,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
-            <div><canvas id="percentnewmembers-alltime" height="200" width="300" ></canvas></div>
+            <div><canvas id="percentnewmembers-alltime" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            <div><canvas id="percentnewmembers-last" height="200" width="300" ></canvas></div>
+            <div><canvas id="percentnewmembers-last" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -78,13 +78,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
-            <div><canvas id="loginperday-alltime" height="200" width="300" ></canvas></div>
+            <div><canvas id="loginperday-alltime" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            <div><canvas id="loginperday-last" height="200" width="300" ></canvas></div>
+            <div><canvas id="loginperday-last" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -94,13 +94,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
-            <div><canvas id="percentloginperday-alltime" height="200" width="300" ></canvas></div>
+            <div><canvas id="percentloginperday-alltime" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            <div><canvas id="percentloginperday-last" height="200" width="300" ></canvas></div>
+            <div><canvas id="percentloginperday-last" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -110,13 +110,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
-            <div><canvas id="onetrust-alltime" height="200" width="300" ></canvas></div>
+            <div><canvas id="onetrust-alltime" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            <div><canvas id="onetrust-last" height="200" width="300" ></canvas></div>
+            <div><canvas id="onetrust-last" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -126,13 +126,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
-            <div><canvas id="percentonetrust-alltime" height="200" width="300" ></canvas></div>
+            <div><canvas id="percentonetrust-alltime" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            <div><canvas id="percentonetrust-last" height="200" width="300" ></canvas></div>
+            <div><canvas id="percentonetrust-last" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -142,13 +142,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
-            <div><canvas id="messages-alltime" height="200" width="300" ></canvas></div>
+            <div><canvas id="messages-alltime" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
-            <div><canvas id="messages-last" height="200" width="300" ></canvas></div>
+            <div><canvas id="messages-last" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -157,13 +157,13 @@ $words = new MOD_words();
     <div class="c50l">
         <div class="subcl">
             <h3><?php echo $words->get("StatsLastLogin") ?></h3>
-            <div><canvas id="lastlogin" height="300" width="300" ></canvas></div>
+            <div><canvas id="lastlogin" height="250" width="400" ></canvas></div>
         </div>
     </div>
     <div class="c50r">
         <div class="subcr">
             <h3><?php echo $words->get("StatsMemberCountry") ?></h3>
-        <div><canvas id="countryranking" height="300" width="300" ></canvas></div>
+        <div><canvas id="countryranking" height="250" width="400" ></canvas></div>
         </div>
     </div>
 </div>
@@ -316,7 +316,7 @@ foreach ($statslast as $val) {
 var opt1 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
    "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
-   "padding":{left: 30, right: 45, top: 20, bottom: 60},
+   "padding":{left: 45, right: 45, top: 20, bottom: 60},
    "xTicks": [
 <?
     foreach ($xtick as $val) {

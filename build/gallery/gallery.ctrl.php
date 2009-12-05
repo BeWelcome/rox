@@ -80,7 +80,7 @@ class GalleryController extends RoxControllerBase {
 
             case 'uploaded_done':
                 $galleryId = (isset($_GET['id'])) ? $_GET['id'] : false;
-                $this->ajaxlatestimages($galleryId);
+                $this->ajaxlatestimages($galleryId, true);
                 PPHP::PExit();
                 
             case 'flickr':
@@ -321,7 +321,7 @@ class GalleryController extends RoxControllerBase {
     public function manage()
     {
         if (!$this->loggedInMember)
-            return false;
+            $this->redirect('login');
         $words = $this->getWords();
         $page = new GalleryManagePage();
         $page->member = $this->member = $this->loggedInMember;
@@ -343,13 +343,13 @@ class GalleryController extends RoxControllerBase {
     public function upload()
     {
         if (!$this->loggedInMember)
-            return false;
+            $this->redirect('login');
         $words = $this->getWords();
         $page = new GalleryUploadPage();
         $page->member = $this->member = $this->loggedInMember;
         $page->myself = true;
         $page->infoMessage = $words->get($this->message);
-        return $page;        
+        return $page;
     }
     
     /**
@@ -446,7 +446,7 @@ class GalleryController extends RoxControllerBase {
      * @access public
      * @return string
      */
-    public function ajaxlatestimages($galleryId = false)
+    public function ajaxlatestimages($galleryId = false, $nopagination = false)
     {
         $loggedInMember = $this->loggedInMember;
         if ($galleryId) $statement = $this->_model->getLatestItems(false,$galleryId);
@@ -456,7 +456,6 @@ class GalleryController extends RoxControllerBase {
     }
 
     private function ajaxImage() {
-        // Modifying a PHOTOSET(GALLERY) using an ajax-request
         PRequest::ignoreCurrentRequest();
         if (!$member = $this->loggedInMember)
             return false;
@@ -670,7 +669,7 @@ class GalleryController extends RoxControllerBase {
         }
         if (!$tmpDir->fileExists($thumbFile) || $tmpDir->file_Size($thumbFile) == 0) {
             if ($img = new MOD_images_Image($tmpDir->dirName().'/'.$d->file)) {
-                if (!$this->_model->createThumbnails($tmpDir,$img) && (isset($_GET['t']) && $_GET['t'] == '2'))
+                if (!$this->_model->createThumbnails($tmpDir,$img) || (isset($_GET['t'])))
                     $thumbFile = $d->file;
             }
         }

@@ -20,14 +20,14 @@ class GalleryModel extends RoxModelBase
 
     public function createGallery($title, $desc = false)
     {
-        if (!$User = APP_User::login())
+        if (!$member = $this->getLoggedInMember())
             return false;
     	$query = '
 INSERT INTO `gallery`
 (`id`, `user_id_foreign`, `flags`, `title`, `text`)
 VALUES
 ('.$this->dao->nextId('gallery').', 
-'.(int)$User->getId().', 
+'.(int)$member->get_userid().', 
 0, 
 \''.$this->dao->escape($title).'\',
 \''.($desc ? $this->dao->escape($desc) : '').'\')
@@ -54,11 +54,11 @@ VALUES
     // delete own uploaded pictures as logged in user or user with gallery rights
     public function deleteOneProcess($image)
     {
-        if (!$User = APP_User::login())
+        if (!$member = $this->getLoggedInMember())
             return false;
         $R = MOD_right::get();
         $GalleryRight = $R->hasRight('Gallery');
-        if (($User->getId() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
+        if (($member->get_userid() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
             // Log the deletion to prevent admin abuse
             MOD_log::get()->write("Deleting a gallery item #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
             // Start the deletion process
@@ -557,15 +557,15 @@ WHERE
     public function uploadProcess(&$vars)
     {
         // NEW CHECKS
-        if (!$User = APP_User::login()) {
+        if (!$member = $this->getLoggedInMember()) {
              $vars['error'] = 'Gallery_NotLoggedIn';
              return false;
         }
         if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0) {
-            //$vars['error'] = 'Gallery_UploadError';
+            $vars['error'] = 'Gallery_UploadError';
             return false;
         }
-        $userDir = new PDataDir('gallery/user'.$User->getId());
+        $userDir = new PDataDir('gallery/user'.$member->get_userid());
         $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
 (`id`, `user_id_foreign`, `file`, `original`, `flags`, `mimetype`, `width`, `height`, `title`, `created`)
@@ -574,7 +574,7 @@ VALUES
             ');
         $itemId = false;
         $insert->bindParam(0, $itemId);
-        $userId = $User->getId();
+        $userId = $member->get_userid();
         $insert->bindParam(1, $userId);
         $hash = false;
         $insert->bindParam(2, $hash);

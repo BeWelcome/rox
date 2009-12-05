@@ -47,6 +47,7 @@ echo '
     $maxPage = $p[2];
     $currentPage = $page;
     $request = $requestStr.'/=page%d';
+    if (!isset($nopagination) || !$nopagination)
     require TEMPLATE_DIR.'misc/pages.php';
     echo '</div>';
 }

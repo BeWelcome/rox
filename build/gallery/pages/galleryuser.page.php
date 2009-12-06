@@ -16,25 +16,87 @@ class GalleryUserPage extends GalleryBasePage
         return 'overview';
     }
 
-    protected function teaserHeadline() {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryUserPage');
+    protected function getSubmenuItems()
+    {
+        $member = $this->member;
+        $words = $this->getWords();
+        $ww = $this->ww;
+        $wwsilent = $this->wwsilent;
+
+        $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
+        $tt = array();
+            $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/'.$this->page.'', $ww->GalleryTitleSets);
+            $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images/'.$this->page.'', $ww->GalleryTitleLatest);
+        if ($this->myself) {
+            $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
+            $tt[]= array("upload", 'gallery/upload', $ww->GalleryUpload, 'upload');
+        }
+        return($tt) ;
     }
     
+    protected function submenu() {
+        $active_menu_item = $this->getSubmenuActiveItem();
+        $cnt = count($this->getSubmenuItems());
+        $ii = 1;
+        foreach ($this->getSubmenuItems() as $index => $item) {
+            $name = $item[0];
+            $url = $item[1];
+            $label = $item[2];
+            $class = isset($item[3]) ? $item[3] : '';
+            if ($name === $active_menu_item) {
+                $attributes = ' class="active '.$class.'"';
+            } else {
+                $attributes = ' class="'.$class.'"';
+            }
+            ?><a <?=$attributes ?> style="cursor:pointer;" href="<?=$url ?>"><span><?=$label ?></span></a> <?=($ii++ != $cnt) ? '|': '' ?>
+            <?php
+        }
+    }
+
+
+    protected function breadcrumbs() {
+        $words = $this->words;
+        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a>';
+    }
+
+    protected function teaserHeadline() {
+        $words = $this->words;
+        return '<h1 class="userpage">'.MOD_layoutbits::PIC_50_50($this->member->Username,'',$style='float_left').' '.ucfirst($this->member->Username).'</h1>';
+    }
+    
+    protected function teaser() {
+        ?>
+        <div id="teaser">
+        <div class="breadcrumbs">
+        <?=$this->breadcrumbs()?>
+        </div>
+        <div class="floatbox">
+            <?=$this->teaserHeadline()?>
+            <div class="gallery_menu">
+            <?=$this->submenu()?>
+            </div>
+        </div>
+        </div>
+        <?
+    }
+        
     public function leftSidebar()
     {
+        $words = $this->words;
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures;
-        $username = $this->username;
+        $username = ($member = $this->loggedInMember) ? $member->Username : '';
+        $loggedInMember = $this->loggedInMember;
         require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
     protected function column_col3() {
         $statement = $this->statement;
         $words = new MOD_words();
-        ?>
-        <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
-        <?php
-        require SCRIPT_BASE . 'build/gallery/templates/overview.php';
+        $username = $this->member->Username;
+        $galleries = $this->galleries;
+        $itemsPerPage = 6;
+        require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 
 }

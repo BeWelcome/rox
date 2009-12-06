@@ -1,4 +1,4 @@
-﻿<? 
+<? 
     $words = $this->words;
     $loggedInMember = $this->loggedInMember;
     // values from previous form submit
@@ -14,15 +14,26 @@
     
     $formkit = $this->layoutkit->formkit;
     $callback_tag = $formkit->setPostCallback('GalleryController', 'createGalleryCallback');
-    
+    $subTab = $this->getSubmenuActiveItem();
 ?>
-<? if ($this->loggedInMember) { ?>
+<h3><?=$words->get('GalleryBrowse')?></h3>
+<div>
+    <ul>
+        <li <?php echo ($subTab === 'overview') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery"><span><?php echo $words->getBuffered('Photosets'); ?></span></a></li>
+        <li <?php echo ($subTab === 'images') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/images"><span><?php echo $words->getBuffered('GalleryAllPhotos'); ?></span></a>
+        </li>
+        <li <?php echo ($subTab === 'flickr') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/flickr"><span><?php echo $words->getBuffered('GalleryFlickr'); ?></span></a></li>
+    </ul>
+    <?php echo $words->flushBuffer(); ?>
+</div>
+<?php
+    if ($this->loggedInMember) { ?>
 
 <h3><?=$words->get('GalleryYourGallery')?></h3>
 <div>
     <ul>
-        <li><img src="images/icons/pictures.png"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/images"><?=$words->get('GalleryUserImages',$cnt_pictures)?></a></li>
-        <li><img src="images/icons/folder_picture.png"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/sets"><?=$words->get('GalleryUserPhotosets',count($galleries))?></a></li>
+        <li><img src="images/icons/pictures.png"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/images"><?=$words->get('GalleryUserImages')?></a></li>
+        <li><img src="images/icons/folder_picture.png"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/sets"><?=$words->get('GalleryUserPhotosets')?></a></li>
         <li><img src="images/icons/picture_add.png"> <a href="gallery/upload"><?=$words->get('GalleryUpload')?></a></li>
     </ul>
     <?//=$this->userLinks()?>
@@ -47,10 +58,10 @@
         }
         ?>
         <input name="new" type="hidden" value="1">
-        <input name="deleteOnly" type="hidden" value="0">
+        <input id="deleteonly" name="deleteOnly" type="hidden" value="0">
         <br />
-        <input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="return submitStuff();"/>
+        <input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
         </form>
     </p>
 
-<? } ?>
+<? } 

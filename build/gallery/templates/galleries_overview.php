@@ -21,33 +21,23 @@ if ($galleries) {
     	static $ii = 0;
         $d = $Gallery->getLatestGalleryItem($g->id);
         $s = $Gallery->getGalleryItems($g->id,1);
-        $member = MOD_member::getUserHandle($g->user_id_foreign);
-        $num_rows = $s ;
+        $username = MOD_member::getUserHandle($g->user_id_foreign);
+        $this->myself = ($this->loggedInMember && $username == $this->loggedInMember->Username);
+        $num_rows = $s ? $s : 0;
         // Only show the galleries with pictures. The belonging user might see them anyway.
-    	if ($d) {
+    	if ($d || $this->myself) {
     	?>
-        <div class="gallery_container float_left" style="margin: 10px; height: 170px; width: 150px; padding: 20px; text-align: center;">
+        <div class="gallery_container float_left">
             <a href="gallery/show/sets/<?=$g->id?>">
-                <img class="framed" src="gallery/thumbimg?id=<?=$d?>" alt="image"/>
+                <img class="framed" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
             </a>
             <h4><a href="gallery/show/sets/<?=$g->id?>"><?=$g->title?></a></h4>
-            <p class="small">
-            <?php //if ($g->text) echo $g->text 
-            ?>
+            <p>
+            <?=$num_rows?> <?=$words->get('pictures')?>
+            <span class="small"><?=$words->get('by')?> <?=$username?></span>
             </p>
-            <p class="small"><?=$words->get('by')?> <?=$member?></p>
-            <p><?=$num_rows?> <?=$words->get('pictures')?></p>
         </div>
         <?php
-        } else {
-            if ($this->username == $member) {
-            if (!isset($emptyPhotosets)) $emptyPhotosets = '<h3>'.$words->get('GalleryEmptyPhotosets').'</h3>';
-            $emptyPhotosets .= '<div class="gallery_container" style="margin: 10px; padding: 5px 0 0 5px;) no-repeat;">';
-            $emptyPhotosets .= '<h4><a href="gallery/show/sets/'.$g->id.'">'.$g->title.'</a></h4>
-            <p class="small">'.$g->text.'</p>';
-            $emptyPhotosets .= '<img src="images/icons/picture_add.png"> <a href="gallery/show/sets/'.$g->id.'"> '.$words->get('GalleryPhotosetAddPictures').'</a>';
-            $emptyPhotosets .= '</div>';
-            }
         }
     }
     echo '</div>';

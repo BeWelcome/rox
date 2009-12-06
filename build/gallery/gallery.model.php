@@ -20,14 +20,14 @@ class GalleryModel extends RoxModelBase
 
     public function createGallery($title, $desc = false)
     {
-        if (!$User = APP_User::login())
+        if (!$member = $this->getLoggedInMember())
             return false;
     	$query = '
 INSERT INTO `gallery`
 (`id`, `user_id_foreign`, `flags`, `title`, `text`)
 VALUES
 ('.$this->dao->nextId('gallery').', 
-'.(int)$User->getId().', 
+'.(int)$member->get_userid().', 
 0, 
 \''.$this->dao->escape($title).'\',
 \''.($desc ? $this->dao->escape($desc) : '').'\')
@@ -54,11 +54,11 @@ VALUES
     // delete own uploaded pictures as logged in user or user with gallery rights
     public function deleteOneProcess($image)
     {
-        if (!$User = APP_User::login())
+        if (!$member = $this->getLoggedInMember())
             return false;
         $R = MOD_right::get();
         $GalleryRight = $R->hasRight('Gallery');
-        if (($User->getId() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
+        if (($member->get_userid() == $this->imageOwner($image->id)) || ($GalleryRight > 1)) {
             // Log the deletion to prevent admin abuse
             MOD_log::get()->write("Deleting a gallery item #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
             // Start the deletion process
@@ -66,6 +66,7 @@ VALUES
             $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
             $userDir->delFile($filename);
             $userDir->delFile('thumb'.$filename);
+            $userDir->delFile('thumb1'.$filename);
             $userDir->delFile('thumb2'.$filename);
             $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
             $this->deleteComments($image->id);
@@ -133,7 +134,7 @@ VALUES
 
     public function deleteMultiple($images)
     {
-        if (!$User = APP_User::login())
+        if (!$member = $this->getLoggedInMember())
         {
             return false;
         }
@@ -142,7 +143,7 @@ VALUES
         foreach ($images as $image) {
             if (!$image)
                 return false;
-            if (($User->getId() == $this->imageOwner($image)) || ($GalleryRight > 1)) {
+            if (($member->get_userid() == $this->imageOwner($image)) || ($GalleryRight > 1)) {                
                 $image = $this->imageData($image);
                 // Log the deletion to prevent admin abuse
                 MOD_log::get()->write("Deleting multiple gallery items #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
@@ -151,11 +152,12 @@ VALUES
                 $userDir = new PDataDir('gallery/user'.$image->user_id_foreign);
                 $userDir->delFile($filename);
                 $userDir->delFile('thumb'.$filename);
+                $userDir->delFile('thumb1'.$filename);
                 $userDir->delFile('thumb2'.$filename);
                 $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
                 $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$image->id);
                 $this->deleteComments($image->id);
-                return PVars::getObj('env')->baseuri.'gallery/show/user/'.$User->getHandle().'/pictures';
+                return 'gallery/manage';
             } else return false;
         }
     }    
@@ -177,20 +179,21 @@ VALUES
                     $vars['errors'] = array('images');
                     return false;
                 }
-                if (!$User = APP_User::login())
+                if (!$member = $this->getLoggedInMember())
                     return false;
-                if ($vars['deleteOnly'])
+                if (isset($vars['deleteOnly']) && $vars['deleteOnly'])
                     return $this->deleteMultiple($images);
                 foreach ($images as $d) {
                     $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
                     if (!isset($vars['removeOnly']) || !$vars['removeOnly']) {
                         $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$this->dao->escape($vars['gallery'])."',`item_id_foreign`= ".$d);
-                    } else {
-                        return PVars::getObj('env')->baseuri.'gallery/show/user/'.$User->getHandle();
-                    }
+                    } 
+                    // else {
+                    //                         return 'gallery/show/user/'.$User->getHandle();
+                    //                     }
                 }
             }
-            return PVars::getObj('env')->baseuri.'gallery/show/sets/'.$vars['gallery'];
+            return 'gallery/show/sets/'.$vars['gallery'];
         }
     }
     
@@ -239,7 +242,7 @@ WHERE i.`gallery_id_foreign` = '.(int)$galleryId.'
         if ($count == true) 
             return $s->numRows();
         return $s;
-    }        
+    }
 
     public function getLatestGalleryItem($galleryId)
     {
@@ -255,7 +258,7 @@ ORDER BY `item_id_foreign` DESC LIMIT 1
             return false;
         //$img = $this->imageData((int)$s);
         return $s->fetch(PDB::FETCH_OBJ)->item_id;
-    }            
+    }
     
     public function getItemGallery($imageId)
     {
@@ -270,7 +273,7 @@ WHERE i.`item_id_foreign` = '.(int)$imageId.'
         if ($s->numRows() == 0)
             return false;
         return $s;
-    }        
+    }
 
     public function getUserGalleries($UserId = false)
     {
@@ -288,97 +291,62 @@ ORDER BY `id` DESC';
         if ($s->numRows() == 0)
             return false;
         return $s;
-    }        
-    
-    
-    /**
-     * Processing creation of a comment
-     *
-     * This is a POST callback function.
-     *
-     * Sets following errors in POST vars:
-     * title        - invalid(empty) title.
-     * textlen      - too short or long text.
-     * inserror     - db error while inserting.
-     */
-    public function commentProcess($vars, $image)
-    {
-        $request = PRequest::get()->request;
-        if (!$image)
-            $image = (int)$request[3];
-
-        // validate
-        if (!isset($vars['ctxt']) || strlen($vars['ctxt']) == 0 || strlen($vars['ctxt']) > 5000) {
-            $vars['errors'] = array('textlen');
-            return false;
-        }
-
-        $User = APP_User::login();
-
-        $commentId = $this->dao->nextId('gallery_comments');
-        $query = '
-INSERT INTO `gallery_comments`
-SET
-    `id`='.$commentId.',
-    `gallery_items_id_foreign`='.$image.',
-    `user_id_foreign`='.$User->getId().',
-    `title`=\''.(isset($vars['ctit'])?$this->dao->escape($vars['ctit']):'').'\',
-    `text`=\''.$this->dao->escape($vars['ctxt']).'\',
-    `created`=NOW()';
-        $s = $this->dao->query($query);
-        if (!$s) {
-            $vars['errors'] = array('inserror');
-            return false;
-        }
-        
-        // Create notification
-        // $data = $this->imageData($image);
-        // if ($data->user_handle != $_SESSION['Username']) {
-        //     $model = new MembersModel();
-        //     $member = $model->createEntity('Member')->FindByUsername($data->user_handle);
-        //     $param['IdMember'] = $member->getPKValue();
-        //     $param['IdRelMember'] = $_SESSION['IdMember'];
-        //     $param['Type'] = 'picture_comment';
-        //     $param['Link'] = "/gallery/show/image/{$image}";
-        //     $param['WordCode'] = '';
-        //     $param['TranslationParams'] = array('GroupsAcceptedIntoGroup', $_SESSION['Username']);
-        //     $note = $model->createEntity('Note')->createNote($param);
-        // }
-        
-        PPostHandler::clearVars();
-        return PVars::getObj('env')->baseuri.implode('/', $request).'#c'.$commentId;
     }
-
     
-    /*
-         Adding comments
-        */
-    public function getComments($image) {
+    public function getGalleriesNotEmpty($UserId = false)
+    {
     	$query = '
-SELECT
-    c.`id` AS `comment_id`,
-    c.`user_id_foreign` AS `user_id`,
-    u.`handle` AS `user_handle`,
-    UNIX_TIMESTAMP(c.`created`) AS `unix_created`,
-    c.`title`,
-    c.`created`,
-    c.`text`
-FROM `gallery_comments` c
-LEFT JOIN `user` u ON c.`user_id_foreign`=u.`id`
-WHERE c.`gallery_items_id_foreign` = '.(int)$image.'
-        ';
+SELECT DISTINCT
+`id`, `user_id_foreign`, `flags`, `title`, `text`
+FROM `gallery` AS g
+LEFT JOIN `gallery_items_to_gallery` AS gi ON
+    g.`id` = gi.`gallery_id_foreign`
+WHERE g.`id` = gi.`gallery_id_foreign`';
+        if ($UserId) {
+    	$query .= '
+AND g.`user_id_foreign` = '.(int)$UserId;
+        }
+    	$query .= '
+ORDER BY `id` DESC';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
         return $s;
     }
-
-    public function deleteComments($image) {
-    	$query = '
-DELETE FROM `gallery_comments`
-WHERE `gallery_items_id_foreign` = '.(int)$image.'
-        ';
-        return $this->dao->exec($query);
+    
+    public function getGalleriesNotEmptyEntities()
+    {
+        /* Different way of getting the galleries
+        $galleries = array();
+        $allgalleries = $this->createEntity('Gallery')->findAll();
+        if (!empty($allgalleries))
+        foreach ($allgalleries as $gallery)
+        {
+            if ($gallery->countItems())
+            $galleries[] = $gallery;
+        }
+        return $galleries;
+        */
+        $sql = <<<SQL
+            SELECT DISTINCT
+            `id`, `user_id_foreign`, `flags`, `title`, `text`
+            FROM `gallery`
+            LEFT JOIN `gallery_items_to_gallery` AS `g` ON
+                g.`gallery_id_foreign` = g.`gallery_id_foreign`
+            WHERE g.`gallery_id_foreign` = gallery.`id`
+            ORDER BY `id` DESC
+SQL;
+        return $this->createEntity('Gallery')->findBySQLMany($sql);
+    }
+    
+    public function getMemberWithUserId($userId)
+    {
+        if (!($userId = intval($userId)))
+        {
+            return false;
+        }
+        $s = $this->singleLookup('SELECT handle FROM user WHERE id = '.(int)$userId);
+        return $this->createEntity('Member')->findByUsername($s->handle);
     }
 
     public function getLatestItems($userId = false,$galleryId = false, $numRows = false)
@@ -589,15 +557,15 @@ WHERE
     public function uploadProcess(&$vars)
     {
         // NEW CHECKS
-        if (!$User = APP_User::login()) {
+        if (!$member = $this->getLoggedInMember()) {
              $vars['error'] = 'Gallery_NotLoggedIn';
              return false;
         }
         if (!isset($_FILES['gallery-file']) || !is_array($_FILES['gallery-file']) || count($_FILES['gallery-file']) == 0) {
-            //$vars['error'] = 'Gallery_UploadError';
+            $vars['error'] = 'Gallery_UploadError';
             return false;
         }
-        $userDir = new PDataDir('gallery/user'.$User->getId());
+        $userDir = new PDataDir('gallery/user'.$member->get_userid());
         $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
 (`id`, `user_id_foreign`, `file`, `original`, `flags`, `mimetype`, `width`, `height`, `title`, `created`)
@@ -606,7 +574,7 @@ VALUES
             ');
         $itemId = false;
         $insert->bindParam(0, $itemId);
-        $userId = $User->getId();
+        $userId = $member->get_userid();
         $insert->bindParam(1, $userId);
         $hash = false;
         $insert->bindParam(2, $hash);
@@ -625,7 +593,6 @@ VALUES
         foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
             if ($error != UPLOAD_ERR_OK)
                 continue;
-
             if (
                 $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
                 $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
@@ -636,7 +603,7 @@ VALUES
             if ($_FILES['gallery-file']['error'] == UPLOAD_ERR_OK) {
                 $vars['error'] = 'Gallery_UploadError';
                 return false;
-            } 
+            }
             // END
             $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
             if (!$img->isImage()) {
@@ -651,14 +618,11 @@ VALUES
                  return false;
             }
             $hash = $img->getHash();
-            if ($userDir->fileExists($img->getHash()))
+            if ($userDir->fileExists($hash))
                 continue;
             if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
                 continue;
-            if (!$img->createThumb($userDir->dirName(), 'thumb', 100, 100))
-                continue;
-            if ($size[0] > 550)
-                $img->createThumb($userDir->dirName(), 'thumb2', 500);
+            if (!$result = $this->createThumbnails($userDir,$img)) return false;
             $itemId = $this->dao->nextId('gallery_items');
             $orig = $_FILES['gallery-file']['name'][$key];
             $mimetype = image_type_to_mime_type($type);
@@ -674,6 +638,18 @@ VALUES
                 $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
             }
         }
+        return true;
+    }
+    
+    public function createThumbnails ($dataDir, $img)
+    {
+        $size = $img->getImageSize();
+        if (!$img->createThumb($dataDir->dirName(), 'thumb', 100, 100))
+            return false;
+        if ($size[0] > 240)
+            $img->createThumb($dataDir->dirName(), 'thumb1', 240, 240, false ,'ratio');
+        if ($size[0] > 500 || $size[1] > 500)
+            $img->createThumb($dataDir->dirName(), 'thumb2', 500, 500, false, 'ratio');
         return true;
     }
 

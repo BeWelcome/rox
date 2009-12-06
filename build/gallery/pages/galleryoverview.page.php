@@ -3,38 +3,47 @@
 
 //------------------------------------------------------------------------------------
 /**
- * base class for all pages in the groups system,
- * which don't belong to one specific group.
+ * overview of the gallery, including latest pictures, most important links etc.
  *
  */
 
 class GalleryOverviewPage extends GalleryBasePage
 {
+    protected function getStylesheets() {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3_75percent.css';
+        return $stylesheets;
+    }
 
     protected function getSubmenuActiveItem()
     {
         return 'overview';
     }
+    
+    protected function teaser() {
+        echo '<div id="teaser" class="clearfix">'.$this->teaserHeadline().'</div>';
+    }
 
     protected function teaserHeadline() {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryOverview');
+        return '<h1>'.$this->getWords()->get('Gallery').'</h1>';
     }
     
     public function leftSidebar()
     {
+        $loggedInMember = $this->loggedInMember;
+        $words = $this->words;
         $galleries = $this->galleries;
         $cnt_pictures = $this->cnt_pictures ? $this->cnt_pictures : 0;
-        $username = $this->loggedInMember ? $this->loggedInMember->Username : '';
-        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
+        require SCRIPT_BASE . 'build/gallery/templates/galleryoverview.leftsidebar.php';
     }
 
     protected function column_col3() {
         $statement = $this->statement;
-        $words = new MOD_words();
-        ?>
-        <h2><?php echo $words->getFormatted('GalleryTitleLatest'); ?></h2>
-        <?php
-        require SCRIPT_BASE . 'build/gallery/templates/overview.php';
+        $galleries = $this->galleries;
+        $words = $this->words;
+        require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 
 }
+
+?>

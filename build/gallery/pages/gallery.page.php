@@ -12,7 +12,8 @@ class GalleryPage extends GalleryBasePage
 {
 
     protected function teaserHeadline() {
-        return parent::teaserHeadline();
+        $words = $this->words;
+        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/sets">'.$words->get("Photosets").'</a>';
     }
     
     protected function getTopmenuActiveItem()
@@ -25,30 +26,19 @@ class GalleryPage extends GalleryBasePage
         return 'overview';
     }
     
-    public function leftSidebar()
-    {
-        $gallery = $this->gallery;
-        $cnt_pictures = $this->cnt_pictures;
-        $username = $this->username;
-        require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
-    }
-
     protected function column_col3() {
         $words = $this->words;
         $cnt_pictures = $this->cnt_pictures;
         $statement = $this->statement;
         $gallery = $this->gallery;
-        echo '<span class="small">';
-        echo ' > <a href="gallery/show/sets">'.$words->get("Photosets").'</a> > <a href="gallery/show/sets/'.$gallery->id.'">'.$gallery->title.'</a>';
-        echo '</span>';
+        $d = $this->d;
+        $num_rows = $this->num_rows;
+        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'">'.$gallery->title.'</a></h2>';
         if ($this->myself && $this->upload) {
             // Display the upload form
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
         }
-        
-        require SCRIPT_BASE . 'build/gallery/templates/latestgallery.php';
-        $shoutsCtrl = new ShoutsController;
-        $shoutsCtrl->shoutsList('gallery', $gallery->id);
+        require SCRIPT_BASE . 'build/gallery/templates/gallery.column_col3.php';
     }
     
     /*
@@ -58,3 +48,5 @@ class GalleryPage extends GalleryBasePage
 
 
 }
+
+?>

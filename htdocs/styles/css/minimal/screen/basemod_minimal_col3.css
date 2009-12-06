@@ -16,8 +16,8 @@
   #col2 { display:none}  
   #col2_content { display:none}
 
-  #col3 { width: auto; margin: 0 0 0 0}
-  #col3_content { padding: 0 2em 0 2em }
+  #col3 { width: auto; margin: 0}
+  #col3_content { padding: 0 }
   * html #col3 {margin-right: 0} /* IE 6 fix */
 
 }

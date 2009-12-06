@@ -88,6 +88,7 @@
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
   .row { padding: .5em 0;}
+  .row_nav { display: block; border-bottom: 1px solid #e5e5e5;}
   .warning {
     background: #fdd;
     padding: 1em;
@@ -294,13 +295,37 @@ dl.list {
     padding: 2em;
     margin-bottom: 1.5em;
   }
+  .fieldset_toggles fieldset {
+    border: 1px solid #e5e5e5;
+    margin-bottom: 1em;
+    margin-right: 2em;
+    padding: .5em 1em;
+  }
+  .fieldset_toggles fieldset.collapsed {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    padding: 0 1em;
+    margin-bottom: 0;
+  }
   legend{
     line-height: 1.5em;
     font-size: 1.8em;
     font-weight: bold;
     margin-left: -0.5em;
-    padding: 0 .6em;
+    padding: .6em;
     color: #2184E8;
+  }
+  .fieldset_toggles fieldset legend {
+    font-size: 1em;
+    margin-left: -0.5em;
+    cursor: pointer;
+    font-weight: normal;
+    color: #000;
+  }
+  .fieldset_toggles fieldset.collapsed legend {
+    color: #999;
   }
   select {
     margin-bottom: 0.5em;
@@ -367,6 +392,16 @@ dl.list {
   }
 
   /**
+   * breadcrumbs
+   * (en) Generic classes for breadcrumbs
+   *
+   * @section breadcrumbs
+   */
+
+  div.breadcrumbs {padding:10px 0; color: #888;}
+  div.breadcrumbs a { color: #888; }
+
+  /**
    * Pagination
    * (en) Generic classes for pagination
    *
@@ -416,7 +451,6 @@ dl.list {
   #footer {
     border: none;
     text-align: left;
-    margin: 0; padding: 2.5em 2em;
     color: #6A6A5B;
   }
   #footer p {font-size: 0.9em;}
@@ -624,7 +658,9 @@ ul li.expanded a.header {
 /* --- Classes for "round boxes" --- */
 div.box {
   margin: 1em 0.25em;
-  padding: 0em;
+  padding: 1em;
+  background-color: #EBF2F8;
+  border: 1px solid #BFD1E1;
 }
 
 div.box h3 {
@@ -726,9 +762,8 @@ div.box div.boxbottom div.links {
   padding:0pt 20px 0pt 0pt;
 }
 */
-
-#teaser h1, #teaser h2,#teaser h3,#teaser h4,#teaser h5,#teaser p,#teaser span,#teaser div,#teaser td {color: #333}
-#teaser .grey { color: #888;}
+#teaser h1,#teaser h1 a { color: #333;}
+#teaser h1 a:hover, #teaser h1 a:focus { color: #888; text-decoration: none;}
 #teaser a.button { color: #ff8800;}
 #teaser a:hover.button { color: #333;}
 #teaser #title { float: left; margin-right: 0}
@@ -1099,9 +1134,12 @@ height:50px;
 .wiki .page-toc-caption { font-size: 1.2em; padding: 1em 0; cursor: pointer; }
 .wiki .page-toc ol { margin: 0 0 1em 0; }
 .wiki .page-toc ol li { list-style-type: none; }
-.wiki .page-toc ol ol { margin: 0 0.8em .5em .3em; padding: 0 .5em; }
-.wiki .page-toc li { line-height: 1em; padding: .3em 0; margin: 0 0; }
-.wiki .page-toc ol ol li { list-style-type: none; }
+.wiki .page-toc ol .toc_1 { margin: 0; padding: .3em 0; }
+.wiki .page-toc ol .toc_2 { margin: 0; padding: .3em 0; }
+.wiki .page-toc ol .toc_3 { margin: 0 0.8em .5em .3em; padding: 0 .5em; }
+.wiki .page-toc ol .toc_4 { margin: 0 0.8em .5em .3em; padding: 0 .5em; font-style: italic; }
+
+.wiki .page-toc li { line-height: 1em;  }
 
 .wiki .search-form { padding: 2em 0; }
 

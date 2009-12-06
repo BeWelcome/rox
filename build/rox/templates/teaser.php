@@ -29,8 +29,10 @@ $words = new MOD_words();
   <div class="subcolumns">
     <div class="c66l">
       <div class="subcl">
-        <h1 class="slogan"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
-        <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
+          
+          <h1 class="slogan"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
+          <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
+          
 		<table>
 		<tr>
 		<td>
@@ -59,46 +61,23 @@ $words = new MOD_words();
           </style>
                   <div id="slideshow-content"  style="width: 360px; height: 240px">
                       <div class="slide" id="slide1">
-                      <img src="images/tour/share4_small.jpg">
+                      <img src="images/tour/thumbimg.jpg" style="width: 360px; height: 240px">
                       </div>
                       <div class="slide" id="slide2" style="display: none;">
-                      <img src="images/tour/syrien.jpg">
+                      <img src="images/tour/thumbimg2.jpg" style="width: 360px; height: 240px">
                       </div>
                       <div class="slide" id="slide3" style="display: none;">
-                      <img src="images/tour/mountain1.jpg">
+                      <img src="images/tour/thumbimg3.jpg" style="width: 360px; height: 240px">
                       </div>
                       <div class="slide" id="slide4" style="display: none;">
-                      <img src="images/tour/river.jpg">
+                      <img src="images/tour/thumbimg4.jpg" style="width: 360px; height: 240px">
                       </div>
                       <div class="slide" id="slide5" style="display: none;">
-                      <img src="images/tour/dancing2.jpg">
+                      <img src="images/tour/thumbimg5.jpg" style="width: 360px; height: 240px">
                       </div>
-                      <div class="slide" id="slide6" style="display: none;">
-                      <img src="images/tour/mountain2.jpg">
-                      </div>
-                      <div class="slide" id="slide7" style="display: none;">
-                      <img src="images/tour/people.jpg">
-                      </div>
-                      <div class="slide" id="slide8" style="display: none;">
-                      <img src="images/tour/people2.jpg">
-                      </div>
-                      </div>
+                  </div>
 
-          <script type="text/javascript">
-              <!--
-              function realeffect() {
-                  new Effect.toggle('real', 'appear', {duration: 2})
-              }
-              $('real').hide();
-              $('something').hide();
-              window.onload = function () {
-                  new Effect.toggle('something', 'appear', {duration: 2});
-                  setTimeout('realeffect()',2000);
-                  start_slideshow(1, 8, 10000);
-              };
 
-          // -->
-          </script>
 
           <script type="text/javascript">
 
@@ -132,6 +111,22 @@ $words = new MOD_words();
 		</td>
 		</tr>
 		</table>
+
+        <script type="text/javascript">
+            <!--
+            function realeffect() {
+                new Effect.toggle('real', 'appear', {duration: 2})
+            }
+            $('real').hide();
+            $('something').hide();
+            window.onload = function () {
+                new Effect.toggle('something', 'appear', {duration: 2});
+                setTimeout('realeffect()',2000);
+                start_slideshow(1, 5, 10000);
+            };
+
+        // -->
+        </script>
       </div> <!-- subcl -->
     </div> <!-- c50l -->
 

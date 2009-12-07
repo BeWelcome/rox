@@ -131,9 +131,9 @@ if ($allow_title) { // New Topic
 <?php
     if (isset($allow_title) && $allow_title) {
 ?>
-    <fieldset class="row" id="fpost_tags_fieldset">
-        <legend for="create-tags" onclick="toggleFieldsets('fpost_tags');"><?php echo $words->getFormatted("forum_label_tags"); ?></legend>
-        <div id="fpost_tags"><div>
+    <fieldset class="row" id="fpost_tags_and_location_fieldset">
+        <legend for="create-tags" onclick="toggleFieldsets('fpost_tags_and_location');"><?php echo $words->getFormatted("forum_label_tags_and_location"); ?></legend>
+        <div id="fpost_tags_and_location"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
         <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
         <?php
@@ -146,12 +146,6 @@ if ($allow_title) { // New Topic
             echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : '';
         ?></textarea>
         <div id="suggestion"></div>
-        </div></div>
-    </fieldset> <!-- row -->
-
-    <fieldset class="row" id="fpost_place_fieldset">
-        <legend for="d_continent" onclick="toggleFieldsets('fpost_place');"><?php echo $words->getFormatted("forum_label_place"); ?></legend>
-        <div id="fpost_place"><div>
         <p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
         <div id="dropdowns">
         <?php
@@ -162,8 +156,9 @@ if ($allow_title) { // New Topic
     </fieldset> <!-- row -->
 
     <fieldset class="row" id="fpost_vis_fieldset">
-        <legend for="fpost_vis" onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_ChooseVisibilty"); ?></legend>
+        <legend for="fpost_vis" onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>
         <div id="fpost_vis"><div>
+            <p class="small"><?=$words->getFormatted("forum_ChooseVisibilty")?></p>
     <?php	
     		if (!$edit) {
     		    ?>
@@ -195,74 +190,15 @@ if ($allow_title) { // New Topic
                 echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
             }
         }
-    ?>
-    </div></div>
-    </fieldset>
-
-    <?php if ($groupsforum) { ?>
-        <input type="hidden" name="IdGroup" value="<?=$groupsforum?>">
-    <?php } else { ?>
-        <fieldset class="row" id="fpost_group_fieldset">
-        <legend for="IdGroup" onclick="toggleFieldsets('fpost_group');"><?php echo $words->getFormatted("forum_label_group"); ?></legend>
-        <div id="fpost_group"><div>
-        <p class="small"><?php echo $words->getFormatted("forum_subline_group"); ?></p>
-        <?php
-            echo $groupsDropdowns;
-        ?>
-        </div></div>
-    </fieldset> <!-- row -->    
-    <?php } ?>
-
-    <script type="text/javascript">
-        function updateContinent() {
-            var urlbit = 'k'+$('d_continent').value;
-            update(urlbit);
-        }
-
-        function updateCountry() {
-            var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value;
-            update(urlbit);
-        }
-
-        function updateAdmincode() {
-            var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value+'/a'+$('d_admin').value;
-            update(urlbit);
-        }
-
-        function updateGeonames() {
-            var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value+'/a'+$('d_admin').value+'/g'+$('d_geoname').value;
-            update(urlbit);
-        }
-
-        function update(urlbit) {
-<?php /*
-    if ($edit) {
-        echo '$("forumsform").action = http_baseuri+"forums/edit/m'.$messageid.'/"+urlbit;';
+    if ($groupsforum) { 
+        echo '<input type="hidden" name="IdGroup" value="{$groupsforum}">';
     } else {
-        echo '$("forumsform").action = http_baseuri+"forums/new/"+urlbit;';
+        echo '<p class="small">'.$words->getFormatted("forum_subline_group").'</p>';
+        echo $groupsDropdowns;
     }
-*/ ?>
-
-            var url = http_baseuri+'forums/locationDropdowns/'+urlbit
-            new Ajax.Request(url,
-            {
-                method:'get',
-                onSuccess: function(req) {
-                    updateDropdowns(req.responseText);
-                }
-            });
-        }
-
-        function updateDropdowns(text) {
-            Element.update('dropdowns', text);
-        }
-
-        function toggleFieldsets(el_name, instantly) {
-            if (instantly) $(el_name).toggle();
-            else Effect.toggle(el_name,'slide',{ duration: 0.2 });
-            Element.toggleClassName($(el_name+'_fieldset'), 'collapsed');
-        }
-    </script>
+    ?>
+        </div></div>
+    </fieldset>
 <?php
     }
 ?>
@@ -346,26 +282,73 @@ if ($allow_title) { // New Topic
 
 </form>
 
-
 <script type="text/javascript">
-document.observe("dom:loaded", forumOnload);
+    function updateContinent() {
+        var urlbit = 'k'+$('d_continent').value;
+        update(urlbit);
+    }
 
-// purpose here is to force the user to select a language
-function check_SelectedLanguage() {
-if (document.editform.IdLanguage.value==-1) {
-    alert("<?php echo $words->getFormatted("YouMustSelectALanguage") ?>") ;
-     document.editform.IdLanguage.focus();
-    return(false);
+    function updateCountry() {
+        var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value;
+        update(urlbit);
+    }
+
+    function updateAdmincode() {
+        var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value+'/a'+$('d_admin').value;
+        update(urlbit);
+    }
+
+    function updateGeonames() {
+        var urlbit = 'k'+$('d_continent').value+'/c'+$('d_country').value+'/a'+$('d_admin').value+'/g'+$('d_geoname').value;
+        update(urlbit);
+    }
+
+    function update(urlbit) {
+<?php /*
+if ($edit) {
+    echo '$("forumsform").action = http_baseuri+"forums/edit/m'.$messageid.'/"+urlbit;';
+} else {
+    echo '$("forumsform").action = http_baseuri+"forums/new/"+urlbit;';
 }
-}
-function forumOnload() {
-    ForumsSuggest.initialize();
-    toggleFieldsets('fpost_tags',1);
-    toggleFieldsets('fpost_vis',1);
-    toggleFieldsets('fpost_note',1);
-    toggleFieldsets('fpost_place',1);
-    toggleFieldsets('fpost_group',1);
-    // toggleFieldsets('fpost_lang',1);
-}
+*/ ?>
+
+        var url = http_baseuri+'forums/locationDropdowns/'+urlbit
+        new Ajax.Request(url,
+        {
+            method:'get',
+            onSuccess: function(req) {
+                updateDropdowns(req.responseText);
+            }
+        });
+    }
+
+    function updateDropdowns(text) {
+        Element.update('dropdowns', text);
+    }
+
+    function toggleFieldsets(el_name, instantly) {
+        if (instantly) $(el_name).toggle();
+        else Effect.toggle(el_name,'slide',{ duration: 0.2 });
+        Element.toggleClassName($(el_name+'_fieldset'), 'collapsed');
+    }
+
+    // purpose here is to force the user to select a language
+    function check_SelectedLanguage() {
+    if (document.editform.IdLanguage.value==-1) {
+        alert("<?php echo $words->getFormatted("YouMustSelectALanguage") ?>") ;
+         document.editform.IdLanguage.focus();
+        return(false);
+    }
+    }
+    function forumOnload() {
+        ForumsSuggest.initialize();
+        toggleFieldsets('fpost_tags_and_location',1);
+        toggleFieldsets('fpost_vis',1);
+        toggleFieldsets('fpost_note',1);
+        toggleFieldsets('fpost_group',1);
+        // toggleFieldsets('fpost_lang',1);
+    }
+
+document.observe("dom:loaded", forumOnload);
 
 </script>

@@ -150,7 +150,7 @@ HTML;
 ?>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('FirstName')?>:</td>
-                  <td><?= (($this->adminedit) ? "<input type='text' name='FirstName' value='{$vars['FirstName']}'/>" : $vars['FirstName']); ?></td>
+                  <td><input type='text' name='FirstName' value='<?= $vars['FirstName'];?>'/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_FirstName"
                     <?php if ($vars['IsHidden_FirstName'])
@@ -161,7 +161,7 @@ HTML;
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SecondName')?>:</td>
-                  <td><?= (($this->adminedit) ? "<input type='text' name='SecondName' value='{$vars['SecondName']}'/>" : $vars['SecondName']); ?></td>
+                  <td><input type='text' name='SecondName' value='<?= $vars['SecondName'];?>'/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_SecondName"
                     <?php if ($vars['IsHidden_SecondName'])
@@ -172,7 +172,7 @@ HTML;
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('LastName')?>:</td>
-                  <td><?= (($this->adminedit) ? "<input type='text' name='LastName' value='{$vars['LastName']}'/>" : $vars['LastName']); ?></td>
+                  <td><input type='text' name='LastName' value='<?= $vars['LastName'];?>'/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_LastName"
                     <?php if ($vars['IsHidden_LastName'])
@@ -501,6 +501,7 @@ HTML;
               </tbody>
             </table>
           </fieldset>
+          <?php if (!empty($vars['Relations'])) : ?>
           <fieldset id="specialrealtions">
             <legend><?=$words->get('MyRelations')?></legend>
             <table border="0" >
@@ -545,8 +546,10 @@ HTML;
               </tbody>
             </table>
           </fieldset>
+          <?php endif; ?>
 
-          <? // Groups (restored by JeanYves) ?>
+<?php if (1 == 0) : ?>
+          <? // Groups (restored by JeanYves) -- disabled ?>
             <?php
             $my_groups =$vars['Groups']; 
             // $my_groups=array() ; // uncomment this line if you don't want to have groups inside edit profile
@@ -598,7 +601,7 @@ HTML;
             <?php
             } // end if (!empty($my_groups) 
             ?>
-           
+          <?php endif; ?> 
           <table>
             <tbody>
               <tr>

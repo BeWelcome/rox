@@ -198,7 +198,7 @@ switch (GetParam("action")) {
 				case "needmore" :
 				   $m = LoadRow("select * from members where id=" . $IdMember);
 				   $needmoretext=GetStrParam("needmoretext_".$ii);
-				   $urltoreply = PVars::getObj('env')->baseuri."login";
+				   $urltoreply = PVars::getObj('env')->baseuri."editmyprofile";
 				   $m = LoadRow("select * from members where id=" . $IdMember);
 				   $Email = AdminReadCrypted($m->Email);
 				   $subj = wwinlang("SignupNeedmoreTitle",$defaultlanguage,$_SYSHCVOL['SiteName']);
@@ -250,4 +250,3 @@ UpdateVolunteer_Board("Accepters_board") ; // Test if the accepter boards neesd 
 $Status=GetStrParam("Status","Pending") ;
 $TData = loaddata($Status, $RestrictToIdMember,GetParam("IdEmail",0));
 DisplayAdminAccepter($TData); // call the layout
-?>

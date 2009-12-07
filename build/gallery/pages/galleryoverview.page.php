@@ -41,6 +41,7 @@ class GalleryOverviewPage extends GalleryBasePage
         $statement = $this->statement;
         $galleries = $this->galleries;
         $words = $this->words;
+        $itemsPerPage = 12;
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 

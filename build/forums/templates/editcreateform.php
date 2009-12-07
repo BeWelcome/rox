@@ -114,7 +114,7 @@ if ($allow_title) { // New Topic
 			echo isset($vars['topic_title']) ? $words->fTrad($vars['IdTitle']) : '';
 			?>" />
 		</div> <!-- row -->
-
+<? } ?>
     <div class="row">
         <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br />
         <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long">
@@ -137,7 +137,8 @@ if ($allow_title) { // New Topic
         <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
         <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
         <?php
-// In case we are in edit mode, this field is a read only, tags cannot be edited by members
+// In case we are in edit mode, this field is a read only, tags cannot be edited by members 
+// lupochen asks: Why?
         if ($edit) {
             echo "\"readonly\"" ;
         }
@@ -183,8 +184,6 @@ if ($allow_title) { // New Topic
     			echo "</select>" ;
     		}
 
-        }
-
         if (isset($vars['errors']) && is_array($vars['errors'])) {
             if (in_array('text', $vars['errors'])) {
                 echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
@@ -199,9 +198,7 @@ if ($allow_title) { // New Topic
     ?>
         </div></div>
     </fieldset>
-<?php
-    }
-?>
+<? } // End if $allow_title ?>
 
     <fieldset class="row" id="fpost_lang_fieldset">
         <legend for="IdLanguage"onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
@@ -342,10 +339,11 @@ if ($edit) {
     }
     function forumOnload() {
         ForumsSuggest.initialize();
+<?php if (isset($allow_title) && $allow_title) { ?>
         toggleFieldsets('fpost_tags_and_location',1);
         toggleFieldsets('fpost_vis',1);
+<? } ?>
         toggleFieldsets('fpost_note',1);
-        toggleFieldsets('fpost_group',1);
         // toggleFieldsets('fpost_lang',1);
     }
 

@@ -47,10 +47,10 @@ var common = {
         for (i = 0; i < checkBoxes.length; i++) { 
             if (obj.checked == true) {
                 checkBoxes[i].checked = true; // this checks all the boxes 
-                common.highlightMe(checkBoxes[i].parentNode.parentNode, true);
+                //common.highlightMe(checkBoxes[i].parentNode.parentNode, true);
             } else { 
                 checkBoxes[i].checked = false; // this unchecks all the boxes 
-                common.highlightMe(checkBoxes[i].parentNode.parentNode, false);
+                //common.highlightMe(checkBoxes[i].parentNode.parentNode, false);
             } 
         } 
     },

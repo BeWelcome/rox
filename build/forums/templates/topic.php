@@ -126,10 +126,10 @@ This File display a topic and the messages which are inside it
 			<?php 
 	
 			if (isset($topic->IdSubscribe)) {
-				echo ForumsView::getURI()."subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
+				echo ForumsView::getURI()."/subscriptions/unsubscribe/thread/",$topic->IdSubscribe,"/",$topic->IdKey,"\">",$words->getBuffered('ForumUnsubscribe'),"</a></span>",$words->flushBuffer();
 			}
 			else {
-				echo ForumsView::getURI()."subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
+				echo ForumsView::getURI()."/subscribe/thread/",$topic->IdThread,"\">",$words->getBuffered('ForumSubscribe'),"</a></span>",$words->flushBuffer(); 
 			}  
 			if ((!$topic->topicinfo->IsClosed)and($topic->topicinfo->CanReply)) {
 				?>

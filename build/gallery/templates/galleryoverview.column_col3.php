@@ -10,10 +10,6 @@ if ($d) {
         <img class="framed" src="gallery/thumbimg?id=<?=$d?>" alt="image"/>
     </a>
     <h4><a href="gallery/show/sets/<?=$g->id?>"><?=$g->title?></a></h4>
-    <p class="small">
-    <?php //if ($g->text) echo $g->text 
-    ?>
-    </p>
     <p class="small"><?=$words->get('by')?> <?=$member?></p>
     <p><?=$num_rows?> <?=$words->get('pictures')?></p>
 </div>

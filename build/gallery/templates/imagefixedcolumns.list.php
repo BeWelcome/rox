@@ -18,7 +18,7 @@ if ($statement) {
     } else {
         $page = 1;
     }
-    if (!isset($itemsPerPage)) $itemsPerPage = 10;
+    if (!isset($itemsPerPage)) $itemsPerPage = 12;
     $p = PFunctions::paginate($statement, $page, $itemsPerPage);
     $statement = $p[0];
     

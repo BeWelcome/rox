@@ -1077,6 +1077,38 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     }
 
     /**
+     * returns true if the member is not in state ActiveHidden
+     *
+     * @access public
+     * @return bool
+     */
+    public function isNotActiveHidden()
+    {
+        if ($this->isLoaded()  && ($this->Status!='ActiveHidden')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * records a visit of current member on member #id
+     *
+     * @param Member $member - member entity
+     *
+     * @access public
+     * @return bool
+     */
+    
+    public function recordVisit(Member $member)
+    {
+        if (!$this->isLoaded() || !$member->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('ProfileVisit')->recordVisit($this, $member);
+    }
+
+    /**
      * deletes all a members languages
      *
      * @access public
@@ -1194,6 +1226,35 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         session_regenerate_id();
 
         return true;
+    }
+
+    /**
+     * checks if a member has a certain old-type right
+     * if member has one of the asked for rights returns true
+     *
+     * @param array $rights - array of right/scope pairs to check for
+     *
+     * @access public
+     * @return bool
+     */
+    public function hasOldRight(array $rights)
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $mod_right = new MOD_right;
+        foreach ($rights as $right => $scope)
+        {
+            if ($mod_right->hasRight($right, $scope, $this->getPKValue())) return true;
+        }
+        return false;
+    }
+
+    public function getPossibleStatusArray()
+    {
+        $info = $this->getTableDescription();
+        return $info['Status']['values'];
     }
 }
 

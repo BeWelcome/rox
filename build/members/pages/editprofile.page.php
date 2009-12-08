@@ -127,8 +127,3 @@ class EditProfilePage extends ProfilePage
     }
 
 }
-
-
-
-
-?>

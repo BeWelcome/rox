@@ -20,6 +20,7 @@ class RoxEntityFactory
     private $_entities = array(
         'BlogEntity'        => 'build/blog/blog.entity',
         'Comment'           => 'build/members/comment.entity',
+        'Donation'          => 'build/donate/donation.entity',
         'Gallery'           => 'build/gallery/gallery.entity',
         'GalleryComment'    => 'build/gallery/gallerycomment.entity',
         'GalleryItem'       => 'build/gallery/galleryitem.entity',
@@ -35,6 +36,7 @@ class RoxEntityFactory
         'MemberLanguage'    => 'build/members/memberlanguage.entity',
         'MemberRole'        => 'build/rights/memberrole.entity',
         'Message'           => 'build/messages/message.entity',
+        'ProfileVisit'      => 'build/members/profilevisit.entity',
         'Note'              => 'build/notify/note.entity',
         'Post'              => 'build/forums/post.entity',
         'PostVote'          => 'build/forums/postvote.entity',
@@ -44,6 +46,7 @@ class RoxEntityFactory
         'RolePrivilege'     => 'build/rights/roleprivilege.entity',
         'Thread'            => 'build/forums/thread.entity',
         'ThreadVote'        => 'build/forums/threadvote.entity',
+        'VolunteerBoard'    => 'build/admin/volunteerboard.entity',
         );
 
     /**

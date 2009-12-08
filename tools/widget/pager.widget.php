@@ -270,4 +270,15 @@ class PagerWidget extends RoxWidget
     {
         return ((($this->items_total - $this->getActiveStart()) > $this->items_per_page) ? $this->items_per_page: $this->items_total - $this->getActiveStart());
     }
+
+    /**
+     * returns number of items to page
+     *
+     * @access public
+     * @return int
+     */
+    public function getTotalCount()
+    {
+        return $this->items_total;
+    }
 }

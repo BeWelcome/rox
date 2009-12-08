@@ -9,5 +9,3 @@ class UpdateMandatoryPage extends EditMyProfilePage
         return $words->get('UpdateMandatoryPage');
     }
 }
-
-?>

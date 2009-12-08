@@ -167,9 +167,17 @@ class MembersController extends RoxControllerBase
                 {
                     // found a member with given id or username
                     $myself = false;
-                    if ($member->id == $member_self->id) {
+                    if ($member->id == $member_self->id)
+                    {
                         // user is watching her own profile
                         $myself = true;
+                    }
+                    else
+                    {
+                        if (($logged_member = $this->model->getLoggedInMember()) and $logged_member->isNotActiveHidden())
+                        {
+                            $member->recordVisit($logged_member);
+                        }
                     }
                     switch (isset($request[2]) ? $request[2] : false) {
                         case 'relations':

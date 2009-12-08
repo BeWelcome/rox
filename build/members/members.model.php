@@ -895,10 +895,17 @@ ORDER BY
         $m->chat_Others = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_Others']),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
         $m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_GOOGLE']),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
 
-        // Only update hide/unhide for identity fields
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->FirstName)),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->SecondName)),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(MOD_crypt::$ReadCrypted($m->LastName)),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
+        $firstname = MOD_crypt::AdminReadCrypted($m->FirstName);
+        $secondname = MOD_crypt::AdminReadCrypted($m->SecondName);
+        $lastname = MOD_crypt::AdminReadCrypted($m->LastName);
+        if ($firstname != strip_tags($vars['FirstName']) || $secondname != strip_tags($vars['SecondName']) || $lastname != strip_tags($vars['LastName']))
+        {
+            $this->logWrite("{$m->Username} changed name. Firstname: {$firstname} -> " . strip_tags($vars['FirstName']) . ", second name: {$secondname} -> " . strip_tags($vars['SecondName']) . ", second name: {$lastname} -> " . strip_tags($vars['LastName']), 'Profile update');
+        }
+
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
+        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
@@ -914,11 +921,12 @@ ORDER BY
                 $this->avatarMake($vars['memberid'],$_FILES['profile_picture']['tmp_name']);
         }
 
-        if ($IdMember == $_SESSION['IdMember']) {
-            $this->logWrite("Profil update by member himself [Status=<b>".$m->Status."</b>]", "Profil update");
+        if ($IdMember == $_SESSION['IdMember'])
+        {
+            $this->logWrite("Profile update by member himself [Status={$m->Status}]", "Profile update");
         }
         else {
-            $this->logWrite("update of another profil", "Profil update"); // Not sure this is possible, any way, if it is, it really desserves a log !
+            $this->logWrite("update of another profile", "Profile update"); // Not sure this is possible, any way, if it is, it really desserves a log !
         }
         
         return $status;

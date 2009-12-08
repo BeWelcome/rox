@@ -31,6 +31,3 @@ class MembersMembernotfoundPage extends PageWithActiveSkin
         echo "<p class='note'>{$words->get('MemberNotFoundDescription')}</p>";
     }
 }
-
-
-?>

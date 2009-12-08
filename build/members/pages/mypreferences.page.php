@@ -11,5 +11,3 @@ class MyPreferencesPage extends ProfilePage
     }
 
 }
-
-?>

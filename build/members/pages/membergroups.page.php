@@ -7,5 +7,3 @@ class MemberGroupsPage extends ProfilePage
         return 'groups';
     }
 }
-
-?>

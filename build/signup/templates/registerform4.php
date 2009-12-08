@@ -284,7 +284,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
           <input type="hidden" id="geonameid" name="geonameid" <?php
             echo isset($vars['geonameid']) ? 'value="'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
-          <p class="entered"><?=$vars['geonamename']?><?=isset($vars['countryname']) ? ', '.$vars['countryname'] : '' ?><?=isset($vars['admincode']) ? ' / '.$vars['admincode'] : ''?></p>
+          <p class="entered"><?= urldecode($vars['geonamename']);?><?=isset($vars['countryname']) ? ', '.$vars['countryname'] : '' ?><?=isset($vars['admincode']) ? ' / '.$vars['admincode'] : ''?></p>
 <?php } ?>
       </div>
 

@@ -135,7 +135,7 @@ HTML;
         }
         $return .= <<<HTML
         </ul>
-<div style='clear:both'></div>
+<div style='clear:right'></div>
 </div>
 HTML;
         return $return;

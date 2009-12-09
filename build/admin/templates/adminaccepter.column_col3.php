@@ -52,7 +52,6 @@ else
 }
 echo <<<HTML
 </p>
-
 <div id="messageboard">
     <h4>The Message board</h4>
     <form action='' method='post'>
@@ -63,7 +62,11 @@ echo <<<HTML
         <input type='submit' value='{$this->getWords()->getSilent('UpdateBoard')}'/>
     </form>
 </div>
-
+HTML;
+// Displaying Shouts for Accepter Team
+$shoutsCtrl = new ShoutsController;
+$shoutsCtrl->shoutsList('admin_accepter', 1);
+echo <<<HTML
 <h4>Displaying members with status: <b>{$this->status}</b> ({$this->members_count} members in total with that status).</h4>
 
 

@@ -252,4 +252,9 @@ h3.icon  {
 	background: transparent url(../../images/iconsfam/group.png) 0 3px no-repeat;
 }
 
+/* styles for member results lists, used in myprofile visitors */
+.myvisitors .subcolumns{margin-bottom: 1.5em;}
+.userinfo {margin-left: 55px;}
+.userinfo p {margin-bottom: 0.2em;}
+
 }

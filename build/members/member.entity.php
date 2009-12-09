@@ -745,36 +745,7 @@ ORDER BY Value asc
     public function getVisitorsSubset(PagerWidget $pager) 
     {
         return $this->createEntity('ProfileVisit')->getVisitingMembersSubset($this, $pager);
-        $sql = <<<SQL
-SELECT
-    members.BirthDate,
-    members.HideBirthDate,
-    members.Accomodation,
-    members.Username,
-    geonames_cache.name AS city
-FROM
-    profilesvisits,
-    members,
-    geonames_cache,
-    addresses
-WHERE
-    profilesvisits.IdMember  = $this->id  AND
-    profilesvisits.IdVisitor = members.Id AND
-    geonames_cache.geonameid = addresses.IdCity AND
-    addresses.IdMember = members.id AND
-    addresses.Rank = 0
-SQL;
-            if (!($s = $this->dao->query($sql)))
-            {
-                return false;
-            }
-            $visitors = array();
-            while ($rr = $s->fetch(PDB::FETCH_OBJ))
-            {
-                $visitors [] = $rr;
-            }
-            return $visitors;
-        }
+    }
 
       public function get_comments() {
           $sql = "

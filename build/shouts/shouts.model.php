@@ -224,8 +224,8 @@ SET
             `table`=\''.$table.'\',
             `table_id`=\''.$table_id.'\',
             `member_id_foreign`='.$memberId.',
-            `title`=\''.$gallery->title.'\',
-            `text`=\''.$gallery->text.'\',
+            `title`=\''.$this->dao->escape($gallery->title).'\',
+            `text`=\''.$this->dao->escape($gallery->text).'\',
             `created`=\''.$gallery->created.'\'';
                     $s = $this->dao->query($query);
                     if (!$s) {

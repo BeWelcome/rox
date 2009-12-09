@@ -595,7 +595,7 @@ SQL;
             else
             {
                 $data = $result->fetch(PDB::FETCH_ASSOC);
-                return $data['count'];
+                return (isset($data['count']) ? $data['count'] : 0);
             }
         }
         catch (Exception $e)

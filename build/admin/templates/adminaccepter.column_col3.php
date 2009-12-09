@@ -52,16 +52,6 @@ else
 }
 echo <<<HTML
 </p>
-<div id="messageboard">
-    <h4>The Message board</h4>
-    <form action='' method='post'>
-        {$this->getCallbackOutput('AdminController', 'updateVolunteerBoard')}
-        <input type='hidden' name='boardname' value='{$this->board->Name}'/>
-        <input type='hidden' name='tool_url' value='{$this->router->url('admin_accepter')}'/>
-        <textarea cols="68" rows="8" name='TextContent'>{$this->board->TextContent}</textarea>
-        <input type='submit' value='{$this->getWords()->getSilent('UpdateBoard')}'/>
-    </form>
-</div>
 HTML;
 // Displaying Shouts for Accepter Team
 $shoutsCtrl = new ShoutsController;

@@ -37,7 +37,9 @@ class ShoutsController extends PAppController {
         $User = APP_User::login();
         if (!isset($request[1]))
             $request[1] = '';
-
+        if ($request[1] == 'moveshoutsfromgallery')
+            $P->content = $this->_model->moveShoutsFromGallery();
+        return $P;
     }
     
     public function shoutsList($application, $object_id) 

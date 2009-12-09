@@ -137,6 +137,106 @@ SET
                 '<a href="mailto:\\1">\\1</a>', $text);
             return $text;
         }
+        
+     /*
+             Gallery Comments
+            */
+        protected function getGalleryComments() {
+        	$query = '
+    SELECT
+        c.`id` AS `comment_id`,
+        c.`user_id_foreign`,
+        u.`handle`,
+        c.`gallery_id_foreign`,
+        c.`gallery_items_id_foreign`,
+        c.`created`,
+        c.`title`,
+        c.`text`
+    FROM `gallery_comments` c
+    LEFT JOIN `user` u ON c.`user_id_foreign`=u.`id`
+            ';
+            $s = $this->dao->query($query);
+            if ($s->numRows() == 0)
+                return false;
+            return $s;
+        }
+        
+        /**
+         * Get all user fields
+         *
+         * @param int $userId
+         * @return stdClass
+         */
+        protected function getMemberIdByUsername($username)
+        {
+            $query = '
+    SELECT
+        `members`.`id`
+    FROM `members` WHERE
+        `Username` = \''.$username.'\'
+            ';
+            $s = $this->dao->query($query);
+            if( $s->numRows() == 0)
+                return false;
+            if( $s->numRows() != 1)
+                throw new PException('Data inconsistency');
+            return $s->fetch(PDB::FETCH_OBJ);
+        }
+
+        
+        public function moveShoutsFromGallery() {
+            $galleries = $this->getGalleryComments();
+            $return = 'MOVED: ';
+            foreach ($galleries as $gallery) {
+                if ($gallery->gallery_items_id_foreign) {
+                    $table = 'gallery_items';
+                    $table_id = $gallery->gallery_items_id_foreign;
+                } elseif ($gallery->gallery_id_foreign) {
+                    $table = 'gallery';
+                    $table_id = $gallery->gallery_id_foreign;
+                }
+                $memberId = $this->getMemberIdByUsername($gallery->handle)->id;
+                
+            	$query = '
+        SELECT
+            c.`id` AS `shout_id`,
+            c.`member_id_foreign` AS `IdMember`,
+            u.`username` AS `username`,
+            UNIX_TIMESTAMP(c.`created`) AS `unix_created`,
+            c.`title`,
+            c.`created`,
+            c.`text`
+        FROM `shouts` c
+        LEFT JOIN `members` u ON c.`member_id_foreign`=u.`id`
+        WHERE c.`table` = \''.$table.'\'
+        AND c.`table_id` = '.(int)$table_id.'
+        AND c.`created` = \''.$gallery->created.'\'
+        ORDER BY c.`created` DESC
+                ';
+                $s = $this->dao->query($query);
+                if ($s->numRows() == 0)
+                {
+                    $shoutId = $this->dao->nextId('shouts');
+                    $query = '
+        INSERT INTO `shouts`
+        SET
+            `id`='.$shoutId.',
+            `table`=\''.$table.'\',
+            `table_id`=\''.$table_id.'\',
+            `member_id_foreign`='.$memberId.',
+            `title`=\''.$gallery->title.'\',
+            `text`=\''.$gallery->text.'\',
+            `created`=\''.$gallery->created.'\'';
+                    $s = $this->dao->query($query);
+                    if (!$s) {
+                        $vars['errors'] = array('inserror');
+                        return false;
+                    }
+                    $return .= $table_id.' - ';
+                }
+            }
+            return $return;
+        }
 
 /*
 * cleanupText

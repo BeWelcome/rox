@@ -45,6 +45,8 @@ class EmailTemplate extends RoxComponentBase
      */
     private static $_templates = array(
         'SignupAccepted'    => 'EmailAccepted',
+        'SignupRejected'    => 'EmailRejected',
+        'SignupNeedmore'    => 'EmailStatusNeedmore',
     );
 
     /**

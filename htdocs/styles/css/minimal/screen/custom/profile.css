@@ -254,6 +254,7 @@ h3.icon  {
 
 /* styles for member results lists, used in myprofile visitors */
 .myvisitors .subcolumns{margin-bottom: 1.5em;}
+.myvisitors .profilesummary{color: #777; font-style: italic;}
 .userinfo {margin-left: 55px;}
 .userinfo p {margin-bottom: 0.2em;}
 

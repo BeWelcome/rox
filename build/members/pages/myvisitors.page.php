@@ -16,6 +16,7 @@ class MyVisitorsPage extends ProfilePage
     	$member = $this->member;
     	$visitor_count = $this->member->getVisitorCount() ;
         $layoutbits = new MOD_layoutbits();
+        $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 
         if (!$visitor_count)
         {
@@ -30,7 +31,7 @@ class MyVisitorsPage extends ProfilePage
 
         $pager->render();
 
-        echo "<div style='clear:right'>";
+        echo '<div class="myvisitors">';
 
         foreach ($member->getVisitorsSubset($pager) as $m)
         {
@@ -39,17 +40,23 @@ class MyVisitorsPage extends ProfilePage
             if ($m->HideBirthDate=="No") $m->age = floor($layoutbits->fage_value($m->BirthDate));
             else $m->age = $words->get("Hidden");
             echo <<<HTML
-<li class="userpicbox float_left">
-    <a href="members/{$m->Username}">{$image}</a>
-    <p>
-        Visited: {$layoutbits->ago(strtotime($m->visited))}
-        <a href="members/{$m->Username}">{$m->Username}</a>
-        <a href="blog/{$m->Username}" title="Read blog by {$m->Username}"><img src="images/icons/blog.gif" alt="" /></a>
-        <a href="trip/show/{$m->Username}" title="Show trips by {$m->Username}"><img src="images/icons/world.gif" alt="" /></a>
-        <br />
-        <span class="small">{$words->getFormatted("yearsold",$m->age)}<br />{$m->city}</span>
-    </p>
-</li>
+<div class="subcolumns">
+    <div class="c33l">
+        <div class="subcl">
+            {$image}
+            <div class="userinfo">
+                <a class="username" href="members/{$m->Username}">{$m->Username}</a><br />
+                <p class="small">{$words->getFormatted("visited")}: {$layoutbits->ago(strtotime($m->visited))}</p>
+                <p class="small">{$words->getFormatted("yearsold",$m->age)} - {$words->getFormatted("from")} {$m->city}</p>
+            </div>
+        </div>
+    </div>
+    <div class="c66r">
+        <div class="subcr">
+            <div class="profilesummary">{$purifier->purify(stripslashes($words->mInTrad($m->ProfileSummary, $language_id=0, true)))}</div>
+        </div>
+    </div>
+</div>
 HTML;
         }
         echo "</div>";

@@ -777,4 +777,5 @@ if (IsLoggedIn()) {
     function PictureInMail($Username) {
        $PictureFilePath='http://www.bewelcome.org/members/avatar/'.$Username ;
        $rval= '<img alt="picture of '.$Username.'" src="'.$PictureFilePath.'"/>';
+	   return($rval) ;
     } // End of PictureInMail

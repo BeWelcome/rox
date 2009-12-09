@@ -29,7 +29,8 @@ class VerifyMembersNotActivePage extends VerifyMembersPage
 
     protected function column_col3()
     {
-        echo '<p class="note error big">Only active members can verify each other!</p>';
+		$words = $this->getWords();
+        echo '<p class="note error big">'.$words->getFormatted("OnlyActiveMembersCanVerifyEachOther").'</p>';
     }
 
     

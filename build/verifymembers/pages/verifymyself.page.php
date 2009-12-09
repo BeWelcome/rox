@@ -29,7 +29,8 @@ class VerifyMyselfPage extends VerifyMembersPage
 
     protected function column_col3()
     {
-        echo '<p class="note error big">You cannot verify yourself!</p>';
+    	$words = $this->getWords();
+        echo '<p class="note error big">'.$words->getFormatted("YouCanNotVerifiyYourself").'</p>';
     }
 
     

@@ -31,16 +31,15 @@ Boston, MA  02111-1307, USA.
 //            This file is in urgent need of a redesign, preferably with the TB framework
 
 
-/* outdated - results in double included files
 //Load the files we'll need
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/SMTP.php";
 require_once "swift/Swift/Message/Encoder.php";
-*/
+/*
 
 // hack while we still use the old bw code
 require_once realpath(dirname(__FILE__) . '/../../../') . '/lib/misc/swift-mailer/lib/swift_required.php';
-
+*/
 // -----------------------------------------------------------------------------
 // bw_mail is a function to centralise all mail send thru BW
 function bw_mail($to, 

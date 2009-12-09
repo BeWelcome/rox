@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-class AdminAccepterPage extends AdminBasePage
+class AdminCommentsPage extends AdminBasePage
 {
 
     public function teaserHeadline()
@@ -38,9 +38,15 @@ class AdminAccepterPage extends AdminBasePage
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminAccepter')}</a>";
     }
     
+    /**
+     * configure the sidebar
+     */
+    protected function leftSidebar() {
+      
+    }
+    
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col1+3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
        return $stylesheets;
     }

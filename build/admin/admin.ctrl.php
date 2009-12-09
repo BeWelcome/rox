@@ -123,6 +123,13 @@ class AdminController extends RoxControllerBase
 //}}} Debug right methods
 
 //{{{ Accepter right methods
+    /**
+     * displays members not yet accepted into bw
+     * or in various other statuses ...
+     *
+     * @access public
+     * @return object
+     */
     public function accepter()
     {
         list($member, $rights) = $this->checkRights('Accepter');
@@ -136,10 +143,86 @@ class AdminController extends RoxControllerBase
         $params->items_per_page = 25; 
         $page->pager = new PagerWidget($params);
         $page->members = $this->_model->getMembersWithStatus($page->status, $page->pager);
+        $page->members_count = $page->pager->getTotalCount();
+        $page->model = $this->_model;
+        $page->board = $this->_model->getAccepterBoard();
         return $page;
     }
 
+     /**
+     * updates members, primarily their status
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff stuff
+     * @param stuff stuff
+     *
+     * @access public
+     * @return string return url
+     */
+    public function accepterProcessMembers(stdClass $args, ReadOnlyObject $memory, $stuff3, $stuff4)
+    {
+        list($member, $rights) = $this->checkRights('Accepter');
+        if (empty($args->post))
+        {
+            return false;
+        }
+        $result = $this->_model->processMembers($args->post);
+        if (!empty($result['errors']))
+        {
+            return false;
+        }
+        return false;
+    }
+
 //}}}
+
+//{{{ admin comments stuff
+    /**
+     * comments overview method
+     *
+     * @access public
+     * @return object
+     */
+    public function commentsOverview()
+    {
+        list($member, $rights) = $this->checkRights('Comments');
+        $page = new AdminCommentsPage;
+        $page->member = $member;
+
+        $page->bad_comments = $this->_model->getBadComments();
+        $params->strategy = new HalfPagePager('left');
+        $params->items = count($page->bad_comments);
+        $params->items_per_page = 25; 
+        $page->pager = new PagerWidget($params);
+        return $page;
+    }
+//}}}
+
+    /**
+     * generic board update function
+     * post callback
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff stuff
+     * @param stuff stuff
+     *
+     * @access public
+     * @return string return url
+     */
+    public function updateVolunteerBoard(stdClass $args, $memory, $stuff3, $stuff4)
+    {
+        if (empty($args->post) || empty($args->post['boardname']) || empty($args->post['tool_url']) || empty($args->post['TextContent']))
+        {
+            return false;
+        }
+        if (!$this->_model->updateVolunteerBoard($args->post['boardname'], $args->post['TextContent']))
+        {
+            return false;
+        }
+        return false;
+    }
 
     public function activityLogs()
     {

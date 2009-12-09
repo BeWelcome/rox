@@ -4,7 +4,7 @@
     $expand_class = count($right_names) == 1 ? 'expanded' : 'expandable';
     if (in_array('Debug', $right_names))
     {
-        $description = htmlspecialchars($this->rights['Debug']['Description'], ENT_NOQUOTES);
+        $description = htmlspecialchars($this->rights['Debug']['Description'], ENT_QUOTES);
         echo <<<HTML
 <li class='{$expand_class}'><a href='#' title='{$description}' class='header'>+/- Debug</a>
     <ul>
@@ -19,9 +19,17 @@ HTML;
 
     if (in_array('Accepter', $right_names))
     {
-        $description = htmlspecialchars($this->rights['Accepter']['Description'], ENT_NOQUOTES);
+        $description = htmlspecialchars($this->rights['Accepter']['Description'], ENT_QUOTES);
         echo <<<HTML
 <li><a href='{$this->router->url('admin_accepter')}' title='{$description}' class='header'>Accepter</a></li>
+HTML;
+    }
+
+    if (in_array('Comments', $right_names))
+    {
+        $description = htmlspecialchars($this->rights['Comments']['Description'], ENT_QUOTES);
+        echo <<<HTML
+<li><a href='{$this->router->url('admin_comments_overview')}' title='{$description}' class='header'>Comments</a></li>
 HTML;
     }
 ?>

@@ -26,10 +26,10 @@ class ExceptionPage
           padding:2px 6px;
           z-index:20;
         }
-        .hoverme:hover {
+        .hoverme a:hover {
           background:#eeeeff;
         }
-        .hoverme:hover .tooltip {
+        .hoverme a:hover .tooltip {
           display:block;
         }
         .tracestep {
@@ -108,8 +108,9 @@ class ExceptionPage
                             )
                         )
                     )
-                )).'</a>
+                )).'
                 <div class="tooltip"><pre>'.print_r($arg, true).'</pre></div>
+                </a>
                 </span>';
             }
         } else {

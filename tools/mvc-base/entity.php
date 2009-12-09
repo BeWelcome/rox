@@ -594,8 +594,11 @@ SQL;
             }
             else
             {
-                $data = $result->fetch(PDB::FETCH_ASSOC);
-                return $data['count'];
+                $data = $result->fetch(PDB::FETCH_BOTH);
+                $return = isset($data['count']) ? $data['count'] : null;
+                $return = is_null($return) && isset($data[0]) ? $data[0] : $return;
+                $return = is_null($return) ? 0 : $return;
+                return intval($return);
             }
         }
         catch (Exception $e)
@@ -805,9 +808,8 @@ SQL;
                     continue;
                 }
             }
-            $value = $this->dao->escape($this->$key);
             $set_string .= (($set_string != '') ? ', ' : '');
-            $set_string .= "{$key} = '" . $this->dao->escape($value) . "'";
+            $set_string .= "{$key} = '{$this->dao->escape($this->$key)}'";
         }
 
         $query = "UPDATE `{$this->getTableName()}` SET {$set_string} WHERE {$where}";

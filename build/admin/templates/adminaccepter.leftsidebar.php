@@ -1,6 +1,7 @@
 <?php
 /*
-Copyright (c) 2007-2009 BeVolunteer
+
+Copyright (c) 2007 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -18,30 +19,30 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/> or 
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
+
 */
-    /** 
-     * @author Fake51
-     */
+/** 
+ * @author Matthias Heß <globetrotter_tt>
+ */
+$words = new MOD_words();
 
-    /** 
-     * accepter overview page
-     * 
-     * @package Apps
-     * @subpackage Admin
-     */
+    echo <<<HTML
 
-class AdminAccepterPage extends AdminBasePage
-{
-
-    public function teaserHeadline()
+<table>
+    <tr>
+        <th>Status</th>
+        <th>#</th>
+    </tr>
+HTML;
+    foreach ($this->model->getStatusOverview() as $status => $count) 
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminAccepter')}</a>";
+        echo <<<HTML
+    <tr>
+        <td><a href="{$this->router->url('admin_accepter')}?status={$status}">{$status}</a></td>
+        <td>{$count}</td>
+    </tr>
+HTML;
     }
-    
-    protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col1+3.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
-       return $stylesheets;
-    }
-}
+    echo <<<HTML
+</table>
+HTML;

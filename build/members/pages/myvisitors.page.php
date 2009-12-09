@@ -6,7 +6,7 @@ class MyVisitorsPage extends ProfilePage
     
     protected function getSubmenuActiveItem()
     {
-        return 'profile';
+        return 'visitors';
     }
     
     
@@ -14,48 +14,51 @@ class MyVisitorsPage extends ProfilePage
     {
         $words = $this->getWords();
     	$member = $this->member;
-    	$visitors = $member->visitors_raw;
+    	$visitor_count = $this->member->getVisitorCount() ;
         $layoutbits = new MOD_layoutbits();
-        // FIXME: Not the best way to provide pagination. But for now there's not better choice.
-        if (!$visitors) {
-            return false;
-        } else {
-            $request = PRequest::get()->request;
-            $requestStr = implode('/', $request);
-            $matches = array();
-            if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
-                $page = $matches[1];
-                $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);
-            } else {
-                $page = 1;
-            }
-            $p = PFunctions::paginate($visitors, $page, $itemsPerPage = 15);
-            $visitors = $p[0];
+        $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+
+        if (!$visitor_count)
+        {
+			echo $words->get("ProfileNoVisitors");
+            return;
         }
 
-        ?>
-        <h3><?=$words->get('')?></h3>
-        <?php
+        $params->strategy = new HalfPagePager('right');
+        $params->items = $visitor_count;
+        $params->items_per_page = 20;
+        $pager = new PagerWidget($params);
 
-    foreach ($visitors as $member) {
-        $image = new MOD_images_Image('',$member->Username);
-        if ($member->HideBirthDate=="No") $member->age = floor($layoutbits->fage_value($member->BirthDate));
-        else $member->age = $words->get("Hidden");
-        echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'members/'.$member->Username.'\'; return false"><a href="bw/member.php?cid='.$member->Username.'">'.MOD_layoutbits::PIC_50_50($member->Username,'',$style='float_left framed').'</a><p><a href="bw/member.php?cid='.$member->Username.'">'.$member->Username.'</a>
-        <a href="blog/'.$member->Username.'" title="Read blog by '.$member->Username.'"><img src="images/icons/blog.gif" alt="" /></a>
-        <a href="trip/show/'.$member->Username.'" title="Show trips by '.$member->Username.'"><img src="images/icons/world.gif" alt="" /></a>
-        <br /><span class="small">'.$words->getFormatted("yearsold",$member->age).'<br />'.$member->city.'</span></p></li></a>';
-    }
+        $pager->render();
 
-    $pages = $p[1];
-    $maxPage = $p[2];
-    $currentPage = $page;
-    if (isset($requestStrNew)) $requestStr = $requestStrNew;
-    $request = $requestStr.'/=page%d';
-    require TEMPLATE_DIR.'misc/pages.php';
+        echo '<div class="myvisitors">';
 
+        foreach ($member->getVisitorsSubset($pager) as $m)
+        {
+            $image = new MOD_images_Image('',$m->Username);
+            $image = MOD_layoutbits::PIC_50_50($m->Username,'',$style='float_left framed');
+            if ($m->HideBirthDate=="No") $m->age = floor($layoutbits->fage_value($m->BirthDate));
+            else $m->age = $words->get("Hidden");
+            echo <<<HTML
+<div class="subcolumns">
+    <div class="c33l">
+        <div class="subcl">
+            {$image}
+            <div class="userinfo">
+                <a class="username" href="members/{$m->Username}">{$m->Username}</a><br />
+                <p class="small">{$words->getFormatted("visited")}: {$layoutbits->ago(strtotime($m->visited))}</p>
+                <p class="small">{$words->getFormatted("yearsold",$m->age)} - {$words->getFormatted("from")} {$m->city}</p>
+            </div>
+        </div>
+    </div>
+    <div class="c66r">
+        <div class="subcr">
+            <div class="profilesummary">{$purifier->purify(stripslashes($words->mInTrad($m->ProfileSummary, $language_id=0, true)))}</div>
+        </div>
+    </div>
+</div>
+HTML;
+        }
+        echo "</div>";
     }
 }
-
-
-?>

@@ -718,38 +718,34 @@ ORDER BY Value asc
       }
 
 
-        public function get_visitors() 
+
+    /**
+     * returns count of profile visitors
+     *
+     * @access public
+     * @return int
+     */
+    public function getVisitorCount()
+    {
+        if (!$this->isLoaded())
         {
-            $sql = <<<SQL
-SELECT
-    members.BirthDate,
-    members.HideBirthDate,
-    members.Accomodation,
-    members.Username,
-    geonames_cache.name AS city
-FROM
-    profilesvisits,
-    members,
-    geonames_cache,
-    addresses
-WHERE
-    profilesvisits.IdMember  = $this->id  AND
-    profilesvisits.IdVisitor = members.Id AND
-    geonames_cache.geonameid = addresses.IdCity AND
-    addresses.IdMember = members.id AND
-    addresses.Rank = 0
-SQL;
-            if (!($s = $this->dao->query($sql)))
-            {
-                return false;
-            }
-            $visitors = array();
-            while ($rr = $s->fetch(PDB::FETCH_OBJ))
-            {
-                $visitors [] = $rr;
-            }
-            return $visitors;
+            return 0;
         }
+        return $this->createEntity('ProfileVisit')->getVisitCountForMember($this);
+    }
+
+    /**
+     * returns array of members that have visited this profile
+     *
+     * @param PagerWidget $pager - pager containing details of visitor subset to fetch
+     *
+     * @access public
+     * @return array
+     */
+    public function getVisitorsSubset(PagerWidget $pager) 
+    {
+        return $this->createEntity('ProfileVisit')->getVisitingMembersSubset($this, $pager);
+    }
 
       public function get_comments() {
           $sql = "

@@ -196,7 +196,7 @@ switch (GetParam("action")) {
 				case "needmore" :
 				   $m = LoadRow("select * from members where id=" . $IdMember);
 				   $needmoretext=GetStrParam("needmoretext_".$ii);
-				   $urltoreply = PVars::getObj('env')->baseuri."login";
+				   $urltoreply = PVars::getObj('env')->baseuri."editmyprofile";
 				   $m = LoadRow("select * from members where id=" . $IdMember);
 				   $str = "update members set Status='NeedMore' where (Status='Pending' or Status='Active' or Status='CompletedPending' or Status='MailToConfirm') and id=" . $IdMember;
 				   $qry = sql_query($str);

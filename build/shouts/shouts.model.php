@@ -70,7 +70,7 @@ ORDER BY c.`created` DESC
     public function deleteShouts($table,$table_id = 0) {
     	$query = '
 DELETE FROM `shouts`
-WHERE `table` = '.$table.'
+WHERE `table` = \''.$table.'\'
 AND `table_id` = '.(int)$table_id.'
         ';
         return $this->dao->exec($query);

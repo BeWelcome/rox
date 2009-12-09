@@ -61,9 +61,21 @@ if (!$comments) {
     echo '<p><a href="signup" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
 } else {
     $count = 0;
+    $max = count($comments);
     $lastHandle = '';
     foreach ($comments as $comment) {
+        if ($max > 6 && $count == 6) {
+            echo '
+            <script type="text/javascript">
+            function showShouts() {
+                $(\'shoutsHidden_'.$table.'\').toggle();
+            }
+            </script>';
+            echo '<a id="shoutsHidden_'.$table.'_link" onclick="showShouts()" class="shoutsShowAll">'.$words->get('Show all').'</a><div style="display:none;" id="shoutsHidden_'.$table.'">';
+        }
         require 'comment.php';
+        if ($max > 6 && $count == $max-1)
+            echo '</div>';
         ++$count;
         $lastHandle = $comment->username;
     }

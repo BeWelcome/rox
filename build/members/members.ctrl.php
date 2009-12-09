@@ -99,6 +99,9 @@ class MembersController extends RoxControllerBase
             case 'mypreferences':
                 $page = new MyPreferencesPage();
                 break;
+            case 'deleteprofile':
+                $page = new DeleteProfilePage();
+                break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
                 // $member->edit_mode = true;

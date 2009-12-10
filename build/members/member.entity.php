@@ -548,6 +548,70 @@ WHERE IdToMember = ".$this->id
 
 
     /**
+     * return an array of trip entities that the member created
+     *
+     * @access public
+     * @return array
+     */
+    public function getTripsArray()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+
+        $tripmodel = new Trip();
+        $usertrips = $tripmodel->getTrips($this->Username);
+        $trip_data = $tripmodel->getTripData();
+        return array($usertrips,$trip_data);
+    }
+    
+    /**
+     * return an array of trip entities that the member created
+     *
+     * @access public
+     * @return array
+     */
+    public function getBlogs()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+
+        $tripmodel = new Blog();
+        $usertrips = $tripmodel->getTrips($this->Username);
+        $trip_data = $tripmodel->getTripData();
+        return array($usertrips,$trip_data);
+    }
+    
+    /**
+     * return an array of trip entities that the member created
+     *
+     * @access public
+     * @return array
+     */
+    public function getComingPosts()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        $date = date('Y-m-d h:i:s');
+        $sql = <<<SQL
+            SELECT b.*
+            FROM `blog_data` bd
+            JOIN `blog` b ON bd.`blog_id` = b.`blog_id`
+            WHERE bd.`blog_geonameid` IS NOT NULL
+            AND b.`IdMember` = {$this->id}
+            AND bd.`blog_start` >= '{$date}'
+            ORDER BY bd.`blog_start`
+SQL;
+        
+        return $this->createEntity('BlogEntity')->findBySQLMany($sql);        
+    }
+
+    /**
      * return an array of group entities that the member is in
      *
      * @access public
@@ -1165,6 +1229,28 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             $this->old_rights = $return;
         }
         return $this->old_rights;
+    }
+    
+    /**
+     * sets a new password for this member
+     *
+     * @param string $pw - new password as string
+     *
+     * @access public
+     * @return bool
+     */
+    public function setPassword($pw)
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($pw).'\') WHERE `id` = '.$this->id;
+        if( $this->model->dao->exec($query)) {
+            $L = MOD_log::get();
+            $L->write("Password changed", "change password");
+            return true;
+        } else return false;
     }
 
     /**

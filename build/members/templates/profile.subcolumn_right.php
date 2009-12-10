@@ -97,16 +97,34 @@ if (count($relations) > 0) { ?>
     </div>
 <? } ?>
 
-<? // This member's gallery ?>
-        <?php        
+<?php
+        // This member's upcoming trips
+        if ($comingposts = $member->getComingPosts()) {
+            echo <<<HTML
+            <h3><a href="trip/show/user/{$member->Username}" title="{$words->getSilent('TripsUpComing')}">
+{$words->getSilent('TripsUpComing')}</a></h3><ul>
+HTML;
+            foreach ($comingposts as $blog) {
+            $date = date("d M Y", strtotime($blog->blog_start));
+            echo <<<HTML
+                <li><a href="trip/show/user/{$member->Username}" title="{$words->getSilent('TripsUpComing')}">
+{$blog->getGeo()->name}</a>
+                    {$date}
+                </li>
+HTML;
+            echo '</ul>';
+            }
+        }
+
+        // This member's gallery
 	    $userid = $member->userid;
 	    $gallery = new GalleryModel;
 	    $statement = $userid ? $gallery->getLatestItems($userid) : false;
 	    if ($statement) {
-		?>
+		echo <<<HTML
 	        <div class="floatbox box">
-	        <h3><a href="gallery/show/user/<?=$member->Username?>" title="<?=$words->getSilent('GalleryTitleLatest')?>"> <?=$words->get('GalleryTitleLatest')?></a></h3>
-	    <?php
+	        <h3><a href="gallery/show/user/{$member->Username}" title="{$words->getSilent('GalleryTitleLatest')}"> {$words->get('GalleryTitleLatest')}</a></h3>
+HTML;
 	        // if the gallery is NOT empty, go show it
 	        $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
 	        $statement = $p[0];

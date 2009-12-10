@@ -1186,6 +1186,8 @@ ORDER BY
                 $suffix = '_xs';
             elseif (isset($_GET['30_30']))
                 $suffix = '_30_30';
+            elseif (isset($_GET['200']))
+                $suffix = '_200';
             else $suffix = '';
             $file .= $suffix;
         }
@@ -1264,6 +1266,7 @@ ORDER BY membersphotos.SortOrder
         $this->writeMemberphoto($memberid);
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
         $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
+        $img->createThumb($this->avatarDir->dirName(), $memberid.'_200',200, 266, true, 'ratio');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_30_30', 30, 30, true, 'square');
         return true;

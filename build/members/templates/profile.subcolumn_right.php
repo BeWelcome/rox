@@ -101,20 +101,22 @@ if (count($relations) > 0) { ?>
         // This member's upcoming trips
         if ($comingposts = $member->getComingPosts()) {
             echo <<<HTML
+            <div class="floatbox box">
             <h3><a href="trip/show/user/{$member->Username}" title="{$words->getSilent('TripsUpComing')}">
 {$words->getSilent('TripsUpComing')}</a></h3><ul>
 HTML;
             foreach ($comingposts as $blog) {
-            $date = date("d M Y", strtotime($blog->blog_start));
-            $geoname = ($blog->getGeo()) ? $blog->getGeo()->name : $blog->title;
-            echo <<<HTML
+                $date = date("d M Y", strtotime($blog->blog_start));
+                $geoname = ($blog->getGeo()) ? $blog->getGeo()->name : $blog->title;
+                echo <<<HTML
                 <li><a href="trip/show/user/{$member->Username}" title="{$words->getSilent('TripsUpComing')}">
                     {$geoname}</a>
                     {$date}
                 </li>
 HTML;
-            echo '</ul>';
+                echo '</ul>';
             }
+            echo '</div>';
         }
 
         // This member's gallery

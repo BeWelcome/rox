@@ -12,6 +12,16 @@
  */
 class FeedbackModel extends RoxModelBase
 {
+
+    const BUG_PROBLEM        = 1;
+    const ABUSE_REPORT       = 2;       
+    const FEEDBACK_AT_SIGNUP = 3;  
+    const COMMENT_ISSUE      = 4;      
+    const MEDIA              = 5;             
+    const FORUM              = 6;             
+    const FEATURE_REQUEST    = 7;    
+    const VOLUNTEERING       = 8;     
+
     public function getFeedbackCategories()
     {
         $categories = $this->bulkLookup(

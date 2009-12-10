@@ -44,7 +44,7 @@ class AdminModel extends RoxModelBase
      * @access public
      * @return array
      */
-    public function getMembersWithStatus($status, $pager)
+    public function getMembersWithStatus($status, PagerWidget $pager)
     {
         $offset = ($pager->active_page - 1) * $pager->items_per_page;
         return $this->createEntity('Member')->findByWhereMany("Status = '{$this->dao->escape($status)}' ORDER BY id LIMIT {$offset}, {$pager->items_per_page}");
@@ -77,12 +77,48 @@ class AdminModel extends RoxModelBase
     }
 
     /**
+     * counts total amount of members with a
+     * username like the term given
+     *
+     * @param string $term - wildcard
+     *
+     * @access public
+     * @return int
+     */
+    public function countMembersByWildcard($term)
+    {
+        if (trim($term) == '')
+        {
+            return 0;
+        }
+        return $this->createEntity('Member')->countWhere("Username like '%{$this->dao->escape($term)}%'");
+    }
+
+    /**
+     * returns array of members with username like given term
+     *
+     * @param string      $term  - wildcard
+     * @param PagerWidget $pager - pager
+     *
+     * @access public
+     * @return array
+     */
+    public function getMembersByWildcard($term, PagerWidget $pager)
+    {
+        if (trim($term) == '')
+        {
+            return array();
+        }
+        return $this->createEntity('Member')->findByWhereMany("Username like '%{$this->dao->escape($term)}%' ORDER BY id LIMIT {$pager->getOffset()}, {$pager->items_per_page}");
+    }
+
+    /**
      * updates member statuses according to a post array
      *
      * @param array $post
      *
      * @access public
-     * @return bool
+     * @return array
      */
     public function processMembers(array $post)
     {
@@ -90,7 +126,13 @@ class AdminModel extends RoxModelBase
         {
             return false;
         }
-        $errors = array();
+        $result = array(
+            'accepted'  => 0,
+            'rejected'  => 0,
+            'duplicate' => 0,
+            'needmore'  => 0,
+            'errors'    => array(),
+        );
         foreach ($post['accept_action'] as $id => $action)
         {
             if (!($member = $this->createEntity('Member')->findById($id)))
@@ -103,19 +145,56 @@ class AdminModel extends RoxModelBase
                     $member->Status = 'Active';
                     if (!$this->sendAcceptedEmail($member) || !$member->update())
                     {
-                        $errors[] = array('id' => $member->id, 'action' => 'accept');
+                        $result['errors'][] = array('id' => $member->id, 'action' => 'accept');
                         $this->logWrite("Accepting of {$member->Username} - {$member->id} failed. Accepter: {$this->getLoggedInMember()->Username}", 'bug');
                     }
                     else
                     {
-                        $this->logWrite("{$member->Username} - {$member->id} was accepted. Accepter: {$this->getLoggedInMember()->Username}", 'bug');
+                        $result['accepted'] += 1;
+                        $this->logWrite("{$member->Username} - {$member->id} was accepted. Accepter: {$this->getLoggedInMember()->Username}", 'admin');
                     }
                     break;
                 case 'reject':
+                    $member->Status = 'Rejected';
+                    if (!$this->sendRejectedEmail($member) || !$member->update())
+                    {
+                        $result['errors'][] = array('id' => $member->id, 'action' => 'reject');
+                        $this->logWrite("Rejection of {$member->Username} - {$member->id} failed. Accepter: {$this->getLoggedInMember()->Username}", 'bug');
+                    }
+                    else
+                    {
+                        $result['rejected'] += 1;
+                        $this->logWrite("{$member->Username} - {$member->id} was rejected. Accepter: {$this->getLoggedInMember()->Username}", 'admin');
+                    }
+                    break;
                 case 'needmore':
+                    $member->Status = 'NeedMore';
+                    if (!$this->sendNeedmoreEmail($member) || !$member->update())
+                    {
+                        $result['errors'][] = array('id' => $member->id, 'action' => 'needmore');
+                        $this->logWrite("Update of {$member->Username} - {$member->id} to Needmore status failed. Accepter: {$this->getLoggedInMember()->Username}", 'bug');
+                    }
+                    else
+                    {
+                        $result['needmore'] += 1;
+                        $this->logWrite("{$member->Username} - {$member->id} set as Needmore. Accepter: {$this->getLoggedInMember()->Username}", 'admin');
+                    }
+                    break;
                 case 'duplicated':
+                    $member->Status = 'DuplicateSigned';
+                    if (!$member->Update())
+                    {
+                        $result['errors'][] = array('id' => $member->id, 'action' => 'duplicate');
+                        $this->logWrite("Setting {$member->Username} - {$member->id} as duplicate failed. Accepter: {$this->getLoggedInMember()->Username}", 'bug');
+                    }
+                    else
+                    {
+                        $result['duplicate'] += 1;
+                        $this->logWrite("{$member->Username} - {$member->id} set as duplicate. Accepter: {$this->getLoggedInMember()->Username}", 'admin');
+                    }
             }
         }
+        return $result;
     }
 
     /**
@@ -124,63 +203,60 @@ class AdminModel extends RoxModelBase
      *
      * @param Member $member - member to welcome
      *
-     * @access public
+     * @access private
      * @return bool
      */
-    public function sendAcceptedEmail(Member $member)
+    private function sendAcceptedEmail(Member $member)
     {
-        $email = new EmailTemplate('SignupAccepted');
+        return $this->sendEmailTemplate($member, 'SignupAccepted');
+    }
+
+    /**
+     * sends out an email containing a nasty message
+     * to rejected members
+     *
+     * @param Member $member - member to welcome
+     *
+     * @access private
+     * @return bool
+     */
+    private function sendRejectedEmail(Member $member)
+    {
+        return $this->sendEmailTemplate($member, 'SignupRejected');
+    }
+
+    /**
+     * sends out an email to new signups stating
+     * they forgot to fill in details
+     *
+     * @param Member $member - member to welcome
+     *
+     * @access private
+     * @return bool
+     */
+    private function sendNeedmoreEmail(Member $member)
+    {
+        return $this->sendEmailTemplate($member, 'SignupNeedmore');
+    }
+
+    /**
+     * boilerplate to instantiate an email template and send it
+     *
+     * @param Member $member   - member to welcome
+     * @param string $template - template to use
+     *
+     * @access private
+     * @return bool
+     */
+    private function sendEmailTemplate(Member $member, $template)
+    {
+        $email = new EmailTemplate($template);
         if (!$email->init(array('member' => $member)))
         {
             return false;
         }
         return $email->send();
     }
-//}}}
-
-//{{{ volunteer board
-    /**
-     * returns the text glob object for accepters
-     *
-     * @access public
-     * @return VolunteerBoard
-     */
-    public function getAccepterBoard()
-    {
-        return $this->getBoard('Accepters_board');
-    }
-
-    /**
-     * returns a board given it's name
-     *
-     * @param string $name
-     *
-     * @access public
-     * @return VolunteerBoard
-     */
-    public function getBoard($name)
-    {
-        return $this->createEntity('VolunteerBoard')->findByName($name);
-    }
-
-    /**
-     * updates a given volunteer board
-     *
-     * @param string $boardname - name of board to update
-     * @param string $text      - text to update with
-     *
-     * @access public
-     * @return bool
-     */
-    public function updateVolunteerBoard($boardname, $text)
-    {
-        if (!($board = $this->createEntity('VolunteerBoard')->findByName($boardname)) || !($member = $this->getLoggedInMember()))
-        {
-            return false;
-        }
-        return $board->updateText($text, $member);
-    }
-
 //}}}
 
 //{{{ comments

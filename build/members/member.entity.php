@@ -482,6 +482,36 @@ WHERE IdMember = ".$this->id
     }
 
 
+    /**
+     * returns address entity for first address
+     *
+     * @access public
+     * @return Address
+     */
+    public function getFirstAddress()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('Address')->getMemberAddress($this);
+    }
+
+    /**
+     * returns feedback entity matched to the users signup
+     * if the user left feedback then
+     *
+     * @access public
+     * @return Feedback
+     */
+    public function getSignupFeedback()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('Feedback')->getSignupFeedback($this);
+    }
 
     public function get_photo() {
         // $photos = $this->bulkLookup(

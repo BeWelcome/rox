@@ -21,13 +21,16 @@ Boston, MA  02111-1307, USA.
 */
     /** 
      * @author Fake51
+     * @author Globetrotter_tt
      */
 
     /** 
      * accepter overview page
      * 
-     * @package Apps
+     * @package    Apps
      * @subpackage Admin
+     * @author     Fake51
+     * @author     Globetrotter_tt
      */
 
 class AdminAccepterPage extends AdminBasePage
@@ -38,7 +41,8 @@ class AdminAccepterPage extends AdminBasePage
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminAccepter')}</a>";
     }
     
-    protected function getStylesheets() {
+    protected function getStylesheets()
+    {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col1+3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';

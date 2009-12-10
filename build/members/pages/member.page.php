@@ -46,7 +46,7 @@ class MemberPage extends PageWithActiveSkin
             );
             if ($this instanceof EditMyProfilePage)
             {
-                $tt[] = array('deletemyprofile', 'deletemyprofile', $ww->DeleteMyProfile, 'deletemyprofile');
+                $tt[] = array('deleteprofile', 'deleteprofile', $ww->DeleteProfile, 'deleteprofile');
             }
         } else {
             $mynotes_count = $member->count_mynotes(); 

@@ -256,7 +256,37 @@ class Geo extends RoxEntityBase
         }
         return $this->total_usage;
     }
-	
+
+    /**
+     * returns region for a given location
+     *
+     * @access public
+     * @return Geo
+     */
+    public function getRegion()
+    {
+        if (!$this->region)
+        {
+            if (!$this->isLoaded() || $this->isCountry())
+            {
+                return false;
+            }
+            if ($this->isRegion())
+            {
+                return $this;
+            }
+            $geo = $this;
+            while ($geo = $geo->getParent())
+            {
+                if ($geo->isRegion())
+                {
+                    $this->region = $geo;
+                }
+            }
+        }
+        return $this->region;
+    }
+
 	/**
 	 * returns the type of the object
      *

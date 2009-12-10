@@ -281,4 +281,15 @@ class PagerWidget extends RoxWidget
     {
         return $this->items_total;
     }
+
+    /**
+     * returns the offset of the first item in the active subset
+     *
+     * @access public
+     * @return int
+     */
+    public function getOffset()
+    {
+        return ($this->active_page - 1) * $this->items_per_page;
+    }
 }

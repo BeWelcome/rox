@@ -145,7 +145,6 @@ class AdminController extends RoxControllerBase
         $page->members = $this->_model->getMembersWithStatus($page->status, $page->pager);
         $page->members_count = $page->pager->getTotalCount();
         $page->model = $this->_model;
-        $page->board = $this->_model->getAccepterBoard();
         return $page;
     }
 
@@ -167,11 +166,38 @@ class AdminController extends RoxControllerBase
         {
             return false;
         }
-        if (!$this->_model->processMembers($args->post))
+        $result = $this->_model->processMembers($args->post);
+        if (!empty($result['errors']))
         {
             return false;
         }
         return false;
+    }
+
+    /**
+     * logic for the search function in admin/accepter
+     *
+     * @access public
+     * @return object
+     */
+    public function accepterSearch()
+    {
+        list($member, $rights) = $this->checkRights('Accepter');
+
+        $page = new AdminAccepterPage;
+        $page->member = $member;
+        $page->scope = explode(',', str_replace('"', '', $rights['Accepter']['Scope']));
+
+        $page->term = !empty($this->args_vars->get['member']) ? $this->args_vars->get['member'] : '';
+
+        $params->strategy = new HalfPagePager('left');
+        $params->items = $this->_model->countMembersByWildcard($page->term);
+        $params->items_per_page = 25; 
+        $page->pager = new PagerWidget($params);
+        $page->members = $this->_model->getMembersByWildcard($page->term, $page->pager);
+        $page->members_count = $page->pager->getTotalCount();
+        $page->model = $this->_model;
+        return $page;
     }
 
 //}}}

@@ -106,9 +106,10 @@ if (count($relations) > 0) { ?>
 HTML;
             foreach ($comingposts as $blog) {
             $date = date("d M Y", strtotime($blog->blog_start));
+            $geoname = ($blog->getGeo()) ? $blog->getGeo()->name : $blog->title;
             echo <<<HTML
                 <li><a href="trip/show/user/{$member->Username}" title="{$words->getSilent('TripsUpComing')}">
-{$blog->getGeo()->name}</a>
+                    {$geoname}</a>
                     {$date}
                 </li>
 HTML;

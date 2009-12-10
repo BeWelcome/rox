@@ -129,10 +129,10 @@ class BlogEntity extends RoxEntityBase
     }
     
     /**
-     * overloads RoxEntityBase::delete
+     * return a Geo-Entity for a blog post's geonameid
      *
      * @access public
-     * @return int
+     * @return obj
      */
     public function getGeo()
     {

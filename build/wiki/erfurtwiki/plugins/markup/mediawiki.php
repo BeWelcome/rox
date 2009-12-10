@@ -22,6 +22,8 @@ $ewiki_config["format_block"]["mediawiki_image_tag"] = array("[[Image:", "]]", f
  $ewiki_plugins["format_line"][] = "ewiki_format_emulate_doublebrackets";
  $ewiki_plugins["format_table"][] = "ewiki_format_emulate_mediawiki_table";
 
+ $ewiki_plugins["title_transform"][] = "ewiki_mediawiki_title_transform";
+
  function ewiki_format_mediawiki_image_tag(&$str, &$in, &$iii, &$s, $btype) {
      if (strpos($str, "Media:") === false) {
          $l = strpos($str, "|");
@@ -122,6 +124,10 @@ $ewiki_config["format_block"]["mediawiki_image_tag"] = array("[[Image:", "]]", f
        $data['content'] = str_replace($from, $to, $data['content']);
     }
  }
-
+ 
+ function ewiki_mediawiki_title_transform($id, &$title, &$go_action){
+        $title = str_replace('  ', ' ', $title);
+        $title = str_replace('_', ' ', $title);
+ }
 
 ?>

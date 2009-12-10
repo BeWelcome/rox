@@ -180,6 +180,7 @@ class WikiController extends PAppController {
         $ewiki_config["smilies"] = array(
            ":)" => "emoticon_happy.png",
            ";)" => "emoticon_grin.png",
+           ":D" => "emoticon_smile.png"
         );
         
         $wiki = ewiki_page($page);
@@ -196,6 +197,8 @@ class WikiController extends PAppController {
         $request = implode('/', $request);
 
         $request = str_replace('wiki/', '', $request);
+        $request = str_replace('  ', ' ', $request);
+        $request = str_replace(' ', '_', $request);
 
         return $request;
     }

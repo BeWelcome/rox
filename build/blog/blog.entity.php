@@ -127,5 +127,16 @@ class BlogEntity extends RoxEntityBase
         }
         return $status;
     }
+    
+    /**
+     * overloads RoxEntityBase::delete
+     *
+     * @access public
+     * @return int
+     */
+    public function getGeo()
+    {
+        return $this->createEntity('Geo')->findById($this->blog_geonameid);        
+    }
 }
 

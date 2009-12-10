@@ -114,8 +114,8 @@ HTML;
                     {$date}
                 </li>
 HTML;
-                echo '</ul>';
             }
+            echo '</ul>';
             echo '</div>';
         }
 

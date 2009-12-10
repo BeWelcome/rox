@@ -567,7 +567,7 @@ WHERE IdToMember = ".$this->id
     }
     
     /**
-     * return an array of trip entities that the member created
+     * return an array of blog entities that the member created
      *
      * @access public
      * @return array
@@ -586,7 +586,7 @@ WHERE IdToMember = ".$this->id
     }
     
     /**
-     * return an array of trip entities that the member created
+     * return an array of blog entities that have a start date that lies in the future
      *
      * @access public
      * @return array
@@ -597,18 +597,7 @@ WHERE IdToMember = ".$this->id
         {
             return false;
         }
-        $date = date('Y-m-d h:i:s');
-        $sql = <<<SQL
-            SELECT b.*
-            FROM `blog_data` bd
-            JOIN `blog` b ON bd.`blog_id` = b.`blog_id`
-            WHERE bd.`blog_geonameid` IS NOT NULL
-            AND b.`IdMember` = {$this->id}
-            AND bd.`blog_start` >= '{$date}'
-            ORDER BY bd.`blog_start`
-SQL;
-        
-        return $this->createEntity('BlogEntity')->findBySQLMany($sql);        
+        return $this->createEntity('BlogEntity')->getComingPosts($this->id);        
     }
 
     /**

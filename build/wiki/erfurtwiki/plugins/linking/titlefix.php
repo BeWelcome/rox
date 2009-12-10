@@ -19,6 +19,8 @@ $ewiki_plugins["link_notfound"][] = "ewiki_linking_titlefix";
 function ewiki_linking_titlefix(&$title, &$href, &$href2, &$type) {
    global $ewiki_links;
    $href_mod = str_replace("  "," ",$href);
+   $href_mod = str_replace(' ','_',$href); // Edit 'Nov09: replace spaces with underscores
+   
    $find = ewiki_db::FIND(array($href_mod));
    if ($find[$href_mod])
    {

@@ -31,14 +31,21 @@ $ewiki_t["en"]["toc"] = "Content";
 // Toc caption showed always German, even if I was reading/surfing site in English. crumbking
 // $ewiki_t["de"]["toc"] = "Inhalt";
 
-
-
 #-- wiki page source rewriting
 function ewiki_toc_format_source(&$src) {
 
    $toc = array();
 
    $src = explode("\n", $src);
+   $found = false;
+   for ($ii = 0; $ii < count($src); $ii++) {   
+       if (stripos($src[$ii],"[TOC]") === 0) {
+           $src[$ii] = str_replace("[TOC]", "", $src[$ii]);
+           $found = true;
+           break;
+       }
+   }
+   
    /* Don't make use of ErfurtWiki headlines for now */
    // $n_last = 0;
    // foreach ($src as $i=>$line) {
@@ -64,8 +71,7 @@ function ewiki_toc_format_source(&$src) {
    $n_last = 0;
    $n_number = 1;
    $iii = 1;
-   if (strstr($src[0],"[TOC]")) {
-   $src[0] = str_replace("[TOC]", "", $src[0]);
+   if ($found) {
    foreach ($src as $i=>$line) {
 
       if ($line[0] == "=" && $line[strlen($line)-1] == "=") {
@@ -75,20 +81,17 @@ function ewiki_toc_format_source(&$src) {
                  $n_number = (strrpos($n_number,".")) ? substr($n_number,0,strrpos($n_number,".")) : $n_number;
                  $iii = (strrpos($n_number,".")) ? substr($n_number,strrpos($n_number,".")+1,strlen($n_number)-1)+1 : $n_number+1;
                  $n_number = (strrpos($n_number,".")) ? substr($n_number,0,strrpos($n_number,".")).'.'.$iii : $iii;                 
-                 $add[0] .= '</ol>';
              }
              if ($n > $n_last && $n_last != 0) {
                  $iii = 1;
                  $n_number = $n_number.'.'.$iii;
-                 $add[1] = '<ol>';
              }
              if ($n == $n_last) {
                  $iii++;
                  $n_number = (strrpos($n_number,".")) ? substr($n_number,0,strrpos($n_number,".")).'.'.$iii : $iii; 
              }
             $text = substr($line, $n,-$n);
-            $toc[$i] = $add[0].$add[1] . /*str_repeat("&nbsp;", 2*($n)) . (($n == 3) ? '·': '')
-                     . */'<li>'.(($n <= 2) ? '<b>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'"><span class="number">'.$n_number.'</span>'
+            $toc[$i] =  '<li class="toc_'.$n.'">'.(($n <= 2) ? '<b>' : '').' <a href="'.implode('/', PRequest::get()->request).'#line'.$i.'"><span class="number">'.$n_number.'</span>'
                      . trim($text) . '</a>'.(($n <= 2) ? '</b>' : '').'</li>';
 
             $src[$i] = str_repeat("=", $n) . " [#line$i]" . $text . str_repeat("=", $n);

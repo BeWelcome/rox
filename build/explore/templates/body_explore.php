@@ -48,6 +48,8 @@ $words = new MOD_words();
         <p><?php echo $words->get('ExploreForumDescription') ?></p>
         <h2><a href="groups"><?php echo $words->get('Groups') ?></a></h2>
         <p><?php echo $words->get('ExploregroupsDescription') ?></p>
+        <h2><a href="groups"><?php echo $words->get('Wiki') ?></a></h2>
+        <p><?php echo $words->get('ExploreWikiDescription') ?></p>
     </div> <!-- subcr -->
   </div> <!-- c50r -->
 </div> <!-- subcolumns -->

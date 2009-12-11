@@ -63,5 +63,6 @@
     $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminController', 'debugLogs');
     // admin accepter routes
     $this->addRoute('admin_accepter', 'admin/accepter', 'AdminController', 'accepter');
+    $this->addRoute('admin_accepter_search', 'admin/accepter/search', 'AdminController', 'accepterSearch');
     // admin comments routes
     $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminController', 'commentsOverview');

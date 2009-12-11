@@ -517,7 +517,7 @@ AND membersgroups.IdMember=members.id"  ;
         }
 
         // This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
-        $str=     "SELECT SQL_CALC_FOUND_ROWS
+        $str=     "SELECT SQL_CALC_FOUND_ROWS DISTINCT
     members.id AS IdMember,
     Username,
     geonames_cache.name AS CityName,

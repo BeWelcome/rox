@@ -45,7 +45,7 @@ if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
 	?>
 
     <li><a href="forums/rules"><?php echo $this->words->get('ForumRulesShort'); ?></a></li>
-    <li><a href="http://www.bevolunteer.org/wiki/forumdoc"><?php echo $this->words->get('ForumLinkToDoc'); ?></a></li>
+    <li><a href="http://www.bewelcome.org/wiki/Howto_Forum"><?php echo $this->words->get('ForumLinkToDoc'); ?></a></li>
 <?php  if (isset($_SESSION["IdMember"])) {
 			echo "<li><a href=\"forums/subscriptions\">",$this->words->get('forum_YourSubscription'),"</a></li>"; 
 			if ($this->BW_Right->HasRight("ForumModerator")) {

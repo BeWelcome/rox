@@ -74,12 +74,6 @@ Boston, MA  02111-1307, USA.
                 'grep files'
             ),
             array(
-                'Verifier',
-                'verify',
-                $words->getFormatted("LinkToVerifyPage"),
-                'verify a member'
-            ),
-            array(
                 'Group',
                 'bw/admin/admingroups.php',
                 'AdminGroups('.$numberPersonsToAcceptInGroup.')',

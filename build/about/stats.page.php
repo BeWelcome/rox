@@ -34,4 +34,11 @@ class AboutStatisticsPage extends AboutBasePage
         
         require 'templates/stats.php';
     }
+    
+    protected function getStylesheets()
+    {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+        return $stylesheets;
+    }
 }

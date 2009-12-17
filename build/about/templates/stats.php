@@ -23,79 +23,150 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
-<h3><?php echo $words->get("StatsHead") ?></h3>
+<h2><?php echo $words->get("StatsHead") ?></h2>
+
+<h3><?php echo $words->get("StatsMembersAlltime") ?></h3>
 <div class="subcolumns">
-  <div class="c50l">
-    <div class="subcl">
-		<h3><?php echo $words->get("StatsHeadCol1") ?></h3>
-
-		<h3><?php echo $words->get("StatsMembersAlltime") ?></h3>
-		<div><canvas id="members-alltime" height="200" width="400" ></canvas></div>
-
-		<h3><?php echo $words->get("StatsNewMembersAlltime") ?></h3>
-		<div><canvas id="newmembers-alltime" height="200" width="400" ></canvas></div>
-
-		<h3><?php echo $words->get("StatsPercentNewMembersAlltime") ?></h3>
-		<div><canvas id="percentnewmembers-alltime" height="200" width="400" ></canvas></div>
-
-
-		<h3><?php echo $words->get("StatsLoginAlltime") ?></h3>
-		<div><canvas id="loginperday-alltime" height="200" width="400" ></canvas></div>
-
-		<h3><?php echo $words->get("StatsPercentLoginAlltime") ?></h3>
-		<div><canvas id="percentloginperday-alltime" height="200" width="400" ></canvas></div>
-
-		<h3><?php echo $words->get("StatsTrustAlltime") ?></h3>
-		<div><canvas id="onetrust-alltime" height="200" width="400" ></canvas></div>
-
-		<h3><?php echo $words->get("StatsPercentTrustAlltime") ?></h3>
-		<div><canvas id="percentonetrust-alltime" height="200" width="400" ></canvas></div>
-
-		<h3><?php echo $words->get("StatsMessagesAlltime") ?></h3>
-		<div><canvas id="messages-alltime" height="200" width="400" ></canvas></div>		
-
-		<h3><?php echo $words->get("StatsLastLogin") ?></h3>
-		<div><canvas id="lastlogin" height="300" width="400" ></canvas></div>
-
+    <div class="c50l">
+        <div class="subcl">
+            <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
+            <div><canvas id="members-alltime" height="250" width="400" ></canvas></div>
+        </div>
     </div>
-  </div>
-  <div class="c50r">
-    <div class="subcr">
-		<h3><?php echo $words->get("StatsHeadCol2") ?></h3>	
+    <div class="c50r">
+        <div class="subcr">
+            <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+            <div><canvas id="members-last" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
 
-		<h3><?php echo $words->get("StatsMembersLast") ?></h3>
-		<div><canvas id="members-last" height="200" width="400" ></canvas></div>
+<h3><?php echo $words->get("StatsNewMembersAlltime") ?></h3>
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
+            <div><canvas id="newmembers-alltime" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr">
+            <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+            <div><canvas id="newmembers-last" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
 
-		<h3><?php echo $words->get("StatsNewMembersLast") ?></h3>
-		<div><canvas id="newmembers-last" height="200" width="400" ></canvas></div>
-		
-		<h3><?php echo $words->get("StatsPercentNewMembersLast") ?></h3>
-		<div><canvas id="percentnewmembers-last" height="200" width="400" ></canvas></div>
+<h3><?php echo $words->get("StatsPercentNewMembersLast") ?></h3>
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
+            <div><canvas id="percentnewmembers-alltime" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr">
+            <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+            <div><canvas id="percentnewmembers-last" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
 
-		
-		<h3><?php echo $words->get("StatsLoginLast") ?></h3>
-		<div><canvas id="loginperday-last" height="200" width="400" ></canvas></div>
-		
-		<h3><?php echo $words->get("StatsPercentLoginLast") ?></h3>
-		<div><canvas id="percentloginperday-last" height="200" width="400" ></canvas></div>
-		
-		<h3><?php echo $words->get("StatsTrustLast") ?></h3>
-		<div><canvas id="onetrust-last" height="200" width="400" ></canvas></div>
-		
-		<h3><?php echo $words->get("StatsPercentTrustLast") ?></h3>
-		<div><canvas id="percentonetrust-last" height="200" width="400" ></canvas></div>
-		
-		<h3><?php echo $words->get("StatsMessagesLast") ?></h3>
-		<div><canvas id="messages-last" height="200" width="400" ></canvas></div>		
-		
-		<h3><?php echo $words->get("StatsMemberCountry") ?></h3>
-		<div><canvas id="countryranking" height="300" width="400" ></canvas></div>	
-	
-	    </div>
-  </div>
-</div>	
+<h3><?php echo $words->get("StatsLoginAlltime") ?></h3>
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
+            <div><canvas id="loginperday-alltime" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr">
+            <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+            <div><canvas id="loginperday-last" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
 
+<h3><?php echo $words->get("StatsPercentLoginAlltime") ?></h3>
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
+            <div><canvas id="percentloginperday-alltime" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr">
+            <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+            <div><canvas id="percentloginperday-last" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
 
+<h3><?php echo $words->get("StatsTrustAlltime") ?></h3>
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
+            <div><canvas id="onetrust-alltime" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr">
+            <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+            <div><canvas id="onetrust-last" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
+
+<h3><?php echo $words->get("StatsPercentTrustAlltime") ?></h3>
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
+            <div><canvas id="percentonetrust-alltime" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr">
+            <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+            <div><canvas id="percentonetrust-last" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
+        
+<h3><?php echo $words->get("StatsMessagesAlltime") ?></h3>
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <h4><?php echo $words->get("StatsHeadCol1") ?></h4>
+            <div><canvas id="messages-alltime" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr">
+            <h4><?php echo $words->get("StatsHeadCol2") ?></h4>
+            <div><canvas id="messages-last" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
+
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <h3><?php echo $words->get("StatsLastLogin") ?></h3>
+            <div><canvas id="lastlogin" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr">
+            <h3><?php echo $words->get("StatsMemberCountry") ?></h3>
+        <div><canvas id="countryranking" height="250" width="400" ></canvas></div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript" src="script/MochiKit/MochiKit.js"></script>
 <script type="text/javascript" src="script/PlotKit/Base.js"></script>
@@ -107,53 +178,53 @@ $words = new MOD_words();
 //get number of members per country
 $i=0;
 foreach ($countryrank as $key=>$val) {
-	$country[$i] = "\"".$key."\"";
-	$countrycnt[$i] = "[".$i.",". $val ."]";
-	$i++;
+    $country[$i] = "\"".$key."\"";
+    $countrycnt[$i] = "[".$i.",". $val ."]";
+    $i++;
 }
 
 //get last login grouped by time
 $i=0;
 foreach ($loginrankgrouped as $key=>$val) {
-	$lastlogingrouped[$i] = "\"".$key."\"";
-	$lastlogingroupedcnt[$i] = "[".$i.",". $val ."]";
-	$i++;
+    $lastlogingrouped[$i] = "\"".$key."\"";
+    $lastlogingroupedcnt[$i] = "[".$i.",". $val ."]";
+    $i++;
 }
 
 
 //get login rank
 $i=0;
 foreach ($loginrank as $key=>$val) {
-	$lastlogin[$i] = "\"".$key."\"";
-	$lastlogincnt[$i] = "[".$key.",". $val ."]";
-	$i++;
+    $lastlogin[$i] = "\"".$key."\"";
+    $lastlogincnt[$i] = "[".$key.",". $val ."]";
+    $i++;
 }
 
 //get all values from stats table
 $i=0;
 
 foreach ($statsall as $val) {
-	$MembersTmp[$i] = $val->NbActiveMembers;
-	//prevent devision by zero 
-		if ($MembersTmp[$i] == 0) {
-			$MembersTmp[$i] = 1;
-		}
+    $MembersTmp[$i] = $val->NbActiveMembers;
+    //prevent devision by zero 
+        if ($MembersTmp[$i] == 0) {
+            $MembersTmp[$i] = 1;
+        }
     $createdfull = split( " ",$val->created);
-	$created[$i] = "\"".$createdfull[0]."\"";
-	$NbActiveMembers[$i] = "[".$i.",". round($val->NbActiveMembers) ."]";
-	if ($i==0) {
-	$NbNewMembersTmp[$i] = $MembersTmp[$i] - $MembersTmp[$i];
-	} else {
-	$NbNewMembersTmp[$i] = $MembersTmp[$i] - $MembersTmp[$i-1];
-	}
-	$NbNewMembers[$i] = "[".$i.",".$NbNewMembersTmp[$i] ."]";
-	$PercentNewMembers[$i] = "[".$i.",".$NbNewMembersTmp[$i] / $MembersTmp[$i] * 100 ."]";
-	$NbMessageSent[$i] = "[".$i.",". round($val->NbMessageSent) ."]";
-	$NbMessageRead[$i] = "[".$i.",". round($val->NbMessageRead) ."]";
-	$NbMemberWithOneTrust[$i] = "[".$i.",". round($val->NbMemberWithOneTrust) ."]";
-	$PercentNbMemberWithOneTrust[$i] = "[".$i.",".$val->NbMemberWithOneTrust / $MembersTmp[$i] * 100	 ."]";
-	$NbMemberWhoLoggedToday[$i] = "[".$i.",". round($val->NbMemberWhoLoggedToday) ."]";
-	$PercentNbMemberWhoLoggedToday[$i] = "[".$i.",".$val->NbMemberWhoLoggedToday / $MembersTmp[$i] * 100 ."]";
+    $created[$i] = "\"".$createdfull[0]."\"";
+    $NbActiveMembers[$i] = "[".$i.",". round($val->NbActiveMembers) ."]";
+    if ($i==0) {
+    $NbNewMembersTmp[$i] = $MembersTmp[$i] - $MembersTmp[$i];
+    } else {
+    $NbNewMembersTmp[$i] = $MembersTmp[$i] - $MembersTmp[$i-1];
+    }
+    $NbNewMembers[$i] = "[".$i.",".$NbNewMembersTmp[$i] ."]";
+    $PercentNewMembers[$i] = "[".$i.",".$NbNewMembersTmp[$i] / $MembersTmp[$i] * 100 ."]";
+    $NbMessageSent[$i] = "[".$i.",". round($val->NbMessageSent) ."]";
+    $NbMessageRead[$i] = "[".$i.",". round($val->NbMessageRead) ."]";
+    $NbMemberWithOneTrust[$i] = "[".$i.",". round($val->NbMemberWithOneTrust) ."]";
+    $PercentNbMemberWithOneTrust[$i] = "[".$i.",".$val->NbMemberWithOneTrust / $MembersTmp[$i] * 100     ."]";
+    $NbMemberWhoLoggedToday[$i] = "[".$i.",". round($val->NbMemberWhoLoggedToday) ."]";
+    $PercentNbMemberWhoLoggedToday[$i] = "[".$i.",".$val->NbMemberWhoLoggedToday / $MembersTmp[$i] * 100 ."]";
     $i++;
  }
  $nbentries = $i;
@@ -167,28 +238,28 @@ foreach ($statsall as $val) {
  //get all values from stats tabel (last 2 months)
  $i=0;
 foreach ($statslast as $val) {
-	$MembersLastTmp[$i] = $val->NbActiveMembers;
-	//prevent devision by zero 
-		if ($MembersLastTmp[$i] == 0) {
-			$MembersLastTmp[$i] = 1;
-		}
+    $MembersLastTmp[$i] = $val->NbActiveMembers;
+    //prevent devision by zero 
+        if ($MembersLastTmp[$i] == 0) {
+            $MembersLastTmp[$i] = 1;
+        }
     $createdfullLast = split( " ",$val->created);
-	$createdLast[$i] = "\"".$createdfullLast[0]."\"";
-	$NbActiveMembersLast[$i] = "[".$i.",". round($val->NbActiveMembers) ."]";
-	if ($i==0){
-	$NbNewMembersLastTmp[$i] = $MembersLastTmp[$i] - $MembersLastTmp[$i];
-	} else {
-	$NbNewMembersLastTmp[$i] = $MembersLastTmp[$i] - $MembersLastTmp[$i-1];
-	}
-	$NbNewMembersLast[$i] = "[".$i.",".$NbNewMembersLastTmp[$i] ."]";
-	$PercentNewMembersLast[$i] = "[".$i.",".$NbNewMembersLastTmp[$i] / $MembersLastTmp[$i] * 100 ."]";
-	$NbMessageSentLast[$i] = "[".$i.",". round($val->NbMessageSent) ."]";
-	$NbMessageReadLast[$i] = "[".$i.",". round($val->NbMessageRead) ."]";
-	$NbMemberWithOneTrustTmpLast[$i] = round($val->NbMemberWithOneTrust);	
-	$NbMemberWithOneTrustLast[$i] = "[".$i.",". round($val->NbMemberWithOneTrust) ."]";
-	$PercentNbMemberWithOneTrustLast[$i] = "[".$i.",".$val->NbMemberWithOneTrust / $MembersLastTmp[$i] * 100 ."]";
-	$NbMemberWhoLoggedTodayLast[$i] = "[".$i.",". round($val->NbMemberWhoLoggedToday) ."]";
-	$PercentNbMemberWhoLoggedTodayLast[$i] = "[".$i.",".$val->NbMemberWhoLoggedToday / $MembersLastTmp[$i] * 100 ."]";
+    $createdLast[$i] = "\"".$createdfullLast[0]."\"";
+    $NbActiveMembersLast[$i] = "[".$i.",". round($val->NbActiveMembers) ."]";
+    if ($i==0){
+    $NbNewMembersLastTmp[$i] = $MembersLastTmp[$i] - $MembersLastTmp[$i];
+    } else {
+    $NbNewMembersLastTmp[$i] = $MembersLastTmp[$i] - $MembersLastTmp[$i-1];
+    }
+    $NbNewMembersLast[$i] = "[".$i.",".$NbNewMembersLastTmp[$i] ."]";
+    $PercentNewMembersLast[$i] = "[".$i.",".$NbNewMembersLastTmp[$i] / $MembersLastTmp[$i] * 100 ."]";
+    $NbMessageSentLast[$i] = "[".$i.",". round($val->NbMessageSent) ."]";
+    $NbMessageReadLast[$i] = "[".$i.",". round($val->NbMessageRead) ."]";
+    $NbMemberWithOneTrustTmpLast[$i] = round($val->NbMemberWithOneTrust);   
+    $NbMemberWithOneTrustLast[$i] = "[".$i.",". round($val->NbMemberWithOneTrust) ."]";
+    $PercentNbMemberWithOneTrustLast[$i] = "[".$i.",".$val->NbMemberWithOneTrust / $MembersLastTmp[$i] * 100 ."]";
+    $NbMemberWhoLoggedTodayLast[$i] = "[".$i.",". round($val->NbMemberWhoLoggedToday) ."]";
+    $PercentNbMemberWhoLoggedTodayLast[$i] = "[".$i.",".$val->NbMemberWhoLoggedToday / $MembersLastTmp[$i] * 100 ."]";
     $i++;
  } 
  
@@ -244,22 +315,22 @@ foreach ($statslast as $val) {
 
 var opt1 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "padding":{left: 45, right: 45, top: 20, bottom: 60},
    "xTicks": [
 <?
-	foreach ($xtick as $val) {
-		echo '{v:'.$val.', label:created['.$val.']},';
-		}
+    foreach ($xtick as $val) {
+        echo '{v:'.$val.', label:created['.$val.']},';
+        }
 ?>
-		],
+        ],
 };
 
 // number of members, weekly average all time
 
 function drawGraph1() {
     var layout = new PlotKit.Layout("line", opt1);
-	layout.addDataset("db",NbActiveMembers);
+    layout.addDataset("db",NbActiveMembers);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("members-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -271,7 +342,7 @@ MochiKit.DOM.addLoadEvent(drawGraph1);
 // number of new members per day, weekly average all time
 function drawGraph5() {
     var layout = new PlotKit.Layout("line", opt1);
-	layout.addDataset("db",NbNewMembers);
+    layout.addDataset("db",NbNewMembers);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("newmembers-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -283,7 +354,7 @@ MochiKit.DOM.addLoadEvent(drawGraph5);
 //percentage of new members, weekly average all time
 function drawGraph6() {
     var layout = new PlotKit.Layout("line", opt1);
-	layout.addDataset("db",PercentNewMembers);
+    layout.addDataset("db",PercentNewMembers);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("percentnewmembers-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -294,7 +365,7 @@ MochiKit.DOM.addLoadEvent(drawGraph6);
 // number of members logged in per day, weekly average alltime.
 function drawGraph7() {
     var layout = new PlotKit.Layout("line", opt1);
-	layout.addDataset("db",NbMemberWhoLoggedToday);
+    layout.addDataset("db",NbMemberWhoLoggedToday);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("loginperday-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -305,7 +376,7 @@ MochiKit.DOM.addLoadEvent(drawGraph7);
 // percentage of members logged in per day, weekly average alltime.
 function drawGraph8() {
     var layout = new PlotKit.Layout("line", opt1);
-	layout.addDataset("db",PercentNbMemberWhoLoggedToday);
+    layout.addDataset("db",PercentNbMemberWhoLoggedToday);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("percentloginperday-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -316,7 +387,7 @@ MochiKit.DOM.addLoadEvent(drawGraph8);
 // number of members who have at least one comment, weekly average alltime.
 function drawGraph9() {
     var layout = new PlotKit.Layout("line", opt1);
-	layout.addDataset("db",NbMemberWithOneTrust);
+    layout.addDataset("db",NbMemberWithOneTrust);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("onetrust-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -327,7 +398,7 @@ MochiKit.DOM.addLoadEvent(drawGraph9);
 //percent of members who have at least one comment, weekly average alltime.
 function drawGraph10() {
     var layout = new PlotKit.Layout("line", opt1);
-	layout.addDataset("db",PercentNbMemberWithOneTrust);
+    layout.addDataset("db",PercentNbMemberWithOneTrust);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("percentonetrust-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -339,7 +410,7 @@ MochiKit.DOM.addLoadEvent(drawGraph10);
 
 function drawGraph3() {
     var layout = new PlotKit.Layout("line", opt1);
-	layout.addDataset("sent",NbMessageSent);
+    layout.addDataset("sent",NbMessageSent);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("messages-alltime");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt1);
@@ -351,15 +422,15 @@ MochiKit.DOM.addLoadEvent(drawGraph3);
 
 var opt3 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "padding":{left: 30, right: 45, top: 20, bottom: 60},
    "xTicks": [
 <?
-	foreach ($lastxtick as $val) {
-		echo '{v:'.$val.', label:createdLast['.$val.']},';
-		}
+    foreach ($lastxtick as $val) {
+        echo '{v:'.$val.', label:createdLast['.$val.']},';
+        }
 ?>
-		],
+        ],
 };
 
 
@@ -369,24 +440,24 @@ var opt3 = {
 // number of members,last two months
 var opt11 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "padding":{left: 30, right: 45, top: 20, bottom: 60},
 <? $ylow = $MembersLastTmp[0] - ($MembersLastTmp[0]/10);
-	$yhigh = $MembersLastTmp[$i-1] + ($MembersLastTmp[$i-1]/10);
-	echo "\"yAxis\":[".$ylow.",".$yhigh."],";
-?>	
+    $yhigh = $MembersLastTmp[$i-1] + ($MembersLastTmp[$i-1]/10);
+    echo "\"yAxis\":[".$ylow.",".$yhigh."],";
+?>  
    "xTicks": [
 <?
-	foreach ($lastxtick as $val) {
-		echo '{v:'.$val.', label:createdLast['.$val.']},';
-		}
+    foreach ($lastxtick as $val) {
+        echo '{v:'.$val.', label:createdLast['.$val.']},';
+        }
 ?>
-		],
+        ],
 };
 
 function drawGraph11() {
     var layout = new PlotKit.Layout("line", opt11);
-	layout.addDataset("db",NbActiveMembersLast);
+    layout.addDataset("db",NbActiveMembersLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("members-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt11);
@@ -398,7 +469,7 @@ MochiKit.DOM.addLoadEvent(drawGraph11);
 // number of new members per day, last two months
 function drawGraph15() {
     var layout = new PlotKit.Layout("line", opt3);
-	layout.addDataset("db",NbNewMembersLast);
+    layout.addDataset("db",NbNewMembersLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("newmembers-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
@@ -410,7 +481,7 @@ MochiKit.DOM.addLoadEvent(drawGraph15);
 //percentage of new members, last two months
 function drawGraph16() {
     var layout = new PlotKit.Layout("line", opt3);
-	layout.addDataset("db",PercentNewMembersLast);
+    layout.addDataset("db",PercentNewMembersLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("percentnewmembers-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
@@ -421,7 +492,7 @@ MochiKit.DOM.addLoadEvent(drawGraph16);
 // number of members logged in per day, last two months
 function drawGraph17() {
     var layout = new PlotKit.Layout("line", opt3);
-	layout.addDataset("db",NbMemberWhoLoggedTodayLast);
+    layout.addDataset("db",NbMemberWhoLoggedTodayLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("loginperday-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
@@ -432,7 +503,7 @@ MochiKit.DOM.addLoadEvent(drawGraph17);
 // percentage of members logged in per day, last two months.
 function drawGraph18() {
     var layout = new PlotKit.Layout("line", opt3);
-	layout.addDataset("db",PercentNbMemberWhoLoggedTodayLast);
+    layout.addDataset("db",PercentNbMemberWhoLoggedTodayLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("percentloginperday-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
@@ -443,24 +514,24 @@ MochiKit.DOM.addLoadEvent(drawGraph18);
 // number of members who have at least one comment,last two months.
 var opt19 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding":{left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "padding":{left: 30, right: 45, top: 20, bottom: 60},
 <? $ylow = $NbMemberWithOneTrustTmpLast[0] - ($NbMemberWithOneTrustTmpLast[0]/10);
-	$yhigh = $NbMemberWithOneTrustTmpLast[$i-1] + ($NbMemberWithOneTrustTmpLast[$i-1]/10);
-	echo "\"yAxis\":[".$ylow.",".$yhigh."],";
-?>	
+    $yhigh = $NbMemberWithOneTrustTmpLast[$i-1] + ($NbMemberWithOneTrustTmpLast[$i-1]/10);
+    echo "\"yAxis\":[".$ylow.",".$yhigh."],";
+?>  
    "xTicks": [
 <?
-	foreach ($lastxtick as $val) {
-		echo '{v:'.$val.', label:createdLast['.$val.']},';
-		}
+    foreach ($lastxtick as $val) {
+        echo '{v:'.$val.', label:createdLast['.$val.']},';
+        }
 ?>
-		],
+        ],
 };
 
 function drawGraph19() {
     var layout = new PlotKit.Layout("line", opt19);
-	layout.addDataset("db",NbMemberWithOneTrustLast);
+    layout.addDataset("db",NbMemberWithOneTrustLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("onetrust-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt19);
@@ -471,7 +542,7 @@ MochiKit.DOM.addLoadEvent(drawGraph19);
 //percent of members who have at least one comment, last two months.
 function drawGraph20() {
     var layout = new PlotKit.Layout("line", opt3);
-	layout.addDataset("db",PercentNbMemberWithOneTrustLast);
+    layout.addDataset("db",PercentNbMemberWithOneTrustLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("percentonetrust-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
@@ -483,7 +554,7 @@ MochiKit.DOM.addLoadEvent(drawGraph20);
 
 function drawGraph13() {
     var layout = new PlotKit.Layout("line", opt3);
-	layout.addDataset("sent",NbMessageSentLast);
+    layout.addDataset("sent",NbMessageSentLast);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("messages-last");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt3);
@@ -496,12 +567,12 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
 // 4 - last login
 // var opt4 = {
    // "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   // "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0])
+   // "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2])
 // };
 
 // function drawGraph4() {
     // var layout = new PlotKit.Layout("line", opt4);
-	// layout.addDataset("line1",lastlogincnt);
+    // layout.addDataset("line1",lastlogincnt);
     // layout.evaluate();
     // var canvas = MochiKit.DOM.getElement("lastlogin");
     // var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt4);
@@ -513,21 +584,22 @@ MochiKit.DOM.addLoadEvent(drawGraph13);
 // country rank
  var opt4 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding": {left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "padding": {left: 20, right: 30, top: 60, bottom: 60},
+   "pieRadius": 0.6,
    "xTicks": [{v:0, label:lastlogingrouped[0]}, 
           {v:1, label:lastlogingrouped[1]}, 
           {v:2, label:lastlogingrouped[2]},
           {v:3, label:lastlogingrouped[3]},
           {v:4, label:lastlogingrouped[4]},
-		  {v:5, label:lastlogingrouped[5]},
-		  {v:6, label:lastlogingrouped[6]}],
+          {v:5, label:lastlogingrouped[5]},
+          {v:6, label:lastlogingrouped[6]}],
    "drawYAxis": false
 };
 
 function drawGraph4() {
     var layout = new PlotKit.Layout("pie", opt4);
-	layout.addDataset("db",lastlogingroupedcnt);
+    layout.addDataset("db",lastlogingroupedcnt);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("lastlogin");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt4);
@@ -540,21 +612,22 @@ MochiKit.DOM.addLoadEvent(drawGraph4);
 // country rank
  var opt2 = {
    "IECanvasHTC": "/PlotKit/iecanvas.htc",
-   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[0]),
-   "padding": {left: 40, right:40, top: 20, bottom: 60},
+   "colorScheme": PlotKit.Base.palette(PlotKit.Base.baseColors()[2]),
+   "padding": {left: 20, right: 30, top: 60, bottom: 60},
+   "pieRadius": 0.6,
    "xTicks": [{v:0, label:country[0]}, 
           {v:1, label:country[1]}, 
           {v:2, label:country[2]},
           {v:3, label:country[3]},
           {v:4, label:country[4]},
-		  {v:5, label:country[5]},
-		  {v:6, label:country[6]}],
+          {v:5, label:country[5]},
+          {v:6, label:country[6]}],
    "drawYAxis": false
 };
 
 function drawGraph2() {
     var layout = new PlotKit.Layout("pie", opt2);
-	layout.addDataset("db",countrycnt);
+    layout.addDataset("db",countrycnt);
     layout.evaluate();
     var canvas = MochiKit.DOM.getElement("countryranking");
     var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, opt2);
@@ -566,5 +639,5 @@ MochiKit.DOM.addLoadEvent(drawGraph2);
 </script>
 
 
-	
-	
+    
+    

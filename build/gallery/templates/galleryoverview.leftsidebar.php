@@ -18,7 +18,7 @@
 ?>
 <h3><?=$words->get('GalleryBrowse')?></h3>
 <div>
-    <ul>
+    <ul class="list-image">
         <li <?php echo ($subTab === 'overview') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery"><span><?php echo $words->getBuffered('Photosets'); ?></span></a></li>
         <li <?php echo ($subTab === 'images') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/images"><span><?php echo $words->getBuffered('GalleryAllPhotos'); ?></span></a>
         </li>
@@ -32,9 +32,9 @@
 <h3><?=$words->get('GalleryYourGallery')?></h3>
 <div>
     <ul>
-        <li><img src="images/icons/pictures.png"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/images"><?=$words->get('GalleryUserImages')?></a></li>
-        <li><img src="images/icons/folder_picture.png"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/sets"><?=$words->get('GalleryUserPhotosets')?></a></li>
-        <li><img src="images/icons/picture_add.png"> <a href="gallery/upload"><?=$words->get('GalleryUpload')?></a></li>
+        <li><img src="images/icons/folder_picture.png" style="padding-right: 3px;"> <a href="gallery/show/user/<?=$loggedInMember->Username?>/sets"><?=$words->get('GalleryUserPhotosets')?></a></li>
+        <li><img src="images/icons/images.png" style="padding-right: 3px;"> <a href="gallery/manage" class="manage"><?=$words->get('GalleryManage')?></a></li>
+        <li><img src="images/icons/picture_add.png" style="padding-right: 3px;"> <a href="gallery/upload"><?=$words->get('GalleryUpload')?></a></li>
     </ul>
     <?//=$this->userLinks()?>
 </div>
@@ -46,7 +46,7 @@
         <?=$words->get('GalleryCreateNewPhotoset')?>: 
         <br />
         <input name="g-user" type="hidden" value="<?=$this->loggedInMember->get_userId()?>">
-        <input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
+        <input name="g-title" id="g-title" type="text" maxlength="30" style="width: 90%" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
         <?php
         // Display errors from last submit	
         if (isset($vars['errors']) && !empty($vars['errors']))

@@ -160,8 +160,13 @@ VALUES
                 return 'gallery/manage';
             } else return false;
         }
-    }    
-    
+    }
+
+    public function deleteComments($table_id,$table = 'gallery_items') {
+        $shouts = new Shouts();
+        return $shouts->deleteShouts($table,$table_id);
+    }
+
     public function updateGalleryProcess($vars = null)
     {
         if (isset($vars)) {

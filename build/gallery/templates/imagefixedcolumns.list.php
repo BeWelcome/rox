@@ -4,12 +4,10 @@ $Gallery = new GalleryController;
 $callbackId = $Gallery->updateGalleryProcess();
 $vars = PPostHandler::getVars($callbackId);
 $words = $this->getWords();
-$type = 'gallery';
 
 $layoutbits = new MOD_layoutbits();
 $thumbsize = $this->thumbsize;
 if ($statement) {
-    $request = PRequest::get()->request;
     $requestStr = implode('/', $request);
     $matches = array();
     if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
@@ -22,23 +20,22 @@ if ($statement) {
     $p = PFunctions::paginate($statement, $page, $itemsPerPage);
     $statement = $p[0];
     
-    }
-    
     foreach ($statement as $d) {
+        $title_short = ((strlen($d->title) >= 26) ? substr($d->title,0,25).'...' : $d->title);
         $d->HTML = '
-        <div class="img thumb">
+        <div class="img thumb" style="width: 244px;">
             <a href="gallery/show/image/'.$d->id.'" id="image_link_'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image" style="margin: 5px 0; float:none;" /></a>';
 
-        $d->HTML .= '<h4>';
+        $d->HTML .= '<h4 class="floatbox">';
         if ($this->loggedInMember && $this->loggedInMember->Username == $d->user_handle) {
             $d->HTML .= '<input type="checkbox" class="thumb_check input_check" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
         }
-        $d->HTML .= '<a href="gallery/show/image/'.$d->id.'" title="'.$d->title.'">'.((strlen($d->title) >= 20) ? substr($d->title,0,15).'...' : $d->title).'</a></h4>'; 
+        $d->HTML .= '<a href="gallery/show/image/'.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><img src="styles/css/minimal/images/icon_image_expand.gif" title="'.$words->get('Preview image').'" style="float: right"></a></h4>';
         $d->HTML .= '
             <p class="small">
                 '.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by').'
                 <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>. 
-                <a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'>
+                <a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->get('galleryUserOthers',$d->user_handle).'">
                 <img src="styles/css/minimal/images/iconsfam/pictures.png" style="float: none">
                 </a>
             </p>
@@ -84,5 +81,5 @@ if ($statement) {
     $request = $requestStr.'/=page%d';
     require TEMPLATE_DIR.'misc/pages.php';
     echo '</div>';
-
+}
 ?>

@@ -29,13 +29,13 @@ if ($statement) {
         echo '<input type="checkbox" class="input_check" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
 }
 ?>
-    <a href="gallery/show/image/<?=$d->id ?>" title="<?=$d->title ?>"><?php if (strlen($d->title) >= 20) echo substr($d->title,0,15).'...'; else echo $d->title; ?></a></h4>
+    <a href="gallery/show/image/<?=$d->id ?>" title="<?=$d->title ?>"><?php if (strlen($d->title) >= 20) echo substr($d->title,0,15).'...'; else echo $d->title; ?></a> <a href="gallery/img?id=<?=$d->id?>" class="lightview" rel="gallery[BestOf]"><img src="styles/css/minimal/images/icon_image_expand.gif" title="<?=$words->get('Preview image')?>" ></a></h4>
 <?php 
 echo '
     <p class="small">
         '.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by').'
         <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>. 
-        <a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'>
+        <a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->get('galleryUserOthers',$d->user_handle).'">
         <img src="styles/css/minimal/images/iconsfam/pictures.png" style="float: none">
         </a>
     </p>

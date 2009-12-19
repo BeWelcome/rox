@@ -34,7 +34,7 @@ if ($galleries) {
             <h4><a href="gallery/show/sets/<?=$g->id?>"><?=$g->title?></a></h4>
             <p>
             <?=$num_rows?> <?=$words->get('pictures')?>
-            <span class="small"><?=$words->get('by')?> <?=$username?></span>
+            <span class="grey small"><?=$words->get('by')?> <a href="members/<?=$username?>" class="grey"><?=$username?></a></span>
             </p>
         </div>
         <?php

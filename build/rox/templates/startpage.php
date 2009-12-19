@@ -78,7 +78,7 @@ $words = new MOD_words();
   <div class="c75r">
     <div class="subcr" style="margin: 1em 2em 1em 0">
         <div class="userinfo">
-            <h3><?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$words->get('IndexPageWord_shareplace',$m->Username).'</a>' ?></h3>
+            <h3><?php echo '<a rel="nofollow" href="members/'.$m->Username.'">'.$words->get('IndexPageWord_shareplace',$m->Username).'</a>' ?></h3>
             <p>in <?php echo $m->cityname; ?>, <?php echo $m->countryname; ?></p>
           </div>
       </div>

@@ -25,5 +25,5 @@ $words = new MOD_words();
 ?>
 
 <div id="teaser" class="clearfix">
-    <h1><?php echo $words->getBuffered('ExplorePage'); ?></h1>
+    <h1><?php echo $words->get('ExplorePage'); ?></h1>
 </div>

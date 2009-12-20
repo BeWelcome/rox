@@ -66,3 +66,7 @@
     $this->addRoute('admin_accepter_search', 'admin/accepter/search', 'AdminController', 'accepterSearch');
     // admin comments routes
     $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminController', 'commentsOverview');
+    // admin words routes
+    $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
+    // admin rightsroutes
+    $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');

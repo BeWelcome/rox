@@ -1,4 +1,37 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
+    /** 
+     * @author Fake51
+     */
+
+    /** 
+     * Admin comments overview template
+     * 
+     * @package Apps
+     * @subpackage Admin
+     */
+?>
+
+<?php
 $total_bad_comments = count($this->bad_comments);
 $words = $this->getWords();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
@@ -33,22 +66,27 @@ foreach ($this->pager->getActiveSubset($this->bad_comments) as $comment)
             </p>
             <p class="small">Meeting type: <b>{$comment->Lenght}</b></p>
            
-    </div>    
+    </div>
     
     <h4>Meeting place:</h4>
-    <p>{$comment->TextWhere}</p>   
+    <p id="commentwhere{$comment->id}">{$comment->TextWhere}</p>   
        
     <h4>Comment text:</h4>
-    <p>{$comment->TextFree}</p>    
+    <p id="commenttext{$comment->id}">{$comment->TextFree}</p>    
     
     <h4>Feedback:</h4>
     <p>FIXME: Insert Feedback message from reporter</p>  
     
-    <h4>Action:</h4>
-    <a href="#">Mark comment as checked</a> | 
-    <a href="#">Edit Comment</a> |
-    <a href="#">Delete Comment</a>
+    <a class="button" href="FIXME">Mark comment as checked</a>
+    <a class="button" href="admin/editcomment/{$comment->id}">Edit Comment</a>
+    <a class="button" href="FIXME">Delete Comment</a>
     
 </div>
+
+<script type="text/javascript">
+ new Ajax.InPlaceEditor('commenttext{$comment->id}', 'FIXME', {rows:6,cols:60});
+ new Ajax.InPlaceEditor('commentwhere{$comment->id}', 'FIXME', {rows:6,cols:60});
+</script>
+
 HTML;
 }

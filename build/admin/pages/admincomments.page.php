@@ -42,7 +42,7 @@ class AdminCommentsPage extends AdminBasePage
      * configure the sidebar
      */
     protected function leftSidebar() {
-      
+        return 'adminsidebar';
     }
     
     protected function getStylesheets() {

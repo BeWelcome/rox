@@ -1,6 +1,7 @@
 <?php
 /*
-Copyright (c) 2007-2009 BeVolunteer
+
+Copyright (c) 2007 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -18,26 +19,31 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/> or 
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
+
 */
-    /** 
-     * @author Fake51
-     */
+/** 
+ * @author Matthias Heﬂ <globetrotter_tt>
+ */
+$words = new MOD_words();
 
-    /** 
-     * page telling people they can't access the admin app as they have no rights
-     * 
-     * @package Apps
-     * @subpackage Admin
-     */
+?>
 
-class AdminOverviewPage extends AdminBasePage
-{
-    /**
-     * configure the sidebar
-     */
-    protected function leftSidebar() {
-      
-    }
-}
-
+<form method="post" action="" class="yform">
+    <fieldset>
+        <legend>Admin Rights</legend>
+        <div class="type-text">
+            <label>Username</label>
+            <input type="text" size="25"/>
+            <input type="submit" value="Find" />
+        </div>
+        
+        <div class="type-select">
+            <label>Rights</label>
+            <select>
+                <option></option>
+            </select>
+        </div>
+        
+    </fieldset>
+</form>
 

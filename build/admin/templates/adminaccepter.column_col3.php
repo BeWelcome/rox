@@ -155,7 +155,7 @@ HTML;
         <li><input type="radio" name="accept_action[{$member->id}]"/>Do nothing</li>
     </ul>
 
-    <label>Additional text for "Need more Infos"</label>
+    <h4>Additional text for "Need more Infos"</h4>
     <textarea cols="50" rows="5" name="accept_info[{$member->id}]"></textarea>
 HTML;
             break;

@@ -292,4 +292,18 @@ class AdminController extends RoxControllerBase
                 ob_end_clean();
 
     }
+    
+    public function wordsOverview()
+    {
+        list($member, $rights) = $this->checkRights('Words');
+        $page = new AdminWordsPage;
+        return $page;
+    }
+    
+    public function rightsOverview()
+    {
+        list($member, $rights) = $this->checkRights('Rights');
+        $page = new AdminRightsPage;
+        return $page;
+    }
 }

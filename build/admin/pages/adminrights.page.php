@@ -24,20 +24,31 @@ Boston, MA  02111-1307, USA.
      */
 
     /** 
-     * page telling people they can't access the admin app as they have no rights
+     * adminrights overview page
      * 
      * @package Apps
      * @subpackage Admin
      */
 
-class AdminOverviewPage extends AdminBasePage
+class AdminRightsPage extends AdminBasePage
 {
+
+    public function teaserHeadline()
+    {
+        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminRights')}</a>";
+    }
+    
     /**
      * configure the sidebar
      */
     protected function leftSidebar() {
-      
+        return 'adminrightssidebar';
+    }
+    
+    protected function getStylesheets() {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forms.css';
+       return $stylesheets;
     }
 }
-
-

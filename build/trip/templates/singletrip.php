@@ -51,7 +51,7 @@ HTML;
 		    if ($bloggeo = $this->model->getBlogGeo($blog->blog_geonameid))
             {
                 $country = $bloggeo->getCountry();
-                $countryname = $country->name;
+                $countryname = ($country) ? $country->name : '';
 	        }
             else
             {

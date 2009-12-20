@@ -22,6 +22,11 @@ class ShoutsView extends PAppView
         require 'templates/shoutlist.php';
     }
     
+    public function showShoutsListCompact($table,$table_id) 
+    {
+        require 'templates/shoutlist_compact.php';
+    }
+    
     public function pages($pages, $currentPage, $maxPage, $request) 
     {
         require 'templates/pages.php';

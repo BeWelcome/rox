@@ -16,6 +16,7 @@ class ShoutsController extends PAppController {
         parent::__construct();
         $this->_model = new Shouts();
         $this->_view =  new ShoutsView($this->_model);
+        $this->format = '';
     }
     
     public function __destruct() {
@@ -44,7 +45,8 @@ class ShoutsController extends PAppController {
     
     public function shoutsList($application, $object_id) 
     {
-        $this->_view->showShoutsList($application, $object_id);
+        if ($this->format == 'compact') $this->_view->showShoutsListCompact($application, $object_id);
+        else $this->_view->showShoutsList($application, $object_id);
     }
 
 }

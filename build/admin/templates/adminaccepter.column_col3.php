@@ -55,6 +55,7 @@ HTML;
 HTML;
 // Displaying Shouts for Accepter Team
 $shoutsCtrl = new ShoutsController;
+$shoutsCtrl->format = 'compact';
 $shoutsCtrl->shoutsList('admin_accepter', 1);
 
 if ($this->status)

@@ -33,5 +33,3 @@ if ($isOwnTrip) {
 	echo '<p class="small"><a href="trip/edit/'.$trip->trip_id.'">Edit</a> | <a href="trip/del/'.$trip->trip_id.'">Delete</a></p><p></p>';
 }
 ?>
-    </div>
-

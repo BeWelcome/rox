@@ -1,6 +1,7 @@
 @media all
 {
-textarea {margin-bottom: 1em;}
+textarea, form {margin-bottom: 0.5em;}
+
 
 #messageboard {margin: 2em 0;}
 #acceptmembers {margin: 2em 0;}
@@ -22,4 +23,7 @@ textarea {margin-bottom: 1em;}
 .memberinfo p{margin-bottom: 0.1em;}
 
 .pagination {margin-bottom: 1em;}
+
+.editor_ok_button {margin-bottom: 0.5em;}
+
 }

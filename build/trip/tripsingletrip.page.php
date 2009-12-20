@@ -2,6 +2,12 @@
 
 class TripSingleTripPage extends PageWithActiveSkin
 {
+    protected function getStylesheets() {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/trip.css';
+        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3_75percent.css';
+        return $stylesheets;
+    }
 
     protected function column_col3()
     {

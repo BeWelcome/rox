@@ -2030,9 +2030,9 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
                 $tag = $this->dao->escape($tag);
 
 				 
-                
+
                 // Check if it already exists in our Database
-                $query = "SELECT `tagid` FROM `forums_tags`,`forum_trads` WHERE `forum_trads`.`IdTrad`=`forums_tags`.`IdName` and `forum_trads`.`IdLanguage`=".$IdLanguage." and `forum_trads`.`Sentence` = '$tag' ";
+                $query = "SELECT `tagid` FROM `forums_tags` WHERE `forums_tags`.`tag` = '$tag' ";
                 $s = $this->dao->query($query);
                 $taginfo = $s->fetch(PDB::FETCH_OBJ);
 								$IdNameUpdate="" ;

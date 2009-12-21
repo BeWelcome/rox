@@ -37,6 +37,7 @@ Object.extend(FieldsetMenu.prototype, {
 			htmlSrc += '<li id="li'+e.id+'"><a href="#" id="a'+e.id+'" onclick="return false;">';
 			htmlSrc += l[0].innerHTML;
 			htmlSrc += '</a></li>';
+			l[0].hide();
 		});
 		htmlSrc += '</ul>';
 		htmlSrc += '</div>';

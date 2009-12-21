@@ -13,9 +13,6 @@
     margin-left: 0; padding:0;
     margin-right:40%;
 }
-#col3_content {
-    padding-left: 4em;
-}
 
 /* modification for trip pages */
 
@@ -264,6 +261,6 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
   text-align:center;
   padding-top: 10px;
 }
-
+#blog-create-form ol#locations li { width: 99%;}
 
 }

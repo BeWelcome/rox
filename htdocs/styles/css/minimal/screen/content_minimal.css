@@ -74,6 +74,14 @@
     border:0;
     border-bottom: 1px #eee solid;
   }
+  hr.divide {
+    color: #fff;
+    background:transparent;
+    margin: 0 0 1em 0;
+    padding: 0 0 1em 0;
+    border:0;
+    border-bottom: 1px transparent solid;
+  }
 
    /**
    * Generic Content Classes
@@ -173,6 +181,11 @@
   .bullet {margin: 0 0 1em 1em;}
   ul.bullet li { list-style-type: disc; margin-left: 0.8em}
   ol.bullet li { list-style-type: decimal; margin-left: 0.8em; }
+  
+  /* in case we want bullet point */
+  .list-image {margin: 0 0 1em 1em;}
+  ul.list-image li { list-style-image: url(../images/list-image-arrow.gif); margin-left: 0.6em}
+  ol.list-image li { list-style-type: decimal; margin-left: 0.8em; }
 
   /* Unordered lists without bullets  */
   ul.linklist { list-style-type: none; }
@@ -350,7 +363,7 @@ dl.list {
     background: transparent;
   }
   input[type=submit] {
-    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
     border-width:1px;
@@ -367,7 +380,7 @@ dl.list {
   }
 
   input[type=reset] {
-    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
     border-width:1px;
@@ -452,7 +465,7 @@ dl.list {
   }
   #footer p {font-size: 0.9em;}
 
-  #footer a {margin: 0.1em 0.2em; padding: 0.2em 0.3em; color:#777; font-weight: normal; text-align: left;}
+  #footer a {margin: 0.1em 0.2em 0 0; padding: 0.2em 0.3em 0 0; color:#777; font-weight: normal; text-align: left;}
   #footer a:hover { text-decoration:underline; }
   #footer a:focus { text-decoration:underline; }
 
@@ -492,7 +505,7 @@ h4.news {
 .hr_div {padding: 5px 30px 0 30px;}
 
 .button, input.button, .control-links a, .control-links input, a.cancel {
-    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
     border-width:1px;
@@ -513,8 +526,8 @@ input.button, .control-links input { /* Only for inputs. Otherwise we have probl
     padding:0 8px;
 }
 .button a, input.button{color: #ff8800; text-decoration:none; background-color:transparent;}
-.button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
-.button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+.button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; color: #333; text-decoration:none; line-height: 21px;}
+.button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; color: #333; text-decoration:none; line-height: 21px;}
 
 a.bigbutton {
     background: transparent url(../images/bg_bigbutton_a_w.gif) no-repeat scroll top right;
@@ -542,6 +555,9 @@ a.bigbutton:active span {
     background-position: bottom left;
     padding: 9px 0 7px 18px; /* push text down 1px */
 }
+
+/* General (Google-) Map styles */
+.map, #spaf_map, .tripmap {overflow: hidden;}
 
 /* Searchmembers styles */
 #mapsearch {font-weight: bold;}
@@ -768,41 +784,49 @@ div.box div.boxbottom div.links {
 #teaser #teaser_r {width: 70%; margin: 0 10px 0 0; }
 
 /* Fieldset menu - creates a tab-menu from form fieldsets via fieldset.js */
-div.fieldset-menu{
+.fieldset-menu{
     margin:0 1em 1em 0;
 }
-div.fieldset-menu ul{
+.fieldset-menu-form .fieldset-menu {
+    margin: 0;
+}
+.fieldset-menu-form fieldset {
+    border-top: none;
+    background: transparent;
+    border-color: #ccc;
+}
+.fieldset-menu ul{
     margin: 0;
     padding:0;
     list-style-type:none;
     border-bottom: 1px solid #ccc;
 }
-div.fieldset-menu li{
+.fieldset-menu li{
     padding-left:1em;
     padding-right:1em;
-    padding-top: 0.25em;
-    padding-bottom: 0.4em;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.6em;
+    margin-left: 0;
+    margin-right: .2em;
     display:inline;
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    line-height: 2em;
+    line-height: 2.4em;
     background-color: #eee;
 }
-div.fieldset-menu li.active {
-    border-bottom: 1px solid white;
+.fieldset-menu li.active {
+    background: transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    border-bottom: 2px solid #f7f7f7;
     font-weight: bold;
-    background-color: #fff;
 }
-div.fieldset-menu li a{
+.fieldset-menu li a{
     color: #333;
 }
-div.fieldset-menu li a:hover{
+.fieldset-menu li a:hover{
     color: #333;
 }
-div.fieldset-menu li.active a {
+.fieldset-menu li.active a {
     color: #333;
 }
 
@@ -829,7 +853,7 @@ div.fieldset-menu li.active a {
 #language_select {
     color: #ffffff;
   float: right;
-  padding: 1.3em;
+  padding: 0 0 1.3em 0;
 }
 
 /**
@@ -884,6 +908,12 @@ a.tr_link:hover {
 
 /* Geo Selector */
 ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center; cursor: pointer;}
+ol#locations li.active,ol.geoloc li.active { 
+    background: transparent url(../images/button_bg.png) repeat-x scroll 0 0; 
+    font-weight: bold; 
+    cursor: pointer;
+    border: 1px solid #999;
+}
 ol.plain{ margin-left: 0; }
 ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
 
@@ -1140,7 +1170,7 @@ height:50px;
 
 .wiki .search-form { padding: 2em 0; }
 
-.wiki.NewestPages a , br {margin-bottom: 0.8em;}
+.wiki.NewestPages a , .wiki.NewestPages br {margin-bottom: 0.8em;}
 
 /* wiki headlines */
 .wiki h1 {padding: 0;}

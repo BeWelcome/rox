@@ -477,9 +477,7 @@ HTML;
                 </tr>
               </tbody>
             </table>
-          </fieldset>
-          <fieldset id="profiletravelexperience">
-            <legend><?=$words->get('ProfileTravelExperience')?></legend>
+            <h3><?=$words->get('ProfileTravelExperience')?></h3>
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
@@ -501,7 +499,8 @@ HTML;
               </tbody>
             </table>
           </fieldset>
-          <?php if (!empty($vars['Relations'])) : ?>
+
+          <?php if (!empty($vars['Relations']) && 1 == 0) : // Disabled ?>
           <fieldset id="specialrealtions">
             <legend><?=$words->get('MyRelations')?></legend>
             <table border="0" >

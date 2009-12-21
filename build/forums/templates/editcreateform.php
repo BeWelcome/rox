@@ -190,7 +190,7 @@ if ($allow_title) { // New Topic
             }
         }
     if ($groupsforum) { 
-        echo '<input type="hidden" name="IdGroup" value="{$groupsforum}">';
+        echo '<input type="hidden" name="IdGroup" value="'.$groupsforum.'">';
     } else {
         echo '<p class="small">'.$words->getFormatted("forum_subline_group").'</p>';
         echo $groupsDropdowns;

@@ -1,14 +1,14 @@
 @media all
 {
 #col3_content ul, #col3_content dl,  #col3_content .box p {
-	margin: 1em 0;
+    margin: 1em 0;
 }
 
 #personalmenu.sm li {
-	font-size: 1em;
+    font-size: 1em;
 }
 .activelanguage {
-	font-weight: bold;
+    font-weight: bold;
 }
 #col1{
     float: left;
@@ -19,13 +19,13 @@
 }
 #col3_content{
     padding: 2em 0 4em 4em;
-	margin: 0;
-	background:transparent url(../../images/bg_col3.png) no-repeat scroll 0 0;
+    margin: 0;
+    background:transparent url(../../images/bg_col3.png) no-repeat scroll 0 0;
 }
 #col1 #col1_content{
-/*	background:transparent url(../../images/bg_leftsidebar.jpg) no-repeat scroll right top; */
+/*  background:transparent url(../../images/bg_leftsidebar.jpg) no-repeat scroll right top; */
     padding: 0 2em 0 0;
-	margin: 0;	
+    margin: 0;
 }
 
 #col1 #col1_content .linklist{
@@ -35,39 +35,39 @@
     padding: 0 0 .4em 0;
 }
 #profile_linklist {
-	padding: 2em 0;
+    padding: 2em 0;
 }
 #profile_linklist li {
-	color: #333;
-	font-size: 1em;
-	border-bottom: 1px solid #e5e5e5;
-	padding: 0.5em 1em;
+    color: #333;
+    font-size: 1em;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0.5em 1em;
 }
 #profile_linklist li a {
-	color: #333;
-	font-size: 1.2em;
+    color: #333;
+    font-size: 1.2em;
 }
 #profile_linklist li.active a {
-	font-weight: bold;
-}	
+    font-weight: bold;
+}
 #middle_nav.clearfix {
     clear:none;
-	display: inline;
+    display: inline;
 }
 #nav_sub {
     margin-top: 2em;
 }
 #nav_sub ul {
-	display: block;
-	padding-left: 0;
+    display: block;
+    padding-left: 0;
 }
 #nav_sub li {
     padding: 0;
 }
 #nav_sub li.active a{
-	background: transparent url(../../images/small_arrow_down_bg.gif) no-repeat center bottom;
-	padding-bottom: 1.4em;
-	border: none;
+    background: transparent url(../../images/small_arrow_down_bg.gif) no-repeat center bottom;
+    padding-bottom: 1.4em;
+    border: none;
 }
 #profile_pic {
     background: transparent url(../../images/pic_shadow.png) no-repeat left top;
@@ -76,27 +76,27 @@
     height: 100px;
 }
 #profile-info {
-	padding: 0 0 2em 0;
+    padding: 0 0 2em 0;
 }
 #profile-info #navigation-path{
-	padding: 2em 0;
+    padding: 2em 0;
 }
 #profile-info #username {
-	padding: 0;
-	line-height: 1.6em;
-	font-size: 1.6em;
+    padding: 0;
+    line-height: 1.6em;
+    font-size: 1.6em;
 }
 #profile-info #username strong {
-	font-size:1.6em;
-	line-height:1.5em;
-	padding:10px 10px 10px 0;
-	color: #000000;
+    font-size:1.6em;
+    line-height:1.5em;
+    padding:10px 10px 10px 0;
+    color: #000000;
 }
 #pic_shadow {
     width: 30em;
     float: left;
-	padding-top: 1em;
-	padding-left: 3em;
+    padding-top: 1em;
+    padding-left: 3em;
 }
 #profile dl, #preferences dl, dl#profiletop {
     display: block;
@@ -111,7 +111,7 @@
     clear: left;
     margin-bottom: 0.8em;
 }
-#profile dd, #preferences dd, #profiletop dd {    
+#profile dd, #preferences dd, #profiletop dd {
     margin-left: 12em;
     line-height: 1.5em;
     margin-bottom: 0.8em;
@@ -138,12 +138,12 @@
 }
 
 #profile .box h3, #profile #linkpath h3, #profile-info .box h3{
-	background: none;
-	padding: .3em 0;
-	color: #2184E8;
+    background: none;
+    padding: .3em 0;
+    color: #2184E8;
 }
 #profile #navigation-path h3,#profile #navigation-path h3 a {
-	color: #333;
+    color: #333;
 }
 
 /* list the spoken languages of a member */
@@ -219,37 +219,41 @@ h3.icon  {
  }
 
 #profile_linklist .space {
-	padding-top: 1em;
-	padding-bottom: 1em;
-	border: none;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    border: none;
 }
 #profile_linklist .messagesadd {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/email_open.png) 0 3px no-repeat;
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/email_open.png) 0 3px no-repeat;
 }
 #profile_linklist .commentsadd {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/comment_add.png) 0 3px no-repeat;
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/comment_add.png) 0 3px no-repeat;
 }
 #profile_linklist .relationsadd {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/add.png) 0 3px no-repeat;
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/add.png) 0 3px no-repeat;
 }
 #profile_linklist .verificationadd {
-	padding-left: 2em;
-	background: transparent url('../../../../../images/icons/shield.png') 0 3px no-repeat;
+    padding-left: 2em;
+    background: transparent url('../../../../../images/icons/shield.png') 0 3px no-repeat;
 }
 #profile_linklist .editmyprofile {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/pencil.png) 0 3px no-repeat;
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/pencil.png) 0 3px no-repeat;
 }
 #profile_linklist .mypreferences {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/wrench.png) 0 3px no-repeat;
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/wrench.png) 0 3px no-repeat;
 }
 #profile_linklist .myvisitors {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/group.png) 0 3px no-repeat;
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/group.png) 0 3px no-repeat;
+}
+#profile_linklist .deleteprofile {
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/delete.png) 0 3px no-repeat;
 }
 
 /* styles for member results lists, used in myprofile visitors */

@@ -1,7 +1,10 @@
 @media all
 {
-textarea, form {margin-bottom: 0.5em;}
 
+/* we need more space on the admin pages */
+#col1_content { padding: 0; }
+
+textarea, form {margin-bottom: 0.5em;}
 
 #messageboard {margin: 2em 0;}
 #acceptmembers {margin: 2em 0;}

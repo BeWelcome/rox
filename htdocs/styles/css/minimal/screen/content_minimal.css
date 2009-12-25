@@ -1375,7 +1375,7 @@ height:50px;
   .yform div input:active,
   .yform div select:active,
   .yform div textarea:active {
-    border:1px #a66 solid;
+    border:1px #666 solid;
     background:#fff;
   }
 

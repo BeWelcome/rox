@@ -67,9 +67,9 @@ Boston, MA  02111-1307, USA.
             if (is_array($sizes)) foreach ($sizes as $k => $size) {
                 $url[$size['label']] = $size;
             }
-            $photosFlat .= "<a href=".$url['Medium']['source']." class='lightview' rel='gallery[BestOf]'>";
-            $photosFlat .=  "<img border='0' alt='$photo[title]' ".
-                "src=" . $f->buildPhotoURL($photo, "Square") . ">";
+            $photosFlat .= "<a href=\"".$url['Medium']['source']."\" class=\"lightview\" rel='gallery[BestOf]'>";
+            $photosFlat .=  "<img border=\"0\" alt='$photo[title]' ".
+                "src=\"" . $f->buildPhotoURL($photo, "Square") . "\" />";
             $photosFlat .=  "</a>";
             $i++;
         }

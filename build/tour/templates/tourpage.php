@@ -33,19 +33,19 @@ $words = new MOD_words();
             <div class="subcl">
                 <h2><?php echo $words->getFormatted('tour_link_share')?></h2>
                 <div class="floatbox">
-                <a href="tour/share"><img src="images/tour/arrow_share_small.png" class="float_right"></a>
+                <a href="tour/share"><img src="images/tour/arrow_share_small.png" class="float_right" alt="share" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text2')?></p>
                 </div>
                 
                 <h2><?php echo $words->getFormatted('tour_link_meet')?></h2>
                 <div class="floatbox">
-                <a href="tour/meet"><img src="images/tour/arrow_world_small.png" class="float_right"></a>
+                <a href="tour/meet"><img src="images/tour/arrow_world_small.png" class="float_right" alt="meet" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text3')?></p>
                 </div>
                 
                 <h2><?php echo $words->getFormatted('tour_link_trips')?></h2>
                 <div class="floatbox">
-                <a href="tour/trips"><img src="images/tour/arrow_plan_small.png" class="float_right"></a>
+                <a href="tour/trips"><img src="images/tour/arrow_plan_small.png" class="float_right" alt="plan trips" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text4')?></p>
                 </div>
             </div> <!-- subcl -->
@@ -55,13 +55,13 @@ $words = new MOD_words();
             <div class="subcr">
                 <h2><?php echo $words->getFormatted('tour_link_maps')?></h2>
                 <div class="floatbox">
-                <a href="tour/maps"><img src="images/tour/arrow_maps_small.png" class="float_right"></a>
+                <a href="tour/maps"><img src="images/tour/arrow_maps_small.png" class="float_right" alt="maps" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text5')?></p>
                 </div>
                 
                 <h2><?php echo $words->getFormatted('tour_link_openness')?></h2>
                 <div class="floatbox">
-                <a href="tour/openness"><img src="images/tour/arrow_door_small.png" class="float_right"></a>
+                <a href="tour/openness"><img src="images/tour/arrow_door_small.png" class="float_right" alt="open door" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text6')?></p>
                 </div>
             </div> <!-- subcr -->

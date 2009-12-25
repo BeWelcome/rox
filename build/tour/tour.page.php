@@ -18,6 +18,7 @@ class TourPage extends PageWithActiveSkin
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/lightview.css';
         return $stylesheets;
     }
     

@@ -28,11 +28,13 @@ Boston, MA  02111-1307, USA.
 $username = $this->member->Username;
 ?>
 
-<form method="post" action="retire">
+<form class="yform full" method="post" action="retire">
     <input type="hidden" name="action" value="retire" />
     <p><?php echo $words->getFormatted ('retire_explanation',$username); ?></p>
-    <h4><?php echo $words->getFormatted ('retire_membercanexplain'); ?></h4>
-    <textarea cols="65" rows="6"></textarea>
+    <div class="type-text">
+        <label for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
+        <textarea id="explain" cols="65" rows="6"></textarea>
+    </div>
     <p>
         <input type="checkbox" name="Complete_retire" 
             onclick="return confirm ('<?php echo $words->getFormatted ('retire_WarningConfirmWithdraw');?>')" />

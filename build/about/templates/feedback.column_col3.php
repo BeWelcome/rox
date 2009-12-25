@@ -26,25 +26,39 @@ $IdCategory = '';
 if (isset($_GET['IdCategory']) && $_GET['IdCategory']) $IdCategory = $_GET['IdCategory'];
 ?>
 
-<?php echo $words->get("FeedBackDisclaimer") ?>
+<p><?php echo $words->get("FeedBackDisclaimer") ?></p>
 
-<form action="about/feedback/submit" method="post">
+<form class="yform full" action="about/feedback/submit" method="post">
     <?=$callback_tag ?>
-    <h4><label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label></h4>
-    <p>
+    <div class="type-select">
+        <h4><label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label></h4>
         <select id="IdCategory" name="IdCategory">
             <?php foreach ($categories as $cat) { ?>
-            <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected': '' ?>><?php echo $words->get("FeedBackName_" . $cat->name) ?></option>
+                <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected': '' ?>>
+                    <?php echo $words->get("FeedBackName_" . $cat->name) ?>
+                </option>
             <?php } ?>
         </select>
-    </p>
-      
-    <h4><label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label></h4>
-    <p><textarea id="FeedbackQuestion" name="FeedbackQuestion" class="long" cols="60" rows="9"></textarea></p>
-    <p><input type="checkbox" id="feedbackUrgent" name="urgent" /> <label for="feedbackUrgent"> <?php echo $words->get("FeedBackUrgentQuestion")?></label></p>
-    <p><input type="checkbox" id="feedbackAnswerneeded" name="answerneeded" /> <label for="feedbackAnswerneeded"> <?php echo $words->get("FeedBackIWantAnAnswer")?></label></p>
+    </div>
+    
+    <div class="type-text">
+        <h4><label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label></h4>
+        <textarea id="FeedbackQuestion" name="FeedbackQuestion" class="long" cols="60" rows="9"></textarea>
+    </div>
+    
+    <div class="type-text">
+        <h4><label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label></h4>
+        <input type="text" id="FeedbackEmail" name="FeedbackEmail" />
+    </div>
+    
+    <div class="type-check">
+        <p><input type="checkbox" id="feedbackUrgent" name="urgent" /> <label for="feedbackUrgent"> <?php echo $words->get("FeedBackUrgentQuestion")?></label></p>
+        <p><input type="checkbox" id="feedbackAnswerneeded" name="answerneeded" /> <label for="feedbackAnswerneeded"> <?php echo $words->get("FeedBackIWantAnAnswer")?></label></p>
+    </div>
     <p><input type="submit" id="submit" name="submit" value="submit" /></p>
-
-    <input name="action" type="hidden" value="ask">
+    
+    <div class="type-button">
+        <input name="action" type="hidden" value="ask" />
+    </div>
 </form>
 

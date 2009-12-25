@@ -92,7 +92,7 @@ for ($ii=0;$ii<count($members);$ii++) {
 ?>
             <div class="float_left" style="padding-right: 15px">
                 <p class="center">
-                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$m->Username.'">'.$m->Username.'</a>' ?></span><br />
+                    <span class="username"><?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?></span><br />
                     <?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?><br />
                     <span class="small grey"><?php echo $m->countryname; ?></span>
                 </p>

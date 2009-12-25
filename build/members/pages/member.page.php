@@ -34,20 +34,22 @@ class MemberPage extends PageWithActiveSkin
             $tt=array(
                 array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
-                array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors'),
-                array('space', '', '', 'space'),
+                );
 
-                array('profile', "members/$username", $ww->MemberPage),
-                array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
-                array('trips', "trip/show/$username", $ww->Trips),
-                array('blogs', "blog/$username", $ww->Blog),
-                array('gallery', "gallery/show/user/$username", $ww->Gallery),
-                array('forum', "forums/member/$username", $ViewForumPosts) 
-            );
             if ($this instanceof EditMyProfilePage)
             {
                 $tt[] = array('deleteprofile', 'deleteprofile', $ww->DeleteProfile, 'deleteprofile');
             }
+
+            $tt[] = array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors');
+            $tt[] = array('space', '', '', 'space');
+
+            $tt[] = array('profile', "members/$username", $ww->MemberPage);
+            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')');
+            $tt[] = array('trips', "trip/show/$username", $ww->Trips);
+            $tt[] = array('blogs', "blog/$username", $ww->Blog);
+            $tt[] = array('gallery', "gallery/show/user/$username", $ww->Gallery);
+            $tt[] = array('forum', "forums/member/$username", $ViewForumPosts);
         } else {
             $mynotes_count = $member->count_mynotes(); 
             if ($mynotes_count>0) {

@@ -124,4 +124,66 @@ class MemberEntityTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($m->isLoaded());
         $this->assertFalse($m->hasOldRight(array('Admin' => '')));
     }
+
+    public function testInactivateProfile1()
+    {
+        $m = $this->entity_factory->create('Member');
+        $this->assertFalse($m->inactivateProfile());
+    }
+
+    public function testinactivateProfile2()
+    {
+        $m = $this->entity_factory->create('Member')->findByUsername('Fake51');
+        $this->assertNotEquals('ChoiceInactive', $m->Status);
+        $this->assertTrue($m->inactivateProfile());
+        $this->assertEquals('ChoiceInactive', $m->Status);
+    }
+
+    public function testActivateProfile1()
+    {
+        $m = $this->entity_factory->create('Member');
+        $this->assertFalse($m->activateProfile());
+    }
+
+    public function testActivateProfile2()
+    {
+        $m = $this->entity_factory->create('Member')->findByUsername('Fake51');
+        $this->assertEquals('ChoiceInactive', $m->Status);
+        $this->assertTrue($m->activateProfile());
+        $this->assertEquals('Active', $m->Status);
+    }
+
+    public function testActivateProfile3()
+    {
+        $m = $this->entity_factory->create('Member')->findByUsername('Fake51');
+        $m->Status = 'TakenOut';
+        $this->assertFalse($m->activateProfile());
+        $m->Status = 'Banned';
+        $this->assertFalse($m->activateProfile());
+        $m->Status = 'SuspendedBeta';
+        $this->assertFalse($m->activateProfile());
+        $m->Status = 'AskToLeave';
+        $this->assertFalse($m->activateProfile());
+        $m->Status = 'PassedAway';
+        $this->assertFalse($m->activateProfile());
+        $m->Status = 'Buggy';
+        $this->assertFalse($m->activateProfile());
+    }
+
+    public function testRemoveProfile1()
+    {
+        $m = $this->entity_factory->create('Member');
+        $this->assertFalse($m->activateProfile());
+    }
+
+    public function testRemoveProfile2()
+    {
+        $m = $this->entity_factory->create('Member')->findByUsername('Fake51');
+        $this->assertNotEquals('AskToLeave', $m->Status);
+        $this->assertTrue($m->removeProfile());
+        $this->assertEquals('AskToLeave', $m->Status);
+        $m->Status = 'Active';
+        $m->update();
+    }
+
 }

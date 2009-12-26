@@ -1300,5 +1300,17 @@ VALUES
     {
         $this->avatarDir = new PDataDir('user/avatars');
     }
-    
+
+
+    public function sendRetiringFeedback($feedback = '')
+    {
+        if (!empty($feedback))
+        {
+            $feedback_model = new FeedbackModel;
+            $feedback_model->sendFeedback(array(
+                "IdCategory"       => FeedbackModel::OTHER,
+                "FeedbackQuestion" => $feedback,
+            ));
+        }
+    }
 }

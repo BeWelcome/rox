@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
     /**
      * @author Lemon-Head
      * @author Fake51
-     * @Fixer for membertrads : jeanyves
+     * @author jeanyves
      */
 
     /**
@@ -38,7 +38,7 @@ class Member extends RoxEntityBase
 
     private $trads = null;
     private $trads_by_tradid = null;
-    public $address = null;
+    public  $address = null;
     private $profile_languages = null;
     private $edit_mode = false;
     private $trad_by_tradid_inlang ; // Used to cache mTrad values
@@ -1373,10 +1373,89 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return false;
     }
 
+    /**
+     * returns array of possible values for Status column
+     *
+     * @access public
+     * @return array
+     */
     public function getPossibleStatusArray()
     {
         $info = $this->getTableDescription();
         return $info['Status']['values'];
+    }
+
+    /**
+     * sets the profile as inactive
+     *
+     * @access public
+     * @return bool
+     */
+    public function inactivateProfile()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $this->Status = 'ChoiceInactive';
+        return $this->update();
+    }
+
+    /**
+     * sets the profile as active
+     *
+     * @access public
+     * @return bool
+     */
+    public function activateProfile()
+    {
+        if (!$this->isLoaded() || in_array($this->Status, array('TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy')))
+        {
+            return false;
+        }
+        $this->Status = 'Active';
+        return $this->update();
+    }
+
+    /**
+     * sets the profile as active
+     *
+     * @access public
+     * @return bool
+     */
+    public function removeProfile()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $this->Status = 'AskToLeave';
+        $return = $this->update();
+
+        // todo: fill in code to actually remove profile here
+
+        return $return;
+    }
+
+    /**
+     * checks if the profile is displayable
+     *
+     * @access public
+     * @return bool
+     */
+    public function isBrowsable()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        // following should be extended to array('Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned')
+        // but won't work for now, as that will block admins checking accounts as well
+        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy')))
+        {
+            return false;
+        }
+        return true;
     }
 }
 

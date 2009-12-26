@@ -68,18 +68,37 @@ class Feedback extends RoxEntityBase
      */
     public function getCategory()
     {
-        if (!$this->isLoaded())
+        if (!$this->isLoaded() || !$this->getCategoryData())
         {
             return '';
         }
-        if (!($result = $this->dao->query(<<<SQL
+        return $this->feedback_category['name'];
+    }
+
+    /**
+     * returns feedback category data
+     *
+     * @access public
+     * @return array
+     */
+    public function getCategoryData()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+        if (!$this->feedback_category)
+        {
+            if (!($result = $this->dao->query(<<<SQL
 SELECT name from feedbackcategories WHERE id = {$this->IdFeedbackCategory}
 SQL
 )) || !($fetch = $result->fetch(PDB::FETCH_ASSOC)))
-        {
-            return '';
+            {
+                return array();
+            }
+            $this->feedback_category = $fetch;
         }
-        return $fetch['name'];
+        return $this->feedback_category;
     }
 
     /**
@@ -97,5 +116,32 @@ SQL
             return false;
         }
         return $this->createEntity('Feedback')->findByWhere("IdFeedbackCategory = " . FeedbackModel::FEEDBACK_AT_SIGNUP . " AND IdMember = {$member->id}");
+    }
+
+    /**
+     * creates a new feedback entry
+     *
+     * @param StdClass $category
+     * @param string   $feedback - feedback from user
+     * @param Member   $member
+     * @param string   $status
+     *
+     * @access public
+     * @return bool
+     */
+    public function createNew(StdClass $category, $feedback, Member $member = null, $status = 'open')
+    {
+        if ($this->isLoaded())
+        {
+            return false;
+        }
+        $this->IdFeedbackCategory = $category->id;
+        $this->Discussion = $feedback;
+        $this->Status = $status;
+        $this->IdVolunteer = $category->IdVolunteer;
+        $this->IdMember = $member ? $member->id : 0;
+        $this->IdLanguage = $_SESSION['IdLanguage'];
+        $this->created = date('Y-m-d H:i:s');
+        return !!$this->insert();
     }
 }

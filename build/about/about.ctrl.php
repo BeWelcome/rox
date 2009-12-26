@@ -58,7 +58,9 @@ class AboutController extends RoxControllerBase
                 if (isset($keyword_2) && $keyword_2 == "submit") {
                     return new FeedbackSentPage;
                 }
-                return new FeedbackPage();
+                $page = new FeedbackPage();
+                $page->model = new AboutModel;
+                return $page;
             case 'faq':
             case 'faqs':
                 $model = new AboutModel;

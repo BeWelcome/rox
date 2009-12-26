@@ -14,13 +14,14 @@ class FeedbackModel extends RoxModelBase
 {
 
     const BUG_PROBLEM        = 1;
-    const ABUSE_REPORT       = 2;       
-    const FEEDBACK_AT_SIGNUP = 3;  
-    const COMMENT_ISSUE      = 4;      
-    const MEDIA              = 5;             
-    const FORUM              = 6;             
-    const FEATURE_REQUEST    = 7;    
-    const VOLUNTEERING       = 8;     
+    const ABUSE_REPORT       = 2;
+    const FEEDBACK_AT_SIGNUP = 3;
+    const COMMENT_ISSUE      = 4;
+    const MEDIA              = 5;
+    const FORUM              = 6;
+    const FEATURE_REQUEST    = 7;
+    const VOLUNTEERING       = 8;
+    const OTHER              = 9;
 
     public function getFeedbackCategories()
     {
@@ -34,12 +35,24 @@ FROM feedbackcategories
         return $categories;
     }
 
+    public function getFeedbackCategory($category_id)
+    {
+        return $this->singleLookup(<<<SQL
+SELECT *
+FROM feedbackcategories
+WHERE id = {$this->dao->escape($category_id)}
+SQL
+        );
+    }
+
 
     public function sendFeedback($vars)
     {
-        $categories = $this->getFeedbackCategories();
-        $rCategory = $categories[$vars["IdCategory"]-1];
-        $receiver_str = str_replace(";", ",", $rCategory->EmailToNotify);
+        if (!($category = $this->getFeedbackCategory($vars["IdCategory"])))
+        {
+            return false;
+        }
+        $receiver_str = str_replace(";", ",", $category->EmailToNotify);
         $receiver = explode(',', $receiver_str);
 
         $IdMember = 0;
@@ -58,20 +71,23 @@ FROM feedbackcategories
         }
         else
         {
-            if (isset($vars["Email"]) && $vars["Email"]!="")
+            if (isset($vars["FeedbackEmail"]) && $vars["FeedbackEmail"]!="")
             {
-                $EmailSender = $vars["Email"]; // todo check if this email is a good one !
+                $EmailSender = $vars["FeedbackEmail"]; // todo check if this email is a good one !
             }
             $username = "unknown user";
         }
-        $str = "INSERT INTO feedbacks(created,Discussion,IdFeedbackCategory,IdVolunteer,Status,IdLanguage,IdMember) values(now(),'" . $this->dao->escape($vars["FeedbackQuestion"]) . "'," . $vars["IdCategory"] . "," . $rCategory->IdVolunteer . ",'open'," . $_SESSION['IdLanguage'] . "," . $IdMember.")";
-        $this->dao->query($str);
+        $feedback = $this->createEntity('Feedback');
+        if (!$feedback->createNew($category, $vars["FeedbackQuestion"], $member ? $member : null, 'open'))
+        {
+            return false;
+        }
 
         // Notify volunteers that a new feedback come in
         // This also send the message to OTRS
-        $subj = "New feedback from " . $username . " - Category: " . $rCategory->Name;
+        $subj = "New feedback from " . $username . " - Category: " . $category->Name;
         $text = "Feedback from " . $username . "\r\n";
-        $text .= "Category " . $rCategory->Name . "\r\n\r\n";
+        $text .= "Category " . $category->Name . "\r\n\r\n";
         // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
         if (!empty($vars["FeedbackQuestion"]))
         {

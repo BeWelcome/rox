@@ -273,6 +273,3 @@ class PageWithHTML extends AbstractBasePage
         if (isset($this->infoMessage) && $this->infoMessage != '') echo '<p class="note big '.$class.'">'.$this->infoMessage.'</p>';
     }
 }
-
-
-?>

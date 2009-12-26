@@ -46,10 +46,12 @@ if (isset($_GET['IdCategory']) && $_GET['IdCategory']) $IdCategory = $_GET['IdCa
         <textarea id="FeedbackQuestion" name="FeedbackQuestion" class="long" cols="60" rows="9"></textarea>
     </div>
     
+    <?php if (!$this->model->getLoggedInMember()) : ?>
     <div class="type-text">
         <h4><label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label></h4>
         <input type="text" id="FeedbackEmail" name="FeedbackEmail" />
     </div>
+    <?php endif; ?>
     
     <div class="type-check">
         <p><input type="checkbox" id="feedbackUrgent" name="urgent" /> <label for="feedbackUrgent"> <?php echo $words->get("FeedBackUrgentQuestion")?></label></p>

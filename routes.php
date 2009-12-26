@@ -56,6 +56,9 @@
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
 
+    // member app routes
+    $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
+
     // admin app routes
     $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
     $this->addRoute('admin_norights', 'admin/norights', 'AdminController', 'noRights');

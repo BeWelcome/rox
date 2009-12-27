@@ -24,11 +24,26 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 $IdCategory = '';
 if (isset($_GET['IdCategory']) && $_GET['IdCategory']) $IdCategory = $_GET['IdCategory'];
+
+$mem = $this->getRedirectedMem('post');
+$IdCategory = isset($mem['IdCategory']) ? $mem['IdCategory'] : 1;
+$FeedbackQuestion = isset($mem['FeedbackQuestion']) ? $mem['FeedbackQuestion'] : '';
+$FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
+$urgent = isset($mem['urgent']) ? $mem['urgent'] : null;
+$answerneeded = isset($mem['answerneeded']) ? $mem['answerneeded'] : null;
+
+if ($errors = $this->getRedirectedMem('errors'))
+{
+    foreach ($errors as $error)
+    {
+        echo "<p>{$words->get($error)}</p>";
+    }
+}
 ?>
 
 <p><?php echo $words->get("FeedBackDisclaimer") ?></p>
 
-<form class="yform full" action="about/feedback/submit" method="post">
+<form class="yform full" action="about/feedback" method="post">
     <?=$callback_tag ?>
     <div class="type-select">
         <h4><label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label></h4>

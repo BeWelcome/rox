@@ -106,7 +106,7 @@ SQL
         $text .= "\n\r Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." \r\n";
 
 
-        $this->feedbackMail($receiver, $subj, $text, $EmailSender);
+        return $this->feedbackMail($receiver, $subj, $text, $EmailSender);
     }
 
     /**

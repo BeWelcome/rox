@@ -83,18 +83,37 @@ class AboutController extends RoxControllerBase
     
     public function feedbackCallback($args, $action, $mem_redirect, $mem_resend)
     {
-        if (isset($args->post)) {
-            $vars = $args->post;
+        if (isset($args->post))
+        {
             $request = $args->request;
             $model = new FeedbackModel;
-            $categories = $model->getFeedbackCategories();
-			if (isset($vars['IdCategory']) && $vars['FeedbackQuestion'] != '') {
-				$model->sendFeedback($vars);
-				return 'feedback/submit';
-            } else {
-                
-				return 'feedback';
+            $mem_redirect->post = $args->post;
+            if (isset($args->post['answerneeded']) && !$model->getLoggedInMember() && !filter_var($args->post['FeedbackEmail'], FILTER_VALIDATE_EMAIL))
+            {
+                $mem_redirect->errors = array('FeedbackErrorBadEmail');
+                return false;
+            }
+			if (isset($args->post['IdCategory']) && $args->post['FeedbackQuestion'] != '')
+            {
+                if ($model->sendFeedback($args->post))
+                {
+                    return 'feedback/submit';
+                }
+                else
+                {
+                    $mem_redirect->errors = array('FeedbackErrorSendfailed');
+                    return false;
+                }
+            }
+            else
+            {
+                $mem_redirect->errors = array('FeedbackErrorDataMissing');
+				return false;
 			}
+        }
+        else
+        {
+            return false;
         }
     }
     

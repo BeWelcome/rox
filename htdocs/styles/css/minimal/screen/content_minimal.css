@@ -106,7 +106,7 @@
     font-size: 1.1em;
   }
 
-  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
+  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dashed; border-bottom: 1px #FF0000 dashed; }
   .highlight {background-color: #eeeeee; border:1px solid #E5E5E5; margin-right:4px;}
 
   .grey {color: #777777; }
@@ -1362,7 +1362,7 @@ height:50px;
   .yform .type-text input,
   .yform .type-text textarea,
   .yform .type-select select {
-    border:1px solid #ddd;
+    border:1px solid #ccc;
   }
 
   /* :hover and :focus status on form fields | Effekt zur Hervorhebung von Formularfeldern bei :hover oder :focus */
@@ -1506,13 +1506,13 @@ height:50px;
 
   /* Styling of error-messages | Fehlermeldungen */
   .yform div.error {
-    border:1px #a00 dashed;
-    background:#faf4f4;
+    border:1px #cc0000 dashed;
+    background:#ffebe8;
     padding:0.5em;
   }
 
   .yform div.error label { color:#000; font-weight:bold; }
-  .yform div.error .message { color:#800; }
+  .yform div.error .message { color:#cc0000; }
 
  /*------------------------------------------------------------------------------------------------------*/
 

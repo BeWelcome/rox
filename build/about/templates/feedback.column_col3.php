@@ -32,6 +32,14 @@ $FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
 $urgent = isset($mem['urgent']) ? $mem['urgent'] : null;
 $answerneeded = isset($mem['answerneeded']) ? $mem['answerneeded'] : null;
 $errors = $this->getRedirectedMem('errors');
+
+if ($errors = $this->getRedirectedMem('errors'))
+{
+    foreach ($errors as $error)
+    {
+        echo "<p class=\"error\">{$words->get($error)}</p>";
+    }
+}
 ?>
 
 <p><?php echo $words->get("FeedBackDisclaimer") ?></p>
@@ -54,7 +62,10 @@ $errors = $this->getRedirectedMem('errors');
         if (in_array('FeedbackErrorDataMissing', $errors))
         {
             echo "error \">";
-            echo "<strong class=\"message\">{$words->get($error)}</strong>";
+            foreach ($errors as $error) 
+            {
+                echo "<strong class=\"message\">{$words->get($error)}</strong>";
+            }
         }
         ?>
         <h4><label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label></h4>
@@ -66,7 +77,10 @@ $errors = $this->getRedirectedMem('errors');
         if (in_array('FeedbackErrorBadEmail', $errors))
         {
             echo "error \">";
-            echo "<strong class=\"message\">{$words->get($error)}</strong>";
+            foreach ($errors as $error) 
+            {
+                echo "<strong class=\"message\">{$words->get($error)}</strong>";
+            }
         }
         ?>
         <h4><label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label></h4>

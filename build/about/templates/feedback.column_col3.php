@@ -31,6 +31,7 @@ $FeedbackQuestion = isset($mem['FeedbackQuestion']) ? $mem['FeedbackQuestion'] :
 $FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
 $urgent = isset($mem['urgent']) ? $mem['urgent'] : null;
 $answerneeded = isset($mem['answerneeded']) ? $mem['answerneeded'] : null;
+$errors = $this->getRedirectedMem('errors');
 ?>
 
 <p><?php echo $words->get("FeedBackDisclaimer") ?></p>
@@ -49,27 +50,25 @@ $answerneeded = isset($mem['answerneeded']) ? $mem['answerneeded'] : null;
         </select>
     </div>
 
-    <div class="type-text">
+    <div class="type-text <?php
+        if (in_array('FeedbackErrorDataMissing', $errors))
+        {
+            echo "error \">";
+            echo "<strong class=\"message\">{$words->get($error)}</strong>";
+        }
+        ?>
         <h4><label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label></h4>
         <textarea id="FeedbackQuestion" name="FeedbackQuestion" class="long" cols="60" rows="9"><?php echo $FeedbackQuestion;?></textarea>
     </div>
 
     <?php if (!$this->model->getLoggedInMember()) : ?>
     <div class="type-text <?php
-        if ($errors = $this->getRedirectedMem('errors'))
+        if (in_array('FeedbackErrorBadEmail', $errors))
         {
-            echo "error";
+            echo "error \">";
+            echo "<strong class=\"message\">{$words->get($error)}</strong>";
         }
-        ?>"><?php
-        if ($errors = $this->getRedirectedMem('errors'))
-        {
-            foreach ($errors as $error)
-            {
-                echo "<strong class=\"message\">{$words->get($error)}</strong>";
-            }
-        }
-    ?>
-
+        ?>
         <h4><label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label></h4>
         <input type="text" id="FeedbackEmail" name="FeedbackEmail" value="<?php echo $FeedbackEmail;?>"/>
     </div>

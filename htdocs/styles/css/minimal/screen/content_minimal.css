@@ -1395,8 +1395,38 @@ height:50px;
     padding:.5em 1.2em;
   }
 
-  .yform .type-button input[type=reset] { color:#300; background:#661717 url(images/button_red.png) top left repeat-x; }
-  .yform .type-button input[type=submit] { color:#330; background:#5e5607 url(images/button_yellow.png) top left repeat-x; }
+  .yform .type-button input[type=reset] { 
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:11px;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto !important;
+  }
+
+  .yform .type-button input[type=submit] { 
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:1.1em;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto !important;
+    cursor: pointer;
+  }
 
   /* optional button styling for IE6 using classes */
   .yform .type-button input.reset { color:#300; background:#661717 url(images/button_red.png) top left repeat-x; }
@@ -1406,12 +1436,10 @@ height:50px;
   .yform div.type-button input:focus,
   .yform div.type-button input:hover,
   .yform div.type-button input:active {
-    border-top:1px #444 solid;
-    border-left:1px #444 solid;
-    border-right:1px #ddd solid;
-    border-bottom:1px #ddd solid;
-    color:#fff;
-    background:#555; 
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; 
+    color: #333; 
+    text-decoration:none; 
+    line-height: 21px; 
   }
 
   .yform div.type-button input.reset:focus,

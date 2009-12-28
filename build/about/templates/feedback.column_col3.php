@@ -48,7 +48,7 @@ if ($errors = $this->getRedirectedMem('errors'))
     <?=$callback_tag ?>
 
     <div class="type-select">
-        <h4><label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label></h4>
+        <label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label>
         <select id="IdCategory" name="IdCategory">
             <?php foreach ($categories as $cat) { ?>
                 <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected="selected"': '' ?>>
@@ -56,7 +56,7 @@ if ($errors = $this->getRedirectedMem('errors'))
                 </option>
             <?php } ?>
         </select>
-    </div>
+    </div> <!-- type-select -->
 
     <div class="type-text <?php
         if (in_array('FeedbackErrorDataMissing', $errors))
@@ -67,10 +67,11 @@ if ($errors = $this->getRedirectedMem('errors'))
                 echo "<strong class=\"message\">{$words->get($error)}</strong>";
             }
         }
+        else echo " \">";
         ?>
-        <h4><label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label></h4>
+        <label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label>
         <textarea id="FeedbackQuestion" name="FeedbackQuestion" class="long" cols="60" rows="9"><?php echo $FeedbackQuestion;?></textarea>
-    </div>
+    </div> <!-- type-text -->
 
     <?php if (!$this->model->getLoggedInMember()) : ?>
     <div class="type-text <?php
@@ -82,8 +83,9 @@ if ($errors = $this->getRedirectedMem('errors'))
                 echo "<strong class=\"message\">{$words->get($error)}</strong>";
             }
         }
-        ?>
-        <h4><label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label></h4>
+        else echo " \">";
+        ?> <!-- type-text -->
+        <label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label>
         <input type="text" id="FeedbackEmail" name="FeedbackEmail" value="<?php echo $FeedbackEmail;?>"/>
     </div>
     <?php endif; ?>
@@ -91,10 +93,10 @@ if ($errors = $this->getRedirectedMem('errors'))
     <div class="type-check">
         <p><input type="checkbox" id="feedbackUrgent" name="urgent" <?php if ($urgent) echo "checked='checked'";?>/> <label for="feedbackUrgent"> <?php echo $words->get("FeedBackUrgentQuestion")?></label></p>
         <p><input type="checkbox" id="feedbackAnswerneeded" name="answerneeded" <?php if ($answerneeded) echo "checked='checked'";?>/> <label for="feedbackAnswerneeded"> <?php echo $words->get("FeedBackIWantAnAnswer")?></label></p>
-    </div>
+    </div> <!-- type-check -->
 
-    <div>
-        <input type="submit" id="submit" name="submit" value="submit" />
+    <div class="type-button">
+        <input type="submit" id="submit" name="submit" value="<?php echo $words->get("FeedbackSubmit")?>" />
         <input name="action" type="hidden" value="ask" />
     </div>
 </form>

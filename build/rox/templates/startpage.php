@@ -64,8 +64,10 @@ $words = new MOD_words();
     <div class="c50r">
       <div class="subcr">
           <div class="floatbox">
-<?php for ($ii=0;$ii<count($members);$ii++) {
-        if ($ii >1) break;
+<?php 
+$Rox = new Rox();
+$members = $Rox->getMembersStartpage(2,'random');
+for ($ii=0;$ii<count($members);$ii++) {
         $m=$members[$ii] ;
 ?>
 <div class="subcolumns">

@@ -18,7 +18,8 @@ class ExplorePage extends RoxPageView
     }
 
     protected function getPageTitle() {
-        return 'Explore BeWelcome *';
+        $words = new MOD_words();
+        echo $words->getBuffered('ExploreTitle');
     }
 
     protected function teaserContent() {

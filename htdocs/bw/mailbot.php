@@ -82,7 +82,8 @@ SELECT
     Username,
     members.Status AS MemberStatus,
     broadcast.Name AS word,
-    broadcast.Type as broadcast_type
+    broadcast.Type as broadcast_type,
+	broadcats.EmailFrom as EmailFrom
 
 FROM
     broadcast,
@@ -104,10 +105,15 @@ while ($rr = mysql_fetch_object($qry)) {
     $text = wwinlang("BroadCast_Body_".$rr->word,$MemberIdLanguage, $rr->Username);
 //    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 
-        $sender_mail="newsletter@bewelcome.org" ;
-        if ($rr->broadcast_type=="RemindToLog") {
-            $sender_mail="reminder@bewelcome.org" ;
-        }
+		if (empty($rr->EmailFrom)) {
+			$sender_mail="newsletter@bewelcome.org" ;
+			if ($rr->broadcast_type=="RemindToLog") {
+				$sender_mail="reminder@bewelcome.org" ;
+			}
+		}
+		else {
+			$sender_mail=$rr->EmailFrom ;
+		}
     if (!bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ")) {
         $str = "UPDATE   broadcastmessages
 SET   Status = 'Failed'
@@ -126,7 +132,7 @@ WHERE    IdBroadcast =  $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver   
 SET    Status = 'Sent'
 WHERE    IdBroadcast = $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
         $countbroadcast++ ;
-        LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast,"Debug") ;
+        LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast." send from:".$sender_mail,"Debug") ;
     }
     sql_query($str);
 } // end of while on broadcast (massmail)
@@ -777,4 +783,5 @@ if (IsLoggedIn()) {
     function PictureInMail($Username) {
        $PictureFilePath='http://www.bewelcome.org/members/avatar/'.$Username ;
        $rval= '<img alt="picture of '.$Username.'" src="'.$PictureFilePath.'"/>';
+	   return($rval) ;
     } // End of PictureInMail

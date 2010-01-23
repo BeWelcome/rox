@@ -1684,6 +1684,9 @@ SQL;
 INDEX ( `IdGroup` , `IdQuery` )
 ) ENGINE = MYISAM COMMENT = 'Allows to define that some groups members will be allowed to run a specifc query'" ; 
 
+
+   $updates[] = "ALTER TABLE `broadcast` ADD `EmailFrom` TEXT NULL COMMENT 'can be null, if not will be used as the email from when message is sent'";
+
     if (empty($res)) {
         $version = 0;
     } else {

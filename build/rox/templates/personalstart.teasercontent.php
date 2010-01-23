@@ -42,6 +42,7 @@ Boston, MA  02111-1307, USA.
                         (<img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/> <?=$_newMessagesNumber?>)
                     <?php } ?>
                     </a></li>
+                    <li><a id="tablink6" href="#tab6"><?=$words->getSilent('InviteAFriend')?></a></li>
                 </ul>
             </div> <!-- subcl -->
         </div> <!-- c33l -->
@@ -429,6 +430,10 @@ Boston, MA  02111-1307, USA.
                 <?php $inbox_widget->render() ?>
                 <p><a href="messages">more...</a></p>
 
+                </div> <!-- tab5 -->
+
+                <div class="panel" id="tab6">
+                    <?php echo $words->get('InviteAFriendInfo');?>
                 </div> <!-- tab5 -->
 
             </div> <!-- subcr -->

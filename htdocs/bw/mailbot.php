@@ -83,7 +83,7 @@ SELECT
     members.Status AS MemberStatus,
     broadcast.Name AS word,
     broadcast.Type as broadcast_type,
-	broadcats.EmailFrom as EmailFrom
+	broadcast.EmailFrom as EmailFrom
 
 FROM
     broadcast,

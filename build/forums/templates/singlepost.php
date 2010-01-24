@@ -114,17 +114,18 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
             // If current user has a moderator right, he can see the post
             if (($post->PostDeleted!="Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) {
-                $max=count($post->Trad) ;
-                if ($max>1) { // we will display the list of trads only if there is more than one trad
+                $PostMaxTrad=count($post->Trad) ;
+                if ($PostMaxTrad>1) { // we will display the list of trads only if there is more than one trad
                     echo "<p class=\"small\">",$words->getFormatted("forum_available_trads"),":" ;
 //                  print_r($post); echo"<br>" ;
-                    for ($jj=0;$jj<$max;$jj++) {
+                    for ($jj=0;$jj<$PostMaxTrad;$jj++) {
                         $Trad=$post->Trad[$jj] ;
 
 
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result
 
                         $ssSentence=str_replace("\"","&quot;",addslashes(strip_tags($Trad->Sentence,"<p><br /><br><strong><ul><li><a><img>")))  ;
+                        $ssSentence=str_replace("\n","",$ssSentence) ; // If we dont remove teh extraline breaks, javascript with on mosover for translation doesn't work
 //                      $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
                         if ($jj==0) {
                             echo "[Original <a  title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onmouseover=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
@@ -242,6 +243,9 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     ?>
 </div> <!-- forumspost -->
 
+<?php
+if ($PostMaxTrad>1) { // No need to at javascript catcher function is there is no more than one translations
+?>
 <script type="text/javascript">
 <!--
  function singlepost_display<?php echo $post->IdContent; ?>(strCode,div_area) {
@@ -257,3 +261,6 @@ JeanYves notes : every display of a forum post content  goes trhu this template
  }
 // -->
 </script>
+<?php
+}
+?>

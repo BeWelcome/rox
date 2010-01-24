@@ -790,7 +790,7 @@ WHERE bt.`name` LIKE \'%'.$this->dao->escape($like).'%\'';
     )
 GROUP BY b.`blog_id`
 ';
-        if ($latest)
+        if ($latest = true)
         {
             $query .= ' ORDER BY blog_created DESC';
         }

@@ -65,6 +65,7 @@ class PollsPage extends RoxPageView {
                 require 'templates/create.php';    
                         break ;
                     case  "contribute":
+                        $callbackid=55656 ;
                 require 'templates/contribute.php';    
                         break ;
                     case  "probablyallreadyvote":
@@ -92,7 +93,7 @@ class PollsPage extends RoxPageView {
                 require 'templates/resultsnotyetavailable.php';    
                         break ;
                     case  "showpoll":
-                        $callbackid=time() ;
+                        $callbackid=5656456 ;
                 require 'templates/create.php';    
                         break ;
                         

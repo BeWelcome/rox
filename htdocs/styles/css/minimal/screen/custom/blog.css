@@ -1,7 +1,11 @@
-div.blogitem{margin-bottom: 3em}
-div.blogitem h3{margin:0;font-family:arial,helvetica,sans-serif;font-size:1.5em}
+div.blogitem{margin-bottom: 3em; color: #333; font-family: Lucida Grande,Lucida Sans Unicode,Verdana,Helvetica,Arial,sans-serif;}
+div.blogitem h3{margin:0; font-family:arial,helvetica,sans-serif; font-size:1.5em; color: #333;}
 div.blogitem .text{max-width:768px}
 div.blogitem .tags { font-size: 80%; padding:2px; background:transparent; }
+div.blogitem ul,ol{margin: 1em 2em;}
+div.blogitem ul li{list-style: disc;}
+div.blogitem ol li{list-style: decimal;}
+
 /* lowest usage */
 a.tagusage1 {font-size:100%;}
 a.tagusage2 {font-size:140%;}

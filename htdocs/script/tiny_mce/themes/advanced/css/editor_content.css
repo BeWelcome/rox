@@ -29,7 +29,7 @@ div.mceVisualAid {
 }
 .mceEditor td { padding: 0; }
 .mceContentBody {
-    padding: 2px;
+    padding: 6px;
 }
 
 /* Important is needed in Gecko browsers inorder to style links */

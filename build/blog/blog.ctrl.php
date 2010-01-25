@@ -295,6 +295,7 @@ class BlogController extends RoxControllerBase {
             $sanitize->allow('h4');
             $sanitize->allow('h5');
             $sanitize->allow('ul');
+            $sanitize->allow('ol');
             $sanitize->allow('li');
         
             $sanitize->allowAttribute('color'); 

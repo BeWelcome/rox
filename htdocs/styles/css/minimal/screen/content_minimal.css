@@ -303,7 +303,7 @@ dl.list {
 
   form {overflow:hidden;}
   fieldset {
-    border: 1px solid #e5e5e5;
+    border: 1px solid #ccc;
     padding: 2em;
     margin-bottom: 1.5em;
   }
@@ -785,7 +785,7 @@ div.box div.boxbottom div.links {
 
 /* Fieldset menu - creates a tab-menu from form fieldsets via fieldset.js */
 .fieldset-menu{
-    margin:0 1em 1em 0;
+    margin:0;
 }
 .fieldset-menu-form .fieldset-menu {
     margin: 0;

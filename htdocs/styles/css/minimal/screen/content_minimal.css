@@ -617,7 +617,23 @@ background: none;
 #main li.userpicbox_big img {
     margin-top: -10px;
 }
-
+/* Special classes for Places_Local_Volunteers_Sidebar*/
+#main li.userpicbox_vol {
+    width: 146px;
+    border: 1px solid transparent;
+}
+	#main li.userpicbox_vol:hover{
+    background-color: #f5f5f5;
+    border-top:1px solid #ccc;
+    border-right:1px solid #777;
+    border-bottom:1px solid #777;
+    border-left:1px solid #ccc;
+}
+#main li.userpicbox_vol a {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+}
 /* blog & gallery comments */
 div.comment { padding:0; margin-bottom:1em; }
 div.comment h4 {padding:0.2em; margin:0; }

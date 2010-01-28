@@ -25,8 +25,21 @@ if (!$members) {
         $image = new MOD_images_Image('',$member->username);
         if ($member->HideBirthDate=="No") $member->age = floor($layoutbits->fage_value($member->BirthDate));
         else $member->age = $words->get("Hidden");
-        echo '<a href="#"><li class="userpicbox float_left" style="cursor:pointer;" onclick="javascript: window.location.href = \'bw/member.php?cid='.$member->username.'\'; return false"><a href="bw/member.php?cid='.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a><p><a href="bw/member.php?cid='.$member->username.'">'.$member->username.'</a>
-        <br /><span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span></p></li></a>';
+        echo '<li class="userpicbox float_left">';
+        echo '<div class="subcolumns">';
+  		echo '	<div class="c25l">';
+        echo '		<div class="subcl">';
+		echo '			<a href="member/'.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a>';   
+		echo '		</div> <!-- subcl -->';
+  		echo '	</div> <!-- c25l -->';
+		echo ' 	<div class="c75r">';
+    	echo '		<div class="subcr">';
+        echo '			<p><a href="member/'.$member->username.'">'.$member->username.'</a>';
+        echo '			<br /><span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span>';
+		echo '		</div>';
+    	echo '	</div>';
+		echo '</div>';
+        echo '</li>';
     }
     ?>
     </ul>

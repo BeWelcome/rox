@@ -629,6 +629,10 @@ background: none;
     border-bottom:1px solid #777;
     border-left:1px solid #ccc;
 }
+/* Special classes for Places_UserpixBox */
+.userpicbox_margin {
+    margin-left: 5px;
+}
 #main li.userpicbox_vol a {
     color: black;
     font-weight: bold;

@@ -29,13 +29,15 @@ if (!$members) {
         echo '<div class="subcolumns">';
   		echo '	<div class="c25l">';
         echo '		<div class="subcl">';
-		echo '			<a href="member/'.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a>';   
+		echo '				<a href="member/'.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a>';
 		echo '		</div> <!-- subcl -->';
   		echo '	</div> <!-- c25l -->';
 		echo ' 	<div class="c75r">';
     	echo '		<div class="subcr">';
-        echo '			<p><a href="member/'.$member->username.'">'.$member->username.'</a>';
-        echo '			<br /><span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span>';
+    	echo '			<div class="userpicbox_margin">';
+        echo '				<p><a href="member/'.$member->username.'">'.$member->username.'</a>';
+        echo '				<br /><span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span>';
+        echo '			</div>';   
 		echo '		</div>';
     	echo '	</div>';
 		echo '</div>';

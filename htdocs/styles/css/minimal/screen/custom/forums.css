@@ -57,7 +57,7 @@ div.forumsmessage ul li{
     margin-left: 0.5em;
 }
 div.forumsmessage ol li{
-    list-style-type: dec;
+    list-style-type: decimal;
     margin-left: 1em;
     padding-bottom: 0em;
 }

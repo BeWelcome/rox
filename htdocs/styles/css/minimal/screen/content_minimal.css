@@ -74,6 +74,14 @@
     border:0;
     border-bottom: 1px #eee solid;
   }
+  hr.divide {
+    color: #fff;
+    background:transparent;
+    margin: 0 0 1em 0;
+    padding: 0 0 1em 0;
+    border:0;
+    border-bottom: 1px transparent solid;
+  }
 
    /**
    * Generic Content Classes
@@ -98,7 +106,7 @@
     font-size: 1.1em;
   }
 
-  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dotted; border-bottom: 1px #FF0000 dotted; }
+  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dashed; border-bottom: 1px #FF0000 dashed; }
   .highlight {background-color: #eeeeee; border:1px solid #E5E5E5; margin-right:4px;}
 
   .grey {color: #777777; }
@@ -173,6 +181,11 @@
   .bullet {margin: 0 0 1em 1em;}
   ul.bullet li { list-style-type: disc; margin-left: 0.8em}
   ol.bullet li { list-style-type: decimal; margin-left: 0.8em; }
+
+  /* in case we want bullet point */
+  .list-image {margin: 0 0 1em 1em;}
+  ul.list-image li { list-style-image: url(../images/list-image-arrow.gif); margin-left: 0.6em}
+  ol.list-image li { list-style-type: decimal; margin-left: 0.8em; }
 
   /* Unordered lists without bullets  */
   ul.linklist { list-style-type: none; }
@@ -290,7 +303,7 @@ dl.list {
 
   form {overflow:hidden;}
   fieldset {
-    border: 1px solid #e5e5e5;
+    border: 1px solid #ccc;
     padding: 2em;
     margin-bottom: 1.5em;
   }
@@ -333,15 +346,13 @@ dl.list {
   }
 
   textarea {
-    font-size: 1.2em;
-    font-family: Arial, Helvetica;
+    font-family:  Arial, Helvetica, sans-serif;
     padding: 5px;
   }
 
   textarea.long {width: 95%; }
 
   input, textarea {
-    font-size: 1.3em;
     border: 1px #ccc solid;
     background: #ffffff;
     color: #777;
@@ -352,7 +363,7 @@ dl.list {
     background: transparent;
   }
   input[type=submit] {
-    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
     border-width:1px;
@@ -369,7 +380,7 @@ dl.list {
   }
 
   input[type=reset] {
-    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
     border-width:1px;
@@ -454,7 +465,7 @@ dl.list {
   }
   #footer p {font-size: 0.9em;}
 
-  #footer a {margin: 0.1em 0.2em; padding: 0.2em 0.3em; color:#777; font-weight: normal; text-align: left;}
+  #footer a {margin: 0.1em 0.2em 0 0; padding: 0.2em 0.3em 0 0; color:#777; font-weight: normal; text-align: left;}
   #footer a:hover { text-decoration:underline; }
   #footer a:focus { text-decoration:underline; }
 
@@ -494,7 +505,7 @@ h4.news {
 .hr_div {padding: 5px 30px 0 30px;}
 
 .button, input.button, .control-links a, .control-links input, a.cancel {
-    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
     border-width:1px;
@@ -515,8 +526,8 @@ input.button, .control-links input { /* Only for inputs. Otherwise we have probl
     padding:0 8px;
 }
 .button a, input.button{color: #ff8800; text-decoration:none; background-color:transparent;}
-.button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
-.button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0%; color: #333; text-decoration:none; line-height: 21px;}
+.button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; color: #333; text-decoration:none; line-height: 21px;}
+.button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; color: #333; text-decoration:none; line-height: 21px;}
 
 a.bigbutton {
     background: transparent url(../images/bg_bigbutton_a_w.gif) no-repeat scroll top right;
@@ -544,6 +555,9 @@ a.bigbutton:active span {
     background-position: bottom left;
     padding: 9px 0 7px 18px; /* push text down 1px */
 }
+
+/* General (Google-) Map styles */
+.map, #spaf_map, .tripmap {overflow: hidden;}
 
 /* Searchmembers styles */
 #mapsearch {font-weight: bold;}
@@ -577,8 +591,9 @@ background: none;
     padding: 10px;
     width: 180px;
     /* if we want vcard-like member-display then we have to uncomment the following lines*/
-      border: 1px solid transparent;
+    /*  border: 1px solid transparent; */
 }
+/*
 #main li.userpicbox:hover{
     background-color: #f5f5f5;
     border-top:1px solid #ccc;
@@ -586,10 +601,12 @@ background: none;
     border-bottom:1px solid #777;
     border-left:1px solid #ccc;
 }
+*/
+
+
 #main li.userpicbox a {
-    color: black;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 1em;
 }
 
 /* Special classes for AboutUsPages*/
@@ -602,6 +619,24 @@ background: none;
 }
 #main li.userpicbox_big img {
     margin-top: -10px;
+}
+/* Special classes for Places_Local_Volunteers_Sidebar*/
+#main li.userpicbox_vol {
+    width: 146px;
+}
+/*
+	#main li.userpicbox_vol:hover{
+    background-color: #f5f5f5;
+    border-top:1px solid #ccc;
+    border-right:1px solid #777;
+    border-bottom:1px solid #777;
+    border-left:1px solid #ccc;
+}
+*/
+
+.userinfo {
+    margin-left: 60px;
+    overflow: hidden;
 }
 
 /* blog & gallery comments */
@@ -770,41 +805,49 @@ div.box div.boxbottom div.links {
 #teaser #teaser_r {width: 70%; margin: 0 10px 0 0; }
 
 /* Fieldset menu - creates a tab-menu from form fieldsets via fieldset.js */
-div.fieldset-menu{
-    margin:0 1em 1em 0;
+.fieldset-menu{
+    margin:0;
 }
-div.fieldset-menu ul{
+.fieldset-menu-form .fieldset-menu {
+    margin: 0;
+}
+.fieldset-menu-form fieldset {
+    border-top: none;
+    background: transparent;
+    border-color: #ccc;
+}
+#col3_content .fieldset-menu ul, .fieldset-menu ul{
     margin: 0;
     padding:0;
     list-style-type:none;
     border-bottom: 1px solid #ccc;
 }
-div.fieldset-menu li{
+.fieldset-menu li{
     padding-left:1em;
     padding-right:1em;
-    padding-top: 0.25em;
-    padding-bottom: 0.4em;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.6em;
+    margin-left: 0;
+    margin-right: .2em;
     display:inline;
     border-top: 1px solid #ccc;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    line-height: 2em;
+    line-height: 2.4em;
     background-color: #eee;
 }
-div.fieldset-menu li.active {
-    border-bottom: 1px solid white;
+.fieldset-menu li.active {
+    background: transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    border-bottom: 2px solid #f7f7f7;
     font-weight: bold;
-    background-color: #fff;
 }
-div.fieldset-menu li a{
+.fieldset-menu li a{
     color: #333;
 }
-div.fieldset-menu li a:hover{
+.fieldset-menu li a:hover{
     color: #333;
 }
-div.fieldset-menu li.active a {
+.fieldset-menu li.active a {
     color: #333;
 }
 
@@ -831,7 +874,7 @@ div.fieldset-menu li.active a {
 #language_select {
     color: #ffffff;
   float: right;
-  padding: 1.3em;
+  padding: 0 0 1.3em 0;
 }
 
 /**
@@ -886,6 +929,12 @@ a.tr_link:hover {
 
 /* Geo Selector */
 ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center; cursor: pointer;}
+ol#locations li.active,ol.geoloc li.active {
+    background: transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #999;
+}
 ol.plain{ margin-left: 0; }
 ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
 
@@ -1142,7 +1191,7 @@ height:50px;
 
 .wiki .search-form { padding: 2em 0; }
 
-.wiki.NewestPages a , br {margin-bottom: 0.8em;}
+.wiki.NewestPages a , .wiki.NewestPages br {margin-bottom: 0.8em;}
 
 /* wiki headlines */
 .wiki h1 {padding: 0;}
@@ -1294,6 +1343,318 @@ height:50px;
     padding-left: 18px;
     padding-right: 0px;
 }
+
+  /**
+   *  YAML Forms - visual styling
+   *
+   *  (en) visual form styling area
+   *  (de) Festlegung des optischen Erscheinungsbildes
+   */
+
+  .yform {
+    background:#f4f4f4;
+    border:1px #ddd solid;
+    margin:0 0 1em 0;
+    padding:10px;
+  }
+
+  .yform fieldset {
+    border:1px #ddd solid;
+    background:#fafafa;
+    margin:0 0 1em 0;
+    padding:0.5em;
+  }
+
+  .yform legend {
+    font-size:125%; font-weight:normal; color:#000;
+  }
+
+  .yform label {
+    color:#666;
+  }
+
+  .yform input,
+  .yform textarea,
+  .yform select,
+  .yform optgroup {
+    font-family:Arial, Helvetica, sans-serif; /* proportional fonts for all form elements */
+  }
+
+  .yform .type-text input,
+  .yform .type-text textarea,
+  .yform .type-select select {
+    border:1px solid #ccc;
+  }
+
+  /* :hover and :focus status on form fields | Effekt zur Hervorhebung von Formularfeldern bei :hover oder :focus */
+  .yform div input:focus,
+  .yform div select:focus,
+  .yform div textarea:focus,
+  .yform div input:hover,
+  .yform div select:hover,
+  .yform div textarea:hover,
+  .yform div input:active,
+  .yform div select:active,
+  .yform div textarea:active {
+    border:1px #666 solid;
+    background:#fff;
+  }
+
+  /* avoid jumping checkboxes & radiobuttons in IE8 */
+  .yform div.type-check input:focus,
+  .yform div.type-check input:hover,
+  .yform div.type-check input:active { border:0 none; }
+
+  /* Styling of buttons | Gestaltung von Buttons */
+  .yform .type-button input {
+    border-top:1px #ddd solid;
+    border-left:1px #ddd solid;
+    border-right:1px #444 solid;
+    border-bottom:1px #444 solid;
+    color:#000;
+    background:#454545 url(images/button_gray.png) top left repeat-x;
+    padding:.5em 1.2em;
+  }
+
+  .yform .type-button input[type=reset] {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:11px;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto !important;
+  }
+
+  .yform .type-button input[type=submit] {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:1.1em;
+    font-weight:bold;
+    height:24px !important;
+    line-height:18px !important;
+    margin:1px;
+    padding:1px 5px;
+    text-align:center;
+    width:auto !important;
+    cursor: pointer;
+  }
+
+  /* optional button styling for IE6 using classes */
+  .yform .type-button input.reset { color:#300; background:#661717 url(images/button_red.png) top left repeat-x; }
+  .yform .type-button input.submit { color:#330; background:#5e5607 url(images/button_yellow.png) top left repeat-x; }
+
+  /* :hover and :focus status on buttons | Effekt zur Hervorhebung von Schaltern bei :hover oder :focus */
+  .yform div.type-button input:focus,
+  .yform div.type-button input:hover,
+  .yform div.type-button input:active {
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    color: #333;
+    text-decoration:none;
+    line-height: 21px;
+  }
+
+  .yform div.type-button input.reset:focus,
+  .yform div.type-button input.reset:hover,
+  .yform div.type-button input.reset:active {
+    background:#800; color:#fff;
+  }
+
+  .yform div.type-button input.submit:focus,
+  .yform div.type-button input.submit:hover,
+  .yform div.type-button input.submit:active {
+    background:#880; color:#fff;
+  }
+
+ /*------------------------------------------------------------------------------------------------------*/
+
+ /**
+  * Vertical-Forms - technical base (standard)
+  *
+  * |-------------------------------|
+  * | fieldset                      |
+  * |-------------------------------|
+  * |   label                       |
+  * |   input / select / textarea   |
+  * |-------------------------------|
+  * | /fieldset                     |
+  * |-------------------------------|
+  *
+  * (en) Styling of forms where both label and input/select/textarea are styled with display:block;
+  * (de) Formulargestaltung, bei der sowohl label als auch input/select/textarea mit display:block; gestaltet werden
+  *
+  * WARNING:This part contains several IE-stability-fixes. Don't edit this part if you are not sure, what you're doing!
+  */
+
+  /* General form styling  | Allgemeine Formatierung des Formulars */
+  .yform { overflow:hidden; }
+  .yform fieldset { overflow:hidden; }
+  .yform label { display:block; cursor:pointer; }
+  .yform legend { background:transparent; border:0; padding:0 0.5em; }
+  .yform .message { display:block; margin-bottom:0.5em; color:#666; }
+
+  /* Hiding of hidden fields (otherwise ugly spaces in Firefox) | Versteckte Felder wirklich verstecken (sonst ggf. häßliche Lücken im Firefox) */
+  .yform input[type=hidden] { display:none !important; }
+
+  /* Highlight mandatory fields | Pflichtfeldkennzeichnung hervorheben */
+  .yform sup { color:#800; font-weight:bold; }
+
+  /* styling containing DIV elements | Gestaltung der kapselnden DIV-Elemente */
+  .yform div.type-text,
+  .yform div.type-select,
+  .yform div.type-check,
+  .yform div.type-button {
+    margin:0.5em 0;
+    padding:3px 0.5em;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .yform div.type-button {
+    padding:3px 0em;
+  }
+
+  /* styling standard form elements with 'almost' equal flexible width | Gestaltung der einzelnen Formularelemente mit annähend gleicher Breite */
+  .yform .type-text input,
+  .yform .type-text textarea {
+    display:block;
+    position:relative;
+    padding:0.3em 0.3em;
+    width:58.5%;
+    font-size: 110%;
+  }
+
+  .yform .type-select select {
+    display:block;
+    position:relative;
+    padding:0.3em 2px 0.3em 1px;
+    width:60%;
+    cursor:pointer;
+  }
+  .yform .type-select select optgroup {
+    font-style:normal;
+    font-weight:bold;
+  }
+
+  .yform .type-check input { cursor:pointer; }
+  .yform .type-check label { display:inline; }
+
+  /* Styling of buttons | Gestaltung von Buttons */
+  .yform .type-button input {
+    width:auto;
+    cursor:pointer;
+  }
+
+  /* Styling of error-messages | Fehlermeldungen */
+  .yform div.error {
+    border:1px #cc0000 dashed;
+    background:#ffebe8;
+    padding:0.5em;
+  }
+
+  .yform div.error label { color:#000; font-weight:bold; }
+  .yform div.error .message { color:#cc0000; }
+
+ /*------------------------------------------------------------------------------------------------------*/
+
+  /* Indent Checkbox fields to match label-width | Checkboxen um den gleichen Wert einrücken, wie die Breite der labels */
+
+  .full div.type-text input,
+  .full div.type-text textarea { width:95.5%; }
+  .full div.type-select select { width:97.0%; }
+
+  /* width adjustments for IE 5.x & IE6 | Breitenanpassung für Internet Explorer 5.x und 6.0 */
+  * html .full div.type-text input,
+  * html .full div.type-text textarea { width:95.5%; }
+  * html .full div.type-select select { width:97.0%; }
+
+ /*------------------------------------------------------------------------------------------------------*/
+
+ /**
+  * Columnar forms display - technical base (optional)
+  *
+  * |-------------------------------------------|
+  * | fieldset                                  |
+  * |-------------------------------------------|
+  * |                                           |
+  * |   label   |   input / select / textarea   |
+  * |                                           |
+  * |-------------------------------------------|
+  * | /fieldset                                 |
+  * |-------------------------------------------|
+  *
+  * (en) Styling of forms where label floats left of form-elements
+  * (de) Formulargestaltung, bei der die label-Elemente nach links fließen
+  *
+  * WARNING:This part contains several IE-stability-fixes. Don't edit this part if you are not sure, what you're doing!
+  */
+
+  /* Columnar display | Spalten-Darstellung */
+  .columnar .type-text label,
+  .columnar .type-select label {
+    float:left;
+    width:30%; /* Can be fixed width too | Kann auch eine fixe Angabe sein */
+  }
+
+  /* Indent Checkbox fields to match label-width | Checkboxen um den gleichen Wert einrücken, wie die Breite der labels */
+  .columnar div.type-check input { margin-left:30%; }
+  .columnar div.error .message { margin-left:30%; }
+
+  .columnar div.type-text input,
+  .columnar div.type-text textarea { float:left; width:67.8%; }
+  .columnar div.type-select select { float:left; width:69.4%; }
+
+  /* width adjustments for IE 5.x & IE6 | Breitenanpassung für Internet Explorer 5.x und 6.0 */
+  * html .columnar div.type-text input,
+  * html .columnar div.type-text textarea { float:left; width:67.2%; }
+  * html .columnar div.type-select select { float:left; width:68.8%; }
+
+ /*------------------------------------------------------------------------------------------------------*/
+
+ /**
+  * Global fixes for YAML's form construction set
+  *
+  * @workaround
+  * @affected IE 5.x/Win, IE6, IE7
+  * @css-for IE 5.x/Win, IE6, IE7
+  * @valid no
+  */
+
+  .yform,
+  .yform div,
+  .yform div * { zoom:1; }
+
+ /**
+  * Forms Fieldset/Legend-Bug in IE
+  * @see http://www.mattheerema.com/web-design/2006/04/getting-fieldset-backgrounds-and-legends-to-behave-in-ie/
+  *
+  * @workaround
+  * @affected IE 5.x/Win, IE6, IE7, IE8
+  * @css-for IE 5.x/Win, IE6, IE7, IE8
+  * @valid no
+  */
+
+  /* all IE */
+  .yform { padding-top:0\9; }
+  .yform fieldset { padding:0 5px\9; padding-top:1em\9; }
+  .yform legend { position:absolute\9; top:-.5em\9; *left:0\9; }
+  .yform fieldset { position:relative\9; overflow:visible\9;  margin-top:1.5em\9; zoom:1; }
+
+  /* IE5.x, IE6 & IE7 */
+  .yform legend { *padding:0 5px; }
+  .yform fieldset { *padding-top:1.5em; }
+
+  /* IE5.x & IE6 */
+  * html .yform { padding-top:10px; }
 
 /* Media screen end */
 }

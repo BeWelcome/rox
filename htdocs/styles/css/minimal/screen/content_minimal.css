@@ -181,7 +181,7 @@
   .bullet {margin: 0 0 1em 1em;}
   ul.bullet li { list-style-type: disc; margin-left: 0.8em}
   ol.bullet li { list-style-type: decimal; margin-left: 0.8em; }
-  
+
   /* in case we want bullet point */
   .list-image {margin: 0 0 1em 1em;}
   ul.list-image li { list-style-image: url(../images/list-image-arrow.gif); margin-left: 0.6em}
@@ -591,8 +591,9 @@ background: none;
     padding: 10px;
     width: 180px;
     /* if we want vcard-like member-display then we have to uncomment the following lines*/
-      border: 1px solid transparent;
+    /*  border: 1px solid transparent; */
 }
+/*
 #main li.userpicbox:hover{
     background-color: #f5f5f5;
     border-top:1px solid #ccc;
@@ -600,10 +601,12 @@ background: none;
     border-bottom:1px solid #777;
     border-left:1px solid #ccc;
 }
+*/
+
+
 #main li.userpicbox a {
-    color: black;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 1em;
 }
 
 /* Special classes for AboutUsPages*/
@@ -620,8 +623,8 @@ background: none;
 /* Special classes for Places_Local_Volunteers_Sidebar*/
 #main li.userpicbox_vol {
     width: 146px;
-    border: 1px solid transparent;
 }
+/*
 	#main li.userpicbox_vol:hover{
     background-color: #f5f5f5;
     border-top:1px solid #ccc;
@@ -629,15 +632,13 @@ background: none;
     border-bottom:1px solid #777;
     border-left:1px solid #ccc;
 }
-/* Special classes for Places_UserpixBox */
-.userpicbox_margin {
-    margin-left: 5px;
+*/
+
+.userinfo {
+    margin-left: 60px;
+    overflow: hidden;
 }
-#main li.userpicbox_vol a {
-    color: black;
-    font-weight: bold;
-    font-size: 12px;
-}
+
 /* blog & gallery comments */
 div.comment { padding:0; margin-bottom:1em; }
 div.comment h4 {padding:0.2em; margin:0; }
@@ -928,9 +929,9 @@ a.tr_link:hover {
 
 /* Geo Selector */
 ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center; cursor: pointer;}
-ol#locations li.active,ol.geoloc li.active { 
-    background: transparent url(../images/button_bg.png) repeat-x scroll 0 0; 
-    font-weight: bold; 
+ol#locations li.active,ol.geoloc li.active {
+    background: transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    font-weight: bold;
     cursor: pointer;
     border: 1px solid #999;
 }
@@ -1363,7 +1364,7 @@ height:50px;
     margin:0 0 1em 0;
     padding:0.5em;
   }
-  
+
   .yform legend {
     font-size:125%; font-weight:normal; color:#000;
   }
@@ -1374,7 +1375,7 @@ height:50px;
 
   .yform input,
   .yform textarea,
-  .yform select, 
+  .yform select,
   .yform optgroup {
     font-family:Arial, Helvetica, sans-serif; /* proportional fonts for all form elements */
   }
@@ -1415,7 +1416,7 @@ height:50px;
     padding:.5em 1.2em;
   }
 
-  .yform .type-button input[type=reset] { 
+  .yform .type-button input[type=reset] {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
@@ -1431,7 +1432,7 @@ height:50px;
     width:auto !important;
   }
 
-  .yform .type-button input[type=submit] { 
+  .yform .type-button input[type=submit] {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
@@ -1456,10 +1457,10 @@ height:50px;
   .yform div.type-button input:focus,
   .yform div.type-button input:hover,
   .yform div.type-button input:active {
-    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; 
-    color: #333; 
-    text-decoration:none; 
-    line-height: 21px; 
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
+    color: #333;
+    text-decoration:none;
+    line-height: 21px;
   }
 
   .yform div.type-button input.reset:focus,
@@ -1513,13 +1514,13 @@ height:50px;
   .yform div.type-check,
   .yform div.type-button {
     margin:0.5em 0;
-    padding:3px 0.5em;  
+    padding:3px 0.5em;
     position:relative;
     overflow:hidden;
   }
 
   .yform div.type-button {
-    padding:3px 0em;  
+    padding:3px 0em;
   }
 
   /* styling standard form elements with 'almost' equal flexible width | Gestaltung der einzelnen Formularelemente mit annähend gleicher Breite */
@@ -1570,7 +1571,7 @@ height:50px;
   .full div.type-text input,
   .full div.type-text textarea { width:95.5%; }
   .full div.type-select select { width:97.0%; }
-  
+
   /* width adjustments for IE 5.x & IE6 | Breitenanpassung für Internet Explorer 5.x und 6.0 */
   * html .full div.type-text input,
   * html .full div.type-text textarea { width:95.5%; }
@@ -1611,12 +1612,12 @@ height:50px;
   .columnar div.type-text input,
   .columnar div.type-text textarea { float:left; width:67.8%; }
   .columnar div.type-select select { float:left; width:69.4%; }
-  
+
   /* width adjustments for IE 5.x & IE6 | Breitenanpassung für Internet Explorer 5.x und 6.0 */
   * html .columnar div.type-text input,
   * html .columnar div.type-text textarea { float:left; width:67.2%; }
   * html .columnar div.type-select select { float:left; width:68.8%; }
-  
+
  /*------------------------------------------------------------------------------------------------------*/
 
  /**
@@ -1628,7 +1629,7 @@ height:50px;
   * @valid no
   */
 
-  .yform, 
+  .yform,
   .yform div,
   .yform div * { zoom:1; }
 
@@ -1641,7 +1642,7 @@ height:50px;
   * @css-for IE 5.x/Win, IE6, IE7, IE8
   * @valid no
   */
-  
+
   /* all IE */
   .yform { padding-top:0\9; }
   .yform fieldset { padding:0 5px\9; padding-top:1em\9; }
@@ -1651,7 +1652,7 @@ height:50px;
   /* IE5.x, IE6 & IE7 */
   .yform legend { *padding:0 5px; }
   .yform fieldset { *padding-top:1.5em; }
-  
+
   /* IE5.x & IE6 */
   * html .yform { padding-top:10px; }
 

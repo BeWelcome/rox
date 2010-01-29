@@ -26,26 +26,16 @@ if (!$members) {
         if ($member->HideBirthDate=="No") $member->age = floor($layoutbits->fage_value($member->BirthDate));
         else $member->age = $words->get("Hidden");
         echo '<li class="userpicbox float_left">';
-        echo '<div class="subcolumns">';
-  		echo '	<div class="c25l">';
-        echo '		<div class="subcl">';
-		echo '				<a href="member/'.$member->username.'">'.MOD_layoutbits::PIC_50_50($member->username,'',$style='float_left framed').'</a>';
-		echo '		</div> <!-- subcl -->';
-  		echo '	</div> <!-- c25l -->';
-		echo ' 	<div class="c75r">';
-    	echo '		<div class="subcr">';
-    	echo '			<div class="userpicbox_margin">';
-        echo '				<p><a href="member/'.$member->username.'">'.$member->username.'</a>';
-        echo '				<br /><span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span>';
-        echo '			</div>';   
-		echo '		</div>';
-    	echo '	</div>';
-		echo '</div>';
+        echo MOD_layoutbits::PIC_50_50($member->username,'',$style='framed float_left');
+        echo '<div class="userinfo">';
+        echo '  <a class="username" href="member/'.$member->username.'">'.$member->username.'</a><br />';
+        echo '  <span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span>';
+        echo '</div>';
         echo '</li>';
     }
     ?>
     </ul>
-<?php    
+<?php
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;

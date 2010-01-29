@@ -127,5 +127,38 @@ class BlogEntity extends RoxEntityBase
         }
         return $status;
     }
+    
+    /**
+     * return an array of blog entities that have a start date that lies in the future
+     *
+     * @access public
+     * @return array
+     */
+    public function getComingPosts($member_id)
+    {
+        $date = date('Y-m-d h:i:s');
+        $sql = <<<SQL
+            SELECT b.*
+            FROM `blog_data` bd
+            JOIN `blog` b ON bd.`blog_id` = b.`blog_id`
+            WHERE bd.`blog_geonameid` IS NOT NULL
+            AND b.`IdMember` = {$member_id}
+            AND bd.`blog_start` >= '{$date}'
+            ORDER BY bd.`blog_start`
+SQL;
+
+        return $this->createEntity('BlogEntity')->findBySQLMany($sql);        
+    }
+    
+    /**
+     * return a Geo-Entity for a blog post's geonameid
+     *
+     * @access public
+     * @return obj
+     */
+    public function getGeo()
+    {
+        return $this->createEntity('Geo')->findById($this->blog_geonameid);        
+    }
 }
 

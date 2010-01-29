@@ -29,16 +29,20 @@ tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
 tinyMCE.init({
     mode: "exact",
     elements: "create-txt",
-    plugins : "advimage",
+    plugins : "advimage,preview,fullscreen",
     theme: "advanced",
+    content_css : "styles/css/minimal/screen/content_minimal.css",
     relative_urls:false,
     convert_urls:false,
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,justifyleft,justifycenter,justifyfull,separator,forecolor,backcolor,separator,link,image,charmap",
+    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,forecolor,backcolor,separator,link,image,charmap,separator,preview,cleanup,code,fullscreen",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location: 'top',
     theme_advanced_statusbar_location: 'bottom',
     theme_advanced_resizing: true,
+    theme_advanced_resize_horizontal : false,
+    plugin_preview_width : "800",
+    plugin_preview_height : "600",
 });
 //-->
 </script>
@@ -61,7 +65,7 @@ if (in_array('upderror', $vars['errors'])) {
 <legend><?=$words->get('BlogCreateLabelText')?></legend>
     <div class="row">
     <label for="create-title"><?=$words->get('BlogCreateLabelTitle')?>:</label><br/>
-        <input type="text" id="create-title" name="t" class="long" size="50" <?php
+        <input type="text" id="create-title" name="t" class="long" size="65"  <?php
         // the title may be set
         echo isset($vars['t']) ? 'value="'.htmlentities($vars['t'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?>/>
@@ -75,7 +79,7 @@ if (in_array('upderror', $vars['errors'])) {
     </div>
     <div class="row">
         <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
-        <textarea id="create-txt" name="txt" rows="10" cols="55"><?php
+        <textarea id="create-txt" name="txt" rows="10" cols="65" class="long" ><?php
         // the content may be set
         echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
         ?></textarea>

@@ -295,6 +295,7 @@ class BlogController extends RoxControllerBase {
             $sanitize->allow('h4');
             $sanitize->allow('h5');
             $sanitize->allow('ul');
+            $sanitize->allow('ol');
             $sanitize->allow('li');
         
             $sanitize->allowAttribute('color'); 
@@ -604,7 +605,7 @@ class BlogController extends RoxControllerBase {
         if (!$member = $this->_model->getLoggedInMember())
             return false;
         $userId = $member->id;
-        $vars =& PPostHandler::getVars();
+        $vars = $args->post;
         if (!isset($vars['id']) || !$this->_model->isUserPost($userId, $vars['id']))
             return false;
         if (isset($vars['txt'])) {
@@ -656,7 +657,7 @@ class BlogController extends RoxControllerBase {
         } */
         // to sql datetime format.
         if (isset($vars['date']) && (strlen($vars['date']) <= 10 && strlen($vars['date']) > 8)) {
-            list($day, $month, $year) = split('[/.-]', $vars['date']);
+            list($day, $month, $year) = preg_split('/[\/.-]/', $vars['date']);
             if (substr($month,0,1) == '0') $month = substr($month,1,2);
             if (substr($day,0,1) == '0') $day = substr($day,1,2);
             $start = mktime(0, 0, 0, (int)$month, (int)$day, (int)$year);
@@ -682,7 +683,7 @@ class BlogController extends RoxControllerBase {
         }
         $this->_model->updateBlogToCategory($post->blog_id, $vars['cat']);
         PPostHandler::clearVars();
-        return PVars::getObj('env')->baseuri.'blog/edit/'.$post->blog_id.'/finish';
+        return 'blog/edit/'.$post->blog_id.'/finish';
     }
     
     public function singlePost($postId, $showComments = true) 

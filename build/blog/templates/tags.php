@@ -60,7 +60,7 @@ if (!$tag) {
     $requestStr = preg_replace('%[/]page\d+%', '', $requestStr);
     
     // display matching tags and matching posts.
-    $postIt      = $Blog->getTaggedPostsIt($tag);
+    $postIt      = $Blog->getTaggedPostsIt($tag, true);
     $pages       = PFunctions::paginate($postIt, $page);
     $postIt      = $pages[0];
     $maxPage     = $pages[2];

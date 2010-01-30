@@ -46,6 +46,9 @@ function DisplayNews() {
 	
 	
 
+	echo ww("BroadCast_Title_NewsJanuary2010",$Username),"<br>\n"  ;
+	echo ww("BroadCast_Body_NewsJanuary2010",$Username),"<hr>\n"  ;
+
 	echo ww("BroadCast_Title_NewsDecember2009",$Username),"<br>\n"  ;
 	echo ww("BroadCast_Body_NewsDecember2009",$Username),"<hr>\n"  ;
 

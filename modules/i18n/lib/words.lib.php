@@ -368,6 +368,28 @@ class MOD_words
         return $this->_text_with_tr($word);
     }
     
+    /**
+     * Looks up (localized) texts in BW words table.
+     * Newlines are replaced by HTML breaks, backslashes are stripped off.
+     * Takes a variable number of arguments as c-style formatted string.
+     *
+	 * Second parametter is the language
+     * @see wwinlang in /lib/lang.php
+     * @param   string  $code keyword for finding text, not allowed to be empty
+     * @param   string  $? formatted according to a variable number of arguments
+     * @param   ... arguments to be inserted in the string
+     * @return  string  localized text, in case of no hit the word keycode, evtl with tr links
+     */  
+    public function getFormattedInLang($code,$lang)
+    {
+        $args = func_get_args();
+        array_shift($args);  // need a second array shift, because of 2 default arguments in function
+        array_shift($args);
+        
+        $word = $this->_lookup($code, $args,$lang);
+        
+        return $this->_text_with_tr($word);
+    }
     
     /**
      * If we want another than the active language
@@ -463,12 +485,11 @@ class MOD_words
      * @param unknown_type $code the key code for the db lookup
      * @return LookedUpWord information that is created from the word lookup
      */
-    private function _lookup($code, $args, $lang = false)
-    {
+    private function _lookup($code, $args, $lang = false)    {
         if($lang == false) {
             $lang = $this->_lang;
         }
-        
+		
         
         if(! $this->_offerTranslationLink) {
             // normal people don't need the tr stuff
@@ -491,7 +512,7 @@ class MOD_words
             $row = $this->_lookup_row($code, $lang);
             if ($row) {
                 $lookup_result = $this->_modified_sentence_from_row($row, $args);
-                if (($lang == 'en')or($row->donottranslate=='Yes')) { // If language is english or if the word is not supposed to be translatable yet just consider display it
+                if (($lang == 'en')or($row->donottranslate=='yes')) { // If language is english or if the word is not supposed to be translatable yet just consider display it
                     $tr_success = LookedUpWord::SUCCESSFUL;
                 } else {
                     $row_en = $this->_lookup_row($code, 'en');
@@ -504,10 +525,17 @@ class MOD_words
             } else if($lang != 'en') {
                 // try in English
                 $row = $this->_lookup_row($code, 'en');
+
                 if($row) {
                     // use English version
-                    $tr_success = LookedUpWord::MISSING_TR;  // at least that bad
-                	$lookup_result = $this->_modified_sentence_from_row($row, $args);
+					if ($row->donottranslate=='yes') {
+						$tr_success = LookedUpWord::SUCCESSFUL;
+						$lookup_result = $this->_modified_sentence_from_row($row, $args);
+					}
+					else {
+						$tr_success = LookedUpWord::MISSING_TR;  // at least that bad
+						$lookup_result = $this->_modified_sentence_from_row($row, $args);
+					}
                 } else {
                     // no translation found
                     $tr_success = LookedUpWord::MISSING_WORD;
@@ -626,6 +654,7 @@ class MOD_words
         }
         
         $q = $this->_dao->query($query);
+        $row = $q->fetch(PDB::FETCH_OBJ);
 		// update the statistic about the use of this word only if the option ToggleStatsForWordsUsage is active
 		if ((isset($_SESSION['Param']->ToggleStatsForWordsUsage) 
 		&& ($_SESSION['Param']->ToggleStatsForWordsUsage=="Yes") 
@@ -636,7 +665,6 @@ class MOD_words
                 throw new PException('Failed to IncWordUse for code ['.$row->code.']');
             }
 		}
-        $row = $q->fetch(PDB::FETCH_OBJ);
         
         return $row;
     }

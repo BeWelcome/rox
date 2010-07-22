@@ -48,6 +48,34 @@ class MembersModel extends RoxModelBase
         parent::__construct();
         $this->bootstrap();
     }
+
+    public function getFromEmail($email)
+    {
+        /**
+         * this is so far the worst, most useless piece of hacky crap
+         * I've had to code for BW so far. The cause is the 'encryption'
+         * that means we cannot query for a member by email - even if
+         * emails are stored unencrypted in the database
+         *
+         *
+         */
+        global $_SYSHCVOL;
+        $email = $this->dao->escape($email);
+        $db_version = "<admincrypted>" . strtr($email, array('@' => '%40')) . "</admincrypted>";
+        $result = $this->singleLookup(<<<SQL
+SELECT
+    IdMember
+FROM
+   {$_SYSHCVOL['Crypted']}cryptedfields 
+WHERE
+    AdminCryptedValue = '{$db_version}'
+    AND
+    TableColumn = 'members.Email'
+SQL
+);
+        if (!$result) return null;
+        return $this->createEntity('Member', $result->IdMember);
+    }
     
     public function getMemberWithUsername($username)
     {
@@ -122,7 +150,7 @@ class MembersModel extends RoxModelBase
           return $relation;
       }
 
-    /**
+   /**
      * set the location of a member
      */
     public function setLocation($IdMember,$geonameid = false)
@@ -146,14 +174,13 @@ class MembersModel extends RoxModelBase
         }
         
         // get Member's current Location
-        $result = $this->singleLookup(
-            "
+        $rAddress=$result = $this->singleLookup(   "
 SELECT  a.IdCity
 FROM    addresses AS a
 WHERE   a.IdMember = '{$IdMember}'
-    AND a.rank = 0
-            "
-        );
+    AND a.rank = 0            "         );
+		
+		
         if (!isset($result) || $result->IdCity != $geonameid) {
             // Check Geo and maybe add location 
             $geomodel = new GeoModel(); 
@@ -169,6 +196,10 @@ WHERE   a.IdMember = '{$IdMember}'
                 $usagetypeId = $geomodel->getUsagetypeId('member_primary')->id;
                 $update = $geomodel->updateUsageCounter($geonameid,$usagetypeId,'add');
             }
+			
+			if (empty($rAddress->IdCity)) {   // In case the member was not having an addresse(in case of DB inconsistency), create one
+				$result = $this->singleLookup("insert into  addresses(IdCity,IdMember,Rank) values($geonameid,$IdMember,0)" );
+			}
             
             $result = $this->singleLookup(
                 "
@@ -209,7 +240,6 @@ WHERE   id = $IdMember
             return false;
         }
     }
-
     
     /**
      * Not totally sure it belongs here - but better this
@@ -225,7 +255,7 @@ WHERE   id = $IdMember
         if (is_numeric($langcode)) {
             $ss=  "
 SELECT SQL_CACHE
-    id,ShortCode, Name
+    id,ShortCode, Name,WordCode
 FROM
     languages
 WHERE
@@ -235,7 +265,7 @@ WHERE
         else {
             $ss=  "
 SELECT SQL_CACHE
-    id,ShortCode, Name
+    id,ShortCode, Name,WordCode
 FROM
     languages
 WHERE
@@ -248,6 +278,7 @@ WHERE
             $l = new stdClass;
             $l->id = 0;
             $l->ShortCode = 'en';
+            $l->WordCode = 'Lang_en';
             $l->Name = 'English';
             $this->profile_language = $l;
         }
@@ -646,7 +677,8 @@ WHERE
             $squery = "
 SELECT
     id,
-    Name
+    Name,
+	WordCode
 FROM
     languages
 ORDER BY
@@ -798,14 +830,13 @@ ORDER BY
         }
     }
 
-    /**
+      /**
      * Update Member's Profile
      *
      * @param unknown_type $vars
      * @return unknown
      */
-    public function updateProfile(&$vars)
-    {
+    public function updateProfile(&$vars)     {
         $IdMember = (int)$vars['memberid'];
         $words = new MOD_words();
         $rights = new MOD_right();
@@ -819,8 +850,7 @@ ORDER BY
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
         }
         $m->removeLanguages();;
-        foreach ($vars['languages_selected'] as $lang)
-        {
+        foreach ($vars['languages_selected'] as $lang)         {
             if ($language = $this->createEntity('Language')->findById($lang->IdLanguage))
             {
                 $ml = $this->createEntity('MemberLanguage');
@@ -832,6 +862,7 @@ ORDER BY
         $words->setlangWrite($vars['profile_language']);
 
         // refactoring to use member entity
+        $m->LastLogin = '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin));
         $m->Gender = $vars['gender'];
         $m->HideGender = $vars['HideGender'];
         $m->BirthDate = $vars['BirthDate'];
@@ -884,8 +915,8 @@ ORDER BY
         }                
 
         $m->Email = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
-        $m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['HomePhoneNumber']),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
         $m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['CellPhoneNumber']),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+        $m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['HomePhoneNumber']),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
         $m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['WorkPhoneNumber']),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
         $m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_SKYPE']),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
         $m->chat_MSN = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_MSN']),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
@@ -903,12 +934,20 @@ ORDER BY
             $this->logWrite("{$m->Username} changed name. Firstname: {$firstname} -> " . strip_tags($vars['FirstName']) . ", second name: {$secondname} -> " . strip_tags($vars['SecondName']) . ", second name: {$lastname} -> " . strip_tags($vars['LastName']), 'Profile update');
         }
 
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+        $m->FirstName=MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
+        $m->SecondName=MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
+        $m->LastName=MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
+        $IdZip=MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
+        $IdHouseNumber=MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
+        $IdStreet=MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+		
+        $rAddress= $this->singleLookup( "SELECT  * FROM    addresses  WHERE   IdMember = '{$IdMember}'    AND Rank = 0    ");
+		if (empty($rAddress->IdCity)) {   // In case the member was not having an addresse(in case of DB inconsistency), create one
+			$result = $this->singleLookup("insert into  addresses(IdCity,IdMember,Rank) values($m->IdCity,$IdMember,0)" );
+			$rAddress= $this->singleLookup( "SELECT  * FROM    addresses  WHERE   IdMember = '{$IdMember}'    AND Rank = 0    ");
+		}
+		$result = $this->singleLookup("update addresses set HouseNumber=".$IdHouseNumber.",StreetName=".$IdStreet.",Zip=".$IdZip." where IdMember=".$IdMember." and Rank=0" );
+		
 
         // Check relations, and update them if they have changed
         $Relations=$m->get_all_relations() ;
@@ -961,6 +1000,7 @@ ORDER BY
         
         return $status;
     }
+    
     
     /**
      * prettify values from post request
@@ -1301,6 +1341,28 @@ VALUES
         $this->avatarDir = new PDataDir('user/avatars');
     }
 
+    /**
+     * sends out an email with lost details
+     * and how to get them back
+     *
+     * @param Member $member
+     *
+     * @access public
+     * @return void
+     */
+    public function sendLostDetails(Member $member)
+    {
+        $token = md5($member->Username . uniqid());
+        $member->passwordtoken = $token;
+        $member->update();
+        $email = new EmailTemplate('ForgottenDetails');
+        if (!$email->init(array('member' => $member, 'token' => $token)))
+        {
+            return false;
+        }
+        return $email->send();
+
+    }
 
     public function sendRetiringFeedback($feedback = '')
     {
@@ -1312,5 +1374,18 @@ VALUES
                 "FeedbackQuestion" => $feedback,
             ));
         }
+    }
+
+    public function getMemberFromPasswordToken($token)
+    {
+        if ($member = $this->createEntity('Member')->findByWhere("passwordtoken = '" . $this->dao->escape($token) . "'"))
+        {
+            $member->passwordtoken = '';
+            $member->update();
+            $login_model = new LoginModel;
+            $login_model->autoLogin($member);
+            return true;
+        }
+        return false;
     }
 }

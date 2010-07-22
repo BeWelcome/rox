@@ -30,10 +30,10 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
     protected function column_col3()
     {
 		if (empty($_SESSION['Username'])) {
-			echo '<p>',$this->getWords()->get('BroadCast_Body_'.$this->Data->LetterName,'member'),'</p>' ;
+			echo '<p>',$this->getWords()->getInLang('BroadCast_Body_'.$this->Data->LetterName,$this->Data->Lang,'member'),'</p>' ;
 		}
 		else {
-			echo '<p>',$this->getWords()->get('BroadCast_Body_'.$this->Data->LetterName,$_SESSION['Username']),'</p>' ;
+			echo '<p>',$this->getWords()->getFormattedInLang('BroadCast_Body_'.$this->Data->LetterName,$this->Data->Lang,$_SESSION['Username']),'</p>' ;
 			if ($this->Data->CountSent > 0) echo '<p>Sent to '.$this->Data->CountSent,' members</p>' ;
 			if ($this->Data->CountToSend > 0) 
 			echo '<p>Still to be sent to '.$this->Data->CountToSend,' members</p>' ;
@@ -53,7 +53,7 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
      * configure the teaser (the content of the orange bar)
      */
     protected function teaserHeadline() {
-        echo $this->getWords()->get('BroadCast_Title_'.$this->Data->LetterName);
+        echo $this->getWords()->getInLang('BroadCast_Title_'.$this->Data->LetterName,$this->Data->Lang);
     }
     
     /**
@@ -61,8 +61,7 @@ class OneNewsLetterPage extends RoxPageView  /* HelloUniversePage doesn't work! 
      * @return string the page title
      */
     protected function getPageTitle() {
-		$ss="" ;
-        $ss = $this->getWords()->get('BroadCast_Title_'.$this->Data->LetterName);
+		$ss=$this->getWords()->getInLang('BroadCast_Title_'.$this->Data->LetterName,$this->Data->Lang);
 		return($ss) ;
     }
     

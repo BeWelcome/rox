@@ -532,7 +532,7 @@ $NbRow=4;
     echo "<tr><td class=\"label\">Description: </td>\n";
     echo "<td><em>\n", $rEnglish->Description,"</em><br />";
     if ($RightLevel >= 10) { // Level 10 allow to change/set description
-      echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
+      echo "                    <textarea name=\"Description\" cols=\"60\" class=\"long\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
 }
     echo "                  </td></tr>\n";
   } else {
@@ -549,11 +549,11 @@ echo "                  <td>", str_replace("\n","<br />",str_replace($tagold,$ta
 </tr>
 <tr>
 <td class="label"><label for="Sentence">Translation:</label> </td>
-<td><textarea name="Sentence" id="Sentence" cols="<?php
+<td><textarea name="Sentence" id="Sentence" class="long" cols="<?php
 $NbRows = 3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br />')+substr_count($SentenceEnglish, '<br />'))+1);
 if (IsAdmin()) echo "60" ;
 else echo "40" ;
-echo "\" rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
+echo "\" rows=\"10\">", $Sentence, "</textarea></td>\n";
 ?>
   </tr>
   <tr>

@@ -88,7 +88,7 @@ class AboutController extends RoxControllerBase
             $request = $args->request;
             $model = new FeedbackModel;
             $mem_redirect->post = $args->post;
-            if (isset($args->post['answerneeded']) && !$model->getLoggedInMember() && !filter_var($args->post['FeedbackEmail'], FILTER_VALIDATE_EMAIL))
+            if (!$model->getLoggedInMember() && !filter_var($args->post['FeedbackEmail'], FILTER_VALIDATE_EMAIL))
             {
                 $mem_redirect->errors = array('FeedbackErrorBadEmail');
                 return false;

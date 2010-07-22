@@ -48,6 +48,3 @@ abstract class AbstractBasePage extends VisualComponent
     
     public abstract function render();
 }
-
-
-?>

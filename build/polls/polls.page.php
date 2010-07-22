@@ -44,6 +44,7 @@ class PollsPage extends RoxPageView {
         $words = $this->getWords();
         $errormessage=$this->_error ;
          
+        $callbackId=time() ;
                 switch ($this->_action) {
 
                     case "listall":

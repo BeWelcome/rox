@@ -62,4 +62,3 @@ class GroupWikiPage extends GroupsBasePage
     
 }
 
-?>

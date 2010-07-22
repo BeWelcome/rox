@@ -569,12 +569,92 @@ class MembersController extends RoxControllerBase
      * displays a page with some text about the profile being retired
      *
      * @access public
-     * @return RetiredPage
+     * @return RetiredProfilePage
      */
     public function retired()
     {
         $page = new RetiredProfilePage();
         $page->model = $this->model;
         return $page;
+    }
+
+    /**
+     * displays a page where you can have your username resent
+     *
+     * @access public
+     * @return ForgottenDetailsPage
+     */
+    public function forgottenDetails()
+    {
+        return new ForgottenDetailsPage;
+    }
+
+    /**
+     * displays a message about details having been mailed
+     *
+     * @access public
+     * @return ForgottenSuccessPage
+     */
+    public function forgottenSuccess()
+    {
+        return new ForgottenSuccessPage;
+    }
+
+    /**
+     * validate a hash sent to the user
+     * basically provides the user with a url to auto-login with
+     *
+     * @access public
+     * @return void
+     */
+    public function forgottenRenew()
+    {
+        if (!empty($this->route_vars['token']) && $member = $this->model->getMemberFromPasswordToken($this->route_vars['token']))
+        {
+            $this->redirectAbsolute($this->router->url('change_password'));
+        }
+        return new ForgottenErrorPage;
+    }
+    
+    /**
+     * displays a page where you can change your password
+     *
+     * @access public
+     * @return ChangePasswordPage
+     */
+    public function changePassword()
+    {
+        return new ChangePasswordPage;
+    }
+
+    /**
+     * callback for profile deletion
+     *
+     * @param stdClass        $args         - all sorts of variables
+     * @param ReadOnlyObject  $action       - request related stuff
+     * @param ReadWriteObject $mem_redirect
+     * @param ReadWriteObject $mem_resend
+     *
+     * @access public
+     * @return mixed
+     */
+    public function forgottenCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $post = $args->post;
+        if (empty($post['email']))
+        {
+            $mem_redirect->errors = array('ForgottenEmpty');
+            return false;
+        }
+        elseif ((($member = $this->model->getMemberWithUsername($post['email'])) || ($member = $this->model->getFromEmail($post['email']))) && $member->canLogIn())
+        {
+            $this->model->sendLostDetails($member);
+            return $this->router->url('forgotten_success', array(), false);
+        }
+        else
+        {
+            $mem_redirect->errors = array('ForgottenError');
+            return false;
+        }
     }
 }

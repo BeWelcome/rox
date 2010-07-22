@@ -32,11 +32,18 @@ HTML;
 <li><a href='{$this->router->url('admin_comments_overview')}' title='{$description}' class='header'>Comments</a></li>
 HTML;
     }
-        if (in_array('words', $right_names))
+    if (in_array('Words', $right_names))
     {
-        $description = htmlspecialchars($this->rights['words']['Description'], ENT_QUOTES);
+        $description = htmlspecialchars($this->rights['Words']['Description'], ENT_QUOTES);
         echo <<<HTML
-<li><a href='{$this->router->url('admin_words')}' title='{$description}' class='header'>Words</a></li>
+<li><a href='{$this->router->url('admin_words_overview')}' title='{$description}' class='header'>Words</a></li>
+HTML;
+    }
+    if (in_array('MassMail', $right_names))
+    {
+        $description = htmlspecialchars($this->rights['MassMail']['Description'], ENT_QUOTES);
+        echo <<<HTML
+<li><a href='{$this->router->url('admin_massmail_overview')}' title='{$description}' class='header'>Massmail</a></li>
 HTML;
     }
 ?>

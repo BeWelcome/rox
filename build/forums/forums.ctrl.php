@@ -629,7 +629,7 @@ class ForumsController extends PAppController
                 }
                 else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
-                } else if (eregi('page([0-9]+)', $r, $regs)) {
+                } else if (preg_match('/page([0-9]+)/', $r, $regs)) {
                     $this->_model->setPage($regs[1]);
                 } else if ($r ==  'locationDropdowns') {
                     $this->action = self::ACTION_LOCATIONDROPDOWNS;

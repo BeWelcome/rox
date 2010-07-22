@@ -60,7 +60,7 @@ $member = $model->getMemberWithUsername($receiver_username);
 				<h3><?=$words->get('MessageEdit')?></h3>
 			<?php } ?>
 			<p class="">
-			  <span class="grey"><?=$words->get('MessageTo','<a href="people/'.$receiver_username.'">'.$receiver_username.'</a>') ?> </span>
+			  <span class="grey"><?=$words->get('MessageTo','<a href="members/'.$receiver_username.'">'.$receiver_username.'</a>') ?> </span>
 			</p>
 			<?if (isset($message->DateSent) && !isset($this->edit)) { ?>
 			<p class="">

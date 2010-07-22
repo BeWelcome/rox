@@ -811,6 +811,9 @@ WHERE `geonameid` = '%d'
             throw new PException('No such Country');
         }
         $geonameid = $s->fetch(PDB::FETCH_OBJ);
+		if (!isset($geonameid->name)) {
+			$geonameid->name='' ; // to avoid a Notice error when trying to display a not found name (fix for ticket #484 the Astghadzor case)
+		}
         
         $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name.'/g'.$this->geonameid.'-'.$geonameid->name;
         $href = $url;
@@ -2145,8 +2148,10 @@ and ($this->ThreadGroupsRestriction)
 		if (!isset($topicinfo->IdThread)) {
 			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=-1 and forums_tags.id=tags_threads.IdTag"; // This will return nothing
-			$topicinfo->title="No Such Thread" ;
+			require SCRIPT_BASE.'build/members/pages/mustlogin.page.php';  
+			$topicinfo->title="Please log in to see the thread" ;
 			$topicinfo->replies=0 ;
+
 		}
 		else {
 			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
@@ -2316,6 +2321,7 @@ WHERE `threadid` = '$this->threadid' LIMIT 1
         $query = sprintf("
 SELECT
     `postid`,
+	`postid` as IdPost,
     UNIX_TIMESTAMP(`create_time`) AS `posttime`,
     `message`,
 	`IdContent`,
@@ -3988,8 +3994,8 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
 	}
 	else {
 		$subject = "moderator report from ".$UsernameReporter." for the post #".$IdPost." written by ".$UsernamePostWriter ;
-		$text="member <a href=\"".PVars::getObj('env')->baseuri."/member/".$UsernameReporter."\">".$UsernameReporter."</a>" ;
-		$text=$text." has written a report about member <a href=\"http://".PVars::getObj('env')->baseuri."/member/".$UsernamePostWriter."\">".$UsernamePostWriter."</a> for post <a href=\"".$postlink."\">".$postlink."</a>" ;
+		$text="member <a href=\"".PVars::getObj('env')->baseuri."/members/".$UsernameReporter."\">".$UsernameReporter."</a>" ;
+		$text=$text." has written a report about member <a href=\"http://".PVars::getObj('env')->baseuri."/members/".$UsernamePostWriter."\">".$UsernamePostWriter."</a> for post <a href=\"".$postlink."\">".$postlink."</a>" ;
 		$text=$text."Thread: <b>".$rPost->ThreadTitle."</b><br />" ;
 		$text.="The status of this report is ".$ReportStatus ;
 		$text.="You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;

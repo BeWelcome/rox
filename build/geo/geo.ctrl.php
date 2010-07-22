@@ -130,9 +130,9 @@ class GeoController extends RoxController {
                     sleep(2);
                     //retrieve all information from geonames
                     $locations = $this->_model->suggestLocation($request[2],40,$fcode);
-                    if (!$locations && $ii++ == 5) {
-                        throw new PException('Could not retireve hierarchy for '.$request[2].' from geonames.org');
-                        return false;
+                    if (!$locations && $ii++ == 3) {
+                        echo '<p class="note">'.$this->getWords()->get('Ooops! There was a problem with our geo location service. Try again later!').'</p>';
+                        PPHP::PExit();
                     }
         		}
                 echo $this->_view->generateLocationOverview($locations);
@@ -182,6 +182,12 @@ class GeoController extends RoxController {
             $mem_redirect->renew = $result = $this->_model->RenewGeo();
             $mem_redirect->counter = $result['counter'];
             $mem_redirect->error = $result['error'];
+        }
+        if ($action == 'renewaltnames') {
+            set_time_limit(0);
+            $mem_redirect->renewaltnames = $result = $this->_model->RenewAltNames();
+            $mem_redirect->counter = $result['counter'];
+            //$mem_redirect->error = $result['error'];
         }
         if ($action == 'recount') {
             set_time_limit(0);

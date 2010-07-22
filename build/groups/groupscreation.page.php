@@ -51,4 +51,3 @@ class GroupsCreationPage extends GroupsBasePage
     }
 }
 
-?>

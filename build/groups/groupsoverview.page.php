@@ -50,4 +50,3 @@ class GroupsOverviewPage extends GroupsBasePage
         return 'overview';
     }
 }
-?>

@@ -56,8 +56,27 @@
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
 
+    // geo groups routes
+    $this->addRoute('geogroup_continents','places', 'GeoController', 'index');
+    $this->addRoute('geogroup_country_catch','places/*', 'GroupsController', 'showGeoGroup');
+    // $this->addRoute('geogroup_continent_catch','places/continent/:location:', 'GroupsController', 'showGeoGroup');
+    $this->addRoute('geogroup_country','places/:location:', 'GroupsController', 'showGeoGroup', true);
+    $this->addRoute('geogroup_forum_catch', 'places/forum/*', 'GroupsController', 'geoForum');
+    $this->addRoute('geogroup_forum','places/forum/:location:', 'GroupsController', 'showGeoGroup', true);
+    $this->addRoute('geogroup_wiki_catch', 'places/wiki/*', 'GroupsController', 'geoWiki');
+    $this->addRoute('geogroup_wiki', 'places/wiki/:location:', 'GroupsController', 'geoWiki', true);
+    $this->addRoute('geogroup_members_catch', 'places/members/*', 'GroupsController', 'geoMembers');
+    $this->addRoute('geogroup_members', 'places/members/:location:', 'GroupsController', 'geoMembers', true);
+
+
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
+    $this->addRoute('forgotten_details', 'forgotten/details', 'MembersController', 'forgottenDetails');
+    $this->addRoute('forgotten_pass_set_new_pass', 'forgotten/renew/:token:', 'MembersController', 'forgottenRenew');
+    $this->addRoute('forgotten_success', 'forgotten/success', 'MembersController', 'forgottenSuccess');
+    $this->addRoute('forgotten_error', 'forgotten/error', 'MembersController', 'forgottenError');
+    $this->addRoute('change_password', 'user/password', 'UserController', 'index');
+    //$this->addRoute('change_password', 'password', 'MembersController', 'changePassword');
 
     // admin app routes
     $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
@@ -71,5 +90,12 @@
     $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminController', 'commentsOverview');
     // admin words routes
     $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
-    // admin rightsroutes
+    // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
+    // admin massmail routes
+    $this->addRoute('admin_massmail_overview', 'admin/massmail', 'AdminController', 'massmailOverview');
+    $this->addRoute('admin_massmail_create', 'admin/massmail/create', 'AdminController', 'massmailCreate');
+
+
+    // Simple newsletter page
+    $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');

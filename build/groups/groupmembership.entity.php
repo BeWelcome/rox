@@ -189,7 +189,7 @@ class GroupMembership extends RoxEntityBase
      * @param string $status - string containing the membership state, defaults to 'In'
      * @access public
      */
-    public function memberJoin(Group $group, Member $member, $status = 'In')
+    public function memberJoin(Group $group, Member $member, $status = 'In', $is_local)
     {
         if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()))
         {
@@ -203,6 +203,7 @@ class GroupMembership extends RoxEntityBase
             $this->IdGroup = $group_id;
             $this->IdMember = $member_id;
             $this->created = date('Y-m-d H:i:s');
+            $this->IsLocal = $is_local ? 1 : 0;
 
             return $this->insert();
         }

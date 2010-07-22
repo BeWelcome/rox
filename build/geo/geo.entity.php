@@ -2,6 +2,34 @@
 
 class Geo extends RoxEntityBase
 {
+
+    const POPULATED_PLACE = 'PPL';
+    const SEAT_OF_ADMINISTRATIVE_DIVISION = 'PPLA';
+    const CAPITAL = 'PPLC';
+    const SEAT_OF_GOVERNMENT = 'PPLG';
+    const POPULATED_PLACES = 'PPLS';
+    const SECTION_OF_POPULATED_PLACE = 'PPLX';
+    const SETTLEMENT = 'STMLT';
+    const CITIES = "'PPL','PPLA','PPLC','PPLG','PPLS','PPLX','STMLT'";
+
+    const DEPENDENT_POLITICAL_ENTITY = 'PCLD';
+    const FREELY_ASSOCIATED_STATE = 'PCLF';
+    const INDEPENDENT_POLITICAL_ENTITY = 'PCLI';
+    const SEMI_INDEPENDENT_POLITICAL_ENTITY = 'PCLS';
+    const SECTION_OF_INDEPENDENT_POLITICAL_ENTITY = 'PCLIX';
+    const TERRITORY = 'TERR';
+    const COUNTRIES = "'PCLD','PCLF','PCLI','PCLS','PCLIX','TERR'";
+
+    const REGION_LEVEL_1 = 'ADM1';
+    const REGION_LEVEL_2 = 'ADM2';
+    const REGION_LEVEL_3 = 'ADM3';
+    const REGION_LEVEL_4 = 'ADM4';
+    const REGION_NO_LEVEL = 'ADMD';
+    const REGIONS = "'ADM1','ADM2','ADM3','ADM4','ADMD'";
+
+    const CONTINENT = 'CONT';
+    const CONTINENTS = "'CONT'";
+
     protected $_table_name = 'geonames_cache';
     protected $alt_names = array();
 
@@ -22,7 +50,7 @@ class Geo extends RoxEntityBase
      */
     public function getParent()
     {
-        if (!$this->isLoaded() || $this->parentAdm1Id == 0)
+        if (!$this->isLoaded())
         {
             return false;
         }
@@ -61,12 +89,18 @@ class Geo extends RoxEntityBase
         if (!$this->ancestor_line)
         {
             $it = $this;
-            while ($parent = $it->getParent())
+            do
             {
-                $result[] = $parent;
-                $it = $parent;
+                $parents = $it->getHierarchyParents();
+                if (!empty($parents))
+                {
+                    // hack: assume the first result is the parent. Should almost always be true
+                    // but theoretically a location can have several parents
+                    $result[] = $parents[0];
+                    $it = $parents[0];
+                }
             }
-            $result[] = $this->getCountry();
+            while (!empty($parents));
             $this->ancestor_line = $result;
         }
         return $this->ancestor_line;
@@ -80,18 +114,48 @@ class Geo extends RoxEntityBase
      */
     public function getCountry()
     {
-        if (!$this->isLoaded() || !$this->parentCountryId)
+        if (!$this->isLoaded())
         {
             return false;
         }
         if (!$this->country)
         {
-            if ($geo = $this->createEntity('Geo')->findById($this->parentCountryId))
+            foreach ($this->getAncestorLine() as $ancestor)
             {
-                $this->country = $geo;
+                if ($ancestor->isCountry())
+                {
+                    $this->country = $ancestor;
+                    break;
+                }
             }
         }
         return $this->country;
+    }
+
+    /**
+     * returns the geo object for the continent
+     *
+     * @access public
+     * @return object
+     */
+    public function getContinent()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        if (!$this->continent)
+        {
+            foreach ($this->getAncestorLine() as $ancestor)
+            {
+                if ($ancestor->isContinent())
+                {
+                    $this->continent = $ancestor;
+                    break;
+                }
+            }
+        }
+        return $this->continent;
     }
 
     /**
@@ -109,15 +173,62 @@ class Geo extends RoxEntityBase
         }
         if (!$this->children)
         {
+            if ($this->parentCountryId == 0 && $this->parentAdm1Id == 0)
+            {
+                $children = $this->findByWhereMany("parentCountryId = '{$this->getPKValue()}' AND parentAdm1Id = 0");
+            }
+            else
+            {
+                $children = $this->findByWhereMany("parentAdm1Id = '{$this->getPKValue()}'");
+            }
+            $ids = array();
+            foreach ($children as $child)
+            {
+                $ids[] = $child->geonameid;
+            }
+            if (!empty($ids))
+            {
+                $this->children = $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+            }
+            else
+            {
+                $this->children = array();
+            }
+        }
+        return $this->children;
+    }
+
+    /**
+     * returns array of all children locations of the current geo entity
+     * uses geo_hierarchy to find the children
+     *
+     * @access public
+     * @return array
+     */
+    public function getHierarchyChildren()
+    {
+        if (!$this->isLoaded())
+        {
+            return array();
+        }
+        if (!$this->hierarchychildren)
+        {
             $children = $this->createEntity('GeoHierarchy')->getAllChildren($this);        
             $ids = array();
             foreach ($children as $child)
             {
                 $ids[] = $child->geoId;
             }
-            $this->children = $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+            if (!empty($ids))
+            {
+                $this->hierarchychildren = $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+            }
+            else
+            {
+                $this->hierarchychildren = array();
+            }
         }
-        return $this->children;
+        return $this->hierarchychildren;
     }
 
     /**
@@ -127,7 +238,7 @@ class Geo extends RoxEntityBase
      * @access public
      * @return array
      */
-    public function getAllParents()
+    public function getHierarchyParents()
     {
         if (!$this->isLoaded())
         {
@@ -139,9 +250,16 @@ class Geo extends RoxEntityBase
             $ids = array();
             foreach ($parents as $parent)
             {
-                $ids[] = $parent->geoId;
+                $ids[] = $parent->parentId;
             }
-            $this->all_parents = $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+            if (!empty($ids))
+            {
+                $this->all_parents = $this->findByWhereMany("geonameid IN (" . implode(',', $ids) . ")");
+            }
+            else
+            {
+                $this->all_parents = array();
+            }
         }
         return $this->all_parents;
     }
@@ -197,6 +315,21 @@ class Geo extends RoxEntityBase
         {
             return $this->getAlternateName($lang);
         }
+    }
+    
+    /**
+     * returns the name of the location in the currently selected language if available
+     *
+     * @access public
+     * @return string
+     */
+    public function getTranslatedName()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->getName(PVars::get()->lang);
     }
 
     /**
@@ -256,7 +389,167 @@ class Geo extends RoxEntityBase
         }
         return $this->total_usage;
     }
+	
+    /**
+     * gets a geo entity by country code
+     *
+     * @param string $countrycode
+     * @access public
+     * @return object|false
+     */
+    public function getCountryFromCountrycode($countrycode)
+    {
+        if (empty($countrycode))
+        {
+            return false;
+        }
+        return $this->findByWhere("fk_countrycode = '{$this->dao->escape($countrycode)}' AND geonameId IN (SELECT geoId FROM geonames_cache AS gc, geo_hierarchy AS gh WHERE gc.fcode = " . Geo::CONTINENTS . " AND gc.geonameId = gh.parentId)");
+    }
 
+    /**
+     * checks whether the loaded geo entity is a child of the supplied entity
+     *
+     * @param object $geo
+     * @access public
+     * @return bool
+     */
+    public function isChildOf(Geo $geo)
+    {
+        if (!$this->isLoaded() || !$geo->isLoaded())
+        {
+            return false;
+        }
+        foreach ($this->getHierarchyParents() as $parent)
+        {
+            if ($parent->getPKValue() == $geo->getPKValue())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * returns geo entities on city level, with at least one member
+     *
+     * @param bool $with_members
+     * @access public
+     * @return array
+     */
+    public function getCitiesBelow($with_members = true)
+    {
+        if (!$this->cities_below)
+        {
+            if (!$this->isLoaded() || $this->isCity())
+            {
+                return array();
+            }
+            if ($this->isContinent())
+            {
+                $this->cities_below = $this->getCitiesFromContinent($with_members); //not ready
+            }
+            if ($this->isCountry())
+            {
+                $this->cities_below = $this->getCitiesFromCountry($with_members);
+            }
+            elseif ($this->isRegion())
+            {
+                $this->cities_below = $this->getCitiesFromRegion($with_members);
+            }
+        }
+        return $this->cities_below;
+    }
+
+    /**
+     * loads cities from a continent geo entity
+     *
+     * @param bool $with_members
+     * @access private
+     * @return array
+     * // todo: complete function!
+     */
+    private function getCitiesFromContinent($with_members)
+    {
+        return array();
+    }
+
+    /**
+     * loads cities from a country geo entity
+     *
+     * @param bool $with_members
+     * @access private
+     * @return array
+     */
+    private function getCitiesFromCountry($with_members)
+    {
+        if ($with_members)
+        {
+            $query = "SELECT gc.* FROM geonames_cache AS gc, geo_usage AS gu, geo_type AS gt WHERE gt.name = 'member_primary' AND gu.typeId = gt.id AND gu.geoId = gc.geonameId AND gc.fcode IN (" . Geo::CITIES . ") AND gc.fk_countrycode = '{$this->fk_countrycode}'";
+        }
+        else
+        {
+            $query = "SELECT gc.* FROM geonames_cache AS gc WHERE gc.fcode IN (" . Geo::CITIES . ") AND gc.fk_countrycode = '{$this->fk_countrycode}'";
+        }
+        if (!($res = $this->dao->query($query)))
+        {
+            return array();
+        }
+        return $this->loadEntities($res);
+    }
+
+    /**
+     * loads cities from a region geo entity
+     *
+     * @param bool $with_members
+     * @access private
+     * @return array
+     */
+    private function getCitiesFromRegion($with_members)
+    {
+        $children = $this->getHierarchyChildren();
+        if (empty($children))
+        {
+            return array();
+        }
+        $ids = array();
+        foreach ($children as $child)
+        {
+            $ids[] = $child->getPKValue();
+        }
+        $final_ids = $ids;
+        while (!empty($ids))
+        {
+            $query = "SELECT geoId FROM geo_hierarchy WHERE parentId IN (" . implode(',', $ids) . ")";
+            $ids = array();
+            if ($res = $this->dao->query($query))
+            {
+                while ($row = $res->fetch(PDB::FETCH_ASSOC))
+                {
+                    $ids[] = $row['geoId'];
+                }
+                $final_ids = array_merge($final_ids, $ids);
+            }
+            else
+            {
+                $ids = array();
+            }
+        }
+        sort($final_ids);
+
+        if ($with_members)
+        {
+            $query = "SELECT gc.* FROM geonames_cache AS gc, geo_usage AS gu, geo_type AS gt WHERE gt.name = 'member_primary' AND gu.typeId = gt.id AND gu.geoId = gc.geonameId AND gc.fcode IN (" . Geo::CITIES . ") AND gc.fk_countrycode = '{$this->fk_countrycode}' AND gc.geonameId IN (" . implode(',', $final_ids) . ")";
+        }
+        else
+        {
+            $query = "SELECT gc.* FROM geonames_cache AS gc WHERE gc.fcode IN (" . Geo::CITIES . ") AND gc.fk_countrycode = '{$this->fk_countrycode}' AND gc.geonameId IN (" . implode(',', $final_ids) . ")";
+        }
+        if (!($res = $this->dao->query($query)))
+        {
+            return array();
+        }
+        return $this->loadEntities($res);
+    }
     /**
      * returns region for a given location
      *
@@ -300,22 +593,38 @@ class Geo extends RoxEntityBase
         }
 		switch($this->fcode)
         {
-			case 'PPL':
-			case 'PPLA':
-			case 'PPLC':
-			case 'PPLG':
-			case 'PPLS':
-			case 'PPLS':
+            case Geo::POPULATED_PLACE:
+            case Geo::SEAT_OF_ADMINISTRATIVE_DIVISION:
+            case Geo::CAPITAL:
+            case Geo::SEAT_OF_GOVERNMENT:
+            case Geo::POPULATED_PLACES:
+            case Geo::SECTION_OF_POPULATED_PLACE:
+            case Geo::SETTLEMENT:
 				return "City";
 				break;
-			case 'PCLI':
-			case 'PCLS':
-			case 'PCLIX':
+            case Geo::DEPENDENT_POLITICAL_ENTITY:
+            case Geo::FREELY_ASSOCIATED_STATE:
+            case Geo::INDEPENDENT_POLITICAL_ENTITY:
+            case Geo::SEMI_INDEPENDENT_POLITICAL_ENTITY:
+            case Geo::SECTION_OF_INDEPENDENT_POLITICAL_ENTITY:
+            case Geo::TERRITORY:
 				return "Country";
 				break;
-			case 'ADM1':
+            case Geo::REGION_LEVEL_1:
+            case Geo::REGION_LEVEL_2:
+            case Geo::REGION_LEVEL_3:
+            case Geo::REGION_LEVEL_4:
+            case Geo::REGION_NO_LEVEL:
 				return "Region";
 				break;
+            case Geo::CONTINENT:
+                return 'Continent';
+                break;
+            default:
+                if ($this->latitude == 0 && $this->longitude == 0 && $this->name == 'Globe')
+                {
+                    return 'Globe';
+                }
 		}
 		$this->logWrite("Database Bug: geonames_cache ({$this->getPKValue()}) fcode={$this->fcode} which is unknown", "Bug");
 		return("Unknown") ;
@@ -364,6 +673,17 @@ class Geo extends RoxEntityBase
             return true;
         }
         return false;
+    }
+
+    /**
+     * tells you whether the currently loaded geo entity represents a continent
+     *
+     * @access public
+     * @return bool
+     */
+    public function isContinent()
+    {
+        return ($this->placeType() == 'Continent');
     }
 
     /**

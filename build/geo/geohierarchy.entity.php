@@ -13,6 +13,13 @@ class GeoHierarchy extends RoxEntityBase
         }
     }
 
+    /**
+     * returns all geo hierarchy entities with geoId = supplied geo
+     *
+     * @param object $geo
+     * @access public
+     * @return array
+     */
     public function getAllParents(Geo $geo)
     {
         if (!$geo->isLoaded())
@@ -22,6 +29,13 @@ class GeoHierarchy extends RoxEntityBase
         return $this->findByWhereMany("geoId = '{$geo->getPKValue()}'");
     }
 
+    /**
+     * returns all geo hierarchy entities with parentId = supplied geo
+     *
+     * @param object $geo
+     * @access public
+     * @return array
+     */
     public function getAllChildren(Geo $geo)
     {
         if (!$geo->isLoaded())

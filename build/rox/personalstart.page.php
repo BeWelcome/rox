@@ -75,7 +75,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
         ?>
         
         <div class="floatbox">
-            <a class="float_right" href="messages/<?=$i_row?>/reply" >
+            <a class="float_right" href="messages/<?=$id?>/reply" >
                 <img src="images/icons/email_go.png" alt="Reply" />
             </a>
             <?= MOD_layoutbits::PIC_30_30($senderUsername,'','float_left framed')?>

@@ -124,4 +124,3 @@ class GroupSettingsPage extends GroupsBasePage
 
 }
 
-?>

@@ -106,52 +106,34 @@ Boston, MA  02111-1307, USA.
 
   <fieldset id="location">
 
-          <ul class="floatbox input_float">
-        <li>
-
-          <label for="register-street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
+          <div class="signup-row floatbox">
+          <label for="register-street"><?php echo $words->get('SignupStreetName'); ?>*</label>
           <input type="text" id="register-street" name="street" style="float: left" <?php
             echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupStreetNameDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupStreetNameDescription'); ?></span>
-          -->
-        </li>
-        <li class="number">
-          <label for="register-housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label><br />
+
+            </div>
+        <div class="signup-row floatbox">
+          <label for="register-housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label>
           <input type="text" id="register-housenumber" name="housenumber" style="float: left" <?php
           echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupHouseNumberDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupProvideHouseNumber'); ?></span>
-          -->
-        </li>
+          <span class="small"> <?php echo $words->get('SignupProvideHouseNumber'); ?></span>
+        </div>
 
-        <li class="number">
-          <label for="zip"><?php echo $words->get('SignupZip'); ?></label><br />
+        <div class="signup-row floatbox">
+          <label for="zip"><?php echo $words->get('SignupZip'); ?>*</label>
           <input type="text" id="zip" name="zip" style="float: left" <?php
             echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
-          <!--
-          <a href="#" onclick="return false;" >
-          <img src="../images/icons/help.png" alt="?" height="16" width="16" />
-          <span><?php echo $words->get('SignupZipDescription'); ?></span></a><br />
-          <span class="small"><?php echo $words->get('SignupZipDescriptionShort'); ?></span>
-          -->
-        </li>
-      </ul>
-
+            <span class="small"> <?php echo $words->get('SignupZipDescriptionShort'); ?></span>
          <?php
         if (in_array('SignupErrorProvideStreetName', $vars['errors'])) {
             echo '<div class="error">'.$words->get('SignupErrorProvideStreetName').'</div>';
         }
         ?>
+        </div>
 
     <input type="hidden" name="geonameid" id="geonameid" value="<?php
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';

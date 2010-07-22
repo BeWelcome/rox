@@ -24,7 +24,7 @@ if (!isset($headingLevel)) {
 <div class="blogitem">
     <h<?=$headingLevel?>><a href="blog/<?=$blog->user_handle?>/<?=$blog->blog_id?>"><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></a></h<?=$headingLevel?>>
     <div class="author">
-        <?=$words->get('written_by')?> <a href="member/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
+        <?=$words->get('written_by')?> <a href="members/<?=$blog->user_handle?>"><?=$blog->user_handle?></a>
         <?php
         if ($blog->fk_countrycode) {
         ?>

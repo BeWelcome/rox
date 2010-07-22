@@ -217,7 +217,7 @@ class SignupController extends RoxControllerBase {
 
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
                 $View->registerMail($vars, $id, $idTB);
-                $View->signupTeamMail($vars);
+                $View->signupTeamMail($vars,$model->GetEnglishCountryNameAndLanguageNameData());
                 unset($_SESSION['IdMember']);
                 return 'signup/finish';
             }

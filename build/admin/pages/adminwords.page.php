@@ -38,17 +38,10 @@ class AdminWordsPage extends AdminBasePage
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminWords')}</a>";
     }
     
-    /**
-     * configure the sidebar
-     */
-    protected function leftSidebar() {
-        return 'adminwordssidebar';
-    }
-    
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col1+3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forms.css';
        return $stylesheets;
     }
 }

@@ -3,6 +3,8 @@
 
 class VisualComponent extends RoxComponentBase
 {
+    private $_router;
+
     /**
      * called by the framework, to inject some essential values..
      *
@@ -109,6 +111,25 @@ class VisualComponent extends RoxComponentBase
             }
             return end($subdirs);
         }
+    }
+
+    /**
+     * returns a url from a route
+     *
+     * @param string $route
+     * @param array  $params
+     * @param bool   $add_base
+     *
+     * @access public
+     * @return string
+     */
+    public function url($route, $params = array(), $add_base = false)
+    {
+        if (!isset($this->_router))
+        {
+            $this->_router = new RequestRouter;
+        }
+        return $this->_router->url($route, $params, $add_base);
     }
 }
 

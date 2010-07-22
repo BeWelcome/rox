@@ -98,7 +98,7 @@ class Member extends RoxEntityBase
 
         $TLanguages = array();
         $str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name,languages.ShortCode AS ShortCode, " .
-          "memberslanguageslevel.Level AS Level FROM memberslanguageslevel,languages " .
+          "memberslanguageslevel.Level AS Level,WordCode FROM memberslanguageslevel,languages " .
           "WHERE memberslanguageslevel.IdMember=" . $this->id .
           " AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
         $qry = mysql_query($str);
@@ -373,6 +373,28 @@ WHERE IdMember = ".$this->id
           return $r;
     }
 
+    /**
+     * checks if the member has set any addresses for messenger protocols
+     *
+     * @author Fake51
+     * @access public
+     * @return bool
+     */
+    public function hasMessengers()
+    {
+        if (!($m = $this->get_messengers()))
+        {
+            return false;
+        }
+        foreach ($m as $messenger)
+        {
+            if (!empty($messenger['address']))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public function get_age() {
         $age = $this->get_crypted("age", "");
@@ -644,6 +666,26 @@ WHERE IdToMember = ".$this->id
         }
 
         return $this->createEntity('GroupMembership')->getMemberGroups($this, 'In');
+    }
+    
+    /**
+     * makes the member leave all geo groups he is in
+     *
+     * @access public
+     * @return true or false
+     */
+    public function leaveGeoGroups()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+
+        $groups = $this->getGroups();
+        foreach ($groups as $group) {
+            if ($group->IdGeoname) $group->memberLeave($this);
+        }
+        return true;
     }
 
 
@@ -1452,6 +1494,27 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         // following should be extended to array('Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned')
         // but won't work for now, as that will block admins checking accounts as well
         if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy')))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * returns a bool based on whether the
+     * member is able to log in or not, based
+     * on status
+     *
+     * @access public
+     * @return bool
+     */
+    public function canLogIn()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        if (in_array($this->Status, array('Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned')))
         {
             return false;
         }

@@ -163,14 +163,14 @@ Boston, MA  02111-1307, USA.
                     ?></span>
                 </td>
                 <td class="forumsboardthreadreplies"><?php echo $thread->replies; ?></td>
-                <td class="forumsboardthreadauthor"><a href="people/<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
+                <td class="forumsboardthreadauthor"><a href="members/<?php echo $thread->first_author; ?>"><?php echo $thread->first_author; ?></a></td>
                 <td class="forumsboardthreadviews"><?php echo number_format($thread->views); ?></td>
                 <td class="forumsboardthreadlastpost">
                     <span class="small grey"><?php 
 //                  echo "#### [",$thread->last_create_time,"] " ; 
                     echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time));
                     ?></span><br />
-                    <a href="people/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
+                    <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                     <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
                      
                 </td>

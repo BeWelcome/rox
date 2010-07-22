@@ -25,7 +25,11 @@ class NewsletterPage extends RoxPageView
     {
 		echo "<p>" ;
 		foreach ($this->Data as $OneLetter) {
-			echo "<a href='".$OneLetter->Name."'>",$this->getWords()->get('BroadCast_Title_'.$OneLetter->Name)."</a></br>" ;
+			echo "<b>",$this->getWords()->get('BroadCast_Title_'.$OneLetter->Name)."</b>" ;
+			foreach ($OneLetter->Lang as $Lang)  {
+				echo " ","<a href='newsletter/".$OneLetter->Name."/".$Lang->ShortCode."' title='in ".$Lang->Name."'>".$Lang->ShortCode."</a>" ;
+			}
+			echo "<br />" ;
 		}
 		echo "</p>" ;
  

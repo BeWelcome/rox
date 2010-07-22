@@ -74,13 +74,20 @@ class Group extends RoxEntityBase
      * @return mixed false or group of arrays that match any of the terms
      * @access public
      */
-    public function findBySearchTerms($terms = array(), $offset, $limit = 10)
+    public function findBySearchTerms($terms = array(), $offset, $limit = 10, $include_locals = false)
     {
         if (empty($terms))
         {
-            return $this->findAll($page, 10);
+            if ($include_locals)
+            {
+                return $this->findAll($offset, $limit);
+            }
+            else
+            {
+                return $this->findByWhereMany('isLocal = false', $offset, $limit);
+            }
         }
-        
+
         foreach ($terms as &$term)
         {
             if (is_string($term))
@@ -92,11 +99,11 @@ class Group extends RoxEntityBase
                 unset($term);
             }
         }
-        
+
         $clause = implode(' or ', $terms);
+        $clause = (($include_locals) ? $clause : "({$clause}) AND isLocal = false");
 
         return $this->findByWhereMany($clause, $offset, $limit);
-
     }
 
 
@@ -123,10 +130,11 @@ class Group extends RoxEntityBase
      * @param string $status - which status to check for (In, WantToBeIn, Kicked)
      * @param int $offset
      * @param int $limit
+     * @param bool $local
      * @access public
      * @return array
      */
-    public function getMembers($status = false, $offset = 0, $limit = null)
+    public function getMembers($status = false, $offset = 0, $limit = null, $local = false)
     {
         if (!$this->_has_loaded)
         {
@@ -135,7 +143,8 @@ class Group extends RoxEntityBase
 
         $status = (($status) ? $status : 'In');
 
-        return $this->createEntity('GroupMembership')->getGroupMembers($this, $status, '', $offset, $limit);
+        $where = (($local) ? "IsLocal = true" : 'IsLocal = false');
+        return $this->createEntity('GroupMembership')->getGroupMembers($this, $status, $where, $offset, $limit);
     }
 
     /**
@@ -162,7 +171,7 @@ class Group extends RoxEntityBase
      * @access public
      * @return int
      */
-    public function getMemberCount($status = false)
+    public function getMemberCount($status = false, $local = false)
     {
         if (!$this->_has_loaded)
         {
@@ -171,8 +180,8 @@ class Group extends RoxEntityBase
 
         $status = (($status) ? $status : 'In');
 
-        return count($this->createEntity('GroupMembership')->getGroupMembers($this, $status));
-        
+        $where = (($local) ? "IsLocal = true" : 'IsLocal = false');
+        return count($this->createEntity('GroupMembership')->getGroupMembers($this, $status, $where));
     }
 
 
@@ -201,14 +210,14 @@ class Group extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function memberJoin($member, $status)
+    public function memberJoin($member, $status, $is_local = false)
     {
         if ($this->_has_loaded === false)
         {
             return false;
         }
 
-        return $this->createEntity('GroupMembership')->memberJoin($this, $member, $status);
+        return $this->createEntity('GroupMembership')->memberJoin($this, $member, $status, $is_local);
     }
 
     /**
@@ -457,6 +466,27 @@ class Group extends RoxEntityBase
             return false;
         }
         return $this->findByWhere("IdGeoname = '{$geo->getPKValue()}'" . (($local) ? " AND IsLocal = TRUE" : ''));
+    }
+    
+    /**
+     * loads a number of forum threads for this group
+     *
+     * @param array $vars
+     * @access public
+     * @return array
+     */
+    public function getForumThreads()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $ForumsModel = new Forums();
+        $ForumsModel->groupId = $this->getPKValue();
+        $ForumsModel->IdGroup = $this->getPKValue();
+        $threads = $this->createEntity('Thread')->findByWhereMany("IdGroup = '{$this->dao->escape($this->getPKValue())}'");
+        //var_dump($ForumsModel->getGroupThreads($this->getPKValue()));
+        return $threads;
     }
 
 }

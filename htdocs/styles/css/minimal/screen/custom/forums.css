@@ -314,6 +314,20 @@ table.row td {
     border: none;
 }
 
+#forumrules ul,ol {
+    margin: 5px 10px;
+}
+#forumrules ul li{    
+    list-style-type: disc;
+    margin-left: 0.5em;
+    margin-bottom: 1em;
+}
+#forumrules ol li{
+    list-style-type: decimal;
+    margin-left: 1em;
+    margin-bottom: 0.5em;
+    padding-bottom: 0em;
+}
 
 
 img.forum_icon, #main h4 img.forum_icon {

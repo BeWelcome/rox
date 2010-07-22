@@ -178,12 +178,12 @@ class Places extends RoxModelBase {
 	*/
 	public function getAllCities($idregion) {
 		if (is_numeric($idregion)) {
-		$query = sprintf("SELECT cities.Name AS city, cities.NbMembers as NbMember FROM cities
-			   where IdRegion=%d  and (cities.NbMembers>0) ORDER BY cities.Name",$idregion);
+		$query = sprintf("SELECT cities.Name AS city, count(*) as NbMember FROM cities,members
+			   where IdRegion=%d  and (members.Status='Active')  and members.IdCity=cities.id and cities.NbMembers>0 group by cities.id ORDER BY cities.Name",$idregion);
 		}
 		else {
-		$query = sprintf("SELECT cities.Name AS city,  cities.NbMembers as NbMember FROM cities,regions
-			   where regions.id=cities.IdRegion and regions.Name='%s' and ( cities.NbMembers>0) ORDER BY cities.Name",$idregion);
+		$query = sprintf("SELECT cities.Name AS city,  count(*) as NbMember FROM cities,regions,members
+			   where regions.id=cities.IdRegion and regions.Name='%s' and (members.Status='Active')  and members.IdCity=cities.id  and cities.NbMembers>0  group by cities.id ORDER BY cities.Name",$idregion);
 		}
 		
 		$result = $this->dao->query($query);

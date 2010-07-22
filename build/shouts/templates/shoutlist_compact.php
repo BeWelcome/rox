@@ -50,8 +50,32 @@ $format = array(
 if (!isset($vars['errors'])) {
     $vars['errors'] = array();
 }
-?>
 
+
+$comments = $Shouts->getShouts($table,$table_id);
+if (!$comments) {
+} else {
+    $count = 0;
+    $max = count($comments);
+    $lastHandle = '';
+    foreach ($comments as $comment) {
+        if ($max > 6 && $count == 6) {
+            echo '
+            <script type="text/javascript">
+            function showShouts() {
+                $(\'shoutsHidden_'.$table.'\').toggle();
+            }
+            </script>';
+            echo '<a id="shoutsHidden_'.$table.'_link" onclick="showShouts()" class="shoutsShowAll">'.$words->get('Show all').'</a><div style="display:none;" id="shoutsHidden_'.$table.'">';
+        }
+        require 'comment_compact.php';
+        if ($max > 6 && $count == $max-1)
+            echo '</div>';
+        ++$count;
+        $lastHandle = $comment->username;
+    }
+}
+?>
 <div id="comments">
 <?php
     if (isset($_SESSION['IdMember']) && $_SESSION['IdMember']) {
@@ -60,7 +84,7 @@ if (!isset($vars['errors'])) {
 <form method="post" action="" class="def-form" id="blog-comment-form">
     <div class="row">
         <label for="comment-text"><?=$words->get('CommentsTextLabel')?>:</label><br />
-        <textarea id="comment-text" name="ctxt" cols="40" rows="2" style="width: 95%;"><?php
+        <textarea id="comment-text" name="ctxt" cols="40" rows="4" style="width: 95%;"><?php
 echo isset($vars['ctxt']) ? htmlentities($vars['ctxt'], ENT_COMPAT, 'utf-8') : '';
       ?></textarea>
         <div id="bcomment-text" class="statbtn"></div>
@@ -104,29 +128,7 @@ jQuery('textarea#comment-text').autoResize({
         echo '<p>'.$words->get('PleaseRegister').'</p>';
     }
 
-$comments = $Shouts->getShouts($table,$table_id);
-if (!$comments) {
-} else {
-    $count = 0;
-    $max = count($comments);
-    $lastHandle = '';
-    foreach ($comments as $comment) {
-        if ($max > 6 && $count == 6) {
-            echo '
-            <script type="text/javascript">
-            function showShouts() {
-                $(\'shoutsHidden_'.$table.'\').toggle();
-            }
-            </script>';
-            echo '<a id="shoutsHidden_'.$table.'_link" onclick="showShouts()" class="shoutsShowAll">'.$words->get('Show all').'</a><div style="display:none;" id="shoutsHidden_'.$table.'">';
-        }
-        require 'comment_compact.php';
-        if ($max > 6 && $count == $max-1)
-            echo '</div>';
-        ++$count;
-        $lastHandle = $comment->username;
-    }
-}
+
 ?>
 </div>
 

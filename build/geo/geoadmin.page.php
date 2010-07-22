@@ -56,6 +56,26 @@ class GeoAdminPage extends RoxPageView
 			</p>
            ';
 		   }
+		   
+           echo '
+   			<p>
+   			<form method="POST" action="'.$page_url.'">
+   			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
+   			Rebuild the alternate names for all stored geoname ids: <input type="hidden" name="action"/ value="renewaltnames"> 	<input type="submit" value="Rebuild Alternate Names"/>
+   			</form>
+   			</p>
+           ';
+
+   		if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
+               } elseif ($mem_redirect->renewaltnames) {
+                   var_dump( $mem_redirect->renewaltnames);
+               echo '
+   			<p>
+   			The geo tables alternate names table has been rebuild: Added '.$mem_redirect->counter['alternate_names'].' unique alternate name Ids.
+   			</p>
+              ';
+   		   }
+		   
 
         echo '
 			<p>

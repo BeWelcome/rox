@@ -63,7 +63,7 @@ $threadsliced = array_slice($threads, 0, 5);
                     <?php
                     echo $words->fTrad($thread->IdTitle);
                     ?></a><br />
-                    <span class="small grey">by <a href="people/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> -
+                    <span class="small grey">by <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> -
                     <?php echo '<span title="'.date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)).'">'.$layoutbits->ago(ServerToLocalDateTime($thread->last_create_time)).'</span>'; ?>
                     <?php // echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?>
                     </span>

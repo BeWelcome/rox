@@ -28,8 +28,9 @@ require_once "lib/init.php";
 $IdMember = IdMember(GetParam("cid", ""));
 
 if (!is_numeric(GetParam("cid", ""))) { // redirects to new rox member if the cid is the username
-	$url="../member/".GetParam("cid", "") ;
+	$url="../members/".GetParam("cid", "") ;
 //	die ("<a href='".$url."'>here</a><br>") ;
+    header("HTTP/1.1 301 old url");
 	header ("location: $url") ;
 	LogStr("redirection of ".$url, "old BW");
 	exit(0) ;

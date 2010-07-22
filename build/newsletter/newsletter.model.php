@@ -21,6 +21,8 @@ class NewsletterModel extends RoxModelBase
 //		die ($sql) ;
         $BroadCast=$this->singleLookup($sql) ;
 		if (empty($BroadCast)) return(NULL) ;
+		$sql="select languages.Name as Name,words.ShortCode from words,languages where words.code='BroadCast_Body_".$LetterName."' and languages.id=words.IdLanguage" ;
+        $BroadCast->Lang=$this->bulkLookup($sql) ;
 		$Data->LetterName=$LetterName ;
 		$Data->BroadCast=$BroadCast ;
 		$sql="select count(*) as cnt from broadcastmessages where IdBroadCast=".$BroadCast->id." and Status='Send'" ;
@@ -35,6 +37,12 @@ class NewsletterModel extends RoxModelBase
     public function PreviousLetters() {
 		$sql="select * from broadcast where Status='Triggered' and type='Normal' order by created desc" ;
         $Data=$this->bulkLookup($sql) ;
+		for ($ii=0;$ii<count($Data);$ii++) { // Compute the available languages for this letter
+			$OneLetter=$Data[$ii] ;
+			$sql="select languages.Name as Name,words.ShortCode from words,languages where words.code='BroadCast_Body_".$OneLetter->Name."' and languages.id=words.IdLanguage" ;
+			$Data[$ii]->Lang=$this->bulkLookup($sql) ;
+		}
+        $BroadCast->Lang=$this->bulkLookup($sql) ;
 		return($Data) ;
 	}
 }

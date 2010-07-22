@@ -29,22 +29,22 @@ $occupation = $member->get_trad("Occupation", $profile_language,true);
         if (strstr($member->TypicOffer, "guidedtour"))
         {
             $title = $words->getSilent("TypicOffer_guidedtour");
-			$image_name = 'icon_castle.gif';
-			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
+            $image_name = 'icon_castle.gif';
+            echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
         }
         if (strstr($member->TypicOffer, "dinner"))
         {
             $title = $words->getSilent("TypicOffer_dinner");
-			$image_name = 'icon_food.gif';
-			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
+            $image_name = 'icon_food.gif';
+            echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
         }
         if (strstr($member->TypicOffer, "CanHostWeelChair"))
         {
             $title = $words->getSilent("TypicOffer_CanHostWeelChair");
-			$image_name = 'wheelchair.gif';
-			echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
+            $image_name = 'wheelchair.gif';
+            echo "<img src='images/icons/{$image_name}' class='float_left' title='{$title}' width='30' height='30' alt='icon_castle' />";
         }
-		echo $words->flushBuffer();
+        echo $words->flushBuffer();
         ?>
     -->
 <ul class="linklist" id="profile_linklist">

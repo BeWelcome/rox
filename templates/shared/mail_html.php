@@ -3,26 +3,44 @@
 $words = new MOD_words();
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
-    <head>
-        <title><?php echo $subject; ?></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    </head>
-    <body style="background-color: #cccccc;font-color: #333;font-size: 12px;line-height: 1.5em;font-family: arial,verdana,sans-serif;margin: 0;padding: 0;">
-        <div style="width: 580px;margin: 0;padding: 0 0 2em 0; background-color: #ffffff; background: #ffffff url(<?php echo PVars::getObj('env')->baseuri; ?>/images/misc/email_bg.gif) top left repeat-y;">
-            <div>
-                <div style="padding: 10px 20px 10px 20px; margin: 10px;background-color: #f5f5f5;border-top: 1px solid #e5e5e5;border-bottom: 1px solid #e5e5e5; text-align: right;">
-                    <a href="<?php echo PVars::getObj('env')->baseuri; ?>"><img src="<?php echo PVars::getObj('env')->baseuri; ?>images/misc/email_logo.gif" alt="<?php echo PVars::getObj('env')->sitename; ?>" style="border:0"/></a>
-                </div>
-                <div style="margin: 40px; background-color: #ffffff;">
-                    <?if($title) { ?><h1 style="font-size: 30px; padding-bottom: 10px; line-height: 1.2em"><?=$title?></h1><?}?>
-                    <div><?=($body_html) ? $body_html : $body?></div>
-                </div>
-            </div>
-        </div>
-        <div style="width: 580px; height: 80px; background: #cccccc url(<?php echo PVars::getObj('env')->baseuri; ?>/images/misc/email_bottom.gif) top left no-repeat; padding: 40px;">
-            <?=$words->getBuffered('MailFooterMessage')?>
-        </div>
-    </body>
+
+<html>
+<head>
+    <title><?php echo $subject; ?></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" bgcolor="#ffffff" >
+
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#ffffff" >
+    <tr>
+        <td valign="top">
+            <table width="580" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td style="background-color:#FFFFFF; border-bottom: 1px solid #e5e5e5; height: 60px;">
+                            <a href="<?php echo PVars::getObj('env')->baseuri; ?>"><img src="<?php echo PVars::getObj('env')->baseuri; ?>images/misc/email_logo.gif" alt="<?php echo PVars::getObj('env')->sitename; ?>" border="0" align="right"></a>
+                    </td>
+                </tr>
+            </table>
+            <table width="580" cellpadding="20" cellspacing="0" bgcolor="#ffffff" >
+                <tr>
+                    <td bgcolor="#ffffff" valign="top" style="font-size:13px; color: #333;line-height: 1.5em;font-family: arial,verdana,sans-serif;">
+                        <?if($title) { ?><h1 style="font-size: 20px; line-height: 1.2em"><?=$title?></h1><?}?>
+                        <p><?=($body_html) ? $body_html : $body?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color:#ffffff; border-top:1px solid #e5e5e5;" valign="top">
+                        <center>
+                        <span style="font-size:11px; color:#333; line-height:1.2em; font-family: arial,verdana,sans-serif;">
+                            <?php echo $words->getBuffered('MailFooterMessage')?>
+                        </span>
+                        </center>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
 </html>

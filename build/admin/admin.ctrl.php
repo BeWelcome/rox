@@ -306,4 +306,18 @@ class AdminController extends RoxControllerBase
         $page = new AdminRightsPage;
         return $page;
     }
+    
+    public function massmailOverview()
+    {
+        list($member, $rights) = $this->checkRights('MassMail');
+        $page = new AdminMassmailPage;
+        return $page;
+    }
+
+    public function massmailCreate()
+    {
+        list($member, $rights) = $this->checkRights('MassMail');
+        $page = new AdminCreateMassmailPage;
+        return $page;
+    }
 }

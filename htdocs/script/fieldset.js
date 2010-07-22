@@ -30,17 +30,14 @@ Object.extend(FieldsetMenu.prototype, {
 	
 	getMenuHTML: function() {
 		var htmlSrc = new String;
-		htmlSrc += '<div class="fieldset-menu">';
-		htmlSrc += '<ul>';
+		htmlSrc += '<ul class="fieldset-menu">';
 		this.fieldsets.each(function(e) {
 			var l = e.getElementsByTagName('legend');
 			htmlSrc += '<li id="li'+e.id+'"><a href="#" id="a'+e.id+'" onclick="return false;">';
 			htmlSrc += l[0].innerHTML;
 			htmlSrc += '</a></li>';
-			l[0].hide();
 		});
 		htmlSrc += '</ul>';
-		htmlSrc += '</div>';
 		return htmlSrc;
 	},
 	
@@ -100,8 +97,7 @@ function createFieldsetMenu()
 		Element.hide(e);
 	});
 	var htmlSrc = new String;
-	htmlSrc += '<div class="fieldset-menu">';
-	htmlSrc += '<ul>';
+	htmlSrc += '<ul class="fieldset-menu">';
 	fieldsets.each(function(e) {
 		var l = e.getElementsByTagName('legend');
 		htmlSrc += '<li id="li_'+e.id+'"><a href="#" onclick="setFieldsetMenu(\''+e.id+'\');return false;">';
@@ -109,7 +105,6 @@ function createFieldsetMenu()
 		htmlSrc += '</a></li>';
 	});
 	htmlSrc += '</ul>';
-	htmlSrc += '</div>';
 	new Insertion.Before(fieldsets[0], htmlSrc);
 }
 function setFieldsetMenu(e) {

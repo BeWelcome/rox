@@ -61,6 +61,3 @@ class PageWithHTMLpart extends PageWithRoxLayout
 	
 	
 }
-
-
-?>

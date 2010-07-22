@@ -147,40 +147,82 @@ class GeoModel extends RoxModelBase {
     * Get list of Poppulated places matching $search
     **/
     
-    public function getGeonamesHierarchy($search,$style,$lang = 'en')
+    public function getGeonamesHierarchy($geonameId,$style,$lang = 'en')
     {
-        if (strlen($search) <= 1) { // Ignore too small queries
-            return '';
+        if (!$geonameId) {
+            return false;
         }
-        $google_conf = PVars::getObj('config_google');
-        if (!$google_conf || !$google_conf->geonames_webservice) {
-            throw new PException('Google config error!');
+        $geoname = new GeoNamesData($geonameId);
+        $geonames_hierarchy = array();
+        while ($parent = $geoname->getParent())
+        {
+            $geonames_hierarchy[] = $geoname;
+            // do stuff with parent
+            $geoname = $parent;
         }
-        require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
-        $spaf = new SPAF_Maps($search);
-        
-        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
-        $spaf->setConfig('style',$style);
-        $spaf->setConfig('service','hierarchy?geonameId=');
-        $spaf->setConfig('lang',$lang);
-        
-        //Try to get results - FIRST TIME
-        $count = 0;
-        $results = @$spaf->getResults();
-        while (!$results && ++$count <= 3) { //Try to get results - ANOTHER TIME
-            if ($count == 1) { // still didn't work, so use the commercial geonames webservice
-                $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_fallback);
-            }
-            $spaf->results = false;
-            $results = @$spaf->getResults();
-            if ($count == 3 && !$results) { // giving up
-                MOD_log::get()->write("Connection to geonames webservice failed! (free & commercial)", "Geo");
-            }
-        }
-
-        return $results;
+        $result = array_reverse($geonames_hierarchy);
+        // FOR TESTING:
+        // var_dump($result);
+        // exit();
+        return $result;
     }
     
+    /**
+    * inserts/updates a single row into the geonames_alternate_names table
+    *
+    * @param int $geonameId
+    * @param string $lang
+    * @param string $name
+    * @param bool $pref
+    * @param bool $short
+    *
+    * @access public
+    * @return void
+    **/
+    public function addAlternateName($geonameId, $lang, $name, $pref = false, $short = 0) 
+    {
+        if ($lang && $name && $geonameId) 
+        {
+            $pref = ($lang == 'en') ? 1 : 0;
+            $found = $this->singleLookup(
+                "
+SELECT `geonameid`
+FROM `geonames_alternate_names`
+WHERE `geonameid` = '".$this->dao->escape($geonameId)."'
+AND `isolanguage` = '".$this->dao->escape($lang)."'
+            ");
+            if (!$found) {
+				$result = $this->dao->query(
+				"
+INSERT INTO 
+    `geonames_alternate_names` 
+SET
+    geonameid = '".$this->dao->escape($geonameId)."',
+    isolanguage = '".$this->dao->escape($lang)."',
+    alternateName = '".$this->dao->escape($name)."',
+    isPreferredName = '".$this->dao->escape($pref)."',
+    isShortName = '".$this->dao->escape($short)."'
+				"
+				);
+				return true;
+		    } else {
+		        $result = $this->dao->query(
+				"
+UPDATE 
+    `geonames_alternate_names`
+SET
+    alternateName = '".$this->dao->escape($name)."',
+    isPreferredName = '".$this->dao->escape($pref)."'
+WHERE 
+    geonameid = '".$this->dao->escape($geonameId)."'
+AND 
+    isolanguage = '".$this->dao->escape($lang)."'
+				"
+				);
+				return false;
+		    }
+		}
+    }
     
     /**
     * Add information for a specific geonameId to our database.
@@ -188,110 +230,79 @@ class GeoModel extends RoxModelBase {
     * - add all translations to geonames_altnames
     * - add hierarchy information to geonames_hierarchy
     **/
-    
     public function addGeonameId($geonameId,$usagetype)
     {
-    
         $parentAdm1Id = 0;
         $parentCountryId = 0;
         $ii = 0;
         
         //get id for usagetype:
         $usagetypeId = $this->getUsagetypeId($usagetype)->id;
-        
         //retrieve all information from geonames
+        
         $data = $this->getGeonamesHierarchy($geonameId,'FULL');
         
-        while(!$data) {
-            sleep(2);
-            //retrieve all information from geonames
-            $data = $this->getGeonamesHierarchy($geonameId,'FULL');
-            if (!$data && $ii++ == 5) {
-                throw new PException('Could not retireve hierarchy for '.$geonameId.' from geonames.org');
-                return false;
-            }
-        }
-//        echo "<br> data <br> ";
-//        var_dump($data);
         //retireve all GeonameIds we already have in geonames_cache and only add new ones.
         $result = $this->getAllGeonameIds();
-        
-//        echo "<br>result <br> ";
-//        var_dump($result);
         $storedGeonameIds = array();
         foreach($result as $key => $value) {
             array_push($storedGeonameIds,$value->geonameid);
         }
-//        var_dump($storedGeonameIds);
+        
+        // go through the reverse array of geoname data objects
         foreach ($data as $level => $dataset) { 
-//        echo "<br> dataset <br> ";
-//        var_dump($dataset);    
-            //initialize empty values:
-            if (!isset($dataset['lat'])) $dataset['lat'] = '';
-            if (!isset($dataset['lng'])) $dataset['lng'] = '';    
-            if (!isset($dataset['name'])) $dataset['name'] = '';            
-            if (!isset($dataset['population'])) $dataset['population'] = '';
-            if (!isset($dataset['fcl'])) $dataset['fcl'] = '';            
-            if (!isset($dataset['fcode'])) $dataset['fcode'] = '';
-            if (!isset($dataset['countryCode'])) $dataset['countryCode'] = '';
-            if (!isset($dataset['adminCode1'])) $dataset['adminCode1'] = '';
-            if (!isset($dataset['timezone'])) $dataset['timezone'] = '';
-                        
-                
-            if (!in_array($dataset['geonameId'],$storedGeonameIds)) {
-            
+            if (!in_array($dataset->geonameId,$storedGeonameIds)) {
+
+                // add all alternate names
+                foreach($dataset->alternate_names as $altname) {
+                    $this->addAlternateName($geonameId,$altname[0],$altname[1]);
+                }
                 
                 //write to geonames_cache
                 $insert = $this->dao->query(
                 "    
-                INSERT INTO geonames_cache
-                    SET
-                    geonameid = '".$this->dao->escape($dataset['geonameId'])."',
-                    latitude = '".$this->dao->escape($dataset['lat'])."',
-                    longitude= '".$this->dao->escape($dataset['lng'])."',
-                    name = '".$this->dao->escape($dataset['name'])."',
-                    population = '".$this->dao->escape($dataset['population'])."',
-                    fclass = '".$this->dao->escape($dataset['fcl'])."',
-                    fcode = '".$this->dao->escape($dataset['fcode'])."',
-                    fk_countrycode = '".$this->dao->escape($dataset['countryCode'])."',
-                    fk_admincode = '".$this->dao->escape($dataset['adminCode1'])."',
-                    timezone = '".$this->dao->escape($dataset['timezone'])."',
-                    parentAdm1Id = '".$this->dao->escape($parentAdm1Id)."',
-                    parentCountryId = '".$this->dao->escape($parentCountryId)."'
+INSERT INTO 
+    geonames_cache
+SET
+    geonameid = '".$this->dao->escape($dataset->geonameId)."',
+    latitude = '".$this->dao->escape($dataset->lat)."',
+    longitude= '".$this->dao->escape($dataset->lng)."',
+    name = '".$this->dao->escape($dataset->name)."',
+    population = '".$this->dao->escape($dataset->population)."',
+    fclass = '".$this->dao->escape($dataset->fcl)."',
+    fcode = '".$this->dao->escape($dataset->fcode)."',
+    fk_countrycode = '".$this->dao->escape($dataset->countryCode)."',
+    fk_admincode = '".$this->dao->escape($dataset->adminCode1)."',
+    timezone = '".$this->dao->escape($dataset->timezone['name'])."',
+    parentAdm1Id = '".$this->dao->escape($parentAdm1Id)."',
+    parentCountryId = '".$this->dao->escape($parentCountryId)."'
                     "
                 );
                 if(!$insert) $return = false;
             
-            
-                //write new data to hirarchy table
+                //write new data to hierarchy table
                 if (isset($parentId)) {
-                    $hierarchy = $this->addHierarchy($dataset['geonameId'],$parentId);
+                    $hierarchy = $this->addHierarchy($dataset->geonameId,$parentId);
                     if(!$hierarchy) $retun = false;
-//                            echo "- addHierarchy end - ";    
                 }
             
             }
-            // update the usage table
-            $update = $this->updateUsageCounter($dataset['geonameId'],$usagetypeId,'add');
-//            echo "- Counter end - ";
-            //set the parentId for next level
-            if ($dataset['fcode'] == 'ADM1') {
-                $parentAdm1Id = $dataset['geonameId'];
-            }
-            if ($dataset['fcode'] == 'PCLI') {
-                $parentCountryId = $dataset['geonameId'];
-            }
-            $parentId = $dataset['geonameId'];
 
-            
+            // update the usage table
+            $update = $this->updateUsageCounter($dataset->geonameId,$usagetypeId,'add');
+
+            //set the parentIds for next level
+            if ($dataset->fcode == 'ADM1') {
+                $parentAdm1Id = $dataset->geonameId;
+            } elseif ($dataset->fcode == 'PCLI') {
+                $parentCountryId = $dataset->geonameId;
+            }
+            $parentId = $dataset->geonameId;
         }
-//        echo "<br>--- end add --<br>";
-//        var_dump($return);
-//        var_dump($update);
-//        var_dump($parentId);        
-            if((isset($return) && !$return) || !$update || !$parentId) 
-                return false;
-            else return true;
+        
+        if((isset($return) && !$return) || !$update || !$parentId) {
+            return false;
+        } else return true;
     }
     
     public function addHierarchy($geonameId,$parentId) {
@@ -317,9 +328,15 @@ class GeoModel extends RoxModelBase {
 //        echo "- addHierarchy end - ";    
     }
     
-    // update information about usage of the location
-    // $type can be 'add' or 'remove'
-            
+    /**
+    * Updateinformation about usage of a location.
+    *
+    * @param string $type   can be 'add' or 'remove'
+    * @param string $term
+    *
+    * @access public
+    * @return query result | false
+    **/
     public function updateUsageCounter($geonameId,$usagetypeId,$type){    
 //        echo "- addUsageCounter begin - ";        
         $inuse = $this->singleLookup(
@@ -360,9 +377,7 @@ class GeoModel extends RoxModelBase {
                     
     
     }    
-        
 
-    
     public function getUsagetypeId($usagetype)
     {
         return $this->singleLookup(
@@ -373,8 +388,6 @@ class GeoModel extends RoxModelBase {
             ");        
     }
     
-    
-    
     /**
     * Updateinformation for a specific geonameId to our database.
     * - add itself and all its parents to geonames_cache
@@ -382,8 +395,8 @@ class GeoModel extends RoxModelBase {
     * - add hierarchy information to geonames_hierarchy
     **/
     
-    public function updateGeonameId($geonameId) {
-    
+    public function updateGeonameId($geonameId) 
+    {
         $parentAdm1Id = 0;
         $parentCountryId = 0;
 
@@ -409,76 +422,68 @@ class GeoModel extends RoxModelBase {
             throw new PException('GeoGeonameIdLookupFailed');
             return false;
         }
-//        var_dump($result->geonameid);
         
         //write to geonames_cache_backup table:
-            $insert = $this->dao->query(
-            "    
-            INSERT INTO geonames_cache_backup
-                SET
-                id = NULL,
-                geonameid = '".$this->dao->escape($result->geonameid)."',
-                latitude = '".$this->dao->escape($result->latitude)."',
-                longitude = '".$this->dao->escape($result->longitude)."',
-                name = '".$this->dao->escape($result->name)."',
-                population = '".$this->dao->escape($result->population)."',
-                fclass = '".$this->dao->escape($result->fclass)."',
-                fcode = '".$this->dao->escape($result->fcode)."',
-                fk_countrycode = '".$this->dao->escape($result->fk_countrycode)."',
-                fk_admincode = '".$this->dao->escape($result->fk_admincode)."',
-                timezone = '".$this->dao->escape($result->timezone)."',
-                parentid = '".$this->dao->escape($result->parentid)."',
-                date_updated = NOW()
-                "
-            );
-            if(!$insert) {
-                throw new PException('FailedToStoreGeonameDataForBackup');
-                $return = false;
-            }
+        $insert = $this->dao->query(
+"    
+INSERT INTO geonames_cache_backup
+    SET
+    id = NULL,
+    geonameid = '".$this->dao->escape($result->geonameid)."',
+    latitude = '".$this->dao->escape($result->latitude)."',
+    longitude = '".$this->dao->escape($result->longitude)."',
+    name = '".$this->dao->escape($result->name)."',
+    population = '".$this->dao->escape($result->population)."',
+    fclass = '".$this->dao->escape($result->fclass)."',
+    fcode = '".$this->dao->escape($result->fcode)."',
+    fk_countrycode = '".$this->dao->escape($result->fk_countrycode)."',
+    fk_admincode = '".$this->dao->escape($result->fk_admincode)."',
+    timezone = '".$this->dao->escape($result->timezone)."',
+    parentid = '".$this->dao->escape($result->parentid)."',
+    date_updated = NOW()
+    "
+);
+        if(!$insert) {
+            throw new PException('FailedToStoreGeonameDataForBackup');
+            $return = false;
+        }
 
         //update:
-        
 
-         foreach ($data as $level => $dataset) {
-            if (!in_array($dataset['geonameId'],$storedGeonameIds) OR $dataset['geonameId'] == $geonameId) {
-    
-                //initialize empty values:
-                if (!isset($dataset['lat'])) $dataset['lat'] = '';
-                if (!isset($dataset['lng'])) $dataset['lng'] = '';    
-                if (!isset($dataset['name'])) $dataset['name'] = '';            
-                if (!isset($dataset['population'])) $dataset['population'] = '';
-                if (!isset($dataset['fcl'])) $dataset['fcl'] = '';            
-                if (!isset($dataset['fcode'])) $dataset['fcode'] = '';
-                if (!isset($dataset['countryCode'])) $dataset['countryCode'] = '';
-                if (!isset($dataset['adminCode1'])) $dataset['adminCode1'] = '';
-                if (!isset($dataset['timezone'])) $dataset['timezone'] = '';
-                            
-                    
-            
-                                    
-                    //write to geonames_cache
-                    $insert = $this->dao->query(
-                    "    
-                    REPLACE INTO geonames_cache
-                        SET
-                        geonameid = '".$this->dao->escape($dataset['geonameId'])."',
-                        latitude = '".$this->dao->escape($dataset['lat'])."',
-                        longitude= '".$this->dao->escape($dataset['lng'])."',
-                        name = '".$this->dao->escape($dataset['name'])."',
-                        population = '".$this->dao->escape($dataset['population'])."',
-                        fclass = '".$this->dao->escape($dataset['fcl'])."',
-                        fcode = '".$this->dao->escape($dataset['fcode'])."',
-                        fk_countrycode = '".$this->dao->escape($dataset['countryCode'])."',
-                        fk_admincode = '".$this->dao->escape($dataset['adminCode1'])."',
-                        timezone = '".$this->dao->escape($dataset['timezone'])."',
-                        parentAdm1Id = '".$this->dao->escape($parentAdm1Id)."',
-                        parentCountryId = '".$this->dao->escape($parentCountryId)."'                        
-                        "
-                    );
-                    if(!$insert) {
-                        throw new PException('FailedToUpdateGeonamesInfoInDb');
-                        $return = false;
-                    }
+        // go through the reverse array of geoname data objects
+        foreach ($data as $level => $dataset) { 
+            if (!in_array($dataset->geonameId,$storedGeonameIds) OR $dataset->geonameId == $geonameId) {
+
+                // add all alternate names
+                foreach($dataset->alternate_names as $altname) {
+                    $this->addAlternateName($geonameId,$altname[0],$altname[1]);
+                }
+
+                //write to geonames_cache
+                $insert = $this->dao->query(
+                "    
+REPLACE INTO 
+    geonames_cache
+SET
+    geonameid = '".$this->dao->escape($dataset->geonameId)."',
+    latitude = '".$this->dao->escape($dataset->lat)."',
+    longitude= '".$this->dao->escape($dataset->lng)."',
+    name = '".$this->dao->escape($dataset->name)."',
+    population = '".$this->dao->escape($dataset->population)."',
+    fclass = '".$this->dao->escape($dataset->fcl)."',
+    fcode = '".$this->dao->escape($dataset->fcode)."',
+    fk_countrycode = '".$this->dao->escape($dataset->countryCode)."',
+    fk_admincode = '".$this->dao->escape($dataset->adminCode1)."',
+    timezone = '".$this->dao->escape($dataset->timezone['name'])."',
+    parentAdm1Id = '".$this->dao->escape($parentAdm1Id)."',
+    parentCountryId = '".$this->dao->escape($parentCountryId)."'
+                "
+                );
+
+                if(!$insert) {
+                    throw new PException('FailedToUpdateGeonamesInfoInDb');
+                    $return = false;
+                }
             
                 //delete old hierarchy row
                 $delet = $this->dao->query(
@@ -488,10 +493,10 @@ class GeoModel extends RoxModelBase {
                     WHERE geo_hierarchy.geoid = '".$geonameId."' AND `geo_hierarchy`.`comment` = 'geonames'
                     "
                     );                
-
                     
+                //write new data to hierarchy table
                 if (isset($parentId)) {
-                    $hierarchy = $this->addHierarchy($dataset['geonameId'],$parentId);
+                    $hierarchy = $this->addHierarchy($dataset->geonameId,$parentId);
                     if(!$hierarchy) $retun = false;
                 }
             
@@ -510,6 +515,9 @@ class GeoModel extends RoxModelBase {
          
         }
 
+        if((isset($return) && !$return) || !$update || !$parentId) {
+            return false;
+        } else return true;
     }
     
     
@@ -562,10 +570,10 @@ class GeoModel extends RoxModelBase {
     
         $hblogCount = array();
         $worldid = 6295630; //globe, top level
-        $hblogCount[$worldid] = $this->countHierarchy($harray,$blogCount,&$hblogCount,$worldid);    
+        $hblogCount[$worldid] = $this->countHierarchy($harray, $blogCount, $hblogCount, $worldid);    
         
         $haddressCount = array();
-        $haddressCount[$worldid] = $this->countHierarchy($harray,$addressCount,&$haddressCount,$worldid);    
+        $haddressCount[$worldid] = $this->countHierarchy($harray, $addressCount, $haddressCount, $worldid);    
         
         //flusha usage table
         $return = $this->dao->query(
@@ -606,13 +614,13 @@ class GeoModel extends RoxModelBase {
   
 
     
-    private function countHierarchy($harray,$carray,$hCount,$id){
+    private function countHierarchy($harray, $carray, &$hCount,$id){
         $counter = 0;
         $nextids = array_keys($harray,$id);
 
         if (!empty($nextids)) {
             foreach ($nextids as $value) {
-                $result = $this->countHierarchy($harray,$carray,&$hCount,$value);
+                $result = $this->countHierarchy($harray, $carray, $hCount, $value);
                 $hCount[$value] = $result;
                 $counter += $result;
             }
@@ -681,6 +689,53 @@ class GeoModel extends RoxModelBase {
         return $result;
     }
     
+    /** 
+    * rebuilds geonames_alternate_names table with data from geonames
+    * 
+    **/
+    public function RenewAltNames($addonly = true) 
+    {
+        $error = array();
+        $counter = 0;
+        //get all geoname ids
+        $geonameIds = $this->getAllGeonameIds();
+        $all_geonameids = array();
+        foreach($geonameIds as $Id) {
+            array_push($all_geonameids, $Id->geonameid);
+        }
+        $current_names = $this->bulkLookup(
+            "
+SELECT DISTINCT `geonameid`
+FROM `geonames_alternate_names`
+WHERE `geonameId` IN ('" . implode("','", $all_geonameids)."') 
+            ");
+        $geonameids_with_name = array();
+        foreach($current_names as $name) {
+            array_push($geonameids_with_name, $name->geonameid);
+        }
+        if (!$addonly) {
+            //empty old geonames_alternate_names table
+            $flush_alternate_names = $this->dao->query(
+                "TRUNCATE TABLE `geonames_alternate_names`"
+            );
+        }
+        foreach($geonameIds as $Id) {
+            if (!in_array($Id->geonameid,$geonameids_with_name)) {
+                $data = GeoNamesData::get($Id->geonameid);                            
+                if (is_array($data->alternate_names)) {
+                    foreach ($data->alternate_names as $lang => $name) {
+                        if ($this->addAlternateName($Id->geonameid,$lang,$name))
+                            $counter++;
+                    }
+                }
+            }
+        }
+
+        $result['error'] = $error;
+        $result['counter']['alternate_names'] = (isset($counter)) ? $counter : 0;
+        
+        return $result;
+    }
     
     
     private function getIdFromAddresses() {

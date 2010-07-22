@@ -109,16 +109,20 @@ class SignupView extends PAppView
      * // TODO: create appropriate template
      * @param array $vars with username
      */
-    public function signupTeamMail($vars)
+    public function signupTeamMail($vars,$Data)
     {   
         $language = $_SESSION['lang'];    // TODO: convert to something readable
-        $subject = "[BW Signup Volunteer] New member " . $vars['username'] . " from " .
-                   $vars['countryname'] .
+        
+        $countryname=urldecode($vars['countryname'] ) ;
+        $cityname=urldecode($vars['geonamename'] ) ;
+        $subject = "[BW Signup] New member " . $vars['username'] . " from " .
+                   $Data->EnglishCountryName.
                    " has signed up at" . PVars::getObj('env')->sitename;
 
         ob_start();
         require 'templates/teammail.php';
         $body = ob_get_contents();
+        $body_html = ob_get_contents();
         ob_end_clean();
                 
         // set the receiver
@@ -128,7 +132,7 @@ class SignupView extends PAppView
         $to = explode(";",$MailToNotifyWhenNewMemberSignup) ;
                 
         if (count($to)<=0)  {
-            die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
+            die("Problem, Signup cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
             $MailToNotifyWhenNewMemberSignup."]") ;
         }
         
@@ -136,7 +140,7 @@ class SignupView extends PAppView
         $from = PVars::getObj('mailAddresses')->registration;
         
         // Use MOD_mail to create and send a message
-        $result = MOD_mail::sendEmail($subject,$from,$to,$subject,$body, false, array());
+        $result = MOD_mail::sendEmail($subject, $from, $to, $title = false, $body, $body_html, $attach = array());
         //Now check if Swift actually sends it
         if ($result) {
             $status = true;

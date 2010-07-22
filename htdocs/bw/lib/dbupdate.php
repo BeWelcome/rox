@@ -1687,6 +1687,63 @@ INDEX ( `IdGroup` , `IdQuery` )
 
    $updates[] = "ALTER TABLE `broadcast` ADD `EmailFrom` TEXT NULL COMMENT 'can be null, if not will be used as the email from when message is sent'";
 
+   $updates[] = "ALTER TABLE `params` ADD `ToggleStatsForWordsUsage` ENUM( 'No', 'Yes' ) NOT NULL DEFAULT 'No' COMMENT 'This toggle statistics about words usage, becareful it can affect performances'";
+   
+   
+   $updates[] = "CREATE TABLE IF NOT EXISTS `words_use` (
+  `code` varchar(256) NOT NULL COMMENT 'The code of the word',
+  `NbUse` int(11) NOT NULL default '0' COMMENT 'The nuber of time the word has been used',
+  PRIMARY KEY  (`code`)
+) ENGINE=MEMORY DEFAULT CHARSET=utf8 COMMENT='Discardable table use to count the number of time a specific '";
+
+
+	$updates[] = "CREATE  PROCEDURE `IncWordUse`(p_code VARCHAR(256))
+    DETERMINISTIC
+begin
+declare v_Use int ;
+select NbUse from words_use where code=p_code into v_Use;
+if (v_Use is null) then
+	insert into words_use(code,NbUse) values(p_code,1) ;
+else 
+	update words_use set NbUse=NbUse+1 where code=p_code ;
+end if ;
+end" ;
+
+	$updates[] = "insert into words(code,ShortCode,Sentence,IdLanguage,IdMember,Description) 
+					SELECT WordCode,'en',EnglishName,0,1,concat('Translation for the name of language: ',EnglishName) FROM `languages` " ;
+	$updates[] = "insert into words(code,ShortCode,Sentence,IdLanguage,IdMember) SELECT WordCode,ShortCode,EnglishName,id,1 FROM `languages`  where id!=0" ;
+	$updates[] = "ALTER TABLE `languages` CHANGE `Name` `Name` TINYTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL" ;
+	$updates[] = " ALTER TABLE `languages` CHANGE `WordCode` `WordCode` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'The code which link to the words table'  " ;
+	$updates[] = "update words,languages set Sentence=languages.Name where languages.id!=0 and languages.WordCode=words.code and languages.id=words.IdLanguage" ;
+					
+	$updates[] =  "ALTER TABLE `geonames_alternate_names` CHANGE `alternateNameId` `alternateNameId` INT( 11 ) NOT NULL AUTO_INCREMENT  " ;
+	
+	$updates[] =  "ALTER TABLE  `sqlforvolunteers` ADD  `param3` TEXT NOT NULL COMMENT  'a possible parameter',
+ADD  `DefValueParam3` TEXT NOT NULL COMMENT  'The default value of a parameter',
+ADD  `Param3Type` ENUM(  'inputtext',  'textarea',  'ListOfChoices' ) NOT NULL DEFAULT  'inputtext' COMMENT  'the type of a parameter'";
+	$updates[] =  "ALTER TABLE  `sqlforvolunteers` ADD  `param4` TEXT NOT NULL COMMENT  'a possible parameter',
+ADD  `DefValueParam4` TEXT NOT NULL COMMENT  'The default value of a parameter',
+ADD  `Param4Type` ENUM(  'inputtext',  'textarea',  'ListOfChoices' ) NOT NULL DEFAULT  'inputtext' COMMENT  'the type of a parameter' " ;
+
+	$updates[] =  "ALTER TABLE  `sqlforvolunteers` ADD  `param5` TEXT NOT NULL COMMENT  'a possible parameter',
+ADD  `DefValueParam5` TEXT NOT NULL COMMENT  'The default value of a parameter',
+ADD  `Param5Type` ENUM(  'inputtext',  'textarea',  'ListOfChoices' ) NOT NULL DEFAULT  'inputtext' COMMENT  'the type of a parameter' " ;
+
+	$updates[] =  "ALTER TABLE `languages` CHANGE `ShortCode` `ShortCode` CHAR( 4 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL  " ;
+
+	$updates[] =  "CREATE FUNCTION `fEnglishLanguageName`(s VARCHAR(32)) RETURNS varchar(200) CHARSET utf8
+    DETERMINISTIC
+begin
+declare sResult VARCHAR(32) ;
+if ( s REGEXP ('[0-9]')) then
+	select EnglishName from languages where id=s into sResult ;
+else
+	select EnglishName from languages where ShortCode=s into sResult ;
+end if ;
+return sResult ;
+end" ;
+    $updates[] = "ALTER TABLE members ADD COLUMN passwordtoken VARCHAR(32) NOT NULL DEFAULT ''";
+
     if (empty($res)) {
         $version = 0;
     } else {

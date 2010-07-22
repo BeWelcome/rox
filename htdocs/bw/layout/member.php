@@ -83,7 +83,7 @@ function DisplayMember($m, $profilewarning = "", $TGroups,$CanBeEdited=false, $N
 		}
 
     if ((IsLoggedIn()) and ($m->NbForumPosts>0)) { // the number of post will only be displayer for logged member
-       $MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"".PVars::getObj('env')->baseuri."forums/member/".$m->Username."\">".ww("ViewForumPosts",$m->NbForumPosts)."</a></li>\n";
+       $MenuAction .= "          <li class=\"icon forumpost16\"><a href=\"".PVars::getObj('env')->baseuri."forums/members/".$m->Username."\">".ww("ViewForumPosts",$m->NbForumPosts)."</a></li>\n";
     }
 
     if ($CanBeEdited) {

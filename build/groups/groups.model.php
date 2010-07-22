@@ -51,6 +51,10 @@ class GroupsModel extends  RoxModelBase
         $group = $this->createEntity('Group',$group_id);
         if ($group->isLoaded())
         {
+            if ($group->IsLocal)
+            {
+                $group = $this->createEntity('GeoGroup', $group_id);
+            }
             return $group;
         }
         else
@@ -112,21 +116,22 @@ class GroupsModel extends  RoxModelBase
      * @acccess public
      * @return int
      */
-    public function countGroupsBySearchterms($terms)
+    public function countGroupsBySearchterms($terms, $include_locals = false)
     {
         $group = $this->createEntity('Group');
-        if (empty($terms))
+        if (!empty($terms))
         {
-            return $group->countAll();
+            $terms_array = explode(' ', $terms);
+            $strings = array();
+            
+            foreach ($terms_array as $term)
+            {
+                $strings[] = "Name LIKE '%" . $this->dao->escape($term) . "%'";
+            }
+            $where = implode(' OR ',$strings);
         }
-        $terms_array = explode(' ', $terms);
-        $strings = array();
-        
-        foreach ($terms_array as $term)
-        {
-            $strings[] = "Name LIKE '%" . $this->dao->escape($term) . "%'";
-        }
-        return $group->countWhere(implode(' OR ',$strings));
+        $where = (($include_locals) ? $where : ((empty($where)) ? 'isLocal = false' : "({$where}) AND isLocal = false"));
+        return $group->countWhere($where);
 
     }
 
@@ -139,7 +144,7 @@ class GroupsModel extends  RoxModelBase
      * @param int $amount how many results to find
      * @return mixed false or an array of Groups
      */    
-    public function findGroups($terms = '', $page = 1, $order = '', $amount = 10)
+    public function findGroups($terms = '', $page = 1, $order = '', $amount = 10, $include_locals = false)
     {
     
         if (!empty($order))
@@ -179,7 +184,7 @@ class GroupsModel extends  RoxModelBase
 
         $group = $this->createEntity('Group');
         $group->sql_order = $order;
-        return $this->_group_list = $group->findBySearchTerms($terms_array, (($page - 1) * $amount), $amount);
+        return $this->_group_list = $group->findBySearchTerms($terms_array, (($page - 1) * $amount), $amount, $include_locals);
     }
 
 
@@ -189,7 +194,7 @@ class GroupsModel extends  RoxModelBase
      * @access public
      * @return array Returns an array of Group entity objects
      */
-    public function findAllGroups($offset = 0, $limit = 0)
+    public function findAllGroups($offset = 0, $limit = 0, $include_locals = false)
     {
         if ($this->_group_list != 0)
         {
@@ -198,7 +203,14 @@ class GroupsModel extends  RoxModelBase
 
         $group = $this->createEntity('Group');
         $group->sql_order = 'created DESC, Name ASC';
-        return $this->_group_list = $group->findAll($offset, $limit);
+        if ($include_locals)
+        {
+            return $this->_group_list = $group->findAll($offset, $limit);
+        }
+        else
+        {
+            return $this->_group_list = $group->findByWhereMany('isLocal = false', $offset, $limit);
+        }
     }
 
     /**
@@ -783,5 +795,148 @@ class GroupsModel extends  RoxModelBase
             $msg->JoinMemberPict = 'no';
             $msg->insert();
         }
+    }
+
+    /**
+     * checks with geo entities if a string represents a valid countrycode
+     * basically loads a country geo
+     *
+     * @param string $countrycode
+     * @access public
+     * @return bool
+     */
+    public function getCountry($countrycode)
+    {
+        if (empty($countrycode))
+        {
+            return false;
+        }
+        return $this->createEntity('Geo')->getCountryFromCountrycode($countrycode);
+    }
+
+    /**
+     * searches for a group, given a geo entity
+     *
+     * @param object $geo
+     * @access public
+     * @return object|false
+     */
+    public function getGeoGroup(Geo $geo)
+    {
+        if (!$geo->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('GeoGroup')->getGroupForGeo($geo);
+    }
+
+    /**
+     * returns a subset of a geo groups members
+     *
+     * @param Group  $group
+     * @param int    $offset
+     * @param int    $limit
+     * @param string $order
+     *
+     * @access public
+     * @return array
+     */
+    public function getGeoGroupMembers(Group $group, $offset = 0, $limit = 10, $order = 'city')
+    {
+        $from = '';
+        $query_offset = intval($offset);
+        $query_limit = intval($limit) ? intval($limit) : 10;
+
+        switch (strtolower($order))
+        {
+            case 'age':
+                $query_order = 'members.birthdate';
+                break;
+            case 'accommodation':
+                $query_order = 'members.accomodation';
+                break;
+            case 'city': 
+            default:
+                $from = <<<SQL
+                JOIN addresses AS a ON a.idmember = m.id
+                JOIN geonames_cache AS gc ON (gc.geonameid = a.idcity AND a.rank = 0)
+SQL;
+                $query_order = <<<SQL
+    gc.name
+SQL;
+                break;
+        }
+
+        return $this->createEntity('Member')->findBySQLMany(<<<SQL
+SELECT
+    m.id
+FROM
+    membersgroups AS mg
+    JOIN members AS m ON (mg.idmember = m.id AND m.status IN ('Active', 'Pending'))
+    {$from}
+WHERE
+    mg.idgroup = {$group->id}
+    AND mg.status = 'In'
+    AND mg.islocal = true
+ORDER BY
+    {$query_order}
+LIMIT
+    {$query_limit}
+OFFSET
+    {$query_offset}
+SQL
+);
+    }
+
+    /**
+     * creates group for a given geo entity
+     *
+     * @param object $geo
+     * @access public
+     * @return object
+     */
+    public function lazyCreateGeoGroup(Geo $geo)
+    {
+        return $this->createEntity('GeoGroup')->lazyCreateGeoGroup($geo);
+    }
+
+    /**
+     * loads a number of geo locations, based on array of route vars
+     *
+     * @param array $vars
+     * @access public
+     * @return array
+     */
+    public function getSpecificLocations($vars, Geo $country)
+    {
+        $return = array();
+        if (!empty($vars) && $country->isLoaded())
+        {
+            $i = 1;
+            $current = $country;
+            do
+            {
+                $geo = false;
+                if (!empty($vars['location' . $i]))
+                {
+                    if ($geos = $this->createEntity('Geo')->findByWhereMany("name = '{$this->dao->escape($vars['location' . $i])}'"))
+                    {
+                        foreach ($geos as $geo)
+                        {
+                            if ($geo->isChildOf($current))
+                            {
+                                $return[] = $geo;
+                                $current = $geo;
+                                break;
+                            }
+                            $geo = false;
+                        }
+                    }
+                }
+                $i++;
+            }
+            while ($geo);
+        }
+        return $return;
     }
 }

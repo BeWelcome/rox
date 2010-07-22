@@ -25,6 +25,12 @@ class NewsletterController extends RoxControllerBase
             $page = new NewsletterPage($Data);
         } else  {
 			$Data=$model->Load(($request[1])) ;
+			if (isset($request[2])) {
+				$Data->Lang=$request[2] ;
+			}
+			else {
+				$Data->Lang='en' ;
+			}
 			if (empty($Data)) {
 				$page = new EmptyLetterPage($request[1]);
 			}

@@ -45,7 +45,7 @@ class PlacesPage extends PageWithActiveSkin
         
         foreach ($continents as $continent) {
             if ($continent->name != 'Antarctica') {
-                $countrylist .= '<td style="vertical-align: top;"><h3>'.$words->getformatted($continent->name).'</h3>'.$this->displayContinent($continent->getChildren()).'</td>';
+                $countrylist .= '<td style="vertical-align: top;"><h3>'.$continent->getTranslatedName().'</h3>'.$this->displayContinent($continent->getHierarchyChildren()).'</td>';
             }
         }
         $countrylist .= '</tr></table>';
@@ -61,7 +61,7 @@ class PlacesPage extends PageWithActiveSkin
         foreach ($countries as $country) {
             $usage = $country->getUsageForAllTypes();
             $number = (isset($usage['member_primary'])) ? $usage['member_primary'] : false;
-           $html .= '<li class="spritecontainer"><div class="sprite sprite-'.strtolower($country->fk_countrycode).'"><a href="places/'.$country->fk_countrycode.'"></a></div> <a href="places/'.$country->fk_countrycode.'" class="'.($number ? 'highlighted' : 'grey').'">'.$country->name;
+           $html .= '<li class="spritecontainer"><div class="sprite sprite-'.strtolower($country->fk_countrycode).'"><a href="places/'.$country->fk_countrycode.'"></a></div> <a href="places/'.$country->fk_countrycode.'" class="'.($number ? 'highlighted' : 'grey').'">'.$country->getTranslatedName();
             if ($number) {
                $html .= '<span class="small grey"> ('.$number.')</span>';
             }

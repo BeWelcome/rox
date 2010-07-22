@@ -47,6 +47,7 @@ class EmailTemplate extends RoxComponentBase
         'SignupAccepted'    => 'EmailAccepted',
         'SignupRejected'    => 'EmailRejected',
         'SignupNeedmore'    => 'EmailStatusNeedmore',
+        'ForgottenDetails'  => 'EmailLostPass',
     );
 
     /**

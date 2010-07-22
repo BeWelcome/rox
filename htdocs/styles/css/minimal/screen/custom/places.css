@@ -5,6 +5,10 @@
 */
 @media all
 {
+    #col1,#col1_content {display: none; }
+    #col2,#col2_content {display: none; }
+    #col3,#col3_content {margin: 0; }
+
     .places li {
         padding-right: 2em;
     }
@@ -16,6 +20,12 @@
 	  margin-right: 0.5em;
 	  padding-bottom: 4em;
 	}
+  
+  .citylist {
+    margin-bottom: 1.5em;
+    width: 120px;
+    overflow: hidden;
+  }
 	
     .spritecontainer {
         clear:both;

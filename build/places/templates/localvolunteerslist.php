@@ -27,7 +27,7 @@ if (empty($volunteers)) {
         $image = new MOD_images_Image('',$member->username);
         echo '<li class="userpicbox_vol float_left">';
         echo MOD_layoutbits::PIC_50_50($member->username,'',$style='framed float_left');
-        echo '<p><a href="member/'.$member->username.'">'.$member->username.'</a>' ;
+        echo '<p><a href="members/'.$member->username.'">'.$member->username.'</a>' ;
         echo '<br /><span class="small">'.$member->city.'</span>' ;
         echo '<br />',$words->mTrad($member->VolComment,true) ;
         echo '</p>';
@@ -36,11 +36,7 @@ if (empty($volunteers)) {
     ?>
     </ul>
 <?php
-    $pages = $p[1];
-    $maxPage = $p[2];
-    $currentPage = $page;
-    $request = $requestStr.'/=page%d';
-    require TEMPLATE_DIR.'misc/pages.php';
+  
 }
 
 ?>

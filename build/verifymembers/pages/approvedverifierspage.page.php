@@ -21,24 +21,24 @@ class VerifiedApprovedVerifiers extends RoxPageView {
      */
 
     private $_error;
-    
+
     public function __construct($MyList) {
-		 $this->list=$MyList ;
-    }    
+         $this->list=$MyList ;
+    }
 
 
 
-    
-	  
+
+
     protected function column_col3()    {
-	  	 
+
         // get the translation module
         $words = $this->getWords();
-		 
-		 		$list=$this->list ;
-        require SCRIPT_BASE . 'build/verifymembers/templates/showexplanationapprovedverifiers.php';    
+
+                $list=$this->list ;
+        require SCRIPT_BASE . 'build/verifymembers/templates/showexplanationapprovedverifiers.php';
     }
-    
+
     /**
      * which item in the top menu should be activated when showing this page?
      * Let's use the 'getanswers' menu item for this one.
@@ -60,7 +60,7 @@ class VerifiedApprovedVerifiers extends RoxPageView {
             echo $words->getFormatted("verifymembers_teaser") ;
         }
     }
-    
+
     /**
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
@@ -68,14 +68,14 @@ class VerifiedApprovedVerifiers extends RoxPageView {
     protected function getPageTitle() {
         return $this->words->getFormatted("ApprovedVerififiersLink");
     }
-    
+
     /**
      * configure the sidebar
      */
     protected function leftSidebar() {
         $words = $this->getWords();
         echo '<h3>',$words->getFormatted("MyVerifyTools"),'</h3>';
-		echo '<ul class="linklist">' ;
+        echo '<ul class="linklist">' ;
         echo '<li><a href="verifymembers/verifiersof/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerifier"),'</a></li>';
         echo '<li><a href="verifymembers/verifiersby/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerified"),'</a></li>';
         echo '</ul>' ;
@@ -83,9 +83,9 @@ class VerifiedApprovedVerifiers extends RoxPageView {
         echo '<ul class="linklist">' ;
         echo '<li><a href="verifymembers/approvedverifiers">',$words->getFormatted("ApprovedVerififiersLink"),'</a></li>';
         echo '<li><a href="wiki/Verification">',$words->getFormatted("VerifyDoc"),'</a></li>';
-		echo '</ul>' ;
+        echo '</ul>' ;
     }
-	 
+
 } // end of VerifyMembersPage
 
 

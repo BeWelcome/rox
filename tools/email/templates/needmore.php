@@ -60,7 +60,7 @@ class EmailStatusNeedmore extends AbstractEmailTemplate
     public function getSubject()
     {
         if (!$this->ready_state) return '';
-        return $this->getWords()->get("SignupSubjRejected", $this->_member->Username);
+        return $this->getWords()->get("SignupNeedmoreTitle", $this->_member->Username);
     }
 
     public function getSender()
@@ -78,6 +78,6 @@ class EmailStatusNeedmore extends AbstractEmailTemplate
     public function getEmailBody()
     {
         if (!$this->ready_state) return '';
-        return $this->getWords()->get("SignupYouHaveBeenRejected", $this->_member->Username, PVars::getObj('env')->baseuri);
+        return $this->getWords()->get("SignupNeedMoreText", $this->_member->Username, PVars::getObj('env')->baseuri);
     }
 }

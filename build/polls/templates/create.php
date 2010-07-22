@@ -191,7 +191,7 @@ for ($ii=0;$ii<count($Data->Choices);$ii++) {
     <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
     <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-    <input type="hidden" name="<?=$IdLanguage ?>"  value="<?$_SESSION["IdLanguage"]?>"/>
+    <input type="hidden" name="IdLanguage"  value="<?$_SESSION["IdLanguage"]?>"/>
     <input type="hidden" name="IdPoll"  value="<?=$Data->rPoll->id?>"/>
     <input type="hidden" name="IdPollChoice" value="<?=$cc->id?>"/>
     <input type="hidden" name="IdChoiceText" value="
@@ -215,7 +215,7 @@ for ($ii=0;$ii<count($Data->Choices);$ii++) {
     <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
     <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-    <input type="hidden" name="<?=$IdLanguage ?>"  value="<?$_SESSION["IdLanguage"]?>"/>
+    <input type="hidden" name="IdLanguage"  value="<?$_SESSION["IdLanguage"]?>"/>
     <input type="hidden" name="IdPoll"  value="<?=$Data->rPoll->id?>"/>
         <tr>
             <td><label for="NewOption">New option:</label></td>
@@ -244,7 +244,7 @@ Use English language for now only
 <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
 <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-<input type="hidden" name="<?=$IdLanguage ?>"  value="<?$_SESSION["IdLanguage"]?>"/>
+<input type="hidden" name="IdLanguage"  value="<?$_SESSION["IdLanguage"]?>"/>
 
 <table>
     <tr>

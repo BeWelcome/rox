@@ -88,7 +88,7 @@ class MemberPage extends PageWithActiveSkin
                 $mynotelinkname=$words->get('ViewMyNotesForThisMember') ;
             }
             else {
-                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id.'&action=add' ;
+                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id.'&amp;action=add' ;
                 $mynotelinkname=$words->get('AddToMyNotes') ;
             }
             $tt= array(

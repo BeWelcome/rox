@@ -2,7 +2,11 @@
 {
 
 /* we need more space on the admin pages */
-#col1_content { padding: 0; }
+#main {padding: 0 2em;}
+#col1_content { padding: 0 0.5em 0 0; }
+
+#col1 {width: 25%;}
+#col3 {margin: 0 0 0 25%; border-left: 1px solid #ddd;}
 
 textarea, form {margin-bottom: 0.5em;}
 
@@ -21,7 +25,7 @@ textarea, form {margin-bottom: 0.5em;}
 .checkcomment h4 {margin-bottom: 0.1em;}
 .commentto {padding-bottom: 15px;}
 
-.adminmembers{margin-bottom: 3em;}
+.adminmembers{margin-bottom: 1em; padding-bottom: 1em; border-bottom: 1px solid #ccc;}
 .memberinfo {margin-bottom: 0.5em;}
 .memberinfo p{margin-bottom: 0.1em;}
 

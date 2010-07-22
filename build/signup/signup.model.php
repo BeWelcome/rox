@@ -233,6 +233,56 @@ ORDER BY u.`handle`
     }
 
     /**
+     * returns the EnglishLanguagename matching the parameter lang
+	* ToDo: this should be a more generic function
+     */
+
+	public function GetEnglishLanguageName($lang)  {
+        $q = $this->dao->query("select fEnglishLanguageName('".$lang."') as name");
+		if (empty($q->name)) {
+				return("no matching language found for ".$lang) ;
+		}else {
+				return($q->name) ;
+			}
+	}
+
+    /**
+     * returns a structure with some data for the current member
+	 * The English name of the language he used
+	 * The English name of the country where is his main addresses
+	* ToDo: considering using  more generic function
+     */
+
+	public function GetEnglishCountryNameAndLanguageNameData($_IdMember=0)  {
+		if (empty($_IdMember)) {
+			$IdMember=$_SESSION["IdMember"] ;
+		}
+		else {
+				$IdMember=$_IdMember ;
+		}
+        $qq = $this->dao->query("select languages.EnglishName from languages where ShortCode='".$_SESSION["lang"]."'");
+		$q=$qq->fetch(PDB::FETCH_OBJ) ;
+		if (empty($q->EnglishName)) {
+				$Data->EnglishLanguageName="no matching language found for #".$_SESSION["lang"];
+		}else {
+				$Data->EnglishLanguageName=$q->EnglishName ;
+		}
+		$ssql="select countries.name as EnglishCountryName,cities.name as EnglishCityName from countries,geonames_cache as cities,members,addresses where addresses.IdMember=members.id and addresses.Rank=0 and addresses.IdCity=cities.geonameid and cities.fk_countrycode=countries.isoalpha2 and members.id=".$_SESSION["IdMember"] ;
+        $qq = $this->dao->query($ssql) ;
+		$q=$qq->fetch(PDB::FETCH_OBJ) ;
+		if (empty($q->EnglishCountryName)) {
+				$Data->EnglishCountryName="no matching country name found member #".$_SESSION["IdMember"];
+				$Data->EnglishCityName="no matching city name found for member #".$_SESSION["IdMember"];
+				MOD_log::get()->write("debugging at Signup with the query [".$ssql."] no results", "Bug");
+		}else {
+				$Data->EnglishCountryName=$q->EnglishCountryName ;
+				$Data->EnglishCityName=$q->EnglishCityName ;
+		}
+		return $Data ;
+	}
+
+
+/**
      * returns handle as written in DB
      */
     public function getRealHandle($userId)
@@ -441,6 +491,9 @@ WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
         // ********************************************************************
         // members
         // ********************************************************************
+		
+		// Creating the member record, at this step Members.IdCity is still needed
+		// if we want to move soon this signup online
         $query = '
 INSERT INTO `members`
 (
@@ -450,6 +503,7 @@ INSERT INTO `members`
 	`created`,
 	`Password`,
 	`BirthDate`,
+	`IdCity`,
 	`HideBirthDate`
 )
 VALUES
@@ -460,6 +514,7 @@ VALUES
 	now(),
 	password(\'' . $vars['password'] . '\'),
 	\'' . $vars['iso_date'] . '\',
+	\'' . $vars['geonameid'] . '\',
 	\'' . $vars['agehidden'] . '\'
 )';
         $members = $this->dao->query($query);
@@ -534,13 +589,35 @@ WHERE `id` = ' . $IdAddress . '
         // ********************************************************************
         // location (where Philipp would put it) 
         // ********************************************************************
-		$geomodel = new GeoModel(); 
-		if(!$geomodel->addGeonameId($vars['geonameid'],'member_primary')) {
-		    $vars['errors'] = array('geoinserterror');
-            return false;
+
+        $member = $this->createEntity('Member')->findById($memberID);
+        if (!($location = $this->createEntity('Geo')->findById($vars['geonameid'])))
+        {
+            $geomodel = new GeoModel(); 
+            if(!$geomodel->addGeonameId($vars['geonameid'],'member_primary')) {
+                $vars['errors'] = array('geoinserterror');
+                return false;
+            }
+            $location = $this->createEntity('Geo')->findById($vars['geonameid']);
         }
-        
-		
+
+        if (!($group = $this->createEntity('GeoGroup')->getGroupForGeo($location)))
+        {
+            $group = $this->createEntity('GeoGroup')->lazyCreateGeoGroup($location);
+        }
+        $group->memberJoin($member, 'In', true);
+        foreach ($location->getAncestorline() as $ancestor)
+        {
+            if ($ancestor->isCountry() || $ancestor->isRegion())
+            {
+                if (!($group = $this->createEntity('GeoGroup')->getGroupForGeo($ancestor)))
+                {
+                    $group = $this->createEntity('GeoGroup')->lazyCreateGeoGroup($ancestor);
+                }
+                $group->memberJoin($member, 'In', true);
+            }
+        }
+
         // Only for bugtesting and backwards compatibility the geo-views in our DB
         $CityName = "not found in cities view" ;
     	$sqry = "select Name from cities where id=".$vars['geonameid'] ;

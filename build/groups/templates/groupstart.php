@@ -38,14 +38,22 @@
                 </div>
                 <?php endif; ?>
                 <h3><?= $words->get('GroupOwner'); ?></h3>
-                <div class="row">
-                    <p><?= (($member =$this->group->getGroupOwner()) ? $member->Username : $words->get('GroupsNoOwner')); ?></p>
+                <div class="floatbox">
+                    <div class="center float_left">
+                        <?php echo (($member =$this->group->getGroupOwner()) ? (MOD_layoutbits::PIC_50_50($member->Username) ."<br /><a href=\"members/".$member->Username ."\">" .$member->Username ."</a>")  : $words->get('GroupsNoOwner')); ?>
+                    </div>
                 </div>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
-                    <?php $memberlist_widget->render() ?>
+                    <?php
+                    if ($this->group->getMemberCount()) {
+                        $memberlist_widget->render();
+                    } else echo $words->get('This group currently has no members.')
+                    ?>
                 </div>
-                <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>
+                <?php if ($this->group->getMemberCount() > 12) { ?>
+                <strong><a href="<?= $this->getPlacesURL('geogroup_members') ?>"><?= $words->get('ShowMore'); ?></a></strong>
+                <?php } ?>
                 
             </div> <!-- subcr -->
         </div> <!-- c38r -->

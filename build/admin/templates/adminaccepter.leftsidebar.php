@@ -45,4 +45,9 @@ HTML;
     }
     echo <<<HTML
 </table>
+<h4>Shouts from the team</h4>
 HTML;
+// Displaying Shouts for Accepter Team
+$shoutsCtrl = new ShoutsController;
+$shoutsCtrl->format = 'compact';
+$shoutsCtrl->shoutsList('admin_accepter', 1);

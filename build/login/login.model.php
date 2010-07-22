@@ -511,6 +511,19 @@ WHERE
         }
     }
     
+    /**
+     * shortcut function to avoid using the TB code below
+     *
+     * @param Member $member
+     *
+     * @access public
+     * @return void
+     */
+    public function setTBLogin(Member $member)
+    {
+        session_regenerate_id();
+        $_SESSION[self::KEY_IN_SESSION] = $member->get_userid();
+    }
     
 
     function setTBUserAsLoggedIn($tb_user)
@@ -535,5 +548,20 @@ WHERE   id = $tb_user_id
             return false;
         }
         return $member->logOut();
+    }
+
+    /**
+     * logs a member into the site without using a password
+     *
+     * @param Member $member
+     *
+     * @access public
+     * @return void
+     */
+    public function autoLogin(Member $member)
+    {
+        $this->setBWMemberAsLoggedIn($member);
+        $this->setupBWSession($member);
+        $this->setTBLogin($member);
     }
 }

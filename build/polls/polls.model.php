@@ -103,7 +103,7 @@ class PollsModel extends RoxModelBase {
      * this function allows to create poll
 		 * @post is the array of the arg_post to be given by the controller
 		 * returns true if the poll is added with success
-		 * according to $post['IdPoll'] teh poll will be inserted or updated
+		 * according to $post['IdPoll'] the poll will be inserted or updated
      **/
     function UpdatePoll($post) {
 			$words = new MOD_words();
@@ -207,7 +207,7 @@ class PollsModel extends RoxModelBase {
 			$ss="insert into polls_choices(IdPoll,IdChoiceText,Counter,created) values(".$rPoll->id.",0,0,now())" ;
  			$result = $this->dao->query($ss);
 			if (!$result) {
-	   		throw new PException('AddChoice::Failed to add back the insert the choice ');
+	   			throw new PException('AddChoice::Failed to add back the insert the choice ');
 			}
 			$IdChoice=$result->insertId();
 
@@ -217,7 +217,7 @@ class PollsModel extends RoxModelBase {
 			$ss="update polls_choices set IdChoiceText=$IdChoiceText where id=$IdChoice" ;
  			$result = $this->dao->query($ss);
 			if (!$result) {
-	   		throw new PException('AddChoice::Failed update the IdChoiceText ');
+	   			throw new PException('AddChoice::Failed update the IdChoiceText ');
 			}
 
 			MOD_log::get()->write("pollchoice : <b>".$post["ChoiceText"]."</b> created IdPollChoice=#".$IdChoice." for poll #".$IdPoll ,"polls") ; 
@@ -267,15 +267,22 @@ class PollsModel extends RoxModelBase {
 			}
 			$IdPoll=$post['IdPoll'] ;
 			$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* Add Vote */") ;
-			$rContribList=$this->bulkLookup("select * from polls_choices  where IdPoll=".$IdPoll) ;
 
-			$wherefordelete="" ; // very important to avoid to delete all votes 
+			// Prevents the same member from voting twice			
 			if (!empty($IdMember)) {
-				$wherefordelete="IdMember='".$IdMember."'" ;
+				$rPreviousContrib=$this->singleLookup("select * from polls_contributions where IdMember=".$IdMember." and IdPoll=".$IdPoll) ; 
 			}
-			if (!empty($Email)) {
-				$wherefordelete="Email='".$Email."'" ;
+			elseif (!empty($Email)) {
+				$rPreviousContrib=$this->singleLookup("select * from polls_contributions where Email='".$Email."' and IdPoll=".$IdPoll) ; 
 			}
+
+			if (!(empty($rPreviousContrib->IdPoll))) {
+   			   		MOD_log::get()->write($sLog,"polls") ;
+					$sLog="Members #".$IdMember." has already contributed to poll #".$IdPoll ;
+ 		   			throw new PException($sLog);
+			}
+
+			$rContribList=$this->bulkLookup("select * from polls_choices  where IdPoll=".$IdPoll) ;
 			
 			if ($rPoll->TypeOfChoice=='Exclusive') {
 					if (!empty($post['ExclusiveChoice'])) { // blank votes are allowed

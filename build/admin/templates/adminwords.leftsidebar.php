@@ -28,13 +28,23 @@ $words = new MOD_words();
 
 ?>
 
+<h3>Links</h3>
 <ul class="linklist">
-    <li><a href="wiki/adminwords">Documentation</a></li>
+    <li><a href="groups/60/wiki">How it works</a></li>
+    <li><a href="groups/60">Translation Group</a></li>
     <li><a href="admin/words">Admin word</a></li>
-    <li><a href="admin/words/important">Important words</a></li>
-    <li><a href="admin/words/ShowLanguageStatus=". $rr->id)."\"> All in ". $rr->EnglishName. "</a></li>
-    <li><a href="admin/words/onlymissing&ShowLanguageStatus=". $rr->id)."\"> Only missing in ". $rr->EnglishName. "</a></li>
-    <li><a href="admin/words/onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Only obsolete in ". $rr->EnglishName. "</a></li>
-    <li><a href="admin/words/statsß">Show stats</a></li>
-    <li><a href="admin/words/memcache">Show memcache</a></li>
+    <li><a href="admin/words/important">FIXME Important words</a></li>
+    <li><a href="admin/words/ShowLanguageStatus=". $rr->id)."\">FIXME All in ". $rr->EnglishName. "</a></li>
+    <li><a href="admin/words/onlymissing&ShowLanguageStatus=". $rr->id)."\">FIXME Only missing in ". $rr->EnglishName. "</a></li>
+    <li><a href="admin/words/onlyobsolete&ShowLanguageStatus=". $rr->id)."\">FIXME Only obsolete in ". $rr->EnglishName. "</a></li>
+    <li><a href="admin/words/stats">FIXME Statistic</a></li>
+    <li><a href="admin/words/memcache">FIXME Show memcache</a></li>
 </ul>
+
+<h3>Shouts from the team</h3>
+<?php
+// Displaying Shouts for Accepter Team
+$shoutsCtrl = new ShoutsController;
+$shoutsCtrl->format = 'compact';
+$shoutsCtrl->shoutsList('admin_words', 1);
+?>

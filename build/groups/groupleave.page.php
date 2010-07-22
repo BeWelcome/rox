@@ -57,4 +57,3 @@ class GroupLeavePage extends GroupsBasePage
 }
 
 
-?>

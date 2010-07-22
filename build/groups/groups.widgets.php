@@ -33,17 +33,9 @@ Boston, MA  02111-1307, USA.
      * @subpackage Widgets
      */
 
-class GroupForumWidget  // extends ForumBoardWidget
+class GroupForumWidget extends ForumPreviewWidget
 {
-    public function render()
-    {
-        echo 'group forum';
-    }
-    
-    public function setGroup($group)
-    {
-        // extract information from the $group object
-    }
+
 }
 
 //------------------------------------------------------------------------------------
@@ -56,12 +48,14 @@ class GroupForumWidget  // extends ForumBoardWidget
 class GroupMemberlistWidget  // extends MemberlistWidget?
 {
     private $_group;
+    private $_limit;
     
     public function render()
     {
         $memberships = $this->_group->getMembers();
         $membercount = count($memberships);
-        for ($i = 0; $i < $membercount && $i < 6; $i++)
+        $limit = ($this->_limit ? $this->_limit : 6);
+        for ($i = 0; $i < $membercount && $i < $limit; $i++)
         {
             $idx = $membercount - $i - 1;
             echo <<<HTML
@@ -69,7 +63,7 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
 HTML;
                 echo MOD_layoutbits::PIC_50_50($memberships[$idx]->Username);
                 echo <<<HTML
-                <a href="people/{$memberships[$idx]->Username}">{$memberships[$idx]->Username}</a>               
+                <a href="members/{$memberships[$idx]->Username}">{$memberships[$idx]->Username}</a>               
             </div>
 HTML;
         }
@@ -79,6 +73,12 @@ HTML;
     {
         // extract memberlist information from the $group object
         $this->_group = $group;
+    }
+    
+    public function setLimit($limit)
+    {
+        // set a maximum of members to be shown, defaults 6
+        $this->_limit = $limit;
     }
 }
 

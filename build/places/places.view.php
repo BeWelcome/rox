@@ -103,13 +103,21 @@ class PlacesView extends PAppView {
     }   
     
     public function displayCities($cities,$region,$countrycode) {
-        $citylist = '<ul>';
-        
+        $citylist = '<div class="floatbox places">';
+        $citylist = '<ul class="float_left citylist">';
+        $ii = 0;
         foreach ($cities as $city) {
+            $ii++;
+            if ($ii > 15) {
+                $citylist .= '</ul>';
+                $citylist .= '<ul class="float_left citylist">';
+                $ii = 0;
+            }
             $citylist .= '<li><a class="highlighted" href="places/'.$countrycode.'/'.$region.'/'.$city->city.'">'.$city->city.' <span class="small grey">('.$city->NbMember.')</span>';
             $citylist .= '</a></li>';
         }
-        $citylist .= '</ul>';        
+        $citylist .= '</ul>';
+        $citylist .= '</div>';      
     
         require 'templates/cityOverview.php';
     }   

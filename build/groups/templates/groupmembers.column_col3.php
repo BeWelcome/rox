@@ -7,8 +7,7 @@
     {
 ?>
 <div id="groups">
-    <div class="subcolumns">
-    <h3><?= $words->get('GroupsMembers'); ?></h3>
+    <h3><?= $words->get('%s members found',$this->group->getMemberCount()); ?></h3>
 
     <?php $this->pager_widget->render(); ?>
     <table>
@@ -25,7 +24,7 @@
             <tr class="<?php echo $background = (($count % 2) ? 'highlight' : 'blank'); ?>">
                 <td><?=MOD_layoutbits::PIC_50_50($member->Username) ?></td>
                 <td>
-                    <a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
+                    <a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
                     <ul>
                         <li><span class="small"><?= $member->age; ?> </span></li>
                         <li><span class="small"><?= $member->cityname; ?></span></li>
@@ -39,3 +38,5 @@
         echo "</table>";
         $this->pager_widget->render();
     }
+    ?>
+</div>

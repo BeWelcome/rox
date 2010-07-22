@@ -63,43 +63,25 @@ $words = new MOD_words();
 
     <div class="c50r">
       <div class="subcr">
-          <div class="floatbox">
-<?php 
-$Rox = new Rox();
-$members = $Rox->getMembersStartpage(2,'random');
-for ($ii=0;$ii<count($members);$ii++) {
-        $m=$members[$ii] ;
-?>
-<div class="subcolumns">
-  <div class="c25l">
-    <div class="subcl" style="margin: 1em 0 1em 0">
-    <?php echo MOD_layoutbits::PIC_50_50($m->Username,'','float_right framed') ?>
-    </div> <!-- subcl -->
-  </div> <!-- c50l -->
+          
+        <?php 
+        $Rox = new Rox();
+        $members = $Rox->getMembersStartpage(2,'random');
+        for ($ii=0;$ii<count($members);$ii++) {
+                $m=$members[$ii] ;
+        ?>
+        <div class="row">
+            <?php echo MOD_layoutbits::PIC_50_50($m->Username,'','float_left framed') ?>
+            <div class="userinfo">
+                <h3><?php echo '<a rel="nofollow" href="members/'.$m->Username.'">'.$words->get('IndexPageWord_shareplace',$m->Username).'</a>' ?></h3>
+                <p>in <?php echo $m->cityname; ?>, <?php echo $m->countryname; ?></p>   
+            </div> <!-- userinfo -->
+        </div> <!-- row -->
 
-  <div class="c75r">
-    <div class="subcr" style="margin: 1em 2em 1em 0">
-        <div class="userinfo">
-            <h3><?php echo '<a rel="nofollow" href="members/'.$m->Username.'">'.$words->get('IndexPageWord_shareplace',$m->Username).'</a>' ?></h3>
-            <p>in <?php echo $m->cityname; ?>, <?php echo $m->countryname; ?></p>
-          </div>
-      </div>
-    </div>
-</div>
+        <?php } ?>
 
-<?php } ?>
-<div class="subcolumns">
-  <div class="c25l">
-    <div class="subcl" style="margin: 1em 0 1em 0">
-    </div> <!-- subcl -->
-  </div> <!-- c50l -->
+        <p class="center row"><a href="places"><?=$words->get('IndexPageWord_MembersText','<a href="searchmembers">','</a>')?></a></p>
 
-  <div class="c75r">
-    <div class="subcr" style="margin: 1em 2em 1em 0">
-        <p style="padding-top: 5px"><?=$words->get('IndexPageWord_MembersText','<a href="searchmembers">','</a>')?></p>
-      </div>
-    </div>
-</div>
       </div> <!-- subcr -->
     </div> <!-- c50r -->
   </div> <!-- subcolumns index_row1 -->

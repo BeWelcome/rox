@@ -58,6 +58,10 @@ class GroupsController extends RoxControllerBase
         {
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
+        if ($group instanceof GeoGroup)
+        {
+            $this->redirectAbsolute($group->getUrl('geogroup_country'));
+        }
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();
         $page->group = $group;
@@ -948,6 +952,199 @@ class GroupsController extends RoxControllerBase
         return $return;
     }
 
+    // geo groups methods
+
+    /**
+     * loads a geo group by the url
+     *
+     * @access public
+     * @return object
+     */
+    public function showGeoGroup()
+    {
+        if (!($vars = $this->args_vars) || empty($vars->request))
+        {
+            $this->redirectAbsolute($this->router->url('geogroup_continents'));
+        }
+        $request = $vars->request;
+        array_shift($request);
+
+        list($country, $loc, $locations) = $this->interpretRequest($request);
+
+        if (!$group = $this->_model->getGeoGroup($loc))
+        {
+            $group = $this->_model->lazyCreateGeoGroup($loc);
+        }
+        //$this->_model->setGroupVisit($group->getPKValue());
+        $page = new GeoGroupStartPage();
+        $page->group = $group;
+        $page->country = $country;
+        $page->location = $loc;
+        $page->locations = $locations;
+        $page->member = $this->_model->getLoggedInMember();
+        $page->model = $this->_model;
+        return $page;
+    }
+
+    /**
+     * handles geo group fora
+     *
+     * @access public
+     * @return object
+     */
+    public function geoForum()
+    {
+        if (!($vars = $this->args_vars) || empty($vars->request))
+        {
+            $this->redirectAbsolute($this->router->url('geogroup_continents'));
+        }
+        $request = $vars->request;
+        array_shift($request);
+        array_shift($request);
+
+        list($country, $loc, $locations) = $this->interpretRequest($request);
+
+        if (!$group = $this->_model->getGeoGroup($loc))
+        {
+            $group = $this->_model->lazyCreateGeoGroup($loc);
+        }
+
+        $page = new GeoGroupForumPage;
+        $page->group = $group;
+        $page->country = $country;
+        $page->location = $loc;
+        $page->locations = $locations;
+        $page->member = $this->_model->getLoggedInMember();
+        $page->model = $this->_model;
+        $this->fillObject($page);
+        return $page;
+    }
+
+    /**
+     * handles geo group wikis
+     *
+     * @access public
+     * @return object
+     */
+    public function geoWiki()
+    {
+        if (!($vars = $this->args_vars) || empty($vars->request))
+        {
+            $this->redirectAbsolute($this->router->url('geogroup_continents'));
+        }
+        $request = $vars->request;
+        array_shift($request);
+        array_shift($request);
+
+        list($country, $loc, $locations) = $this->interpretRequest($request);
+
+        if (!$group = $this->_model->getGeoGroup($loc))
+        {
+            $group = $this->_model->lazyCreateGeoGroup($loc);
+        }
+
+        $page = new GeoGroupWikiPage();
+        $page->group = $group;
+        $page->country = $country;
+        $page->location = $loc;
+        $page->locations = $locations;
+        $page->member = $this->_model->getLoggedInMember();
+        $page->model = $this->_model;
+        $this->fillObject($page);
+        return $page;
+    }
+
+    /**
+     * displays local group members
+     *
+     * @access public
+     * @return object
+     */
+    public function geoMembers()
+    {
+        if (!($vars = $this->args_vars) || empty($vars->request))
+        {
+            $this->redirectAbsolute($this->router->url('geogroup_continents'));
+        }
+        $request = $vars->request;
+        array_shift($request);
+        array_shift($request);
+
+        list($country, $loc, $locations) = $this->interpretRequest($request);
+
+        if (!$group = $this->_model->getGeoGroup($loc))
+        {
+            $group = $this->_model->lazyCreateGeoGroup($loc);
+        }
+
+        $order = isset($vars->get['OrderBy']) ? $vars->get['OrderBy'] : null;
+
+        $page = new GeoGroupMembersPage();
+
+        $page->group = $group;
+        $this->fillObject($page);
+        $page->country = $country;
+        $page->location = $loc;
+        $page->locations = $locations;
+        $page->member = $this->_model->getLoggedInMember();
+        $page->model = $this->_model;
+        $pager_params->strategy = new HalfPagePager;
+        $pager_params->page_method = 'url';
+        $pager_params->items = $page->group->getMemberCount('In', true);
+        $pager_params->items_per_page = 10;
+        $page->pager_widget = new PagerWidget($pager_params);
+        $page->members = $this->_model->getGeoGroupMembers($page->group, $page->pager_widget->getActiveStart(), $page->pager_widget->getActiveLength(), $order);
+        return $page;
+
+    }
+
+    /**
+     * uses the request to get location parts
+     *
+     * @param array $request
+     * @access private
+     * @return array
+     */
+    private function extractLocationFromRequest($request)
+    {
+        $return = array();
+        if (empty($request[0]))
+        {
+            return $return;
+        }
+        $return['countrycode'] = $request[0];
+        array_shift($request);
+        $i = 1;
+        foreach ($request as $part)
+        {
+            $return['location' . $i] = $part;
+            $i++;
+        }
+        return $return;
+    }
+
+    /**
+     * shared setup code between the various geo group routes
+     *
+     * @param array $request
+     * @access private
+     * @return array
+     */
+    private function interpretRequest($request)
+    {
+        $loc_vars = $this->extractLocationFromRequest($request);
+
+        if (empty($loc_vars['countrycode']) || !($country = $this->_model->getCountry($loc_vars['countrycode'])))
+        {
+            $this->redirectAbsolute($this->router->url('geogroup_continents'));
+        }
+
+        $locations = $this->_model->getSpecificLocations($loc_vars, $country);
+
+        $loc = ((empty($locations)) ? $country : $locations[count($locations)-1]);
+
+        return array($country, $loc, $locations);
+    }
 
 }
 

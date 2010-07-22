@@ -28,13 +28,13 @@ if (!$members) {
         echo '<li class="userpicbox float_left">';
         echo MOD_layoutbits::PIC_50_50($member->username,'',$style='framed float_left');
         echo '<div class="userinfo">';
-        echo '  <a class="username" href="member/'.$member->username.'">'.$member->username.'</a><br />';
+        echo '  <a class="username" href="members/'.$member->username.'">'.$member->username.'</a><br />';
         echo '  <span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span>';
         echo '</div>';
         echo '</li>';
     }
     ?>
-    </ul>
+</ul>
 <?php
     $pages = $p[1];
     $maxPage = $p[2];

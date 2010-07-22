@@ -57,14 +57,14 @@ $TList = array ();
 $table="sqlforvolunteers" ;
 
 if ($IdQueryScope=="\"All\"") {
-	$swhere="" ;
+			 $swhere="" ;
 }
 else {
 	/* Group option Disabled -because this is not a good one (better write real features)
 	$table="sqlforvolunteers,sqlforgroupsmembers" ;
 	$sList=str_replace("\"","",$IdQueryScope) ;
-	$sList=str_replace("'","",$sList) ;
-	$sList=str_replace(";",",",$sList) ;
+		  $sList=str_replace("'","",$sList) ;
+		  $sList=str_replace(";",",",$sList) ;
 	$swhere=" where ( (sqlforvolunteers.id in (".$sList.")) or (sqlforvolunteers.id=sqlforgroupsmembers.IdQuery and sqlforgroupsmembers.IdGroup in (".$membergrouplist.")))" ;
 	*/
 	$table="sqlforvolunteers" ;
@@ -253,31 +253,44 @@ switch (GetParam("action")) {
 			$TTitle=array() ;
 			$Param1=mysql_escape_string(stripslashes(GetStrParam("param1",""))) ;
 			$Param2=mysql_escape_string(stripslashes(GetStrParam("param2",""))) ;
-//		echo " \$rrQuery->Query=",$rrQuery->Query,"<br>"  ;
+			$Param3=mysql_escape_string(stripslashes(GetStrParam("param3",""))) ;
+			$Param4=mysql_escape_string(stripslashes(GetStrParam("param4",""))) ;
+			$Param5=mysql_escape_string(stripslashes(GetStrParam("param5",""))) ;
+
+			 $sQuery=$sQry ;
+
+			// echo " \$rrQuery->Query=",$rrQuery->Query," \$Param1=[$Param1]<br>"  ;
 			if ((!empty($Param1)) and (!empty($Param2))) {
-			 $sQuery=sprintf($sQry,$Param1,$Param2) ;
+				if (stripos ($sQry,'%s')!==0) {
+					$sQuery=sprintf($sQry,$Param1,$Param2) ;
+				}
 			}
 			else if (!empty($Param1)) {
-				$sQuery=sprintf($sQry,$Param1) ;
+				if (stripos($sQry,'%s')!==0) {
+					$sQuery=sprintf($sQry,$Param1) ;
+				} 
 			}
-			else {
-			 $sQuery=$sQry ;
-			}
+
+			$sQuery=str_ireplace( "\$P1",$Param1,$sQuery) ;
+			$sQuery=str_ireplace( "\$P2",$Param2,$sQuery) ;
+			$sQuery=str_ireplace( "\$P3",$Param3,$sQuery) ;
+			$sQuery=str_ireplace( "\$P4",$Param4,$sQuery) ;
+			$sQuery=str_ireplace( "\$P5",$Param5,$sQuery) ;
+			$sQuery=str_ireplace( "\$IdMember",$_SESSION["IdMember"],$sQuery) ;
+			$sQuery=str_ireplace( "\$Username",$_SESSION["Username"],$sQuery) ;
 	
 			if ($rrQuery->LogMe=="True") {
 				LogStr("Doing query [".$sQuery."]","adminquery") ;
 			}
 		
-//			echo "\$sQuery=",stripslashes($sQuery),"<br>\n"  ;
+			// echo "\$sQuery=",stripslashes($sQuery)," \$Param1=[$Param1]<br>\n"  ;
 			$_TTsqry[]=$sQuery ;
-
 		
 			$qry=sql_query(stripslashes($sQuery)) ;
-
 			if (!$qry) {
-				die ( "Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
-				DisplayMyResults(array(),array(),array(),null,"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
-				break ;
+			die ( "Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
+		   DisplayMyResults(array(),array(),array(),null,"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
+		   break ;
 			}
 
 
@@ -290,31 +303,31 @@ switch (GetParam("action")) {
 					$Message=$sQuery."<br><b>".mysql_error()."</b>" ;
 				}
 				else {
-					$AffectedRows=mysql_affected_rows() ;
-					$Message=$AffectedRows." affected rows<br />" ;
-					$iCount=0 ;
-					LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery." /#".$jj,"adminquery") ;
+		   $AffectedRows=mysql_affected_rows() ;
+		   $Message=$AffectedRows." affected rows<br />" ;
+		   $iCount=0 ;
+		   LogStr($AffectedRows." affected rows by query IdQuery=#".$IdQuery." /#".$jj,"adminquery") ;
 			 
-					$TTitle[]="Affected rows" ;
-					$TResult[]=sprintf("%d",$AffectedRows) ;
+			 $TTitle[]="Affected rows" ;
+			 $TResult[]=sprintf("%d",$AffectedRows) ;
 			 
-					$_TResult[]=$TResult ;
-					$_TTitle[]=$TTitle ;
-				}
+			 $_TResult[]=$TResult ;
+			 $_TTitle[]=$TTitle ;
+			}
 			}
 			else {
-				$AffectedRows=0 ;
-				$iCount=mysql_num_fields($qry) ;
+		   $AffectedRows=0 ;
+		   $iCount=mysql_num_fields($qry) ;
 		
-				for ($ii=0;$ii<$iCount;$ii++) {
+		   for ($ii=0;$ii<$iCount;$ii++) {
 					$TTitle[$ii]=mysql_field_name($qry,$ii) ;
-				}
+		   }
 		
-				while ($rr=mysql_fetch_array($qry)) {
-					array_push($TResult, $rr);
-				}
-				$_TResult[]=$TResult ;
-				$_TTitle[]=$TTitle ;
+		   while ($rr=mysql_fetch_array($qry)) {
+			 	array_push($TResult, $rr);
+		   }
+			 $_TResult[]=$TResult ;
+			 $_TTitle[]=$TTitle ;
 			}
 		}
 		DisplayMyResults($_TResult,$_TTitle,$_TTsqry,$rrQuery,$Message,$TList) ;

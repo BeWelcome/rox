@@ -2,19 +2,22 @@
 $userbarText = array();
 $words = new MOD_words();
 ?>
+
+<?php /*  local volunteers disabled for now */
+/*
 <h3><?php echo $words->get('localvolunteers'); ?></h3>
 
 <?php
-
 require 'localvolunteerslist.php';
-
 if ((MOD_right::get()->HasRight('ContactLocation',$countryinfo->IdCountry)) or (MOD_right::get()->HasRight('ContactLocation','All'))) {
-	echo " <a href=\"contactlocal/preparenewmessage/".$countryinfo->IdCountry."\" title=\" prepare a local volunteer message for this country\">write a local vol message</a>" ;
+?>
+   <p><a href="contactlocal/preparenewmessage/<?php echo $countryinfo->IdCountry ?>" title="<?php echo $words->get('PrepareLocalMessageTitle'); ?>"> <?php echo $words->get('PrepareLocalMessage'); ?></a></p>
+<?php
 }
 ?>
+*/ ?>
 
-<h3>WikiWiki what?</h3>
-<ul class="linklist">
-<li>Our regional pages consist of a wiki. You're encouraged to modify them, add new content and enrich what's already there. Learn how to edit pages <a href="wiki/GoodStyle">here</a></li>
+<h3><?php echo $words->get('PlacesSidebarHeader'); ?></h3>
+<p><?php echo $words->get('PlacesSidebarText'); ?></p>
 
-</ul>
+

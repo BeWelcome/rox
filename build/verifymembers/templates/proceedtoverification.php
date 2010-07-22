@@ -88,7 +88,7 @@ if (!empty($errormessage)) {
                     <tr>
                         <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
                         <td>
-                            <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
+                            <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?>
                             <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
                             <br />
                             <?php echo $m->country; ?>
@@ -121,7 +121,7 @@ if (!empty($errormessage)) {
                     <tr>
                         <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
                         <td>
-                            <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
+                            <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?>
                             <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
                             <br />
                             <?php echo $m->country; ?>

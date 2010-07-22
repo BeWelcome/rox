@@ -1,19 +1,19 @@
 <div id="profile-info">
   <div class="subcolumns">
-
+    <h1 id="username">
+      <strong><?=$member->Username ?></strong>
+      <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>
+      <?=($verification_status) ? '
+        <a href="verifymembers/verifiersof/'.$member->Username.'">
+          <img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'" />
+        </a>': ''?>
+      <?=($member->Accomodation == 'anytime') ? '
+        <img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="'.$member->Accomodation.'" />': ''?>
+      <?=$words->flushBuffer()?>
+    </h1> <!-- username -->
     <div class="c50l">
       <div class="subcl">
-        <div id="username">
-          <strong><?=$member->Username ?></strong>
-          <?=($verification_status) ? '
-            <a href="verifymembers/verifiersof/'.$member->Username.'">
-              <img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'" />
-            </a>': ''?>
-          <?=($member->Accomodation == 'anytime') ? '
-            <img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="'.$member->Accomodation.'" />': ''?><br />
-          <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>
-          <?=$words->flushBuffer()?>
-        </div> <!-- username -->
+        
         <?php if (($logged_member = $this->model->getLoggedInMember()) && $logged_member->hasOldRight(array('Admin' => '', 'SafetyTeam' => '', 'Accepter' => ''))) : ?>
         <div id='member-status'>
           <?php  if ($member->Status!="Active") {
@@ -21,6 +21,28 @@
                 }; ?>
         </div>
         <?php endif ;?>
+        <div id="navigation-path" >
+          <h2><strong><a class="" href="places/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
+              (<a class="" href="places/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
+              <a class="" href="places/<?=$member->countryCode() ?>" ><?=$member->country() ?></a>
+          </h2>
+          <p class="grey">
+            <?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?><br />
+            <?php if (!empty($logged_member)) : ?>
+                <?php echo $words->get("MemberSince");?>: <?php echo $layoutbits->ago(strtotime($member->created));?> <br />
+                <?php
+                    if (strtotime($member->LastLogin) > strtotime('-1 week'))
+                    {
+                        echo $words->get("LastLogin")?>: <?php echo $words->get("LastLoginPrivacy");
+                    }
+                    else
+                    {
+                        echo $words->get("LastLogin")?>: <?php echo $layoutbits->ago(strtotime($member->LastLogin));
+                    }
+                    ?>
+            <?php endif; ?>
+          </p>
+        </div> <!-- navigation-path -->
       </div> <!-- subcl -->
     </div> <!-- c50l -->
     <div class="c50r" >
@@ -36,7 +58,8 @@
             if (isset($urlstring)) {
                 require 'profileversion.php'; 
             }
-            ?>
+        ?>
+            
       </div> <!-- subcr -->
     </div> <!-- c50r -->
   </div> <!-- subcolumns -->

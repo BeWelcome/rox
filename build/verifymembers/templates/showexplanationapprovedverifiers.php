@@ -27,11 +27,11 @@ $words = $this->getWords();
 $words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the list of the verifierd
+$purifier = MOD_htmlpure::getBasicHtmlPurifier();
 ?>
 <p>
 <?=$words->getFormatted("verifymembers_approvedverifiersexp",$words->getFormatted("verifymembers_VerifiedByApproved"),$words->getFormatted("verifymembers_VerifiedByVerified"),$words->getFormatted("verifymembers_VerifiedByNormal")) ?>
 </p>
-<p>
 
 <table class="full">
 
@@ -40,6 +40,7 @@ $iiMax = count($list) ; // This retrieve the list of the verifierd
         <th></th>
         <th><?=$words->getFormatted("Username") ?></th>
         <th><?=$words->getFormatted("Location") ?></th>
+        <th><?=$words->getFormatted("MemberSince") ?></th>
         <th><?=$words->getFormatted("ProfileSummary") ?></th>
     </tr>
 <?php } ?>
@@ -58,15 +59,17 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             <br /><?=$m->FullName ?>
             <br /><?=$m->age ?>
         </td>
-        <td><?=$m->country ?>/<?=$m->city ?></td>
+        <td><?=$m->country ?><br/><?=$m->city ?></td>
         <td>
-        <?=$words->getFormatted("MemberSince",$m->MemberSince)?>
-        <br /><a href="members/<?=$m->Username ?>/comments"><?=$words->getFormatted("ViewComments")."(".$m->NbComments.")"?></a>
-        <br /><?=$words->mTrad($m->ProfileSummary) ?>
+            <?=$words->getFormatted("MemberSince",$m->MemberSince)?>
+        </td>
+        <td>
+            <a href="members/<?=$m->Username ?>/comments"><?=$words->getFormatted("ViewComments")."(".$m->NbComments.")"?></a><br/>
+            <?php echo $purifier->purify(stripslashes($words->mInTrad($m->ProfileSummary, $language_id=0, true))); ?>
         </td>
     </tr>
     <?php
 }
 ?>
 </table>
-</p>
+

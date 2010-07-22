@@ -29,7 +29,7 @@ if (req.indexOf('signup') != -1) {
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
     document.write('<script type="text/javascript" src="script/geo_suggest.js"></script>');
 }
-if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('forums') != -1 || req.indexOf('trip') != -1 ) {
+if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('forums') != -1 || req.indexOf('admin') != -1 || req.indexOf('trip') != -1 ) {
     	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
 }
 if (req.indexOf('blog') != -1 || req.indexOf('blog/create') != -1 || req.indexOf('trip') != -1 ) {

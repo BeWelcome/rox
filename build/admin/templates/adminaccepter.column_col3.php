@@ -53,21 +53,18 @@ HTML;
     echo <<<HTML
 </p>
 HTML;
-// Displaying Shouts for Accepter Team
-$shoutsCtrl = new ShoutsController;
-$shoutsCtrl->format = 'compact';
-$shoutsCtrl->shoutsList('admin_accepter', 1);
+
 
 if ($this->status)
 {
     echo <<<HTML
-    <h4>Displaying members with status: <b>{$this->status}</b> ({$this->members_count} members in total with that status).</h4>
+    <p>Displaying members with status: <strong>{$this->status}</strong><br /> ({$this->members_count} members in total with that status).</p>
 HTML;
 }
 elseif ($this->term)
 {
     echo <<<HTML
-    <h4>Displaying members from search: <b>{$this->term}</b> ({$this->members_count} members in total with something like that username).</h4>
+    <p>Displaying members from search: <strong>{$this->term}</strong><br /> ({$this->members_count} members in total with something like that username).<p>
 HTML;
 }
 
@@ -85,6 +82,8 @@ foreach ($members as $member)
     $name       = $firstname . ' ' . $secondname . ' ' . $lastname;
     $age        = (date('Y', time()) - date('Y', strtotime($member->BirthDate)))  . ' years old';
     $summary    = MOD_crypt::AdminReadCrypted($member->ProfileSummary);
+    $email      = MOD_crypt::AdminReadCrypted($member->Email);
+    $gender     = $member->get_gender_for_public();
     $address    = $member->getFirstAddress();
     if ($address)
     {
@@ -104,27 +103,39 @@ foreach ($members as $member)
 <div class="adminmembers">
 
     <div class="floatbox memberinfo">
-        <a class="float_left" href="people/{$member->Username}">
+        <a class="float_left" href="members/{$member->Username}">
             <img class="framed" src="members/avatar/{$member->Username}/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
-        <a href="people/{$member->Username}" class="username">{$member->Username}</a> ({$name})
-        <p>Age: {$age}</p>
+        <a href="members/{$member->Username}" class="username">{$member->Username}</a> ({$name} - <a href="mailto:{$email}">{$email}</a>)
+        <a class="button" href="messages/compose/{$member->Username}">Contact</a> <a class="button" href="members/{$member->Username}/adminedit">Edit Profile</a>
+
+        <p>{$gender}, {$age}</p>
         <p class="small">Profile created: {$member->created} | Last login: {$member->Lastlogin}</p>
     </div>
+
+    <div class="subcolumns">
+        <div class="c50l">
+            <div class="subcl">
+                <h4>Address</h4>
+                <ul>
+                    <li>{$street}</li>
+                    <li>{$zip} {$city}</li>
+                    <li>{$region}</li>
+                    <li>{$country}</li>
+                </ul>
+            
+                <h4>About Me</h4>
+                <p>{$summary}</p>
+                
+                <h4>Feedback on signup</h4>
+                <p>{$feedback}</p>
+            </div>
+        </div>
+
+        <div class="c50r">
+            <div class="subcr">
+   
     
-    <h4>Address</h4>
-        <ul>
-            <li>{$street}</li>
-            <li>{$zip} {$city}</li>
-            <li>{$region}</li>
-            <li>{$country}</li>
-        </ul>
-    
-    <h4>About Me</h4>
-    <p>{$summary}</p>
-    
-    <h4>Feedback on signup</h4>
-    <p>{$feedback}</p>
     
     <h4>Actions</h4>
 
@@ -157,7 +168,15 @@ HTML;
     </ul>
 
     <h4>Additional text for "Need more Infos"</h4>
-    <textarea cols="50" rows="5" name="accept_info[{$member->id}]"></textarea>
+    <a href="#" onclick="Effect.toggle('{$member->id}-needmore', 'blind'); return false;">"Needmore"-template</a> | 
+    <a href="#" onclick="Effect.toggle('{$member->id}-reject', 'blind'); return false;">"Reject"-template</a>
+    <div id="{$member->id}-needmore" style="display:none; padding: 0.5em; margin: 0.5em 0; width:95%;">
+        {$words->get('SignupNeedMoreText', $member->Username, PVars::getObj('env')->baseuri)}
+    </div>
+    <div id="{$member->id}-reject" style="display:none; padding: 0.5em; margin: 0.5em 0; width:95%;">
+        {$words->get('SignupYouHaveBeenRejected', $member->Username, PVars::getObj('env')->baseuri)}
+    </div>
+    <textarea cols="50" rows="5" name="accept_info[{$member->id}]" class="long"></textarea>
 HTML;
             break;
         
@@ -206,8 +225,9 @@ HTML;
     }
 
     echo <<<HTML
-    <div><a class="button" href="messages/compose/{$member->Username}">Contact</a> <a class="button" href="members/{$member->Username}/adminedit">Edit Profile</a></div>
-    
+    </div>
+    </div>
+    </div>
 </div>
 HTML;
 }

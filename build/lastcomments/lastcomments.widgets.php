@@ -54,7 +54,7 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
             ?>
             <div class="groupmembers center float_left">                
                 <?=MOD_layoutbits::PIC_50_50($memberships[$i]->Username) ?>
-                <a href="people/<?=$memberships[$i]->Username ?>"><?=$memberships[$i]->Username ?></a>               
+                <a href="members/<?=$memberships[$i]->Username ?>"><?=$memberships[$i]->Username ?></a>               
             </div>
             <?php
         }

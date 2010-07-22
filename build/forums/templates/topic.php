@@ -69,11 +69,14 @@ This File display a topic and the messages which are inside it
 		echo "</h2>" ;
 
 		?>
-		<span class="forumsthreadtags"><strong>Tags:</strong> <?php
+		<span class="forumsthreadtags"><strong><?php echo $words->get("forum_label_tags");?>:</strong> <?php
 
 		$url = ForumsView::getURI().'';
 		$breadcrumb = '';
 		if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
+			if ($url{strlen($url)-1}!='/') {  // Fix for ticket 
+				$url=$url.'/' ;
+			}
 			$url = $url.'k'.$topic->topicinfo->continent.'-'.Forums::$continents[$topic->topicinfo->continent].'/';
 			$breadcrumb .= '<a href="'.$url.'">'.Forums::$continents[$topic->topicinfo->continent].'</a> ';
         

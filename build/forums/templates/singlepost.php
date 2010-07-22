@@ -33,7 +33,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     <div class="forumsauthor">
         <div class="forumsauthorname">
             <a name="post<?php echo $post->postid; ?>"></a>
-            <a href="people/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
+            <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
         </div> <!-- forumsauthorname -->
         <div class="forumsavatar">
             <img
@@ -97,10 +97,9 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
 
             if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
-                echo '<br />';
                 echo $words->getFormatted('search_topic_text');
 //                echo ' <b>'.$post->title.'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
-                echo ' <b>'.$words->fTrad($post->IdTitle).'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
+                echo ' <strong><a href="'.ForumsView::postURL($post).'">'.$words->fTrad($post->IdTitle).'</a></strong>';
             }
             ?>
         </p>
@@ -244,7 +243,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 </div> <!-- forumspost -->
 
 <?php
-if ($PostMaxTrad>1) { // No need to at javascript catcher function is there is no more than one translations
+if ((isset($PostMaxTrad)) and ($PostMaxTrad>1)) { // No need to at javascript catcher function is there is no more than one translations
 ?>
 <script type="text/javascript">
 <!--

@@ -80,7 +80,7 @@ Boston, MA  02111-1307, USA.
                             <tr>
                                 <td>{$img}</td>
                                 <td>
-                                    <a href="people/{$m->Username}">{$m->Username}</a><br />
+                                    <a href="members/{$m->Username}">{$m->Username}</a><br />
                                     {$m->countryname}
                                 </td>
                             </tr>
@@ -105,7 +105,7 @@ HTML;
                             <tr>
                                 <td><?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?></td>
                                 <td>
-                                    <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
+                                    <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
                                     <?php echo $m->countryname; ?>
                                 </td>
                             </tr>
@@ -129,7 +129,7 @@ HTML;
                             <tr>
                                 <td><?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?></td>
                                 <td>
-                                    <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
+                                    <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
                                     <?php echo $m->city; ?> / <?php echo $m->country; ?><br />
                                     <? echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
                                 </td>

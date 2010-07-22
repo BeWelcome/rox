@@ -26,7 +26,7 @@ class LinkUpdatePage extends LinkPage  /* HelloUniversePage doesn't work! */
 <h3>Admin Links</h3>
 
 <p>
-Rebuildin the Tree of links
+Updating Tree of links
 </p>
         ';
     
@@ -36,8 +36,9 @@ Rebuildin the Tree of links
 		// var_dump($listitem);
 	// $model->createLinkList($listitem);
 
-	$flush = $model->deleteLinkList();
-	$model->getTree();
+	$model->updateLinks();
+	//$flush = $model->deleteLinkList();
+	//$model->getTree();
 
 	
 	}

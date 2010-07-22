@@ -61,10 +61,10 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             if (!empty($p->IdCreator)) {
                 echo MOD_layoutbits::PIC_50_50($p->CreatorUsername) ;
                 echo "<br />" ;
-                echo "<a class=\"username\" href=\"bw/member.php?cid=",$p->CreatorUsername,"\">",$p->CreatorUsername,"</a>" ;
+                echo "<a class=\"username\" href=\"member/",$p->CreatorUsername,"\">",$p->CreatorUsername,"</a>" ;
             }
             if (!empty($p->IdGroupCreator)) {
-                echo $words->getFormatted("Group"),":","<a  href=\"bw/groups.php?action=ShowMembers&IdGroup=",$p->IdGroupCreator,"\">",$p->GroupCreatorName,"</a>" ;
+                echo $words->getFormatted("Group"),":","<a  href=\"groups/",$p->IdGroupCreator,"\">",$p->GroupCreatorName,"</a>" ;
             }
             ?>
         </td>

@@ -25,6 +25,7 @@ chdir("..") ;
 require_once "lib/init.php";
 $title = "Words management";
 require_once "layout/menus.php";
+require_once "lib/f_volunteer_boards.php" ;
 
 function CheckRLang( $rlang )
 {
@@ -68,6 +69,7 @@ $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?ShowLan
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlymissing&ShowLanguageStatus=". $rr->id)."\"> Only missing in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Only obsolete in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showstats")."\">Show stats</a></li>\n";
+$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showmemcache")."\">Show memcache</a></li>\n";
 
 
 function showPercentageAchieved($IdLanguage = null)
@@ -89,9 +91,55 @@ function showPercentageAchieved($IdLanguage = null)
     echo "</table>\n";
 }
 
+function showmemcache($IdLanguage = null) {
+	
+	echo "<h2>memcache statistics</h2>" ;
+	echo "\$_SESSION[\"Param\"]->memcache=",$_SESSION["Param"]->memcache,"<br />\n" ;
+
+	$memcache=new MemCache ;
+
+	$memcache->connect('localhost',11211) or die ("adminword: Could not connect to memcache") ;
+
+	$ServerStatus=$memcache->getServerStatus('localhost',11211) ;
+	echo "Memcache server Status=",$ServerStatus,"<br />" ;
+
+
+	
+
+	$Stats=$memcache->getStats('maps') ;
+	echo "\n<hr>Stats maps=<br/>\n" ;
+	$v=var_export($Stats,true);
+	echo str_replace("\n","<br>",$v) ;
+	echo "<br />" ;
+	
+	$Stats=$memcache->getStats('items') ;
+	echo "<hr>Stats items=<br/>\n" ;
+	$v=var_export($Stats,true);
+	$v=str_replace("\n","<br>\n",$v) ;
+	$v=str_replace(" ","&nbsp;",$v) ;
+	echo $v ;
+
+
+	$Stats=$memcache->getStats('cachedump') ;
+	echo "<hr>Stats cachedump=<br/>\n" ;
+	$v=var_export($Stats,true);
+	$v=str_replace("\n","<br>\n",$v) ;
+	$v=str_replace(" ","&nbsp;",$v) ;
+	echo $v ;
+
+	
+    require_once "layout/footer.php";
+	exit(0);
+	
+} // end of showmemcache
+
+
 
 DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
 ShowLeftColumn($MenuAction,VolMenu());
+
+UpdateVolunteer_Board("translator_board") ;
+DisplayVolunteer_Board("translator_board") ; 
 
 $scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
@@ -122,11 +170,17 @@ if ((isset ($_POST['id'])) and ($_POST['id'] != ""))
 if (isset ($_POST['lang']))
   $lang = $_POST['lang'];
 
+
+
 // if it was a show translation on page request
 if (isset ($_GET['showstats'])) {
   showPercentageAchieved();
 }
 
+// if it was a show translation on page request
+if (isset ($_GET['showmemcache'])) {
+  showmemcache();
+}
 //OMG, this file is in desperate need of mysql_real_escape_string
 
 // If it was a find word request
@@ -478,7 +532,7 @@ $NbRow=4;
     echo "<tr><td class=\"label\">Description: </td>\n";
     echo "<td><em>\n", $rEnglish->Description,"</em><br />";
     if ($RightLevel >= 10) { // Level 10 allow to change/set description
-      echo "                    <textarea name=\"Description\" cols=\"60\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
+      echo "                    <textarea name=\"Description\" cols=\"60\" class=\"long\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
 }
     echo "                  </td></tr>\n";
   } else {
@@ -495,7 +549,7 @@ echo "                  <td>", str_replace("\n","<br />",str_replace($tagold,$ta
 </tr>
 <tr>
 <td class="label"><label for="Sentence">Translation:</label> </td>
-<td><textarea name="Sentence" id="Sentence" cols="<?php
+<td><textarea name="Sentence" id="Sentence" class="long" cols="<?php
 $NbRows = 3*((substr_count($SentenceEnglish, '\n')+substr_count($SentenceEnglish, '<br />')+substr_count($SentenceEnglish, '<br />'))+1);
 if (IsAdmin()) echo "60" ;
 else echo "40" ;

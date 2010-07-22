@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
     /**
      * @author Lemon-Head
      * @author Fake51
-     * @Fixer for membertrads : jeanyves
+     * @author jeanyves
      */
 
     /**
@@ -38,7 +38,7 @@ class Member extends RoxEntityBase
 
     private $trads = null;
     private $trads_by_tradid = null;
-    public $address = null;
+    public  $address = null;
     private $profile_languages = null;
     private $edit_mode = false;
     private $trad_by_tradid_inlang ; // Used to cache mTrad values
@@ -98,7 +98,7 @@ class Member extends RoxEntityBase
 
         $TLanguages = array();
         $str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name,languages.ShortCode AS ShortCode, " .
-          "memberslanguageslevel.Level AS Level FROM memberslanguageslevel,languages " .
+          "memberslanguageslevel.Level AS Level,WordCode FROM memberslanguageslevel,languages " .
           "WHERE memberslanguageslevel.IdMember=" . $this->id .
           " AND memberslanguageslevel.IdLanguage=languages.id AND memberslanguageslevel.Level != 'DontKnow' order by memberslanguageslevel.Level asc";
         $qry = mysql_query($str);
@@ -373,6 +373,28 @@ WHERE IdMember = ".$this->id
           return $r;
     }
 
+    /**
+     * checks if the member has set any addresses for messenger protocols
+     *
+     * @author Fake51
+     * @access public
+     * @return bool
+     */
+    public function hasMessengers()
+    {
+        if (!($m = $this->get_messengers()))
+        {
+            return false;
+        }
+        foreach ($m as $messenger)
+        {
+            if (!empty($messenger['address']))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public function get_age() {
         $age = $this->get_crypted("age", "");
@@ -482,6 +504,36 @@ WHERE IdMember = ".$this->id
     }
 
 
+    /**
+     * returns address entity for first address
+     *
+     * @access public
+     * @return Address
+     */
+    public function getFirstAddress()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('Address')->getMemberAddress($this);
+    }
+
+    /**
+     * returns feedback entity matched to the users signup
+     * if the user left feedback then
+     *
+     * @access public
+     * @return Feedback
+     */
+    public function getSignupFeedback()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        return $this->createEntity('Feedback')->getSignupFeedback($this);
+    }
 
     public function get_photo() {
         // $photos = $this->bulkLookup(
@@ -546,6 +598,59 @@ WHERE IdToMember = ".$this->id
          return $r;
     }
 
+
+    /**
+     * return an array of trip entities that the member created
+     *
+     * @access public
+     * @return array
+     */
+    public function getTripsArray()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+
+        $tripmodel = new Trip();
+        $usertrips = $tripmodel->getTrips($this->Username);
+        $trip_data = $tripmodel->getTripData();
+        return array($usertrips,$trip_data);
+    }
+    
+    /**
+     * return an array of blog entities that the member created
+     *
+     * @access public
+     * @return array
+     */
+    public function getBlogs()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+
+        $tripmodel = new Blog();
+        $usertrips = $tripmodel->getTrips($this->Username);
+        $trip_data = $tripmodel->getTripData();
+        return array($usertrips,$trip_data);
+    }
+    
+    /**
+     * return an array of blog entities that have a start date that lies in the future
+     *
+     * @access public
+     * @return array
+     */
+    public function getComingPosts()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        return $this->createEntity('BlogEntity')->getComingPosts($this->id);        
+    }
 
     /**
      * return an array of group entities that the member is in
@@ -1056,6 +1161,27 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return preg_split("/','/", $set); // Split into and array
     }
 
+    /**
+     * returns array of all post votes the member has cast
+     *
+     * @access public
+     * @return array
+     */
+    public function getAllPostVotes()
+    {
+        return $this->createEntity('PostVote')->getVotesForMember($this);
+    }
+
+    /**
+     * returns array of all thread votes the member has cast
+     *
+     * @access public
+     * @return array
+     */
+    public function getAllThreadVotes()
+    {
+        return $this->createEntity('ThreadVote')->getVotesForMember($this);
+    }
 
     /**
      * returns true if the member is Active or ActiveHidden
@@ -1144,6 +1270,28 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             $this->old_rights = $return;
         }
         return $this->old_rights;
+    }
+    
+    /**
+     * sets a new password for this member
+     *
+     * @param string $pw - new password as string
+     *
+     * @access public
+     * @return bool
+     */
+    public function setPassword($pw)
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $query = 'UPDATE `members` SET `PassWord` = PASSWORD(\''.trim($pw).'\') WHERE `id` = '.$this->id;
+        if( $this->model->dao->exec($query)) {
+            $L = MOD_log::get();
+            $L->write("Password changed", "change password");
+            return true;
+        } else return false;
     }
 
     /**
@@ -1247,10 +1395,89 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return false;
     }
 
+    /**
+     * returns array of possible values for Status column
+     *
+     * @access public
+     * @return array
+     */
     public function getPossibleStatusArray()
     {
         $info = $this->getTableDescription();
         return $info['Status']['values'];
+    }
+
+    /**
+     * sets the profile as inactive
+     *
+     * @access public
+     * @return bool
+     */
+    public function inactivateProfile()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $this->Status = 'ChoiceInactive';
+        return $this->update();
+    }
+
+    /**
+     * sets the profile as active
+     *
+     * @access public
+     * @return bool
+     */
+    public function activateProfile()
+    {
+        if (!$this->isLoaded() || in_array($this->Status, array('TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy')))
+        {
+            return false;
+        }
+        $this->Status = 'Active';
+        return $this->update();
+    }
+
+    /**
+     * sets the profile as active
+     *
+     * @access public
+     * @return bool
+     */
+    public function removeProfile()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        $this->Status = 'AskToLeave';
+        $return = $this->update();
+
+        // todo: fill in code to actually remove profile here
+
+        return $return;
+    }
+
+    /**
+     * checks if the profile is displayable
+     *
+     * @access public
+     * @return bool
+     */
+    public function isBrowsable()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        // following should be extended to array('Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned')
+        // but won't work for now, as that will block admins checking accounts as well
+        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy')))
+        {
+            return false;
+        }
+        return true;
     }
 }
 

@@ -11,13 +11,13 @@
 
 class VerifymembersController extends RoxControllerBase
 {
-    
+
     public function __construct()
     {
         parent::__construct();
         $this->model = new VerifyMembersModel;
     }
-    
+
     /**
      * decide which page to show.
      * This method is called automatically
@@ -33,8 +33,8 @@ class VerifymembersController extends RoxControllerBase
             $page = new VerifyMustLoginPage();
             $page->setRedirectURL(implode('/',$request));
             return $page;
-        } 
-        
+        }
+
         // look at the request.
         switch (isset($request[1]) ? $request[1] : false) {
             case 'verifiersof':
@@ -97,7 +97,7 @@ class VerifymembersController extends RoxControllerBase
         // so the framework can call the "$page->render()" function.
         return $page;
     }
-    
+
     protected function getMember($cid)
     {
         $model = new MembersModel;
@@ -109,7 +109,7 @@ class VerifymembersController extends RoxControllerBase
             return false;
         }
     }
-    
+
     /**
      * handles edit profile form post - profile updating
      *
@@ -133,7 +133,7 @@ class VerifymembersController extends RoxControllerBase
                 $mem_redirect->post = $vars;
                 return false;
             }
-                        
+
             $member_data = array();
             $member_data[1] = $this->model->LoadPrivateData($vars['cid1'], $vars['password1']);
             $member_data[2] = $this->model->LoadPrivateData($vars['cid2'], $vars['password2']);
@@ -145,13 +145,13 @@ class VerifymembersController extends RoxControllerBase
                 return false;
             }
             $mem_redirect->member_data = $member_data;
-            
+
             $str = $request[0].'/'.$request[1];
             if (in_array('proceed',$request)) return implode($request,'/');
             return $str.'/proceed';
         }
     }
-    
+
     /**
      * handles verification form post
      *
@@ -167,7 +167,7 @@ class VerifymembersController extends RoxControllerBase
         if (isset($args->post)) {
             $vars = $this->cleanVars($args->post);
             $vars_old = $mem_redirect->post;
-            
+
             $request = $args->request;
             $errors = $this->model->checkVerificationForm($args->post);
             if (count($errors) > 0) {
@@ -177,10 +177,10 @@ class VerifymembersController extends RoxControllerBase
                 $mem_redirect->post = $vars;
                 return false;
             }
-            
+
             $success = $this->model->AddNewVerified($vars);
             if (!$success) $mem_redirect->problems = array('Could not update profile');
-                        
+
             // Redirect to a nice location like editmyprofile/finish
             $str = implode('/',$request);
             return $request[0].'/'.$request[1].'/finish';

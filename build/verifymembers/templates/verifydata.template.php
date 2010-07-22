@@ -35,7 +35,7 @@ if ($verification_status) $verification_text = $words->getSilent('verifymembers_
             <tr>
                 <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
                 <td>
-                    <?php echo '<a href="people/'.$m->Username.'">'.$m->Username.'</a>' ?>
+                    <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?>
                     <?=($verification_status) ? '<img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'">': ''?>
                     <br />
                     <?php echo $m->country; ?>
@@ -46,7 +46,7 @@ if ($verification_status) $verification_text = $words->getSilent('verifymembers_
 
     <div class="row">
         <dl class="list">
-            <dt><?=$words->getFormatted("FullName")?></dt><dd><?=$m->member_data->FirstName?> <i><?=$m->member_data->SecondName?></i> <?=$m->member_data->LastName?></dd>
+            <dt><?=$words->getFormatted("FullName")?></dt><dd><?=$m->member_data->FirstName?> <?=$m->member_data->SecondName?> <?=$m->member_data->LastName?></dd>
             <dt><?=$words->getFormatted("HouseNumber")?></dt><dd><?=$m->member_data->HouseNumber?></dd>
             <dt><?=$words->getFormatted("StreetName")?></dt><dd><?=$m->member_data->StreetName?></dd>
             <dt><?=$words->getFormatted("Zip")?></dt><dd><?=$m->member_data->Zip?></dd>
@@ -68,8 +68,8 @@ if ($verification_status) $verification_text = $words->getSilent('verifymembers_
 </div>
 
 <div class="row">
-    <span class="small"><?=$words->getFormatted("verifymembers_Comment") ?></span>
-    <textarea name="comment<?=$n?>" cols="30" rows="5" ><?=(isset($vars['comment'.$n])) ? $vars['comment'.$n] : ''?></textarea>
+    <textarea name="comment<?=$n?>" cols="35" rows="5" style="width: 97%" ><?=(isset($vars['comment'.$n])) ? $vars['comment'.$n] : ''?></textarea>
+    <p class="small"><?=$words->getFormatted("verifymembers_Comment") ?></p>
 </div>
 
 <input type="hidden" name="username<?=$n?>" value="<?=$m->Username?>" />

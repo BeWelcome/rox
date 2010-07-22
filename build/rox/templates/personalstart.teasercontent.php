@@ -433,7 +433,7 @@ Boston, MA  02111-1307, USA.
                 </div> <!-- tab5 -->
 
                 <div class="panel" id="tab6">
-                    <?php echo $words->get('InviteAFriendInfo');?>
+                    <p class="big"><?php echo $words->get('InviteAFriendInfo');?></p>
                 </div> <!-- tab5 -->
 
             </div> <!-- subcr -->

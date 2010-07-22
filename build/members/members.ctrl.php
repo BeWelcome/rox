@@ -34,7 +34,8 @@ class MembersController extends RoxControllerBase
     {
         $request = $args->request;
         
-        switch (isset($request[0]) ? $request[0] : false) {
+        switch (isset($request[0]) ? $request[0] : false)
+        {
             case 'updatemandatory':
             case 'mypreferences':
             case 'editmyprofile':
@@ -48,24 +49,36 @@ class MembersController extends RoxControllerBase
             case 'members':
             case 'people':
             default:
-                if (!isset($request[1]) || empty($request[1])) {
+                if (!isset($request[1]) || empty($request[1]))
+                {
                     // no member specified
                     $this->redirect("places");
-                } else if ($request[1] == 'avatar') {
+                }
+                else if ($request[1] == 'avatar')
+                {
                     if (!isset($request[2]) || !$member = $this->getMember($request[2]))
+                    {
                         PPHP::PExit();
+                    }
                     PRequest::ignoreCurrentRequest();
                     $this->model->showAvatar($member->id);
                     break;
-                } else if (!$member = $this->getMember($request[1])) {
+                }
+                else if (!($member = $this->getMember($request[1])) || !$member->isBrowsable())
+                {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
-                } else if (!$member->publicProfile) {
+                }
+                else if (!$member->publicProfile)
+                {
                     // this profile is not public
                     $page = new MembersMustloginPage;
-                } else {
+                }
+                else
+                {
                     // found a member with given id or username. juhu
-                    switch (isset($request[2]) ? $request[2] : false) {
+                    switch (isset($request[2]) ? $request[2] : false)
+                    {
                         case 'comments':
                             $page = new CommentsPage();
                             break;
@@ -98,6 +111,9 @@ class MembersController extends RoxControllerBase
                 break;
             case 'mypreferences':
                 $page = new MyPreferencesPage();
+                break;
+            case 'deleteprofile':
+                $page = new DeleteProfilePage();
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
@@ -158,7 +174,7 @@ class MembersController extends RoxControllerBase
                     $this->model->showAvatar($member->id);
                     break;
                 }
-                else if (!$member = $this->getMember($request[1]))
+                else if (!($member = $this->getMember($request[1])) || !$member->isBrowsable())
                 {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
@@ -518,4 +534,47 @@ class MembersController extends RoxControllerBase
         }
     }
 
+    /**
+     * callback for profile deletion
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff          $stuff1
+     * @param stuff          $stuff2
+     *
+     * @access public
+     * @return mixed
+     */
+    public function retireProfile(StdClass $args, $memory, $stuff1, $stuff2)
+    {
+        if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
+        {
+            return false;
+        }
+        $feedback = !empty($args->post['explanation']) ? $args->post['explanation'] : '';
+        if (isset($args->post['Complete_retire']))
+        {
+            $member->removeProfile();
+        }
+        else
+        {
+            $member->inactivateProfile();
+        }
+        $this->model->sendRetiringFeedback($feedback);
+        $member->logOut();
+        return $this->router->url('members_profile_retired', array(), false);
+    }
+
+    /**
+     * displays a page with some text about the profile being retired
+     *
+     * @access public
+     * @return RetiredPage
+     */
+    public function retired()
+    {
+        $page = new RetiredProfilePage();
+        $page->model = $this->model;
+        return $page;
+    }
 }

@@ -44,6 +44,7 @@ class PollsPage extends RoxPageView {
         $words = $this->getWords();
         $errormessage=$this->_error ;
          
+        $callbackId=time() ;
                 switch ($this->_action) {
 
                     case "listall":
@@ -65,7 +66,6 @@ class PollsPage extends RoxPageView {
                 require 'templates/create.php';    
                         break ;
                     case  "contribute":
-                        $callbackId=55656 ;
                 require 'templates/contribute.php';    
                         break ;
                     case  "probablyallreadyvote":
@@ -93,7 +93,7 @@ class PollsPage extends RoxPageView {
                 require 'templates/resultsnotyetavailable.php';    
                         break ;
                     case  "showpoll":
-                        $callbackid=5656456 ;
+                        $callbackid=time() ;
                 require 'templates/create.php';    
                         break ;
                         

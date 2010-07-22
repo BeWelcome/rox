@@ -225,7 +225,7 @@ WHERE   id = $IdMember
         if (is_numeric($langcode)) {
             $ss=  "
 SELECT SQL_CACHE
-    id,ShortCode, Name
+    id,ShortCode, Name,WordCode
 FROM
     languages
 WHERE
@@ -235,7 +235,7 @@ WHERE
         else {
             $ss=  "
 SELECT SQL_CACHE
-    id,ShortCode, Name
+    id,ShortCode, Name,WordCode
 FROM
     languages
 WHERE
@@ -248,6 +248,7 @@ WHERE
             $l = new stdClass;
             $l->id = 0;
             $l->ShortCode = 'en';
+            $l->WordCode = 'Lang_en';
             $l->Name = 'English';
             $this->profile_language = $l;
         }
@@ -646,7 +647,8 @@ WHERE
             $squery = "
 SELECT
     id,
-    Name
+    Name,
+	WordCode
 FROM
     languages
 ORDER BY
@@ -832,6 +834,7 @@ ORDER BY
         $words->setlangWrite($vars['profile_language']);
 
         // refactoring to use member entity
+        $m->LastLogin = '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin));
         $m->Gender = $vars['gender'];
         $m->HideGender = $vars['HideGender'];
         $m->BirthDate = $vars['BirthDate'];
@@ -909,6 +912,36 @@ ORDER BY
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
         MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+
+        // Check relations, and update them if they have changed
+        $Relations=$m->get_all_relations() ;
+        foreach($Relations as $Relation) {
+            if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id]) 
+                and (!empty($vars["RelationComment_".$Relation->id])))  {
+//              echo "Relation #".$Relation->id,"<br />", $words->mInTrad($Relation->Comment,$vars['profile_language']),"<br />",$vars['RelationComment_'.$Relation->id],"<br />" ;
+                $words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
+                $this->logWrite("updating relation #".$Relation->id." Relation Confirmed=".$Relation->Confirmed, "Profile update");
+            }
+        }
+
+        // Check groups membership description, and update them if they have changed
+        // Tod od with Peter: check if there is other feature to update a group membership (a groupmembership model for example, or entity)
+        /* group membership should not be present here, disabled for now
+        $Groups=$m->getGroups() ;
+        for ($i = 0; $i < count($Groups) ; $i++) {
+            $group=$Groups[$i] ;
+            $group_id = $group->getPKValue() ;
+            $group_name_translated = $words->get("Group_".$group->Name);
+            $group_comment_translated = htmlspecialchars($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']), ENT_QUOTES);
+            $IdMemberShip=$m->getGroupMembership($group)->id ;
+            if (($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language'])!=$vars["GroupMembership_".$IdMemberShip]) 
+                and (!empty($vars["GroupMembership_".$IdMemberShip])))  {
+                echo "Group #".$group_id,"<br />",$words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']),"<br />",$vars["GroupMembership_".$IdMemberShip],"<br />" ;
+                $words->ReplaceInMTrad(strip_tags($vars["GroupMembership_".$IdMemberShip]),"membersgroups.Comment", $IdMemberShip, $m->getGroupMembership($group)->Comment, $IdMember);
+                $this->logWrite("updating membership description in group #".$group_id." Group name=".$group->name, "Profil update");
+            }
+        }
+        */
 
         // if a member with status NeedMore updates her/his profile, moving them back to pending
         if ($m->Status == 'NeedMore') $m->Status = 'Pending';
@@ -1156,6 +1189,8 @@ ORDER BY
                 $suffix = '_xs';
             elseif (isset($_GET['30_30']))
                 $suffix = '_30_30';
+            elseif (isset($_GET['200']))
+                $suffix = '_200';
             else $suffix = '';
             $file .= $suffix;
         }
@@ -1234,6 +1269,7 @@ ORDER BY membersphotos.SortOrder
         $this->writeMemberphoto($memberid);
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
         $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
+        $img->createThumb($this->avatarDir->dirName(), $memberid.'_200',200, 266, true, 'ratio');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_30_30', 30, 30, true, 'square');
         return true;
@@ -1267,5 +1303,17 @@ VALUES
     {
         $this->avatarDir = new PDataDir('user/avatars');
     }
-    
+
+
+    public function sendRetiringFeedback($feedback = '')
+    {
+        if (!empty($feedback))
+        {
+            $feedback_model = new FeedbackModel;
+            $feedback_model->sendFeedback(array(
+                "IdCategory"       => FeedbackModel::OTHER,
+                "FeedbackQuestion" => $feedback,
+            ));
+        }
+    }
 }

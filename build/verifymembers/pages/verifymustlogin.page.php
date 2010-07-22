@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
- 
+
 class VerifyMustLoginPage extends VerifyMembersPage
 {
     private $_redirect_url = 'verify';
@@ -32,11 +32,11 @@ class VerifyMustLoginPage extends VerifyMembersPage
         $login_widget->render();
     }
 
-    
+
     protected function getColumnNames()
     {
         // we don't need the other columns
         return array('col3');
     }
-    
+
 }

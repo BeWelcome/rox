@@ -25,7 +25,7 @@
             <tr class="<?php echo $background = (($count % 2) ? 'highlight' : 'blank'); ?>">
                 <td><?=MOD_layoutbits::PIC_50_50($member->Username) ?></td>
                 <td>
-                    <a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
+                    <a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a>
                     <ul>
                         <li><span class="small"><?= $member->age; ?> </span></li>
                         <li><span class="small"><?= $member->cityname; ?></span></li>

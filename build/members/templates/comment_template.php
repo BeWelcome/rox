@@ -43,14 +43,14 @@ Boston, MA  02111-1307, USA.
 
     <div class="c75l" >
       <div class="subcl" >
-        <a href="people/<?=$c->Username?>">
+        <a href="members/<?=$c->Username?>">
            <img class="float_left framed"  src="members/avatar/<?=$c->Username?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
             <p class="floatbox">
               <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->Id) echo '<a href="members/'.$member->username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?>
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
-              <span class="small grey"><?=$words->get('CommentFrom','<a href="people/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
+              <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
             </p>
             <p>
               <em><?=$c->TextWhere?></em>

@@ -6,7 +6,7 @@ then
 fi
 
 file=`date +%Y-%m-%d`
-if `/usr/bin/wget --header="Host: $1" http://localhost/geo/refreshgeo -O /tmp/geoupdate$file > /dev/null`
+if `/usr/bin/wget --header="Host: $1" http://localhost/geo/refreshgeo -O /tmp/geoupdate$file > /dev/null 2>&1`
 then
     if /bin/grep -q "^success$" /tmp/geoupdate$file && /bin/rm /tmp/geoupdate$file
     then

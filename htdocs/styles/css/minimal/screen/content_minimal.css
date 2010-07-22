@@ -108,6 +108,7 @@
 
   .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dashed; border-bottom: 1px #FF0000 dashed; }
   .highlight {background-color: #eeeeee; border:1px solid #E5E5E5; margin-right:4px;}
+  .success {background: #CCFF99 url(../images/iconsfam/accept.png); background-repeat:no-repeat; background-position: 5px; padding: 1em 2em; border: 1px #888 solid; margin: 1em;}
 
   .grey {color: #777777; }
   .black  {color: #000; }
@@ -357,6 +358,7 @@ dl.list {
     background: #ffffff;
     color: #777;
     padding: 2px;
+    font-size:1.1em;
   }
   input[type=image] {
     border: 0;
@@ -418,7 +420,7 @@ dl.list {
    * @section content-pagination
    */
 
-  div.pages {padding-top:10px; white-space: nowrap; }
+  div.pages {padding:1em 0; white-space: nowrap; overflow:hidden;  }
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
   div.pages li.current a {color:#666;font-weight:bold; }
@@ -635,7 +637,7 @@ background: none;
 */
 
 .userinfo {
-    margin-left: 60px;
+    margin-left: 0px;
     overflow: hidden;
 }
 
@@ -812,43 +814,46 @@ div.box div.boxbottom div.links {
     margin: 0;
 }
 .fieldset-menu-form fieldset {
-    border-top: none;
+	border: 1px solid #ccc;
+	border-top: none;
     background: transparent;
-    border-color: #ccc;
+	margin: 0;
+	padding: 2em;
+	position: relative;
 }
-#col3_content .fieldset-menu ul, .fieldset-menu ul{
+.fieldset-menu-form legend {
+	display: none;
+}
+
+#col3_content ul.fieldset-menu {
     margin: 0;
-    padding:0;
+    padding: 4px 0;
+	padding-bottom: 2px;
     list-style-type:none;
     border-bottom: 1px solid #ccc;
 }
 .fieldset-menu li{
-    padding-left:1em;
-    padding-right:1em;
-    padding-top: 0.5em;
-    padding-bottom: 0.6em;
-    margin-left: 0;
-    margin-right: .2em;
     display:inline;
-    border-top: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    line-height: 2.4em;
-    background-color: #eee;
+	margin-right: 0.5em;
 }
-.fieldset-menu li.active {
-    background: transparent url(../images/button_bg.png) repeat-x scroll 0 0;
-    border-bottom: 2px solid #f7f7f7;
-    font-weight: bold;
-}
+
 .fieldset-menu li a{
     color: #333;
+	background-color: #e8e8ee;
+	border: 1px solid #ccc;
+	border-bottom: none;
+	padding: 4px 0.5em;
 }
 .fieldset-menu li a:hover{
     color: #333;
+	background: #fff;
+	border-bottom: 1px solid white;
+
 }
 .fieldset-menu li.active a {
     color: #333;
+	background-color: #fff;
+	border-bottom: 1px solid #fff;
 }
 
 /* Login Widget */
@@ -858,7 +863,7 @@ div.box div.boxbottom div.links {
     background-color: #f5f5f5;
 }
 #login-widget input#login-u, #login-widget input#login-p {
-    width: 8em;
+    width: 10em;
 }
 #loginmessage {
     width: 100%;
@@ -872,9 +877,11 @@ div.box div.boxbottom div.links {
     border-bottom: 4px solid #ff0000;
 }
 #language_select {
-    color: #ffffff;
+  color: #ffffff;
   float: right;
-  padding: 0 0 1.3em 0;
+  padding: 1.4em 1.7em;
+  font-size: 1.1em;
+  font-weight: bold;
 }
 
 /**
@@ -1644,10 +1651,10 @@ height:50px;
   */
 
   /* all IE */
-  .yform { padding-top:0\9; }
-  .yform fieldset { padding:0 5px\9; padding-top:1em\9; }
-  .yform legend { position:absolute\9; top:-.5em\9; *left:0\9; }
-  .yform fieldset { position:relative\9; overflow:visible\9;  margin-top:1.5em\9; zoom:1; }
+  .yform { padding-top:0; }
+  .yform fieldset { padding:0 5px; padding-top:1em; }
+  .yform legend { position:absolute; top:-.5em; *left:0; }
+  .yform fieldset { position:relative; overflow:visible;  margin-top:1.5em; zoom:1; }
 
   /* IE5.x, IE6 & IE7 */
   .yform legend { *padding:0 5px; }

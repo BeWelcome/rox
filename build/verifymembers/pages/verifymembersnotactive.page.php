@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
- 
+
 class VerifyMembersNotActivePage extends VerifyMembersPage
 {
     private $_redirect_url = 'verify';
@@ -18,7 +18,7 @@ class VerifyMembersNotActivePage extends VerifyMembersPage
     {
         $this->_redirect_url = $url;
     }
-    
+
     /**
      * configure the teaser (the content of the orange bar)
      */
@@ -29,14 +29,15 @@ class VerifyMembersNotActivePage extends VerifyMembersPage
 
     protected function column_col3()
     {
-        echo '<p class="note error big">Only active members can verify each other!</p>';
+        $words = $this->getWords();
+        echo '<p class="note error big">'.$words->getFormatted("OnlyActiveMembersCanVerifyEachOther").'</p>';
     }
 
-    
+
     protected function getColumnNames()
     {
         // we don't need the other columns
         return array('col3');
     }
-    
+
 }

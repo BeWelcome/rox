@@ -86,7 +86,7 @@ class VerifiedMembersViewPage extends RoxPageView {
     protected function teaserHeadline() {
          $words = $this->getWords();
          if ($this->VerifierUsername!="") {
-            echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),"<a href=\"people/".$this->VerifierUsername."\">".$this->VerifierUsername."</a>") ;
+            echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),"<a href=\"members/".$this->VerifierUsername."\">".$this->VerifierUsername."</a>") ;
         }
          if ($this->VerifiedUsername!="") {
             echo count($this->list)," have been verified by ",$this->VerifiedUsername ;
@@ -107,7 +107,7 @@ class VerifiedMembersViewPage extends RoxPageView {
     protected function leftSidebar() {
         $words = $this->getWords();
         echo '<h3>',$words->getFormatted("MyVerifyTools"),'</h3>';
-		echo '<ul class="linklist">' ;
+        echo '<ul class="linklist">' ;
         echo '<li><a href="verifymembers/verifiersof/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerifier"),'</a></li>';
         echo '<li><a href="verifymembers/verifiersby/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerified"),'</a></li>';
         echo '</ul>' ;
@@ -115,7 +115,7 @@ class VerifiedMembersViewPage extends RoxPageView {
         echo '<ul class="linklist">' ;
         echo '<li><a href="verifymembers/approvedverifiers">',$words->getFormatted("ApprovedVerififiersLink"),'</a></li>';
         echo '<li><a href="wiki/Verification">',$words->getFormatted("VerifyDoc"),'</a></li>';
-		echo '</ul>' ;
+        echo '</ul>' ;
     }
 
 } // end of VerifyMembersPage

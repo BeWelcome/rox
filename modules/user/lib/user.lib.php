@@ -409,7 +409,7 @@ WHERE
         // is always deleted
 
         //if we are on localhost and use IPv6 we must omit this
-        if ($_SERVER['REMOTE_ADDR'] != '::1') {
+        if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != '::1') {
         	$ip_string = (string)$_SERVER['REMOTE_ADDR'];
         }
         if (!is_int($ip_int = ip2long($ip_string))) {

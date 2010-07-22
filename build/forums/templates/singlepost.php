@@ -33,7 +33,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     <div class="forumsauthor">
         <div class="forumsauthorname">
             <a name="post<?php echo $post->postid; ?>"></a>
-            <a href="people/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
+            <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
         </div> <!-- forumsauthorname -->
         <div class="forumsavatar">
             <img
@@ -73,7 +73,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
         ?>
         </p> <!-- forumstime -->
-
+        
         <p class="forumsedit">
         <?php
 
@@ -97,10 +97,9 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
 
             if (isset($post->title) && $post->title) { // This is set if it's a SEARCH
-                echo '<br />';
                 echo $words->getFormatted('search_topic_text');
 //                echo ' <b>'.$post->title.'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
-                echo ' <b>'.$words->fTrad($post->IdTitle).'</b> &mdash; <a href="'.ForumsView::postURL($post).'">'.$words->getFormatted('search_topic_href').'</a>';
+                echo ' <strong><a href="'.ForumsView::postURL($post).'">'.$words->fTrad($post->IdTitle).'</a></strong>';
             }
             ?>
         </p>
@@ -114,17 +113,18 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
             // If current user has a moderator right, he can see the post
             if (($post->PostDeleted!="Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) {
-                $max=count($post->Trad) ;
-                if ($max>1) { // we will display the list of trads only if there is more than one trad
+                $PostMaxTrad=count($post->Trad) ;
+                if ($PostMaxTrad>1) { // we will display the list of trads only if there is more than one trad
                     echo "<p class=\"small\">",$words->getFormatted("forum_available_trads"),":" ;
 //                  print_r($post); echo"<br>" ;
-                    for ($jj=0;$jj<$max;$jj++) {
+                    for ($jj=0;$jj<$PostMaxTrad;$jj++) {
                         $Trad=$post->Trad[$jj] ;
 
 
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result
 
                         $ssSentence=str_replace("\"","&quot;",addslashes(strip_tags($Trad->Sentence,"<p><br /><br><strong><ul><li><a><img>")))  ;
+                        $ssSentence=str_replace("\n","",$ssSentence) ; // If we dont remove teh extraline breaks, javascript with on mosover for translation doesn't work
 //                      $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
                         if ($jj==0) {
                             echo "[Original <a  title=\" [".$words->getFormatted("ForumTranslatedBy",$Trad->TranslatorUsername)."]\"  href=\"rox/in/".$Trad->ShortCode."/forums/s".$post->threadid."\" onmouseover=\"singlepost_display".$post->IdContent."('".$ssSentence."','d".$post->IdContent."')\">".$Trad->ShortCode."</a>] " ;
@@ -162,7 +162,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 $LocalVolMessage=$post->LocalVolMessage ;
                 $TitleText=$words->fTrad($LocalVolMessage->IdTitleText) ;
                 $MessageText=$words->fTrad($LocalVolMessage->IdMessageText) ;
-
+            
                 echo "<div>"  ; // Todo add a special div for a special layout
                 echo "<br /> ",$words->getFormatted('ForumPostWithLocalMessage') ;
                 echo "<table bgcolor=\"lightgray\">" ;
@@ -186,7 +186,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                     echo $words->getFormatted("ForumPostCurrentResults") ;
                     echo "<ul>"  ;
                     foreach ($Vote->PossibleChoice as $cc) {
-                    $ss='Choice_'.$cc ;
+                    $ss=$cc ;
                     $count=$Vote->$ss ;
                     $countpercent="0%" ;
                     if ($Vote->Total>0) {
@@ -216,29 +216,35 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     } // end if not deleted
 
     ?>
+
+    </div> <!-- forumsmessage -->
     <?php
-    if (isset($_SESSION["IdMember"]) and (isset($post->IdPost))) {
+    if (isset($_SESSION["IdMember"])) {
         if ($this->BW_Right->HasRight("ForumModerator")) {
             $TheReports=$this->_model->GetReports($post->IdPost) ;
             $max=count($TheReports) ;
             foreach ($TheReports as $report) {
-                echo "<p class=\"forumsedit\">report from ",$report->Username," [".$report->Status."] " ;
-                echo "<a href='forums/reporttomod/",$report->IdPost,"/".$report->IdReporter."'>view report</a></p>" ;
+                echo "<br />report from ",$report->Username," [".$report->Status."] " ;
+                echo "<a href='forums/reporttomod/",$report->IdPost,"/".$report->IdReporter."'>view report</a>" ;
             }
         }
+        /*
         $TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
         if (isset($TheReports[0]->IdReporter)) {
-            echo "<p class=\"forumsedit\"><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a></p>" ;
+            echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a>" ;
         }
         else {
-            echo "<p class=\"forumsedit\"><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a></p>" ;
+            echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a>" ;
         }
+        */
     }
 
     ?>
-    </div> <!-- forumsmessage -->
 </div> <!-- forumspost -->
 
+<?php
+if ((isset($PostMaxTrad)) and ($PostMaxTrad>1)) { // No need to at javascript catcher function is there is no more than one translations
+?>
 <script type="text/javascript">
 <!--
  function singlepost_display<?php echo $post->IdContent; ?>(strCode,div_area) {
@@ -254,3 +260,6 @@ JeanYves notes : every display of a forum post content  goes trhu this template
  }
 // -->
 </script>
+<?php
+}
+?>

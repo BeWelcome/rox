@@ -18,9 +18,11 @@ class RoxEntityFactory
      * @var array
      */
     private $_entities = array(
+        'Address'           => 'build/members/address.entity',
         'BlogEntity'        => 'build/blog/blog.entity',
         'Comment'           => 'build/members/comment.entity',
         'Donation'          => 'build/donate/donation.entity',
+        'Feedback'          => 'build/about/feedback.entity',
         'Gallery'           => 'build/gallery/gallery.entity',
         'GalleryComment'    => 'build/gallery/gallerycomment.entity',
         'GalleryItem'       => 'build/gallery/galleryitem.entity',

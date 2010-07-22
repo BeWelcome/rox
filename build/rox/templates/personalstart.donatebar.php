@@ -7,8 +7,8 @@ $Stats = $DModel->getStatForDonations() ;
 // display the donation bar if the parameters are set
 if ($TDonationArray) {
     $max=count($TDonationArray) ;
-    $TotalDonations=$Stats->QuaterDonation ;
-    $TotalDonationsNeeded = $Stats->QuaterNeededAmount ;
+    $TotalDonations=$Stats->QuarterDonation ;
+    $TotalDonationsNeeded = $Stats->QuarterNeededAmount ;
     $Percent = $TotalDonations *100/$TotalDonationsNeeded;
     
     $BarState = -101 *$Percent/100;

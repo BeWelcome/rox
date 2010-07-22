@@ -17,4 +17,13 @@ $right = new MOD_right();
 $verification_status = $member->verification_status;
 if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
 
+$agestr = "";
+if ($member->age == "hidden") {
+    $agestr .= $ww->AgeHidden;
+} else {
+    $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate));
+}
+
+$occupation = $member->get_trad("Occupation", $profile_language,true);
+
 ?>

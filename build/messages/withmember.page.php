@@ -14,7 +14,7 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
             <div class="float_left framed">
                 <?=MOD_layoutbits::PIC_50_50($contactUsername,'')?>
             </div>
-            <h4>All Messages with <a href="people/<?=$contactUsername ?>"><?=$contactUsername ?></a>
+            <h4>All Messages with <a href="members/<?=$contactUsername ?>"><?=$contactUsername ?></a>
             </h4>
             (in both directions)
         </div>
@@ -76,7 +76,7 @@ class MailboxWidget_WithMember extends MailboxWidget
         <?=MOD_layoutbits::PIC_30_30($message->senderUsername,'')?>
         </td>
         <td>
-        <a style="color: #333;" href="people/<?=$contact_username ?>"><strong><?=$link_username ?></strong></a>
+        <a style="color: #333;" href="members/<?=$contact_username ?>"><strong><?=$link_username ?></strong></a>
         <br />
         <span class="small"><?=$layoutbits->ago(strtotime($date_created)) ?></span>
         </td>

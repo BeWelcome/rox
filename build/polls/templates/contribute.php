@@ -51,6 +51,7 @@ $list=$Data->Choices ; // Retrieve the possible choices
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 $iiMax = count($list) ; // This retrieve the number of polls
 $IdPoll=$Data->rPoll->id ;
+$rPoll=$Data->rPoll ;
 ?>
 
 <form name="contribute" action="polls/vote"  id="idcontribute" method="post">
@@ -64,6 +65,9 @@ $IdPoll=$Data->rPoll->id ;
 <?php if ($list != false) { ?>
         <h3><?=$words->getFormatted("polls_choice")." (".$words->getFormatted("polls_typechoice_".$Data->rPoll->TypeOfChoice).")" ?></h3>
 <?php }
+//if ($rPoll->Ended!='0000-00-00 00:00:00') {
+		echo "<p>",$words->getFormatted("polls_willend_on",$rPoll->Ended)."</p>" ;
+//	}
 ?>
 
 <ul class="poll">
@@ -81,7 +85,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             }
             if ($Data->rPoll->TypeOfChoice=="Inclusive") {
                 ?>
-                <input type="checkbox" id="choice<?=$ii;?>" name="<choice_<?=$p->id;?>" />
+                <input type="checkbox" id="choice<?=$ii;?>" name="choice_<?=$p->id;?>" />
                 <label for="choice<?=$ii;?>"><? echo $words->fTrad($p->IdChoiceText); ?></label>
                 <?
             }

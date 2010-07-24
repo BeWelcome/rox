@@ -31,6 +31,10 @@ $messengers = $member->messengers();
 $website = $member->WebSite;
 
 $languages = $member->get_profile_languages(); 
-$occupation = $member->get_trad("Occupation", $profile_language,true);        
+$occupation = $member->get_trad("Occupation", $profile_language,true);
+
+$trips_array = $member->getTripsArray();      
+$trips = $trips_array[0];
+$trip_data = $trips_array[1];
 
 ?>

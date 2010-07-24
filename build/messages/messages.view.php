@@ -84,7 +84,7 @@ class ReadMessagePage extends MessagesBasePage
                 <?=MOD_layoutbits::PIC_50_50($contact_username) ?>
                 </p>
                 <p class="">
-                  <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="people/'.$contact_username.'">'.$contact_username.'</a>') : $words->get('MessageTo','<a href="people/'.$contact_username.'">'.$contact_username.'</a>')) ?> </span>
+                  <span class="grey"><?=($direction_in ? $words->get('MessageFrom','<a href="members/'.$contact_username.'">'.$contact_username.'</a>') : $words->get('MessageTo','<a href="members/'.$contact_username.'">'.$contact_username.'</a>')) ?> </span>
                 </p>
                 <p class="">
                   <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->created)) ?>

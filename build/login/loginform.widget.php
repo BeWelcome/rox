@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -34,30 +34,30 @@ Boston, MA  02111-1307, USA.
 class LoginFormWidget extends RoxWidget
 {
     private $_memory = false;
-    
+
     public function render($small = false)
     {
         $layoutkit = $this->layoutkit;
         $words = $this->words;
         $ww = $this->ww;
         $formkit = $layoutkit->formkit;
-        
+
         $callback_tag = $formkit->setPostCallback('LoginController', 'loginCallback');
         $mem_recovery_tag = $formkit->setMemForRecovery();
 
-	    $mem_redirect = $formkit->mem_from_redirect;
-		$err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
+        $mem_redirect = $formkit->mem_from_redirect;
+        $err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
         $url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         if (!empty($_SERVER['QUERY_STRING'])) {
             $url .= '?'.$_SERVER['QUERY_STRING'];
         }
-        
+
         // hack for HTTPS-Login
         if (strrpos($url, 'test') === false && strrpos($url, 'bw') === false  && strrpos($url, 'alpha') === false && strrpos($url, 'localhost') === false)
             $url = str_replace('http://','https://',$url);
 
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
-        
+
         if ($logged_in) {
             // already logged in
             // why show this form?
@@ -81,75 +81,81 @@ class LoginFormWidget extends RoxWidget
         }
 
 
-		// Adds for subdomain to forward login (not definitive, under discussions), jy 5/7/2009
-		$ItIsNotASubDomain=true ;
-		$url_login=$url ;
-		
-		
-		// Test if it is a knowm subdomain, and if so change prepare forwarding to a login widget on www
-		if 	(  (strrpos($url_login, 'fr.') !== false) 
-			or (strrpos($url_login, 'de.') !== false) 
-//			or (strrpos($url_login, 'localhost') !== false)
-		) {
-			$ItIsNotASubDomain=false ;
-			$url_login="http://www.bewelcome.org/login#login-widget" ;
-		} // end of adds for subdomains
-		
-        
+        // Adds for subdomain to forward login (not definitive, under discussions), jy 5/7/2009
+        $ItIsNotASubDomain=true ;
+        $url_login=$url ;
+
+
+        // Test if it is a knowm subdomain, and if so change prepare forwarding to a login widget on www
+        if  (  (strrpos($url_login, 'fr.') !== false)
+            or (strrpos($url_login, 'de.') !== false)
+//          or (strrpos($url_login, 'localhost') !== false)
+        ) {
+            $ItIsNotASubDomain=false ;
+            $url_login="http://www.bewelcome.org/login#login-widget" ;
+        } // end of adds for subdomains
+
+
         ?>
         <?php if ($small == true) { ?>
         <div class="login-widget-small" >
         <form id="main-login-form" method="post" action="<?=$url_login ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
-			<?php if ($ItIsNotASubDomain) { // Added because this is hidden for subdomain ?>
-				<table>
-					<tr>
-						<td>
-							<label for="login-u"><?=$ww->Username ?></label><br />
-							<input type="text" id="login-u" name="u" />
-						</td>
-						<td>
-							<label for="login-p"><?=$ww->Password ?></label><br />
-							<input type="password" id="login-p" name="p" />
-						</td>
-						<td>
-							<br /><input type="submit" value="Login" id="smallbutton" class="button"/>
-						</td>
-					</tr>
-				</table>
-        <?php }  // Added because this is hidden for subdomain ?>    
-		</form>
-        
+            <?php if ($ItIsNotASubDomain) { // Added because this is hidden for subdomain ?>
+                <table>
+                    <tr>
+                        <td>
+                            <label for="login-u"><?=$ww->Username ?></label><br />
+                            <input type="text" id="login-u" name="u" />
+                        </td>
+                        <td>
+                            <label for="login-p"><?=$ww->Password ?></label><br />
+                            <input type="password" id="login-p" name="p" />
+                        </td>
+                        <td>
+                            <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
+                        </td>
+                    </tr>
+                </table>
+        <?php }  // Added because this is hidden for subdomain ?>
+        </form>
+
         <script type="text/javascript">
             document.getElementById("login-u").focus();
         </script>
-        
+
         </div>
         <?php } else { ?>
         <div class="info" id="login-widget">
         <h3><?=$ww->Login ?></h3>
-		<?if ($err) : ?>
-		<p class="note warning"><?=$err?></p>
-		<? endif ?>
+        <?if ($err) : ?>
+        <p class="note warning"><?=$err?></p>
+        <? endif ?>
         <form method="post" action="<?=$url_login ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
-          
-			<?php if ($ItIsNotASubDomain) {  // Added because this is hidden for subdomain ?>
-				<table>
-				<tr><td align="right">
-				<label for="login-u"><?=$ww->Username ?></label>
-				</td><td>
-				<input type="text" id="login-u" name="u" />
-				</td></tr>
-				<tr><td align="right">
-				<label for="login-p"><?=$ww->Password ?></label>
-				</td><td>
-				<input type="password" id="login-p" name="p" />
-				</tr></td>
-				<tr><td>&nbsp;</td><td>
-			<?php }  // Added because this is hidden for subdomain ?>    
+
+            <?php if ($ItIsNotASubDomain) {  // Added because this is hidden for subdomain ?>
+                <table>
+                    <tr>
+                        <td align="right">
+                            <label for="login-u"><?=$ww->Username ?></label>
+                        </td>
+                        <td>
+                            <input type="text" id="login-u" name="u" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">
+                            <label for="login-p"><?=$ww->Password ?></label>
+                        </td>
+                        <td>
+                            <input type="password" id="login-p" name="p" />
+                        </td>
+                    </tr>
+                <tr><td>&nbsp;</td><td>
+            <?php }  // Added because this is hidden for subdomain ?>
             <input type="submit" value="Login" class="button"/>
           </td></tr></table>
           <p><?=$ww->LoginformForgetPassword('<a href="bw/lostpassword.php">', '</a>') ?><br /><br /></p>

@@ -38,8 +38,10 @@
                 </div>
                 <?php endif; ?>
                 <h3><?= $words->get('GroupOwner'); ?></h3>
-                <div class="row">
-                    <p><?= (($member =$this->group->getGroupOwner()) ? $member->Username : $words->get('GroupsNoOwner')); ?></p>
+                <div class="floatbox">
+                    <div class="center float_left">
+                        <?php echo (($member =$this->group->getGroupOwner()) ? (MOD_layoutbits::PIC_50_50($member->Username) ."<br /><a href=\"members/".$member->Username ."\">" .$member->Username ."</a>")  : $words->get('GroupsNoOwner')); ?>
+                    </div>
                 </div>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">

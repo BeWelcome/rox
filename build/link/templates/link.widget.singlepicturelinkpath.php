@@ -66,7 +66,7 @@ Boston, MA  02111-1307, USA.
             </div> <!-- float_left -->
             <div class="float_left" style="padding-right: 15px">
                 <p class="center">
-                    <span class="username"><?php echo '<a href="bw/member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?></span><br />
+                    <?php echo '<a href="bw/member.php?cid='.$e['memberdata']->Username.'">'.$e['memberdata']->Username.'</a>' ?><br />
                     <?php echo MOD_layoutbits::PIC_50_50($e['memberdata']->Username,'',$style='framed') ?><br />
                     <span class="small grey"><?php echo $e['memberdata']->Country; ?></span>
                 </p>

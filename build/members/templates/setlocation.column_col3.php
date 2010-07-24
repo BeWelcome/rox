@@ -141,7 +141,7 @@ Boston, MA  02111-1307, USA.
   </fieldset>
 
   <div id="submit_button" style="display: none;">
-    <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
+    <input type="submit" value="<?php echo $words->get('Save Location'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
   </div>

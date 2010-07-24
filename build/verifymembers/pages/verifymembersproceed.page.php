@@ -12,9 +12,9 @@
 
 
 
-class VerifyMembersProceedPage extends VerifyMembersPage 
+class VerifyMembersProceedPage extends VerifyMembersPage
 {
-    
+
     /**
      * which item in the top menu should be activated when showing this page?
      * Let's use the 'getanswers' menu item for this one.
@@ -23,25 +23,22 @@ class VerifyMembersProceedPage extends VerifyMembersPage
     protected function getTopmenuActiveItem() {
         return 'getanswers';
     }
-    
+
     /**
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
      */
     protected function getPageTitle() {
-	 	 $words = new MOD_words();
-	 	 if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
-		 	echo $words->getFormatted("verifymembers_approvedverifier") ;
-	     }
-		 else {
-		 	echo $words->getFormatted("verifymembers_teaser") ;
-		 }
+         $words = new MOD_words();
+         if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
+            echo $words->getFormatted("verifymembers_approvedverifier") ;
+         }
+         else {
+            echo $words->getFormatted("verifymembers_teaser") ;
+         }
     }
-    
-	 
+
+
 } // end of VerifyMembersProceedPage
-
-
-
 
 ?>

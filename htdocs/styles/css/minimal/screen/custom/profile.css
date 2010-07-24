@@ -1,15 +1,9 @@
 @media all
 {
-#col3_content ul, #col3_content dl,  #col3_content .box p {
-	margin: 1em 0;
-}
 
-#personalmenu.sm li {
-	font-size: 1em;
-}
-.activelanguage {
-	font-weight: bold;
-}
+#main {padding: 0 2em;}
+
+
 #col1{
     float: left;
     width: 18%;
@@ -17,58 +11,34 @@
 #col3{
     margin: 0 0 0 18%;
 }
-#col3_content{
-    padding: 2em 0 4em 4em;
-	margin: 0;
-	background:transparent url(../../images/bg_col3.png) no-repeat scroll 0 0;
-}
+
+
 #col1 #col1_content{
-/*	background:transparent url(../../images/bg_leftsidebar.jpg) no-repeat scroll right top; */
     padding: 0 2em 0 0;
-	margin: 0;	
+    margin: 0;
 }
 
-#col1 #col1_content .linklist{
-    margin-right: 0;
+
+#col3_content{
+    padding: 1em 0 3em 3em;
+    margin: 0;
+    background:transparent url(../../images/bg_col3.png) no-repeat scroll 0 0;
 }
+
 #col3_content h1 {
     padding: 0 0 .4em 0;
 }
-#profile_linklist {
-	padding: 2em 0;
+
+#col3_content ul, #col3_content dl,  #col3_content .box p {
+    margin: 0 0;
+    color: #333;
 }
-#profile_linklist li {
-	color: #333;
-	font-size: 1em;
-	border-bottom: 1px solid #e5e5e5;
-	padding: 0.5em 1em;
+
+
+#navigation-path {
+    margin: 0 0 0.5em 0;
 }
-#profile_linklist li a {
-	color: #333;
-	font-size: 1.2em;
-}
-#profile_linklist li.active a {
-	font-weight: bold;
-}	
-#middle_nav.clearfix {
-    clear:none;
-	display: inline;
-}
-#nav_sub {
-    margin-top: 2em;
-}
-#nav_sub ul {
-	display: block;
-	padding-left: 0;
-}
-#nav_sub li {
-    padding: 0;
-}
-#nav_sub li.active a{
-	background: transparent url(../../images/small_arrow_down_bg.gif) no-repeat center bottom;
-	padding-bottom: 1.4em;
-	border: none;
-}
+
 #profile_pic {
     background: transparent url(../../images/pic_shadow.png) no-repeat left top;
     padding:17px;
@@ -76,28 +46,26 @@
     height: 100px;
 }
 #profile-info {
-	padding: 0 0 2em 0;
+    padding: 0 0 1em 0;
 }
-#profile-info #navigation-path{
-	padding: 2em 0;
-}
+
 #profile-info #username {
-	padding: 0;
-	line-height: 1.6em;
-	font-size: 1.6em;
+    padding: 0;
+    line-height: 1.6em;
+    font-size: 1.6em;
 }
 #profile-info #username strong {
-	font-size:1.6em;
-	line-height:1.5em;
-	padding:10px 10px 10px 0;
-	color: #000000;
+    font-size:1.6em;
+    padding:10px 10px 10px 0;
+    color: #000000;
 }
-#pic_shadow {
-    width: 30em;
-    float: left;
-	padding-top: 1em;
-	padding-left: 3em;
+#profile-info #quickinfo {
+    padding-top: 4.5em;
 }
+#profile-info .profile_translations {
+    white-space: pre-line
+}
+
 #profile dl, #preferences dl, dl#profiletop {
     display: block;
 }
@@ -111,11 +79,35 @@
     clear: left;
     margin-bottom: 0.8em;
 }
-#profile dd, #preferences dd, #profiletop dd {    
+#profile dd, #preferences dd, #profiletop dd {
     margin-left: 12em;
     line-height: 1.5em;
     margin-bottom: 0.8em;
 }
+
+#profile #interests dt, #profile #travel dt, #profile #accommodation dt {
+    float: none;
+    width: auto;
+    margin-bottom: 0;
+    font-weight:bold;
+}
+#profile #interests dd, #profile #travel dd, #profile #accommodation dd {
+    width: auto;
+    margin-left:0;
+}
+#profile #accommodation dt.guests {
+    width: 12em;
+    float: left;
+    clear: left;
+    margin-bottom: 0.8em;
+}
+#profile #accommodation dd.guests {
+    margin-left: 12em;
+    line-height: 1.5em;
+    margin-bottom: 0.8em;
+}
+
+
 
 #profile .profile_translations {
     padding: 0 0 1em 0;
@@ -129,21 +121,15 @@
     padding-right: 1em;
 }
 
-#profile .box, #profile #linkpath {
-    background-image: none;
-    border: none;
-    margin: 0 0 2em 0;
-    background: transparent none;
-    padding: 0;
-}
 
-#profile .box h3, #profile #linkpath h3, #profile-info .box h3{
-	background: none;
-	padding: .3em 0;
-	color: #2184E8;
+#profile-info #navigation-path h2 {
+    color: #333;
+    font-size: 1.2em;
+    font-weight: normal;
 }
-#profile #navigation-path h3,#profile #navigation-path h3 a {
-	color: #333;
+#profile-info #navigation-path strong {
+    font-size: 1.2em;
+    font-weight: strong;
 }
 
 /* list the spoken languages of a member */
@@ -151,20 +137,102 @@
     margin-right: .5em;
 }
 
-/* for the active language the profileconten is shown */
-#profile .activelanguage {
-    font-weight: bold;
-    padding-right: 1em;
-}
-
 /* for the available languages of the profil content*/
-#profile .availablelanguages,#profile-info .availablelanguages {
+#profile-info .availablelanguages {
     padding-right: 0.5em;
     color: #888;
+}
+#profile-info .activelanguage {
+    font-weight: bold;
+    padding-right: 0.5em;
 }
 
 #preferences ul, #preferences select {
     margin-bottom: 2em;
+}
+
+
+/* #profile_linklist for styles in the sidebar */
+#profile_linklist {
+    padding: 2em 0;
+}
+#profile_linklist li {
+    color: #333;
+    font-size: 1em;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0.5em 1em;
+}
+#profile_linklist li a {
+    color: #333;
+    font-size: 1.2em;
+}
+#profile_linklist li.active a {
+    font-weight: bold;
+}
+
+#profile_linklist .space {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    border: none;
+}
+#profile_linklist .messagesadd {
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/email_open.png) 0 3px no-repeat;
+}
+#profile_linklist .commentsadd {
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/comment_add.png) 0 3px no-repeat;
+}
+#profile_linklist .relationsadd {
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/add.png) 0 3px no-repeat;
+}
+#profile_linklist .verificationadd {
+    padding-left: 2em;
+    background: transparent url('../../../../../images/icons/shield.png') 0 3px no-repeat;
+}
+#profile_linklist .editmyprofile {
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/pencil.png) 0 3px no-repeat;
+}
+#profile_linklist .mypreferences {
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/wrench.png) 0 3px no-repeat;
+}
+#profile_linklist .myvisitors {
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/group.png) 0 3px no-repeat;
+}
+#profile_linklist .deleteprofile {
+    padding-left: 2em;
+    background: transparent url(../../images/iconsfam/delete.png) 0 3px no-repeat;
+}
+
+/* using css3 for round corners and shadow effect (only firefoxm chrome and safari) */
+#profile .box, #profile-info .box{
+    border: 1px solid #ccc; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;
+    padding: 0.8em;
+    margin-bottom: 1.2em;
+    margin-left: 0;
+    margin-top: 0;
+    background: #F5F5F5;
+    -moz-box-shadow: 2px 2px 5px #ccc; -webkit-box-shadow: 2px 2px 2px #ccc; box-shadow: 2px 2px 2px #ccc;
+    width: auto;
+}
+#profile #linkpath div.profile{
+    margin-right: 5px;
+}
+#profile #linkpath div.connection{
+    margin-right: 5px;
+    margin: 15px 5px 0 0;
+    vertical-align: middle;
+}
+
+#profile .box h3, #profile #linkpath h3, #profile-info .box h3{
+    margin-bottom: 0.3em;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+
 }
 
 /* colors for comment quality */
@@ -182,80 +250,13 @@
 }
 
 
-/* space for the icons next to the headline */
-h3.icon  {
-  padding-left: 25px;
-  padding-bottom: 2px;
-}
-
-/* icon for "About me" */
-.info22 {
-  background: url(../../images/icons22/icon_info.png) top left no-repeat;
- }
-
-/* icon for "Hobbies & Interests" */
-.sun22 {
-  background: url(../../images/icons22/icon_sun.png) top left no-repeat;
- }
-
-/* icon for "Travel Experience" */
-.world22 {
-  background: url(../../images/icons22/icon_world.png) top left no-repeat;
- }
-
-/* icon for "My Groups" */
-.groups22 {
-  background: url(../../images/icons22/icon_groups.png) top left no-repeat;
- }
-
-/* icon for "Accommodation" */
-.accommodation22 {
-  background: url(../../images/icons22/icon_accommodation.png) top left no-repeat;
- }
-
-/* icon for "Contact Info" */
-.contact22 {
-  background: url(../../images/icons22/icon_contact.png) top left no-repeat;
- }
-
-#profile_linklist .space {
-	padding-top: 1em;
-	padding-bottom: 1em;
-	border: none;
-}
-#profile_linklist .messagesadd {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/email_open.png) 0 3px no-repeat;
-}
-#profile_linklist .commentsadd {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/comment_add.png) 0 3px no-repeat;
-}
-#profile_linklist .relationsadd {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/add.png) 0 3px no-repeat;
-}
-#profile_linklist .verificationadd {
-	padding-left: 2em;
-	background: transparent url('../../../../../images/icons/shield.png') 0 3px no-repeat;
-}
-#profile_linklist .editmyprofile {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/pencil.png) 0 3px no-repeat;
-}
-#profile_linklist .mypreferences {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/wrench.png) 0 3px no-repeat;
-}
-#profile_linklist .myvisitors {
-	padding-left: 2em;
-	background: transparent url(../../images/iconsfam/group.png) 0 3px no-repeat;
-}
-
 /* styles for member results lists, used in myprofile visitors */
 .myvisitors .subcolumns{margin-bottom: 1.5em;}
 .myvisitors .profilesummary{color: #777; font-style: italic;}
 .userinfo {margin-left: 55px;}
 .userinfo p {margin-bottom: 0.2em;}
+.groupbox {margin-bottom: 0.5em;}
+
+.quickinfo {clear: right; padding-top: 5em; position: bottom;}
 
 }

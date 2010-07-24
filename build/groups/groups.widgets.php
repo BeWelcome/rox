@@ -69,7 +69,7 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
 HTML;
                 echo MOD_layoutbits::PIC_50_50($memberships[$idx]->Username);
                 echo <<<HTML
-                <a href="people/{$memberships[$idx]->Username}">{$memberships[$idx]->Username}</a>               
+                <a href="members/{$memberships[$idx]->Username}">{$memberships[$idx]->Username}</a>               
             </div>
 HTML;
         }

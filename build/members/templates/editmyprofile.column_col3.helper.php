@@ -33,7 +33,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     echo "</div>";
 } else {
     if ($this->status == 'finish') {
-          echo '<div class="note check">'.$ww->EditmyprofileFinish.'</div>';
+          echo '<div class="success">'.$ww->EditmyprofileFinish.'</div>';
     }
     $vars['errors'] = array();
 }

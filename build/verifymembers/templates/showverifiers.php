@@ -33,20 +33,17 @@ $styles = array( 'highlight', 'blank' ); // alternating background for table row
 $iiMax = count($list) ; // This retrieve the list of the verifiers
 ?>
 
-<table class="full">
-<tr class="<?=$styles[1] ?>">
-<td colspan="4">
- <?=$words->getFormatted("MemberHasVerificationLevel","<a class=\"username\" href=\"members/".$this->VerifierUsername."\">".$this->VerifierUsername."</a>", "<b>".$words->getFormatted($VerificationMaxLevel)."</b>") ?>
-</td></tr>
+<p><?=$words->getFormatted("MemberHasVerificationLevel","<a class=\"username\" href=\"members/".$this->VerifierUsername."\">".$this->VerifierUsername."</a>", "<strong>".$words->getFormatted($VerificationMaxLevel)."</strong>") ?></p>
 
+<table class="full">
 <?php if ($list != false) { ?>
     <tr>
-        <th><?=$words->getFormatted("Username") ?></th>
-        <th><?=$words->getFormatted("Location") ?></th>
-        <th><?=$words->getFormatted("verifymembers_HasCheckName") ?></th>
-        <th><?=$words->getFormatted("verifymembers_HasCheckAddress") ?></th>
-        <th><?=$words->getFormatted("verifymembers_CommentOfVer") ?></th>
-        <th><?=$words->getFormatted("verifymembers_Type") ?></th>
+        <th align="center"><?=$words->getFormatted("Username") ?></th>
+        <th align="center"><?=$words->getFormatted("Location") ?></th>
+        <th align="center"><?=$words->getFormatted("verifymembers_HasCheckName") ?></th>
+        <th align="center"><?=$words->getFormatted("verifymembers_HasCheckAddress") ?></th>
+        <th align="center"><?=$words->getFormatted("verifymembers_CommentOfVer") ?></th>
+        <th align="center"><?=$words->getFormatted("verifymembers_Type") ?></th>
     </tr>
 <?php } ?>
 
@@ -60,7 +57,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             <br />
             <a class="username" href="bw/member.php?cid=<?=$m->Username ?>"><?=$m->Username ?></a>
         </td>
-        <td><?=$m->CityName ?></td>
+        <td align="center"><?=$m->CityName ?></td>
         <td align="center"><? if ($m->NameVerified=="True") {
                                    echo $words->getFormatted("Yes") ;
                                 }

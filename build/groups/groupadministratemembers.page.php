@@ -77,7 +77,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         <?php foreach ($members as $member) : ?>
             <tr>
                 <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
-                <td><a href="people/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
+                <td><a href="members/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
                 <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>{$words->getSilent('GroupsBanMember')}</a> / <a class='kick' href='groups/{$this->group->getPKValue()}/kickmember/{$member->getPKValue()}'>{$words->getSilent('GroupsKickMember')}</a>");?></td>
             </tr>
         <?php endforeach; ?>
@@ -118,7 +118,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                 <?php foreach ($need_approval as $member) : ?>
                     <tr>
                         <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
-                        <td><a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
+                        <td><a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
                         <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='accept' href='groups/{$this->group->getPKValue()}/acceptmember/{$member->getPKValue()}'>Accept?</a>");?></td>
                     </tr>
                 <?php endforeach; ?>
@@ -136,7 +136,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
     <?php foreach ($invited as $member) : ?>
                     <tr>
                         <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
-                        <td><a href="people/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
+                        <td><a href="members/<?=$member->Username ?>" class="username"><?=$member->Username ?></a></td>
                     </tr>
     <?php endforeach; ?>
 <?php endif; ?>

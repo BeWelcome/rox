@@ -5,6 +5,6 @@
   <build>build2006_testing</build>
   <template></template>
   <text></text>
-  <debug/>
+<!--   <debug/> -->
 <!--  <suspended/>-->
 </basedata>

@@ -21,7 +21,7 @@ $words = new MOD_words();
 <td valign="top">
     <h<?=$headingLevel?>><?=htmlentities($comment->title, ENT_COMPAT, 'utf-8')?></h<?=$headingLevel?>>
     <div class="author small">
-        <?php echo $words->getFormatted('written_by'); ?> <a href="member/<?=$comment->user_handle?>"><?=$comment->user_handle?></a>
+        <?php echo $words->getFormatted('written_by'); ?> <a href="members/<?=$comment->user_handle?>"><?=$comment->user_handle?></a>
         <a href="blog/<?=$comment->user_handle?>" title="Read blog by <?=$comment->user_handle?>"><img src="images/icons/blog.gif" alt="" /></a>
          - <?php echo MOD_layoutbits::ago($comment->unix_created)?> <a href="#" title="<?=date($format['short'], $comment->unix_created)?>">(i)</a>
     </div>

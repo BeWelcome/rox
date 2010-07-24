@@ -195,38 +195,51 @@ WHERE
 // Now search in places
         $TPlaces=array() ;
         
-        if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
+                if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
             $searchtext = $this->dao->escape($_searchtext) ;
-            $str = "SELECT DISTINCT(geonameId) AS geonameid FROM geonames_alternate_names WHERE alternateName='{$searchtext}'";
+            $str = "SELECT DISTINCT(geonames_cache.geonameId) AS geonameid FROM geonames_alternate_names,geonames_cache WHERE alternateName='{$searchtext}' and geonames_alternate_names.geonameid=geonames_cache.geonameid";
             $qry = $this->dao->query($str);
             
             while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
                 $str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
                 $result = $this->dao->query($str);
                 $cc = $result->fetch(PDB::FETCH_OBJ);
+                
+                // Jeanyves trying to find a bug when venice is search in the quicksearch
+                if (empty($cc->fcode)) {
+            		$this->logWrite("SearchMembersModel : Failed to [".$str."] searchtext=[".$searchtext."]", "Bug");
+                }
+                // end of Jeanyves trying to find a bug when venice is search in the quicksearch
+                
                 if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
                     $cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
                     $cc->link="places/".$cc->fk_countrycode ;
                     $cc->CountryName="" ;
                     $cc->RegionName="" ;
                 }
-                elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')) {
+                elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')or($cc->fcode=='PPLA2')or($cc->fcode=='PPLA3')or($cc->fcode=='PPLA4')) {
                     $cc->TypePlace='City' ; // Becareful this will be use as a word, take care with lowercase, don't change
                     $sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
                     $qryRegion = $this->dao->query($sRegion);
                     $Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
-                    $cc->RegionName=$Region->name ;
                     
                     $sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
                     $qryCountry = $this->dao->query($sCountry);
                     $Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
-                    $cc->CountryName=$Country->name ;
+                    if (isset($Country->name)) {
+						$cc->CountryName=$Country->name ;
+					}
+					else {
+						$cc->CountryName="" ;
+					}
 
                     if (isset($Region->name)) {
+                    	$cc->RegionName=$Region->name ;
                         $cc->link="places/".$cc->fk_countrycode."/".$Region->name."/".$cc->name ;
                     }
                     else {
                         $cc->link="places/".$cc->fk_countrycode."//".$cc->name ;
+			$cc->RegionName='No region' ;
                     }
                 }
                 elseif (($cc->fcode=='ADM1') or ($cc->fcode=='ADM2')or ($cc->fcode=='ADMD')) {

@@ -56,6 +56,9 @@
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
 
+    // member app routes
+    $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
+
     // admin app routes
     $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
     $this->addRoute('admin_norights', 'admin/norights', 'AdminController', 'noRights');
@@ -63,5 +66,17 @@
     $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminController', 'debugLogs');
     // admin accepter routes
     $this->addRoute('admin_accepter', 'admin/accepter', 'AdminController', 'accepter');
+    $this->addRoute('admin_accepter_search', 'admin/accepter/search', 'AdminController', 'accepterSearch');
     // admin comments routes
     $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminController', 'commentsOverview');
+
+// admin words routes
+    $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
+    // admin rightsroutes
+    $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
+	
+
+
+    
+// Simple newsletter page
+    $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');

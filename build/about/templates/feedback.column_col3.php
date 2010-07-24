@@ -24,27 +24,80 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 $IdCategory = '';
 if (isset($_GET['IdCategory']) && $_GET['IdCategory']) $IdCategory = $_GET['IdCategory'];
+
+$mem = $this->getRedirectedMem('post');
+$IdCategory = isset($mem['IdCategory']) ? $mem['IdCategory'] : 1;
+$FeedbackQuestion = isset($mem['FeedbackQuestion']) ? $mem['FeedbackQuestion'] : '';
+$FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
+$urgent = isset($mem['urgent']) ? $mem['urgent'] : null;
+$answerneeded = isset($mem['answerneeded']) ? $mem['answerneeded'] : null;
+$errors = $this->getRedirectedMem('errors');
+
+if ($errors = $this->getRedirectedMem('errors'))
+{
+    foreach ($errors as $error)
+    {
+        echo "<p class=\"error\">{$words->get($error)}</p>";
+    }
+}
 ?>
 
-<?php echo $words->get("FeedBackDisclaimer") ?>
+<p><?php echo $words->get("FeedBackDisclaimer") ?></p>
 
-<form action="about/feedback/submit" method="post">
+<form class="yform full" action="about/feedback" method="post">
     <?=$callback_tag ?>
-    <h4><label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label></h4>
-    <p>
+
+    <div class="type-select">
+        <label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label>
         <select id="IdCategory" name="IdCategory">
             <?php foreach ($categories as $cat) { ?>
-            <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected': '' ?>><?php echo $words->get("FeedBackName_" . $cat->name) ?></option>
+                <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected="selected"': '' ?>>
+                    <?php echo $words->get("FeedBackName_" . $cat->name) ?>
+                </option>
             <?php } ?>
         </select>
-    </p>
-      
-    <h4><label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label></h4>
-    <p><textarea id="FeedbackQuestion" name="FeedbackQuestion" class="long" cols="60" rows="9"></textarea></p>
-    <p><input type="checkbox" id="feedbackUrgent" name="urgent" /> <label for="feedbackUrgent"> <?php echo $words->get("FeedBackUrgentQuestion")?></label></p>
-    <p><input type="checkbox" id="feedbackAnswerneeded" name="answerneeded" /> <label for="feedbackAnswerneeded"> <?php echo $words->get("FeedBackIWantAnAnswer")?></label></p>
-    <p><input type="submit" id="submit" name="submit" value="submit" /></p>
+    </div> <!-- type-select -->
 
-    <input name="action" type="hidden" value="ask">
+    <div class="type-text <?php
+        if (in_array('FeedbackErrorDataMissing', $errors))
+        {
+            echo "error \">";
+            foreach ($errors as $error) 
+            {
+                echo "<strong class=\"message\">{$words->get($error)}</strong>";
+            }
+        }
+        else echo " \">";
+        ?>
+        <label for="FeedbackQuestion"><?php echo $words->get("FeedBackEnterYourQuestion")?></label>
+        <textarea id="FeedbackQuestion" name="FeedbackQuestion" class="long" cols="60" rows="9"><?php echo $FeedbackQuestion;?></textarea>
+    </div> <!-- type-text -->
+
+    <?php if (!$this->model->getLoggedInMember()) : ?>
+    <div class="type-text <?php
+        if (in_array('FeedbackErrorBadEmail', $errors))
+        {
+            echo "error \">";
+            foreach ($errors as $error) 
+            {
+                echo "<strong class=\"message\">{$words->get($error)}</strong>";
+            }
+        }
+        else echo " \">";
+        ?> <!-- type-text -->
+        <label for="FeedbackEmail"><?php echo $words->get("FeedBackEmail")?></label>
+        <input type="text" id="FeedbackEmail" name="FeedbackEmail" value="<?php echo $FeedbackEmail;?>"/>
+    </div>
+    <?php endif; ?>
+
+    <div class="type-check">
+        <p><input type="checkbox" id="feedbackUrgent" name="urgent" <?php if ($urgent) echo "checked='checked'";?>/> <label for="feedbackUrgent"> <?php echo $words->get("FeedBackUrgentQuestion")?></label></p>
+        <p><input type="checkbox" id="feedbackAnswerneeded" name="answerneeded" <?php if ($answerneeded) echo "checked='checked'";?>/> <label for="feedbackAnswerneeded"> <?php echo $words->get("FeedBackIWantAnAnswer")?></label></p>
+    </div> <!-- type-check -->
+
+    <div class="type-button">
+        <input type="submit" id="submit" name="submit" value="<?php echo $words->get("FeedbackSubmit")?>" />
+        <input name="action" type="hidden" value="ask" />
+    </div>
 </form>
 

@@ -1,22 +1,21 @@
           <fieldset id="profilesummary">
-            <legend><?=$words->getInLang('ProfileSummary', $profile_language)?></legend>
-            <a name="profilepic" />
+            <legend><?=$words->get('ProfileSummary')?></legend>
             <table border="0" >
               <colgroup>
                 <col width="25%" ></col>
                 <col width="25%" ></col>
-                <col width="35%" ></col>
                 <col width="15%" ></col>
+                <col width="35%" ></col>
               </colgroup>
               <tbody>
                 <tr align="left" >
-                  <td class="label" ><?=$words->getInLang('ProfilePicture', $profile_language)?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
+                  <td class="label" ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
                   <td colspan="3" >
                     <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br /><input id="profile_picture" name="profile_picture" type="file" />
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->getInLang('ProfileSummary', $profile_language)?>:</td>
+                  <td class="label" ><?=$words->get('ProfileSummary')?>:</td>
                   <td colspan="3" >
                     <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?=$vars['ProfileSummary']?></textarea>
                   </td>
@@ -137,12 +136,12 @@ HTML;
           </fieldset>
           <fieldset id="contactinfo">
             <legend>{$words->get('ContactInfo')}</legend>
-            <table border="0" >
+            <table border="0" class="full" >
               <colgroup>
                 <col width="25%" ></col>
                 <col width="25%" ></col>
-                <col width="15%" ></col>
-                <col width="35%" ></col>
+                <col width="25%" ></col>
+                <col width="25%" ></col>
               </colgroup>
               <tbody>
 HTML;
@@ -185,7 +184,7 @@ HTML;
                   <td class="label" ><?=$words->get('Street')?> / <?=$words->get('HouseNumber')?>:</td>
                   <td>
                       <input type='text' name='Street' id='Street' value='<?=$vars['Street']?>'/>
-                      <input type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>' size="5" />     
+                      <input type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>' size="5" class="short"/>     
                     <?php
                         if (in_array('SignupErrorInvalidAddress', $vars['errors']))
                         {
@@ -217,7 +216,7 @@ HTML;
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Location')?>:</td>
-                  <td colspan="2" >
+                  <td >
                     <?=$member->city?>
                     <br />
                     <?=$member->region?>
@@ -439,7 +438,7 @@ HTML;
           </fieldset>
           <fieldset id="profileinterests">
             <legend><?=$words->get('ProfileInterests')?></legend>
-            <table border="0" >
+            <table border="0" class="full" >
               <colgroup>
                 <col width="25%" ></col>
                 <col width="75%" ></col>
@@ -477,10 +476,8 @@ HTML;
                 </tr>
               </tbody>
             </table>
-          </fieldset>
-          <fieldset id="profiletravelexperience">
-            <legend><?=$words->get('ProfileTravelExperience')?></legend>
-            <table border="0" >
+            <h3><?=$words->get('ProfileTravelExperience')?></h3>
+            <table border="0" class="full" >
               <colgroup>
                 <col width="25%" ></col>
                 <col width="75%" ></col>
@@ -501,9 +498,61 @@ HTML;
               </tbody>
             </table>
           </fieldset>
-          <?php
-          // Groups are out of editmyprofile now!
-          /*
+
+          <?php if (!empty($vars['Relations']) && 1 == 1) : // Disabled ?>
+          <fieldset id="specialrealtions">
+            <legend><?=$words->get('MyRelations')?></legend>
+            <table border="0" >
+              <colgroup>
+                <col width="25%" ></col>
+                <col width="60%" ></col>
+                <col width="15%" ></col>
+              </colgroup>
+              <tbody>
+                <?php
+                $Relations=$vars['Relations'];
+                foreach($Relations as $Relation) {
+                ?>
+                <tr align="left" >
+                  <td class="label" >
+                  <?php
+                  if ($Relation->Confirmed=='Yes') {
+                    echo "<b>",$Relation->Username,"</b>" ;
+                  }
+                  else {
+                    echo $Relation->Username ;
+                  }
+                  ?><br />
+                    <img class="framed"  src="members/avatar/<?=$Relation->Username?>?xs"  height="50px"  width="50px"  alt="Profile" />
+                  </td>
+                  <td>
+                    <?php 
+                    echo "<textarea cols=\"40\" rows=\"6\" name=\"", "RelationComment_" . $Relation->id, "\">";
+                    echo $words->mInTrad($Relation->Comment,$profile_language) ;
+                    echo "</textarea>\n";
+                    ?>
+                  </td>
+                  <td>
+                  <?php 
+                  echo "<a href=\"bw/editmyprofile.php?action=delrelation&amp;Username=",$Relation->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",$words->getFormatted("delrelation",$Relation->Username),"</a>\n";
+                  ?>
+                  </td>
+                </tr>
+                <?php
+                }
+                ?>
+              </tbody>
+            </table>
+          </fieldset>
+          <?php endif; ?>
+
+<?php if (1 == 0) : ?>
+          <? // Groups (restored by JeanYves) -- disabled ?>
+            <?php
+            $my_groups =$vars['Groups']; 
+            // $my_groups=array() ; // uncomment this line if you don't want to have groups inside edit profile
+            if (!empty($my_groups)) {
+            ?>
           <fieldset>
             <legend class="icon groups22" ><?=$words->get('MyGroups')?></legend>
             <table border="0" >
@@ -513,26 +562,31 @@ HTML;
               </colgroup>
               <tbody>
                 <?php
-                foreach($groups as $group) {
-                    $group_id = $group->IdGroup;
-                    $group_name_translated = $words->getInLang($group->Name, $profile_language_code);
-                    $group_comment_translated = $member->get_trad_by_tradid($group->Comment, $profile_language);
+                for ($i = 0; $i < count($my_groups) ; $i++) {
+                    $group=$my_groups[$i] ;
+                    $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$group->getPKValue()}" : 'images/icons/group.png' );
+                    $group_id = $group->getPKValue() ;
+                    $group_name_translated = $words->get("Group_".$group->Name);
+                    $group_comment_translated = htmlspecialchars($words->mInTrad($member->getGroupMembership($group)->Comment,$profile_language), ENT_QUOTES);
                 ?>
                 <tr align="left" >
                   <td class="label" ><a href="groups/<?=$group_id?>" ><?php echo $group_name_translated," ",$group->Location ;?></a></td>
                   <td colspan="2" >
-                    <textarea cols="50"  rows="6"  name="Group_<?=$group->Name?>" ><?=$group_comment_translated?></textarea>
+                    <input type="hidden" Name="Group_id<?=$group->id?>" value="<?=$group->id?>">
+                    <textarea cols="50"  rows="6"  name="GroupMembership_<?=$member->getGroupMembership($group)->id?>" ><?=$group_comment_translated?></textarea>
                 <?php
+                /*
                 if ($Rights->hasRight("Beta","GroupMessage")) {
                        echo "<br /> BETA ";
-                       echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$group->Name."\" ";
+                       echo "                <input type=\"checkbox\" name=\"AcceptMessage_".$group->od."\" ";
                        if ($group->IacceptMassMailFromThisGroup=="yes") echo "checked";
                        echo " />\n";
                        echo $words->get('AcceptMessageFromThisGroup');
                     }
                     else {
-                       echo "<input type=\"hidden\" name=\"AcceptMessage_".$group->Name."\" value=\"".$group->IacceptMassMailFromThisGroup."\" />\n";
+                       echo "<input type=\"hidden\" name=\"AcceptMessage_".$group->od."\" value=\"".$group->IacceptMassMailFromThisGroup."\" />\n";
                     }
+                */
                 ?>
                   </td>
                 </tr>
@@ -542,12 +596,15 @@ HTML;
               </tbody>
             </table>
           </fieldset>
-           */ ?>
+            <?php
+            } // end if (!empty($my_groups) 
+            ?>
+          <?php endif; ?> 
           <table>
             <tbody>
               <tr>
                 <td colspan="3"  align="center" >
-                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('SubmitForm')?>" >
+                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('SubmitForm')?>" />
                 </td>
               </tr>
             </tbody>

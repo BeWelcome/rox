@@ -1,6 +1,37 @@
 <?php
+/*
+Copyright (c) 2007-2009 BeVolunteer
 
+This file is part of BW Rox.
 
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+*/
+    /** 
+     * @author Micha
+     * @author Globetrotter_tt
+     */
+
+    /** 
+     * members base page
+     * 
+     * @package    Apps
+     * @subpackage Members
+     * @author     Micha
+     * @author     Globetrotter_tt
+     */
 class MemberPage extends PageWithActiveSkin
 {
     protected function getPageTitle()
@@ -34,16 +65,22 @@ class MemberPage extends PageWithActiveSkin
             $tt=array(
                 array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
-                array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors'),
-                array('space', '', '', 'space'),
+                );
 
-                array('profile', "members/$username", $ww->MemberPage),
-                array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
-                array('trips', "trip/show/$username", $ww->Trips),
-                array('blogs', "blog/$username", $ww->Blog),
-                array('gallery', "gallery/show/user/$username", $ww->Gallery),
-                array('forum', "forums/member/$username", $ViewForumPosts) 
-            );
+            if ($this instanceof EditMyProfilePage)
+            {
+                $tt[] = array('deleteprofile', 'deleteprofile', $ww->DeleteProfile, 'deleteprofile');
+            }
+
+            $tt[] = array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors');
+            $tt[] = array('space', '', '', 'space');
+
+            $tt[] = array('profile', "members/$username", $ww->MemberPage);
+            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')');
+            $tt[] = array('trips', "trip/show/$username", $ww->Trips);
+            $tt[] = array('blogs', "blog/$username", $ww->Blog);
+            $tt[] = array('gallery', "gallery/show/user/$username", $ww->Gallery);
+            $tt[] = array('forum', "forums/member/$username", $ViewForumPosts);
         } else {
             $mynotes_count = $member->count_mynotes(); 
             if ($mynotes_count>0) {
@@ -51,7 +88,7 @@ class MemberPage extends PageWithActiveSkin
                 $mynotelinkname=$words->get('ViewMyNotesForThisMember') ;
             }
             else {
-                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id.'&action=add' ;
+                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id.'&amp;action=add' ;
                 $mynotelinkname=$words->get('AddToMyNotes') ;
             }
             $tt= array(
@@ -70,9 +107,9 @@ class MemberPage extends PageWithActiveSkin
                 array('notes',$mynotelink,$mynotelinkname)
             );
         }
-        if (MOD_right::get()->HasRight('SafetyTeam'))  {
-//            array_push($tt,array('admin',"members/{$username}/adminedit",'Admin: Edit Profile') ) ;
-            array_push($tt,array('admin',"bw/updatemandatory.php?cid={$username}",'Admin: updatemandatory (Safety Team)') ) ;
+        if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))
+        {
+            $tt[] = array('admin',"members/{$username}/adminedit",'Admin: Edit Profile');
         }
         if (MOD_right::get()->HasRight('Rights')) {
             array_push($tt,array('admin','bw/admin/adminrights.php?username='.$username,'AdminRights') ) ;
@@ -82,9 +119,6 @@ class MemberPage extends PageWithActiveSkin
         }
         if (MOD_right::get()->HasRight('Logs')) {
             array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,'See Logs') ) ;
-        }
-        if (MOD_right::get()->HasRight('Admin')) {
-            array_push($tt,array('admin','bw/editmyprofile.php?cid='.$this->member->id,'BW Edit Profile #'.$this->member->id) ) ;
         }
         return($tt) ;
     }

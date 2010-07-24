@@ -1,3 +1,4 @@
+<div id="groups">
         <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
         <form action="groups/search" method="get">
             <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
@@ -13,23 +14,21 @@
             $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
             ?>
             <h4><?= $words->get('GroupsSearchOrder');?></h4>
-            <p class="grey">
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$name_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderName'); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$name_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderName'); ?></a>
             |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$member_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderMembers'); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$member_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderMembers'); ?></a>
             |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$created_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate'); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$created_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate'); ?></a>
 <?
 // Categories link disabled until we have categories
 //            |
 //            <a class="grey" href="groups/search?GroupsSearchInput={$this->search_terms}&amp;Order={$category_order}&Page={$this->result_page}">Category</a>
             $this->pager->render();
             echo <<<HTML
-<div>
+<div class="floatbox">
 HTML;
             foreach ($search_result as $group_data) :?>
-                <div style='float: left; width: 48%'>
-                <div class="groupbox floatbox">
+                <div class="groupbox float_left">
                     <a href="groups/<?=$group_data->getPKValue() ?>">
                         <img class="framed float_left"  width="80px" height='80px' alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                     </a>
@@ -41,10 +40,9 @@ HTML;
                             <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
                         </ul>
                     </div> <!-- groupinfo -->
-                </div> <!-- groupbox clearfix -->
-                </div>
+                </div> <!-- groupbox  -->
             <?php endforeach ; ?>
-            </div>
+</div> <!-- floatbox -->
             <?php
             $this->pager->render();
             ?>
@@ -55,3 +53,5 @@ HTML;
             </p>
 HTML;
         endif;
+        ?>
+</div> <!-- groups -->

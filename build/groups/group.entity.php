@@ -227,7 +227,7 @@ class Group extends RoxEntityBase
 
         if ($this->isGroupOwner($member))
         {
-            $this->removeGroupOwner($member);
+            $this->removeGroupOwner();
         }
 
         return $this->createEntity('GroupMembership')->memberLeave($this, $member);
@@ -421,7 +421,7 @@ class Group extends RoxEntityBase
         // if any previous owner is set, remove previous owner first
         if ($prev_owner = $this->getGroupOwner())
         {
-            $this->removeGroupOwner($prev_owner);
+            $this->removeGroupOwner();
         }
 
         return $role->addForMember($member, array('Group' => $this->getPKValue()));
@@ -430,13 +430,12 @@ class Group extends RoxEntityBase
     /**
      * removes ownership of group from member
      *
-     * @param object $member
      * @access public
      * @return bool
      */
-    public function removeGroupOwner(Member $member)
+    public function removeGroupOwner()
     {
-        if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')) || !$this->isMember($member))
+        if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')) || !($member = $this->getGroupOwner()))
         {
             return false;
         }

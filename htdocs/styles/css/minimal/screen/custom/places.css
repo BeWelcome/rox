@@ -16,6 +16,12 @@
 	  margin-right: 0.5em;
 	  padding-bottom: 4em;
 	}
+  
+  .citylist {
+    margin-bottom: 1.5em;
+    width: 120px;
+    overflow: hidden;
+  }
 	
     .spritecontainer {
         clear:both;

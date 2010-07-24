@@ -48,30 +48,41 @@ $words = new MOD_words();
 <?php
     echo "<h3>", $words->get("AboutUs_HowOrganized"),"</h3>";
     echo "<p>",$words->get("AboutUs_HowOrganizedText"),"</p>";
+    
+//Blog model to fetch the Community News
+$Blog = new Blog();
+$postIt      = $Blog->getTaggedPostsIt('Community News for the frontpage', true);
+$format = array('short'=>$words->getSilent('DateFormatShort'));
 
-    $url = 'http://www.bevolunteer.org/blog/?feed=rss2';
-    $num_items = 1;
-    $rss = fetch_rss($url);
-    $items = array_slice($rss->items, 0, $num_items);
+    ?><h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a></h3>
+                <div class="floatbox">
+                    <?php
+                    $i=1;
+                    foreach ($postIt as $blog) {
+                    $i++;
+                    if ($i <=3) {
+                        $Blog = new Blog();
+                        $View = new BlogView($Blog);
+                        $txt = $View->blogText($blog->blog_text);
+                    ?>
+                        <h4 class="news"><a href="blog/<?=$blog->user_handle?>/<?=$blog->blog_id?>"><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></a></h4>
+                        <span class="small grey"><?=$words->get('written_by')?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a> - <?=date($format['short'], $blog->unix_created)?></span>
+                        <p>
+                        <?php
+                            $snippet = ((strlen($txt[0]) > 600) ? substr($txt[0], 0, 600) . '...': $txt[0]);
+                            $purifier = MOD_htmlpure::get()->getPurifier();
+                            echo $purifier->purify($snippet);
+                            if ($txt[1]) {
+                              echo '<p> <a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$words->get('BlogItemContinued').'</a></p>';
+                            }
+                        ?>
+                        </p>
+                    <?php
+                    }
+                    }
+                    ?>
 
-    echo "<h3>Live from the ", $rss->channel['title'], "</h3><br />
-    ";
-    foreach ($items as $item ) {
-        $title = $item['title'];
-        $url   = $item['link'];
-        $description   = $item['description'];
-    /*    $subject = $item ['dc'] ['subject']; */
-        /*$startdate   = $item['date'];
-        $type   = $item['type'];
-        $author   = $item['author'];     */
-        echo "<h3><a href=\"",$url,"\">",$title,"</a></h3>
-        <p>",$description,"</p>
-
-    ";
-    }
-        echo "<a href=\"http://blogs.bevolunteer.org\">", $words->get("getMoreEntriesandComments"),"</a>\n";
-
-?>
+                    <a href="blog/tags/Community News for the frontpage"><?echo $words->get('ReadMore');?></a>
     </div>
   </div>
 </div>

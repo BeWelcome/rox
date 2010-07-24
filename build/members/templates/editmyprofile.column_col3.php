@@ -1,5 +1,5 @@
 
-<form method="post" action="<?=$page_url?>" name="signup" id="profile" enctype="multipart/form-data">
+<form method="post" action="<?=$page_url?>" name="signup" id="profile-edit-form" class="fieldset-menu-form" enctype="multipart/form-data">
 <input type="hidden"  name="memberid"  value="<?=$member->id?>" />
 <input type="hidden"  name="profile_language"  value="<?=$profile_language?>" />
 <?php
@@ -73,12 +73,13 @@ require_once 'editprofile_form.php';
     }
 
     document.observe("dom:loaded", function() {
-      //new FieldsetMenu('profile-edit-form', {active: "profilesummary"});
+      new FieldsetMenu('profile-edit-form', {active: "profilesummary"});
       $('langbutton').observe('click',insertNewTemplate);
       $$('a.remove_lang').each(function(a){
         a.observe('click', removeLang);
       });
     });
+
 //-->
 </script>
             

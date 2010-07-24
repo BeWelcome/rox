@@ -153,20 +153,23 @@ function GetPostVote($IdPost) {
 	}
 	$IdMember=$_SESSION["IdMember"] ;
 	$Res->PossibleAction='none' ;
-	$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
+    $member = $this->getLoggedInMember();
+    $post = $this->createEntity('Post',$IdPost);
+    $MyVote = $this->createEntity('PostVote')->findVote($post, $member);
+	//$MyVote=$this->singleLookup("select * from forums_posts_votes where IdPost=".$IdPost." and IdContributor=".$IdMember) ;
 	$PossibleChoice=array('Yes','DontKnow','DontCare','No') ;
 	$Res->PossibleChoice=$PossibleChoice ;
-	if (!empty($MyVote->Choice) or ($_SESSION["MemberStatus"]!="Active")) { // Members who are not cative cannot vote (for example admin who has status ActiveHidden)
-		if (!empty($MyVote->Choice)) {
+	if ($MyVote or ($_SESSION["MemberStatus"]!="Active")) { // Members who are not cative cannot vote (for example admin who has status ActiveHidden)
+		if ($MyVote->Choice) {
 			$Res->Choice=$MyVote->Choice ;
 		}
 		$Res->PossibleAction="ShowResult" ;
 		$Res->Total=0 ;
-		foreach ($PossibleChoice as $cc) {
-			$rr=$this->singleLookup("select count(*) as cnt from forums_posts_votes where IdPost=".$IdPost." and Choice='".$cc."'") ; 
-			$ss='Choice_'.$cc ;
-			$Res->$ss=$rr->cnt ;
-			$Res->Total=$Res->Total+$rr->cnt ;
+        $votes = $this->createEntity('PostVote')->getResultForPost($post);
+		foreach ($PossibleChoice as $cc)
+        {
+            $Res->$cc = $votes[$cc];
+			$Res->Total += $votes[$cc] ;
 		}
 	}
 	else {
@@ -572,7 +575,7 @@ WHERE `country_code` = '%s' AND `admin_code` = '%s'
         $admincode = $s->fetch(PDB::FETCH_OBJ);
 
 		if (!isset($admincode->name)) { // Added by JeanYves to trap what might be a geoname problem which creates phperrorlogs
-		    MOD_log::get()->write("Forum::boardAdminCode Problem with geo [".$query."] as faile for country [".$countrycode->name."]","Bug") ; 				
+		    MOD_log::get()->write("Forum::boardAdminCode Problem with geo [".$query."] as failed for country [".$countrycode->name."]","Bug") ; 				
 		}
 
         $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name;
@@ -727,72 +730,6 @@ WHERE `iso_alpha2` = '%s'
         }
     } // end of boardGroup
     
-    private function pboardGroup()    {
-        $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
-        $gr = $this->dao->query($query);
-        if (!$gr) {
-            throw new PException('No such IdGroup=#'.$this->IdGroup);
-        }
-        $group = $gr->fetch(PDB::FETCH_OBJ);
-
-        $query = sprintf(
-            "
-SELECT `name`, `continent` 
-FROM `geonames_countries` 
-WHERE `iso_alpha2` = '%s'
-            ",
-            $this->countrycode
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('No such Country');
-        }
-        $countrycode = $s->fetch(PDB::FETCH_OBJ);
-        
-        $navichain = array('forums/' => 'Forums', 
-            'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/' => Forums::$continents[$this->continent],
-            'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/' => $countrycode->name);
-    
-        $query = sprintf(
-            "
-SELECT `name`
-FROM `geonames_admincodes` 
-WHERE `country_code` = '%s' AND `admin_code` = '%s'
-            ",
-            $this->countrycode,
-            $this->admincode
-        );
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('No such Admincode');
-        }
-        $admincode = $s->fetch(PDB::FETCH_OBJ);
-
-        $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name;
-        $href = $url;
-        if ($this->tags) {
-            $taginfo = $this->getTagsNamed();
-            
-            
-            $navichain[$url] = $admincode->name;
-            
-            for ($i = 0; $i < count($this->tags) - 1; $i++) {
-                if (isset($taginfo[$this->tags[$i]])) {
-                    $url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
-                    $navichain[$url] = $taginfo[$this->tags[$i]];
-                }
-            }
-            
-            $title = $taginfo[$this->tags[count($this->tags) -1]];
-        } else {
-          $title =  $this->getGroupName($group->Name) ;
-        }
-        
-        $this->board = new Board($this->dao, $title, $href, $navichain, $this->tags, $this->continent, $this->countrycode, $this->IdGroup);
-        
-        $this->board->initThreads($this->getPage());
-    } // end of boardGroup
-
 	/*
 	@ $Name name of the group (direct from groups.Name
 	*/
@@ -874,6 +811,9 @@ WHERE `geonameid` = '%d'
             throw new PException('No such Country');
         }
         $geonameid = $s->fetch(PDB::FETCH_OBJ);
+		if (!isset($geonameid->name)) {
+			$geonameid->name='' ; // to avoid a Notice error when trying to display a not found name (fix for ticket #484 the Astghadzor case)
+		}
         
         $url = 'forums/k'.$this->continent.'-'.Forums::$continents[$this->continent].'/c'.$this->countrycode.'-'.$countrycode->name.'/a'.$this->admincode.'-'.$admincode->name.'/g'.$this->geonameid.'-'.$geonameid->name;
         $href = $url;
@@ -2093,9 +2033,9 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
                 $tag = $this->dao->escape($tag);
 
 				 
-                
+
                 // Check if it already exists in our Database
-                $query = "SELECT `tagid` FROM `forums_tags`,`forum_trads` WHERE `forum_trads`.`IdTrad`=`forums_tags`.`IdName` and `forum_trads`.`IdLanguage`=".$IdLanguage." and `forum_trads`.`Sentence` = '$tag' ";
+                $query = "SELECT `tagid` FROM `forums_tags` WHERE `forums_tags`.`tag` = '$tag' ";
                 $s = $this->dao->query($query);
                 $taginfo = $s->fetch(PDB::FETCH_OBJ);
 								$IdNameUpdate="" ;
@@ -2208,8 +2148,10 @@ and ($this->ThreadGroupsRestriction)
 		if (!isset($topicinfo->IdThread)) {
 			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=-1 and forums_tags.id=tags_threads.IdTag"; // This will return nothing
-			$topicinfo->title="No Such Thread" ;
+			require SCRIPT_BASE.'build/members/pages/mustlogin.page.php';  
+			$topicinfo->title="Please log in to see the thread" ;
 			$topicinfo->replies=0 ;
+
 		}
 		else {
 			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
@@ -2379,6 +2321,7 @@ WHERE `threadid` = '$this->threadid' LIMIT 1
         $query = sprintf("
 SELECT
     `postid`,
+	`postid` as IdPost,
     UNIX_TIMESTAMP(`create_time`) AS `posttime`,
     `message`,
 	`IdContent`,
@@ -2853,16 +2796,13 @@ AND IdTag=%d
         if (is_numeric($cid)) {
            $IdMember=$cid ;
         }
-        else {
-           $query = "select id from members where username='".$this->dao->escape($cid)."'" ; 
-           $s = $this->dao->query($query);
-           if (!$s) {
-              throw new PException('Could not retrieve members id via username !');
-           }
-           $row = $s->fetch(PDB::FETCH_OBJ) ;
-           if (isset($row->id)) {
-                 $IdMember=$row->id ;
-           }
+        else
+        {
+            if (!($member = $this->createEntity('Member')->findByUsername($cid)))
+            {
+                throw new PException('Could not retrieve members id via username !');
+            }
+            $IdMember = $member->id;
         }
 
         $query = sprintf(
@@ -3091,18 +3031,6 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         }
         return $tags;    
     } // end of getTopCategoryLevelTags
-    
-    
-    private function makeClickableLinks($text) 
-    {    
-        $text = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
-            '<a href="\\1">\\1</a>', $text);
-        $text = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)',
-            '\\1<a href="http://\\2">\\2</a>', $text);
-        $text = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})',
-            '<a href="mailto:\\1">\\1</a>', $text);
-        return $text;
-    }
     
     /*
      * cleanupText
@@ -4060,21 +3988,21 @@ function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus
 		$text=$text."The status of this report is ".$ReportStatus ;
 		$text=$text."You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;
 		$text=$text."<hr />".$message ;
-		$mReceiver=new Member($IdReporter) ;
+		$mReceiver= $this->createEntity('Member',$IdReporter) ;
 		$Email=$mReceiver->get_email() ;
 		$sender = "noreply@bewelcome.org" ;
 	}
 	else {
 		$subject = "moderator report from ".$UsernameReporter." for the post #".$IdPost." written by ".$UsernamePostWriter ;
-		$text="member <a href=\"".PVars::getObj('env')->baseuri."/member/".$UsernameReporter."\">".$UsernameReporter."</a>" ;
-		$text=$text." has written a report about member <a href=\"http://".PVars::getObj('env')->baseuri."/member/".$UsernamePostWriter."\">".$UsernamePostWriter."</a> for post <a href=\"".$postlink."\">".$postlink."</a>" ;
+		$text="member <a href=\"".PVars::getObj('env')->baseuri."/members/".$UsernameReporter."\">".$UsernameReporter."</a>" ;
+		$text=$text." has written a report about member <a href=\"http://".PVars::getObj('env')->baseuri."/members/".$UsernamePostWriter."\">".$UsernamePostWriter."</a> for post <a href=\"".$postlink."\">".$postlink."</a>" ;
 		$text=$text."Thread: <b>".$rPost->ThreadTitle."</b><br />" ;
 		$text.="The status of this report is ".$ReportStatus ;
 		$text.="You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;
 		$text.="<hr />".$message ;
-		$mModerator=new Member($IdModerator) ;
+		$mModerator= $this->createEntity('Member',$IdModerator) ;
 		$Email=$mModerator->get_email() ;
-		$mReporter=new Member($IdReporter) ;
+		$mReporter= $this->createEntity('Member',$IdReporter) ;
 		// set the sender
 		$sender = strip_tags(str_replace("%40","@",$mReporter->get_email())) ;
 	}
@@ -4091,10 +4019,10 @@ die("force stop") ;
 	
 
     //Start Swift
-    $swift =& new Swift(new Swift_Connection_SMTP("localhost"));
+    $swift = new Swift(new Swift_Connection_SMTP("localhost"));
 				
     //Create a message
-    $message =& new Swift_Message($subject);
+    $message = new Swift_Message($subject);
         
     //Add some "parts"
     $message->attach(new Swift_Message_Part($text));

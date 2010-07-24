@@ -15,9 +15,9 @@
 /**
 * This page prepares the verification
 **/
-class VerifyMembersPage extends RoxPageView 
+class VerifyMembersPage extends RoxPageView
 {
-    
+
     /**
      * which item in the top menu should be activated when showing this page?
      * Let's use the 'getanswers' menu item for this one.
@@ -39,7 +39,7 @@ class VerifyMembersPage extends RoxPageView
             echo $words->getFormatted("verifymembers_teaser") ;
         }
     }
-    
+
     /**
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
@@ -47,14 +47,14 @@ class VerifyMembersPage extends RoxPageView
     protected function getPageTitle() {
         return 'Verify members page!';
     }
-    
+
     /**
      * configure the sidebar
      */
     protected function leftSidebar() {
         $words = $this->getWords();
         echo '<h3>',$words->getFormatted("MyVerifyTools"),'</h3>';
-		echo '<ul class="linklist">' ;
+        echo '<ul class="linklist">' ;
         echo '<li><a href="verifymembers/verifiersof/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerifier"),'</a></li>';
         echo '<li><a href="verifymembers/verifiersby/'.$_SESSION["Username"],'">',$words->getFormatted("MyVerified"),'</a></li>';
         echo '</ul>' ;
@@ -62,9 +62,9 @@ class VerifyMembersPage extends RoxPageView
         echo '<ul class="linklist">' ;
         echo '<li><a href="verifymembers/approvedverifiers">',$words->getFormatted("ApprovedVerififiersLink"),'</a></li>';
         echo '<li><a href="wiki/Verification">',$words->getFormatted("VerifyDoc"),'</a></li>';
-		echo '</ul>' ;
+        echo '</ul>' ;
     }
-	 
+
 } // end of VerifyMembersPage
 
 

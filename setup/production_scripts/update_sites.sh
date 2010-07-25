@@ -42,8 +42,8 @@ echo -e "\n\nOutput of git pull on ${SITE}" >> ${TMPFILE}
 git pull >> ${TMPFILE} 2>&1 || state="UNSUCCESSFUL"
 echo -e "\n\nUpdate finished " >> ${TMPFILE}
 date >> ${TMPFILE}
-echo -e "\n\nOutput of git stat on ${SITE}" >> ${TMPFILE}
-git stat >> ${TMPFILE}
+echo -e "\n\nOutput of git status on ${SITE}" >> ${TMPFILE}
+git status >> ${TMPFILE}
 echo -e "\n\nOutput of git show on ${SITE}" >> ${TMPFILE}
 git show >> ${TMPFILE}
 echo -e "\n\nOutput of git diff on ${SITE}" >> ${TMPFILE}

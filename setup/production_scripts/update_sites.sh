@@ -10,7 +10,8 @@ for SITE in ${SITES}
 do
 
 ## TODO: figure out how to do this under git
-if false then
+if false 
+then
 cd /home/bwrox/${SITE}
 if ! svn stat --show-updates > ${TMPFILE} 2>&1
 then

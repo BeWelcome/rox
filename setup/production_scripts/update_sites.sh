@@ -9,10 +9,11 @@ TMPFILE=/home/bwrox/tmp/updates.$$
 for SITE in ${SITES}
 do
 
+cd /home/bwrox/${SITE}
+
 ## TODO: figure out how to do this under git
 if false 
 then
-cd /home/bwrox/${SITE}
 if ! svn stat --show-updates > ${TMPFILE} 2>&1
 then
   date >> /home/bwrox/${SITE}/htdocs/update_status.txt

@@ -6,7 +6,7 @@
 *  file       : bw_content.css
 *  function   : formatting  of content (text, graphics, links, lists, tables, etc.)
 *
-*  last modification: 38.09.07 by Matthias Hess (BW: matthias)
+*  last modification: 02.07.10 by gl0bi (BW: matthias)
 *
 */
 
@@ -639,6 +639,16 @@ background: none;
 .userinfo {
     margin-left: 0px;
     overflow: hidden;
+}
+.newmember, .visitors {
+    margin: 0em 2% 1em 0.4em;
+    width: 44%;
+    float: left;
+    white-space:nowrap;
+    overflow: hidden;
+}
+#newmembers, #visitors {
+    margin-bottom: 1em;
 }
 
 /* blog & gallery comments */

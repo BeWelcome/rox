@@ -20,9 +20,6 @@ then
   cat ${TMPFILE} >> /home/bwrox/${SITE}/htdocs/update_status.txt
 fi
 
-## any modifications in svn?
-grep -q '  \*  ' ${TMPFILE} || continue
-
 ## then check for conflicts
 if grep -q '^[\?MA] *\*  ' ${TMPFILE}
 then
@@ -40,6 +37,8 @@ echo -n "Update starting on " > ${TMPFILE}
 date >> ${TMPFILE}
 echo -e "\n\nOutput of git pull on ${SITE}" >> ${TMPFILE}
 git pull >> ${TMPFILE} 2>&1 || state="UNSUCCESSFUL"
+grep -q 'Already up-to-date' ${TMPFILE} && continue
+
 echo -e "\n\nUpdate finished " >> ${TMPFILE}
 date >> ${TMPFILE}
 echo -e "\n\nOutput of git status on ${SITE}" >> ${TMPFILE}

@@ -66,76 +66,58 @@ Boston, MA  02111-1307, USA.
             <div class="subcl personallist">
                 <h2><?php echo $words->getFormatted('StartpageWhoiswho') ?></h2>
                 <h3 class="first"><?php echo $words->getFormatted('RecentMember') ?></h3>
-                <div class="floatbox">
+                <div id="newmembers" class="floatbox">
                     <?php
                         // Display the last created members with a picture
                         $latestmembers = MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(4);
                         for ($ii=0;$ii<count($latestmembers);$ii++)
                         {
                             $m=$latestmembers[$ii];
-                            $img = MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed');
+                            $img = MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed');
                             echo <<<HTML
-                    <div class="float_left" style="width: 40%; overflow: hidden;">
-                        <table>
-                            <tr>
-                                <td>{$img}</td>
-                                <td>
-                                    <a href="members/{$m->Username}">{$m->Username}</a><br />
-                                    {$m->countryname}
-                                </td>
-                            </tr>
-                        </table>
-                    </div> <!-- float_left -->
+                        <div class="newmember" >
+                            {$img}
+                             <a href="members/{$m->Username}">{$m->Username}</a><br />
+                            {$m->countryname}
+                        </div>
 HTML;
                         }
                         echo <<<HTML
                 </div> <!-- floatbox -->
                 
                 <h3><a href="myvisitors">{$words->get('RecentVisitsOfyourProfile')}</a></h3> 
-                <div class="floatbox">
+                <div id="visitors" class="floatbox">
 HTML;
                         
-                        // /*###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
                         $last_visits=MOD_visits::get()->BuildLastVisits(0, 4) ;
                         for ($ii=0;$ii<count($last_visits);$ii++) {
                             $m=$last_visits[$ii] ;
-                    ?>
-                    <div class="float_left" style="width: 40%; overflow: hidden;">
-                        <table>
-                            <tr>
-                                <td><?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?></td>
-                                <td>
-                                    <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
-                                    <?php echo $m->countryname; ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div> <!-- float_left -->
-                    <?php 
+                            $img = MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed');
+                            echo <<<HTML
+                        <div class="visitors" >
+                            {$img}
+                             <a href="members/{$m->Username}">{$m->Username}</a><br />
+                            {$m->countryname}
+                        </div>
+HTML;
                         }
-                    ?>
+                        ?>
                 </div> <!-- floatbox -->
        
                 <h3 class="first"><?php echo $words->getFormatted('TripCity')  ?></h3>
-                <div class="floatbox">
+                <div id="nextvisitors" class="floatbox">
                     <?php
                         $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4) ;
                         for ($ii=0;$ii<count($next_trips);$ii++) {
                             $m=$next_trips[$ii] ;
                             $tripDate = explode(" ",$m->tripDate);
                     ?>
-                    <div class="float_left" style="width: 40%; overflow: hidden;">
-                        <table>
-                            <tr>
-                                <td><?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='framed') ?></td>
-                                <td>
-                                    <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
-                                    <?php echo $m->city; ?> / <?php echo $m->country; ?><br />
-                                    <? echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div> <!-- float_left -->
+                    <div class="visitors">
+                        <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed') ?>
+                        <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
+                        <?php echo $m->city; ?> / <?php echo $m->country; ?><br />
+                        <?php echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
+                    </div> <!-- visitors -->
                     <?php
                         }
                     ?>

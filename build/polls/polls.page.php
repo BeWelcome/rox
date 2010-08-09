@@ -136,9 +136,11 @@ class PollsPage extends RoxPageView {
     protected function leftSidebar()
     {
         $words = $this->getWords();
-        echo '<ul class="linklist">';
-        echo '<li><a href="http://www.bevolunteer.org/wiki/How_pollsworks">Wiki Doc</a></li>';
-        echo '<li><a href="polls/listall">',$words->getFormatted("polls_listlink"),'</a></li>';
+		?>
+        <ul class="linklist">
+        <li><a href="http://www.bevolunteer.org/wiki/How_pollsworks">Wiki Doc</a></li>
+        <li><a href="polls/listall"><?php echo $words->getFormatted("polls_listlink"); ?></a></li>
+		<?php
         if (MOD_right::get()->HasRight("Poll","create")) {
                     echo '<li><a href="polls/create">',$words->getFormatted("polls_createlink"),'</a></li>';
                 }

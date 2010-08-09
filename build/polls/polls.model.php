@@ -20,24 +20,24 @@ class PollsModel extends RoxModelBase {
 			
 // Check that the poll is open
 			if ($rPoll->Status!="Open") {
-//      	MOD_log::get()->write("CanUserContribute in a closed poll","polls") ; 				
+				MOD_log::get()->write("CanUserContribute in a closed poll","polls") ; 				
 				return(false) ;
 			}
 // Check that we are is the range time people can contribute
 	  	 if (time()<strtotime($rPoll->Started)) {
-//      	 MOD_log::get()->write("CanUserContribute in a not started poll time()=".time()." strtotime('".$rPoll->Started."')=".$rPoll->Started,"polls") ; 				
+				MOD_log::get()->write("CanUserContribute in a not started poll time()=".time()." strtotime('".$rPoll->Started."')=".$rPoll->Started,"polls") ; 				
 			 	 return(false) ;
 			 }
 	  	 if ((time()>strtotime($rPoll->Ended)) and ($rPoll->Ended!="0000-00-00 00:00:00")) {
 //			 echo " time()=",time()," strtotime(\$rPoll->Ended)=",strtotime($rPoll->Ended)," ",$rPoll->Ended ;
-//      	 MOD_log::get()->write("CanUserContribute in an already ended poll","polls") ; 				
+		     	 MOD_log::get()->write("CanUserContribute in an already ended poll","polls") ; 				
 			 	 return(false) ;
 			 }
 
 // If it is a memberonly poll check that the member is logged in  
 			if ($rPoll->ForMembersOnly=="Yes") {
 				if ((!isset($_SESSION["IdMember"])) or ($_SESSION["MemberStatus"]!="Active")) {
-//      	  MOD_log::get()->write("trying to vote in an member only post and not logged in","polls") ; 				
+					MOD_log::get()->write("trying to vote in an member only post and not logged in","polls") ; 				
 					return (false) ;
 				}
 			}
@@ -47,12 +47,12 @@ class PollsModel extends RoxModelBase {
 					return(false) ;
 				}
 				if (($rPoll->CanChangeVote=='No') and ($this->HasAlreadyContributed($IdPoll,$Email))) {
-//      	  MOD_log::get()->write("CanUserContribute in an already contributed post with Email".$Email,"polls") ; 				
+					MOD_log::get()->write("CanUserContribute in an already contributed post with Email".$Email,"polls") ; 				
 					return(false) ;
 				}
 			}
 			if (($rPoll->CanChangeVote=='No') and ($this->HasAlreadyContributed($IdPoll,"",$_SESSION["IdMember"]))) {
-//      	  MOD_log::get()->write("CanUserContribute in an already contributed post ","polls") ; 				
+		      	  MOD_log::get()->write("CanUserContribute in an already contributed post ","polls") ; 				
 					return(false) ;
 			}
 			return(true) ;
@@ -100,7 +100,7 @@ class PollsModel extends RoxModelBase {
 		} // end of HasAlreadyContributed
 
     /**
-     * this function allows to create poll
+     * this function allows to create/update  poll
 		 * @post is the array of the arg_post to be given by the controller
 		 * returns true if the poll is added with success
 		 * according to $post['IdPoll'] the poll will be inserted or updated
@@ -135,7 +135,15 @@ class PollsModel extends RoxModelBase {
 				$ss="update polls set Title=$IdTitle,Description=$IdDescription where id=$IdPoll" ;
  				$result = $this->dao->query($ss);
 				if (!$result) {
-	   			throw new PException('UpdatePoll::Failed to add back the Title and Description ');
+					throw new PException('UpdatePoll::Failed to add back the Title and Description ');
+				}
+				
+				$TIdGrouRestricted=explode(",",$post["GroupIdLimit"]) ;
+				for ($ii=0;$ii<count($TIdGrouRestricted);$ii++) {
+					$IdGroup=(int)$TIdGrouRestricted[$ii] ;
+					if ($IdGroup==0) continue ;
+					$sSql="insert into polls_list_allowed_groups(IdPoll,IdGroup) values(".$IdPoll.",".$IdGroup.") " ;
+					$rPoll=$this->singleLookup($sSql) ;
 				}
 
 				MOD_log::get()->write("poll : ".$post["Title"]." created IdPoll=#".$IdPoll,"polls") ; 
@@ -182,6 +190,15 @@ class PollsModel extends RoxModelBase {
 				
 				$ss=$this->dao->escape($post['Title']) ;
 		 		$words->ReplaceInFTrad($ss,"polls.Title",$rPoll->id,$rPoll->Title) ;
+
+				$TIdGrouRestricted=explode(",",$post["GroupIdLimit"]) ;
+				$this->singleLookup("delete from polls_list_allowed_groups where IdPoll=".$IdPoll) ;
+				for ($ii=0;$ii<count($TIdGrouRestricted);$ii++) {
+					$IdGroup=(int)$TIdGrouRestricted[$ii] ;
+					if ($IdGroup==0) continue ;
+					$this->singleLookup("insert into polls_list_allowed_groups(IdPoll,IdGroup) values(".$IdPoll.",".$IdGroup.") ") ;
+				}
+
 
 				MOD_log::get()->write("poll : ".$post["Title"]." updating IdPoll=#".$IdPoll." Set Status=".$rPoll->Status." to ".$post["Status"],"polls") ; 
 			}
@@ -236,6 +253,11 @@ class PollsModel extends RoxModelBase {
 			$IdPoll=$post['IdPoll'] ;
 			$IdPollChoice=$post['IdPollChoice'] ;
 			$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* UpdatedChoice */") ;
+
+			if ((empty($rPoll->id)) or $rPoll->Status=='Open') {
+					$sLog="it is not possible to change The possible choices for poll #".$rPoll->id." because it is an Open one or there is no such a poll" ;
+   			   		MOD_log::get()->write($sLog,"polls") ;
+			}
 			
 			if (!( (isset($_SESSION["IdMember"]) and ($rPoll->IdCreator==$_SESSION["IdMember"]) and ($rPoll->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) )) {
 			MOD_log::get()->write("Forbidden to update poll choice for poll #".$IdPoll ,"polls") ; 
@@ -266,9 +288,24 @@ class PollsModel extends RoxModelBase {
 				die ("Fatal error In AddVote \$post['IdPoll'] is missing") ;
 			}
 			$IdPoll=$post['IdPoll'] ;
-			$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." /* Add Vote */") ;
+			$rPoll=$this->singleLookup("select * from polls where id=".$IdPoll." and Status='Open' /* Add Vote */") ;
 
-			// Prevents the same member from voting twice			
+			if (empty($rPoll->id)) {
+					$sLog="it is not possible to contribute to poll #".$IdPoll ;
+   			   		MOD_log::get()->write($sLog,"polls") ;
+ 		   			throw new PException($sLog);
+			}
+	
+			// If there is a group list, test if the current member is in the group list
+			if (!$this->IsMemberAllowed($rPoll)) {
+					$sLog="To contribute to this poll ".$rPoll->id ." specific membership in some group is needed ";
+					MOD_log::get()->write($sLog,"polls") ;
+					throw new PException($sLog);
+			}
+					
+
+
+// Prevents the same member from voting twice			
 			if (!empty($IdMember)) {
 				$rPreviousContrib=$this->singleLookup("select * from polls_contributions where IdMember=".$IdMember." and IdPoll=".$IdPoll) ; 
 			}
@@ -277,8 +314,8 @@ class PollsModel extends RoxModelBase {
 			}
 
 			if (!(empty($rPreviousContrib->IdPoll))) {
-   			   		MOD_log::get()->write($sLog,"polls") ;
 					$sLog="Members #".$IdMember." has already contributed to poll #".$IdPoll ;
+   			   		MOD_log::get()->write($sLog,"polls") ;
  		   			throw new PException($sLog);
 			}
 
@@ -464,6 +501,8 @@ class PollsModel extends RoxModelBase {
 			$ss=$ss. " where polls.id=".$IdPoll ;
 			$Data->rPoll=$this->singleLookup($ss) ;
 			$Data->Choices=$this->bulkLookup("select * from polls_choices where IdPoll=".$IdPoll." order by created asc") ;
+			$Data->IdGroupRestricted=$this->BulkLookup("select IdGroup from polls_list_allowed_groups where IdPoll=".$IdPoll) ;
+			
 			return($Data) ;
 		} // end of LoadPoll
 
@@ -491,8 +530,22 @@ class PollsModel extends RoxModelBase {
             throw new PException('polls::LLoadList Could not retrieve the polls!');
       	}
 
-				// for all the records
+		if (isset($_SESSION["IdMember"])) {
+			$IdMember=$_SESSION["IdMember"] ;
+		}
+		else {
+			$IdMember=0 ;
+		}
+		
+		// for all the records
       	while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+					
+					// If there is a group list, test if the current member is in the group list
+				if (!$this->IsMemberAllowed($rr)) {
+							continue ; // Skip this record
+				}
+					
+					
 					if (!empty($rr->IdGroupCreator)) { // In case the polls is created by a group find back the name of this group
 						$rGroup=$this->singleLookup("select * from groups where id=".$rr->IdGroupCreator) ;
 						$rr->GroupCreatorName=$words->getFormatted("Group_" . $rGroup->Name);
@@ -501,31 +554,30 @@ class PollsModel extends RoxModelBase {
 					$rr->NbContributors=$rContrib->cnt ;
 					
 // This is the logic for the possible action (may be this could be better in the controller)
-					$rr->PossibleActions="" ;
+					$rr->PossibleActions="<ul>" ;
 					
 					// Only owner of admin with proper right can update the poll
 					if ( (isset($_SESSION["IdMember"]) and ($rr->IdCreator==$_SESSION["IdMember"]) and ($rr->Status=="Projet")) or (MOD_right::get()->HasRight("Poll","update")) ) {
-						$rr->PossibleActions=$rr->PossibleActions."<a href=\"polls/update/".$rr->id."\">".$words->getFormatted("polls_adminlink")."</a>" ;
+						$rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/update/".$rr->id."\">".$words->getFormatted("polls_adminlink")."</a></li>" ;
 					}
 
 
 					if ($this->HasAlreadyContributed($rr->id,"",$_SESSION["IdMember"])) {
 						$rr->PossibleActions=$words->getFormatted("polls_youhavealreadyvoted") ;
-						if ($rr->CanChangeVote=="Yes") {
-						  $rr->PossibleActions.="<br /><a href=\"polls/cancelvote/".$rr->id."\">".$words->getFormatted("polls_remove_vote")."</a>" ;
+						if (($rr->CanChangeVote=="Yes") and ($rr->Status=="Open") ) {
+						  $rr->PossibleActions.="<li<a href=\"polls/cancelvote/".$rr->id."\">".$words->getFormatted("polls_remove_vote")."</a></li>" ;
 						}
 						if (($rr->ResultsVisibility=="VisibleAfterVisit") and ($rr->Status!="Closed")) {
-						  $rr->PossibleActions=$rr->PossibleActions."<br /><a href=\"polls/seeresults/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</a>" ;
-						}
-					}
-					else {
-						if ($rr->Status=="Closed") {
-							$rr->PossibleActions="<a href=\"polls/results/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</a>" ;
+						  $rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/seeresults/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</li>" ;
 						}
 					}
 					if ($this->CanUserContribute($rr->id,"",$_SESSION["IdMember"])) {
-						$rr->PossibleActions=$rr->PossibleActions."<br /><a href=\"polls/contribute/".$rr->id."\">".$words->getFormatted("polls_contribute")."</a>" ;
+						$rr->PossibleActions=$rr->PossibleActions."<li><a href=\"polls/contribute/".$rr->id."\">".$words->getFormatted("polls_contribute")."</li>" ;
 					} 
+					if ($rr->Status=="Closed") {
+						$rr->PossibleActions.="<li><a href=\"polls/results/".$rr->id."\">".$words->getFormatted("polls_seeresults")."</li>" ;
+					}
+					$rr->PossibleActions.="</ul>" ;
 					
 					array_push( $tt,$rr) ;
 
@@ -534,8 +586,46 @@ class PollsModel extends RoxModelBase {
         
     } // end of LoadList
 
+    /**
+     * this function retruns true if th member is allowed to contribute to the poll according to 
+	 * his groups membership
+	 * @$rPoll is a record of a poll table
+	 * @$IdMember is the member to consider if it is 0, teh current member will be used
+	**/
+    function IsMemberAllowed($rPoll,$_IdMember=0) {
+		if  (empty($_IdMember)) {
+			$IdMember=0 ;
+			if (!empty($_SESSION["IdMember"])) {
+				$IdMember=$_SESSION["IdMember"] ;
+				if ($rPoll->IdCreator==$IdMember) {
+					return(true) ; // It makes sense that the creator of the poll can always access it
+				}
+			}
+		}
+		else {
+			$IdMember=$_IdMember ;
+		}
+		$rCount=$this->singleLookup("select count(*) as cnt from polls_list_allowed_groups as p  where p.IdPoll=".$rPoll->id) ;
+		if ($rCount->cnt >0) { // If they are groups limitation, we are going to test in the member is within these limits
+			$rCount=$this->singleLookup("select count(*) as cnt from membersgroups as m,polls_list_allowed_groups as p  where m.IdGroup=p.IdGroup and m.IdMember=".$IdMember." and m.Status='In'  and p.IdPoll=".$rPoll->id) ;
+			if ($rCount->cnt<=0) {
+				return(false) ;
+			}
+		}
+		
+		if (!empty($rPoll->WhereToRestrictMember)) { // If there is another special restriction
+																					 // ie something the currend member Must match
+																					 // for exemple select count(*) as cnt from members where Gender='Female' and members.id=$IdMember" to only query for female members
+			$sSQL=str_replace("\$IdMember",$IdMember,$rPoll->WhereToRestrictMember) ;
+			$rPossible=$this->singleLookup($sSQL) ;
+			if ($rPossible->cnt<=0) {
+				return(false) ;
+			}
+		}
+		return(true) ; // all test ok, member can use the poll
+	}
 
-}
+} // end if IsMemberAllowed
 
 
 

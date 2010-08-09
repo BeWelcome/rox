@@ -211,13 +211,13 @@ WHERE
                 }
                 // end of Jeanyves trying to find a bug when venice is search in the quicksearch
 
-                if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
+                if (($cc->fcode=='PPLI') or ($cc->fcode=='PCL')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
                     $cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
                     $cc->link="places/".$cc->fk_countrycode ;
                     $cc->CountryName="" ;
                     $cc->RegionName="" ;
                 }
-                elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')) {
+                elseif (($cc->fcode=='PPL')or($cc->fcode=='PPLA')or($cc->fcode=='PPLG')or($cc->fcode=='PPLC')or($cc->fcode=='PPLS')or($cc->fcode=='PPLX')or($cc->fcode=='PPL2')or($cc->fcode=='PPL3')or($cc->fcode=='PPL4')) {
                     $cc->TypePlace='City' ; // Becareful this will be use as a word, take care with lowercase, don't change
                     $sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
                     $qryRegion = $this->dao->query($sRegion);

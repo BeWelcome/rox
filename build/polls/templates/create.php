@@ -175,6 +175,20 @@ Use English language for now only
         <td><label for="Description" >Poll Description:</label></td>
         <td><textarea id="Description" name="Description" cols="60" rows="5"><?=$words->fTrad($Data->rPoll->Description) ?></textarea></td>
     </tr>
+    <tr>
+        <td><label for="GroupIdLimit">Limited to groups Id : </label></td>
+        <td><input type="text" id="GroupIdLimit" name="GroupIdLimit" size="8" class="long" value="
+<?php for ($ii=0;$ii<count($Data->IdGroupRestricted);$ii++) {
+	if ($ii>0) echo "," ;
+	echo $Data->IdGroupRestricted[$ii]->IdGroup ;
+}
+?>
+"> (experimental comma separated)</td>
+    </tr>
+	<?php if (!empty($rr->WhereToRestrictMember)) {
+			echo "<tr bgcolor='Yellow'><td>Special restriction<br />(ask admin)</td><td>".$rr->WhereToRestrictMember."</td></tr>" ;
+		}
+	?>
 </table>
 <p class="center"><input type="submit" value="go update"></p>
 </form>
@@ -191,7 +205,7 @@ for ($ii=0;$ii<count($Data->Choices);$ii++) {
     <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
     <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-    <input type="hidden" name="IdLanguage"  value="<?$_SESSION["IdLanguage"]?>"/>
+	<input name="IdLanguage"  value="<?php echo $_SESSION["IdLanguage"] ; ?>" type="hidden"/>
     <input type="hidden" name="IdPoll"  value="<?=$Data->rPoll->id?>"/>
     <input type="hidden" name="IdPollChoice" value="<?=$cc->id?>"/>
     <input type="hidden" name="IdChoiceText" value="
@@ -244,7 +258,7 @@ Use English language for now only
 <input type="hidden" name="PPostHandlerShutUp" value="ShutUp"/>
 
 <input type="hidden" name="<?=$callbackId ?>"  value="1"/>
-<input type="hidden" name="IdLanguage"  value="<?$_SESSION["IdLanguage"]?>"/>
+<input name="IdLanguage"  value="<php? echo $_SESSION["IdLanguage"] ; ?>" type="hidden"/>
 
 <table>
     <tr>
@@ -254,6 +268,10 @@ Use English language for now only
     <tr>
         <td><label for="Description">Poll Description:</label></td>
         <td><textarea id="Description" name="Description" rows="5" cols="60" class="long" ></textarea></td>
+    </tr>
+    <tr>
+        <td><label for="GroupIdLimit">Limited to groups Id : </label></td>
+        <td><input type="text"  id="GroupIdLimit" name="GroupIdLimit" size="8" class="long"> (experimental comma separated)</td>
     </tr>
 </table>
 <p class="center"><input type="submit" name="go create"></p>

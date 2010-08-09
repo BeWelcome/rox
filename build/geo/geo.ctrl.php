@@ -35,7 +35,7 @@ class GeoController extends RoxController {
     private $_view;
     
     private $fcode_default = '';
-    private $fcode_city = '&featureCode=PPL&featureCode=PPLA&featureCode=PPLC&featureCode=PPLG&featureCode=PPLL&featureCode=PPLS&featureCode=STLMT';
+    private $fcode_city = '&featureCode=PPL&featureCode=PPLA&featureCode=PPLA2&featureCode=PPLA3&featureCode=PPLA4&featureCode=PPLC&featureCode=PPLG&featureCode=PPLL&featureCode=PPLS&featureCode=STLMT';
     private $fcode_blog = '';
     
     /**

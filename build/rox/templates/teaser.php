@@ -41,19 +41,19 @@ $words = new MOD_words();
             */ ?>
             <div id="slideshow-content" class="float_left" >
                 <div class="slide" id="slide1">
-                <img src="images/tour/thumbimg.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage1');?>" />
+                <img src="images/startpage/pablod_01.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage1');?>" />
                 </div>
                 <div class="slide" id="slide2" style="display: none;">
-                <img src="images/tour/thumbimg2.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage2');?>" />
+                <img src="images/startpage/Olga_Kruglova_01.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage2');?>" />
                 </div>
                 <div class="slide" id="slide3" style="display: none;">
-                <img src="images/tour/thumbimg3.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage3');?>" />
+                <img src="images/startpage/pablod_02.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage3');?>" />
                 </div>
                 <div class="slide" id="slide4" style="display: none;">
-                <img src="images/tour/thumbimg4.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage4');?>" />
+                <img src="images/startpage/Olga_Kruglova_02.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage4');?>" />
                 </div>
                 <div class="slide" id="slide5" style="display: none;">
-                <img src="images/tour/thumbimg5.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage5');?>" />
+                <img src="images/startpage/pablod_03.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage5');?>" />
                 </div>
             </div>
             

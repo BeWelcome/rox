@@ -31,7 +31,7 @@ $_SESSION['IdLanguage'] = 0; // force English for menu
 
 $Schema="BW_MAIN" ;
 $Schema="bewelcome" ;
-echo "<H2 align=left>$Schema Schema</H2>";
+echo "<H2 align=left>$Schema Schema (jy)</H2>";
 
 echo "<table align=left><tr><td align=left>" ;
 $s1 = "select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_SCHEMA='".$Schema."' order by TABLE_NAME";
@@ -51,5 +51,5 @@ while ($r1 = mysql_fetch_object($qry1)) {
 	echo "<br />";
 }
 echo "</td></tr></table>" ;
-require_once "../layout/footer.php";
+require_once "layout/footer.php";
 ?>

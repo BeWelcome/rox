@@ -27,6 +27,8 @@ require_once "layout/error.php";
 
 // test if is logged, if not logged and forward to the current page
 MustBeAdmin(); // need to be log
+echo "<h2>phpinfo logged as [".$_SESSION["Username"]."]</h2>" ;
+echo "<p>This version was updated and committed with Git by jeanYves</p>" ;
 phpinfo();
 
 ?>

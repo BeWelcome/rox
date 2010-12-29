@@ -86,8 +86,14 @@ $R = MOD_right::get();
         }
     }
 ?>
-
+<?
+/*
+ * disabled because of low traffic. see forum: http://www.bewelcome.org/groups/47/forum/s1079-Please__please__let_us_remove_the__x_members_online__
+ *
   <li><img src="styles/css/minimal/images/icon_grey_online.png" alt="onlinemembers" /> <a href="online" id="IdLoggedMembers"><?php echo $words->getBuffered('NbMembersOnline', $who_is_online_count); ?></a><?php echo $words->flushBuffer(); ?></li>
+*/
+?>
+  
   <?php if ($logged_in) { ?>
   <li><img src="styles/css/minimal/images/icon_grey_mail.png" alt="mymessages"/><a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>
   <li><img src="styles/css/minimal/images/icon_grey_logout.png" alt="logout" /><a href="logout" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>

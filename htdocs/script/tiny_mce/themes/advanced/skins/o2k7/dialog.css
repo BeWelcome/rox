@@ -15,20 +15,20 @@ margin:8px 8px 0 8px;
 }
 
 html {background:#F0F0EE;}
-td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px;}
+td {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
 textarea {resize:none;outline:none;}
 a:link, a:visited {color:black;}
 a:hover {color:#2B6FB6;}
 .nowrap {white-space: nowrap}
 
 /* Forms */
-fieldset {margin:0; padding:4px; border:1px solid #919B9C; font-family:Verdana, Arial; font-size:12px;}
+fieldset {margin:0; padding:4px; border:1px solid #919B9C; font-family:Verdana, Arial; font-size:10px;}
 legend {color:#2B6FB6; font-weight:bold;}
 label.msg {display:none;}
 label.invalid {color:#EE0000; display:inline;}
 input.invalid {border:1px solid #EE0000;}
 input {background:#FFF; border:1px solid #CCC;}
-input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px;}
+input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;}
 input, select, textarea {border:1px solid #808080;}
 input.radio {border:1px none #000000; background:transparent; vertical-align:middle;}
 input.checkbox {border:1px none #000000; background:transparent; vertical-align:middle;}
@@ -65,7 +65,7 @@ table.charmap {border:1px solid #AAA; text-align:center}
 td.charmap, #charmap a {width:18px; height:18px; color:#000; border:1px solid #AAA; text-align:center; font-size:12px; vertical-align:middle; line-height: 18px;}
 #charmap a {display:block; color:#000; text-decoration:none; border:0}
 #charmap a:hover {background:#CCC;color:#2B6FB6}
-#charmap #codeN {font-size:12px; font-family:Arial,Helvetica,sans-serif; text-align:center}
+#charmap #codeN {font-size:10px; font-family:Arial,Helvetica,sans-serif; text-align:center}
 #charmap #codeV {font-size:40px; height:80px; border:1px solid #AAA; text-align:center}
 
 /* Source */
@@ -79,7 +79,7 @@ td.charmap, #charmap a {width:18px; height:18px; color:#000; border:1px solid #A
 .tabs li.current {background:url(../default/img/tabs.gif) no-repeat 0 -18px; margin-right:2px;}
 .tabs span {float:left; display:block; background:url(../default/img/tabs.gif) no-repeat right -36px; padding:0px 10px 0 0;}
 .tabs .current span {background:url(../default/img/tabs.gif) no-repeat right -54px;}
-.tabs a {text-decoration:none; font-family:Verdana, Arial; font-size:12px;}
+.tabs a {text-decoration:none; font-family:Verdana, Arial; font-size:10px;}
 .tabs a:link, .tabs a:visited, .tabs a:hover {color:black;}
 
 /* Panels */
@@ -114,3 +114,4 @@ h3 {font-size:14px;}
 #colorpicker #namedcolors {width:150px;}
 #colorpicker #namedcolors a {display:block; float:left; width:10px; height:10px; margin:1px 1px 0 0; overflow:hidden;}
 #colorpicker #colornamecontainer {margin-top:5px;}
+#colorpicker #picker_panel fieldset {margin:auto;width:325px;}

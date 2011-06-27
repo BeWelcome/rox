@@ -93,6 +93,11 @@
                 <?php echo $purifier->purify($member->get_trad("InformationToGuest", $profile_language,true)); ?>
             </dd>
         <? } ?>
+
+        <?php if ($member->get_trad("PublicTransport", $profile_language,true) != "") { ?>
+            <dt class="label" ><?=$words->get('ProfilePublicTransport');?>:</dt>
+            <dd><?php echo $purifier->purify($member->get_trad("PublicTransport", $profile_language,true)); ?></dd>
+        <? } ?>
         
         <?php
         $TabRestrictions = explode(",", $member->Restrictions);

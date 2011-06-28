@@ -76,7 +76,7 @@ $words = new MOD_words();
 
           <div class="video-desc">
             <p><?//=$words->get('IndexPageVideoDesc','username') //TODO: Fix the 'username' to something dynamic ?>
-            <a class="bigbutton" href="tour" onclick="this.blur();"><?php echo $words->get('tour_take');?></a>
+            <a class="bigbutton" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
             <br /><br />
             </p>
 

@@ -547,6 +547,8 @@ a.bigbutton span {
     display: block;
     line-height: 14px;
     padding: 8px 0 8px 18px;
+    font-size:1.2em;
+    font-weight:bold;
 }
 a.bigbutton:active {
     background-position: bottom right;

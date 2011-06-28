@@ -53,7 +53,7 @@ tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
 tinyMCE.init({
     mode: "exact",
     elements: "topic_text",
-    plugins : "advimage,preview,fullscreen",
+    plugins : "advimage,preview,fullscreen,autolink",
     theme: "advanced",
     content_css : "styles/css/minimal/screen/content_minimal.css",    
     relative_urls:false,

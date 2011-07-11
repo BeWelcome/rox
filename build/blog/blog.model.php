@@ -7,6 +7,7 @@
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id:blog.model.php 201 2007-02-11 14:07:56Z marco $
+* Fix by JeanYves on July 2011 1st to avoid kicked members post to be displayed
  */
 class Blog extends RoxModelBase 
 {
@@ -15,7 +16,7 @@ class Blog extends RoxModelBase
     const SQL_BLOGPOST = '
 SELECT
     b.`blog_id`,
-    b.IdMember,
+    b.IdMember,m.Status as MemberStatus,
     b.`flags` AS `flags`,
     bd.`blog_title`, bd.`blog_text`,
     m.Username AS `user_handle`,
@@ -26,7 +27,7 @@ SELECT
 FROM `blog` b
 JOIN `blog_data` bd ON b.`blog_id` = bd.`blog_id`
 LEFT JOIN `trip_data` td ON b.`trip_id_foreign` = td.`trip_id`
-LEFT JOIN members m ON b.IdMember = m.id
+JOIN members m ON b.IdMember = m.id and m.Status in ("Active","ChoiceInactive","OutOfRemind","PassedAway")
 LEFT JOIN `blog_comments` AS c ON c.`blog_id_foreign` = b.`blog_id`
 LEFT JOIN `geonames_cache` AS `geonames_cache` ON (`bd`.`blog_geonameid` = `geonames_cache`.`geonameid`)
 LEFT JOIN `geonames_countries` ON (`geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)

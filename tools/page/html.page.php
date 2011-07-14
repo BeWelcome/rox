@@ -243,9 +243,14 @@ class PageWithHTML extends AbstractBasePage
     
     protected function head()
     {
+        if (isset($_SERVER['HTTPS']) && PVars::getObj('env')->baseuri_https !== false) {
+            $baseuri = PVars::getObj('env')->baseuri_https;
+        } else {
+            $baseuri = PVars::getObj('env')->baseuri;
+        }
         ?>
         <title><?=$this->getPageTitle() ?></title>
-        <base id="baseuri" href="<?=PVars::getObj('env')->baseuri; ?>" />
+        <base id="baseuri" href="<?=$baseuri ?>" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
         <meta name="description" content="<?=$this->getPage_meta_description()?>" />

@@ -28,6 +28,23 @@
 </div> <!-- page_margins-->
 <?php $this->debugInfo() ?>
 
+<?php if (APP_User::isBWLoggedIn() && isset($_SESSION['Username'])) { ?>
+<!-- Jappix WebChat Integration -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://static.jappix.com/php/get.php?l=en&amp;t=js&amp;g=mini.xml"></script>
+<script type="text/javascript">
+ jQuery.noConflict();
+jQuery(document).ready(function() {
+   MINI_GROUPCHATS = ["BeWelcome"];
+   MINI_ANIMATE = true;
+   // Define the user nickname
+   MINI_NICKNAME = "<?=$_SESSION['Username']?>";
+   launchMini(true, false, "anonymous.jappix.com");
+});
+</script>
+<!-- End Jappix Tag -->
+<?php } ?>
+
 <!-- Piwik web analytics http://piwik.org/ -->
 <script type="text/javascript">
 var pkBaseURL = (("https:" == document.location.protocol) ? "https://www.bevolunteer.org/piwik/" : "http://www.bevolunteer.org/piwik/");

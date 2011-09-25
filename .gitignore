@@ -1,1 +1,4 @@
 errors.log
+rox_local.ini
+*.cache.ini
+

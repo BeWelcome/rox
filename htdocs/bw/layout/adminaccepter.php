@@ -188,7 +188,7 @@ function DisplayAdminAccepter($TData) {
 
   Menu2("admin/adminaccepter.php", ww('MainPage')); // Displays the second menu
 
-  $MenuAction  = "            <li><a href=\"http://www.bevolunteer.org/wiki/Signup_Tool:_HowTo\" target=\"new\">Wiki HowTo</a</li>\n";
+  $MenuAction  = "            <li><a href=\"http://www.bevolunteer.org/wiki/Signup_Tool:_HowTo\" target=\"new\">Wiki HowTo</a></li>\n";
 
   DisplayHeaderShortUserContent($title);
   ShowLeftColumn($MenuAction,VolMenu());

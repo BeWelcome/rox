@@ -11,7 +11,7 @@
 
 class Forums extends RoxModelBase {
     const CV_THREADS_PER_PAGE = 15;
-    const CV_POSTS_PER_PAGE = 20;
+    const CV_POSTS_PER_PAGE = 200;
     const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
     const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for lastposts
 
@@ -1274,7 +1274,7 @@ WHERE `threadid` = '%d' ",
 			if (isset($OldReport->PostComment)) $PostComment=$PostComment."<hr />\n".$OldReport->PostComment ;
 			$ss="update reports_to_moderators set  LastWhoSpoke='Moderator',PostComment='".$this->dao->escape($PostComment)."',IdModerator=".$_SESSION["IdMember"].",Status='".$this->dao->escape($Status)."',Type='".$this->dao->escape($Type)."',IdModerator=".$_SESSION['IdMember']." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 			$this->dao->query($ss);
-			MailTheReport($IdPost,$IdReporter,$PostComment,0,$Status,1) ;
+			$this->MailTheReport($IdPost,$IdReporter,$PostComment,0,$Status,1) ;
 
 		}
 		else {
@@ -1286,7 +1286,7 @@ WHERE `threadid` = '%d' ",
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment'])."<hr />\n".$OldReport->PostComment ;
 				$ss="update reports_to_moderators set LastWhoSpoke='Member',PostComment='".$this->dao->escape($PostComment)."',Status='".$this->dao->escape($Status)."'"." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 				$this->dao->query($ss);
-				MailTheReport($IdPost,$OldReport->IdReporter,$PostComment,$OldReport->IdModerator,$Status,0) ;
+				$this->MailTheReport($IdPost,$OldReport->IdReporter,$PostComment,$OldReport->IdModerator,$Status,0) ;
 			}
 			else {
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
@@ -3945,7 +3945,7 @@ class Board implements Iterator {
         return $var;
     }
 
-}
+
 
 /**
      * Notify volunteers
@@ -3953,7 +3953,7 @@ class Board implements Iterator {
      * @param array $vars with username
 */
 
-function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus,$ToMember=0)    {
+Public function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus,$ToMember=0)    {
     //Load the files we'll need
     require_once "bw/lib/swift/Swift.php";
     require_once "bw/lib/swift/Swift/Connection/SMTP.php";
@@ -4048,4 +4048,4 @@ die("force stop") ;
         $status = false;
     }
 } // end of MailTheReport
-
+}

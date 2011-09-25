@@ -40,14 +40,19 @@ if (!isset($_SESSION['Param']->MailBotMode)) {
     die ('\$_SESSION[\'Param\']->MailBotMode is missing') ;
 }
 elseif ($_SESSION['Param']->MailBotMode=='Stop') {
-    die ('MailBot is stopped') ;
+    die ( 'MailBot is stopped') ;
 }
 elseif (($_SESSION['Param']->MailBotMode=='Manual') and (!IsLoggedIn()) ) {
-    die ('MailBot is in Manual mode') ;
+    LogStr("MailBot is in Manual mode" , "mailbot"); // In this case silent exit to avoid mails notification in the sysadmin mail list
+	exit(0) ;
+}
+elseif (($_SESSION['Param']->MailBotMode=='Manual') ) {
+    echo 'MailBot is in Manual mode<br>' ;
 }
 elseif ($_SESSION['Param']->MailBotMode!='Auto') {
-    die ('MailBot is in and unknown mode ('.$_SESSION['Param']->MailBotMode.')') ;
+    die ('MailBot is in an unknown mode ('.$_SESSION['Param']->MailBotMode.')') ;
 }
+
 
 $baseuri = PVars::getObj('env')->baseuri;
 
@@ -98,6 +103,9 @@ $qry = sql_query($str);
 
 $countbroadcast = 0;
 while ($rr = mysql_fetch_object($qry)) {
+	if ($_SESSION['Param']->MailBotMode!='Auto') {
+		echo "broadcastmessages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> broadcastmessages.id=".$rr->id."<br>" ;
+	}
     $Email = GetEmail($rr->IdReceiver);
     $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
     
@@ -164,6 +172,9 @@ while ($rr = mysql_fetch_object($qry)) {
         if (($rr->created_since_x_minute<10) and(($rr->Type=='newthread') or ($rr->Type=='reply'))) {
             continue ; // Don't process to recent change so it means give time for the user to fix it by an edit
         }
+	if ($_SESSION['Param']->MailBotMode!='Auto') {
+		echo "posts_notificationqueue <b> Going to Get Email for IdMember : [".$rr->IdMember."]</b> posts_notificationqueue.id=".$rr->id."<br>" ;
+	}
     $Email = GetEmail($rr->IdMember);
     $fTradIdLastUsedLanguage=$MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
 
@@ -225,6 +236,7 @@ WHERE
     // Rewrite the title and the message to the corresponding default language for this member if any
     $rPost->thread_title=fTrad($rPost->IdTitle) ;
     $rPost->message=fTrad($rPost->IdContent) ;
+    $rPost->message=str_replace('<p><br>\n</p>','',$rPost->message) ;
 
     $NotificationType=$rr->Type ;
 
@@ -325,7 +337,9 @@ $qry = sql_query($str);
 
 $count = 0;
 while ($rr = mysql_fetch_object($qry)) {
-    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
+//    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
+    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')and ($rr->MemberStatus!='NeedMore')and ($rr->MemberStatus!='Pending')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
+
         if (IsLoggedIn()) {
             echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
         }
@@ -342,6 +356,9 @@ WHERE
         continue ;
     } 
      
+	if ($_SESSION['Param']->MailBotMode!='Auto') {
+		echo "messages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> messages.id=".$rr->id."<br>" ;
+	}
     $Email = GetEmail($rr->IdReceiver);
     $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
     $subj = ww("YouveGotAMail", $rr->Username);
@@ -368,6 +385,11 @@ WHERE
 //            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
             $MessageFormatted .= PictureInMail($rr->Username);
         }
+        if  (($rr->MemberStatus=='NeedMore')or($rr->MemberStatus=='Pending')) {
+            LogStr("Mailbot procceds sending  message #".$rr->id." Message from Sender".$rr->Username."not active (".$rr->MemberStatus.")","mailbot");
+            $MessageFormatted=$MessageFormatted."<br>Message sent by a may be not yet verified member<br>" ;
+        }
+
         $MessageFormatted .= '</td><td>';
 //      $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
         $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);

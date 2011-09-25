@@ -397,7 +397,11 @@ WHERE IdMember = ".$this->id
     }
 
     public function get_age() {
+if ($this->HidBirthDate!=='No') {
+ $age='hidden' ;
+} else {
         $age = $this->get_crypted("age", "");
+}
         return $age;
     }
 

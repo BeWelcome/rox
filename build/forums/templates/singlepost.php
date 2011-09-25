@@ -228,7 +228,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 echo "<a href='forums/reporttomod/",$report->IdPost,"/".$report->IdReporter."'>view report</a>" ;
             }
         }
-        /*
+        
         $TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
         if (isset($TheReports[0]->IdReporter)) {
             echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a>" ;
@@ -236,7 +236,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         else {
             echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a>" ;
         }
-        */
+        
     }
 
     ?>

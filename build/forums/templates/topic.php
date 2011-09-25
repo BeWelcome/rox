@@ -102,6 +102,9 @@ This File display a topic and the messages which are inside it
 			if ($breadcrumb) {
 				$breadcrumb .= '|| ';
 			}
+                        if ($url{strlen($url)-1}!='/') {  // Fix for ticket
+                                $url=$url.'/' ;
+                        }
 			$url = $url.'t'.$topic->topicinfo->IdTag[$ii].'-'.$wordtag.'/';
 			$breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
 		} // end of for $ii

@@ -35,24 +35,50 @@ $countmatch = 0;
 MustLogIn(); // need to be log
 
 $RightLevel = HasRight('SqlForVolunteers'); // Check the rights
+
 if ($RightLevel < 1) {
-	echo "This Need the suffcient <b>SqlForVolunteers</b> rights<br>";
+	echo "This Need the sufficient <b>SqlForVolunteers</b> rights<br>";
 	exit (0);
 }
 
-$GroupeScope = RightScope('SqlForVolunteers');
 
+$IdQueryScope = RightScope('SqlForVolunteers');
+
+$membergrouplist="" ; // receive the list of groups the member belongs to
+$qry=sql_query("select IdGroup from membersgroups where Status='In' and IdMember=".$_SESSION["IdMember"]) ;
+while ($rr=mysql_fetch_object($qry)) {
+	if ($membergrouplist!="") {
+		$membergrouplist.="," ;
+	}
+	$membergrouplist=$membergrouplist.$rr->IdGroup ;
+
+}
 $TList = array ();
-if ($GroupeScope=="\"All\"") {
+$table="sqlforvolunteers" ;
+
+if ($IdQueryScope=="\"All\"") {
 			 $swhere="" ;
 }
 else {
-		  $sList=str_replace("\"","",$GroupeScope) ;
+	/* Group option Disabled -because this is not a good one (better write real features)
+	$table="sqlforvolunteers,sqlforgroupsmembers" ;
+	$sList=str_replace("\"","",$IdQueryScope) ;
 		  $sList=str_replace("'","",$sList) ;
 		  $sList=str_replace(";",",",$sList) ;
-			$swhere=" where sqlforvolunteers.id in (".$sList.")" ;
+	$swhere=" where ( (sqlforvolunteers.id in (".$sList.")) or (sqlforvolunteers.id=sqlforgroupsmembers.IdQuery and sqlforgroupsmembers.IdGroup in (".$membergrouplist.")))" ;
+	*/
+	$table="sqlforvolunteers" ;
+	$sList=str_replace("\"","",$IdQueryScope) ;
+	$sList=str_replace("'","",$sList) ;
+	$sList=str_replace(";",",",$sList) ;
+	$swhere=" where  (sqlforvolunteers.id in (".$sList.")) " ;
 }
-$ss="select * from sqlforvolunteers ".$swhere." order by id" ;
+
+
+
+$ss="select sqlforvolunteers.* from ".$table." " ;
+$ss=
+$ss=$ss.$swhere."  group by sqlforvolunteers.id order by sqlforvolunteers.id" ;
 //		echo "\$ss=",$ss,"<br>\n" ; ;
 $qry=sql_query($ss) ;
 while ($rr = mysql_fetch_object($qry)) {
@@ -63,15 +89,11 @@ while ($rr = mysql_fetch_object($qry)) {
 
 $lastaction = "";
 switch (GetParam("action")) {
-	case "logout" :
-		Logout();
-		exit (0);
-		break;
 	case "See Users" :
 		$IdQuery=(int)GetParam("IdQuery",0) ;
 		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
 //		print_r($rrQuery) ;
-		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
+		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.Status as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
 //		echo "ss=",$ss ;
 		$TResult=array() ; 
 
@@ -80,7 +102,15 @@ switch (GetParam("action")) {
 		   array_push($TResult, $rr);
 		}
 		
- 	    DisplayUsers($rrQuery,$TResult) ;
+		$ss="select groups.Name,groups.id as IdGroup from groups,sqlforgroupsmembers where sqlforgroupsmembers.IdGroup=groups.id and sqlforgroupsmembers.IdQuery=".$IdQuery ;
+		$TAllowedGroups=array() ; 
+
+		$qry=sql_query($ss) ;
+		while ($rr=mysql_fetch_object($qry)) {
+		   array_push($TAllowedGroups, $rr);
+		}
+		
+ 	    DisplayUsers($rrQuery,$TResult,$TAllowedGroups) ;
 		break ;
 		
    case "grant query" :
@@ -101,7 +131,18 @@ switch (GetParam("action")) {
 			 $ss="select rightsvolunteers.*,rightsvolunteers.id as IdRightForVol,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and members.id=rightsvolunteers.IdMember and members.Username='".$Username."'" ;
 			 $rRight=LoadRow($ss) ;
 			 if (!isset($rRight->Scope))  {
+				$TheRight=LoadRow("select * from rights where Name='SqlForVolunteers'") ;
+		   	 	echo "creating right SqlForVolunteers for ".$Username,"<br>" ;
+				$ss="insert into rightsvolunteers(IdMember,IdRight,Level,Comment,created) values(".$rUser->id.",".$TheRight->id.",1,'Granted via adminquery interface',now())" ;
+				LogStr("Adding rights <i>SqlForVolunteers</i> for <b>$rUser->Username</b>","Adminrights") ;
+				sql_query($ss) ;
+				
+			 }
+			 $ss="select rightsvolunteers.*,rightsvolunteers.id as IdRightForVol,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and members.id=rightsvolunteers.IdMember and members.Username='".$Username."'" ;
+			 $rRight=LoadRow($ss) ;
+			 if (!isset($rRight->Scope))  {
 		   	 	$Message="You first need to grant ".$Username. " with right <b>SqlForVolunteers</b>" ;
+				
 			 }
 			 else {
 			 	  if ($rRight->Scope=="\"All\"") {
@@ -130,7 +171,7 @@ switch (GetParam("action")) {
 	
 		// Reload the data
 		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
-		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.STatus as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
+		$ss="select rightsvolunteers.*,rights.Name as RightName,members.Username,members.Status as MemberStatus from rightsvolunteers,rights,members where rights.id=rightsvolunteers.IdRight and rightsvolunteers.Level>=1 and rights.Name='SqlForVolunteers' and (Scope like '%\"".$IdQuery."\"%' or Scope like '%\"All\"%') and members.id=rightsvolunteers.IdMember" ;
 		$TResult=array() ; 
 
 		$qry=sql_query($ss) ;
@@ -138,7 +179,7 @@ switch (GetParam("action")) {
 		   array_push($TResult, $rr);
 		}
 		
- 	    DisplayUsers($rrQuery,$TResult,$Message) ;
+ 	    DisplayUsers($rrQuery,$TResult,NULL,$Message) ;
 		break ;
 	
    case "remove access" :
@@ -179,7 +220,7 @@ switch (GetParam("action")) {
 		   array_push($TResult, $rr);
 		}
 		
- 	    DisplayUsers($rrQuery,$TResult,$Message) ;
+ 	    DisplayUsers($rrQuery,$TResult,NULL,$Message) ;
 		break ;
 	
 	case "execute" :
@@ -187,12 +228,14 @@ switch (GetParam("action")) {
 		$rrQuery=LoadRow("select * from sqlforvolunteers where id=".$IdQuery) ;
 		
 		if (!isset($rrQuery->id)) {
-		   DisplayMyResults(array(),array(),$rrQuery,"Sorry your query has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
+		   DisplayMyResults(array(),array(),array(),$rrQuery,"Sorry your query has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
 		   break ;
 		}
 		
-		if (!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) {
-		   DisplayMyResults(array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>",$TList) ;
+		
+		$IsQueryAllowedInGroup=LoadRow("select count(*) as cnt  from sqlforgroupsmembers where IdGroup in (".$membergrouplist.") and IdQuery=".$IdQuery) ;
+		if ((!HasRight('SqlForVolunteers','"'.$IdQuery.'"')) and ($IsQueryAllowedInGroup->cnt==0) ) {
+		   DisplayMyResults(array(),array(),array(),$rrQuery,"Sorry you miss right scope for query <b>".$rrQuery->Name."</b>",$TList) ;
 		   LogStr("Trying to use a not allowed query (".$rrQuery->Name.")","adminquery") ;
 		   break ;
 		}
@@ -210,27 +253,40 @@ switch (GetParam("action")) {
 			$TTitle=array() ;
 			$Param1=mysql_escape_string(stripslashes(GetStrParam("param1",""))) ;
 			$Param2=mysql_escape_string(stripslashes(GetStrParam("param2",""))) ;
-//		echo " \$rrQuery->Query=",$rrQuery->Query,"<br>"  ;
+			$Param3=mysql_escape_string(stripslashes(GetStrParam("param3",""))) ;
+			$Param4=mysql_escape_string(stripslashes(GetStrParam("param4",""))) ;
+			$Param5=mysql_escape_string(stripslashes(GetStrParam("param5",""))) ;
+
+			 $sQuery=$sQry ;
+
+			// echo " \$rrQuery->Query=",$rrQuery->Query," \$Param1=[$Param1]<br>"  ;
 			if ((!empty($Param1)) and (!empty($Param2))) {
-			 $sQuery=sprintf($sQry,$Param1,$Param2) ;
+				if (stripos ($sQry,'%s')!==0) {
+					$sQuery=sprintf($sQry,$Param1,$Param2) ;
+				}
 			}
 			else if (!empty($Param1)) {
-			 $sQuery=sprintf($sQry,$Param1) ;
+				if (stripos($sQry,'%s')!==0) {
+					$sQuery=sprintf($sQry,$Param1) ;
+				} 
 			}
-			else {
-			 $sQuery=$sQry ;
-			}
+
+			$sQuery=str_ireplace( "\$P1",$Param1,$sQuery) ;
+			$sQuery=str_ireplace( "\$P2",$Param2,$sQuery) ;
+			$sQuery=str_ireplace( "\$P3",$Param3,$sQuery) ;
+			$sQuery=str_ireplace( "\$P4",$Param4,$sQuery) ;
+			$sQuery=str_ireplace( "\$P5",$Param5,$sQuery) ;
+			$sQuery=str_ireplace( "\$IdMember",$_SESSION["IdMember"],$sQuery) ;
+			$sQuery=str_ireplace( "\$Username",$_SESSION["Username"],$sQuery) ;
 	
 			if ($rrQuery->LogMe=="True") {
-		   LogStr("Doing query [".$sQuery."]","adminquery") ;
+				LogStr("Doing query [".$sQuery."]","adminquery") ;
 			}
 		
-//			echo "\$sQuery=",stripslashes($sQuery),"<br>\n"  ;
+			// echo "\$sQuery=",stripslashes($sQuery)," \$Param1=[$Param1]<br>\n"  ;
 			$_TTsqry[]=$sQuery ;
-
 		
 			$qry=sql_query(stripslashes($sQuery)) ;
-
 			if (!$qry) {
 			die ( "Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>") ;
 		   DisplayMyResults(array(),array(),array(),null,"Sorry your query [".$sQuery."] has failed #IdQuery=<b>".$IdQuery."</b>",$TList) ;
@@ -242,7 +298,11 @@ switch (GetParam("action")) {
 			 	$_TResult[]=$sQuery ;
 			 	$_TTitle[]=$sQuery ;
 			} 
-			elseif ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"replace")===0) or 								(stripos ($sQuery,"insert")===0) ){
+			elseif ((stripos ($sQuery,"delete")===0) or (stripos ($sQuery,"update")===0) or (stripos ($sQuery,"truncate")===0) or (stripos ($sQuery,"replace")===0) or 								(stripos ($sQuery,"insert")===0) ){
+				if (!$qry) {
+					$Message=$sQuery."<br><b>".mysql_error()."</b>" ;
+				}
+				else {
 		   $AffectedRows=mysql_affected_rows() ;
 		   $Message=$AffectedRows." affected rows<br />" ;
 		   $iCount=0 ;
@@ -253,6 +313,7 @@ switch (GetParam("action")) {
 			 
 			 $_TResult[]=$TResult ;
 			 $_TTitle[]=$TTitle ;
+			}
 			}
 			else {
 		   $AffectedRows=0 ;

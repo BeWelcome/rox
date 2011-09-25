@@ -25,6 +25,7 @@ Boston, MA  02111-1307, USA.
      * @author Lemon-Head
      * @author Lupochen
      * @author Fake51
+	 * @Fix jeanyves (2011-09-19)
      */
 
     /**
@@ -717,17 +718,17 @@ ORDER BY
         $errors = array();
         
         // email (e-mail duplicates in BW database allowed)
-        if (!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) {
+        if ((!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email']))and($vars['Email']!='cryptedhidden')) {
             $Email = ((!empty($vars['Email'])) ? $vars['Email'] : '-empty-');
             $errors[] = 'SignupErrorInvalidEmail';
-            $this->logWrite("Editmyprofile: Invalid Email update with value " .$Email, "Email Update");
+            $this->logWrite("members.model checkProfileForm Editmyprofile: Invalid Email update with value " .$Email, "Email Update");
         }
         if (empty($vars['Street']) || empty($vars['Zip']))
         {
             $Street = ((!empty($vars['Street'])) ? $vars['Street'] : '-empty-');
             $Zip = ((!empty($vars['Zip'])) ? $vars['Zip'] : '-empty-');
             $errors[] = 'SignupErrorInvalidAddress';
-            $this->logWrite("Editmyprofile: Invalid address update with value {$Street} and {$Zip}", "Address Update");
+            $this->logWrite("members.model checkProfileForm Editmyprofile: Invalid address update with value {$Street} and {$Zip}", "Address Update");
         }
 
         $birthdate_error = false;
@@ -806,8 +807,7 @@ ORDER BY
      * @param unknown_type $vars
      * @return unknown
      */
-    public function updateProfile(&$vars)
-    {
+    public function updateProfile(&$vars)     {
         $IdMember = (int)$vars['memberid'];
         $words = new MOD_words();
         $rights = new MOD_right();
@@ -834,7 +834,7 @@ ORDER BY
         $words->setlangWrite($vars['profile_language']);
 
         // refactoring to use member entity
-        $m->LastLogin = '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin));
+//        $m->LastLogin = '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin)); // Members lastlogin is no to be updated here
         $m->Gender = $vars['gender'];
         $m->HideGender = $vars['HideGender'];
         $m->BirthDate = $vars['BirthDate'];
@@ -870,12 +870,6 @@ ORDER BY
         // as $CanTranslate is set explicitly above, this is disabled
         // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data        
 
-        if ($vars["Email"] != $m->email) {
-            $this->logWrite("Email updated (previous was " . $m->email . ")", "Email Update"); // Sticking to old BW, the previous email is stored in logs,
-                                                                                               // this might be discussed, but if the member fills a bad email, 
-                                                                                               // there is no more way to retrieve him
-                                                                                               // Todo : get rid with this, but implement a confimmation mail
-        }                
         if ($vars["HouseNumber"] != $m->get_housenumber()) {
             $this->logWrite("Housenumber updated", "Address Update");
         }                
@@ -886,17 +880,48 @@ ORDER BY
             $this->logWrite("Zip updated", "Address Update");
         }                
 
-        $m->Email = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
-        $m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['HomePhoneNumber']),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
-        $m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['CellPhoneNumber']),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
-        $m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['WorkPhoneNumber']),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
-        $m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_SKYPE']),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
-        $m->chat_MSN = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_MSN']),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
-        $m->chat_AOL = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_AOL']),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
-        $m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_YAHOO']),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
-        $m->chat_ICQ = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_ICQ']),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
-        $m->chat_Others = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_Others']),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
-        $m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_GOOGLE']),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
+		if ($vars["Email"]=="cryptedhidden") {
+			$this->logWrite("members.model updateprofile email keeps previous value (cryptedhidden detected)", "Debug"); 
+		}
+        else {
+			if ($vars["Email"] != $m->email) {
+				$this->logWrite("Email updated (previous was " . $m->email . ")", "Email Update"); // Sticking to old BW, the previous email is stored in logs,
+                                                                                               // this might be discussed, but if the member fills a bad email, 
+                                                                                               // there is no more way to retrieve him
+                                                                                               // Todo : get rid with this, but implement a confimmation mail
+				$m->Email = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
+			}
+		}
+		if ($vars["HomePhoneNumber"]!="cryptedhidden") {
+			$m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['HomePhoneNumber']),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
+		}
+		if ($vars["CellPhoneNumber"]!="cryptedhidden") {
+			$m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['CellPhoneNumber']),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+		}
+		if ($vars["WorkPhoneNumber"]!="cryptedhidden") {
+			$m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['WorkPhoneNumber']),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
+		}
+		if ($vars["chat_SKYPE"]!="cryptedhidden") {
+			$m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_SKYPE']),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
+		}
+		if ($vars["chat_MSN"]!="cryptedhidden") {
+			$m->chat_MSN = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_MSN']),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
+		}
+		if ($vars["chat_AOL"]!="cryptedhidden") {
+			$m->chat_AOL = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_AOL']),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
+		}
+		if ($vars["chat_YAHOO"]!="cryptedhidden") {
+			$m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_YAHOO']),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
+		}
+		if ($vars["chat_ICQ"]!="cryptedhidden") {
+			$m->chat_ICQ = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_ICQ']),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
+		}
+		if ($vars["chat_Others"]!="cryptedhidden") {
+			$m->chat_Others = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_Others']),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
+		}
+		if ($vars["chat_GOOGLE"]!="cryptedhidden") {
+			$m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_GOOGLE']),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
+		}
 
         $firstname = MOD_crypt::AdminReadCrypted($m->FirstName);
         $secondname = MOD_crypt::AdminReadCrypted($m->SecondName);
@@ -906,12 +931,26 @@ ORDER BY
             $this->logWrite("{$m->Username} changed name. Firstname: {$firstname} -> " . strip_tags($vars['FirstName']) . ", second name: {$secondname} -> " . strip_tags($vars['SecondName']) . ", second name: {$lastname} -> " . strip_tags($vars['LastName']), 'Profile update');
         }
 
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
-        MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+		if ($vars["FirstName"]!="cryptedhidden") {
+			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
+		}
+		if ($vars["SecondName"]!="cryptedhidden") {
+			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
+		}
+		if ($vars["LastName"]!="cryptedhidden") {
+			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
+		}
+		if ($vars["Zip"]!="cryptedhidden") {
+            $this->logWrite("in members.model updateprofile() Before Zip update addresss.Zip=".$m->address->Zip,"Debug");
+			$iZip=MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
+            $this->logWrite("in members.model updateprofile() After Zip update addresss.Zip=".$m->address->Zip." \$iZip=".$iZip,"Debug");
+		}
+		if ($vars["HouseNumber"]!="cryptedhidden") {
+			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
+		}
+		if ($vars["Street"]!="cryptedhidden") {
+			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+		}
 
         // Check relations, and update them if they have changed
         $Relations=$m->get_all_relations() ;
@@ -959,7 +998,7 @@ ORDER BY
             $this->logWrite("Profile update by member himself [Status={$m->Status}]", "Profile update");
         }
         else {
-            $this->logWrite("update of another profile", "Profile update"); // Not sure this is possible, any way, if it is, it really desserves a log !
+            $this->logWrite("update of another profile <b>".$m->Username."</b>", "Profile update"); // It can be an admin update or a delegated translation update
         }
         
         return $status;

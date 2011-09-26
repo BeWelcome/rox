@@ -4,3 +4,4 @@ rox_local.ini
 htdocs/bw/faq_*.php
 data/
 htdocs/exception.log
+google*.html

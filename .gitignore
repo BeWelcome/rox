@@ -7,3 +7,6 @@ htdocs/exception.log
 google*.html
 htdocs/bw/.htaccess
 htdocs/.htaccess
+htdocs/update_status.txt
+htdocs/revision.txt
+

@@ -5,3 +5,5 @@ htdocs/bw/faq_*.php
 data/
 htdocs/exception.log
 google*.html
+htdocs/bw/.htaccess
+htdocs/.htaccess

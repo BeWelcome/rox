@@ -1,7 +1,6 @@
 errors.log
 rox_local.ini
 *.cache.ini
-htdocs/bw/faq_*.php
 data/
 htdocs/exception.log
 google*.html

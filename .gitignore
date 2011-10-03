@@ -1,7 +1,7 @@
 errors.log
 rox_local.ini
 *.cache.ini
-data/
+data
 htdocs/exception.log
 google*.html
 htdocs/bw/.htaccess

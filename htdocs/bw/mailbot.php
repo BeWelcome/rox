@@ -203,14 +203,16 @@ WHERE
     cities.id = members.IdCity  AND
     countries.id = cities.IdCountry
         
-    "); 
+    ");
+    // Sanitise IdMember
+    $rPostIdMember = intval($rPost->IdMember);
     $rImage=LoadRow("
 SELECT
     *
 FROM
     membersphotos
 WHERE
-    IdMember = $rPost->IdMember AND
+    IdMember = $rPostIdMember AND
     SortOrder = 0
     ");
     

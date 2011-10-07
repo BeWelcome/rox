@@ -1,7 +1,7 @@
 <?php
 /**
  * Messages model
- * 
+ *
  * @package messages
  * @author Andreas (lemon-head)
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
@@ -11,13 +11,13 @@
 class MessagesModel extends RoxModelBase
 {
     public $sort_element;
-    
+
     function __construct()
     {
         parent::__construct();
     }
-    
-    
+
+
     public function filteredMailbox($where_filters, $sort_string=false)
     {
         if (!is_array($where_filters)) {
@@ -30,7 +30,7 @@ class MessagesModel extends RoxModelBase
             if (!$sort_string)
                 $sort_string = "IF(messages.created > messages.DateSent, messages.created, messages.DateSent) DESC";
         }
-        
+
         return $this->bulkLookup(
             "
 SELECT
@@ -44,7 +44,7 @@ SELECT
 FROM
     messages
     LEFT JOIN members  AS  receivers  ON  messages.IdReceiver = receivers.id
-    LEFT JOIN members  AS  senders    ON  messages.IdSender   = senders.id 
+    LEFT JOIN members  AS  senders    ON  messages.IdSender   = senders.id
 WHERE
     $where_string
 ORDER BY
@@ -52,7 +52,7 @@ ORDER BY
             "
         );
     }
-    
+
     public function sortFilters($sort_element=false)
     {
         if (!$sort_element) return false;
@@ -71,8 +71,8 @@ ORDER BY
                 $sort_string = false;
         }
         return $sort_string;
-    }   
-    
+    }
+
     public function receivedMailbox($sort_element=false)
     {
         if (!isset($_SESSION['IdMember'])) {
@@ -85,7 +85,7 @@ ORDER BY
             return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND DeleteRequest != "receiverdeleted"');
         }
     }
-    
+
     public function spamMailbox()
     {
         if (!isset($_SESSION['IdMember'])) {
@@ -96,7 +96,7 @@ ORDER BY
             return $this->filteredMailbox('messages.InFolder = "Spam" AND DeleteRequest != "receiverdeleted"');
         }
     }
-    
+
     public function getMessage($message_id)
     {
         if (!is_numeric($message_id)) {
@@ -107,20 +107,20 @@ ORDER BY
 SELECT
     messages.*,
     receivers.Username AS receiverUsername,
-    senders.Username   AS senderUsername  
+    senders.Username   AS senderUsername
 FROM
     messages
     LEFT JOIN members AS receivers  ON  messages.IdReceiver = receivers.id
-    LEFT JOIN members AS senders    ON  messages.IdSender   = senders.id 
+    LEFT JOIN members AS senders    ON  messages.IdSender   = senders.id
 WHERE
     messages.id = $message_id
             "
         );
-        
+
         $user_id = $_SESSION['IdMember'];
-        
-        
-        // look if the member is allowed to see the message 
+
+
+        // look if the member is allowed to see the message
         if ($message->IdSender == $user_id) {
             return $message;
         } else if ($message->IdReceiver != $user_id) {
@@ -131,14 +131,14 @@ WHERE
             return 0;
         }
     }
-    
+
     public function deleteMessage($message_id)     {
         if (!is_numeric($message_id)) {
             return false;
         }
         $oldmsg = $this->singleLookup("SELECT DeleteRequest, IdSender, IdReceiver FROM messages WHERE id = '$message_id'");
         $DeleteRequest=$oldmsg->DeleteRequest ;
-        
+
         if ($oldmsg->IdSender==$_SESSION["IdMember"]) {
             if ($DeleteRequest=="receiverdeleted") {
                 $DeleteRequest.="senderdeleted,receiverdeleted";
@@ -153,7 +153,7 @@ WHERE
                 $DeleteRequest="receiverdeleted";
             }
         }
-        
+
         if ($DeleteRequest==$oldmsg->DeleteRequest) {
             MOD_log::get()->write("Weird: trying todelete message #$message_id in Tab: $DeleteRequest prévious value=[".$oldmsg->DeleteRequest."](MessagesModel::deleteMessage)", "hacking");
         }
@@ -164,7 +164,7 @@ WHERE
         $this->dao->query($ss);
         MOD_log::get()->write("Request to delete message #$message_id in Tab: $DeleteRequest del message  (MessagesModel::deleteMessage)", "message");
     } // end of deleteMessage
-    
+
     // Mark a message as "read" or "unread"
     public function markReadMessage($message_id, $read = true)
     {
@@ -178,7 +178,7 @@ WHERE id = $message_id
         );
         MOD_log::get()->write("Has read message #" . $message_id."  (MessagesModel::markReadMessage)", "readmessage");
     } // end of markReadMessage
-    
+
     // Mark a message as "read" or "unread"
     public function moveMessage($message_id, $folder)
     {
@@ -191,7 +191,7 @@ WHERE id = $message_id
             "
         );
     }
-     
+
     public function getMember($username) {
         return $this->singleLookup(
             "
@@ -201,7 +201,7 @@ WHERE Username = '$username'
             "
         );
     }
-    
+
     public function getMessagesWith($contact_id)
     {
         $user_id = $_SESSION['IdMember'];
@@ -213,8 +213,8 @@ AND DeleteRequest != 'receiverdeleted'
             "
         );
     }
-    
-    public function getSpamCheckStatus($IdSender,$IdReceiver) 
+
+    public function getSpamCheckStatus($IdSender,$IdReceiver)
     {
         $Right = new MOD_right();
 // Case NeverCheckSendMail
@@ -223,7 +223,7 @@ AND DeleteRequest != 'receiverdeleted'
             $SpamInfo = "NotSpam";
             $CheckerComment.="Sent by member with NeverCheckSendMail \n";
         }
-        
+
 // Test what the Spam mark should be
         $SpamInfo = "NotSpam"; // By default its not a Spam
         $tt=explode(";",wwinlang("MessageBlackWord",0));
@@ -265,18 +265,18 @@ AND DeleteRequest != 'receiverdeleted'
             sql_query($str);
             LogStr("PreferenceCheckMyMail for message #".$IdMess." from <b>".fUsername($Mes->IdSender)."</b> to <b>".fUsername($Mes->IdReceiver)."</b>","AutoSpamCheck");
             return($Status);
-        }   
+        }
     }
-    
-    
+
+
     /**
      * Look if the information in $input is ok to send.
      * If yes, send and return a confirmation.
      * Otherwise, return an array that tells what is missing.
-     * 
+     *
      * required information in $input:
      * sender_id, receiver_id, text
-     * 
+     *
      * optional fields in $input:
      * reply_to_id, draft_id
      *
@@ -285,13 +285,9 @@ AND DeleteRequest != 'receiverdeleted'
     public function sendOrComplain($input)
     {
         // check fields
-        
+
         $problems = array();
-        
-        if (!isset($input['agree_spam_policy'])) {
-            $problems['agree_spam_policy'] = 'you must agree with spam policy.';
-        }
-        
+
         if (!isset($input['receiver_id'])) {
             // receiver is not set:
             if (!isset($input['receiver_username'])) {
@@ -314,7 +310,7 @@ WHERE id = ".$input['receiver_id']."
             // receiver does not exist.
             $problems['receiver_id'] = 'receiver does not exist.';
         }
-        
+
         if (!isset($input['sender_id'])) {
             // sender is not set.
             $input['sender_id'] = $_SESSION['IdMember'];
@@ -324,13 +320,13 @@ WHERE id = ".$input['receiver_id']."
             $problems['sender_id'] = 'you are not the sender.';
             MOD_log::get()->write("Trying to send a message with IdMember #".$input['sender_id']." (MessagesModel::sendOrComplain)", "hacking");
         }
-        
+
         if (empty($input['text'])) {
             $problems['text'] = 'text is empty.';
         }
-        
+
         $input['status'] = 'ToSend';
-        
+
         if (!empty($problems)) {
             $message_id = false;
         } else if (!isset($input['draft_id'])) {
@@ -357,13 +353,13 @@ WHERE id = ".$input['receiver_id']."
             $this->_updateMessage($draft_id, $input);
             $message_id = $draft_id;
         }
-        
+
         return array(
             'problems' => $problems,
             'message_id' => $message_id
         );
     }
-    
+
     /*
     * This function compute a Captcha in bitmap
     * It look a bit weird to have it in the model, but some day it might require additional data from database
@@ -375,11 +371,11 @@ WHERE id = ".$input['receiver_id']."
 //      $ss=$_SESSION['TheCaptcha'] ;
         return($ss) ;
     } // end of DisplayCaptcha
-    
+
     public function CaptchaNeeded($IdMember) {
         // In case this member is submitted to Captcha
         $ss="select count(*) as NbTrust from comments where comments.Quality='Good' and comments.IdToMember=".$IdMember;
-        $mSender=$this->singleLookup($ss) ; 
+        $mSender=$this->singleLookup($ss) ;
         $BW_Rights = new MOD_right();
         $BW_Flags = new MOD_flag();
         return (($mSender->NbTrust<=0)or($BW_Flags->HasFlag("RequireCaptchaForContact"))) ;
@@ -398,7 +394,7 @@ WHERE id = ".$input['receiver_id']."
         }
         return(true) ;
     } // end of Check for Captcha
-    
+
     private function _createMessage($fields)    {
         //if (!$this->CheckForCaptcha($fields)) return false ;
         $attach_picture = (isset($fields['attach_picture']) ? ($fields['attach_picture'] ? 'yes' : 'no') : 'no');
@@ -421,11 +417,11 @@ SET
     IdParent = {$parent}
 SQL
         )->insertId();
-        
+
         return ($iMes) ;
     }
-    
-    
+
+
     private function _updateMessage($message_id, $fields)  {
 
         $this->dao->query(
@@ -442,5 +438,5 @@ WHERE id = $message_id
             "
         );
     }
-    
+
 }

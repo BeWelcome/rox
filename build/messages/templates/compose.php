@@ -29,44 +29,44 @@ $member = $model->getMemberWithUsername($receiver_username);
     <div id="shade_top"></div>
     <div id="messageheader" class="floatbox">
         <div id="messageside" class="float_right">
-			<p class="small grey">
-				<?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong><br />
-				<?=$words->get('Speaks')?> 
-				<?php
-				$languages = $member->get_languages_spoken(); 
-				if (count($languages) > 1) {
-					$ii = 0;
-              		$max = count($languages);
-					foreach($languages as $language) {
-              			$space = ($ii != $max -1) ? ', ' : '';
+      <p class="small grey">
+        <?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong><br />
+        <?=$words->get('Speaks')?>
+        <?php
+        $languages = $member->get_languages_spoken();
+        if (count($languages) > 1) {
+          $ii = 0;
+                  $max = count($languages);
+          foreach($languages as $language) {
+                    $space = ($ii != $max -1) ? ', ' : '';
                         ?><strong><span title="<?=$words->get('LanguageLevel_'.$language->Level) ?>"><?=$language->Name ?><?=$space?></span></strong><?php
-              			$ii++;
+                    $ii++;
                     }
-				} ?>
+        } ?>
              </p>
              <p class="small grey">
-				<a href="messages/with/<?=$receiver_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>" /> <?=$words->getSilent('messages_allmessageswith',$receiver_username)?></a>
+        <a href="messages/with/<?=$receiver_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$receiver_username)?>" /> <?=$words->getSilent('messages_allmessageswith',$receiver_username)?></a>
              </p>
-		</div> <!-- messageside -->
-		
+    </div> <!-- messageside -->
+
         <div class="float_left">
-			<?=MOD_layoutbits::PIC_50_50($receiver_username) ?>
+      <?=MOD_layoutbits::PIC_50_50($receiver_username) ?>
         </div>
         <div class="float_left">
-			<?if (!isset($message->DateSent)) { ?>
-				<h3><?=$words->get('MessageCompose')?></h3>
-			<?php } ?>
-			<?if (isset($message->DateSent) && isset($this->edit)) { ?>
-				<h3><?=$words->get('MessageEdit')?></h3>
-			<?php } ?>
-			<p class="">
-			  <span class="grey"><?=$words->get('MessageTo','<a href="members/'.$receiver_username.'">'.$receiver_username.'</a>') ?> </span>
-			</p>
-			<?if (isset($message->DateSent) && !isset($this->edit)) { ?>
-			<p class="">
-			  <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>
-			</p>
-			<?php } ?>
+      <?if (!isset($message->DateSent)) { ?>
+        <h3><?=$words->get('MessageCompose')?></h3>
+      <?php } ?>
+      <?if (isset($message->DateSent) && isset($this->edit)) { ?>
+        <h3><?=$words->get('MessageEdit')?></h3>
+      <?php } ?>
+      <p class="">
+        <span class="grey"><?=$words->get('MessageTo','<a href="members/'.$receiver_username.'">'.$receiver_username.'</a>') ?> </span>
+      </p>
+      <?if (isset($message->DateSent) && !isset($this->edit)) { ?>
+      <p class="">
+        <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->DateSent)) ?>
+      </p>
+      <?php } ?>
         </div>
     </div> <!-- messageheader -->
     <form method="post" action="<?=$page_url ?>">
@@ -83,29 +83,19 @@ $member = $model->getMemberWithUsername($receiver_username);
                 <textarea name="text" rows="15" cols="60" ><?=$text ?></textarea>
             </p>
 
-        	<?php
-        	if ($this->_model->CaptchaNeeded($_SESSION["IdMember"])) {
-        		$CaptchaValue=rand(100000,999999) ;
-        		echo "<p>" ;
-        		$_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
-        		echo $words->getFormatted("ContactCaptchaRequest",$this->_model->DisplayCaptcha($CaptchaValue))," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
-        //		echo $words->get("ContactCaptchaRequest"," "),$this->_model->DisplayCaptcha($CaptchaValue)," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
-        		echo "</p>" ;
-        	}
-        	?>
+          <?php
+          if ($this->_model->CaptchaNeeded($_SESSION["IdMember"])) {
+            $CaptchaValue=rand(100000,999999) ;
+            echo "<p>" ;
+            $_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
+            echo $words->getFormatted("ContactCaptchaRequest",$this->_model->DisplayCaptcha($CaptchaValue))," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
+        //    echo $words->get("ContactCaptchaRequest"," "),$this->_model->DisplayCaptcha($CaptchaValue)," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
+            echo "</p>" ;
+          }
+          ?>
 
     </div> <!-- messageconent -->
     <div id="messagefooter">
-        <p>
-            <input type="checkbox" name="agree_spam_policy" id="IamAwareOfSpamCheckingRules" />
-            <label for="IamAwareOfSpamCheckingRules"><?= $words->get('IamAwareOfSpamCheckingRules'); ?></label>
-        </p>
-
-        <p>
-            <input type="checkbox" name="attach_picture" id="JoinMemberPict"<?=$attach_picture ?>/>
-            <label for="JoinMemberPict"><?= $words->get('JoinMyPicture'); ?></label>
-        </p>
-
         <p>
             <input type="submit" value="send"/>
         </p>

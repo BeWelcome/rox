@@ -73,7 +73,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
         ?>
         </p> <!-- forumstime -->
-        
+
         <p class="forumsedit">
         <?php
 
@@ -162,7 +162,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 $LocalVolMessage=$post->LocalVolMessage ;
                 $TitleText=$words->fTrad($LocalVolMessage->IdTitleText) ;
                 $MessageText=$words->fTrad($LocalVolMessage->IdMessageText) ;
-            
+
                 echo "<div>"  ; // Todo add a special div for a special layout
                 echo "<br /> ",$words->getFormatted('ForumPostWithLocalMessage') ;
                 echo "<table bgcolor=\"lightgray\">" ;
@@ -217,7 +217,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 
     ?>
 
-    </div> <!-- forumsmessage -->
+
     <?php
     if (isset($_SESSION["IdMember"])) {
         if ($this->BW_Right->HasRight("ForumModerator")) {
@@ -228,18 +228,19 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 echo "<a href='forums/reporttomod/",$report->IdPost,"/".$report->IdReporter."'>view report</a>" ;
             }
         }
-        
+
         $TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
         if (isset($TheReports[0]->IdReporter)) {
-            echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a>" ;
+            echo "<p class=\"float_right\"><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a></p>" ;
         }
         else {
-            echo "<br /><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a>" ;
+            echo "<p class=\"float_right\"><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a></p>" ;
         }
-        
+
     }
 
     ?>
+    </div> <!-- forumsmessage -->
 </div> <!-- forumspost -->
 
 <?php

@@ -3041,7 +3041,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
      */
     private function cleanupText($txt)
     {
-        $purifier = MOD_htmlpure::get()->getAdvancedHtmlPurifier();
+        $purifier = MOD_htmlpure::get()->getPurifier();
         return $purifier->purify($txt);
     } // end of cleanupText
     

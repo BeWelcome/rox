@@ -25,6 +25,14 @@ class InvitePage extends RoxPageView
     }
 
     /**
+     * rigth column empty by default
+     */
+    protected function column_col2()
+    {
+
+    }
+
+    /**
      * content of the middle column - this is the most important part
      */
     protected function column_col3()

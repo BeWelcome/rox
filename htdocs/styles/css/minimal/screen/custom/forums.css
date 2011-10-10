@@ -14,6 +14,13 @@
 
 
 /* Thread view */
+div.forumthreadinfo {
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 1em;
+    margin-bottom: 1.5em;
+    overflow: hidden;
+}
+
 div.forumspost { 
     border-top: 1px solid #e5e5e5;
     border-bottom: 1px solid #f5f5f5;
@@ -22,7 +29,7 @@ div.forumspost {
     width:100%; 
     position:relative; 
     overflow:hidden;
-    padding:5px;
+    padding: 1em 0;
     float:right; 
 } 
 div.forumsavatar {
@@ -38,7 +45,7 @@ div.forumsauthorname {
     font-size: 1.1em;
 }
 div.forumsauthor {
-    padding:1em 0;
+    padding:0;
     width:13%;
     float:left;
     text-align:center;
@@ -77,14 +84,16 @@ p.forumsedit {
     margin-bottom: 0em;
 }
 div#forumsthreadreplytop {
-    width:100%;
-    text-align:right;
     margin-bottom: 0.5em;
+    float: right;
 }
 div#forumsthreadreplybottom {
     width:100%;
     text-align:right;
     margin-top: 0.5em;
+}
+h2.forumstopic {
+    margin-bottom: 0.2em;
 }
 
 
@@ -117,12 +126,12 @@ div#forumsboardselect {
     border: 1px solid #888;
     padding: 5px 5px 5px 5px;
 }
-span.forumsboardthreadtags {
+.forumsboardthreadtags {
     font-size: 11px;
     font-weight: bold;
     color: #888;
 }
-span.forumsboardnavichain {
+.forumsboardnavichain {
     font-size: 11px;
     font-weight: normal;
     color: #888888;
@@ -139,10 +148,10 @@ div#boardnewtopicbottom {
     text-align: right;
     margin-top: 5px;
 }
-span.forumsthreadtags {
+.forumsthreadtags {
     font-size: 11px;
     font-weight: normal;
-  color: #333;
+    color: #333;
     margin: 0;
     padding: 0;
 }
@@ -189,32 +198,32 @@ div.forums_subtitle {
     border-top: 0;
     margin-top: 0;
 }
-span.forumsboardthreadtags a {
+.forumsboardthreadtags a {
     font-size: 11px;
     font-weight: normal;
     color: #888888;
 }
-span.forumsboardthreadtags a:hover {
+.forumsboardthreadtags a:hover {
     font-weight: normal;
-  color: #333;
-  background: transparent;
-  text-decoration: underline;
+    color: #333;
+    background: transparent;
+    text-decoration: underline;
 }
-span.forumsthreadtags a {
+.forumsthreadtags a {
     font-size: 11px;
     font-weight: normal;
     margin: 0;
     padding: 0;
     color: #888;
 }
-span.forumsthreadtags a:hover {
+.forumsthreadtags a:hover {
     font-weight: normal;
-  color: #333;
-  background: transparent;
-  text-decoration: underline;
+    color: #333;
+    background: transparent;
+    text-decoration: underline;
 }
 
-span.forums_tag_description {
+.forums_tag_description {
     font-size: 11px;    
     line-height: 1em;
     margin: 0;
@@ -223,7 +232,7 @@ span.forums_tag_description {
 .category { margin-right: 15px;    }
 .category h4 img{
     margin: 5px;
-  border: none;
+    border: none;
 }
 .category ul li {
     line-height: 1em;
@@ -240,15 +249,14 @@ span.forums_tag_description {
 }
 .region { margin-right: 15px; }
 .region h4 img{
-
     margin: 5px;
     border: none;
 }
 .region ul li {
-line-height: 1em;
-margin: 0 5px 5px 5px 0;
-padding-bottom: 5px;
-padding-top: 0;
+    line-height: 1em;
+    margin: 0 5px 5px 5px 0;
+    padding-bottom: 5px;
+    padding-top: 0;
 }
 .region ul a {
     font-weight: bold;
@@ -290,7 +298,7 @@ table.row td {
 
 /* Highlighting in forums view */
 #main div.forumspost.highlight {
-    background: #f5f5f5 url(../images/cell_bg.jpg) repeat-x;
+    background: #f5f5f5;
     border: none;
     border-top: 1px solid #e5e5e5;
     border-bottom: 1px solid #e5e5e5;    

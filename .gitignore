@@ -4,7 +4,6 @@ rox_local.ini
 data
 htdocs/exception.log
 google*.html
-htdocs/bw/.htaccess
 htdocs/bw/cache/
 htdocs/.htaccess
 htdocs/update_status.txt

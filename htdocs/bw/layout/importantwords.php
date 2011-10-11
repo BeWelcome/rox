@@ -171,6 +171,7 @@ function DisplayImportantWords() {
   echo "<li>",ww("AgeEqualX"),"</li>\n";
   echo "<li>",ww("ModifyYourPhotos"),"</li>\n";
   echo "<li>",ww("WarningYouAreWorkingIn"),"</li>\n";
+  echo "<li>JeanYves was here testing GIT</li>\n";
 
   echo "</ul>" ;
 

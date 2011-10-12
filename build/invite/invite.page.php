@@ -25,7 +25,7 @@ class InvitePage extends RoxPageView
     }
 
     /**
-     * rigth column empty by default
+     * show empty column by default
      */
     protected function column_col2()
     {
@@ -132,6 +132,14 @@ class InviteSentPage extends RoxPageView
             </div>
         </div>
         <?php
+    }
+
+    /**
+     * show empty column by default
+     */
+    protected function column_col2()
+    {
+
     }
 
     /**

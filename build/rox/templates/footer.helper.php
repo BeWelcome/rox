@@ -13,11 +13,11 @@ $languageSelector = _languageSelector();
  */
 function _getVersionInfo()
 {
-    // TODO: add alpha/test/live
-    if (file_exists("revision.txt")) {   // htdocs is default dir
-        $version = 'r' . file_get_contents("revision.txt");
+    $revisionFile = "../revision.txt";
+    if (file_exists($revisionFile)) {
+        $version = substr(file_get_contents($revisionFile), 0, 7);
     } else {
-        $version = "local";
+        $version = "0000000";
     }
     return $version;
 }
@@ -31,12 +31,16 @@ function _getBugreportLink()
 {
     global $versionInfo;
 
-    $url = "http://www.bevolunteer.org/trac/newticket?";
+    if ($versionInfo === null) {
+        $versionInfo = _getVersionInfo();
+    }
+
+    $url = "http://trac.bewelcome.org/newticket?";
     $url .= "description=";
     $info =
-        'BW Rox version: ' . $versionInfo . "\n" .
-        'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
-        'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\n";
+        'BW Rox version: ' . $versionInfo . "\r\n" .
+        'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\r\n" .
+        'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\r\n";
     $url .= urlencode($info);
     $url .= "&amp;summary=bug%20report";
     return $url;

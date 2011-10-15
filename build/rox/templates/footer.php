@@ -45,8 +45,8 @@ require_once "footer.helper.php";
      &copy; 2007-<?= date('Y'); ?> <strong>BeWelcome</strong> - <?php echo $words->get('TheHospitalityNetwork'); ?>
   </p>
   <p class="float_right">
-     running on <a href="http://bevolunteer.org/trac">BW Rox <?php echo $versionInfo; ?></a>
-     • <a href="<?php echo $bugreportLink; ?>">report bug</a>
+     Running on <a href="http://trac.bewelcome.org/">BW Rox</a> rev. <a href="http://gitorious.org/bewelcome/rox/commit/<?php echo $versionInfo; ?>"><?php echo $versionInfo; ?></a>
+     • <a href="<?php echo $bugreportLink; ?>">Report bug</a>
   </p>
   </div>
   </div> <!-- footer -->

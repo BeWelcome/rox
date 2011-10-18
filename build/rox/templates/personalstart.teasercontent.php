@@ -24,6 +24,7 @@ Boston, MA  02111-1307, USA.
 ?>
 
 <div id="teaser" class="clearfix teaser_main">
+    <?echo $thumbPathMember;?>
     <h1><?=$words->getSilent('HelloUsername',$_SESSION['Username'])?></h1>
 
     <div class="subcolumns" style="margin-bottom: 2em">

@@ -28,6 +28,7 @@
 </div> <!-- page_margins-->
 <?php $this->debugInfo() ?>
 
+<?php /* Temporarily disable Piwik, because Gnat is down. ?>
 <!-- Piwik -->
 <script type="text/javascript">
 var pkBaseURL = (("https:" == document.location.protocol) ? "https://www.bevolunteer.org/piwik/" : "http://www.bevolunteer.org/piwik/");
@@ -40,3 +41,4 @@ piwikTracker.enableLinkTracking();
 } catch( err ) {}
 </script><noscript><p><img src="http://www.bevolunteer.org/piwik/piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Tag -->
+<?php */ ?>

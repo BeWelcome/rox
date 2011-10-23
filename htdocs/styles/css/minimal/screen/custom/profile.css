@@ -40,10 +40,9 @@
 }
 
 #profile_pic {
-    background: transparent url(../../images/pic_shadow.png) no-repeat left top;
-    padding:17px;
-    width:100px;
-    height: 100px;
+   /* background: transparent url(../../images/pic_shadow.png) no-repeat left top; */
+    padding:1em 0 1.5em 0;
+    width:150px;
 }
 #profile-info {
     padding: 0 0 1em 0;
@@ -153,7 +152,7 @@
 
 /* #profile_linklist for styles in the sidebar */
 #profile_linklist {
-    padding: 2em 0;
+    padding: 0 0;
 }
 #profile_linklist li {
     color: #333;

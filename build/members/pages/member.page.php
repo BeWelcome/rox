@@ -166,8 +166,16 @@ class MemberPage extends PageWithActiveSkin
         $words = $this->getWords();
         $piclink = $this->myself ? 'editmyprofile#profilepic':'gallery/show/user/'.$member->Username;
         ?>
+
+        
         <div id="profile_pic" >
-                <a href="<?=$piclink?>"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" class="framed" /></a>
+                <a href="#medium_box" id="medium"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" class="framed" width="150px"/></a>
+                <div id="medium_box">
+                  <img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" />
+                </div>
+                <script type="text/javascript">
+                    new FancyZoom('medium');
+                </script>
         </div> <!-- profile_pic -->                
 
             <ul class="linklist" id="profile_linklist">

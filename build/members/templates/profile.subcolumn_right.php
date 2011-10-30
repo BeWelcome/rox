@@ -254,7 +254,7 @@ HTML;
           }
           echo '</div>';
           ?>
-          <p class="float_right"><a href="gallery/show/user/<?php echo $member->Username;?>" title="<?php echo $words->getSilent('GalleryTitleLatest');?>"><?php echo $words->get('GalleryShowAll');?></a></p>
+          <p class="float_right"><a href="gallery/show/user/<?php echo $member->Username;?/images>" title="<?php echo $words->getSilent('GalleryTitleLatest');?>"><?php echo $words->get('GalleryShowAll');?></a></p>
           </div>
           <?php
         echo $words->flushBuffer();

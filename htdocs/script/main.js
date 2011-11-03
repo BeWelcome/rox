@@ -66,6 +66,11 @@ if (req.indexOf('searchmembers') != -1) {
 if (req.indexOf('explore') != -1 || req.indexOf('about') != -1) {
 	document.write(' <!--[if IE 6]><script type="text/javascript" src="script/shop.js"></script><![endif]--> ');
 }
-if (req.indexOf('members') != -1) {
+if (req.indexOf('members') != -1
+	|| req.indexOf('editmyprofile') != -1
+	|| req.indexOf('mypreferences') != -1
+	|| req.indexOf('myvisitors') != -1
+	|| req.indexOf('deleteprofile') != -1
+	) {
 	document.write('<script type="text/javascript" src="script/fancyzoom.js"></script>');
 }

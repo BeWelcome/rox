@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
     <div class="c33l">
         <div class="subcl">
             <!-- Community news -->
-                <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a></h3>
+                <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a><a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"> <img src="images/icons/feed.png" alt="<?=$words->get('GetRSSFeed')?>"></a></h3>
                 <div class="floatbox">
                     <?php
                     $i=1;

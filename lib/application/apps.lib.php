@@ -125,7 +125,7 @@ class PApps
     {
         $buildDir = dir(BUILD_DIR);
         while ($d = $buildDir->read()) {
-            if ($d == '.' || $d == '..')
+            if ($d == '.' || $d == '..' || ! is_dir($buildDir->path.'/'.$d))
                 continue;
             if (!file_exists($buildDir->path.'/'.$d.'/build.xml'))
                 continue;

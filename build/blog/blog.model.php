@@ -865,7 +865,7 @@ WHERE b2t.`blog_id_foreign` = '.(int)$postId;
      * textlen      - too short or long text.
      * inserror     - db error while inserting.
      */
-    public function commentProcess($vars, $request, $blogId)
+    public function commentProcess(&$vars, $request, $blogId)
     {
         // validate
         if (!isset($vars['ctxt']) || strlen($vars['ctxt']) == 0 || strlen($vars['ctxt']) > 5000) {
@@ -905,7 +905,7 @@ SET
      * upderror     - db error while updating.
      * delerror     - db error while deleting.
      */
-    public function categoryProcess($vars, $request)
+    public function categoryProcess(&$vars, $request)
     {
         $member = $this->getLoggedInMember();
         if (isset($request[2])) {

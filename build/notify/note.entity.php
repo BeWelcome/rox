@@ -108,27 +108,27 @@ class Note extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function updateNote($check = false, $type = false, $visible = false, $translationparams = false)
+    public function updateNote($check = null, $type = null, $visible = null, $translationparams = null)
     {
         if (!$this->isLoaded())
         {
             return false;
         }
-        if ($check)
+        if (isset($check))
         {
             $this->Checked = intval($check);
         }
-        if ($type)
+        if (isset($type))
         {
             $this->Type = $this->dao->escape($type);
         }
-        if ($visible)
+        if (isset($visible))
         {
             $this->Visible = $this->dao->escape($visible);
         }
-        if ($translationparams && is_array($translationparams))
+        if (isset($translationparams) && is_array($translationparams))
         {
-            $this->TranslationParams = serialize($this->sanitizeTranslationParams($translateparams));
+            $this->TranslationParams = serialize($this->sanitizeTranslationParams($translationparams));
         }
         return $this->update();
     }

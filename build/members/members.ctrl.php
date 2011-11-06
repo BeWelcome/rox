@@ -226,9 +226,6 @@ class MembersController extends RoxControllerBase
                             $page->my_groups = $my_groups;
                             $page->pager = $pager;
                             break;
-                        case 'redesign':
-                            $page = new ProfileRedesignPage();
-                            break;
                         case 'adminedit':
                             $rights = new MOD_right();
                             if ($rights->hasRight('Admin'))

@@ -27,11 +27,11 @@ Boston, MA  02111-1307, USA.
     <div class="c33l">
         <div class="subcl">
             <!-- Community news -->
-                <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a><a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"> <img src="images/icons/feed.png" alt="<?=$words->get('GetRSSFeed')?>"></a></h3>
-                <div class="floatbox">
-                    <?php
-                    $i=1;
-                    foreach ($postIt as $blog) {
+            <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a><a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"> <img src="images/icons/feed.png" alt="<?=$words->get('GetRSSFeed')?>"></a></h3>
+            <div class="floatbox">
+                <?php
+                $i=1;
+                foreach ($postIt as $blog) {
                     $i++;
                     if ($i <=3) {
                         $Blog = new Blog();
@@ -41,7 +41,7 @@ Boston, MA  02111-1307, USA.
                     <div class="newsitem">
                         <h4 class="news"><a href="blog/<?=$blog->user_handle?>/<?=$blog->blog_id?>"><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></a></h4>
                         <span class="small grey"><?=$words->get('written_by')?> <a href="user/<?=$blog->user_handle?>"><?=$blog->user_handle?></a> - <?=date($format['short'], $blog->unix_created)?></span>
-                        <div>
+                        <div class="newsbody">
                         <?php
                             $snippet = ((strlen($txt[0]) > 200) ? substr($txt[0], 0, 200) . '...': $txt[0]);
                             $purifier = MOD_htmlpure::get()->getPurifier();
@@ -50,34 +50,31 @@ Boston, MA  02111-1307, USA.
                               echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'">'.$words->get('BlogItemContinued').'</a>';
                             }
                         ?>
-                        </div>
+                        </div> <!-- newsbody -->
+                        <div class="newscomments small">
+                            <?php
+                                echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
+                                if ($blog->comments) {
+                                  if ($blog->comments == 1) {
+                                    echo '1 '.$words->get('CommentsSingular');
+                                  } else {
+                                    echo (int)$blog->comments.' '.$words->get('CommentsPlural');
+                                  }
+                                } else {
+                                  echo $words->get('CommentsAdd');
+                                }
+                                echo '</a>';
+                            ?>
+                        </div> <!-- newscomments -->
+                    </div> <!-- newsitem -->
                     <?php
                     }
                     ?>
-                    <div class="small">
-                    <?php
-                        echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
-                        if ($blog->comments) {
-                          if ($blog->comments == 1) {
-                            echo '1 '.$words->get('CommentsSingular');
-                          } else {
-                            echo (int)$blog->comments.' '.$words->get('CommentsPlural');
-                          }
-                        } else {
-                          echo $words->get('CommentsAdd');
-                        }
-                        echo '</a>';
-                    ?>
-                    </div>
-                    </div>
-                    <?php
-                    }
-                    ?>
-
-                    <p><a href="blog/tags/Community News for the frontpage" ><?echo $words->get('ReadMore');?></a></p>
-                    
-                    
-                </div> <!-- floatbox -->
+                <?php
+                }
+                ?>
+                <p><a href="blog/tags/Community News for the frontpage" ><?echo $words->get('ReadMore');?></a></p>
+            </div> <!-- floatbox -->
         </div> <!-- subcl -->
     </div> <!-- c33l -->
     
@@ -99,7 +96,7 @@ Boston, MA  02111-1307, USA.
                              <a href="members/{$m->Username}">{$m->Username}</a><br />
                             {$m->countryname}
                             </div>
-                        </div>
+                        </div> <!-- newmember -->
 HTML;
                         }
                         echo <<<HTML
@@ -119,8 +116,8 @@ HTML;
                             <div class="memberinfo" style="margin-left: 40px;">
                              <a href="members/{$m->Username}">{$m->Username}</a><br />
                             {$m->countryname}
-                            </div>
-                        </div>
+                            </div> <!-- memberinfo -->
+                        </div> <!-- visitors -->
 HTML;
                         }
                         ?>
@@ -144,7 +141,7 @@ HTML;
                         }
                     ?>
                 </div> <!-- floatbox -->
-            </div> <!-- subc -->
+            </div> <!-- subcl -->
         </div> <!-- c33l -->
 
         <div class="c33r">

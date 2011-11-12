@@ -170,7 +170,7 @@ class MemberPage extends PageWithActiveSkin
         
         <div id="profile_pic" >
                 <a href="#medium_box" id="medium"><img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" class="framed" width="150px"/></a>
-                <div id="medium_box">
+                <div id="medium_box" class="hidden">
                   <img src="members/avatar/<?=$member->Username?>" alt="Picture of <?$member->Username?>" />
                 </div>
                 <script type="text/javascript">

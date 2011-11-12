@@ -397,12 +397,12 @@ WHERE IdMember = ".$this->id
     }
 
     public function get_age() {
-if ($this->HidBirthDate!=='No') {
- $age='hidden' ;
-} else {
-        $age = $this->get_crypted("age", "");
-}
-        return $age;
+        
+        if ($this->HideBirthDate=='Yes') {
+            return('hidden' );
+        }
+        $layoutbits = new MOD_layoutbits;    
+        return ($layoutbits->fage_value($this->BirthDate));
     }
 
     /*

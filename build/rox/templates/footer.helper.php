@@ -9,7 +9,8 @@ $languageSelector = _languageSelector();
 
 
 /**
- * move back to better spot once htdocs/bw/layout/footer.php is gone
+ * remove and use $versionInfo = $this->getVersionInfo(); instead
+ * once htdocs/bw/layout/footer.php is gone
  */
 function _getVersionInfo()
 {
@@ -29,16 +30,11 @@ $versionInfo = _getVersionInfo();
  */
 function _getBugreportLink()
 {
-    global $versionInfo;
+    $url = PVars::getObj("env")->baseuri . "feedback?";
+    $url .= "IdCategory=1&";
+    $url .= "RequestURI=";
+    $url .= urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 
-    $url = "http://www.bevolunteer.org/trac/newticket?";
-    $url .= "description=";
-    $info =
-        'BW Rox version: ' . $versionInfo . "\n" .
-        'user agent: ' . $_SERVER['HTTP_USER_AGENT'] . "\n" .
-        'request uri: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']  . "\n";
-    $url .= urlencode($info);
-    $url .= "&amp;summary=bug%20report";
     return $url;
 }
 

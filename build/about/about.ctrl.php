@@ -59,7 +59,7 @@ class AboutController extends RoxControllerBase
                     return new FeedbackSentPage;
                 }
                 $page = new FeedbackPage();
-                $page->model = new AboutModel;
+                $page->model = new FeedbackModel();
                 return $page;
             case 'faq':
             case 'faqs':

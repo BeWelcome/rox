@@ -121,5 +121,22 @@ class RoxComponentBase
     {
         return MOD_log::get();
     }
+
+    /**
+     * returns the revision number saved in revision.txt
+     *
+     * @access protected
+     * @return string
+     */
+    protected function getVersionInfo()
+    {
+        // TODO: add alpha/test/live
+        if (file_exists("revision.txt")) {   // htdocs is default dir
+            $version = 'r' . file_get_contents("revision.txt");
+        } else {
+            $version = "local";
+        }
+        return $version;
+    }
 }
 

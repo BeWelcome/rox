@@ -47,11 +47,11 @@ class AboutController extends RoxControllerBase
                 $page->setModel(new AboutModel());
                 return $page;
             case 'stats':
-			case 'statistics':
+            case 'statistics':
                 $page = new AboutStatisticsPage();
                 $page->setModel(new StatsModel());
                 return $page;
-			case 'feedback':
+            case 'feedback':
             case 'contact':
             case 'contactus':
             case 'support':
@@ -93,7 +93,7 @@ class AboutController extends RoxControllerBase
                 $mem_redirect->errors = array('FeedbackErrorBadEmail');
                 return false;
             }
-			if (isset($args->post['IdCategory']) && $args->post['FeedbackQuestion'] != '')
+            if (isset($args->post['IdCategory']) && $args->post['FeedbackQuestion'] != '')
             {
                 if ($model->sendFeedback($args->post))
                 {
@@ -108,8 +108,8 @@ class AboutController extends RoxControllerBase
             else
             {
                 $mem_redirect->errors = array('FeedbackErrorDataMissing');
-				return false;
-			}
+                return false;
+            }
         }
         else
         {

@@ -3,10 +3,8 @@
 <?php endforeach; ?>
 <?php
     $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
-    }
-    $google_api_key = $google_conf->maps_api_key;
+    $google_api_key = ($google_conf && $google_conf->maps_api_key)
+        ? $google_conf->maps_api_key : "";
 
     $geo = $this->group->getGeo();
     //var_dump($geo);

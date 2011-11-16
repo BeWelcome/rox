@@ -142,7 +142,7 @@ class WikiController extends PAppController {
             $ewiki_author = 'guest';
             define("EWIKI_AUTH_DEFAULT_RING", 3);    //  3 = read/view/browse-only
         }
-        $this->defineMarkup(&$ewiki_config);
+        $this->defineMarkup($ewiki_config);
                 
         // More plugins
         require_once("erfurtwiki/plugins/aview/toc.php"); // Table of contents
@@ -207,7 +207,7 @@ class WikiController extends PAppController {
     /**
     * defineMarkup tunes the ewiki's default markup my custom values
     */
-    public function defineMarkup($ewiki_config) 
+    public function defineMarkup(&$ewiki_config) 
     {    
         /*
         * MediaWiki Markup

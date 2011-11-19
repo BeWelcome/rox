@@ -744,7 +744,7 @@ class BlogController extends RoxControllerBase {
             return false;
         $vars = $args->post;
         $request = $args->request;
-        if ($comment_id = $this->_model->commentProcess(&$vars, $request, $request[2]))
+        if ($comment_id = $this->_model->commentProcess($vars, $request, $request[2]))
         {
             return implode('/', $request) . '#c' . $comment_id;
         }
@@ -770,7 +770,7 @@ class BlogController extends RoxControllerBase {
         if (!$this->_model->getLoggedInMember())
             return false;
         $vars = $args->post;
-        if ($this->_model->categoryProcess(&$vars, $args->request))
+        if ($this->_model->categoryProcess($vars, $args->request))
         {
             return 'blog/cat';
         }

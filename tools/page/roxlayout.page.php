@@ -99,13 +99,7 @@ class PageWithRoxLayout extends PageWithHTML
             $items[] = array('messages', 'messages', 'Messages');
         }
         
-        $subitems = array();
-        
-        $subitems[] = array('forums', 'forums', 'Community');
-        
-
         return $items;
-        return $subitems;
     }
 
     /*

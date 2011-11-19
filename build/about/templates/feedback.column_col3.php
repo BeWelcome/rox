@@ -22,11 +22,14 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-$IdCategory = '';
+$IdCategory = '1';
+$RequestURI = '';
 if (isset($_GET['IdCategory']) && $_GET['IdCategory']) $IdCategory = $_GET['IdCategory'];
+if (isset($_GET['RequestURI']) && $_GET['RequestURI']) $RequestURI = $_GET['RequestURI'];
 
 $mem = $this->getRedirectedMem('post');
-$IdCategory = isset($mem['IdCategory']) ? $mem['IdCategory'] : 1;
+if(isset($mem['IdCategory'])) $IdCategory = $mem['IdCategory'];
+if(isset($mem['RequestURI'])) $RequestURI = $mem['RequestURI'];
 $FeedbackQuestion = isset($mem['FeedbackQuestion']) ? $mem['FeedbackQuestion'] : '';
 $FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
 $urgent = isset($mem['urgent']) ? $mem['urgent'] : null;
@@ -46,6 +49,7 @@ if ($errors = $this->getRedirectedMem('errors'))
 
 <form class="yform full" action="about/feedback" method="post">
     <?=$callback_tag ?>
+    <input type="hidden" name="RequestURI" value="<?= $RequestURI ?>">
 
     <div class="type-select">
         <label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label>

@@ -103,8 +103,14 @@ SQL
         if (isset($vars["urgent"]) && $vars["urgent"]=="on") {
             $text .= "- member has ticked the urgent checkbox\r\n";
         }
-        $text .= "\n\r Using Browser " . $_SERVER['HTTP_USER_AGENT']." languages:".$_SERVER["HTTP_ACCEPT_LANGUAGE"]." \r\n";
 
+        $text .= "\r\n";
+        $text .= 'BW Rox Version: ' . $this->getVersionInfo() . "\r\n";
+        $text .= 'Browser: ' . $_SERVER['HTTP_USER_AGENT'] . "\r\n";
+        $text .= 'Languages: ' . $_SERVER["HTTP_ACCEPT_LANGUAGE"] . "\r\n";
+        if (isset($vars["RequestURI"]) and ! empty($vars["RequestURI"])) {
+            $text .= 'Request URI: ' . $vars["RequestURI"] . "\r\n" ;
+        }
 
         return $this->feedbackMail($receiver, $subj, $text, $EmailSender);
     }

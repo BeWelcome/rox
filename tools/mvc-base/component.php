@@ -121,5 +121,22 @@ class RoxComponentBase
     {
         return MOD_log::get();
     }
+
+    /**
+     * returns the revision number saved in revision.txt
+     *
+     * @access protected
+     * @return string
+     */
+    protected function getVersionInfo()
+    {
+        $revisionFile = "../revision.txt";
+        if (file_exists($revisionFile)) {
+            $version = substr(file_get_contents($revisionFile), 0, 7);
+        } else {
+            $version = "0000000";
+        }
+        return $version;
+    }
 }
 

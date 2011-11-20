@@ -1230,13 +1230,15 @@ ORDER BY
                 $suffix = '_30_30';
             elseif (isset($_GET['200']))
                 $suffix = '_200';
+            elseif (isset($_GET['500']))
+                $suffix = '_500';
             else $suffix = '';
             $file .= $suffix;
         }
 
         $member = $this->createEntity('Member', $memberId);
 
-        if (!$this->hasAvatar($memberId) || (!$member->publicProfile && !$this->getLoggedInMember())) {
+        if (!$this->hasAvatar($memberId, $suffix) || (!$member->publicProfile && !$this->getLoggedInMember())) {
             header('Content-type: image/png');
             @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
             PPHP::PExit();
@@ -1247,18 +1249,21 @@ ORDER BY
             @copy(HTDOCS_BASE.'images/misc/empty_avatar'.(isset($suffix) ? $suffix : '').'.png', 'php://output');
             PPHP::PExit();
         }
-        $size = $img->getImageSize();
-        header('Content-type: '.image_type_to_mime_type($size[2]));
+        header('Content-type: '.$img->getMimetype());
         $this->avatarDir->readFile($file);
         PPHP::PExit();
     }
         
-    public function hasAvatar($memberid)
+    public function hasAvatar($memberid, $suffix = '')
     {
-        if ($this->avatarDir->fileExists((int)$memberid))
+        if ($this->avatarDir->fileExists((int)$memberid . $suffix))
             return true;
-        $img_path = $this->getOldPicture($memberid);
-        $this->avatarMake($memberid,$img_path);
+        elseif ($this->avatarDir->fileExists((int)$memberid . '_original'))
+            return $this->avatarMake($memberid, $this->avatarDir->dirName() . '/' . (int)$memberid . '_original', true);
+        else {
+            $img_path = $this->getOldPicture($memberid);
+            return $this->avatarMake($memberid,$img_path);
+        }
     }
     
     
@@ -1286,10 +1291,10 @@ ORDER BY membersphotos.SortOrder
                 return $full_path;
             }
         }
-        return false;       
+        return false;
     }    
         
-    public function avatarMake($memberid,$img_file)
+    public function avatarMake($memberid, $img_file, $using_original=false)
     {
         $img = new MOD_images_Image($img_file);
         if( !$img->isImage())
@@ -1305,12 +1310,16 @@ ORDER BY membersphotos.SortOrder
             $max_x = 600;
         // if( $max_y > 100)
             // $max_y = 100;
-        $this->writeMemberphoto($memberid);
-        $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
+
+        if (!$using_original) {
+            $this->writeMemberphoto($memberid);
+            $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
+        }
         $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_200',200, 266, true, 'ratio');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_xs', 50, 50, true, 'square');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_30_30', 30, 30, true, 'square');
+        $img->createThumb($this->avatarDir->dirName(), $memberid.'_500', 500, 500, true, 'ratio');
         return true;
     }
 

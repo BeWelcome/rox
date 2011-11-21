@@ -1306,10 +1306,8 @@ ORDER BY membersphotos.SortOrder
             return false;
         $max_x = $size[0];
         $max_y = $size[1];
-        if( $max_x > 600)
-            $max_x = 600;
-        // if( $max_y > 100)
-            // $max_y = 100;
+        if( $max_x > 150)
+            $max_x = 150;
 
         if (!$using_original) {
             $this->writeMemberphoto($memberid);

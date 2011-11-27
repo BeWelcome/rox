@@ -31,7 +31,7 @@ $versionInfo = _getVersionInfo();
 function _getBugreportLink()
 {
     $url = PVars::getObj("env")->baseuri . "feedback?";
-    $url .= "IdCategory=1&";
+    $url .= "IdCategory=1&amp;";
     $url .= "RequestURI=";
     $url .= urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 

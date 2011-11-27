@@ -33,16 +33,16 @@ Boston, MA  02111-1307, USA.
  */
 class InviteController extends RoxControllerBase
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->model = new InviteModel();
+    }
+
     public function index($args = false)
     {
         $request = $args->request;
-        $model = new InviteModel();
-        
-        if (PPostHandler::isHandling()) {
-            return;
-        }
-        
-        $request = $args->request;
+
         $logged = APP_User::isBWLoggedIn('NeedMore,Pending');
         
         switch (isset($request[1])) {
@@ -58,8 +58,8 @@ class InviteController extends RoxControllerBase
                 }
         }
         
-        $page->setModel($model);
-        
+        $page->setModel($this->model);
+    
         return $page;
     }
     
@@ -104,8 +104,7 @@ class InviteController extends RoxControllerBase
             }
             
             // now finally try to send it.
-            $model = new InviteModel();
-            $result = new ReadOnlyObject($model->sendOrComplain($args->post));
+            $result = new ReadOnlyObject($this->model->sendOrComplain($args->post));
             
             if (count($result->problems) > 0) {
                 $mem_redirect->problems = $result->problems;
@@ -117,7 +116,7 @@ class InviteController extends RoxControllerBase
                 return "invite/sent";
             }
         }
-        
+
         return implode('/', $args->request);
     }
     

@@ -15,7 +15,7 @@ class InvitePage extends RoxPageView
     protected function teaserContent() {
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-        $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : 'Nobody';
+
         ?>
         <div id="teaser" class="clearfix">
             <div id="teaser_l1"> 
@@ -123,8 +123,6 @@ class InviteSentPage extends RoxPageView
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
         
-        // &gt; or &raquo; ?
-        $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : 'Nobody';
         ?>
         <div id="teaser" class="clearfix">
             <div id="teaser_l1"> 

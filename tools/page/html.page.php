@@ -245,9 +245,17 @@ class PageWithHTML extends AbstractBasePage
     {
         if (isset($_SERVER['HTTPS']) && PVars::getObj('env')->baseuri_https !== false) {
             $baseuri = PVars::getObj('env')->baseuri_https;
+            $lstrip = "https://" . $_SERVER['HTTP_HOST'];
         } else {
             $baseuri = PVars::getObj('env')->baseuri;
+            $lstrip = "http://" . $_SERVER['HTTP_HOST'];
         }
+        // be smart ass about whether we need the full url or just the absolute path.
+        // works around a chromium bug (refer to http://trac.bewelcome.org/ticket/1435)
+        if (substr($baseuri, 0, strlen($lstrip)) == $lstrip) {
+            $baseuri = substr($baseuri, strlen($lstrip));
+        }
+
         ?>
         <title><?=$this->getPageTitle() ?></title>
         <base id="baseuri" href="<?=$baseuri ?>" />

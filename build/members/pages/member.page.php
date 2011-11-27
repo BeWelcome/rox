@@ -164,25 +164,24 @@ class MemberPage extends PageWithActiveSkin
     protected function leftsidebar() {
         $member = $this->member;
         $words = $this->getWords();
-        $piclink = $this->myself ? 'editmyprofile#profilepic':'gallery/show/user/'.$member->Username;
+        $thumbnail_url = 'members/avatar/'.$member->Username.'?150';
+        $picture_url = 'members/avatar/'.$member->Username.'?500';
         ?>
 
-        
         <div id="profile_pic" >
-                <a href="members/avatar/<?=$member->Username?>?500" id="medium"><img src="members/avatar/<?=$member->Username?>?150" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
+                <a href="<?=$picture_url?>" id="medium"><img src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
                 <div id="medium_box" class="hidden">
-                  <img src="members/avatar/<?=$member->Username?>?500" alt="Picture of <?=$member->Username?>" />
+                  <img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" />
                 </div>
                 <script type="text/javascript">
                     // Activate FancyZoom for profile picture
                     document.getElementById('medium').href = "#medium_box";
                     new FancyZoom('medium');
                 </script>
-        </div> <!-- profile_pic -->                
+        </div> <!-- profile_pic -->
 
             <ul class="linklist" id="profile_linklist">
               <?php
-          // $this->__call('leftsidebar', array());
 
         $active_menu_item = $this->getSubmenuActiveItem();
         foreach ($this->getSubmenuItems() as $index => $item) {

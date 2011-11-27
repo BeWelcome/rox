@@ -169,11 +169,13 @@ class MemberPage extends PageWithActiveSkin
 
         
         <div id="profile_pic" >
-                <a href="#medium_box" id="medium"><img src="members/avatar/<?=$member->Username?>?150" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
+                <a href="members/avatar/<?=$member->Username?>?500" id="medium"><img src="members/avatar/<?=$member->Username?>?150" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
                 <div id="medium_box" class="hidden">
                   <img src="members/avatar/<?=$member->Username?>?500" alt="Picture of <?=$member->Username?>" />
                 </div>
                 <script type="text/javascript">
+                    // Activate FancyZoom for profile picture
+                    document.getElementById('medium').href = "#medium_box";
                     new FancyZoom('medium');
                 </script>
         </div> <!-- profile_pic -->                

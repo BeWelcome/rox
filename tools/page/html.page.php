@@ -250,7 +250,7 @@ class PageWithHTML extends AbstractBasePage
         }
         ?>
         <title><?=$this->getPageTitle() ?></title>
-        <base id="baseuri" href="<?=$baseuri ?>" />
+        <base id="baseuri" href='<?=$baseuri ?>' />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
         <meta name="description" content="<?=$this->getPage_meta_description()?>" />

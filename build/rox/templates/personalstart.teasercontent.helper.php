@@ -1,6 +1,6 @@
 <?php
 $words = new MOD_words();
-$thumbPathMember = MOD_layoutbits::PIC_30_30($_SESSION['IdMember'], '',$style='float_left framed');
+$thumbPathMember = MOD_layoutbits::PIC_30_30($_SESSION['Username'], '',$style='float_left framed');
 //$imagePathMember = MOD_user::getImage();
 
 $_newMessagesNumber = $this->model->getNewMessagesNumber($_SESSION['IdMember']);

@@ -175,8 +175,10 @@ class MemberPage extends PageWithActiveSkin
                 </div>
                 <script type="text/javascript">
                     // Activate FancyZoom for profile picture
-                    document.getElementById('medium').href = "#medium_box";
-                    new FancyZoom('medium');
+                    if (typeof FancyZoom == "function") {
+                      document.getElementById('medium').href = "#medium_box";
+                      new FancyZoom('medium');
+                    }
                 </script>
         </div> <!-- profile_pic -->
 

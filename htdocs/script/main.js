@@ -71,6 +71,7 @@ if (req.indexOf('members') != -1
 	|| req.indexOf('mypreferences') != -1
 	|| req.indexOf('myvisitors') != -1
 	|| req.indexOf('deleteprofile') != -1
-	) {
+	|| req.indexOf('people') != -1
+  ) {
 	document.write('<script type="text/javascript" src="script/fancyzoom.js"></script>');
 }

@@ -147,7 +147,7 @@ class TripController extends PAppController {
                 $vars['errors'][] = 'name';
                 return false;
             }
-            if ($trip_id = $this->_model->createTrip(&$vars, $member))
+            if ($trip_id = $this->_model->createTrip($vars, $member))
             {
                 return 'trip/' . $trip_id;
             }

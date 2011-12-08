@@ -25,11 +25,13 @@ $vars = $this->editMyProfileFormPrepare($member);
 <?php
 // Check for errors and update status and display a message
 if (isset($vars['errors']) and count($vars['errors']) > 0) {
-    echo '<div class="error">'.$ww->EditmyprofileError.'<br/>';
+    echo '<div class="error">'.$ww->EditmyprofileError;
+    echo "<ul>";
     foreach ($vars['errors'] as $error)
     {
-        echo $words->getInLang($error,$profile_language) ."<br/>";
+        echo "<li>" . $words->getInLang($error,$profile_language) ."</li>";
     }
+    echo "</ul>";
     echo "</div>";
 } else {
     if ($this->status == 'finish') {

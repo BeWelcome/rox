@@ -716,39 +716,37 @@ ORDER BY
     public function checkProfileForm(&$vars)
     {
         $errors = array();
-        
-        // email (e-mail duplicates in BW database allowed)
-        if ((!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email']))and($vars['Email']!='cryptedhidden')) {
-            $Email = ((!empty($vars['Email'])) ? $vars['Email'] : '-empty-');
-            $errors[] = 'SignupErrorInvalidEmail';
-            $this->logWrite("members.model checkProfileForm Editmyprofile: Invalid Email update with value " .$Email, "Email Update");
-        }
-        if (empty($vars['Street']) || empty($vars['Zip']))
-        {
-            $Street = ((!empty($vars['Street'])) ? $vars['Street'] : '-empty-');
-            $Zip = ((!empty($vars['Zip'])) ? $vars['Zip'] : '-empty-');
-            $errors[] = 'SignupErrorInvalidAddress';
-            $this->logWrite("members.model checkProfileForm Editmyprofile: Invalid address update with value {$Street} and {$Zip}", "Address Update");
-        }
 
-        $birthdate_error = false;
-        if (empty($vars['BirthDate']) || false === $this->validateBirthdate($vars['BirthDate']))
-        {
-            $birthdate_error = true;
-        }
-
-        if ($birthdate_error)
-        {
-            $birthdate = ((!empty($vars['BirthDate'])) ? $vars['BirthDate'] : '-empty-');
+        if (empty($vars['BirthDate']) || $this->validateBirthdate($vars['BirthDate']) === false) {
             $errors[] = 'SignupErrorInvalidBirthDate';
-            $this->logWrite("Editmyprofile: Invalid birthdate update with value {$vars['BirthDate']}", "Birthdate Update");
         }
 
-        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','IDontTell')))
-        {
-            $gender = ((!empty($vars['gender'])) ? $vars['gender'] : '-empty-');
+        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','IDontTell'))) {
             $errors[] = 'SignupErrorInvalidGender';
-            $this->logWrite("Editmyprofile: Invalid gender update with value {$gender}", "Gender Update");
+        }
+
+        if (empty($vars['FirstName'])) {
+            $errors[] = 'SignupErrorInvalidFirstName';
+        }
+
+        if (empty($vars['LastName'])) {
+            $errors[] = 'SignupErrorInvalidLastName';
+        }
+
+        if (empty($vars['Street'])) {
+            $errors[] = 'SignupErrorInvalidStreet';
+        }
+
+        if (empty($vars['HouseNumber'])) {
+            $errors[] = 'SignupErrorInvalidHouseNumber';
+        }
+
+        if (empty($vars['Zip'])) {
+            $errors[] = 'SignupErrorInvalidZip';
+        }
+
+        if ((empty($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) && ($vars['Email']!='cryptedhidden')) {
+            $errors[] = 'SignupErrorInvalidEmail';
         }
 
         return $errors;

@@ -29,7 +29,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     echo "<ul>";
     foreach ($vars['errors'] as $error)
     {
-        echo "<li>" . $words->getInLang($error,$profile_language) ."</li>";
+        echo "<li>" . $words->get($error) . "</li>";
     }
     echo "</ul>";
     echo "</div>";

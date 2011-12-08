@@ -443,8 +443,14 @@ class MembersController extends RoxControllerBase
             $errors = $this->model->checkProfileForm($vars);
             $vars['errors'] = array();
             if (count($errors) > 0) {
-                // show form again
                 $vars['errors'] = $errors;
+
+                // Activate fieldset tab "Contact Info" if needed.
+                if (in_array('SignupErrorInvalidBirthDate', $vars['errors']) === false) {
+                    $vars['activeFieldset'] = 'contactinfo';
+                }
+
+                // show form again
                 $mem_redirect->post = $vars;
                 return false;
             }

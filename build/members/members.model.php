@@ -393,7 +393,7 @@ WHERE
     public function addComment($TCom,&$vars)
     {
         $return = true;
-        $msg_wordcode = '';
+        $commentRecipient = $this->createEntity('Member', $vars['IdMember']);
         // Mark if an admin's check is needed for this comment (in case it is "bad")
         $AdminAction = "NothingNeeded";
         if ($vars['Quality'] == "Bad") {
@@ -448,7 +448,8 @@ INSERT INTO
             if(!$qry) {
                 $return = false;
             } else {
-                $msg_wordcode = 'Notify_profile_comment';
+                $noteWordCode = 'Notify_profile_comment';
+                $messageWordCode = 'Message_profile_comment';
             }
             $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         } else {
@@ -470,7 +471,8 @@ WHERE
             if(!$qry) {
                 $return = false;
             } else {
-                $msg_wordcode = 'Notify_profile_comment_update';
+                $noteWordCode = 'Notify_profile_comment_update';
+                $messageWordCode = 'Message_profile_comment_update';
             }
             $this->logWrite("Updating a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         }
@@ -480,11 +482,11 @@ WHERE
             $note = array(
                 'IdMember' => $vars['IdMember'], 
                 'IdRelMember' => $_SESSION['IdMember'], 
-                'Type' => 'profile_comment'.$c_add, 
-                'Link' => 'members/'.$vars['IdMember'].'/comments',
-                'WordCode' => $msg_wordcode
+                'Type' => 'profile_comment' . $c_add, 
+                'Link' => 'members/' . $commentRecipient->Username . '/comments',
+                'WordCode' => $noteWordCode
             );
-            $this->sendCommentMessage($note, $msg_wordcode);
+            $this->sendCommentMessage($note, $messageWordCode);
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -1114,14 +1116,18 @@ ORDER BY
      * creates a message to inform the member of a new comment
      *
      * @param object $note
-     * @param string $msg_wordcode - member entity
+     * @param string $messageWordCode
      * @access public
      */
-    public function sendCommentMessage($note, $msg_wordcode)
+    public function sendCommentMessage($note, $messageWordCode)
     {
         if (($member = $this->createEntity('Member', $note['IdMember'])) && ($RelMember = $this->createEntity('Member', $note['IdRelMember'])))
         {
+            $words = new MOD_words();
             $msg = $this->createEntity('Message');
+            $url = PVars::getObj('env')->baseuri . $note['Link'];
+
+            // Prepare message
             $msg->MessageType = 'MemberToMember';
             $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
             $msg->IdParent = 0;
@@ -1130,10 +1136,11 @@ ORDER BY
             $msg->SendConfirmation = 'No';
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
-            $url = PVars::getObj('env')->baseuri . $note['Link'];
-            $msg->Message = "Hi {$member->Username}<br/><br/>You just got a comment from {$RelMember->Username}. If you would like to read the new comment, click the following link: <a href='{$url}'>{$url}</a>.<br/><br/>Have a great time<br/>BeWelcome";
+            $msg->Message = $words->get($messageWordCode, $member->Username, $RelMember->Username, $url, $url);
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
+
+            // Queue message
             $msg->insert();
         }
     }

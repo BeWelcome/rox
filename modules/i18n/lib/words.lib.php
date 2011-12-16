@@ -370,6 +370,25 @@ class MOD_words
     
     /**
      * Looks up (localized) texts in BW words table.
+     * No newlines or slashes are replaced.
+     * Takes a variable number of arguments as c-style formatted string.
+     *
+     * @see wwinlang in /lib/lang.php
+     * @param   string  $code keyword for finding text, not allowed to be empty
+     * @param   string  $? formatted according to a variable number of arguments
+     * @param   ... arguments to be inserted in the string
+     * @return  string  localized text, in case of no hit the word keycode, evtl with tr links
+     */
+    public function getRaw($code)
+    {
+        $args = func_get_args();
+        array_shift($args);
+        $word = $this->_lookup($code, $args, 'de', true);
+        return $this->_text_and_buffer($word);
+    }
+
+    /**
+     * Looks up (localized) texts in BW words table.
      * Newlines are replaced by HTML breaks, backslashes are stripped off.
      * Takes a variable number of arguments as c-style formatted string.
      *
@@ -485,7 +504,7 @@ class MOD_words
      * @param unknown_type $code the key code for the db lookup
      * @return LookedUpWord information that is created from the word lookup
      */
-    private function _lookup($code, $args, $lang = false)    {
+    private function _lookup($code, $args, $lang = false, $get_raw = false)    {
         if($lang == false) {
             $lang = $this->_lang;
         }
@@ -503,7 +522,7 @@ class MOD_words
                 $lookup_result = $code;
             } else {
                 // use the row that has been found
-                $lookup_result = $this->_modified_sentence_from_row($row, $args);
+                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
             }
             return new LookedUpWord($code, $lang, $lookup_result);
         } else {
@@ -511,7 +530,7 @@ class MOD_words
             $tr_quality = LookedUpWord::FINE;
             $row = $this->_lookup_row($code, $lang);
             if ($row) {
-                $lookup_result = $this->_modified_sentence_from_row($row, $args);
+                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
                 if (($lang == 'en')or($row->donottranslate=='yes')) { // If language is english or if the word is not supposed to be translatable yet just consider display it
                     $tr_success = LookedUpWord::SUCCESSFUL;
                 } else {
@@ -530,11 +549,11 @@ class MOD_words
                     // use English version
 					if ($row->donottranslate=='yes') {
 						$tr_success = LookedUpWord::SUCCESSFUL;
-						$lookup_result = $this->_modified_sentence_from_row($row, $args);
+						$lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
 					}
 					else {
 						$tr_success = LookedUpWord::MISSING_TR;  // at least that bad
-						$lookup_result = $this->_modified_sentence_from_row($row, $args);
+						$lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
 					}
                 } else {
                     // no translation found
@@ -570,16 +589,23 @@ class MOD_words
     
     /**
      * Reads the (modified) translation sentence from a row in the database.
-     * Modifications:
+     * Modifications (if $get_raw is false):
      *  - stripslashes
      *  - n12br
      *
      * @param dbrow $row
+     * @param array $args
+     * @param boolean $get_raw true for raw string, false for modified string
      * @return string modified sentence from db
      */
-    private function _modified_sentence_from_row($row, $args)
+    private function _modified_sentence_from_row($row, $args, $get_raw = false)
     {
-        $lookup_string = nl2br(stripslashes($row->Sentence));
+        $row_sentence = $row->Sentence;
+        if ($get_raw) {
+            $lookup_string = $row_sentence;
+        } else {
+            $lookup_string = nl2br(stripslashes($row_sentence));
+        }
         while (!$res = @vsprintf($lookup_string, $args)) {
             // if not enough arguments given, fill up with dummy arguments
             $args[] = ' -x- '; 

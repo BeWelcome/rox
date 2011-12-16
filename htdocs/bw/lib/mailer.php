@@ -22,24 +22,11 @@ Boston, MA  02111-1307, USA.
 
 */
 
-// CZ_070620: Added uft8 encoding to the header values 
-//            mail() is changed to swiftmail
-//            That one handles utf8 strings correctly
-//            This is a bugfix to flyspray task FS#112
-//            Attention! Extra Headers are NOT used this way (they are not used up to this point)
-//           
-//            This file is in urgent need of a redesign, preferably with the TB framework
-
-
 //Load the files we'll need
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/SMTP.php";
 require_once "swift/Swift/Message/Encoder.php";
-/*
 
-// hack while we still use the old bw code
-require_once realpath(dirname(__FILE__) . '/../../../') . '/lib/misc/swift-mailer/lib/swift_required.php';
-*/
 // -----------------------------------------------------------------------------
 // bw_mail is a function to centralise all mail send thru BW
 // it returns true if the mail was processed by swith in a correct way
@@ -68,51 +55,6 @@ function bw_mail($to,
 		return(false) ;
 	}
 } // end of bw_mail
-
-// -----------------------------------------------------------------------------
-// bw_sendmail is a function to centralise all mail send thru BW with more feature 
-// $to = email of receiver
-// $mail_subject=subject of mail
-// $text = text of mail
-// $textinhtml = text in html will be use if user preference are html
-// $From= from mail (will also be the reply to)
-// $deflanguage : default language of receiver
-// $PreferenceHtmlEmail : if set to yes member will receive mail in html format, note that it will be force to html if text contain ";&#"
-// $LogInfo = used for debugging
-
-
-// I think the bw_sendmail_swift function is not in use (JeanYves 2008, February 3)
-function bw_sendmail_swift($to,
-                           $mail_subject, 
-                           $text, 
-                           $textinhtml = "", 
-                           $extra_headers = "", 
-                           $FromParam = "", 
-                           $IdLanguage = 0, 
-                           $PreferenceHtmlEmail = "yes", 
-                           $LogInfo = "", 
-                           $replyto = "",
-                           $ParamGreetings=""
-                          ) {	
-	//Start Swift
-	$swift = new Swift(new Swift_Connection_SMTP("localhost"));
-	 
-	 //Create a message
-	$message = new Swift_Message("My subject");
-	//Add some "parts"
-	$message->attach(new Swift_Message_Part($text));
-	$message->attach(new Swift_Message_Part($textinhtml, "text/html"));
-	 
-	//Now check if Swift actually sends it
-	if ($swift->send($message, $to, $_FromParam)) {
-	   echo "Sent"; // this will be only in the mail bot result
-	}
-	else {
-		LogStr("bw_sendmail_swift: Failed to send a mail to ".$to, "hcvol_mail");
-		echo "Failed";
-	}
- 
-} // end of bw_sendmail_swift
 
 // -----------------------------------------------------------------------------
 // bw_sendmail is a function to centralise all mail send thru HC with more feature 
@@ -154,7 +96,6 @@ function bw_sendmail($to,
 	   $verbose = false;
 	}
 	
-//	if (IsAdmin())  $verbose=1; // set to one for a verbose function
 	$FromParam = $_FromParam;
 	if ($_FromParam == "")
 		$FromParam = $_SYSHCVOL['MessageSenderMail'];
@@ -163,7 +104,6 @@ function bw_sendmail($to,
 
 	$text = str_replace("<br />", "", $text);
 
-	//	nl2br_inv($text);	// neutralize the nl2br() of ww() and wwinlang()
 	$text = str_replace("\r\n", "\n", $text); // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
 
 	$use_html = $PreferenceHtmlEmail;
@@ -196,11 +136,6 @@ function bw_sendmail($to,
 			echo "<br />3<br />";
 		$use_html = "yes";
 	}
-
-	//	$headers .= "To: $to\n";
-	//	$headers .= "Subject: $mail_subject\n";
-	//	$headers .= "Return-Path: $From\n";
-	//	$headers .= "Organization: " . $_SYSHCVOL['SiteName']."\n";
 
 	if ($replyto != "") {
 		$headers = $headers . "Reply-To:" . utf8_encode($replyto);
@@ -269,7 +204,6 @@ function bw_sendmail($to,
 		$ss = $headers;
 		echo "<tr><td>\$headers=<font color=#ff9933>";
 		for ($ii = 0; $ii < strlen($ss); $ii++) {
-			//			echo "\$ss[$ii]=",ord($ss{$ii})," [",$ss{$ii},"]<br>";
 			$jj = ord($ss {
 				$ii });
 			if ($jj == 10) {
@@ -294,30 +228,9 @@ function bw_sendmail($to,
 		echo "<br>13 removing extra \\n from \$mail_subject<br>\n";
 	
 	//CZ_070619: Removing the newlines
-	
 	$mail_subject = str_replace("\n", "", $mail_subject);
 	$mail_subject = str_replace("\r", "", $mail_subject);
 		
-		
-		
-	//CZ_070619: parsing the string like this isreally a bad idea, because we will have unicode values here!
-	//           lets utf8_encode the whole subject and everything will be fine.
-	//           most modern mail clients will understand this. Netscape3Gold maybe not, ok...
-	/*
-	for ($ii = 0; $ii < strlen($mail_subject); $ii++) {
-		//	  echo $ii,"-->",$mail_subject{$ii}," ",ord($mail_subject{$ii}),"<br>";;
-		if ((ord($mail_subject {
-			$ii }) < 32) or (ord($mail_subject {
-			$ii }) > 255)) {
-			$mail_subject {
-				$ii }
-			= " ";
-			if ($verbose) echo "One weird char removed in subject at ", $ii, " position<br>\n";
-		}
-	}
-	*/
-	
-	
 	//CZ_070702: Let's check if the string isnt already in utf8
 	if (!(Swift_Message_Encoder::instance()->isUTF8($mail_subject)))
 	{
@@ -329,18 +242,6 @@ function bw_sendmail($to,
 	  $From = utf8_encode($From);
         }
 
-// CZ_070620: localhost at bewelcome DOES send mails!
-
-//	if (true OR $_SERVER['SERVER_NAME'] == 'localhost') { // Localhost don't send mail
-//		return ("<br><b><font color=blue>" . $mail_subject . "</font></b><br /><b><font color=blue>" . $realtext . "</font></b><br />" . " not sent<br>");
-//	}
-//	elseif (($_SERVER['SERVER_NAME'] == 'ns20516.ovh.net') or 
-//	       ($_SERVER['SERVER_NAME'] == 'test.bewelcome.org') or 
-//	       ($_SERVER['SERVER_NAME'] == 'www.bewelcome.org')) {
-		
-		//$ret = mail($to, $mail_subject, $realtext, $headers, "-" . $_SYSHCVOL['ferrorsSenderMail']);
-		
-		
 	       //Start Swift with localhost smtp
 	       $swift = new Swift(new Swift_Connection_SMTP("localhost"));
 	       //Create the message
@@ -363,10 +264,7 @@ function bw_sendmail($to,
 			foreach ($tolist as $email) {		
 	       		$ret = $ret.$swift->send($message, $email, $From);
 			}
-
 		
-		
-		//	  $ret=mail($to,$mail_subject,$realtext,$headers) ;
 		if ($verbose) {
 			echo "<br />14 <br />\n";
 			echo "headers:\n";
@@ -377,7 +275,6 @@ function bw_sendmail($to,
 			echo " \$ret=", $ret, "<br />\n";
 		}
 		return ($ret);
-//	}
 } // end of bw_sendmail
 
 ?>

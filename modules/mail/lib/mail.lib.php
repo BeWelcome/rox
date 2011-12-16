@@ -75,22 +75,49 @@ class MOD_mail
 
     private static function sendSwift($message)
     {
-        //Create the Transport
-        $transport = Swift_SmtpTransport::newInstance('localhost', 25);
+        // Read config section [smtp]
+        $config = PVars::getObj('config_smtp');
 
-        // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-        // $transport = Swift_SmtpTransport::newInstance("smtp.gmail.com", 465, 'tls');
-        // $transport->setUsername("USERNAME");
-        // $transport->setPassword("PASSWORD");
+        // Currently only SMTP backend is supported
+        if ($config->backend == 'smtp') {
+            if ($config->host) {
+                $host = $config->host;
+            } else {
+                $host = 'localhost';
+            }
 
-        //Create the Mailer using your created Transport
-        $mailer = Swift_Mailer::newInstance($transport);
+            if ($config->port) {
+                $port = $config->port;
+            } else {
+                $port = 25;
+            }
 
-        // FOR TESTING ONLY
-        // $logger = new Swift_Plugins_Loggers_EchoLogger();
-        // $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+            if ($config->tls) {
+                $tls = 'tls';
+            } else {
+                $tls = null;
+            }
 
-        return $mailer->batchSend($message);
+            // Create transport
+            $transport = Swift_SmtpTransport::newInstance($host, $port, $tls);
+
+            if ($config->auth && $config->username && $config->password) {
+                $transport->setUsername($config->username);
+                $transport->setPassword($config->password);
+            }
+
+            // Create mailer using transport
+            $mailer = Swift_Mailer::newInstance($transport);
+
+            // Log if debug is enabled
+            if ($config->debug) {
+                $logger = new Swift_Plugins_Loggers_EchoLogger();
+                $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+            }
+            return $mailer->batchSend($message);
+        } else {
+            return false;
+        }
     }
 
     public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 

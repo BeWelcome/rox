@@ -24,11 +24,11 @@ Boston, MA  02111-1307, USA.
 
 /**
  * @author Micha (bw/cs:lupochen)
+ * @author Meinhard (bw:planetcruiser)
  */
 
 /**
  * MOD_mails lets you create & send mails using our default template
- * + It gives you access to SWIFT too
  *
  * @package Modules
  * @subpackage Mail
@@ -68,16 +68,13 @@ class MOD_mail
 
     private function __clone() {}
 
-    public static function getSwift()
+    private static function getSwift()
     {
-        self::init();
         return Swift_Message::newInstance();
     }
 
-    public static function sendSwift($message)
+    private static function sendSwift($message)
     {
-        self::init();
-
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25);
 

@@ -59,26 +59,25 @@ class MOD_mail
         }
         return self::$_instance;
     }
-    
+
     private function __construct()
     {
         // Load the files we'll need
-        require_once SCRIPT_BASE."lib/misc/swift-mailer/lib/swift_required.php";
+        require_once SCRIPT_BASE . "lib/misc/swift-mailer/lib/swift_required.php";
     }
-        
+
     private function __clone() {}
-    
+
     public static function getSwift()
-    {        
+    {
         self::init();
-        
         return Swift_Message::newInstance();
     }
-    
+
     public static function sendSwift($message)
     {
         self::init();
-        
+
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25);
 
@@ -96,15 +95,15 @@ class MOD_mail
 
         return $mailer->batchSend($message);
     }
-    
+
     public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 
     {
         self::init();
-        
+
         // Check that $to/$from are both arrays
         $from = (is_array($from)) ? $from : explode(',', $from);        
         $to = (is_array($to)) ? $to : explode(',', $to);
-        
+
         //Create the message
         $message = self::getSwift()
 
@@ -135,7 +134,7 @@ class MOD_mail
                 $message->attach(Swift_Attachment::fromPath($path));
             }
         }
-        
+
         return self::sendSwift($message);
     }
 

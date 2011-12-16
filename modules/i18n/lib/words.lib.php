@@ -383,7 +383,7 @@ class MOD_words
     {
         $args = func_get_args();
         array_shift($args);
-        $word = $this->_lookup($code, $args, 'de', true);
+        $word = $this->_lookup($code, $args, false, true);
         return $this->_text_and_buffer($word);
     }
 

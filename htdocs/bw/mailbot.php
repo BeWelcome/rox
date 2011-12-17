@@ -268,7 +268,7 @@ $word->            $text="Problem in forum notification Type=".$rr->Type."<br />
     }
 
 // Setting some default values
-    $subj = "Forum Bewelcome, ".$NotificationType.":".$rPost->thread_title." from ".$rPost->Username ; 
+    $subj = "Forum Bewelcome, ".$NotificationType.": ".$rPost->thread_title; 
     $text = '<html><head><title>'.$subj.'</title></head>' ;
      $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
      $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;

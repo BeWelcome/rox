@@ -450,6 +450,7 @@ INSERT INTO
             } else {
                 $noteWordCode = 'Notify_profile_comment';
                 $messageWordCode = 'Message_profile_comment';
+                $messageSubjectWordCode = 'Message_profile_comment_subject';
             }
             $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         } else {
@@ -473,6 +474,7 @@ WHERE
             } else {
                 $noteWordCode = 'Notify_profile_comment_update';
                 $messageWordCode = 'Message_profile_comment_update';
+                $messageSubjectWordCode = 'Message_profile_comment_update_subject';
             }
             $this->logWrite("Updating a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         }
@@ -486,7 +488,7 @@ WHERE
                 'Link' => 'members/' . $commentRecipient->Username . '/comments',
                 'WordCode' => $noteWordCode
             );
-            $this->sendCommentMessage($note, $messageWordCode);
+            $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -1113,35 +1115,27 @@ ORDER BY
     }
 
     /**
-     * creates a message to inform the member of a new comment
+     * Sends an email to inform the member of a new comment.
      *
-     * @param object $note
-     * @param string $messageWordCode
-     * @access public
+     * @param object $note Notification configuration.
+     * @param string $messageWordCode i18n code for email content.
+     * @param string $subjectWordCode i18n code for email subject.
      */
-    public function sendCommentMessage($note, $messageWordCode)
-    {
-        if (($member = $this->createEntity('Member', $note['IdMember'])) && ($RelMember = $this->createEntity('Member', $note['IdRelMember'])))
-        {
+    public function sendCommentNotification($note, $messageWordCode, $subjectWordCode) {
+        $fromMember = $this->createEntity('Member', $note['IdRelMember']);
+        $toMember = $this->createEntity('Member', $note['IdMember']);
+
+        if ($fromMember && $toMember) {
             $words = new MOD_words();
-            $msg = $this->createEntity('Message');
-            $url = PVars::getObj('env')->baseuri . $note['Link'];
+            $commentsUrl = PVars::getObj('env')->baseuri . $note['Link'];
+            $languageCode = $toMember->getLanguagePreference();
 
-            // Prepare message
-            $msg->MessageType = 'MemberToMember';
-            $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
-            $msg->IdParent = 0;
-            $msg->IdReceiver = $member->getPKValue();
-            $msg->IdSender = $RelMember->getPKValue();
-            $msg->SendConfirmation = 'No';
-            $msg->Status = 'ToSend';
-            $msg->SpamInfo = 'NotSpam';
-            $msg->Message = $words->get($messageWordCode, $member->Username, $RelMember->Username, $url, $url);
-            $msg->InFolder = 'Normal';
-            $msg->JoinMemberPict = 'no';
+            // Prepare email content
+            $subject = $words->getRaw($subjectWordCode, array(), $languageCode);
+            $body = $words->getRaw($messageWordCode, array($toMember->Username, $fromMember->Username, $commentsUrl, $commentsUrl), $languageCode);
 
-            // Queue message
-            $msg->insert();
+            // TODO: Error handling
+            $toMember->sendMail($subject, $body);
         }
     }
 

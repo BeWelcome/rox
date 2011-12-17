@@ -1524,5 +1524,23 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return true;
     }
-}
 
+    /**
+     * Sends a mail to member's email address (i.e. for notifications).
+     *
+     * @param string $subject Email subject.
+     * @param string $body Email body.
+     */
+    public function sendMail($subject, $body) {
+        $from = PVars::getObj('mailAddresses')->noreply;
+        $to = $this->email;
+
+        // Create HTML version via purifier (linkify and add paragraphs)
+        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        $bodyHTML = $purifier->purify($body);
+
+        // TODO: Error handling
+        MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML);
+    }
+
+}

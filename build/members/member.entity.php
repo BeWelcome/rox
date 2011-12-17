@@ -134,6 +134,46 @@ ORDER BY languages.id asc
     }
 
     /**
+     * Get language code from preferences.
+     * @return string language ShortCode (2 to 4 letters), 'en' if no preference was found.
+     */
+    public function get_language_preference() {
+        $id = $this->get_language_preference_id();
+        $allLanguages = $this->get_languages_all();
+
+        // set default
+        // TODO: read from config
+        $shortCode = 'en';
+
+        foreach ($allLanguages as $language) {
+            if ($language->id == $id) {
+                $shortCode = $language->ShortCode;
+                break;
+            }
+        }
+        return $shortCode;
+    }
+
+    /**
+     * Get language ID from preferences.
+     * @return integer language ID, 0 if no preference was found.
+     */
+    public function get_language_preference_id() {
+        $preferences = $this->get_preferences();
+
+        // set default
+        $id = 0;
+
+        foreach ($preferences as $preference) {
+            if ($preference->codeName == "PreferenceLanguage") {
+                $id = intval($preference->Value);
+                break;
+            }
+        }
+        return $id;
+    }
+
+    /**
      * Get all possible levels of languages
      */
     public function get_language_levels() {

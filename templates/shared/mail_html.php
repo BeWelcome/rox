@@ -22,7 +22,7 @@ $words = new MOD_words();
             </div>
         </div>
         <div style="width: 580px; height: 80px; background: #cccccc url(<?php echo PVars::getObj('env')->baseuri; ?>/images/misc/email_bottom.gif) top left no-repeat; padding: 40px;">
-            <?=$words->getBuffered('MailFooterMessage')?>
+            <?=$words->getBuffered('MailFooterMessage', date('Y'))?>
         </div>
     </body>
 </html>

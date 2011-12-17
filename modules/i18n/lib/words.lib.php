@@ -369,21 +369,18 @@ class MOD_words
     }
     
     /**
-     * Looks up (localized) texts in BW words table.
+     * Look up texts in words table.
      * No newlines or slashes are replaced.
-     * Takes a variable number of arguments as c-style formatted string.
      *
-     * @see wwinlang in /lib/lang.php
-     * @param   string  $code keyword for finding text, not allowed to be empty
-     * @param   string  $? formatted according to a variable number of arguments
-     * @param   ... arguments to be inserted in the string
-     * @return  string  localized text, in case of no hit the word keycode, evtl with tr links
+     * @param string $code         keyword for finding text, not allowed to be empty
+     * @param array  $replacements strings to be inserted into the translation's %s placeholders
+     * @param string $language     ShortCode of language, 2 to 4 letter
+     *
+     * @return string localized text, in case of no hit the word keycode
      */
-    public function getRaw($code)
+    public function getRaw($code, $replacements = array(), $language = false)
     {
-        $args = func_get_args();
-        array_shift($args);
-        $word = $this->_lookup($code, $args, false, true);
+        $word = $this->_lookup($code, $replacements, $language, true);
         return $word->text();
     }
 

@@ -370,7 +370,7 @@ class MOD_words
     
     /**
      * Look up texts in words table.
-     * No newlines or slashes are replaced.
+     * No newlines or slashes are replaced. Never add translation links.
      *
      * @param string $code         keyword for finding text, not allowed to be empty
      * @param array  $replacements strings to be inserted into the translation's %s placeholders
@@ -382,6 +382,23 @@ class MOD_words
     {
         $word = $this->_lookup($code, $replacements, $language, true);
         return $word->text();
+    }
+
+    /**
+     * Look up texts in words table.
+     * Use purifier to add paragraphs and linkify. Never add translation links.
+     *
+     * @param string $code         keyword for finding text, not allowed to be empty
+     * @param array  $replacements strings to be inserted into the translation's %s placeholders
+     * @param string $language     ShortCode of language, 2 to 4 letter
+     *
+     * @return string localized text, in case of no hit the word keycode
+     */
+    public function getPurified($code, $replacements = array(), $language = false)
+    {
+        $text = $this->getRaw($code, $replacements, $language);
+        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        return $purifier->purify($text);
     }
 
     /**

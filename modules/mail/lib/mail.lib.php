@@ -144,11 +144,9 @@ class MOD_mail
           ->setBody($body)
         ;
 
-        // Translate footer text
+        // Translate footer text (used in HTML template)
         $words = new MOD_words();
-        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
-        $footerMessageRaw = $words->getRaw('MailFooterMessage', array(date('Y')), $language);
-        $footer_message = $purifier->purify($footerMessageRaw);
+        $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $language);
 
         // Using a html-template
         ob_start();

@@ -27,7 +27,7 @@ $model = new VolunteerbarModel();
 
 $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
 $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
-$numberMessagesToBeChecked = $model->getNumberPersonsToAcceptInGroup() ;
+$numberMessagesToBeChecked = $model->getNumberMessagesToBeChecked() ;
 $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
 $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
 $numberPendingLocalMess = $model->getNumberPendingLocalMess() ;

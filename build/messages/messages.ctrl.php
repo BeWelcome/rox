@@ -265,10 +265,12 @@ class MessagesController extends RoxControllerBase
                     $result = $model->deleteMessage($m->id);
                 elseif ($post['submit_multi'] == 'markasread')
                     $result = $model->markReadMessage($m->id);
-                elseif ($post['submit_multi'] == 'markasspam')
+                elseif ($post['submit_multi'] == 'markasspam') {
                     $result = $model->moveMessage($m->id,'Spam');
-                elseif ($post['submit_multi'] == 'nospam') {
+                    $model->updateSpamInfo($m->id, 'SpamSayMember', 'NotSpam', $m->SpamInfo);
+                } elseif ($post['submit_multi'] == 'nospam') {
                     $result = $model->moveMessage($m->id,'Normal');
+                    $model->updateSpamInfo($m->id, 'NotSpam', array('SpamSayMember', 'SpamSayChecker'), $m->SpamInfo);
                 } else {
                     $mem_redirect->problems = true;
                     return $return;

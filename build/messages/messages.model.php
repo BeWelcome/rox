@@ -192,6 +192,45 @@ WHERE id = $message_id
         );
     }
 
+    /**
+     * add and remove marks from the SpamInfo of a message
+     * 
+     * @param integer $message_id
+     * @param array/string $marks_to_add
+     * @param array/string $marks_to_remove
+     * @param string $spam_info current value of the SpamInfo column (optional)
+     * @return void
+     */
+    public function updateSpamInfo($message_id, $marks_to_add, $marks_to_remove, $spam_info=null)
+    {
+        if (is_string($marks_to_add)) $marks_to_add = array($marks_to_add);
+        if (is_string($marks_to_remove)) $marks_to_remove = array($marks_to_remove);
+
+        if (is_null($spam_info)) {
+            $old_msg = $this->singleLookup("
+SELECT SpamInfo
+FROM
+    messages
+WHERE
+    id = '$message_id'");
+            if (!$old_msg) return;
+            $spam_info = $old_msg->SpamInfo;
+        }
+
+        $marks = explode(',', $spam_info);
+        $marks = array_diff($marks, array_merge($marks_to_add, $marks_to_remove));
+        $marks = array_merge($marks, $marks_to_add);
+        $spam_info = implode(',', $marks);
+
+        $this->dao->query("
+UPDATE messages
+SET
+    SpamInfo = '$spam_info'
+WHERE
+    id = $message_id
+             ");
+    }
+
     public function getMember($username) {
         return $this->singleLookup(
             "

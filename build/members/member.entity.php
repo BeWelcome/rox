@@ -134,6 +134,35 @@ ORDER BY languages.id asc
     }
 
     /**
+     * Get language code from preferences.
+     * @return string language ShortCode (2 to 4 letters), 'en' if no preference was found.
+     */
+    public function getLanguagePreference() {
+        $id = $this->getLanguagePreferenceId();
+        $allLanguages = $this->get_languages_all();
+
+        // set default
+        // TODO: read from config
+        $shortCode = 'en';
+
+        foreach ($allLanguages as $language) {
+            if ($language->id == $id) {
+                $shortCode = $language->ShortCode;
+                break;
+            }
+        }
+        return $shortCode;
+    }
+
+    /**
+     * Get language ID from preferences.
+     * @return integer language ID, 0 if no preference was found.
+     */
+    public function getLanguagePreferenceId() {
+        return intval($this->getPreference('PreferenceLanguage'));
+    }
+
+    /**
      * Get all possible levels of languages
      */
     public function get_language_levels() {
@@ -826,7 +855,19 @@ ORDER BY Value asc
         return $rows;
       }
 
-
+    /**
+     * Get value of a user's preference.
+     * @param string $name codeName of preference.
+     * @return mixed preference value, null if preference not set.
+     */
+    public function getPreference($name) {
+        $preferences = $this->get_preferences();
+        foreach ($preferences as $preference) {
+            if ($preference->codeName == $name) {
+                return $preference->Value;
+            }
+        }
+    }
 
     /**
      * returns count of profile visitors
@@ -1483,5 +1524,26 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return true;
     }
-}
 
+    /**
+     * Sends a mail to member's email address (i.e. for notifications).
+     *
+     * @param string $subject Email subject.
+     * @param string $body Email body.
+     */
+    public function sendMail($subject, $body) {
+        $from = PVars::getObj('mailAddresses')->noreply;
+        $to = $this->email;
+
+        // Create HTML version via purifier (linkify and add paragraphs)
+        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        $bodyHTML = $purifier->purify($body);
+
+        // Set language for email translations
+        $languageCode = $this->getLanguagePreference();
+
+        // TODO: Error handling
+        MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, false, $languageCode);
+    }
+
+}

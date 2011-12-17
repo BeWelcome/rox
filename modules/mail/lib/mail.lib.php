@@ -120,7 +120,7 @@ class MOD_mail
         }
     }
 
-    public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 
+    public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array(), $language = 'en')
     {
         self::init();
 
@@ -143,6 +143,12 @@ class MOD_mail
           //Give it a body
           ->setBody($body)
         ;
+
+        // Translate footer text
+        $words = new MOD_words();
+        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        $footerMessageRaw = $words->getRaw('MailFooterMessage', array(date('Y')), $language);
+        $footer_message = $purifier->purify($footerMessageRaw);
 
         // Using a html-template
         ob_start();

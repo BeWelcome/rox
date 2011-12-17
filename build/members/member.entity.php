@@ -1539,8 +1539,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
         $bodyHTML = $purifier->purify($body);
 
+        // Set language for email translations
+        $languageCode = $this->getLanguagePreference();
+
         // TODO: Error handling
-        MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML);
+        MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, false, $languageCode);
     }
 
 }

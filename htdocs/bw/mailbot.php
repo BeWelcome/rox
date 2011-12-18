@@ -316,7 +316,7 @@ WHERE
     }
     sql_query($str);
 }
-$sResult = $countposts_notificationqueue . " forum notification sent <br \>";
+$sResult = "<br />".$countposts_notificationqueue . " forum notification sent <br \>";
 
 
 // -----------------------------------------------------------------------------
@@ -343,7 +343,7 @@ while ($rr = mysql_fetch_object($qry)) {
     if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')and ($rr->MemberStatus!='NeedMore')and ($rr->MemberStatus!='Pending')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
 
         if (IsLoggedIn()) {
-            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
+            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")<br>\n" ;
         }
         $str = "
 UPDATE
@@ -474,7 +474,7 @@ $count = 0;
 while ($rr = mysql_fetch_object($qry)) {
     if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned
         if (IsLoggedIn()) {
-            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
+            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")<br>\n" ;
         }
         $str = "
 UPDATE

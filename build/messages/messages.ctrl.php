@@ -28,6 +28,8 @@ class MessagesController extends RoxControllerBase
         $request = $args->request;
         $model = new MessagesModel();
         
+        $layoutbits = new MOD_layoutbits();
+        
         // look if the user is logged in.
         if (!isset($_SESSION['IdMember'])) {
             $page = new MessagesMustloginPage();
@@ -63,16 +65,26 @@ class MessagesController extends RoxControllerBase
                     $page->active_page = $this->getPageNumber($request, 2);
                     break;
                 case 'compose':
-                    if (!($logged_member = $model->getLoggedInMember()) || !$logged_member->isActive()) { // Ticket #1327, only active members should be allowed to send message
+                    if (!($logged_member = $model->getLoggedInMember()))  { // We only resquest the Sender to be logged in
                         $page = new ContactNotPossible();
                     }
-                    else if (!isset($request[2])) {
+                    else if (!isset($request[2])) { // $request[2] should be the member who is going to receive the message
                         $page = new MessagesInboxPage();
                     } else if (!$member = $model->getMember($request[2])) {
                         $page = new MessagesInboxPage();
                     } else {
-                        $page = new ComposeMessagePage();
-                        $page->receiver = $member;
+                        if ($logged_member->isActive()) {
+                            $page = new ComposeMessagePage();
+                            $page->receiver = $member;
+                        }
+                        else if ($layoutbits->GetPreference("PrefererenceVerification",$member->id)=="B") { // Case the receiver don't care if the member is Active
+                            $page = new ComposeMessagePage();
+                            $page->receiver = $member;
+                        }
+                        else {
+                            $page = new ContactNotPossible();
+                        }
+                        
                     }
                     break;
                 case 'with':

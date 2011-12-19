@@ -39,12 +39,12 @@ if ($RightLevel < 1) {
 function viewSpamSayMember($sResult="") { 
 	   
 	   $TMess=array() ;
-	   $str = "select messages.*,messages.Status as MessageStatus,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active' order by messages.id desc limit 50";
+	   $str = "select messages.*,messages.Status as MessageStatus,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and (mSender.Status='Active' or mSender.Status='Pending') order by messages.id desc limit 50";
 		if (GetStrParam("IdSender","") !="") {
-		   $str = "select messages.*,messages.Status as MessageStatus,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and mSender.Status='Active' and messages.SpamInfo='SpamSayMember' and messages.IdSender=".IdMember(GetStrParam("IdSender",0))." order by messages.id desc limit 20";
+		   $str = "select messages.*,messages.Status as MessageStatus,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and (mSender.Status='Active' or mSender.Status='Pending') and messages.SpamInfo='SpamSayMember' and messages.IdSender=".IdMember(GetStrParam("IdSender",0))." order by messages.id desc limit 20";
 		}
 		if (GetStrParam("IdReceiver","") !="") {
-		   $str = "select messages.*,messages.Status as MessageStatus,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and mSender.Status='Active' and messages.SpamInfo='SpamSayMember' and messages.IdReceiver".IdMember(GetStrParam("IdReceiver",0))." order by messages.id desc limit 20";
+		   $str = "select messages.*,messages.Status as MessageStatus,mSender.Username as Username_sender,mReceiver.Username as Username_receiver from messages,members as mSender,members as mReceiver where mSender.id=IdSender and mReceiver.id=IdReceiver and (mSender.Status='Active' or mSender.Status='Pending') and messages.SpamInfo='SpamSayMember' and messages.IdReceiver".IdMember(GetStrParam("IdReceiver",0))." order by messages.id desc limit 20";
 		}
 //		echo "str=$str<br>" ;
 		$qry = sql_query($str);

@@ -82,10 +82,10 @@ class MemberPage extends PageWithActiveSkin
 
             $tt[] = array('profile', "members/$username", $ww->MemberPage);
             $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')');
-            $tt[] = array('trips', "trip/show/$username", $ww->Trips);
-            $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('gallery', "gallery/show/user/$username", $ww->Gallery . ' (' . $galleryItemsCount . ')');
             $tt[] = array('forum', "forums/member/$username", $ViewForumPosts);
+            $tt[] = array('blogs', "blog/$username", $ww->Blog);
+            $tt[] = array('trips', "trip/show/$username", $ww->Trips);
         } else {
             $mynotes_count = $member->count_mynotes(); 
             if ($mynotes_count>0) {
@@ -105,10 +105,10 @@ class MemberPage extends PageWithActiveSkin
 
                 array('profile', "members/$username", $ww->MemberPage),
                 array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')'),
-                array('trips', "trip/show/$username", $ww->Trips),
-                array('blogs', "blog/$username", $ww->Blog),
                 array('gallery', "gallery/show/user/$username", $ww->Gallery . ' (' . $galleryItemsCount . ')'),
                 array('forum', "forums/member/$username", $ViewForumPosts),
+                array('blogs', "blog/$username", $ww->Blog),
+                array('trips', "trip/show/$username", $ww->Trips),
                 array('notes',$mynotelink,$mynotelinkname)
             );
         }

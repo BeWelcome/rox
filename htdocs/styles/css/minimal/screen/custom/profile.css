@@ -233,6 +233,15 @@
 
 }
 
+#profile #profile-edit-form fieldset td{
+  vertical-align: top;
+}
+
+#profile #profile-edit-form fieldset td.label{
+  vertical-align: top;
+  padding-top: 0.7em;
+}
+
 /* colors for comment quality */
 .neutral { color: #333; }
 .good { color: green; }

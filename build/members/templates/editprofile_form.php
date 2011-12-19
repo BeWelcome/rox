@@ -1,3 +1,29 @@
+<?php
+// Error shortcuts
+if (in_array('SignupErrorInvalidBirthDate', $vars['errors'])) {
+  $errorBirthDate = true;
+}
+if (in_array('SignupErrorInvalidFirstName', $vars['errors'])) {
+  $errorFirstName = true;
+}
+if (in_array('SignupErrorInvalidLastName', $vars['errors'])) {
+  $errorLastName = true;
+}
+if (in_array('SignupErrorInvalidStreet', $vars['errors'])) {
+  $errorStreet = true;
+}
+if (in_array('SignupErrorInvalidHouseNumber', $vars['errors'])) {
+  $errorHouseNumber = true;
+}
+if (in_array('SignupErrorInvalidZip', $vars['errors'])) {
+  $errorZip = true;
+}
+if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
+  $errorEmail = true;
+}
+
+
+?>
           <fieldset id="profilesummary">
             <legend><?=$words->get('ProfileSummary')?></legend>
             <table border="0" >
@@ -21,18 +47,19 @@
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('SignupBirthDate')?>:</td>
-                  <td colspan="2" ><input type='text' value='<?=$vars['BirthDate']?>' name='BirthDate'/></td>
-                  <td>   
+                  <td class="label" ><strong><?=$words->get('SignupBirthDate')?></strong>: *</td>
+                  <td colspan="2" >
+                    <input<?php if (isset($errorBirthDate)) { ?> class="error-input-text"<?php } ?> type='text' value='<?=$vars['BirthDate']?>' name='BirthDate'/>
+                    <?php if (isset($errorBirthDate)) { ?>
+                      <div class="error-caption"><?=$words->get('SignupErrorInvalidBirthDate')?></div>
+                    <?php } ?>
+                  </td>
+                  <td>
                         <input name="HideBirthDate" value="Yes" type="checkbox"
                         <?php
                         if ($vars['HideBirthDate'] == "Yes")
                             echo ' checked="checked"';
                         echo ' /> ', $words->get("Hidden");
-                        if (in_array('SignupErrorInvalidBirthDate', $vars['errors']))
-                        {
-                            echo '<div class="error">'.$words->get('SignupErrorInvalidBirthDate').'</div>';
-                        }
                     ?>
                   </td>
                 </tr>
@@ -148,8 +175,13 @@ HTML;
     if ($this->adminedit || !$CanTranslate) { // member translator is not allowed to update crypted data
 ?>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('FirstName')?>:</td>
-                  <td><input type='text' name='FirstName' value='<?= $vars['FirstName'];?>'/></td>
+                  <td class="label" ><strong><?=$words->get('FirstName')?></strong>: *</td>
+                  <td>
+                    <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type='text' name='FirstName' value='<?= $vars['FirstName'];?>'/>
+                    <?php if (isset($errorFirstName)) { ?>
+                      <div class="error-caption"><?=$words->get('SignupErrorInvalidFirstName')?></div>
+                    <?php } ?>
+                  </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_FirstName"
                     <?php if ($vars['IsHidden_FirstName'])
@@ -170,8 +202,13 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('LastName')?>:</td>
-                  <td><input type='text' name='LastName' value='<?= $vars['LastName'];?>'/></td>
+                  <td class="label" ><strong><?=$words->get('LastName')?></strong>: *</td>
+                  <td>
+                    <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type='text' name='LastName' value='<?= $vars['LastName'];?>'/>
+                    <?php if (isset($errorLastName)) { ?>
+                      <div class="error-caption"><?=$words->get('SignupErrorInvalidLastName')?></div>
+                    <?php } ?>
+                  </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_LastName"
                     <?php if ($vars['IsHidden_LastName'])
@@ -181,16 +218,12 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('Street')?> / <?=$words->get('HouseNumber')?>:</td>
+                  <td class="label" ><strong><?=$words->get('Street')?></strong>: *</td>
                   <td>
-                      <input type='text' name='Street' id='Street' value='<?=$vars['Street']?>'/>
-                      <input type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>' size="5" class="short"/>     
-                    <?php
-                        if (in_array('SignupErrorInvalidAddress', $vars['errors']))
-                        {
-                            echo '<div class="error">'.$words->get('SignupErrorInvalidAddress').'</div>';
-                        }
-                    ?>
+                    <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type='text' name='Street' id='Street' value='<?=$vars['Street']?>'/>
+                    <?php if (isset($errorStreet)) { ?>
+                      <div class="error-caption"><?=$words->get('SignupErrorInvalidStreet')?></div>
+                    <?php } ?>
                   </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_Address"
@@ -201,8 +234,24 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" >Zip:</td>
-                  <td><input type='text' name='Zip' value='<?=$vars['Zip']?>'/></td>
+                  <td class="label" ><strong><?=$words->get('HouseNumber')?></strong>: *</td>
+                  <td>
+                    <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>" type='text' name='HouseNumber' id='HouseNumber' value='<?=$vars['HouseNumber']?>' size="6"/>
+                    <?php if (isset($errorHouseNumber)) { ?>
+                      <div class="error-caption"><?=$words->get('SignupErrorInvalidHouseNumber')?></div>
+                    <?php } ?>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+                <tr align="left" >
+                  <td class="label" ><strong><?=$words->get('Post code')?></strong>: *</td>
+                  <td>
+                    <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type='text' name='Zip' value='<?=$vars['Zip']?>' size="6"/>
+                    <?php if (isset($errorZip)) { ?>
+                      <div class="error-caption"><?=$words->get('SignupErrorInvalidZip')?></div>
+                    <?php } ?>
+                  </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_Zip"
                     <?php if ($vars['IsHidden_Zip'])
@@ -268,14 +317,12 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('SignupEmail')?>:</td>
+                  <td class="label" ><strong><?=$words->get('SignupEmail')?></strong>: *</td>
                   <td>
-                    <input type="text" size="25" name="Email"  value="<?=str_replace('%40', '@', $vars['Email'])?>" />
-                    <?php
-                      if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
-                          echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
-                      }
-                    ?>
+                    <input class="<?php if (isset($errorEmail)) { ?>error-input-text<?php } ?>" type="text" size="25" name="Email" value="<?=str_replace('%40', '@', $vars['Email'])?>" />
+                    <?php if (isset($errorEmail)) { ?>
+                      <div class="error-caption"><?=$words->get('SignupErrorInvalidEmail')?></div>
+                    <?php } ?>
                   </td>
                   <td><?=$words->get('EmailIsAlwayHidden')?></td>
 
@@ -604,7 +651,7 @@ HTML;
             <tbody>
               <tr>
                 <td colspan="3"  align="center" >
-                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('SubmitForm')?>" />
+                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('Save Profile')?>" />
                 </td>
               </tr>
             </tbody>

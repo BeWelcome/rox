@@ -168,6 +168,7 @@ WHERE
     /**
      * Returns the number of spam messages
      *
+     * TODO: merge with other getNumberSpamToBeChecked() methods
      */
     public function getNumberSpamToBeChecked()
     {
@@ -183,7 +184,11 @@ WHERE
     mSender.id        = IdSender         AND
     messages.SpamInfo = 'SpamSayMember'  AND
     mReceiver.id      = IdReceiver       AND
-    mSender.Status    = 'Active'
+    (
+        mSender.Status = 'Active'
+    OR
+        mSender.Status = 'Pending'
+    )
             "
         );
         $record = $result->fetch(PDB::FETCH_OBJ);

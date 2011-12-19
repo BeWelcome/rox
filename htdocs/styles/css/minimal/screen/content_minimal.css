@@ -110,7 +110,23 @@
     font-size: 1.1em;
   }
 
-  .error {background: #FFEBE8; padding: 1em; border-top: 1px #FF0000 dashed; border-bottom: 1px #FF0000 dashed; }
+  .error {
+    background: #FFEBE8;
+    border: 2px #FF0000 solid;
+    border-radius: 5px;
+    margin-bottom: 1em;
+    padding: 1em;
+  }
+  .error li {
+    list-style-type: disc;
+    margin-left: 2em;
+  }
+  .error-caption {
+    color: #FF0000;
+  }
+  .error-input-text {
+    border-color: #FF0000;
+  }
   .highlight {background-color: #eeeeee; border:1px solid #E5E5E5; margin-right:4px;}
   .success {background: #CCFF99 url(../images/iconsfam/accept.png); background-repeat:no-repeat; background-position: 1em; padding: 1em 3.4em; border: 1px #888 solid; margin: 1em;}
 

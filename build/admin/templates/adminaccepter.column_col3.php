@@ -80,10 +80,10 @@ foreach ($members as $member)
 <div class="adminmembers">
 
     <div class="floatbox memberinfo">
-        <a class="float_left" href="people/{$member->Username}">
+        <a class="float_left" href="members/{$member->Username}">
             <img class="framed" src="members/avatar/{$member->Username}/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
-        <a href="people/{$member->Username}" class="username">{$member->Username}</a> (FIXME: INSERT MEMBER NAME)
+        <a href="members/{$member->Username}" class="username">{$member->Username}</a> (FIXME: INSERT MEMBER NAME)
         <p>FIXME: INSERT AGE</p>
         <p class="small">Profile created: {$member->created} | Last login: {$member->Lastlogin}</p>
     </div>

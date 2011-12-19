@@ -34,7 +34,7 @@ function DisplayMessages($TMess, $lastaction = "",$IdSender="") {
 
     Menu2($_SERVER["PHP_SELF"]);
 
-    $rr=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active'");
+    $rr=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and (mSender.Status='Active' or mSender.Status='Pending')");
 //           "select count(*) as cnt from messages,members as mSender where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mSender.Status='Active'"
 
     $MenuAction  = "            <li><a href=\"".$_SERVER["PHP_SELF"]."\">Admin Spam</a></li>\n";
@@ -135,7 +135,7 @@ function DisplayPendingMayBeSpammers($TMess, $lastaction = "") {
     Menu1(); // Displays the top menu
     Menu2($_SERVER["PHP_SELF"]);
 
-    $rr=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and mSender.Status='Active'");
+    $rr=LoadRow("select count(*) as cnt from messages,members as mSender,members as mReceiver where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mReceiver.id=IdReceiver and (mSender.Status='Active' or mSender.Status='Pending')");
 //           "select count(*) as cnt from messages,members as mSender where mSender.id=IdSender and messages.SpamInfo='SpamSayMember' and mSender.Status='Active'"
 
     $MenuAction  = "            <li><a href=\"".$_SERVER["PHP_SELF"]."\">Admin Spam</a></li>\n";

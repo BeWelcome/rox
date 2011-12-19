@@ -73,7 +73,11 @@ require_once 'editprofile_form.php';
     }
 
     document.observe("dom:loaded", function() {
-      new FieldsetMenu('profile-edit-form', {active: "profilesummary"});
+      var activeFieldset = '<?php if (!empty($vars['activeFieldset'])) { echo $vars['activeFieldset']; } ?>'; // Value inserted by PHP.
+      if (activeFieldset == '') {
+        activeFieldset = 'profilesummary';
+      }
+      new FieldsetMenu('profile-edit-form', {active: activeFieldset});
       $('langbutton').observe('click',insertNewTemplate);
       $$('a.remove_lang').each(function(a){
         a.observe('click', removeLang);

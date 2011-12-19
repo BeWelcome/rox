@@ -227,6 +227,7 @@ AND messages.WhenFirstRead=\'0000-00-00 00:00:00\'';
     /**
      * Returns the number of spam messages
      *
+     * TODO: merge with other getNumberSpamToBeChecked() methods
      */
     public function getNumberSpamToBeChecked()
     {
@@ -236,7 +237,12 @@ FROM messages, members AS mSender, members AS mReceiver
 WHERE mSender.id=IdSender
 AND messages.SpamInfo=\'SpamSayMember\'
 AND mReceiver.id=IdReceiver
-AND mSender.Status=\'Active\'';
+AND (
+        mSender.Status=\'Active\'
+    OR
+        mSender.Status=\'Pending\'
+    )
+';
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;

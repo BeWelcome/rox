@@ -13,7 +13,7 @@ if ($ToggleDonateBar) {
 <ul class="linklist">
 
 <!-- new suggestion for left column (globetrotter_tt) -->
-<li><a href="people">My Profile</a></li>
+<li><a href="members">My Profile</a></li>
 <li><a href="messages">My Messages</a></li>
 <li><a href="#">My Contacts</a></li>
 <li><a href="#">My Groups</a></li>

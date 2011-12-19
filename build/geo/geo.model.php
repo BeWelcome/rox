@@ -562,10 +562,10 @@ class GeoModel extends RoxModelBase {
     
         $hblogCount = array();
         $worldid = 6295630; //globe, top level
-        $hblogCount[$worldid] = $this->countHierarchy($harray,$blogCount,&$hblogCount,$worldid);    
+        $hblogCount[$worldid] = $this->countHierarchy($harray,$blogCount,$hblogCount,$worldid);    
         
         $haddressCount = array();
-        $haddressCount[$worldid] = $this->countHierarchy($harray,$addressCount,&$haddressCount,$worldid);    
+        $haddressCount[$worldid] = $this->countHierarchy($harray,$addressCount,$haddressCount,$worldid);    
         
         //flusha usage table
         $return = $this->dao->query(
@@ -612,7 +612,7 @@ class GeoModel extends RoxModelBase {
 
         if (!empty($nextids)) {
             foreach ($nextids as $value) {
-                $result = $this->countHierarchy($harray,$carray,&$hCount,$value);
+                $result = $this->countHierarchy($harray,$carray,$hCount,$value);
                 $hCount[$value] = $result;
                 $counter += $result;
             }

@@ -17,11 +17,11 @@ foreach ($this->pager->getActiveSubset($this->bad_comments) as $comment)
     <p><b>{$comment->AdminAction}</b></p>
     <div class="floatbox">
         <div class="float_left">
-            <a href="people/{$from}">
+            <a href="members/{$from}">
                 <img class="framed"  src="members/avatar/{$from}/?xs"  height="50px"  width="50px"  alt="Profile" />
             </a>
             <img class="commentto" src="images/icons/tango/22x22/go-next.png" alt="comment to" />
-            <a href="people/{$to}">
+            <a href="members/{$to}">
                 <img class="framed"  src="members/avatar/{$to}/?xs"  height="50px"  width="50px"  alt="Profile" />
             </a>
         </div>

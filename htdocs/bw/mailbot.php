@@ -387,7 +387,7 @@ WHERE
 //            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
             $MessageFormatted .= PictureInMail($rr->Username);
         }
-        if  (($rr->MemberStatus=='NeedMore')or($rr->MemberStatus=='Pending')) {
+        if  (($rr->MemberStatus=='NeedMore')) {
             LogStr("Mailbot procceds sending  message #".$rr->id." Message from Sender".$rr->Username."not active (".$rr->MemberStatus.")","mailbot");
             $MessageFormatted=$MessageFormatted."<br>Message sent by a may be not yet verified member<br>" ;
         }

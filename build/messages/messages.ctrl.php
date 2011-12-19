@@ -27,9 +27,7 @@ class MessagesController extends RoxControllerBase
     {
         $request = $args->request;
         $model = new MessagesModel();
-        
-        $layoutbits = new MOD_layoutbits();
-        
+
         // look if the user is logged in.
         if (!isset($_SESSION['IdMember'])) {
             $page = new MessagesMustloginPage();
@@ -73,18 +71,8 @@ class MessagesController extends RoxControllerBase
                     } else if (!$member = $model->getMember($request[2])) {
                         $page = new MessagesInboxPage();
                     } else {
-                        if ($logged_member->isActive()) {
-                            $page = new ComposeMessagePage();
-                            $page->receiver = $member;
-                        }
-                        else if ($layoutbits->GetPreference("PrefererenceVerification",$member->id)=="B") { // Case the receiver don't care if the member is Active
-                            $page = new ComposeMessagePage();
-                            $page->receiver = $member;
-                        }
-                        else {
-                            $page = new ContactNotPossible();
-                        }
-                        
+                        $page = new ComposeMessagePage();
+                        $page->receiver = $member;
                     }
                     break;
                 case 'with':

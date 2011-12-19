@@ -268,7 +268,7 @@ $word->            $text="Problem in forum notification Type=".$rr->Type."<br />
     }
 
 // Setting some default values
-    $subj = "Forum Bewelcome, ".$NotificationType.":".$rPost->thread_title." from ".$rPost->Username ; 
+    $subj = "Forum Bewelcome, ".$NotificationType.": ".$rPost->thread_title; 
     $text = '<html><head><title>'.$subj.'</title></head>' ;
      $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
      $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
@@ -316,7 +316,7 @@ WHERE
     }
     sql_query($str);
 }
-$sResult = $countposts_notificationqueue . " forum notification sent <br \>";
+$sResult = "<br />".$countposts_notificationqueue . " forum notification sent <br \>";
 
 
 // -----------------------------------------------------------------------------
@@ -343,7 +343,7 @@ while ($rr = mysql_fetch_object($qry)) {
     if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')and ($rr->MemberStatus!='NeedMore')and ($rr->MemberStatus!='Pending')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
 
         if (IsLoggedIn()) {
-            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
+            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")<br>\n" ;
         }
         $str = "
 UPDATE
@@ -387,7 +387,7 @@ WHERE
 //            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
             $MessageFormatted .= PictureInMail($rr->Username);
         }
-        if  (($rr->MemberStatus=='NeedMore')or($rr->MemberStatus=='Pending')) {
+        if  (($rr->MemberStatus=='NeedMore')) {
             LogStr("Mailbot procceds sending  message #".$rr->id." Message from Sender".$rr->Username."not active (".$rr->MemberStatus.")","mailbot");
             $MessageFormatted=$MessageFormatted."<br>Message sent by a may be not yet verified member<br>" ;
         }
@@ -474,7 +474,7 @@ $count = 0;
 while ($rr = mysql_fetch_object($qry)) {
     if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned
         if (IsLoggedIn()) {
-            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")" ;
+            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")<br>\n" ;
         }
         $str = "
 UPDATE

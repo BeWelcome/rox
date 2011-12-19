@@ -393,6 +393,7 @@ WHERE
     public function addComment($TCom,&$vars)
     {
         $return = true;
+        $commentRecipient = $this->createEntity('Member', $vars['IdMember']);
         // Mark if an admin's check is needed for this comment (in case it is "bad")
         $AdminAction = "NothingNeeded";
         if ($vars['Quality'] == "Bad") {
@@ -444,7 +445,13 @@ INSERT INTO
     )"
     ;
             $qry = $this->dao->query($str);
-            if(!$qry) $return = false;
+            if(!$qry) {
+                $return = false;
+            } else {
+                $noteWordCode = 'Notify_profile_comment';
+                $messageWordCode = 'Message_profile_comment';
+                $messageSubjectWordCode = 'Message_profile_comment_subject';
+            }
             $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         } else {
             $textfree_add = ($vars['TextFree'] != '') ? ('<hr>' . $vars['TextFree']) : '';
@@ -462,13 +469,26 @@ SET
 WHERE
     id=" . $TCom->id;
             $qry = $this->dao->exec($str);
-            if(!$qry) $return = false;
+            if(!$qry) {
+                $return = false;
+            } else {
+                $noteWordCode = 'Notify_profile_comment_update';
+                $messageWordCode = 'Message_profile_comment_update';
+                $messageSubjectWordCode = 'Message_profile_comment_update_subject';
+            }
             $this->logWrite("Updating a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         }
         if ($return != false) {
             // Create a note (member-notification) for this action
             $c_add = ($vars['Quality'] == "Bad") ? '_bad' : '';
-            $note = array('IdMember' => $vars['IdMember'], 'IdRelMember' => $_SESSION['IdMember'], 'Type' => 'profile_comment'.$c_add, 'Link' => 'members/'.$vars['IdMember'].'/comments','WordCode' => 'Notify_profile_comment');
+            $note = array(
+                'IdMember' => $vars['IdMember'], 
+                'IdRelMember' => $_SESSION['IdMember'], 
+                'Type' => 'profile_comment' . $c_add, 
+                'Link' => 'members/' . $commentRecipient->Username . '/comments',
+                'WordCode' => $noteWordCode
+            );
+            $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -1093,7 +1113,32 @@ ORDER BY
 
         return $vars;
     }
-    
+
+    /**
+     * Sends an email to inform the member of a new comment.
+     *
+     * @param object $note Notification configuration.
+     * @param string $messageWordCode i18n code for email content.
+     * @param string $subjectWordCode i18n code for email subject.
+     */
+    public function sendCommentNotification($note, $messageWordCode, $subjectWordCode) {
+        $fromMember = $this->createEntity('Member', $note['IdRelMember']);
+        $toMember = $this->createEntity('Member', $note['IdMember']);
+
+        if ($fromMember && $toMember) {
+            $words = new MOD_words();
+            $commentsUrl = PVars::getObj('env')->baseuri . $note['Link'];
+            $languageCode = $toMember->getLanguagePreference();
+
+            // Prepare email content
+            $subject = $words->getRaw($subjectWordCode, array(), $languageCode);
+            $body = $words->getRaw($messageWordCode, array($toMember->Username, $fromMember->Username, $commentsUrl, $commentsUrl), $languageCode);
+
+            // TODO: Error handling
+            $toMember->sendMail($subject, $body);
+        }
+    }
+
     public function sendMandatoryForm($vars)
     {
         $rights = new MOD_rights();

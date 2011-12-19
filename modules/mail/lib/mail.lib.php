@@ -24,11 +24,11 @@ Boston, MA  02111-1307, USA.
 
 /**
  * @author Micha (bw/cs:lupochen)
+ * @author Meinhard (bw:planetcruiser)
  */
 
 /**
  * MOD_mails lets you create & send mails using our default template
- * + It gives you access to SWIFT too
  *
  * @package Modules
  * @subpackage Mail
@@ -59,52 +59,75 @@ class MOD_mail
         }
         return self::$_instance;
     }
-    
+
     private function __construct()
     {
         // Load the files we'll need
-        require_once SCRIPT_BASE."lib/misc/swift-mailer/lib/swift_required.php";
+        require_once SCRIPT_BASE . "lib/misc/swift-mailer/lib/swift_required.php";
     }
-        
+
     private function __clone() {}
-    
-    public static function getSwift()
-    {        
-        self::init();
-        
+
+    private static function getSwift()
+    {
         return Swift_Message::newInstance();
     }
-    
-    public static function sendSwift($message)
+
+    private static function sendSwift($message)
     {
-        self::init();
-        
-        //Create the Transport
-        $transport = Swift_SmtpTransport::newInstance('localhost', 25);
+        // Read config section [smtp]
+        $config = PVars::getObj('config_smtp');
 
-        // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-        // $transport = Swift_SmtpTransport::newInstance("smtp.gmail.com", 465, 'tls');
-        // $transport->setUsername("USERNAME");
-        // $transport->setPassword("PASSWORD");
+        // Currently only SMTP backend is supported
+        if ($config->backend == 'smtp') {
+            if ($config->host) {
+                $host = $config->host;
+            } else {
+                $host = 'localhost';
+            }
 
-        //Create the Mailer using your created Transport
-        $mailer = Swift_Mailer::newInstance($transport);
+            if ($config->port) {
+                $port = $config->port;
+            } else {
+                $port = 25;
+            }
 
-        // FOR TESTING ONLY
-        // $logger = new Swift_Plugins_Loggers_EchoLogger();
-        // $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+            if ($config->tls) {
+                $tls = 'tls';
+            } else {
+                $tls = null;
+            }
 
-        return $mailer->batchSend($message);
+            // Create transport
+            $transport = Swift_SmtpTransport::newInstance($host, $port, $tls);
+
+            if ($config->auth && $config->username && $config->password) {
+                $transport->setUsername($config->username);
+                $transport->setPassword($config->password);
+            }
+
+            // Create mailer using transport
+            $mailer = Swift_Mailer::newInstance($transport);
+
+            // Log if debug is enabled
+            if ($config->debug) {
+                $logger = new Swift_Plugins_Loggers_EchoLogger();
+                $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
+            }
+            return $mailer->batchSend($message);
+        } else {
+            return false;
+        }
     }
-    
-    public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array()) 
+
+    public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array(), $language = 'en')
     {
         self::init();
-        
+
         // Check that $to/$from are both arrays
         $from = (is_array($from)) ? $from : explode(',', $from);        
         $to = (is_array($to)) ? $to : explode(',', $to);
-        
+
         //Create the message
         $message = self::getSwift()
 
@@ -121,6 +144,10 @@ class MOD_mail
           ->setBody($body)
         ;
 
+        // Translate footer text (used in HTML template)
+        $words = new MOD_words();
+        $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $language);
+
         // Using a html-template
         ob_start();
         require SCRIPT_BASE.'templates/shared/mail_html.php';
@@ -135,7 +162,7 @@ class MOD_mail
                 $message->attach(Swift_Attachment::fromPath($path));
             }
         }
-        
+
         return self::sendSwift($message);
     }
 

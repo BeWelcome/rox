@@ -132,6 +132,10 @@ class LoginFormWidget extends RoxWidget
         <?if ($err) : ?>
         <p class="note warning"><?=$err?></p>
         <? endif ?>
+        <script type="text/javascript">
+        	if(!navigator.cookieEnabled)
+            	document.write("<p class=\"note warning\">Please enable cookies in your browser.</p>");
+        </script>
         <form method="post" action="<?=$url_login ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>

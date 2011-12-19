@@ -27,7 +27,7 @@ class MessagesController extends RoxControllerBase
     {
         $request = $args->request;
         $model = new MessagesModel();
-        
+
         // look if the user is logged in.
         if (!isset($_SESSION['IdMember'])) {
             $page = new MessagesMustloginPage();
@@ -63,10 +63,10 @@ class MessagesController extends RoxControllerBase
                     $page->active_page = $this->getPageNumber($request, 2);
                     break;
                 case 'compose':
-                    if (!($logged_member = $model->getLoggedInMember()) || !$logged_member->isActive()) { // Ticket #1327, only active members should be allowed to send message
+                    if (!($logged_member = $model->getLoggedInMember()))  { // We only resquest the Sender to be logged in
                         $page = new ContactNotPossible();
                     }
-                    else if (!isset($request[2])) {
+                    else if (!isset($request[2])) { // $request[2] should be the member who is going to receive the message
                         $page = new MessagesInboxPage();
                     } else if (!$member = $model->getMember($request[2])) {
                         $page = new MessagesInboxPage();
@@ -265,10 +265,12 @@ class MessagesController extends RoxControllerBase
                     $result = $model->deleteMessage($m->id);
                 elseif ($post['submit_multi'] == 'markasread')
                     $result = $model->markReadMessage($m->id);
-                elseif ($post['submit_multi'] == 'markasspam')
+                elseif ($post['submit_multi'] == 'markasspam') {
                     $result = $model->moveMessage($m->id,'Spam');
-                elseif ($post['submit_multi'] == 'nospam') {
+                    $model->updateSpamInfo($m->id, 'SpamSayMember', 'NotSpam', $m->SpamInfo);
+                } elseif ($post['submit_multi'] == 'nospam') {
                     $result = $model->moveMessage($m->id,'Normal');
+                    $model->updateSpamInfo($m->id, 'NotSpam', array('SpamSayMember', 'SpamSayChecker'), $m->SpamInfo);
                 } else {
                     $mem_redirect->problems = true;
                     return $return;

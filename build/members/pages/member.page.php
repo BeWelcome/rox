@@ -60,7 +60,12 @@ class MemberPage extends PageWithActiveSkin
         {
             $TCom = $member->get_comments_commenter($logged_user->id);
         }
-        $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
+
+        $galleryItemsCount = $member->getGalleryItemsCount();
+
+        // TODO: move number out of translation string
+        $ViewForumPosts = $words->get("ViewForumPosts",$member->forums_posts_count());
+
         if ($this->myself) {
             $tt=array(
                 array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
@@ -76,10 +81,10 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('space', '', '', 'space');
 
             $tt[] = array('profile', "members/$username", $ww->MemberPage);
-            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')');
+            $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')');
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
-            $tt[] = array('gallery', "gallery/show/user/$username", $ww->Gallery);
+            $tt[] = array('gallery', "gallery/show/user/$username", $ww->Gallery . ' (' . $galleryItemsCount . ')');
             $tt[] = array('forum', "forums/member/$username", $ViewForumPosts);
         } else {
             $mynotes_count = $member->count_mynotes(); 
@@ -99,10 +104,10 @@ class MemberPage extends PageWithActiveSkin
                 array('space', '', '', 'space'),
 
                 array('profile', "members/$username", $ww->MemberPage),
-                array('comments', "members/$username/comments", $ww->ViewComments.'('.$comments_count['all'].')'),
+                array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')'),
                 array('trips', "trip/show/$username", $ww->Trips),
                 array('blogs', "blog/$username", $ww->Blog),
-                array('gallery', "gallery/show/user/$username", $ww->Gallery),
+                array('gallery', "gallery/show/user/$username", $ww->Gallery . ' (' . $galleryItemsCount . ')'),
                 array('forum', "forums/member/$username", $ViewForumPosts),
                 array('notes',$mynotelink,$mynotelinkname)
             );

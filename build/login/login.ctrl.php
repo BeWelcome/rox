@@ -61,8 +61,9 @@ class LoginController extends RoxControllerBase
             $errmsg = 'member "'.$username.'" does not exist';
             
         } else if (!is_string($post['p']) || strlen($post['p'])==0) {
-            $errmsg = 'no password given';
-            
+            if (PVars::getObj('development')->skip_password_check != 1) {
+                $errmsg = 'no password given';
+            }
         } else if (!$this->model->checkBWPassword($bw_member, $password = trim($post['p']))) {
             if (PVars::getObj('development')->skip_password_check != 1) {
                 $errmsg = 'wrong password given for username '.$bw_member->Username;

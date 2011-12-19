@@ -47,9 +47,6 @@ class LoginFormWidget extends RoxWidget
 
         $mem_redirect = $formkit->mem_from_redirect;
         $err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
-        if (!isset($_COOKIE) || !isset($_COOKIE['sidTB'])) {
-            $err = "Please enable cookies in your browser.";
-        }
         $url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         if (!empty($_SERVER['QUERY_STRING'])) {
             $url .= '?'.$_SERVER['QUERY_STRING'];
@@ -135,6 +132,10 @@ class LoginFormWidget extends RoxWidget
         <?if ($err) : ?>
         <p class="note warning"><?=$err?></p>
         <? endif ?>
+        <script type="text/javascript">
+        	if(!navigator.cookieEnabled)
+            	document.write("<p class=\"note warning\">Please enable cookies in your browser.</p>");
+        </script>
         <form method="post" action="<?=$url_login ?>">
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>

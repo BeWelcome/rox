@@ -669,7 +669,20 @@ WHERE IdToMember = ".$this->id
         $trip_data = $tripmodel->getTripData();
         return array($usertrips,$trip_data);
     }
-    
+
+    /**
+     * Get number of gallery items
+     *
+     * @todo Cache count to save database queries
+     * @return integer Number of items
+     */
+    public function getGalleryItemsCount()
+    {
+        $gallery = new GalleryModel;
+        $count = $gallery->getUserItemCount($this->get_userid());
+        return $count;
+    }
+
     /**
      * return an array of blog entities that have a start date that lies in the future
      *

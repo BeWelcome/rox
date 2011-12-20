@@ -958,6 +958,29 @@ WHERE
 
       }
 
+    /**
+     * Fetches comments written by this member
+     *
+     * @return array of objects
+     *
+     */
+    public function get_comments_written() {
+        $sql = "
+SELECT *,
+  comments.Quality AS comQuality,
+  comments.id AS id,
+  comments.created,
+  UNIX_TIMESTAMP(comments.updated) unix_updated
+FROM
+  comments,
+  members
+WHERE
+  comments.IdFromMember   = $this->id  AND
+  comments.IdFromMember = members.Id
+        ";
+        return $this->bulkLookup($sql);
+    }
+
 
     /**
      * Fetches translation of specific field in user profile.

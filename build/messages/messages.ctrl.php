@@ -99,11 +99,11 @@ class MessagesController extends RoxControllerBase
                         if (!isset($request[2])) {
                             $page = new ReadMessagePage();
                         } else switch ($request[2]) { 
-                //message action
-                case 'delete':
-                  $model->deleteMessage($request[1]);
-                  $page = new MessagesInboxPage();
-                  break;
+                            //message action
+                            case 'delete':
+                                $model->deleteMessage($request[1]);
+                                $page = new MessagesInboxPage();
+                                break;
                             case 'edit':
                                 $page = new EditMessagePage();
                                 break;
@@ -113,12 +113,23 @@ class MessagesController extends RoxControllerBase
                             case 'sent':
                                 $page = new MessageSentPage();
                                 break;
+                            case 'spam':
+                                $model->moveMessage($message->id,'Spam');
+                                $model->updateSpamInfo($message->id, 'SpamSayMember', 'NotSpam', $message->SpamInfo);
+                                $page = new MessagesInboxPage();
+                                break;
+                            case 'nospam':
+                                $model->moveMessage($message->id,'Normal');
+                                $model->updateSpamInfo($message->id, 'NotSpam', array('SpamSayMember', 'SpamSayChecker'), $message->SpamInfo);
+                                $page = new MessagesInboxPage();
+                                break;
                             case 'read':
                             default:
                                 $page = new ReadMessagePage();
-                        }
-                        $page->message = $message;
+                            }
+                            $page->message = $message;
                     }
+                    
             }
             
             $page->setModel($model);

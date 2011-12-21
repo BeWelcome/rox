@@ -98,12 +98,18 @@ class ReadMessagePage extends MessagesBasePage
                 </p>
             </div> <!-- messagecontent -->
             <div id="messagefooter">
-                <p>
+                <p class="floatbox">
                   <?php if ($direction_in) { ?>
-                  <a class="button" href="messages/<?=$message->id ?>/reply"><?=$words->get('replymessage')?></a>
+                  <a class="button float_left" href="messages/<?=$message->id ?>/reply"><?=$words->get('replymessage')?></a>
+                      <?php if ($message->InFolder == 'spam') { ?>
+                          <a class="button float_right" href="messages/<?=$message->id ?>/nospam"><?=$words->get('marknospam')?></a>
+                      <?php } else { ?>
+                          <a class="button float_right" href="messages/<?=$message->id ?>/spam"><?=$words->get('markspam')?></a>
+                      <?php } ?>
                   <?php } else { ?>
-                  <a class="button" href="messages/<?=$message->id ?>/edit"><?=$words->get('editmessage')?></a>
+                  <a class="button float_left" href="messages/<?=$message->id ?>/edit"><?=$words->get('editmessage')?></a>
                   <?php } ?>
+                  <a class="button float_right" href="messages/<?=$message->id ?>/delete"><?=$words->get('delmessage')?></a>
                 </p>
             </div> <!-- messagefooter -->
             <div id="shade"> </div>

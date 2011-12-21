@@ -116,10 +116,11 @@ WHERE
     messages.id = $message_id
             "
         );
-
+        // check if the message exists
+        if (!$message) {
+            return false;
+        }
         $user_id = $_SESSION['IdMember'];
-
-
         // look if the member is allowed to see the message
         if ($message->IdSender == $user_id) {
             return $message;
@@ -155,7 +156,7 @@ WHERE
         }
 
         if ($DeleteRequest==$oldmsg->DeleteRequest) {
-            MOD_log::get()->write("Weird: trying todelete message #$message_id in Tab: $DeleteRequest prévious value=[".$oldmsg->DeleteRequest."](MessagesModel::deleteMessage)", "hacking");
+            MOD_log::get()->write("Weird: trying todelete message #$message_id in Tab: $DeleteRequest prÃ©vious value=[".$oldmsg->DeleteRequest."](MessagesModel::deleteMessage)", "hacking");
         }
         if ($oldmsg->DeleteRequest!=""){
             $DeleteRequest.="," . $oldmsg->DeleteRequest;

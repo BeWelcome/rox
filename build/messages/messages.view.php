@@ -101,7 +101,7 @@ class ReadMessagePage extends MessagesBasePage
                 <p class="floatbox">
                   <?php if ($direction_in) { ?>
                   <a class="button float_left" href="messages/<?=$message->id ?>/reply"><?=$words->get('replymessage')?></a>
-                      <?php if ($message->InFolder == 'spam') { ?>
+                      <?php if ($message->InFolder == 'Spam') { ?>
                           <a class="button float_right" href="messages/<?=$message->id ?>/nospam"><?=$words->get('marknospam')?></a>
                       <?php } else { ?>
                           <a class="button float_right" href="messages/<?=$message->id ?>/spam"><?=$words->get('markspam')?></a>

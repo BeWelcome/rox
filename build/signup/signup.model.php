@@ -43,25 +43,25 @@ class SignupModel extends RoxModelBase
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
-    const HANDLE_PREGEXP_STREET = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    const HANDLE_PREGEXP_STREET = '%^[^Â°!"Â§\$\%\}\#\{<>_=]{1,}$%i';
     
     /**
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
-    const HANDLE_PREGEXP_HOUSENUMBER = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    const HANDLE_PREGEXP_HOUSENUMBER = '%^[^Â°!"Â§\$\%\}\#\{<>_=]{1,}$%i';
     
     /**
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
-    const HANDLE_PREGEXP_FIRSTNAME = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    const HANDLE_PREGEXP_FIRSTNAME = '%^[^Â°!"Â§\$\%\}\#\{<>_=]{1,}$%i';
 
     /**
      * FIXME: pay attention for non ISO-8859-x-characters, but build something
      * reasonable...
      */
-    const HANDLE_PREGEXP_LASTNAME = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
+    const HANDLE_PREGEXP_LASTNAME = '%^[^Â°!"Â§\$\%\}\#\{<>_=]{1,}$%i';
     
     /**
      * TODO: check, if this is indeed the best form; I don't believe it (steinwinde, 2008-08-04)
@@ -271,36 +271,10 @@ FROM `user` WHERE
     }
 
     /**
-     * returns "true" if handle is in use
-     *
-     * @param string $handle
-     * @return boolean
-		 * !!!!!! don not use such a function !!! the username is in the members table !
-     */
-    public function handleInUse($handle)
-    {
-		
-			return($this->UsernameInUse($handle)) ;
-		
-//		die ("Must not use this handleInUse function here") ;
-        $query = 'SELECT `id` FROM `user` WHERE `handle` = \''.$this->dao->escape(strtolower($handle)).'\'';
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not determine if handle is in use!');
-        }
-        if ($s->numRows() == 0)
-            return false;
-        if ($s->numRows() != 1)
-            throw new PException('Data inconsistency');
-        return $s->fetch(PDB::FETCH_OBJ)->id;
-    } // end of handleInUse
-
-    /**
      * returns "true" if Username is in use (in members or in members who have quitted)
      *
      * @param string $Username
      * @return boolean true if username was used before, false if not
-		 * !!!!!! don not use such a function !!! the username is in the members table !
      */
     public function UsernameInUse($Username)
     {
@@ -309,10 +283,10 @@ FROM `user` WHERE
         if (!$s) {
             throw new PException('Could not determine if Username is in use in members!');
         }
-				$row=$s->fetch(PDB::FETCH_OBJ) ;
-				if (isset($row->id)) {
-						return(true) ; // found a still used Username
-				}
+        $row = $s->fetch(PDB::FETCH_OBJ);
+        if (isset($row->id)) {
+            return(true) ; // found a still used Username
+        }
 
         $query = 'SELECT `UsernameNotToUse` FROM `recorded_usernames_of_left_members` WHERE `UsernameNotToUse` = \''.
 				$this->dao->escape(strtolower($Username)).'\'';
@@ -320,12 +294,11 @@ FROM `user` WHERE
         if (!$s) {
             throw new PException('Could not determine if Username is in use in recorded_usernames_of_left_members!');
         }
-				$row=$s->fetch(PDB::FETCH_OBJ) ;
-				if (isset($row->UsernameNotToUse)) {
-						return(true) ; // found an ex used Username
-				}
-				
-				return(false) ;
+        $row = $s->fetch(PDB::FETCH_OBJ);
+        if (isset($row->UsernameNotToUse)) {
+            return(true); // found an ex used Username
+        }
+        return(false);
     } // end of UsernameInUse
 
     /**
@@ -676,7 +649,7 @@ VALUES
                 !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
                 strpos($vars['username'], 'xn--') !== false) {
             $errors[] = 'SignupErrorWrongUsername';
-        } elseif ($this->handleInUse($vars['username'])) {
+        } elseif ($this->UsernameInUse($vars['username'])) {
             $errors[] = 'SignupErrorUsernameAlreadyTaken';
         }
         

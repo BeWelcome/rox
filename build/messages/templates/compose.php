@@ -84,6 +84,11 @@ $member = $model->getMemberWithUsername($receiver_username);
             </p>
 
           <?php
+
+                 /* Deactivate Display of Captcha
+                  * (on reenabling also uncomment the Captcha line in
+                  *  the model's _createMessage function)
+
           if ($this->_model->CaptchaNeeded($_SESSION["IdMember"])) {
             $CaptchaValue=rand(100000,999999) ;
             echo "<p>" ;
@@ -92,6 +97,7 @@ $member = $model->getMemberWithUsername($receiver_username);
         //    echo $words->get("ContactCaptchaRequest"," "),$this->_model->DisplayCaptcha($CaptchaValue)," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
             echo "</p>" ;
           }
+                 */
           ?>
 
     </div> <!-- messageconent -->

@@ -324,9 +324,9 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
         #
     $ewiki_t["en"] = (array)@$ewiki_t["en"] + array(
        "EDITTHISPAGE" => $words->getFormatted("WikiEditThisPage"),
-           "APPENDTOPAGE" => $words->getFormatted("WikiAddTo"),
+       "APPENDTOPAGE" => $words->getFormatted("WikiAddTo"),
        "BACKLINKS" => $words->getFormatted("WikiBackLinks"),
-           "EDITCOMPLETE" => $words->getFormatted('WikiEditSaved', '<a href="$url">', '</a>'), // 'Your edit has been saved click <a href="$url">here</a> to see the edited page.',
+       "EDITCOMPLETE" => $words->getFormatted('WikiEditSaved', '<a href="$url">', '</a>'), // 'Your edit has been saved click <a href="$url">here</a> to see the edited page.',
        "PAGESLINKINGTO" => $words->getFormatted('WikiPagesLinkingTo', '"$title"'), //"Pages linking to \$title",
        "PAGEHISTORY" => $words->getFormatted("WikiPageInfo"),
        "INFOABOUTPAGE" => $words->getFormatted("WikiInfoAboutPage"), //"Information about page",
@@ -358,6 +358,8 @@ if (!class_exists("ewiki_database_mysql")) { include_once("plugins/db/mysql.php"
        "BIN_IMGTOOLARGE" => $words->getFormatted("WikiImageTooLarge"), //"Image file is too large!",
        "BIN_NOIMG" => $words->getFormatted("WikiNoImg"), //"This is no image file (inacceptable file format)!",
        "FORBIDDEN" => $words->getFormatted("WikiForbidden"), //"You are not authorized to access this page.",
+       "FETCHBACK" => $words->getFormatted("WikiEdit"),
+       "BROWSE" => $words->getFormatted("WikiBrowse"),
     );
         #
         $ewiki_t["es"] = (array)@$ewiki_t["es"] + array(

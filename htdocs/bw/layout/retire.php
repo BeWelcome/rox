@@ -23,6 +23,9 @@ Boston, MA  02111-1307, USA.
 */
 
 
+Header( "HTTP/1.1 301 Moved Permanently" );
+Header( "Location: ../deleteprofile" ); 
+
 require_once ("menus.php");
 function DisplayForm($m) {
 	global $title;

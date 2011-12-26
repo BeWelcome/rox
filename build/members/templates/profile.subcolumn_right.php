@@ -220,7 +220,7 @@ if (count($relations) > 0) { ?>
                 $date = date("d M Y", strtotime($blog->blog_start));
                 $geoname = ($blog->getGeo()) ? $blog->getGeo()->name : $blog->title;
                 ?>
-                <li><a href="trip/show/user/<?php echo $member->Username;?>" title="<?php echo $words->getSilent('TripsUpComing');?>">
+                <li><a href="trip/show/<?php echo $member->Username;?>" title="<?php echo $words->getSilent('TripsUpComing');?>">
                         <?php echo $geoname;?>
                     </a>
                     - <?php echo $date;?>
@@ -230,7 +230,7 @@ if (count($relations) > 0) { ?>
             ?>
             </ul>
             <p class="float_right">
-                <a href="trip/show/user/<?php echo $member->Username;?>" title="<?php echo $words->getSilent('TripsUpComing');?>"><?php echo $words->get('TripsShowAll');?></a>
+                <a href="trip/show/<?php echo $member->Username;?>" title="<?php echo $words->getSilent('TripsUpComing');?>"><?php echo $words->get('TripsShowAll');?></a>
             </p>
             </div>
             <?php

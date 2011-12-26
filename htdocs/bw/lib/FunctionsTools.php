@@ -1124,7 +1124,7 @@ function BuildVolMenu() {
 
 	if (HasRight("Checker")) {
 	  $rr=LoadRow("SELECT COUNT(*) AS cnt FROM messages WHERE Status='ToCheck' AND messages.WhenFirstRead='0000-00-00 00:00:00'");
-		$rrSpam=LoadRow("SELECT COUNT(*) AS cnt FROM messages,members AS mSender, members AS mReceiver WHERE mSender.id=IdSender AND messages.SpamInfo='SpamSayMember' AND mReceiver.id=IdReceiver AND mSender.Status='Active'");
+		$rrSpam=LoadRow("SELECT COUNT(*) AS cnt FROM messages,members AS mSender, members AS mReceiver WHERE mSender.id=IdSender AND messages.SpamInfo='SpamSayMember' AND mReceiver.id=IdReceiver AND (mSender.Status='Active' or mSender.Status='Pending')");
 		
 		$text ="AdminChecker"."(".$rr->cnt."/".$rrSpam->cnt.")";
 		array_push($res,new CVolMenu("admin/adminchecker.php",$text,"Mail Checking")) ;

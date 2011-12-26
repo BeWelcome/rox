@@ -297,7 +297,26 @@ ORDER BY `id` DESC';
             return false;
         return $s;
     }
-    
+
+    /**
+     * Gets number of gallery items for a user
+     *
+     * @param integer $userId Travelbook user ID
+     *
+     * @return integer
+     */
+    public function getUserItemCount($userId)
+    {
+        $query = '
+SELECT
+COUNT(*)
+FROM `gallery_items`
+WHERE `gallery_items`.`user_id_foreign` = ' . (int) $userId;
+        $s = $this->dao->query($query);
+        $count = (int) $s->fetchColumn();
+        return $count;
+    }
+
     public function getGalleriesNotEmpty($UserId = false)
     {
     	$query = '

@@ -669,7 +669,20 @@ WHERE IdToMember = ".$this->id
         $trip_data = $tripmodel->getTripData();
         return array($usertrips,$trip_data);
     }
-    
+
+    /**
+     * Get number of gallery items
+     *
+     * @todo Cache count to save database queries
+     * @return integer Number of items
+     */
+    public function getGalleryItemsCount()
+    {
+        $gallery = new GalleryModel;
+        $count = $gallery->getUserItemCount($this->get_userid());
+        return $count;
+    }
+
     /**
      * return an array of blog entities that have a start date that lies in the future
      *
@@ -944,6 +957,29 @@ WHERE
           return $this->bulkLookup($sql);
 
       }
+
+    /**
+     * Fetches comments written by this member
+     *
+     * @return array of objects
+     *
+     */
+    public function get_comments_written() {
+        $sql = "
+SELECT *,
+  comments.Quality AS comQuality,
+  comments.id AS id,
+  comments.created,
+  UNIX_TIMESTAMP(comments.updated) unix_updated
+FROM
+  comments,
+  members
+WHERE
+  comments.IdFromMember   = $this->id  AND
+  comments.IdFromMember = members.Id
+        ";
+        return $this->bulkLookup($sql);
+    }
 
 
     /**

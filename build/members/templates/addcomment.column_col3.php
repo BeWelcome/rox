@@ -6,6 +6,7 @@
     $commenter = $this->loggedInMember->Username;
     $member = $this->member;
     $Username = $member->Username;
+    $comments_written = $this->member->get_comments_written();
     
     $syshcvol = PVars::getObj('syshcvol');
     $ttc = $syshcvol->LenghtComments;

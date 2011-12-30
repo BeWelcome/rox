@@ -62,7 +62,6 @@ Boston, MA  02111-1307, USA.
         </a>
         <div class="comment">
             <p class="floatbox">
-              <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->Id) echo '<a href="members/'.$this->member->username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?>
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
               <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
             </p>
@@ -71,9 +70,6 @@ Boston, MA  02111-1307, USA.
             </p>
             <p>
               <?=$c->TextFree?>
-            </p>
-            <p>
-              <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->unix_updated)?></em>
             </p>
         </div> <!-- comment -->
       </div> <!-- subcl -->
@@ -90,9 +86,6 @@ Boston, MA  02111-1307, USA.
                 ?>
             </li>
             <li>
-                <?php if ($this->loggedInMember) :?> <a href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $comments[$ii]->id;?>" ><?=$words->get('ReportCommentProblem')?><?php endif;?></a>
-            </li>
-            <li>
             <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
                 <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $comments[$ii]->id; ?>"><?=$words->get('EditComment')?></a>
                 <?php
@@ -103,6 +96,11 @@ Boston, MA  02111-1307, USA.
       </div> <!-- subcr -->
     </div> <!-- c25r -->
   </div> <!-- subcolumns -->
+  <p style="text-align: right">
+    <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->unix_updated)?></em> 
+    <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id) echo '<a class="button small" href="members/'.$this->member->Username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?> 
+    <?php if ($this->loggedInMember) :?> <a href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $c->id;?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/error.png" alt="<?=$ww->ReportCommentProblem ?>" class="float_right"><?php endif;?></a>
+  </p>
   <?php if ($cc && $quality = $cc->comQuality) : ?> 
   <div class="profilecomment floatbox counter">
       <div class="subcolumns profilecomment">
@@ -114,18 +112,14 @@ Boston, MA  02111-1307, USA.
             </a>
             <div class="comment">
                 <p class="floatbox">
-                  <? if ($this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->Id) echo '<a href="members/'.$this->member->username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?>
                   <strong class="<?=$cc->comQuality?>"><?=$cc->comQuality?></strong><br/>
-                  <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$cc->Username.'">'.$cc->Username.'</a>')?> - <?=$cc->created?></span>
+                  <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$cc->Username.'">'.$cc->Username.'</a>')?> <?=$words->get('CommentTo','<a href="members/'.$this->member->Username.'">'.$this->member->Username.'</a>')?> - <?=$cc->created?></span>
                 </p>
                 <p>
                   <em><?=$cc->TextWhere?></em>
                 </p>
                 <p>
                   <?=$cc->TextFree?>
-                </p>
-                <p>
-                  <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($cc->unix_updated)?></em>
                 </p>
             </div> <!-- comment -->
           </div> <!-- subcl -->
@@ -142,9 +136,6 @@ Boston, MA  02111-1307, USA.
                     ?>
                 </li>
                 <li>
-                    <?php if ($this->loggedInMember) :?> <a href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $cc->id;?>" ><?=$words->get('ReportCommentProblem')?><?php endif;?></a>
-                </li>
-                <li>
                 <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
                     <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $cc->id; ?>"><?=$words->get('EditComment')?></a>
                     <?php
@@ -155,6 +146,11 @@ Boston, MA  02111-1307, USA.
           </div> <!-- subcr -->
         </div> <!-- c25r -->
       </div> <!-- subcolumns -->
+      <p style="text-align: right">
+        <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($cc->unix_updated)?></em> 
+        <? if ($this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id) echo '<a class="button" href="members/'.$this->member->Username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?> 
+        <?php if ($this->loggedInMember) :?> <a href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $cc->id;?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/error.png" alt="<?=$ww->ReportCommentProblem ?>" class="float_right"><?php endif;?></a>
+      </p>
   </div> <!-- profilecomment counter -->
   <?php endif; ?>
   <?=($ii == $iiMax-1) ? '' : '<hr/>' ?>

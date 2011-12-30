@@ -286,9 +286,11 @@ class MessagesController extends RoxControllerBase
                     $mem_redirect->problems = true;
                     return $return;
                 }
-                
+
             }
-        }  
+        } else {
+            $result = false;
+        }
         $mem_redirect->result = $result;
         return $return;
     }

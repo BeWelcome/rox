@@ -81,6 +81,17 @@ class Member extends RoxEntityBase
     }
 
     /**
+     * Set user's Zip field in addresses table
+     * @param integer $cryptId ID of field in crypted table
+     * @return boolean Result of database query execution
+     */
+    public function setCryptedZip($cryptId) {
+        $query = 'UPDATE addresses SET Zip = ' . intval($cryptId)
+            . ' WHERE IdMember = ' . $this->id . ' LIMIT 1';
+        return $this->dao->exec($query);
+    }
+
+    /**
      * Checks which languages profile has been translated into
      */
     public function get_profile_languages() {

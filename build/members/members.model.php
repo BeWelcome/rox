@@ -952,9 +952,14 @@ ORDER BY
 		if ($vars["FirstName"]!="cryptedhidden") {
 			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
 		}
-		if ($vars["SecondName"]!="cryptedhidden") {
-			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
-		}
+        if ($vars["SecondName"] != "cryptedhidden") {
+            $cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
+
+            // Update member if a new crypted SecondName value was added
+            if ($cryptId != $m->SecondName) {
+                $m->SecondName = $cryptId;
+            }
+        }
 		if ($vars["LastName"]!="cryptedhidden") {
 			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
 		}

@@ -974,9 +974,14 @@ ORDER BY
 
             $this->logWrite("in members.model updateprofile() After Zip update addresss.Zip=". $m->address->Zip . " \$cryptId=" . $cryptId, "Debug");
         }
-		if ($vars["HouseNumber"]!="cryptedhidden") {
-			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
-		}
+        if ($vars["HouseNumber"] != "cryptedhidden") {
+            $cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])), "addresses.HouseNumber", $m->IdAddress, $m->address->HouseNumber, $IdMember, $this->ShallICrypt($vars, "Address"));
+
+            // Update addresses table if a new crypted HouseNumber value was added
+            if ($cryptId != $m->address->HouseNumber) {
+                $m->setCryptedHouseNumber($cryptId);
+            }
+        }
 		if ($vars["Street"]!="cryptedhidden") {
 			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
 		}

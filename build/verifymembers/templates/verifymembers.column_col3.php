@@ -29,14 +29,19 @@ $formkit = $layoutkit->formkit;
 $callback_tag = $formkit->setPostCallback('VerifymembersController', 'checkPasswordCallback');
 
 $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
-if (!empty($_SERVER['QUERY_STRING'])) {
-    $page_url .= '?'.$_SERVER['QUERY_STRING'];
+
+$action_url = '';
+
+// Force HTTPS action URL, if allowed in config
+if (PVars::getObj('development')->avoid_https != 1) {
+    // TODO: ideally this should be implemented on routing level
+    //       (i.e. via a "force_https" setting for the verification page)
+    $action_url = str_replace('http://', 'https://', $page_url);
+    if (!empty($_SERVER['QUERY_STRING'])) {
+        $action_url = $action_url . '?' . $_SERVER['QUERY_STRING'];
+    }
 }
 
-// hack for HTTPS-Login
-if (strrpos($page_url, 'test') === false && strrpos($page_url, 'bw') === false  && strrpos($page_url, 'alpha') === false && strrpos($page_url, 'localhost') === false)
-    $page_url = str_replace('http://','https://',$page_url);
-    
 if (!empty($errormessage)) {
     echo "
     <p class=\"error\">$errormessage</p>";
@@ -74,7 +79,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
 <?=$words->getFormatted("verifymembers_explanation",$_SESSION["Username"]) ?>
 </p>
 
-<form name="entermembertoverify" action="<?=$page_url?>" id="prepareverifymember" method="post">
+<form name="entermembertoverify" action="<?=$action_url?>" id="prepareverifymember" method="post">
 
         <?=$callback_tag?>
     

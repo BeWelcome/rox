@@ -31,41 +31,59 @@ class VolunteerbarModel extends PAppModel
 
 
     /**
-     * Returns the number of people due to be checked to become a member
-     * of BW. The number depends on the scope of the person logged on.
+     * Returns the number of people due to be accepted.
+     * The number depends on the scope of the person logged on.
      *
-		 * $_AccepterScope="" is an optional value for accepter Scope which can be used for performance if it was already fetched from database
-     * @return integer indicating the number of people waiting acceptance
+     * @return integer Number of members with Pending status in user's scope
      */
-    public function getNumberPersonsToBeAccepted($_AccepterScope="")
-    {
-		
-   		$R = MOD_right::get();
-		if ($_AccepterScope!="") {
-    		$AccepterScope=$_AccepterScope ;
-		}
-		else {
-      		$AccepterScope=$R->RightScope('Accepter');
-		}
-		if ($AccepterScope=="") return 0 ;
+    public function getNumberPersonsToBeAccepted() {
+        $userRights = MOD_right::get();
 
-        if ($R->hasRight('Accepter','All'))  {
-           $InScope = " /* All countries */";
-        } else {
-          $InScope = " AND (countries.id IN (" . $AccepterScope . ") or countries.Name IN (" . $AccepterScope . "))";
+        // Don't count for users without Accepter permission
+        if ($userRights->hasRight('Accepter') < 1) {
+            return 0;
         }
-        $query = '
-SELECT SQL_CACHE COUNT(*) AS cnt
-FROM members, cities,countries
-WHERE  members.Status=\'Pending\'
-AND cities.id=members.IdCity and countries.id=cities.IdCountry' . $InScope.' /* Model volunteerbar.model->getNumberPersonsToBeAccepted ' ;
-		if (isset($_SESSION['Username'])) $query.=$_SESSION['Username'] ;
-		$query.=' */';
+
+        // Can user accept for all regions?
+        if ($userRights->hasRight('Accepter', 'All')) {
+            // Simply select all members with Pending status
+            $query = "
+                SELECT SQL_CACHE
+                    COUNT(*) AS count
+                FROM
+                    members
+                WHERE
+                    Status = 'Pending'
+                ";
+        } else {
+            // Select members with Pending status in user's scope
+            $scope = $userRights->RightScope('Accepter');
+            $query = "
+                SELECT SQL_CACHE
+                    COUNT(*) AS count
+                FROM
+                    members,
+                    countries,
+                    geonames_cache
+                WHERE
+                    members.IdCity = geonames_cache.geonameid
+                    AND
+                    countries.id = geonames_cache.parentCountryId
+                    AND (
+                        countries.Name IN (" . $scope . ")
+                        OR
+                        countries.id IN (" . $scope . ")
+                        )
+                    AND
+                    Status='Pending'
+                ";
+        }
+
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
-        return $record->cnt;
+        return $record->count;
     }
-    
+
     /**
      * Returns the number of people due to be checked to problems or what.
      * The number depends on the scope of the person logged on.

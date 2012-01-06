@@ -32,11 +32,17 @@ require_once "layout/adminaccepter.php";
 // $RestrictToIdMember allow to restrict to a member
 function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 
-	global $AccepterScope,$_SYSHCVOL,$lastaction;
+    global $AccepterScope,$_SYSHCVOL,$lastaction;
+
+    // Create convenience boolean for All scope
+    $allScope = false;
+    if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
+        $allScope = true;
+    }
 
 	$TData = array ();
 
-	if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
+	if ($allScope) {
 		$InScope = "";
 	} else {
 	  $tt=explode(",",$AccepterScope) ;
@@ -69,11 +75,9 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	   $emailwhere=" and members.Email=".$_SYSHCVOL['Crypted']."cryptedfields.id and ".$_SYSHCVOL['Crypted']."cryptedfields.AdminCryptedValue='".$Email."'" ;
 	   $lastaction=$lastaction." Seek all members with a duplicated email" ;
 	   $str = "SELECT countries.Name AS countryname,geonames_cache.parentAdm1Id AS IdRegion,geonames_cache.name AS cityname,members.* FROM members,countries,geonames_cache".$emailtable." WHERE members.IdCity=geonames_cache.geonameid AND countries.id=geonames_cache.parentCountryId " . $InScope .$emailwhere;
-//	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE //members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope .$emailwhere;
 	}
 	else {
 	   $str = "SELECT countries.Name AS countryname,geonames_cache.parentAdm1Id AS IdRegion,geonames_cache.name AS cityname,members.* FROM members,countries,geonames_cache".$emailtable." WHERE members.IdCity=geonames_cache.geonameid AND countries.id=geonames_cache.parentCountryId " . $InScope . " AND Status='" . $Status . "'".$emailwhere;
-//	   $str = "SELECT countries.Name AS countryname,cities.IdRegion AS IdRegion,cities.Name AS cityname,members.* FROM members,countries,cities".$emailtable." WHERE //members.IdCity=cities.id AND countries.id=cities.IdCountry " . $InScope . " AND Status='" . $Status . "'".$emailwhere;
 	}
 
 	if ($RestrictToIdMember != "") {
@@ -83,10 +87,50 @@ function loaddata($Status, $RestrictToIdMember = "",$IdEmail=0) {
 	$str_desc="desc" ;
 	$str=$str." order by members.created ".$str_desc." limit ".GetParam("Limit",50) ;
 	
-	
+
+    // Make sure to catch all Pending members if scope is "All", regardless their location
+    if ($allScope && $RestrictToIdMember == "" && $IdEmail == 0) {
+        $str = "
+            SELECT
+                *
+            FROM
+                members
+            WHERE
+                Status = '" . $Status . "'
+            ORDER BY
+                created DESC
+            LIMIT
+                50
+            ";
+    }
 
 	$qry = sql_query($str);
 	while ($m = mysql_fetch_object($qry)) {
+
+        // Load missing location data, if location was disregarded before
+        if ($allScope) {
+            $query = "
+                SELECT
+                    geonames_cache.name AS cityname,
+                    geonames_cache.parentAdm1Id AS IdRegion,
+                    countries.name AS countryname
+                FROM
+                    addresses,
+                    countries,
+                    geonames_cache
+                WHERE
+                    IdMember = " . intval($m->id) . "
+                    AND
+                    addresses.IdCity = geonames_cache.geonameid
+                    AND
+                    countries.id = geonames_cache.parentCountryId
+                ";
+            $placeNames = LoadRow($query);
+            $m->cityname = $placeNames->cityname;
+            $m->countryname = $placeNames->countryname;
+            $m->IdRegion = $placeNames->IdRegion;
+        }
+
 		$m->regionname=getregionname($m->IdRegion) ;
 
 		$StreetName = "";

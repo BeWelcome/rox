@@ -51,7 +51,7 @@ $R = MOD_right::get();
             array(
                 'Accepter',
                 'bw/admin/adminaccepter.php',
-                'AdminAccepter('.$numberPersonsToBeAccepted.')',
+                'Pending members ('.$numberPersonsToBeAccepted.')',
                 'accept new member accounts'
             ),
             array(

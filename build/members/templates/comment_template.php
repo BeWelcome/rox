@@ -108,12 +108,12 @@ Boston, MA  02111-1307, USA.
         <div class="c75l" >
           <div class="subcl" >
             <a href="members/<?=$cc->Username?>">
-               <img class="float_left framed"  src="members/avatar/<?=$cc->Username?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+               <img class="float_left framed"  src="members/avatar/<?=$cc->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
             </a>
             <div class="comment">
                 <p class="floatbox">
                   <strong class="<?=$cc->comQuality?>"><?=$cc->comQuality?></strong><br/>
-                  <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$cc->Username.'">'.$cc->Username.'</a>')?> <?=$words->get('CommentTo','<a href="members/'.$this->member->Username.'">'.$this->member->Username.'</a>')?> - <?=$cc->created?></span>
+                  <span class="small grey"><?= $words->get('CommentFrom', '<a href="members/' . $cc->UsernameFromMember . '">' . $cc->UsernameFromMember . '</a>') ?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameToMember ?>"><?= $cc->UsernameToMember ?></a> - <?= $cc->created ?></span>
                 </p>
                 <p>
                   <em><?=$cc->TextWhere?></em>

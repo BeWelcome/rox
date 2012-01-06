@@ -988,17 +988,22 @@ WHERE
      */
     public function get_comments_written() {
         $sql = "
-SELECT *,
+SELECT
+  comments.*,
   comments.Quality AS comQuality,
   comments.id AS id,
   comments.created,
-  UNIX_TIMESTAMP(comments.updated) unix_updated
+  UNIX_TIMESTAMP(comments.updated) unix_updated,
+  members.username as UsernameFromMember,
+  members2.username as UsernameToMember
 FROM
   comments,
-  members
+  members,
+  members as members2
 WHERE
-  comments.IdFromMember   = $this->id  AND
-  comments.IdFromMember = members.Id
+  comments.IdFromMember   = " . $this->id . " AND
+  comments.IdFromMember = members.Id AND
+  comments.IdToMember = members2.Id
         ";
         return $this->bulkLookup($sql);
     }

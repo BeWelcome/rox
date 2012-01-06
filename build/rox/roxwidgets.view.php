@@ -9,7 +9,7 @@ class VolunteerLinksWidget
     public function render()
     {
         $this->_init();
-        $this->_model = new VolunteermenuModel();
+        $this->_model = new VolunteerbarModel();
 
 		if (empty($_SESSION['IdMember'])) {
 			return ; // Do nothing if user is not identified (thi cannot be a volunteer)

@@ -54,12 +54,6 @@ class VolunteermenuWidget extends VolunteerLinksWidget {
     }
 }
 
-class VolunteerbarWidget extends VolunteerLinksWidget {
-    public function getTemplatePath() {
-        return TEMPLATE_DIR.'apps/rox/volunteerbar.php';
-    }
-}
-
 class FooterWidget {
     public function render() {
         

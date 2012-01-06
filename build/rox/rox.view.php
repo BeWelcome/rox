@@ -179,33 +179,7 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/userbar_donate.php';
     }
-    
-    public function volunteerBar(
-                        $numberPersonsToBeAccepted,
-                        $numberPersonsToBeChecked,
-                        $numberMessagesToBeChecked,
-                        $numberSpamToBeChecked,
-						$numberPersonsToAcceptInGroup,
-						$numberPendingLocalMess
-                    )
-    {
-        require TEMPLATE_DIR.'apps/rox/volunteerbar.php';
-    }
-    
-    
-    // waiting for a later commit
-    /*
-    public function volunteerMenu(
-                        $numberPersonsToBeAccepted,
-                        $numberPersonsToBeChecked,
-                        $numberMessagesToBeChecked,
-                        $numberSpamToBeChecked
-                    )
-    {
-        require TEMPLATE_DIR.'apps/rox/volunteermenu.php';
-    }
-    */
-    
+
     public function volunteerToolsBar()
     {
         require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';

@@ -284,15 +284,6 @@ class PageWithRoxLayout extends PageWithHTML
 
     protected function volunteerMenu()
     {
-        $model = new VolunteerbarModel();
-
-        $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
-        $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
-        $numberMessagesToBeChecked = $model->getNumberPersonsToAcceptInGroup() ;
-        $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
-        $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
-        $numberPendingLocalMess = $model->getNumberPendingLocalMess() ;
-
         $widget = $this->createWidget('VolunteermenuWidget');
         $widget->render();
     }

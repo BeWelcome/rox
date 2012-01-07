@@ -71,6 +71,14 @@ Boston, MA  02111-1307, USA.
             <p>
               <?=$c->TextFree?>
             </p>
+            <p>
+              <em class="small">
+                <?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->unix_updated)?>
+              </em> 
+              <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
+                <a class="button small" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
+              <? endif; ?>
+            </p>
         </div> <!-- comment -->
       </div> <!-- subcl -->
     </div> <!-- c75l -->
@@ -96,11 +104,6 @@ Boston, MA  02111-1307, USA.
       </div> <!-- subcr -->
     </div> <!-- c25r -->
   </div> <!-- subcolumns -->
-  <p style="text-align: right">
-    <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->unix_updated)?></em> 
-    <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id) echo '<a class="button small" href="members/'.$this->member->Username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?> 
-    <?php if ($this->loggedInMember) :?> <a href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $c->id;?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/error.png" alt="<?=$ww->ReportCommentProblem ?>" class="float_right"><?php endif;?></a>
-  </p>
   <?php if ($cc && $quality = $cc->comQuality) : ?> 
   <div class="profilecomment floatbox counter">
       <div class="subcolumns profilecomment">
@@ -120,6 +123,12 @@ Boston, MA  02111-1307, USA.
                 </p>
                 <p>
                   <?=$cc->TextFree?>
+                </p>
+                <p>
+                  <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($cc->unix_updated)?></em>
+                  <? if ($this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id): ?>
+                    <a class="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
+                  <? endif; ?>
                 </p>
             </div> <!-- comment -->
           </div> <!-- subcl -->
@@ -146,11 +155,6 @@ Boston, MA  02111-1307, USA.
           </div> <!-- subcr -->
         </div> <!-- c25r -->
       </div> <!-- subcolumns -->
-      <p style="text-align: right">
-        <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($cc->unix_updated)?></em> 
-        <? if ($this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id) echo '<a class="button" href="members/'.$this->member->Username.'/comments/add" title="Edit">'.$ww->edit.'</a>' ?> 
-        <?php if ($this->loggedInMember) :?> <a href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $cc->id;?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/error.png" alt="<?=$ww->ReportCommentProblem ?>" class="float_right"><?php endif;?></a>
-      </p>
   </div> <!-- profilecomment counter -->
   <?php endif; ?>
   <?=($ii == $iiMax-1) ? '' : '<hr/>' ?>

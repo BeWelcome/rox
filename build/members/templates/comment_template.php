@@ -107,8 +107,8 @@ Boston, MA  02111-1307, USA.
 
         <div class="c75l" >
           <div class="subcl" >
-            <a href="members/<?=$cc->Username?>">
-               <img class="float_left framed"  src="members/avatar/<?=$cc->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+            <a href="members/<?= $cc->UsernameFromMember ?>">
+               <img class="float_left framed" src="members/avatar/<?= $cc->UsernameFromMember ?>/?xs" height="50px" width="50px" alt="Profile" />
             </a>
             <div class="comment">
                 <p class="floatbox">

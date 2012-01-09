@@ -81,6 +81,28 @@ class Member extends RoxEntityBase
     }
 
     /**
+     * Set user's Zip field in addresses table
+     * @param integer $cryptId ID of field in crypted table
+     * @return boolean Result of database query execution
+     */
+    public function setCryptedZip($cryptId) {
+        $query = 'UPDATE addresses SET Zip = ' . intval($cryptId)
+            . ' WHERE IdMember = ' . $this->id . ' LIMIT 1';
+        return $this->dao->exec($query);
+    }
+
+    /**
+     * Set user's HouseNumber field in addresses table
+     * @param integer $cryptId ID of field in crypted table
+     * @return boolean Result of database query execution
+     */
+    public function setCryptedHouseNumber($cryptId) {
+        $query = 'UPDATE addresses SET HouseNumber = ' . intval($cryptId)
+            . ' WHERE IdMember = ' . $this->id . ' LIMIT 1';
+        return $this->dao->exec($query);
+    }
+
+    /**
      * Checks which languages profile has been translated into
      */
     public function get_profile_languages() {
@@ -387,7 +409,7 @@ WHERE IdMember = ".$this->id
             array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png", "href" => "msnim:chat?contact="),
             array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png", "href" => "ymsgr:sendIM?"),
             array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png", "href" => "skype:echo"),
-            array("network" => "Others", "nicename" => "Other", "image" => "", "href" => "#")
+            array("network" => "Others", "nicename" => "Other", "image" => "icon_other.png", "href" => "#")
         );
           $r = array();
           foreach($messengers as $m) {
@@ -957,6 +979,34 @@ WHERE
           return $this->bulkLookup($sql);
 
       }
+
+    /**
+     * Fetches comments written by this member
+     *
+     * @return array of objects
+     *
+     */
+    public function get_comments_written() {
+        $sql = "
+SELECT
+  comments.*,
+  comments.Quality AS comQuality,
+  comments.id AS id,
+  comments.created,
+  UNIX_TIMESTAMP(comments.updated) unix_updated,
+  members.username as UsernameFromMember,
+  members2.username as UsernameToMember
+FROM
+  comments,
+  members,
+  members as members2
+WHERE
+  comments.IdFromMember   = " . $this->id . " AND
+  comments.IdFromMember = members.Id AND
+  comments.IdToMember = members2.Id
+        ";
+        return $this->bulkLookup($sql);
+    }
 
 
     /**

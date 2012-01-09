@@ -24,7 +24,7 @@ class SignupMailConfirmPage extends SignupPage
         if (!$this->error) {
             echo $words->get('SignupMailConfirmed');
         } else {
-            echo '<p>'.$words->get('SignupMailConfirmedError'.$this->error).'</p>';
+            echo '<p class="error">'.$words->get('SignupMailConfirmedError'.$this->error).'</p>';
         }
         $widg = $this->createWidget('LoginFormWidget');
         $widg->render();

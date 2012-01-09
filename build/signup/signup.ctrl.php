@@ -91,7 +91,7 @@ class SignupController extends RoxControllerBase {
                     echo '0';
                     PPHP::PExit();
                 }
-                echo (bool)!$model->handleInUse($request[2]);
+                echo (bool)!$model->UsernameInUse($request[2]);
                 PPHP::PExit();
                 break;
                 
@@ -119,26 +119,15 @@ class SignupController extends RoxControllerBase {
                     !isset($request[2]) 
                     || !isset($request[3]) 
                     || !preg_match(User::HANDLE_PREGEXP, $request[2])
-                    || !$model->handleInUse($request[2])
+                    || !$model->UsernameInUse($request[2])
                     || !preg_match('/^[a-f0-9]{16}$/', $request[3])
                 ) {
-                    $error = true;
+                    $error = 'InvalidLink';
                 } else {
                     $error = $model->confirmSignup($request[2], $request[3]);
                 }
                 $page = new SignupMailConfirmPage();
                 $page->error = $error;
-                // if (!isset($request[3])) {
-                    // can't continue
-                    // $page = new SignupMailConfirmPage_linkIsInvalid();
-                // } else if (!$process = $model->getProcess($request)) {
-                    // process id invalid
-                    // $page = new SignupMailConfirmPage_linkIsInvalid();
-                // } else {
-                    // yeah, we can continue the process!
-                    // $page = new SignupMailConfirmPage();
-                    // $page->process = $process;
-                // }
                 break;
                 
             case 'finish':

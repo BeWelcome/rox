@@ -952,20 +952,36 @@ ORDER BY
 		if ($vars["FirstName"]!="cryptedhidden") {
 			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['FirstName'])),"members.FirstName",$IdMember, $m->FirstName, $IdMember, $this->ShallICrypt($vars, "FirstName"));
 		}
-		if ($vars["SecondName"]!="cryptedhidden") {
-			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
-		}
+        if ($vars["SecondName"] != "cryptedhidden") {
+            $cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['SecondName'])),"members.SecondName",$IdMember, $m->SecondName, $IdMember, $this->ShallICrypt($vars, "SecondName"));
+
+            // Update member if a new crypted SecondName value was added
+            if ($cryptId != $m->SecondName) {
+                $m->SecondName = $cryptId;
+            }
+        }
 		if ($vars["LastName"]!="cryptedhidden") {
 			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['LastName'])),"members.LastName",$IdMember, $m->LastName, $IdMember, $this->ShallICrypt($vars, "LastName"));
 		}
-		if ($vars["Zip"]!="cryptedhidden") {
-            $this->logWrite("in members.model updateprofile() Before Zip update addresss.Zip=".$m->address->Zip,"Debug");
-			$iZip=MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])),"addresses.Zip",$m->IdAddress,$m->address->Zip,$IdMember,$this->ShallICrypt($vars, "Zip"));
-            $this->logWrite("in members.model updateprofile() After Zip update addresss.Zip=".$m->address->Zip." \$iZip=".$iZip,"Debug");
-		}
-		if ($vars["HouseNumber"]!="cryptedhidden") {
-			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])),"addresses.HouseNumber",$m->IdAddress,$m->address->HouseNumber,$IdMember,$this->ShallICrypt($vars, "Address"));
-		}
+        if ($vars["Zip"] != "cryptedhidden") {
+            $this->logWrite("in members.model updateprofile() Before Zip update addresss.Zip=" . $m->address->Zip, "Debug");
+            $cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Zip'])), "addresses.Zip", $m->IdAddress, $m->address->Zip, $IdMember, $this->ShallICrypt($vars, "Zip"));
+
+            // Update addresses table if a new crypted zip value was added
+            if ($cryptId != $m->address->Zip) {
+                $m->setCryptedZip($cryptId);
+            }
+
+            $this->logWrite("in members.model updateprofile() After Zip update addresss.Zip=". $m->address->Zip . " \$cryptId=" . $cryptId, "Debug");
+        }
+        if ($vars["HouseNumber"] != "cryptedhidden") {
+            $cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['HouseNumber'])), "addresses.HouseNumber", $m->IdAddress, $m->address->HouseNumber, $IdMember, $this->ShallICrypt($vars, "Address"));
+
+            // Update addresses table if a new crypted HouseNumber value was added
+            if ($cryptId != $m->address->HouseNumber) {
+                $m->setCryptedHouseNumber($cryptId);
+            }
+        }
 		if ($vars["Street"]!="cryptedhidden") {
 			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
 		}

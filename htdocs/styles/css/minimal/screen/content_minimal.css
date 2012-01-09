@@ -562,6 +562,15 @@ input.button, .control-links input { /* Only for inputs. Otherwise we have probl
 .button a:hover,a:hover.button,input.button:hover {background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; color: #333; text-decoration:none; line-height: 21px;}
 .button a:focus,a:focus.button {background:transparent url(../images/button_bg.png) repeat-x scroll 0 0; color: #333; text-decoration:none; line-height: 21px;}
 
+button.button {
+    font-size: 13px;
+    height: 2.5em !important;
+}
+
+button.button:hover, button.button span.button_label:hover {
+    color: #333;
+}
+
 a.bigbutton {
     background: transparent url(../images/bg_bigbutton_a_w.gif) no-repeat scroll top right;
     color: #fff;

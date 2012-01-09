@@ -219,16 +219,6 @@ class RoxController extends RoxControllerBase
     }
     
     /**
-     * show the volunteer links for the sidebar
-     *
-     */
-    public function volunteerBar()
-    {
-        $widget = new VolunteerbarWidget();
-        $widget->render();
-    }
-    
-    /**
      * show a volunteer menu on top (currently not used)
      *
      */

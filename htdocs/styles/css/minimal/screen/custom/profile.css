@@ -250,12 +250,19 @@
 .neutral, .good, .bad { font-weight: bold; font-size: 1.1em; }
 
 /* comment content */
-.comment {
+div.comment {
     display: block;
     float: left;
     width: 70%;
+    margin: 0;
 }
-
+.profilecomment.counter {
+    background:none repeat scroll 0 0 #EEEEEE;
+    border:1px solid #CCCCCC;
+    border-radius:3px 3px 3px 3px;
+    margin-left:10%;
+    padding:10px;
+}
 
 /* styles for member results lists, used in myprofile visitors */
 .myvisitors .subcolumns{margin-bottom: 1.5em;}

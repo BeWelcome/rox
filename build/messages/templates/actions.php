@@ -1,9 +1,9 @@
 <p>
-    <button type="submit" name="submit_multi" value="delete" class="button"><?=$words->get('delmessage')?></button>
+    <button type="submit" name="submit_multi" value="delete" class="button"><span class="button_label"><?=$words->get('delmessage')?></span></button>
     <?php if ($message_page == 'spam') { ?>
-    <button type="submit" name="submit_multi" value="nospam" class="button"><?=$words->get('marknospam')?></button>
+    <button type="submit" name="submit_multi" value="nospam" class="button"><span class="button_label"><?=$words->get('marknospam')?></span></button>
     <?php } elseif ($message_page != 'sent' && $message_page != 'drafts') { ?>
-    <button type="submit" name="submit_multi" value="markasspam" class="button"><?=$words->get('markspam')?></button>
+    <button type="submit" name="submit_multi" value="markasspam" class="button"><span class="button_label"><?=$words->get('markspam')?></span></button>
     <?php } else { ?>
     <?php }  ?>
 </p>

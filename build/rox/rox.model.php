@@ -116,36 +116,6 @@ AND `WhenFirstRead` = 0';
         return $record->n;
     }
 
-
-    
-    /**
-     * Returns the number of people due to be checked to become a member
-     * of BW. The number depends on the scope of the person logged on.
-     *
-     * @return integer indicating the number of people waiting acceptance
-     */
-    public function getNumberPersonsToBeAccepted()
-    {
-        $R = MOD_right::get();
-        $AccepterScope=$R->RightScope('Accepter');
-        if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-           $InScope = " /* All countries */";
-        } else {
-          $InScope = "AND countries.id IN (" . $AccepterScope . ")";
-        }
-        $query = <<<SQL
-SELECT SQL_CACHE COUNT(*) AS cnt
-FROM members, addresses, geonames_cache AS g1, geonames_cache AS g2
-WHERE members.Status='Pending'
-AND addresses.IdMember = members.id AND addresses.rank = 0
-AND g1.geonameid=addresses.IdCity
-AND g2.geonameid=g1.parentCountryId {$InScope};
-SQL;
-        $result = $this->dao->query($query);
-        $record = $result->fetch(PDB::FETCH_OBJ);
-        return $record->cnt;
-    }
-    
     /**
      * Returns the number of people due to be checked to problems or what.
      * The number depends on the scope of the person logged on.

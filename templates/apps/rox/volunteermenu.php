@@ -58,7 +58,7 @@ Boston, MA  02111-1307, USA.
             array(
                 'Accepter',
                 'bw/admin/adminaccepter.php',
-                'AdminAccepter('.$numberPersonsToBeAccepted.')',
+                'Pending ('.$numberPersonsToBeAccepted.')',
                 'accept new member accounts'
             ),
             array(

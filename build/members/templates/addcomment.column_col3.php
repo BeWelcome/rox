@@ -6,7 +6,7 @@
     $commenter = $this->loggedInMember->Username;
     $member = $this->member;
     $Username = $member->Username;
-    
+
     $syshcvol = PVars::getObj('syshcvol');
     $ttc = $syshcvol->LenghtComments;
     $max = count($ttc);
@@ -53,9 +53,6 @@
     
     
     <?php
-    // Display the previous comment if any
-    require_once 'comment_template.php';
-    
     // Display errors from last submit	
     if (isset($vars['errors']) && !empty($vars['errors']))
     {

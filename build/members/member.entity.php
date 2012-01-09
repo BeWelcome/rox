@@ -409,7 +409,7 @@ WHERE IdMember = ".$this->id
             array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png", "href" => "msnim:chat?contact="),
             array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png", "href" => "ymsgr:sendIM?"),
             array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png", "href" => "skype:echo"),
-            array("network" => "Others", "nicename" => "Other", "image" => "", "href" => "#")
+            array("network" => "Others", "nicename" => "Other", "image" => "icon_other.png", "href" => "#")
         );
           $r = array();
           foreach($messengers as $m) {

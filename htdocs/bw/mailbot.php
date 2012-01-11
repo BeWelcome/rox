@@ -169,69 +169,66 @@ $qry = sql_query($str);
 $countposts_notificationqueue = 0;
 global $fTradIdLastUsedLanguage  ; // This is set for the fTrad function (will define which language to use)
 while ($rr = mysql_fetch_object($qry)) {
-        if (($rr->created_since_x_minute<10) and(($rr->Type=='newthread') or ($rr->Type=='reply'))) {
-            continue ; // Don't process to recent change so it means give time for the user to fix it by an edit
-        }
-	if ($_SESSION['Param']->MailBotMode!='Auto') {
-		echo "posts_notificationqueue <b> Going to Get Email for IdMember : [".$rr->IdMember."]</b> posts_notificationqueue.id=".$rr->id."<br>" ;
-	}
+    if (($rr->created_since_x_minute<10) and(($rr->Type=='newthread') or ($rr->Type=='reply'))) {
+        continue ; // Don't process to recent change so it means give time for the user to fix it by an edit
+    }
+    if ($_SESSION['Param']->MailBotMode!='Auto') {
+        echo "posts_notificationqueue <b> Going to Get Email for IdMember : [".$rr->IdMember."]</b> posts_notificationqueue.id=".$rr->id."<br>" ;
+    }
     $Email = GetEmail($rr->IdMember);
     $fTradIdLastUsedLanguage=$MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
 
     $rPost=LoadRow("
-SELECT
-    forums_posts.*,
-    members.Username,
-    members.id AS IdMember,
-    forums_threads.title AS thread_title,
-    forums_threads.IdTitle,
-    forums_threads.threadid AS IdThread,
-    forums_posts.message,
-    forums_posts.IdContent,
-    cities.Name AS cityname,
-    countries.Name AS countryname
-FROM    
-    cities,
-    countries,
-    forums_posts,
-    forums_threads,
-    members
-WHERE
-    forums_threads.threadid = forums_posts.threadid  AND
-    forums_posts.IdWriter = members.id  AND
-    forums_posts.postid = $rr->IdPost  AND
-    cities.id = members.IdCity  AND
-    countries.id = cities.IdCountry
-        
+        SELECT
+            forums_posts.*,
+            members.Username,
+            members.id AS IdMember,
+            forums_threads.title AS thread_title,
+            forums_threads.IdTitle,
+            forums_threads.threadid AS IdThread,
+            forums_posts.message,
+            forums_posts.IdContent,
+            cities.Name AS cityname,
+            countries.Name AS countryname
+        FROM    
+            cities,
+            countries,
+            forums_posts,
+            forums_threads,
+            members
+        WHERE
+            forums_threads.threadid = forums_posts.threadid  AND
+            forums_posts.IdWriter = members.id  AND
+            forums_posts.postid = $rr->IdPost  AND
+            cities.id = members.IdCity  AND
+            countries.id = cities.IdCountry
     ");
     // Sanitise IdMember
     $rPostIdMember = intval($rPost->IdMember);
     $rImage=LoadRow("
-SELECT
-    *
-FROM
-    membersphotos
-WHERE
-    IdMember = $rPostIdMember AND
-    SortOrder = 0
+        SELECT
+            *
+        FROM
+            membersphotos
+        WHERE
+            IdMember = $rPostIdMember AND
+            SortOrder = 0
     ");
-    
+
     $UnsubscribeLink="" ;
     if ($rr->IdSubscription!=0) { // Compute the unsubscribe link according to the table where the subscription was coming from
         $rSubscription = LoadRow("
-SELECT
-    *
-FROM
-    $rr->TableSubscription
-WHERE
-    id = $rr->IdSubscription
+            SELECT
+                *
+            FROM
+                $rr->TableSubscription
+            WHERE
+                id = $rr->IdSubscription
         ");
         if ($rr->TableSubscription == "members_threads_subscribed") {
             $UnsubscribeLink = '<a href="'.$baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.wwinlang('ForumUnSubscribe',$MemberIdLanguage).'</a>';
         }
-    }
-    elseif ($rr->TableSubscription == 'membersgroups')
-    {
+    } elseif ($rr->TableSubscription == 'membersgroups') {
         $UnsubscribeLink = "----<br/><br/>\n\n" . wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
     }
 
@@ -243,10 +240,7 @@ WHERE
     $NotificationType=$rr->Type ;
 
     switch ($rr->Type) {
-    
         case 'newthread':
-            //             $subj = wwinlang("ForumNotification_Title_newthread",$MemberIdLanguage, $ForumSenderUsername->Username);
-            //             $text = wwinlang("ForumNotification_Body",$MemberIdLanguage,$rr->Username,$rr->type);
             $NotificationType=wwinlang("ForumMailbotNewThread",$MemberIdLanguage) ;                     
 
             break ;
@@ -263,24 +257,18 @@ WHERE
             break ;
         case 'buggy':
         default :
-$word->            $text="Problem in forum notification Type=".$rr->Type."<br />" ;
+          $word->$text="Problem in forum notification Type=".$rr->Type."<br />" ;
             break ;
     }
 
-// Setting some default values
+    // Setting some default values
     $subj = "Forum Bewelcome, ".$NotificationType.": ".$rPost->thread_title; 
     $text = '<html><head><title>'.$subj.'</title></head>' ;
-     $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
-     $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
-     $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>' ;
-     $text.='<tr><td valign="top">';
-/*
-    if (isset($rImage->FilePath)) {
-       $text .= '<img alt="picture of '.$rPost->Username.'" height="150px" src="'.$baseuri.$rImage->FilePath.'"/>';
-    } else {
-       $text .= '<img alt="Bewelcome" src="http://www.bewelcome.org/styles/YAML/images/logo.gif" />';
-    }
-    */
+    $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
+    $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
+    $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>' ;
+    $text.='<tr><td valign="top">';
+
     $text.=PictureInMail($rPost->Username) ;
     $text .= '</td><td>'.$rPost->message.'</td></tr>';
     if ($UnsubscribeLink!="") {
@@ -295,23 +283,23 @@ $word->            $text="Problem in forum notification Type=".$rr->Type."<br />
         LogStr("Cannot send posts_notificationqueue=#" . $rr->id . " to <b>".$rPost->Username."</b> \$Email=[".$Email."]","mailbot");
         // Telling that the notification has been not sent
         $str = "
-UPDATE
-    posts_notificationqueue
-SET
-    posts_notificationqueue.Status = 'Failed'
-WHERE
-    posts_notificationqueue.id = $rr->id
+            UPDATE
+                posts_notificationqueue
+            SET
+                posts_notificationqueue.Status = 'Failed'
+            WHERE
+                posts_notificationqueue.id = $rr->id
         ";
     } else {
         $countposts_notificationqueue++;
         // Telling that the notification has been sent
         $str = "
-UPDATE
-    posts_notificationqueue
-SET
-    posts_notificationqueue.Status='Sent'
-WHERE
-    posts_notificationqueue.id = $rr->id
+            UPDATE
+                posts_notificationqueue
+            SET
+                posts_notificationqueue.Status='Sent'
+            WHERE
+                posts_notificationqueue.id = $rr->id
         ";
     }
     sql_query($str);

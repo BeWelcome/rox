@@ -188,24 +188,24 @@ while ($rr = mysql_fetch_object($qry)) {
             forums_threads.threadid AS IdThread,
             forums_posts.message,
             forums_posts.IdContent,
-            cities.Name AS cityname,
-            countries.Name AS countryname
-        FROM    
-            cities,
-            countries,
+            geonames_cache.name AS cityname,
+            geonames_cache2.name AS countryname
+        FROM
             forums_posts,
             forums_threads,
-            members
+            members,
+            geonames_cache,
+            geonames_cache as geonames_cache2
         WHERE
             forums_threads.threadid = forums_posts.threadid  AND
             forums_posts.IdWriter = members.id  AND
-            forums_posts.postid = $rr->IdPost  AND
-            cities.id = members.IdCity  AND
-            countries.id = cities.IdCountry
+            forums_posts.postid = $rr->IdPost AND
+            geonames_cache.geonameid = members.IdCity  AND
+            geonames_cache2.geonameid = geonames_cache.parentCountryId
     ");
 
     // Skip to next item in queue if there was no result from database
-    if (!is_object($rPost) {
+    if (!is_object($rPost)) {
         continue;
     }
 

@@ -273,7 +273,7 @@ while ($rr = mysql_fetch_object($qry)) {
     $text = '<html><head><title>'.$subj.'</title></head>' ;
     $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
     $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
-    $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>' ;
+    $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> ('.$rPost->cityname.', '.$rPost->countryname.')</td></tr>' ;
     $text.='<tr><td valign="top">';
 
     $text.=PictureInMail($rPost->Username) ;

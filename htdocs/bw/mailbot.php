@@ -203,8 +203,15 @@ while ($rr = mysql_fetch_object($qry)) {
             cities.id = members.IdCity  AND
             countries.id = cities.IdCountry
     ");
+
+    // Skip to next item in queue if there was no result from database
+    if (!is_object($rPost) {
+        continue;
+    }
+
     // Sanitise IdMember
     $rPostIdMember = intval($rPost->IdMember);
+
     $rImage=LoadRow("
         SELECT
             *

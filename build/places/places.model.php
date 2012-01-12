@@ -109,11 +109,28 @@ class Places extends PAppModel {
 	*/  
     
 	public function getAllCountries() {
-		$query = "SELECT countries.isoalpha2 as code, countries.name,
-            countries.continent, COUNT(members.id) AS number
-			FROM countries,cities,members where members.Status='Active' and cities.IdCountry=countries.Id and members.IdCity=cities.id  
-			GROUP BY countries.isoalpha2
-            ORDER BY continent asc, countries.name ";
+        $query = "
+            SELECT
+                geonames_countries.iso_alpha2 AS code,
+                geonames_countries.name,
+                geonames_countries.continent,
+                COUNT(members.id) AS number
+            FROM
+                geonames_countries,
+                geonames_cache,
+                members
+            WHERE
+                members.Status = 'Active'
+                AND
+                geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
+                AND
+                members.IdCity = geonames_cache.geonameid
+            GROUP BY
+                geonames_countries.iso_alpha2
+            ORDER BY
+                continent ASC,
+                geonames_countries.name
+        ";
 		$result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve Places list.');

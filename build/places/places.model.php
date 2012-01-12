@@ -160,35 +160,53 @@ class Places extends PAppModel {
         return $countries;
 	}
 
-	/**
-	retrieve the list of all regions for a given country
-	@$countrycode is either the country code of the country or the countries.id
-	the number of members in the area is to be kept up to date by a cron or by some SQL for volunteers query
-	*/
-	public function getAllRegions($countrycode) {
-		if (is_numeric($countrycode)) {
-			$query = sprintf("SELECT regions.name AS region, NbMembers AS number
-			FROM regions WHERE  IdCountry='%d' and regions.feature_code='ADM1'
-           ORDER BY regions.name", $this->dao->escape($countrycode));
-		}
-		else {
-			$query = sprintf("SELECT regions.name AS region, NbMembers AS number
-			FROM regions WHERE  regions.country_code='%s' and regions.feature_code='ADM1'
-           ORDER BY regions.name", $this->dao->escape($countrycode));
-		}
-		$result = $this->dao->query($query);
+    /**
+     * Retrieve the list of all regions for a given country
+     * @param string $countrycode Two-letter country code, i.e. "FR"
+     * @return array List of regions with number of members in them
+     */
+    public function getAllRegions($countrycode) {
+        $query = sprintf("
+            SELECT
+                geonames_cache.name AS region,
+                COUNT(members.id) as number
+            FROM
+                geonames_cache,
+                geonames_cache AS geonames_cache2,
+                geonames_cache AS geonames_cache3,
+                members
+            WHERE
+                geonames_cache.fk_countrycode = '%s'
+                AND
+                geonames_cache.fcode = 'ADM1'
+                AND
+                geonames_cache2.geonameid = members.idCity
+                AND
+                geonames_cache3.geonameid = geonames_cache2.parentAdm1Id
+                AND
+                geonames_cache3.geonameid = geonames_cache.geonameid
+                AND
+                members.status = 'Active'
+            GROUP BY
+                geonames_cache.name
+            ORDER BY
+                geonames_cache.name
+            ", $this->dao->escape($countrycode));
+
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve region list.');
-		}
-		$regions = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$regions[$row->region]['name'] = $row->region;
-			$regions[$row->region]['number'] = $row->number;
-		}
-		
+        }
+
+        $regions = array();
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $regions[$row->region]['name'] = $row->region;
+            $regions[$row->region]['number'] = $row->number;
+        }
+
         return $regions;
-	}    // end of getAllRegions
-    
+    }
+
 	/**
 	retrieve the list of all regions for a given country
 	@$idregion is either the region Name of the region or the regions.id

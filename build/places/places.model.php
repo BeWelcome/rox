@@ -226,32 +226,41 @@ class Places extends PAppModel {
         return $regions;
     }
 
-	/**
-	retrieve the list of all regions for a given country
-	@$idregion is either the region Name of the region or the regions.id
-	the number of members in the area is to be kept up to date by a cron or by some SQL for volunteers query
-	*/
-	public function getAllCities($idregion) {
-		if (is_numeric($idregion)) {
-		$query = sprintf("SELECT cities.Name AS city, cities.NbMembers as NbMember FROM cities
-			   where IdRegion=%d  and (cities.NbMembers>0) ORDER BY cities.Name",$idregion);
-		}
-		else {
-		$query = sprintf("SELECT cities.Name AS city,  cities.NbMembers as NbMember FROM cities,regions
-			   where regions.id=cities.IdRegion and regions.Name='%s' and ( cities.NbMembers>0) ORDER BY cities.Name",$idregion);
-		}
-		
-		$result = $this->dao->query($query);
+    /**
+     * Retrieve list of all cities for a region that have members
+     * @param int $regionId Geoname ID of region
+     * @return array List of cities with number of members
+     */
+    public function getAllCities($regionId) {
+        $query = sprintf("
+            SELECT
+                geonames_cache.name AS city,
+                COUNT(members.id) AS NbMember
+            FROM
+                geonames_cache,
+                members
+            WHERE
+                geonames_cache.parentAdm1Id = %d
+                AND
+                members.status = 'Active'
+                AND
+                members.idCity = geonames_cache.geonameId
+            GROUP BY
+                geonames_cache.name
+            ORDER BY
+                geonames_cache.name
+            ", $regionId);
+
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve city list.');
-		}
-		$cities = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$cities[] = $row;
-		}
-		
+        }
+        $cities = array();
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $cities[] = $row;
+        }
         return $cities;
-	}  // end of getAllCities
+    }
 }
-	
+
 ?>

@@ -106,6 +106,8 @@ class Places extends PAppModel {
                 geonames_cache.geonameId = members.idCity
                 AND
                 geonames_cache.fk_countrycode = '%s'
+            ORDER BY
+                city
             ",$this->dao->escape($countrycode));
 
         return $this->getMembersAll($query);
@@ -125,20 +127,58 @@ class Places extends PAppModel {
         return $this->getMembersAll($query);
         } // end of getVolunteersOfPlace
     
-	public function getMembersOfRegion($regioncode) {
-        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username, cities.name AS city FROM members, cities,regions 
-                 WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND
-                 regions.name='%s' and regions.feature_code='ADM1'",$this->dao->escape($regioncode));
-		return $this->getMembersAll($query);
-        }	
+    public function getMembersOfRegion($regioncode, $countrycode) {
+        $query = sprintf("
+            SELECT
+                members.BirthDate,
+                members.HideBirthDate,
+                members.Accomodation,
+                members.username,
+                geonames_cache.name AS city
+            FROM
+                members,
+                geonames_cache,
+                geonames_cache as geonames_cache2
+            WHERE
+                Status = 'Active'
+                AND
+                geonames_cache.fk_countrycode = '%s'
+                AND
+                members.idCity = geonames_cache.geonameid
+                AND
+                geonames_cache.parentAdm1Id = geonames_cache2.geonameid
+                AND
+                geonames_cache2.name = '%s'
+            ORDER BY
+                city
+            ", $this->dao->escape($countrycode), $this->dao->escape($regioncode));
 
-	public function getMembersOfCity($cityname,$regionname="",$countrycode="") {
-        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,geonames_cache.name AS city FROM members,geonames_cache 
-                    WHERE `Status`='Active' AND members.IdCity=geonames_cache.geonameid AND geonames_cache.name='%s'  and geonames_cache.fk_countrycode='%s'", 
-                    $this->dao->escape($cityname),$this->dao->escape($countrycode));
-		return $this->getMembersAll($query);
-	}	
-    
+        return $this->getMembersAll($query);
+    }
+
+    public function getMembersOfCity($cityname, $regionname = "", $countrycode = "") {
+        $query = sprintf("
+            SELECT
+                members.BirthDate,
+                members.HideBirthDate,
+                members.Accomodation,
+                username,
+                geonames_cache.name AS city
+            FROM
+                members,
+                geonames_cache 
+            WHERE
+                Status = 'Active'
+                AND
+                members.IdCity = geonames_cache.geonameid
+                AND
+                geonames_cache.name = '%s'
+                AND
+                geonames_cache.fk_countrycode = '%s'
+            ", $this->dao->escape($cityname), $this->dao->escape($countrycode));
+        return $this->getMembersAll($query);
+    }
+
 	/**
 	* Returns a 3D array of all countries
 	* Format:

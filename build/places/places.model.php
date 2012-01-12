@@ -28,16 +28,35 @@ class Places extends PAppModel {
 		}
 		return $result->fetch(PDB::FETCH_OBJ);
 	}
-    
-	public function getRegionInfo($regioncode,$countrycode="") {
-		$query = sprintf("SELECT name AS region, id AS idregion FROM regions WHERE regions.name = '%s'",
-			$this->dao->escape($regioncode));
-		$result = $this->dao->query($query);
+
+    /**
+     * Get details for a region
+     * @param string $regionName Name of region, i.e. "Flanders"
+     * @param string $countryCode Two-letter country code, i.e. "BE"
+     * @return object Region with its name and ID
+     */
+    public function getRegionInfo($regionName, $countryCode) {
+        $query = sprintf("
+            SELECT
+                name AS region,
+                geonameId AS idregion
+            FROM
+                geonames_cache
+            WHERE
+                fcode = 'ADM1'
+                AND
+                name = '%s'
+                AND
+                fk_countrycode = '%s'
+            ", $this->dao->escape($regionName),
+                $this->dao->escape($countryCode));
+
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve info about Region.');
-		}
-		return $result->fetch(PDB::FETCH_OBJ);
-	}	
+        }
+      return $result->fetch(PDB::FETCH_OBJ);
+    }	
 
 	public function getCityInfo($cityname,$regionname="",$countrycode="") {
 		$query = sprintf("SELECT geonames_cache.name AS city, geonames_cache.geonameid AS IdCity FROM geonames_cache WHERE geonames_cache.name = '%s' and geonames_cache.fk_countrycode='%s'",

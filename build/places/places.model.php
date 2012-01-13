@@ -58,16 +58,25 @@ class Places extends PAppModel {
       return $result->fetch(PDB::FETCH_OBJ);
     }	
 
-	public function getCityInfo($cityname,$regionname="",$countrycode="") {
-		$query = sprintf("SELECT geonames_cache.name AS city, geonames_cache.geonameid AS IdCity FROM geonames_cache WHERE geonames_cache.name = '%s' and geonames_cache.fk_countrycode='%s'",
-			$this->dao->escape($cityname),$this->dao->escape($countrycode));
-			
-		$result = $this->dao->query($query);
+    public function getCityInfo($cityname, $regionname = "", $countrycode = "") {
+        $query = sprintf("
+            SELECT
+                geonames_cache.name AS city,
+                geonames_cache.geonameid AS IdCity
+            FROM
+                geonames_cache
+            WHERE
+                geonames_cache.name = '%s'
+                AND
+                geonames_cache.fk_countrycode = '%s'
+            ", $this->dao->escape($cityname), $this->dao->escape($countrycode));
+
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve the city.');
-		}
-		return $result->fetch(PDB::FETCH_OBJ);
-	}	
+        }
+        return $result->fetch(PDB::FETCH_OBJ);
+    }
 
     private function getMembersAll($query) {
         // this condition makes sure that unlogged people won't see non-public profiles

@@ -334,23 +334,6 @@ class MembersController extends RoxControllerBase
     public function updateMandatoryCallback($args, $action, $mem_redirect, $mem_resend)
     {
         throw new Exception('This should not be used - mandatory details are taken care of in edit my profile');
-        $request = $args->request;
-        if (isset($args->post)) {
-            foreach ($args->post as $key => $value) {
-                $vars[$key] = $value;
-            }
-            
-            if (count($errors) > 0) {
-                // show form again
-                $vars['errors'] = $errors;
-                $mem_redirect->post = $vars;
-                return false;
-            }
-            $model->polishFormValues($vars);
-            $model->sendMandatoryForm($vars);
-            return 'updatemandatory/finish';
-        }
-        return false;        
     }
     
     public function myPreferencesCallback($args, $action, $mem_redirect)

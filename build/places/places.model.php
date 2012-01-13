@@ -174,21 +174,15 @@ class Places extends PAppModel {
         return $this->getMembersAll($query);
     }
 
-	/**
-	* Returns a 3D array of all countries
-	* Format:
-	*	[Continent]
-	*		[Places-Code]
-	*			[Name] Name of the Places
-	*			[Number] Number of members living in this places
-	*/  
-    
-	public function getAllCountries() {
+    /**
+     * Get a list of all countries with number of members for each country
+     * @return array List of continents, containing array of countries
+     */
+    public function getAllCountries() {
+        // Get countries that have members and count members
         $query = "
             SELECT
                 geonames_countries.iso_alpha2 AS code,
-                geonames_countries.name,
-                geonames_countries.continent,
                 COUNT(members.id) AS number
             FROM
                 geonames_countries,
@@ -202,38 +196,47 @@ class Places extends PAppModel {
                 members.IdCity = geonames_cache.geonameid
             GROUP BY
                 geonames_countries.iso_alpha2
+            ";
+
+        $result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve country member counts.');
+        }
+        $number = array();
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $number[$row->code] = $row->number;
+        }
+
+        // Get all countries
+        $query = "
+            SELECT
+                iso_alpha2 AS code,
+                name,
+                continent
+            FROM
+                geonames_countries
             ORDER BY
                 continent ASC,
-                geonames_countries.name
-        ";
-		$result = $this->dao->query($query);
+                name ASC
+            ";
+        $result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve Places list.');
-		}
-		$number = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$number[$row->code] = $row->number;
-		}
-		
-		$query = "SELECT `isoalpha2` AS `code`, `name`, `continent`
-			FROM `countries`
-			ORDER BY `continent` ASC, `name` ASC";
-		$result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve Places list.');
-		}
+            throw new PException('Could not retrieve country list.');
+        }
+
+        // Pack both database results into country list
         $countries = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$countries[$row->continent][$row->code]['name'] = $row->name;
-			if (isset($number[$row->code]) && $number[$row->code]) {
-				$countries[$row->continent][$row->code]['number'] = $number[$row->code];
-			} else {
-				$countries[$row->continent][$row->code]['number'] = 0;
-			}
-		}
-		
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $countries[$row->continent][$row->code]['name'] = $row->name;
+            if (isset($number[$row->code]) && $number[$row->code]) {
+                $countries[$row->continent][$row->code]['number'] = $number[$row->code];
+            } else {
+                $countries[$row->continent][$row->code]['number'] = 0;
+            }
+        }
+
         return $countries;
-	}
+    }
 
     /**
      * Retrieve the list of all regions for a given country

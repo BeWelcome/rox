@@ -397,8 +397,20 @@ WHERE IdMember = ".$this->id
         return $this->get_crypted($this->LastName, "");
     }
 
+    /**
+     * Get member's email address (uses various permission checks)
+     * @return string Email address of member, empty if read permission denied
+     */
     public function get_email() {
         return $this->get_crypted($this->Email, "");
+    }
+
+    /**
+     * Get member's email address (no permission checks)
+     * @return string|bool Email address of member, false on database error
+     */
+    public function getEmailWithoutPermissionChecks() {
+        return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($this->Email)));
     }
 
     public function get_messengers() {
@@ -1610,7 +1622,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      */
     public function sendMail($subject, $body) {
         $from = PVars::getObj('mailAddresses')->noreply;
-        $to = $this->email;
+        $to = $this->getEmailWithoutPermissionChecks();
 
         // Create HTML version via purifier (linkify and add paragraphs)
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();

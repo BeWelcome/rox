@@ -193,11 +193,17 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
                 $IdMember=0 ; $IdCountry=0 ; // This values will remain if the user was not logged
                 if (isset($_SESSION["IdMember"])) {
                     $IdMember=$_SESSION["IdMember"] ;
-                    $query = '
-SELECT IdCountry
-FROM  members,cities
-WHERE members.id='.$IdMember.'
-AND cities.id=members.IdCity';
+                    $query = "
+                        SELECT
+                            geonames_cache.parentCountryId AS IdCountry
+                        FROM
+                            members,
+                            geonames_cache
+                        WHERE
+                            members.id = $IdMember
+                            AND
+                            geonames_cache.geonameId = members.IdCity
+                        ";
                     $result = $this->dao->query($query);
                     $m = $result->fetch(PDB::FETCH_OBJ);
                     $IdCountry=$m->IdCountry ; 

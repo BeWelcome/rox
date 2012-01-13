@@ -63,19 +63,20 @@ class VolunteerbarModel extends PAppModel
                     COUNT(*) AS count
                 FROM
                     members,
-                    countries,
+                    geonames_countries,
                     geonames_cache
                 WHERE
+                    Status = 'Pending'
+                    AND
                     members.IdCity = geonames_cache.geonameid
                     AND
-                    countries.id = geonames_cache.parentCountryId
-                    AND (
-                        countries.Name IN (" . $scope . ")
-                        OR
-                        countries.id IN (" . $scope . ")
-                        )
+                    geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
                     AND
-                    Status='Pending'
+                    (
+                        geonames_countries.name IN ($scope)
+                        OR
+                        geonames_countries.iso_alpha2 IN ($scope)
+                    )
                 ";
         }
 

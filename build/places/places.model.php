@@ -113,20 +113,6 @@ class Places extends PAppModel {
         return $this->getMembersAll($query);
     }
 
-/*
-* This retrieve the list of volunteers for a place
-* volunteers are the one of the Local Vol group
-* @IdLocation is the geoname id where the members is volunteering
-*/
-	public function getVolunteersOfPlace($IdLocation) {
-        $query = sprintf("SELECT members.ProfileSummary,members.BirthDate,membersgroups.Comment as VolComment,
-				 	members.HideBirthDate,members.Accomodation,username,cities.name AS city FROM members,cities,countries,groups, groups_locations,membersgroups
-                 WHERE `members`.`Status`='Active' AND groups.Name='BewelcomeLV' AND groups_locations.IdGroupMembership=membersgroups.id 
-								 AND membersgroups.IdMember=members.id AND membersgroups.IdGroup=groups.id AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
-                 AND groups_locations.IdLocation='%d'",$this->dao->escape($IdLocation));
-        return $this->getMembersAll($query);
-        } // end of getVolunteersOfPlace
-    
     public function getMembersOfRegion($regioncode, $countrycode) {
         $query = sprintf("
             SELECT

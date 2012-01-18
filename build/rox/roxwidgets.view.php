@@ -39,10 +39,7 @@ class VolunteerLinksWidget
                 $numberMessagesToBeChecked = $this->_model->getNumberMessagesToBeChecked();
                 $numberSpamToBeChecked = $this->_model->getNumberSpamToBeChecked();
             }
-            if (($R->hasRight("ContactLocation","All"))or($R->hasRight("ContactLocation","CanTrigger"))) {
-                $numberPendingLocalMess = $this->_model->getNumberPendingLocalMess();
-			}
-            
+
             require $this->getTemplatePath();
         }
     } // end of render() ;

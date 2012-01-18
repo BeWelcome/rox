@@ -157,26 +157,6 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             </div>
             <?php
 
-            // Here add additional data from local messages if any
-            if (isset($post->LocalVolMessage)) {
-                $LocalVolMessage=$post->LocalVolMessage ;
-                $TitleText=$words->fTrad($LocalVolMessage->IdTitleText) ;
-                $MessageText=$words->fTrad($LocalVolMessage->IdMessageText) ;
-
-                echo "<div>"  ; // Todo add a special div for a special layout
-                echo "<br /> ",$words->getFormatted('ForumPostWithLocalMessage') ;
-                echo "<table bgcolor=\"lightgray\">" ;
-                echo "<tr><th>",$TitleText,"</th></tr>\n" ;
-                echo "<tr><td>",$MessageText,"</td></tr>\n" ;
-                echo "<tr><td>" ;
-                foreach ($post->Places as $place) {
-                    echo "<a href=\"",$place->Link,"\">",$place->Name,"</a> " ;
-                }
-                echo "</td></tr>" ;
-                echo "</table>\n" ;
-                echo "</div>" ;
-            }   // End of add additional data from local volunteers messages if any
-
             // Here add additional data from votes if any
             if (isset($post->Vote))  {
                 $Vote=$post->Vote ;

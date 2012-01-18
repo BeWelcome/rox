@@ -30,7 +30,6 @@ $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
 $numberMessagesToBeChecked = $model->getNumberMessagesToBeChecked() ;
 $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
 $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
-$numberPendingLocalMess = $model->getNumberPendingLocalMess() ;
 
 $R = MOD_right::get();
 

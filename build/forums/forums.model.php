@@ -92,57 +92,6 @@ function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
 	return ($this->words->ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad, $IdOwner )) ;
 } // end of ReplaceInFTrad
 
-
-
-/**
-* this function returns an structured array with the possible location the member is allow to send a message in
-* @$IdLocaVolMessage stands for the id of the local vol message
-**/
-function GetAffectedLocation($IdLocaVolMessage) { 
-	$tt=array() ;
-	$ss="Select IdLocation from localvolmessages_location where IdLocalVolMessage=".$IdLocaVolMessage ;
-	$q=mysql_query($ss) ;
-	while ($row=mysql_fetch_object($q)) { ;
-		$IdLoc=$row->IdLocation ;
-		$rr=$this->singleLookup("select id,Name,IdRegion,IdCountry from cities where id=".$IdLoc) ;
-		if (isset($rr->id)) {
-			$rCountry=$this->singleLookup("select id,Name,isoalpha2 from countries where id=".$rr->IdCountry) ;
-			$rRegion=$this->singleLookup("select id,Name from regions where id=".$rr->IdRegion) ;
-			$rr->Type="City" ;
-			$rr->Choice=" City: ".$rr->Name ;
-			$rr->Link="places/".$rCountry->isoalpha2."/" ;
-			if (isset($rRegion->Name)) {
-				$rr->Link.=$rRegion->Name ;
-			}
-			$rr->Link=$rr->Link."/".$rr->Name ;
-		}
-		else {
-			$rr=$this->singleLookup("select id,Name,IdCountry from regions where id=".$IdLoc) ;
-			if (isset($rr->id)) {
-				$rCountry=$this->singleLookup("select id,Name,isoalpha2 from countries where id=".$rr->IdCountry) ;
-				$rr->Type="Region" ;
-				$rr->Choice=" Region: ".$rr->Name ;
-				$rr->Link="places/".$rCountry->isoalpha2."/".$rr->Name ;
-			}
-			else {
-				$rr=$this->singleLookup("select id,Name,isoalpha2 from countries where id=".$IdLoc) ;
-				if (isset($rr->id)) {
-					$rr->Type="Country" ;
-					$rr->Choice=" Country: ".$rr->Name ;
-					$rr->Link="places/".$rr->isoalpha2 ;
-				}
-				else {
-					$ss="Found Location #".$IdLoc." in scope, does'nt match any city or region or country" ;
-				    MOD_log::get()->write($ss,"contactlocation") ; 				
-					die ($ss) ;
-				}
-			}
-			array_push($tt,$rr) ;
-		}
-	}
-	return($tt) ;
-} // end of GetAffectedLocation
-		
 /**
 * this function returns a structure with the result of a vote for a given IdPost
 * according to the current logged member
@@ -908,7 +857,6 @@ SELECT
     `authorid`,
     `IdWriter`,
     `HasVotes`,
-    `IdLocalVolMessage`,
     `IdLocalEvent`,
     `PostDeleted`,
     `PostVisibility`,
@@ -991,7 +939,6 @@ SELECT
     `IdWriter`,
     `forums_posts`.`threadid`, 
     `HasVotes`,
-    `IdLocalVolMessage`,
     `IdLocalEvent`,
     `first_postid`,
 	`OwnerCanStillEdit`,
@@ -1074,7 +1021,6 @@ WHERE `postid` = $this->messageId
     private function editPost($vars, $editorid) {
         $query = "SELECT message,forums_posts.threadid,  
     `HasVotes`,
-    `IdLocalVolMessage`,
     `PostVisibility`,
     `IdLocalEvent`,
 		OwnerCanStillEdit,IdWriter,forums_posts.IdFirstLanguageUsed as post_IdFirstLanguageUsed,forums_threads.IdFirstLanguageUsed as thread_IdFirstLanguageUsed,forums_posts.id,IdWriter,IdContent,forums_threads.IdTitle,forums_threads.first_postid from `forums_posts`,`forums_threads` WHERE forums_posts.threadid=forums_threads.id and forums_posts.id = ".$this->messageId ;
@@ -1639,7 +1585,6 @@ RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThre
 SELECT
     `forums_posts`.`threadid`,
     `HasVotes`,
-    `IdLocalVolMessage`,
     `IdLocalEvent`,
     `forums_threads`.`first_postid`,
     `forums_threads`.`last_postid`,
@@ -2188,7 +2133,6 @@ SELECT
     OwnerCanStillEdit,
     members.Username as OwnerUsername,
     HasVotes,
-    IdLocalVolMessage,
     PostVisibility,
     PostDeleted,
     IdLocalEvent,
@@ -2222,17 +2166,6 @@ LIMIT %d, %d",$this->threadid,$from,$this->POSTS_PER_PAGE);
 										where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
 				while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 					$row->Trad[]=$roww ;
-				}
-				if ($row->IdLocalVolMessage!=0) { // If the post is connected to some local vol message, then we will load this message
-					$query="Select * from localvolmessages  where id=".$row->IdLocalVolMessage ;
-					$sLocalVolMessage = $this->dao->query($query);
-					if (!$sLocalVolMessage) {
-						throw new PException('Could not retrieve LocalVolMessage #'.$row->IdLocalVolMessage.' )!');
-					}
-					$LocalVolMessage=$sLocalVolMessage->fetch(PDB::FETCH_OBJ) ;
-					$row->LocalVolMessage=$LocalVolMessage ;
-					$row->Places=$this->GetAffectedLocation($row->IdLocalVolMessage) ;
-				
 				}
 				if ($row->HasVotes=="Yes") { // Id this post is connected to some opinion
 					$row->Vote=$this->GetPostVote($row->IdPost) ;
@@ -2334,7 +2267,6 @@ SELECT
 	`OwnerCanStillEdit`,
     `geonames_cache`.`fk_countrycode`,
     `HasVotes`,
-    `IdLocalVolMessage`,
     `IdLocalEvent`
     `IdGroup`
 FROM forums_posts, forums_threads, members, addresses
@@ -2814,7 +2746,6 @@ AND IdTag=%d
     `PostVisibility`,
     `PostDeleted`,
     `ThreadDeleted`,
-    `IdLocalVolMessage`,
     `IdLocalEvent`,
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames_cache`.`fk_countrycode` 
 		FROM (forums_posts, members, forums_threads, addresses)  

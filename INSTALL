@@ -70,7 +70,7 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
   1.  Database
   
     The test database can be downloaded from
-    http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.zip
+    http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.gz
 
       mysql -u root -p -e 'CREATE DATABASE bewelcome'
       unzip bewelcome.sql.zip

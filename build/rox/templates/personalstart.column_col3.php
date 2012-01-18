@@ -122,25 +122,29 @@ HTML;
                         }
                         ?>
                 </div> <!-- floatbox -->
-       
-                <h3 class="first"><?php echo $words->getFormatted('TripCity')  ?></h3>
+
+<?php
+// TODO: move to controller
+$next_trips = MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4);
+$next_trips_count = count($next_trips);
+?>
+                <?php if ($next_trips_count > 0): ?>
+                <h3 class="first"><?php echo $words->getFormatted('TripCity'); ?></h3>
                 <div id="nextvisitors" class="floatbox">
+                    <?php for ($ii = 0; $ii < $next_trips_count; $ii++): ?>
                     <?php
-                        $next_trips=MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4) ;
-                        for ($ii=0;$ii<count($next_trips);$ii++) {
-                            $m=$next_trips[$ii] ;
-                            $tripDate = explode(" ",$m->tripDate);
+                        $m = $next_trips[$ii];
+                        $tripDate = date('Y-m-d', strtotime($m->tripDate));
                     ?>
                     <div class="visitors">
-                        <?php echo MOD_layoutbits::PIC_30_30($m->Username,'',$style='float_left framed') ?>
-                        <?php echo '<a href="members/'.$m->Username.'">'.$m->Username.'</a>' ?><br />
-                        <?php echo $m->city; ?> / <?php echo $m->country; ?><br />
-                        <?php echo '<a href="blog/'.$m->Username.'/'.$m->tripId.'">'.$words->get('ComingOn').' '.$tripDate[0].'</a>'; ?>
+                        <?php echo MOD_layoutbits::PIC_30_30($m->Username, '', $style = 'float_left framed'); ?>
+                        <?php echo '<a href="members/' . $m->Username . '">' . $m->Username . '</a>'; ?><br />
+                        <?php echo $m->country; ?><br />
+                        <?php echo '<a href="blog/' . $m->Username . '/' . $m->tripId . '">' . $tripDate . '</a>'; ?>
                     </div> <!-- visitors -->
-                    <?php
-                        }
-                    ?>
+                    <?php endfor; ?>
                 </div> <!-- floatbox -->
+                <?php endif; ?>
             </div> <!-- subcl -->
         </div> <!-- c33l -->
 

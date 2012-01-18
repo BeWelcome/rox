@@ -293,6 +293,8 @@ WHERE
      *
      * @access public
      * @return array
+     *
+     * TODO: Gaaah! This mess needs a serious clean-up! --meinhard
      */
     public function search(&$vars)
     {
@@ -310,7 +312,7 @@ WHERE
         $OrderBy = "ORDER BY {$order_by} {$direction}";
         $vars['OrderBy'] = $order_by;
     
-        $tablelist ="members, geonames_cache, countries, addresses";
+        $tablelist ="members, geonames_cache, geonames_countries, addresses";
     
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1")
         {
@@ -464,11 +466,11 @@ AND (
 )"   ;
             }
         }
-        $where = $where." AND geonames_cache.geonameid=addresses.IdCity AND addresses.IdMember = members.id AND countries.id=geonames_cache.parentCountryId" ;
+        $where = $where." AND geonames_cache.geonameid=addresses.IdCity AND addresses.IdMember = members.id AND geonames_countries.iso_alpha2=geonames_cache.fk_countrycode" ;
     
         if ($this->GetParam($vars, "IdCountry",0)!= '0')
         {
-            $where .= " AND countries.isoalpha2='".$this->GetParam($vars, "IdCountry")."'" ;
+            $where .= " AND geonames_countries.iso_alpha2='".$this->GetParam($vars, "IdCountry")."'" ;
         }
         if ($this->GetParam($vars, "IdCity",0)!=0) {
            $where .= " AND geonames_cache.geonameid=".$this->GetParam($vars, "IdCity") ;
@@ -534,7 +536,7 @@ AND membersgroups.IdMember=members.id"  ;
     members.id AS IdMember,
     Username,
     geonames_cache.name AS CityName,
-    countries.Name AS CountryName
+    geonames_countries.name AS CountryName
 FROM
     ($tablelist)
 $where

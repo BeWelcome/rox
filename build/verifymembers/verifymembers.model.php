@@ -150,28 +150,92 @@ WHERE   IdVerified = $member_id
 
 
     /**
-     * this function load the list of verification done for member Username
-     * @Username the id of the member (can also be the IdMember, it will be converted to a Username)
-     * @ returns a structure with the data with the list of verifications or and empty structure if password/Username dont match
-     **/
-    public function LoadVerifiers($cid)
-    {
+     * Get verifications a member has received.
+     *
+     * @param int|string $cid User ID or username of member
+     * @return array List of verifications
+     *
+     * TODO: Restrict method usage to either user ID *or* username, not both
+     */
+    public function LoadVerifiers($cid) {
+        if (is_numeric($cid)) {
+            $userId = intval($cid);
+            $query = "
+                SELECT
+                    m1.Username,
+                    AddressVerified,
+                    NameVerified,
+                    verifiedmembers.Comment AS Comment,
+                    verifiedmembers.Type AS VerificationType,
+                    geonames_cache.name AS CityName,
+                    m1.Gender,
+                    verifiedmembers.created AS VerificationDate
+                FROM
+                    members m1,
+                    members m2,
+                    verifiedmembers,
+                    geonames_cache
+                WHERE
+                    m1.id = verifiedmembers.IdVerifier
+                    AND
+                    m2.id = verifiedmembers.IdVerified
+                    AND
+                    geonames_cache.geonameId = m1.IdCity
+                    AND
+                    (
+                        m1.Status = 'Active'
+                        OR
+                        m1.Status = 'ChoiceInactive'
+                    )
+                    AND
+                    m2.id = $userId
+                ";
+        } else {
+            $username = mysql_real_escape_string($cid);
 
-        $where_cid = is_numeric($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
-        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender,verifiedmembers.created as VerificationDate".
-             " from members m1,members m2, verifiedmembers,cities ".
-             " where m1.id=verifiedmembers.IdVerifier and m2.id=verifiedmembers.IdVerified and cities.id=m1.IdCity and (m1.Status='Active' or m1.Status='ChoiceInactive') and ".$where_cid ;
+            // This is almost the same query as for user ID, but to improve
+            // code readability it's repeated here
+            $query = "
+                SELECT
+                    m1.Username,
+                    AddressVerified,
+                    NameVerified,
+                    verifiedmembers.Comment AS Comment,
+                    verifiedmembers.Type AS VerificationType,
+                    geonames_cache.name AS CityName,
+                    m1.Gender,
+                    verifiedmembers.created AS VerificationDate
+                FROM
+                    members m1,
+                    members m2,
+                    verifiedmembers,
+                    geonames_cache
+                WHERE
+                    m1.id = verifiedmembers.IdVerifier
+                    AND
+                    m2.id = verifiedmembers.IdVerified
+                    AND
+                    geonames_cache.geonameId = m1.IdCity
+                    AND
+                    (
+                        m1.Status = 'Active'
+                        OR
+                        m1.Status = 'ChoiceInactive'
+                    )
+                    AND
+                    m2.Username = '$username'
+                ";
+        }
 
-             if (!is_array($rows = $this->bulkLookup($ss))) {
-            return array(); // empty array means no verifier
+        if (!is_array($rows = $this->bulkLookup($query))) {
+             // empty array means no verifier
+            return array();
         } else {
             // $rows can be empty or not, we don't care at this point.
             return $rows;
         }
 
-    } // LoadVerifiers
-
-
+    }
 
     /**
      * this function load the list of the approved verifiers

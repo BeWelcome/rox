@@ -244,15 +244,41 @@ WHERE   IdVerified = $member_id
     public function LoadApprovedVerifiers()
     {
         $layoutbits = new MOD_layoutbits();
-        $ss="select m1.*,cities.Name as CityName,countries.Name as CountryName".
-             " from members m1,cities,rightsvolunteers,rights,countries ".
-             " where m1.id=rightsvolunteers.IdMember and cities.IdCountry=countries.id and rights.id=rightsvolunteers.IdRight and rights.Name='Verifier' and rightsvolunteers.Level>0 and cities.id=m1.IdCity and (m1.Status='Active') order by CityName" ;
-        $mm = $this->createEntity('Member')->findBySQLMany($ss);
+        $query = "
+            SELECT
+                m1.*,
+                geonames_cache.name AS CityName,
+                geonames_countries.name AS CountryName
+            FROM
+                members m1,
+                geonames_cache,
+                rightsvolunteers,
+                rights,
+                geonames_countries
+            WHERE
+                m1.id = rightsvolunteers.IdMember
+                AND
+                geonames_cache.geonameId = m1.IdCity
+                AND
+                geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
+                AND
+                rights.id = rightsvolunteers.IdRight
+                AND
+                rights.Name = 'Verifier'
+                AND
+                rightsvolunteers.Level > 0
+                AND
+                m1.Status = 'Active'
+            ORDER BY
+                CityName
+            ";
+
+        $mm = $this->createEntity('Member')->findBySQLMany($query);
         if (!$mm) {
             throw new PException('verifymembers::LoadApprovedVerifiers Could not retrieve the verifiers list!');
         }
 
-        $tt=array() ;
+        $tt=array();
 
         // for all the records
         foreach ($mm as $m) {

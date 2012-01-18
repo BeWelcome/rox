@@ -82,19 +82,41 @@ class MOD_trips {
 		
 		$TTrips=array() ;
 
-		// retrieve the visiting members handle and trip data
-        $query = '
-			SELECT SQL_CACHE bd.blog_id AS tripId, bd.blog_start AS tripDate, members.Username, members.IdCity, cities.Name AS city, countries.Name AS country	
-			FROM `blog` AS b, `blog_data` AS bd, members, cities, countries
-			WHERE `b`.`blog_id` = `bd`.`blog_id` 
-				AND `b`.`trip_id_foreign` IS NOT NULL 
-				AND `bd`.`blog_geonameid` = '.$result->IdCity.'
-				AND `b`.IdMember = members.id
-				AND cities.id = members.IdCity
-				AND countries.id = cities.IdCountry
-				AND `bd`.`blog_start` >= CURDATE()
-			ORDER BY `bd`.`blog_start` asc limit '. $limit
-			;
+        // retrieve the visiting members handle and trip data
+        $cityId = $result->IdCity;
+        $query = "
+            SELECT SQL_CACHE
+                bd.blog_id           AS tripId,
+                bd.blog_start        AS tripDate,
+                members.Username,
+                members.IdCity,
+                geonames_cache.name  AS city,
+                geonames_cache2.name AS country
+            FROM
+                blog            AS b,
+                blog_data       AS bd,
+                members,
+                geonames_cache,
+                geonames_cache  AS geonames_cache2
+            WHERE
+                b.blog_id                 = bd.blog_id 
+                AND
+                b.trip_id_foreign         IS NOT NULL
+                AND
+                bd.blog_geonameid         = $cityId
+                AND
+                b.IdMember                = members.id
+                AND
+                geonames_cache.geonameId  = members.IdCity
+                AND
+                geonames_cache2.geonameId = geonames_cache.parentCountryId
+                AND
+                bd.blog_start             >= CURDATE()
+            ORDER BY
+                bd.blog_start ASC
+            LIMIT
+                $limit
+            ";
     		$s = $this->dao->query($query);
 				if (!$s) {
 			 		 throw new PException('Cannot retrieve last member with photo!');

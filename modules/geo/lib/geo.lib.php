@@ -82,47 +82,7 @@ class MOD_geo
 		}
 		return $countries;
     }
-    
-    /**
-     * Expecting the id of the country and the first letters
-     * of the name of a city, this method returns a list of possible cities.
-     * The list is ordered by population, bigger cities first.
-     * 
-     * @param int $countryID ID of country in database
-     * @param string $city name of city acc. to Name or OtherNames in database
-     * @return array (cities.id => (cities.Name, cities.RegionName))
-     */
-    public function guessCity($countryID, $cityname)
-    {
-        $query = '
-SELECT SQL_CACHE
-	cities.`id`,
-	cities.`Name`,
-	regions.`name` AS `RegionName`
-FROM
-	`cities` LEFT JOIN `regions` ON (cities.`IdRegion`=regions.`id`)
-WHERE
-	cities.`IdCountry`=' . $countryID . '
-AND (
-	cities.`Name` like \'' . $cityname . '%\' OR
-	cities.`OtherNames` like \'%' . $cityname . '%\'
-)
-AND
-	`ActiveCity`=\'True\'
-ORDER BY
-	cities.`population` DESC';
-        
-        $s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve cities!');
-		}
-		$cities = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$cities[$row->id] = array($row->Name, $row->RegionName);
-		}
-        return $cities;
-    }
-    
+
     /**
      * @param string $cityname precise, case sensitive name of city
      * @return int unambiguous identifier of a city in database

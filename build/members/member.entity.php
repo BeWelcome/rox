@@ -956,7 +956,8 @@ FROM
     members
 WHERE
     comments.IdToMember   = $this->id  AND
-    comments.IdFromMember = members.Id
+    comments.IdFromMember = members.Id AND
+    members.Status in ('Active','ActiveHidden','ChoiceInactive')
 ORDER BY
     comments.updated DESC
           ";

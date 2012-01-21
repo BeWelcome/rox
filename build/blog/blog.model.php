@@ -391,6 +391,7 @@ SELECT
 FROM blog_comments c
 LEFT JOIN members m ON c.IdMember =m.id
 WHERE c.`blog_id_foreign` = '.(int)$blogId.'
+AND m.Status in ("Active","ChoiceInactive","OutOfRemind","PassedAway")
         ';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)

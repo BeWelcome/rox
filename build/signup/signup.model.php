@@ -517,13 +517,21 @@ WHERE `id` = ' . $IdAddress . '
         
 		
         // Only for bugtesting and backwards compatibility the geo-views in our DB
-        $CityName = "not found in cities view" ;
-    	$sqry = "select Name from cities where id=".$vars['geonameid'] ;
+        $CityName = "not found in cities view";
+        $geonameId = intval($vars['geonameid']);
+        $sqry = "
+            SELECT
+                name
+            FROM
+                geonames_cache
+            WHERE
+                geonameId = $geonameId
+            ";
     	$qry = $this->dao->query($sqry);
     	if ($qry) {
     		$rr = $qry->fetch(PDB::FETCH_OBJ);
-    		if (isset($rr->Name)) {
-    			$CityName=$rr->Name ;
+    		if (isset($rr->name)) {
+                $CityName=$rr->name;
     		}
     		else {
     			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");

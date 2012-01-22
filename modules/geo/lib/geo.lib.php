@@ -121,22 +121,34 @@ class MOD_geo
         }
         return $cityIDs[0];
     }
-    
+
     /**
-     * @param int $cityID of city in database
-     * @return string name of a city in database
+     * Get name for a place by ID.
+     *
+     * @param integer $placeID ID of place in Geonames database
+     * @return string|boolean Name of place in Geonames database, false if none
      */
-    public function getCityName($cityID)
-    {
-        $query = '
-SELECT SQL_CACHE `Name`
-FROM `cities`
-WHERE `id` = \'' . $cityID . '\'';
+    public function getPlaceNameByID($placeID) {
+        $placeID = intval($placeID);
+        $query = "
+            SELECT SQL_CACHE
+                name
+            FROM
+                geonames_cache
+            WHERE
+                fcode = 'PPL'
+                AND
+                geonameId = $placeID
+            LIMIT
+                1
+            ";
         $s = $this->dao->query($query);
-		$cityName = array();
-		$row = $s->fetch(PDB::FETCH_OBJ);
-		$cityName[] = $row->Name;
-		return $cityName[0];
+        $row = $s->fetch(PDB::FETCH_OBJ);
+        if (isset($row->name)) {
+            return $row->name;
+        } else {
+            return false;
+        }
     }
 }
 ?>

@@ -84,30 +84,42 @@ class MOD_geo
     }
 
     /**
-     * @param string $cityname precise, case sensitive name of city
-     * @return int unambiguous identifier of a city in database
+     * Get Geonames ID for a place name.
+     *
+     * @param string $placeName Name of place (case-sensitive)
+     * @param boolean $allowAmbigious Set true if more than one place is
+     *                                allowed - in this case just the first hit
+     *                                is returned
+     * @return integer|boolean Geonames ID of a place in database, false if
+     *                         none found
      */
-    public function getCityID($cityname, $mode = false)
-    {
-        $query = '
-SELECT SQL_CACHE `id`
-FROM `cities`
-WHERE `Name` = \'' . $cityname . '\'';
+    public function getCityID($placeName, $allowAmbigious = false) {
+        $placeNameEscaped = mysql_real_escape_string($placeName);
+        $query = "
+            SELECT SQL_CACHE
+                geonameId AS id
+            FROM
+                geonames_cache
+            WHERE
+                name = '$placeNameEscaped'
+                AND
+                fcode = 'PPL'
+            ";
         $s = $this->dao->query($query);
-		$cityIDs = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$cityIDs[] = $row->id;
-		}
-		if (count($cityIDs) > 1 && !$mode) {
-		    throw new PException(
-		         'Number of found cities for ' . $cityname . 
-		         ' is ' . count($cityIDs) .
-		         '. Can\'t determine unambiguous city id.');
-		}
-		if (!isset($cityIDs[0])) {
-		    return false;
-		}
-		return $cityIDs[0];
+        $cityIDs = array();
+        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            $cityIDs[] = intval($row->id);
+        }
+        if (count($cityIDs) > 1 && !$allowAmbigious) {
+            throw new PException(
+                'Number of found cities for ' . $placeName . 
+                ' is ' . count($cityIDs) .
+                '. Can\'t determine unambiguous city id.');
+        }
+        if (!isset($cityIDs[0])) {
+            return false;
+        }
+        return $cityIDs[0];
     }
     
     /**

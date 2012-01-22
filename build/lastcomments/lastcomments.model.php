@@ -8,25 +8,62 @@ class LastcommentsModel extends  RoxModelBase
     {
         parent::__construct();
     }
-	
-	
-	/**
-     * Find and returns the twenty last comments
-	 * @$limit optional parameter define the limits of nb of comments
-     */    
-    public function GetLastComments($limit=20) {
-		$sql="select m1.Username as UsernameFrom,m2.Username as UsernameTo,comments.updated,TextWhere,TextFree,comments.Quality,
-		country1.id as IdCountryFrom,city1.id as IdCityFrom,country1.Name as CountryNameFrom,
-		country2.id as IdCountryTo,city2.id as IdCityTo,country2.Name as CountryNameTo
-from comments,members as m1,members as m2,cities as city1,countries as country1,cities as city2,countries as country2
-where m1.id=IdFromMember and m2.id=IdToMember and m1.Status='Active' and m2.Status='Active' and DisplayableInCommentOfTheMonth='Yes' 
-and city1.id=m1.IdCity and country1.id=city1.IdCountry
-and city2.id=m2.IdCity and country2.id=city2.IdCountry
-order by comments.id desc limit $limit" ;
-		$Data=$this->bulkLookup($sql) ;
-		return($Data) ;
-    }
 
+    /**
+     * Get last comments members have given each other.
+     *
+     * @param $limit Maximum number of results
+     * @return array List of comments, empty if no results
+     */
+    public function GetLastComments($limit = 20) {
+        $query = "
+            SELECT
+                m1.Username         AS UsernameFrom,
+                m2.Username         AS UsernameTo,
+                comments.updated,
+                TextWhere,
+                TextFree,
+                comments.Quality,
+                country1.iso_alpha2 AS IdCountryFrom,
+                city1.geonameId     AS IdCityFrom,
+                country1.name       AS CountryNameFrom,
+                country2.iso_alpha2 AS IdCountryTo,
+                city2.geonameId     AS IdCityTo,
+                country2.name       AS CountryNameTo
+            FROM
+                comments,
+                members            AS m1,
+                members            AS m2,
+                geonames_cache     AS city1,
+                geonames_countries AS country1,
+                geonames_cache     AS city2,
+                geonames_countries AS country2
+            WHERE
+                m1.id = IdFromMember
+                AND
+                m2.id = IdToMember
+                AND
+                m1.Status = 'Active'
+                AND
+                m2.Status = 'Active'
+                AND
+                DisplayableInCommentOfTheMonth = 'Yes' 
+                AND
+                city1.geonameId = m1.IdCity
+                AND
+                country1.iso_alpha2 = city1.fk_countrycode
+                AND
+                city2.geonameId = m2.IdCity
+                AND
+                country2.iso_alpha2 = city2.fk_countrycode
+            ORDER BY
+                comments.id DESC
+            LIMIT
+                $limit
+            ";
+        $result = $this->bulkLookup($query);
+        return $result;
+    }
 
     /**
      * Find and return one group, using id

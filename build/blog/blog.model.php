@@ -399,17 +399,6 @@ AND m.Status in ("Active","ChoiceInactive","OutOfRemind","PassedAway")
         return $s;
     }
 
-    public function getCountryIt()
-    {
-
-        $query = 'SELECT `country_id`, `continent`, `country_name` FROM `countries` ORDER BY `continent` ASC, `country_name` ASC';
-        $s = $this->dao->query($query);
-        if (!$s) {
-            throw new PException('Could not retrieve countries!');
-        }
-        return $s;
-    }
-
     public function getCategoryFromUserIt($userid,$galleryid = false)
     {
         $query = '

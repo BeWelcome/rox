@@ -66,21 +66,32 @@ class MOD_geo
     }
 
     /**
-     * @param void
-     * @return strings the names of all countries in table countries
+     * Get all countries
+     *
+     * @return array List of countries in geonames_cache table, objects with
+     *               string properties, empty if none
      */
-    public function getAllCountries()
-    {
-        $query = 'SELECT SQL_CACHE `id`, `Name` FROM `countries` ORDER BY `Name`';
-	    $s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve countries!');
-		}
-		$countries = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$countries[$row->id] = $row->Name;
-		}
-		return $countries;
+    public function getAllCountries() {
+        $query = "
+            SELECT SQL_CACHE
+                geonameId AS id,
+                name
+            FROM
+                geonames_cache
+            WHERE
+                fcode LIKE 'PCL%'
+            ORDER BY
+                name
+            ";
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not retrieve countries!');
+        }
+        $countries = array();
+        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            $countries[$row->id] = $row->name;
+        }
+        return $countries;
     }
 
     /**

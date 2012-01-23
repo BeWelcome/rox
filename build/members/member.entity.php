@@ -660,7 +660,7 @@ WHERE IdMember = ".$this->id
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status = 'Active'
+                members.status IN ('Active', 'ChoiceInactive')
             "
         );
 
@@ -676,7 +676,7 @@ WHERE IdMember = ".$this->id
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status = 'Active'
+                members.status IN ('Active', 'ChoiceInactive')
             "
         );
 
@@ -979,7 +979,7 @@ FROM
 WHERE
     comments.IdToMember   = $this->id  AND
     comments.IdFromMember = members.Id AND
-    members.Status in ('Active','ActiveHidden','ChoiceInactive')
+    members.Status IN ('Active', 'ChoiceInactive')
 ORDER BY
     comments.updated DESC
           ";

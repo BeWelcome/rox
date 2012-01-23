@@ -27,16 +27,16 @@ class OnlineModel extends PAppModel {
                     NOW() - online.updated      AS NbSec,
                     members.*,
                     geonames_cache.name         AS cityname,
-                    members.Status              AS MemberStatus,
                     geonames_cache.parentAdm1Id AS IdRegion,
-                    countries.Name              AS countryname,
+                    geonames_countries.name     AS countryname,
+                    members.Status              AS MemberStatus,
                     membersphotos.FilePath      AS photo,
                     membersphotos.Comment,
                     online.updated              AS lastdateaction,
                     lastactivity
                 FROM
                     geonames_cache,
-                    countries,
+                    geonames_countries,
                     online,
                     members
                         LEFT JOIN
@@ -44,7 +44,7 @@ class OnlineModel extends PAppModel {
                         ON
                             membersphotos.IdMember = members.id
                 WHERE
-                    countries.id = geonames_cache.parentCountryId
+                    geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
                     AND
                     geonames_cache.geonameid = members.IdCity
                     AND
@@ -66,13 +66,14 @@ class OnlineModel extends PAppModel {
                 ";
         } else {
             // Public profiles only
+            // TODO: combine with query above
             $query = "
                 SELECT
                     NOW() - online.updated      AS NbSec,
                     members.*,
                     geonames_cache.name         AS cityname,
                     geonames_cache.parentAdm1Id AS IdRegion,
-                    countries.Name              AS countryname,
+                    geonames_countries.name     AS countryname,
                     members.Status              AS MemberStatus,
                     membersphotos.FilePath      AS photo,
                     membersphotos.Comment,
@@ -80,16 +81,16 @@ class OnlineModel extends PAppModel {
                     lastactivity
                 FROM
                     geonames_cache,
-                    countries,
+                    geonames_countries,
                     online,
                     memberspublicprofiles,
-                    members 
+                    members
                         LEFT JOIN
                             membersphotos
                         ON
                             membersphotos.IdMember = members.id
                 WHERE
-                    countries.id = geonames_cache.parentCountryId
+                    geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
                     AND
                     geonames_cache.geonameid = members.IdCity
                     AND

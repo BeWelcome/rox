@@ -52,42 +52,54 @@ class DonateModel extends PAppModel
 			
 			
 	 } // end of getStatForDonations
-	 
+
     /**
-     * Returns an array with the mist of X latest donations (all donation in case the current user has Treasurer rights)
+     * Get donations (max. 25, all if user has Treasurer rights)
      *
-     */    
+     * @return array List of donations as objects with string properties
+     *
+     * TODO: Add parameter for limit and do permission check elsewhere
+     */
     public function getDonations() {
-        $TDonations = array() ;
-        $R = MOD_right::get();
-        $hasRight = $R->hasRight('Treasurer');
-        if ($hasRight) {
-           $query = "select * from donations order by created desc" ;
+        $rights = MOD_right::get();
+        if ($rights->hasRight('Treasurer')) {
+            $limitClause = "";
+        } else {
+            $limitClause = "LIMIT 25";
         }
-        else {
-           $query = "select * from donations order by created desc limit 25" ;
-        }
+        $query = "
+            SELECT
+                *
+            FROM
+                donations
+            ORDER BY
+                created DESC
+            $limitClause
+            ";
         $result = $this->dao->query($query);
+        $donations = array();
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-		 	   if ($row->IdCountry==0) {
-			   	  $CountryName="Unknown country"  ;
-			   }
-			   else {
-        		  $resultcountry = $this->dao->query("select Name from countries where id=".$row->IdCountry);
-				  $rCountry=$resultcountry->fetch(PDB::FETCH_OBJ) ;
-				  $CountryName=$rCountry->Name ;
-			   }
-			   $row->CountryName=$CountryName ;
-              array_push($TDonations, $row);
+            if ($row->IdCountry == 0) {
+                $countryName = "Unknown country";
+            } else {
+                $idCountry = intval($row->IdCountry);
+                $resultcountry = $this->dao->query("
+                    SELECT
+                        name
+                    FROM
+                        geonames_cache
+                    WHERE
+                        geonameId = $idCountry
+                    ");
+                $country = $resultcountry->fetch(PDB::FETCH_OBJ);
+                $countryName = $country->name;
+            }
+            $row->CountryName = $countryName;
+            array_push($donations, $row);
         }
-        return($TDonations) ;
+        return $donations;
     }
-    
-    
-    
-    
-    
-    
+
     public function returnFromPayPal()
     {    
 	 	  global $_SYSHCVOL ; // this is needed to be able to read the value of paypal_authtoken !

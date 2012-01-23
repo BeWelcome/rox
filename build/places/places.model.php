@@ -16,18 +16,33 @@ class Places extends PAppModel {
 		parent::__construct();
 	}
 
-	
-	public function getCountryInfo($countrycode) {
-		$query = sprintf("SELECT `geonames_countries`.`name`, `geonames_countries`.`continent`,countries.id as IdCountry
-			FROM `geonames_countries`,`countries`
-			WHERE `geonames_countries`.`iso_alpha2` = '%s' and `geonames_countries`.`iso_alpha2`=`countries`.`isoalpha2`", 
-			$this->dao->escape($countrycode));
-		$result = $this->dao->query($query);
+    /**
+     * Get country details from database (name, Geoname ID, continent)
+     * @param string $countrycode Country ISO alpha2 code, i.e. "BE"
+     * @return object|bool Database object, false if no match in database
+     */
+    public function getCountryInfo($countrycode) {
+        $query = sprintf("
+            SELECT
+                geonames_cache.name,
+                geonames_cache.geonameId as IdCountry,
+                geonames_countries.continent
+            FROM
+                geonames_cache,
+                geonames_countries
+            WHERE
+                geonames_cache.fcode LIKE 'PCL%%'
+                AND
+                geonames_countries.iso_alpha2 = '%s'
+                AND
+                geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
+            ", $this->dao->escape($countrycode));
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve info about countries list.');
-		}
-		return $result->fetch(PDB::FETCH_OBJ);
-	}
+        }
+        return $result->fetch(PDB::FETCH_OBJ);
+    }
 
     /**
      * Get details for a region

@@ -639,30 +639,52 @@ WHERE IdMember = ".$this->id
         return($rr->cnt) ;
     } // end of count_mynotes
 
-        public function count_comments()
-    {
-        if (!$this->isLoaded())
-        {
-            return array('positive' => 0, 'all' => 0);
+    public function count_comments() {
+        if (!$this->isLoaded()) {
+            return array(
+                'positive' => 0,
+                'all' => 0
+            );
         }
-        $positive = $this->bulkLookup(
+        $id = intval($this->id);
+        $positive = $this->bulkLookup("
+            SELECT
+                COUNT(*) as positive
+            FROM
+                comments,
+                members
+            WHERE
+                comments.IdToMember = $id
+                AND
+                comments.Quality = 'Good'
+                AND
+                members.id = comments.IdFromMember
+                AND
+                members.status = 'Active'
             "
-SELECT COUNT(*) AS positive
-FROM comments
-WHERE IdToMember = ".$this->id."
-AND Quality = 'Good'
-             "
-         );
+        );
 
-        $all = $this->bulkLookup(
+        // TODO: This could be done in first query
+        $all = $this->bulkLookup("
+            SELECT
+                COUNT(*) as sum
+            FROM
+                comments,
+                members
+            WHERE
+                comments.IdToMember = $id
+                AND
+                members.id = comments.IdFromMember
+                AND
+                members.status = 'Active'
             "
-SELECT COUNT(*) AS sum
-FROM comments
-WHERE IdToMember = ".$this->id
-         );
+        );
 
-         $r = array('positive' => $positive[0]->positive, 'all' => $all[0]->sum);
-         return $r;
+        $commentCounters = array(
+            'positive' => $positive[0]->positive,
+            'all' => $all[0]->sum
+        );
+        return $commentCounters;
     }
 
 

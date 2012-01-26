@@ -254,6 +254,36 @@ AND DeleteRequest != 'receiverdeleted'
         );
     }
 
+    public function hasMessageLimitExceeded($IdSender) {
+
+        $nbComments = $this->singleLookup("
+SELECT
+      COUNT(*) as Nb
+FROM
+      comments
+WHERE
+      comments.IdToMember = $IdSender
+  AND comments.Quality = 'Good'
+")->Nb;
+
+        if ($nbComments > 0) {
+            return false;
+        } else {
+            $nbMsgs = $this->singleLookup("
+SELECT
+      COUNT(*) as Nb
+FROM
+      messages
+WHERE
+      IdSender = $IdSender
+  AND Status = 'Sent'
+  AND DateSent > DATE_SUB(NOW(), interval 1 hour)
+")->Nb;
+
+            return $nbMsgs > 5 ? "As a new member you can only sent out five messages per hour." : false;
+        }
+    }
+
     public function getSpamCheckStatus($IdSender,$IdReceiver)
     {
         $Right = new MOD_right();
@@ -363,6 +393,10 @@ WHERE id = ".$input['receiver_id']."
 
         if (empty($input['text'])) {
             $problems['text'] = 'text is empty.';
+        }
+
+        if (($msg = $this->hasMessageLimitExceeded($input['sender_id']))) {
+            $problems['Message Limit Exceeded'] = $msg;
         }
 
         $input['status'] = 'ToSend';

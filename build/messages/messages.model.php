@@ -256,31 +256,36 @@ AND DeleteRequest != 'receiverdeleted'
 
     public function hasMessageLimitExceeded($IdSender) {
 
-        $nbComments = $this->singleLookup("
-SELECT
-      COUNT(*) as Nb
-FROM
-      comments
-WHERE
-      comments.IdToMember = $IdSender
-  AND comments.Quality = 'Good'
-")->Nb;
+        $q = $this->singleLookup("
+ SELECT
+     (
+     SELECT
+         COUNT(*)
+     FROM
+         comments
+     WHERE
+         comments.IdToMember = $IdSender
+         AND
+         comments.Quality = 'Good'
+     ) AS numberOfComments,
+     (
+     SELECT
+         COUNT(*)
+     FROM
+         messages
+     WHERE
+         messages.IdSender = $IdSender
+         AND
+         Status = 'Sent'
+         AND
+         DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+     ) AS numberOfMessages
+");
 
-        if ($nbComments > 0) {
-            return false;
+        if ($q->numberOfComments < 1 and $q->numberOfMessages > 5) {
+            return "As a new member you can only sent out five messages per hour.";
         } else {
-            $nbMsgs = $this->singleLookup("
-SELECT
-      COUNT(*) as Nb
-FROM
-      messages
-WHERE
-      IdSender = $IdSender
-  AND Status = 'Sent'
-  AND DateSent > DATE_SUB(NOW(), interval 1 hour)
-")->Nb;
-
-            return $nbMsgs > 5 ? "As a new member you can only sent out five messages per hour." : false;
+            return false;
         }
     }
 

@@ -211,7 +211,7 @@ var FancyZoom = Class.create({
 	  FancyZoomBox.init();
 	  this.element = $(element);
 		if (this.element) {
-		  this.element.content_div = $(this.element.readAttribute('href').gsub(/^#/, ''));
+		  this.element.content_div = $(element + '_zoom_content');
   		this.element.content_div.hide();
   		this.element.zoom_width = this.options.width;
   		this.element.zoom_height = this.options.height;

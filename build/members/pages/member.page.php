@@ -167,6 +167,7 @@ class MemberPage extends PageWithActiveSkin
     }
 
     protected function leftsidebar() {
+        // TODO: move HTML to a template
         $member = $this->member;
         $words = $this->getWords();
         $thumbnail_url = 'members/avatar/'.$member->Username.'?150';
@@ -175,13 +176,12 @@ class MemberPage extends PageWithActiveSkin
 
         <div id="profile_pic" >
                 <a href="<?=$picture_url?>" id="medium"><img src="<?=$thumbnail_url?>" alt="Picture of <?=$member->Username?>" class="framed" height="150" width="150"/></a>
-                <div id="medium_box" class="hidden">
+                <div id="medium_zoom_content" class="hidden">
                   <img src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>" />
                 </div>
                 <script type="text/javascript">
                     // Activate FancyZoom for profile picture
                     if (typeof FancyZoom == "function") {
-                      document.getElementById('medium').href = "#medium_box";
                       new FancyZoom('medium');
                     }
                 </script>

@@ -181,7 +181,8 @@ class MemberPage extends PageWithActiveSkin
                 </div>
                 <script type="text/javascript">
                     // Activate FancyZoom for profile picture
-                    if (typeof FancyZoom == "function") {
+                    // (not for IE, which don't like FancyZoom)
+                    if (typeof FancyZoom == "function" && is_ie === false) {
                       new FancyZoom('profile_image');
                     }
                 </script>

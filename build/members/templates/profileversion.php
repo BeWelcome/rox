@@ -70,7 +70,10 @@ if (count($languages) > 1 || $myself) {
     }
 
     document.observe("dom:loaded", function() {
-      $('add_language').observe('change',linkDropDown);
+        var element = $('add_language');
+        if (element !== null) {
+            element.observe('change', linkDropDown);
+        }
     });
 //-->
 </script>

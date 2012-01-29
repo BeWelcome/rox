@@ -284,9 +284,13 @@ AND DeleteRequest != 'receiverdeleted'
                 WHERE
                     messages.IdSender = $id
                     AND
-                    Status IN ('ToSend', 'Sent')
-                    AND
-                    created > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                        AND
+                        DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                    )
                 ) AS numberOfMessages
             ";
         $row = $this->singleLookup($query);

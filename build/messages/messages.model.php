@@ -276,14 +276,16 @@ AND DeleteRequest != 'receiverdeleted'
      WHERE
          messages.IdSender = $IdSender
          AND
-         Status = 'Sent'
+         Status IN ('ToSend', 'Sent')
          AND
-         DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+         created > DATE_SUB(NOW(), INTERVAL 1 HOUR)
      ) AS numberOfMessages
 ");
 
+        // TODO: Add config option for limit
         if ($q->numberOfComments < 1 and $q->numberOfMessages > 5) {
-            return "As a new member you can only sent out five messages per hour.";
+            // TODO: Add translations
+            return "You sent too many messages in a short period of time. Please try again later.";
         } else {
             return false;
         }

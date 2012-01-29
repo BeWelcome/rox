@@ -13,26 +13,40 @@ class Blog extends RoxModelBase
 {
     private $_namespace;
 
-    const SQL_BLOGPOST = '
-SELECT
-    b.`blog_id`,
-    b.IdMember,m.Status as MemberStatus,
-    b.`flags` AS `flags`,
-    bd.`blog_title`, bd.`blog_text`,
-    m.Username AS `user_handle`,
-    UNIX_TIMESTAMP(`blog_created`) AS `unix_created`,
-    COUNT(c.`id`) AS comments,
-    `geonames_cache`.`latitude`, `geonames_cache`.`longitude`, `geonames_cache`.`name` AS `geonamesname`, `geonames_countries`.`name` AS `geonamescountry`,
-    `user_geonames_cache`.`fk_countrycode`
-FROM `blog` b
-JOIN `blog_data` bd ON b.`blog_id` = bd.`blog_id`
-LEFT JOIN `trip_data` td ON b.`trip_id_foreign` = td.`trip_id`
-JOIN members m ON b.IdMember = m.id and m.Status in ("Active","ChoiceInactive","OutOfRemind","PassedAway")
-LEFT JOIN `blog_comments` AS c ON c.`blog_id_foreign` = b.`blog_id`
-LEFT JOIN `geonames_cache` AS `geonames_cache` ON (`bd`.`blog_geonameid` = `geonames_cache`.`geonameid`)
-LEFT JOIN `geonames_countries` ON (`geonames_cache`.`fk_countrycode` = `geonames_countries`.`iso_alpha2`)
-LEFT JOIN addresses AS a ON a.IdMember = m.id
-LEFT JOIN `geonames_cache` AS `user_geonames_cache` ON (a.IdCity = `user_geonames_cache`.`geonameid`)';
+    const SQL_BLOGPOST = "
+        SELECT b.blog_id,
+               b.IdMember,
+               m.Status                     AS MemberStatus,
+               b.flags                      AS flags,
+               bd.blog_title,
+               bd.blog_text,
+               m.Username                   AS user_handle,
+               UNIX_TIMESTAMP(blog_created) AS unix_created,
+               COUNT(c.id)                  AS comments,
+               geonames_cache.latitude,
+               geonames_cache.longitude,
+               geonames_cache.name          AS geonamesname,
+               geonames_countries.name      AS geonamescountry,
+               user_geonames_cache.fk_countrycode
+        FROM   blog AS b
+               JOIN blog_data AS bd
+                 ON b.blog_id = bd.blog_id
+               LEFT JOIN trip_data AS td
+                 ON b.trip_id_foreign = td.trip_id
+               JOIN members AS m
+                 ON b.IdMember = m.id
+                    AND m.Status IN ('Active', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
+               LEFT JOIN blog_comments AS c
+                 ON c.blog_id_foreign = b.blog_id
+               LEFT JOIN geonames_cache AS geonames_cache
+                 ON bd.blog_geonameid = geonames_cache.geonameid
+               LEFT JOIN geonames_countries
+                 ON geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
+               LEFT JOIN addresses AS a
+                 ON a.IdMember = m.id
+               LEFT JOIN geonames_cache AS user_geonames_cache
+                 ON a.IdCity = user_geonames_cache.geonameid
+            ";
 
     /*
      * Blogentry flags

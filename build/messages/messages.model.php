@@ -291,12 +291,31 @@ AND DeleteRequest != 'receiverdeleted'
                         AND
                         DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
                     )
-                ) AS numberOfMessages
+                ) AS numberOfMessagesLastHour,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = $id
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                        AND
+                        DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
+                    )
+                ) AS numberOfMessagesLastDay
             ";
         $row = $this->singleLookup($query);
+        $comments = $row->numberOfComments;
+        $lastHour = $row->numberOfMessagesLastHour;
+        $lastDay = $row->numberOfMessagesLastDay;
 
-        // TODO: Add config option for limit
-        if ($row->numberOfComments < 1 && $row->numberOfMessages > 5) {
+        // TODO: Add config options for limits
+        if ($comments < 1 && ($lastHour >= 5 || $lastDay >= 15)) {
             // TODO: Add translations
             return "You sent too many messages in a short period of time. "
                 . "Please try again later.";

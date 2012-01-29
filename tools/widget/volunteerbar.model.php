@@ -192,7 +192,7 @@ AND messages.WhenFirstRead=\'0000-00-00 00:00:00\'';
      */
     public function getNumberSpamToBeChecked()
     {
-        /* TODO: I am abusing layoutbits as a storage to save database queries,
+        /* TODO: I am abusing layoutbits as a storage to cut database queries,
                  I am certain there is a nicer way of doing this. */
         $layoutbits = MOD_layoutbits::get();
         if (!isset($layoutbits->numberSpamToBeChecked)) {

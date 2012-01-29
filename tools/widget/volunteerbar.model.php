@@ -189,8 +189,6 @@ AND messages.WhenFirstRead=\'0000-00-00 00:00:00\'';
     
     /**
      * Returns the number of spam messages
-     *
-     * TODO: merge with other getNumberSpamToBeChecked() methods
      */
     public function getNumberSpamToBeChecked()
     {

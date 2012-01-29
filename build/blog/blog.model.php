@@ -35,9 +35,9 @@ class Blog extends RoxModelBase
                  ON b.trip_id_foreign = td.trip_id
                JOIN members AS m
                  ON b.IdMember = m.id
-                    AND m.Status IN ('Active', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
+                    AND m.Status IN ('Active', 'Pending', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
                LEFT JOIN members AS active_members
-                 ON active_members.Status IN ('Active', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
+                 ON active_members.Status IN ('Active', 'Pending', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
                LEFT JOIN blog_comments AS c
                  ON c.blog_id_foreign = b.blog_id
                     AND c.IdMember = active_members.Id
@@ -408,7 +408,7 @@ SELECT
 FROM blog_comments c
 LEFT JOIN members m ON c.IdMember =m.id
 WHERE c.`blog_id_foreign` = '.(int)$blogId.'
-AND m.Status in ("Active","ChoiceInactive","OutOfRemind","PassedAway")
+AND m.Status in ("Active","Pending","ChoiceInactive","OutOfRemind","PassedAway")
         ';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)

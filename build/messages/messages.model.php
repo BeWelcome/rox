@@ -254,38 +254,48 @@ AND DeleteRequest != 'receiverdeleted'
         );
     }
 
-    public function hasMessageLimitExceeded($IdSender) {
+    /**
+     * Tests if a member has exceeded its limit for sending messages
+     *
+     * @param int $memberId ID of member
+     * @return bool|string False if not exceeded, error message if exceeded
+     */
+    public function hasMessageLimitExceeded($memberId) {
+        // Wash ID
+        $id = intval($memberId);
 
-        $q = $this->singleLookup("
- SELECT
-     (
-     SELECT
-         COUNT(*)
-     FROM
-         comments
-     WHERE
-         comments.IdToMember = $IdSender
-         AND
-         comments.Quality = 'Good'
-     ) AS numberOfComments,
-     (
-     SELECT
-         COUNT(*)
-     FROM
-         messages
-     WHERE
-         messages.IdSender = $IdSender
-         AND
-         Status IN ('ToSend', 'Sent')
-         AND
-         created > DATE_SUB(NOW(), INTERVAL 1 HOUR)
-     ) AS numberOfMessages
-");
+        $query = "
+            SELECT
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    comments
+                WHERE
+                    comments.IdToMember = $id
+                    AND
+                    comments.Quality = 'Good'
+                ) AS numberOfComments,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = $id
+                    AND
+                    Status IN ('ToSend', 'Sent')
+                    AND
+                    created > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                ) AS numberOfMessages
+            ";
+        $row = $this->singleLookup($query);
 
         // TODO: Add config option for limit
-        if ($q->numberOfComments < 1 and $q->numberOfMessages > 5) {
+        if ($row->numberOfComments < 1 && $row->numberOfMessages > 5) {
             // TODO: Add translations
-            return "You sent too many messages in a short period of time. Please try again later.";
+            return "You sent too many messages in a short period of time. "
+                . "Please try again later.";
         } else {
             return false;
         }

@@ -36,8 +36,11 @@ class Blog extends RoxModelBase
                JOIN members AS m
                  ON b.IdMember = m.id
                     AND m.Status IN ('Active', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
+               LEFT JOIN members AS active_members
+                 ON active_members.Status IN ('Active', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
                LEFT JOIN blog_comments AS c
                  ON c.blog_id_foreign = b.blog_id
+                    AND c.IdMember = active_members.Id
                LEFT JOIN geonames_cache AS geonames_cache
                  ON bd.blog_geonameid = geonames_cache.geonameid
                LEFT JOIN geonames_countries

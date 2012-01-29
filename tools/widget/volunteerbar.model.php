@@ -192,21 +192,27 @@ AND messages.WhenFirstRead=\'0000-00-00 00:00:00\'';
      */
     public function getNumberSpamToBeChecked()
     {
-        $query = '
-SELECT COUNT(*) AS cnt
-FROM messages, members AS mSender, members AS mReceiver
-WHERE mSender.id=IdSender
-AND messages.SpamInfo=\'SpamSayMember\'
-AND mReceiver.id=IdReceiver
-AND (
-        mSender.Status=\'Active\'
-    OR
-        mSender.Status=\'Pending\'
-    )
-';
-        $result = $this->dao->query($query);
-        $record = $result->fetch(PDB::FETCH_OBJ);
-        return $record->cnt;
+        /* TODO: I am abusing layoutbits as a storage to save database queries,
+                 I am certain there is a nicer way of doing this. */
+        $layoutbits = MOD_layoutbits::get();
+        if (!isset($layoutbits->numberSpamToBeChecked)) {
+            $query = '
+                SELECT COUNT(*) AS cnt
+                FROM messages, members AS mSender, members AS mReceiver
+                WHERE mSender.id=IdSender
+                AND messages.SpamInfo=\'SpamSayMember\'
+                AND mReceiver.id=IdReceiver
+                AND (
+                        mSender.Status=\'Active\'
+                    OR
+                        mSender.Status=\'Pending\'
+                    )
+                ';
+            $result = $this->dao->query($query);
+            $record = $result->fetch(PDB::FETCH_OBJ);
+            $layoutbits->numberSpamToBeChecked = $record->cnt;
+        }
+        return $layoutbits->numberSpamToBeChecked;
     }
 
     

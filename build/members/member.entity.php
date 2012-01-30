@@ -1370,6 +1370,21 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     }
 
     /**
+     * returns true if the member is banned
+     *
+     * @access public
+     * @return bool
+     */
+    public function isBanned()
+    {
+        if ($this->isLoaded() && $this->Status == 'Banned')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * records a visit of current member on member #id
      *
      * @param Member $member - member entity

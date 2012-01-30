@@ -49,9 +49,26 @@ class RoxFrontRouter
     {
         $this->setLanguage();
         PVars::register('lang', $_SESSION['lang']);
-        
-        MOD_user::updateDatabaseOnlineCounter();
-        MOD_user::updateSessionOnlineCounter();    // update session environment
+
+        $roxModelBase = new RoxModelBase();
+        $member = $roxModelBase->getLoggedInMember();
+
+        if (!($member = $roxModelBase->getLoggedInMember())) {
+            // not logged in or not in database
+            $memberId = false;
+        } elseif ($member->isBanned()) {
+            // user is banned, log him out
+            $member->logOut();
+            $member = $memberId = false;
+        } else {
+            // normal logged in member
+            $memberId = $member->id;
+        }
+
+        $ipAsInt = intval(ip2long($_SERVER['REMOTE_ADDR']));
+        MOD_online::get()->iAmOnline($ipAsInt, $memberId);
+
+        return $member;
     }
     
     

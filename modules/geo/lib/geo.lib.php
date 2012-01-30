@@ -66,105 +66,100 @@ class MOD_geo
     }
 
     /**
-     * @param void
-     * @return strings the names of all countries in table countries
+     * Get all countries
+     *
+     * @return array List of countries in geonames_cache table, objects with
+     *               string properties, empty if none
      */
-    public function getAllCountries()
-    {
-        $query = 'SELECT SQL_CACHE `id`, `Name` FROM `countries` ORDER BY `Name`';
-	    $s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve countries!');
-		}
-		$countries = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$countries[$row->id] = $row->Name;
-		}
-		return $countries;
-    }
-    
-    /**
-     * Expecting the id of the country and the first letters
-     * of the name of a city, this method returns a list of possible cities.
-     * The list is ordered by population, bigger cities first.
-     * 
-     * @param int $countryID ID of country in database
-     * @param string $city name of city acc. to Name or OtherNames in database
-     * @return array (cities.id => (cities.Name, cities.RegionName))
-     */
-    public function guessCity($countryID, $cityname)
-    {
-        $query = '
-SELECT SQL_CACHE
-	cities.`id`,
-	cities.`Name`,
-	regions.`name` AS `RegionName`
-FROM
-	`cities` LEFT JOIN `regions` ON (cities.`IdRegion`=regions.`id`)
-WHERE
-	cities.`IdCountry`=' . $countryID . '
-AND (
-	cities.`Name` like \'' . $cityname . '%\' OR
-	cities.`OtherNames` like \'%' . $cityname . '%\'
-)
-AND
-	`ActiveCity`=\'True\'
-ORDER BY
-	cities.`population` DESC';
-        
+    public function getAllCountries() {
+        $query = "
+            SELECT SQL_CACHE
+                geonameId AS id,
+                name
+            FROM
+                geonames_cache
+            WHERE
+                fcode LIKE 'PCL%'
+            ORDER BY
+                name
+            ";
         $s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Could not retrieve cities!');
-		}
-		$cities = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$cities[$row->id] = array($row->Name, $row->RegionName);
-		}
-        return $cities;
+        if (!$s) {
+            throw new PException('Could not retrieve countries!');
+        }
+        $countries = array();
+        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            $countries[$row->id] = $row->name;
+        }
+        return $countries;
     }
-    
+
     /**
-     * @param string $cityname precise, case sensitive name of city
-     * @return int unambiguous identifier of a city in database
+     * Get Geonames ID for a place name.
+     *
+     * @param string $placeName Name of place (case-sensitive)
+     * @param boolean $allowAmbigious Set true if more than one place is
+     *                                allowed - in this case just the first hit
+     *                                is returned
+     * @return integer|boolean Geonames ID of a place in database, false if
+     *                         none found
      */
-    public function getCityID($cityname, $mode = false)
-    {
-        $query = '
-SELECT SQL_CACHE `id`
-FROM `cities`
-WHERE `Name` = \'' . $cityname . '\'';
+    public function getCityID($placeName, $allowAmbigious = false) {
+        $placeNameEscaped = mysql_real_escape_string($placeName);
+        $query = "
+            SELECT SQL_CACHE
+                geonameId AS id
+            FROM
+                geonames_cache
+            WHERE
+                name = '$placeNameEscaped'
+                AND
+                fcode = 'PPL'
+            ";
         $s = $this->dao->query($query);
-		$cityIDs = array();
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$cityIDs[] = $row->id;
-		}
-		if (count($cityIDs) > 1 && !$mode) {
-		    throw new PException(
-		         'Number of found cities for ' . $cityname . 
-		         ' is ' . count($cityIDs) .
-		         '. Can\'t determine unambiguous city id.');
-		}
-		if (!isset($cityIDs[0])) {
-		    return false;
-		}
-		return $cityIDs[0];
+        $cityIDs = array();
+        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            $cityIDs[] = intval($row->id);
+        }
+        if (count($cityIDs) > 1 && !$allowAmbigious) {
+            throw new PException(
+                'Number of found cities for ' . $placeName . 
+                ' is ' . count($cityIDs) .
+                '. Can\'t determine unambiguous city id.');
+        }
+        if (!isset($cityIDs[0])) {
+            return false;
+        }
+        return $cityIDs[0];
     }
-    
+
     /**
-     * @param int $cityID of city in database
-     * @return string name of a city in database
+     * Get name for a place by ID.
+     *
+     * @param integer $placeID ID of place in Geonames database
+     * @return string|boolean Name of place in Geonames database, false if none
      */
-    public function getCityName($cityID)
-    {
-        $query = '
-SELECT SQL_CACHE `Name`
-FROM `cities`
-WHERE `id` = \'' . $cityID . '\'';
+    public function getPlaceNameByID($placeID) {
+        $placeID = intval($placeID);
+        $query = "
+            SELECT SQL_CACHE
+                name
+            FROM
+                geonames_cache
+            WHERE
+                fcode = 'PPL'
+                AND
+                geonameId = $placeID
+            LIMIT
+                1
+            ";
         $s = $this->dao->query($query);
-		$cityName = array();
-		$row = $s->fetch(PDB::FETCH_OBJ);
-		$cityName[] = $row->Name;
-		return $cityName[0];
+        $row = $s->fetch(PDB::FETCH_OBJ);
+        if (isset($row->name)) {
+            return $row->name;
+        } else {
+            return false;
+        }
     }
 }
 ?>

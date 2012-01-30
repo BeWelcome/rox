@@ -14,28 +14,118 @@ class OnlineModel extends PAppModel {
     }
 
     public function GetMembers() {
-	 	global $_SYSHCVOL ;
-		// TODO : I am not sure it is useful to look in membersphotos table here 
-       if ($User = APP_User::login("Pending,NeedMore")) { // if the use is logged we will not reduce to only public profile 
-		 	$query = "select now()-online.updated as NbSec ,members.*,geonames_cache.name as cityname,members.Status as MemberStatus,geonames_cache.parentAdm1Id as IdRegion,countries.Name as countryname,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from geonames_cache,countries,online,members left 
-			join membersphotos on membersphotos.IdMember=members.id where countries.id=geonames_cache.parentCountryId and geonames_cache.geonameid=members.IdCity and (members.Status='Active' or members.Status='Pending' or members.Status='NeedMore') and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) GROUP BY members.id order by members.LastLogin desc";
-		} 
-		else { // User is not log search only public profile
-		   	$query = "select now()-online.updated as NbSec ,members.*,geonames_cache.name as cityname,geonames_cache.parentAdm1Id as IdRegion,countries.Name as countryname,members.Status as MemberStatus,membersphotos.FilePath as photo,membersphotos.Comment,online.updated as lastdateaction,lastactivity from geonames_cache,countries,online,memberspublicprofiles,members 
-			left join membersphotos on membersphotos.IdMember=members.id where countries.id=geonames_cache.parentCountryId and geonames_cache.geonameid=members.IdCity and (members.Status='Active' or members.Status='Pending' or members.Status='NeedMore') and online.IdMember=members.id and online.updated>DATE_SUB(now(),interval " . $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] . " minute) and online.IdMember=members.id and memberspublicprofiles.IdMember=members.id GROUP BY members.id order by members.LastLogin desc";
-		}
-       $s = $this->dao->query($query);
-		if (!$s) {
-			throw new PException('Failed to get online members!');
-		}
- 		$TMembers=array() ;
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			$TMembers[] = $row;
-		}
-		return ($TMembers) ;
-		 
-	 } // end of GetMembers
-	 
+        // TODO: Replace by config values
+        global $_SYSHCVOL;
+        $delay = $_SYSHCVOL['WhoIsOnlineDelayInMinutes'];
+
+        // Test if member is logged in
+        if ($User = APP_User::login("Pending,NeedMore")) {
+            // All profiles
+            // TODO: JY: I am not sure it is useful to look in membersphotos table here
+            $query = "
+                SELECT
+                    NOW() - online.updated      AS NbSec,
+                    members.*,
+                    geonames_cache.name         AS cityname,
+                    geonames_cache.parentAdm1Id AS IdRegion,
+                    geonames_countries.name     AS countryname,
+                    members.Status              AS MemberStatus,
+                    membersphotos.FilePath      AS photo,
+                    membersphotos.Comment,
+                    online.updated              AS lastdateaction,
+                    lastactivity
+                FROM
+                    geonames_cache,
+                    geonames_countries,
+                    online,
+                    members
+                        LEFT JOIN
+                            membersphotos
+                        ON
+                            membersphotos.IdMember = members.id
+                WHERE
+                    geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
+                    AND
+                    geonames_cache.geonameid = members.IdCity
+                    AND
+                    (
+                        members.Status = 'Active'
+                        OR
+                        members.Status = 'Pending'
+                        OR
+                        members.Status = 'NeedMore'
+                    )
+                    AND
+                    online.IdMember = members.id
+                    AND
+                    online.updated > DATE_SUB(NOW(), INTERVAL $delay MINUTE)
+                GROUP BY
+                    members.id
+                ORDER BY
+                    members.LastLogin DESC
+                ";
+        } else {
+            // Public profiles only
+            // TODO: combine with query above
+            $query = "
+                SELECT
+                    NOW() - online.updated      AS NbSec,
+                    members.*,
+                    geonames_cache.name         AS cityname,
+                    geonames_cache.parentAdm1Id AS IdRegion,
+                    geonames_countries.name     AS countryname,
+                    members.Status              AS MemberStatus,
+                    membersphotos.FilePath      AS photo,
+                    membersphotos.Comment,
+                    online.updated              AS lastdateaction,
+                    lastactivity
+                FROM
+                    geonames_cache,
+                    geonames_countries,
+                    online,
+                    memberspublicprofiles,
+                    members
+                        LEFT JOIN
+                            membersphotos
+                        ON
+                            membersphotos.IdMember = members.id
+                WHERE
+                    geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
+                    AND
+                    geonames_cache.geonameid = members.IdCity
+                    AND
+                    (
+                        members.Status = 'Active'
+                        OR
+                        members.Status = 'Pending'
+                        OR
+                        members.Status = 'NeedMore'
+                    )
+                    AND
+                    online.IdMember = members.id
+                    AND
+                    online.updated > DATE_SUB(NOW(), INTERVAL $delay MINUTE)
+                    AND
+                    online.IdMember = members.id
+                    AND
+                    memberspublicprofiles.IdMember = members.id
+                GROUP BY
+                    members.id
+                ORDER BY
+                    members.LastLogin DESC
+                ";
+        }
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Failed to get online members!');
+        }
+        $TMembers = array();
+        while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+            $TMembers[] = $row;
+        }
+        return $TMembers;
+    }
+
 	 // The GetGuests function will return an array with guest online
 	 // Not a only people with righ ShowAdctivity or Admin will be able to see them
     public function GetGuests() {

@@ -517,13 +517,21 @@ WHERE `id` = ' . $IdAddress . '
         
 		
         // Only for bugtesting and backwards compatibility the geo-views in our DB
-        $CityName = "not found in cities view" ;
-    	$sqry = "select Name from cities where id=".$vars['geonameid'] ;
+        $CityName = "not found in cities view";
+        $geonameId = intval($vars['geonameid']);
+        $sqry = "
+            SELECT
+                name
+            FROM
+                geonames_cache
+            WHERE
+                geonameId = $geonameId
+            ";
     	$qry = $this->dao->query($sqry);
     	if ($qry) {
     		$rr = $qry->fetch(PDB::FETCH_OBJ);
-    		if (isset($rr->Name)) {
-    			$CityName=$rr->Name ;
+    		if (isset($rr->name)) {
+                $CityName=$rr->name;
     		}
     		else {
     			MOD_log::get()->write("Signup bug [".$sqry."]"." (With New Signup !)","Signup");
@@ -782,68 +790,5 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Pending
         }
         return false; // no error
 	}
-	
-	public function test()
-	{
-	    // just defaults
-	    assert_options(ASSERT_ACTIVE, 1);
-	    assert_options(ASSERT_WARNING, 1);
-	    assert_options(ASSERT_BAIL, 0);
-	    assert_options(ASSERT_QUIET_EVAL, 0);
-	    
-	    // checkEmail
-	    assert($this->checkEmail('f1f@ddd.info'));
-	    assert($this->checkEmail('zungi@gmx.de'));
-	    
-	    // polishFormValues
-	    $vars['email'] = "stOCKHAUSen@nIcEmUsiKa.net"; 
-	    $vars['agehidden'] = "YES";
-	    $vars['username'] = "' OR ''='";
-	    $this->polishFormValues($vars);
-	    assert(strcmp($vars['agehidden'], self::BW_TRUE) != 0);
-	    assert(strcmp($vars['email'], 'stockhausen@nicemusika.net') == 0);
-	    assert(strcmp($vars['username'], "\\' OR \\'\\'=\\'") == 0);
-	    
-	    // specifyCity
-	    $rows = MOD_geo::get()->guessCity(2921044, 'Hamburg');
-	    assert(count($rows) == 1);
-	    
-	    // checkRegistrationForm
-	    //$vars['country'] = "2921044";
-	    $vars['country'] = "2077456";
-	    $vars['city'] = "Magdeburg";
-	    //$vars['city_id'] = "2155571";
-	    $vars['housenumber'] = "0";
-	    $vars['street'] = "Schanzenstrasse";
-	    $vars['zip'] = "20357";
-	    $vars['username'] = "Felixo";
-	    $vars['email'] = "quatsch@kannweg.de";
-	    $vars['emailcheck'] = 'quatsch@kannweg.de';
-	    $vars['password'] = 'tschangtschang';
-	    $vars['passwordcheck'] = 'tschangtschang';
-	    $vars['firstname'] = 'Felixaa';
-	    $vars['lastname'] = 'van So';
-	    $vars['gender'] = 'female';
-	    $vars['birthyear'] = '1900';
-	    $vars['terms'] = 'Yes';
-	    
-	    $errors = $this->checkRegistrationForm($vars);
-	    assert(count($errors) == 0);
-	    echo "";
-	    var_dump($errors);
-	    echo "";
-	    var_dump($vars['city_id']);
-	    echo "";
-	    var_dump($vars['city']);
 
-	    //$V = new SignupView($this);
-	    //$elem = $V->getCityElement($vars['city']);
-	    //echo "<br>" . $elem;
-
-	    //assert(in_array("SignupErrorProvideHouseNumber", $errors));
-	    
-	    //$S = new MOD_secshield(0,0);
-	    //$S->test();
-	}
-	
 }

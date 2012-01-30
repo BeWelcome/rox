@@ -29,34 +29,24 @@ class PlacesView extends PAppView {
     public function teaserplaces($countrycode,$country,$region,$city) {
         require 'templates/teaserCountry.php';
     }
-    public function placesbar($volunteers) {
-        require 'templates/countrybar.php';
-    }
     public function submenu($subTab) {
         //require 'templates/submenu.php';
     }
-    public function displayPlacesInfo($countryinfo, $members,$volunteers) {
+    public function displayPlacesInfo($countryinfo, $members) {
         $memberlist = $this->generateMemberList($members);
         $forums = '';
         $wiki = new WikiController();
         $wikipage = str_replace(' ', '', ucwords($countryinfo->name));
-//				MOD_log::get()->write("place.view.php::displayPlacesInfo[".$countryinfo->name."]<br /> count(\$volunteers)=".count($volunteers)  ,"debug") ;
-				
         require 'templates/countryInfo.php';
     }
-    public function displayPlacesWiki($countryinfo, $members,$volunteers) {
-        $wiki = new WikiController();
-        $wikipage = str_replace(' ', '', ucwords($countryinfo->name));
-        require 'templates/countryWiki.php';
-    }
-    public function displayRegionInfo($regioninfo, $members,$volunteers) {
+    public function displayRegionInfo($regioninfo, $members) {
         //$memberlist = $this->generateMemberList($members);
         $forums = '';
         $wiki = new WikiController();
         $wikipage = str_replace(' ', '', ucwords($regioninfo->region));
         require 'templates/regionInfo.php';
     }
-    public function displayCityInfo($cityinfo, $members,$volunteers) {
+    public function displayCityInfo($cityinfo, $members) {
         $forums = '';
         $wiki = new WikiController();
         $wikipage = str_replace(' ', '', ucwords($cityinfo->city));

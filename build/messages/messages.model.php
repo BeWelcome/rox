@@ -254,6 +254,76 @@ AND DeleteRequest != 'receiverdeleted'
         );
     }
 
+    /**
+     * Tests if a member has exceeded its limit for sending messages
+     *
+     * @param int $memberId ID of member
+     * @return bool|string False if not exceeded, error message if exceeded
+     */
+    public function hasMessageLimitExceeded($memberId) {
+        // Wash ID
+        $id = intval($memberId);
+
+        $query = "
+            SELECT
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    comments
+                WHERE
+                    comments.IdToMember = $id
+                    AND
+                    comments.Quality = 'Good'
+                ) AS numberOfComments,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = $id
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                        AND
+                        DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                    )
+                ) AS numberOfMessagesLastHour,
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    messages
+                WHERE
+                    messages.IdSender = $id
+                    AND
+                    (
+                        Status = 'ToSend'
+                        OR
+                        Status = 'Sent'
+                        AND
+                        DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
+                    )
+                ) AS numberOfMessagesLastDay
+            ";
+        $row = $this->singleLookup($query);
+        $comments = $row->numberOfComments;
+        $lastHour = $row->numberOfMessagesLastHour;
+        $lastDay = $row->numberOfMessagesLastDay;
+
+        // TODO: Add config options for limits
+        if ($comments < 1 && ($lastHour >= 5 || $lastDay >= 15)) {
+            // TODO: Add translations
+            return "You sent too many messages in a short period of time. "
+                . "Please try again later.";
+        } else {
+            return false;
+        }
+    }
+
     public function getSpamCheckStatus($IdSender,$IdReceiver)
     {
         $Right = new MOD_right();
@@ -363,6 +433,10 @@ WHERE id = ".$input['receiver_id']."
 
         if (empty($input['text'])) {
             $problems['text'] = 'text is empty.';
+        }
+
+        if (($msg = $this->hasMessageLimitExceeded($input['sender_id']))) {
+            $problems['Message Limit Exceeded'] = $msg;
         }
 
         $input['status'] = 'ToSend';

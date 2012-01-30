@@ -81,5 +81,5 @@ var common = {
         $$('li.expanded a.header').each(function(it){
             it.observe('click', observer);
         });
-    },
+    }
 };

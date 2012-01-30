@@ -188,24 +188,24 @@ while ($rr = mysql_fetch_object($qry)) {
             forums_threads.threadid AS IdThread,
             forums_posts.message,
             forums_posts.IdContent,
-            cities.Name AS cityname,
-            countries.Name AS countryname
-        FROM    
-            cities,
-            countries,
+            geonames_cache.name AS cityname,
+            geonames_cache2.name AS countryname
+        FROM
             forums_posts,
             forums_threads,
-            members
+            members,
+            geonames_cache,
+            geonames_cache as geonames_cache2
         WHERE
             forums_threads.threadid = forums_posts.threadid  AND
             forums_posts.IdWriter = members.id  AND
-            forums_posts.postid = $rr->IdPost  AND
-            cities.id = members.IdCity  AND
-            countries.id = cities.IdCountry
+            forums_posts.postid = $rr->IdPost AND
+            geonames_cache.geonameid = members.IdCity  AND
+            geonames_cache2.geonameid = geonames_cache.parentCountryId
     ");
 
     // Skip to next item in queue if there was no result from database
-    if (!is_object($rPost) {
+    if (!is_object($rPost)) {
         continue;
     }
 
@@ -273,7 +273,7 @@ while ($rr = mysql_fetch_object($qry)) {
     $text = '<html><head><title>'.$subj.'</title></head>' ;
     $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
     $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
-    $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> '.$rPost->countryname.'('.$rPost->cityname.')</td></tr>' ;
+    $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> ('.$rPost->cityname.', '.$rPost->countryname.')</td></tr>' ;
     $text.='<tr><td valign="top">';
 
     $text.=PictureInMail($rPost->Username) ;
@@ -444,129 +444,7 @@ if ($countbroadcast>0) {
     $sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
 } 
 
-// -----------------------------------------------------------------------------
-// Messages from LocalVolunteers
-// -----------------------------------------------------------------------------
 
-$str = "
-SELECT
-    SQL_CALC_FOUND_ROWS messages.*,
-    Username,
-    members.Status AS MemberStatus
-FROM
-    messages,
-    members
-WHERE
-    messages.IdSender = members.id  AND
-    messages.Status = 'ToSend' AND
-    messages.MessageType = 'LocalVolToMember' 
-    and members.Status in('Active','ActiveHidden')";
-$qry = sql_query($str);
-
-$rCount=mysql_fetch_object(sql_query("SELECT FOUND_ROWS() as Cnt")) ;
-
-$count = 0;
-while ($rr = mysql_fetch_object($qry)) {
-    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned
-        if (IsLoggedIn()) {
-            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")<br>\n" ;
-        }
-        $str = "
-UPDATE
-    messages
-SET
-    Status = 'Freeze'
-WHERE
-    id = $rr->id and IdParent=0
-        "; 
-        sql_query($str);
-        LogStr("Mailbot refuse to send localvolunteer message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
-        continue ;
-    } 
-     
-    $Email = GetEmail($rr->IdReceiver);
-    $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
-    $subj = ww("YouveGotAMail", $rr->Username);
-    $urltoreply = $baseuri."messages/{$rr->id}/reply";
-    $MessageFormatted=$rr->Message;
-    if ($rr->JoinMemberPict=="yes") {
-        $rImage=LoadRow("
-SELECT
-    *
-FROM
-    membersphotos
-WHERE
-    IdMember = $rr->IdSender  AND
-    SortOrder = 0
-        ");
-        $MessageFormatted = '
-            <html><head>
-            <title>'.$subj.'</title></head>
-            <body>
-            <table>
-            <tr><td>
-        ';
-        if (isset($rImage->FilePath)) {
-//            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
-            $MessageFormatted .= PictureInMail($rr->Username);
-        }
-        $MessageFormatted .= '</td><td>';
-        $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
-        $MessageFormatted .= '</td>';
-        
-        if (IsLoggedIn()) { // In this case we display the tracks for the admin who will probably need to check who is sending for sure and who is not
-            echo " from ".$rr->Username." to ".fUsername($rr->IdReceiver). " email=".$Email,"<br>" ;
-        }
-        if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
-            $MessageFormatted .= '<tr><td colspan=2>'.ww('mailbot_JoinSenderMail', $rr->Username, GetEmail($rr->IdSender)).'</td>';
-        }
-        
-        $MessageFormatted .= '</table></body></html>';
-        
-        $text=$MessageFormatted;
-        
-    } else {
-        $text = ww('mailbot_YouveGotAMailText', fUsername($rr->IdReceiver), $rr->Username, $rr->Message, $urltoreply, $rr->Username, $rr->Username);
-    }
-    
-    // to force because context is not defined
-    // TODO: What the hell is this?
-    $_SERVER['SERVER_NAME'] = 'www.bewelcome.org';
-
-    $SenderMail="localevent@bewelcome.org" ;
-    $text=$text."<br />".ww("mailbot_localvol_info","<a href=\"{$baseuri}members/".$rr->Username."\">".$rr->Username."</a>",$rCount->Cnt,"<a href=\"http://www.bewelcome.org/bw/mypreferences.php\">".ww("MyPreferences")."</a>","<b>".ww("PreferenceLocalEvent")."</b>" );
-    if (!bw_mail($Email, $subj, $text, "", $SenderMail, $MemberIdLanguage, "html", "", "")) {
-        LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
-        $str = "
-UPDATE
-    messages
-SET
-    Status = 'Failed'
-WHERE
-    id = $rr->id
-        ";
-    } else {
-        $str = "
-UPDATE
-    messages
-SET
-    Status = 'Sent',
-    IdTriggerer = $IdTriggerer,
-    DateSent = NOW()
-WHERE
-    id = $rr->id
-        ";
-        $count++;
-    }
-    sql_query($str);
-
-}
-    
-if ($count>0) {
-    $sResult=$sResult. " and ".$count. " localmember Messages sent" ;
-} 
-
-    
     $str="select * from volunteers_reports_schedule where Type='Accepter' and TimeToDeliver<now() " ;
     $qryV=sql_query($str);
     while ($rrV = mysql_fetch_object($qryV)) {

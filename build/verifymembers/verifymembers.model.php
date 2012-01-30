@@ -150,28 +150,92 @@ WHERE   IdVerified = $member_id
 
 
     /**
-     * this function load the list of verification done for member Username
-     * @Username the id of the member (can also be the IdMember, it will be converted to a Username)
-     * @ returns a structure with the data with the list of verifications or and empty structure if password/Username dont match
-     **/
-    public function LoadVerifiers($cid)
-    {
+     * Get verifications a member has received.
+     *
+     * @param int|string $cid User ID or username of member
+     * @return array List of verifications
+     *
+     * TODO: Restrict method usage to either user ID *or* username, not both
+     */
+    public function LoadVerifiers($cid) {
+        if (is_numeric($cid)) {
+            $userId = intval($cid);
+            $query = "
+                SELECT
+                    m1.Username,
+                    AddressVerified,
+                    NameVerified,
+                    verifiedmembers.Comment AS Comment,
+                    verifiedmembers.Type AS VerificationType,
+                    geonames_cache.name AS CityName,
+                    m1.Gender,
+                    verifiedmembers.created AS VerificationDate
+                FROM
+                    members m1,
+                    members m2,
+                    verifiedmembers,
+                    geonames_cache
+                WHERE
+                    m1.id = verifiedmembers.IdVerifier
+                    AND
+                    m2.id = verifiedmembers.IdVerified
+                    AND
+                    geonames_cache.geonameId = m1.IdCity
+                    AND
+                    (
+                        m1.Status = 'Active'
+                        OR
+                        m1.Status = 'ChoiceInactive'
+                    )
+                    AND
+                    m2.id = $userId
+                ";
+        } else {
+            $username = mysql_real_escape_string($cid);
 
-        $where_cid = is_numeric($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
-        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender,verifiedmembers.created as VerificationDate".
-             " from members m1,members m2, verifiedmembers,cities ".
-             " where m1.id=verifiedmembers.IdVerifier and m2.id=verifiedmembers.IdVerified and cities.id=m1.IdCity and (m1.Status='Active' or m1.Status='ChoiceInactive') and ".$where_cid ;
+            // This is almost the same query as for user ID, but to improve
+            // code readability it's repeated here
+            $query = "
+                SELECT
+                    m1.Username,
+                    AddressVerified,
+                    NameVerified,
+                    verifiedmembers.Comment AS Comment,
+                    verifiedmembers.Type AS VerificationType,
+                    geonames_cache.name AS CityName,
+                    m1.Gender,
+                    verifiedmembers.created AS VerificationDate
+                FROM
+                    members m1,
+                    members m2,
+                    verifiedmembers,
+                    geonames_cache
+                WHERE
+                    m1.id = verifiedmembers.IdVerifier
+                    AND
+                    m2.id = verifiedmembers.IdVerified
+                    AND
+                    geonames_cache.geonameId = m1.IdCity
+                    AND
+                    (
+                        m1.Status = 'Active'
+                        OR
+                        m1.Status = 'ChoiceInactive'
+                    )
+                    AND
+                    m2.Username = '$username'
+                ";
+        }
 
-             if (!is_array($rows = $this->bulkLookup($ss))) {
-            return array(); // empty array means no verifier
+        if (!is_array($rows = $this->bulkLookup($query))) {
+             // empty array means no verifier
+            return array();
         } else {
             // $rows can be empty or not, we don't care at this point.
             return $rows;
         }
 
-    } // LoadVerifiers
-
-
+    }
 
     /**
      * this function load the list of the approved verifiers
@@ -180,15 +244,41 @@ WHERE   IdVerified = $member_id
     public function LoadApprovedVerifiers()
     {
         $layoutbits = new MOD_layoutbits();
-        $ss="select m1.*,cities.Name as CityName,countries.Name as CountryName".
-             " from members m1,cities,rightsvolunteers,rights,countries ".
-             " where m1.id=rightsvolunteers.IdMember and cities.IdCountry=countries.id and rights.id=rightsvolunteers.IdRight and rights.Name='Verifier' and rightsvolunteers.Level>0 and cities.id=m1.IdCity and (m1.Status='Active') order by CityName" ;
-        $mm = $this->createEntity('Member')->findBySQLMany($ss);
+        $query = "
+            SELECT
+                m1.*,
+                geonames_cache.name AS CityName,
+                geonames_countries.name AS CountryName
+            FROM
+                members m1,
+                geonames_cache,
+                rightsvolunteers,
+                rights,
+                geonames_countries
+            WHERE
+                m1.id = rightsvolunteers.IdMember
+                AND
+                geonames_cache.geonameId = m1.IdCity
+                AND
+                geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
+                AND
+                rights.id = rightsvolunteers.IdRight
+                AND
+                rights.Name = 'Verifier'
+                AND
+                rightsvolunteers.Level > 0
+                AND
+                m1.Status = 'Active'
+            ORDER BY
+                CityName
+            ";
+
+        $mm = $this->createEntity('Member')->findBySQLMany($query);
         if (!$mm) {
             throw new PException('verifymembers::LoadApprovedVerifiers Could not retrieve the verifiers list!');
         }
 
-        $tt=array() ;
+        $tt=array();
 
         // for all the records
         foreach ($mm as $m) {
@@ -209,26 +299,49 @@ WHERE   IdVerified = $member_id
     } // LoadApprovedVerifiers
 
     /**
-     * this function load the list of verification done for by member Username
-     * @Username the id of the member (can also be the IdMember, it will be converted to a Username)
-     * @ returns a structure with the data with the list of verifications or and empty structure if password/Username dont match
-     **/
-    public function LoadVerified($cid)
-    {
+     * Get verifications a member has given.
+     *
+     * @param string $username Username of member
+     * @return array List of verifications, empty if none
+     */
+    public function LoadVerified($username) {
+        $usernameEscaped = mysql_real_escape_string($username);
+        $query = "
+            SELECT
+                m1.Username,
+                AddressVerified,
+                NameVerified,
+                verifiedmembers.Comment AS Comment,
+                verifiedmembers.Type AS VerificationType,
+                geonames_cache.name AS CityName,
+                m1.Gender
+            FROM
+                members m1,
+                members m2,
+                verifiedmembers,
+                geonames_cache
+            WHERE
+                m1.id = verifiedmembers.IdVerified
+                AND
+                m2.id = verifiedmembers.IdVerifier
+                AND
+                geonames_cache.geonameId = m1.IdCity
+                AND
+                (
+                    m1.Status = 'Active'
+                    OR
+                    m1.Status = 'ChoiceInactive'
+                )
+                AND
+                    m2.username = '$usernameEscaped'
+            ";
 
-        $where_cid = is_numeric($cid) ? 'm2.id='.(int)$cid : 'm2.Username=\''.mysql_real_escape_string($cid).'\'';
-
-        $ss="select m1.Username,AddressVerified,NameVerified,verifiedmembers.Comment as Comment,verifiedmembers.Type as VerificationType,cities.Name as CityName,m1.Gender".
-             " from members m1,members m2, verifiedmembers,cities ".
-             " where m1.id=verifiedmembers.IdVerified and m2.id=verifiedmembers.IdVerifier and cities.id=m1.IdCity and (m1.Status='Active' or m1.Status='ChoiceInactive') and ".$where_cid ;
-        if (!is_array($rows = $this->bulkLookup($ss))) {
-            return array(); // empty array means no verifier
+        if (!is_array($rows = $this->bulkLookup($query))) {
+            return array();
         } else {
-            // $rows can be empty or not, we don't care at this point.
             return $rows;
         }
-
-    } // LoadVerified
+    }
 
 
     /**

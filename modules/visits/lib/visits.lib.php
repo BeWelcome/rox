@@ -86,11 +86,47 @@ class MOD_visits {
         
 
         $query = '
-SELECT `profilesvisits`.`updated` as datevisite,`members`.`Username`,`members`.`ProfileSummary`,`cities`.`Name` as cityname,`countries`.`Name` as countryname,`membersphotos`.`FilePath` as photo,`membersphotos`.`Comment`
-FROM 	`profilesvisits`,`cities`,`countries`,`members` left join `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 
-WHERE `countries`.`id`=`cities`.`IdCountry` and `cities`.`id`=`members`.`IdCity` and `status`=\'Active\' and `members`.`id`=`profilesvisits`.`IdVisitor` and `profilesvisits`.`IdMember`=' . $idMember . ' and (`members`.`Status`=\'Active\' or `members`.`Status`=\'Pending\' or `members`.`Status`=\'NeedMore\')    
-ORDER BY `profilesvisits`.`updated` desc limit '.$quantity; 
-;
+            SELECT
+                profilesvisits.updated as datevisite,
+                members.Username,
+                members.ProfileSummary,
+                geonames_cache.name AS cityname,
+                geonames_cache2.name AS countryname,
+                membersphotos.FilePath as photo,
+                membersphotos.Comment
+            FROM
+                profilesvisits,
+                geonames_cache,
+                geonames_cache as geonames_cache2,
+                members
+                    LEFT JOIN
+                        membersphotos
+                    ON
+                        membersphotos.IdMember = members.id
+                        AND
+                        membersphotos.SortOrder = 0
+            WHERE
+                geonames_cache.geonameid = members.IdCity
+                AND
+                geonames_cache2.geonameid = geonames_cache.parentCountryId
+                AND
+                status = \'Active\'
+                AND
+                members.id = profilesvisits.IdVisitor
+                AND
+                profilesvisits.IdMember = ' . $idMember . '
+                AND
+                (
+                    members.Status = \'Active\'
+                    OR
+                    members.Status = \'Pending\'
+                    OR
+                    members.Status = \'NeedMore\'
+                )    
+            ORDER BY
+                profilesvisits.updated DESC
+            LIMIT
+                '.$quantity;
     		$s = $this->dao->query($query);
 				if (!$s) {
 			 		 throw new PException('Cannot retrieve last visits!');
@@ -123,8 +159,8 @@ ORDER BY `profilesvisits`.`updated` desc limit '.$quantity;
 		
 		
     /**
-		
-     * Retrieve the 5 last accepted profiles with a picture 
+
+     * Retrieve the 5 last accepted profiles with a picture
 
      */
     public function RetrieveLastAcceptedProfilesWithAPicture($quantity = 5)
@@ -154,39 +190,4 @@ SQL;
 		return($members) ;
 	} // end of	RetrieveLastAcceptedProfileWithAPicture
 		
-   /**
-		
-     * Retrieve the last accepted profile in the city of the member with a picture 
-
-     */
-    public function RetrieveLastAcceptedProfilesInCityWithAPicture($IdMember, $quantity = 5)
-    {
-        $members=array() ;
-		//retrieve City for $IdMember
-        $query = '
-			SELECT SQL_CACHE `members`.`IdCity` 
-			FROM 	`members`
-			WHERE `members`.`id`= '.$IdMember
-		;
-    		$s = $this->dao->query($query);
-				if (!$s) {
-			 		 throw new PException('Cannot retrieve last member with photo!');
-				}
-		$result = $s->fetch(PDB::FETCH_OBJ);
-
-		// retrieve the last member
-        $query = '
-			SELECT SQL_CACHE `members`.*,`membersphotos`.`FilePath` as photo,`membersphotos`.`id` as IdPhoto,`countries`.`Name` as countryname 
-			FROM 	`members`,`membersphotos`,`cities`,`countries` 
-			WHERE `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 and `members`.`Status`=\'Active\' and `members`.`IdCity`=`cities`.`id` and `countries`.`id`=`cities`.`IdCountry` and `members`.`IdCity` = '.$result->IdCity.'
-			ORDER BY `members`.`id` desc limit '.$quantity
-			;
-		$s = $this->dao->query($query);
-		if (!$s) {
-	 		 throw new PException('Cannot retrieve last member with photo!');
-		}
-		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-			array_push($members, $row);
-		} // end of while
-    } // end of	RetrieveLastAcceptedProfileInCityWithAPicture		
 }

@@ -16,39 +16,82 @@ class Places extends PAppModel {
 		parent::__construct();
 	}
 
-	
-	public function getCountryInfo($countrycode) {
-		$query = sprintf("SELECT `geonames_countries`.`name`, `geonames_countries`.`continent`,countries.id as IdCountry
-			FROM `geonames_countries`,`countries`
-			WHERE `geonames_countries`.`iso_alpha2` = '%s' and `geonames_countries`.`iso_alpha2`=`countries`.`isoalpha2`", 
-			$this->dao->escape($countrycode));
-		$result = $this->dao->query($query);
+    /**
+     * Get country details from database (name, Geoname ID, continent)
+     * @param string $countrycode Country ISO alpha2 code, i.e. "BE"
+     * @return object|bool Database object, false if no match in database
+     */
+    public function getCountryInfo($countrycode) {
+        $query = sprintf("
+            SELECT
+                geonames_cache.name,
+                geonames_cache.geonameId as IdCountry,
+                geonames_countries.continent
+            FROM
+                geonames_cache,
+                geonames_countries
+            WHERE
+                geonames_cache.fcode LIKE 'PCL%%'
+                AND
+                geonames_countries.iso_alpha2 = '%s'
+                AND
+                geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
+            ", $this->dao->escape($countrycode));
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve info about countries list.');
-		}
-		return $result->fetch(PDB::FETCH_OBJ);
-	}
-    
-	public function getRegionInfo($regioncode,$countrycode="") {
-		$query = sprintf("SELECT name AS region, id AS idregion FROM regions WHERE regions.name = '%s'",
-			$this->dao->escape($regioncode));
-		$result = $this->dao->query($query);
+        }
+        return $result->fetch(PDB::FETCH_OBJ);
+    }
+
+    /**
+     * Get details for a region
+     * @param string $regionName Name of region, i.e. "Flanders"
+     * @param string $countryCode Two-letter country code, i.e. "BE"
+     * @return object Region with its name and ID
+     */
+    public function getRegionInfo($regionName, $countryCode) {
+        $query = sprintf("
+            SELECT
+                name AS region,
+                geonameId AS idregion
+            FROM
+                geonames_cache
+            WHERE
+                fcode = 'ADM1'
+                AND
+                name = '%s'
+                AND
+                fk_countrycode = '%s'
+            ", $this->dao->escape($regionName),
+                $this->dao->escape($countryCode));
+
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve info about Region.');
-		}
-		return $result->fetch(PDB::FETCH_OBJ);
-	}	
+        }
+      return $result->fetch(PDB::FETCH_OBJ);
+    }	
 
-	public function getCityInfo($cityname,$regionname="",$countrycode="") {
-		$query = sprintf("SELECT geonames_cache.name AS city, geonames_cache.geonameid AS IdCity FROM geonames_cache WHERE geonames_cache.name = '%s' and geonames_cache.fk_countrycode='%s'",
-			$this->dao->escape($cityname),$this->dao->escape($countrycode));
-			
-		$result = $this->dao->query($query);
+    public function getCityInfo($cityname, $regionname = "", $countrycode = "") {
+        $query = sprintf("
+            SELECT
+                geonames_cache.name AS city,
+                geonames_cache.geonameid AS IdCity
+            FROM
+                geonames_cache
+            WHERE
+                geonames_cache.name = '%s'
+                AND
+                geonames_cache.fk_countrycode = '%s'
+            ", $this->dao->escape($cityname), $this->dao->escape($countrycode));
+
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve the city.');
-		}
-		return $result->fetch(PDB::FETCH_OBJ);
-	}	
+        }
+        return $result->fetch(PDB::FETCH_OBJ);
+    }
 
     private function getMembersAll($query) {
         // this condition makes sure that unlogged people won't see non-public profiles
@@ -64,140 +107,234 @@ class Places extends PAppModel {
 		return $result;
 	} // end of getMembersAll
 
-	public function getMembersOfCountry($countrycode) {
-        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,cities.name AS city FROM members,cities,countries 
-                 WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
-                 AND countries.isoalpha2='%s'",$this->dao->escape($countrycode));
+    /**
+     * Get all members of a country
+     * @param string $countryCode Two-letter country code, i.e. "BE"
+     * @return object Region with its name and ID
+     */
+    public function getMembersOfCountry($countrycode) {
+        $query = sprintf("
+            SELECT
+                members.BirthDate,
+                members.HideBirthDate,
+                members.Accomodation,
+                members.idCity,
+                members.username,
+                geonames_cache.name AS city
+            FROM
+                members,
+                geonames_cache
+            WHERE
+                members.Status = 'Active'
+                AND
+                geonames_cache.geonameId = members.idCity
+                AND
+                geonames_cache.fk_countrycode = '%s'
+            ORDER BY
+                city
+            ",$this->dao->escape($countrycode));
+
         return $this->getMembersAll($query);
+    }
+
+    public function getMembersOfRegion($regioncode, $countrycode) {
+        $query = sprintf("
+            SELECT
+                members.BirthDate,
+                members.HideBirthDate,
+                members.Accomodation,
+                members.username,
+                geonames_cache.name AS city
+            FROM
+                members,
+                geonames_cache,
+                geonames_cache as geonames_cache2
+            WHERE
+                Status = 'Active'
+                AND
+                geonames_cache.fk_countrycode = '%s'
+                AND
+                members.idCity = geonames_cache.geonameid
+                AND
+                geonames_cache.parentAdm1Id = geonames_cache2.geonameid
+                AND
+                geonames_cache2.name = '%s'
+            ORDER BY
+                city
+            ", $this->dao->escape($countrycode), $this->dao->escape($regioncode));
+
+        return $this->getMembersAll($query);
+    }
+
+    public function getMembersOfCity($cityname, $regionname = "", $countrycode = "") {
+        $query = sprintf("
+            SELECT
+                members.BirthDate,
+                members.HideBirthDate,
+                members.Accomodation,
+                username,
+                geonames_cache.name AS city
+            FROM
+                members,
+                geonames_cache 
+            WHERE
+                Status = 'Active'
+                AND
+                members.IdCity = geonames_cache.geonameid
+                AND
+                geonames_cache.name = '%s'
+                AND
+                geonames_cache.fk_countrycode = '%s'
+            ", $this->dao->escape($cityname), $this->dao->escape($countrycode));
+        return $this->getMembersAll($query);
+    }
+
+    /**
+     * Get a list of all countries with number of members for each country
+     * @return array List of continents, containing array of countries
+     */
+    public function getAllCountries() {
+        // Get countries that have members and count members
+        $query = "
+            SELECT
+                geonames_countries.iso_alpha2 AS code,
+                COUNT(members.id) AS number
+            FROM
+                geonames_countries,
+                geonames_cache,
+                members
+            WHERE
+                members.Status = 'Active'
+                AND
+                geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
+                AND
+                members.IdCity = geonames_cache.geonameid
+            GROUP BY
+                geonames_countries.iso_alpha2
+            ";
+
+        $result = $this->dao->query($query);
+        if (!$result) {
+            throw new PException('Could not retrieve country member counts.');
         }
-    
-/*
-* This retrieve the list of volunteers for a place
-* volunteers are the one of the Local Vol group
-* @IdLocation is the geoname id where the members is volunteering
-*/
-	public function getVolunteersOfPlace($IdLocation) {
-        $query = sprintf("SELECT members.ProfileSummary,members.BirthDate,membersgroups.Comment as VolComment,
-				 	members.HideBirthDate,members.Accomodation,username,cities.name AS city FROM members,cities,countries,groups, groups_locations,membersgroups
-                 WHERE `members`.`Status`='Active' AND groups.Name='BewelcomeLV' AND groups_locations.IdGroupMembership=membersgroups.id 
-								 AND membersgroups.IdMember=members.id AND membersgroups.IdGroup=groups.id AND members.IdCity=cities.id AND cities.IdCountry=countries.id 
-                 AND groups_locations.IdLocation='%d'",$this->dao->escape($IdLocation));
-        return $this->getMembersAll($query);
-        } // end of getVolunteersOfPlace
-    
-	public function getMembersOfRegion($regioncode) {
-        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username, cities.name AS city FROM members, cities,regions 
-                 WHERE `Status`='Active' AND members.IdCity=cities.id AND cities.idregion=regions.id AND
-                 regions.name='%s' and regions.feature_code='ADM1'",$this->dao->escape($regioncode));
-		return $this->getMembersAll($query);
-        }	
+        $number = array();
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $number[$row->code] = $row->number;
+        }
 
-	public function getMembersOfCity($cityname,$regionname="",$countrycode="") {
-        $query = sprintf("SELECT members.BirthDate,members.HideBirthDate,members.Accomodation,username,geonames_cache.name AS city FROM members,geonames_cache 
-                    WHERE `Status`='Active' AND members.IdCity=geonames_cache.geonameid AND geonames_cache.name='%s'  and geonames_cache.fk_countrycode='%s'", 
-                    $this->dao->escape($cityname),$this->dao->escape($countrycode));
-		return $this->getMembersAll($query);
-	}	
-    
-	/**
-	* Returns a 3D array of all countries
-	* Format:
-	*	[Continent]
-	*		[Places-Code]
-	*			[Name] Name of the Places
-	*			[Number] Number of members living in this places
-	*/  
-    
-	public function getAllCountries() {
-		$query = "SELECT countries.isoalpha2 as code, countries.name,
-            countries.continent, COUNT(members.id) AS number
-			FROM countries,cities,members where members.Status='Active' and cities.IdCountry=countries.Id and members.IdCity=cities.id  
-			GROUP BY countries.isoalpha2
-            ORDER BY continent asc, countries.name ";
-		$result = $this->dao->query($query);
+        // Get all countries
+        $query = "
+            SELECT
+                iso_alpha2 AS code,
+                name,
+                continent
+            FROM
+                geonames_countries
+            ORDER BY
+                continent ASC,
+                name ASC
+            ";
+        $result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve Places list.');
-		}
-		$number = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$number[$row->code] = $row->number;
-		}
-		
-		$query = "SELECT `isoalpha2` AS `code`, `name`, `continent`
-			FROM `countries`
-			ORDER BY `continent` ASC, `name` ASC";
-		$result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve Places list.');
-		}
+            throw new PException('Could not retrieve country list.');
+        }
+
+        // Pack both database results into country list
         $countries = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$countries[$row->continent][$row->code]['name'] = $row->name;
-			if (isset($number[$row->code]) && $number[$row->code]) {
-				$countries[$row->continent][$row->code]['number'] = $number[$row->code];
-			} else {
-				$countries[$row->continent][$row->code]['number'] = 0;
-			}
-		}
-		
-        return $countries;
-	}
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $countries[$row->continent][$row->code]['name'] = $row->name;
+            if (isset($number[$row->code]) && $number[$row->code]) {
+                $countries[$row->continent][$row->code]['number'] = $number[$row->code];
+            } else {
+                $countries[$row->continent][$row->code]['number'] = 0;
+            }
+        }
 
-	/**
-	retrieve the list of all regions for a given country
-	@$countrycode is either the country code of the country or the countries.id
-	the number of members in the area is to be kept up to date by a cron or by some SQL for volunteers query
-	*/
-	public function getAllRegions($countrycode) {
-		if (is_numeric($countrycode)) {
-			$query = sprintf("SELECT regions.name AS region, NbMembers AS number
-			FROM regions WHERE  IdCountry='%d' and regions.feature_code='ADM1'
-           ORDER BY regions.name", $this->dao->escape($countrycode));
-		}
-		else {
-			$query = sprintf("SELECT regions.name AS region, NbMembers AS number
-			FROM regions WHERE  regions.country_code='%s' and regions.feature_code='ADM1'
-           ORDER BY regions.name", $this->dao->escape($countrycode));
-		}
-		$result = $this->dao->query($query);
+        return $countries;
+    }
+
+    /**
+     * Retrieve the list of all regions for a given country
+     * @param string $countrycode Two-letter country code, i.e. "FR"
+     * @return array List of regions with number of members in them
+     */
+    public function getAllRegions($countrycode) {
+        $query = sprintf("
+            SELECT
+                geonames_cache.name AS region,
+                COUNT(members.id) as number
+            FROM
+                geonames_cache,
+                geonames_cache AS geonames_cache2,
+                geonames_cache AS geonames_cache3,
+                members
+            WHERE
+                geonames_cache.fk_countrycode = '%s'
+                AND
+                geonames_cache.fcode = 'ADM1'
+                AND
+                geonames_cache2.geonameid = members.idCity
+                AND
+                geonames_cache3.geonameid = geonames_cache2.parentAdm1Id
+                AND
+                geonames_cache3.geonameid = geonames_cache.geonameid
+                AND
+                members.status = 'Active'
+            GROUP BY
+                geonames_cache.name
+            ORDER BY
+                geonames_cache.name
+            ", $this->dao->escape($countrycode));
+
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve region list.');
-		}
-		$regions = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$regions[$row->region]['name'] = $row->region;
-			$regions[$row->region]['number'] = $row->number;
-		}
-		
+        }
+
+        $regions = array();
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $regions[$row->region]['name'] = $row->region;
+            $regions[$row->region]['number'] = $row->number;
+        }
+
         return $regions;
-	}    // end of getAllRegions
-    
-	/**
-	retrieve the list of all regions for a given country
-	@$idregion is either the region Name of the region or the regions.id
-	the number of members in the area is to be kept up to date by a cron or by some SQL for volunteers query
-	*/
-	public function getAllCities($idregion) {
-		if (is_numeric($idregion)) {
-		$query = sprintf("SELECT cities.Name AS city, cities.NbMembers as NbMember FROM cities
-			   where IdRegion=%d  and (cities.NbMembers>0) ORDER BY cities.Name",$idregion);
-		}
-		else {
-		$query = sprintf("SELECT cities.Name AS city,  cities.NbMembers as NbMember FROM cities,regions
-			   where regions.id=cities.IdRegion and regions.Name='%s' and ( cities.NbMembers>0) ORDER BY cities.Name",$idregion);
-		}
-		
-		$result = $this->dao->query($query);
+    }
+
+    /**
+     * Retrieve list of all cities for a region that have members
+     * @param int $regionId Geoname ID of region
+     * @return array List of cities with number of members
+     */
+    public function getAllCities($regionId) {
+        $query = sprintf("
+            SELECT
+                geonames_cache.name AS city,
+                COUNT(members.id) AS NbMember
+            FROM
+                geonames_cache,
+                members
+            WHERE
+                geonames_cache.parentAdm1Id = %d
+                AND
+                members.status = 'Active'
+                AND
+                members.idCity = geonames_cache.geonameId
+            GROUP BY
+                geonames_cache.name
+            ORDER BY
+                geonames_cache.name
+            ", $regionId);
+
+        $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve city list.');
-		}
-		$cities = array();
-		while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-			$cities[] = $row;
-		}
-		
+        }
+        $cities = array();
+        while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+            $cities[] = $row;
+        }
         return $cities;
-	}  // end of getAllCities
+    }
 }
-	
+
 ?>

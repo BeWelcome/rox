@@ -3,33 +3,6 @@
 
 class VolunteerbarModel extends PAppModel
 {
-    
-    /**
-     * Returns the number of local volunteers messages to trigger
-     * 
-     *
-     * @return integer indicating the number of Message
-     */
-    public function getNumberPendingLocalMess()
-    {
-        $R = MOD_right::get();
-		
-		if ($R->HasRight("ContactLocation","All"))  {
-			$Query="select SQL_CACHE COUNT(*) AS cnt from localvolmessages where Status='ToSend'" ;
-		}
-		elseif ($R->HasRight("ContactLocation","CanTrigger")) {
-			$Query="select SQL_CACHE COUNT(*) AS cnt from localvolmessages where Status='ToSend' and IdSender=".$_SESSION["IdMember"] ;
-		}
-		else {
-			return(0) ;
-		}
-		 
-        $result = $this->dao->query($Query);
-        $record = $result->fetch(PDB::FETCH_OBJ);
-        return $record->cnt;
-    } // end of getNumberPendingLocalMessageToTrigger
-
-
     /**
      * Returns the number of people due to be accepted.
      * The number depends on the scope of the person logged on.
@@ -63,19 +36,20 @@ class VolunteerbarModel extends PAppModel
                     COUNT(*) AS count
                 FROM
                     members,
-                    countries,
+                    geonames_countries,
                     geonames_cache
                 WHERE
+                    Status = 'Pending'
+                    AND
                     members.IdCity = geonames_cache.geonameid
                     AND
-                    countries.id = geonames_cache.parentCountryId
-                    AND (
-                        countries.Name IN (" . $scope . ")
-                        OR
-                        countries.id IN (" . $scope . ")
-                        )
+                    geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
                     AND
-                    Status='Pending'
+                    (
+                        geonames_countries.name IN ($scope)
+                        OR
+                        geonames_countries.iso_alpha2 IN ($scope)
+                    )
                 ";
         }
 
@@ -88,36 +62,70 @@ class VolunteerbarModel extends PAppModel
      * Returns the number of people due to be checked to problems or what.
      * The number depends on the scope of the person logged on.
      *
-		 * $_AccepterScope="" is an optional value for accepter Scope which can be used for performance if it was already fetched from database
+     * $_AccepterScope="" is an optional value for accepter Scope which can be used for performance if it was already fetched from database
      * @return integer indicating the number of people in need to be checked
      */
-    public function getNumberPersonsToBeChecked($_AccepterScope="")
-    {
-        		$R = MOD_right::get();
-		 		if ($_AccepterScope!="") {
-        		 $AccepterScope=$_AccepterScope ;
-				}
-				else {
-        		 $AccepterScope=$R->RightScope('Accepter');
-				}
-				if ($AccepterScope=="") return 0 ;
+    public function getNumberPersonsToBeChecked($_AccepterScope = "") {
+        $R = MOD_right::get();
+        if ($_AccepterScope != "") {
+            $AccepterScope = $_AccepterScope ;
+        } else {
+            $AccepterScope = $R->RightScope('Accepter');
+        }
+        if ($AccepterScope == "") {
+            return 0;
+        }
 
         if ($R->hasRight('Accepter','All'))  {
-           $InScope = " /* All countries */";
+            $query = "
+                SELECT SQL_CACHE
+                    COUNT(*) AS cnt
+                FROM
+                    pendingmandatory,
+                    geonames_countries,
+                    geonames_cache
+                WHERE
+                    (
+                        pendingmandatory.Status = 'NeedMore'
+                        OR
+                        pendingmandatory.Status = 'Pending'
+                    )
+                    AND
+                    geonames_cache.geonameid = pendingmandatory.IdCity
+                    AND
+                    geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
+                ";
         } else {
-          $InScope = " AND (countries.id IN (" . $AccepterScope . ") or countries.Name IN (" . $AccepterScope . "))";
+            $query = "
+                SELECT SQL_CACHE
+                    COUNT(*) AS cnt
+                FROM
+                    pendingmandatory,
+                    geonames_countries,
+                    geonames_cache
+                WHERE
+                    (
+                        pendingmandatory.Status = 'NeedMore'
+                        OR
+                        pendingmandatory.Status = 'Pending'
+                    )
+                    AND
+                    geonames_cache.geonameid = pendingmandatory.IdCity
+                    AND
+                    geonames_countries.iso_alpha2 = geonames_cache.fk_countrycode
+                    AND
+                    (
+                        geonames_countries.iso_alpha2 IN ($AccepterScope)
+                        OR
+                        geonames_countries.name IN ($AccepterScope)
+                    )
+                ";
         }
-        $query = '
-SELECT SQL_CACHE COUNT(*) AS cnt
-FROM pendingmandatory, countries, cities
-WHERE (pendingmandatory.Status=\'NeedMore\' OR pendingmandatory.Status=\'Pending\')
-AND cities.id=pendingmandatory.IdCity
-AND countries.id=cities.IdCountry ' . $InScope;
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
     }
-    
+
     /**
      * Returns the number of people due to be checked to problems or what.
      * The number depends on the scope of the person logged on.
@@ -181,26 +189,30 @@ AND messages.WhenFirstRead=\'0000-00-00 00:00:00\'';
     
     /**
      * Returns the number of spam messages
-     *
-     * TODO: merge with other getNumberSpamToBeChecked() methods
      */
     public function getNumberSpamToBeChecked()
     {
-        $query = '
-SELECT COUNT(*) AS cnt
-FROM messages, members AS mSender, members AS mReceiver
-WHERE mSender.id=IdSender
-AND messages.SpamInfo=\'SpamSayMember\'
-AND mReceiver.id=IdReceiver
-AND (
-        mSender.Status=\'Active\'
-    OR
-        mSender.Status=\'Pending\'
-    )
-';
-        $result = $this->dao->query($query);
-        $record = $result->fetch(PDB::FETCH_OBJ);
-        return $record->cnt;
+        /* TODO: I am abusing layoutbits as a storage to cut database queries,
+                 I am certain there is a nicer way of doing this. */
+        $layoutbits = MOD_layoutbits::get();
+        if (!isset($layoutbits->numberSpamToBeChecked)) {
+            $query = '
+                SELECT COUNT(*) AS cnt
+                FROM messages, members AS mSender, members AS mReceiver
+                WHERE mSender.id=IdSender
+                AND messages.SpamInfo=\'SpamSayMember\'
+                AND mReceiver.id=IdReceiver
+                AND (
+                        mSender.Status=\'Active\'
+                    OR
+                        mSender.Status=\'Pending\'
+                    )
+                ';
+            $result = $this->dao->query($query);
+            $record = $result->fetch(PDB::FETCH_OBJ);
+            $layoutbits->numberSpamToBeChecked = $record->cnt;
+        }
+        return $layoutbits->numberSpamToBeChecked;
     }
 
     

@@ -124,20 +124,33 @@ AND `WhenFirstRead` = 0';
      */
     public function getNumberPersonsToBeChecked($AccepterScope)
     {
-        // FIXME: this if clause indicates a problem, doesn't it???
-        // But you need database access to solve it.
         if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-            $InScope = " /* All countries */";
+            $query = "
+                SELECT SQL_CACHE
+                    COUNT(*) AS cnt
+                FROM
+                    pendingmandatory
+                WHERE
+                    pendingmandatory.Status = 'Pending'
+                ";
         } else {
-            $InScope = "AND countries.id IN (" . $AccepterScope . ")";
+            $query = "
+                SELECT SQL_CACHE
+                    COUNT(*) AS cnt
+                FROM
+                    pendingmandatory,
+                    geonames_cache AS g1,
+                    geonames_cache AS g2
+                WHERE
+                    pendingmandatory.Status = 'Pending'
+                    AND
+                    g1.geonameid = pendingmandatory.IdCity
+                    AND
+                    g2.geonameid = g1.parentCountryId
+                    AND
+                    g2.name IN ('$AccepterScope')
+                ";
         }
-        $query = <<<SQL
-SELECT SQL_CACHE COUNT(*) AS cnt
-FROM pendingmandatory, geonames_cache AS g1, geonames_cache AS g2
-WHERE pendingmandatory.Status='Pending'
-AND g1.geonameid=pendingmandatory.IdCity
-AND g2.geonameid=g1.parentCountryId {$InScope};
-SQL;
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
@@ -193,32 +206,7 @@ AND messages.WhenFirstRead=\'0000-00-00 00:00:00\'';
         $record = $result->fetch(PDB::FETCH_OBJ);
         return $record->cnt;
     }
-    
-    /**
-     * Returns the number of spam messages
-     *
-     * TODO: merge with other getNumberSpamToBeChecked() methods
-     */
-    public function getNumberSpamToBeChecked()
-    {
-        $query = '
-SELECT COUNT(*) AS cnt
-FROM messages, members AS mSender, members AS mReceiver
-WHERE mSender.id=IdSender
-AND messages.SpamInfo=\'SpamSayMember\'
-AND mReceiver.id=IdReceiver
-AND (
-        mSender.Status=\'Active\'
-    OR
-        mSender.Status=\'Pending\'
-    )
-';
-        $result = $this->dao->query($query);
-        $record = $result->fetch(PDB::FETCH_OBJ);
-        return $record->cnt;
-    }
 
-	
 	/**
 	* return lat/long for all cities with at least one member
 	*

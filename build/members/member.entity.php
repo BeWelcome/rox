@@ -397,8 +397,20 @@ WHERE IdMember = ".$this->id
         return $this->get_crypted($this->LastName, "");
     }
 
+    /**
+     * Get member's email address (uses various permission checks)
+     * @return string Email address of member, empty if read permission denied
+     */
     public function get_email() {
         return $this->get_crypted($this->Email, "");
+    }
+
+    /**
+     * Get member's email address (no permission checks)
+     * @return string|bool Email address of member, false on database error
+     */
+    public function getEmailWithoutPermissionChecks() {
+        return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($this->Email)));
     }
 
     public function get_messengers() {
@@ -627,30 +639,52 @@ WHERE IdMember = ".$this->id
         return($rr->cnt) ;
     } // end of count_mynotes
 
-        public function count_comments()
-    {
-        if (!$this->isLoaded())
-        {
-            return array('positive' => 0, 'all' => 0);
+    public function count_comments() {
+        if (!$this->isLoaded()) {
+            return array(
+                'positive' => 0,
+                'all' => 0
+            );
         }
-        $positive = $this->bulkLookup(
+        $id = intval($this->id);
+        $positive = $this->bulkLookup("
+            SELECT
+                COUNT(*) as positive
+            FROM
+                comments,
+                members
+            WHERE
+                comments.IdToMember = $id
+                AND
+                comments.Quality = 'Good'
+                AND
+                members.id = comments.IdFromMember
+                AND
+                members.status IN ('Active', 'ChoiceInactive')
             "
-SELECT COUNT(*) AS positive
-FROM comments
-WHERE IdToMember = ".$this->id."
-AND Quality = 'Good'
-             "
-         );
+        );
 
-        $all = $this->bulkLookup(
+        // TODO: This could be done in first query
+        $all = $this->bulkLookup("
+            SELECT
+                COUNT(*) as sum
+            FROM
+                comments,
+                members
+            WHERE
+                comments.IdToMember = $id
+                AND
+                members.id = comments.IdFromMember
+                AND
+                members.status IN ('Active', 'ChoiceInactive')
             "
-SELECT COUNT(*) AS sum
-FROM comments
-WHERE IdToMember = ".$this->id
-         );
+        );
 
-         $r = array('positive' => $positive[0]->positive, 'all' => $all[0]->sum);
-         return $r;
+        $commentCounters = array(
+            'positive' => $positive[0]->positive,
+            'all' => $all[0]->sum
+        );
+        return $commentCounters;
     }
 
 
@@ -944,7 +978,8 @@ FROM
     members
 WHERE
     comments.IdToMember   = $this->id  AND
-    comments.IdFromMember = members.Id
+    comments.IdFromMember = members.Id AND
+    members.Status IN ('Active', 'ChoiceInactive')
 ORDER BY
     comments.updated DESC
           ";
@@ -1610,7 +1645,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      */
     public function sendMail($subject, $body) {
         $from = PVars::getObj('mailAddresses')->noreply;
-        $to = $this->email;
+        $to = $this->getEmailWithoutPermissionChecks();
 
         // Create HTML version via purifier (linkify and add paragraphs)
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();

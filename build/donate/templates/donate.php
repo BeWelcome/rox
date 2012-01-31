@@ -27,24 +27,24 @@ $words = new MOD_words();
 <?php   if ($sub == 'done') { 
             if ($error) {?> 
 
-    	<p class="warning"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
+        <p class="warning"><?php echo $words->getFormatted('Donate_NotDoneText')?>: <?=$error?></p>
 <?php   } else { ?>
-    	<p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="feedback">','</a>')?></p>
+        <p class="note"><?php echo $words->getFormatted('Donate_DoneText','<a href="feedback">','</a>')?></p>
 <?php } 
 } elseif ($sub == 'cancel') { ?>
         <p class="warning"><?php echo $words->getFormatted('Donate_CancelText'); ?></p>
 <?php   } ?>
 <div class="subcolumns">
-  		<div class="c50l">
-    		<div class="subcl">
-    			<a name="why"></a>
-    			<h3><?php echo $words->get('Donate_Why');?></h3>
-    			<p><?php echo $words->getFormatted('Donate_WhyText','<a href="feedback">','</a>')?></p>
-    		</div>
-   		</div>
-		<div class="c50r">
-    		<div class="subcr">
-    			<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <div class="c50l">
+            <div class="subcl">
+                <a name="why"></a>
+                <h3><?php echo $words->get('Donate_Why');?></h3>
+                <p><?php echo $words->getFormatted('Donate_WhyText','<a href="feedback">','</a>')?></p>
+            </div>
+        </div>
+        <div class="c50r">
+            <div class="subcr">
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
                     <h3><?=$words->get('Donate_Paypal_Legend')?></h3>
                     <p><img src="images/misc/paymethods.gif" alt="methods of payment" /></p>
                     <p><?=$words->get('Donate_Process')?></p>
@@ -71,23 +71,23 @@ $words = new MOD_words();
                     <input type="hidden" name="no_shipping" value="1" />
                     <input type="hidden" name="lc" value="<?php 
                      if (isset($_SESSION["lang"]) ) {
-                     		switch ($_SESSION["lang"]){
-                    					 case 'fr' :
-                    					 			echo "FR" ;
-                    								break ;
-                    					 case 'de' :
-                    					 			echo "DE" ;
-                    								break ;
-                    					 case 'it' :
-                    					 			echo "IT" ;
-                    								break ;
-                    					 case 'esp' :
-                    					 			echo "ES" ;
-                    								break ;
-                    					 default :
-                    					 			echo "US" ;
-                    								break ;
-                    		} 
+                            switch ($_SESSION["lang"]){
+                                         case 'fr' :
+                                                    echo "FR" ;
+                                                    break ;
+                                         case 'de' :
+                                                    echo "DE" ;
+                                                    break ;
+                                         case 'it' :
+                                                    echo "IT" ;
+                                                    break ;
+                                         case 'esp' :
+                                                    echo "ES" ;
+                                                    break ;
+                                         default :
+                                                    echo "US" ;
+                                                    break ;
+                            } 
                      }
                      else {
                        echo "US" ;
@@ -103,41 +103,41 @@ $words = new MOD_words();
                     <input type="submit" class="button" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
                     <img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
                     </p>
-            	</form>
+                </form>
                 <?php echo $words->flushBuffer() ?>  
-    		</div>
-  		</div>
+            </div>
+        </div>
 </div>
 <div class="subcolumns">
-  		<div class="c50l">
-    		<div class="subcl">
-    			<a name="tax"></a>
-        		<h3><?php echo $words->get('Donate_Tax'); ?></h3>
-        		<p><?php echo $words->get('Donate_TaxText'); ?></p>
-    		</div>
-   		</div>
-		<div class="c50r">
-    		<div class="subcr">
+        <div class="c50l">
+            <div class="subcl">
+                <a name="tax"></a>
+                <h3><?php echo $words->get('Donate_Tax'); ?></h3>
+                <p><?php echo $words->get('Donate_TaxText'); ?></p>
+            </div>
+        </div>
+        <div class="c50r">
+            <div class="subcr">
                 <h3><?=$words->get('Donate_Account_Legend')?></h3>
                 <p><?=$words->get('Donate_Account')?></p>
                 <p><?=$words->get('Donate_Account2')?></p>
-    		</div>
-  		</div>
+            </div>
+        </div>
 </div>
 <div class="subcolumns">
-  		<div class="c50l">
-    		<div class="subcl">
-    			<a name="transparency"></a>
-        		<h3><?php echo $words->get('Donate_Transparency'); ?></h3>
-        		<p><?php echo $words->getFormatted('Donate_TransparencyText'); ?></p>
-    		</div>
-   		</div>
-		<div class="c50r">
-    		<div class="subcr">
-    			<h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
-				<p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
-    		</div>
-  		</div>
+        <div class="c50l">
+            <div class="subcl">
+                <a name="transparency"></a>
+                <h3><?php echo $words->get('Donate_Transparency'); ?></h3>
+                <p><?php echo $words->getFormatted('Donate_TransparencyText'); ?></p>
+            </div>
+        </div>
+        <div class="c50r">
+            <div class="subcr">
+                <h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
+                <p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
+            </div>
+        </div>
 </div>
 <script type="text/javascript">
 

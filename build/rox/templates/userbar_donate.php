@@ -5,8 +5,8 @@ $TDonationArray = $DModel->getDonations();
 $Stats = $DModel->getStatForDonations() ;
 
     $max=count($TDonationArray) ;
-    $TotalDonations=$Stats->QuaterDonation ;
-    $TotalDonationsNeeded = $Stats->QuaterNeededAmount ;
+    $TotalDonations=$Stats->YearDonation ;
+    $TotalDonationsNeeded = $Stats->YearNeededAmount ;
     $Percent = $TotalDonations *100/$TotalDonationsNeeded;
 
     $BarState = -101 *$Percent/100;

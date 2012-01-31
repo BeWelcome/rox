@@ -28,14 +28,11 @@ $words = new MOD_words();
         <div id="nav_sub">
           <ul> 
             <li id="sub1" class="<?php if ($sub!=='list') echo 'active';?>">
-			<a href="donate">
-			<span><?php echo $words->getBuffered('DonateLink'); ?></span></a></li>
+            <a href="donate">
+            <span><?php echo $words->getBuffered('DonateLink'); ?></span></a></li>
             <li id="sub2" class="<?php if ($sub=='list') echo 'active';?>"><a href="donate/list"><span><?php echo $words->getBuffered('DonateList'); ?></span></a></li>
                 <?php echo $words->flushBuffer() ?>            
             <!--<li id="sub4"><a style="cursor:pointer;" onClick="$('FindPeopleFilter').toggle(); $('sub4').addClassName('active'); $('sub4').siblings().each(Element.removeClassName('active');"><span>another option</span></a></li> -->
           </ul>
         </div>
       </div>
-
-     
-

@@ -41,9 +41,18 @@ class SignupController extends RoxControllerBase {
     public function index($args = false) 
     {	
         // In case Signup is closed
-		if (isset($_SESSION['Param']->FeatureSignupClose) && $_SESSION['Param']->FeatureSignupClose=="Yes") {
+        if (isset($_SESSION['Param']->FeatureSignupClose) && $_SESSION['Param']->FeatureSignupClose=="Yes") {
             return new SignupClosedPage();
-		}
+        }
+
+        /*
+         * Enable to check against DNS Blocklists
+
+        if (MOD_dnsblock::get()->checkRemoteIp()) {
+            return new SignupDNSBlockPage();
+        }
+
+        */
 
         $request = $args->request;
         $model = new SignupModel();
@@ -191,7 +200,18 @@ class SignupController extends RoxControllerBase {
                 $_SESSION['IdMember'] = $id;
                 // $_SESSION['Username'] = $vars['username'];
                 // $idTB = $id;
-                
+
+                if (($count = MOD_dnsblock::get()->checkRemoteIp())) {
+                    // Log that the user would be blocked, false positive
+                    MOD_log::get()->write(
+                                          "Would have DNSBlocked signup of user"
+                                          . " with ip ".$_SERVER['REMOTE_ADDR']
+                                          . " and username " . $vars['Username']
+                                          . " due to " . ($count == 1 ? "xbl" : "sbl"),
+                                          "Signup"
+                                          );
+                }
+
                 $vars['feedback'] .= 
                     $model->takeCareForNonUniqueEmailAddress($vars['email']);
                     
@@ -202,7 +222,7 @@ class SignupController extends RoxControllerBase {
                 
                 $View = new SignupView($model);
                 // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
-                // look at that ... a two years plus old todo :)
+                // look at that ... a two years plus old todo :) ... and now four years plus :P
 
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
                 $View->registerMail($vars, $id, $idTB);

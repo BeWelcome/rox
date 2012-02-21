@@ -266,7 +266,7 @@ class GeoModel extends RoxModelBase {
                 //write new data to hirarchy table
                 if (isset($parentId)) {
                     $hierarchy = $this->addHierarchy($dataset['geonameId'],$parentId);
-                    if(!$hierarchy) $retun = false;
+                    if(!$hierarchy) $return = false;
 //                            echo "- addHierarchy end - ";    
                 }
             
@@ -492,7 +492,7 @@ class GeoModel extends RoxModelBase {
                     
                 if (isset($parentId)) {
                     $hierarchy = $this->addHierarchy($dataset['geonameId'],$parentId);
-                    if(!$hierarchy) $retun = false;
+                    if(!$hierarchy) $return = false;
                 }
             
             }

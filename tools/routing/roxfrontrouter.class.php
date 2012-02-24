@@ -19,10 +19,8 @@ class RoxFrontRouter
      */
     function route()
     {
-        // retrieve user information,
-        // and update statistics of being online
-        $user = $this->initUser();
-        
+        $this->initUser();
+
         $request = $this->args->request;
         switch ($keyword = isset($request[0]) ? $request[0] : false) {
             case 'ajax':
@@ -34,16 +32,11 @@ class RoxFrontRouter
                 $this->route_normal();
         }
     }
-    
-    
+
+
     /**
-     * This method should look at the $_SESSION,
-     * cookies, evtl the DB, and grab all the info for
-     * the current user.
-     * 
-     * It should update all the statistics, and
-     * return a user object representing all user-related data.
-     * 
+     * Initialise the current user.
+     * Sets language and online status.
      */
     protected function initUser()
     {
@@ -53,25 +46,20 @@ class RoxFrontRouter
         $roxModelBase = new RoxModelBase();
         $member = $roxModelBase->getLoggedInMember();
 
-        if (!($member = $roxModelBase->getLoggedInMember())) {
-            // not logged in or not in database
-            $memberId = false;
-        } elseif ($member->isBanned()) {
-            // user is banned, log him out
-            $member->logOut();
-            $member = $memberId = false;
-        } else {
-            // normal logged in member
-            $memberId = $member->id;
+        $memberId = false;
+        if ($member) {
+            if ($member->isBanned()) {
+              $member->logOut();
+            } else {
+              $memberId = $member->id;
+            }
         }
 
         $ipAsInt = intval(ip2long($_SERVER['REMOTE_ADDR']));
         MOD_online::get()->iAmOnline($ipAsInt, $memberId);
-
-        return $member;
     }
-    
-    
+
+
 	/*
 	setLanguage() allows to chose a language in case the user is a not logged one
 	it works as follow

@@ -15,8 +15,9 @@ class DonateModel extends PAppModel
      * @return object Database result row with string properties
      */
     public function getStatForDonations() {
-        $YearNeededAmount = 1000;
-        $MonthNeededAmount = 85;
+        // TODO: Move to config
+        $requiredPerYear = 1000;
+        $requiredPerMonth = 85;
 
         // Calculate donations received for current year
         $result = $this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,quarter(now()) as quarter from donations where created> concat(concat(year(now()),'-01'),'-01')");
@@ -46,12 +47,12 @@ class DonateModel extends PAppModel
 
         $row = $result->fetch(PDB::FETCH_OBJ);
         $row->QuarterDonation = sprintf("%d", $row->Total);
-        $row->MonthNeededAmount = $MonthNeededAmount;
-        $row->YearNeededAmount = $YearNeededAmount;
-        $row->QuarterNeededAmount = $MonthNeededAmount * 3;
+        $row->MonthNeededAmount = $requiredPerMonth;
+        $row->YearNeededAmount = $requiredPerYear;
+        $row->QuarterNeededAmount = $requiredPerMonth * 3;
         $row->YearDonation = $rowYear->YearDonation;
 
-        return($row);
+        return $row;
      }
 
     /**

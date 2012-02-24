@@ -458,7 +458,12 @@ function EvaluateMyEvents() {
 
     global $_SYSHCVOL;
 
-    $memberId = isset($_SESSION['IdMember']) ? $_SESSION['IdMember'] : false;
+    if (isset($_SESSION['IdMember'])) {
+        $memberId = $_SESSION['IdMember'];
+    } else {
+        $memberId = false;
+    }
+
     $ipAsInt = intval(ip2long($_SERVER['REMOTE_ADDR']));
     MOD_online::get()->iAmOnline($ipAsInt, $memberId);
 

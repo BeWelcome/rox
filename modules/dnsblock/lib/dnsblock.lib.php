@@ -99,9 +99,11 @@ class MOD_dnsblock
             if (!isset($this->_dns_list) or empty($this->_dns_list)) {
                 MOD_log::get()->write("DNSBlock List is not set or empty. Not checking ...", "DNSBlock");
             } else {
-                foreach ($this->_dns_list as $dns)
-                    if (checkdnsrr($ip_reverse . '.' . $dns, "A"))
-                        $no_blocked ++;
+                foreach ($this->_dns_list as $dns) {
+                    if (checkdnsrr($ip_reverse . '.' . $dns, "A")) {
+                        $no_blocked++;
+                    }
+                }
 
                 MOD_log::get()->write("Ip $ip returns as blocked by $no_blocked servers", "DNSBlock");
             }

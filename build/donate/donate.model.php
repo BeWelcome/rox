@@ -5,16 +5,20 @@ class DonateModel extends PAppModel
 {
 
     /**
-     * Returns an structure with the current received donation for the year, the current received donation for the last quarter, the expected donation for a quarter, the month expected donation
+     * Get donation statistics
+     *   - QuarterDonation: Received donations for current quarter
+     *   - MonthNeededAmount: Required donations per month
+     *   - YearNeededAmount: Required donations per year
+     *   - QuarterNeededAmount: Required donations per quarter
+     *   - YearDonation: Received donations for current year
      *
+     * @return object Database result row with string properties
      */
     public function getStatForDonations() {
-        // It is assumed that 1000 Euro are needed per year
         $YearNeededAmount = 1000;
-        // It is assumed that 180 Euro are needed per month
         $MonthNeededAmount = 85;
 
-        // compute yearly receivde donations
+        // Calculate donations received for current year
         $result = $this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,quarter(now()) as quarter from donations where created> concat(concat(year(now()),'-01'),'-01')");
         $rowYear = $result->fetch(PDB::FETCH_OBJ);
 
@@ -35,16 +39,19 @@ class DonateModel extends PAppModel
                 $start = $rowYear->yearnow . "-10-01";
                 $end = $rowYear->yearnow . "-12-31";
                 break;
-            }
-            $query = "SELECT sum( round( amount ) ) AS Total, year( now( ) ) AS year FROM donations WHERE created >= '" . $start . "' AND created < '" . $end . "'" ;
-            $result = $this->dao->query($query);
-            $row = $result->fetch(PDB::FETCH_OBJ);
-            $row->QuarterDonation = sprintf("%d", $row->Total);
-            $row->MonthNeededAmount = $MonthNeededAmount;
-            $row->YearNeededAmount = $YearNeededAmount;
-            $row->QuarterNeededAmount = $MonthNeededAmount * 3;
-            $row->YearDonation = $rowYear->YearDonation;
-            return($row);
+        }
+
+        $query = "SELECT sum( round( amount ) ) AS Total, year( now( ) ) AS year FROM donations WHERE created >= '" . $start . "' AND created < '" . $end . "'" ;
+        $result = $this->dao->query($query);
+
+        $row = $result->fetch(PDB::FETCH_OBJ);
+        $row->QuarterDonation = sprintf("%d", $row->Total);
+        $row->MonthNeededAmount = $MonthNeededAmount;
+        $row->YearNeededAmount = $YearNeededAmount;
+        $row->QuarterNeededAmount = $MonthNeededAmount * 3;
+        $row->YearDonation = $rowYear->YearDonation;
+
+        return($row);
      }
 
     /**

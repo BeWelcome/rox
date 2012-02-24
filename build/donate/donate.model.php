@@ -6,11 +6,11 @@ class DonateModel extends PAppModel
 
     /**
      * Get donation statistics
-     *   - QuarterDonation: Received donations for current quarter
-     *   - MonthNeededAmount: Required donations per month
-     *   - YearNeededAmount: Required donations per year
+     *   - QuarterDonation:     Received donations for current quarter
+     *   - MonthNeededAmount:   Required donations per month
+     *   - YearNeededAmount:    Required donations per year
      *   - QuarterNeededAmount: Required donations per quarter
-     *   - YearDonation: Received donations for current year
+     *   - YearDonation:        Received donations for current year
      *
      * @return object Database result row with string properties
      */
@@ -20,7 +20,17 @@ class DonateModel extends PAppModel
         $requiredPerMonth = 85;
 
         // Calculate donations received for current year
-        $result = $this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,quarter(now()) as quarter from donations where created> concat(concat(year(now()),'-01'),'-01')");
+        $result = $this->dao->query("
+            SELECT
+                SUM(amount) AS YearDonation,
+                year(NOW()) AS yearnow,
+                month(NOW()) AS month,
+                quarter(NOW()) AS quarter
+            FROM
+                donations
+            WHERE
+                created > CONCAT(CONCAT(year(NOW()), '-01'), '-01')
+            ");
         $rowYear = $result->fetch(PDB::FETCH_OBJ);
 
         switch ($rowYear->quarter) {
@@ -42,7 +52,17 @@ class DonateModel extends PAppModel
                 break;
         }
 
-        $query = "SELECT sum( round( amount ) ) AS Total, year( now( ) ) AS year FROM donations WHERE created >= '" . $start . "' AND created < '" . $end . "'" ;
+        $query = "
+            SELECT
+                SUM(ROUND(amount)) AS Total,
+                year(now()) AS year
+            FROM
+                donations
+            WHERE
+                created >= '$start'
+                AND
+                created < '$end'
+            ";
         $result = $this->dao->query($query);
 
         $row = $result->fetch(PDB::FETCH_OBJ);

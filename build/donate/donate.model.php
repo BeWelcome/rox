@@ -7,49 +7,46 @@ class DonateModel extends PAppModel
     /**
      * Returns an structure with the current received donation for the year, the current received donation for the last quarter, the expected donation for a quarter, the month expected donation
      *
-     */    
+     */
     public function getStatForDonations() {
-            $YearNeededAmount=1000 ; // It is assumed that 1000 Euro are needed per year
-            $MonthNeededAmount=85 ; // It is assumed that 180 Euro are needed per month
-            // compute yearly receivde donations
-            
-           $result=$this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,quarter(now()) as quarter from donations where created> concat(concat(year(now()),'-01'),'-01')") ;
-            $rowYear=$result->fetch(PDB::FETCH_OBJ) ;
-            
-            switch ($rowYear->quarter) {
-                   case 1 :
-                        $start=$rowYear->yearnow."-01-01" ;
-                        $end=$rowYear->yearnow."-04-01" ;
-                        break ;
-                   case 2 :
-                        $start=$rowYear->yearnow."-04-01" ;
-                        $end=$rowYear->yearnow."-07-01" ;
-                        break ;
-                   case 3 :
-                        $start=$rowYear->yearnow."-07-01" ;
-                        $end=$rowYear->yearnow."-10-01" ;
-                        break ;
-                   case 4 :
-                        $start=$rowYear->yearnow."-10-01" ;
-                        $end=$rowYear->yearnow."-12-31" ;
-                        break ;
+        // It is assumed that 1000 Euro are needed per year
+        $YearNeededAmount = 1000;
+        // It is assumed that 180 Euro are needed per month
+        $MonthNeededAmount = 85;
+
+        // compute yearly receivde donations
+        $result = $this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,quarter(now()) as quarter from donations where created> concat(concat(year(now()),'-01'),'-01')");
+        $rowYear = $result->fetch(PDB::FETCH_OBJ);
+
+        switch ($rowYear->quarter) {
+            case 1:
+                $start = $rowYear->yearnow . "-01-01";
+                $end = $rowYear->yearnow . "-04-01";
+                break;
+            case 2:
+                $start = $rowYear->yearnow . "-04-01";
+                $end = $rowYear->yearnow . "-07-01";
+                break;
+            case 3:
+                $start = $rowYear->yearnow . "-07-01";
+                $end = $rowYear->yearnow . "-10-01";
+                break;
+            case 4:
+                $start = $rowYear->yearnow . "-10-01";
+                $end = $rowYear->yearnow . "-12-31";
+                break;
             }
-            $query="SELECT sum( round( amount ) ) AS Total, year( now( ) ) AS year FROM donations WHERE created >= '".$start."' AND created < '".$end."'" ;
-//          echo "query=$query<br>" ;
-           $result=$this->dao->query($query) ;
-            $row=$result->fetch(PDB::FETCH_OBJ) ;
-    
-            $row->QuarterDonation=sprintf("%d",$row->Total) ;
-            $row->MonthNeededAmount=$MonthNeededAmount ;
-            $row->YearNeededAmount=$YearNeededAmount ;
-            $row->QuarterNeededAmount=$MonthNeededAmount*3 ;
-            $row->YearDonation=$rowYear->YearDonation ;
-            
-            return($row) ;
-            
-            
-     } // end of getStatForDonations
-     
+            $query = "SELECT sum( round( amount ) ) AS Total, year( now( ) ) AS year FROM donations WHERE created >= '" . $start . "' AND created < '" . $end . "'" ;
+            $result = $this->dao->query($query);
+            $row = $result->fetch(PDB::FETCH_OBJ);
+            $row->QuarterDonation = sprintf("%d", $row->Total);
+            $row->MonthNeededAmount = $MonthNeededAmount;
+            $row->YearNeededAmount = $YearNeededAmount;
+            $row->QuarterNeededAmount = $MonthNeededAmount * 3;
+            $row->YearDonation = $rowYear->YearDonation;
+            return($row);
+     }
+
     /**
      * Get donations (max. 25, all if user has Treasurer rights)
      *

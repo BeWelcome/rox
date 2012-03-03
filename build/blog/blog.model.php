@@ -13,6 +13,11 @@ class Blog extends RoxModelBase
 {
     private $_namespace;
 
+    /* Note: Comments counting via this query is unreliable, because it does
+     *       not respect commenter's visibility. Use Blog::countComments($id)
+     *       instead. Another JOIN to respect commenter's visibility here makes
+     *       the query very slow unfortunately.
+     */
     const SQL_BLOGPOST = "
         SELECT b.blog_id,
                b.IdMember,
@@ -688,13 +693,6 @@ ORDER BY b.`blog_created` DESC';
         $offset = ($page - 1) * 5;
         $query .= " LIMIT {$offset}, 5";
         $recentPosts = $this->bulkLookup($query);
-
-        // Re-count comments, because SQL_BLOGPOST does not respect commenter's
-        // visibility and a JOIN in SQL_BLOGPOST that takes care of this makes
-        // the query really really slow (tested by Meinhard).
-        foreach($recentPosts as $post) {
-            $post->comments = $this->countComments($post->blog_id);
-        }
 
         return $recentPosts;
     }

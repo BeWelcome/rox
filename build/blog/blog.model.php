@@ -394,7 +394,7 @@ SQL;
     }
 
     public function getComments($blogId) {
-    	$query = '
+        $query = '
 SELECT
     c.id AS comment_id,
     c.IdMember AS IdMember,
@@ -411,6 +411,43 @@ AND m.Status in ("Active","Pending","ChoiceInactive","OutOfRemind","PassedAway")
         if ($s->numRows() == 0)
             return false;
         return $s;
+    }
+
+    /**
+     * Count comments for a blog post, respecting commenter's visibility
+     *
+     * @param int $postId ID of blog post
+     *
+     * @return int Number of comments
+     */
+    public function countComments($postId) {
+        $postId = intval($postId);
+        $query = "
+            SELECT
+                COUNT(blog_comments.id) as count
+            FROM
+                blog_comments
+            LEFT JOIN
+                members
+                ON blog_comments.IdMember = members.id
+            WHERE
+                blog_comments.blog_id_foreign = $postId
+                AND
+                members.Status IN (
+                    'Active',
+                    'Pending',
+                    'ChoiceInactive',
+                    'OutOfRemind',
+                    'PassedAway'
+                )
+            ";
+        $result = $this->bulkLookup($query);
+        if (isset($result[0]) && isset($result[0]->count)) {
+            $count = intval($result[0]->count);
+        } else {
+            $count = 0;
+        }
+        return $count;
     }
 
     public function getCategoryFromUserIt($userid,$galleryid = false)
@@ -650,8 +687,16 @@ ORDER BY b.`blog_created` DESC';
         $page = (($page < 1) ? 1 : $page);
         $offset = ($page - 1) * 5;
         $query .= " LIMIT {$offset}, 5";
+        $recentPosts = $this->bulkLookup($query);
 
-        return $this->bulkLookup($query);
+        // Re-count comments, because SQL_BLOGPOST does not respect commenter's
+        // visibility and a JOIN in SQL_BLOGPOST that takes care of this makes
+        // the query really really slow (tested by Meinhard).
+        foreach($recentPosts as $post) {
+            $post->comments = $this->countComments($post->blog_id);
+        }
+
+        return $recentPosts;
     }
 
     /**

@@ -45,10 +45,10 @@ if (!isset($headingLevel)) {
     </div> <!-- author -->
     <div class="floatbox">
         <?php
-        $Blog = new Blog;
-        $View = new BlogView($Blog);
-        $txt = $View->blogText($blog->blog_text);
-        $tags = $Blog->getPostTagsIt($blog->blog_id);
+        $blogModel = new Blog;
+        $blogView = new BlogView($blogModel);
+        $txt = $blogView->blogText($blog->blog_text);
+        $tags = $blogModel->getPostTagsIt($blog->blog_id);
         if ($tags->numRows() > 0) {
         ?>
             <div class="tags">

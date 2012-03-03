@@ -198,19 +198,6 @@ class SignupController extends RoxControllerBase {
                 // signup on MyTB successful, yeah.
                 $id = $model->registerBWMember($vars);
                 $_SESSION['IdMember'] = $id;
-                // $_SESSION['Username'] = $vars['username'];
-                // $idTB = $id;
-
-                if (($count = MOD_dnsblock::get()->checkRemoteIp())) {
-                    // Log that the user would be blocked, false positive
-                    MOD_log::get()->write(
-                                          "Would have DNSBlocked signup of user"
-                                          . " with ip ".$_SERVER['REMOTE_ADDR']
-                                          . " and username " . $vars['Username']
-                                          . " due to " . ($count == 1 ? "xbl" : "sbl"),
-                                          "Signup"
-                                          );
-                }
 
                 $vars['feedback'] .= 
                     $model->takeCareForNonUniqueEmailAddress($vars['email']);

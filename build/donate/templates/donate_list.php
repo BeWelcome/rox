@@ -47,10 +47,10 @@ $i18n = new MOD_i18n('date.php');
         echo "<td>",$T->SystemComment,"</td>" ;
         echo "<td>",$T->CountryName,"</td>" ;
         echo "</td>" ;
-    	 if ($hasRight) {
-        	$m = MOD_member::getMember_userId($T->IdMember);
-        	echo "<td>",$m->getUsername()," ",$T->referencepaypal,"</td>" ;
-		 }
+         if ($hasRight) {
+            $m = MOD_member::getMember_userId($T->IdMember);
+            echo "<td>",$m->getUsername()," ",$T->referencepaypal,"</td>" ;
+         }
         echo "</tr>\n" ;
     }
     echo "</table>" ;

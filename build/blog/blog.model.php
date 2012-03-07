@@ -13,6 +13,11 @@ class Blog extends RoxModelBase
 {
     private $_namespace;
 
+    /* Note: Comments counting via this query is unreliable, because it does
+     *       not respect commenter's visibility. Use Blog::countComments($id)
+     *       instead. Another JOIN to respect commenter's visibility here makes
+     *       the query very slow unfortunately.
+     */
     const SQL_BLOGPOST = "
         SELECT b.blog_id,
                b.IdMember,
@@ -394,7 +399,7 @@ SQL;
     }
 
     public function getComments($blogId) {
-    	$query = '
+        $query = '
 SELECT
     c.id AS comment_id,
     c.IdMember AS IdMember,
@@ -411,6 +416,43 @@ AND m.Status in ("Active","Pending","ChoiceInactive","OutOfRemind","PassedAway")
         if ($s->numRows() == 0)
             return false;
         return $s;
+    }
+
+    /**
+     * Count comments for a blog post, respecting commenter's visibility
+     *
+     * @param int $postId ID of blog post
+     *
+     * @return int Number of comments
+     */
+    public function countComments($postId) {
+        $postId = intval($postId);
+        $query = "
+            SELECT
+                COUNT(blog_comments.id) as count
+            FROM
+                blog_comments
+            LEFT JOIN
+                members
+                ON blog_comments.IdMember = members.id
+            WHERE
+                blog_comments.blog_id_foreign = $postId
+                AND
+                members.Status IN (
+                    'Active',
+                    'Pending',
+                    'ChoiceInactive',
+                    'OutOfRemind',
+                    'PassedAway'
+                )
+            ";
+        $result = $this->bulkLookup($query);
+        if (isset($result[0]) && isset($result[0]->count)) {
+            $count = intval($result[0]->count);
+        } else {
+            $count = 0;
+        }
+        return $count;
     }
 
     public function getCategoryFromUserIt($userid,$galleryid = false)
@@ -650,8 +692,9 @@ ORDER BY b.`blog_created` DESC';
         $page = (($page < 1) ? 1 : $page);
         $offset = ($page - 1) * 5;
         $query .= " LIMIT {$offset}, 5";
+        $recentPosts = $this->bulkLookup($query);
 
-        return $this->bulkLookup($query);
+        return $recentPosts;
     }
 
     /**

@@ -3,55 +3,77 @@
 
 class DonateModel extends PAppModel
 {
-    
-    
-    
-    
-    
-    
+
     /**
-     * Returns an structure with the current received donation for the year, the current received donation for the last quater, the expected donation for a quater, the month expected donation
+     * Get donation statistics
+     *   - QuarterDonation:     Received donations for current quarter
+     *   - MonthNeededAmount:   Required donations per month
+     *   - YearNeededAmount:    Required donations per year
+     *   - QuarterNeededAmount: Required donations per quarter
+     *   - YearDonation:        Received donations for current year
      *
-     */    
+     * @return object Database result row with string properties
+     */
     public function getStatForDonations() {
-	 		$MonthNeededAmount=180 ; // It is assume taht 180 € are needed per month
-			// compute yearly receivde donations
-			
-           $result=$this->dao->query("select sum(amount) as YearDonation,year( now( ) ) as yearnow, month(now()) as month ,quarter(now()) as quater from donations where created> concat(concat(year(now()),'-01'),'-01')") ;
-			$rowYear=$result->fetch(PDB::FETCH_OBJ) ;
-			
-			switch ($rowYear->quater) {
-				   case 1 :
-				   		$start=$rowYear->yearnow."-01-01" ;
-				   		$end=$rowYear->yearnow."-04-01" ;
-						break ;
-				   case 2 :
-				   		$start=$rowYear->yearnow."-04-01" ;
-				   		$end=$rowYear->yearnow."-07-01" ;
-						break ;
-				   case 3 :
-				   		$start=$rowYear->yearnow."-07-01" ;
-				   		$end=$rowYear->yearnow."-10-01" ;
-						break ;
-				   case 4 :
-				   		$start=$rowYear->yearnow."-10-01" ;
-				   		$end=$rowYear->yearnow."-12-31" ;
-						break ;
-			}
-			$query="SELECT sum( round( amount ) ) AS Total, year( now( ) ) AS year FROM donations WHERE created >= '".$start."' AND created < '".$end."'" ;
-//			echo "query=$query<br>" ;
-           $result=$this->dao->query($query) ;
-			$row=$result->fetch(PDB::FETCH_OBJ) ;
-	
-			$row->QuaterDonation=sprintf("%d",$row->Total) ;
-			$row->MonthNeededAmount=$MonthNeededAmount ;
-			$row->QuaterNeededAmount=$MonthNeededAmount*3 ;
-			$row->YearDonation=$rowYear->YearDonation ;
-			
-			return($row) ;
-			
-			
-	 } // end of getStatForDonations
+        // TODO: Move to config
+        $requiredPerYear = 1000;
+        $requiredPerMonth = 85;
+
+        // Calculate donations received for current year
+        $result = $this->dao->query("
+            SELECT
+                SUM(amount) AS YearDonation,
+                year(NOW()) AS yearnow,
+                month(NOW()) AS month,
+                quarter(NOW()) AS quarter
+            FROM
+                donations
+            WHERE
+                created > CONCAT(CONCAT(year(NOW()), '-01'), '-01')
+            ");
+        $rowYear = $result->fetch(PDB::FETCH_OBJ);
+
+        switch ($rowYear->quarter) {
+            case 1:
+                $start = $rowYear->yearnow . "-01-01";
+                $end = $rowYear->yearnow . "-04-01";
+                break;
+            case 2:
+                $start = $rowYear->yearnow . "-04-01";
+                $end = $rowYear->yearnow . "-07-01";
+                break;
+            case 3:
+                $start = $rowYear->yearnow . "-07-01";
+                $end = $rowYear->yearnow . "-10-01";
+                break;
+            case 4:
+                $start = $rowYear->yearnow . "-10-01";
+                $end = $rowYear->yearnow . "-12-31";
+                break;
+        }
+
+        $query = "
+            SELECT
+                SUM(ROUND(amount)) AS Total,
+                year(now()) AS year
+            FROM
+                donations
+            WHERE
+                created >= '$start'
+                AND
+                created < '$end'
+            ";
+        $result = $this->dao->query($query);
+
+        $row = $result->fetch(PDB::FETCH_OBJ);
+        $row->QuarterDonation = sprintf("%d", $row->Total);
+        $row->MonthNeededAmount = $requiredPerMonth;
+        $row->YearNeededAmount = $requiredPerYear;
+        $row->QuarterNeededAmount = $requiredPerMonth * 3;
+        $row->YearDonation = $rowYear->YearDonation;
+
+        return $row;
+     }
 
     /**
      * Get donations (max. 25, all if user has Treasurer rights)
@@ -102,7 +124,7 @@ class DonateModel extends PAppModel
 
     public function returnFromPayPal()
     {    
-	 	  global $_SYSHCVOL ; // this is needed to be able to read the value of paypal_authtoken !
+          global $_SYSHCVOL ; // this is needed to be able to read the value of paypal_authtoken !
 /*    
 //The donation returns an url as the following
 http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&amt=5.00&cc=EUR&cm=&item_number=&sig=hYUTlSOjBeJvNqfFqc%252fZbrBA4p6c%252fe6EErVp1w18eOBR96p6hzzenPysL%252bFVPZi8YEcONFovQmYn%252b6QF%252fBYoVhGMoaQJCxBQh%252bLAlC0TdgeScs1skk0%252bpY6SyoC%252fNCV1ou69zWRrhDrtsa4SUHibLD%252f1RwGg43iaZjPhB24I6lg%253d
@@ -119,9 +141,9 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
          if (isset($_SYSHCVOL['paypal_authtoken'])) {
             $auth_token =$_SYSHCVOL['paypal_authtoken'] ;
          }
-		  else {
+          else {
             MOD_log::get()->write("_SYSHCVOL[paypal_authtoken] is not set","donation") ;
-		  }
+          }
          $req .= "&tx=$tx_token&at=$auth_token";
 
 /*           

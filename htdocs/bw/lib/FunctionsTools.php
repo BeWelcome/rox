@@ -452,21 +452,21 @@ function GetArrayParam($param, $defaultvalue = "") {
 
 
 //------------------------------------------------------------------------------ 
-// this function return the count of whoisonline members
-function CountWhoIsOnLine() {
-    MOD_user::updateSessionOnlineCounter();
-	return $_SESSION['WhoIsOnlineCount'];
-} // end of CountWhoIsOnLine
-
-//------------------------------------------------------------------------------ 
 // function EvaluateMyEvents()  evaluate several events :
 // - not read message
 function EvaluateMyEvents() {
 
     global $_SYSHCVOL;
 
-	MOD_user::updateDatabaseOnlineCounter();
-	CountWhoIsOnLine();
+    if (isset($_SESSION['IdMember'])) {
+        $memberId = $_SESSION['IdMember'];
+    } else {
+        $memberId = false;
+    }
+
+    $ipAsInt = intval(ip2long($_SERVER['REMOTE_ADDR']));
+    MOD_online::get()->iAmOnline($ipAsInt, $memberId);
+
 	if (!IsLoggedIn()) {
 		return; // if member not identified, no more evaluation needed
 	}

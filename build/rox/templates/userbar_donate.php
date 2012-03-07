@@ -5,8 +5,8 @@ $TDonationArray = $DModel->getDonations();
 $Stats = $DModel->getStatForDonations() ;
 
     $max=count($TDonationArray) ;
-    $TotalDonations=$Stats->QuaterDonation ;
-    $TotalDonationsNeeded = $Stats->QuaterNeededAmount ;
+    $TotalDonations=$Stats->YearDonation ;
+    $TotalDonationsNeeded = $Stats->YearNeededAmount ;
     $Percent = $TotalDonations *100/$TotalDonationsNeeded;
 
     $BarState = -101 *$Percent/100;
@@ -31,7 +31,7 @@ $Stats = $DModel->getStatForDonations() ;
         </td>
         <td style="vertical-align: top">
             <div class="small">
-                <p><?=$ww->Donate_bar($TotalDonations,$TotalDonationsNeeded) ?></p>
+                <p><?=$ww->Donate_bar_annual($TotalDonations,$TotalDonationsNeeded) ?></p>
                 <a href="donate" title="<?=$wwsilent->Donate_DonateNow ?>"><?=$wwsilent->Donate_DonateNow ?></a>
             </div>
             <?=$words->flushBuffer() ?>

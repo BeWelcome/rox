@@ -45,10 +45,11 @@ if (!isset($headingLevel)) {
     </div> <!-- author -->
     <div class="floatbox">
         <?php
-        $Blog = new Blog;
-        $View = new BlogView($Blog);
-        $txt = $View->blogText($blog->blog_text);
-        $tags = $Blog->getPostTagsIt($blog->blog_id);
+        $blogModel = new Blog;
+        $blogView = new BlogView($blogModel);
+        $txt = $blogView->blogText($blog->blog_text);
+        $tags = $blogModel->getPostTagsIt($blog->blog_id);
+        $commentsCount = $blogModel->countComments($blog->blog_id);
         if ($tags->numRows() > 0) {
         ?>
             <div class="tags">
@@ -73,11 +74,11 @@ if (!isset($headingLevel)) {
     <p class="action">
 <?php
 echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
-if ($blog->comments) {
-  if ($blog->comments == 1) {
+if ($commentsCount > 0) {
+  if ($commentsCount == 1) {
     echo '<img src="images/icons/comment.png" alt="'.$words->get('CommentsSingular').'"/> 1 '.$words->get('CommentsSingular');
   } else {
-    echo '<img src="images/icons/comments.png" alt="'.$words->get('CommentsPlural').'"/> '.(int)$blog->comments.' '.$words->get('CommentsPlural');
+    echo '<img src="images/icons/comments.png" alt="'.$words->get('CommentsPlural').'"/> '.$commentsCount.' '.$words->get('CommentsPlural');
   }
 } else {
   echo '<img src="images/icons/comment_add.png" alt="'.$words->get('CommentsAdd').'"/> '.$words->get('CommentsAdd');

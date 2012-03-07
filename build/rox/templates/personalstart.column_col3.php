@@ -30,13 +30,15 @@ Boston, MA  02111-1307, USA.
             <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a> <a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"><img src="images/icons/feed.png" alt="<?=$words->get('GetRSSFeed')?>"></a></h3>
             <div class="floatbox">
                 <?php
-                $i=1;
+                $blogModel = new Blog();
+                $view = new BlogView($blogModel);
+                $i = 1;
                 foreach ($postIt as $blog) {
+                    // TODO: use for 1..3 loop instead
                     $i++;
                     if ($i <=3) {
-                        $Blog = new Blog();
-                        $View = new BlogView($Blog);
-                        $txt = $View->blogText($blog->blog_text);
+                        $txt = $view->blogText($blog->blog_text);
+                        $commentsCount = $blogModel->countComments($blog->blog_id);
                     ?>
                     <div class="newsitem">
                         <h4 class="news"><a href="blog/<?=$blog->user_handle?>/<?=$blog->blog_id?>"><?=htmlentities($blog->blog_title, ENT_COMPAT, 'utf-8')?></a></h4>
@@ -54,11 +56,11 @@ Boston, MA  02111-1307, USA.
                         <div class="newscomments small">
                             <?php
                                 echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
-                                if ($blog->comments) {
-                                  if ($blog->comments == 1) {
+                                if ($commentsCount > 0) {
+                                  if ($commentsCount == 1) {
                                     echo '1 '.$words->get('CommentsSingular');
                                   } else {
-                                    echo (int)$blog->comments.' '.$words->get('CommentsPlural');
+                                    echo $commentsCount . ' ' . $words->get('CommentsPlural');
                                   }
                                 } else {
                                   echo $words->get('CommentsAdd');

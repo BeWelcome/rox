@@ -785,52 +785,73 @@ WHERE IdMember = ".$this->id
 
     /**
      * Member address lookup
+     * TODO: Translate errors
      */
     protected function get_address() {
-        $sql = <<<SQL
-SELECT
-    SQL_CACHE a.*
-FROM
-    addresses AS a
-WHERE
-    a.IdMember = {$this->id}
-SQL;
-        ;
-        $a = $this->bulkLookup($sql);
-        if($a != null && sizeof($a) > 0)
-        {
-            $city = $this->createEntity('Geo')->findById($a[0]->IdCity);
-            if ($city)
-            {
-                $a[0]->CityName = $city->getName();
+        $id = $this->id;
+        $query = "
+            SELECT
+                SQL_CACHE a.*
+            FROM
+                addresses AS a
+            WHERE
+                a.IdMember = $id
+            ";
+        $rows = $this->bulkLookup($query);
+
+        if($rows != null && sizeof($rows) > 0) {
+            $address = $rows[0];
+            $city = $this->createEntity('Geo')->findById($address->IdCity);
+            if ($city) {
+                $address->CityName = $city->getName();
                 $region = $city->getParent();
                 $country = $city->getCountry();
-                if ($region && $country)
-                {
-                    $a[0]->RegionName = $region->getPKValue() == $country->getPKValue() ? '' : $region->getName();
-                    $a[0]->CountryName = $country->getName();
-                    $a[0]->CountryCode = $country->fk_countrycode;
+                if ($region && $country) {
+                    if ($region->getPKValue() == $country->getPKValue()) {
+                        $address->RegionName = '';
+                    } else {
+                        $address->RegionName = $region->getName();
+                    }
+                    $address->CountryName = $country->getName();
+                    $address->CountryCode = $country->fk_countrycode;
                 }
             }
+            if (!empty($address->CityName)) {
+                $address->CityName = $address->CityName;
+            } else {
+                $address->CityName = 'Error: City not found';
+            }
+        } else {
+            // Create new empty address if database returned no result
+            $address = new stdClass();
+            $address->IdCity = '';
+            $address->CityName = 'Error: City not found';
+            $address->HouseNumber = 'Error: House number not found';
+            $address->StreetName = 'Error: Street not found';
+            $address->Zip = 'Error: Postcode not found';
         }
-        else
-        {
-            $a[0] = new stdClass();
-            $a[0]->IdCity = '';
-            $a[0]->CityName = 'Unknown';
-            $a[0]->HouseNumber = 'Unknown';
-            $a[0]->StreetName = 'Unknown';
-            $a[0]->Zip = 'Unknown';
-        }
-        $a[0]->CityName = ((!empty($a[0]->CityName)) ? $a[0]->CityName : '');
-        $a[0]->RegionName = ((!empty($a[0]->RegionName)) ? $a[0]->RegionName : '');
-        $a[0]->CountryName = ((!empty($a[0]->CountryName)) ? $a[0]->CountryName : 'Unknown');
-        $a[0]->CountryCode = ((!empty($a[0]->CountryCode)) ? $a[0]->CountryCode : 'Unknown');
 
-        $this->address = $a[0];
+        if (empty($address->RegionName)) {
+            $address->RegionName = 'Error: Region not found';
+        } else {
+            $address->RegionName = $address->RegionName;
+        }
+
+        if (empty($address->CountryName)) {
+            $address->CountryName = 'Error: Country not found';
+        } else {
+            $address->CountryName = $address->CountryName;
+        }
+
+        if (empty($address->CountryCode)) {
+            $address->CountryCode = 'ERROR';
+        } else {
+            $address->CountryCode = $address->CountryCode;
+        }
+
+        $this->address = $address;
     }
 
-    
     /*
     * this function get the number of post of the current member
     */
@@ -1364,6 +1385,21 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     public function isPending()
     {
         if ($this->isLoaded() && ($this->Status == 'Pending')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * returns true if the member is banned
+     *
+     * @access public
+     * @return bool
+     */
+    public function isBanned()
+    {
+        if ($this->isLoaded() && $this->Status == 'Banned')
+        {
             return true;
         }
         return false;

@@ -785,8 +785,7 @@ WHERE IdMember = ".$this->id
 
     /**
      * Member address lookup
-     *
-     * TODO: Translate "Unknown"
+     * TODO: Translate errors
      */
     protected function get_address() {
         $id = $this->id;
@@ -820,33 +819,34 @@ WHERE IdMember = ".$this->id
             if (!empty($address->CityName)) {
                 $address->CityName = $address->CityName;
             } else {
-                $address->CityName = '';
+                $address->CityName = 'Error: City not found';
             }
         } else {
+            // Create new empty address if database returned no result
             $address = new stdClass();
             $address->IdCity = '';
-            $address->CityName = 'Unknown';
-            $address->HouseNumber = 'Unknown';
-            $address->StreetName = 'Unknown';
-            $address->Zip = 'Unknown';
+            $address->CityName = 'Error: City not found';
+            $address->HouseNumber = 'Error: House number not found';
+            $address->StreetName = 'Error: Street not found';
+            $address->Zip = 'Error: Postcode not found';
         }
 
-        if (!empty($address->RegionName)) {
+        if (empty($address->RegionName)) {
+            $address->RegionName = 'Error: Region not found';
+        } else {
             $address->RegionName = $address->RegionName;
-        } else {
-            $address->RegionName = 'Unknown';
         }
 
-        if (!empty($address->CountryName)) {
+        if (empty($address->CountryName)) {
+            $address->CountryName = 'Error: Country not found';
+        } else {
             $address->CountryName = $address->CountryName;
-        } else {
-            $address->CountryName = 'Unknown';
         }
 
-        if (!empty($address->CountryCode)) {
-            $address->CountryCode = $address->CountryCode;
+        if (empty($address->CountryCode)) {
+            $address->CountryCode = 'ERROR';
         } else {
-            $address->CountryCode = 'Unknown';
+            $address->CountryCode = $address->CountryCode;
         }
 
         $this->address = $address;

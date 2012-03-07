@@ -80,9 +80,15 @@ class Geo extends RoxEntityBase
      */
     public function getCountry()
     {
-        if (!$this->isLoaded() || !$this->parentCountryId)
+        if (!$this->isLoaded())
         {
             return false;
+        }
+        if ($this->parentCountryId == 0) {
+            $code = $this->fk_countrycode;
+            $geo = $this->createEntity('Geo');
+            $geo->findByWhere("fcode LIKE 'PC%' AND fk_countrycode = '$code'");
+            $this->country = $geo;
         }
         if (!$this->country)
         {

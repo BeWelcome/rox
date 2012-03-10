@@ -464,7 +464,12 @@ function EvaluateMyEvents() {
         $memberId = false;
     }
 
-    $ipAsInt = intval(ip2long($_SERVER['REMOTE_ADDR']));
+    // REMOTE_ADDR is not set when run via CLI
+    if (isset($_SERVER['REMOTE_ADDR'])) {
+        $ipAsInt = intval(ip2long($_SERVER['REMOTE_ADDR']));
+    } else {
+        $ipAsInt = intval(ip2long('127.0.0.1'));
+    }
     MOD_online::get()->iAmOnline($ipAsInt, $memberId);
 
 	if (!IsLoggedIn()) {

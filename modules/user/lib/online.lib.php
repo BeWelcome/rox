@@ -82,7 +82,12 @@ class MOD_online
     
     private function _guestIsOnline($ip)
     {
-        $appearance = $_SERVER['REMOTE_ADDR'];  // what for?
+        // REMOTE_ADDR is not set when run via CLI
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $appearance = $_SERVER['REMOTE_ADDR'];
+        } else {
+            $appearance = '127.0.0.1';
+        }
         $lastactivity = 'whocares';
         
         $this->dao->query(

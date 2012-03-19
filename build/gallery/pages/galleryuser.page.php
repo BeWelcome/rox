@@ -61,7 +61,7 @@ class GalleryUserPage extends GalleryBasePage
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<h1 class="userpage">'.MOD_layoutbits::PIC_50_50($this->member->Username,'',$style='float_left').' '.ucfirst($this->member->Username).'</h1>';
+        return '<h1 class="userpage">'.MOD_layoutbits::PIC_50_50($this->member->Username,'',$style='float_left').' <a href="members/'.$this->member->Username.'">'.$this->member->Username.'</a></h1>';
     }
     
     protected function teaser() {

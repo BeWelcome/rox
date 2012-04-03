@@ -796,58 +796,78 @@ WHERE IdMember = ".$this->id
                 addresses AS a
             WHERE
                 a.IdMember = $id
+            LIMIT
+                1
             ";
         $rows = $this->bulkLookup($query);
 
+        // Check if address was found
         if($rows != null && sizeof($rows) > 0) {
-            $address = $rows[0];
-            $city = $this->createEntity('Geo')->findById($address->IdCity);
+            $addressRow = $rows[0];
+            $city = $this->createEntity('Geo')->findById($addressRow->IdCity);
             if ($city) {
-                $address->CityName = $city->getName();
-                $region = $city->getParent();
-                $country = $city->getCountry();
-                if ($region && $country) {
-                    if ($region->getPKValue() == $country->getPKValue()) {
-                        $address->RegionName = '';
-                    } else {
-                        $address->RegionName = $region->getName();
-                    }
-                    $address->CountryName = $country->getName();
-                    $address->CountryCode = $country->fk_countrycode;
+                // Set city name
+                if ($city->getName() == '') {
+                    $cityName = 'Error: City name not set';
+                } else {
+                    $cityName = $city->getName();
                 }
-            }
-            if (!empty($address->CityName)) {
-                $address->CityName = $address->CityName;
+
+                // Set region name
+                $region = $city->getParent();
+                if ($region) {
+                    $regionName = $region->getName();
+                } else {
+                    $regionName = 'Error: City has no region';
+                }
+
+                // Set country name and code
+                $country = $city->getCountry();
+                if ($country) {
+                    $countryName = $country->getName();
+                    $countryCode = $country->fk_countrycode;
+                }
+
+                // Set remaining address fields
+                $idCity = $addressRow->IdCity;
+                $houseNumber = $addressRow->HouseNumber;
+                $streetName = $addressRow->StreetName;
+                $zip = $addressRow->Zip;
             } else {
-                $address->CityName = 'Error: City not found';
+                // Use error message everywhere if city could not be found
+                $errorMessage = 'Error: City not found';
+                $idCity = '';
+                $cityName = $errorMessage;
+                $houseNumber = $errorMessage;
+                $streetName = $errorMessage;
+                $zip = $errorMessage;
+                $regionName = $errorMessage;
+                $countryName = $errorMessage;
+                $countryCode = $errorMessage;
             }
         } else {
-            // Create new empty address if database returned no result
-            $address = new stdClass();
-            $address->IdCity = '';
-            $address->CityName = 'Error: City not found';
-            $address->HouseNumber = 'Error: House number not found';
-            $address->StreetName = 'Error: Street not found';
-            $address->Zip = 'Error: Postcode not found';
+            // Use error message everywhere if database returned no address
+            $errorMessage = 'Error: Address not set';
+            $idCity = '';
+            $cityName = $errorMessage;
+            $houseNumber = $errorMessage;
+            $streetName = $errorMessage;
+            $zip = $errorMessage;
+            $regionName = $errorMessage;
+            $countryName = $errorMessage;
+            $countryCode = $errorMessage;
         }
 
-        if (empty($address->RegionName)) {
-            $address->RegionName = 'Error: Region not found';
-        } else {
-            $address->RegionName = $address->RegionName;
-        }
-
-        if (empty($address->CountryName)) {
-            $address->CountryName = 'Error: Country not found';
-        } else {
-            $address->CountryName = $address->CountryName;
-        }
-
-        if (empty($address->CountryCode)) {
-            $address->CountryCode = 'ERROR';
-        } else {
-            $address->CountryCode = $address->CountryCode;
-        }
+        // Build address
+        $address = new stdClass();
+        $address->IdCity = $idCity;
+        $address->HouseNumber = $houseNumber;
+        $address->StreetName = $streetName;
+        $address->Zip = $zip;
+        $address->CityName = $cityName;
+        $address->RegionName = $regionName;
+        $address->CountryName = $countryName;
+        $address->CountryCode = $countryCode;
 
         $this->address = $address;
     }

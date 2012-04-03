@@ -23,7 +23,11 @@
         <?php endif ;?>
         <div id="navigation-path" >
           <h2>
-            <strong><a class="" href="places/<?php echo $member->countryCode() . "/" . $member->region() . "/" . $member->city(); ?>"><?php echo $member->city(); ?></a></strong><?php if ($member->region() != '' && $member->region() != $member->city()): ?>, <a class="" href="places/<?php echo $member->countryCode() . "/" . $member->region(); ?>"><?php echo $member->region(); ?></a><?php endif; ?>, <a class="" href="places/<?php echo $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
+            <?php if ($member->region() == '' && $member->city() == $member->country()): /* The Hong Kong solution ;) */ ?>
+              <strong><a class="" href="places/<?php echo $member->countryCode(); ?>"><?php echo $member->country(); ?></a></strong>
+            <?php else: ?>
+              <strong><a class="" href="places/<?php echo $member->countryCode() . "/" . $member->region() . "/" . $member->city(); ?>"><?php echo $member->city(); ?></a></strong><?php if ($member->region() != '' && $member->region() != $member->city()): ?>, <a class="" href="places/<?php echo $member->countryCode() . "/" . $member->region(); ?>"><?php echo $member->region(); ?></a><?php endif; ?>, <a class="" href="places/<?php echo $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
+            <?php endif; ?>
           </h2>
           <p class="grey">
             <?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?><br />

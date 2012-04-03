@@ -22,9 +22,8 @@
         </div>
         <?php endif ;?>
         <div id="navigation-path" >
-          <h2><strong><a class="" href="places/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
-              (<a class="" href="places/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
-              <a class="" href="places/<?=$member->countryCode() ?>" ><?=$member->country() ?></a>
+          <h2>
+            <strong><a class="" href="places/<?php echo $member->countryCode() . "/" . $member->region() . "/" . $member->city(); ?>"><?php echo $member->city(); ?></a></strong><?php if ($member->region() != '' && $member->region() != $member->city()): ?>, <a class="" href="places/<?php echo $member->countryCode() . "/" . $member->region(); ?>"><?php echo $member->region(); ?></a><?php endif; ?>, <a class="" href="places/<?php echo $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
           </h2>
           <p class="grey">
             <?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?><br />

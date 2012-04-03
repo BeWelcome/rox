@@ -818,7 +818,8 @@ WHERE IdMember = ".$this->id
                 if ($region) {
                     $regionName = $region->getName();
                 } else {
-                    $regionName = 'Error: City has no region';
+                    // Suppress display in template
+                    $regionName = '';
                 }
 
                 // Set country name and code

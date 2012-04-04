@@ -600,6 +600,14 @@ a.bigbutton:active span {
     padding: 9px 0 7px 18px; /* push text down 1px */
 }
 
+a.flagbutton {
+  opacity: 0.2;
+}
+
+a.flagbutton:hover {
+  opacity: 1;
+}
+
 /* General (Google-) Map styles */
 .map, #spaf_map, .tripmap {overflow: hidden;}
 

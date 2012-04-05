@@ -89,11 +89,18 @@ Boston, MA  02111-1307, USA.
                                     <h3><?php echo $words->getFormatted('StartpageBrowseCountries') ?></h3>
                                     <select onchange="window.location.href=this.value; return false" style="width: 100%">
                                     <?php foreach ($Countries as $continent => $countries_group) { ?>
-                                         <optgroup label="<?=$continent?>">
+                                        <optgroup label="<?php
+                                        if ($continent=='AF') { echo $words->getformatted('Africa');} 
+                                        if ($continent=='AN') { echo $words->getformatted('Antarctica');} 
+                                        if ($continent=='EU') { echo $words->getformatted('Europe');} 
+                                        if ($continent=='NA') { echo $words->getformatted('NorthAmerica');}
+                                        if ($continent=='SA') { echo $words->getformatted('SouthAmerica');}
+                                        if ($continent=='OC') { echo $words->getformatted('Oceania');}
+                                        if ($continent=='AS') { echo $words->getformatted('Asia');} ?>">
                                         <?php foreach ($countries_group as $code => $country) { ?>
                                              <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
                                         <?php } ?>
-                                        </optgroup>
+                                    </optgroup>
                                     <?php } ?>
                                     </select>
                                 </div> <!-- browsecities_dropdown -->

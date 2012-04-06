@@ -121,7 +121,7 @@ Boston, MA  02111-1307, USA.
                   <strong class="<?=$cc->comQuality?>"><?=$cc->comQuality?></strong><br/>
                   <span class="small grey"><?= $words->get('CommentFrom', '<a href="members/' . $cc->UsernameFromMember . '">' . $cc->UsernameFromMember . '</a>') ?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameToMember ?>"><?= $cc->UsernameToMember ?></a> - <?= $cc->created ?></span>
                   <?php if ($this->loggedInMember) :?>
-                    <a class="flagbutton" href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $cc->id;?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/noun_project_flag.png" alt="<?=$ww->ReportCommentProblem ?>"></a>
+                    <a class="flagbutton" href="members/reportcomment/<?php echo $cc->UsernameToMember; ?>/<?php echo $cc->id;?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/noun_project_flag.png" alt="<?=$ww->ReportCommentProblem ?>"></a>
                   <?php endif;?>
                 </p>
                 <p>

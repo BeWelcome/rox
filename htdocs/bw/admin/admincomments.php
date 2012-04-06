@@ -168,5 +168,5 @@ switch ($action) {
 }
 
 $Message = " Comments needed to be checked by AdminComment";
-DisplayAdminComments(loaddata("AdminComment", $RestrictToIdMember), $Message); // call the layout
+DisplayAdminComments(loaddata("AdminCommentMustCheck", $RestrictToIdMember), $Message); // call the layout
 ?>

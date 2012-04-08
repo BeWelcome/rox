@@ -148,6 +148,32 @@ class MembersController extends RoxControllerBase
                         $page = new ProfilePage;
                 }
                 break;
+            case 'flagcomment':
+                if (isset($request[1]) && isset($request[2])) {
+                    $username = $request[1];
+                    $commentId = $request[2];
+                    if (isset($request[3])) {
+                        $commentPage = $request[3];
+                    } else {
+                        $commentPage = $username;
+                    }
+                    $reportResult = $this->model->reportBadComment($username,
+                        $commentId);
+
+                    if ($reportResult) {
+                        $member = $this->model->getLoggedInMember();
+                        $this->logWrite("{$member->Username} has reported"
+                            . " comment ID: {$commentId} on user {$username}"
+                            . " as problematic", 'comments');
+                        $this->redirect('members/' . $commentPage
+                            . '/comments');
+                    } else {
+                        $this->redirect('');
+                    }
+                } else {
+                    $this->redirect('');
+                }
+                break;
             case 'people':
             case 'members':
             default:
@@ -158,13 +184,20 @@ class MembersController extends RoxControllerBase
                 }
                 elseif ($request[1] == 'reportcomment')
                 {
-                    if (!isset($request[2]) || !isset($request[3]) || !$this->model->getLoggedInMember() || !$this->model->reportBadComment($request[2], $request[3]))
-                    {
+                    if (isset($request[2]) && isset($request[3])
+                        && $this->model->getLoggedInMember()) {
+
+                        $redirect = 'flagcomment/' . $request[2] . '/'
+                            . $request[3];
+                        // Use profile the comment was left on if available
+                        if (isset($request[4])) {
+                            $redirect .= '/' . $request[4];
+                        }
+                        $this->redirect('feedback?IdCategory=4&redirect='
+                            . urlencode($redirect));
+                    } else {
                         $this->redirect('');
                     }
-                    $member = $this->model->getLoggedInMember();
-                    $this->logWrite("{$member->Username} has reported comment ID: {$request[3]} on user {$request[2]} as problematic", 'comments');
-                    $this->redirect('feedback?IdCategory=4');
                 }
                 else if ($request[1] == 'avatar')
                 {

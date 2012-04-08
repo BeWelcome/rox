@@ -187,14 +187,30 @@ class MembersController extends RoxControllerBase
                     if (isset($request[2]) && isset($request[3])
                         && $this->model->getLoggedInMember()) {
 
-                        $redirect = 'flagcomment/' . $request[2] . '/'
-                            . $request[3];
+                        $username = $request[2];
+                        $commentId = $request[3];
+                        $redirect = 'flagcomment/' . $username . '/'
+                            . $commentId;
                         // Use profile the comment was left on if available
+                        // (needed to redirect user back to correct page)
                         if (isset($request[4])) {
                             $redirect .= '/' . $request[4];
                         }
-                        $this->redirect('feedback?IdCategory=4&redirect='
-                            . urlencode($redirect));
+
+                        // Prepare feedback data
+                        $baseUri = PVars::getObj('env')->baseuri;
+                        $data = array();
+                        $data['Admin comment'] = $baseUri
+                            . 'bw/admin/admincomments.php?IdComment='
+                            . $commentId;
+                        $data['Member comment page'] = $baseUri
+                            . 'members/' . $username . '/comments';
+                        $dataEncoded = urlencode(serialize($data));
+
+                        // Redirect
+                        $url = 'feedback?IdCategory=4&redirect='
+                            . urlencode($redirect) . '&data=' . $dataEncoded;
+                        $this->redirect($url);
                     } else {
                         $this->redirect('');
                     }

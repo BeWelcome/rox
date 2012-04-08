@@ -169,7 +169,17 @@ SQL
         }
 
         //Now check if Swift actually sends it
-        if ($mailer->send($message))
+        try
+        {
+            $sendResult = $mailer->send($message);
+        }
+        catch (Exception $e)
+        {
+            $this->logWrite("Exception when executing Swift_Mailer::send()", "feedback");
+            $sendResult = false;
+        }
+
+        if ($sendResult)
         {
             return true;
         }

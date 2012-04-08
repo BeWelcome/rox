@@ -44,8 +44,12 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if ($RestrictToIdMember != "") {
 		$str .= $RestrictToIdMember;
 	}
+    // Filter by comment ID
+    $commentId = intval(Getparam('IdComment'));
+    if ($commentId > 0) {
+        $str .= " AND comments.id=" . $commentId;
+    }
 
-	//	echo "str=$str\n";
 	$qry = sql_query($str);
 	while ($c = mysql_fetch_object($qry)) {
 		array_push($TData, $c);

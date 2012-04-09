@@ -28,6 +28,10 @@ $layoutbits = new MOD_layoutbits();
 
 
 <?php
+function short_name($str, $limit)
+{
+    return strlen($str) > $limit ? substr($str, 0, $limit - 3) . ' ...' : $str;
+}
     $uri = ForumsView::getURI();
     if ($threads = $boards->getThreads()) {
 ?>
@@ -63,7 +67,12 @@ $threadsliced = array_slice($threads, 0, 5);
                     <?php
                     echo $words->fTrad($thread->IdTitle);
                     ?></a><br />
-                    <span class="small grey">by <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> -
+                    <span class="small grey"><?php echo $words->get("by");?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
+                    <?php if ($thread->IdGroup>0 && isset($request[1]) == "") 
+                        { 
+                            echo " in <a href=\"groups/".$thread->IdGroup."\"><strong>" . $words->get("group") . ": </strong>",$this->_model->getGroupName(short_name($thread->GroupName, 13)),"</a> -" ;
+                        }
+                    ?>
                     <?php echo '<span title="'.date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)).'">'.$layoutbits->ago($thread->last_create_time).'</span>'; ?>
                     <?php // echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?>
                     </span>

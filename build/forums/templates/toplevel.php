@@ -29,9 +29,6 @@ $User = APP_User::login();
 <?php
 $ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
-if ($ToogleTagCloud) { // If We want to see the TagCloud
-  require 'tagcloud_and_toptags.php';
-} // if ToogleTagCloud
 if (!$User) {
 ?>
     <div class="subcolumns">

@@ -167,6 +167,8 @@ class MembersController extends RoxControllerBase
                             . " as problematic", 'comments');
                         $this->redirect('members/' . $commentPage
                             . '/comments');
+                        $notice = $this->getWords()->CommentReported;
+                        $this->setFlashNotice($notice);
                     } else {
                         $this->redirect('');
                     }

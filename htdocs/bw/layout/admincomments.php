@@ -86,7 +86,7 @@ function ShowList($TData) {
     echo "                  <div class=\"subcr\">\n";
     echo "                    <ul class=\"linklist\">\n";
     if ($c->AdminComment != "Checked")
-      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=Checked")."\">Checked</a></li>\n";
+      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=Checked")."\" class=button>Mark as checked</a></li>\n";
     if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminComment")))
       echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=AdminCommentMustCheck")."\">Admin Comment Must Check</a></li>\n";
     if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminAbuser")))
@@ -130,9 +130,12 @@ function DisplayAdminComments($TData, $lastaction = "") {
 
   Menu2("admincomments.php", ww('MainPage')); // Displays the second menu
 
-  if (HasRight("Comments", "AdminAbuser"))
-  $MenuAction  = "            <li><a href=\"".bwlink("admin/admincomments.php?action=AdminAbuser")."\">Comments to check by Admin Abuser</a></li>\n";
-  $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php?action=All")."\">All Comments </a></li>\n";
+  $MenuAction = "";
+  $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php")."\">Reported comments</a></li>\n";
+  if (HasRight("Comments", "AdminAbuser")) {
+      $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php?action=AdminAbuser")."\">Comments marked as abuse</a></li>\n";
+  }
+  $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php?action=All")."\">All comments</a></li>\n";
 
   DisplayHeaderShortUserContent($title . " : " . $lastaction);
   ShowLeftColumn($MenuAction,VolMenu());

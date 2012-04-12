@@ -446,17 +446,22 @@ class ForumsController extends PAppController
         $this->_view->uri = 'groups/'.$request[1].'/forum/';
         $this->_view->showExternal();
     }          
-    
-// This rebuild the list of lates post to display on the main user page
-    public function showExternalLatest() { 
-        $request = $this->request;    
-        $this->parseRequest();    
+
+    /**
+     * Displays a teaser list with latest threads
+     *
+     * @param bool $showGroups Set true if group name and link should be shown
+     *                         in teasers
+     */
+    public function showExternalLatest($showGroups = false) {
+        $request = $this->request;
+        $this->parseRequest();
         $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
-        $this->_model->prepareForum();     
+        $this->_model->prepareForum();
         $this->_view->uri = 'forums/';
-        $this->_view->showExternal();
-    }  // end of showExternalLatest
-    
+        $this->_view->showExternal($showGroups);
+    }
+
     public function editProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
         

@@ -601,6 +601,25 @@ class MOD_layoutbits
         return $year_diff;
     } // end of fage_value
 
+    /**
+     * Truncate a string
+     *
+     * @param string $string Input string
+     * @param int $length Maximum length of truncated version
+     * @param string $omission Trailing characters indicating omission,
+     *                         default: '...'
+     *
+     * @return string Truncated version of string
+     */
+    public static function truncate($string, $length, $omission = '...') {
+        if (strlen($string) > $length) {
+            $truncated = substr($string, 0, $length) . $omission;
+        } else {
+            $truncated = $string;
+        }
+        return $truncated;
+    }
+
 }
 
 ?>

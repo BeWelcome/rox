@@ -22,9 +22,25 @@
         </div>
         <?php endif ;?>
         <div id="navigation-path" >
-          <h2><strong><a class="" href="places/<?=$member->countryCode()."/".$member->region()."/".$member->city() ?>" ><?=$member->city() ?></a></strong>
-              (<a class="" href="places/<?=$member->countryCode()."/".$member->region() ?>" ><?=$member->region() ?></a>)
-              <a class="" href="places/<?=$member->countryCode() ?>" ><?=$member->country() ?></a>
+          <h2>
+            <?php
+              // The "Hong Kong solution": Only display and link country.
+              if ($member->region() == '' && $member->city() == $member->country()):
+            ?>
+              <strong><a class="" href="places/<?php echo $member->countryCode(); ?>"><?php echo $member->country(); ?></a></strong>
+            <?php
+              // In case of missing parent in Geonames DB: Only display city and country. Don't link city.
+              elseif ($member->region() == ''):
+            ?>
+              <strong><?php echo $member->city(); ?></strong>, <a class="" href="places/<?php echo $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
+            <?php
+              // For every other city display normal path. Don't show region if it has the same name as city.
+              else:
+            ?>
+              <strong><a class="" href="places/<?php echo $member->countryCode() . "/" . $member->region() . "/" . $member->city(); ?>"><?php echo $member->city(); ?></a></strong><?php if ($member->region() != $member->city()): ?>, <a class="" href="places/<?php echo $member->countryCode() . "/" . $member->region(); ?>"><?php echo $member->region(); ?></a><?php endif; ?>, <a class="" href="places/<?php echo $member->countryCode(); ?>"><?php echo $member->country(); ?></a>
+            <?php
+              endif;
+            ?>
           </h2>
           <p class="grey">
             <?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?><br />

@@ -37,23 +37,20 @@ $layoutbits = new MOD_layoutbits();
 <?php 
 $threadsliced = array_slice($threads, 0, 5);
     foreach ($threadsliced as $cnt =>  $thread) {
-    //[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
-        //$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
         $url = ForumsView::threadURL($thread);
         if ($url{0}=='s') { // JeanYves Hack/Fix to be sure that forums/ is written in the beginning of the links !
-            $url="forums/".$url ;
+            $url="forums/" . $url ;
         }
 
         $max = $thread->replies + 1;
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
 
-        $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
-//        $last_url = $uri.'s'.$thread->threadid.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
+        $last_url = $url . ($maxPage != 1 ? '/page'.$maxPage : '') . '/#post' . $thread->last_postid;
 
 
         ?>
             <tr>
-                <td class="forumsboardthreadtitle"><?php echo '<img src="styles/css/minimal/images/iconsfam/comment_add.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" />' . $words->flushBuffer();?>
+                <td class="forumsboardthreadtitle"><?php echo '<img src="styles/css/minimal/images/iconsfam/comment_add.png" alt="' . $words->getBuffered('tags') . '" title="' . $words->getBuffered('tags') . '" />' . $words->flushBuffer(); ?>
                     <?php
                     if ($thread->ThreadDeleted=='Deleted') {
                         echo "[Deleted]" ;
@@ -63,9 +60,13 @@ $threadsliced = array_slice($threads, 0, 5);
                     <?php
                     echo $words->fTrad($thread->IdTitle);
                     ?></a><br />
-                    <span class="small grey">by <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a> -
-                    <?php echo '<span title="'.date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)).'">'.$layoutbits->ago($thread->last_create_time).'</span>'; ?>
-                    <?php // echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?>
+                    <span class="small grey"><?php echo $words->getFormatted('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
+                    <?php if ($thread->IdGroup > 0 && $showGroups)
+                        {
+                            echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getFormatted('Group') . ": " . $thread->GroupName . '">' . MOD_layoutbits::truncate($thread->GroupName, 13);
+                        }
+                    ?>
+                    <?php echo '</a><span title="' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)) . '"> - ' . $layoutbits->ago($thread->last_create_time) . '</span>'; ?>
                     </span>
                     <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
                 </td>
@@ -88,7 +89,7 @@ $threadsliced = array_slice($threads, 0, 5);
     ?>
     <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $this->uri; ?>new
     <?php 
-    if (!empty($this->_model->IdGroup)) echo "/u".$this->_model->IdGroup ;
+    if (!empty($this->_model->IdGroup)) echo "/u" . $this->_model->IdGroup ;
     echo "\">",$words->getBuffered('ForumNewTopic'); 
     ?></a></span><?php echo $words->flushBuffer(); ?></div>
     <?php

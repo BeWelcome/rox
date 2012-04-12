@@ -14,6 +14,13 @@
 
     <!-- #main: content begins here -->
     <div id="main">
+        <?php if ($this->getFlashError()): ?>
+        <div class="flash error"><?php echo $this->getFlashError(true); ?></div>
+        <?php endif; ?>
+        <?php if ($this->getFlashNotice()): ?>
+        <div class="flash notice"><?php echo $this->getFlashNotice(true); ?></div>
+        <?php endif; ?>
+
         <?php $this->statusMessage() ?>
         <div id="teaser_bg">
             <?php $this->teaser() ?>

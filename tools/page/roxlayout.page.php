@@ -322,4 +322,54 @@ class PageWithRoxLayout extends PageWithHTML
         }
     }
 
+    /**
+     * Get flash message and remove from session if needed
+     *
+     * @param string $type Type of flash, i.e. "error" or "notice"
+     * @param bool $remove True if message should be removed from session,
+     *                     false by default
+     *
+     * @return string Flash message
+     */
+    private function getFlash($type, $remove = false) {
+        $flashName = 'flash_' . $type;
+        if (isset($_SESSION[$flashName])) {
+            $flashMessage = $_SESSION[$flashName];
+        } else {
+            $flashMessage = false;
+        }
+        if ($remove) {
+            unset($_SESSION[$flashName]);
+        }
+        return $flashMessage;
+    }
+
+    /**
+     * Get flash notice message and remove from session if needed
+     * @see RoxControllerBase::setFlashNotice() for counterpart
+     * @see templates/shared/roxpage/body.php
+     *
+     * @param bool $remove True if message should be removed from session,
+     *                     false by default
+     *
+     * @return string Flash notice message
+     */
+    public function getFlashNotice($remove = false) {
+        return $this->getFlash('notice', $remove);
+    }
+
+    /**
+     * Get flash error message and remove from session if needed
+     * @see RoxControllerBase::setFlashError() for counterpart
+     * @see templates/shared/roxpage/body.php
+     *
+     * @param bool $remove True if message should be removed from session,
+     *                     false by default
+     *
+     * @return string Flash error message
+     */
+    public function getFlashError($remove = false) {
+        return $this->getFlash('error', $remove);
+    }
+
 }

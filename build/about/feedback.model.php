@@ -88,6 +88,14 @@ SQL
         $subj = "New feedback from " . $username . " - Category: " . $category->Name;
         $text = "Feedback from " . $username . "\r\n";
         $text .= "Category " . $category->Name . "\r\n\r\n";
+
+        // Unserialise data parameter
+        if (isset($vars["data"]) && !empty($vars["data"])) {
+            $data = unserialize($vars["data"]);
+        } else {
+            $data = array();
+        }
+
         // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
         if (!empty($vars["FeedbackQuestion"]))
         {
@@ -97,6 +105,14 @@ SQL
         {
             $text .= "Feedback text not filled in.\r\n\r\n";
         }
+
+        // Write extra data to mail if this is a comment issue
+        if($category->id == self::COMMENT_ISSUE) {
+            foreach($data as $key => $value) {
+                $text .= $key . ': ' . $value . "\r\n";
+            }
+        }
+
         if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
             $text .= "- member requested an answer (".$EmailSender.")\r\n";
         }
@@ -169,7 +185,17 @@ SQL
         }
 
         //Now check if Swift actually sends it
-        if ($mailer->send($message))
+        try
+        {
+            $sendResult = $mailer->send($message);
+        }
+        catch (Exception $e)
+        {
+            $this->logWrite("Exception when executing Swift_Mailer::send()", "feedback");
+            $sendResult = false;
+        }
+
+        if ($sendResult)
         {
             return true;
         }

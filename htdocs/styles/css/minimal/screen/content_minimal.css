@@ -149,6 +149,31 @@
   .flat {margin: 0; padding: 0;}
   .text { line-height: 1.5em; }
 
+  /**
+   * Flashes
+   * (en) Classes for displaying notices and warnings at the top of the page
+   *
+   * @section content-flashes
+   */
+  .flash {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    clear: both;
+    margin-bottom: 1em;
+    padding: 1.25em;
+  }
+
+  .flash.error {
+    background: #ffebe8;
+    border-color: #ff0000;
+    border-width: 2px;
+  }
+
+  .flash.notice {
+    background: #fff8c3;
+    border-color: #888;
+  }
 
   /**
    * Images
@@ -598,6 +623,14 @@ a.bigbutton:active {
 a.bigbutton:active span {
     background-position: bottom left;
     padding: 9px 0 7px 18px; /* push text down 1px */
+}
+
+a.flagbutton {
+  opacity: 0.2;
+}
+
+a.flagbutton:hover {
+  opacity: 1;
 }
 
 /* General (Google-) Map styles */

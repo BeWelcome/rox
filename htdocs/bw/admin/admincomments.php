@@ -44,8 +44,12 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if ($RestrictToIdMember != "") {
 		$str .= $RestrictToIdMember;
 	}
+    // Filter by comment ID
+    $commentId = intval(Getparam('IdComment'));
+    if ($commentId > 0) {
+        $str .= " AND comments.id=" . $commentId;
+    }
 
-	//	echo "str=$str\n";
 	$qry = sql_query($str);
 	while ($c = mysql_fetch_object($qry)) {
 		array_push($TData, $c);
@@ -88,18 +92,39 @@ if ($action == "") {
 }
 $lastaction = "";
 switch ($action) {
-	case "update" :
+    case "update" :
+        $Message = " Updated comment #" . GetParam("IdComment");
+        $c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
 
-		// todo :  proceed with length of stay and trust
+        // Build string for length database field
+        $lengthArray = array();
+        foreach($_SYSHCVOL['LenghtComments'] as $checkbox) {
+            if (GetParam("Comment_" . $checkbox)) {
+                $lengthArray[] = $checkbox;
+            }
+        }
+        $length = implode(",", $lengthArray);
 
-		$Message = " Updated comment #" . GetParam("IdComment");
-		$c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
-		$str = "update comments set Quality='" . GetStrParam("Quality") . "',TextWhere='" . GetStrParam("TextWhere") . "',TextFree='" . GetStrParam("TextFree") . "' where id=" . GetParam("IdComment");
-		sql_query($str);
-		LogStr("Updating comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
-		DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
-		exit (0);
-		break;
+        $quality = GetStrParam("Quality");
+        $textWhere = GetStrParam("TextWhere");
+        $textFree = GetStrParam("TextFree");
+        $id = GetParam("IdComment");
+        $str = "
+            UPDATE
+                comments
+            SET
+                Lenght='$length',
+                Quality='$quality',
+                TextWhere='$textWhere',
+                TextFree='$textFree'
+            WHERE
+                id=$id
+        ";
+        sql_query($str);
+        LogStr("Updating comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
+        DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
+        exit (0);
+        break;
 
 	case "AdminAbuserMustCheck" :
 		$Message = " Set comment to to be check by Admin Comment";
@@ -168,5 +193,5 @@ switch ($action) {
 }
 
 $Message = " Comments needed to be checked by AdminComment";
-DisplayAdminComments(loaddata("AdminComment", $RestrictToIdMember), $Message); // call the layout
+DisplayAdminComments(loaddata("AdminCommentMustCheck", $RestrictToIdMember), $Message); // call the layout
 ?>

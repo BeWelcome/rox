@@ -438,9 +438,11 @@ WHERE id = ".$input['receiver_id']."
             $problems['text'] = 'text is empty.';
         }
 
-        // Test if member's message sending limits have been exceeded
+        // Test if member's message sending limits have been exceeded, but
+        // don't apply limits if message is a reply to another.
         $limitResult = $this->hasMessageLimitExceeded($input['sender_id']);
-        if ($limitResult !== false) {
+        $replyToId = intval($input['reply_to_id']);
+        if ($limitResult !== false && $replyToId == 0) {
             $problems['Message Limit Exceeded'] = $limitResult;
         }
 

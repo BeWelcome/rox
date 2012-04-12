@@ -67,7 +67,7 @@ $threadsliced = array_slice($threads, 0, 5);
                            if (strlen($thread->GroupName) > 13) echo ' ...';
                         }
                     ?>
-                    <?php echo '</a><span title="' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)) . '">' . $layoutbits->ago($thread->last_create_time) . '</span>'; ?>
+                    <?php echo '</a><span title="' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)) . '"> - ' . $layoutbits->ago($thread->last_create_time) . '</span>'; ?>
                     </span>
                     <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
                 </td>

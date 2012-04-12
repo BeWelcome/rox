@@ -28,10 +28,6 @@ $layoutbits = new MOD_layoutbits();
 
 
 <?php
-function short_name($str, $limit)
-{
-    return strlen($str) > $limit ? substr($str, 0, $limit - 3) . ' ...' : $str;
-}
     $uri = ForumsView::getURI();
     if ($threads = $boards->getThreads()) {
 ?>
@@ -70,10 +66,11 @@ $threadsliced = array_slice($threads, 0, 5);
                     <span class="small grey"><?php echo $words->getFormatted('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                     <?php if ($thread->IdGroup>0 && isset($request[1]) == "") 
                         { 
-                           echo $words->getFormatted('in'). " <a href=\"groups/".$thread->IdGroup."\"><strong>" . $words->getFormatted('group') . ": </strong>",$this->_model->getGroupName(short_name($thread->GroupName, 13)),"</a> -" ;
+                           echo $words->getFormatted('in'). ' <a href="groups/'.$thread->IdGroup.'/" title="'.$this->_model->getGroupName($thread->GroupName). '">'. $this->_model->getGroupName(substr($thread->GroupName, 0, 13));
+                           if (strlen($thread->GroupName) > 13) echo ' ...';
                         }
                     ?>
-                    <?php echo '<span title="'.date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)).'">'.$layoutbits->ago($thread->last_create_time).'</span>'; ?>
+                    <?php echo '</a><span title="'.date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)).'">'.$layoutbits->ago($thread->last_create_time).'</span>'; ?>
                     <?php // echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?>
                     </span>
                     <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>

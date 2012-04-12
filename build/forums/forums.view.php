@@ -238,14 +238,17 @@ class ForumsView extends RoxAppView {
     } // end of showModeratorEditTag
 
     /**
-    * Display a number of threads externally
-    */
-
+     * Display thread teasers externally
+     *
+     * @param bool $showGroups Set true if group name and link should be shown
+     *                         in teasers
+     */
     public function showExternal($showGroups = false) {
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
         require 'templates/external.php';
     }
+
     /**
     * Display a forum
     */

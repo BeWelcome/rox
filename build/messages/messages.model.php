@@ -314,11 +314,14 @@ AND DeleteRequest != 'receiverdeleted'
         $lastHour = $row->numberOfMessagesLastHour;
         $lastDay = $row->numberOfMessagesLastDay;
 
-        // TODO: Add config options for limits
-        if ($comments < 1 && ($lastHour >= 5 || $lastDay >= 15)) {
-            // TODO: Add translations
-            return "You sent too many messages in a short period of time. "
-                . "Please try again later.";
+        $config = PVars::getObj('messages');
+
+        if ($comments < 1 && (
+            $lastHour >= $config->new_members_messages_per_hour ||
+            $lastDay >= $config->new_members_messages_per_day)) {
+
+            $words = new MOD_words();
+            return $words->getFormatted("YouSentToManyMessages");
         } else {
             return false;
         }

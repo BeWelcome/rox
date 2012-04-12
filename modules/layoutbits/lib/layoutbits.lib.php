@@ -611,7 +611,7 @@ class MOD_layoutbits
      *
      * @return string Truncated version of string
      */
-    public function truncate($string, $length, $omission = '...') {
+    public static function truncate($string, $length, $omission = '...') {
         if (strlen($string) > $length) {
             $truncated = substr($string, 0, $length) . $omission;
         } else {

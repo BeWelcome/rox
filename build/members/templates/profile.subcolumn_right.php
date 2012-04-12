@@ -200,7 +200,7 @@ if (count($relations) > 0) { ?>
               <?php
                   $textStripped = strip_tags($c->TextFree, '<font>');
                   $moreLink = '... <a href="members/' . $member->Username . '/comments">' . $ww->more . '</a>';
-                  echo $layoutbits->truncate($textStripped, 250, $moreLink);
+                  echo MOD_layoutbits::truncate($textStripped, 250, $moreLink);
               ?>
             </p>
           <? if ($ii != ($iiMax-1)) echo '<hr />' ?>

@@ -438,8 +438,10 @@ WHERE id = ".$input['receiver_id']."
             $problems['text'] = 'text is empty.';
         }
 
-        if (($msg = $this->hasMessageLimitExceeded($input['sender_id']))) {
-            $problems['Message Limit Exceeded'] = $msg;
+        // Test if member's message sending limits have been exceeded
+        $limitResult = $this->hasMessageLimitExceeded($input['sender_id']);
+        if ($limitResult !== false) {
+            $problems['Message Limit Exceeded'] = $limitResult;
         }
 
         $input['status'] = 'ToSend';

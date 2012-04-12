@@ -37,8 +37,6 @@ $layoutbits = new MOD_layoutbits();
 <?php 
 $threadsliced = array_slice($threads, 0, 5);
     foreach ($threadsliced as $cnt =>  $thread) {
-    //[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
-        //$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
         $url = ForumsView::threadURL($thread);
         if ($url{0}=='s') { // JeanYves Hack/Fix to be sure that forums/ is written in the beginning of the links !
             $url="forums/".$url ;
@@ -48,7 +46,6 @@ $threadsliced = array_slice($threads, 0, 5);
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
 
         $last_url = $url.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
-//        $last_url = $uri.'s'.$thread->threadid.($maxPage != 1 ? '/page'.$maxPage : '').'/#post'.$thread->last_postid;
 
 
         ?>
@@ -71,7 +68,6 @@ $threadsliced = array_slice($threads, 0, 5);
                         }
                     ?>
                     <?php echo '</a><span title="'.date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)).'">'.$layoutbits->ago($thread->last_create_time).'</span>'; ?>
-                    <?php // echo date($words->getFormatted('DateHHMMShortFormat'), $thread->last_create_time); ?>
                     </span>
                     <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
                 </td>

@@ -61,7 +61,7 @@ $threadsliced = array_slice($threads, 0, 5);
                     echo $words->fTrad($thread->IdTitle);
                     ?></a><br />
                     <span class="small grey"><?php echo $words->getFormatted('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
-                    <?php if ($thread->IdGroup > 0 && isset($request[1]) == "")
+                    <?php if ($thread->IdGroup > 0)
                         {
                             echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getFormatted('Group') . ": " . $thread->GroupName . '">' . $layoutbits->truncate($thread->GroupName, 13);
                         }

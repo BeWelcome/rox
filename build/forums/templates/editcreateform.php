@@ -194,8 +194,12 @@ if ($allow_title) { // New Topic
     if ($groupsforum) { 
         echo '<input type="hidden" name="IdGroup" value="'.$groupsforum.'">';
     } else {
-        echo '<input type="hidden" name="IdGroup" value="0">';
-	}
+        if ($vars['IdGroup']!=0 && is_numeric($vars['IdGroup'])) {
+            echo '<input type="hidden" name="IdGroup" value="'.$vars['IdGroup'].'">';
+        } else {
+            echo '<input type="hidden" name="IdGroup" value="0">';
+        }
+    }
     ?>
 
         </div></div>

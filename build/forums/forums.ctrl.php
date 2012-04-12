@@ -448,13 +448,13 @@ class ForumsController extends PAppController
     }          
     
 // This rebuild the list of lates post to display on the main user page
-    public function showExternalLatest() { 
+    public function showExternalLatest($showGroups = false) { 
         $request = $this->request;    
         $this->parseRequest();    
         $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
         $this->_model->prepareForum();     
         $this->_view->uri = 'forums/';
-        $this->_view->showExternal();
+        $this->_view->showExternal($showGroups);
     }  // end of showExternalLatest
     
     public function editProcess() {

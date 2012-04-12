@@ -241,7 +241,7 @@ class ForumsView extends RoxAppView {
     * Display a number of threads externally
     */
 
-    public function showExternal() {
+    public function showExternal($showGroups = false) {
         $boards = $this->_model->getBoard();
         $request = PRequest::get()->request;
         require 'templates/external.php';

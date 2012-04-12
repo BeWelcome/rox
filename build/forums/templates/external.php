@@ -63,8 +63,7 @@ $threadsliced = array_slice($threads, 0, 5);
                     <span class="small grey"><?php echo $words->getFormatted('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                     <?php if ($thread->IdGroup>0 && isset($request[1]) == "") 
                         { 
-                           echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $this->_model->getGroupName($thread->GroupName) . '">'. $this->_model->getGroupName(substr($thread->GroupName, 0, 13));
-                           if (strlen($thread->GroupName) > 13) echo ' ...';
+                           echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $thread->GroupName . '">' . $layoutbits->truncate($thread->GroupName, 13);
                         }
                     ?>
                     <?php echo '</a><span title="' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)) . '"> - ' . $layoutbits->ago($thread->last_create_time) . '</span>'; ?>

@@ -99,7 +99,7 @@ Boston, MA  02111-1307, USA.
 <table class="float_left" style="padding-bottom: 10px"><tr><td valign="top">
 <strong class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></strong><br />
 <?php foreach($TabAccomodation as $TabAcc) { ?>
-<input type="checkbox" name="Accomodation[]" id="<?php echo "Accomodation_$TabAcc"; ?>" value="<?php echo $TabAcc; ?>" <?=$TabAcc == 'anytime' ? 'checked="checked"' : '' ; ?> class="sval" />&nbsp;<span onclick="document.getElementById('<?php echo "Accomodation_$TabAcc"; ?>').click();"><?php echo $words->getFormatted('Accomodation_'.$TabAcc); ?></span><br />
+<input type="checkbox" name="Accomodation[]" id="<?php echo "Accomodation_$TabAcc"; ?>" value="<?php echo $TabAcc; ?>" <?php if ($TabAcc == 'anytime') { echo 'checked="checked"'; } ?> class="sval" />&nbsp;<span onclick="document.getElementById('<?php echo "Accomodation_$TabAcc"; ?>').click();"><?php echo $words->getFormatted('Accomodation_'.$TabAcc); ?></span><br />
 <?php } ?>
 <strong class="small">
 <?php echo $words->getFormatted('FindPeopleAccomodationTip'); ?>
@@ -120,7 +120,7 @@ Boston, MA  02111-1307, USA.
 <strong class="small"><?php echo $words->getFormatted('FindPeopleSortOrder'); ?></strong><br />
 <select name="OrderBy" id="filterorder" onchange="document.getElementById('thisorder').value = this.value;">
     <?php foreach($TabSortOrder as $key=>$val) { ?>
-    <option value="<?php echo $key; ?>" <?=$key=='LastLogin' ? 'selected="selected"' : ''; ?>><?php echo $words->getBuffered($val); ?></option>
+    <option value="<?php echo $key; ?>" <?php if ($key == 'LastLogin') { echo 'selected="selected"'; } ?>><?php echo $words->getBuffered($val); ?></option>
     <?php } ?>
 </select>
 </td>

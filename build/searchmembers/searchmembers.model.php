@@ -320,7 +320,7 @@ WHERE
         }
         else
         {
-            $where = "WHERE members.Status='Active' AND membersphotos.id=members.id" ; // only active members with memberphoto
+            $where = "WHERE members.Status = 'Active' AND membersphotos.id = members.id"; // only active members with memberphoto
         }
     
         // Process Accomodation
@@ -341,7 +341,7 @@ WHERE
             if ($where_accomodation) $where .= " AND (".implode(" OR ", $where_accomodation).")";
         }
         else {
-            $where .= " AND Accomodation='anytime'";
+            $where .= " AND Accomodation = 'anytime'";
         }
     
         // Process typic Offer

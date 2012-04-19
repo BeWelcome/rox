@@ -42,7 +42,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
             <form id="changethisorder" style="overflow: visible;" action="">
             <select name="OrderBy" id="thisorder" onchange="changeSortOrder(this.value);">
                 <?php foreach($TabSortOrder as $key=>$val) { ?>
-                <option value="<?php echo $key; ?>" <?php if ($key == 'LastLogin') { echo 'selected="selected"'; } ?>><?php echo $words->getBuffered($val); ?></option>
+                <option value="<?php echo $key; ?>" <?php if ($key == 'Accomodation') { echo 'selected="selected"'; } ?>><?php echo $words->getBuffered($val); ?></option>
                 <?php } ?>
             </select>
             </form>

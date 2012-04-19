@@ -44,7 +44,7 @@ class Searchmembers extends RoxModelBase
             'Accomodation'    => 'ASC',
         );
 
-    private $default_column = 'LastLogin';
+    private $default_column = 'Accomodation';
 
     // supported languages for translations; basis for flags in the footer
     private $_langs;
@@ -307,12 +307,12 @@ WHERE
         $start_rec = $this->GetParam($vars, "start_rec", 0); // Number of records per page
         $vars['start_rec'] = $start_rec;
 		
-        list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, "OrderBy", 'LastLogin'), $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
+        list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, "OrderBy", 'Accomodation'), $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
 
-        $OrderBy = "ORDER BY {$order_by} {$direction}";
+        $OrderBy = "ORDER BY {$order_by} {$direction}, members.Accomodation ASC, members.LastLogin DESC";
         $vars['OrderBy'] = $order_by;
 		
-        $tablelist ="members, geonames_cache, geonames_countries, addresses, membersphotos";
+        $tablelist ="members, geonames_cache, geonames_countries, addresses";
 		
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1")
         {
@@ -320,7 +320,7 @@ WHERE
         }
         else
         {
-            $where = "WHERE members.Status = 'Active' AND membersphotos.id = members.id"; // only active members with memberphoto
+            $where = "WHERE members.Status = 'Active' AND members.Accomodation != 0";
         }
     
         // Process Accomodation
@@ -339,9 +339,6 @@ WHERE
                 }
             }
             if ($where_accomodation) $where .= " AND (".implode(" OR ", $where_accomodation).")";
-        }
-        else {
-            $where .= " AND Accomodation = 'anytime'";
         }
     
         // Process typic Offer

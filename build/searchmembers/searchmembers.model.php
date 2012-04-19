@@ -309,7 +309,7 @@ WHERE
 		
         list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, "OrderBy", 'Accomodation'), $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
 
-        $OrderBy = "ORDER BY {$order_by} {$direction}, members.Accomodation ASC, members.LastLogin DESC";
+        $OrderBy = "ORDER BY {$order_by} {$direction}, members.Accomodation ASC, HasSummary DESC, members.LastLogin DESC";
         $vars['OrderBy'] = $order_by;
 		
         $tablelist ="members, geonames_cache, geonames_countries, addresses";
@@ -536,7 +536,8 @@ AND membersgroups.IdMember=members.id"  ;
     members.id AS IdMember,
     Username,
     geonames_cache.name AS CityName,
-    geonames_countries.name AS CountryName
+    geonames_countries.name AS CountryName,
+    IF(members.ProfileSummary != 0, 1, 0) as HasSummary 
 FROM
     ($tablelist)
 $where

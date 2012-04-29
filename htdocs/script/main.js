@@ -39,7 +39,7 @@ BWRox.prototype.selectScripts = function(scripts) {
         // Trim leading slash
         var currentPage = req.substring(1, req.length);
 
-        // Iclude script if path starts with page name
+        // Include script if path starts with page name
         if (currentPage.indexOf(script.pages[j]) == 0) {
           this.includeScript(script.file);
         }

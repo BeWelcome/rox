@@ -1,5 +1,8 @@
-var http_baseuri = new String(document.getElementById('baseuri').href);
+/*
+ * Setting helper globals
+ */
 var agt = navigator.userAgent.toLowerCase();
+
 var is_op = (agt.indexOf("opera") != -1);
 var is_ie = (agt.indexOf("msie") != -1) && document.all && !is_op;
 var is_ie5 = (agt.indexOf("msie 5") != -1) && document.all && !is_op;
@@ -8,20 +11,21 @@ var is_gk = (agt.indexOf("gecko") != -1);
 var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
-document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-
+var http_baseuri = new String(document.getElementById('baseuri').href);
 var req = new String(location.pathname).toLowerCase();
 var loc = new String(location);
+
+/*
+ * Including JavaScript files, depending on current URL
+ */
+document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
+document.write('<script type="text/javascript" src="script/fabtabulous.js"></script>');
 
 if (req.indexOf('trip') != -1 ) {
 	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"></script>');
 } else {
 	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder"></script>');
 }
-
-// Needed for the dynamic tabs on personal startpage, only 1KB:
-document.write('<script type="text/javascript" src="script/fabtabulous.js"></script>');
-
 if (req.indexOf('signup') != -1) {
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
     document.write('<script type="text/javascript" src="script/geo_suggest.js"></script>');

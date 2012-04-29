@@ -22,9 +22,6 @@ if (req.indexOf('trip') != -1 ) {
 // Needed for the dynamic tabs on personal startpage, only 1KB:
 document.write('<script type="text/javascript" src="script/fabtabulous.js"></script>');
 
-// Fix PNG transparency for IE6
-//document.write(' <!--[if lt IE 7]><script type="text/javascript" src="script/unitpngfix.js"></script><![endif]--> ');
-
 if (req.indexOf('signup') != -1) {
 	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
     document.write('<script type="text/javascript" src="script/geo_suggest.js"></script>');
@@ -62,9 +59,6 @@ if (req.indexOf('searchmembers') != -1) {
 	document.write('<script type="text/javascript" src="script/prototip.js"></script>');
     if (req.indexOf('searchmembers/quicksearch') == -1)
         document.write('<script type="text/javascript" src="script/labeled_marker.js"></script>');
-}
-if (req.indexOf('explore') != -1 || req.indexOf('about') != -1) {
-	document.write(' <!--[if IE 6]><script type="text/javascript" src="script/shop.js"></script><![endif]--> ');
 }
 if (req.indexOf('members') != -1
 	|| req.indexOf('editmyprofile') != -1

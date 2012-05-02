@@ -729,7 +729,7 @@ function ewiki_make_title($id='', $title='', $class=3, $action="view", $go_actio
    }
 
    #-- simple headline
-   $o = $title;
+   $o = rawurldecode($title);
 
    // h2.page.title is obsolete; h2.text-title recommended
    return('<h1 class="text-title page title">' . $o . '</h1>');

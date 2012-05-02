@@ -1,5 +1,8 @@
-var http_baseuri = new String(document.getElementById('baseuri').href);
+/*
+ * Setting helper globals
+ */
 var agt = navigator.userAgent.toLowerCase();
+
 var is_op = (agt.indexOf("opera") != -1);
 var is_ie = (agt.indexOf("msie") != -1) && document.all && !is_op;
 var is_ie5 = (agt.indexOf("msie 5") != -1) && document.all && !is_op;
@@ -8,70 +11,168 @@ var is_gk = (agt.indexOf("gecko") != -1);
 var is_sf = (agt.indexOf("safari") != -1);
 var is_kq = (agt.indexOf("konqueror") != -1);
 
-document.write('<script type="text/javascript" src="script/prototype162.js"></script>');
-
+var http_baseuri = new String(document.getElementById('baseuri').href);
 var req = new String(location.pathname).toLowerCase();
 var loc = new String(location);
 
-if (req.indexOf('trip') != -1 ) {
-	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"></script>');
-} else {
-	document.write('<script type="text/javascript" src="script/scriptaculous18/scriptaculous.js?load=effects,controls,builder"></script>');
-}
+/**
+ * Creating "BWRox" namespace.
+ */
+function BWRox() {};
 
-// Needed for the dynamic tabs on personal startpage, only 1KB:
-document.write('<script type="text/javascript" src="script/fabtabulous.js"></script>');
+/**
+ * Select scripts to include on current page.
+ * @param {array} scripts Object list with available scripts, object properties:
+ *     - file: Script file name, relative to scripts folder
+ *     - pages: Array with names of pages the script should be included on.
+ *         Matches if request path starts with given page name (pattern:
+ *         "^name.*"). If pages property is omitted the script will be included
+ *         on every page.
+ */
+BWRox.prototype.selectScripts = function(scripts) {
+  for (var i = 0; i < scripts.length; i++) {
+    var script = scripts[i];
 
-// Fix PNG transparency for IE6
-//document.write(' <!--[if lt IE 7]><script type="text/javascript" src="script/unitpngfix.js"></script><![endif]--> ');
+    // Loop through pages array, if it exists
+    if (typeof(script.pages) == 'object' && script.pages.length > 0) {
+      for (var j = 0; j < script.pages.length; j++) {
+        // Trim leading slash
+        var currentPage = req.substring(1, req.length);
 
-if (req.indexOf('signup') != -1) {
-	document.write('<script type="text/javascript" src="script/registerrox.js"></script>');
-    document.write('<script type="text/javascript" src="script/geo_suggest.js"></script>');
-}
-if (req.indexOf('blog/create') != -1 || req.indexOf('blog') != -1 || req.indexOf('forums') != -1 || req.indexOf('trip') != -1 ) {
-    	document.write('<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>');
-}
-if (req.indexOf('blog') != -1 || req.indexOf('blog/create') != -1 || req.indexOf('trip') != -1 ) {
-        document.write('<script type="text/javascript" src="script/blog_suggest.js"></script>');
-		document.write('<script type="text/javascript" src="script/datepicker.js"></script>');
-}
-if (
-		req.indexOf('blog/create') != -1
-		|| req.indexOf('blog/edit') != -1
-		|| req.indexOf('user/settings') != -1
-		|| req.indexOf('trip/create') != -1
-		|| req.indexOf('trip/edit') != -1
-		|| req.indexOf('gallery/show/image') != -1
-		|| req.indexOf('message/write') != -1
-		|| req.indexOf('editmyprofile') != -1
-	) {
-	document.write('<script type="text/javascript" src="script/fieldset.js"></script>');
-}
-if (req.indexOf('gallery') != -1) {
-	document.write('<script type="text/javascript" src="script/gallery.js"></script>');
-	document.write('<script type="text/javascript" src="script/uploader.js"></script>');
-}
-if (req.indexOf('gallery') != -1 || req.indexOf('tour/meet') != -1) {
-	document.write('<script type="text/javascript" src="script/lightview.js"></script>');
-}
-if (req.indexOf('thepeople') != -1) {
-	document.write('<script type="text/javascript" src="script/transition.js"></script>');
-}
-if (req.indexOf('searchmembers') != -1) {
-	document.write('<script type="text/javascript" src="script/prototip.js"></script>');
-    if (req.indexOf('searchmembers/quicksearch') == -1)
-        document.write('<script type="text/javascript" src="script/labeled_marker.js"></script>');
-}
-if (req.indexOf('explore') != -1 || req.indexOf('about') != -1) {
-	document.write(' <!--[if IE 6]><script type="text/javascript" src="script/shop.js"></script><![endif]--> ');
-}
-if (req.indexOf('members') != -1
-	|| req.indexOf('editmyprofile') != -1
-	|| req.indexOf('mypreferences') != -1
-	|| req.indexOf('myvisitors') != -1
-	|| req.indexOf('deleteprofile') != -1
-	|| req.indexOf('people') != -1
-  ) {
-	document.write('<script type="text/javascript" src="script/fancyzoom.js"></script>');
-}
+        // Include script if path starts with page name
+        if (currentPage.indexOf(script.pages[j]) == 0) {
+          this.includeScript(script.file);
+        }
+      }
+    } else {
+      this.includeScript(script.file);
+    }
+  }
+};
+
+/**
+ * Select scripts to include on current page.
+ * @param {string} file Name of script file, relative to scripts folder.
+ */
+BWRox.prototype.includeScript = function(file) {
+  document.write('<script type="text/javascript" src="script/' + file
+    + '"></script>');
+};
+
+/*
+ * Creating "bwrox" singleton for global use.
+ */
+var bwrox = new BWRox;
+
+/*
+ * Including JavaScript files, depending on current URL.
+ * Extend selectScripts() first parameter array to load more files.
+ */
+bwrox.selectScripts([
+  {
+    file: "prototype162.js"
+  },
+  {
+    file: "fabtabulous.js"
+  },
+  {
+    file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"
+  },
+  {
+    file: "registerrox.js",
+    pages: [
+      "signup"
+    ]
+  },
+  {
+    file: "geo_suggest.js",
+    pages: [
+      "signup"
+    ]
+  },
+  {
+    file: "tiny_mce/tiny_mce.js",
+    pages: [
+      "blog",
+      "forums",
+      "trip"
+    ]
+  },
+  {
+    file: "blog_suggest.js",
+    pages: [
+      "blog",
+      "trip"
+    ]
+  },
+  {
+    file: "datepicker.js",
+    pages: [
+      "blog",
+      "trip"
+    ]
+  },
+  {
+    file: "fieldset.js",
+    pages: [
+      "blog/create",
+      "blog/edit",
+      "user/settings",
+      "trip/create",
+      "trip/edit",
+      "gallery/show/image",
+      "message/write",
+      "editmyprofile"
+    ]
+  },
+  {
+    file: "gallery.js",
+    pages: [
+      "blog/create",
+      "editmyprofile"
+    ]
+  },
+  {
+    file: "uploader.js",
+    pages: [
+      "blog/create",
+      "editmyprofile"
+    ]
+  },
+  {
+    file: "lightview.js",
+    pages: [
+      "gallery",
+      "tour/meet"
+    ]
+  },
+  {
+    file: "transition.js",
+    pages: [
+      "thepeople"
+    ]
+  },
+  {
+    file: "prototip.js",
+    pages: [
+      "searchmembers"
+    ]
+  },
+  {
+    file: "labeled_marker.js",
+    pages: [
+      "searchmembers/quicksearch"
+    ]
+  },
+  {
+    file: "fancyzoom.js",
+    pages: [
+      "members",
+      "editmyprofile",
+      "mypreferences",
+      "myvisitors",
+      "deleteprofile",
+      "people"
+    ]
+  }
+]);

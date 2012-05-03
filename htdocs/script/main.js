@@ -161,7 +161,7 @@ bwrox.selectScripts([
   {
     file: "labeled_marker.js",
     pages: [
-      "searchmembers/quicksearch"
+      "searchmembers"
     ]
   },
   {

@@ -110,6 +110,7 @@ class WikiController extends PAppController {
         // Some settings
         define("EWIKI_NAME", "BeWelcome Wiki");
         define('EWIKI_SCRIPT', 'wiki/');
+        define("EWIKI_SPLIT_TITLE", 1);
         define("EWIKI_SCRIPT_URL", PVars::getObj("env")->baseuri.'wiki/');	# absolute URL
         define("EWIKI_SCRIPT_BINARY", 0);
         define("EWIKI_PROTECTED_MODE", 1);
@@ -200,6 +201,9 @@ class WikiController extends PAppController {
         $request = str_replace('  ', ' ', $request);
         $request = str_replace(' ', '_', $request);
         $request = str_replace('+', '_', $request);
+        $request = rawurlencode($request);
+        // this is a workaround because edit/ rss/ etc. is now edit%2F rss%2F
+        $request = str_replace('%2F', '/', $request);
 
         return $request;
     }

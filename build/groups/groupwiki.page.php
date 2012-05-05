@@ -51,6 +51,10 @@ class GroupWikiPage extends GroupsBasePage
                 $wiki->editProcess();
             }
             $wikipage = 'Group_'.str_replace(' ', '', ucwords($this->group->Name));
+            // for group names with "+"
+            $wikipage = str_replace('+', '_', $wikipage);
+            // for group names with umlaut etc.
+            $wikipage = rawurlencode($wikipage);
             
             include "templates/groupwiki.column_col3.php";
         }

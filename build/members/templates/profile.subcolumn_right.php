@@ -197,8 +197,11 @@ if (count($relations) > 0) { ?>
               <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
             </p>
             <p>
-              <?=substr(strip_tags($c->TextFree,'<font>'), 0, 250)?>
-              <? if (strlen($c->TextFree) > 250) echo ' ... <a href="members/'.$member->Username.'/comments">'.$ww->more.'</a>'?>
+              <?php
+                  $textStripped = strip_tags($c->TextFree, '<font>');
+                  $moreLink = '... <a href="members/' . $member->Username . '/comments">' . $ww->more . '</a>';
+                  echo MOD_layoutbits::truncate($textStripped, 250, $moreLink);
+              ?>
             </p>
           <? if ($ii != ($iiMax-1)) echo '<hr />' ?>
         </div> <!-- comment -->

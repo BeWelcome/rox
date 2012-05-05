@@ -24,12 +24,26 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 $IdCategory = '1';
 $RequestURI = '';
+$redirect = '';
+$data = '';
 if (isset($_GET['IdCategory']) && $_GET['IdCategory']) $IdCategory = $_GET['IdCategory'];
 if (isset($_GET['RequestURI']) && $_GET['RequestURI']) $RequestURI = $_GET['RequestURI'];
+if (isset($_GET['redirect']) && $_GET['redirect']) {
+    $redirect = $_GET['redirect'];
+}
+if (isset($_GET['data']) && $_GET['data']) {
+    $data = $_GET['data'];
+}
 
 $mem = $this->getRedirectedMem('post');
 if(isset($mem['IdCategory'])) $IdCategory = $mem['IdCategory'];
 if(isset($mem['RequestURI'])) $RequestURI = $mem['RequestURI'];
+if (isset($mem['redirect'])) {
+    $redirect = $mem['redirect'];
+}
+if (isset($mem['data'])) {
+    $data = $mem['data'];
+}
 $FeedbackQuestion = isset($mem['FeedbackQuestion']) ? $mem['FeedbackQuestion'] : '';
 $FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
 $urgent = isset($mem['urgent']) ? $mem['urgent'] : null;
@@ -50,6 +64,8 @@ if ($errors = $this->getRedirectedMem('errors'))
 <form class="yform full" action="about/feedback" method="post">
     <?=$callback_tag ?>
     <input type="hidden" name="RequestURI" value="<?= $RequestURI ?>">
+    <input type="hidden" name="redirect" value="<?php echo htmlentities($redirect); ?>">
+    <input type="hidden" name="data" value="<?php echo htmlentities($data); ?>">
 
     <div class="type-select">
         <label for="IdCategory"><?php echo $words->get("FeedBackChooseYourCategory")?></label>

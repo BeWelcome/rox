@@ -41,8 +41,8 @@ if ($this->gallery) {
 $d = $image;
 echo '    <div class="floatbox" style="padding-top: 30px;">
 <h3 class="borderless">'.$words->getFormatted('GalleryImageAdditionalInfo').'</h3>';
-echo '
-    <p class="small" title="'.$d->created.'">'.$words->get('created').': '.$layoutbits->ago(strtotime($d->created)).'</p>
+echo '  
+    <p class="small" title="'.$d->created.'">'.$words->get('created').': '.$layoutbits->ago(strtotime($d->created)).'</br>'.$words->getFormatted('by').' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a></p>
     <p class="small"><a href="gallery/img?id='.$d->id.'&amp;t=1" title="'.$words->getFormatted('GalleryOriginal').'" />'.$d->width.'x'.$d->height.'</a>; '.$d->mimetype.'</p>
     <p class="small"><a href="gallery/img?id='.$d->id.'&amp;s=1"><img src="images/icons/disk.png" alt="'.$words->getFormatted('GalleryDownload').'" title="'.$words->getFormatted('GalleryDownload').'"/> </a>  </a></p>
     </div>';

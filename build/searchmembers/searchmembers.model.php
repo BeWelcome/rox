@@ -44,7 +44,7 @@ class Searchmembers extends RoxModelBase
             'Accomodation'    => 'ASC',
         );
 
-    private $default_column = 'members.created';
+    private $default_column = 'Accomodation';
 
     // supported languages for translations; basis for flags in the footer
     private $_langs;
@@ -306,21 +306,21 @@ WHERE
     
         $start_rec = $this->GetParam($vars, "start_rec", 0); // Number of records per page
         $vars['start_rec'] = $start_rec;
-    
-        list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, "OrderBy", 'members.created'), $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
+		
+        list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, "OrderBy", 'Accomodation'), $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
 
-        $OrderBy = "ORDER BY {$order_by} {$direction}";
+        $OrderBy = "ORDER BY {$order_by} {$direction}, members.Accomodation ASC, HasSummary DESC, members.LastLogin DESC";
         $vars['OrderBy'] = $order_by;
-    
+		
         $tablelist ="members, geonames_cache, geonames_countries, addresses";
-    
+		
         if ($this->GetParam($vars, "IncludeInactive", "0") == "1")
         {
             $where = "WHERE (members.Status in ('Pending', 'Active', 'ChoiceInActive', 'OutOfRemind'))";
         }
         else
         {
-            $where = "WHERE members.Status='Active'" ; // only active members
+            $where = "WHERE members.Status = 'Active' AND members.Accomodation != 0";
         }
     
         // Process Accomodation
@@ -536,7 +536,8 @@ AND membersgroups.IdMember=members.id"  ;
     members.id AS IdMember,
     Username,
     geonames_cache.name AS CityName,
-    geonames_countries.name AS CountryName
+    geonames_countries.name AS CountryName,
+    IF(members.ProfileSummary != 0, 1, 0) as HasSummary 
 FROM
     ($tablelist)
 $where

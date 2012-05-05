@@ -97,7 +97,14 @@ class AboutController extends RoxControllerBase
             {
                 if ($model->sendFeedback($args->post))
                 {
-                    return 'feedback/submit';
+                    // Redirect if "redirect" GET parameter was set when first
+                    // calling the feedback form.
+                    if (isset($args->post['redirect'])
+                        && !empty($args->post['redirect'])) {
+                        return $args->post['redirect'];
+                    } else {
+                        return 'feedback/submit';
+                    }
                 }
                 else
                 {

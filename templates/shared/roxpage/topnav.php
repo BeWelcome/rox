@@ -26,6 +26,7 @@ $words = new MOD_words();
 $model = new VolunteerbarModel();
 
 $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
+$numberReportedComments = $model->getNumberReportedComments();
 $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
 $numberMessagesToBeChecked = $model->getNumberMessagesToBeChecked() ;
 $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
@@ -52,6 +53,12 @@ $R = MOD_right::get();
                 'bw/admin/adminaccepter.php',
                 'Pending members ('.$numberPersonsToBeAccepted.')',
                 'accept new member accounts'
+            ),
+            array(
+                'Comments',
+                'bw/admin/admincomments.php',
+                'Reported comments (' . $numberReportedComments . ')',
+                'Review reported comments'
             ),
             array(
                 'Accepter',

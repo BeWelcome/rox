@@ -59,6 +59,33 @@ class VolunteerbarModel extends PAppModel
     }
 
     /**
+     * Returns the number of reported comments due to be reviewed.
+     *
+     * @return integer Number of comments that need to be reviewed
+     */
+    public function getNumberReportedComments() {
+        $userRights = MOD_right::get();
+
+        // Don't count for users without Comments permission
+        if ($userRights->hasRight('Comments') < 1) {
+            return 0;
+        }
+
+        $query = "
+            SELECT SQL_CACHE
+                COUNT(*) AS count
+            FROM
+                comments
+            WHERE
+                AdminAction = 'AdminCommentMustCheck'
+            ";
+
+        $result = $this->dao->query($query);
+        $record = $result->fetch(PDB::FETCH_OBJ);
+        return $record->count;
+    }
+
+    /**
      * Returns the number of people due to be checked to problems or what.
      * The number depends on the scope of the person logged on.
      *

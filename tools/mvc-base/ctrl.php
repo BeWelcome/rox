@@ -72,4 +72,35 @@ abstract class RoxControllerBase extends RoxComponentBase
         $this->redirectAbsolute($this->router->url('login_helper', array('url' => $url_part)));
         PPHP::PExit();
     }
+
+    /**
+     * Set flash message
+     *
+     * @param string $message Message text for flash
+     * @param string $type Type of flash, i.e. "error" or "notice"
+     */
+    private function setFlash($message, $type) {
+        $flashName = 'flash_' . $type;
+        $_SESSION[$flashName] = $message;
+    }
+
+    /**
+     * Set flash notice message
+     * @see PageWithRoxLayout::getFlashNotice() for counterpart
+     *
+     * @param string $message Message text for flash
+     */
+    public function setFlashNotice($message) {
+        $this->setFlash($message, 'notice');
+    }
+
+    /**
+     * Set flash error message
+     * @see PageWithRoxLayout::getFlashError() for counterpart
+     *
+     * @param string $message Message text for flash
+     */
+    public function setFlashError($message) {
+        $this->setFlash($message, 'error');
+    }
 }

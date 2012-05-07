@@ -271,11 +271,17 @@ class MembersController extends RoxControllerBase
                                             $this->setFlashError($this->getWords()->Relation_delete_error);
                                         }
                                     }
-                                    // Redirect to relations page or homepage
-                                    if (isset($_SESSION['Username'])) {
-                                        $redirect = 'members/' . $_SESSION['Username'] . '/relations/';
+                                    // Define redirect target
+                                    // TODO: if there is a nicer way than using $_GET, please change this
+                                    if ($_GET['redirect']) {
+                                        $redirect = $_GET['redirect'];
                                     } else {
-                                        $redirect = '';
+                                        // Redirect to relations page or homepage
+                                        if (isset($_SESSION['Username'])) {
+                                            $redirect = 'members/' . $_SESSION['Username'] . '/relations/';
+                                        } else {
+                                            $redirect = '';
+                                        }
                                     }
                                     $this->redirect($redirect);
                                     return;

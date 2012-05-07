@@ -547,7 +547,7 @@ HTML;
           </fieldset>
 
           <?php if (!empty($vars['Relations']) && 1 == 1) : // Disabled ?>
-          <fieldset id="specialrealtions">
+          <fieldset id="specialrelations">
             <legend><?=$words->get('MyRelations')?></legend>
             <table border="0" >
               <colgroup>
@@ -580,7 +580,7 @@ HTML;
                     ?>
                   </td>
                   <td>
-                    <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>" onclick="return confirm('<?php echo $words->get('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?></a>
+                    <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations" onclick="return confirm('<?php echo $words->get('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?></a>
                   </td>
                 </tr>
                 <?php

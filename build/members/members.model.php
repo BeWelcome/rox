@@ -668,7 +668,7 @@ WHERE
             if ($updateResult != NULL) {
                 // Create a note on partner's start page
                 $partnerMember = $this->getMemberWithId(
-                    $partnerRelation->IdRelation
+                    $partnerRelation->IdOwner
                 );
                 $note = array(
                     'IdMember' => $partnerMember->id,

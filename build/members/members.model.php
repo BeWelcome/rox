@@ -667,14 +667,14 @@ WHERE
             // Test if update was successful
             if ($updateResult != NULL) {
                 // Create a note on partner's start page
-                $partnerMember = $this->getMemberWithId(
-                    $partnerRelation->IdOwner
+                $member = $this->getMemberWithId(
+                    $relation->IdOwner
                 );
                 $note = array(
-                    'IdMember' => $partnerMember->id,
-                    'IdRelMember' => $partnerRelation->IdRelation,
+                    'IdMember' => $partnerRelation->IdOwner,
+                    'IdRelMember' => $relation->IdOwner,
                     'Type' => 'relation',
-                    'Link' => 'members/' . $partnerMember->Username
+                    'Link' => 'members/' . $member->Username
                         . '/relations/',
                     'WordCode' => 'Notify_relation_delete'
                 );

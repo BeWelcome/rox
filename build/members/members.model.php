@@ -598,39 +598,92 @@ WHERE
             }
         } else $return = false;
         return $return;
-    }    
-    
-    public function deleteRelation(&$vars)
-    {
-        $return = false;
-        $words = new MOD_words();
-        $TData = array();
-        $TData[1]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdOwner']." AND IdRelation=".$vars['IdRelation']);
-        $TData[2]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdRelation']." AND IdRelation=".$vars['IdOwner']);
-        if (isset($TData) && isset($TData[1]->IdOwner) && count($TData[1]) > 0 && count($TData[2]) > 0 && isset($vars['confirm'])) {
-            foreach ($TData as $rel) {
-                $IdOwner = $rel->IdOwner;
-                $IdRelation = $rel->IdRelation;
-                $str = "
-DELETE FROM
-    specialrelations
-WHERE
-    IdOwner = ".$IdOwner." AND
-    IdRelation = ".$IdRelation."
-                ";
-                $qry = $this->dao->query($str);
-                if(!$qry) $return = false;
-                if ($return != false) {
-                    // Create a note (member-notification) for this action
-                    $note = array('IdMember' => $IdRelation, 'IdRelMember' => $IdOwner, 'Type' => 'relation', 'Link' => 'members/'.$IdRelation.'/relations/','WordCode' => 'Notify_relation_delete');
-                    $noteEntity = $this->createEntity('Note');
-                    $noteEntity->createNote($note);
-                }
-            }
-        } else $return = false;
-        return $return;
     }
-    
+
+    /**
+     * Delete member special relation
+     *
+     * @param int $id ID of relation
+     * @return bool Deletion result, true for success, false on error
+     */
+    public function deleteRelation($id)
+    {
+        // Wash ID
+        $id = intval($id);
+
+        // Fetch relation from database
+        $relation = $this->singleLookup("
+            SELECT
+                *
+            FROM
+                specialrelations
+            WHERE
+                id = '$id'
+        ");
+
+        // Return unsuccessfully if no relation was found
+        if ($relation === false) {
+            return false;
+        }
+
+        // Delete relation
+        $deleteResult = $this->dao->query("
+            DELETE FROM
+                specialrelations
+            WHERE
+                id = '$id'
+        ");
+
+        // Return unsuccessfully if deletion failed
+        if ($deleteResult === false) {
+            return false;
+        }
+
+        // Fetch partner relation from database
+        $idOwner = $relation->IdRelation;
+        $idRelation = $relation->IdOwner;
+        $partnerRelation = $this->singleLookup("
+            SELECT
+                *
+            FROM
+                specialrelations
+            WHERE
+                IdRelation = '$idRelation'
+                AND
+                IdOwner = '$idOwner'
+        ");
+
+        // Update partner relation if it exists
+        if ($partnerRelation) {
+            $relationId = $partnerRelation->id;
+            $updateResult = $this->dao->query("
+                UPDATE
+                    specialrelations
+                SET
+                    Confirmed = 'No'
+                WHERE
+                    id = '$relationId'
+            ");
+            // Test if update was successful
+            if ($updateResult != NULL) {
+                // Create a note on partner's start page
+                $partnerMember = $this->getMemberWithId(
+                    $partnerRelation->IdRelation
+                );
+                $note = array(
+                    'IdMember' => $partnerMember->id,
+                    'IdRelMember' => $partnerRelation->IdRelation,
+                    'Type' => 'relation',
+                    'Link' => 'members/' . $partnerMember->Username
+                        . '/relations/',
+                    'WordCode' => 'Notify_relation_delete'
+                );
+                $noteEntity = $this->createEntity('Note');
+                $noteEntity->createNote($note);
+            }
+        }
+        return true;
+    }
 
     /**
      * Check form values of MyPreferences form,

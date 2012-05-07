@@ -580,9 +580,7 @@ HTML;
                     ?>
                   </td>
                   <td>
-                  <?php 
-                  echo "<a href=\"bw/editmyprofile.php?action=delrelation&amp;Username=",$Relation->Username,"\"  onclick=\"return confirm('Confirm delete ?');\">",$words->getFormatted("delrelation",$Relation->Username),"</a>\n";
-                  ?>
+                    <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>" onclick="return confirm('<?php echo $words->get('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?></a>
                   </td>
                 </tr>
                 <?php

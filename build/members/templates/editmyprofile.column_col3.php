@@ -81,6 +81,11 @@ require_once 'editprofile_form.php';
         if (hashValue == '') {
           activeFieldset = defaultFieldset;
         } else {
+          /* This allows URLs like "/editmyprofile#!profileaccommodation",
+           * which opens the "Accommodation" form tab after loading the page.
+           * The hashbang value needs to match the ID of the fieldset that
+           * is to be opened.
+           */
           var tab = document.getElementById(hashValue);
           if (tab != null && tab.tagName.toLowerCase() == 'fieldset') {
             activeFieldset = hashValue;

@@ -43,7 +43,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileSummary')?>:</td>
                   <td colspan="3" >
-                    <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?php echo htmlentities($vars['ProfileSummary']); ?></textarea>
+                    <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
                   </td>
                 </tr>
                 <tr align="left" >
@@ -83,7 +83,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileOccupation')?>:</td>
                   <td colspan="2" >
-                    <input type="text"  name="Occupation" value="<?php echo htmlentities($vars['Occupation']); ?>" />
+                    <input type="text"  name="Occupation" value="<?php echo htmlentities($vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
                 </tr>
                 <tr align="left" >
@@ -177,7 +177,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><strong><?=$words->get('FirstName')?></strong>: *</td>
                   <td>
-                    <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text" name="FirstName" value="<?php echo htmlentities($vars['FirstName']); ?>"/>
+                    <input class="<?php if (isset($errorFirstName)) { ?>error-input-text<?php } ?>" type="text" name="FirstName" value="<?php echo htmlentities($vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <?php if (isset($errorFirstName)) { ?>
                       <div class="error-caption"><?=$words->get('SignupErrorInvalidFirstName')?></div>
                     <?php } ?>
@@ -192,7 +192,7 @@ HTML;
                 </tr>
                 <tr align="left" >
                   <td class="label" ><?=$words->get('SecondName')?>:</td>
-                  <td><input type="text" name="SecondName" value="<?php echo htmlentities($vars['SecondName']); ?>"/></td>
+                  <td><input type="text" name="SecondName" value="<?php echo htmlentities($vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/></td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_SecondName"
                     <?php if ($vars['IsHidden_SecondName'])
@@ -204,7 +204,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><strong><?=$words->get('LastName')?></strong>: *</td>
                   <td>
-                    <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text" name="LastName" value="<?php echo htmlentities($vars['LastName']); ?>"/>
+                    <input class="<?php if (isset($errorLastName)) { ?>error-input-text<?php } ?>" type="text" name="LastName" value="<?php echo htmlentities($vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <?php if (isset($errorLastName)) { ?>
                       <div class="error-caption"><?=$words->get('SignupErrorInvalidLastName')?></div>
                     <?php } ?>
@@ -220,7 +220,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><strong><?=$words->get('Street')?></strong>: *</td>
                   <td>
-                    <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type="text" name="Street" id="Street" value="<?php echo htmlentities($vars['Street']); ?>"/>
+                    <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type="text" name="Street" id="Street" value="<?php echo htmlentities($vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <?php if (isset($errorStreet)) { ?>
                       <div class="error-caption"><?=$words->get('SignupErrorInvalidStreet')?></div>
                     <?php } ?>
@@ -236,7 +236,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><strong><?=$words->get('HouseNumber')?></strong>: *</td>
                   <td>
-                    <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>" type="text" name="HouseNumber" id="HouseNumber" value="<?php echo htmlentities($vars['HouseNumber']); ?>" size="6"/>
+                    <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>" type="text" name="HouseNumber" id="HouseNumber" value="<?php echo htmlentities($vars['HouseNumber'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
                     <?php if (isset($errorHouseNumber)) { ?>
                       <div class="error-caption"><?=$words->get('SignupErrorInvalidHouseNumber')?></div>
                     <?php } ?>
@@ -247,7 +247,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><strong><?=$words->get('Post code')?></strong>: *</td>
                   <td>
-                    <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text" name="Zip" value="<?php echo htmlentities($vars['Zip']); ?>" size="6"/>
+                    <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text" name="Zip" value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
                     <?php if (isset($errorZip)) { ?>
                       <div class="error-caption"><?=$words->get('SignupErrorInvalidZip')?></div>
                     <?php } ?>
@@ -280,7 +280,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileHomePhoneNumber')?>:</td>
                   <td>
-                    <input type="text" size="25" name="HomePhoneNumber"  value="<?php echo htmlentities($vars['HomePhoneNumber']); ?>" />
+                    <input type="text" size="25" name="HomePhoneNumber"  value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_HomePhoneNumber"
@@ -293,7 +293,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileCellPhoneNumber')?>:</td>
                   <td>
-                    <input type="text" size="25" name="CellPhoneNumber" value="<?php echo htmlentities($vars['CellPhoneNumber']); ?>" />
+                    <input type="text" size="25" name="CellPhoneNumber" value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_CellPhoneNumber"
@@ -306,7 +306,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileWorkPhoneNumber')?>:</td>
                   <td>
-                    <input type="text" size="25"  name="WorkPhoneNumber" value="<?php echo htmlentities($vars['WorkPhoneNumber']); ?>" />
+                    <input type="text" size="25"  name="WorkPhoneNumber" value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
                   <td>
                     <input type="checkbox"  value="Yes"  name="IsHidden_WorkPhoneNumber"
@@ -330,7 +330,7 @@ HTML;
                 <tr align="left" >
                   <td class="label" ><?=$words->get('Website')?>:</td>
                   <td>
-                    <input type="text" size="25"  name="WebSite"  value="<?php echo htmlentities($vars['WebSite']); ?>" />
+                    <input type="text" size="25"  name="WebSite"  value="<?php echo htmlentities($vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
                 </tr>
 
@@ -344,7 +344,7 @@ HTML;
                   <?="<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
                   </td>
                   <td>
-                    <input type="text" size="25" name="<?=$val?>" value="<?php echo htmlentities($me["address"]); ?>" />
+                    <input type="text" size="25" name="<?=$val?>" value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>" />
                   </td>
                   <td>
                   </td>

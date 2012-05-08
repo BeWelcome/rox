@@ -559,6 +559,13 @@ HTML;
                 <?php
                 $Relations=$vars['Relations'];
                 foreach($Relations as $Relation) {
+                    $comment = $words->mInTrad($Relation->Comment, $profile_language);
+
+                    // Hack to filter out accidental '0' or '123456' comments that were saved
+                    // by users while relation comment update form was buggy (see #1580)
+                    if (is_numeric($comment)) {
+                        $comment = '';
+                    }
                 ?>
                 <tr align="left" >
                   <td class="label" >
@@ -575,7 +582,7 @@ HTML;
                   <td>
                     <?php 
                     echo "<textarea cols=\"40\" rows=\"6\" name=\"", "RelationComment_" . $Relation->id, "\">";
-                    echo $words->mInTrad($Relation->Comment,$profile_language) ;
+                    echo $comment;
                     echo "</textarea>\n";
                     ?>
                   </td>

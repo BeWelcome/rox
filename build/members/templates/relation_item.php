@@ -10,5 +10,5 @@
   </span>
 <? endif; ?>
   <a href="<?php echo PVars::getObj('env')->baseuri."members/" . $rel->Username; ?>" ><?php echo $rel->Username; ?></a><br />
-  <?php echo $purifier->purify($words->mInTrad($rel->IdTradComment, $profile_language, true)); ?>
+  <?php echo $rel->Comment; ?>
 </li>

@@ -142,6 +142,15 @@ if (count($relations) > 0) { ?>
         <ul class="linklist">
             <?php
                 foreach ($relations as $rel) {
+                    $comment = $words->mInTrad($rel->IdTradComment, $profile_language, true);
+
+                    // Hack to filter out accidental '0' or '123456' comments that were saved
+                    // by users while relation comment update form was buggy (see #1580)
+                    if (is_numeric($comment)) {
+                        $comment = '';
+                    }
+
+                    $rel->Comment = $purifier->purify($comment);
             ?>
             <li class="floatbox">
                 <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
@@ -149,7 +158,7 @@ if (count($relations) > 0) { ?>
                 </a>
                 <a class="float_left" href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
                 <br />
-                <?php echo $purifier->purify($words->mInTrad($rel->IdTradComment,$profile_language,true)) ; ?>
+                <?php echo $rel->Comment; ?>
             </li>
           <?php } ?>
         </ul>

@@ -13,6 +13,15 @@ $profile_language = $lang->id;
 <ul class="linklist">
 <?php
 foreach ($relations as $rel) {
+    $comment = $words->mInTrad($rel->IdTradComment, $profile_language, true);
+
+    // Hack to filter out accidental '0' or '123456' comments that were saved
+    // by users while relation comment update form was buggy (see #1580)
+    if (is_numeric($comment)) {
+        $comment = '';
+    }
+
+    $rel->Comment = $purifier->purify($comment);
     require 'relation_item.php';
 }
 ?>

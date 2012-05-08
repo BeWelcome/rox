@@ -162,7 +162,6 @@ if (count($relations) > 0) { ?>
             </li>
           <?php } ?>
         </ul>
-        <p class="float_right"><a href="members/<?=$member->Username?>/relations/ "><?php echo $words->get('ShowRelations');?></a></p>
     </div> <!-- relations -->
 <?php } ?>
 

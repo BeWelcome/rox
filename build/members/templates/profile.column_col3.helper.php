@@ -37,4 +37,10 @@ $trips_array = $member->getTripsArray();
 $trips = $trips_array[0];
 $trip_data = $trips_array[1];
 
+if ($this->myself) {
+  $showEditLinks = true;
+} else {
+  $showEditLinks = false;
+}
+
 ?>

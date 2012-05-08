@@ -13,6 +13,11 @@
 ?>
 
 <div id="accommodationinfo" class="floatbox box">
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="/editmyprofile#!profileaccommodation"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
     <h3 class="icon accommodation22" ><?=$words->get('ProfileAccommodation');?></h3>
     <div id="quickinfo" class="float_right" >
                 <!-- showing hosting icons (only one possibility) -->
@@ -138,6 +143,11 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $relations = $member->relations;
 if (count($relations) > 0) { ?>
     <div id="relations" class="floatbox box">
+        <?php if ($showEditLinks): ?>
+        <span class="float_right profile-edit-link">
+            <a href="/editmyprofile#!specialrelations"><?php echo $words->get('Edit'); ?></a>
+        </span>
+        <?php endif; ?>
         <h3><?php echo $words->get('MyRelations');?></h3>
         <ul class="linklist">
             <?php
@@ -176,7 +186,11 @@ if (count($relations) > 0) { ?>
 ?>
 
   <div id="comments" class="floatbox box">
-    
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="members/<?php echo $member->Username; ?>/comments/"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
     <h3><?php echo $words->get('LatestComments')?></h3> 
 
     <?php
@@ -224,6 +238,11 @@ if (count($relations) > 0) { ?>
         if ($comingposts = $member->getComingPosts()) {
             ?>
             <div id="trips" class="floatbox box">
+            <?php if ($showEditLinks): ?>
+            <span class="float_right profile-edit-link">
+                <a href="/trip/show/my"><?php echo $words->get('Edit'); ?></a>
+            </span>
+            <?php endif; ?>
             <h3><?php echo $words->getSilent('TripsUpComing');?></h3>
             <ul>
             <?php 
@@ -252,10 +271,15 @@ if (count($relations) > 0) { ?>
       $gallery = new GalleryModel;
       $statement = $userid ? $gallery->getLatestItems($userid) : false;
       if ($statement) {
-    echo <<<HTML
+?>
           <div id="gallery" class="floatbox box">
-          <h3>{$words->get('GalleryTitleLatest')}</h3>
-HTML;
+          <?php if ($showEditLinks): ?>
+          <span class="float_right profile-edit-link">
+              <a href="/gallery/manage"><?php echo $words->get('Edit'); ?></a>
+          </span>
+          <?php endif; ?>
+          <h3><?php echo $words->get('GalleryTitleLatest'); ?></h3>
+<?php
           // if the gallery is NOT empty, go show it
           $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
           $statement = $p[0];

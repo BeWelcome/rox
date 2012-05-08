@@ -1,17 +1,27 @@
 
 
 <div id="profilesummary" class="floatbox box">
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="/editmyprofile"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
     <h3 class="icon info22" ><?=$words->get('ProfileSummary');?></h3>
     <?php
     $purifier = MOD_htmlpure::getBasicHtmlPurifier();
     echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language,true)));
-    echo <<<HTML
+?>
 </div> <!-- profilesummary -->
 
 <div id="languages" class="floatbox box">
-    <h3>{$words->get('ProfileLanguagesSpoken')}</h3>
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="/editmyprofile"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
+    <h3><?php echo $words->get('ProfileLanguagesSpoken'); ?></h3>
     <ul class="icon profile_languages">
-HTML;
+<?php
         foreach ($member->get_languages_spoken() as $lang)
         {
             echo <<<HTML
@@ -25,11 +35,16 @@ HTML;
 HTML;
         if ($member->get_trad("Hobbies", $profile_language,true) != "" || $member->get_trad("Organizations", $profile_language,true) != "" || $member->get_trad("Books", $profile_language,true) != "" || $member->get_trad("Music", $profile_language,true) != "" || $member->get_trad("Movies", $profile_language,true) != "")
         { 
-            echo <<<HTML
+?>
 <div id="interests" class="floatbox box">
-    <h3 class="icon sun22">{$words->get('ProfileInterests')}</h3>
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="/editmyprofile#!profileinterests"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
+    <h3 class="icon sun22"><?php echo $words->get('ProfileInterests'); ?></h3>
     <dl>
-HTML;
+<?php
             if ($member->get_trad("Hobbies", $profile_language,true) != "")
             {
                 echo <<<HTML
@@ -77,18 +92,23 @@ HTML;
 
 
         if ($member->get_trad("PastTrips", $profile_language,true) != "" || $member->get_trad("PlannedTrips", $profile_language,true) != "")
-        { 
-            echo <<<HTML
+        {
+?>
 <div id="travel" class="floatbox box">
-    <h3 class="icon world22" >{$words->get('ProfileTravelExperience')}</h3>
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="/editmyprofile#!profileinterests"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
+    <h3 class="icon world22" ><?php echo $words->get('ProfileTravelExperience'); ?></h3>
     <dl>
-        <dt>{$words->get('ProfilePastTrips')}:</dt>
-        <dd>{$purifier->purify($member->get_trad("PastTrips", $profile_language,true))}</dd>
-        <dt>{$words->get('ProfilePlannedTrips')}:</dt>
-        <dd>{$purifier->purify($member->get_trad("PlannedTrips", $profile_language,true))}</dd>
+        <dt><?php echo $words->get('ProfilePastTrips'); ?>:</dt>
+        <dd><?php echo $purifier->purify($member->get_trad("PastTrips", $profile_language,true)); ?></dd>
+        <dt><?php echo $words->get('ProfilePlannedTrips'); ?>:</dt>
+        <dd><?php echo $purifier->purify($member->get_trad("PlannedTrips", $profile_language,true)); ?></dd>
     </dl>
 </div>
-HTML;
+<?php
         }
 
         // display my groups, if there are any
@@ -97,6 +117,13 @@ HTML;
             echo <<<HTML
 <div id="groups" class="floatbox box">
 HTML;
+?>
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="/groups/mygroups"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
+<?php
             // display my groups, if there are any
             echo "<h3>{$words->get('ProfileGroups')}</h3>";
             for ($i = 0; $i < count($my_groups) && $i < 3; $i++) :
@@ -124,6 +151,11 @@ HTML;
 
 <?php if ($this->model->getLoggedInMember()) : ?>
 <div class="address box" >
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="/editmyprofile#!contactinfo"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
     <h3 class="icon contact22" ><?=$words->get('ContactInfo');?></h3>
     <dl id="address">
         <dt><?=$words->get('Name');?>:</dt>

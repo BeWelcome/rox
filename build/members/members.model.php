@@ -964,34 +964,34 @@ ORDER BY
 			}
 		}
 		if ($vars["HomePhoneNumber"]!="cryptedhidden") {
-			$m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['HomePhoneNumber']),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
+			$m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
 		}
 		if ($vars["CellPhoneNumber"]!="cryptedhidden") {
-			$m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['CellPhoneNumber']),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+			$m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['CellPhoneNumber'])),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
 		}
 		if ($vars["WorkPhoneNumber"]!="cryptedhidden") {
-			$m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['WorkPhoneNumber']),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
+			$m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['WorkPhoneNumber'])),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
 		}
 		if ($vars["chat_SKYPE"]!="cryptedhidden") {
-			$m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_SKYPE']),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
+			$m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
 		}
 		if ($vars["chat_MSN"]!="cryptedhidden") {
-			$m->chat_MSN = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_MSN']),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
+			$m->chat_MSN = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_MSN'])),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
 		}
 		if ($vars["chat_AOL"]!="cryptedhidden") {
-			$m->chat_AOL = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_AOL']),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
+			$m->chat_AOL = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_AOL'])),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
 		}
 		if ($vars["chat_YAHOO"]!="cryptedhidden") {
-			$m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_YAHOO']),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
+			$m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_YAHOO'])),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
 		}
 		if ($vars["chat_ICQ"]!="cryptedhidden") {
-			$m->chat_ICQ = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_ICQ']),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
+			$m->chat_ICQ = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_ICQ'])),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
 		}
 		if ($vars["chat_Others"]!="cryptedhidden") {
-			$m->chat_Others = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_Others']),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
+			$m->chat_Others = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
 		}
 		if ($vars["chat_GOOGLE"]!="cryptedhidden") {
-			$m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_GOOGLE']),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
+			$m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
 		}
 
         $firstname = MOD_crypt::AdminReadCrypted($m->FirstName);

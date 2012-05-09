@@ -110,7 +110,7 @@ function ewiki_page_rc_usemod(&$e, &$meta) {
       foreach ($pages as $id) {
 
          $diff = '<a href="'.ewiki_script("diff",$id).'">(diff)</a>';
-         $page = '<a href="'.ewiki_script("",$id).'">'.htmlentities($id).'</a>';
+         $page = '<a href="'.ewiki_script("", $id).'">' . rawurldecode($id) . '</a>';
          $time = strftime($clockstr, $meta[$id][0][2]);
          $author = ewiki_author_html($meta[$id][0][0], 0);
          $log = htmlentities($meta[$id][0][1]);
@@ -148,7 +148,7 @@ function ewiki_page_rc_moin(&$e, &$meta) {
       $o .= "\n<tr><td colspan=\"3\"><br /><h4 class=\"date\">$datestr</h4></td></tr>\n";
       foreach ($pages as $id) {
 
-         $link = '<a href="' . ewiki_script("", $id) . '">' . htmlentities($id) . '</a>';
+         $link = '<a href="' . ewiki_script("", $id) . '">' . rawurldecode($id) . '</a>';
          $time = strftime($clockstr, $meta[$id][0][2]);
          $changes = $meta[$id];
          if (count($changes) >= 2) {

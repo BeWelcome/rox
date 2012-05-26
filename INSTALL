@@ -53,12 +53,37 @@ In recent versions of Debian and Ubuntu (Fedora (8)):
 
   6:  Set magic_quotes_gpc to Off in /etc/php5/apache2/php.ini
 
-Copy all the files to your web server (/var/www/html/ on Fedora).  Make sure the 'data' directory
-is world writable (chmod -R a+w path_to_your_bwrox_installation/data).  
-      
-      sudo chgrp -R www-data trunk
-      sudo chmod g+w trunk/data
+Copy all the files to your web server (/var/www/html/ on Fedora).  Make sure
+the 'data' directory exists (mkdir -p path_to_your_bwrox_installation/data)
+and is world writable (chmod -R a+w path_to_your_bwrox_installation/data).
 
+Make sure the following files exist and are writable by the web server. Change the
+group "www-data" in the chgrp commands to whatever group your web server is in.
+
+      cd path_to_your_bwrox_installation
+
+      touch build/alias.cache.ini
+      touch build/autoload.cache.ini
+      touch modules/autoload.cache.ini
+      touch pthacks/autoload.cache.ini
+      touch tools/autoload.cache.ini
+      touch htdocs/exception.log
+
+      chgrp www-data build/autoload.cache.ini
+      chgrp www-data modules/autoload.cache.ini
+      chgrp www-data tools/autoload.cache.ini
+      chgrp www-data pthacks/autoload.cache.ini
+      chgrp www-data build/alias.cache.ini
+      chgrp www-data htdocs/exception.log
+
+      chmod g+rw build/autoload.cache.ini
+      chmod g+rw modules/autoload.cache.ini
+      chmod g+rw tools/autoload.cache.ini
+      chmod g+rw pthacks/autoload.cache.ini
+      chmod g+rw build/alias.cache.ini
+      chmod g+rw htdocs/exception.log
+
+      
 After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
 
 
@@ -69,8 +94,7 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
     http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.gz
 
       mysql -u root -p -e 'CREATE DATABASE bewelcome'
-      unzip bewelcome.sql.gz
-      cat bewelcome.sql | mysql bewelcome -u root -p
+      gzip -dc bewelcome.sql.gz | mysql bewelcome -u root -p
 
     Then you might want to set the password to 'password' for all users:
 
@@ -172,13 +196,3 @@ Things to check:
 
 - .htaccess is readable by apache and placed in the right directory 
 	(should be /path_to_your_bwrox_installation/htdocs/)
-
-
-- autoload.cache.ini problems
-  Make sure the following files exist and are writable by the web server:
-    * build/alias.cache.ini
-    * build/autoload.cache.ini
-    * modules/autoload.cache.ini
-    * pthacks/autoload.cache.ini
-    * tools/autoload.cache.ini
-  (create them with touch and then chown or chmod)

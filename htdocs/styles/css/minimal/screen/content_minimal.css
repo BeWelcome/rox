@@ -965,7 +965,7 @@ div.box div.boxbottom div.links {
 #language_select {
   color: #ffffff;
   float: right;
-  padding: 1.4em 1.7em;
+  padding: 1.4em 1.7em 0em;
   font-size: 1.1em;
   font-weight: bold;
 }

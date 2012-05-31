@@ -61,7 +61,7 @@ Boston, MA  02111-1307, USA.
         $photos = $f->groups_pools_getPhotos('771581@N21',NULL,NULL,NULL,27);
         $photosFlat = '';
         // Loop through the photos and output the html
-        foreach ((array)$photos['photo'] as $photo) {
+        foreach ((array)$photos['photos']['photo'] as $photo) {
             $sizes = $f->photos_getSizes($photo['id']);
             $url = array();
             if (is_array($sizes)) foreach ($sizes as $k => $size) {

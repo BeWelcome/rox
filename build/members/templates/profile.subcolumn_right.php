@@ -13,6 +13,11 @@
 ?>
 
 <div id="accommodationinfo" class="floatbox box">
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="/editmyprofile#!profileaccommodation"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
     <h3 class="icon accommodation22" ><?=$words->get('ProfileAccommodation');?></h3>
     <div id="quickinfo" class="float_right" >
                 <!-- showing hosting icons (only one possibility) -->
@@ -138,10 +143,24 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $relations = $member->relations;
 if (count($relations) > 0) { ?>
     <div id="relations" class="floatbox box">
+        <?php if ($showEditLinks): ?>
+        <span class="float_right profile-edit-link">
+            <a href="/editmyprofile#!specialrelations"><?php echo $words->get('Edit'); ?></a>
+        </span>
+        <?php endif; ?>
         <h3><?php echo $words->get('MyRelations');?></h3>
         <ul class="linklist">
             <?php
                 foreach ($relations as $rel) {
+                    $comment = $words->mInTrad($rel->IdTradComment, $profile_language, true);
+
+                    // Hack to filter out accidental '0' or '123456' comments that were saved
+                    // by users while relation comment update form was buggy (see #1580)
+                    if (is_numeric($comment)) {
+                        $comment = '';
+                    }
+
+                    $rel->Comment = $purifier->purify($comment);
             ?>
             <li class="floatbox">
                 <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
@@ -149,11 +168,10 @@ if (count($relations) > 0) { ?>
                 </a>
                 <a class="float_left" href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>" ><?=$rel->Username?></a>
                 <br />
-                <?php echo $purifier->purify($words->mInTrad($rel->IdTradComment,$profile_language,true)) ; ?>
+                <?php echo $rel->Comment; ?>
             </li>
           <?php } ?>
         </ul>
-        <p class="float_right"><a href="members/<?=$member->Username?>/relations/ "><?php echo $words->get('ShowRelations');?></a></p>
     </div> <!-- relations -->
 <?php } ?>
 
@@ -168,7 +186,11 @@ if (count($relations) > 0) { ?>
 ?>
 
   <div id="comments" class="floatbox box">
-    
+    <?php if ($showEditLinks): ?>
+    <span class="float_right profile-edit-link">
+        <a href="members/<?php echo $member->Username; ?>/comments/"><?php echo $words->get('Edit'); ?></a>
+    </span>
+    <?php endif; ?>
     <h3><?php echo $words->get('LatestComments')?></h3> 
 
     <?php
@@ -216,6 +238,11 @@ if (count($relations) > 0) { ?>
         if ($comingposts = $member->getComingPosts()) {
             ?>
             <div id="trips" class="floatbox box">
+            <?php if ($showEditLinks): ?>
+            <span class="float_right profile-edit-link">
+                <a href="/trip/show/my"><?php echo $words->get('Edit'); ?></a>
+            </span>
+            <?php endif; ?>
             <h3><?php echo $words->getSilent('TripsUpComing');?></h3>
             <ul>
             <?php 
@@ -244,10 +271,15 @@ if (count($relations) > 0) { ?>
       $gallery = new GalleryModel;
       $statement = $userid ? $gallery->getLatestItems($userid) : false;
       if ($statement) {
-    echo <<<HTML
+?>
           <div id="gallery" class="floatbox box">
-          <h3>{$words->get('GalleryTitleLatest')}</h3>
-HTML;
+          <?php if ($showEditLinks): ?>
+          <span class="float_right profile-edit-link">
+              <a href="/gallery/manage"><?php echo $words->get('Edit'); ?></a>
+          </span>
+          <?php endif; ?>
+          <h3><?php echo $words->get('GalleryTitleLatest'); ?></h3>
+<?php
           // if the gallery is NOT empty, go show it
           $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
           $statement = $p[0];

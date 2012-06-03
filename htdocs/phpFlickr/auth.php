@@ -1,5 +1,5 @@
-<?
-    /* Last updated with phpFlickr 1.3.1
+<?php
+    /* Last updated with phpFlickr 2.3.2
      *
      * Edit these variables to reflect the values you need. $default_redirect 
      * and $permissions are only important if you are linking here instead of
@@ -14,10 +14,11 @@
 
     ob_start();
     require_once($path_to_phpFlickr_class . "phpFlickr.php");
-    unset($_SESSION['phpFlickr_auth_token']);
+    @unset($_SESSION['phpFlickr_auth_token']);
      
-	if (!empty($_GET['extra'])) {
-		$redirect = $_GET['extra'];
+	if ( isset($_SESSION['phpFlickr_auth_redirect']) && !empty($_SESSION['phpFlickr_auth_redirect']) ) {
+		$redirect = $_SESSION['phpFlickr_auth_redirect'];
+		unset($_SESSION['phpFlickr_auth_redirect']);
 	}
     
     $f = new phpFlickr($api_key, $api_secret);

@@ -273,4 +273,8 @@ div.comment {
 
 .quickinfo {clear: right; padding-top: 5em; position: bottom;}
 
+span.profile-edit-link a {
+  color: #2184E8;
+}
+
 }

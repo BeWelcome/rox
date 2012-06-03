@@ -148,8 +148,9 @@
 
   /* positioning of the quicksearchbar in the main menu */
   #form-quicksearch {
-    width: 15em;
+   /* width: 15em;*/
     margin-bottom: 2px;
+    margin-right: 12px;
     position: relative;
     top: 14px;
     float: right;

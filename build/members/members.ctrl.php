@@ -248,12 +248,48 @@ class MembersController extends RoxControllerBase
                     }
                     switch (isset($request[2]) ? $request[2] : false) {
                         case 'relations':
-                            if (!$myself && isset($request[3]) && $request[3] == 'add') {
-                                $page = new AddRelationPage();
-                                if (isset($request[4]) && $request[4] == 'finish') {
-                                    $page->relation_wait = true;
+                            if (isset($request[3])) {
+                                if ($request[3] == 'add') {
+                                    if (!$myself) {
+                                        $page = new AddRelationPage();
+                                        if (isset($request[4]) && $request[4] == 'finish') {
+                                            $page->relation_wait = true;
+                                        }
+                                    }
+                                } elseif ($request[3] == 'delete') {
+                                    // Make sure user is deleting their own relation and that ID is set
+                                    if ($myself && isset($request[4])) {
+                                        $id = intval($request[4]);
+                                        if ($id > 0) {
+                                            $deleteResult = $this->model->deleteRelation($id);
+                                            if ($deleteResult) {
+                                                $this->setFlashNotice($this->getWords()->Relation_deleted);
+                                            } else {
+                                                $this->setFlashError($this->getWords()->Relation_delete_error);
+                                            }
+                                        } else {
+                                            $this->setFlashError($this->getWords()->Relation_delete_error);
+                                        }
+                                    }
+                                    // Define redirect target
+                                    // TODO: if there is a nicer way than using $_GET, please change this
+                                    if ($_GET['redirect']) {
+                                        $redirect = $_GET['redirect'];
+                                    } else {
+                                        // Redirect to relations page or homepage
+                                        if (isset($_SESSION['Username'])) {
+                                            $redirect = 'members/' . $_SESSION['Username'] . '/relations/';
+                                        } else {
+                                            $redirect = '';
+                                        }
+                                    }
+                                    $this->redirect($redirect);
+                                    return;
                                 }
-                            } else {
+                            }
+
+                            // Default relations page
+                            if (!isset($page)) {
                                 $page = new RelationsPage();
                             }
                             break;

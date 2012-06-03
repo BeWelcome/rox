@@ -75,7 +75,24 @@ require_once 'editprofile_form.php';
     document.observe("dom:loaded", function() {
       var activeFieldset = '<?php if (!empty($vars['activeFieldset'])) { echo $vars['activeFieldset']; } ?>'; // Value inserted by PHP.
       if (activeFieldset == '') {
-        activeFieldset = 'profilesummary';
+        var defaultFieldset = 'profilesummary';
+        // Trim leading hashbang
+        var hashValue = document.location.hash.replace('#!', '');
+        if (hashValue == '') {
+          activeFieldset = defaultFieldset;
+        } else {
+          /* This allows URLs like "/editmyprofile#!profileaccommodation",
+           * which opens the "Accommodation" form tab after loading the page.
+           * The hashbang value needs to match the ID of the fieldset that
+           * is to be opened.
+           */
+          var tab = document.getElementById(hashValue);
+          if (tab != null && tab.tagName.toLowerCase() == 'fieldset') {
+            activeFieldset = hashValue;
+          } else {
+            activeFieldset = defaultFieldset;
+          }
+        }
       }
       new FieldsetMenu('profile-edit-form', {active: activeFieldset});
       $('langbutton').observe('click',insertNewTemplate);

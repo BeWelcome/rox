@@ -60,7 +60,16 @@ class AddRelationPage extends RelationsPage
                 <label class="grey"><?=$words->get("RelationText",$member->Username)?></label>
                 <textarea rows="4" cols="60" name="Comment"><?php
                     if (isset($relation['myself']->Comment)) {
-                       echo $relation['myself']->Comment;
+                        $lang = $this->model->get_profile_language();
+                        $comment = $words->mInTrad($relation['myself']->IdTradComment, $lang->id);
+
+                        // Hack to filter out accidental '0' or '123456' comments that were saved
+                        // by users while relation comment update form was buggy (see #1580)
+                        if (is_numeric($comment)) {
+                            $comment = '';
+                        }
+
+                        echo $comment;
                     }
                 ?></textarea>
             </div>

@@ -598,39 +598,92 @@ WHERE
             }
         } else $return = false;
         return $return;
-    }    
-    
-    public function deleteRelation(&$vars)
-    {
-        $return = false;
-        $words = new MOD_words();
-        $TData = array();
-        $TData[1]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdOwner']." AND IdRelation=".$vars['IdRelation']);
-        $TData[2]= $this->singleLookup("select * from specialrelations where IdOwner=".$vars['IdRelation']." AND IdRelation=".$vars['IdOwner']);
-        if (isset($TData) && isset($TData[1]->IdOwner) && count($TData[1]) > 0 && count($TData[2]) > 0 && isset($vars['confirm'])) {
-            foreach ($TData as $rel) {
-                $IdOwner = $rel->IdOwner;
-                $IdRelation = $rel->IdRelation;
-                $str = "
-DELETE FROM
-    specialrelations
-WHERE
-    IdOwner = ".$IdOwner." AND
-    IdRelation = ".$IdRelation."
-                ";
-                $qry = $this->dao->query($str);
-                if(!$qry) $return = false;
-                if ($return != false) {
-                    // Create a note (member-notification) for this action
-                    $note = array('IdMember' => $IdRelation, 'IdRelMember' => $IdOwner, 'Type' => 'relation', 'Link' => 'members/'.$IdRelation.'/relations/','WordCode' => 'Notify_relation_delete');
-                    $noteEntity = $this->createEntity('Note');
-                    $noteEntity->createNote($note);
-                }
-            }
-        } else $return = false;
-        return $return;
     }
-    
+
+    /**
+     * Delete member special relation
+     *
+     * @param int $id ID of relation
+     * @return bool Deletion result, true for success, false on error
+     */
+    public function deleteRelation($id)
+    {
+        // Wash ID
+        $id = intval($id);
+
+        // Fetch relation from database
+        $relation = $this->singleLookup("
+            SELECT
+                *
+            FROM
+                specialrelations
+            WHERE
+                id = '$id'
+        ");
+
+        // Return unsuccessfully if no relation was found
+        if ($relation === false) {
+            return false;
+        }
+
+        // Delete relation
+        $deleteResult = $this->dao->query("
+            DELETE FROM
+                specialrelations
+            WHERE
+                id = '$id'
+        ");
+
+        // Return unsuccessfully if deletion failed
+        if ($deleteResult === false) {
+            return false;
+        }
+
+        // Fetch partner relation from database
+        $idOwner = $relation->IdRelation;
+        $idRelation = $relation->IdOwner;
+        $partnerRelation = $this->singleLookup("
+            SELECT
+                *
+            FROM
+                specialrelations
+            WHERE
+                IdRelation = '$idRelation'
+                AND
+                IdOwner = '$idOwner'
+        ");
+
+        // Update partner relation if it exists
+        if ($partnerRelation) {
+            $relationId = $partnerRelation->id;
+            $updateResult = $this->dao->query("
+                UPDATE
+                    specialrelations
+                SET
+                    Confirmed = 'No'
+                WHERE
+                    id = '$relationId'
+            ");
+            // Test if update was successful
+            if ($updateResult != NULL) {
+                // Create a note on partner's start page
+                $member = $this->getMemberWithId(
+                    $relation->IdOwner
+                );
+                $note = array(
+                    'IdMember' => $partnerRelation->IdOwner,
+                    'IdRelMember' => $relation->IdOwner,
+                    'Type' => 'relation',
+                    'Link' => 'members/' . $member->Username
+                        . '/relations/',
+                    'WordCode' => 'Notify_relation_delete'
+                );
+                $noteEntity = $this->createEntity('Note');
+                $noteEntity->createNote($note);
+            }
+        }
+        return true;
+    }
 
     /**
      * Check form values of MyPreferences form,
@@ -911,34 +964,34 @@ ORDER BY
 			}
 		}
 		if ($vars["HomePhoneNumber"]!="cryptedhidden") {
-			$m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['HomePhoneNumber']),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
+			$m->HomePhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['HomePhoneNumber'])),"members.HomePhoneNumber",$IdMember, $m->HomePhoneNumber, $IdMember, $this->ShallICrypt($vars,"HomePhoneNumber"));
 		}
 		if ($vars["CellPhoneNumber"]!="cryptedhidden") {
-			$m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['CellPhoneNumber']),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
+			$m->CellPhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['CellPhoneNumber'])),"members.CellPhoneNumber",$IdMember, $m->CellPhoneNumber, $IdMember, $this->ShallICrypt($vars,"CellPhoneNumber"));
 		}
 		if ($vars["WorkPhoneNumber"]!="cryptedhidden") {
-			$m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['WorkPhoneNumber']),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
+			$m->WorkPhoneNumber = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['WorkPhoneNumber'])),"members.WorkPhoneNumber",$IdMember, $m->WorkPhoneNumber, $IdMember, $this->ShallICrypt($vars,"WorkPhoneNumber"));
 		}
 		if ($vars["chat_SKYPE"]!="cryptedhidden") {
-			$m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_SKYPE']),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
+			$m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
 		}
 		if ($vars["chat_MSN"]!="cryptedhidden") {
-			$m->chat_MSN = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_MSN']),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
+			$m->chat_MSN = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_MSN'])),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
 		}
 		if ($vars["chat_AOL"]!="cryptedhidden") {
-			$m->chat_AOL = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_AOL']),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
+			$m->chat_AOL = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_AOL'])),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
 		}
 		if ($vars["chat_YAHOO"]!="cryptedhidden") {
-			$m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_YAHOO']),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
+			$m->chat_YAHOO = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_YAHOO'])),"members.chat_YAHOO",$IdMember, $m->chat_YAHOO, $IdMember, $this->ShallICrypt($vars,"chat_YAHOO"));
 		}
 		if ($vars["chat_ICQ"]!="cryptedhidden") {
-			$m->chat_ICQ = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_ICQ']),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
+			$m->chat_ICQ = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_ICQ'])),"members.chat_ICQ",$IdMember, $m->chat_ICQ, $IdMember, $this->ShallICrypt($vars,"chat_ICQ"));
 		}
 		if ($vars["chat_Others"]!="cryptedhidden") {
-			$m->chat_Others = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_Others']),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
+			$m->chat_Others = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
 		}
 		if ($vars["chat_GOOGLE"]!="cryptedhidden") {
-			$m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['chat_GOOGLE']),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
+			$m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
 		}
 
         $firstname = MOD_crypt::AdminReadCrypted($m->FirstName);

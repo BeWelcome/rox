@@ -308,8 +308,15 @@ WHERE
         $vars['start_rec'] = $start_rec;
 		
         list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, "OrderBy", 'Accomodation'), $this->GetParam($vars, "OrderByDirection",0) ? 1 : 0);
-
-        $OrderBy = "ORDER BY {$order_by} {$direction}, members.Accomodation ASC, HasSummary DESC, members.LastLogin DESC";
+        
+        if ($order_by != "Accomodation" && $direction != "ASC")
+        {
+            $OrderBy = "ORDER BY {$order_by} {$direction}, HasLoggedIn DESC, HasSummary DESC, members.Accomodation ASC, members.LastLogin DESC";
+        } else
+        {
+            $OrderBy = "ORDER BY HasLoggedIn DESC, HasSummary DESC, members.Accomodation ASC, members.LastLogin DESC";
+        }
+        
         $vars['OrderBy'] = $order_by;
 		
         $tablelist ="members, geonames_cache, geonames_countries, addresses";
@@ -537,7 +544,8 @@ AND membersgroups.IdMember=members.id"  ;
     Username,
     geonames_cache.name AS CityName,
     geonames_countries.name AS CountryName,
-    IF(members.ProfileSummary != 0, 1, 0) as HasSummary 
+    IF(members.ProfileSummary != 0, 1, 0) AS HasSummary,
+    IF(DATEDIFF(NOW(), members.LastLogin) < 300, 1, 0) AS HasLoggedIn 
 FROM
     ($tablelist)
 $where

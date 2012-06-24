@@ -326,10 +326,10 @@ function ProposeCity($Id = 0, $IdRegion = 0, $form="signup", $CityName="", $IdCo
 //------------------------------------------------------------------------------
 // CheckEmail return true if the email looks valid
 function CheckEmail($email) {
-	if (!ereg('^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+' .
+	if (!preg_match('/^[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+' .
 		'@' .
 		'[-!#$%&\'*+\\/0-9=?A-Z^_`a-z{|}~]+\.' .
-		'[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$', $email)) {
+		'[-!#$%&\'*+\\./0-9=?A-Z^_`a-z{|}~]+$/', $email)) {
 		return (false);
 
 	} else {

@@ -739,7 +739,7 @@ VALUES
 	 */
 	public function checkEmail($email)
 	{
-		return ereg(self::HANDLE_PREGEXP_EMAIL, $email);
+		return preg_match('/'.self::HANDLE_PREGEXP_EMAIL.'/', $email);
 	}
 	
 	/**

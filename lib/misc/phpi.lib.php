@@ -24,13 +24,17 @@ class PPHP {
     }
     
     public static function assertExtension($name) {
+      // stripped by jsfan (2/6/2012)
+      // dl() deprecated in PHP 5.3
+      /*
         if (!extension_loaded($name)) {
             $dlext = self::os() == 'WIN' ? '.dll' : '.so';
             $dlprefix = self::os() == 'WIN' ? 'php_' : '';
             @dl($dlprefix . $name . $dlext);
             return extension_loaded($name);
         }
-        return true;
+        return true; */
+      return extension_loaded($name);
     }
     
     public static function PExit() {

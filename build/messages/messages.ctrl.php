@@ -152,9 +152,9 @@ class MessagesController extends RoxControllerBase
             $s = $request[$req_index];
             if (is_numeric($s)) {
                 return $s;
-            } else if (eregi('page([0-9]+)', $r, $regs)) {
+            } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {
                 return $regs[1];
-            } else if (eregi('p([0-9]+)', $r, $regs)) {
+            } else if (preg_match_all('/p([0-9]+)/i', $r, $regs)) {
                 return $regs[1];
             } else {
                 // not the right format for page

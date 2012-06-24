@@ -251,11 +251,11 @@ switch (GetParam("action")) {
 			$Message="" ;
 			$TResult=array() ;
 			$TTitle=array() ;
-			$Param1=mysql_escape_string(stripslashes(GetStrParam("param1",""))) ;
-			$Param2=mysql_escape_string(stripslashes(GetStrParam("param2",""))) ;
-			$Param3=mysql_escape_string(stripslashes(GetStrParam("param3",""))) ;
-			$Param4=mysql_escape_string(stripslashes(GetStrParam("param4",""))) ;
-			$Param5=mysql_escape_string(stripslashes(GetStrParam("param5",""))) ;
+			$Param1=mysql_real_escape_string(stripslashes(GetStrParam("param1",""))) ;
+			$Param2=mysql_real_escape_string(stripslashes(GetStrParam("param2",""))) ;
+			$Param3=mysql_real_escape_string(stripslashes(GetStrParam("param3",""))) ;
+			$Param4=mysql_real_escape_string(stripslashes(GetStrParam("param4",""))) ;
+			$Param5=mysql_real_escape_string(stripslashes(GetStrParam("param5",""))) ;
 
 			 $sQuery=$sQry ;
 

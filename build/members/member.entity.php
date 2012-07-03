@@ -1685,9 +1685,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
-        // following should be extended to array('Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned')
-        // but won't work for now, as that will block admins checking accounts as well
-        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy')))
+        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'Banned', 'Rejected', 'DuplicateSigned')))
         {
             return false;
         }

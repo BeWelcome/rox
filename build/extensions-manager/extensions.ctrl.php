@@ -18,7 +18,7 @@ class ExtensionsController extends RoxControllerBase
             if (!isset($_SESSION['extension_folders'])) {
                 $_SESSION['extension_folders'] = '';
             }
-            $active_ext_folders = split("[,\n\r\t ]+", $_SESSION['extension_folders']);
+            $active_ext_folders = preg_split("/[,\n\r\t ]+/", $_SESSION['extension_folders']);
             $extfolder = $request[1];
             switch (isset($request[2]) ? $request[2] : '') {
                 case 'off':

@@ -225,13 +225,30 @@ class MembersController extends RoxControllerBase
                     $this->model->showAvatar($member->id);
                     break;
                 }
-                else if (!($member = $this->getMember($request[1])) || !$member->isBrowsable())
+                else if (!($member = $this->getMember($request[1])))
                 {
                     // did not find such a member
                     $page = new MembersMembernotfoundPage;
                 }
                 else
                 {
+                    //check if member can browse that profile
+                    if (!$member->isBrowsable()){
+                        // found a member, but that member is not browsable(e.g. status "banned")
+                        $rights_self = $member_self->getOldRights();
+                        if (empty($rights_self)){
+                            // the profile is not shown because the request is coming from a member without admin rights
+                            $page = new MembersMembernotfoundPage;
+                            break;
+                        }
+                        else if (!in_array("SafetyTeam", array_keys($rights_self)) && !in_array("Admin", array_keys($rights_self)))
+                        {
+                            // the profile is not shown because the request is coming from a member without necessary admin rights
+                            $page = new MembersMembernotfoundPage;
+                            break;
+                        }
+                    } 
+                    
                     // found a member with given id or username
                     $myself = false;
                     if ($member->id == $member_self->id)

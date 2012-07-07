@@ -220,7 +220,7 @@ class GeoController extends PAppController {
         // if (isset($_SESSION['GeoVars']['geonamename'])) var_dump($_SESSION['GeoVars']['geonamename']);
         // if (isset($request[2]) && $request[2] == 'save' && $mem_redirect->geolocation) {
             // $geolocation = $mem_redirect->geolocation;
-            // list($geonameid, $geonamename) = split('[//]', $geolocation);
+            // list($geonameid, $geonamename) = preg_split('/[\/\/]/', $geolocation);
             // $_SESSION['SignupBWVars']['geonameid'] = $geonameid;
             // $_SESSION['SignupBWVars']['geonamename'] = $geonamename;
             // print 'GEO SET';

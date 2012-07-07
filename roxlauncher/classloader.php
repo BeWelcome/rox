@@ -129,7 +129,7 @@ class ClassLoader
     
     protected function addClassesFromIniRow($file, $string_with_classnames)
     {
-        foreach (split("[,\n\r\t ]+", $string_with_classnames) as $classname) {
+        foreach (preg_split("/[,\n\r\t ]+/", $string_with_classnames) as $classname) {
             $this->addClass($classname, $file);
         }
     }

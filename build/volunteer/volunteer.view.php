@@ -8,7 +8,7 @@ class VolunteerPageView extends RoxPageView
     }
 
     protected function teaserContent() {
-        $this->showTemplate('apps/rox/teaser_volunteer.php');
+        require 'templates/teaser_volunteer.php';
     }
     
     protected function getPageTitle() {
@@ -17,7 +17,7 @@ class VolunteerPageView extends RoxPageView
     
     protected function leftSidebar()
     {
-        $this->showTemplate('apps/rox/volunteertoolsbar.php');
+        require 'templates/volunteertoolsbar.php';
     }
     
     protected function getSubmenuItems()
@@ -25,7 +25,6 @@ class VolunteerPageView extends RoxPageView
         $items = array();
         $items[] = array('dashboard', 'volunteer/dashboard', 'VolunteerDashboard');
         $items[] = array('tools', 'volunteer/tools', 'VolunteerTools');
-        $items[] = array('search', 'volunteer/search', 'VolunteerSearch');
 		$items[] = array('tasks', 'volunteer/tasks', 'VolunteerTasks');
         $items[] = array('features', 'volunteer/features', 'VolunteerFeatures');
         return $items;
@@ -50,21 +49,9 @@ class VolunteerToolsView extends VolunteerPageView
     }
     protected function column_col3() {
         $currentSubPage = $this->_toolname;
-        require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
+        require 'templates/volunteertoolspage.php';
     }
 }
-
-class VolunteerSearchView extends VolunteerPageView
-{
-    protected function getSubmenuActiveItem() {
-        return 'search';
-    }
-    
-    protected function column_col3() { 
-        require TEMPLATE_DIR.'apps/rox/volunteersearchpage.php';
-    }
-}
-
 
 class VolunteerTaskView extends VolunteerPageView
 {
@@ -74,7 +61,7 @@ class VolunteerTaskView extends VolunteerPageView
     
     protected function column_col3() {
         $currentSubPage = 'tasks';
-        require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
+        require 'templates/volunteertoolspage.php';
     }
 }
 
@@ -87,7 +74,7 @@ class VolunteerFeaturesView extends VolunteerPageView
     
     protected function column_col3() {
         $currentSubPage = 'features';
-        require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
+        require 'templates/volunteertoolspage.php';
     }
 }
 
@@ -98,11 +85,11 @@ class VolunteerDashboardView extends VolunteerPageView
         return 'dashboard';
     }
     
-    protected function column_col3() {
-        define('MAGPIE_CACHE_ON',false);
-        require_once ("magpierss/rss_fetch.inc");
+    protected function column_col3() 
+    {
+        require_once 'simplepie/autoloader.php';
         $isvolunteer = true;
-        require TEMPLATE_DIR.'apps/rox/volunteer.php';
+        require 'templates/volunteer.php';
     }
 }
 

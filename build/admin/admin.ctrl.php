@@ -198,7 +198,25 @@ class AdminController extends RoxControllerBase
         return $page;
     }
 //}}}
-
+//{{{ admin spam stuff
+    /**
+     * comments overview method
+     *
+     * @access public
+     * @return object
+     */
+    public function spamOverview()
+    {
+        list($member, $rights) = $this->checkRights('Checker');
+        $page = new AdminSpamPage;
+        $page->member = $member;
+        $params->strategy = new HalfPagePager('left');
+        $params->items = count($page->bad_spam);
+        $params->items_per_page = 25; 
+        $page->pager = new PagerWidget($params);
+        return $page;
+    }
+//}}}
     /**
      * generic board update function
      * post callback

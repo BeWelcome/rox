@@ -32,6 +32,17 @@ Boston, MA  02111-1307, USA.
 
 class AdminNoRightsPage extends AdminBasePage
 {
+    protected function column_col3() 
+    {
+        $words = new MOD_words();
+        echo "<div class=\"info\">\n";
+		echo "<h3>", $words->get("Volunteer_Join"),"</h3>";
+		echo "<p>",$words->get("Volunteer_JoinText"),"</p>";
+		echo "</div>\n";
+    }
 
-
+    protected function leftSidebar()
+    {
+        
+    }
 }

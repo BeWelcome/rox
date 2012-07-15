@@ -20,11 +20,11 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /** 
-     * @author Fake51
+     * @author Fake51, crumbking
      */
 
     /** 
-     * page telling people they can't access the admin app as they have no rights
+     * Page as entry point for members with relevant rights to admin/volunteer tools. 
      * 
      * @package Apps
      * @subpackage Admin
@@ -32,4 +32,5 @@ Boston, MA  02111-1307, USA.
 
 class AdminOverviewPage extends AdminBasePage
 {
+
 }

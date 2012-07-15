@@ -47,7 +47,7 @@ class VolunteerLinksWidget
 
 class VolunteermenuWidget extends VolunteerLinksWidget {
     public function getTemplatePath() {
-        return TEMPLATE_DIR.'apps/rox/volunteermenu.php';
+        return TEMPLATE_DIR.'../build/volunteer/templates/volunteermenu.php';
     }
 }
 

@@ -1036,8 +1036,12 @@ ORDER BY
             }
         }
 		if ($vars["Street"]!="cryptedhidden") {
-			MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
-		}
+			$cryptId = MOD_crypt::NewReplaceInCrypted($this->dao->escape(strip_tags($vars['Street'])),"addresses.StreetName",$m->IdAddress,$m->address->StreetName,$IdMember,$this->ShallICrypt($vars, "Address"));
+            // Update addresses table if a new crypted StreetName value was added
+            if ($cryptId != $m->address->StreetName) {
+                $m->setCryptedStreetName($cryptId);
+            }
+        }
 
         // Check relations, and update them if they have changed
         $Relations=$m->get_all_relations() ;

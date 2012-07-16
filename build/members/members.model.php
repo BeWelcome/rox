@@ -806,18 +806,6 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidLastName';
         }
 
-        if (empty($vars['Street'])) {
-            $errors[] = 'SignupErrorInvalidStreet';
-        }
-
-        if (empty($vars['HouseNumber'])) {
-            $errors[] = 'SignupErrorInvalidHouseNumber';
-        }
-
-        if (empty($vars['Zip'])) {
-            $errors[] = 'SignupErrorInvalidZip';
-        }
-
         if ((empty($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) && ($vars['Email']!='cryptedhidden')) {
             $errors[] = 'SignupErrorInvalidEmail';
         }

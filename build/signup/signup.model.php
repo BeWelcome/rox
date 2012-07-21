@@ -725,8 +725,8 @@ WHERE members.id = \''.$m->id.'\'
         APP_User::activate($userId);
         $query = "
 UPDATE members
-SET Status = 'Pending'
-WHERE id=" . $m->id; // The email is confirmed > make the status Pending
+SET Status = 'Active'
+WHERE id=" . $m->id; // The email is confirmed > make the status Active
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?
             throw new PException('Could not determine if email is in use!');

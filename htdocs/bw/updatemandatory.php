@@ -170,7 +170,7 @@ switch (GetParam("action")) {
 		if (empty($IdCity)) { // if there was no city return by the form because of some bug
 		   if (!empty($rr->IdCity)) $IdCity=$rr->IdCity ; // try with the one of the address if any
 		   else {
-		   	  $IdCity=$m->IdCity ; // or try with the pr�vious one
+		   	  $IdCity=$m->IdCity ; // or try with the previous one
 		   }
 		}
         /*

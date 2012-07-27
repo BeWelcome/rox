@@ -77,7 +77,8 @@
     $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
     // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
-	
+    // admin activity routes
+    $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');
 
 
     

@@ -229,10 +229,6 @@ class AdminController extends RoxControllerBase
         list($member, $rights) = $this->checkRights('Words');
         $page = new AdminWordsPage;
         $page->member = $member;
-        $params->strategy = new HalfPagePager('left');
-        $params->items = count($page->bad_spam);
-        $params->items_per_page = 25; 
-        $page->pager = new PagerWidget($params);
         return $page;
     }
 //}}} END: admin words stuff
@@ -263,7 +259,7 @@ class AdminController extends RoxControllerBase
 
     public function activityLogs()
     {
-/*
+/* This does not work yet. If you call admin/activitylogs ..
                 case 'activitylogs':
 
                 $level = $R->hasRight('Logs');

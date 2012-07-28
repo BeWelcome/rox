@@ -102,7 +102,20 @@ class AdminController extends RoxControllerBase
         $page->rights = $rights;
         return $page;
     }
-
+//{{{ START: tempVolStart stuff
+    /**
+     * tempVolStart method - will be removed after new admin pages work
+     *
+     * @access public
+     * @return object
+     *
+     */
+    public function tempVolStart()
+    {
+        $page = new TempVolStartPage;
+        return $page;
+    }
+//}}} END: tempVolStart stuff
 //{{{ START: Debug right methods
     /**
      * displays the php error logs

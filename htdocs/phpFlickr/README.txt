@@ -1,10 +1,10 @@
-phpFlickr Class 2.2.0
+phpFlickr Class 3.0
 Written by Dan Coulter (dancoulter@users.sourceforge.net)
 Project Homepage: http://www.phpflickr.com/
-Sourceforge Project Page: http://www.sourceforge.net/projects/phpflickr/
+Google Code Project Page: http://code.google.com/p/phpflickr/
 Released under GNU Lesser General Public License (http://www.gnu.org/copyleft/lgpl.html)
 For more information about the class and upcoming tools and applications using it,
-visit http://www.phpflickr.com/ or http://www.sourceforge.net/projects/phpflickr/
+visit http://www.phpflickr.com/ or http://code.google.com/p/phpflickr/
 
 If you are interested in hiring me for a project (involving phpFlickr
 or not), feel free to email me.

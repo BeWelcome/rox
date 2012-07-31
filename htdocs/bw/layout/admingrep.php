@@ -102,8 +102,8 @@ function showfile($fname, $searchstr, $nbligne, $searchstr2, $searchnot) {
           $res .= "\n<table bgcolor=#ffffcc style=\"color:blue;font-size:12;\" border=1 class=s width=100%>\n<tr><td align=left>File <b>$fname</b></td>\n<tr><td>";
         }
         $res .= sprintf("<font color=green>%04d </font>", $iligne);
-        $ss = ereg_replace("<", "&#60", $ss);
-        $ss = ereg_replace(">", "&#62", $ss);
+        $ss = preg_replace("<", "&#60", $ss);
+        $ss = preg_replace(">", "&#62", $ss);
         $res .= $ss . "<br>";
         $countmatch++;
       }

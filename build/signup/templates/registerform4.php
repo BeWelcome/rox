@@ -132,7 +132,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
         <div class="signup-row-thin">
           <label for="firstname"><?php echo $words->get('FirstName'); ?>* </label>
           <input id="firstname" name="firstname" <?php
-          echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          echo isset($vars['firstname']) ? 'value="'.htmlentities(strip_tags($vars['firstname']), ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
 
         </div> <!-- signup-row-thin -->
@@ -141,7 +141,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
         <div class="signup-row-thin">
           <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
           <input id="secondname" name="secondname" <?php
-          echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          echo isset($vars['secondname']) ? 'value="'.htmlentities(strip_tags($vars['secondname']), ENT_COMPAT, 'utf-8').'" ' : '';
           ?> />
           <!--
           <span class="small"><?php echo $words->get('SignupSecondNameShortDesc'); ?></span>
@@ -152,7 +152,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
         <div class="signup-row-thin">
           <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
           <input id="lastname" name="lastname" <?php
-          echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
+          echo isset($vars['lastname']) ? 'value="'.htmlentities(strip_tags($vars['lastname']), ENT_COMPAT, 'utf-8').'" ' : '';
           ?>/>
           <!--
           <span class="small"><?php echo $words->get('SignupLastNameShortDesc'); ?></span>
@@ -170,7 +170,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
           <input type="hidden" id="lastname" name="lastname" <?php
           echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
           ?>/>
-          <p class="entered"><?=$vars['firstname'].' '.$vars['secondname'].' '.$vars['lastname'] ;?></p>
+          <p class="entered"><?=strip_tags($vars['firstname']) .' ' . strip_tags($vars['secondname']) .' '. strip_tags($vars['lastname']) ;?></p>
         </div> <!-- signup-row-thin -->
 
 <?php } ?>
@@ -285,49 +285,6 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
             echo isset($vars['geonameid']) ? 'value="'.htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8').'" ' : '';
             ?> />
           <p class="entered"><?= urldecode($vars['geonamename']);?><?=isset($vars['countryname']) ? ', '.$vars['countryname'] : '' ?><?=isset($vars['admincode']) ? ' / '.$vars['admincode'] : ''?></p>
-<?php } ?>
-      </div>
-
-  <div class="signup-row-thin">
-    <label for="zip"><?php echo $words->get('SignupZip'); ?></label>
-<?php if (in_array('SignupErrorProvideZip', $vars['errors'])) { ?>
-          <input id="zip" name="zip" <?php
-            echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> /><br />
-            <div class="error"><?=$words->get('SignupErrorProvideZip')?></div>
-<?php } else { ?>
-          <input type="hidden" id="zip" name="zip" <?php
-            echo isset($vars['zip']) ? 'value="'.htmlentities($vars['zip'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-          <p class="entered"><?=$vars['zip']?></p>
-<?php } ?>
-      </div>
-      <div class="signup-row-thin">
-          <label for="street"><?php echo $words->get('SignupStreetName'); ?>*</label>
-<?php if (in_array('SignupErrorProvideStreetName', $vars['errors'])) { ?>
-          <input id="street" name="street" <?php
-            echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> /><br />
-            <div class="error"><?=$words->get('SignupErrorProvideStreetName')?></div>
-<?php } else { ?>
-          <input type="hidden" id="street" name="street" <?php
-            echo isset($vars['street']) ? 'value="'.htmlentities($vars['street'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> />
-          <p class="entered"><?=$vars['street']?></p>
-<?php } ?>
-      </div>
-      <div class="signup-row-thin">
-          <label for="housenumber"><?php echo $words->get('SignupHouseNumber'); ?>*</label>
-<?php if (in_array('SignupErrorProvideHouseNumber', $vars['errors'])) { ?>
-          <input id="housenumber" name="housenumber" <?php
-            echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
-            ?> /><br />
-            <div class="error"><?=$words->get('SignupErrorProvideHouseNumber')?></div>
-<?php } else { ?>
-          <input type="hidden" id="housenumber" name="housenumber" <?php
-          echo isset($vars['housenumber']) ? 'value="'.htmlentities($vars['housenumber'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
-          <p class="entered"><?=$vars['housenumber']?></p>
 <?php } ?>
       </div>
 

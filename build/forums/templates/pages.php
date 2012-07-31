@@ -26,7 +26,7 @@ if (!is_array($pages) || count($pages) == 0) {
 }
 
 $request = implode('/', $request);
-$request = eregi_replace('\/page[0-9]+\/?', '', $request);
+$request = preg_replace('/\/page[0-9]+\/?/i', '', $request);
 $request = $request.'/page%d/';
 
 ?>

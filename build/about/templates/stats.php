@@ -209,7 +209,7 @@ foreach ($statsall as $val) {
         if ($MembersTmp[$i] == 0) {
             $MembersTmp[$i] = 1;
         }
-    $createdfull = split( " ",$val->created);
+    $createdfull = preg_split( "/ /",$val->created);
     $created[$i] = "\"".$createdfull[0]."\"";
     $NbActiveMembers[$i] = "[".$i.",". round($val->NbActiveMembers) ."]";
     if ($i==0) {
@@ -243,7 +243,7 @@ foreach ($statslast as $val) {
         if ($MembersLastTmp[$i] == 0) {
             $MembersLastTmp[$i] = 1;
         }
-    $createdfullLast = split( " ",$val->created);
+    $createdfullLast = preg_split( "/ /",$val->created);
     $createdLast[$i] = "\"".$createdfullLast[0]."\"";
     $NbActiveMembersLast[$i] = "[".$i.",". round($val->NbActiveMembers) ."]";
     if ($i==0){

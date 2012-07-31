@@ -103,6 +103,18 @@ class Member extends RoxEntityBase
     }
 
     /**
+     * Set user's StreetName field in addresses table
+     * @param integer $cryptId ID of field in crypted table
+     * @return boolean Result of database query execution
+     */
+    public function setCryptedStreetName($cryptId) {
+        $query = 'UPDATE addresses SET StreetName = ' . intval($cryptId)
+            . ' WHERE IdMember = ' . $this->id . ' LIMIT 1';
+        return $this->dao->exec($query);
+    } 
+    
+    
+    /**
      * Checks which languages profile has been translated into
      */
     public function get_profile_languages() {
@@ -1685,9 +1697,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
-        // following should be extended to array('Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned')
-        // but won't work for now, as that will block admins checking accounts as well
-        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy')))
+        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'Banned', 'Rejected', 'DuplicateSigned')))
         {
             return false;
         }

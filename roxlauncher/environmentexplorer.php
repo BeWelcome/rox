@@ -541,7 +541,7 @@ class EnvironmentExplorer
         } else if (!is_string($ext_dirs_encoded = $_SESSION['extension_folders'])) {
             // nothing
         } else {
-            $ext_folders = split("[,\n\r\t ]+", $ext_dirs_encoded);
+            $ext_folders = preg_split("/[,\n\r\t ]+/", $ext_dirs_encoded);
             foreach ($ext_folders as $folder) {
                 $autoload_folders[] = SCRIPT_BASE.'extensions/'.$folder;
             }

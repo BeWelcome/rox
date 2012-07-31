@@ -21,8 +21,7 @@ OVERVIEW
 2. Import geographical data (optional)
 3. Modify .ini files
 4. Modify .htaccess file
-5. Set up image directory
-6. Test the installation
+5. Test the installation
 
 
 ==Apache and PHP configuration==
@@ -54,12 +53,37 @@ In recent versions of Debian and Ubuntu (Fedora (8)):
 
   6:  Set magic_quotes_gpc to Off in /etc/php5/apache2/php.ini
 
-Copy all the files to your web server (/var/www/html/ on Fedora).  Make sure the 'data' directory
-is world writable (chmod -R a+w path_to_your_bwrox_installation/data).  
-      
-      sudo chgrp -R www-data trunk
-      sudo chmod g+w trunk/data
+Copy all the files to your web server (/var/www/html/ on Fedora).  Make sure
+the 'data' directory exists (mkdir -p path_to_your_bwrox_installation/data)
+and is world writable (chmod -R a+w path_to_your_bwrox_installation/data).
 
+Make sure the following files exist and are writable by the web server. Change the
+group "www-data" in the chgrp commands to whatever group your web server is in.
+
+      cd path_to_your_bwrox_installation
+
+      touch build/alias.cache.ini
+      touch build/autoload.cache.ini
+      touch modules/autoload.cache.ini
+      touch pthacks/autoload.cache.ini
+      touch tools/autoload.cache.ini
+      touch htdocs/exception.log
+
+      chgrp www-data build/autoload.cache.ini
+      chgrp www-data modules/autoload.cache.ini
+      chgrp www-data tools/autoload.cache.ini
+      chgrp www-data pthacks/autoload.cache.ini
+      chgrp www-data build/alias.cache.ini
+      chgrp www-data htdocs/exception.log
+
+      chmod g+rw build/autoload.cache.ini
+      chmod g+rw modules/autoload.cache.ini
+      chmod g+rw tools/autoload.cache.ini
+      chmod g+rw pthacks/autoload.cache.ini
+      chmod g+rw build/alias.cache.ini
+      chmod g+rw htdocs/exception.log
+
+      
 After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
 
 
@@ -70,12 +94,14 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
     http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.gz
 
       mysql -u root -p -e 'CREATE DATABASE bewelcome'
-      unzip bewelcome.sql.zip
-      cat bewelcome.sql | mysql bewelcome -u root -p
+      gzip -dc bewelcome.sql.gz | mysql bewelcome -u root -p
 
     Then you might want to set the password to 'password' for all users:
 
       mysql bewelcome -u root -p -e 'UPDATE members SET password = PASSWORD("password")'
+
+    ...or set "skip_password_check = true" in your rox_local.ini (see
+    [development] section in rox_default.ini)
       
       Create a non-root user (e.g. with username bewelcome) for the database. 
       GRANT ALL PRIVILEGES ON bewelcome.* TO 'bewelcome'@'localhost' IDENTIFIED BY 'password';
@@ -87,15 +113,10 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
 
   2.  Geographical data
 
-    This step is (only?) necessary to be able to create new profiles
-    and users with your local website. Import the following files from
-    testdb in the repository:
-
-      geonames_admincodes.sql.bz2
-      geonames_cache.sql.bz2
-
-   This is done the same way as above. (For a bz2 archive, bzcat can
-   be used.)
+    There are sample geographical data included in the developer database dump.
+    If you need more geographical data, please write to the bw-dev mailing
+    list (see below) and request a dump of the geonames_* tables from the live
+    database.
 
   3.  BW configuration files
   	
@@ -146,34 +167,14 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
 		RewriteRule ^.* index.php [L,QSA,PT]
 	-----------------------------------------------------------
 	
-  5.  Configure the upload images directory.
-    - Make data/images  accessible via the url 
-      http://your.url.com/memberphotos/. You have(at least) two options:
-	a) In Unix one can make a symbolic link from data/images to 
-	   htdocs/memberphotos and ensure that the FollowsSymlinks is on. 
-	b) Add the following lines(modify as required) to the apache conf file.
----- BEGIN APACHE EXTRACT ----
-Alias /memberphotos/ "/path_to_your_bwrox_installation/upload/images/"
-
-<Location /memberphotos>
-</Location>
-
-<Directory "/path_to_your_bwrox_installation/upload/images">
-   AllowOverride None
-   Order allow,deny
-   Allow from all
-</Directory>  
----- END APACHE EXTRACT ----
-
-  6.  Test, check that everything works
+  5.  Test, check that everything works
 
 
 Installation should be finished so far.  If it's not working, refer to:
-	
-  * Wiki: http://www.bevolunteer.org/trac
-  * mailing list: "BeWelcome developers discussion list" <bw-dev-discussion@bewelcome.org>
-  * IRC: #bewelcome-dev on Freenode
-  * email/jabber/gtalk: kasper.souren@gmail.com
+
+  * Wiki: http://trac.bewelcome.org/wiki
+  * Mailing list: http://lists.bewelcome.org/mailman/listinfo/bw-dev-discussion
+  * Chat: #bewelcome on irc.freenode.net
 
 
 ==Common issues==
@@ -195,8 +196,3 @@ Things to check:
 
 - .htaccess is readable by apache and placed in the right directory 
 	(should be /path_to_your_bwrox_installation/htdocs/)
-
-
-- autoload.cache.ini problems
-  Try
-  $ bash setup/fix-permissions.sh

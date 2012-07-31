@@ -37,7 +37,7 @@ class ExtensionsPage extends PageWithActiveSkin
         if (!isset($_SESSION['extension_folders'])) {
             $_SESSION['extension_folders'] = '';
         }
-        $active_ext_folders = split("[,\n\r\t ]+", $_SESSION['extension_folders']);
+        $active_ext_folders = preg_split("/[,\n\r\t ]+/", $_SESSION['extension_folders']);
         foreach ($active_ext_folders as $key) {
             if (isset($available_ext_folders[$key])) {
                 $available_ext_folders[$key] = true;

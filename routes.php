@@ -59,6 +59,8 @@
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
 
+    // admin temporary vol page route
+    $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminController', 'tempVolStart');
     // admin app routes
     $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
     // admin no rights routes
@@ -77,7 +79,8 @@
     $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
     // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
-	
+    // admin activity routes
+    $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');
 
 
     

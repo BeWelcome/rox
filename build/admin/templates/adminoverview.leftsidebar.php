@@ -45,7 +45,13 @@ $words = new MOD_words();
 </li>
 HTML;
     }
-
+    if (in_array('Words', $right_names))
+    {
+        $description = htmlspecialchars($this->rights['Words']['Description'], ENT_QUOTES);
+        echo <<<HTML
+<li><a href='{$this->router->url('admin_words_overview')}' title='{$description}' class='header'>Words</a></li>
+HTML;
+    }
     if (in_array('Accepter', $right_names))
     {
         $description = htmlspecialchars($this->rights['Accepter']['Description'], ENT_QUOTES);

@@ -102,8 +102,21 @@ class AdminController extends RoxControllerBase
         $page->rights = $rights;
         return $page;
     }
-
-//{{{ Debug right methods
+//{{{ START: tempVolStart stuff
+    /**
+     * tempVolStart method - will be removed after new admin pages work
+     *
+     * @access public
+     * @return object
+     *
+     */
+    public function tempVolStart()
+    {
+        $page = new TempVolStartPage;
+        return $page;
+    }
+//}}} END: tempVolStart stuff
+//{{{ START: Debug right methods
     /**
      * displays the php error logs
      *
@@ -120,9 +133,9 @@ class AdminController extends RoxControllerBase
         return $page;
     }
 
-//}}} Debug right methods
+//}}} END: Debug right methods
 
-//{{{ Accepter right methods
+//{{{ START: Accepter right methods
     /**
      * displays members not yet accepted into bw
      * or in various other statuses ...
@@ -175,9 +188,9 @@ class AdminController extends RoxControllerBase
         return false;
     }
 
-//}}}
+//}}} END: Accepter right methods
 
-//{{{ admin comments stuff
+//{{{ START: admin comments stuff
     /**
      * comments overview method
      *
@@ -197,10 +210,10 @@ class AdminController extends RoxControllerBase
         $page->pager = new PagerWidget($params);
         return $page;
     }
-//}}}
-//{{{ admin spam stuff
+//}}} END: admin comment stuff
+//{{{ START: admin spam stuff
     /**
-     * comments overview method
+     * spam overview method
      *
      * @access public
      * @return object
@@ -216,7 +229,22 @@ class AdminController extends RoxControllerBase
         $page->pager = new PagerWidget($params);
         return $page;
     }
-//}}}
+//}}} END: admin spam stuff
+//{{{ START: admin words stuff
+    /**
+     * words overview method
+     *
+     * @access public
+     * @return object
+     */
+    public function wordsOverview()
+    {
+        list($member, $rights) = $this->checkRights('Words');
+        $page = new AdminWordsPage;
+        $page->member = $member;
+        return $page;
+    }
+//}}} END: admin words stuff
     /**
      * generic board update function
      * post callback
@@ -244,7 +272,7 @@ class AdminController extends RoxControllerBase
 
     public function activityLogs()
     {
-/*
+/* This does not work yet. If you call admin/activitylogs ..
                 case 'activitylogs':
 
                 $level = $R->hasRight('Logs');

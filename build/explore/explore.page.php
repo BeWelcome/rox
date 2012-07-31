@@ -40,6 +40,12 @@ class ExplorePage extends RoxPageView
     protected function column_col3() {
         require 'templates/body_explore.php';
     }
+    
+    protected function getStylesheets() {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/custom/explore.css';
+       return $stylesheets;
+    }
 }
 
 

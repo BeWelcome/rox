@@ -24,17 +24,13 @@ Boston, MA  02111-1307, USA.
      */
 
     /** 
-     * accepter overview page
+     * Translation management page
      * 
      * @package Apps
      * @subpackage Admin
      */
 
-class AdminCommentsPage extends AdminBasePage
+class AdminWordPage extends AdminBasePage
 {
 
-    public function teaserHeadline()
-    {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminComments')}</a>";
-    }
 }

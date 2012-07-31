@@ -20,21 +20,21 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /** 
-     * @author Fake51
+     * @author Fake51, crumbking
      */
 
     /** 
-     * accepter overview page
+     * spam checker overview page
      * 
      * @package Apps
      * @subpackage Admin
      */
 
-class AdminCommentsPage extends AdminBasePage
+class AdminSpamPage extends AdminBasePage
 {
 
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminComments')}</a>";
+        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminSpam')}</a>";
     }
 }

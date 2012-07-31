@@ -32,6 +32,11 @@ Boston, MA  02111-1307, USA.
 
 class AdminLogsPage extends AdminBasePage
 {
+    public function teaserHeadline()
+    {
+ return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; {$this->words->get('AdminLogs')}";
+    }
+    
     /**
      * determines the output displayed on the page
      * errors       = php error log

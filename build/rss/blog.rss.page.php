@@ -27,7 +27,7 @@ class PageWithBlogRSS extends PageWithGivenRSS
     	
     	if(isset($this->posts[0]->blog_tag_id)) {
 			$title = "BeWelcome Blog Feed for tag ".$this->posts[0]->name;
-    		$link .= "tag/".$this->posts[0]->name;
+    		$link .= "tags/".$this->posts[0]->name;
     	}
     	else if(isset($this->posts[0]->uid)) {
     		$title = "BeWelcome Blog Feed for ".$this->posts[0]->author;

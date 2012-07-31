@@ -1,6 +1,7 @@
 <?php
 /*
-Copyright (c) 2007-2009 BeVolunteer
+
+Copyright (c) 2007 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -18,23 +19,14 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/> or 
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
+
 */
-    /** 
-     * @author Fake51
-     */
-
-    /** 
-     * accepter overview page
-     * 
-     * @package Apps
-     * @subpackage Admin
-     */
-
-class AdminCommentsPage extends AdminBasePage
-{
-
-    public function teaserHeadline()
-    {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminComments')}</a>";
-    }
-}
+/** 
+ * @author Matthias Heß <globetrotter_tt>
+ */
+$words = new MOD_words();
+?>
+<h3><a href="admin" title="$words->get('BackToVolunteerToolsBarTitle')">&laquo; <?php echo $words->get('VolunteerToolsBarTitle') ?></a></h3>
+</br>
+FIXME Actions
+for Comments

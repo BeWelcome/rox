@@ -20,21 +20,42 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /** 
-     * @author Fake51
+     * @author Fake51, crumbking
      */
 
     /** 
-     * accepter overview page
+     * Temp page as entry point for members with relevant rights to admin/volunteer tools. Will be removed after admin tools are ported to build/admin. 
      * 
      * @package Apps
      * @subpackage Admin
      */
 
-class AdminCommentsPage extends AdminBasePage
+class TempVolStartPage extends AdminBasePage
 {
-
+    protected function getPageTitle() 
+    {
+        return 'Volunteer Pages - BeWelcome';
+    }
+    
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminComments')}</a>";
+        return "<a href='admin'>{$this->words->get('VolunteerPage')}</a>";
+    }
+    
+    protected function getStylesheets() 
+    {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
+       return $stylesheets;
+    }
+    
+    protected function column_col3() {
+        require_once SCRIPT_BASE . 'build/about/templates/getactive.php';
+    }
+    
+    protected function leftSidebar()
+    {
+
     }
 }

@@ -22,28 +22,30 @@ Boston, MA  02111-1307, USA.
 
 */
 /** 
- * @author Matthias Heß <globetrotter_tt>
+ * @author Manuel <crumbking>
  */
 $words = new MOD_words();
 ?>
 <h3><a href="admin" title="$words->get('BackToVolunteerToolsBarTitle')">&laquo; <?php echo $words->get('VolunteerToolsBarTitle') ?></a></h3>
+<ul class="linklist">
 <?php
-    echo <<<HTML
-<table>
-    <tr>
-        <th>Status</th>
-        <th>#</th>
-    </tr>
-HTML;
-    foreach ($this->model->getStatusOverview() as $status => $count) 
+    $right_names = array_keys($this->rights);
+    $expand_class = count($right_names) == 1 ? 'expanded' : 'expandable';
+    if (in_array('Debug', $right_names))
     {
         echo <<<HTML
-    <tr>
-        <td><a href="{$this->router->url('admin_accepter')}?status={$status}">{$status}</a></td>
-        <td>{$count}</td>
-    </tr>
+        <li><a href='{$this->router->url('admin_debug_logs', array('log_type' => 'php'))}' title='Check the PHP error logs'>PHP error logs</a></li>
+        <li><a href='{$this->router->url('admin_debug_logs', array('log_type' => 'exception'))}' title='Check the Exception logs'>Exception logs</a></li>
+        <li><a href='{$this->router->url('admin_debug_logs', array('log_type' => 'mysql'))}' title='Check the MySQL logs'>MySQL logs</a></li>
+        <li><a href='{$this->router->url('admin_debug_logs', array('log_type' => 'apache'))}' title='Check the MySQL logs'>Apache error logs</a></li>
+    </ul>
+</li>
 HTML;
     }
-    echo <<<HTML
-</table>
-HTML;
+
+?>
+</ul>
+
+<script type='text/javascript'>
+late_loader.queueObjectMethod('common', 'makeExpandableLinks');
+</script>

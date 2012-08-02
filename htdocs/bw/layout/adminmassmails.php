@@ -160,7 +160,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   for ($ii=0;$ii<count($TGroupList);$ii++) {
     echo "<option value=",$TGroupList[$ii]->id ;
     if ($TGroupList[$ii]->id==$IdGroup) echo " selected" ;
-    echo ">",$TGroupList[$ii]->Name,":",ww("Group_".$TGroupList[$ii]->Name) ;
+    echo ">",$TGroupList[$ii]->Name,":",$TGroupList[$ii]->Name ; 
     echo "</option>" ;
 
   }

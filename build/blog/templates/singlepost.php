@@ -195,7 +195,7 @@ if (in_array('textlen', $vars['errors'])) {
 <?
 } else {
     // not logged in.
-    echo '<p>'.$words->getBuffered('PleaseRegister', '<a href="signup">', '</a>', '<a href="' . $login_url . '">', '</a>').'</p>';
+    echo '<p>'.$words->getBuffered('PleaseRegister', '<a href="' . $login_url . '">', '</a>').'</p>';
 }
 ?>
 </div>

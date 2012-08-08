@@ -150,13 +150,13 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
     (OLD: You will need some rewriting directives for the system to
     work.  Please set the "Rewrite-Base" directive.)
     
-    Edit htdocs/.htaccess and modify RewriteBase (e.g./bw/htdocs/)
+    Edit htdocs/.htaccess and modify RewriteBase (e.g./bewelcome/htdocs/)
     
     htdocs/.htaccess example: 
     -----------------------------------------------------------
     	php_flag register_argc_argv off
 		RewriteEngine On
-		RewriteBase /bw/htdocs/
+		RewriteBase /bewelcome/htdocs/
 		
 		RewriteCond %{REQUEST_FILENAME} !-f
 		RewriteCond %{REQUEST_FILENAME} !-d

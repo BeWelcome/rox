@@ -112,6 +112,7 @@ class AdminController extends RoxControllerBase
      */
     public function tempVolStart()
     {
+        list($member, $rights) = $this->checkRights();
         $page = new TempVolStartPage;
         return $page;
     }

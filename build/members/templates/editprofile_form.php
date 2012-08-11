@@ -218,7 +218,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><strong><?=$words->get('Street')?></strong>: *</td>
+                  <td class="label" ><?=$words->get('Street')?>:</td>
                   <td>
                     <input class="<?php if (isset($errorStreet)) { ?>error-input-text<?php } ?>" type="text" name="Street" id="Street" value="<?php echo htmlentities($vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     <?php if (isset($errorStreet)) { ?>
@@ -234,7 +234,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><strong><?=$words->get('HouseNumber')?></strong>: *</td>
+                  <td class="label" ><?=$words->get('HouseNumber')?>:</td>
                   <td>
                     <input class="short<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>" type="text" name="HouseNumber" id="HouseNumber" value="<?php echo htmlentities($vars['HouseNumber'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
                     <?php if (isset($errorHouseNumber)) { ?>
@@ -245,7 +245,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><strong><?=$words->get('Post code')?></strong>: *</td>
+                  <td class="label" ><?=$words->get('Post code')?>:</td>
                   <td>
                     <input class="short <?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text" name="Zip" value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="6"/>
                     <?php if (isset($errorZip)) { ?>

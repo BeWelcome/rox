@@ -743,7 +743,7 @@ GROUP BY b.`blog_id`
         $query .= '
     )
 GROUP BY b.`blog_id`
-ORDER BY b.`blog_created` DESC';
+ORDER BY bd.`edited` DESC';
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve blog posts.');

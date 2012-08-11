@@ -162,9 +162,9 @@ class NotifyController extends RoxControllerBase
             if (is_numeric($s)) {
                 return $s;
             } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {
-                return $regs[1];
+                return $regs[1][0];
             } else if (preg_match_all('/p([0-9]+)/i', $r, $regs)) {
-                return $regs[1];
+                return $regs[1][0];
             } else {
                 // not the right format for page
                 return 1;

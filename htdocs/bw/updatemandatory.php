@@ -134,6 +134,7 @@ switch (GetParam("action")) {
 	case "updatemandatory" : // check parameters
 
 		$Username = $m->Username; // retrieve Username
+		/*
 		if ($IdCountry <= 0) {
 			$IdCity = 0;
 			$IdRegion = 0;
@@ -151,6 +152,7 @@ switch (GetParam("action")) {
 		if (strlen($HouseNumber) < 1) {
 			$MessageError .= ww('SignupErrorProvideHouseNumber') . "<br />";
 		}
+        */
 		if (strlen($Gender) < 1) {
 			$MessageError .= ww('SignupErrorProvideGender', ww('IdontSay')) . "<br />";
 		}
@@ -168,12 +170,14 @@ switch (GetParam("action")) {
 		if (empty($IdCity)) { // if there was no city return by the form because of some bug
 		   if (!empty($rr->IdCity)) $IdCity=$rr->IdCity ; // try with the one of the address if any
 		   else {
-		   	  $IdCity=$m->IdCity ; // or try with the prévious one
+		   	  $IdCity=$m->IdCity ; // or try with the previous one
 		   }
 		}
+        /*
 		if (empty($IdCity)) { 
 			$MessageError .= ww('SignupErrorProvideCity') . "<br />";
 		}
+		*/
 
 
 		if ($MessageError != "") {

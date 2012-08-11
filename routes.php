@@ -59,8 +59,11 @@
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
 
+    // admin temporary vol page route
+    $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminController', 'tempVolStart');
     // admin app routes
     $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
+    // admin no rights routes
     $this->addRoute('admin_norights', 'admin/norights', 'AdminController', 'noRights');
     // admin debug routes
     $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminController', 'debugLogs');
@@ -69,12 +72,15 @@
     $this->addRoute('admin_accepter_search', 'admin/accepter/search', 'AdminController', 'accepterSearch');
     // admin comments routes
     $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminController', 'commentsOverview');
+    // admin spam routes
+    $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminController', 'spamOverview');
 
-// admin words routes
+    // admin words routes
     $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
-    // admin rightsroutes
+    // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
-	
+    // admin activity routes
+    $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');
 
 
     

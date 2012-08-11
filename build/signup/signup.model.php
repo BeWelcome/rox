@@ -39,29 +39,6 @@ class SignupModel extends RoxModelBase
      */
     const HANDLE_PREGEXP = '%^[a-z][a-z0-9_]{3,}$%i';
     
-    /**
-     * FIXME: pay attention for non ISO-8859-x-characters, but build something
-     * reasonable...
-     */
-    const HANDLE_PREGEXP_STREET = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
-    
-    /**
-     * FIXME: pay attention for non ISO-8859-x-characters, but build something
-     * reasonable...
-     */
-    const HANDLE_PREGEXP_HOUSENUMBER = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
-    
-    /**
-     * FIXME: pay attention for non ISO-8859-x-characters, but build something
-     * reasonable...
-     */
-    const HANDLE_PREGEXP_FIRSTNAME = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
-
-    /**
-     * FIXME: pay attention for non ISO-8859-x-characters, but build something
-     * reasonable...
-     */
-    const HANDLE_PREGEXP_LASTNAME = '%^[^°!"§\$\%\}\#\{<>_=]{1,}$%i';
     
     /**
      * TODO: check, if this is indeed the best form; I don't believe it (steinwinde, 2008-08-04)
@@ -444,9 +421,9 @@ VALUES
         // e-mail, names/members
         // ********************************************************************
         $cryptedfieldsEmail = MOD_crypt::insertCrypted($vars['email'],"members.Email", $memberID, $memberID, "always") ;
-        $cryptedfieldsFirstname =  MOD_crypt::insertCrypted($vars['firstname'],"members.FirstName", $memberID, $memberID) ;
-        $cryptedfieldsSecondname  =  MOD_crypt::insertCrypted($vars['secondname'],"members.SecondName", $memberID, $memberID) ;
-        $cryptedfieldsLastname =  MOD_crypt::insertCrypted($vars['lastname'],"members.LastName", $memberID, $memberID) ;
+        $cryptedfieldsFirstname =  MOD_crypt::insertCrypted($this->dao->escape(strip_tags($vars['firstname'])),"members.FirstName", $memberID, $memberID) ;
+        $cryptedfieldsSecondname  =  MOD_crypt::insertCrypted($this->dao->escape(strip_tags($vars['secondname'])),"members.SecondName", $memberID, $memberID) ;
+        $cryptedfieldsLastname =  MOD_crypt::insertCrypted($this->dao->escape(strip_tags($vars['lastname'])),"members.LastName", $memberID, $memberID) ;
         $query = '
 UPDATE
 	`members`
@@ -482,24 +459,7 @@ VALUES
 	0,
 	0,
 	now(),
-	"Signup addresse")';
-        $s = $this->dao->query($query);
-        if( !$s->insertId()) {
-            $vars['errors'] = array('inserror');
-            return false;
-        }
-        $IdAddress = $s->insertId();
-        $cryptedfieldsHousenumber = MOD_crypt::insertCrypted($vars['housenumber'], "addresses.HouseNumber", $IdAddress, $memberID);
-        $cryptedfieldsStreet = MOD_crypt::insertCrypted($vars['street'], "addresses.StreetName", $IdAddress, $memberID);
-        $cryptedfieldsZip = MOD_crypt::insertCrypted($vars['zip'], "addresses.Zip", $IdAddress, $memberID);
-        $query = '
-UPDATE addresses
-SET
-	`HouseNumber` = ' . $cryptedfieldsHousenumber . ',
-	`StreetName` = ' . $cryptedfieldsStreet . ',
-	`Zip` = ' . $cryptedfieldsZip . '
-WHERE `id` = ' . $IdAddress . '
-        ';
+	0)';
         $s = $this->dao->query($query);
         if( !$s->insertId()) {
             $vars['errors'] = array('inserror');
@@ -634,24 +594,8 @@ VALUES
             $errors[] = 'SignupErrorProvideLocation';
             unset($vars['geonameid']);
         }
-            
-        // housenumber
-        if (!isset($vars['housenumber']) || 
-            !preg_match(self::HANDLE_PREGEXP_HOUSENUMBER, $vars['housenumber'])) {
-            $errors[] = 'SignupErrorProvideHouseNumber';
-        }
         
-        // street
-        if (empty($vars['street']) || 
-            !preg_match(self::HANDLE_PREGEXP_STREET, $vars['street'])) {
-            $errors[] = 'SignupErrorProvideStreetName';
-        }
-        
-        // zip
-        if (!isset($vars['zip'])) {
-            $errors[] = 'SignupErrorProvideZip';
-        }
-        
+         
         // username
         if (!isset($vars['username']) || 
                 !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
@@ -675,9 +619,8 @@ VALUES
         }
         
         // firstname, lastname
-        if (empty($vars['firstname']) || !preg_match(self::HANDLE_PREGEXP_FIRSTNAME, $vars['firstname']) ||
-            empty($vars['lastname']) || !preg_match(self::HANDLE_PREGEXP_LASTNAME, $vars['lastname'])
-        ) {
+        if (empty($vars['firstname']) || empty($vars['lastname']))
+        {
             $errors[] = 'SignupErrorFullNameRequired';
         }
              
@@ -782,8 +725,8 @@ WHERE members.id = \''.$m->id.'\'
         APP_User::activate($userId);
         $query = "
 UPDATE members
-SET Status = 'Pending'
-WHERE id=" . $m->id; // The email is confirmed > make the status Pending
+SET Status = 'Active'
+WHERE id=" . $m->id; // The email is confirmed > make the status Active
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?
             throw new PException('Could not determine if email is in use!');

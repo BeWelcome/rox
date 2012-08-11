@@ -36,7 +36,7 @@ class GalleryController extends RoxControllerBase {
         if (!isset($request[1]))
             $request[1] = '';
         if (!$loggedInMember) {
-            $this->redirect('login');
+            $this->redirectToLogin(implode('/', $request));
         }
         switch ($request[1]) {
             case 'ajax':

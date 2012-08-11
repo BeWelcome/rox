@@ -270,7 +270,7 @@ if (count($relations) > 0) { ?>
       $userid = $member->userid;
       $gallery = new GalleryModel;
       $statement = $userid ? $gallery->getLatestItems($userid) : false;
-      if ($statement) {
+      if ($statement && (isset($_SESSION["IdMember"])) ) {
 ?>
           <div id="gallery" class="floatbox box">
           <?php if ($showEditLinks): ?>

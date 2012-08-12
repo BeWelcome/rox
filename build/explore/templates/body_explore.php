@@ -32,8 +32,11 @@ $words = new MOD_words();
         <p><?php echo $words->get('ExploreTripsDescription') ?></p>
         <h2><a href="blog"><?php echo $words->get('Blogs') ?></a></h2>
         <p><?php echo $words->get('ExploreBlogsDescription') ?></p>
-        <h2><a href="gallery"><?php echo $words->get('Gallery') ?></a></h2>
-        <p><?php echo $words->get('ExploreGalleryDescription') ?></p>
+        <?php if (isset($_SESSION["IdMember"])) { ?>
+            <h2><a href="gallery"><?php echo $words->get('Gallery') ?></a></h2>
+            <p><?php echo $words->get('ExploreGalleryDescription') ?></p>
+        <?php } ?>
+
     </div> <!-- subcl -->
   </div> <!-- c33l -->
   

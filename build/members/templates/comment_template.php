@@ -69,10 +69,10 @@ Boston, MA  02111-1307, USA.
               <?php endif;?>
             </p>
             <p>
-              <em><?=$c->TextWhere?></em>
+              <em><?php echo nl2br($c->TextWhere); ?></em>
             </p>
             <p>
-              <?=$c->TextFree?>
+              <?php echo nl2br($c->TextFree); ?>
             </p>
             <p>
               <em class="small">

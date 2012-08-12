@@ -63,7 +63,7 @@ Boston, MA  02111-1307, USA.
         <div class="comment">
             <p class="floatbox">
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
-              <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
+              <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->Username.'">'.$c->Username.'</a>')?> - <span title="<?php echo $c->created; ?>"><?php echo $layoutbits->ago($c->unix_created); ?></span></span>
               <?php if ($this->loggedInMember) :?>
                 <a class="flagbutton" href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $c->id;?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/noun_project_flag.png" alt="<?=$ww->ReportCommentProblem ?>"></a>
               <?php endif;?>
@@ -76,7 +76,7 @@ Boston, MA  02111-1307, USA.
             </p>
             <p>
               <em class="small">
-                <?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($c->unix_updated)?>
+                <?=$words->get('CommentLastUpdated')?>: <span title="<?php echo $c->updated; ?>"><?php echo $layoutbits->ago($c->unix_updated); ?></span>
               </em> 
               <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
                 <a class="button small" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
@@ -119,7 +119,7 @@ Boston, MA  02111-1307, USA.
             <div class="comment">
                 <p class="floatbox">
                   <strong class="<?=$cc->comQuality?>"><?=$cc->comQuality?></strong><br/>
-                  <span class="small grey"><?= $words->get('CommentFrom', '<a href="members/' . $cc->UsernameFromMember . '">' . $cc->UsernameFromMember . '</a>') ?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameToMember ?>"><?= $cc->UsernameToMember ?></a> - <?= $cc->created ?></span>
+                  <span class="small grey"><?= $words->get('CommentFrom', '<a href="members/' . $cc->UsernameFromMember . '">' . $cc->UsernameFromMember . '</a>') ?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameToMember ?>"><?= $cc->UsernameToMember ?></a> - <span title="<?php echo $cc->created; ?>"><?php echo $layoutbits->ago($cc->unix_created); ?></span></span>
                   <?php if ($this->loggedInMember) :?>
                     <a class="flagbutton" href="members/reportcomment/<?php echo $cc->UsernameToMember; ?>/<?php echo $cc->id;?>/<?php echo $cc->UsernameFromMember; ?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/noun_project_flag.png" alt="<?=$ww->ReportCommentProblem ?>"></a>
                   <?php endif;?>
@@ -131,7 +131,7 @@ Boston, MA  02111-1307, USA.
                   <?php echo nl2br($cc->TextFree); ?>
                 </p>
                 <p>
-                  <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($cc->unix_updated)?></em>
+                  <em class="small"><?=$words->get('CommentLastUpdated')?>: <span title="<?php echo $cc->updated; ?>"><?php echo $layoutbits->ago($cc->unix_updated); ?></span></em>
                   <? if ($this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id): ?>
                     <a class="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
                   <? endif; ?>

@@ -1026,6 +1026,7 @@ SELECT *,
     comments.Quality AS comQuality,
     comments.id AS id,
     comments.created,
+    UNIX_TIMESTAMP(comments.created) unix_created,
     UNIX_TIMESTAMP(comments.updated) unix_updated
 FROM
     comments,
@@ -1052,6 +1053,7 @@ SELECT *,
     comments.Quality AS comQuality,
     comments.id AS id,
     comments.created,
+    UNIX_TIMESTAMP(comments.created) unix_created,
     UNIX_TIMESTAMP(comments.updated) unix_updated
 FROM
     comments,
@@ -1082,6 +1084,7 @@ SELECT
   comments.Quality AS comQuality,
   comments.id AS id,
   comments.created,
+  UNIX_TIMESTAMP(comments.created) unix_created,
   UNIX_TIMESTAMP(comments.updated) unix_updated,
   members.username as UsernameFromMember,
   members2.username as UsernameToMember

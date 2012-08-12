@@ -75,9 +75,11 @@ Boston, MA  02111-1307, USA.
               <?php echo nl2br($c->TextFree); ?>
             </p>
             <p>
-              <em class="small">
-                <?=$words->get('CommentLastUpdated')?>: <span title="<?php echo $c->updated; ?>"><?php echo $layoutbits->ago($c->unix_updated); ?></span>
-              </em> 
+              <?php if ($c->created != $c->updated): ?>
+                <em class="small">
+                  <?=$words->get('CommentLastUpdated')?>: <span title="<?php echo $c->updated; ?>"><?php echo $layoutbits->ago($c->unix_updated); ?></span>
+                </em>
+              <?php endif; ?>
               <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
                 <a class="button small" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
               <? endif; ?>
@@ -131,7 +133,11 @@ Boston, MA  02111-1307, USA.
                   <?php echo nl2br($cc->TextFree); ?>
                 </p>
                 <p>
-                  <em class="small"><?=$words->get('CommentLastUpdated')?>: <span title="<?php echo $cc->updated; ?>"><?php echo $layoutbits->ago($cc->unix_updated); ?></span></em>
+                  <?php if ($cc->created != $cc->updated): ?>
+                    <em class="small">
+                      <?=$words->get('CommentLastUpdated')?>: <span title="<?php echo $cc->updated; ?>"><?php echo $layoutbits->ago($cc->unix_updated); ?></span>
+                    </em>
+                  <? endif; ?>
                   <? if ($this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id): ?>
                     <a class="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
                   <? endif; ?>

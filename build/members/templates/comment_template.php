@@ -125,10 +125,10 @@ Boston, MA  02111-1307, USA.
                   <?php endif;?>
                 </p>
                 <p>
-                  <em><?=$cc->TextWhere?></em>
+                  <em><?php echo nl2br($cc->TextWhere); ?></em>
                 </p>
                 <p>
-                  <?=$cc->TextFree?>
+                  <?php echo nl2br($cc->TextFree); ?>
                 </p>
                 <p>
                   <em class="small"><?=$words->get('CommentLastUpdated')?>: <?=$layoutbits->ago($cc->unix_updated)?></em>

@@ -46,6 +46,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <content>
 ";
 $maxpos = $vars['rCount'];
+$maxLoggedIn = $vars['rCountFull'];
 
 // Check wether there is a specific list type set or not
 if ($mapstyle == 'mapon')
@@ -136,7 +137,7 @@ else
         "'/>";
 }
 echo "<footer footer='".htmlspecialchars("".$words->flushBuffer() ."</table>" , ENT_QUOTES)."'/>";
-echo "<num_results num_results='".$maxpos."'/>";
+echo "<num_results num_results='".$maxpos."' num_all_results='".$maxLoggedIn."'/>";
 echo "</content>
 ";
 

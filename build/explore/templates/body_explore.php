@@ -43,8 +43,6 @@ $words = new MOD_words();
   <div class="c33r">
     <div class="subcr">
       <!-- Content of middle block -->
-        <h2><a href="chat"><?php echo $words->get('Chat') ?></a></h2>
-        <p><?php echo $words->get('ExploreChatDescription') ?></p>
         <h2><a href="wiki"><?php echo $words->get('Wiki') ?></a></h2>
         <p><?php echo $words->get('ExploreWikiDescription') ?></p>
     </div> <!-- subcr -->

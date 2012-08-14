@@ -54,7 +54,7 @@ class SearchmembersView extends PAppView {
     }
     public function searchmembers_ajax($TList, $vars, $mapstyle)
     {
-        include 'templates/ajax.php';
+    	include 'templates/ajax.php';
     }
     
 

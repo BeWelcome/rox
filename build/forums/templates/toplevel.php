@@ -42,12 +42,7 @@ if (!$User) {
     $uri = 'forums/';
     if ($threads = $boards->getThreads()) {
 ?>
-  <div class="row">
-<?php  if ($User) { ?>
-    <div class="r">
-      <span class="button"><a href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?>
-    </div> <!-- r -->
-<?php } ?>    
+  <div class="row"> 
     <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>
   </div><!--  row -->
 <?php

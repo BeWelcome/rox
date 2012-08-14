@@ -454,7 +454,6 @@ INSERT INTO
             }
             $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         } else {
-            $textfree_add = ($vars['TextFree'] != '') ? ('<hr>' . $vars['TextFree']) : '';
             $str = "
 UPDATE
     comments
@@ -465,7 +464,7 @@ SET
     Lenght='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
     TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
-    TextFree='" . $this->dao->escape($TCom->TextFree . $textfree_add) . "'
+    TextFree='" . $this->dao->escape($vars['TextFree']) . "'
 WHERE
     id=" . $TCom->id;
             $qry = $this->dao->exec($str);

@@ -45,8 +45,7 @@ class TempVolStartPage extends AdminBasePage
     protected function getStylesheets() 
     {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
+       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        return $stylesheets;
     }
     

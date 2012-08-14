@@ -18,7 +18,6 @@
     if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
         // this is a fresh form
         $ttLenght = ($TCom) ? explode(',',$TCom->Lenght) : array();
-        if ($TCom) $TCom->TextFree = "";
     } else {
         // last time something went wrong.
         // recover old form input.
@@ -41,7 +40,36 @@
             $TCom->TextFree = $vars['TextFree'];
         }
     }
-    
+
+    // Remove injected tags from old comments, so users don't have to edit HTML
+    // that they didn't write
+    $replacePatterns = array(
+        '/<hr>/',
+        '/<hr \/>/',
+        '/<br>/',
+        '/<br \/>/',
+        '/<font color=gray><font size=1>(comment date .*)<\/font><\/font>/'
+    );
+    $replacements = array(
+        "\n\n",
+        "\n\n",
+        "\n",
+        "\n",
+        '$1'
+    );
+    if (isset($TCom->TextFree)) {
+        $textFreeWashed = preg_replace($replacePatterns, $replacements,
+            $TCom->TextFree);
+    } else {
+        $textFreeWashed = "";
+    }
+    if (isset($TCom->TextWhere)) {
+        $textWhereWashed = preg_replace($replacePatterns, $replacements,
+            $TCom->TextWhere);
+    } else {
+        $textWhereWashed = "";
+    }
+
     $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
     
     $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
@@ -123,14 +151,14 @@
         <td colspan="2"><h3><label for="TextWhere"><?php echo $words->get("CommentsWhere") ?></label></h3></td>
     </tr>
     <tr>
-        <td><textarea name="TextWhere" id="TextWhere" cols="40" rows="3"><?=(isset($TCom->TextWhere) && $TCom->TextWhere != "") ? $TCom->TextWhere : ""?></textarea></td>
+        <td><textarea name="TextWhere" id="TextWhere" cols="40" rows="3"><?php echo $textWhereWashed; ?></textarea></td>
         <td><p class="grey"><?php echo $words->get("CommentsWhereDescription", $member->username) ?></p></td>
     </tr>
     <tr>
         <td colspan="2"><h3><label for="Commenter"><?php echo $words->get("CommentsCommenter") ?></label></h3></td>
     </tr>
     <tr>
-        <td><textarea name="TextFree" id="TextFree" cols="40" rows="8"><?=(isset($TCom->TextFree) && $TCom->TextFree != "") ? $TCom->TextFree : ""?></textarea></td>
+        <td><textarea name="TextFree" id="TextFree" cols="40" rows="8"><?php echo $textFreeWashed; ?></textarea></td>
         <td style="vertical-align=top"><p class="grey"><?php echo $words->get("CommentsCommenterDescription", $member->username) ?></p></td>
     </tr>
     <tr><td colspan="2">

@@ -1,37 +1,33 @@
 <?php
-if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
-?>
+/*
 
-<h3><?php echo $this->words->getFormatted('ForumBrowseCategories'); ?></h3>
-<select name="board" id="forumsboarddropdown" onchange="window.location.href=this.value;">
-    <option value=""><?php echo $this->words->getFormatted('ForumChooseCategory'); ?></option>
-<?php
-    foreach ($topboards as $topboard) {
-        $url = 'forums/t'. $topboard->tagid.'-'.$topboard->tag;
-        ?>
-            <option value="<?php echo $url; ?>"><?php echo $topboard->tag; ?></option>
-        <?php
-        /*if ($board->hasSubBoards()) {
-            foreach ($board as $b) {
-                echo '<a href="'.$uri.$b->getBoardLink().'">'.$b->getBoardName().'</a>';
-                echo '<br />';
-            }
-        }*/
-    }
-?>
-</select>
-<?php
-}
-?>
+Copyright (c) 2007 BeVolunteer
 
-<h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
-<ul class="linklist">
-<?php 
-//	        echo "<li class=\"icon fam_commentadd\"><a href=\"forums/new\"" ;
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+
     $request = PRequest::get()->request;
     $uri = implode('/', $request);
     $uri = rtrim($uri, '/').'/';
 ?>
+    <h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
+    <ul class="linklist">
     <li class="icon fam_commentadd">
         <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->get('ForumNewTopic'); ?></a>
     </li>

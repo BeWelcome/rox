@@ -29,9 +29,6 @@ $User = APP_User::login();
 <?php
 $ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
-if ($ToogleTagCloud) { // If We want to see the TagCloud
-  require 'tagcloud_and_toptags.php';
-} // if ToogleTagCloud
 if (!$User) {
 ?>
     <div class="subcolumns">
@@ -45,12 +42,7 @@ if (!$User) {
     $uri = 'forums/';
     if ($threads = $boards->getThreads()) {
 ?>
-  <div class="row">
-<?php  if ($User) { ?>
-    <div class="r">
-      <span class="button"><a href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?>
-    </div> <!-- r -->
-<?php } ?>    
+  <div class="row"> 
     <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>
   </div><!--  row -->
 <?php

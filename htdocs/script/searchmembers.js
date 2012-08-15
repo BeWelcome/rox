@@ -450,7 +450,7 @@ function loadMap(i)
             if (num_results > 0) {
             	var addRes = '';
             	if (Number(num_all_results) > Number(num_results)) {
-            		addRes = ' (' + num_all_results + ' ' + membersVisibleTo + ' <a href="../login/searchmembers#login-widget">' + loggedInMembers + '</a>)'            	          	
+            		addRes = ' (' + num_all_results + ' ' + membersVisibleTo + ' <a href="login/searchmembers#login-widget">' + loggedInMembers + '</a>)'            	          	
             	}
                 put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + wordOf + ' ' + num_results + ' ' + wordFound + addRes);
             } else {

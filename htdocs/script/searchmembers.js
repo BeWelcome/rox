@@ -447,14 +447,14 @@ function loadMap(i)
             var results = getxmlEl(xmlDoc, "num_results");
             var num_results = results[0].getAttribute("num_results");
             var num_all_results = results[0].getAttribute("num_all_results");
-            if (num_results > 0) {
-            	var addRes = '';
-            	if (Number(num_all_results) > Number(num_results)) {
-            		addRes = ' (' + num_all_results + ' ' + membersVisibleTo + ' <a href="login/searchmembers#login-widget">' + loggedInMembers + '</a>)'            	          	
-            	}
+            var addRes = '';
+            if (Number(num_all_results) > Number(num_results)) {
+            	addRes = ' (' + num_all_results + ' ' + membersVisibleTo + ' <a href="login/searchmembers#login-widget">' + loggedInMembers + '</a>)'            	          	
+        	}
+            if (num_results > 0) {            	            	
                 put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + wordOf + ' ' + num_results + ' ' + wordFound + addRes);
             } else {
-                put_html('loading', noMembersFound);
+                put_html('loading', noMembersFound + addRes);
             }
             if (num_results == 0) {
                 put_html('help_and_markers', searchHelp);

@@ -125,7 +125,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
   echo "        <div class=\"info clearfix\">\n";
 
-  echo " for broadcast <b>",$Name,"</b><br /><br />" ;
+  echo "<h2>For broadcast <b>",$Name,"</b></h2>" ;
   if ($count>0) {
      echo "<center><table><tr bgcolor='#ffff66'><td>&nbsp;</td></tr><tr  bgcolor='#ffff66'><td> $count enqueued messages !<br /><i>$countnonews will not receive the mail because of their preference</td></tr><tr  bgcolor='#ffff66'><td>&nbsp;</td></tr></table></center>\n" ;
   }
@@ -135,15 +135,17 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   echo "<tr bgcolor='#ccff99'><td>body</td><td>",ww("BroadCast_Body_".$Name),"</td></tr>" ;
   echo "</table>\n" ;
 
-  echo "<br /><form method=post action=adminmassmails.php name=adminmassmails>\n" ;
-  echo "<input type=hidden Name=IdBroadCast value=".GetParam("IdBroadCast",0).">\n" ;
-  echo "<table>" ;
-  echo "<tr><th align=center colspan=2> Filtering the scope of the mass mail</tr></td>" ;
-  echo "<tr><td>restrict to some members<br />(ex : lupochen;kiwiflave;jeanyves)</td><td><input type=text name=Usernames value=".GetStrParam("Usernames",""),"></td></tr>\n" ;
-
-  echo "<tr><td>specify a country</td>" ;
-  echo "<td><select name=\"CountryIsoCode\">" ;
-  echo "<option value=0>all</option>" ;
+  echo "<br /><form method=\"post\" action=\"adminmassmails.php\" name=\"adminmassmails\" class=\"yform full\">\n" ;
+  echo "<input type=\"hidden\" Name=\"IdBroadCast\" value=".GetParam("IdBroadCast",0).">\n" ;
+  echo "<h3> Filtering the scope of the mass mail</h3>" ;
+  echo "<div class=\"type-text\">";
+  echo "<label for=\"Usernames\">Restrict to some members (ex : lupochen;kiwiflave;jeanyves)</label>" ;
+  echo "<input type=\"text\" id=\"Usernames\" name=\"Usernames\" value=\"".GetStrParam("Usernames",""),"\" />\n" ;
+  echo "</div>";
+  echo "<div class=\"type-select\">";
+  echo "<label for=\"CountryIsoCode\">Choose a country</label>" ;
+  echo "<select id=\"CountryIsoCode\" name=\"CountryIsoCode\">" ;
+  echo "<option value=\"0\">All countries</option>" ;
   for ($ii=0;$ii<count($TCountries);$ii++) {
     echo "<option value=\"",$TCountries[$ii]->isoCode.'"' ;
     if (strcmp($TCountries[$ii]->isoCode,$CountryIsoCode) === 0) echo " selected";
@@ -151,12 +153,12 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
     echo "</option>" ;
 
   }
-  echo "</select></td></tr>\n" ;
-
-
-  echo "<tr><td>specify a group</td>" ;
-  echo "<td><select name=IdGroup>" ;
-  echo "<option value=0>all</option>" ;
+  echo "</select>\n" ;
+  echo "</div>";
+  echo "<div class=\"type-select\">";
+  echo "<label for=\"IdGroup\">Choose a group</label>" ;
+  echo "<select id=\"IdGroup\" name=\"IdGroup\">" ;
+  echo "<option value=\"0\">All groups</option>" ;
   for ($ii=0;$ii<count($TGroupList);$ii++) {
     echo "<option value=",$TGroupList[$ii]->id ;
     if ($TGroupList[$ii]->id==$IdGroup) echo " selected" ;
@@ -164,42 +166,54 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
     echo "</option>" ;
 
   }
-  echo "</select></td></tr>\n" ;
-
-
-  echo "<tr><td>member with status</td><td><input type=text name=MemberStatus value=\"".GetStrParam("MemberStatus","Active")."\"></td></tr>\n" ;
+  echo "</select>\n" ;
+  echo "</div>";
+  echo "<div class=\"type-text\">";
+  echo "<label for =\"MemberStatus\">Member with status</label>";
+  echo "<input type=\"text\" id=\"MemberStatus\" name=\"MemberStatus\" value=\"".GetStrParam("MemberStatus","Active")."\" />\n" ;
+  echo "</div>";
   if (IsAdmin() and ($query!="")) {
-     echo "<tr><td align=center colspan=2>This will supersed the query</td></tr>\n" ;
-     echo "<tr><td align=left colspan=2><textarea name=query cols=130 rows=5>",$query,"</textarea><br />Use Open Query <input type='checkbox' name='UseOpenQuery'></td></tr>\n" ;
+     echo "<div class=\"type-text\">";
+     echo "<label for=\"query\">This will override the query</label>\n" ;
+     echo "<textarea id=\"query\" name=\"query\" cols=\"80\" rows=\"5\">",$query,"</textarea>" ;
+     echo "</div>";
+     echo "<div class=\"type-check\">";
+     echo "<p>";
+     echo "<input type=\"checkbox\" id=\"UseOpenQuery\" name=\"UseOpenQuery\" />" ;
+     echo "<label for=\"UseOpenQuey\">Use Open Query</label>";
+     echo "</p>";
+     echo "</div>";
   }
     if (HasRight('MassMail',"test")) {
-     echo "<tr><td align=center colspan=2><input type=submit name=action value=test></td></tr>\n" ;
+     echo "<div class=\"type-button\">";   
+     echo "<p><input type=\"submit\" name=\"action\" value=\"test\" /></p>\n" ;
+     echo "</div>";
   }
-  echo "</table>\n" ;
+
 
 
 // if it was a test action display the result build from previous filtering
   if (GetStrParam("action")=="test") {
      $max=count($TData) ;
+     echo "<h3>This could be send  to $max members</h3>\n" ;
      echo "<table>\n"  ;
-     echo "<tr><th colspan=3>This could be send  to $max members</th></tr>\n" ;
      echo "<tr align=left><th>Username</th><th>country</th>" ;
      if (IsAdmin()) echo "<th>email</th>" ;
      echo "<th>Status</th><th>Will try in</th></tr>" ;
      for ($ii=0;$ii<$max;$ii++) {
           $m=$TData[$ii] ;
-          echo "<tr bgcolor='#00ffff'>" ;
+          echo "<tr class=\"highlight\">" ;
           echo "<td>",$m->Username,"</td>" ;
           echo "<td>",getcountrynamebycode($m->isoCode),"</td>" ;
          if (IsAdmin()) echo "<td>",GetEmail($m->id),"</td>" ;
           echo "<td>",$m->Status,"</td>" ;
-					$iLang=GetDefaultLanguage($m->id);
+                    $iLang=GetDefaultLanguage($m->id);
           $PrefLanguageName=LanguageName($iLang) ;
           echo "<td>",$PrefLanguageName,"</td>" ;
 
           echo "</tr>\n" ;
          echo "<tr>" ;
-         echo "<td colspan=5 bgcolor='#c0c0c0'>" ;
+         echo "<td colspan=5 class=\"blank\">" ;
          echo wwinlang("BroadCast_Title_".$Name,$iLang),"<br />" ;
          echo wwinlang("BroadCast_Body_".$Name,$iLang,$m->Username),"<br />" ;
          echo "</td>" ;
@@ -208,7 +222,15 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
      echo "</table>\n" ;
   }
   if (HasRight('MassMail',"enqueue")) {
-     echo "<table><tr><td>Tick this if you really want to enqueue the messages to send and click on enqueue</td><td><input type='checkbox' name='enqueuetick'>&nbsp;&nbsp;<input type='submit' name='action' value='enqueue'></td></tr></table>\n" ;
+     echo "<div class=\"note\">";
+     echo "<div class=\"type-check\">";
+     echo "<input type=\"checkbox\" id=\"enqueuetick\"  name=\"enqueuetick\" />";
+     echo "<label for=\"enqueuetick\">Tick this if you really want to enqueue the messages to send and click on enqueue</label>";
+     echo "</div>";
+     echo "<div class=\"type-button\">";
+     echo "<input type=\"submit\" name=\"action\" value=\"enqueue\" />\n" ;
+     echo "</div>";
+     echo "</div>";
   }
   echo "</form>\n";
 
@@ -296,21 +318,21 @@ function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_
   echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
   echo "        <div class=\"info clearfix\">\n";
 
-  echo "<form method=post action=adminmassmails.php>\n";
-  echo "<input type=hidden name=IdBroadCast value=$IdBroadCast>";
+  echo "<form method=\"post\" action=\"adminmassmails.php\" class=\"yform full\">\n";
+  echo "<input type=\"hidden\" name=\"IdBroadCast value=\"$IdBroadCast\">";
   echo "<p class=\"note center\">Please write here in <strong>".LanguageName($_SESSION['IdLanguage'])."</strong></p>";
   echo "<table>";
-  echo "<tr><td width=30%>Give the code name of the broadcast as a word entry (must not exist in words table previously) like<br /> <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces !<br />";
+  echo "<tr><td width=\"30%\">Give the code name of the broadcast as a word entry (must not exist in words table previously) like<br /> <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces !<br />";
   echo "</td>";
   echo "<td>";
-  echo "<input type=text ";
+  echo "<input type=\"text\" ";
   if ($Name != "")
     echo "readonly"; // don't change a group name because it is connected to words
-  echo " name=Name value=\"$Name\">";
+  echo " name=\"Name\" value=\"$Name\">";
   echo "</td>";
 
-  echo "<tr><td width=30%>Title for the massmail</td>";
-  echo "<td align=left><textarea name=BroadCast_Title_ cols=80 rows=1>",$BroadCast_Title_,"</textarea></td>" ;
+  echo "<tr><td width=\"30%\">Title for the massmail</td>";
+  echo "<td align=\"left\"><textarea name=BroadCast_Title_ cols=\"80\" rows=\"1\">",$BroadCast_Title_,"</textarea></td>" ;
   echo "<tr><td>text of the mass mail (first %s, if any, will be replaced by the username at sending)</td>";
   echo "<td align=left><textarea name=BroadCast_Body_ cols=80 rows=15>",$BroadCast_Body_,"</textarea></td>" ;
   echo "<tr><td>Description (as translators will see it in words) </td>";

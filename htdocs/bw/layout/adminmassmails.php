@@ -119,7 +119,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 
   $Name=$rBroadCast->Name ;
   $IdGroup=GetParam("IdGroup",0) ;
-  $IdCountry=GetParam("IdCountry",0) ;
+  $CountryIsoCode=GetParam("CountryIsoCode",0) ;
 
   echo "    <div id=\"col3\"> \n";
   echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
@@ -142,11 +142,11 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   echo "<tr><td>restrict to some members<br />(ex : lupochen;kiwiflave;jeanyves)</td><td><input type=text name=Usernames value=".GetStrParam("Usernames",""),"></td></tr>\n" ;
 
   echo "<tr><td>specify a country</td>" ;
-  echo "<td><select name=IdCountry>" ;
+  echo "<td><select name=\"CountryIsoCode\">" ;
   echo "<option value=0>all</option>" ;
   for ($ii=0;$ii<count($TCountries);$ii++) {
-    echo "<option value=",$TCountries[$ii]->id ;
-    if ($TCountries[$ii]->id==$IdCountry) echo " selected" ;
+    echo "<option value=\"",$TCountries[$ii]->isoCode.'"' ;
+    if (strcmp($TCountries[$ii]->isoCode,$CountryIsoCode) === 0) echo " selected";
     echo ">",$TCountries[$ii]->Name ;
     echo "</option>" ;
 
@@ -190,7 +190,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
           $m=$TData[$ii] ;
           echo "<tr bgcolor='#00ffff'>" ;
           echo "<td>",$m->Username,"</td>" ;
-          echo "<td>",getcountryname($m->IdCountry),"</td>" ;
+          echo "<td>",getcountrynamebycode($m->isoCode),"</td>" ;
          if (IsAdmin()) echo "<td>",GetEmail($m->id),"</td>" ;
           echo "<td>",$m->Status,"</td>" ;
 					$iLang=GetDefaultLanguage($m->id);

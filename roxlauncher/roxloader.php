@@ -93,7 +93,6 @@ class RoxLoader
                 'mailAddresses' => 'config_mailAddresses',
                 'request' => 'config_request',
                 'google' => 'config_google',
-                'chat' => 'config_chat',
                 'env' => 'env'
             ) as $section => $objectname) {
                 if(

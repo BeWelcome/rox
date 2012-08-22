@@ -127,13 +127,11 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 
   echo "<h2>For broadcast <b>",$Name,"</b></h2>" ;
   if ($count>0) {
-     echo "<center><table><tr bgcolor='#ffff66'><td>&nbsp;</td></tr><tr  bgcolor='#ffff66'><td> $count enqueued messages !<br /><i>$countnonews will not receive the mail because of their preference</td></tr><tr  bgcolor='#ffff66'><td>&nbsp;</td></tr></table></center>\n" ;
+     echo "<p class=\"note\"> $count enqueued messages !<br /><i>$countnonews will not receive the mail because of their preference</i></p>" ;
   }
 
-
-  echo "<table><tr bgcolor='#ffffcc'><td>title</td><td>",ww("BroadCast_Title_".$Name),"</td></tr>" ;
-  echo "<tr bgcolor='#ccff99'><td>body</td><td>",ww("BroadCast_Body_".$Name),"</td></tr>" ;
-  echo "</table>\n" ;
+  echo "<h3>",ww("BroadCast_Title_".$Name),"</h3>" ;
+  echo "<p>",ww("BroadCast_Body_".$Name),"</p>" ;
 
   echo "<br /><form method=\"post\" action=\"adminmassmails.php\" name=\"adminmassmails\" class=\"yform full\">\n" ;
   echo "<input type=\"hidden\" Name=\"IdBroadCast\" value=".GetParam("IdBroadCast",0).">\n" ;
@@ -319,36 +317,41 @@ function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_
   echo "        <div class=\"info clearfix\">\n";
 
   echo "<form method=\"post\" action=\"adminmassmails.php\" class=\"yform full\">\n";
-  echo "<input type=\"hidden\" name=\"IdBroadCast value=\"$IdBroadCast\">";
+  echo "<input type=\"hidden\" name=\"IdBroadCast\" value=\"$IdBroadCast\">";
   echo "<p class=\"note center\">Please write here in <strong>".LanguageName($_SESSION['IdLanguage'])."</strong></p>";
-  echo "<table>";
-  echo "<tr><td width=\"30%\">Give the code name of the broadcast as a word entry (must not exist in words table previously) like<br /> <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces !<br />";
-  echo "</td>";
-  echo "<td>";
+  echo "<div class=\"type-text\">";
+  echo "<p>Give the code name of the broadcast as a word entry (must not exist in words table previously) like <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces!</p>";
+  echo "<label for=\"Name\">WordCode for the newsletter</label>";
   echo "<input type=\"text\" ";
   if ($Name != "")
     echo "readonly"; // don't change a group name because it is connected to words
-  echo " name=\"Name\" value=\"$Name\">";
-  echo "</td>";
+  echo " id=\"Name\" name=\"Name\" value=\"$Name\" />";
+  echo "</div>";
 
-  echo "<tr><td width=\"30%\">Title for the massmail</td>";
-  echo "<td align=\"left\"><textarea name=BroadCast_Title_ cols=\"80\" rows=\"1\">",$BroadCast_Title_,"</textarea></td>" ;
-  echo "<tr><td>text of the mass mail (first %s, if any, will be replaced by the username at sending)</td>";
-  echo "<td align=left><textarea name=BroadCast_Body_ cols=80 rows=15>",$BroadCast_Body_,"</textarea></td>" ;
-  echo "<tr><td>Description (as translators will see it in words) </td>";
-  echo "<td align=left><textarea name=Description cols=60 rows=5>",$Description,"</textarea></td>" ;
+  echo "<div class=\"type-text\">";
+  echo "<label for=\"BroadCast_Title_\">Subject for the newsletter</label>";
+  echo "<input type=\"text\" id=\"BroadCast_Title_\" name=\"BroadCast_Title_\" value=\"$BroadCast_Title_\" />" ;
+  echo "</div>";
+  
+  echo "<div class=\"type-text\">";
+  echo "<label for=\"BroadCast_Body_\">Body of the newsletter (first %s, if any, will be replaced by the username at sending)</label>";
+  echo "<textarea id=\"BroadCast_Body_\" name=\"BroadCast_Body_\" rows=\"30\">",$BroadCast_Body_,"</textarea>" ;
+  echo "</div>";
+  
+  echo "<div class=\"type-text\">";
+  echo "<label for=\"Description\">Description (as translators will see it in AdminWord) </label>";
+  echo "<textarea id=\"Description\" name=\"Description\" rows=\"8\">",$Description,"</textarea>" ;
+  echo "</div>";
 
-  echo "\n<tr><td colspan=2 align=center>";
-
+  echo "<div class=\"type-button\">";
   if ($IdBroadCast != 0)
-    echo "<input type=submit name=submit value=\"update massmail\">";
+    echo "<input type=\"submit\" name=\"submit\" value=\"update massmail\">";
   else
-    echo "<input type=submit name=submit value=\"create massmail\">";
+    echo "<input type=\"submit\" name=\"submit\" value=\"create massmail\">";
 
-  echo "<input type=hidden name=action value=createbroadcast>";
-  echo "</td>\n</table>\n";
-  echo "</form>\n";
-  echo "</center>";
+  echo "<input type=\"hidden\" name=\"action\" value=\"createbroadcast\">";
+  echo "</div>";
+  echo "</form>";
 
   require_once "footer.php";
 } // DisplayFormCreateBroadcast

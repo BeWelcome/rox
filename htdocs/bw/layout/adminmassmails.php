@@ -51,7 +51,7 @@ function DisplayAdminMassMailsList($TData) {
   $max = count($TData);
 
   for ($ii=0;$ii<$max;$ii++) {
-      echo "<br \>&nbsp;&nbsp;&nbsp;&nbsp;* <font color=green>",$TData[$ii]->Name,"</font> (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> | <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare enqueue</a><br />" ;
+      echo "<br \>&nbsp;&nbsp;&nbsp;&nbsp;* <font color=green>",$TData[$ii]->Name,"</font> (",$TData[$ii]->Status,") <a href=\"adminmassmails.php?action=edit&IdBroadCast=".$TData[$ii]->id."\">edit</a> | <a href=\"adminmassmails.php?action=prepareenque&IdBroadCast=".$TData[$ii]->id."\">prepare & enqueue</a><br />" ;
   }
 
   echo "</div> <!-- info -->\n";
@@ -182,10 +182,14 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
      echo "</p>";
      echo "</div>";
   }
-    if (HasRight('MassMail',"test")) {
-     echo "<div class=\"type-button\">";   
-     echo "<p><input type=\"submit\" name=\"action\" value=\"test\" /></p>\n" ;
-     echo "</div>";
+  if (HasRight('MassMail',"test")) {
+    if (GetStrParam("hide_recipients", "") == "on") {
+      $checked = ' checked="checked"';
+    } else {
+      $checked = '';
+    }
+    echo "<input type=\"submit\" name=\"action\" value=\"test\" />\n" ;
+    echo '<input type="checkbox" ' . $checked . 'name="hide_recipients" /> Hide recipients list';
   }
 
 
@@ -194,6 +198,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   if (GetStrParam("action")=="test") {
      $max=count($TData) ;
      echo "<h3>This newsletter will be sent to $max members</h3>\n" ;
+    if (GetStrParam("hide_recipients", "") != "on") {
      echo "<table>\n"  ;
      echo "<tr align=left><th>Username</th><th>country</th>" ;
      if (IsAdmin()) echo "<th>email</th>" ;
@@ -218,6 +223,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
          echo "</tr>" ;
      }
      echo "</table>\n" ;
+    }
   }
   if (HasRight('MassMail',"enqueue")) {
      echo "<div class=\"note\">";

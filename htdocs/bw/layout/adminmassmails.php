@@ -193,7 +193,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 // if it was a test action display the result build from previous filtering
   if (GetStrParam("action")=="test") {
      $max=count($TData) ;
-     echo "<h3>This could be send  to $max members</h3>\n" ;
+     echo "<h3>This newsletter will be sent to $max members</h3>\n" ;
      echo "<table>\n"  ;
      echo "<tr align=left><th>Username</th><th>country</th>" ;
      if (IsAdmin()) echo "<th>email</th>" ;

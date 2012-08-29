@@ -29,22 +29,28 @@ $User = APP_User::login();
 
 $words = new MOD_words();
 
-//BW to be cut:
-if ($navichain_items = $boards->getNaviChain()) {
-	$navichain = '<span class="forumsboardnavichain">';
-	foreach ($navichain_items as $link => $title) {
-		$navichain .= '<a href="'.$link.'">'.$title.'</a> :: ';
-	}
-	$navichain .= '<br /></span>';
-} else {
-	$navichain = '';
+// Build board navigation path
+$navigationPath = '';
+$navichain_items = $boards->getNaviChain();
+if (is_array($navichain_items)) {
+    // trim off first item ("forums")
+    array_shift($navichain_items);
+    foreach ($navichain_items as $link => $title) {
+        $navigationPath .= '<a href="' . $link . '">' . $title . '</a> » ';
+    }
 }
+$boardName = $boards->getBoardName();
+$navigationPath .= '<a href="' . $boards->getBoardLink() . '">'
+    . $boardName . '</a>';
 
 ?>
 
 <?php 
-	 
-	echo "<h2 style=\"Display:inline\">",$boards->getBoardName(),"</h2> " ;
+// Quick hack to avoid "no tags" showing up at the top of tag search results
+// TODO: fix this properly in Forums::boardTopLevelLastPosts() (forums model)
+if ($boardName != 'no tags') {
+    echo "<h2>" . $navigationPath . "</h2>";
+}
 
 	if (($this->BW_Right->HasRight("ForumModerator","Edit")) ||($this->BW_Right->HasRight("ForumModerator","All")) ) {
 	   if (isset($boards->IdTag)) echo " <a href=\"forums/modedittag/".$boards->IdTag."\">Edit Tag</a>" ;
@@ -88,7 +94,6 @@ if ($navichain_items = $boards->getNaviChain()) {
 if ($User) {
 ?>
 	<div id="boardnewtopictop">
-    <div class="l"><?php echo $navichain; ?></div>
     <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
 <?php
 } // end if $User

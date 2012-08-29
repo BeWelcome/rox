@@ -194,7 +194,7 @@ if ($allow_title) { // New Topic
     if ($groupsforum) { 
         echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
     } else {
-        if ($vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
+        if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
             echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
         } else {
             echo '<input type="hidden" name="IdGroup" value="0">';

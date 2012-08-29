@@ -449,10 +449,10 @@ function loadMap(i)
             var num_all_results = results[0].getAttribute("num_all_results");
             var addRes = '';
             if (Number(num_all_results) > Number(num_results)) {
-            	addRes = ' (' + num_all_results + ' ' + membersVisibleTo + ' <a href="login/searchmembers#login-widget">' + loggedInMembers + '</a>)'            	          	
+            	addRes = ' (<a href="login/searchmembers#login-widget">' + logIn + '</a> ' + toSee + ' ' + String(Number(num_all_results)-Number(num_results)) + ' ' + more + ')'            	          	
         	}
             if (num_results > 0) {            	            	
-                put_html('loading', markers.length + ' ' + membersDisplayed + ' ' + wordOf + ' ' + num_results + ' ' + wordFound + addRes);
+                put_html('loading', num_results + ' ' + wordFound + addRes);
             } else {
                 put_html('loading', noMembersFound + addRes);
             }

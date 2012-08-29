@@ -80,8 +80,7 @@ This File display a topic and the messages which are inside it
     }
     ?>
     
-
-    <p class="forumsthreadtags"><strong><?php echo $words->get("forum_label_tags");?>:</strong> <?php
+    <?php
 
     $url = ForumsView::getURI().'';
     $breadcrumb = '';
@@ -117,10 +116,14 @@ This File display a topic and the messages which are inside it
       $url = $url.'t'.$topic->topicinfo->IdTag[$ii].'-'.$wordtag.'/';
       $breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
     } // end of for $ii
-
-    echo $breadcrumb;
-
-  ?></p></div>
+  ?>
+  <?php if ($breadcrumb != ""): ?>
+    <p class="forumsthreadtags">
+      <strong><?php echo $words->get("forum_label_tags");?>:</strong>
+      <?php echo $breadcrumb; ?>
+    </p>
+  <?php endif; ?>
+  </div>
   <?php
     $topic->topicinfo->IsClosed=false ;
     if ($topic->topicinfo->expiredate!="0000-00-00 00:00:00") {

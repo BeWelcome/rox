@@ -283,7 +283,7 @@ WHERE
     {
         $length = strlen($str);
         if($length <= $len) return $str;
-        return substr($str, 0, $len).'...';
+        return mb_substr($str, 0, $len, 'utf-8').'...';
     }
     
     /**

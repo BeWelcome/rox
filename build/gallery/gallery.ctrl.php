@@ -78,8 +78,14 @@ class GalleryController extends RoxControllerBase {
                 break;
 
             case 'images':
+                if ($loggedInMember) {
+                    $statement = $this->_model->getLatestItems();
+                } else {
+                    $statement = $this->_model->getLatestItems(false, false,
+                        false, true);
+                }
                 $page = new GalleryAllImagesPage();
-                $page->statement = $this->_model->getLatestItems();
+                $page->statement = $statement;
                 $page->loggedInMember = $loggedInMember;
                 return $page;
                 

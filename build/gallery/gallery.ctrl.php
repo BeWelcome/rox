@@ -48,21 +48,35 @@ class GalleryController extends RoxControllerBase {
                         break;
                 }
                 break;
-                
+
             case 'thumbimg':
                 PRequest::ignoreCurrentRequest();
-                if (!isset($_GET['id']))
+                if (!isset($_GET['id'])) {
                     PPHP::PExit();
-                $this->thumbImg((int)$_GET['id']);
+                } else {
+                    $id = (int) $_GET['id'];
+                }
+                if ($this->loggedInMember || $this->imageIsPublicById($id)) {
+                    $this->thumbImg($id);
+                } else {
+                    PPHP::PExit();
+                }
                 break;
-                
+
             case 'img':
                 PRequest::ignoreCurrentRequest();
-                if (!isset($_GET['id']))
+                if (!isset($_GET['id'])) {
                     PPHP::PExit();
-                $this->_view->realImg((int)$_GET['id']);
+                } else {
+                    $id = (int) $_GET['id'];
+                }
+                if ($this->loggedInMember || $this->imageIsPublicById($id)) {
+                    $this->_view->realImg($id);
+                } else {
+                    PPHP::PExit();
+                }
                 break;
-                
+
             case 'images':
                 $page = new GalleryAllImagesPage();
                 $page->statement = $this->_model->getLatestItems();
@@ -125,6 +139,10 @@ class GalleryController extends RoxControllerBase {
                         if (!$image = $this->_model->imageData($request[3])) {
                             return new GalleryImageNotFoundPage();
                         }
+                        if (!$loggedInMember &&
+                            !$this->imageIsPublic($image)) {
+                            $this->redirectToLogin(implode('/', $request));
+                        }
                         switch (isset($request[4]) ? $request[4] : '') {
                             case 'delete':
                                 return $this->deleteImage($image);
@@ -168,6 +186,9 @@ class GalleryController extends RoxControllerBase {
                         $subTab = 'user';
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && ($member = $membersmodel->getMemberWithUsername($request[3])) && $userId = $member->get_userid()) {
                             $this->member = $member;
+                            if (!$loggedInMember && !$member->publicProfile) {
+                                $this->redirectToLogin(implode('/', $request));
+                            }
                             if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {
                                     case 'galleries':
@@ -690,4 +711,44 @@ class GalleryController extends RoxControllerBase {
         $tmpDir->readFile($thumbFile);
         PPHP::PExit();
     }
+
+    /**
+     * Checks if an image is publicly visible. Looks up the image by its ID.
+     *
+     * @param int $id Database ID of image
+     *
+     * @return bool True if publicly visible, false if not
+     */
+    private function imageIsPublicById($id)
+    {
+        $image = $this->_model->imageData($id);
+        return $this->imageIsPublic($image);
+    }
+
+    /**
+     * Checks if an image is publicly visible.
+     *
+     * Note: Currently this only checks if the image owner's profile is public.
+     * If individual image or album rights are implemented, they can be checked
+     * here.
+     *
+     * @param object $image Image as returned by GalleryModel::imageData()
+     *
+     * @return bool True if publicly visible, false if not
+     */
+    private function imageIsPublic($image)
+    {
+        if (isset($this->membersmodel)) {
+            $members = $this->membersmodel;
+        } else {
+            $members = new MembersModel();
+        }
+        $imageOwner = $members->getMemberWithUsername($image->user_handle);
+        if ($imageOwner->publicProfile === false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

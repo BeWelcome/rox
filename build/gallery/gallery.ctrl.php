@@ -754,6 +754,9 @@ class GalleryController extends RoxControllerBase {
     private function imageIsPublicById($id)
     {
         $image = $this->_model->imageData($id);
+        if (!$image) {
+            return false;
+        }
         return $this->imageIsPublic($image);
     }
 

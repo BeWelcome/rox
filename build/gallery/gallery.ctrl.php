@@ -229,7 +229,8 @@ class GalleryController extends RoxControllerBase {
             $page->galleries = $this->_model->getGalleriesNotEmpty();
             $page->cnt_pictures = $page->images ? $page->images->numRows() : 0;
         } else {
-            $page->galleries = $this->_model->getGalleriesNotEmpty();                            
+            $page->galleries = $this->_model->getGalleriesNotEmpty(false,
+                true);
         }
         $page->loggedInMember = $this->_model->getLoggedInMember();
         $page->statement = $this->_model->getLatestItems();
@@ -312,10 +313,16 @@ class GalleryController extends RoxControllerBase {
      */
     public function allgalleries()
     {
+        $loggedInMember = $this->loggedInMember;
         $page = new GalleryAllGalleriesPage();
         $page->member = $this->member;
-        $page->galleries = $this->_model->getGalleriesNotEmpty();
-        $page->loggedInMember = $this->loggedInMember;
+        if ($loggedInMember) {
+            $page->galleries = $this->_model->getGalleriesNotEmpty();
+        } else {
+            $page->galleries = $this->_model->getGalleriesNotEmpty(false,
+                true);
+        }
+        $page->loggedInMember = $loggedInMember;
         return $page;
     }
     
@@ -332,7 +339,17 @@ class GalleryController extends RoxControllerBase {
         $page->member = $this->member;
         $page->myself = ($this->loggedInMember && ($this->loggedInMember->get_userId() == $userId)) ? $this->loggedInMember : false;
         $page->infoMessage = $words->get($this->message);
-        $page->galleries = ($page->myself) ? $this->_model->getUserGalleries($userId) : $this->_model->getGalleriesNotEmpty($userId);
+        if ($page->myself) {
+            $page->galleries = $this->_model->getUserGalleries($userId);
+        } else {
+            if ($this->loggedInMember) {
+                $page->galleries = $this->_model->getGalleriesNotEmpty(
+                    $userId);
+            } else {
+                $page->galleries = $this->_model->getGalleriesNotEmpty(
+                    $userId, true);
+            }
+        }
         $page->statement = $this->_model->getLatestItems($userId);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->loggedInMember = $this->loggedInMember;

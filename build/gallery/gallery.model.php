@@ -317,20 +317,46 @@ WHERE `gallery_items`.`user_id_foreign` = ' . (int) $userId;
         return $count;
     }
 
-    public function getGalleriesNotEmpty($UserId = false)
+    public function getGalleriesNotEmpty($UserId = false, $publicOnly = false)
     {
-    	$query = '
+        $query = '
 SELECT DISTINCT
-`id`, `user_id_foreign`, `flags`, `title`, `text`
+    g.`id` AS `id`,
+    `user_id_foreign`,
+    `flags`,
+    `title`,
+    `text`
 FROM `gallery` AS g
 LEFT JOIN `gallery_items_to_gallery` AS gi ON
-    g.`id` = gi.`gallery_id_foreign`
-WHERE g.`id` = gi.`gallery_id_foreign`';
-        if ($UserId) {
-    	$query .= '
-AND g.`user_id_foreign` = '.(int)$UserId;
+    g.`id` = gi.`gallery_id_foreign`';
+        if ($publicOnly) {
+            $query .= '
+LEFT JOIN `user` AS `u` ON
+    u.`id` = g.`user_id_foreign`
+LEFT JOIN `members` AS `m` ON
+    u.`handle` = m.`Username`
+LEFT JOIN `memberspublicprofiles` AS `mp` ON
+    m.`id` = mp.`IdMember`';
         }
-    	$query .= '
+        $query .= '
+WHERE
+    g.`id` = gi.`gallery_id_foreign`
+    AND ';
+        if ($UserId) {
+            $query .= '
+    g.`user_id_foreign` = ' . (int)$UserId . '
+    AND ';
+        }
+        if ($publicOnly) {
+            $query .= '
+    m.`id` = mp.`idMember`
+    AND
+    m.`Status` = \'Active\'
+    AND ';
+        }
+        $query .= '
+    1';
+        $query .= '
 ORDER BY `id` DESC';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)

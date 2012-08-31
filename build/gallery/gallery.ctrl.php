@@ -164,6 +164,15 @@ class GalleryController extends RoxControllerBase {
                         if (!isset($request[3]) || !$gallery = $this->_model->getGallery($request[3])) {
                             return $this->allgalleries();
                         }
+                        if (!$loggedInMember) {
+                            // Check if gallery owner's profile is public,
+                            // redirect to login if it is not
+                            $owner = $this->_model->getMemberWithUserId(
+                                $gallery->user_id_foreign);
+                            if (!$owner->publicProfile) {
+                                $this->redirectToLogin(implode('/', $request));
+                            }
+                        }
                         if (isset($request[4])) {
                             switch ($request[4]) {
                                 case 'delete':
@@ -186,15 +195,6 @@ class GalleryController extends RoxControllerBase {
                                 default:
                             }                      
                         } 
-                        if (!$loggedInMember) {
-                            // Check if gallery owner's profile is public,
-                            // redirect to login if it is not
-                            $owner = $this->_model->getMemberWithUserId(
-                                $gallery->user_id_foreign);
-                            if (!$owner->publicProfile) {
-                                $this->redirectToLogin(implode('/', $request));
-                            }
-                        }
                         return $this->gallery($gallery,(isset($request[4]) && $request[4] == 'upload'));
 
                     case 'user':

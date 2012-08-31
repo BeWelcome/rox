@@ -167,7 +167,7 @@ echo $callbackIdCom; ?>" value="1"/>
 else
 {
     // not logged in.
-    echo '<p>'. $words->getFormatted('PleaseRegister') .'</p>';
+    echo '<p>'. $words->getFormatted('PleaseLogInToComment') .'</p>';
 }
     echo "</div>";
 

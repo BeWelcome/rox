@@ -186,8 +186,17 @@ class GalleryController extends RoxControllerBase {
                                 default:
                             }                      
                         } 
+                        if (!$loggedInMember) {
+                            // Check if gallery owner's profile is public,
+                            // redirect to login if it is not
+                            $owner = $this->_model->getMemberWithUserId(
+                                $gallery->user_id_foreign);
+                            if (!$owner->publicProfile) {
+                                $this->redirectToLogin(implode('/', $request));
+                            }
+                        }
                         return $this->gallery($gallery,(isset($request[4]) && $request[4] == 'upload'));
-                                                
+
                     case 'user':
                         $subTab = 'user';
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && ($member = $membersmodel->getMemberWithUsername($request[3])) && $userId = $member->get_userid()) {

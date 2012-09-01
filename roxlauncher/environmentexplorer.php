@@ -352,7 +352,6 @@ class EnvironmentExplorer
             'config_mailAddresses' => 'mailAddresses',
             'config_request' => 'request',
             'config_google' => 'google',
-            'config_chat' => 'chat',
             'env' => 'env'
         ) as $key_in_pvars => $key_in_inifile) {
             $keymap[$key_in_pvars] = $key_in_inifile;

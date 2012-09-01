@@ -35,19 +35,6 @@ class AdminCommentsPage extends AdminBasePage
 
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminAccepter')}</a>";
-    }
-    
-    /**
-     * configure the sidebar
-     */
-    protected function leftSidebar() {
-      
-    }
-    
-    protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
-       return $stylesheets;
+        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminComments')}</a>";
     }
 }

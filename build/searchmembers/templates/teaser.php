@@ -70,8 +70,8 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
         </div> <!-- mapswitch -->
     </div> <!-- searchoptions -->
     <div class="floatbox">        
+        <div id="loading" class="small"></div>
         <div id="paging-div" ></div>
-        <div id="loading" class="small float_left"></div>
     </div>
         
 </div> <!-- teaser -->

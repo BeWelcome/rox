@@ -48,10 +48,10 @@
                 <li><a href="forums"><?=$words->get('Community')?></a></li>
                 <li><a href="groups"><?=$words->get('Groups')?></a></li>
                 <li><a href="trip"><?=$words->get('Trips')?></a></li>
-                <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
+                <?php if ($logged_in) { ?>
+                    <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
+                <?php } ?>
                 <li><a href="blog"><?=$words->get('Blogs')?></a></li>
-                <li><a href="chat"><?=$words->get('Chat')?></a></li>
-                <li><a href="shop"><?=$words->get('Shop')?></a></li>
                 <li><a href="wiki"><?=$words->get('Wiki')?></a></li>
             </ul>
         </li>

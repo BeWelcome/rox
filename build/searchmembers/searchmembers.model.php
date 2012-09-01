@@ -283,7 +283,7 @@ WHERE
     {
         $length = strlen($str);
         if($length <= $len) return $str;
-        return substr($str, 0, $len).'...';
+        return mb_substr($str, 0, $len, 'utf-8').'...';
     }
     
     /**
@@ -425,12 +425,6 @@ WHERE
         // If the SortOrder is "BirthDate", hide the members that don't want to show their age.
         if($order_by == 'BirthDate') $where .= " AND members.HideBirthDate='No'"  ;
         
-        if (!$this->getLoggedInMember())
-        {
-            $where .= " AND memberspublicprofiles.IdMember=members.id";
-            $tablelist=$tablelist.", memberspublicprofiles" ;
-        }
-        
         if($this->GetParam($vars, "mapsearch")) {
             if($this->GetParam($vars, "bounds_sw_lng") > $this->GetParam($vars, "bounds_ne_lng")) {
                 $where .= "
@@ -531,12 +525,31 @@ AND membersgroups.IdGroup=".$this->GetParam($vars, "IdGroup")."
 AND membersgroups.Status='In'
 AND membersgroups.IdMember=members.id"  ;
         }
+        
+        // only logged in members can see profiles that aren't public
+        $memberWhere = $where;
+        $memberTablelist = $tablelist;
+        if (!$this->getLoggedInMember())
+        {
+        	$where .= " AND memberspublicprofiles.IdMember=members.id";
+        	$tablelist=$tablelist.", memberspublicprofiles" ;
+        }
     
         if (empty($where))
         {
             $this->logWrite("empty where. input: " . print_r($vars, true), "Search");
             $where = " WHERE (1=0)" ;
+            $memberWhere = $where;
         }
+        
+        $fullSearchStr = '';
+        if (!$this->getLoggedInMember()) {
+        	$fullSearchStr = "SELECT COUNT(DISTINCT
+    members.id) as fullCount    	
+FROM
+    ($memberTablelist)
+    $memberWhere";
+		}
 
         // This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
         $str=     "SELECT SQL_CALC_FOUND_ROWS DISTINCT
@@ -545,7 +558,7 @@ AND membersgroups.IdMember=members.id"  ;
     geonames_cache.name AS CityName,
     geonames_countries.name AS CountryName,
     IF(members.ProfileSummary != 0, 1, 0) AS HasSummary,
-    IF(DATEDIFF(NOW(), members.LastLogin) < 300, 1, 0) AS HasLoggedIn 
+    IF(DATEDIFF(NOW(), members.LastLogin) < 300, 1, 0) AS HasLoggedIn		
 FROM
     ($tablelist)
 $where
@@ -560,6 +573,7 @@ LIMIT $start_rec,$limitcount " ;
         $vars['rCount'] = $rCount;
         
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+        	      	
             $sData = <<<SQL
 SELECT
     m.created,
@@ -614,7 +628,16 @@ SQL;
             else $rr->Age= "Hidden";
 
             array_push($TMember, $rr);
+        }       
+        
+        // get full count of search results if not logged in
+        $rCountFull = -1;
+        if (!empty($fullSearchStr)) {
+        	$result = $this->dao->query($fullSearchStr);
+        	$row = $result->fetch(PDB::FETCH_OBJ);
+        	$rCountFull = $row->fullCount;
         }
+        $vars['rCountFull'] = $rCountFull;
         
         return($TMember);
     }

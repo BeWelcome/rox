@@ -15,7 +15,7 @@
 $callback = $this->getCallbackOutput('BlogController', 'CommentProcess');
 $request = PRequest::get()->request;
 $vars = $this->getRedirectedMem('vars');
-
+$login_url = 'login/'.implode('/', $request);
 
 $blogitemText = array();
 $i18n = new MOD_i18n('apps/blog/blogitem.php');
@@ -195,7 +195,7 @@ if (in_array('textlen', $vars['errors'])) {
 <?
 } else {
     // not logged in.
-    echo '<p>'.$words->get('PleaseRegister').'</p>';
+    echo '<p>'.$words->getBuffered('PleaseLogInToComment', '<a href="' . $login_url . '">', '</a>').'</p>';
 }
 ?>
 </div>

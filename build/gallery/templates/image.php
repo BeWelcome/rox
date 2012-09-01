@@ -1,6 +1,7 @@
 <?php
 $words = new MOD_words();
 $request = PRequest::get()->request;
+$login_url = 'login/' . implode('/', $request);
 $Gallery = new GalleryModel;
 $Gallery_ctrl = new GalleryController;
 if ($member = $this->model->getLoggedInMember())
@@ -167,7 +168,7 @@ echo $callbackIdCom; ?>" value="1"/>
 else
 {
     // not logged in.
-    echo '<p>'. $words->getFormatted('PleaseRegister') .'</p>';
+    echo '<p>'. $words->getFormatted('PleaseLogInToComment', '<a href="' . $login_url . '">', '</a>') .'</p>';
 }
     echo "</div>";
 

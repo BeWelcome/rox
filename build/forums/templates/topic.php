@@ -80,15 +80,19 @@ This File display a topic and the messages which are inside it
     }
     ?>
     
-
-    <p class="forumsthreadtags"><strong><?php echo $words->get("forum_label_tags");?>:</strong> <?php
+    <?php
 
     $url = ForumsView::getURI().'';
     $breadcrumb = '';
+
+    // Append slash to URL if it's not there yet
+    if (substr($url, -1) != '/') {
+      $url = $url . '/';
+    }
+
+    $tagBase = $url;
+
     if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
-      if ($url{strlen($url)-1}!='/') {  // Fix for ticket
-        $url=$url.'/' ;
-      }
       $url = $url.'k'.$topic->topicinfo->continent.'-'.Forums::$continents[$topic->topicinfo->continent].'/';
       $breadcrumb .= '<a href="'.$url.'">'.Forums::$continents[$topic->topicinfo->continent].'</a> ';
 
@@ -114,13 +118,18 @@ This File display a topic and the messages which are inside it
       if ($breadcrumb) {
         $breadcrumb .= '|| ';
       }
-      $url = $url.'t'.$topic->topicinfo->IdTag[$ii].'-'.$wordtag.'/';
-      $breadcrumb .= '<a href="'.$url.'">'.$wordtag.'</a> ';
+      $tagUrl = $tagBase . 't' . $topic->topicinfo->IdTag[$ii] . '-'
+        . $wordtag;
+      $breadcrumb .= '<a href="' . $tagUrl . '">' . $wordtag . '</a> ';
     } // end of for $ii
-
-    echo $breadcrumb;
-
-  ?></p></div>
+  ?>
+  <?php if ($breadcrumb != ""): ?>
+    <p class="forumsthreadtags">
+      <strong><?php echo $words->get("forum_label_tags");?>:</strong>
+      <?php echo $breadcrumb; ?>
+    </p>
+  <?php endif; ?>
+  </div>
   <?php
     $topic->topicinfo->IsClosed=false ;
     if ($topic->topicinfo->expiredate!="0000-00-00 00:00:00") {

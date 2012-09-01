@@ -34,7 +34,7 @@ $Shouts = new Shouts;
 $callbackId = $Shouts->shoutProcess($table,$table_id);
 $vars =& PPostHandler::getVars($callbackId);
 $request = PRequest::get()->request;
-
+$login_url = 'login/'.implode('/', $request);
 $commentsText = array();
 $commentsError = array();
 $i18n = new MOD_i18n('apps/blog/comments.php');
@@ -57,17 +57,35 @@ if (!isset($vars['errors'])) {
 <?php
 
 $comments = $Shouts->getShouts($table,$table_id);
-if (!$comments) {
-    echo '<p><a href="signup" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
-} else {
+if (!$comments) 
+{
+    if (isset($_SESSION['IdMember']) && $_SESSION['IdMember']) 
+        {
+        echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
+        }
+        else
+        {
+        echo '<p>'.$words->get('CommentsAdd').'</p>';
+        }
+} 
+else 
+{
     $count = 0;
     $lastHandle = '';
-    foreach ($comments as $comment) {
+    foreach ($comments as $comment) 
+    {
         require 'comment.php';
         ++$count;
         $lastHandle = $comment->username;
     }
-    echo '<p><a href="signup" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
+    if (isset($_SESSION['IdMember']) && $_SESSION['IdMember']) 
+        {
+        echo '<p><a href="#" id="commentadd">'.$words->get('CommentsAdd').'</a></p>';
+        }
+        else
+        {
+        echo '<p>'.$words->get('CommentsAdd').'</p>';
+        }
 }
 
 if (isset($_SESSION['IdMember']) && $_SESSION['IdMember']) {
@@ -118,7 +136,8 @@ $('commentadd').onclick = function (){ $('comment-form').toggle(); return false;
 <?
 } else {
     // not logged in.
-    echo '<p>'.$words->get('PleaseRegister').'</p>';
+
+    echo '<p>'.$words->getBuffered('PleaseLogInToComment', '<a href="' . $login_url . '">', '</a>').'</p>';
 }
 ?>
 </div>

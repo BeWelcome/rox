@@ -33,8 +33,23 @@ Boston, MA  02111-1307, USA.
 
 class AdminBasePage extends PageWithActiveSkin
 {
+    protected function getPageTitle() 
+    {
+        return 'Volunteer Pages - BeWelcome';
+    }
+    
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a>";
     }
+    
+    protected function getStylesheets() 
+    {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col1+3.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
+       return $stylesheets;
+    }
+    
+
 }

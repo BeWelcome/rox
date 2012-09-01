@@ -317,20 +317,46 @@ WHERE `gallery_items`.`user_id_foreign` = ' . (int) $userId;
         return $count;
     }
 
-    public function getGalleriesNotEmpty($UserId = false)
+    public function getGalleriesNotEmpty($UserId = false, $publicOnly = false)
     {
-    	$query = '
+        $query = '
 SELECT DISTINCT
-`id`, `user_id_foreign`, `flags`, `title`, `text`
+    g.`id` AS `id`,
+    `user_id_foreign`,
+    `flags`,
+    `title`,
+    `text`
 FROM `gallery` AS g
 LEFT JOIN `gallery_items_to_gallery` AS gi ON
-    g.`id` = gi.`gallery_id_foreign`
-WHERE g.`id` = gi.`gallery_id_foreign`';
-        if ($UserId) {
-    	$query .= '
-AND g.`user_id_foreign` = '.(int)$UserId;
+    g.`id` = gi.`gallery_id_foreign`';
+        if ($publicOnly) {
+            $query .= '
+LEFT JOIN `user` AS `u` ON
+    u.`id` = g.`user_id_foreign`
+LEFT JOIN `members` AS `m` ON
+    u.`handle` = m.`Username`
+LEFT JOIN `memberspublicprofiles` AS `mp` ON
+    m.`id` = mp.`IdMember`';
         }
-    	$query .= '
+        $query .= '
+WHERE
+    g.`id` = gi.`gallery_id_foreign`
+    AND ';
+        if ($UserId) {
+            $query .= '
+    g.`user_id_foreign` = ' . (int)$UserId . '
+    AND ';
+        }
+        if ($publicOnly) {
+            $query .= '
+    m.`id` = mp.`idMember`
+    AND
+    m.`Status` = \'Active\'
+    AND ';
+        }
+        $query .= '
+    1';
+        $query .= '
 ORDER BY `id` DESC';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
@@ -373,7 +399,7 @@ SQL;
         return $this->createEntity('Member')->findByUsername($s->handle);
     }
 
-    public function getLatestItems($userId = false,$galleryId = false, $numRows = false)
+    public function getLatestItems($userId = false, $galleryId = false, $numRows = false, $publicOnly = false)
     {
     	$query = '
 SELECT
@@ -392,18 +418,34 @@ FROM `gallery_items` AS i
 LEFT JOIN `user` AS `u` ON
     u.`id` = i.`user_id_foreign`
 LEFT JOIN `gallery_items_to_gallery` AS `g` ON
-    g.`item_id_foreign` = i.`id`
-        ';
+    g.`item_id_foreign` = i.`id` ';
+        if ($publicOnly) {
+            $query .= '
+LEFT JOIN `members` AS `m` ON
+    u.`handle` = m.`Username`
+LEFT JOIN `memberspublicprofiles` AS `mp` ON
+    m.`id` = mp.`IdMember`';
+        }
+        $query .= '
+WHERE ';
         if ($userId) {
         	$query .= '
-WHERE `user_id_foreign` = '.(int)$userId.'
-            ';
+    `user_id_foreign` = '.(int)$userId.'
+AND ';
         }
         if ($galleryId) {
         	$query .= '
-WHERE `gallery_id_foreign` = '.(int)$galleryId.'
-            ';
+    `gallery_id_foreign` = '.(int)$galleryId.'
+AND ';
         }
+        if ($publicOnly) {
+            $query .= '
+    m.`id` = mp.`idMember`
+AND
+    m.`Status` = \'Active\'
+AND ';
+        }
+        $query .= '1';
         $query .= '
 ORDER BY `created` DESC
         ';

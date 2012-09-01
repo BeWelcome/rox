@@ -87,10 +87,10 @@ switch (GetParam("action")) {
 
 	case "enqueue" :
 	case "test" :
-		 $where=" where members.IdCity=cities.id " ;
-		 $table="members,cities" ;
-		 if (GetParam("IdCountry",0)!=0) {
-		 		$where=$where." and cities.IdCountry=".GetParam("IdCountry",0) ;
+		 $where=" where members.IdCity=geonames_cache.geonameid AND geonames_countries.iso_alpha2=geonames_cache.fk_countrycode" ;
+		 $table="members,geonames_cache,geonames_countries" ;
+		 if (GetParam("CountryIsoCode",0)) {
+		 		$where=$where." and geonames_countries.iso_alpha2='".GetParam("CountryIsoCode",0)."'";
 		 }
 		 if (GetStrParam("Usernames","")!=="") { // the list can be for one or several usernames
 		 		$TUsernames=explode(";",GetStrParam("Usernames")) ;
@@ -119,7 +119,7 @@ switch (GetParam("action")) {
 		 		$where=stripslashes(GetStrParam("query","")) ;
 				echo "<br />USING OPEN QUERY ! " ;
 		 }
-		 $str="select members.id as id,Username,cities.IdCountry,members.Status as Status from ".$table.$where ;
+		 $str="select members.id as id,Username,geonames_countries.iso_alpha2 as isoCode,members.Status as Status from ".$table.$where ;
 		 
 		 if (IsAdmin()) {
 		 		echo "<table><tr><td bgcolor=yellow>$str</td></tr></table>\n" ;
@@ -158,7 +158,7 @@ switch (GetParam("action")) {
 	 }
 
 	 $TCountries = array ();
-	 $str = "select id,Name from countries order by Name";
+	 $str = "select iso_alpha2 AS isoCode,Name from geonames_countries order by Name";
 	 $qry = sql_query($str);
 	 while ($rr = mysql_fetch_object($qry)) { // building the possible countries
 			array_push($TCountries, $rr);

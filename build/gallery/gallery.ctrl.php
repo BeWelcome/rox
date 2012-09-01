@@ -48,24 +48,44 @@ class GalleryController extends RoxControllerBase {
                         break;
                 }
                 break;
-                
+
             case 'thumbimg':
                 PRequest::ignoreCurrentRequest();
-                if (!isset($_GET['id']))
+                if (!isset($_GET['id'])) {
                     PPHP::PExit();
-                $this->thumbImg((int)$_GET['id']);
+                } else {
+                    $id = (int) $_GET['id'];
+                }
+                if ($this->loggedInMember || $this->imageIsPublicById($id)) {
+                    $this->thumbImg($id);
+                } else {
+                    PPHP::PExit();
+                }
                 break;
-                
+
             case 'img':
                 PRequest::ignoreCurrentRequest();
-                if (!isset($_GET['id']))
+                if (!isset($_GET['id'])) {
                     PPHP::PExit();
-                $this->_view->realImg((int)$_GET['id']);
+                } else {
+                    $id = (int) $_GET['id'];
+                }
+                if ($this->loggedInMember || $this->imageIsPublicById($id)) {
+                    $this->_view->realImg($id);
+                } else {
+                    PPHP::PExit();
+                }
                 break;
-                
+
             case 'images':
+                if ($loggedInMember) {
+                    $statement = $this->_model->getLatestItems();
+                } else {
+                    $statement = $this->_model->getLatestItems(false, false,
+                        false, true);
+                }
                 $page = new GalleryAllImagesPage();
-                $page->statement = $this->_model->getLatestItems();
+                $page->statement = $statement;
                 $page->loggedInMember = $loggedInMember;
                 return $page;
                 
@@ -125,6 +145,10 @@ class GalleryController extends RoxControllerBase {
                         if (!$image = $this->_model->imageData($request[3])) {
                             return new GalleryImageNotFoundPage();
                         }
+                        if (!$loggedInMember &&
+                            !$this->imageIsPublic($image)) {
+                            $this->redirectToLogin(implode('/', $request));
+                        }
                         switch (isset($request[4]) ? $request[4] : '') {
                             case 'delete':
                                 return $this->deleteImage($image);
@@ -139,6 +163,15 @@ class GalleryController extends RoxControllerBase {
                     case 'sets':
                         if (!isset($request[3]) || !$gallery = $this->_model->getGallery($request[3])) {
                             return $this->allgalleries();
+                        }
+                        if (!$loggedInMember) {
+                            // Check if gallery owner's profile is public,
+                            // redirect to login if it is not
+                            $owner = $this->_model->getMemberWithUserId(
+                                $gallery->user_id_foreign);
+                            if (!$owner->publicProfile) {
+                                $this->redirectToLogin(implode('/', $request));
+                            }
                         }
                         if (isset($request[4])) {
                             switch ($request[4]) {
@@ -163,11 +196,14 @@ class GalleryController extends RoxControllerBase {
                             }                      
                         } 
                         return $this->gallery($gallery,(isset($request[4]) && $request[4] == 'upload'));
-                                                
+
                     case 'user':
                         $subTab = 'user';
                         if (isset($request[3]) && preg_match(User::HANDLE_PREGEXP, $request[3]) && ($member = $membersmodel->getMemberWithUsername($request[3])) && $userId = $member->get_userid()) {
                             $this->member = $member;
+                            if (!$loggedInMember && !$member->publicProfile) {
+                                $this->redirectToLogin(implode('/', $request));
+                            }
                             if (isset($request[4]) && (substr($request[4], 0, 5) != '=page')) {
                                 switch ($request[4]) {
                                     case 'galleries':
@@ -202,7 +238,8 @@ class GalleryController extends RoxControllerBase {
             $page->galleries = $this->_model->getGalleriesNotEmpty();
             $page->cnt_pictures = $page->images ? $page->images->numRows() : 0;
         } else {
-            $page->galleries = $this->_model->getGalleriesNotEmpty();                            
+            $page->galleries = $this->_model->getGalleriesNotEmpty(false,
+                true);
         }
         $page->loggedInMember = $this->_model->getLoggedInMember();
         $page->statement = $this->_model->getLatestItems();
@@ -285,10 +322,16 @@ class GalleryController extends RoxControllerBase {
      */
     public function allgalleries()
     {
+        $loggedInMember = $this->loggedInMember;
         $page = new GalleryAllGalleriesPage();
         $page->member = $this->member;
-        $page->galleries = $this->_model->getGalleriesNotEmpty();
-        $page->loggedInMember = $this->loggedInMember;
+        if ($loggedInMember) {
+            $page->galleries = $this->_model->getGalleriesNotEmpty();
+        } else {
+            $page->galleries = $this->_model->getGalleriesNotEmpty(false,
+                true);
+        }
+        $page->loggedInMember = $loggedInMember;
         return $page;
     }
     
@@ -305,7 +348,17 @@ class GalleryController extends RoxControllerBase {
         $page->member = $this->member;
         $page->myself = ($this->loggedInMember && ($this->loggedInMember->get_userId() == $userId)) ? $this->loggedInMember : false;
         $page->infoMessage = $words->get($this->message);
-        $page->galleries = ($page->myself) ? $this->_model->getUserGalleries($userId) : $this->_model->getGalleriesNotEmpty($userId);
+        if ($page->myself) {
+            $page->galleries = $this->_model->getUserGalleries($userId);
+        } else {
+            if ($this->loggedInMember) {
+                $page->galleries = $this->_model->getGalleriesNotEmpty(
+                    $userId);
+            } else {
+                $page->galleries = $this->_model->getGalleriesNotEmpty(
+                    $userId, true);
+            }
+        }
         $page->statement = $this->_model->getLatestItems($userId);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->loggedInMember = $this->loggedInMember;
@@ -690,4 +743,47 @@ class GalleryController extends RoxControllerBase {
         $tmpDir->readFile($thumbFile);
         PPHP::PExit();
     }
+
+    /**
+     * Checks if an image is publicly visible. Looks up the image by its ID.
+     *
+     * @param int $id Database ID of image
+     *
+     * @return bool True if publicly visible, false if not
+     */
+    private function imageIsPublicById($id)
+    {
+        $image = $this->_model->imageData($id);
+        if (!$image) {
+            return false;
+        }
+        return $this->imageIsPublic($image);
+    }
+
+    /**
+     * Checks if an image is publicly visible.
+     *
+     * Note: Currently this only checks if the image owner's profile is public.
+     * If individual image or album rights are implemented, they can be checked
+     * here.
+     *
+     * @param object $image Image as returned by GalleryModel::imageData()
+     *
+     * @return bool True if publicly visible, false if not
+     */
+    private function imageIsPublic($image)
+    {
+        if (isset($this->membersmodel)) {
+            $members = $this->membersmodel;
+        } else {
+            $members = new MembersModel();
+        }
+        $imageOwner = $members->getMemberWithUsername($image->user_handle);
+        if ($imageOwner->publicProfile === false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

@@ -194,82 +194,21 @@ if (isset($vars['id']) && $vars['id']) {
 if ($google_conf && $google_conf->maps_api_key) {
 ?>
     <div class="row">
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
-        echo $google_conf->maps_api_key;
+   <?php
+if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
+	// store latitude and logitude into hidden fields (in order to get the values in blogSmallMapGeoLocation.js)
+	echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="'.$vars['latitude'].'"/>';
+	echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="'.$vars['longitude'].'"/>';
+	if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
+		$markerDescription = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
+		echo '<input type="hidden" id="markerDescription" name="markerDescription" value="'.$markerDescription.'"/>';
+	}
+} else {
+	echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="47.3666667"/>';
+	echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="8.55"/>';
+}
+?>
 
-    ?>" type="text/javascript"></script>
-         <script type="text/javascript">
-         var map = null;
-
-    function createMarker(point, descr) {
-         var marker = new GMarker(point);
-         GEvent.addListener(marker, "click", function() {
-            marker.openInfoWindowHtml(descr);
-         });
-         return marker;
-    }
-
-    var loaded = false;
-    function SPAF_Maps_load() {
-         if (!loaded && GBrowserIsCompatible()) {
-
-            map = new GMap2(document.getElementById("spaf_map"));
-<?php
-    if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
-        echo 'map.setCenter(new GLatLng('.htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
-        if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
-            $desc = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
-            echo 'var marker = new GMarker(new GLatLng('.$vars['latitude'].', '.$vars['longitude'].'), '.$desc.');
-                map.addOverlay(marker);
-                GEvent.addListener(marker, "click", function() {
-                    marker.openInfoWindowHtml('.$desc.');
-                });
-                marker.openInfoWindowHtml('.$desc.');';
-        }
-    } else {
-        echo 'map.setCenter(new GLatLng(47.3666667, 8.55), 8);';
-    } ?>
-            map.addControl(new GSmallMapControl());
-            map.addControl(new GMapTypeControl());
-        }
-        loaded = true;
-    }
-
-    function changeMarker(lat, lng, zoom, descr) {
-        if (!loaded) {
-            SPAF_Maps_load();
-            loaded = true;
-        }
-        map.panTo(new GLatLng(lat, lng));
-        map.setZoom(zoom);
-        map.addOverlay(createMarker(new GLatLng(lat, lng), descr));
-    }
-
-    function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode) {
-        $('geonameid').value = geonameid;
-        $('latitude').value = latitude;
-        $('longitude').value = longitude;
-        $('geonamename').value = geonamename;
-        $('geonamecountrycode').value = countrycode;
-        $('admincode').value = admincode;
-    }
-
-    function removeHighlight() {
-        var lis = $A($('locations').childNodes);
-        lis.each(function(li) {
-            Element.setStyle(li, {fontWeight:''});
-        });
-    }
-
-    function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-        setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode);
-        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
-        removeHighlight();
-        Element.setStyle($('li_'+geonameid), {fontWeight:'bold'});
-    }
-
-    window.onunload = GUnload;
-    </script>
     <input type="hidden" name="geonameid" id="geonameid" value="<?php
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
@@ -394,7 +333,8 @@ if (in_array('startdate', $vars['errors']) || in_array('duration', $vars['errors
 BlogSuggest.initialize('blog-create-form');
 
 function eventHandlerFunction(e) {
-    SPAF_Maps_load();
+    // SPAF_Maps_load();
+    initOsmMapBlogEdit();
     Event.stop(e);
 }
 Event.observe('liblog-trip', "click", eventHandlerFunction, false);

@@ -1,0 +1,51 @@
+##### Here is a short description of the files used by the Map functionality #####
+
+
+**** htdocs/script/main.js ****
+This file is used to add/remove JS and CSS files (nothing specific to search function here)
+    
+**** build/searchmembers/template/script.php ****
+Here, we add the searchmember.js file: this has to be done here, not in main.js, but I am not sure why (I supposed that other elements have to be initialised before this one)
+
+**** build/searchmembers/templates/ajax.php ****
+Here is the formatted answer of search ajax requests (search member lists, map popup content, etc...)
+
+**** htdocs/script/searchmember.js: this is the original JS file and the entry point for map search functionalities. 
+I tried to refactor it, first by removing GMap references. 
+It is still a bit complicated, but really easier to understand now
+
+
+##### I added the following files (I come from Java world, il like to have 1 class per file, and single responsability classes, if you disagree we can talk about that too) #####
+
+**** htdocs/script/map/builder/OSMMapBuilder.js ****
+Low level map manipulation (initMap, addLayer, addControl...)
+
+**** htdocs/script/map/builder/BWGeosearchMapBuilder.js ****
+High level map manipulation matching map search needs (addHostMarker, zoomIn...)
+
+**** htdocs/script/map/builder/BWSimpleMapBuilder.js ****
+High level map manipulation matching blog, signin and travel pages needs (addSimpleMarker, addFlagMarker...)
+
+**** htdocs/script/map/geolocation/BWGoogleMapReverseGeolocator.js ****
+Current used implementation of geolocation (so yes we are still not totally free) 
+=> we have to work on that later, cause my experimentation with Geoname and Nominatim, including in search autocomplete are not working like expected
+
+**** htdocs/script/map/geolocation/BWGeonameMapReverseGeolocator.js ****
+Experimentation using geoname, not used
+
+**** htdocs/script/map/geolocation/BWNominatimMapReverseGeolocator.js ****
+Experimentation using nominatim with openstreetmap, not used
+
+**** htdocs/script/map/leaflet/*.js ****
+Custom Leaflet classes used to extend the classical behaviour (only LeafletLabelIcon.js is used in the current version in order to display the classical markers)
+
+**** htdocs/script/map/search/BWMapSearchAutocomplete.js ****
+Experimentation with autocomplete, not used
+
+**** htdocs/script/map/small/*.js ****
+Display maps in blog, signin and travel pages 
+
+**** htdocs/script/map/*.js ****
+Container (beans) classes used to manipulate cleaner objects
+
+##### Contact http://www.bewelcome.org/members/toub if your have any question. #####

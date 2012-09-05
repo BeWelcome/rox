@@ -9,6 +9,61 @@
 ** #################################################################
 */
 
+#map { 
+	height: 400px; 
+	width: 99%;
+	border: 1px solid #333;
+	z-index: 1;
+}
+
+div.anytime-marker-icon{
+	background-image: url('/images/icons/gicon1_a.png');
+}
+
+div.maybe-marker-icon{
+	background-image: url('/images/icons/gicon2_a.png');
+}
+
+div.neverask-marker-icon{
+	background-image: url('/images/icons/gicon3_a.png');
+}
+
+div.leaflet-marker-icon{
+	text-align:center; 
+	padding-right: 5px;
+	color:white; 
+	line-height:22px; 
+	font-size:12px;
+	font-weight: bold;
+	width: 21px !important;
+	height: 21px !important;	
+}
+				
+.highlighted-member-detail{background-color: #bccba4;}
+
+.highlighted-leaflet-marker-icon{border-width: 5px;border-style:dotted;}
+
+.memberPopup {padding:0;}
+.memberPopup .memberPhoto{}
+a.profileLink{cursor: pointer}
+/* .profileLinkArea:hover{background-color: #bccba4;} */
+a:hover{text-decoration: none}
+div.leaflet-popup-content{margin: 0; padding: 0}
+div.leaflet-popup-content div.memberlist div.avatar{margin: 5px 5px 3px 2px ; padding: 0px;float:left}
+div.leaflet-popup-content div.memberlist div.details{margin: 0; padding: 0 5px 5px 5px; width: 250px;}
+div.leaflet-popup-content .accomodation img{float:right}
+.memberPopup .memberName{position: relative;top:-40px;left:-5px;font-weight: bold;color: #2184E8;margin: 5px}
+.memberPopup .memberDescription{position: relative;top:-40px;left:50px;margin: 5px 50px 5px 5px;color:gray;}
+#map div.leaflet-control-attribution {color: #555;font-size:9px}
+.leaflet-container .leaflet-control-attribution a{color: #555; font-weight:bold}
+.leaflet-container .leaflet-control-attribution a:hover{color: #0078A8}
+#mapBoundariesSearchButton{
+	position: absolute;
+	top: 15px;
+	left: 400px;
+	z-index: 10;
+}
+
 @media all
 {
 

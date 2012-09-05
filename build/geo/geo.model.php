@@ -103,14 +103,14 @@ class GeoModel extends RoxModelBase {
             return '';
         }
         $google_conf = PVars::getObj('config_google');
-        if (!$google_conf || !$google_conf->geonames_webservice || !$google_conf->maps_api_key) {
+        if (!$google_conf || !$google_conf->geonames_webservice /*|| !$google_conf->maps_api_key */) {
             throw new PException('Google config error!');
         }
         require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
         $spaf = new SPAF_Maps($search);
         
         $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_fallback); // FALLBACK DISABLED - to active again, use $google_conf->geonames_webservice_custom
-        $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
+        // $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
         $spaf->setConfig('style','FULL');
         $spaf->setConfig('lang',$_SESSION['lang']);
         $spaf->setConfig('fcode',$fcode);

@@ -35,12 +35,12 @@ var BWSimpleMapBuilder = Class
 			var googleLayer = new L.Google('ROADMAP');
 
 			this.baseMaps = {
-				'Open Steet Map' : this.osmLayer
+				'Open  Map' : this.osmLayer
 			 ,'Google Map': googleLayer
 			};
 			
 			this.layerGroups = {
-					'OpenSteetMap' : this.osmLayer
+					'OpenMap' : this.osmLayer
 				 ,'GoogleMap': googleLayer
 				};
 

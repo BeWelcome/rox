@@ -3,7 +3,12 @@ $words = new MOD_words();
 $search = '';
 if (isset($_GET['s']) && $_GET['s'])
     $search = $_GET['s'];
+
+$cloudmade_conf = PVars::getObj('cloudmade');
+
 ?>
+ <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+
 
 <div id="teaser" class="clearfix">
 	<div class="subcolumns">

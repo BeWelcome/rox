@@ -27,6 +27,13 @@ Boston, MA  02111-1307, USA.
  */
 ?>
 
+
+<?php 
+	$cloudmade_conf = PVars::getObj('cloudmade');
+?>
+ <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+
+
 <div id="signuprox">
 
 <form method="post" action="signup/3" name="geo-form-js" id="geo-form-js">

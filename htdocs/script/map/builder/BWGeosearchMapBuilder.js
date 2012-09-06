@@ -9,6 +9,8 @@ var BWGeosearchMapBuilder = Class
 			 */
 			initialize : function(cloudmadeApiKey, mapHtmlId, mapoff) {
 				
+				console.debug('Initialize BWGeosearchMapBuilder with couldmade API key \'%s\' and mapHtmlId \'%s\'.', cloudmadeApiKey, mapHtmlId);
+				
 				this.isInitialized = false;
 				this.mapHtmlId = mapHtmlId;
 				this.mapoff = mapoff;

@@ -10,7 +10,14 @@ function initOsmMap() {
 	var markerLatitude = jQuery('#markerLatitude').val();
 	var markerLongitude = jQuery('#markerLongitude').val();
 	if (jQuery('#geonamesmap').length > 0 && markerLatitude != null && markerLongitude != null){
-		mapBuilder = new BWSimpleMapBuilder("geonamesmap", false);
+
+		var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
+		
+		if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
+			console.error('CloudMade API key not defined!');
+		}
+		
+		mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "geonamesmap", false);
 		// zoom map to specified location
 		var zoomLevel = 8;
 		mapBuilder.setCenter(markerLatitude, markerLongitude, zoomLevel);

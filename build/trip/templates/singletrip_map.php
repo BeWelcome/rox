@@ -3,7 +3,13 @@ $words = new MOD_words();
 $styleadd = '';
 if (strlen($trip->trip_name) >= 20) $styleadd = 'font-size: 22px';
 if (!$trip_data) $trip_data[$trip->trip_id] = false;
+
+$cloudmade_conf = PVars::getObj('cloudmade');
+
 ?>
+ <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+
+
 <div id="onmap">
     <h3 id="trip_name" style="<?=$styleadd?>">
         <a href="trip/<?=$trip->trip_id ?>" style="padding-right: 10px;">

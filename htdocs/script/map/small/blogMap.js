@@ -8,7 +8,13 @@ function displayMap(popupid,  markerLatitude, markerLongitude, markerDescription
 	Element.setStyle(popupid, {display:'block'});
     Element.show(popupid + '_map');
 	
-	var mapBuilder = new BWSimpleMapBuilder(popupid + '_map', false);
+    var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
+	
+	if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
+		console.error('CloudMade API key not defined!');
+	}
+	
+	var mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, popupid + '_map', false);
 	
 	if (markerLatitude != null && markerLongitude != null) {
 		// zoom map to specified location

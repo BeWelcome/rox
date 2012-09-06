@@ -7,15 +7,17 @@ var BWSimpleMapBuilder = Class
 		/**
 		 * constructor
 		 */
-		initialize : function(mapHtmlId, mapoff) {
+		initialize : function(cloudmadeApiKey, mapHtmlId, mapoff) {
 			
+			console.debug('Initialize BWGeosearchMapBuilder with couldmade API key \'%s\' and mapHtmlId \'%s\'.', cloudmadeApiKey, mapHtmlId);
+
 			this.mapoff = mapoff;
 			
 			this.markers = new Array();
 			
 			// configure the tiles provider
-			var apiKey = 'f18f7e7fa8014d8ab1379c78df29f5c6';
-			this.cloudmadeUrl = 'http://{s}.tile.cloudmade.com/'+apiKey+'/997/256/{z}/{x}/{y}.png';
+			this.cloudmadeApiKey = cloudmadeApiKey;
+			this.cloudmadeUrl = 'http://{s}.tile.cloudmade.com/' + cloudmadeApiKey + '/997/256/{z}/{x}/{y}.png';
 			
 			// map attribution
 			this.mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';

@@ -46,10 +46,10 @@ function changeMarkerBlog(markerLatitude, markerLongitude, zoomLevel, markerDesc
 }
 
 function setGeonameIdInFormBlog(geonameid, latitude, longitude, geonamename, countrycode, admincode) {
-    $('geonameid').value = geonameid;
-    $('latitude').value = latitude;
-    $('longitude').value = longitude;
-    $('geonamename').value = geonamename;
-    $('geonamecountrycode').value = countrycode;
-    $('admincode').value = admincode;
+    jQuery('#geonameid').val(geonameid);
+    jQuery('#latitude').val(latitude);
+    jQuery('#longitude').val(longitude);
+    jQuery('#geonamename').val(geonamename);
+    jQuery('#geonamecountrycode').val(countrycode);
+    jQuery('#admincode').val(admincode);
 }

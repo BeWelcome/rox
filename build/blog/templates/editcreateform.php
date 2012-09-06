@@ -190,9 +190,6 @@ if (isset($vars['id']) && $vars['id']) {
 
         </div> <!-- subcolumns -->
         
-<?php
-if ($google_conf && $google_conf->maps_api_key) {
-?>
     <div class="row">
    <?php
 if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
@@ -208,7 +205,6 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
 	echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="8.55"/>';
 }
 ?>
-
     <input type="hidden" name="geonameid" id="geonameid" value="<?php
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
@@ -228,9 +224,6 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
 </div>
-<?php
-}
-?>
     <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label><br />
     <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
     <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>

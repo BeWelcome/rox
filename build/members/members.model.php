@@ -808,7 +808,18 @@ ORDER BY
         if ((empty($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) && ($vars['Email']!='cryptedhidden')) {
             $errors[] = 'SignupErrorInvalidEmail';
         }
-
+        
+        if (!empty($_FILES['profile_picture']) && ($_FILES['profile_picture']['error'] != UPLOAD_ERR_OK)) {
+        	switch ($_FILES['profile_picture']['error']) {
+        		case UPLOAD_ERR_INI_SIZE:
+        		case UPLOAD_ERR_FORM_SIZE:
+        			$errors[] = 'UploadedProfileImageTooBig';
+        			break;
+        		UPLOAD_ERR_PARTIAL:
+        			$errors[] = 'ProfileImageUploadFailed';
+        			break;
+        	}
+        }
         return $errors;
     }
 
@@ -1303,8 +1314,10 @@ ORDER BY membersphotos.SortOrder
             $max_x = 150;
 
         if (!$using_original) {
+        	$original_x = min($size[0],1024);
+        	$original_y = min($size[1],768);
             $this->writeMemberphoto($memberid);
-            $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
+            $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $original_x, $original_y, true, 'ratio');
         }
         $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_200',200, 266, true, 'ratio');

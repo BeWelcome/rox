@@ -676,6 +676,17 @@ VALUES
                 $vars['error'] = 'Gallery_UploadNotImage';
                 return false;
             }
+            
+            // resize
+            $size = $img->getImageSize();
+            $original_x = min($size[0],PVars::getObj('images')->max_width);
+            $original_y = min($size[1],PVars::getObj('images')->max_height);
+             $tempDir = dirname($_FILES['gallery-file']['tmp_name'][$key]);
+            $resizedName = md5($_FILES['gallery-file']['tmp_name'][$key]) . '_resized';                         
+            $img->createThumb($tempDir,$resizedName, $original_x, $original_y, true, 'ratio');
+            $tempFile = $tempDir . '/' . $resizedName;                                    
+            // create new image object from resized image
+            $img = new MOD_images_Image($tempFile);                                    
             $size = $img->getImageSize();
             $type = $size[2];
             // maybe this should be changed by configuration
@@ -686,7 +697,7 @@ VALUES
             $hash = $img->getHash();
             if ($userDir->fileExists($hash))
                 continue;
-            if (!$userDir->copyTo($_FILES['gallery-file']['tmp_name'][$key], $hash))
+            if (!$userDir->copyTo($tempFile, $hash))
                 continue;
             if (!$result = $this->createThumbnails($userDir,$img)) return false;
             $itemId = $this->dao->nextId('gallery_items');

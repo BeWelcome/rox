@@ -1314,8 +1314,8 @@ ORDER BY membersphotos.SortOrder
             $max_x = 150;
 
         if (!$using_original) {
-        	$original_x = min($size[0],1024);
-        	$original_y = min($size[1],768);
+        	$original_x = min($size[0],PVars::getObj('images')->max_width);
+        	$original_y = min($size[1],PVars::getObj('images')->max_height);        	
             $this->writeMemberphoto($memberid);
             $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $original_x, $original_y, true, 'ratio');
         }

@@ -137,7 +137,7 @@ class GroupsBasePage extends PageWithActiveSkin
         ?>
         <div id="teaser" class="clearfix">
         <div id="teaser_l1"> 
-        <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?=$this->group->Name ?></a></h1>
+        <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h1>
         </div>
         </div>
         <?php

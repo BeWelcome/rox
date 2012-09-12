@@ -1,15 +1,16 @@
 <?php foreach ($this->getMessages() as $message) : ?>
 <p><?= $words->get($message); ?>
 <?php endforeach; ?>
+<?php $group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES); ?>
 
 <div id="groups">
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
                 <div class="row floatbox">
-                    <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
+                    <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
                     <h3><?= $words->get('GroupDescription'); ?></h3>
-                    <p><?=nl2br($this->group->getDescription()) ?></p>
+                    <p><?= htmlspecialchars(nl2br($this->group->getDescription()), ENT_QUOTES) ?></p>
                 </div> <!--row floatbox -->
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>
@@ -29,10 +30,10 @@
             
                 <?php
                     if (!APP_user::isBWLoggedIn('NeedMore,Pending')) : ?>
-                <h3><?= $words->get('GroupsJoinNamedGroup', $this->getGroupTitle()); ?></h3>
+                <h3><?= $words->get('GroupsJoinNamedGroup', $group_name_html); ?></h3>
                     <?= $words->get('GroupsJoinLoginFirst'); ?>
                 <?php else : ?>
-                <h3><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinNamedGroup', $this->getGroupTitle()) : $words->get('GroupsLeaveNamedGroup', $this->getGroupTitle()) ) ?></h3>
+                <h3><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinNamedGroup', $group_name_html) : $words->get('GroupsLeaveNamedGroup', $group_name_html) ) ?></h3>
                 <div class="row clearfix">
                     <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
                 </div>

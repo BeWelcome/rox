@@ -43,6 +43,7 @@ class MembersController extends RoxControllerBase
             case 'self':
             case 'myself':
             case 'my':
+            case 'deleteprofile':
                 // you are not supposed to open these pages when not logged in!
                 $page = new MembersMustloginPage;
                 break;

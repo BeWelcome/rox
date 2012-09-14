@@ -528,6 +528,13 @@ class MembersController extends RoxControllerBase
             $vars = $this->cleanVars($args->post);
             $request = $args->request;
             $errors = $this->model->checkProfileForm($vars);
+            
+            // check if uploaded file is image
+            $img = new MOD_images_Image($_FILES['profile_picture']['tmp_name']);
+            if (!$img->isImage()) {
+            	$error[] = 'ProfileUploadNotImage';            	
+            }
+            
             $vars['errors'] = array();
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;

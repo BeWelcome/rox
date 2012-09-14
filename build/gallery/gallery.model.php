@@ -681,7 +681,7 @@ VALUES
             $size = $img->getImageSize();
             $original_x = min($size[0],PVars::getObj('images')->max_width);
             $original_y = min($size[1],PVars::getObj('images')->max_height);
-             $tempDir = dirname($_FILES['gallery-file']['tmp_name'][$key]);
+            $tempDir = dirname($_FILES['gallery-file']['tmp_name'][$key]);
             $resizedName = md5($_FILES['gallery-file']['tmp_name'][$key]) . '_resized';                         
             $img->createThumb($tempDir,$resizedName, $original_x, $original_y, true, 'ratio');
             $tempFile = $tempDir . '/' . $resizedName;                                    

@@ -808,14 +808,14 @@ ORDER BY
         if ((empty($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) && ($vars['Email']!='cryptedhidden')) {
             $errors[] = 'SignupErrorInvalidEmail';
         }
-        
+                   
         if (!empty($_FILES['profile_picture']) && ($_FILES['profile_picture']['error'] != UPLOAD_ERR_OK)) {
         	switch ($_FILES['profile_picture']['error']) {
         		case UPLOAD_ERR_INI_SIZE:
         		case UPLOAD_ERR_FORM_SIZE:
         			$errors[] = 'UploadedProfileImageTooBig';
         			break;
-        		UPLOAD_ERR_PARTIAL:
+        		case UPLOAD_ERR_PARTIAL:
         			$errors[] = 'ProfileImageUploadFailed';
         			break;
         	}

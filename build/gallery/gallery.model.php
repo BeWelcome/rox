@@ -631,6 +631,7 @@ WHERE
             $vars['error'] = 'Gallery_UploadError';
             return false;
         }
+        $noError = true; // flag for error on one file
         $userDir = new PDataDir('gallery/user'.$member->get_userid());
         $insert = $this->dao->prepare('
 INSERT INTO `gallery_items`
@@ -657,65 +658,63 @@ VALUES
         $title = false;
         $insert->bindParam(8, $title);
         foreach ($_FILES['gallery-file']['error'] as $key=>$error) {
-            if ($error != UPLOAD_ERR_OK)
-                continue;
-            if (
-                $_FILES['gallery-file']['error'] == UPLOAD_ERR_INI_SIZE ||
-                $_FILES['gallery-file']['error'] == UPLOAD_ERR_FORM_SIZE
-            ) {
-                $vars['error'] = 'Gallery_UploadFileTooLarge';
-                return false;
-            }
-            if ($_FILES['gallery-file']['error'] == UPLOAD_ERR_OK) {
-                $vars['error'] = 'Gallery_UploadError';
-                return false;
-            }
-            // END
-            $img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
-            if (!$img->isImage()) {
-                $vars['error'] = 'Gallery_UploadNotImage';
-                return false;
-            }
-            
-            // resize
-            $size = $img->getImageSize();
-            $original_x = min($size[0],PVars::getObj('images')->max_width);
-            $original_y = min($size[1],PVars::getObj('images')->max_height);
-            $tempDir = dirname($_FILES['gallery-file']['tmp_name'][$key]);
-            $resizedName = md5($_FILES['gallery-file']['tmp_name'][$key]) . '_resized';                         
-            $img->createThumb($tempDir,$resizedName, $original_x, $original_y, true, 'ratio');
-            $tempFile = $tempDir . '/' . $resizedName;                                    
-            // create new image object from resized image
-            $img = new MOD_images_Image($tempFile);                                    
-            $size = $img->getImageSize();
-            $type = $size[2];
-            // maybe this should be changed by configuration
-            if ($type != IMAGETYPE_GIF && $type != IMAGETYPE_JPEG && $type != IMAGETYPE_PNG) {
-                 $vars['error'] = 'Gallery_UploadInvalidFileType';
-                 return false;
-            }
-            $hash = $img->getHash();
-            if ($userDir->fileExists($hash))
-                continue;
-            if (!$userDir->copyTo($tempFile, $hash))
-                continue;
-            if (!$result = $this->createThumbnails($userDir,$img)) return false;
-            $itemId = $this->dao->nextId('gallery_items');
-            $orig = $_FILES['gallery-file']['name'][$key];
-            $mimetype = image_type_to_mime_type($type);
-            $width = $size[0];
-            $height = $size[1];
-            $title = $orig;
-            try {
-                $insert->execute();
-            } catch (PException $e) {
-                error_log($e->__toString());
-            }
-            if ($vars['galleryId']) {
-                $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
+        	$fileName = $_FILES['gallery-file']['name'][$key];
+        	// if upload failed, set error message
+        	if (!empty($fileName) && $error != UPLOAD_ERR_OK) {
+        		$noError = false;
+        		switch ($error) {
+        		    case UPLOAD_ERR_INI_SIZE:
+        			case UPLOAD_ERR_FORM_SIZE:
+        				$vars['fileErrors'][$fileName] = 'Gallery_UploadFileTooLarge';
+                		break;
+        			default:
+        				$vars['fileErrors'][$fileName] = 'Gallery_UploadError';
+            			break;                
+            	}
+        	} elseif (!empty($fileName)) { // upload succeeded -> check if image
+            	$img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
+            	if (!$img->isImage()) {
+            		$noError = false;
+            		$vars['fileErrors'][$fileName] = 'Gallery_UploadNotImage';
+            	} else { // upload is image
+                    // resize
+		            $size = $img->getImageSize();
+		            $original_x = min($size[0],PVars::getObj('images')->max_width);
+		            $original_y = min($size[1],PVars::getObj('images')->max_height);
+		            $tempDir = dirname($_FILES['gallery-file']['tmp_name'][$key]);
+		            $resizedName = md5($_FILES['gallery-file']['tmp_name'][$key]) . '_resized';                         
+		            $img->createThumb($tempDir,$resizedName, $original_x, $original_y, true, 'ratio');
+		            $tempFile = $tempDir . '/' . $resizedName;                                    
+		            
+		            // create new image object from resized image
+		            $img = new MOD_images_Image($tempFile);                                    
+		            $size = $img->getImageSize();
+		            $type = $size[2];
+		            $hash = $img->getHash();
+		            if ($userDir->fileExists($hash))
+		                continue;
+		            if (!$userDir->copyTo($tempFile, $hash))
+		                continue;
+		            if (!$result = $this->createThumbnails($userDir,$img)) return false;
+		            $itemId = $this->dao->nextId('gallery_items');
+		            $orig = $_FILES['gallery-file']['name'][$key];
+		            $mimetype = image_type_to_mime_type($type);
+		            $width = $size[0];
+		            $height = $size[1];
+		            $title = $orig;
+		            try {
+		                $insert->execute();
+		            } catch (PException $e) {
+		                error_log($e->__toString());
+		            }
+		            if ($vars['galleryId']) {
+		                $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
+		            }
+		            $vars['fileErrors'][$_FILES['gallery-file']['name'][$key]] = 'Gallery_UploadFileSuccessfule';
+            	}
             }
         }
-        return true;
+        return $noError;
     }
     
     public function createThumbnails ($dataDir, $img)

@@ -491,14 +491,20 @@ class GalleryController extends RoxControllerBase {
         $username = $this->_model->getLoggedInMember()->Username;
         $vars = $args->post;
         $uploaded = $this->_model->uploadProcess($vars);
-        if ($uploaded) {
-            $this->redirect(array("gallery","show","user",$username,"images"));
-        } 
-        else {
-            //TODO: should callback to gallery/upload and display an error message 
-            //$this->redirect(["gallery","upload"]);
-            $this->redirect(array("gallery","show","user",$username,"images"));
+        if ($uploaded === false) {
+        	$words = $this->getWords();
+        	if (!empty($vars['error'])) { // upload failed altogether
+        		$this->setFlashError($words->get($vars['error']));
+        	} elseif (!empty($vars['fileErrors'])) { // upload of some files failed
+        		$errorMessage = '';
+        		foreach ($vars['fileErrors'] as $file => $message) {
+        			$errorMessage .= $file . ' => ' . $words->get($message) . '<br />' . "\n";
+        		}
+        		$this->setFlashError($errorMessage);
+    		}
+        	return 'gallery/upload';
         }
+        return 'gallery/show/user/' . $username . '/images';        
     }
     
     /**

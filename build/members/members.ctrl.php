@@ -529,20 +529,28 @@ class MembersController extends RoxControllerBase
             $vars = $this->cleanVars($args->post);
             $request = $args->request;
             $errors = $this->model->checkProfileForm($vars);
-            
-            // check if uploaded file is image
-            $img = new MOD_images_Image($_FILES['profile_picture']['tmp_name']);
-            if (!$img->isImage()) {
-				$errors[] = 'ProfileUploadNotImage';
+            		
+            $uploadFailed = false;
+			if (in_array('UploadedProfileImageTooBig', $errors) === false
+				|| in_array('ProfileImageUploadFailed', $errors) === false
+            ) {
+            	$uploadFailed = true;
+            } else {
+				// check if uploaded file is image
+				$img = new MOD_images_Image($_FILES['profile_picture']['tmp_name']);
+				if (!$img->isImage()) {
+					$errors[] = 'ProfileUploadNotImage';
+					$uploadFailed = true;
+				}
 			}
-            
+			
             $vars['errors'] = array();
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;
 
                 // Activate fieldset tab "Contact Info" if needed.
                 if (in_array('SignupErrorInvalidBirthDate', $vars['errors']) === false
-                	&& in_array('ProfileUploadNotImage', $vars['errors']) === false) {
+                	&& $uploadFailed === false) {
                     $vars['activeFieldset'] = 'contactinfo';
                 }
 

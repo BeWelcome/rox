@@ -815,7 +815,7 @@ ORDER BY
         		case UPLOAD_ERR_FORM_SIZE:
         			$errors[] = 'UploadedProfileImageTooBig';
         			break;
-        		case UPLOAD_ERR_PARTIAL:
+        		default:
         			$errors[] = 'ProfileImageUploadFailed';
         			break;
         	}

@@ -37,7 +37,8 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
                   <td colspan="3" >
-                    <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br /><input id="profile_picture" name="profile_picture" type="file" />
+                    <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?>
+                    <div class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></div><br /></label><br /><input id="profile_picture" name="profile_picture" type="file" />
                   </td>
                 </tr>
                 <tr align="left" >

@@ -541,7 +541,8 @@ class MembersController extends RoxControllerBase
                 $vars['errors'] = $errors;
 
                 // Activate fieldset tab "Contact Info" if needed.
-                if (in_array('SignupErrorInvalidBirthDate', $vars['errors']) === false) {
+                if (in_array('SignupErrorInvalidBirthDate', $vars['errors']) === false
+                	&& in_array('ProfileUploadNotImage', $vars['errors']) === false) {
                     $vars['activeFieldset'] = 'contactinfo';
                 }
 

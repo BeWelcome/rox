@@ -533,8 +533,8 @@ class MembersController extends RoxControllerBase
             // check if uploaded file is image
             $img = new MOD_images_Image($_FILES['profile_picture']['tmp_name']);
             if (!$img->isImage()) {
-            	$error[] = 'ProfileUploadNotImage';            	
-            }
+				$errors[] = 'ProfileUploadNotImage';
+			}
             
             $vars['errors'] = array();
             if (count($errors) > 0) {

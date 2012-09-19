@@ -48,9 +48,7 @@
                 <li><a href="forums"><?=$words->get('Community')?></a></li>
                 <li><a href="groups"><?=$words->get('Groups')?></a></li>
                 <li><a href="trip"><?=$words->get('Trips')?></a></li>
-                <?php if ($logged_in) { ?>
-                    <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
-                <?php } ?>
+                <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
                 <li><a href="blog"><?=$words->get('Blogs')?></a></li>
                 <li><a href="wiki"><?=$words->get('Wiki')?></a></li>
             </ul>

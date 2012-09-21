@@ -31,7 +31,7 @@ function _languageSelectorDropDown()
     $model = new FlaglistModel();
     $languages = $model->getLanguages();
     $langsel = '';
-    $request_string = implode('/',PVars::get()->request);
+    $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel = '
     <form id="language_select" action="a" method="post">
     '.$words->get('Languages').':

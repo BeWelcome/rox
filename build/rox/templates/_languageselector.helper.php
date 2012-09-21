@@ -5,7 +5,7 @@ function _languageSelector()
     $model = new FlaglistModel();
     $languages = $model->getLanguages();
     $langsel = '';
-    $request_string = implode('/',PVars::get()->request);
+    $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
 
     foreach($languages as $language) {
         $abbr = $language->ShortCode;

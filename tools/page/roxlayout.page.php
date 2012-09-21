@@ -141,7 +141,7 @@ class PageWithRoxLayout extends PageWithHTML
                     $login_url = 'login';
                     break;
                 default:
-                    $login_url = 'login/'.implode('/', $request);
+                    $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
             }
         } else {
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
@@ -192,7 +192,7 @@ class PageWithRoxLayout extends PageWithHTML
                     $login_url = 'login';
                     break;
                 default:
-                    $login_url = 'login/'.implode('/', $request);
+                    $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
             }
         } else {
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';

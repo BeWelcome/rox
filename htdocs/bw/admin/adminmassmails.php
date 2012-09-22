@@ -119,7 +119,20 @@ switch (GetParam("action")) {
 		 		$where=stripslashes(GetStrParam("query","")) ;
 				echo "<br />USING OPEN QUERY ! " ;
 		 }
-		 $str="select members.id as id,Username,geonames_countries.iso_alpha2 as isoCode,members.Status as Status from ".$table.$where ;
+        if (GetStrParam("limit", "") != "") {
+            $limit = ' LIMIT ' . intval(GetStrParam("limit", ""));
+        } else {
+            $limit = '';
+        }
+
+        if (GetStrParam("random_order", "") == "on") {
+            $order = ' ORDER BY RAND()';
+        } else {
+            $order = '';
+        }
+
+        $str = "select members.id as id,Username,geonames_countries.iso_alpha2 as isoCode,members.Status as Status from "
+            . $table . $where . $order . $limit;
 		 
 		 if (IsAdmin()) {
 		 		echo "<table><tr><td bgcolor=yellow>$str</td></tr></table>\n" ;

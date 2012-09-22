@@ -170,6 +170,24 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   echo "<label for =\"MemberStatus\">Member with status</label>";
   echo "<input type=\"text\" id=\"MemberStatus\" name=\"MemberStatus\" value=\"".GetStrParam("MemberStatus","Active")."\" />\n" ;
   echo "</div>";
+
+  echo '<div class="type-text">';
+  echo '<label for="Limit">Maximum number of members (i.e. 100)</label>';
+  echo '<input type="text" id="limit" name="limit" value="' . GetStrParam("limit", "") . '" />';
+  echo '</div>';
+
+  if (GetStrParam("random_order", "") == "on") {
+    $random_order_checked = ' checked="checked"';
+  } else {
+    $random_order_checked = '';
+  }
+  echo '<div class="type-check">';
+  echo '<p>';
+  echo '<input type="checkbox"' . $random_order_checked . ' id="random_order" name="random_order" /> ';
+  echo '<label for="random_order">Select random members</label>';
+  echo '</p>';
+  echo '</div>';
+
   if (IsAdmin() and ($query!="")) {
      echo "<div class=\"type-text\">";
      echo "<label for=\"query\">This will override the query</label>\n" ;

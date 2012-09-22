@@ -29,8 +29,8 @@ $words = new MOD_words();
     <h2><?php echo $words->getFormatted('tour_openness_title1')?></h2>
     <p><?php echo $words->getFormatted('tour_openness_text1')?></p>
     <div class="floatbox">
-        <div class="float_left" style="padding:20px">
-            <embed id="VideoPlayback" src="http://video.google.de/googleplayer.swf?docid=-5605653070159143554&hl=de&fs=true" style="width:400px;height:326px" allowFullScreen="true" allowScriptAccess="always" type="application/x-shockwave-flash"> </embed>
+        <div class="float_left" style="padding:10px">
+            <iframe width="400" height="300" src="http://www.youtube-nocookie.com/embed/aRS_wG4ZN4k?rel=0" frameborder="0" allowfullscreen></iframe>
         </div>
         <p><?php echo $words->getFormatted('tour_openness_videotext','<a href="http://en.wikipedia.org/wiki/unconference">','</a>')?></p>
         <h2><?php echo $words->getFormatted('tour_openness_title2')?></h2>

@@ -170,26 +170,41 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   echo "<label for =\"MemberStatus\">Member with status</label>";
   echo "<input type=\"text\" id=\"MemberStatus\" name=\"MemberStatus\" value=\"".GetStrParam("MemberStatus","Active")."\" />\n" ;
   echo "</div>";
-  if (IsAdmin() and ($query!="")) {
-     echo "<div class=\"type-text\">";
-     echo "<label for=\"query\">This will override the query</label>\n" ;
-     echo "<textarea id=\"query\" name=\"query\" cols=\"80\" rows=\"5\">",$query,"</textarea>" ;
-     echo "</div>";
-     echo "<div class=\"type-check\">";
-     echo "<p>";
-     echo "<input type=\"checkbox\" id=\"UseOpenQuery\" name=\"UseOpenQuery\" />" ;
-     echo "<label for=\"UseOpenQuey\">Use Open Query</label>";
-     echo "</p>";
-     echo "</div>";
+
+  echo '<div class="type-text">';
+  echo '<label for="Limit">Maximum number of members (i.e. 100)</label>';
+  echo '<input type="text" id="limit" name="limit" value="' . GetStrParam("limit", "") . '" />';
+  echo '</div>';
+
+  if (GetStrParam("random_order", "") == "on") {
+    $random_order_checked = ' checked="checked"';
+  } else {
+    $random_order_checked = '';
   }
+  echo '<div class="type-check">';
+  echo '<p>';
+  echo '<input type="checkbox"' . $random_order_checked . ' id="random_order" name="random_order" /> ';
+  echo '<label for="random_order">Select random members</label>';
+  echo '<br>Note: If this option is checked the recipients list below is only an example and does not reflect the list of members the mail will actually be sent to. Members will be randomly selected again when pressing "enqueue".';
+  echo '</p>';
+  echo '</div>';
+
   if (HasRight('MassMail',"test")) {
     if (GetStrParam("hide_recipients", "") == "on") {
       $checked = ' checked="checked"';
     } else {
       $checked = '';
     }
-    echo "<input type=\"submit\" name=\"action\" value=\"test\" />\n" ;
-    echo '<input type="checkbox" ' . $checked . 'name="hide_recipients" /> Hide recipients list';
+    echo '<div class="type-check">';
+    echo '<p>';
+    echo '<input type="checkbox"' . $checked . ' id="hide_recipients" name="hide_recipients" /> ';
+    echo '<label for="hide_recipients">Hide recipients list</label>';
+    echo '</p>';
+    echo '</div>';
+    echo '<p>';
+    echo '<input type="submit" name="action" value="test" />';
+    echo ' (Shows number of matching members and list of recipients)';
+    echo '</p>';
   }
 
 

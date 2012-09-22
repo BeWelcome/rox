@@ -185,6 +185,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   echo '<p>';
   echo '<input type="checkbox"' . $random_order_checked . ' id="random_order" name="random_order" /> ';
   echo '<label for="random_order">Select random members</label>';
+  echo '<br>Note: If this option is checked the recipients list below is only an example and does not reflect the list of members the mail will actually be sent to. Members will be randomly selected again when pressing "enqueue".';
   echo '</p>';
   echo '</div>';
 
@@ -194,8 +195,16 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
     } else {
       $checked = '';
     }
-    echo "<input type=\"submit\" name=\"action\" value=\"test\" />\n" ;
-    echo '<input type="checkbox" ' . $checked . 'name="hide_recipients" /> Hide recipients list';
+    echo '<div class="type-check">';
+    echo '<p>';
+    echo '<input type="checkbox"' . $checked . ' id="hide_recipients" name="hide_recipients" /> ';
+    echo '<label for="hide_recipients">Hide recipients list</label>';
+    echo '</p>';
+    echo '</div>';
+    echo '<p>';
+    echo '<input type="submit" name="action" value="test" />';
+    echo ' (Shows number of matching members and list of recipients)';
+    echo '</p>';
   }
 
 

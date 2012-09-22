@@ -188,18 +188,6 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   echo '</p>';
   echo '</div>';
 
-  if (IsAdmin() and ($query!="")) {
-     echo "<div class=\"type-text\">";
-     echo "<label for=\"query\">This will override the query</label>\n" ;
-     echo "<textarea id=\"query\" name=\"query\" cols=\"80\" rows=\"5\">",$query,"</textarea>" ;
-     echo "</div>";
-     echo "<div class=\"type-check\">";
-     echo "<p>";
-     echo "<input type=\"checkbox\" id=\"UseOpenQuery\" name=\"UseOpenQuery\" />" ;
-     echo "<label for=\"UseOpenQuey\">Use Open Query</label>";
-     echo "</p>";
-     echo "</div>";
-  }
   if (HasRight('MassMail',"test")) {
     if (GetStrParam("hide_recipients", "") == "on") {
       $checked = ' checked="checked"';

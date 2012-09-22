@@ -114,11 +114,6 @@ switch (GetParam("action")) {
 		 		$where=$where." and members.id=membersgroups.IdMember and membersgroups.Status='In' and membersgroups.IdGroup=".GetParam("IdGroup") ;
 		 }
 		 
-		 // If the option use the OpenQuery is activated and the user has proper right
-		 if (IsAdmin() and (GetStrParam("UseOpenQuery","")=="on") and (GetStrParam("query","")!="")) {
-		 		$where=stripslashes(GetStrParam("query","")) ;
-				echo "<br />USING OPEN QUERY ! " ;
-		 }
         if (GetStrParam("limit", "") != "") {
             $limit = ' LIMIT ' . intval(GetStrParam("limit", ""));
         } else {

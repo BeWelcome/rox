@@ -1,7 +1,10 @@
 <?php foreach ($this->getMessages() as $message) : ?>
 <p><?= $words->get($message); ?>
 <?php endforeach; ?>
-<?php $group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES); ?>
+<?php 
+$group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES); 
+$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+?>
 
 <div id="groups">
     <div class="subcolumns">
@@ -10,7 +13,7 @@
                 <div class="row floatbox">
                     <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
                     <h3><?= $words->get('GroupDescription'); ?></h3>
-                    <p><?= htmlspecialchars(nl2br($this->group->getDescription()), ENT_QUOTES) ?></p>
+                    <p><?= $purifier->purify(nl2br($this->group->getDescription())) ?></p>
                 </div> <!--row floatbox -->
 
                 <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>

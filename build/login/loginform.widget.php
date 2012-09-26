@@ -48,6 +48,7 @@ class LoginFormWidget extends RoxWidget
         $mem_redirect = $formkit->mem_from_redirect;
         $err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
         $url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
+        $stayLoggedIn = PVars::getObj('env')->stay_logged_in;
         if (!empty($_SERVER['QUERY_STRING'])) {
             $url .= '?'.$_SERVER['QUERY_STRING'];
         }
@@ -113,6 +114,11 @@ class LoginFormWidget extends RoxWidget
                             <label for="login-p"><?=$ww->Password ?></label><br />
                             <input type="password" id="login-p" name="p" />
                         </td>
+                        <?php if ($stayLoggedIn) { ?>
+                        <td>
+                            <input type="checkbox" id="login-r" name="r" /><label for="login-r"><?=$ww->StayLoggedIn ?></label><br />
+                        </td>
+                        <?php } ?>
                         <td>
                             <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
                         </td>
@@ -158,6 +164,14 @@ class LoginFormWidget extends RoxWidget
                             <input type="password" id="login-p" name="p" />
                         </td>
                     </tr>
+                    <?php if ($stayLoggedIn) { ?>
+                    <tr>
+                    	<td></td>
+                    	<td>
+                    		<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>q
+                        </td>
+                     </tr>
+                    <?php } ?>
                 <tr><td>&nbsp;</td><td>
             <?php }  // Added because this is hidden for subdomain ?>
             <input type="submit" value="Login" class="button"/>

@@ -1601,6 +1601,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $this->wipeEntity();
         session_regenerate_id();
 
+        // if "stay logged in active, clear i
+        $this->removeSessionMemory();
         return true;
     }
 
@@ -1731,4 +1733,99 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, false, $languageCode);
     }
 
+    /**
+    * Validates "stay logged in" tokens and refreshes them
+    *
+    * @param boolean	$newsession: flag for a new session (no validation)
+    *
+    * @return boolean true if cookie refreshed, false if cookie removed
+    */
+    public function refreshMemoryCookie($newsession=false) {
+    	if ($newsession === false) {
+    		// existing session -> validate first
+    		$s = $this->dao->query('
+        					SELECT
+        						AuthToken, SeriesToken
+        					FROM
+        						members
+        					WHERE
+        						id=' . (int)$this->id);
+    		$tokens = $s->fetch(PDB::FETCH_OBJ);
+    		$authTokenDB = $tokens->AuthToken;
+    		$seriesTokenDB = $tokens->SeriesToken;
+    
+    		$memoryCookie = $this->getMemoryCookie();    		
+    		if ($memoryCookie !== false) {
+    			 
+    			list($id,$seriesToken,$authToken) = $memoryCookie;
+    			 
+    			// compare tokens from database with those in cookie
+    			if ($seriesToken === $seriesTokenDB) {
+    				if ($authToken !== $authTokenDB) {
+    					// auth token incorrect but series token correct -> hijacked
+    					$this->setFlashError('SessionHijacked');
+    					$this->removeSessionMemory();
+    					return false;
+    				}
+    			} else {
+    				// both tokens (or just series token) incorrect
+    				$this->removeSessionMemory();
+    				return false;
+    			}
+    		} else {
+    			$this->removeSessionMemory(); // just to clean up token records in database
+    			return false;
+    		}
+    
+    		// both tokens correct -> continue
+    		// log in user
+    		$loginModel = new LoginModel;
+    		$tb_user = $loginModel->getTBUserForBWMember($this);
+    		$loginModel->setupBWSession($this);
+    		$loginModel->setTBUserAsLoggedIn($tb_user);
+    		
+    	} else {
+    		// create series token
+    		$seriesToken = md5(rand()+time());
+    	}
+    	 
+    	// create auth token
+    	$authToken = md5(rand()+time());
+    	 
+    	// write tokens to database
+    	$s = $this->dao->query('
+    					UPDATE
+    						members
+    					SET
+    						AuthToken=\'' . $authToken . '\', SeriesToken=\'' . $seriesToken . '\'
+    					WHERE
+    						id=' . (int)$this->id);
+
+    	// create cookie
+    	$this->setMemoryCookie($this->id,$seriesToken,$authToken);    	
+    	 
+    	return true;
+    }
+
+    /**
+     * Removes "stay logged in" tokens and cookie
+     *
+     * @return boolean (always true)
+     */
+    public function removeSessionMemory() {
+    	// remove tokens from database
+    	$s = $this->dao->query('
+    					UPDATE
+    						members
+    					SET
+    						AuthToken=\'\', SeriesToken=\'\'
+    					WHERE
+    						id=' . (int)$this->id);
+
+    	// remove cookie
+    	$this->setMemoryCookie(false);    	
+    	 
+    	return true;
+    }    
+    
 }

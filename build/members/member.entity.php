@@ -1601,8 +1601,10 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $this->wipeEntity();
         session_regenerate_id();
 
-        // if "stay logged in active, clear i
-        $this->removeSessionMemory();
+        // if "stay logged in active, clear memory cookie
+        if (PVars::getObj('env')->stay_logged_in) {
+        	$this->removeSessionMemory();
+        }
         return true;
     }
 

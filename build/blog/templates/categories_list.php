@@ -21,9 +21,10 @@ $words = new MOD_words();
 <?
 foreach ($catIt as $cat)
 {
+    $html_category_name = htmlspecialchars($cat->name, ENT_QUOTES);
     echo <<<HTML
         <li>
-        <a href="blog/{$member->Username}/cat/{$cat->blog_category_id}">{$cat->name}</a>
+        <a href="blog/{$member->Username}/cat/{$cat->blog_category_id}">{$html_category_name}</a>
         </li>
 HTML;
 }

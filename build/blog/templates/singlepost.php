@@ -15,7 +15,7 @@
 $callback = $this->getCallbackOutput('BlogController', 'CommentProcess');
 $request = PRequest::get()->request;
 $vars = $this->getRedirectedMem('vars');
-$login_url = 'login/'.implode('/', $request);
+$login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
 
 $blogitemText = array();
 $i18n = new MOD_i18n('apps/blog/blogitem.php');

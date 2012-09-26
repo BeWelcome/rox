@@ -49,7 +49,7 @@ foreach($trips as $trip) {
     }
 
     // Call this onload, I recommend using the function defined at: http://untruths.org/technology/javascript-windowonload/
-    window.onload = highlightOnLoad('<?=$search?>');
+    window.onload = highlightOnLoad('<?=htmlspecialchars($search, ENT_QUOTES)?>');
 
     // -->
   </script>

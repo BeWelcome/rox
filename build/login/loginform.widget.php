@@ -47,8 +47,9 @@ class LoginFormWidget extends RoxWidget
 
         $mem_redirect = $formkit->mem_from_redirect;
         $err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
-        $url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
+        $url = PVars::getObj('env')->baseuri . htmlspecialchars(implode('/', PRequest::get()->request), ENT_QUOTES);
         $stayLoggedIn = PVars::getObj('env')->stay_logged_in;
+
         if (!empty($_SERVER['QUERY_STRING'])) {
             $url .= '?'.$_SERVER['QUERY_STRING'];
         }

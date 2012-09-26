@@ -28,7 +28,7 @@ $words = new MOD_words();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 
 
-echo $words->getFormatted("SearchResultsFor","<b>".$TReturn->searchtext."</b>"),"<br />" ;
+echo $words->getFormatted("SearchResultsFor","<b>".htmlspecialchars($TReturn->searchtext, ENT_QUOTES)."</b>"),"<br />" ;
 ?>
 
 <?php
@@ -134,5 +134,5 @@ echo $words->getFormatted("SearchResultsFor","<b>".$TReturn->searchtext."</b>"),
     } // end of if they are forum tags found
     
     if (($iCountMemberFound<=0) and ($iCountPlacesFound<=0)  and ($iCountForumTags<=0)) {
-        echo $words->getFormatted("QuickSearchMembersNoResults",$TReturn->searchtext,"<a href=\"searchmembers\">".$words->getFormatted("MapSearch")."</a>") ;
+        echo $words->getFormatted("QuickSearchMembersNoResults",htmlspecialchars($TReturn->searchtext, ENT_QUOTES),"<a href=\"searchmembers\">".$words->getFormatted("MapSearch")."</a>") ;
     }

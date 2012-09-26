@@ -36,11 +36,11 @@ if (is_array($navichain_items)) {
     // trim off first item ("forums")
     array_shift($navichain_items);
     foreach ($navichain_items as $link => $title) {
-        $navigationPath .= '<a href="' . $link . '">' . $title . '</a> » ';
+        $navigationPath .= '<a href="' . htmlspecialchars($link, ENT_QUOTES) . '">' . htmlspecialchars($title, ENT_QUOTES) . '</a> » ';
     }
 }
-$boardName = $boards->getBoardName();
-$navigationPath .= '<a href="' . $boards->getBoardLink() . '">'
+$boardName = htmlspecialchars($boards->getBoardName(), ENT_QUOTES);
+$navigationPath .= '<a href="' . htmlspecialchars($boards->getBoardLink(), ENT_QUOTES) . '">'
     . $boardName . '</a>';
 
 ?>

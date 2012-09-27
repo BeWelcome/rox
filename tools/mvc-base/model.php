@@ -135,7 +135,7 @@ class RoxModelBase extends RoxComponentBase
     protected function setMemoryCookie($id,$seriesToken='',$authToken='') {
         if ($id !== false) {
             // set new cookie
-            setcookie('bwRemember', serialize(array($id, $seriesToken, $authToken)), time()+31536000, '/'); // cookie expires after 365 days
+            setcookie('bwRemember', serialize(array($id, $seriesToken, $authToken)), time() + 1209600, '/'); // cookie expires after 14 days
         } else { // unset cookie
             setcookie('bwRemember', false, 1, '/');
         }

@@ -117,7 +117,8 @@ class LoginFormWidget extends RoxWidget
                         </td>
                         <?php if ($stayLoggedIn) { ?>
 						<td>
-							<input type="checkbox" id="login-r" name="r" /><label for="login-r"><?=$ww->StayLoggedIn ?></label><br />
+							<input type="checkbox" id="login-r" name="r" /><label for="login-r"><?=$ww->StayLoggedIn ?></label>
+							<div class="small"><?=$ww->StayLoggedIn_SecurityHint ?></div>
 						</td>
                         <?php } ?>
                         <td>
@@ -170,6 +171,7 @@ class LoginFormWidget extends RoxWidget
                     	<td></td>
                     	<td>
                     		<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>
+                    		<div class="small"><?=$ww->StayLoggedIn_SecurityHint ?></div>
                         </td>
                      </tr>
                     <?php } ?>

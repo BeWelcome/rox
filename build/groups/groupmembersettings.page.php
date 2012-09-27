@@ -61,7 +61,7 @@ class GroupMemberSettingsPage extends GroupsBasePage
         <form action="" method="post">
         <?= $callbacktag; ?>
         <fieldset>
-            <legend><?= $words->get('GroupsMemberSettings') ;?><?= $this->group->Name ?></legend>
+            <legend><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></legend>
             <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
             <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
             <div class="row">

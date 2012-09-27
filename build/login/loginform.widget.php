@@ -116,9 +116,9 @@ class LoginFormWidget extends RoxWidget
                             <input type="password" id="login-p" name="p" />
                         </td>
                         <?php if ($stayLoggedIn) { ?>
-                        <td>
-                            <input type="checkbox" id="login-r" name="r" /><label for="login-r"><?=$ww->StayLoggedIn ?></label><br />
-                        </td>
+						<td>
+							<input type="checkbox" id="login-r" name="r" /><label for="login-r"><?=$ww->StayLoggedIn ?></label><br />
+						</td>
                         <?php } ?>
                         <td>
                             <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
@@ -138,9 +138,6 @@ class LoginFormWidget extends RoxWidget
         <h3><?=$ww->Login ?></h3>
         <?if ($err) : ?>
         <p class="note warning"><?=$err?></p>
-        <? endif ?>
-        <?if (!empty($_COOKIE['bwRemember']) && $_COOKIE['bwRemember'] == 'hijacked') : ?>
-        <p class="note warning"><?php echo $ww->SessionHijacked ?></p>
         <? endif ?>
         <script type="text/javascript">
         	if(!navigator.cookieEnabled)

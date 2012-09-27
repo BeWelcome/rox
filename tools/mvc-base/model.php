@@ -121,7 +121,7 @@ class RoxModelBase extends RoxComponentBase
                 return unserialize($_COOKIE['bwRemember']);
         } elseif (!empty($_COOKIE['bwRemember'])
                   && $_COOKIE['bwRemember'] == 'hijacked') {
-            $_SESSION['flash_error'] = 'Your last session seems to have been hijacked and was canceled.';
+            $_SESSION['flash_error'] = 'Your last session seems to have been hijacked and was cancelled.';
             $this->setMemoryCookie(false);
         }
         return false;

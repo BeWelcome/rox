@@ -1736,98 +1736,132 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     }
 
     /**
-    * Validates "stay logged in" tokens and refreshes them
-    *
-    * @param boolean	$newsession: flag for a new session (no validation)
-    *
-    * @return boolean true if cookie refreshed, false if cookie removed
-    */
-    public function refreshMemoryCookie($newsession=false) {
-    	if ($newsession === false) {
-    		// existing session -> validate first
-    		$s = $this->dao->query('
-        					SELECT
-        						AuthToken, SeriesToken
-        					FROM
-        						members
-        					WHERE
-        						id=' . (int)$this->id);
-    		$tokens = $s->fetch(PDB::FETCH_OBJ);
-    		$authTokenDB = $tokens->AuthToken;
-    		$seriesTokenDB = $tokens->SeriesToken;
-    
-    		$memoryCookie = $this->getMemoryCookie();    		
-    		if ($memoryCookie !== false) {
-    			 
-    			list($id,$seriesToken,$authToken) = $memoryCookie;
-    			 
-    			// compare tokens from database with those in cookie
-    			if ($seriesToken === $seriesTokenDB) {
-    				if ($authToken !== $authTokenDB) {
-    					// auth token incorrect but series token correct -> hijacked
-    					$this->setFlashError('SessionHijacked');
-    					$this->removeSessionMemory();
-    					return false;
-    				}
-    			} else {
-    				// both tokens (or just series token) incorrect
-    				$this->removeSessionMemory();
-    				return false;
-    			}
-    		} else {
-    			$this->removeSessionMemory(); // just to clean up token records in database
-    			return false;
-    		}
-    
-    		// both tokens correct -> continue
-    		// log in user
-    		$loginModel = new LoginModel;
-    		$tb_user = $loginModel->getTBUserForBWMember($this);
-    		$loginModel->setupBWSession($this);
-    		$loginModel->setTBUserAsLoggedIn($tb_user);
-    		
-    	} else {
-    		// create series token
-    		$seriesToken = md5(rand()+time());
-    	}
-    	 
-    	// create auth token
-    	$authToken = md5(rand()+time());
-    	 
-    	// write tokens to database
-    	$s = $this->dao->query('
-    					UPDATE
-    						members
-    					SET
-    						AuthToken=\'' . $authToken . '\', SeriesToken=\'' . $seriesToken . '\'
-    					WHERE
-    						id=' . (int)$this->id);
+     * Validates "stay logged in" tokens and refreshes them
+     *
+     * @param boolean	$newsession: flag for a new session (no validation)
+     *
+     * @return boolean true if cookie refreshed, false if cookie removed
+     */
+    public function refreshMemoryCookie($newsession = false) {
+        $tstamp = 0;
+        if ($newsession === false) {
 
-    	// create cookie
-    	$this->setMemoryCookie($this->id,$seriesToken,$authToken);    	
-    	 
-    	return true;
+            $memoryCookie = $this->getMemoryCookie();
+            if ($memoryCookie !== false) {
+
+                list($id,$seriesToken,$authToken) = $memoryCookie;
+
+                $seriesTokenEsc = $this->dao->escape($seriesToken);
+
+                // existing session -> validate first
+                $s = $this->dao->query('
+										SELECT
+											AuthToken, SeriesToken, tstamp
+										FROM
+											member_sessions
+										WHERE
+											MemberId = ' . (int)$this->id . '
+											AND
+											SeriesToken = \'' . $seriesTokenEsc . '\''
+                );
+                $tokens = $s->fetch(PDB::FETCH_OBJ);
+
+                // compare tokens from database with those in cookie
+                if ($tokens) {
+                    $authTokenDB = $tokens->AuthToken;
+                    $seriesTokenDB = $tokens->SeriesToken;
+                    $tstamp = $tokens->tstamp;
+                    if ($authToken !== $authTokenDB) {
+                        // auth token incorrect but series token correct -> hijacked
+                        $this->removeSessionMemory($seriesToken, true);
+                        return false;
+                    }
+                } else {
+                    // both tokens (or just series token) incorrect
+                    $this->removeSessionMemory($seriesToken);
+                    return false;
+                }
+            } else {
+                $this->removeSessionMemory(); // just to clean up token records in database
+                return false;
+            }
+
+            // both tokens correct -> continue
+            // log in user
+            $loginModel = new LoginModel;
+            $tb_user = $loginModel->getTBUserForBWMember($this);
+            $loginModel->setupBWSession($this);
+            $loginModel->setTBUserAsLoggedIn($tb_user);
+
+        } else {
+            // create series token
+            $seriesToken = md5(rand()+time());
+        }
+
+        // create auth token
+        $authToken = md5(rand()+time());
+
+        // write tokens to database
+        if ($tstamp) {
+            // update token from existing series
+            $s = $this->dao->query('
+									UPDATE
+										member_sessions
+									SET
+										AuthToken = \'' . $authToken . '\', SeriesToken = \'' . $seriesToken . '\', tstamp = \'' . time() . '\'
+									WHERE
+										MemberId = ' . (int) $this->id
+            );
+        } else { // create new token series
+            $s = $this->dao->query('
+									INSERT INTO
+										member_sessions
+										(MemberId, AuthToken, SeriesToken, tstamp)
+									VALUES
+										(' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\', \'' . time() . '\')'
+            );
+        }
+
+        // create cookie
+        $this->setMemoryCookie($this->id, $seriesToken, $authToken);
+
+        return true;
     }
 
     /**
      * Removes "stay logged in" tokens and cookie
      *
+     * @param  boolean $hijacked: true if session was hijacked
+     *
      * @return boolean (always true)
      */
-    public function removeSessionMemory() {
-    	// remove tokens from database
-    	$s = $this->dao->query('
-    					UPDATE
-    						members
-    					SET
-    						AuthToken=\'\', SeriesToken=\'\'
-    					WHERE
-    						id=' . (int)$this->id);
+    public function removeSessionMemory($seriesToken = '', $hijacked = false) {
+        if (empty($sessionToken)) { // no cookie passed -> get current one
+            $memoryCookie = $this->getMemoryCookie();
+            $sessionToken = $memoryCookie[1];
+        }
+        // remove tokens from database
+        // (also removes tokens more than 1 year old)
+        $s = $this->dao->query('
+								DELETE FROM
+									member_sessions
+								WHERE
+									(MemberId = ' . (int) $this->id . '
+									AND
+									SeriesToken = \'' . $seriesToken . '\')
+									OR
+									tstamp > ' . (time() - 1296000)
+        );
 
-    	// remove cookie
-    	$this->setMemoryCookie(false);    	
-    	 
-    	return true;
-    }    
-    
+        if ($hijacked === true) {
+            // session hijacked
+            setcookie('bwRemember', 'hijacked', time() + 3600, '/');
+        } else {
+            // remove cookie
+            $this->setMemoryCookie(false);
+        }
+
+        return true;
+    }
+
 }

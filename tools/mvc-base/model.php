@@ -90,47 +90,55 @@ class RoxModelBase extends RoxComponentBase
         
         return $this->logged_in_member;
     }
-    
+
    /**
-    * Resore session if memory cookie exists
-    */
+    *
+	* Restore session if memory cookie exists
+	*/
     public function restoreLoggedInMember()
     {
-    	if ($memoryCookie = $this->getMemoryCookie())  {
-    		// try using memory cookie
-    		$tmpMember = $this->createEntity('Member')->findById($memoryCookie[0]);
-    		if ($tmpMember->refreshMemoryCookie() === true) {
-	    		$this->logged_in_member = $tmpMember;
-    		} else {
-	    		return false;
-    		}
-    	}
-    	return $this->logged_in_member;
+        if ($memoryCookie = $this->getMemoryCookie())  {
+            // try using memory cookie
+            $tmpMember = $this->createEntity('Member')->findById($memoryCookie[0]);
+            if ($tmpMember->refreshMemoryCookie() === true) {
+                $this->logged_in_member = $tmpMember;
+            } else {
+                return false;
+            }
+        }
+        return $this->logged_in_member;
     }
     
     /**
      * Reads the contents of the memory cookie (for "stay logged in")
-     * 
-     * @return array/boolean Contents of cookie or FALSE 
+     *
+     * @return array/boolean Contents of cookie or FALSE
      */
     protected function getMemoryCookie() {
-    	if (PVars::getObj('env')->stay_logged_in && !empty($_COOKIE['bwRemember'])) {
-    		return unserialize($_COOKIE['bwRemember']);
-    	}
-    	return false;    	
+        if (PVars::getObj('env')->stay_logged_in
+            && !empty($_COOKIE['bwRemember'])
+            && $_COOKIE['bwRemember'] != 'hijacked') {
+                return unserialize($_COOKIE['bwRemember']);
+        } elseif (!empty($_COOKIE['bwRemember'])
+                  && $_COOKIE['bwRemember'] == 'hijacked') {
+            $_SESSION['flash_error'] = 'Your last session seems to have been hijacked and was cancelled.';
+            $this->setMemoryCookie(false);
+        }
+        return false;
     }
-    
+
     /**
-    * Sets the contents of the memory cookie (for "stay logged in")
-    *
-    * @return array/boolean Contents of cookie or FALSE
-    */
+     * Sets the contents of the memory cookie (for "stay logged in")
+     *
+     * @return array/boolean Contents of cookie or FALSE
+     */
     protected function setMemoryCookie($id,$seriesToken='',$authToken='') {
-    	if ($id !== false) { // set new cookie
-    		setcookie('bwRemember',serialize(array($id,$seriesToken,$authToken)),time()+31536000); // cookie expires after 365 days
-    	} else { // unset cookie
-    		setcookie('bwRemember',false,1);
-    	}
+        if ($id !== false) {
+            // set new cookie
+            setcookie('bwRemember', serialize(array($id, $seriesToken, $authToken)), time() + 1209600, '/'); // cookie expires after 14 days
+        } else { // unset cookie
+            setcookie('bwRemember', false, 1, '/');
+        }
     }
 
 

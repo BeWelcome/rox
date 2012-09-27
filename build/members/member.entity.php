@@ -1855,7 +1855,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
         if ($hijacked === true) {
             // session hijacked
-            setcookie('bwRemember', 'hijacked', time() + 3600);
+            setcookie('bwRemember', 'hijacked', time() + 3600, '/');
         } else {
             // remove cookie
             $this->setMemoryCookie(false);

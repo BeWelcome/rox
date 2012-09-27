@@ -1825,12 +1825,13 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     					WHERE
     						id=' . (int)$this->id);
 
-    	if ($hijacked === true) { // session hijacked
-    		setcookie('bwRemember','hijacked',time()+300);
-    	}
-
     	// remove cookie
     	$this->setMemoryCookie(false);
+
+    	if ($hijacked === true) {
+    		// session hijacked
+    		setcookie('bwRemember','hijacked',time()+300);
+    	}
 
     	return true;
     }    

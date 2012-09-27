@@ -139,6 +139,9 @@ class LoginFormWidget extends RoxWidget
         <?if ($err) : ?>
         <p class="note warning"><?=$err?></p>
         <? endif ?>
+        <?if (!empty($_COOKIE['bwRemember']) && $_COOKIE['bwRemember'] == 'hijacked') : ?>
+        <p class="note warning"><?php echo $ww->SessionHijacked ?></p>
+        <? endif ?>
         <script type="text/javascript">
         	if(!navigator.cookieEnabled)
             	document.write("<p class=\"note warning\">Please enable cookies in your browser.</p>");
@@ -169,7 +172,7 @@ class LoginFormWidget extends RoxWidget
                     <tr>
                     	<td></td>
                     	<td>
-                    		<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>q
+                    		<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>
                         </td>
                      </tr>
                     <?php } ?>

@@ -1765,8 +1765,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     			if ($seriesToken === $seriesTokenDB) {
     				if ($authToken !== $authTokenDB) {
     					// auth token incorrect but series token correct -> hijacked
-    					$this->setFlashError('SessionHijacked');
-    					$this->removeSessionMemory();
+    					$this->removeSessionMemory(true);
     					return false;
     				}
     			} else {
@@ -1812,9 +1811,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     /**
      * Removes "stay logged in" tokens and cookie
      *
+     * @param  boolean $hijacked: true if session was hijacked
+     *
      * @return boolean (always true)
      */
-    public function removeSessionMemory() {
+    public function removeSessionMemory($hijacked=false) {
     	// remove tokens from database
     	$s = $this->dao->query('
     					UPDATE
@@ -1824,9 +1825,13 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     					WHERE
     						id=' . (int)$this->id);
 
+    	if ($hijacked === true) { // session hijacked
+    		setcookie('bwRemember','hijacked',time()+300);
+    	}
+
     	// remove cookie
-    	$this->setMemoryCookie(false);    	
-    	 
+    	$this->setMemoryCookie(false);
+
     	return true;
     }    
     

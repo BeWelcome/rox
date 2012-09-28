@@ -35,17 +35,30 @@
 </div> <!-- page_margins-->
 <?php $this->debugInfo() ?>
 
-<?php /* Temporarily disable Piwik, because Gnat is down. ?>
+<?php
+$piwikBaseURL = PVars::getObj('piwik')->baseurl;
+$piwikType = PVars::getObj('piwik')->type;
+if ($piwikBaseURL) {
+    $piwikId = intval(PVars::getObj('piwik')->siteid) || 1;
+    $piwikBaseName = preg_replace('/^([a-z]+:\/\/)*(.*?)\/*$/','$2',$piwikBaseURL);
+    
+    if ($piwikType == 'javascript') { ?>          
 <!-- Piwik -->
 <script type="text/javascript">
-var pkBaseURL = (("https:" == document.location.protocol) ? "https://www.bevolunteer.org/piwik/" : "http://www.bevolunteer.org/piwik/");
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://<?php echo $piwikBaseName ?>/" : "http://https://<?php echo $piwikBaseName ?>/");
 document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
 </script><script type="text/javascript">
 try {
-var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
-piwikTracker.trackPageView();
-piwikTracker.enableLinkTracking();
-} catch( err ) {}
-</script><noscript><p><img src="http://www.bevolunteer.org/piwik/piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
-<!-- End Piwik Tag -->
-<?php */ ?>
+    var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", <?php echo $piwikId ?>);
+    piwikTracker.trackPageView();
+    piwikTracker.enableLinkTracking();
+} catch( err ) {
+}
+</script><noscript><p><img src="http://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" /></p></noscript>
+<!-- End Piwik Tracking Code -->
+<?php    } else { ?>
+<!-- Piwik Image Tracker -->
+<img src="<?php echo $piwikBaseURL ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" />
+<!-- End Piwik -->
+<?php    }
+} ?>

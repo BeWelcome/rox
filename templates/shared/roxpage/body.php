@@ -39,7 +39,10 @@
 $piwikBaseURL = PVars::getObj('piwik')->baseurl;
 $piwikType = PVars::getObj('piwik')->type;
 if ($piwikBaseURL) {
-    $piwikId = intval(PVars::getObj('piwik')->siteid) || 1;
+    $piwikId = intval(PVars::getObj('piwik')->siteid);
+    if ($piwikId == 0) {
+        $piwikId = 1;
+    }
     $piwikBaseName = preg_replace('/^([a-z]+:\/\/)*(.*?)\/*$/','$2',$piwikBaseURL);
     
     if ($piwikType == 'javascript') { ?>          

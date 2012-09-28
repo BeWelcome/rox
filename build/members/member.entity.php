@@ -1850,7 +1850,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 									AND
 									SeriesToken = \'' . $seriesToken . '\')
 									OR
-									tstamp > ' . (time() - 1296000)
+									tstamp < ' . (time() - 1296000)
         );
 
         if ($hijacked === true) {

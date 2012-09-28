@@ -129,8 +129,8 @@ HTML;
             for ($i = 0; $i < count($my_groups) && $i < 3; $i++) :
                 $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' );
                 $group_id = $my_groups[$i]->id;
-                $group_name = htmlspecialchars($words->get($my_groups[$i]->Name), ENT_QUOTES);
-                $comment = htmlspecialchars($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment,$profile_language), ENT_QUOTES);
+                $group_name = htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES);
+                $comment = $purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment,$profile_language));
                 echo <<<HTML
                 <div class="groupbox floatbox">
                     <a href="groups/{$group_id}">

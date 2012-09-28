@@ -1836,10 +1836,13 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * @return boolean (always true)
      */
     public function removeSessionMemory($seriesToken = '', $hijacked = false) {
-        if (empty($sessionToken)) { // no cookie passed -> get current one
+        if (empty($seriesToken)) {
+            // no cookie passed -> get current one
             $memoryCookie = $this->getMemoryCookie();
-            $sessionToken = $memoryCookie[1];
+            $seriesToken = $memoryCookie[1];
         }
+
+        $seriesTokenEsc = $this->dao->escape($seriesToken);
         // remove tokens from database
         // (also removes tokens more than 1 year old)
         $s = $this->dao->query('
@@ -1848,7 +1851,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 								WHERE
 									(MemberId = ' . (int) $this->id . '
 									AND
-									SeriesToken = \'' . $seriesToken . '\')
+									SeriesToken = \'' . $seriesTokenEsc . '\')
 									OR
 									tstamp < ' . (time() - 1296000)
         );

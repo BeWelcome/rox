@@ -91,10 +91,10 @@ class RoxModelBase extends RoxComponentBase
         return $this->logged_in_member;
     }
 
-   /**
-    *
-	* Restore session if memory cookie exists
-	*/
+    /**
+     *
+     * Restore session if memory cookie exists
+     */
     public function restoreLoggedInMember()
     {
         if ($memoryCookie = $this->getMemoryCookie())  {
@@ -108,7 +108,7 @@ class RoxModelBase extends RoxComponentBase
         }
         return $this->logged_in_member;
     }
-    
+
     /**
      * Reads the contents of the memory cookie (for "stay logged in")
      *
@@ -116,11 +116,11 @@ class RoxModelBase extends RoxComponentBase
      */
     protected function getMemoryCookie() {
         if (PVars::getObj('env')->stay_logged_in
-            && !empty($_COOKIE['bwRemember'])
-            && $_COOKIE['bwRemember'] != 'hijacked') {
-                return unserialize($_COOKIE['bwRemember']);
+        && !empty($_COOKIE['bwRemember'])
+        && $_COOKIE['bwRemember'] != 'hijacked') {
+            return unserialize($_COOKIE['bwRemember']);
         } elseif (!empty($_COOKIE['bwRemember'])
-                  && $_COOKIE['bwRemember'] == 'hijacked') {
+        && $_COOKIE['bwRemember'] == 'hijacked') {
             $_SESSION['flash_error'] = 'Your last session seems to have been hijacked and was cancelled.';
             $this->setMemoryCookie(false);
         }

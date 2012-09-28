@@ -167,13 +167,13 @@ class LoginFormWidget extends RoxWidget
                         </td>
                     </tr>
                     <?php if ($stayLoggedIn) { ?>
-                    <tr>
-                    	<td></td>
-                    	<td>
-                    		<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>
-                    		<div class="small"><?=$ww->StayLoggedIn_SecurityHint ?></div>
-                        </td>
-                     </tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>
+							<div class="small"><?=$ww->StayLoggedIn_SecurityHint ?></div>
+						</td>
+					</tr>
                     <?php } ?>
                 <tr><td>&nbsp;</td><td>
             <?php }  // Added because this is hidden for subdomain ?>

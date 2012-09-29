@@ -980,15 +980,23 @@ ORDER BY Value asc
 
     /**
      * Get value of a user's preference.
+     *
      * @param string $name codeName of preference.
-     * @return mixed preference value, null if preference not set.
+     * @param string $default Default value of preference (if not set).
+     * @return mixed Preference value, null or default if preference not set.
      */
-    public function getPreference($name) {
+    public function getPreference($name, $default = false) {
         $preferences = $this->get_preferences();
         foreach ($preferences as $preference) {
             if ($preference->codeName == $name) {
-                return $preference->Value;
+                $value = $preference->Value;
+                break;
             }
+        }
+        if ((!isset($value) || $value == null) && $default !== false) {
+            return $default;
+        } else {
+            return $value;
         }
     }
 
@@ -1445,21 +1453,32 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     }
 
     /**
-     * records a visit of current member on member #id
+     * Records visit of current member to another member's profile, respecting
+     * "Show profile visits" preference.
      *
-     * @param Member $member - member entity
-     *
-     * @access public
-     * @return bool
+     * @param Member $member Visiting member entity
+     * @return bool True if visit recorded, false if not recorded
      */
-    
     public function recordVisit(Member $member)
     {
         if (!$this->isLoaded() || !$member->isLoaded())
         {
             return false;
         }
-        return $this->createEntity('ProfileVisit')->recordVisit($this, $member);
+        $visitorShow = $member->getPreference('PreferenceShowProfileVisits',
+            'Yes');
+        $ownerShow = $this->getPreference('PreferenceShowProfileVisits',
+            'Yes');
+        if ($visitorShow == 'Yes' && $ownerShow == 'Yes') {
+            $visit = $this->createEntity('ProfileVisit');
+            if ($visit->recordVisit($this, $member) === false) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**

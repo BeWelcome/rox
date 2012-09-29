@@ -1863,7 +1863,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }        
         $seriesTokenEsc = $this->dao->escape($seriesToken);
         // remove tokens from database
-        // (also removes tokens more than 1 year old)
+        // (also removes tokens more than cookie expiry)
         $s = $this->dao->query('
 								DELETE FROM
 									members_sessions

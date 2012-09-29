@@ -1602,9 +1602,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         session_regenerate_id();
 
         // if "stay logged in active, clear memory cookie
-        if (PVars::getObj('env')->stay_logged_in) {
-        	$this->removeSessionMemory();
-        }
+        $this->removeSessionMemory();
         return true;
     }
 
@@ -1743,7 +1741,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * @return boolean true if cookie refreshed, false if cookie removed
      */
     public function refreshMemoryCookie($newsession = false) {
-        $tstamp = 0;
+        $modified = 0;
         if ($newsession === false) {
 
             $memoryCookie = $this->getMemoryCookie();
@@ -1756,11 +1754,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
                 // existing session -> validate first
                 $s = $this->dao->query('
 										SELECT
-											AuthToken, SeriesToken, tstamp
+											AuthToken, SeriesToken, modified
 										FROM
-											member_sessions
+											members_sessions
 										WHERE
-											MemberId = ' . (int)$this->id . '
+											IdMember = ' . (int)$this->id . '
 											AND
 											SeriesToken = \'' . $seriesTokenEsc . '\''
                 );
@@ -1769,8 +1767,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
                 // compare tokens from database with those in cookie
                 if ($tokens) {
                     $authTokenDB = $tokens->AuthToken;
-                    $seriesTokenDB = $tokens->SeriesToken;
-                    $tstamp = $tokens->tstamp;
+                    $seriesToken = $tokens->SeriesToken;
+                    $modified = $tokens->modified;
                     if ($authToken !== $authTokenDB) {
                         // auth token incorrect but series token correct -> hijacked
                         $this->removeSessionMemory($seriesToken, true);
@@ -1802,23 +1800,23 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $authToken = md5(rand()+time());
 
         // write tokens to database
-        if ($tstamp) {
+        if ($modified) {
             // update token from existing series
             $s = $this->dao->query('
 									UPDATE
-										member_sessions
+										members_sessions
 									SET
-										AuthToken = \'' . $authToken . '\', SeriesToken = \'' . $seriesToken . '\', tstamp = \'' . time() . '\'
+										AuthToken = \'' . $authToken . '\', SeriesToken = \'' . $seriesToken . '\'
 									WHERE
-										MemberId = ' . (int) $this->id
+										IdMember = ' . (int) $this->id
             );
         } else { // create new token series
             $s = $this->dao->query('
 									INSERT INTO
-										member_sessions
-										(MemberId, AuthToken, SeriesToken, tstamp)
+										members_sessions
+										(IdMember, AuthToken, SeriesToken)
 									VALUES
-										(' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\', \'' . time() . '\')'
+										(' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\')'
             );
         }
 
@@ -1847,13 +1845,13 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         // (also removes tokens more than 1 year old)
         $s = $this->dao->query('
 								DELETE FROM
-									member_sessions
+									members_sessions
 								WHERE
-									(MemberId = ' . (int) $this->id . '
+									(IdMember = ' . (int) $this->id . '
 									AND
 									SeriesToken = \'' . $seriesTokenEsc . '\')
 									OR
-									tstamp < ' . (time() - 1296000)
+									modified < NOW() - INTERVAL ' . PVars::getObj('env')->rememberme_expiry . ' DAY'
         );
 
         if ($hijacked === true) {

@@ -120,7 +120,7 @@ class LoginController extends RoxControllerBase
                     }
                     $this->model->setupBWSession($bw_member);
                     $this->model->setTBUserAsLoggedIn($tb_user);
-                    if (PVars::getObj('env')->stay_logged_in && !empty($post['r']) && $post['r']) { // member wants to stay logged in
+                    if (!empty($post['r']) && $post['r']) { // member wants to stay logged in
                         $bw_member->refreshMemoryCookie(true);
                     }
                     if (isset($request[0]) && 'login' == $request[0]) {

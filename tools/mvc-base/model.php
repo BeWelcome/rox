@@ -115,8 +115,7 @@ class RoxModelBase extends RoxComponentBase
      * @return array/boolean Contents of cookie or FALSE
      */
     protected function getMemoryCookie() {
-        if (PVars::getObj('env')->stay_logged_in
-        && !empty($_COOKIE['bwRemember'])
+        if (!empty($_COOKIE['bwRemember'])
         && $_COOKIE['bwRemember'] != 'hijacked') {
             return unserialize($_COOKIE['bwRemember']);
         } elseif (!empty($_COOKIE['bwRemember'])

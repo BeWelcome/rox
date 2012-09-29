@@ -1828,7 +1828,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 									SET
 										AuthToken = \'' . $authToken . '\'
 									WHERE
-										IdMember = ' . (int) $this->id . 'AND SeriesToken = \'' . $seriesToken . '\'' 
+										IdMember = ' . (int) $this->id . ' AND SeriesToken = \'' . $seriesToken . '\''
             );
         } else { // create new token series
             $s = $this->dao->query('

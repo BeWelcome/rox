@@ -1538,6 +1538,9 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
+        
+        // if "stay logged in active, clear memory cookie
+        $this->removeSessionMemory();
 
         $keys_to_delete = array(
             'IdMember',
@@ -1600,9 +1603,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         session_destroy() ;
         $this->wipeEntity();
         session_regenerate_id();
-
-        // if "stay logged in active, clear memory cookie
-        $this->removeSessionMemory();
+        
         return true;
     }
 
@@ -1837,9 +1838,10 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         if (empty($seriesToken)) {
             // no cookie passed -> get current one
             $memoryCookie = $this->getMemoryCookie();
-            $seriesToken = $memoryCookie[1];
-        }
-
+            if ($memoryCookie !== false) {
+                $seriesToken = $memoryCookie[1];
+            }
+        }        
         $seriesTokenEsc = $this->dao->escape($seriesToken);
         // remove tokens from database
         // (also removes tokens more than 1 year old)

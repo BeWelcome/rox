@@ -1829,7 +1829,7 @@ WHERE `threadid` = '$this->threadid'
 			}
 		}
 		if ($ThreadVisibility=='Default') {
-			$ThreadVisibility='MembersOnly' ;
+			$ThreadVisibility='NoRestriction' ;
 		}
 				
         $this->dao->query("START TRANSACTION");

@@ -89,7 +89,7 @@ Boston, MA  02111-1307, USA.
                         if ($showVisitors) {
                             $latestmembersMax = 4;
                         } else {
-                            $latestmembersMax = 10;
+                            $latestmembersMax = 6;
                         }
                         $latestmembers = MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture($latestmembersMax);
                         for ($ii=0;$ii<count($latestmembers);$ii++)

@@ -449,9 +449,7 @@ function loadMap(i)
             var num_all_results = results[0].getAttribute("num_all_results");
             var addRes = '';
             if (Number(num_all_results) > Number(num_results)) {
-            	var hint = toSeeMoreResults;
-            	hint = hint.replace('-x-',String(Number(num_all_results)-Number(num_results)));
-            	addRes = ' (<a href="login/searchmembers#login-widget">' + logIn + '</a> ' + hint + ')'            	          	
+            	addRes = ' (<a href="login/searchmembers#login-widget">' + logIn + '</a> ' + toSee + ' ' + String(Number(num_all_results)-Number(num_results)) + ' ' + more + ')'            	          	
         	}
             if (num_results > 0) {            	            	
                 put_html('loading', num_results + ' ' + wordFound + addRes);

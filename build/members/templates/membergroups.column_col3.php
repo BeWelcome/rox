@@ -6,7 +6,7 @@
     ?>
     <div id="profile_groups" class="floatbox box">
         <?php // display my groups, if there are any
-            $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+            $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
             echo "<h3>{$words->getInLang('ProfileGroups', $profile_language_code)}</h3>";
             $this->pager->render(); 
             foreach ($this->pager->getActiveSubset($my_groups) as $group)  : ?>

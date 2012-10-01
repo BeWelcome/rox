@@ -8,7 +8,7 @@
     <?php endif; ?>
     <h3 class="icon info22" ><?=$words->get('ProfileSummary');?></h3>
     <?php
-    $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+    $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
     echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language,true)));
 ?>
 </div> <!-- profilesummary -->

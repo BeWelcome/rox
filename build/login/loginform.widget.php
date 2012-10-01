@@ -48,7 +48,7 @@ class LoginFormWidget extends RoxWidget
         $mem_redirect = $formkit->mem_from_redirect;
         $err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
         $url = PVars::getObj('env')->baseuri . htmlspecialchars(implode('/', PRequest::get()->request), ENT_QUOTES);
-        $stayLoggedIn = PVars::getObj('env')->stay_logged_in;
+        $memoryExpiry = PVars::getObj('env')->rememberme_expiry;
 
         if (!empty($_SERVER['QUERY_STRING'])) {
             $url .= '?'.$_SERVER['QUERY_STRING'];
@@ -115,12 +115,9 @@ class LoginFormWidget extends RoxWidget
                             <label for="login-p"><?=$ww->Password ?></label><br />
                             <input type="password" id="login-p" name="p" />
                         </td>
-                        <?php if ($stayLoggedIn) { ?>
-						<td>
+						<td title="<?=$ww->StayLoggedIn_SecurityHint($memoryExpiry) ?>">
 							<input type="checkbox" id="login-r" name="r" /><label for="login-r"><?=$ww->StayLoggedIn ?></label>
-							<div class="small"><?=$ww->StayLoggedIn_SecurityHint ?></div>
 						</td>
-                        <?php } ?>
                         <td>
                             <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
                         </td>
@@ -166,15 +163,12 @@ class LoginFormWidget extends RoxWidget
                             <input type="password" id="login-p" name="p" />
                         </td>
                     </tr>
-                    <?php if ($stayLoggedIn) { ?>
-                    <tr>
-                    	<td></td>
-                    	<td>
-                    		<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>
-                    		<div class="small"><?=$ww->StayLoggedIn_SecurityHint ?></div>
-                        </td>
-                     </tr>
-                    <?php } ?>
+					<tr>
+						<td></td>
+						<td title="<?=$ww->StayLoggedIn_SecurityHint($memoryExpiry) ?>">
+							<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>
+						</td>
+					</tr>
                 <tr><td>&nbsp;</td><td>
             <?php }  // Added because this is hidden for subdomain ?>
             <input type="submit" value="Login" class="button"/>

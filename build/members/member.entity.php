@@ -980,15 +980,23 @@ ORDER BY Value asc
 
     /**
      * Get value of a user's preference.
+     *
      * @param string $name codeName of preference.
-     * @return mixed preference value, null if preference not set.
+     * @param string $default Default value of preference (if not set).
+     * @return mixed Preference value, null or default if preference not set.
      */
-    public function getPreference($name) {
+    public function getPreference($name, $default = false) {
         $preferences = $this->get_preferences();
         foreach ($preferences as $preference) {
             if ($preference->codeName == $name) {
-                return $preference->Value;
+                $value = $preference->Value;
+                break;
             }
+        }
+        if ((!isset($value) || $value == null) && $default !== false) {
+            return $default;
+        } else {
+            return $value;
         }
     }
 
@@ -1445,21 +1453,32 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     }
 
     /**
-     * records a visit of current member on member #id
+     * Records visit of current member to another member's profile, respecting
+     * "Show profile visits" preference.
      *
-     * @param Member $member - member entity
-     *
-     * @access public
-     * @return bool
+     * @param Member $member Visiting member entity
+     * @return bool True if visit recorded, false if not recorded
      */
-    
     public function recordVisit(Member $member)
     {
         if (!$this->isLoaded() || !$member->isLoaded())
         {
             return false;
         }
-        return $this->createEntity('ProfileVisit')->recordVisit($this, $member);
+        $visitorShow = $member->getPreference('PreferenceShowProfileVisits',
+            'Yes');
+        $ownerShow = $this->getPreference('PreferenceShowProfileVisits',
+            'Yes');
+        if ($visitorShow == 'Yes' && $ownerShow == 'Yes') {
+            $visit = $this->createEntity('ProfileVisit');
+            if ($visit->recordVisit($this, $member) === false) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1538,6 +1557,9 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
+        
+        // if "stay logged in active, clear memory cookie
+        $this->removeSessionMemory();
 
         $keys_to_delete = array(
             'IdMember',
@@ -1600,11 +1622,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         session_destroy() ;
         $this->wipeEntity();
         session_regenerate_id();
-
-        // if "stay logged in active, clear memory cookie
-        if (PVars::getObj('env')->stay_logged_in) {
-        	$this->removeSessionMemory();
-        }
+        
         return true;
     }
 
@@ -1743,7 +1761,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * @return boolean true if cookie refreshed, false if cookie removed
      */
     public function refreshMemoryCookie($newsession = false) {
-        $tstamp = 0;
+        $modified = 0;
         if ($newsession === false) {
 
             $memoryCookie = $this->getMemoryCookie();
@@ -1756,11 +1774,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
                 // existing session -> validate first
                 $s = $this->dao->query('
 										SELECT
-											AuthToken, SeriesToken, tstamp
+											AuthToken, SeriesToken, modified
 										FROM
-											member_sessions
+											members_sessions
 										WHERE
-											MemberId = ' . (int)$this->id . '
+											IdMember = ' . (int)$this->id . '
 											AND
 											SeriesToken = \'' . $seriesTokenEsc . '\''
                 );
@@ -1769,8 +1787,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
                 // compare tokens from database with those in cookie
                 if ($tokens) {
                     $authTokenDB = $tokens->AuthToken;
-                    $seriesTokenDB = $tokens->SeriesToken;
-                    $tstamp = $tokens->tstamp;
+                    $seriesToken = $tokens->SeriesToken;
+                    $modified = $tokens->modified;
                     if ($authToken !== $authTokenDB) {
                         // auth token incorrect but series token correct -> hijacked
                         $this->removeSessionMemory($seriesToken, true);
@@ -1802,23 +1820,23 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $authToken = md5(rand()+time());
 
         // write tokens to database
-        if ($tstamp) {
+        if ($modified) {
             // update token from existing series
             $s = $this->dao->query('
 									UPDATE
-										member_sessions
+										members_sessions
 									SET
-										AuthToken = \'' . $authToken . '\', SeriesToken = \'' . $seriesToken . '\', tstamp = \'' . time() . '\'
+										AuthToken = \'' . $authToken . '\'
 									WHERE
-										MemberId = ' . (int) $this->id
+										IdMember = ' . (int) $this->id . ' AND SeriesToken = \'' . $seriesToken . '\''
             );
         } else { // create new token series
             $s = $this->dao->query('
 									INSERT INTO
-										member_sessions
-										(MemberId, AuthToken, SeriesToken, tstamp)
+										members_sessions
+										(IdMember, AuthToken, SeriesToken)
 									VALUES
-										(' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\', \'' . time() . '\')'
+										(' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\')'
             );
         }
 
@@ -1836,21 +1854,25 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * @return boolean (always true)
      */
     public function removeSessionMemory($seriesToken = '', $hijacked = false) {
-        if (empty($sessionToken)) { // no cookie passed -> get current one
+        if (empty($seriesToken)) {
+            // no cookie passed -> get current one
             $memoryCookie = $this->getMemoryCookie();
-            $sessionToken = $memoryCookie[1];
-        }
+            if ($memoryCookie !== false) {
+                $seriesToken = $memoryCookie[1];
+            }
+        }        
+        $seriesTokenEsc = $this->dao->escape($seriesToken);
         // remove tokens from database
-        // (also removes tokens more than 1 year old)
+        // (also removes tokens more than cookie expiry)
         $s = $this->dao->query('
 								DELETE FROM
-									member_sessions
+									members_sessions
 								WHERE
-									(MemberId = ' . (int) $this->id . '
+									(IdMember = ' . (int) $this->id . '
 									AND
-									SeriesToken = \'' . $seriesToken . '\')
+									SeriesToken = \'' . $seriesTokenEsc . '\')
 									OR
-									tstamp > ' . (time() - 1296000)
+									modified < NOW() - INTERVAL ' . PVars::getObj('env')->rememberme_expiry . ' DAY'
         );
 
         if ($hijacked === true) {

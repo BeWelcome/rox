@@ -100,7 +100,7 @@
     <input name="IdMember" value="<?=$member->id?>" type="hidden" />
         <table valign="center" >
           <tr>
-            <td colspan=2><h3><?=$words->get("CommentQuality",$member->username)?></h3><br /><?=$words->get("RuleForNeverMetComment")?></td>
+            <td colspan=2><h3><?=$words->get("CommentQuality" , $Username)?></h3><br /><?=$words->get("RuleForNeverMetComment")?></td>
           </tr>
           <tr>
             <td>
@@ -120,12 +120,12 @@
                 </selected>
             </td>
             <td>
-                <p class="grey"><?=$words->get("CommentQualityDescription", $member->username, $member->username, $member->username)?></p>
+                <p class="grey"><?=$words->get("CommentQualityDescription", $Username, $Username, $Username)?></p>
             </td>
           </tr>
         <tr>
         <td colspan=2>
-            <h3><?=$words->get("CommentLength")?></h3>
+            <h3><?=$words->get("CommentLength", $Username)?></h3>
         </td>
         </tr>
         <tr>
@@ -144,22 +144,22 @@
         </table>
         </td>
         <td>
-        <p class="grey"><?php echo $words->get("CommentLengthDescription", $member->username, $member->username, $member->username) ?></p>
+        <p class="grey"><?php echo $words->get("CommentLengthDescription", $Username, $Username, $Username) ?></p>
         </td>
     </tr>
     <tr>
-        <td colspan="2"><h3><label for="TextWhere"><?php echo $words->get("CommentsWhere") ?></label></h3></td>
+        <td colspan="2"><h3><label for="TextWhere"><?php echo $words->get("CommentsWhere", $Username) ?></label></h3></td>
     </tr>
     <tr>
         <td><textarea name="TextWhere" id="TextWhere" cols="40" rows="3"><?php echo $textWhereWashed; ?></textarea></td>
-        <td><p class="grey"><?php echo $words->get("CommentsWhereDescription", $member->username) ?></p></td>
+        <td><p class="grey"><?php echo $words->get("CommentsWhereDescription", $Username) ?></p></td>
     </tr>
     <tr>
         <td colspan="2"><h3><label for="Commenter"><?php echo $words->get("CommentsCommenter") ?></label></h3></td>
     </tr>
     <tr>
         <td><textarea name="TextFree" id="TextFree" cols="40" rows="8"><?php echo $textFreeWashed; ?></textarea></td>
-        <td style="vertical-align=top"><p class="grey"><?php echo $words->get("CommentsCommenterDescription", $member->username) ?></p></td>
+        <td style="vertical-align=top"><p class="grey"><?php echo $words->get("CommentsCommenterDescription", $Username) ?></p></td>
     </tr>
     <tr><td colspan="2">
         <input type="hidden" value="<?php echo $member->id?>" name="cid">

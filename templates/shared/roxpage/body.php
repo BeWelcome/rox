@@ -39,7 +39,7 @@
 $piwikBaseURL = PVars::getObj('piwik')->baseurl;
 $piwikType = PVars::getObj('piwik')->type;
 $proto = 'http';
-if ($_SERVER['HTTPS']) {
+if (!empty($_SERVER['HTTPS'])) {
     $proto .= 's';
 }
 if ($piwikBaseURL) {

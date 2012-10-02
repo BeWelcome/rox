@@ -38,6 +38,10 @@
 <?php
 $piwikBaseURL = PVars::getObj('piwik')->baseurl;
 $piwikType = PVars::getObj('piwik')->type;
+$proto = 'http';
+if ($_SERVER['HTTPS']) {
+    $proto .= 's';
+}
 if ($piwikBaseURL) {
     $piwikId = intval(PVars::getObj('piwik')->siteid);
     if ($piwikId == 0) {
@@ -57,11 +61,11 @@ try {
     piwikTracker.enableLinkTracking();
 } catch( err ) {
 }
-</script><noscript><p><img src="http://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" /></p></noscript>
+</script><noscript><p><img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Tracking Code -->
 <?php    } else { ?>
 <!-- Piwik Image Tracker -->
-<img src="<?php echo $piwikBaseURL ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" />
+<img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" />
 <!-- End Piwik -->
 <?php    }
 } ?>

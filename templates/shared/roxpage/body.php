@@ -61,11 +61,11 @@ try {
     piwikTracker.enableLinkTracking();
 } catch( err ) {
 }
-</script><noscript><p><img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" /></p></noscript>
+</script><noscript><p><img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" width="1" height="1" /></p></noscript>
 <!-- End Piwik Tracking Code -->
 <?php    } else { ?>
 <!-- Piwik Image Tracker -->
-<img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" />
+<img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" width="1" height="1" />
 <!-- End Piwik -->
 <?php    }
 } ?>

@@ -8,7 +8,7 @@
     <?php endif; ?>
     <h3 class="icon info22" ><?=$words->get('ProfileSummary');?></h3>
     <?php
-    $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+    $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
     echo $purifier->purify(stripslashes($member->get_trad("ProfileSummary", $profile_language,true)));
 ?>
 </div> <!-- profilesummary -->
@@ -128,14 +128,16 @@ HTML;
             echo "<h3>{$words->get('ProfileGroups')}</h3>";
             for ($i = 0; $i < count($my_groups) && $i < 3; $i++) :
                 $group_img = ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' );
-                $comment = htmlspecialchars($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment,$profile_language), ENT_QUOTES);
+                $group_id = $my_groups[$i]->id;
+                $group_name = htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES);
+                $comment = $purifier->purify($words->mInTrad($member->getGroupMembership($my_groups[$i])->Comment,$profile_language));
                 echo <<<HTML
                 <div class="groupbox floatbox">
-                    <a href="groups/{$my_groups[$i]->id}">
+                    <a href="groups/{$group_id}">
                         <img class="framed float_left"  width="50px" height="50px" alt="Group" src="{$group_img}"/>
                     </a>
                     <div class="groupinfo">
-                    <h4><a href="groups/{$my_groups[$i]->id}">{$words->get($my_groups[$i]->Name)}</a></h4>
+                    <h4><a href="groups/{$group_id}">{$group_name}</a></h4>
                     <p>{$comment}</p>
                     </div>  <!-- groupinfo -->
                 </div> <!-- groupbox clearfix -->

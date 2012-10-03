@@ -86,7 +86,12 @@ Boston, MA  02111-1307, USA.
                 <div id="newmembers" class="floatbox">
                     <?php
                         // Display the last created members with a picture
-                        $latestmembers = MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture(4);
+                        if ($showVisitors) {
+                            $latestmembersMax = 4;
+                        } else {
+                            $latestmembersMax = 6;
+                        }
+                        $latestmembers = MOD_visits::get()->RetrieveLastAcceptedProfilesWithAPicture($latestmembersMax);
                         for ($ii=0;$ii<count($latestmembers);$ii++)
                         {
                             $m=$latestmembers[$ii];
@@ -103,7 +108,10 @@ HTML;
                         }
                         echo <<<HTML
                 </div> <!-- floatbox -->
-                
+
+HTML;
+                if ($showVisitors) {
+                        echo <<<HTML
                 <h3><a href="myvisitors">{$words->get('RecentVisitsOfyourProfile')}</a></h3> 
                 <div id="visitors" class="floatbox">
 HTML;
@@ -124,8 +132,9 @@ HTML;
                         }
                         ?>
                 </div> <!-- floatbox -->
-
 <?php
+                }
+
 // TODO: move to controller
 $next_trips = MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember'], 4);
 $next_trips_count = count($next_trips);

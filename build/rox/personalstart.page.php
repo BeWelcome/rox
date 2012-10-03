@@ -92,7 +92,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
             ?>
         
             </a><br />
-            <span class="small grey" title="<?=date('d. m. Y',$message->unixtime_created)?>"><?=$words->get('from')?> <a href="bw/member.php?cid=<?=$senderUsername?>"><?=$senderUsername?>: </a>
+            <span class="small grey" title="<?=date('d. m. Y',$message->unixtime_created)?>"><?=$words->get('from')?> <a href="members/<?=$senderUsername?>"><?=$senderUsername?>: </a>
             <?=MOD_layoutbits::ago($message->unixtime_created);?></span>
         </div>
         

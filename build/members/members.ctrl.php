@@ -127,7 +127,14 @@ class MembersController extends RoxControllerBase
                     $page->status = "finish";
                 break;
             case 'myvisitors':
-                $page = new MyVisitorsPage();
+                $member = $this->model->getLoggedInMember();
+                $showVisits = $member->getPreference(
+                    'PreferenceShowProfileVisits', 'Yes');
+                if ($showVisits == 'Yes') {
+                    $page = new MyVisitorsPage();
+                } else {
+                    $this->redirect("members/" . $member->Username);
+                }
                 break;
             case 'self':
             case 'myself':

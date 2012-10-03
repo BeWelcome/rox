@@ -1818,7 +1818,7 @@ WHERE `threadid` = '$this->threadid'
 		if (isset($vars['IdGroup'])) {
 			$IdGroup=$vars['IdGroup'] ;
 			if (!empty($IdGroup)) {
-				$ss="select * from groups where id=".$IdGroup ;
+				$ss="select * from groups where id=".intval($IdGroup);
                 $s = $this->dao->query($ss);
                 $rGroup = $s->fetch(PDB::FETCH_OBJ);
 				if ($vars['ThreadVisibility']=='Default') {

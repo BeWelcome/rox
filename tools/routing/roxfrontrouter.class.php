@@ -46,6 +46,11 @@ class RoxFrontRouter
         $roxModelBase = new RoxModelBase();
         $member = $roxModelBase->getLoggedInMember();
 
+        // try restoring session from memory cookie
+        if (!$member) {
+            $member = $roxModelBase->restoreLoggedInMember();
+        }
+
         $memberId = false;
         if ($member) {
             if ($member->isBanned()) {

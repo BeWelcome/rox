@@ -711,6 +711,7 @@ VALUES
 		                $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$vars['galleryId']."', `item_id_foreign`= ".$itemId);
 		            }
 		            $vars['fileErrors'][$_FILES['gallery-file']['name'][$key]] = 'Gallery_UploadFileSuccessfule';
+		            unlink($tempFile);
             	}
             }
         }

@@ -1,7 +1,7 @@
 <?php foreach ($this->getMessages() as $message) : ?>
 <p><?= $words->get($message); ?>
 <?php endforeach; ?>
-<?php 
+<?php
 $group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES); 
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 ?>

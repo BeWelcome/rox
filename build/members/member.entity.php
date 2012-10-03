@@ -1557,7 +1557,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
-        
+
         // if "stay logged in active, clear memory cookie
         $this->removeSessionMemory();
 
@@ -1622,7 +1622,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         session_destroy() ;
         $this->wipeEntity();
         session_regenerate_id();
-        
+
         return true;
     }
 
@@ -1860,7 +1860,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             if ($memoryCookie !== false) {
                 $seriesToken = $memoryCookie[1];
             }
-        }        
+        }
         $seriesTokenEsc = $this->dao->escape($seriesToken);
         // remove tokens from database
         // (also removes tokens more than cookie expiry)

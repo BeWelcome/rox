@@ -84,10 +84,10 @@ class RoxModelBase extends RoxComponentBase
         
         if (!isset($_SESSION['IdMember']))
         {
-        	return false;
+            return false;
         }
-        $this->logged_in_member = $this->createEntity('Member')->findById($_SESSION['IdMember']);               
-        
+        $this->logged_in_member = $this->createEntity('Member')->findById($_SESSION['IdMember']);
+
         return $this->logged_in_member;
     }
 

@@ -48,8 +48,8 @@ if ($piwikBaseURL) {
         $piwikId = 1;
     }
     $piwikBaseName = preg_replace('/^([a-z]+:\/\/)*(.*?)\/*$/','$2',$piwikBaseURL);
-    
-    if ($piwikType == 'javascript') { ?>          
+
+    if ($piwikType == 'javascript') { ?>
 <!-- Piwik -->
 <script type="text/javascript">
 var pkBaseURL = (("https:" == document.location.protocol) ? "https://<?php echo $piwikBaseName ?>/" : "http://https://<?php echo $piwikBaseName ?>/");

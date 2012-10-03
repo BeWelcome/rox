@@ -48,7 +48,7 @@ class RoxFrontRouter
 
         // try restoring session from memory cookie
         if (!$member) {
-        	$member = $roxModelBase->restoreLoggedInMember();
+            $member = $roxModelBase->restoreLoggedInMember();
         }
 
         $memberId = false;

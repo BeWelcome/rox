@@ -17,6 +17,7 @@
           <th><?= $words->get('GroupsMemberComment'); ?></th>
         </tr>
     <?php
+        $purifier = MOD_htmlpure::getBasicHtmlPurifier();
         $count = 0;
         foreach ($this->pager_widget->getActiveSubset($this->group->getMembers('In', $this->pager_widget->getActiveStart(), $this->pager_widget->getActiveLength())) as $member)
         {
@@ -31,7 +32,7 @@
                         <li><span class="small"><?= $member->cityname; ?></span></li>
                     </ul>
                 </td>
-                <td><em><?php echo $words->mTrad($membershipinfo->Comment,true) ?></em></td>
+                <td><em><?php echo $purifier->purify($words->mTrad($membershipinfo->Comment,true)) ?></em></td>
             </tr>
             <?php
             $count++;

@@ -1,7 +1,7 @@
 <?php
 $words = new MOD_words();
 $request = PRequest::get()->request;
-$login_url = 'login/' . implode('/', $request);
+$login_url = 'login/' . htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $Gallery = new GalleryModel;
 $Gallery_ctrl = new GalleryController;
 if ($member = $this->model->getLoggedInMember())

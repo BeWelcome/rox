@@ -249,7 +249,7 @@ class PageWithHTML extends AbstractBasePage
             $baseuri = PVars::getObj('env')->baseuri;
         }
         ?>
-        <title><?=$this->getPageTitle() ?></title>
+        <title><?= htmlspecialchars($this->getPageTitle(), ENT_QUOTES) ?></title>
         <base id="baseuri" href='<?=$baseuri ?>' />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />

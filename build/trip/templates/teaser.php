@@ -21,7 +21,7 @@ $cloudmade_conf = PVars::getObj('cloudmade');
         	<div class="subc">
             	<div id="searchteaser" >
                 <form method="get" action="trip/search">
-                    <input type="text" name="s" value="<?=$search?>" />
+                    <input type="text" name="s" value="<?= htmlspecialchars($search, ENT_QUOTES)?>" />
                     <input class="button" type="submit" name="submit" value="<?php echo $words->getFormatted('TripsSearch'); ?>" />
                 </div>
                 </form>

@@ -77,7 +77,11 @@ class MemberPage extends PageWithActiveSkin
                 $tt[] = array('deleteprofile', 'deleteprofile', $ww->DeleteProfile, 'deleteprofile');
             }
 
-            $tt[] = array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors');
+            $showVisitors = $member->getPreference('PreferenceShowProfileVisits',
+                'Yes');
+            if ($showVisitors == 'Yes') {
+                $tt[] = array('myvisitors', "myvisitors", $ww->MyVisitors, 'myvisitors');
+            }
             $tt[] = array('space', '', '', 'space');
 
             $tt[] = array('profile', "members/$username", $ww->MemberPage);

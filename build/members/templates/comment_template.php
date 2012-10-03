@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-
+    $purifier = MOD_htmlpure::getBasicHtmlPurifier();
     $rights = new MOD_right;
     $rights->HasRight('Comments');
 
@@ -77,10 +77,10 @@ Boston, MA  02111-1307, USA.
               <?php endif;?>
             </p>
             <p>
-              <em><?php echo nl2br($c->TextWhere); ?></em>
+              <em><?php echo $purifier->purify(nl2br($c->TextWhere)); ?></em>
             </p>
             <p>
-              <?php echo nl2br($c->TextFree); ?>
+              <?php echo $purifier->purify(nl2br($c->TextFree)); ?>
             </p>
             <p>
               <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
@@ -139,10 +139,10 @@ Boston, MA  02111-1307, USA.
                   <?php endif;?>
                 </p>
                 <p>
-                  <em><?php echo nl2br($cc->TextWhere); ?></em>
+                  <em><?php echo $purifier->purify(nl2br($cc->TextWhere)); ?></em>
                 </p>
                 <p>
-                  <?php echo nl2br($cc->TextFree); ?>
+                  <?php echo $purifier->purify(nl2br($cc->TextFree)); ?>
                 </p>
                 <p>
                   <? if ($this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id): ?>

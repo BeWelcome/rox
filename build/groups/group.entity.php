@@ -244,6 +244,7 @@ class Group extends RoxEntityBase
     {
         $group_name = $this->dao->escape($input['Group_']);
         $type = $this->dao->escape($input['Type']);
+        $visible_posts = $this->dao->escape($input['VisiblePosts']);
         $picture = ((!empty($input['Picture'])) ? $this->dao->escape($input['Picture']) : '');
 
         if ($this->createEntity('Group')->findByWhere("Name = '{$group_name}'"))
@@ -253,6 +254,7 @@ class Group extends RoxEntityBase
 
         $this->Name = $group_name;
         $this->Type = $type;
+        $this->VisiblePosts = $visible_posts;
         $this->Picture = $picture;
         $this->created = date('Y-m-d H:i:s');
         return $this->insert();

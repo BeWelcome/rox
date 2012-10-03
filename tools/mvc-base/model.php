@@ -86,9 +86,58 @@ class RoxModelBase extends RoxComponentBase
         {
             return false;
         }
-
         $this->logged_in_member = $this->createEntity('Member')->findById($_SESSION['IdMember']);
+
         return $this->logged_in_member;
+    }
+
+    /**
+     *
+     * Restore session if memory cookie exists
+     */
+    public function restoreLoggedInMember()
+    {
+        if ($memoryCookie = $this->getMemoryCookie())  {
+            // try using memory cookie
+            $tmpMember = $this->createEntity('Member')->findById($memoryCookie[0]);
+            if ($tmpMember->refreshMemoryCookie() === true) {
+                $this->logged_in_member = $tmpMember;
+            } else {
+                return false;
+            }
+        }
+        return $this->logged_in_member;
+    }
+
+    /**
+     * Reads the contents of the memory cookie (for "stay logged in")
+     *
+     * @return array/boolean Contents of cookie or FALSE
+     */
+    protected function getMemoryCookie() {
+        if (!empty($_COOKIE['bwRemember'])
+        && $_COOKIE['bwRemember'] != 'hijacked') {
+            return unserialize($_COOKIE['bwRemember']);
+        } elseif (!empty($_COOKIE['bwRemember'])
+        && $_COOKIE['bwRemember'] == 'hijacked') {
+            $_SESSION['flash_error'] = 'Your last session seems to have been hijacked and was cancelled.';
+            $this->setMemoryCookie(false);
+        }
+        return false;
+    }
+
+    /**
+     * Sets the contents of the memory cookie (for "stay logged in")
+     *
+     * @return array/boolean Contents of cookie or FALSE
+     */
+    protected function setMemoryCookie($id,$seriesToken='',$authToken='') {
+        if ($id !== false) {
+            // set new cookie
+            setcookie('bwRemember', serialize(array($id, $seriesToken, $authToken)), time() + 1209600, '/'); // cookie expires after 14 days
+        } else { // unset cookie
+            setcookie('bwRemember', false, 1, '/');
+        }
     }
 
 

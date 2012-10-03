@@ -56,7 +56,7 @@ foreach ($catIt as $cat) {
         $vars['n'] = $cat->name;
     }
     echo '    <li>'.(isset($request[2]) && in_array($request[2], array('edit', 'del')) && isset($request[3]) && $cat->blog_category_id == $request[3]?
-        '<b>'.$cat->name.'</b>':$cat->name).
+        '<b>'.htmlspecialchars($cat->name, ENT_QUOTES).'</b>':htmlspecialchars($cat->name, ENT_QUOTES)).
         ' <a href="blog/cat/edit/'.$cat->blog_category_id.'">'.$words->get('edit').'</a>'.
         ' | <a href="blog/cat/del/'.$cat->blog_category_id.'">'.$words->get('delete').'</a>'.
         "</li>\n";

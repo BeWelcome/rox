@@ -52,12 +52,14 @@ class GroupJoinPage extends GroupsBasePage
 
             $error = $formkit->mem_from_redirect ? $words->get('GroupsErrorJoiningGroup') : '';
 
+            $group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES);
+
             echo <<<HTML
         {$error}
         <form action="" method="post">
             {$callback_tag}
             <fieldset>
-                <legend>{$words->get('GroupsJoinTheGroup')} {$this->group->Name}</legend>
+                <legend>{$words->get('GroupsJoinTheGroup')} {$group_name_html}</legend>
                 <input type='hidden' name='member_id' value='{$this->member->id}' />
                 <input type='hidden' name='group_id' value='{$this->group->id}' />
                 <label for="comment">{$words->get('GroupsMemberComments')}</label><br />
@@ -70,7 +72,7 @@ class GroupJoinPage extends GroupsBasePage
                     <label for="yes_option">{$words->get('yes')}</label><br /><br />
                     {$words->get('ValuesCanBeChangedLaterInMemberSettings')}
                 </div> <!-- row -->
-                <h3>{$words->get('GroupsJoinNamedGroup', $this->getGroupTitle())}</h3>
+                <h3>{$words->get('GroupsJoinNamedGroup', $group_name_html)}</h3>
                 <input type='submit' value='{$words->getSilent('GroupsGetMeIn')}' name='join'/>
                 <span class="button"><a href="groups/{$this->group->id}">{$words->get('GroupsDontGetMeIn')}</a></span>
             </fieldset>           

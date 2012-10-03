@@ -97,7 +97,7 @@ class BlogBasePage extends PageWithActiveSkin
         if ($this->useRSS)
         {
             $request = PRequest::get()->request;
-            $requestStr = implode('/', $request);
+            $requestStr = htmlspecialchars(implode('/', $request), ENT_QUOTES);
             $return[] = "<link rel='alternate' type='application/rss+xml' title='RSS 2.0' href='rss/{$requestStr}' />";
         }
         return $return;

@@ -94,12 +94,7 @@ After all this, make sure to restart Apache (/etc/init.d/apache2 restart)
     http://downloads.bewelcome.org/for_developers/rox_test_db/bewelcome.sql.gz
 
       mysql -u root -p -e 'CREATE DATABASE bewelcome'
-<<<<<<< HEAD
-      unzip bewelcome.sql.gz
-      cat bewelcome.sql | mysql bewelcome -u root -p
-=======
       gzip -dc bewelcome.sql.gz | mysql bewelcome -u root -p
->>>>>>> c5a001bcf361c5c9f832467bb594ab9db25d9e57
 
     Then you might want to set the password to 'password' for all users:
 

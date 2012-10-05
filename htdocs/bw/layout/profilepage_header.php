@@ -288,7 +288,6 @@ if (!empty($m->IdPhoto)){
   //display a static google map - quick hack
   $google_conf = PVars::getObj('config_google');
   echo "      <div id=\"teaser_gmap\" >\n";
-  echo "        <img class=\"framed\" alt=\"googlemap\" src=\"http://maps.google.com/staticmap?zoom=4&maptype=mobile&size=200x80&center=".$m->Latitude.",".$m->Longitude."&markers=".$m->Latitude.",".$m->Longitude.",blue&key=".$google_conf->maps_api_key."\"/>\n";
   echo "      </div>\n";
 echo "      </div>\n";
 echo "      </div>\n";

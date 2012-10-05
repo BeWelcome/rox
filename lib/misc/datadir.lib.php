@@ -31,8 +31,14 @@ class PDataDir {
         if (!file_exists($datadir)) {
             @mkdir($datadir, 0700, true);
         }
-        if(!is_dir($datadir) || !is_writable($datadir)) {
-            throw new PException('Data subdir error!');
+    	if (!file_exists($datadir)) {
+             throw new PException('Data subdir "' . $datadir . '" does not exist!');
+        }
+        if(!is_dir($datadir)) {
+            throw new PException('Data subdir "' . $datadir . '" is not a directory!');
+        }
+   		if(!is_writable($datadir)) {
+            throw new PException('Data subdir "' . $datadir . '" is not writable!');
         }
         $this->dir = $datadir;
     }

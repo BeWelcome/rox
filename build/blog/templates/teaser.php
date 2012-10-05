@@ -1,8 +1,13 @@
 <?php
+
 $member = $this->_model->getLoggedInMember();
 
 $words = new MOD_words();
+$cloudmade_conf = PVars::getObj('cloudmade');
+
 ?>
+ <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+
 
 <div id="teaser" class="clearfix">
 

@@ -196,16 +196,3 @@ Things to check:
 
 - .htaccess is readable by apache and placed in the right directory 
 	(should be /path_to_your_bwrox_installation/htdocs/)
-<<<<<<< HEAD
-
-
-- autoload.cache.ini problems
-  Make sure the following files exist and are writable by the web server:
-    * build/alias.cache.ini
-    * build/autoload.cache.ini
-    * modules/autoload.cache.ini
-    * pthacks/autoload.cache.ini
-    * tools/autoload.cache.ini
-  (create them with touch and then chown or chmod)
-=======
->>>>>>> c5a001bcf361c5c9f832467bb594ab9db25d9e57

@@ -564,7 +564,7 @@ class GroupsController extends RoxControllerBase
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
         $acceptedby = $this->_model->getLoggedInMember();
-        $this->_model->acceptGroupMember($group, $member_id, $acceptedby_id->getPKValue());
+        $this->_model->acceptGroupMember($group, $member_id, $acceptedby->getPKValue());
         $this->logWrite("Member #{$member_id} was accepted into group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
 
         $page = new GroupStartPage();

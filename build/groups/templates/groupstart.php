@@ -41,18 +41,28 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                     <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
                 </div>
                 <?php endif; ?>
-                <h3><?= $words->get('GroupOwner'); ?></h3>
-                <div class="floatbox">
-                    <div class="center float_left">
-                        <?php echo (($member =$this->group->getGroupOwner()) ? (MOD_layoutbits::PIC_50_50($member->Username) ."<br /><a href=\"members/".$member->Username ."\">" .$member->Username ."</a>")  : $words->get('GroupsNoOwner')); ?>
-                    </div>
-                </div>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>
                 </div>
                 <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>
-                
+                <br><br>
+                <div class="floatbox">
+                    <h3><?php echo $words->get('GroupAdmins'); ?></h3>
+                    <div class="center float_left">
+                        <?php $admins = $this->group->getGroupOwners();
+                        if (isset($admins) && !empty($admins))
+                        {
+                            foreach ($admins as $admin){ ?>
+                                <a href="members/<?php echo $admin->Username; ?> "> <?php echo $admin->Username; ?> </a> <strong> / </strong>
+
+                                <?php
+                            }
+                        } else {
+                            echo $words->get('GroupNoAdmin');
+                        } ?>
+                    </div>
+                </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

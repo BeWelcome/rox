@@ -110,7 +110,17 @@ new Resizable('tripMap', {minWidth:0, minHeight:200, handle:'handle2', constrain
 <?php 
 	// random point used to center the map 
 	$point = rand(1,count($locations));
-	echo '<input type="hidden" id="centerLatitude" name="centerLatitude" value="'.$locations[$point]->lat.'"/>';
-	echo '<input type="hidden" id="centerLongitude" name="centerLongitude" value="'.$locations[$point]->lng.'"/>';
+	
+	if ($locations != null && $point != null && $locations[$point] != null){
+		$lat = $locations[$point]->lat;
+		$lng = $locations[$point]->lng;
+	}else{
+		// arbitrary center to London
+		$lat = '51.505';
+		$lng = '-0.09';
+	}
+	
+	echo '<input type="hidden" id="centerLatitude" name="centerLatitude" value="' . $lat . '"/>';
+	echo '<input type="hidden" id="centerLongitude" name="centerLongitude" value="' . $lng . '"/>';
 	echo '<input type="hidden" id="zoomLevel" name="zoomLevel" value="'.$zoomLevel.'"/>';
 ?>

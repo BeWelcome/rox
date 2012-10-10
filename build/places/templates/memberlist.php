@@ -3,7 +3,6 @@
 $User = new APP_User;
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits;
-
 if (!$members) {
     return $text['no_members'];
 } else {
@@ -18,10 +17,14 @@ if (!$members) {
     }
     $p = PFunctions::paginate($members, $page, $itemsPerPage = 15);
     $members = $p[0];
+        $pages = $p[1];
+    $maxPage = $p[2];
+    $currentPage = $page;
 ?>
 <ul class="floatbox">
 <?php
-    foreach ($members as $member) {
+    foreach ($members as $member) 
+    {
         $image = new MOD_images_Image('',$member->username);
         if ($member->HideBirthDate=="No") $member->age = floor($layoutbits->fage_value($member->BirthDate));
         else $member->age = $words->get("Hidden");
@@ -32,7 +35,17 @@ if (!$members) {
         echo '  <span class="small">'.$words->get("yearsold",$member->age).'<br />'.$member->city.'</span>';
         echo '</div>';
         echo '</li>';
-    }
+        }
+    if (!(APP_User::isBWLoggedIn('NeedMore,Pending')) || $currentPage == $maxPage) 
+        {
+        $request = PRequest::get()->request;
+        $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
+        echo '<li class="userpicbox_more float_left">';
+        echo '<div class="userinfo">';
+        echo $words->get('PlacesLoginToSeeMore', '<a class="username" href="' . $login_url .'">' , '</a><br /><span class="small">' , '<br />' , '</span>');
+        echo '</div>';
+        echo '</li>';
+        }
     ?>
 </ul>
 <?php

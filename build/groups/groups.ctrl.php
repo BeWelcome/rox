@@ -398,7 +398,7 @@ class GroupsController extends RoxControllerBase
         }
         $this->logWrite("Member #{$member_id} accepted invitation to join group #{$group->getPKValue()}");
         $page = new GroupStartPage();
-        $page->setMessage('GroupsJoinSuccess');
+        $this->setFlashNotice($this->getWords()->getSilent('GroupJoinSuccess'));
         $this->_fillObject($page);
         $page->group = $group;
         return $page;
@@ -504,9 +504,11 @@ class GroupsController extends RoxControllerBase
         $newAdmin = $this->_model->addGroupMemberAsAdmin($group, $member_id);
         if (!$newAdmin)
         {
+            $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
         $this->logWrite("Member #{$member_id} added as admin to the group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+        $this->setFlashNotice($this->getWords()->getSilent('GroupNewAdminSuccess'));
         $page = new GroupStartPage;
         $this->_fillObject($page);
         $page->group = $group;
@@ -532,12 +534,18 @@ class GroupsController extends RoxControllerBase
         {
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
-        $resigned = $this->_model->resignGroupAdmin($group, $resigner->getPKValue());
-        if (!$resigned)
-        {
-            $this->redirectAbsolute($this->router->url('groups_overview'));
+        $owners = $group->getGroupOwners();
+        if (is_array($owners) && count($owners) < 2) {
+            $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed_LastAdmin'));
+        } else {
+            $resigned = $this->_model->resignGroupAdmin($group, $resigner->getPKValue());
+            if (!$resigned)
+            {
+                $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
+            }
+            $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->Name}");
+            $this->setFlashNotice($this->getWords()->getSilent('GroupAdminResignationSuccess'));
         }
-        $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->Name}");
         $page = new GroupStartPage;
         $this->_fillObject($page);
         $page->group = $group;
@@ -596,9 +604,6 @@ class GroupsController extends RoxControllerBase
         $member = $this->_model->getLoggedInMember();
         $rights = $member->getOldRights();
         if ( !empty($rights) && in_array("Admin", array_keys($rights))) {
-            $isBWAdmin = true;
-        }
-        if ( !empty($rights) && in_array("ForumModerator", array_keys($rights))) {
             $isBWAdmin = true;
         }
 
@@ -663,7 +668,8 @@ class GroupsController extends RoxControllerBase
         else
         {
             $mem_redirect->post = $post;
-            return false;
+            $this->setFlashError($this->getWords()->getSilent('GroupsErrorJoiningGroup'));
+            return $this->router->url('group_start', array('group_id' => $group->getPKValue()), false);;
         }
         return $this->router->url('group_start', array('group_id' => $group->getPKValue()), false);
     }
@@ -682,8 +688,16 @@ class GroupsController extends RoxControllerBase
             $this->redirectToLogin($this->router->url('group_leave', array('group_id' => $group->getPKValue()), false));
         }
 
-        $page = new GroupLeavePage();
-        $page->group = $group;
+        if ($group->isGroupOwner($member)) {
+            $page = new GroupStartPage();
+            $page->group = $group;
+            $page->member = $this->_model->getLoggedInMember();
+            $page->model = $this->_model;
+            $this->setFlashError($this->getWords()->getSilent('GroupLeaveFail_ResignAdminFirst'));
+        } else {
+            $page = new GroupLeavePage();
+            $page->group = $group;
+        }
         return $page;
     }
 
@@ -704,12 +718,12 @@ class GroupsController extends RoxControllerBase
         $page = new GroupStartPage();
         if ($this->_model->leaveGroup($member, $group))
         {
-            $page->setMessage('GroupsLeaveSuccess');
+            $this->setFlashNotice($this->getWords()->getSilent('GroupsLeaveSuccess'));
             $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} left group #{$group->getPKValue()}");
         }
         else
         {
-            $page->setMessage('GroupsLeaveFail');
+            $this->setFlashError($this->getWords()->getSilent('GroupsLeaveFail'));
         }
         $page->group = $group;
         return $page;

@@ -691,9 +691,6 @@ class GroupsModel extends  RoxModelBase
             return false;
         }
         $rights = $logged_member->getOldRights();
-        if ( !empty($rights) && (in_array("Admin", array_keys($rights)) || in_array("ForumModerator", array_keys($rights)))) {
-            return false;
-        }
         return $group->removeGroupOwner($member);
     }
 

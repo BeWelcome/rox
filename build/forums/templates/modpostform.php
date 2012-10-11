@@ -162,8 +162,7 @@ echo "</form>" ;
 echo "</th>" ;
 
 if (isset($DataPost->UserNameStarter)) echo "<tr><td colspan=3>thread started by member ".$DataPost->UserNameStarter,"</td>" ;
-echo "<tr><td colspan=3>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a> [".$DataPost->Post->memberstatus."]</td>" ;
-
+echo "<tr><td colspan=3>post  by member <a href=\"/members/".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a> [".$DataPost->Post->memberstatus."]</td>" ;
 
 // Display the various title for this post in various languages
 $max=count($DataPost->Thread->Title) ;
@@ -202,7 +201,6 @@ echo "<tr><th colspan=3 align=left>Title of thread ($max translations)</th>" ;
 
     foreach ($ArrayLanguage as $Choices) {
             echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            if ($Choices->IdLanguage==$Title->IdLanguage) echo " selected ";
             echo "\">",$Choices->EnglishName,"</option>" ;
     }
     echo "</select>" ;
@@ -331,7 +329,7 @@ foreach ($DataPost->Post->Content as $Content) {
     echo "<input type=\"hidden\" name=\"",$callbackId,"\"  value=\"1\"/>" ;
     echo "<input type=\"hidden\" name=\"IdPost\"  value=\"".$DataPost->Post->id."\"/>" ;
     echo "<input type=\"hidden\" name=\"IdTrad\"  value=\"".$DataPost->Post->IdContent."\"/><br />" ;
-    $ArrayLanguage=$this->_model->LanguageChoices($Content->IdLanguage) ;
+    $ArrayLanguage=$this->_model->LanguageChoices() ;
 
 
     echo "<tr><td>" ;
@@ -340,7 +338,6 @@ foreach ($DataPost->Post->Content as $Content) {
 
     foreach ($ArrayLanguage as $Choices) {
             echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
             echo "\">",$Choices->EnglishName,"</option>" ;
     }
     echo "</select>\n" ;

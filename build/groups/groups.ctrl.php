@@ -664,6 +664,9 @@ class GroupsController extends RoxControllerBase
 
         if ($this->_model->joinGroup($member, $group))
         {
+            if ($group->Type == 'NeedInvitation') {
+                $this->setFlashError($this->getWords()->getSilent('GroupsErrorJoiningGroup'));
+            }
             $this->_model->updateMembershipSettings($member->id, $group->getPKValue(), $post['membershipinfo_acceptgroupmail'], !empty($post['membershipinfo_comment']) ? $post['membershipinfo_comment']:'');
             $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} joined group #{$group->getPKValue()}");
         }

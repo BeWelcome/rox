@@ -506,9 +506,10 @@ class GroupsController extends RoxControllerBase
         {
             $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
             $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            $this->logWrite("Member #{$member_id} added as admin to the group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+            $this->setFlashNotice($this->getWords()->getSilent('GroupNewAdminSuccess'));
         }
-        $this->logWrite("Member #{$member_id} added as admin to the group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-        $this->setFlashNotice($this->getWords()->getSilent('GroupNewAdminSuccess'));
         $page = new GroupStartPage;
         $this->_fillObject($page);
         $page->group = $group;
@@ -542,9 +543,10 @@ class GroupsController extends RoxControllerBase
             if (!$resigned)
             {
                 $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
+            } else {
+                $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->Name}");
+                $this->setFlashNotice($this->getWords()->getSilent('GroupAdminResignationSuccess'));
             }
-            $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->Name}");
-            $this->setFlashNotice($this->getWords()->getSilent('GroupAdminResignationSuccess'));
         }
         $page = new GroupStartPage;
         $this->_fillObject($page);

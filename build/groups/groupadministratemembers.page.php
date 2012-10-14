@@ -78,13 +78,38 @@ class GroupMemberAdministrationPage extends GroupsBasePage
             <tr>
                 <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
                 <td><a href="members/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
-                <td><?= (($this->member->getPKValue() == $member->getPKValue()) ? '' : "<a class='ban' href='groups/{$this->group->getPKValue()}/banmember/{$member->getPKValue()}'>{$words->getSilent('GroupsBanMember')}</a> / <a class='kick' href='groups/{$this->group->getPKValue()}/kickmember/{$member->getPKValue()}'>{$words->getSilent('GroupsKickMember')}</a>");?></td>
+                <td>
+                    <?php
+                    $groupid = $this->group->getPKValue();
+                    $memberid = $member->getPKValue();
+                    $BWAdmin = $this->isBWAdmin;
+                    if ($this->member->getPKValue() == $memberid  && !$BWAdmin) {
+                        echo "<a class='resignAdmin' href='groups/{$groupid}/resignAdmin'>{$words->getSilent('resignAsAdmin')}</a>";
+                    } elseif ($this->member->getPKValue() == $memberid  && $BWAdmin) {
+                        echo "SuperAdminPower!";
+                    }
+                    else {
+                        if ($this->group->isGroupOwner($member) && !$BWAdmin) {
+                            echo $words->getSilent('MemberIsAdmin');
+                        } elseif ($this->group->isGroupOwner($member) && $BWAdmin) {
+                            echo $words->getSilent('MemberIsAdmin');
+                            echo " / <a class='ban' href='groups/{$groupid}/banmember/{$memberid}'>{$words->getSilent('GroupsBanMember')}</a>";
+                            echo " / <a class='kick' href='groups/{$groupid}/kickmember/{$memberid}'>{$words->getSilent('GroupsKickMember')}</a>";
+                        } else {
+                            echo "<a class='addAdmin' href='groups/{$groupid}/addAdmin/{$memberid}'>{$words->getSilent('GroupsAddAdmin')}</a>";
+                            echo " / <a class='ban' href='groups/{$groupid}/banmember/{$memberid}'>{$words->getSilent('GroupsBanMember')}</a>";
+                            echo " / <a class='kick' href='groups/{$groupid}/kickmember/{$memberid}'>{$words->getSilent('GroupsKickMember')}</a>";
+                        }
+                    } ?>
+                </td>
             </tr>
         <?php endforeach; ?>
         </table>
         <script type='text/javascript'>
         var memberban = $('current_members').getElementsBySelector('a.ban');
         var memberkick = $('current_members').getElementsBySelector('a.kick');
+        var memberasadmin = $('current_members').getElementsBySelector('a.addAdmin');
+        var resignasadmin = $('current_members').getElementsBySelector('a.resignAdmin');
         memberban.each(function(elem){
             elem.observe('click', function(e){
                 if (!confirm('<?= $words->getSilent('GroupsConfirmMemberBan');?>'))
@@ -96,6 +121,22 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         memberkick.each(function(elem){
             elem.observe('click', function(e){
                 if (!confirm('<?= $words->getSilent('GroupsConfirmMemberKick');?>'))
+                {
+                    Event.stop(e);
+                }
+            })
+        });
+        memberasadmin.each(function(elem){
+            elem.observe('click', function(e){
+                if (!confirm('<?= $words->getSilent('GroupsConfirmMemberAsAdmin');?>'))
+                {
+                    Event.stop(e);
+                }
+            })
+        });
+        resignasadmin.each(function(elem){
+            elem.observe('click', function(e){
+                if (!confirm('<?= $words->getSilent('GroupsConfirmResignAsAdmin');?>'))
                 {
                     Event.stop(e);
                 }

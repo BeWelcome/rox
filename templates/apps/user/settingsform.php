@@ -70,10 +70,6 @@ $google_conf = PVars::getObj('config_google');
 if ($google_conf && $google_conf->maps_api_key) {
 ?>
     <div class="row">
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
-        echo $google_conf->maps_api_key;
-
-    ?>" type="text/javascript"></script>
          <script type="text/javascript">
          var map = null;
     

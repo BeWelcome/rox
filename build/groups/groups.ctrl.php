@@ -295,7 +295,8 @@ class GroupsController extends RoxControllerBase
     {
         $member_id = $this->_getMemberIdFromRequest();
         $group = $this->_getGroupFromRequest();
-        if ($group->Status != 'Public' && $this->_model->getLoggedInMember()->getPKValue() != $group->getGroupOwner()->getPkValue())
+        $invitedby = $this->_model->getLoggedInMember();
+        if ($group->Status != 'Public' && !$group->isGroupOwner($invitedby))
         {
             $this->redirect($this->router->url('groups_overview'));
         }
@@ -324,7 +325,13 @@ class GroupsController extends RoxControllerBase
     public function memberSearchAjax()
     {
         header('Content-Type: text/plain; encoding=utf-8');
-        if (empty($this->route_vars['search_term']) || empty($this->route_vars['group_id']) || !($group = $this->_model->findGroup($this->route_vars['group_id'])) || !$this->_model->getLoggedInMember() || ($group->Status != 'Public' && $this->_model->getLoggedInMember()->getPKValue() != $group->getGroupOwner()->getPKValue()))
+        if (empty($this->route_vars['search_term']) || empty($this->route_vars['group_id']) || !($group = $this->_model->findGroup($this->route_vars['group_id'])))
+        {
+            header('Status: 500 Fudged it');
+            exit;
+        }
+        $invitedby = $this->_model->getLoggedInMember();
+        if ( !$invitedby || ($group->Status != 'Public' && !$group->isGroupOwner($invitedby)))
         {
             header('Status: 500 Fudged it');
             exit;
@@ -351,7 +358,8 @@ class GroupsController extends RoxControllerBase
         $vars = $this->route_vars;
         if (!empty($vars['member_id']) && !empty($vars['group_id']) && ($group = $this->_model->findGroup($vars['group_id'])))
         {
-            if (!($group->Status != 'Public' && $this->_model->getLoggedInMember()->getPKValue() != $group->getGroupOwner()->getPkValue()) && $this->_model->inviteMember($group, $vars['member_id']))
+            $invitedby = $this->_model->getLoggedInMember();
+            if (!($group->Status != 'Public' && !$group->isGroupOwner($invitedby)) && $this->_model->inviteMember($group, $vars['member_id']))
             {
                 $this->logWrite("Member #{$vars['member_id']} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
                 $this->_model->sendInvitation($group, $vars['member_id'], $this->_model->getLoggedInMember());
@@ -390,7 +398,7 @@ class GroupsController extends RoxControllerBase
         }
         $this->logWrite("Member #{$member_id} accepted invitation to join group #{$group->getPKValue()}");
         $page = new GroupStartPage();
-        $page->setMessage('GroupsJoinSuccess');
+        $this->setFlashNotice($this->getWords()->getSilent('GroupJoinSuccess'));
         $this->_fillObject($page);
         $page->group = $group;
         return $page;
@@ -475,6 +483,79 @@ class GroupsController extends RoxControllerBase
     }
 
     /**
+     * adds a member of a group as admin
+     *
+     * @access public
+     * @return object $page
+     */
+    public function addMemberAsAdmin()
+    {
+        $group = $this->_getGroupFromRequest();
+        $member_id = $this->_getMemberIdFromRequest();
+        if (!$this->_model->getLoggedInMember())
+        {
+            $this->redirectToLogin($this->router->url('group_addadmin', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
+        }
+        elseif (!$this->_model->canAccessGroupAdmin($group) || empty($member_id))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
+        }
+
+        $newAdmin = $this->_model->addGroupMemberAsAdmin($group, $member_id);
+        if (!$newAdmin)
+        {
+            $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
+            $this->redirectAbsolute($this->router->url('groups_overview'));
+        } else {
+            $this->logWrite("Member #{$member_id} added as admin to the group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+            $this->setFlashNotice($this->getWords()->getSilent('GroupNewAdminSuccess'));
+        }
+        $page = new GroupStartPage;
+        $this->_fillObject($page);
+        $page->group = $group;
+        return $page;
+    }
+
+
+    /**
+     * resigns a member as admin of a group
+     *
+     * @access public
+     * @return object $page
+     */
+    public function resignAsAdmin()
+    {
+        $group = $this->_getGroupFromRequest();
+        $resigner = $this->_model->getLoggedInMember();
+        if (!$resigner)
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
+        }
+        elseif (!$this->_model->canAccessGroupAdmin($group) && !$group->isGroupOwner($resigner))
+        {
+            $this->redirectAbsolute($this->router->url('groups_overview'));
+        }
+        $owners = $group->getGroupOwners();
+        if (is_array($owners) && count($owners) < 2) {
+            $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed_LastAdmin'));
+        } else {
+            $resigned = $this->_model->resignGroupAdmin($group, $resigner->getPKValue());
+            if (!$resigned)
+            {
+                $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
+            } else {
+                $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->Name}");
+                $this->setFlashNotice($this->getWords()->getSilent('GroupAdminResignationSuccess'));
+            }
+        }
+        $page = new GroupStartPage;
+        $this->_fillObject($page);
+        $page->group = $group;
+        return $page;
+    }
+
+
+    /**
      * accepts a member to group
      *
      * @access public
@@ -492,8 +573,8 @@ class GroupsController extends RoxControllerBase
         {
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
-
-        $this->_model->acceptGroupMember($group, $member_id);
+        $acceptedby = $this->_model->getLoggedInMember();
+        $this->_model->acceptGroupMember($group, $member_id, $acceptedby->getPKValue());
         $this->logWrite("Member #{$member_id} was accepted into group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
 
         $page = new GroupStartPage();
@@ -521,12 +602,19 @@ class GroupsController extends RoxControllerBase
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
+        $isBWAdmin = false;
+        $member = $this->_model->getLoggedInMember();
+        $rights = $member->getOldRights();
+        if ( !empty($rights) && in_array("Admin", array_keys($rights))) {
+            $isBWAdmin = true;
+        }
+
         $page = new GroupMemberAdministrationPage;
         $this->_fillObject($page);
         $page->group = $group;
+        $page->$isBWAdmin = $isBWAdmin;
         return $page;
     }
-
 
     /**
      * handles member joining a group
@@ -576,13 +664,17 @@ class GroupsController extends RoxControllerBase
 
         if ($this->_model->joinGroup($member, $group))
         {
+            if ($group->Type == 'NeedAcceptance') {
+                $this->setFlashNotice($this->getWords()->getSilent('GroupsJoinApprovalWait'));
+            }
             $this->_model->updateMembershipSettings($member->id, $group->getPKValue(), $post['membershipinfo_acceptgroupmail'], !empty($post['membershipinfo_comment']) ? $post['membershipinfo_comment']:'');
             $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} joined group #{$group->getPKValue()}");
         }
         else
         {
             $mem_redirect->post = $post;
-            return false;
+            $this->setFlashError($this->getWords()->getSilent('GroupsErrorJoiningGroup'));
+            return $this->router->url('group_start', array('group_id' => $group->getPKValue()), false);;
         }
         return $this->router->url('group_start', array('group_id' => $group->getPKValue()), false);
     }
@@ -601,8 +693,16 @@ class GroupsController extends RoxControllerBase
             $this->redirectToLogin($this->router->url('group_leave', array('group_id' => $group->getPKValue()), false));
         }
 
-        $page = new GroupLeavePage();
-        $page->group = $group;
+        if ($group->isGroupOwner($member)) {
+            $page = new GroupStartPage();
+            $page->group = $group;
+            $page->member = $this->_model->getLoggedInMember();
+            $page->model = $this->_model;
+            $this->setFlashError($this->getWords()->getSilent('GroupLeaveFail_ResignAdminFirst'));
+        } else {
+            $page = new GroupLeavePage();
+            $page->group = $group;
+        }
         return $page;
     }
 
@@ -623,12 +723,12 @@ class GroupsController extends RoxControllerBase
         $page = new GroupStartPage();
         if ($this->_model->leaveGroup($member, $group))
         {
-            $page->setMessage('GroupsLeaveSuccess');
+            $this->setFlashNotice($this->getWords()->getSilent('GroupsLeaveSuccess'));
             $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} left group #{$group->getPKValue()}");
         }
         else
         {
-            $page->setMessage('GroupsLeaveFail');
+            $this->setFlashError($this->getWords()->getSilent('GroupsLeaveFail'));
         }
         $page->group = $group;
         return $page;
@@ -675,6 +775,7 @@ class GroupsController extends RoxControllerBase
         $page = ((isset($request[3]) && strtolower($request[3]) == 'true') ? new GroupStartPage() : new GroupSettingsPage());
         $this->_fillObject($page);
         $page->group = $group;
+        $page->group_members = $group->getMembers();
         return $page;
     }
 

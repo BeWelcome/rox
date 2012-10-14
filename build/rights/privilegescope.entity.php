@@ -189,4 +189,21 @@ class PrivilegeScope extends RoxEntityBase
         return $this->findByWhere("IdRole = '{$role->getPKValue()}' AND IdType = '{$object->getPKValue()}'");
     }
 
+    /**
+     * returns the members found with the given role for the given object
+     *
+     * @param object $role - role to check for
+     * @param object $object - object to check for
+     * @return mixed - privilegescope entity or false
+     * @access public
+     */
+    public function getMembersWithRoleObjectAccess($role, $object)
+    {
+        if (!is_object($role) || !$role->isLoaded() || !is_object($object) || !$object->isLoaded())
+        {
+            return false;
+        }
+        return $this->findByWhereMany("IdRole = '{$role->getPKValue()}' AND IdType = '{$object->getPKValue()}'");
+    }
+
 }

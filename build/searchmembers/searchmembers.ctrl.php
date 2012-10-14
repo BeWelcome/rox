@@ -249,7 +249,6 @@ class SearchmembersController extends PAppController {
                 
                 $P->addStyles = $this->_view->customStyles($mapstyle);
                 $google_conf = PVars::getObj('config_google');
-                $P->addStyles .= '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$google_conf->maps_api_key.'" type="text/javascript"></script>';
 
                 $P->title = $words->getBuffered('searchmembersTitle') . " - BeWelcome";
 

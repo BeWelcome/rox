@@ -227,8 +227,6 @@ function ShowMembersOnMap() {
 
 ?>
   <script src="../script/prototype.js" type="text/javascript"></script>
-  <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?= $google_conf->maps_api_key ?>"
-    type="text/javascript"></script>
   <div class="info">
 		<h3><? echo ww("FindPeopleMap"); ?></h3>
 		<br /><br />

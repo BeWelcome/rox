@@ -456,7 +456,7 @@ class GroupsModel extends  RoxModelBase
         $result = (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
         if ($result && $status == 'WantToBeIn')
         {
-            $this->notifyGroupAdmin($group, $member);
+            $this->notifyGroupAdmins($group, $member);
         }
         return $result;
     }
@@ -830,7 +830,7 @@ class GroupsModel extends  RoxModelBase
                 $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
                 $msg->IdParent = 0;
                 $msg->IdReceiver = $admin->getPKValue();
-                $msg->IdSender = 0;
+                $msg->IdSender = $member->get_userid();
                 $msg->SendConfirmation = 'No';
                 $msg->Status = 'ToSend';
                 $msg->SpamInfo = 'NotSpam';

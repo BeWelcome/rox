@@ -56,7 +56,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <?php } ?>
                   </td>
                   </tr>
-                  <tr>
+                  <tr align="left" >
                   <td class="label"><?= $words->get('HideAge')?>:</td>
                   <td colspan="3">
                         <input name="HideBirthDate" value="Yes" type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> /> <?= $words->get("Yes");?>

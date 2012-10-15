@@ -830,7 +830,7 @@ class GroupsModel extends  RoxModelBase
                 $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
                 $msg->IdParent = 0;
                 $msg->IdReceiver = $admin->getPKValue();
-                $msg->IdSender = $member->get_userid();
+                $msg->IdSender = $member->getPKValue();
                 $msg->SendConfirmation = 'No';
                 $msg->Status = 'ToSend';
                 $msg->SpamInfo = 'NotSpam';

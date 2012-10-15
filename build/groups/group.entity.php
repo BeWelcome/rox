@@ -308,7 +308,7 @@ class Group extends RoxEntityBase
         $description = str_replace(array("\r\n", "\r", "\n"), "", nl2br($description));
 
         $words = $this->getWords();
-        $description_id = ((!$this->IdDescription) ? $words->InsertInMTrad($this->dao->escape($description), 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($this->dao->escape($description), 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
+        $description_id = ((!$this->IdDescription) ? $words->InsertInMTrad($this->dao->escape($description), 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
 
         if (!$description_id)
         {

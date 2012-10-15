@@ -132,7 +132,7 @@ class Places extends PAppModel {
                 AND
                 geonames_cache.fk_countrycode = '%s'
             ORDER BY
-                members.Accomodation ASC, members.LastLogin DESC fixing
+                members.Accomodation ASC, members.LastLogin DESC
             ",$this->dao->escape($countrycode));
 
         return $this->getMembersAll($query);

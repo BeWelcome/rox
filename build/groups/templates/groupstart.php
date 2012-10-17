@@ -47,21 +47,20 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 </div>
                 <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>
                 <br><br>
+                <h3><?php echo $words->get('GroupAdmins'); ?></h3>
                 <div class="floatbox">
-                    <h3><?php echo $words->get('GroupAdmins'); ?></h3>
-                    <div class="center float_left">
                         <?php $admins = $this->group->getGroupOwners();
                         if (isset($admins) && !empty($admins))
                         {
-                            foreach ($admins as $admin){ ?>
-                                <a href="members/<?php echo $admin->Username; ?> "> <?php echo $admin->Username; ?> </a> <strong> / </strong>
-
-                                <?php
+                            foreach ($admins as $admin){
+                            
+                                echo '<div class="groupmembers center float_left">';
+                                echo MOD_layoutbits::PIC_50_50($admin->Username);
+                                echo '<a href="members/' . $admin->Username .'">' . $admin->Username .'</a></div>';
                             }
                         } else {
                             echo $words->get('GroupNoAdmin');
                         } ?>
-                    </div>
                 </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->

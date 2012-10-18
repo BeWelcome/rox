@@ -69,42 +69,52 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         <div class="c50l">
             <div class="subcl">
         <h4><?= $words->get('GroupsCurrentMembers');?></h4>
+        <?php $this->pager_widget->render(); ?>
         <table id='current_members'>
             <tr>
               <th colspan="2"><?= $words->get('Username');?></th>
               <th><?= $words->get('Action');?></th>
             </tr>
-        <?php foreach ($members as $member) : ?>
-            <tr>
-                <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
-                <td><a href="members/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
-                <td>
-                    <?php
-                    $groupid = $this->group->getPKValue();
-                    $memberid = $member->getPKValue();
-                    $BWAdmin = $this->isBWAdmin;
-                    if ($this->member->getPKValue() == $memberid  && !$BWAdmin) {
-                        echo "<a class='resignAdmin' href='groups/{$groupid}/resignAdmin'>{$words->getSilent('resignAsAdmin')}</a>";
-                    } elseif ($this->member->getPKValue() == $memberid  && $BWAdmin) {
-                        echo "SuperAdminPower!";
-                    }
-                    else {
-                        if ($this->group->isGroupOwner($member) && !$BWAdmin) {
-                            echo $words->getSilent('MemberIsAdmin');
-                        } elseif ($this->group->isGroupOwner($member) && $BWAdmin) {
-                            echo $words->getSilent('MemberIsAdmin');
-                            echo " / <a class='ban' href='groups/{$groupid}/banmember/{$memberid}'>{$words->getSilent('GroupsBanMember')}</a>";
-                            echo " / <a class='kick' href='groups/{$groupid}/kickmember/{$memberid}'>{$words->getSilent('GroupsKickMember')}</a>";
-                        } else {
-                            echo "<a class='addAdmin' href='groups/{$groupid}/addAdmin/{$memberid}'>{$words->getSilent('GroupsAddAdmin')}</a>";
-                            echo " / <a class='ban' href='groups/{$groupid}/banmember/{$memberid}'>{$words->getSilent('GroupsBanMember')}</a>";
-                            echo " / <a class='kick' href='groups/{$groupid}/kickmember/{$memberid}'>{$words->getSilent('GroupsKickMember')}</a>";
+        <?php
+            $purifier = MOD_htmlpure::getBasicHtmlPurifier();
+            $count = 0;
+            foreach ($this->pager_widget->getActiveSubset($this->group->getMembers('In', $this->pager_widget->getActiveStart(), $this->pager_widget->getActiveLength())) as $member)
+            {
+                ?>
+                <tr>
+                    <td><?=MOD_layoutbits::linkWithPicture($member->Username) ?></td>
+                    <td><a href="members/<?= $member->Username; ?>" class="username"><?=$member->Username ?></a></td>
+                    <td>
+                        <?php
+                        $groupid = $this->group->getPKValue();
+                        $memberid = $member->getPKValue();
+                        $BWAdmin = $this->isBWAdmin;
+                        if ($this->member->getPKValue() == $memberid  && !$BWAdmin) {
+                            echo "<a class='resignAdmin' href='groups/{$groupid}/resignAdmin'>{$words->getSilent('resignAsAdmin')}</a>";
+                        } elseif ($this->member->getPKValue() == $memberid  && $BWAdmin) {
+                            echo "SuperAdminPower!";
                         }
-                    } ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </table>
+                        else {
+                            if ($this->group->isGroupOwner($member) && !$BWAdmin) {
+                                echo $words->getSilent('MemberIsAdmin');
+                            } elseif ($this->group->isGroupOwner($member) && $BWAdmin) {
+                                echo $words->getSilent('MemberIsAdmin');
+                                echo " / <a class='ban' href='groups/{$groupid}/banmember/{$memberid}'>{$words->getSilent('GroupsBanMember')}</a>";
+                                echo " / <a class='kick' href='groups/{$groupid}/kickmember/{$memberid}'>{$words->getSilent('GroupsKickMember')}</a>";
+                            } else {
+                                echo "<a class='addAdmin' href='groups/{$groupid}/addAdmin/{$memberid}'>{$words->getSilent('GroupsAddAdmin')}</a>";
+                                echo " / <a class='ban' href='groups/{$groupid}/banmember/{$memberid}'>{$words->getSilent('GroupsBanMember')}</a>";
+                                echo " / <a class='kick' href='groups/{$groupid}/kickmember/{$memberid}'>{$words->getSilent('GroupsKickMember')}</a>";
+                            }
+                        } ?>
+                    </td>
+                </tr>
+                <?php
+                $count++;
+            }
+        echo "</table>";
+        $this->pager_widget->render();
+        ?>
         <script type='text/javascript'>
         var memberban = $('current_members').getElementsBySelector('a.ban');
         var memberkick = $('current_members').getElementsBySelector('a.kick');

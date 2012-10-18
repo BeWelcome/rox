@@ -44,6 +44,7 @@
     $this->addRoute('group_leave','groups/:group_id:/leave', 'GroupsController', 'leave');
     $this->addRoute('group_left','groups/:group_id:/leave/true', 'GroupsController', 'left');
     $this->addRoute('group_memberadministration','groups/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
+    $this->addRoute('group_memberadministration_paged','groups/:group_id:/memberadministration/page/:page_number:', 'GroupsController', 'memberAdministration');
     $this->addRoute('group_members','groups/:group_id:/members', 'GroupsController', 'members');
     $this->addRoute('group_members_paged','groups/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
     $this->addRoute('group_membersearch_ajax','groups/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');

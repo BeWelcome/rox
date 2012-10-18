@@ -55,7 +55,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                             foreach ($admins as $admin){
                             
                                 echo '<div class="groupmembers center float_left">';
-                                echo MOD_layoutbits::PIC_15_15($admin->Username);
+                                echo MOD_layoutbits::PIC_30_30($admin->Username);
                                 echo '<div><a href="members/' . $admin->Username .'">' . " " . $admin->Username .'</a></div></div>';
                             }
                         } else {

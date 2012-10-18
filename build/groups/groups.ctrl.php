@@ -613,6 +613,11 @@ class GroupsController extends RoxControllerBase
         $this->_fillObject($page);
         $page->group = $group;
         $page->$isBWAdmin = $isBWAdmin;
+        $pager_params->strategy = new HalfPagePager;
+        $pager_params->page_method = 'url';
+        $pager_params->items = $page->group->getMemberCount();
+        $pager_params->items_per_page = 5;
+        $page->pager_widget = new PagerWidget($pager_params);
         return $page;
     }
 

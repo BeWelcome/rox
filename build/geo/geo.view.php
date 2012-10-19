@@ -112,10 +112,10 @@ class GeoView extends PAppView {
                                 jQuery.noConflict();
                                 jQuery(\'a#showAllResults\').on(\'click\',
                                     function () {
-                                		jQuery(\'li.hidden\').show();
-                                		jQuery(\'p#moreHint\').hide();
-                                    	return false;
-                                	}
+                                        jQuery(\'li.hidden\').show();
+                                        jQuery(\'p#moreHint\').hide();
+                                        return false;
+                                    }
                                 );
                             </script>
                         ';

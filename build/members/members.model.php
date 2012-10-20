@@ -454,7 +454,6 @@ INSERT INTO
             }
             $this->logWrite("Adding a comment quality <b>" . $vars['Quality'] . "</b> on " . $mReceiver->Username, "Comment");
         } else {
-            $textfree_add = ($vars['TextFree'] != '') ? ('<hr>' . $vars['TextFree']) : '';
             $str = "
 UPDATE
     comments
@@ -465,7 +464,7 @@ SET
     Lenght='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
     TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
-    TextFree='" . $this->dao->escape($TCom->TextFree . $textfree_add) . "'
+    TextFree='" . $this->dao->escape($vars['TextFree']) . "'
 WHERE
     id=" . $TCom->id;
             $qry = $this->dao->exec($str);
@@ -810,6 +809,17 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidEmail';
         }
 
+        if (!empty($_FILES['profile_picture']['name']) && ($_FILES['profile_picture']['error'] != UPLOAD_ERR_OK)) {
+        	switch ($_FILES['profile_picture']['error']) {
+        		case UPLOAD_ERR_INI_SIZE:
+        		case UPLOAD_ERR_FORM_SIZE:
+        			$errors[] = 'UploadedProfileImageTooBig';
+        			break;
+        		default:
+        			$errors[] = 'ProfileImageUploadFailed';
+        			break;
+        	}
+        }
         return $errors;
     }
 
@@ -1304,8 +1314,10 @@ ORDER BY membersphotos.SortOrder
             $max_x = 150;
 
         if (!$using_original) {
+        	$original_x = min($size[0],PVars::getObj('images')->max_width);
+        	$original_y = min($size[1],PVars::getObj('images')->max_height);        	
             $this->writeMemberphoto($memberid);
-            $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $size[0], $size[1], true, 'ratio');
+            $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $original_x, $original_y, true, 'ratio');
         }
         $img->createThumb($this->avatarDir->dirName(), $memberid, $max_x, $max_y, true, '');
         $img->createThumb($this->avatarDir->dirName(), $memberid.'_200',200, 266, true, 'ratio');

@@ -58,7 +58,7 @@ class LoginController extends RoxControllerBase
             $errmsg = 'no username given.';
             
         } else if (!$bw_member = $this->model->getBWMemberByUsername($username = trim($post['u']))) {
-            $errmsg = 'member "'.$username.'" does not exist';
+            $errmsg = 'member "'.htmlentities($username).'" does not exist';
             
         } else if (!is_string($post['p']) || strlen($post['p'])==0) {
             if (PVars::getObj('development')->skip_password_check != 1) {
@@ -120,6 +120,9 @@ class LoginController extends RoxControllerBase
                     }
                     $this->model->setupBWSession($bw_member);
                     $this->model->setTBUserAsLoggedIn($tb_user);
+                    if (!empty($post['r']) && $post['r']) { // member wants to stay logged in
+                        $bw_member->refreshMemoryCookie(true);
+                    }
                     if (isset($request[0]) && 'login' == $request[0]) {
                         $redirect_url = implode('/', array_slice($request, 1));
                         if (!empty($_SERVER['QUERY_STRING'])) {

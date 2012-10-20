@@ -43,6 +43,7 @@ class MembersController extends RoxControllerBase
             case 'self':
             case 'myself':
             case 'my':
+            case 'deleteprofile':
                 // you are not supposed to open these pages when not logged in!
                 $page = new MembersMustloginPage;
                 break;
@@ -126,7 +127,14 @@ class MembersController extends RoxControllerBase
                     $page->status = "finish";
                 break;
             case 'myvisitors':
-                $page = new MyVisitorsPage();
+                $member = $this->model->getLoggedInMember();
+                $showVisits = $member->getPreference(
+                    'PreferenceShowProfileVisits', 'Yes');
+                if ($showVisits == 'Yes') {
+                    $page = new MyVisitorsPage();
+                } else {
+                    $this->redirect("members/" . $member->Username);
+                }
                 break;
             case 'self':
             case 'myself':
@@ -528,12 +536,28 @@ class MembersController extends RoxControllerBase
             $vars = $this->cleanVars($args->post);
             $request = $args->request;
             $errors = $this->model->checkProfileForm($vars);
+            		
+            $uploadFailed = false;
+			if (in_array('UploadedProfileImageTooBig', $errors) === false
+				|| in_array('ProfileImageUploadFailed', $errors) === false
+            ) {
+            	$uploadFailed = true;
+            } else {
+				// check if uploaded file is image
+				$img = new MOD_images_Image($_FILES['profile_picture']['tmp_name']);
+				if (!$img->isImage()) {
+					$errors[] = 'ProfileUploadNotImage';
+					$uploadFailed = true;
+				}
+			}
+			
             $vars['errors'] = array();
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;
 
                 // Activate fieldset tab "Contact Info" if needed.
-                if (in_array('SignupErrorInvalidBirthDate', $vars['errors']) === false) {
+                if (in_array('SignupErrorInvalidBirthDate', $vars['errors']) === false
+                	&& $uploadFailed === false) {
                     $vars['activeFieldset'] = 'contactinfo';
                 }
 

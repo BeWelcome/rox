@@ -1378,13 +1378,23 @@ WHERE `threadid` = '%d' ",
 		 }
 		 
 // retrieve alltag NOT connected to this thread (will be use to select the proposed tag to add)
-        $query = "SELECT forums_tags.id AS IdTag, forums_tags.IdName AS IdName,forums_tags.counter  as cnt 
+         $query = "SELECT DISTINCT forums_tags.id AS IdTag, forums_tags.IdName AS IdName,forums_tags.counter  as cnt
 				FROM forums_tags
-RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThread =".$DataPost->Thread->id." order by cnt desc" ;
+				RIGHT JOIN tags_threads ON ( tags_threads.IdTag != forums_tags.id ) WHERE IdThread = ".$DataPost->Thread->id." order by cnt desc" ;
         $s = $this->dao->query($query);
 		 $DataPost->AllNoneTags=array() ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
 		 	   $DataPost->AllNoneTags[]=$row ;
+		 }
+		 // no tags means query above won't work
+		 if (empty($DataPost->AllNoneTags)) {
+		     $query = "SELECT forums_tags.id AS IdTag, forums_tags.IdName AS IdName,forums_tags.counter  as cnt
+						FROM forums_tags ORDER BY cnt DESC" ;
+		     $s = $this->dao->query($query);
+		     $DataPost->AllNoneTags=array() ;
+		     while ($row=$s->fetch(PDB::FETCH_OBJ)) {
+		         $DataPost->AllNoneTags[]=$row ;
+		     }
 		 }
 		$DataPost->PossibleGroups=$this->ModeratorGroupChoice() ;		
 		return ($DataPost) ;
@@ -1818,7 +1828,7 @@ WHERE `threadid` = '$this->threadid'
 		if (isset($vars['IdGroup'])) {
 			$IdGroup=$vars['IdGroup'] ;
 			if (!empty($IdGroup)) {
-				$ss="select * from groups where id=".$IdGroup ;
+				$ss="select * from groups where id=".intval($IdGroup);
                 $s = $this->dao->query($ss);
                 $rGroup = $s->fetch(PDB::FETCH_OBJ);
 				if ($vars['ThreadVisibility']=='Default') {
@@ -2900,7 +2910,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     public function getAllTags() {
         $tags = array();
         
-        $query = "SELECT `tag`, `tagid`, `counter`,`IdName`,`tag_description`, IdDescription FROM `forums_tags` ORDER BY `counter` DESC LIMIT 50 ";
+        $query = "SELECT `tag`, `tagid`, `counter`,`IdName`,`tag_description`, IdDescription FROM `forums_tags` ORDER BY `counter` DESC LIMIT 25 ";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve tags!');
@@ -3061,7 +3071,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	 
 
 	 		function GetLanguageName($IdLanguage) {
-				$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id=".$IdLanguage ;
+				$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id=".($IdLanguage) ;
             	$s = $this->dao->query($query);
             	if (!$s) {
                   throw new PException('Could not retrieve IdLanguage in GetLanguageName entries');

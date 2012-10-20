@@ -32,18 +32,16 @@ $words = new MOD_words();
         <p><?php echo $words->get('ExploreTripsDescription') ?></p>
         <h2><a href="blog"><?php echo $words->get('Blogs') ?></a></h2>
         <p><?php echo $words->get('ExploreBlogsDescription') ?></p>
-        <h2><a href="gallery"><?php echo $words->get('Gallery') ?></a></h2>
-        <p><?php echo $words->get('ExploreGalleryDescription') ?></p>
     </div> <!-- subcl -->
   </div> <!-- c33l -->
   
   <div class="c33r">
     <div class="subcr">
-      <!-- Content of middle block -->
-        <h2><a href="chat"><?php echo $words->get('Chat') ?></a></h2>
-        <p><?php echo $words->get('ExploreChatDescription') ?></p>
+      <!-- Content of right block -->
         <h2><a href="wiki"><?php echo $words->get('Wiki') ?></a></h2>
         <p><?php echo $words->get('ExploreWikiDescription') ?></p>
+        <h2><a href="gallery"><?php echo $words->get('Gallery') ?></a></h2>
+        <p><?php echo $words->get('ExploreGalleryDescription') ?></p>
     </div> <!-- subcr -->
   </div> <!-- c33r -->
   

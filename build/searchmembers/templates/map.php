@@ -19,24 +19,34 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php echo $google_conf->maps_api_key; ?>" type="text/javascript"></script>
 */
     $words = new MOD_words();
-?>
-
+    ?>
 <?php if ($mapstyle == "mapon") { ?>
-    <div id="map" style="height:400px;width:100%; border: 1px solid #888; padding: 1px;">
-    </div>
+
+<?php 
+	$cloudmade_conf = PVars::getObj('cloudmade');
+?>
+	<input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+    <div id="map"></div>
     <div id="legend" style="padding: 20px;">
     <?php
-    for($i=1;$i<=3;$i++) {
-        $accom = $TabAccomodation[$i-1];
-        echo '<img src="images/icons/gicon'.$i.'_a.png" title="'. $words->getBuffered("Accomodation_".$accom) .'" alt="'. $words->getBuffered("Accomodation_".$accom) .'" class="legend_icon" /> ';
-        echo '<span>'.$words->getBuffered("Accomodation_".$accom).'</span> ';
+    function showLegendAccomodation($imgUrl, $i, $TabAccomodation, $words){
+    	$accom = $TabAccomodation[$i-1];
+    	echo '<img src="'.$imgUrl.'" title="'. $words->getBuffered("Accomodation_".$accom) .'" alt="'. $words->getBuffered("Accomodation_".$accom) .'" class="legend_icon" /> ';
+    	echo '<span id="accomodation'.$i.'">'.$words->getBuffered("Accomodation_".$accom).'</span> ';
     }
+    // yes, you are welcome
+    showLegendAccomodation('images/icons/gicon1_a.png', 1, $TabAccomodation, $words);
+    // never ask
+    showLegendAccomodation('images/icons/gicon2_a.png', 2, $TabAccomodation, $words);
+    // maybe
+    showLegendAccomodation('images/icons/gicon3_a.png', 3, $TabAccomodation, $words);
+    
     echo $words->flushBuffer();
     ?>
     </div>
-<?php } ?>
+<input onclick="searchByMap(0);" type="button" id="mapBoundariesSearchButton" class="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>" >
+   <?php } ?>
 
 <?php echo $words->flushBuffer();

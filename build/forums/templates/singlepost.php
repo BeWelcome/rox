@@ -63,7 +63,10 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             if ($post->PostVisibility=='ModeratorOnly') {
                 echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:ModeratorOnly " ;
             }
-            $max=count($post->Trad) ;
+            $max = 0;
+            if (!empty($post->Trad)) {
+                $max = count($post->Trad) ;
+            }
             for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                 if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
                     if ($post->Trad[$jj]->IdLanguage==$_SESSION["IdLanguage"]) {
@@ -113,7 +116,10 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             }
             // If current user has a moderator right, he can see the post
             if (($post->PostDeleted!="Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) {
-                $PostMaxTrad=count($post->Trad) ;
+                $PostMaxTrad = 0;
+                if (!empty($post->Trad)) {
+                    $PostMaxTrad = count($post->Trad);
+                }
                 if ($PostMaxTrad>1) { // we will display the list of trads only if there is more than one trad
                     echo "<p class=\"small\">",$words->getFormatted("forum_available_trads"),":" ;
 //                  print_r($post); echo"<br>" ;

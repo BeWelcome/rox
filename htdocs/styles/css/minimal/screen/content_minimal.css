@@ -512,12 +512,16 @@ dl.list {
   }
   #footer p {font-size: 0.9em;}
 
-  #footer a {margin: 0.1em 0.2em 0 0; padding: 0.2em 0.3em 0 0; color:#777; font-weight: normal; text-align: left;}
+  #footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#777; font-weight: normal; text-align: left;}
   #footer a:hover { text-decoration:underline; }
   #footer a:focus { text-decoration:underline; }
 
   #footer #flags {padding: 0 0 2.5em 0; line-height: 1em; }
-  #footer #flags a {color: #333; }
+  #footer #flags a {
+    color: #333;
+    margin: 0.1em 0.2em 0 0;
+    padding: 0.2em 0.3em 0 0;
+  }
   #footer #flags a:hover {color: #333; text-decoration:underline; }
   #footer #flags a:focus {color: #333; text-decoration:underline; }
 
@@ -950,6 +954,9 @@ div.box div.boxbottom div.links {
 }
 #login-widget input#login-u, #login-widget input#login-p {
     width: 10em;
+}
+#login-widget input#login-r {
+    vertical-align: bottom;
 }
 #loginmessage {
     width: 100%;

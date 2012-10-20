@@ -35,17 +35,42 @@
 </div> <!-- page_margins-->
 <?php $this->debugInfo() ?>
 
-<?php /* Temporarily disable Piwik, because Gnat is down. ?>
+<?php
+$piwikBaseURL = PVars::getObj('piwik')->baseurl;
+$piwikType = PVars::getObj('piwik')->type;
+$proto = 'http';
+if (!empty($_SERVER['HTTPS'])) {
+    $proto .= 's';
+}
+if ($piwikBaseURL) {
+    $piwikId = intval(PVars::getObj('piwik')->siteid);
+    if ($piwikId == 0) {
+        $piwikId = 1;
+    }
+    $piwikBaseName = preg_replace('/^([a-z]+:\/\/)*(.*?)\/*$/','$2',$piwikBaseURL);
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        $urlref = urlencode($_SERVER['HTTP_REFERER']);
+    } else {
+        $urlref = '';
+    }
+
+    if ($piwikType == 'javascript') { ?>
 <!-- Piwik -->
 <script type="text/javascript">
-var pkBaseURL = (("https:" == document.location.protocol) ? "https://www.bevolunteer.org/piwik/" : "http://www.bevolunteer.org/piwik/");
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://<?php echo $piwikBaseName ?>/" : "http://https://<?php echo $piwikBaseName ?>/");
 document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
 </script><script type="text/javascript">
 try {
-var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
-piwikTracker.trackPageView();
-piwikTracker.enableLinkTracking();
-} catch( err ) {}
-</script><noscript><p><img src="http://www.bevolunteer.org/piwik/piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
-<!-- End Piwik Tag -->
-<?php */ ?>
+    var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", <?php echo $piwikId ?>);
+    piwikTracker.trackPageView();
+    piwikTracker.enableLinkTracking();
+} catch( err ) {
+}
+</script><noscript><p><img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" width="1" height="1" /></p></noscript>
+<!-- End Piwik Tracking Code -->
+<?php    } else { ?>
+<!-- Piwik Image Tracker -->
+<img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1&amp;urlref=<?php echo $urlref; ?>" style="border:0" alt="" width="1" height="1" />
+<!-- End Piwik -->
+<?php    }
+} ?>

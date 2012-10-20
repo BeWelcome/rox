@@ -3,7 +3,12 @@ $words = new MOD_words();
 $search = '';
 if (isset($_GET['s']) && $_GET['s'])
     $search = $_GET['s'];
+
+$cloudmade_conf = PVars::getObj('cloudmade');
+
 ?>
+ <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+
 
 <div id="teaser" class="clearfix">
 	<div class="subcolumns">
@@ -16,7 +21,7 @@ if (isset($_GET['s']) && $_GET['s'])
         	<div class="subc">
             	<div id="searchteaser" >
                 <form method="get" action="trip/search">
-                    <input type="text" name="s" value="<?=$search?>" />
+                    <input type="text" name="s" value="<?= htmlspecialchars($search, ENT_QUOTES)?>" />
                     <input class="button" type="submit" name="submit" value="<?php echo $words->getFormatted('TripsSearch'); ?>" />
                 </div>
                 </form>

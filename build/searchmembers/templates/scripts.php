@@ -54,15 +54,19 @@ var membersDisplayed = decodeURIComponent('<?php echo rawurlencode($words->getBu
 var noMembersFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleNoMembersFound')); ?>');
 var wordOf = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordOf')); ?>');
 var wordFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordFound')); ?>');
+var logIn = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('logSpaceIn')); ?>');
+var toSee = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('toSee')); ?>');
+var more = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('moreResults')); ?>');
 
 function addTips() {
 // prototip tips
 new Tip('Address', fieldHelpAddress,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
-new Tip('map_search', fieldHelpMapBoundaries,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
+//new Tip('map_search', fieldHelpMapBoundaries,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 new Tip('UsernameField', fieldHelpUsername,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 new Tip('TextToFindField', fieldHelpTextToFind,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 }
 </script>
+<!-- searchmembers script -->
 <script src="script/searchmembers.js" type="text/javascript"></script>
 <script type="text/javascript">
 Event.observe(window, "load", addTips); 

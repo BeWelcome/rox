@@ -44,7 +44,7 @@ class GroupLeavePage extends GroupsBasePage
         else
         {
         ?>
-        <h3><?= $words->get('GroupsLeaveNamedGroup', $this->getGroupTitle()); ?></h3>
+        <h3><?= $words->get('GroupsLeaveNamedGroup', htmlspecialchars($this->getGroupTitle(), ENT_QUOTES)); ?></h3>
         <span class="button"><a href="groups/<?=$this->group->id ?>/leave/true"><?= $words->get('GroupsYesGetMeOut');?></a></span>
         <span class="button"><a href="groups/<?=$this->group->id ?>"><?= $words->get('GroupsNoIStay');?></a></span>
         <?php

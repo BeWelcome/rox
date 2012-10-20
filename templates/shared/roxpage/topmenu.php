@@ -50,7 +50,6 @@
                 <li><a href="trip"><?=$words->get('Trips')?></a></li>
                 <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
                 <li><a href="blog"><?=$words->get('Blogs')?></a></li>
-                <li><a href="chat"><?=$words->get('Chat')?></a></li>
                 <li><a href="wiki"><?=$words->get('Wiki')?></a></li>
             </ul>
         </li>

@@ -52,7 +52,6 @@ but "'.SCRIPT_BASE.'inc/config.inc.php" is missing
                 'mailAddresses' => 'config_mailAddresses',
                 'request' => 'config_request',
                 'google' => 'config_google',
-                'chat' => 'config_chat',
                 'env' => 'env'
             ) as $sectionname => $objectname) {
                 $differences[$sectionname] = array();

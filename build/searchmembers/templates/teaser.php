@@ -19,7 +19,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
             <label for="Address"><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></label>
         </span><br />
         <input type="text" size="30" name="Address" id="Address" class="float_left" value="<?=$address?>"
-            onfocus="this.value='';" onkeypress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/>
+           onclick="this.value='';" onfocus="this.value='';" onkeypress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/>
         <?php echo $words->flushBuffer(); ?>
         <input id="text_search" class="float_left button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"
             onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" /><?php echo $words->flushBuffer(); ?>
@@ -33,7 +33,6 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
             </span>
         </div> <!-- searchmore -->
     </div> <!-- searchbox -->
-    
 <!-- NEXT ROW -->
     <div id="searchoptions" class="floatbox">
 
@@ -70,8 +69,8 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
         </div> <!-- mapswitch -->
     </div> <!-- searchoptions -->
     <div class="floatbox">        
+        <div id="loading" class="small"></div>
         <div id="paging-div" ></div>
-        <div id="loading" class="small float_left"></div>
     </div>
         
 </div> <!-- teaser -->

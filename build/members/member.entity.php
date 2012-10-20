@@ -980,15 +980,23 @@ ORDER BY Value asc
 
     /**
      * Get value of a user's preference.
+     *
      * @param string $name codeName of preference.
-     * @return mixed preference value, null if preference not set.
+     * @param string $default Default value of preference (if not set).
+     * @return mixed Preference value, null or default if preference not set.
      */
-    public function getPreference($name) {
+    public function getPreference($name, $default = false) {
         $preferences = $this->get_preferences();
         foreach ($preferences as $preference) {
             if ($preference->codeName == $name) {
-                return $preference->Value;
+                $value = $preference->Value;
+                break;
             }
+        }
+        if ((!isset($value) || $value == null) && $default !== false) {
+            return $default;
+        } else {
+            return $value;
         }
     }
 
@@ -1026,6 +1034,8 @@ SELECT *,
     comments.Quality AS comQuality,
     comments.id AS id,
     comments.created,
+    comments.updated,
+    UNIX_TIMESTAMP(comments.created) unix_created,
     UNIX_TIMESTAMP(comments.updated) unix_updated
 FROM
     comments,
@@ -1052,6 +1062,8 @@ SELECT *,
     comments.Quality AS comQuality,
     comments.id AS id,
     comments.created,
+    comments.updated,
+    UNIX_TIMESTAMP(comments.created) unix_created,
     UNIX_TIMESTAMP(comments.updated) unix_updated
 FROM
     comments,
@@ -1082,6 +1094,8 @@ SELECT
   comments.Quality AS comQuality,
   comments.id AS id,
   comments.created,
+  comments.updated,
+  UNIX_TIMESTAMP(comments.created) unix_created,
   UNIX_TIMESTAMP(comments.updated) unix_updated,
   members.username as UsernameFromMember,
   members2.username as UsernameToMember
@@ -1439,21 +1453,32 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     }
 
     /**
-     * records a visit of current member on member #id
+     * Records visit of current member to another member's profile, respecting
+     * "Show profile visits" preference.
      *
-     * @param Member $member - member entity
-     *
-     * @access public
-     * @return bool
+     * @param Member $member Visiting member entity
+     * @return bool True if visit recorded, false if not recorded
      */
-    
     public function recordVisit(Member $member)
     {
         if (!$this->isLoaded() || !$member->isLoaded())
         {
             return false;
         }
-        return $this->createEntity('ProfileVisit')->recordVisit($this, $member);
+        $visitorShow = $member->getPreference('PreferenceShowProfileVisits',
+            'Yes');
+        $ownerShow = $this->getPreference('PreferenceShowProfileVisits',
+            'Yes');
+        if ($visitorShow == 'Yes' && $ownerShow == 'Yes') {
+            $visit = $this->createEntity('ProfileVisit');
+            if ($visit->recordVisit($this, $member) === false) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1532,6 +1557,9 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
+
+        // if "stay logged in active, clear memory cookie
+        $this->removeSessionMemory();
 
         $keys_to_delete = array(
             'IdMember',
@@ -1723,6 +1751,139 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
         // TODO: Error handling
         MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, false, $languageCode);
+    }
+
+    /**
+     * Validates "stay logged in" tokens and refreshes them
+     *
+     * @param boolean	$newsession: flag for a new session (no validation)
+     *
+     * @return boolean true if cookie refreshed, false if cookie removed
+     */
+    public function refreshMemoryCookie($newsession = false) {
+        $modified = 0;
+        if ($newsession === false) {
+
+            $memoryCookie = $this->getMemoryCookie();
+            if ($memoryCookie !== false) {
+
+                list($id,$seriesToken,$authToken) = $memoryCookie;
+
+                $seriesTokenEsc = $this->dao->escape($seriesToken);
+
+                // existing session -> validate first
+                $s = $this->dao->query('
+										SELECT
+											AuthToken, SeriesToken, modified
+										FROM
+											members_sessions
+										WHERE
+											IdMember = ' . (int)$this->id . '
+											AND
+											SeriesToken = \'' . $seriesTokenEsc . '\''
+                );
+                $tokens = $s->fetch(PDB::FETCH_OBJ);
+
+                // compare tokens from database with those in cookie
+                if ($tokens) {
+                    $authTokenDB = $tokens->AuthToken;
+                    $seriesToken = $tokens->SeriesToken;
+                    $modified = $tokens->modified;
+                    if ($authToken !== $authTokenDB) {
+                        // auth token incorrect but series token correct -> hijacked
+                        $this->removeSessionMemory($seriesToken, true);
+                        return false;
+                    }
+                } else {
+                    // both tokens (or just series token) incorrect
+                    $this->removeSessionMemory($seriesToken);
+                    return false;
+                }
+            } else {
+                $this->removeSessionMemory(); // just to clean up token records in database
+                return false;
+            }
+
+            // both tokens correct -> continue
+            // log in user
+            $loginModel = new LoginModel;
+            $tb_user = $loginModel->getTBUserForBWMember($this);
+            $loginModel->setupBWSession($this);
+            $loginModel->setTBUserAsLoggedIn($tb_user);
+
+        } else {
+            // create series token
+            $seriesToken = md5(rand()+time());
+        }
+
+        // create auth token
+        $authToken = md5(rand()+time());
+
+        // write tokens to database
+        if ($modified) {
+            // update token from existing series
+            $s = $this->dao->query('
+									UPDATE
+										members_sessions
+									SET
+										AuthToken = \'' . $authToken . '\'
+									WHERE
+										IdMember = ' . (int) $this->id . ' AND SeriesToken = \'' . $seriesToken . '\''
+            );
+        } else { // create new token series
+            $s = $this->dao->query('
+									INSERT INTO
+										members_sessions
+										(IdMember, AuthToken, SeriesToken)
+									VALUES
+										(' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\')'
+            );
+        }
+
+        // create cookie
+        $this->setMemoryCookie($this->id, $seriesToken, $authToken);
+
+        return true;
+    }
+
+    /**
+     * Removes "stay logged in" tokens and cookie
+     *
+     * @param  boolean $hijacked: true if session was hijacked
+     *
+     * @return boolean (always true)
+     */
+    public function removeSessionMemory($seriesToken = '', $hijacked = false) {
+        if (empty($seriesToken)) {
+            // no cookie passed -> get current one
+            $memoryCookie = $this->getMemoryCookie();
+            if ($memoryCookie !== false) {
+                $seriesToken = $memoryCookie[1];
+            }
+        }
+        $seriesTokenEsc = $this->dao->escape($seriesToken);
+        // remove tokens from database
+        // (also removes tokens more than cookie expiry)
+        $s = $this->dao->query('
+								DELETE FROM
+									members_sessions
+								WHERE
+									(IdMember = ' . (int) $this->id . '
+									AND
+									SeriesToken = \'' . $seriesTokenEsc . '\')
+									OR
+									modified < NOW() - INTERVAL ' . PVars::getObj('env')->rememberme_expiry . ' DAY'
+        );
+
+        if ($hijacked === true) {
+            // session hijacked
+            setcookie('bwRemember', 'hijacked', time() + 3600, '/');
+        } else {
+            // remove cookie
+            $this->setMemoryCookie(false);
+        }
+
+        return true;
     }
 
 }

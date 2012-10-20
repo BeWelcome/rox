@@ -38,13 +38,6 @@ $google['maps_api_key'] = 'ABQIAAAARaC_q9WJHfFkobcvibZvUBT2yXp_ZAY8_ufC3CFXhHIE1
 // The URL to the geoname webservice (this default is probably ok for you)
 $google['geonames_webservice'] = 'http://ws.geonames.org/search?q={query}&maxRows={rows}&style=LONG';
 
-
-// Chat settings (optional)
-$chat = array();
-// $chat['host'] = 'your.chat.domain';
-// $chat['port'] = 6667;
-// $chat['channel'] = '#mytravelbook';
-
 //*******************************************************
 // PLEASE DO NOT EDIT BEYOND THIS LINE
 //*******************************************************
@@ -59,8 +52,6 @@ PVars::register('config_request', $request);
 unset($request);
 PVars::register('config_google', $google);
 unset($google);
-PVars::register('config_chat', $chat);
-unset($chat);
 PVars::register('env', $env);
 define('SESSION_NAME', $env['session_name']);
 unset($env);

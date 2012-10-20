@@ -17,7 +17,6 @@ $menuText = array(
     'country'   => 'Länder',
     'forums'   => 'Foren',
     'wiki'		=> 'Wiki',
-    'chat'		=> 'Chat',
     'help'   => 'Hilfe',
     'about'     => 'About'
 );

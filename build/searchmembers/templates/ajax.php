@@ -46,6 +46,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <content>
 ";
 $maxpos = $vars['rCount'];
+$maxLoggedIn = $vars['rCountFull'];
 
 // Check wether there is a specific list type set or not
 if ($mapstyle == 'mapon')
@@ -62,26 +63,32 @@ $width = $vars['limitcount'];
 foreach($TList as $TL) {
     $ii++;
     $Nr = $ii;
+    
+    $accomodationIcon = ShowAccomodation($TL->Accomodation, $Accomodation);
+    
+    // replace line breaks '\r\n' by html line break element '<br/>'
+    $profileSummary = str_replace("\\r\\n", "<br/>", $TL->ProfileSummary);
+    
     $string = <<<HTML
-<table style="width: 200px">
-    <tr>
-        <td class="memberlist">
-            <img src="members/avatar/{$TL->Username}?xs"/>
-        </td>
-        <td class="memberlist" valign="top">
-            <p><a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a><br />
-            <span class="small">{$words->getFormatted('YearsOld',$TL->Age)}, {$words->getFormatted('from')} {$TL->CityName}, {$TL->CountryName}<br/>{$TL->ProfileSummary}
-            </span><br />
-            <a class="button" href="javascript: map.setZoom((map.getZoom())+4);">Zoom In</a> <a class="button" href="javascript: map.setZoom((map.getZoom())-4);">Zoom Out</a>
-        </td>
-    </tr>
-</table>
+<div class="memberlist">
+	<div class="avatar">
+    	<a href="members/{$TL->Username}" target="_blank"><img src="members/avatar/{$TL->Username}?xs"/></a>
+    </div>
+    <div class="details">
+    	<p><a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a>
+    		<br/><span class="small">{$words->getFormatted('YearsOld',$TL->Age)}, {$words->getFormatted('from')} {$TL->CityName}, {$TL->CountryName}
+    		<br/>{$profileSummary}</span>
+				<a class="button" href="javascript: geosearchMapBuilder.zoomIn($TL->Latitude, $TL->Longitude);">Zoom In</a> 
+				<a class="button" href="javascript: geosearchMapBuilder.zoomOut(-4);">Zoom Out</a>
+        </p>
+    </div>
+</div>
 HTML;
     $summary = htmlspecialchars($string, ENT_QUOTES);
     $string = '';
     $detail = htmlspecialchars($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr), ENT_QUOTES);
     
-    echo "<marker Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
+    echo "<marker username='$TL->Username' Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
 ";
 }
 /* pagination should NOT be inside the results sent back
@@ -136,7 +143,7 @@ else
         "'/>";
 }
 echo "<footer footer='".htmlspecialchars("".$words->flushBuffer() ."</table>" , ENT_QUOTES)."'/>";
-echo "<num_results num_results='".$maxpos."'/>";
+echo "<num_results num_results='".$maxpos."' num_all_results='".$maxLoggedIn."'/>";
 echo "</content>
 ";
 
@@ -188,12 +195,18 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
     
+    $memberProfileLink = "members/".$TM->Username;
+    
     $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',$TM->LastLogin))));
     if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
     $info_styles = array(0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">");
     $string = $info_styles[($ii++%2)]; // this display the <tr>
-    $string .= "<table class=\"full\"><tr><td valign=\"top\" class=\"memberlist\">" ;
+    $string .= "<table id=\"memberDetail".$Nr."\" class=\"profileLinkArea full\"";
+    // highlight marker on member list mouse over: $string .= " onmouseover=\"mapBuilder.highlightMarker(".$Nr.");\" onmouseout=\"mapBuilder.unhighlightMarker(".$Nr.");\"";
+    $string .= " ><tr><td valign=\"top\" class=\"memberlist\">" ;
+   	$string .= "<a class=\"profileLink\" href=".$memberProfileLink." target=\"_blank\">";
     $string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
+    $string .= "</a>";
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\" valign=\"top\">" ;
     $string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
@@ -201,11 +214,9 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $string .= $words->getFormatted('MemberSince').": <span title=".$TM->created."><strong>".date('d M y', strtotime($TM->created))."</strong><br />";
     $string .= $words->getFormatted('Comments').": <span title=".$TM->NbComment."><strong>".$TM->NbComment."</strong><br />";
     $string .= "</span></td><td align=\"right\" class=\"accommodation\">";
-    $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:GEvent.trigger(gmarkers[".$Nr."], 'click');\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";
-    $string .= "<span class=\"small\">".$Accomodation[$TM->Accomodation]."</span>";
+    $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:geosearchMapBuilder.openMarker(".$Nr.");\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";
     $string .= "</td></tr></table>" ;
     $string .="</div>" ;
-
     
     return $string;
 }
@@ -214,9 +225,9 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
 function ShowAccomodation($accom, $Accomodation)
 {
     if ($accom == "anytime")
-       return "<img src=\"images/icons/gicon1.png\" title=\"".$Accomodation['anytime']."\"  alt=\"yesicanhost\" />";
+       return "<img src=\"images/icons/gicon1_a.png\" title=\"".$Accomodation['anytime']."\"  alt=\"yesicanhost\" />";
     if (($accom == "dependonrequest") || ($accom == ""))
-       return "<img src=\"images/icons/gicon3.png\" title=\"".$Accomodation['dependonrequest']."\"  alt=\"dependonrequest\"   />";
+       return "<img src=\"images/icons/gicon2_a.png\" title=\"".$Accomodation['dependonrequest']."\"  alt=\"dependonrequest\"   />";
     if ($accom == "neverask")
-       return "<img src=\"images/icons/gicon2.png\" title=\"".$Accomodation['neverask']."\"  alt=\"neverask\" />";
+       return "<img src=\"images/icons/gicon3_a.png\" title=\"".$Accomodation['neverask']."\"  alt=\"neverask\" />";
 }

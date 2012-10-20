@@ -325,14 +325,6 @@ Boston, MA  02111-1307, USA.
 </form>
 </div> <!-- signup -->
 
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
-    $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
-    }
-    echo $google_conf->maps_api_key;
-
-?>" type="text/javascript"></script>
 <script src="script/geo_suggest.js" type="text/javascript"></script>
 <script type="text/javascript">
          var map = null;

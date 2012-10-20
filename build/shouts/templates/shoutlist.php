@@ -34,7 +34,7 @@ $Shouts = new Shouts;
 $callbackId = $Shouts->shoutProcess($table,$table_id);
 $vars =& PPostHandler::getVars($callbackId);
 $request = PRequest::get()->request;
-$login_url = 'login/'.implode('/', $request);
+$login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $commentsText = array();
 $commentsError = array();
 $i18n = new MOD_i18n('apps/blog/comments.php');
@@ -137,7 +137,7 @@ $('commentadd').onclick = function (){ $('comment-form').toggle(); return false;
 } else {
     // not logged in.
 
-    echo '<p>'.$words->getBuffered('PleaseRegister', '<a href="' . $login_url . '">', '</a>').'</p>';
+    echo '<p>'.$words->getBuffered('PleaseLogInToComment', '<a href="' . $login_url . '">', '</a>').'</p>';
 }
 ?>
 </div>

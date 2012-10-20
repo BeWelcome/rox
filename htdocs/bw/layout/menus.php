@@ -146,7 +146,6 @@ function Menu2_old($link = "", $tt = "") {
                         <li><a href="/trip"><?=ww('Trips')?></a></li>
                         <li><a href="/gallery"><?=ww('Gallery')?></a></li>
                         <li><a href="/blog"><?=ww('Blogs')?></a></li>
-                        <li><a href="/chat"><?=ww('Chat')?></a></li>
                     </ul>
                 </li>
                 <li><a href="/about"><?=ww('GetAnswers')?></a>

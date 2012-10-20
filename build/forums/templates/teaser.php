@@ -25,7 +25,7 @@ $User = APP_User::login();
                 <input type="hidden" name="cx" value="003793464580395137050:n7s_x10-itw" />
                 <input type="hidden" name="cof" value="FORID:9" />
                 <input type="hidden" name="ie" value="UTF-8" />
-                <input type="text" name="q" size="31" />
+                <input type="text" name="q" size="15" />
                 <input type="submit" name="sa" value="Search" />
             </div>
         </form>

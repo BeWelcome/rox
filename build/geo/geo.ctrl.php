@@ -126,7 +126,7 @@ class GeoController extends PAppController {
                     //retrieve all information from geonames
                     $locations = $this->_model->suggestLocation($request[2],40,$fcode);
                     if (!$locations && $ii++ == 5) {
-                        throw new PException('Could not retireve hierarchy for '.$request[2].' from geonames.org');
+                        throw new PException('Could not retrieve hierarchy for '.$request[2].' from geonames.org');
                         return false;
                     }
         		}

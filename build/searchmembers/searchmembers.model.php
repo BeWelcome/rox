@@ -317,7 +317,7 @@ WHERE
         $vars['OrderBy'] = $order_by;
 		
         // tables to query
-        $tablelist ="members, geonames_cache, geonames_countries, addresses";
+        $tablelist = "members, geonames_cache, geonames_countries, addresses";
 
         // get all conditions for search
         $where = 'WHERE ' . $this->generateMemberTypeCond($vars)
@@ -335,7 +335,7 @@ WHERE
             $where .= ' AND members.HideBirthDate=\'No\'';
         }
 
-        $visitorsWhere = $this->generateVisitorsOnlyCond();
+        $visitorsWhere = $this->generateVisitorsOnlyCond($vars);
 
         // if there is a condition using membertrads table, include it in table list for query
         if (preg_match('/memberstrads/i',$where)) {
@@ -344,7 +344,7 @@ WHERE
         // if there is a condition using membergroups table, include it in table list for query
         if (preg_match('/membersgroups/i',$where)) {
             $tablelist .= ', membersgroups';
-        }
+        }        
         
         // map boundaries for search
         if($this->GetParam($vars, "mapsearch")) {
@@ -362,6 +362,7 @@ WHERE
         $fullWhere = $where;
         if ($visitorsWhere) { // hide non-public profiles from visitors
             $fullWhere = $where . ' AND ' . $visitorsWhere;
+            $tablelist .= ', memberspublicprofiles';
         }
 
         // perform search
@@ -374,7 +375,7 @@ WHERE
                 SELECT
                     COUNT(DISTINCT members.id) AS fullCount
                 FROM
-                    (' . $memberTablelist . ')
+                    (' . $tablelist . ')
                 ' . $where);
             $row = $result->fetch(PDB::FETCH_OBJ);
             $rCountFull = $row->fullCount;
@@ -820,7 +821,7 @@ WHERE
     *
     * @return  string/boolean  WHERE condition (false if logged in)
     */
-    private function generateVisitorOnlyCond(&$vars) {
+    private function generateVisitorsOnlyCond(&$vars) {
         if ($this->getLoggedInMember()) {
             return false;
         }

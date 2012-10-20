@@ -59,10 +59,9 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
     
     public function render()
     {
-        $memberships = $this->_group->getMembers();
-        $membercount = count($memberships);
-        $memberships_newest = array_slice($memberships, -15);
-        foreach (array_reverse($memberships_newest) as $membership)
+        $numberOfMembers = 12;   
+        $memberships = $this->_group->getLastLoggedInMembers($numberOfMembers);
+        foreach ($memberships as $membership)
         {
             echo <<<HTML
             <div class="groupmembers center float_left">                

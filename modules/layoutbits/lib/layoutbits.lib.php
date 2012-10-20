@@ -37,16 +37,19 @@ class MOD_layoutbits
      * Quasi-constant functions for userthumbnails
      *
      */
-    public static function PIC_100_100 ($username,$picfile='',$style="framed") {
+    public static function PIC_100_100($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=100,$width=100,$quality=85,$picfile,$style);
     }
-    public static function PIC_50_50 ($username,$picfile='',$style="framed") {
+    public static function PIC_50_50($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=50,$width=50,$quality=85,$picfile,$style);
     }
-    public static function PIC_30_30 ($username,$picfile='',$style="framed") {
+    public static function PIC_40_40($username,$picfile='',$style="framed") {
+        return self::linkWithPictureVar($username,$height=40,$width=40,$quality=100,$picfile,$style);
+    }
+    public static function PIC_30_30($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=30,$width=30,$quality=100,$picfile,$style);
     }
-    public static function PIC_15_15 ($username,$picfile='',$style="framed") {
+    public static function PIC_15_15($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=15,$width=15,$quality=100,$picfile,$style);
     }
 

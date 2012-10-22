@@ -106,14 +106,17 @@ class GeoView extends PAppView {
                     // hide all results above 10
                     if ($ii++ == 10) {
                         $dohide = 'style="display:none" class="hidden"';
-                        $out .= '<p style="padding: 1em 0; clear:both">'.$words->get('Geo_results_foundmore','<a id="showAllResults" href="#">','</a>').'</p>';
+                        $out .= '<p style="padding: 1em 0; clear:both" id="moreHint">'.$words->get('Geo_results_foundmore','<a id="showAllResults" href="#">','</a>').'</p>';
                         $add_out = '
                             <script>
-                                $(\'showAllResults\').onclick = showAllResults;
-                                function showAllResults () {
-                                    $$(\'li.hidden\').invoke(\'toggle\');
-                                    return false;
-                                }
+                                jQuery.noConflict();
+                                jQuery(\'a#showAllResults\').on(\'click\',
+                                    function () {
+                                        jQuery(\'li.hidden\').show();
+                                        jQuery(\'p#moreHint\').hide();
+                                        return false;
+                                    }
+                                );
                             </script>
                         ';
                     }

@@ -134,9 +134,32 @@ class Group extends RoxEntityBase
         }
 
         $status = (($status) ? $status : 'In');
-
+        
         return $this->createEntity('GroupMembership')->getGroupMembers($this, $status, '', $offset, $limit);
     }
+
+
+    /**
+     * return the x recently logged in members of the group
+     *
+     * @param int $numberOfMembers- number of last logged in members to return
+     * @access public
+     * @return array - GroupMembership entities of x recently logged in members
+     */
+    public function getLastLoggedInMembers($numberOfMembers = 20)
+    {
+        if (!$this->_has_loaded || !is_int($numberOfMembers))
+        {
+            return false;
+        }
+        
+        $bylastlogin = true;
+        $memberships = $this->createEntity('GroupMembership')->getGroupMembers($this, 'In', '', 0, null, $bylastlogin);
+        $ms_lastloggedin = array_slice($memberships, 0, $numberOfMembers);
+        return $ms_lastloggedin;
+    }
+
+
 
     /**
      * return the members of the group accepting email from the other group members

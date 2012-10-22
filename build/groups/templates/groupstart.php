@@ -29,17 +29,15 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
         </div> <!-- c62l -->
         
         <div class="c38r">
-            <div class="subcr">
+            <div class="subcr"><br />
             
                 <?php
                     if (!APP_user::isBWLoggedIn('NeedMore,Pending')) : ?>
-                <h3><?= $words->get('GroupsJoinNamedGroup', $group_name_html); ?></h3>
                     <?= $words->get('GroupsJoinLoginFirst'); ?>
                 <?php else : ?>
-                <h3><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinNamedGroup', $group_name_html) : $words->get('GroupsLeaveNamedGroup', $group_name_html) ) ?></h3>
                 <div class="row clearfix">
                     <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
-                </div>
+                </div><br />
                 <?php endif; ?>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">

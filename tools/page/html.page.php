@@ -5,8 +5,10 @@ class PageWithHTML extends AbstractBasePage
 {
     private $_widgets = array();  // will be asked for stylesheet and scriptfile information
 
+    // Add or increment query string if a JS file changes to make sure browsers
+    // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        'script/main.js',
+        'script/main.js?1',
         'script/common.js',
     );
 

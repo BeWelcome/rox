@@ -106,6 +106,9 @@ var bwrox = new BWRox;
 /*
  * Including JavaScript files, depending on current URL.
  * Extend selectScripts() first parameter array to load more files.
+ *
+ *   Note: Add or increment query string if a JS file changes to make sure
+ *         browsers reload the file (e.g. "gallery.js?1" -> "gallery.js?2")
  */
 bwrox.selectScripts([
   {
@@ -143,7 +146,7 @@ bwrox.selectScripts([
     ]
   },
   {
-    file: "geo_suggest.js",
+    file: "geo_suggest.js?1",
     pages: [
       "signup", "setlocation"
     ]
@@ -281,5 +284,9 @@ bwrox.selectScripts([
   {
     file: "map/small/tripMap.js",
     pages: ["trip"]
+  },
+  {
+    file: "searchmembers.js?1",
+    pages: ["searchmembers"]
   }
 ]);

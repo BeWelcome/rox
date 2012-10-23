@@ -59,41 +59,43 @@ BWRox.prototype.selectScripts = function(scripts) {
  * @param {string} file Name of css file, relative to scripts folder or absolute.
  */
 BWRox.prototype.includeScript = function(file) {
-	if (file){
-		var src;
-		if (file.substring(0,4) == 'http'){
-			src = file;
-		}else{
-			src = 'script/' + file;
-		}
-		document.write('<script type="text/javascript" src="' + src + '"></script>');
-	}
+  if (file){
+    var src;
+    if (file.substring(0,4) == 'http') {
+      src = file;
+    } else {
+      src = 'script/' + file;
+    }
+    document.write('<script type="text/javascript" src="' + src + '"></script>');
+  }
 };
+
 /**
  * Select style to include on current page for IE8 only.
  * @param {string} file Name of script file, relative to styles folder or absolute.
  */
 BWRox.prototype.includeStyleIE8 = function(file) {
-	if (file){
-		document.write('<!--[if lte IE 8]>');
-		this.includeStyle(file);
-		document.write('<![endif]-->');
-	}
+  if (file){
+    document.write('<!--[if lte IE 8]>');
+    this.includeStyle(file);
+    document.write('<![endif]-->');
+  }
 };
+
 /**
  * Select style to include on current page.
  * @param {string} file Name of script file, relative to styles folder or absolute.
  */
 BWRox.prototype.includeStyle = function(file) {
-	if (file){
-		var src;
-		if (file.substring(0,4) == 'http'){
-			src = file;
-		}else{
-			src = 'styles/' + file;
-		}
-		document.write('<link media="all" type="text/css" href="' + src + '" rel="stylesheet">');
-	}
+  if (file){
+    var src;
+    if (file.substring(0,4) == 'http') {
+      src = file;
+    } else {
+      src = 'styles/' + file;
+    }
+    document.write('<link media="all" type="text/css" href="' + src + '" rel="stylesheet">');
+  }
 };
 
 /*
@@ -107,24 +109,24 @@ var bwrox = new BWRox;
  */
 bwrox.selectScripts([
   {
-	//JQuery has to be defined before prototype to avoid conflicts
+    //JQuery has to be defined before prototype to avoid conflicts
     file: "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
-		file: "3rdparty/leaflet/0.4.4/leaflet.js",
-	    style: "css/3rdparty/leaflet/0.4.4/leaflet.css",
-	    styleIE8: "css/3rdparty/leaflet/0.4.4/leaflet.ie.css",
-	    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-	}, 
-	{
-		  file: "http://maps.googleapis.com/maps/api/js?sensor=false",
-		  pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-	}, 
-	{
-		file: "3rdparty/leaflet/plugins/Google.js",
-	  pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-	},
+    file: "3rdparty/leaflet/0.4.4/leaflet.js",
+    style: "css/3rdparty/leaflet/0.4.4/leaflet.css",
+    styleIE8: "css/3rdparty/leaflet/0.4.4/leaflet.ie.css",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "http://maps.googleapis.com/maps/api/js?sensor=false",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "3rdparty/leaflet/plugins/Google.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
   {
     file: "prototype162.js"
   },
@@ -214,12 +216,6 @@ bwrox.selectScripts([
       "searchmembers"
     ]
   },
-//  {
-//    file: "labeled_marker.js",
-//    pages: [
-//      "searchmembers"
-//    ]
-//  },
   {
     file: "fancyzoom.js",
     pages: [
@@ -230,60 +226,60 @@ bwrox.selectScripts([
       "deleteprofile",
       "people"
     ]
-  }, 
+  },
   {
-	  file: "util/console.js"
-  }, 
+    file: "util/console.js"
+  },
   {
-	  file: "map/geolocation/BWGoogleMapReverseGeolocator.js",
-	  pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-  }, 
+    file: "map/geolocation/BWGoogleMapReverseGeolocator.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
   {
-	  file: "map/leaflet/LeafletFlagIcon.js",
-	  pages: ["signup/3", "setlocation", "blog", "trip"]
-  }, 
+    file: "map/leaflet/LeafletFlagIcon.js",
+    pages: ["signup/3", "setlocation", "blog", "trip"]
+  },
   {
-	  file: "map/builder/BWSimpleMapBuilder.js",
-	  pages: ["signup/3", "setlocation", "blog", "trip"]
-  }, 
+    file: "map/builder/BWSimpleMapBuilder.js",
+    pages: ["signup/3", "setlocation", "blog", "trip"]
+  },
   {
-	  file: "map/builder/BWGeosearchMapBuilder.js",
-	  pages: ["searchmembers"]
-  }, 
+    file: "map/builder/BWGeosearchMapBuilder.js",
+    pages: ["searchmembers"]
+  },
   {
-	  file: "map/BWMapMaths.js",
-	  pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-  }, 
+    file: "map/BWMapMaths.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
   {
-	  file: "map/BWMapAddressPoint.js",
-	  pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-  }, 
+    file: "map/BWMapAddressPoint.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
   {
-	  file: "map/BWMapHostPoint.js",
-	  pages: ["searchmembers"]
-  }, 
+    file: "map/BWMapHostPoint.js",
+    pages: ["searchmembers"]
+  },
   {
-	  file: "map/BWMapSearchResult.js",
-	  pages: ["searchmembers"]
-  }, 
+    file: "map/BWMapSearchResult.js",
+    pages: ["searchmembers"]
+  },
   {
-	  file: "map/small/smallMapGeoLocation.js",
-	  pages: ["signup/3", "setlocation"]
-  }, 
+    file: "map/small/smallMapGeoLocation.js",
+    pages: ["signup/3", "setlocation"]
+  },
   {
-	  file: "map/small/blogSmallMapGeoLocation.js",
-	  pages: ["blog", "trip"]
-  }, 
+    file: "map/small/blogSmallMapGeoLocation.js",
+    pages: ["blog", "trip"]
+  },
   {
-	  file: "map/small/blogMap.js",
-	  pages: ["blog"]
-  }, 
+    file: "map/small/blogMap.js",
+    pages: ["blog"]
+  },
   {
-	  file: "map/small/singlePost.js",
-	  pages: ["blog"]
-  }, 
+    file: "map/small/singlePost.js",
+    pages: ["blog"]
+  },
   {
-	  file: "map/small/tripMap.js",
-	  pages: ["trip"]
-  } 
+    file: "map/small/tripMap.js",
+    pages: ["trip"]
+  }
 ]);

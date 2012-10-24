@@ -1,4 +1,15 @@
 /*
+ * main.js
+ *
+ * Sets helper globals, creates BWRox namespace, creates bwrox singleton
+ * and includes scripts based on current URL.
+ *
+ * Note: If you make changes here make sure to increment query string in array
+ *       $_early_scriptfiles in <rox>/tools/page/html.page.php so browsers
+ *       reload main.js
+ */
+
+/*
  * Setting helper globals
  */
 var agt = navigator.userAgent.toLowerCase();
@@ -33,6 +44,14 @@ BWRox.prototype.selectScripts = function(scripts) {
   for (var i = 0; i < scripts.length; i++) {
     var script = scripts[i];
 
+    // No script prefix if remote location
+    if (typeof script.remote === "boolean" && script.remote === true) {
+      var prefix = '';
+    } else {
+      var prefix = 'script/';
+    }
+    var src = prefix + script.file;
+
     // Loop through pages array, if it exists
     if (typeof(script.pages) == 'object' && script.pages.length > 0) {
       for (var j = 0; j < script.pages.length; j++) {
@@ -41,61 +60,21 @@ BWRox.prototype.selectScripts = function(scripts) {
 
         // Include script if path starts with page name
         if (currentPage.indexOf(script.pages[j]) == 0) {
-          this.includeScript(script.file);
-          this.includeStyle(script.style);
-          this.includeStyleIE8(script.styleIE8);
+          this.includeScript(src);
         }
       }
     } else {
-      this.includeScript(script.file);
-      this.includeStyle(script.style);
-      this.includeStyleIE8(script.styleIE8);
+      this.includeScript(src);
     }
   }
 };
 
 /**
- * Select script to include on current page.
- * @param {string} file Name of css file, relative to scripts folder or absolute.
+ * Include a JavaScript file.
+ * @param {string} src Location of script file.
  */
-BWRox.prototype.includeScript = function(file) {
-  if (file){
-    var src;
-    if (file.substring(0,4) == 'http') {
-      src = file;
-    } else {
-      src = 'script/' + file;
-    }
-    document.write('<script type="text/javascript" src="' + src + '"></script>');
-  }
-};
-
-/**
- * Select style to include on current page for IE8 only.
- * @param {string} file Name of script file, relative to styles folder or absolute.
- */
-BWRox.prototype.includeStyleIE8 = function(file) {
-  if (file){
-    document.write('<!--[if lte IE 8]>');
-    this.includeStyle(file);
-    document.write('<![endif]-->');
-  }
-};
-
-/**
- * Select style to include on current page.
- * @param {string} file Name of script file, relative to styles folder or absolute.
- */
-BWRox.prototype.includeStyle = function(file) {
-  if (file){
-    var src;
-    if (file.substring(0,4) == 'http') {
-      src = file;
-    } else {
-      src = 'styles/' + file;
-    }
-    document.write('<link media="all" type="text/css" href="' + src + '" rel="stylesheet">');
-  }
+BWRox.prototype.includeScript = function(src) {
+  document.write('<script type="text/javascript" src="' + src + '"></script>');
 };
 
 /*
@@ -112,18 +91,18 @@ var bwrox = new BWRox;
  */
 bwrox.selectScripts([
   {
-    //JQuery has to be defined before prototype to avoid conflicts
+    // JQuery has to be included before prototype to avoid conflicts
     file: "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+    remote: true,
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
     file: "3rdparty/leaflet/0.4.4/leaflet.js",
-    style: "css/3rdparty/leaflet/0.4.4/leaflet.css",
-    styleIE8: "css/3rdparty/leaflet/0.4.4/leaflet.ie.css",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
     file: "http://maps.googleapis.com/maps/api/js?sensor=false",
+    remote: true,
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
@@ -232,6 +211,10 @@ bwrox.selectScripts([
   },
   {
     file: "util/console.js"
+  },
+  {
+    file: "map/include_css.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
     file: "map/geolocation/BWGoogleMapReverseGeolocator.js",

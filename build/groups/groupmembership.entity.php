@@ -128,7 +128,7 @@ class GroupMembership extends RoxEntityBase
         $sql = "
 SELECT
 m.*,
-IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, CURDATE(), m.LastLogin) as covertracks
+IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastLogin) as covertracks
 FROM members AS m, {$this->getTableName()} AS mg
 WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}
 ORDER BY {$orderby}{$limit_clause}{$offset_clause}";

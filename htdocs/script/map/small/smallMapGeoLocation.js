@@ -64,7 +64,7 @@ function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, 
     removeHighlight();
     Element.setStyle($('li_'+geonameid), {
         fontWeight: 'bold',
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#ffffff',
         backgroundImage: 'url(images/icons/tick.png)'
     });
 }

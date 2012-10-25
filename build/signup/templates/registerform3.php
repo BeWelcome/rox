@@ -82,7 +82,7 @@ Boston, MA  02111-1307, USA.
                     <?= urldecode($vars['geonamename'])?><br/>
                     <?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
                         <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
-                        <span class="small"><?=$vars['countryname']?> / <?=$vars['admincode']?></span>
+                        <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
                     <?php } ?>
                     </a></li>
                 </ol>

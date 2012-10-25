@@ -60,7 +60,7 @@ function removeHighlight() {
  */
 function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
     setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
-    changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
+    changeMarker(latitude, longitude, zoom, decodeURIComponent(geonamename) + ', ' + decodeURIComponent(countryname));
     removeHighlight();
     Element.setStyle($('li_'+geonameid), {
         fontWeight: 'bold',

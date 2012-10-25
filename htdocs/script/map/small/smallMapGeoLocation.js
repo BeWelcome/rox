@@ -43,13 +43,30 @@ function initOsmMap() {
 	}
 }
 
+function removeHighlight() {
+    var lis = $A($('locations').childNodes);
+    lis.each(function(li) {
+        Element.setStyle(li, {
+            fontWeight: '',
+            backgroundColor: '',
+            backgroundImage: ''
+        });
+    });
+}
+
 /**
  * called when an user click on a result of the list, to update the marker.
- * */
+ *
+ */
 function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
     setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
     changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
-    Element.setStyle($('li_'+geonameid), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
+    removeHighlight();
+    Element.setStyle($('li_'+geonameid), {
+        fontWeight: 'bold',
+        backgroundColor: '#f5f5f5',
+        backgroundImage: 'url(images/icons/tick.png)'
+    });
 }
 
 function changeMarker(markerLatitude, markerLongitude, zoomLevel, markerDescription) {

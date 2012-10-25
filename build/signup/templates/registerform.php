@@ -407,20 +407,6 @@ Boston, MA  02111-1307, USA.
         $('admincode').value = admincode;    
     }
 
-    function removeHighlight() {
-        var lis = $A($('locations').childNodes);
-        lis.each(function(li) {
-            Element.setStyle(li, {fontWeight:''});
-        });
-    }
-
-    function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-        setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode);
-        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname); 
-        removeHighlight();
-        Element.setStyle($('li_'+geonameid), {fontWeight:'bold'});
-    }
-
     window.onunload = GUnload;
     </script>
     <input type="hidden" name="geonameid" id="geonameid" value="<?php 

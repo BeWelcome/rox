@@ -125,12 +125,31 @@ class GeoView extends PAppView {
                     } else {
                         $adminName1 = '';
                     }
-                    $out .= '<li id="li_'.$location['geonameId'].'" '.$dohide.' onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.rawurlencode($location['name']).'\', \''.rawurlencode($location['countryName']).'\', \''.$location['countryCode'].', \'' . $adminName1 . '\'); return false;"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.rawurlencode($location['name']).'\', \''.rawurlencode($location['countryName']).'\', \''.$location['countryCode'].'\', \'' . $adminName1 . '\'); return false;">
-                            '.$location['name'].'<br />
-                            <img src="images/icons/flags/'.strtolower($location['countryCode']).'.png" alt="'.$location['countryName'].'"> <span class="small">'.$location['countryName'];
-                    if (isset($location['fcodeName'])) {
-                        // $out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
-                    }
+                    $onclick = "javascript: setMap('"
+                        . $location['geonameId']
+                        . "', '"
+                        . $location['lat']
+                        . "', '"
+                        . $location['lng']
+                        . "', '"
+                        . $location['zoom']
+                        . "', '"
+                        . rawurlencode($location['name'])
+                        . "', '"
+                        . rawurlencode($location['countryName'])
+                        . "', '"
+                        . $location['countryCode']
+                        . "', '"
+                        . $adminName1
+                        . "'); return false;";
+                    $out .= '<li id="li_' . $location['geonameId'] . '" '
+                        . $dohide . ' onclick="' . $onclick . '">'
+                        . '<a id="href_'.$location['geonameId'] . '" onclick="'
+                        . $onclick . '">' . $location['name']
+                        . '<br /><img src="images/icons/flags/'
+                        . strtolower($location['countryCode']) . '.png" alt="'
+                        . $location['countryName'] . '"> <span class="small">'
+                        . $location['countryName'];
                     if (isset($location['adminName1'])) {
                         $out .= ' / '.$location['adminName1'];
                     }

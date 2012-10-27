@@ -99,7 +99,7 @@ function searchByText(address, i) {
 		$('second_pager').innerHTML = '';
 	}
 	reverseGeolocator.getLocation(address, function(addressPoint) {
-		searchByAddressPoint(addressPoint, 0);
+		searchByAddressPoint(addressPoint, i);
 	}, function() {
 		// address not fount
 		put_html('loading', addressNotFound);
@@ -177,8 +177,7 @@ function loadMap(i) {
 					if (mapSearchResult.hasResults()) {
 						console.log("Adding the pager...");
 						// remove the first child of first page
-						var removedFirstPageChild = mapSearchResult
-								.removeFirstPageChild();
+						var removedFirstPageChild = mapSearchResult.removeFirstPageChild();
 						// create temporary div
 						var tempdiv = document.createElement('div');
 						try {
@@ -340,7 +339,12 @@ function hookUpPager(container_id, per_page) {
 			Event.stop(ev);
 			var reg = /page=(\d+)/;
 			var page = (this.href.match(reg)[1] - 1) * per_page;
-			loadMap(page);
+            if (state == 'text')
+                searchByText(get_val("Address"), page);
+            else if (state == 'map')
+                searchByMap(page);
+            else
+                loadMap(page);
 		});
 	}
 }

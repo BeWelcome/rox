@@ -91,6 +91,8 @@ div#forumsthreadreplybottom {
     width:100%;
     text-align:right;
     margin-top: 0.5em;
+    overflow: hidden;
+    padding-top: 0.7em;
 }
 h2.forumstopic {
     margin-bottom: 0.2em;

@@ -25,11 +25,7 @@ Boston, MA  02111-1307, USA.
 /*
  * REGISTER FORM TEMPLATE
  */
-?>
-
-
-<?php 
-	$cloudmade_conf = PVars::getObj('cloudmade');
+$cloudmade_conf = PVars::getObj('cloudmade');
 ?>
  <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
 
@@ -72,20 +68,19 @@ Boston, MA  02111-1307, USA.
               </div>
             </div>
 
-            </div> <!-- geoselectorjs -->
-
-            <div id="location-suggestion">
+        </div> <!-- geoselectorjs -->
+        <div id="location-suggestion">
             <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
-                <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
-                <ol class="plain">
-                    <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
-                    <?= urldecode($vars['geonamename'])?><br/>
-                    <?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
-                        <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
-                        <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
+            <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
+            <ol id="locations" class="plain">
+                <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);">
+                    <a id="href_4544349"><?= urldecode($vars['geonamename']) ?><br/><?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
+                    <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
+                    <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
                     <?php } ?>
-                    </a></li>
-                </ol>
+                    </a>
+                </li>
+            </ol>
             <?php } ?>
         </div>
 
@@ -111,8 +106,6 @@ Boston, MA  02111-1307, USA.
         }
         ?>
 
-  <fieldset id="location">
-
     <input type="hidden" name="geonameid" id="geonameid" value="<?php
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
@@ -135,8 +128,6 @@ Boston, MA  02111-1307, USA.
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
-
-  </fieldset>
 
   <p>
     <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"

@@ -34,11 +34,7 @@
             $actionUrl = implode('/', $request);
             $submitName = '';
             $submitValue = $words->getSilent('BlogCreateSubmit');
-            // COMMENTED OUT
-            //echo '<h2>'.$words->get('BlogCreateTitle').'</h2>';
-        } else { // $request[2] == 'finish'
-            // COMMENTED OUT
-            //echo '<h2>'.$words->get('BlogCreateFinishTitle')."</h2>\n";
+        } else {
             echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
             echo '<p>'.$words->get('BlogCreateFinishInfo')."</p>\n";
         }

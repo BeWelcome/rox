@@ -344,7 +344,7 @@ WHERE
         // if there is a condition using membergroups table, include it in table list for query
         if (preg_match('/membersgroups/i',$where)) {
             $tablelist .= ', membersgroups';
-        }        
+        }
         
         // map boundaries for search
         if($this->GetParam($vars, "mapsearch")) {
@@ -504,12 +504,12 @@ WHERE
         $where = '1=1'; // initialise condition
 
         // preset latitudes
-        $latSW = intval($this->GetParam($vars, "bounds_sw_lat"));
-        $latNE = intval($this->GetParam($vars, "bounds_ne_lat"));
+        $latSW = floatval($this->GetParam($vars, "bounds_sw_lat"));
+        $latNE = floatval($this->GetParam($vars, "bounds_ne_lat"));
 
         // preset longitudes
-        $longSW = intval($this->GetParam($vars, "bounds_sw_lng"));
-        $longNE = intval($this->GetParam($vars, "bounds_ne_lng"));
+        $longSW = floatval($this->GetParam($vars, "bounds_sw_lng"));
+        $longNE = floatval($this->GetParam($vars, "bounds_ne_lng"));
 
         // restrict latitude
         if($latSW > $latNE) { // searching across pole (impossible on map?)

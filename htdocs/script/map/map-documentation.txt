@@ -3,15 +3,12 @@
 
 **** htdocs/script/main.js ****
 This file is used to add/remove JS and CSS files (nothing specific to search function here)
-    
-**** build/searchmembers/template/script.php ****
-Here, we add the searchmember.js file: this has to be done here, not in main.js, but I am not sure why (I supposed that other elements have to be initialised before this one)
 
 **** build/searchmembers/templates/ajax.php ****
 Here is the formatted answer of search ajax requests (search member lists, map popup content, etc...)
 
-**** htdocs/script/searchmember.js: this is the original JS file and the entry point for map search functionalities. 
-I tried to refactor it, first by removing GMap references. 
+**** htdocs/script/searchmembers.js: this is the original JS file and the entry point for map search functionalities.
+I tried to refactor it, first by removing GMap references.
 It is still a bit complicated, but really easier to understand now
 
 

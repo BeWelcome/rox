@@ -67,20 +67,7 @@ $cloudmade_conf = PVars::getObj('cloudmade');
                     <p class="desc"><?=$words->get('subline_location')?></p>
 
                     <div id="location-status"></div>
-            <div id="location-suggestion">
-            <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
-                <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
-                <ol id="locations" class="plain">
-                    <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
-                    <?=$vars['geonamename']?><br/>
-                    <?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
-                        <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
-                        <span class="small"><?=$vars['countryname']?> / <?=$vars['admincode']?></span>
-                    <?php } ?>
-                    </a></li>
-                </ol>
-            <?php } ?>
-        </div>
+
                 </div>
               </div>
 
@@ -93,7 +80,21 @@ $cloudmade_conf = PVars::getObj('cloudmade');
               </div>
             </div>
 
-            </div> <!-- geoselectorjs -->
+        </div> <!-- geoselectorjs -->
+        <div id="location-suggestion">
+            <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
+            <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
+            <ol id="locations" class="plain">
+                <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);">
+                    <a id="href_4544349"><?= urldecode($vars['geonamename']) ?><br/><?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
+                    <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
+                    <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
+                    <?php } ?>
+                    </a>
+                </li>
+            </ol>
+            <?php } ?>
+        </div>
 
     </fieldset>
 </form>
@@ -115,7 +116,6 @@ $cloudmade_conf = PVars::getObj('cloudmade');
         }
         ?>
 
-  <fieldset id="location">
   
     <input type="hidden" name="id" id="id" value="<?php
             echo isset($vars['id']) ? htmlentities($vars['id'], ENT_COMPAT, 'utf-8') : '';
@@ -143,8 +143,6 @@ $cloudmade_conf = PVars::getObj('cloudmade');
         ?>" />
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
 
-  </fieldset>
-
   <div id="submit_button" style="display: none;">
     <input type="submit" value="<?php echo $words->get('Save Location'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
@@ -152,9 +150,8 @@ $cloudmade_conf = PVars::getObj('cloudmade');
   </div>
 
 </form>
-</div>
-
-
+</div> 
+        
 <?php
     if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
         // store latitude and logitude into hidden fields (in order to get the values in registermform3.js)

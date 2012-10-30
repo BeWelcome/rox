@@ -49,18 +49,19 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 </tr>
                 <tr align="left" >
                   <td class="label" ><strong><?=$words->get('SignupBirthDate')?></strong>: *</td>
-                  <td colspan="3" >
+                  <td colspan="2" >
                     <input<?php if (isset($errorBirthDate)) { ?> class="error-input-text"<?php } ?> type='text' value="<?=$vars['BirthDate']?>" name="BirthDate"/>
                     <?php if (isset($errorBirthDate)) { ?>
                       <div class="error-caption"><?=$words->get('SignupErrorInvalidBirthDate')?></div>
                     <?php } ?>
                   </td>
+                  <td><?=$words->get('EmailIsAlwayHidden')?></td>
                   </tr>
                   <tr align="left" >
-                  <td class="label"><?= $words->get('HideAge')?>:</td>
+                  <td class="label"><?= $words->get('Age')?>:</td>
                   <td colspan="3">
-                        <input name="HideBirthDate" value="Yes" type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> /> <?= $words->get("Yes");?>
-                        <div class="small"><?= $words->get('HideAgeInfo'); ?></div>
+                        <input name="HideBirthDate" value="Yes" type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> /> <?= $words->get('Hidden');?>
+                        <div class="small"><?= $words->get('HiddenAgeInfo'); ?></div>
                   </td>
                 </tr>
 

@@ -1,6 +1,6 @@
 <script type="text/javascript" src="script/fieldset.js"></script>
 <script type="text/javascript" src="script/blog_suggest.js"></script>
-<div id="blog-create-form" class="NotDisplayed">
+<div>
 <?php
         //$User = A PP_User::login();
         $member = $this->model->getLoggedInMember();
@@ -162,8 +162,8 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
 		echo '<input type="hidden" id="markerDescription" name="markerDescription" value="'.$markerDescription.'"/>';
 	}
 } else {
-	echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="47.3666667"/>';
-	echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="8.55"/>';
+	echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="0"/>';
+	echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="0"/>';
 }
 
 ?>
@@ -314,14 +314,14 @@ if (isset($vars['id']) && $vars['id']) {
 
 </form>
 <script type="text/javascript">//<!--
-$('blog-create-form').hide();
 new FieldsetMenu('blog-create-form', {
     active: "blog-trip"
 });
 BlogSuggest.initialize('blog-create-form');
 
 jQuery(function() {
-	initOsmMapBlogEdit();
+    $('spaf_map').style.display = 'block';
+    initOsmMapBlogEdit();
 });
 
 //-->

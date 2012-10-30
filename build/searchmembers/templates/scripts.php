@@ -66,8 +66,6 @@ new Tip('UsernameField', fieldHelpUsername,{className: 'clean', hook: {target: '
 new Tip('TextToFindField', fieldHelpTextToFind,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 }
 </script>
-<!-- searchmembers script -->
-<script src="script/searchmembers.js" type="text/javascript"></script>
 <script type="text/javascript">
 Event.observe(window, "load", addTips); 
 $('flip-sort-direction-button').observe('click', flipSortDirection);

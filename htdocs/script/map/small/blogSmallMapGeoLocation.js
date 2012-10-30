@@ -16,8 +16,12 @@ function initOsmMapBlogEdit() {
 		var markerLatitude = jQuery('#markerLatitude').val();
 		var markerLongitude = jQuery('#markerLongitude').val();
 		if (markerLatitude != null && markerLongitude != null) {
-			// zoom map to specified location
-			var zoomLevel = 8;
+            // zoom map to specified location
+            if (markerLatitude == "0" && markerLongitude == "0") {
+                var zoomLevel = 0;
+            } else {
+                var zoomLevel = 8;
+            }
 			mapBuilder.setCenter(markerLatitude, markerLongitude, zoomLevel);
 			
 			var markerDescription = jQuery('#markerDescription').val();
@@ -28,13 +32,30 @@ function initOsmMapBlogEdit() {
 		}
 	}
 }
+
+function removeHighlight() {
+    var lis = $A($('locations').childNodes);
+    lis.each(function(li) {
+        Element.setStyle(li, {
+            fontWeight: '',
+            backgroundColor: '',
+            backgroundImage: ''
+        });
+    });
+}
+
 /**
  * called when an user click on a result of the list, to update the marker.
  * */
 function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
     setGeonameIdInFormBlog(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
-    changeMarkerBlog(latitude, longitude, zoom, geonamename+', '+countryname);
-    Element.setStyle($('li_'+geonameid), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
+    changeMarkerBlog(latitude, longitude, zoom, decodeURIComponent(geonamename) + ', ' + decodeURIComponent(countryname));
+    removeHighlight();
+    Element.setStyle($('li_'+geonameid), {
+        fontWeight: 'bold',
+        backgroundColor: '#ffffff',
+        backgroundImage: 'url(images/icons/tick.png)'
+    });
 }
 
 function changeMarkerBlog(markerLatitude, markerLongitude, zoomLevel, markerDescription) {

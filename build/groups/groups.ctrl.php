@@ -616,7 +616,7 @@ class GroupsController extends RoxControllerBase
         $pager_params->strategy = new HalfPagePager;
         $pager_params->page_method = 'url';
         $pager_params->items = $page->group->getMemberCount();
-        $pager_params->items_per_page = 5;
+        $pager_params->items_per_page = 50;
         $page->pager_widget = new PagerWidget($pager_params);
         return $page;
     }

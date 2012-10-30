@@ -98,16 +98,6 @@ class GroupMembership extends RoxEntityBase
         }
         $where_clause .= " ORDER BY created";
 
-        if ($limit)
-        {
-            $where_clause .= " LIMIT {$this->dao->escape($limit)}";
-        }
-
-        if ($offset)
-        {
-            $where_clause .= " OFFSET {$this->dao->escape($offset)}";
-        }
-
         $links = $this->findByWhereMany($where_clause);
 
         $members = array();
@@ -117,6 +107,18 @@ class GroupMembership extends RoxEntityBase
             unset($link);
         }
         unset($links);
+
+        $limit_clause = "";
+        $offset_clause = "";
+        if ($limit)
+        {
+            $limit_clause = " LIMIT {$this->dao->escape($limit)}";
+        }
+
+        if ($offset)
+        {
+            $offset_clause = " OFFSET {$this->dao->escape($offset)}";
+        }
         
         $orderby = "mg.created ASC";
         if ($bylastlogin == TRUE){
@@ -126,10 +128,10 @@ class GroupMembership extends RoxEntityBase
         $sql = "
 SELECT
 m.*,
-IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, CURDATE(), m.LastLogin) as covertracks
+IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastLogin) as covertracks
 FROM members AS m, {$this->getTableName()} AS mg
 WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}
-ORDER BY {$orderby}";
+ORDER BY {$orderby}{$limit_clause}{$offset_clause}";
         return $this->createEntity('Member')->findBySQLMany($sql);
     }
 

@@ -11,7 +11,7 @@ function displayMap(popupid,  markerLatitude, markerLongitude, markerDescription
     var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
 	
 	if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-		console.error('CloudMade API key not defined!');
+		bwrox.error('CloudMade API key not defined!');
 	}
 	
 	var mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, popupid + '_map', false);

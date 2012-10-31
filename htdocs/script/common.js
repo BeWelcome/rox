@@ -46,6 +46,18 @@ BWRox.prototype.error = function(message) {
   }
 };
 
+/**
+ * Write log output to browser console
+ *
+ * @param {string} message Text to write to console
+ * @param {string}* Replacement strings, will be passed on
+ */
+BWRox.prototype.log = function(message) {
+  if (typeof bwroxConfig != 'undefined' && bwroxConfig.log == '1') {
+    console.log.apply(console, arguments);
+  }
+};
+
 var late_loader = {
     queueFunction: function(func, args){
         Event.observe(window, 'load', function(e){

@@ -227,8 +227,7 @@ function loadMap(i) {
 
 					if (!mapoff && state == 'global'
 							&& mapSearchResult.points.length) {
-						console
-								.debug("Calculate the center and zoom of the map...");
+						bwrox.debug("Calculate the center and zoom of the map...");
 						// find min and max lat
 						var minLat = 90, maxLat = -90;
 						var aveLat = 0, delLat, lat, lng;

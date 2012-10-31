@@ -8,7 +8,7 @@ function initOsmMapBlogEdit() {
 		var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
 		
 		if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-			console.error('CloudMade API key not defined!');
+			bwrox.error('CloudMade API key not defined!');
 		}
 		
 		mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "spaf_map", false);

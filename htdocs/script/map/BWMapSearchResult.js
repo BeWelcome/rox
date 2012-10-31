@@ -97,9 +97,7 @@ var BWMapSearchResult = Class
 			 * Read the points
 			 */
 			readPoints : function() {
-				console
-						.log("Reading the " + this.markers.length
-								+ " points...");
+				bwrox.log("Reading the " + this.markers.length + " points...");
 				this.points = new Array();
 				for ( var i = 0; i < this.markers.length; i++) {
 					this.points[i] = new BWMapHostPoint(this.markers[i]);
@@ -113,8 +111,7 @@ var BWMapSearchResult = Class
 				// combine marker summaries when coordinates and accomodation is
 				// the same,
 				// in groups of columns x rows
-				console
-						.log("Combine points summaries when coordinates and accomodation is the same...");
+				bwrox.log("Combine points summaries when coordinates and accomodation is the same...");
 				for ( var i = 0; i < this.points.length; i++) {
 					if (this.points[i].summary == '') {
 						continue;
@@ -131,8 +128,7 @@ var BWMapSearchResult = Class
 				}
 
 				// space markers that have the same geo-coordinates
-				console
-						.log("Space markers that have the same geo-coordinates...");
+				bwrox.log("Space markers that have the same geo-coordinates...");
 				var offset = 1;
 				var newpoint = 1;
 				for (i = 0; i < this.points.length; i++) {

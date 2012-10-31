@@ -92,6 +92,17 @@ class GeoModel extends RoxModelBase {
 	
 
     /**
+     * Get a location by its Geonames ID
+     *
+     * @param int $id Geonames ID of location
+     * @return object|bool Geo entity, false if not found or lookup failed
+     */
+    public function getLocationById($id)
+    {
+        return $this->createEntity('Geo')->findById($id);
+    }
+
+    /**
      * Search for locations in the geonames database using the SPAF-Webservice
      *
      * @param search The location to search for

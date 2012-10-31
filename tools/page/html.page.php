@@ -159,6 +159,7 @@ class PageWithHTML extends AbstractBasePage
         <?php
         
         $this->head();
+        $this->includeJsConfig();
         $this->includeScriptfiles();
         ?>
         </head>
@@ -209,6 +210,30 @@ class PageWithHTML extends AbstractBasePage
             {
                 echo $element . PHP_EOL;
             }
+        }
+    }
+
+    /**
+     * Inserts JavaScript configuration.
+     *
+     * Reads [javascript] section in rox.ini and makes it available via
+     * bwroxConfig object in JavaScript.
+     */
+    protected function includeJsConfig()
+    {
+        $config = PVars::getArray('javascript');
+        if ($config) {
+            $html = array();
+            $pairs = array();
+            $html[] = '<script type="text/javascript">';
+            $html[] = 'var bwroxConfig = {';
+            foreach($config as $key => $value) {
+                $pairs[] = $key . ": '" . $value . "'";
+            }
+            $html[] = implode($pairs, ',');
+            $html[] = '}';
+            $html[] = '</script>';
+            echo implode($html, "\n");
         }
     }
 

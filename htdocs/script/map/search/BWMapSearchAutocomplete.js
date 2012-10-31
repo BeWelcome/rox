@@ -10,7 +10,7 @@ BWRox.prototype.initSearchAutocomplete = function(inputFieldSelector){
 		},
 		minLength: 2,
 		select: function( event, ui ) {
-			console.log( ui.item ?
+			bwrox.log( ui.item ?
 				"Autocomplete result selected: " + ui.item.label + ' (' + ui.item.place.lat + ',' + ui.item.place.lon + ')' :
 				"Nothing selected, input was " + this.value);
  			if (ui.item){
@@ -58,7 +58,7 @@ BWRox.prototype.initSearchAutocomplete = function(inputFieldSelector){
 //			  if (searchText.length > 3){
 //				  // text length > 3
 //				  reverseGeolocator.getLocations(searchText, function(results){
-//					  console.debug('=> Search places containing text "%s" returned %d results.', searchText, results.length);
+//					  bwrox.debug('=> Search places containing text "%s" returned %d results.', searchText, results.length);
 //				  });
 //			  }
 //	    }, 200 );

@@ -9,7 +9,7 @@ class PageWithHTML extends AbstractBasePage
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
         'script/main.js?2',
-        'script/common.js',
+        'script/common.js?1',
     );
 
     private $_late_scriptfiles = array();

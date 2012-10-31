@@ -1,3 +1,51 @@
+/**
+ * Write debug output to browser console
+ *
+ * @param {string} message Text to write to console
+ * @param {string}* Replacement strings, will be passed on
+ */
+BWRox.prototype.debug = function(message) {
+  if (typeof bwroxConfig != 'undefined' && bwroxConfig.debug == '1') {
+    console.debug.apply(console, arguments);
+  }
+};
+
+/**
+ * Write info output to browser console
+ *
+ * @param {string} message Text to write to console
+ * @param {string}* Replacement strings, will be passed on
+ */
+BWRox.prototype.info = function(message) {
+  if (typeof bwroxConfig != 'undefined' && bwroxConfig.info == '1') {
+    console.info.apply(console, arguments);
+  }
+};
+
+/**
+ * Write warn output to browser console
+ *
+ * @param {string} message Text to write to console
+ * @param {string}* Replacement strings, will be passed on
+ */
+BWRox.prototype.warn = function(message) {
+  if (typeof bwroxConfig != 'undefined' && bwroxConfig.warn == '1') {
+    console.warn.apply(console, arguments);
+  }
+};
+
+/**
+ * Write error output to browser console
+ *
+ * @param {string} message Text to write to console
+ * @param {string}* Replacement strings, will be passed on
+ */
+BWRox.prototype.error = function(message) {
+  if (typeof bwroxConfig != 'undefined' && bwroxConfig.error == '1') {
+    console.error.apply(console, arguments);
+  }
+};
+
 var late_loader = {
     queueFunction: function(func, args){
         Event.observe(window, 'load', function(e){

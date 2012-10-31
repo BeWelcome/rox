@@ -11,7 +11,7 @@ function initTripMap() {
 		var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
 		
 		if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-			console.error('CloudMade API key not defined!');
+			bwrox.error('CloudMade API key not defined!');
 		}
 		
 		mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "tripMap", false);
@@ -27,7 +27,7 @@ function initTripMap() {
 		for (var i=0 ; i<=markers.length ; i++){
 			var marker = markers[i];
 			if (marker != null){
-				// console.debug('Add marker %s to map.', marker.name);
+				// bwrox.debug('Add marker %s to map.', marker.name);
 				addMarker(marker.latitude, marker.longitude, marker.name, marker.tripId);
 			}
 		}

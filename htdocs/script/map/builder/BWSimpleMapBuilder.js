@@ -9,7 +9,7 @@ var BWSimpleMapBuilder = Class
 		 */
 		initialize : function(cloudmadeApiKey, mapHtmlId, mapoff) {
 			
-			console.debug('Initialize BWGeosearchMapBuilder with couldmade API key \'%s\' and mapHtmlId \'%s\'.', cloudmadeApiKey, mapHtmlId);
+			bwrox.debug('Initialize BWGeosearchMapBuilder with couldmade API key \'%s\' and mapHtmlId \'%s\'.', cloudmadeApiKey, mapHtmlId);
 
 			this.mapoff = mapoff;
 			
@@ -46,7 +46,7 @@ var BWSimpleMapBuilder = Class
 				 ,'GoogleMap': googleLayer
 				};
 
-			console.debug('Adding layers control');
+			bwrox.debug('Adding layers control');
 			
 			// layers control
 			this.layersControl = L.control.layers(this.baseMaps);
@@ -59,14 +59,14 @@ var BWSimpleMapBuilder = Class
 		 */
 		clearMap : function() {
 			if (!this.mapoff) {
-				console.debug('Removing %s markers.', this.markers.length);
+				bwrox.debug('Removing %s markers.', this.markers.length);
 				for (var i = 0; i < this.markers.length; i++){
-					// console.debug('Remove marker %s ...', i);
+					// bwrox.debug('Remove marker %s ...', i);
 					this.osmMap.removeLayer(this.markers[i]);
 				}
 				this.markers = new Array();
 				
-				console.debug('Map clear');
+				bwrox.debug('Map clear');
 			}
 		},
 		/**
@@ -74,7 +74,7 @@ var BWSimpleMapBuilder = Class
 		 */
 		refresh: function(){
 			if (!this.mapoff) {
-				console.debug('Force to refresh the map');
+				bwrox.debug('Force to refresh the map');
 				this.osmMap.invalidateSize();
 			}
 		},
@@ -86,7 +86,7 @@ var BWSimpleMapBuilder = Class
 		 */
 		setCenter : function(latitude, longitude, zoomLevel) {
 			if (!this.mapoff) {
-				console.debug('Center to (%d, %d) with zoom level %d.', latitude, longitude, zoomLevel);
+				bwrox.debug('Center to (%d, %d) with zoom level %d.', latitude, longitude, zoomLevel);
 				this.osmMap.setView(new L.LatLng(latitude, longitude), zoomLevel);
 			}
 		},
@@ -99,7 +99,7 @@ var BWSimpleMapBuilder = Class
 		 */
 		addSimpleMarker : function(longitude, latitude, description) {
 			if (!this.mapoff) {
-				console.debug('Add simple marker to (%d, %d) with description %s.', latitude, longitude, description);
+				bwrox.debug('Add simple marker to (%d, %d) with description %s.', latitude, longitude, description);
 				var marker = new L.Marker(new L.LatLng(longitude, latitude));
 				this.osmMap.addLayer(marker);
 				if (description != null){

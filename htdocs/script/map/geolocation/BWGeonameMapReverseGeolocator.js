@@ -10,7 +10,7 @@ var BWGeonameMapReverseGeolocator = Class.create({
 	},
 	
 	getLocations: function(searchText, successCallBackFunction, errorCallBackFunction){
-		console.debug('[Geoname] Search places containing text "%s".', searchText);
+		bwrox.debug('[Geoname] Search places containing text "%s".', searchText);
 		
 		jQuery.ajax({
 			url: "http://ws.geonames.org/searchJSON",
@@ -24,7 +24,7 @@ var BWGeonameMapReverseGeolocator = Class.create({
 				name_startsWith: searchText
 			},
 			success: function( data ) {
-				console.debug('[Geoname] Search places containing text "%s" returned %d results.', searchText, data.totalResultsCount);
+				bwrox.debug('[Geoname] Search places containing text "%s" returned %d results.', searchText, data.totalResultsCount);
 				var results = jQuery.map( data.geonames, function( item ) {
 					if (item){
 						var label = item.name;
@@ -44,7 +44,7 @@ var BWGeonameMapReverseGeolocator = Class.create({
 							place: item
 						};
 					}else{
-						console.error("Error: item is null.");
+						bwrox.error("Error: item is null.");
 					}
 				});
 				successCallBackFunction(results);

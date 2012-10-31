@@ -12,7 +12,7 @@ var BWGoogleMapReverseGeolocator = Class.create({
 	
 	buildAddressPoint: function (place){
 		
-		console.info("Building address point '%s'", place.formatted_address);
+		bwrox.info("Building address point '%s'", place.formatted_address);
 
 		var addressPoint = new BWMapAddressPoint(place.geometry.location.lat(),
 					place.geometry.location.lng(), place.formatted_address);
@@ -33,7 +33,7 @@ var BWGoogleMapReverseGeolocator = Class.create({
 				addressPoint.countryNameCode = '';
 			}
 			addressPoint.location = place.formatted_address;
-			console.debug("Location: " + addressPoint.location);
+			bwrox.debug("Location: " + addressPoint.location);
 		} else {
 			// addressPoint.accuracy = '';
 			// addressPoint.coordinates = '';
@@ -99,12 +99,12 @@ var BWGoogleMapReverseGeolocator = Class.create({
 //				break;
 //		}
 		
-		console.debug("Zoom level is %s (accuraci = %s)", addressPoint.zoomLevel, addressPoint.accuracy);
+		bwrox.debug("Zoom level is %s (accuraci = %s)", addressPoint.zoomLevel, addressPoint.accuracy);
 		
 		return addressPoint;
 	},
 	getLocationsForAutocompletion: function(searchText, successCallBackFunction){
-		console.debug('Start autocomplete');
+		bwrox.debug('Start autocomplete');
 		this.getLocations(searchText, function(results){
 			results = jQuery.map(results, function( item ) {
 				if (item){
@@ -114,7 +114,7 @@ var BWGoogleMapReverseGeolocator = Class.create({
 						place: item
 					};
 				}else{
-					console.error("Error: item is null.");
+					bwrox.error("Error: item is null.");
 				}
 			});
 			successCallBackFunction(results);
@@ -124,13 +124,13 @@ var BWGoogleMapReverseGeolocator = Class.create({
 	 * load the icons
 	 */
 	getLocation : function(address, successCallBackFunction, errorCallBackFunction) {
-		console.debug("Try to reverse geolocate address '%s'.", address);
+		bwrox.debug("Try to reverse geolocate address '%s'.", address);
 		var thisObject = this;
 		this.getLocations(address, function(results) {
 	    	if (results && results.length > 0){
 	    		if (results.length > 1){
 	    			// the first result is used
-					console.warn("Reverse geolocation of address '%s' returned %d results: use first one '%s'.", address, results.length, results[0].formatted_address);
+					bwrox.warn("Reverse geolocation of address '%s' returned %d results: use first one '%s'.", address, results.length, results[0].formatted_address);
 				}
 				var place = results[0];
 				var addressPoint = thisObject.buildAddressPoint(place);
@@ -138,25 +138,25 @@ var BWGoogleMapReverseGeolocator = Class.create({
 				successCallBackFunction(addressPoint);
 	    	}else{
 	    		// not fount
-	    		console.warn("Address not fount...");
+	    		bwrox.warn("Address not fount...");
 				errorCallBackFunction();
 	    	}
     	}, function(){
     		// not fount
-    		console.warn("Error while searching place...");
+    		bwrox.warn("Error while searching place...");
 			errorCallBackFunction();
     	});
 	},
 	getLocations: function(searchText, successCallBackFunction, errorCallBackFunction){
-		console.debug('Search places containing text "%s".', searchText);
+		bwrox.debug('Search places containing text "%s".', searchText);
 		
 		this.geocoder.geocode( { 'address': searchText}, function(results, status) {
 		      if (status == google.maps.GeocoderStatus.OK) {
-				console.debug('Search places containing text "%s" returned %d results.', searchText, results.length);
+				bwrox.debug('Search places containing text "%s" returned %d results.', searchText, results.length);
 		        successCallBackFunction(results);
 		        
 		      } else {
-		    	  console.error("Geocode was not successful for the following reason: " + status);
+		    	  bwrox.error("Geocode was not successful for the following reason: " + status);
 		    	  errorCallBackFunction();
 		      }
 		});

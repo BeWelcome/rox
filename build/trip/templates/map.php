@@ -65,7 +65,7 @@ $point = 0;
         }
     }
 ?>
-console.debug('%d markers defined.', markers.length);
+bwrox.debug('%d markers defined.', markers.length);
 
 //Markers
 var iconData = {

@@ -9,7 +9,7 @@ var BWGeosearchMapBuilder = Class
 			 */
 			initialize : function(cloudmadeApiKey, mapHtmlId, mapoff) {
 				
-				console.debug('Initialize BWGeosearchMapBuilder with couldmade API key \'%s\' and mapHtmlId \'%s\'.', cloudmadeApiKey, mapHtmlId);
+				bwrox.debug('Initialize BWGeosearchMapBuilder with couldmade API key \'%s\' and mapHtmlId \'%s\'.', cloudmadeApiKey, mapHtmlId);
 				
 				this.isInitialized = false;
 				this.mapHtmlId = mapHtmlId;
@@ -48,9 +48,9 @@ var BWGeosearchMapBuilder = Class
 			 */
 			clearMap : function() {
 				if (!this.mapoff) {
-					console.debug('Removing %s markers.', this.markers.length);
+					bwrox.debug('Removing %s markers.', this.markers.length);
 					for (var i = 0; i < this.markers.length; i++){
-						// console.debug('Remove marker %s ...', i);
+						// bwrox.debug('Remove marker %s ...', i);
 						this.layerGroup1.removeLayer(this.markers[i]);
 						this.layerGroup2.removeLayer(this.markers[i]);
 						this.layerGroup3.removeLayer(this.markers[i]);
@@ -60,15 +60,15 @@ var BWGeosearchMapBuilder = Class
 					this.memberListOffsets = null;
 					
 					if (!this.isLayerGroup1Used){
-						console.debug('Show layer group 1 (yes)');
+						bwrox.debug('Show layer group 1 (yes)');
 						this.layersControl.addOverlay(this.layerGroup1, this.labelAccomodation1);
 					}
 					if (!this.isLayerGroup2Used){
-						console.debug('Show layer group 2 (maybe)');
+						bwrox.debug('Show layer group 2 (maybe)');
 						this.layersControl.addOverlay(this.layerGroup2, this.labelAccomodation2);
 					}
 					if (!this.isLayerGroup3Used){
-						console.debug('Show layer group 3 (no)');
+						bwrox.debug('Show layer group 3 (no)');
 						this.layersControl.addOverlay(this.layerGroup3, this.labelAccomodation3);
 					}
 					
@@ -76,7 +76,7 @@ var BWGeosearchMapBuilder = Class
 					this.isLayerGroup2Used = false;
 					this.isLayerGroup3Used = false;
 					
-					console.debug('Map clear');
+					bwrox.debug('Map clear');
 				}
 			},
 			/**
@@ -84,14 +84,14 @@ var BWGeosearchMapBuilder = Class
 			 */
 			initMap : function() {
 				if (this.mapoff) {
-					console.info('Map is disabled');
+					bwrox.info('Map is disabled');
 					return;
 				}
 				if (this.isInitialized) {
-					console.warn('Map is already initialized!');
+					bwrox.warn('Map is already initialized!');
 					return;
 				} else {
-					console.debug('Map "%s" initializing... from url %s', this.mapHtmlId, this.cloudmadeUrl);
+					bwrox.debug('Map "%s" initializing... from url %s', this.mapHtmlId, this.cloudmadeUrl);
 				}
 				
 				// create the map
@@ -121,24 +121,24 @@ var BWGeosearchMapBuilder = Class
 				this.initLayersGroups();
 				
 				// center the map
-				console.debug('Set default center and zoom.');
+				bwrox.debug('Set default center and zoom.');
 				this.setCenter(25, 10, this.initialZoomLevel);
 				
 				// add scale
-				console.debug('Add scale.');
+				bwrox.debug('Add scale.');
 				L.control.scale({position: 'bottomright'}).addTo(this.osmMap);
 				
 				// mark map as initialized
 				this.isInitialized = true;
 
-				console.debug('Map initialized!');
+				bwrox.debug('Map initialized!');
 			},
 			/**
 			 * Create the layers groups and controls
 			 */
 			initLayersGroups: function(){
 				// add group layers
-				console.debug('Adding group layers');
+				bwrox.debug('Adding group layers');
 				
 				// first group : Yes, be welcome
 				this.layerGroup1 = new L.LayerGroup();
@@ -152,7 +152,7 @@ var BWGeosearchMapBuilder = Class
 				this.layerGroup3 = new L.LayerGroup();
 				this.addLayer(this.layerGroup3);
 				
-				console.debug('Adding layers control');
+				bwrox.debug('Adding layers control');
 				
 				this.overlayMaps= new Array();
 				this.overlayMaps[this.labelAccomodation1] = this.layerGroup1;
@@ -169,15 +169,15 @@ var BWGeosearchMapBuilder = Class
 			removeUnusedLayersControls: function(){
 				if (!this.mapoff) {
 					if (!this.isLayerGroup1Used){
-						console.debug('Hide layer group 1 (yes)');
+						bwrox.debug('Hide layer group 1 (yes)');
 						this.layersControl.removeLayer(this.layerGroup1);
 					}
 					if (!this.isLayerGroup2Used){
-						console.debug('Hide layer group 2 (maybe)');
+						bwrox.debug('Hide layer group 2 (maybe)');
 						this.layersControl.removeLayer(this.layerGroup2);
 					}
 					if (!this.isLayerGroup3Used){
-						console.debug('Hide layer group 3 (no)');
+						bwrox.debug('Hide layer group 3 (no)');
 						this.layersControl.removeLayer(this.layerGroup3);
 					}
 				}
@@ -216,7 +216,7 @@ var BWGeosearchMapBuilder = Class
 			 */
 			setCenter : function(latitude, longitude, zoomLevel) {
 				if (!this.mapoff) {
-					console.debug('Center to (%d, %d) with zoom level %d.', latitude, longitude, zoomLevel);
+					bwrox.debug('Center to (%d, %d) with zoom level %d.', latitude, longitude, zoomLevel);
 					this.osmMap.setView(new L.LatLng(latitude, longitude), zoomLevel);
 				}
 			},
@@ -239,7 +239,7 @@ var BWGeosearchMapBuilder = Class
 					// control min zoom
 					zoomLevel = this.minZoom;
 				}
-				console.debug('Zoom to level %d.', zoomLevel);
+				bwrox.debug('Zoom to level %d.', zoomLevel);
 				this.osmMap.setZoom(zoomLevel);
 			},
 			/**
@@ -247,7 +247,7 @@ var BWGeosearchMapBuilder = Class
 			 */
 			refresh: function(){
 				if (!this.mapoff) {
-					console.debug('Force to refresh the map');
+					bwrox.debug('Force to refresh the map');
 					this.osmMap.invalidateSize();
 				}
 			},
@@ -266,7 +266,7 @@ var BWGeosearchMapBuilder = Class
 						var memberDetailSelector = '#memberDetail'+(i+1);
 						// calculate member details size
 						var offset = jQuery(memberDetailSelector).height();
-						console.debug('Member detail %d offset is %d (total=%d)', i, offset, totalOffset);
+						bwrox.debug('Member detail %d offset is %d (total=%d)', i, offset, totalOffset);
 						// store it in the array
 						this.memberListOffsets[i] = totalOffset;
 						totalOffset += offset + spaceBetweenItems;

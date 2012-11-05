@@ -7,7 +7,7 @@ if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
     $gallery = new GalleryModel;
     $statement = $gallery->getLatestItems('',$trip->gallery_id_foreign);
     if ($statement) {
-        echo '<h3>Pictures of this trip</h3>';
+        echo '<h3>' . $words->get('TripPicturesOfThisTrip') . '</h3>';
         // if the gallery is NOT empty, go show it
         $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
         $statement = $p[0];

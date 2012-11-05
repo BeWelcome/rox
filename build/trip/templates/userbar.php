@@ -36,21 +36,3 @@ if ($member)
           <p>Plan a trip and <b>make arrangements with your hosts beforehand</b>. Show trips to people outside of BeWelcome or set them to be hidden for the public. Go sign up, to create a new trip yourself.</p>
 </div>
 <?php } ?>
-
-<?php 
-/*
-          <h3>Favourite trips</h3>
-          <ul class="linklist">
-			<li><a href="trip/show/my">User2</a></li>
-			<li><a href="trip/create">User88</a></li>
-            <li><a href="blog/create">User27</a></li>
-		  </ul>
-          
-          <h3>Users with great galleries</h3>
-          <ul class="linklist">
-			<li><a href="trip/show/my">User1</a></li>
-			<li><a href="trip/create">User1</a></li>
-            <li>User2</li>
-		  </ul>
-*/
-?>

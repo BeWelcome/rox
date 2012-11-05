@@ -281,9 +281,7 @@ class TripController extends PAppController {
         // hack to display sidebar without too much refactoring for now
         // todo: remove this when/if trips are actually refactored
         $vw = new ViewWrap($this->_view);	
-        $bar = $vw->displaySingleTrip_Map($trip, $trip_data);
-        $bar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
-        $bar .= $vw->userbar();
+        $bar = $vw->userbar();
         $bar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
         $page->sidebar = $bar;
         $page->heading = $vw->heading_singleTrip($trip, $trip_data);

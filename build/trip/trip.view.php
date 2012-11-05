@@ -82,8 +82,6 @@ class TripView extends PAppView {
 		}
 		require 'templates/singletrip_sidebar.php';
 	}
-	public function displaySingleTrip_Map($trip, $trip_data) {
-	}
     
     public function teaser($trip = false) {
         require 'templates/teaser.php';

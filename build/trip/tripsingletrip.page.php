@@ -42,4 +42,12 @@ HTML;
     {
         echo $this->sidebar;
     }
+    
+    protected function getStylesheets() 
+    {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/custom/trip_single_trip.css';
+       return $stylesheets;
+    }
+    
 }

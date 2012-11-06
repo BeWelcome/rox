@@ -382,7 +382,8 @@ WHERE
                     IF(DATEDIFF(NOW(), members.LastLogin) < 300, 1, 0) AS HasLoggedIn
                 FROM
                     (' . $tablelist . ')
-                ' . $where);
+                ' . $where .'
+            	LIMIT 1');
             $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
             $row = $result->fetch(PDB::FETCH_OBJ);
             $rCountFull = $row->cnt;            

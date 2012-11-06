@@ -359,6 +359,8 @@ WHERE
             $where = ' WHERE (1=0)';
         }
 
+        // clean up meaningless conditions
+        $where = preg_replace('/ AND 1=1/','',$where);
         $fullWhere = $where;
         if ($visitorsWhere) { // hide non-public profiles from visitors
             $fullWhere = $where . ' AND ' . $visitorsWhere;
@@ -370,7 +372,7 @@ WHERE
         
         // get full count of search results if not logged in
         $rCountFull = -1;
-        if ($visitorsWhere) {
+        if ($visitorsWhere) {            
             $result = $this->dao->query('
                 SELECT
                     COUNT(DISTINCT members.id) AS fullCount

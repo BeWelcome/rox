@@ -374,13 +374,19 @@ WHERE
         $rCountFull = -1;
         if ($visitorsWhere) {            
             $result = $this->dao->query('
-                SELECT
-                    COUNT(DISTINCT members.id) AS fullCount
+                SELECT SQL_CALC_FOUND_ROWS DISTINCT
+                    members.id AS IdMember,
+                    geonames_cache.name AS CityName,
+                    geonames_countries.name AS CountryName,
+                    IF(members.ProfileSummary != 0, 1, 0) AS HasSummary,
+                    IF(DATEDIFF(NOW(), members.LastLogin) < 300, 1, 0) AS HasLoggedIn
                 FROM
                     (' . $tablelist . ')
-                ' . $where);
+                ' . $where .'
+            	LIMIT 1');
+            $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
             $row = $result->fetch(PDB::FETCH_OBJ);
-            $rCountFull = $row->fullCount;
+            $rCountFull = $row->cnt;            
         }
         $vars['rCountFull'] = $rCountFull;
 
@@ -423,7 +429,7 @@ WHERE
         $qry = $this->dao->query($str);
         $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
         $row = $result->fetch(PDB::FETCH_OBJ);
-        $rCount= $row->cnt;
+        $rCount = $row->cnt;
     
         $vars['rCount'] = $rCount;
         

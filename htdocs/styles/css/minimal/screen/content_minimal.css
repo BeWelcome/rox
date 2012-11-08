@@ -236,7 +236,7 @@
   /* Unordered lists without bullets  */
   ul.linklist { list-style-type: none; }
   ul.linklist li { margin: 0 0 0.5em 0;}
-  ul.linklist li a { line-height: 1em;}
+  ul.linklist li a { line-height: 1em; vertical-align: bottom;}
   ul.linklist li a.active { line-height: 1em; color: #000; font-weight:bold;}
 
   /* CrossBrowser-Compatibility */

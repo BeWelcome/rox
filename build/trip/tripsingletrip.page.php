@@ -27,15 +27,7 @@ class TripSingleTripPage extends PageWithActiveSkin
     protected function teaserHeadline()
     {
         $trip = $this->trip;
-        $layoutbits = new MOD_layoutbits();
-
-        $return = <<<HTML
-        <div class="float_left">
-            {$layoutbits->PIC_50_50($trip->handle)}
-        </div>
-            {$trip->trip_name}
-HTML;
-        return $return;
+        return "<a href='trip'>{$this->words->get('tripsTitle')}</a> &raquo; <a href='trip/show/{$trip->handle}'>{$trip->handle}</a>";
     }
 
     protected function leftSideBar()

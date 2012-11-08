@@ -213,6 +213,8 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
   text-align:center;
   padding-top: 10px;
 }
-
+.tripname{
+margin:0;
+}
 
 }

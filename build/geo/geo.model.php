@@ -110,9 +110,6 @@ class GeoModel extends RoxModelBase {
      */
     public function suggestLocation($search, $max = false,$fcode = '')
     {
-        if (strlen($search) <= 1) { // Ignore too small queries
-            return '';
-        }
         $google_conf = PVars::getObj('config_google');
         if (!$google_conf || !$google_conf->geonames_webservice /*|| !$google_conf->maps_api_key */) {
             throw new PException('Google config error!');

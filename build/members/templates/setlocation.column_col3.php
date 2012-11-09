@@ -88,7 +88,7 @@ $cloudmade_conf = PVars::getObj('cloudmade');
                 <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);">
                     <a id="href_4544349"><?= urldecode($vars['geonamename']) ?><br/><?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
                     <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
-                    <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
+                    <span class="small"><?= urldecode($vars['countryname']) ?><?php if ($vars['admincode'] <> '') { echo " / " . urldecode($vars['admincode']); } ?></span>
                     <?php } ?>
                     </a>
                 </li>

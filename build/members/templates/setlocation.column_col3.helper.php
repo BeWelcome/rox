@@ -37,7 +37,10 @@ if (!$mem_redirect || !isset($mem_redirect->post['id'])) {
         $vars['geonamecountrycode'] = $location->fk_countrycode;
         $vars['latitude'] = $location->latitude;
         $vars['longitude'] = $location->longitude;
-        $vars['admincode'] = $parent->name;
+        if (isset($parent->name))
+        {
+        	$vars['admincode'] = $parent->name;
+        }
         $vars['geonamecountry'] = $country->name;
         $vars['countryname'] = $country->name;
     }

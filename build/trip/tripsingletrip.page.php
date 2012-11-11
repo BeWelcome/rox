@@ -7,6 +7,8 @@ class TripSingleTripPage extends PageWithActiveSkin
     {
         $trip = $this->trip;
         $trip_data = $this->trip_data;
+        $words = new MOD_words();
+        $layoutbits = new MOD_layoutbits();
         $member = $this->model->getLoggedInMember();
         if (!$member)
         {   

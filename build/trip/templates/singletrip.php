@@ -118,7 +118,7 @@ Sortable.create('triplist', {
 ?>
     <div style="padding: 20px 0">
     <h3>
-    <a href="blog/create" onclick="$('blog-create-form').toggle(); return false"><img src="images/icons/note_add.png"></a> <a href="blog/create" onclick="$('blog-create-form').toggle(); return false"><?=$words->get('Trip_SubtripsCreate')?></a><br />
+    <a href="blog/create" name="destination" onclick="$('blog-create-form').toggle(); return false"><img src="images/icons/note_add.png"></a> <a href="blog/create" onclick="$('blog-create-form').toggle(); return false"><?=$words->get('Trip_SubtripsCreate')?></a><br />
     </h3>
     <p class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></p>
     </div>

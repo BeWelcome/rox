@@ -217,4 +217,17 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
 margin:0;
 }
 
+.gallery_container {
+    background: url("../../images/pic_shadow.png") no-repeat scroll center top transparent;
+    height: 170px;
+    margin: 0 20px 20px 0;
+    padding: 17px 10px 8px 8px;
+    text-align: center;
+    width: 170px;
+}
+.gallery_container .framed {
+    height: 100px;
+    margin-bottom: 20px;
+    width: 100px;
+}
 }

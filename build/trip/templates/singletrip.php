@@ -1,5 +1,4 @@
 <?php
-$words = new MOD_words();
 $i = 1;
 ?>
 <div class="floatbox">
@@ -7,14 +6,10 @@ $i = 1;
 <?php
 if (isset($trip_data[$trip->trip_id])) {
     echo '<h3>'. $CntSubtrips.' ' .$words->get('Trip_SubtripsTitle').'</h3>';
-	if ($isOwnTrip) {
-		echo '<p class="small">'.$words->get('Trip_draganddrop').'</p>';
-	}
-	
 	echo '<ul id="triplist">';
 	foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
 		
-		echo '<li id="tripitem_'.$blogid.'"'.($isOwnTrip ? ' class="edit" style="cursor:move;"' : '').'>';
+		echo '<li id="tripitem_'.$blogid.'">';
 ?>
 
 <!-- Subtemplate: 2 columns 50/50 size -->
@@ -79,35 +74,6 @@ HTML;
 			
 	}
 	echo '</ul>';
-
-
-?>
-
-<?php
-	if ($isOwnTrip) {
-?>
-<script type="text/javascript">
-
-Sortable.create('triplist', {
-	onUpdate:function(){
-		new Ajax.Updater('list-info', 'trip/reorder/', {
-			onComplete:function(request){
-				new Effect.Highlight('triplist',{});
-				params = Sortable.serialize('triplist').toQueryParams();
-				points = Object.values(params).toString().split(',');
-				setPolyline();
-				
-			}, 
-			parameters:Sortable.serialize('triplist'), 
-			evalScripts:true, 
-			asynchronous:true,
-			method: 'get'
-		})
-	}
-})</script>
-
-<?php
-} // end if is own trip
 
 } // end if tripdata
 ?>

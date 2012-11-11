@@ -37,18 +37,11 @@ div.tripitem {
       list-style-type: none;
 }
 #triplist li {
-      margin:0;
-      margin-bottom:4px;
+      background: url("../../images/teaser_bg_white2.png") no-repeat scroll left bottom transparent;
+      margin: 0 0 1em;
       padding:15px;
       line-height: 1.5em;
-}
-#triplist li.edit {
-      border: 1px dotted #0394C3;
-	  background-color: #ffffff;
-}
-#triplist li:hover.edit {
-      border: 1px solid #0394C3;
-	  background-color: #ffffff;
+
 }
 #triplist li h3 {
       border: none;

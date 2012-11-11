@@ -1,7 +1,3 @@
-<?php
-$words = new MOD_words();
-$layoutbits = new MOD_layoutbits();
-?>
 <div class="float_left"><?=$layoutbits->PIC_50_50($trip->handle)?></div><h2 class="tripname"><?=$trip->trip_name; ?></h2>
         <div class="trip_author"><?=$words->get('by')?> <a href="members/<?php echo $trip->handle; ?>"><?php echo $trip->handle; ?></a>
             <a href="blog/<?php echo $trip->handle; ?>" title="Read blog by <?php echo $trip->handle; ?>"><img src="images/icons/blog.gif" alt="" /></a>

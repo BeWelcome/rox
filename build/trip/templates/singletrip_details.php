@@ -16,35 +16,28 @@ if ($trip_data)
 ?>
 
 <?php
-if (isset($trip->trip_descr) && $trip->trip_descr) {
-	echo '<p>'.$trip->trip_descr.'</p>';
-}
-if (isset($trip->trip_text) && $trip->trip_text) {
-	echo '<p>'.$trip->trip_text.'</p>';
-}
 if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
     $gallery = new GalleryModel;
     $statement = $gallery->getLatestItems('',$trip->gallery_id_foreign);
     if ($statement) {
         // if the gallery is NOT empty, go show it
-        $p = PFunctions::paginate($statement, 1, $itemsPerPage = 6);
+        $p = PFunctions::paginate($statement, 1, $itemsPerPage = 1);
         $statement = $p[0];
-        echo '<p>';
-        foreach ($statement as $d) {
-        	echo '<a href="gallery/show/image/'.$d->id.'"><img src="gallery/thumbimg?id='.$d->id.'" alt="image" style="height: 100px; width: 100px; margin-right:5px;" class="framed"/></a>';
-        }
-        echo'</p>';
-    	echo '<p><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->getSilent('TripShowPhotoset').'"><img src="images/icons/picture.png"> '.$words->get('TripShowPhotoset').'</a></p>';
-    } 
-    echo $words->flushBuffer();
+        foreach ($statement as $d) { ?>
+            <div class="gallery_container float_right" style="margin: -10px 10px 0; height: 170px; width: 150px; padding: 20px; text-align: center;">
+            <a href="gallery/show/sets/<?=$trip->gallery_id_foreign; ?>" title="<?=$words->getSilent('TripShowPhotoset')?>"><img class="framed" src="gallery/thumbimg?id=<?=$d->id?>" alt="image"/></a>
+            <h4><a href="members/<?=$trip->handle; ?>"><?=$trip->trip_name; ?></a></h4>
+            <p><span class="grey small"><?=$words->get('by')?> <?php echo $trip->handle; ?></span></p>
+            </div> 
+        <?php    } 
+    }
 }
-?>
-
-<p class="small">
-<?=$CntSubtrips ?> <?=$words->get('Trip_NumberofSubtrips')?>
-</p>
-
-<?php
+if (isset($trip->trip_descr) && $trip->trip_descr) {
+echo '<p>'.$trip->trip_descr.'</p>';
+}
+if (isset($trip->trip_text) && $trip->trip_text) {
+	echo '<p>'.$trip->trip_text.'</p>';
+}
 if ($isOwnTrip) {
 	echo '<p class="small"><a href="trip/edit/'.$trip->trip_id.'">Edit</a> | <a href="trip/del/'.$trip->trip_id.'">Delete</a></p><p></p>';
 }

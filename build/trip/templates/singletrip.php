@@ -6,7 +6,7 @@ $i = 1;
 
 <?php
 if (isset($trip_data[$trip->trip_id])) {
-    echo '<h3>'.$words->get('Trip_SubtripsTitle').'</h3>';
+    echo '<h3>'. $CntSubtrips.' ' .$words->get('Trip_SubtripsTitle').'</h3>';
 	if ($isOwnTrip) {
 		echo '<p class="small">'.$words->get('Trip_draganddrop').'</p>';
 	}

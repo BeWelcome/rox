@@ -17,7 +17,7 @@ function displayMap(popupid,  markerLatitude, markerLongitude, markerDescription
     		bwrox.error('CloudMade API key not defined!');
     	}
     	
-    	var mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, popupid + '_map', false);
+    	mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, popupid + '_map', false);
     	mapList[blogId] = mapBuilder;
     }
     else

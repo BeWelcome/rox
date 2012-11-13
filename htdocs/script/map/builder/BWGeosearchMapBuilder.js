@@ -15,7 +15,7 @@ var BWGeosearchMapBuilder = Class
 				this.mapHtmlId = mapHtmlId;
 				this.mapoff = mapoff;
 				// set zoom limits
-				this.initialZoomLevel = 1;
+				this.initialZoomLevel = 2;
 				this.minZoom = 1;
 				this.maxZoom = 18;
 				// configure the tiles provider

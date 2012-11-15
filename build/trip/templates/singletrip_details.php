@@ -33,10 +33,6 @@ echo '<p>'.$trip->trip_descr.'</p>';
 }
 if (isset($trip->trip_text) && $trip->trip_text) {
 	echo '<p>'.$trip->trip_text.'</p>';
-}
-if ($isOwnTrip) {
-	echo '<p class="small"><a href="trip/edit/'.$trip->trip_id.'">Edit</a> | <a href="trip/del/'.$trip->trip_id.'">Delete</a></p><p></p>';
-}
-?>
+} ?>
     </div>
 

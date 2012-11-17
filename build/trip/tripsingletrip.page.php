@@ -10,6 +10,21 @@ class TripSingleTripPage extends PageWithActiveSkin
         $words = new MOD_words();
         $layoutbits = new MOD_layoutbits();
         $member = $this->model->getLoggedInMember();
+        $google_conf = PVars::getObj('config_google');
+        $Model = new Blog;
+        $callback = $this->getCallbackOutput('BlogController', 'createProcess');
+        // get the saved post vars
+        // todo: grab from page model
+        $vars = array();
+        $request = PRequest::get()->request;
+        $errors = array();
+        $lang = array();
+        $catIt = $Model->getCategoryArray(false, $member);
+        //$tripIt = $Model->getTripFromUserIt($member->id);
+        //$defaultVis = A PP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
+        // defaults to public then
+        $defaultVis = false;
+        
         if (!$member)
         {   
             $isOwnTrip = false;
@@ -40,7 +55,7 @@ class TripSingleTripPage extends PageWithActiveSkin
     protected function getStylesheets() 
     {
         $member = $this->model->getLoggedInMember();
-        if ($member)
+        if (!$member)
         {   
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/trip_single_trip.css';

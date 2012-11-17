@@ -272,7 +272,7 @@ if (isset($vars['id']) && $vars['id']) {
             echo ' checked="checked"';
         }
         ?>/> <label for="create-vis-prt"><?=$words->get('BlogCreateSettings_LabelVisprotected')?></label>
-        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVispublic')?></p>
+        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprotected')?></p>
     </div>
     <div class="row">
         <input type="radio" name="vis" value="pri" id="create-vis-pri"<?php

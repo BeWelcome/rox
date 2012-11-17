@@ -46,6 +46,70 @@ div.tripitem {
 #triplist li h3 {
       border: none;
 }
+
+.fieldset-menu {
+    margin: 0;
+}
+.fieldset-menu-form .fieldset-menu {
+    margin: 0;
+}
+.fieldset-menu-form fieldset {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 transparent;
+    border-color: -moz-use-text-color #CCCCCC #CCCCCC;
+    border-image: none;
+    border-right: 1px solid #CCCCCC;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
+    margin: 0;
+    padding: 2em;
+    position: relative;
+}
+.fieldset-menu-form legend {
+    display: none;
+}
+ul.fieldset-menu {
+    border-bottom: 1px solid #CCCCCC;
+    list-style-type: none;
+    margin: 0;
+    padding: 4px 0 2px;
+}
+.fieldset-menu li {
+    display: inline;
+    margin-right: 0.5em;
+}
+.fieldset-menu li a {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #E8E8EE;
+    border-color: #CCCCCC #CCCCCC -moz-use-text-color;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 1px medium;
+    color: #333333;
+    padding: 4px 0.5em;
+}
+.fieldset-menu li a:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-bottom: 1px solid white;
+    color: #333333;
+}
+.fieldset-menu li.active a {
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #F7F7F7;
+    color: #333333;
+}
+.datepicker-opener {
+    padding: 0;
+}
+.datepicker-opener-table {
+    margin: 3px 0 0 3px;
+}
 .trip_map {
     width: 100%; 
     height: 200px; 

@@ -33,7 +33,7 @@ if (isset($trip_data[$trip->trip_id])) {
 <?php
         echo <<<HTML
         <h3 class="borderless">
-        <a href="blog/{$trip->handle}/{$blogid}">{$blog->blog_title}</a><br />
+        <a href="blog/{$trip->handle}/{$blogid}">{$blog->blog_title}</a> </h3>
 HTML;
 		if ($blog->name)
         {
@@ -46,9 +46,8 @@ HTML;
             {
                 $countryname = '';
             }
-			echo "<span style='font-size: 14px;'>{$blog->name}, {$countryname}</span>";
+			echo "<span <span class='trip_author'>{$blog->name}, {$countryname}</span>";
 		}
-        echo '</h3>';
 		if ($blog->blog_text) {
 			if (strlen($blog->blog_text) > 400) {
 				$blogtext = substr($blog->blog_text, 0, 400);

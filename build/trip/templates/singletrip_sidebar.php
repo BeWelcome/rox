@@ -12,10 +12,7 @@ if ($member)
             <li><a href="trip/edit/<?=$trip->trip_id; ?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" style="vertical-align:bottom;" alt="<?=$words->get('Trip_EditMyTrip')?>" /></a> <a href="trip/edit/<?=$trip->trip_id; ?>" title="<?=$words->get('Trip_EditMyTrip')?>"><?=$words->get('Trip_EditMyTrip')?></a></li>
             <li><a href="trip/del/<?=$trip->trip_id; ?>"><img src="styles/css/minimal/images/iconsfam/delete.png" style="vertical-align:bottom;" alt="<?=$words->get('Trip_DeleteMyTrip')?>" /></a> <a href="trip/del/<?=$trip->trip_id; ?>" title="<?=$words->get('Trip_DeleteMyTrip')?>"><?=$words->get('Trip_DeleteMyTrip')?></a></li>
             <li><a href="trip/<?=$trip->trip_id; ?>/#destination" title="<?=$words->get('Trip_SubtripsCreate')?>"><img src="images/icons/note_add.png" style="vertical-align:bottom;" alt="<?=$words->get('Trip_SubtripsCreate')?>" /></a> <a href="trip/<?=$trip->trip_id; ?>/#destination" title="<?=$words->get('Trip_SubtripsCreate')?>"><?=$words->get('Trip_SubtripsCreate')?></a></li>
-        <?php if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
-            echo '<li><a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->get('Trip_GalleryAddPhotos').'"><img src="images/icons/picture_add.png" style="vertical-align:bottom;" alt="' . $words->get('TripTitle_create') . '"></a> <a href="gallery/show/galleries/'.$trip->gallery_id_foreign.'" title="'.$words->get('Trip_GalleryAddPhotos').'">'.$words->get('Trip_GalleryAddPhotos').'</a><li>';
-        }
-    }?>
+<?php    }?>
           </ul>
 <?php 
 } ?>

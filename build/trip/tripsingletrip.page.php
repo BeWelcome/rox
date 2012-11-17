@@ -55,7 +55,7 @@ class TripSingleTripPage extends PageWithActiveSkin
     protected function getStylesheets() 
     {
         $member = $this->model->getLoggedInMember();
-        if (!$member)
+        if ($member)
         {   
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/trip_single_trip.css';

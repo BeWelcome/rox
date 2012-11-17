@@ -9,25 +9,7 @@
 $CntSubtrips = 0;
 if ($trip_data) 
     $CntSubtrips = count($trip_data[$trip->trip_id]);
-?>
 
-<?php
-if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
-    $gallery = new GalleryModel;
-    $statement = $gallery->getLatestItems('',$trip->gallery_id_foreign);
-    if ($statement) {
-        // if the gallery is NOT empty, go show it
-        $p = PFunctions::paginate($statement, 1, $itemsPerPage = 1);
-        $statement = $p[0];
-        foreach ($statement as $d) { ?>
-            <div class="gallery_container float_right" style="margin: -10px 10px 0; height: 170px; width: 150px; padding: 20px; text-align: center;">
-            <a href="gallery/show/sets/<?=$trip->gallery_id_foreign; ?>" title="<?=$words->getSilent('TripShowPhotoset')?>"><img class="framed" src="gallery/thumbimg?id=<?=$d->id?>" alt="image"/></a>
-            <h4><a href="members/<?=$trip->handle; ?>"><?=$trip->trip_name; ?></a></h4>
-            <p><span class="grey small"><?=$words->get('by')?> <?php echo $trip->handle; ?></span></p>
-            </div> 
-        <?php    } 
-    }
-}
 if (isset($trip->trip_descr) && $trip->trip_descr) {
 echo '<p>'.$trip->trip_descr.'</p>';
 }

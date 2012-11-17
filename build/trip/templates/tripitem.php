@@ -1,16 +1,6 @@
 <?php
 
 $words = new MOD_words();
-// show the first image if there is a photoset assigned to the trip
-$galleryitem = '';
-if (isset($trip->gallery_id_foreign) && $trip->gallery_id_foreign) {
-    $gallery = new GalleryModel;
-    $d = $gallery->getLatestGalleryItem($trip->gallery_id_foreign);
-    if ($d) {
-        $galleryitem = '<a href="gallery/show/image/'.$d.'"><img src="gallery/thumbimg?id='.$d.'" alt="image" style="margin:10px;" class="framed" /></a>';
-    }
-}
-
 // processing to display date ranges of trip correctly
 // TODO MAYBE: add date range to DB table for each trip or similar solution
 if (isset($trip_data[$trip->trip_id])) {
@@ -61,9 +51,6 @@ if (!isset($trip_data[$trip->trip_id])) {
     if (isset($trip->trip_text) && $trip->trip_text) {
         echo '<p>'.$trip->trip_text.'</p>';
     }
-    if ($galleryitem) {
-       echo '<div class="gallery-item">'.$galleryitem.'</div>';
-    }
 } else {
 
 ?>
@@ -77,9 +64,6 @@ if (!isset($trip_data[$trip->trip_id])) {
     }
     if (isset($trip->trip_text) && $trip->trip_text) {
         echo '<p>'.$trip->trip_text.'</p>';
-    }
-    if ($galleryitem) {
-       echo '<div class="gallery-item">'.$galleryitem.'</div>';
     }
 ?>
 <!-- End of contents for left subtemplate -->

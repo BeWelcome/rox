@@ -16,8 +16,8 @@ class DonateModel extends PAppModel
      */
     public function getStatForDonations() {
         // TODO: Move to config
-        $requiredPerYear = 1000;
-        $requiredPerMonth = 85;
+        $requiredPerYear = 1260;
+        $requiredPerMonth = 105;
 
         // Calculate donations received for current year
         $result = $this->dao->query("
@@ -29,7 +29,7 @@ class DonateModel extends PAppModel
             FROM
                 donations
             WHERE
-                created > CONCAT(CONCAT(year(NOW()), '-01'), '-01')
+                created > '2012-10-11'
             ");
         $rowYear = $result->fetch(PDB::FETCH_OBJ);
 

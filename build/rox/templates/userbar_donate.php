@@ -31,7 +31,7 @@ $Stats = $DModel->getStatForDonations() ;
         </td>
         <td style="vertical-align: top">
             <div class="small">
-                <p><?=$ww->Donate_bar_annual($TotalDonations,$TotalDonationsNeeded) ?></p>
+                <p><?=$ww->Donate_bar_annual_2013($TotalDonations,$TotalDonationsNeeded) ?></p>
                 <a href="donate" title="<?=$wwsilent->Donate_DonateNow ?>"><?=$wwsilent->Donate_DonateNow ?></a>
             </div>
             <?=$words->flushBuffer() ?>

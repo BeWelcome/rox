@@ -17,7 +17,7 @@ if (!$members) {
     }
     $p = PFunctions::paginate($members, $page, $itemsPerPage = 15);
     $members = $p[0];
-        $pages = $p[1];
+    $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;
 ?>
@@ -36,11 +36,14 @@ if (!$members) {
         echo '</div>';
         echo '</li>';
         }
-    if (!(APP_User::isBWLoggedIn('NeedMore,Pending')) || $currentPage == $maxPage) 
+    if (!APP_User::isBWLoggedIn('NeedMore,Pending') AND $currentPage = $maxPage) 
         {
         $request = PRequest::get()->request;
         $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
         echo '<li class="userpicbox_more float_left">';
+        echo '<a href="' . $login_url .'">';
+        echo '<img width="50" height="50" alt="Profile" src="images/misc/empty_avatar_xs.png" class="framed float_left">';
+        echo '</a>';
         echo '<div class="userinfo">';
         echo $words->get('PlacesLoginToSeeMore', '<a class="username" href="' . $login_url .'">' , '</a><br /><span class="small">' , '<br />' , '</span>');
         echo '</div>';

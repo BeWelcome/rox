@@ -49,8 +49,8 @@ var BWGoogleMapReverseGeolocator = Class.create({
 		
 		// calculate zoom level
 		if (place.geometry.bounds){
-			var distance = calculateDistance(place.geometry.bounds.ca.b, place.geometry.bounds.ca.f
-					, place.geometry.bounds.ea.b, place.geometry.bounds.ea.f);
+			var distance = calculateDistance(place.geometry.bounds.ca.b, place.geometry.bounds.ca.d
+					, place.geometry.bounds.Z.b, place.geometry.bounds.Z.d);
 			addressPoint.zoomLevel = calculateZoomLevel(distance);
 		}else{
 			addressPoint.zoomLevel = 3;

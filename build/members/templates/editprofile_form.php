@@ -117,7 +117,7 @@ HTML;
                             echo <<<HTML
                             </select>
                           </td>
-                          <td><a href='#' class='remove_lang'>Remove</a>
+                          <td><a href='#' class='remove_lang'>{$words->get('RemoveLanguage')}</a>
                           </td>
                         </tr>
 HTML;
@@ -156,7 +156,7 @@ HTML;
                         </tr>
                       </tbody>
                       </table>
-                    <input type="button" id="langbutton" class="button" name="addlang" value="Add Language" />
+                    <input type="button" id="langbutton" class="button" name="addlang" value="{$words->get('AddLanguage')}" />
                   </td>
                 </tr>
               </tbody>

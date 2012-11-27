@@ -33,10 +33,10 @@ Boston, MA  02111-1307, USA.
     </li>
 	<?php
 	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_CATEGORY) {
-		echo '<li><a href="forums/lastposts">Last Posts</a></li>' ;
+		echo '<li><a href="forums/lastposts">'.$this->words->get('ForumLastPost').'</a></li>' ;
 	}
 	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
-		echo '<li><a href="forums/category"> by categories</a></li>' ;
+		echo '<li><a href="forums/category">'.$this->words->get('ForumByCategory').'</a></li>' ;
 	}
 	?>
 

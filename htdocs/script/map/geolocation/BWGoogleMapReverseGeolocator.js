@@ -46,15 +46,16 @@ var BWGoogleMapReverseGeolocator = Class.create({
 			addressPoint.coordinates[1] = place.geometry.location.lat();
 			addressPoint.coordinates[2] = 0;
 		}
-		
-		// calculate zoom level
-		if (place.geometry.bounds){
-			var distance = calculateDistance(place.geometry.bounds.ca.b, place.geometry.bounds.ca.d
-					, place.geometry.bounds.Z.b, place.geometry.bounds.Z.d);
-			addressPoint.zoomLevel = calculateZoomLevel(distance);
-		}else{
-			addressPoint.zoomLevel = 3;
-		}
+
+        // calculate zoom level
+        if (place.geometry.viewport){
+                var ne = place.geometry.viewport.getNorthEast();
+                var sw = place.geometry.viewport.getSouthWest();
+                var distance = calculateDistance(ne.lat(), sw.lat(), ne.lng(), sw.lng());
+                addressPoint.zoomLevel = calculateZoomLevel(distance);
+        }else{
+                addressPoint.zoomLevel = 3;
+        }
 		
 		if (addressPoint.zoomLevel < 3){
 			addressPoint.accuracy = 0;

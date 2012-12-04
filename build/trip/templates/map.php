@@ -59,7 +59,7 @@ $point = 0;
         if($point == 40 ) {
         	$zoomLevel = 7;
         } elseif ($point == 200) {
-        	$zoomLevel = 0;
+        	$zoomLevel = 2;
         } elseif ($point >= 1000 ) {
         	// do not display more that 1000 points
         	break;

@@ -262,40 +262,40 @@ class Geo extends RoxEntityBase
         }
         return $this->total_usage;
     }
-	
-	/**
-	 * returns the type of the object
+
+    /**
+     * returns the type of the object
      *
      * @access public
      * @return string
-	 */
-	public function placeType() {
+     */
+    public function placeType() {
         if (!$this->isLoaded())
         {
             return '';
         }
-		switch($this->fcode)
+        switch($this->fcode)
         {
-			case 'PPL':
-			case 'PPLA':
-			case 'PPLC':
-			case 'PPLG':
-			case 'PPLS':
-			case 'PPLS':
-				return "City";
-				break;
-			case 'PCLI':
-			case 'PCLS':
-			case 'PCLIX':
-				return "Country";
-				break;
-			case 'ADM1':
-				return "Region";
-				break;
-		}
-		$this->logWrite("Database Bug: geonames_cache ({$this->getPKValue()}) fcode={$this->fcode} which is unknown", "Bug");
-		return("Unknown") ;
-	}
+            case 'PPL':
+            case 'PPLA':
+            case 'PPLC':
+            case 'PPLG':
+            case 'PPLS':
+            case 'PPLS':
+                return "City";
+                break;
+            case 'PCLI':
+            case 'PCLS':
+            case 'PCLIX':
+                return "Country";
+                break;
+            case 'ADM1':
+                return "Region";
+                break;
+        }
+        $this->logWrite("Database Bug: geonames_cache ({$this->getPKValue()}) fcode={$this->fcode} which is unknown", "Bug");
+        return("Unknown");
+    }
 
     /**
      * returns true if the entity is a city

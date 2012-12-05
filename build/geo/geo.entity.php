@@ -278,10 +278,20 @@ class Geo extends RoxEntityBase
         {
             case 'PPL':
             case 'PPLA':
+            case 'PPLA2':
+            case 'PPLA3':
+            case 'PPLA4':
             case 'PPLC':
+            case 'PPLCH':
+            case 'PPLF':
             case 'PPLG':
+            case 'PPLH':
+            case 'PPLL':
+            case 'PPLQ':
+            case 'PPLR':
             case 'PPLS':
-            case 'PPLS':
+            case 'PPLW':
+            case 'PPLX':
                 return "City";
                 break;
             case 'PCLI':

@@ -103,7 +103,7 @@ $member = $model->getMemberWithUsername($receiver_username);
     </div> <!-- messageconent -->
     <div id="messagefooter">
         <p>
-            <input type="submit" value="<?=$words->get('replymessage')?>"/>
+            <input type="submit" value="send"/>
         </p>
     </div> <!-- messagefooter -->
     </form>

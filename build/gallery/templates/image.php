@@ -61,7 +61,7 @@ HTML;
 	        <input type="hidden" name="{$callbackId}" value="1"/>
 	        <input type="hidden" name="id" value="{$d->id}"/>
             <p class="desc">{$words->getFormatted('GalleryDescTitle')}</p>
-            <input type="submit" name="button" value="<?=$words->getFormatted('SubmitForm')?>" id="button" />
+            <input type="submit" name="button" value="submit" id="button" />
         </div>
         <div class="row">
         </div>    

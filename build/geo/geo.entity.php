@@ -291,8 +291,10 @@ class Geo extends RoxEntityBase
             case 'PPLR':
             case 'PPLS':
             case 'PPLW':
-            case 'PPLX':
                 return "City";
+                break;
+            case 'PPLX':
+                return "Borough";
                 break;
             case 'PCLI':
             case 'PCLS':
@@ -316,6 +318,21 @@ class Geo extends RoxEntityBase
     public function isCity()
     {
         if ($this->isLoaded() && $this->placeType() == 'City')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * returns true if the entity is a borough
+     *
+     * @access public
+     * @return bool
+     */
+    public function isBorough()
+    {
+        if ($this->isLoaded() && $this->placeType() == 'Borough')
         {
             return true;
         }

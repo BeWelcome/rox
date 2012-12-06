@@ -581,7 +581,7 @@ WHERE
         if (($g_city = $this->GetParam($vars, 'CityName', '')) || ($g_city = $this->GetParam($vars, 'CityNameOrg', ''))) {
             if ($places = $this->createEntity('Geo')->findLocationsByName($g_city)) {
                 foreach ($places as $geo) {
-                    if ($geo->isCity()) {
+                    if ($geo->isCity() || $geo->isBorough()) {
                         $WhereCity = 'geonames_cache.geonameid = ' . $geo->getPKValue();
                         break;
                     }
@@ -597,7 +597,7 @@ WHERE
 
             foreach ($this->createEntity('Geo')->findLocationsByCoordinates(array('long' => $long, 'lat' => $lat)) as $geo)
             {
-                if ($geo->isCity()) {
+                if ($geo->isCity() || $geo->isBorough()) {
                     $cities[] = $geo->geonameid;
                 }
             }

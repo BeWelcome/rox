@@ -16,14 +16,14 @@ var BWNominatimMapReverseGeolocator = Class.create({
 		var addressPoint = new BWMapAddressPoint(place.lat,
 				place.lon, place.display_name);
 		
-		console.info("[OSM] Building address point '%s': %s, %s", addressPoint.address,
+		bwrox.info("[OSM] Building address point '%s': %s, %s", addressPoint.address,
 					addressPoint.latitude, addressPoint.longitude);
 
 		addressPoint.countryNameCode = "";
 		addressPoint.boundingBox = place.boundingbox;
 		addressPoint.coordinates = new Array(addressPoint.longitude, addressPoint.latitude, 0);
 		addressPoint.location = place.display_name;
-		console.debug("[OSM] Location: " + addressPoint.location);
+		bwrox.debug("[OSM] Location: " + addressPoint.location);
 		
 		// calculate zoom level
 		addressPoint.distance = calculateDistance(addressPoint.boundingBox[0], addressPoint.boundingBox[1]
@@ -34,7 +34,7 @@ var BWNominatimMapReverseGeolocator = Class.create({
 		// FIXME: update the php service in order to use the bounds instead!
 		addressPoint.accuracy = 1;
 		
-		console.debug("[OSM] Zoom level is %s (distance=%d)", addressPoint.zoomLevel, addressPoint.distance);
+		bwrox.debug("[OSM] Zoom level is %s (distance=%d)", addressPoint.zoomLevel, addressPoint.distance);
 		
 		return addressPoint;
 	},
@@ -42,13 +42,13 @@ var BWNominatimMapReverseGeolocator = Class.create({
 	 * load the icons
 	 */
 	getLocation : function(address, successCallBackFunction, errorCallBackFunction) {
-		console.debug("[OSM] Try to reverse geolocate address '%s'.", address);
+		bwrox.debug("[OSM] Try to reverse geolocate address '%s'.", address);
 		var thisObject = this;
 		this.getLocations(address, function(results) {
 	    	if (results && results.length > 0){
 	    		if (results.length > 1){
 	    			// the first result is used
-					console.warn("[OSM] Reverse geolocation of address '%s' returned %d results: use first one '%s'.", address, results.length, results[0].display_name);
+					bwrox.warn("[OSM] Reverse geolocation of address '%s' returned %d results: use first one '%s'.", address, results.length, results[0].display_name);
 				}
 				var place = results[0];
 				var addressPoint = thisObject.buildAddressPoint(place);
@@ -56,7 +56,7 @@ var BWNominatimMapReverseGeolocator = Class.create({
 				successCallBackFunction(addressPoint);
 	    	}else{
 	    		// not fount
-	    		console.warn("[OSM] Address not fount...");
+	    		bwrox.warn("[OSM] Address not fount...");
 				errorCallBackFunction();
 	    	}
     	});
@@ -71,14 +71,14 @@ var BWNominatimMapReverseGeolocator = Class.create({
 						place: item
 					};
 				}else{
-					console.error("Error: item is null.");
+					bwrox.error("Error: item is null.");
 				}
 			});
 			successCallBackFunction(results);
 		} );
 	},
 	getLocations: function(searchText, successCallBackFunction){
-		console.debug('[OSM] Search places containing text "%s".', searchText);
+		bwrox.debug('[OSM] Search places containing text "%s".', searchText);
 		jQuery.ajax({
 			url: this.queryBaseUrl,
 			dataType: 'json',
@@ -90,12 +90,12 @@ var BWNominatimMapReverseGeolocator = Class.create({
 				limit:'10',
 			},
 			success: function( data ) {
-				console.debug('[OSM] Search places containing text "%s" returned %d results.', searchText, data.length);
+				bwrox.debug('[OSM] Search places containing text "%s" returned %d results.', searchText, data.length);
 				// data = jQuery(data).filter(function(index) {
 				// 	  return this.type == 'administrative';
 				// });
 				// TODO: mapquest limit to 10 results, and no way to filter by type: we have to host our own nominativ server
-				// console.debug('[OSM] Search places containing text "%s" returned %d results (after administrative filter).', searchText, data.length);
+				// bwrox.debug('[OSM] Search places containing text "%s" returned %d results (after administrative filter).', searchText, data.length);
 				successCallBackFunction(data);
 			}
 		});

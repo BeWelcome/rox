@@ -1,21 +1,30 @@
 jQuery(function() {
-	// document loaded
+	mapList = new Array();
 });
 
 /* function called when the user click on the 'map' text link */
 function displayMap(popupid,  markerLatitude, markerLongitude, markerDescription) {
-	
 	Element.setStyle(popupid, {display:'block'});
     Element.show(popupid + '_map');
 	
-    var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
-	
-	if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-		console.error('CloudMade API key not defined!');
-	}
-	
-	var mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, popupid + '_map', false);
-	
+    var blogId = popupid.replace('/' + popupid + '/g', 'map_');
+    
+    if (mapList[blogId] == null)
+    {
+        var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
+    	
+    	if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
+    		bwrox.error('CloudMade API key not defined!');
+    	}
+    	
+    	mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, popupid + '_map', false);
+    	mapList[blogId] = mapBuilder;
+    }
+    else
+    {
+    	var mapBuilder = mapList[blogId]; 
+    }
+
 	if (markerLatitude != null && markerLongitude != null) {
 		// zoom map to specified location
 		var zoomLevel = 8;

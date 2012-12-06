@@ -85,7 +85,7 @@ if ($commentsCount > 0) {
 }
 echo '</a>';
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
-    echo ' | <a href="" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
+    echo ' | <a href="#" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
 }
 $member = $this->_model->getLoggedInMember();
 if ($member && $member->id == $blog->IdMember) {

@@ -125,8 +125,16 @@ class SearchmembersController extends PAppController {
         $varsGet = '';
         if(isset($request[1])) {
             switch ($request[1]) {
-                case 'mapoff': $mapstyle = "mapoff"; break;
-                case 'mapon': $mapstyle = "mapon"; break;
+                case 'mapoff': {
+                    $mapstyle = "mapoff"; 
+                    $_SESSION['SearchMembersTList'] = array();
+                    break;
+                }
+                case 'mapon': {
+                    $mapstyle = "mapon";
+                    $_SESSION['SearchMembersTList'] = array();
+                    break;
+                }
                 case 'queries': {
                     if(PVars::get()->debug) {
                         $R = MOD_right::get();

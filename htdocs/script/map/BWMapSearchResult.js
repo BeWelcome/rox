@@ -22,8 +22,8 @@ var BWMapSearchResult = Class
 			 * constructor
 			 */
 			initialize : function(xmlDoc) {
-				console.debug("Parsing XML response...");
-				// console.debug(xmlDoc);
+				bwrox.debug("Parsing XML response...");
+				// bwrox.debug(xmlDoc);
 				this.xmlDoc = xmlDoc;
 
 				this.header = getxmlEl(xmlDoc, "header");
@@ -33,7 +33,7 @@ var BWMapSearchResult = Class
 				if (this.header && this.header[0]) {
 					this.detailHeader = this.header[0].getAttribute("header");
 				} else {
-					console.warn("Header is missing.");
+					bwrox.warn("Header is missing.");
 				}
 				if (! this.detailHeader){
 					this.detailHeader = "";
@@ -45,17 +45,17 @@ var BWMapSearchResult = Class
 						this.firstPageChild = this.firstPage.firstChild;
 						this.paging = this.firstPage.getAttribute('paging');
 					} else {
-						console.warn("First page is missing.");
+						bwrox.warn("First page is missing.");
 					}
 				} else {
-					console.warn("Pager is missing.");
+					bwrox.warn("Pager is missing.");
 				}
 				var results = getxmlEl(xmlDoc, "num_results");
 				if (results) {
 					this.numResults = Number(results[0].getAttribute("num_results"));
-					console.debug("Number of results:" + this.numResults);
+					bwrox.debug("Number of results:" + this.numResults);
 				} else {
-					console.warn("Number of results is missing.");
+					bwrox.warn("Number of results is missing.");
 				}
 
 				this.numAllResults = Number(results[0].getAttribute("num_all_results"));
@@ -64,7 +64,7 @@ var BWMapSearchResult = Class
 				if (this.footer && this.footer[0]) {
 					this.detailFooter = this.footer[0].getAttribute("footer");
 				} else {
-					console.warn("Footer is missing.");
+					bwrox.warn("Footer is missing.");
 				}
 				if (! this.detailFooter){
 					this.detailFooter = "";
@@ -97,24 +97,21 @@ var BWMapSearchResult = Class
 			 * Read the points
 			 */
 			readPoints : function() {
-				console
-						.log("Reading the " + this.markers.length
-								+ " points...");
+				bwrox.log("Reading the " + this.markers.length + " points...");
 				this.points = new Array();
 				for ( var i = 0; i < this.markers.length; i++) {
 					this.points[i] = new BWMapHostPoint(this.markers[i]);
 				}
 				// fix points
 				this.fixPoints();
-				console.info(this.points.length + " points have been read.");
+				bwrox.info(this.points.length + " points have been read.");
 				return this.points;
 			},
 			fixPoints : function() {
 				// combine marker summaries when coordinates and accomodation is
 				// the same,
 				// in groups of columns x rows
-				console
-						.log("Combine points summaries when coordinates and accomodation is the same...");
+				bwrox.log("Combine points summaries when coordinates and accomodation is the same...");
 				for ( var i = 0; i < this.points.length; i++) {
 					if (this.points[i].summary == '') {
 						continue;
@@ -131,8 +128,7 @@ var BWMapSearchResult = Class
 				}
 
 				// space markers that have the same geo-coordinates
-				console
-						.log("Space markers that have the same geo-coordinates...");
+				bwrox.log("Space markers that have the same geo-coordinates...");
 				var offset = 1;
 				var newpoint = 1;
 				for (i = 0; i < this.points.length; i++) {

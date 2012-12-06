@@ -17,8 +17,9 @@ $blogText = array();
 $i18n = new MOD_i18n('apps/blog/allblogs.php');
 $blogText = $i18n->getText('blogText');
 if (isset($title)) echo '<h2>'.$title.'</h2>'."\n";
+$cloudmade_conf = PVars::getObj('cloudmade');
 ?>
-<?php
+<input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/><?php
 foreach($blogIt as $blog)
 {
     require 'blogitem.php';

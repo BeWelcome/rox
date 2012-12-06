@@ -44,7 +44,7 @@ var GeoSuggest = {
 //    		GeoSuggest.displaySuggestion('location-status', '');
 //    	}, function() {
 //    		// address not fount
-//    		console.error('Address "%s" not fount.', address);
+//    		bwrox.error('Address "%s" not fount.', address);
 //    	});
     	
         var url = http_baseuri+'geo/suggestLocation/'+address+'/city';

@@ -14,7 +14,7 @@ BWRox.prototype.initSearchMembers = function() {
 	var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
 	
 	if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-		console.error('CloudMade API key not defined!');
+		bwrox.error('CloudMade API key not defined!');
 	}
 	
 	// create a new map builder and init the map
@@ -42,7 +42,7 @@ BWRox.prototype.initSearchMembers = function() {
 	// TODO uncomment to activate autocompletion
 	// bwrox.initSearchAutocomplete('#Address');
 	
-	console.debug("Page loaded.");
+	bwrox.debug("Page loaded.");
 };
 
 function searchGlobal(i) {
@@ -87,7 +87,7 @@ function searchByMap(i) {
 }
 
 function searchByText(address, i) {
-	console.info("Running text search (address='" + address + "', i=" + i
+	bwrox.info("Running text search (address='" + address + "', i=" + i
 			+ ")...");
 	$('CityNameOrg').value = address;
 	state = 'text';
@@ -121,7 +121,7 @@ function searchByAddressPoint(addressPoint){
 
 function searchByAddressPoint(addressPoint, i){
 	
-	console.debug("Search by address point '%s': %s,%s", addressPoint.address,
+	bwrox.debug("Search by address point '%s': %s,%s", addressPoint.address,
 			addressPoint.latitude, addressPoint.longitude);
 	$('paging-div').innerHTML = '';
 	if ($('second_pager')) {
@@ -148,11 +148,11 @@ function flipSortDirection(e) {
 }
 
 function loadMap(i) {
-	console.debug("Loading map (" + i + ")...");
+	bwrox.debug("Loading map (" + i + ")...");
 	geosearchMapBuilder.clearMap();
 	put_val('start_rec', i);
 	// send search request
-	console.debug("Search members (varsOnLoad=" + varsOnLoad
+	bwrox.debug("Search members (varsOnLoad=" + varsOnLoad
 			+ ", varSortOrder=" + varSortOrder + ", queries=" + queries + ")");
 
 	new Ajax.Request(
@@ -161,21 +161,21 @@ function loadMap(i) {
 				parameters : $('searchmembers').serialize(true),
 				method : 'get',
 				onSuccess : function(req) {
-					console.debug("Search success: processing the results...");
+					bwrox.debug("Search success: processing the results...");
 					if (queries != '') {
-						console.info("Show member list (map is hidden)");
+						bwrox.info("Show member list (map is hidden)");
 						// load members list result (no map)
 						put_html('member_list', req.responseText);
 						put_html('loading', '');
 						toggle_map();
 						return;
 					}
-					console.debug("Parsing results...");
+					bwrox.debug("Parsing results...");
 					// parse results
 					var mapSearchResult = new BWMapSearchResult(req.responseXML);
 
 					if (mapSearchResult.hasResults()) {
-						console.log("Adding the pager...");
+						bwrox.log("Adding the pager...");
 						// remove the first child of first page
 						var removedFirstPageChild = mapSearchResult.removeFirstPageChild();
 						// create temporary div
@@ -200,7 +200,7 @@ function loadMap(i) {
 					// reading the points
 					mapSearchResult.readPoints();
 					
-					console.debug("Adding the %d markers...", mapSearchResult.points.length);
+					bwrox.debug("Adding the %d markers...", mapSearchResult.points.length);
 					
 					var detail = mapSearchResult.detailHeader;
 					var index = 0;
@@ -219,7 +219,7 @@ function loadMap(i) {
 							}
 							detail += mapSearchResult.points[i].detail;
 						}else{
-							console.warn("Summary missing for point %d.", i);
+							bwrox.warn("Summary missing for point %d.", i);
 						}
 					}
 					// remove the unused layers control (associated with the layers without any markers)
@@ -227,8 +227,7 @@ function loadMap(i) {
 
 					if (!mapoff && state == 'global'
 							&& mapSearchResult.points.length) {
-						console
-								.debug("Calculate the center and zoom of the map...");
+						bwrox.debug("Calculate the center and zoom of the map...");
 						// find min and max lat
 						var minLat = 90, maxLat = -90;
 						var aveLat = 0, delLat, lat, lng;
@@ -319,7 +318,7 @@ function loadMap(i) {
 					} else {
 						put_html('help_and_markers', '');
 					}
-					console.info("Map succesfully loaded");
+					bwrox.info("Map succesfully loaded");
 					jQuery(".ui-autocomplete").hide();
 				}
 			});

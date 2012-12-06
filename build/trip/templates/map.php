@@ -48,6 +48,7 @@ $point = 0;
                     			.', longitude:'.$blog->longitude
                     			.', name:"'.$blog->name.'"'
                     			.', tripId:'.$trip->trip_id.'};';
+                    $locations[$point] = new stdClass();
                     $locations[$point]->lat = $blog->latitude;
                     $locations[$point]->lng = $blog->longitude;
                     $locations[$point]->name = $blog->name;
@@ -58,14 +59,14 @@ $point = 0;
         if($point == 40 ) {
         	$zoomLevel = 7;
         } elseif ($point == 200) {
-        	$zoomLevel = 0;
+        	$zoomLevel = 2;
         } elseif ($point >= 1000 ) {
         	// do not display more that 1000 points
         	break;
         }
     }
 ?>
-console.debug('%d markers defined.', markers.length);
+bwrox.debug('%d markers defined.', markers.length);
 
 //Markers
 var iconData = {

@@ -359,7 +359,10 @@ WHERE
             $where = ' WHERE (1=0)';
         }
 
+        // clean up meaningless conditions
+        $where = preg_replace('/ AND 1=1/','',$where);
         $fullWhere = $where;
+        $tablelistAll = $tablelist;
         if ($visitorsWhere) { // hide non-public profiles from visitors
             $fullWhere = $where . ' AND ' . $visitorsWhere;
             $tablelist .= ', memberspublicprofiles';
@@ -367,7 +370,7 @@ WHERE
 
         // perform search
         $TMember = $this->doSearch($vars, $tablelist, $fullWhere, $OrderBy, $start_rec, $limitcount);
-        
+
         // get full count of search results if not logged in
         $rCountFull = -1;
         if ($visitorsWhere) {
@@ -375,7 +378,7 @@ WHERE
                 SELECT
                     COUNT(DISTINCT members.id) AS fullCount
                 FROM
-                    (' . $tablelist . ')
+                    (' . $tablelistAll . ')
                 ' . $where);
             $row = $result->fetch(PDB::FETCH_OBJ);
             $rCountFull = $row->fullCount;
@@ -578,7 +581,7 @@ WHERE
         if (($g_city = $this->GetParam($vars, 'CityName', '')) || ($g_city = $this->GetParam($vars, 'CityNameOrg', ''))) {
             if ($places = $this->createEntity('Geo')->findLocationsByName($g_city)) {
                 foreach ($places as $geo) {
-                    if ($geo->isCity()) {
+                    if ($geo->isCity() || $geo->isBorough()) {
                         $WhereCity = 'geonames_cache.geonameid = ' . $geo->getPKValue();
                         break;
                     }
@@ -594,7 +597,7 @@ WHERE
 
             foreach ($this->createEntity('Geo')->findLocationsByCoordinates(array('long' => $long, 'lat' => $lat)) as $geo)
             {
-                if ($geo->isCity()) {
+                if ($geo->isCity() || $geo->isBorough()) {
                     $cities[] = $geo->geonameid;
                 }
             }

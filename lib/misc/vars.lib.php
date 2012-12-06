@@ -70,5 +70,29 @@ class PVars {
         $obj = new PVarObj($c->_vars[$name]);
         return $obj;
     }
+    
+    /**
+     * Get config section as an array
+     *
+     * @param string $name Name of config section, e.g. "db" ("[db]" in
+     *                     rox.ini)
+     * @return array|bool Config key/value pairs; false if config section does
+     *                    not exist
+     *
+     * TODO: Reuse in getObj(), keeping same getObj() performance
+     */
+    public static function getArray($name) {
+        if (!isset(self::$_instance)) {
+            $c = self::get();
+        } else {
+            $c = self::$_instance;
+        }
+        if (array_key_exists($name, $c->_vars)) {
+            return $c->_vars[$name];
+        } else {
+            return false;
+        }
+    }
+
 }
 ?>

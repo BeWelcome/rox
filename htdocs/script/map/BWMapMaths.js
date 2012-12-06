@@ -21,7 +21,7 @@ function calculateDistance(lat1, lat2, lon1, lon2){
 	        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1Rad) * Math.cos(lat2Rad); 
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	var d = R * c;
-	console.debug('Distance from %s,%s to %s,%s is ' + d, lon1, lat1, lon2, lat2 );
+	bwrox.debug('Distance from %s,%s to %s,%s is ' + d, lon1, lat1, lon2, lat2 );
 	return d;
 }
 

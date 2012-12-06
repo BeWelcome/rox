@@ -8,7 +8,7 @@ function initOsmMapBlogEdit() {
 		var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
 		
 		if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-			console.error('CloudMade API key not defined!');
+			bwrox.error('CloudMade API key not defined!');
 		}
 		
 		mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "spaf_map", false);
@@ -18,7 +18,7 @@ function initOsmMapBlogEdit() {
 		if (markerLatitude != null && markerLongitude != null) {
             // zoom map to specified location
             if (markerLatitude == "0" && markerLongitude == "0") {
-                var zoomLevel = 0;
+                var zoomLevel = 1;
             } else {
                 var zoomLevel = 8;
             }

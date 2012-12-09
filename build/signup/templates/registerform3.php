@@ -149,7 +149,7 @@ $cloudmade_conf = PVars::getObj('cloudmade');
             echo '<input type="hidden" id="markerDescription" name="markerDescription" value="'.$markerDescription.'"/>';
         }
     } else {
-        echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="47.3666667"/>';
-        echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="8.55"/>';
+        echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="0"/>';
+        echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="0"/>';
     } 
 ?>        

@@ -109,8 +109,8 @@ var BWGeosearchMapBuilder = Class
 				var googleLayer = new L.Google('ROADMAP');
 
 				this.baseMaps = {
-					'Open Street Map' : this.osmLayer
-				 ,'Google Map': googleLayer
+					'OpenStreetMap' : this.osmLayer
+				 ,'Google Maps': googleLayer
 				};
 				
 				this.layerGroups = {

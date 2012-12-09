@@ -37,8 +37,8 @@ var BWSimpleMapBuilder = Class
 			var googleLayer = new L.Google('ROADMAP');
 
 			this.baseMaps = {
-				'Open  Map' : this.osmLayer
-			 ,'Google Map': googleLayer
+				'OpenStreetMap' : this.osmLayer
+			 ,'Google Maps': googleLayer
 			};
 			
 			this.layerGroups = {

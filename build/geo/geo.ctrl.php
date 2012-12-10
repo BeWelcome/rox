@@ -97,11 +97,8 @@ class GeoController extends PAppController {
                 if (isset($_GET['s'])) {
                     $request[2] = $_GET['s'];
                 }
-                if (!isset($request[2])) {
-                    PPHP::PExit();
-                }
                 if (!isset($request[3])) {
-                    $request[3] = '';
+                    PPHP::PExit();
                 }
                 $type = false;
 

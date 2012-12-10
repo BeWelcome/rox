@@ -144,8 +144,8 @@ class GeoView extends PAppView {
                         . "'); return false;";
                     $out .= '<li id="li_' . $location['geonameId'] . '" '
                         . $dohide . ' onclick="' . $onclick . '">'
-                        . '<a id="href_'.$location['geonameId'] . '" onclick="'
-                        . $onclick . '">' . $location['name']
+                        . '<a id="href_' . $location['geonameId'] . '">'
+                        . $location['name']
                         . '<br /><img src="images/icons/flags/'
                         . strtolower($location['countryCode']) . '.png" alt="'
                         . $location['countryName'] . '"> <span class="small">'

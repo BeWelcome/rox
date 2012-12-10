@@ -158,10 +158,14 @@ class GeoView extends PAppView {
             }
             $out .= '</ol>';
             $out .= $add_out;
-            if ($ii == 0) return 'We couldnt find your location!';
-            return $out;
-        } else
-        return 'We couldnt find your location!';
+            if ($ii == 0) {
+                return '<p class="desc">' . $words->get('Geo_no_matches_found') . '</p>';
+            } else {
+                return $out;
+            }
+        } else {
+            return '<p class="desc">' . $words->get('Geo_no_matches_found') . '</p>';
+        }
     }
 
 

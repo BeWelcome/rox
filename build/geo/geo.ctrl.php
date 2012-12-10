@@ -119,17 +119,9 @@ class GeoController extends PAppController {
                         
                 }
 
-                $locations = $this->_model->suggestLocation($request[2],40,$fcode);
-                $ii = 0;
-                while(!$locations) {
-                    sleep(2);
-                    //retrieve all information from geonames
-                    $locations = $this->_model->suggestLocation($request[2],40,$fcode);
-                    if (!$locations && $ii++ == 5) {
-                        throw new PException('Could not retrieve hierarchy for '.$request[2].' from geonames.org');
-                        return false;
-                    }
-        		}
+                // get locations from geonames. suggestLocation returns empty array
+                // if nothing is found.
+                $locations = $this->_model->suggestLocation($request[2], 40, $fcode);
                 echo $this->_view->generateLocationOverview($locations);
                 PPHP::PExit();
                 break;

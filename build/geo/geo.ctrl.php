@@ -199,10 +199,10 @@ class GeoController extends PAppController {
             $locations_print = '';
         } elseif ($mem_redirect->location) {
             $Geo = new GeoController;
-            $locations_print = $Geo->GeoSearch($mem_redirect->location,40,false, $callbacktag);
+            $locations_print = $Geo->GeoSearch($mem_redirect->location,40, true, $callbacktag);
         } else {
             $Geo = new GeoController;
-            $locations_print = $Geo->GeoSearch(' ',40,false, $callbacktag);
+            $locations_print = $Geo->GeoSearch(' ',40, true, $callbacktag);
         }
         // Just for testing:
         // if (isset($_SESSION['GeoVars'])) var_dump($_SESSION['GeoVars']);

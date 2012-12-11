@@ -96,7 +96,7 @@ bwrox.selectScripts([
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "3rdparty/leaflet/0.4.4/leaflet.js",
+    file: "leaflet/0.4.5/leaflet.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
@@ -105,7 +105,7 @@ bwrox.selectScripts([
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "3rdparty/leaflet/plugins/Google.js",
+    file: "leaflet/plugins/Google.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {

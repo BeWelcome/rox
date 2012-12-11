@@ -97,11 +97,8 @@ class GeoController extends PAppController {
                 if (isset($_GET['s'])) {
                     $request[2] = $_GET['s'];
                 }
-                if (!isset($request[2])) {
-                    PPHP::PExit();
-                }
                 if (!isset($request[3])) {
-                    $request[3] = '';
+                    PPHP::PExit();
                 }
                 $type = false;
 
@@ -119,17 +116,9 @@ class GeoController extends PAppController {
                         
                 }
 
-                $locations = $this->_model->suggestLocation($request[2],40,$fcode);
-                $ii = 0;
-                while(!$locations) {
-                    sleep(2);
-                    //retrieve all information from geonames
-                    $locations = $this->_model->suggestLocation($request[2],40,$fcode);
-                    if (!$locations && $ii++ == 5) {
-                        throw new PException('Could not retrieve hierarchy for '.$request[2].' from geonames.org');
-                        return false;
-                    }
-        		}
+                // get locations from geonames. suggestLocation returns empty array
+                // if nothing is found.
+                $locations = $this->_model->suggestLocation($request[2], 40, $fcode);
                 echo $this->_view->generateLocationOverview($locations);
                 PPHP::PExit();
                 break;
@@ -210,10 +199,10 @@ class GeoController extends PAppController {
             $locations_print = '';
         } elseif ($mem_redirect->location) {
             $Geo = new GeoController;
-            $locations_print = $Geo->GeoSearch($mem_redirect->location,40,false, $callbacktag);
+            $locations_print = $Geo->GeoSearch($mem_redirect->location,40, true, $callbacktag);
         } else {
             $Geo = new GeoController;
-            $locations_print = $Geo->GeoSearch(' ',40,false, $callbacktag);
+            $locations_print = $Geo->GeoSearch(' ',40, true, $callbacktag);
         }
         // Just for testing:
         // if (isset($_SESSION['GeoVars'])) var_dump($_SESSION['GeoVars']);

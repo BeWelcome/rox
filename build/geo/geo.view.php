@@ -144,8 +144,8 @@ class GeoView extends PAppView {
                         . "'); return false;";
                     $out .= '<li id="li_' . $location['geonameId'] . '" '
                         . $dohide . ' onclick="' . $onclick . '">'
-                        . '<a id="href_'.$location['geonameId'] . '" onclick="'
-                        . $onclick . '">' . $location['name']
+                        . '<a id="href_' . $location['geonameId'] . '">'
+                        . $location['name']
                         . '<br /><img src="images/icons/flags/'
                         . strtolower($location['countryCode']) . '.png" alt="'
                         . $location['countryName'] . '"> <span class="small">'
@@ -158,10 +158,14 @@ class GeoView extends PAppView {
             }
             $out .= '</ol>';
             $out .= $add_out;
-            if ($ii == 0) return 'We couldnt find your location!';
-            return $out;
-        } else
-        return 'We couldnt find your location!';
+            if ($ii == 0) {
+                return '<p class="desc">' . $words->get('Geo_no_matches_found') . '</p>';
+            } else {
+                return $out;
+            }
+        } else {
+            return '<p class="desc">' . $words->get('Geo_no_matches_found') . '</p>';
+        }
     }
 
 

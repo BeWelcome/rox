@@ -1,12 +1,12 @@
 
  jQuery(document).ready(function(){
-	 var apiKey = 'f18f7e7fa8014d8ab1379c78df29f5c6';
-	 var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/'+apiKey+'/997/256/{z}/{x}/{y}.png';
-	 var cloudmadeAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="http://cloudmade.com">CloudMade</a>';
-	 var cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
-	
-	 var map = new L.Map('map');
-	 map.setView(new L.LatLng(51.505, -0.09), 13).addLayer(cloudmade);
+   var apiKey = 'f18f7e7fa8014d8ab1379c78df29f5c6';
+   var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/'+apiKey+'/997/256/{z}/{x}/{y}.png';
+   var cloudmadeAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="http://cloudmade.com">CloudMade</a>';
+   var cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
+
+   var map = new L.Map('map');
+   map.setView(new L.LatLng(51.505, -0.09), 13).addLayer(cloudmade);
  });
  //var marker = new L.Marker(new L.LatLng(51.5, -0.09));
 //map.addLayer(marker);
@@ -16,7 +16,7 @@
 //
 //// configure the tiles provider
 //var mapquestUrl = 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';
-//				
+//
 //// subdomains
 //var subDomains = ['otile1','otile2','otile3','otile4'];
 //
@@ -28,22 +28,22 @@
 //
 //// OSM layer
 //var osmLayer = new L.TileLayer(mapquestUrl, {
-//	maxZoom : 18,
-//	attribution : mapquestAttrib,
-//	subdomains : subDomains
+//  maxZoom : 18,
+//  attribution : mapquestAttrib,
+//  subdomains : subDomains
 //});
 //
 //osmMap.addLayer(osmLayer);
 //
 //var baseMaps = {
-//	'Open Steet Map' : osmLayer
+//  'Open Steet Map' : osmLayer
 // //,'Google Map': googleLayer
 //};
 //
 ////layerGroups = {
-////		'OpenSteetMap' : osmLayer
-////	// ,'GoogleMap': googleLayer
-////	};
+////    'OpenSteetMap' : osmLayer
+////  // ,'GoogleMap': googleLayer
+////  };
 ////
 ////initLayersGroups();
 //

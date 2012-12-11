@@ -68,13 +68,18 @@ class SPAF_Maps {
   var $query = '';
   var $country = '';
   var $results = '';
+  var $result_code = false;
   var $default = '';
   var $service = 'search?q=';
   var $offset = '';
   var $style = 'medium';
   var $fcode = '';
   var $lang = '';
- 
+
+  const RESULT_OK = 1;
+  const RESULT_NO_XML = 2;
+  const RESULT_NO_MATCHES = 3;
+
   // }}}
   // {{{
   function SPAF_Maps ($query = '', $country = '') {
@@ -294,21 +299,12 @@ class SPAF_Maps {
   }
   // }}}
   // {{{
-  function fetchResults ($repeat = false) {
-    // prepare fetch url
-    if ($repeat) {
-      $url = str_replace(
-        array('{service}','{query}', '{rows}','{style}'),
-        array($this->service,$this->country, $this->max_results,$this->style),
-        $this->geonames_url);
-    }
-    else {
-      $url = str_replace(
-        array('{service}','{query}', '{rows}','{style}'),
-        array($this->service,urlencode($this->query), $this->max_results,$this->style),
-        $this->geonames_url);
-    }
-    
+  function fetchResults () {
+    $url = str_replace(
+      array('{service}','{query}', '{rows}','{style}'),
+      array($this->service,urlencode($this->query), $this->max_results,$this->style),
+      $this->geonames_url);
+
     // add country filtering
     if ($this->country != '') {
       $url .= '&country='.$this->country;
@@ -327,8 +323,6 @@ class SPAF_Maps {
 	if ($this->lang != '')
 		$url .= '&lang='.$this->lang;
 
-//	var_dump($url);	
-    
     // fetch url
     if ($this->use_sockets) {
       $xml = $this->fetchUrl($url);
@@ -336,12 +330,14 @@ class SPAF_Maps {
     else {
       $xml = file_get_contents($url);
     }
-    // chech if file was actually fetched
+
+    // check if xml was received
     if ($xml === false) {
       $this->results = array();
+      $this->result_code = self::RESULT_NO_XML;
       return false;
     }
-    
+
     // parse fetched XML
     // get all items
     $this->results = array(); 
@@ -356,11 +352,15 @@ class SPAF_Maps {
       }
       $this->results[] = $location;
     }
-    // check if search shoud be repeated with less restrictive query
-    if (sizeof($this->results) == 0 && $this->secondary_search && !$repeat) {
-      $this->fetchResults(true);
+
+    // check if search was successful
+    if (sizeof($this->results) == 0) {
+      $this->results = array();
+      $this->result_code = self::RESULT_NO_MATCHES;
+      return false;
     }
-    
+
+    $this->result_code = self::RESULT_OK;
     return true;
   }
   // }}}

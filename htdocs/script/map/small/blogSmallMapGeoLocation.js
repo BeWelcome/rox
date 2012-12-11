@@ -3,34 +3,34 @@ var mapBuilder;
 var firstChange = true;
 
 function initOsmMapBlogEdit() {
-	if (jQuery('#spaf_map').length > 0){
-		
-		var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
-		
-		if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-			bwrox.error('CloudMade API key not defined!');
-		}
-		
-		mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "spaf_map", false);
-	
-		var markerLatitude = jQuery('#markerLatitude').val();
-		var markerLongitude = jQuery('#markerLongitude').val();
-		if (markerLatitude != null && markerLongitude != null) {
+  if (jQuery('#spaf_map').length > 0){
+
+    var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
+
+    if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
+      bwrox.error('CloudMade API key not defined!');
+    }
+
+    mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "spaf_map", false);
+
+    var markerLatitude = jQuery('#markerLatitude').val();
+    var markerLongitude = jQuery('#markerLongitude').val();
+    if (markerLatitude != null && markerLongitude != null) {
             // zoom map to specified location
             if (markerLatitude == "0" && markerLongitude == "0") {
-                var zoomLevel = 1;
+                var zoomLevel = 0;
             } else {
                 var zoomLevel = 8;
             }
-			mapBuilder.setCenter(markerLatitude, markerLongitude, zoomLevel);
-			
-			var markerDescription = jQuery('#markerDescription').val();
-			if (markerDescription != null) {
-				// add marker
-				mapBuilder.addSimpleMarker(markerLatitude, markerLongitude, markerDescription);;
-			}
-		}
-	}
+      mapBuilder.setCenter(markerLatitude, markerLongitude, zoomLevel);
+
+      var markerDescription = jQuery('#markerDescription').val();
+      if (markerDescription != null) {
+        // add marker
+        mapBuilder.addSimpleMarker(markerLatitude, markerLongitude, markerDescription);;
+      }
+    }
+  }
 }
 
 function removeHighlight() {
@@ -59,18 +59,18 @@ function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, 
 }
 
 function changeMarkerBlog(markerLatitude, markerLongitude, zoomLevel, markerDescription) {
-	// refresh if necessary
-	if (firstChange){
-		jQuery('#spaf_map').show();
-		mapBuilder.refresh();
-		firstChange = false;
-	}
-	mapBuilder.clearMap();
-	mapBuilder.setCenter(markerLatitude, markerLongitude, zoomLevel);
-	if (markerDescription != null) {
-		// add marker
-		mapBuilder.addSimpleMarker(markerLatitude, markerLongitude, markerDescription);;
-	}
+  // refresh if necessary
+  if (firstChange){
+    jQuery('#spaf_map').show();
+    mapBuilder.refresh();
+    firstChange = false;
+  }
+  mapBuilder.clearMap();
+  mapBuilder.setCenter(markerLatitude, markerLongitude, zoomLevel);
+  if (markerDescription != null) {
+    // add marker
+    mapBuilder.addSimpleMarker(markerLatitude, markerLongitude, markerDescription);;
+  }
 }
 
 function setGeonameIdInFormBlog(geonameid, latitude, longitude, geonamename, countrycode, admincode) {

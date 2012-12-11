@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -63,31 +63,32 @@ $width = $vars['limitcount'];
 foreach($TList as $TL) {
     $ii++;
     $Nr = $ii;
-    
+
     $accomodationIcon = ShowAccomodation($TL->Accomodation, $Accomodation);
-    
-    // replace line breaks '\r\n' by html line break element '<br/>'
-    $profileSummary = str_replace("\\r\\n", "<br/>", $TL->ProfileSummary);
-    
+    $profileSummary = nl2br($TL->ProfileSummary);
+
     $string = <<<HTML
-<div class="memberlist">
-	<div class="avatar">
-    	<a href="members/{$TL->Username}" target="_blank"><img src="members/avatar/{$TL->Username}?xs"/></a>
+    <div class="avatar">
+        <a href="members/{$TL->Username}" target="_blank"><img width="50" height="50" src="members/avatar/{$TL->Username}?xs"/></a>
+    </div>
+    <div class="username">
+        <a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a>
     </div>
     <div class="details">
-    	<p><a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a>
-    		<br/><span class="small">{$words->getFormatted('YearsOld',$TL->Age)}, {$words->getFormatted('from')} {$TL->CityName}, {$TL->CountryName}
-    		<br/>{$profileSummary}</span>
-				<a class="button" href="javascript: geosearchMapBuilder.zoomIn($TL->Latitude, $TL->Longitude);">Zoom In</a> 
-				<a class="button" href="javascript: geosearchMapBuilder.zoomOut(-4);">Zoom Out</a>
-        </p>
+        {$words->getFormatted('YearsOld',$TL->Age)}, {$words->getFormatted('from')} {$TL->CityName}, {$TL->CountryName}
     </div>
-</div>
+    <div class="summary">
+        {$profileSummary}
+    </div>
+    <div class="zoom-buttons">
+        <a class="button" href="javascript: geosearchMapBuilder.zoomIn($TL->Latitude, $TL->Longitude);">Zoom In</a>
+        <a class="button" href="javascript: geosearchMapBuilder.zoomOut(-4);">Zoom Out</a>
+    </div>
 HTML;
     $summary = htmlspecialchars($string, ENT_QUOTES);
     $string = '';
     $detail = htmlspecialchars($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr), ENT_QUOTES);
-    
+
     echo "<marker username='$TL->Username' Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
 ";
 }
@@ -124,8 +125,8 @@ if ($ShowMemberFunction == 'ShowMembersAjaxShort')
     echo "<header header='".
     "'/>";
 }
-else 
-{        
+else
+{
     if(sizeof($TList) > 0) echo "<header header='".
         htmlspecialchars("<table class=\"full\">
             <tr>
@@ -187,16 +188,16 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     $string .= "</td>" ;
     $string .="</tr>" ;
 
-    
+
     return $string;
 }
 function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     static $ii = 0;
     $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
-    
+
     $memberProfileLink = "members/".$TM->Username;
-    
+
     $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',$TM->LastLogin))));
     if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
     $info_styles = array(0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">");
@@ -204,7 +205,7 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $string .= "<table id=\"memberDetail".$Nr."\" class=\"profileLinkArea full\"";
     // highlight marker on member list mouse over: $string .= " onmouseover=\"mapBuilder.highlightMarker(".$Nr.");\" onmouseout=\"mapBuilder.unhighlightMarker(".$Nr.");\"";
     $string .= " ><tr><td valign=\"top\" class=\"memberlist\">" ;
-   	$string .= "<a class=\"profileLink\" href=".$memberProfileLink." target=\"_blank\">";
+    $string .= "<a class=\"profileLink\" href=".$memberProfileLink." target=\"_blank\">";
     $string .= "<img src=\"members/avatar/".$TM->Username."?xs\" class=\"framed\">";
     $string .= "</a>";
     $string .= "</td>" ;
@@ -217,7 +218,7 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:geosearchMapBuilder.openMarker(".$Nr.");\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";
     $string .= "</td></tr></table>" ;
     $string .="</div>" ;
-    
+
     return $string;
 }
 

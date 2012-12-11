@@ -1,4 +1,4 @@
-var leafletCssBase = 'styles/css/3rdparty/leaflet/0.4.4/';
+var leafletCssBase = 'script/leaflet/0.4.5/';
 
 document.write('<link media="all" type="text/css" href="' + leafletCssBase + 'leaflet.css" rel="stylesheet">');
 document.write('<!--[if lte IE 8]>');

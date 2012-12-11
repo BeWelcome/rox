@@ -1037,6 +1037,9 @@ ol#locations li.active,ol.geoloc li.active {
 }
 ol.plain{ margin-left: 0; }
 ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
+#location-suggestion {
+  margin-top: 1em;
+}
 
 
 /* Datepicker classes */

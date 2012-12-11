@@ -43,21 +43,42 @@ div.leaflet-marker-icon{
 
 .highlighted-leaflet-marker-icon{border-width: 5px;border-style:dotted;}
 
-.memberPopup {padding:0;}
-.memberPopup .memberPhoto{}
 a.profileLink{cursor: pointer}
 /* .profileLinkArea:hover{background-color: #bccba4;} */
 a:hover{text-decoration: none}
-div.leaflet-popup-content{margin: 0; padding: 0}
-div.leaflet-popup-content div.memberlist div.avatar{margin: 5px 5px 3px 2px ; padding: 0px;float:left}
-div.leaflet-popup-content div.memberlist div.details{margin: 0; padding: 0 5px 5px 5px; width: 250px;}
-div.leaflet-popup-content .accomodation img{float:right}
-.memberPopup .memberName{position: relative;top:-40px;left:-5px;font-weight: bold;color: #2184E8;margin: 5px}
-.memberPopup .memberDescription{position: relative;top:-40px;left:50px;margin: 5px 50px 5px 5px;color:gray;}
+
+div.leaflet-popup-content {
+    margin: 10px;
+}
+div.leaflet-popup-content div.avatar {
+    margin: 0 5px 5px 0;
+    float: left;
+}
+div.leaflet-popup-content div.details {
+    color: #777;
+    font-size: 0.9em;
+    margin-left: 50px;
+    width: 200px;
+}
+div.leaflet-popup-content div.summary {
+    clear: both;
+    color: #777;
+    font-size: 0.9em;
+    line-height: 1.5em;
+    max-height:10.5em;
+    overflow: hidden;
+    width: 250px;
+}
+div.leaflet-popup-content div.zoom-buttons {
+    font-size: 0.75em;
+    margin-top: 5px;
+}
+
 #map div.leaflet-control-attribution {color: #555;font-size:9px}
 .leaflet-container .leaflet-control-attribution a{color: #555; font-weight:bold}
 .leaflet-container .leaflet-control-attribution a:hover{color: #0078A8}
 #mapBoundariesSearchButton{
+    background: url(../../images/button_bg.png);
 	position: absolute;
 	top: 15px;
 	left: 400px;
@@ -134,6 +155,10 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
 #changethisorder {display: inline;}
 
 #loading {margin-left: 1em; }
+
+#searchstatus {
+    height: 4.5em;
+}
 
 #SearchAdvanced {
     border-top: 1px solid #999;

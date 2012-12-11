@@ -65,24 +65,25 @@ foreach($TList as $TL) {
     $Nr = $ii;
 
     $accomodationIcon = ShowAccomodation($TL->Accomodation, $Accomodation);
-
-    // replace line breaks '\r\n' by html line break element '<br/>'
-    $profileSummary = str_replace("\\r\\n", "<br/>", $TL->ProfileSummary);
+    $profileSummary = nl2br($TL->ProfileSummary);
 
     $string = <<<HTML
-<div class="memberlist">
     <div class="avatar">
         <a href="members/{$TL->Username}" target="_blank"><img src="members/avatar/{$TL->Username}?xs"/></a>
     </div>
-    <div class="details">
-        <p><a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a>
-            <br/><span class="small">{$words->getFormatted('YearsOld',$TL->Age)}, {$words->getFormatted('from')} {$TL->CityName}, {$TL->CountryName}
-            <br/>{$profileSummary}</span>
-                <a class="button" href="javascript: geosearchMapBuilder.zoomIn($TL->Latitude, $TL->Longitude);">Zoom In</a>
-                <a class="button" href="javascript: geosearchMapBuilder.zoomOut(-4);">Zoom Out</a>
-        </p>
+    <div class="username">
+        <a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a>
     </div>
-</div>
+    <div class="details">
+        {$words->getFormatted('YearsOld',$TL->Age)}, {$words->getFormatted('from')} {$TL->CityName}, {$TL->CountryName}
+    </div>
+    <div class="summary">
+        {$profileSummary}
+    </div>
+    <div class="zoom-buttons">
+        <a class="button" href="javascript: geosearchMapBuilder.zoomIn($TL->Latitude, $TL->Longitude);">Zoom In</a>
+        <a class="button" href="javascript: geosearchMapBuilder.zoomOut(-4);">Zoom Out</a>
+    </div>
 HTML;
     $summary = htmlspecialchars($string, ENT_QUOTES);
     $string = '';

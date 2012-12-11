@@ -323,7 +323,8 @@ var BWGeosearchMapBuilder = Class
 
         // configure the popup to be displayed on marker click
         marker.bindPopup(point.summary, {
-          autoPanPadding: new L.Point(50, 50)
+          autoPanPadding: new L.Point(50, 50),
+          offset: new L.Point(5, 0)
         });
 
         var currentInstance = this;

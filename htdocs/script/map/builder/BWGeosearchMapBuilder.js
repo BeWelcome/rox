@@ -1,6 +1,6 @@
 /**
  * Map builder.
- * 
+ *
  */
 var BWGeosearchMapBuilder = Class
     .create({
@@ -8,9 +8,9 @@ var BWGeosearchMapBuilder = Class
        * Constructor: initialize the map
        */
       initialize : function(cloudmadeApiKey, mapHtmlId, mapoff) {
-        
+
         bwrox.debug('Initialize BWGeosearchMapBuilder with couldmade API key \'%s\' and mapHtmlId \'%s\'.', cloudmadeApiKey, mapHtmlId);
-        
+
         this.isInitialized = false;
         this.mapHtmlId = mapHtmlId;
         this.mapoff = mapoff;
@@ -21,25 +21,25 @@ var BWGeosearchMapBuilder = Class
         // configure the tiles provider
         this.cloudmadeApiKey = cloudmadeApiKey;
         this.cloudmadeUrl = 'http://{s}.tile.cloudmade.com/' + this.cloudmadeApiKey + '/997/256/{z}/{x}/{y}.png';
-        
+
         // map attribution
         this.mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';
-        
+
         this.labelAccomodation1 = jQuery('#accomodation1').html();
         this.labelAccomodation2 = jQuery('#accomodation2').html();
         this.labelAccomodation3 = jQuery('#accomodation3').html();
-        
+
         this.currentlyOpenMarkerIndex = null;
         this.maxZIndexOffset = 100;
-        
+
         this.memberListOffsets = null;
 
         this.isLayerGroup1Used = false;
         this.isLayerGroup2Used = false;
         this.isLayerGroup3Used = false;
-        
+
         this.markers = new Array();
-        
+
         // init map
         this.initMap();
       },
@@ -56,9 +56,9 @@ var BWGeosearchMapBuilder = Class
             this.layerGroup3.removeLayer(this.markers[i]);
           }
           this.markers = new Array();
-          
+
           this.memberListOffsets = null;
-          
+
           if (!this.isLayerGroup1Used){
             bwrox.debug('Show layer group 1 (yes)');
             this.layersControl.addOverlay(this.layerGroup1, this.labelAccomodation1);
@@ -71,11 +71,11 @@ var BWGeosearchMapBuilder = Class
             bwrox.debug('Show layer group 3 (no)');
             this.layersControl.addOverlay(this.layerGroup3, this.labelAccomodation3);
           }
-          
+
           this.isLayerGroup1Used = false;
           this.isLayerGroup2Used = false;
           this.isLayerGroup3Used = false;
-          
+
           bwrox.debug('Map clear');
         }
       },
@@ -93,18 +93,18 @@ var BWGeosearchMapBuilder = Class
         } else {
           bwrox.debug('Map "%s" initializing... from url %s', this.mapHtmlId, this.cloudmadeUrl);
         }
-        
+
         // create the map
         this.osmMap = new L.Map(this.mapHtmlId, {attributionControl: true});
-        
+
         // OSM layer
         this.osmLayer = new L.TileLayer(this.cloudmadeUrl, {
           maxZoom : this.maxZoom,
           attribution : this.mapAttribution
         });
-        
+
         this.osmMap.addLayer(this.osmLayer);
-        
+
         // Google map layer
         var googleLayer = new L.Google('ROADMAP');
 
@@ -112,22 +112,22 @@ var BWGeosearchMapBuilder = Class
           'OpenStreetMap' : this.osmLayer
          ,'Google Maps': googleLayer
         };
-        
+
         this.layerGroups = {
             'OpenStreetMap' : this.osmLayer
            ,'GoogleMap': googleLayer
           };
-        
+
         this.initLayersGroups();
-        
+
         // center the map
         bwrox.debug('Set default center and zoom.');
         this.setCenter(25, 10, this.initialZoomLevel);
-        
+
         // add scale
         bwrox.debug('Add scale.');
         L.control.scale({position: 'bottomright'}).addTo(this.osmMap);
-        
+
         // mark map as initialized
         this.isInitialized = true;
 
@@ -139,7 +139,7 @@ var BWGeosearchMapBuilder = Class
       initLayersGroups: function(){
         // add group layers
         bwrox.debug('Adding group layers');
-        
+
         // first group : Yes, be welcome
         this.layerGroup1 = new L.LayerGroup();
         this.addLayer(this.layerGroup1);
@@ -151,14 +151,14 @@ var BWGeosearchMapBuilder = Class
         // third group : No
         this.layerGroup3 = new L.LayerGroup();
         this.addLayer(this.layerGroup3);
-        
+
         bwrox.debug('Adding layers control');
-        
+
         this.overlayMaps= new Array();
         this.overlayMaps[this.labelAccomodation1] = this.layerGroup1;
         this.overlayMaps[this.labelAccomodation2] = this.layerGroup2;
         this.overlayMaps[this.labelAccomodation3] = this.layerGroup3;
-        
+
         // layers control
         this.layersControl = L.control.layers(this.baseMaps, this.overlayMaps);
         this.layersControl.addTo(this.osmMap);
@@ -281,11 +281,11 @@ var BWGeosearchMapBuilder = Class
        * @returns
        */
       addHostMarker : function(point, label) {
-        
+
         var markerIndex = this.markers.length;
-        
+
         var markerNonZeroIndex = markerIndex + 1;
-        
+
         // create DIV icon marker
         var markerClassName;
         if(point.accomodation == 'anytime'){
@@ -296,9 +296,9 @@ var BWGeosearchMapBuilder = Class
           // maybe
           markerClassName = 'maybe-marker-icon';
         }
-        
+
         var icon = L.divIcon({className: markerClassName, html: label});
-        
+
         marker = L.marker([point.latitude, point.longitude], {icon : icon});
         this.markers[markerIndex] = marker;
 
@@ -320,38 +320,38 @@ var BWGeosearchMapBuilder = Class
           // 'maybe' should by default be in the back of the map
           marker.setZIndexOffset(50);
         }
-        
+
         // configure the popup to be displayed on marker click
         marker.bindPopup(point.summary);
-        
+
         var currentInstance = this;
-        
+
         jQuery(marker).on('click', function(e){
           // store the last open index
           currentInstance.currentlyOpenMarkerIndex = this.index;
         });
-      
+
         return marker;
       },
       /**
-       * Open the specified index marker 
+       * Open the specified index marker
        */
       openMarker : function(num){
         var markerIndex = num-1;
         if (this.currentlyOpenMarkerIndex != markerIndex){
           // auto open only if marker is not already open
           var marker = this.markers[markerIndex];
-          
+
           // put marker to front (in case of several markers in the same area)
           this.maxZIndexOffset += 10;
           marker.setZIndexOffset(this.maxZIndexOffset);
-          
+
           // simulate a click on the marker to open the popup
           marker.fireEvent('click');
         }
       },
       /**
-       * Unhighlight the specified index marker 
+       * Unhighlight the specified index marker
        */
       unhighlightMarker: function(num){
         var markerIndex = num-1;
@@ -359,19 +359,19 @@ var BWGeosearchMapBuilder = Class
         jQuery(marker._icon).removeClass('highlighted-leaflet-marker-icon');
       },
       /**
-       * Highlight the specified index marker 
+       * Highlight the specified index marker
        */
       highlightMarker : function(num){
         var markerIndex = num-1;
         var marker = this.markers[markerIndex];
-        
+
         // put marker to front (in case of several markers in the same area)
         this.maxZIndexOffset += 10;
         marker.setZIndexOffset(this.maxZIndexOffset);
-        
+
         // add a class in order to hightlight the marker
         jQuery(marker._icon).addClass('highlighted-leaflet-marker-icon');
-        
+
       },
       /**
        * Zoom in to the specified position

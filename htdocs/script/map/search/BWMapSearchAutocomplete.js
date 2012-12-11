@@ -31,7 +31,7 @@ BWRox.prototype.initSearchAutocomplete = function(inputFieldSelector){
 /// TODO: the following code is a try to implement autocomplete without JQuery-UI (to be continued)
 ///**
 // *  Delay an action.
-// * 
+// *
 // */
 //var delay = (function(){
 //    var timer = 0;
@@ -44,14 +44,14 @@ BWRox.prototype.initSearchAutocomplete = function(inputFieldSelector){
 //
 ///**
 // *  Configure search auto complete.
-// * 
+// *
 // */
 //BWRox.prototype.initSearchAutocomplete = function(inputFieldSelector){
 //  var inputField = jQuery(inputFieldSelector);
-//  
+//
 //  // on text change
 //  inputField.keyup(function(event) {
-//    
+//
 //    // wait 200ms without new change
 //    delay(function(){
 //       var searchText = event.target.value;

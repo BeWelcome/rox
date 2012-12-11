@@ -1,6 +1,6 @@
 /**
  * Reverse geolocator using GoogleMap.
- * 
+ *
  */
 var BWGeonameMapReverseGeolocator = Class.create({
   /**
@@ -8,10 +8,10 @@ var BWGeonameMapReverseGeolocator = Class.create({
    */
   initialize : function() {
   },
-  
+
   getLocations: function(searchText, successCallBackFunction, errorCallBackFunction){
     bwrox.debug('[Geoname] Search places containing text "%s".', searchText);
-    
+
     jQuery.ajax({
       url: "http://ws.geonames.org/searchJSON",
       dataType: "jsonp",
@@ -51,5 +51,5 @@ var BWGeonameMapReverseGeolocator = Class.create({
       }
     });
   }
-  
+
 });

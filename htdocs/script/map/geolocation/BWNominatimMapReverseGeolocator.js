@@ -1,6 +1,6 @@
 /**
  * Reverse geolocator using OpenStreetMap.
- * 
+ *
  */
 var BWNominatimMapReverseGeolocator = Class.create({
   /**
@@ -15,7 +15,7 @@ var BWNominatimMapReverseGeolocator = Class.create({
   buildAddressPoint: function (place){
     var addressPoint = new BWMapAddressPoint(place.lat,
         place.lon, place.display_name);
-    
+
     bwrox.info("[OSM] Building address point '%s': %s, %s", addressPoint.address,
           addressPoint.latitude, addressPoint.longitude);
 
@@ -24,18 +24,18 @@ var BWNominatimMapReverseGeolocator = Class.create({
     addressPoint.coordinates = new Array(addressPoint.longitude, addressPoint.latitude, 0);
     addressPoint.location = place.display_name;
     bwrox.debug("[OSM] Location: " + addressPoint.location);
-    
+
     // calculate zoom level
     addressPoint.distance = calculateDistance(addressPoint.boundingBox[0], addressPoint.boundingBox[1]
     , addressPoint.boundingBox[2], addressPoint.boundingBox[3]);
-    
+
     addressPoint.zoomLevel = calculateZoomLevel(addressPoint.distance);
-    
+
     // FIXME: update the php service in order to use the bounds instead!
     addressPoint.accuracy = 1;
-    
+
     bwrox.debug("[OSM] Zoom level is %s (distance=%d)", addressPoint.zoomLevel, addressPoint.distance);
-    
+
     return addressPoint;
   },
   /**
@@ -52,7 +52,7 @@ var BWNominatimMapReverseGeolocator = Class.create({
         }
         var place = results[0];
         var addressPoint = thisObject.buildAddressPoint(place);
-        
+
         successCallBackFunction(addressPoint);
         }else{
           // not fount

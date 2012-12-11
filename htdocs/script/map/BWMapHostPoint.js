@@ -1,12 +1,12 @@
 /**
  * Represent a host point on the map.
- * 
+ *
  * @member accomodation
  * @member summary
  * @member latitude
  * @member longitude
  * @member detail
- * 
+ *
  */
 var BWMapHostPoint = Class.create({
   /**

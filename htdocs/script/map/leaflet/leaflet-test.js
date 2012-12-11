@@ -4,7 +4,7 @@
    var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/'+apiKey+'/997/256/{z}/{x}/{y}.png';
    var cloudmadeAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="http://cloudmade.com">CloudMade</a>';
    var cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
-  
+
    var map = new L.Map('map');
    map.setView(new L.LatLng(51.505, -0.09), 13).addLayer(cloudmade);
  });
@@ -16,7 +16,7 @@
 //
 //// configure the tiles provider
 //var mapquestUrl = 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';
-//        
+//
 //// subdomains
 //var subDomains = ['otile1','otile2','otile3','otile4'];
 //

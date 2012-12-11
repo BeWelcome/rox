@@ -6,8 +6,8 @@ if (typeof(Number.prototype.toRad) === "undefined") {
 }
 
 /**
- *  Calculate the distance (in km) between 2 points. 
- * 
+ *  Calculate the distance (in km) between 2 points.
+ *
  */
 function calculateDistance(lat1, lat2, lon1, lon2){
   var R = 6371; // km
@@ -18,8 +18,8 @@ function calculateDistance(lat1, lat2, lon1, lon2){
   var lat2Rad = parseInt(lat2).toRad();
 
   var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1Rad) * Math.cos(lat2Rad); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1Rad) * Math.cos(lat2Rad);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c;
   bwrox.debug('Distance from %s,%s to %s,%s is ' + d, lon1, lat1, lon2, lat2 );
   return d;
@@ -28,13 +28,13 @@ function calculateDistance(lat1, lat2, lon1, lon2){
 /**
  *  TODO : test and optimize this algorithm
  *  Determine the best zoom level for distance
- *  @see http://wiki.openstreetmap.org/wiki/Zoom_levels 
+ *  @see http://wiki.openstreetmap.org/wiki/Zoom_levels
  *
  **/
 function calculateZoomLevel(distance){
-  // village or town 
+  // village or town
   var zoomLevel = 13;
-  
+
   if (distance > 13000){
     // whole world (or Australia including islands...)
     zoomLevel = 0;

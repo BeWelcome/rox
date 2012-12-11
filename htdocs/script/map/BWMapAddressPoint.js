@@ -1,10 +1,10 @@
 /**
  * Represent an address point.
- * 
+ *
  * @member latitude
  * @member longitude
  * @member address
- * 
+ *
  */
 var BWMapAddressPoint = Class.create({
   /**

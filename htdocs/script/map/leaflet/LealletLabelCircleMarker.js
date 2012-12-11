@@ -1,7 +1,7 @@
-/* class currently not used 
- * 
+/* class currently not used
+ *
  * usefull to create a circle marker with label
- * 
+ *
  * */
 L.LealletLabelCircleMarker.js = L.CircleMarker.extend({
         _label : null,

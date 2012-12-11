@@ -1,6 +1,6 @@
 /**
  * Map builder.
- * 
+ *
  */
 var BWSimpleMapBuilder = Class
   .create({
@@ -8,31 +8,31 @@ var BWSimpleMapBuilder = Class
      * constructor
      */
     initialize : function(cloudmadeApiKey, mapHtmlId, mapoff) {
-      
+
       bwrox.debug('Initialize BWGeosearchMapBuilder with couldmade API key \'%s\' and mapHtmlId \'%s\'.', cloudmadeApiKey, mapHtmlId);
 
       this.mapoff = mapoff;
-      
+
       this.markers = new Array();
-      
+
       // configure the tiles provider
       this.cloudmadeApiKey = cloudmadeApiKey;
       this.cloudmadeUrl = 'http://{s}.tile.cloudmade.com/' + cloudmadeApiKey + '/997/256/{z}/{x}/{y}.png';
-      
+
       // map attribution
       this.mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';
-      
+
       // create the map
       this.osmMap = new L.Map(mapHtmlId, {attributionControl: false});
-      
+
       // OSM layer
       this.osmLayer = new L.TileLayer(this.cloudmadeUrl, {
         maxZoom : this.maxZoom,
         attribution : this.mapAttribution
       });
-      
+
       this.osmMap.addLayer(this.osmLayer);
-      
+
       // Google map layer
       var googleLayer = new L.Google('ROADMAP');
 
@@ -40,18 +40,18 @@ var BWSimpleMapBuilder = Class
         'OpenStreetMap' : this.osmLayer
        ,'Google Maps': googleLayer
       };
-      
+
       this.layerGroups = {
           'OpenMap' : this.osmLayer
          ,'GoogleMap': googleLayer
         };
 
       bwrox.debug('Adding layers control');
-      
+
       // layers control
       this.layersControl = L.control.layers(this.baseMaps);
       this.layersControl.addTo(this.osmMap);
-      
+
       this.flagIcon = new LeafletFlagIcon();
     },
     /**
@@ -65,7 +65,7 @@ var BWSimpleMapBuilder = Class
           this.osmMap.removeLayer(this.markers[i]);
         }
         this.markers = new Array();
-        
+
         bwrox.debug('Map clear');
       }
     },
@@ -106,10 +106,10 @@ var BWSimpleMapBuilder = Class
           // configure the popup to be displayed on marker click
           marker.bindPopup(description);
         }
-        
+
         var markerIndex = this.markers.length;
         this.markers[markerIndex] = marker;
-        
+
         return marker;
       }
     },
@@ -121,7 +121,7 @@ var BWSimpleMapBuilder = Class
      * @returns {L.Marker}
      */
     addFlagMarker: function(longitude, latitude, description){
-      
+
       if (!this.mapoff) {
         var marker = new L.Marker(new L.LatLng(longitude, latitude), {icon: this.flagIcon});
         this.osmMap.addLayer(marker);
@@ -129,10 +129,10 @@ var BWSimpleMapBuilder = Class
           // configure the popup to be displayed on marker click
           marker.bindPopup(description);
         }
-        
+
         var markerIndex = this.markers.length;
         this.markers[markerIndex] = marker;
-        
+
         return marker;
       }
     }

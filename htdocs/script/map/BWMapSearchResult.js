@@ -1,6 +1,6 @@
 /**
  * Represent a Search result.
- * 
+ *
  * @member xmlDoc the XML AJAX response
  * @member summary
  * @member header
@@ -14,7 +14,7 @@
  * @member numResults
  * @member footer
  * @member detailFooter
- * 
+ *
  */
 var BWMapSearchResult = Class
     .create({
@@ -59,7 +59,7 @@ var BWMapSearchResult = Class
         }
 
         this.numAllResults = Number(results[0].getAttribute("num_all_results"));
-        
+
         this.footer = getxmlEl(xmlDoc, "footer");
         if (this.footer && this.footer[0]) {
           this.detailFooter = this.footer[0].getAttribute("footer");

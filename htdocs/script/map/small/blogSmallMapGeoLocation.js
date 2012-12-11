@@ -4,15 +4,15 @@ var firstChange = true;
 
 function initOsmMapBlogEdit() {
   if (jQuery('#spaf_map').length > 0){
-    
+
     var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
-    
+
     if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
       bwrox.error('CloudMade API key not defined!');
     }
-    
+
     mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "spaf_map", false);
-  
+
     var markerLatitude = jQuery('#markerLatitude').val();
     var markerLongitude = jQuery('#markerLongitude').val();
     if (markerLatitude != null && markerLongitude != null) {
@@ -23,7 +23,7 @@ function initOsmMapBlogEdit() {
                 var zoomLevel = 8;
             }
       mapBuilder.setCenter(markerLatitude, markerLongitude, zoomLevel);
-      
+
       var markerDescription = jQuery('#markerDescription').val();
       if (markerDescription != null) {
         // add marker

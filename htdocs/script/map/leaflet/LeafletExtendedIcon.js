@@ -1,7 +1,7 @@
-/* class currently not used 
- * 
+/* class currently not used
+ *
  * usefull to add a custom class to an icon (in order to use extra-css, for example to add a colored border)
- * 
+ *
  * */
  LeafletExtendedIcon = L.Class.extend({
   iconUrl: L.ROOT_URL + 'images/marker.png',

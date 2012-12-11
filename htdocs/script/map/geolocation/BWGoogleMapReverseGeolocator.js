@@ -1,6 +1,6 @@
 /**
  * Reverse geolocator using GoogleMap.
- * 
+ *
  */
 var BWGoogleMapReverseGeolocator = Class.create({
   /**
@@ -9,14 +9,14 @@ var BWGoogleMapReverseGeolocator = Class.create({
   initialize : function() {
     this.geocoder = new google.maps.Geocoder();
   },
-  
+
   buildAddressPoint: function (place){
-    
+
     bwrox.info("Building address point '%s'", place.formatted_address);
 
     var addressPoint = new BWMapAddressPoint(place.geometry.location.lat(),
           place.geometry.location.lng(), place.formatted_address);
-      
+
     if (typeof (place) == 'object'
            && place.address_components
           // && place.AddressDetails.Accuracy
@@ -39,7 +39,7 @@ var BWGoogleMapReverseGeolocator = Class.create({
       // addressPoint.coordinates = '';
       addressPoint.countryNameCode = '';
     }
-    
+
     if (place.geometry.location){
       addressPoint.coordinates = new Array();
       addressPoint.coordinates[0] = place.geometry.location.lng();
@@ -56,7 +56,7 @@ var BWGoogleMapReverseGeolocator = Class.create({
         }else{
                 addressPoint.zoomLevel = 3;
         }
-    
+
     if (addressPoint.zoomLevel < 3){
       addressPoint.accuracy = 0;
     }else if (addressPoint.zoomLevel < 7){
@@ -99,9 +99,9 @@ var BWGoogleMapReverseGeolocator = Class.create({
 //        addressPoint.zoomLevel = 11;
 //        break;
 //    }
-    
+
     bwrox.debug("Zoom level is %s (accuraci = %s)", addressPoint.zoomLevel, addressPoint.accuracy);
-    
+
     return addressPoint;
   },
   getLocationsForAutocompletion: function(searchText, successCallBackFunction){
@@ -135,7 +135,7 @@ var BWGoogleMapReverseGeolocator = Class.create({
         }
         var place = results[0];
         var addressPoint = thisObject.buildAddressPoint(place);
-        
+
         successCallBackFunction(addressPoint);
         }else{
           // not fount
@@ -150,17 +150,17 @@ var BWGoogleMapReverseGeolocator = Class.create({
   },
   getLocations: function(searchText, successCallBackFunction, errorCallBackFunction){
     bwrox.debug('Search places containing text "%s".', searchText);
-    
+
     this.geocoder.geocode( { 'address': searchText}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
         bwrox.debug('Search places containing text "%s" returned %d results.', searchText, results.length);
             successCallBackFunction(results);
-            
+
           } else {
             bwrox.error("Geocode was not successful for the following reason: " + status);
             errorCallBackFunction();
           }
     });
   }
-  
+
 });

@@ -7,22 +7,22 @@ var mapBuilder;
 
 function initTripMap() {
   if (jQuery('#tripMap').length > 0){
-    
+
     var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
-    
+
     if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
       bwrox.error('CloudMade API key not defined!');
     }
-    
+
     mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "tripMap", false);
-    
+
     // center the map
     var centerLatitude = jQuery('#centerLatitude').val();
     var centerLongitude = jQuery('#centerLongitude').val();
     var zoomLevel = jQuery('#zoomLevel').val();
     mapBuilder.setCenter(centerLatitude, centerLongitude, zoomLevel);
-    
-    
+
+
     // add markers
     for (var i=0 ; i<=markers.length ; i++){
       var marker = markers[i];
@@ -31,7 +31,7 @@ function initTripMap() {
         addMarker(marker.latitude, marker.longitude, marker.name, marker.tripId);
       }
     }
-    
+
   }
 }
 

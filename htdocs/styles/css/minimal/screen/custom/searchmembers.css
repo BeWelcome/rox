@@ -135,6 +135,10 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
 
 #loading {margin-left: 1em; }
 
+#searchstatus {
+    height: 4.5em;
+}
+
 #SearchAdvanced {
     border-top: 1px solid #999;
     border-bottom: 1px solid #999;

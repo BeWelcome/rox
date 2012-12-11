@@ -20,7 +20,7 @@ var BWGeosearchMapBuilder = Class
         this.maxZoom = 18;
         // configure the tiles provider
         this.cloudmadeApiKey = cloudmadeApiKey;
-        this.cloudmadeUrl = 'http://{s}.tile.cloudmade.com/' + this.cloudmadeApiKey + '/997/256/{z}/{x}/{y}.png';
+        this.cloudmadeUrl = 'http://{s}.tile.cloudmade.com/' + this.cloudmadeApiKey + '/' + bwroxConfig.cloudmade_style_id + '/256/{z}/{x}/{y}.png';
 
         // map attribution
         this.mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';

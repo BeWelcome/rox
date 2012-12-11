@@ -7,12 +7,12 @@
  * 
  */
 var BWMapAddressPoint = Class.create({
-	/**
-	 * constructor
-	 */
-	initialize : function(latitude, longitude, address) {
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.address = address;
-	}
+  /**
+   * constructor
+   */
+  initialize : function(latitude, longitude, address) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.address = address;
+  }
 });

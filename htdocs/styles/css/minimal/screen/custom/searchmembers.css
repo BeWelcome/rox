@@ -78,6 +78,7 @@ div.leaflet-popup-content div.zoom-buttons {
 .leaflet-container .leaflet-control-attribution a{color: #555; font-weight:bold}
 .leaflet-container .leaflet-control-attribution a:hover{color: #0078A8}
 #mapBoundariesSearchButton{
+    background: url(../../images/button_bg.png);
 	position: absolute;
 	top: 15px;
 	left: 400px;

@@ -69,7 +69,7 @@ foreach($TList as $TL) {
 
     $string = <<<HTML
     <div class="avatar">
-        <a href="members/{$TL->Username}" target="_blank"><img src="members/avatar/{$TL->Username}?xs"/></a>
+        <a href="members/{$TL->Username}" target="_blank"><img width="50" height="50" src="members/avatar/{$TL->Username}?xs"/></a>
     </div>
     <div class="username">
         <a href="members/{$TL->Username}" target="_blank"><b>{$TL->Username}</b></a>

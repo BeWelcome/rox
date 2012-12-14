@@ -134,9 +134,32 @@ class Group extends RoxEntityBase
         }
 
         $status = (($status) ? $status : 'In');
-
+        
         return $this->createEntity('GroupMembership')->getGroupMembers($this, $status, '', $offset, $limit);
     }
+
+
+    /**
+     * return the x recently logged in members of the group
+     *
+     * @param int $numberOfMembers- number of last logged in members to return
+     * @access public
+     * @return array - GroupMembership entities of x recently logged in members
+     */
+    public function getLastLoggedInMembers($numberOfMembers = 20)
+    {
+        if (!$this->_has_loaded || !is_int($numberOfMembers))
+        {
+            return false;
+        }
+        
+        $bylastlogin = true;
+        $memberships = $this->createEntity('GroupMembership')->getGroupMembers($this, 'In', '', 0, null, $bylastlogin);
+        $ms_lastloggedin = array_slice($memberships, 0, $numberOfMembers);
+        return $ms_lastloggedin;
+    }
+
+
 
     /**
      * return the members of the group accepting email from the other group members
@@ -227,7 +250,7 @@ class Group extends RoxEntityBase
 
         if ($this->isGroupOwner($member))
         {
-            $this->removeGroupOwner();
+            $this->removeGroupOwner($member);
         }
 
         return $this->createEntity('GroupMembership')->memberLeave($this, $member);
@@ -384,13 +407,14 @@ class Group extends RoxEntityBase
         return (($member->hasRole($role, $this)) ? true : false);
     }
 
+
     /**
-     * returns a member entity representing the group owner, if there is one
+     * returns member entities representing the group owners, if group has owners
      *
-     * @return mixed - member entity or false
+     * @return mixed - member entities or false
      * @access public
      */
-    public function getGroupOwner()
+    public function getGroupOwners()
     {
         if (!$this->isLoaded())
         {
@@ -398,13 +422,19 @@ class Group extends RoxEntityBase
         }
 
         $role = $this->createEntity('Role')->findByName('GroupOwner');
-        $priv_scope = $this->createEntity('PrivilegeScope')->getMemberWithRoleObjectAccess($role, $this);
-        if (!$priv_scope)
+        $priv_scopes = $this->createEntity('PrivilegeScope')->getMembersWithRoleObjectAccess($role, $this);
+        if (!$priv_scopes)
         {
             return false;
         }
-        return $this->createEntity('Member', $priv_scope->IdMember);
+        $group_owners = array();
+        foreach ($priv_scopes as $priv_scope) {
+            $group_owners[] = $this->createEntity('Member', $priv_scope->IdMember);
+        }
+        return $group_owners;
     }
+
+
 
     /**
      * sets ownership for a group - owner has admin powers + more for a group
@@ -420,12 +450,6 @@ class Group extends RoxEntityBase
             return false;
         }
 
-        // if any previous owner is set, remove previous owner first
-        if ($prev_owner = $this->getGroupOwner())
-        {
-            $this->removeGroupOwner();
-        }
-
         return $role->addForMember($member, array('Group' => $this->getPKValue()));
     }
 
@@ -435,13 +459,16 @@ class Group extends RoxEntityBase
      * @access public
      * @return bool
      */
-    public function removeGroupOwner()
+    public function removeGroupOwner($member)
     {
-        if (!$this->isLoaded() || !($role = $this->createEntity('Role')->findByName('GroupOwner')) || !($member = $this->getGroupOwner()))
+        if (!$this->isLoaded() || !is_object($member) || !$this->isGroupOwner($member))
         {
             return false;
         }
-
+        if (!($role = $this->createEntity('Role')->findByName('GroupOwner')))
+        {
+            return false;
+        }
         return $role->removeFromMember($member, $role->getScopesForMemberRole($member, $this->getPKValue()));
     }
 

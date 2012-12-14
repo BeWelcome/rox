@@ -5,9 +5,11 @@ class PageWithHTML extends AbstractBasePage
 {
     private $_widgets = array();  // will be asked for stylesheet and scriptfile information
 
+    // Add or increment query string if a JS file changes to make sure browsers
+    // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        'script/main.js',
-        'script/common.js',
+        'script/main.js?2',
+        'script/common.js?1',
     );
 
     private $_late_scriptfiles = array();
@@ -157,6 +159,7 @@ class PageWithHTML extends AbstractBasePage
         <?php
         
         $this->head();
+        $this->includeJsConfig();
         $this->includeScriptfiles();
         ?>
         </head>
@@ -207,6 +210,30 @@ class PageWithHTML extends AbstractBasePage
             {
                 echo $element . PHP_EOL;
             }
+        }
+    }
+
+    /**
+     * Inserts JavaScript configuration.
+     *
+     * Reads [javascript] section in rox.ini and makes it available via
+     * bwroxConfig object in JavaScript.
+     */
+    protected function includeJsConfig()
+    {
+        $config = PVars::getArray('javascript');
+        if ($config) {
+            $html = array();
+            $pairs = array();
+            $html[] = '<script type="text/javascript">';
+            $html[] = 'var bwroxConfig = {';
+            foreach($config as $key => $value) {
+                $pairs[] = $key . ": '" . $value . "'";
+            }
+            $html[] = implode($pairs, ',');
+            $html[] = '}';
+            $html[] = '</script>';
+            echo implode($html, "\n");
         }
     }
 

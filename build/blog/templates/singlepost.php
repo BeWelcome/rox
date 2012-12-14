@@ -82,40 +82,16 @@ if ($tags->numRows() > 0) {
 <?php
 }
     if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
-        echo '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=';
-    $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
+        echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="'.$blog->latitude.'"/>';
+        echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="'.$blog->longitude.'"/>';
     }
-    echo $google_conf->maps_api_key;
+    if (isset($blog->geonamesname) && $blog->geonamesname && isset($blog->geonamescountry) && $blog->geonamescountry) {
+    	$markerDescription = "'".$blog->geonamesname.', '.$blog->geonamescountry."'";
+    	echo '<input type="hidden" id="markerDescription" name="markerDescription" value="'.$markerDescription.'"/>';
+    }
 
-        echo '" type="text/javascript"></script>
-<script type="text/javascript">
-var map = null;
-
-function displayMap() {
-    if (GBrowserIsCompatible()) {
-        map = new GMap2($("geonamesmap"));
-        map.setCenter(new GLatLng('.$blog->latitude.', '.$blog->longitude.'), 8);
-        map.addControl(new GSmallMapControl());
-        map.addControl(new GMapTypeControl());';
-
-if (isset($blog->geonamesname) && $blog->geonamesname && isset($blog->geonamescountry) && $blog->geonamescountry) {
-    $desc = "'".$blog->geonamesname.', '.$blog->geonamescountry."'";
-    echo 'var marker = new GMarker(new GLatLng('.$blog->latitude.', '.$blog->longitude.'), '.$desc.');
-        map.addOverlay(marker);
-        GEvent.addListener(marker, "click", function() {
-            marker.openInfoWindowHtml('.$desc.');
-        });
-        ';
-}
-echo '    }
-}
-window.onload = displayMap;
-window.onunload = GUnload;
-</script>
-<div id="geonamesmap" class="float_right" style="width: 280px; height: 280px;" ></div>
-';
+    if (isset($blog->geonamesname) && $blog->geonamesname && isset($blog->geonamescountry) && $blog->geonamescountry) {
+        echo '<div id="geonamesmap" class="float_right blogmap" style="width: 280px; height: 280px;" ></div>'; 
     }
 
 echo $txt[0];

@@ -29,6 +29,10 @@ div.popupmap .innermap{
     border-top: 4px solid #999;
 }
 
+.blogmap {
+    border: 1px solid #CCCCCC;
+    padding: 2px;
+}
 /* --- labeled marker styles for Google Maps --- */
 
 div.markerLabel {

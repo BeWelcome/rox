@@ -125,8 +125,16 @@ class SearchmembersController extends PAppController {
         $varsGet = '';
         if(isset($request[1])) {
             switch ($request[1]) {
-                case 'mapoff': $mapstyle = "mapoff"; break;
-                case 'mapon': $mapstyle = "mapon"; break;
+                case 'mapoff': {
+                    $mapstyle = "mapoff"; 
+                    $_SESSION['SearchMembersTList'] = array();
+                    break;
+                }
+                case 'mapon': {
+                    $mapstyle = "mapon";
+                    $_SESSION['SearchMembersTList'] = array();
+                    break;
+                }
                 case 'queries': {
                     if(PVars::get()->debug) {
                         $R = MOD_right::get();
@@ -249,7 +257,6 @@ class SearchmembersController extends PAppController {
                 
                 $P->addStyles = $this->_view->customStyles($mapstyle);
                 $google_conf = PVars::getObj('config_google');
-                $P->addStyles .= '<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key='.$google_conf->maps_api_key.'" type="text/javascript"></script>';
 
                 $P->title = $words->getBuffered('searchmembersTitle') . " - BeWelcome";
 

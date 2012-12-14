@@ -1028,7 +1028,7 @@ a.tr_link:hover {
 
 
 /* Geo Selector */
-ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center; cursor: pointer;}
+ol#locations li,ol.geoloc li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: transparent none no-repeat scroll right center; background-position: 250px; cursor: pointer;}
 ol#locations li.active,ol.geoloc li.active {
     background: transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     font-weight: bold;
@@ -1037,6 +1037,9 @@ ol#locations li.active,ol.geoloc li.active {
 }
 ol.plain{ margin-left: 0; }
 ol.plain li{ list-style-type: none; margin-left: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 22em; float:left; background: center right no-repeat}
+#location-suggestion {
+  margin-top: 1em;
+}
 
 
 /* Datepicker classes */

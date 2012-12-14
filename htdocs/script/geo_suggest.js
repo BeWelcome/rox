@@ -33,8 +33,21 @@ var GeoSuggest = {
     },
     
     ajaxSearch: function(e) {
-        var textValue = $F(e);
-        var url = http_baseuri+'geo/suggestLocation/'+textValue+'/city';
+        var address = $F(e);
+        
+     // init geolocator
+//    	var reverseGeolocator = new BWGoogleMapReverseGeolocator();
+//        
+//    	GeoSuggest.displaySuggestion('location-status', '<img src="images/misc/loading.gif">');
+//    	reverseGeolocator.getLocation(address, function(addressPoint) {
+//    		GeoSuggest.displaySuggestion('location-suggestion', addressPoint.location);
+//    		GeoSuggest.displaySuggestion('location-status', '');
+//    	}, function() {
+//    		// address not fount
+//    		bwrox.error('Address "%s" not fount.', address);
+//    	});
+    	
+        var url = http_baseuri+'geo/suggestLocation/'+address+'/city';
         GeoSuggest.displaySuggestion('location-status', '<img src="images/misc/loading.gif">');
         new Ajax.Request(url, 
         {

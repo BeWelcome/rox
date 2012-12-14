@@ -26,6 +26,8 @@
     $this->addRoute('group_acceptinvitation','groups/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
     $this->addRoute('group_acceptmember','groups/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
     $this->addRoute('group_banmember','groups/:group_id:/banmember/:member_id:', 'GroupsController', 'banMember');
+    $this->addRoute('group_addadmin','groups/:group_id:/addAdmin/:member_id:', 'GroupsController', 'addMemberAsAdmin');
+    $this->addRoute('group_resignadmin','groups/:group_id:/resignAdmin', 'GroupsController', 'resignAsAdmin');
     $this->addRoute('group_declineinvitation','groups/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
     $this->addRoute('group_delete','groups/:group_id:/delete', 'GroupsController', 'delete');
     $this->addRoute('group_deleted','groups/:group_id:/delete/true', 'GroupsController', 'delete');
@@ -42,6 +44,7 @@
     $this->addRoute('group_leave','groups/:group_id:/leave', 'GroupsController', 'leave');
     $this->addRoute('group_left','groups/:group_id:/leave/true', 'GroupsController', 'left');
     $this->addRoute('group_memberadministration','groups/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
+    $this->addRoute('group_memberadministration_paged','groups/:group_id:/memberadministration/page/:page_number:', 'GroupsController', 'memberAdministration');
     $this->addRoute('group_members','groups/:group_id:/members', 'GroupsController', 'members');
     $this->addRoute('group_members_paged','groups/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
     $this->addRoute('group_membersearch_ajax','groups/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');

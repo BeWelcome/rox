@@ -85,7 +85,7 @@ if ($commentsCount > 0) {
 }
 echo '</a>';
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
-    echo ' | <a href="" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
+    echo ' | <a href="#" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';
 }
 $member = $this->_model->getLoggedInMember();
 if ($member && $member->id == $blog->IdMember) {
@@ -104,52 +104,4 @@ if ($member && $member->id == $blog->IdMember) {
     }
     ?>
 </div> <!-- blogitem -->
-
-<?php if (!isset($gmap_script)) { ?>
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
-    $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
-    }
-    echo $google_conf->maps_api_key;
-
-?>" type="text/javascript"></script>
-<script type="text/javascript" src="script/labeled_marker.js"></script>
-<script type="text/javascript">
-var map = null;
-
-var icon = new GIcon(); // green - agreeing
-icon.image = "images/icons/marker_left.png";
-icon.iconSize = new GSize(11, 24);
-icon.iconAnchor = new GPoint(0, 12);
-icon.infoWindowAnchor = new GPoint(17, 21);
-
-function displayMap(popupid, lng, ltd, desc) {
-    Element.setStyle(popupid, {display:'block'});
-    Element.show(popupid+'_map');
-    if (GBrowserIsCompatible()) {
-        map = new GMap2($(popupid+'_map'));
-        map.setCenter(new GLatLng(lng, ltd), 8);
-        map.addControl(new GSmallMapControl());
-        map.addControl(new GMapTypeControl());
-        map.addMapType(G_PHYSICAL_MAP);
-        map.setMapType(G_PHYSICAL_MAP); 
-        var opts = {
-            "icon": icon,
-            "clickable": true,
-            "labelText": desc,
-            "labelOffset": new GSize(11, -18)
-        };
-        var marker = new LabeledMarker(new GLatLng(lng, ltd), opts);
-        map.addOverlay(marker);
-    }
-}
-
-window.onunload = GUnload;
-</script>
-<?php 
-    // won't load the above scripts again
-    $gmap_script = 'loaded';
-}
-?>
 

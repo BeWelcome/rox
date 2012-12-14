@@ -29,30 +29,37 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
         </div> <!-- c62l -->
         
         <div class="c38r">
-            <div class="subcr">
+            <div class="subcr"><br />
             
                 <?php
                     if (!APP_user::isBWLoggedIn('NeedMore,Pending')) : ?>
-                <h3><?= $words->get('GroupsJoinNamedGroup', $group_name_html); ?></h3>
                     <?= $words->get('GroupsJoinLoginFirst'); ?>
                 <?php else : ?>
-                <h3><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinNamedGroup', $group_name_html) : $words->get('GroupsLeaveNamedGroup', $group_name_html) ) ?></h3>
                 <div class="row clearfix">
                     <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
-                </div>
+                </div><br />
                 <?php endif; ?>
-                <h3><?= $words->get('GroupOwner'); ?></h3>
-                <div class="floatbox">
-                    <div class="center float_left">
-                        <?php echo (($member =$this->group->getGroupOwner()) ? (MOD_layoutbits::PIC_50_50($member->Username) ."<br /><a href=\"members/".$member->Username ."\">" .$member->Username ."</a>")  : $words->get('GroupsNoOwner')); ?>
-                    </div>
-                </div>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>
                 </div>
                 <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>
-                
+                <br><br>
+                <h4><?php echo $words->get('GroupAdmins'); ?></h4>
+                <div class="floatbox">
+                        <?php $admins = $this->group->getGroupOwners();
+                        if (isset($admins) && !empty($admins))
+                        {
+                            foreach ($admins as $admin){
+                            
+                                echo '<div class="groupmembers center float_left">';
+                                echo MOD_layoutbits::PIC_40_40($admin->Username);
+                                echo '<div><a href="members/' . $admin->Username .'">' . " " . $admin->Username .'</a></div></div>';
+                            }
+                        } else {
+                            echo $words->get('GroupNoAdmin');
+                        } ?>
+                </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

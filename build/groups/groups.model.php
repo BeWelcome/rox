@@ -456,7 +456,7 @@ class GroupsModel extends  RoxModelBase
         $result = (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
         if ($result && $status == 'WantToBeIn')
         {
-            $this->notifyGroupAdmin($group, $member);
+            $this->notifyGroupAdmins($group, $member);
         }
         return $result;
     }
@@ -631,7 +631,13 @@ class GroupsModel extends  RoxModelBase
         {
             return false;
         }
-
+        $rights = $member->getOldRights();
+        if ( !empty($rights) && in_array("Admin", array_keys($rights))) {
+            return false;
+        }
+        if ( !empty($rights) && in_array("ForumModerator", array_keys($rights))) {
+            return false;
+        }
         $membership = $this->createEntity('GroupMembership')->getMembership($group, $member);
         if ($ban)
         {
@@ -643,6 +649,52 @@ class GroupsModel extends  RoxModelBase
         }
     }
 
+
+    /**
+     * adds a member as admin of the group
+     *
+     * @param object $group - group entity
+     * @param int $member_id
+     * @return bool
+     * @access public
+     */
+    public function addGroupMemberAsAdmin($group, $member_id)
+    {
+        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
+        {
+            return false;
+        }
+        return $group->setGroupOwner($member);
+    }
+
+
+
+    /**
+     * resigns as admin of the group
+     *
+     * @param object $group - group entity
+     * @param int $member_id
+     * @return bool
+     * @access public
+     */
+    public function resignGroupAdmin($group, $member_id)
+    {
+        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
+        {
+            return false;
+        }
+        if (!($logged_member = $this->getLoggedInMember()) || $logged_member->getPKValue() != $member->getPKValue())
+        {
+            return false;
+        }
+        if (!$group->isGroupOwner($member)) {
+            return false;
+        }
+        $rights = $logged_member->getOldRights();
+        return $group->removeGroupOwner($member);
+    }
+
+
     /**
      * accepts a member into a group
      *
@@ -651,17 +703,20 @@ class GroupsModel extends  RoxModelBase
      * @return bool
      * @access public
      */
-    public function acceptGroupMember($group, $member_id)
+    public function acceptGroupMember($group, $member_id, $acceptedby_id)
     {
         if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
         {
             return false;
         }
-
+        if (!($acceptedby = $this->createEntity('Member')->findById($acceptedby_id)) && $group->isGroupOwner($acceptedby))
+        {
+            return false;
+        }
         if (($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '" . $group->getPKValue() . "' AND IdMember = '" . $member->getPKValue() . "'")) && $membership->Status == 'WantToBeIn')
         {
             $param['IdMember'] = $member->getPKValue();
-            $param['IdRelMember'] = $group->getGroupOwner()->getPKValue();
+            $param['IdRelMember'] = $acceptedby->getPKValue();
             $param['Type'] = 'message';
             $param['Link'] = "/groups/{$group->getPKValue()}";
             $param['WordCode'] = '';
@@ -757,31 +812,34 @@ class GroupsModel extends  RoxModelBase
         }
     }
 
+
     /**
-     * creates a message for the group admin, that a new member wants to join
+     * creates a message for the group admins, that a new member wants to join
      *
      * @param object $group
      * @param object $member - member entity
      * @access public
      */
-    public function notifyGroupAdmin($group, $member)
+    public function notifyGroupAdmins($group, $member)
     {
-        if ($group->isLoaded() && $member->isLoaded() && ($admin = $group->getGroupOwner()))
+        if ($group->isLoaded() && $member->isLoaded() && ($admins = $group->getGroupOwners()))
         {
-            $msg = $this->createEntity('Message');
-            $msg->MessageType = 'MemberToMember';
-            $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
-            $msg->IdParent = 0;
-            $msg->IdReceiver = $admin->getPKValue();
-            $msg->IdSender = 0;
-            $msg->SendConfirmation = 'No';
-            $msg->Status = 'ToSend';
-            $msg->SpamInfo = 'NotSpam';
-            $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-            $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
-            $msg->InFolder = 'Normal';
-            $msg->JoinMemberPict = 'no';
-            $msg->insert();
+            foreach ($admins as $admin) {
+                $msg = $this->createEntity('Message');
+                $msg->MessageType = 'MemberToMember';
+                $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
+                $msg->IdParent = 0;
+                $msg->IdReceiver = $admin->getPKValue();
+                $msg->IdSender = $member->getPKValue();
+                $msg->SendConfirmation = 'No';
+                $msg->Status = 'ToSend';
+                $msg->SpamInfo = 'NotSpam';
+                $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
+                $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
+                $msg->InFolder = 'Normal';
+                $msg->JoinMemberPict = 'no';
+                $msg->insert();
+            }
         }
     }
 }

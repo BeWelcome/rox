@@ -48,6 +48,11 @@ if ($piwikBaseURL) {
         $piwikId = 1;
     }
     $piwikBaseName = preg_replace('/^([a-z]+:\/\/)*(.*?)\/*$/','$2',$piwikBaseURL);
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        $urlref = urlencode($_SERVER['HTTP_REFERER']);
+    } else {
+        $urlref = '';
+    }
 
     if ($piwikType == 'javascript') { ?>
 <!-- Piwik -->
@@ -65,7 +70,7 @@ try {
 <!-- End Piwik Tracking Code -->
 <?php    } else { ?>
 <!-- Piwik Image Tracker -->
-<img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" width="1" height="1" />
+<img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1&amp;urlref=<?php echo $urlref; ?>" style="border:0" alt="" width="1" height="1" />
 <!-- End Piwik -->
 <?php    }
 } ?>

@@ -25,7 +25,10 @@ Boston, MA  02111-1307, USA.
 /*
  * REGISTER FORM TEMPLATE
  */
+$cloudmade_conf = PVars::getObj('cloudmade');
 ?>
+ <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+
 
 <div id="signuprox">
 
@@ -65,20 +68,19 @@ Boston, MA  02111-1307, USA.
               </div>
             </div>
 
-            </div> <!-- geoselectorjs -->
-
-            <div id="location-suggestion">
+        </div> <!-- geoselectorjs -->
+        <div id="location-suggestion">
             <?php if (isset($vars['geonamename']) && isset($vars['geonameid']) && $vars['geonameid'] != '') { ?>
-                <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
-                <ol class="plain">
-                    <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
-                    <?= urldecode($vars['geonamename'])?><br/>
-                    <?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
-                        <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
-                        <span class="small"><?=$vars['countryname']?> / <?=$vars['admincode']?></span>
+            <p><b><?=$words->get('Geo_choosenLocation')?>:</b></p>
+            <ol id="locations" class="plain">
+                <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);">
+                    <a id="href_4544349"><?= urldecode($vars['geonamename']) ?><br/><?php if (isset($vars['geonamecountrycode']) && isset($vars['countryname']) && isset($vars['admincode'])) { ?>
+                    <img alt="<?=$vars['countryname']?>" src="images/icons/flags/<?=strtolower($vars['geonamecountrycode'])?>.png"/>
+                    <span class="small"><?= urldecode($vars['countryname']) ?> / <?= urldecode($vars['admincode']) ?></span>
                     <?php } ?>
-                    </a></li>
-                </ol>
+                    </a>
+                </li>
+            </ol>
             <?php } ?>
         </div>
 
@@ -104,8 +106,6 @@ Boston, MA  02111-1307, USA.
         }
         ?>
 
-  <fieldset id="location">
-
     <input type="hidden" name="geonameid" id="geonameid" value="<?php
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
@@ -129,8 +129,6 @@ Boston, MA  02111-1307, USA.
         ?>" />
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
 
-  </fieldset>
-
   <p>
     <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
@@ -139,100 +137,19 @@ Boston, MA  02111-1307, USA.
   </p>
 
 </form>
-</div> <!-- signup -->
-
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
-    $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
-    }
-    echo $google_conf->maps_api_key;
-
-?>" type="text/javascript"></script>
-<script type="text/javascript">
-         var map = null;
-
-    function createMarker(point, descr) {
-         var marker = new GMarker(point);
-         GEvent.addListener(marker, "click", function() {
-            marker.openInfoWindowHtml(descr);
-         });
-         return marker;
-    }
-
-    var loaded = false;
-    function SPAF_Maps_load() {
-         if (!loaded && GBrowserIsCompatible()) {
-
-            map = new GMap2(document.getElementById("spaf_map"));
+</div> 
+        
 <?php
     if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
-        echo 'map.setCenter(new GLatLng('.htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
-        if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
-            $desc = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
-            echo 'var marker = new GMarker(new GLatLng('.$vars['latitude'].', '.$vars['longitude'].'), '.$desc.');
-                map.addOverlay(marker);
-                GEvent.addListener(marker, "click", function() {
-                    marker.openInfoWindowHtml('.$desc.');
-                });
-                marker.openInfoWindowHtml('.$desc.');';
+        // store latitude and logitude into hidden fields (in order to get the values in registermform3.js)
+    	echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="'.$vars['latitude'].'"/>';
+        echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="'.$vars['longitude'].'"/>';
+       	if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
+            $markerDescription = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
+            echo '<input type="hidden" id="markerDescription" name="markerDescription" value="'.$markerDescription.'"/>';
         }
     } else {
-        echo 'map.setCenter(new GLatLng(47.3666667, 8.55), 8);';
-    } ?>
-            map.addControl(new GSmallMapControl());
-            //map.addControl(new GMapTypeControl());
-        }
-        loaded = true;
-    }
-
-    function changeMarker(lat, lng, zoom, descr) {
-        if (!loaded) {
-            SPAF_Maps_load();
-            loaded = true;
-        }
-        map.panTo(new GLatLng(lat, lng));
-        map.setZoom(zoom);
-        map.clearOverlays();
-        map.addOverlay(createMarker(new GLatLng(lat, lng), descr));
-    }
-
-    function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode) {
-        $('geonameid').value = geonameid;
-        $('latitude').value = latitude;
-        $('longitude').value = longitude;
-        $('geonamename').value = geonamename;
-        $('countryname').value = countryname;
-        $('geonamecountrycode').value = countrycode;
-        $('admincode').value = admincode;
-        $('countryname').value = countryname;
-        $('newgeo').value = 1;
-    }
-
-    function removeHighlight() {
-        var lis = $A($('locations').childNodes);
-        lis.each(function(li) {
-            Element.setStyle(li, {fontWeight:'',backgroundColor:'#fff',backgroundImage:''});
-        });
-    }
-
-    function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-        setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countryname, countrycode, admincode);
-        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
-        removeHighlight();
-        Element.setStyle($('li_'+geonameid), {fontWeight:'bold',backgroundColor:'#f5f5f5',backgroundImage:'url(images/icons/tick.png)'});
-    }
-
-    function init(){
-        $('geoselector').style.display = 'none';
-        $('geoselectorjs').style.display = 'block';
-        $('spaf_map').style.display = 'block';
-        GeoSuggest.initialize('geo-form');
-        SPAF_Maps_load();
-    }
-
-    window.onunload = GUnload;
-
-    Event.observe(window, 'load', init, false);
-
-</script>
+        echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="0"/>';
+        echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="0"/>';
+    } 
+?>        

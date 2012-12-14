@@ -28,10 +28,22 @@ if (!$mem_redirect || !isset($mem_redirect->post['id'])) {
     foreach ($m as $key => $value) {
         $vars[$key] = $value;
     }
-    $Geo = new GeoModel;
-    if (isset($vars['geonameid']) && !isset($vars['geonamename']))
-        $vars['geonamename'] = $Geo->getDataById($vars['geonameid'])->name;
-        $vars['geonamecountry'] = '';
+    if (isset($vars['geonameid']) && !isset($vars['geonamename'])) {
+        $geo = new GeoModel;
+        $location = $geo->getLocationById($vars['geonameid']);
+        $country = $location->getCountry();
+        $parent = $location->getParent();
+        $vars['geonamename'] = $location->name;
+        $vars['geonamecountrycode'] = $location->fk_countrycode;
+        $vars['latitude'] = $location->latitude;
+        $vars['longitude'] = $location->longitude;
+        if (isset($parent->name))
+        {
+        	$vars['admincode'] = $parent->name;
+        }
+        $vars['geonamecountry'] = $country->name;
+        $vars['countryname'] = $country->name;
+    }
 } else {
     $vars = $mem_redirect->post;
     $vars['errors'] = $mem_redirect->errors;

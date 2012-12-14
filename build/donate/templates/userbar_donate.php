@@ -30,7 +30,7 @@ if ($TDonationArray) {
 
             <td style="vertical-align: top">
                 <div style="position: relative; top: <?=$TextState?>px">
-                    <?=$words->getFormatted('Donate_bar_annual',$TotalDonations,$TotalDonationsNeeded); ?>
+                    <?=$words->getFormatted('Donate_bar_annual_2013',$TotalDonations,$TotalDonationsNeeded); ?>
                 </div>
             </td>
 

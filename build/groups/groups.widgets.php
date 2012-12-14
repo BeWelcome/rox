@@ -59,17 +59,16 @@ class GroupMemberlistWidget  // extends MemberlistWidget?
     
     public function render()
     {
-        $memberships = $this->_group->getMembers();
-        $membercount = count($memberships);
-        for ($i = 0; $i < $membercount && $i < 6; $i++)
+        $numberOfMembers = 12;   
+        $memberships = $this->_group->getLastLoggedInMembers($numberOfMembers);
+        foreach ($memberships as $membership)
         {
-            $idx = $membercount - $i - 1;
             echo <<<HTML
             <div class="groupmembers center float_left">                
 HTML;
-                echo MOD_layoutbits::PIC_50_50($memberships[$idx]->Username);
+                echo MOD_layoutbits::PIC_50_50($membership->Username);
                 echo <<<HTML
-                <a href="members/{$memberships[$idx]->Username}">{$memberships[$idx]->Username}</a>               
+                <a href="members/{$membership->Username}">{$membership->Username}</a>               
             </div>
 HTML;
         }

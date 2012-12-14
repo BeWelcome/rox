@@ -92,6 +92,17 @@ class GeoModel extends RoxModelBase {
 	
 
     /**
+     * Get a location by its Geonames ID
+     *
+     * @param int $id Geonames ID of location
+     * @return object|bool Geo entity, false if not found or lookup failed
+     */
+    public function getLocationById($id)
+    {
+        return $this->createEntity('Geo')->findById($id);
+    }
+
+    /**
      * Search for locations in the geonames database using the SPAF-Webservice
      *
      * @param search The location to search for
@@ -99,18 +110,15 @@ class GeoModel extends RoxModelBase {
      */
     public function suggestLocation($search, $max = false,$fcode = '')
     {
-        if (strlen($search) <= 1) { // Ignore too small queries
-            return '';
-        }
         $google_conf = PVars::getObj('config_google');
-        if (!$google_conf || !$google_conf->geonames_webservice || !$google_conf->maps_api_key) {
+        if (!$google_conf || !$google_conf->geonames_webservice /*|| !$google_conf->maps_api_key */) {
             throw new PException('Google config error!');
         }
         require_once SCRIPT_BASE.'lib/misc/SPAF_Maps.class.php';
         $spaf = new SPAF_Maps($search);
         
-        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_fallback); // FALLBACK DISABLED - to active again, use $google_conf->geonames_webservice_custom
-        $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
+        $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_custom);
+        // $spaf->setConfig('google_api_key', $google_conf->maps_api_key);
         $spaf->setConfig('style','FULL');
         $spaf->setConfig('lang',$_SESSION['lang']);
         $spaf->setConfig('fcode',$fcode);
@@ -118,21 +126,25 @@ class GeoModel extends RoxModelBase {
         // If the request wants more than 10 members
         if ($max) $spaf->setMaxResults($max);
         
-        //Try to get results - FIRST TIME
+        // Try to get results - FIRST TIME
         $count = 0;
         $results = @$spaf->getResults();
-        
-        while (!$results && ++$count <= 3) { //Try to get results - ANOTHER TIME
-            if ($count == 1) { // still didn't work, so use the commercial geonames webservice
-                $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_fallback);
-            }
-            $spaf->results = false;
-            $results = @$spaf->getResults();
-            if ($count == 3 && !$results) { // giving up
-                MOD_log::get()->write("Connection to geonames webservice failed! (free & commercial)", "Geo");
+
+        // Try getting results again, if no XML was received the first time
+        if ($spaf->result_code == SPAF_Maps::RESULT_NO_XML) {
+            while (++$count <= 3 && $spaf->result_code != SPAF_Maps::RESULT_OK) {
+                sleep(2);
+                if ($count == 2) { // still didn't work, so use the commercial geonames webservice
+                    $spaf->setConfig('geonames_url', $google_conf->geonames_webservice_fallback);
+                }
+                $spaf->results = false;
+                $results = @$spaf->getResults();
+                if ($count == 3 && !$results) { // giving up
+                    MOD_log::get()->write("Connection to geonames webservice failed! (free & commercial)", "Geo");
+                }
             }
         }
-            
+
         foreach ($results as &$res) {
             $res['zoom'] = $spaf->calcZoom($res);
         }

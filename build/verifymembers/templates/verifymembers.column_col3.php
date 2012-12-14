@@ -36,7 +36,7 @@ $action_url = '';
 if (PVars::getObj('development')->avoid_https != 1) {
     // TODO: ideally this should be implemented on routing level
     //       (i.e. via a "force_https" setting for the verification page)
-    $action_url = str_replace('http://', 'https://', $page_url);
+    $action_url = str_replace('http://', 'http://', $page_url);
     if (!empty($_SERVER['QUERY_STRING'])) {
         $action_url = $action_url . '?' . $_SERVER['QUERY_STRING'];
     }

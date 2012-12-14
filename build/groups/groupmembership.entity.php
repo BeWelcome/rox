@@ -84,7 +84,7 @@ class GroupMembership extends RoxEntityBase
      * @access public
      * @return array
      */
-    public function getGroupMembers($group, $status = '', $where = '', $offset = 0, $limit = null)
+    public function getGroupMembers($group, $status = '', $where = '', $offset = 0, $limit = null, $bylastlogin = false)
     {
         if (!is_object($group) || !($group_id = $group->getPKValue()))
         {
@@ -98,16 +98,6 @@ class GroupMembership extends RoxEntityBase
         }
         $where_clause .= " ORDER BY created";
 
-        if ($limit)
-        {
-            $where_clause .= " LIMIT {$this->dao->escape($limit)}";
-        }
-
-        if ($offset)
-        {
-            $where_clause .= " OFFSET {$this->dao->escape($offset)}";
-        }
-
         $links = $this->findByWhereMany($where_clause);
 
         $members = array();
@@ -117,10 +107,36 @@ class GroupMembership extends RoxEntityBase
             unset($link);
         }
         unset($links);
+
+        $limit_clause = "";
+        $offset_clause = "";
+        if ($limit)
+        {
+            $limit_clause = " LIMIT {$this->dao->escape($limit)}";
+        }
+
+        if ($offset)
+        {
+            $offset_clause = " OFFSET {$this->dao->escape($offset)}";
+        }
         
-        $sql = "SELECT m.* FROM members AS m, {$this->getTableName()} AS mg WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id} ORDER BY mg.created ASC";
+        $orderby = "mg.created ASC";
+        if ($bylastlogin == TRUE){
+            $orderby = "covertracks DESC";
+        }
+        
+        $sql = "
+SELECT
+m.*,
+IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastLogin) as covertracks
+FROM members AS m, {$this->getTableName()} AS mg
+WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}
+ORDER BY {$orderby}{$limit_clause}{$offset_clause}";
         return $this->createEntity('Member')->findBySQLMany($sql);
     }
+
+
+
 
     /**
      * return the groups for a member

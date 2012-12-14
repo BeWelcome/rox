@@ -135,141 +135,20 @@ if (isset($vars['id']) && $vars['id']) {
 </fieldset>
 
 <fieldset id="blog-trip"><legend><?=$words->get('BlogCreate_LabelTrips')?></legend>
-    <div class="row">
-        <div class="subcolumns" id="profile_subcolumns">
-
-          <div class="c50l" >
-            <div class="subcl" >
-                
-                <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
-                <div class="floatbox">
-                    <input type="text" id="create-date" name="date" class="date" maxlength="10" style="width:9em" <?php
-                    echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
-                    ?> />
-                    <script type="text/javascript">
-                        var datepicker  = new DatePicker({
-                        relative    : 'create-date',
-                        language    : '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
-                        current_date: '', 
-                        topOffset   : '25',
-                        relativeAppend : true
-                        });
-                    </script>
-                </div>
-                    <?php
-                    if (in_array('startdate', $vars['errors'])) {
-                        echo '<span class="error">'.$words->get('BlogErrors_startdate').'</span>';
-                    } elseif (in_array('duration', $vars['errors'])) {
-                        echo '<span class="error">'.$words->get('BlogErrors_duration').'</span>';
-                    }
-                    ?>
-                    <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
-                
-            </div> <!-- subcl -->
-          </div> <!-- c50l -->
-          <div class="c50r" >
-            <div class="subcr" >
-
-                    <label for="create-trip"><?=$words->get('BlogCreateTrips_LabelTrip')?></label><br />
-                    <select id="create-trip" name="tr">
-                        <option value="">-- <?=$words->get('BlogCreateTrips_NoTrip')?> --</option>
-                    <?php
-                        foreach ($tripIt as $t)
-                            echo "<option value=\"".$t->trip_id."\"".($t->trip_id == $vars['trip_id_foreign'] ? ' selected="selected"' : '').">".htmlentities($t->trip_name, ENT_COMPAT, 'utf-8')."</option>\n";
-                    ?>
-                    </select>
-                    <?php
-                    if (in_array('trip', $vars['errors'])) {
-                        echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
-                    }
-                    ?>
-                    <p class="desc"></p>
-
-            </div> <!-- subcr -->
-          </div> <!-- c50r -->
-
-        </div> <!-- subcolumns -->
-        
-<?php
-if ($google_conf && $google_conf->maps_api_key) {
-?>
-    <div class="row">
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
-        echo $google_conf->maps_api_key;
-
-    ?>" type="text/javascript"></script>
-         <script type="text/javascript">
-         var map = null;
-
-    function createMarker(point, descr) {
-         var marker = new GMarker(point);
-         GEvent.addListener(marker, "click", function() {
-            marker.openInfoWindowHtml(descr);
-         });
-         return marker;
-    }
-
-    var loaded = false;
-    function SPAF_Maps_load() {
-         if (!loaded && GBrowserIsCompatible()) {
-
-            map = new GMap2(document.getElementById("spaf_map"));
-<?php
+    <?php
     if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
-        echo 'map.setCenter(new GLatLng('.htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
-        if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
-            $desc = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
-            echo 'var marker = new GMarker(new GLatLng('.$vars['latitude'].', '.$vars['longitude'].'), '.$desc.');
-                map.addOverlay(marker);
-                GEvent.addListener(marker, "click", function() {
-                    marker.openInfoWindowHtml('.$desc.');
-                });
-                marker.openInfoWindowHtml('.$desc.');';
-        }
-    } else {
-        echo 'map.setCenter(new GLatLng(47.3666667, 8.55), 8);';
-    } ?>
-            map.addControl(new GSmallMapControl());
-            map.addControl(new GMapTypeControl());
-        }
-        loaded = true;
-    }
-
-    function changeMarker(lat, lng, zoom, descr) {
-        if (!loaded) {
-            SPAF_Maps_load();
-            loaded = true;
-        }
-        map.panTo(new GLatLng(lat, lng));
-        map.setZoom(zoom);
-        map.addOverlay(createMarker(new GLatLng(lat, lng), descr));
-    }
-
-    function setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode) {
-        $('geonameid').value = geonameid;
-        $('latitude').value = latitude;
-        $('longitude').value = longitude;
-        $('geonamename').value = geonamename;
-        $('geonamecountrycode').value = countrycode;
-        $('admincode').value = admincode;
-    }
-
-    function removeHighlight() {
-        var lis = $A($('locations').childNodes);
-        lis.each(function(li) {
-            Element.setStyle(li, {fontWeight:''});
-        });
-    }
-
-    function setMap(geonameid, latitude, longitude, zoom, geonamename, countryname, countrycode, admincode) {
-        setGeonameIdInForm(geonameid, latitude, longitude, geonamename, countrycode, admincode);
-        changeMarker(latitude, longitude, zoom, geonamename+', '+countryname);
-        removeHighlight();
-        Element.setStyle($('li_'+geonameid), {fontWeight:'bold'});
-    }
-
-    window.onunload = GUnload;
-    </script>
+	// store latitude and logitude into hidden fields (in order to get the values in blogSmallMapGeoLocation.js)
+	echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="'.$vars['latitude'].'"/>';
+	echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="'.$vars['longitude'].'"/>';
+	if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
+		$markerDescription = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
+		echo '<input type="hidden" id="markerDescription" name="markerDescription" value="'.$markerDescription.'"/>';
+	}
+} else {
+	echo '<input type="hidden" id="markerLatitude" name="markerLatitude" value="0"/>';
+	echo '<input type="hidden" id="markerLongitude" name="markerLongitude" value="0"/>';
+}
+?>
     <input type="hidden" name="geonameid" id="geonameid" value="<?php
             echo isset($vars['geonameid']) ? htmlentities($vars['geonameid'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
@@ -288,36 +167,71 @@ if ($google_conf && $google_conf->maps_api_key) {
     <input type="hidden" name="admincode" id="admincode" value="<?php
             echo isset($vars['admincode']) ? htmlentities($vars['admincode'], ENT_COMPAT, 'utf-8') : '';
         ?>" />
-</div>
-<?php
-}
-?>
-    <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label><br />
-    <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
-    <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
-    <div class="subcolumns">
-      <div class="c50l">
-        <div class="subcl">
-          <div id="location-suggestion" class></div>
+<div class="subcolumns">
+  <div class="c50l">
+    <div class="subcl">
+      <!-- Content of left block -->
+      <!-- Start join with trip block -->
+        <label for="create-trip"><?=$words->get('BlogCreateTrips_LabelTrip')?></label><br />
+        <select id="create-trip" name="tr">
+        <option value="">-- <?=$words->get('BlogCreateTrips_NoTrip')?> --</option>
+        <?php
+        foreach ($tripIt as $t)
+        echo "<option value=\"".$t->trip_id."\"".($t->trip_id == $vars['trip_id_foreign'] ? ' selected="selected"' : '').">".htmlentities($t->trip_name, ENT_COMPAT, 'utf-8')."</option>\n";
+        ?>
+        </select>
+        <?php
+        if (in_array('trip', $vars['errors'])) {
+        echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
+        }
+        ?>
+        <p class="desc"></p>
+        <!-- End join with trip block -->
+        <!-- Start trip start date block -->
+        <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
+        <div class="floatbox">
+        <input type="text" id="create-date" name="date" class="date" maxlength="10" style="width:9em" <?php
+        echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
+        ?> />
+        <script type="text/javascript">
+        var datepicker  = new DatePicker({
+        relative    : 'create-date',
+        language    : '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
+        current_date: '', 
+        topOffset   : '25',
+        relativeAppend : true
+        });
+        </script>
         </div>
-      </div>
-      <div class="c50r">
-        <div class="subcr">
-          <div id="spaf_map" style="width:300px; height:200px;"></div>
-        </div>
-      </div>
+        <?php
+        if (in_array('startdate', $vars['errors'])) {
+        echo '<span class="error">'.$words->get('BlogErrors_startdate').'</span>';
+        } elseif (in_array('duration', $vars['errors'])) {
+        echo '<span class="error">'.$words->get('BlogErrors_duration').'</span>';
+        }
+        ?>
+        <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
+        <!-- End trip start date block -->
+        <!-- Start location search block -->
+        <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label><br />
+        <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
+        <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
+        <!-- End location search block -->
     </div>
+  </div>
+  <div class="c50r">
+    <div class="subcr">
+      <div id="spaf_map" style="width:300px; height:200px;"></div>
+    </div>
+  </div>
+</div>
+<div id="location-suggestion"></div>
     <p>
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
     </p>
 </fieldset>
-
-
-
-
-
 
 <fieldset id="blog-settings">
     <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
@@ -358,7 +272,7 @@ if ($google_conf && $google_conf->maps_api_key) {
             echo ' checked="checked"';
         }
         ?>/> <label for="create-vis-prt"><?=$words->get('BlogCreateSettings_LabelVisprotected')?></label>
-        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVispublic')?></p>
+        <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprotected')?></p>
     </div>
     <div class="row">
         <input type="radio" name="vis" value="pri" id="create-vis-pri"<?php
@@ -377,10 +291,12 @@ if ($google_conf && $google_conf->maps_api_key) {
         ?> />
     </p>
 </fieldset>
+<?php 
 
+$cloudmade_conf = PVars::getObj('cloudmade');
 
-
-
+?>
+ <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
 
 </form>
 <script type="text/javascript">//<!--
@@ -394,7 +310,8 @@ if (in_array('startdate', $vars['errors']) || in_array('duration', $vars['errors
 BlogSuggest.initialize('blog-create-form');
 
 function eventHandlerFunction(e) {
-    SPAF_Maps_load();
+    // SPAF_Maps_load();
+    initOsmMapBlogEdit();
     Event.stop(e);
 }
 Event.observe('liblog-trip', "click", eventHandlerFunction, false);

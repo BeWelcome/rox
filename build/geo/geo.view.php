@@ -106,23 +106,50 @@ class GeoView extends PAppView {
                     // hide all results above 10
                     if ($ii++ == 10) {
                         $dohide = 'style="display:none" class="hidden"';
-                        $out .= '<p style="padding: 1em 0; clear:both">'.$words->get('Geo_results_foundmore','<a id="showAllResults" href="#">','</a>').'</p>';
+                        $out .= '<p style="padding: 1em 0; clear:both" id="moreHint">'.$words->get('Geo_results_foundmore','<a id="showAllResults" href="#">','</a>').'</p>';
                         $add_out = '
                             <script>
-                                $(\'showAllResults\').onclick = showAllResults;
-                                function showAllResults () {
-                                    $$(\'li.hidden\').invoke(\'toggle\');
-                                    return false;
-                                }
+                                jQuery.noConflict();
+                                jQuery(\'a#showAllResults\').on(\'click\',
+                                    function () {
+                                        jQuery(\'li.hidden\').show();
+                                        jQuery(\'p#moreHint\').hide();
+                                        return false;
+                                    }
+                                );
                             </script>
                         ';
                     }
-                    $out .= '<li id="li_'.$location['geonameId'].'" '.$dohide.' onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.rawurlencode($location['name']).'\', \''.rawurlencode($location['countryName']).'\', \''.$location['countryCode'].'\'); return false;"><a id="href_'.$location['geonameId'].'" onclick="javascript: setMap(\''.$location['geonameId'].'\', \''.$location['lat'].'\',  \''.$location['lng'].'\', \''.$location['zoom'].'\', \''.rawurlencode($location['name']).'\', \''.rawurlencode($location['countryName']).'\', \''.$location['countryCode'].'\'); return false;">
-                            '.$location['name'].'<br />
-                            <img src="images/icons/flags/'.strtolower($location['countryCode']).'.png" alt="'.$location['countryName'].'"> <span class="small">'.$location['countryName'];
-                    if (isset($location['fcodeName'])) {
-                        // $out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
+                    if (isset($location['adminName1'])) {
+                        $adminName1 = rawurlencode($location['adminName1']);
+                    } else {
+                        $adminName1 = '';
                     }
+                    $onclick = "javascript: setMap('"
+                        . $location['geonameId']
+                        . "', '"
+                        . $location['lat']
+                        . "', '"
+                        . $location['lng']
+                        . "', '"
+                        . $location['zoom']
+                        . "', '"
+                        . rawurlencode($location['name'])
+                        . "', '"
+                        . rawurlencode($location['countryName'])
+                        . "', '"
+                        . $location['countryCode']
+                        . "', '"
+                        . $adminName1
+                        . "'); return false;";
+                    $out .= '<li id="li_' . $location['geonameId'] . '" '
+                        . $dohide . ' onclick="' . $onclick . '">'
+                        . '<a id="href_' . $location['geonameId'] . '">'
+                        . $location['name']
+                        . '<br /><img src="images/icons/flags/'
+                        . strtolower($location['countryCode']) . '.png" alt="'
+                        . $location['countryName'] . '"> <span class="small">'
+                        . $location['countryName'];
                     if (isset($location['adminName1'])) {
                         $out .= ' / '.$location['adminName1'];
                     }
@@ -131,10 +158,14 @@ class GeoView extends PAppView {
             }
             $out .= '</ol>';
             $out .= $add_out;
-            if ($ii == 0) return 'We couldnt find your location!';
-            return $out;
-        } else
-        return 'We couldnt find your location!';
+            if ($ii == 0) {
+                return '<p class="desc">' . $words->get('Geo_no_matches_found') . '</p>';
+            } else {
+                return $out;
+            }
+        } else {
+            return '<p class="desc">' . $words->get('Geo_no_matches_found') . '</p>';
+        }
     }
 
 

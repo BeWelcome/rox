@@ -1,4 +1,15 @@
 /*
+ * main.js
+ *
+ * Sets helper globals, creates BWRox namespace, creates bwrox singleton
+ * and includes scripts based on current URL.
+ *
+ * Note: If you make changes here make sure to increment query string in array
+ *       $_early_scriptfiles in <rox>/tools/page/html.page.php so browsers
+ *       reload main.js
+ */
+
+/*
  * Setting helper globals
  */
 var agt = navigator.userAgent.toLowerCase();
@@ -33,6 +44,14 @@ BWRox.prototype.selectScripts = function(scripts) {
   for (var i = 0; i < scripts.length; i++) {
     var script = scripts[i];
 
+    // No script prefix if remote location
+    if (typeof script.remote === "boolean" && script.remote === true) {
+      var prefix = '';
+    } else {
+      var prefix = 'script/';
+    }
+    var src = prefix + script.file;
+
     // Loop through pages array, if it exists
     if (typeof(script.pages) == 'object' && script.pages.length > 0) {
       for (var j = 0; j < script.pages.length; j++) {
@@ -41,22 +60,21 @@ BWRox.prototype.selectScripts = function(scripts) {
 
         // Include script if path starts with page name
         if (currentPage.indexOf(script.pages[j]) == 0) {
-          this.includeScript(script.file);
+          this.includeScript(src);
         }
       }
     } else {
-      this.includeScript(script.file);
+      this.includeScript(src);
     }
   }
 };
 
 /**
- * Select scripts to include on current page.
- * @param {string} file Name of script file, relative to scripts folder.
+ * Include a JavaScript file.
+ * @param {string} src Location of script file.
  */
-BWRox.prototype.includeScript = function(file) {
-  document.write('<script type="text/javascript" src="script/' + file
-    + '"></script>');
+BWRox.prototype.includeScript = function(src) {
+  document.write('<script type="text/javascript" src="' + src + '"></script>');
 };
 
 /*
@@ -67,8 +85,29 @@ var bwrox = new BWRox;
 /*
  * Including JavaScript files, depending on current URL.
  * Extend selectScripts() first parameter array to load more files.
+ *
+ *   Note: Add or increment query string if a JS file changes to make sure
+ *         browsers reload the file (e.g. "gallery.js?1" -> "gallery.js?2")
  */
 bwrox.selectScripts([
+  {
+    // JQuery has to be included before prototype to avoid conflicts
+    file: "jquery-1.8.2.min.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "leaflet/0.4.5/leaflet.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "http://maps.googleapis.com/maps/api/js?sensor=false",
+    remote: true,
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "leaflet/plugins/Google.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
   {
     file: "prototype162.js"
   },
@@ -85,9 +124,9 @@ bwrox.selectScripts([
     ]
   },
   {
-    file: "geo_suggest.js",
+    file: "geo_suggest.js?1",
     pages: [
-      "signup"
+      "signup", "setlocation"
     ]
   },
   {
@@ -153,13 +192,7 @@ bwrox.selectScripts([
     ]
   },
   {
-    file: "prototip.js",
-    pages: [
-      "searchmembers"
-    ]
-  },
-  {
-    file: "labeled_marker.js",
+    file: "prototip.js?1",
     pages: [
       "searchmembers"
     ]
@@ -174,5 +207,68 @@ bwrox.selectScripts([
       "deleteprofile",
       "people"
     ]
+  },
+  {
+    file: "util/console.js"
+  },
+  {
+    file: "map/include_css.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "map/geolocation/BWGoogleMapReverseGeolocator.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "map/leaflet/LeafletFlagIcon.js",
+    pages: ["signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "map/builder/BWSimpleMapBuilder.js",
+    pages: ["signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "map/builder/BWGeosearchMapBuilder.js",
+    pages: ["searchmembers"]
+  },
+  {
+    file: "map/BWMapMaths.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "map/BWMapAddressPoint.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+  },
+  {
+    file: "map/BWMapHostPoint.js",
+    pages: ["searchmembers"]
+  },
+  {
+    file: "map/BWMapSearchResult.js",
+    pages: ["searchmembers"]
+  },
+  {
+    file: "map/small/smallMapGeoLocation.js",
+    pages: ["signup/3", "setlocation"]
+  },
+  {
+    file: "map/small/blogSmallMapGeoLocation.js",
+    pages: ["blog", "trip"]
+  },
+  {
+    file: "map/small/blogMap.js",
+    pages: ["blog"]
+  },
+  {
+    file: "map/small/singlePost.js",
+    pages: ["blog"]
+  },
+  {
+    file: "map/small/tripMap.js",
+    pages: ["trip"]
+  },
+  {
+    file: "searchmembers.js?1",
+    pages: ["searchmembers"]
   }
 ]);

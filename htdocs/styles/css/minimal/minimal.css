@@ -21,7 +21,7 @@
 /* import screen layout | Screen-Layout einbinden */
 /* #### BW Costumizing #### */
 @import url(screen/basemod_minimal.css);
-@import url(screen/content_minimal.css);
+@import url(screen/content_minimal.css?1);
 @import url(navigation/nav_minimal.css);
 
 /* import print layout | Druck-Layout einbinden */

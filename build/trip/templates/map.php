@@ -8,7 +8,6 @@ if (isset($request[1]) && $request[1] == 'show' && isset($request[2])) {
     $sub .= '</a>';
 }
 ?>
-
 <div id="onmap">
     <h1 id="trip_name">
         <a href="trip">
@@ -21,40 +20,53 @@ if (isset($request[1]) && $request[1] == 'show' && isset($request[2])) {
     </div>
 </div>
 <div class="popupmap" id="map_alltrips">
-    <div id="map" class="tripmap"></div>
+    <div id="tripMap" class="tripmap"></div>
 </div>
 <div id="handle2" style="width: 100%; height: 14px; cursor: s-resize; text-align: center"><a href="#" onclick="return false" title="Drag this bar to resize the map!"><img src="images/btns/resize_hor.png" alt="resize" /></a></div>
 
 <?=$words->flushBuffer()?>
-<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<?php
-    $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
-    }
-    echo $google_conf->maps_api_key;
 
-?>" type="text/javascript"></script>
-<script type="text/javascript" src="script/marker_manager.js"></script>   
+<!-- <script type="text/javascript" src="script/marker_manager.js"></script>    -->
 <script type="text/javascript" src="script/resizable.js"></script>  
-<script type="text/javascript" src="script/trip_functions.js"></script>
+<!-- <script type="text/javascript" src="script/trip_functions.js"></script> -->
 <script type="text/javascript">
 //<![CDATA[
-/*
-function displayMap(popupid, lng, ltd, desc) {
-//    Element.setStyle(popupid, {display:'block'});
-    if (GBrowserIsCompatible()) {
-        map = new GMap2(document.getElementById("map"));
-            var mapTypeControl = new GSmallMapControl();
-            var topRight = new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(30,50));
-    		map.addControl(mapTypeControl,topRight);
-    		map.addControl(new GMapTypeControl());
-            map.enableDoubleClickZoom();
-            map.setCenter(new GLatLng(15, 10), 2);
-            map.addMapType(G_PHYSICAL_MAP);
-            map.setMapType(G_PHYSICAL_MAP);    
+
+<?php // dynamically create addMarkers javascript function ?>
+        
+var markers = new Array();
+<?php
+$zoomLevel = 4;    
+$point = 0;
+    $locations = array();
+    foreach($trips as $trip) { 
+        if (isset($trip_data[$trip->trip_id])) {
+            foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
+                if ($blog->latitude && $blog->longitude) {
+                    ++$point;
+                    echo 'markers['.($point-1).']={latitude:'.$blog->latitude
+                    			.', longitude:'.$blog->longitude
+                    			.', name:"'.$blog->name.'"'
+                    			.', tripId:'.$trip->trip_id.'};';
+                    $locations[$point] = new stdClass();
+                    $locations[$point]->lat = $blog->latitude;
+                    $locations[$point]->lng = $blog->longitude;
+                    $locations[$point]->name = $blog->name;
+                    $locations[$point]->trip_id = $trip->trip_id;
+                }
+            }
         }
-}
-*/
+        if($point == 40 ) {
+        	$zoomLevel = 7;
+        } elseif ($point == 200) {
+        	$zoomLevel = 2;
+        } elseif ($point >= 1000 ) {
+        	// do not display more that 1000 points
+        	break;
+        }
+    }
+?>
+bwrox.debug('%d markers defined.', markers.length);
 
 //Markers
 var iconData = {
@@ -66,55 +78,6 @@ var iconData = {
   "headquarters": { width: 32, height: 32 },
   "headquarters-shadow": { width: 59, height: 32 }
 };
-
-var officeLayer = [
-  {
-    "zoom": [0, 17],
-    "places": [
-    <?php
-    $point = 0;
-    $counter = 0;
-    $locations = array();
-    foreach($trips as $trip) { 
-        if (isset($trip_data[$trip->trip_id])) {
-            foreach ($trip_data[$trip->trip_id] as $blogid => $blog) {
-                if ($blog->latitude && $blog->longitude) {
-                    ++$point;
-                    echo '
-                      {
-                        "name": "'.$blog->name.'",
-                        "icon": ["gicon_flag", "gicon_flag_shadow"],
-                        "posn": ['.$blog->latitude.', '.$blog->longitude.']
-                      },';
-                      $locations[$point]->lat = $blog->latitude;
-                      $locations[$point]->lng = $blog->longitude;
-                      $locations[$point]->name = $blog->name;
-                      $locations[$point]->trip_id = $trip->trip_id;
-                }
-            }
-        }
-        if(++ $counter == 40 ) {
-?>
-    ]
-  },
- {
-    "zoom": [4, 17],
-    "places": [
-<?php
-        } elseif ($counter == 200) {
-?>
-    ]
-  },
- {
-    "zoom": [7, 17],
-    "places": [
-<?php
-        }
-        if(++ $counter >= 1000 ) break;
-    } ?>
-    ]
-  }
-];
 
 function HighlightUp() {
     new Effect.Highlight(this, {startcolor: '#333333',endcolor: '#666666',restorecolor: '#666666',duration: .5});
@@ -139,51 +102,26 @@ function startRest() {
 	document.documentElement.firstChild.appendChild(tripfunctions);
 }
 
-    var map;
-    var mgr;
-    <?php
-    $point = rand(1,count($locations));
-    ?>
-    function load() {
-      if (GBrowserIsCompatible()) {
-        map = new GMap2(document.getElementById("map"));
-        var mapTypeControl = new GSmallMapControl();
-        var topRight = new GControlPosition(G_ANCHOR_TOP_RIGHT, new GSize(30,50));
-        <? if ($locations) { ?>
-        map.setCenter(new GLatLng(<?=$locations[$point]->lat?>, <?=$locations[$point]->lng?>), 5);
-        <? } ?>
-        map.addMapType(G_PHYSICAL_MAP);
-        map.setMapType(G_PHYSICAL_MAP); 
-        map.enableDoubleClickZoom();
-        mgr = new MarkerManager(map, {trackMarkers:true});
-        window.setTimeout(setupOfficeMarkers, 0);
-        // zoomfit(map);
-      }
-    }
-
-/*
-* Starts the loading of the Google Maps API, once loaded will call the specified callback Function
-*/
-function activateMap() {
-	var script = document.createElement("script");
-	script.setAttribute("src", "http://maps.google.com/maps?file=api&v=2&key=<?php
-    $google_conf = PVars::getObj('config_google');
-    if (!$google_conf || !$google_conf->maps_api_key) {
-        throw new PException('Google config error!');
-    }
-    echo $google_conf->maps_api_key;
-
-?>&async=2&callback=load");
-	script.setAttribute("type", "text/javascript");
-	document.documentElement.firstChild.appendChild(script);
-    
-}
-
-//window.onload = displayMap;
-window.onload = load;
-// window.onunload = GUnload;
 $('handle2').onmouseover = HighlightUp;
 $('handle2').onmouseout = HighlightDown;
-new Resizable('map', {minWidth:0, minHeight:200, handle:'handle2', constraint:'vertical'});
+new Resizable('tripMap', {minWidth:0, minHeight:200, handle:'handle2', constraint:'vertical'});
     //]]>
 </script>
+
+<?php 
+	// random point used to center the map 
+	$point = rand(1,count($locations));
+	
+	if ($locations != null && $point != null && $locations[$point] != null){
+		$lat = $locations[$point]->lat;
+		$lng = $locations[$point]->lng;
+	}else{
+		// arbitrary center to London
+		$lat = '51.505';
+		$lng = '-0.09';
+	}
+	
+	echo '<input type="hidden" id="centerLatitude" name="centerLatitude" value="' . $lat . '"/>';
+	echo '<input type="hidden" id="centerLongitude" name="centerLongitude" value="' . $lng . '"/>';
+	echo '<input type="hidden" id="zoomLevel" name="zoomLevel" value="'.$zoomLevel.'"/>';
+?>

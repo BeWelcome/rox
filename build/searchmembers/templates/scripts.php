@@ -61,12 +61,11 @@ var more = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('more
 function addTips() {
 // prototip tips
 new Tip('Address', fieldHelpAddress,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
-new Tip('map_search', fieldHelpMapBoundaries,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
+//new Tip('map_search', fieldHelpMapBoundaries,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 new Tip('UsernameField', fieldHelpUsername,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 new Tip('TextToFindField', fieldHelpTextToFind,{className: 'clean', hook: {target: 'bottomLeft', tip: 'topLeft' }});
 }
 </script>
-<script src="script/searchmembers.js" type="text/javascript"></script>
 <script type="text/javascript">
 Event.observe(window, "load", addTips); 
 $('flip-sort-direction-button').observe('click', flipSortDirection);

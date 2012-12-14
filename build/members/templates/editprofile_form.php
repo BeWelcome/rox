@@ -55,24 +55,24 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                       <div class="error-caption"><?=$words->get('SignupErrorInvalidBirthDate')?></div>
                     <?php } ?>
                   </td>
-                  <td>
-                        <input name="HideBirthDate" value="Yes" type="checkbox"
-                        <?php
-                        if ($vars['HideBirthDate'] == "Yes")
-                            echo ' checked="checked"';
-                        echo ' /> ', $words->get("Hidden");
-                    ?>
+                  <td><?=$words->get('EmailIsAlwayHidden')?></td>
+                  </tr>
+                  <tr align="left" >
+                  <td class="label"><?= $words->get('Age')?>:</td>
+                  <td colspan="3">
+                        <input name="HideBirthDate" value="Yes" type="checkbox" <?= ($vars['HideBirthDate'] == 'Yes') ? 'checked="checked"' : '' ?> /> <?= $words->get('Hidden');?>
+                        <div class="small"><?= $words->get('HiddenAgeInfo'); ?></div>
                   </td>
                 </tr>
 
                 <tr align='left'>
-                    <td class='label'><?= $words->get('Gender'); ?></td>
+                    <td class='label'><?= $words->get('Gender'); ?>:</td>
                     <td colspan='2' >
-                        <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'><?= $words->get('female'); ?></label>&nbsp;&nbsp;
-                        <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'><?= $words->get('male'); ?></label>&nbsp;&nbsp;
-                        <input class="radio" type="radio" id='genderX' name="gender" value="IDontTell" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'IDontTell') ? ' checked="checked"' : '');?>/><label for='genderX'><?= $words->get('IDontTell'); ?></label></td>
+                        <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'> <?= $words->get('female'); ?></label>&nbsp;&nbsp;
+                        <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'> <?= $words->get('male'); ?></label>&nbsp;&nbsp;
+                        <input class="radio" type="radio" id='genderX' name="gender" value="IDontTell" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'IDontTell') ? ' checked="checked"' : '');?>/><label for='genderX'> <?= $words->get('IDontTell'); ?></label></td>
                         
-                     <td><input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'><?= $words->get("Hidden");?></label></td>
+                     <td><input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'> <?= $words->get("Hidden");?></label></td>
                     <?php
                         if (in_array('SignupErrorInvalidGender', $vars['errors']))
                         {

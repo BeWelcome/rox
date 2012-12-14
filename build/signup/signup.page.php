@@ -8,7 +8,7 @@ class SignupPage extends PageWithRoxLayout
     {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';
-        $stylesheets[] = "styles/css/minimal/screen/custom/signup.css";
+        $stylesheets[] = "styles/css/minimal/screen/custom/signup.css?1";
         return $stylesheets;
     }
     

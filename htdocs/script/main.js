@@ -192,7 +192,7 @@ bwrox.selectScripts([
     ]
   },
   {
-    file: "prototip.js",
+    file: "prototip.js?1",
     pages: [
       "searchmembers"
     ]

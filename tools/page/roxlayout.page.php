@@ -16,7 +16,7 @@ class PageWithRoxLayout extends PageWithHTML
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/minimal.css';
+        $stylesheets[] = 'styles/css/minimal/minimal.css?1';
         return $stylesheets;
     }
 

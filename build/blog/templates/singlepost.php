@@ -89,10 +89,10 @@ if ($tags->numRows() > 0) {
     	$markerDescription = "'".$blog->geonamesname.', '.$blog->geonamescountry."'";
     	echo '<input type="hidden" id="markerDescription" name="markerDescription" value="'.$markerDescription.'"/>';
     }
-?>
-<div id="geonamesmap" class="float_right" style="width: 280px; height: 280px;" ></div>
 
-<?php
+    if (isset($blog->geonamesname) && $blog->geonamesname && isset($blog->geonamescountry) && $blog->geonamescountry) {
+        echo '<div id="geonamesmap" class="float_right blogmap" style="width: 280px; height: 280px;" ></div>'; 
+    }
 
 echo $txt[0];
 

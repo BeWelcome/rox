@@ -29,16 +29,8 @@ $words = new MOD_words();
   <div class="subcolumns">
     <div class="c66l">
       <div class="subcl">
-
           <h1 class="slogan"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
           <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
-          
-          <? /*
-            <div class="video-embedded">
-              <!--<img src="images/misc/video-placeholder.png">-->
-              <object width="306" height="172"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=3545292&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00ADEF&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=3545292&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00ADEF&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="306" height="172"></embed></object>
-            </div>
-            */ ?>
             <div id="slideshow-content" class="float_left" >
                 <div class="slide" id="slide1">
                 <img src="images/startpage/pablod_01.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage1');?>" />
@@ -73,13 +65,11 @@ $words = new MOD_words();
               }
 
             </script>
-
           <div class="video-desc">
-            <p><?//=$words->get('IndexPageVideoDesc','username') //TODO: Fix the 'username' to something dynamic ?>
-            <a class="bigbutton" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
+            <p>
+            <a class="button2" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
             <br /><br />
             </p>
-
             <p class="small photodesc" style="color: #999;">
                 <?=$words->get('StartPageListofPhotographers');?>
             </p>

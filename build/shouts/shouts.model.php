@@ -55,7 +55,7 @@ SELECT
 FROM
     shouts c
     JOIN members u ON c.member_id_foreign = u.id
-    AND u.Status IN ('Active', 'Pending', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
+    AND u.Status IN ('Active')
 WHERE 
     c.table = '".$table."'
     AND c.table_id = '".(int)$table_id."'

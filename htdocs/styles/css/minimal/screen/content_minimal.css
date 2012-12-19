@@ -465,9 +465,9 @@ dl.list {
    * @section content-pagination
    */
 
-  div.pages {padding:1em 0; white-space: nowrap; overflow:hidden;  }
+  div.pages {padding:1em 0; white-space: nowrap; overflow:hidden; width:100%  }
   div.pages ul{float:right; margin:0;padding:0;}
-  div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
+  div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0 0 0.7em; }
   div.pages li.current a {color:#666;font-weight:bold; }
   div.pages li a:hover {color: #333; background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%; text-decoration:none; }
   div.pages li a.off:hover {background: none; color: #666; }
@@ -486,7 +486,7 @@ dl.list {
     color: #ff8800;
     height:18px !important;
     line-height:16px !important;
-    margin:.2em;
+    margin: 0;
     padding:1px 5px;
     text-align:center;
     width:auto;

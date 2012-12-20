@@ -7,6 +7,13 @@
 {
 /* modification for trip pages */
 
+#col1 { width: 0; display: none;}
+#col2 { width: 0; display: none;}
+#col3 {
+    margin-left: 0; padding:0;
+    margin-right:0;
+}
+
 div.infobox {
   border-top: 1px solid #ccc;
   background-color: #f5f5f5;

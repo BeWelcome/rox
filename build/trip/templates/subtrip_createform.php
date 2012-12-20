@@ -45,7 +45,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
 <fieldset id="destination"><legend><?=$words->get('TripDestinationLabelTab')?></legend>
         <div class="subcolumns">
 
-          <div class="c50l" >
+          <div class="c38l" >
             <div class="subcl" >
                 
                 <div>
@@ -112,9 +112,9 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                 
             </div> <!-- subcl -->
           </div> <!-- c50l -->
-          <div class="c50r" >
+          <div class="c62r" >
             <div class="subcr" >
-          <div id="spaf_map" style="width:300px; height:320px; border: 2px solid #333; display:none;"></div>
+          <div id="spaf_map" style="width:99%; height:320px; border: 2px solid #333; display:none;"></div>
             </div> <!-- subcr -->
           </div> <!-- c50r -->
 

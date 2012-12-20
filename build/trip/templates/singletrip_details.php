@@ -4,12 +4,11 @@
             <a href="trip/show/<?php echo $trip->handle; ?>" title="Show trips by <?php echo $trip->handle; ?>"><img src="images/icons/world.gif" style="vertical-align:bottom;" alt="" /></a>
 
 <div class="float_right">
-<?php 
+<?php
 if ($member)
 {
 ?>
           <ul class="float_left">
-			<li class="float_left"><a href="trip/show/<?=$member->Username?>" title="<?=$words->get('TripsShowMy')?>"><img src="images/icons/world.png" style="vertical-align:bottom;" alt="<?=$words->get('TripsShowMy')?>" /></a> <a href="trip/show/<?=$member->Username?>" title="<?=$words->get('TripsShowMy')?>"><?=$words->get('TripsShowMy')?></a></li>
             <li class="float_left"><a href="trip/create" title="<?=$words->get('TripTitle_create')?>"><img src="images/icons/world_add.png" style="vertical-align:bottom;" alt="<?=$words->get('TripTitle_create')?>" /></a> <a href="trip/create" title="<?=$words->get('TripTitle_create')?>"><?=$words->get('TripTitle_create')?></a></li>
     <?php if ($isOwnTrip) { ?>
             <li class="float_left"><a href="trip/edit/<?=$trip->trip_id; ?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" style="vertical-align:bottom;" alt="<?=$words->get('Trip_EditMyTrip')?>" /></a> <a href="trip/edit/<?=$trip->trip_id; ?>" title="<?=$words->get('Trip_EditMyTrip')?>"><?=$words->get('Trip_EditMyTrip')?></a></li>

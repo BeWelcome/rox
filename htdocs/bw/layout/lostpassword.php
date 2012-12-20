@@ -48,7 +48,7 @@ function DisplayLostPasswordForm($CurrentError) {
 	echo "</form>\n";
 	echo "</div>\n";
 
-	require_once "footer.php";
+	require SCRIPT_BASE . "build/rox/templates/footer.php";
 }
 
 function DisplayResult( $Result = "") {
@@ -69,7 +69,7 @@ function DisplayResult( $Result = "") {
 	echo "</h4></td></table>\n";
 	echo "</center>";
 
-	require_once "footer.php";
+	require SCRIPT_BASE . "build/rox/templates/footer.php";
 
 } // end of display result
 

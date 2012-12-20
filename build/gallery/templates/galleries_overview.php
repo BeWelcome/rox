@@ -47,5 +47,5 @@ if ($galleries) {
     $currentPage = $page;
     if (isset($requestStrNew)) $requestStr = $requestStrNew;
     $request = $requestStr.'/=page%d';
-    require TEMPLATE_DIR.'misc/pages.php';
+    require 'pages.php';
 }

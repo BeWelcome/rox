@@ -2,7 +2,7 @@
 
 /*
 
-Copyright (c) 2012 the respective authors
+Copyright (c) 2007-2012 BeVolunteer and contributors
 
 This file is part of BW Rox.
 

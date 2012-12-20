@@ -1,5 +1,8 @@
 <?php
-  /* what is this supposed to do?   It should probably become a widget. */
+  /* what is this supposed to do?   It should probably become a widget. 
+   * This seems to be a pager template and is used in build/places and somewhere else?
+   *
+   * */
 
 if (!is_array($pages) || count($pages) == 0) {
     return false;

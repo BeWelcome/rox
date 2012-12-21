@@ -30,12 +30,9 @@ if (isset($trip_data[$trip->trip_id])) {
   <div class="c75r" style="width: 90%">
     <div class="subcr">
       <!-- Contents for right subtemplate -->
-<?php
-        echo <<<HTML
         <h3 class="borderless">
-        <a href="blog/{$trip->handle}/{$blogid}">{$blog->blog_title}</a> </h3>
-HTML;
-		if ($blog->name)
+        <a href="blog/<?=$trip->handle?>/<?=$blogid?>"><?=$blog->blog_title?></a> </h3>
+<?php	if ($blog->name)
         {
 		    if ($bloggeo = $this->model->getBlogGeo($blog->blog_geonameid))
             {
@@ -48,6 +45,14 @@ HTML;
             }
 			echo "<span <span class='trip_author'>{$blog->name}, {$countryname}</span>";
 		}
+?>
+<div class="float_right">
+<?php
+if ($member && $isOwnTrip) {?>
+<a href="blog/edit/<?=$blogid; ?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" style="vertical-align:bottom;" alt="<?=$words->get('Trip_EditMyOwnSubTrip')?>" /></a> <a href="blog/edit/<?=$blogid; ?>" title="<?=$words->get('Trip_EditMyOwnSubTrip')?>"><?=$words->get('Trip_EditMyOwnSubTrip')?></a>
+<?php   }?>
+</div>
+<?php 
 		if ($blog->blog_text) {
 			if (strlen($blog->blog_text) > 400) {
 				$blogtext = substr($blog->blog_text, 0, 400);

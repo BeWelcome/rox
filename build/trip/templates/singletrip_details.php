@@ -8,7 +8,7 @@
 if ($member)
 {
 ?>
-          <ul class="float_left">
+          <ul>
             <li class="float_left"><a href="trip/create" title="<?=$words->get('TripTitle_create')?>"><img src="images/icons/world_add.png" style="vertical-align:bottom;" alt="<?=$words->get('TripTitle_create')?>" /></a> <a href="trip/create" title="<?=$words->get('TripTitle_create')?>"><?=$words->get('TripTitle_create')?></a></li>
     <?php if ($isOwnTrip) { ?>
             <li class="float_left"><a href="trip/edit/<?=$trip->trip_id; ?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" style="vertical-align:bottom;" alt="<?=$words->get('Trip_EditMyTrip')?>" /></a> <a href="trip/edit/<?=$trip->trip_id; ?>" title="<?=$words->get('Trip_EditMyTrip')?>"><?=$words->get('Trip_EditMyTrip')?></a></li>
@@ -31,6 +31,5 @@ echo '<p class="tripdesc">'.$trip->trip_descr.'</p>';
 if (isset($trip->trip_text) && $trip->trip_text) {
 	echo '<p>'.$trip->trip_text.'</p>';
 } ?>
-    </div>
 
 

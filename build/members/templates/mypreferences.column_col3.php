@@ -152,6 +152,6 @@
             <dd><input type="password" name="passwordconfirm" /></dd>
         </dl>
 
-        <p><input type="submit" id="submit"  value="Submit" /></p>
+        <p><input type="submit" id="submit"  value="<?php echo $words->get('SubmitForm'); ?>" /></p>
         </fieldset>
         </form>

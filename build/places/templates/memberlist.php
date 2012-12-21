@@ -36,7 +36,7 @@ if (!$members) {
         echo '</div>';
         echo '</li>';
         }
-    if (!APP_User::isBWLoggedIn('NeedMore,Pending') AND $currentPage = $maxPage) 
+    if (!APP_User::isBWLoggedIn('NeedMore,Pending') AND $currentPage == $maxPage) 
         {
         $request = PRequest::get()->request;
         $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);

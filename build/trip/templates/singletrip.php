@@ -55,8 +55,10 @@ HTML;
 			} else {
 				$blogtext = $blog->blog_text;
 			}
-			echo '<p>'.$blogtext.'</p>';
-		}
+			echo '<p style="padding: 0 0 20px 0;">'.$blogtext.'</p>';
+		} else  {
+        echo '<p style="padding: 0 0 20px 0;">'.$blogtext.'</p>';
+        }
 ?>
 <!-- End of contents for right subtemplate -->
     </div>

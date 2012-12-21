@@ -7,23 +7,20 @@ Many people have helped building BW Rox, the software running
 BeWelcome.
 
 
-An incomplate list of current developers
+An incomplete list of current developers
 
 - Meinhard Benn
 - Manuel
 - Christian Lerrahn - jsfan
-- Matthias - crumbking
+- Matthias
 - lantti
 - shevek
 - toub
 
-
 An incomplete list of former developers
 
 - Andreas - lemon-head
-- Jean-Yves 
-
-
+- Jean-Yves - jeanyves
 
 BeWelcome is not just the code, it's also the community. By now
 probably over 100 people have given their input and ideas and feedback

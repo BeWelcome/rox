@@ -26,7 +26,7 @@ if ($trip_data)
     $CntSubtrips = count($trip_data[$trip->trip_id]);
 
 if (isset($trip->trip_descr) && $trip->trip_descr) {
-echo '<p>'.$trip->trip_descr.'</p>';
+echo '<p class="tripdesc">'.$trip->trip_descr.'</p>';
 }
 if (isset($trip->trip_text) && $trip->trip_text) {
 	echo '<p>'.$trip->trip_text.'</p>';

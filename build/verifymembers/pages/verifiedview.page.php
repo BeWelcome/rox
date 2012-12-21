@@ -62,6 +62,8 @@ class VerifiedMembersViewPage extends RoxPageView {
                     $VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType;
                 } elseif ($list[$ii]->VerificationType=="VerifiedByNormal" && $VerificationMaxLevel != "VerifiedByVerified") {
                     $VerificationMaxLevel="verifymembers_".$list[$ii]->VerificationType;
+                } elseif ($list[$ii]->VerificationType=="" && $VerificationMaxLevel != "VerifiedByVerified" && $VerificationMaxLevel != "VerifiedByNormal" ) {
+                    $VerificationMaxLevel="verifymembers_";
                 }
             }
             $Username=$this->VerifierUsername ;

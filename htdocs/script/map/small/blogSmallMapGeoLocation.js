@@ -18,7 +18,7 @@ function initOsmMapBlogEdit() {
     if (markerLatitude != null && markerLongitude != null) {
             // zoom map to specified location
             if (markerLatitude == "0" && markerLongitude == "0") {
-                var zoomLevel = 0;
+                var zoomLevel = 1;
             } else {
                 var zoomLevel = 8;
             }

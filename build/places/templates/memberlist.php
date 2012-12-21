@@ -36,7 +36,7 @@ if (!$members) {
         echo '</div>';
         echo '</li>';
         }
-    if (!APP_User::isBWLoggedIn('NeedMore,Pending') AND $currentPage == $maxPage) 
+    if (!APP_User::isBWLoggedIn('NeedMore,Pending') AND $currentPage == $maxPage OR !APP_User::isBWLoggedIn('NeedMore,Pending') AND !$members) 
         {
         $request = PRequest::get()->request;
         $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
@@ -45,7 +45,11 @@ if (!$members) {
         echo '<img width="50" height="50" alt="Profile" src="images/misc/empty_avatar_xs.png" class="framed float_left">';
         echo '</a>';
         echo '<div class="userinfo">';
-        echo $words->get('PlacesLoginToSeeMore', '<a class="username" href="' . $login_url .'">' , '</a><br /><span class="small">' , '<br />' , '</span>');
+        if (!APP_User::isBWLoggedIn('NeedMore,Pending') AND !$members){ //not logged in and all profiles non public
+            echo $words->get('PlacesLoginToSeeOurMembers', '<a class="username" href="' . $login_url .'">' , '</a><br /><span class="small">' , '<br />' , '</span>');
+        } else { //not logged in and some public profiles
+            echo $words->get('PlacesLoginToSeeMore', '<a class="username" href="' . $login_url .'">' , '</a><br /><span class="small">' , '<br />' , '</span>');
+        }     
         echo '</div>';
         echo '</li>';
         }

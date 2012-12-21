@@ -47,6 +47,7 @@ function DisplayLostPasswordForm($CurrentError) {
 	echo "<p><input type=submit id=submit name=submit value=submit></p>\n";
 	echo "</form>\n";
 	echo "</div>\n";
+    echo "</div>\n";
 
 	require SCRIPT_BASE . "build/rox/templates/footer.php";
 }
@@ -66,8 +67,11 @@ function DisplayResult( $Result = "") {
 
 	echo "<table width=50%><tr><td><h4>";
 	echo $Result;
-	echo "</h4></td></table>\n";
+	echo "</h4></td></tr></table>\n";
 	echo "</center>";
+    echo "</div>\n";
+    echo "</div>\n";
+    echo "</div>\n";
 
 	require SCRIPT_BASE . "build/rox/templates/footer.php";
 

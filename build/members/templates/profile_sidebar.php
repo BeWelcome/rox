@@ -10,7 +10,7 @@
     <a href="forums/members/<?=$member->Username?>" ><?=$words->get('ViewForumPosts', 7);?>View Forum Posts</a>
   </li>
 </ul>
-<h3><?=$words->get('MyRelations');?></H3>
+<h3><?=$words->get('MyRelations');?></h3>
 <ul class="linklist" >
     <?php 
         $relations = $member->relations;

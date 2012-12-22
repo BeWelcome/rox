@@ -5,46 +5,60 @@
     </span>
     <?php endif; ?>
     <h3 class="icon accommodation22" ><?=$words->get('ProfileAccommodation');?></h3>
-    <div id="quickinfo" class="float_right" >
-                <!-- showing hosting icons (only one possibility) -->
-                <?php
-                    switch($member->Accomodation)
-                    {
-                        case 'anytime': ?>
-                            <img src="images/icons/yesicanhost.png" alt="<?php echo $words->getSilent('yesicanhost');?>" title="<?php echo $words->getSilent('CanOfferAccomodation');?>" />
-                        <?php
-                        break;
-                        case 'dependonrequest': ?>
-                            <img src="images/icons/maybe.png" alt="<?php echo $words->getSilent('dependonrequest');?>" title="<?php echo $words->getSilent('CanOfferdependonrequest');?>" />
-                        <?php
-                        break;
-                        case 'neverask': ?>
-                            <img src="images/icons/nosorry.png" alt="<?php echo $words->getSilent('neverask');?>" title="<?php echo $words->getSilent('CannotOfferneverask');?>" />
-                        <?php
-                        break;
-                    }
-                    ?>
-
-                <!-- showing special offer icons (several posibilities) -->
-                <?php
-                    if (strstr($member->TypicOffer, "CanHostWeelChair"))
-                    {
-                        ?><img src="images/icons/wheelchair.png" alt="<?php echo $words->getSilent('wheelchair');?>" title="<?php echo $words->getSilent('CanHostWeelChairYes');?>" /><?php
-                    }
-                ?>
-                
-                <!-- showing restriction icons (several posibilities) -->
-                <?php
-                    if (strstr($member->Restrictions, "NoSmoker"))
-                    {
-                        ?><img src="images/icons/no-smoking.png" alt="<?php echo $words->getSilent('nosmoking');?>" title="<?php echo $words->getSilent('nosmoking');?>" /><?php
-                    }
-                    if (strstr($member->Restrictions, "NoAlchool"))
-                    {
-                        ?><img src="images/icons/no-alcohol.png" alt="<?php echo $words->getSilent('noalcohol');?>" title="<?php echo $words->getSilent('noalcohol');?>" /><?php
-                    }
-                ?>
-            </div> <!-- quickinfo -->
+    <div id="quickinfo" class="float_right" style="text-align: right;">
+<?php
+$icons = array();
+switch($member->Accomodation)
+{
+    case 'anytime':
+        $icons[] = '<img src="images/icons/yesicanhost.png" alt="' . $words->getSilent('yesicanhost') .'"' .
+                   ' title="' . $words->getSilent('CanOfferAccomodation') . '" />';
+        break;
+    case 'dependonrequest': 
+        $icons[] = '<img src="images/icons/maybe.png" alt="' . $words->getSilent('dependonrequest') .'"' .
+                ' title="' . $words->getSilent('CanOfferdependonrequest') . '" />';
+        break;
+    case 'neverask':
+        $icons[] = '<img src="images/icons/nosorry.png" alt="' . $words->getSilent('neverask') .'"' .
+                ' title="' . $words->getSilent('CannotOfferneverask') . '" />';
+        break;
+}
+// showing offer icons (several posibilities)
+if (strstr($member->TypicOffer, "CanHostWeelChair"))
+{
+    $icons[] = '<img src="images/icons/wheelchair.png" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWeelChairYes') . '" />';
+}
+if (strstr($member->TypicOffer, "guidedtour"))
+{
+    $icons[] = '<img src="images/icons/guidedtour.png" alt="' . $words->getSilent('guidedtour') . '" title="' . $words->getSilent('guidedtour') . '" />';
+}
+if (strstr($member->TypicOffer, "dinner"))
+{
+    $icons[] = '<img src="images/icons/dinner.png" alt="' . $words->getSilent('dinner') . '" title="' . $words->getSilent('dinner') . '" />';
+}
+// showing restriction icons (several posibilities)
+if (strstr($member->Restrictions, "NoSmoker"))
+{
+    $icons[] = '<img src="images/icons/no-smoking.png" alt="' . $words->getSilent('nosmoking') . '" title="' . $words->getSilent('nosmoking') . '" />';
+}
+if (strstr($member->Restrictions, "NoAlchool"))
+{
+    $icons[] = '<img src="images/icons/no-alcohol.png" alt="' . $words->getSilent('noalcohol') . '" title="' . $words->getSilent('noalcohol') . '" />';
+}
+if (strstr($member->Restrictions, "NoDrugs"))
+{
+    $icons[] = '<img src="images/icons/no-drugs.png" alt="' . $words->getSilent('nodrugs') . '" title="' . $words->getSilent('nodrugs') . '" />';
+}
+$modul = count($icons) < 5 ? $modul = 5 : $modul = 2; 
+for($ii=0; $ii < count($icons); $ii++)
+{
+    echo $icons[$ii];
+    if (($ii + 1) % $modul == 0) {
+        echo '<br />';
+    }
+}
+?>
+</div> <!-- quickinfo -->
     <dl id="accommodation" >
         <?php if ($member->MaxGuest != 0 && $member->MaxGuest != "") { ?>
             <dt class="label guests" ><?=$words->get('ProfileNumberOfGuests');?>:</dt>

@@ -109,6 +109,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
 
   $MenuAction  = "            <li><a href=\"adminmassmails.php\">Admin Massmails</a></li>\n";
   $MenuAction .= "            <li><a href=\"adminmassmails.php?action=createbroadcast\">Create new broadcast</a></li>\n";
+
   if (HasRight("MassMail","Send")) { // if has right to trig
     $MenuAction .= "            <li><a href=\"adminmassmails.php?action=ShowPendingTrigs\">Trigger mass mails</a></li>\n";
   }
@@ -130,8 +131,19 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
      echo "<p class=\"note\"> $count enqueued messages !<br /><i>$countnonews will not receive the mail because of their preference</i></p>" ;
   }
 
-  echo "<h3>",ww("BroadCast_Title_".$Name),"</h3>" ;
-  echo "<p>",ww("BroadCast_Body_".$Name),"</p>" ;
+  $BroadCast_Title_ = getBroadCastElement("BroadCast_Title_" . $Name, 0);
+  $BroadCast_Body_ = getBroadCastElement("BroadCast_Body_" . $Name, 0);
+
+  $rr=LoadRow("select * from words where code='BroadCast_Title_".$Name."' and IdLanguage=0") ;
+  if (isset($rr->Description)) {
+      $Description=$rr->Description ;
+  }
+  else {
+      $Description="" ;
+  }
+
+  echo "<h3>", nl2br($BroadCast_Title_) ,"</h3>" ;
+  echo "<p>", nl2br($BroadCast_Body_) ,"</p>" ;
 
   echo "<br /><form method=\"post\" action=\"adminmassmails.php\" name=\"adminmassmails\" class=\"yform full\">\n" ;
   echo "<input type=\"hidden\" Name=\"IdBroadCast\" value=".GetParam("IdBroadCast",0).">\n" ;
@@ -160,7 +172,7 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
   for ($ii=0;$ii<count($TGroupList);$ii++) {
     echo "<option value=",$TGroupList[$ii]->id ;
     if ($TGroupList[$ii]->id==$IdGroup) echo " selected" ;
-    echo ">",$TGroupList[$ii]->Name,":",$TGroupList[$ii]->Name ; 
+    echo ">",$TGroupList[$ii]->Name,":",$TGroupList[$ii]->Name ;
     echo "</option>" ;
 
   }
@@ -232,8 +244,8 @@ function DisplayAdminMassprepareenque($rBroadCast,$TGroupList,$TCountries,$TData
           echo "</tr>\n" ;
          echo "<tr>" ;
          echo "<td colspan=5 class=\"blank\">" ;
-         echo wwinlang("BroadCast_Title_".$Name,$iLang),"<br />" ;
-         echo wwinlang("BroadCast_Body_".$Name,$iLang,$m->Username),"<br />" ;
+         echo getBroadCastElement("BroadCast_Title_".$Name,$iLang, $m->Username),"<br />" ;
+         echo getBroadCastElement("BroadCast_Body_".$Name,$iLang,$m->Username),"<br />" ;
          echo "</td>" ;
          echo "</tr>" ;
      }
@@ -300,7 +312,7 @@ function DisplayAdminMassMails($TData) {
   if (empty($TData->IdBroadcast)) echo " <input type=submit name=action value=update>";
   else echo " <input type=submit name=action value=update>";
   echo "</td><td align=center>" ;
-   if (HasRight('MassMail','Send')) {
+  if (HasRight('MassMail','Send')) {
      echo "Send <input type=checkbox name=send> ";
      echo " <input type=submit name=action value=send>";
   }
@@ -350,15 +362,15 @@ function DisplayFormCreateBroadcast($IdBroadCast=0, $Name = "",$BroadCast_Title_
   echo "</div>";
 
   echo "<div class=\"type-text\">";
-  echo "<label for=\"BroadCast_Title_\">Subject for the newsletter</label>";
+  echo "<label for=\"BroadCast_Title_\">Subject for the newsletter (%username% will be replaced by the username at sending)</label>";
   echo "<input type=\"text\" id=\"BroadCast_Title_\" name=\"BroadCast_Title_\" value=\"$BroadCast_Title_\" />" ;
   echo "</div>";
-  
+
   echo "<div class=\"type-text\">";
-  echo "<label for=\"BroadCast_Body_\">Body of the newsletter (first %s, if any, will be replaced by the username at sending)</label>";
+  echo "<label for=\"BroadCast_Body_\">Body of the newsletter (%username% will be replaced by the username at sending)</label>";
   echo "<textarea id=\"BroadCast_Body_\" name=\"BroadCast_Body_\" rows=\"30\">",$BroadCast_Body_,"</textarea>" ;
   echo "</div>";
-  
+
   echo "<div class=\"type-text\">";
   echo "<label for=\"Description\">Description (as translators will see it in AdminWord) </label>";
   echo "<textarea id=\"Description\" name=\"Description\" rows=\"8\">",$Description,"</textarea>" ;

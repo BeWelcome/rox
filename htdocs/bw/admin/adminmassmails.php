@@ -215,14 +215,9 @@ switch (GetParam("action")) {
                     $Name="" ;
              }
                      
-             $rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='BroadCast_Title_$Name' and IdLanguage='0'");
-             if (isset($rr->Sentence)) {
-                $BroadCast_Title_ = $rr->Sentence;
-             }
-             $rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='BroadCast_Body_$Name' and IdLanguage='0'");
-             if (isset($rr->Sentence)) {
-                $BroadCast_Body_ = $rr->Sentence;
-             }
+             $BroadCast_Title_ = getBroadCastElement("BroadCast_Title_" . $Name, 0);
+             $BroadCast_Body_ = getBroadCastElement("BroadCast_Body_" . $Name, 0);
+
              $rr=LoadRow("select * from words where code='BroadCast_Title_".$Name."' and IdLanguage=0") ;
              if (isset($rr->Description)) {
                     $Description=$rr->Description ;

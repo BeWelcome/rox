@@ -24,7 +24,10 @@ Boston, MA  02111-1307, USA.
 
 $verification_status = $m->verification_status;
 if ($verification_status) $verification_text = $words->getSilent('verifymembers_'.$verification_status);
-
+$houseNumber = empty($m->member_data->HouseNumber) ? '&nbsp;' : $m->member_data->HouseNumber; 
+$streetName = empty($m->member_data->StreetName) ? '&nbsp;' : $m->member_data->StreetName;
+$zip = empty($m->member_data->Zip) ? '&nbsp;' : $m->member_data->Zip;
+$cityName = empty($m->member_data->CityName) ? '&nbsp;' : $m->member_data->CityName;
 ?>
 
 <div class="box-bg">
@@ -46,11 +49,11 @@ if ($verification_status) $verification_text = $words->getSilent('verifymembers_
 
     <div class="row">
         <dl class="list">
-            <dt><?=$words->getFormatted("FullName")?></dt><dd><?=$m->member_data->FirstName?> <?=$m->member_data->SecondName?> <?=$m->member_data->LastName?></dd>
-            <dt><?=$words->getFormatted("HouseNumber")?></dt><dd><?=$m->member_data->HouseNumber?></dd>
-            <dt><?=$words->getFormatted("StreetName")?></dt><dd><?=$m->member_data->StreetName?></dd>
-            <dt><?=$words->getFormatted("Zip")?></dt><dd><?=$m->member_data->Zip?></dd>
-            <dt><?=$words->getFormatted("CityName")?></dt><dd><?=$m->member_data->CityName?></dd>
+            <dt><?=$words->getFormatted("FullName")?></dt><dd><?php  $m->member_data->FirstName?> <?=$m->member_data->SecondName?> <?=$m->member_data->LastName?></dd>
+            <dt><?=$words->getFormatted("HouseNumber")?></dt><dd><?=$houseNumber?></dd>
+            <dt><?=$words->getFormatted("StreetName")?></dt><dd><?=$streetName?></dd>
+            <dt><?=$words->getFormatted("Zip")?></dt><dd><?=$zip?></dd>
+            <dt><?=$words->getFormatted("CityName")?></dt><dd><?=$cityName?></dd>
         </dl>
     </div>
 

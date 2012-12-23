@@ -41,21 +41,28 @@ class Shouts extends PAppModel
          get comments
         */
     public function getShouts($table,$table_id = 0) {
-    	$query = '
+    	$query = 
+        "
 SELECT
-    c.`id` AS `shout_id`,
-    c.`member_id_foreign` AS `IdMember`,
-    u.`username` AS `username`,
-    UNIX_TIMESTAMP(c.`created`) AS `unix_created`,
-    c.`title`,
-    c.`created`,
-    c.`text`
-FROM `shouts` c
-LEFT JOIN `members` u ON c.`member_id_foreign`=u.`id`
-WHERE c.`table` = \''.$table.'\'
-AND c.`table_id` = '.(int)$table_id.'
-ORDER BY c.`created` DESC
-        ';
+    c.id                          AS shout_id,
+    c.member_id_foreign           AS IdMember,
+    u.username                    AS username,
+    u.Status                      AS MemberStatus,
+    UNIX_TIMESTAMP(c.created)     AS unix_created,
+    c.title,
+    c.created,
+    c.text
+FROM
+    shouts c
+    JOIN members u ON c.member_id_foreign = u.id
+    AND u.Status IN ('Active')
+WHERE 
+    c.table = '".$table."'
+    AND c.table_id = '".(int)$table_id."'
+ORDER BY 
+    c.created DESC
+        "
+        ;
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;

@@ -157,7 +157,6 @@ VALUES
                 $this->dao->exec('DELETE FROM `gallery_items` WHERE `id` = '.$image->id);
                 $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$image->id);
                 $this->deleteComments($image->id);
-                return 'gallery/manage';
             } else return false;
         }
     }

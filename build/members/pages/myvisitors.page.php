@@ -47,7 +47,7 @@ class MyVisitorsPage extends ProfilePage
             <div class="userinfo">
                 <a class="username" href="members/{$m->Username}">{$m->Username}</a><br />
                 <p class="small">{$words->getFormatted("visited")}: {$layoutbits->ago(strtotime($m->visited))}</p>
-                <p class="small">{$words->getFormatted("yearsold",$m->age)} - {$words->getFormatted("from")} {$m->city}</p>
+                <p class="small">{$words->getFormatted("yearsold",$m->age)}, {$m->city}</p>
             </div>
         </div>
     </div>

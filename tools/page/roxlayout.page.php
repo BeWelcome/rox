@@ -145,6 +145,11 @@ class PageWithRoxLayout extends PageWithHTML
             }
         } else {
             $username = isset($_SESSION['Username']) ? $_SESSION['Username'] : '';
+            if (isset($_SESSION["IdMember"])) {
+                $IdMember = intval($_SESSION["IdMember"]);
+                $roxmodel = new Rox();
+                $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
+            }
         }
 
         if (class_exists('MOD_online')) {

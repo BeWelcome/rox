@@ -23,8 +23,7 @@
      */
     public function sVerifierLevel($member_id=-1)    {
         $member_id = (int)$member_id;
-
-        $sRet= "VerifiedByNormal" ;
+        $sRet= "Normal" ;
         if ($member_id > 0) {
             // everything is cool
         } else if (isset($_SESSION["IdMember"])) {
@@ -35,30 +34,34 @@
             return false;
         }
 
-        if (!$rr = $this->singleLookup(
+        $rr = $this->SingleLookup(
             "
 SELECT  max(Type) AS Type
 FROM    verifiedmembers
 WHERE   IdVerified = $member_id
- AND    type != ''
             "
-        )) {
-        } else if ("Buggy" == $rr->Type) {
+                    );
+        if ($rr) {
+        	if ("Buggy" == $rr->Type) {
             // problem
-            throw new PException('Buggy Value in verifiedmembers for IdMember=".$IdMember." !');
+            	throw new PException('Buggy Value in verifiedmembers for IdMember=".$IdMember." !');
+        	}
+         	else 
+         	{
+            	if (!empty($rr->Type)) {
+            		$sRet = $rr->Type;
+            	}
+         	}
         }
-         else {
-            $sRet = $rr->Type;
-         }
+        
 
-
-        // if the member is a verifier and has ApprovedVerifier scope, this information will supersed all others
+         // if the member is a verifier and has ApprovedVerifier scope, this information will supersed all others
         // comment by lemon-head: Better do this in the controller?
         if (MOD_right::get()->hasRight("Verifier","ApprovedVerifier")) {
             // TODO: HasRight does only check the currently logged-in user, not the given argument!
             $sRet= "VerifiedByApproved" ;
         }
-         return $sRet;
+        return $sRet;
     } // end of sVerifierLevel
 
 

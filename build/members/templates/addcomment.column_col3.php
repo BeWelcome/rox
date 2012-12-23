@@ -164,7 +164,7 @@
     <tr><td colspan="2">
         <input type="hidden" value="<?php echo $member->id?>" name="cid">
         <input type="hidden" name="action" value="add">
-        <input type="submit" id="submit" name="valide" value="submit"></td>
+        <input type="submit" id="submit" name="valide" value="<?php echo $words->getFormatted('SubmitForm'); ?>"></td>
     </tr>
     </table>
     </fieldset>

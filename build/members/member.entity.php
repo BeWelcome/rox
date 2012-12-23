@@ -899,7 +899,7 @@ WHERE IdMember = ".$this->id
     
     public function get_verification_status()
     {
-        // Loads the vérification level of the member (if any) 
+        // Loads the verification level of the member (if any) 
         $sql = "
 SELECT *
 FROM verifiedmembers
@@ -910,7 +910,11 @@ ORDER BY
         ";
         $rr = $this->singleLookup($sql);
         if ($rr) {
-            return $rr->Type;
+            if (empty($rr->Type)) {
+                return "Normal";
+            } else {
+                return $rr->Type;
+            }
         }
     }
 
@@ -1756,7 +1760,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     /**
      * Validates "stay logged in" tokens and refreshes them
      *
-     * @param boolean	$newsession: flag for a new session (no validation)
+     * @param boolean   $newsession: flag for a new session (no validation)
      *
      * @return boolean true if cookie refreshed, false if cookie removed
      */
@@ -1773,14 +1777,14 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
                 // existing session -> validate first
                 $s = $this->dao->query('
-										SELECT
-											AuthToken, SeriesToken, modified
-										FROM
-											members_sessions
-										WHERE
-											IdMember = ' . (int)$this->id . '
-											AND
-											SeriesToken = \'' . $seriesTokenEsc . '\''
+                                        SELECT
+                                            AuthToken, SeriesToken, modified
+                                        FROM
+                                            members_sessions
+                                        WHERE
+                                            IdMember = ' . (int)$this->id . '
+                                            AND
+                                            SeriesToken = \'' . $seriesTokenEsc . '\''
                 );
                 $tokens = $s->fetch(PDB::FETCH_OBJ);
 
@@ -1823,20 +1827,20 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         if ($modified) {
             // update token from existing series
             $s = $this->dao->query('
-									UPDATE
-										members_sessions
-									SET
-										AuthToken = \'' . $authToken . '\'
-									WHERE
-										IdMember = ' . (int) $this->id . ' AND SeriesToken = \'' . $seriesToken . '\''
+                                    UPDATE
+                                        members_sessions
+                                    SET
+                                        AuthToken = \'' . $authToken . '\'
+                                    WHERE
+                                        IdMember = ' . (int) $this->id . ' AND SeriesToken = \'' . $seriesToken . '\''
             );
         } else { // create new token series
             $s = $this->dao->query('
-									INSERT INTO
-										members_sessions
-										(IdMember, AuthToken, SeriesToken)
-									VALUES
-										(' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\')'
+                                    INSERT INTO
+                                        members_sessions
+                                        (IdMember, AuthToken, SeriesToken)
+                                    VALUES
+                                        (' . (int) $this->id . ', \'' . $authToken . '\', \'' . $seriesToken . '\')'
             );
         }
 
@@ -1865,14 +1869,14 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         // remove tokens from database
         // (also removes tokens more than cookie expiry)
         $s = $this->dao->query('
-								DELETE FROM
-									members_sessions
-								WHERE
-									(IdMember = ' . (int) $this->id . '
-									AND
-									SeriesToken = \'' . $seriesTokenEsc . '\')
-									OR
-									modified < NOW() - INTERVAL ' . PVars::getObj('env')->rememberme_expiry . ' DAY'
+                                DELETE FROM
+                                    members_sessions
+                                WHERE
+                                    (IdMember = ' . (int) $this->id . '
+                                    AND
+                                    SeriesToken = \'' . $seriesTokenEsc . '\')
+                                    OR
+                                    modified < NOW() - INTERVAL ' . PVars::getObj('env')->rememberme_expiry . ' DAY'
         );
 
         if ($hijacked === true) {

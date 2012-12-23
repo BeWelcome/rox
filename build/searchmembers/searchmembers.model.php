@@ -463,8 +463,20 @@ WHERE
             $rr->Latitude       = $rData->Latitude;
             $rr->Longitude      = $rData->Longitude;
 
-            $sData='SELECT COUNT(*) AS NbComment FROM comments WHERE IdToMember=' . $rr->IdMember;
-
+            $sData ="
+            SELECT
+                COUNT(*) as NbComment
+            FROM
+                comments,
+                members
+            WHERE
+                comments.IdToMember =" . $rr->IdMember . "
+                AND
+                members.id = comments.IdFromMember
+                AND
+                members.status IN ('Active', 'ChoiceInactive')
+            "
+            ;
             $qryData = $this->dao->query($sData);
             $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
             $rr->NbComment=$rData->NbComment ;

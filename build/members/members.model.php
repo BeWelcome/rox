@@ -260,8 +260,8 @@ WHERE
         if(isset($this->profile_language)) {
             return $this->profile_language;
         } else {
-        	// if no language is set use English
-     		$this->set_profile_language("en") ;
+            // if no language is set use English
+            $this->set_profile_language("en") ;
             return $this->profile_language;
         }
     }

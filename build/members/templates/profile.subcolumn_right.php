@@ -45,10 +45,6 @@ if (strstr($member->Restrictions, "NoAlchool"))
 {
     $icons[] = '<img src="images/icons/no-alcohol.png" alt="' . $words->getSilent('noalcohol') . '" title="' . $words->getSilent('noalcohol') . '" />';
 }
-if (strstr($member->Restrictions, "NoDrugs"))
-{
-    $icons[] = '<img src="images/icons/no-drugs.png" alt="' . $words->getSilent('nodrugs') . '" title="' . $words->getSilent('nodrugs') . '" />';
-}
 $modul = count($icons) < 5 ? $modul = 5 : $modul = 2; 
 for($ii=0; $ii < count($icons); $ii++)
 {

@@ -30,24 +30,24 @@ if (strstr($member->TypicOffer, "CanHostWeelChair"))
 }
 if (strstr($member->TypicOffer, "guidedtour"))
 {
-    $icons[] = '<img src="images/icons/guidedtour.png" alt="' . $words->getSilent('guidedtour') . '" title="' . $words->getSilent('guidedtour') . '" />';
+    $icons[] = '<img src="images/icons/guidedtour.png" alt="' . $words->getSilent('CanOfferCityTour') . '" title="' . $words->getSilent('CanOfferCityTour') . '" />';
 }
 if (strstr($member->TypicOffer, "dinner"))
 {
-    $icons[] = '<img src="images/icons/dinner.png" alt="' . $words->getSilent('dinner') . '" title="' . $words->getSilent('dinner') . '" />';
+    $icons[] = '<img src="images/icons/dinner.png" alt="' . $words->getSilent('TypicOffer_dinner') . '" title="' . $words->getSilent('TypicOffer_dinner') . '" />';
 }
 // showing restriction icons (several posibilities)
 if (strstr($member->Restrictions, "NoSmoker"))
 {
-    $icons[] = '<img src="images/icons/no-smoking.png" alt="' . $words->getSilent('nosmoking') . '" title="' . $words->getSilent('nosmoking') . '" />';
+    $icons[] = '<img src="images/icons/no-smoking.png" alt="' . $words->getSilent('Restriction_NoSmoker') . '" title="' . $words->getSilent('Restriction_NoSmoker') . '" />';
 }
 if (strstr($member->Restrictions, "NoAlchool"))
 {
-    $icons[] = '<img src="images/icons/no-alcohol.png" alt="' . $words->getSilent('noalcohol') . '" title="' . $words->getSilent('noalcohol') . '" />';
+    $icons[] = '<img src="images/icons/no-alcohol.png" alt="' . $words->getSilent('Restriction_NoAlchool') . '" title="' . $words->getSilent('Restriction_NoAlchool') . '" />';
 }
 if (strstr($member->Restrictions, "NoDrugs"))
 {
-    $icons[] = '<img src="images/icons/no-drugs.png" alt="' . $words->getSilent('nodrugs') . '" title="' . $words->getSilent('nodrugs') . '" />';
+    $icons[] = '<img src="images/icons/no-drugs.png" alt="' . $words->getSilent('Restriction_NoDrugs') . '" title="' . $words->getSilent('Restriction_NoDrugs') . '" />';
 }
 $modul = count($icons) < 5 ? $modul = 5 : $modul = 2; 
 for($ii=0; $ii < count($icons); $ii++)

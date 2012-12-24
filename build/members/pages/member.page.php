@@ -86,7 +86,7 @@ class MemberPage extends PageWithActiveSkin
 
             $tt[] = array('profile', "members/$username", $ww->MemberPage);
             $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')');
-            $tt[] = array('gallery', "gallery/show/user/$username", $ww->Gallery . ' (' . $galleryItemsCount . ')');
+            $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' (' . $galleryItemsCount . ')');
             $tt[] = array('forum', "forums/member/$username", $ViewForumPosts);
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
@@ -109,7 +109,7 @@ class MemberPage extends PageWithActiveSkin
 
                 array('profile', "members/$username", $ww->MemberPage),
                 array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')'),
-                array('gallery', "gallery/show/user/$username", $ww->Gallery . ' (' . $galleryItemsCount . ')'),
+                array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' (' . $galleryItemsCount . ')'),
                 array('forum', "forums/member/$username", $ViewForumPosts),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('trips', "trip/show/$username", $ww->Trips),

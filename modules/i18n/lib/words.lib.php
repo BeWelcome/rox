@@ -762,23 +762,18 @@ class MOD_words
     * 
     */ 
     public function deleteMTrad($IdTrad, $IdOwner, $IdLanguage) {
-        $this->MakeRevision($IdTrad, "memberstrads"); // create revision befor the delete
-
         $IdMember = $_SESSION['IdMember'];
-        $BW_Right = new MOD_right();
-        if ($IdOwner != $IdMember && !$BW_Right->hasRight('Admin'))  {
-            return false;
-        }
+
 
         $str = <<<SQL
 SELECT
-    id,
-    IdOwner,
-    IdLanguage
+    *
 FROM 
     memberstrads
 WHERE
-    IdTrad = '{$IdTrad}'
+    IdTrad = '{$IdTrad}' AND
+    IdOwner = '{$IdOwner}' AND
+    IdLanguage = '{$IdLanguage}'
 SQL;
 
         $s = $this->_dao->query($str);
@@ -786,51 +781,28 @@ SQL;
             return false;
         }
 
-        $TradToDelete = false;
-        $TradCount = $s->numRows();
-        for ($i = 0; $i < $TradCount; $i++) {
-            $T = $s->fetch(PDB::FETCH_OBJ);
-            if ($T->IdOwner == $IdOwner && $T->IdLanguage == $IdLanguage) {
-                $TradToDelete = $T;
-                break;
-            }
+        if ($s->numRows() == 0) {
+            return false;
         }
 
-        if (!$TradToDelete) {
-             return false;
+        $Trad = $s->fetch(PDB::FETCH_OBJ);
+        $BW_Right = new MOD_right();
+        if ($IdOwner != $IdMember && !$BW_Right->hasRight('Admin'))  {
+            return false;
         }
 
-
-        //We do not want to delete the last translation for an IdTrad, but leave 
-        //an empty translation instead to get around various problems with 
-        //IdTrad management. Unfortunately the $TradCount can become invalid
-        //by the time we get here, but at the moment I have no better ideas.
-        //The concurrency issues can't easily be managed in the application code
-        //and I have ne experience with sql magic. --lantti 
-        if ($TradCount == 1) {
-            $query = <<<SQL
-UPDATE 
+        $this->MakeRevision($Trad->id, "memberstrads"); // create revision before the delete
+        
+        // Mark the tradId as deleted by turning it into -IdTrad
+        $query = "
+UPDATE
     memberstrads
 SET
-    IdLanguage = 0,
-    IdTranslator = '{$IdOwner}',
-    created = now(),
-    Type = 'member',
-    Sentence = ''
+    IdTrad = '" . (-$IdTrad) . "'
 WHERE
-    id = '{$TradToDelete->id}'
-SQL;
-        }
-        else {
-            $query = <<<SQL
-DELETE
-FROM 
-    memberstrads
-WHERE
-    id = '{$TradToDelete->id}'
-
-SQL;
-        }
+    IdTrad = '{$IdTrad}' AND
+    IdOwner = '{$IdMember}' AND
+    IdLanguage = '{$IdLanguage}'";
         $this->_dao->query($query);
         return false;
     } // end of deleteMTrad
@@ -1087,6 +1059,10 @@ SQL;
      * 
      */ 
     function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
+        if ($ss=="") { // No need to insert an empty record in memberstrads
+            return(0) ;
+        }
+
         if ($_IdMember == 0) { // by default it is current member
             $IdMember = $_SESSION['IdMember'];
         } else {
@@ -1097,23 +1073,6 @@ SQL;
             $IdLanguage = $this->_langWrite;
         else
             $IdLanguage = $_IdLanguage;
-
-        if ($IdTrad <=0) {
-			if ($ss=="") { // No need to insert an empty record in memberstrads
-				return(0) ;
-			}
-            // Compute a new IdTrad
-            $s = $this->_dao->query("Select max(IdTrad) as maxi from memberstrads");
-            if (!$s) {
-                throw new PException('Failed in InsertInMTrad searching Next max IdTrad');
-            }
-            $rr=$s->fetch(PDB::FETCH_OBJ) ;
-            if (isset ($rr->maxi)) {
-                $IdTrad = $rr->maxi + 1;
-            } else {
-                $IdTrad = 1;
-            }
-        }
 
         $IdOwner = $IdMember;
         $IdTranslator = $_SESSION['IdMember']; // the recorded translator will always be the current logged member
@@ -1136,13 +1095,40 @@ SQL;
         else {
             $Sentence = $this->_dao->escape($ss);
         }
+
+        $str = "LOCK TABLES memberstrads WRITE";
+        $s = $this->_dao->query($str);
+        // \todo: Check result?
+        if ($IdTrad <=0) {
+            // Compute a new IdTrad
+            $s = $this->_dao->query("Select max(IdTrad) as maxi, min(IdTrad) as mini from memberstrads");
+            if (!$s) {
+                // Unlock table before throwing exception!
+                $this->_dao>query("UNLOCK TABLES");
+                throw new PException('Failed in InsertInMTrad searching Next max IdTrad');
+            }
+            $rr=$s->fetch(PDB::FETCH_OBJ) ;
+            if (isset ($rr->maxi)) {
+                // get
+                error_log(__FUNCTION__ . ": [" . $rr->mini . ", " . $rr->maxi  . "]");
+                
+                $IdTrad = max(abs($rr->mini), $rr->maxi) + 1;
+            } else {
+                $IdTrad = 1;
+            }
+        }
+        error_log(__FUNCTION__ . ": [" . $IdTrad . "]");
         $str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
         $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
         $s = $this->_dao->query($str);
         if (!$s) {
+            // Unlock table before throwing exception!
+            $this->_dao>query("UNLOCK TABLES");
             throw new PException('Failed in InsertInMTrad inserting in membertrads');
         }
-
+        // unlock membertrads table, the other table can be updated without lock.
+        $this->_dao->query("UNLOCK TABLES");
+        
         // update the IdTrad in the original table (if the TableColumn was given properly and the IdRecord too)
         if (!empty($TableColumn) and !empty($Idrecord)) {
              $table=explode(".",$TableColumn) ;

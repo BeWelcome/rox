@@ -90,6 +90,9 @@ This File display a topic and the messages which are inside it
       $url = $url . '/';
     }
 
+    
+    $replyuri = preg_replace('page.+/', '', $uri);
+    
     $tagBase = $url;
 
     if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {
@@ -157,7 +160,7 @@ This File display a topic and the messages which are inside it
       }
       if ((!$topic->topicinfo->IsClosed)and($topic->topicinfo->CanReply)) {
         ?>
-        <span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
+        <span class="button"><a href="<?php echo $replyuri; ?>reply"><?php echo $words->getBuffered('ForumReply'); ?></a></span><?php echo $words->flushBuffer() ?>
 
       <?php
       }
@@ -195,7 +198,7 @@ This File display a topic and the messages which are inside it
 
     if (!$topic->topicinfo->IsClosed) {
   ?>
-  <div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $uri; ?>reply"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?></div>
+  <div id="forumsthreadreplybottom"><span class="button"><a href="<?php echo $replyuri; ?>reply"><?php echo $words->getBuffered('ForumReply');; ?></a></span><?php echo $words->flushBuffer() ?></div>
   <?php
     }
 

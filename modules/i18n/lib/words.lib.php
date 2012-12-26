@@ -763,38 +763,74 @@ class MOD_words
     */ 
     public function deleteMTrad($IdTrad, $IdOwner, $IdLanguage) {
         $this->MakeRevision($IdTrad, "memberstrads"); // create revision befor the delete
+
         $IdMember = $_SESSION['IdMember'];
+        $BW_Right = new MOD_right();
+        if ($IdOwner != $IdMember && !$BW_Right->hasRight('Admin'))  {
+            return false;
+        }
 
         $str = <<<SQL
 SELECT
-    *
+    id,
+    IdOwner,
+    IdLanguage
 FROM 
     memberstrads
 WHERE
-    IdTrad = '{$IdTrad}' AND
-    IdOwner = '{$IdOwner}' AND
-    IdLanguage = '{$IdLanguage}'
+    IdTrad = '{$IdTrad}'
 SQL;
 
         $s = $this->_dao->query($str);
         if (!$s) {
             return false;
         }
-        $Trad = $s->fetch(PDB::FETCH_OBJ);
-        $BW_Right = new MOD_right();
-        if ($IdOwner != $IdMember && !$BW_Right->hasRight('Admin'))  {
-            return false;
+
+        $TradToDelete = false;
+        $TradCount = $s->numRows();
+        for ($i = 0; $i < $TradCount; $i++) {
+            $T = $s->fetch(PDB::FETCH_OBJ);
+            if ($T->IdOwner == $IdOwner && $T->IdLanguage == $IdLanguage) {
+                $TradToDelete = $T;
+                break;
+            }
         }
 
-        $query = <<<SQL
+        if (!$TradToDelete) {
+             return false;
+        }
+
+
+        //We do not want to delete the last translation for an IdTrad, but leave 
+        //an empty translation instead to get around various problems with 
+        //IdTrad management. Unfortunately the $TradCount can become invalid
+        //by the time we get here, but at the moment I have no better ideas.
+        //The concurrency issues can't easily be managed in the application code
+        //and I have ne experience with sql magic. --lantti 
+        if ($TradCount == 1) {
+            $query = <<<SQL
+UPDATE 
+    memberstrads
+SET
+    IdLanguage = 0,
+    IdTranslator = '{$IdOwner}',
+    created = now(),
+    Type = 'member',
+    Sentence = ''
+WHERE
+    id = '{$TradToDelete->id}'
+SQL;
+        }
+        else {
+            $query = <<<SQL
 DELETE
 FROM 
     memberstrads
 WHERE
-    IdTrad = '{$IdTrad}' AND
-    IdOwner = '{$IdMember}' AND
-    IdLanguage = '{$IdLanguage}'
+    id = '{$TradToDelete->id}'
+
 SQL;
+        }
         $this->_dao->query($query);
         return false;
     } // end of deleteMTrad

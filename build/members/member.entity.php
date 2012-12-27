@@ -375,7 +375,9 @@ FROM
     }
 
     /**
-     * Get the status of the member's profile (public/private)
+     * Get member's public profile
+     *
+     * @return mixed Public profile entity or false if not public
      */
     public function get_publicProfile()
     {
@@ -386,6 +388,20 @@ FROM memberspublicprofiles
 WHERE IdMember = ".$this->id
          );
         return $s;
+    }
+
+    /**
+     * Find out if member's profile is public
+     *
+     * @return bool True if public, false if not
+     */
+    public function isPublic()
+    {
+        if ($this->publicProfile === false) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 

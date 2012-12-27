@@ -27,7 +27,12 @@ class ApiController extends RoxControllerBase
         if ($member == false) {
             $this->_view->error('Member not found');
         } else {
-            $this->_view->jsonResponse($member);
+            if ($member->isPublic()) {
+                $memberData = $this->_model->getMemberData($member);
+                $this->_view->jsonResponse($memberData);
+            } else {
+                $this->_view->error('Profile not public');
+            }
         }
         exit;
     }

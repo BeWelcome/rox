@@ -15,7 +15,7 @@ class ApiView extends RoxAppView
 
     public function jsonResponse($content) {
         header('Content-type: application/json');
-        echo json_encode($content, JSON_NUMERIC_CHECK);
+        echo json_encode($content);
     }
 }
 

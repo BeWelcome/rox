@@ -33,7 +33,7 @@ class ApiModel extends RoxModelBase
             $phones->work = $memberPhone['WorkPhoneNumber'];
         }
         $memberData->username = $member->Username;
-        $memberData->numberOfComments = $commentCounts['all'];
+        $memberData->numberOfComments = intval($commentCounts['all']);
         $memberData->isPublic = $member->isPublic();
         if ($member->firstname != '') {
             $memberData->givenName = $member->firstname;

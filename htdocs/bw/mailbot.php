@@ -122,8 +122,8 @@ while ($rr = mysql_fetch_object($qry)) {
         else {
             $sender_mail=$rr->EmailFrom ;
         }
-    echo $text;
-    // $res = bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ");
+
+    $res = bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ");
     $res = true;
     if (!$res) {
         $str = "UPDATE   broadcastmessages

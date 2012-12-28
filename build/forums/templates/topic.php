@@ -91,7 +91,7 @@ This File display a topic and the messages which are inside it
     }
     
     $replyuri = preg_replace('/page.+\//i', '', $uri . 'reply');
-echo $replyuri;        
+        
     $tagBase = $url;
 
     if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {

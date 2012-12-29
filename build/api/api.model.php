@@ -172,6 +172,128 @@ class ApiModel extends RoxModelBase
             }
         }
 
+        // accommodation
+        $acc = new stdClass;
+
+        // field : accommodation.offered : string : yes/no/maybe
+        if ($member->Accomodation == 'anytime') {
+            $acc->offered = 'yes';
+        } else if ($member->Accomodation == 'neverask') {
+            $acc->offered = 'no';
+        } else if ($member->Accomodation == 'dependonrequest') {
+            $acc->offered = 'maybe';
+        }
+
+        // field : accommodation.numberOfGuests : number
+        $acc->numberOfGuests = intval($member->MaxGuest);
+
+        // field : accommodation.lengthOfStay : string
+        $lengthOfStay =
+            $member->get_trad('MaxLenghtOfStay', $languageId, true);
+        if ($lengthOfStay != '') {
+            $acc->lengthOfStay = $lengthOfStay;
+        }
+
+        // field : accommodation.livingWith : string
+        $livingWith =
+            $member->get_trad('ILiveWith', $languageId, true);
+        if ($livingWith != '') {
+            $acc->livingWith = $livingWith;
+        }
+
+        // field : accommodation.pleaseBring : string
+        $pleaseBring =
+            $member->get_trad('PleaseBring', $languageId, true);
+        if ($pleaseBring != '') {
+            $acc->pleaseBring = $pleaseBring;
+        }
+
+        // field : accommodation.offerForGuests : string
+        $offerForGuests =
+            $member->get_trad('OfferGuests', $languageId, true);
+        if ($offerForGuests != '') {
+            $acc->offerForGuests = $offerForGuests;
+        }
+
+        // field : accommodation.offerForHosts : string
+        $offerForHosts =
+            $member->get_trad('OfferHosts', $languageId, true);
+        if ($offerForHosts != '') {
+            $acc->offerForHosts = $offerForHosts;
+        }
+
+        // field : accommodation.publicTransport : string
+        $publicTransport =
+            $member->get_trad('PublicTransport', $languageId, true);
+        if ($publicTransport != '') {
+            $acc->publicTransport = $publicTransport;
+        }
+
+        // field : accommodation.otherRestrictions : string
+        $otherRestrictions =
+            $member->get_trad('OtherRestrictions', $languageId, true);
+        if ($otherRestrictions != '') {
+            $acc->otherRestrictions = $otherRestrictions;
+        }
+
+        // field : accommodation.additionalInfo : string
+        $additionalInfo =
+            $member->get_trad('AdditionalAccomodationInfo', $languageId, true);
+        if ($additionalInfo != '') {
+            $acc->additionalInfo = $additionalInfo;
+        }
+
+        // prepare offers boolean fields
+        $offers = explode(',', $member->TypicOffer);
+
+        // field : accommodation.offersGuidedTour : boolean
+        if (in_array('guidedtour', $offers)) {
+            $acc->offersGuidedTour = true;
+        } else {
+            $acc->offersGuidedTour = false;
+        }
+
+        // field : accommodation.offersDinner : boolean
+        if (in_array('dinner', $offers)) {
+            $acc->offersDinner = true;
+        } else {
+            $acc->offersDinner = false;
+        }
+
+        // field : accommodation.wheelchairAccessible : boolean
+        if (in_array('CanHostWeelChair', $offers)) {
+            $acc->wheelchairAccessible = true;
+        } else {
+            $acc->wheelchairAccessible = false;
+        }
+
+        // prepare restrictions boolean fields
+        $restrictions = explode(',', $member->Restrictions);
+
+        // field : accommodation.noSmoking : boolean
+        if (in_array('NoSmoker', $restrictions)) {
+            $acc->noSmoking = true;
+        } else {
+            $acc->noSmoking = false;
+        }
+
+        // field : accommodation.noAlcohol : boolean
+        if (in_array('NoAlchool', $restrictions)) {
+            $acc->noAlcohol = true;
+        } else {
+            $acc->noAlcohol = false;
+        }
+
+        // field : accommodation.noOtherDrugs : boolean
+        if (in_array('NoDrugs', $restrictions)) {
+            $acc->noOtherDrugs = true;
+        } else {
+            $acc->noOtherDrugs = false;
+        }
+
+        // field : accommodation : object
+        $memberData->accommodation = $acc;
+
         return $memberData;
     }
 

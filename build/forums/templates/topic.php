@@ -90,8 +90,8 @@ This File display a topic and the messages which are inside it
       $url = $url . '/';
     }
     
-    $replyuri = preg_replace('/page.+\//i', '', $uri . 'reply');
-        
+    $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
+
     $tagBase = $url;
 
     if (isset($topic->topicinfo->continent) && $topic->topicinfo->continent) {

@@ -24,7 +24,7 @@ class PlacesView extends PAppView {
     public function customStyles()
     {       
     // calls a 1column layout 
-         echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/custom/places.css\" type=\"text/css\"/>";
+         echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/custom/places.css?1\" type=\"text/css\"/>";
     }
     public function teaserplaces($countrycode,$country,$region,$city) {
         require 'templates/teaserCountry.php';

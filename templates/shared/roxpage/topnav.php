@@ -28,7 +28,6 @@ $model = new VolunteerbarModel();
 $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
 $numberReportedComments = $model->getNumberReportedComments();
 $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
-$numberMessagesToBeChecked = $model->getNumberMessagesToBeChecked() ;
 $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
 $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
 
@@ -49,34 +48,22 @@ $R = MOD_right::get();
     $array_of_items =
         array(
             array(
-                'Accepter',
-                'bw/admin/adminaccepter.php',
-                'Pending members ('.$numberPersonsToBeAccepted.')',
-                'accept new member accounts'
-            ),
-            array(
                 'Comments',
                 'bw/admin/admincomments.php',
                 'Reported comments (' . $numberReportedComments . ')',
-                'Review reported comments'
+                'Review comments flagged by users'
             ),
             array(
-                'Accepter',
-                'bw/admin/adminmandatory.php',
-                'AdminMandatory('.$numberPersonsToBeChecked.')',
-                'check member accounts'
+                'Checker',
+                'bw/admin/adminchecker.php?action=viewSpamSayMember',
+                'Reported messages ('.$numberSpamToBeChecked.')',
+                'Review messages reported by users as spam'
             ),
             array(
                 'Group',
                 'bw/admin/admingroups.php',
-                'AdminGroups('.$numberPersonsToAcceptInGroup.')',
-                'manage groups'
-            ),
-            array(
-                'Checker',
-                'bw/admin/adminchecker.php',
-                'AdminSpam('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
-                'check spam reports'
+                'Group applications ('.$numberPersonsToAcceptInGroup.')',
+                'Review join requests for groups'
             )
         )
     ;

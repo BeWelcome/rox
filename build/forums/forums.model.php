@@ -23,6 +23,7 @@ class Forums extends RoxModelBase {
 	public $ForumOrderList ; // The order of list in forum ascencding or desc this is a preference
     public $BW_Right;
 
+
 	 
 /**
 * GetLanguageChoosen function
@@ -335,7 +336,40 @@ function FindAppropriatedLanguage($IdPost=0) {
 		}
         MOD_log::get()->write("Switching PreferenceForumOrderListAsc to [".$this->ForumOrderList."]", "ForumModerator");
 	} // end of SwitchForumOrderList
+
+    // This switch the preference ShowMyGroupsTopicsOnly
+    public function SwitchShowMyGroupsTopicsOnly() {
+        $member = $this->getLoggedInMember();
+        $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
+        $this->ShowMyGroupsTopicsOnly = $owngroupsonly;
+        if ($this->ShowMyGroupsTopicsOnly=="Yes") {
+            $this->ShowMyGroupsTopicsOnly="No" ;
+        }
+        else {
+            $this->ShowMyGroupsTopicsOnly="Yes" ;
+        }
+        $ss="select Value,memberspreferences.id as id,IdMember,preferences.id as IdPreference from (preferences) " ;
+        $ss=$ss." left join memberspreferences on preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
+        $ss=$ss." where codeName='ShowMyGroupsTopicsOnly'" ;
+        
+        $qq = $this->dao->query($ss);
+        $rr=$qq->fetch(PDB::FETCH_OBJ) ;
+        if (empty($rr->Value)) {
+            $ss="insert into memberspreferences(created,IdPreference,IdMember,Value) " ;
+            $ss=$ss." values(now(),".$rr->IdPreference.",".$_SESSION['IdMember'].",'".$this->ShowMyGroupsTopicsOnly."')" ;
+        }
+        else {
+            $ss="update memberspreferences set Value='".$this->ShowMyGroupsTopicsOnly."' where id=".$rr->id ;
+        }
+        $qq = $this->dao->query($ss);
+        if (!$qq) {
+            throw new PException('ShowMyGroupsTopicsOnly '.$ss.' !');
+        }
+        MOD_log::get()->write("Switching ShowMyGroupsTopicsOnly to [".$this->ShowMyGroupsTopicsOnly."]", "ForumModerator");
+    } // end of ShowMyGroupsTopicsOnly
     
+
+ 
     public static $continents = array(
         'AF' => 'Africa',
         'AN' => 'Antarctica',
@@ -3505,16 +3539,27 @@ class Board implements Iterator {
 
 		//	Decide if it is an active LoggeMember or not
 		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"]=='Pending') or $_SESSION["MemberStatus"]=='NeedMore') ) {
-			$this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
-			$this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
-			$this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
+            $this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
+            $this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
+            $this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
+            $this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
 		}
 		else {
 			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
-			$this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
-			$this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
+			//if only want to see posts from groups where i am member of   
+            $roxmodel = New RoxModelBase ;
+            $member = $roxmodel->getLoggedInMember();
+            $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
+            //$owngroupsonly = "Yes"; //Dummy 
+            $this->owngroupsonly = $owngroupsonly;
+            if ($owngroupsonly == "Yes") {
+                $this->PostGroupsRestriction=" (IdGroup in(-1" ;
+                $this->ThreadGroupsRestriction=" (IdGroup in(-1" ;
+            } else {
+                $this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
+			    $this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
+            }
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
@@ -3561,7 +3606,9 @@ class Board implements Iterator {
        $row = $s->fetch(PDB::FETCH_OBJ) ;
        return (isset($row->IdSubscribe))  ;
     } // end of IsTagSubscribed
-    
+
+
+
 /**
 	this filtres the list of thread results according to the presence of :
 	$this->continent ;

@@ -21,13 +21,13 @@ class ApiModel extends RoxModelBase
         $languageId = 0;
         $memberData = new stdClass;
 
-        // field : username : string : mandatory
+        // field : username : string : always
         $memberData->username = $member->Username;
 
-        // field : isPublic : boolean : mandatory
+        // field : isPublic : boolean : always
         $memberData->isPublic = $member->isPublic();
 
-        // field : givenName : string : mandatory
+        // field : givenName : string : always
         if ($member->firstname != '') {
             $memberData->givenName = $member->firstname;
         }
@@ -37,12 +37,12 @@ class ApiModel extends RoxModelBase
             $memberData->middleName = $member->secondname;
         }
 
-        // field : familyName : string : mandatory
+        // field : familyName : string : always
         if ($member->lastname != '') {
             $memberData->familyName = $member->lastname;
         }
 
-        // field : signUpDate : string : mandatory : Format: YYYY-MM-DD
+        // field : signUpDate : string : always : Format: YYYY-MM-DD
         $memberData->signUpDate = date('Y-m-d', strtotime($member->created));
 
         // field : lastLogin : string : optional : Format: YYYY-MM-DD hh:mm:ss
@@ -104,20 +104,20 @@ class ApiModel extends RoxModelBase
             $address->postcode = $member->zip;
         }
 
-        // field : address : object : mandatory
+        // field : address : object : always
         $memberData->address = $address;
 
-        // field : location : object : mandatory
+        // field : location : object : always
         $memberData->location = new stdClass;
 
-        // field : location.city : string : mandatory
+        // field : location.city : string : always
         $memberData->location->cityName = $member->city;
 
-        // field : location.cityGeonamesId : number : mandatory
+        // field : location.cityGeonamesId : number : always
         $memberData->location->cityGeonamesId = intval($member->IdCity);
 
-        // field : location.cityLatitude : number : mandatory
-        // field : location.cityLongitude : number : mandatory
+        // field : location.cityLatitude : number : always
+        // field : location.cityLongitude : number : always
         $city = $member->createEntity('Geo')->findById($member->IdCity);
         if (gettype($city) == 'object') {
             $memberData->location->cityLatitude = floatVal($city->latitude);
@@ -127,13 +127,13 @@ class ApiModel extends RoxModelBase
             $memberData->location->cityLongitude = 0;
         }
 
-        // field : location.regionName : string : mandatory
+        // field : location.regionName : string : always
         $memberData->location->regionName = $member->region;
 
-        // field : location.countryName : string : mandatory
+        // field : location.countryName : string : always
         $memberData->location->countryName = $member->country;
 
-        // field : location.countryCode : string : mandatory : ISO 3166-1 alpha-2
+        // field : location.countryCode : string : always : ISO 3166-1 alpha-2
         $memberData->location->countryCode = $member->countryCode;
 
         // field : age : number : optional
@@ -158,7 +158,7 @@ class ApiModel extends RoxModelBase
             $memberData->summary = $summary;
         }
 
-        // field : phones : object : mandatory
+        // field : phones : object : always
         $memberPhone = $member->phone;
         $memberData->phones = new stdClass;
 
@@ -177,36 +177,36 @@ class ApiModel extends RoxModelBase
             $memberData->phones->work = $memberPhone['WorkPhoneNumber'];
         }
 
-        // field : picture : object : mandatory
+        // field : picture : object : always
         // TODO: add image width and height (tricky for the full image)
         $avatarBase = $baseURL . 'avatar/' . $member->Username . '?';
         $memberData->picture = new stdClass;
 
-        // field : picture.tiny : object : mandatory
+        // field : picture.tiny : object : always
         $memberData->picture->tiny = new stdClass;
 
-        // field : picture.tiny.url : string : mandatory
+        // field : picture.tiny.url : string : always
         $memberData->picture->tiny->url = $avatarBase . '30_30';
 
-        // field : picture.small : object : mandatory
+        // field : picture.small : object : always
         $memberData->picture->small = new stdClass;
 
-        // field : picture.small.url : string : mandatory
+        // field : picture.small.url : string : always
         $memberData->picture->small->url = $avatarBase . 'xs';
 
-        // field : picture.medium : object : mandatory
+        // field : picture.medium : object : always
         $memberData->picture->medium = new stdClass;
 
-        // field : picture.medium.url : string : mandatory
+        // field : picture.medium.url : string : always
         $memberData->picture->medium->url = $avatarBase . '150';
 
-        // field : picture.full : object : mandatory
+        // field : picture.full : object : always
         $memberData->picture->full = new stdClass;
 
-        // field : picture.full.url : string : mandatory
+        // field : picture.full.url : string : always
         $memberData->picture->full->url = $avatarBase . '500';
 
-        // field : languagesSpoken : array : mandatory
+        // field : languagesSpoken : array : always
         // TODO: add locale code (e.g. en_GB) and level (native, beginner etc.)
         $languages = array();
 
@@ -223,7 +223,7 @@ class ApiModel extends RoxModelBase
             $memberData->website = $member->WebSite;
         }
 
-        // field : chatContacts : object : mandatory
+        // field : chatContacts : object : always
         $memberData->chatContacts = new stdClass;
         $chats = $member->get_messengers();
 
@@ -244,7 +244,7 @@ class ApiModel extends RoxModelBase
         // accommodation
         $acc = new stdClass;
 
-        // field : accommodation.offered : string : mandatory : Values can be yes/no/maybe
+        // field : accommodation.offered : string : always : Values can be yes/no/maybe
         if ($member->Accomodation == 'anytime') {
             $acc->offered = 'yes';
         } else if ($member->Accomodation == 'neverask') {
@@ -253,7 +253,7 @@ class ApiModel extends RoxModelBase
             $acc->offered = 'maybe';
         }
 
-        // field : accommodation.numberOfGuests : number : mandatory
+        // field : accommodation.numberOfGuests : number : always
         $acc->numberOfGuests = intval($member->MaxGuest);
 
         // field : accommodation.lengthOfStay : string : optional
@@ -315,21 +315,21 @@ class ApiModel extends RoxModelBase
         // prepare offers boolean fields
         $offers = explode(',', $member->TypicOffer);
 
-        // field : accommodation.offersGuidedTour : boolean : mandatory
+        // field : accommodation.offersGuidedTour : boolean : always
         if (in_array('guidedtour', $offers)) {
             $acc->offersGuidedTour = true;
         } else {
             $acc->offersGuidedTour = false;
         }
 
-        // field : accommodation.offersDinner : boolean : mandatory
+        // field : accommodation.offersDinner : boolean : always
         if (in_array('dinner', $offers)) {
             $acc->offersDinner = true;
         } else {
             $acc->offersDinner = false;
         }
 
-        // field : accommodation.wheelchairAccessible : boolean : mandatory
+        // field : accommodation.wheelchairAccessible : boolean : always
         if (in_array('CanHostWeelChair', $offers)) {
             $acc->wheelchairAccessible = true;
         } else {
@@ -339,28 +339,28 @@ class ApiModel extends RoxModelBase
         // prepare restrictions boolean fields
         $restrictions = explode(',', $member->Restrictions);
 
-        // field : accommodation.noSmoking : boolean : mandatory
+        // field : accommodation.noSmoking : boolean : always
         if (in_array('NoSmoker', $restrictions)) {
             $acc->noSmoking = true;
         } else {
             $acc->noSmoking = false;
         }
 
-        // field : accommodation.noAlcohol : boolean : mandatory
+        // field : accommodation.noAlcohol : boolean : always
         if (in_array('NoAlchool', $restrictions)) {
             $acc->noAlcohol = true;
         } else {
             $acc->noAlcohol = false;
         }
 
-        // field : accommodation.noOtherDrugs : boolean : mandatory
+        // field : accommodation.noOtherDrugs : boolean : always
         if (in_array('NoDrugs', $restrictions)) {
             $acc->noOtherDrugs = true;
         } else {
             $acc->noOtherDrugs = false;
         }
 
-        // field : accommodation : object : mandatory
+        // field : accommodation : object : always
         $memberData->accommodation = $acc;
 
         // field : hobbies : string : optional

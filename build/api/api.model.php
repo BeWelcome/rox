@@ -16,6 +16,7 @@ class ApiModel extends RoxModelBase
     }
 
     public static function getMemberData($member) {
+        // TODO: avoid translation links in ago() when in translate mode
         $baseURL = PVars::getObj('env')->baseuri;
         $languageId = 0;
         $memberData = new stdClass;
@@ -26,6 +27,27 @@ class ApiModel extends RoxModelBase
         // field : numberOfComments : number : mandatory
         $commentCounts = $member->count_comments();
         $memberData->numberOfComments = intval($commentCounts['all']);
+
+        // field : numberOfContacts : number : optional
+        $memberData->numberOfContacts = count($member->relations);
+
+        // field : numberOfImages : number : optional
+        $memberData->numberOfImages = $member->getGalleryItemsCount();
+
+        // field : numberOfForumPosts : number : optional
+        $memberData->numberOfForumPosts = $member->forums_posts_count();
+
+        // field : numberOfBlogPosts : number : optional
+        $blogModel = new Blog();
+        $blogPosts = $blogModel->getRecentPostIt($member->id);
+        $memberData->numberOfBlogPosts = $blogPosts->numRows();
+
+        // field : numberOfTrips : number : optional
+        $tripsData = $member->getTripsArray();
+        $memberData->numberOfTrips = count($tripsData[1]);
+
+        // field : numberOfGroupMemberships : number : optional
+        $memberData->numberOfGroupMemberships = count($member->getGroups());
 
         // field : isPublic : boolean : mandatory
         $memberData->isPublic = $member->isPublic();
@@ -44,6 +66,19 @@ class ApiModel extends RoxModelBase
         if ($member->lastname != '') {
             $memberData->familyName = $member->lastname;
         }
+
+        // field : signUpDate : string : mandatory : Format: YYYY-MM-DD
+        $memberData->signUpDate = date('Y-m-d', strtotime($member->created));
+
+        // field : lastLogin : string : optional : Format: YYYY-MM-DD hh:mm:ss
+        $memberData->lastLogin = $member->LastLogin;
+
+        // field : lastLoginTimestamp : number : optional : Unix timestamp
+        $memberData->lastLoginTimestamp = strtotime($member->LastLogin);
+
+        // field : lastLoginFuzzy : string : optional : Fuzzy time like "3 hours ago"
+        $memberData->lastLoginFuzzy =
+            MOD_layoutbits::ago(strtotime($member->LastLogin));
 
         // field : occupation : string : optional
         $occupation = $member->get_trad('Occupation', $languageId, true);
@@ -106,9 +141,15 @@ class ApiModel extends RoxModelBase
             $memberData->age = $member->age;
         }
 
-        // field : gender : string : optional
-        if ($member->Gender != '' && $member->Gender != 'IDontTell') {
-            $memberData->gender = $member->Gender;
+        // field : gender : string : optional : Values can be female/male/other
+        if ($member->Gender != '' && $member->HideGender == 'No') {
+            if ($member->Gender == 'female') {
+                $memberData->gender = 'female';
+            } else if ($member->Gender == 'male') {
+                $memberData->gender = 'male';
+            } else {
+                $memberData->gender = 'other';
+            }
         }
 
         // field : summary : string : optional

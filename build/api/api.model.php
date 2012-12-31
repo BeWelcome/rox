@@ -24,31 +24,6 @@ class ApiModel extends RoxModelBase
         // field : username : string : mandatory
         $memberData->username = $member->Username;
 
-        // field : numberOfComments : number : mandatory
-        $commentCounts = $member->count_comments();
-        $memberData->numberOfComments = intval($commentCounts['all']);
-
-        // field : numberOfContacts : number : optional
-        $memberData->numberOfContacts = count($member->relations);
-
-        // field : numberOfImages : number : optional
-        $memberData->numberOfImages = $member->getGalleryItemsCount();
-
-        // field : numberOfForumPosts : number : optional
-        $memberData->numberOfForumPosts = $member->forums_posts_count();
-
-        // field : numberOfBlogPosts : number : optional
-        $blogModel = new Blog();
-        $blogPosts = $blogModel->getRecentPostIt($member->id);
-        $memberData->numberOfBlogPosts = $blogPosts->numRows();
-
-        // field : numberOfTrips : number : optional
-        $tripsData = $member->getTripsArray();
-        $memberData->numberOfTrips = count($tripsData[1]);
-
-        // field : numberOfGroupMemberships : number : optional
-        $memberData->numberOfGroupMemberships = count($member->getGroups());
-
         // field : isPublic : boolean : mandatory
         $memberData->isPublic = $member->isPublic();
 
@@ -79,6 +54,31 @@ class ApiModel extends RoxModelBase
         // field : lastLoginFuzzy : string : optional : Fuzzy time like "3 hours ago"
         $memberData->lastLoginFuzzy =
             MOD_layoutbits::ago(strtotime($member->LastLogin));
+
+        // field : numberOfComments : number : optional
+        $commentCounts = $member->count_comments();
+        $memberData->numberOfComments = intval($commentCounts['all']);
+
+        // field : numberOfContacts : number : optional
+        $memberData->numberOfContacts = count($member->relations);
+
+        // field : numberOfImages : number : optional
+        $memberData->numberOfImages = $member->getGalleryItemsCount();
+
+        // field : numberOfForumPosts : number : optional
+        $memberData->numberOfForumPosts = $member->forums_posts_count();
+
+        // field : numberOfBlogPosts : number : optional
+        $blogModel = new Blog();
+        $blogPosts = $blogModel->getRecentPostIt($member->id);
+        $memberData->numberOfBlogPosts = $blogPosts->numRows();
+
+        // field : numberOfTrips : number : optional
+        $tripsData = $member->getTripsArray();
+        $memberData->numberOfTrips = count($tripsData[1]);
+
+        // field : numberOfGroupMemberships : number : optional
+        $memberData->numberOfGroupMemberships = count($member->getGroups());
 
         // field : occupation : string : optional
         $occupation = $member->get_trad('Occupation', $languageId, true);
@@ -360,7 +360,7 @@ class ApiModel extends RoxModelBase
             $acc->noOtherDrugs = false;
         }
 
-        // field : accommodation : object : optional
+        // field : accommodation : object : mandatory
         $memberData->accommodation = $acc;
 
         // field : hobbies : string : optional

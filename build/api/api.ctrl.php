@@ -16,25 +16,39 @@ class ApiController extends RoxControllerBase
         unset($this->_view);
     }
 
-    public function index() {
-        $this->_view->error('Does not compute');
+    public function error($message) {
+        $callback = $this->_getCallback();
+        $this->_view->error($message, $callback);
         exit;
+    }
+
+    public function index() {
+        $this->error('Does not compute');
     }
 
     public function memberAction() {
         $username = $this->route_vars['username'];
         $member = $this->_model->getMember($username);
         if ($member == false) {
-            $this->_view->error('Member not found');
+            $this->error('Member not found');
         } else {
             if ($member->isPublic()) {
                 $memberData = $this->_model->getMemberData($member);
-                $this->_view->jsonResponse($memberData);
+                $callback = $this->_getCallback();
+                $this->_view->response($memberData, $callback);
             } else {
-                $this->_view->error('Profile not public');
+                $this->error('Profile not public');
             }
         }
         exit;
+    }
+
+    private function _getCallback() {
+        if (isset($this->args_vars->get['callback'])) {
+            return $this->args_vars->get['callback'];
+        } else {
+            return false;
+        }
     }
 }
 

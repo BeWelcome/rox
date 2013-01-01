@@ -6,7 +6,7 @@ Virtualbox image available at http://bewelcome.penpal4u.net/ which could save
 you some work.
 
 These steps have been tested on Debian/Ubuntu based systems. Commands and
-usernames might differ on you distribution.
+usernames might differ on your distribution.
 
 
 Requirements
@@ -113,7 +113,7 @@ Configure Apache
      complicates the setup and might cause unexpected behaviour.
 
   2. Set a ServerName (i.e. "bewelcome") and add it to your hosts file (for
-     this example above add "127.0.0.1 bewelcome" to /etc/hosts).
+     this example add "127.0.0.1 bewelcome" to /etc/hosts).
 
   3. Point DocumentRoot to /path/to/rox/htdocs
 

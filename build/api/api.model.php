@@ -179,7 +179,7 @@ class ApiModel extends RoxModelBase
 
         // field : picture : object : always
         // TODO: add image width and height (tricky for the full image)
-        $avatarBase = $baseURL . 'avatar/' . $member->Username . '?';
+        $avatarBase = $baseURL . 'members/avatar/' . $member->Username . '?';
         $memberData->picture = new stdClass;
 
         // field : picture.tiny : object : always

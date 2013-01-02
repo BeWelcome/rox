@@ -16,10 +16,21 @@ class ApiController extends RoxControllerBase
         unset($this->_view);
     }
 
+    public function success($data) {
+        $this->response('success', $data);
+    }
+
     public function error($message) {
+        $data = new stdClass;
+        $data->errorMessage = $message;
+        $this->response('error', $data);
+    }
+
+    public function response($resultType, $data) {
+        $result = (object) array('result' => $resultType);
+        $content = (object) array_merge((array) $result, (array) $data);
         $callback = $this->_getCallback();
-        $this->_view->error($message, $callback);
-        exit;
+        $this->_view->response($content, $callback);
     }
 
     public function index() {
@@ -34,13 +45,11 @@ class ApiController extends RoxControllerBase
         } else {
             if ($member->isPublic()) {
                 $memberData = $this->_model->getMemberData($member);
-                $callback = $this->_getCallback();
-                $this->_view->response($memberData, $callback);
+                $this->success($memberData);
             } else {
                 $this->error('Profile not public');
             }
         }
-        exit;
     }
 
     private function _getCallback() {

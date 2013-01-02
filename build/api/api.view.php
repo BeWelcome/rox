@@ -8,17 +8,13 @@ class ApiView extends RoxAppView
         $this->_model = $model;
     }
 
-    public function error($message, $callback = false) {
-        $content = array('result' => 'error', 'message' => $message);
-        $this->response($content, $callback);
-    }
-
     public function response($content, $callback = false) {
         if ($callback) {
             $this->jsonpResponse($content, $callback);
         } else {
             $this->jsonResponse($content);
         }
+        exit;
     }
 
     public function jsonResponse($content) {

@@ -42,6 +42,9 @@ class ApiModel extends RoxModelBase
             $memberData->familyName = $member->lastname;
         }
 
+        // field : profileURL : string : always
+        $memberData->profileURL = $baseURL . 'members/' . $member->Username;
+
         // field : signUpDate : string : always : Format: YYYY-MM-DD
         $memberData->signUpDate = date('Y-m-d', strtotime($member->created));
 

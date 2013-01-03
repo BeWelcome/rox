@@ -46,6 +46,7 @@ require_once "footer.helper.php";
   </p>
   <p class="float_right">
      Running on <a href="http://trac.bewelcome.org/">BW Rox</a> rev. <a href="http://gitorious.org/bewelcome/rox/commit/<?php echo $versionInfo; ?>"><?php echo $versionInfo; ?></a>
+     (<span title="<?php echo $deploymentDateTime; ?>"><?php echo $deploymentDate; ?></span>)
      • <a href="<?php echo $bugreportLink; ?>">Report bug</a>
   </p>
   </div>

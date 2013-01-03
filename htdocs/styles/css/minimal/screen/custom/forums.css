@@ -43,6 +43,7 @@ div.forumsavatar img {
 div.forumsauthorname {
     font-weight: bold;
     font-size: 1.1em;
+    word-wrap: break-word;
 }
 div.forumsauthor {
     padding:0;

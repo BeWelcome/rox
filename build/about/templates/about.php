@@ -86,3 +86,4 @@ $format = array('short'=>$words->getSilent('DateFormatShort'));
     </div>
   </div>
 </div>
+</div>

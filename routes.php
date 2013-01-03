@@ -90,4 +90,4 @@
 // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
 
-    $this->addRoute('api_member','api/member/:username:', 'ApiController', 'memberAction');
+    $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');

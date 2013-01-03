@@ -17,15 +17,21 @@ class ApiView extends RoxAppView
         exit;
     }
 
+    public function rawResponse($message) {
+        header('Content-type: text/plain');
+        echo $message . "\n";
+        exit;
+    }
+
     public function jsonResponse($content) {
         header('Content-type: application/json');
-        echo json_encode($content);
+        echo json_encode($content) . "\n";
     }
 
     public function jsonpResponse($content, $callback) {
         header('Content-type: application/javascript');
         $javascript = $callback . '(' . json_encode($content) . ')';
-        echo $javascript;
+        echo $javascript . "\n";
     }
 }
 

@@ -1,21 +1,50 @@
 <?php
-
+/**
+ * API model class.
+ *
+ * @author Meinhard Benn <meinhard@bewelcome.org>
+ */
 class ApiModel extends RoxModelBase
 {
+    /**
+     * Default constructor.
+     */
     public function __construct() {
         parent::__construct();
     }
 
+    /**
+     * Shortcut for Member::findByUsername().
+     *
+     * @param string $username Username of member.
+     * @return Member|false Member entity object or false if member not found.
+     */
     public function getMember($username) {
-        $member = $this->createEntity('Member')->findByUsername($username);
-        if ($member == false) {
-            return false;
-        } else {
-            return $member;
-        }
+        return $this->createEntity('Member')->findByUsername($username);
     }
 
-    public static function getMemberData($member) {
+    /**
+     * Get all data for a member.
+     *
+     * This method is a huge monolith, but should be seen as sort of an
+     * export filter and sanitiser.
+     *
+     * Each data field has a documentation comment of this format:
+     *   field : <fieldName> : <fieldType> : <occurrance> : <comment>
+     *
+     * These comments will be used later to render the API documentation.
+     *
+     * fieldType: Matches the type in JavaScript, so for example "number" for
+     * both integer and float.
+     *
+     * occurance: Can be either "always" or "optional". Fields labelled as
+     * "always" will be included in each response, "optional" fields will only
+     * be included if they are visible and have content.
+     *
+     * @param Member $member Member entity object.
+     * @return object Object containing member data as properties.
+     */
+    public static function getMemberData(Member $member) {
         // TODO: avoid translation links in ago() when in translate mode
         $baseURL = PVars::getObj('env')->baseuri;
         $languageId = 0;
@@ -417,7 +446,4 @@ class ApiModel extends RoxModelBase
 
         return $memberData;
     }
-
 }
-
-?>

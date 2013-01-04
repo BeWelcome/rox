@@ -55,7 +55,7 @@ tinyMCE.init({
     elements: "topic_text",
     plugins : "advimage,preview,fullscreen,autolink",
     theme: "advanced",
-    content_css : "styles/css/minimal/screen/content_minimal.css",    
+    content_css : "styles/css/minimal/screen/content_minimal.css?2",    
     relative_urls:false,
     convert_urls:false,
     theme_advanced_buttons1: "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,forecolor,backcolor,charmap,link,image,separator,preview,fullscreen",

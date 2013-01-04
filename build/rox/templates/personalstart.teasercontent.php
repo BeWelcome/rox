@@ -38,7 +38,7 @@ Boston, MA  02111-1307, USA.
                     <?php /* NOTREADY<li><a id="tablink4" href="#tab4"><?=$words->getSilent('SetLocation')?></a></li> */ ?>
                     <li><a id="tablink5" href="#tab5"><?=$words->getSilent('CheckYourMessages')?>
                     <?php if (isset($_mainPageNewMessagesMessage)) { ?>
-                        (<img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/> <?=$_newMessagesNumber?>)
+                        <span style="color:#333333; font-weight:bold;">(<img src="images/icons/icons1616/icon_contactmember.png" alt="Messages"/> <?=$_newMessagesNumber?>)</span>
                     <?php } ?>
                     </a></li>
                     <li><a id="tablink6" href="#tab6"><?=$words->getSilent('InviteAFriend')?></a></li>
@@ -73,7 +73,7 @@ Boston, MA  02111-1307, USA.
                                 <h3><?php echo $words->getFormatted('StartpageSearchMember') ?></h3>
                                 <div id="search-bar">
                                     <form id="form1" name="form1" method="get" action="searchmembers">
-                                        <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='Search for hosts, places...'" value="Search for hosts, places..." onfocus="this.value='';" />
+                                        <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='<?php echo $words->get('StartpageSearchMemberText'); ?>'" value="<?php echo $words->get('StartpageSearchMemberText'); ?>" onfocus="this.value='';" />
                                         <input type="hidden" name="searchopt" id="searchopt" />
                                         <input type="submit" value="<?php echo $words->getFormatted('FindPeopleSubmitSearch'); ?>" class="button"/>
                                     </form>

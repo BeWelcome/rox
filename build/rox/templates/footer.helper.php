@@ -25,6 +25,11 @@ function _getVersionInfo()
 
 $versionInfo = _getVersionInfo();
 
+// Deployment date and time
+$mtime = filemtime(__FILE__);
+$deploymentDate = date("j M Y", $mtime);
+$deploymentDateTime = date(DATE_RSS, $mtime);
+
 /**
  * used in footer
  */

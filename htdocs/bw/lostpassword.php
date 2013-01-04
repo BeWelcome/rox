@@ -93,6 +93,10 @@ switch ($action) {
 		   	 exit(0);
 			}
 		
+		    $ss="select Username from members where id = " . $IdMember;
+		    $rr=LoadRow($ss);
+		    $Username = $rr->Username;
+			
 			$Password=CreatePassword();
 			$str="update members set password=PASSWORD('".$Password."') where id=".$IdMember;
 			sql_query($str);
@@ -101,6 +105,7 @@ switch ($action) {
 			$subj = ww("lostpasswordsubj");
 			$urltosignup = "http://".$_SYSHCVOL['SiteName'] .$_SYSHCVOL['MainDir']. "changepassword.php";
 			$text=ww("lostpasswordtext",$Password);
+			$text .= "\nUsername: " . $Username;
 			$_SERVER['SERVER_NAME'] = "www.bewelcome.org"; // to force because context is not defined
 
 // echo $email,"<br />subj=",$subj,"<br />text=",$text,"<br />";

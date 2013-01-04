@@ -37,7 +37,7 @@ if (!$volunteers) {
     $maxPage = $p[2];
     $currentPage = $page;
     $request = $requestStr.'/=page%d';
-    require TEMPLATE_DIR.'misc/pages.php';
+    require 'pages.php';
 }
 
 ?>

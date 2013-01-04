@@ -95,9 +95,10 @@ class Places extends PAppModel {
 
     private function getMembersAll($query) {
         // this condition makes sure that unlogged people won't see non-public profiles
-        if (!(APP_User::isBWLoggedIn('NeedMore,Pending'))) {
-            $query = str_ireplace("FROM ","FROM memberspublicprofiles,",$query);
-            $query = str_ireplace("WHERE ","WHERE members.id=memberspublicprofiles.IdMember AND ",$query);
+        if (!(APP_User::isBWLoggedIn('NeedMore,Pending'))) 
+        {
+            $query = str_ireplace("FROM","FROM memberspublicprofiles,",$query);
+            $query = str_ireplace("WHERE","WHERE members.id = memberspublicprofiles.IdMember AND",$query);
         }
 
         $result = $this->dao->query($query);
@@ -131,7 +132,7 @@ class Places extends PAppModel {
                 AND
                 geonames_cache.fk_countrycode = '%s'
             ORDER BY
-                city
+                members.Accomodation ASC, members.LastLogin DESC
             ",$this->dao->escape($countrycode));
 
         return $this->getMembersAll($query);
@@ -160,7 +161,7 @@ class Places extends PAppModel {
                 AND
                 geonames_cache2.name = '%s'
             ORDER BY
-                city
+                members.Accomodation ASC, members.LastLogin DESC
             ", $this->dao->escape($countrycode), $this->dao->escape($regioncode));
 
         return $this->getMembersAll($query);
@@ -185,6 +186,8 @@ class Places extends PAppModel {
                 geonames_cache.name = '%s'
                 AND
                 geonames_cache.fk_countrycode = '%s'
+            ORDER BY
+                members.Accomodation ASC, members.LastLogin DESC
             ", $this->dao->escape($cityname), $this->dao->escape($countrycode));
         return $this->getMembersAll($query);
     }

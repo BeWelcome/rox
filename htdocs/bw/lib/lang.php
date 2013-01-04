@@ -180,9 +180,9 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 		$res = nl2br(stripslashes($rr->Sentence));
 	} else { // In case the code wasnt a numeric id
 		$rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$code' and IdLanguage='" . $IdLanguage . "'");
-		if (isset ($rr->Sentence))
+		if (isset ($rr->Sentence)){
 			$res = nl2br(stripslashes($rr->Sentence));
-		//		echo "ww('",$code,"')=",$res,"<br>";
+		}		//		echo "ww('",$code,"')=",$res,"<br>";
 	}
 
 	if ($res == "") { // If not translation found
@@ -222,4 +222,36 @@ function wwinlang($code, $IdLanguage = 0, $p1 = NULL, $p2 = NULL, $p3 = NULL, $p
 	return ($res);
 } // end of wwinlang
 
+function getBroadCastElement($wordCode, $languageId, $username = false)
+{
+    $sentence = "";
+    $rr = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$wordCode' and IdLanguage='" . $languageId . "'");
+    if (isset ($rr->Sentence)){
+        $sentence = stripslashes($rr->Sentence);
+    }
+
+    if ($sentence == "") {
+        $rEnglish = LoadRow("select SQL_CACHE Sentence,donottranslate from words where code='$wordCode' and IdLanguage=0");
+        if (!isset ($rEnglish->Sentence)) {
+            $sentence = $wordCode; // The code of the word will be return
+        } else {
+            $sentence = stripslashes($rEnglish->Sentence);
+        }
+    }
+    if ($username) {
+        // we prepare to send or display the send mail therefore change nls to <br>
+        $sentence = nl2br($sentence);
+
+        // backwards compatibility replace %s with username and %% with % (just in case someone 
+        // wants to send an old newsletter again
+        $sentence = str_replace('%s', $username, $sentence);
+        $sentence = str_replace('%%', '%', $sentence);
+
+        // replace %username% with real username. allow some different writings.
+        $sentence = str_replace('%UserName%', $username, $sentence);
+        $sentence = str_replace('%username%', $username, $sentence);
+        $sentence = str_replace('%Username%', $username, $sentence);
+    }
+    return $sentence;
+}
 ?>

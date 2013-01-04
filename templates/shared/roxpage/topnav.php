@@ -28,7 +28,6 @@ $model = new VolunteerbarModel();
 $numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
 $numberReportedComments = $model->getNumberReportedComments();
 $numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
-$numberMessagesToBeChecked = $model->getNumberMessagesToBeChecked() ;
 $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
 $numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
 
@@ -49,34 +48,22 @@ $R = MOD_right::get();
     $array_of_items =
         array(
             array(
-                'Accepter',
-                'bw/admin/adminaccepter.php',
-                'Pending members ('.$numberPersonsToBeAccepted.')',
-                'accept new member accounts'
-            ),
-            array(
                 'Comments',
                 'bw/admin/admincomments.php',
                 'Reported comments (' . $numberReportedComments . ')',
-                'Review reported comments'
+                'Review comments flagged by users'
             ),
             array(
-                'Accepter',
-                'bw/admin/adminmandatory.php',
-                'AdminMandatory('.$numberPersonsToBeChecked.')',
-                'check member accounts'
+                'Checker',
+                'bw/admin/adminchecker.php?action=viewSpamSayMember',
+                'Reported messages ('.$numberSpamToBeChecked.')',
+                'Review messages reported by users as spam'
             ),
             array(
                 'Group',
                 'bw/admin/admingroups.php',
-                'AdminGroups('.$numberPersonsToAcceptInGroup.')',
-                'manage groups'
-            ),
-            array(
-                'Checker',
-                'bw/admin/adminchecker.php',
-                'AdminSpam('.$numberMessagesToBeChecked.'/'.$numberSpamToBeChecked.')',
-                'check spam reports'
+                'Group applications ('.$numberPersonsToAcceptInGroup.')',
+                'Review join requests for groups'
             )
         )
     ;
@@ -100,8 +87,14 @@ $R = MOD_right::get();
 */
 ?>
   
-  <?php if ($logged_in) { ?>
-  <li><img src="styles/css/minimal/images/icon_grey_mail.png" alt="mymessages"/><a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a><?php echo $words->flushBuffer(); ?></li>
+  <?php if ($logged_in) { 
+      ?>
+      <li><img src="styles/css/minimal/images/icon_grey_mail.png" alt="mymessages"/><a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a>
+          <?php if ($numberOfNewMessagees > 0) {
+              echo "(" . intval($numberOfNewMessagees) . ")";
+              echo $words->flushBuffer();
+          } ?>
+      </li>
   <li><img src="styles/css/minimal/images/icon_grey_logout.png" alt="logout" /><a href="logout" id="header-logout-link"><?php echo $words->getBuffered('Logout'); ?></a><?php echo $words->flushBuffer(); ?></li>
   <?php } else { ?>
   <li><img src="styles/css/minimal/images/icon_grey_logout.png" alt="login" /><a href="<?php echo $login_url ?>#login-widget" id="header-login-link"><?php echo $words->getBuffered('Login'); ?></a><?php echo $words->flushBuffer(); ?></li>

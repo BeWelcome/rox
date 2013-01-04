@@ -55,8 +55,11 @@ class LoginFormWidget extends RoxWidget
         }
 
         // hack for HTTPS-Login
-        if (strrpos($url, 'test') === false && strrpos($url, 'bw') === false  && strrpos($url, 'alpha') === false && strrpos($url, 'localhost') === false)
+        if (strrpos($url, 'alpha.bewelcome.org') === false &&
+                strrpos($url, 'localhost') === false &&
+                PVars::getObj('development')->avoid_https != 1 ) {
             $url = str_replace('http://','https://',$url);
+        }
 
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
 

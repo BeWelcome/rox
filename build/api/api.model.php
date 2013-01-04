@@ -14,13 +14,18 @@ class ApiModel extends RoxModelBase
     }
 
     /**
-     * Shortcut for Member::findByUsername().
+     * Get active member by username.
      *
      * @param string $username Username of member.
-     * @return Member|false Member entity object or false if member not found.
+     * @return Member|false Member entity object or false if member not found
+     *                      or not 'Active'.
      */
     public function getMember($username) {
-        return $this->createEntity('Member')->findByUsername($username);
+        $member = $this->createEntity('Member')->findByUsername($username);
+        if ($member != false && $member->Status == 'Active') {
+            return $member;
+        }
+        return false;
     }
 
     /**

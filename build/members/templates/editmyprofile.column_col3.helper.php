@@ -35,7 +35,8 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     echo "</div>";
 } else {
     if ($this->status == 'finish') {
-          echo '<div class="success">'.$ww->EditmyprofileFinish.'</div>';
+          echo '<div class="success">'.$words->getFormatted("EditmyprofileFinish", $profile_language_name, 
+                '<a href="members/'. $member->Username . '/' . $profile_language_code . '">', '</a>') . '</div>';
     }
     $vars['errors'] = array();
 }

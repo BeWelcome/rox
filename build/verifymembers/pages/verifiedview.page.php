@@ -89,7 +89,7 @@ class VerifiedMembersViewPage extends RoxPageView {
          $words = $this->getWords();
          if ($this->VerifierUsername!="") {
              // UserVerifiedByNumber is '%d users have verified user %s'
-            echo $words->getFormatted("UserVerifiedByNumber",count($this->list),$this->VerifierUsername) ;
+            echo $words->getFormatted("verifymembers_verifiedbynb",count($this->list),$this->VerifierUsername) ;
         }
          if ($this->VerifiedUsername!="") {
              // NumberOfMembersVerifiedByUser is '%d have been verified by user %s'

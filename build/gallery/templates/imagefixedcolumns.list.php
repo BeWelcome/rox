@@ -27,6 +27,9 @@ if ($statement) {
             <a href="gallery/show/image/'.$d->id.'" id="image_link_'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image" style="margin: 5px 0; float:none;" /></a>';
 
         $d->HTML .= '<h4 class="floatbox">';
+        if ($this->loggedInMember && $this->loggedInMember->Username == $d->user_handle) {
+            $d->HTML .= '<input type="checkbox" class="thumb_check input_check" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
+        }
         $d->HTML .= '<a href="gallery/show/image/'.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><img src="styles/css/minimal/images/icon_image_expand.gif" title="'.$words->get('Preview image').'" style="float: right"></a></h4>';
         $d->HTML .= '
             <p class="small">

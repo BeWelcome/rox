@@ -792,6 +792,18 @@ SQL;
         }
 
         $this->MakeRevision($Trad->id, "memberstrads"); // create revision before the delete
+
+        // If the IdTrad for this language was already deleted 
+        // SQL will throw an exception as the triple IdTrad, IdOwner and IdLanguage is already set
+        // live DB has an index on this.
+        $query = "
+DELETE FROM 
+    memberstrads
+WHERE
+    IdTrad = '" . (-$IdTrad) . "' AND
+    IdOwner = '{$IdMember}' AND
+    IdLanguage = '{$IdLanguage}'";
+        $this->_dao->query($query);
         
         // Mark the tradId as deleted by turning it into -IdTrad
         $query = "
@@ -804,6 +816,8 @@ WHERE
     IdOwner = '{$IdMember}' AND
     IdLanguage = '{$IdLanguage}'";
         $this->_dao->query($query);
+
+        
         return false;
     } // end of deleteMTrad
 

@@ -6,10 +6,22 @@
  */
 class ApiController extends RoxControllerBase
 {
+    /**
+     * Declaring private variables.
+     */
     private $_model;
     private $_view;
 
-    public $supporedFormats = array('json', 'js');
+    /**
+     * Defining class constants.
+     */
+    const FORMAT_JSON = 'json';
+    const FORMAT_JS = 'js';
+
+    /**
+     * Defining formats supported by the API.
+     */
+    public $supportedFormats = array(self::FORMAT_JSON, self::FORMAT_JS);
 
     /**
      * Constructor.
@@ -35,13 +47,13 @@ class ApiController extends RoxControllerBase
      * parameters, but will send a raw error message response otherwise.
      */
     public function checkFormat() {
-        $format = $this->route_vars['format'];
-        if (in_array($format, $this->supporedFormats) == false) {
+        $format = $this->_getFormat();
+        if (in_array($format, $this->supportedFormats) == false) {
             $this->_view->rawResponse('Invalid request: Format "' . $format
                 . '" not supported');
         }
         $callback = $this->_getCallback();
-        if ($format == 'js' && $callback == false) {
+        if ($format == self::FORMAT_JS && $callback == false) {
             $this->_view->rawResponse(
                 'Invalid request: JSONP callback missing');
         }
@@ -68,16 +80,25 @@ class ApiController extends RoxControllerBase
     }
 
     /**
-     * Prepare response data and send it to view.
+     * Prepare response data and send it to view, using requested format.
      *
      * @param string $resultType Descriptive result type included in response.
      * @param object $data Object containing data fields for response.
      */
     public function response($resultType, $data) {
-        $result = (object) array('result' => $resultType);
-        $content = (object) array_merge((array) $result, (array) $data);
-        $callback = $this->_getCallback();
-        $this->_view->response($content, $callback);
+        /* "result" should be the first field in the response, so we are
+           inserting it before the data. The easiest way to do this is
+           temporarily converting $data into an array: */
+        $result = array('result' => $resultType);
+        $content = (object) array_merge($result, (array) $data);
+
+        $format = $this->_getFormat();
+        if($format == self::FORMAT_JSON) {
+            $this->_view->jsonResponse($content);
+        } else if ($format == self::FORMAT_JS) {
+            $callback = $this->_getCallback();
+            $this->_view->jsonpResponse($content, $callback);
+        }
     }
 
     /**
@@ -122,5 +143,14 @@ class ApiController extends RoxControllerBase
         } else {
             return false;
         }
+    }
+
+    /**
+     * Get request format.
+     *
+     * @return string Request format, e.g. "json".
+     */
+    private function _getFormat() {
+        return $this->route_vars['format'];
     }
 }

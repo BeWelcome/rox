@@ -123,26 +123,23 @@ class ApiModel extends RoxModelBase
             $memberData->occupation = $occupation;
         }
 
-        // address
-        $address = new stdClass;
+        // field : address : object : always
+        $memberData->address = new stdClass;
 
         // field : address.street : string : optional
         if ($member->street != '') {
-            $address->street = $member->street;
+            $memberData->address->street = $member->street;
         }
 
         // field : address.house : string : optional
         if ($member->housenumber != '') {
-            $address->house = $member->housenumber;
+            $memberData->address->house = $member->housenumber;
         }
 
         // field : address.postcode : string : optional
         if ($member->zip != '') {
-            $address->postcode = $member->zip;
+            $memberData->address->postcode = $member->zip;
         }
-
-        // field : address : object : always
-        $memberData->address = $address;
 
         // field : location : object : always
         $memberData->location = new stdClass;
@@ -278,7 +275,7 @@ class ApiModel extends RoxModelBase
             }
         }
 
-        // accommodation
+        // accommodation, using temporary short variable name
         $acc = new stdClass;
 
         // field : accommodation.offered : string : always : Values can be yes/no/maybe

@@ -6,6 +6,9 @@
  */
 class ApiView extends RoxAppView
 {
+    /**
+     * Declaring private variable.
+     */
     private $_model;
 
     /**
@@ -13,21 +16,6 @@ class ApiView extends RoxAppView
      */
     public function __construct(ApiModel $model) {
         $this->_model = $model;
-    }
-
-    /**
-     * Send a JSON or JSONP response.
-     *
-     * @param object $content Object containing data fields.
-     * @param string $callback Name of JavaScript callback function. If given
-     *                         a JSONP response will be sent.
-     */
-    public function response($content, $callback = false) {
-        if ($callback) {
-            $this->jsonpResponse($content, $callback);
-        } else {
-            $this->jsonResponse($content);
-        }
     }
 
     /**

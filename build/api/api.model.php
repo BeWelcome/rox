@@ -61,7 +61,7 @@ class ApiModel extends RoxModelBase
         // field : isPublic : boolean : always
         $memberData->isPublic = $member->isPublic();
 
-        // field : givenName : string : always
+        // field : givenName : string : optional
         if ($member->firstname != '') {
             $memberData->givenName = $member->firstname;
         }
@@ -71,7 +71,7 @@ class ApiModel extends RoxModelBase
             $memberData->middleName = $member->secondname;
         }
 
-        // field : familyName : string : always
+        // field : familyName : string : optional
         if ($member->lastname != '') {
             $memberData->familyName = $member->lastname;
         }

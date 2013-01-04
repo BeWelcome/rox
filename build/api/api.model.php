@@ -51,6 +51,7 @@ class ApiModel extends RoxModelBase
      */
     public static function getMemberData(Member $member) {
         // TODO: avoid translation links in ago() when in translate mode
+        // TODO: allow viewing of profile translations
         $baseURL = PVars::getObj('env')->baseuri;
         $languageId = 0;
         $memberData = new stdClass;
@@ -83,6 +84,7 @@ class ApiModel extends RoxModelBase
         $memberData->signUpDate = date('Y-m-d', strtotime($member->created));
 
         // field : lastLogin : string : optional : Format: YYYY-MM-DD hh:mm:ss
+        // TODO: make disclosure configurable in user prefs
         $memberData->lastLogin = $member->LastLogin;
 
         // field : lastLoginTimestamp : number : optional : Unix timestamp
@@ -241,7 +243,8 @@ class ApiModel extends RoxModelBase
         $memberData->picture->full->url = $avatarBase . '500';
 
         // field : languagesSpoken : array : always
-        // TODO: add locale code (e.g. en_GB) and level (native, beginner etc.)
+        // TODO: add ISO 639-1 code (e.g. "en", needs to be added to database)
+        //       and level (native/beginner/..)
         $languages = array();
 
         foreach ($member->languages_spoken as $language) {

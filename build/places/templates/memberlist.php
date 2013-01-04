@@ -40,7 +40,7 @@ if (!$members) {
         {
         $request = PRequest::get()->request;
         $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
-        echo '<li class="userpicbox_more float_left">';
+        echo '<li class="userpicbox float_left">';
         echo '<a href="' . $login_url .'">';
         echo '<img width="50" height="50" alt="Profile" src="images/misc/empty_avatar_xs.png" class="framed float_left">';
         echo '</a>';

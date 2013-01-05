@@ -261,14 +261,16 @@ WHERE
             return $this->profile_language;
         } else {
             // check if current session language is a profile language
-            $member = $this->createEntity('Member', intval($_SESSION['IdMember']));
-            $member->set_profile_languages();
-            $langs = $member->profile_languages;
             $found = false;
-
-            foreach($langs as $lang) {
-                $found = ($lang->ShortCode == $_SESSION['lang']);
-                if ($found) break; 
+            if (isset($_SESSION['IdMember'])) {
+                $memberId = intval($_SESSION['IdMember']);
+                $member = $this->createEntity('Member', $memberId);
+                $member->set_profile_languages();
+                $langs = $member->profile_languages;
+                foreach($langs as $lang) {
+                    $found = ($lang->ShortCode == $_SESSION['lang']);
+                    if ($found) break; 
+                }
             }
             if ($found) {
                 $this->set_profile_language($_SESSION['lang']);

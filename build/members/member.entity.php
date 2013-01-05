@@ -987,7 +987,7 @@ LEFT JOIN
     memberspreferences.IdMember = $this->id
 WHERE
     preferences.Status != 'Inactive'
-ORDER BY Value asc
+ORDER BY preferences.id asc
           ";
         $rows = array();
         if (!$sql_result = $this->dao->query($sql)) {

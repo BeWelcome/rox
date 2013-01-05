@@ -1,0 +1,4 @@
+That's how I created the db table:
+
+DROP TABLE IF EXISTS groups_subgroups;
+CREATE TABLE groups_subgroups(id int(11) PRIMARY KEY auto_increment, group_id int(11), subgroup_id int(11), addedby int(11), deletedby int(11), ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);

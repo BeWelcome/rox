@@ -632,6 +632,8 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
                 } else if ($r == 'reverse') {  // This mean user has click on the reverse order box
                     $this->_model->SwitchForumOrderList() ;
+                } else if ($r == 'mygroupsonly') {  // This mean user has click on the ShowMyGroupsTopicsOnly box
+                    $this->_model->SwitchShowMyGroupsTopicsOnly() ;
                 }
                 else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;

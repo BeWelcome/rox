@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 $User = APP_User::login();
 ?>
 
-<div id="forum">
+<div id="forum">   
 
 <?php
 $ToogleTagCloud=true ;
@@ -43,7 +43,24 @@ if (!$User) {
     if ($threads = $boards->getThreads()) {
 ?>
   <div class="row"> 
-    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>
+    <h4><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
+    <?php
+    if ($User) {
+        if ($boards->owngroupsonly == "No") {
+            $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
+        } else {
+            $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
+        }
+        $url=$_SERVER['REQUEST_URI'] ;
+        if (strpos($url,"/mygroupsonly")===false) { // THis in order to avoid to concatenate /mygroupsonly twice
+            $url.="/mygroupsonly"  ;
+        }
+        ?>
+        <span class="button"><a href="<?php echo $url; ?>"><?php echo $buttonText; ?></a></span><?php echo $this->words->flushBuffer(); ?>
+        <?php
+    }
+    ?> 
+    </h4>
   </div><!--  row -->
 <?php
         require 'boardthreads.php';

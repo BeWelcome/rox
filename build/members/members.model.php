@@ -260,8 +260,22 @@ WHERE
         if(isset($this->profile_language)) {
             return $this->profile_language;
         } else {
-            // if no language is set use English
-            $this->set_profile_language("en") ;
+            // check if current session language is a profile language
+            $member = $this->createEntity('Member', intval($_SESSION['IdMember']));
+            $member->set_profile_languages();
+            $langs = $member->profile_languages;
+            $found = false;
+            for($ii = 0; $ii < count($langs); $ii++)
+            {
+                $found = ($langs[$ii]->ShortCode == $_SESSION['lang']);
+                if ($found) break; 
+            }
+            if ($found) {
+                $this->set_profile_language($_SESSION['lang']);
+            } else {
+                // if no language is set use English
+                $this->set_profile_language("en");
+            }
             return $this->profile_language;
         }
     }

@@ -265,9 +265,9 @@ WHERE
             $member->set_profile_languages();
             $langs = $member->profile_languages;
             $found = false;
-            for($ii = 0; $ii < count($langs); $ii++)
-            {
-                $found = ($langs[$ii]->ShortCode == $_SESSION['lang']);
+
+            foreach($langs as $lang) {
+                $found = ($lang->ShortCode == $_SESSION['lang']);
                 if ($found) break; 
             }
             if ($found) {

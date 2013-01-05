@@ -280,7 +280,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 		}
 		else {
 			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
+			$this->PublicPostVisibility="(PostVisibility != 'ModeratorOnly') && (PostDeleted!='Deleted')" ;
 			$this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
 			$this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
@@ -298,8 +298,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 		
 		// Prepares additional visibility options for moderator
 		if ($this->BW_Right->HasRight("ForumModerator")) {
-			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorsOnly')" ;
-			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorsOnly')" ;
+			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')" ;
+			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')" ;
 			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
 				$this->PostGroupsRestriction=" (1=1)" ;
 				$this->ThreadGroupsRestriction=" (1=1)" ;
@@ -2083,7 +2083,7 @@ and ($this->ThreadGroupsRestriction)
 					$topicinfo->CanReply=in_array($topicinfo->IdGroup,$this->MyGroups) ; // Set to true only if current member is member of the group
 				}
 			}
-			else if ($topicinfo->WhoCanReply=="ModeratorsOnly") {
+			else if ($topicinfo->WhoCanReply=="ModeratorOnly") {
 				if ($this->BW_Right->HasRight("ForumModerator")) {
 					$topicinfo->CanReply=true ;
 				}
@@ -3529,8 +3529,8 @@ class Board implements Iterator {
 		
 		// Prepares additional visibility options for moderator
 		if ($this->BW_Right->HasRight("ForumModerator")) {
-			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorsOnly')" ;
-			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorsOnly')" ;
+			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')" ;
+			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')" ;
 			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
 				$this->PostGroupsRestriction=" (1=1)" ;
 				$this->ThreadGroupsRestriction=" (1=1)" ;

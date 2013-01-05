@@ -122,9 +122,9 @@ if (isset($DataPost->Thread->title))
 				}
 				?>
 				>Group Members only</option>
-				<option value="ModeratorsOnly"
+				<option value="ModeratorOnly"
 				<?php
-				if ($DataPost->Thread->WhoCanReply=="ModeratorsOnly") {
+				if ($DataPost->Thread->WhoCanReply=="ModeratorOnly") {
 					echo " selected" ;
 				}
 				?>

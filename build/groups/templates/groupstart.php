@@ -1,6 +1,6 @@
-<?php foreach ($this->getMessages() as $message) : ?>
+<?php foreach ($this->getMessages() as $message) { ?>
 <p><?= $words->get($message); ?>
-<?php endforeach; ?>
+<?php } ?>
 <?php
 $group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES); 
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
@@ -12,19 +12,41 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
             <div class="subcl">
                 <div class="row floatbox">
                     <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
-                    <h3><?= $words->get('GroupDescription'); ?></h3>
-                    <p><?= $purifier->purify(nl2br($this->group->getDescription())) ?></p>
+                    <h3><?php echo $words->get('GroupDescription'); ?></h3>
+                    <p><?php echo $purifier->purify(nl2br($this->group->getDescription())) ?></p>
                 </div> <!--row floatbox -->
 
-                <h3><?= $words->getFormatted('ForumRecentPostsLong');?></h3>
+                <h3><?php echo $words->getFormatted('ForumRecentPostsLong');?></h3>
                 <div class="row floatbox">
-                    <?= $Forums->showExternalGroupThreads($group_id); ?>
+                    <?php echo $Forums->showExternalGroupThreads($group_id); ?>
                 </div> <!-- floatbox -->
-                <?php
-                $shouts = new ShoutsController();
-    	        $shouts->shoutsList('groups',$group_id);
-                ?>
                 
+                <?php
+                $subgroups = $this->group->findSubgroups($group_id);
+                if (!empty($subgroups)) { ?>
+                    <h3><?php echo $words->getFormatted('SubgroupsTitle');?></h3>
+                <?php } ?>
+                <ul class="floatbox">
+                <?php 
+                foreach ($subgroups as $group_data) { 
+                    if (strlen($group_data->Picture) > 0) {
+                        $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
+                    } else {
+                        $img_link = "images/icons/group.png";
+                    } ?>
+                <li class="picbox_subgroup float_left">
+                    <a href="groups/<?php echo $group_data->getPKValue() ?>">
+                        <img class="framed_subgroup float_left"  width="60px" height="60px" alt="Group" src="<?php echo $img_link; ?>"/>
+                    </a>
+                    <div class="userinfo"><span class="small">
+                    <h4><a href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
+                        <?php echo $words->get('GroupsMemberCount');?>: <?php echo $group_data->getMemberCount(); ?><br />
+                        <?php echo $words->get('GroupsForumPostsTitle');?>: <?php echo count($group_data->getNewMembers()) ; ?><br />
+                    </span></div> <!-- userinfo -->
+                </li> <!-- userpicbox_subgroup -->
+
+            <?php } ?>
+            </ul>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         

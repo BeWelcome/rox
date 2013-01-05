@@ -55,7 +55,7 @@ class GroupSettingsPage extends GroupsBasePage
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
         $model = $this->getModel();
-
+        $group_id = $this->group->id;
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('GroupsController', 'changeGroupSettings');
         
@@ -77,48 +77,68 @@ class GroupSettingsPage extends GroupsBasePage
         }
 ?>
     <div id="groups">
-        <div class="subcolumns">
-            <div class="c62l">
-                <div class="subcl">
 
-                    <form method="post" action="" enctype='multipart/form-data'>
-                    <?=$callback_tag ?>
-                        <fieldset>
-                            <legend><?= $words->get('GroupsAdminGroup'); ?></legend>
+
+    <form method="post" action="" enctype='multipart/form-data'>
+    <?=$callback_tag ?>
+        <fieldset>
+            <legend><?= $words->get('GroupsAdminGroup'); ?></legend>
+            <div class="subcolumns">
+                <div class="c50l">
+                    <div class="subcl">
                             <input type='hidden' name='group_id' value='<?=$this->group->getPKValue(); ?>' />
                             <?= ((!empty($problems['General'])) ? "<p class='error'>" . $words->get('GroupsChangeFailed') . "</p>" : '' ); ?>
-                            <label for="description"><?= $words->get('Description');?>:</label><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?><br />
-                            <textarea  id="description" name="GroupDesc_" cols="36" rows="5" class="long" ><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea><br /><br />
-                            <h3><?= $words->get('GroupsPublicStatusHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
+                            <label for="description"><h3><?= $words->get('Description');?>:</label></h3><?= ((!empty($problems['GroupDesc_'])) ? "<span class='error'>" . $words->get('GroupsCreationDescriptionMissing') ."</span>" : '' ); ?>
+                            <textarea  id="description" name="GroupDesc_" cols="40" rows="4" class="long" ><?=htmlspecialchars($GroupDesc_, ENT_QUOTES)?></textarea><br /><br />
+                    </div><!-- subcl -->
+                </div><!-- c50l -->
+                <div class="c50r">
+                    <div class="subcr">  
+                     <h3><?= $words->get('GroupsPublicStatusHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
                             <ul>
                                 <li><input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?> /><label for="public" ><?=$words->get('GroupsJoinPublic'); ?></label></li>
                                 <li><input type="radio" id="approved" name="Type" value="NeedAcceptance"<?= (($Type=='NeedAcceptance') ? ' checked="checked"': ''); ?> /><label for="approved" ><?=$words->get('GroupsJoinApproved'); ?></label></li>
                                 <li><input type="radio" id="invited" name="Type" value="NeedInvitation"<?= (($Type=='NeedInvitation') ? ' checked="checked"': ''); ?> /><label for="invited" ><?=$words->get('GroupsJoinInvited'); ?></label></li>
                             </ul>
-                            <h3><?= $words->get('GroupsVisiblePostsHeading'); ?></h3><?= ((!empty($problems['Visibility'])) ? "<span class='error'>" . $words->get('GroupsCreationVisibilityMissing') . "</span>" : '' ); ?>
+                    </div><!-- subcr -->
+                </div><!-- c50r -->
+            </div><!-- subcolumns -->             
+            <div class="subcolumns">
+                <div class="c50l">
+                    <div class="subcl">
+                          <h3><?= $words->get('GroupsVisiblePostsHeading'); ?></h3><?= ((!empty($problems['Visibility'])) ? "<span class='error'>" . $words->get('GroupsCreationVisibilityMissing') . "</span>" : '' ); ?>
                             <ul>
                                 <li><input type="radio" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked="checked"': ''); ?> /><label for="visible" ><?=$words->get('GroupsVisiblePosts'); ?></label></li>
                                 <li><input type="radio" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked="checked"': ''); ?> /><label for="invisible" ><?=$words->get('GroupsInvisiblePosts'); ?></label></li>
                             </ul>
-                            <h3><?= $words->get('GroupsAddImage'); ?></h3>
+                    </div><!-- subcl -->
+                </div><!-- c50l -->
+                <div class="c50r">
+                    <div class="subcr">  
+                     <h3><?= $words->get('GroupsAddImage'); ?></h3>
                             <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
-                        <p style="padding-top: 2em"><input type="submit" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></p>
-                    </fieldset>
-
-                    </form>
-                </div>
-            </div>
-            <div class="c38r">
-                <div class="subcr">
+                        
+                    </div><!-- subcr -->
+                </div><!-- c50r -->
+            </div><!-- subcolumns -->                                       
+           <div style="margin-bottom:1.5em"><input type="submit" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></div>           
+            <div class="subcolumns">
+                <div class="c50l">
+                    <div class="subcl">
                     <h3><?= $words->get('GroupsAdministrateMembers'); ?></h3>
-                        <p><a class="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a></p>
+                    <a class="button" href="groups/<?= $this->group->id; ?>/memberadministration"><?= $words->get('GroupsAdministrateMembers'); ?></a>
+                    </div><!-- subcl -->
+                </div><!-- c50l -->
+                <div class="c50r">
+                    <div class="subcr">  
                     <h3><?= $words->get('GroupsDeleteGroup'); ?></h3>
-                        <p><a class="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
+                    <a class="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a>
+                    </div><!-- subcr -->
+                </div><!-- c50r -->
+            </div><!-- subcolumns -->                           
+        </fieldset>
+    </form>
+    <?php    
     }
 
 

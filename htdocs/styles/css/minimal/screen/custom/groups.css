@@ -40,4 +40,15 @@
   display: block;
 }
 
+/* Special classes for subgrouplogs*/
+#main li.picbox_subgroup {
+    padding: 7px;
+    width: 230px;
+    padding-left: 0px;
+}
+img.framed_subgroup {
+    background: none repeat scroll 0 0 #F3F3F3;
+    border: 1px solid #DDDDDD;
+    padding: 1px;
+    margin-bottom: 1.5em;
 }

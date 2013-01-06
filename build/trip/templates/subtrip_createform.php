@@ -97,7 +97,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                     <p class="desc"></p>
                 <div class="row">
                     <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
-                    <textarea id="create-txt" name="txt" rows="11" cols="35"><?php
+                    <textarea id="create-txt" name="txt" rows="11" cols="30"><?php
                     // the content may be set
                     echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
                     ?></textarea>

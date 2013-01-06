@@ -337,35 +337,75 @@ function FindAppropriatedLanguage($IdPost=0) {
         MOD_log::get()->write("Switching PreferenceForumOrderListAsc to [".$this->ForumOrderList."]", "ForumModerator");
 	} // end of SwitchForumOrderList
 
+
     // This switch the preference ShowMyGroupsTopicsOnly
     public function SwitchShowMyGroupsTopicsOnly() {
         $member = $this->getLoggedInMember();
         $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
         $this->ShowMyGroupsTopicsOnly = $owngroupsonly;
-        if ($this->ShowMyGroupsTopicsOnly=="Yes") {
-            $this->ShowMyGroupsTopicsOnly="No" ;
+        if ($this->ShowMyGroupsTopicsOnly == "Yes") {
+            $this->ShowMyGroupsTopicsOnly = "No" ;
         }
         else {
-            $this->ShowMyGroupsTopicsOnly="Yes" ;
+            $this->ShowMyGroupsTopicsOnly = "Yes" ;
         }
-        $ss="select Value,memberspreferences.id as id,IdMember,preferences.id as IdPreference from (preferences) " ;
-        $ss=$ss." left join memberspreferences on preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$_SESSION['IdMember'] ;
-        $ss=$ss." where codeName='ShowMyGroupsTopicsOnly'" ;
+        
+        $ss = "
+SELECT 
+    Value, 
+    memberspreferences.id AS id, 
+    IdMember, 
+    preferences.id AS IdPreference 
+FROM 
+    (preferences) " ;
+        
+        $ss = $ss . " 
+LEFT JOIN 
+    memberspreferences 
+    ON 
+    preferences.id = memberspreferences.IdPreference 
+    AND 
+    memberspreferences.IdMember = " . $_SESSION['IdMember'] ;
+        
+        $ss = $ss . " 
+WHERE 
+    codeName = 'ShowMyGroupsTopicsOnly'" ;
         
         $qq = $this->dao->query($ss);
-        $rr=$qq->fetch(PDB::FETCH_OBJ) ;
+        $rr = $qq->fetch(PDB::FETCH_OBJ) ;
         if (empty($rr->Value)) {
-            $ss="insert into memberspreferences(created,IdPreference,IdMember,Value) " ;
-            $ss=$ss." values(now(),".$rr->IdPreference.",".$_SESSION['IdMember'].",'".$this->ShowMyGroupsTopicsOnly."')" ;
+            $ss = "
+INSERT INTO 
+    memberspreferences(
+        created,
+        IdPreference,
+        IdMember,
+        Value
+    ) " ;
+            
+            $ss = $ss . " 
+VALUES(
+    now(), 
+    " . $rr->IdPreference . "," . 
+    $_SESSION['IdMember'] . ",
+    '" . $this->ShowMyGroupsTopicsOnly . "'
+)" ;
         }
         else {
-            $ss="update memberspreferences set Value='".$this->ShowMyGroupsTopicsOnly."' where id=".$rr->id ;
+            $ss = "
+UPDATE 
+    memberspreferences 
+SET 
+    Value='" . $this->ShowMyGroupsTopicsOnly . "' 
+WHERE 
+    id=" . $rr->id ;
         }
+        
         $qq = $this->dao->query($ss);
         if (!$qq) {
-            throw new PException('ShowMyGroupsTopicsOnly '.$ss.' !');
+            throw new PException('ShowMyGroupsTopicsOnly ' . $ss . ' !');
         }
-        MOD_log::get()->write("Switching ShowMyGroupsTopicsOnly to [".$this->ShowMyGroupsTopicsOnly."]", "ForumModerator");
+        MOD_log::get()->write("Switching ShowMyGroupsTopicsOnly to [" . $this->ShowMyGroupsTopicsOnly . "]", "ForumModerator");
     } // end of ShowMyGroupsTopicsOnly
     
 

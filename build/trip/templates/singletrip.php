@@ -62,7 +62,7 @@ if ($member && $isOwnTrip) {?>
 			}
 			echo '<p style="padding: 0 0 20px 0;">'.$blogtext.'</p>';
 		} else  {
-        echo '<p style="padding: 0 0 20px 0;">'.$blogtext.'</p>';
+        echo '<p style="padding: 0 0 20px 0;"></p>';
         }
 ?>
 <!-- End of contents for right subtemplate -->

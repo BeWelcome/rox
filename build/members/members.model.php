@@ -1064,7 +1064,12 @@ ORDER BY
             if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id]) 
                 and (!empty($vars["RelationComment_".$Relation->id])))  {
 //              echo "Relation #".$Relation->id,"<br />", $words->mInTrad($Relation->Comment,$vars['profile_language']),"<br />",$vars['RelationComment_'.$Relation->id],"<br />" ;
-                $words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
+                $IdTrad = $words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
+                // Empty comments have trad id 0. Causing ReplaceInMTrad to create
+                // a new trad id and returning the new number.
+                if ($IdTrad != $Relation->id) {
+                    $m->update_relation($Relation->id, $IdTrad);
+                }
                 $this->logWrite("updating relation #".$Relation->id." Relation Confirmed=".$Relation->Confirmed, "Profile update");
             }
         }

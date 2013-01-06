@@ -68,13 +68,13 @@ class MOD_htmlpure
      */
     public function getPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier/library/HTMLPurifier.standalone.php');
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
         return new HTMLPurifier();
     }
 
     public function getBasicHtmlPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier/library/HTMLPurifier.standalone.php');
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd');
         $config->set('AutoFormat.AutoParagraph', true);
@@ -83,7 +83,7 @@ class MOD_htmlpure
     
     public function getAdvancedHtmlPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier/library/HTMLPurifier.standalone.php');
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd');
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs

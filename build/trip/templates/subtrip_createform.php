@@ -12,9 +12,10 @@ $cloudmade_conf = PVars::getObj('cloudmade');
             $actionUrl = implode('/', $request);
             $submitName = '';
             $submitValue = $words->getSilent('BlogCreateSubmit');
-        } else {
+        } else if (isset($request[2]) || $request[2] = 'finish') {
             echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
-            echo '<p>'.$words->get('BlogCreateFinishInfo')."</p>\n";
+            $submitValue = $words->getSilent('BlogCreateSubmit');
+            $actionUrl = $request[0] . '/' . $request[1];
         }
 
 /**

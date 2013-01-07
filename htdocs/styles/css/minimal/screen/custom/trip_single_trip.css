@@ -51,7 +51,7 @@ div.tripitem {
 #triplist li {
       background: url("../../images/teaser_bg_white2.png") no-repeat scroll left bottom transparent;
       margin: 0 0 1em;
-      padding:15px;
+      padding:15px 0 0 0;
       line-height: 1.5em;
 
 }

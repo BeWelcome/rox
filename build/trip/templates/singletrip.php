@@ -10,7 +10,7 @@ if (isset($trip_data[$trip->trip_id])) {
 ?>
 
 <!-- Subtemplate: 2 columns 50/50 size -->
-<div class="subcolumns">
+<div class="subcolumns" style="padding-bottom: 30px;">
   <div class="c25l" style="width: 10%">
     <div class="subcl">
 <?php
@@ -43,15 +43,9 @@ if (isset($trip_data[$trip->trip_id])) {
             {
                 $countryname = '';
             }
-			echo "<span <span class='trip_author'>{$blog->name}, {$countryname}</span>";
+			echo "<span <span class='trip_author'>{$blog->name}, {$countryname}</span><br />";
 		}
 ?>
-<div class="float_right">
-<?php
-if ($member && $isOwnTrip) {?>
-<a href="blog/edit/<?=$blogid; ?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" style="vertical-align:bottom;" alt="<?=$words->get('Trip_EditMyOwnSubTrip')?>" /></a> <a href="blog/edit/<?=$blogid; ?>" title="<?=$words->get('Trip_EditMyOwnSubTrip')?>"><?=$words->get('Trip_EditMyOwnSubTrip')?></a>
-<?php   }?>
-</div>
 <?php 
 		if ($blog->blog_text) {
 			if (strlen($blog->blog_text) > 400) {
@@ -60,15 +54,19 @@ if ($member && $isOwnTrip) {?>
 			} else {
 				$blogtext = $blog->blog_text;
 			}
-			echo '<p style="padding: 0 0 20px 0;">'.$blogtext.'</p>';
-		} else  {
-        echo '<p style="padding: 0 0 20px 0;"></p>';
-        }
+			echo '<div>'.$blogtext.'</div>';
+		} 
 ?>
+<div>
+<?php
+if ($member && $isOwnTrip) {?>
+<a href="blog/edit/<?=$blogid; ?>"><img src="styles/css/minimal/images/iconsfam/pencil.png" style="vertical-align:bottom;" alt="<?=$words->get('Trip_EditMyOwnSubTrip')?>" /></a> <a href="blog/edit/<?=$blogid; ?>" title="<?=$words->get('Trip_EditMyOwnSubTrip')?>"><?=$words->get('Trip_EditMyOwnSubTrip')?></a>
+<?php   }?>
+</div>
 <!-- End of contents for right subtemplate -->
-    </div>
-  </div>
-</div> 
+    </div><!-- End of subcr -->
+  </div><!-- End of c75r -->
+</div>
 <?php
 		echo '</li>';
 			

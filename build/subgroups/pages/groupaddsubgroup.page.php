@@ -37,6 +37,7 @@ class GroupAddSubgroupPage extends GroupsBasePage
     {
         $words = $this->getWords();
 ?>
+        <div class="subcolumns"> 
             <div class="subcr">
                 <?php // display my groups, if there are any
                 $my_groups = $this->my_groups;
@@ -67,7 +68,7 @@ class GroupAddSubgroupPage extends GroupsBasePage
                     } 
                 } ?>
                 
-        </div> <!-- c38r -->
+        </div> <!-- subcr -->
     </div> <!-- subcolumns -->
 </div> <!-- groups -->
 

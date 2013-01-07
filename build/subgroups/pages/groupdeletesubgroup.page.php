@@ -37,6 +37,7 @@ class GroupDeleteSubgroupPage extends GroupsBasePage
     {
         $words = $this->getWords();
 ?>
+        <div class="subcolumns"> 
             <div class="subcr">
                 <?php // display my groups, if there are any
                 $subgroups = $this->subgroups;
@@ -65,7 +66,7 @@ class GroupDeleteSubgroupPage extends GroupsBasePage
                  } ?>
                 
 
-        </div> <!-- c38r -->
+        </div> <!-- subcr -->
     </div> <!-- subcolumns -->
 </div> <!-- groups -->
 

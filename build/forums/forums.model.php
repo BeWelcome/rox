@@ -340,7 +340,9 @@ function FindAppropriatedLanguage($IdPost=0) {
 
     // This switch the preference ShowMyGroupsTopicsOnly
     public function SwitchShowMyGroupsTopicsOnly() {
-        $member = $this->getLoggedInMember();
+        if (!$member = $this->getLoggedInMember()) {
+            return;
+        }
         $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
         $this->ShowMyGroupsTopicsOnly = $owngroupsonly;
         if ($this->ShowMyGroupsTopicsOnly == "Yes") {
@@ -3585,7 +3587,6 @@ class Board implements Iterator {
             $roxmodel = New RoxModelBase ;
             $member = $roxmodel->getLoggedInMember();
             $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
-            //$owngroupsonly = "Yes"; //Dummy 
             $this->owngroupsonly = $owngroupsonly;
             if ($owngroupsonly == "Yes") {
                 $this->PostGroupsRestriction=" (IdGroup in(-1" ;

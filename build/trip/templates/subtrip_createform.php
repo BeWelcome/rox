@@ -12,12 +12,11 @@ $cloudmade_conf = PVars::getObj('cloudmade');
             $actionUrl = implode('/', $request);
             $submitName = '';
             $submitValue = $words->getSilent('BlogCreateSubmit');
-        } else if (isset($request[2]) || $request[2] = 'finish') {
+        } else if (isset($request[2]) && $request[2] === 'finish') {
             echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
             $submitValue = $words->getSilent('BlogCreateSubmit');
-            $actionUrl = $request[0] . '/' . $request[1];
+            $actionUrl = 'trip/' . $request[1];
         }
-
 /**
  * edit and create form template controller // mostly copied from Blog Application
  * for documentation look at build/blog/editcreateform.php

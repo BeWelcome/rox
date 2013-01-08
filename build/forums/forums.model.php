@@ -357,17 +357,13 @@ SELECT
     IdMember, 
     preferences.id AS IdPreference 
 FROM 
-    (preferences) " ;
-        
-        $ss = $ss . " 
+    preferences 
 LEFT JOIN 
     memberspreferences 
     ON 
     preferences.id = memberspreferences.IdPreference 
     AND 
-    memberspreferences.IdMember = " . $_SESSION['IdMember'] ;
-        
-        $ss = $ss . " 
+    memberspreferences.IdMember = " . $_SESSION['IdMember'] . " 
 WHERE 
     codeName = 'ShowMyGroupsTopicsOnly'" ;
         
@@ -381,14 +377,12 @@ INSERT INTO
         IdPreference,
         IdMember,
         Value
-    ) " ;
-            
-            $ss = $ss . " 
+    ) 
 VALUES(
     now(), 
     " . $rr->IdPreference . "," . 
-    $_SESSION['IdMember'] . ",
-    '" . $this->ShowMyGroupsTopicsOnly . "'
+    $_SESSION['IdMember'] . ", 
+    '" . $this->ShowMyGroupsTopicsOnly . "' 
 )" ;
         }
         else {

@@ -138,6 +138,7 @@ class GroupSettingsPage extends GroupsBasePage
             </div><!-- subcolumns -->                           
         </fieldset>
     </form>
+    </div><!-- groups --> 
     <?php    
     }
 

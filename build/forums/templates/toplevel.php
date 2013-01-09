@@ -56,7 +56,7 @@ if (!$User) {
             $url.="/mygroupsonly"  ;
         }
         ?>
-        <span class="button"><a href="<?php echo $url; ?>"><?php echo $buttonText; ?></a></span><?php echo $this->words->flushBuffer(); ?>
+        <div class="float_right"><span class="button"><a href="<?php echo $url; ?>"><?php echo $buttonText; ?></a></span></div><?php echo $this->words->flushBuffer(); ?>
         <?php
     }
     ?> 

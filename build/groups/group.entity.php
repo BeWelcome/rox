@@ -501,7 +501,7 @@ class Group extends RoxEntityBase
         $where = "{$this->_table_name}.id IN  (
 SELECT sg.subgroup_id 
 FROM groups_subgroups as sg 
-WHERE sg.group_id = $group_id AND sg.deletedby IS NULL
+WHERE sg.group_id = " . intval($group_id) . " AND sg.deletedby IS NULL
 ORDER BY group_id)";
         
         return $this->findByWhereMany($where, $offset, $limit);

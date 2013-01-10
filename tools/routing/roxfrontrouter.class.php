@@ -104,8 +104,7 @@ class RoxFrontRouter
 				$_SESSION['IdLanguage'] = $trylang->id;
 				return ;
 			}
-       		if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error
-                error_log($_SERVER["HTTP_ACCEPT_LANGUAGE"]);	    
+       		if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error    
        		    // Try to look in the default browser settings
                 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
                 for ($ii=0;$ii<count($TLang);$ii++) {

@@ -8,9 +8,9 @@ $cloudmade_conf = PVars::getObj('cloudmade');
 
 if ($isOwnTrip) {
 ?>
-    <div style="padding: 20px 0">
+    <div style="padding: 20px 0" id="destination-form">
     <h3>
-    <a href="blog/create" name="destination" onclick="$('blog-create-form').toggle(); return false"><img src="images/icons/note_add.png"></a> <a href="blog/create" onclick="$('blog-create-form').toggle(); return false"><?=$words->get('Trip_SubtripsCreate')?></a><br />
+    <img src="images/icons/note_add.png" alt="<?=$words->get('Trip_SubtripsCreate')?>"/> <?=$words->get('Trip_SubtripsCreate')?><br />
     </h3>
     <p class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></p>
     </div>
@@ -75,7 +75,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                     ?>
                     <p class="desc"></p>
                 </div>
-                                <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
+                                <label for="create-date"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
                 <div class="floatbox">
                     <input type="text" id="create-date" name="date" class="date" maxlength="10" <?php
                     echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -101,7 +101,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                     ?>
                     <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
                     
-                    <input id="create-trip" name="tr" type="hidden" value="<?=$vars['trip_id_foreign'] ? $vars['trip_id_foreign'] : ''?>">
+                    <input id="create-trip" name="tr" type="hidden" value="<?=$vars['trip_id_foreign'] ? $vars['trip_id_foreign'] : ''?>" />
                     <?php
                     if (in_array('trip', $vars['errors'])) {
                         echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
@@ -173,7 +173,7 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
     <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
     <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
 
-          <div id="location-suggestion" class></div>
+          <div id="location-suggestion"></div>
 </fieldset>
 
 <fieldset id="destination-options">

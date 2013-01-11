@@ -218,22 +218,7 @@ if (isset($vars['id']) && $vars['id']) {
 ?>
 
     <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
-    <?php
-    /* removed pending deletiong
-    if ($User->hasRight('write_sticky@blog')) {
-    ?>
-        <div class="row">
-            <input type="checkbox" id="create-flag-sticky" name="flag-sticky"<?php
-            if (isset($vars['flag-sticky']) && (int)$vars['flag-sticky']) {
-                echo ' checked="checked"';
-            }
-            ?>/>
-            <label for="create-flag-sticky"> <?=$words->get('BlogCreateSettings_LabelSticky')?></label>
-        </div>
-    <?php
-    }
-    */
-    ?>
+
     <label><?=$words->get('label_vis')?></label>
     <div class="row">
         <input type="radio" name="vis" value="pub" id="create-vis-pub"<?php

@@ -69,19 +69,6 @@ class TripView extends PAppView {
         $shoutsCtrl = new ShoutsController;
         $shoutsCtrl->shoutsList('trip', $trip->trip_id);
 	}
-	public function displaySingleTrip_Sidebar($trip, $trip_data)
-    {
-        $member = $this->_model->getLoggedInMember();
-		if (!$member = $this->_model->getLoggedInMember())
-        {
-			$isOwnTrip = false;
-		}
-        else
-        {
-			$isOwnTrip = ($trip->IdMember == $member->id);
-		}
-		require 'templates/singletrip_sidebar.php';
-	}
     
     public function teaser($trip = false) {
         require 'templates/teaser.php';

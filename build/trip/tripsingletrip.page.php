@@ -45,11 +45,6 @@ class TripSingleTripPage extends PageWithActiveSkin
         $trip = $this->trip;
         return "<a href='trip'>{$this->words->get('tripsTitle')}</a> &raquo; <a href='trip/show/{$trip->handle}'>{$trip->handle}</a>";
     }
-
-    protected function leftSideBar()
-    {
-        echo $this->sidebar;
-    }
     
     protected function getStylesheets() 
     {  

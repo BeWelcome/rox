@@ -1,3 +1,13 @@
+<?php
+/*
+ * template content: 
+ * shows the destinations (subtrips) of a trip 
+ * 2 columns 10% /90%
+ * left column: calendar icons (date)
+ * right column: destination title, location and text
+ * 
+ */
+?>
 <div class="floatbox">
 
 <?php
@@ -76,17 +86,4 @@ if ($member && $isOwnTrip) {?>
 } // end if tripdata
 ?>
 </div>
-
-<?php
-	if ($isOwnTrip) {
-?>
-    <div style="padding: 20px 0">
-    <h3>
-    <a href="blog/create" name="destination" onclick="$('blog-create-form').toggle(); return false"><img src="images/icons/note_add.png"></a> <a href="blog/create" onclick="$('blog-create-form').toggle(); return false"><?=$words->get('Trip_SubtripsCreate')?></a><br />
-    </h3>
-    <p class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></p>
-    </div>
-    <?php require 'subtrip_createform.php' ?>
-<?php
-    }
-?>
+<?php require 'subtrip_createform.php' ?>

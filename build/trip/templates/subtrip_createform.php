@@ -1,6 +1,19 @@
 <?php 
+/*
+ * template content: 
+ * shows the add destinations form with destination and options tab
+ */
+ 
 $cloudmade_conf = PVars::getObj('cloudmade');
+
+if ($isOwnTrip) {
 ?>
+    <div style="padding: 20px 0">
+    <h3>
+    <a href="blog/create" name="destination" onclick="$('blog-create-form').toggle(); return false"><img src="images/icons/note_add.png"></a> <a href="blog/create" onclick="$('blog-create-form').toggle(); return false"><?=$words->get('Trip_SubtripsCreate')?></a><br />
+    </h3>
+    <p class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></p>
+    </div>
  <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
 
 <?php
@@ -266,7 +279,8 @@ if (isset($vars['id']) && $vars['id']) {
 
 
 </form>
-</div>
+<?php    }?>
+
 <script type="text/javascript">//<!--
 
 BlogSuggest.initialize('destination-edit-form');

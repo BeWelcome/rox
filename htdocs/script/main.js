@@ -126,7 +126,7 @@ bwrox.selectScripts([
   {
     file: "geo_suggest.js?1",
     pages: [
-      "signup", "setlocation"
+      "signup", "setlocation" ,
     ]
   },
   {
@@ -159,6 +159,7 @@ bwrox.selectScripts([
       "user/settings",
       "trip/create",
       "trip/edit",
+      "trip",
       "gallery/show/image",
       "message/write",
       "editmyprofile"

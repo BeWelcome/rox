@@ -306,7 +306,4 @@ jQuery(function() {
 });
 
 //-->
-</script>        
-<script type="text/javascript" src="script/fieldset.js"></script>
-<script type="text/javascript" src="script/blog_suggest.js"></script>        
-
+</script>

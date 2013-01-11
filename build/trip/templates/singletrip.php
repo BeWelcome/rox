@@ -53,7 +53,7 @@ if (isset($trip_data[$trip->trip_id])) {
             {
                 $countryname = '';
             }
-			echo "<span <span class='trip_author'>{$blog->name}, {$countryname}</span><br />";
+			echo "<span class='trip_author'>{$blog->name}, {$countryname}</span><br />";
 		}
 ?>
 <?php 

@@ -19,7 +19,6 @@ class TripSingleTripPage extends PageWithActiveSkin
         $request = PRequest::get()->request;
         $errors = array();
         $lang = array();
-        $catIt = $Model->getCategoryArray(false, $member);
         //$tripIt = $Model->getTripFromUserIt($member->id);
         //$defaultVis = A PP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
         // defaults to public then

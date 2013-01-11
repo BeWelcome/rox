@@ -178,26 +178,7 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
 
 <fieldset id="destination-options">
 <legend><?=$words->get('TripDestinationOptionsLabelTab')?></legend>
-    
-    <div class="row">
-        <label for="create-cat"><?=$words->get('BlogCreateLabelCategories')?>:</label><br />
-        <select id="create-cat" name="cat">
-            <option value="">-- <?=$words->get('BlogCreateNoCategories')?> --</option>
-        <?php
-            foreach ($catIt as $c) {
-                echo "<option value=\"".$c->blog_category_id."\" ";
-                if (isset($vars['cat']) && $c->blog_category_id == $vars['cat']) echo ' selected';
-                echo ">".htmlentities($c->name, ENT_COMPAT, 'utf-8')."</option>\n";
-            }
-        ?>
-        </select>
-        <?php
-        if (in_array('category', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_category').'</span>';
-        }
-        ?>
-        <p class="desc"></p>
-    </div>
+
     <div class="row">
         <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
         <textarea id="create-tags" name="tags" cols="40" rows="1"><?php

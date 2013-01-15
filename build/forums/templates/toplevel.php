@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 $User = APP_User::login();
 ?>
 
-<div id="forum">   
+<div id="forum">
 
 <?php
 $ToogleTagCloud=true ;
@@ -52,7 +52,8 @@ if (!$User) {
             $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
         }
         $url=$_SERVER['REQUEST_URI'] ;
-        if (strpos($url,"/mygroupsonly")===false) { // THis in order to avoid to concatenate /mygroupsonly twice
+        if (strpos($url,"/mygroupsonly")===false) {
+            // in order to avoid to concatenate /mygroupsonly twice
             $url.="/mygroupsonly"  ;
         }
         ?>

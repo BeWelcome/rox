@@ -401,7 +401,8 @@ WHERE
         if (!$qq) {
             throw new PException('ShowMyGroupsTopicsOnly ' . $ss . ' !');
         }
-        MOD_log::get()->write("Switching ShowMyGroupsTopicsOnly to [" . $this->ShowMyGroupsTopicsOnly . "]", "ForumModerator");
+        header('Location: ' . PVars::getObj('env')->baseuri . 'forums');
+        PPHP::PExit();
     } // end of ShowMyGroupsTopicsOnly
     
 
@@ -3583,12 +3584,13 @@ class Board implements Iterator {
 		else {
 			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
-			//if only want to see posts from groups where i am member of   
+			//if the member prefers to see only posts to his/her groups
             $roxmodel = New RoxModelBase ;
             $member = $roxmodel->getLoggedInMember();
             $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
             $this->owngroupsonly = $owngroupsonly;
             if ($owngroupsonly == "Yes") {
+                // 0 is the group id for topics without an explicit group, we don't want them in this case. Lazy hack to avoid changing more than necessary: replace 0 with -1
                 $this->PostGroupsRestriction=" (IdGroup in(-1" ;
                 $this->ThreadGroupsRestriction=" (IdGroup in(-1" ;
             } else {

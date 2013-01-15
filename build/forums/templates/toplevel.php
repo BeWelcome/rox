@@ -52,13 +52,16 @@ if (!$User) {
             $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
         }
         $url=$_SERVER['REQUEST_URI'] ;
-        if (strpos($url,"/mygroupsonly")===false) {
-            // in order to avoid to concatenate /mygroupsonly twice
-            $url.="/mygroupsonly"  ;
-        }
-        ?>
-        <div class="float_right"><span class="button"><a href="<?php echo $url; ?>"><?php echo $buttonText; ?></a></span></div><?php echo $this->words->flushBuffer(); ?>
-        <?php
+        if (substr($url,-6) === "forums") {
+            ?>
+            <div class="float_right">
+                <span class="button">
+                    <a href="<?php echo $url . '/mygroupsonly'; ?>"><?php echo $buttonText; ?></a>
+                </span>
+            </div>
+            <?php
+        } 
+        echo $this->words->flushBuffer();
     }
     ?> 
     </h4>

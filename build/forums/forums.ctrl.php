@@ -602,6 +602,8 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SUBSCRIBE;
         } else if (isset($request[1]) && $request[1] == 'rules') {
             $this->action = self::ACTION_RULES;
+        } else if (isset($request[1]) && $request[1] === 'mygroupsonly') {
+            $this->_model->SwitchShowMyGroupsTopicsOnly() ;
         } else {
             foreach ($request as $r) {
                 if ($r == 'new') {
@@ -632,10 +634,7 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
                 } else if ($r == 'reverse') {  // This mean user has click on the reverse order box
                     $this->_model->SwitchForumOrderList() ;
-                } else if ($r == 'mygroupsonly') {  // This mean user has click on the ShowMyGroupsTopicsOnly box
-                    $this->_model->SwitchShowMyGroupsTopicsOnly() ;
-                }
-                else if ($r == 'delete') {
+                } else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
                 } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {
                     $this->_model->setPage($regs[1][0]);
@@ -670,7 +669,7 @@ class ForumsController extends PAppController
                     } else if ($char == 'k' && $r != "kickmember") { // Continent-ID
                         $this->_model->setContinent(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                    } else if ($char == 'm') { // Message-ID (Single Post)
+                    } else if ($char == 'm' && $r != "mygroupsonly") { // Message-ID (Single Post)
                         $this->_model->setMessageId(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
                     }

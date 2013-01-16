@@ -123,13 +123,13 @@ class SubgroupsController extends RoxControllerBase
             $page->group = $group;
             $page->member = $member;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
-            $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES));
+            $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES)));
          } else {
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
-            $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES));
+            $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES)));
          }
          return $page;
      }

@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
      * This page asks if the user wants to remove a group as subgroups the group
      *
      * @package Apps
-     * @subpackage Groups
+     * @subpackage Subgroups
      */
 class GroupDeleteSubgroupPage extends GroupsBasePage
 {
@@ -58,7 +58,7 @@ class GroupDeleteSubgroupPage extends GroupsBasePage
                             </a>
                             <div class="groupinfo">
                             <h4><a href="groups/<?php echo $subgroup->getPKValue(); ?>"><?php echo htmlspecialchars($subgroup->Name, ENT_QUOTES); ?></a></h4>
-                            <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/deleteSubgroup/<?php echo $subgroup->id; ?>"><span><?php echo $words->get('RemoveFromGroup'); ?></span></a>
+                            <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/deletesubgroup/<?php echo $subgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
                             </div> <!-- groupinfo -->
                         </div> <!-- groupbox floatbox -->
                         </div>   

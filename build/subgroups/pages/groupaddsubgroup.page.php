@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
      * This page shows groups which the user could add as subgroup to the group
      *
      * @package Apps
-     * @subpackage Groups
+     * @subpackage Subgroups
      */
 class GroupAddSubgroupPage extends GroupsBasePage
 {
@@ -59,7 +59,7 @@ class GroupAddSubgroupPage extends GroupsBasePage
                                 </a>
                                 <div class="groupinfo">
                                 <h4><a href="groups/<?php echo $my_group->getPKValue(); ?>"><?php echo htmlspecialchars($my_group->Name, ENT_QUOTES); ?></a></h4>
-                                <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/addSubgroup/<?php echo $my_group->id; ?>"><span><?php echo $words->get('AddAsSubgroup'); ?></span></a>
+                                <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/addsubgroup/<?php echo $my_group->id; ?>"><span><?php echo $words->get('GroupsAddAsSubgroup'); ?></span></a>
                                 </div> <!-- groupinfo -->
                             </div> <!-- groupbox floatbox -->
                             </div>    

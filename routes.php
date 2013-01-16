@@ -60,10 +60,10 @@
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
     
     // subgroup routes
-    $this->addRoute('subgroup_select','groups/:group_id:/selectSubgroup', 'SubgroupsController', 'selectSubgroup');
-    $this->addRoute('subgroup_add','groups/:group_id:/addSubgroup/:subgroup_id:', 'SubgroupsController', 'addSubgroup');
-    $this->addRoute('subgroup_selectdelete','groups/:group_id:/selectdeleteSubgroup', 'SubgroupsController', 'selectdeleteSubgroup');
-    $this->addRoute('subgroup_delete','groups/:group_id:/deleteSubgroup/:subgroup_id:', 'SubgroupsController', 'deleteSubgroup');
+    $this->addRoute('subgroup_select','groups/:group_id:/selectsubgroup', 'SubgroupsController', 'selectSubgroup');
+    $this->addRoute('subgroup_add','groups/:group_id:/addsubgroup/:subgroup_id:', 'SubgroupsController', 'addSubgroup');
+    $this->addRoute('subgroup_selectdelete','groups/:group_id:/selectdeletesubgroup', 'SubgroupsController', 'selectdeleteSubgroup');
+    $this->addRoute('subgroup_delete','groups/:group_id:/deletesubgroup/:subgroup_id:', 'SubgroupsController', 'deleteSubgroup');
     $this->addRoute('subgroup_log','groups/:group_id:/subgroupsettings', 'SubgroupsController', 'showSubgroupLog');
 
 

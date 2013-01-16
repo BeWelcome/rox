@@ -62,10 +62,11 @@ class SubgroupsModel extends  RoxModelBase
 
 
     /**
-     * Find all groups I am member of
+     * Find all groups I am member of and which are not subgroups of a given group
      *
+     * @param object $group - a group entity 
      * @access public
-     * @return mixed Returns an array of Group entity objects or false if you're not logged in
+     * @return array() Returns an array
      */
     public function getMyGroups(Group $group)
     {

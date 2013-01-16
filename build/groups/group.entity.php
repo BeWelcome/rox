@@ -498,6 +498,9 @@ class Group extends RoxEntityBase
      */
     public function findSubgroups($group_id, $offset = 0, $limit = 10)
     {
+        if (!is_numeric($group_id)) {
+            return false;
+        }
         $where = "{$this->_table_name}.id IN  (
 SELECT sg.subgroup_id 
 FROM groups_subgroups as sg 

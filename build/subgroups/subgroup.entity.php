@@ -41,37 +41,6 @@ class Subgroup extends RoxEntityBase
     }
 
     /**
-     * return the subgroups of the group
-     *
-     * @param object $group - Group entity object to get subgroups for
-     * @access public
-     * @return array
-     */
-    public function getSubgroups($group, $offset = 0, $limit = null)
-    {
-        if (!is_object($group) || !($group_id = $group->getPKValue()))
-        {
-            return array();
-        }
-
-        $where_clause = "group_id = '{$group_id}' AND deletedby IS NULL";
-        //$this->sql_order = "group_id DESC";
-        $links = $this->findByWhereMany($where_clause, $offset, $limit);
-
-        $subgroups = array();
-        foreach ($links as &$link)
-        {
-            $subgroups[] = $link->subgroup_id;
-            unset($link);
-        }
-        unset($links);
-        
-        $sql = "SELECT g.* FROM groups AS g, {$this->getTableName()} AS sg WHERE g.id IN ('" . implode("','", $subgroups) . "') AND sg.subggroup_id = g.id AND sg.group_id = {$group_id} ORDER BY sg.group_id ASC";
-        return $this->createEntity('Group')->findBySQLMany($sql);
-    }
-
-
-    /**
      * Check if a group id is connected with a group
      *
      * @param object $subgroup - child group entity to check
@@ -111,10 +80,6 @@ class Subgroup extends RoxEntityBase
         {
             return false;
         }
-        if (!is_object($group) || !is_object($group) || !is_object($member))
-        {
-            return false;
-        }
 
         // only bother if subgroup is not already a subgroup       
         if (!$this->isSubgroup($group, $subgroup))
@@ -145,7 +110,7 @@ class Subgroup extends RoxEntityBase
         {
             return false;
         }
-        if (!is_object($member))
+        if (!is_object($member) && !is_numeric($member->getPKValue()))
         {
             return false;
         }
@@ -165,7 +130,7 @@ class Subgroup extends RoxEntityBase
      */
     public function getSubgroupsLog($group, $offset = 0, $limit = null)
     {
-        if (!is_object($group))
+        if (!is_object($group) && !is_numeric($group->getPKValue()))
         {
             return false;
         }

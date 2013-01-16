@@ -95,13 +95,12 @@ class SubgroupsController extends RoxControllerBase
      */
     public function selectSubgroup()
     {
-        $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
 
         $page = new GroupAddSubgroupPage();
         $page->my_groups = $this->_model->getMyGroups($group);
         $page->group = $group;
-        $page->member = $member;
+        $page->member = $this->_model->getLoggedInMember();
         return $page;
     }
 
@@ -124,16 +123,15 @@ class SubgroupsController extends RoxControllerBase
             $page->group = $group;
             $page->member = $member;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
-            $this->setFlashNotice($this->getWords()->SuccessfullyAddedSubgroup . " " . htmlspecialchars($subgroup->Name, ENT_QUOTES));
-            return $page;
+            $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES));
          } else {
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
-            $this->setFlashError($this->getWords()->ErrorWhileAddSubgroup . " " . htmlspecialchars($subgroup->Name, ENT_QUOTES));
-            return $page;
+            $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES));
          }
+         return $page;
      }
 
 
@@ -145,13 +143,12 @@ class SubgroupsController extends RoxControllerBase
      */
     public function selectdeleteSubgroup()
     {
-        $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
 
         $page = new GroupDeleteSubgroupPage();
         $page->group = $group;
         $page->subgroups =  $group->findSubgroups($group->getPKValue());
-        $page->member = $member;
+        $page->member = $this->_model->getLoggedInMember();
         return $page;
     }
 

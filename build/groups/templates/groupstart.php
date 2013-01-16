@@ -79,9 +79,9 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
             <div class="userinfo"><span class="small">
             <h4><a href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
                 <?php echo $words->get('GroupsMemberCount');?>: <?php echo $group_data->getMemberCount(); ?><br />
-                <?php echo $words->get('GroupsForumPostsTitle');?>: <?php echo count($group_data->getNewMembers()) ; ?><br />
+                <?php echo $words->get('GroupsNewMembers');?>: <?php echo count($group_data->getNewMembers()) ; ?><br />
             </span></div> <!-- userinfo -->
-        </li> <!-- userpicbox_subgroup -->
+        </li> <!-- picbox_subgroup -->
 
     <?php } ?>
     </ul>

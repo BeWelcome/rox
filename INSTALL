@@ -189,7 +189,7 @@ Useful hints
   * Resetting all user passwords:
 
       $ mysql bewelcome -u bewelcome -pbewelcome
-      mysql> UPDATE members SET password = PASSWORD("password")'
+      mysql> UPDATE members SET password = PASSWORD("password");
       mysql> exit
 
     Note: Entering a password when logging in is only needed if

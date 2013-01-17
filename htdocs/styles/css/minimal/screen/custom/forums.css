@@ -52,9 +52,9 @@ div.forumsauthor {
     text-align:center;
 }
 div.forumsmessage {
-    padding:0 0 5px 0;
+    padding:0 15px 5px 0;
     float:right; 
-    width:85%; 
+    width:84%; 
     position:relative;
 }
 div.forumsmessage ul,ol {

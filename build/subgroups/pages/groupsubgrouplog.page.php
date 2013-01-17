@@ -124,7 +124,7 @@ class GroupSubgroupLogPage extends GroupsBasePage
     }
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?1';
        return $stylesheets;
     }
     protected function getSubmenuActiveItem() {

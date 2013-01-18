@@ -78,7 +78,6 @@ class GroupSubgroupLogPage extends GroupsBasePage
                     ?>
                     <div class="c50l">
                         <div class="subcl">
-                            <h3><?php echo $words->getFormatted('AddSubgroupTitle');?></h3>
                             <a class="button" href="<?php echo $add_button_link; ?>">
                                 <span><?php echo $add_button_word; ?></span>
                             </a>
@@ -87,7 +86,6 @@ class GroupSubgroupLogPage extends GroupsBasePage
                     <div class="c50r">
                         <div class="subcr"> <?php 
                             if (!empty($subgroups)) { ?>
-                                <h3><?php echo $words->getFormatted('RemoveSubgroupTitle');?></h3>
                                 <a class="button" href="<?php echo $delete_button_link; ?>">
                                     <span><?php echo $delete_button_word; ?></span>
                                 </a> <?php

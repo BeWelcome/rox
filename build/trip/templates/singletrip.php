@@ -58,13 +58,9 @@ if (isset($trip_data[$trip->trip_id])) {
 ?>
 <?php 
 		if ($blog->blog_text) {
-			if (strlen($blog->blog_text) > 400) {
-				$blogtext = substr($blog->blog_text, 0, 400);
-				$blogtext .= '...<br /><a href="blog/'.$trip->handle.'/'.$blogid.'">'.$words->get('ReadMore').'...</a>';
-			} else {
-				$blogtext = $blog->blog_text;
-			}
-			echo '<div>'.$blogtext.'</div>';
+            $blogtext = $blog->blog_text;
+            $moreLink = ' ...<br /><a href="blog/' . $trip->handle. '/' . $blogid . '">' . $words->get('ReadMore') . ' ...</a>';
+            echo '<div>' . MOD_layoutbits::truncate_words($blogtext, 60, $moreLink) . '</div>';
 		} 
 ?>
 <div>

@@ -44,6 +44,7 @@ class ForumsView extends RoxAppView {
         $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
         $LanguageChoices=$this->_model->LanguageChoices() ;
+        $visibilitiesDropdown = $this->getNewThreadVisibilitiesDropdown($IdGroup);
         require 'templates/editcreateform.php';
     }
 
@@ -93,12 +94,23 @@ class ForumsView extends RoxAppView {
 */
          $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($topic->topicinfo->first_postid) ;
          $LanguageChoices=$this->_model->LanguageChoices($AppropriatedLanguage) ;
+         
+        // Get current visibility of thread and set $visibilitiesDropdown
+        // for editcreateform
+        $IdGroup = 0;
+        if (isset($topic->topicinfo->IdGroup)) {
+            $IdGroup = $topic->topicinfo->IdGroup;
+        }
+
+        $visibility = $this->_model->getThreadVisibility($topic->IdThread);
+        $visibilitiesDropdown = $this->getVisibilitiesDropdown($visibility, $visibility, $IdGroup, false);
+
         require 'templates/editcreateform.php';
 
         require 'templates/replyLastPosts.php';
     }
 
-// This is the normal edit/translate post by a member
+    // This is the normal edit/translate post by a member
     public function editPost(&$callbackId,$translate=false) {
         $boards = $this->_model->getBoard();
         $topic = $this->_model->getTopic();
@@ -114,7 +126,14 @@ class ForumsView extends RoxAppView {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
 
-// By default no appropriated language is propose, the member can choose to translate
+        if (isset($this->_model->IdGroup)) {
+            $IdGroup = $this->_model->IdGroup;
+        }
+        $visibilityThread = $this->_model->GetThreadVisibility($vars['threadid']);
+        $visibilityPost = $this->_model->GetPostVisibility($vars['postid']);
+        $visibilitiesDropdown = $this->getVisibilitiesDropdown($visibilityPost, $visibilityThread, $IdGroup, $allow_title);
+        
+        // By default no appropriated language is propose, the member can choose to translate
         $LanguageChoices=$this->_model->LanguageChoices() ;
         if (!$translate) { // In case this is a edit, by default force the original post language
             $IdContent=$this->_model->getIdContent();
@@ -158,6 +177,11 @@ class ForumsView extends RoxAppView {
         $topic = $this->_model->getTopic();
         $request = PRequest::get()->request;
 
+        if (isset($topic->topicinfo->IdGroup) && ($topic->topicinfo->IdGroup > 0) && isset($_SESSION["IdMember"])) {
+             $memberIsGroupMember = false;
+             $group_id = $topic->topicinfo->IdGroup;
+             $memberIsGroupMember = $this->_model->checkGroupMembership($group_id);
+        }
         // maybe in a later commit..
         if (isset($topic->topicinfo->IdTitle)) {
             $this->SetPageTitle($this->words->fTrad($topic->topicinfo->IdTitle));
@@ -420,6 +444,113 @@ class ForumsView extends RoxAppView {
             return $out;
         }
         return '';
+    }
+
+    private function getVisibilitiesDropdown($currentVisibility, $highestVisibility, $IdGroup, $newtopic) {
+        $visiblities = array();
+        // If we have a group check if visibility is limited to GroupOnly
+        if ($IdGroup != 0) {
+            // can't use the entity here for some reason
+            // resorting to a SQL query
+            $query = "SELECT VisiblePosts FROM groups WHERE id = " . $IdGroup;
+            $s = $this->_model->dao->query($query);
+            $row = $s->fetch(PDB::FETCH_OBJ);
+            $groupOnly = ($row->VisiblePosts == "no");
+            $currentVisibility = "GroupOnly";
+            if ($groupOnly) {
+                $visibilities[] = "GroupOnly";
+            }
+            else
+            {
+                $visibilities[] = "NoRestriction";
+                $visibilities[] = "MembersOnly";
+                $visibilities[] = "GroupOnly";
+            }
+        }
+        else
+        {
+            $visibilities[] = "NoRestriction";
+            $visibilities[] = "MembersOnly";
+        }
+
+        if (!$newtopic) {
+            $name = "PostVisibility";
+            // if this is a reply or edit of a reply we need to limit the choices 
+            switch($highestVisibility) {
+                case 'GroupOnly': 
+                    
+                    $k = array_search("NoRestriction", $visibilities, true); 
+                    if ($k !== false) { 
+                        unset($visibilities[$k]); 
+                    } 
+                    $k = array_search("MembersOnly", $visibilities, true); 
+                    if ($k !== false) { 
+                        unset($visibilities[$k]); 
+                    } 
+                    break;
+                case 'MembersOnly': 
+                    $k = array_search("NoRestriction", $visibilities, true); 
+                    if ($k !== false) { 
+                        unset($visibilities[$k]); 
+                    } 
+                    break;
+            }
+        } else {
+            $name = "ThreadVisibility";
+        }
+
+        $out = '<select name="' . $name . '" id="' . $name . '" onchange="javascript: ();">';
+        foreach ($visibilities as $visibility) {
+            $selected = "";
+            if ($visibility == $currentVisibility) {
+                $selected = ' selected="selected"';
+            }
+            $out .= '<option value="'.$visibility.'"'. $selected . '>' 
+                . $this->words->get("forum_edit_vis_" . $visibility) .'</option>';
+        }
+        $out .= '</select>';
+        return $out;
+    }
+    
+    private function getNewThreadVisibilitiesDropdown($IdGroup) {
+        $visiblities = array();
+        // If we have a group check if visibility is limited to GroupOnly
+        if ($IdGroup != 0) {
+            // can't use the entity here for some reason
+            // resorting to a SQL query
+            $query = "SELECT VisiblePosts FROM groups WHERE id = " . $IdGroup;
+            $s = $this->_model->dao->query($query);
+            $row = $s->fetch(PDB::FETCH_OBJ);
+            $groupOnly = ($row->VisiblePosts == "no");
+            $currentVisibility = "GroupOnly";
+            if ($groupOnly) {
+                $visibilities[] = "GroupOnly";
+            }
+            else
+            {
+                $visibilities[] = "NoRestriction";
+                $visibilities[] = "MembersOnly";
+                $visibilities[] = "GroupOnly";
+            }
+        }
+        else
+        {
+            $currentVisibility = "MembersOnly";
+            $visibilities[] = "NoRestriction";
+            $visibilities[] = "MembersOnly";
+        }
+
+        $out = '<select name="ThreadVisibility" id="ThreadVisibility" onchange="javascript: ();">';
+        foreach ($visibilities as $visibility) {
+            $selected = "";
+            if ($visibility == $currentVisibility) {
+                $selected = ' selected="selected"';
+            }
+            $out .= '<option value="'.$visibility.'"'. $selected . '>' 
+                . $this->words->get("forum_edit_vis_" . $visibility) .'</option>';
+        }
+        $out .= '</select>';
+        return $out;
     }
 
     private function getContinentDropdown($preselect = false) {

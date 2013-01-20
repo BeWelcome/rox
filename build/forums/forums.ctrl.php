@@ -53,6 +53,7 @@ class ForumsController extends PAppController
         
     /**
     * index is called when http request = ./forums
+    * or during a new topic/edit of a group
     */
     public function index($subforum = false)     {
         if (PPostHandler::isHandling()) {
@@ -60,10 +61,14 @@ class ForumsController extends PAppController
         }
         
         $view = $this->_view;
-        $page = $view->page=new RoxGenericPage(); 
+        $page = $view->page = new RoxGenericPage(); 
         
         $request = $this->request;
         if (isset($request[0]) && $request[0] != 'forums') {
+            // if this is a ./groups url get the group number if any
+            if (($request[0] == "groups") && (isset($request[1]))) {
+                $IdGroup = intval($request[1]);
+            }
             $new_request = array();
             $push = false;
             foreach ($request as $r) {
@@ -203,7 +208,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_NEW) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+                die("You can't do this because you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
             }
             if (!$User) {
                 PRequest::home();
@@ -212,7 +217,9 @@ class ForumsController extends PAppController
                  $IdGroup=substr($request[2],1) ;
             }
             else {
+                if (!isset($IdGroup)) {
                  $IdGroup=0 ;
+            }
             }
             $this->_model->prepareForum();
             $callbackId = $this->createProcess();

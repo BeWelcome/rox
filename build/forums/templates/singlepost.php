@@ -54,14 +54,12 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             <?php
 //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
             echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));
-            if ($post->PostVisibility=='MembersOnly') {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:MembersOnly " ;
-            }
+            echo "  &nbsp;&nbsp; " . $words->getFormatted("forum_label_visibility") . ": " . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility); 
+            $hideGroupOnlyPost = false;
             if ($post->PostVisibility=='GroupOnly') {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:GroupOnly " ;
-            }
-            if ($post->PostVisibility=='ModeratorOnly') {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:ModeratorOnly " ;
+                if (!isset($memberIsGroupMember) || (!$memberIsGroupMember)) {
+                    $hideGroupOnlyPost = true;
+                }
             }
             $max = 0;
             if (!empty($post->Trad)) {
@@ -115,7 +113,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 echo "[Deleted]" ;
             }
             // If current user has a moderator right, he can see the post
-            if (($post->PostDeleted!="Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) {
+            if ((($post->PostDeleted!="Deleted") && (!$hideGroupOnlyPost)) or ($this->BW_Right->HasRight("ForumModerator"))) {
                 $PostMaxTrad = 0;
                 if (!empty($post->Trad)) {
                     $PostMaxTrad = count($post->Trad);
@@ -144,7 +142,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             } // end if not deleted
         } // end If the details of trads are available, we will display them
         // If current user has a moderator right, he can see the post
-        if (($post->PostDeleted!="Deleted") or ($this->BW_Right->HasRight("ForumModerator"))) {
+        if ((($post->PostDeleted!="Deleted") && (!$hideGroupOnlyPost)) or ($this->BW_Right->HasRight("ForumModerator"))) {
             ?>
 
             <hr />

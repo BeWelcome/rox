@@ -406,6 +406,12 @@ WHERE
     } // end of ShowMyGroupsTopicsOnly
     
 
+    public function checkGroupMembership($group_id) {
+        if (in_array($group_id,$this->MyGroups)) {
+            return true;
+        }
+        return false;
+    } // end of checkGroupMembership
  
     public static $continents = array(
         'AF' => 'Africa',
@@ -1042,6 +1048,10 @@ WHERE `postid` = $this->messageId
             if ($vars_ok) {
                 $this->dao->query("START TRANSACTION");
         
+                if ($is_topic) {
+                    $vars['PostVisibility'] = $vars['ThreadVisibility'];
+                }
+                
                 $this->editPost($vars, $User->getId());
                 if ($is_topic) {
                     $this->editTopic($vars, $postinfo->threadid);
@@ -1236,6 +1246,10 @@ WHERE `threadid` = '%d' ",
         	$s=$this->dao->query($query);
 		}
 		 
+         // Set ThreadVisibility
+        $query = 'UPDATE forums_threads SET ThreadVisibility = "' . $vars['ThreadVisibility'] . '" WHERE forums_threads.id=' . $rBefore->IdThread;
+        $s =$this->dao->query($query);
+
 // Edit topic must not allow for tags edit
 // or if if does, this iss something very uneasy to manage ;-)
 //        $this->updateTags($vars, $threadid);
@@ -1251,7 +1265,7 @@ WHERE `threadid` = '%d' ",
 
 	     $this->checkVarsReply($vars);
         $this->replyTopic($vars);
-    
+
         PPostHandler::clearVars();
         return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
     } // end of replyProcess
@@ -1790,7 +1804,6 @@ WHERE `threadid` = '$topicinfo->threadid'
         if (!isset($vars['topic_text']) || empty($vars['topic_text'])) {
             $errors[] = 'text';
         }
-        
         if ($errors) {
             $vars['errors'] = $errors;
             return false;
@@ -1822,12 +1835,6 @@ WHERE `threadid` = '$topicinfo->threadid'
             throw new PException('User gone missing...');
         }
 
-        // Required because the post will herit from the visibility of its thread
-		$qry = $this->dao->query("select ThreadVisibility from forums_threads where id=".$this->threadid);
-		$rThread=$qry->fetch(PDB::FETCH_OBJ) ;
-
-		
-        
         $this->dao->query("START TRANSACTION");
         
         $query = sprintf(
@@ -1838,9 +1845,8 @@ VALUES ('%d', '%d', NOW(), '%s','%d',%d,'%s')
             $User->getId(),
             $this->threadid,
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $_SESSION["IdMember"],$this->GetLanguageChoosen(),$rThread->ThreadVisibility
+            $_SESSION["IdMember"],$this->GetLanguageChoosen(),$vars['PostVisibility']
         );
-		  
 
         $result = $this->dao->query($query);
 		 
@@ -3538,6 +3544,27 @@ SQL;
        return (isset($row->IdSubscribe))  ;
     } // end of IsTagSubscribed
     
+    public function GetThreadVisibility($IdThread) {
+        $query = "SELECT ThreadVisibility FROM forums_threads WHERE threadid = " . intval($IdThread);
+        $s = $this->dao->query($query);
+        if (!$s) {
+            // Couldn't fetch the result from the DB assume 'MembersOnly'
+            return "MembersOnly";
+        }
+        $row = $s->fetch(PDB::FETCH_OBJ) ;
+        return ($row->ThreadVisibility);
+    }
+
+    public function GetPostVisibility($IdPost) {
+        $query = "SELECT PostVisibility FROM forums_posts WHERE postid = " . intval($IdPost);
+        $s = $this->dao->query($query);
+        if (!$s) {
+            // Couldn't fetch the result from the DB assume 'MembersOnly'
+            return "MembersOnly";
+        }
+        $row = $s->fetch(PDB::FETCH_OBJ) ;
+        return ($row->PostVisibility);
+    }
 } // end of class Forums
 
 

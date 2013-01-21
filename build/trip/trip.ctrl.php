@@ -149,7 +149,7 @@ class TripController extends PAppController {
             }
             if ($trip_id = $this->_model->createTrip($vars, $member))
             {
-                return 'trip/' . $trip_id;
+                return $trip_id;
             }
             return false;
     	}

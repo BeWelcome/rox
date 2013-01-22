@@ -52,6 +52,8 @@ class MemberPage extends PageWithActiveSkin
         $username = $this->member->Username;
         $member = $this->member;
         
+        $lang = $this->model->get_profile_language();
+        $profile_language_code = $lang->ShortCode;
         $words = $this->getWords();
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
@@ -68,7 +70,7 @@ class MemberPage extends PageWithActiveSkin
 
         if ($this->myself) {
             $tt=array(
-                array('editmyprofile', 'editmyprofile', $ww->EditMyProfile, 'editmyprofile'),
+                array('editmyprofile', 'editmyprofile/' . $profile_language_code, $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
                 );
 

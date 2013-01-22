@@ -51,8 +51,11 @@ if (!$User) {
         } else {
             $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
         }
-        $url=$_SERVER['REQUEST_URI'] ;
-        if (substr($url,-6) === "forums") {
+        $url = $_SERVER['REQUEST_URI'] ;
+        if ((substr($url,-6) === "forums") || (substr($url,-13) === "forums/page1/")) {
+            if (substr($url,-7) === "/page1/") {
+                $url = substr($url,0,-7);
+            }
             ?>
             <div class="float_right">
                 <span class="button">

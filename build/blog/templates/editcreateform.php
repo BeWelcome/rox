@@ -47,7 +47,7 @@ tinyMCE.init({
 //-->
 </script>
 
-<form method="post" action="<?=$actionUrl?>" class="def-form" id="blog-create-form">
+<form method="post" action="<?=$actionUrl?>" class="fieldset-menu-form" id="blog-create-form">
 
 <?php
 if (in_array('inserror', $vars['errors'])) {

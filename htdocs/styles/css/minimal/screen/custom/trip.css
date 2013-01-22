@@ -14,7 +14,7 @@
     margin-right:40%;
 }
 #col3_content {
-    padding-left: 4em;
+    padding-left: 1.5em;
 }
 
 /* modification for trip pages */
@@ -97,7 +97,7 @@ div.tripitem {
 
 #searchteaser form {
     border: none;
-	padding: 2em 0 1em 0;
+	padding: 0.8em 0 1em 0;
 }
 
 #main #col3 h2.trip_date, .trip_date {

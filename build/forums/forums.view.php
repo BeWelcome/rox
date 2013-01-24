@@ -125,7 +125,7 @@ class ForumsView extends RoxAppView {
         if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
-
+        $IdGroup = 0;
         if (isset($this->_model->IdGroup)) {
             $IdGroup = $this->_model->IdGroup;
         }
@@ -469,8 +469,15 @@ class ForumsView extends RoxAppView {
         }
         else
         {
-            $visibilities[] = "NoRestriction";
-            $visibilities[] = "MembersOnly";
+            // Unfortunately if a group post is edited we can't know that so we
+            // check if the current visibility id group only and limit the drop 
+            // down to that  
+            if ($currentVisibility == 'GroupOnly') {
+                $visibilities[] = "GroupOnly";
+            } else {
+                $visibilities[] = "NoRestriction";
+                $visibilities[] = "MembersOnly";
+            }
         }
 
         if (!$newtopic) {

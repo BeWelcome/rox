@@ -169,10 +169,7 @@ if ($allow_title) { // New Topic
     <fieldset class="row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>
         <div id="fpost_vis"><div>
-            <p class="small"><?=$words->getFormatted("forum_ChooseVisibilty")?></p>
             <?php echo $visibilitiesDropdown;
-
-                echo "</select>" ;
     if ($groupsforum) { 
         echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
     } else {

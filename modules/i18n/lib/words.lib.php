@@ -364,8 +364,11 @@ class MOD_words
         array_shift($args);
         
         $word = $this->_lookup($code, $args);
-        
-        return $this->_text_with_tr($word);
+        $translation = $this->_text_with_tr($word);
+        if (($translation == $code) && (!empty($args))) {
+            $translation .= " [" . implode($args, ",") . "]";
+        }
+        return $translation;
     }
     
     /**
@@ -382,6 +385,60 @@ class MOD_words
     {
         $word = $this->_lookup($code, $replacements, $language, true);
         return $word->text();
+    }
+
+    /**
+     * Get text as is from the database no call to vsprintf
+     * (Needed for newsletter that contain links and %username% tags)
+     *
+     * @param string $code         keyword for finding text, not allowed to be empty
+     *
+     * @return string localized text, in case of no hit the word keycode
+     */
+    public function getAsIs($code)
+    {
+        $lang = $this->_lang;
+        $whereCategory = $this->_whereCategory;
+        
+        if (is_numeric($code)) {
+            $query =
+                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
+                "FROM `words` ".
+                "WHERE `id`=" . $this->_dao->escape($code)
+            ;
+        } else {
+            // First try in memcache
+            if ($value=$this->WordMemcache->GetValue($code,$lang)) {
+                return $value;
+            } 
+            $query =
+                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
+                "FROM `words` ".
+                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
+            ;
+        }
+
+        $q = $this->_dao->query($query);
+        $rows = $q->numRows();
+        if ($rows <> 0) {
+            $row = $q->fetch(PDB::FETCH_OBJ);
+        } else {
+            // Try again in English
+            $query =
+                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
+                "FROM `words` ".
+                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='en'"
+            ;
+            $q = $this->_dao->query($query);
+            $rows = $q->numRows();
+            if ($rows <> 0) {
+                $row = $q->fetch(PDB::FETCH_OBJ);
+            } else {
+                $row = new StdClass;
+                $row->Sentence = $code;
+            }
+        }
+        return $row->Sentence;
     }
 
     /**

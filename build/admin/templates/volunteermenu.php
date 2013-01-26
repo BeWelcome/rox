@@ -123,7 +123,7 @@ Boston, MA  02111-1307, USA.
             ),
             array(
                 'MassMail',
-                'bw/admin/adminmassmails.php',
+                'admin/massmail',
                 'mass mails',
                 'broadcast messages'
             ),

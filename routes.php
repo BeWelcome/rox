@@ -7,7 +7,7 @@
      *     $this->addRoute(route_name, route_url, controller, method, callback);
      *         |               |            |         |           |
      * RequestRouter method    |            |         |           |
-     *       unique name of yor route       |         |           |
+     *       unique name of your route       |         |           |
      *                      the url you want to map   |           |
      *                              the controller to map to      |
      *                                   the method in the controller to map to
@@ -92,9 +92,21 @@
     // admin activity routes
     $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');
 
-
+    // admin massmailing
+    $this->addRoute('admin_massmail', 'admin/massmail', 'AdminController', 'massmail');
+    $this->addRoute('admin_massmail_create', 'admin/massmail/create', 'AdminController', 'massmailcreate');
+    $this->addRoute('admin_massmail_details', 'admin/massmail/details/:id:', 'AdminController', 'massmaildetails');
+    $this->addRoute('admin_massmail_details_mailing', 'admin/massmail/details/:id:/:type:', 'AdminController', 'massmaildetailsmailing');
+    $this->addRoute('admin_massmail_details_mailing_pages', 'admin/massmail/details/:id:/:type:/page/:page:', 'AdminController', 'massmaildetailsmailing');
+    $this->addRoute('admin_massmail_edit', 'admin/massmail/edit/:id:', 'AdminController', 'massmailedit');
+    $this->addRoute('admin_massmail_enqueue', 'admin/massmail/enqueue/:id:', 'AdminController', 'massmailenqueue');
+    $this->addRoute('admin_massmail_unqueue', 'admin/massmail/unqueue/:id:', 'AdminController', 'massmailunqueue');
+    $this->addRoute('admin_massmail_getadminunits', 'admin/massmail/getadminunits/:countrycode:', 'AdminController', 'getadminunits');
+    $this->addRoute('admin_massmail_getplaces', 'admin/massmail/getplaces/:countrycode:/:adminunit:', 'AdminController', 'getplaces');
+    $this->addRoute('admin_massmail_trigger', 'admin/massmail/trigger/:id:', 'AdminController', 'massmailtrigger');
+    $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminController', 'massmailuntrigger');
     
-// Simple newsletter page
+    // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
 
     $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');

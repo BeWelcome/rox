@@ -78,23 +78,30 @@ class GroupSubgroupLogPage extends GroupsBasePage
                     ?>
                     <div class="c50l">
                         <div class="subcl">
-                            <a class="button" href="<?php echo $add_button_link; ?>">
-                                <span><?php echo $add_button_word; ?></span>
-                            </a>
+                            <hr>
+                                <a class="button" href="<?php echo $add_button_link; ?>">
+                                    <span><?php echo $add_button_word; ?></span>
+                                </a>
+                            <hr>
                         </div><!-- subcl -->
                     </div><!-- c50l -->
                     <div class="c50r">
                         <div class="subcr"> <?php 
                             if (!empty($subgroups)) { ?>
-                                <a class="button" href="<?php echo $delete_button_link; ?>">
-                                    <span><?php echo $delete_button_word; ?></span>
-                                </a> <?php
+                                <hr>
+                                    <a class="button" href="<?php echo $delete_button_link; ?>">
+                                        <span><?php echo $delete_button_word; ?></span>
+                                    </a>
+                                <hr> <?php
                             } ?>
                         </div><!-- subcr -->
                     </div><!-- c50r --> <?php
                 } ?>
 
-            </div><!-- subcolumns -->             
+            </div><!-- subcolumns -->
+            <?php
+            if ($this->isGroupAdmin) {
+            ?>        
             <div class="subcolumns">
                 <br />
                 <h4> <?php echo $words->get('NbOfLogEntries') . ": " . count($logvar); ?> </h4>
@@ -117,6 +124,9 @@ class GroupSubgroupLogPage extends GroupsBasePage
                     } ?>
                 </ul>  <!-- floatbox --> 
             </div><!-- subcolumns -->  
+            <?php
+            }
+            ?>    
         </fieldset>
     <?php
     }

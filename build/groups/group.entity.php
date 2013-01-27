@@ -496,7 +496,7 @@ class Group extends RoxEntityBase
      * @return mixed false or array of groups that are subgroups of the group
      * @access public
      */
-    public function findSubgroups($group_id, $offset = 0, $limit = 10)
+    public function findSubgroups($group_id, $offset = 0, $limit = null)
     {
         if (!is_numeric($group_id)) {
             return false;

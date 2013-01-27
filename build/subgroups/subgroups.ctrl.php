@@ -115,6 +115,7 @@ class SubgroupsController extends RoxControllerBase
     {
         $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
+        $isGroupAdmin = $group->isGroupOwner($member);
         $subgroup = $this->_getSubgroupFromRequest();
         $result = $this->_model->MemberAddsSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
         if ($result)
@@ -122,12 +123,14 @@ class SubgroupsController extends RoxControllerBase
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;
+            $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
             $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES)));
          } else {
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;
+            $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
             $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES)));
          }
@@ -163,6 +166,7 @@ class SubgroupsController extends RoxControllerBase
     {
         $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
+        $isGroupAdmin = $group->isGroupOwner($member);
         $subgroup = $this->_getSubgroupFromRequest();
         $result = $this->_model->MemberDeletesSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
         if ($result)
@@ -170,6 +174,7 @@ class SubgroupsController extends RoxControllerBase
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;
+            $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
             $this->setFlashNotice($this->getWords()->SuccessfullyRemovedSubgroup . " " . htmlspecialchars($subgroup->Name, ENT_QUOTES));
             return $page;
@@ -177,6 +182,7 @@ class SubgroupsController extends RoxControllerBase
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;
+            $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
             $this->setFlashError($this->getWords()->ErrorWhileRemoveSubgroup . " " . htmlspecialchars($subgroup->Name, ENT_QUOTES));
             return $page;
@@ -194,9 +200,11 @@ class SubgroupsController extends RoxControllerBase
     {
         $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
+        $isGroupAdmin = $group->isGroupOwner($member);
         $page = new GroupSubgroupLogPage();
         $page->group = $group;
         $page->member = $member;
+        $page->isGroupAdmin = $isGroupAdmin;
         $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
         return $page;
     }

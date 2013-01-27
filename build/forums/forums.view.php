@@ -125,10 +125,7 @@ class ForumsView extends RoxAppView {
         if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
             $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
         }
-        $IdGroup = 0;
-        if (isset($this->_model->IdGroup)) {
-            $IdGroup = $this->_model->IdGroup;
-        }
+        $IdGroup = $this->_model->IdGroup;
         $visibilityThread = $this->_model->GetThreadVisibility($vars['threadid']);
         $visibilityPost = $this->_model->GetPostVisibility($vars['postid']);
         $visibilitiesDropdown = $this->getVisibilitiesDropdown($visibilityPost, $visibilityThread, $IdGroup, $allow_title);
@@ -512,10 +509,10 @@ class ForumsView extends RoxAppView {
             if ($visibility == $currentVisibility) {
                 $selected = ' selected="selected"';
             }
-            $out .= '<option value="'.$visibility.'"'. $selected . '>' 
-                . $this->words->get("forum_edit_vis_" . $visibility) .'</option>';
+            $out .= '<option value="'. $visibility . '"'. $selected . '>' 
+                . $this->words->getBuffered("forum_edit_vis_" . $visibility) .'</option>';
         }
-        $out .= '</select>';
+        $out .= '</select>' . $this->words->flushBuffer();
         return $out;
     }
     
@@ -553,10 +550,10 @@ class ForumsView extends RoxAppView {
             if ($visibility == $currentVisibility) {
                 $selected = ' selected="selected"';
             }
-            $out .= '<option value="'.$visibility.'"'. $selected . '>' 
-                . $this->words->get("forum_edit_vis_" . $visibility) .'</option>';
+            $out .= '<option value="' . $visibility . '"'. $selected . '>' 
+                . $this->words->getBuffered("forum_edit_vis_" . $visibility) .'</option>';
         }
-        $out .= '</select>';
+        $out .= '</select>' . $this->words->flushBuffer();
         return $out;
     }
 

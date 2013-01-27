@@ -62,55 +62,34 @@
                 <ul>
 		            <?php $PossibleValueArray = explode((strpos($rr->PossibleValues,',') ? ',' : ';'),$rr->PossibleValues); ?>
 		            <?php if ($rr->codeName == 'PreferenceLocalTime') { ?>
-		            <?
-		            echo "
-                    <select name='PreferenceLocalTime' class='prefsel'>" ;
-                     echo "<option value='-28800'"; if ($Value==-28800) echo  " selected ";echo ">Los Angeles</option>
-                    ";
-                     echo "<option value='-25200'"; if ($Value==-25200) echo  " selected ";echo ">Calgari</option>
-                    ";
-                     echo "<option value='-21600'"; if ($Value==-21600) echo  " selected ";echo ">Mexico</option>
-                    ";
-                     echo "<option value='-18000'"; if ($Value==-18000) echo  " selected ";echo ">New York</option>
-                    ";
-                     echo "<option value='-14400'"; if ($Value==-14400) echo  " selected ";echo ">Santiago</option>
-                    ";
-                     echo "<option value='-10800'"; if ($Value==-10800) echo  " selected ";echo ">Sao Paulo</option>
-                    ";
-                     echo "<option value='-7200'"; if ($Value==-7200) echo  " selected ";echo ">Fernando de Noronha</option>
-                    ";
-                     echo "<option value='-3600'"; if ($Value==-3600) echo  " selected ";echo ">Cape Verde</option>
-                    ";
-                     echo "<option value='0'"; if ($Value==0) echo  " selected ";echo ">London</option>
-                    ";
-                     echo "<option value='3600'"; if ($Value==3600) echo  " selected ";echo ">Paris, Berlin</option>
-                    ";
-                     echo "<option value='7200'"; if ($Value==7200) echo  " selected ";echo ">Cairo</option>
-                    ";
-                     echo "<option value='10800'"; if ($Value==10800) echo  " selected ";echo ">Moscow</option>
-                    ";
-                     echo "<option value='14400'"; if ($Value==14400) echo  " selected ";echo ">Dubai</option>
-                    ";
-                     echo "<option value='18000'"; if ($Value==18000) echo  " selected ";echo ">Karachi</option>
-                    ";
-                     echo "<option value='19800'"; if ($Value==19800) echo  " selected ";echo ">Mumbai</option>
-                    ";
-                     echo "<option value='21600'"; if ($Value==21600) echo  " selected ";echo ">Dhaka</option>
-                    ";
-                     echo "<option value='25200'"; if ($Value==25200) echo  " selected ";echo ">Jakarta</option>
-                    ";
-                     echo "<option value='28800'"; if ($Value==28800) echo  " selected ";echo ">Hong Kong</option>
-                    ";
-                     echo "<option value='32400'"; if ($Value==32400) echo  " selected ";echo ">Tokyo</option>
-                    ";
-                     echo "<option value='36000'"; if ($Value==36000) echo  " selected ";echo ">Sydney</option>
-                    ";
-                     echo "<option value='39600'"; if ($Value==39600) echo  " selected ";echo ">Noumea</option>
-                    ";
-                     echo "<option value='43200'"; if ($Value==43200) echo  " selected ";echo ">Auckland</option>
-                    ";
-                     echo "</select>
-                    " ;
+		            <?php
+		            echo "<select name='PreferenceLocalTime' class='prefsel'>" ;
+                     echo "<option value='-39600'"; if ($Value==-39600) echo  " selected ";echo ">Pago Pago (UTC-11)</option>";
+		             echo "<option value='-36000'"; if ($Value==-36000) echo  " selected ";echo ">Honululu (UTC-10)</option>";
+                     echo "<option value='-32400'"; if ($Value==-32400) echo  " selected ";echo ">Fairbanks (UTC-9)</option>";
+                     echo "<option value='-28800'"; if ($Value==-28800) echo  " selected ";echo ">Los Angeles (UTC-8)</option>";
+		             echo "<option value='-25200'"; if ($Value==-25200) echo  " selected ";echo ">Calgari (UTC-7)</option>";
+                     echo "<option value='-21600'"; if ($Value==-21600) echo  " selected ";echo ">Mexico (UTC-6)</option>";
+                     echo "<option value='-18000'"; if ($Value==-18000) echo  " selected ";echo ">New York (UTC-5)</option>";
+                     echo "<option value='-14400'"; if ($Value==-14400) echo  " selected ";echo ">Santiago (UTC-4)</option>";
+                     echo "<option value='-10800'"; if ($Value==-10800) echo  " selected ";echo ">Sao Paulo (UTC-3)</option>";
+                     echo "<option value='-7200'"; if ($Value==-7200) echo  " selected ";echo ">Fernando de Noronha (UTC-2)</option>";
+                     echo "<option value='-3600'"; if ($Value==-3600) echo  " selected ";echo ">Cape Verde (UTC-1)</option>";
+                     echo "<option value='0'"; if ($Value==0) echo  " selected ";echo ">London (UTC-0)</option>";
+                     echo "<option value='3600'"; if ($Value==3600) echo  " selected ";echo ">Paris, Berlin (UTC+1)</option>";
+                     echo "<option value='7200'"; if ($Value==7200) echo  " selected ";echo ">Cairo (UTC+2)</option>";
+                     echo "<option value='10800'"; if ($Value==10800) echo  " selected ";echo ">Moscow (UTC+3)</option>";
+                     echo "<option value='14400'"; if ($Value==14400) echo  " selected ";echo ">Dubai (UTC+4)</option>";
+                     echo "<option value='18000'"; if ($Value==18000) echo  " selected ";echo ">Karachi (UTC+5)</option>";
+                     echo "<option value='19800'"; if ($Value==19800) echo  " selected ";echo ">Mumbai (UTC+5.5)</option>";
+                     echo "<option value='21600'"; if ($Value==21600) echo  " selected ";echo ">Dhaka (UTC+6)</option>";
+                     echo "<option value='25200'"; if ($Value==25200) echo  " selected ";echo ">Jakarta (UTC+7)</option>";
+                     echo "<option value='28800'"; if ($Value==28800) echo  " selected ";echo ">Hong Kong (UTC+8)</option>";
+                     echo "<option value='32400'"; if ($Value==32400) echo  " selected ";echo ">Tokyo (UTC+9)</option>";
+                     echo "<option value='36000'"; if ($Value==36000) echo  " selected ";echo ">Sydney (UTC+10)</option>";
+                     echo "<option value='39600'"; if ($Value==39600) echo  " selected ";echo ">Noumea (UTC+11)</option>";
+                     echo "<option value='43200'"; if ($Value==43200) echo  " selected ";echo ">Auckland (UTC+12)</option>";
+                     echo "</select>" ;
                     ?>
 		            <?php } elseif (count($PossibleValueArray) > 1) { ?>
     			        <? foreach ($PossibleValueArray as $PValue) : ?>

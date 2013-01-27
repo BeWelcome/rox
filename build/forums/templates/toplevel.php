@@ -32,11 +32,27 @@ if ($User) $TagCloud=true ;
 if (!$User) {
 ?>
     <div class="subcolumns">
-	<?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
-	</div>
+        <?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
+    </div>
 <?php
-} // end if User
-?>
+} // end if not User
+if ($User) {
+    if ($boards->owngroupsonly == "No") {
+        $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
+    } else {
+        $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
+    }
+    ?>
+    <div class="float_right">
+        <span class="button">
+            <a href="forums/mygroupsonly"><?php echo $buttonText; ?></a>
+        </span>
+    </div>
+    <?php
+    echo $this->words->flushBuffer();
+}
+?> 
+
 <!-- Now displays the recent post list -->	
 <?php
     $uri = 'forums/';
@@ -44,29 +60,6 @@ if (!$User) {
 ?>
   <div class="row"> 
     <h4><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
-    <?php
-    if ($User) {
-        if ($boards->owngroupsonly == "No") {
-            $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
-        } else {
-            $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
-        }
-        $url = $_SERVER['REQUEST_URI'] ;
-        if ((substr($url,-6) === "forums") || (substr($url,-13) === "forums/page1/")) {
-            if (substr($url,-7) === "/page1/") {
-                $url = substr($url,0,-7);
-            }
-            ?>
-            <div class="float_right">
-                <span class="button">
-                    <a href="<?php echo $url . '/mygroupsonly'; ?>"><?php echo $buttonText; ?></a>
-                </span>
-            </div>
-            <?php
-        } 
-        echo $this->words->flushBuffer();
-    }
-    ?> 
     </h4>
   </div><!--  row -->
 <?php

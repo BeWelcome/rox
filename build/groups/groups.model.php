@@ -639,6 +639,9 @@ class GroupsModel extends  RoxModelBase
             return false;
         }
         $membership = $this->createEntity('GroupMembership')->getMembership($group, $member);
+        if (!is_object($membership) || !$membership->isPKSet()) {
+            return false;
+        }
         if ($ban)
         {
             return $membership->updateStatus('Kicked');

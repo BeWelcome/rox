@@ -59,8 +59,8 @@ if ($User) {
     if ($threads = $boards->getThreads()) {
 ?>
   <div class="row"> 
-    <h4><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
-    </h4>
+    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
+    </h3>
   </div><!--  row -->
 <?php
         require 'boardthreads.php';

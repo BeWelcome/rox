@@ -76,7 +76,7 @@ class Subgroup extends RoxEntityBase
      */
     public function AddSubgroup(Group $group, Group $subgroup, Member $member)
     {
-        if (!is_object($group) || !is_object($group) || !is_object($member))
+        if (!is_object($group) || !is_object($subgroup) || !is_object($member))
         {
             return false;
         }

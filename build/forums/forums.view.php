@@ -175,7 +175,6 @@ class ForumsView extends RoxAppView {
         $request = PRequest::get()->request;
 
         if (isset($topic->topicinfo->IdGroup) && ($topic->topicinfo->IdGroup > 0) && isset($_SESSION["IdMember"])) {
-             $memberIsGroupMember = false;
              $group_id = $topic->topicinfo->IdGroup;
              $memberIsGroupMember = $this->_model->checkGroupMembership($group_id);
         }
@@ -466,15 +465,8 @@ class ForumsView extends RoxAppView {
         }
         else
         {
-            // Unfortunately if a group post is edited we can't know that so we
-            // check if the current visibility id group only and limit the drop 
-            // down to that  
-            if ($currentVisibility == 'GroupOnly') {
-                $visibilities[] = "GroupOnly";
-            } else {
-                $visibilities[] = "NoRestriction";
-                $visibilities[] = "MembersOnly";
-            }
+            $visibilities[] = "NoRestriction";
+            $visibilities[] = "MembersOnly";
         }
 
         if (!$newtopic) {

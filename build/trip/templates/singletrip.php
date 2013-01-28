@@ -59,7 +59,7 @@ if (isset($trip_data[$trip->trip_id])) {
 <?php 
 		if ($blog->blog_text) {
             $blogtext = $blog->blog_text;
-            $moreLink = ' ...<br /><a href="blog/' . $trip->handle. '/' . $blogid . '">' . $words->get('ReadMore') . ' ...</a>';
+            $moreLink = '<br /><a href="blog/' . $trip->handle. '/' . $blogid . '">' . $words->get('ReadMore') . ' ...</a>';
             echo '<div>' . MOD_layoutbits::truncate_words($blogtext, 60, $moreLink) . '</div>';
 		} 
 ?>

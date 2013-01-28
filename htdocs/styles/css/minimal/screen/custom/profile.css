@@ -197,6 +197,10 @@
     padding-left: 2em;
     background: transparent url(../../images/iconsfam/wrench.png) 0 3px no-repeat;
 }
+#profile_linklist .mynotes{
+    padding-left: 2em;
+    background: transparent url(../../../../../images/icons/vcard.png) 0 3px no-repeat;
+}
 #profile_linklist .myvisitors {
     padding-left: 2em;
     background: transparent url(../../images/iconsfam/group.png) 0 3px no-repeat;
@@ -256,8 +260,14 @@ div.comment {
     width: 70%;
     margin: 0;
 }
+
+div.frame {
+    background:none repeat scroll 0 0 #fff;
+    padding: 5px;
+}
+
 .profilecomment.counter {
-    background:none repeat scroll 0 0 #EEEEEE;
+    background:none repeat scroll 0 0 #ddd;
     border:1px solid #CCCCCC;
     border-radius:3px 3px 3px 3px;
     margin-left:10%;

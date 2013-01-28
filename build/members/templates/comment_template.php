@@ -21,50 +21,32 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-    $purifier = MOD_htmlpure::getBasicHtmlPurifier();
-    $rights = new MOD_right;
-    $rights->HasRight('Comments');
 
-    // Index the written comments array by memberId
-    $comments_written_array = array();
-    foreach ($comments_written as $comment) {
-        // echo 'Comment '.$comment->id.':  --------- ';
-        $comments_written_array[$comment->IdToMember] = $comment;
-    }    
-
-    $iiMax = (isset($max) && count($comments) > $max) ? $max : count($comments);
-    $tt = array ();
-    for ($ii = 0; $ii < $iiMax; $ii++) {
-        $c = $comments[$ii];
-        $quality = "neutral";
-        if ($c->comQuality == "Good") {
-            $quality = "good";
-        }
-        if ($c->comQuality == "Bad") {
-            $quality = "bad";
-        }
-
-        $tt = explode(",", $comments[$ii]->Lenght);
-
-        // Check if there's a counter comment available:
-        $cc = false;
-        if (isset($comments_written_array[$c->IdFromMember])) {
-            $cc = $comments_written_array[$c->IdFromMember];
-        }
-?>
-
-  <div class="subcolumns profilecomment">
-
+$purifier = MOD_htmlpure::getBasicHtmlPurifier();
+$rights = new MOD_right;
+$rights->HasRight('Comments');
+   
+foreach($comments as $comment) {
+if(isset($comment['from'])) {
+    echo '<div class="frame">';
+} else { 
+    echo '<div>';
+}    ?>
+<div class="subcolumns profilecomment">
+    <?php if (isset($comment['from'])) { 
+        $c = $comment['from']; 
+        $quality = strtolower($c->comQuality); 
+        $tt = explode(',', $c->Lenght); ?>
     <div class="c75l" >
       <div class="subcl" >
-        <a href="members/<?=$c->Username?>">
-           <img class="float_left framed"  src="members/avatar/<?=$c->Username?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+        <a href="members/<?=$c->UsernameFromMember?>">
+           <img class="float_left framed"  src="members/avatar/<?=$c->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
             <p class="floatbox">
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
               <span class="small grey">
-                <?=$words->get('CommentFrom','<a href="members/'.$c->Username.'">'.$c->Username.'</a>')?> -
+                <?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?> <?= $words->get('CommentTo') ?> <a href="members/<?= $c->UsernameToMember ?>"><?= $c->UsernameToMember ?></a> -
                 <span title="<?php echo $c->created; ?>">
                   <?php echo $layoutbits->ago($c->unix_created); ?>
                 </span>
@@ -103,7 +85,7 @@ Boston, MA  02111-1307, USA.
             </li>
             <li>
             <?php if (MOD_right::get()->HasRight('Comments'))  { ?>
-                <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $comments[$ii]->id; ?>"><?=$words->get('EditComment')?></a>
+                <a href="bw/admin/admincomments.php?action=editonecomment&IdComment=<?php echo $c->id; ?>"><?=$words->get('EditComment')?></a>
                 <?php
                 };
                 ?>
@@ -111,8 +93,32 @@ Boston, MA  02111-1307, USA.
         </ul>
       </div> <!-- subcr -->
     </div> <!-- c25r -->
+    <?php 
+    } else { 
+        $cc = $comment['to'];?>
+    <div class="c75l" >
+      <div class="subcl" >
+        <a href="members/<?=$cc->UsernameToMember?>">
+           <img class="float_left framed"  src="members/avatar/<?=$c->UsernameToMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+        </a>
+        <div class="comment">
+            <p class="floatbox"><strong class="neutral"><?php echo $words->get('CommentNoComment'); ?></strong><br />
+              <span class="small grey">
+                <?=$words->get('CommentFrom','<a href="members/'.$cc->UsernameToMember.'">'.$cc->UsernameToMember.'</a>')?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameFromMember ?>"><?= $cc->UsernameFromMember ?></a>
+              </span>
+            </p>
+        </div>
+      </div>
+    </div>
+    <?php
+    }
+    ?>
   </div> <!-- subcolumns -->
-  <?php if ($cc && $quality = $cc->comQuality) : ?> 
+  <?php 
+    if (isset($comment['to'])) {
+        $cc = $comment['to'];
+        $quality = strtolower($cc->comQuality);
+        $tt = explode(',', $cc->Lenght); ?> 
   <div class="profilecomment floatbox counter">
       <div class="subcolumns profilecomment">
 
@@ -175,8 +181,9 @@ Boston, MA  02111-1307, USA.
         </div> <!-- c25r -->
       </div> <!-- subcolumns -->
   </div> <!-- profilecomment counter -->
-  <?php endif; ?>
-  <?=($ii == $iiMax-1) ? '' : '<hr/>' ?>
-
+<?php } ?>
+</div>
+<hr>
 <?php
 }
+?>

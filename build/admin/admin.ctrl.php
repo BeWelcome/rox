@@ -322,6 +322,75 @@ class AdminController extends RoxControllerBase
     }
     
     /**
+     * Treasurer overview method
+     *
+     * @access public
+     * @return object
+     */
+    public function treasurerOverview()
+    {
+        list($member, $rights) = $this->checkRights('Treasurer');
+        $page = new AdminTreasurerPage($this->_model);
+        return $page;
+    }
+
+    /**
+     *
+     */
+    public function treasurerEditCreateDonationCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        if (empty($args->post))
+        {
+            return false;
+        }
+        $vars = $args->post;
+        $errors = $this->_model->treasurerEditCreateDonationVarsOk($vars);
+        if (!empty($errors)) {
+            $mem_redirect->vars = $vars;
+            $mem_redirect->errors = $errors;
+            return false;
+        }
+        $countryid = $this->_model->getGeonameIdForCountryCode($vars['donate-country']);
+        if (!$countryid) {
+            $mem_redirect->vars = $vars;
+            $mem_redirect->errors = array('AdminTreasurerDbCountry');
+            return false;
+        }
+        $id = $vars['id'];
+        if ($id == 0) {
+            $success = $this->_model->createDonation($vars['IdMember'], $vars['DonatedOn'], 
+                $vars['donate-amount'], $countryid);
+        } else {
+            $success = $this->_model->updateDonation($id, $vars['IdMember'], $vars['DonatedOn'], 
+                $vars['donate-amount'], $countryid);
+        }
+        error_log("Success: [" . print_r($success, true) . "]");
+        if (!$success) {
+            $mem_redirect->vars = $vars;
+            $mem_redirect->errors = array('AdminTreasurerDbUpdateFailed');
+            return false;
+        }
+        return $this->router->url('admin_treasurer_overview', array(), false);
+    }
+    
+    /**
+     * Treasurer add donation method
+     *
+     * @access public
+     * @return object
+     */
+    public function treasurerEditCreateDonation()
+    {
+        list($member, $rights) = $this->checkRights('Treasurer');
+        $id = 0;
+        if (isset($this->route_vars['id'])) {
+            $id = $this->route_vars['id'];
+        }
+        $page = new AdminTreasurerEditCreateDonationPage($this->_model, $id);
+        return $page;
+    }
+
+    /**
      * overview page for mass mailings
      *
      */

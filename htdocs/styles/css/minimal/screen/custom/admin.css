@@ -22,4 +22,18 @@ textarea {margin-bottom: 1em;}
 .memberinfo p{margin-bottom: 0.1em;}
 
 .pagination {margin-bottom: 1em;}
+
+#adminmassmail table {
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+#adminmassmail td,
+#adminmassmail th {
+    text-align: center;
+}
+
+#adminmassmail td.left,
+#adminmassmail th.left {
+    text-align: left;
 }

@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -35,7 +35,7 @@ Boston, MA  02111-1307, USA.
      */
 class AdminModel extends RoxModelBase
 {
-    
+
 //{{{ accepter stuff
     /**
      * gets an array of members with a given status
@@ -283,7 +283,7 @@ class AdminModel extends RoxModelBase
 
     public function procActivitylogs($vars, $level = 0)
     {
-        
+
 		$where = '';
 		$username = $vars["username"];
 
@@ -294,138 +294,138 @@ class AdminModel extends RoxModelBase
 		if ($cid != 0) {
 			$where .= " AND IdMember=" . $cid;
 		}
-		
+
 		$R = MOD_right::get();
 		$level = $R->hasRight('Logs');
-		
-		
+
+
 		$limitcount=$vars["limitcount"]; // Number of records per page
 		$start_rec=$vars["start_rec"]; // Number of records per page
-		
-		
+
+
 		$andS1 = $vars["andS1"];
 		if ($andS1 != "") {
 			$where .= " AND Str LIKE '%" . $andS1 . "%'";
 		}
-		
+
 		$andS2 = $vars["andS2"];
 		if ($andS2 != "") {
 			$where .= " AND Str LIKE '%" . $andS2 . "%'";
 		}
-		
+
 		$notAndS1 = $vars["notAndS1"];
 		if ($notAndS1 != "") {
 			$where .= " AND Str NOT LIKE '%" . $notAndS1 . "%'";
 		}
-		
+
 		$notAndS2 = $vars["notAndS2"];
 		if ($notAndS2 != "") {
 			$where .= " AND Str NOT LIKE '%" . $notAndS2 . "%'";
 		}
-		
+
 		$ip = $vars["ip"];
 		if ($ip != "") {
 			$where .= " AND IpAddress=" . ip2long($ip) . "";
 		}
-		
+
 		$type = $vars["type"];
 		if ($type != "") {
 			$where .= " AND Type='" . $type . "'";
 		}
-		
+
 		// If there is a Scope limit logs to the type in this Scope (unless it his own logs)
 		if (!$R->hasRight('Logs', "\"All\"")) {
 			$scope = RightScope("Logs");
 			str_replace($scope, "\"", "'");
 			$where .= " AND (Type IN (" . $scope . ") OR IdMember=" . $_SESSION["IdMember"] . ") ";
 		}
-		
+
 		$tData = array ();
 		$db = "";
 		if (!empty($_SYSHCVOL['ARCH_DB'])) {
 		    $db = $_SYSHCVOL['ARCH_DB'] . ".";
 		}
-		
+
 		// not using: SQL_CALC_FOUND_ROWS and FOUND_ROWS()
 		$query = "SELECT logs.*, Username " .
-		        "FROM " . $db . ".logs LEFT JOIN members ON members.id=logs.IdMember " . 
+		        "FROM " . $db . ".logs LEFT JOIN members ON members.id=logs.IdMember " .
 		        "WHERE 1=1 " . $where . " " .
 		        "ORDER BY created DESC LIMIT $start_rec," . $limitcount;
 		$resultRecords = $this->dao->query($query);
-		
+
 		$query = "SELECT COUNT(*) AS n " .
-		        "FROM " . $db . ".logs LEFT JOIN members ON members.id=logs.IdMember " . 
+		        "FROM " . $db . ".logs LEFT JOIN members ON members.id=logs.IdMember " .
 		        "WHERE 1=1 " . $where;
 		$result = $this->dao->query($query);
 		$altogether = $result->fetch(PDB::FETCH_OBJ);
-		
+
 		return array($altogether->n => $resultRecords);
     }
-    
+
     /**
      * returns the broadcast messages in the database
      * including information about the current state
      * (number of enqueued, triggered and sent messages)
-     * 
+     *
      * @return array of broadcast messages
      */
     public function getMassMailings($specific = false, $general = false) {
         $query = "
-            SELECT    
+            SELECT
                 b.*,
                 IFNULL(enqueued.total, 0) enqueuedCount,
                 IFNULL(triggered.total, 0) triggeredCount,
                 IFNULL(sent.total, 0) sentCount,
                 IFNULL(failed.total, 0) failedCount
-            FROM      
+            FROM
                 broadcast b
-            LEFT JOIN ( 
-                SELECT   
+            LEFT JOIN (
+                SELECT
                     COUNT(*) total, IdBroadcast
-                FROM     
+                FROM
                     broadcastmessages
-                WHERE 
+                WHERE
                     Status = 'ToApprove'
-                GROUP BY 
+                GROUP BY
                     IdBroadcast
-                ) enqueued 
-            ON 
+                ) enqueued
+            ON
                 (enqueued.IdBroadcast = b.id)
-            LEFT JOIN ( 
-                SELECT   
+            LEFT JOIN (
+                SELECT
                     COUNT(*) total, IdBroadcast
-                FROM     
+                FROM
                     broadcastmessages
-                WHERE 
+                WHERE
                     Status = 'ToSend'
-                GROUP BY 
+                GROUP BY
                     IdBroadcast
                 ) triggered
-            ON 
+            ON
                 (triggered.IdBroadcast = b.id)
-            LEFT JOIN ( 
-                SELECT   
+            LEFT JOIN (
+                SELECT
                     COUNT(*) total, IdBroadcast
-                FROM     
+                FROM
                     broadcastmessages
-                WHERE 
+                WHERE
                     Status = 'Sent'
-                GROUP BY 
+                GROUP BY
                     IdBroadcast
                 ) sent
-            ON 
+            ON
                 (sent.IdBroadcast = b.id)
-            LEFT JOIN ( 
-                SELECT   
+            LEFT JOIN (
+                SELECT
                     COUNT(*) total, IdBroadcast
-                FROM     
+                FROM
                     broadcastmessages
-                WHERE 
+                WHERE
                     Status = 'Failed'
-                GROUP BY 
+                GROUP BY
                     IdBroadcast
                 ) failed
-            ON 
+            ON
                 (failed.IdBroadcast = b.id)";
         if (!($specific && $general)) {
             if ($specific) {
@@ -434,7 +434,7 @@ class AdminModel extends RoxModelBase
             if ($general) {
                 $query .= " WHERE Type = 'Normal'";
             }
-        }    
+        }
         $query .= " ORDER BY Created DESC";
         return $this->BulkLookup($query);
     }
@@ -455,11 +455,11 @@ class AdminModel extends RoxModelBase
                 w2.Sentence AS Body,
                 w2.Description AS Description
             FROM
-                words AS w1, 
+                words AS w1,
                 words AS w2
             WHERE
                 w1.Code = 'BroadCast_Title_" . $this->dao->escape($broadcast->Name) . "'
-                AND w1.IdLanguage = 0 
+                AND w1.IdLanguage = 0
                 AND w2.Code = 'BroadCast_Body_" . $this->dao->escape($broadcast->Name) . "'
                 AND w2.IdLanguage = 0";
         $entry = $this->SingleLookup($query);
@@ -475,12 +475,12 @@ class AdminModel extends RoxModelBase
             SELECT
                 languages.ShortCode AS ShortCode,
                 languages.Name AS Name
-            FROM 
+            FROM
                 languages, words
             WHERE words.code='BroadCast_Body_" . $broadcast->Name . "'
             AND languages.id=words.IdLanguage";
         $ret->Languages = $this->BulkLookup($query);
-        
+
         // Make sure all counts are set (to avoid isset)
         $ret->ToApprove = $ret->ToSend = $ret->Sent = $ret->Failed = 0;
         $query = "
@@ -534,13 +534,13 @@ class AdminModel extends RoxModelBase
         foreach($mmris as $mm) {
             $languages[] = $mm->LanguageId;
         }
-        
+
         $query = "SELECT id, EnglishName FROM languages WHERE id IN ('" . implode("', '", $languages) . "')";
         $r = $this->dao->query($query);
         while ($row = $r->fetch(PDB::FETCH_OBJ)) {
             $languagesnames[$row->id] = $row->EnglishName;
         }
-        
+
         foreach($mmris as &$mmri) {
             $mmri->Language = $languagesnames[$mmri->LanguageId];
         }
@@ -599,9 +599,9 @@ class AdminModel extends RoxModelBase
         $this->dao->query($query);
 
         $query = "
-            INSERT INTO 
+            INSERT INTO
                 words
-            SET 
+            SET
                 code = 'Broadcast_Body_" . $name . "',
                 ShortCode = 'en',
                 IdLanguage = 0,
@@ -616,7 +616,7 @@ class AdminModel extends RoxModelBase
         $query = "
             UPDATE
                 broadcast
-            SET 
+            SET
                 created = NOW(),
                 IdCreator = ". $_SESSION["IdMember"] . ",
                 Type = '" . $type . "'
@@ -638,9 +638,9 @@ class AdminModel extends RoxModelBase
         $this->dao->query($query);
 
         $query = "
-            UPDATE 
+            UPDATE
                 words
-            SET 
+            SET
                 Sentence = '" . $this->dao->escape($body) . "',
                 updated = NOW(),
                 IdMember = " . $this->getLoggedInMember()->id . "
@@ -670,7 +670,7 @@ class AdminModel extends RoxModelBase
         if (empty($description)) {
             $errors[] = 'AdminMassMailDescriptionEmpty';
         }
-        
+
         // if $id = 0 check if a word code for $name already exists
         if ($id == 0) {
             $words = new MOD_words();
@@ -687,7 +687,7 @@ class AdminModel extends RoxModelBase
 
     public function getAdminUnits($countrycode) {
         $query = "
-            SELECT 
+            SELECT
                 fk_admincode, name
             FROM
                 geonames_cache
@@ -698,10 +698,10 @@ class AdminModel extends RoxModelBase
                 name";
         return $this->BulkLookup($query);
     }
-    
+
     public function getPlaces($countrycode, $adminunit) {
         $query = "
-            SELECT 
+            SELECT
                 geonameid, name
             FROM
                 geonames_cache
@@ -728,7 +728,7 @@ class AdminModel extends RoxModelBase
         }
         return $action;
     }
-    
+
     public function massmailEnqueueVarsOk(&$vars) {
         $errors = array();
         $action = $this->getEnqueueAction($vars);
@@ -789,19 +789,19 @@ class AdminModel extends RoxModelBase
         }
         return $r->id;
     }
-    
+
     private function enqueueMassmailMembers($id, $usernames, $maxmessages) {
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO 
+            INSERT IGNORE INTO
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
                 members AS m
             LEFT JOIN
-                memberspreferences AS mp 
+                memberspreferences AS mp
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")";
         if (empty($usernames)) {
             // get count of members that would receive the newsletter
@@ -817,28 +817,25 @@ class AdminModel extends RoxModelBase
             $limit = "LIMIT 0, " . $maxmessages;
         }
         $r = $this->dao->query($query . " " . $where . " " . $limit);
-        if (!$r) {
-            return -1;
-        }
         $count = $r->affectedRows();
         return $count;
     }
-    
+
     private function enqueueMassmailLocation($id, $countrycode, $adminunit, $place) {
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO 
+            INSERT IGNORE INTO
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
-            SELECT 
+            SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
-            FROM 
+            FROM
                 geonames_cache AS g, members AS m
-            LEFT JOIN 
-                memberspreferences AS mp 
+            LEFT JOIN
+                memberspreferences AS mp
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
-            WHERE 
-                (m.IdCity = g.geonameId) 
+            WHERE
+                (m.IdCity = g.geonameId)
                 AND g.fk_countrycode = 'AO'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                 AND (m.Status IN ('Active', 'ActiveHidden'))";
@@ -904,11 +901,11 @@ class AdminModel extends RoxModelBase
         }
         return $count;
     }
-    
+
     public function enqueueMassmail($vars) {
         $count = 0;
         $id = $vars['id'];
-        $action = $this->getEnqueueAction($vars);    
+        $action = $this->getEnqueueAction($vars);
         switch($action) {
             case 'enqueueMembers':
                 $usernames = array();
@@ -950,24 +947,24 @@ class AdminModel extends RoxModelBase
         $query = "
             DELETE FROM
                 broadcastmessages
-            WHERE 
+            WHERE
                 Status = 'ToApprove'
                 AND IdBroadcast = " . $id;
         $r = $this->dao->query($query);
         return $r->affectedRows();
     }
-    
+
     public function untriggerMassMail($id) {
         $query = "
             DELETE FROM
                 broadcastmessages
-            WHERE 
+            WHERE
                 Status = 'ToSend'
                 AND IdBroadcast = " . $id;
         $r = $this->dao->query($query);
         return $r->affectedRows();
     }
-    
+
     public function triggerMassMail($id) {
         $query = "
             UPDATE
@@ -979,5 +976,138 @@ class AdminModel extends RoxModelBase
                 broadcastmessages.IdBroadcast = " . $id;
         $r = $this->dao->query($query);
         return $r->affectedRows();
+    }
+
+    public function treasurerEditCreateDonationVarsOk(&$vars) {
+        $errors = array();
+        if (empty($vars['donate-username'])) {
+            $errors[] = 'AdminTreasurerDonatorEmpty';
+        } else {
+            $donator = $this->createEntity('Member')->findByUsername($vars['donate-username']);
+            if (!$donator) {
+                $errors[] = 'AdminTreasurerUnknownDonator';
+            } else {
+                $vars['IdMember'] = $donator->id;
+            }
+        }
+        if (!is_numeric($vars['donate-amount'])) {
+            $errors[] = 'AdminTreasurerDonatedAmountInvalid';
+        }
+        if (empty($vars['donate-date'])) {
+            $errors[] = 'AdminTreasurerDonatedOnEmpty';
+        } else {
+            $date = $vars['donate-date'];
+            if ((strlen($date) < 8) || (strlen($date) > 10)) {
+                 $errors[] = 'AdminTreasurerDonatedOnInvalid';
+            } else {
+                list($day, $month, $year) = preg_split('/[\/.-]/', $date);
+                if (substr($month,0,1) == '0') $month = substr($month,1,2);
+                if (substr($day,0,1) == '0') $day = substr($day,1,2);
+                $start = mktime(0, 0, 0, (int)$month, (int)$day, (int)$year);
+                $vars['DonatedOn'] = date('YmdHis', $start);
+            }
+        }
+        if (is_numeric($vars['donate-country'])) {
+            $errors[] = 'AdminTreasurerNoCountry';
+        }
+        return $errors;
+    }
+
+    public function getGeonameIdForCountryCode($countrycode) {
+        $query = "
+            SELECT
+                geonameid
+            FROM
+                geonames_cache AS g
+            WHERE
+                g.fcode LIKE 'PCL%'
+                AND g.fk_countrycode = '" . $countrycode . "'";
+        $cc = $this->singleLookup($query);
+        if ($cc) {
+            return $cc->geonameid;
+        }
+        return false;
+    }
+    
+    public function getCountryCodeForGeonameId($geonameid) {
+        $query = "
+            SELECT
+                fk_countrycode
+            FROM
+                geonames_cache AS g
+            WHERE
+                g.geonameid = " . $geonameid;
+        $cc = $this->singleLookup($query);
+        if ($cc) {
+            return $cc->fk_countrycode;
+        }
+        return false;
+    }
+    
+    public function createDonation($memberid, $donatedon, $amount, $countryid) {
+        $query = "
+            INSERT INTO
+                donations
+            SET
+                IdMember = " . $memberid . ",
+                Email = '',
+                StatusPrivate = 'showamountonly',
+                created = '" .  $donatedon . "',
+                Amount = " . $amount . ",
+                Money = '',
+                IdCountry = " . $countryid . ",
+                namegiven = '',
+                referencepaypal = '',
+                membercomment = '',
+                SystemComment = 'Bank transfer'";
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return false;
+        }
+        if ($sql->affectedRows() != 1) {
+            return false;
+        }
+        return true;
+    }
+
+    public function updateDonation($id, $memberid, $donatedon, $amount, $countryid) {
+        $query = "
+            UPDATE
+                donations
+            SET
+                IdMember = " . $memberid . ",
+                Email = '',
+                StatusPrivate = 'showamountonly',
+                created = '" .  $donatedon . "',
+                Amount = " . $amount . ",
+                Money = '',
+                IdCountry = " . $countryid . ",
+                namegiven = '',
+                referencepaypal = '',
+                membercomment = '',
+                SystemComment = 'Bank transfer'
+            WHERE
+                id = " . $id;
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getDonations() {
+        $donateModel = new DonateModel();
+        return $donateModel->getDonations();
+    }
+
+    public function getDonation($id) {
+        $query = "
+            SELECT
+                *
+            FROM
+                donations
+            WHERE
+                id = " . $id;
+        return $this->singleLookup($query);
     }
 }

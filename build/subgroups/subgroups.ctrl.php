@@ -176,7 +176,7 @@ class SubgroupsController extends RoxControllerBase
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
-            $this->setFlashNotice($this->getWords()->SuccessfullyRemovedSubgroup . " " . htmlspecialchars($subgroup->Name, ENT_QUOTES));
+            $this->setFlashNotice($this->getWords()->getFormatted('SuccessfullyRemovedSubgroup', htmlspecialchars($subgroup->Name, ENT_QUOTES)));
             return $page;
          } else {
             $page = new GroupSubgroupLogPage();
@@ -184,7 +184,7 @@ class SubgroupsController extends RoxControllerBase
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
-            $this->setFlashError($this->getWords()->ErrorWhileRemoveSubgroup . " " . htmlspecialchars($subgroup->Name, ENT_QUOTES));
+            $this->setFlashError($this->getWords()->getFormatted('ErrorWhileRemoveSubgroup', htmlspecialchars($subgroup->Name, ENT_QUOTES)));
             return $page;
          }
      }

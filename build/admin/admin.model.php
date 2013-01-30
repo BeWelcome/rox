@@ -1095,9 +1095,19 @@ class AdminModel extends RoxModelBase
         return true;
     }
 
-    public function getDonations() {
+    public function getRecentDonations() {
         $donateModel = new DonateModel();
-        return $donateModel->getDonations();
+        return $donateModel->getDonations(true);
+    }
+    
+    public function getStatForDonations() {
+        $donateModel = new DonateModel();
+        return $donateModel->getStatForDonations();
+    }
+
+    public function getDonationCampaignValues() {
+        $donateModel = new DonateModel();
+        return $donateModel->getCampaignValues();
     }
 
     public function getDonation($id) {
@@ -1109,5 +1119,69 @@ class AdminModel extends RoxModelBase
             WHERE
                 id = " . $id;
         return $this->singleLookup($query);
+    }
+    
+    public function getDonationCampaignStatus() {
+        $query = "
+            SELECT
+                ToggleDonateBar
+            FROM
+                params";
+        $r = $this->singleLookup($query);
+        if (isset($r)) {
+            return $r->ToggleDonateBar;
+        }
+        return false;
+    }
+ 
+    public function treasurerStartDonationCampaignVarsOk(&$vars) {
+        $errors = array();
+        if (!is_numeric($vars['donate-needed-per-year'])) {
+            $errors[] = 'AdminTreasurerNeededAmountInvalid';
+        }
+        if (empty($vars['donate-start-date'])) {
+            $errors[] = 'AdminTreasurerStartDateEmpty';
+        } else {
+            $date = $vars['donate-start-date'];
+            if ((strlen($date) < 8) || (strlen($date) > 10)) {
+                 $errors[] = 'AdminTreasurerStartDateInvalid';
+            } else {
+                list($day, $month, $year) = preg_split('/[\/.-]/', $date);
+                if (substr($month,0,1) == '0') $month = substr($month,1,2);
+                if (substr($day,0,1) == '0') $day = substr($day,1,2);
+                $start = mktime(0, 0, 0, (int)$month, (int)$day, (int)$year);
+                $vars['StartDate'] = date('Y-m-d', $start);
+            }
+        }
+        return $errors;
+    }
+
+    public function startDonationCampaign($vars) {
+        $donateModel = new DonateModel();
+        $donateModel->writeDonateIni($vars['donate-needed-per-year'],
+            $vars['StartDate']);
+        $query = "
+            UPDATE
+                params
+            SET
+                ToggleDonateBar = 1";
+        $r = $this->dao->query($query);
+        if ($r->affectedRows() != 1) {
+            return false;
+        };
+        return true;
+    }
+
+    public function stopDonationCampaign() {
+        $query = "
+            UPDATE
+                params
+            SET
+                ToggleDonateBar = 0";
+        $r = $this->dao->query($query);
+        if ($r->affectedRows() != 1) {
+            return false;
+        };
+        return true;
     }
 }

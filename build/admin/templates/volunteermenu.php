@@ -130,8 +130,8 @@ Boston, MA  02111-1307, USA.
             array(
                 'Treasurer',
                 'admin/treasurer',
-                'Add donations',
-                'Display list of donations and add bank transfers'
+                'Treasurer',
+                'Manage donations, start/stop donation campaign'
             ),
             array(
                 'SqlForVolunteers',
@@ -143,13 +143,7 @@ Boston, MA  02111-1307, USA.
     ;
     foreach($array_of_items as $item) {
         if ($R->hasRight($item[0])) {
-            if ($link == $item[1]) {
-                echo '<li>'.$item[2].'</li>
-                ';
-            } else {
-                echo '<li><a href="'.$item[1].'" title="'.$item[3].'">'.$item[2].'</a></li>
-                ';
-            }
+            echo '<li><a href="'.$item[1].'" title="'.$item[3].'">'.$item[2].'</a></li>';
         }
     }
 ?>

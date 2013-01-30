@@ -364,7 +364,6 @@ class AdminController extends RoxControllerBase
             $success = $this->_model->updateDonation($id, $vars['IdMember'], $vars['DonatedOn'], 
                 $vars['donate-amount'], $countryid);
         }
-        error_log("Success: [" . print_r($success, true) . "]");
         if (!$success) {
             $mem_redirect->vars = $vars;
             $mem_redirect->errors = array('AdminTreasurerDbUpdateFailed');
@@ -374,7 +373,7 @@ class AdminController extends RoxControllerBase
     }
     
     /**
-     * Treasurer add donation method
+     * Treasurer edit donation method
      *
      * @access public
      * @return object
@@ -388,6 +387,64 @@ class AdminController extends RoxControllerBase
         }
         $page = new AdminTreasurerEditCreateDonationPage($this->_model, $id);
         return $page;
+    }
+
+    /**
+     *
+     */
+    public function treasurerStartDonationCampaignCallback(StdClass $args, 
+        ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        if (empty($args->post))
+        {
+            return false;
+        }
+        $vars = $args->post;
+        $errors = $this->_model->treasurerStartDonationCampaignVarsOk($vars);
+        if (!empty($errors)) {
+            $mem_redirect->vars = $vars;
+            $mem_redirect->errors = $errors;
+            return false;
+        }
+        $success = $this->_model->startDonationCampaign($vars);
+        if (!$success) {
+            $mem_redirect->vars = $vars;
+            $mem_redirect->errors = array('AdminTreasurerDbUpdateFailed');
+            return false;
+        }
+        $_SESSION['AdminTreasurerStatus'] = array('StartSuccess');
+        return $this->router->url('admin_treasurer_overview', array(), false);
+    }
+    
+    /**
+     * This enables the treasurer to start the donation campaign
+     *
+     * @access public
+     * @return object
+     */
+    public function treasurerStartDonationCampaign()
+    {
+        list($member, $rights) = $this->checkRights('Treasurer');
+        $page = new AdminTreasurerStartDonationCampaignPage($this->_model);
+        return $page;
+    }
+
+    /**
+     * This enables the treasurer to stop the donation campaign
+     *
+     * @access public
+     * @return object
+     */
+    public function treasurerStopDonationCampaign()
+    {
+        list($member, $rights) = $this->checkRights('Treasurer');
+        $success = $this->_model->stopDonationCampaign();
+        if ($success) {
+            $_SESSION['AdminTreasurerStatus'] = array('StopSuccess');
+        } else {
+            $_SESSION['AdminTreasurerStatus'] = array('StopFailed');
+        }
+        $this->redirectAbsolute($this->router->url('admin_treasurer_overview'));
     }
 
     /**

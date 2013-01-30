@@ -15,9 +15,9 @@ class DonateModel extends PAppModel
      * @return object Database result row with string properties
      */
     public function getStatForDonations() {
-        // TODO: Move to config
-        $requiredPerYear = 1260;
-        $requiredPerMonth = 105;
+        // check if donate.ini exists and get values
+        list($requiredPerYear, $campaignStart) = $this->getCampaignValues();
+        $requiredPerMonth = floor($requiredPerYear / 12);
 
         // Calculate donations received for current year
         $result = $this->dao->query("
@@ -29,7 +29,7 @@ class DonateModel extends PAppModel
             FROM
                 donations
             WHERE
-                created > '2012-10-11'
+                created > '" . $campaignStart . "'
             ");
         $rowYear = $result->fetch(PDB::FETCH_OBJ);
 
@@ -78,14 +78,20 @@ class DonateModel extends PAppModel
     /**
      * Get donations (max. 25, all if user has Treasurer rights)
      *
+     * @param recent Get only the results since the start of the current campaign
      * @return array List of donations as objects with string properties
      *
      * TODO: Add parameter for limit and do permission check elsewhere
      */
-    public function getDonations() {
+    public function getDonations($recent = false) {
         $rights = MOD_right::get();
+        $where = "";
+        list($dummy, $campaignStart) = $this->getCampaignValues();
         if ($rights->hasRight('Treasurer')) {
             $limitClause = "";
+            if ($recent) {
+                $where = "WHERE created >= '" . $campaignStart . "'";
+            }
         } else {
             $limitClause = "LIMIT 25";
         }
@@ -94,6 +100,7 @@ class DonateModel extends PAppModel
                 *
             FROM
                 donations
+            " . $where . "
             ORDER BY
                 created DESC
             $limitClause
@@ -291,7 +298,53 @@ VALUES
             return $error;
         } // enf if fp
     }
+
+    public function getCampaignValues() {
+        $inifile = DATA_DIR . "/donate.ini";
+        if (file_exists($inifile)) {
+            $donate_ini = parse_ini_file( $inifile );
+            $requiredPerYear = $donate_ini['needed_per_year'];
+            if (!is_numeric($requiredPerYear)) {
+                $requiredPerYear = 1260;
+            }
+            $campaignStart = $donate_ini['campaign_start_date'];
+            if (!strtotime($campaignStart)) {
+                $campaignStart = '2012-10-11';
+            }
+        } else {
+            $requiredPerYear = 1260;
+            $campaignStart = '2012-10-11';
+        }
+        return array($requiredPerYear, $campaignStart);
+    }
+
+    public function writeDonateIni($needed_per_year, $start_date)
+    {
+        $donateini = DATA_DIR. '/donate.ini';
+        $ini_content = "
+[donation]
+needed_per_year = " . $needed_per_year . "
+campaign_start_date = " . $start_date;
+        if ($fp = fopen($donateini, 'w'))
+        {
+            $startTime = microtime();
+            do
+            {            
+                $canWrite = flock($fp, LOCK_EX);
+                // If lock not obtained sleep for 0 - 100 milliseconds, to avoid collision and CPU load
+                if(!$canWrite) {
+                    usleep(round(rand(0, 100)*1000));
+                }
+            } while ((!$canWrite) &&  ((microtime()-$startTime) < 1000));
+
+            //file was locked so now we can store information
+            if ($canWrite)
+            {
+                fwrite($fp, $ini_content);
+                flock($fp, LOCK_UN);
+            }
+            fclose($fp);
+        }
+    }
 }
-
-
 ?>

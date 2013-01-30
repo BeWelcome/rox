@@ -110,6 +110,9 @@
     $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
     $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminController', 'treasurerEditCreateDonation');
     $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminController', 'treasurerEditCreateDonation');
+    $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminController', 'treasurerStartDonationCampaign');
+    $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminController', 'treasurerStopDonationCampaign');
+    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
 
     // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');

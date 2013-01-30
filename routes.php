@@ -106,6 +106,11 @@
     $this->addRoute('admin_massmail_trigger', 'admin/massmail/trigger/:id:', 'AdminController', 'massmailtrigger');
     $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminController', 'massmailuntrigger');
     
+    // admin treasurer routes
+    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
+    $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminController', 'treasurerEditCreateDonation');
+    $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminController', 'treasurerEditCreateDonation');
+
     // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
 

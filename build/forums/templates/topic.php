@@ -50,9 +50,11 @@ This File display a topic and the messages which are inside it
     echo "<h2 class=\"forumstopic\">" ;
 
     if ($topic->topicinfo->ThreadDeleted=='Deleted') {
-      echo "[Deleted]" ;
+        echo "[Deleted]" ;
     }
-
+    if ($topic->topicinfo->ThreadVisibility=='ModeratorOnly') {
+        echo "[ModOnly]" ;
+    }
 
     echo $words->fTrad($topic->topicinfo->IdTitle);
     if ($User) {
@@ -174,7 +176,6 @@ This File display a topic and the messages which are inside it
    <?php
   // counting for background switch trick
   $cntx = '1';
-
 
   if ($this->_model->ForumOrderList=="No") {
     for ($ii=count($topic->posts)-1;$ii>=0;$ii--) {

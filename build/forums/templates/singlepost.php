@@ -58,8 +58,8 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         <p class="forumstime">
             <?php
 //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
-            echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));
-            echo "  &nbsp;&nbsp; " . $words->getFormatted("forum_label_visibility") . ": " . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility); 
+            echo $words->getFormatted('posted'); ?> <?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));
+            echo $words->flushBuffer() . "  &nbsp;&nbsp; " . $words->getFormatted("forum_label_visibility") . ": " . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility); 
             $max = 0;
             if (!empty($post->Trad)) {
                 $max = count($post->Trad) ;

@@ -9,6 +9,9 @@ if ($_newMessagesNumber > 0) {
     $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
 }
 
+$LayoutBits = new MOD_layoutbits();
+$ShowDonateBar = $LayoutBits->getParams('ToggleDonateBar');
+
 $notify_widget = new NotifyMemberWidget;
 $notify_widget->model = new NotifyModel;
 $notify_widget->items_per_page = 4;

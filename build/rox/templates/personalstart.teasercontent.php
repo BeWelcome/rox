@@ -31,9 +31,9 @@ Boston, MA  02111-1307, USA.
         <div class="c33l">
             <div class="subcl">
                 <ul id="personalmenu">
-                    <li><a id="tablink1" class="active-tab" href="#tab1"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
+                    <li><a id="tablink1" <?php if(!$ShowDonateBar) { echo 'class="active-tab"'; } ?> href="#tab1"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
                     <li><a id="tablink2" href="#tab2"><?=$words->getSilent('FindAHost')?></a></li>
-                    <li><a id="tablink3" href="#tab3"><?=$words->getSilent('HelpTheProject')?></a></li>
+                    <li><a id="tablink3" <?php if($ShowDonateBar) { echo 'class="active-tab"'; } ?> href="#tab3"><?=$words->getSilent('HelpTheProject')?></a></li>
                     <?php /* NOTREADY <li><a id="tablink3a" href="#tab3a"><?=$words->getSilent('OfferHosting')?></a></li> */ ?>
                     <?php /* NOTREADY<li><a id="tablink4" href="#tab4"><?=$words->getSilent('SetLocation')?></a></li> */ ?>
                     <li><a id="tablink5" href="#tab5"><?=$words->getSilent('CheckYourMessages')?>

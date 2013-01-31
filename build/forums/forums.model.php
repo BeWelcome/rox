@@ -3565,6 +3565,10 @@ SQL;
         $row = $s->fetch(PDB::FETCH_OBJ) ;
         return ($row->PostVisibility);
     }
+
+    public function GetGroupEntity($IdGroup) {
+        return $this->createEntity('Group')->findById($IdGroup);
+    }
 } // end of class Forums
 
 

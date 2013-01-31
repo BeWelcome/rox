@@ -446,25 +446,23 @@ class ForumsView extends RoxAppView {
         $visiblities = array();
         // If we have a group check if visibility is limited to GroupOnly
         if ($IdGroup != 0) {
-            // can't use the entity here for some reason
-            // resorting to a SQL query
-            $query = "SELECT VisiblePosts FROM groups WHERE id = " . $IdGroup;
-            $s = $this->_model->dao->query($query);
-            $row = $s->fetch(PDB::FETCH_OBJ);
-            $groupOnly = ($row->VisiblePosts == "no");
+            // getting group entity from model as createEntity isn't public
+            $group = $this->_model->GetGroupEntity($IdGroup);
+            $groupOnly = ($group->VisiblePosts == "no");
             $currentVisibility = "GroupOnly";
             if ($groupOnly) {
                 $visibilities[] = "GroupOnly";
-            }
-            else
-            {
+            } else {
                 $visibilities[] = "NoRestriction";
                 $visibilities[] = "MembersOnly";
-                $visibilities[] = "GroupOnly";
+                if ($group->isMember($this->_model->getLoggedInMember())) {
+                    $visibilities[] = "GroupOnly";
+                } else {
+                    // No GroupOnly if no member so switch current visibility
+                    $currentVisibility = "MembersOnly";
+                }
             }
-        }
-        else
-        {
+        } else {
             $visibilities[] = "NoRestriction";
             $visibilities[] = "MembersOnly";
         }

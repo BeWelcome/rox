@@ -3619,7 +3619,7 @@ class Board implements Iterator {
             $member = $roxmodel->getLoggedInMember();
             $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
             $this->owngroupsonly = $owngroupsonly;
-            if ($owngroupsonly == "Yes") {
+            if ($owngroupsonly == "Yes" && ($this->IdGroup == 0 || !isset($this->IdGroup))) {
                 // 0 is the group id for topics without an explicit group, we don't want them in this case. Lazy hack to avoid changing more than necessary: replace 0 with -1
                 $this->PostGroupsRestriction=" (IdGroup in(-1" ;
                 $this->ThreadGroupsRestriction=" (IdGroup in(-1" ;

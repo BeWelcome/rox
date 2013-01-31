@@ -55,6 +55,9 @@ $threadsliced = array_slice($threads, 0, 5);
                     if ($thread->ThreadDeleted=='Deleted') {
                         echo "[Deleted]" ;
                     }
+                    if ($thread->ThreadVisibility=="ModeratorOnly") {
+                        echo "[ModOnly]" ;
+                    }
                     ?>
                     <a href="<?php echo $url; ?>" class="news">
                     <?php

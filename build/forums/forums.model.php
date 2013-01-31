@@ -2354,7 +2354,7 @@ SELECT
 	`OwnerCanStillEdit`,
     `geonames_cache`.`fk_countrycode`,
     `HasVotes`,
-    `IdLocalEvent`
+    `IdLocalEvent`,
     `IdGroup`
 FROM forums_posts, forums_threads, members, addresses
 LEFT JOIN `geonames_cache` ON (addresses.IdCity = `geonames_cache`.`geonameid`)
@@ -2370,7 +2370,6 @@ LIMIT %d
             $this->threadid,
             Forums::NUMBER_LAST_POSTS_PREVIEW
         );
-
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve Posts!');

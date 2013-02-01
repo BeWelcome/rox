@@ -280,8 +280,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 			$this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
 		}
 		else {
-			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility="(PostVisibility != 'ModeratorOnly') && (PostDeleted!='Deleted')" ;
+			$this->PublicThreadVisibility="(ThreadVisibility != 'ModeratorOnly') and (ThreadDeleted!='Deleted')" ;
+			$this->PublicPostVisibility="(PostVisibility != 'ModeratorOnly') and (PostDeleted!='Deleted')" ;
 			$this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
 			$this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
@@ -3612,7 +3612,7 @@ class Board implements Iterator {
             $this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
 		}
 		else {
-			$this->PublicThreadVisibility="(ThreadDeleted!='Deleted')" ;
+			$this->PublicThreadVisibility="(ThreadVisibility!='ModeratorOnly') and (ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
 			//if the member prefers to see only posts to his/her groups
             $roxmodel = New RoxModelBase ;

@@ -1158,8 +1158,10 @@ class AdminModel extends RoxModelBase
 
     public function startDonationCampaign($vars) {
         $donateModel = new DonateModel();
-        $donateModel->writeDonateIni($vars['donate-needed-per-year'],
-            $vars['StartDate']);
+        $success = $donateModel->setCampaignValues($vars['donate-needed-per-year'], $vars['StartDate']);
+        if (!$success) {
+            return false;
+        }
         $query = "
             UPDATE
                 params

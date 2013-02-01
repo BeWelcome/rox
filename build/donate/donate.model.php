@@ -1,7 +1,7 @@
 <?php
 
 
-class DonateModel extends PAppModel
+class DonateModel extends RoxModelBase
 {
 
     /**
@@ -18,7 +18,7 @@ class DonateModel extends PAppModel
         // check if donate.ini exists and get values
         list($requiredPerYear, $campaignStart) = $this->getCampaignValues();
         $requiredPerMonth = floor($requiredPerYear / 12);
-
+        
         // Calculate donations received for current year
         $result = $this->dao->query("
             SELECT
@@ -300,51 +300,32 @@ VALUES
     }
 
     public function getCampaignValues() {
-        $inifile = DATA_DIR . "/donate.ini";
-        if (file_exists($inifile)) {
-            $donate_ini = parse_ini_file( $inifile );
-            $requiredPerYear = $donate_ini['needed_per_year'];
-            if (!is_numeric($requiredPerYear)) {
-                $requiredPerYear = 1260;
-            }
-            $campaignStart = $donate_ini['campaign_start_date'];
-            if (!strtotime($campaignStart)) {
-                $campaignStart = '2012-10-11';
-            }
+        $query = "
+            SELECT
+                neededperyear,campaignstartdate
+            FROM
+                params";
+        $r = $this->singleLookup($query);
+        if (!$r) {
+            // failed return defaults (might miss a DB update)
+            return array(1260, '2012-10-11');
         } else {
-            $requiredPerYear = 1260;
-            $campaignStart = '2012-10-11';
+            return array($r->neededperyear, $r->campaignstartdate);
         }
-        return array($requiredPerYear, $campaignStart);
     }
 
-    public function writeDonateIni($needed_per_year, $start_date)
-    {
-        $donateini = DATA_DIR. '/donate.ini';
-        $ini_content = "
-[donation]
-needed_per_year = " . $needed_per_year . "
-campaign_start_date = " . $start_date;
-        if ($fp = fopen($donateini, 'w'))
-        {
-            $startTime = microtime();
-            do
-            {            
-                $canWrite = flock($fp, LOCK_EX);
-                // If lock not obtained sleep for 0 - 100 milliseconds, to avoid collision and CPU load
-                if(!$canWrite) {
-                    usleep(round(rand(0, 100)*1000));
-                }
-            } while ((!$canWrite) &&  ((microtime()-$startTime) < 1000));
-
-            //file was locked so now we can store information
-            if ($canWrite)
-            {
-                fwrite($fp, $ini_content);
-                flock($fp, LOCK_UN);
-            }
-            fclose($fp);
+    public function setCampaignValues($neededPerYear,$campaignStartDate) {
+        $query = "
+            UPDATE
+                params
+            SET
+                neededperyear = " . $neededPerYear . ",
+                campaignstartdate = '" . $campaignStartDate . "'";
+        $r = $this->dao->query($query);
+        if (!$r) {
+            return false;
         }
+        return true;
     }
 }
 ?>

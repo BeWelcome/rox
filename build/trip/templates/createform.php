@@ -45,11 +45,11 @@ if (in_array('name', $errors)) {
         </div>
         <div class="row">
             <label for="trip-desc"><?=$words->get('TripLabel_desc')?></label><br/>
-            <textarea id="trip-desc" name="d" cols="40" rows="7"><?php
+            <textarea id="trip-desc" name="d" cols="48" rows="7"><?php
 if (isset($vars['d']) && $vars['d'])
     echo htmlentities($vars['d'], ENT_COMPAT, 'utf-8');
             ?></textarea>
-            <p class="desc"><?=$words->get('TripDesc_desc')?></p>
+            <p class="desc"><?=$words->get('TripDesc_desc2')?></p>
         </div>
     </fieldset>
     <p>

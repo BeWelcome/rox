@@ -104,7 +104,7 @@ class GroupSubgroupLogPage extends GroupsBasePage
             ?>        
             <div class="subcolumns">
                 <br />
-                <h4> <?php echo $words->get('NbOfLogEntries') . ": " . count($logvar); ?> </h4>
+                <h4> <?php echo $words->get('NbOfLogEntries', count($logvar)); ?> </h4>
                 <ul class="floatbox"> <?php
                     foreach ($logvar as &$value) { ?>
                         <li class="picbox_subgroup float_left">

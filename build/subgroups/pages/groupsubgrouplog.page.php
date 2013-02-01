@@ -114,10 +114,11 @@ class GroupSubgroupLogPage extends GroupsBasePage
                                     <?php
                                     $layoutbits->ago(strtotime($value->ts));
                                     ?>
-                                    <br />
-                                    <a href="members/<?php echo $value->member->Username; ?>"><?php echo $value->member->Username; ?></a>
-                                    <?php echo $words->get($value->SubgroupAction); ?>
-                                    <a href="groups/<?php echo $value->subgroup->getPKValue(); ?>"><?php echo htmlspecialchars($value->subgroup->Name, ENT_QUOTES); ?></a><br />
+                                    <br /><?php 
+$memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
+$grouplink =  '<a href="groups/' . $value->subgroup->getPKValue() . '">' . htmlspecialchars($value->subgroup->Name, ENT_QUOTES) . '</a>'; 
+$logentry = $words->get($value->SubgroupAction, $memberlink, $grouplink);
+                                    echo $logentry; ?><br />
                                 </span>
                             </div>
                         </li> <?php

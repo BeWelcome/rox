@@ -449,17 +449,15 @@ class ForumsView extends RoxAppView {
             // getting group entity from model as createEntity isn't public
             $group = $this->_model->GetGroupEntity($IdGroup);
             $groupOnly = ($group->VisiblePosts == "no");
-            $currentVisibility = "GroupOnly";
+            $isMember = $group->isMember($this->_model->getLoggedInMember()); 
             if ($groupOnly) {
+                $currentVisibility = "GroupOnly";
                 $visibilities[] = "GroupOnly";
             } else {
                 $visibilities[] = "NoRestriction";
                 $visibilities[] = "MembersOnly";
-                if ($group->isMember($this->_model->getLoggedInMember())) {
+                if ($isMember) {
                     $visibilities[] = "GroupOnly";
-                } else {
-                    // No GroupOnly if no member so switch current visibility
-                    $currentVisibility = "MembersOnly";
                 }
             }
         } else {

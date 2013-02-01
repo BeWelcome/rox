@@ -451,8 +451,20 @@ class ForumsView extends RoxAppView {
             $groupOnly = ($group->VisiblePosts == "no");
             $isMember = $group->isMember($this->_model->getLoggedInMember()); 
             if ($groupOnly) {
-                $currentVisibility = "GroupOnly";
-                $visibilities[] = "GroupOnly";
+                // check if highest visibility is not GroupOnly meaning
+                // thread was started before the group setting changed
+                if ($highestVisibility != "GroupOnly") {
+                    if ($highestVisibility == "NoRestriction") {
+                        $visibilities[] = "NoRestriction";
+                    }
+                    $visibilities[] = "MembersOnly";
+                    if ($isMember) {
+                        $visibilities[] = "GroupOnly";
+                    }
+                } else {
+                    $currentVisibility = "GroupOnly";
+                    $visibilities[] = "GroupOnly";
+                }
             } else {
                 $visibilities[] = "NoRestriction";
                 $visibilities[] = "MembersOnly";

@@ -3615,7 +3615,7 @@ class Board implements Iterator {
 			$this->PublicThreadVisibility="(ThreadVisibility!='ModeratorOnly') and (ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
 			//if the member prefers to see only posts to his/her groups
-            $roxmodel = New RoxModelBase ;
+            $roxmodel = new RoxModelBase;
             $member = $roxmodel->getLoggedInMember();
             $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
             $this->owngroupsonly = $owngroupsonly;

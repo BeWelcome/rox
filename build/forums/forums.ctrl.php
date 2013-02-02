@@ -610,7 +610,7 @@ class ForumsController extends PAppController
         } else if (isset($request[1]) && $request[1] == 'rules') {
             $this->action = self::ACTION_RULES;
         } else if (isset($request[1]) && $request[1] === 'mygroupsonly') {
-            $this->_model->SwitchShowMyGroupsTopicsOnly() ;
+            $this->_model->switchShowMyGroupsTopicsOnly() ;
         } else {
             foreach ($request as $r) {
                 if ($r == 'new') {
@@ -640,7 +640,7 @@ class ForumsController extends PAppController
                 } else if ($r == 'modedittag') {
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
                 } else if ($r == 'reverse') {  // This mean user has click on the reverse order box
-                    $this->_model->SwitchForumOrderList() ;
+                    $this->_model->switchForumOrderList() ;
                 } else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
                 } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {

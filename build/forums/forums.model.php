@@ -310,7 +310,7 @@ function FindAppropriatedLanguage($IdPost=0) {
     } // __construct
 	
 	// This switch the preference ForumOrderList
-	public function SwitchForumOrderList() {
+	public function switchForumOrderList() {
 		if ($this->ForumOrderList=="Yes") {
 			$this->ForumOrderList="No" ;
 		}
@@ -332,14 +332,14 @@ function FindAppropriatedLanguage($IdPost=0) {
 		}
 		$qq = $this->dao->query($ss);
 		if (!$qq) {
-            throw new PException('SwitchForumOrderList '.$ss.' !');
+            throw new PException('switchForumOrderList '.$ss.' !');
 		}
         MOD_log::get()->write("Switching PreferenceForumOrderListAsc to [".$this->ForumOrderList."]", "ForumModerator");
-	} // end of SwitchForumOrderList
+	} // end of switchForumOrderList
 
 
-    // This switch the preference ShowMyGroupsTopicsOnly
-    public function SwitchShowMyGroupsTopicsOnly() {
+    // This switch the preference switchShowMyGroupsTopicsOnly
+    public function switchShowMyGroupsTopicsOnly() {
         if (!$member = $this->getLoggedInMember()) {
             return;
         }
@@ -399,11 +399,11 @@ WHERE
         
         $qq = $this->dao->query($ss);
         if (!$qq) {
-            throw new PException('ShowMyGroupsTopicsOnly ' . $ss . ' !');
+            throw new PException('switchShowMyGroupsTopicsOnly ' . $ss . ' !');
         }
         header('Location: ' . PVars::getObj('env')->baseuri . 'forums');
         PPHP::PExit();
-    } // end of ShowMyGroupsTopicsOnly
+    } // end of switchShowMyGroupsTopicsOnly
     
 
     public function checkGroupMembership($group_id) {

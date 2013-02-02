@@ -259,58 +259,58 @@ function FindAppropriatedLanguage($IdPost=0) {
 		}
 		
 		if (!isset($_SESSION['IdMember'])) {
-			$this->THREADS_PER_PAGE=100  ; // Variable because it can change wether the user is logged or no
-			$this->POSTS_PER_PAGE=200 ; // Variable because it can change wether the user is logged or no
+			$this->THREADS_PER_PAGE = 100; // Variable because it can change wether the user is logged or no
+			$this->POSTS_PER_PAGE = 200; // Variable because it can change wether the user is logged or no
 		}
 		
-		$MyGroups=array() ;
+		$MyGroups = array();
 
 		
-		$this->words= new MOD_words();
+		$this->words = new MOD_words();
 		$this->BW_Right = MOD_right::get();
-		$this->IdGroup=0 ; // By default no group
-		$this->ByCategories=false ; // toggle or not toglle the main view is TopCategories or TopLevel
-		$this->ForumOrderList=$layoutbits->GetPreference("PreferenceForumOrderListAsc") ;
+		$this->IdGroup = 0; // By default no group
+		$this->ByCategories = false; // toggle or not toglle the main view is TopCategories or TopLevel
+		$this->ForumOrderList = $layoutbits->GetPreference("PreferenceForumOrderListAsc");
 
 		//	Decide if it is an active LoggeMember or not
-		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"]=='Pending') or $_SESSION["MemberStatus"]=='NeedMore') ) {
-			$this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
-			$this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
-			$this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
+		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"] == 'Pending') or $_SESSION["MemberStatus"] == 'NeedMore') ) {
+			$this->PublicThreadVisibility=" (ThreadVisibility = 'NoRestriction') AND (ThreadDeleted != 'Deleted')";
+			$this->PublicPostVisibility = " (PostVisibility = 'NoRestriction') AND (PostDeleted != 'Deleted')";
+			$this->ThreadGroupsRestriction = " (IdGroup = 0 OR ThreadVisibility = 'NoRestriction')";
+			$this->PostGroupsRestriction = " (IdGroup = 0 OR PostVisibility = 'NoRestriction')" ;
 		}
 		else {
-			$this->PublicThreadVisibility="(ThreadVisibility != 'ModeratorOnly') and (ThreadDeleted!='Deleted')" ;
-			$this->PublicPostVisibility="(PostVisibility != 'ModeratorOnly') and (PostDeleted!='Deleted')" ;
-			$this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
-			$this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
-			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
+			$this->PublicThreadVisibility = "(ThreadVisibility != 'ModeratorOnly') AND (ThreadDeleted != 'Deleted')" ;
+			$this->PublicPostVisibility = "(PostVisibility != 'ModeratorOnly') AND (PostDeleted !='Deleted')" ;
+			$this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') OR (PostVisibility='GroupOnly' AND IdGroup in(0" ;
+			$this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' and IdGroup in(0" ;
+			$qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember = " . $_SESSION["IdMember"] . " AND Status = 'In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
 			}
-			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
-				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
-				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
+			while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
+				$this->PostGroupsRestriction = $this->PostGroupsRestriction . "," . $rr->IdGroup;
+				$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
 				array_push($MyGroups,$rr->IdGroup) ; // Save the group list
 			}	;
-			$this->PostGroupsRestriction=$this->PostGroupsRestriction."))" ;
-			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction."))" ;
+			$this->PostGroupsRestriction = $this->PostGroupsRestriction . "))";
+			$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))";
 		}
 		
 		// Prepares additional visibility options for moderator
 		if ($this->BW_Right->HasRight("ForumModerator")) {
-			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')" ;
-			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')" ;
+			$this->PublicPostVisibility = " PostVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
+			$this->PublicThreadVisibility = " ThreadVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
-				$this->PostGroupsRestriction=" (1=1)" ;
-				$this->ThreadGroupsRestriction=" (1=1)" ;
+				$this->PostGroupsRestriction = " (1=1)";
+				$this->ThreadGroupsRestriction = " (1=1)";
 			}
 		}
         $this->MyGroups = $MyGroups;
     } // __construct
 	
 	// This switch the preference ForumOrderList
-	public function SwitchForumOrderList() {
+	public function switchForumOrderList() {
 		if ($this->ForumOrderList=="Yes") {
 			$this->ForumOrderList="No" ;
 		}
@@ -332,14 +332,14 @@ function FindAppropriatedLanguage($IdPost=0) {
 		}
 		$qq = $this->dao->query($ss);
 		if (!$qq) {
-            throw new PException('SwitchForumOrderList '.$ss.' !');
+            throw new PException('switchForumOrderList '.$ss.' !');
 		}
         MOD_log::get()->write("Switching PreferenceForumOrderListAsc to [".$this->ForumOrderList."]", "ForumModerator");
-	} // end of SwitchForumOrderList
+	} // end of switchForumOrderList
 
 
-    // This switch the preference ShowMyGroupsTopicsOnly
-    public function SwitchShowMyGroupsTopicsOnly() {
+    // This switch the preference switchShowMyGroupsTopicsOnly
+    public function switchShowMyGroupsTopicsOnly() {
         if (!$member = $this->getLoggedInMember()) {
             return;
         }
@@ -399,11 +399,11 @@ WHERE
         
         $qq = $this->dao->query($ss);
         if (!$qq) {
-            throw new PException('ShowMyGroupsTopicsOnly ' . $ss . ' !');
+            throw new PException('switchShowMyGroupsTopicsOnly ' . $ss . ' !');
         }
         header('Location: ' . PVars::getObj('env')->baseuri . 'forums');
         PPHP::PExit();
-    } // end of ShowMyGroupsTopicsOnly
+    } // end of switchShowMyGroupsTopicsOnly
     
 
     public function checkGroupMembership($group_id) {
@@ -3615,37 +3615,37 @@ class Board implements Iterator {
 			$this->PublicThreadVisibility="(ThreadVisibility!='ModeratorOnly') and (ThreadDeleted!='Deleted')" ;
 			$this->PublicPostVisibility=" (PostDeleted!='Deleted')" ;
 			//if the member prefers to see only posts to his/her groups
-            $roxmodel = New RoxModelBase ;
+            $roxmodel = new RoxModelBase;
             $member = $roxmodel->getLoggedInMember();
             $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
             $this->owngroupsonly = $owngroupsonly;
             if ($owngroupsonly == "Yes" && ($this->IdGroup == 0 || !isset($this->IdGroup))) {
                 // 0 is the group id for topics without an explicit group, we don't want them in this case. Lazy hack to avoid changing more than necessary: replace 0 with -1
-                $this->PostGroupsRestriction=" (IdGroup in(-1" ;
-                $this->ThreadGroupsRestriction=" (IdGroup in(-1" ;
+                $this->PostGroupsRestriction = " (IdGroup IN (-1";
+                $this->ThreadGroupsRestriction = " (IdGroup IN (-1";
             } else {
-                $this->PostGroupsRestriction=" PostVisibility in ('MembersOnly','NoRestriction') or (PostVisibility='GroupOnly' and IdGroup in(0" ;
-			    $this->ThreadGroupsRestriction=" ThreadVisibility in ('MembersOnly','NoRestriction') or (ThreadVisibility='GroupOnly' and IdGroup in(0" ;
+                $this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND IdGroup IN (0";
+			    $this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND IdGroup IN (0";
             }
-			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and Status='In'");
+			$qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember=" . $_SESSION["IdMember"] . " AND Status = 'In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$_SESSION["IdMember"].' !');
 			}
 			while ($rr=$qry->fetch(PDB::FETCH_OBJ)) {
-				$this->PostGroupsRestriction=$this->PostGroupsRestriction.",".$rr->IdGroup ;
-				$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction.",".$rr->IdGroup ;
+				$this->PostGroupsRestriction = $this->PostGroupsRestriction . "," . $rr->IdGroup;
+				$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
 			}	;
-			$this->PostGroupsRestriction=$this->PostGroupsRestriction."))" ;
-			$this->ThreadGroupsRestriction=$this->ThreadGroupsRestriction."))" ;
+			$this->PostGroupsRestriction = $this->PostGroupsRestriction . "))";
+			$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))";
 		}
 		
 		// Prepares additional visibility options for moderator
 		if ($this->BW_Right->HasRight("ForumModerator")) {
-			$this->PublicPostVisibility=" PostVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')" ;
-			$this->PublicThreadVisibility=" ThreadVisibility in ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')" ;
+			$this->PublicPostVisibility = " PostVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
+			$this->PublicThreadVisibility = " ThreadVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
-				$this->PostGroupsRestriction=" (1=1)" ;
-				$this->ThreadGroupsRestriction=" (1=1)" ;
+				$this->PostGroupsRestriction = " (1=1)";
+				$this->ThreadGroupsRestriction = " (1=1)";
 			}
 		}
     }

@@ -127,7 +127,7 @@ class SubgroupsModel extends  RoxModelBase
         if (!$subgroupentry) {
             return false;
         }
-        $delete = $subgroupentry->DeleteSubgroup($member);
+        $delete = $subgroupentry->deleteSubgroup($member);
         return $delete;
 
     }

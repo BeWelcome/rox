@@ -93,7 +93,7 @@ class Subgroup extends RoxEntityBase
     }
 
 
-    public function DeleteSubgroup(Member $member)
+    public function deleteSubgroup(Member $member)
     {
         if (!$this->isLoaded()) {
             return false;

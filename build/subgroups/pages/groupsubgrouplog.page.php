@@ -54,7 +54,7 @@ class GroupSubgroupLogPage extends GroupsBasePage
                     } ?>
                 <li class="picbox_subgroup float_left">
                     <a href="groups/<?php echo $group_data->getPKValue() ?>">
-                        <img class="framed_subgroup float_left"  width="60px" height="60px" alt="Group" src="<?php echo $img_link; ?>"/>
+                        <img class="framed_subgroup float_left" alt="Group" src="<?php echo $img_link; ?>"/>
                     </a>
                     <div class="userinfo"><span class="small">
                     <h4><a href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>

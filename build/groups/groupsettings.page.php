@@ -121,7 +121,7 @@ class GroupSettingsPage extends GroupsBasePage
                     </div><!-- subcr -->
                 </div><!-- c50r -->
             </div><!-- subcolumns -->                                       
-           <div style="margin-bottom:1.5em"><input type="submit" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></div>           
+           <div class="groupsettinginfo"><input type="submit" value="<?= $words->get('GroupsUpdateGroupSettings'); ?>" /></div>           
             <div class="subcolumns">
                 <div class="c50l">
                     <div class="subcl">

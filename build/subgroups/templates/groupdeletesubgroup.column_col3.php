@@ -44,7 +44,7 @@ Boston, MA  02111-1307, USA.
                     $img_link = "images/icons/group.png";
                 } ?>
 
-                <div style='float: left; width: 48%'>
+                <div class="subgroupinfo">
                     <div class="groupbox floatbox">
                         <a href="groups/<?php echo $subgroup->getPKValue(); ?>">
                             <img class="framed float_left"  width="60px" height="60px" alt="Group" src="<?php echo $img_link; ?>"/>

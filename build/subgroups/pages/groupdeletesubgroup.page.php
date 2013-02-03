@@ -36,42 +36,9 @@ class GroupDeleteSubgroupPage extends GroupsBasePage
     protected function column_col3()
     {
         $words = $this->getWords();
-?>
-        <div class="subcolumns"> 
-            <div class="subcr">
-                <?php // display my groups, if there are any
-                $subgroups = $this->subgroups;
-                $group = $this->group;
-                if (!empty($subgroups)) {
-                    echo "<h3>" . $words->get('TitleDeleteSubgroupFromGroup') . " " . htmlspecialchars($group->Name, ENT_QUOTES) . "</h3>" ;
-                    foreach($subgroups as $subgroup) {
-                        if (strlen($subgroup->Picture) > 0) {
-                            $img_link = "groups/thumbimg/{$subgroup->getPKValue()}";
-                        } else {
-                            $img_link = "images/icons/group.png";
-                        } ?>
-
-                        <div style='float: left; width: 48%'>
-                        <div class="groupbox floatbox">
-                            <a href="groups/<?php echo $subgroup->getPKValue(); ?>">
-                                <img class="framed float_left"  width="60px" height="60px" alt="Group" src="<?php echo $img_link; ?>"/>
-                            </a>
-                            <div class="groupinfo">
-                            <h4><a href="groups/<?php echo $subgroup->getPKValue(); ?>"><?php echo htmlspecialchars($subgroup->Name, ENT_QUOTES); ?></a></h4>
-                            <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/deletesubgroup/<?php echo $subgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
-                            </div> <!-- groupinfo -->
-                        </div> <!-- groupbox floatbox -->
-                        </div>   
-                    <?php }
-                 } ?>
-                
-
-        </div> <!-- subcr -->
-    </div> <!-- subcolumns -->
-</div> <!-- groups -->
-
-
-    <?php
+        $subgroups = $this->subgroups;
+        $group = $this->group;
+        require SCRIPT_BASE . "build/subgroups/templates/groupdeletesubgroup.column_col3.php";
     }
 
     protected function getSubmenuActiveItem() {

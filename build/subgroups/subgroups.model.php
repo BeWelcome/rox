@@ -44,12 +44,12 @@ class SubgroupsModel extends  RoxModelBase
     /**
      * Find and return one group, using id
      *
-     * @param int $group_id
+     * @param int $groupId
      * @return mixed false or a Group entity
      */    
-    public function findGroup($group_id)
+    public function findGroup($groupId)
     {
-        $group = $this->createEntity('Group',$group_id);
+        $group = $this->createEntity('Group',$groupId);
         if ($group->isLoaded()) {
             return $group;
         } else {
@@ -87,29 +87,29 @@ class SubgroupsModel extends  RoxModelBase
 
 
     /**
-     * Find all groups $member_id is member of
+     * Find all groups $memberId is member of
      *
      * @access public
      * @return mixed Returns an array of Group entity objects or false if you're not logged in
      */
-    public function getGroupsForMember($member_id)
+    public function getGroupsForMember($memberId)
     {
-        if (!($member_id = intval($member_id))) {
+        if (!($memberId = intval($memberId))) {
             return false;
         }
 
-        $member = $this->createEntity('Member')->findById($member_id);
+        $member = $this->createEntity('Member')->findById($memberId);
         return $member->getGroups();
 
     }
 
 
 
-    public function MemberAddsSubgroup($group_id, $subgroup_id, $member_id)
+    public function MemberAddsSubgroup($groupId, $subgroupId, $memberId)
     {
-        $group = $this->createEntity('Group', $group_id);
-        $subgroup = $this->createEntity('Group', $subgroup_id);
-        $member = $this->createEntity('Member', $member_id);
+        $group = $this->createEntity('Group', $groupId);
+        $subgroup = $this->createEntity('Group', $subgroupId);
+        $member = $this->createEntity('Member', $memberId);
         $add = $this->createEntity('Subgroup')->AddSubgroup($group,$subgroup,$member);
         return $add;
 
@@ -117,12 +117,12 @@ class SubgroupsModel extends  RoxModelBase
 
 
 
-    public function MemberDeletesSubgroup($group_id, $subgroup_id, $member_id)
+    public function MemberDeletesSubgroup($groupId, $subgroupId, $memberId)
     {
-        $group = $this->createEntity('Group', $group_id);
-        $subgroup = $this->createEntity('Group', $subgroup_id);
-        $member = $this->createEntity('Member', $member_id);
-        $where_clause = "subgroup_id = '{$subgroup_id}' AND group_id = '{$group_id}' AND deletedby IS NULL";
+        $group = $this->createEntity('Group', $groupId);
+        $subgroup = $this->createEntity('Group', $subgroupId);
+        $member = $this->createEntity('Member', $memberId);
+        $where_clause = "subgroup_id = '{$subgroupId}' AND group_id = '{$groupId}' AND deletedby IS NULL";
         $subgroupentry = $this->createEntity('Subgroup')->findByWhere($where_clause);
         if (!$subgroupentry) {
             return false;
@@ -134,9 +134,9 @@ class SubgroupsModel extends  RoxModelBase
 
 
 
-    public function showSubgroupsLog($group_id, $offset = 0, $limit = 25)
+    public function showSubgroupsLog($groupId, $offset = 0, $limit = 25)
     {
-        $group = $this->createEntity('Group', $group_id);
+        $group = $this->createEntity('Group', $groupId);
         $Subgroupslog = $this->createEntity('Subgroup')->getSubgroupsLog($group, $offset = 0, $limit = 25);
         return $Subgroupslog;
     }

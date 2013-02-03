@@ -43,12 +43,12 @@ class GroupsModel extends  RoxModelBase
     /**
      * Find and return one group, using id
      *
-     * @param int $group_id
+     * @param int $groupId
      * @return mixed false or a Group entity
      */    
-    public function findGroup($group_id)
+    public function findGroup($groupId)
     {
-        $group = $this->createEntity('Group',$group_id);
+        $group = $this->createEntity('Group',$groupId);
         if ($group->isLoaded())
         {
             return $group;
@@ -63,13 +63,13 @@ class GroupsModel extends  RoxModelBase
      * creates a membership for a member and sets the status to invited
      *
      * @param object $group - Group entity
-     * @param int $member_id - id of member to invite
+     * @param int $memberId - id of member to invite
      * @access public
      * @return bool
      */
-    public function inviteMember($group, $member_id)
+    public function inviteMember($group, $memberId)
     {
-        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $member_id)))
+        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $memberId)))
         {
             return false;
         }
@@ -232,19 +232,19 @@ class GroupsModel extends  RoxModelBase
     }
     
     /**
-     * Find all groups $member_id is member of
+     * Find all groups $memberId is member of
      *
      * @access public
      * @return mixed Returns an array of Group entity objects or false if you're not logged in
      */
-    public function getGroupsForMember($member_id)
+    public function getGroupsForMember($memberId)
     {
-        if (!($member_id = intval($member_id)))
+        if (!($memberId = intval($memberId)))
         {
             return false;
         }
 
-        $member = $this->createEntity('Member')->findById($member_id);
+        $member = $this->createEntity('Member')->findById($memberId);
         return $member->getGroups();
 
     }
@@ -253,9 +253,9 @@ class GroupsModel extends  RoxModelBase
     /**
      * remember the last visited groups, so 
      *
-     * @param int $now_group_id id of the group you are visiting now
+     * @param int $now_groupId id of the group you are visiting now
      */
-    public function setGroupVisit($group_id)
+    public function setGroupVisit($groupId)
     {
         if (
             (!isset($_SESSION['my_group_visits'])) ||
@@ -264,7 +264,7 @@ class GroupsModel extends  RoxModelBase
         ) {
             $group_visits = array();
         }
-        $group_visits[$group_id] = microtime(true);
+        $group_visits[$groupId] = microtime(true);
         
         // sort by value, while preserving the keys
         asort($group_visits);
@@ -333,52 +333,52 @@ class GroupsModel extends  RoxModelBase
         
         if (!empty($problems))
         {
-            $group_id = false;
+            $groupId = false;
         }
         else
         {
             $group = $this->createEntity('Group');
             if (!$group->createGroup($input))
             {
-                $group_id = false;
+                $groupId = false;
                 $problems['General'] = true;
             }
             else
             {
                 $group->memberJoin($this->getLoggedInMember(), 'In');
-                $group_id = $group->id;
+                $groupId = $group->id;
                 $group->setDescription($input['GroupDesc_']);
                 
                 if (!$group->setGroupOwner($this->getLoggedInMember()))
                 {
                     // TODO: display error message and something about contacting admins
                     $problems['General'] = true;
-                    $this->createEntity('Group', $group_id)->deleteGroup();
-                    $group_id = false;
+                    $this->createEntity('Group', $groupId)->deleteGroup();
+                    $groupId = false;
                 }
             }
         }
 
         return array(
             'problems' => $problems,
-            'group_id' => $group_id
+            'group_id' => $groupId
         );
     }
 
     /**
      * update membership settings for a given member and group
      *
-     * @param int $member_id
-     * @param int $group_id
+     * @param int $memberId
+     * @param int $groupId
      * @param string $acceptgroupmail
      * @param string $comment
      * @return bool
      * @access public
      */
-    public function updateMembershipSettings($member_id, $group_id, $acceptgroupmail, $comment)
+    public function updateMembershipSettings($memberId, $groupId, $acceptgroupmail, $comment)
     {
-        $group = $this->createEntity('Group', $group_id);
-        $member = $this->createEntity('Member', $member_id);
+        $group = $this->createEntity('Group', $groupId);
+        $member = $this->createEntity('Member', $memberId);
         if (!($membership = $this->createEntity('GroupMembership')->getMembership($group, $member)))
         {
             return false;
@@ -621,13 +621,13 @@ class GroupsModel extends  RoxModelBase
      * bans a member from a group
      *
      * @param object $group - group entity
-     * @param int $member_id
+     * @param int $memberId
      * @return bool
      * @access public
      */
-    public function banGroupMember($group, $member_id, $ban = false)
+    public function banGroupMember($group, $memberId, $ban = false)
     {
-        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
+        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($memberId)))
         {
             return false;
         }
@@ -657,13 +657,13 @@ class GroupsModel extends  RoxModelBase
      * adds a member as admin of the group
      *
      * @param object $group - group entity
-     * @param int $member_id
+     * @param int $memberId
      * @return bool
      * @access public
      */
-    public function addGroupMemberAsAdmin($group, $member_id)
+    public function addGroupMemberAsAdmin($group, $memberId)
     {
-        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
+        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($memberId)))
         {
             return false;
         }
@@ -676,13 +676,13 @@ class GroupsModel extends  RoxModelBase
      * resigns as admin of the group
      *
      * @param object $group - group entity
-     * @param int $member_id
+     * @param int $memberId
      * @return bool
      * @access public
      */
-    public function resignGroupAdmin($group, $member_id)
+    public function resignGroupAdmin($group, $memberId)
     {
-        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
+        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($memberId)))
         {
             return false;
         }
@@ -702,17 +702,17 @@ class GroupsModel extends  RoxModelBase
      * accepts a member into a group
      *
      * @param object $group - group entity
-     * @param int $member_id
+     * @param int $memberId
      * @return bool
      * @access public
      */
-    public function acceptGroupMember($group, $member_id, $acceptedby_id)
+    public function acceptGroupMember($group, $memberId, $acceptedbyId)
     {
-        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($member_id)))
+        if (!is_object($group) || !$group->isPKSet() || !($member = $this->createEntity('Member')->findById($memberId)))
         {
             return false;
         }
-        if (!($acceptedby = $this->createEntity('Member')->findById($acceptedby_id)) && $group->isGroupOwner($acceptedby))
+        if (!($acceptedby = $this->createEntity('Member')->findById($acceptedbyId)) && $group->isGroupOwner($acceptedby))
         {
             return false;
         }
@@ -734,13 +734,13 @@ class GroupsModel extends  RoxModelBase
      * creates a message for the invited member
      *
      * @param object $group
-     * @param int $member_id
+     * @param int $memberId
      * @param object $from - member entity
      * @access public
      */
-    public function sendInvitation($group, $member_id, $from)
+    public function sendInvitation($group, $memberId, $from)
     {
-        if ($group->isLoaded() && ($member = $this->createEntity('Member', $member_id)) && $from->isLoaded())
+        if ($group->isLoaded() && ($member = $this->createEntity('Member', $memberId)) && $from->isLoaded())
         {
             $msg = $this->createEntity('Message');
             $msg->MessageType = 'MemberToMember';
@@ -771,13 +771,13 @@ class GroupsModel extends  RoxModelBase
      * changes a membership from invited to in
      *
      * @param object $group
-     * @param int $member_id
+     * @param int $memberId
      * @access public
      * @return bool
      */
-    public function memberAcceptedInvitation($group, $member_id)
+    public function memberAcceptedInvitation($group, $memberId)
     {
-        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $member_id)) || !($logged_in = $this->getLoggedInMember()) || $logged_in->getPKValue() != $member->getPKValue())
+        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $memberId)) || !($logged_in = $this->getLoggedInMember()) || $logged_in->getPKValue() != $member->getPKValue())
         {
             return false;
         }
@@ -795,13 +795,13 @@ class GroupsModel extends  RoxModelBase
      * deletes a membership
      *
      * @param object $group
-     * @param int $member_id
+     * @param int $memberId
      * @access public
      * @return bool
      */
-    public function memberDeclinedInvitation($group, $member_id)
+    public function memberDeclinedInvitation($group, $memberId)
     {
-        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $member_id)) || !($logged_in = $this->getLoggedInMember()) || $logged_in->getPKValue() != $member->getPKValue())
+        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $memberId)) || !($logged_in = $this->getLoggedInMember()) || $logged_in->getPKValue() != $member->getPKValue())
         {
             return false;
         }

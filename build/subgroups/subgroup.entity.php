@@ -53,9 +53,9 @@ class Subgroup extends RoxEntityBase
         if (!is_object($group) ||  !is_object($subgroup)) {
             return false;
         }
-        $group_id = $group->getPKValue();
-        $subgroup_id = $subgroup->getPKValue();
-        $where_clause = "subgroup_id = '{$subgroup_id}' AND group_id = '{$group_id}' AND deletedby IS NULL";
+        $groupId = $group->getPKValue();
+        $subgroupId = $subgroup->getPKValue();
+        $where_clause = "subgroup_id = '{$subgroupId}' AND group_id = '{$groupId}' AND deletedby IS NULL";
         if ($this->findByWhere($where_clause)) {
             return true;
         } else {
@@ -67,7 +67,7 @@ class Subgroup extends RoxEntityBase
      * Add a subgroup to a group
      *
      * @param object $group - the group where the subgroup is added
-     * @param int $subgroup_id - id of the subgroup
+     * @param int $subgroupId - id of the subgroup
      * @access public
      */
     public function AddSubgroup(Group $group, Group $subgroup, Member $member)
@@ -120,8 +120,8 @@ class Subgroup extends RoxEntityBase
         if (!is_object($group) && !is_numeric($group->getPKValue())) {
             return false;
         }
-        $group_id = $group->getPKValue();
-        $where_clause = "group_id = '{$group_id}'";
+        $groupId = $group->getPKValue();
+        $where_clause = "group_id = '{$groupId}'";
         $this->sql_order = "ts DESC";
         $logs = $this->findByWhereMany($where_clause, $offset, $limit);
         foreach ($logs as &$log) {

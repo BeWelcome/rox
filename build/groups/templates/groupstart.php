@@ -1,6 +1,6 @@
-<?php foreach ($this->getMessages() as $message) { ?>
+<?php foreach ($this->getMessages() as $message) : ?>
 <p><?= $words->get($message); ?>
-<?php } ?>
+<?php endforeach; ?>
 <?php
 $group_name_html = htmlspecialchars($this->getGroupTitle(), ENT_QUOTES); 
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
@@ -66,7 +66,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
     <?php } ?>
     <ul class="floatbox">
         <?php 
-        foreach ($subgroups as $group_data) { 
+        foreach ($subgroups as $group_data) : 
             if (strlen($group_data->Picture) > 0) {
                 $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
             } else {
@@ -83,7 +83,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
             </span></div> <!-- userinfo -->
         </li> <!-- picbox_subgroup -->
 
-    <?php } ?>
+        <?php endforeach; ?>
     </ul>
     </div><!-- subcolumns -->
 </div> <!-- groups -->

@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
         <?php // display my groups, if there are any
         if (!empty($subgroups)) {
             echo "<h3>" . $words->get('TitleDeleteSubgroupFromGroup') . " " . htmlspecialchars($group->Name, ENT_QUOTES) . "</h3>" ;
-            foreach($subgroups as $subgroup) {
+            foreach($subgroups as $subgroup) :
                 if (strlen($subgroup->Picture) > 0) {
                     $img_link = "groups/thumbimg/{$subgroup->getPKValue()}";
                 } else {
@@ -55,8 +55,7 @@ Boston, MA  02111-1307, USA.
                         </div> <!-- groupinfo -->
                     </div> <!-- groupbox floatbox -->
                 </div>   
-            <?php
-            } // end foreach
+            <?php endforeach;
         } ?>
                 
 

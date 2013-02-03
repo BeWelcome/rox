@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
         <ul class="floatbox">
             <?php 
             $subgroups = $this->group->findSubgroups($groupId);
-            foreach ($subgroups as $group_data) { 
+            foreach ($subgroups as $group_data) :
                 if (strlen($group_data->Picture) > 0) {
                     $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
                 } else {
@@ -43,8 +43,7 @@ Boston, MA  02111-1307, USA.
                         <?php echo $words->get('GroupsNewMembers');?>: <?php echo count($group_data->getNewMembers()) ; ?><br />
                     </span></div> <!-- userinfo -->
                 </li> <!-- userpicbox_subgroup -->
-                <?php
-            } ?>
+            <?php endforeach; ?>
         </ul>   
     </div><!-- subcolumns -->
     <div class="subcolumns">   
@@ -86,7 +85,7 @@ Boston, MA  02111-1307, USA.
             <br />
             <h4> <?php echo $words->get('NbOfLogEntries', count($logvar)); ?> </h4>
             <ul class="floatbox"> <?php
-                foreach ($logvar as &$value) { ?>
+                foreach ($logvar as &$value) : ?>
                     <li class="picbox_subgroup float_left">
                         <img class="framed_subgroup float_left" src="members/avatar/<?php echo $value->member->Username; ?>?xs"/>
                         <div class="userinfo">
@@ -101,8 +100,8 @@ Boston, MA  02111-1307, USA.
                                 echo $logentry; ?><br />
                             </span>
                         </div>
-                    </li> <?php
-                } ?>
+                    </li>
+                <?php endforeach; ?>
             </ul>  <!-- floatbox --> 
         </div><!-- subcolumns -->  
         <?php

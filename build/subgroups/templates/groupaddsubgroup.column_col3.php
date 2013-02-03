@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
         <?php // display my groups, if there are any
         if (!empty($my_groups)) {
             echo "<h3>" . $words->get('TitleAddSubgroupToGroup') . " " . htmlspecialchars($group->Name, ENT_QUOTES) . "</h3>" ;
-            foreach($my_groups as $my_group) {
+            foreach($my_groups as $my_group) :
                 if ($my_group->id != $group->getPKValue()) {
                     if (strlen($my_group->Picture) > 0) {
                         $img_link = "groups/thumbimg/{$my_group->getPKValue()}";
@@ -58,7 +58,7 @@ Boston, MA  02111-1307, USA.
                     </div>    
                 <?php 
                 }
-            } // end foreach
+            endforeach;
         } ?>
                 
     </div> <!-- subcr -->

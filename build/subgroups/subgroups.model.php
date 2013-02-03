@@ -50,12 +50,9 @@ class SubgroupsModel extends  RoxModelBase
     public function findGroup($group_id)
     {
         $group = $this->createEntity('Group',$group_id);
-        if ($group->isLoaded())
-        {
+        if ($group->isLoaded()) {
             return $group;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -71,17 +68,13 @@ class SubgroupsModel extends  RoxModelBase
     public function getMyGroups(Group $group)
     {
         $notsubgroups = array();
-        if (!isset($_SESSION['IdMember']))
-        {
+        if (!isset($_SESSION['IdMember'])) {
             return array();
-        }
-        else
-        {
+        } else {
             $mygroups = $this->getGroupsForMember($_SESSION['IdMember']);
             $subgroups = $group->findSubgroups($group->getPKValue());
             foreach ($mygroups as $mygroup) {
-                if (!in_array($mygroup, $subgroups))
-                {
+                if (!in_array($mygroup, $subgroups)) {
                     $notsubgroups[] = $mygroup;
                 }
                     
@@ -101,8 +94,7 @@ class SubgroupsModel extends  RoxModelBase
      */
     public function getGroupsForMember($member_id)
     {
-        if (!($member_id = intval($member_id)))
-        {
+        if (!($member_id = intval($member_id))) {
             return false;
         }
 

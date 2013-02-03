@@ -54,10 +54,8 @@ class SubgroupsController extends RoxControllerBase
      */
     private function _getGroupFromRequest($redirect = null)
     {
-        if (!($vars = $this->route_vars) || empty($vars['group_id']) || !($group = $this->_model->findGroup($vars['group_id'])))
-        {
-            if (!$redirect)
-            {
+        if (!($vars = $this->route_vars) || empty($vars['group_id']) || !($group = $this->_model->findGroup($vars['group_id']))) {
+            if (!$redirect) {
                 $redirect = $this->router->url('groups_overview');
             }
             $this->redirectAbsolute($redirect);
@@ -75,10 +73,8 @@ class SubgroupsController extends RoxControllerBase
      */
     private function _getSubGroupFromRequest($redirect = null)
     {
-        if (!($vars = $this->route_vars) || empty($vars['subgroup_id']) || !($subgroup = $this->_model->findGroup($vars['subgroup_id'])))
-        {
-            if (!$redirect)
-            {
+        if (!($vars = $this->route_vars) || empty($vars['subgroup_id']) || !($subgroup = $this->_model->findGroup($vars['subgroup_id']))) {
+            if (!$redirect) {
                 $redirect = $this->router->url('groups_overview');
             }
             $this->redirectAbsolute($redirect);
@@ -118,8 +114,7 @@ class SubgroupsController extends RoxControllerBase
         $isGroupAdmin = $group->isGroupOwner($member);
         $subgroup = $this->_getSubgroupFromRequest();
         $result = $this->_model->MemberAddsSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
-        if ($result)
-        {
+        if ($result) {
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;
@@ -169,8 +164,7 @@ class SubgroupsController extends RoxControllerBase
         $isGroupAdmin = $group->isGroupOwner($member);
         $subgroup = $this->_getSubgroupFromRequest();
         $result = $this->_model->MemberDeletesSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
-        if ($result)
-        {
+        if ($result) {
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;

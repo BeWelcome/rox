@@ -50,19 +50,15 @@ class Subgroup extends RoxEntityBase
      */
     public function isSubgroup(Group $group, Group $subgroup)
     {
-        if (!is_object($group) ||  !is_object($subgroup))
-        {
+        if (!is_object($group) ||  !is_object($subgroup)) {
             return false;
         }
         $group_id = $group->getPKValue();
         $subgroup_id = $subgroup->getPKValue();
         $where_clause = "subgroup_id = '{$subgroup_id}' AND group_id = '{$group_id}' AND deletedby IS NULL";
-        if ($this->findByWhere($where_clause))
-        {
+        if ($this->findByWhere($where_clause)) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -76,29 +72,22 @@ class Subgroup extends RoxEntityBase
      */
     public function AddSubgroup(Group $group, Group $subgroup, Member $member)
     {
-        if (!is_object($group) || !is_object($subgroup) || !is_object($member))
-        {
+        if (!is_object($group) || !is_object($subgroup) || !is_object($member)) {
             return false;
         }
 
         // only bother if subgroup is not already a subgroup       
-        if (!$this->isSubgroup($group, $subgroup))
-        {
+        if (!$this->isSubgroup($group, $subgroup)) {
             $this->group_id = $group->getPKValue();
             $this->subgroup_id = $subgroup->getPKValue();
             $this->addedby = $member->getPKValue();
             //$this->created = date('Y-m-d H:i:s');
-            if ($this->group_id != $this->subgroup_id)
-            {
+            if ($this->group_id != $this->subgroup_id) {
                 return $this->insert();
-            }
-            else
-            {
+            } else {
                 return false;
             }
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -106,12 +95,10 @@ class Subgroup extends RoxEntityBase
 
     public function DeleteSubgroup(Member $member)
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
-        if (!is_object($member) && !is_numeric($member->getPKValue()))
-        {
+        if (!is_object($member) && !is_numeric($member->getPKValue())) {
             return false;
         }
         $this->ts = date('Y-m-d H:i:s');
@@ -130,8 +117,7 @@ class Subgroup extends RoxEntityBase
      */
     public function getSubgroupsLog($group, $offset = 0, $limit = null)
     {
-        if (!is_object($group) && !is_numeric($group->getPKValue()))
-        {
+        if (!is_object($group) && !is_numeric($group->getPKValue())) {
             return false;
         }
         $group_id = $group->getPKValue();
@@ -140,8 +126,7 @@ class Subgroup extends RoxEntityBase
         $logs = $this->findByWhereMany($where_clause, $offset, $limit);
         foreach ($logs as &$log) {
             $log->subgroup = $this->createEntity('Group', $log->subgroup_id);
-            if ($log->deletedby == "")
-            {
+            if ($log->deletedby == "") {
                 $log->member = $this->createEntity('Member', $log->addedby);
                 $log->SubgroupAction = "AddedSubgroup";
             } else {

@@ -113,7 +113,7 @@ class SubgroupsController extends RoxControllerBase
         $group = $this->_getGroupFromRequest();
         $isGroupAdmin = $group->isGroupOwner($member);
         $subgroup = $this->_getSubgroupFromRequest();
-        $result = $this->_model->MemberAddsSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
+        $result = $this->_model->memberAddsSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
         if ($result) {
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
@@ -163,7 +163,7 @@ class SubgroupsController extends RoxControllerBase
         $group = $this->_getGroupFromRequest();
         $isGroupAdmin = $group->isGroupOwner($member);
         $subgroup = $this->_getSubgroupFromRequest();
-        $result = $this->_model->MemberDeletesSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
+        $result = $this->_model->memberDeletesSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
         if ($result) {
             $page = new GroupSubgroupLogPage();
             $page->group = $group;

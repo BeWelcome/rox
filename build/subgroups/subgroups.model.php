@@ -106,7 +106,7 @@ class SubgroupsModel extends  RoxModelBase
 
 
 
-    public function MemberAddsSubgroup($groupId, $subgroupId, $memberId)
+    public function memberAddsSubgroup($groupId, $subgroupId, $memberId)
     {
         $group = $this->createEntity('Group', $groupId);
         $subgroup = $this->createEntity('Group', $subgroupId);
@@ -118,7 +118,7 @@ class SubgroupsModel extends  RoxModelBase
 
 
 
-    public function MemberDeletesSubgroup($groupId, $subgroupId, $memberId)
+    public function memberDeletesSubgroup($groupId, $subgroupId, $memberId)
     {
         $group = $this->createEntity('Group', $groupId);
         $subgroup = $this->createEntity('Group', $subgroupId);

@@ -133,25 +133,10 @@ class Subgroup extends RoxEntityBase
                 $log->member = $this->createEntity('Member', $log->deletedby);
                 $log->SubgroupAction = "RemovedSubgroup";
             }
-            
         }
         return $logs;
-        
-
     }
 
-
-
-
 }
-
-
-
-
-
-
-
-
-
 
 

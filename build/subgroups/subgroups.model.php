@@ -94,7 +94,8 @@ class SubgroupsModel extends  RoxModelBase
      */
     public function getGroupsForMember($memberId)
     {
-        if (!($memberId = intval($memberId))) {
+        $memberId = intval($memberId);
+        if ($memberId == 0) {
             return false;
         }
 

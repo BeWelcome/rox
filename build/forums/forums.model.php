@@ -354,20 +354,16 @@ function FindAppropriatedLanguage($IdPost=0) {
         
         $ss = "
 SELECT 
-    Value, 
-    memberspreferences.id AS id, 
-    IdMember, 
-    preferences.id AS IdPreference 
+    m.Value AS Value, 
+    m.id AS id, 
+    p.id AS IdPreferences 
 FROM 
-    preferences 
-LEFT JOIN 
-    memberspreferences 
-    ON 
-    preferences.id = memberspreferences.IdPreference 
-    AND 
-    memberspreferences.IdMember = " . $_SESSION['IdMember'] . " 
+    memberspreferences AS m, 
+    preferences AS p 
 WHERE 
-    codeName = 'ShowMyGroupsTopicsOnly'" ;
+    p.id = m.IdPreference 
+    AND m.IdMember = " . $_SESSION['IdMember'] . "  
+    AND p.CodeName = 'ShowMyGroupsTopicsOnly'";
         
         $qq = $this->dao->query($ss);
         $rr = $qq->fetch(PDB::FETCH_OBJ) ;

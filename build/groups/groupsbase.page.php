@@ -165,7 +165,9 @@ class GroupsBasePage extends PageWithActiveSkin
             if ($this->isGroupMember())
             {
                 $items[] = array('membersettings', 'groups/'.$group_id.'/membersettings', $words->getSilent('GroupMembersettings'));
+                /* FUTURE related groups settings
                 $items[] = array('subgroupsettings', 'groups/'.$group_id.'/subgroupsettings', $words->getSilent('GroupSubgroups'));
+                */
             }
             if ($this->member && $this->member->hasPrivilege('GroupsController', 'GroupSettings', $this->group))
             {

@@ -2836,8 +2836,9 @@ LEFT JOIN `geonames_cache` ON (addresses.IdCity = geonames_cache.geonameid)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id` 
 AND `forums_posts`.`threadid` = `forums_threads`.`threadid` 
 AND addresses.IdMember = members.id AND addresses.rank = 0
-and ($this->PublicPostVisibility)
-and ($this->PostGroupsRestriction)
+AND ($this->PublicThreadVisibility)
+AND ($this->PublicPostVisibility)
+AND ($this->PostGroupsRestriction)
 ORDER BY `posttime` DESC    ",    $IdMember   );
         $s = $this->dao->query($query);
         if (!$s) {

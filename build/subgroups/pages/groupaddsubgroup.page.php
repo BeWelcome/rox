@@ -42,7 +42,7 @@ class GroupAddSubgroupPage extends GroupsBasePage
     }
 
     protected function getSubmenuActiveItem() {
-        return 'subgroupsettings';
+        return 'relatedgroupsettings';
     }
 
 }

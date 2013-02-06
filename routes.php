@@ -64,7 +64,7 @@
     $this->addRoute('relatedgroup_add','groups/:group_id:/addrelatedgroup/:related_id:', 'SubgroupsController', 'addSubgroup');
     $this->addRoute('relatedgroup_selectdelete','groups/:group_id:/selectdeleterelatedgroup', 'SubgroupsController', 'selectdeleteSubgroup');
     $this->addRoute('relatedgroup_delete','groups/:group_id:/deleterelatedgroup/:related_id:', 'SubgroupsController', 'deleteSubgroup');
-    $this->addRoute('relatedgroup_log','groups/:group_id:/subgroupsettings', 'SubgroupsController', 'showSubgroupLog');
+    $this->addRoute('relatedgroup_log','groups/:group_id:/relatedgroupsettings', 'SubgroupsController', 'showSubgroupLog');
 
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');

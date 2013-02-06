@@ -51,7 +51,7 @@ Boston, MA  02111-1307, USA.
                         </a>
                         <div class="groupinfo">
                             <h4><a href="groups/<?php echo $subgroup->getPKValue(); ?>"><?php echo htmlspecialchars($subgroup->Name, ENT_QUOTES); ?></a></h4>
-                            <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/deletesubgroup/<?php echo $subgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
+                            <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/deleterelatedgroup/<?php echo $subgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
                         </div> <!-- groupinfo -->
                     </div> <!-- groupbox floatbox -->
                 </div>   

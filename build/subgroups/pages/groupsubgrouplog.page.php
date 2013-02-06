@@ -45,7 +45,7 @@ class GroupSubgroupLogPage extends GroupsBasePage
        return $stylesheets;
     }
     protected function getSubmenuActiveItem() {
-        return 'subgroupsettings';
+        return 'relatedgroupsettings';
     }
     
 }

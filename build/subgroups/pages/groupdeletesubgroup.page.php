@@ -42,7 +42,7 @@ class GroupDeleteSubgroupPage extends GroupsBasePage
     }
 
     protected function getSubmenuActiveItem() {
-        return 'subgroupsettings';
+        return 'relatedgroupsettings';
     }
 
 }

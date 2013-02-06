@@ -26,18 +26,18 @@ Boston, MA  02111-1307, USA.
      */
 
     /**
-     * This template is used to remove subgroups grom the group
+     * This template is used to remove related groups from the group
      *
      * @package Apps
-     * @subpackage Subgroups
+     * @subpackage RelatedGroups
      */
 ?>
 <div class="subcolumns"> 
     <div class="subcr">
         <?php // display my groups, if there are any
-        if (!empty($subgroups)) {
+        if (!empty($relatedgroups)) {
             echo "<h3>" . $words->get('TitleDeleteSubgroupFromGroup') . " " . htmlspecialchars($group->Name, ENT_QUOTES) . "</h3>" ;
-            foreach($subgroups as $subgroup) :
+            foreach($relatedgroups as $subgroup) :
                 if (strlen($subgroup->Picture) > 0) {
                     $img_link = "groups/thumbimg/{$subgroup->getPKValue()}";
                 } else {

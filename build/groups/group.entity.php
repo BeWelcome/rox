@@ -490,13 +490,13 @@ class Group extends RoxEntityBase
 
 
     /**
-     * find subgroups for a group
+     * find related groups for a group
      *
      * @param int $groupId - id of the group
-     * @return mixed false or array of groups that are subgroups of the group
+     * @return mixed false or array of groups that are related with the group
      * @access public
      */
-    public function findSubgroups($groupId, $offset = 0, $limit = null)
+    public function findRelatedGroups($groupId, $offset = 0, $limit = null)
     {
         if (!is_numeric($groupId)) {
             return false;

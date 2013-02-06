@@ -26,27 +26,26 @@ Boston, MA  02111-1307, USA.
      */
 
     /**
-     * This page shows subgroup logging
+     * This page shows groups which the user could add as subgroup to the group
      *
      * @package Apps
-     * @subpackage Subgroups
+     * @subpackage RelatedGroups
      */
-class GroupSubgroupLogPage extends GroupsBasePage
+class GroupAddSubgroupPage extends GroupsBasePage
 {
-    protected function column_col3() {
-        $layoutbits = new MOD_layoutbits();
+    protected function column_col3()
+    {
         $words = $this->getWords();
-        $groupId = $this->group->id;
-        require SCRIPT_BASE . "build/subgroups/templates/groupsubgrouplog.column_col3.php";
+        $my_groups = $this->my_groups;
+        $group = $this->group;
+        require SCRIPT_BASE . "build/relatedgroups/templates/groupaddsubgroup.column_col3.php";
     }
-    protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?1';
-       return $stylesheets;
-    }
+
     protected function getSubmenuActiveItem() {
         return 'relatedgroupsettings';
     }
-    
+
 }
+
+
 ?>

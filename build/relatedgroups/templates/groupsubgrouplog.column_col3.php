@@ -21,13 +21,13 @@ Boston, MA  02111-1307, USA.
 */
 ?>
 <fieldset>
-    <legend><?= $words->get('AdministrateSubgroupsTitle'); ?></legend>
+    <legend><?= $words->get('AdministrateRelatedGroupsTitle'); ?></legend>
     <div class="subcolumns">
-    <h3><?php echo $words->getFormatted('CurrentSubgroupsTitle');?></h3>
+    <h3><?php echo $words->getFormatted('CurrentRelatedGroupsTitle');?></h3>
         <ul class="floatbox">
             <?php 
-            $subgroups = $this->group->findSubgroups($groupId);
-            foreach ($subgroups as $group_data) :
+            $relatedgroups = $this->group->findRelatedGroups($groupId);
+            foreach ($relatedgroups as $group_data) :
                 if (strlen($group_data->Picture) > 0) {
                     $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
                 } else {
@@ -67,7 +67,7 @@ Boston, MA  02111-1307, USA.
             </div><!-- c50l -->
             <div class="c50r">
                 <div class="subcr"> <?php 
-                    if (!empty($subgroups)) { ?>
+                    if (!empty($relatedgroups)) { ?>
                         <hr>
                             <a class="button" href="<?php echo $delete_button_link; ?>">
                                 <span><?php echo $delete_button_word; ?></span>

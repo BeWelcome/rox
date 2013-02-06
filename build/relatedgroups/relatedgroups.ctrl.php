@@ -21,20 +21,20 @@ Boston, MA  02111-1307, USA.
 */
 
     /**
-     * subgroups controller
-     * handles all requests that have to do with subgroups
+     * relatedgroups controller
+     * handles all requests that have to do with related groups
      * 
      * @package    Apps
-     * @subpackage Subgroups
+     * @subpackage RelatedGroups
      * @author     mahouni
      */
-class SubgroupsController extends RoxControllerBase   
+class RelatedGroupsController extends RoxControllerBase   
 {
 
     public function __construct()
     {
         parent::__construct();
-        $this->_model = new SubgroupsModel();
+        $this->_model = new RelatedGroupsModel();
     }
     
     public function __destruct()
@@ -119,14 +119,14 @@ class SubgroupsController extends RoxControllerBase
             $page->group = $group;
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
-            $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
+            $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
             $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES)));
          } else {
             $page = new GroupSubgroupLogPage();
             $page->group = $group;
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
-            $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
+            $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
             $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES)));
          }
          return $page;
@@ -145,7 +145,7 @@ class SubgroupsController extends RoxControllerBase
 
         $page = new GroupDeleteSubgroupPage();
         $page->group = $group;
-        $page->subgroups =  $group->findSubgroups($group->getPKValue());
+        $page->relatedgroups =  $group->findRelatedGroups($group->getPKValue());
         $page->member = $this->_model->getLoggedInMember();
         return $page;
     }
@@ -169,7 +169,7 @@ class SubgroupsController extends RoxControllerBase
             $page->group = $group;
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
-            $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
+            $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
             $this->setFlashNotice($this->getWords()->getFormatted('SuccessfullyRemovedSubgroup', htmlspecialchars($subgroup->Name, ENT_QUOTES)));
             return $page;
          } else {
@@ -177,7 +177,7 @@ class SubgroupsController extends RoxControllerBase
             $page->group = $group;
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
-            $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
+            $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
             $this->setFlashError($this->getWords()->getFormatted('ErrorWhileRemoveSubgroup', htmlspecialchars($subgroup->Name, ENT_QUOTES)));
             return $page;
          }
@@ -185,7 +185,7 @@ class SubgroupsController extends RoxControllerBase
 
 
     /**
-     * shows the activities of adding and deleting subgroups
+     * shows the activities of adding and deleting related groups
      *
      * @access public
      * @return object $page
@@ -199,7 +199,7 @@ class SubgroupsController extends RoxControllerBase
         $page->group = $group;
         $page->member = $member;
         $page->isGroupAdmin = $isGroupAdmin;
-        $page->logs = $this->_model->showSubgroupsLog($group->getPKValue());
+        $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
         return $page;
     }
 

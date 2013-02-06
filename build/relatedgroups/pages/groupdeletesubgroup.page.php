@@ -26,19 +26,19 @@ Boston, MA  02111-1307, USA.
      */
 
     /**
-     * This page shows groups which the user could add as subgroup to the group
+     * This page asks if the user wants to remove a related group
      *
      * @package Apps
-     * @subpackage Subgroups
+     * @subpackage RelatedGroups
      */
-class GroupAddSubgroupPage extends GroupsBasePage
+class GroupDeleteSubgroupPage extends GroupsBasePage
 {
     protected function column_col3()
     {
         $words = $this->getWords();
-        $my_groups = $this->my_groups;
+        $relatedgroups = $this->relatedgroups;
         $group = $this->group;
-        require SCRIPT_BASE . "build/subgroups/templates/groupaddsubgroup.column_col3.php";
+        require SCRIPT_BASE . "build/relatedgroups/templates/groupdeletesubgroup.column_col3.php";
     }
 
     protected function getSubmenuActiveItem() {

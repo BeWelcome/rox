@@ -27,11 +27,11 @@ Boston, MA  02111-1307, USA.
      * the model of the groups mvc
      *
      * @package Apps
-     * @subpackage Subgroups
+     * @subpackage RelatedGroups
      */
      
 
-class SubgroupsModel extends  RoxModelBase
+class RelatedGroupsModel extends  RoxModelBase
 {
     private $_subgroup_list = 0;
     
@@ -59,7 +59,7 @@ class SubgroupsModel extends  RoxModelBase
 
 
     /**
-     * Find all groups I am member of and which are not subgroups of a given group
+     * Find all groups I am member of and which are not related groups of a given group
      *
      * @param object $group - a group entity 
      * @access public
@@ -67,20 +67,20 @@ class SubgroupsModel extends  RoxModelBase
      */
     public function getMyGroups(Group $group)
     {
-        $notsubgroups = array();
+        $notrelatedgroups = array();
         if (!isset($_SESSION['IdMember'])) {
             return array();
         } else {
             $mygroups = $this->getGroupsForMember($_SESSION['IdMember']);
-            $subgroups = $group->findSubgroups($group->getPKValue());
+            $relatedgroups = $group->findRelatedGroups($group->getPKValue());
             foreach ($mygroups as $mygroup) {
-                if (!in_array($mygroup, $subgroups)) {
-                    $notsubgroups[] = $mygroup;
+                if (!in_array($mygroup, $relatedgroups)) {
+                    $notrelatedgroups[] = $mygroup;
                 }
                     
             }
                 
-            return $notsubgroups;
+            return $notrelatedgroups;
         }
     }
 
@@ -135,11 +135,11 @@ class SubgroupsModel extends  RoxModelBase
 
 
 
-    public function showSubgroupsLog($groupId, $offset = 0, $limit = 25)
+    public function showRelatedGroupsLog($groupId, $offset = 0, $limit = 25)
     {
         $group = $this->createEntity('Group', $groupId);
-        $Subgroupslog = $this->createEntity('Subgroup')->getSubgroupsLog($group, $offset = 0, $limit = 25);
-        return $Subgroupslog;
+        $RelatedGroupslog = $this->createEntity('Subgroup')->getRelatedGroupsLog($group, $offset = 0, $limit = 25);
+        return $RelatedGroupslog;
     }
 
 }

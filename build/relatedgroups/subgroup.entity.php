@@ -109,13 +109,13 @@ class Subgroup extends RoxEntityBase
 
 
     /**
-     * return the history of subgroups of the group
+     * return the history of related groups of the group
      *
      * @param Group $group - Group object to get history of locations for
      * @access public
      * @return array
      */
-    public function getSubgroupsLog($group, $offset = 0, $limit = null)
+    public function getRelatedGroupsLog($group, $offset = 0, $limit = null)
     {
         if (!is_object($group) && !is_numeric($group->getPKValue())) {
             return false;

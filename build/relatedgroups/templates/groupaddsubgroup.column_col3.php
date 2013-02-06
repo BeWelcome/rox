@@ -26,10 +26,10 @@ Boston, MA  02111-1307, USA.
      */
 
     /**
-     * This template is used to add subgroups to the group
+     * This template is used to add related groups to the group
      *
      * @package Apps
-     * @subpackage Subgroups
+     * @subpackage RelatedGroups
      */
 ?>
 <div class="subcolumns"> 

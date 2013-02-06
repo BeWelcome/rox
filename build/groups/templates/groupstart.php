@@ -60,13 +60,13 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
     </div> <!-- subcolumns -->
     <div class="subcolumns">
     <?php
-    $subgroups = $this->group->findSubgroups($group_id);
-    if (!empty($subgroups)) { ?>
-        <h3><?php echo $words->getFormatted('SubgroupsTitle');?></h3>
+    $relatedgroups = $this->group->findRelatedGroups($group_id);
+    if (!empty($relatedgroups)) { ?>
+        <h3><?php echo $words->getFormatted('RelatedGroupsTitle');?></h3>
     <?php } ?>
     <ul class="floatbox">
         <?php 
-        foreach ($subgroups as $group_data) : 
+        foreach ($relatedgroups as $group_data) : 
             if (strlen($group_data->Picture) > 0) {
                 $img_link = "groups/thumbimg/{$group_data->getPKValue()}";
             } else {

@@ -41,7 +41,7 @@ class GroupRelatedGroupLogPage extends GroupsBasePage
     }
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?1';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?2';
        return $stylesheets;
     }
     protected function getSubmenuActiveItem() {

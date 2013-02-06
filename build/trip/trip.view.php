@@ -94,7 +94,7 @@ class TripView extends PAppView {
     
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
-        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/trip.css?1" type="text/css"/>';
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/trip.css?2" type="text/css"/>';
 		echo $out;
     }
 }

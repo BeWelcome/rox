@@ -299,7 +299,7 @@ class ForumsView extends RoxAppView {
     /* This adds custom styles to the page*/
     public function customStyles() {
         $out = '';
-        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?1" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?3" type="text/css"/>';
         return $out;
     }
 

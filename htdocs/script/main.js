@@ -253,7 +253,7 @@ bwrox.selectScripts([
     pages: ["signup/3", "setlocation"]
   },
   {
-    file: "map/small/blogSmallMapGeoLocation.js",
+    file: "map/small/blogSmallMapGeoLocation.js?1",
     pages: ["blog", "trip"]
   },
   {

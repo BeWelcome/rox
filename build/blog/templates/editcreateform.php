@@ -31,7 +31,7 @@ tinyMCE.init({
     elements: "create-txt",
     plugins : "advimage,preview,fullscreen",
     theme: "advanced",
-    content_css : "styles/css/minimal/screen/content_minimal.css?2",
+    content_css : "styles/css/minimal/screen/content_minimal.css?3",
     relative_urls:false,
     convert_urls:false,
     theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,forecolor,backcolor,separator,link,image,charmap,separator,preview,cleanup,code,fullscreen",

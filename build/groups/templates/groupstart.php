@@ -72,16 +72,16 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
             } else {
                 $img_link = "images/icons/group.png";
             } ?>
-        <li class="picbox_subgroup float_left">
+        <li class="picbox_relatedgroup float_left">
             <a href="groups/<?php echo $group_data->getPKValue() ?>">
-                <img class="framed_subgroup float_left" alt="Group" src="<?php echo $img_link; ?>"/>
+                <img class="framed_relatedgroup float_left" alt="Group" src="<?php echo $img_link; ?>"/>
             </a>
             <div class="userinfo"><span class="small">
             <h4><a href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
                 <?php echo $words->get('GroupsMemberCount');?>: <?php echo $group_data->getMemberCount(); ?><br />
                 <?php echo $words->get('GroupsNewMembers');?>: <?php echo count($group_data->getNewMembers()) ; ?><br />
             </span></div> <!-- userinfo -->
-        </li> <!-- picbox_subgroup -->
+        </li> <!-- picbox_relatedgroup -->
 
         <?php endforeach; ?>
     </ul>

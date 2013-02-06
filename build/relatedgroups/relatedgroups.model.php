@@ -33,7 +33,7 @@ Boston, MA  02111-1307, USA.
 
 class RelatedGroupsModel extends  RoxModelBase
 {
-    private $_subgroup_list = 0;
+    private $_relatedgroup_list = 0;
     
     public function __construct()
     {
@@ -106,29 +106,29 @@ class RelatedGroupsModel extends  RoxModelBase
 
 
 
-    public function memberAddsSubgroup($groupId, $subgroupId, $memberId)
+    public function memberAddsRelatedGroup($groupId, $relatedgroupId, $memberId)
     {
         $group = $this->createEntity('Group', $groupId);
-        $subgroup = $this->createEntity('Group', $subgroupId);
+        $relatedgroup = $this->createEntity('Group', $relatedgroupId);
         $member = $this->createEntity('Member', $memberId);
-        $add = $this->createEntity('Subgroup')->AddSubgroup($group,$subgroup,$member);
+        $add = $this->createEntity('RelatedGroup')->AddRelatedGroup($group,$relatedgroup,$member);
         return $add;
 
     }
 
 
 
-    public function memberDeletesSubgroup($groupId, $subgroupId, $memberId)
+    public function memberDeletesRelatedGroup($groupId, $relatedgroupId, $memberId)
     {
         $group = $this->createEntity('Group', $groupId);
-        $subgroup = $this->createEntity('Group', $subgroupId);
+        $relatedgroup = $this->createEntity('Group', $relatedgroupId);
         $member = $this->createEntity('Member', $memberId);
-        $where_clause = "related_id = '{$subgroupId}' AND group_id = '{$groupId}' AND deletedby IS NULL";
-        $subgroupentry = $this->createEntity('Subgroup')->findByWhere($where_clause);
-        if (!$subgroupentry) {
+        $where_clause = "related_id = '{$relatedgroupId}' AND group_id = '{$groupId}' AND deletedby IS NULL";
+        $relatedgroupentry = $this->createEntity('RelatedGroup')->findByWhere($where_clause);
+        if (!$relatedgroupentry) {
             return false;
         }
-        $delete = $subgroupentry->deleteSubgroup($member);
+        $delete = $relatedgroupentry->deleteRelatedGroup($member);
         return $delete;
 
     }
@@ -138,7 +138,7 @@ class RelatedGroupsModel extends  RoxModelBase
     public function showRelatedGroupsLog($groupId, $offset = 0, $limit = 25)
     {
         $group = $this->createEntity('Group', $groupId);
-        $RelatedGroupslog = $this->createEntity('Subgroup')->getRelatedGroupsLog($group, $offset = 0, $limit = 25);
+        $RelatedGroupslog = $this->createEntity('RelatedGroup')->getRelatedGroupsLog($group, $offset = 0, $limit = 25);
         return $RelatedGroupslog;
     }
 

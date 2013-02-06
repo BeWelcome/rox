@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
     <div class="subcr">
         <?php // display my groups, if there are any
         if (!empty($my_groups)) {
-            echo "<h3>" . $words->get('TitleAddSubgroupToGroup') . " " . htmlspecialchars($group->Name, ENT_QUOTES) . "</h3>" ;
+            echo "<h3>" . $words->get('TitleAddRelatedGroupToGroup') . " " . htmlspecialchars($group->Name, ENT_QUOTES) . "</h3>" ;
             foreach($my_groups as $my_group) :
                 if ($my_group->id != $group->getPKValue()) {
                     if (strlen($my_group->Picture) > 0) {
@@ -52,7 +52,7 @@ Boston, MA  02111-1307, USA.
                             </a>
                             <div class="groupinfo">
                                 <h4><a href="groups/<?php echo $my_group->getPKValue(); ?>"><?php echo htmlspecialchars($my_group->Name, ENT_QUOTES); ?></a></h4>
-                                <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/addrelatedgroup/<?php echo $my_group->id; ?>"><span><?php echo $words->get('GroupsAddAsSubgroup'); ?></span></a>
+                                <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/addrelatedgroup/<?php echo $my_group->id; ?>"><span><?php echo $words->get('GroupsAddAsRelatedGroup'); ?></span></a>
                             </div> <!-- groupinfo -->
                         </div> <!-- groupbox floatbox -->
                     </div>    

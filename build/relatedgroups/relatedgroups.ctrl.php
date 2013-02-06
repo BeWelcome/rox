@@ -64,36 +64,37 @@ class RelatedGroupsController extends RoxControllerBase
     }
 
     /**
-     * fetches subgroup entity from route vars or redirects to a given route
+     * fetches related group entity from route vars or redirects to a given route
      *
      * @param string $redirect url to redirect to
      *
      * @access private
      * @return object
+     * TODO: Looks like this method is not in use. Remove?
      */
-    private function _getSubGroupFromRequest($redirect = null)
+    private function _getRelatedGroupFromRequest($redirect = null)
     {
-        if (!($vars = $this->route_vars) || empty($vars['related_id']) || !($subgroup = $this->_model->findGroup($vars['related_id']))) {
+        if (!($vars = $this->route_vars) || empty($vars['related_id']) || !($relatedgroup = $this->_model->findGroup($vars['related_id']))) {
             if (!$redirect) {
                 $redirect = $this->router->url('groups_overview');
             }
             $this->redirectAbsolute($redirect);
         }
-        return $subgroup;
+        return $relatedgroup;
     }
 
 
     /**
-     * handles member selecting a subgroup
+     * handles member selecting a related group
      *
      * @access public
      * @return object $page
      */
-    public function selectSubgroup()
+    public function selectRelatedGroup()
     {
         $group = $this->_getGroupFromRequest();
 
-        $page = new GroupAddSubgroupPage();
+        $page = new GroupAddRelatedGroupPage();
         $page->my_groups = $this->_model->getMyGroups($group);
         $page->group = $group;
         $page->member = $this->_model->getLoggedInMember();
@@ -103,47 +104,47 @@ class RelatedGroupsController extends RoxControllerBase
 
 
     /**
-     * handles member adding a subgroup
+     * handles member adding a related group
      *
      * @return object $page
      */
-    public function addSubgroup()
+    public function addRelatedGroup()
     {
         $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
         $isGroupAdmin = $group->isGroupOwner($member);
-        $subgroup = $this->_getSubgroupFromRequest();
-        $result = $this->_model->memberAddsSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
+        $relatedgroup = $this->_getRelatedGroupFromRequest();
+        $result = $this->_model->memberAddsRelatedGroup($group->getPKValue(), $relatedgroup->getPKValue(), $member->getPKValue());
         if ($result) {
-            $page = new GroupSubgroupLogPage();
+            $page = new GroupRelatedGroupLogPage();
             $page->group = $group;
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
-            $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES)));
+            $this->setFlashNotice($this->getWords()->getFormatted("SuccessfullyAddedRelatedGroup", htmlspecialchars($relatedgroup->Name, ENT_QUOTES)));
          } else {
-            $page = new GroupSubgroupLogPage();
+            $page = new GroupRelatedGroupLogPage();
             $page->group = $group;
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
-            $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingSubgroup", htmlspecialchars($subgroup->Name, ENT_QUOTES)));
+            $this->setFlashError($this->getWords()->getFormatted("ErrorWhileAddingRelatedGroup", htmlspecialchars($relatedgroup->Name, ENT_QUOTES)));
          }
          return $page;
      }
 
 
     /**
-     * handles member selecting a subgroup to be removed
+     * handles member selecting a related group to be removed
      *
      * @access public
      * @return object $page
      */
-    public function selectdeleteSubgroup()
+    public function selectdeleteRelatedGroup()
     {
         $group = $this->_getGroupFromRequest();
 
-        $page = new GroupDeleteSubgroupPage();
+        $page = new GroupDeleteRelatedGroupPage();
         $page->group = $group;
         $page->relatedgroups =  $group->findRelatedGroups($group->getPKValue());
         $page->member = $this->_model->getLoggedInMember();
@@ -152,33 +153,33 @@ class RelatedGroupsController extends RoxControllerBase
 
 
     /**
-     * handles member deleting a subgroup
+     * handles member deleting a related group
      *
      * @access public
      * @return object $page
      */
-    public function deleteSubgroup()
+    public function deleteRelatedGroup()
     {
         $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
         $isGroupAdmin = $group->isGroupOwner($member);
-        $subgroup = $this->_getSubgroupFromRequest();
-        $result = $this->_model->memberDeletesSubgroup($group->getPKValue(), $subgroup->getPKValue(), $member->getPKValue());
+        $relatedgroup = $this->_getRelatedGroupFromRequest();
+        $result = $this->_model->memberDeletesRelatedGroup($group->getPKValue(), $relatedgroup->getPKValue(), $member->getPKValue());
         if ($result) {
-            $page = new GroupSubgroupLogPage();
+            $page = new GroupRelatedGroupLogPage();
             $page->group = $group;
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
-            $this->setFlashNotice($this->getWords()->getFormatted('SuccessfullyRemovedSubgroup', htmlspecialchars($subgroup->Name, ENT_QUOTES)));
+            $this->setFlashNotice($this->getWords()->getFormatted('SuccessfullyRemovedRelatedGroup', htmlspecialchars($relatedgroup->Name, ENT_QUOTES)));
             return $page;
          } else {
-            $page = new GroupSubgroupLogPage();
+            $page = new GroupRelatedGroupLogPage();
             $page->group = $group;
             $page->member = $member;
             $page->isGroupAdmin = $isGroupAdmin;
             $page->logs = $this->_model->showRelatedGroupsLog($group->getPKValue());
-            $this->setFlashError($this->getWords()->getFormatted('ErrorWhileRemoveSubgroup', htmlspecialchars($subgroup->Name, ENT_QUOTES)));
+            $this->setFlashError($this->getWords()->getFormatted('ErrorWhileRemoveRelatedGroup', htmlspecialchars($relatedgroup->Name, ENT_QUOTES)));
             return $page;
          }
      }
@@ -190,12 +191,12 @@ class RelatedGroupsController extends RoxControllerBase
      * @access public
      * @return object $page
      */
-    public function showSubgroupLog()
+    public function showRelatedGroupLog()
     {
         $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
         $isGroupAdmin = $group->isGroupOwner($member);
-        $page = new GroupSubgroupLogPage();
+        $page = new GroupRelatedGroupLogPage();
         $page->group = $group;
         $page->member = $member;
         $page->isGroupAdmin = $isGroupAdmin;

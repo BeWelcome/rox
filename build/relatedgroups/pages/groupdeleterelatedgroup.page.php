@@ -26,27 +26,26 @@ Boston, MA  02111-1307, USA.
      */
 
     /**
-     * This page shows subgroup logging
+     * This page asks if the user wants to remove a related group
      *
      * @package Apps
      * @subpackage RelatedGroups
      */
-class GroupSubgroupLogPage extends GroupsBasePage
+class GroupDeleteRelatedGroupPage extends GroupsBasePage
 {
-    protected function column_col3() {
-        $layoutbits = new MOD_layoutbits();
+    protected function column_col3()
+    {
         $words = $this->getWords();
-        $groupId = $this->group->id;
-        require SCRIPT_BASE . "build/relatedgroups/templates/groupsubgrouplog.column_col3.php";
+        $relatedgroups = $this->relatedgroups;
+        $group = $this->group;
+        require SCRIPT_BASE . "build/relatedgroups/templates/groupdeleterelatedgroup.column_col3.php";
     }
-    protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?1';
-       return $stylesheets;
-    }
+
     protected function getSubmenuActiveItem() {
         return 'relatedgroupsettings';
     }
-    
+
 }
+
+
 ?>

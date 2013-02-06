@@ -26,19 +26,19 @@ Boston, MA  02111-1307, USA.
      */
 
     /**
-     * This page shows groups which the user could add as subgroup to the group
+     * This page shows groups which the user could add as related group to the group
      *
      * @package Apps
      * @subpackage RelatedGroups
      */
-class GroupAddSubgroupPage extends GroupsBasePage
+class GroupAddRelatedGroupPage extends GroupsBasePage
 {
     protected function column_col3()
     {
         $words = $this->getWords();
         $my_groups = $this->my_groups;
         $group = $this->group;
-        require SCRIPT_BASE . "build/relatedgroups/templates/groupaddsubgroup.column_col3.php";
+        require SCRIPT_BASE . "build/relatedgroups/templates/groupaddrelatedgroup.column_col3.php";
     }
 
     protected function getSubmenuActiveItem() {

@@ -33,16 +33,16 @@ Boston, MA  02111-1307, USA.
                 } else {
                     $img_link = "images/icons/group.png";
                 } ?>
-                <li class="picbox_subgroup float_left">
+                <li class="picbox_relatedgroup float_left">
                     <a href="groups/<?php echo $group_data->getPKValue() ?>">
-                        <img class="framed_subgroup float_left" alt="Group" src="<?php echo $img_link; ?>"/>
+                        <img class="framed_relatedgroup float_left" alt="Group" src="<?php echo $img_link; ?>"/>
                     </a>
                     <div class="userinfo"><span class="small">
                     <h4><a href="groups/<?php echo $group_data->getPKValue() ?>"><?php echo htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
                         <?php echo $words->get('GroupsMemberCount');?>: <?php echo $group_data->getMemberCount(); ?><br />
                         <?php echo $words->get('GroupsNewMembers');?>: <?php echo count($group_data->getNewMembers()) ; ?><br />
                     </span></div> <!-- userinfo -->
-                </li> <!-- userpicbox_subgroup -->
+                </li> <!-- userpicbox_relatedgroup -->
             <?php endforeach; ?>
         </ul>   
     </div><!-- subcolumns -->
@@ -52,9 +52,9 @@ Boston, MA  02111-1307, USA.
     <div class="subcolumns"> <?php
         if ($this->isGroupMember())  {
             $add_button_link = "groups/{$this->group->id}/selectrelatedgroup";
-            $add_button_word = $words->get('AddSubgroupButton');
+            $add_button_word = $words->get('AddRelatedGroupButton');
             $delete_button_link = "groups/{$this->group->id}/selectdeleterelatedgroup";
-            $delete_button_word = $words->get('RemoveSubgroupButton');
+            $delete_button_word = $words->get('RemoveRelatedGroupButton');
             ?>
             <div class="c50l">
                 <div class="subcl">
@@ -86,8 +86,8 @@ Boston, MA  02111-1307, USA.
             <h4> <?php echo $words->get('NbOfLogEntries', count($logvar)); ?> </h4>
             <ul class="floatbox"> <?php
                 foreach ($logvar as &$value) : ?>
-                    <li class="picbox_subgroup float_left">
-                        <img class="framed_subgroup float_left" src="members/avatar/<?php echo $value->member->Username; ?>?xs"/>
+                    <li class="picbox_relatedgroup float_left">
+                        <img class="framed_relatedgroup float_left" src="members/avatar/<?php echo $value->member->Username; ?>?xs"/>
                         <div class="userinfo">
                             <span class="small">
                                 <?php
@@ -95,8 +95,8 @@ Boston, MA  02111-1307, USA.
                                 ?>
                                 <br /><?php 
                                 $memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
-                                $grouplink =  '<a href="groups/' . $value->subgroup->getPKValue() . '">' . htmlspecialchars($value->subgroup->Name, ENT_QUOTES) . '</a>'; 
-                                $logentry = $words->get($value->SubgroupAction, $memberlink, $grouplink);
+                                $grouplink =  '<a href="groups/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>'; 
+                                $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
                                 echo $logentry; ?><br />
                             </span>
                         </div>

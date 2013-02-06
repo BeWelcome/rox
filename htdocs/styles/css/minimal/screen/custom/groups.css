@@ -44,13 +44,13 @@
   display: block;
 }
 
-/* Special classes for subgrouplogs*/
-#main li.picbox_subgroup {
+/* Special classes for relatedgrouplogs*/
+#main li.picbox_relatedgroup {
   padding: 7px;
   width: 230px;
   padding-left: 0px;
 }
-img.framed_subgroup {
+img.framed_relatedgroup {
   background: none repeat scroll 0 0 #F3F3F3;
   border: 1px solid #DDDDDD;
   padding: 1px;
@@ -58,7 +58,7 @@ img.framed_subgroup {
   width: 60px;
   height: 60px;
 }
-#main .subgroupinfo {
+#main .relatedgroupinfo {
   float: left;
   width: 48%;
 }

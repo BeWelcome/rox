@@ -60,7 +60,6 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
     </div> <!-- subcolumns -->
     <div class="subcolumns">
     <?php
-    /*
     $subgroups = $this->group->findSubgroups($group_id);
     if (!empty($subgroups)) { ?>
         <h3><?php echo $words->getFormatted('SubgroupsTitle');?></h3>
@@ -86,7 +85,6 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 
         <?php endforeach; ?>
     </ul>
-    */ ?>
     </div><!-- subcolumns -->
 </div> <!-- groups -->
 

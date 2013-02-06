@@ -52,7 +52,7 @@ Boston, MA  02111-1307, USA.
                             </a>
                             <div class="groupinfo">
                                 <h4><a href="groups/<?php echo $my_group->getPKValue(); ?>"><?php echo htmlspecialchars($my_group->Name, ENT_QUOTES); ?></a></h4>
-                                <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/addsubgroup/<?php echo $my_group->id; ?>"><span><?php echo $words->get('GroupsAddAsSubgroup'); ?></span></a>
+                                <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/addrelatedgroup/<?php echo $my_group->id; ?>"><span><?php echo $words->get('GroupsAddAsSubgroup'); ?></span></a>
                             </div> <!-- groupinfo -->
                         </div> <!-- groupbox floatbox -->
                     </div>    

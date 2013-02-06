@@ -502,8 +502,8 @@ class Group extends RoxEntityBase
             return false;
         }
         $where = "{$this->_table_name}.id IN  (
-SELECT sg.subgroup_id 
-FROM groups_subgroups as sg 
+SELECT sg.related_id 
+FROM groups_related as sg 
 WHERE sg.group_id = " . intval($groupId) . " AND sg.deletedby IS NULL
 ORDER BY group_id)";
         

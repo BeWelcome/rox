@@ -51,9 +51,9 @@ Boston, MA  02111-1307, USA.
     </div><!-- subcolumns -->
     <div class="subcolumns"> <?php
         if ($this->isGroupMember())  {
-            $add_button_link = "groups/{$this->group->id}/selectsubgroup";
+            $add_button_link = "groups/{$this->group->id}/selectrelatedgroup";
             $add_button_word = $words->get('AddSubgroupButton');
-            $delete_button_link = "groups/{$this->group->id}/selectdeletesubgroup";
+            $delete_button_link = "groups/{$this->group->id}/selectdeleterelatedgroup";
             $delete_button_word = $words->get('RemoveSubgroupButton');
             ?>
             <div class="c50l">

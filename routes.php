@@ -59,14 +59,12 @@
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
     
-    /* FUTURE related groups routes
-    $this->addRoute('subgroup_select','groups/:group_id:/selectsubgroup', 'SubgroupsController', 'selectSubgroup');
-    $this->addRoute('subgroup_add','groups/:group_id:/addsubgroup/:subgroup_id:', 'SubgroupsController', 'addSubgroup');
-    $this->addRoute('subgroup_selectdelete','groups/:group_id:/selectdeletesubgroup', 'SubgroupsController', 'selectdeleteSubgroup');
-    $this->addRoute('subgroup_delete','groups/:group_id:/deletesubgroup/:subgroup_id:', 'SubgroupsController', 'deleteSubgroup');
-    $this->addRoute('subgroup_log','groups/:group_id:/subgroupsettings', 'SubgroupsController', 'showSubgroupLog');
-    */
-
+    // related groups routes
+    $this->addRoute('relatedgroup_select','groups/:group_id:/selectrelatedgroup', 'SubgroupsController', 'selectSubgroup');
+    $this->addRoute('relatedgroup_add','groups/:group_id:/addrelatedgroup/:related_id:', 'SubgroupsController', 'addSubgroup');
+    $this->addRoute('relatedgroup_selectdelete','groups/:group_id:/selectdeleterelatedgroup', 'SubgroupsController', 'selectdeleteSubgroup');
+    $this->addRoute('relatedgroup_delete','groups/:group_id:/deleterelatedgroup/:related_id:', 'SubgroupsController', 'deleteSubgroup');
+    $this->addRoute('relatedgroup_log','groups/:group_id:/subgroupsettings', 'SubgroupsController', 'showSubgroupLog');
 
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');

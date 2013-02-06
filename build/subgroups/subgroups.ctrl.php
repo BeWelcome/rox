@@ -73,7 +73,7 @@ class SubgroupsController extends RoxControllerBase
      */
     private function _getSubGroupFromRequest($redirect = null)
     {
-        if (!($vars = $this->route_vars) || empty($vars['subgroup_id']) || !($subgroup = $this->_model->findGroup($vars['subgroup_id']))) {
+        if (!($vars = $this->route_vars) || empty($vars['related_id']) || !($subgroup = $this->_model->findGroup($vars['related_id']))) {
             if (!$redirect) {
                 $redirect = $this->router->url('groups_overview');
             }

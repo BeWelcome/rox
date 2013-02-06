@@ -33,7 +33,7 @@ Boston, MA  02111-1307, USA.
 class Subgroup extends RoxEntityBase
 {
 
-    protected $_table_name = 'groups_subgroups';
+    protected $_table_name = 'groups_related';
 
     public function __construct()
     {
@@ -55,7 +55,7 @@ class Subgroup extends RoxEntityBase
         }
         $groupId = $group->getPKValue();
         $subgroupId = $subgroup->getPKValue();
-        $where_clause = "subgroup_id = '{$subgroupId}' AND group_id = '{$groupId}' AND deletedby IS NULL";
+        $where_clause = "related_id = '{$subgroupId}' AND group_id = '{$groupId}' AND deletedby IS NULL";
         if ($this->findByWhere($where_clause)) {
             return true;
         } else {
@@ -79,10 +79,10 @@ class Subgroup extends RoxEntityBase
         // only bother if subgroup is not already a subgroup       
         if (!$this->isSubgroup($group, $subgroup)) {
             $this->group_id = $group->getPKValue();
-            $this->subgroup_id = $subgroup->getPKValue();
+            $this->related_id = $subgroup->getPKValue();
             $this->addedby = $member->getPKValue();
             //$this->created = date('Y-m-d H:i:s');
-            if ($this->group_id != $this->subgroup_id) {
+            if ($this->group_id != $this->related_id) {
                 return $this->insert();
             } else {
                 return false;
@@ -125,7 +125,7 @@ class Subgroup extends RoxEntityBase
         $this->sql_order = "ts DESC";
         $logs = $this->findByWhereMany($where_clause, $offset, $limit);
         foreach ($logs as &$log) {
-            $log->subgroup = $this->createEntity('Group', $log->subgroup_id);
+            $log->subgroup = $this->createEntity('Group', $log->related_id);
             if ($log->deletedby == "") {
                 $log->member = $this->createEntity('Member', $log->addedby);
                 $log->SubgroupAction = "AddedSubgroup";

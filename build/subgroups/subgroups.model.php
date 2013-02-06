@@ -123,7 +123,7 @@ class SubgroupsModel extends  RoxModelBase
         $group = $this->createEntity('Group', $groupId);
         $subgroup = $this->createEntity('Group', $subgroupId);
         $member = $this->createEntity('Member', $memberId);
-        $where_clause = "subgroup_id = '{$subgroupId}' AND group_id = '{$groupId}' AND deletedby IS NULL";
+        $where_clause = "related_id = '{$subgroupId}' AND group_id = '{$groupId}' AND deletedby IS NULL";
         $subgroupentry = $this->createEntity('Subgroup')->findByWhere($where_clause);
         if (!$subgroupentry) {
             return false;

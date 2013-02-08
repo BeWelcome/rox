@@ -58,21 +58,17 @@ Boston, MA  02111-1307, USA.
             ?>
             <div class="c50l">
                 <div class="subcl">
-                    <hr>
-                        <a class="button" href="<?php echo $add_button_link; ?>">
-                            <span><?php echo $add_button_word; ?></span>
-                        </a>
-                    <hr>
+                    <a class="button" href="<?php echo $add_button_link; ?>">
+                        <span><?php echo $add_button_word; ?></span>
+                    </a>
                 </div><!-- subcl -->
             </div><!-- c50l -->
             <div class="c50r">
                 <div class="subcr"> <?php 
                     if (!empty($relatedgroups)) { ?>
-                        <hr>
-                            <a class="button" href="<?php echo $delete_button_link; ?>">
-                                <span><?php echo $delete_button_word; ?></span>
-                            </a>
-                        <hr> <?php
+                        <a class="button" href="<?php echo $delete_button_link; ?>">
+                            <span><?php echo $delete_button_word; ?></span>
+                        </a><?php
                     } ?>
                 </div><!-- subcr -->
             </div><!-- c50r --> <?php

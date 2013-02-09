@@ -378,7 +378,7 @@ INSERT INTO
     ) 
 VALUES(
     now(), 
-    " . $rr->IdPreference . "," . 
+    " . $rr->IdPreferences . "," . 
     $_SESSION['IdMember'] . ", 
     '" . $this->ShowMyGroupsTopicsOnly . "' 
 )" ;

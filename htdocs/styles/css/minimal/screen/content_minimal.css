@@ -741,6 +741,9 @@ div.comment .author {background:#fff; padding:0.2em;}
 #SearchAdvanced div {    padding: 10px 30px; }
 #SearchAdvanced a:hover {    background: transparent; }
 
+#groups #comments {
+  width: 500px;
+}
 
 /*
 * Admin tools classes

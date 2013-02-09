@@ -352,6 +352,23 @@ function FindAppropriatedLanguage($IdPost=0) {
             $this->ShowMyGroupsTopicsOnly = "Yes" ;
         }
         
+        // Fetch preference object
+        $query = "
+            SELECT
+                id
+            FROM
+                preferences
+            WHERE
+                CodeName = 'ShowMyGroupsTopicsOnly'
+            LIMIT 1
+            ";
+        $row = $this->dao->query($query);
+        $preference = $row->fetch(PDB::FETCH_OBJ);
+        if ($preference === false) {
+            throw new Exception('Database error: "ShowMyGroupsTopicsOnly"'
+                . ' preference not found in "preferences" table');
+        }
+
         $ss = "
 SELECT 
     m.Value AS Value, 
@@ -378,7 +395,7 @@ INSERT INTO
     ) 
 VALUES(
     now(), 
-    " . $rr->IdPreferences . "," . 
+    " . $preference->id . "," . 
     $_SESSION['IdMember'] . ", 
     '" . $this->ShowMyGroupsTopicsOnly . "' 
 )" ;

@@ -55,7 +55,7 @@ tinyMCE.init({
     elements: "topic_text",
     plugins : "advimage,preview,fullscreen,autolink",
     theme: "advanced",
-    content_css : "styles/css/minimal/screen/content_minimal.css?2",    
+    content_css : "styles/css/minimal/screen/content_minimal.css?3",    
     relative_urls:false,
     convert_urls:false,
     theme_advanced_buttons1: "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,forecolor,backcolor,charmap,link,image,separator,preview,fullscreen",
@@ -103,19 +103,28 @@ if ($allow_title) { // New Topic
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
 
 <?php
-    if (isset($allow_title) && $allow_title) {
-
-        if (isset($vars['errors']) && is_array($vars['errors'])) {
+    if (isset($vars['errors']) && is_array($vars['errors'])) {
             if (in_array('title', $vars['errors'])) {
                 echo '<div class="row error">'.$words->getFormatted("forum_error_title").'</div>';
             }
         }
+    if (isset($vars['errors']) && is_array($vars['errors'])) {
+        if (in_array('text', $vars['errors'])) {
+            echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
+        }
+    }
+    if (isset($allow_title) && $allow_title) {
+
 ?>
         <div class="row">
             <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
-            <input type="text" style="width: 95%" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php
-            echo isset($vars['topic_title']) ? $words->fTrad($vars['IdTitle']) : '';
-            ?>" />
+            <?php 
+            $topic_titletrad = "";
+            if ( isset($vars['topic_title']) && isset($vars['IdTitle']) ) {
+                $topic_titletrad = $words->fTrad($vars['IdTitle']);
+            } 
+            ?>
+            <input type="text" style="width: 95%" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php echo $topic_titletrad; ?>" />
         </div> <!-- row -->
 <? } ?>
     <div class="row">
@@ -159,38 +168,12 @@ if ($allow_title) { // New Topic
     </div></div>
     </fieldset> <!-- row -->
 
+<? } // End if $allow_title ?>
+
     <fieldset class="row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>
         <div id="fpost_vis"><div>
-            <p class="small"><?=$words->getFormatted("forum_ChooseVisibilty")?></p>
-    <?php   
-            if (!$edit) {
-                ?>
-                <select name="ThreadVisibility" id="ThreadVisibility">
-                <?php
-                $CurValue=$vars['ThreadVisibility'] ;
-
-                echo "<option value='Default'" ;
-                echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
-
-                echo "<option value='NoRestriction'" ;
-                if ($CurValue=="NoRestriction") echo " selected" ;
-                echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
-
-                echo "<option value='MembersOnly'" ;
-                if ($CurValue=="MembersOnly") echo " selected" ;
-                echo ">",$words->getFormatted("forum_edit_vis_MembersOnly"),"</option>" ;
-
-                echo "<option value='GroupOnly'" ;
-                if ($CurValue=="GroupOnly") echo " selected" ;
-                echo ">",$words->getFormatted("forum_edit_vis_GroupOnly"),"</option>" ;
-                echo "</select>" ;
-            }
-        if (isset($vars['errors']) && is_array($vars['errors'])) {
-            if (in_array('text', $vars['errors'])) {
-                echo '<div class="row error">'.$words->getFormatted("forum_error_post").'</div>';
-            }
-        }
+            <?php echo $visibilitiesDropdown;
     if ($groupsforum) { 
         echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
     } else {
@@ -204,7 +187,6 @@ if ($allow_title) { // New Topic
 
         </div></div>
     </fieldset>
-<? } // End if $allow_title ?>
 
     <fieldset class="row" id="fpost_lang_fieldset">
         <legend onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
@@ -224,33 +206,6 @@ if ($allow_title) { // New Topic
             }
         ?></select>
 <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
-
-        <?php if (!empty($vars['PostVisibility'])) { ?>
-            <br /><?php echo $words->getBuffered("forum_ChooseVisibilty") ?>
-            <select name="PostVisibility" id="PostVisibility">
-            <?php
-            $CurValue=$vars['PostVisibility'] ;
-//          echo "<option value='Default'" ;
-//          echo ">",$words->getFormatted("forum_edit_vis_Default"),"</option>" ;
-
-            echo "<option value='NoRestriction'" ;
-            if ($CurValue=="NoRestriction") echo " selected" ;
-            echo ">",$words->getFormatted("forum_edit_vis_NoRestriction"),"</option>" ;
-
-            echo "<option value='MembersOnly'" ;
-            if ($CurValue=="MembersOnly") echo " selected" ;
-            echo ">",$words->getFormatted("forum_edit_vis_MembersOnly"),"</option>" ;
-
-            if ($vars['IdGroup']!=0) {
-                echo "<option value='GroupOnly'" ;
-                if ($CurValue=="GroupOnly") echo " selected" ;
-                echo ">",$words->getFormatted("forum_edit_vis_GroupOnly"),"</option>" ;
-            }
-
-        ?>
-        </select>
-        <br />
-        <?php } // end if (!empty($vars['PostVisibility'])) ?>
         </div></div>
     </fieldset> <!-- row -->
     
@@ -347,7 +302,6 @@ if ($edit) {
         ForumsSuggest.initialize();
 <?php if (isset($allow_title) && $allow_title) { ?>
         toggleFieldsets('fpost_tags_and_location',1);
-        toggleFieldsets('fpost_vis',1);
 <? } ?>
         toggleFieldsets('fpost_note',1);
         // toggleFieldsets('fpost_lang',1);

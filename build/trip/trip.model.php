@@ -178,7 +178,7 @@ SQL;
 	        		)';
                     */
 	        }
-        	$query .= ") ORDER BY `blog_display_order` ASC, `blog_start` ASC, `name` ASC";
+        	$query .= ") ORDER BY `blog_start` ASC, `name` ASC";
 			
 		$result = $this->dao->query($query);
 		if (!$result) {

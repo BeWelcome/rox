@@ -5,19 +5,19 @@
 */
 @media all
 {
+/* modification for trip pages */
 
-#col1 { width: 40%; float: right; display: block;}
+#col1 { width: 0; display: none;}
 #col2 { width: 0; display: none;}
-
 #col3 {
     margin-left: 0; padding:0;
-    margin-right:40%;
-}
-#col3_content {
-    padding-left: 1.5em;
+    margin-right:0;
 }
 
-/* modification for trip pages */
+.tripdesc {
+    font-size: 1.3em;
+    line-height: 1.6em;
+}
 
 div.infobox {
   border-top: 1px solid #ccc;
@@ -49,21 +49,78 @@ div.tripitem {
       list-style-type: none;
 }
 #triplist li {
-      margin:0;
-      margin-bottom:4px;
-      padding:15px;
+      background: url("../../images/teaser_bg_white2.png") no-repeat scroll left bottom transparent;
+      margin: 0 0 1em;
+      padding:15px 0 0 0;
       line-height: 1.5em;
-}
-#triplist li.edit {
-      border: 1px dotted #0394C3;
-	  background-color: #ffffff;
-}
-#triplist li:hover.edit {
-      border: 1px solid #0394C3;
-	  background-color: #ffffff;
+
 }
 #triplist li h3 {
       border: none;
+}
+
+.fieldset-menu {
+    margin: 0;
+}
+.fieldset-menu-form .fieldset-menu {
+    margin: 0;
+}
+.fieldset-menu-form fieldset {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 transparent;
+    border-color: -moz-use-text-color #CCCCCC #CCCCCC;
+    border-image: none;
+    border-right: 1px solid #CCCCCC;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
+    margin: 0;
+    padding: 2em;
+    position: relative;
+}
+.fieldset-menu-form legend {
+    display: none;
+}
+ul.fieldset-menu {
+    border-bottom: 1px solid #CCCCCC;
+    list-style-type: none;
+    margin: 0;
+    padding: 4px 0 2px;
+}
+.fieldset-menu li {
+    display: inline;
+    margin-right: 0.5em;
+}
+.fieldset-menu li a {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #E8E8EE;
+    border-color: #CCCCCC #CCCCCC -moz-use-text-color;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 1px medium;
+    color: #333333;
+    padding: 4px 0.5em;
+}
+.fieldset-menu li a:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-bottom: 1px solid white;
+    color: #333333;
+}
+.fieldset-menu li.active a {
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #F7F7F7;
+    color: #333333;
+}
+.datepicker-opener {
+    padding: 0;
+}
+.datepicker-opener-table {
+    margin: 3px 0 0 3px;
 }
 .trip_map {
     width: 100%; 
@@ -97,7 +154,7 @@ div.tripitem {
 
 #searchteaser form {
     border: none;
-	padding: 0.8em 0 1em 0;
+	padding: 2em 0 1em 0;
 }
 
 #main #col3 h2.trip_date, .trip_date {
@@ -116,47 +173,8 @@ div.tripitem {
 }
 .tripmap {
 	width: 100%;
-	height: 295px;
+	height: 250px;
 }
-#onmap {
-    position: relative; 
-    z-index: 100; 
-    top: 160px; 
-    left: 0; 
-    margin-bottom: -100px; 
-    height: 100px;
-    float: left;
-}
-#onmap_right{
-    position: relative; 
-    z-index: 100; 
-    top: 100px; 
-    left: 30px; 
-    margin-bottom: -100px; 
-    height: 100px;
-    float: right;
-}
-#onmap #trip_name,#onmap_right #trip_name a {
-    margin-bottom: 4px;
-}
-#onmap #trip_name a,#onmap_right #trip_name a{
-    display: inline;
-    background-color: #000; 
-    padding: 5px 5px 5px 10px; 
-    color: #fff; 
-    opacity: 0.8;
-}
-#onmap .trip_author {
-    display: inline;
-    background-color: #000; 
-    padding: 10px 10px 10px 10px; 
-    color: #fff; 
-    opacity: 0.8; 
-    margin-top: 10px;
-    margin-bottom: 10px;
-	line-height: 2.5em;
-}
-
 
 div.markerLabel {
 	display: block;
@@ -264,6 +282,11 @@ div.markerLabelList a,div.markerLabelList a:hover,div.markerLabelList a:focus{
   text-align:center;
   padding-top: 10px;
 }
+.tripname{
+margin:0;
+}
 
-
+ol#locations li, ol.geoloc li {
+    width: 20em;
+}
 }

@@ -5,8 +5,8 @@ Follow these steps to install BW-Rox. Please note that there is a developer
 Virtualbox image available at http://bewelcome.penpal4u.net/ which could save
 you some work.
 
-These steps have been tested on Debian/Ubuntu based systems. Commands and
-usernames might differ on your distribution.
+These steps have been tested on Debian/Ubuntu based systems. Commands,
+usernames and locations might differ on your distribution.
 
 
 Requirements
@@ -28,7 +28,7 @@ Download
 
       $ git clone git://gitorious.org/bewelcome/rox.git
 
-  2. Done. For a fist look a simple read-only close will do. See
+  2. Done. For a fist look a simple read-only clone will do. See
      http://trac.bewelcome.org/wiki/Download for more details on branches and
      pushing code.
 
@@ -93,42 +93,58 @@ Database installation
   3. Uncompress dumps:
 
       $ gunzip bewelcome.sql.gz
-      $ bunzip languages.sql.bz2
-      $ bunzip words.sql.bz2
+      $ bunzip2 languages.sql.bz2 words.sql.bz2
 
-  4. Import dumps into database:
+  4. Import dumps into database (first line needs root because of routines):
 
-      $ mysql bewelcome -u bewelcome -pbewelcome < bewelcome.sql
+      $ mysql bewelcome -u root -p < bewelcome.sql
       $ mysql bewelcome -u bewelcome -pbewelcome < languages.sql
       $ mysql bewelcome -u bewelcome -pbewelcome < words.sql
+
+  5. Remove dumps:
+
+      $ rm bewelcome.sql languages.sql words.sql
 
 
 Configure Apache
 ----------------
 
-  1. Create a new virtual host (recommended) or modify the default one.
+  1. Create a new virtual host file:
+
+      $ sudo touch /etc/apache2/sites-available/bewelcome
+
+  2. Edit virtual host file, add basic settings and rewrites:
+
+      <VirtualHost *:80>
+          ServerName bewelcome
+          DocumentRoot /path/to/rox/htdocs
+          ErrorLog /var/log/apache2/bewelcome-error.log
+          CustomLog /var/log/apache2/bewelcome-access.log combined
+          php_admin_value error_reporting "E_ALL"
+          <Directory /path/to/rox/htdocs>
+              RewriteEngine On
+              RewriteBase /
+              RewriteCond %{REQUEST_FILENAME} !-f
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteRule ^/*([^/]*)\.php /bw/$1.php [L,R,QSA]
+              RewriteCond %{REQUEST_FILENAME} !-f
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteRule ^.* index.php [L,QSA,PT]
+          </Directory>
+      </VirtualHost>
 
      Note: Running BW-Rox in a sub directory (e.g. http:/localhost/bewelcome/)
      instead of the server root works, but is not recommended, because it
      complicates the setup and might cause unexpected behaviour.
 
-  2. Set a ServerName (i.e. "bewelcome") and add it to your hosts file (for
-     this example add "127.0.0.1 bewelcome" to /etc/hosts).
+  3. Add ServerName to your /etc/hosts file:
 
-  3. Point DocumentRoot to /path/to/rox/htdocs
+      127.0.0.1 bewelcome
 
-  4. Add rewrite directives:
+  4. Enable virtual host:
 
-      <Directory /path/to/rox/htdocs>
-          RewriteEngine On
-          RewriteBase /
-          RewriteCond %{REQUEST_FILENAME} !-f
-          RewriteCond %{REQUEST_FILENAME} !-d
-          RewriteRule ^/*([^/]*)\.php /bw/$1.php [L,R,QSA]
-          RewriteCond %{REQUEST_FILENAME} !-f
-          RewriteCond %{REQUEST_FILENAME} !-d
-          RewriteRule ^.* index.php [L,QSA,PT]
-      </Directory>
+      $ sudo a2ensite bewelcome
+      $ sudo service apache2 reload
 
 
 Configure BW-Rox
@@ -140,7 +156,7 @@ Configure BW-Rox
 
   2. Create rox_local.ini based on rox_local.ini.example:
 
-      $ cp rox_local.ini.example rox_local.ini
+      $ cp rox_local.example.ini rox_local.ini
 
   3. Edit rox_local.ini and modify at least these sections to your needs:
 
@@ -167,14 +183,13 @@ Useful hints
   * Geographical data:
 
     There are sample geographical data included in the developer database dump.
-    If you need more geographical data, please write to the bw-dev mailing list
-    (see bottom) and request a dump of the geonames_* tables from the live
-    database.
+    If you need more geographical data, import the geonames dump:
+    http://downloads.bewelcome.org/for_developers/rox_test_db/geonames.sql.bz2
 
   * Resetting all user passwords:
 
       $ mysql bewelcome -u bewelcome -pbewelcome
-      mysql> UPDATE members SET password = PASSWORD("password")'
+      mysql> UPDATE members SET password = PASSWORD("password");
       mysql> exit
 
     Note: Entering a password when logging in is only needed if

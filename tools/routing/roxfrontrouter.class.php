@@ -82,7 +82,6 @@ class RoxFrontRouter
 	*/
     protected function setLanguage()
     {
-	
         if ((!isset($_SESSION['IdMember'])) and  (!isset ($_SESSION['lang']))) {
 			$Model = new RoxFrontRouterModel;
 			$tt=explode(".",$_SERVER['HTTP_HOST']) ;
@@ -92,7 +91,7 @@ class RoxFrontRouter
 			else {
 				$urlheader="www" ;
 			}
-			if ($urlheader!='wwww') {
+			if ($urlheader!='www') {
 				if ($trylang = $Model->getPossibleUrlLanguage($urlheader) ) {
 					$_SESSION['lang'] = $trylang->ShortCode;
 					$_SESSION['IdLanguage'] = $trylang->id;
@@ -105,8 +104,8 @@ class RoxFrontRouter
 				$_SESSION['IdLanguage'] = $trylang->id;
 				return ;
 			}
-       		if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error
-                // Try to look in the default browser settings
+       		if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error    
+       		    // Try to look in the default browser settings
                 $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
                 for ($ii=0;$ii<count($TLang);$ii++) {
                     $trylang = $Model->getLanguage($TLang[$ii]);

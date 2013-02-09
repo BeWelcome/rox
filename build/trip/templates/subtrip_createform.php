@@ -1,31 +1,22 @@
-<script type="text/javascript" src="script/fieldset.js"></script>
-<script type="text/javascript" src="script/blog_suggest.js"></script>
-<div>
+<?php 
+/*
+ * template content: 
+ * shows the add destinations form with destination and options tab
+ */
+ 
+$cloudmade_conf = PVars::getObj('cloudmade');
+
+if ($isOwnTrip) {
+?>
+    <div style="padding: 20px 0" id="destination-form">
+    <h3>
+    <img src="images/icons/note_add.png" alt="<?=$words->get('Trip_SubtripsCreate')?>"/> <?=$words->get('Trip_SubtripsCreate')?><br />
+    </h3>
+    <p class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></p>
+    </div>
+ <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+
 <?php
-        //$User = A PP_User::login();
-        $member = $this->model->getLoggedInMember();
-
-        $Model = new Blog;
-
-        $callback = $this->getCallbackOutput('BlogController', 'createProcess');
-
-        // get the saved post vars
-        // todo: grab from page model
-        $vars = array();
-        // get current request
-        $request = PRequest::get()->request;
-        
-        $errors = array();
-        $lang = array();
-        $words = new MOD_words();
-
-        $catIt = $Model->getCategoryArray(false, $member);
-        $tripIt = $Model->getTripFromUserIt($member->id);
-        $google_conf = PVars::getObj('config_google');
-        //$defaultVis = A PP_User::getSetting($User->getId(), 'APP_blog_defaultVis');
-        // defaults to public then
-        $defaultVis = false;
-        
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();
         }
@@ -34,15 +25,11 @@
             $actionUrl = implode('/', $request);
             $submitName = '';
             $submitValue = $words->getSilent('BlogCreateSubmit');
-            // COMMENTED OUT
-            //echo '<h2>'.$words->get('BlogCreateTitle').'</h2>';
-        } else { // $request[2] == 'finish'
-            // COMMENTED OUT
-            //echo '<h2>'.$words->get('BlogCreateFinishTitle')."</h2>\n";
+        } else if (isset($request[2]) && $request[2] === 'finish') {
             echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
-            echo '<p>'.$words->get('BlogCreateFinishInfo')."</p>\n";
+            $submitValue = $words->getSilent('BlogCreateSubmit');
+            $actionUrl = 'trip/' . $request[1];
         }
-
 /**
  * edit and create form template controller // mostly copied from Blog Application
  * for documentation look at build/blog/editcreateform.php
@@ -52,12 +39,9 @@ if (!$member) {
     echo '<p class="error">'.$words->get('BlogErrors_not_logged_in').'</p>';
     return false;
 }
-$words = new MOD_words();
 ?>
 
-
-
-<form method="post" action="<?=$actionUrl?>" class="def-form" id="blog-create-form">
+<form method="post" action="<?=$actionUrl?>" class="fieldset-menu-form" id="destination-edit-form">
 
 <?php
 if (in_array('inserror', $vars['errors'])) {
@@ -71,14 +55,13 @@ if (in_array('upderror', $vars['errors'])) {
 if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_foreign'] = $trip->trip_id;
 ?>
 
-<fieldset id="blog-trip"><legend><?=$words->get('BlogCreate_LabelTrips')?></legend>
-    <div class="row">
-        <div class="subcolumns" id="profile_subcolumns">
+<fieldset id="destination"><legend><?=$words->get('TripDestinationLabelTab')?></legend>
+        <div class="subcolumns">
 
-          <div class="c50l" >
+          <div class="c38l" >
             <div class="subcl" >
                 
-                <div class="row">
+                <div>
                 <label for="create-title"><?=$words->get('BlogCreateLabelTitle')?>:</label><br/>
                     <input type="text" id="create-title" name="t" class="long" <?php
                     // the title may be set
@@ -92,29 +75,9 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                     ?>
                     <p class="desc"></p>
                 </div>
-                <div class="row">
-                    <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
-                    <textarea id="create-txt" name="txt" rows="10" cols="50"><?php
-                    // the content may be set
-                    echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
-                    ?></textarea>
-                    <div id="bcreate-c" class="statbtn"></div>
-                    <?php
-                    if (in_array('text', $vars['errors'])) {
-                        echo '<span class="error">'.$words->get('BlogErrors_text').'</span>';
-                    }
-                    ?>
-                    <p class="desc"></p>
-                </div>
-                
-            </div> <!-- subcl -->
-          </div> <!-- c50l -->
-          <div class="c50r" >
-            <div class="subcr" >
-                
-                <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
+                                <label for="create-date"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
                 <div class="floatbox">
-                    <input type="text" id="create-date" name="date" class="date" maxlength="10" style="width:9em" <?php
+                    <input type="text" id="create-date" name="date" class="date" maxlength="10" <?php
                     echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
                     ?> />
                 	<script type="text/javascript">
@@ -138,14 +101,33 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                     ?>
                     <p class="desc"><?=$words->get('BlogCreateTrips_SublineStartdate')?></p>
                     
-                    <input id="create-trip" name="tr" type="hidden" value="<?=$vars['trip_id_foreign'] ? $vars['trip_id_foreign'] : ''?>">
+                    <input id="create-trip" name="tr" type="hidden" value="<?=$vars['trip_id_foreign'] ? $vars['trip_id_foreign'] : ''?>" />
                     <?php
                     if (in_array('trip', $vars['errors'])) {
                         echo '<span class="error">'.$words->get('BlogErrors_trip').'</span>';
                     }
                     ?>
                     <p class="desc"></p>
-
+                <div class="row">
+                    <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
+                    <textarea id="create-txt" name="txt" rows="11" cols="30"><?php
+                    // the content may be set
+                    echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
+                    ?></textarea>
+                    <div id="bcreate-c" class="statbtn"></div>
+                    <?php
+                    if (in_array('text', $vars['errors'])) {
+                        echo '<span class="error">'.$words->get('BlogErrors_text').'</span>';
+                    }
+                    ?>
+                    <p class="desc"></p>
+                </div>
+                
+            </div> <!-- subcl -->
+          </div> <!-- c50l -->
+          <div class="c62r" >
+            <div class="subcr" >
+          <div id="spaf_map" style="width:99%; height:320px; border: 2px solid #333; display:none;"></div>
             </div> <!-- subcr -->
           </div> <!-- c50r -->
 
@@ -187,50 +169,16 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
         ?>" />
 </div>
     <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label><br />
-    <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
+    <input type="text" name="create-location" id="create-location" value="" /> <br />
+    <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
     <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
-    <div class="subcolumns">
-      <div class="c50l">
-        <div class="subcl">
-          <div id="location-suggestion" class></div>
-        </div>
-      </div>
-      <div class="c50r">
-        <div class="subcr">
-          <div id="spaf_map" style="width:240px; height:180px; border: 2px solid #333; display:none;">
-          </div>
-        </div>
-      </div>
-    </div>
-    <p>
-        <input type="submit" value="<?=$submitValue?>" class="submit"<?php
-        echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
-        ?> />
-    </p>
+
+          <div id="location-suggestion"></div>
 </fieldset>
 
-<fieldset id="blog-text">
-<legend><?=$words->get('BlogCreateLabelText')?></legend>
-    
-    <div class="row">
-        <label for="create-cat"><?=$words->get('BlogCreateLabelCategories')?>:</label><br />
-        <select id="create-cat" name="cat">
-            <option value="">-- <?=$words->get('BlogCreateNoCategories')?> --</option>
-        <?php
-            foreach ($catIt as $c) {
-                echo "<option value=\"".$c->blog_category_id."\" ";
-                if (isset($vars['cat']) && $c->blog_category_id == $vars['cat']) echo ' selected';
-                echo ">".htmlentities($c->name, ENT_COMPAT, 'utf-8')."</option>\n";
-            }
-        ?>
-        </select>
-        <?php
-        if (in_array('category', $vars['errors'])) {
-            echo '<span class="error">'.$words->get('BlogErrors_category').'</span>';
-        }
-        ?>
-        <p class="desc"></p>
-    </div>
+<fieldset id="destination-options">
+<legend><?=$words->get('TripDestinationOptionsLabelTab')?></legend>
+
     <div class="row">
         <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
         <textarea id="create-tags" name="tags" cols="40" rows="1"><?php
@@ -251,22 +199,7 @@ if (isset($vars['id']) && $vars['id']) {
 ?>
 
     <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
-    <?php
-    /* removed pending deletiong
-    if ($User->hasRight('write_sticky@blog')) {
-    ?>
-        <div class="row">
-            <input type="checkbox" id="create-flag-sticky" name="flag-sticky"<?php
-            if (isset($vars['flag-sticky']) && (int)$vars['flag-sticky']) {
-                echo ' checked="checked"';
-            }
-            ?>/>
-            <label for="create-flag-sticky"> <?=$words->get('BlogCreateSettings_LabelSticky')?></label>
-        </div>
-    <?php
-    }
-    */
-    ?>
+
     <label><?=$words->get('label_vis')?></label>
     <div class="row">
         <input type="radio" name="vis" value="pub" id="create-vis-pub"<?php
@@ -301,30 +234,56 @@ if (isset($vars['id']) && $vars['id']) {
         ?>/> <label for="create-vis-pri"><?=$words->get('BlogCreateSettings_LabelVisprivate')?></label>
         <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprivate')?></p>
     </div>
-<p>
+</fieldset>
+
+    <p class="row">
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
     </p>
-</fieldset>
-
-
 
 
 
 </form>
-<script type="text/javascript">//<!--
-new FieldsetMenu('blog-create-form', {
-    active: "blog-trip"
-});
-BlogSuggest.initialize('blog-create-form');
+<?php    }?>
 
+<script type="text/javascript">//<!--
+
+BlogSuggest.initialize('destination-edit-form');
+
+document.observe("dom:loaded", function() 
+{
+      var activeFieldset = '<?php if (!empty($vars['activeFieldset'])) { echo $vars['activeFieldset']; } ?>'; // Value inserted by PHP.
+      if (activeFieldset == '') {
+        var defaultFieldset = 'destination';
+        // Trim leading hashbang
+        var hashValue = document.location.hash.replace('#!', '');
+        if (hashValue == '') {
+          activeFieldset = defaultFieldset;
+        } else {
+          /* This allows URLs like "/editmyprofile#!profileaccommodation",
+           * which opens the "Accommodation" form tab after loading the page.
+           * The hashbang value needs to match the ID of the fieldset that
+           * is to be opened.
+           */
+          var tab = document.getElementById(hashValue);
+          if (tab != null && tab.tagName.toLowerCase() == 'fieldset') {
+            activeFieldset = hashValue;
+          } else {
+            activeFieldset = defaultFieldset;
+          }
+        }
+      }
+      new FieldsetMenu('destination-edit-form', {active: activeFieldset});
+});
+
+//-->
+</script>
+<script type="text/javascript">//<!--
 jQuery(function() {
     $('spaf_map').style.display = 'block';
     initOsmMapBlogEdit();
 });
 
 //-->
-</script>        
-        
-</div>
+</script>

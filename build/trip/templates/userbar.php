@@ -5,11 +5,12 @@ $member = $this->_model->getLoggedInMember();
 if ($member)
 {
 ?>
-          <h3>Actions</h3>
+          <h3><?=$words->get('TripsSingleTripActionsHeadline')?></h3>
           <ul class="linklist">
-			<li><a href="trip/show/my"><img src="images/icons/world.png" alt="my trips" /></a> <a href="trip/show/my"><?=$words->get('TripsShowMy')?></a></li>
-            <li><a href="trip/create"><img src="images/icons/world_add.png" alt="new trip" /></a> <a href="trip/create"><?=$words->get('TripTitle_create')?></a></li>
-		  </ul>
+			<li><a href="trip/show/<?=$member->Username?>" title="<?=$words->get('TripsShowMy')?>"><img src="images/icons/world.png" style="vertical-align:bottom;" alt="<?=$words->get('TripsShowMy')?>" /></a> <a href="trip/show/<?=$member->Username?>" title="<?=$words->get('TripsShowMy')?>"><?=$words->get('TripsShowMy')?></a></li>
+            <li><a href="trip/create" title="<?=$words->get('TripTitle_create')?>"><img src="images/icons/world_add.png" style="vertical-align:bottom;" alt="<?=$words->get('TripTitle_create')?>" /></a> <a href="trip/create" title="<?=$words->get('TripTitle_create')?>"><?=$words->get('TripTitle_create')?></a></li>
+          </ul>
+
             <?php
                 // ###   NEW   To be programmed: show the first visitor, then the second. !! Different div's (c50l, c50r)!  ###
                 $next_trips = MOD_trips::get()->RetrieveVisitorsInCityWithAPicture($_SESSION['IdMember']);
@@ -31,26 +32,7 @@ if ($member)
             ?>
 <?php } else { ?>
 <div class="infobox">
-          <h3>Your own trip!</h3>
-          <p>Trips are a great way to keep track of your <b>memories</b>, <b>share stories</b> and <b>pictures</b> and show others where you are/were or will be.</p>
-          <p>Plan a trip and <b>make arrangements with your hosts beforehand</b>. Show trips to people outside of BeWelcome or set them to be hidden for the public. Go sign up, to create a new trip yourself.</p>
+          <h3><?=$words->get('TripYourOwnTripHeadline')?></h3>
+          <p><?=$words->get('TripYourOwnTripText')?></p>
 </div>
 <?php } ?>
-
-<?php 
-/*
-          <h3>Favourite trips</h3>
-          <ul class="linklist">
-			<li><a href="trip/show/my">User2</a></li>
-			<li><a href="trip/create">User88</a></li>
-            <li><a href="blog/create">User27</a></li>
-		  </ul>
-          
-          <h3>Users with great galleries</h3>
-          <ul class="linklist">
-			<li><a href="trip/show/my">User1</a></li>
-			<li><a href="trip/create">User1</a></li>
-            <li>User2</li>
-		  </ul>
-*/
-?>

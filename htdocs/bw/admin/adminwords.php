@@ -369,7 +369,7 @@ if (isset ($_GET['ShowLanguageStatus'])) {
         if (isset ($rr->Sentence))
           echo $rr->Sentence;
         echo "<br /><a href=\"".bwlink("admin/adminwords.php?code=". $rEnglish->code. "&idword=". $rr->idword). "\">edit</a> ";
-        echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>obsolete</td></table>\n";
+        echo "\n<table  style=\"display:inline\"><tr><td bgcolor=#ff3333>update needed?</td></table>\n";
         echo "\n<table  style=\"display:inline;color:#3300ff;\"><tr><td>Last update ",fSince($rr->updated)," ",fUserName($rr->IdMember),"</td></table>\n";
       } else {
         echo "<td bgcolor=#ffffcc>";

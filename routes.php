@@ -58,6 +58,13 @@
     $this->addRoute('groups_realimg','groups/realimg/:group_id:', 'GroupsController', 'realImg');
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
+    
+    // related groups routes
+    $this->addRoute('relatedgroup_select','groups/:group_id:/selectrelatedgroup', 'RelatedGroupsController', 'selectRelatedGroup');
+    $this->addRoute('relatedgroup_add','groups/:group_id:/addrelatedgroup/:related_id:', 'RelatedGroupsController', 'addRelatedGroup');
+    $this->addRoute('relatedgroup_selectdelete','groups/:group_id:/selectdeleterelatedgroup', 'RelatedGroupsController', 'selectdeleteRelatedGroup');
+    $this->addRoute('relatedgroup_delete','groups/:group_id:/deleterelatedgroup/:related_id:', 'RelatedGroupsController', 'deleteRelatedGroup');
+    $this->addRoute('relatedgroup_log','groups/:group_id:/relatedgroupsettings', 'RelatedGroupsController', 'showRelatedGroupLog');
 
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');

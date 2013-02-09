@@ -68,3 +68,9 @@ span.term2 {
   background-color: #ccc;
 }
 fieldset {border-top: 0;}
+
+.fieldset-menu li.active a {
+    background-color: #F7F7F7;
+    border-bottom: 1px solid #F7F7F7;
+    color: #333333;
+}

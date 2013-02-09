@@ -149,7 +149,7 @@ class TripController extends PAppController {
             }
             if ($trip_id = $this->_model->createTrip($vars, $member))
             {
-                return 'trip/' . $trip_id;
+                return $trip_id;
             }
             return false;
     	}
@@ -277,15 +277,7 @@ class TripController extends PAppController {
         $page = new TripSingleTripPage();
         $page->trip = $trip;
         $page->trip_data = $trip_data;
-
-        // hack to display sidebar without too much refactoring for now
-        // todo: remove this when/if trips are actually refactored
         $vw = new ViewWrap($this->_view);	
-        $bar = $vw->displaySingleTrip_Map($trip, $trip_data);
-        $bar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
-        $bar .= $vw->userbar();
-        $bar .= $vw->displaySingleTrip_Sidebar($trip, $trip_data);
-        $page->sidebar = $bar;
         $page->heading = $vw->heading_singleTrip($trip, $trip_data);
         $page->model = $this->_model;
         return $page;

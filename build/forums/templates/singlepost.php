@@ -28,6 +28,11 @@ JeanYves notes : every display of a forum post content  goes trhu this template
     $words = new MOD_words();
     $styles = array( 'highlight', 'blank' );
 
+    $hideGroupOnlyPost = false;
+
+    if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
+        $hideGroupOnlyPost = ($this->_model->checkGroupMembership($post->IdGroup) == false);
+    }
 ?>
 <div class="forumspost <?php echo $styles[$cnt%2];  ?>">
     <div class="forumsauthor">
@@ -53,16 +58,8 @@ JeanYves notes : every display of a forum post content  goes trhu this template
         <p class="forumstime">
             <?php
 //echo "[",$post->posttime,"]",$words->getFormatted('DateHHMMShortFormat') ;
-            echo $words->getFormatted('posted'); ?> <?php echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));
-            if ($post->PostVisibility=='MembersOnly') {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:MembersOnly " ;
-            }
-            if ($post->PostVisibility=='GroupOnly') {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:GroupOnly " ;
-            }
-            if ($post->PostVisibility=='ModeratorOnly') {
-                echo "&nbsp;&nbsp;&nbsp;&nbsp;Visibility:ModeratorOnly " ;
-            }
+            echo $words->getFormatted('posted'); ?> <?php echo date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($post->posttime));
+            echo $words->flushBuffer() . "  &nbsp;&nbsp; " . $words->getFormatted("forum_label_visibility") . ": " . $words->getFormatted("forum_edit_vis_" . $post->PostVisibility); 
             $max = 0;
             if (!empty($post->Trad)) {
                 $max = count($post->Trad) ;
@@ -157,7 +154,13 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                     echo "<s>",$Sentence,"</s>" ;
                 }
                 else {
-                    echo $Sentence ;
+                    // hide the post if the current member is not a member of this post and
+                    // not a forum moderator
+                    if ($hideGroupOnlyPost && !($this->BW_Right->HasRight("ForumModerator"))) {
+                        echo $this->words->get('GroupOnlyPostHidden');
+                    } else {
+                        echo $Sentence ;
+                    }
                 }
                 ?>
             </div>

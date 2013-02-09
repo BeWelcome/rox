@@ -33,6 +33,7 @@ class RoxEntityFactory
         'GeoType'           => 'build/geo/geotype.entity',
         'Group'             => 'build/groups/group.entity',
         'GroupMembership'   => 'build/groups/groupmembership.entity',
+        'RelatedGroup'      => 'build/relatedgroups/relatedgroup.entity',
         'Language'          => 'build/rox/language.entity',
         'Member'            => 'build/members/member.entity',
         'MemberLanguage'    => 'build/members/memberlanguage.entity',

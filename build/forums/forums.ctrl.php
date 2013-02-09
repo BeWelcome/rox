@@ -53,6 +53,7 @@ class ForumsController extends PAppController
         
     /**
     * index is called when http request = ./forums
+    * or during a new topic/edit of a group
     */
     public function index($subforum = false)     {
         if (PPostHandler::isHandling()) {
@@ -60,10 +61,14 @@ class ForumsController extends PAppController
         }
         
         $view = $this->_view;
-        $page = $view->page=new RoxGenericPage(); 
+        $page = $view->page = new RoxGenericPage(); 
         
         $request = $this->request;
         if (isset($request[0]) && $request[0] != 'forums') {
+            // if this is a ./groups url get the group number if any
+            if (($request[0] == "groups") && (isset($request[1]))) {
+                $IdGroup = intval($request[1]);
+            }
             $new_request = array();
             $push = false;
             foreach ($request as $r) {
@@ -203,7 +208,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_NEW) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+                die("You can't do this because you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
             }
             if (!$User) {
                 PRequest::home();
@@ -212,7 +217,9 @@ class ForumsController extends PAppController
                  $IdGroup=substr($request[2],1) ;
             }
             else {
+                if (!isset($IdGroup)) {
                  $IdGroup=0 ;
+            }
             }
             $this->_model->prepareForum();
             $callbackId = $this->createProcess();
@@ -602,6 +609,8 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SUBSCRIBE;
         } else if (isset($request[1]) && $request[1] == 'rules') {
             $this->action = self::ACTION_RULES;
+        } else if (isset($request[1]) && $request[1] === 'mygroupsonly') {
+            $this->_model->switchShowMyGroupsTopicsOnly() ;
         } else {
             foreach ($request as $r) {
                 if ($r == 'new') {
@@ -631,9 +640,8 @@ class ForumsController extends PAppController
                 } else if ($r == 'modedittag') {
                     $this->action = self::ACTION_MODERATOR_EDITTAG;
                 } else if ($r == 'reverse') {  // This mean user has click on the reverse order box
-                    $this->_model->SwitchForumOrderList() ;
-                }
-                else if ($r == 'delete') {
+                    $this->_model->switchForumOrderList() ;
+                } else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
                 } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {
                     $this->_model->setPage($regs[1][0]);
@@ -665,10 +673,10 @@ class ForumsController extends PAppController
                     } else if ($char == 'u') { // Group ID (This is a dedicated group)
                         $this->_model->setGroupId((int) substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                    } else if ($char == 'k') { // Continent-ID
+                    } else if ($char == 'k' && $r != "kickmember") { // Continent-ID
                         $this->_model->setContinent(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                    } else if ($char == 'm') { // Message-ID (Single Post)
+                    } else if ($char == 'm' && $r != "mygroupsonly") { // Message-ID (Single Post)
                         $this->_model->setMessageId(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
                     }

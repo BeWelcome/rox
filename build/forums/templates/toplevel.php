@@ -32,18 +32,35 @@ if ($User) $TagCloud=true ;
 if (!$User) {
 ?>
     <div class="subcolumns">
-	<?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
-	</div>
+        <?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
+    </div>
 <?php
-} // end if User
-?>
+} // end if not User
+if ($User) {
+    if ($boards->owngroupsonly == "No") {
+        $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
+    } else {
+        $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
+    }
+    ?>
+    <div class="float_right">
+        <span class="button">
+            <a href="forums/mygroupsonly"><?php echo $buttonText; ?></a>
+        </span>
+    </div>
+    <?php
+    echo $this->words->flushBuffer();
+}
+?> 
+
 <!-- Now displays the recent post list -->	
 <?php
     $uri = 'forums/';
     if ($threads = $boards->getThreads()) {
 ?>
   <div class="row"> 
-    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?></h3>
+    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
+    </h3>
   </div><!--  row -->
 <?php
         require 'boardthreads.php';

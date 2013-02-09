@@ -52,11 +52,14 @@ Boston, MA  02111-1307, USA.
         ?>
             <tr class="<?php echo $styles[$cnt%2]; ?>">
                 <td class="forumsboardthreadtitle">
-                    <?php 
-                    
-					if ($thread->ThreadDeleted=="Deleted") {
-						echo "[Deleted]" ;
-					}
+                    <?php
+
+                    if ($thread->ThreadDeleted=="Deleted") {
+                        echo "[Deleted]" ;
+                    }
+                    if ($thread->ThreadVisibility=="ModeratorOnly") {
+                        echo "[ModOnly]" ;
+                    }
                     echo "<a href=\"",$url,"\">" ;
                     echo $words->fTrad($thread->IdTitle); 
                     ?></a>

@@ -1124,14 +1124,12 @@ WHERE
             $rr=$s->fetch(PDB::FETCH_OBJ) ;
             if (isset ($rr->maxi)) {
                 // get
-                error_log(__FUNCTION__ . ": [" . $rr->mini . ", " . $rr->maxi  . "]");
-                
                 $IdTrad = max(abs($rr->mini), $rr->maxi) + 1;
             } else {
                 $IdTrad = 1;
             }
         }
-        error_log(__FUNCTION__ . ": [" . $IdTrad . "]");
+
         $str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
         $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
         $s = $this->_dao->query($str);

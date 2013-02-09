@@ -49,7 +49,7 @@ $cityName = empty($m->member_data->CityName) ? '&nbsp;' : $m->member_data->CityN
 
     <div class="row">
         <dl class="list">
-            <dt><?=$words->getFormatted("FullName")?></dt><dd><?php  $m->member_data->FirstName?> <?=$m->member_data->SecondName?> <?=$m->member_data->LastName?></dd>
+            <dt><?=$words->getFormatted("FullName")?></dt><dd><?=$m->member_data->FirstName?> <?=$m->member_data->SecondName?> <?=$m->member_data->LastName?></dd>
             <dt><?=$words->getFormatted("HouseNumber")?></dt><dd><?=$houseNumber?></dd>
             <dt><?=$words->getFormatted("StreetName")?></dt><dd><?=$streetName?></dd>
             <dt><?=$words->getFormatted("Zip")?></dt><dd><?=$zip?></dd>

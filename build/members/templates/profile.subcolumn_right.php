@@ -1,7 +1,7 @@
 <div id="accommodationinfo" class="floatbox box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
-        <a href="/editmyprofile#!profileaccommodation"><?php echo $words->get('Edit'); ?></a>
+        <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileaccommodation"><?php echo $words->get('Edit'); ?></a>
     </span>
     <?php endif; ?>
     <h3 class="icon accommodation22" ><?=$words->get('ProfileAccommodation');?></h3>
@@ -145,7 +145,7 @@ if (count($relations) > 0) { ?>
     <div id="relations" class="floatbox box">
         <?php if ($showEditLinks): ?>
         <span class="float_right profile-edit-link">
-            <a href="/editmyprofile#!specialrelations"><?php echo $words->get('Edit'); ?></a>
+            <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations"><?php echo $words->get('Edit'); ?></a>
         </span>
         <?php endif; ?>
         <h3><?php echo $words->get('MyRelations');?></h3>

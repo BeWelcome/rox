@@ -69,22 +69,6 @@ class TripView extends PAppView {
         $shoutsCtrl = new ShoutsController;
         $shoutsCtrl->shoutsList('trip', $trip->trip_id);
 	}
-	public function displaySingleTrip_Sidebar($trip, $trip_data)
-    {
-        $member = $this->_model->getLoggedInMember();
-		if (!$member = $this->_model->getLoggedInMember())
-        {
-			$isOwnTrip = false;
-		}
-        else
-        {
-			$isOwnTrip = ($trip->IdMember == $member->id);
-		}
-		require 'templates/singletrip_sidebar.php';
-	}
-	public function displaySingleTrip_Map($trip, $trip_data) {
-		require 'templates/singletrip_map.php';
-	}
     
     public function teaser($trip = false) {
         require 'templates/teaser.php';
@@ -110,7 +94,7 @@ class TripView extends PAppView {
     
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
-        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/trip.css?1" type="text/css"/>';
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/trip.css?2" type="text/css"/>';
 		echo $out;
     }
 }

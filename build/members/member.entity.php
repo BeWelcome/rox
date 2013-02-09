@@ -934,6 +934,23 @@ ORDER BY
         }
     }
 
+    public function update_relation($IdRelation, $IdTrad)
+    {
+        $result = false;
+        $sql = "
+            UPDATE 
+                specialrelations
+            SET 
+                Comment = " . $IdTrad . "
+            WHERE
+                Id = " . $IdRelation;
+        $s = $this->dao->query($sql);
+        if ($s) {
+            $result = true;
+        }
+        return $result;
+    }
+    
       public function get_relations()
       {
           $all_relations = $this->all_relations();
@@ -987,7 +1004,7 @@ LEFT JOIN
     memberspreferences.IdMember = $this->id
 WHERE
     preferences.Status != 'Inactive'
-ORDER BY Value asc
+ORDER BY preferences.position ASC
           ";
         $rows = array();
         if (!$sql_result = $this->dao->query($sql)) {

@@ -55,12 +55,12 @@ class Group extends RoxEntityBase
         return $result;
     }
 
-    public function __construct($group_id = false)
+    public function __construct($groupId = false)
     {
         parent::__construct();
-        if (intval($group_id))
+        if (intval($groupId))
         {
-            $this->findById(intval($group_id));
+            $this->findById(intval($groupId));
         }
     }
 
@@ -203,35 +203,35 @@ class Group extends RoxEntityBase
     /**
      * Check if a member id is connected with a group
      *
-     * @param int $member_id - id of the member to check
+     * @param int $memberId - id of the member to check
      * @access public
      * @return bool
      */
-    public function isMember($member)
+    public function isMember($memberId)
     {
         if (!$this->_has_loaded)
         {
             return false;
         }
 
-        return $this->createEntity('GroupMembership')->isMember($this, $member);
+        return $this->createEntity('GroupMembership')->isMember($this, $memberId);
     }
 
     /**
      * puts a member in a group, aka joining the group
      *
-     * @param int $member_id - id of the member that joins
+     * @param int $memberId - id of the member that joins
      * @access public
      * @return bool
      */
-    public function memberJoin($member, $status)
+    public function memberJoin($memberId, $status)
     {
         if ($this->_has_loaded === false)
         {
             return false;
         }
 
-        return $this->createEntity('GroupMembership')->memberJoin($this, $member, $status);
+        return $this->createEntity('GroupMembership')->memberJoin($this, $memberId, $status);
     }
 
     /**
@@ -331,15 +331,15 @@ class Group extends RoxEntityBase
         $description = str_replace(array("\r\n", "\r", "\n"), "", nl2br($description));
 
         $words = $this->getWords();
-        $description_id = ((!$this->IdDescription) ? $words->InsertInMTrad($this->dao->escape($description), 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
+        $descriptionId = ((!$this->IdDescription) ? $words->InsertInMTrad($this->dao->escape($description), 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
 
-        if (!$description_id)
+        if (!$descriptionId)
         {
             return false;
         }
-        elseif ($this->IdDescription != $description_id)
+        elseif ($this->IdDescription != $descriptionId)
         {
-            $this->IdDescription = $description_id;
+            $this->IdDescription = $descriptionId;
             return $this->update();
         }
 
@@ -487,6 +487,29 @@ class Group extends RoxEntityBase
         }
         return $this->findByWhere("IdGeoname = '{$geo->getPKValue()}'" . (($local) ? " AND IsLocal = TRUE" : ''));
     }
+
+
+    /**
+     * find related groups for a group
+     *
+     * @param int $groupId - id of the group
+     * @return mixed false or array of groups that are related with the group
+     * @access public
+     */
+    public function findRelatedGroups($groupId, $offset = 0, $limit = null)
+    {
+        if (!is_numeric($groupId)) {
+            return false;
+        }
+        $where = "{$this->_table_name}.id IN  (
+SELECT gr.related_id 
+FROM groups_related as gr
+WHERE gr.group_id = " . intval($groupId) . " AND gr.deletedby IS NULL
+ORDER BY group_id)";
+        
+        return $this->findByWhereMany($where, $offset, $limit);
+    }
+
 
 }
 

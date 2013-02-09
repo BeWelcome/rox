@@ -3,7 +3,7 @@
 <div id="profilesummary" class="floatbox box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
-        <a href="/editmyprofile"><?php echo $words->get('Edit'); ?></a>
+        <a href="editmyprofile/<?php echo $profile_language_code; ?>"><?php echo $words->get('Edit'); ?></a>
     </span>
     <?php endif; ?>
     <h3 class="icon info22" ><?=$words->get('ProfileSummary');?></h3>
@@ -16,7 +16,7 @@
 <div id="languages" class="floatbox box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
-        <a href="/editmyprofile"><?php echo $words->get('Edit'); ?></a>
+        <a href="editmyprofile/<?php echo $profile_language_code; ?>"><?php echo $words->get('Edit'); ?></a>
     </span>
     <?php endif; ?>
     <h3><?php echo $words->get('ProfileLanguagesSpoken'); ?></h3>
@@ -39,7 +39,7 @@ HTML;
 <div id="interests" class="floatbox box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
-        <a href="/editmyprofile#!profileinterests"><?php echo $words->get('Edit'); ?></a>
+        <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests"><?php echo $words->get('Edit'); ?></a>
     </span>
     <?php endif; ?>
     <h3 class="icon sun22"><?php echo $words->get('ProfileInterests'); ?></h3>
@@ -97,7 +97,7 @@ HTML;
 <div id="travel" class="floatbox box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
-        <a href="/editmyprofile#!profileinterests"><?php echo $words->get('Edit'); ?></a>
+        <a href="editmyprofile/<?php echo $profile_language_code; ?>#!profileinterests"><?php echo $words->get('Edit'); ?></a>
     </span>
     <?php endif; ?>
     <h3 class="icon world22" ><?php echo $words->get('ProfileTravelExperience'); ?></h3>
@@ -155,7 +155,7 @@ HTML;
 <div class="address box" >
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
-        <a href="/editmyprofile#!contactinfo"><?php echo $words->get('Edit'); ?></a>
+        <a href="editmyprofile/<?php echo $profile_language_code; ?>#!contactinfo"><?php echo $words->get('Edit'); ?></a>
     </span>
     <?php endif; ?>
     <h3 class="icon contact22" ><?=$words->get('ContactInfo');?></h3>

@@ -16,6 +16,7 @@ An incomplete list of current developers
 - lantti
 - shevek
 - toub
+- Toni - mahouni200000
 - Kasper - guaka ;-)
 
 A list of former developers

@@ -473,12 +473,19 @@ class GroupsController extends RoxControllerBase
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
 
-        $this->_model->banGroupMember($group, $member_id, false);
-        $this->logWrite("Member #{$member_id} was kicked from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-
-        $page = new GroupStartPage;
-        $this->_fillObject($page);
+        $page = new GroupStartPage();
+        $kicked = $this->_model->banGroupMember($group, $member_id, false);
+        if ($kicked)
+        {
+            $this->setFlashNotice($this->getWords()->getSilent('MemberKickSuccess'));
+            $this->logWrite("Member #{$member_id} was kicked from group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+        }
+        else
+        {
+            $this->setFlashError($this->getWords()->getSilent('MemberKickFail'));
+        }
         $page->group = $group;
+        
         return $page;
     }
 

@@ -59,7 +59,7 @@ if (!empty($errors))
 ?>
 <div class="subcolumns">
 <div class="subcl">
-<div class="c33l"><label for="donate-username"><?php echo $words->get('AdminTreasurerDonator'); ?></label><br />
+<div class="c33l"><label for="donate-username"><?php echo $words->get('AdminTreasurerDonor'); ?></label><br />
 <input type="text" id="donate-username" name="donate-username" value="<?php if (isset($vars['donate-username'])) { echo $vars['donate-username']; };  ?>" />
 </div>
 <div class="c33l"><label for="donate-amount"><?php echo $words->get('AdminTreasurerDonatedAmount'); ?></label><br />

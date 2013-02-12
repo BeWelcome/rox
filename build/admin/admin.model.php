@@ -981,13 +981,13 @@ class AdminModel extends RoxModelBase
     public function treasurerEditCreateDonationVarsOk(&$vars) {
         $errors = array();
         if (empty($vars['donate-username'])) {
-            $errors[] = 'AdminTreasurerDonatorEmpty';
+            $errors[] = 'AdminTreasurerDonorEmpty';
         } else {
-            $donator = $this->createEntity('Member')->findByUsername($vars['donate-username']);
-            if (!$donator) {
-                $errors[] = 'AdminTreasurerUnknownDonator';
+            $donor = $this->createEntity('Member')->findByUsername($vars['donate-username']);
+            if (!$donor) {
+                $errors[] = 'AdminTreasurerUnknownDonor';
             } else {
-                $vars['IdMember'] = $donator->id;
+                $vars['IdMember'] = $donor->id;
             }
         }
         if (!is_numeric($vars['donate-amount'])) {

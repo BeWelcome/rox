@@ -61,7 +61,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
         </td>
         <td><?=$m->country ?><br/><?=$m->city ?></td>
         <td>
-            <?=$words->getFormatted("MemberSince",$m->MemberSince)?>
+            <?=$words->getFormatted("MemberSinceColumn", MOD_layoutbits::ago(strtotime($m->created)))?>
         </td>
         <td>
             <a href="members/<?=$m->Username ?>/comments"><?=$words->getFormatted("ViewComments")."(".$m->NbComments.")"?></a><br/>

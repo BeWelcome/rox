@@ -489,7 +489,7 @@ class AdminController extends RoxControllerBase
      * create a mass mailing
      *
      */
-    public function massmailcreate() {
+    public function massmailCreate() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
         $page = new AdminMassMailEditCreatePage($this->_model);
         $page->member = $member;
@@ -500,7 +500,7 @@ class AdminController extends RoxControllerBase
      * show details for a mass mailing
      *
      */
-    public function massmaildetails() {
+    public function massmailDetails() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
         $id = $this->route_vars['id'];
         $page = new AdminMassMailDetailsPage($this->_model, $id);
@@ -512,7 +512,7 @@ class AdminController extends RoxControllerBase
      * show details about status for a mass mailing
      *
      */
-    public function massmaildetailsmailing() {
+    public function massmailDetailsMailing() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
         $id = $this->route_vars['id'];
         $type = $this->route_vars['type'];
@@ -529,7 +529,7 @@ class AdminController extends RoxControllerBase
      * edit a mass mailing
      *
      */
-    public function massmailedit() {
+    public function massmailEdit() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
         $id = $this->route_vars['id'];
         $page = new AdminMassMailEditCreatePage($this->_model, $id);
@@ -542,7 +542,7 @@ class AdminController extends RoxControllerBase
      *
      * @return json encoded list of admin units
      */
-    public function getadminunits() {
+    public function getAdminUnits() {
         $countrycode = $this->route_vars['countrycode'];
         $adminunits = $this->_model->getAdminUnits($countrycode);
         header('Content-type: application/json');
@@ -555,7 +555,7 @@ class AdminController extends RoxControllerBase
      *
      * @return json encoded list of places
      */
-    public function getplaces() {
+    public function getPlaces() {
         $countrycode = $this->route_vars['countrycode'];
         $adminunit = $this->route_vars['adminunit'];
         $places = $this->_model->getPlaces($countrycode, $adminunit);
@@ -592,7 +592,7 @@ class AdminController extends RoxControllerBase
      * enqueue a mass mailing
      *
      */
-    public function massmailenqueue() {
+    public function massmailEnqueue() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILENQUEUE);
         $id = $this->route_vars['id'];
         $page = new AdminMassMailEnqueuePage($this->_model, $id);
@@ -603,7 +603,7 @@ class AdminController extends RoxControllerBase
      * unqueue a mass mailing
      *
      */
-    public function massmailunqueue() {
+    public function massmailUnqueue() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILENQUEUE);
         $id = $this->route_vars['id'];
         $count = $this->_model->unqueueMassMail($id);
@@ -616,7 +616,7 @@ class AdminController extends RoxControllerBase
      * trigger a mass mailing
      *
      */
-    public function massmailtrigger() {
+    public function massmailTrigger() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILTRIGGER);
         $id = $this->route_vars['id'];
         $count = $this->_model->triggerMassMail($id);
@@ -629,7 +629,7 @@ class AdminController extends RoxControllerBase
      * untrigger a mass mailing
      *
      */
-    public function massmailuntrigger() {
+    public function massmailUntrigger() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILTRIGGER);
         $id = $this->route_vars['id'];
         $count = $this->_model->untriggerMassMail($id);

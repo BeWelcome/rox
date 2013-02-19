@@ -263,8 +263,9 @@ class ForumsView extends RoxAppView {
      * @param bool $showGroups Set true if group name and link should be shown
      *                         in teasers
      */
-    public function showExternal($showGroups = false) {
-        $boards = $this->_model->getBoard();
+    public function showExternal($showGroups = false, $showsticky = true) {
+        echo "[" . $showsticky . "]";
+        $boards = $this->_model->getBoard($showsticky);
         $request = PRequest::get()->request;
         require 'templates/external.php';
     }

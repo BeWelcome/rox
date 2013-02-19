@@ -264,7 +264,6 @@ class ForumsView extends RoxAppView {
      *                         in teasers
      */
     public function showExternal($showGroups = false, $showsticky = true) {
-        echo "[" . $showsticky . "]";
         $boards = $this->_model->getBoard($showsticky);
         $request = PRequest::get()->request;
         require 'templates/external.php';

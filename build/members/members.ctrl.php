@@ -694,4 +694,82 @@ class MembersController extends RoxControllerBase
         $page->model = $this->model;
         return $page;
     }
+
+     /**
+     * callback for password reset
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff          $stuff1
+     * @param stuff          $stuff2
+     *
+     * @access public
+     * @return mixed
+     */
+    public function resetPasswordCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $post = $args->post;
+        if (empty($post['UsernameOrEmail']))
+        {
+            $mem_redirect->errors = array('ResetPasswordEmpty');
+            return false;
+        }
+        $member = $this->model->getMemberWithUsername($post['UsernameOrEmail']);
+        if (!$member) {
+            $member = $this->model->getMemberFromEmail($post['UsernameOrEmail']);
+        }
+        if (!$member) {
+            $mem_redirect->errors = array('ResetPasswordError');
+            return false;
+        }
+        if ($member->canLogIn()) {
+            $member->model = $this->model;
+            
+            // Generate random password (copied from bw)
+            $totalChar = 8; // number of chars in the password
+            $salt = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";  // salt to select chars from
+            srand((double)microtime()*1000000); // start the random generator
+            $password=""; // set the inital variable
+            for ($i=0;$i<$totalChar;$i++) {  // loop and create password
+                $password = $password . substr ($salt, rand() % strlen($salt), 1);
+            }
+
+            // Alternate version using md5
+            // $password = md5($member->Username . uniqid());
+            $member->setPassword($password);
+            $subject = $this->getWords()->get("ResetPasswordSubject");
+            $body = $this->getWords()->get("ResetPasswordBody", $password, $member->Username);
+            $member->sendMail($subject, $body);
+            return $this->router->url('reset_password_finish', array(), false);
+        } else {
+            $mem_redirect->errors = array('ResetPasswordNoLogin');
+            return false;
+        }
+    }
+
+    /**
+     * displays the reset your passwod page
+     *
+     * @access public
+     * @return ResetPasswordPage
+     */
+    public function resetpassword()
+    {
+        $page = new ResetPasswordPage();
+        $page->model = $this->model;
+        return $page;
+    }
+
+    /**
+     * displays the reset your passwod page
+     *
+     * @access public
+     * @return ResetPasswordPage
+     */
+    public function resetpasswordfinish()
+    {
+        $page = new ResetPasswordFinishPage();
+        $page->model = $this->model;
+        return $page;
+    }
 }

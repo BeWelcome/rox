@@ -68,6 +68,8 @@
 
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
+    $this->addRoute('members_reset_password', 'resetpassword' , 'MembersController', 'resetpassword');
+    $this->addRoute('members_reset_password_finish', 'resetpassword/finish' , 'MembersController', 'resetpasswordfinish');
 
     // admin temporary vol page route
     $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminController', 'tempVolStart');

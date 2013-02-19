@@ -5,10 +5,9 @@
       <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>
       <?=($verification_status) ? '
         <a href="verifymembers/verifiersof/'.$member->Username.'">
-          <img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'" />
-        </a>': ''?>
+          <img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'" /></a>': ''?>
       <?=($member->Accomodation == 'anytime') ? '
-        <img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="'.$member->Accomodation.'" />': ''?>
+        <img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="' . $words->getSilent('CanOfferAccomodation') . '" />': ''?>
       <?=$words->flushBuffer()?>
     </h1> <!-- username -->
     <div class="c50l">

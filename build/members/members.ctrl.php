@@ -740,7 +740,7 @@ class MembersController extends RoxControllerBase
             $subject = $this->getWords()->get("ResetPasswordSubject");
             $body = $this->getWords()->get("ResetPasswordBody", $password, $member->Username);
             $member->sendMail($subject, $body);
-            return $this->router->url('reset_password_finish', array(), false);
+            return $this->router->url('members_reset_password_finish', array(), false);
         } else {
             $mem_redirect->errors = array('ResetPasswordNoLogin');
             return false;
@@ -748,12 +748,12 @@ class MembersController extends RoxControllerBase
     }
 
     /**
-     * displays the reset your passwod page
+     * displays the reset your password page
      *
      * @access public
      * @return ResetPasswordPage
      */
-    public function resetpassword()
+    public function resetPassword()
     {
         $page = new ResetPasswordPage();
         $page->model = $this->model;
@@ -761,12 +761,12 @@ class MembersController extends RoxControllerBase
     }
 
     /**
-     * displays the reset your passwod page
+     * displays the reset your password page
      *
      * @access public
-     * @return ResetPasswordPage
+     * @return ResetPasswordFinishPage
      */
-    public function resetpasswordfinish()
+    public function resetPasswordFinish()
     {
         $page = new ResetPasswordFinishPage();
         $page->model = $this->model;

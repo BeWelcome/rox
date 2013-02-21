@@ -39,6 +39,17 @@
             $comment['timestamp'] = max($ts_from, $ts_to);
             $comments[] = $comment;
         }
+
+        // sort the comments descending by timestamp
+        function cmp($a, $b)
+        {
+            if ($a['timestamp'] == $b['timestamp']) {
+                return 0;
+            }
+            return ($a['timestamp'] > $b['timestamp']) ? -1 : 1;
+        }
+
+        usort($comments, "cmp");
         $username = $this->member->Username;
         $layoutbits = new MOD_layoutbits();
 ?>

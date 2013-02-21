@@ -99,7 +99,7 @@ if(isset($comment['from'])) {
     <div class="c75l" >
       <div class="subcl" >
         <a href="members/<?=$cc->UsernameToMember?>">
-           <img class="float_left framed"  src="members/avatar/<?=$c->UsernameToMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+           <img class="float_left framed"  src="members/avatar/<?=$cc->UsernameToMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
             <p class="floatbox"><strong class="neutral"><?php echo $words->get('CommentNoComment'); ?></strong><br />

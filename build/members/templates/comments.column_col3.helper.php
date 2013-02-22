@@ -26,7 +26,7 @@
         // the profile
         $comment_to_self = false;
         $visitor = $this->model->getLoggedInMember();
-        if (($visitor->id <> $member->id) && (in_array($visitor->id, $member_ids))) {
+        if ($visitor && ($visitor->id <> $member->id) && (in_array($visitor->id, $member_ids))) {
             $comment_to_self = true;
         }
 

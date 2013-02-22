@@ -4,12 +4,13 @@
         $comments_written = $this->member->get_comments_written();
 
         $comments_from = array();
+        $comment_for_self = false;
         // Get member ids into one array
         $member_ids = array();
         foreach($comments_received as $c) {
             if (!in_array($c->IdFromMember, $member_ids)) {
                 $member_ids[] = $c->IdFromMember;
-                $comments_from[$c->IdFromMember] = $c; 
+                $comments_from[$c->IdFromMember] = $c;
             }
         }
 
@@ -19,6 +20,14 @@
                 $member_ids[] = $c->IdToMember;
             }
             $comments_to[$c->IdToMember] = $c;
+        }
+
+        // check if member_ids contains a comment for the member browsing the
+        // the profile
+        $comment_to_self = false;
+        $visitor = $this->model->getLoggedInMember();
+        if (($visitor->id <> $member->id) && (in_array($visitor->id, $member_ids))) {
+            $comment_to_self = true;
         }
 
         // now that we have all members we create one array with all comments
@@ -36,8 +45,12 @@
                 $comment['to'] = $comments_to[$id];
                 $ts_to = $comments_to[$id]->unix_updated;
             }
-            $comment['timestamp'] = max($ts_from, $ts_to);
-            $comments[] = $comment;
+            // Add comments to list if it isn't for the current visitor
+            // or if the visitor left a comment him-/herself
+            if (!$comment_to_self || (isset($comment['from']))) {
+                $comment['timestamp'] = max($ts_from, $ts_to);
+                $comments[] = $comment;
+            }
         }
 
         // sort the comments descending by timestamp
@@ -50,6 +63,16 @@
         }
 
         usort($comments, "cmp");
+
+        // if current visitor didn't leave a comment add entry to the beginning 
+        // of the comment list
+
+        if ($comment_to_self && (!isset($comments_from[$visitor->id]))) {
+            $comment = array();
+            $comment['to'] = $comments_to[$visitor->id];
+            array_unshift($comments, $comment);
+        }
+
         $username = $this->member->Username;
         $layoutbits = new MOD_layoutbits();
 ?>

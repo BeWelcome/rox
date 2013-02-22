@@ -25,7 +25,13 @@ Boston, MA  02111-1307, USA.
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
-   
+if (!$comment_to_self && (count($comment_byloggedinmember) == 0)) {
+      // Show "Add comment" button
+      echo '  <p class="floatbox"><a href="members/' . $username
+          . '/comments/add" class="button">' . $words->get('addcomments')
+          . '</a></p>' . "\n";
+    }
+
 foreach($comments as $comment) {
 if(isset($comment['from'])) {
     echo '<div class="frame">';
@@ -102,17 +108,23 @@ if(isset($comment['from'])) {
            <img class="float_left framed"  src="members/avatar/<?=$cc->UsernameToMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
-            <p class="floatbox"><strong class="neutral"><?php echo $words->get('CommentNoComment'); ?></strong><br />
+            <p class="floatbox">
+              <strong class="neutral"><?php echo $words->get('CommentNoComment');?></strong><br/>
               <span class="small grey">
-                <?=$words->get('CommentFrom','<a href="members/'.$cc->UsernameToMember.'">'.$cc->UsernameToMember.'</a>')?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameFromMember ?>"><?= $cc->UsernameFromMember ?></a>
+                <?=$words->get('CommentFrom','<a href="members/'.$cc->UsernameToMember.'">'.$cc->UsernameToMember.'</a>')?> <?= $words->get('CommentTo') ?> <a href="members/<?= $c->UsernameFromMember ?>"><?= $c->UsernameFromMember ?></a>
               </span>
-            </p>
         </div>
       </div>
+   </div>
+    <div class="c25r" >
+      <div class="subcr" >
+      <p class="float_right"><a href="members/<?php echo $username; ?>/comments/add" 
+         class="button"><?php echo $words->get('addcomments'); ?></a></p>
+      </div>
     </div>
-    <?php
-    }
-    ?>
+<?php
+   }
+   ?>
   </div> <!-- subcolumns -->
   <?php 
     if (isset($comment['to'])) {

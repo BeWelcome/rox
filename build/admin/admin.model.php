@@ -1186,4 +1186,49 @@ class AdminModel extends RoxModelBase
         };
         return true;
     }
+
+    public function profileEditVarsOk(&$vars) {
+        $errors = array();
+        if (empty($vars['profile-username'])) {
+            $errors[] = 'AdminProfileUsernameEmpty';
+        } else {
+            $member = $this->createEntity('Member')->findByUsername($vars['profile-username']);
+            if (!$member) {
+                $errors[] = 'AdminProfileUnknownMember';
+            } else {
+                $vars['IdMember'] = $member->id;
+            }
+        }
+        $emailAddress = $vars['profile-emailaddress'];
+        if (empty($emailAddress)) {
+            $errors[] = 'AdminProfileEmailAddressEmpty';
+        } else {
+            // Todo: Check for validity of email address
+            // for now just check if there is an @ in there and if so make sure 
+            // there's something left of it and the right has at least one.
+            $parts = explode('@', $emailAddress);
+            if (count($parts) <> 2) {
+                $errors[] = 'AdminProfileEditEmailAddressInvalid';
+            } else {
+                if (strpos($parts[1], '.') === false) {
+                    $errors[] = 'AdminProfileEditEmailAddressInvalid';
+                }
+            }
+        }
+        return $errors;
+    }
+
+    public function profileEdit($username, $email) {
+        $volunteer = $this->getLoggedInMember();
+        $member=$this->createEntity('Member')->findByUsername($username);
+        $oldEmail = $member->getEmailWithoutPermissionChecks();
+        $result = $member->setEmailWithoutPermissionChecks($email);
+        if (!$result) {
+            $this->logWrite("Changing email address {$member->Username} - {$member->id} failed. Volunteer: {$volunteer->Username} - {$volunteer->id}", 'bug');
+            return false;
+        } else {
+            $this->logWrite("Email address for {$member->Username} - {$member->id} successfully changed to {$email}. Old email address: {$oldEmail}. Volunteer: {$volunteer->Username} - {$volunteer->id}", 'info');
+            return $oldEmail;
+        }
+    }
 }

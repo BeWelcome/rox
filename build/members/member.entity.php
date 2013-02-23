@@ -441,6 +441,14 @@ WHERE IdMember = ".$this->id
         return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($this->Email)));
     }
 
+    /**
+     * Set member's email address (no permission checks)
+     * @returns the current entry in members.email pointing to the row in crypted.
+     */
+    public function setEmailWithoutPermissionChecks($newEmail) {
+        return MOD_crypt::NewReplaceInCrypted(strip_tags($newEmail), "members.Email", $this->id, $this->Email, $this->id);
+    }
+
     public function get_messengers() {
           $messengers = array(
             array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png", "href" => ""),

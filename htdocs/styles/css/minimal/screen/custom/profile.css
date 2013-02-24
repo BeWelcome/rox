@@ -262,13 +262,14 @@ div.comment {
 }
 
 div.frame {
-    background:none repeat scroll 0 0 #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px 3px 3px 3px;
     padding: 5px;
 }
 
 .profilecomment.counter {
-    background:none repeat scroll 0 0 #ddd;
-    border:1px solid #CCCCCC;
+    background:none repeat scroll 0 0 #eee;
+    border:1px solid #ccc;
     border-radius:3px 3px 3px 3px;
     margin-left:10%;
     padding:10px;

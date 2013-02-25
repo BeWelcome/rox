@@ -195,7 +195,16 @@ if(isset($comment['from'])) {
         </div> <!-- c25r -->
       </div> <!-- subcolumns -->
   </div> <!-- profilecomment counter -->
-<?php } ?>
+<?php } else {
+if ($this->myself) {
+    $cc = $comment['from'] ?>
+    <div class="subcolumns profilecomment">
+    <p class="float_right"><a class="button" href="members/<?= $cc->UsernameFromMember?>/comments/add"
+        title="<? echo $words->getBuffered('CommentAddComment'); ?>"><?= $words->get('CommentAddComment'); ?></a></p>
+        </div>
+<?php 
+    }
+} ?>
 </div>
 <hr>
 <?php

@@ -116,9 +116,6 @@
     $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminController', 'treasurerStopDonationCampaign');
     $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
 
-    // admin profile routes
-    $this->addRoute('admin_profile_edit', 'admin/profile/edit', 'AdminController', 'profileEdit');
-
     // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
 

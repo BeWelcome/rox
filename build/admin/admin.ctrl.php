@@ -638,41 +638,4 @@ class AdminController extends RoxControllerBase
         $this->redirectAbsolute($this->router->url('admin_massmail'));
     }
 
-    /**
-     * Profile edit callback function
-     */
-    public function profileEditCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
-    {
-        if (empty($args->post))
-        {
-            return false;
-        }
-        $errors = $this->_model->profileEditVarsOk($args->post);
-        if (!empty($errors)) {
-            $mem_redirect->vars = $args->post;
-            $mem_redirect->errors = $errors;
-            return false;
-        }
-        $result = $this->_model->profileEdit($args->post['profile-username'], $args->post['profile-emailaddress']);
-        if ($result) {
-            $_SESSION['AdminProfileEditStatus'] = array( 'Edit', $args->post['profile-username'], $args->post['profile-emailaddress'], $result);
-        } else {
-            $errors = array('AdminProfileUpdateEmailAddressFailed');
-            $mem_redirect->vars = $args->post;
-            $mem_redirect->errors = $errors;
-            return false;
-        }
-        return $this->router->url('admin_profile_edit', array(), false);
-    }
-
-    /**
-     * Allow editing of a members profile for a volunteer with the correct rights.
-     * For the start only editing the members email address is possible.
-     */
-    public function profileEdit() {
-        list($member, $rights) = $this->checkRights('Profile');
-        $page = new AdminProfileEditPage($this->_model);
-        return $page;
-    }
-
 }

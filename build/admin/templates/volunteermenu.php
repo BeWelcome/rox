@@ -62,10 +62,10 @@ Boston, MA  02111-1307, USA.
                 'accept new member accounts'
             ),
             array(
-                'Profile',
-                'admin/profile/edit',
-                'Change email',
-                'Allows to change a faulty email address'
+                'Accepter',
+                'bw/admin/adminmandatory.php',
+                'AdminMandatory('.$numberPersonsToBeChecked.')',
+                'check member accounts'
             ),
             array(
                 'Grep',

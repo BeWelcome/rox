@@ -71,7 +71,7 @@ if(isset($comment['from'])) {
               <?php echo $purifier->purify(nl2br($c->TextFree)); ?>
             </p>
             <p>
-              <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
+              <? if ($this->myself && $this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
                 <a class="button small" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
               <? endif; ?>
             </p>

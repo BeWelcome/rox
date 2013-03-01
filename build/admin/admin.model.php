@@ -910,7 +910,7 @@ class AdminModel extends RoxModelBase
             case 'enqueueMembers':
                 $usernames = array();
                 if ($vars['members-type'] == 'usernames') {
-                    $usernames = explode(";", $vars['Usernames']);
+                    $usernames = explode(";", $vars['usernames']);
                 }
                 if (empty($vars['max-messages'])) {
                     $maxmessages = 0;

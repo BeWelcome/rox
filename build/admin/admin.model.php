@@ -836,7 +836,7 @@ class AdminModel extends RoxModelBase
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
             WHERE
                 (m.IdCity = g.geonameId)
-                AND g.fk_countrycode = 'AO'
+                AND g.fk_countrycode = '" . $this->dao->escape($countrycode) . "'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                 AND (m.Status IN ('Active', 'ActiveHidden'))";
         if ($adminunit) {

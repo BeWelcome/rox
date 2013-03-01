@@ -735,7 +735,7 @@ class AdminModel extends RoxModelBase
         switch($action) {
             case 'enqueueMembers':
                 if ($vars['members-type'] == 'usernames') {
-                    $usernames = $vars['Usernames'];
+                    $usernames = $vars['usernames'];
                     if (!empty($usernames)) {
                         // todo: shall we check if all members exist?
                         // $members = explode(";", $usernames);

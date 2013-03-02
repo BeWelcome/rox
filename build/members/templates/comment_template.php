@@ -118,7 +118,7 @@ if(isset($comment['from'])) {
    </div>
     <div class="c50r" >
       <div class="subcr" >
-      <?php if ($this->myself) { ?>
+      <?php if (!$this->myself && $cc->IdToMember == $this->loggedInMember->id) { ?>
       <p class="float_right"><a href="members/<?php echo $username; ?>/comments/add" 
          class="button"><?php echo $words->get('addcomments'); ?></a></p>
       <?php } ?>

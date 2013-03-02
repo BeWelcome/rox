@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
-if (!$this->myself && !$comment_to_self && (count($comment_byloggedinmember) == 0)) {
+if (!$this->myself && !$comment_to_self && (count($comment_byloggedinmember) == 0) && $this->loggedInMember) {
       // Show "Add comment" button
       echo '  <p class="floatbox"><a href="members/' . $username
           . '/comments/add" class="button">' . $words->get('addcomments')

@@ -678,6 +678,8 @@ class AdminModel extends RoxModelBase
             $body = 'BroadCast_Body_' . $name;
             $subjectCode = $words->get($subject);
             $bodyCode = $words->get($body);
+            echo "[" . $subject . ", " . $subjectCode;
+            echo "] [" . $body . ", " . $bodyCode . "]";
             if (!($subject == $subjectCode) || !($body == $bodyCode)) {
                 $errors[] = 'AdminMassMailCodeExists';
             }

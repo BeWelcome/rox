@@ -676,10 +676,8 @@ class AdminModel extends RoxModelBase
             $words = new MOD_words();
             $subject = 'BroadCast_Title_' . $name;
             $body = 'BroadCast_Body_' . $name;
-            $subjectCode = $words->get($subject);
-            $bodyCode = $words->get($body);
-            echo "[" . $subject . ", " . $subjectCode;
-            echo "] [" . $body . ", " . $bodyCode . "]";
+            $subjectCode = $words->getAsIs($subject);
+            $bodyCode = $words->getAsIs($body);
             if (!($subject == $subjectCode) || !($body == $bodyCode)) {
                 $errors[] = 'AdminMassMailCodeExists';
             }
@@ -894,6 +892,9 @@ class AdminModel extends RoxModelBase
             LEFT JOIN
                 memberspreferences AS mp 
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
+            WHERE
+                m.Status IN ('Active', 'ActiveHidden')
+                AND DATEDIFF(NOW(), m.LastLogin) < 183
             ORDER BY RAND()
             LIMIT 0, " . $voters;
         $r = $this->dao->query($query);

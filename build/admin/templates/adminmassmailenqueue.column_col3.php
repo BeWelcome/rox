@@ -55,14 +55,10 @@
     <tr><td colspan="3"><?php echo $words->flushBuffer(); ?></td></tr>
     <tr>
     <td><input type="radio" id="allmembers" name="members-type" value="allmembers" 
-    <?php if (isset($vars['members-type'])) {
-        if (($vars['members-type'] == 'allmembers')) {
-        echo 'checked="checked"';
-    } } else {
+    <?php if (isset($vars['members-type']) && ($vars['members-type'] == 'allmembers')) {
         echo 'checked="checked"';
     }
-    ?>
-    /></td>
+    ?>/></td>
     <td colspan="2"><label for="allmembers"><?php echo $words->get('AdminMassMailEnqueueAllMembers'); ?></label></td>
     </tr>
     <tr>
@@ -70,9 +66,15 @@
     </tr>
     <tr>
     <td><input type="radio" id="selectedmembers" name="members-type" value="usernames"     
-    <?php if (isset($vars['members-type']) && ($vars['members-type'] == 'usernames')) {
-        echo 'checked="checked"';
-    } ?>/></td>
+    <?php 
+        if (isset($vars['members-type'])) {
+            if (($vars['members-type'] == 'usernames')) {
+                echo 'checked="checked"';
+            } 
+        }  else {
+            echo 'checked="checked"';
+        }
+    ?>/></td>
     <td colspan="2"><label for="selectedmembers"><?php echo $words->get('AdminMassMailEnqueueSelectedMembers'); ?></label></td>
     </tr>
     <tr>

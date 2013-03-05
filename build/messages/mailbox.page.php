@@ -11,7 +11,7 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $widget->model = $this->getModel();
         $widget->model->sort_element = $this->sort_element;
         $widget->model->sort_dir = $this->sort_dir;
-        $widget->items_per_page = 7;
+        $widget->items_per_page = 20;
         $widget->active_page = $this->active_page;
         $widget->visible_range = 2;
         return $widget;

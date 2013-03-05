@@ -1241,9 +1241,11 @@ form .date {
   padding: 2em 3em;
 }
 #messagecontent .text {
+/*
   font-family: Georgia;
-  font-size: 1.3em;
-  font-style: italic;
+  font-style: normal;
+*/
+  font-size: 1.1em;
 }
 #messageside {
   width: 22em;

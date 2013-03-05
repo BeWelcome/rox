@@ -210,13 +210,13 @@ if (count($relations) > 0) { ?>
         // var_dump($c);
     ?>
     <div class="floatbox">
-        <a href="members/<?=$c->Username?>">
-           <img class="float_left framed"  src="members/avatar/<?=$c->Username?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+        <a href="members/<?=$c->UsernameFromMember?>">
+           <img class="float_left framed"  src="members/avatar/<?=$c->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
             <p>
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
-              <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->Username.'">'.$c->Username.'</a>')?> - <?=$c->created?></span>
+              <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?> - <?=$c->created?></span>
             </p>
             <p>
               <?php

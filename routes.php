@@ -7,7 +7,7 @@
      *     $this->addRoute(route_name, route_url, controller, method, callback);
      *         |               |            |         |           |
      * RequestRouter method    |            |         |           |
-     *       unique name of yor route       |         |           |
+     *       unique name of your route       |         |           |
      *                      the url you want to map   |           |
      *                              the controller to map to      |
      *                                   the method in the controller to map to
@@ -68,6 +68,8 @@
 
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
+    $this->addRoute('members_reset_password', 'resetpassword' , 'MembersController', 'resetPassword');
+    $this->addRoute('members_reset_password_finish', 'resetpassword/finish' , 'MembersController', 'resetPasswordFinish');
 
     // admin temporary vol page route
     $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminController', 'tempVolStart');
@@ -92,9 +94,29 @@
     // admin activity routes
     $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');
 
-
+    // admin massmailing
+    $this->addRoute('admin_massmail', 'admin/massmail', 'AdminController', 'massmail');
+    $this->addRoute('admin_massmail_create', 'admin/massmail/create', 'AdminController', 'massmailCreate');
+    $this->addRoute('admin_massmail_details', 'admin/massmail/details/:id:', 'AdminController', 'massmailDetails');
+    $this->addRoute('admin_massmail_details_mailing', 'admin/massmail/details/:id:/:type:', 'AdminController', 'massmailDetailsMailing');
+    $this->addRoute('admin_massmail_details_mailing_pages', 'admin/massmail/details/:id:/:type:/page/:page:', 'AdminController', 'massmailDetailsMailing');
+    $this->addRoute('admin_massmail_edit', 'admin/massmail/edit/:id:', 'AdminController', 'massmailEdit');
+    $this->addRoute('admin_massmail_enqueue', 'admin/massmail/enqueue/:id:', 'AdminController', 'massmailEnqueue');
+    $this->addRoute('admin_massmail_unqueue', 'admin/massmail/unqueue/:id:', 'AdminController', 'massmailUnqueue');
+    $this->addRoute('admin_massmail_getadminunits', 'admin/massmail/getadminunits/:countrycode:', 'AdminController', 'getAdminUnits');
+    $this->addRoute('admin_massmail_getplaces', 'admin/massmail/getplaces/:countrycode:/:adminunit:', 'AdminController', 'getPlaces');
+    $this->addRoute('admin_massmail_trigger', 'admin/massmail/trigger/:id:', 'AdminController', 'massmailTrigger');
+    $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminController', 'massmailUntrigger');
     
-// Simple newsletter page
+    // admin treasurer routes
+    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
+    $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminController', 'treasurerEditCreateDonation');
+    $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminController', 'treasurerEditCreateDonation');
+    $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminController', 'treasurerStartDonationCampaign');
+    $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminController', 'treasurerStopDonationCampaign');
+    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
+
+    // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
 
     $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');

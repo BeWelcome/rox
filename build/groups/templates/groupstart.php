@@ -18,7 +18,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 
                 <h3><?php echo $words->getFormatted('ForumRecentPostsLong');?></h3>
                 <div class="row floatbox">
-                    <?php echo $Forums->showExternalGroupThreads($group_id); ?>
+                    <?php echo $Forums->showExternalGroupThreads($group_id, false); ?>
                 </div> <!-- floatbox -->
             </div> <!-- subcl -->
         </div> <!-- c62l -->

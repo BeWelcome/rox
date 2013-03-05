@@ -1,0 +1,47 @@
+<?php
+/*
+
+Copyright (c) 2007 BeVolunteer
+
+This file is part of BW Rox.
+
+BW Rox is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+BW Rox is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, see <http://www.gnu.org/licenses/> or 
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+Boston, MA  02111-1307, USA.
+
+*/
+/** 
+ * @author crumbking
+ * 
+ *  
+ * @package Apps
+ * @subpackage Admin
+ */
+$words = new MOD_words();
+?>
+<h3><?php echo $words->get('AdminTreasurerActions');?></h3>
+<ul class="linklist">
+    <li><a href="admin/treasurer/add" title="$words->get('AdminTreasurerAddDonation')"><?php echo $words->get('AdminTreasurerAddDonation') ?></a></li>
+    <?php
+    if ($this->campaign) { ?>
+    <li><a href="admin/treasurer/campaign/stop" title="$words->get('AdminTreasurerStopCampaign')"><?php echo $words->get('AdminTreasurerStopCampaign') ?></a></li>
+    <?php } else { ?>
+    <li><a href="admin/treasurer/campaign/start" title="$words->get('AdminTreasurerStartCampaign')"><?php echo $words->get('AdminTreasurerStartCampaign') ?></a></li>
+    <?php } ?>
+<?php
+/*    
+    <li><a href="admin/treasurer/reset" title="$words->get('AdminTreasurerResetDonations')"><?php echo $words->get('AdminTreasurerResetDonations') ?></a></li>
+*/
+?>
+</ul>

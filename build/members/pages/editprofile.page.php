@@ -20,8 +20,10 @@ class EditProfilePage extends ProfilePage
         $profile_language_name = $lang->Name;
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
-        $ReadCrypted = 'AdminReadCrypted';
-
+        $ReadCrypted = 'MemberReadCrypted';
+        if ($this->adminedit) {
+            $ReadCrypted = 'AdminReadCrypted';
+        }
         $vars = array();
 
         // Prepare $vars
@@ -50,10 +52,10 @@ class EditProfilePage extends ProfilePage
         $vars['IsHidden_HomePhoneNumber'] = MOD_crypt::IsCrypted($member->HomePhoneNumber);
         $vars['IsHidden_CellPhoneNumber'] = MOD_crypt::IsCrypted($member->CellPhoneNumber);
         $vars['IsHidden_WorkPhoneNumber'] = MOD_crypt::IsCrypted($member->WorkPhoneNumber);
-        $vars['HomePhoneNumber'] = ($member->HomePhoneNumber > 0) ? MOD_crypt::MemberReadCrypted($member->HomePhoneNumber) : '';
-        $vars['CellPhoneNumber'] = ($member->CellPhoneNumber > 0) ? MOD_crypt::MemberReadCrypted($member->CellPhoneNumber) : '';
-        $vars['WorkPhoneNumber'] = ($member->WorkPhoneNumber > 0) ? MOD_crypt::MemberReadCrypted($member->WorkPhoneNumber) : '';
-        $vars['Email'] = ($member->Email > 0) ? MOD_crypt::MemberReadCrypted($member->Email) : '';
+        $vars['HomePhoneNumber'] = ($member->HomePhoneNumber > 0) ? MOD_crypt::$ReadCrypted($member->HomePhoneNumber) : '';
+        $vars['CellPhoneNumber'] = ($member->CellPhoneNumber > 0) ? MOD_crypt::$ReadCrypted($member->CellPhoneNumber) : '';
+        $vars['WorkPhoneNumber'] = ($member->WorkPhoneNumber > 0) ? MOD_crypt::$ReadCrypted($member->WorkPhoneNumber) : '';
+        $vars['Email'] = ($member->Email > 0) ? MOD_crypt::$ReadCrypted($member->Email) : '';
         $vars['WebSite'] = $member->WebSite;
 
         $vars['messengers'] = $member->messengers();

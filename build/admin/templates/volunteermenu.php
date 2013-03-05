@@ -123,9 +123,15 @@ Boston, MA  02111-1307, USA.
             ),
             array(
                 'MassMail',
-                'bw/admin/adminmassmails.php',
-                'mass mails',
+                'admin/massmail',
+                'Mass mailings',
                 'broadcast messages'
+            ),
+            array(
+                'Treasurer',
+                'admin/treasurer',
+                'Treasurer',
+                'Manage donations, start/stop donation campaign'
             ),
             array(
                 'SqlForVolunteers',
@@ -137,13 +143,7 @@ Boston, MA  02111-1307, USA.
     ;
     foreach($array_of_items as $item) {
         if ($R->hasRight($item[0])) {
-            if ($link == $item[1]) {
-                echo '<li><strong>'.$item[2].'</strong></li>
-                ';
-            } else {
-                echo '<li><a href="'.$item[1].'" title="'.$item[3].'">'.$item[2].'</a></li>
-                ';
-            }
+            echo '<li><a href="'.$item[1].'" title="'.$item[3].'">'.$item[2].'</a></li>';
         }
     }
 ?>

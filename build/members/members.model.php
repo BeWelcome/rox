@@ -50,6 +50,36 @@ class MembersModel extends RoxModelBase
         $this->bootstrap();
     }
     
+
+    public function getMemberFromEmail($email)
+    {
+        /**
+         * this is so far the worst, most useless piece of hacky crap
+         * I've had to code for BW so far. The cause is the 'encryption'
+         * that means we cannot query for a member by email - even if
+         * emails are stored unencrypted in the database
+         *
+         */
+        global $_SYSHCVOL;
+        $email = $this->dao->escape($email);
+        $db_version = "<admincrypted>" . strtr($email, array('@' => '%40')) . "</admincrypted>";
+        $result = $this->singleLookup(<<<SQL
+SELECT
+    IdMember
+FROM
+   {$_SYSHCVOL['Crypted']}cryptedfields 
+WHERE
+    AdminCryptedValue = '{$db_version}'
+    AND
+    TableColumn = 'members.Email'
+SQL
+);
+        if (!$result) {
+            return false;
+        }
+        return $this->createEntity('Member', $result->IdMember);
+    }
+
     public function getMemberWithUsername($username)
     {
         return $this->createEntity('Member')->findByUsername($username);

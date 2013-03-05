@@ -798,6 +798,21 @@ WHERE IdMember = ".$this->id
         return $this->createEntity('GroupMembership')->getMemberGroups($this, 'In');
     }
 
+    /**
+     * returns an array of notes the member wrote
+     *
+     * @access public
+     * @return array
+     */
+    public function getNotes()
+    {
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        return $this->createEntity('ProfileNote')->getNotes($this);
+    }
+
 
     /**
      * automatically called by __get('group_memberships'),
@@ -1004,7 +1019,7 @@ LEFT JOIN
     memberspreferences.IdMember = $this->id
 WHERE
     preferences.Status != 'Inactive'
-ORDER BY preferences.position ASC
+ORDER BY preferences.position asc
           ";
         $rows = array();
         if (!$sql_result = $this->dao->query($sql)) {
@@ -1067,20 +1082,24 @@ ORDER BY preferences.position ASC
 
       public function get_comments() {
           $sql = "
-SELECT *,
+SELECT comments.*,
     comments.Quality AS comQuality,
     comments.id AS id,
     comments.created,
     comments.updated,
     UNIX_TIMESTAMP(comments.created) unix_created,
-    UNIX_TIMESTAMP(comments.updated) unix_updated
+    UNIX_TIMESTAMP(comments.updated) unix_updated,
+    members.username AS UsernameFromMember,
+    members2.username AS UsernameToMember
 FROM
     comments,
-    members
+    members,
+    members as members2
 WHERE
-    comments.IdToMember   = $this->id  AND
+    comments.IdToMember   = " . $this->id . " AND
     comments.IdFromMember = members.Id AND
-    members.Status IN ('Active', 'ChoiceInactive')
+    comments.IdToMember = members2.Id
+    AND members.Status IN ('Active', 'ChoiceInactive')
 ORDER BY
     comments.updated DESC
           ";
@@ -1095,7 +1114,7 @@ ORDER BY
       public function get_comments_commenter($id) {
         $id = (int)$id;
           $sql = "
-SELECT *,
+SELECT comments.*,
     comments.Quality AS comQuality,
     comments.id AS id,
     comments.created,
@@ -1144,7 +1163,8 @@ WHERE
   comments.IdFromMember   = " . $this->id . " AND
   comments.IdFromMember = members.Id AND
   comments.IdToMember = members2.Id
-        ";
+ORDER BY
+    comments.updated DESC        ";
         return $this->bulkLookup($sql);
     }
 
@@ -1787,7 +1807,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $languageCode = $this->getLanguagePreference();
 
         // TODO: Error handling
-        MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, false, $languageCode);
+        $result = MOD_mail::sendEmail($subject, $from, $to, false, $body, $bodyHTML, false, $languageCode);
     }
 
     /**
@@ -1923,4 +1943,24 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         return true;
     }
 
+    /**
+     * returns a bool based on whether the
+     * member is able to log in or not, based
+     * on status
+     *
+     * @access public
+     * @return bool
+     */
+    public function canLogIn()
+    {
+        if (!$this->isLoaded())
+        {
+            return false;
+        }
+        if (in_array($this->Status, array('Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned')))
+        {
+            return false;
+        }
+        return true;
+    }
 }

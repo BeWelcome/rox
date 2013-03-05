@@ -116,9 +116,6 @@ SQL
         if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
             $text .= "- member requested an answer (".$EmailSender.")\r\n";
         }
-        if (isset($vars["urgent"]) && $vars["urgent"]=="on") {
-            $text .= "- member has ticked the urgent checkbox\r\n";
-        }
 
         $text .= "\r\n";
         $text .= 'BW Rox Version: ' . $this->getVersionInfo() . "\r\n";

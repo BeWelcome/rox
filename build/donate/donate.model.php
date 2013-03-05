@@ -1,7 +1,7 @@
 <?php
 
 
-class DonateModel extends PAppModel
+class DonateModel extends RoxModelBase
 {
 
     /**
@@ -15,10 +15,10 @@ class DonateModel extends PAppModel
      * @return object Database result row with string properties
      */
     public function getStatForDonations() {
-        // TODO: Move to config
-        $requiredPerYear = 1260;
-        $requiredPerMonth = 105;
-
+        // check if donate.ini exists and get values
+        list($requiredPerYear, $campaignStart) = $this->getCampaignValues();
+        $requiredPerMonth = floor($requiredPerYear / 12);
+        
         // Calculate donations received for current year
         $result = $this->dao->query("
             SELECT
@@ -29,7 +29,7 @@ class DonateModel extends PAppModel
             FROM
                 donations
             WHERE
-                created > '2012-10-11'
+                created > '" . $campaignStart . "'
             ");
         $rowYear = $result->fetch(PDB::FETCH_OBJ);
 
@@ -78,14 +78,20 @@ class DonateModel extends PAppModel
     /**
      * Get donations (max. 25, all if user has Treasurer rights)
      *
+     * @param recent Get only the results since the start of the current campaign
      * @return array List of donations as objects with string properties
      *
      * TODO: Add parameter for limit and do permission check elsewhere
      */
-    public function getDonations() {
+    public function getDonations($recent = false) {
         $rights = MOD_right::get();
+        $where = "";
+        list($dummy, $campaignStart) = $this->getCampaignValues();
         if ($rights->hasRight('Treasurer')) {
             $limitClause = "";
+            if ($recent) {
+                $where = "WHERE created >= '" . $campaignStart . "'";
+            }
         } else {
             $limitClause = "LIMIT 25";
         }
@@ -94,6 +100,7 @@ class DonateModel extends PAppModel
                 *
             FROM
                 donations
+            " . $where . "
             ORDER BY
                 created DESC
             $limitClause
@@ -291,7 +298,34 @@ VALUES
             return $error;
         } // enf if fp
     }
+
+    public function getCampaignValues() {
+        $query = "
+            SELECT
+                neededperyear,campaignstartdate
+            FROM
+                params";
+        $r = $this->singleLookup($query);
+        if (!$r) {
+            // failed return defaults (might miss a DB update)
+            return array(1260, '2012-10-11');
+        } else {
+            return array($r->neededperyear, $r->campaignstartdate);
+        }
+    }
+
+    public function setCampaignValues($neededPerYear,$campaignStartDate) {
+        $query = "
+            UPDATE
+                params
+            SET
+                neededperyear = " . $neededPerYear . ",
+                campaignstartdate = '" . $campaignStartDate . "'";
+        $r = $this->dao->query($query);
+        if (!$r) {
+            return false;
+        }
+        return true;
+    }
 }
-
-
 ?>

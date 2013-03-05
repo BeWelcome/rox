@@ -39,8 +39,10 @@ $member = $model->getMemberWithUsername($receiver_username);
                   $max = count($languages);
           foreach($languages as $language) {
                     $space = ($ii != $max -1) ? ', ' : '';
-                        ?><strong><span title="<?=$words->get('LanguageLevel_'.$language->Level) ?>"><?=$language->Name ?><?=$space?></span></strong><?php
-                    $ii++;
+                        ?><strong><span title="<?=$words->getBuffered('LanguageLevel_'.$language->Level) ?>"><?php
+                        // Don't flush buffer as the languages levels are better translated on the profile page
+                        echo $words->get($language->WordCode);?><?=$space?></span></strong><?php
+                        $ii++;
                     }
         } ?>
              </p>
@@ -103,7 +105,7 @@ $member = $model->getMemberWithUsername($receiver_username);
     </div> <!-- messageconent -->
     <div id="messagefooter">
         <p>
-            <input type="submit" value="send"/>
+            <input type="submit" value="<?php echo $words->getBuffered('ComposeSend');?>"/><?php echo $words->flushBuffer();?>
         </p>
     </div> <!-- messagefooter -->
     </form>

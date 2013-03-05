@@ -38,9 +38,10 @@ class AdminTreasurerEditCreateDonationPage extends AdminBasePage
 
         $this->id = $id;
         if ($id == 0) {
-            $this->username = "";
+            $this->username = "-empty-";
             $this->amount = "";
             $this->date = "";
+            $this->comment = "Bank transfer";
             $this->countrycode = "";
         } else {
             $donation = $this->model->getDonation($id);
@@ -48,6 +49,7 @@ class AdminTreasurerEditCreateDonationPage extends AdminBasePage
             $this->username = $m->Username;
             $this->amount = $donation->Amount;
             $this->date = date('d.m.Y', strtotime($donation->created));
+            $this->comment = $donation->SystemComment;
             $this->countrycode = $this->model->getCountryCodeForGeonameId($donation->IdCountry);
         }
     }

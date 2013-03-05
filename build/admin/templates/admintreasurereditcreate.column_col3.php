@@ -39,6 +39,7 @@ if (empty($vars)) {
     $vars['donate-username'] = $this->username;
     $vars['donate-amount'] = $this->amount;
     $vars['donate-date'] = $this->date;
+    $vars['donate-comment'] = $this->comment;
     $vars['donate-country'] = $this->countrycode;
 }
 
@@ -83,7 +84,12 @@ echo isset($vars['donate-date']) ? 'value="'.htmlentities($vars['donate-date'], 
 </div>
 </div>
 <div class="subcolumns">
-    <label for="donate-country"><?php echo $words->get('AdminTreasurerSelectCountry'); ?></label>
+<label for="donate-comment"><?php echo $words->get('AdminTreasurerComment'); ?></label><br />
+<input type="text" id="donate-comment" name="donate-comment" style="width:45em" maxlength="100" value="<?php echo $vars['donate-comment'];?>" />
+<br /> 
+</div>
+<div class="subcolumns">
+<label for="donate-country"><?php echo $words->get('AdminTreasurerSelectCountry'); ?></label>
     <select id="donate-country" name="donate-country" style="width:55em;">
     <option value="0"><?php echo $words->getBuffered('AdminTreasurerSelectACountry'); ?></option>
     <?php

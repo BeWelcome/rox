@@ -986,11 +986,15 @@ class AdminModel extends RoxModelBase
         if (empty($vars['donate-username'])) {
             $errors[] = 'AdminTreasurerDonorEmpty';
         } else {
-            $donor = $this->createEntity('Member')->findByUsername($vars['donate-username']);
-            if (!$donor) {
-                $errors[] = 'AdminTreasurerUnknownDonor';
+            if ($vars['donate-username'] == "-empty-") {
+                $vars['IdMember'] = 0;
             } else {
-                $vars['IdMember'] = $donor->id;
+                $donor = $this->createEntity('Member')->findByUsername($vars['donate-username']);
+                if (!$donor) {
+                    $errors[] = 'AdminTreasurerUnknownDonor';
+                } else {
+                    $vars['IdMember'] = $donor->id;
+                }
             }
         }
         if (!is_numeric($vars['donate-amount'])) {
@@ -1047,7 +1051,7 @@ class AdminModel extends RoxModelBase
         return false;
     }
     
-    public function createDonation($memberid, $donatedon, $amount, $countryid) {
+    public function createDonation($memberid, $donatedon, $amount, $comment, $countryid) {
         $query = "
             INSERT INTO
                 donations
@@ -1062,7 +1066,7 @@ class AdminModel extends RoxModelBase
                 namegiven = '',
                 referencepaypal = '',
                 membercomment = '',
-                SystemComment = 'Bank transfer'";
+                SystemComment = '" . $this->dao->escape($comment) . "'";
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
@@ -1073,7 +1077,7 @@ class AdminModel extends RoxModelBase
         return true;
     }
 
-    public function updateDonation($id, $memberid, $donatedon, $amount, $countryid) {
+    public function updateDonation($id, $memberid, $donatedon, $amount, $comment, $countryid) {
         $query = "
             UPDATE
                 donations
@@ -1088,7 +1092,7 @@ class AdminModel extends RoxModelBase
                 namegiven = '',
                 referencepaypal = '',
                 membercomment = '',
-                SystemComment = 'Bank transfer'
+                SystemComment = '" . $this->dao->escape($comment) . "'
             WHERE
                 id = " . $id;
         $sql = $this->dao->query($query);

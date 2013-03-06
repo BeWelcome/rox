@@ -1844,6 +1844,9 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
         $bodyHTML = $purifier->purify($body);
 
+        //clear <br> tags stored in database
+        $body = strip_tags($body); 
+
         // Set language for email translations
         $languageCode = $this->getLanguagePreference();
 

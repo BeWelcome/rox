@@ -105,7 +105,10 @@
     margin-bottom: 0.8em;
 }
 
-
+#profile_linklist .mynotes {
+    padding-left: 2em;
+    background: transparent url(../../../../../images/icons/vcard.png) 0 3px no-repeat;
+}
 
 #profile .profile_translations {
     padding: 0 0 1em 0;

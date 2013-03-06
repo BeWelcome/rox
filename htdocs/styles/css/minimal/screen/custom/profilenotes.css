@@ -1,0 +1,16 @@
+/* profile note boxes with pictures */
+#main li.notepicbox {
+    width: 310px;
+    padding: 5px;
+    /* if we want vcard-like member-display then we have to uncomment the following lines*/
+    border: 1px solid #ccc;
+}
+
+#main li.notepicbox a {
+    font-weight: bold;
+    font-size: 1em;
+}
+
+#main li.notepicbox .category {
+	float: right;
+}

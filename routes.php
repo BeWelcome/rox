@@ -71,6 +71,11 @@
     $this->addRoute('members_reset_password', 'resetpassword' , 'MembersController', 'resetPassword');
     $this->addRoute('members_reset_password_finish', 'resetpassword/finish' , 'MembersController', 'resetPasswordFinish');
 
+    $this->addRoute('members_show_all_notes', 'mynotes', 'MembersController', 'myNotes');
+    $this->addRoute('members_add_note', 'members/:username:/note/add', 'MembersController', 'addNote');
+    $this->addRoute('members_update_note', 'members/:username:/note/update', 'MembersController', 'addNote');
+    $this->addRoute('members_add_note_callback', 'members/:username:/note/added', 'MembersController', 'addNoteCallback', true);
+
     // admin temporary vol page route
     $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminController', 'tempVolStart');
     // admin app routes

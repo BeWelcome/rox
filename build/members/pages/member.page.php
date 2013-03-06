@@ -68,10 +68,12 @@ class MemberPage extends PageWithActiveSkin
         // TODO: move number out of translation string
         $ViewForumPosts = $words->get("ViewForumPosts",$member->forums_posts_count());
 
+        $mynotes_count = $member->count_mynotes();
         if ($this->myself) {
             $tt=array(
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
+                array('mynotes', 'mynotes', $words->get('MyNotes', $mynotes_count), 'mynotes')
                 );
 
             if ($this instanceof EditMyProfilePage)
@@ -93,13 +95,10 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
         } else {
-            $mynotes_count = $member->count_mynotes(); 
             if ($mynotes_count>0) {
-                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id ;
                 $mynotelinkname=$words->get('ViewMyNotesForThisMember') ;
             }
             else {
-                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id.'&amp;action=add' ;
                 $mynotelinkname=$words->get('AddToMyNotes') ;
             }
             $tt= array(
@@ -115,7 +114,7 @@ class MemberPage extends PageWithActiveSkin
                 array('forum', "forums/member/$username", $ViewForumPosts),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('trips', "trip/show/$username", $ww->Trips),
-                array('notes',$mynotelink,$mynotelinkname)
+                array('notes', "members/$username/note/add", $mynotelinkname)
             );
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))

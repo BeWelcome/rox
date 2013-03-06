@@ -663,7 +663,10 @@ WHERE IdMember = ".$this->id
     public function count_mynotes()
     {
         if  (empty($_SESSION['IdMember'])) return (0) ;
-        $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$this->id);
+        $str = "select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"];
+        error_log($str);
+        $rr=$this->singleLookup($str);
+        // $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$this->id);
         return($rr->cnt) ;
     } // end of count_mynotes
 
@@ -798,6 +801,21 @@ WHERE IdMember = ".$this->id
         return $this->createEntity('GroupMembership')->getMemberGroups($this, 'In');
     }
 
+    /** get_note gets the note for this member written by id
+    *
+    * @param id id of the member that wrote the note
+    *
+    * @return ProfileNote entity or false
+    */
+    public function getNote($for)
+    {
+        $member = $this->CreateEntity('Member', $for);
+        $note = $this->createEntity('ProfileNote')->getNote($this, $member);
+        if (count($note) == 1) {
+            return $note[0];
+        }
+    }
+
     /**
      * returns an array of notes the member wrote
      *
@@ -813,6 +831,29 @@ WHERE IdMember = ".$this->id
         return $this->createEntity('ProfileNote')->getNotes($this);
     }
 
+    /**
+     * returns an array of notes the member wrote
+     *
+     * @access public
+     * @return array
+     */
+    public function getNoteCategories()
+    {
+        $categories = array();
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        $sql = 'SELECT DISTINCT Category FROM mycontacts WHERE IdMember= ' . $this->id;
+        $cats = $this->bulkLookup($sql);
+        if ($cats) {
+            foreach($cats as $cat)
+            {
+                $categories[] = $cat->Category;
+            }
+        }
+        return $categories;
+    }
 
     /**
      * automatically called by __get('group_memberships'),

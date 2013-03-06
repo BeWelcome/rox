@@ -1421,4 +1421,35 @@ VALUES
             ));
         }
     }
+
+    /**
+     * Creates or updates a note for a member
+     * 
+     * @param string username Username of the member for which the note is written
+     * @param string category Category under which the note is filed
+     * @param string comment Comment text. May be empty  
+     */
+    public function writeNoteForMember($username, $category, $comment) {
+        $loggedInMember = $this->getLoggedInMember();
+        $member =$this->getMemberWithUsername($username);
+        // Check if it is a new note
+        $sql = "SELECT * FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = "
+                . $member->id;
+        error_log($sql);
+        $res = $this->dao->query($sql);
+        if (!$res) {
+            return false;
+        }
+        if ($res->numRows()) {
+            $sql = "UPDATE mycontacts SET Updated = NOW(), Category = '" . $this->dao->escape($category) . "'"
+                 . ", Comment = '" . $this->dao->escape($comment) 
+                 . "' WHERE IdMember = " . $loggedInMember->id . " AND IdContact = " . $member->id;
+                    } else {
+            $sql = "INSERT INTO mycontacts SET IdMember = " . $loggedInMember->id . ", IdContact = "
+                 . $member->id . ", Created = NOW(), Category = '" . $this->dao->escape($category) . "'"
+                 . ", Comment = '" . $this->dao->escape($comment) . "'";
+        }
+        error_log($sql);
+        $this->dao->query($sql);
+    }
 }

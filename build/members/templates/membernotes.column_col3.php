@@ -1,7 +1,7 @@
 <div id="profile">
     <div id="profile_notes" class="floatbox box">
     <?php // display my groups, if there are any
-    echo "<h3>" . $words->get('MyNotes') . "</h3>";
+    echo "<h3>" . $words->get('ProfileMyNotes') . "</h3>";
     if (!empty($mynotes)) {
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
         echo $this->pager->render(); 

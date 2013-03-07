@@ -23,12 +23,8 @@ class MailboxWidget_Sent extends MailboxWidget
 {
     protected function getMessages()
     {
-        return $this->model->filteredMailbox(array(
-            'IdSender = '.$_SESSION['IdMember'],
-            'messages.Status != "Draft"'
-        ));
+        return $this->model->sentMailbox();
     }
-    
 
     protected function getTableColumns()
     {

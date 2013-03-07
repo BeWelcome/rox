@@ -25,13 +25,15 @@ require_once "footer.helper.php";
 ?>
 
 <div id="footer">
-  <p><?php echo $words->get('ToChangeLanguageClickFlag'); ?></p>
-  <div id="flags">
-    <p><?php echo $languageSelector; ?></p>
-
-    <?php translator_block() ?>
+  <?php translator_block() ?>
+  <div id="language-select">
+    <?php 
+      echo $words->get('FooterChooseLanguage') . ": " . _languageFooterSelectorDropDown()
+        . _languageFooterReverseSelectorDropDown()  
+        . "&nbsp;&nbsp;&nbsp;" . $words->get('FooterHelpUsTranslate'); 
+      echo $words->flushBuffer();
+    ?>
   </div>
-
   <p>
     <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> • 
     <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> • 

@@ -5,8 +5,6 @@ require_once "_languageselector.helper.php";
 
 
 $words = new MOD_words();
-$languageSelector = _languageSelector();
-
 
 /**
  * remove and use $versionInfo = $this->getVersionInfo(); instead

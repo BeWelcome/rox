@@ -516,6 +516,8 @@ dl.list {
   #footer a:hover { text-decoration:underline; }
   #footer a:focus { text-decoration:underline; }
 
+  #footer #language-select { font-size: 0.9em; }
+  
   #footer #flags {padding: 0 0 2.5em 0; line-height: 1em; }
   #footer #flags a {
     color: #333;

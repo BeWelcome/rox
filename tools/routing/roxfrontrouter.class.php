@@ -75,58 +75,86 @@ class RoxFrontRouter
 	if the url is xxx.bw (xxx defining the forced language like fr, de ...)
 		First depending of the value of xxx, if something match for it in the urlheader_languages table, this langauge is used
 		If not, try with a cookie LastLang is search for, if found, this language is used
-		if not, the web browser capability and first available langaue is seard for,  if found, this language is used
+		if not, the web browser http_accept_language header is parsed,  if found, highest quality language is used
 		if not, the default language (english is used)
 		
 		
 	*/
     protected function setLanguage()
     {
-        if ((!isset($_SESSION['IdMember'])) and  (!isset ($_SESSION['lang']))) {
-			$Model = new RoxFrontRouterModel;
-			$tt=explode(".",$_SERVER['HTTP_HOST']) ;
-			if (count($tt)>0) {
-				$urlheader=$tt[0] ;
-			}
-			else {
-				$urlheader="www" ;
-			}
-			if ($urlheader!='www') {
-				if ($trylang = $Model->getPossibleUrlLanguage($urlheader) ) {
-					$_SESSION['lang'] = $trylang->ShortCode;
-					$_SESSION['IdLanguage'] = $trylang->id;
-					return ;
-				}
-			}
-			if (!empty($_COOKIE['LastLang']) and $trylang = $Model->getLanguage($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
-				$langcode = $_COOKIE['LastLang'];
-				$_SESSION['lang'] = $trylang->ShortCode;
-				$_SESSION['IdLanguage'] = $trylang->id;
-				return ;
-			}
-       		if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) { // To avoid a notice error    
-       		    // Try to look in the default browser settings
-                $TLang = explode(",",$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-                for ($ii=0;$ii<count($TLang);$ii++) {
-                    $trylang = $Model->getLanguage($TLang[$ii]);
-                    if (isset($trylang->id)) { // if valid language found
-                        $langcode = $trylang->ShortCode;
-						$_SESSION['lang'] = $trylang->ShortCode;
-						$_SESSION['IdLanguage'] = $trylang->id;
-						return ;
-                    }
-  				}
-   			}
-			$_SESSION['lang'] = 'en';
-			$_SESSION['IdLanguage'] = 0;
-			return ;
-		}
-       	if (!isset ($_SESSION['lang'])) {
-			$_SESSION['lang'] = $trylang->ShortCode;
-			$_SESSION['IdLanguage'] = $trylang->id;
-		}
-		return ;
+        if (!isset ($_SESSION['lang']) ) {
+            $Model = new RoxFrontRouterModel;
+            
+            $tt=explode(".",$_SERVER['HTTP_HOST']) ;
+            if (count($tt)>0) {
+                $urlheader=$tt[0] ;
+            } else {
+                $urlheader="www" ;
+            }
+            if ($urlheader!='www') {
+                if ($trylang = $Model->getPossibleUrlLanguage($urlheader) ) {
+                    $_SESSION['lang'] = $trylang->ShortCode;
+                    $_SESSION['IdLanguage'] = $trylang->id;
+                    return ;
+                }
+            }
+
+            if (!empty($_COOKIE['LastLang']) and $trylang = $Model->getLanguage($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
+                $langcode = $_COOKIE['LastLang'];
+                $_SESSION['lang'] = $trylang->ShortCode;
+                $_SESSION['IdLanguage'] = $trylang->id;
+                return ;
+            }
+
+            if ($this->setLanguageByBrowser()) { 
+                return;
+            }
+            return ;
+        }
+       	
+        if (!isset ($_SESSION['lang'])) {
+            $_SESSION['lang'] = 'en';
+            $_SESSION['IdLanguage'] = 0;
+        }	
+	return ;
     } // end of setLanguage
+
+    protected function setLanguageByBrowser()
+    {
+        if (!isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
+            return false;
+        }
+        $Model = new RoxFrontRouterModel;
+        $browser_lang_str = trim($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+        $best_q = 0;
+        $result_lang = false;
+        $lang_list = explode(',', $browser_lang_str);
+        foreach ($lang_list as $browser_lang){
+            $browser_lang_regex = '/(\*|[a-zA-Z0-9]{1,8}(?:-[a-zA-Z0-9]{1,8})*)(?:\s*;\s*q\s*=\s*(0(?:\.\d{0,3})|1(?:\.0{0,3})))?/'; 
+            if (preg_match($browser_lang_regex, trim($browser_lang), $match)){
+                if (!isset($match[2])){
+                    $match[2] = 1.0;//per http_accept_header specs
+                }
+                if ($match[2] > $best_q){
+                    $result_lang = $Model->getLanguage($match[1]);
+                    if ($result_lang){
+                        $best_q = $match[2];
+                    }else{
+                        if ($best_q == 0){
+                            //when e.g. en-us is set but en isn't
+                            $result_lang = $Model->getLanguage(substr($match[1], 0, 2));
+                        }
+                    }
+                }
+            }
+        }
+        if ($result_lang){
+            $_SESSION['lang'] = $result_lang->ShortCode;
+            $_SESSION['IdLanguage'] = $result_lang->id;
+            return true;
+        }
+        return false; 
+    } //end of setLanguageByBrowser
     
     protected function setSessionLanguage()
     {

@@ -10,7 +10,7 @@
             <div class="subcl" >
                 <select name="PreferenceLanguage" >
                     <?php foreach ($languages as $lang) { ?>
-                        <option value="<?=$lang->id ?>" <?=($lang->id == $p['PreferenceLanguage']->Value) ? 'selected' : ''?> ><?=$lang->Name ?></option>
+                        <option value="<?=$lang->id ?>" <?=($lang->id == $p['PreferenceLanguage']->Value) ? 'selected' : ''?> ><?=$lang->NativeName . " (" . $lang->Name . ")"?></option>
                     <?php } ?>
                 </select>
             </div> <!-- subcl -->

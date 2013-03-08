@@ -1,9 +1,22 @@
 <?php
+function cmpPrefLang($a, $b)
+{
+    if ($a->NativeName == $b->NativeName) {
+        return 0;
+    }
+    return ($a->NativeName < $b->NativeName) ? -1 : 1;
+}
+
     $words = $this->getWords();
     $layoutkit = $this->layoutkit;
     $formkit = $layoutkit->formkit;
     $callback_tag = $formkit->setPostCallback('MembersController', 'myPreferencesCallback');
-    $languages = $this->member->get_languages_all();
+    $flaglist = new FlaglistModel();
+    $languages = $flaglist->getLanguages();
+    foreach($languages as &$language) {
+        $language->NativeName = $words->getSilent($language->WordCode);
+    }
+    usort($languages, "cmpPrefLang");
     $value = $this->member->get_publicProfile();
     $pref_publicprofile = (isset($value) && $value) ? true : false;
     $p = $this->member->preferences;

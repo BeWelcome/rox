@@ -99,14 +99,16 @@ ORDER BY
         }
     }
 
-    public function spamMailbox()
+    public function spamMailbox($sort_element=false)
     {
         if (!isset($_SESSION['IdMember'])) {
             // not logged in - no messages
             return array();
         } else {
+            if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
+            else $sort_string = false;
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('messages.InFolder = "Spam" AND DeleteRequest != "receiverdeleted"');
+            return $this->filteredMailbox('messages.IdReceiver ='.$member_id.' AND messages.InFolder = "Spam" AND DeleteRequest != "receiverdeleted"');
         }
     }
 

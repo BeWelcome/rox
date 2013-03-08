@@ -51,6 +51,29 @@ JeanYves notes : every display of a forum post content  goes trhu this template
                 style="height:auto; width:auto;"
             /> <!-- img -->
         </div> <!-- forumsavatar -->
+<?php 
+if (isset($_SESSION["IdMember"])) { 
+    if (isset($post->city) && isset($post->country)) { ?>    
+    <div class="forumsauthorname" style="font-weight: normal;">
+    <?php
+    $maxlen = 13;
+    if (strlen($post->city) > $maxlen) {
+        echo '<span title="' . $post->city . '">' . MOD_layoutbits::truncate($post->city, $maxlen) . '</span>';
+    } else {
+        echo $post->city;
+    }
+    echo "<br />";
+    if (strlen($post->country) > $maxlen) {
+        echo '<span title="' . $post->country . '">' . MOD_layoutbits::truncate($post->country, $maxlen) . '</span>';
+    } else {
+        echo $post->country;
+    }
+    ?>
+    </div>
+<?php
+    }
+}
+?>
     </div> <!-- forumsauthor -->
     <div class="forumsmessage">
         <div class="floatbox">

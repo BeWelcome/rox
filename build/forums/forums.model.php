@@ -2229,6 +2229,8 @@ SELECT
     IdContent,
     IdWriter,
     geonames_cache.fk_countrycode,
+    geonames_cache.name AS city,
+    geonames_countries.name AS country,
     forums_posts.threadid,
     OwnerCanStillEdit,
     members.Username as OwnerUsername,
@@ -2236,7 +2238,7 @@ SELECT
     PostVisibility,
     PostDeleted,
     IdLocalEvent,
-	forums_threads.IdGroup
+    forums_threads.IdGroup
 FROM
     forums_threads,
     forums_posts
@@ -2246,6 +2248,8 @@ LEFT JOIN
     addresses AS a ON a.IdMember = members.id AND a.rank = 0
 LEFT JOIN
     geonames_cache ON a.IdCity = geonames_cache.geonameid
+LEFT JOIN
+    geonames_countries ON geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
 WHERE
     forums_posts.threadid = '%d'
     AND forums_posts.threadid=forums_threads.id

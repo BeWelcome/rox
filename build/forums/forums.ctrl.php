@@ -229,7 +229,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_REPORT_TO_MOD) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+                die("You can't do this because you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
             }
             if (!$User) {
                 PRequest::home();

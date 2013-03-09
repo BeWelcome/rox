@@ -45,8 +45,7 @@ if (empty($vars)) {
 
 $words = new MOD_words();
 ?>
-<form method="post">
-<fieldset><legend><?php echo $words->get('AdminTreasurerAddDonation');?></legend>
+<form method="post" class="yform full">
 <?php echo $callback_tag; 
 echo '<input type="hidden" id="id" name="id" value="' . $vars['id'] . '" />';
 if (!empty($errors))
@@ -58,39 +57,46 @@ if (!empty($errors))
     echo "</div>";
 }
 ?>
-<div class="subcolumns">
-<div class="subcl">
-<div class="c33l"><label for="donate-username"><?php echo $words->get('AdminTreasurerDonor'); ?></label><br />
-<input type="text" id="donate-username" name="donate-username" value="<?php if (isset($vars['donate-username'])) { echo $vars['donate-username']; };  ?>" />
+<div class="row">
+        <div class="c33l">
+            <div class=" subcl type-text">
+            <label for="donate-username"><?php echo $words->get('AdminTreasurerDonor'); ?></label>
+            <input type="text" id="donate-username" name="donate-username" value="<?php if (isset($vars['donate-username'])) { echo $vars['donate-username']; };  ?>" />
+            </div>
+        </div>
+        <div class="c33l">
+            <div class="subcl type-text">            
+            <label for="donate-amount"><?php echo $words->get('AdminTreasurerDonatedAmount'); ?></label>
+            <input type="text" id="donate-amount" name="donate-amount" value="<?php if (isset($vars['donate-amount'])) { echo $vars['donate-amount']; };  ?>" />
+            </div>
+        </div>
+        <div class="c33r">
+            <div class="subcl type-text" style="overflow:visible">
+            <label for="donate-date"><?php echo $words->get('AdminTreasurerDonatedOn'); ?></label>
+            <input type="text" id="donate-date" name="donate-date" class="date" maxlength="10" <?php
+            echo isset($vars['donate-date']) ? 'value="'.htmlentities($vars['donate-date'], ENT_COMPAT, 'utf-8').'" ' : ''; ?> />
+            </div>
+            <script type="text/javascript">
+            /*<[CDATA[*/
+            var datepicker	= new DatePicker({
+            relative	: 'donate-date',
+            language	: '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
+            current_date : '', 
+            topOffset   : '25',
+            relativeAppend : false
+            });
+            /*]]>*/
+            </script>
+
+        </div>
 </div>
-<div class="c33l"><label for="donate-amount"><?php echo $words->get('AdminTreasurerDonatedAmount'); ?></label><br />
-<input type="text" id="donate-amount" name="donate-amount" value="<?php if (isset($vars['donate-amount'])) { echo $vars['donate-amount']; };  ?>" />
+<div class="subcolumns type-text">
+    <label for="donate-comment"><?php echo $words->get('AdminTreasurerComment'); ?></label>
+    <input type="text" id="donate-comment" name="donate-comment" maxlength="100" value="<?php echo $vars['donate-comment'];?>" />
 </div>
-<div class="c33r">
-<label for="donate-date"><?php echo $words->get('AdminTreasurerDonatedOn'); ?></label><br />
-<input type="text" id="donate-date" name="donate-date" class="date" maxlength="10" <?php
-echo isset($vars['donate-date']) ? 'value="'.htmlentities($vars['donate-date'], ENT_COMPAT, 'utf-8').'" ' : ''; ?> /><script type="text/javascript">
-    /*<[CDATA[*/
-    var datepicker	= new DatePicker({
-    relative	: 'donate-date',
-    language	: '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
-    current_date : '', 
-    topOffset   : '25',
-    relativeAppend : true
-    });
-    /*]]>*/
-</script>
-</div>
-</div>
-</div>
-<div class="subcolumns">
-<label for="donate-comment"><?php echo $words->get('AdminTreasurerComment'); ?></label><br />
-<input type="text" id="donate-comment" name="donate-comment" style="width:45em" maxlength="100" value="<?php echo $vars['donate-comment'];?>" />
-<br /> 
-</div>
-<div class="subcolumns">
-<label for="donate-country"><?php echo $words->get('AdminTreasurerSelectCountry'); ?></label>
-    <select id="donate-country" name="donate-country" style="width:55em;">
+<div class="subcolumns type-select">
+    <label for="donate-country"><?php echo $words->get('AdminTreasurerSelectCountry'); ?></label>
+    <select id="donate-country" name="donate-country">
     <option value="0"><?php echo $words->getBuffered('AdminTreasurerSelectACountry'); ?></option>
     <?php
     foreach($countries as $country) {
@@ -103,13 +109,13 @@ echo isset($vars['donate-date']) ? 'value="'.htmlentities($vars['donate-date'], 
     ?>
     </select><?php echo $words->flushBuffer(); ?>
 </div>
-<div class="float_right"><br /><input class="button" type="submit" name="addDonation" 
-        value="<?php 
-    if ($vars['id'] == 0) {
-        echo $words->getBuffered('AdminTreasurerAddDonation');
-    } else {
-        echo $words->getBuffered('AdminTreasurerUpdateDonation');
-    }
-    ?>" /><?php echo $words->flushBuffer(); ?></div>
-</fieldset>
+<div class="type-button float_right">
+          <input type="submit" name="addDonation" value="<?php 
+            if ($vars['id'] == 0) {
+            echo $words->getBuffered('AdminTreasurerAddDonation');
+            } else {
+            echo $words->getBuffered('AdminTreasurerUpdateDonation');
+            }
+            ?>" /><?php echo $words->flushBuffer(); ?>
+</div>
 </form>

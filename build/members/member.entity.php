@@ -664,7 +664,7 @@ WHERE IdMember = ".$this->id
     {
         if  (empty($_SESSION['IdMember'])) return (0) ;
         $str = "select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"];
-        error_log($str);
+
         $rr=$this->singleLookup($str);
         // $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$this->id);
         return($rr->cnt) ;

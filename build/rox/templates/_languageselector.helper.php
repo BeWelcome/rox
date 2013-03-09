@@ -45,7 +45,7 @@ function _languageOptions($words, $reverse = false) {
         $langarr[] = $lang;
     }
     usort($langarr, "cmpLang");
-    
+
     $langOptions = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langOptions = '';

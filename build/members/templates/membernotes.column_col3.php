@@ -1,6 +1,6 @@
 <div id="profile">
     <div id="profile_notes" class="floatbox box">
-    <?php // display my groups, if there are any
+    <?php // display my notes, if there are any
     echo "<h3>" . $words->get('ProfileMyNotes') . "</h3>";
     if (!empty($mynotes)) {
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
@@ -14,13 +14,13 @@
             echo '<li class="notepicbox float_left">';
             echo '<div style="float: left;  padding-right: 0.5em; text-align: center">';
             echo '<div style="clear:both">' . $layoutbits->PIC_50_50($m->Username, 'class="framed"') . '</div>';
-            echo '<div><a href="members/' . $m->Username . '/note/add" target="_blank">'.$m->Username.'</a></div>';
+            echo '<div><a href="members/' . $m->Username . '" target="_blank">'.$m->Username.'</a></div>';
             echo '</div>';
             echo '<p style="text-align: right;">' . $note->Category . '</p>';
             echo '<hr>';
-            echo '<p>' . $note->Comment . '</p>';
+            echo '<p>' . $purifier->purify($note->Comment) . '</p>';
             echo '<hr>';
-            echo '<p style="text-align: right;">' . $note->updated . '</p>';
+            echo '<p style="text-align: right;">' .$layoutbits->ago($note->updated). '</p>';
             echo '</li>';
 /*
  

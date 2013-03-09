@@ -194,7 +194,7 @@ class Group extends RoxEntityBase
 
         $status = (($status) ? $status : 'In');
 
-        return count($this->createEntity('GroupMembership')->getGroupMembers($this, $status));
+        return $this->createEntity('GroupMembership')->getGroupMembersCount($this);
         
     }
 
@@ -427,9 +427,17 @@ class Group extends RoxEntityBase
         {
             return false;
         }
+        $loggedIn = false;
+        if ($this->getLoggedInMember()) {
+            $loggedIn = true;
+        }
+
         $group_owners = array();
         foreach ($priv_scopes as $priv_scope) {
-            $group_owners[] = $this->createEntity('Member', $priv_scope->IdMember);
+            $group_owner = $this->createEntity('Member', $priv_scope->IdMember);
+            if ($loggedIn || $group_owner->get_publicProfile()) {
+                $group_owners[] = $group_owner;
+            }
         }
         return $group_owners;
     }

@@ -37,6 +37,11 @@
             <?php
             $count++;
         }
-        echo "</table>";
+    ?>
+    </table>
+    <?php 
         $this->pager_widget->render();
     }
+    ?>
+</div>
+</div>

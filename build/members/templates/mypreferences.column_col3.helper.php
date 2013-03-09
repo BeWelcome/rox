@@ -1,11 +1,11 @@
 <?php
-function cmpPrefLang($a, $b)
-{
-    if ($a->NativeName == $b->NativeName) {
-        return 0;
+    function cmpPrefLang($a, $b)
+    {
+        if ($a->NativeName == $b->NativeName) {
+            return 0;
+        }
+        return ($a->NativeName < $b->NativeName) ? -1 : 1;
     }
-    return ($a->NativeName < $b->NativeName) ? -1 : 1;
-}
 
     $words = $this->getWords();
     $layoutkit = $this->layoutkit;
@@ -20,6 +20,11 @@ function cmpPrefLang($a, $b)
     $value = $this->member->get_publicProfile();
     $pref_publicprofile = (isset($value) && $value) ? true : false;
     $p = $this->member->preferences;
+    
+    // Check if preferred language is set
+    if (!isset($p['PreferenceLanguage']->Value)) {
+        $p['PreferenceLanguage']->Value = $_SESSION['IdLanguage'];
+    }
     // var_dump ($p);
     $ii = 1;
     

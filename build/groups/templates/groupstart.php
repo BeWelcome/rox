@@ -38,7 +38,19 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>
                 </div>
+                <p><?php
+                    if ($memberCount != $visibleMemberCount) {
+                        echo $words->get("GroupMoreMembers", $memberCount - $visibleMemberCount);
+                    } else { ?>
                 <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>
+                <?php
+                    }
+                ?></p>
+                <?php
+                    // Hide the admin list if no user is logged in (which means that visible lis
+                    if ($memberCount == $visibleMemberCount) {
+
+                ?>
                 <br><br>
                 <h4><?php echo $words->get('GroupAdmins'); ?></h4>
                 <div class="floatbox">
@@ -55,6 +67,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                             echo $words->get('GroupNoAdmin');
                         } ?>
                 </div>
+                <?php }?>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

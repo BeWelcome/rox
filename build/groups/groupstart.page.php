@@ -44,6 +44,8 @@ class GroupStartPage extends GroupsBasePage
 	        $group_id = $this->group->id;
 			$memberlist_widget = new GroupMemberlistWidget();
 	        $memberlist_widget->setGroup($this->group);
+	        $memberCount = $this->group->getMemberCount();
+	        $visibleMemberCount = count($this->group->getMembers());
 
 	        $Forums = new ForumsController;
 	        //$forums_widget->setGroup($this->getGroup());

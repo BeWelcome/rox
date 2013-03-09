@@ -58,13 +58,13 @@ if (isset($_SESSION["IdMember"])) {
     <?php
     $maxlen = 13;
     if (strlen($post->city) > $maxlen) {
-        echo '<span title="' . $post->city . '">' . MOD_layoutbits::truncate($post->city, $maxlen) . '</span>';
+        echo '<span title="' . $post->city . '">' . MOD_layoutbits::truncate_words($post->city, $maxlen) . '</span>';
     } else {
         echo $post->city;
     }
     echo "<br />";
     if (strlen($post->country) > $maxlen) {
-        echo '<span title="' . $post->country . '">' . MOD_layoutbits::truncate($post->country, $maxlen) . '</span>';
+        echo '<span title="' . $post->country . '">' . MOD_layoutbits::truncate_words($post->country, $maxlen) . '</span>';
     } else {
         echo $post->country;
     }

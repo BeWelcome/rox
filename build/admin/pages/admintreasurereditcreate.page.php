@@ -56,6 +56,12 @@ class AdminTreasurerEditCreateDonationPage extends AdminBasePage
     
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/treasurer'>{$this->words->get('AdminTreasurer')}</a> &raquo; {$this->words->get('AdminTreasurerAddDonation')}</a>";
+        $str = "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/treasurer'>{$this->words->get('AdminTreasurer')}</a> &raquo; ";
+        if ($this->id) {
+            $str .= $this->words->get('AdminTreasurerEditDonation');
+        } else {
+            $str .= $this->words->get('AdminTreasurerAddDonation');
+        }
+        return $str;
     }
 }

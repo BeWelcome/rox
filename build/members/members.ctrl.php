@@ -777,7 +777,7 @@ class MembersController extends RoxControllerBase
      * displays the a list of contacts/notes
      *
      * @access public
-     * @return ResetPasswordPage
+     * @return MemberNotesPage
      */
     public function mynotes()
     {
@@ -836,17 +836,17 @@ class MembersController extends RoxControllerBase
     }
 
     /**
-     * displays the reset your passwod page
+     * displays the add or edit note page
      *
      * @access public
-     * @return ResetPasswordPage
+     * @return AddNotePagePage
      */
     public function addNote()
     {
         $loggedInMember = $this->model->getLoggedInMember();
         $member =$this->model->getMemberWithUsername($this->route_vars['username']); 
         if (!$loggedInMember || !$member) {
-            return false;
+            return $page = new MembersMustloginPage;
         }
         $page = new AddNotePage();
         $page->model = $this->model;

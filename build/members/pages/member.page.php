@@ -51,7 +51,6 @@ class MemberPage extends PageWithActiveSkin
     {
         $username = $this->member->Username;
         $member = $this->member;
-        
         $lang = $this->model->get_profile_language();
         $profile_language_code = $lang->ShortCode;
         $words = $this->getWords();
@@ -61,6 +60,7 @@ class MemberPage extends PageWithActiveSkin
         if ($logged_user = $this->model->getLoggedInMember())
         {
             $TCom = $member->get_comments_commenter($logged_user->id);
+            $note = $this->loggedInMember->getNote($this->member->id);
         }
 
         $galleryItemsCount = $member->getGalleryItemsCount();
@@ -95,26 +95,28 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
         } else {
-            if ($mynotes_count>0) {
-                $mynotelinkname=$words->get('ViewMyNotesForThisMember') ;
+            
+            if (isset($note)) {
+                $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;
+                $mynotelinkname= "members/$username/note/edit" ;
             }
             else {
-                $mynotelinkname=$words->get('AddToMyNotes') ;
+                $mynotewordsname=$words->get('NoteAddToMyNotes') ;
+                $mynotelinkname= "members/$username/note/add" ;
             }
             $tt= array(
                 array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
+                array('notes', $mynotelinkname, $mynotewordsname, 'mynotes'),
                 array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),
                 array('space', '', '', 'space'),
-
                 array('profile', "members/$username", $ww->MemberPage),
                 array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')'),
                 array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' (' . $galleryItemsCount . ')'),
                 array('forum', "forums/member/$username", $ViewForumPosts),
                 array('blogs', "blog/$username", $ww->Blog),
-                array('trips', "trip/show/$username", $ww->Trips),
-                array('notes', "members/$username/note/add", $mynotelinkname)
+                array('trips', "trip/show/$username", $ww->Trips)
             );
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))

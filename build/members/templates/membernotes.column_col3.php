@@ -5,33 +5,32 @@
     if (!empty($mynotes)) {
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
         echo $this->pager->render(); 
-        echo '<ul class="floatbox">';
         $left = "";
         $right = "";
         $ii = 0;
         foreach ($this->pager->getActiveSubset($mynotes) as $note) {
-            $m = $this->model->getMemberWithId($note->IdContact);
-            echo '<li class="notepicbox float_left">';
-            echo '<div style="float: left;  padding-right: 0.5em; text-align: center">';
-            echo '<div style="clear:both">' . $layoutbits->PIC_50_50($m->Username, 'class="framed"') . '</div>';
-            echo '<div><a href="members/' . $m->Username . '" target="_blank">'.$m->Username.'</a></div>';
-            echo '</div>';
-            echo '<p style="text-align: right;">' . $note->Category . '</p>';
-            echo '<hr>';
-            echo '<p>' . $purifier->purify($note->Comment) . '</p>';
-            echo '<hr>';
-            echo '<p style="text-align: right;">' .$layoutbits->ago($note->updated). '</p>';
-            echo '</li>';
-/*
- 
-                    <table border="1" rules="rows" cellspacing="4" style="width:95%;">
-            <tr><td style="text-align: left;"><a href="members/' . $m->Username . '">' . $m->Username . '</a></td><td style="text-align: right;">' . $note->Category . '</td></tr>
-            <tr><td colspan="2">' . $purifier->purify($note->Comment) . '</td></tr>
-            <tr><td colspan="2" style="text-align: right"><a href="members/' . $m->Username . '/note/update">' . $words->get('NotesUpdate') . '</a></td></tr>
-            </table></div>';
-*/          
-        } 
-        echo "</ul>";
+            $m = $this->model->getMemberWithId($note->IdContact);?>
+            <div class="subcolumns">
+                <div class="c33l">
+                    <div class="subcl">
+                        <?php echo $layoutbits->PIC_50_50($m->Username,'',$style='float_left framed')?>
+                        <div class="userinfo">
+                        <a href="members/<?php echo $m->Username ?>" class="username"><?php echo $m->Username ?></a><br>
+                        <p class="small"><?php echo $layoutbits->ago($note->updated) ?></p>
+                        <p><a class="button" href="members/<?php echo $m->Username ?>/note/edit"><?php echo $words->get('Edit') ?></a> <a class="button" href="members/<?php echo $m->Username ?>/note/delete"><?php echo $words->get('Delete') ?></a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="c66r">
+                    <div class="subcr">
+                    <div class="notecategory"><b><?php echo $note->Category ?></b></div>
+                    <div class="notecomment"><?php echo $purifier->purify($note->Comment) ?></div>
+
+                    </div>
+                </div>
+            </div>
+            <hr>
+       <?php } 
         $this->pager->render(); 
     } else {
         echo $words->get("MyNotesNoNotes");

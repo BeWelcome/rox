@@ -783,7 +783,7 @@ class MembersController extends RoxControllerBase
     {
         $member = $this->model->getLoggedInMember();
         if (!$member) {
-            return false;
+            return $page = new MembersMustloginPage;
         }
         $mynotes = $member->getNotes();
         $params = new StdClass;

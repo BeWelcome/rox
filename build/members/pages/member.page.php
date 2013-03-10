@@ -60,7 +60,7 @@ class MemberPage extends PageWithActiveSkin
         if ($logged_user = $this->model->getLoggedInMember())
         {
             $TCom = $member->get_comments_commenter($logged_user->id);
-            $note = $this->loggedInMember->getNote($this->member->id);
+            $note = $mynotes = $member->getNotes();
         }
 
         $galleryItemsCount = $member->getGalleryItemsCount();

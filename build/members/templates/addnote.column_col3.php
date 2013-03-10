@@ -44,14 +44,14 @@
     
     <form method="post" name="addnote" class="yform">
     <?=$callback_tag ?>
-    <div class="row">
-    <h2><?php 
+    <div class="type-text">
+    <h3><?php 
     if (!$edit_mode) {
         echo $words->get("ProfileNoteAddNote");
     } else {
-        echo $words->get("ProfileNoteUpdateNote");
+        echo $words->get("ProfileNoteEditNote");
     }
-    ?></h2>
+    ?></h3>
     </div>
         <input name="IdMember" value="<?=$member->id?>" type="hidden" />
         <div class="type-select">
@@ -79,7 +79,15 @@
         <textarea name="ProfileNoteComment" id="ProfileNoteComment" cols="40" rows="8"><?php echo $note->Comment; ?></textarea>
         </div>
         <div class="type-button">
-        <input type="submit" id="submit" name="submit" value="<?php echo $words->getFormatted('ProfileNoteSubmit'); ?>"></td>
+        <?php 
+        if (!$edit_mode) {
+        $notesubmitvalue = $words->get("ProfileNoteButtonAdd");
+        } else {
+        $notesubmitvalue = $words->get("ProfileNoteButtonEdit");
+        }
+    ?>
+        <input type="submit" id="submit" name="submit" value="<?php echo $notesubmitvalue; ?>">
+        <input type="submit" id="submit" name="submit" value="<?php echo $words->getFormatted('ProfileNoteButtonDelete'); ?>">
         </div>
     </form>
     <?=$words->flushBuffer();?>

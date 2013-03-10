@@ -812,7 +812,6 @@ class MembersController extends RoxControllerBase
     public function addNoteCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         $vars = $args->post;
-        error_log(print_r($vars, true));
         $category="";
         $catselect = trim($vars['ProfileNoteCategory']);
         $catfree = trim($vars['ProfileNoteCategoryFree']);
@@ -849,6 +848,42 @@ class MembersController extends RoxControllerBase
             return $page = new MembersMustloginPage;
         }
         $page = new AddNotePage();
+        $page->model = $this->model;
+        $page->loggedInMember = $loggedInMember;
+        $page->member = $member;
+        return $page;
+    }
+
+    /**
+     * noteCallback
+     *
+     * @param Object $args
+     * @param Object $action 
+     * @param Object $mem_redirect memory for the page after redirect
+     * @param Object $mem_resend memory for resending the form
+     * @return string relative request for redirect
+     */
+    public function deleteNoteCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $vars = $args->post;
+        $this->model->deleteNoteForMember($vars['IdMember']);
+        return $this->router->url('members_show_all_notes', array(), false);
+    }
+
+    /**
+     * displays the add or edit note page
+     *
+     * @access public
+     * @return AddNotePagePage
+     */
+    public function deleteNote()
+    {
+        $loggedInMember = $this->model->getLoggedInMember();
+        $member =$this->model->getMemberWithUsername($this->route_vars['username']); 
+        if (!$loggedInMember || !$member) {
+            return $page = new MembersMustloginPage;
+        }
+        $page = new DeleteNotePage();
         $page->model = $this->model;
         $page->loggedInMember = $loggedInMember;
         $page->member = $member;

@@ -1435,7 +1435,6 @@ VALUES
         // Check if it is a new note
         $sql = "SELECT * FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = "
                 . $member->id;
-        error_log($sql);
         $res = $this->dao->query($sql);
         if (!$res) {
             return false;
@@ -1449,7 +1448,19 @@ VALUES
                  . $member->id . ", Created = NOW(), Category = '" . $this->dao->escape($category) . "'"
                  . ", Comment = '" . $this->dao->escape($comment) . "'";
         }
-        error_log($sql);
         $this->dao->query($sql);
+    }
+
+    /**
+     * Deletes the note for a member
+     * 
+     * @param string memberId Id of the member for which the note was written
+     */
+    public function deleteNoteForMember($memberId) {
+        $loggedInMember = $this->getLoggedInMember();
+        // Check if it is a new note
+        $sql = "DELETE FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = ". $memberId;
+        error_log($sql);
+        $res = $this->dao->query($sql);
     }
 }

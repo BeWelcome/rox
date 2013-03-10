@@ -74,7 +74,7 @@
     $this->addRoute('members_show_all_notes', 'mynotes', 'MembersController', 'myNotes');
     $this->addRoute('members_add_note', 'members/:username:/note/add', 'MembersController', 'addNote');
     $this->addRoute('members_update_note', 'members/:username:/note/edit', 'MembersController', 'addNote');
-    $this->addRoute('members_add_note_callback', 'members/:username:/note/added', 'MembersController', 'addNoteCallback', true);
+    $this->addRoute('members_delete_note', 'members/:username:/note/delete', 'MembersController', 'deleteNote');
 
     // admin temporary vol page route
     $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminController', 'tempVolStart');

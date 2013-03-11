@@ -80,14 +80,12 @@
         </div>
         <div class="type-button">
         <?php 
-        if (!$edit_mode) {
-        $notesubmitvalue = $words->get("ProfileNoteButtonAdd");
-        } else {
-        $notesubmitvalue = $words->get("ProfileNoteButtonEdit");
-        }
-    ?>
-        <input type="submit" id="submit" name="submit" value="<?php echo $notesubmitvalue; ?>" />
-        <a href="/members/<?php echo $this->member->Username;?>/note/delete" class="button"><?php echo $words->getFormatted('ProfileNoteButtonDelete'); ?></a>
+        if (!$edit_mode) { ?>
+            <input type="submit" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonAdd") ?>" />
+  <?php } else { ?>
+            <input type="submit" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonEdit") ?>" />
+            <a href="/members/<?php echo $this->member->Username;?>/note/delete" class="button"><?php echo $words->getFormatted('ProfileNoteButtonDelete'); ?></a>
+        <?php } ?>
         </div>
     </form>
     <?=$words->flushBuffer();?>

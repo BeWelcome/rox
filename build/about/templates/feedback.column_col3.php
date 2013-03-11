@@ -62,7 +62,7 @@ if ($errors = $this->getRedirectedMem('errors'))
 
 <form class="yform full" action="about/feedback" method="post">
     <?=$callback_tag ?>
-    <input type="hidden" name="RequestURI" value="<?= $RequestURI ?>">
+    <input type="hidden" name="RequestURI" value="<?= htmlspecialchars($RequestURI, ENT_QUOTES) ?>">
     <input type="hidden" name="redirect" value="<?php echo htmlentities($redirect); ?>">
     <input type="hidden" name="data" value="<?php echo htmlentities($data); ?>">
 

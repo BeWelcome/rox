@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
 */
 
     $request = PRequest::get()->request;
-    $uri = implode('/', $request);
+    $uri = htmlspecialchars(implode('/', $request), ENT_QUOTES);
     $uri = rtrim($uri, '/').'/';
 ?>
     <h3><?php echo $this->words->getFormatted('Actions'); ?></h3>

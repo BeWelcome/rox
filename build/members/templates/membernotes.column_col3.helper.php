@@ -9,8 +9,6 @@ $profile_language_code = $lang->ShortCode;
 $profile_language_name = $lang->Name;
 $words = $this->getWords();
 
-$words = $this->getWords();
-
 $layoutbits = new MOD_layoutbits;
 $right = new MOD_right(); 
 ?>

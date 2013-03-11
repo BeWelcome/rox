@@ -233,6 +233,7 @@
     vertical-align: middle;
 }
 
+a.back {color: #888}
 #profile .box h3, #profile #linkpath h3, #profile-info .box h3{
     margin-bottom: 0.3em;
     color: #333;

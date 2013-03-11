@@ -96,7 +96,7 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
         } else {
             
-            if (isset($note)) {
+            if (isset($note[0])) {
                 $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;
                 $mynotelinkname= "members/$username/note/edit" ;
             }

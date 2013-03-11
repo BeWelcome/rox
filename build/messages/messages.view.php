@@ -13,7 +13,7 @@ class MessagesMustloginPage extends MessagesBasePage
 
     protected function column_col3()
     {
-        $url = rawurlencode($this->_redirect_url);
+        $url = htmlspecialchars($this->_redirect_url, ENT_QUOTES);
         ?><h3>Please log in!</h3>
         You tried to open<br>
         <a href="<?=$url ?>"><?=$url ?></a><br><br>

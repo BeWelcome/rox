@@ -32,7 +32,7 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $words = $layoutkit->getWords();
         $model = $this->getModel();
         
-        $page_url = PVars::getObj('env')->baseuri . rawurlencode(implode('/', PRequest::get()->request));
+        $page_url = PVars::getObj('env')->baseuri . htmlspecialchars(implode('/', PRequest::get()->request), ENT_QUOTES);
         
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('MessagesController', 'mailBoxCallback');

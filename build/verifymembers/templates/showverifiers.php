@@ -33,7 +33,7 @@ $styles = array( 'highlight', 'blank' ); // alternating background for table row
 $iiMax = count($list) ; // This retrieve the list of the verifiers
 ?>
 
-<p><?=$words->getFormatted("MemberHasVerificationLevel","<a class=\"username\" href=\"members/".$this->VerifierUsername."\">".$this->VerifierUsername."</a>", "<strong>".$words->getFormatted($VerificationMaxLevel)."</strong>") ?></p>
+<p><?=$words->getFormatted("MemberHasVerificationLevel","<a class=\"username\" href=\"members/".htmlspecialchars($this->VerifierUsername, ENT_QUOTES)."\">".htmlspecialchars($this->VerifierUsername, ENT_QUOTES)."</a>", "<strong>".$words->getFormatted($VerificationMaxLevel)."</strong>") ?></p>
 
 <table class="full">
 <?php if ($list != false) { ?>

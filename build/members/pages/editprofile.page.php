@@ -18,6 +18,9 @@ class EditProfilePage extends ProfilePage
         $profile_language = $lang->id;
         $profile_language_code = $lang->ShortCode;
         $profile_language_name = $lang->Name;
+        $all_spoken_languages = $member->get_languages_all();
+        $all_signed_languages = $member->get_languages_all(true);
+
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
         $ReadCrypted = 'MemberReadCrypted';
@@ -35,7 +38,8 @@ class EditProfilePage extends ProfilePage
         $vars['HideGender'] = $member->HideGender;
 
         $vars['language_levels'] = $member->language_levels;
-        $vars['languages_all'] = $member->languages_all;
+        $vars['languages_all_spoken'] = $all_spoken_languages;
+        $vars['languages_all_signed'] = $all_signed_languages;
         $vars['languages_selected'] = $member->languages_spoken;
 
         $vars['FirstName'] = $member->get_firstname();

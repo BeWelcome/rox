@@ -125,20 +125,36 @@ HTML;
                       echo <<<HTML
                         <tr id="lang1">
                           <td><select class='lang_selector' name="memberslanguages[]" >
-                            <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
+                          <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
+                          <optgroup label="{$words->getSilent('SpokenLanguage')}">
 HTML;
-                                for ($jj = 0; $jj < count($vars['languages_all']); $jj++)
+                                for ($jj = 0; $jj < count($vars['languages_all_spoken']); $jj++)
                                 {
-                                    if (in_array($vars['languages_all'][$jj]->id, $lang_ids))
+                                    if (in_array($vars['languages_all_spoken'][$jj]->id, $lang_ids))
                                     {
                                         continue;
                                     }
                                     echo <<<HTML
-                                    <option value="{$vars['languages_all'][$jj]->id}">{$vars['languages_all'][$jj]->Name}</option>
+                                    <option value="{$vars['languages_all_spoken'][$jj]->id}">{$vars['languages_all_spoken'][$jj]->Name}</option>
 HTML;
                                 }
                             echo <<<HTML
-                            </select>
+                            </optgroup>
+                          <optgroup label="{$words->getSilent('SignedLanguage')}">
+HTML;
+                                for ($jj = 0; $jj < count($vars['languages_all_signed']); $jj++)
+                                {
+                                    if (in_array($vars['languages_all_signed'][$jj]->id, $lang_ids))
+                                    {
+                                        continue;
+                                    }
+                                    echo <<<HTML
+                                    <option value="{$vars['languages_all_signed'][$jj]->id}">{$vars['languages_all_signed'][$jj]->Name}</option>
+HTML;
+                                }
+                            echo <<<HTML
+                            </optgroup>
+                          </select>{$words->flushBuffer()}
                           </td>
                           <td>
                             <select name="memberslanguageslevel[]" >

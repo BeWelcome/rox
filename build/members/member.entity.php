@@ -146,19 +146,21 @@ class Member extends RoxEntityBase
     /**
      * Get all available languages
      */
-    public function get_languages_all() {
+    public function get_languages_all($signlanguages = false) {
 
         $AllLanguages = array();
-        $str =
-            "
-SELECT SQL_CACHE
-    languages.Name AS Name,
-    languages.ShortCode AS ShortCode,
-    languages.id AS id
-FROM
-    languages
-ORDER BY languages.id asc
-            ";
+        $str = "
+            SELECT SQL_CACHE
+                l.Name AS Name,
+                l.ShortCode AS ShortCode,
+                l.id AS id 
+            FROM
+                languages AS l";
+        if ($signlanguages) {
+            $str .= " WHERE l.IsSignlanguage = 1";
+        } else {
+            $str .= " WHERE l.IsSignlanguage = 0";
+        }
         $s = $this->dao->query($str);
         while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
             //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
@@ -169,7 +171,7 @@ ORDER BY languages.id asc
 
     /**
      * Get language code from preferences.
-     * @return string language ShortCode (2 to 4 letters), 'en' if no preference was found.
+     * @return string language ShortCode (2 to 5 letters), 'en' if no preference was found.
      */
     public function getLanguagePreference() {
         $id = $this->getLanguagePreferenceId();

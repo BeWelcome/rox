@@ -29,7 +29,6 @@ require_once "footer.helper.php";
   <div id="language-select">
     <?php 
       echo $words->get('FooterChooseLanguage') . ": " . _languageFooterSelectorDropDown()
-        . _languageFooterReverseSelectorDropDown()  
         . "&nbsp;&nbsp;&nbsp;" . $words->get('FooterHelpUsTranslate'); 
       echo $words->flushBuffer();
     ?>

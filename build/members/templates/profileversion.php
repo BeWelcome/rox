@@ -5,7 +5,7 @@ $profile_language_code = $lang->ShortCode;
 $profile_language_name = $lang->Name;
 $languages = $member->profile_languages;
 $languages_spoken = $member->languages_spoken;
-$languages_all = $member->languages_all;
+$all_spoken_languages = $member->get_languages_all(false);
 
 $words = $this->getWords();
 $myself = $this->myself;
@@ -48,7 +48,7 @@ if (count($languages) > 1 || $myself) {
     </optgroup>
     <optgroup label="<?=$wwsilent->AllLanguages?>">
       <?php
-      foreach ($languages_all as $lang) {
+      foreach ($all_spoken_languages as $lang) {
       if (!in_array($lang->ShortCode,$languages))
       echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
       } ?>

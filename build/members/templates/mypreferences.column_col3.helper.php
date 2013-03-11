@@ -1,10 +1,10 @@
 <?php
     function cmpPrefLang($a, $b)
     {
-        if ($a->NativeName == $b->NativeName) {
+        if ($a->TranslatedName == $b->TranslatedName) {
             return 0;
         }
-        return ($a->NativeName < $b->NativeName) ? -1 : 1;
+        return (strtolower($a->TranslatedName) < strtolower($b->TranslatedName)) ? -1 : 1;
     }
 
     $words = $this->getWords();
@@ -14,7 +14,7 @@
     $flaglist = new FlaglistModel();
     $languages = $flaglist->getLanguages();
     foreach($languages as &$language) {
-        $language->NativeName = $words->getSilent($language->WordCode);
+        $language->TranslatedName = $words->getSilent($language->WordCode);
     }
     usort($languages, "cmpPrefLang");
     $value = $this->member->get_publicProfile();

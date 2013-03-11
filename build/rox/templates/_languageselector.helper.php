@@ -27,20 +27,20 @@ function _languageSelector()
 
 function cmpLang($a, $b)
 {
-    if ($a->Name == $b->Name) {
+    if ($a == $b) {
         return 0;
     }
-    return ($a->Name < $b->Name) ? -1 : 1;
+    return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
 }
 
-function _languageOptions($words, $reverse = false) {
+function _languageOptions($words) {
     $model = new FlaglistModel();
     $languages = $model->getLanguages();
     $langarr = array();
     foreach($languages as $language) {
         $lang = new StdClass;
-        $lang->NativeName = $language->Name;
-        $lang->Name = $words->getSilent($language->WordCode);
+        $lang->Name = $language->Name;
+        $lang->TranslatedName = $words->getSilent($language->WordCode);
         $lang->ShortCode = $language->ShortCode;
         $langarr[] = $lang;
     }
@@ -51,23 +51,13 @@ function _languageOptions($words, $reverse = false) {
     $langOptions = '';
     foreach($langarr as $language) {
         $abbr = $language->ShortCode;
-        if ($reverse) {
-            $title = $language->Name;
-        } else {
-            $title = $language->NativeName;
-        }
         $png = $abbr.'.png';
         if (!isset($_SESSION['lang'])) {
             // hmm
         } else {
             $langOptions .=
-                '<option value="rox/in/'.$abbr.'/'.$request_string.'" '.(($_SESSION['lang'] == $abbr) ? 'selected="selected"' : '') .' title="';
-            if ($reverse) {
-                $langOptions .= $language->NativeName;
-            } else {
-                $langOptions .= $language->Name;
-            }
-            $langOptions .= '">' . $title . '</option>';
+                '<option value="rox/in/'.$abbr.'/'.$request_string.'" '.(($_SESSION['lang'] == $abbr) ? 'selected="selected"' : '');
+            $langOptions .= '">' . $language->TranslatedName . ' (' . $language->Name . ')</option>';
         }
     }
     return $langOptions;
@@ -96,19 +86,6 @@ function _languageFooterSelectorDropDown()
     <form style="display: inline;" action="a" method="post">
       <select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
     $langsel .= _languageOptions($words) . '</select></form>';
-    echo $words->flushBuffer();
-    return $langsel;
-}
-
-function _languageFooterReverseSelectorDropDown()
-{
-    $words = new MOD_words();
-    $langsel = '';
-    $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
-    $langsel = '
-    <form style="display: inline;" action="a" method="post">
-      <select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
-    $langsel .= _languageOptions($words, true) . '</select></form>';
     echo $words->flushBuffer();
     return $langsel;
 }

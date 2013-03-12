@@ -234,7 +234,7 @@ if ($allow_title) { // New Topic
             if ($closeOptGroupFinal) {
                 echo "</optgroup>";
             }
-        ?></select>
+        ?></select><?php echo $words->flushBuffer(); ?>
 <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
         </div></div>
     </fieldset> <!-- row -->

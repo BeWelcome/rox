@@ -3174,7 +3174,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
     function GetLanguageName($IdLanguage) {
         $query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id=".($IdLanguage) 
-            . " AND CanBeUsedForTranslation = 1";
+            . " AND IsWrittenLanguage = 1";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve IdLanguage in GetLanguageName entries');
@@ -3223,7 +3223,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			array_push($tt, "AllLanguages");
 			// then now all available languages
 			$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id>0" 
-			    . " AND CanBeUsedForTranslation = 1";
+			    . " AND IsWrittenLanguage = 1";
           	$s = $this->dao->query($query);
           	$langarr = array();
         	while ($row = $s->fetch(PDB::FETCH_OBJ)) {

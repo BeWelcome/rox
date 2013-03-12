@@ -80,8 +80,6 @@ class ReadMessagePage extends MessagesBasePage
                         <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>" title="<?=$words->getSilent('messages_allmessageswith',$contact_username)?>" /> <?=$words->getSilent('messages_allmessageswith',$contact_username)?></a>
                       </p>
                 </div> <!-- messageside -->
-                <div>
-                <div>
                 <p class="float_left">
                 <?=MOD_layoutbits::PIC_50_50($contact_username) ?>
                 </p>
@@ -90,13 +88,9 @@ class ReadMessagePage extends MessagesBasePage
                 </p>
                 <p class="">
                   <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->created)) ?>
-<br /><br />
+
                 </p>
-                </div>
-                <?php if ($direction_in) { ?>
-                    <div class="clearfix float_left"><a class="button float_left" href="messages/<?=$message->id ?>/reply"><?=$words->get('replymessage')?></a></div>
-                <?php } ?>
-                </div>
+
             </div>
             <div id="messagecontent">
                 <p class="text">

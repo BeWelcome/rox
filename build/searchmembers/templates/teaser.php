@@ -18,7 +18,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
             <input type="radio" name="SelectedSearchField" value="TextToFind"><?php echo $words->getBuffered('TextToFind'); ?> -->
             <label for="Address"><?php echo $words->getFormatted('FindPeopleEnterLocation'); ?></label>
         </span><br />
-        <input type="text" size="30" name="Address" id="Address" class="float_left" value="<?=$address?>"
+        <input type="text" size="30" name="Address" id="Address" class="float_left" value="<?= htmlspecialchars($address, ENT_QUOTES)?>"
            onclick="this.value='';" onfocus="this.value='';" onkeypress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/>
         <?php echo $words->flushBuffer(); ?>
         <input id="text_search" class="float_left button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"

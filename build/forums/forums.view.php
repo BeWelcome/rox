@@ -431,10 +431,10 @@ class ForumsView extends RoxAppView {
             foreach ($tags as $suggestion) {
                 $out .= '<a href="#" onclick="javascript:ForumsSuggest.updateForm(\'';
                 foreach ($suggestion as $word) {
-                    $out .= $word.', ';
+                    $out .= htmlspecialchars($word, ENT_QUOTES).', ';
                 }
                 $out = rtrim($out, ', ');
-                $out .= '\'); return false;">'.$word.'</a>, ';
+                $out .= '\'); return false;">'.htmlspecialchars($word, ENT_QUOTES).'</a>, ';
             }
             $out = rtrim($out, ', ');
             return $out;

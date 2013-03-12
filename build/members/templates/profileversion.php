@@ -27,7 +27,7 @@ $profile_language_code = $lang->ShortCode;
 $profile_language_name = $lang->Name;
 $languages = $member->profile_languages;
 $languages_spoken = $member->languages_spoken;
-$all_spoken_languages = sortLanguages($member->get_languages_all(false));
+$all_spoken_languages = sortLanguages($member->get_all_translatable_languages());
 
 $words = $this->getWords();
 $myself = $this->myself;

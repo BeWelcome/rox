@@ -144,10 +144,9 @@ class Member extends RoxEntityBase
     }
 
     /**
-     * Get all available languages
+     * Get all languages where 
      */
-    public function get_languages_all($signlanguages = false) {
-
+    private function get_all_languages_where($where) {
         $AllLanguages = array();
         $str = "
             SELECT SQL_CACHE
@@ -156,18 +155,35 @@ class Member extends RoxEntityBase
                 l.WordCode AS WordCode,
                 l.id AS id 
             FROM
-                languages AS l";
-        if ($signlanguages) {
-            $str .= " WHERE l.IsSignlanguage = 1";
-        } else {
-            $str .= " WHERE l.IsSignlanguage = 0";
-        }
+                languages AS l ";
+        $str .= $where;
         $s = $this->dao->query($str);
         while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
             //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
             array_push($AllLanguages, $rr);
         }
         return $AllLanguages;
+    }
+
+    /**
+     * Get all available spoken languages
+     */
+    public function get_all_spoken_languages() {
+        return $this->get_all_languages_where ("WHERE (l.IsSignLanguage = 0)");
+    }
+
+    /**
+     * Get all available sign languages
+     */
+    public function get_all_signed_languages() {
+        return $this->get_all_languages_where ("WHERE (l.IsSignLanguage = 1)");
+    }
+
+    /**
+     * Get all translatable languages
+     */
+    public function get_all_translatable_languages() {
+        return $this->get_all_languages_where ("WHERE (l.IsWrittenLanguage = 1)");
     }
 
     /**

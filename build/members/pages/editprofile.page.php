@@ -39,8 +39,8 @@ class EditProfilePage extends ProfilePage
         $profile_language = $lang->id;
         $profile_language_code = $lang->ShortCode;
         $profile_language_name = $lang->Name;
-        $all_spoken_languages = $this->sortLanguages($member->get_languages_all());
-        $all_signed_languages = $this->sortLanguages($member->get_languages_all(true));
+        $all_spoken_languages = $this->sortLanguages($member->get_all_spoken_languages());
+        $all_signed_languages = $this->sortLanguages($member->get_all_signed_languages());
 
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;

@@ -126,7 +126,7 @@ HTML;
                         <tr id="lang1">
                           <td><select class='lang_selector' name="memberslanguages[]" >
                           <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
-                          <optgroup label="{$words->getSilent('SpokenLanguage')}">
+                          <optgroup label="{$words->getSilent('SpokenLanguages')}">
 HTML;
                                 for ($jj = 0; $jj < count($vars['languages_all_spoken']); $jj++)
                                 {
@@ -140,7 +140,7 @@ HTML;
                                 }
                             echo <<<HTML
                             </optgroup>
-                          <optgroup label="{$words->getSilent('SignedLanguage')}">
+                          <optgroup label="{$words->getSilent('SignedLanguages')}">
 HTML;
                                 for ($jj = 0; $jj < count($vars['languages_all_signed']); $jj++)
                                 {

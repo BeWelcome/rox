@@ -57,10 +57,11 @@ class MemberPage extends PageWithActiveSkin
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
         $comments_count = $member->count_comments();
-        if ($logged_user = $this->model->getLoggedInMember())
+        $logged_user = $this->model->getLoggedInMember();
+        if ($logged_user)
         {
             $TCom = $member->get_comments_commenter($logged_user->id);
-            $note = $mynotes = $member->getNotes();
+            $note = $logged_user->getNote($member);
         }
 
         $galleryItemsCount = $member->getGalleryItemsCount();
@@ -95,8 +96,8 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
         } else {
-            
-            if (isset($note[0])) {
+            error_log("Hallo : " . print_r($note, true));
+            if (isset($note)) {
                 $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;
                 $mynotelinkname= "members/$username/note/edit" ;
             }

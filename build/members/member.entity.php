@@ -828,7 +828,7 @@ WHERE IdMember = ".$this->id
     */
     public function getNote($for)
     {
-        $member = $this->CreateEntity('Member', $for);
+        $member = $this->CreateEntity('Member', $for->id);
         $note = $this->createEntity('ProfileNote')->getNote($this, $member);
         if (count($note) == 1) {
             return $note[0];

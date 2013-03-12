@@ -1460,7 +1460,6 @@ VALUES
         $loggedInMember = $this->getLoggedInMember();
         // Check if it is a new note
         $sql = "DELETE FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = ". $memberId;
-        error_log($sql);
         $res = $this->dao->query($sql);
     }
 }

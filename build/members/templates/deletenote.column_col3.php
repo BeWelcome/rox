@@ -11,7 +11,7 @@
         $categories = $this->loggedInMember->getNoteCategories();
         $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
         if (!$mem_redirect) {
-            $note = $this->loggedInMember->getNote($this->member->id);
+            $note = $this->loggedInMember->getNote($this->member);
             if (!isset($note)) {
                 $vars['errors'] = 'ProfileNoteDeleteDoesntExist';
             }

@@ -883,6 +883,11 @@ class MembersController extends RoxControllerBase
         if (!$loggedInMember || !$member) {
             return $page = new MembersMustloginPage;
         }
+        $note = $loggedInMember->getNote($member);
+        if (!$note) {
+            $baseURL = PVars::getObj('env')->baseuri;
+            return $this->redirectAbsolute($baseURL . 'members/' . $this->route_vars['username']);
+        } 
         $page = new DeleteNotePage();
         $page->model = $this->model;
         $page->loggedInMember = $loggedInMember;

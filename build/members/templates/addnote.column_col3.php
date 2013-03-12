@@ -10,7 +10,7 @@
     $categories = $this->loggedInMember->getNoteCategories();
     $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
     if (!$mem_redirect) {
-        $note = $this->loggedInMember->getNote($this->member->id);
+        $note = $this->loggedInMember->getNote($this->member);
         $edit_mode = isset($note);
         if (!$edit_mode) {
             $note = new StdClass;

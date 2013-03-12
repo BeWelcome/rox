@@ -88,10 +88,23 @@ class ReadMessagePage extends MessagesBasePage
                 </p>
                 <p class="">
                   <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->created)) ?>
-
                 </p>
-
             </div>
+            <div id="buttonstop">
+                <p class="floatbox">
+                  <?php if ($direction_in) { ?>
+                  <a class="button float_left" href="messages/<?=$message->id ?>/reply"><?=$words->get('replymessage')?></a>
+                      <?php if ($message->InFolder == 'Spam') { ?>
+                          <a class="button float_right" href="messages/<?=$message->id ?>/nospam"><?=$words->get('marknospam')?></a>
+                      <?php } else { ?>
+                          <a class="button float_right" href="messages/<?=$message->id ?>/spam"><?=$words->get('markspam')?></a>
+                      <?php } ?>
+                  <?php } else { ?>
+                  <a class="button float_left" href="messages/<?=$message->id ?>/edit"><?=$words->get('editmessage')?></a>
+                  <?php } ?>
+                  <a class="button float_right" href="messages/<?=$message->id ?>/delete"><?=$words->get('delmessage')?></a>
+                </p>
+            </div> <!-- buttonstop -->
             <div id="messagecontent">
                 <p class="text">
                 <?echo $purifier->purify(str_replace("\n","<br />",$message->Message)) ; ?>

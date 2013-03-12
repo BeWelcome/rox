@@ -1235,12 +1235,12 @@ form .date {
 }
 #messageheader {
   background-color: #fff;
-  padding: 2em 3em 1em 3em;
+  padding: 1em 1.5em 0.5em 1.5em;
   border-bottom: 1px solid #e5e5e5;
 }
 #messagecontent {
   background-color: #fff;
-  padding: 2em 3em;
+  padding: 1em 1.5em;
 }
 #messagecontent .text {
 /*
@@ -1253,10 +1253,15 @@ form .date {
   width: 22em;
   text-align: right;
 }
-#messagefooter {
+#buttonstop {
   background-color: #fff;
-  padding: 2em 3em;
+  padding: 1em 1.5em;
+  border-bottom: 1px solid #e5e5e5;
+}
+#messagefooter {
   border-top: 1px solid #e5e5e5;
+  background-color: #fff;
+  padding: 1em 1.5em;
 }
 
 div#message div#messagecontent p textarea {

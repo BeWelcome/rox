@@ -118,3 +118,9 @@
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
 
     $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');
+
+    // Events feature
+    $this->addRoute('events_list', 'events', 'EventsController', 'list_all');
+    $this->addRoute('events_find', 'events/find', 'EventsController', 'find');    
+    $this->addRoute('events_create', 'events/create', 'EventsController', 'create');
+    $this->addRoute('events_join', 'events/joinleave', 'EventsController', 'joinleave');

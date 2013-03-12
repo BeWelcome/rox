@@ -9,6 +9,15 @@
 * @version $Id: forums.model.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
+// Utility function to sort the languages
+function cmpForumLang($a, $b)
+{
+    if ($a == $b) {
+        return 0;
+    }
+    return (strtolower($a->Name) < strToLower($b->Name)) ? -1 : 1;
+}
+
 class Forums extends RoxModelBase {
     const CV_THREADS_PER_PAGE = 15;
     const CV_POSTS_PER_PAGE = 200;
@@ -42,7 +51,6 @@ function GetLanguageChoosen() {
 	}
 	return($DefLanguage) ;
 } // end of GetLanguageChoosen
-
 
 
 /**
@@ -3164,19 +3172,19 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     } // end of suggestTags
 	 
 
-	 		function GetLanguageName($IdLanguage) {
-				$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id=".($IdLanguage) ;
-            	$s = $this->dao->query($query);
-            	if (!$s) {
-                  throw new PException('Could not retrieve IdLanguage in GetLanguageName entries');
-            	}
-				else {
-					 $row = $s->fetch(PDB::FETCH_OBJ) ;
-				 	return($row) ;
-				}
-				return("not Found") ;
-				
-			} // end of GetLanguageName
+    function GetLanguageName($IdLanguage) {
+        $query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id=".($IdLanguage) 
+            . " AND CanBeUsedForTranslation = 1";
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not retrieve IdLanguage in GetLanguageName entries');
+        } else {
+            $row = $s->fetch(PDB::FETCH_OBJ) ;
+            $row->Name = $this->getWords()->getSilent($row->WordCode) . " (" . $row->Name . ")";
+            return($row) ;
+        }
+        return("not Found") ;
+    } // end of GetLanguageName
 
 
     // This fonction will prepare a list of language to choose
@@ -3194,34 +3202,41 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			if (($DefIdLanguage>=0)) {
 			   $row=$this->GetLanguageName($DefIdLanguage) ;
 		   	   array_push($allreadyin,$row->IdLanguage) ;
-			   array_push($tt,$row) ;
+			   array_push($tt, "DefinedLanguage");
+		   	   array_push($tt,$row) ;
 			}
 			// Then next will be english (if not allready in the list)
 			if (!in_array(0,$allreadyin)) {
 			   $row=$this->GetLanguageName(0) ;
 		   	   array_push($allreadyin,$row->IdLanguage) ;
-			   array_push($tt,$row) ;
+			   array_push($tt, "DefaultLanguage");
+		   	   array_push($tt,$row) ;
 			}
 			// Then next will the current user language
 			if ((isset($_SESSION["IdLanguage"]) and (!in_array($_SESSION["IdLanguage"],$allreadyin)))) {
 			   $row=$this->GetLanguageName($_SESSION["IdLanguage"]) ;
 		   	   array_push($allreadyin,$row->IdLanguage) ;
-			   array_push($tt,$row) ;
+			   array_push($tt, "UILanguage");
+		   	   array_push($tt,$row);
 			}
 			
+			array_push($tt, "AllLanguages");
 			// then now all available languages
-			$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id>0 order by FlagSortCriteria asc";
+			$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id>0" 
+			    . " AND CanBeUsedForTranslation = 1";
           	$s = $this->dao->query($query);
+          	$langarr = array();
         	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			   if (!in_array($row->IdLanguage,$allreadyin)) {
 			   	  array_push($allreadyin,$row->IdLanguage) ;
-			  	  array_push($tt,$row) ;
+			   	  $row->Name = $this->getWords()->getSilent($row->WordCode) . " (" . trim($row->Name) . ")";
+			  	  $langarr[] = $row;
 			   }
 			}
-			return($tt) ; // returs the array of structures
-			
-	 
-	 } // end of LanguageChoices 
+			// now sort langarr and append to the $tt array
+			usort($langarr, "cmpForumLang");
+			return($tt + $langarr) ; // returs the array of structures
+    } // end of LanguageChoices 
 
     // This fonction will prepare a list of group in an array that the moderator can use
 	 public function ModeratorGroupChoice() {

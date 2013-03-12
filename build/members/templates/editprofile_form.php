@@ -135,7 +135,7 @@ HTML;
                                         continue;
                                     }
                                     echo <<<HTML
-                                    <option value="{$vars['languages_all_spoken'][$jj]->id}">{$vars['languages_all_spoken'][$jj]->Name}</option>
+                                    <option value="{$vars['languages_all_spoken'][$jj]->id}">{$vars['languages_all_spoken'][$jj]->TranslatedName} ({$vars['languages_all_spoken'][$jj]->Name})</option>
 HTML;
                                 }
                             echo <<<HTML

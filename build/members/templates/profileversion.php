@@ -1,11 +1,33 @@
 <?php
+// Utility function to sort the languages
+function cmpProfileLang($a, $b)
+{
+    if ($a == $b) {
+        return 0;
+    }
+    return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+}
+
+function sortLanguages($languages)
+{
+    $words = new MOD_words;
+    $langarr = array();
+    foreach($languages as $language) {
+        $lang = $language;
+        $lang->TranslatedName = $words->getSilent($language->WordCode);
+        $langarr[] = $lang;
+    }
+    usort($langarr, "cmpProfileLang");
+    return $langarr;
+}
+
 $lang = $this->model->get_profile_language();
 $profile_language = $lang->id;
 $profile_language_code = $lang->ShortCode;
 $profile_language_name = $lang->Name;
 $languages = $member->profile_languages;
 $languages_spoken = $member->languages_spoken;
-$all_spoken_languages = $member->get_languages_all(false);
+$all_spoken_languages = sortLanguages($member->get_languages_all(false));
 
 $words = $this->getWords();
 $myself = $this->myself;
@@ -14,9 +36,26 @@ if (count($languages) > 1 || $myself) {
 <div class="floatbox">
     <div class="profile_translations float_right">
         <strong><?=$words->get('ProfileTranslations')?></strong>
-        <p class="floatbox">
-            
-            <?php
+<?php if ($myself) { ?>
+
+<select class="floatbox" id="add_language">
+    <option>- <?=$wwsilent->AddLanguage?> -</option>
+    <optgroup label="<?=$wwsilent->YourLanguages?>">
+      <?php
+      foreach ($languages_spoken as $lang) {
+      if (!in_array($lang->ShortCode,$languages))
+      echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
+      } ?>
+    </optgroup>
+    <optgroup label="<?=$wwsilent->AllLanguages?>">
+      <?php
+      foreach ($all_spoken_languages as $lang) {
+      if (!in_array($lang->ShortCode,$languages))
+      echo '<option value="'.$lang->ShortCode.'">' . $lang->TranslatedName . ' (' . $lang->Name . ')</option>';
+      } ?>
+    </optgroup>
+</select>
+        <p class="floatbox"><?php
             $ii = 0;
             $max = count($languages);
             foreach($languages as $language) {
@@ -31,30 +70,9 @@ if (count($languages) > 1 || $myself) {
                 }
             } 
             if (!isset($activelang_set)) echo '<span class="activelanguage">'.$profile_language_name.'</span>';
-            ?>
-        </p>
+            ?></p>
     </div>
 <?php } ?>
-<?php if ($myself) { ?>
-
-<select id="add_language">
-    <option>- <?=$wwsilent->AddLanguage?> -</option>
-    <optgroup label="<?=$wwsilent->YourLanguages?>">
-      <?php
-      foreach ($languages_spoken as $lang) {
-      if (!in_array($lang->ShortCode,$languages))
-      echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
-      } ?>
-    </optgroup>
-    <optgroup label="<?=$wwsilent->AllLanguages?>">
-      <?php
-      foreach ($all_spoken_languages as $lang) {
-      if (!in_array($lang->ShortCode,$languages))
-      echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
-      } ?>
-    </optgroup>
-</select>
-
 <?=$words->flushBuffer()?>
 <?php }
 if (count($languages) > 1 || $myself) {

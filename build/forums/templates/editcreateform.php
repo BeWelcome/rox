@@ -197,12 +197,42 @@ if ($allow_title) { // New Topic
                echo "<option value=\"-1\">-</option>";
             }
 
+            $closeOptGroup = false;
+            $closeOptGroupFinal = false;
             foreach ($LanguageChoices as $Choices) {
-                    echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-                    if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
-                       echo " selected='selected'" ;
+                    if (is_string($Choices)) {
+                        switch($Choices) {
+                            case "CurrentLanguage": 
+                                echo '<optgroup label="' . $words->getSilent("ForumCurrentLanguage") . '">';
+                                $closeOptGroup = true;
+                                break;
+                            case "DefaultLanguage": 
+                                echo '<optgroup label="' . $words->getSilent("ForumDefaultLanguage") . '">';
+                                $closeOptGroup = true;
+                                break;
+                            case "UILanguage": 
+                                echo '<optgroup label="' . $words->getSilent("ForumUILanguage") . '">';
+                                $closeOptGroup = true;
+                                break;
+                            case "AllLanguages":
+                                echo '<optgroup label="' . $words->getSilent("ForumAllLanguages") . '">';
+                                $closeOptGroupFinal = true;
+                                break;
+                        }
+                    } else {
+                        echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+                        if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
+                           echo " selected='selected'" ;
+                        }
+                        echo ">",$Choices->Name,"</option>" ;
+                        if ($closeOptGroup) {
+                            echo "</optgroup>";
+                            $closeOptGroup = false;
+                        }
                     }
-                    echo ">",$Choices->Name,"</option>" ;
+            }
+            if ($closeOptGroupFinal) {
+                echo "</optgroup>";
             }
         ?></select>
 <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>

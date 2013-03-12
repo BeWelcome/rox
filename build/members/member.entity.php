@@ -153,6 +153,7 @@ class Member extends RoxEntityBase
             SELECT SQL_CACHE
                 l.Name AS Name,
                 l.ShortCode AS ShortCode,
+                l.WordCode AS WordCode,
                 l.id AS id 
             FROM
                 languages AS l";

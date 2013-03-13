@@ -43,6 +43,7 @@
           </h2>
           <p class="grey">
             <?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?><br />
+             Gender: <?php echo $member->Gender; ?><br />
             <?php if (!empty($logged_member)) : ?>
                 <?php echo $words->get("MemberSince");?>: <?php echo $layoutbits->ago(strtotime($member->created));?> <br />
                 <?php

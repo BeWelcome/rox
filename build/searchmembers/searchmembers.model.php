@@ -776,9 +776,11 @@ WHERE
     * @return  string  WHERE condition
     */
     private function generateGenderCond(&$vars) {
-        if ($Gender = $this->GetParam($vars, 'Gender', '0')) {
+        if ($Gender = $this->GetParam($vars, 'Gender', '0') && $this->GetParam($vars, 'Gender', '0') <> 'otherGender') {
             return "Gender='" . $this->dao->escape($Gender) . "' AND HideGender='No'";
-        }
+        } elseif ($this->GetParam($vars, 'Gender', '0') == 'otherGender') {
+            return "gender NOT IN ('male','female') AND HideGender='No'";
+        } 
         return '1=1';
     }
     

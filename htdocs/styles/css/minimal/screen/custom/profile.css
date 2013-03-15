@@ -291,5 +291,7 @@ div.frame {
 span.profile-edit-link a {
   color: #2184E8;
 }
+/* additional styles for member note form */
 
+.yform label {padding-bottom: 0.12em;}
 }

@@ -195,7 +195,6 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     static $ii = 0;
     $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
-//die(var_dump($tm));
     $memberProfileLink = "members/".$TM->Username;
 
     $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',$TM->LastLogin))));

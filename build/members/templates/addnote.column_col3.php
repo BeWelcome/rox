@@ -42,7 +42,7 @@
     $callback_tag = $formkit->setPostCallback('MembersController', 'addnoteCallback');
     ?>
     
-    <form method="post" name="addnote" class="yform">
+    <form method="post" name="addnote" class="yform full">
     <?=$callback_tag ?>
     <div class="type-text">
     <h3><?php 

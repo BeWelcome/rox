@@ -840,7 +840,7 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidBirthDate';
         }
 
-        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','IDontTell'))) {
+        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','other'))) {
             $errors[] = 'SignupErrorInvalidGender';
         }
 

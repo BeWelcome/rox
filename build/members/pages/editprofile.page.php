@@ -57,6 +57,10 @@ class EditProfilePage extends ProfilePage
         $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('Occupation', $profile_language) : '';
         $vars['Gender'] = $member->Gender;
         $vars['HideGender'] = $member->HideGender;
+        if ($vars['Gender'] == 'IDontTell') {
+            $vars['Gender'] = 'other';
+            $vars['HideGender'] = true;
+        }
 
         $vars['language_levels'] = $member->language_levels;
         $vars['languages_all_spoken'] = $all_spoken_languages;

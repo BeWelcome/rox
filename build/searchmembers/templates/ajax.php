@@ -195,7 +195,7 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     static $ii = 0;
     $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
-
+//die(var_dump($tm));
     $memberProfileLink = "members/".$TM->Username;
 
     $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',$TM->LastLogin))));
@@ -211,7 +211,13 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\" valign=\"top\">" ;
     $string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
-    $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ".$TM->CityName.", ".$TM->CountryName."<br /> ". $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span><br />";
+    $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ".$TM->CityName.", ".$TM->CountryName. "<br />";
+    if ($member->gender != "hidden") {
+    $string .= $words->get('Gender'). ": " .$TM->Gender. "<br />"; 
+    }else{
+    $string .= $words->get('Gender'). ": hidden <br />"; 
+    }
+    $string .= $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span><br />";
     $string .= $words->getFormatted('MemberSince').": <span title=".$TM->created."><strong>".date('d M y', strtotime($TM->created))."</strong><br />";
     $string .= $words->getFormatted('Comments').": <span title=".$TM->NbComment."><strong>".$TM->NbComment."</strong><br />";
     $string .= "</span></td><td align=\"right\" class=\"accommodation\">";

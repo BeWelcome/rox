@@ -23,8 +23,12 @@
                 </div>
                 <div class="c66r">
                     <div class="subcr">
-                    <div class="notecategory"><b><?php echo $note->Category ?></b></div>
-                    <div class="notecomment"><?php echo $purifier->purify($note->Comment) ?></div>
+                       <?php if (!$note->Category){ ?>
+                        <p>&nbsp;</p>    
+                       <?php } else { ?>
+                        <div class="notecategory"><b><?php echo $purifier->purify($note->Category) ?></b></div>
+                        <?php } ?>
+                        <div class="notecomment"><?php echo $purifier->purify($note->Comment) ?></div>
 
                     </div>
                 </div>

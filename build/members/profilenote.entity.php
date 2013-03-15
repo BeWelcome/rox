@@ -73,7 +73,7 @@ class ProfileNote extends RoxEntityBase
             return array();
         }
 
-        $where = "id IN ('" . implode("','", $notes) . "') ORDER BY Category";
+        $where = "id IN ('" . implode("','", $notes) . "') ORDER BY created DESC";
         return $this->createEntity('ProfileNote')->findByWhereMany($where);
     }
 

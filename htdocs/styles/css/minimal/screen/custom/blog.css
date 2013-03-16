@@ -74,3 +74,11 @@ fieldset {border-top: 0;}
     border-bottom: 1px solid #F7F7F7;
     color: #333333;
 }
+
+a.toggleedit {
+    text-decoration: none;
+}
+
+a.toggleedit:hover {
+    text-decoration: underline;
+}

@@ -137,8 +137,11 @@ if ($allow_title) { // New Topic
         else {
             echo isset($vars['topic_text']) ? $vars['topic_text'] : '';
         }
-        ?></textarea>
-    </div> <!-- row -->
+        ?></textarea><script>
+  document.write('<p>');
+  document.write('<a href="javascript:;" onclick="tinymce.execCommand(\'mceToggleEditor\',false,\'topic_text\');">');
+  document.write('<?php echo $words->getFormatted("forum_toggleTinyMCE"); ?></a></p>');
+</script></div> <!-- row -->
 
 <?php
     if (isset($allow_title) && $allow_title) {

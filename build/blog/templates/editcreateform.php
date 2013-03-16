@@ -82,7 +82,11 @@ if (in_array('upderror', $vars['errors'])) {
         <textarea id="create-txt" name="txt" rows="10" cols="65" class="long" ><?php
         // the content may be set
         echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
-        ?></textarea>
+        ?></textarea><script>
+  document.write('<p>');
+  document.write('<a href="javascript:;" onclick="tinymce.execCommand(\'mceToggleEditor\',false,\'create-txt\');">');
+  document.write('<?php echo $words->getFormatted("forum_toggleTinyMCE"); ?></a></p>');
+</script>
         <div id="bcreate-c" class="statbtn"></div>
         <?php
         if (in_array('text', $vars['errors'])) {

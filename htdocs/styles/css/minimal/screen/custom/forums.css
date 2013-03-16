@@ -348,3 +348,12 @@ img.forum_icon, #main h4 img.forum_icon {
 margin: 0 4px;
 float:left;
 }
+
+
+a.toggleedit {
+    text-decoration: none;
+}
+
+a.toggleedit:hover {
+    text-decoration: underline;
+}

@@ -56,7 +56,7 @@ Boston, MA  02111-1307, USA.
     <option value="0"></option>
     <option value="male"><?php echo $words->getBuffered('Male'); ?></option>
     <option value="female"><?php echo $words->getBuffered('Female'); ?></option>
-    <option value="otherGender"><?php echo $words->getBuffered('Othergender'); ?></option>
+    <option value="genderOther"><?php echo $words->getBuffered('genderOther'); ?></option>
 </select><?php echo $words->flushBuffer(); ?>
 </td><td>
 <strong class="small"><?php echo $words->getFormatted('FindPeopleMinimumAge'); ?></strong><br />

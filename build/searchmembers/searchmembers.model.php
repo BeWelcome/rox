@@ -778,10 +778,10 @@ WHERE
     private function generateGenderCond(&$vars) {
         $gender = $this->GetParam($vars, 'Gender', '0');
 
-        if ( strlen($gender) > 1 && $gender != 'otherGender') {
+        if ( strlen($gender) > 1 && $gender != 'genderOther') {
             return "Gender='" . $this->dao->escape($gender) . "' AND HideGender='No'";
-        } elseif ($gender == 'otherGender') {
-            return "Gender NOT IN ('male','female') AND HideGender='No'";
+        } elseif ($gender == 'genderOther') {
+            return "Gender = 'other' AND HideGender='No'";
         } 
         return '1=1';
     }

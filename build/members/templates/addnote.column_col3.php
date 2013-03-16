@@ -37,7 +37,12 @@
     if (isset($vars['success'])) {
         echo '<div class="success">' . $words->get('ProfileNoteSuccess') . '<br />';
         echo '<a href="mynotes">' . $words->get('ProfileNoteAllNotes') . '</a></div>';
+        if ($note->Category == "") {
+            $note->Category = $note->CategoryFree;
+            $note->CategoryFree = "";
+        }
     }
+
     $formkit = $this->layoutkit->formkit;
     $callback_tag = $formkit->setPostCallback('MembersController', 'addnoteCallback');
     ?>
@@ -57,7 +62,7 @@
         <div class="type-select">
         <label><?=$words->get("ProfileNoteCategory")?></label>
             <select name="ProfileNoteCategory" id="ProfileNoteCategory">
-                        <option value=""></option>
+                        <option value="">-<?php echo $words->getBuffered('ProfileNoteCategory');?>-</option>
                         <?php foreach($categories as $category) {
                             $catoption = '<option value="' . $category . '"';
                             if ($category == $note->Category) {
@@ -67,7 +72,7 @@
                             echo $catoption . "\n";
                         } 
                         ?>
-            </select>
+            </select><?php $words->flushBuffer(); ?>
             
         </div>
         <div class="type-text">

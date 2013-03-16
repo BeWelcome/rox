@@ -828,6 +828,11 @@ class MembersController extends RoxControllerBase
         } else {
             $category = $catfree;
         }
+        if (empty($category)) {
+            $vars['errors'] = array('ProfileNoteCategoryNotSet');
+            $mem_redirect->post = $vars;
+            return false;
+        }
         $this->model->writeNoteForMember($this->route_vars['username'], $category, $vars['ProfileNoteComment']);
         $vars['success'] = true;
         $mem_redirect->post = $vars;

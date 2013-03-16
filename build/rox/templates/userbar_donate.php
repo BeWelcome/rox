@@ -7,8 +7,11 @@ $Stats = $DModel->getStatForDonations() ;
     $max=count($TDonationArray) ;
     $TotalDonations=$Stats->YearDonation ;
     $TotalDonationsNeeded = $Stats->YearNeededAmount ;
-    $Percent = $TotalDonations *100/$TotalDonationsNeeded;
-
+    if ($TotalDonations >= $TotalDonationsNeeded) {
+        $Percent = 100;
+    } else {
+        $Percent = $TotalDonations *100/$TotalDonationsNeeded;
+    }
     $BarState = -101 *$Percent/100;
     //$TextState = 202+$BarState;
     //if ($TextState > 160) $TextState = 160;

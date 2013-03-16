@@ -22,7 +22,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
            onclick="this.value='';" onfocus="this.value='';" onkeypress="if(chkEnt(this, event)) {if(CheckEmpty(this)) {searchGlobal(0)} else {searchByText(this.value, 0)}};"/>
         <?php echo $words->flushBuffer(); ?>
         <input id="text_search" class="float_left button" type="button" value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"
-            onclick="searchMembers();" />
+            onclick="if(CheckEmpty(getElementById('Address'))) {searchGlobal(0)} else {searchByText(get_val('Address'), 0)};" />
             <?php echo $words->flushBuffer(); ?>
         <input type="reset" id="advancedbuttons" class="NotDisplayed float_left button" value="<?php echo $words->getBuffered('SearchClearValues'); ?>" />
         

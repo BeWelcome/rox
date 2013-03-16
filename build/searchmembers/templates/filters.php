@@ -167,13 +167,6 @@ Boston, MA  02111-1307, USA.
         $('searchmembers').reset();
     }
 
-    function searchMembers(){
-        if( $('Address').value ) {
-            searchGlobal(0);
-        } else {
-            searchByText(get_val('Address'), 0);
-        }
-    }
 
     // hide all the filters
     $$('.NotDisplayed').each(Element.toggle);

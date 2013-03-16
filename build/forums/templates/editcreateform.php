@@ -139,7 +139,7 @@ if ($allow_title) { // New Topic
         }
         ?></textarea><script>
   document.write('<p>');
-  document.write('<a href="javascript:;" onclick="tinymce.execCommand(\'mceToggleEditor\',false,\'topic_text\');">');
+  document.write('<a class="toggleedit" href="javascript:;" onclick="tinymce.execCommand(\'mceToggleEditor\',false,\'topic_text\');">');
   document.write('<?php echo $words->getFormatted("forum_toggleTinyMCE"); ?></a></p>');
 </script></div> <!-- row -->
 

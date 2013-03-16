@@ -49,6 +49,8 @@
   /* ### paragraphs ###*/
   p,ul,dd,dt { line-height: 1.5em; }
   p { line-height: 1.5em; margin: 0 0 0.8em 0; }
+  #buttonstop p.floatbox,
+  #messagefooter p.floatbox  { margin: 0 }
 
   /* ### text formatting  ### */
   strong,b {font-weight: bold; }

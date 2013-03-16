@@ -211,7 +211,7 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $string .= "<td class=\"memberlist\" valign=\"top\">" ;
     $string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
     $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ".$TM->CityName.", ".$TM->CountryName. "<br />";
-    if ($member->gender != "hidden") {
+    if ($TM->Gender != "hidden") {
     $string .= $words->get('Gender'). ": " .$TM->Gender. "<br />"; 
     }else{
     $string .= $words->get('Gender'). ": hidden <br />"; 

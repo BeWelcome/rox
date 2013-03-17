@@ -70,6 +70,7 @@ class BlogEditPage extends BlogBasePage
         $submitName = 'submit_blog_edit';
         $submitValue = $words->getSilent('BlogEditSubmit');      
 
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require_once SCRIPT_BASE . 'build/blog/templates/editcreateform.php';
     }
 

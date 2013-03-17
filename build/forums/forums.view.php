@@ -45,6 +45,7 @@ class ForumsView extends RoxAppView {
         $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
         $LanguageChoices=$this->_model->LanguageChoices() ;
         $visibilitiesDropdown = $this->getNewThreadVisibilitiesDropdown($IdGroup);
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     }
 
@@ -104,6 +105,7 @@ class ForumsView extends RoxAppView {
 
         $visibility = $this->_model->getThreadVisibility($topic->IdThread);
         $visibilitiesDropdown = $this->getVisibilitiesDropdown($visibility, $visibility, $IdGroup, false);
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
 
         require 'templates/editcreateform.php';
 
@@ -140,6 +142,7 @@ class ForumsView extends RoxAppView {
             $void_string=$word->ftrad($IdContent) ;
             $AppropriatedLanguage=$fTradIdLastUsedLanguage ;
         }
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     } // end of editPost
 
@@ -164,6 +167,7 @@ class ForumsView extends RoxAppView {
         }
                 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
                 $LanguageChoices=$this->_model->LanguageChoices() ;
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     } // end of editPost
 

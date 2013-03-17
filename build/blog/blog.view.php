@@ -90,6 +90,7 @@ class BlogView extends RoxAppView
             echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
             echo '<p>'.$words->get('BlogCreateFinishInfo')."</p>\n";
         }
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     }
 
@@ -126,7 +127,7 @@ class BlogView extends RoxAppView
         $actionUrl = 'blog/edit/'.$blogId;
         $submitName = 'submit_blog_edit';
         $submitValue = $words->getSilent('BlogEditSubmit');
-
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     }
 

@@ -22,31 +22,12 @@ if (!$member) {
 }
 $words = new MOD_words();
 ?>
-
-<script type="text/javascript">//<!--
-tinyMCE.srcMode = '';
-tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
-tinyMCE.init({
-    mode: "exact",
-    elements: "create-txt",
-    plugins : "advimage,preview,fullscreen",
-    theme: "advanced",
-    content_css : http_baseuri + "styles/css/minimal/screen/custom/tinymce_content.css?1",
-    relative_urls:false,
-    convert_urls:false,
-    theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,forecolor,backcolor,separator,link,image,charmap,separator,preview,cleanup,code,fullscreen",
-    theme_advanced_buttons2 : "",
-    theme_advanced_buttons3 : "",
-    theme_advanced_toolbar_location: 'top',
-    theme_advanced_statusbar_location: 'bottom',
-    theme_advanced_resizing: true,
-    theme_advanced_resize_horizontal : false,
-    plugin_preview_width : "800",
-    plugin_preview_height : "600",
-});
-//-->
-</script>
-
+<?php
+if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
+    $textarea = 'create-txt';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
+}
+?>
 <form method="post" action="<?=$actionUrl?>" class="fieldset-menu-form" id="blog-create-form">
 
 <?php
@@ -82,11 +63,7 @@ if (in_array('upderror', $vars['errors'])) {
         <textarea id="create-txt" name="txt" rows="10" cols="65" class="long" ><?php
         // the content may be set
         echo isset($vars['txt']) ? htmlentities($vars['txt'], ENT_COMPAT, 'utf-8') : '';
-        ?></textarea><script>
-  document.write('<p>');
-  document.write('<a class="toggleedit" href="javascript:;" onclick="tinymce.execCommand(\'mceToggleEditor\',false,\'create-txt\');">');
-  document.write('<?php echo $words->getFormatted("forum_toggleTinyMCE"); ?></a></p>');
-</script>
+        ?></textarea>
         <div id="bcreate-c" class="statbtn"></div>
         <?php
         if (in_array('text', $vars['errors'])) {

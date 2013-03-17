@@ -3601,6 +3601,11 @@ SQL;
     public function GetGroupEntity($IdGroup) {
         return $this->createEntity('Group')->findById($IdGroup);
     }
+
+    public function getTinyMCEPreference() {
+        $member = $this->getLoggedInMember();
+        return $member->getPreference("DisableTinyMCE", $default = "No");
+    }
 } // end of class Forums
 
 

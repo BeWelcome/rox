@@ -42,7 +42,7 @@ require_once "footer.helper.php";
           </div>
       </div>
       <div class="c50r">
-          <div class="subcl">
+          <div class="subcr">
             <div id="language-select" class="float_right">
             <?php
             echo $words->get('Languages') . ": " . _languageFooterSelectorDropDown()

@@ -3202,7 +3202,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			if (($DefIdLanguage>=0)) {
 			   $row=$this->GetLanguageName($DefIdLanguage) ;
 		   	   array_push($allreadyin,$row->IdLanguage) ;
-			   array_push($tt, "DefinedLanguage");
+			   array_push($tt, "CurrentLanguage");
 		   	   array_push($tt,$row) ;
 			}
 			// Then next will be english (if not allready in the list)

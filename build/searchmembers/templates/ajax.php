@@ -211,11 +211,18 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $string .= "<td class=\"memberlist\" valign=\"top\">" ;
     $string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
     $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ".$TM->CityName.", ".$TM->CountryName. "<br />";
-    if ($TM->Gender != "hidden") {
-    $string .= $words->get('Gender'). ": " .$TM->Gender. "<br />"; 
-    }else{
-    $string .= $words->get('Gender'). ": hidden <br />"; 
+    $string .= $words->getFormatted('Gender'). ": ";
+    $gender = $TM->Gender;
+    if (($TM->HideGender == 'No') && ($gender != 'IDontTell')) {
+        if ($gender != 'other') {
+            $string .= $words->getFormatted($gender);
+        } else {
+            $string .= $words->getFormatted('GenderOther');
+        } 
+    } else {
+        $string .= $words->getFormatted('hidden'); 
     }
+    $string .="<br />";
     $string .= $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span><br />";
     $string .= $words->getFormatted('MemberSince').": <span title=".$TM->created."><strong>".date('d M y', strtotime($TM->created))."</strong><br />";
     $string .= $words->getFormatted('Comments').": <span title=".$TM->NbComment."><strong>".$TM->NbComment."</strong><br />";

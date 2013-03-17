@@ -43,10 +43,18 @@
           </h2>
           <p class="grey">
             <?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?><br />
-             <?php 
-             if ($member->gender != "hidden") {
-                echo $words->get('Gender') . ": " . $member->Gender; 
-             }
+             <?php
+                $gender = $member->Gender;
+                echo $words->get('Gender') . ": ";
+                if (($member->HideGender == "No") && ($gender != 'IDontTell')) {
+                    if ($gender != 'other') {
+                        echo $words->get($gender);
+                    } else {
+                        echo $words->get('GenderOther');
+                    }
+                } else {
+                    echo $words->get('hidden');
+                }
              ?><br />
             <?php if (!empty($logged_member)) : ?>
                 <?php echo $words->get("MemberSince");?>: <?php echo $layoutbits->ago(strtotime($member->created));?> <br />

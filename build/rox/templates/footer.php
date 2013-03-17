@@ -26,22 +26,32 @@ require_once "footer.helper.php";
 
 <div id="footer">
   <?php translator_block() ?>
-  <div class="floatbox">
-  <p class="float_left">
-    <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> • 
-    <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> • 
-    <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> • 
-    <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> • 
-    <a href="faq"><?php echo $words->getFormatted('faq'); ?></a> • 
-    <a href="about/feedback"><?php echo $words->getFormatted('Contact'); ?></a>
-  </p>
-<div id="language-select" class="float_right">
-    <?php
-      echo $words->get('Languages') . ": " . _languageFooterSelectorDropDown()
-        . "&nbsp;&nbsp;&nbsp;" . $words->get('FooterHelpUsTranslate');
-    ?>
-  </div>
-  </div>
+  <div class="subcolumns">
+      <div class="c50l">
+          <div class="subcl">
+            <div class="floatbox">
+              <p class="float_left linklist">
+                <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> • 
+                <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> • 
+                <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> • 
+                <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> • 
+                <a href="faq"><?php echo $words->getFormatted('faq'); ?></a> • 
+                <a href="about/feedback"><?php echo $words->getFormatted('Contact'); ?></a>
+              </p>
+            </div>    
+          </div>
+      </div>
+      <div class="c50r">
+          <div class="subcl">
+            <div id="language-select" class="float_right">
+            <?php
+            echo $words->get('Languages') . ": " . _languageFooterSelectorDropDown()
+            . "&nbsp;&nbsp;&nbsp;" . $words->get('FooterHelpUsTranslate', '<a href="http://www.bewelcome.org/groups/60/wiki">', '</a>');
+            ?>
+            </div>    
+          </div>
+      </div>
+    </div>
 <div class="floatbox">
   <p class="float_left">
      &copy; 2007-<?php echo date('Y') . ' ' . $words->get('CopyrightByBV'); ?>

@@ -436,7 +436,6 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Delete')) {
   }
 } // end of delete
 
-print_r($_POST);
 // If it was a request for insert or update
 if ((isset ($_POST['DOACTION'])) and (strtolower($_POST['DOACTION']) == "submit") and ($_POST['Sentence'] != "") and ($_POST['lang'] != "")) {
   if (isset ($_POST['lang'])) {

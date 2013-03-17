@@ -86,7 +86,6 @@ function _languageFooterSelectorDropDown()
     <form style="display: inline;" action="a" method="post">
       <select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
     $langsel .= _languageOptions($words) . '</select></form>';
-    echo $words->flushBuffer();
     return $langsel;
 }
 

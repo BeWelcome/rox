@@ -26,14 +26,8 @@ require_once "footer.helper.php";
 
 <div id="footer">
   <?php translator_block() ?>
-  <div id="language-select">
-    <?php 
-      echo $words->get('FooterChooseLanguage') . ": " . _languageFooterSelectorDropDown()
-        . "&nbsp;&nbsp;&nbsp;" . $words->get('FooterHelpUsTranslate'); 
-      echo $words->flushBuffer();
-    ?>
-  </div>
-  <p>
+  <div class="floatbox">
+  <p class="float_left">
     <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> • 
     <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> • 
     <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> • 
@@ -41,7 +35,14 @@ require_once "footer.helper.php";
     <a href="faq"><?php echo $words->getFormatted('faq'); ?></a> • 
     <a href="about/feedback"><?php echo $words->getFormatted('Contact'); ?></a>
   </p>
-  <div class="floatbox">
+<div id="language-select" class="float_right">
+    <?php
+      echo $words->get('Languages') . ": " . _languageFooterSelectorDropDown()
+        . "&nbsp;&nbsp;&nbsp;" . $words->get('FooterHelpUsTranslate');
+    ?>
+  </div>
+  </div>
+<div class="floatbox">
   <p class="float_left">
      &copy; 2007-<?php echo date('Y') . ' ' . $words->get('CopyrightByBV'); ?>
   </p>

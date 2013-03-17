@@ -49,7 +49,7 @@ $query_list = PVars::get()->query_history;
 function translator_block() {
 
     if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
-        ?><div id="translator"><?php
+        ?><div id="translator" class="row"><?php
         $pagetotranslate = $_SERVER['PHP_SELF'];
         if ($pagetotranslate { 0 } == "/") {
             // funky array stuff

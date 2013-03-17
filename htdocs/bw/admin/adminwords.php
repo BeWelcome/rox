@@ -585,7 +585,7 @@ echo "\" rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
   </tr>
   <tr>
     <td class="label"><label for="lang">Language:</label> </td>
-    <td><select id="lang"><?php
+    <td><select id="lang"><option value=""></option><?php
         foreach($langarr as $language) {
             echo '<option value="' . $language->ShortCode . '"';
             if ($lang == $language->ShortCode) {

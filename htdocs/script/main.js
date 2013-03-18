@@ -134,6 +134,7 @@ bwrox.selectScripts([
     pages: [
       "blog",
       "forums",
+      "groups",
       "trip"
     ]
   },
@@ -164,7 +165,8 @@ bwrox.selectScripts([
       "gallery/show/image",
       "message/write",
       "editmyprofile",
-      "admin/massmail"
+      "admin/massmail",
+      "members/"
     ]
   },
   {

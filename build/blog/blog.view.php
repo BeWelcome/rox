@@ -20,13 +20,13 @@ class BlogView extends RoxAppView
     // new functions
 	/* This adds other custom styles to the page*/
 	public function customStylesPublic() {
-        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?2" type="text/css"/>';        
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?3" type="text/css"/>';
         $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/bw_basemod_blog_public.css" type="text/css"/>';
 		return $out;
     }    
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
-        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?2" type="text/css"/>';        
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?3" type="text/css"/>';
 		return $out;
     }    
 	/* This adds RSS links to the header of the page*/

@@ -3604,7 +3604,7 @@ SQL;
 
     public function getTinyMCEPreference() {
         $member = $this->getLoggedInMember();
-        return $member->getPreference("DisableTinyMCE", $default = "No");
+        return $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
     }
 } // end of class Forums
 

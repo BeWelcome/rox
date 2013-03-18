@@ -1294,6 +1294,6 @@ ORDER BY b.`blog_created` DESC LIMIT 20';
 
     public function getTinyMCEPreference() {
         $member = $this->getLoggedInMember();
-        return $member->getPreference("DisableTinyMCE", $default = "No");
+        return $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
     }
 }

@@ -794,7 +794,7 @@ class AdminModel extends RoxModelBase
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO
+            REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
@@ -825,7 +825,7 @@ class AdminModel extends RoxModelBase
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO
+            REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
@@ -857,7 +857,7 @@ class AdminModel extends RoxModelBase
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO 
+            REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT 
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
@@ -883,7 +883,7 @@ class AdminModel extends RoxModelBase
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO 
+            REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()

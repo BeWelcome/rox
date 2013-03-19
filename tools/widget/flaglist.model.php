@@ -13,7 +13,7 @@ class FlaglistModel extends PAppModel
         $dao = PDB::get($db_vars->dsn, $db_vars->user, $db_vars->password);
         
         $dbresult = $dao->query('
-SELECT languages.*
+SELECT DISTINCT languages.*
 FROM languages, words
 WHERE languages.id = words.IdLanguage
 AND words.code = \'WelcomeToSignup\'

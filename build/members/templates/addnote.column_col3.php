@@ -85,11 +85,11 @@
         </div>
         <div class="type-button">
         <?php 
-        if (!$edit_mode) { ?>
-            <input type="submit" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonAdd") ?>" />
-  <?php } else { ?>
+        if ($edit_mode || isset($vars['success'])) { ?>
             <input type="submit" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonEdit") ?>" />
             <a href="/members/<?php echo $this->member->Username;?>/note/delete" class="button"><?php echo $words->getFormatted('ProfileNoteButtonDelete'); ?></a>
+  <?php } else { ?>
+            <input type="submit" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonAdd") ?>" />
         <?php } ?>
         </div>
     </form>

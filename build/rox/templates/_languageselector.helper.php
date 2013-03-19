@@ -57,7 +57,7 @@ function _languageOptions($words) {
         } else {
             $langOptions .=
                 '<option value="rox/in/'.$abbr.'/'.$request_string.'" '.(($_SESSION['lang'] == $abbr) ? 'selected="selected"' : '');
-            $langOptions .= '">' . $language->TranslatedName . ' (' . $language->Name . ')</option>';
+            $langOptions .= '>' . $language->TranslatedName . ' (' . $language->Name . ')</option>';
         }
     }
     return $langOptions;

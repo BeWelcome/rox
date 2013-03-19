@@ -86,12 +86,11 @@
         <div class="type-button">
         <?php 
         if ($edit_mode || isset($vars['success'])) { ?>
-            <input type="submit" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonEdit") ?>" />
+            <input type="submit" id="submit" name="submit" value="<?php echo $words->getBuffered("ProfileNoteButtonEdit") ?>" /><?=$words->flushBuffer();?>
             <a href="/members/<?php echo $this->member->Username;?>/note/delete" class="button"><?php echo $words->getFormatted('ProfileNoteButtonDelete'); ?></a>
   <?php } else { ?>
-            <input type="submit" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonAdd") ?>" />
+            <input type="submit" id="submit" name="submit" value="<?php echo $words->getBuffered("ProfileNoteButtonAdd") ?>" /><?=$words->flushBuffer();?>
         <?php } ?>
         </div>
     </form>
-    <?=$words->flushBuffer();?>
 </div>

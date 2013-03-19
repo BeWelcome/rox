@@ -153,12 +153,14 @@ if (strpos($scope, "All") === false) {
     $langall = false;
     $scope = str_replace('"', '', $scope);
     $langs = array_map('mysql_real_escape_string',explode(",", $scope));
+    $langs = array_map('trim',$langs);
     $str .= "ShortCode IN ('" . implode("','", $langs) . "')";
 } else {
     $langall = true;
     $str .= "1 = 1";
 }
 $str .= " AND IsWrittenLanguage = 1 ORDER BY EnglishName";
+
 $qry=sql_query($str);
 $langarr = array();
 while ($language=mysql_fetch_object($qry)) {

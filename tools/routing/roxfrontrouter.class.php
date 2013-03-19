@@ -83,7 +83,7 @@ class RoxFrontRouter
     protected function setLanguage()
     {
         if (!isset ($_SESSION['lang']) ) {
-            $Model = new RoxFrontRouterModel;
+/*            $Model = new RoxFrontRouterModel;
             
             $tt=explode(".",$_SERVER['HTTP_HOST']) ;
             if (count($tt)>0) {
@@ -98,7 +98,7 @@ class RoxFrontRouter
                     return ;
                 }
             }
-
+*/
             if (!empty($_COOKIE['LastLang']) and $trylang = $Model->getLanguage($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
                 $langcode = $_COOKIE['LastLang'];
                 $_SESSION['lang'] = $trylang->ShortCode;
@@ -111,12 +111,12 @@ class RoxFrontRouter
             }
             return ;
         }
-       	
+
         if (!isset ($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en';
             $_SESSION['IdLanguage'] = 0;
-        }	
-	return ;
+        }
+        return ;
     } // end of setLanguage
 
     protected function setLanguageByBrowser()

@@ -82,8 +82,12 @@ class RoxFrontRouter
 	*/
     protected function setLanguage()
     {
+        $lang_debug_string = "lang debug string: ";
+        if (isset ($_SESSION['lang'])){
+           $lang_debug_string .= "language already in session: ".$_SESSION['lang'];
+        }
         if (!isset ($_SESSION['lang']) ) {
-/*            $Model = new RoxFrontRouterModel;
+            $Model = new RoxFrontRouterModel;
             
             $tt=explode(".",$_SERVER['HTTP_HOST']) ;
             if (count($tt)>0) {
@@ -95,18 +99,24 @@ class RoxFrontRouter
                 if ($trylang = $Model->getPossibleUrlLanguage($urlheader) ) {
                     $_SESSION['lang'] = $trylang->ShortCode;
                     $_SESSION['IdLanguage'] = $trylang->id;
+                    $lang_debug_string .= "lang set by urllanguage: ".$_SESSION['lang'];
+                    echo $lang_debug_string;
                     return ;
                 }
             }
-*/
+
             if (!empty($_COOKIE['LastLang']) and $trylang = $Model->getLanguage($_COOKIE['LastLang'])) { // If there is already a cookie ide set, we are going try it as language
                 $langcode = $_COOKIE['LastLang'];
                 $_SESSION['lang'] = $trylang->ShortCode;
                 $_SESSION['IdLanguage'] = $trylang->id;
+                $lang_debug_string .= "lang set by cookie: ".$_SESSION['lang'];
+                echo $lang_debug_string;
                 return ;
             }
 
             if ($this->setLanguageByBrowser()) { 
+                $lang_debug_string .= "lang set by browser: ".$_SESSION['lang'];
+                echo $lang_debug_string;
                 return;
             }
             return ;
@@ -115,7 +125,12 @@ class RoxFrontRouter
         if (!isset ($_SESSION['lang'])) {
             $_SESSION['lang'] = 'en';
             $_SESSION['IdLanguage'] = 0;
+            $lang_debug_string .= "lang set by default.";
+            if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])){
+               $lang_debug_string .= "yes http accept was set: ".$_SERVER["HTTP_ACCEPT_LANGAGE"];
+            }
         }
+        echo $lang_debug_string;
         return ;
     } // end of setLanguage
 

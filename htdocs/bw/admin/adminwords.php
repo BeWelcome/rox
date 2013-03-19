@@ -152,6 +152,7 @@ $str = "SELECT * FROM languages WHERE ";
 if (strpos($scope, "All") === false) {
     $langall = false;
     $scope = str_replace('"', '', $scope);
+    $scope = str_replace(';', ',', $scope);
     $langs = array_map('mysql_real_escape_string',explode(",", $scope));
     $langs = array_map('trim',$langs);
     $str .= "ShortCode IN ('" . implode("','", $langs) . "')";

@@ -100,7 +100,7 @@ class RoxFrontRouter
                     $_SESSION['lang'] = $trylang->ShortCode;
                     $_SESSION['IdLanguage'] = $trylang->id;
                     $lang_debug_string .= "lang set by urllanguage: ".$_SESSION['lang'];
-                    echo $lang_debug_string;
+                    echo "<!--".$lang_debug_string.">";
                     return ;
                 }
             }
@@ -110,13 +110,13 @@ class RoxFrontRouter
                 $_SESSION['lang'] = $trylang->ShortCode;
                 $_SESSION['IdLanguage'] = $trylang->id;
                 $lang_debug_string .= "lang set by cookie: ".$_SESSION['lang'];
-                echo $lang_debug_string;
-                return ;
+echo "<!--".$lang_debug_string.">";                
+return ;
             }
 
             if ($this->setLanguageByBrowser()) { 
                 $lang_debug_string .= "lang set by browser: ".$_SESSION['lang'];
-                echo $lang_debug_string;
+                echo "<!--".$lang_debug_string.">";
                 return;
             }
             return ;
@@ -130,8 +130,9 @@ class RoxFrontRouter
                $lang_debug_string .= "yes http accept was set: ".$_SERVER["HTTP_ACCEPT_LANGAGE"];
             }
         }
-        echo $lang_debug_string;
-        return ;
+       
+                echo "<!--".$lang_debug_string.">";
+                return;
     } // end of setLanguage
 
     protected function setLanguageByBrowser()

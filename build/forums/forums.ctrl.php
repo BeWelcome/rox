@@ -205,6 +205,9 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_VIEW_LASTPOSTS) {
             $this->_view->showTopLevelRecentPosts();
         } 
+        else if ($this->action == self::ACTION_VIEW_LANDING) {
+            $this->_view->showTopLevelLandingPage();
+        } 
         else if ($this->action == self::ACTION_RULES) {
             $this->_view->rules();
         } 
@@ -583,6 +586,7 @@ class ForumsController extends PAppController
     const ACTION_VOTE_POST = 17;
 	const ACTION_DELETEVOTE_POST = 18 ;
 	const ACTION_REPORT_TO_MOD = 19 ;
+    const ACTION_VIEW_LANDING = 20;
     
     /**
     * Parses a request
@@ -628,6 +632,9 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_NEW;
                 } else if ($r == 'edit') {
                     $this->action = self::ACTION_EDIT;
+                } else if ($r == 'landing') {
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
+                    $this->action = self::ACTION_VIEW_LANDING;
                 } else if ($r == 'lastposts') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
                     $this->action = self::ACTION_VIEW_LASTPOSTS;

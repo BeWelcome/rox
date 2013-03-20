@@ -111,8 +111,7 @@ if ($allow_title) { // New Topic
 <? } ?>
     <div class="row">
         <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br />
-        <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long">
-        <?php
+        <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long"><?php
         if (isset($void_string)) {
             echo $void_string ;
         }

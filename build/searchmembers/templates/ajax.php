@@ -136,7 +136,7 @@ else
                 <th>".$words->getFormatted('MemberSince')."</th>
                 <th>".$words->getFormatted('LastLogin')."</th>
                 <th>".$words->getFormatted('Comments')."</th>
-                <th align=\"right\">".$words->getFormatted('Age')."</th>
+                <th align=\"right\">".$words->getFormatted('Age')."<br />" . $words->getFormatted('Gender') . "</th>
             </tr>", ENT_QUOTES).
         "'/>";
     else echo "<header header='".
@@ -184,7 +184,7 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     $string .= $TM->NbComment ;
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\" align=\"right\">" ;
-    $string .= $TM->Age ;
+    $string .= $TM->Age . '<br />' . $layoutbits->getGenderTranslated($TM->Gender, $TM->HideGender, false);
     $string .= "</td>" ;
     $string .="</tr>" ;
 
@@ -211,17 +211,7 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $string .= "<td class=\"memberlist\" valign=\"top\">" ;
     $string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
     $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ".$TM->CityName.", ".$TM->CountryName. "<br />";
-    $string .= $words->getFormatted('Gender'). ": ";
-    $gender = $TM->Gender;
-    if (($TM->HideGender == 'No') && ($gender != 'IDontTell')) {
-        if ($gender != 'other') {
-            $string .= $words->getFormatted($gender);
-        } else {
-            $string .= $words->getFormatted('GenderOther');
-        } 
-    } else {
-        $string .= $words->getFormatted('hidden'); 
-    }
+    $string .= $layoutbits->getGenderTranslated($TM->Gender, $TM->HideGender);
     $string .="<br />";
     $string .= $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span><br />";
     $string .= $words->getFormatted('MemberSince').": <span title=".$TM->created."><strong>".date('d M y', strtotime($TM->created))."</strong><br />";

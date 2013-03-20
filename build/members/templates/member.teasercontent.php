@@ -44,18 +44,11 @@
           <p class="grey">
             <?=$agestr ?><?php if($occupation != null) echo ", ".$occupation; ?><br />
              <?php
-                $gender = $member->Gender;
-                echo $words->get('Gender') . ": ";
-                if (($member->HideGender == "No") && ($gender != 'IDontTell')) {
-                    if ($gender != 'other') {
-                        echo $words->get($gender);
-                    } else {
-                        echo $words->get('GenderOther');
-                    }
-                } else {
-                    echo $words->get('hidden');
+                $strGender = MOD_layoutbits::getGenderTranslated($member->Gender, $member->HideGender, true);
+                if (!empty($strGender)) {
+                    echo $strGender . "<br />";
                 }
-             ?><br />
+             ?>
             <?php if (!empty($logged_member)) : ?>
                 <?php echo $words->get("MemberSince");?>: <?php echo $layoutbits->ago(strtotime($member->created));?> <br />
                 <?php

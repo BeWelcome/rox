@@ -646,6 +646,28 @@ class MOD_layoutbits
         }
         return $text;
     }
+    
+    /**
+     * Returns a string with the gender if that isn't hidden. Translated of the 
+     * form 'Gender: male/female/other'
+     * 
+     * @return string 'Gender: male/female/other/ translated or empty string
+     */
+    public static function getGenderTranslated($gender, $hideGender, $addGenderText = true) {
+        $words = new MOD_words();
+        $string = '';
+        if (($hideGender == 'No') && ($gender != 'IDontTell')) {
+            if ($addGenderText) {
+                $string .= $words->getFormatted('Gender'). ": ";
+            }
+            if ($gender != 'other') {
+                $string .= $words->getFormatted($gender);
+            } else {
+                $string .= $words->getFormatted('GenderOther');
+            } 
+        }
+        return $string;
+    }
 }
 
 ?>

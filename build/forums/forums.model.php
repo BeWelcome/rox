@@ -23,6 +23,7 @@ class Forums extends RoxModelBase {
     const CV_POSTS_PER_PAGE = 200;
     const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
     const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for lastposts
+    const CV_TOPMODE_LANDING=3; // Says that we use the forums landing page for topmode
 
     const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
 	
@@ -261,8 +262,11 @@ function FindAppropriatedLanguage($IdPost=0) {
 			case "Pref_ForumFirstPageCategory":
 				$this->setTopMode(Forums::CV_TOPMODE_CATEGORY) ;
 				break ;
+			case "Pref_ForumFirstPageLanding":
+				$this->setTopMode(Forums::CV_TOPMODE_LANDING) ;
+				break ;
 			default:
-				$this->setTopMode(Forums::CV_TOPMODE_LASTPOSTS) ;
+				$this->setTopMode(Forums::CV_TOPMODE_LANDING) ;
 				break ;
 		}
 		
@@ -443,6 +447,42 @@ WHERE
         'SA' => 'South Amercia',
         'OC' => 'Oceania'
     );
+
+    private function boardTopLevelLanding($showsticky = true) {
+        if ($this->tags) {
+            $subboards = array();
+            $taginfo = $this->getTagsNamed();
+            
+            $url = 'forums';
+            
+            $subboards[$url] = 'Forums';
+            
+            for ($i = 0; $i < count($this->tags) - 1; $i++) {
+                if (isset($taginfo[$this->tags[$i]])) {
+                    $url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
+                    $subboards[$url] = $taginfo[$this->tags[$i]];
+                }
+            }
+            
+            if ((count($this->tags)>0)and isset($taginfo[0])) {
+               $title = $this->words->getFormatted("Forum_label_tag").":".$taginfo[$this->tags[count($this->tags) -1]];
+               $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
+            }
+            else {
+               $title = "no tags";
+               $href = $url.'/t'.'-'.$title;
+            }
+            
+			 
+            $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
+        } else {
+            $this->board = new Board($this->dao, 'Forums', '.');
+            foreach (Forums::$continents as $code => $name) {
+                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
+            }
+        }
+        $this->board->initThreads($this->getPage(), $showsticky);
+    } // end of boardTopLevelLastPosts
     
     private function boardTopLevelLastPosts($showsticky = true) {
         if ($this->tags) {
@@ -896,8 +936,11 @@ WHERE `geonameid` = '%d'
 			elseif ($this->TopMode==Forums::CV_TOPMODE_LASTPOSTS) {
 				$this->boardTopLevelLastPosts($showsticky);
 			}
+			elseif ($this->TopMode==Forums::CV_TOPMODE_LANDING) {
+				$this->boardTopLevelLanding($showsticky);
+			}
 			else {
-				$this->boardTopLevelLastPosts($showsticky);
+				$this->boardTopLevelLanding($showsticky);
 			}
 		} else if ($this->continent && !$this->geonameid && !$this->countrycode) { 
             $this->boardContinent();
@@ -2907,7 +2950,9 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $continent = false;
     private $page = 1;
     private $messageId = 0;
-    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATEGORIES
+    private $TopMode=Forums::CV_TOPMODE_LANDING; // define that we use the landing page for top mode
+
+//    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATEGORIES
 //    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATEGORIES
 
 

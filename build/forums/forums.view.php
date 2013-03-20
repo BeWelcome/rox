@@ -329,6 +329,27 @@ class ForumsView extends RoxAppView {
     }
 
 /*
+* showTopLevelLandingPage produce the view with recent forum posts (without any group posts) 
+* on top and groups on the bottom
+*/
+    public function showTopLevelLandingPage() {
+        $this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
+
+//        $boards = $this->_model->getBoard();
+//        $request = PRequest::get()->request;
+//
+//        $pages = $this->getBoardPageLinks();
+//        $currentPage = $this->_model->getPage();
+//        $max = $this->_model->getBoard()->getNumberOfThreads();
+//        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+//
+//        $top_tags = $this->_model->getTopCategoryLevelTags();
+//        $all_tags_maximum = $this->_model->getTagsMaximum();
+//        $all_tags = $this->_model->getAllTags();
+        require 'templates/landing.php';
+    } // end of ShowTopLevelLandingPage
+
+/*
 * showTopLevelRecentPosts produce the view with the TagCloud and categories list
 * last posts are not grouped in categories
 */

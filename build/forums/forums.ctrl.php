@@ -188,6 +188,9 @@ class ForumsController extends PAppController
                     else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LASTPOSTS){
                         $this->_view->showTopLevelRecentPosts(); 
                     }
+                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LANDING){
+                        $this->_view->showTopLevelLandingPage(); 
+                    }
                     else {
                         die("getTopMode is not set") ;
                     }

@@ -11,17 +11,17 @@
         foreach ($this->pager->getActiveSubset($mynotes) as $note) {
             $m = $this->model->getMemberWithId($note->IdContact);?>
             <div class="subcolumns">
-                <div class="c33l">
+                <div class="c38l">
                     <div class="subcl">
                         <?php echo $layoutbits->PIC_50_50($m->Username,'',$style='float_left framed')?>
                         <div class="userinfo">
                         <a href="members/<?php echo $m->Username ?>" class="username"><?php echo $m->Username ?></a><br>
                         <p class="small"><?php echo date($words->getSilent('DateFormatShort'),strtotime($note->updated)); ?></p>
-                        <p><a class="button" href="members/<?php echo $m->Username ?>/note/edit"><?php echo $words->get('Edit') ?></a> <a class="button" href="members/<?php echo $m->Username ?>/note/delete"><?php echo $words->get('Delete') ?></a></p>
+                        <p><a class="button" href="members/<?php echo $m->Username ?>/note/edit"><?php echo $words->get('Edit') ?></a>&nbsp;&nbsp; <a class="button" href="members/<?php echo $m->Username ?>/note/delete"><?php echo $words->get('Delete') ?></a></p>
                         </div>
                     </div>
                 </div>
-                <div class="c66r">
+                <div class="c62r">
                     <div class="subcr">
                        <?php if (!$note->Category){ ?>
                         <p>&nbsp;</p>    

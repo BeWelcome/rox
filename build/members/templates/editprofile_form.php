@@ -149,12 +149,12 @@ HTML;
                                         continue;
                                     }
                                     echo <<<HTML
-                                    <option value="{$vars['languages_all_signed'][$jj]->id}">{$vars['languages_all_signed'][$jj]->Name}</option>
+                                    <option value="{$vars['languages_all_signed'][$jj]->id}">{$vars['languages_all_signed'][$jj]->TranslatedName}</option>
 HTML;
                                 }
                             echo <<<HTML
                             </optgroup>
-                          </select>{$words->flushBuffer()}
+                          </select>
                           </td>
                           <td>
                             <select name="memberslanguageslevel[]" >

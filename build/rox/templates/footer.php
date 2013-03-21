@@ -54,7 +54,7 @@ require_once "footer.helper.php";
     </div>
 <div class="floatbox">
   <p class="float_left">
-     &copy; 2007-<?php echo date('Y') . ' ' . $words->get('CopyrightByBV'); ?>
+     &copy; 2007-<?php echo date('Y') . ' ' . $words->get('CopyrightByBV', '<a href="http://www.bevolunteer.org/" target="_blank">', '</a>'); ?>
   </p>
   <p class="float_right">
      Running on <a href="http://trac.bewelcome.org/">BW Rox</a> rev. <a href="http://gitorious.org/bewelcome/rox/commit/<?php echo $versionInfo; ?>"><?php echo $versionInfo; ?></a>

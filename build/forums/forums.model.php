@@ -450,39 +450,18 @@ WHERE
 
     private function boardTopLevelLanding($showsticky = true) {
         if ($this->tags) {
-            $subboards = array();
-            $taginfo = $this->getTagsNamed();
+            $this->boardTopLevelLastPosts() ;
+            return ;
+        } 
+        $this->board = new Board($this->dao, 'Forums and Groups', '.');
+        $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 38);
+        $groups = new Board($this->dao, 'Groups', '.');
+        $forum->initThreads();
+        $groups->initThreads();
+        $this->board->add($forum);
+        $this->board->add($groups);
             
-            $url = 'forums';
-            
-            $subboards[$url] = 'Forums';
-            
-            for ($i = 0; $i < count($this->tags) - 1; $i++) {
-                if (isset($taginfo[$this->tags[$i]])) {
-                    $url = $url.'/t'.$this->tags[$i].'-'.$taginfo[$this->tags[$i]];
-                    $subboards[$url] = $taginfo[$this->tags[$i]];
-                }
-            }
-            
-            if ((count($this->tags)>0)and isset($taginfo[0])) {
-               $title = $this->words->getFormatted("Forum_label_tag").":".$taginfo[$this->tags[count($this->tags) -1]];
-               $href = $url.'/t'.$this->tags[count($this->tags) -1].'-'.$title;
-            }
-            else {
-               $title = "no tags";
-               $href = $url.'/t'.'-'.$title;
-            }
-            
-			 
-            $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent);
-        } else {
-            $this->board = new Board($this->dao, 'Forums', '.');
-            foreach (Forums::$continents as $code => $name) {
-                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
-            }
-        }
-        $this->board->initThreads($this->getPage(), $showsticky);
-    } // end of boardTopLevelLastPosts
+    } // end of boardTopLevelLanding 
     
     private function boardTopLevelLastPosts($showsticky = true) {
         if ($this->tags) {

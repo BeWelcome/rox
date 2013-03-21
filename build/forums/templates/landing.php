@@ -1,4 +1,3 @@
-FORUM LANDING
 <?php
 /*
 
@@ -23,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 
-/*
+
 $User = APP_User::login();
 ?>
 
@@ -39,6 +38,29 @@ if (!$User) {
     </div>
 <?php
 } // end if not User
+?> 
+
+<!-- Now displays the recent forum post list -->	
+<?php
+    $uri = 'forums/';
+    if ($threads = $forum->getThreads()) {
+?>
+  <div class="row"> 
+    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $forum->getTotalThreads(); ?>
+    </h3>
+  </div><!--  row -->
+<?php
+        require 'boardthreads.php';
+?>
+</div> <!-- Forum-->
+<?php
+    }
+?>
+
+<!-- Now displays the recent groups post list -->
+<div id="groups">
+<h2>Groups</h2>
+<?php
 if ($User) {
     if ($boards->owngroupsonly == "No") {
         $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
@@ -51,28 +73,25 @@ if ($User) {
             <a href="forums/mygroupsonly"><?php echo $buttonText; ?></a>
         </span>
     </div>
-    <?php
+<?php
     echo $this->words->flushBuffer();
 }
-?> 
 
-<!-- Now displays the recent post list -->	
-<?php
     $uri = 'forums/';
-    if ($threads = $boards->getThreads()) {
+    if ($threads = $groups->getThreads()) {
 ?>
   <div class="row"> 
-    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
+    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $groups->getTotalThreads(); ?>
     </h3>
   </div><!--  row -->
 <?php
         require 'boardthreads.php';
 ?>
-</div> <!-- Forum-->
+</div> <!-- Groups-->
 <?php
     }
 ?>
+
 <br /><br />
 <a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>
-*/
-?>
+

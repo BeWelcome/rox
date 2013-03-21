@@ -210,9 +210,12 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\" valign=\"top\">" ;
     $string .= '<p><a href="members/'.$TM->Username.'" target="_blank"><b>'.$TM->Username.'</b></a><br />';
-    $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ".$TM->CityName.", ".$TM->CountryName. "<br />";
-    $string .= $layoutbits->getGenderTranslated($TM->Gender, $TM->HideGender);
-    $string .="<br />";
+    $string .= "<span class=\"small\">". $words->getFormatted('YearsOld',$TM->Age).", ";
+    $strGender = $layoutbits->getGenderTranslated($TM->Gender, $TM->HideGender, false);
+    if (!empty($strGender)) {
+       $string .= $strGender . ", ";
+    }
+    $string .= $TM->CityName.", ".$TM->CountryName. "<br />";
     $string .= $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span><br />";
     $string .= $words->getFormatted('MemberSince').": <span title=".$TM->created."><strong>".date('d M y', strtotime($TM->created))."</strong><br />";
     $string .= $words->getFormatted('Comments').": <span title=".$TM->NbComment."><strong>".$TM->NbComment."</strong><br />";

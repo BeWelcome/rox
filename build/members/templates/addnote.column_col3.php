@@ -77,7 +77,12 @@
         </div>
         <div class="type-text">
             <label for="ProfileNoteCategoryFree"><?=$words->get("ProfileNoteCategoryFree")?></label>
-            <input name="ProfileNoteCategoryFree" id="ProfileNoteCategoryFree"><?php if (!in_array($note->CategoryFree, $categories)) { echo $note->CategoryFree; } ?></textarea>
+            <?php echo '<input name="ProfileNoteCategoryFree" id="ProfileNoteCategoryFree" value="';
+                if (!in_array($note->CategoryFree, $categories)) { 
+                    echo $note->CategoryFree;
+                };
+                echo '" />';
+            ?>
         </div>
         <div class="type-text">
         <label for="ProfileNoteComment"><?php echo $words->get("ProfileNoteCommentInfo") ?></label>
@@ -85,7 +90,7 @@
         </div>
         <div class="type-button">
         <?php 
-        if ($edit_mode || isset($vars['success'])) { ?>
+        if ($edit_mode || isset($vars['success']) || isset($vars['errors'])) { ?>
             <input type="submit" id="submit" name="submit" value="<?php echo $words->getBuffered("ProfileNoteButtonEdit") ?>" /><?=$words->flushBuffer();?>
             <a href="/members/<?php echo $this->member->Username;?>/note/delete" class="button"><?php echo $words->getFormatted('ProfileNoteButtonDelete'); ?></a>
   <?php } else { ?>

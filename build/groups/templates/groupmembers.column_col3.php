@@ -14,7 +14,7 @@
     <table>
         <tr>
           <th colspan="2"><?= $words->get('Username'); ?></th>
-          <th><?= $words->get('GroupsMemberComment'); ?></th>
+          <th style="width:100%;"><?= $words->get('GroupsMemberComment'); ?></th>
         </tr>
     <?php
         $purifier = MOD_htmlpure::getBasicHtmlPurifier();

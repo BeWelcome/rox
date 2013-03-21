@@ -104,7 +104,7 @@ $member = $model->getMemberWithUsername($receiver_username);
 
     </div> <!-- messageconent -->
     <div id="messagefooter">
-        <p>
+        <p class="float_left">
             <input type="submit" value="<?php echo $words->getBuffered('ComposeSend');?>"/><?php echo $words->flushBuffer();?>
         </p>
     </div> <!-- messagefooter -->

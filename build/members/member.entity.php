@@ -192,7 +192,7 @@ class Member extends RoxEntityBase
      */
     public function getLanguagePreference() {
         $id = $this->getLanguagePreferenceId();
-        $allLanguages = $this->get_languages_all();
+        $allLanguages = $this->get_all_translatable_languages();
 
         // set default
         // TODO: read from config

@@ -454,7 +454,7 @@ WHERE
             return ;
         } 
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
-        $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 38);
+        $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
         $groups = new Board($this->dao, 'Groups', '.');
         $forum->initThreads();
         $groups->initThreads();
@@ -3763,19 +3763,19 @@ class Board implements Iterator {
 	public function FilterThreadListResultsWithIdCriteria() {
         $wherethread="" ;
         
-        if ($this->continent) {
+        if (isset($this->continent) && $this->continent !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`continent` = '%s' ", $this->continent);
         }
-        if ($this->countrycode) {
+        if (isset($this->countrycode) && $this->countrycode !== false) {
             $wherethread .= sprintf("AND `countrycode` = '%s' ", $this->countrycode);
         }
-        if ($this->admincode) {
+        if (isset($this->admincode) && $this->admincode !== false) {
             $wherethread .= sprintf("AND `admincode` = '%s' ", $this->admincode);
         }
-        if ($this->IdGroup) {
+        if (isset($this->IdGroup) && $this->IdGroup !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`IdGroup` = '%d' ", $this->IdGroup);
         }
-        if ($this->geonameid) {
+        if (isset($this->geonameid) && $this->geonameid !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
         }
 		$wherethread=$wherethread."and (".$this->PublicThreadVisibility.")" ;

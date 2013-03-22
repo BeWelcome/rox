@@ -455,8 +455,8 @@ WHERE
         } 
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
-        $groups = new Board($this->dao, 'Groups', '.');
         $forum->initThreads();
+        $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
         $groups->initThreads();
         $this->board->add($forum);
         $this->board->add($groups);
@@ -3656,7 +3656,7 @@ class Board implements Iterator {
 	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 
-    public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false) {
+    public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false, $no_forumsgroup=false) {
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 		
@@ -3682,10 +3682,16 @@ class Board implements Iterator {
 
 		//	Decide if it is an active LoggeMember or not
 		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"]=='Pending') or $_SESSION["MemberStatus"]=='NeedMore') ) {
-            $this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
-            $this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
-            $this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
-            $this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
+                   $this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
+                   $this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
+                   if ($no_forumsgroup) {
+                       $this->ThreadGroupsRestriction=" (IdGroup != 0 and ThreadVisibility ='NoRestriction')" ;
+                       $this->PostGroupsRestriction=" (IdGroup != 0 and PostVisibility='NoRestriction')" ;
+                   } 
+                   else {
+                       $this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
+                       $this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
+                   }
 		}
 		else {
 			$this->PublicThreadVisibility="(ThreadVisibility!='ModeratorOnly') and (ThreadDeleted!='Deleted')" ;
@@ -3695,13 +3701,13 @@ class Board implements Iterator {
             $member = $roxmodel->getLoggedInMember();
             $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
             $this->owngroupsonly = $owngroupsonly;
-            if ($owngroupsonly == "Yes" && ($this->IdGroup == 0 || !isset($this->IdGroup))) {
+            if ($owngroupsonly == "Yes" && ($this->IdGroup === false || !isset($this->IdGroup))) {
                 // 0 is the group id for topics without an explicit group, we don't want them in this case. Lazy hack to avoid changing more than necessary: replace 0 with -1
-                $this->PostGroupsRestriction = " (IdGroup IN (-1";
-                $this->ThreadGroupsRestriction = " (IdGroup IN (-1";
+                $this->PostGroupsRestriction = " (((IdGroup IN (-1";
+                $this->ThreadGroupsRestriction = " (((IdGroup IN (-1";
             } else {
-                $this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND IdGroup IN (0";
-			    $this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND IdGroup IN (0";
+                $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND IdGroup IN (0";
+			    $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND IdGroup IN (0";
             }
 			$qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember=" . $_SESSION["IdMember"] . " AND Status = 'In'");
 			if (!$qry) {
@@ -3711,8 +3717,15 @@ class Board implements Iterator {
 				$this->PostGroupsRestriction = $this->PostGroupsRestriction . "," . $rr->IdGroup;
 				$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
 			}	;
-			$this->PostGroupsRestriction = $this->PostGroupsRestriction . "))";
-			$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))";
+
+                        if ($no_forumsgroup) {
+			    $this->PostGroupsRestriction = $this->PostGroupsRestriction . "))) and IdGroup != 0)";
+			    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))) and IdGroup != 0)";
+                        }
+                        else {
+			    $this->PostGroupsRestriction = $this->PostGroupsRestriction . "))))";
+			    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))))";
+                        }
 		}
 		
 		// Prepares additional visibility options for moderator

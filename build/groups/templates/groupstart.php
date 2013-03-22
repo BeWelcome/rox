@@ -41,7 +41,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 <p><?php
                     if ($memberCount != $visibleMemberCount) {
                         $login_url = 'login/groups/' . $this->group->id;
-                        $loginstr = '<a href="' . $login_url . '#login-widget" alt="login" id="header-login-link">' . $words->getBuffered('Login') . '</a>';
+                        $loginstr = '<a href="' . $login_url . '#login-widget" alt="login" id="header-login-link">' . $words->getBuffered('GroupsMoreMemberLogin') . '</a>';
                         echo $words->get("GroupMoreMembers", $memberCount - $visibleMemberCount, $loginstr);
                     } else { ?>
                 <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>

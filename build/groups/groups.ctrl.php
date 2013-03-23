@@ -841,6 +841,12 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
+    public function groupForumsOverview()
+    {
+        $page = new GroupsBasePage(); 
+        return $page;
+    }
+
     /**
      * handles showing group members page
      *

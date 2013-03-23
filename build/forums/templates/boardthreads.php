@@ -191,7 +191,7 @@ Boston, MA  02111-1307, USA.
 </table>
 
 <?php
-if ($User) {
+if ($User && empty($noForumNewTopicButton)) {
 ?>
 <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
 <?php

@@ -52,6 +52,7 @@ if (!$User) {
   </div><!--  row -->
 <?php
         $noForumLegendBox = true;
+        $noForumNewTopicButton = true;
         require 'boardthreads.php';
 ?>
 </div> <!-- Forum-->

@@ -53,19 +53,20 @@ Boston, MA  02111-1307, USA.
             <tr class="<?php echo $styles[$cnt%2]; ?>">
                 <td class="forumsboardthreadtitle">
                     <?php
-
+                    if ($thread->stickyvalue < 0) {
+                        echo '<img src="styles/css/minimal/images/icons16/pin_blue.png" alt="'. $words->getBuffered('PinnedPost') .'" title="'. $words->getBuffered('PinnedPost') .'" class="forum_icon" />' . $words->flushBuffer();
+                    }
                     if ($thread->ThreadDeleted=="Deleted") {
-                        echo "[Deleted]" ;
+                        echo "[Deleted] " ;
                     }
                     if ($thread->ThreadVisibility=="ModeratorOnly") {
-                        echo "[ModOnly]" ;
+                        echo "[ModOnly] " ;
                     }
                     echo "<a href=\"",$url,"\">" ;
                     echo $words->fTrad($thread->IdTitle); 
                     ?></a>
                     <br />
                     <span class="forumsboardthreadtags"><?php
-                        
                         // show tags if post is part of a group
                     if ($thread->IdGroup>0) {
                             echo "<a href=\"groups/".$thread->IdGroup."\"><strong>" . $words->getFormatted('Group'). ": </strong>",$this->_model->getGroupName($thread->GroupName),"</a><br />" ;
@@ -147,8 +148,7 @@ Boston, MA  02111-1307, USA.
                         }
                         
                     
-
-                    if ($breadcrumb) {
+                        if ($breadcrumb) {
                         // we will later use the 'tags' word, but don't want an edit link inside the html tag!
                         if ($ShowHelp) {
                         echo '<img src="styles/css/minimal/images/iconsfam/help.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();

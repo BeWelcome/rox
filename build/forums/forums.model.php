@@ -3784,11 +3784,12 @@ class Board implements Iterator {
 		$from = ($this->THREADS_PER_PAGE * ($page - 1));
         
 		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
-		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
+		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`,
 				  `forums_threads`.`IdTitle`, 
 				  `forums_threads`.`IdGroup`, 
 				  `forums_threads`.`replies`, 
-				  `groups`.`Name` as `GroupName`, 
+		          `forums_threads`.`stickyvalue`,
+		          `groups`.`Name` as `GroupName`, 
 					`ThreadVisibility`,
 					`ThreadDeleted`,
 				  `forums_threads`.`views`, 

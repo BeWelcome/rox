@@ -610,13 +610,14 @@ class ForumsController extends PAppController
                 if ($request[1] == 'forums') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_GROUPS);
                     $this->action = self::ACTION_VIEW_GROUPS;
+                    $this->uri = 'forums/';
                 }
                 else if (isset($request[2]) && $request[2]=='forum') {
                     $this->_model->setGroupId((int) $request[1]);
                     $this->isTopLevel = false;
                     $this->isTopCategories = false;
+                    $this->uri = 'groups/'.$request[1].'/forum/';
                 } 
-                $this->uri = 'groups/'.$request[1].'/forum/';
             } 
         } 
         if (isset($request[1]) && $request[1] == 'suggestTags') {

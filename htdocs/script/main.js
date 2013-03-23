@@ -221,7 +221,7 @@ bwrox.selectScripts([
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "map/geolocation/BWGoogleMapReverseGeolocator.js",
+    file: "map/geolocation/BWGoogleMapReverseGeolocator.js?1",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {

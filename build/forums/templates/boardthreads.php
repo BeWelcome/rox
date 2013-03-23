@@ -200,6 +200,7 @@ if ($User) {
 
 require 'pages.php';
 
+if (!$noForumLegendBox) {
 ?>
 <div class="floatbox small float_left" style="width: 80%">
     <?php echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
@@ -216,3 +217,6 @@ require 'pages.php';
     ?>
      = <?php echo $words->get('ForumLegendTaggedHelp');?>
 </div>
+<?php
+}
+?>

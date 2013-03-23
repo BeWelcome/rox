@@ -51,6 +51,7 @@ if (!$User) {
     </h3>
   </div><!--  row -->
 <?php
+        $noForumLegendBox = true;
         require 'boardthreads.php';
 ?>
 </div> <!-- Forum-->
@@ -86,6 +87,7 @@ if ($User) {
     </h3>
   </div><!--  row -->
 <?php
+        $noForumLegendBox = false;
         require 'boardthreads.php';
 ?>
 </div> <!-- Groups-->

@@ -69,10 +69,17 @@ class GroupForumsOverviewPage extends GroupsBasePage
         $Forums = new ForumsController;
         $Forums->index();
     }
-    protected function getSubmenuActiveItem() {
-        return 'forum';
-    }
-    
+    protected function teaserContent()
+    {
+        $words = $this->getWords();
+        ?>
+        <div id="teaser" class="clearfix">
+        <div id="teaser_l1"> 
+        <h1><a href="groups"><?= $words->get('Groups');?></a></h1>
+        </div>
+        </div>
+        <?php
+    }    
 }
 
 ?>

@@ -58,7 +58,7 @@ if (!$User) {
 <?php
     }
 ?>
-<br /><br /><br /><br /><br /><br />
+
 <!-- Now displays the recent groups post list -->
 <div id="groups">
 <h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a></h2>

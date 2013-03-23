@@ -56,7 +56,7 @@ function _languageOptions($words) {
             // hmm
         } else {
             $langOptions .=
-                '<option value="rox/in/'.$abbr.'/'.$request_string.'" '.(($_SESSION['lang'] == $abbr) ? 'selected="selected"' : '');
+                '<option value="' . PVars::getObj("env")->baseuri. 'rox/in/'.$abbr.'/'.$request_string.'" '.(($_SESSION['lang'] == $abbr) ? 'selected="selected"' : '');
             $langOptions .= '>' . $language->TranslatedName . ' (' . trim($language->Name) . ')</option>';
         }
     }

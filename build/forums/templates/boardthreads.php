@@ -41,8 +41,12 @@ Boston, MA  02111-1307, USA.
     foreach ($threads as $cnt =>  $thread) {
     //[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
         //$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
-        $url = ForumsView::threadURL($thread);
-        
+        if ($thread->IdGroup){
+            $url = ForumsView::threadURL($thread, 'groups/'.$thread->IdGroup.'/forum/');
+        }
+        else {
+            $url = ForumsView::threadURL($thread);
+        }    
         $max = $thread->replies + 1;
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
         

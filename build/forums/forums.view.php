@@ -61,15 +61,20 @@ class ForumsView extends RoxAppView {
      * @param $thread as read from the threads database with mysql_fetch_object
      * @return string to be used as url
      */
-    public function threadURL($thread)
+    public function threadURL($thread, $baseurl = false)
     {
-        return $this->uri.'s'.$thread->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($thread->IdTitle) ) ;
+        if ($baseurl === false) {
+            $baseurl = $this->uri;
+        }
+        return $baseurl.'s'.$thread->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($thread->IdTitle) ) ;
     }
 
-    public  function postURL($post)
+    public  function postURL($post, $baseurl = false)
     {
-
-        return $this->uri.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($post->IdTitle) ) ;
+        if ($baseurl === false) {
+            $baseurl = $this->uri;
+        }
+        return $baseurl.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($post->IdTitle) ) ;
     }
 
 

@@ -478,8 +478,10 @@ WHERE
         } 
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
+        $forum->THREADS_PER_PAGE = 5;
         $forum->initThreads(1, $showsticky);
         $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
+        $groups->THREADS_PER_PAGE = 5;
         $groups->initThreads(1, $showsticky);
         $this->board->add($forum);
         $this->board->add($groups);

@@ -211,6 +211,9 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_VIEW_FORUM) {
             $this->_view->showTopLevelRecentPosts();
         }
+        else if ($this->action == self::ACTION_VIEW_GROUPS) {
+            $this->_view->showTopLevelRecentPosts();
+        }
         else if ($this->action == self::ACTION_RULES) {
             $this->_view->rules();
         } 
@@ -591,6 +594,7 @@ class ForumsController extends PAppController
 	const ACTION_REPORT_TO_MOD = 19 ;
     const ACTION_VIEW_LANDING = 20;
     const ACTION_VIEW_FORUM = 21;
+    const ACTION_VIEW_GROUPS = 22;
 
     
     /**
@@ -603,7 +607,11 @@ class ForumsController extends PAppController
         // If this is a subforum within a group
         if (isset($request[0]) && $request[0] == 'groups') {
             if (isset($request[1])) {
-                if (isset($request[2]) && $request[2]=='forum') {
+                if ($request[1] == 'forums') {
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_GROUPS);
+                    $this->action = self::ACTION_VIEW_GROUPS;
+                }
+                else if (isset($request[2]) && $request[2]=='forum') {
                     $this->_model->setGroupId((int) $request[1]);
                     $this->isTopLevel = false;
                     $this->isTopCategories = false;

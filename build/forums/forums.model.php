@@ -25,6 +25,7 @@ class Forums extends RoxModelBase {
     const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for lastposts
     const CV_TOPMODE_LANDING=3; // Says that we use the forums landing page for topmode
     const CV_TOPMODE_FORUM=4; // Says that we use the forums main page for topmode
+    const CV_TOPMODE_GROUPS=5; // Says that we use the group forums overview page for topmode
 
 
     const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
@@ -458,8 +459,17 @@ WHERE
         $this->board = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
         $this->board->initThreads($this->getPage(), $showsticky);
             
-    } // end of boardTopLevelLanding 
+    } // end of boardTopLevelForum 
     
+    private function boardTopLevelGroups($showsticky = true) {
+        if ($this->tags) {
+            $this->boardTopLevelLastPosts() ;
+            return ;
+        }
+        $this->board = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
+        $this->board->initThreads($this->getPage(), $showsticky);
+            
+    } // end of boardTopLevelGroups
 
     private function boardTopLevelLanding($showsticky = true) {
         if ($this->tags) {
@@ -933,6 +943,9 @@ WHERE `geonameid` = '%d'
 			}
 			elseif ($this->TopMode==Forums::CV_TOPMODE_FORUM) {
 				$this->boardTopLevelForum($showsticky);
+			}
+			elseif ($this->TopMode==Forums::CV_TOPMODE_GROUPS) {
+				$this->boardTopLevelGroups($showsticky);
 			}
 			else {
 				$this->boardTopLevelLanding($showsticky);

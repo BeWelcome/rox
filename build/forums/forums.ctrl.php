@@ -687,7 +687,7 @@ class ForumsController extends PAppController
                     } else if ($char == 'c') { // Countrycode
                         $this->_model->setCountryCode(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                    } else if ($char == 'a') { // Admincode
+                    } else if ($char == 'a' && $r != "agora") { // Admincode
                         $this->_model->setAdminCode(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 't') { // Tagid

@@ -843,7 +843,7 @@ class GroupsController extends RoxControllerBase
 
     public function groupForumsOverview()
     {
-        $page = new GroupsBasePage(); 
+        $page = new GroupForumsOverviewPage(); 
         return $page;
     }
 

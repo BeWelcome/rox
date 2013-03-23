@@ -61,4 +61,18 @@ class GroupForumPage extends GroupsBasePage
     
 }
 
+
+class GroupForumsOverviewPage extends GroupsBasePage
+{
+    protected function column_col3()
+    {
+        $Forums = new ForumsController;
+        $Forums->index();
+    }
+    protected function getSubmenuActiveItem() {
+        return 'forum';
+    }
+    
+}
+
 ?>

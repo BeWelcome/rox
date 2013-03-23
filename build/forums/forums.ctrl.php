@@ -209,7 +209,7 @@ class ForumsController extends PAppController
             $this->_view->showTopLevelLandingPage();
         } 
         else if ($this->action == self::ACTION_VIEW_FORUM) {
-            $this->_view->showTopLevelRecentPosts();
+            $this->_view->showTopLevelRecentPosts(false);
         }
         else if ($this->action == self::ACTION_VIEW_GROUPS) {
             $this->_view->showTopLevelRecentPosts();

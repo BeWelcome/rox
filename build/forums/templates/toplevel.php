@@ -36,7 +36,7 @@ if (!$User) {
     </div>
 <?php
 } // end if not User
-if ($User) {
+if ($User && $showOwnGroupsButton) {
     if ($boards->owngroupsonly == "No") {
         $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
     } else {

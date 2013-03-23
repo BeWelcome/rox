@@ -56,7 +56,7 @@ if (!$User) {
 <?php
     }
 ?>
-
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 <!-- Now displays the recent groups post list -->
 <div id="groups">
 <h2>Groups</h2>

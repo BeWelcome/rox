@@ -24,6 +24,8 @@ class Forums extends RoxModelBase {
     const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
     const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for lastposts
     const CV_TOPMODE_LANDING=3; // Says that we use the forums landing page for topmode
+    const CV_TOPMODE_FORUM=4; // Says that we use the forums main page for topmode
+
 
     const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
 	
@@ -448,6 +450,17 @@ WHERE
         'OC' => 'Oceania'
     );
 
+    private function boardTopLevelForum($showsticky = true) {
+        if ($this->tags) {
+            $this->boardTopLevelLastPosts() ;
+            return ;
+        } 
+        $this->board = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
+        $this->board->initThreads($this->getPage(), $showsticky);
+            
+    } // end of boardTopLevelLanding 
+    
+
     private function boardTopLevelLanding($showsticky = true) {
         if ($this->tags) {
             $this->boardTopLevelLastPosts() ;
@@ -455,9 +468,9 @@ WHERE
         } 
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
-        $forum->initThreads();
+        $forum->initThreads(1, $showsticky);
         $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
-        $groups->initThreads();
+        $groups->initThreads(1, $showsticky);
         $this->board->add($forum);
         $this->board->add($groups);
             
@@ -917,6 +930,9 @@ WHERE `geonameid` = '%d'
 			}
 			elseif ($this->TopMode==Forums::CV_TOPMODE_LANDING) {
 				$this->boardTopLevelLanding($showsticky);
+			}
+			elseif ($this->TopMode==Forums::CV_TOPMODE_FORUM) {
+				$this->boardTopLevelForum($showsticky);
 			}
 			else {
 				$this->boardTopLevelLanding($showsticky);

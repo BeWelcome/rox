@@ -41,7 +41,7 @@ if (!$User) {
 ?> 
 
 <!-- Now displays the recent forum post list -->
-<h2><?php echo $this->words->getFormatted('ForumTitle'); ?></h2>	
+<h2><a href="forums/agora"><?php echo $this->words->getFormatted('ForumTitle'); ?></a></h2>	
 <?php
     $uri = 'forums/';
     if ($threads = $forum->getThreads()) {
@@ -60,7 +60,7 @@ if (!$User) {
 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 <!-- Now displays the recent groups post list -->
 <div id="groups">
-<h2><?php echo $this->words->getFormatted('Groups'); ?></h2>
+<h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a></h2>
 <?php
 if ($User) {
     if ($boards->owngroupsonly == "No") {

@@ -52,7 +52,8 @@
     $this->addRoute('group_start','groups/:group_id:', 'GroupsController', 'showGroup');
     $this->addRoute('group_wiki','groups/:group_id:/wiki', 'GroupsController', 'wiki');
     $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');
-    $this->addRoute('groups_forums_overview','groups/forums/:page_number:', 'GroupsController', 'groupForumsOverview');
+    $this->addRoute('groups_forums_overview','groups/forums', 'GroupsController', 'groupForumsOverview');
+    $this->addRoute('groups_forums_overview_paged','groups/forums/:page_number:', 'GroupsController', 'groupForumsOverview');
     $this->addRoute('groups_mygroups','groups/mygroups', 'GroupsController', 'myGroups');
     $this->addRoute('groups_new','groups/new', 'GroupsController', 'create');
     $this->addRoute('groups_overview','groups', 'GroupsController', 'index');

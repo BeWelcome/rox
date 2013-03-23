@@ -55,6 +55,12 @@ if (!$User) {
         $noForumNewTopicButton = true;
         require 'boardthreads.php';
 ?>
+    <div class="float_right">
+        <span class="button">
+            <a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a>
+        </span>
+    </div>
+
 </div> <!-- Forum-->
 <?php
     }
@@ -91,6 +97,12 @@ if ($User) {
         $noForumLegendBox = false;
         require 'boardthreads.php';
 ?>
+    <div class="float_right">
+        <span class="button">
+            <a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a>
+        </span>
+    </div>
+
 </div> <!-- Groups-->
 <?php
     }

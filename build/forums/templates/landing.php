@@ -60,7 +60,7 @@ if (!$User) {
             <a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a>
         </span>
     </div>
-
+    <br /><br />
 </div> <!-- Forum-->
 <?php
     }

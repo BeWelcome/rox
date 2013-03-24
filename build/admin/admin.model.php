@@ -869,6 +869,7 @@ class AdminModel extends RoxModelBase
             WHERE
                 m.id = mg.IdMember 
                 AND mg.IdGroup = " . $groupId . "
+                AND mg.Status = 'In'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                 AND (m.Status IN ('Active', 'ActiveHidden'))";
         $r = $this->dao->query($query);

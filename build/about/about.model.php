@@ -67,7 +67,9 @@ FROM
         $faqs = $this->bulkLookup(
             "
 SELECT *
-FROM faq where faq.Active='Active' 
+FROM faq 
+WHERE faq.Active='Active' 
+ORDER BY SortOrder 
             ",
             array('IdCategory', false)
         );

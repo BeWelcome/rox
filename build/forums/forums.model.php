@@ -429,7 +429,7 @@ WHERE
         if (!$qq) {
             throw new PException('switchShowMyGroupsTopicsOnly ' . $ss . ' !');
         }
-        return PVars::getObj('env')->baseuri . 'forums';
+        return false;
     } // end of switchShowMyGroupsTopicsOnly
     
 

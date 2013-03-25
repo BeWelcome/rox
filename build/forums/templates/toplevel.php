@@ -36,7 +36,7 @@ if (!$User) {
     </div>
 <?php
 } // end if not User
-if ($User && $showOwnGroupsButton) {
+if ($User && $ownGroupsButtonCallbackId) {
     if ($boards->owngroupsonly == "No") {
         $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
     } else {
@@ -44,9 +44,10 @@ if ($User && $showOwnGroupsButton) {
     }
     ?>
     <div class="float_right">
-        <span class="button">
-            <a href="forums/mygroupsonly"><?php echo $buttonText; ?></a>
-        </span>
+        <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
+            <input type="submit" name="submit" value="<?php echo $buttonText; ?>">
+        </form>
     </div>
     <?php
     echo $this->words->flushBuffer();

@@ -356,7 +356,7 @@ function FindAppropriatedLanguage($IdPost=0) {
     // This switch the preference switchShowMyGroupsTopicsOnly
     public function switchShowMyGroupsTopicsOnly() {
         if (!$member = $this->getLoggedInMember()) {
-            return;
+            return false;
         }
         $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
         $this->ShowMyGroupsTopicsOnly = $owngroupsonly;
@@ -429,8 +429,7 @@ WHERE
         if (!$qq) {
             throw new PException('switchShowMyGroupsTopicsOnly ' . $ss . ' !');
         }
-        header('Location: ' . PVars::getObj('env')->baseuri . 'forums');
-        PPHP::PExit();
+        return PVars::getObj('env')->baseuri . 'forums';
     } // end of switchShowMyGroupsTopicsOnly
     
 

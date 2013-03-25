@@ -337,7 +337,7 @@ class ForumsView extends RoxAppView {
 * showTopLevelLandingPage produce the view with recent forum posts (without any group posts) 
 * on top and groups on the bottom
 */
-    public function showTopLevelLandingPage() {
+    public function showTopLevelLandingPage($ownGroupsButtonCallbackId = false) {
         $this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
 
         $boards = $this->_model->getBoard();
@@ -362,7 +362,7 @@ class ForumsView extends RoxAppView {
 * showTopLevelRecentPosts produce the view with the TagCloud and categories list
 * last posts are not grouped in categories
 */
-    public function showTopLevelRecentPosts($showOwnGroupsButton = true) {
+    public function showTopLevelRecentPosts($ownGroupsButtonCallbackId = false) {
 //        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome';
         $this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
 

@@ -186,10 +186,14 @@ class ForumsController extends PAppController
                         $this->_view->showTopLevelCategories();
                     }
                     else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LASTPOSTS){
-                        $this->_view->showTopLevelRecentPosts(); 
+                        $callbackId = $this->mygroupsonlyProcess();
+                        $this->_view->showTopLevelRecentPosts($callbackId); 
+                        PPostHandler::clearVars($callbackId);
                     }
                     else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LANDING){
-                        $this->_view->showTopLevelLandingPage(); 
+                        $callbackId = $this->mygroupsonlyProcess();
+                        $this->_view->showTopLevelLandingPage($callbackId); 
+                        PPostHandler::clearVars($callbackId);
                     }
                     else {
                         die("getTopMode is not set") ;
@@ -203,16 +207,22 @@ class ForumsController extends PAppController
             $this->_view->showTopLevelCategories();
         } 
         else if ($this->action == self::ACTION_VIEW_LASTPOSTS) {
-            $this->_view->showTopLevelRecentPosts();
+            $callbackId = $this->mygroupsonlyProcess();
+            $this->_view->showTopLevelRecentPosts($callbackId);
+            PPostHandler::clearVars($callbackId);
         } 
         else if ($this->action == self::ACTION_VIEW_LANDING) {
-            $this->_view->showTopLevelLandingPage();
+            $callbackId = $this->mygroupsonlyProcess();
+            $this->_view->showTopLevelLandingPage($callbackId);
+            PPostHandler::clearVars($callbackId);
         } 
         else if ($this->action == self::ACTION_VIEW_FORUM) {
-            $this->_view->showTopLevelRecentPosts(false);
+            $this->_view->showTopLevelRecentPosts();
         }
         else if ($this->action == self::ACTION_VIEW_GROUPS) {
-            $this->_view->showTopLevelRecentPosts();
+            $callbackId = $this->mygroupsonlyProcess();
+            $this->_view->showTopLevelRecentPosts($callbackId);
+            PPostHandler::clearVars($callbackId);
         }
         else if ($this->action == self::ACTION_RULES) {
             $this->_view->rules();
@@ -568,6 +578,18 @@ class ForumsController extends PAppController
         $this->parseRequest();
         $this->_model->delProcess();
     }
+
+    public function mygroupsonlyProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        
+        if (PPostHandler::isHandling()) {
+            return $this->_model->switchShowMyGroupsTopicsOnly();
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
+
     
     private $action = 0;
     private $isTopLevel = true;
@@ -638,8 +660,8 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SUBSCRIBE;
         } else if (isset($request[1]) && $request[1] == 'rules') {
             $this->action = self::ACTION_RULES;
-        } else if (isset($request[1]) && $request[1] === 'mygroupsonly') {
-            $this->_model->switchShowMyGroupsTopicsOnly() ;
+//        } else if (isset($request[1]) && $request[1] === 'mygroupsonly') {
+//            $this->_model->switchShowMyGroupsTopicsOnly() ;
         } else {
             foreach ($request as $r) {
                 if ($r == 'new') {

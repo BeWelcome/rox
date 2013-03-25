@@ -221,7 +221,7 @@ class ForumsController extends PAppController
         }
         else if ($this->action == self::ACTION_VIEW_GROUPS) {
             $callbackId = $this->mygroupsonlyProcess();
-            $this->_view->showTopLevelRecentPosts($callbackId);
+            $this->_view->showTopLevelRecentPosts($callbackId, true);
             PPostHandler::clearVars($callbackId);
         }
         else if ($this->action == self::ACTION_RULES) {

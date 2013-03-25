@@ -362,7 +362,7 @@ class ForumsView extends RoxAppView {
 * showTopLevelRecentPosts produce the view with the TagCloud and categories list
 * last posts are not grouped in categories
 */
-    public function showTopLevelRecentPosts($ownGroupsButtonCallbackId = false) {
+    public function showTopLevelRecentPosts($ownGroupsButtonCallbackId = false, $noForumNewTopicButton = false) {
 //        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome';
         $this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
 

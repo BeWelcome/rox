@@ -660,8 +660,6 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SUBSCRIBE;
         } else if (isset($request[1]) && $request[1] == 'rules') {
             $this->action = self::ACTION_RULES;
-//        } else if (isset($request[1]) && $request[1] === 'mygroupsonly') {
-//            $this->_model->switchShowMyGroupsTopicsOnly() ;
         } else {
             foreach ($request as $r) {
                 if ($r == 'new') {

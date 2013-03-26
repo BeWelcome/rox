@@ -7,6 +7,7 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
 {
     protected function mailboxDescription()
     {
+        $words = new MOD_words();
         $contactUsername = $this->contact_member->Username;
         $myselfUsername = $_SESSION['Username'];
         ?>
@@ -14,9 +15,9 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
             <div class="float_left framed">
                 <?=MOD_layoutbits::PIC_50_50($contactUsername,'')?>
             </div>
-            <h4>All Messages with <a href="members/<?=$contactUsername ?>"><?=$contactUsername ?></a>
+            <h4><?php echo $words->get('MessagesAllWithmember', '<a href="members/' . $contactUsername . '">' . $contactUsername . '</a>'); ?>
             </h4>
-            (in both directions)
+            (<?php echo $words->get('MessagesAllBothDirections'); ?>)
         </div>
         <?php
     }
@@ -44,6 +45,17 @@ class MailboxWidget_WithMember extends MailboxWidget
     
     protected function getTableColumns()
     {
+        $request_str = implode('/',PRequest::get()->request);
+        $dir_str = (isset($_GET['dir']) && $_GET['dir'] != 'ASC') ? 'ASC' : 'DESC';
+        $words = new MOD_words();
+        return array(
+            'select' => '',
+            'from' => '<a href="'.$request_str.'?sort=sender&amp;dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),
+            'message' => $words->get('MessagesText'),
+            // 'status' => 'Status'
+            //'date' => 'Date',
+        );
+
         return array(
             'select' => '',
             'from' => 'From/To',

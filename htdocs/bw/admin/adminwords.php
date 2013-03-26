@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL & ~E_STRICT);
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -146,10 +147,39 @@ $RightLevel = HasRight('Words',$lang); // Check the rights
 
 $scope = RightScope('Words');
 
+// get languages from rights scope fill array to be used in drop down
+$str = "SELECT * FROM languages WHERE ";
+if (strpos($scope, "All") === false) {
+    $langall = false;
+    $scope = str_replace('"', '', $scope);
+    $scope = str_replace(';', ',', $scope);
+    $langs = array_map('mysql_real_escape_string',explode(",", $scope));
+    $langs = array_map('trim',$langs);
+    $str .= "ShortCode IN ('" . implode("','", $langs) . "')";
+} else {
+    $langall = true;
+    $str .= "1 = 1";
+}
+$str .= " AND IsWrittenLanguage = 1 ORDER BY EnglishName";
+
+$qry=sql_query($str);
+$langarr = array();
+while ($language=mysql_fetch_object($qry)) {
+    $langarr[] = $language;
+} 
 echo "    <div id=\"col3\"> \n";
 echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
 echo "          <div class=\"info\">\n";
-echo "            <h2>Your current language is ", " #", $rr->id, " (", $rr->EnglishName, ", ", $rr->ShortCode, ") your scope is for $scope </h2>\n";
+echo "            <h2>Your current language is " . trim($rr->EnglishName) . " (" . $rr->ShortCode . ", id = " . $rr->id, ")</h2>";
+echo "Your scope is for";
+if ($langall) {
+    echo " all languages\n";
+} else {
+    echo ": ";
+    foreach($langarr as $language) {
+        echo trim($language->EnglishName) . " (" . $language->ShortCode . ") ";
+    }
+}
 $Sentence = "";
 $code = "";
 if (isset ($_GET['code']))
@@ -409,7 +439,6 @@ if ((isset ($_POST['DOACTION'])) and ($_POST['DOACTION'] == 'Delete')) {
   }
 } // end of delete
 
-
 // If it was a request for insert or update
 if ((isset ($_POST['DOACTION'])) and (strtolower($_POST['DOACTION']) == "submit") and ($_POST['Sentence'] != "") and ($_POST['lang'] != "")) {
   if (isset ($_POST['lang'])) {
@@ -558,7 +587,14 @@ echo "\" rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
   </tr>
   <tr>
     <td class="label"><label for="lang">Language:</label> </td>
-    <td><input name="lang" id="lang" value="<?php echo $lang ?>"></td>
+    <td><select id="lang" name="lang"><option value=""></option><?php
+        foreach($langarr as $language) {
+            echo '<option value="' . $language->ShortCode . '"';
+            if ($lang == $language->ShortCode) {
+                echo ' selected="selected"';
+            }
+            echo '>' . trim($language->EnglishName) . ' (' . $language->ShortCode . ')</option>';
+        }?></td>
   </tr>
   <tr>
     <td colspan="2" align="center">

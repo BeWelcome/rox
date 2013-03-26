@@ -1,4 +1,4 @@
-<?php
+<!--
 /*
 
 Copyright (c) 2007 BeVolunteer
@@ -26,22 +26,22 @@ Boston, MA  02111-1307, USA.
  * @author Fake51
  */
  
-echo <<<HTML
+-->
 <form class="yform full" method="post" action="">
-    {$this->getCallbackOutput('MembersController','retireProfile')}
-    <p>{$words->getFormatted ('retire_explanation',$this->member->Username)}</p>
+    <?php echo $this->getCallbackOutput('MembersController','retireProfile'); ?>
+    <p><?php echo $words->getFormatted('retire_explanation',$this->member->Username); ?></p>
     <div class="type-text">
-        <label for="explain">{$words->getFormatted ('retire_membercanexplain')}</label>
+        <label for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
         <textarea name="explanation" id="explain" cols="65" rows="6"></textarea>
     </div>
     <p>
         <input type="checkbox" name="Complete_retire" 
-            onclick="return confirm ('{$words->getFormatted ('retire_WarningConfirmWithdraw')}')" />
-        {$words->getFormatted ('retire_fulltickbox')}
+             onclick="return confirm ('<?php echo $words->getBuffered ('retire_WarningConfirmWithdraw'); ?>')" />
+             <?php echo $words->flushBuffer();
+             echo $words->getFormatted ('retire_fulltickbox'); ?>
     </p>
     <p class="center">
-        <input type="submit"
-            onclick="return confirm ('{$words->getFormatted ('retire_WarningConfirmRetire')}')" />
-    </p>
+    <input type="submit" value="<?php echo $words->getBuffered('DeleteProfile') ?>"
+        onclick="return confirm ('<?php echo $words->getBuffered ('retire_WarningConfirmRetire'); ?>')" />
+        <?php echo $words->flushBuffer(); ?>    </p>
 </form>
-HTML;

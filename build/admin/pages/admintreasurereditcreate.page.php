@@ -20,7 +20,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /** 
-     * @author crumbking
+     * @author shevek, crumbking
      */
 
     /** 
@@ -38,9 +38,10 @@ class AdminTreasurerEditCreateDonationPage extends AdminBasePage
 
         $this->id = $id;
         if ($id == 0) {
-            $this->username = "";
+            $this->username = "-empty-";
             $this->amount = "";
             $this->date = "";
+            $this->comment = "Bank transfer";
             $this->countrycode = "";
         } else {
             $donation = $this->model->getDonation($id);
@@ -48,12 +49,19 @@ class AdminTreasurerEditCreateDonationPage extends AdminBasePage
             $this->username = $m->Username;
             $this->amount = $donation->Amount;
             $this->date = date('d.m.Y', strtotime($donation->created));
+            $this->comment = $donation->SystemComment;
             $this->countrycode = $this->model->getCountryCodeForGeonameId($donation->IdCountry);
         }
     }
     
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/treasurer'>{$this->words->get('AdminTreasurer')}</a> &raquo; {$this->words->get('AdminTreasurerAddDonation')}</a>";
+        $str = "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/treasurer'>{$this->words->get('AdminTreasurer')}</a> &raquo; ";
+        if ($this->id) {
+            $str .= $this->words->get('AdminTreasurerEditDonation');
+        } else {
+            $str .= $this->words->get('AdminTreasurerAddDonation');
+        }
+        return $str;
     }
 }

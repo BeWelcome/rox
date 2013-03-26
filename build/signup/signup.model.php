@@ -627,7 +627,8 @@ VALUES
         // (skipped:) secondname
 
         // gender
-        if (empty($vars['gender']) || ($vars['gender']!='female' && $vars['gender']!='male')) {
+        if (empty($vars['gender']) || ($vars['gender']!='female' && $vars['gender']!='male'
+             && $vars['gender']!='other')) {
             $errors[] = 'SignupErrorProvideGender';
         }
         

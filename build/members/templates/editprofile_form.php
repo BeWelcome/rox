@@ -70,7 +70,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <td colspan='2' >
                         <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'> <?= $words->get('female'); ?></label>&nbsp;&nbsp;
                         <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'> <?= $words->get('male'); ?></label>&nbsp;&nbsp;
-                        <input class="radio" type="radio" id='genderX' name="gender" value="IDontTell" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'IDontTell') ? ' checked="checked"' : '');?>/><label for='genderX'> <?= $words->get('IDontTell'); ?></label></td>
+                        <input class="radio" type="radio" id='genderX' name="gender" value="other" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : '');?>/><label for='genderX'> <?= $words->get('GenderOther'); ?></label></td>
                         
                      <td><input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'> <?= $words->get("Hidden");?></label></td>
                     <?php
@@ -125,20 +125,36 @@ HTML;
                       echo <<<HTML
                         <tr id="lang1">
                           <td><select class='lang_selector' name="memberslanguages[]" >
-                            <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
+                          <option selected="selected">-{$words->get("ChooseNewLanguage")}-</option>
+                          <optgroup label="{$words->getSilent('SpokenLanguages')}">
 HTML;
-                                for ($jj = 0; $jj < count($vars['languages_all']); $jj++)
+                                for ($jj = 0; $jj < count($vars['languages_all_spoken']); $jj++)
                                 {
-                                    if (in_array($vars['languages_all'][$jj]->id, $lang_ids))
+                                    if (in_array($vars['languages_all_spoken'][$jj]->id, $lang_ids))
                                     {
                                         continue;
                                     }
                                     echo <<<HTML
-                                    <option value="{$vars['languages_all'][$jj]->id}">{$vars['languages_all'][$jj]->Name}</option>
+                                    <option value="{$vars['languages_all_spoken'][$jj]->id}">{$vars['languages_all_spoken'][$jj]->TranslatedName} ({$vars['languages_all_spoken'][$jj]->Name})</option>
 HTML;
                                 }
                             echo <<<HTML
-                            </select>
+                            </optgroup>
+                          <optgroup label="{$words->getSilent('SignedLanguages')}">
+HTML;
+                                for ($jj = 0; $jj < count($vars['languages_all_signed']); $jj++)
+                                {
+                                    if (in_array($vars['languages_all_signed'][$jj]->id, $lang_ids))
+                                    {
+                                        continue;
+                                    }
+                                    echo <<<HTML
+                                    <option value="{$vars['languages_all_signed'][$jj]->id}">{$vars['languages_all_signed'][$jj]->TranslatedName}</option>
+HTML;
+                                }
+                            echo <<<HTML
+                            </optgroup>
+                          </select>
                           </td>
                           <td>
                             <select name="memberslanguageslevel[]" >

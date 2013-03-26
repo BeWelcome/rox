@@ -20,13 +20,13 @@ class BlogView extends RoxAppView
     // new functions
 	/* This adds other custom styles to the page*/
 	public function customStylesPublic() {
-        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?2" type="text/css"/>';        
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?3" type="text/css"/>';
         $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/bw_basemod_blog_public.css" type="text/css"/>';
 		return $out;
     }    
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
-        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?2" type="text/css"/>';        
+        $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?3" type="text/css"/>';
 		return $out;
     }    
 	/* This adds RSS links to the header of the page*/
@@ -90,6 +90,7 @@ class BlogView extends RoxAppView
             echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
             echo '<p>'.$words->get('BlogCreateFinishInfo')."</p>\n";
         }
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     }
 
@@ -126,7 +127,7 @@ class BlogView extends RoxAppView
         $actionUrl = 'blog/edit/'.$blogId;
         $submitName = 'submit_blog_edit';
         $submitValue = $words->getSilent('BlogEditSubmit');
-
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     }
 
@@ -273,10 +274,10 @@ class BlogView extends RoxAppView
             foreach ($tags as $suggestion) {
                 $out .= '<a href="#" onclick="javascript:BlogSuggest.updateForm(\'';
                 foreach ($suggestion as $word) {
-                    $out .= $word.', ';
+                    $out .= htmlspecialchars($word, ENT_QUOTES).', ';
                 }
                 $out = rtrim($out, ', ');
-                $out .= '\'); return false;">'.$word.'</a>, ';
+                $out .= '\'); return false;">'.htmlspecialchars($word, ENT_QUOTES).'</a>, ';
             }
             $out = rtrim($out, ', ');
             return $out;

@@ -25,7 +25,7 @@ if (!is_array($pages) || count($pages) == 0) {
 	return false;
 }
 
-$request = implode('/', $request);
+$request = htmlspecialchars(implode('/', $request), ENT_QUOTES);
 $request = preg_replace('/\/page[0-9]+\/?/i', '', $request);
 $request = $request.'/page%d/';
 

@@ -134,6 +134,7 @@ bwrox.selectScripts([
     pages: [
       "blog",
       "forums",
+      "groups",
       "trip"
     ]
   },
@@ -164,7 +165,8 @@ bwrox.selectScripts([
       "gallery/show/image",
       "message/write",
       "editmyprofile",
-      "admin/massmail"
+      "admin/massmail",
+      "members/"
     ]
   },
   {
@@ -219,7 +221,7 @@ bwrox.selectScripts([
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "map/geolocation/BWGoogleMapReverseGeolocator.js",
+    file: "map/geolocation/BWGoogleMapReverseGeolocator.js?1",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {

@@ -75,7 +75,7 @@ class GroupMemberSettingsPage extends GroupsBasePage
                 <input id='yes_option' type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>/>
                 <label for="yes_option"><?= $words->get('yes') ;?></label>
             </div> <!-- row -->
-            <p style="padding-top: 2em"><input type='submit' value='<?= $words->get('GroupsUpdateMemberSettings') ;?>' /></p>
+            <p style="padding-top: 2em"><input type="submit" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>" /><?=$words->flushBuffer();?></p>
             </fieldset>
         </form>
         <?php

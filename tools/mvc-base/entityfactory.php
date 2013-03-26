@@ -40,6 +40,7 @@ class RoxEntityFactory
         'MemberRole'        => 'build/rights/memberrole.entity',
         'Message'           => 'build/messages/message.entity',
         'ProfileVisit'      => 'build/members/profilevisit.entity',
+        'ProfileNote'       => 'build/members/profilenote.entity',
         'Note'              => 'build/notify/note.entity',
         'Post'              => 'build/forums/post.entity',
         'PostVote'          => 'build/forums/postvote.entity',

@@ -46,30 +46,12 @@ if (isset($vars['tags']) && $vars['tags']) {
 ?>
 <script type="text/javascript" src="script/blog_suggest.js"></script>
 <script type="text/javascript" src="script/forums_suggest.js"></script>
-<script type="text/javascript" src="script/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript">//<!--
-tinyMCE.srcMode = '';
-tinyMCE.baseURL = http_baseuri+'script/tiny_mce';
-tinyMCE.init({
-    mode: "exact",
-    elements: "topic_text",
-    plugins : "advimage,preview,fullscreen,autolink",
-    theme: "advanced",
-    content_css : http_baseuri + "styles/css/minimal/screen/custom/tinymce_content.css?1",
-    relative_urls:false,
-    convert_urls:false,
-    theme_advanced_buttons1: "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,forecolor,backcolor,charmap,link,image,separator,preview,fullscreen",
-    theme_advanced_buttons2: "",
-    theme_advanced_buttons3: "",
-    theme_advanced_toolbar_location: 'top',
-    theme_advanced_statusbar_location: 'bottom',
-    theme_advanced_resizing: true,
-    theme_advanced_resize_horizontal : false,
-    plugin_preview_width : "800",
-    plugin_preview_height : "600"
-});
-//-->
-</script>
+<?php
+if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
+    $textarea = 'topic_text';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
+}
+?>
 <h2>
 <?php
 if ($navichain_items = $boards->getNaviChain()) {
@@ -129,8 +111,7 @@ if ($allow_title) { // New Topic
 <? } ?>
     <div class="row">
         <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br />
-        <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long">
-        <?php
+        <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long"><?php
         if (isset($void_string)) {
             echo $void_string ;
         }
@@ -138,7 +119,7 @@ if ($allow_title) { // New Topic
             echo isset($vars['topic_text']) ? $vars['topic_text'] : '';
         }
         ?></textarea>
-    </div> <!-- row -->
+        </div> <!-- row -->
 
 <?php
     if (isset($allow_title) && $allow_title) {
@@ -197,14 +178,44 @@ if ($allow_title) { // New Topic
                echo "<option value=\"-1\">-</option>";
             }
 
+            $closeOptGroup = false;
+            $closeOptGroupFinal = false;
             foreach ($LanguageChoices as $Choices) {
-                    echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-                    if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
-                       echo " selected='selected'" ;
+                    if (is_string($Choices)) {
+                        switch($Choices) {
+                            case "CurrentLanguage": 
+                                echo '<optgroup label="' . $words->getSilent("ForumCurrentLanguage") . '">';
+                                $closeOptGroup = true;
+                                break;
+                            case "DefaultLanguage": 
+                                echo '<optgroup label="' . $words->getSilent("ForumDefaultLanguage") . '">';
+                                $closeOptGroup = true;
+                                break;
+                            case "UILanguage": 
+                                echo '<optgroup label="' . $words->getSilent("ForumUILanguage") . '">';
+                                $closeOptGroup = true;
+                                break;
+                            case "AllLanguages":
+                                echo '<optgroup label="' . $words->getSilent("ForumAllLanguages") . '">';
+                                $closeOptGroupFinal = true;
+                                break;
+                        }
+                    } else {
+                        echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+                        if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
+                           echo " selected='selected'" ;
+                        }
+                        echo ">",$Choices->Name,"</option>" ;
+                        if ($closeOptGroup) {
+                            echo "</optgroup>";
+                            $closeOptGroup = false;
+                        }
                     }
-                    echo ">",$Choices->Name,"</option>" ;
             }
-        ?></select>
+            if ($closeOptGroupFinal) {
+                echo "</optgroup>";
+            }
+        ?></select><?php echo $words->flushBuffer(); ?>
 <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
         </div></div>
     </fieldset> <!-- row -->

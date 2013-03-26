@@ -359,10 +359,10 @@ class AdminController extends RoxControllerBase
         $id = $vars['id'];
         if ($id == 0) {
             $success = $this->_model->createDonation($vars['IdMember'], $vars['DonatedOn'], 
-                $vars['donate-amount'], $countryid);
+                $vars['donate-amount'], $vars['donate-comment'], $countryid);
         } else {
             $success = $this->_model->updateDonation($id, $vars['IdMember'], $vars['DonatedOn'], 
-                $vars['donate-amount'], $countryid);
+                $vars['donate-amount'], $vars['donate-comment'], $countryid);
         }
         if (!$success) {
             $mem_redirect->vars = $vars;

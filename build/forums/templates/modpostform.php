@@ -200,8 +200,10 @@ echo "<tr><th colspan=3 align=left>Title of thread ($max translations)</th>" ;
 //  echo "<option value=\"-1\">-</option>" ;
 
     foreach ($ArrayLanguage as $Choices) {
+        if (is_object($Choices)) {
             echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            echo "\">",$Choices->EnglishName,"</option>" ;
+            echo "\">" . $Choices->Name . "</option>" ;
+        }
     }
     echo "</select>" ;
     echo "</td><td>New Title<br /><textarea class=\"long\" name=\"NewTranslatedTitle\" cols=\"60\" rows=\"5\"></textarea>" ;
@@ -313,7 +315,7 @@ foreach ($DataPost->Post->Content as $Content) {
     foreach ($ArrayLanguage as $Choices) {
             echo "<option value=\"",$Choices->IdLanguage,"\"" ;
             if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
-            echo "\">",$Choices->EnglishName,"</option>" ;
+            echo "\">" . $Choices->Name . "</option>" ;
     }
     echo "</select>\n" ;
 
@@ -337,8 +339,10 @@ foreach ($DataPost->Post->Content as $Content) {
 //  echo "<option value=\"-1\">-</option>" ;
 
     foreach ($ArrayLanguage as $Choices) {
+        if (is_object($Choices)) {
             echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-            echo "\">",$Choices->EnglishName,"</option>" ;
+            echo "\">",$Choices->Name,"</option>";
+        }
     }
     echo "</select>\n" ;
 

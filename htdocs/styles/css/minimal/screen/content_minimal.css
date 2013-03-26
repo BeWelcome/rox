@@ -49,6 +49,8 @@
   /* ### paragraphs ###*/
   p,ul,dd,dt { line-height: 1.5em; }
   p { line-height: 1.5em; margin: 0 0 0.8em 0; }
+  #buttonstop p.floatbox,
+  #messagefooter p.floatbox  { margin: 0 }
 
   /* ### text formatting  ### */
   strong,b {font-weight: bold; }
@@ -512,10 +514,12 @@ dl.list {
   }
   #footer p {font-size: 0.9em;}
 
-  #footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#777; font-weight: normal; text-align: left;}
+  #footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#777; font-weight: normal; text-align: left; white-space: nowrap; }
   #footer a:hover { text-decoration:underline; }
   #footer a:focus { text-decoration:underline; }
-
+  #footer .linklist {padding-top: 0.2em;}
+  #footer #language-select { font-size: 0.9em; }
+  
   #footer #flags {padding: 0 0 2.5em 0; line-height: 1em; }
   #footer #flags a {
     color: #333;
@@ -1233,26 +1237,33 @@ form .date {
 }
 #messageheader {
   background-color: #fff;
-  padding: 2em 3em 1em 3em;
+  padding: 1em 1.5em 0.5em 1.5em;
   border-bottom: 1px solid #e5e5e5;
 }
 #messagecontent {
   background-color: #fff;
-  padding: 2em 3em;
+  padding: 1em 1.5em;
 }
 #messagecontent .text {
+/*
   font-family: Georgia;
-  font-size: 1.3em;
-  font-style: italic;
+  font-style: normal;
+*/
+  font-size: 1.1em;
 }
 #messageside {
   width: 22em;
   text-align: right;
 }
-#messagefooter {
+#buttonstop {
   background-color: #fff;
-  padding: 2em 3em;
+  padding: 1em 1.5em;
+  border-bottom: 1px solid #e5e5e5;
+}
+#messagefooter {
   border-top: 1px solid #e5e5e5;
+  background-color: #fff;
+  padding: 1em 1.5em;
 }
 
 div#message div#messagecontent p textarea {

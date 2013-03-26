@@ -74,7 +74,33 @@ class GroupMembership extends RoxEntityBase
         return $this->getGroupMembers($group, 'In', $where);
     }
 
+    /**
+     * return the count of members of the group
+     *
+     * @param object $group - Group entity object to get members for
+     * @access public
+     * @return array
+     */
+    public function getGroupMembersCount($group)
+    {
+        if (!is_object($group) || !($group_id = $group->getPKValue()))
+        {
+            return array();
+        }
 
+        $sql = "SELECT COUNT(*) AS count FROM members AS m, " . $this->getTableName() 
+            . " AS mg WHERE mg.IdGroup = " . $group_id . " AND mg.Status = 'In' "
+            . " AND mg.IdMember = m.id AND m.Status IN ('Active')";
+        
+        $rr = $this->dao->query($sql);
+        $count = 0;
+        if ($rr) {
+            $row = $rr->fetch(PDB::FETCH_OBJ);
+            $count = $row->count;
+        }
+        return $count;
+    }
+    
     /**
      * return the members of the group
      *
@@ -91,11 +117,15 @@ class GroupMembership extends RoxEntityBase
             return array();
         }
 
+        $notLoggedIn = true;
+        if (isset($_SESSION["IdMember"])) {
+            $notLoggedIn = false;
+        }
         $where_clause = "IdGroup = '{$group_id}'" . (($status = $this->dao->escape($status)) ? " AND Status = '{$status}'" : '');
         if (isset($where) && strlen($where))
         {
             $where_clause .= " AND {$where}";
-        }
+        }        
         $where_clause .= " ORDER BY created";
 
         $links = $this->findByWhereMany($where_clause);
@@ -126,17 +156,20 @@ class GroupMembership extends RoxEntityBase
         }
         
         $sql = "
-SELECT
-m.*,
-IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastLogin) as covertracks
-FROM members AS m, {$this->getTableName()} AS mg
-WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}
-ORDER BY {$orderby}{$limit_clause}{$offset_clause}";
+            SELECT
+                m.*,
+                IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastLogin) as covertracks
+                FROM members AS m, {$this->getTableName()} AS mg";
+        if ($notLoggedIn) {
+            $sql .= ", memberspublicprofiles as mp ";
+        }        
+        $sql .= " WHERE m.Status IN ('Active', 'Pending') AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}";
+        if ($notLoggedIn) {
+            $sql .= " AND mp.IdMember=m.id";
+        }
+        $sql .= " ORDER BY {$orderby}{$limit_clause}{$offset_clause}";
         return $this->createEntity('Member')->findBySQLMany($sql);
     }
-
-
-
 
     /**
      * return the groups for a member

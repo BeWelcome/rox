@@ -8,8 +8,11 @@ if ($TDonationArray) {
     $max=count($TDonationArray) ;
     $TotalDonations=$Stat->YearDonation ;
     $TotalDonationsNeeded = $Stat->YearNeededAmount ;
-    $Percent = $TotalDonations *100/$TotalDonationsNeeded;
-    
+    if ($TotalDonations >= $TotalDonationsNeeded) {
+        $Percent = 100;
+    } else {
+        $Percent = $TotalDonations *100/$TotalDonationsNeeded;
+    }
     $BarState = -202 *$Percent/100;
     //$TextState = 202+$BarState;
     //if ($TextState > 160) $TextState = 160;

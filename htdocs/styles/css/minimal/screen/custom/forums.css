@@ -17,7 +17,6 @@
 div.forumthreadinfo {
     border-bottom: 1px solid #e5e5e5;
     padding-bottom: 1em;
-    margin-bottom: 1.5em;
     overflow: hidden;
 }
 
@@ -44,6 +43,10 @@ div.forumsauthorname {
     font-weight: bold;
     font-size: 1.1em;
     word-wrap: break-word;
+}    
+div.forumsauthorlocation {
+    word-wrap: break-word;    
+    font-weight: normal
 }
 div.forumsauthor {
     padding:0;
@@ -344,4 +347,13 @@ table.row td {
 img.forum_icon, #main h4 img.forum_icon {
 margin: 0 4px;
 float:left;
+}
+
+
+a.toggleedit {
+    text-decoration: none;
+}
+
+a.toggleedit:hover {
+    text-decoration: underline;
 }

@@ -249,15 +249,17 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
                  if (isset($vars['gender']) && $vars['gender'] == 'female') {
                      echo ' checked="checked"';
                   }
-                  ?> />
-                  <?php echo $words->get('female'); ?>
+                  ?> /><?php echo $words->get('female'); ?>&nbsp;
                   <input class="radio" type="radio" name="gender" value="male"<?php
                   if (isset($vars['gender']) && $vars['gender'] == 'male') {
                       echo ' checked="checked"';
                   }
-                  ?> />
-                  <?php echo $words->get('male');?>
-
+                  ?> /><?php echo $words->get('male');?>&nbsp;
+                  <input class="radio" type="radio" name="gender" value="male"<?php
+                  if (isset($vars['gender']) && $vars['gender'] == 'other') {
+                      echo ' checked="checked"';
+                  }
+                  ?> /><?php echo $words->get('Genderother');?>
                 <div class="error"><?=$words->get('SignupErrorProvideGender')?></div>
 <?php } else { ?>
           <input type="hidden" id="gender" name="gender" value="<?php

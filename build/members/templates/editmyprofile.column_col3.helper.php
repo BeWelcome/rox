@@ -12,7 +12,6 @@ $profile_language_code = $lang->ShortCode;
 $profile_language_name = $lang->Name;
 $languages = $member->profile_languages;
 $languages_spoken = $member->languages_spoken;
-$languages_all = $member->languages_all;
 
 $CanTranslate = false; // FIXME that seems to be incorrect
 

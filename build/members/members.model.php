@@ -840,7 +840,7 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidBirthDate';
         }
 
-        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','IDontTell'))) {
+        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','other'))) {
             $errors[] = 'SignupErrorInvalidGender';
         }
 
@@ -1420,5 +1420,46 @@ VALUES
                 "FeedbackQuestion" => $feedback,
             ));
         }
+    }
+
+    /**
+     * Creates or updates a note for a member
+     * 
+     * @param string username Username of the member for which the note is written
+     * @param string category Category under which the note is filed
+     * @param string comment Comment text. May be empty  
+     */
+    public function writeNoteForMember($username, $category, $comment) {
+        $loggedInMember = $this->getLoggedInMember();
+        $member =$this->getMemberWithUsername($username);
+        // Check if it is a new note
+        $sql = "SELECT * FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = "
+                . $member->id;
+        $res = $this->dao->query($sql);
+        if (!$res) {
+            return false;
+        }
+        if ($res->numRows()) {
+            $sql = "UPDATE mycontacts SET Updated = NOW(), Category = '" . $this->dao->escape($category) . "'"
+                 . ", Comment = '" . $this->dao->escape($comment) 
+                 . "' WHERE IdMember = " . $loggedInMember->id . " AND IdContact = " . $member->id;
+                    } else {
+            $sql = "INSERT INTO mycontacts SET IdMember = " . $loggedInMember->id . ", IdContact = "
+                 . $member->id . ", Created = NOW(), Category = '" . $this->dao->escape($category) . "'"
+                 . ", Comment = '" . $this->dao->escape($comment) . "'";
+        }
+        $this->dao->query($sql);
+    }
+
+    /**
+     * Deletes the note for a member
+     * 
+     * @param string memberId Id of the member for which the note was written
+     */
+    public function deleteNoteForMember($memberId) {
+        $loggedInMember = $this->getLoggedInMember();
+        // Check if it is a new note
+        $sql = "DELETE FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = ". $memberId;
+        $res = $this->dao->query($sql);
     }
 }

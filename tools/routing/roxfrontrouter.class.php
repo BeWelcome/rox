@@ -19,6 +19,7 @@ class RoxFrontRouter
      */
     function route()
     {
+        $this->setBaseUri();
         $this->initUser();
 
         $request = $this->args->request;
@@ -33,6 +34,36 @@ class RoxFrontRouter
         }
     }
 
+    /*
+     * set baseuri based on http or https if it is not already set
+     */
+    protected function setBaseUri()
+    {
+        $env = PVars::get()->env;
+        $override_conds = isset($env["baseuri_override"]) && 
+                               $env["baseuri_override"];
+        $http_ref_conds = isset($_SERVER['HTTP_REFERER']) &&
+                          strpos($_SERVER['HTTP_REFERER'], 'http://') !== false;
+        //sometimes we will be sending data via ssl even while the user 
+        //is browsing on http.  the http_referer conditions keep user from
+        //being automatically rerouted onto https
+        $https_conds = isset($_SERVER['HTTPS']) && 
+                            isset($env["baseuri_https"]) &&
+                            $env["baseuri_https"] &&
+                            !$http_ref_conds;
+        $http_conds = isset($env["baseuri_http"]) && $env["baseuri_http"];
+        if ($override_conds){
+            $env["baseuri"] = $env["baseuri_override"];
+        } elseif ($https_conds) {
+            $env["baseuri"] = $env["baseuri_https"];
+        } elseif ($http_conds){
+            $env["baseuri"] = $env["baseuri_http"];
+        } else {
+            //TODO: error logging
+        }
+        PVars::register('env', $env); 
+        
+    }
 
     /**
      * Initialise the current user.

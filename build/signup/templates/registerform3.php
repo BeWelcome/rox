@@ -32,7 +32,7 @@ $cloudmade_conf = PVars::getObj('cloudmade');
 
 <div id="signuprox">
 
-<form method="post" action="signup/3" name="geo-form-js" id="geo-form-js">
+<form method="post" action="<?php echo $baseuri.'signup/3'?>" name="geo-form-js" id="geo-form-js">
     <fieldset>
         <?=$callback_tag ?>
         <input type="hidden" name="javascriptactive" value="false" />

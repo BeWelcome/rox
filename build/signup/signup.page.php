@@ -39,6 +39,13 @@ class SignupPage extends PageWithRoxLayout
         $javascript = false;
         $selCity = null;
         $selYear = 0;
+
+        //get baseuri
+        $baseuri = PVars::getObj('env')->baseuri;
+        if (PVars::getObj('env')->force_ssl_sensitive) {
+            $baseuri = PVars::getObj('env')->baseuri_https;
+        }
+
         
         // Overwrite Signup-Geo-Info with GeoVars-Session (used for non-js users), afterwards unset it again.
         if (isset($_SESSION['GeoVars'])) {

@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
 <div id="signuprox">
 <p><?php echo $words->get('SignupIntroduction'); ?></p>
 
-<form method="post" action="signup/2" name="signup" id="user-register-form">
+<form method="post" action="<?php echo $baseuri.'signup/2'?>" name="signup" id="user-register-form">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
 

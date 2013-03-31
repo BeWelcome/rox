@@ -1291,4 +1291,9 @@ ORDER BY b.`blog_created` DESC LIMIT 20';
     {
         return $this->createEntity('Member')->findByUsername($username);
     }
+
+    public function getTinyMCEPreference() {
+        $member = $this->getLoggedInMember();
+        return $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
+    }
 }

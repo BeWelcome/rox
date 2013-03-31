@@ -51,16 +51,17 @@ class MemberPage extends PageWithActiveSkin
     {
         $username = $this->member->Username;
         $member = $this->member;
-        
         $lang = $this->model->get_profile_language();
         $profile_language_code = $lang->ShortCode;
         $words = $this->getWords();
         $ww = $this->ww;
         $wwsilent = $this->wwsilent;
         $comments_count = $member->count_comments();
-        if ($logged_user = $this->model->getLoggedInMember())
+        $logged_user = $this->model->getLoggedInMember();
+        if ($logged_user)
         {
             $TCom = $member->get_comments_commenter($logged_user->id);
+            $note = $logged_user->getNote($member);
         }
 
         $galleryItemsCount = $member->getGalleryItemsCount();
@@ -68,10 +69,12 @@ class MemberPage extends PageWithActiveSkin
         // TODO: move number out of translation string
         $ViewForumPosts = $words->get("ViewForumPosts",$member->forums_posts_count());
 
+        $mynotes_count = $member->count_mynotes();
         if ($this->myself) {
             $tt=array(
                 array('editmyprofile', 'editmyprofile/' . $profile_language_code, $ww->EditMyProfile, 'editmyprofile'),
                 array('mypreferences', 'mypreferences', $ww->MyPreferences, 'mypreferences'),
+                array('mynotes', 'mynotes', $words->get('MyNotes', $mynotes_count), 'mynotes')
                 );
 
             if ($this instanceof EditMyProfilePage)
@@ -93,29 +96,27 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
         } else {
-            $mynotes_count = $member->count_mynotes(); 
-            if ($mynotes_count>0) {
-                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id ;
-                $mynotelinkname=$words->get('ViewMyNotesForThisMember') ;
+            if (isset($note)) {
+                $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;
+                $mynotelinkname= "members/$username/note/edit" ;
             }
             else {
-                $mynotelink='bw/mycontacts.php?IdContact='.$this->member->id.'&amp;action=add' ;
-                $mynotelinkname=$words->get('AddToMyNotes') ;
+                $mynotewordsname=$words->get('NoteAddToMyNotes') ;
+                $mynotelinkname= "members/$username/note/add" ;
             }
             $tt= array(
                 array('messagesadd', "messages/compose/$username", $ww->ContactMember, 'messagesadd'),
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
+                array('notes', $mynotelinkname, $mynotewordsname, 'mynotes'),
                 array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),
                 array('space', '', '', 'space'),
-
                 array('profile', "members/$username", $ww->MemberPage),
                 array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')'),
                 array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' (' . $galleryItemsCount . ')'),
                 array('forum', "forums/member/$username", $ViewForumPosts),
                 array('blogs', "blog/$username", $ww->Blog),
-                array('trips', "trip/show/$username", $ww->Trips),
-                array('notes',$mynotelink,$mynotelinkname)
+                array('trips', "trip/show/$username", $ww->Trips)
             );
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))
@@ -226,7 +227,7 @@ class MemberPage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?1';
        return $stylesheets;
     }
     

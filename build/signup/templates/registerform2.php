@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
 
 <div id="signuprox">
 
-<form method="post" action="signup/3" name="signup" id="user-register-form">
+<form method="post" action="<?php echo $baseuri.'signup/3'?>" name="signup" id="user-register-form">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
 
@@ -132,18 +132,21 @@ Boston, MA  02111-1307, USA.
     <!-- Gender -->
         <div class="signup-row">
           <label for="gender"><?php echo $words->get('Gender'); ?>*</label>
-          <input class="radio" style="float: left" type="radio" id="gender" name="gender" value="female"<?php
+            <input class="radio" style="float: left" type="radio" id="gender" name="gender" value="female"<?php
              if (isset($vars['gender']) && $vars['gender'] == 'female') {
                  echo ' checked="checked"';
               }
-              ?> />
-              <?php echo $words->get('female'); ?>
+              ?> /><?php echo $words->get('female'); ?>&nbsp;
               <input class="radio" type="radio" name="gender" value="male"<?php
               if (isset($vars['gender']) && $vars['gender'] == 'male') {
                   echo ' checked="checked"';
               }
-              ?> />
-              <?php echo $words->get('male'); ?>
+              ?> /><?php echo $words->get('male'); ?>&nbsp;
+              <input class="radio" type="radio" name="gender" value="other"<?php
+              if (isset($vars['gender']) && $vars['gender'] == 'other') {
+                  echo ' checked="checked"';
+              }
+              ?> /><?php echo $words->get('GenderOther'); ?>
               <?php if (in_array('SignupErrorProvideGender', $vars['errors'])) {
                   echo '<div class="error">'.$words->get('SignupErrorProvideGender').'</div>';
                       }

@@ -81,7 +81,6 @@ $words = new MOD_words();
             </p>
 
             <p class="small photodesc" style="color: #999;">
-                all pictures (cc)
                 <?=$words->get('StartPageListofPhotographers');?>
             </p>
           </div>

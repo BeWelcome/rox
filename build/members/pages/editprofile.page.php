@@ -1,5 +1,14 @@
 <?php
 
+// Utility function to sort the languages
+function cmpEditLang($a, $b)
+{
+    if ($a == $b) {
+        return 0;
+    }
+    return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+}
+
 
 class EditProfilePage extends ProfilePage
 {
@@ -9,7 +18,19 @@ class EditProfilePage extends ProfilePage
         return 'editmyprofile';
     }
 
-
+    private function sortLanguages($languages)
+    {
+        $words = new MOD_words;
+        $langarr = array();
+        foreach($languages as $language) {
+            $lang = $language;
+            $lang->TranslatedName = $words->getSilent($language->WordCode);
+            $langarr[] = $lang;
+        }
+        usort($langarr, "cmpEditLang");
+        return $langarr;
+    }
+    
     protected function editMyProfileFormPrepare($member)
     {
         $member->setEditMode(true);
@@ -18,10 +39,15 @@ class EditProfilePage extends ProfilePage
         $profile_language = $lang->id;
         $profile_language_code = $lang->ShortCode;
         $profile_language_name = $lang->Name;
+        $all_spoken_languages = $this->sortLanguages($member->get_all_spoken_languages());
+        $all_signed_languages = $this->sortLanguages($member->get_all_signed_languages());
+
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
-        $ReadCrypted = 'AdminReadCrypted';
-
+        $ReadCrypted = 'MemberReadCrypted';
+        if ($this->adminedit) {
+            $ReadCrypted = 'AdminReadCrypted';
+        }
         $vars = array();
 
         // Prepare $vars
@@ -31,9 +57,14 @@ class EditProfilePage extends ProfilePage
         $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('Occupation', $profile_language) : '';
         $vars['Gender'] = $member->Gender;
         $vars['HideGender'] = $member->HideGender;
+        if ($vars['Gender'] == 'IDontTell') {
+            $vars['Gender'] = 'other';
+            $vars['HideGender'] = true;
+        }
 
         $vars['language_levels'] = $member->language_levels;
-        $vars['languages_all'] = $member->languages_all;
+        $vars['languages_all_spoken'] = $all_spoken_languages;
+        $vars['languages_all_signed'] = $all_signed_languages;
         $vars['languages_selected'] = $member->languages_spoken;
 
         $vars['FirstName'] = $member->get_firstname();
@@ -50,10 +81,10 @@ class EditProfilePage extends ProfilePage
         $vars['IsHidden_HomePhoneNumber'] = MOD_crypt::IsCrypted($member->HomePhoneNumber);
         $vars['IsHidden_CellPhoneNumber'] = MOD_crypt::IsCrypted($member->CellPhoneNumber);
         $vars['IsHidden_WorkPhoneNumber'] = MOD_crypt::IsCrypted($member->WorkPhoneNumber);
-        $vars['HomePhoneNumber'] = ($member->HomePhoneNumber > 0) ? MOD_crypt::MemberReadCrypted($member->HomePhoneNumber) : '';
-        $vars['CellPhoneNumber'] = ($member->CellPhoneNumber > 0) ? MOD_crypt::MemberReadCrypted($member->CellPhoneNumber) : '';
-        $vars['WorkPhoneNumber'] = ($member->WorkPhoneNumber > 0) ? MOD_crypt::MemberReadCrypted($member->WorkPhoneNumber) : '';
-        $vars['Email'] = ($member->Email > 0) ? MOD_crypt::MemberReadCrypted($member->Email) : '';
+        $vars['HomePhoneNumber'] = ($member->HomePhoneNumber > 0) ? MOD_crypt::$ReadCrypted($member->HomePhoneNumber) : '';
+        $vars['CellPhoneNumber'] = ($member->CellPhoneNumber > 0) ? MOD_crypt::$ReadCrypted($member->CellPhoneNumber) : '';
+        $vars['WorkPhoneNumber'] = ($member->WorkPhoneNumber > 0) ? MOD_crypt::$ReadCrypted($member->WorkPhoneNumber) : '';
+        $vars['Email'] = ($member->Email > 0) ? MOD_crypt::$ReadCrypted($member->Email) : '';
         $vars['WebSite'] = $member->WebSite;
 
         $vars['messengers'] = $member->messengers();

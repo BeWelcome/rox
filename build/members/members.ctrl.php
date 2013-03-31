@@ -694,4 +694,209 @@ class MembersController extends RoxControllerBase
         $page->model = $this->model;
         return $page;
     }
+
+     /**
+     * callback for password reset
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff          $stuff1
+     * @param stuff          $stuff2
+     *
+     * @access public
+     * @return mixed
+     */
+    public function resetPasswordCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $post = $args->post;
+        if (empty($post['UsernameOrEmail']))
+        {
+            $mem_redirect->errors = array('ResetPasswordEmpty');
+            return false;
+        }
+        $member = $this->model->getMemberWithUsername($post['UsernameOrEmail']);
+        if (!$member) {
+            $member = $this->model->getMemberFromEmail($post['UsernameOrEmail']);
+        }
+        if (!$member) {
+            $mem_redirect->errors = array('ResetPasswordError');
+            return false;
+        }
+        if ($member->canLogIn()) {
+            $member->model = $this->model;
+            
+            // Generate random password (copied from bw)
+            $totalChar = 8; // number of chars in the password
+            $salt = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";  // salt to select chars from
+            srand((double)microtime()*1000000); // start the random generator
+            $password=""; // set the inital variable
+            for ($i=0;$i<$totalChar;$i++) {  // loop and create password
+                $password = $password . substr ($salt, rand() % strlen($salt), 1);
+            }
+
+            // Alternate version using md5
+            // $password = md5($member->Username . uniqid());
+            $member->setPassword($password);
+            $subject = $this->getWords()->get("ResetPasswordSubject");
+            $body = $this->getWords()->get("ResetPasswordBody", $password, $member->Username);
+            $member->sendMail($subject, $body);
+            return $this->router->url('members_reset_password_finish', array(), false);
+        } else {
+            $mem_redirect->errors = array('ResetPasswordNoLogin');
+            return false;
+        }
+    }
+
+    /**
+     * displays the reset your password page
+     *
+     * @access public
+     * @return ResetPasswordPage
+     */
+    public function resetPassword()
+    {
+        $page = new ResetPasswordPage();
+        $page->model = $this->model;
+        return $page;
+    }
+
+    /**
+     * displays the reset your password page
+     *
+     * @access public
+     * @return ResetPasswordFinishPage
+     */
+    public function resetPasswordFinish()
+    {
+        $page = new ResetPasswordFinishPage();
+        $page->model = $this->model;
+        return $page;
+    }
+
+    /**
+     * displays the a list of contacts/notes
+     *
+     * @access public
+     * @return MemberNotesPage
+     */
+    public function mynotes()
+    {
+        $member = $this->model->getLoggedInMember();
+        if (!$member) {
+            return $page = new MembersMustloginPage;
+        }
+        $mynotes = $member->getNotes();
+        $params = new StdClass;
+        $params->strategy = new HalfPagePager('left');
+        $params->items = $mynotes;
+        $params->items_per_page = 20;
+        $pager = new PagerWidget($params);
+        $page = new MemberNotesPage();
+        $page->mynotes = $mynotes;
+        $page->pager = $pager;
+        $page->model = $this->model;
+        $page->member = $member;
+        $page->myself = true;
+        return $page;
+    }
+
+    /**
+     * noteCallback
+     *
+     * @param Object $args
+     * @param Object $action 
+     * @param Object $mem_redirect memory for the page after redirect
+     * @param Object $mem_resend memory for resending the form
+     * @return string relative request for redirect
+     */
+    public function addNoteCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $vars = $args->post;
+        $category="";
+        $catselect = trim($vars['ProfileNoteCategory']);
+        $catfree = trim($vars['ProfileNoteCategoryFree']);
+        $request = $args->request;
+        if (!empty($catselect) && !empty($catfree)) {
+            if ($catselect != $catfree) {
+                $vars['errors'] = array('ProfileNoteCategoryUnclear');
+                $mem_redirect->post = $vars;
+                return false;
+            }
+        }
+        if (!empty($catselect)) {
+            $category = $catselect;
+        } else {
+            $category = $catfree;
+        }
+        if (empty($category)) {
+            $vars['errors'] = array('ProfileNoteCategoryNotSet');
+            $mem_redirect->post = $vars;
+            return false;
+        }
+        $this->model->writeNoteForMember($this->route_vars['username'], $category, $vars['ProfileNoteComment']);
+        $vars['success'] = true;
+        $mem_redirect->post = $vars;
+        return false;
+    }
+
+    /**
+     * displays the add or edit note page
+     *
+     * @access public
+     * @return AddNotePagePage
+     */
+    public function addNote()
+    {
+        $loggedInMember = $this->model->getLoggedInMember();
+        $member =$this->model->getMemberWithUsername($this->route_vars['username']); 
+        if (!$loggedInMember || !$member) {
+            return $page = new MembersMustloginPage;
+        }
+        $page = new AddNotePage();
+        $page->model = $this->model;
+        $page->loggedInMember = $loggedInMember;
+        $page->member = $member;
+        return $page;
+    }
+
+    /**
+     * noteCallback
+     *
+     * @param Object $args
+     * @param Object $action 
+     * @param Object $mem_redirect memory for the page after redirect
+     * @param Object $mem_resend memory for resending the form
+     * @return string relative request for redirect
+     */
+    public function deleteNoteCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $vars = $args->post;
+        $this->model->deleteNoteForMember($vars['IdMember']);
+        return $this->router->url('members_show_all_notes', array(), false);
+    }
+
+    /**
+     * displays the add or edit note page
+     *
+     * @access public
+     * @return AddNotePagePage
+     */
+    public function deleteNote()
+    {
+        $loggedInMember = $this->model->getLoggedInMember();
+        $member =$this->model->getMemberWithUsername($this->route_vars['username']); 
+        if (!$loggedInMember || !$member) {
+            return $page = new MembersMustloginPage;
+        }
+        $note = $loggedInMember->getNote($member);
+        if (!$note) {
+            $baseURL = PVars::getObj('env')->baseuri;
+            return $this->redirectAbsolute($baseURL . 'members/' . $this->route_vars['username']);
+        } 
+        $page = new DeleteNotePage();
+        $page->model = $this->model;
+        $page->loggedInMember = $loggedInMember;
+        $page->member = $member;
+        return $page;
+    }
 }

@@ -676,8 +676,8 @@ class AdminModel extends RoxModelBase
             $words = new MOD_words();
             $subject = 'BroadCast_Title_' . $name;
             $body = 'BroadCast_Body_' . $name;
-            $subjectCode = $words->get($subject);
-            $bodyCode = $words->get($body);
+            $subjectCode = $words->getAsIs($subject);
+            $bodyCode = $words->getAsIs($body);
             if (!($subject == $subjectCode) || !($body == $bodyCode)) {
                 $errors[] = 'AdminMassMailCodeExists';
             }
@@ -794,7 +794,7 @@ class AdminModel extends RoxModelBase
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO
+            REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
@@ -825,7 +825,7 @@ class AdminModel extends RoxModelBase
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO
+            REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
@@ -836,7 +836,7 @@ class AdminModel extends RoxModelBase
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
             WHERE
                 (m.IdCity = g.geonameId)
-                AND g.fk_countrycode = 'AO'
+                AND g.fk_countrycode = '" . $this->dao->escape($countrycode) . "'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                 AND (m.Status IN ('Active', 'ActiveHidden'))";
         if ($adminunit) {
@@ -857,7 +857,7 @@ class AdminModel extends RoxModelBase
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO 
+            REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT 
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
@@ -869,6 +869,7 @@ class AdminModel extends RoxModelBase
             WHERE
                 m.id = mg.IdMember 
                 AND mg.IdGroup = " . $groupId . "
+                AND mg.Status = 'In'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                 AND (m.Status IN ('Active', 'ActiveHidden'))";
         $r = $this->dao->query($query);
@@ -883,7 +884,7 @@ class AdminModel extends RoxModelBase
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
-            INSERT IGNORE INTO 
+            REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
@@ -892,6 +893,9 @@ class AdminModel extends RoxModelBase
             LEFT JOIN
                 memberspreferences AS mp 
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
+            WHERE
+                m.Status IN ('Active', 'ActiveHidden')
+                AND DATEDIFF(NOW(), m.LastLogin) < 183
             ORDER BY RAND()
             LIMIT 0, " . $voters;
         $r = $this->dao->query($query);
@@ -910,7 +914,7 @@ class AdminModel extends RoxModelBase
             case 'enqueueMembers':
                 $usernames = array();
                 if ($vars['members-type'] == 'usernames') {
-                    $usernames = explode(";", $vars['Usernames']);
+                    $usernames = explode(";", $vars['usernames']);
                 }
                 if (empty($vars['max-messages'])) {
                     $maxmessages = 0;
@@ -983,11 +987,15 @@ class AdminModel extends RoxModelBase
         if (empty($vars['donate-username'])) {
             $errors[] = 'AdminTreasurerDonorEmpty';
         } else {
-            $donor = $this->createEntity('Member')->findByUsername($vars['donate-username']);
-            if (!$donor) {
-                $errors[] = 'AdminTreasurerUnknownDonor';
+            if ($vars['donate-username'] == "-empty-") {
+                $vars['IdMember'] = 0;
             } else {
-                $vars['IdMember'] = $donor->id;
+                $donor = $this->createEntity('Member')->findByUsername($vars['donate-username']);
+                if (!$donor) {
+                    $errors[] = 'AdminTreasurerUnknownDonor';
+                } else {
+                    $vars['IdMember'] = $donor->id;
+                }
             }
         }
         if (!is_numeric($vars['donate-amount'])) {
@@ -1044,7 +1052,7 @@ class AdminModel extends RoxModelBase
         return false;
     }
     
-    public function createDonation($memberid, $donatedon, $amount, $countryid) {
+    public function createDonation($memberid, $donatedon, $amount, $comment, $countryid) {
         $query = "
             INSERT INTO
                 donations
@@ -1059,7 +1067,7 @@ class AdminModel extends RoxModelBase
                 namegiven = '',
                 referencepaypal = '',
                 membercomment = '',
-                SystemComment = 'Bank transfer'";
+                SystemComment = '" . $this->dao->escape($comment) . "'";
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
@@ -1070,7 +1078,7 @@ class AdminModel extends RoxModelBase
         return true;
     }
 
-    public function updateDonation($id, $memberid, $donatedon, $amount, $countryid) {
+    public function updateDonation($id, $memberid, $donatedon, $amount, $comment, $countryid) {
         $query = "
             UPDATE
                 donations
@@ -1085,7 +1093,7 @@ class AdminModel extends RoxModelBase
                 namegiven = '',
                 referencepaypal = '',
                 membercomment = '',
-                SystemComment = 'Bank transfer'
+                SystemComment = '" . $this->dao->escape($comment) . "'
             WHERE
                 id = " . $id;
         $sql = $this->dao->query($query);

@@ -105,7 +105,10 @@
     margin-bottom: 0.8em;
 }
 
-
+#profile_linklist .mynotes {
+    padding-left: 2em;
+    background: transparent url(../../../../../images/icons/vcard.png) 0 3px no-repeat;
+}
 
 #profile .profile_translations {
     padding: 0 0 1em 0;
@@ -230,6 +233,7 @@
     vertical-align: middle;
 }
 
+a.back {color: #888}
 #profile .box h3, #profile #linkpath h3, #profile-info .box h3{
     margin-bottom: 0.3em;
     color: #333;
@@ -262,13 +266,14 @@ div.comment {
 }
 
 div.frame {
-    background:none repeat scroll 0 0 #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px 3px 3px 3px;
     padding: 5px;
 }
 
 .profilecomment.counter {
-    background:none repeat scroll 0 0 #ddd;
-    border:1px solid #CCCCCC;
+    background:none repeat scroll 0 0 #eee;
+    border:1px solid #ccc;
     border-radius:3px 3px 3px 3px;
     margin-left:10%;
     padding:10px;
@@ -286,5 +291,7 @@ div.frame {
 span.profile-edit-link a {
   color: #2184E8;
 }
+/* additional styles for member note form */
 
+.yform label {padding-bottom: 0.12em;}
 }

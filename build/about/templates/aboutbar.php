@@ -12,8 +12,8 @@ $words = new MOD_words();
         <h3><?php echo $words->get('MoreInfo') ?></h3>
         <ul class="linklist">
             <li><a href="wiki/press%20information"><?php echo $words->get('PressInfoPage') ?></a></li>
-            <li><a href="bod"><?php echo $words->get('BoardOfDirectorsPage') ?></a></li>
-            <li><a href="wiki/BeVolunteer"><?php echo $words->get('BeVolunteerBlogs') ?></a></li>
+            <li><a href="http://www.bevolunteer.org/about-bevolunteer/board-of-directors/" target="_blank"><?php echo $words->get('BoardOfDirectorsPage') ?></a></li>
+            <li><a href="http://www.bevolunteer.org/" target="_blank"><?php echo $words->get('BeVolunteerBlogs') ?></a></li>
             <li><a href="terms"><?php echo $words->get('TermsPage') ?></a></li>
             <li><a href="privacy"><?php echo $words->get('PrivacyPage') ?></a></li>
             <li><a href="stats"><?php echo $words->get('StatsPage') ?></a></li>

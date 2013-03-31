@@ -28,7 +28,16 @@ var BWGoogleMapReverseGeolocator = Class.create({
       // addressPoint.coordinates = place.Point.coordinates;
       var nbAddressComponents = place.address_components.length;
       if (nbAddressComponents != 0){
-        addressPoint.countryNameCode = place.address_components[nbAddressComponents-1].short_name;
+    	  
+    	  addressPoint.countryNameCode = '';
+    	  
+    	  for (var i = 0; i < nbAddressComponents; i++){
+    		  if (jQuery.inArray('country', place.address_components[i].types) != -1){
+    			  addressPoint.countryNameCode = place.address_components[i].short_name;
+    			  break;
+    		  }
+    	  }
+    	  
       }else{
         addressPoint.countryNameCode = '';
       }

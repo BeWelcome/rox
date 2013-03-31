@@ -50,6 +50,36 @@ class MembersModel extends RoxModelBase
         $this->bootstrap();
     }
     
+
+    public function getMemberFromEmail($email)
+    {
+        /**
+         * this is so far the worst, most useless piece of hacky crap
+         * I've had to code for BW so far. The cause is the 'encryption'
+         * that means we cannot query for a member by email - even if
+         * emails are stored unencrypted in the database
+         *
+         */
+        global $_SYSHCVOL;
+        $email = $this->dao->escape($email);
+        $db_version = "<admincrypted>" . strtr($email, array('@' => '%40')) . "</admincrypted>";
+        $result = $this->singleLookup(<<<SQL
+SELECT
+    IdMember
+FROM
+   {$_SYSHCVOL['Crypted']}cryptedfields 
+WHERE
+    AdminCryptedValue = '{$db_version}'
+    AND
+    TableColumn = 'members.Email'
+SQL
+);
+        if (!$result) {
+            return false;
+        }
+        return $this->createEntity('Member', $result->IdMember);
+    }
+
     public function getMemberWithUsername($username)
     {
         return $this->createEntity('Member')->findByUsername($username);
@@ -810,7 +840,7 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidBirthDate';
         }
 
-        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','IDontTell'))) {
+        if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','other'))) {
             $errors[] = 'SignupErrorInvalidGender';
         }
 
@@ -1390,5 +1420,46 @@ VALUES
                 "FeedbackQuestion" => $feedback,
             ));
         }
+    }
+
+    /**
+     * Creates or updates a note for a member
+     * 
+     * @param string username Username of the member for which the note is written
+     * @param string category Category under which the note is filed
+     * @param string comment Comment text. May be empty  
+     */
+    public function writeNoteForMember($username, $category, $comment) {
+        $loggedInMember = $this->getLoggedInMember();
+        $member =$this->getMemberWithUsername($username);
+        // Check if it is a new note
+        $sql = "SELECT * FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = "
+                . $member->id;
+        $res = $this->dao->query($sql);
+        if (!$res) {
+            return false;
+        }
+        if ($res->numRows()) {
+            $sql = "UPDATE mycontacts SET Updated = NOW(), Category = '" . $this->dao->escape($category) . "'"
+                 . ", Comment = '" . $this->dao->escape($comment) 
+                 . "' WHERE IdMember = " . $loggedInMember->id . " AND IdContact = " . $member->id;
+                    } else {
+            $sql = "INSERT INTO mycontacts SET IdMember = " . $loggedInMember->id . ", IdContact = "
+                 . $member->id . ", Created = NOW(), Category = '" . $this->dao->escape($category) . "'"
+                 . ", Comment = '" . $this->dao->escape($comment) . "'";
+        }
+        $this->dao->query($sql);
+    }
+
+    /**
+     * Deletes the note for a member
+     * 
+     * @param string memberId Id of the member for which the note was written
+     */
+    public function deleteNoteForMember($memberId) {
+        $loggedInMember = $this->getLoggedInMember();
+        // Check if it is a new note
+        $sql = "DELETE FROM mycontacts WHERE IdMember = ". $loggedInMember->id . " AND IdContact = ". $memberId;
+        $res = $this->dao->query($sql);
     }
 }

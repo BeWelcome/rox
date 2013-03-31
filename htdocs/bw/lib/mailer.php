@@ -132,11 +132,8 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     }
     $headers .= "\nX-Mailer:PHP"; // mail of client			
 
-    if ($ParamGreetings == "") {
-        $Greetings = wwinlang('HCVolMailSignature', $IdLanguage);
-    } else {
-        $Greetings = $ParamGreetings;
-    }
+    $Greetings = $ParamGreetings;
+ 
     if ($use_html == "yes") {
         if ($verbose)
             echo "<br/ >4<br />\n";
@@ -156,31 +153,29 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
             if ($verbose) {
                 echo "<br>7<br>";
             }
-            $realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor='#ffffcc'>\n" . str_replace("\n", "<br>", $texttosend);
-            $realtext .= "<br>\n<font color=blue>" . $Greetings . "</font>";
-            $realtext .= "\n</body>\n</html>";
+            $html_text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . "<html>\n<head>\n<title>" . $mail_subject . "</title>\n</head>\n<body bgcolor='#ffffcc'>\n" . str_replace("\n", "<br>", $texttosend);
+            $html_text .= "<br>" . $Greetings;
+            $html_text .= "\n</body>\n</html>";
         } else {
             if ($verbose)
                 echo "<br>8<br>\n";
 
-            $realtext = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . str_replace("\n", "<br>\n", $texttosend); // In this case, its already in html, \n are to replace by <br>
+            $html_text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . str_replace("\n", "<br>\n", $texttosend); // In this case, its already in html, \n are to replace by <br>
         }
-    } else {
-        if ($verbose)
-            echo "<br>9 <br>\n";
-
-        $text .= "\n" . $Greetings;
-        $realtext = str_replace("<br>", "\n", $text);
     }
+    
+    if ($verbose)
+        echo "<br>9 <br>\n";
+
+    $plain_text = $text ."\n" . $Greetings;
+    $plain_text = str_replace("<br>", "\n", $plain_text);
+    
 
     if ($verbose)
-        echo "<br>10 " . nl2br($realtext) . "<br>\n";
+        echo "<br>10 " . nl2br($html_text) . "<br>\n";
 
     if ($verbose)
-        echo "<br>11 " . nl2br($realtext) . "<br>\n";
-
-    if ($verbose)
-        echo "<br>12 " . $realtext . "<br>\n";
+        echo "<br>12 " . $html_text . "<br>\n";
 
     // Debugging trick
     if ($verbose) {
@@ -201,9 +196,9 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
             }
         }
         echo "</font></td>";
-        echo "<tr><td><font color=#6633ff>", htmlentities($realtext), "</font></td>";
+        echo "<tr><td><font color=#6633ff>", htmlentities($html_text), "</font></td>";
         if ($use_html == "yes")
-        echo "<tr><td>$realtext</td>";
+        echo "<tr><td>$html_text</td>";
         echo "</table><br />";
     } // end of for $ii
     // end of debugging trick
@@ -233,11 +228,11 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     $message->setCharset("utf-8");
     $message->headers->set("Subject",  $mail_subject);
     $message->headers->set("Reply-To", $replyto);
-    $message->attach(new Swift_Message_Part( strip_tags($text), "text/plain", "8bit", "utf-8"));
+    $message->attach(new Swift_Message_Part( strip_tags($plain_text), "text/plain", "8bit", "utf-8"));
 
     //attach the html if used.
     if ($use_html){
-        $message->attach(new Swift_Message_Part($realtext, "text/html", "8bit", "utf-8"));
+        $message->attach(new Swift_Message_Part($html_text, "text/html", "8bit", "utf-8"));
     }
 
     //send the message to the list of member in the mail
@@ -253,7 +248,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         print_r($headers);
         echo "\n<br />to=", $to, "<br />\n";
         echo "subj=", $mail_subject, "<br />";
-        echo "text :<i>", htmlentities($realtext), "</i><br />\n";
+        echo "text :<i>", htmlentities($html_text), "</i><br />\n";
         echo " \$ret=", $ret, "<br />\n";
     }
 

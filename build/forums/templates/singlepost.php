@@ -41,16 +41,31 @@ JeanYves notes : every display of a forum post content  goes trhu this template
             <a href="members/<?php echo $post->OwnerUsername; ?>"><?php echo $post->OwnerUsername; ?></a>
         </div> <!-- forumsauthorname -->
         <div class="forumsavatar">
-            <img
-                class="framed"
-                src="<?php echo "members/avatar/".$post->OwnerUsername."?50_50"?>"
-                alt="avatar"
-                title="<?php echo $post->OwnerUsername; ?>"
-                height="56"
-                width="56"
-                style="height:auto; width:auto;"
-            /> <!-- img -->
+            <?=MOD_layoutbits::PIC_50_50($post->OwnerUsername) ?>
         </div> <!-- forumsavatar -->
+<?php 
+if (isset($_SESSION["IdMember"])) { 
+    if (isset($post->city) && isset($post->country)) { ?>    
+    <div class="forumsauthorlocation" title="<?php echo $post->city ?>, <?php echo $post->country ?>">
+    <?php
+    $maxlen = 13;
+    if (strlen($post->city) > $maxlen) {
+        echo '<span>' . MOD_layoutbits::truncate_words($post->city, $maxlen) . '</span>';
+    } else {
+        echo $post->city;
+    }
+    echo "<br />";
+    if (strlen($post->country) > $maxlen) {
+        echo '<span title="">' . MOD_layoutbits::truncate_words($post->country, $maxlen) . '</span>';
+    } else {
+        echo $post->country;
+    }
+    ?>
+    </div>
+<?php
+    }
+}
+?>
     </div> <!-- forumsauthor -->
     <div class="forumsmessage">
         <div class="floatbox">

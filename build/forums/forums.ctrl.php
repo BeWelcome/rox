@@ -229,7 +229,7 @@ class ForumsController extends PAppController
         else if ($this->action == self::ACTION_REPORT_TO_MOD) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
-                die("You can't do this because you you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
+                die("You can't do this because you are not allowed to post in Forum (Flag NotAllowToPostInForum)") ;
             }
             if (!$User) {
                 PRequest::home();
@@ -445,14 +445,14 @@ class ForumsController extends PAppController
     * show latest threads belonging to a group
     *
     **/
-    public function showExternalGroupThreads($groupId) {
+    public function showExternalGroupThreads($groupId, $showsticky = true) {
         $request = $this->request;    
         $this->parseRequest();
         $this->_model->setGroupId($groupId);
         $this->isTopLevel = false;
-        $this->_model->prepareForum();
+        $this->_model->prepareForum($showsticky);
         $this->_view->uri = 'groups/'.$request[1].'/forum/';
-        $this->_view->showExternal();
+        $this->_view->showExternal(true, $showsticky);
     }          
 
     /**
@@ -465,7 +465,7 @@ class ForumsController extends PAppController
         $request = $this->request;
         $this->parseRequest();
         $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
-        $this->_model->prepareForum();
+        $this->_model->prepareForum(false);
         $this->_view->uri = 'forums/';
         $this->_view->showExternal($showGroups);
     }

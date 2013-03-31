@@ -5,8 +5,6 @@ require_once "_languageselector.helper.php";
 
 
 $words = new MOD_words();
-$languageSelector = _languageSelector();
-
 
 /**
  * remove and use $versionInfo = $this->getVersionInfo(); instead
@@ -51,7 +49,7 @@ $query_list = PVars::get()->query_history;
 function translator_block() {
 
     if (MOD_right::get()->hasRight("Words", PVars::get()->lang)) {
-        ?><div id="translator"><?php
+        ?><div id="translator" class="row"><?php
         $pagetotranslate = $_SERVER['PHP_SELF'];
         if ($pagetotranslate { 0 } == "/") {
             // funky array stuff

@@ -169,8 +169,8 @@ class SignupView extends PAppView
         $confirmUrl_html ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>";
         
         $title = $words->get("Welcome").'!';
-        $body = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl);
         $body_html = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl_html);
+        $body = strip_tags($body_html);
 
         // set the sender & receiver
         $from    = PVars::getObj('mailAddresses')->registration;

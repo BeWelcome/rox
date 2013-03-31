@@ -25,7 +25,13 @@ Boston, MA  02111-1307, USA.
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
-   
+if (!$this->myself && !$comment_to_self && (count($comment_byloggedinmember) == 0) && $this->loggedInMember) {
+      // Show "Add comment" button
+      echo '  <p class="floatbox"><a href="members/' . $username
+          . '/comments/add" class="button">' . $words->get('addcomments')
+          . '</a></p>' . "\n";
+    }
+
 foreach($comments as $comment) {
 if(isset($comment['from'])) {
     echo '<div class="frame">';
@@ -65,7 +71,7 @@ if(isset($comment['from'])) {
               <?php echo $purifier->purify(nl2br($c->TextFree)); ?>
             </p>
             <p>
-              <? if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
+              <?php if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
                 <a class="button small" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
               <? endif; ?>
             </p>
@@ -96,23 +102,31 @@ if(isset($comment['from'])) {
     <?php 
     } else { 
         $cc = $comment['to'];?>
-    <div class="c75l" >
+    <div class="c50l" >
       <div class="subcl" >
         <a href="members/<?=$cc->UsernameToMember?>">
-           <img class="float_left framed"  src="members/avatar/<?=$c->UsernameToMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
+           <img class="float_left framed"  src="members/avatar/<?=$cc->UsernameToMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
-            <p class="floatbox"><strong class="neutral"><?php echo $words->get('CommentNoComment'); ?></strong><br />
+            <p class="floatbox">
+              <strong class="neutral"><?php echo $words->get('CommentNoComment');?></strong><br/>
               <span class="small grey">
                 <?=$words->get('CommentFrom','<a href="members/'.$cc->UsernameToMember.'">'.$cc->UsernameToMember.'</a>')?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameFromMember ?>"><?= $cc->UsernameFromMember ?></a>
               </span>
-            </p>
         </div>
       </div>
+   </div>
+    <div class="c50r" >
+      <div class="subcr" >
+      <?php if ($this->loggedInMember && !$this->myself && $cc->IdToMember == $this->loggedInMember->id) { ?>
+      <p class="float_right"><a href="members/<?php echo $username; ?>/comments/add" 
+         class="button"><?php echo $words->get('addcomments'); ?></a></p>
+      <?php } ?>
+      </div>
     </div>
-    <?php
-    }
-    ?>
+<?php
+   }
+   ?>
   </div> <!-- subcolumns -->
   <?php 
     if (isset($comment['to'])) {
@@ -151,7 +165,7 @@ if(isset($comment['from'])) {
                   <?php echo $purifier->purify(nl2br($cc->TextFree)); ?>
                 </p>
                 <p>
-                  <? if ($this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id): ?>
+                  <? if ($this->myself && $this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id): ?>
                     <a class="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
                   <? endif; ?>
                 </p>
@@ -181,7 +195,16 @@ if(isset($comment['from'])) {
         </div> <!-- c25r -->
       </div> <!-- subcolumns -->
   </div> <!-- profilecomment counter -->
-<?php } ?>
+<?php } else {
+if ($this->myself) {
+    $cc = $comment['from'] ?>
+    <div class="subcolumns profilecomment">
+    <p class="float_right"><a class="button" href="members/<?= $cc->UsernameFromMember?>/comments/add"
+        title="<? echo $words->getBuffered('CommentAddComment'); ?>"><?= $words->get('CommentAddComment'); ?></a></p>
+        </div>
+<?php 
+    }
+} ?>
 </div>
 <hr>
 <?php

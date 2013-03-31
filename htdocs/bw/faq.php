@@ -58,7 +58,7 @@ switch (GetParam("action")) {
 			$errcode = "ErrorNeedRight"; // initialise global variable
 			DisplayError(ww($errcode, "Faq"));
 		}
-		$str = "INSERT INTO faq(created,IdCategory,Active) VALUES(NOW()," . GetParam("IdCategory") . ",'".GetParamStr("Status")."')";
+		$str = "INSERT INTO faq(created,IdCategory,Active) VALUES(NOW()," . GetParam("IdCategory") . ",'".GetParam("Status")."')";
 		sql_query($str);
 		$LastInsert = mysql_insert_id();
 

@@ -9,6 +9,15 @@
 * @version $Id: forums.model.php 32 2007-04-03 10:22:22Z marco_p $
 */
 
+// Utility function to sort the languages
+function cmpForumLang($a, $b)
+{
+    if ($a == $b) {
+        return 0;
+    }
+    return (strtolower($a->Name) < strToLower($b->Name)) ? -1 : 1;
+}
+
 class Forums extends RoxModelBase {
     const CV_THREADS_PER_PAGE = 15;
     const CV_POSTS_PER_PAGE = 200;
@@ -42,7 +51,6 @@ function GetLanguageChoosen() {
 	}
 	return($DefLanguage) ;
 } // end of GetLanguageChoosen
-
 
 
 /**
@@ -436,7 +444,7 @@ WHERE
         'OC' => 'Oceania'
     );
     
-    private function boardTopLevelLastPosts() {
+    private function boardTopLevelLastPosts($showsticky = true) {
         if ($this->tags) {
             $subboards = array();
             $taginfo = $this->getTagsNamed();
@@ -469,7 +477,7 @@ WHERE
                 $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
             }
         }
-        $this->board->initThreads($this->getPage());
+        $this->board->initThreads($this->getPage(), $showsticky);
     } // end of boardTopLevelLastPosts
     
 
@@ -723,7 +731,7 @@ WHERE `iso_alpha2` = '%s'
     } // end of boardCountry
     
 // This build the board for the $this->IdGroup
-    private function boardGroup() {
+    private function boardGroup($showsticky = true) {
 
         $query = sprintf("SELECT `Name` FROM `groups` WHERE `id` = %d",$this->IdGroup);
         $gr = $this->dao->query($query);
@@ -759,13 +767,13 @@ WHERE `iso_alpha2` = '%s'
             
 			 
             $this->board = new Board($this->dao, $title, $href, $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
-            $this->board->initThreads($this->getPage());
+            $this->board->initThreads($this->getPage(), $showsticky);
         } else {
             $this->board = new Board($this->dao, $gtitle, ".", $subboards, $this->tags, $this->continent,false,false,false,false,$this->IdGroup);
 //            foreach (Forums::$continents as $code => $name) {
 //                $this->board->add(new Board($this->dao, $name, 'k'.$code.'-'.$name));
 //            }
-            $this->board->initThreads($this->getPage());
+            $this->board->initThreads($this->getPage(), $showsticky);
         }
     } // end of boardGroup
     
@@ -880,21 +888,21 @@ WHERE `geonameid` = '%d'
     * Fetch all required data for the view to display a forum
 		* this data are stored in $this->board
     */
-    public function prepareForum() {
+    public function prepareForum($showsticky = true) {
         if (!$this->geonameid && !$this->countrycode && !$this->continent && !$this->IdGroup) {
 			if($this->TopMode==Forums::CV_TOPMODE_CATEGORY) {
 				$this->boardTopLevelCategories();
 			}
 			elseif ($this->TopMode==Forums::CV_TOPMODE_LASTPOSTS) {
-				$this->boardTopLevelLastPosts();
+				$this->boardTopLevelLastPosts($showsticky);
 			}
 			else {
-				$this->boardTopLevelLastPosts();
+				$this->boardTopLevelLastPosts($showsticky);
 			}
 		} else if ($this->continent && !$this->geonameid && !$this->countrycode) { 
             $this->boardContinent();
         } else if ($this->IdGroup) { 
-            $this->boardGroup();
+            $this->boardGroup($showsticky);
         } else if (isset($this->admincode) && $this->admincode && $this->continent && $this->countrycode && !$this->geonameid) { 
             $this->boardadminCode();
         } else if ($this->continent && $this->countrycode && !$this->geonameid) {
@@ -2229,6 +2237,8 @@ SELECT
     IdContent,
     IdWriter,
     geonames_cache.fk_countrycode,
+    geonames_cache.name AS city,
+    geonames_countries.name AS country,
     forums_posts.threadid,
     OwnerCanStillEdit,
     members.Username as OwnerUsername,
@@ -2236,7 +2246,7 @@ SELECT
     PostVisibility,
     PostDeleted,
     IdLocalEvent,
-	forums_threads.IdGroup
+    forums_threads.IdGroup
 FROM
     forums_threads,
     forums_posts
@@ -2246,6 +2256,8 @@ LEFT JOIN
     addresses AS a ON a.IdMember = members.id AND a.rank = 0
 LEFT JOIN
     geonames_cache ON a.IdCity = geonames_cache.geonameid
+LEFT JOIN
+    geonames_countries ON geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
 WHERE
     forums_posts.threadid = '%d'
     AND forums_posts.threadid=forums_threads.id
@@ -3160,19 +3172,19 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     } // end of suggestTags
 	 
 
-	 		function GetLanguageName($IdLanguage) {
-				$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id=".($IdLanguage) ;
-            	$s = $this->dao->query($query);
-            	if (!$s) {
-                  throw new PException('Could not retrieve IdLanguage in GetLanguageName entries');
-            	}
-				else {
-					 $row = $s->fetch(PDB::FETCH_OBJ) ;
-				 	return($row) ;
-				}
-				return("not Found") ;
-				
-			} // end of GetLanguageName
+    function GetLanguageName($IdLanguage) {
+        $query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id=".($IdLanguage) 
+            . " AND IsWrittenLanguage = 1";
+        $s = $this->dao->query($query);
+        if (!$s) {
+            throw new PException('Could not retrieve IdLanguage in GetLanguageName entries');
+        } else {
+            $row = $s->fetch(PDB::FETCH_OBJ) ;
+            $row->Name = $this->getWords()->getSilent($row->WordCode) . " (" . $row->Name . ")";
+            return($row) ;
+        }
+        return("not Found") ;
+    } // end of GetLanguageName
 
 
     // This fonction will prepare a list of language to choose
@@ -3190,34 +3202,41 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			if (($DefIdLanguage>=0)) {
 			   $row=$this->GetLanguageName($DefIdLanguage) ;
 		   	   array_push($allreadyin,$row->IdLanguage) ;
-			   array_push($tt,$row) ;
+			   array_push($tt, "CurrentLanguage");
+		   	   array_push($tt,$row) ;
 			}
 			// Then next will be english (if not allready in the list)
 			if (!in_array(0,$allreadyin)) {
 			   $row=$this->GetLanguageName(0) ;
 		   	   array_push($allreadyin,$row->IdLanguage) ;
-			   array_push($tt,$row) ;
+			   array_push($tt, "DefaultLanguage");
+		   	   array_push($tt,$row) ;
 			}
 			// Then next will the current user language
 			if ((isset($_SESSION["IdLanguage"]) and (!in_array($_SESSION["IdLanguage"],$allreadyin)))) {
 			   $row=$this->GetLanguageName($_SESSION["IdLanguage"]) ;
 		   	   array_push($allreadyin,$row->IdLanguage) ;
-			   array_push($tt,$row) ;
+			   array_push($tt, "UILanguage");
+		   	   array_push($tt,$row);
 			}
 			
+			array_push($tt, "AllLanguages");
 			// then now all available languages
-			$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id>0 order by FlagSortCriteria asc";
+			$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id>0" 
+			    . " AND IsWrittenLanguage = 1";
           	$s = $this->dao->query($query);
+          	$langarr = array();
         	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			   if (!in_array($row->IdLanguage,$allreadyin)) {
 			   	  array_push($allreadyin,$row->IdLanguage) ;
-			  	  array_push($tt,$row) ;
+			   	  $row->Name = $this->getWords()->getSilent($row->WordCode) . " (" . trim($row->Name) . ")";
+			  	  $langarr[] = $row;
 			   }
 			}
-			return($tt) ; // returs the array of structures
-			
-	 
-	 } // end of LanguageChoices 
+			// now sort langarr and append to the $tt array
+			usort($langarr, "cmpForumLang");
+			return($tt + $langarr) ; // returs the array of structures
+    } // end of LanguageChoices 
 
     // This fonction will prepare a list of group in an array that the moderator can use
 	 public function ModeratorGroupChoice() {
@@ -3582,6 +3601,11 @@ SQL;
     public function GetGroupEntity($IdGroup) {
         return $this->createEntity('Group')->findById($IdGroup);
     }
+
+    public function getTinyMCEPreference() {
+        $member = $this->getLoggedInMember();
+        return $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
+    }
 } // end of class Forums
 
 
@@ -3721,9 +3745,15 @@ class Board implements Iterator {
 		return($wherethread) ;
 	} // end of FilterThreadListResultsWithIdCriteria
 	
-    public function initThreads($page = 1) {
+    public function initThreads($page = 1, $showsticky = true) {
         
         $wherethread=$this->FilterThreadListResultsWithIdCriteria() ;
+
+        if ($showsticky) {
+            $orderby = " ORDER BY `stickyvalue` ASC,`last_create_time` DESC";
+        } else {
+            $orderby = " ORDER BY `last_create_time` DESC";
+        }
 
         $wherein="" ;
         $tabletagthread="" ;
@@ -3754,11 +3784,12 @@ class Board implements Iterator {
 		$from = ($this->THREADS_PER_PAGE * ($page - 1));
         
 		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`threadid`,
-		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`, 
+		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`,
 				  `forums_threads`.`IdTitle`, 
 				  `forums_threads`.`IdGroup`, 
 				  `forums_threads`.`replies`, 
-				  `groups`.`Name` as `GroupName`, 
+		          `forums_threads`.`stickyvalue`,
+		          `groups`.`Name` as `GroupName`, 
 					`ThreadVisibility`,
 					`ThreadDeleted`,
 				  `forums_threads`.`views`, 
@@ -3780,7 +3811,7 @@ class Board implements Iterator {
 		$query .= "LEFT JOIN `geonames_cache` ON (`forums_threads`.`geonameid` = `geonames_cache`.`geonameid`)"; 
 		$query .= "LEFT JOIN `geonames_admincodes` ON (`forums_threads`.`admincode` = `geonames_admincodes`.`admin_code` AND `forums_threads`.`countrycode` = `geonames_admincodes`.`country_code`)" ; 
 		$query .= "LEFT JOIN `geonames_countries` ON (`forums_threads`.`countrycode` = `geonames_countries`.`iso_alpha2`)" ;
-		$query .= " WHERE 1 ".$wherethread." ORDER BY `stickyvalue` asc,`last_create_time` DESC LIMIT ".$from.", ".$this->THREADS_PER_PAGE ;
+		$query .= " WHERE 1 ".$wherethread . $orderby . " LIMIT ".$from.", ".$this->THREADS_PER_PAGE ;
 
 
 		$s = $this->dao->query($query);

@@ -91,10 +91,7 @@ foreach($this->donations as $donation) {
 <td><?php echo $donation->SystemComment; ?></td>
 <td><?php echo $donation->CountryName; ?></td>
 <td><?php echo MOD_member::getUsername($donation->IdMember) . " " . $donation->referencepaypal; ?></td>
-<td><?php if (strpos($donation->SystemComment, 'Bank') !== false) {
-    echo '<a href="admin/treasurer/edit/' . $donation->id . '">' . $words->get('AdminTreasurerOverviewEdit')
-        . '</a>';
-}        ?></td>
+<td><?php echo '<a href="admin/treasurer/edit/' . $donation->id . '">' . $words->get('AdminTreasurerOverviewEdit') . '</a>'; ?></td>
 </tr>
 <?php
     $ii++;

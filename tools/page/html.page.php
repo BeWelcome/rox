@@ -8,7 +8,7 @@ class PageWithHTML extends AbstractBasePage
     // Add or increment query string if a JS file changes to make sure browsers
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        'script/main.js?3',
+        'script/main.js?4',
         'script/common.js?1',
     );
 
@@ -270,11 +270,7 @@ class PageWithHTML extends AbstractBasePage
     
     protected function head()
     {
-        if (isset($_SERVER['HTTPS']) && PVars::getObj('env')->baseuri_https !== false) {
-            $baseuri = PVars::getObj('env')->baseuri_https;
-        } else {
-            $baseuri = PVars::getObj('env')->baseuri;
-        }
+        $baseuri = PVars::getObj('env')->baseuri;
         ?>
         <title><?= htmlspecialchars($this->getPageTitle(), ENT_QUOTES) ?></title>
         <base id="baseuri" href='<?=$baseuri ?>' />

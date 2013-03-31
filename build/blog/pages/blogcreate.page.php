@@ -74,7 +74,8 @@ class BlogCreatePage extends BlogBasePage
             echo '<h2>'.$words->get('BlogCreateFinishTitle')."</h2>\n";
             echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
             echo '<p>'.$words->get('BlogCreateFinishInfo')."</p>\n";
-        }   
+        }
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require SCRIPT_BASE . 'build/blog/templates/editcreateform.php';
     }
 }

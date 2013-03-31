@@ -45,6 +45,7 @@ class ForumsView extends RoxAppView {
         $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
         $LanguageChoices=$this->_model->LanguageChoices() ;
         $visibilitiesDropdown = $this->getNewThreadVisibilitiesDropdown($IdGroup);
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     }
 
@@ -104,6 +105,7 @@ class ForumsView extends RoxAppView {
 
         $visibility = $this->_model->getThreadVisibility($topic->IdThread);
         $visibilitiesDropdown = $this->getVisibilitiesDropdown($visibility, $visibility, $IdGroup, false);
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
 
         require 'templates/editcreateform.php';
 
@@ -140,6 +142,7 @@ class ForumsView extends RoxAppView {
             $void_string=$word->ftrad($IdContent) ;
             $AppropriatedLanguage=$fTradIdLastUsedLanguage ;
         }
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     } // end of editPost
 
@@ -164,6 +167,7 @@ class ForumsView extends RoxAppView {
         }
                 $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
                 $LanguageChoices=$this->_model->LanguageChoices() ;
+        $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     } // end of editPost
 
@@ -263,8 +267,8 @@ class ForumsView extends RoxAppView {
      * @param bool $showGroups Set true if group name and link should be shown
      *                         in teasers
      */
-    public function showExternal($showGroups = false) {
-        $boards = $this->_model->getBoard();
+    public function showExternal($showGroups = false, $showsticky = true) {
+        $boards = $this->_model->getBoard($showsticky);
         $request = PRequest::get()->request;
         require 'templates/external.php';
     }
@@ -299,7 +303,7 @@ class ForumsView extends RoxAppView {
     /* This adds custom styles to the page*/
     public function customStyles() {
         $out = '';
-        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?3" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?4" type="text/css"/>';
         return $out;
     }
 
@@ -431,10 +435,10 @@ class ForumsView extends RoxAppView {
             foreach ($tags as $suggestion) {
                 $out .= '<a href="#" onclick="javascript:ForumsSuggest.updateForm(\'';
                 foreach ($suggestion as $word) {
-                    $out .= $word.', ';
+                    $out .= htmlspecialchars($word, ENT_QUOTES).', ';
                 }
                 $out = rtrim($out, ', ');
-                $out .= '\'); return false;">'.$word.'</a>, ';
+                $out .= '\'); return false;">'.htmlspecialchars($word, ENT_QUOTES).'</a>, ';
             }
             $out = rtrim($out, ', ');
             return $out;

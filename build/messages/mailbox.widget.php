@@ -43,7 +43,7 @@ class MailboxWidget extends ItemlistWithPagination
         return array(
             'select' => '',
             'from' => '<a href="'.$request_str.'?sort=sender&amp;dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),
-            'message' => 'Text',
+            'message' => $words->get('MessagesText'),
             // 'status' => 'Status'
             //'date' => 'Date',
         );

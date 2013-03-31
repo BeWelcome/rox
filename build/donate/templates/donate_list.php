@@ -49,7 +49,9 @@ $i18n = new MOD_i18n('date.php');
         echo "</td>" ;
          if ($hasRight) {
             $m = MOD_member::getMember_userId($T->IdMember);
-            echo "<td>",$m->getUsername()," ",$T->referencepaypal,"</td>" ;
+            if ($m) {
+                echo "<td>",$m->getUsername()," ",$T->referencepaypal,"</td>" ;
+            }
          }
         echo "</tr>\n" ;
     }

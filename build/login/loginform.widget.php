@@ -47,18 +47,15 @@ class LoginFormWidget extends RoxWidget
 
         $mem_redirect = $formkit->mem_from_redirect;
         $err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
-        $url = PVars::getObj('env')->baseuri . htmlspecialchars(implode('/', PRequest::get()->request), ENT_QUOTES);
+        $baseuri = PVars::getObj('env')->baseuri;
+        if (PVars::getObj('env')->force_ssl_sensitive) {
+            $baseuri = PVars::getObj('env')->baseuri_https;
+        }
+        $url = $baseuri . htmlspecialchars(implode('/', PRequest::get()->request), ENT_QUOTES);
         $memoryExpiry = PVars::getObj('env')->rememberme_expiry;
 
         if (!empty($_SERVER['QUERY_STRING'])) {
             $url .= '?'.$_SERVER['QUERY_STRING'];
-        }
-
-        // hack for HTTPS-Login
-        if (strrpos($url, 'alpha.bewelcome.org') === false &&
-                strrpos($url, 'localhost') === false &&
-                PVars::getObj('development')->avoid_https != 1 ) {
-            $url = str_replace('http://','https://',$url);
         }
 
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
@@ -176,7 +173,7 @@ class LoginFormWidget extends RoxWidget
             <?php }  // Added because this is hidden for subdomain ?>
             <input type="submit" value="Login" class="button"/>
           </td></tr></table>
-          <p><?=$ww->LoginformForgetPassword('<a href="bw/lostpassword.php">', '</a>') ?><br /><br /></p>
+          <p><?=$ww->LoginformForgetPassword('<a href="resetpassword/">', '</a>') ?><br /><br /></p>
           <h3><?=$ww->SignupNow ?></h3>
           <p><?=$ww->IndexPageWord17('<a class="button" href="signup">', '</a>') ?></p>
         </form>

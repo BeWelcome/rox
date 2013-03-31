@@ -144,21 +144,19 @@ class Member extends RoxEntityBase
     }
 
     /**
-     * Get all available languages
+     * Get all languages where 
      */
-    public function get_languages_all() {
-
+    private function get_all_languages_where($where) {
         $AllLanguages = array();
-        $str =
-            "
-SELECT SQL_CACHE
-    languages.Name AS Name,
-    languages.ShortCode AS ShortCode,
-    languages.id AS id
-FROM
-    languages
-ORDER BY languages.id asc
-            ";
+        $str = "
+            SELECT SQL_CACHE
+                l.Name AS Name,
+                l.ShortCode AS ShortCode,
+                l.WordCode AS WordCode,
+                l.id AS id 
+            FROM
+                languages AS l ";
+        $str .= $where;
         $s = $this->dao->query($str);
         while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
             //if (isset($rr->Level)) $rr->Level = ("LanguageLevel_".$rr->Level);
@@ -168,12 +166,33 @@ ORDER BY languages.id asc
     }
 
     /**
+     * Get all available spoken languages
+     */
+    public function get_all_spoken_languages() {
+        return $this->get_all_languages_where ("WHERE (l.IsSignLanguage = 0)");
+    }
+
+    /**
+     * Get all available sign languages
+     */
+    public function get_all_signed_languages() {
+        return $this->get_all_languages_where ("WHERE (l.IsSignLanguage = 1)");
+    }
+
+    /**
+     * Get all translatable languages
+     */
+    public function get_all_translatable_languages() {
+        return $this->get_all_languages_where ("WHERE (l.IsWrittenLanguage = 1)");
+    }
+
+    /**
      * Get language code from preferences.
-     * @return string language ShortCode (2 to 4 letters), 'en' if no preference was found.
+     * @return string language ShortCode (2 to 5 letters), 'en' if no preference was found.
      */
     public function getLanguagePreference() {
         $id = $this->getLanguagePreferenceId();
-        $allLanguages = $this->get_languages_all();
+        $allLanguages = $this->get_all_translatable_languages();
 
         // set default
         // TODO: read from config
@@ -663,7 +682,10 @@ WHERE IdMember = ".$this->id
     public function count_mynotes()
     {
         if  (empty($_SESSION['IdMember'])) return (0) ;
-        $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$this->id);
+        $str = "select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"];
+
+        $rr=$this->singleLookup($str);
+        // $rr=$this->singleLookup("select SQL_CACHE count(*) as cnt from mycontacts where IdMember=".$_SESSION["IdMember"]." and IdContact=".$this->id);
         return($rr->cnt) ;
     } // end of count_mynotes
 
@@ -798,6 +820,21 @@ WHERE IdMember = ".$this->id
         return $this->createEntity('GroupMembership')->getMemberGroups($this, 'In');
     }
 
+    /** get_note gets the note for this member written by id
+    *
+    * @param id id of the member that wrote the note
+    *
+    * @return ProfileNote entity or false
+    */
+    public function getNote($for)
+    {
+        $member = $this->CreateEntity('Member', $for->id);
+        $note = $this->createEntity('ProfileNote')->getNote($this, $member);
+        if (count($note) == 1) {
+            return $note[0];
+        }
+    }
+
     /**
      * returns an array of notes the member wrote
      *
@@ -813,6 +850,29 @@ WHERE IdMember = ".$this->id
         return $this->createEntity('ProfileNote')->getNotes($this);
     }
 
+    /**
+     * returns an array of notes the member wrote
+     *
+     * @access public
+     * @return array
+     */
+    public function getNoteCategories()
+    {
+        $categories = array();
+        if (!$this->_has_loaded)
+        {
+            return false;
+        }
+        $sql = 'SELECT DISTINCT Category FROM mycontacts WHERE IdMember= ' . $this->id;
+        $cats = $this->bulkLookup($sql);
+        if ($cats) {
+            foreach($cats as $cat)
+            {
+                $categories[] = $cat->Category;
+            }
+        }
+        return $categories;
+    }
 
     /**
      * automatically called by __get('group_memberships'),
@@ -1802,6 +1862,9 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         // Create HTML version via purifier (linkify and add paragraphs)
         $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
         $bodyHTML = $purifier->purify($body);
+
+        //clear <br> tags stored in database
+        $body = strip_tags($body); 
 
         // Set language for email translations
         $languageCode = $this->getLanguagePreference();

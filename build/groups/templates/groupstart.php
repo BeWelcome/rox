@@ -18,7 +18,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 
                 <h3><?php echo $words->getFormatted('ForumRecentPostsLong');?></h3>
                 <div class="row floatbox">
-                    <?php echo $Forums->showExternalGroupThreads($group_id); ?>
+                    <?php echo $Forums->showExternalGroupThreads($group_id, false); ?>
                 </div> <!-- floatbox -->
             </div> <!-- subcl -->
         </div> <!-- c62l -->
@@ -38,7 +38,21 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>
                 </div>
+                <p><?php
+                    if ($memberCount != $visibleMemberCount) {
+                        $login_url = 'login/groups/' . $this->group->id;
+                        $loginstr = '<a href="' . $login_url . '#login-widget" alt="login" id="header-login-link">' . $words->getBuffered('GroupsMoreMemberLogin') . '</a>';
+                        echo $words->get("GroupMoreMembers", $memberCount - $visibleMemberCount, $loginstr);
+                    } else { ?>
                 <strong><a href="groups/<?= $group_id.'/members'; ?>"><?= $words->get('GroupSeeAllMembers'); ?></a></strong>
+                <?php
+                    }
+                ?></p>
+                <?php
+                    // Hide the admin list if no user is logged in (which means that visible lis
+                    if ($memberCount == $visibleMemberCount) {
+
+                ?>
                 <br><br>
                 <h4><?php echo $words->get('GroupAdmins'); ?></h4>
                 <div class="floatbox">
@@ -55,6 +69,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                             echo $words->get('GroupNoAdmin');
                         } ?>
                 </div>
+                <?php }?>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

@@ -1,0 +1,4 @@
+/* TinyMCE specific rules */
+.mceContentBody {
+   font-size: 12px !important; /* FF requires a important here */
+}

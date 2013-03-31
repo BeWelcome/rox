@@ -46,7 +46,6 @@ if (isset($mem['data'])) {
 }
 $FeedbackQuestion = isset($mem['FeedbackQuestion']) ? $mem['FeedbackQuestion'] : '';
 $FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
-$urgent = isset($mem['urgent']) ? $mem['urgent'] : null;
 $answerneeded = isset($mem['answerneeded']) ? $mem['answerneeded'] : null;
 $errors = $this->getRedirectedMem('errors');
 
@@ -63,7 +62,7 @@ if ($errors = $this->getRedirectedMem('errors'))
 
 <form class="yform full" action="about/feedback" method="post">
     <?=$callback_tag ?>
-    <input type="hidden" name="RequestURI" value="<?= $RequestURI ?>">
+    <input type="hidden" name="RequestURI" value="<?= htmlspecialchars($RequestURI, ENT_QUOTES) ?>">
     <input type="hidden" name="redirect" value="<?php echo htmlentities($redirect); ?>">
     <input type="hidden" name="data" value="<?php echo htmlentities($data); ?>">
 
@@ -111,7 +110,6 @@ if ($errors = $this->getRedirectedMem('errors'))
     <?php endif; ?>
 
     <div class="type-check">
-        <p><input type="checkbox" id="feedbackUrgent" name="urgent" <?php if ($urgent) echo "checked='checked'";?>/> <label for="feedbackUrgent"> <?php echo $words->get("FeedBackUrgentQuestion")?></label></p>
         <p><input type="checkbox" id="feedbackAnswerneeded" name="answerneeded" <?php if ($answerneeded) echo "checked='checked'";?>/> <label for="feedbackAnswerneeded"> <?php echo $words->get("FeedBackIWantAnAnswer")?></label></p>
     </div> <!-- type-check -->
 

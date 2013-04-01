@@ -173,7 +173,7 @@
     <script type="text/javascript">
         function DoVerifySubmit(nameform) {
         nevermet=document.forms[nameform].elements['Comment_NeverMetInRealLife'].checked;
-            if ((document.forms[nameform].elements['Quality'].value!='Bad') && (nevermet)) {
+            if ((document.forms[nameform].elements['Quality'].value=='Good') && (nevermet)) {
                alert('<?=addslashes($words->getSilent("RuleForNeverMetComment"))?>');
                return (false);
             }

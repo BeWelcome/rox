@@ -431,7 +431,7 @@ WHERE
         if (!isset($one_selected)) {
             $errors[] = 'Comment_NoCommentLengthSelected';
         }
-        if ($vars['Quality'] != "Bad" && isset ($vars["Comment_NeverMetInRealLife"])) {
+        if ($vars['Quality'] == "Good" && isset ($vars["Comment_NeverMetInRealLife"])) {
             $errors[] = 'NoPositiveComment_if_NeverMetInRealLife';
         }        
         return $errors;

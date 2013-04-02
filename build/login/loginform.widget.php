@@ -148,7 +148,7 @@ class LoginFormWidget extends RoxWidget
             <?php if ($ItIsNotASubDomain) {  // Added because this is hidden for subdomain ?>
                 <table>
                     <tr>
-                        <td align="right">
+                        <td align="right" class="login_widget">
                             <label for="login-u"><?=$ww->Username ?></label>
                         </td>
                         <td>

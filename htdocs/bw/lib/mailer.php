@@ -228,7 +228,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     $message->setCharset("utf-8");
     $message->headers->set("Subject",  $mail_subject);
     $message->headers->set("Reply-To", $replyto);
-    $message->attach(new Swift_Message_Part( strip_tags(preg_replace('/<a href="(.*)">/', '$1 : ', $plain_text)), "text/plain", "8bit", "utf-8"));
+    $message->attach(new Swift_Message_Part( strip_tags($plain_text), "text/plain", "8bit", "utf-8"));
 
     //attach the html if used.
     if ($use_html){

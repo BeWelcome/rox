@@ -20,55 +20,40 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
+/**
+ * @author shevek
+ */
 
-    /**
-     * @author shevek
-     */
-
-    /**
-     * base class for all events pages
-     *
-     * @package Apps
-     * @subpackage Events
-     */
-class EventsCreatePage extends PageWithActiveSkin
+/**
+ * base class for all Activities pages
+ *
+ * @package Apps
+ * @subpackage Activities
+ */
+class ActivitiesShowPage extends ActivitiesBasePage
 {
-    protected function column_col3()
-    {
-        $words = $this->getWords();
-        require 'templates/eventcreateform.php';
-    }
-
-    protected function leftSidebar()
-    {
+    protected function leftSidebar() {
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
+        $this->sidebarItems = array (
+            array( "href" => "activities", "wordCode" => "ActivitiesOverview" ),
+            array( "href" => "activities/myactivities", "wordCode" => "ActivitiesMyActivities" ),
+            array( "href" => "activities/pastactivities", "wordCode" => "ActivitiesPastActivities" ),
+            array( "href" => "activities/create", "wordCode" => "ActivitiesCreate" ),
+        );
+        if (!isset($this->member->id)) {
+            $this->sidebarItems = array();
+        }
         require 'templates/sidebar.php';
     }
-    
 
-    protected function getPageTitle() {
-        $words = $this->getWords();
-        return $words->getBuffered('Events') . ' - BeWelcome';
-    }
-
-    protected function teaserContent()
-    {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-
-        require 'templates/teaser.php';
-    }
-    
-    protected function getTopmenuActiveItem()
-    {
-        return 'events';
+    protected function getTopmenuActiveItem() {
+        return 'Activities';
     }
     
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';
        return $stylesheets;
     }
 }
-

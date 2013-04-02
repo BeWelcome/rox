@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /*
 Copyright (c) 2007-2009 BeVolunteer
 
@@ -20,25 +20,32 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
-    /**
-     * @author shevek
-     */
-
-    /**
-     * represents a single event
-     *
-     * @package Apps
-     * @subpackage Entities
-     */
-class Event
+/**
+ * @author shevek
+ */
+/**
+ * This page is shown if there is no future activity
+ *
+ * @package Apps
+ * @subpackage Activities
+ */
+class ActivitiesNotLoggedInPage extends ActivitiesBasePage
 {
-    public $id;
-    public $name;
+    protected function leftSidebar() {
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+
+        $this->sidebarItems = array (
+            array( "href" => "activities/myactivities", "wordCode" => "ActivitiesMyActivities" ),
+            array( "href" => "activities/pastactivities", "wordCode" => "ActivitiesPastActivities" ),
+            array( "href" => "activities/create", "wordCode" => "ActivitiesCreate" ),
+        );
+        require 'templates/sidebar.php';
+    }
     
-    public function __construct()
-    {
-        $this->id = 10;
-        $this->name = "Lorem ipsum dolores elitr someone somewhere";
+    protected function getSubmenuActiveItem() {
+        return 'overview';
     }
 }
+
 

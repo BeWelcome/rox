@@ -24,17 +24,17 @@ Boston, MA  02111-1307, USA.
      */
 
     /**
-     * This page list all future events
+     * This page list all future Activities
      *
      * @package Apps
-     * @subpackage Events
+     * @subpackage Activities
      */
-class EventsFindPage extends EventsBasePage
+class ActivitiesFindPage extends ActivitiesBasePage
 {
     protected function column_col3()
     {
         $words = $this->getWords();
-        echo '<div class="row"><h3>Upcoming Events</h3>';
+        echo '<div class="row"><h3>Upcoming Activities</h3>';
         echo '<table class="forumsboardthreads">';
         echo '<tr>';
         echo '<th>Category</th>';
@@ -44,7 +44,7 @@ class EventsFindPage extends EventsBasePage
         echo '<th>Attendees</th>';
         echo '<th>Organizer</th>';
         echo '</tr>';
-        $events = array(
+        $Activities = array(
             array('<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'Somewhere', '12', '<a href="members/someone">someone</a><br>Created Jan, 07 2013'),
             array('<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'over the', '1102', '<a href="members/someone">someone</a><br>Created Dec, 12 2012'),
             array('<img src="images/icons/maybe.png" width="16" height="16">', 'Lorem ipsum dolor', 'Jan, 10 2013<br> 11:00am - 1:00pm', 'Rainbow', '3', '<a href="members/someone">someone</a><br>Created Jan, 01 2013')
@@ -56,7 +56,7 @@ class EventsFindPage extends EventsBasePage
             } else {
                 $row = '<tr class="blank">';
             }
-            $rowcontent = $events[$ii % 3];
+            $rowcontent = $Activities[$ii % 3];
             foreach($rowcontent as $item) {
                 $row .= '<td>' . $item . '</td>';
             }
@@ -65,7 +65,7 @@ class EventsFindPage extends EventsBasePage
         }
         echo '</table>';
         echo '</div>';
-        echo '<div id="boardnewtopicbottom"><span class="button"><a href="events/create">New event</a></span></div>';
+        echo '<div id="boardnewtopicbottom"><span class="button"><a href="Activities/create">New event</a></span></div>';
         echo '
 <div class="pages">
 	<ul>

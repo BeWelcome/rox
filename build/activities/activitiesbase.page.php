@@ -21,42 +21,21 @@ Boston, MA  02111-1307, USA.
 */
 
 
-    /**
-     * @author shevek
-     */
+/**
+ * @author shevek
+ */
 
-    /**
-     * base class for all events pages
-     *
-     * @package Apps
-     * @subpackage Events
-     */
-class EventsShowPage extends PageWithActiveSkin
+/**
+ * base class for all Activities pages
+ *
+ * @package Apps
+ * @subpackage Activities
+ */
+class ActivitiesBasePage extends PageWithActiveSkin
 {
-    protected $event;
-    
-    public function __construct(Event $showevent)
-    {
-        $this->event = $showevent;
-    }
-    
-  protected function column_col3()
-    {
-        $words = $this->getWords();
-        require 'templates/eventshow.php';
-    }
-
-    protected function leftSidebar()
-    {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-        require 'templates/sidebar.php';
-    }
-    
-
     protected function getPageTitle() {
         $words = $this->getWords();
-        return $words->getBuffered('Events') . ' - BeWelcome';
+        return $words->getBuffered('Activities') . ' - BeWelcome';
     }
 
     protected function teaserContent()
@@ -69,12 +48,12 @@ class EventsShowPage extends PageWithActiveSkin
     
     protected function getTopmenuActiveItem()
     {
-        return 'events';
+        return 'Activities';
     }
     
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';
        return $stylesheets;
     }
 

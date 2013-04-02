@@ -132,6 +132,7 @@ bwrox.selectScripts([
   {
     file: "tiny_mce/tiny_mce.js",
     pages: [
+      "activities",
       "blog",
       "forums",
       "groups",
@@ -148,6 +149,7 @@ bwrox.selectScripts([
   {
     file: "datepicker.js",
     pages: [
+      "activities",
       "blog",
       "trip",
       "admin/treasurer"

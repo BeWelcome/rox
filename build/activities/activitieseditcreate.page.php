@@ -20,51 +20,29 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
+/**
+ * @author shevek
+ */
 
-    /**
-     * @author shevek
-     */
-
-    /**
-     * base class for all events pages
-     *
-     * @package Apps
-     * @subpackage Events
-     */
-class EventsBasePage extends PageWithActiveSkin
+/**
+ * base class for all Activities pages
+ *
+ * @package Apps
+ * @subpackage Activities
+ */
+class ActivitiesEditCreatePage extends ActivitiesBasePage
 {
-
     protected function leftSidebar()
     {
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
+
+        $this->sidebarItems = array (
+            array( "href" => "activities", "wordCode" => "ActivitiesOverview" ),
+            array( "href" => "activities/myactivities", "wordCode" => "ActivitiesMyActivities" ),
+            array( "href" => "activities/pastactivities", "wordCode" => "ActivitiesPastActivities" ),
+        );
         require 'templates/sidebar.php';
     }
-    
-
-    protected function getPageTitle() {
-        $words = $this->getWords();
-        return $words->getBuffered('Events') . ' - BeWelcome';
-    }
-
-    protected function teaserContent()
-    {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-
-        require 'templates/teaser.php';
-    }
-    
-    protected function getTopmenuActiveItem()
-    {
-        return 'events';
-    }
-    
-    protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/events.css';
-       return $stylesheets;
-    }
-
 }
 

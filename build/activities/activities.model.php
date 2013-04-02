@@ -66,8 +66,13 @@ class ActivitiesModel extends RoxModelBase
             $status = 3;
         }
         if ($status != 0) {
-            $query = 'UPDATE activitiesattendees SET status=' . $status . ', comment=\'' . $post['activity-comment']
-                . '\' WHERE activityId = ' . $activity->id . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
+            if (in_array($this->getLoggedInMember()->id, array_keys($activity->attendees))) {
+                $query = 'UPDATE activitiesattendees SET status=' . $status . ', comment=\'' . $post['activity-comment']
+                    . '\' WHERE activityId = ' . $activity->id . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
+            } else {
+                $query = 'INSERT INTO activitiesattendees SET status=' . $status . ', comment=\'' . $post['activity-comment']
+                    . '\', activityId = ' . $activity->id . ', attendeeId = ' . $this->getLoggedInMember()->id;
+            }
             error_log($query);
             $this->dao->query($query);
             return true;

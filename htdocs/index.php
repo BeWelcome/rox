@@ -54,7 +54,7 @@ function main() {
      */
     define('HTDOCS_BASE', dirname(__FILE__).'/');
     ini_set('error_log', SCRIPT_BASE.'errors.log');
-    error_reporting(E_ALL);
+    error_reporting(E_ALL & ~E_STRICT);
     // for php5.4x uncomment the below and comment out the above
     //error_reporting(E_ALL & ~E_STRICT);
 

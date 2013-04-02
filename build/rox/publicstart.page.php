@@ -7,7 +7,7 @@ class PublicStartpage extends RoxPageView
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/index.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/index.css?1';
         return $stylesheets;
     }
 

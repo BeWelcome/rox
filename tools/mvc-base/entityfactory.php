@@ -18,6 +18,7 @@ class RoxEntityFactory
      * @var array
      */
     private $_entities = array(
+        'Activity'          => 'build/activities/activity.entity',
         'Address'           => 'build/members/address.entity',
         'BlogEntity'        => 'build/blog/blog.entity',
         'Comment'           => 'build/members/comment.entity',

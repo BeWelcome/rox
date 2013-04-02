@@ -125,3 +125,11 @@
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
 
     $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');
+
+    // Events feature
+    $this->addRoute('activities', 'activities', 'ActivitiesController', 'overview');
+    $this->addRoute('activities_find', 'activities/find', 'ActivitiesController', 'find');    
+    $this->addRoute('activities_create', 'activities/create', 'ActivitiesController', 'editcreate');
+    $this->addRoute('activities_edit', 'activities/edit/:id:', 'ActivitiesController', 'editcreate');
+    $this->addRoute('activities_show', 'activities/show/:id:', 'ActivitiesController', 'show');    
+    $this->addRoute('activities_show_attendees', 'activities/show/:id:/attendees/page/:page:', 'ActivitiesController', 'show');

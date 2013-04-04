@@ -57,6 +57,7 @@ class Activity extends RoxEntityBase
             // location details
             $entityFactory = new RoxEntityFactory();
             $this->location = $entityFactory->create('Geo', $this->locationId);
+            error_log("Activity location" . print_r($this->location, true));
         }
         return $status;
     }

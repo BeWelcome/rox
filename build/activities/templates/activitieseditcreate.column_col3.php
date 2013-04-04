@@ -14,6 +14,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
 <div>
 <form method="post" id="activity-create-form">
 <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
+<input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $this->activity->locationId; ?>" /> 
 <?php echo $callbackTags; ?>
 <fieldset id="activity-create"><legend><?php echo $words->get('ActivitiesCreate'); ?></legend>
 <?php
@@ -34,12 +35,15 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
         <input type="text" id="activity-title" name="activity-title" class="long" style="width:99%" value="<?php echo $this->activity->title; ?>" />
     </div>
     <div class="row">
-        <label for="activity-address"><?php echo $words->get('ActivityLocation'); ?>:</label><br/>
+        <label for="activity-location"><?php echo $words->get('ActivityLocation'); ?>:</label><br/>
         <input type="text" id="activity-location" name="activity-location" class="long" value="<?php 
         if ($this->activity->location) {
             echo $this->activity->location->name
                 . ", " . $this->activity->location->getCountry()->name;
-        }?>" style="width: 99%"/>
+        }?>" style="width:70%" /><input class="button" type="submit" id="activity-location-button" name="activity-location-button" value="<?php echo $words->getBuffered('ActivitiesLocationSearch'); ?>" /><?php echo $words->flushBuffer(); ?> 
+    </div>
+    <div id="activity-location-suggestion" style="display: none;">
+        <ol id="locations" class="plain"></ol>
     </div>
     <div class="row">
         <label for="activity-address"><?php echo $words->get('ActivityAddress'); ?>:</label><br/>
@@ -100,3 +104,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
 </fieldset>
 </form>
 </div>
+<script type="text/javascript">//<!--
+ActivityGeoSuggest.initialize('activity-create-form');
+//-->
+</script>

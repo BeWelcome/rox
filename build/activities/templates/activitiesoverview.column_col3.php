@@ -26,7 +26,7 @@ foreach($this->activities as $activity) {
     echo '<tr>';
     echo '<td><a href="/activities/show/' . $activity->id . '">' . $activity->title . '</a></td>';
     echo '<td>' . $activity->dateStart . '-<br />' . $activity->dateEnd . '</td>';
-    echo '<td>' . $activity->locationName . ', ' . $activity->locationCountry . '</td>';
+    echo '<td>' . $activity->location->name . ', ' . $activity->location->getCountry()->name . '</td>';
     echo '<td>' . count($activity->attendees) . '</td>';
     echo '<td>';
     $organizers = '';

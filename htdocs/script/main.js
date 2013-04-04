@@ -93,7 +93,15 @@ bwrox.selectScripts([
   {
     // JQuery has to be included before prototype to avoid conflicts
     file: "jquery-1.8.2.min.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "admin/massmail/enqueue"]
+    pages: [
+      "searchmembers", 
+      "signup/3", 
+      "setlocation", 
+      "blog", 
+      "trip", 
+      "admin/massmail/enqueue", 
+      "activities/create", 
+      "activities/edit"]
   },
   {
     file: "leaflet/0.4.5/leaflet.js",
@@ -144,6 +152,12 @@ bwrox.selectScripts([
     pages: [
       "blog",
       "trip"
+    ]
+  },
+  {
+    file: "act_suggest.js",
+    pages: [
+      "activities"
     ]
   },
   {

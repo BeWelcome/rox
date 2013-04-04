@@ -104,6 +104,9 @@ class ActivitiesController extends RoxControllerBase
             } else {
                 $activity = new Activity();
                 $activity->id = 0;
+                $activity->locationId = $loggedInMember->IdCity;
+                $entityFactory = new RoxEntityFactory();
+                $activity->location = $entityFactory->create('Geo', $activity->locationId);
             }
             $page = new ActivitiesEditCreatePage();
             $page->activity = $activity;

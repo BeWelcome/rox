@@ -99,7 +99,7 @@ class ActivitiesModel extends RoxModelBase
         $activity->creator = $this->getLoggedInMember()->id;
         $activity->title = $args->post['activity-title'];
         $activity->address = $args->post['activity-address'];
-        $activity->locationId = 2988507;
+        $activity->locationId = $args->post['activity-location-id'];
         $activity->dateTimeStart = $args->post['activity-start-date'] . " " . $args->post['activity-start-time'] . ":00";
         $activity->dateTimeEnd = $args->post['activity-end-date'] . " " . $args->post['activity-end-time'] . ":00";
         $activity->description = $args->post['activity-description'];

@@ -51,44 +51,12 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     </div>
     <div class="subcolumns row">
     <div class="c50l"><div class="subcl">
-        <label for="activity-start-date"><?php echo $words->get('ActivityDateStart'); ?>:</label><br />
+        <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>:</label><br />
         <input type="text" id="activity-start-date" name="activity-start-date" class="date" maxlength="10" style="width:90%" value="<?php echo $this->activity->dateStart;?>" />
-            <script type="text/javascript">
-                /*<[CDATA[*/
-                var datepicker	= new DatePicker({
-                relative	: 'activity-start-date',
-                language	: '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
-                current_date : '<?php echo $this->activity->dateStart; ?>', 
-                topOffset   : '25',
-                relativeAppend : true
-                });
-                /*]]>*/
-            </script>
         </div></div>
         <div class="c50r"><div class="subcr">
-        <label for="activity-start-time"><?php echo $words->get('ActivityTimeStart'); ?></label><br />
-        <input type="text" id="activity-start-time" name="activity-start-time" class="time" maxlength="10" style="width:98%" value="<?php echo $this->activity->timeStart; ?>" />
-        </div></div>
-    </div>
-    <div class="subcolumns row">
-    <div class="c50l"><div class="subcl">
-        <label for="activity-start-date"><?php echo $words->get('ActivityDateEnd'); ?></label><br />
-        <input type="text" id="activity-end-date" name="activity-end-date" class="date" maxlength="10" style="width:90%" value="<?php echo $this->activity->dateEnd; ?>" />
-            <script type="text/javascript">
-                /*<[CDATA[*/
-                var datepicker	= new DatePicker({
-                relative	: 'activity-end-date',
-                language	: '<?=isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en'?>',
-                current_date : '<?php echo $this->activity->dateEnd; ?>', 
-                topOffset   : '25',
-                relativeAppend : true
-                });
-                /*]]>*/
-            </script>
-        </div></div>
-        <div class="c50r"><div class="subcr">
-        <label for="activity-start-time"><?php echo $words->get('ActivityDateEnd'); ?>:</label><br />
-        <input type="text" id="activity-end-time" name="activity-end-time" class="time" maxlength="10" style="width:98%" value="<?php echo $this->activity->timeEnd; ?>" />
+        <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?></label><br />
+        <input type="text" id="activity-end-date" name="activity-end-date" class="time" maxlength="10" style="width:98%" value="<?php echo $this->activity->timeStart; ?>" />
         </div></div>
     </div>
     <div class="subcolumns row">
@@ -106,5 +74,11 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
 </div>
 <script type="text/javascript">//<!--
 ActivityGeoSuggest.initialize('activity-create-form');
+jQuery(function() {
+  jQuery( "#activity-start-date" ).datetimepicker();
+});
+jQuery(function() {
+  jQuery( "#activity-end-date" ).datetimepicker();
+});
 //-->
 </script>

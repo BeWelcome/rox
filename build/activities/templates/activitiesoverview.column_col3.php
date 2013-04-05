@@ -1,4 +1,3 @@
-<div><h3><?php echo $words->get('ActivitiesUpcoming'); ?></h3>
 <?php 
 if (count($this->activities) == 0) {
 ?>

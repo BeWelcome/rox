@@ -46,14 +46,26 @@ class ActivitiesBasePage extends PageWithActiveSkin
         require 'templates/teaser.php';
     }
     
-    protected function getTopmenuActiveItem()
+    
+    protected function getSubmenuItems()
     {
-        return 'Activities';
+        $items = array();
+        
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+            $items[] = array('overview', 'activites/', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
+            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+        if (!isset($this->member->id)) {
+            $this->items = array();
+        }
+        return $items;
     }
     
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';
+       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        return $stylesheets;
     }
 

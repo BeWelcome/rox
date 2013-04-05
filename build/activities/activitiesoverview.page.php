@@ -32,18 +32,6 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesOverviewPage extends ActivitiesBasePage
 {
-    protected function leftSidebar() {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-
-        $this->sidebarItems = array (
-            array( "href" => "activities/myactivities", "wordCode" => "ActivitiesMyActivities" ),
-            array( "href" => "activities/pastactivities", "wordCode" => "ActivitiesPastActivities" ),
-            array( "href" => "activities/create", "wordCode" => "ActivitiesCreate" ),
-        );
-        require 'templates/sidebar.php';
-    }
-    
     protected function getSubmenuActiveItem() {
         return 'overview';
     }

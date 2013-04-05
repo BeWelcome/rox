@@ -53,12 +53,9 @@ class ActivitiesBasePage extends PageWithActiveSkin
         
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-            $items[] = array('upcomingactivities', 'activites', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('upcomingactivities', 'activities', $words->getSilent('ActivitiesUpcoming'));
             $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
             $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
-        if (!isset($this->member->id)) {
-            $this->items = array();
-        }
         return $items;
     }
     

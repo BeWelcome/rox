@@ -179,26 +179,29 @@ class ForumsController extends PAppController
                 $this->_view->showTopic();
             } 
             else {
-                $this->_model->prepareForum();
                 if ($this->isTopLevel) {
 //                die("\$this->_model->getTopMode()=".$this->_model->getTopMode()) ;
-                    if ($this->_model->getTopMode()==Forums::CV_TOPMODE_CATEGORY) { // Ici on fera l'aiguillage Category ou Recent Posts
-                        $this->_view->showTopLevelCategories();
-                    }
-                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LASTPOSTS){
-                        $callbackId = $this->mygroupsonlyProcess();
-                        $this->_view->showTopLevelRecentPosts($callbackId); 
-                        PPostHandler::clearVars($callbackId);
-                    }
-                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LANDING){
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
+                    $this->_model->prepareForum();
+
+//                    if ($this->_model->getTopMode()==Forums::CV_TOPMODE_CATEGORY) { // Ici on fera l'aiguillage Category ou Recent Posts
+//                        $this->_view->showTopLevelCategories();
+//                    }
+//                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LASTPOSTS){
+//                        $callbackId = $this->mygroupsonlyProcess();
+//                        $this->_view->showTopLevelRecentPosts($callbackId); 
+//                        PPostHandler::clearVars($callbackId);
+//                    }
+//                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LANDING){
                         $callbackId = $this->mygroupsonlyProcess();
                         $this->_view->showTopLevelLandingPage($callbackId); 
                         PPostHandler::clearVars($callbackId);
-                    }
-                    else {
-                        die("getTopMode is not set") ;
-                    }
+//                    }
+//                    else {
+//                        die("getTopMode is not set") ;
+//                    }
                 } else {
+                    $this->_model->prepareForum();
                     $this->_view->showForum();
                 }
             }
@@ -670,8 +673,14 @@ class ForumsController extends PAppController
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
                     $this->action = self::ACTION_VIEW_LANDING;
                 } else if ($r == 'agora') {
-                    $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);
-                    $this->action = self::ACTION_VIEW_FORUM;
+                    $layoutbits = new MOD_layoutbits();
+                    if ($layoutbits->GetPreference("PreferenceForumFirstPage") == "Pref_ForumFirstPageCategory") {
+                        $this->_model->setTopMode(Forums::CV_TOPMODE_CATEGORY) ;
+                        $this->action = self::ACTION_VIEW_CATEGORY;
+		    } else {
+                        $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);
+                        $this->action = self::ACTION_VIEW_FORUM;
+                    }
                 } else if ($r == 'lastposts') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
                     $this->action = self::ACTION_VIEW_LASTPOSTS;

@@ -25,24 +25,17 @@ Boston, MA  02111-1307, USA.
  */
 
 /**
- * base class for all Activities pages
+ * This page list all future Activities
  *
  * @package Apps
  * @subpackage Activities
  */
-class ActivitiesEditCreatePage extends ActivitiesBasePage
+class ActivitiesMyActivitiesPage extends ActivitiesBasePage
 {
-
     protected function getSubmenuActiveItem() 
     {
-        return 'upcomingactivities';
+        return 'myactivities';
     }
-
-    protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.2.custom.min.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
-       return $stylesheets;
-    }
-
 }
+
+

@@ -118,4 +118,17 @@ class ActivitiesController extends RoxControllerBase
             return new ActivitiesNotLoggedInPage();
         }
     }
+
+    public function myActivities() {
+        error_log("my activities");
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if (!$loggedInMember) {
+            return $this->router->url('main_page', array(), false);
+        }
+        $page = new ActivitiesMyActivitiesPage();
+        $page->member = $loggedInMember;
+        $activities = $this->_model->getMyActivities();
+        $page->activities = $activities;
+        return $page;
+    }
 }

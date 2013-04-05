@@ -25,6 +25,12 @@ class ActivitiesModel extends RoxModelBase
         return $all;
     }
 
+    public function getMyActivities() {
+        $all = $this->CreateEntity('Activity')->getActivitiesForMember($this->getLoggedInMember());
+        error_log("Activities: " . count($all));
+        return $all;
+    }
+
     public function checkEditCreateActivityVarsOk($args) {
         $errors = array();
         $post = $args->post;
@@ -79,20 +85,17 @@ class ActivitiesModel extends RoxModelBase
                 $query = 'INSERT INTO activitiesattendees SET status=' . $status . ', comment=\'' . $post['activity-comment']
                     . '\', activityId = ' . $activity->id . ', attendeeId = ' . $this->getLoggedInMember()->id;
             }
-            error_log($query);
             $this->dao->query($query);
             return true;
         }
         if (isset($post['activity-leave'])) {
             $query = 'DELETE FROM activitiesattendees WHERE activityId = ' . $activity->id
                 . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
-            error_log($query);
             $this->dao->query($query);
             return true;
         }
         if (isset($post['activity-cancel'])) {
             $query = 'UPDATE activitiesattendees SET status = 4 WHERE activityId = ' . $activity->id;
-            error_log($query);
             $this->dao->query($query);
             $activity->status = 1;
             $activity->update();

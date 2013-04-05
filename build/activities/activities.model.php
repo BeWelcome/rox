@@ -31,6 +31,18 @@ class ActivitiesModel extends RoxModelBase
         return $all;
     }
 
+    public function getPastActivities($onlyPublic) {
+        $temp = $this->CreateEntity('Activity');
+        if ($onlyPublic) {
+            $all = $temp->FindByWhereMany('public = 1 AND (dateTimeStart < NOW() AND dateTimeEnd < NOW())'
+                . ' AND ORDER BY dateTimeStart');
+        } else {
+            $all = $temp->FindByWhereMany('(dateTimeStart < NOW() AND dateTimeEnd < NOW())'
+                . ' ORDER BY dateTimeStart');
+        }
+        return $all;
+            }
+
     public function checkEditCreateActivityVarsOk($args) {
         $errors = array();
         $post = $args->post;

@@ -132,7 +132,7 @@
     $this->addRoute('activities_find', 'activities/find', 'ActivitiesController', 'find');    
     $this->addRoute('activities_create', 'activities/create', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_my_activities', 'activities/myactivities', 'ActivitiesController', 'myActivities');
-    $this->addRoute('activities_my_past_activities', 'myactivities/past', 'ActivitiesController', 'myPastActivities');
+    $this->addRoute('activities_my_past_activities', 'activities/pastactivities', 'ActivitiesController', 'pastActivities');
     $this->addRoute('activities_edit', 'activities/:id:/edit', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_show', 'activities/:id:', 'ActivitiesController', 'show');    
     $this->addRoute('activities_show_attendees', 'activities/:id:/attendees/page/:page:', 'ActivitiesController', 'show');

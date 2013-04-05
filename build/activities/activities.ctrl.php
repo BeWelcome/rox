@@ -120,7 +120,6 @@ class ActivitiesController extends RoxControllerBase
     }
 
     public function myActivities() {
-        error_log("my activities");
         $loggedInMember = $this->_model->getLoggedInMember();
         if (!$loggedInMember) {
             return $this->router->url('main_page', array(), false);
@@ -129,6 +128,19 @@ class ActivitiesController extends RoxControllerBase
         $page->member = $loggedInMember;
         $activities = $this->_model->getMyActivities();
         $page->activities = $activities;
+        return $page;
+    }
+
+    public function pastActivities() {
+        $page = new ActivitiesPastActivitiesPage();
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if ($loggedInMember) {
+            $page->publicOnly = false;
+        } else {
+            $page->publicOnly = true;
+        }
+        $page->member = $loggedInMember;
+        $page->activities = $this->_model->getPastActivities($page->publicOnly);
         return $page;
     }
 }

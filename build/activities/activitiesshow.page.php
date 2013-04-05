@@ -32,9 +32,27 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesShowPage extends ActivitiesBasePage
 {
+    public function teaserHeadline()
+    {
+        return "<a href='activities'>{$this->words->get('Activities')}</a> &raquo; {$this->activity->title}";
+    }
+    
+    protected function getSubmenuItems()
+    {
+        $items = array();
+        
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+            $items[] = array('upcomingactivities', 'activities', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
+            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+            $items[] = array('activitiesdetails', '', $words->getSilent('ActivitiesDetails'));
+        return $items;
+    }
+    
     protected function getSubmenuActiveItem() 
     {
-        return 'upcomingactivities';
+        return 'activitiesdetails';
     }
 
     protected function getStylesheets() {

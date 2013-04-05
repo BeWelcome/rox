@@ -5,24 +5,35 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'activity-description';
     require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
 }
+$errors = $this->getRedirectedMem('errors');
+$vars = $this->getRedirectedMem('vars');
+if (empty($vars)) {
+    $vars['activity-id'] = $this->activity->id;
+    $vars['activity-title'] = $this->activity->title;
+    $vars['activity-location-id'] = $this->activity->locationId;
+    $vars['activity-location'] = $this->activity->location->name . ", " . $this->activity->location->getCountry()->name;
+    $vars['activity-address'] = $this->activity->address;
+    $vars['activity-start-date'] = $this->activity->dateTimeStart;
+    $vars['activity-end-date'] = $this->activity->dateTimeEnd;
+    $vars['activity-description'] = $this->description;
+    if ($this->activity->public) {
+        $vars['activity-public'] = true;
+    }
+}
 ?>
-<h3><?php if ($this->editMode) {
+<h3><?php if ($this->activity->id != 0) {
     echo $words->get('ActivitiesEdit');
 } else {
     echo $words->get('ActivitiesCreate');
 } ?></h3>
 <div>
 <form method="post" id="activity-create-form">
-<input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
-<input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $this->activity->locationId; ?>" /> 
+<input type="hidden" id="activity-id" name="activity-id" value="<?php echo $vars['activity-id']; ?>" />
+<input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" /> 
 <?php echo $callbackTags; ?>
 <fieldset id="activity-create"><legend><?php echo $words->get('ActivitiesCreate'); ?></legend>
 <?php
-    $errors = array();
-    if (isset($mem_redirect->errors)) {
-        $errors = $mem_redirect->errors;
-    }
-    if (count($errors) > 0) {
+    if (!empty($errors)) {
         echo '<div class="error">';
         foreach ($errors as $error) {
             echo $words->get($error) . "<br />";
@@ -32,39 +43,36 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
 ?>
     <div class="row">
         <label for="activity-title"><?php echo $words->get('ActivityTitle'); ?>:</label><br />
-        <input type="text" id="activity-title" name="activity-title" class="long" style="width:99%" value="<?php echo $this->activity->title; ?>" />
+        <input type="text" id="activity-title" name="activity-title" class="long" style="width:99%" value="<?php echo $vars['activity-title']; ?>" />
     </div>
     <div class="row">
         <label for="activity-location"><?php echo $words->get('ActivityLocation'); ?>:</label><br/>
-        <input type="text" id="activity-location" name="activity-location" class="long" value="<?php 
-        if ($this->activity->location) {
-            echo $this->activity->location->name
-                . ", " . $this->activity->location->getCountry()->name;
-        }?>" style="width:70%" /><input class="button" type="submit" id="activity-location-button" name="activity-location-button" value="<?php echo $words->getBuffered('ActivitiesLocationSearch'); ?>" /><?php echo $words->flushBuffer(); ?> 
+        <input type="text" id="activity-location" name="activity-location" class="long" value="<?php echo $vars['activity-location']; ?>" style="width:70%" />
+        <input class="button" type="submit" id="activity-location-button" name="activity-location-button" value="<?php echo $words->getBuffered('ActivitiesLocationSearch'); ?>" /><?php echo $words->flushBuffer(); ?> 
     </div>
     <div id="activity-location-suggestion" style="display: none;">
         <ol id="locations" class="plain"></ol>
     </div>
     <div class="row">
         <label for="activity-address"><?php echo $words->get('ActivityAddress'); ?>:</label><br/>
-        <input type="text" id="activity-address" name="activity-address" class="long" value="<?php echo $this->activity->address; ?>" style="width: 99%"/>
+        <input type="text" id="activity-address" name="activity-address" class="long" value="<?php echo $vars['activity-address']; ?>" style="width: 99%"/>
     </div>
     <div class="subcolumns row">
     <div class="c50l"><div class="subcl">
         <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>:</label><br />
-        <input type="text" id="activity-start-date" name="activity-start-date" class="date" maxlength="10" style="width:90%" value="<?php echo $this->activity->dateStart;?>" />
+        <input type="text" id="activity-start-date" name="activity-start-date" class="date" maxlength="10" style="width:90%" value="<?php echo $vars['activity-start-date'];?>" />
         </div></div>
         <div class="c50r"><div class="subcr">
         <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?></label><br />
-        <input type="text" id="activity-end-date" name="activity-end-date" class="time" maxlength="10" style="width:98%" value="<?php echo $this->activity->timeStart; ?>" />
+        <input type="text" id="activity-end-date" name="activity-end-date" class="time" maxlength="10" style="width:98%" value="<?php echo $vars['activity-end-date']; ?>" />
         </div></div>
     </div>
     <div class="subcolumns row">
         <label for="activity-description"><?php echo $words->get('ActivityDescription'); ?>:</label><br/>
-        <textarea id="activity-description" name="activity-description" rows="10" cols="80" style="width:99%"><?php echo $this->activity->description; ?></textarea>
+        <textarea id="activity-description" name="activity-description" rows="10" cols="80" style="width:99%"><?php echo $vars['activity-description']; ?></textarea>
     </div>
     <div class="subcolumns row">
-        <input type="checkbox" id="activity-public" name="activity-public" <?php if ($this->activity->public) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?>:</label>
+        <input type="checkbox" id="activity-public" name="activity-public" <?php if (isset($vars['activity-public'])) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?>:</label>
     </div>
     <div class="row">
         <input type="submit" id="activity-submit" name="activity-submit" value="<?php echo $words->get('ActivitiesSubmit'); ?>" class="submit" />
@@ -75,10 +83,10 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
 <script type="text/javascript">//<!--
 ActivityGeoSuggest.initialize('activity-create-form');
 jQuery(function() {
-  jQuery( "#activity-start-date" ).datetimepicker();
+  jQuery( "#activity-start-date" ).datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'HH:mm', minDate: 0 });
 });
 jQuery(function() {
-  jQuery( "#activity-end-date" ).datetimepicker();
+  jQuery( "#activity-end-date" ).datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'HH:mm', minDate: 0 });
 });
 //-->
 </script>

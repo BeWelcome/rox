@@ -15,23 +15,22 @@ if (empty($vars)) {
     $vars['activity-address'] = $this->activity->address;
     $vars['activity-start-date'] = $this->activity->dateTimeStart;
     $vars['activity-end-date'] = $this->activity->dateTimeEnd;
-    $vars['activity-description'] = $this->description;
+    $vars['activity-description'] = $this->activity->description;
     if ($this->activity->public) {
         $vars['activity-public'] = true;
     }
 }
 ?>
-<h3><?php if ($this->activity->id != 0) {
-    echo $words->get('ActivitiesEdit');
-} else {
-    echo $words->get('ActivitiesCreate');
-} ?></h3>
 <div>
 <form method="post" id="activity-create-form">
 <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $vars['activity-id']; ?>" />
 <input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" /> 
 <?php echo $callbackTags; ?>
-<fieldset id="activity-create"><legend><?php echo $words->get('ActivitiesCreate'); ?></legend>
+<fieldset id="activity-create"><legend><?php if ($vars['activity-id'] != 0) {
+    echo $words->get('ActivitiesEdit');
+} else {
+    echo $words->get('ActivitiesCreate');
+} ?></legend>
 <?php
     if (!empty($errors)) {
         echo '<div class="error">';

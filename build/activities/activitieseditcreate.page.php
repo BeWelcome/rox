@@ -32,17 +32,10 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesEditCreatePage extends ActivitiesBasePage
 {
-    protected function leftSidebar()
-    {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
 
-        $this->sidebarItems = array (
-            array( "href" => "activities", "wordCode" => "ActivitiesOverview" ),
-            array( "href" => "activities/myactivities", "wordCode" => "ActivitiesMyActivities" ),
-            array( "href" => "activities/pastactivities", "wordCode" => "ActivitiesPastActivities" ),
-        );
-        require 'templates/sidebar.php';
+    protected function getSubmenuActiveItem() 
+    {
+        return 'upcomingactivities';
     }
 
     protected function getStylesheets() {

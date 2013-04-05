@@ -32,11 +32,9 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesOverviewNotLoggedInPage extends ActivitiesBasePage
 {
-    protected function leftSidebar() {
-    }
-    
+
     protected function getSubmenuActiveItem() {
-        return 'overview';
+        return 'upcomingactivities';
     }
 }
 

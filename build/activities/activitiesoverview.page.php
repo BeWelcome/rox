@@ -32,8 +32,9 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesOverviewPage extends ActivitiesBasePage
 {
-    protected function getSubmenuActiveItem() {
-        return 'overview';
+    protected function getSubmenuActiveItem() 
+    {
+        return 'upcomingactivities';
     }
 }
 

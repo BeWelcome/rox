@@ -32,25 +32,11 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesShowPage extends ActivitiesBasePage
 {
-    protected function leftSidebar() {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-        $this->sidebarItems = array (
-            array( "href" => "activities", "wordCode" => "ActivitiesOverview" ),
-            array( "href" => "activities/myactivities", "wordCode" => "ActivitiesMyActivities" ),
-            array( "href" => "activities/pastactivities", "wordCode" => "ActivitiesPastActivities" ),
-            array( "href" => "activities/create", "wordCode" => "ActivitiesCreate" ),
-        );
-        if (!isset($this->member->id)) {
-            $this->sidebarItems = array();
-        }
-        require 'templates/sidebar.php';
+    protected function getSubmenuActiveItem() 
+    {
+        return 'upcomingactivities';
     }
 
-    protected function getTopmenuActiveItem() {
-        return 'Activities';
-    }
-    
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';

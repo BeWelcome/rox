@@ -104,6 +104,24 @@ bwrox.selectScripts([
       "activities/edit"]
   },
   {
+    file: "jquery-ui-1.10.2.custom.min.js",
+    pages: [
+      "activities" /*,
+      "blog",
+      "trip",
+      "admin/treasurer" */
+    ]
+  },
+  {
+    file: "jquery-ui-timepicker-addon.js",
+    pages: [
+      "activities" /*,
+      "blog",
+      "trip",
+      "admin/treasurer" */
+    ]
+  },
+  {
     file: "leaflet/0.4.5/leaflet.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },

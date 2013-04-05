@@ -26,8 +26,8 @@ class ActivitiesModel extends RoxModelBase
     }
 
     public function checkEditCreateActivityVarsOk($args) {
-        $post = $args->post;
         $errors = array();
+        $post = $args->post;
         if (empty($post['activity-title'])) {
             $errors[] = 'ActivityTitleEmpty';
         }
@@ -36,20 +36,26 @@ class ActivitiesModel extends RoxModelBase
         }
         if (empty($post['activity-start-date'])) {
             $errors[] = 'ActivityDateStartEmpty';
-        }
-        if (empty($post['activity-start-time'])) {
-            $errors[] = 'ActivityTimeStartEmpty';
+        } else {
+            $startdate = strtotime($post['activity-start-date']);
+            if ($startdate === false) {
+                $errors[] = 'ActivityWrongStartDateFormat';
+            }
         }
         if (empty($post['activity-end-date'])) {
             $errors[] = 'ActivityDateEndEmpty';
+        } else {
+            $enddate = strtotime($post['activity-end-date']);
+            if ($enddate === false) {
+                $errors[] = 'ActivityWrongEndDateFormat';
+            }
         }
-        if (empty($post['activity-end-time'])) {
-            $errors[] = 'ActivityTimeEndEmpty';
+        if ($enddate < $startdate) {
+            $errors[] = 'ActivityEndBeforeStart';
         }
         if (empty($post['activity-description'])) {
             $errors[] = 'ActivityDescriptionEmpty';
         }
-        error_log(print_r($errors, true));
         return $errors;
     }
 
@@ -94,14 +100,15 @@ class ActivitiesModel extends RoxModelBase
     }
     
     public function createActivity($args) {
-    error_log(__FUNCTION__);
         $activity = new Activity();
         $activity->creator = $this->getLoggedInMember()->id;
         $activity->title = $args->post['activity-title'];
         $activity->address = $args->post['activity-address'];
         $activity->locationId = $args->post['activity-location-id'];
-        $activity->dateTimeStart = $args->post['activity-start-date'] . " " . $args->post['activity-start-time'] . ":00";
-        $activity->dateTimeEnd = $args->post['activity-end-date'] . " " . $args->post['activity-end-time'] . ":00";
+        $startdate = strtotime($args->post['activity-start-date']);
+        $activity->dateTimeStart = date('Y-m-d H:i:s', $startdate);
+        $enddate = strtotime($args->post['activity-end-date']);
+        $activity->dateTimeEnd = date('Y-m-d H:i:s', $enddate);;
         $activity->description = $args->post['activity-description'];
         $activity->public = isset($args->post['activity-public']);
         $organizer = array();
@@ -111,12 +118,14 @@ class ActivitiesModel extends RoxModelBase
     }
 
     public function updateActivity($args) {
-        $activity = new Activity($args->post['id']);
+        $activity = new Activity($args->post['activity-id']);
         $activity->title = $args->post['activity-title'];
         $activity->address = $args->post['activity-address'];
-        $activity->locationId = 2988507;
-        $activity->dateTimeStart = $args->post['activity-start-date'] . " " . $args->post['activity-start-time'] . ":00";
-        $activity->dateTimeEnd = $args->post['activity-end-date'] . " " . $args->post['activity-end-time'] . ":00";
+        $activity->locationId = $args->post['activity-location-id'];
+        $startdate = strtotime($args->post['activity-start-date']);
+        $activity->dateTimeStart = date('Y-m-d H:i:s', $startdate);
+        $enddate = strtotime($args->post['activity-end-date']);
+        $activity->dateTimeEnd = date('Y-m-d H:i:s', $enddate);;
         $activity->description = $args->post['activity-description'];
         $activity->public = isset($args->post['activity-public']);
         $activity->update();

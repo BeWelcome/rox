@@ -82,15 +82,18 @@ class ActivitiesController extends RoxControllerBase
         if (count($errors) > 0) {
             error_log("error");
             $mem_redirect->errors = $errors;
+            $mem_redirect->vars = $args->post;
             return false;
         } else {
             if ($args->post['activity-id'] == 0) {
                 $this->_model->createActivity($args);
+                $_SESSION['ActivityStatus'] = array('ActivityCreateSuccess', $args->post['activity-title']);
             } else {
                 $this->_model->updateActivity($args);
+                $_SESSION['ActivityStatus'] = array('ActivityUpdateSuccess', $args->post['activity-title']);
             }
-            /* todo: redirect nicely */
-            return true;
+            error_log("redirect: ". print_r($this->router->url('activities'), true));
+            return $this->router->url('activities', array(), false);
         }
     }
     

@@ -1,4 +1,19 @@
 <?php 
+if (isset($_SESSION['ActivityStatus'])) {
+    echo '<div class="success">';
+    $status = $_SESSION['ActivityStatus'];
+    switch($status[0]) {
+        case 'ActivityCreateSuccess':
+            echo $words->get('ActivitiesSuccessCreate', $status[1]);
+            break;  
+        case 'ActivityUpdateSuccess':
+            echo $words->get('ActivitiesSuccessUpdate', $status[1]);
+            break;  
+    }
+    echo '</div>';
+    unset($_SESSION['ActivityStatus']);
+}
+
 if (count($this->activities) == 0) {
 ?>
 <p><?php 
@@ -23,7 +38,7 @@ if ($this->publicOnly) {
 <?php 
 foreach($this->activities as $activity) {
     echo '<tr>';
-    echo '<td><a href="/activities/show/' . $activity->id . '">' . $activity->title . '</a></td>';
+    echo '<td><a href="/activities/' . $activity->id . '">' . $activity->title . '</a></td>';
     echo '<td>' . $activity->dateStart . '-<br />' . $activity->dateEnd . '</td>';
     echo '<td>' . $activity->location->name . ', ' . $activity->location->getCountry()->name . '</td>';
     echo '<td>' . count($activity->attendees) . '</td>';
@@ -34,7 +49,7 @@ foreach($this->activities as $activity) {
     }
     echo substr($organizers, 0, -2) . '</td>';
     if (in_array($this->member->id, array_keys($activity->organizers))) {
-        echo '<td><a href="activities/edit/' . $activity->id . '">'
+        echo '<td><a href="activities/' . $activity->id . '/edit">'
         . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
     }
     echo '</tr>';

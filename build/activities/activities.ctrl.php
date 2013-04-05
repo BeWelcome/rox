@@ -93,7 +93,7 @@ class ActivitiesController extends RoxControllerBase
                 $_SESSION['ActivityStatus'] = array('ActivityUpdateSuccess', $args->post['activity-title']);
             }
             error_log("redirect: ". print_r($this->router->url('activities'), true));
-            $this->redirectAbsolute($this->router->url('activities'));
+            return $this->router->url('activities', array(), false);
         }
     }
     

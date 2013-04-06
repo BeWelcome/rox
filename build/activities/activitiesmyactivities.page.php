@@ -34,7 +34,7 @@ class ActivitiesMyActivitiesPage extends ActivitiesBasePage
 {
     protected function getSubmenuActiveItem() 
     {
-        return 'pastactivities';
+        return 'myactivities';
     }
 }
 

@@ -18,9 +18,8 @@ if ($this->activity->status == 1) {
         </div> <!-- c62l -->
         <div class="c38r">
             <div class="subcr">
-                    <?php
-                    if ($this->loggedInMember) {
-                    ?>
+                <?php if ($this->loggedInMember) {
+                        if ($this->activity->status == 0) { ?>
                     <form method="post" id="activity-show-form" class="yform full">
                     <?php echo $callbackTags; ?>
                     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
@@ -33,7 +32,7 @@ if ($this->activity->status == 1) {
                             </div> <!-- c38l -->
                             <div class="c62r">
                                 <div class="subcl float_right">
-                                    <?php if ($this->activity->status == 0) { ?>
+                                    
                                     <?php
                                         $disabled = 'class="button"';
                                         if ($this->member->status == 1) {
@@ -80,10 +79,10 @@ if ($this->activity->status == 1) {
                         }
                     ?>
                     </div>
-                    <?php
-                    }
-                    }?>
                     </form>
+                    <?php
+                        }
+                    }?>
                 <div class="row abitright">
                     <h3><?= $words->get('ActivityDateTime'); ?></h3>
                     <p><?php echo $this->activity->dateStart; ?> - <?php echo $this->activity->dateEnd; ?><br />

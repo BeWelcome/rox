@@ -180,26 +180,12 @@ class ForumsController extends PAppController
             } 
             else {
                 if ($this->isTopLevel) {
-//                die("\$this->_model->getTopMode()=".$this->_model->getTopMode()) ;
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
                     $this->_model->prepareForum();
 
-//                    if ($this->_model->getTopMode()==Forums::CV_TOPMODE_CATEGORY) { // Ici on fera l'aiguillage Category ou Recent Posts
-//                        $this->_view->showTopLevelCategories();
-//                    }
-//                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LASTPOSTS){
-//                        $callbackId = $this->mygroupsonlyProcess();
-//                        $this->_view->showTopLevelRecentPosts($callbackId); 
-//                        PPostHandler::clearVars($callbackId);
-//                    }
-//                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LANDING){
-                        $callbackId = $this->mygroupsonlyProcess();
-                        $this->_view->showTopLevelLandingPage($callbackId); 
-                        PPostHandler::clearVars($callbackId);
-//                    }
-//                    else {
-//                        die("getTopMode is not set") ;
-//                    }
+                    $callbackId = $this->mygroupsonlyProcess();
+                    $this->_view->showTopLevelLandingPage($callbackId); 
+                    PPostHandler::clearVars($callbackId);
                 } else {
                     $this->_model->prepareForum();
                     $this->_view->showForum();
@@ -630,7 +616,12 @@ class ForumsController extends PAppController
         $request = $this->request;
     //    die ("\$request[1]=".$request[1]) ;
         // If this is a subforum within a group
-        if (isset($request[0]) && $request[0] == 'groups') {
+      if (isset($request[0]) && !isset($request[1]) && $request[0] == 'forums') {
+          $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
+          $this->action = self::ACTION_VIEW;
+      }  
+
+      if (isset($request[0]) && $request[0] == 'groups') {
             if (isset($request[1])) {
                 if ($request[1] == 'forums') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_GROUPS);
@@ -645,7 +636,10 @@ class ForumsController extends PAppController
                 } 
             } 
         } 
-        if (isset($request[1]) && $request[1] == 'suggestTags') {
+        if (!isset($request[1])) {
+            $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
+            $this->action = self::ACTION_VIEW;
+        } else if (isset($request[1]) && $request[1] == 'suggestTags') {
             $this->action = self::ACTION_SUGGEST;
         } else if (isset($request[1]) && $request[1] == 'member') {
             $this->action = self::ACTION_SEARCH_USERPOSTS;

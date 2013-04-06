@@ -260,7 +260,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 		
 		switch($layoutbits->GetPreference("PreferenceForumFirstPage")) {
 			case "Pref_ForumFirstPageLastPost":
-				$this->setTopMode(Forums::CV_TOPMODE_LASTPOSTS) ;
+				$this->setTopMode(Forums::CV_TOPMODE_FORUM) ;
 				break ;
 			case "Pref_ForumFirstPageCategory":
 				$this->setTopMode(Forums::CV_TOPMODE_CATEGORY) ;

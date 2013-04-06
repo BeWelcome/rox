@@ -97,9 +97,9 @@ if ($this->activity->status == 1) {
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolums -->
-</div>
     <?php if ($this->activity->public || $this->loggedInMember) { ?>
-    <div><?php echo $words->get('ActivityAttendees'); echo $this->attendeesPager->render(); ?>
+    <div><h3><?php echo $words->get('ActivityAttendees');?></h3>
+    <?php echo $this->attendeesPager->render(); ?>
     <ul class="floatbox">
     <?php
         foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) 
@@ -129,7 +129,7 @@ if ($this->activity->status == 1) {
         echo $this->attendeesPager->render();
     ?>
     </ul></div>
-    <div><?php echo $words->get('ActivityOrganizers');?>
+    <div><h3><?php echo $words->get('ActivityOrganizers');?></h3>
     <ul class="floatbox">
     <?php
         foreach ($this->activity->organizers as $organizer) 
@@ -157,5 +157,5 @@ if ($this->activity->status == 1) {
     ?>
     </ul></div>
     <?php
-
     }?>
+</div>

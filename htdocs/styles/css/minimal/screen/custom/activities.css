@@ -9,4 +9,6 @@
 .abitright {padding-left: 15px;}
 .abitlower {padding-top: 0.4em;}
 .yform label {padding-bottom: 0.12em;}
+.activitieslist {width: 100%;}
+.activitieslist tr a {display: block;}
 }

@@ -5,11 +5,11 @@
 <th><?php echo $words->get('ActivitiesPlace'); ?></th>
 <th><?php echo $words->get('ActivitiesNumberAttendees'); ?></th>
 <th><?php echo $words->get('ActivitiesOrganizers'); ?></th>
-<th></th>
 </tr>
-<?php 
+<?php
+$count= 0;
 foreach($this->activities as $activity) {
-    echo '<tr>';
+    echo '<tr class="' . $background = (($count % 2) ? 'highlight' : 'blank') . '" title="' . $activity->title . '">';
     echo '<td><a href="/activities/' . $activity->id . '">' 
         . $activity->title . '</a></td>';
     echo '<td>' . $activity->dateStart . '-<br />' . $activity->dateEnd . '</td>';
@@ -26,6 +26,7 @@ foreach($this->activities as $activity) {
         . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
     }
     echo '</tr>';
+    $count++;
 }
 ?>
 </table>

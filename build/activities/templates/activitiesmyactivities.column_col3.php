@@ -7,9 +7,10 @@
 <th><?php echo $words->get('ActivitiesOrganizers'); ?></th>
 <th></th>
 </tr>
-<?php 
+<?php
+$count= 0;
 foreach($this->activities as $activity) {
-    echo '<tr>';
+    echo '<tr class="' . $background = (($count % 2) ? 'highlight' : 'blank') . '" title="' . $activity->title . '">';
     echo '<td><a href="/activities/' . $activity->id . '">' 
         . $activity->title . '</a></td>';
     echo '<td>' . $activity->dateStart . '-<br />' . $activity->dateEnd . '</td>';
@@ -24,8 +25,9 @@ foreach($this->activities as $activity) {
     if (in_array($this->member->id, array_keys($activity->organizers))) {
         echo '<td><a href="activities/' . $activity->id . '/edit">'
         . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
-    }
+    } else {echo '<td></td>';}
     echo '</tr>';
+    $count++;
 }
 ?>
 </table>

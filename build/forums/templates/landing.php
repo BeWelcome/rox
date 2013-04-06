@@ -95,7 +95,6 @@ if ($User && $ownGroupsButtonCallbackId) {
     </h3>
   </div><!--  row -->
 <?php
-        $noForumLegendBox = false;
         require 'boardthreads.php';
 ?>
     <div class="float_right">

@@ -682,8 +682,8 @@ class ForumsController extends PAppController
                         $this->action = self::ACTION_VIEW_FORUM;
                     }
                 } else if ($r == 'lastposts') {
-                    $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
-                    $this->action = self::ACTION_VIEW_LASTPOSTS;
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);
+                    $this->action = self::ACTION_VIEW_FORUM;
                 } else if ($r == 'category') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_CATEGORY);
                     $this->action = self::ACTION_VIEW_CATEGORY;

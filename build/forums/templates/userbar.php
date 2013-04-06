@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
 		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
 		echo '<li><a href="forums/lastposts">' . $this->words->get('ForumLastPost') . '</a></li>' ;
 	}
-	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
+	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_FORUM) {
 		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
 		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
 	}

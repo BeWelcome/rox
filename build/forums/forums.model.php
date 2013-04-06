@@ -265,9 +265,6 @@ function FindAppropriatedLanguage($IdPost=0) {
 			case "Pref_ForumFirstPageCategory":
 				$this->setTopMode(Forums::CV_TOPMODE_CATEGORY) ;
 				break ;
-			case "Pref_ForumFirstPageLanding":
-				$this->setTopMode(Forums::CV_TOPMODE_LANDING) ;
-				break ;
 			default:
 				$this->setTopMode(Forums::CV_TOPMODE_LANDING) ;
 				break ;

@@ -36,8 +36,9 @@ if ($this->publicOnly) {
 <th></th>
 </tr>
 <?php 
+$count= 0;
 foreach($this->activities as $activity) {
-    echo '<tr>';
+    echo '<tr class="' . $background = (($count % 2) ? 'highlight' : 'blank') . '">';
     echo '<td><a href="/activities/' . $activity->id . '">' . $activity->title . '</a></td>';
     echo '<td>' . $activity->dateStart . '-<br />' . $activity->dateEnd . '</td>';
     echo '<td>' . $activity->location->name . ', ' . $activity->location->getCountry()->name . '</td>';
@@ -53,6 +54,7 @@ foreach($this->activities as $activity) {
         . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
     }
     echo '</tr>';
+    $count++;
 }
 ?>
 </table>

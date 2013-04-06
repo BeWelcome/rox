@@ -431,12 +431,20 @@ class ForumsController extends PAppController
     }
     
     private function searchUserposts($user) {
-                if (APP_User::isBWLoggedIn()) { // Data will be displayed only if the current user is Logged and is an active member
-            $posts = $this->_model->searchUserposts($user); // todo test if the member is still active
-                    
+        // Data will be displayed only if the current user is Logged
+        if (APP_User::isBWLoggedIn()) { 
+            $roxModel = new RoxModelBase;
+            $profileVisitor = $roxModel->getLoggedInMember();
+            $userId = APP_User::memberId($user);
+            $membersForumPostsPagePublic = $this->_model->isMembersForumPostsPagePublic($userId);
+            if ($membersForumPostsPagePublic || ($profileVisitor->getPKValue() == $userId) || $this->BW_Right->HasRight("Admin") || $this->BW_Right->HasRight("ForumModerator") || $this->BW_Right->HasRight("SafetyTeam") ) {
+                $posts = $this->_model->searchUserposts($user);
+            } else {
+                $posts = array();
+            }       
         }
         else {
-            $posts = array() ; // todo post something suggesting to LogIn or to register to see a posts by user
+            $posts = array() ;
         }
         $this->_view->displaySearchResultPosts($posts);
     }

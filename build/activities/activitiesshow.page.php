@@ -32,25 +32,29 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesShowPage extends ActivitiesBasePage
 {
-    protected function leftSidebar() {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-        $this->sidebarItems = array (
-            array( "href" => "activities", "wordCode" => "ActivitiesOverview" ),
-            array( "href" => "activities/myactivities", "wordCode" => "ActivitiesMyActivities" ),
-            array( "href" => "activities/pastactivities", "wordCode" => "ActivitiesPastActivities" ),
-            array( "href" => "activities/create", "wordCode" => "ActivitiesCreate" ),
-        );
-        if (!isset($this->member->id)) {
-            $this->sidebarItems = array();
-        }
-        require 'templates/sidebar.php';
-    }
-
-    protected function getTopmenuActiveItem() {
-        return 'Activities';
+    public function teaserHeadline()
+    {
+        return "<a href='activities'>{$this->words->get('Activities')}</a> &raquo; {$this->activity->title}";
     }
     
+    protected function getSubmenuItems()
+    {
+        $items = array();
+        
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+            $items[] = array('upcomingactivities', 'activities', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
+            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+            $items[] = array('activitiesdetails', '', $words->getSilent('ActivitiesDetails'));
+        return $items;
+    }
+    
+    protected function getSubmenuActiveItem() 
+    {
+        return 'activitiesdetails';
+    }
+
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';

@@ -3575,6 +3575,20 @@ SQL;
        $row = $s->fetch(PDB::FETCH_OBJ) ;
        return (isset($row->IdSubscribe))  ;
     } // end of IsTagSubscribed
+
+
+    // This function isMembersForumPostsPagePublic return true if the members allows other members to see his forum posts page: /forums/member/username
+    // @$userId : The user we want to know if his forum page is public
+    public function isMembersForumPostsPagePublic($userId = 0) {
+       $member = $this->createEntity("Member", $userId);
+       $usersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
+       if ($usersForumPostsPagePublic == "Yes") {
+           return true;
+       }
+       return false;
+    } // end of isMembersForumPostsPagePublic
+
+
     
     public function GetThreadVisibility($IdThread) {
         $query = "SELECT ThreadVisibility FROM forums_threads WHERE threadid = " . intval($IdThread);

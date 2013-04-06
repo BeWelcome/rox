@@ -86,4 +86,26 @@ class Activity extends RoxEntityBase
         }
         return $status;
     }
+    
+    /** 
+     * get all activities for a member
+     * 
+     * @access public
+     * @return list of ActivitiesBasePage
+     */
+    public function getActivitiesForMember(Member $member) {
+        $activities = array();
+        $query = "SELECT a.id AS id FROM activities AS a, activitiesattendees AS aa WHERE a.id = aa.activityId AND aa.attendeeId = " . $member->id;
+        $result = $this->dao->query($query);
+        if ($result) {
+            $activityIds = array();
+            while ($row = $result->fetch(PDB::FETCH_OBJ)) {
+                $activityIds[] = $row->id;
+            }
+            if (count($activityIds)) {
+                $activities = $this->findByWhereMany("id IN ('" . implode("','", $activityIds) . "')");
+            }
+        }
+        return $activities;
+    }
 }

@@ -82,15 +82,18 @@ class ActivitiesController extends RoxControllerBase
         if (count($errors) > 0) {
             error_log("error");
             $mem_redirect->errors = $errors;
+            $mem_redirect->vars = $args->post;
             return false;
         } else {
             if ($args->post['activity-id'] == 0) {
                 $this->_model->createActivity($args);
+                $_SESSION['ActivityStatus'] = array('ActivityCreateSuccess', $args->post['activity-title']);
             } else {
                 $this->_model->updateActivity($args);
+                $_SESSION['ActivityStatus'] = array('ActivityUpdateSuccess', $args->post['activity-title']);
             }
-            /* todo: redirect nicely */
-            return true;
+            error_log("redirect: ". print_r($this->router->url('activities'), true));
+            return $this->router->url('activities', array(), false);
         }
     }
     
@@ -104,6 +107,9 @@ class ActivitiesController extends RoxControllerBase
             } else {
                 $activity = new Activity();
                 $activity->id = 0;
+                $activity->locationId = $loggedInMember->IdCity;
+                $entityFactory = new RoxEntityFactory();
+                $activity->location = $entityFactory->create('Geo', $activity->locationId);
             }
             $page = new ActivitiesEditCreatePage();
             $page->activity = $activity;
@@ -111,5 +117,30 @@ class ActivitiesController extends RoxControllerBase
         } else {
             return new ActivitiesNotLoggedInPage();
         }
+    }
+
+    public function myActivities() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if (!$loggedInMember) {
+            return $this->router->url('main_page', array(), false);
+        }
+        $page = new ActivitiesMyActivitiesPage();
+        $page->member = $loggedInMember;
+        $activities = $this->_model->getMyActivities();
+        $page->activities = $activities;
+        return $page;
+    }
+
+    public function pastActivities() {
+        $page = new ActivitiesPastActivitiesPage();
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if ($loggedInMember) {
+            $page->publicOnly = false;
+        } else {
+            $page->publicOnly = true;
+        }
+        $page->member = $loggedInMember;
+        $page->activities = $this->_model->getPastActivities($page->publicOnly);
+        return $page;
     }
 }

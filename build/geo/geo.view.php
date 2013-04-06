@@ -88,7 +88,7 @@ class GeoView extends PAppView {
     * @param locations The places to display
     * @return HTML-List of the locations
     */
-    public function generateLocationOverview($locations)
+    public function generateLocationOverview($locations, $activities = false)
     {
         $words = new MOD_words();
         $out = '';
@@ -125,8 +125,12 @@ class GeoView extends PAppView {
                     } else {
                         $adminName1 = '';
                     }
-                    $onclick = "javascript: setMap('"
-                        . $location['geonameId']
+                    if ($activities) {
+                        $onclick = "javascript: setActivityLocation('";
+                    } else {
+                        $onclick = "javascript: setMap('";
+                    }
+                    $onclick .= $location['geonameId']
                         . "', '"
                         . $location['lat']
                         . "', '"

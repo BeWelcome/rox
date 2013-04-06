@@ -32,17 +32,17 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesEditCreatePage extends ActivitiesBasePage
 {
-    protected function leftSidebar()
+
+    protected function getSubmenuActiveItem() 
     {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-
-        $this->sidebarItems = array (
-            array( "href" => "activities", "wordCode" => "ActivitiesOverview" ),
-            array( "href" => "activities/myactivities", "wordCode" => "ActivitiesMyActivities" ),
-            array( "href" => "activities/pastactivities", "wordCode" => "ActivitiesPastActivities" ),
-        );
-        require 'templates/sidebar.php';
+        return 'upcomingactivities';
     }
-}
 
+    protected function getStylesheets() {
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.2.custom.min.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
+       return $stylesheets;
+    }
+
+}

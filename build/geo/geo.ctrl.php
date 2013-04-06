@@ -115,11 +115,15 @@ class GeoController extends PAppController {
                         $fcode = $this->fcode_default;
                         
                 }
-
+                $activities = false;
+                if (isset($request[4]) && ($request[4] == 'activities')) {
+                    $activities = true;
+                }
+                
                 // get locations from geonames. suggestLocation returns empty array
                 // if nothing is found.
                 $locations = $this->_model->suggestLocation($request[2], 40, $fcode);
-                echo $this->_view->generateLocationOverview($locations);
+                echo $this->_view->generateLocationOverview($locations, $activities);
                 PPHP::PExit();
                 break;
 

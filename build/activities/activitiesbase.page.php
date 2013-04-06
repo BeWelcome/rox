@@ -38,22 +38,28 @@ class ActivitiesBasePage extends PageWithActiveSkin
         return $words->getBuffered('Activities') . ' - BeWelcome';
     }
 
-    protected function teaserContent()
+    public function teaserHeadline()
     {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-
-        require 'templates/teaser.php';
+        return "<a href='activities'>{$this->words->get('Activities')}</a>";
     }
     
-    protected function getTopmenuActiveItem()
+    
+    protected function getSubmenuItems()
     {
-        return 'Activities';
+        $items = array();
+        
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
+            $items[] = array('upcomingactivities', 'activities', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
+            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+        return $items;
     }
     
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';
+       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        return $stylesheets;
     }
 

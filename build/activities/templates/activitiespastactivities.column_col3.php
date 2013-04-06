@@ -1,31 +1,3 @@
-<?php 
-if (isset($_SESSION['ActivityStatus'])) {
-    echo '<div class="success">';
-    $status = $_SESSION['ActivityStatus'];
-    switch($status[0]) {
-        case 'ActivityCreateSuccess':
-            echo $words->get('ActivitiesSuccessCreate', $status[1]);
-            break;  
-        case 'ActivityUpdateSuccess':
-            echo $words->get('ActivitiesSuccessUpdate', $status[1]);
-            break;  
-    }
-    echo '</div>';
-    unset($_SESSION['ActivityStatus']);
-}
-
-if (count($this->activities) == 0) {
-?>
-<p><?php 
-if ($this->publicOnly) {
-    echo $words->get('ActivitiesNoPublicUpcoming');
-} else {
-    echo $words->get('ActivitiesNoUpcoming');
-}
-?></p>
-<?php 
-} else {
-?>
 <table class='activitieslist'>
 <tr>
 <th><?php echo $words->get('ActivitiesTitle'); ?></th>
@@ -38,7 +10,8 @@ if ($this->publicOnly) {
 <?php 
 foreach($this->activities as $activity) {
     echo '<tr>';
-    echo '<td><a href="/activities/' . $activity->id . '">' . $activity->title . '</a></td>';
+    echo '<td><a href="/activities/' . $activity->id . '">' 
+        . $activity->title . '</a></td>';
     echo '<td>' . $activity->dateStart . '-<br />' . $activity->dateEnd . '</td>';
     echo '<td>' . $activity->location->name . ', ' . $activity->location->getCountry()->name . '</td>';
     echo '<td>' . count($activity->attendees) . '</td>';
@@ -57,6 +30,3 @@ foreach($this->activities as $activity) {
 ?>
 </table>
 </div>
-<?php
-}
-?>

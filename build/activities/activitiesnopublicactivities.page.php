@@ -35,7 +35,7 @@ class ActivitiesNoPublicActivitiesPage extends ActivitiesBasePage
     }
     
     protected function getSubmenuActiveItem() {
-        return 'overview';
+        return 'upcomingactivities';
     }
 }
 

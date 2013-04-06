@@ -67,7 +67,18 @@ class MemberPage extends PageWithActiveSkin
         $galleryItemsCount = $member->getGalleryItemsCount();
 
         // TODO: move number out of translation string
-        $ViewForumPosts = $words->get("ViewForumPosts",$member->forums_posts_count());
+        $viewForumPosts = $words->get("ViewForumPosts",$member->forums_posts_count());
+        $membersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
+        $linkMembersForumPosts = false;
+        if ($membersForumPostsPagePublic == "Yes") {
+            $linkMembersForumPosts = true;
+        }
+        if ($logged_user->getPKValue() == $member->getPKValue()) {
+            $linkMembersForumPosts = true;
+        }
+        if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin') || MOD_right::get()->HasRight('ForumModerator')) {
+            $linkMembersForumPosts = true;
+        }
 
         $mynotes_count = $member->count_mynotes();
         if ($this->myself) {
@@ -92,9 +103,9 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = array('profile', "members/$username", $ww->MemberPage);
             $tt[] = array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')');
             $tt[] = array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' (' . $galleryItemsCount . ')');
-            $tt[] = array('forum', "forums/member/$username", $ViewForumPosts);
             $tt[] = array('blogs', "blog/$username", $ww->Blog);
             $tt[] = array('trips', "trip/show/$username", $ww->Trips);
+            $tt[] = array('forum', "forums/member/$username", $viewForumPosts);
         } else {
             if (isset($note)) {
                 $mynotewordsname=$words->get('NoteEditMyNotesOfMember') ;
@@ -114,10 +125,12 @@ class MemberPage extends PageWithActiveSkin
                 array('profile', "members/$username", $ww->MemberPage),
                 array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')'),
                 array('gallery', "gallery/show/user/$username/pictures", $ww->Gallery . ' (' . $galleryItemsCount . ')'),
-                array('forum', "forums/member/$username", $ViewForumPosts),
                 array('blogs', "blog/$username", $ww->Blog),
                 array('trips', "trip/show/$username", $ww->Trips)
             );
+            if ($linkMembersForumPosts) {
+                $tt[] = array('forum', "forums/member/$username", $viewForumPosts);
+            }
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))
         {

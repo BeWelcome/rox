@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 Copyright (c) 2007-2009 BeVolunteer
 
@@ -30,11 +30,11 @@ Boston, MA  02111-1307, USA.
  * @package Apps
  * @subpackage Activities
  */
-class ActivitiesOverviewNotLoggedInPage extends ActivitiesBasePage
+class ActivitiesPastActivitiesPage extends ActivitiesBasePage
 {
-
-    protected function getSubmenuActiveItem() {
-        return 'upcomingactivities';
+    protected function getSubmenuActiveItem() 
+    {
+        return 'pastactivities';
     }
 }
 

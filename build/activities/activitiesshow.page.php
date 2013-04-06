@@ -58,6 +58,8 @@ class ActivitiesShowPage extends ActivitiesBasePage
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
        return $stylesheets;
     }
 }

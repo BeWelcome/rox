@@ -94,7 +94,7 @@ class GroupsBasePage extends PageWithActiveSkin
     protected function getPageTitle() {
         $words = $this->getWords();
         if (is_object($this->group)) {
-            return  $words->getBuffered('Group') . " '".$this->group->Name . "' | BeWelcome";
+            return  $words->getBuffered('Group') . " " .$this->group->Name . " | BeWelcome";
         } else return $words->getBuffered('Groups') . ' | BeWelcome';
     }
 

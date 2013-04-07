@@ -126,7 +126,7 @@
 
     $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');
 
-    // Events feature
+    // activities feature
     $this->addRoute('activities', 'activities', 'ActivitiesController', 'overview');
     // $this->addRoute('activities_pages', 'activities/page/:pageno:', 'ActivitiesController', 'overview');
     $this->addRoute('activities_find', 'activities/find', 'ActivitiesController', 'find');    

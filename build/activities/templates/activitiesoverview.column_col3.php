@@ -1,3 +1,20 @@
+<div class="row>"
+<div class="subcolumns">
+    <div class="c50l">
+        <div class="subcl">
+            <form action="activities/search" id="activities-search-box" method="get">
+            <input type="text" name="activities-search" id="GroupsSearchInput" /><input type="submit" name="activities-submit" value="Search" />
+            </form>
+        </div>
+    </div>
+    <div class="c50r">
+        <div class="subcr float_right">
+            <a class="bigbutton" href="activities/create"><span><?= $words->get('ActivityCreateNew'); ?></span></a>
+        </div>
+    </div>
+</div>
+</div>
+<div class="row>">
 <?php 
 if (isset($_SESSION['ActivityStatus'])) {
     echo '<div class="success">';
@@ -52,13 +69,13 @@ foreach($this->activities as $activity) {
     if (in_array($this->member->id, array_keys($activity->organizers))) {
         echo '<td><a href="activities/' . $activity->id . '/edit">'
         . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
-    }
+    } else {echo '<td></td>';}
     echo '</tr>';
     $count++;
 }
 ?>
 </table>
-</div>
 <?php
 }
 ?>
+</div>

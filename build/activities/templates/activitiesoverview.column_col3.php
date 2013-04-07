@@ -39,7 +39,7 @@ if ($this->publicOnly) {
 $count= 0;
 foreach($this->activities as $activity) {
     echo '<tr class="' . $background = (($count % 2) ? 'highlight' : 'blank') . '" title="' . $activity->title . '">';
-    echo '<td><a href="/activities/' . $activity->id . '">' . $activity->title . '</a></td>';
+    echo '<td><a href="activities/' . $activity->id . '">' . $activity->title . '</a></td>';
     echo '<td>' . $activity->dateStart . '-<br />' . $activity->dateEnd . '</td>';
     echo '<td>' . $activity->location->name . ', ' . $activity->location->getCountry()->name . '</td>';
     echo '<td>' . count($activity->attendees) . '</td>';

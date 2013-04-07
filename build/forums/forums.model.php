@@ -3760,8 +3760,14 @@ class Board implements Iterator {
 			$this->PublicPostVisibility = " PostVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			$this->PublicThreadVisibility = " ThreadVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
-				$this->PostGroupsRestriction = " (1=1)";
-				$this->ThreadGroupsRestriction = " (1=1)";
+				if ($no_forumsgroup) {
+                                    $this->PostGroupsRestriction = " (IdGroup != 0)";
+				    $this->ThreadGroupsRestriction = " (IdGroup != 0)";
+                                } 
+                                else {
+                                    $this->PostGroupsRestriction = " (1=1)";
+				    $this->ThreadGroupsRestriction = " (1=1)";
+                                }
 			}
 		}
     }

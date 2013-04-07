@@ -32,18 +32,22 @@ Boston, MA  02111-1307, USA.
         <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->get('ForumNewTopic'); ?></a>
     </li>
 	<?php
-	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_CATEGORY) {
-		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
-		echo '<li><a href="forums/lastposts">' . $this->words->get('ForumLastPost') . '</a></li>' ;
-	}
-	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_FORUM) {
-		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
-		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
-	}
-	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LANDING) {
-		echo '<li><a href="forums/lastposts">' . $this->words->get('ForumLastPost') . '</a></li>' ;
-		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
-	}
+//	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_CATEGORY) {
+//		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
+//		echo '<li><a href="forums/lastposts">' . $this->words->get('ForumLastPost') . '</a></li>' ;
+//	}
+//	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LASTPOSTS) {
+//		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
+//		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
+//	}
+//	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_FORUM) {
+//		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
+//		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
+//	}
+//	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_LANDING) {
+//		echo '<li><a href="forums/lastposts">' . $this->words->get('ForumLastPost') . '</a></li>' ;
+//		echo '<li><a href="forums/category">' . $this->words->get('ForumByCategory') . '</a></li>' ;
+//	}
 	?>
 
     <li><a href="forums/rules"><?php echo $this->words->get('ForumRulesShort'); ?></a></li>

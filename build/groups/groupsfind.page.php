@@ -19,18 +19,15 @@ along with this program; if not, see <http://www.gnu.org/licenses/> or
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
 */
-    /**
-     * @author Fake51
-     */
 
     /**
-     * page that shows all a members groups
+     * page that shows all groups visible
      *
      * @package Apps
      * @subpackage Groups
      */
 
-class GroupsMyGroupsPage extends GroupsBasePage
+class GroupsFindPage extends GroupsBasePage
 {
     protected function teaserContent()
     {
@@ -39,10 +36,16 @@ class GroupsMyGroupsPage extends GroupsBasePage
         ?>
         <div id="teaser" class="clearfix">
             <div id="teaser_l1"> 
-                <h1><a href="groups/mygroups"><?= $words->get('GroupsMyGroups');?></a></h1>
+                <h1><a href="groups/findgroups"><?= $words->get('GroupsFindGroups');?></a></h1>
             </div>
         </div>
         <?php
+    }
+
+    protected function column_col3()
+    {
+        $words = $this->getWords();
+        require "templates/groupsoverview.column_col3.php";
     }
 
     protected function getSubmenuItems()
@@ -58,7 +61,7 @@ class GroupsMyGroupsPage extends GroupsBasePage
 
     protected function getSubmenuActiveItem()
     {
-        return 'mygroups';
+        return 'findgroups';
     }
 
 

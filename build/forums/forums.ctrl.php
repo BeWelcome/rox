@@ -667,9 +667,7 @@ class ForumsController extends PAppController
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
                     $this->action = self::ACTION_VIEW_LANDING;
                 } else if ($r == 'agora') {
-                    $layoutbits = new MOD_layoutbits();
-                    if ($layoutbits->GetPreference("PreferenceForumFirstPage") == "Pref_ForumFirstPageCategory") {
-                        $this->_model->setTopMode(Forums::CV_TOPMODE_CATEGORY) ;
+                    if ($this->_model->getTopMode() == Forums::CV_TOPMODE_CATEGORY) {
                         $this->action = self::ACTION_VIEW_CATEGORY;
 		    } else {
                         $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);

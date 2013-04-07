@@ -68,7 +68,6 @@ class ActivitiesController extends RoxControllerBase
             $member->status = $activity->attendees[$loggedInMember->id]->status;
             $member->comment = $activity->attendees[$loggedInMember->id]->comment;
             $member->organizer = in_array($loggedInMember->id, array_keys($activity->organizers));
-            print_r($member);
         }
         $page->member = $member;
         $page->attendeesPager = $pager;

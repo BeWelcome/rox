@@ -5,6 +5,7 @@
 <th><?php echo $words->get('ActivitiesPlace'); ?></th>
 <th><?php echo $words->get('ActivitiesNumberAttendees'); ?></th>
 <th><?php echo $words->get('ActivitiesOrganizers'); ?></th>
+<th></th>
 </tr>
 <?php
 $count= 0;
@@ -24,7 +25,7 @@ foreach($this->activities as $activity) {
     if (in_array($this->member->id, array_keys($activity->organizers))) {
         echo '<td><a href="activities/' . $activity->id . '/edit">'
         . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
-    }
+    } else {echo '<td></td>';}
     echo '</tr>';
     $count++;
 }

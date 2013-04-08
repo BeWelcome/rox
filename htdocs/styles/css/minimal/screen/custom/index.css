@@ -1,4 +1,3 @@
-
 /*
 *  Show only column 3 for index page
 *
@@ -91,6 +90,7 @@ h2 {
 	background:-moz-linear-gradient( center top, #fb9e25 5%, #ffc477 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477');
 	background-color:#fb9e25;
+	text-decoration:none;
 }
 .button2:active {
 	position:relative;

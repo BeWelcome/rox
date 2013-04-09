@@ -27,7 +27,7 @@ if ($this->activity->status == 1) {
                         <div class="subcolumns">
                             <div class="c38l">
                                 <div class="subcl">
-                                    <h3 class="abitlower"><?= $words->get('ActivityYourStatus'); ?>:</h3>
+                                    <h3 class="abitlower"><?= $words->get('ActivityMyStatus'); ?>:</h3>
                                 </div> <!-- subcl -->
                             </div> <!-- c38l -->
                             <div class="c62r">
@@ -59,7 +59,7 @@ if ($this->activity->status == 1) {
                                 </div> <!-- subcl -->
                             </div> <!-- c62r -->
                         </div>
-                        <label for="activity-comment"><?php echo $words->get('ActivityYourComment'); ?></label>
+                        <label for="activity-comment"><?php echo $words->get('ActivityYourComment'); ?>:</label>
                         <input type="text" id="activity-comment" name="activity-comment" value="<?php echo $this->member->comment;?>" />
                     </div>
                     <div class="type-button">
@@ -84,12 +84,12 @@ if ($this->activity->status == 1) {
                         }
                     }?>
                 <div class="row abitright">
-                    <h3><?= $words->get('ActivityDateTime'); ?></h3>
+                    <h3><?= $words->get('ActivityDateTime'); ?>:</h3>
                     <p style="text-align: center;"><?php echo $this->activity->dateStart; ?> - <?php echo $this->activity->dateEnd; ?><br />
                     <?php echo $this->activity->timeStart; ?> - <?php echo $this->activity->timeEnd; ?></p>
                 </div>
                 <div class="row abitright">
-                    <h3><?= $words->get('ActivityLocationAddress'); ?></h3>
+                    <h3><?= $words->get('ActivityLocationAddress'); ?>:</h3>
                     <p><?php echo $this->activity->address; ?><br />
                     <?php  echo $this->activity->location->name ?>, <?php echo $this->activity->location->getCountry()->name ?></p>
                 </div>
@@ -117,7 +117,7 @@ if ($this->activity->status == 1) {
                     echo $words->get('ActivityIMightAttend');
                     break;
                 case 3:
-                    echo $words->get('ActivityNoIDontAttend');
+                    echo $words->get('ActivitySorryCantJoinYou');
                     break;
             }
             echo '  </span><br />';

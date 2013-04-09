@@ -25,6 +25,7 @@ Boston, MA  02111-1307, USA.
 JeanYves notes : every display of a forum post content  goes trhu this template
 
 */
+
     $words = new MOD_words();
     $styles = array( 'highlight', 'blank' );
 
@@ -233,14 +234,16 @@ if (isset($_SESSION["IdMember"])) {
             }
         }
 
+        echo '<hr /><div class="floatbox"><p class="float_left"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '">' . $words->get('ForumPermalink') . '</a></p>';
         $TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
+        echo '<p class="float_right">';
         if (isset($TheReports[0]->IdReporter)) {
-            echo "<p class=\"float_right\"><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a></p>" ;
+            echo "<a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumViewMyReportToMod'),"</a>" ;
         }
         else {
-            echo "<p class=\"float_right\"><a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a></p>" ;
+            echo "<a href='forums/reporttomod/",$post->IdPost,"'>",$words->getBuffered('ForumMyReportToMod'),"</a>" ;
         }
-
+        echo '</p></div>';
     }
 
     ?>

@@ -127,12 +127,13 @@
     $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');
 
     // activities feature
-    $this->addRoute('activities', 'activities', 'ActivitiesController', 'overview');
-    // $this->addRoute('activities_pages', 'activities/page/:pageno:', 'ActivitiesController', 'overview');
-    $this->addRoute('activities_find', 'activities/find', 'ActivitiesController', 'find');    
-    $this->addRoute('activities_create', 'activities/create', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_my_activities', 'activities/myactivities', 'ActivitiesController', 'myActivities');
-    $this->addRoute('activities_my_past_activities', 'activities/pastactivities', 'ActivitiesController', 'pastActivities');
+    $this->addRoute('activities', 'activities', 'ActivitiesController', 'myActivities');
+    // $this->addRoute('activities_pages', 'activities/page/:pageno:', 'ActivitiesController', 'overview');
+    $this->addRoute('activities_search_results', 'activities/search', 'ActivitiesController', 'search');
+    $this->addRoute('activities_create', 'activities/create', 'ActivitiesController', 'editcreate');
+    $this->addRoute('activities_upcoming', 'activities/upcomingactivities', 'ActivitiesController', 'upcomingActivities');
+    $this->addRoute('activities_past_activities', 'activities/pastactivities', 'ActivitiesController', 'pastActivities');
     $this->addRoute('activities_edit', 'activities/:id:/edit', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_show', 'activities/:id:', 'ActivitiesController', 'show');    
     $this->addRoute('activities_show_attendees', 'activities/:id:/attendees/page/:page:', 'ActivitiesController', 'show');

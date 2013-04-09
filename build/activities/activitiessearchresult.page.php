@@ -20,48 +20,45 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
-
 /**
  * @author shevek
  */
 
 /**
- * base class for all Activities pages
+ * This page list all future Activities
  *
  * @package Apps
  * @subpackage Activities
  */
-class ActivitiesBasePage extends PageWithActiveSkin
+class ActivitiesSearchResultPage extends ActivitiesBasePage
 {
-    protected function getPageTitle() {
-        $words = $this->getWords();
-        return $words->getBuffered('Activities') . ' - BeWelcome';
-    }
-
     public function teaserHeadline()
     {
-        return "<a href='activities'>{$this->words->get('Activities')}</a>";
+        $layoutkit = $this->layoutkit;
+        $words = $layoutkit->getWords();
     }
-    
-    
+
     protected function getSubmenuItems()
     {
         $items = array();
-        
+
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
+        $items[] = array('upcomingactivities', 'activities', $words->getSilent('ActivitiesUpcoming'));
         $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
-        $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
         $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+        $items[] = array('activitiessearch', '', $words->getSilent('ActivitiesSearchResult'));
         return $items;
     }
-    
+
+    protected function getSubmenuActiveItem() 
+    {
+        return 'activitiessearch';
+    }
+
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';
-       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        return $stylesheets;
     }
-
 }
-

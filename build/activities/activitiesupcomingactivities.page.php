@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
  * @package Apps
  * @subpackage Activities
  */
-class ActivitiesOverviewPage extends ActivitiesBasePage
+class ActivitiesUpcomingActivitiesPage extends ActivitiesBasePage
 {
     protected function getSubmenuActiveItem() 
     {

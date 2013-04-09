@@ -1,9 +1,33 @@
-<div class="row>"
+<?php
+$formkit = $this->layoutkit->formkit;
+$callbackTags = $formkit->setPostCallback('ActivitiesController', 'searchActivitiesCallback');
+
+$errors = array();
+if (isset($_SESSION['errors'])) {
+    $errors = unserialize($_SESSION['errors']);
+    unset($_SESSION['errors']);
+}
+$vars= array();
+if (isset($_SESSION['vars'])) {
+    $vars = unserialize($_SESSION['vars']);
+    unset($_SESSION['vars']);
+}
+$activities= array();
+if (isset($_SESSION['activities'])) {
+    $activities = unserialize($_SESSION['activities']);
+    unset($_SESSION['activities']);
+}
+$this->activities = $activities;
+if (empty($vars)) {
+    $vars['activity-keyword'] = '';
+}
+?><div class="row">
 <div class="subcolumns">
     <div class="c50l">
         <div class="subcl">
-            <form action="activities/search" id="activities-search-box" method="get">
-            <input type="text" name="activities-search" id="GroupsSearchInput" /><input type="submit" name="activities-submit" value="Search" />
+            <form id="activities-search-box" method="post" >
+            <?php echo $callbackTags; ?>
+            <input type="text" name="activities-keyword" id="activities-keyword" value="<?php echo $vars['activity-keyword']; ?>" /><input type="submit" name="activities-search" value="<?php echo $words->getSilent('ActivitiesSearchButton'); ?>" /><?php echo $words->flushBuffer(); ?>
             </form>
         </div>
     </div>

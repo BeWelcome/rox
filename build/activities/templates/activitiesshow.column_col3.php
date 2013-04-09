@@ -27,36 +27,35 @@ if ($this->activity->status == 1) {
                         <div class="subcolumns">
                             <div class="c38l">
                                 <div class="subcl">
-                                    <h3 class="abitlower"><?= $words->get('ActivityYourStatus'); ?></h3>
+                                    <h3 class="abitlower"><?= $words->get('ActivityYourStatus'); ?>:</h3>
                                 </div> <!-- subcl -->
                             </div> <!-- c38l -->
                             <div class="c62r">
                                 <div class="subcl float_right">
-                                    
                                     <?php
                                         $disabled = 'class="button"';
                                         if ($this->member->status == 1) {
                                             $disabled = 'disabled="disabled" class="button back"';
                                         }
                                     ?>
-                                    <button type="submit" id="activity-yes" name="activity-yes" <?php echo $disabled; ?> title="<?php echo $words->get('ActivityYes'); ?>" >
-                                    <i class="icon-ok-sign"></i></button>
+                                    <button type="submit" id="activity-yes" name="activity-yes" <?php echo $disabled; ?> title="<?php echo $words->getSilent('ActivityYes'); ?>" >
+                                    <i class="icon-ok-sign"></i></button><?php echo $words->flushBuffer(); ?>
                                     <?php
                                         $disabled = 'class="button"';
                                         if ($this->member->status == 2) {
                                             $disabled = 'disabled="disabled" class="button back"';
                                         }
                                     ?>
-                                    <button type="submit" id="activity-maybe" name="activity-maybe" <?php echo $disabled; ?> title="<?php echo $words->get('ActivityMaybe'); ?>" >
-                                    <i class="icon-question-sign"></i></button>
+                                    <button type="submit" id="activity-maybe" name="activity-maybe" <?php echo $disabled; ?> title="<?php echo $words->getSilent('ActivityMaybe'); ?>" >
+                                    <i class="icon-question-sign"></i></button><?php echo $words->flushBuffer(); ?>
                                     <?php
                                         $disabled = 'class="button"';
                                         if ($this->member->status == 3) {
                                             $disabled = 'disabled="disabled" class="button back"';
                                         }
                                     ?>
-                                    <button type="submit" id="activity-no" name="activity-no" <?php echo $disabled; ?> title="<?php echo $words->get('ActivityNo'); ?>" >
-                                    <i class="icon-minus-sign"></i></button>
+                                    <button type="submit" id="activity-no" name="activity-no" <?php echo $disabled; ?> title="<?php echo $words->getSilent('ActivityNo'); ?>" >
+                                    <i class="icon-minus-sign"></i></button><?php echo $words->flushBuffer(); ?>
                                 </div> <!-- subcl -->
                             </div> <!-- c62r -->
                         </div>
@@ -72,10 +71,11 @@ if ($this->activity->status == 1) {
                             $disabled = 'disabled="disabled" class="button back"';
                         }
                     ?>
-                    <input type="submit" id="activity-leave" name="activity-leave" value="<?php echo $words->get('ActivityLeave'); ?>" <?php echo $disabled; ?> /> 
+                    <input type="submit" id="activity-leave" name="activity-leave" value="<?php echo $words->getSilent('ActivityLeave'); ?>" <?php echo $disabled; ?> /><?php echo $words->flushBuffer(); ?> 
                     <?php
                         if (isset($this->member->organizer)) {
-                            echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->get('ActivityCancel') . '"/>';
+                            echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
+                            echo $words->flushBuffer();
                         }
                     ?>
                     </div>
@@ -85,7 +85,7 @@ if ($this->activity->status == 1) {
                     }?>
                 <div class="row abitright">
                     <h3><?= $words->get('ActivityDateTime'); ?></h3>
-                    <p><?php echo $this->activity->dateStart; ?> - <?php echo $this->activity->dateEnd; ?><br />
+                    <p style="text-align: center;"><?php echo $this->activity->dateStart; ?> - <?php echo $this->activity->dateEnd; ?><br />
                     <?php echo $this->activity->timeStart; ?> - <?php echo $this->activity->timeEnd; ?></p>
                 </div>
                 <div class="row abitright">

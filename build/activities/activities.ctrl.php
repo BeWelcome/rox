@@ -20,20 +20,7 @@ class ActivitiesController extends RoxControllerBase
         $this->_model = new ActivitiesModel();
         $this->_view  = new ActivitiesView($this->_model);
     }
-    
-    public function overview() {
-        $page = new ActivitiesOverviewPage();
-        $loggedInMember = $this->_model->getLoggedInMember();
-        if ($loggedInMember) {
-            $page->publicOnly = false;
-        } else {
-            $page->publicOnly = true;
-        }
-        $page->member = $loggedInMember;
-        $page->activities = $this->_model->getActivities($page->publicOnly);
-        return $page;
-    }
-    
+
     public function find() {
         return new ActivitiesFindPage();
     }
@@ -130,6 +117,19 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
+    public function upcomingActivities() {
+        $page = new ActivitiesUpcomingActivitiesPage();
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if ($loggedInMember) {
+            $page->publicOnly = false;
+        } else {
+            $page->publicOnly = true;
+        }
+        $page->member = $loggedInMember;
+        $page->activities = $this->_model->getActivities($page->publicOnly);
+        return $page;
+    }
+
     public function pastActivities() {
         $page = new ActivitiesPastActivitiesPage();
         $loggedInMember = $this->_model->getLoggedInMember();
@@ -140,6 +140,49 @@ class ActivitiesController extends RoxControllerBase
         }
         $page->member = $loggedInMember;
         $page->activities = $this->_model->getPastActivities($page->publicOnly);
+        return $page;
+    }
+
+    public function searchActivitiesCallback(StdClass $args, ReadOnlyObject $action, 
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
+    {
+        error_log("search");
+        $errors = $this->_model->checkSearchActivitiesVarsOk($args);
+        error_log(print_r($errors, true));
+        if (count($errors) > 0) {
+            error_log("error");
+            $_SESSION['errors'] = serialize($errors);
+        } else {
+            error_log("no error");
+                $loggedInMember = $this->_model->getLoggedInMember();
+            if ($loggedInMember) {
+                $publicOnly = false;
+            } else {
+                $publicOnly = true;
+            }
+            $activities = $this->_model->getPastActivities($publicOnly);
+            $_SESSION['activities'] = serialize($activities);
+            $_SESSION['vars'] = serialize($args->post);
+        }
+        return $this->router->url('activities_search_results', array(), false);
+    }
+
+    /**
+     * normally search will be reached by a redirect and the information from the originating
+     * page will be stored in a $_SESSION variable.
+     * 
+     * if none of the expected variables is set we just an empty page with a search field.  
+     */
+    public function search() {
+        error_log("hallo search");
+        $page = new ActivitiesSearchResultPage();
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if ($loggedInMember) {
+            $page->publicOnly = false;
+        } else {
+            $page->publicOnly = true;
+        }
+        $page->member = $loggedInMember;
         return $page;
     }
 }

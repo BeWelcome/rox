@@ -62,7 +62,7 @@ if (empty($vars)) {
         <input type="text" id="activity-start-date" name="activity-start-date" class="date" maxlength="10" style="width:90%" value="<?php echo $vars['activity-start-date'];?>" />
         </div></div>
         <div class="c50r"><div class="subcr">
-        <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?></label><br />
+        <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?>:</label><br />
         <input type="text" id="activity-end-date" name="activity-end-date" class="time" maxlength="10" style="width:98%" value="<?php echo $vars['activity-end-date']; ?>" />
         </div></div>
     </div>
@@ -71,10 +71,10 @@ if (empty($vars)) {
         <textarea id="activity-description" name="activity-description" rows="10" cols="80" style="width:99%"><?php echo $vars['activity-description']; ?></textarea>
     </div>
     <div class="subcolumns row">
-        <input type="checkbox" id="activity-public" name="activity-public" <?php if (isset($vars['activity-public'])) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?>:</label>
+        <input type="checkbox" id="activity-public" name="activity-public" <?php if (isset($vars['activity-public'])) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
     </div>
     <div class="row">
-        <input type="submit" id="activity-submit" name="activity-submit" value="<?php echo $words->get('ActivitiesSubmit'); ?>" class="submit" />
+        <input type="submit" id="activity-submit" name="activity-submit" value="<?php echo $words->getSilent('ActivitiesSubmit'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
     </div>
 </fieldset>
 </form>

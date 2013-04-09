@@ -145,4 +145,14 @@ class ActivitiesModel extends RoxModelBase
         $activity->public = isset($args->post['activity-public']);
         $activity->update();
     }
+
+    public function checkSearchActivitiesVarsOk($args) {
+        $errors = array();
+        $post = $args->post;
+        error_log(print_r($post, true));
+        if (empty($post['activity-keyword'])) {
+            $errors[] = 'ActivityKeywordEmpty';
+        }
+        return $errors;
+    }
 }

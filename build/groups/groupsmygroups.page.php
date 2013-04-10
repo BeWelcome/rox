@@ -50,7 +50,7 @@ class GroupsMyGroupsPage extends GroupsBasePage
         $words = $this->getWords();
         $items = array();
         $items[] = array('mygroups', 'groups/mygroups', $words->getSilent('GroupsMyGroups'));
-        $items[] = array('findgroups', 'groups/findgroups', $words->getSilent('GroupsFindGroups'));
+        $items[] = array('search', 'groups/search', $words->getSilent('search'));
 
         return $items;
     }

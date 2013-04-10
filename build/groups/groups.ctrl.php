@@ -215,20 +215,6 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
-    /**
-     * fetches all the groups visible for a member and shows them
-     *
-     * @access public
-     * @return object
-     */
-    public function findGroups()
-    {
-        $page = new GroupsFindPage();
-        $page->featured_groups = $this->_model->findAllGroups(0, 5);
-        $page->my_groups = $this->_model->getMyGroups();
-        $this->_fillObject($page);
-        return $page;
-    }
 
     /**
      * fetches the groups for the logged in member and shows them

@@ -65,7 +65,7 @@ if ($this->activity->status == 1) {
                     <div class="type-button">
                     <?php
                         $disabled = 'class="button"';
-                        $disableLeave = ($this->member->status == 0);
+                        $disableLeave = ($this->member->status != 0);
                         $disableLeave = $disableLeave || (($this->member->organizer == 1) && (count($this->activity->organizers) == 1));
                         if ($disableLeave) {
                             $disabled = 'disabled="disabled" class="button back"';

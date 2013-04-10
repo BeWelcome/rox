@@ -78,7 +78,6 @@ class ActivitiesController extends RoxControllerBase
                 $this->_model->updateActivity($args);
                 $_SESSION['ActivityStatus'] = array('ActivityUpdateSuccess', $args->post['activity-title']);
             }
-            error_log("redirect: ". print_r($this->router->url('activities'), true));
             return $this->router->url('activities', array(), false);
         }
     }
@@ -151,7 +150,7 @@ class ActivitiesController extends RoxControllerBase
         error_log(print_r($errors, true));
         if (count($errors) > 0) {
             error_log("error");
-            $_SESSION['errors'] = serialize($errors);
+            $_SESSION['errors'] = $errors;
         } else {
             error_log("no error");
                 $loggedInMember = $this->_model->getLoggedInMember();
@@ -161,8 +160,8 @@ class ActivitiesController extends RoxControllerBase
                 $publicOnly = true;
             }
             $activities = $this->_model->getPastActivities($publicOnly);
-            $_SESSION['activities'] = serialize($activities);
-            $_SESSION['vars'] = serialize($args->post);
+            $_SESSION['activities'] = $activities;
+            $_SESSION['vars'] = $args->post;
         }
         return $this->router->url('activities_search_results', array(), false);
     }

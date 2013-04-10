@@ -44,8 +44,8 @@ class ActivitiesSearchResultPage extends ActivitiesBasePage
 
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-        $items[] = array('upcomingactivities', 'activities', $words->getSilent('ActivitiesUpcoming'));
         $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
+        $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
         $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
         $items[] = array('activitiessearch', '', $words->getSilent('ActivitiesSearchResult'));
         return $items;

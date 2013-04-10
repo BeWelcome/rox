@@ -41,11 +41,12 @@ class ActivitiesModel extends RoxModelBase
                 . ' ORDER BY dateTimeStart');
         }
         return $all;
-            }
+    }
 
     public function checkEditCreateActivityVarsOk($args) {
         $errors = array();
         $post = $args->post;
+        $startdate = $enddate = '';
         if (empty($post['activity-title'])) {
             $errors[] = 'ActivityTitleEmpty';
         }
@@ -91,10 +92,10 @@ class ActivitiesModel extends RoxModelBase
         }
         if ($status != 0) {
             if (in_array($this->getLoggedInMember()->id, array_keys($activity->attendees))) {
-                $query = 'UPDATE activitiesattendees SET status=' . $status . ', comment=\'' . $post['activity-comment']
+                $query = 'UPDATE activitiesattendees SET status=' . $status . ', comment=\'' . $this->dao->escape($post['activity-comment'])
                     . '\' WHERE activityId = ' . $activity->id . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
             } else {
-                $query = 'INSERT INTO activitiesattendees SET status=' . $status . ', comment=\'' . $post['activity-comment']
+                $query = 'INSERT INTO activitiesattendees SET status=' . $status . ', comment=\'' . $this->dao->escape($post['activity-comment'])
                     . '\', activityId = ' . $activity->id . ', attendeeId = ' . $this->getLoggedInMember()->id;
             }
             $this->dao->query($query);

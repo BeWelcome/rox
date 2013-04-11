@@ -73,7 +73,7 @@ class MemberPage extends PageWithActiveSkin
         if ($membersForumPostsPagePublic == "Yes") {
             $linkMembersForumPosts = true;
         }
-        if ($logged_user->getPKValue() == $member->getPKValue()) {
+        if ($logged_user && $logged_user->getPKValue() == $member->getPKValue()) {
             $linkMembersForumPosts = true;
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin') || MOD_right::get()->HasRight('ForumModerator')) {

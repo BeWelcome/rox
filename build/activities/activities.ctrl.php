@@ -78,7 +78,7 @@ class ActivitiesController extends RoxControllerBase
                 $this->_model->updateActivity($args);
                 $_SESSION['ActivityStatus'] = array('ActivityUpdateSuccess', $args->post['activity-title']);
             }
-            return $this->router->url('activities', array(), false);
+            return $this->router->url('activities_my_activities', array(), false);
         }
     }
     

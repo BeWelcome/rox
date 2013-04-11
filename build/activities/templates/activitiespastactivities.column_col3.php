@@ -1,6 +1,10 @@
+<div class="floatbox">
+    <div class="float_right">
+        <a class="bigbutton" href="activities/create"><span><?= $words->get('ActivityCreateNew'); ?></span></a>
+    </div>
+</div>
 <div class="row>">
 <?php 
-print_r($this->activities);
 if (count($this->activities) == 0) {
     if ($this->public) {
         echo '<p>' . $words->get('ActivitiesNoPublicPastActivities') . '</p>';

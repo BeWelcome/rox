@@ -3,6 +3,7 @@ $formkit = $this->layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('ActivitiesController', 'searchActivitiesCallback');
 
 require_once('../build/geo/geo.entity.php');
+require_once('../build/activities/activity.entity.php');
 
 $errors = array();
 if (isset($_SESSION['errors'])) {
@@ -24,7 +25,17 @@ if (empty($vars)) {
     $vars['activity-keyword'] = '';
 }
 ?><div class="row">
-<div class="subcolumns">
+<?php 
+if (!empty($errors)) {
+    echo '<div class="subcolumns error">';
+    foreach($errors as $error) {
+        echo '<p>' . $words->get($error) . '<p>';
+    }
+    echo '</div>';
+}
+?>
+</div>
+<div class="subcolumns row">
     <div class="c50l">
         <div class="subcl">
             <form id="activities-search-box" method="post" >

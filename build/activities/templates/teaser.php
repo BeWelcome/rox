@@ -1,18 +1,13 @@
 <div id="teaser" class="floatbox">
 <div class="float_left">
 <h1><a href="activities"><?php echo $words->get('Activities'); ?></a>
-<?php
-if (isset($this->event)) {
-    echo htmlspecialchars(MOD_layoutbits::truncate($this->event->name, 20), ENT_QUOTES);
-}
-?>
-</h1>
 </div>
+<?php if (!isset($hideSearch)) { ?>
 <div class="float_right">
-<form action="activities/search" id="activities-search-box">
-<label for="activities-search"><?php echo $words->get('ActivitiesFind'); ?></label><br />
-<input type="text" name="activities-search" size="15" />
-<input type="submit" name="activities-submit" value="Search" />
-</form>
+    <form id="activities-search-box" method="post">
+    <?php echo $callbackTags; ?>
+    <input type="text" name="activity-keyword" id="activity-keyword" /><input type="submit" size="60" id="activy-search-button" name="activy-search-button" value="<?php echo $words->getSilent('ActivitiesSearchButton'); ?>" /><?php echo $words->flushBuffer(); ?>
+    </form>
 </div>
+<?php } ?>
 </div>

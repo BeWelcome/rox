@@ -152,7 +152,7 @@ class ActivitiesModel extends RoxModelBase
         $post = $args->post;
         error_log(print_r($post, true));
         if (empty($post['activity-keyword'])) {
-            $errors[] = 'ActivityKeywordEmpty';
+            $errors[] = 'ActivitiesKeywordEmpty';
         }
         return $errors;
     }

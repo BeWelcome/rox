@@ -7,6 +7,12 @@ if ($this->activity->status == 1) {
     <div class="error"><?php echo $words->get('ActivityCancelled'); ?></div>
 <?php } ?>
 <div id="activity">
+    <div class="floatbox">
+        <h2 class="float_left" style="width: 75%;"><?php echo $this->activity->title; ?></h2>
+        <div class="float_right">
+            <a class="bigbutton" href="activities/create"><span><?= $words->get('ActivityCreateNew'); ?></span></a>
+        </div>
+    </div>
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">

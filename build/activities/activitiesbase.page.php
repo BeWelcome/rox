@@ -38,14 +38,19 @@ class ActivitiesBasePage extends PageWithActiveSkin
         return $words->getBuffered('Activities') . ' - BeWelcome';
     }
 
-    public function teaserHeadline()
+    protected function teaserContent()
     {
-        return "<a href='activities'>{$this->words->get('Activities')}</a>";
+        $layoutkit = $this->layoutkit;
+        $formkit = $layoutkit->formkit;
+        $callbackTags = $formkit->setPostCallback('ActivitiesController', 'searchActivitiesCallback');
+        $words = $layoutkit->getWords();
+        require('templates/teaser.php');
     }
     
     
     protected function getSubmenuItems()
     {
+        error_log('Test');
         $items = array();
         
         $layoutkit = $this->layoutkit;

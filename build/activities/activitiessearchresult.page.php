@@ -32,12 +32,12 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesSearchResultPage extends ActivitiesBasePage
 {
-    public function teaserHeadline()
+    protected function teaserContent()
     {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
+        $hideSearch = true;
+        parent::teaserContent();
     }
-
+    
     protected function getSubmenuItems()
     {
         $items = array();

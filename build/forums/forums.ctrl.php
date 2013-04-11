@@ -440,13 +440,13 @@ class ForumsController extends PAppController
             if ($membersForumPostsPagePublic || ($profileVisitor->getPKValue() == $userId) || $this->BW_Right->HasRight("Admin") || $this->BW_Right->HasRight("ForumModerator") || $this->BW_Right->HasRight("SafetyTeam") ) {
                 $posts = $this->_model->searchUserposts($user);
             } else {
-                $posts = array();
+                $posts = array(); //TODO: post something that says that the user has not enabled that page
             }       
         }
         else {
             $posts = array() ;
         }
-        $this->_view->displaySearchResultPosts($posts);
+        $this->_view->displaySearchResultPosts($posts); // TODO: post something suggesting to LogIn or to register to maybe see posts by this user
     }
     
     /**

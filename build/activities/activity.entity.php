@@ -93,9 +93,22 @@ class Activity extends RoxEntityBase
      * @access public
      * @return list of ActivitiesBasePage
      */
-    public function getActivitiesForMember(Member $member) {
+    public function getActivitiesForMemberCount(Member $member) {
+        $activities = array();
+        $query = "SELECT COUNT(*) FROM activities AS a, activitiesattendees AS aa WHERE a.id = aa.activityId AND aa.attendeeId = " . $member->id;
+        return $this->sqlCount($query);
+    }
+
+    /** 
+     * get all activities for a member
+     * 
+     * @access public
+     * @return list of ActivitiesBasePage
+     */
+    public function getActivitiesForMember(Member $member, $pageno, $items) {
         $activities = array();
         $query = "SELECT a.id AS id FROM activities AS a, activitiesattendees AS aa WHERE a.id = aa.activityId AND aa.attendeeId = " . $member->id;
+        $query .= " LIMIT " . $items . " OFFSET " . ($pageno * $items);
         $result = $this->dao->query($query);
         if ($result) {
             $activityIds = array();

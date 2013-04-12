@@ -129,7 +129,7 @@
     // activities feature
     $this->addRoute('activities', 'activities', 'ActivitiesController', 'activities');
     $this->addRoute('activities_my_activities', 'activities/myactivities', 'ActivitiesController', 'myActivities');
-    // $this->addRoute('activities_pages', 'activities/page/:pageno:', 'ActivitiesController', 'overview');
+    $this->addRoute('activities_my_activities_pages', 'activities/myactivities/page/:pageno:', 'ActivitiesController', 'myActivities');
     $this->addRoute('activities_search', 'activities/search', 'ActivitiesController', 'search');
     $this->addRoute('activities_search_results', 'activities/search/:keyword:', 'ActivitiesController', 'search');
     $this->addRoute('activities_search_results_pages', 'activities/search/:keyword:/page/:pageno:', 'ActivitiesController', 'search');

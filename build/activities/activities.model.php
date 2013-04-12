@@ -37,8 +37,14 @@ class ActivitiesModel extends RoxModelBase
         return $all;
     }
 
-    public function getMyActivities($pageno = 0) {
-        $all = $this->CreateEntity('Activity')->getActivitiesForMember($this->getLoggedInMember());
+    public function getMyActivitiesCount() {
+        $all = $this->CreateEntity('Activity')->getActivitiesForMemberCount($this->getLoggedInMember());
+        error_log("Activities: " . count($all));
+        return $all;
+    }
+
+    public function getMyActivities($pageno, $items) {
+        $all = $this->CreateEntity('Activity')->getActivitiesForMember($this->getLoggedInMember(), $pageno, $items);
         error_log("Activities: " . count($all));
         return $all;
     }

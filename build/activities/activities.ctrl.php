@@ -153,7 +153,7 @@ class ActivitiesController extends RoxControllerBase
         $page = new ActivitiesMyActivitiesPage();
         $page->member = $loggedInMember;
         $count = $this->_model->getMyActivitiesCount();
-        $activities = $this->_model->getMyActivities();
+        $activities = $this->_model->getMyActivities($pageno, self::ACTIVITIES_PER_PAGE);
         $page->activities = $activities;
         $page->pager = $this->getPager('myactivities', $count, $pageno);
         return $page;

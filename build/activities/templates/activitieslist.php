@@ -18,7 +18,7 @@ foreach($this->activities as $activity) {
         $organizers .= MOD_layoutbits::PIC_40_40($organizer->Username,'',$style='framed float_left') . " ";
     }
     echo substr($organizers, 0, -2) . '</td>';
-    if (in_array($this->member->id, array_keys($activity->organizers))) {
+    if (isset($this->member) && in_array($this->member->id, array_keys($activity->organizers))) {
         echo '<td><a href="activities/' . $activity->id . '/edit">'
         . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
     } else {echo '<td></td>';}

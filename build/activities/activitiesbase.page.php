@@ -58,6 +58,7 @@ class ActivitiesBasePage extends PageWithActiveSkin
         $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
         $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
         $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+        $items[] = array('createactivities', 'activities/create', $words->getSilent('ActivitiesCreateNew'));
         } else {
         $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
         $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));

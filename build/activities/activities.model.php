@@ -17,7 +17,7 @@ class ActivitiesModel extends RoxModelBase
         $temp = $this->CreateEntity('Activity');
         if ($onlyPublic) {
             $all = $temp->FindByWhereMany('public = 1 AND (dateTimeStart >= NOW() OR dateTimeEnd >= NOW())'
-                . ' AND status = 0 AND ORDER BY dateTimeStart');
+                . ' AND status = 0 ORDER BY dateTimeStart');
         } else {
             $all = $temp->FindByWhereMany('(dateTimeStart >= NOW() OR dateTimeEnd >= NOW())'
                 . ' AND status = 0 ORDER BY dateTimeStart');
@@ -35,7 +35,7 @@ class ActivitiesModel extends RoxModelBase
         $temp = $this->CreateEntity('Activity');
         if ($onlyPublic) {
             $all = $temp->FindByWhereMany('public = 1 AND (dateTimeStart < NOW() AND dateTimeEnd < NOW())'
-                . ' AND ORDER BY dateTimeEnd DESC');
+                . ' ORDER BY dateTimeEnd DESC');
         } else {
             $all = $temp->FindByWhereMany('(dateTimeStart < NOW() AND dateTimeEnd < NOW())'
                 . ' ORDER BY dateTimeEnd DESC');
@@ -122,10 +122,28 @@ class ActivitiesModel extends RoxModelBase
             return true;
         }
         if (isset($post['activity-cancel'])) {
-            $query = 'UPDATE activitiesattendees SET status = 4 WHERE activityId = ' . $activity->id;
-            $this->dao->query($query);
-            $activity->status = 1;
-            $activity->update();
+            // Check if currently logged in member is an organizer of the meeting
+            if (in_array($this->getLoggedInMember()->id, array_keys($activity->organizers))) {
+                $query = 'UPDATE activitiesattendees SET status = 4 WHERE activityId = ' . $activity->id;
+                $this->dao->query($query);
+                $activity->status = 1;
+                $activity->update();
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (isset($post['activity-uncancel'])) {
+            // Check if currently logged in member is an organizer of the meeting
+            if (in_array($this->getLoggedInMember()->id, array_keys($activity->organizers))) {
+                $query = 'UPDATE activitiesattendees SET status = 1 WHERE activityId = ' . $activity->id;
+                $this->dao->query($query);
+                $activity->status = 0;
+                $activity->update();
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     

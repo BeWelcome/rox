@@ -2,7 +2,7 @@
 <div class="float_left">
 <h1><a href="activities"><?php echo $words->get('Activities'); ?></a>
 </div>
-<?php if (isset($hideSearch)) { ?>
+<?php if (!($this->hideSearch)) { ?>
 <div class="float_right">
     <form id="activities-search-box" method="post">
     <?php echo $callbackTags; ?>

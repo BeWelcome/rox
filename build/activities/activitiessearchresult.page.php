@@ -34,7 +34,7 @@ class ActivitiesSearchResultPage extends ActivitiesBasePage
 {
     protected function teaserContent()
     {
-        $hideSearch = true;
+        $this->hideSearch = true;
         parent::teaserContent();
     }
     

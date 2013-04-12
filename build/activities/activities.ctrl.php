@@ -37,15 +37,24 @@ class ActivitiesController extends RoxControllerBase
     public function joinLeaveCancelActivityCallback(StdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
-        $this->_model->joinLeaveCancelActivity($args->post);
-        /* todo: redirect nicely */
-        return true;
+        $result = $this->_model->joinLeaveCancelActivity($args->post);
+        if ($result) {
+            $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $args->post['activity-title']);
+            return $this->router->url('activities_my_activities', array(), false);
+        } else {
+            return false;
+        }
     }
     
     public function show() {
         $id = intval($this->route_vars['id']);
-        $page = new ActivitiesShowPage();
         $activity = new Activity($id);
+        
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if (!$loggedInMember && !isset($activity->public)) {
+            return new ActivitiesNotLoggedInPage();
+        }
+        $page = new ActivitiesShowPage();
         $page->activity = $activity;
         $page->loggedInMember = $this->_model->getLoggedInMember();
         $params = new StdClass;
@@ -59,7 +68,6 @@ class ActivitiesController extends RoxControllerBase
         $member = new StdClass;
         $member->status = 0;
         $member->comment = '';
-        $loggedInMember = $this->_model->getLoggedInMember();
         if ($loggedInMember && in_array($loggedInMember->id, array_keys($activity->attendees))) {
             $member->status = $activity->attendees[$loggedInMember->id]->status;
             $member->comment = $activity->attendees[$loggedInMember->id]->comment;
@@ -98,6 +106,9 @@ class ActivitiesController extends RoxControllerBase
             if (isset($this->route_vars['id'])) {
                 $id = $this->route_vars['id'];
                 $activity = new Activity($id);
+                if (!in_array($loggedInMember->id, array_keys($activity->organizers))) {
+                    $this->redirectAbsolute($this->router->url('activities_my_activities'));
+                }
             } else {
                 $activity = new Activity();
                 $activity->id = 0;

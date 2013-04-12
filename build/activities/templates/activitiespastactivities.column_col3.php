@@ -1,6 +1,6 @@
 <?php 
 if (count($this->activities) == 0) {
-    if ($this->public) {
+    if ($this->publicOnly) {
         echo '<p>' . $words->get('ActivitiesNoPublicPastActivities') . '</p>';
     } else {
         echo '<p>' . $words->get('ActivitiesNoPastActivities') . '</p>';

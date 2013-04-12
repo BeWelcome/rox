@@ -100,8 +100,7 @@ bwrox.selectScripts([
       "blog", 
       "trip", 
       "admin/massmail/enqueue", 
-      "activities/create", 
-      "activities/edit"]
+      "activities/"]
   },
   {
     file: "jquery-ui-1.10.2.custom.min.js",

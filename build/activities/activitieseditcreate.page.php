@@ -35,7 +35,7 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
 
     protected function getSubmenuActiveItem() 
     {
-        return 'upcomingactivities';
+        return 'createactivities';
     }
 
     protected function getStylesheets() {

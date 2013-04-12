@@ -31,8 +31,20 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesNotLoggedInPage extends ActivitiesBasePage
 {
-    protected function getSubmenuActiveItem() {
-        return 'upcomingactivities';
+    protected function getPageTitle()
+    {
+        return "Please login to view these pages - BeWelcome";
+    }
+    
+    protected function getSubmenuItems()
+    {
+
+    }
+    
+    protected function column_col3()
+    {
+        $loginWidget = $this->layoutkit->createWidget('LoginFormWidget');
+        $loginWidget->render();
     }
 }
 

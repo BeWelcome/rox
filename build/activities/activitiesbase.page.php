@@ -50,17 +50,16 @@ class ActivitiesBasePage extends PageWithActiveSkin
     
     protected function getSubmenuItems()
     {
-        error_log('Test');
         $items = array();
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
         if ($this->member) {
-        $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
-        $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
-        $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+            $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
+            $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
         } else {
-        $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
-        $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+            $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
         }
         return $items;
     }

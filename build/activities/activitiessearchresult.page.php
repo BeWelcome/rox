@@ -47,7 +47,7 @@ class ActivitiesSearchResultPage extends ActivitiesBasePage
         $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
         $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
         $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
-        $items[] = array('activitiessearch', '', $words->getSilent('ActivitiesSearchResult'));
+        $items[] = array('activitiessearch', 'activities/search?activity-keyword=Test', $words->getSilent('ActivitiesSearchResult'));
         return $items;
     }
 

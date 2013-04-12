@@ -13,7 +13,7 @@ class ActivitiesModel extends RoxModelBase
         parent::__construct();
     }
 
-    public function getActivities($onlyPublic) {
+    public function getActivities($onlyPublic, $pageno = 0) {
         $temp = $this->CreateEntity('Activity');
         if ($onlyPublic) {
             $all = $temp->FindByWhereMany('public = 1 AND (dateTimeStart >= NOW() OR dateTimeEnd >= NOW())'
@@ -25,24 +25,29 @@ class ActivitiesModel extends RoxModelBase
         return $all;
     }
 
-    public function getMyActivities() {
+    public function getMyActivities($pageno = 0) {
         $all = $this->CreateEntity('Activity')->getActivitiesForMember($this->getLoggedInMember());
         error_log("Activities: " . count($all));
         return $all;
     }
 
-    public function getPastActivities($onlyPublic) {
+    public function getPastActivities($onlyPublic, $pageno = 0) {
         $temp = $this->CreateEntity('Activity');
         if ($onlyPublic) {
             $all = $temp->FindByWhereMany('public = 1 AND (dateTimeStart < NOW() AND dateTimeEnd < NOW())'
-                . ' AND ORDER BY dateTimeStart');
+                . ' AND ORDER BY dateTimeEnd DESC');
         } else {
             $all = $temp->FindByWhereMany('(dateTimeStart < NOW() AND dateTimeEnd < NOW())'
-                . ' ORDER BY dateTimeStart');
+                . ' ORDER BY dateTimeEnd DESC');
         }
         return $all;
     }
 
+    public function searchActivities($onlyPublic, $keyword, $pageno = 0) {
+        $temp = $this->CreateEntity('Activity');
+        return $temp->searchActivities($onlyPublic, $keyword, $pageno);
+    }
+    
     public function checkEditCreateActivityVarsOk($args) {
         $errors = array();
         $post = $args->post;
@@ -52,6 +57,11 @@ class ActivitiesModel extends RoxModelBase
         }
         if (empty($post['activity-location'])) {
             $errors[] = 'ActivityLocationEmpty';
+        }
+        if (!empty($post['activity-address'])) {
+            if (strlen($post['activity-address']) > 320) {
+                $errors[] = 'ActivityAddressTooLong###320###';
+            }
         }
         if (empty($post['activity-start-date'])) {
             $errors[] = 'ActivityDateStartEmpty';
@@ -74,6 +84,10 @@ class ActivitiesModel extends RoxModelBase
         }
         if (empty($post['activity-description'])) {
             $errors[] = 'ActivityDescriptionEmpty';
+        } else {
+            if (strlen($post['activity-description']) > 4000) {
+                $errors[] = 'ActivityDescriptionTooLong###4000###';
+            }
         }
         return $errors;
     }

@@ -42,7 +42,7 @@ if (empty($vars)) {
 ?>
     <div class="row">
         <label for="activity-title"><?php echo $words->get('ActivityTitle'); ?>:</label><br />
-        <input type="text" id="activity-title" name="activity-title" class="long" style="width:99%" value="<?php echo $vars['activity-title']; ?>" />
+        <input type="text" id="activity-title" name="activity-title" maxlength="80" class="long" style="width:99%" value="<?php echo $vars['activity-title']; ?>" />
     </div>
     <div class="row">
         <label for="activity-location"><?php echo $words->get('ActivityLocation'); ?>:</label><br/>
@@ -54,16 +54,16 @@ if (empty($vars)) {
     </div>
     <div class="row">
         <label for="activity-address"><?php echo $words->get('ActivityAddress'); ?>:</label><br/>
-        <input type="text" id="activity-address" name="activity-address" class="long" value="<?php echo $vars['activity-address']; ?>" style="width: 99%"/>
+        <textarea id="activity-address" name="activity-address" rows="3" cols="80" class="long" style="width:99%" ><?php echo $vars['activity-address']; ?></textarea>
     </div>
     <div class="subcolumns row">
     <div class="c50l"><div class="subcl">
         <label for="activity-start-date"><?php echo $words->get('ActivityStart'); ?>:</label><br />
-        <input type="text" id="activity-start-date" name="activity-start-date" class="date" maxlength="10" style="width:90%" value="<?php echo $vars['activity-start-date'];?>" />
+        <input type="text" id="activity-start-date" name="activity-start-date" class="date" maxlength="16" style="width:90%" value="<?php echo $vars['activity-start-date'];?>" />
         </div></div>
         <div class="c50r"><div class="subcr">
         <label for="activity-end-date"><?php echo $words->get('ActivityEnd'); ?>:</label><br />
-        <input type="text" id="activity-end-date" name="activity-end-date" class="time" maxlength="10" style="width:98%" value="<?php echo $vars['activity-end-date']; ?>" />
+        <input type="text" id="activity-end-date" name="activity-end-date" class="time" maxlength="16" style="width:98%" value="<?php echo $vars['activity-end-date']; ?>" />
         </div></div>
     </div>
     <div class="subcolumns row">
@@ -82,10 +82,48 @@ if (empty($vars)) {
 <script type="text/javascript">//<!--
 ActivityGeoSuggest.initialize('activity-create-form');
 jQuery(function() {
-  jQuery( "#activity-start-date" ).datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'HH:mm', minDate: 0 });
+  jQuery( "#activity-start-date" ).datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'HH:mm', minDate: 0, stepMinute: 15 });
 });
 jQuery(function() {
-  jQuery( "#activity-end-date" ).datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'HH:mm', minDate: 0 });
+  jQuery( "#activity-end-date" ).datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'HH:mm', minDate: 0, stepMinute: 15 });
+});
+
+var startDateTextBox = jQuery('#activity-start-date');
+var endDateTextBox = jQuery('#activity-end-date');
+
+startDateTextBox.datetimepicker({ 
+    onClose: function(dateText, inst) {
+        if (endDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+                endDateTextBox.datetimepicker('setDate', testStartDate);
+        }
+        else {
+            // todo: Add two hours to the selected date/time
+            endDateTextBox.val(dateText);
+        }
+    },
+    onSelect: function (selectedDateTime){
+        endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+    }
+});
+endDateTextBox.datetimepicker({ 
+    onClose: function(dateText, inst) {
+        if (startDateTextBox.val() != '') {
+            var testStartDate = startDateTextBox.datetimepicker('getDate');
+            var testEndDate = endDateTextBox.datetimepicker('getDate');
+            if (testStartDate > testEndDate)
+                startDateTextBox.datetimepicker('setDate', testEndDate);
+        }
+        else {
+            // todo: Subtract two hours to the selected date/time
+            startDateTextBox.val(dateText);
+        }
+    },
+    onSelect: function (selectedDateTime){
+        startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+    }
 });
 //-->
 </script>

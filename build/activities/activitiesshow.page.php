@@ -46,7 +46,7 @@ class ActivitiesShowPage extends ActivitiesBasePage
             $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
             $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
             $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
-            $items[] = array('activitiesdetails', '', $words->getSilent('ActivitiesDetails'));
+            $items[] = array('activitiesdetails', 'activities/search' , $words->getSilent('ActivitiesDetails'));
         return $items;
     }
     

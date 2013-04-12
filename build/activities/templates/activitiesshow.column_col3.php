@@ -79,7 +79,7 @@ if ($this->activity->status == 1) {
                     ?>
                     <input type="submit" id="activity-leave" name="activity-leave" value="<?php echo $words->getSilent('ActivityLeave'); ?>" <?php echo $disabled; ?> /><?php echo $words->flushBuffer(); ?> 
                     <?php
-                        if (isset($this->member->organizer)) {
+                        if (isset($this->member->organizer) && ($this->member->organizer == 1)) {
                             echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
                             echo $words->flushBuffer();
                         }

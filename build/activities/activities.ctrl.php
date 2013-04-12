@@ -21,8 +21,17 @@ class ActivitiesController extends RoxControllerBase
         $this->_view  = new ActivitiesView($this->_model);
     }
 
-    public function find() {
-        return new ActivitiesFindPage();
+    /**
+     * Redirects to my activities if a member is logged in otherwise shows upcoming activities
+     */
+    public function activities() {
+        if ($this->_model->getLoggedInMember()) {
+        error_log('myact');
+            $this->redirectAbsolute($this->router->url('activities_my_activities'));
+        } else {
+        error_log('upact');
+            $this->redirectAbsolute($this->router->url('activities_upcoming_activities'));
+        }
     }
     
     public function joinLeaveCancelActivityCallback(StdClass $args, ReadOnlyObject $action, 
@@ -97,6 +106,7 @@ class ActivitiesController extends RoxControllerBase
                 $activity->location = $entityFactory->create('Geo', $activity->locationId);
             }
             $page = new ActivitiesEditCreatePage();
+            $page->member = $loggedInMember;
             $page->activity = $activity;
             return $page;
         } else {
@@ -149,21 +159,11 @@ class ActivitiesController extends RoxControllerBase
         $errors = $this->_model->checkSearchActivitiesVarsOk($args);
         error_log(print_r($errors, true));
         if (count($errors) > 0) {
-            error_log("error");
             $_SESSION['errors'] = $errors;
+            return $this->router->url('activities_search', array(), false);
         } else {
-            error_log("no error");
-                $loggedInMember = $this->_model->getLoggedInMember();
-            if ($loggedInMember) {
-                $publicOnly = false;
-            } else {
-                $publicOnly = true;
-            }
-            $activities = $this->_model->getPastActivities($publicOnly);
-            $_SESSION['activities'] = $activities;
-            $_SESSION['vars'] = $args->post;
+            return $this->router->url('activities_search_results', array( "keyword" => $args->post['activity-keyword']), false);
         }
-        return $this->router->url('activities_search_results', array(), false);
     }
 
     /**
@@ -173,7 +173,6 @@ class ActivitiesController extends RoxControllerBase
      * if none of the expected variables is set we just an empty page with a search field.  
      */
     public function search() {
-        error_log("hallo search");
         $page = new ActivitiesSearchResultPage();
         $loggedInMember = $this->_model->getLoggedInMember();
         if ($loggedInMember) {
@@ -182,6 +181,13 @@ class ActivitiesController extends RoxControllerBase
             $page->publicOnly = true;
         }
         $page->member = $loggedInMember;
+        if (isset($this->route_vars['keyword'])) {
+            $page->keyword = $this->route_vars['keyword'];
+            $activities = $this->_model->searchActivities($page->publicOnly, $page->keyword);
+            $page->activities = $activities;
+        } else {
+            $page->keyword = '';
+        }
         return $page;
     }
 }

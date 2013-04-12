@@ -1,16 +1,3 @@
-<?php
-if (count($this->activities) == 0) {
-?>
-<p><?php 
-if ($this->publicOnly) {
-    echo $words->get('ActivitiesNoPublicUpcoming');
-} else {
-    echo $words->get('ActivitiesNoUpcoming');
-}
-?></p>
-<?php 
-} else {
-?>
 <table class='activitieslist'>
 <?php 
 $count= 0;
@@ -39,6 +26,3 @@ foreach($this->activities as $activity) {
 }
 ?>
 </table>
-<?php
-}
-?>

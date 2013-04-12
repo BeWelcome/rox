@@ -35,13 +35,13 @@ class ActivitiesShowPage extends ActivitiesBasePage
     protected function getSubmenuItems()
     {
         $items = array();
-        
+        $activity_id = $this->activity->id;
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
             $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
             $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
             $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
-            $items[] = array('activitiesdetails', 'activities/search' , $words->getSilent('ActivitiesDetails'));
+            $items[] = array('activitiesdetails', 'activities/'. $activity_id, $words->getSilent('ActivitiesDetails'));
         return $items;
     }
     

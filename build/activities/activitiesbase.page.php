@@ -74,6 +74,8 @@ class ActivitiesBasePage extends PageWithActiveSkin
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
        return $stylesheets;
     }
 

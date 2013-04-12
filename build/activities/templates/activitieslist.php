@@ -12,26 +12,22 @@ if ($this->publicOnly) {
 } else {
 ?>
 <table class='activitieslist'>
-<tr>
-<th><?php echo $words->get('ActivitiesTitle'); ?></th>
-<th><?php echo $words->get('ActivitiesDuration'); ?></th>
-<th><?php echo $words->get('ActivitiesPlace'); ?></th>
-<th><?php echo $words->get('ActivitiesNumberAttendees'); ?></th>
-<th><?php echo $words->get('ActivitiesOrganizers'); ?></th>
-<th></th>
-</tr>
 <?php 
 $count= 0;
 foreach($this->activities as $activity) {
     echo '<tr class="' . $background = (($count % 2) ? 'highlight' : 'blank') . '" title="' . $activity->title . '">';
-    echo '<td><a href="activities/' . $activity->id . '">' . $activity->title . '</a></td>';
-    echo '<td>' . $activity->dateStart . '-<br />' . $activity->dateEnd . '</td>';
-    echo '<td>' . $activity->location->name . ', ' . $activity->location->getCountry()->name . '</td>';
-    echo '<td>' . count($activity->attendees) . '</td>';
-    echo '<td>';
+    echo '<td style="padding-bottom: 30px; width: 10%;">
+            <div class="calendar calendar-icon-' . date("m", strtotime($activity->dateStart)) . '">
+              <div class="calendar-day">' . date("j", strtotime($activity->dateStart)) . '</div>
+              <div class="calendar-year">' . date("Y", strtotime($activity->dateStart)) . '</div></td>';
+    echo '<td colspan="2"><div class="small grey">' . $activity->dateStart . '-' . $activity->dateEnd . '</div><h3><a href="activities/' . $activity->id . '">' . $activity->title . '</a><h3></td>';
+    echo '<td><i class="icon-map-marker icon-3x grey"></i></td>';
+    echo '<td>' . $activity->location->name . '<br /> ' . $activity->location->getCountry()->name . '</td>';
+    echo '<td>' . count($activity->attendees) . '&nbsp;' . $words->get('ActivitiesNumbAttendees') . '</td>';
+    echo '<td width="112px"><div class="small grey">' . $words->get('ActivitiesOrganizedBy') . '</div>';
     $organizers = '';
     foreach($activity->organizers as $organizer) {
-        $organizers .= $organizer->Username . ", ";
+        $organizers .= MOD_layoutbits::PIC_40_40($organizer->Username,'',$style='framed float_left') . " ";
     }
     echo substr($organizers, 0, -2) . '</td>';
     if (in_array($this->member->id, array_keys($activity->organizers))) {

@@ -32,11 +32,6 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesShowPage extends ActivitiesBasePage
 {
-    public function teaserHeadline()
-    {
-        return "<a href='activities'>{$this->words->get('Activities')}</a> &raquo; {$this->activity->title}";
-    }
-    
     protected function getSubmenuItems()
     {
         $items = array();
@@ -53,13 +48,5 @@ class ActivitiesShowPage extends ActivitiesBasePage
     protected function getSubmenuActiveItem() 
     {
         return 'activitiesdetails';
-    }
-
-    protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
-       return $stylesheets;
     }
 }

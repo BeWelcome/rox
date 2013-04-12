@@ -117,7 +117,7 @@ class Activity extends RoxEntityBase
      * @access public
      * @return list of Activity objects if any match
      */
-    public function searchActivities($publicOnly, $keyword, $pageno) {
+    public function searchActivities($publicOnly, $keyword, $pageno, $items) {
         $keywordEscaped = $this->dao->escape($keyword);
         $sql  = "SELECT * FROM (";
         $sql .= "SELECT a.* FROM activities AS a WHERE ";
@@ -132,7 +132,36 @@ class Activity extends RoxEntityBase
             $sql .= "public = 1 AND ";
         }
         $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
-        $sql .= ") AS r ORDER BY r.dateTimeEnd DESC LIMIT " . ($pageno * 20) . ",20";
+        $sql .= ") AS r ORDER BY r.dateTimeEnd DESC LIMIT " . $items . " OFFSET " . ($pageno * $items);
+        error_log($sql);
         return $this->findBySQLMany($sql);
+    }
+
+    /**
+     * get count for activities matching a keyword.
+     * 
+     * Keyword can match any part of the activity (title, location, address and description)
+     * 
+     * @access public
+     * @return list of Activity objects if any match
+     */
+    public function searchActivitiesCount($publicOnly, $keyword) {
+        $keywordEscaped = $this->dao->escape($keyword);
+        $sql  = "SELECT COUNT(*) FROM (";
+        $sql .= "SELECT a.* FROM activities AS a WHERE ";
+        if ($publicOnly) {
+            $sql .= "public = 1 AND ";
+        }
+        $sql .= "(a.title LIKE '%". $keywordEscaped . "%' OR a.address LIKE '%". $keywordEscaped . "%'";
+        $sql .= "OR a.description LIKE '%". $keywordEscaped . "%') ";
+        $sql .= "UNION ";
+        $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g WHERE ";
+        if ($publicOnly) {
+            $sql .= "public = 1 AND ";
+        }
+        $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= ") AS r";
+        error_log($sql);
+        return $this->sqlCount($sql);
     }
 }

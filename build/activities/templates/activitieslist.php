@@ -1,3 +1,4 @@
+<?php $this->pager->render(); ?>
 <table class='activitieslist'>
 <?php 
 $count= 0;
@@ -26,3 +27,4 @@ foreach($this->activities as $activity) {
 }
 ?>
 </table>
+<?php $this->pager->render(); ?>

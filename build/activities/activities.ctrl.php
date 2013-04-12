@@ -6,6 +6,9 @@
  */
 class ActivitiesController extends RoxControllerBase
 {
+    const ACTIVITIES_PER_PAGE = 2;
+    const ATTENDEES_PER_PAGE = 18;
+    
     /**
      * Declaring private variables.
      */
@@ -63,7 +66,7 @@ class ActivitiesController extends RoxControllerBase
         $params->page_url_marker = 'page';
         $params->page_method = 'url';
         $params->items = count($activity->attendees);
-        $params->items_per_page = 18;
+        $params->items_per_page = self::ATTENDEES_PER_PAGE;
         $pager = new PagerWidget($params);
         $member = new StdClass;
         $member->status = 0;
@@ -125,15 +128,34 @@ class ActivitiesController extends RoxControllerBase
         }
     }
 
+    protected function getPager($url, $count, $pageno) {
+        $params = new StdClass;
+        $params->strategy = new HalfPagePager('right');
+        $params->page_url = 'activities/' . $url . '/';
+        $params->page_url_marker = 'page';
+        $params->page_method = 'url';
+        $params->items = $count;
+        $params->active_page = $this->pageno;
+        $params->items_per_page = self::ACTIVITIES_PER_PAGE;
+        $pager = new PagerWidget($params);
+        return $pager;
+    }
+    
     public function myActivities() {
         $loggedInMember = $this->_model->getLoggedInMember();
         if (!$loggedInMember) {
             $this->redirectAbsolute($this->router->url('activities_upcoming'));
         }
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
         $page = new ActivitiesMyActivitiesPage();
         $page->member = $loggedInMember;
+        $count = $this->_model->getMyActivitiesCount();
         $activities = $this->_model->getMyActivities();
         $page->activities = $activities;
+        $page->pager = $this->getPager('myactivities', $count, $pageno);
         return $page;
     }
 
@@ -146,7 +168,13 @@ class ActivitiesController extends RoxControllerBase
             $page->publicOnly = true;
         }
         $page->member = $loggedInMember;
-        $page->activities = $this->_model->getActivities($page->publicOnly);
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
+        $count = $this->_model->getUpcomingActivitiesCount($page->publicOnly);
+        $page->activities = $this->_model->getUpcomingActivities($page->publicOnly, $pageno, self::ACTIVITIES_PER_PAGE);
+        $page->pager = $this->getPager('upcomingactivities', $count, $pageno);
         return $page;
     }
 
@@ -159,14 +187,19 @@ class ActivitiesController extends RoxControllerBase
             $page->publicOnly = true;
         }
         $page->member = $loggedInMember;
-        $page->activities = $this->_model->getPastActivities($page->publicOnly);
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
+        $count = $this->_model->getPastActivitiesCount($page->publicOnly);
+        $page->activities = $this->_model->getPastActivities($page->publicOnly, $pageno, self::ACTIVITIES_PER_PAGE);
+        $page->pager = $this->getPager('pastactivities', $count, $pageno);
         return $page;
     }
 
     public function searchActivitiesCallback(StdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
-        error_log("search");
         $errors = $this->_model->checkSearchActivitiesVarsOk($args);
         error_log(print_r($errors, true));
         if (count($errors) > 0) {
@@ -177,12 +210,6 @@ class ActivitiesController extends RoxControllerBase
         }
     }
 
-    /**
-     * normally search will be reached by a redirect and the information from the originating
-     * page will be stored in a $_SESSION variable.
-     * 
-     * if none of the expected variables is set we just an empty page with a search field.  
-     */
     public function search() {
         $page = new ActivitiesSearchResultPage();
         $loggedInMember = $this->_model->getLoggedInMember();
@@ -192,10 +219,16 @@ class ActivitiesController extends RoxControllerBase
             $page->publicOnly = true;
         }
         $page->member = $loggedInMember;
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
         if (isset($this->route_vars['keyword'])) {
             $page->keyword = $this->route_vars['keyword'];
-            $activities = $this->_model->searchActivities($page->publicOnly, $page->keyword);
+            $count = $this->_model->searchActivitiesCount($page->publicOnly, $page->keyword);
+            $activities = $this->_model->searchActivities($page->publicOnly, $page->keyword, $pageno, self::ACTIVITIES_PER_PAGE);
             $page->activities = $activities;
+            $page->pager = $this->getPager('search/' . urlencode($page->keyword), $count, $pageno);
         } else {
             $page->keyword = '';
         }

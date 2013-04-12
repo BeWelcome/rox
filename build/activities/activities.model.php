@@ -13,15 +13,27 @@ class ActivitiesModel extends RoxModelBase
         parent::__construct();
     }
 
-    public function getActivities($onlyPublic, $pageno = 0) {
-        $temp = $this->CreateEntity('Activity');
+    protected function getUpcomingQuery($onlyPublic) {
+        $sql = '';
         if ($onlyPublic) {
-            $all = $temp->FindByWhereMany('public = 1 AND (dateTimeStart >= NOW() OR dateTimeEnd >= NOW())'
-                . ' AND status = 0 ORDER BY dateTimeStart');
-        } else {
-            $all = $temp->FindByWhereMany('(dateTimeStart >= NOW() OR dateTimeEnd >= NOW())'
-                . ' AND status = 0 ORDER BY dateTimeStart');
+            $sql .= 'public = 1 AND ';
         }
+        $sql .= '(dateTimeStart >= NOW() OR dateTimeEnd >= NOW())'
+                . ' AND status = 0';
+        return $sql;
+    }
+    
+    public function getUpcomingActivitiesCount($onlyPublic) {
+        $temp = $this->CreateEntity('Activity');
+        $count = $temp->countWhere($this->getUpcomingQuery($onlyPublic));
+        return $count;
+    }
+
+    public function getUpcomingActivities($onlyPublic, $pageno, $items) {
+        $temp = $this->CreateEntity('Activity');
+        $temp->sql_order = "dateTimeStart";
+        $query = $this->getUpcomingQuery($onlyPublic);
+        $all = $temp->FindByWhereMany($query, $pageno * $items, $items);
         return $all;
     }
 
@@ -31,21 +43,36 @@ class ActivitiesModel extends RoxModelBase
         return $all;
     }
 
-    public function getPastActivities($onlyPublic, $pageno = 0) {
-        $temp = $this->CreateEntity('Activity');
+    protected function getPastQuery($onlyPublic) {
+        $sql = '';
         if ($onlyPublic) {
-            $all = $temp->FindByWhereMany('public = 1 AND (dateTimeStart < NOW() AND dateTimeEnd < NOW())'
-                . ' ORDER BY dateTimeEnd DESC');
-        } else {
-            $all = $temp->FindByWhereMany('(dateTimeStart < NOW() AND dateTimeEnd < NOW())'
-                . ' ORDER BY dateTimeEnd DESC');
+            $sql .= 'public = 1 AND ';
         }
+        $sql .= '(dateTimeStart < NOW() AND dateTimeEnd < NOW())';
+        return $sql;
+    }
+    
+    public function getPastActivitiesCount($onlyPublic) {
+        $temp = $this->CreateEntity('Activity');
+        $count = $temp->countWhere($this->getPastQuery($onlyPublic));
+        return $count;
+    }
+
+    public function getPastActivities($onlyPublic, $pageno, $items) {
+        $temp = $this->CreateEntity('Activity');
+        $temp->sql_order = 'dateTimeEnd DESC';
+        $all = $temp->FindByWhereMany($this->getPastQuery($onlyPublic), $pageno * $items, $items);
         return $all;
     }
 
-    public function searchActivities($onlyPublic, $keyword, $pageno = 0) {
+    public function searchActivitiesCount($onlyPublic, $keyword) {
         $temp = $this->CreateEntity('Activity');
-        return $temp->searchActivities($onlyPublic, $keyword, $pageno);
+        return $temp->searchActivitiesCount($onlyPublic, $keyword);
+    }
+    
+    public function searchActivities($onlyPublic, $keyword, $pageno, $items) {
+        $temp = $this->CreateEntity('Activity');
+        return $temp->searchActivities($onlyPublic, $keyword, $pageno, $items);
     }
     
     public function checkEditCreateActivityVarsOk($args) {

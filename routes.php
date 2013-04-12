@@ -137,7 +137,9 @@
     $this->addRoute('activities_search_results_show_pages', 'activities/search/:keyword:/page/:pageno:/:id:', 'ActivitiesController', 'show');    
     $this->addRoute('activities_create', 'activities/create', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_upcoming_activities', 'activities/upcomingactivities', 'ActivitiesController', 'upcomingActivities');
+    $this->addRoute('activities_upcoming_activities_pages', 'activities/upcomingactivities/page/:pageno:', 'ActivitiesController', 'upcomingActivities');
     $this->addRoute('activities_past_activities', 'activities/pastactivities', 'ActivitiesController', 'pastActivities');
+    $this->addRoute('activities_past_activities_pages', 'activities/pastactivities/page/:pageno:', 'ActivitiesController', 'pastActivities');
     $this->addRoute('activities_edit', 'activities/:id:/edit', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_show', 'activities/:id:', 'ActivitiesController', 'show');    
     $this->addRoute('activities_show_attendees', 'activities/:id:/attendees/page/:page:', 'ActivitiesController', 'show');

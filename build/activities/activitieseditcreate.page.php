@@ -32,20 +32,6 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesEditCreatePage extends ActivitiesBasePage
 {
-    protected function getSubmenuItems()
-    {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-    
-        $items = parent::getSubmenuItems();
-        if ($this->activity->id == 0) {
-            $items[] = array('createactivities', 'activities/create', $words->getSilent('ActivitiesCreate'));
-        } else {
-            $items[] = array('editactivities', 'activities/edit', $words->getSilent('ActivitiesEdit'));
-        }
-        return $items;
-    }
-    
     protected function getSubmenuActiveItem() 
     {
         return 'createactivities';
@@ -57,5 +43,4 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/datetimepicker.css';
        return $stylesheets;
     }
-
 }

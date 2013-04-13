@@ -53,9 +53,7 @@ class ActivitiesController extends RoxControllerBase
     public function show() {
         $id = intval($this->route_vars['id']);
         $activity = new Activity($id);
-        
-        $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember && !isset($activity->public)) {
+        if (!$loggedInMember && !$activity->public) {
             return new ActivitiesNotLoggedInPage();
         }
         $page = new ActivitiesShowPage();

@@ -75,7 +75,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
         ?>
         <div id="teaser" class="clearfix">
         <div id="teaser_l1"> 
-        <h1><a href="groups"><?= $words->get('Groups');?></a></h1>
+        <h1><a href="forums"><?= $words->get('CommunityLanding');?></a> &raquo <a href="groups/forums"><?= $words->get('Groups');?></a></h1>
         </div>
         </div>
         <?php

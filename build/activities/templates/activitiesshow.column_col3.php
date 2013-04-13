@@ -100,6 +100,35 @@ if ($this->activity->status == 1) {
                     <p><?php echo $this->activity->address; ?><br />
                     <?php  echo $this->activity->location->name ?>, <?php echo $this->activity->location->getCountry()->name ?></p>
                 </div>
+                <div class="row abitright">
+                    <h3><?php echo $words->get('ActivityOrganizers');?></h3>
+                    <ul class="floatbox">
+                    <?php
+                        foreach ($this->activity->organizers as $organizer) 
+                        {
+                            $image = new MOD_images_Image('',$organizer->Username);
+                            echo '<li class="userpicbox float_left">';
+                            echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left');
+                            echo '<div class="userinfo">';
+                            echo '  <a class="username" href="members/'.$attendee->organizer.'">'.$organizer->Username.'</a><br />';
+                            echo '  <span class="small">';
+                            switch($organizer->status) {
+                                case 1: 
+                                    echo $words->get('ActivityYesIAttend');
+                                    break;
+                                case 2:
+                                    echo $words->get('ActivityIMightAttend');
+                                    break;
+                                case 3:
+                                    echo $words->get('ActivityNoIDontAttend');
+                                    break;
+                            }
+                            echo '</div>';
+                            echo '</li>';
+                        }
+                    ?>
+                    </ul>
+                </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolums -->
@@ -133,33 +162,6 @@ if ($this->activity->status == 1) {
             echo '</li>';
             }
         echo $this->attendeesPager->render();
-    ?>
-    </ul></div>
-    <div><h3><?php echo $words->get('ActivityOrganizers');?></h3>
-    <ul class="floatbox">
-    <?php
-        foreach ($this->activity->organizers as $organizer) 
-        {
-            $image = new MOD_images_Image('',$organizer->Username);
-            echo '<li class="userpicbox float_left">';
-            echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left');
-            echo '<div class="userinfo">';
-            echo '  <a class="username" href="members/'.$attendee->organizer.'">'.$organizer->Username.'</a><br />';
-            echo '  <span class="small">';
-            switch($organizer->status) {
-                case 1: 
-                    echo $words->get('ActivityYesIAttend');
-                    break;
-                case 2:
-                    echo $words->get('ActivityIMightAttend');
-                    break;
-                case 3:
-                    echo $words->get('ActivityNoIDontAttend');
-                    break;
-            }
-            echo '</div>';
-            echo '</li>';
-        }
     ?>
     </ul></div>
     <?php

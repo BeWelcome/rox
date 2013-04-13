@@ -111,7 +111,6 @@ class ForumsController extends PAppController
         $page->currentTab = 'forums'; 
         // then the userBar
         $page->newBar .= $view->getAsString('userBar');
-        $page->teaserBar .= $view->getAsString('teaser');
                 
         // we can't replace this ob_start()
         ob_start();
@@ -412,6 +411,7 @@ class ForumsController extends PAppController
         $page->content .= ob_get_contents();
          ob_end_clean();
         $page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
+        $page->teaserBar .= $view->getAsString('teaser');
         $page->render();
     } // end of index
     

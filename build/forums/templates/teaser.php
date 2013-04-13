@@ -4,7 +4,14 @@ $User = APP_User::login();
 
 <div id="teaser" class="clearfix">
     <div id="title" class="float_left">
-        <h1><a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a></h1>
+        <h1>
+            <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
+
+<?php if ($this->_model->getTopMode() == Forums::CV_TOPMODE_FORUM) {
+          echo '&raquo <a href="forums/agora">'.$this->_model->words->getFormatted('AgoraForum').'</a>';
+      }
+?>
+        </h1>
 
         <!-- CategoryTitle in teaser -->
         <div class="forumtitle">

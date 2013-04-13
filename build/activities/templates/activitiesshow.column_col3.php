@@ -107,11 +107,11 @@ if ($this->activity->status == 1) {
                         foreach ($this->activity->organizers as $organizer) 
                         {
                             $image = new MOD_images_Image('',$organizer->Username);
-                            echo '<li class="userpicbox float_left">';
+                            echo '<li class="picbox_activities float_left">';
                             echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left');
                             echo '<div class="userinfo">';
-                            echo '  <a class="username" href="members/'.$attendee->organizer.'">'.$organizer->Username.'</a><br />';
-                            echo '  <span class="small">';
+                            echo '<a class="username" href="members/'.$organizer->organizer.'">'.$organizer->Username.'</a><br />';
+                            echo '<span class="small"><b>';
                             switch($organizer->status) {
                                 case 1: 
                                     echo $words->get('ActivityYesIAttend');
@@ -123,6 +123,8 @@ if ($this->activity->status == 1) {
                                     echo $words->get('ActivityNoIDontAttend');
                                     break;
                             }
+                            echo '</b></span><br />';
+                            echo '  <span class="small">' . $organizer->comment . '</span>';
                             echo '</div>';
                             echo '</li>';
                         }
@@ -132,7 +134,7 @@ if ($this->activity->status == 1) {
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolums -->
-    <?php if ($this->activity->public || $this->loggedInMember) { ?>
+    <?php if ($this->loggedInMember) { ?>
     <div><h3><?php echo $words->get('ActivityAttendees');?></h3>
     <?php echo $this->attendeesPager->render(); ?>
     <ul class="floatbox">
@@ -140,11 +142,11 @@ if ($this->activity->status == 1) {
         foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) 
         {
             $image = new MOD_images_Image('',$attendee->Username);
-            echo '<li class="userpicbox float_left">';
+            echo '<li class="picbox_activities float_left">';
             echo MOD_layoutbits::PIC_50_50($attendee->Username,'',$style='framed float_left');
             echo '<div class="userinfo">';
             echo '  <a class="username" href="members/'.$attendee->Username.'">'.$attendee->Username.'</a><br />';
-            echo '  <span class="small">';
+            echo '  <span class="small"><b>';
             switch($attendee->status) {
                 case 1: 
                     echo $words->get('ActivityYesIAttend');
@@ -156,8 +158,8 @@ if ($this->activity->status == 1) {
                     echo $words->get('ActivitySorryCantJoinYou');
                     break;
             }
-            echo '  </span><br />';
-            echo '  <span class="small">' . $attendee->comment . '</span>';
+            echo '</b></span><br />';
+            echo '<span class="small">' . $attendee->comment . '</span>';
             echo '</div>';
             echo '</li>';
             }

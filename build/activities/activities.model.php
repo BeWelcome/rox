@@ -71,6 +71,62 @@ class ActivitiesModel extends RoxModelBase
         return $all;
     }
 
+    protected function getNearMeQuery($distance, $count = false) {
+        // get latitude and logitude for location of logged in member
+        $loggedInMember = $this->getLoggedInMember();
+        $query = "SELECT latitude, longitude FROM geonames_cache WHERE geonameid = " . $loggedInMember->IdCity;
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return false;
+        }
+        $row = $sql->fetch(PDB::FETCH_OBJ);
+        
+        // calculate rectangle around place with given distance
+        $lat = deg2rad(doubleval($row->latitude));
+        $long = deg2rad(doubleval($row->longitude));
+
+        $latne = rad2deg(($distance + 12740 * $lat) / 12740);
+        $latsw = rad2deg((12740 * $lat - $distance) / 12740);
+
+        $radiusAtLongitude = 6370 * cos($long);
+
+        $longne = rad2deg(($distance + $radiusAtLongitude * $long) / $radiusAtLongitude);
+
+        $longsw = rad2deg(($radiusAtLongitude * $long - $distance) / $radiusAtLongitude);
+        if ($count) {
+            $query = "SELECT COUNT(*) AS count ";
+        } else {
+            $query = "SELECT a.* ";
+        }
+        $query .= "FROM activities AS a, geonames_cache AS g WHERE a.locationId = g.geonameid ";
+        $query .= 'AND g.latitude < ' . $latne . '
+            AND g.latitude > ' . $latsw . '
+            AND g.longitude < ' . $longne . '
+            AND g.longitude > ' . $longsw . '
+            AND (a.dateTimeStart >= NOW() OR a.dateTimeEnd >= NOW())
+            AND a.status = 0';
+        return $query;
+    }
+    
+    public function getActivitiesNearMeCount($distance) {
+        $query = $this->getNearMeQuery($distance, true);
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return 0;
+        }
+        $row = $sql->fetch(PDB::FETCH_OBJ);
+        return $row->count;
+    }
+
+    public function getActivitiesNearMe($distance, $pageno, $items) {
+        $temp = $this->CreateEntity('Activity');
+        $temp->sql_order = "dateTimeStart";
+        $query = $this->getNearMeQuery($distance);
+        $query .= " ORDER BY dateTimeStart LIMIT " . $items . " OFFSET " . ($pageno * $items);
+        $all = $temp->FindBySQLMany($query);
+        return $all;
+    }
+
     public function searchActivitiesCount($onlyPublic, $keyword) {
         $temp = $this->CreateEntity('Activity');
         return $temp->searchActivitiesCount($onlyPublic, $keyword);

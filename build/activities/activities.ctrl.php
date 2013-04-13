@@ -197,6 +197,25 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
+    public function activitiesNearme() {
+        $page = new ActivitiesActivitiesNearMePage();
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if (!$loggedInMember) {
+            $this->redirectAbsolute($this->router->url('activities_upcoming'));
+        }
+        $page->member = $loggedInMember;
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
+        $distance = 50;
+        $count = $this->_model->getActivitiesNearMeCount($distance);
+        error_log($count);
+        $page->activities = $this->_model->getActivitiesNearMe($distance, $pageno, self::ACTIVITIES_PER_PAGE);
+        $page->pager = $this->getPager('nearme', $count, $pageno);
+        return $page;
+    }
+
     public function searchActivitiesCallback(StdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {

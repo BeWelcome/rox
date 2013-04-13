@@ -8,6 +8,7 @@ if ($this->publicOnly) {
     echo $words->get('ActivitiesNoUpcoming');
 }
 ?></p>
+
 <?php 
 } else {
     require_once('activitieslist.php');

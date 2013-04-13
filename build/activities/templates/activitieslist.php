@@ -1,4 +1,22 @@
-<?php $this->pager->render(); ?>
+<?php $this->pager->render();
+
+$cloudmade_conf = PVars::getObj('cloudmade');
+?>
+<input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
+
+<div id="activitiesMap"></div>
+
+<div id="activitiesData">
+<?php 
+foreach($this->activities as $activity) {
+	echo '<div class="activityData">';
+	echo '<input type="hidden" class="latitudeValue" name="latitude" value="' . $activity->location->latitude . '" />';
+	echo '<input type="hidden" class="longitudeValue" name="latitude" value="' . $activity->location->longitude . '" />';
+	echo '</div>';
+}
+?>
+</div>
+
 <table class='activitieslist'>
 <?php 
 $count= 0;

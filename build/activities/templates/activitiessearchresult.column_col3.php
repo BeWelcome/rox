@@ -25,13 +25,12 @@ if (!empty($errors)) {
         <div class="subcl">
             <form id="activities-search-box" method="post" >
             <?php echo $callbackTags; ?>
-            <input type="text" name="activity-keyword" id="activity-keyword" value="<?php echo $this->keyword; ?>" /><input type="submit" name="activities-search" value="<?php echo $words->getSilent('ActivitiesSearchButton'); ?>" /><?php echo $words->flushBuffer(); ?>
+            <input type="text" name="activity-keyword" id="activity-keyword" size="50" value="<?php echo $this->keyword; ?>" /><input type="submit" name="activities-search" value="<?php echo $words->getSilent('ActivitiesSearchButton'); ?>" /><?php echo $words->flushBuffer(); ?>
             </form>
         </div>
     </div>
     <div class="c33r">
         <div class="subcr float_right">
-            // todo: add spinner...
         </div>
     </div>
 </div>

@@ -197,7 +197,7 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
-    public function activitiesNearme() {
+    public function activitiesNearMe() {
         $page = new ActivitiesActivitiesNearMePage();
         $loggedInMember = $this->_model->getLoggedInMember();
         if (!$loggedInMember) {

@@ -41,6 +41,7 @@ if (!$User) {
 ?> 
 
 <!-- Now displays the recent forum post list -->
+<h2><a href="forums/agora"><?php echo $this->words->getFormatted('AgoraForum'); ?></a></h2>
 <?php
     $uri = 'forums/';
     if ($threads = $forum->getThreads()) {

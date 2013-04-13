@@ -175,8 +175,12 @@ class ActivitiesController extends RoxControllerBase
         $count = $this->_model->getUpcomingActivitiesCount($page->publicOnly);
         $page->activities = $this->_model->getUpcomingActivities($page->publicOnly, $pageno, self::ACTIVITIES_PER_PAGE);
         $page->pager = $this->getPager('upcomingactivities', $count, $pageno);
+        
+        $page->allActivities = $this->_model->getUpcomingActivities($page->publicOnly, 0, 1000);
+        
         return $page;
     }
+    
 
     public function pastActivities() {
         $page = new ActivitiesPastActivitiesPage();

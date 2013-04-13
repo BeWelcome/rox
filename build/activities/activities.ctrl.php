@@ -44,7 +44,7 @@ class ActivitiesController extends RoxControllerBase
         $result = $this->_model->joinLeaveCancelActivity($args->post);
         if ($result) {
             $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $args->post['activity-title']);
-            return $this->router->url('activities_my_activities', array(), false);
+            return true;
         } else {
             return false;
         }

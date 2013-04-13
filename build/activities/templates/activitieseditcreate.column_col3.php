@@ -10,7 +10,7 @@ $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['activity-id'] = $this->activity->id;
     $vars['activity-title'] = $this->activity->title;
-    $vars['activity-location-id'] = $this->activity->locationId;
+    $vars['activity-location-id'] = 0;
     $vars['activity-location'] = $this->activity->location->name . ", " . $this->activity->location->getCountry()->name;
     $vars['activity-address'] = $this->activity->address;
     $vars['activity-start-date'] = $this->activity->dateTimeStart;
@@ -35,7 +35,13 @@ if (empty($vars)) {
     if (!empty($errors)) {
         echo '<div class="error">';
         foreach ($errors as $error) {
-            echo $words->get($error) . "<br />";
+            $parts = explode("###", $error);
+            if (count($parts) > 1) {
+                echo $words->get($parts[0], $parts[1]);
+            } else {
+                echo $words->get($error);
+            }
+            echo  "<br />";
         }
         echo '</div>';
     }
@@ -81,16 +87,9 @@ if (empty($vars)) {
 </div>
 <script type="text/javascript">//<!--
 ActivityGeoSuggest.initialize('activity-create-form');
-jQuery(function() {
-  jQuery( "#activity-start-date" ).datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'HH:mm', minDate: 0, stepMinute: 15 });
-});
-jQuery(function() {
-  jQuery( "#activity-end-date" ).datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'HH:mm', minDate: 0, stepMinute: 15 });
-});
 
 var startDateTextBox = jQuery('#activity-start-date');
 var endDateTextBox = jQuery('#activity-end-date');
-
 startDateTextBox.datetimepicker({ 
     onClose: function(dateText, inst) {
         if (endDateTextBox.val() != '') {
@@ -106,7 +105,11 @@ startDateTextBox.datetimepicker({
     },
     onSelect: function (selectedDateTime){
         endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
-    }
+    },
+    dateFormat: 'yy-mm-dd', 
+    timeFormat: 'HH:mm', 
+    minDate: 0,    
+    stepMinute: 15
 });
 endDateTextBox.datetimepicker({ 
     onClose: function(dateText, inst) {
@@ -123,7 +126,11 @@ endDateTextBox.datetimepicker({
     },
     onSelect: function (selectedDateTime){
         startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
-    }
+    },
+    dateFormat: 'yy-mm-dd', 
+    timeFormat: 'HH:mm', 
+    minDate: 0, 
+    stepMinute: 15
 });
 //-->
 </script>

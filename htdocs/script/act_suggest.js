@@ -10,9 +10,7 @@ var ActivityGeoSuggest = {
         var elements = $A(Form.getElements(this.form));
         this.elements = elements.findAll(function(e) {return e.id;});
         this.elements = this.elements.inject([], function(n, v) {
-            // v.tags = ActivityGeoSuggest.tags.bind(ActivityGeoSuggest);
             v.locations = ActivityGeoSuggest.locations.bind(ActivityGeoSuggest);
-            // Event.observe(v, 'keyup', function(ev) {Event.element(ev).tags(Event.element(ev));});
             Event.observe(v, 'keydown', function(ev) {Event.element(ev).locations(Event.element(ev), ev);});
             n.push(v);
             return n;
@@ -34,19 +32,7 @@ var ActivityGeoSuggest = {
     
     ajaxSearch: function(e) {
         var address = $F(e);
-        
-     // init geolocator
-//    	var reverseGeolocator = new BWGoogleMapReverseGeolocator();
-//        
-//    	ActivityGeoSuggest.displaySuggestion('location-status', '<img src="images/misc/loading.gif">');
-//    	reverseGeolocator.getLocation(address, function(addressPoint) {
-//    		ActivityGeoSuggest.displaySuggestion('location-suggestion', addressPoint.location);
-//    		ActivityGeoSuggest.displaySuggestion('location-status', '');
-//    	}, function() {
-//    		// address not fount
-//    		bwrox.error('Address "%s" not fount.', address);
-//    	});
-    	
+
         var url = http_baseuri+'geo/suggestLocation/'+address+'/city/activities';
         new Ajax.Request(url, 
         {

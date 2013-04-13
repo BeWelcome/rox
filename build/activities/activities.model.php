@@ -6,6 +6,10 @@
  */
 class ActivitiesModel extends RoxModelBase
 {
+    // Limits for textareas
+    const ACTIVITY_ADDRESS_LIMIT = 320;
+    const ACTIVITY_DESCRIPTION_LIMIT = 4000;
+    
     /**
      * Default constructor.
      */
@@ -45,7 +49,6 @@ class ActivitiesModel extends RoxModelBase
 
     public function getMyActivities($pageno, $items) {
         $all = $this->CreateEntity('Activity')->getActivitiesForMember($this->getLoggedInMember(), $pageno, $items);
-        error_log("Activities: " . count($all));
         return $all;
     }
 
@@ -136,7 +139,21 @@ class ActivitiesModel extends RoxModelBase
         $temp = $this->CreateEntity('Activity');
         return $temp->searchActivities($onlyPublic, $keyword, $pageno, $items);
     }
-    
+
+    /**
+     * checks if the entered data on the activity-create-form is correct
+     *
+     * There is one situation however where we can't determine if the form data is correct
+     * This occurs when the user selects a location that isn't yet in the geonames_cache table
+     * As the location will only be added after the form is validated there is no way to check if
+     * the content of activity-location and activity-location-id match.
+     *
+     * To ensure that the user at least used the search button to set the activity-location-id one
+     * check is added. If activity-location-id is still 0, the content of activity-location must match
+     * the city of the member.     
+     *
+     * @return array with the found problems
+     */
     public function checkEditCreateActivityVarsOk($args) {
         $errors = array();
         $post = $args->post;
@@ -146,10 +163,18 @@ class ActivitiesModel extends RoxModelBase
         }
         if (empty($post['activity-location'])) {
             $errors[] = 'ActivityLocationEmpty';
+        } else {
+            if ($post['activity-location-id'] == 0) {
+                $geo = $this->CreateEntity('Geo', $this->getLoggedInMember()->IdCity);
+                $defaultLocation = $geo->name . ", " . $geo->getCountry()->name;
+                if ($defaultLocation != $post['activity-location']) {
+                    $errors[] = 'ActivityLocationAmbiguous';
+                }
+            }
         }
         if (!empty($post['activity-address'])) {
-            if (strlen($post['activity-address']) > 320) {
-                $errors[] = 'ActivityAddressTooLong###320###';
+            if (strlen($post['activity-address']) > self::ACTIVITY_ADDRESS_LIMIT) {
+                $errors[] = 'ActivityAddressTooLong###' . self::ACTIVITY_ADDRESS_LIMIT . '###';
             }
         }
         if (empty($post['activity-start-date'])) {
@@ -174,8 +199,8 @@ class ActivitiesModel extends RoxModelBase
         if (empty($post['activity-description'])) {
             $errors[] = 'ActivityDescriptionEmpty';
         } else {
-            if (strlen($post['activity-description']) > 4000) {
-                $errors[] = 'ActivityDescriptionTooLong###4000###';
+            if (strlen($post['activity-description']) > self::ACTIVITY_DESCRIPTION_LIMIT) {
+                $errors[] = 'ActivityDescriptionTooLong###' . self::ACTIVITY_DESCRIPTION_LIMIT . '###';
             }
         }
         return $errors;
@@ -237,11 +262,19 @@ class ActivitiesModel extends RoxModelBase
     }
     
     public function createActivity($args) {
+        // First add geo location to geonames_cache if it doesn't exist yet
+        $locationId = $args->post['activity-location-id'];
+        if ($locationId != 0) {
+            $geomodel = new GeoModel();
+            $geomodel->addGeonameId($locationId, 'member_primary');
+        } else {
+            $locationId = $this->getLoggedInMember()->IdCity;
+        }
         $activity = new Activity();
         $activity->creator = $this->getLoggedInMember()->id;
         $activity->title = $args->post['activity-title'];
         $activity->address = $args->post['activity-address'];
-        $activity->locationId = $args->post['activity-location-id'];
+        $activity->locationId = $locationId;
         $startdate = strtotime($args->post['activity-start-date']);
         $activity->dateTimeStart = date('Y-m-d H:i:s', $startdate);
         $enddate = strtotime($args->post['activity-end-date']);
@@ -255,10 +288,18 @@ class ActivitiesModel extends RoxModelBase
     }
 
     public function updateActivity($args) {
+        // First add geo location to geonames_cache if it doesn't exist yet
+        $locationId = $args->post['activity-location-id'];
+        if ($locationId != 0) {
+            $geomodel = new GeoModel();
+            $geomodel->addGeonameId($locationId, 'member_primary');
+        } else {
+            $locationId = $this->getLoggedInMember()->IdCity;
+        }
         $activity = new Activity($args->post['activity-id']);
         $activity->title = $args->post['activity-title'];
         $activity->address = $args->post['activity-address'];
-        $activity->locationId = $args->post['activity-location-id'];
+        $activity->locationId = $locationId;
         $startdate = strtotime($args->post['activity-start-date']);
         $activity->dateTimeStart = date('Y-m-d H:i:s', $startdate);
         $enddate = strtotime($args->post['activity-end-date']);

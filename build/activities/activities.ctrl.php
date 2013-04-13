@@ -6,7 +6,7 @@
  */
 class ActivitiesController extends RoxControllerBase
 {
-    const ACTIVITIES_PER_PAGE = 20;
+    const ACTIVITIES_PER_PAGE = 5;
     const ATTENDEES_PER_PAGE = 18;
     const ACTIVITIES_MAX_ON_MAP = 1000;
     

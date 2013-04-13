@@ -107,18 +107,11 @@ class Activity extends RoxEntityBase
      */
     public function getActivitiesForMember(Member $member, $pageno, $items) {
         $activities = array();
-        $query = "SELECT a.id AS id FROM activities AS a, activitiesattendees AS aa WHERE a.id = aa.activityId AND aa.attendeeId = " . $member->id;
-        $query .= " LIMIT " . $items . " OFFSET " . ($pageno * $items);
-        $result = $this->dao->query($query);
-        if ($result) {
-            $activityIds = array();
-            while ($row = $result->fetch(PDB::FETCH_OBJ)) {
-                $activityIds[] = $row->id;
-            }
-            if (count($activityIds)) {
-                $activities = $this->findByWhereMany("id IN ('" . implode("','", $activityIds) . "')");
-            }
-        }
+        $query  = "SELECT a.* FROM activities AS a, activitiesattendees AS aa WHERE a.id = aa.activityId AND aa.attendeeId = " . $member->id . " ";
+        $query .= "ORDER BY a.dateTimeStart DESC ";
+        $query .= "LIMIT " . $items . " OFFSET " . ($pageno * $items);
+        error_log($query);
+        $activities = $this->findBySQLMany($query);
         return $activities;
     }
 

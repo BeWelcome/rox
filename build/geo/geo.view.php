@@ -99,12 +99,16 @@ class GeoView extends PAppView {
             $dohide = '';
             $add_out = '';
             $ii = 0;
+            $hideAfter = 10;
+            if ($activities) {
+                $hideAfter = 15;
+            }
             foreach ($locations as $location) {
                 if (isset($location['name'])) {
                     if(!isset($location['countryCode'])) $location['countryCode'] = '';
                     if(!isset($location['countryName'])) $location['countryName'] = '';
                     // hide all results above 10
-                    if ($ii++ == 10) {
+                    if ($ii++ == $hideAfter) {
                         $dohide = 'style="display:none" class="hidden"';
                         $out .= '<p style="padding: 1em 0; clear:both" id="moreHint">'.$words->get('Geo_results_foundmore','<a id="showAllResults" href="#">','</a>').'</p>';
                         $add_out = '

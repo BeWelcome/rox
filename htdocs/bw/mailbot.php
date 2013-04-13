@@ -172,7 +172,7 @@ $qry = sql_query($str);
 $countposts_notificationqueue = 0;
 global $fTradIdLastUsedLanguage  ; // This is set for the fTrad function (will define which language to use)
 while ($rr = mysql_fetch_object($qry)) {
-    if (($rr->created_since_x_minute<10) and(($rr->Type=='newthread') or ($rr->Type=='reply'))) {
+    if (($rr->created_since_x_minute<0) and(($rr->Type=='newthread') or ($rr->Type=='reply'))) {
         continue ; // Don't process to recent change so it means give time for the user to fix it by an edit
     }
     if ($_SESSION['Param']->MailBotMode!='Auto') {
@@ -189,6 +189,7 @@ while ($rr = mysql_fetch_object($qry)) {
             forums_threads.title AS thread_title,
             forums_threads.IdTitle,
             forums_threads.threadid AS IdThread,
+            forums_threads.IdGroup AS IdGroup,
             forums_posts.message,
             forums_posts.IdContent,
             geonames_cache.name AS cityname,
@@ -242,26 +243,35 @@ while ($rr = mysql_fetch_object($qry)) {
         $UnsubscribeLink = "----<br/><br/>\n\n" . wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
     }
 
+    if ($rPost->IdGroup!=0) { // Get group name
+        $rGroupname = LoadRow("
+            SELECT
+                Name
+            FROM
+                groups
+            WHERE
+                id = $rPost->IdGroup
+        ");
+    }
+    
     // Rewrite the title and the message to the corresponding default language for this member if any
     $rPost->thread_title=fTrad($rPost->IdTitle) ;
     $rPost->message=fTrad($rPost->IdContent) ;
     $rPost->message=str_replace('<p><br>\n</p>','',$rPost->message) ;
 
-    $NotificationType=$rr->Type ;
+    $NotificationType='';
 
     switch ($rr->Type) {
         case 'newthread':
-            $NotificationType=wwinlang("ForumMailbotNewThread",$MemberIdLanguage) ;                     
-
             break ;
         case 'reply':
-            $NotificationType=wwinlang("ForumMailbotReply",$MemberIdLanguage) ;
+            $NotificationType='Re: ';
             break ;
         case 'moderatoraction':
         case 'deletepost':
         case 'deletethread':
         case 'useredit':
-            $NotificationType=wwinlang("ForumMailbotEditedPost",$MemberIdLanguage) ;
+            $NotificationType=wwinlang("ForumMailbotEditedPost",$MemberIdLanguage);
             break ;
         case 'translation':
             break ;
@@ -272,10 +282,20 @@ while ($rr = mysql_fetch_object($qry)) {
     }
 
     // Setting some default values
-    $subj = "Forum Bewelcome, ".$NotificationType.": ".$rPost->thread_title; 
+    $subj = $NotificationType . $rPost->thread_title;
+    if ($rPost->IdGroup != 0) { 
+        $from = "BW " . $rPost->Username . " <group@bewelcome.org>";
+    } else {
+        $from = "BW " . $rPost->Username . " <forum@bewelcome.org>";
+    }
     $text = '<html><head><title>'.$subj.'</title></head>' ;
     $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
-    $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
+
+    if ($rPost->IdGroup != 0) {
+        $text.='<tr><th align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th><th>' . $rGroupname->Name . '</th></tr>' ;
+    } else {
+        $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
+    }
     $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> ('.$rPost->cityname.', '.$rPost->countryname.')</td></tr>' ;
     $text.='<tr><td valign="top">';
 
@@ -289,7 +309,7 @@ while ($rr = mysql_fetch_object($qry)) {
     }
     $text .= '</table></body></html>';
     
-    if (!bw_mail($Email, $subj, $text, "", "forum@bewelcome.org", $MemberIdLanguage, "html", "", "")) {
+    if (!bw_mail($Email, $subj, $text, "", $from, $MemberIdLanguage, "html", "", "")) {
         LogStr("Cannot send posts_notificationqueue=#" . $rr->id . " to <b>".$rPost->Username."</b> \$Email=[".$Email."]","mailbot");
         // Telling that the notification has been not sent
         $str = "

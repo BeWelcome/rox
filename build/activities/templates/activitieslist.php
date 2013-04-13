@@ -81,7 +81,7 @@ foreach($this->activities as $activity) {
               <div class="calendar-day">' . date("j", strtotime($activity->dateStart)) . '</div>
               <div class="calendar-year">' . date("Y", strtotime($activity->dateStart)) . '</div></td>';
     echo '<td colspan="2"><div class="small grey">' . $activity->dateStart . '-' . $activity->dateEnd . '</div><h3><a href="activities/' . $activity->id . '">' . $activity->title . '</a><h3></td>';
-    echo '<td><i class="icon-map-marker icon-3x grey"></i></td>';
+    echo '<td><i class="icon-map-marker icon-3x grey float_right"></i></td>';
     if ($activity->location != null){
         $locationName = $activity->location->name;
         if ($activity->location->getCountry() != null){

@@ -1,14 +1,16 @@
 ﻿<?php
 $formkit = $this->layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('ActivitiesController', 'joinLeaveCancelActivityCallback');
-$layoutbits = new Mod_layoutbits(); 
+$layoutbits = new Mod_layoutbits();
+$request = PRequest::get()->request;
+$login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
 if ($this->activity->status == 1) {
     // the activity has been cancelled ?>
     <div class="error"><?php echo $words->get('ActivityCancelled'); ?></div>
 <?php } ?>
 <div id="activity">
     <div class="floatbox">
-        <h2 class="float_left" style="width: 75%;"><?php echo $this->activity->title; ?></h2>
+        <h2><?php echo $this->activity->title; ?></h2>
     </div>
     <div class="subcolumns">
         <div class="c62l">
@@ -123,16 +125,25 @@ if ($this->activity->status == 1) {
                     </form>
                     <?php
                         }
+                    } else {
+                        echo '<div class="row abitright">';
+                        echo '<p>'.$words->getBuffered('ActivitiesPleaseLogInToJoinActivity', '<a href="' . $login_url . '">', '</a>').'</p>';
+                        echo '</div>';
                     }?>
                 <div class="row abitright">
-                    <h3><?= $words->get('ActivityDateTime'); ?>:</h3>
+                    <h3><?= $words->get('ActivityDateTime'); ?></h3>
                     <p><?php echo $this->activity->dateStart; ?> - <?php echo $this->activity->dateEnd; ?><br />
                     <?php echo $this->activity->timeStart; ?> - <?php echo $this->activity->timeEnd; ?></p>
                 </div>
                 <div class="row abitright">
-                    <h3><?= $words->get('ActivityLocationAddress'); ?>:</h3>
+                    <h3><?= $words->get('ActivityLocationAddress'); ?></h3>
                     <p><?php echo $this->activity->address; ?><br />
                     <?php  echo $this->activity->location->name ?>, <?php echo $this->activity->location->getCountry()->name ?></p>
+                </div>
+                <div class="row abitright">
+                    <h3><?= $words->get('ActivityAttendeesNumbersTitle'); ?></h3>
+                    <p> 20 FIXME <?= $words->get('ActivityYesAttendees'); ?><br />
+                     20 FIXME <?= $words->get('ActivityMightAttendees'); ?></p>
                 </div>
                 <div class="row abitright">
                     <h3><?php echo $words->get('ActivityOrganizers');?></h3>

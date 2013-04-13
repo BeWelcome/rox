@@ -6,7 +6,7 @@
  */
 class ActivitiesController extends RoxControllerBase
 {
-    const ACTIVITIES_PER_PAGE = 2;
+    const ACTIVITIES_PER_PAGE = 20;
     const ATTENDEES_PER_PAGE = 18;
     
     /**

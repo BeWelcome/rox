@@ -122,15 +122,15 @@ bwrox.selectScripts([
   },
   {
     file: "leaflet/0.4.5/leaflet.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities/upcomingactivities"]
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
   },
   {
     file: "leaflet/plugins/Leaflet.markercluster/2013-04-09/leaflet.markercluster.js",
-    pages: ["activities/upcomingactivities"]
+    pages: ["activities"]
   },
   {
     file: "leaflet/plugins/Leaflet.markercluster/2013-04-09/include_markercluster_css.js",
-    pages: ["activities/upcomingactivities"]
+    pages: ["activities"]
   },
   {
     file: "http://maps.googleapis.com/maps/api/js?sensor=false",
@@ -259,7 +259,7 @@ bwrox.selectScripts([
   },
   {
     file: "map/include_css.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities/upcomingactivities"]
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
   },
   {
     file: "map/geolocation/BWGoogleMapReverseGeolocator.js?1",
@@ -319,6 +319,6 @@ bwrox.selectScripts([
   },
   {
 	  file: "map/activities/activities_map.js",
-      pages: ["activities/upcomingactivities"]
+      pages: ["activities"]
   }
 ]);

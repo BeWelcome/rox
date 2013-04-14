@@ -61,4 +61,25 @@ class GroupForumPage extends GroupsBasePage
     
 }
 
+
+class GroupForumsOverviewPage extends GroupsBasePage
+{
+    protected function column_col3()
+    {
+        $Forums = new ForumsController;
+        $Forums->index();
+    }
+    protected function teaserContent()
+    {
+        $words = $this->getWords();
+        ?>
+        <div id="teaser" class="clearfix">
+        <div id="teaser_l1"> 
+        <h1><a href="forums"><?= $words->get('CommunityLanding');?></a> &raquo <a href="groups/forums"><?= $words->get('Groups');?></a></h1>
+        </div>
+        </div>
+        <?php
+    }    
+}
+
 ?>

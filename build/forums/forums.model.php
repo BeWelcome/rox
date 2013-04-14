@@ -23,6 +23,10 @@ class Forums extends RoxModelBase {
     const CV_POSTS_PER_PAGE = 200;
     const CV_TOPMODE_CATEGORY=1; // Says that the forum topmode is for categories
     const CV_TOPMODE_LASTPOSTS=2; // Says that the forum topmode is for lastposts
+    const CV_TOPMODE_LANDING=3; // Says that we use the forums landing page for topmode
+    const CV_TOPMODE_FORUM=4; // Says that we use the forums main page for topmode
+    const CV_TOPMODE_GROUPS=5; // Says that we use the group forums overview page for topmode
+
 
     const NUMBER_LAST_POSTS_PREVIEW = 5; // Number of Posts shown as a help on the "reply" page
 	
@@ -256,13 +260,13 @@ function FindAppropriatedLanguage($IdPost=0) {
 		
 		switch($layoutbits->GetPreference("PreferenceForumFirstPage")) {
 			case "Pref_ForumFirstPageLastPost":
-				$this->setTopMode(Forums::CV_TOPMODE_LASTPOSTS) ;
+				$this->setTopMode(Forums::CV_TOPMODE_FORUM) ;
 				break ;
 			case "Pref_ForumFirstPageCategory":
 				$this->setTopMode(Forums::CV_TOPMODE_CATEGORY) ;
 				break ;
 			default:
-				$this->setTopMode(Forums::CV_TOPMODE_LASTPOSTS) ;
+				$this->setTopMode(Forums::CV_TOPMODE_LANDING) ;
 				break ;
 		}
 		
@@ -349,7 +353,7 @@ function FindAppropriatedLanguage($IdPost=0) {
     // This switch the preference switchShowMyGroupsTopicsOnly
     public function switchShowMyGroupsTopicsOnly() {
         if (!$member = $this->getLoggedInMember()) {
-            return;
+            return false;
         }
         $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
         $this->ShowMyGroupsTopicsOnly = $owngroupsonly;
@@ -422,8 +426,7 @@ WHERE
         if (!$qq) {
             throw new PException('switchShowMyGroupsTopicsOnly ' . $ss . ' !');
         }
-        header('Location: ' . PVars::getObj('env')->baseuri . 'forums');
-        PPHP::PExit();
+        return false;
     } // end of switchShowMyGroupsTopicsOnly
     
 
@@ -443,6 +446,43 @@ WHERE
         'SA' => 'South Amercia',
         'OC' => 'Oceania'
     );
+
+    private function boardTopLevelForum($showsticky = true) {
+        if ($this->tags) {
+            $this->boardTopLevelLastPosts() ;
+            return ;
+        } 
+        $this->board = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
+        $this->board->initThreads($this->getPage(), $showsticky);
+            
+    } // end of boardTopLevelForum 
+    
+    private function boardTopLevelGroups($showsticky = true) {
+        if ($this->tags) {
+            $this->boardTopLevelLastPosts() ;
+            return ;
+        }
+        $this->board = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
+        $this->board->initThreads($this->getPage(), $showsticky);
+            
+    } // end of boardTopLevelGroups
+
+    private function boardTopLevelLanding($showsticky = true) {
+        if ($this->tags) {
+            $this->boardTopLevelLastPosts() ;
+            return ;
+        } 
+        $this->board = new Board($this->dao, 'Forums and Groups', '.');
+        $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
+        $forum->THREADS_PER_PAGE = 5;
+        $forum->initThreads(1, $showsticky);
+        $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
+        $groups->THREADS_PER_PAGE = 5;
+        $groups->initThreads(1, $showsticky);
+        $this->board->add($forum);
+        $this->board->add($groups);
+            
+    } // end of boardTopLevelLanding 
     
     private function boardTopLevelLastPosts($showsticky = true) {
         if ($this->tags) {
@@ -896,8 +936,17 @@ WHERE `geonameid` = '%d'
 			elseif ($this->TopMode==Forums::CV_TOPMODE_LASTPOSTS) {
 				$this->boardTopLevelLastPosts($showsticky);
 			}
+			elseif ($this->TopMode==Forums::CV_TOPMODE_LANDING) {
+				$this->boardTopLevelLanding($showsticky);
+			}
+			elseif ($this->TopMode==Forums::CV_TOPMODE_FORUM) {
+				$this->boardTopLevelForum($showsticky);
+			}
+			elseif ($this->TopMode==Forums::CV_TOPMODE_GROUPS) {
+				$this->boardTopLevelGroups($showsticky);
+			}
 			else {
-				$this->boardTopLevelLastPosts($showsticky);
+				$this->boardTopLevelLanding($showsticky);
 			}
 		} else if ($this->continent && !$this->geonameid && !$this->countrycode) { 
             $this->boardContinent();
@@ -2907,7 +2956,9 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $continent = false;
     private $page = 1;
     private $messageId = 0;
-    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATEGORIES
+    private $TopMode=Forums::CV_TOPMODE_LANDING; // define that we use the landing page for top mode
+
+//    private $TopMode=Forums::CV_TOPMODE_LASTPOSTS; // define which top mode is to be use latest post or CATEGORIES
 //    private $TopMode=Forums::CV_TOPMODE_CATEGORY; // define which top mode is to be use latest post or CATEGORIES
 
 
@@ -3632,7 +3683,7 @@ class Board implements Iterator {
 	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 
-    public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false) {
+    public function __construct(&$dao, $boardname, $link, $navichain=false, $tags=false, $continent=false, $countrycode=false, $admincode=false, $geonameid=false, $board_description=false,$IdGroup=false, $no_forumsgroup=false) {
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 		
@@ -3658,10 +3709,16 @@ class Board implements Iterator {
 
 		//	Decide if it is an active LoggeMember or not
 		if ((empty($_SESSION["IdMember"]) or empty($_SESSION["MemberStatus"]) or ($_SESSION["MemberStatus"]=='Pending') or $_SESSION["MemberStatus"]=='NeedMore') ) {
-            $this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
-            $this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
-            $this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
-            $this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
+                   $this->PublicThreadVisibility=" (ThreadVisibility='NoRestriction') and (ThreadDeleted!='Deleted')" ;
+                   $this->PublicPostVisibility=" (PostVisibility='NoRestriction') and (PostDeleted!='Deleted')" ;
+                   if ($no_forumsgroup) {
+                       $this->ThreadGroupsRestriction=" (IdGroup != 0 and ThreadVisibility ='NoRestriction')" ;
+                       $this->PostGroupsRestriction=" (IdGroup != 0 and PostVisibility='NoRestriction')" ;
+                   } 
+                   else {
+                       $this->ThreadGroupsRestriction=" (IdGroup=0 or ThreadVisibility ='NoRestriction')" ;
+                       $this->PostGroupsRestriction=" (IdGroup=0 or PostVisibility='NoRestriction')" ;
+                   }
 		}
 		else {
 			$this->PublicThreadVisibility="(ThreadVisibility!='ModeratorOnly') and (ThreadDeleted!='Deleted')" ;
@@ -3671,13 +3728,13 @@ class Board implements Iterator {
             $member = $roxmodel->getLoggedInMember();
             $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
             $this->owngroupsonly = $owngroupsonly;
-            if ($owngroupsonly == "Yes" && ($this->IdGroup == 0 || !isset($this->IdGroup))) {
+            if ($owngroupsonly == "Yes" && ($this->IdGroup === false || !isset($this->IdGroup))) {
                 // 0 is the group id for topics without an explicit group, we don't want them in this case. Lazy hack to avoid changing more than necessary: replace 0 with -1
-                $this->PostGroupsRestriction = " (IdGroup IN (-1";
-                $this->ThreadGroupsRestriction = " (IdGroup IN (-1";
+                $this->PostGroupsRestriction = " (((IdGroup IN (-1";
+                $this->ThreadGroupsRestriction = " (((IdGroup IN (-1";
             } else {
-                $this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND IdGroup IN (0";
-			    $this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND IdGroup IN (0";
+                $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND IdGroup IN (0";
+			    $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND IdGroup IN (0";
             }
 			$qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember=" . $_SESSION["IdMember"] . " AND Status = 'In'");
 			if (!$qry) {
@@ -3687,8 +3744,15 @@ class Board implements Iterator {
 				$this->PostGroupsRestriction = $this->PostGroupsRestriction . "," . $rr->IdGroup;
 				$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
 			}	;
-			$this->PostGroupsRestriction = $this->PostGroupsRestriction . "))";
-			$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))";
+
+                        if ($no_forumsgroup) {
+			    $this->PostGroupsRestriction = $this->PostGroupsRestriction . "))) and IdGroup != 0)";
+			    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))) and IdGroup != 0)";
+                        }
+                        else {
+			    $this->PostGroupsRestriction = $this->PostGroupsRestriction . "))))";
+			    $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))))";
+                        }
 		}
 		
 		// Prepares additional visibility options for moderator
@@ -3696,8 +3760,14 @@ class Board implements Iterator {
 			$this->PublicPostVisibility = " PostVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			$this->PublicThreadVisibility = " ThreadVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
-				$this->PostGroupsRestriction = " (1=1)";
-				$this->ThreadGroupsRestriction = " (1=1)";
+				if ($no_forumsgroup) {
+                                    $this->PostGroupsRestriction = " (IdGroup != 0)";
+				    $this->ThreadGroupsRestriction = " (IdGroup != 0)";
+                                } 
+                                else {
+                                    $this->PostGroupsRestriction = " (1=1)";
+				    $this->ThreadGroupsRestriction = " (1=1)";
+                                }
 			}
 		}
     }
@@ -3739,19 +3809,19 @@ class Board implements Iterator {
 	public function FilterThreadListResultsWithIdCriteria() {
         $wherethread="" ;
         
-        if ($this->continent) {
+        if (isset($this->continent) && $this->continent !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`continent` = '%s' ", $this->continent);
         }
-        if ($this->countrycode) {
+        if (isset($this->countrycode) && $this->countrycode !== false) {
             $wherethread .= sprintf("AND `countrycode` = '%s' ", $this->countrycode);
         }
-        if ($this->admincode) {
+        if (isset($this->admincode) && $this->admincode !== false) {
             $wherethread .= sprintf("AND `admincode` = '%s' ", $this->admincode);
         }
-        if ($this->IdGroup) {
+        if (isset($this->IdGroup) && $this->IdGroup !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`IdGroup` = '%d' ", $this->IdGroup);
         }
-        if ($this->geonameid) {
+        if (isset($this->geonameid) && $this->geonameid !== false) {
             $wherethread .= sprintf("AND `forums_threads`.`geonameid` = '%s' ", $this->geonameid);
         }
 		$wherethread=$wherethread."and (".$this->PublicThreadVisibility.")" ;

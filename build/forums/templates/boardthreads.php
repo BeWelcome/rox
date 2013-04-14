@@ -41,8 +41,12 @@ Boston, MA  02111-1307, USA.
     foreach ($threads as $cnt =>  $thread) {
     //[threadid] => 10 [title] => aswf [replies] => 0 [views] => 0 [first_postid] => 1 [first_authorid] => 1 [first_create_time] => 1165322369 [last_postid] => 1 [last_authorid] => 1 [last_create_time] => 1165322369 [first_author] => dave [last_author] => dave )
         //$url = $uri.'s'.$thread->threadid.'-'.$thread->title;
-        $url = ForumsView::threadURL($thread);
-        
+        if ($thread->IdGroup){
+            $url = ForumsView::threadURL($thread, 'groups/'.$thread->IdGroup.'/forum/');
+        }
+        else {
+            $url = ForumsView::threadURL($thread);
+        }    
         $max = $thread->replies + 1;
         $maxPage = ceil($max / $this->_model->POSTS_PER_PAGE);
         
@@ -187,7 +191,7 @@ Boston, MA  02111-1307, USA.
 </table>
 
 <?php
-if ($User) {
+if ($User && empty($noForumNewTopicButton)) {
 ?>
 <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>
 <?php
@@ -200,6 +204,7 @@ if ($User) {
 
 require 'pages.php';
 
+if (empty($noForumLegendBox)) {
 ?>
 <div class="floatbox small float_left" style="width: 80%">
     <?php echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $words->getBuffered('tags') .'" title="'. $words->getBuffered('tags') .'" class="forum_icon" />' . $words->flushBuffer();
@@ -216,3 +221,6 @@ require 'pages.php';
     ?>
      = <?php echo $words->get('ForumLegendTaggedHelp');?>
 </div>
+<?php
+}
+?>

@@ -6,7 +6,7 @@ $request = PRequest::get()->request;
 $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
 if ($this->activity->status == 1) {
     // the activity has been cancelled ?>
-    <div class="error"><?php echo $words->get('ActivityCancelled'); ?></div>
+    <div class="error"><?php echo $words->get('ActivityHasBeenCancelled'); ?></div>
 <?php } ?>
 <div id="activity">
     <div class="floatbox">
@@ -67,19 +67,22 @@ if ($this->activity->status == 1) {
                         <input type="text" maxlength="80" id="activity-comment" name="activity-comment" value="<?php echo $this->member->comment;?>" />
                     </div>
                     <div class="type-check">
-                        <div class="abitlower"><input type="radio" value="activity-yes" id="activity-yes" name="activity-status" checked="checked"><label for="activity-yes"><?php echo $words->getSilent('ActivityYes'); ?></label></div>
-                        <div class="abitlower"><input type="radio" value="activity-maybe" id="activity-maybe" name="activity-status"><label for="activity-maybe"><?php echo $words->getSilent('ActivityMaybe'); ?></label></div>
-                        <div class="abitlower"><input type="radio" value="activity-no" id="activity-no" name="activity-status"><label for="activity-no"><?php echo $words->getSilent('ActivityNo'); ?></label></div>
+                        <div class="abitlower"><input type="radio" value="activity-yes" id="activity-yes" name="activity-status" <?php if ($this->member->status == 1) { echo 'checked="checked"'; }?> >&nbsp;<label for="activity-yes"><?php echo $words->getSilent('ActivityYes'); ?></label></div>
+                        <?php if (!$this->member->organizer) { ?>
+                        <div class="abitlower"><input type="radio" value="activity-maybe" id="activity-maybe" name="activity-status" <?php if ($this->member->status == 2) { echo 'checked="checked"'; }?> >&nbsp;<label for="activity-maybe"><?php echo $words->getSilent('ActivityMaybe'); ?></label></div>
+                        <div class="abitlower"><input type="radio" value="activity-no" id="activity-no" name="activity-status" <?php if ($this->member->status == 3) { echo 'checked="checked"'; }?> >&nbsp;<label for="activity-no"><?php echo $words->getSilent('ActivityNo'); ?></label></div>
+                    <?php } ?>
                     </div>
                     <div class="type-button">
                     <?php
                         $enabled = 'class="button"';
                         if ($this->member->status == 0) {
-                            echo '<button type="submit" id="activity-yes" name="activity-yes" class="button" title="' . $words->getSilent('ActivityJoinTheFun') . '" >' . $words->getSilent('ActivityJoinTheFun') . '</button>';
+                            echo '<button type="submit" id="activity-join" name="activity-join" class="button" title="' . $words->getSilent('ActivityJoinTheFun') . '" >' . $words->getSilent('ActivityJoinTheFun') . '</button>';
                         } else {
-                            echo '<button type="submit" id="activity-update" name="activity-edit" class="button" title="' . $words->getSilent('ActivityEdit') . '" >' . $words->getSilent('ActivityEdit') . '</button>';
-// TODO if currently logged in member = organizer this  leave button should be hidden. Organizers should not be able to leave an active activity.
+                            echo '<button type="submit" id="activity-update" name="activity-edit" class="button" title="' . $words->getSilent('ActivityUpdate') . '" >' . $words->getSilent('ActivityUpdate') . '</button>';
+                            if (!$this->member->organizer) {
                                 echo '&nbsp;&nbsp;<button type="submit" id="activity-leave" name="activity-leave" class="button back" title="' . $words->getSilent('ActivityLeave') . '" >' . $words->getSilent('ActivityLeave') . '</button>';
+                            }
                         }
                     ?>
                     </div>
@@ -114,7 +117,7 @@ if ($this->activity->status == 1) {
                         <?php echo $callbackTags; ?>
                         <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                         <?php
-                            if (isset($this->member->organizer) && ($this->member->organizer == 1)) {
+                            if ($this->member->organizer == true) {
                                 if ($this->activity->status == 1) {
                                     echo '<input type="submit" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
                                 } else {

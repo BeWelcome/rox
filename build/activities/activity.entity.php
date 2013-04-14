@@ -188,6 +188,12 @@ class Activity extends RoxEntityBase
             $sql .= "public = 1 AND ";
         }
         $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "UNION ";
+        $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g, geonames_countries AS gc WHERE ";
+        if ($publicOnly) {
+            $sql .= "public = 1 AND ";
+        }
+        $sql .= "a.locationId = g.geonameid AND g.fk_countrycode = gc.iso_alpha2 AND gc.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= ") AS r";
         return $this->sqlCount($sql);
     }

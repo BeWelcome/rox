@@ -59,66 +59,27 @@ if ($this->activity->status == 1) {
             <div class="subcr">
                 <?php if ($this->loggedInMember) {
                         if ($this->activity->status == 0) { ?>
-                    <form method="post" id="activity-show-form" class="yform full">
+                    <form method="post" id="activity-show-form" class="yform full abitlower">
                     <?php echo $callbackTags; ?>
                     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                     <div class="type-text">
-                        <div class="subcolumns">
-                            <div class="c38l">
-                                <div class="subcl">
-                                    <h3 class="abitlower"><?= $words->get('ActivityMyStatus'); ?></h3>
-                                </div> <!-- subcl -->
-                            </div> <!-- c38l -->
-                            <div class="c62r">
-                                <div class="subcl float_right">
-                                    <?php
-                                        $disabled = 'class="button"';
-                                        if ($this->member->status == 1) {
-                                            $disabled = 'disabled="disabled" class="button back"';
-                                        }
-                                    ?>
-                                    <button type="submit" id="activity-yes" name="activity-yes" <?php echo $disabled; ?> title="<?php echo $words->getSilent('ActivityYes'); ?>" >
-                                    <i class="icon-ok-sign"></i></button><?php echo $words->flushBuffer(); ?>
-                                    <?php
-                                        $disabled = 'class="button"';
-                                        if ($this->member->status == 2) {
-                                            $disabled = 'disabled="disabled" class="button back"';
-                                        }
-                                    ?>
-                                    <button type="submit" id="activity-maybe" name="activity-maybe" <?php echo $disabled; ?> title="<?php echo $words->getSilent('ActivityMaybe'); ?>" >
-                                    <i class="icon-question-sign"></i></button><?php echo $words->flushBuffer(); ?>
-                                    <?php
-                                        $disabled = 'class="button"';
-                                        if ($this->member->status == 3) {
-                                            $disabled = 'disabled="disabled" class="button back"';
-                                        }
-                                    ?>
-                                    <button type="submit" id="activity-no" name="activity-no" <?php echo $disabled; ?> title="<?php echo $words->getSilent('ActivityNo'); ?>" >
-                                    <i class="icon-minus-sign"></i></button><?php echo $words->flushBuffer(); ?>
-                                </div> <!-- subcl -->
-                            </div> <!-- c62r -->
-                        </div>
                         <label for="activity-comment"><?php echo $words->get('ActivityYourComment'); ?>:</label>
-                        <input type="text" id="activity-comment" name="activity-comment" value="<?php echo $this->member->comment;?>" />
+                        <input type="text" maxlength="80" id="activity-comment" name="activity-comment" value="<?php echo $this->member->comment;?>" />
+                    </div>
+                    <div class="type-check">
+                        <div class="abitlower"><input type="radio" value="activity-yes" id="activity-yes" name="activity-status" checked="checked"><label for="activity-yes"><?php echo $words->getSilent('ActivityYes'); ?></label></div>
+                        <div class="abitlower"><input type="radio" value="activity-maybe" id="activity-maybe" name="activity-status"><label for="activity-maybe"><?php echo $words->getSilent('ActivityMaybe'); ?></label></div>
+                        <div class="abitlower"><input type="radio" value="activity-no" id="activity-no" name="activity-status"><label for="activity-no"><?php echo $words->getSilent('ActivityNo'); ?></label></div>
                     </div>
                     <div class="type-button">
                     <?php
-                        $disabled = 'class="button"';
-                        $disableLeave = ($this->member->status != 0);
-                        $disableLeave = $disableLeave || (($this->member->organizer == 1) && (count($this->activity->organizers) == 1));
-                        if ($disableLeave) {
-                            $disabled = 'disabled="disabled" class="button back"';
-                        }
-                    ?>
-                    <input type="submit" id="activity-leave" name="activity-leave" value="<?php echo $words->getSilent('ActivityLeave'); ?>" <?php echo $disabled; ?> /><?php echo $words->flushBuffer(); ?> 
-                    <?php
-                        if (isset($this->member->organizer) && ($this->member->organizer == 1)) {
-                            if ($this->activity->status == 1) {
-                                echo '<input type="submit" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
-                            } else {
-                                echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
-                            }
-                            echo $words->flushBuffer();
+                        $enabled = 'class="button"';
+                        if ($this->member->status == 0) {
+                            echo '<button type="submit" id="activity-yes" name="activity-yes" class="button" title="' . $words->getSilent('ActivityJoinTheFun') . '" >' . $words->getSilent('ActivityJoinTheFun') . '</button>';
+                        } else {
+                            echo '<button type="submit" id="activity-update" name="activity-edit" class="button" title="' . $words->getSilent('ActivityEdit') . '" >' . $words->getSilent('ActivityEdit') . '</button>';
+// TODO if currently logged in member = organizer this  leave button should be hidden. Organizers should not be able to leave an active activity.
+                                echo '&nbsp;&nbsp;<button type="submit" id="activity-leave" name="activity-leave" class="button back" title="' . $words->getSilent('ActivityLeave') . '" >' . $words->getSilent('ActivityLeave') . '</button>';
                         }
                     ?>
                     </div>
@@ -145,6 +106,26 @@ if ($this->activity->status == 1) {
                     <p> 20 FIXME <?= $words->get('ActivityYesAttendees'); ?><br />
                      20 FIXME <?= $words->get('ActivityMightAttendees'); ?></p>
                 </div>
+                <?php if ($this->loggedInMember) {
+                    ?><form method="post" id="activity-show-form" class="yform full abitlower">
+                    <div class="type-button">
+                        <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
+                        <?php echo $callbackTags; ?>
+                        <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
+                        <?php
+                            if (isset($this->member->organizer) && ($this->member->organizer == 1)) {
+                                if ($this->activity->status == 1) {
+                                    echo '<input type="submit" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
+                                } else {
+                                    echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
+                                }
+                                echo $words->flushBuffer();
+                            }
+                        ?>
+                    </div>
+                    </form>
+                    <?php
+                        }?>
                 <div class="row abitright">
                     <h3><?php echo $words->get('ActivityOrganizers');?></h3>
                     <ul class="floatbox">

@@ -8,9 +8,10 @@
 .yform div.type-button {padding: 3px 0.5em;}
 .abitright {padding-left: 15px;}
 .abitlower {padding-top: 0.4em;}
+.yform .type-check label {vertical-align: top;}
+.yform .type-check .abitlower {padding-bottom: 0.1em;}
 .yform label {padding-bottom: 0.12em;}
 .activitieslist {width: 100%;}
-.activitieslist tr a {}
 #activitiesMap { 
     height: 300px; 
     width: 100%;

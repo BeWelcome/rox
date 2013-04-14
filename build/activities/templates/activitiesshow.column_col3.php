@@ -103,8 +103,9 @@ if ($this->activity->status == 1) {
                 </div>
                 <div class="row abitright">
                     <h3><?= $words->get('ActivityAttendeesNumbersTitle'); ?></h3>
-                    <p> 20 FIXME <?= $words->get('ActivityYesAttendees'); ?><br />
-                     20 FIXME <?= $words->get('ActivityMightAttendees'); ?></p>
+                    <p><?php echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes); ?><br />
+                     <?= $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe); ?><br />
+                     <?= $words->get('ActivityAttendeesNo', $this->activity->attendeesNo); ?></p>
                 </div>
                 <?php if ($this->loggedInMember) {
                     ?><form method="post" id="activity-show-form" class="yform full abitlower">

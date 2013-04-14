@@ -209,14 +209,18 @@ class ActivitiesModel extends RoxModelBase
     public function joinLeaveCancelActivity($post) {
         $status = 0;
         $activity = new Activity($post['activity-id']);
-        if (isset($post['activity-yes'])) {
-            $status = 1;
-        }
-        if (isset($post['activity-maybe'])) {
-            $status = 2;
-        }
-        if (isset($post['activity-no'])) {
-            $status = 3;
+        if (isset($post['activity-status'])) {
+            switch ($post['activity-status']) {
+                case 'activity-yes':
+                    $status = 1;
+                    break;
+                case 'activity-maybe':
+                    $status = 2;
+                    break;
+                case 'activity-no':
+                    $status = 3;
+                    break;
+            }
         }
         if ($status != 0) {
             if (in_array($this->getLoggedInMember()->id, array_keys($activity->attendees))) {

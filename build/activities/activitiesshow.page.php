@@ -34,14 +34,12 @@ class ActivitiesShowPage extends ActivitiesBasePage
 {
     protected function getSubmenuItems()
     {
-        $items = array();
+        $items = parent::getSubmenuItems();
         $activity_id = $this->activity->id;
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-            $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
-            $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
-            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
-            $items[] = array('activitiesdetails', 'activities/'. $activity_id, $words->getSilent('ActivitiesDetails'));
+        // add details item to end of normal list like search results
+        $items[] = array('activitiesdetails', 'activities/'. $activity_id, $words->getSilent('ActivitiesDetails'));
         return $items;
     }
     

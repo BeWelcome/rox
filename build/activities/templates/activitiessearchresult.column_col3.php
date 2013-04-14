@@ -9,8 +9,6 @@ if (isset($_SESSION['errors'])) {
     $errors = $_SESSION['errors'];
     unset($_SESSION['errors']);
 }
-?><div class="row">
-<?php 
 if (!empty($errors)) {
     echo '<div class="subcolumns error">';
     foreach($errors as $error) {
@@ -19,7 +17,6 @@ if (!empty($errors)) {
     echo '</div>';
 }
 ?>
-</div>
 <div class="subcolumns row">
     <div class="c66l">
         <div class="subcl">

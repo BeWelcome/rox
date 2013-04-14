@@ -137,6 +137,8 @@ class Activity extends RoxEntityBase
     public function searchActivities($publicOnly, $keyword, $pageno, $items) {
         $keywordEscaped = $this->dao->escape($keyword);
         $sql  = "SELECT * FROM (";
+        
+        // Search activities text elements
         $sql .= "SELECT a.* FROM activities AS a WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
@@ -144,11 +146,21 @@ class Activity extends RoxEntityBase
         $sql .= "(a.title LIKE '%". $keywordEscaped . "%' OR a.address LIKE '%". $keywordEscaped . "%'";
         $sql .= "OR a.description LIKE '%". $keywordEscaped . "%') ";
         $sql .= "UNION ";
+        
+        // Add results from place names
         $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
         $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "UNION ";
+        
+        // Add results for countries (english names only sorry)
+        $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g, geonames_countries AS gc WHERE ";
+        if ($publicOnly) {
+            $sql .= "public = 1 AND ";
+        }
+        $sql .= "a.locationId = g.geonameid AND g.fk_countrycode = gc.iso_alpha2 AND gc.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= ") AS r ORDER BY r.dateTimeEnd DESC LIMIT " . $items . " OFFSET " . ($pageno * $items);
         return $this->findBySQLMany($sql);
     }

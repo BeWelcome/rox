@@ -56,7 +56,6 @@ class ActivitiesController extends RoxControllerBase
         }
         $page = new ActivitiesShowPage();
         $page->activity = $activity;
-        $page->loggedInMember = $loggedInMember;
         $params = new StdClass;
         $params->strategy = new HalfPagePager('right');
         $params->page_url = 'activities/show/' . $id . '/attendees/';
@@ -65,7 +64,7 @@ class ActivitiesController extends RoxControllerBase
         $params->items = count($activity->attendees);
         $params->items_per_page = self::ATTENDEES_PER_PAGE;
         $pager = new PagerWidget($params);
-        $member = new StdClass;
+        $member = $loggedInMember;
         $member->status = 0;
         $member->comment = '';
         if ($loggedInMember && in_array($loggedInMember->id, array_keys($activity->attendees))) {
@@ -257,8 +256,6 @@ class ActivitiesController extends RoxControllerBase
             $page->pager = $this->getPager('search/' . urlencode($page->keyword), $count, $pageno);
             
             $page->allActivities = $this->_model->searchActivities($page->publicOnly, $page->keyword, 0, PVars::getObj('activities')->max_activities_on_map);
-            
-            
         } else {
             $page->keyword = '';
         }

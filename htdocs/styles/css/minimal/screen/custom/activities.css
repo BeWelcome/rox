@@ -1,6 +1,30 @@
-#activitiesMap { 
+#activities-map { 
 	height: 300px; 
 	width: 100%;
+}
+
+#activities-data{
+	display: none;
+}
+
+.marker-cluster-unique {
+    background-color: rgba(146, 144, 200, 0.6);
+}
+
+.marker-cluster-unique div {
+    background-color: rgba(146, 144, 200, 0.6);
+}
+
+.leaflet-popup-content h4{
+	margin: 0;
+}
+
+.leaflet-popup-content p.date-start{
+	margin: 0;
+}
+
+.leaflet-popup-content .date-start{
+	font-size: 75%;
 }
 
 /*

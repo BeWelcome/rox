@@ -8,34 +8,46 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
     $env_conf = PVars::getObj('env');
 
 
-    echo '<input type="hidden" id="cloudmadeApiKeyInput" value="' . $cloudmade_conf->cloudmade_api_key . '"/>';
+    echo '<input type="hidden" id="cloudmade-api-key-input" value="' . $cloudmade_conf->cloudmade_api_key . '"/>';
 
-    // map container
-    echo '<div id="activitiesMap"></div>';
+    // activities map container
+    echo '<div id="activities-map"></div>';
 
-    // map data
-    echo '<div id="activitiesData">';
-
+    // activities map data
+    echo '<div id="activities-data">';
+    
     $latitudeMin = null;
     $latitudeMax = null;
     $longitudeMin = null;
     $longitudeMax = null;
 
+    // activities data is stored in a hidden table in order to retrieve it from activities_map.js script
+    echo '<table>';
     foreach($this->allActivities as $activity) {
         $location = $activity->location;
 
         if ($location != null && $location->latitude != null && $location->longitude != null){
+        	
+            echo '<tr>';
+            
+            // activity title
+            echo '<td>' . $activity->title . '</td>';
+            
+            // location name
+            echo '<td>' . $location->name . '</td>';
+            // location latitude
+            echo '<td>' . $location->latitude . '</td>';
+            // location longitude
+            echo '<td>' . $location->longitude . '</td>';
+            
+            // activity details link URL
+            echo '<td>' . $env_conf->baseuri . 'activities/' . $activity->id . '</td>';
+            
+            echo '<td>' . $activity->dateStart . '</td>';
+            
+            echo '</tr>';
 
-            echo '<div class="activityData">';
-            echo '<input type="hidden" class="activityTitle" value="' . $activity->title . '" />';
-            echo '<input type="hidden" class="locationName" value="' . $location->name . '" />';
-
-            echo '<input type="hidden" class="activityUrl" value="' . $env_conf->baseuri . 'activities/' . $activity->id . '" />';
-
-            echo '<input type="hidden" class="latitudeValue" value="' . $location->latitude . '" />';
-            echo '<input type="hidden" class="longitudeValue" value="' . $location->longitude . '" />';
-            echo '</div>';
-
+            // update the bounds of the map with this point
             if ($latitudeMin === null || $latitudeMin > $location->latitude){
                 $latitudeMin = $location->latitude;
             }
@@ -54,17 +66,18 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
         }
 
     }
-
-    echo '<input type="hidden" id="activityDataLatitudeMin" value="' . $latitudeMin . '" />';
-    echo '<input type="hidden" id="activityDataLatitudeMax" value="' . $latitudeMax . '" />';
-    echo '<input type="hidden" id="activityDataLongitudeMin" value="' . $longitudeMin . '" />';
-    echo '<input type="hidden" id="activityDataLongitudeMax" value="' . $longitudeMax . '" />';
-
-    $latitudeCenter = $latitudeMax - $latitudeMin;
-    $longitudeCenter = $longitudeMax - $longitudeMin;
-
-    echo '<input type="hidden" id="activityDataLatitudeCenter" value="' . $latitudeCenter . '" />';
-    echo '<input type="hidden" id="activityDataLongitudeCenter" value="' . $longitudeCenter . '" />';
+    echo '</table>';
+    
+    if ($latitudeMin != null){
+    	// at least one point with valid location
+    	
+    	// min & max latitude
+    	echo '<input type="hidden" id="activity-data-min-latitude" value="' . $latitudeMin . '" />';
+    	echo '<input type="hidden" id="activity-data-max-latitude" value="' . $latitudeMax . '" />';
+    	// min & max longitude
+    	echo '<input type="hidden" id="activity-data-min-longitude" value="' . $longitudeMin . '" />';
+    	echo '<input type="hidden" id="activity-data-max-longitude" value="' . $longitudeMax . '" />';
+    }
 
     echo '</div>';
 

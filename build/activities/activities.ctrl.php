@@ -258,6 +258,12 @@ class ActivitiesController extends RoxControllerBase
             $page->allActivities = $this->_model->searchActivities($page->publicOnly, $page->keyword, 0, PVars::getObj('activities')->max_activities_on_map);
         } else {
             $page->keyword = '';
+            $count = $this->_model->searchActivitiesCount($page->publicOnly, $page->keyword);
+            $activities = $this->_model->searchActivities($page->publicOnly, $page->keyword, $pageno, self::ACTIVITIES_PER_PAGE);
+            $page->activities = $activities;
+            $page->pager = $this->getPager('search/' . urlencode($page->keyword), $count, $pageno);
+            
+            $page->allActivities = $this->_model->searchActivities($page->publicOnly, $page->keyword, 0, PVars::getObj('activities')->max_activities_on_map);
         }
         return $page;
     }

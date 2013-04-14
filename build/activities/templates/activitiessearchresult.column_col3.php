@@ -34,14 +34,16 @@ if (!empty($errors)) {
 </div>
 <div class="row>">
 <?php 
-if (count($this->activities) == 0) {
-    if ($this->public) {
-        echo '<p>' . $words->get('ActivitiesSearchNoPublicResults') . '</p>';
+if ($this->keyword != '') {
+    if (count($this->activities) == 0) {
+        if ($this->public) {
+            echo '<p>' . $words->get('ActivitiesSearchNoPublicResults') . '</p>';
+        } else {
+            echo '<p>' . $words->get('ActivitiesSearchNoResults') . '</p>';
+        }
     } else {
-        echo '<p>' . $words->get('ActivitiesSearchNoResults') . '</p>';
+        require_once('activitieslist.php');
     }
-} else {
-    require_once('activitieslist.php');
 }
 ?>
 </div>

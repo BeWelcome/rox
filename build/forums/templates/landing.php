@@ -74,7 +74,7 @@ if ($User && $ownGroupsButtonCallbackId) {
     if ($boards->owngroupsonly == "No") {
         $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
     } else {
-        $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
+        $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
     }
     ?>
     <div class="float_right">

@@ -17,6 +17,18 @@ class Activity extends RoxEntityBase
         }
     }
 
+    private function getAttendeesCountByStatus($status) {
+        $query = 'SELECT COUNT(aa.attendeeId) AS count FROM activitiesattendees AS aa WHERE 
+            aa.activityId = ' . $this->id . ' AND aa.status = ' . $status;
+        error_log(__FUNCTION__ . ": " . $query);
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return -1;
+        }
+        $row = $sql->fetch(PDB::FETCH_OBJ);
+        return $row->count;
+    }
+    
     /**
      * overloads RoxEntityBase::loadEntity to load related data
      *
@@ -57,6 +69,11 @@ class Activity extends RoxEntityBase
             // location details
             $entityFactory = new RoxEntityFactory();
             $this->location = $entityFactory->create('Geo', $this->locationId);
+            // get counts for yes, maybe and no attendees
+            error_log(__FUNCTION__ . ": Get attendees");
+            $this->attendeesYes = $this->getAttendeesCountByStatus( 1 );
+            $this->attendeesMaybe = $this->getAttendeesCountByStatus( 2 );
+            $this->attendeesNo = $this->getAttendeesCountByStatus( 3 );
         }
         return $status;
     }

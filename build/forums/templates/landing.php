@@ -55,11 +55,8 @@ if (!$User) {
         $noForumNewTopicButton = true;
         require 'boardthreads.php';
 ?>
-    <div class="float_right">
-        <span class="button">
-            <a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a>
-        </span>
-    </div>
+    <br />
+    <p><strong><a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong></p>
     <br /><br />
 </div> <!-- Forum-->
 <?php
@@ -97,11 +94,8 @@ if ($User && $ownGroupsButtonCallbackId) {
 <?php
         require 'boardthreads.php';
 ?>
-    <div class="float_right">
-        <span class="button">
-            <a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a>
-        </span>
-    </div>
+    <br />
+    <p><strong><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong></p>
 
 </div> <!-- Groups-->
 <?php

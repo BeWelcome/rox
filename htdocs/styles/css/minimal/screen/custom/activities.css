@@ -12,7 +12,8 @@
 .yform .type-check .abitlower {padding-bottom: 0.1em;}
 .yform label {padding-bottom: 0.12em;}
 .activitieslist {width: 100%;}
-#activitiesMap { 
+
+#activities-map { 
     height: 300px; 
     width: 100%;
 }

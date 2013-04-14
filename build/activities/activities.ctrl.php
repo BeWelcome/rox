@@ -8,7 +8,6 @@ class ActivitiesController extends RoxControllerBase
 {
     const ACTIVITIES_PER_PAGE = 5;
     const ATTENDEES_PER_PAGE = 18;
-    const ACTIVITIES_MAX_ON_MAP = 1000;
     
     /**
      * Declaring private variables.
@@ -157,7 +156,7 @@ class ActivitiesController extends RoxControllerBase
         $page->activities = $activities;
         $page->pager = $this->getPager('myactivities', $count, $pageno);
         
-        $page->allActivities = $this->_model->getMyActivities(0, self::ACTIVITIES_MAX_ON_MAP);
+        $page->allActivities = $this->_model->getMyActivities(0, PVars::getObj('activities')->max_activities_on_map);
         
         return $page;
     }
@@ -179,7 +178,7 @@ class ActivitiesController extends RoxControllerBase
         $page->activities = $this->_model->getUpcomingActivities($page->publicOnly, $pageno, self::ACTIVITIES_PER_PAGE);
         $page->pager = $this->getPager('upcomingactivities', $count, $pageno);
         
-        $page->allActivities = $this->_model->getUpcomingActivities($page->publicOnly, 0, self::ACTIVITIES_MAX_ON_MAP);
+        $page->allActivities = $this->_model->getUpcomingActivities($page->publicOnly, 0, PVars::getObj('activities')->max_activities_on_map);
         
         return $page;
     }
@@ -202,7 +201,7 @@ class ActivitiesController extends RoxControllerBase
         $page->activities = $this->_model->getPastActivities($page->publicOnly, $pageno, self::ACTIVITIES_PER_PAGE);
         $page->pager = $this->getPager('pastactivities', $count, $pageno);
         
-        $page->allActivities = $this->_model->getPastActivities($page->publicOnly, 0, self::ACTIVITIES_MAX_ON_MAP);
+        $page->allActivities = $this->_model->getPastActivities($page->publicOnly, 0, PVars::getObj('activities')->max_activities_on_map);
                 
         return $page;
     }
@@ -224,7 +223,7 @@ class ActivitiesController extends RoxControllerBase
         $page->activities = $this->_model->getActivitiesNearMe($distance, $pageno, self::ACTIVITIES_PER_PAGE);
         $page->pager = $this->getPager('nearme', $count, $pageno);
         
-        $page->allActivities = $this->_model->getActivitiesNearMe($distance, 0, self::ACTIVITIES_MAX_ON_MAP);
+        $page->allActivities = $this->_model->getActivitiesNearMe($distance, 0, PVars::getObj('activities')->max_activities_on_map);
         
         return $page;
     }
@@ -262,7 +261,7 @@ class ActivitiesController extends RoxControllerBase
             $page->activities = $activities;
             $page->pager = $this->getPager('search/' . urlencode($page->keyword), $count, $pageno);
             
-            $page->allActivities = $this->_model->searchActivities($page->publicOnly, $page->keyword, 0, self::ACTIVITIES_MAX_ON_MAP);
+            $page->allActivities = $this->_model->searchActivities($page->publicOnly, $page->keyword, 0, PVars::getObj('activities')->max_activities_on_map);
             
             
         } else {

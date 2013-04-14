@@ -234,7 +234,7 @@ if (isset($_SESSION["IdMember"])) {
             }
         }
 
-        echo '<hr /><div class="floatbox"><p class="float_left"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '">' . $words->get('ForumPermalink') . '</a></p>';
+        echo '<div class="floatbox clearfix" style="clear: both;"><hr /><p class="float_left"><a href="forums/s' . $post->threadid . '/#post' . $post->IdPost . '">' . $words->get('ForumPermalink') . '</a></p>';
         $TheReports=$this->_model->GetReports($post->IdPost,$_SESSION["IdMember"]) ; // Check if there is a pending report for this member
         echo '<p class="float_right">';
         if (isset($TheReports[0]->IdReporter)) {

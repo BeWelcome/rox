@@ -43,7 +43,6 @@ class ActivitiesModel extends RoxModelBase
 
     public function getMyActivitiesCount() {
         $all = $this->CreateEntity('Activity')->getActivitiesForMemberCount($this->getLoggedInMember());
-        error_log("Activities: " . count($all));
         return $all;
     }
 
@@ -316,7 +315,6 @@ class ActivitiesModel extends RoxModelBase
     public function checkSearchActivitiesVarsOk($args) {
         $errors = array();
         $post = $args->post;
-        error_log(print_r($post, true));
         if (empty($post['activity-keyword'])) {
             $errors[] = 'ActivitiesKeywordEmpty';
         }

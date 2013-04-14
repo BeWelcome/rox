@@ -41,9 +41,9 @@ class ActivitiesSearchResultPage extends ActivitiesBasePage
     protected function getSubmenuItems()
     {
         $items = parent::getSubmenuItems();
-
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
+
         // Add search results to the end of the list
         $items[] = array('activitiessearch', 'activities/search', $words->getSilent('ActivitiesSearchResult'));
         return $items;

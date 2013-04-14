@@ -29,10 +29,8 @@ class ActivitiesController extends RoxControllerBase
      */
     public function activities() {
         if ($this->_model->getLoggedInMember()) {
-        error_log('myact');
             $this->redirectAbsolute($this->router->url('activities_my_activities'));
         } else {
-        error_log('upact');
             $this->redirectAbsolute($this->router->url('activities_upcoming_activities'));
         }
     }
@@ -40,7 +38,6 @@ class ActivitiesController extends RoxControllerBase
     public function joinLeaveCancelActivityCallback(StdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
-    error_log(print_r($args, true));
         $result = $this->_model->joinLeaveCancelActivity($args->post);
         if ($result) {
             $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $args->post['activity-title']);
@@ -59,7 +56,6 @@ class ActivitiesController extends RoxControllerBase
         }
         $page = new ActivitiesShowPage();
         $page->activity = $activity;
-        $page->loggedInMember = $loggedInMember;
         $params = new StdClass;
         $params->strategy = new HalfPagePager('right');
         $params->page_url = 'activities/show/' . $id . '/attendees/';
@@ -68,7 +64,7 @@ class ActivitiesController extends RoxControllerBase
         $params->items = count($activity->attendees);
         $params->items_per_page = self::ATTENDEES_PER_PAGE;
         $pager = new PagerWidget($params);
-        $member = new StdClass;
+        $member = $loggedInMember;
         $member->status = 0;
         $member->comment = '';
         if ($loggedInMember && in_array($loggedInMember->id, array_keys($activity->attendees))) {
@@ -86,7 +82,6 @@ class ActivitiesController extends RoxControllerBase
     {
         $errors = $this->_model->checkEditCreateActivityVarsOk($args);
         if (count($errors) > 0) {
-            error_log("error");
             $mem_redirect->errors = $errors;
             $mem_redirect->vars = $args->post;
             return false;
@@ -220,7 +215,6 @@ class ActivitiesController extends RoxControllerBase
         }
         $distance = 50;
         $count = $this->_model->getActivitiesNearMeCount($distance);
-        error_log($count);
         $page->activities = $this->_model->getActivitiesNearMe($distance, $pageno, self::ACTIVITIES_PER_PAGE);
         $page->pager = $this->getPager('nearme', $count, $pageno);
         
@@ -233,7 +227,6 @@ class ActivitiesController extends RoxControllerBase
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
         $errors = $this->_model->checkSearchActivitiesVarsOk($args);
-        error_log(print_r($errors, true));
         if (count($errors) > 0) {
             $_SESSION['errors'] = $errors;
             return $this->router->url('activities_search', array(), false);
@@ -263,10 +256,14 @@ class ActivitiesController extends RoxControllerBase
             $page->pager = $this->getPager('search/' . urlencode($page->keyword), $count, $pageno);
             
             $page->allActivities = $this->_model->searchActivities($page->publicOnly, $page->keyword, 0, PVars::getObj('activities')->max_activities_on_map);
-            
-            
         } else {
             $page->keyword = '';
+            $count = $this->_model->searchActivitiesCount($page->publicOnly, $page->keyword);
+            $activities = $this->_model->searchActivities($page->publicOnly, $page->keyword, $pageno, self::ACTIVITIES_PER_PAGE);
+            $page->activities = $activities;
+            $page->pager = $this->getPager('search/' . urlencode($page->keyword), $count, $pageno);
+            
+            $page->allActivities = $this->_model->searchActivities($page->publicOnly, $page->keyword, 0, PVars::getObj('activities')->max_activities_on_map);
         }
         return $page;
     }

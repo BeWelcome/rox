@@ -20,7 +20,6 @@ class Activity extends RoxEntityBase
     private function getAttendeesCountByStatus($status) {
         $query = 'SELECT COUNT(aa.attendeeId) AS count FROM activitiesattendees AS aa WHERE 
             aa.activityId = ' . $this->id . ' AND aa.status = ' . $status;
-        error_log(__FUNCTION__ . ": " . $query);
         $sql = $this->dao->query($query);
         if (!$sql) {
             return -1;
@@ -70,7 +69,6 @@ class Activity extends RoxEntityBase
             $entityFactory = new RoxEntityFactory();
             $this->location = $entityFactory->create('Geo', $this->locationId);
             // get counts for yes, maybe and no attendees
-            error_log(__FUNCTION__ . ": Get attendees");
             $this->attendeesYes = $this->getAttendeesCountByStatus( 1 );
             $this->attendeesMaybe = $this->getAttendeesCountByStatus( 2 );
             $this->attendeesNo = $this->getAttendeesCountByStatus( 3 );
@@ -87,16 +85,13 @@ class Activity extends RoxEntityBase
     public function insert()
     {
         $status = parent::insert();
-        error_log("Status: [" . $status . "]");
         if ($status) {
-            error_log("organizers: " . print_r($this->organizers, true) . "|");
             if (count($this->organizers) > 0) {
                 // add organizers to activitiesattendees table
                 foreach($this->organizers as $organizer) {
                     $query = "INSERT INTO activitiesattendees SET activityId = " . $this->id;
                     $query .= ", attendeeId=" . $organizer['attendeeId'];
                     $query .= ", organizer=1, status=1";
-                    error_log($query);
                     $this->dao->query($query);
                 }
             }
@@ -127,7 +122,6 @@ class Activity extends RoxEntityBase
         $query  = "SELECT a.* FROM activities AS a, activitiesattendees AS aa WHERE a.id = aa.activityId AND aa.attendeeId = " . $member->id . " ";
         $query .= "ORDER BY a.dateTimeStart DESC ";
         $query .= "LIMIT " . $items . " OFFSET " . ($pageno * $items);
-        error_log($query);
         $activities = $this->findBySQLMany($query);
         return $activities;
     }
@@ -143,6 +137,8 @@ class Activity extends RoxEntityBase
     public function searchActivities($publicOnly, $keyword, $pageno, $items) {
         $keywordEscaped = $this->dao->escape($keyword);
         $sql  = "SELECT * FROM (";
+        
+        // Search activities text elements
         $sql .= "SELECT a.* FROM activities AS a WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
@@ -150,13 +146,22 @@ class Activity extends RoxEntityBase
         $sql .= "(a.title LIKE '%". $keywordEscaped . "%' OR a.address LIKE '%". $keywordEscaped . "%'";
         $sql .= "OR a.description LIKE '%". $keywordEscaped . "%') ";
         $sql .= "UNION ";
+        
+        // Add results from place names
         $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g WHERE ";
         if ($publicOnly) {
             $sql .= "public = 1 AND ";
         }
         $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
+        $sql .= "UNION ";
+        
+        // Add results for countries (english names only sorry)
+        $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g, geonames_countries AS gc WHERE ";
+        if ($publicOnly) {
+            $sql .= "public = 1 AND ";
+        }
+        $sql .= "a.locationId = g.geonameid AND g.fk_countrycode = gc.iso_alpha2 AND gc.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= ") AS r ORDER BY r.dateTimeEnd DESC LIMIT " . $items . " OFFSET " . ($pageno * $items);
-        error_log($sql);
         return $this->findBySQLMany($sql);
     }
 
@@ -184,7 +189,6 @@ class Activity extends RoxEntityBase
         }
         $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= ") AS r";
-        error_log($sql);
         return $this->sqlCount($sql);
     }
 }

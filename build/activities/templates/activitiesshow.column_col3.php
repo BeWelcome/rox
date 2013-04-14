@@ -19,7 +19,7 @@ if ($this->activity->status == 1) {
                     <h3><?= $words->get('ActivityDescription'); ?></h3>
                     <span><?php echo $this->activity->description; ?></span>
                 </div>
-                <?php if ($this->loggedInMember) { ?>
+                <?php if ($this->member) { ?>
                 <div><h3><?php echo $words->get('ActivityAttendees');?></h3>
                 <?php echo $this->attendeesPager->render(); ?>
                 <ul class="floatbox">
@@ -57,7 +57,7 @@ if ($this->activity->status == 1) {
         </div> <!-- c62l -->
         <div class="c38r">
             <div class="subcr">
-                <?php if ($this->loggedInMember) {
+                <?php if ($this->member) {
                         if ($this->activity->status == 0) { ?>
                     <form method="post" id="activity-show-form" class="yform full abitlower">
                     <?php echo $callbackTags; ?>
@@ -107,7 +107,7 @@ if ($this->activity->status == 1) {
                      <?= $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe); ?><br />
                      <?= $words->get('ActivityAttendeesNo', $this->activity->attendeesNo); ?></p>
                 </div>
-                <?php if ($this->loggedInMember) {
+                <?php if ($this->member) {
                     ?><form method="post" id="activity-show-form" class="yform full abitlower">
                     <div class="type-button">
                         <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>

@@ -1,3 +1,4 @@
+<div id="groups">
         <h3><?= $words->get('GroupsMyGroups'); ?></h3>
         <div class="floatbox">
         <?php
@@ -35,3 +36,4 @@ HTML;
         }
         ?>
         </div>
+</div>

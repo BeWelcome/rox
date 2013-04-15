@@ -69,15 +69,17 @@ class ActivitiesController extends RoxControllerBase
         }
         $page = new ActivitiesShowPage();
         $page->activity = $activity;
-        $member = $loggedInMember;
-        $member->status = 0;
-        $member->comment = '';
-        if ($loggedInMember && in_array($loggedInMember->id, array_keys($activity->attendees))) {
-            $member->status = $activity->attendees[$loggedInMember->id]->status;
-            $member->comment = $activity->attendees[$loggedInMember->id]->comment;
-            $member->organizer = in_array($loggedInMember->id, array_keys($activity->organizers));
+        if ($loggedInMember) {
+            $member = $loggedInMember;
+            $member->status = 0;
+            $member->comment = '';
+            if ($loggedInMember && in_array($loggedInMember->id, array_keys($activity->attendees))) {
+                $member->status = $activity->attendees[$loggedInMember->id]->status;
+                $member->comment = $activity->attendees[$loggedInMember->id]->comment;
+                $member->organizer = in_array($loggedInMember->id, array_keys($activity->organizers));
+            }
+            $page->member = $member;
         }
-        $page->member = $member;
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;

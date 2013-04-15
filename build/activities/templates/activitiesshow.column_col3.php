@@ -119,26 +119,29 @@ if ($this->activity->status == 1) {
                      <?= $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe); ?><br />
                      <?= $words->get('ActivityAttendeesNo', $this->activity->attendeesNo); ?></p>
                 </div>
-                <?php if ($this->member) {
-                    ?><form method="post" id="activity-show-form" class="yform full abitlower">
+                <?php if ($this->member) 
+                {
+                        if ($this->member->organizer == true) 
+                    { ?>
+                    <form method="post" id="activity-show-form" class="yform full abitlower">
                     <div class="type-button">
                         <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
                         <?php echo $callbackTags; ?>
                         <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
-                        <?php
-                            if ($this->member->organizer == true) {
-                                if ($this->activity->status == 1) {
+                        <?php if ($this->activity->status == 1) 
+                                {
                                     echo '<input type="submit" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
                                 } else {
                                     echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
                                 }
                                 echo $words->flushBuffer();
-                            }
+                            
                         ?>
                     </div>
                     </form>
-                    <?php
-                        }?>
+                    <?php 
+                    }
+                }?>
                 <div class="row abitright">
                     <h3><?php echo $words->get('ActivityOrganizers');?></h3>
                     <ul class="floatbox">

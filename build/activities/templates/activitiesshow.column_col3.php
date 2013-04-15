@@ -4,10 +4,19 @@ $callbackTags = $formkit->setPostCallback('ActivitiesController', 'joinLeaveCanc
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
 $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
+$status = array();
+if (isset($_SESSION['ActivityStatus'])) {
+    $status = $_SESSION['ActivityStatus'];
+    unset($_SESSION['ActivityStatus']);
+}
+if (!empty($status)) {
+    echo '<div class="success">' . $words->get($status[0], $status[1]) . '</div>';
+}
 if ($this->activity->status == 1) {
-    // the activity has been cancelled ?>
-    <div class="error"><?php echo $words->get('ActivityHasBeenCancelled'); ?></div>
-<?php } ?>
+    // the activity has been cancelled
+    echo '<div class="error">' . $words->get('ActivityHasBeenCancelled') . '</div>';
+}
+?>
 <div id="activity">
     <div class="floatbox">
         <h2><?php echo $this->activity->title; ?></h2>

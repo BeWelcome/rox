@@ -40,7 +40,8 @@ class ActivitiesController extends RoxControllerBase
     {
         $result = $this->_model->joinLeaveCancelActivity($args->post);
         if ($result) {
-            $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $args->post['activity-title']);
+            $activity = new Activity($args->post['activity-id']);
+            $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $activity->title);
             return true;
         } else {
             return false;

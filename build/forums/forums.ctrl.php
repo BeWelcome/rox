@@ -94,7 +94,8 @@ class ForumsController extends PAppController
             $User = false;
         }
          
-        
+        $showSticky = true;        
+
         $this->parseRequest();
         
         // set uri for correct links in group pages etc.
@@ -104,7 +105,7 @@ class ForumsController extends PAppController
         $view->BW_Right = $this->BW_Right;
         $page->BW_Right = $this->BW_Right;
         
-        $this->_model->prepareForum();
+        $this->_model->prepareForum($showSticky);
         
         // first include the col2-stylesheet
         $page->addStyles .= $view->customStyles();
@@ -180,7 +181,7 @@ class ForumsController extends PAppController
             else {
                 if ($this->isTopLevel) {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
-                    $this->_model->prepareForum();
+                    $this->_model->prepareForum(false);
 
                     $callbackId = $this->mygroupsonlyProcess();
                     $this->_view->showTopLevelLandingPage($callbackId); 
@@ -666,6 +667,7 @@ class ForumsController extends PAppController
                 } else if ($r == 'landing') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
                     $this->action = self::ACTION_VIEW_LANDING;
+                    $showSticky = false;
                 } else if ($r == 'agora') {
                     if ($this->_model->getTopMode() == Forums::CV_TOPMODE_CATEGORY) {
                         $this->action = self::ACTION_VIEW_CATEGORY;

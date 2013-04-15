@@ -133,7 +133,7 @@ bwrox.selectScripts([
     pages: ["activities"]
   },
   {
-    file: "http://maps.googleapis.com/maps/api/js?sensor=false",
+    file: "//maps.googleapis.com/maps/api/js?sensor=false",
     remote: true,
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },

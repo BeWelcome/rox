@@ -126,17 +126,20 @@ if ($this->activity->status == 1) {
                     <form method="post" id="activity-show-form" class="yform full abitlower">
                     <div class="type-button">
                         <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
+                        <div class= "row"
                         <?php echo $callbackTags; ?>
                         <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                         <?php if ($this->activity->status == 1) 
                                 {
                                     echo '<input type="submit" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
                                 } else {
-                                    echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
+                                    echo '<a href="activities/' . $this->activity->id .'/edit" class="button" style="padding-bottom: 2.5px; padding-top: 4.5px;">' . $words->getSilent('ActivityEdit') . '</a>';
+                                    echo '&nbsp;&nbsp;<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
                                 }
                                 echo $words->flushBuffer();
                             
                         ?>
+                        </div>
                     </div>
                     </form>
                     <?php 

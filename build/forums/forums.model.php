@@ -349,6 +349,71 @@ function FindAppropriatedLanguage($IdPost=0) {
         MOD_log::get()->write("Switching PreferenceForumOrderListAsc to [".$this->ForumOrderList."]", "ForumModerator");
 	} // end of switchForumOrderList
 
+    public function adjustThreadsCountToShow($step = 1) {
+        $MAX_THREADS = 1000; //An upper limit just in case
+        if (!$member = $this->getLoggedInMember()) {
+            return false;
+        }
+        $vars =& PPostHandler::getVars();
+        if (!isset($vars['agoragroupsthreadscountmoreless'])) {
+            return false;
+        }
+        $command = $vars['agoragroupsthreadscountmoreless'];
+        $forumthreads = intval($member->getPreference("ForumThreadsOnLandingPage", $default = "5"));
+        $groupsthreads = intval($member->getPreference("GroupsThreadsOnLandingPage", $default = "5"));
+        $membersmodel = new MembersModel();
+
+        $query = "
+            SELECT
+                id
+            FROM
+                preferences
+            WHERE
+                CodeName = 'ForumThreadsOnLandingPage'
+            LIMIT 1
+            ";
+        $row = $this->dao->query($query);
+        $forumpref = $row->fetch(PDB::FETCH_OBJ);
+        if ($forumpref === false) {
+            throw new Exception('Database error: "ForumThreadsOnLandingPage"'
+                . ' preference not found in "preferences" table');
+        }
+
+        $query = "
+            SELECT
+                id
+            FROM
+                preferences
+            WHERE
+                CodeName = 'GroupsThreadsOnLandingPage'
+            LIMIT 1
+            ";
+        $row = $this->dao->query($query);
+        $groupspref = $row->fetch(PDB::FETCH_OBJ);
+        if ($groupspref === false) {
+            throw new Exception('Database error: "GroupsThreadsOnLandingPage"'
+                . ' preference not found in "preferences" table');
+        }
+
+        switch ($command) {
+            case "moreagora":
+                $membersmodel->set_preference($member->id, $forumpref->id, min($forumthreads + $step, $MAX_THREADS));
+                break;
+            case "lessagora":
+                $membersmodel->set_preference($member->id, $forumpref->id, max($forumthreads - $step, 1));
+                break;
+            case "moregroups": 
+                $membersmodel->set_preference($member->id, $groupspref->id, min($groupsthreads + $step, $MAX_THREADS));
+                break;
+            case "lessgroups": 
+                $membersmodel->set_preference($member->id, $groupspref->id, max($groupsthreads - $step, 1));
+                break;
+        }
+
+        return false;
+    }
+
+
 
     // This switch the preference switchShowMyGroupsTopicsOnly
     public function switchShowMyGroupsTopicsOnly() {
@@ -473,23 +538,17 @@ WHERE
             return ;
         }
         $member = $this->getLoggedInMember();
-        $forumthreads = intval($member->getPreference("ForumThreadsOnLandingPage"));
-        $groupsthreads = intval($member->getPreference("GroupsThreadsOnLandingPage"));
+        $forumthreads = intval($member->getPreference("ForumThreadsOnLandingPage", $default = 5));
+        $groupsthreads = intval($member->getPreference("GroupsThreadsOnLandingPage", $default = 5));
 
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
 
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
-        if (!empty($forumthreads)) 
-            {$forum->THREADS_PER_PAGE = $forumthreads;}
-        else 
-            {$forum->THREADS_PER_PAGE = 5;}
+        $forum->THREADS_PER_PAGE = $forumthreads;
         $forum->initThreads(1, $showsticky);
 
         $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
-        if (!empty($groupsthreads)) 
-            {$groups->THREADS_PER_PAGE = $groupsthreads;}
-        else 
-            {$groups->THREADS_PER_PAGE = 5;}
+        $groups->THREADS_PER_PAGE = $groupsthreads;
         $groups->initThreads(1, $showsticky);
 
         $this->board->add($forum);

@@ -54,8 +54,26 @@ if (!$User) {
         $noForumLegendBox = true;
         $noForumNewTopicButton = true;
         require 'boardthreads.php';
+
+
+    if ($User && $moreLessThreadsCallbackId) {
 ?>
-    <br />
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
+            <input type="hidden" name="agoragroupsthreadscountmoreless" value="moreagora">
+            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowMore'); ?>">
+        </form>
+
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
+            <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessagora">
+            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowLess'); ?>">
+        </form>
+
+<?php
+    }
+?>
+    <br /><br />
     <p><strong><a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong></p>
     <br /><br />
 </div> <!-- Forum-->
@@ -93,8 +111,26 @@ if ($User && $ownGroupsButtonCallbackId) {
   </div><!--  row -->
 <?php
         require 'boardthreads.php';
+
+
+
+    if ($User && $moreLessThreadsCallbackId) {
 ?>
-    <br />
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
+            <input type="hidden" name="agoragroupsthreadscountmoreless" value="moregroups">
+            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowMore'); ?>">
+        </form>
+
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
+            <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
+            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowLess'); ?>">
+        </form>
+<?php
+    }
+?>
+    <br /><br />
     <p><strong><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong></p>
 
 </div> <!-- Groups-->

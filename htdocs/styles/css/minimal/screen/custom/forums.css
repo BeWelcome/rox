@@ -357,3 +357,6 @@ a.toggleedit {
 a.toggleedit:hover {
     text-decoration: underline;
 }
+
+/* Community landing more and less buttons */
+.morelessbuttons {display: inline;}

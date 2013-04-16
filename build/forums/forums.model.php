@@ -471,14 +471,27 @@ WHERE
         if ($this->tags) {
             $this->boardTopLevelLastPosts() ;
             return ;
-        } 
+        }
+        $member = $this->getLoggedInMember();
+        $forumthreads = intval($member->getPreference("ForumThreadsOnLandingPage"));
+        $groupsthreads = intval($member->getPreference("GroupsThreadsOnLandingPage"));
+
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
+
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
-        $forum->THREADS_PER_PAGE = 5;
+        if (!empty($forumthreads)) 
+            {$forum->THREADS_PER_PAGE = $forumthreads;}
+        else 
+            {$forum->THREADS_PER_PAGE = 5;}
         $forum->initThreads(1, $showsticky);
+
         $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
-        $groups->THREADS_PER_PAGE = 5;
+        if (!empty($groupsthreads)) 
+            {$groups->THREADS_PER_PAGE = $groupsthreads;}
+        else 
+            {$groups->THREADS_PER_PAGE = 5;}
         $groups->initThreads(1, $showsticky);
+
         $this->board->add($forum);
         $this->board->add($groups);
             

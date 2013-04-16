@@ -1,4 +1,4 @@
-       <form method="post" id="preferences" >
+       <form method="post" id="preferences" action="<?=$baseuri.'mypreferences/'?>"  >
         <fieldset>
             <legend><?=$words->get('MyPreferences')?></legend>
         <?=$callback_tag ?>

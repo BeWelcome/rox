@@ -43,8 +43,9 @@
         </div> <!-- subcolumns -->
 
 <?php
+        $doNotShow = array('PreferenceLanguage', 'ForumThreadsOnLandingPage','GroupsThreadsOnLandingPage');
 	foreach ($p as $rr) {
-		if ($rr->codeName != 'PreferenceLanguage') {
+		if (!in_array($rr->codeName, $doNotShow)) {
 ?>
         <h3><?=$words->get($rr->codeName)?></h3>
 		<?php

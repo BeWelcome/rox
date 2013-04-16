@@ -38,7 +38,7 @@ function initMap(){
 	
 		L.tileLayer(cloudmadeUrl, {
 		    attribution: mapAttribution,
-		    maxZoom: 18
+		    maxZoom: 14
 		}).addTo(map);
 		
 		return map;

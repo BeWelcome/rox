@@ -38,6 +38,12 @@ class ActivitiesController extends RoxControllerBase
     public function joinLeaveCancelActivityCallback(StdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
+        $errors = $this->_model->checkJoinLeaveCancelActivityVarsOk($args);
+        if (count($errors) > 0) {
+            $mem_redirect->errors = $errors;
+            $mem_redirect->vars = $args->post;
+            return false;
+        }
         $result = $this->_model->joinLeaveCancelActivity($args->post);
         if ($result) {
             $activity = new Activity($args->post['activity-id']);

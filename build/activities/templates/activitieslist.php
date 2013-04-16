@@ -1,5 +1,4 @@
-<?php $this->pager->render();
-
+<?php
 if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 
     // retrieve cloudmade API key
@@ -86,7 +85,8 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
     echo '</div>';
 
 }
-?>
+$this->pager->render(); ?>
+
 
 <table class='activitieslist'>
 <?php

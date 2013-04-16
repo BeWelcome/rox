@@ -40,6 +40,7 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
             $this->update = true;
         } 
         $items = parent::getSubmenuItems();
+        return $items;
     }
     
     protected function getSubmenuActiveItem() 

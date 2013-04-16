@@ -60,7 +60,7 @@ class ActivitiesBasePage extends PageWithActiveSkin
             $geo = new Geo($this->member->IdCity);
             $items[] = array('activitiesnearme', 'activities/nearme', $words->getSilent('ActivitiesActivitiesNear', $geo->name));
             if ($this->update) {
-                $items[] = array('editactivities', 'activities/edit', $words->getSilent('ActivitiesEdit'));
+                $items[] = array('createactivities', 'activities/' . $this->activity->id . '/edit', $words->getSilent('ActivitiesEdit'));
             } else {
                 $items[] = array('createactivities', 'activities/create', $words->getSilent('ActivitiesCreate'));
             }

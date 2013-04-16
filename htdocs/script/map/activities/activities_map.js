@@ -84,12 +84,14 @@ function addMarkers(map){
 		var longitude =  jQuery(cols[3]).html();
 		var activityUrl =  jQuery(cols[4]).html();
 		var dateStart =  jQuery(cols[5]).html();
+		var address =  jQuery(cols[6]).html();
 		
 		var marker = new L.Marker([latitude, longitude], {icon: icon});
 		
 		var popupContent = '<h4><a href="' + activityUrl + '">' + activityTitle + '</a></h4>';
 		popupContent += '<p class="date-start">' + dateStart + '</p>';
 		popupContent += '<p>' + locationName + '</p>';
+		popupContent += '<p class="address">' + address + '</p>';
 			
 		marker.bindPopup(popupContent).openPopup();
 		

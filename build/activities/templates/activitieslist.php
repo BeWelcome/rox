@@ -43,7 +43,11 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
             // activity details link URL
             echo '<td>' . $env_conf->baseuri . 'activities/' . $activity->id . '</td>';
             
+            // date start
             echo '<td>' . $activity->dateStart . '</td>';
+            
+            // address
+            echo '<td>' . $activity->address . '</td>';
             
             echo '</tr>';
 

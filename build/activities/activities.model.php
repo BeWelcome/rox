@@ -205,7 +205,7 @@ class ActivitiesModel extends RoxModelBase
         return $errors;
     }
 
-    public function checkJoinLeaveCancelActivityVarsOk($args) {
+    public function checkJoinLeaveActivityVarsOk($args) {
         $errors = array();
         $post = $args->post;
         $status = 0;
@@ -232,10 +232,9 @@ class ActivitiesModel extends RoxModelBase
         return $errors;
     }
     
-    public function joinLeaveCancelActivity($post) {
+    public function joinLeaveActivity($post) {
         $activity = new Activity($post['activity-id']);
         // First check if the member wants to leave the activity
-        print_r($post);
         if (isset($post['activity-leave'])) {
             $query = 'DELETE FROM activitiesattendees WHERE activityId = ' . $activity->id
                 . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
@@ -267,6 +266,10 @@ class ActivitiesModel extends RoxModelBase
             $this->dao->query($query);
             return true;
         }
+    }
+
+    public function cancelUncancelActivity($post) {
+        $activity = new Activity($post['activity-id']);
         if (isset($post['activity-cancel'])) {
             // Check if currently logged in member is an organizer of the meeting
             if (in_array($this->getLoggedInMember()->id, array_keys($activity->organizers))) {
@@ -291,8 +294,8 @@ class ActivitiesModel extends RoxModelBase
                 return false;
             }
         }
+        
     }
-    
     public function createActivity($args) {
         // First add geo location to geonames_cache if it doesn't exist yet
         $locationId = $args->post['activity-location-id'];

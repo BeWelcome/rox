@@ -537,10 +537,14 @@ WHERE
             $this->boardTopLevelLastPosts() ;
             return ;
         }
-        $member = $this->getLoggedInMember();
-        $forumthreads = intval($member->getPreference("ForumThreadsOnLandingPage", $default = 5));
-        $groupsthreads = intval($member->getPreference("GroupsThreadsOnLandingPage", $default = 5));
-
+        if ($member = $this->getLoggedInMember()) {
+            $forumthreads = intval($member->getPreference("ForumThreadsOnLandingPage", $default = 5));
+            $groupsthreads = intval($member->getPreference("GroupsThreadsOnLandingPage", $default = 5));
+        }
+        else {
+            $forumthreads = "5";
+            $groupsthreads = "5";
+        }
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
 
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);

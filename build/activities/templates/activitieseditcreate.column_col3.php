@@ -100,8 +100,8 @@ startDateTextBox.datetimepicker({
                 endDateTextBox.datetimepicker('setDate', testStartDate);
         }
         else {
-            // todo: Add two hours to the selected date/time
-            endDateTextBox.val(dateText);
+            var endDate = startDateTextBox.datetimepicker('getDate').getTime() + 7200000;
+            endDateTextBox.datetimepicker('setDate', new Date(endDate));
         }
     },
     onSelect: function (selectedDateTime){
@@ -109,7 +109,7 @@ startDateTextBox.datetimepicker({
     },
     dateFormat: 'yy-mm-dd', 
     timeFormat: 'HH:mm', 
-    minDate: 0,    
+    minDate: +1,
     stepMinute: 15
 });
 endDateTextBox.datetimepicker({ 
@@ -121,8 +121,8 @@ endDateTextBox.datetimepicker({
                 startDateTextBox.datetimepicker('setDate', testEndDate);
         }
         else {
-            // todo: Subtract two hours to the selected date/time
-            startDateTextBox.val(dateText);
+            var startDate = endDateTextBox.datetimepicker('getDate').getTime() - 7200000;
+            startDateTextBox.datetimepicker('setDate', new Date(startDate));
         }
     },
     onSelect: function (selectedDateTime){
@@ -130,7 +130,7 @@ endDateTextBox.datetimepicker({
     },
     dateFormat: 'yy-mm-dd', 
     timeFormat: 'HH:mm', 
-    minDate: 0, 
+    minDate: +1, 
     stepMinute: 15
 });
 //-->

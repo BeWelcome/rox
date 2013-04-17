@@ -100,7 +100,11 @@ class SignupController extends RoxControllerBase {
                     echo '0';
                     PPHP::PExit();
                 }
-                echo (bool)!$model->UsernameInUse($request[2]);
+                if ($model->UsernameInUse($request[2])) {
+                    echo 0;
+                } else {
+                    echo 1;
+                }
                 PPHP::PExit();
                 break;
                 

@@ -32,10 +32,22 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesEditCreatePage extends ActivitiesBasePage
 {
+    protected function getSubmenuItems()
+    {
+        if ($this->activity->id == 0) {
+            $this->update = false;
+        } else {
+            $this->update = true;
+        } 
+        $items = parent::getSubmenuItems();
+        return $items;
+    }
+    
     protected function getSubmenuActiveItem() 
     {
         return 'createactivities';
     }
+    
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.2.custom.min.css';

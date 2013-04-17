@@ -38,9 +38,16 @@ class ActivitiesController extends RoxControllerBase
     public function joinLeaveCancelActivityCallback(StdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
+        $errors = $this->_model->checkJoinLeaveCancelActivityVarsOk($args);
+        if (count($errors) > 0) {
+            $mem_redirect->errors = $errors;
+            $mem_redirect->vars = $args->post;
+            return false;
+        }
         $result = $this->_model->joinLeaveCancelActivity($args->post);
         if ($result) {
-            $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $args->post['activity-title']);
+            $activity = new Activity($args->post['activity-id']);
+            $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $activity->title);
             return true;
         } else {
             return false;
@@ -69,15 +76,17 @@ class ActivitiesController extends RoxControllerBase
         }
         $page = new ActivitiesShowPage();
         $page->activity = $activity;
-        $member = $loggedInMember;
-        $member->status = 0;
-        $member->comment = '';
-        if ($loggedInMember && in_array($loggedInMember->id, array_keys($activity->attendees))) {
-            $member->status = $activity->attendees[$loggedInMember->id]->status;
-            $member->comment = $activity->attendees[$loggedInMember->id]->comment;
-            $member->organizer = in_array($loggedInMember->id, array_keys($activity->organizers));
+        if ($loggedInMember) {
+            $member = $loggedInMember;
+            $member->status = 0;
+            $member->comment = '';
+            if ($loggedInMember && in_array($loggedInMember->id, array_keys($activity->attendees))) {
+                $member->status = $activity->attendees[$loggedInMember->id]->status;
+                $member->comment = $activity->attendees[$loggedInMember->id]->comment;
+                $member->organizer = in_array($loggedInMember->id, array_keys($activity->organizers));
+            }
+            $page->member = $member;
         }
-        $page->member = $member;
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;
@@ -115,6 +124,9 @@ class ActivitiesController extends RoxControllerBase
                 $id = $this->route_vars['id'];
                 $activity = new Activity($id);
                 if (!in_array($loggedInMember->id, array_keys($activity->organizers))) {
+                    $this->redirectAbsolute($this->router->url('activities_my_activities'));
+                }
+                if (time() > strtotime($activity->dateTimeStart)) {
                     $this->redirectAbsolute($this->router->url('activities_my_activities'));
                 }
             } else {

@@ -205,9 +205,44 @@ class ActivitiesModel extends RoxModelBase
         return $errors;
     }
 
-    public function joinLeaveCancelActivity($post) {
+    public function checkJoinLeaveCancelActivityVarsOk($args) {
+        $errors = array();
+        $post = $args->post;
         $status = 0;
+        if (isset($post['activity-status'])) {
+            switch ($post['activity-status']) {
+                case 'activity-yes':
+                    $status = 1;
+                    break;
+                case 'activity-maybe':
+                    $status = 2;
+                    break;
+                case 'activity-no':
+                    $status = 3;
+                    break;
+            }
+        }
+        if ($status == 0) {
+            if (empty($post['activity-comment'])) {
+                $errors[] = 'ActivitiesNoStatusSelectedComment';
+            } else {
+                $errors[] = 'ActivitiesNoStatusSelected';
+            }
+        }
+        return $errors;
+    }
+    
+    public function joinLeaveCancelActivity($post) {
         $activity = new Activity($post['activity-id']);
+        // First check if the member wants to leave the activity
+        print_r($post);
+        if (isset($post['activity-leave'])) {
+            $query = 'DELETE FROM activitiesattendees WHERE activityId = ' . $activity->id
+                . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
+            $this->dao->query($query);
+            return true;
+        }
+        $status = 0;
         if (isset($post['activity-status'])) {
             switch ($post['activity-status']) {
                 case 'activity-yes':
@@ -229,12 +264,6 @@ class ActivitiesModel extends RoxModelBase
                 $query = 'INSERT INTO activitiesattendees SET status=' . $status . ', comment=\'' . $this->dao->escape($post['activity-comment'])
                     . '\', activityId = ' . $activity->id . ', attendeeId = ' . $this->getLoggedInMember()->id;
             }
-            $this->dao->query($query);
-            return true;
-        }
-        if (isset($post['activity-leave'])) {
-            $query = 'DELETE FROM activitiesattendees WHERE activityId = ' . $activity->id
-                . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
             $this->dao->query($query);
             return true;
         }

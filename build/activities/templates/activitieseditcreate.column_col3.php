@@ -32,19 +32,20 @@ if (empty($vars)) {
     echo $words->get('ActivitiesCreate');
 } ?></legend>
 <?php
-    if (!empty($errors)) {
-        echo '<div class="error">';
-        foreach ($errors as $error) {
-            $parts = explode("###", $error);
-            if (count($parts) > 1) {
-                echo $words->get($parts[0], $parts[1]);
-            } else {
-                echo $words->get($error);
-            }
-            echo  "<br />";
+if (!empty($errors)) {
+    $errStr = '<div class="error">';
+    foreach ($errors as $error) {
+        $parts = explode("###", $error);
+        if (count($parts) > 1) {
+            $errStr .= $words->get($parts[0], $parts[1]);
+        } else {
+            $errStr .= $words->get($error);
         }
-        echo '</div>';
+        $errStr .=  "<br />";
     }
+    $errStr = substr($errStr, 0, -6) . '</div>';
+    echo $errStr;
+}
 ?>
     <div class="row">
         <label for="activity-title"><?php echo $words->get('ActivityTitle'); ?>:</label><br />

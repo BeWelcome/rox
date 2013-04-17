@@ -35,16 +35,16 @@ class ActivitiesController extends RoxControllerBase
         }
     }
     
-    public function joinLeaveCancelActivityCallback(StdClass $args, ReadOnlyObject $action, 
+    public function joinLeaveActivityCallback(StdClass $args, ReadOnlyObject $action, 
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
     {
-        $errors = $this->_model->checkJoinLeaveCancelActivityVarsOk($args);
+        $errors = $this->_model->checkJoinLeaveActivityVarsOk($args);
         if (count($errors) > 0) {
             $mem_redirect->errors = $errors;
             $mem_redirect->vars = $args->post;
             return false;
         }
-        $result = $this->_model->joinLeaveCancelActivity($args->post);
+        $result = $this->_model->joinLeaveActivity($args->post);
         if ($result) {
             $activity = new Activity($args->post['activity-id']);
             $_SESSION['ActivityStatus'] = array('ActivityUpdateStatusSuccess', $activity->title);
@@ -52,6 +52,18 @@ class ActivitiesController extends RoxControllerBase
         } else {
             return false;
         }
+    }
+
+    public function cancelUncancelActivityCallback(StdClass $args, ReadOnlyObject $action, 
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
+    {
+        $result = $this->_model->cancelUncancelActivity($args->post);
+        if (!$result) {
+            $errors = array( 'ActivityCancelUncancelError' );
+            $mem_redirect->errors = $errors;
+            return false;
+        }
+        return true;
     }
 
     protected function getPager($url, $count, $pageno) {

@@ -1,6 +1,8 @@
 ﻿<?php
 $formkit = $this->layoutkit->formkit;
-$callbackTags = $formkit->setPostCallback('ActivitiesController', 'joinLeaveCancelActivityCallback');
+$callbackTagsJoinEdit = $formkit->setPostCallback('ActivitiesController', 'joinLeaveActivityCallback');
+$callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
+
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
 $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
@@ -83,7 +85,7 @@ if (empty($vars)) {
                 <?php if ($this->member) {
                         if ($this->activity->status == 0) { ?>
                     <form method="post" id="activity-show-form" class="yform full abitlower">
-                    <?php echo $callbackTags; ?>
+                    <?php echo $callbackTagsJoinEdit; ?>
                     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                     <div class="type-text">
                         <label for="activity-comment"><?php echo $words->get('ActivityYourComment'); ?>:</label>
@@ -140,7 +142,7 @@ if (empty($vars)) {
                     <form method="post" id="activity-show-form" class="yform full abitlower">
                     <div class="type-button">
                         <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
-                        <?php echo $callbackTags; ?>
+                        <?php echo $callbackTagsCancelUncancel; ?>
                         <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                         <?php if ($this->activity->status == 1) 
                                 {

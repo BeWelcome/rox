@@ -24,6 +24,7 @@ Boston, MA  02111-1307, USA.
 
 
 $User = APP_User::login();
+$TIGHT_THREADLIST = true;
 ?>
 
 <div id="forum">
@@ -45,11 +46,7 @@ if (!$User) {
 <?php
     $uri = 'forums/';
     if ($threads = $forum->getThreads()) {
-?>
-  <div class="row"> 
-    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $forum->getTotalThreads(); ?>
-    </h3>
-  </div><!--  row -->
+    $forum->getTotalThreads(); ?>
 <?php
         $noForumLegendBox = true;
         $noForumNewTopicButton = true;
@@ -73,17 +70,14 @@ if (!$User) {
 <?php
     }
 ?>
-    <br /><br />
-    <p><strong><a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong></p>
-    <br /><br />
+    <strong class="float_right"><a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong> 
 </div> <!-- Forum-->
 <?php
     }
 ?>
-
+<br /><br />
 <!-- Now displays the recent groups post list -->
 <div id="groups">
-<h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a></h2>
 <?php
 if ($User && $ownGroupsButtonCallbackId) {
     if ($boards->owngroupsonly == "No") {
@@ -101,14 +95,13 @@ if ($User && $ownGroupsButtonCallbackId) {
 <?php
     echo $this->words->flushBuffer();
 }
+?>
+    <h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a></h2>
 
+<?php
     $uri = 'forums/';
     if ($threads = $groups->getThreads()) {
-?>
-  <div class="row"> 
-    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $groups->getTotalThreads(); ?>
-    </h3>
-  </div><!--  row -->
+    $groups->getTotalThreads(); ?>
 <?php
         require 'boardthreads.php';
 
@@ -127,12 +120,11 @@ if ($User && $ownGroupsButtonCallbackId) {
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
             <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowLess'); ?>">
         </form>
+
 <?php
     }
 ?>
-    <br /><br />
-    <p><strong><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong></p>
-
+    <strong class="float_right"><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong>
 </div> <!-- Groups-->
 <?php
     }

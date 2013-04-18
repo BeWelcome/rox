@@ -192,7 +192,9 @@ h2#forums_reply_title_lastposts {
 #main table.forumsboardthreads td {
     padding: 8px;
 }
-
+#main table.forumsboardthreadstight td {
+    padding: 0px;
+}
 #main tr.highlight td {
     border-bottom: 1px solid #e5e5e5;
     border-top: 1px solid #e5e5e5;

@@ -24,12 +24,26 @@ Boston, MA  02111-1307, USA.
     $styles = array( 'highlight', 'blank' );
     $words = new MOD_words();
     $layoutbits = new MOD_layoutbits();
+    if (empty($TIGHT_THREADLIST)) {
+        $threadliststyle = "forumsboardthreads";
+    } else {
+        $threadliststyle = "forumsboardthreadstight";
+    }
+    
 ?>
 
-<table class="forumsboardthreads">
+<table class="<?php echo $threadliststyle; ?>">
 
 <tr>
-    <th><?php echo $words->getFormatted('Thread'); ?></th>
+    <th>
+        <?php if (empty($TIGHT_THREADLIST)) {
+                  echo $words->getFormatted('Thread');
+              } 
+              else {
+                  echo $words->getFormatted('ForumRecentPosts');
+              } 
+        ?>
+    </th>
     <th><?php echo $words->getFormatted('Replies'); ?></th>
     <th><?php echo $words->getFormatted('Author'); ?></th>
     <th><?php echo $words->getFormatted('Views'); ?></th>

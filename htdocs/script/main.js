@@ -121,7 +121,7 @@ bwrox.selectScripts([
     ]
   },
   {
-    file: "leaflet/0.4.5/leaflet.js",
+    file: "leaflet/0.5.1/leaflet.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
   },
   {

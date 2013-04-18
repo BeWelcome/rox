@@ -43,7 +43,7 @@
         </div> <!-- subcolumns -->
 
 <?php
-        $doNotShow = array('PreferenceLanguage', 'ForumThreadsOnLandingPage','GroupsThreadsOnLandingPage');
+        $doNotShow = array('PreferenceLanguage');
 	foreach ($p as $rr) {
 		if (!in_array($rr->codeName, $doNotShow)) {
 ?>

@@ -359,8 +359,9 @@ function FindAppropriatedLanguage($IdPost=0) {
             return false;
         }
         $command = $vars['agoragroupsthreadscountmoreless'];
-        $forumthreads = intval($member->getPreference("ForumThreadsOnLandingPage", $default = "5"));
-        $groupsthreads = intval($member->getPreference("GroupsThreadsOnLandingPage", $default = "5"));
+        $layoutbits = new MOD_layoutbits();
+        $forumthreads = intval($layoutbits->getPreference("ForumThreadsOnLandingPage"));
+        $groupsthreads = intval($layoutbits->getPreference("GroupsThreadsOnLandingPage"));
         $membersmodel = new MembersModel();
 
         $query = "
@@ -533,26 +534,25 @@ WHERE
     } // end of boardTopLevelGroups
 
     private function boardTopLevelLanding($showsticky = true) {
+        $MAX_THREADS = 1000; //An upper limit of threads th show just in case the preference goes silly
         if ($this->tags) {
             $this->boardTopLevelLastPosts() ;
             return ;
         }
-        if ($member = $this->getLoggedInMember()) {
-            $forumthreads = intval($member->getPreference("ForumThreadsOnLandingPage", $default = 5));
-            $groupsthreads = intval($member->getPreference("GroupsThreadsOnLandingPage", $default = 5));
-        }
-        else {
-            $forumthreads = "5";
-            $groupsthreads = "5";
-        }
+        
+        $layoutbits = new MOD_layoutbits();
+
+        $forumthreads = intval($layoutbits->getPreference("ForumThreadsOnLandingPage"));
+        $groupsthreads = intval($layoutbits->getPreference("GroupsThreadsOnLandingPage"));
+
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
 
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
-        $forum->THREADS_PER_PAGE = $forumthreads;
+        $forum->THREADS_PER_PAGE = max(1, min($forumthreads, $MAX_THREADS));
         $forum->initThreads(1, $showsticky);
 
         $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
-        $groups->THREADS_PER_PAGE = $groupsthreads;
+        $groups->THREADS_PER_PAGE = max(1, min($groupsthreads, $MAX_THREADS));
         $groups->initThreads(1, $showsticky);
 
         $this->board->add($forum);

@@ -20,4 +20,3 @@ if (count($this->activities) == 0) {
 require_once('activitieslist.php');
 }
 ?>
-</div>

@@ -26,7 +26,6 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
         $location = $activity->location;
 
         if ($location != null && $location->latitude != null && $location->longitude != null){
-        	
             echo '<tr>';
             
             // activity title
@@ -72,14 +71,14 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
     echo '</table>';
     
     if ($latitudeMin != null){
-    	// at least one point with valid location
-    	
-    	// min & max latitude
-    	echo '<input type="hidden" id="activity-data-min-latitude" value="' . $latitudeMin . '" />';
-    	echo '<input type="hidden" id="activity-data-max-latitude" value="' . $latitudeMax . '" />';
-    	// min & max longitude
-    	echo '<input type="hidden" id="activity-data-min-longitude" value="' . $longitudeMin . '" />';
-    	echo '<input type="hidden" id="activity-data-max-longitude" value="' . $longitudeMax . '" />';
+        // at least one point with valid location
+        
+        // min & max latitude
+        echo '<input type="hidden" id="activity-data-min-latitude" value="' . $latitudeMin . '" />';
+        echo '<input type="hidden" id="activity-data-max-latitude" value="' . $latitudeMax . '" />';
+        // min & max longitude
+        echo '<input type="hidden" id="activity-data-min-longitude" value="' . $longitudeMin . '" />';
+        echo '<input type="hidden" id="activity-data-max-longitude" value="' . $longitudeMax . '" />';
     }
 
     echo '</div>';
@@ -96,13 +95,13 @@ foreach($this->activities as $activity) {
     echo '<td style="padding-bottom: 30px; width: 10%;">
             <div class="calendar calendar-icon-' . date("m", strtotime($activity->dateStart)) . '">
               <div class="calendar-day">' . date("j", strtotime($activity->dateStart)) . '</div>
-              <div class="calendar-year">' . date("Y", strtotime($activity->dateStart)) . '</div></td>';
-    echo '<td colspan="2"><div class="small grey">' . $activity->dateStart . '-' . $activity->dateEnd . '</div><h3><a href="activities/' . $activity->id . '">' . $activity->title . '</a><h3></td>';
+              <div class="calendar-year">' . date("Y", strtotime($activity->dateStart)) . '</div></div></td>';
+    echo '<td colspan="2"><div class="small grey">' . $activity->dateStart . '-' . $activity->dateEnd . '</div><h3><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></h3></td>';
     echo '<td><i class="icon-map-marker icon-3x grey float_right"></i></td>';
     if ($activity->location != null){
-        $locationName = $activity->location->name;
+        $locationName = htmlspecialchars($activity->location->name);
         if ($activity->location->getCountry() != null){
-            $countryName = $activity->location->getCountry()->name;
+            $countryName = htmlspecialchars($activity->location->getCountry()->name);
         }else{
             $countryName = '';
         }

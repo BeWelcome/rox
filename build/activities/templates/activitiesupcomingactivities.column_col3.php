@@ -14,4 +14,3 @@ if ($this->publicOnly) {
     require_once('activitieslist.php');
 }
 ?>
-</div>

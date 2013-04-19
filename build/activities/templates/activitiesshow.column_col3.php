@@ -161,12 +161,13 @@ if (empty($vars)) {
                     <h3><?php echo $words->get('ActivityOrganizers');?></h3>
                     <ul class="floatbox">
                     <?php
+                    print_r($this->activity->organizers);
                         foreach ($this->activity->organizers as $organizer) {
                             $image = new MOD_images_Image('',$organizer->Username);
                             echo '<li class="picbox_activities float_left">';
                             echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left');
                             echo '<div class="userinfo">';
-                            echo '<a class="username" href="members/'.$organizer->organizer.'">'.$organizer->Username.'</a><br />';
+                            echo '<a class="username" href="members/'.$organizer->Username.'">'.$organizer->Username.'</a><br />';
                             echo '<span class="small"><b>';
                             switch($organizer->status) {
                                 case 1: 

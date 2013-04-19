@@ -79,22 +79,7 @@ if (!$User) {
 <!-- Now displays the recent groups post list -->
 <div id="groups">
 <?php
-if ($User && $ownGroupsButtonCallbackId) {
-    if ($boards->owngroupsonly == "No") {
-        $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
-    } else {
-        $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
-    }
-    ?>
-    <div class="float_right">
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
-            <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
-            <input type="submit" name="submit" value="<?php echo $buttonText; ?>">
-        </form>
-    </div>
-<?php
     echo $this->words->flushBuffer();
-}
 ?>
     <h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a></h2>
 
@@ -119,6 +104,19 @@ if ($User && $ownGroupsButtonCallbackId) {
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
             <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowLess'); ?>">
+        </form>
+<?php
+    }
+    if ($User && $ownGroupsButtonCallbackId) {
+        if ($boards->owngroupsonly == "No") {
+            $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
+        } else {
+            $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
+        }
+?>
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
+            <input type="submit" name="submit" value="<?php echo $buttonText; ?>">
         </form>
 
 <?php

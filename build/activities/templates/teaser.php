@@ -1,6 +1,6 @@
 <div id="teaser" class="floatbox">
 <div class="float_left">
-<h1><a href="activities"><?php echo $words->get('Activities'); ?></a>
+<h1><a href="activities"><?php echo $words->get('Activities'); ?></a></h1>
 </div>
 <?php if (!($this->hideSearch)) { ?>
 <div class="float_right abitlower">

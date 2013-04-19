@@ -69,7 +69,7 @@ if (empty($vars)) {
                                 break;
                         }
                         echo '</b></span><br />';
-                        echo '<span class="small">' . $attendee->comment . '</span>';
+                        echo '<span class="small">' . htmlspecialchars($attendee->comment) . '</span>';
                         echo '</div>';
                         echo '</li>';
                         }
@@ -135,10 +135,8 @@ if (empty($vars)) {
                      <?= $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe); ?><br />
                      <?= $words->get('ActivityAttendeesNo', $this->activity->attendeesNo); ?></p>
                 </div>
-                <?php if ($this->member) 
-                {
-                        if ($this->member->organizer == true) 
-                    { ?>
+                <?php if ($this->member) {
+                    if ($this->member->organizer == true) { ?>
                     <form method="post" id="activity-show-form" class="yform full abitlower">
                     <div class="type-button">
                         <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
@@ -163,8 +161,7 @@ if (empty($vars)) {
                     <h3><?php echo $words->get('ActivityOrganizers');?></h3>
                     <ul class="floatbox">
                     <?php
-                        foreach ($this->activity->organizers as $organizer) 
-                        {
+                        foreach ($this->activity->organizers as $organizer) {
                             $image = new MOD_images_Image('',$organizer->Username);
                             echo '<li class="picbox_activities float_left">';
                             echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left');
@@ -183,7 +180,7 @@ if (empty($vars)) {
                                     break;
                             }
                             echo '</b></span><br />';
-                            echo '  <span class="small">' . $organizer->comment . '</span>';
+                            echo '  <span class="small">' . htmlspecialchars($organizer->comment) . '</span>';
                             echo '</div>';
                             echo '</li>';
                         }

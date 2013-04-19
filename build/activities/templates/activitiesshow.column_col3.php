@@ -161,7 +161,6 @@ if (empty($vars)) {
                     <h3><?php echo $words->get('ActivityOrganizers');?></h3>
                     <ul class="floatbox">
                     <?php
-                    print_r($this->activity->organizers);
                         foreach ($this->activity->organizers as $organizer) {
                             $image = new MOD_images_Image('',$organizer->Username);
                             echo '<li class="picbox_activities float_left">';

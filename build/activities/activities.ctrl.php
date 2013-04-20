@@ -6,8 +6,8 @@
  */
 class ActivitiesController extends RoxControllerBase
 {
-    const ACTIVITIES_PER_PAGE = 5;
-    const ATTENDEES_PER_PAGE = 4;
+    const ACTIVITIES_PER_PAGE = 10;
+    const ATTENDEES_PER_PAGE = 10;
     
     /**
      * Declaring private variables.
@@ -66,7 +66,7 @@ class ActivitiesController extends RoxControllerBase
         return true;
     }
 
-    protected function getPager($url, $count, $pageno) {
+    protected function getPager($url, $count, $pageno, $itemsPerPage = self::ACTIVITIES_PER_PAGE) {
         $params = new StdClass;
         $params->strategy = new HalfPagePager('right');
         $params->page_url = 'activities/' . $url . '/';
@@ -74,7 +74,7 @@ class ActivitiesController extends RoxControllerBase
         $params->page_method = 'url';
         $params->items = $count;
         $params->active_page = $this->pageno;
-        $params->items_per_page = self::ACTIVITIES_PER_PAGE;
+        $params->items_per_page = $itemsPerPage;
         $pager = new PagerWidget($params);
         return $pager;
     }
@@ -103,8 +103,15 @@ class ActivitiesController extends RoxControllerBase
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;
         }
-        $pager = $this->getPager($activity->id . '/attendees', count($activity->attendees), $pageno);
-        $page->attendeesPager = $pager;
+        $params = new StdClass;
+        $params->strategy = new HalfPagePager('right');
+        $params->page_url = 'activities/' . $activity->id . '/attendees/';
+        $params->page_url_marker = 'page';
+        $params->page_method = 'url';
+        $params->items = $activity->attendees;
+        $params->active_page = $this->pageno;
+        $params->items_per_page = self::ATTENDEES_PER_PAGE;
+        $page->attendeesPager = new PagerWidget($params);
         return $page;
     }
 

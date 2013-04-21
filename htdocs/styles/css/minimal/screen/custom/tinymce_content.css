@@ -1,4 +1,13 @@
 /* TinyMCE specific rules */
 .mceContentBody {
-   font-size: 12px !important; /* FF requires a important here */
+  font-size: 12px !important; /* FF requires a important here */
+}
+
+blockquote {
+  color: #444;
+  background: #f8f8f8;
+  border: 1px #ddd solid;
+  border-left: 8px #ddd solid;
+  padding: 0 0.5em 0 0.5em;
+  margin: 0 0 0 1em;
 }

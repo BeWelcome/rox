@@ -126,6 +126,9 @@ class ActivitiesController extends RoxControllerBase
                 if (!in_array($loggedInMember->id, array_keys($activity->organizers))) {
                     $this->redirectAbsolute($this->router->url('activities_my_activities'));
                 }
+                if (time() > strtotime($activity->dateTimeStart)) {
+                    $this->redirectAbsolute($this->router->url('activities_my_activities'));
+                }
             } else {
                 $activity = new Activity();
                 $activity->id = 0;

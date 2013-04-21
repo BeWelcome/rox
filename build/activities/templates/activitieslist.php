@@ -118,10 +118,18 @@ foreach($this->activities as $activity) {
         $organizers .= MOD_layoutbits::PIC_40_40($organizer->Username,'',$style='framed float_left') . " ";
     }
     echo substr($organizers, 0, -1) . '</td>';
-    if ($this->member && in_array($this->member->id, array_keys($activity->organizers))) {
-        echo '<td><a href="activities/' . $activity->id . '/edit">'
-        . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
-    } else {echo '<td></td>';}
+    echo '<td>';
+    if ($activity->status == 0) {
+        $activityInTheFuture = (time() < strtotime($activity->dateTimeStart));
+        if ($this->member && in_array($this->member->id, array_keys($activity->organizers)) 
+                && $activityInTheFuture ) {
+            echo '<a href="activities/' . $activity->id . '/edit">'
+                    . '<img src="images/icons/comment_edit.png" alt="' . $words->getSilent('ActivityEdit') . '" /></a>';
+        }
+    } else {
+        echo '<img src="images/icons/cancel.png" alt="' . $words->getSilent('ActivityCancelled') . '" />';
+    }
+    echo '</td>';
     echo '</tr>';
     $count++;
 }

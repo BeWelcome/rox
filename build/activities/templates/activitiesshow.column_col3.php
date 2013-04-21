@@ -6,7 +6,7 @@ $callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
 $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
-$purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+$purifier = MOD_htmlpure::getActivitiesHtmlPurifier();
 $status = array();
 if (isset($_SESSION['ActivityStatus'])) {
     $status = $_SESSION['ActivityStatus'];

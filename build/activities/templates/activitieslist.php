@@ -110,8 +110,8 @@ foreach($this->activities as $activity) {
         $countryName = '';
     }
     echo '<td>' . $locationName . '<br /> ' . $countryName . '</td>';
-    echo '<td>' . count($activity->attendeesYes) . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '<br />'
-                . count($activity->attendeesMaybe) . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe') . '</td>';
+    echo '<td>' . $activity->attendeesYes . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '<br />'
+                . $activity->attendeesMaybe . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe') . '</td>';
     echo '<td width="112px"><div class="small grey">' . $words->get('ActivitiesOrganizedBy') . '</div>';
     $organizers = '';
     foreach($activity->organizers as $organizer) {

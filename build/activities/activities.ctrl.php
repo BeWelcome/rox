@@ -125,13 +125,13 @@ class ActivitiesController extends RoxControllerBase
             return false;
         } else {
             if ($args->post['activity-id'] == 0) {
-                $this->_model->createActivity($args);
+                $activity = $this->_model->createActivity($args);
                 $_SESSION['ActivityStatus'] = array('ActivityCreateSuccess', $args->post['activity-title']);
             } else {
-                $this->_model->updateActivity($args);
+                $activity = $this->_model->updateActivity($args);
                 $_SESSION['ActivityStatus'] = array('ActivityUpdateSuccess', $args->post['activity-title']);
             }
-            return $this->router->url('activities_my_activities', array(), false);
+            return $this->router->url('activities_show', array('id' => $activity->id), false);
         }
     }
     

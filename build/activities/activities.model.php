@@ -320,6 +320,7 @@ class ActivitiesModel extends RoxModelBase
         $organizer[$activity->creator] = array ( "attendeeId" => $activity->creator, "organizer" => "1", "status" => "1");
         $activity->organizers = $organizer;
         $activity->insert();
+        return $activity;
     }
 
     public function updateActivity($args) {
@@ -342,6 +343,7 @@ class ActivitiesModel extends RoxModelBase
         $activity->description = $args->post['activity-description'];
         $activity->public = isset($args->post['activity-public']);
         $activity->update();
+        return $activity;
     }
 
     public function checkSearchActivitiesVarsOk($args) {

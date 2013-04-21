@@ -76,7 +76,7 @@ class MOD_htmlpure
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
-        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd');
+        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('AutoFormat.AutoParagraph', true);
         return new HTMLPurifier($config);
     }
@@ -85,7 +85,7 @@ class MOD_htmlpure
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
-        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd');
+        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
         $config->set('AutoFormat.Linkify', true); // automatically turn stuff like http://domain.com into links
         return new HTMLPurifier($config);
@@ -95,7 +95,7 @@ class MOD_htmlpure
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
-        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height]');
+        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote');
         $config->set('HTML.MaxImgLength', '500');
         $config->set('CSS.MaxImgLength', '500px');
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs

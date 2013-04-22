@@ -183,9 +183,11 @@ class ForumsController extends PAppController
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
                     $this->_model->prepareForum(false);
 
-                    $callbackId = $this->mygroupsonlyProcess();
-                    $this->_view->showTopLevelLandingPage($callbackId); 
-                    PPostHandler::clearVars($callbackId);
+                    $onlymygroupscallbackId = $this->mygroupsonlyProcess();
+                    $morelessthreadscallbackid = $this->morelessthreadsProcess();
+                    $this->_view->showTopLevelLandingPage($onlymygroupscallbackId, $morelessthreadscallbackid); 
+                    PPostHandler::clearVars($onlymygroupscallbackId);
+                    PPostHandler::clearVars($morelessthreadscallbackid);
                 } else {
                     $this->_model->prepareForum();
                     $this->_view->showForum();
@@ -580,6 +582,16 @@ class ForumsController extends PAppController
         }
     }
 
+    public function morelessthreadsProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        
+        if (PPostHandler::isHandling()) {
+            return $this->_model->adjustThreadsCountToShow($step = 3);
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
     
     private $action = 0;
     private $isTopLevel = true;

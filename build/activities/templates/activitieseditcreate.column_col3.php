@@ -32,19 +32,20 @@ if (empty($vars)) {
     echo $words->get('ActivitiesCreate');
 } ?></legend>
 <?php
-    if (!empty($errors)) {
-        echo '<div class="error">';
-        foreach ($errors as $error) {
-            $parts = explode("###", $error);
-            if (count($parts) > 1) {
-                echo $words->get($parts[0], $parts[1]);
-            } else {
-                echo $words->get($error);
-            }
-            echo  "<br />";
+if (!empty($errors)) {
+    $errStr = '<div class="error">';
+    foreach ($errors as $error) {
+        $parts = explode("###", $error);
+        if (count($parts) > 1) {
+            $errStr .= $words->get($parts[0], $parts[1]);
+        } else {
+            $errStr .= $words->get($error);
         }
-        echo '</div>';
+        $errStr .=  "<br />";
     }
+    $errStr = substr($errStr, 0, -6) . '</div>';
+    echo $errStr;
+}
 ?>
     <div class="row">
         <label for="activity-title"><?php echo $words->get('ActivityTitle'); ?>:</label><br />
@@ -99,8 +100,8 @@ startDateTextBox.datetimepicker({
                 endDateTextBox.datetimepicker('setDate', testStartDate);
         }
         else {
-            // todo: Add two hours to the selected date/time
-            endDateTextBox.val(dateText);
+            var endDate = startDateTextBox.datetimepicker('getDate').getTime() + 7200000;
+            endDateTextBox.datetimepicker('setDate', new Date(endDate));
         }
     },
     onSelect: function (selectedDateTime){
@@ -108,7 +109,7 @@ startDateTextBox.datetimepicker({
     },
     dateFormat: 'yy-mm-dd', 
     timeFormat: 'HH:mm', 
-    minDate: 0,    
+    minDate: +1,
     stepMinute: 15
 });
 endDateTextBox.datetimepicker({ 
@@ -120,8 +121,8 @@ endDateTextBox.datetimepicker({
                 startDateTextBox.datetimepicker('setDate', testEndDate);
         }
         else {
-            // todo: Subtract two hours to the selected date/time
-            startDateTextBox.val(dateText);
+            var startDate = endDateTextBox.datetimepicker('getDate').getTime() - 7200000;
+            startDateTextBox.datetimepicker('setDate', new Date(startDate));
         }
     },
     onSelect: function (selectedDateTime){
@@ -129,7 +130,7 @@ endDateTextBox.datetimepicker({
     },
     dateFormat: 'yy-mm-dd', 
     timeFormat: 'HH:mm', 
-    minDate: 0, 
+    minDate: +1, 
     stepMinute: 15
 });
 //-->

@@ -1,9 +1,12 @@
 ﻿<?php
 $formkit = $this->layoutkit->formkit;
-$callbackTags = $formkit->setPostCallback('ActivitiesController', 'joinLeaveCancelActivityCallback');
+$callbackTagsJoinEdit = $formkit->setPostCallback('ActivitiesController', 'joinLeaveActivityCallback');
+$callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
+
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
 $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
+$purifier = MOD_htmlpure::getActivitiesHtmlPurifier();
 $status = array();
 if (isset($_SESSION['ActivityStatus'])) {
     $status = $_SESSION['ActivityStatus'];
@@ -16,6 +19,19 @@ if ($this->activity->status == 1) {
     // the activity has been cancelled
     echo '<div class="error">' . $words->get('ActivityHasBeenCancelled') . '</div>';
 }
+$errors = $this->getRedirectedMem('errors');
+if (!empty($errors)) {
+    $errStr = '<div class="error">';
+    foreach ($errors as $error) {
+        $errStr .= $words->get($error) . "<br />";
+    }
+    $errStr = substr($errStr, 0, -6) . '</div>';
+    echo $errStr;
+}
+$vars = $this->getRedirectedMem('vars');
+if (empty($vars)) {
+    $vars['activity-comment'] = $this->member->comment;
+}
 ?>
 <div id="activity">
     <div class="floatbox">
@@ -26,7 +42,7 @@ if ($this->activity->status == 1) {
             <div class="subcl">
                 <div class="row">
                     <h3><?= $words->get('ActivityDescription'); ?></h3>
-                    <span><?php echo $this->activity->description; ?></span>
+                    <?php echo $purifier->purify($this->activity->description); ?>
                 </div>
                 <?php if ($this->member) { ?>
                 <div><h3><?php echo $words->get('ActivityAttendees');?></h3>
@@ -53,7 +69,7 @@ if ($this->activity->status == 1) {
                                 break;
                         }
                         echo '</b></span><br />';
-                        echo '<span class="small">' . $attendee->comment . '</span>';
+                        echo '<span class="small">' . htmlspecialchars($attendee->comment) . '</span>';
                         echo '</div>';
                         echo '</li>';
                         }
@@ -69,11 +85,11 @@ if ($this->activity->status == 1) {
                 <?php if ($this->member) {
                         if ($this->activity->status == 0) { ?>
                     <form method="post" id="activity-show-form" class="yform full abitlower">
-                    <?php echo $callbackTags; ?>
+                    <?php echo $callbackTagsJoinEdit; ?>
                     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                     <div class="type-text">
                         <label for="activity-comment"><?php echo $words->get('ActivityYourComment'); ?>:</label>
-                        <input type="text" maxlength="80" id="activity-comment" name="activity-comment" value="<?php echo $this->member->comment;?>" />
+                        <input type="text" maxlength="80" id="activity-comment" name="activity-comment" value="<?php echo htmlspecialchars($vars['activity-comment'], ENT_QUOTES); ?>" />
                     </div>
                     <div class="type-check">
                         <div class="abitlower"><input type="radio" value="activity-yes" id="activity-yes" name="activity-status" <?php if ($this->member->status == 1) { echo 'checked="checked"'; }?> >&nbsp;<label for="activity-yes"><?php echo $words->getSilent('ActivityYes'); ?></label></div>
@@ -110,7 +126,7 @@ if ($this->activity->status == 1) {
                 </div>
                 <div class="row abitright">
                     <h3><?= $words->get('ActivityLocationAddress'); ?></h3>
-                    <p><?php echo $this->activity->address; ?><br />
+                    <p><?php echo $this->activity->address ?><br />
                     <?php  echo $this->activity->location->name ?>, <?php echo $this->activity->location->getCountry()->name ?></p>
                 </div>
                 <div class="row abitright">
@@ -119,14 +135,12 @@ if ($this->activity->status == 1) {
                      <?= $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe); ?><br />
                      <?= $words->get('ActivityAttendeesNo', $this->activity->attendeesNo); ?></p>
                 </div>
-                <?php if ($this->member) 
-                {
-                        if ($this->member->organizer == true) 
-                    { ?>
+                <?php if ($this->member) {
+                    if ($this->member->organizer == true) { ?>
                     <form method="post" id="activity-show-form" class="yform full abitlower">
                     <div class="type-button">
                         <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
-                        <?php echo $callbackTags; ?>
+                        <?php echo $callbackTagsCancelUncancel; ?>
                         <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                         <?php if ($this->activity->status == 1) 
                                 {
@@ -147,13 +161,12 @@ if ($this->activity->status == 1) {
                     <h3><?php echo $words->get('ActivityOrganizers');?></h3>
                     <ul class="floatbox">
                     <?php
-                        foreach ($this->activity->organizers as $organizer) 
-                        {
+                        foreach ($this->activity->organizers as $organizer) {
                             $image = new MOD_images_Image('',$organizer->Username);
                             echo '<li class="picbox_activities float_left">';
                             echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left');
                             echo '<div class="userinfo">';
-                            echo '<a class="username" href="members/'.$organizer->organizer.'">'.$organizer->Username.'</a><br />';
+                            echo '<a class="username" href="members/'.$organizer->Username.'">'.$organizer->Username.'</a><br />';
                             echo '<span class="small"><b>';
                             switch($organizer->status) {
                                 case 1: 
@@ -167,7 +180,7 @@ if ($this->activity->status == 1) {
                                     break;
                             }
                             echo '</b></span><br />';
-                            echo '  <span class="small">' . $organizer->comment . '</span>';
+                            echo '  <span class="small">' . htmlspecialchars($organizer->comment) . '</span>';
                             echo '</div>';
                             echo '</li>';
                         }

@@ -24,9 +24,11 @@ Boston, MA  02111-1307, USA.
 
 
 $User = APP_User::login();
-?>
+$TIGHT_THREADLIST = true;
+$noForumLegendBox = true;
+$noForumNewTopicButton = true;
 
-<div id="forum">
+?>
 
 <?php
 $ToogleTagCloud=true ;
@@ -39,67 +41,111 @@ if (!$User) {
 <?php
 } // end if not User
 ?> 
-
-<!-- Now displays the recent forum post list -->
-<h2><a href="forums/agora"><?php echo $this->words->getFormatted('AgoraForum'); ?></a></h2>
-<?php
-    $uri = 'forums/';
-    if ($threads = $forum->getThreads()) {
-?>
-  <div class="row"> 
-    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $forum->getTotalThreads(); ?>
-    </h3>
-  </div><!--  row -->
-<?php
-        $noForumLegendBox = true;
-        $noForumNewTopicButton = true;
-        require 'boardthreads.php';
-?>
-    <br />
-    <p><strong><a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong></p>
-    <br /><br />
-</div> <!-- Forum-->
-<?php
-    }
-?>
-
 <!-- Now displays the recent groups post list -->
 <div id="groups">
-<h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a></h2>
 <?php
-if ($User && $ownGroupsButtonCallbackId) {
-    if ($boards->owngroupsonly == "No") {
-        $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
-    } else {
-        $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
+    echo $this->words->flushBuffer();
+?>
+    <span class="float_right">
+        <?= $this->words->get('GroupsSearchHeading'); ?>
+        <form action="groups/search" method="get">
+            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $this->words->get('GroupsSearchSubmit'); ?>" /><br />
+        </form>
+    </span>
+    <h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a></h2>
+
+
+<?php
+    $uri = 'forums/';
+if ($threads = $groups->getThreads()) {
+    $groups->getTotalThreads(); ?>
+<?php
+        require 'boardthreads.php';
+
+
+
+    if ($User && $moreLessThreadsCallbackId) {
+?>
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
+            <input type="hidden" name="agoragroupsthreadscountmoreless" value="moregroups">
+            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowMore'); ?>">
+        </form>
+
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
+            <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
+            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowLess'); ?>">
+        </form>
+<?php
     }
-    ?>
-    <div class="float_right">
-        <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+    if ($User && $ownGroupsButtonCallbackId) {
+        if ($boards->owngroupsonly == "No") {
+            $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
+        } else {
+            $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
+        }
+?>
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
             <input type="submit" name="submit" value="<?php echo $buttonText; ?>">
         </form>
-    </div>
-<?php
-    echo $this->words->flushBuffer();
-}
 
-    $uri = 'forums/';
-    if ($threads = $groups->getThreads()) {
-?>
-  <div class="row"> 
-    <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $groups->getTotalThreads(); ?>
-    </h3>
-  </div><!--  row -->
-<?php
-        require 'boardthreads.php';
-?>
-    <br />
-    <p><strong><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong></p>
-
-</div> <!-- Groups-->
 <?php
     }
+?>
+    <strong class="float_right"><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong>
+</div> <!-- Groups-->
+
+<br /><br />
+
+<?php
+}
+?>
+
+<div id="forum">
+<!-- Now displays the recent forum post list -->
+<?php
+if ($User) {
+?>
+    <span class="float_right">
+        <br />
+        <form method="get" action="forums/new">
+            <input type="submit" name="submit" value="<?= $this->words->get('ForumNewTopic'); ?>">
+        </form>
+    </span>
+    <h2><a href="forums/agora"><?php echo $this->words->getFormatted('AgoraForum'); ?></a></h2>
+<?php
+}
+    $uri = 'forums/';
+if ($threads = $forum->getThreads()) {
+    $forum->getTotalThreads(); ?>
+<?php
+        require 'boardthreads.php';
+
+
+    if ($User && $moreLessThreadsCallbackId) {
+?>
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
+            <input type="hidden" name="agoragroupsthreadscountmoreless" value="moreagora">
+            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowMore'); ?>">
+        </form>
+
+        <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
+            <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessagora">
+            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowLess'); ?>">
+        </form>
+
+<?php
+    }
+?>
+    <strong class="float_right"><a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong> 
+</div> <!-- Forum-->
+
+<?php
+}
 ?>
 
 <br /><br />

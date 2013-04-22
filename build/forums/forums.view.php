@@ -337,7 +337,7 @@ class ForumsView extends RoxAppView {
 * showTopLevelLandingPage produce the view with recent forum posts (without any group posts) 
 * on top and groups on the bottom
 */
-    public function showTopLevelLandingPage($ownGroupsButtonCallbackId = false) {
+    public function showTopLevelLandingPage($ownGroupsButtonCallbackId = false, $moreLessThreadsCallbackId = false) {
         $this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
 
         $boards = $this->_model->getBoard();

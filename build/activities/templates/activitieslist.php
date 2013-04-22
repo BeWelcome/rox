@@ -1,5 +1,4 @@
-<?php $this->pager->render();
-
+<?php
 if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 
     // retrieve cloudmade API key
@@ -27,7 +26,6 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
         $location = $activity->location;
 
         if ($location != null && $location->latitude != null && $location->longitude != null){
-        	
             echo '<tr>';
             
             // activity title
@@ -73,20 +71,21 @@ if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
     echo '</table>';
     
     if ($latitudeMin != null){
-    	// at least one point with valid location
-    	
-    	// min & max latitude
-    	echo '<input type="hidden" id="activity-data-min-latitude" value="' . $latitudeMin . '" />';
-    	echo '<input type="hidden" id="activity-data-max-latitude" value="' . $latitudeMax . '" />';
-    	// min & max longitude
-    	echo '<input type="hidden" id="activity-data-min-longitude" value="' . $longitudeMin . '" />';
-    	echo '<input type="hidden" id="activity-data-max-longitude" value="' . $longitudeMax . '" />';
+        // at least one point with valid location
+        
+        // min & max latitude
+        echo '<input type="hidden" id="activity-data-min-latitude" value="' . $latitudeMin . '" />';
+        echo '<input type="hidden" id="activity-data-max-latitude" value="' . $latitudeMax . '" />';
+        // min & max longitude
+        echo '<input type="hidden" id="activity-data-min-longitude" value="' . $longitudeMin . '" />';
+        echo '<input type="hidden" id="activity-data-max-longitude" value="' . $longitudeMax . '" />';
     }
 
     echo '</div>';
 
 }
-?>
+$this->pager->render(); ?>
+
 
 <table class='activitieslist'>
 <?php
@@ -96,13 +95,13 @@ foreach($this->activities as $activity) {
     echo '<td style="padding-bottom: 30px; width: 10%;">
             <div class="calendar calendar-icon-' . date("m", strtotime($activity->dateStart)) . '">
               <div class="calendar-day">' . date("j", strtotime($activity->dateStart)) . '</div>
-              <div class="calendar-year">' . date("Y", strtotime($activity->dateStart)) . '</div></td>';
-    echo '<td colspan="2"><div class="small grey">' . $activity->dateStart . '-' . $activity->dateEnd . '</div><h3><a href="activities/' . $activity->id . '">' . $activity->title . '</a><h3></td>';
+              <div class="calendar-year">' . date("Y", strtotime($activity->dateStart)) . '</div></div></td>';
+    echo '<td colspan="2"><div class="small grey">' . $activity->dateStart . '-' . $activity->dateEnd . '</div><h3><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></h3></td>';
     echo '<td><i class="icon-map-marker icon-3x grey float_right"></i></td>';
     if ($activity->location != null){
-        $locationName = $activity->location->name;
+        $locationName = htmlspecialchars($activity->location->name);
         if ($activity->location->getCountry() != null){
-            $countryName = $activity->location->getCountry()->name;
+            $countryName = htmlspecialchars($activity->location->getCountry()->name);
         }else{
             $countryName = '';
         }
@@ -111,17 +110,26 @@ foreach($this->activities as $activity) {
         $countryName = '';
     }
     echo '<td>' . $locationName . '<br /> ' . $countryName . '</td>';
-    echo '<td>' . count($activity->attendees) . '&nbsp;' . $words->get('ActivitiesNumbAttendees') . '</td>';
+    echo '<td>' . $activity->attendeesYes . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '<br />'
+                . $activity->attendeesMaybe . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe') . '</td>';
     echo '<td width="112px"><div class="small grey">' . $words->get('ActivitiesOrganizedBy') . '</div>';
     $organizers = '';
     foreach($activity->organizers as $organizer) {
         $organizers .= MOD_layoutbits::PIC_40_40($organizer->Username,'',$style='framed float_left') . " ";
     }
     echo substr($organizers, 0, -1) . '</td>';
-    if ($this->member && in_array($this->member->id, array_keys($activity->organizers))) {
-        echo '<td><a href="activities/' . $activity->id . '/edit">'
-        . '<img src="images/icons/comment_edit.png" alt="edit" /></a></td>';
-    } else {echo '<td></td>';}
+    echo '<td>';
+    if ($activity->status == 0) {
+        $activityInTheFuture = (time() < strtotime($activity->dateTimeStart));
+        if ($this->member && in_array($this->member->id, array_keys($activity->organizers)) 
+                && $activityInTheFuture ) {
+            echo '<a href="activities/' . $activity->id . '/edit">'
+                    . '<img src="images/icons/comment_edit.png" alt="' . $words->getSilent('ActivityEdit') . '" /></a>';
+        }
+    } else {
+        echo '<img src="images/icons/cancel.png" alt="' . $words->getSilent('ActivityCancelled') . '" />';
+    }
+    echo '</td>';
     echo '</tr>';
     $count++;
 }

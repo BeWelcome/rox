@@ -205,9 +205,43 @@ class ActivitiesModel extends RoxModelBase
         return $errors;
     }
 
-    public function joinLeaveCancelActivity($post) {
+    public function checkJoinLeaveActivityVarsOk($args) {
+        $errors = array();
+        $post = $args->post;
         $status = 0;
+        if (isset($post['activity-status'])) {
+            switch ($post['activity-status']) {
+                case 'activity-yes':
+                    $status = 1;
+                    break;
+                case 'activity-maybe':
+                    $status = 2;
+                    break;
+                case 'activity-no':
+                    $status = 3;
+                    break;
+            }
+        }
+        if ($status == 0) {
+            if (empty($post['activity-comment'])) {
+                $errors[] = 'ActivitiesNoStatusSelectedComment';
+            } else {
+                $errors[] = 'ActivitiesNoStatusSelected';
+            }
+        }
+        return $errors;
+    }
+    
+    public function joinLeaveActivity($post) {
         $activity = new Activity($post['activity-id']);
+        // First check if the member wants to leave the activity
+        if (isset($post['activity-leave'])) {
+            $query = 'DELETE FROM activitiesattendees WHERE activityId = ' . $activity->id
+                . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
+            $this->dao->query($query);
+            return true;
+        }
+        $status = 0;
         if (isset($post['activity-status'])) {
             switch ($post['activity-status']) {
                 case 'activity-yes':
@@ -232,12 +266,10 @@ class ActivitiesModel extends RoxModelBase
             $this->dao->query($query);
             return true;
         }
-        if (isset($post['activity-leave'])) {
-            $query = 'DELETE FROM activitiesattendees WHERE activityId = ' . $activity->id
-                . ' AND attendeeId = ' . $this->getLoggedInMember()->id;
-            $this->dao->query($query);
-            return true;
-        }
+    }
+
+    public function cancelUncancelActivity($post) {
+        $activity = new Activity($post['activity-id']);
         if (isset($post['activity-cancel'])) {
             // Check if currently logged in member is an organizer of the meeting
             if (in_array($this->getLoggedInMember()->id, array_keys($activity->organizers))) {
@@ -262,8 +294,8 @@ class ActivitiesModel extends RoxModelBase
                 return false;
             }
         }
+        
     }
-    
     public function createActivity($args) {
         // First add geo location to geonames_cache if it doesn't exist yet
         $locationId = $args->post['activity-location-id'];
@@ -288,6 +320,7 @@ class ActivitiesModel extends RoxModelBase
         $organizer[$activity->creator] = array ( "attendeeId" => $activity->creator, "organizer" => "1", "status" => "1");
         $activity->organizers = $organizer;
         $activity->insert();
+        return $activity;
     }
 
     public function updateActivity($args) {
@@ -310,6 +343,7 @@ class ActivitiesModel extends RoxModelBase
         $activity->description = $args->post['activity-description'];
         $activity->public = isset($args->post['activity-public']);
         $activity->update();
+        return $activity;
     }
 
     public function checkSearchActivitiesVarsOk($args) {

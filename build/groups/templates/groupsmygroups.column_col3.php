@@ -30,7 +30,7 @@
         {
             echo <<<HTML
             <p class="note">
-            {$words->get('GroupSearchNoResults')}
+            {$words->get('GroupsMyGroupsNoResults', '<a href="groups/search">', '</a>', '<a href="groups/new">', '</a>')}
             </p>
 HTML;
         }

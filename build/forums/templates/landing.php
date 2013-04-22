@@ -69,13 +69,13 @@ if ($threads = $groups->getThreads()) {
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="moregroups">
-            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowMore'); ?>">
+            <input type="submit" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
         </form>
 
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessgroups">
-            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowLess'); ?>">
+            <input type="submit" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
         </form>
 <?php
     }
@@ -90,8 +90,8 @@ if ($threads = $groups->getThreads()) {
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
             <input type="submit" name="submit" value="<?php echo $buttonText; ?>">
         </form>
-
 <?php
+    echo $words->flushBuffer();
     }
 ?>
     <strong class="float_right"><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong>
@@ -114,9 +114,11 @@ if ($User) {
             <input type="submit" name="submit" value="<?= $this->words->get('ForumNewTopic'); ?>">
         </form>
     </span>
-    <h2><a href="forums/agora"><?php echo $this->words->getFormatted('AgoraForum'); ?></a></h2>
 <?php
 }
+?>
+    <h2><a href="forums/agora"><?php echo $this->words->getFormatted('AgoraForum'); ?></a></h2>
+<?php 
     $uri = 'forums/';
 if ($threads = $forum->getThreads()) {
     $forum->getTotalThreads(); ?>
@@ -129,16 +131,16 @@ if ($threads = $forum->getThreads()) {
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="moreagora">
-            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowMore'); ?>">
+            <input type="submit" name="submit" value="<?php echo $this->words->getSilent('ShowMore'); ?>">
         </form>
 
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $moreLessThreadsCallbackId; ?>"  value="1">
             <input type="hidden" name="agoragroupsthreadscountmoreless" value="lessagora">
-            <input type="submit" name="submit" value="<?php echo $this->words->getFormatted('ShowLess'); ?>">
+            <input type="submit" name="submit" value="<?php echo $this->words->getSilent('ShowLess'); ?>">
         </form>
-
 <?php
+    echo $words->flushBuffer();
     }
 ?>
     <strong class="float_right"><a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong> 

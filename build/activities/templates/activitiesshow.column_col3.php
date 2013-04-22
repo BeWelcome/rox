@@ -1,4 +1,5 @@
 ﻿<?php
+$activityInTheFuture = (time() < strtotime($this->activity->dateTimeStart));
 $formkit = $this->layoutkit->formkit;
 $callbackTagsJoinEdit = $formkit->setPostCallback('ActivitiesController', 'joinLeaveActivityCallback');
 $callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
@@ -30,7 +31,11 @@ if (!empty($errors)) {
 }
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
-    $vars['activity-comment'] = $this->member->comment;
+    if ($this->member) {
+        $vars['activity-comment'] = $this->member->comment;
+    } else {
+        $vars['activity-comment'] = '';
+    }
 }
 ?>
 <div id="activity">
@@ -82,8 +87,9 @@ if (empty($vars)) {
         </div> <!-- c62l -->
         <div class="c38r">
             <div class="subcr">
-                <?php if ($this->member) {
-                        if ($this->activity->status == 0) { ?>
+                <?php if ($activityInTheFuture) {
+                        if ($this->member) {
+                            if ($this->activity->status == 0) { ?>
                     <form method="post" id="activity-show-form" class="yform full abitlower">
                     <?php echo $callbackTagsJoinEdit; ?>
                     <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
@@ -118,6 +124,7 @@ if (empty($vars)) {
                         echo '<div class="row abitright">';
                         echo '<p>'.$words->getBuffered('ActivitiesPleaseLogInToJoinActivity', '<a href="' . $login_url . '">', '</a>').'</p>';
                         echo '</div>';
+                    }
                     }?>
                 <div class="row abitright">
                     <h3><?= $words->get('ActivityDateTime'); ?></h3>
@@ -142,15 +149,19 @@ if (empty($vars)) {
                         <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
                         <?php echo $callbackTagsCancelUncancel; ?>
                         <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
-                        <?php if ($this->activity->status == 1) 
-                                {
+                        <?php 
+                            $activityInTheFuture = (time() < strtotime($this->activity->dateTimeStart));
+                            if ($activityInTheFuture) {
+                                if ($this->activity->status == 1) { 
                                     echo '<input type="submit" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
                                 } else {
-                                    echo '<a href="activities/' . $this->activity->id .'/edit" class="button" style="padding-bottom: 2.5px; padding-top: 4.5px;">' . $words->getSilent('ActivityEdit') . '</a>';
-                                    echo '&nbsp;&nbsp;<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
+                                    echo '<a href="activities/' . $this->activity->id .'/edit" class="button" style="padding-bottom: 2.5px; padding-top: 4.5px;">' . $words->getSilent('ActivityEdit') . '</a>&nbsp;&nbsp;';
+                                    echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
                                 }
-                                echo $words->flushBuffer();
-                            
+                            } else {
+                                echo $words->getSilent('ActivitityInThePastOrganizer');
+                            }
+                            echo $words->flushBuffer();
                         ?>
                     </div>
                     </form>

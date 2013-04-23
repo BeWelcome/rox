@@ -42,7 +42,7 @@ Boston, MA  02111-1307, USA.
 	   		echo $words->getFormatted("forum_YourDontHaveSubscription") ;
 	   }
 	   else {
-	   		echo "</h2>".$words->getFormatted("forum_YourSubscription")."</h2>" ;
+	   		echo "<h2>".$words->getFormatted("forum_YourSubscription")."</h2>" ;
 	   }
 	}
 	echo "</td></tr>\n" ;

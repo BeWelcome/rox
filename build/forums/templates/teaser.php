@@ -8,7 +8,7 @@ $User = APP_User::login();
             <a href="forums"><?php echo $this->_model->words->getFormatted('CommunityLanding'); ?></a>
 
 <?php if ($this->_model->getTopMode() == Forums::CV_TOPMODE_FORUM) {
-          echo '&raquo <a href="forums/agora">'.$this->_model->words->getFormatted('AgoraForum').'</a>';
+          echo '&raquo <a href="forums/bwforum">'.$this->_model->words->getFormatted('AgoraForum').'</a>';
       }
 ?>
         </h1>
@@ -26,7 +26,7 @@ $User = APP_User::login();
 
     <div class="float_right">
         <!-- Google froum search bar -->
-        <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
+        <p style="><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
         <form action="http://www.google.com/cse" id="cse-search-box">
             <div>
                 <input type="hidden" name="cx" value="003793464580395137050:n7s_x10-itw" />

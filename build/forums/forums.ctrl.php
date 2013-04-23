@@ -680,7 +680,7 @@ class ForumsController extends PAppController
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
                     $this->action = self::ACTION_VIEW_LANDING;
                     $showSticky = false;
-                } else if ($r == 'agora') {
+                } else if ($r == 'bwforum') {
                     if ($this->_model->getTopMode() == Forums::CV_TOPMODE_CATEGORY) {
                         $this->action = self::ACTION_VIEW_CATEGORY;
 		    } else {
@@ -731,7 +731,7 @@ class ForumsController extends PAppController
                     } else if ($char == 'c') { // Countrycode
                         $this->_model->setCountryCode(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
-                    } else if ($char == 'a' && $r != "agora") { // Admincode
+                    } else if ($char == 'a') { // Admincode
                         $this->_model->setAdminCode(substr($r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 't') { // Tagid

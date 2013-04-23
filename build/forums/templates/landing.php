@@ -116,7 +116,7 @@ if ($User) {
 <?php
 }
 ?>
-    <h2><a href="forums/agora"><?php echo $this->words->getFormatted('AgoraForum'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('AgoraTagLine'); ?></span></h2>
+    <h2><a href="forums/bwforum"><?php echo $this->words->getFormatted('AgoraForum'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('AgoraTagLine'); ?></span></h2>
 <?php 
     $uri = 'forums/';
 if ($threads = $forum->getThreads()) {
@@ -142,7 +142,7 @@ if ($threads = $forum->getThreads()) {
     echo $words->flushBuffer();
     }
 ?>
-    <strong class="float_right"><a href="forums/agora"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong> 
+    <strong class="float_right"><a href="forums/bwforum"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong> 
 </div> <!-- Forum-->
 
 <?php

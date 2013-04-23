@@ -46,13 +46,13 @@ if (!$User) {
 <?php
     echo $this->words->flushBuffer();
 ?>
-<!--      <span class="float_right">
+<!--       <span class="float_right">
         <?= $this->words->get('GroupsSearchHeading'); ?>
         <form action="groups/search" method="get">
-            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $this->words->get('GroupsSearchSubmit'); ?>" /><br />
-        </form>
-    </span>-->
-    <h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a></h2>
+            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $this->words->getSilent('GroupsSearchSubmit'); ?>" /><br />
+        </form><?php echo $this->words->flushBuffer(); ?>
+    </span> -->
+    <h2><a href="groups/forums"><?php echo $this->words->getFormatted('Groups'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('GroupsTagLine'); ?></span></h2>
 
 
 <?php
@@ -111,13 +111,13 @@ if ($User) {
     <span class="float_right">
         <br />
         <form method="get" action="forums/new">
-            <input type="submit" name="submit" value="<?= $this->words->get('ForumNewTopic'); ?>">
-        </form>
+            <input type="submit" name="submit" value="<?= $this->words->getSilent('ForumNewTopic'); ?>">
+        </form><?php echo $this->words->flushBuffer(); ?>
     </span>
 <?php
 }
 ?>
-    <h2><a href="forums/agora"><?php echo $this->words->getFormatted('AgoraForum'); ?></a></h2>
+    <h2><a href="forums/agora"><?php echo $this->words->getFormatted('AgoraForum'); ?></a> <span class="small">&ndash; <?php echo $this->words->get('AgoraTagLine'); ?></span></h2>
 <?php 
     $uri = 'forums/';
 if ($threads = $forum->getThreads()) {

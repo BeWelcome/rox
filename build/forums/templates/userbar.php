@@ -31,7 +31,10 @@ Boston, MA  02111-1307, USA.
     <li class="icon fam_commentadd">
         <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->get('ForumNewTopic'); ?></a>
     </li>
-	<?php
+        <li>
+        <a href="groups/search"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
+    </li>
+    <?php
 //	if ($this->_model->GetTopMode()==Forums::CV_TOPMODE_CATEGORY) {
 //		echo '<li><a href="forums/landing">' . $this->words->get('ForumLanding') . '</a></li>' ;
 //		echo '<li><a href="forums/lastposts">' . $this->words->get('ForumLastPost') . '</a></li>' ;

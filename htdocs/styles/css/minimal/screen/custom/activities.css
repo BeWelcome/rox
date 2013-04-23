@@ -21,12 +21,21 @@
     display: none;
 }
 
+/*
+*  custom styles for activities in Internet Explorer
+*
+*/
+
 .marker-cluster-unique {
-    background-color: rgba(146, 144, 200, 0.6);
+	/* hack for browsers without standard alpha support */
+	background-color: #b9b6d4;
+	background-color: rgba(146, 144, 200, 0.6);
 }
 
 .marker-cluster-unique div {
-    background-color: rgba(146, 144, 200, 0.6);
+	/* hack for browsers without standard alpha support */
+	background-color: #989acc;
+	background-color: rgba(146, 144, 200, 0.6);
 }
 
 .leaflet-popup-content h4{

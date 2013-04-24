@@ -18,7 +18,7 @@ if (!empty($status)) {
 }
 if ($this->activity->status == 1) {
     // the activity has been cancelled
-    echo '<div class="error">' . $words->get('ActivityHasBeenCancelled') . '</div>';
+    echo '<div class="note">' . $words->get('ActivityHasBeenCancelled') . '</div>';
 }
 $errors = $this->getRedirectedMem('errors');
 if (!empty($errors)) {

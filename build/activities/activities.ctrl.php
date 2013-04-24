@@ -63,6 +63,12 @@ class ActivitiesController extends RoxControllerBase
             $mem_redirect->errors = $errors;
             return false;
         }
+        $activity = new Activity($args->post['activity-id']);
+        if (!$activity->status == 1){
+            $_SESSION['ActivityStatus'] = array('ActivityUnCancelSuccess', $activity->title);
+        } else {
+            return $this->router->url('activities_show', array('id' => $activity->id), false);
+        }
         return true;
     }
 

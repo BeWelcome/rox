@@ -82,6 +82,10 @@ if (empty($vars)) {
                 ?>
                 </ul></div>
                 <?php
+                } else {
+                        echo '<div class="row"><h3>' .  $words->get('ActivityAttendees') . '</h3>';
+                        echo '<p>'.$words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>').'</p>';
+                        echo '</div>';
                 }?>
             </div> <!-- subcl -->
         </div> <!-- c62l -->

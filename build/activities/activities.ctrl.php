@@ -80,6 +80,9 @@ class ActivitiesController extends RoxControllerBase
     }
     
     public function show() {
+        if (!is_numeric($this->route_vars['id'])) {
+            $this->redirectAbsolute($this->router->url('activities_upcoming_activities'));
+        }
         $id = intval($this->route_vars['id']);
         $activity = new Activity($id);
         $loggedInMember = $this->_model->getLoggedInMember();

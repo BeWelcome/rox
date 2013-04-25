@@ -84,12 +84,6 @@ if (!empty($errors)) {
     <div class="row float_left">
         <input type="submit" id="activity-submit" name="activity-submit" value="<?php echo $words->getSilent('ActivitiesSubmit'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
     </div>
-    <div class="row float_right">
-        <?php echo $callbackTagsCancelUncancel;
-        if (!$this->activity->status == 1 && $vars['activity-id'] != 0) { 
-            echo '<input type="submit" class="back" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityEditCreateCancel') . '"/>';
-        }?>
-    </div>
 </fieldset>
 </form>
 </div>

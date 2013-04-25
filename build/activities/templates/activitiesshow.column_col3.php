@@ -18,7 +18,7 @@ if (!empty($status)) {
 }
 if ($this->activity->status == 1) {
     // the activity has been cancelled
-    echo '<div class="error">' . $words->get('ActivityHasBeenCancelled') . '</div>';
+    echo '<div class="note">' . $words->get('ActivityHasBeenCancelled') . '</div>';
 }
 $errors = $this->getRedirectedMem('errors');
 if (!empty($errors)) {
@@ -82,6 +82,10 @@ if (empty($vars)) {
                 ?>
                 </ul></div>
                 <?php
+                } else {
+                        echo '<div class="row"><h3>' .  $words->get('ActivityAttendees') . '</h3>';
+                        echo '<p>'.$words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>').'</p>';
+                        echo '</div>';
                 }?>
             </div> <!-- subcl -->
         </div> <!-- c62l -->

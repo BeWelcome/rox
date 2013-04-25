@@ -1,6 +1,7 @@
 <?php
 $formkit = $this->layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('ActivitiesController', 'editCreateActivityCallback');
+$callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'activity-description';
     require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
@@ -80,8 +81,14 @@ if (!empty($errors)) {
     <div class="subcolumns row">
         <input type="checkbox" id="activity-public" name="activity-public" <?php if (isset($vars['activity-public'])) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
     </div>
-    <div class="row">
+    <div class="row float_left">
         <input type="submit" id="activity-submit" name="activity-submit" value="<?php echo $words->getSilent('ActivitiesSubmit'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+    </div>
+    <div class="row float_right">
+        <?php echo $callbackTagsCancelUncancel;
+        if (!$this->activity->status == 1 && $vars['activity-id'] != 0) { 
+            echo '<input type="submit" class="back" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityEditCreateCancel') . '"/>';
+        }?>
     </div>
 </fieldset>
 </form>

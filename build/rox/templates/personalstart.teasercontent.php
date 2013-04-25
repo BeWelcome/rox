@@ -426,7 +426,7 @@ Boston, MA  02111-1307, USA.
                 <div class="panel" id="tab5">
 
                 <?php $inbox_widget->render() ?>
-                <p><a href="messages">more...</a></p>
+                <p><a href="messages"><?php echo $words->get('PersonalStartMessageMore');?></a></p>
 
                 </div> <!-- tab5 -->
 

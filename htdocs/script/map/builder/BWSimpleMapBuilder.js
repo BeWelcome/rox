@@ -25,6 +25,8 @@ var BWSimpleMapBuilder = Class
       // create the map
       this.osmMap = new L.Map(mapHtmlId, {attributionControl: false});
 
+      this.maxZoom = 18;
+      
       // OSM layer
       this.osmLayer = new L.TileLayer(this.cloudmadeUrl, {
         maxZoom : this.maxZoom,

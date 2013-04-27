@@ -126,10 +126,10 @@ foreach($this->activities as $activity) {
         if ($this->member && in_array($this->member->id, array_keys($activity->organizers)) 
                 && $activityInTheFuture ) {
             echo '<a href="activities/' . $activity->id . '/edit">'
-                    . '<img src="images/icons/comment_edit.png" alt="' . $words->getSilent('ActivityEdit') . '" /></a>';
+                    . '<img src="images/icons/comment_edit.png" title="' . $words->getBuffered('ActivityEdit') . '" alt="' . $words->getBuffered('ActivityEdit') . '" />' . $words->flushBuffer() . '</a>';
         }
     } else {
-        echo '<img src="images/icons/cancel.png" alt="' . $words->getSilent('ActivityCancelled') . '" />';
+        echo '<img src="images/icons/cancel.png" title="' . $words->getBuffered('ActivityCancelled') . '" alt="' . $words->getBuffered('ActivityCancelled') . '" />' . $words->flushBuffer();
     }
     echo '</td>';
     echo '</tr>';

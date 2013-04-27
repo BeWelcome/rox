@@ -23,16 +23,15 @@ if (empty($vars)) {
 }
 ?>
 <div>
-<form method="post" id="activity-create-form">
-<input type="hidden" id="activity-id" name="activity-id" value="<?php echo $vars['activity-id']; ?>" />
-<input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" /> 
-<?php echo $callbackTags; ?>
 <fieldset id="activity-create"><legend><?php if ($vars['activity-id'] != 0) {
     echo $words->get('ActivitiesEdit');
 } else {
     echo $words->get('ActivitiesCreate');
 } ?></legend>
-<?php
+<form method="post" id="activity-create-form">
+<input type="hidden" id="activity-id" name="activity-id" value="<?php echo $vars['activity-id']; ?>" />
+<input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" /> 
+<?php echo $callbackTags;
 if (!empty($errors)) {
     $errStr = '<div class="error">';
     foreach ($errors as $error) {
@@ -81,12 +80,31 @@ if (!empty($errors)) {
     <div class="subcolumns row">
         <input type="checkbox" id="activity-public" name="activity-public" <?php if (isset($vars['activity-public'])) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>
     </div>
-    <div class="row float_left">
-        <input type="submit" id="activity-submit" name="activity-submit" value="<?php echo $words->getSilent('ActivitiesSubmit'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+    <div class="subcolumns row">
+        <?php
+        if ($vars['activity-id'] != 0) {
+             $activitieseditcreatebutton = $words->getSilent('ActivitiesEditCreateUpdate');
+        } else {
+             $activitieseditcreatebutton = $words->getSilent('ActivitiesSubmit');
+        }
+        ?>
+        <input type="submit" id="activity-submit" name="activity-submit" value="<?php echo $activitieseditcreatebutton; ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
     </div>
-</fieldset>
+</form>
+<form method="post" id="activity-show-form">
+    <div class="row">
+        <?php echo $callbackTagsCancelUncancel; ?>
+        <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
+        <?php 
+            if (!$this->activity->status == 1 && $vars['activity-id'] != 0) { 
+                echo '<input type="submit" class="back" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityEditCreateCancel') . '"/>';
+            }
+        ?>
+    </div>
 </form>
 </div>
+</fieldset>
+
 <script type="text/javascript">//<!--
 ActivityGeoSuggest.initialize('activity-create-form');
 

@@ -31,7 +31,7 @@ $ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
 if (!$User) {
 ?>
-    <div class="subcolumns">
+    <div class="row subcolumns">
         <?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
     </div>
 <?php

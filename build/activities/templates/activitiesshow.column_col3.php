@@ -145,9 +145,9 @@ if (empty($vars)) {
                 </div>
                 <div class="row abitright">
                     <h3><?= $words->get('ActivityAttendeesNumbersTitle'); ?></h3>
-                    <p><?php echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes); ?><br />
-                     <?= $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe); ?><br />
-                     <?= $words->get('ActivityAttendeesNo', $this->activity->attendeesNo); ?></p>
+                    <p><?php if ($this->activity->attendeesYes != 0){ echo $words->get('ActivityAttendeesYes', $this->activity->attendeesYes);} ?><br />
+                     <?php if ($this->activity->attendeesMaybe != 0){ echo $words->get('ActivityAttendeesMaybe', $this->activity->attendeesMaybe);} ?><br />
+                     <?php if ($this->activity->attendeesNo != 0){ echo $words->get('ActivityAttendeesNo', $this->activity->attendeesNo);} ?></p>
                 </div>
                 <?php if ($this->member) {
                     if ($this->member->organizer == true) { ?>

@@ -115,10 +115,10 @@ foreach($this->activities as $activity) {
     }
     echo '<td><div class="small grey">' . $words->get('ActivityListLocation') . '</div><p>'
                  . $locationName . '<br /> ' . $countryName . '</p></td>';
-    echo '<td><div class="small grey">' . $words->get('ActivityListAttendees') . '</div><p>'
-                . $activity->attendeesYes . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '<br />'
-                . $activity->attendeesMaybe . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe') . '</p></td>';
-    echo '<td width="112px"><div class="small grey">' . $words->get('ActivitiesOrganizedBy') . '</div>';
+    echo '<td><div class="small grey">' . $words->get('ActivityListAttendees') . '</div><p>';
+    if ($activity->attendeesYes != 0){ echo $activity->attendeesYes . '&nbsp;' . $words->get('ActivitiesNumbAttendeesYes') . '<br />';}
+    if ($activity->attendeesMaybe != 0){ echo $activity->attendeesMaybe . '&nbsp;' . $words->get('ActivitiesNumbAttendeesMaybe');}
+    echo '</p></td><td width="112px"><div class="small grey">' . $words->get('ActivitiesOrganizedBy') . '</div>';
     $organizers = '';
     foreach($activity->organizers as $organizer) {
         $organizers .= MOD_layoutbits::PIC_40_40($organizer->Username,'',$style='framed float_left') . " ";

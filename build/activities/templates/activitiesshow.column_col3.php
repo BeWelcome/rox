@@ -185,19 +185,6 @@ if (empty($vars)) {
                             echo MOD_layoutbits::PIC_50_50($organizer->Username,'',$style='framed float_left');
                             echo '<div class="userinfo">';
                             echo '<a class="username" href="members/'.$organizer->Username.'">'.$organizer->Username.'</a><br />';
-                            echo '<span class="small"><b>';
-                            switch($organizer->status) {
-                                case 1: 
-                                    echo $words->get('ActivityYesIAttend');
-                                    break;
-                                case 2:
-                                    echo $words->get('ActivityIMightAttend');
-                                    break;
-                                case 3:
-                                    echo $words->get('ActivityNoIDontAttend');
-                                    break;
-                            }
-                            echo '</b></span><br />';
                             echo '  <span class="small">' . htmlspecialchars($organizer->comment) . '</span>';
                             echo '</div>';
                             echo '</li>';

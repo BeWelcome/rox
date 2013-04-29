@@ -55,8 +55,8 @@ class ActivitiesBasePage extends PageWithActiveSkin
         $words = $layoutkit->getWords();
         if ($this->member) {
             $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
-            $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
-            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+            $items[] = array('upcomingactivities', 'activities/upcoming', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('pastactivities', 'activities/past', $words->getSilent('ActivitiesPastActivities'));
             $geo = new Geo($this->member->IdCity);
             $items[] = array('activitiesnearme', 'activities/nearme', $words->getSilent('ActivitiesActivitiesNear', $geo->name));
             if ($this->update) {
@@ -65,8 +65,8 @@ class ActivitiesBasePage extends PageWithActiveSkin
                 $items[] = array('createactivities', 'activities/create', $words->getSilent('ActivitiesCreate'));
             }
         } else {
-            $items[] = array('upcomingactivities', 'activities/upcomingactivities', $words->getSilent('ActivitiesUpcoming'));
-            $items[] = array('pastactivities', 'activities/pastactivities', $words->getSilent('ActivitiesPastActivities'));
+            $items[] = array('upcomingactivities', 'activities/upcoming', $words->getSilent('ActivitiesUpcoming'));
+            $items[] = array('pastactivities', 'activities/past', $words->getSilent('ActivitiesPastActivities'));
         }
         return $items;
     }

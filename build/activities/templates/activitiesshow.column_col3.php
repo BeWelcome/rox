@@ -132,7 +132,10 @@ if (empty($vars)) {
                     }?>
                 <div class="row abitright">
                     <h3><?= $words->get('ActivityDateTime'); ?></h3>
-                    <p><?php echo $this->activity->dateStart; ?> - <?php echo $this->activity->dateEnd; ?><br />
+                    <p><?php echo $this->activity->dateStart; ?><?php 
+                    if ($this->activity->dateStart != $this->activity->dateEnd){
+                        echo ' - ' . $this->activity->dateEnd;
+                    }?><br />
                     <?php echo $this->activity->timeStart; ?> - <?php echo $this->activity->timeEnd; ?></p>
                 </div>
                 <div class="row abitright">

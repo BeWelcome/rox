@@ -96,7 +96,11 @@ foreach($this->activities as $activity) {
             <div class="calendar calendar-icon-' . date("m", strtotime($activity->dateStart)) . '">
               <div class="calendar-day">' . date("j", strtotime($activity->dateStart)) . '</div>
               <div class="calendar-year">' . date("Y", strtotime($activity->dateStart)) . '</div></div></td>';
-    echo '<td colspan="2"><div class="small grey">' . $activity->dateStart . '-' . $activity->dateEnd . '</div><h3><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></h3></td>';
+    echo '<td colspan="2"><div class="small grey">' . $activity->dateStart;
+                    if ($activity->dateStart != $activity->dateEnd){
+                        echo ' - ' . $activity->dateEnd;
+                    }
+    echo '</div><h3><a href="activities/' . $activity->id . '">' . htmlspecialchars($activity->title) . '</a></h3></td>';
     echo '<td><i class="icon-map-marker icon-4x grey float_right"></i></td>';
     if ($activity->location != null){
         $locationName = htmlspecialchars($activity->location->name);

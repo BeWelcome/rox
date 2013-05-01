@@ -131,6 +131,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
      */
     public function takeCareForNonUniqueEmailAddress($email)
     {
+        $email = str_replace("@", "%40", $email);
         $query = '
 SELECT `Username`, members.`Status`, members.`id` AS `idMember`
 FROM `members`, '. PVars::getObj('syshcvol')->Crypted .'`cryptedfields`

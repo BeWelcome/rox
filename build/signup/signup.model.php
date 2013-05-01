@@ -612,7 +612,7 @@ VALUES
             $errors[] = 'SignupErrorInvalidEmail';
         }
 
-        $users = $this->takeCareForNonUniqueEmailAddress($_GET['email']);
+        $users = $this->takeCareForNonUniqueEmailAddress($vars['email']);
         if ($users != '') {
             $errors[] = 'SignupErrorEmailAddressAlreadyInUse';
         }

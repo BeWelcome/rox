@@ -209,7 +209,7 @@ class ActivitiesController extends RoxControllerBase
         }
         $count = $this->_model->getUpcomingActivitiesCount($page->publicOnly);
         $page->activities = $this->_model->getUpcomingActivities($page->publicOnly, $pageno, self::ACTIVITIES_PER_PAGE);
-        $page->pager = $this->getPager('upcomingactivities', $count, $pageno);
+        $page->pager = $this->getPager('upcoming', $count, $pageno);
         
         $page->allActivities = $this->_model->getUpcomingActivities($page->publicOnly, 0, PVars::getObj('activities')->max_activities_on_map);
         
@@ -232,7 +232,7 @@ class ActivitiesController extends RoxControllerBase
         }
         $count = $this->_model->getPastActivitiesCount($page->publicOnly);
         $page->activities = $this->_model->getPastActivities($page->publicOnly, $pageno, self::ACTIVITIES_PER_PAGE);
-        $page->pager = $this->getPager('pastactivities', $count, $pageno);
+        $page->pager = $this->getPager('past', $count, $pageno);
         
         $page->allActivities = $this->_model->getPastActivities($page->publicOnly, 0, PVars::getObj('activities')->max_activities_on_map);
                 

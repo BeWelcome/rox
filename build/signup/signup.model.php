@@ -607,11 +607,16 @@ VALUES
             $errors[] = 'SignupErrorUsernameAlreadyTaken';
         }
         
-        // email (e-mail duplicates in BW database allowed)
+        // email (e-mail duplicates in BW database *not* allowed (as of 1st May 2013, ticket ))
         if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email'])) {
             $errors[] = 'SignupErrorInvalidEmail';
         }
-        
+
+        $users = $model->takeCareForNonUniqueEmailAddress($_GET['email']);
+        if ($users != '') {
+            $errors[] = 'SignupErrorEmailAddressAlreadyInUse';
+        }
+
         // password
         if (!isset($vars['password']) || !isset($vars['passwordcheck']) ||
                 strlen($vars['password']) < 6 || 

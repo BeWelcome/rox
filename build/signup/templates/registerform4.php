@@ -112,6 +112,8 @@ Boston, MA  02111-1307, USA.
           <?php
           if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
+          } else if (in_array('SignupErrorEmailAddressAlreadyInUse', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorEmailAddressAlreadyInUse').'</div>';
           } else {
             echo '<p class="float_left entered">'.$vars['email'].'</p>';
           }

@@ -215,6 +215,7 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
+
     /**
      * fetches the groups for the logged in member and shows them
      *
@@ -838,6 +839,12 @@ class GroupsController extends RoxControllerBase
         $page = new GroupForumPage();
         $page->group = $this->_getGroupFromRequest();
         $this->_fillObject($page);
+        return $page;
+    }
+
+    public function groupForumsOverview()
+    {
+        $page = new GroupForumsOverviewPage(); 
         return $page;
     }
 

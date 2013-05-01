@@ -45,6 +45,16 @@ class GroupsSearchPage extends GroupsBasePage
         <?php
     }
 
+    protected function getSubmenuItems()
+    {
+        $words = $this->getWords();
+        $items = array();
+        $items[] = array('mygroups', 'groups/mygroups', $words->getSilent('GroupsMyGroups'));
+        $items[] = array('search', 'groups/search', $words->getSilent('GroupsFindGroups'));
+
+        return $items;
+    }
+
     protected function getSubmenuActiveItem()
     {
         return 'search';

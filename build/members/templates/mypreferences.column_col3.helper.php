@@ -21,6 +21,13 @@
     $pref_publicprofile = (isset($value) && $value) ? true : false;
     $p = $this->member->preferences;
     
+    //get baseuri
+    $baseuri = PVars::getObj('env')->baseuri;
+    if (PVars::getObj('env')->force_ssl_sensitive) {
+        $baseuri = PVars::getObj('env')->baseuri_https;
+    }
+    
+ 
     // Check if preferred language is set
     if (!isset($p['PreferenceLanguage']->Value)) {
         $p['PreferenceLanguage']->Value = $_SESSION['IdLanguage'];

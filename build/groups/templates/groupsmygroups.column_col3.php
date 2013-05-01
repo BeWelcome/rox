@@ -1,3 +1,4 @@
+<div id="groups">
         <h3><?= $words->get('GroupsMyGroups'); ?></h3>
         <div class="floatbox">
         <?php
@@ -29,9 +30,10 @@
         {
             echo <<<HTML
             <p class="note">
-            {$words->get('GroupSearchNoResults')}
+            {$words->get('GroupsMyGroupsNoResults', '<a href="groups/search">', '</a>', '<a href="groups/new">', '</a>')}
             </p>
 HTML;
         }
         ?>
         </div>
+</div>

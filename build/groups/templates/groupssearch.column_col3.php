@@ -1,9 +1,18 @@
 <div id="groups">
-        <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
-        <form action="groups/search" method="get">
-            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
-        </form>
-    
+        <div class="floatbox">
+            <div class="groupbox float_left">
+                <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
+                <form action="groups/search" method="get">
+                    <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
+                </form>
+            </div>             
+            <div class="groupbox float_left">
+                <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
+                <p><?= $words->get('GroupsCreateDescription'); ?></p>
+                <a class="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+            </div>
+        </div>
+
         <h3><?= $words->get('GroupsSearchResult'); ?></h3>
         <?php
         $search_result = $this->search_result;

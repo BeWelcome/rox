@@ -97,7 +97,7 @@ HTML;
                 echo '</a>';
             }
             echo "</div>";
-            if ($item->Link != '' && !$text_params) { 
+            if ($item->Link != '') { 
                 echo "<a href='{$item->Link}'>";
             }
             echo <<<HTML
@@ -105,7 +105,7 @@ HTML;
                 {$text}
             </p>
 HTML;
-            if ($item->Link != '' && !$text_params) { 
+            if ($item->Link != '') { 
                 echo '</a>';
             }
             echo "</div>";

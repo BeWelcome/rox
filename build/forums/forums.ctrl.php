@@ -94,7 +94,8 @@ class ForumsController extends PAppController
             $User = false;
         }
          
-        
+        $showSticky = true;        
+
         $this->parseRequest();
         
         // set uri for correct links in group pages etc.
@@ -104,14 +105,13 @@ class ForumsController extends PAppController
         $view->BW_Right = $this->BW_Right;
         $page->BW_Right = $this->BW_Right;
         
-        $this->_model->prepareForum();
+        $this->_model->prepareForum($showSticky);
         
         // first include the col2-stylesheet
         $page->addStyles .= $view->customStyles();
         $page->currentTab = 'forums'; 
         // then the userBar
         $page->newBar .= $view->getAsString('userBar');
-        $page->teaserBar .= $view->getAsString('teaser');
                 
         // we can't replace this ob_start()
         ob_start();
@@ -179,19 +179,17 @@ class ForumsController extends PAppController
                 $this->_view->showTopic();
             } 
             else {
-                $this->_model->prepareForum();
                 if ($this->isTopLevel) {
-//                die("\$this->_model->getTopMode()=".$this->_model->getTopMode()) ;
-                    if ($this->_model->getTopMode()==Forums::CV_TOPMODE_CATEGORY) { // Ici on fera l'aiguillage Category ou Recent Posts
-                        $this->_view->showTopLevelCategories();
-                    }
-                    else if ($this->_model->getTopMode()==Forums::CV_TOPMODE_LASTPOSTS){
-                        $this->_view->showTopLevelRecentPosts(); 
-                    }
-                    else {
-                        die("getTopMode is not set") ;
-                    }
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
+                    $this->_model->prepareForum(false);
+
+                    $onlymygroupscallbackId = $this->mygroupsonlyProcess();
+                    $morelessthreadscallbackid = $this->morelessthreadsProcess();
+                    $this->_view->showTopLevelLandingPage($onlymygroupscallbackId, $morelessthreadscallbackid); 
+                    PPostHandler::clearVars($onlymygroupscallbackId);
+                    PPostHandler::clearVars($morelessthreadscallbackid);
                 } else {
+                    $this->_model->prepareForum();
                     $this->_view->showForum();
                 }
             }
@@ -200,8 +198,23 @@ class ForumsController extends PAppController
             $this->_view->showTopLevelCategories();
         } 
         else if ($this->action == self::ACTION_VIEW_LASTPOSTS) {
-            $this->_view->showTopLevelRecentPosts();
+            $callbackId = $this->mygroupsonlyProcess();
+            $this->_view->showTopLevelRecentPosts($callbackId);
+            PPostHandler::clearVars($callbackId);
         } 
+        else if ($this->action == self::ACTION_VIEW_LANDING) {
+            $callbackId = $this->mygroupsonlyProcess();
+            $this->_view->showTopLevelLandingPage($callbackId);
+            PPostHandler::clearVars($callbackId);
+        } 
+        else if ($this->action == self::ACTION_VIEW_FORUM) {
+            $this->_view->showTopLevelRecentPosts();
+        }
+        else if ($this->action == self::ACTION_VIEW_GROUPS) {
+            $callbackId = $this->mygroupsonlyProcess();
+            $this->_view->showTopLevelRecentPosts($callbackId, true);
+            PPostHandler::clearVars($callbackId);
+        }
         else if ($this->action == self::ACTION_RULES) {
             $this->_view->rules();
         } 
@@ -401,6 +414,7 @@ class ForumsController extends PAppController
         $page->content .= ob_get_contents();
          ob_end_clean();
         $page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
+        $page->teaserBar .= $view->getAsString('teaser');
         $page->render();
     } // end of index
     
@@ -431,14 +445,22 @@ class ForumsController extends PAppController
     }
     
     private function searchUserposts($user) {
-                if (APP_User::isBWLoggedIn()) { // Data will be displayed only if the current user is Logged and is an active member
-            $posts = $this->_model->searchUserposts($user); // todo test if the member is still active
-                    
+        // Data will be displayed only if the current user is Logged
+        if (APP_User::isBWLoggedIn()) { 
+            $roxModel = new RoxModelBase;
+            $profileVisitor = $roxModel->getLoggedInMember();
+            $userId = APP_User::memberId($user);
+            $membersForumPostsPagePublic = $this->_model->isMembersForumPostsPagePublic($userId);
+            if ($membersForumPostsPagePublic || ($profileVisitor->getPKValue() == $userId) || $this->BW_Right->HasRight("Admin") || $this->BW_Right->HasRight("ForumModerator") || $this->BW_Right->HasRight("SafetyTeam") ) {
+                $posts = $this->_model->searchUserposts($user);
+            } else {
+                $posts = array(); //TODO: post something that says that the user has not enabled that page
+            }       
         }
         else {
-            $posts = array() ; // todo post something suggesting to LogIn or to register to see a posts by user
+            $posts = array() ;
         }
-        $this->_view->displaySearchResultPosts($posts);
+        $this->_view->displaySearchResultPosts($posts); // TODO: post something suggesting to LogIn or to register to maybe see posts by this user
     }
     
     /**
@@ -464,7 +486,7 @@ class ForumsController extends PAppController
     public function showExternalLatest($showGroups = false) {
         $request = $this->request;
         $this->parseRequest();
-        $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
+        $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);
         $this->_model->prepareForum(false);
         $this->_view->uri = 'forums/';
         $this->_view->showExternal($showGroups);
@@ -548,6 +570,28 @@ class ForumsController extends PAppController
         $this->parseRequest();
         $this->_model->delProcess();
     }
+
+    public function mygroupsonlyProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        
+        if (PPostHandler::isHandling()) {
+            return $this->_model->switchShowMyGroupsTopicsOnly();
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
+
+    public function morelessthreadsProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+        
+        if (PPostHandler::isHandling()) {
+            return $this->_model->adjustThreadsCountToShow($step = 3);
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
     
     private $action = 0;
     private $isTopLevel = true;
@@ -572,6 +616,10 @@ class ForumsController extends PAppController
     const ACTION_VOTE_POST = 17;
 	const ACTION_DELETEVOTE_POST = 18 ;
 	const ACTION_REPORT_TO_MOD = 19 ;
+    const ACTION_VIEW_LANDING = 20;
+    const ACTION_VIEW_FORUM = 21;
+    const ACTION_VIEW_GROUPS = 22;
+
     
     /**
     * Parses a request
@@ -581,17 +629,30 @@ class ForumsController extends PAppController
         $request = $this->request;
     //    die ("\$request[1]=".$request[1]) ;
         // If this is a subforum within a group
-        if (isset($request[0]) && $request[0] == 'groups') {
+      if (isset($request[0]) && !isset($request[1]) && $request[0] == 'forums') {
+          $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
+          $this->action = self::ACTION_VIEW;
+      }  
+
+      if (isset($request[0]) && $request[0] == 'groups') {
             if (isset($request[1])) {
-                if (isset($request[2]) && $request[2]=='forum') {
+                if ($request[1] == 'forums') {
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_GROUPS);
+                    $this->action = self::ACTION_VIEW_GROUPS;
+                    $this->uri = 'forums/';
+                }
+                else if (isset($request[2]) && $request[2]=='forum') {
                     $this->_model->setGroupId((int) $request[1]);
                     $this->isTopLevel = false;
                     $this->isTopCategories = false;
+                    $this->uri = 'groups/'.$request[1].'/forum/';
                 } 
-                $this->uri = 'groups/'.$request[1].'/forum/';
             } 
         } 
-        if (isset($request[1]) && $request[1] == 'suggestTags') {
+        if (!isset($request[1])) {
+            $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
+            $this->action = self::ACTION_VIEW;
+        } else if (isset($request[1]) && $request[1] == 'suggestTags') {
             $this->action = self::ACTION_SUGGEST;
         } else if (isset($request[1]) && $request[1] == 'member') {
             $this->action = self::ACTION_SEARCH_USERPOSTS;
@@ -609,14 +670,23 @@ class ForumsController extends PAppController
             $this->action = self::ACTION_SUBSCRIBE;
         } else if (isset($request[1]) && $request[1] == 'rules') {
             $this->action = self::ACTION_RULES;
-        } else if (isset($request[1]) && $request[1] === 'mygroupsonly') {
-            $this->_model->switchShowMyGroupsTopicsOnly() ;
         } else {
             foreach ($request as $r) {
                 if ($r == 'new') {
                     $this->action = self::ACTION_NEW;
                 } else if ($r == 'edit') {
                     $this->action = self::ACTION_EDIT;
+                } else if ($r == 'landing') {
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
+                    $this->action = self::ACTION_VIEW_LANDING;
+                    $showSticky = false;
+                } else if ($r == 'bwforum') {
+                    if ($this->_model->getTopMode() == Forums::CV_TOPMODE_CATEGORY) {
+                        $this->action = self::ACTION_VIEW_CATEGORY;
+		    } else {
+                        $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);
+                        $this->action = self::ACTION_VIEW_FORUM;
+                    }
                 } else if ($r == 'lastposts') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
                     $this->action = self::ACTION_VIEW_LASTPOSTS;

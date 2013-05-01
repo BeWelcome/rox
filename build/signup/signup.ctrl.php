@@ -79,7 +79,12 @@ class SignupController extends RoxControllerBase {
                     echo '0';
                     PPHP::PExit();
                 }
-                echo (bool)!$model->takeCareForNonUniqueEmailAddress($_GET['email']);
+                $users = $model->takeCareForNonUniqueEmailAddress($_GET['email']);
+                if ($users == '') {
+                    echo "1";
+                } else {
+                    echo "0";
+                }
                 PPHP::PExit();
                 break;
                 

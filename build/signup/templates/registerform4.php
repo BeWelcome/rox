@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
 <div id="signuprox">
 <p><?php echo $words->get('SignupCheckIntro'); ?></p>
 
-<form method="post" action="signup/4" name="signup" id="user-register-form">
+<form method="post" action="<?php echo $baseuri.'signup/4'?>" name="signup" id="user-register-form">
   <?=$callback_tag ?>
   <input type="hidden" name="javascriptactive" value="false" />
 
@@ -112,6 +112,8 @@ Boston, MA  02111-1307, USA.
           <?php
           if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
+          } else if (in_array('SignupErrorEmailAddressAlreadyInUse', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorEmailAddressAlreadyInUse').'</div>';
           } else {
             echo '<p class="float_left entered">'.$vars['email'].'</p>';
           }

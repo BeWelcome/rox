@@ -94,7 +94,7 @@ class GroupsBasePage extends PageWithActiveSkin
     protected function getPageTitle() {
         $words = $this->getWords();
         if (is_object($this->group)) {
-            return  $words->getBuffered('Group') . " '".$this->group->Name . "' | BeWelcome";
+            return  $words->getBuffered('Group') . " " .$this->group->Name . " | BeWelcome";
         } else return $words->getBuffered('Groups') . ' | BeWelcome';
     }
 
@@ -179,7 +179,7 @@ class GroupsBasePage extends PageWithActiveSkin
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?2';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?4';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?5';
        return $stylesheets;
     }
 

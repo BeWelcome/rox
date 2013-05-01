@@ -131,6 +131,7 @@ WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
      */
     public function takeCareForNonUniqueEmailAddress($email)
     {
+        $email = str_replace("@", "%40", $email);
         $query = '
 SELECT `Username`, members.`Status`, members.`id` AS `idMember`
 FROM `members`, '. PVars::getObj('syshcvol')->Crypted .'`cryptedfields`
@@ -140,8 +141,9 @@ WHERE members.`id` = cryptedfields.`IdMember`';
 AND members.`id`!=' . $_SESSION['IdMember']
 ; }
         $query .= '
-AND `AdminCryptedValue`=\'' . $email .'\''
+AND `AdminCryptedValue` LIKE \'%' . $email .'%\''
 ;
+
         $s = $this->dao->query($query);
         if ($s->numRows() == 0) {
 						if (!empty($email)) MOD_log::get()->write("Unique email checking done successfuly","Signup") ;
@@ -605,11 +607,16 @@ VALUES
             $errors[] = 'SignupErrorUsernameAlreadyTaken';
         }
         
-        // email (e-mail duplicates in BW database allowed)
+        // email (e-mail duplicates in BW database *not* allowed (as of 1st May 2013, ticket ))
         if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email'])) {
             $errors[] = 'SignupErrorInvalidEmail';
         }
-        
+
+        $users = $this->takeCareForNonUniqueEmailAddress($vars['email']);
+        if ($users != '') {
+            $errors[] = 'SignupErrorEmailAddressAlreadyInUse';
+        }
+
         // password
         if (!isset($vars['password']) || !isset($vars['passwordcheck']) ||
                 strlen($vars['password']) < 6 || 

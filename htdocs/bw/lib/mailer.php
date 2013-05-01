@@ -26,6 +26,7 @@ Boston, MA  02111-1307, USA.
 require_once "swift/Swift.php";
 require_once "swift/Swift/Connection/SMTP.php";
 require_once "swift/Swift/Message/Encoder.php";
+require_once __DIR__."/../../../lib/htmlpurifier-4.0.0/library/HTMLPurifier.auto.php";
 
 // -----------------------------------------------------------------------------
 // bw_mail is a function to centralise all mail send thru BW
@@ -78,7 +79,13 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     if ($_FromParam == "")
         $FromParam = $_SYSHCVOL['MessageSenderMail'];
 
-    $From = $FromParam;
+    // Is sender in format "name" <email@address>?
+    if (strpos($FromParam, '" <')) {
+        $parts = explode('" <', $FromParam);
+        $From = new Swift_Address(substr($parts[1],0,-1), substr($parts[0],1));
+    } else {
+        $From = $FromParam;
+    }
     $text = str_replace("<br />", "", $text);
     $text = str_replace("\r\n", "\n", $text); // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
     $use_html = $PreferenceHtmlEmail;
@@ -169,6 +176,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
 
     $plain_text = $text ."\n" . $Greetings;
     $plain_text = str_replace("<br>", "\n", $plain_text);
+    $plain_text = str_replace("</td>", "</td>\n", $plain_text);
     
 
     if ($verbose)
@@ -216,7 +224,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         //CZ_070619: now encoding the subject
         $mail_subject = utf8_encode($mail_subject);
     }
-    if (!(Swift_Message_Encoder::instance()->isUTF8($From))) {
+    if (!is_object($From) && !(Swift_Message_Encoder::instance()->isUTF8($From))) {
         $From = utf8_encode($From);
     }
 
@@ -228,7 +236,12 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     $message->setCharset("utf-8");
     $message->headers->set("Subject",  $mail_subject);
     $message->headers->set("Reply-To", $replyto);
-    $message->attach(new Swift_Message_Part( strip_tags(preg_replace('/<a href="(.*)">/', '$1 : ', $plain_text)), "text/plain", "8bit", "utf-8"));
+    
+    $config = HTMLPurifier_Config::createDefault();
+    $config->set('HTML.Allowed', 'a[href]');
+    $purifier = new HTMLPurifier($config);
+    $plain_text = $purifier->purify($plain_text);
+    $message->attach(new Swift_Message_Part( $plain_text, "text/plain", "8bit", "utf-8"));
 
     //attach the html if used.
     if ($use_html){

@@ -47,18 +47,15 @@ class LoginFormWidget extends RoxWidget
 
         $mem_redirect = $formkit->mem_from_redirect;
         $err = is_object($mem_redirect) ? $mem_redirect->errmsg : '';
-        $url = PVars::getObj('env')->baseuri . htmlspecialchars(implode('/', PRequest::get()->request), ENT_QUOTES);
+        $baseuri = PVars::getObj('env')->baseuri;
+        if (PVars::getObj('env')->force_ssl_sensitive) {
+            $baseuri = PVars::getObj('env')->baseuri_https;
+        }
+        $url = $baseuri . htmlspecialchars(implode('/', PRequest::get()->request), ENT_QUOTES);
         $memoryExpiry = PVars::getObj('env')->rememberme_expiry;
 
         if (!empty($_SERVER['QUERY_STRING'])) {
             $url .= '?'.$_SERVER['QUERY_STRING'];
-        }
-
-        // hack for HTTPS-Login
-        if (strrpos($url, 'alpha.bewelcome.org') === false &&
-                strrpos($url, 'localhost') === false &&
-                PVars::getObj('development')->avoid_https != 1 ) {
-            $url = str_replace('http://','https://',$url);
         }
 
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
@@ -151,7 +148,7 @@ class LoginFormWidget extends RoxWidget
             <?php if ($ItIsNotASubDomain) {  // Added because this is hidden for subdomain ?>
                 <table>
                     <tr>
-                        <td align="right">
+                        <td align="right" class="login_widget">
                             <label for="login-u"><?=$ww->Username ?></label>
                         </td>
                         <td>

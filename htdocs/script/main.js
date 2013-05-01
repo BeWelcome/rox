@@ -93,14 +93,47 @@ bwrox.selectScripts([
   {
     // JQuery has to be included before prototype to avoid conflicts
     file: "jquery-1.8.2.min.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "admin/massmail/enqueue"]
+    pages: [
+      "searchmembers", 
+      "signup/3", 
+      "setlocation", 
+      "blog", 
+      "trip", 
+      "admin/massmail/enqueue", 
+      "activities/"]
   },
   {
-    file: "leaflet/0.4.5/leaflet.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+    file: "jquery-ui-1.10.2.custom.min.js",
+    pages: [
+      "activities" /*,
+      "blog",
+      "trip",
+      "admin/treasurer" */
+    ]
   },
   {
-    file: "http://maps.googleapis.com/maps/api/js?sensor=false",
+    file: "jquery-ui-timepicker-addon.js",
+    pages: [
+      "activities" /*,
+      "blog",
+      "trip",
+      "admin/treasurer" */
+    ]
+  },
+  {
+    file: "leaflet/0.5.1/leaflet.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
+  },
+  {
+    file: "leaflet/plugins/Leaflet.markercluster/2013-04-09/leaflet.markercluster.js",
+    pages: ["activities"]
+  },
+  {
+    file: "leaflet/plugins/Leaflet.markercluster/2013-04-09/include_markercluster_css.js",
+    pages: ["activities"]
+  },
+  {
+    file: "//maps.googleapis.com/maps/api/js?sensor=false",
     remote: true,
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
@@ -132,6 +165,7 @@ bwrox.selectScripts([
   {
     file: "tiny_mce/tiny_mce.js",
     pages: [
+      "activities",
       "blog",
       "forums",
       "groups",
@@ -146,8 +180,15 @@ bwrox.selectScripts([
     ]
   },
   {
+    file: "act_suggest.js",
+    pages: [
+      "activities"
+    ]
+  },
+  {
     file: "datepicker.js",
     pages: [
+      "activities",
       "blog",
       "trip",
       "admin/treasurer"
@@ -217,8 +258,8 @@ bwrox.selectScripts([
     file: "util/console.js"
   },
   {
-    file: "map/include_css.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+    file: "map/include_css.js?1",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
   },
   {
     file: "map/geolocation/BWGoogleMapReverseGeolocator.js?1",
@@ -229,7 +270,7 @@ bwrox.selectScripts([
     pages: ["signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "map/builder/BWSimpleMapBuilder.js",
+    file: "map/builder/BWSimpleMapBuilder.js?1",
     pages: ["signup/3", "setlocation", "blog", "trip"]
   },
   {
@@ -275,5 +316,9 @@ bwrox.selectScripts([
   {
     file: "searchmembers.js?1",
     pages: ["searchmembers"]
+  },
+  {
+	  file: "map/activities/activities_map.js",
+      pages: ["activities"]
   }
 ]);

@@ -1,4 +1,4 @@
-       <form method="post" id="preferences" >
+       <form method="post" id="preferences" action="<?=$baseuri.'mypreferences/'?>"  >
         <fieldset>
             <legend><?=$words->get('MyPreferences')?></legend>
         <?=$callback_tag ?>
@@ -43,8 +43,9 @@
         </div> <!-- subcolumns -->
 
 <?php
+        $doNotShow = array('PreferenceLanguage');
 	foreach ($p as $rr) {
-		if ($rr->codeName != 'PreferenceLanguage') {
+		if (!in_array($rr->codeName, $doNotShow)) {
 ?>
         <h3><?=$words->get($rr->codeName)?></h3>
 		<?php

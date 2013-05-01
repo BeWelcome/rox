@@ -61,15 +61,20 @@ class ForumsView extends RoxAppView {
      * @param $thread as read from the threads database with mysql_fetch_object
      * @return string to be used as url
      */
-    public function threadURL($thread)
+    public function threadURL($thread, $baseurl = false)
     {
-        return $this->uri.'s'.$thread->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($thread->IdTitle) ) ;
+        if ($baseurl === false) {
+            $baseurl = $this->uri;
+        }
+        return $baseurl.'s'.$thread->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($thread->IdTitle) ) ;
     }
 
-    public  function postURL($post)
+    public  function postURL($post, $baseurl = false)
     {
-
-        return $this->uri.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($post->IdTitle) ) ;
+        if ($baseurl === false) {
+            $baseurl = $this->uri;
+        }
+        return $baseurl.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',$this->words->fTrad($post->IdTitle) ) ;
     }
 
 
@@ -303,7 +308,7 @@ class ForumsView extends RoxAppView {
     /* This adds custom styles to the page*/
     public function customStyles() {
         $out = '';
-        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?4" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?5" type="text/css"/>';
         return $out;
     }
 
@@ -329,10 +334,35 @@ class ForumsView extends RoxAppView {
     }
 
 /*
+* showTopLevelLandingPage produce the view with recent forum posts (without any group posts) 
+* on top and groups on the bottom
+*/
+    public function showTopLevelLandingPage($ownGroupsButtonCallbackId = false, $moreLessThreadsCallbackId = false) {
+        $this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
+
+        $boards = $this->_model->getBoard();
+        $boards->rewind();
+        $forum = $boards->current();
+        $groups = $boards->next();
+           
+        $request = PRequest::get()->request;
+
+        $pages = $this->getBoardPageLinks();
+        $currentPage = $this->_model->getPage();
+        $max = $boards->getNumberOfThreads();
+        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+
+        $top_tags = $this->_model->getTopCategoryLevelTags();
+        $all_tags_maximum = $this->_model->getTagsMaximum();
+        $all_tags = $this->_model->getAllTags();
+        require 'templates/landing.php';
+    } // end of ShowTopLevelLandingPage
+
+/*
 * showTopLevelRecentPosts produce the view with the TagCloud and categories list
 * last posts are not grouped in categories
 */
-    public function showTopLevelRecentPosts() {
+    public function showTopLevelRecentPosts($ownGroupsButtonCallbackId = false, $noForumNewTopicButton = false) {
 //        PVars::getObj('page')->title = $this->words->getBuffered('Forum').' - BeWelcome';
         $this->SetPageTitle($this->words->getBuffered('Forum').' - BeWelcome') ;
 

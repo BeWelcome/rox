@@ -83,6 +83,16 @@ class MembersController extends RoxControllerBase
                         case 'comments':
                             $page = new CommentsPage();
                             break;
+                        case 'groups':
+                            $my_groups = $member->getGroups();
+                            $params->strategy = new HalfPagePager('left');
+                            $params->items = $my_groups;
+                            $params->items_per_page = 10;
+                            $pager = new PagerWidget($params);
+                            $page = new MemberGroupsPage();
+                            $page->my_groups = $my_groups;
+                            $page->pager = $pager;
+                            break;
                         case 'profile':
                         case '':
                         case false:

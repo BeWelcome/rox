@@ -31,22 +31,23 @@ $ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
 if (!$User) {
 ?>
-    <div class="subcolumns">
+    <div class="row subcolumns">
         <?=$this->words->getFormatted('ForumOnlyForBeWelcomeMember'); ?>
     </div>
 <?php
 } // end if not User
-if ($User) {
+if ($User && $ownGroupsButtonCallbackId) {
     if ($boards->owngroupsonly == "No") {
         $buttonText = $this->words->getBuffered('SwitchShowOnlyMyGroupsTopics');
     } else {
-        $buttonText = $this->words->getBuffered('SwitchShowAllForumTopics');
+        $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
     }
     ?>
     <div class="float_right">
-        <span class="button">
-            <a href="forums/mygroupsonly"><?php echo $buttonText; ?></a>
-        </span>
+        <form method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
+            <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">
+            <input type="submit" name="submit" value="<?php echo $buttonText; ?>">
+        </form>
     </div>
     <?php
     echo $this->words->flushBuffer();

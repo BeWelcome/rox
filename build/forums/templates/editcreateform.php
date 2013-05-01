@@ -49,7 +49,7 @@ if (isset($vars['tags']) && $vars['tags']) {
 <?php
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'topic_text';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js?1';
 }
 ?>
 <h2>

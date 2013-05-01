@@ -179,7 +179,7 @@ class GroupsBasePage extends PageWithActiveSkin
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?2';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?4';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?5';
        return $stylesheets;
     }
 

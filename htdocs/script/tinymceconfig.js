@@ -6,7 +6,7 @@ tinyMCE.init({
     elements: "<?php echo $textarea; ?>",
     plugins : "advimage,preview,fullscreen,autolink",
     theme: "advanced",
-    content_css : http_baseuri + "styles/css/minimal/screen/custom/tinymce_content.css?1",
+    content_css : http_baseuri + "styles/css/minimal/screen/custom/tinymce_content.css?2",
     relative_urls:false,
     convert_urls:false,
     theme_advanced_buttons1: "bold,italic,underline,strikethrough,separator,bullist,numlist,separator,forecolor,backcolor,separator,charmap,link,image,separator,blockquote",

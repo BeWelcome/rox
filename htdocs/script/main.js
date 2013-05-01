@@ -258,7 +258,7 @@ bwrox.selectScripts([
     file: "util/console.js"
   },
   {
-    file: "map/include_css.js",
+    file: "map/include_css.js?1",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
   },
   {
@@ -270,7 +270,7 @@ bwrox.selectScripts([
     pages: ["signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "map/builder/BWSimpleMapBuilder.js",
+    file: "map/builder/BWSimpleMapBuilder.js?1",
     pages: ["signup/3", "setlocation", "blog", "trip"]
   },
   {

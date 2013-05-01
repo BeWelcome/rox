@@ -126,7 +126,7 @@ foreach($this->activities as $activity) {
     echo substr($organizers, 0, -1) . '</td>';
     echo '<td>';
     if ($activity->status == 0) {
-        $activityInTheFuture = (time() < strtotime($activity->dateTimeStart));
+        $activityInTheFuture = (time() < strtotime($activity->dateTimeEnd));
         if ($this->member && in_array($this->member->id, array_keys($activity->organizers)) 
                 && $activityInTheFuture ) {
             echo '<a href="activities/' . $activity->id . '/edit">'

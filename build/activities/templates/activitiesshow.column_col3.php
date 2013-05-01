@@ -1,5 +1,5 @@
 ﻿<?php
-$activityInTheFuture = (time() < strtotime($this->activity->dateTimeStart));
+$activityInTheFuture = (time() < strtotime($this->activity->dateTimeEnd));
 $formkit = $this->layoutkit->formkit;
 $callbackTagsJoinEdit = $formkit->setPostCallback('ActivitiesController', 'joinLeaveActivityCallback');
 $callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
@@ -157,7 +157,7 @@ if (empty($vars)) {
                         <?php echo $callbackTagsCancelUncancel; ?>
                         <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                         <?php 
-                            $activityInTheFuture = (time() < strtotime($this->activity->dateTimeStart));
+                            $activityInTheFuture = (time() < strtotime($this->activity->dateTimeEnd));
                             if ($activityInTheFuture) {
                                 if ($this->activity->status == 1) { 
                                     echo '<input type="submit" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';

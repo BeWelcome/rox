@@ -140,8 +140,9 @@ WHERE members.`id` = cryptedfields.`IdMember`';
 AND members.`id`!=' . $_SESSION['IdMember']
 ; }
         $query .= '
-AND `AdminCryptedValue`=\'' . $email .'\''
+AND `AdminCryptedValue` LIKE \'%' . $email .'%\''
 ;
+
         $s = $this->dao->query($query);
         if ($s->numRows() == 0) {
 						if (!empty($email)) MOD_log::get()->write("Unique email checking done successfuly","Signup") ;

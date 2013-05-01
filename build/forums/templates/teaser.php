@@ -26,7 +26,7 @@ $User = APP_User::login();
 
     <div class="float_right">
         <!-- Google froum search bar -->
-        <p style="><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
+        <p><?php echo $this->_model->words->getFormatted('ForumSearch'); ?></p>
         <form action="http://www.google.com/cse" id="cse-search-box">
             <div>
                 <input type="hidden" name="cx" value="003793464580395137050:n7s_x10-itw" />

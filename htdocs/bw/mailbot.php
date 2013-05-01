@@ -172,7 +172,7 @@ $qry = sql_query($str);
 $countposts_notificationqueue = 0;
 global $fTradIdLastUsedLanguage  ; // This is set for the fTrad function (will define which language to use)
 while ($rr = mysql_fetch_object($qry)) {
-    if (($rr->created_since_x_minute<0) and(($rr->Type=='newthread') or ($rr->Type=='reply'))) {
+    if (($rr->created_since_x_minute < 10) and(($rr->Type == 'newthread') or ($rr->Type == 'reply'))) {
         continue ; // Don't process to recent change so it means give time for the user to fix it by an edit
     }
     if ($_SESSION['Param']->MailBotMode!='Auto') {
@@ -240,7 +240,7 @@ while ($rr = mysql_fetch_object($qry)) {
             $UnsubscribeLink = '<a href="'.$baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.wwinlang('ForumUnSubscribe',$MemberIdLanguage).'</a>';
         }
     } elseif ($rr->TableSubscription == 'membersgroups') {
-        $UnsubscribeLink = "----<br/><br/>\n\n" . wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
+        $UnsubscribeLink = "<hr /><br /><br />\n\n" . wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
     }
 
     if ($rPost->IdGroup!=0) { // Get group name
@@ -257,7 +257,7 @@ while ($rr = mysql_fetch_object($qry)) {
     // Rewrite the title and the message to the corresponding default language for this member if any
     $rPost->thread_title=fTrad($rPost->IdTitle) ;
     $rPost->message=fTrad($rPost->IdContent) ;
-    $rPost->message=str_replace('<p><br>\n</p>','',$rPost->message) ;
+    $rPost->message=str_replace('<p><br />\n</p>','',$rPost->message) ;
 
     $NotificationType='';
 
@@ -284,9 +284,10 @@ while ($rr = mysql_fetch_object($qry)) {
     // Setting some default values
     $subj = $NotificationType . $rPost->thread_title;
     if ($rPost->IdGroup != 0) { 
-        $from = "BW " . $rPost->Username . " <group@bewelcome.org>";
+        $from = "\"BW " . $rPost->Username . "\" <group@bewelcome.org>";
+        $subj .= " (" . $rGroupname->Name . ")";
     } else {
-        $from = "BW " . $rPost->Username . " <forum@bewelcome.org>";
+        $from = "\"BW " . $rPost->Username . "\" <forum@bewelcome.org>";
     }
     $text = '<html><head><title>'.$subj.'</title></head>' ;
     $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;

@@ -285,7 +285,7 @@ while ($rr = mysql_fetch_object($qry)) {
     $subj = $NotificationType . $rPost->thread_title;
     if ($rPost->IdGroup != 0) { 
         $from = "\"BW " . $rPost->Username . "\" <group@bewelcome.org>";
-        $subj .= " (" . $rGroupname->Name . ")";
+        $subj .= " [" . $rGroupname->Name . "]";
     } else {
         $from = "\"BW " . $rPost->Username . "\" <forum@bewelcome.org>";
     }

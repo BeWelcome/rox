@@ -79,7 +79,13 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     if ($_FromParam == "")
         $FromParam = $_SYSHCVOL['MessageSenderMail'];
 
-    $From = $FromParam;
+    // Is sender in format "name" <email@address>?
+    if (strpos($FromParam, '" <')) {
+        $parts = explode('" <', $FromParam);
+        $From = new Swift_Address(substr($parts[1],0,-1), substr($parts[0],1));
+    } else {
+        $From = $FromParam;
+    }
     $text = str_replace("<br />", "", $text);
     $text = str_replace("\r\n", "\n", $text); // solving the century-bug: NO MORE DAMN TOO MANY BLANK LINES!!!
     $use_html = $PreferenceHtmlEmail;
@@ -218,7 +224,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         //CZ_070619: now encoding the subject
         $mail_subject = utf8_encode($mail_subject);
     }
-    if (!(Swift_Message_Encoder::instance()->isUTF8($From))) {
+    if (!is_object($From) && !(Swift_Message_Encoder::instance()->isUTF8($From))) {
         $From = utf8_encode($From);
     }
 

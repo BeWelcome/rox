@@ -10,7 +10,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
  * @version $Id$
  */
-class ExplorePage extends RoxPageView
+class CommunityPage extends RoxPageView
 {
 
     protected function getTopmenuActiveItem() {

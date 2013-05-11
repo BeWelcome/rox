@@ -7,8 +7,16 @@
 #groups .groupbox {
   margin-top: 0.8em;
   margin-bottom: 0.8em;
-  margin-right: 2.5em;
-  width: 350px;
+  margin-right: 2em;
+  width: 260px;
+}
+#groups .groupboxright {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+  width: 260px;
+}
+#groups .group_float_left {
+  float: left;
 }
 #groups .groupinfo {
   margin-left: 100px;

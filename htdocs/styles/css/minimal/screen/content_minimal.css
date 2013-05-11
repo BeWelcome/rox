@@ -151,6 +151,9 @@
   .flat {margin: 0; padding: 0;}
   .text { line-height: 1.5em; }
 
+  .tr_span {
+    display: inline-block;
+  }
   /**
    * Flashes
    * (en) Classes for displaying notices and warnings at the top of the page

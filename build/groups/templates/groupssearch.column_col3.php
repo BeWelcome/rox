@@ -36,8 +36,9 @@
             echo <<<HTML
 <div class="floatbox">
 HTML;
+            $ii = 1;
             foreach ($search_result as $group_data) :?>
-                <div class="groupbox float_left">
+                <div class="<?php if ($ii % 3 == 0) { echo "groupboxright"; } else { echo "groupbox"; } ?> group_float_left">
                     <a href="groups/<?=$group_data->getPKValue() ?>">
                         <img class="framed float_left"  width="80px" height='80px' alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                     </a>
@@ -50,7 +51,9 @@ HTML;
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox  -->
-            <?php endforeach ; ?>
+            <?php 
+                $ii++;
+                endforeach ; ?>
 </div> <!-- floatbox -->
             <?php
             $this->pager->render();

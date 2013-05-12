@@ -35,7 +35,9 @@ HTML;
                         <ul>
                             <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
                             <li><?= $words->get('GroupsDateCreation');?>: <?=$group_data->created; ?></li>
-                            <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
+                            <?php if ($group_data !== 0) {?>
+                            <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost)); ?></li>
+                            <?php } ?>
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox -->

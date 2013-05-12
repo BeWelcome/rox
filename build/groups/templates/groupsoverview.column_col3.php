@@ -42,7 +42,9 @@
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($group_data->getNewMembers()) ; ?></li>
-                                <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
+                            <?php if ($group_data !== 0) {?>
+                            <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost)); ?></li>
+                            <?php } ?>
                             </ul>
                         </div>  <!-- groupinfo -->
                     </div> <!-- groupbox clearfix -->
@@ -68,7 +70,9 @@
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$my_groups[$i]->getMemberCount(); ?> </li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($my_groups[$i]->getNewMembers()); ?> </li>
-                                <li><?= $words->get('GroupsNewForumPosts');?>: <?=$my_groups[$i]->getNewForumPosts; ?></li>
+                                <?php if ($group_data !== 0) {?>
+                                <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($my_groups[$i]->latestPost)); ?></li>
+                                <?php } ?>
                             </ul>
                             </div>  <!-- groupinfo -->
                         </div> <!-- groupbox clearfix -->

@@ -50,8 +50,10 @@ HTML;
                         <h4><a href="groups/<?=$group_data->getPKValue() ?>"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
                         <ul>
                             <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
-                            <li><?= $words->get('GroupsDateCreation');?>: <?=$group_data->created; ?></li>
-                            <li><?= $words->get('GroupsNewForumPosts');?>: <?=$group_data->getNewForumPosts; ?></li>
+                            <li><?= $words->get('GroupsDateCreation');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime(strtotime($group_data->created))); ?></li>
+                            <?php if ($group_data !== 0) {?>
+                            <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost)); ?></li>
+                            <?php } ?>
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox  -->

@@ -17,12 +17,15 @@
         <?php
         $search_result = $this->search_result;
         if ($search_result) :
+            $act_order = (($this->result_order == "actdesc") ? 'actasc' : 'actdesc');
             $name_order = (($this->result_order == "nameasc") ? 'namedesc' : 'nameasc');
             $member_order = (($this->result_order == "membersdesc") ? 'membersasc' : 'membersdesc');
             $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
             $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
             ?>
             <h4><?= $words->get('GroupsSearchOrder');?></h4>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$act_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderActivity'); ?></a>
+            |
             <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$name_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderName'); ?></a>
             |
             <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$member_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderMembers'); ?></a>

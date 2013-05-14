@@ -573,7 +573,7 @@ echo "                </tr>\n";
 echo "                  <td class=\"label\" >English source: </td>\n";
 $tagold = array("&lt;", "&gt;");
 $tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
-echo "                  <td>", str_replace("\n","<br />",str_replace($tagold,$tagnew,htmlentities($rEnglish->Sentence))), " </td>\n";
+echo "                  <td>", str_replace("\n","<br />",str_replace($tagold,$tagnew,htmlentities($rEnglish->Sentence, ENT_COMPAT | ENT_HTML401, 'UTF-8'))), " </td>\n";
 ?>
 </tr>
 <tr>

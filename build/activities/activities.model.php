@@ -8,7 +8,7 @@ class ActivitiesModel extends RoxModelBase
 {
     // Limits for textareas
     const ACTIVITY_ADDRESS_LIMIT = 320;
-    const ACTIVITY_DESCRIPTION_LIMIT = 4000;
+    const ACTIVITY_DESCRIPTION_LIMIT = 65535;
     
     /**
      * Default constructor.

@@ -1,15 +1,20 @@
 <div id="groups">
         <div class="floatbox">
-            <div class="groupbox float_left">
-                <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
-                <form action="groups/search" method="get">
-                    <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
-                </form>
-            </div>             
-            <div class="groupbox float_left">
-                <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
-                <p><?= $words->get('GroupsCreateDescription'); ?></p>
-                <a class="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+        <div class="subcolumns">
+            <div class="c50l">
+                <div class="groupbox float_left">
+                    <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
+                    <form action="groups/search" method="get">
+                        <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
+                    </form>
+                </div>        
+            </div>
+            <div class="c50r">     
+                <div class="groupbox float_left">
+                    <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
+                    <p><?= $words->get('GroupsCreateDescription'); ?></p>
+                    <a class="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                </div>
             </div>
         </div>
 
@@ -40,9 +45,18 @@
             echo <<<HTML
 <div class="floatbox">
 HTML;
-            $ii = 1;
-            foreach ($search_result as $group_data) :?>
-                <div class="<?php if ($ii % 3 == 0) { echo "groupboxright"; } else { echo "groupbox"; } ?> group_float_left">
+            $ii = 0;
+            foreach ($search_result as $group_data) :
+                if ($ii %3 == 0) :
+                    echo '<div class="subcolumns">';
+                endif;
+                if ($ii % 3 != 2) :
+                    echo '<div class="c33l">';
+                else :
+                    echo '<div class="c33r">';
+                endif;
+                ?>
+                <div class="groupbox group_float_left">
                     <a href="groups/<?=$group_data->getPKValue() ?>">
                         <img class="framed float_left"  width="80px" height='80px' alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                     </a>
@@ -57,9 +71,9 @@ HTML;
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox  -->
-            <?php 
-                $ii++;
-                endforeach ; ?>
+            <?php $ii++; ?>
+            </div>
+            <?php endforeach ; ?>
 </div> <!-- floatbox -->
             <?php
             $this->pager->render();

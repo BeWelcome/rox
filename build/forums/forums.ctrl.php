@@ -181,7 +181,7 @@ class ForumsController extends PAppController
             else {
                 if ($this->isTopLevel) {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
-                    $this->_model->prepareForum(false);
+                    $this->_model->prepareForum();
 
                     $onlymygroupscallbackId = $this->mygroupsonlyProcess();
                     $morelessthreadscallbackid = $this->morelessthreadsProcess();

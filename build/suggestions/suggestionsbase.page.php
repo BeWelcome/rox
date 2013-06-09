@@ -50,12 +50,12 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $words = $this->getWords();
         $items = array();
         if ($this->hasSuggestionRights) {
-            $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
+        //    $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
         //    $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
         }
         // $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
         if ($this->hasSuggestionRights) {
-            $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
+        //    $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
         }
         $items[] = array('vote', 'suggestions/vote', $words->getSilent('SuggestionsVote'));
         // $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));

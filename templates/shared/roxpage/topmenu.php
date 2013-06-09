@@ -48,6 +48,7 @@
                 <li><a href="forums"><?=$words->get('CommunityDiscussions')?></a></li>
                 <li><a href="groups/search"><?=$words->get('Groups')?></a></li>
                 <li><a href="activities"><?=$words->get('Activities')?></a></li>
+                <li><a href="suggestions"><?=$words->get('Suggestions')?></a></li>
                 <li><a href="trip"><?=$words->get('Trips')?></a></li>
                 <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
                 <li><a href="blog"><?=$words->get('Blogs')?></a></li>

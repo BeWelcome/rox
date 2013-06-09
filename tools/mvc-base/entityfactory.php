@@ -49,6 +49,7 @@ class RoxEntityFactory
         'PrivilegeScope'    => 'build/rights/privilegescope.entity',
         'Role'              => 'build/rights/role.entity',
         'RolePrivilege'     => 'build/rights/roleprivilege.entity',
+        'Suggestion'        => 'build/suggestions/suggestion.entity',
         'Thread'            => 'build/forums/thread.entity',
         'ThreadVote'        => 'build/forums/threadvote.entity',
         'VolunteerBoard'    => 'build/admin/volunteerboard.entity',

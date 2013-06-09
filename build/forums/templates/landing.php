@@ -111,11 +111,6 @@ if ($threads = $groups->getThreads()) {
 <?php
 if ($User) {
 ?>
-    <span class="float_right">
-        <form method="get" action="forums/new">
-            <input type="submit" name="submit" value="<?= $this->words->getSilent('ForumNewTopic'); ?>">
-        </form><?php echo $this->words->flushBuffer(); ?>
-    </span>
 <?php
 }
 ?>

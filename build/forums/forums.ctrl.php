@@ -413,7 +413,7 @@ class ForumsController extends PAppController
         
         $page->content .= ob_get_contents();
          ob_end_clean();
-        $page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
+        //$page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
         $page->teaserBar .= $view->getAsString('teaser');
         $page->render();
     } // end of index

@@ -3370,7 +3370,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	 		$tt=array() ;
 
 			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
-										 WHERE membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
+										 WHERE membersgroups.IdGroup=groups.id group by groups.id order by Name ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$row->Name=$this->getGroupName($row->Name);

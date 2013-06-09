@@ -3031,6 +3031,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $tags = array();
     private $continent = false;
     private $page = 1;
+    private $page_array = array();
     private $messageId = 0;
     private $TopMode=Forums::CV_TOPMODE_LANDING; // define that we use the landing page for top mode
 
@@ -3091,6 +3092,15 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     }
     public function setPage($page) {
         $this->page = (int) $page;
+    }
+    public function getPageArray() {
+        return $this->page_array;
+    }
+    public function setPageArray($page_array) {
+        $this->page_array = $page_array;
+    }
+    public function pushToPageArray($page) {
+        $this->page_array[] = $page;
     }
     public function setMessageId($messageid) {
         $this->messageId = (int) $messageid;

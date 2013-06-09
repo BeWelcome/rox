@@ -347,10 +347,22 @@ class ForumsView extends RoxAppView {
            
         $request = PRequest::get()->request;
 
-        $pages = $this->getBoardPageLinks();
-        $currentPage = $this->_model->getPage();
-        $max = $boards->getNumberOfThreads();
-        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+        $page_array = $this->_model->getPageArray();        
+
+        if (isset($page_array[0]) && isset($page_array[1])) {
+            $currentForumPage = (int) $page_array[0];
+            $currentGroupsPage = (int) $page_array[1];
+        } else {
+            $currentForumPage = 1;
+            $currentGroupsPage = 1;
+        }
+        
+        $pages = null;
+        $forumpages = $this->getPageLinks($currentForumPage, $forum->THREADS_PER_PAGE, $forum->getNumberOfThreads());
+        $groupspages = $this->getPageLinks($currentGroupsPage, $groups->THREADS_PER_PAGE, $groups->getNumberOfThreads());
+        $forumMaxPage = ceil($forum->getNumberOfThreads() / $forum->THREADS_PER_PAGE);
+        $groupsMaxPage = ceil($groups->getNumberOfThreads() / $groups->THREADS_PER_PAGE);
+
 
         $top_tags = $this->_model->getTopCategoryLevelTags();
         $all_tags_maximum = $this->_model->getTagsMaximum();

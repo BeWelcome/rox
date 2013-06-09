@@ -21,13 +21,27 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-if (!is_array($pages) || count($pages) == 0) {
-	return false;
+if (is_array($pages) && count($pages) > 0) {
+    $req = htmlspecialchars(implode('/', $request), ENT_QUOTES);
+    $req = preg_replace('/\/page[0-9]+/i', '', $req);
+    $req = $req.'/page%d/';
+} elseif (is_array($multipages)) {
+    $req = htmlspecialchars(implode('/', $request), ENT_QUOTES);
+    $req = preg_replace('/\/page[0-9]+/i', '', $req);
+    foreach ($multipages as $mp) {
+        if (is_array($mp) && count($mp) > 0) {
+            $pages = $mp;
+            $req = $req.'/page%d';
+        } elseif (is_int($mp)) {
+            $req = $req.'/page'.$mp;
+        } else {
+            return false;
+        }
+    }
+    $req = $req.'/';
+} else {
+    return false;
 }
-
-$request = htmlspecialchars(implode('/', $request), ENT_QUOTES);
-$request = preg_replace('/\/page[0-9]+\/?/i', '', $request);
-$request = $request.'/page%d/';
 
 ?>
 
@@ -41,7 +55,7 @@ if ($currentPage != 1) {
 
 ?>
 			
-			<a href="<?=sprintf($request, ($currentPage - 1))?>">&laquo;</a>
+			<a href="<?=sprintf($req, ($currentPage - 1))?>">&laquo;</a>
 
 <?php
 
@@ -58,7 +72,7 @@ foreach ($pages as $page) {
 	}
 	if (!isset($page['current'])) {
 		echo '<li>';
-		echo '<a href="'.sprintf($request, $page['pageno']).'">';
+		echo '<a href="'.sprintf($req, $page['pageno']).'">';
 		echo $page['pageno'];
 		echo '</a>';
 		echo '</li>';
@@ -71,7 +85,7 @@ foreach ($pages as $page) {
 <?php
 if ($currentPage != $maxPage) {
 ?>
-			<a href="<?=sprintf($request, ($currentPage + 1))?>">&raquo;</a>
+			<a href="<?=sprintf($req, ($currentPage + 1))?>">&raquo;</a>
 <?php
 } else {
 	echo '<a class="off">&raquo;</a>';

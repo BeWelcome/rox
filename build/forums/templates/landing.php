@@ -60,9 +60,13 @@ if (!$User) {
 if ($threads = $groups->getThreads()) {
     $groups->getTotalThreads(); ?>
 <?php
+        $multipages = array($currentForumPage, $groupspages);
+        $currentPage = $currentGroupsPage;
+        $maxPage = $groupsMaxPage;
+
         require 'boardthreads.php';
 
-
+        $pages = null;
 
     if ($User && $moreLessThreadsCallbackId) {
 ?>
@@ -122,8 +126,13 @@ if ($User) {
 if ($threads = $forum->getThreads()) {
     $forum->getTotalThreads(); ?>
 <?php
+        $multipages = array($forumpages, $currentGroupsPage);
+        $currentPage = $currentForumPage;
+        $maxPage = $forumMaxPage;
+
         require 'boardthreads.php';
 
+        $pages = null;
 
     if ($User && $moreLessThreadsCallbackId) {
 ?>

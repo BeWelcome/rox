@@ -544,16 +544,26 @@ WHERE
 
         $forumthreads = intval($layoutbits->getPreference("ForumThreadsOnLandingPage"));
         $groupsthreads = intval($layoutbits->getPreference("GroupsThreadsOnLandingPage"));
+        
+        $page_array = $this->getPageArray();        
+
+        if (isset($page_array[0]) && isset($page_array[1])) {
+            $forumpage = $page_array[0];
+            $groupspage = $page_array[1];
+        } else {
+            $forumpage = 1;
+            $groupspage = 1;
+        }
 
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
 
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
         $forum->THREADS_PER_PAGE = max(1, min($forumthreads, $MAX_THREADS));
-        $forum->initThreads(1, $showsticky);
+        $forum->initThreads($forumpage, $showsticky);
 
         $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
         $groups->THREADS_PER_PAGE = max(1, min($groupsthreads, $MAX_THREADS));
-        $groups->initThreads(1, $showsticky);
+        $groups->initThreads($groupspage, $showsticky);
 
         $this->board->add($forum);
         $this->board->add($groups);

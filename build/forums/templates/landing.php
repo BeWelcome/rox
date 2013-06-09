@@ -98,7 +98,6 @@ if ($threads = $groups->getThreads()) {
     echo $words->flushBuffer();
     }
 ?>
-    <strong class="float_right"><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong>
 </div> <!-- Groups-->
 
 <br /><br />
@@ -151,7 +150,6 @@ if ($threads = $forum->getThreads()) {
     echo $words->flushBuffer();
     }
 ?>
-    <strong class="float_right"><a href="forums/bwforum"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong> 
 </div> <!-- Forum-->
 
 <?php

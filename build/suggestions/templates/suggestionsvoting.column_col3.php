@@ -10,6 +10,7 @@ $purifier = MOD_htmlpure::getActivitiesHtmlPurifier();
 $callbackTags = $formkit->setPostCallback('SuggestionsController', 'voteSuggestionCallback');
 $errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');
+
 if (empty($vars)) {
     $vars['suggestion-id'] = $this->suggestion->id;
     $vars['suggestion-summary'] = $this->suggestion->summary;
@@ -28,6 +29,7 @@ if (empty($vars)) {
             $vars['option' . $key . 'rank'] = $value->rank;
         }
     }
+} else {
 }
 ?>
 <div>
@@ -52,13 +54,13 @@ if (!empty($errors)) {
 ?>
     <h3><?php echo $purifier->purify($this->suggestion->summary); ?></h3>
     <p><?php echo $purifier->purify($this->suggestion->description); ?></p>
-    <?php foreach($this->suggestion->options as $option) : ?><div class="subcolumns">
-    <div class="row"><div class="c50l"><div class="subcl"><strong><?php echo $option->summary;?></strong></div></div>
-    <div class="c50r"><div class="subcr"><?php foreach($ranks as $key => $rank) :
+    <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
+    <div class="floatbox float_left"><p><strong><?php echo $purifier->purify($option->summary); ?></strong></p><p><?php  echo $purifier->purify($option->description); ?></p></div>
+    <div class="floatbox float_right"><?php foreach($ranks as $key => $rank) :
         $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?><label class="button" for="<?php echo $id; ?>"><input type="radio" class="toggle" 
         <?php if ($key == $this->votes[$option->id]->rank) { echo 'checked="checked"'; } ?> id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $key; ?>" /><?php echo $rank; ?></label>
     <?php endforeach; ?>
-        </div></div></div></div>
+        </div></div>
     <?php endforeach; ?>
     <p><?php echo $words->get('SuggestionsVoteHint');?></p>
     <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>

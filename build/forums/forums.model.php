@@ -554,16 +554,25 @@ WHERE
             $forumpage = 1;
             $groupspage = 1;
         }
+        
 
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
 
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
         $forum->THREADS_PER_PAGE = max(1, min($forumthreads, $MAX_THREADS));
         $forum->initThreads($forumpage, $showsticky);
+        $forumMaxPage = ceil($forum->getNumberOfThreads() / $forum->THREADS_PER_PAGE);
+        if ($forumpage > $forumMaxPage) {
+            $forum->initThreads($forumMaxPage, $showsticky);
+        }
 
         $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
         $groups->THREADS_PER_PAGE = max(1, min($groupsthreads, $MAX_THREADS));
         $groups->initThreads($groupspage, $showsticky);
+        $groupsMaxPage = ceil($groups->getNumberOfThreads() / $groups->THREADS_PER_PAGE);
+        if ($groupspage > $groupsMaxPage) {
+            $groups->initThreads($groupsMaxPage, $showsticky);
+        }
 
         $this->board->add($forum);
         $this->board->add($groups);

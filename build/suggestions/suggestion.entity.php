@@ -45,6 +45,13 @@ class Suggestion extends RoxEntityBase
                 }
             }
             $this->options = $options;
+            $query = "SELECT COUNT(DISTINCT memberHash) AS count FROM suggestions_votes WHERE suggestionId = " . $this->id;
+            error_log($query);
+            $sql = $this->dao->query($query);
+            if ($sql) {
+                $row = $sql->fetch(PDB::FETCH_OBJ);
+                $this->votes = $row->count;
+            }
         }
         return $status;
     }

@@ -45,8 +45,8 @@
         </li>
         <li><a href="community"><?=$words->get('CommunityMenu')?></a>
             <ul>
-                <li><a href="forums"><?=$words->get('CommunityDiscussions')?></a></li>
-                <li><a href="groups/search"><?=$words->get('Groups')?></a></li>
+                <li><a href="forums" title="<?=$words->get('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a></li>
+                <li><a href="groups/search" title="<?=$words->get('GroupsTagLine')?>"><?=$words->get('Groups')?></a></li>
                 <li><a href="activities"><?=$words->get('Activities')?></a></li>
                 <li><a href="suggestions"><?=$words->get('Suggestions')?></a></li>
                 <li><a href="trip"><?=$words->get('Trips')?></a></li>

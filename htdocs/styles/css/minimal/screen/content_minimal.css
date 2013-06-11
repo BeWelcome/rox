@@ -470,7 +470,7 @@ dl.list {
    * @section content-pagination
    */
 
-  div.pages {padding:1em 0; white-space: nowrap; overflow:hidden; width:100%  }
+  div.pages {padding:1em 0; white-space: nowrap; overflow:hidden;}
   div.pages ul{float:right; margin:0;padding:0;}
   div.pages li{float: left; display:block; display:inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0 0 0.7em; }
   div.pages li.current a {color:#666;font-weight:bold; }

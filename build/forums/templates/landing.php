@@ -60,14 +60,16 @@ if (!$User) {
 if ($threads = $groups->getThreads()) {
     $groups->getTotalThreads(); ?>
 <?php
-        $multipages = array($currentForumPage, $groupspages);
-        $currentPage = $currentGroupsPage;
-        $maxPage = $groupsMaxPage;
-
-        require 'boardthreads.php';
-
+        //force pagination render to abort by feeding it's pager variables 
+        //invalid values because we want to call it separately later
+        $multipages = null;
+        $currentPage = null;
+        $maxPage = null;
         $pages = null;
 
+        require 'boardthreads.php';
+?>
+<?php
     if ($User && $moreLessThreadsCallbackId) {
 ?>
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
@@ -98,6 +100,15 @@ if ($threads = $groups->getThreads()) {
     echo $words->flushBuffer();
     }
 ?>
+<?php
+
+    $multipages = array($currentForumPage, $groupspages);
+    $currentPage = $currentGroupsPage;
+    $maxPage = $groupsMaxPage;
+
+    require 'pages.php';
+
+?>
 </div> <!-- Groups-->
 
 <br /><br />
@@ -120,9 +131,12 @@ if ($User) {
 if ($threads = $forum->getThreads()) {
     $forum->getTotalThreads(); ?>
 <?php
-        $multipages = array($forumpages, $currentGroupsPage);
-        $currentPage = $currentForumPage;
-        $maxPage = $forumMaxPage;
+        //force pagination render to abort by feeding it's pager variables 
+        //invalid values because we want to call it separately later
+        $multipages = null;
+        $currentPage = null;
+        $maxPage = null;
+        $pages = null;
 
         require 'boardthreads.php';
 
@@ -144,6 +158,13 @@ if ($threads = $forum->getThreads()) {
 <?php
     echo $words->flushBuffer();
     }
+
+    $multipages = array($forumpages, $currentGroupsPage);
+    $currentPage = $currentForumPage;
+    $maxPage = $forumMaxPage;
+
+    require 'pages.php';
+
 ?>
 </div> <!-- Forum-->
 

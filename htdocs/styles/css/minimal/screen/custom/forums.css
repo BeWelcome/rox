@@ -361,4 +361,4 @@ a.toggleedit:hover {
 }
 
 /* Community landing more and less buttons */
-.morelessbuttons {display: inline;}
+.morelessbuttons {display: inline; float: left; padding: 0.7em 0.7em 1.3em 0;}

@@ -3,5 +3,5 @@
 /* Template for showing the deletion page of a single gallery */
 
 ?>
-    <p><?=$words->get('DeleteAlbumSure', $this->gallery->title)?></p>
+    <p><?=$words->get('DeleteAlbumSure', htmlspecialchars($this->gallery->title))?></p>
     <p><a class="button" href="gallery/show/sets/<?=$this->gallery->id?>/delete/true" ><?=$words->get('Yep, just delete it!')?></a> <a class="button" href="gallery/show/sets/<?=$this->gallery->id?>" ><?=$words->get('Cancel')?></a></p>

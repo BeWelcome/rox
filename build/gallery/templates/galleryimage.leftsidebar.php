@@ -35,7 +35,7 @@ require_once 'surrounditems_small.php';
 
 if ($this->gallery) {
     echo '<div class="floatbox" style="padding-top: 30px;"><h3 class="borderless">'.$words->getFormatted('Belongs to album').'</h3>';
-    echo '<a href="gallery/show/sets/'.$this->gallery->id.'">'.$this->gallery->title.'</a>
+    echo '<a href="gallery/show/sets/'.$this->gallery->id.'">'.htmlspecialchars($this->gallery->title).'</a>
     </div>';
 }
 $d = $image;

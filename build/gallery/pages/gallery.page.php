@@ -33,7 +33,7 @@ class GalleryPage extends GalleryBasePage
         $gallery = $this->gallery;
         $d = $this->d;
         $num_rows = $this->num_rows;
-        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'">'.$gallery->title.'</a></h2>';
+        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'">'.htmlspecialchars($gallery->title).'</a></h2>';
         if ($this->myself && $this->upload) {
             // Display the upload form
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';

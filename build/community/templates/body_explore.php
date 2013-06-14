@@ -28,7 +28,7 @@ $words = new MOD_words();
   <div class="c50l">
     <div class="subcl">
       <!-- Content of left block -->
-        <h2><a href="forums"><?php echo $words->get('AgoraForum') ?></a></h2>
+        <h2><a href="forums"><?php echo $words->get('CommunityDiscussions') ?></a></h2>
         <p><?php echo $words->get('ExploreForumDescription') ?></p>
         </div> <!-- subcl -->
   </div> <!-- c33l -->
@@ -68,12 +68,12 @@ $words = new MOD_words();
         <p><?php echo $words->get('ExploreTripsDescription') ?></p>
     </div> <!-- subcl -->
   </div> <!-- c33l -->
-  
+
 <div class="c50r">
     <div class="subcr">
       <!-- Content of right block -->
-        <h2><a href="wiki"><?php echo $words->get('Wiki') ?></a></h2>
-        <p><?php echo $words->get('ExploreWikiDescription') ?></p>
+        <h2><a href="gallery"><?php echo $words->get('Gallery') ?></a></h2>
+        <p><?php echo $words->get('ExploreGalleryDescription') ?></p>
     </div> <!-- subcr -->
   </div> <!-- c33r -->
 </div> <!-- subcolumns -->
@@ -86,12 +86,12 @@ $words = new MOD_words();
         <p><?php echo $words->get('ExploreBlogsDescription') ?></p>
     </div> <!-- subcl -->
   </div> <!-- c33l -->
-  
+
 <div class="c50r">
     <div class="subcr">
-      <!-- Content of right block -->
-        <h2><a href="gallery"><?php echo $words->get('Gallery') ?></a></h2>
-        <p><?php echo $words->get('ExploreGalleryDescription') ?></p>
+    <!-- Content of right block -->
+        <h2><a href="wiki"><?php echo $words->get('Wiki') ?></a></h2>
+        <p><?php echo $words->get('ExploreWikiDescription') ?></p>
     </div> <!-- subcr -->
   </div> <!-- c33r -->
 </div> <!-- subcolumns -->
@@ -99,4 +99,4 @@ $words = new MOD_words();
 
 
 
- 
+

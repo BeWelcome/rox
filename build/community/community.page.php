@@ -19,7 +19,7 @@ class CommunityPage extends RoxPageView
 
     protected function getPageTitle() {
         $words = new MOD_words();
-        echo $words->getBuffered('ExploreTitle');
+        echo $words->getBuffered('CommunityTitle');
     }
 
     protected function teaserContent() {
@@ -40,7 +40,7 @@ class CommunityPage extends RoxPageView
     protected function column_col3() {
         require 'templates/body_explore.php';
     }
-    
+
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/explore.css';

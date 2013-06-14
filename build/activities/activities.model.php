@@ -1,6 +1,6 @@
 <?php
 /**
- * Events model class.
+ * Activities model class.
  *
  * @author shevek
  */
@@ -296,6 +296,7 @@ class ActivitiesModel extends RoxModelBase
         }
         
     }
+
     public function createActivity($args) {
         // First add geo location to geonames_cache if it doesn't exist yet
         $locationId = $args->post['activity-location-id'];

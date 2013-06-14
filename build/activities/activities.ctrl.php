@@ -1,6 +1,6 @@
 <?php
 /**
- * Events controller class.
+ * Activities controller class.
  *
  * @author shevek
  */

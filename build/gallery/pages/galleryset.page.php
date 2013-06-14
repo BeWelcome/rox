@@ -17,7 +17,7 @@ class GallerySetPage extends GalleryBasePage
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<h2><a href="gallery/show/sets/'.$this->gallery->id.'" class="black" id="g-title">'.$this->gallery->title.'</a></h2>';
+        return '<h2><a href="gallery/show/sets/'.$this->gallery->id.'" class="black" id="g-title">'.htmlspecialchars($this->gallery->title).'</a></h2>';
     }
     
     protected function teaser() {

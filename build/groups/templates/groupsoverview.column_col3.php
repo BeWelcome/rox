@@ -8,7 +8,7 @@
                     <form action="groups/search" method="get">
                     <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('Search'); ?>" />
                     </form>
-                </div>             
+                </div>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         <div class="c38r">
@@ -21,20 +21,25 @@
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolums -->
-            
+
 
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-            
+
                 <h3><?= $words->get('GroupsList'); ?></h3>
+                <div class="subcolumns">
                 <?php
+                $count=0;
                 $featured_groups = (($this->featured_groups) ? $this->featured_groups : array());
                 foreach($featured_groups as $group_data) :
                     if ($group_data->Type == 'NeedInvitation' && !$this->model->getLoggedInMember()) continue;
-                 ?>
-                    <div class="groupbox floatbox">
-                        <a href="groups/<?=$group_data->id ?>"> 
+                    if ($count % 2 == 0) { ?>
+                    <div class="c50l groupbox floatbox">
+                    <?php } else { ?>
+                    <div class="c50r groupbox floatbox">
+                    <?php } ?>
+                        <a href="groups/<?=$group_data->id ?>">
                             <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                         </a>
                         <div class="groupinfo">
@@ -48,12 +53,13 @@
                             </ul>
                         </div>  <!-- groupinfo -->
                     </div> <!-- groupbox clearfix -->
-                <?php endforeach ; ?>
-
+                <?php $count++;
+                    endforeach ; ?>
+                </div>
                 <p><strong><a href="groups/featured"><?= $words->get('GroupsAllFeaturedLink'); ?></a></strong></p>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
-        
+
         <div class="c38r">
             <div class="subcr">
                 <?php // display my groups, if there are any
@@ -79,7 +85,7 @@
                     <?php endfor; ?>
                     <p><strong><a href="groups/mygroups"><?= $words->get('GroupsAllMyLink'); ?></a></strong></p>
                 <?php endif ; ?>
-                
+
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

@@ -63,8 +63,8 @@ if (!empty($errors)) {
     <?php endforeach; ?>
         </div></div><hr />
     <?php endforeach; ?>
-    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint');?></p>
-    <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit', date('d.m.Y', $this->suggestion->votingendts)); ?>" /><?php echo $words->flushBuffer(); ?></p>
+    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', date('d.m.Y', $this->suggestion->votingendts));?></p>
+    <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
 </form>
 </fieldset>
 </div>

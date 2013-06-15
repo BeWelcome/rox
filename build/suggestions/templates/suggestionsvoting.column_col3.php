@@ -1,8 +1,8 @@
 <?php
 $ranks = array(
-        4 => $words->getSilent('SuggestionsExcellent'), 
-        3 => $words->getSilent('SuggestionsGood'), 
-        2 => $words->getSilent('SuggestionsFair'), 
+        4 => $words->getSilent('SuggestionsExcellent'),
+        3 => $words->getSilent('SuggestionsGood'),
+        2 => $words->getSilent('SuggestionsFair'),
         1 => $words->getSilent('SuggestionsPoor')
     );
 $formkit = $this->layoutkit->formkit;
@@ -16,7 +16,7 @@ if (empty($vars)) {
     $vars['suggestion-summary'] = $this->suggestion->summary;
     $vars['suggestion-description'] = $this->suggestion->description;
     if (count($this->votes) == 0) {
-        $votes = array(); 
+        $votes = array();
         foreach($this->suggestion->options as $option) {
             $vars['option' . $option->id . 'rank'] = 0;
             $vote = new StdClass;
@@ -56,9 +56,9 @@ if (!empty($errors)) {
     <p><?php echo $purifier->purify($this->suggestion->description); ?></p>
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
     <div class="floatbox float_left"><p><strong><?php echo $purifier->purify($option->summary); ?></strong></p><p><?php  echo $purifier->purify($option->description); ?></p></div>
-    <div class="floatbox float_right"><?php foreach($ranks as $key => $rank) :
-        $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?><label class="button" for="<?php echo $id; ?>"><input type="radio" class="toggle" 
-        <?php if ($key == $this->votes[$option->id]->rank) { echo 'checked="checked"'; } ?> id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $key; ?>" /><?php echo $rank; ?></label>
+    <div class="vote floatbox float_right"><?php foreach($ranks as $key => $rank) :
+        $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?><input type="radio" class="toggle"
+        <?php if ($key == $this->votes[$option->id]->rank) { echo 'checked="checked"'; } ?> id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $key; ?>"/><label for="<?php echo $id; ?>"><?php echo $rank; ?></label>
     <?php endforeach; ?>
         </div></div>
     <?php endforeach; ?>

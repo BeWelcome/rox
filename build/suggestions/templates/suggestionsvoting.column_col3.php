@@ -33,8 +33,7 @@ if (empty($vars)) {
 }
 ?>
 <div>
-<fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); $voteEndDate = strtotime($this->suggestion->votingended);
-    echo " (" .  $words->get('SuggestionsVoteEnds', date('d.m.Y', $voteEndDate)) .  ")"; ?></legend>
+<fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); ?></legend>
 <form method="post" id="suggestion-vote-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />
 <?php echo $callbackTags;
@@ -53,7 +52,7 @@ if (!empty($errors)) {
     echo $errStr;
 }
 ?>
-    <h3><?php echo $purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', date('d.m.Y', $voteEndDate)) .  ")"); ?></h3>
+    <h3><?php echo $purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', date('d.m.Y', $this->suggestion->votingendts)) .  ")"); ?></h3>
     <p><?php echo $purifier->purify($this->suggestion->description); ?></p>
     <hr />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
@@ -65,7 +64,7 @@ if (!empty($errors)) {
         </div></div><hr />
     <?php endforeach; ?>
     <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint');?></p>
-    <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
+    <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit', date('d.m.Y', $this->suggestion->votingendts)); ?>" /><?php echo $words->flushBuffer(); ?></p>
 </form>
 </fieldset>
 </div>

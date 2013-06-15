@@ -52,6 +52,14 @@ class Suggestion extends RoxEntityBase
                 $row = $sql->fetch(PDB::FETCH_OBJ);
                 $this->votes = $row->count;
             }
+            $query = "SELECT UNIX_TIMESTAMP(votingend) AS votingendts FROM " . $this->_table_name . " WHERE id = " . $this->id;
+            error_log($query);
+            if ($result = $this->dao->query($query)) {
+                $timestamp = $result->fetch(PDB::FETCH_OBJ);
+                $this->votingendts = $timestamp->votingendts;
+            } else {
+                $this->votingendts = 0;
+            }
         }
         return $status;
     }

@@ -12,18 +12,18 @@ class SuggestionsModel extends RoxModelBase
         }
 
         switch($type) {
-            case SuggestionsController::SUGGESTIONS_REJECTED: 
-                $query = "SELECT COUNT(*) FROM suggestions WHERE state = " 
-                    . SuggestionsController::SUGGESTIONS_REJECTED 
+            case SuggestionsController::SUGGESTIONS_REJECTED:
+                $query = "SELECT COUNT(*) FROM suggestions WHERE state = "
+                    . SuggestionsController::SUGGESTIONS_REJECTED
                     . " OR state = " . SuggestionsController::SUGGESTIONS_DUPLICATE;
                 break;
-            case SuggestionsController::SUGGESTIONS_DEV: 
-                $query = "SELECT COUNT(*) FROM suggestions WHERE state = " 
-                    . SuggestionsController::SUGGESTIONS_IMPLEMENTED 
+            case SuggestionsController::SUGGESTIONS_DEV:
+                $query = "SELECT COUNT(*) FROM suggestions WHERE state = "
+                    . SuggestionsController::SUGGESTIONS_IMPLEMENTED
                     . " OR state = " . SuggestionsController::SUGGESTIONS_IMPLEMENTING;
                 break;
             default:
-                $query = "SELECT COUNT(*) FROM suggestions WHERE state = " . $type; 
+                $query = "SELECT COUNT(*) FROM suggestions WHERE state = " . $type;
                 break;
         }
         $sql = $this->dao->query($query);
@@ -40,19 +40,19 @@ class SuggestionsModel extends RoxModelBase
         }
         $temp = $this->CreateEntity('Suggestion');
         switch($type) {
-            case SuggestionsController::SUGGESTIONS_REJECTED: 
-                $query = "state = " . SuggestionsController::SUGGESTIONS_REJECTED 
+            case SuggestionsController::SUGGESTIONS_REJECTED:
+                $query = "state = " . SuggestionsController::SUGGESTIONS_REJECTED
                     . " OR state = " . SuggestionsController::SUGGESTIONS_DUPLICATE;
-                $temp->sql_order = "state DESC, created ASC"; 
+                $temp->sql_order = "state DESC, created ASC";
                 break;
-            case SuggestionsController::SUGGESTIONS_DEV: 
-                $query = "state = " . SuggestionsController::SUGGESTIONS_IMPLEMENTED 
+            case SuggestionsController::SUGGESTIONS_DEV:
+                $query = "state = " . SuggestionsController::SUGGESTIONS_IMPLEMENTED
                     . " OR state = " . SuggestionsController::SUGGESTIONS_IMPLEMENTING;
-                $temp->sql_order = "state ASC, created ASC"; 
+                $temp->sql_order = "state ASC, created ASC";
                 break;
             default:
-                $query = "state = " . $type; 
-                $temp->sql_order = "created ASC"; 
+                $query = "state = " . $type;
+                $temp->sql_order = "created ASC";
                 break;
         }
         $all = $temp->FindByWhereMany($query, $pageno * $items, $items);
@@ -106,7 +106,7 @@ class SuggestionsModel extends RoxModelBase
     public function getVotesForLoggedInMember($suggestion) {
         $member = $this->getLoggedInMember();
         $hash = hash_hmac('sha256', $member->id, $suggestion->salt);
-        $query = "SELECT * FROM suggestions_votes WHERE suggestionId = " 
+        $query = "SELECT * FROM suggestions_votes WHERE suggestionId = "
             . $suggestion->id . " AND memberHash = '" . $hash . "'";
         $sql = $this->dao->query($query);
         if (!$sql) {
@@ -122,7 +122,7 @@ class SuggestionsModel extends RoxModelBase
     public function checkVoteSuggestion($vars) {
         return array();
     }
-    
+
     private function filterOptions($var) {
         if (!is_string($var)) {
             return false;
@@ -133,7 +133,7 @@ class SuggestionsModel extends RoxModelBase
         }
         return false;
     }
-    
+
     public function voteForSuggestion($member, $args) {
         $optionKeys = array_filter(array_keys($args->post), array($this, 'filterOptions'));
         $suggestion = new Suggestion($args->post['suggestion-id']);
@@ -162,16 +162,18 @@ class SuggestionsModel extends RoxModelBase
 
         foreach($votes as $vote) {
             if ($vote->id == 0) {
-                $query = "INSERT INTO suggestions_votes SET suggestionId = " . $suggestion->id 
-                    . ", optionId = " . $vote->optionId . ", rank = " . $vote->rank 
+                $query = "INSERT INTO suggestions_votes SET suggestionId = " . $suggestion->id
+                    . ", optionId = " . $vote->optionId . ", rank = " . $vote->rank
                     . ", memberHash = '" . $vote->memberHash . "'";
             } else {
-                $query = "REPLACE INTO suggestions_votes SET id = " . $vote->id 
-                    . ", suggestionId = " . $vote->suggestionId . ", optionId = " 
+                $query = "REPLACE INTO suggestions_votes SET id = " . $vote->id
+                    . ", suggestionId = " . $vote->suggestionId . ", optionId = "
                     . $vote->optionId . ", rank = " . $vote->rank . ", memberHash = '" . $vote->memberHash . "'";
             }
             $this->dao->query($query);
         }
+
+        return $suggestion;
     }
 }
 

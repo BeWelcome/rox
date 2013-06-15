@@ -7,14 +7,14 @@
 class SuggestionsController extends RoxControllerBase
 {
     const SUGGESTIONS_DUPLICATE = 0; // suggestion already existed and was there marked as duplicate by suggestion team
-    const SUGGESTIONS_AWAIT_APPROVAL = 1; // wait for suggestion team to check 
+    const SUGGESTIONS_AWAIT_APPROVAL = 1; // wait for suggestion team to check
     const SUGGESTIONS_DISCUSSION = 2; // discuss the suggestion try to find solutions
     const SUGGESTIONS_ADD_OPTIONS = 4; // enter solutions into the system (10 days after start)
     const SUGGESTIONS_VOTING = 8; // allow voting (30 days after switching to discussion mode)
-    const SUGGESTIONS_RANKING = 16; // Voting finished (30 days after voting started). Ranking can be done now. 
-    const SUGGESTIONS_REJECTED = 32; // Suggestion didn't reach the necessary level of approval (at least 'good') 
-    const SUGGESTIONS_IMPLEMENTING = 64; // Dev started implementing (no more ranking) 
-    const SUGGESTIONS_IMPLEMENTED = 128; // Dev finished implementation 
+    const SUGGESTIONS_RANKING = 16; // Voting finished (30 days after voting started). Ranking can be done now.
+    const SUGGESTIONS_REJECTED = 32; // Suggestion didn't reach the necessary level of approval (at least 'good')
+    const SUGGESTIONS_IMPLEMENTING = 64; // Dev started implementing (no more ranking)
+    const SUGGESTIONS_IMPLEMENTED = 128; // Dev finished implementation
     const SUGGESTIONS_DEV = 192;
 
     const SUGGESTIONS_PER_PAGE = 10;
@@ -39,7 +39,7 @@ class SuggestionsController extends RoxControllerBase
             return false;
         } else {
             return true;
-        } 
+        }
     }
 
     public function suggestions() {
@@ -59,18 +59,18 @@ class SuggestionsController extends RoxControllerBase
         return $pager;
     }
 
-    public function approveSuggestionCallback(StdClass $args, ReadOnlyObject $action, 
-        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
+    public function approveSuggestionCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
     }
 
-    public function postSuggestionCallback(StdClass $args, ReadOnlyObject $action, 
-        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
+    public function postSuggestionCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
     }
 
-    public function voteSuggestionCallback(StdClass $args, ReadOnlyObject $action, 
-        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
+    public function voteSuggestionCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         $errors = $this->_model->checkVoteSuggestion($args);
         if (!empty($errors)) {
@@ -79,11 +79,11 @@ class SuggestionsController extends RoxControllerBase
             return false;
         }
         $member = $this->_model->getLoggedInMember();
-        $this->_model->voteForSuggestion($member, $args);
-        $this->setFlashNotice($this->getWords()->get('SuggestionsVoted'));
+        $suggestion = $this->_model->voteForSuggestion($member, $args);
+        $this->setFlashNotice($this->getWords()->get('SuggestionsVoted', date('d.m.Y', $suggestion->votingendts)));
         return true;
     }
-    
+
     public function suggestionsUpdate() {
         if (!is_numeric($this->route_vars['id'])) {
             $this->redirectAbsolute($this->router->url('suggestions_votelist'));
@@ -107,7 +107,7 @@ class SuggestionsController extends RoxControllerBase
                 $page = new SuggestionsAddOptionsPage();
                 break;
             case self::SUGGESTIONS_VOTING:
-                // Members can change their ballot as long as the voting is running 
+                // Members can change their ballot as long as the voting is running
                 $page = new SuggestionsVotingPage();
                 $page->votes = $this->_model->getVotesForLoggedInMember($suggestion);
                 break;
@@ -118,8 +118,8 @@ class SuggestionsController extends RoxControllerBase
         return $page;
     }
 
-    public function editCreateSuggestionCallback(StdClass $args, ReadOnlyObject $action, 
-        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
+    public function editCreateSuggestionCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         $errors = $this->_model->checkEditCreateSuggestionVarsOk($args);
         if (count($errors) > 0) {

@@ -33,7 +33,8 @@ if (empty($vars)) {
 }
 ?>
 <div>
-<fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); ?></legend>
+<fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); $voteEndDate = strtotime($this->suggestion->votingended);
+    echo " (" .  $words->get('SuggestionsVoteEnds', date('d.m.Y', $voteEndDate)) .  ")"; ?></legend>
 <form method="post" id="suggestion-vote-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />
 <?php echo $callbackTags;
@@ -52,17 +53,18 @@ if (!empty($errors)) {
     echo $errStr;
 }
 ?>
-    <h3><?php echo $purifier->purify($this->suggestion->summary); ?></h3>
+    <h3><?php echo $purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', date('d.m.Y', $voteEndDate)) .  ")"); ?></h3>
     <p><?php echo $purifier->purify($this->suggestion->description); ?></p>
+    <hr />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
     <div class="floatbox float_left"><p><strong><?php echo $purifier->purify($option->summary); ?></strong></p><p><?php  echo $purifier->purify($option->description); ?></p></div>
     <div class="vote floatbox float_right"><?php foreach($ranks as $key => $rank) :
         $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?><input type="radio" class="toggle"
         <?php if ($key == $this->votes[$option->id]->rank) { echo 'checked="checked"'; } ?> id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $key; ?>"/><label for="<?php echo $id; ?>"><?php echo $rank; ?></label>
     <?php endforeach; ?>
-        </div></div>
+        </div></div><hr />
     <?php endforeach; ?>
-    <p><?php echo $words->get('SuggestionsVoteHint');?></p>
+    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint');?></p>
     <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
 </form>
 </fieldset>

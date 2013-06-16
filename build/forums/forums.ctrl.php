@@ -181,7 +181,7 @@ class ForumsController extends PAppController
             else {
                 if ($this->isTopLevel) {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
-                    $this->_model->prepareForum(false);
+                    $this->_model->prepareForum();
 
                     $onlymygroupscallbackId = $this->mygroupsonlyProcess();
                     $morelessthreadscallbackid = $this->morelessthreadsProcess();
@@ -413,7 +413,7 @@ class ForumsController extends PAppController
         
         $page->content .= ob_get_contents();
          ob_end_clean();
-        $page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
+        //$page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
         $page->teaserBar .= $view->getAsString('teaser');
         $page->render();
     } // end of index
@@ -715,6 +715,7 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_DELETE;
                 } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {
                     $this->_model->setPage($regs[1][0]);
+                    $this->_model->pushToPageArray($regs[1][0]);
                 } else if ($r ==  'locationDropdowns') {
                     $this->action = self::ACTION_LOCATIONDROPDOWNS;
                 } else {

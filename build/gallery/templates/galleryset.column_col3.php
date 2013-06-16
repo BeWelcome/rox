@@ -4,7 +4,7 @@
 
 $g = $gallery;
 $g->user_handle = MOD_member::getUserHandle($g->user_id_foreign);
-
+$purifier = MOD_htmlpure::getPurifier();
 // Set variable own (if own gallery)
 $Own = false;
 if ($this->myself) {
@@ -28,7 +28,7 @@ if (!isset($vars['errors'])) {
 <? } ?>
       <p id="g-text" class="description">
       <?php 
-        echo ($Own && !$g->text) ? $words->get('GalleryAddDescription') : $g->text;
+        echo ($Own && !$g->text) ? $words->get('GalleryAddDescription') : $purifier->purify($g->text);
       ?>
       </p>
       <div class="floatbox">

@@ -147,3 +147,28 @@
     $this->addRoute('activities_edit', 'activities/:id:/edit', 'ActivitiesController', 'editcreate');
     $this->addRoute('activities_show', 'activities/:id:', 'ActivitiesController', 'show');    
     $this->addRoute('activities_show_attendees', 'activities/:id:/attendees/page/:page:', 'ActivitiesController', 'show');
+
+    // suggestions feature
+    $this->addRoute('suggestions', 'suggestions', 'suggestionsController', 'suggestions');
+    $this->addRoute('suggestions_update', 'suggestions/:id:', 'suggestionsController', 'suggestionsUpdate');
+    $this->addRoute('suggestions_create', 'suggestions/create', 'suggestionsController', 'suggestionsEditCreate');
+    $this->addRoute('suggestions_edit', 'suggestions/edit/:id:', 'suggestionsController', 'suggestionsEditCreate');
+    $this->addRoute('suggestions_approvelist', 'suggestions/approve', 'suggestionsController', 'suggestionsApproveList');
+    $this->addRoute('suggestions_approvelist_pages', 'suggestions/approve/page/:pageno:', 'suggestionsController', 'suggestionsApproveList');
+    $this->addRoute('suggestions_approve', 'suggestions/approve/:id:', 'suggestionsController', 'suggestionsApprove');
+    $this->addRoute('suggestions_discusslist', 'suggestions/discuss', 'suggestionsController', 'suggestionsDiscussList');
+    $this->addRoute('suggestions_discusslist_pages', 'suggestions/discuss/page/:pageno:', 'suggestionsController', 'suggestionsDiscussList');
+    $this->addRoute('suggestions_discuss', 'suggestions/discuss/:id:', 'suggestionsController', 'suggestionsDiscuss');
+    $this->addRoute('suggestions_optionslist', 'suggestions/addoptions', 'suggestionsController', 'suggestionsAddOptionsList');
+    $this->addRoute('suggestions_optionslist_pages', 'suggestions/addoptions/page/:pageno:', 'suggestionsController', 'suggestionsAddOptionsList');
+    $this->addRoute('suggestions_options', 'suggestions/addoptions/:id:', 'suggestionsController', 'suggestionsAddOptions');
+    $this->addRoute('suggestions_votelist', 'suggestions/vote', 'suggestionsController', 'suggestionsVoteList');
+    $this->addRoute('suggestions_votelist_pages', 'suggestions/vote/page/:pageno:', 'suggestionsController', 'suggestionsVoteList');
+    $this->addRoute('suggestions_vote', 'suggestions/vote/:id:', 'suggestionsController', 'suggestionsVote');
+    $this->addRoute('suggestions_ranklist', 'suggestions/rank', 'suggestionsController', 'suggestionsRankList');
+    $this->addRoute('suggestions_ranklist_pages', 'suggestions/rank/page/:pageno:', 'suggestionsController', 'suggestionsRankList');
+    $this->addRoute('suggestions_rank', 'suggestions/rank/:id:', 'suggestionsController', 'suggestionsRank');
+    $this->addRoute('suggestions_rejectedlist', 'suggestions/rejected', 'suggestionsController', 'suggestionsRejectedList');
+    $this->addRoute('suggestions_rejectedlist_pages', 'suggestions/rejected/page/:pageno:', 'suggestionsController', 'suggestionsRejectedList');
+    $this->addRoute('suggestions_devlist', 'suggestions/dev', 'suggestionsController', 'suggestionsDevList');
+    $this->addRoute('suggestions_devlist_pages', 'suggestions/dev/page/:pageno:', 'suggestionsController', 'suggestionsDevList');

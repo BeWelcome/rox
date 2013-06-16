@@ -121,7 +121,9 @@ if ($allow_title) { // New Topic
         ?></textarea>
         </div> <!-- row -->
 
-<?php
+<?php 
+/* The following code is for adding tags to forum posts, disabled at the moment
+
     if (isset($allow_title) && $allow_title) {
 ?>
     <fieldset class="row" id="fpost_tags_and_location_fieldset">
@@ -149,7 +151,7 @@ if ($allow_title) { // New Topic
     </div></div>
     </fieldset> <!-- row -->
 
-<? } // End if $allow_title ?>
+<? } // End if $allow_title */?>
 
     <fieldset class="row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>

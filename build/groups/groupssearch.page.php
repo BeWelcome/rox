@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /**
@@ -38,8 +38,8 @@ class GroupsSearchPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
-        <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href="groups/search"><?= $words->get('search');?></a></h1>
+        <div id="teaser_l1">
+        <h1><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="groups/search"><?= $words->get('search');?></a></h1>
         </div>
         </div>
         <?php

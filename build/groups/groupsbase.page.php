@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -89,7 +89,7 @@ class GroupsBasePage extends PageWithActiveSkin
         </ul>
         <?
     }
-    
+
 
     protected function getPageTitle() {
         $words = $this->getWords();
@@ -128,30 +128,30 @@ class GroupsBasePage extends PageWithActiveSkin
             return $this->group->isMember($this->member);
         }
     }
-    
-    
+
+
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
         <div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
-        <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h1>
+        <div id="teaser_l1">
+        <h1><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h1>
         </div>
         </div>
         <?php
     }
-    
+
     protected function getTopmenuActiveItem()
     {
         return 'groups';
     }
-    
+
     protected function getSubmenuItems()
     {
         $items = array();
-        
+
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
 
@@ -175,11 +175,11 @@ class GroupsBasePage extends PageWithActiveSkin
         }
         return $items;
     }
-    
+
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?2';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?5';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?3';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?6';
        return $stylesheets;
     }
 

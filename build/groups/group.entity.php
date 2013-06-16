@@ -64,6 +64,31 @@ class Group extends RoxEntityBase
         }
     }
 
+    /*
+     * Loads the entity based on the data array.
+     * 
+     * Additionally gets the timestamp of the latest post to the group
+     * 
+     */
+    protected function loadEntity(array $data)
+    {
+        if ($status = parent::loadEntity($data))
+        {
+            // get latest post timestamp (if any)
+            $query = "SELECT UNIX_TIMESTAMP(MAX( p.create_time )) AS ts
+FROM groups AS g, forums_threads AS t, forums_posts AS p
+WHERE g.id = " . $this->id . "
+AND g.id = t.IdGroup
+AND t.last_postid = p.id";
+            if ($result = $this->dao->query($query)) {
+                $timestamp = $result->fetch(PDB::FETCH_OBJ);
+                $this->latestPost = $timestamp->ts;
+            } else {
+                $this->latestPost = 0;
+            }
+        }
+        return $status;
+    }
 
     /**
      * Uses an array of terms to create a create to search for groups with

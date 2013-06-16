@@ -12,7 +12,7 @@ if ($d) {
           <img class="framed" src="gallery/thumbimg?id=<?=$d?>" style="background-color: #fff; padding: 1em; text-align: center" alt="image"/>
       </a>
       <p class="small">
-      <?php if ($gallery->text) echo $gallery->text 
+      <?php if ($gallery->text) echo htmlspecialchars($gallery->text) 
       ?>
       </p>
       <p class="small"><?=$words->get('by')?> <?=$this->member->Username?></p>

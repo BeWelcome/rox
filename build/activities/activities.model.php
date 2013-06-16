@@ -1,6 +1,6 @@
 <?php
 /**
- * Events model class.
+ * Activities model class.
  *
  * @author shevek
  */
@@ -8,7 +8,7 @@ class ActivitiesModel extends RoxModelBase
 {
     // Limits for textareas
     const ACTIVITY_ADDRESS_LIMIT = 320;
-    const ACTIVITY_DESCRIPTION_LIMIT = 4000;
+    const ACTIVITY_DESCRIPTION_LIMIT = 65535;
     
     /**
      * Default constructor.
@@ -296,6 +296,7 @@ class ActivitiesModel extends RoxModelBase
         }
         
     }
+
     public function createActivity($args) {
         // First add geo location to geonames_cache if it doesn't exist yet
         $locationId = $args->post['activity-location-id'];

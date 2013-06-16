@@ -27,7 +27,7 @@ class LastCommentsPage extends PageWithActiveSkin {
         <?
 		*/
     }
-    
+
 
     protected function getLastCommentsTitle() {
         return $this->getWords()->getBuffered(
@@ -42,35 +42,35 @@ class LastCommentsPage extends PageWithActiveSkin {
 
 		$iiMax = count($data) ; // This retrieve the number of comments
 
-        require ('templates/lastcomments.php');    
-		
+        require ('templates/lastcomments.php');
+
     } // end of column_col3
 
-    
+
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
         <div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
+        <div id="teaser_l1">
         <h1><a href="lastcomments"><?= $words->get('LastCommentsTitlePage');?></a> </h1>
         </div>
         </div>
         <?php
     }
-    
+
     protected function getTopmenuActiveItem()
     {
 		return ;
 
-		
+
     }
-    
+
     protected function getSubmenuItems()
     {
         $items = array();
-        
+
 /*
         if ($this->group)
         {
@@ -92,14 +92,14 @@ class LastCommentsPage extends PageWithActiveSkin {
 */
         return $items;
     }
-    
+
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?2';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?5';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?3';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?6';
        return $stylesheets;
     }
-    
+
     protected function getStylesheetPatches() {
        $stylesheets[] = 'styles/css/minimal/screen/patches/patch_3col.css';
        return $stylesheets;

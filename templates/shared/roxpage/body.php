@@ -55,18 +55,12 @@ if ($piwikBaseURL) {
     }
 
     if ($piwikType == 'javascript') { ?>
-<!-- Piwik -->
-<script type="text/javascript">
-var pkBaseURL = (("https:" == document.location.protocol) ? "https://<?php echo $piwikBaseName ?>/" : "http://https://<?php echo $piwikBaseName ?>/");
-document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-</script><script type="text/javascript">
-try {
-    var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", <?php echo $piwikId ?>);
-    piwikTracker.trackPageView();
-    piwikTracker.enableLinkTracking();
-} catch( err ) {
-}
-</script><noscript><p><img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" width="1" height="1" /></p></noscript>
+<!-- Piwik --> 
+<script type="text/javascript"> 
+   var _paq = _paq || []; 
+   (function(){var u=(("https:" == document.location.protocol) ? "https" : "http") + "://<?php echo $piwikBaseName ?>/"; _paq.push(['setSiteId', <?php echo $piwikId ?>]); _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })();
+</script> 
+<noscript><p><img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" width="1" height="1" /></p></noscript>
 <!-- End Piwik Tracking Code -->
 <?php    } else { ?>
 <!-- Piwik Image Tracker -->

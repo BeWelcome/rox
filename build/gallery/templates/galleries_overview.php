@@ -31,7 +31,7 @@ if ($galleries) {
             <a href="gallery/show/sets/<?=$g->id?>">
                 <img class="framed" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image"/>
             </a>
-            <h4><a href="gallery/show/sets/<?=$g->id?>"><?=$g->title?></a></h4>
+            <h4><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars($g->title)?></a></h4>
             <p>
             <?=$num_rows?> <?=$words->get('pictures')?>
             <span class="grey small"><?=$words->get('by')?> <a href="members/<?=$username?>" class="grey"><?=$username?></a></span>

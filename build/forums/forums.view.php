@@ -100,7 +100,7 @@ class ForumsView extends RoxAppView {
 */
          $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($topic->topicinfo->first_postid) ;
          $LanguageChoices=$this->_model->LanguageChoices($AppropriatedLanguage) ;
-         
+
         // Get current visibility of thread and set $visibilitiesDropdown
         // for editcreateform
         $IdGroup = 0;
@@ -136,7 +136,7 @@ class ForumsView extends RoxAppView {
         $visibilityThread = $this->_model->GetThreadVisibility($vars['threadid']);
         $visibilityPost = $this->_model->GetPostVisibility($vars['postid']);
         $visibilitiesDropdown = $this->getVisibilitiesDropdown($visibilityPost, $visibilityThread, $IdGroup, $allow_title);
-        
+
         // By default no appropriated language is propose, the member can choose to translate
         $LanguageChoices=$this->_model->LanguageChoices() ;
         if (!$translate) { // In case this is a edit, by default force the original post language
@@ -308,7 +308,7 @@ class ForumsView extends RoxAppView {
     /* This adds custom styles to the page*/
     public function customStyles() {
         $out = '';
-        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?5" type="text/css"/>';
+        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/forums.css?6" type="text/css"/>';
         return $out;
     }
 
@@ -334,7 +334,7 @@ class ForumsView extends RoxAppView {
     }
 
 /*
-* showTopLevelLandingPage produce the view with recent forum posts (without any group posts) 
+* showTopLevelLandingPage produce the view with recent forum posts (without any group posts)
 * on top and groups on the bottom
 */
     public function showTopLevelLandingPage($ownGroupsButtonCallbackId = false, $moreLessThreadsCallbackId = false) {
@@ -344,13 +344,25 @@ class ForumsView extends RoxAppView {
         $boards->rewind();
         $forum = $boards->current();
         $groups = $boards->next();
-           
+
         $request = PRequest::get()->request;
 
-        $pages = $this->getBoardPageLinks();
-        $currentPage = $this->_model->getPage();
-        $max = $boards->getNumberOfThreads();
-        $maxPage = ceil($max / $this->_model->THREADS_PER_PAGE);
+        $page_array = $this->_model->getPageArray();
+
+        if (isset($page_array[0]) && isset($page_array[1])) {
+            $currentForumPage = (int) $page_array[0];
+            $currentGroupsPage = (int) $page_array[1];
+        } else {
+            $currentForumPage = 1;
+            $currentGroupsPage = 1;
+        }
+
+        $pages = null;
+        $forumpages = $this->getPageLinks($currentForumPage, $forum->THREADS_PER_PAGE, $forum->getNumberOfThreads());
+        $groupspages = $this->getPageLinks($currentGroupsPage, $groups->THREADS_PER_PAGE, $groups->getNumberOfThreads());
+        $forumMaxPage = ceil($forum->getNumberOfThreads() / $forum->THREADS_PER_PAGE);
+        $groupsMaxPage = ceil($groups->getNumberOfThreads() / $groups->THREADS_PER_PAGE);
+
 
         $top_tags = $this->_model->getTopCategoryLevelTags();
         $all_tags_maximum = $this->_model->getTagsMaximum();
@@ -483,7 +495,7 @@ class ForumsView extends RoxAppView {
             // getting group entity from model as createEntity isn't public
             $group = $this->_model->GetGroupEntity($IdGroup);
             $groupOnly = ($group->VisiblePosts == "no");
-            $isMember = $group->isMember($this->_model->getLoggedInMember()); 
+            $isMember = $group->isMember($this->_model->getLoggedInMember());
             if ($groupOnly) {
                 // check if highest visibility is not GroupOnly meaning
                 // thread was started before the group setting changed
@@ -513,24 +525,24 @@ class ForumsView extends RoxAppView {
 
         if (!$newtopic) {
             $name = "PostVisibility";
-            // if this is a reply or edit of a reply we need to limit the choices 
+            // if this is a reply or edit of a reply we need to limit the choices
             switch($highestVisibility) {
-                case 'GroupOnly': 
-                    
-                    $k = array_search("NoRestriction", $visibilities, true); 
-                    if ($k !== false) { 
-                        unset($visibilities[$k]); 
-                    } 
-                    $k = array_search("MembersOnly", $visibilities, true); 
-                    if ($k !== false) { 
-                        unset($visibilities[$k]); 
-                    } 
+                case 'GroupOnly':
+
+                    $k = array_search("NoRestriction", $visibilities, true);
+                    if ($k !== false) {
+                        unset($visibilities[$k]);
+                    }
+                    $k = array_search("MembersOnly", $visibilities, true);
+                    if ($k !== false) {
+                        unset($visibilities[$k]);
+                    }
                     break;
-                case 'MembersOnly': 
-                    $k = array_search("NoRestriction", $visibilities, true); 
-                    if ($k !== false) { 
-                        unset($visibilities[$k]); 
-                    } 
+                case 'MembersOnly':
+                    $k = array_search("NoRestriction", $visibilities, true);
+                    if ($k !== false) {
+                        unset($visibilities[$k]);
+                    }
                     break;
             }
         } else {
@@ -543,13 +555,13 @@ class ForumsView extends RoxAppView {
             if ($visibility == $currentVisibility) {
                 $selected = ' selected="selected"';
             }
-            $out .= '<option value="'. $visibility . '"'. $selected . '>' 
+            $out .= '<option value="'. $visibility . '"'. $selected . '>'
                 . $this->words->getBuffered("forum_edit_vis_" . $visibility) .'</option>';
         }
         $out .= '</select>' . $this->words->flushBuffer();
         return $out;
     }
-    
+
     private function getNewThreadVisibilitiesDropdown($IdGroup) {
         $visiblities = array();
         // If we have a group check if visibility is limited to GroupOnly
@@ -580,7 +592,7 @@ class ForumsView extends RoxAppView {
             if ($visibility == $currentVisibility) {
                 $selected = ' selected="selected"';
             }
-            $out .= '<option value="' . $visibility . '"'. $selected . '>' 
+            $out .= '<option value="' . $visibility . '"'. $selected . '>'
                 . $this->words->getBuffered("forum_edit_vis_" . $visibility) .'</option>';
         }
         $out .= '</select>' . $this->words->flushBuffer();

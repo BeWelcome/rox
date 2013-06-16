@@ -60,10 +60,16 @@ if (!$User) {
 if ($threads = $groups->getThreads()) {
     $groups->getTotalThreads(); ?>
 <?php
+        //force pagination render to abort by feeding it's pager variables 
+        //invalid values because we want to call it separately later
+        $multipages = null;
+        $currentPage = null;
+        $maxPage = null;
+        $pages = null;
+
         require 'boardthreads.php';
-
-
-
+?>
+<?php
     if ($User && $moreLessThreadsCallbackId) {
 ?>
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
@@ -94,7 +100,15 @@ if ($threads = $groups->getThreads()) {
     echo $words->flushBuffer();
     }
 ?>
-    <strong class="float_right"><a href="groups/forums"><?php echo $this->words->getFormatted('ShowGroupsForums'); ?></a></strong>
+<?php
+
+    $multipages = array($currentForumPage, $groupspages);
+    $currentPage = $currentGroupsPage;
+    $maxPage = $groupsMaxPage;
+
+    require 'pages.php';
+
+?>
 </div> <!-- Groups-->
 
 <br /><br />
@@ -108,11 +122,6 @@ if ($threads = $groups->getThreads()) {
 <?php
 if ($User) {
 ?>
-    <span class="float_right">
-        <form method="get" action="forums/new">
-            <input type="submit" name="submit" value="<?= $this->words->getSilent('ForumNewTopic'); ?>">
-        </form><?php echo $this->words->flushBuffer(); ?>
-    </span>
 <?php
 }
 ?>
@@ -122,8 +131,16 @@ if ($User) {
 if ($threads = $forum->getThreads()) {
     $forum->getTotalThreads(); ?>
 <?php
+        //force pagination render to abort by feeding it's pager variables 
+        //invalid values because we want to call it separately later
+        $multipages = null;
+        $currentPage = null;
+        $maxPage = null;
+        $pages = null;
+
         require 'boardthreads.php';
 
+        $pages = null;
 
     if ($User && $moreLessThreadsCallbackId) {
 ?>
@@ -141,8 +158,14 @@ if ($threads = $forum->getThreads()) {
 <?php
     echo $words->flushBuffer();
     }
+
+    $multipages = array($forumpages, $currentGroupsPage);
+    $currentPage = $currentForumPage;
+    $maxPage = $forumMaxPage;
+
+    require 'pages.php';
+
 ?>
-    <strong class="float_right"><a href="forums/bwforum"><?php echo $this->words->getFormatted('ShowAgoraForum'); ?></a></strong> 
 </div> <!-- Forum-->
 
 <?php

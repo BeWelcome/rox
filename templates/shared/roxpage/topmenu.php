@@ -43,10 +43,14 @@
                 <li><a href="places"><?=$words->get('BrowseCountries')?></a></li>
             </ul>
         </li>
-        <li><a href="explore"><?=$words->get('Explore')?></a>
+        <li><a href="community"><?=$words->get('CommunityMenu')?></a>
             <ul>
-                <li><a href="forums"><?=$words->get('CommunityLanding')?></a></li>
+                <li><a href="forums" title="<?=$words->get('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a></li>
+                <li><a href="groups/search" title="<?=$words->get('GroupsTagLine')?>"><?=$words->get('Groups')?></a></li>
                 <li><a href="activities"><?=$words->get('Activities')?></a></li>
+                <?php if ($logged_in) { ?>
+                <li><a href="suggestions"><?=$words->get('Suggestions')?></a></li>
+                <?php } ?>
                 <li><a href="trip"><?=$words->get('Trips')?></a></li>
                 <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
                 <li><a href="blog"><?=$words->get('Blogs')?></a></li>
@@ -67,7 +71,7 @@
         </li>
         <? } ?>
     </ul>
-    
+
 <!-- show login fields or searchbox, depending if logged in or not-->
     <?php $this->quicksearch() ?>
 

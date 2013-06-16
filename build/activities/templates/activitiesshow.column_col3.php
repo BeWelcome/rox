@@ -78,9 +78,10 @@ if (empty($vars)) {
                         echo '</div>';
                         echo '</li>';
                         }
+                    echo '</ul>';
                     echo $this->attendeesPager->render();
-                ?>
-                </ul></div>
+                    ?>
+                </div>
                 <?php
                 } else {
                         echo '<div class="row"><h3>' .  $words->get('ActivityAttendees') . '</h3>';

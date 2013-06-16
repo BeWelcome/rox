@@ -544,16 +544,35 @@ WHERE
 
         $forumthreads = intval($layoutbits->getPreference("ForumThreadsOnLandingPage"));
         $groupsthreads = intval($layoutbits->getPreference("GroupsThreadsOnLandingPage"));
+        
+        $page_array = $this->getPageArray();        
+
+        if (isset($page_array[0]) && isset($page_array[1])) {
+            $forumpage = $page_array[0];
+            $groupspage = $page_array[1];
+        } else {
+            $forumpage = 1;
+            $groupspage = 1;
+        }
+        
 
         $this->board = new Board($this->dao, 'Forums and Groups', '.');
 
         $forum = new Board($this->dao, 'Forum', '.', false, false, false, false, false, false, false, 0);
         $forum->THREADS_PER_PAGE = max(1, min($forumthreads, $MAX_THREADS));
-        $forum->initThreads(1, $showsticky);
+        $forum->initThreads($forumpage, $showsticky);
+        $forumMaxPage = ceil($forum->getNumberOfThreads() / $forum->THREADS_PER_PAGE);
+        if ($forumpage > $forumMaxPage) {
+            $forum->initThreads($forumMaxPage, $showsticky);
+        }
 
         $groups = new Board($this->dao, 'Groups', '.', false, false, false, false, false, false, false, false, true);
         $groups->THREADS_PER_PAGE = max(1, min($groupsthreads, $MAX_THREADS));
-        $groups->initThreads(1, $showsticky);
+        $groups->initThreads($groupspage, $showsticky);
+        $groupsMaxPage = ceil($groups->getNumberOfThreads() / $groups->THREADS_PER_PAGE);
+        if ($groupspage > $groupsMaxPage) {
+            $groups->initThreads($groupsMaxPage, $showsticky);
+        }
 
         $this->board->add($forum);
         $this->board->add($groups);
@@ -3031,6 +3050,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     private $tags = array();
     private $continent = false;
     private $page = 1;
+    private $page_array = array();
     private $messageId = 0;
     private $TopMode=Forums::CV_TOPMODE_LANDING; // define that we use the landing page for top mode
 
@@ -3091,6 +3111,15 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     }
     public function setPage($page) {
         $this->page = (int) $page;
+    }
+    public function getPageArray() {
+        return $this->page_array;
+    }
+    public function setPageArray($page_array) {
+        $this->page_array = $page_array;
+    }
+    public function pushToPageArray($page) {
+        $this->page_array[] = $page;
     }
     public function setMessageId($messageid) {
         $this->messageId = (int) $messageid;
@@ -3370,7 +3399,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	 		$tt=array() ;
 
 			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
-										 WHERE membersgroups.IdGroup=groups.id group by groups.id order by groups.id ";
+										 WHERE membersgroups.IdGroup=groups.id group by groups.id order by Name ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$row->Name=$this->getGroupName($row->Name);

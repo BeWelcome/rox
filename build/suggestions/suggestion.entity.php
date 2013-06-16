@@ -46,14 +46,12 @@ class Suggestion extends RoxEntityBase
             }
             $this->options = $options;
             $query = "SELECT COUNT(DISTINCT memberHash) AS count FROM suggestions_votes WHERE suggestionId = " . $this->id;
-            error_log($query);
             $sql = $this->dao->query($query);
             if ($sql) {
                 $row = $sql->fetch(PDB::FETCH_OBJ);
                 $this->votes = $row->count;
             }
             $query = "SELECT UNIX_TIMESTAMP(votingend) AS votingendts FROM " . $this->_table_name . " WHERE id = " . $this->id;
-            error_log($query);
             if ($result = $this->dao->query($query)) {
                 $timestamp = $result->fetch(PDB::FETCH_OBJ);
                 $this->votingendts = $timestamp->votingendts;

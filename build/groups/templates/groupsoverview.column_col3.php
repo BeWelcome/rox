@@ -48,8 +48,13 @@
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($group_data->getNewMembers()) ; ?></li>
                             <?php if ($group_data !== 0) {?>
-                            <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost)); ?></li>
-                            <?php } ?>
+                            <li><?php
+                                if ($group_data->latestPost) {
+                                    echo $words->get('GroupsLastPost') . ": " . date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost));
+                                } else {
+                                    echo $words->get('GroupsNoPostYet');
+                                }
+                            } ?>
                             </ul>
                         </div>  <!-- groupinfo -->
                     </div> <!-- groupbox clearfix -->

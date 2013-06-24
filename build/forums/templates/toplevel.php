@@ -55,6 +55,9 @@ if ($User && $ownGroupsButtonCallbackId) {
 }
 ?> 
 
+<span class="button float_right"><a href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span>
+<?php echo $this->words->flushBuffer(); ?>
+
 <!-- Now displays the recent post list -->	
 <?php
     $uri = 'forums/';

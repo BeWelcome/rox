@@ -57,6 +57,9 @@
                 <li><a href="wiki"><?=$words->get('Wiki')?></a></li>
             </ul>
         </li>
+        <?php if ($logged_in) {
+            $R = MOD_right::get();
+            if ($R->hasRight('SafetyTeam')) { ?><li><a href="safety"><?=$words->get('Safety')?></a></li> <?php } } ?>
         <li><a href="about"><?=$words->get('GetAnswers')?></a>
             <ul>
                 <li><a href="faq"><?=$words->get('Faq')?></a></li>

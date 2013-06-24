@@ -27,6 +27,7 @@ $User = APP_User::login();
 <div id="forum">
 
 <?php
+$noForumLegendBox = true;
 $ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
 if (!$User) {

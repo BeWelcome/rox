@@ -69,6 +69,7 @@ Boston, MA  02111-1307, USA.
           <span><?php echo $words->get('SignupUsernameDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupUsernameShortDesc'); ?></span>
           -->
+          <br /><br/><p class="desc" style="margin-left:11.3em"><?=$words->get('subline_username')?></p>
         </div> <!-- signup-row -->
 
     <!-- password -->

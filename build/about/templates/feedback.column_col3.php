@@ -46,7 +46,7 @@ if (isset($mem['data'])) {
 }
 $FeedbackQuestion = isset($mem['FeedbackQuestion']) ? $mem['FeedbackQuestion'] : '';
 $FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
-$answerneeded = isset($mem['answerneeded']) ? $mem['answerneeded'] : null;
+$answernotneeded = isset($mem['answernotneeded']) ? $mem['answernotneeded'] : null;
 $errors = $this->getRedirectedMem('errors');
 
 if ($errors = $this->getRedirectedMem('errors'))
@@ -110,7 +110,7 @@ if ($errors = $this->getRedirectedMem('errors'))
     <?php endif; ?>
 
     <div class="type-check">
-        <p><input type="checkbox" id="feedbackAnswerneeded" name="answerneeded" <?php if ($answerneeded) echo "checked='checked'";?>/> <label for="feedbackAnswerneeded"> <?php echo $words->get("FeedBackIWantAnAnswer")?></label></p>
+        <p><input type="checkbox" id="feedbackAnswernotneeded" name="answernotneeded" <?php if ($answernotneeded) echo "checked='checked'";?>/> <label for="feedbackAnswernotneeded"> <?php echo $words->get("FeedBackIDoNotWantAnAnswer")?></label></p>
     </div> <!-- type-check -->
 
     <div class="type-button">

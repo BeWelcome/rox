@@ -94,7 +94,8 @@ bwrox.selectScripts([
     // JQuery has to be included before prototype to avoid conflicts
     file: "jquery-1.8.2.min.js",
     pages: [
-      "searchmembers", 
+      "searchmembers",
+      "search",
       "signup/3", 
       "setlocation", 
       "blog", 
@@ -103,9 +104,11 @@ bwrox.selectScripts([
       "activities/"]
   },
   {
-    file: "jquery-ui-1.10.2.custom.min.js",
+    // complete jquery ui with theme smoothness
+    file: "jquery-ui-1.10.3.custom.min.js",
     pages: [
-      "activities" /*,
+      "activities",
+      "search" /*,
       "blog",
       "trip",
       "admin/treasurer" */
@@ -318,7 +321,11 @@ bwrox.selectScripts([
     pages: ["searchmembers"]
   },
   {
-	  file: "map/activities/activities_map.js",
-      pages: ["activities"]
+    file: "search/search.js",
+    pages: ["search"]
+  },
+  {
+    file: "map/activities/activities_map.js",
+    pages: ["activities"]
   }
 ]);

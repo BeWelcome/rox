@@ -60,7 +60,7 @@
     $this->addRoute('groups_realimg','groups/realimg/:group_id:', 'GroupsController', 'realImg');
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
-    
+
     // related groups routes
     $this->addRoute('relatedgroup_select','groups/:group_id:/selectrelatedgroup', 'RelatedGroupsController', 'selectRelatedGroup');
     $this->addRoute('relatedgroup_add','groups/:group_id:/addrelatedgroup/:related_id:', 'RelatedGroupsController', 'addRelatedGroup');
@@ -114,7 +114,7 @@
     $this->addRoute('admin_massmail_getplaces', 'admin/massmail/getplaces/:countrycode:/:adminunit:', 'AdminController', 'getPlaces');
     $this->addRoute('admin_massmail_trigger', 'admin/massmail/trigger/:id:', 'AdminController', 'massmailTrigger');
     $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminController', 'massmailUntrigger');
-    
+
     // admin treasurer routes
     $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
     $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminController', 'treasurerEditCreateDonation');
@@ -145,7 +145,7 @@
     $this->addRoute('activities_upcoming_activities', 'activities/upcoming', 'ActivitiesController', 'upcomingActivities');
     $this->addRoute('activities_upcoming_activities_pages', 'activities/upcoming/page/:pageno:', 'ActivitiesController', 'upcomingActivities');
     $this->addRoute('activities_edit', 'activities/:id:/edit', 'ActivitiesController', 'editcreate');
-    $this->addRoute('activities_show', 'activities/:id:', 'ActivitiesController', 'show');    
+    $this->addRoute('activities_show', 'activities/:id:', 'ActivitiesController', 'show');
     $this->addRoute('activities_show_attendees', 'activities/:id:/attendees/page/:page:', 'ActivitiesController', 'show');
 
     // suggestions feature
@@ -172,3 +172,11 @@
     $this->addRoute('suggestions_rejectedlist_pages', 'suggestions/rejected/page/:pageno:', 'suggestionsController', 'suggestionsRejectedList');
     $this->addRoute('suggestions_devlist', 'suggestions/dev', 'suggestionsController', 'suggestionsDevList');
     $this->addRoute('suggestions_devlist_pages', 'suggestions/dev/page/:pageno:', 'suggestionsController', 'suggestionsDevList');
+
+    // searchmembers
+    $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');
+    $this->addRoute('searchmembers_map', 'search/members/map', 'SearchController', 'searchMembersOnMap');
+    $this->addRoute('searchmembers_map_advanced', 'search/members/map/advanced', 'SearchController', 'searchMembersOnMap');
+    $this->addRoute('searchmembers_text', 'search/members/text', 'SearchController', 'searchMembersText');
+    $this->addRoute('searchmembers_text_advanced', 'search/members/text/advanced', 'SearchController', 'searchMembersText');
+    $this->addRoute('search_places', 'search/locations/:type:', 'SearchController', 'searchSuggestLocations');

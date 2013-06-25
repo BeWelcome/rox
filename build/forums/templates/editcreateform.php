@@ -121,8 +121,7 @@ if ($allow_title) { // New Topic
         ?></textarea>
         </div> <!-- row -->
 
-<?php 
-/* The following code is for adding tags to forum posts, disabled at the moment
+<?php
 
     if (isset($allow_title) && $allow_title) {
 ?>
@@ -142,16 +141,18 @@ if ($allow_title) { // New Topic
             echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : '';
         ?></textarea>
         <div id="suggestion"></div>
+<?php /*
         <p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
         <div id="dropdowns">
         <?php
             echo $locationDropdowns;
         ?>
         </div>
+*/?>
     </div></div>
     </fieldset> <!-- row -->
 
-<? } // End if $allow_title */?>
+<?php } // End if $allow_title ?>
 
     <fieldset class="row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>

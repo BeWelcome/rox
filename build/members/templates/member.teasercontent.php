@@ -3,10 +3,10 @@
     <h1 id="username">
       <strong><?=$member->Username ?></strong>
       <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>
-      <!-- Hidden in accordance with trac ticket 1992 until bugs which limit the validity of verification system are resolved. -->
+      <!-- Hidden in accordance with trac ticket 1992 until bugs which limit the validity of verification system are resolved.  
       <?=($verification_status) ? '
         <a href="verifymembers/verifiersof/'.$member->Username.'">
-          <img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'" /></a>': ''?> -->
+        <img src="images/icons/shield.png" alt="'.$verification_text.'" title="'.$verification_text.'" /></a>': ''?>  -->
       <?=($member->Accomodation == 'anytime') ? '
         <img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="' . $words->getSilent('CanOfferAccomodation') . '" />': ''?>
       <?=$words->flushBuffer()?>

@@ -70,7 +70,7 @@ $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?ShowLan
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlymissing&ShowLanguageStatus=". $rr->id)."\"> Only missing in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Update needed in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showstats")."\">Show stats</a></li>\n";
-$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showmemcache")."\">Show memcache</a></li>\n";
+// $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showmemcache")."\">Show memcache</a></li>\n"; -- removed as it has currently no function (requested in ticket 2041)
 
 
 function showPercentageAchieved($IdLanguage = null)

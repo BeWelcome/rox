@@ -4,6 +4,8 @@
 */
 ?>
 <br/>
+<?php
+/*
 <!-- Now displays the by continent -->
       
         <div class="regionlist">
@@ -33,7 +35,8 @@
             ?>
           </ul>
         </div> <!-- subcl -->
-
+*/
+?>
 
 
 

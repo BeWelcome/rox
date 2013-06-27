@@ -34,3 +34,4 @@ $words = new MOD_words();
         France
     </p>
     <p><strong><?=$words->get('SignupEmail'); ?>:</strong> info[at]bevolunteer.org</p>
+    <p><?=$words->get('YamlLayout'); ?></p>

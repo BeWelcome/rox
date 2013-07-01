@@ -77,9 +77,16 @@ HTML;
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox  -->
-            <?php $ii++; ?>
             </div>
-            <?php endforeach ; ?>
+			<?php if ($ii % 3 == 2) :
+				echo "</div>"; // subcolumns
+		    endif;
+			$ii++;
+            endforeach ; 
+			// check if a subcolumns need to be closed
+			if ($ii % 3 == 0) :
+				echo "</div>"; // subcolumns
+			endif; ?>
 </div> <!-- floatbox -->
             <?php
             $this->pager->render();
@@ -92,4 +99,5 @@ HTML;
 HTML;
         endif;
         ?>
+</div> <!-- floatbox -->
 </div> <!-- groups -->

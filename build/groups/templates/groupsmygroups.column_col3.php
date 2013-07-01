@@ -32,9 +32,15 @@
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox floatbox -->
-            <?php $ii++;
-            endforeach;
-            echo '</div>';
+			<?php if ($ii % 3 == 2) :
+				echo "</div>"; // subcolumns
+		    endif;
+			$ii++;
+            endforeach ; 
+			// check if a subcolumns need to be closed
+			if ($ii % 3 == 0) :
+				echo "</div>"; // subcolumns
+			endif;
             $this->pager->render();
         }
         else

@@ -84,7 +84,7 @@ HTML;
 			$ii++;
             endforeach ; 
 			// check if a subcolumns need to be closed
-			if ($ii % 3 == 0) :
+			if ($ii % 3 != 0) :
 				echo "</div>"; // subcolumns
 			endif; ?>
 </div> <!-- floatbox -->

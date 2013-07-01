@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 
 require_once ("menus.php");
 
-function ShowList($TData) {
+function ShowList($TData, $start = 0, $total = 0) {
   global $_SYSHCVOL;
   $maxTData = count($TData);
   $count = 0;
@@ -36,7 +36,7 @@ function ShowList($TData) {
     $c = $TData[$iData];
     $count++;
     echo "          <div class=\"admincomment\">\n";
-    echo "            <h3> comment from ", LinkWithUsername($c->UsernameWriterMember), " to ", LinkWithUsername($c->UsernameReceiverMember), "</h3>\n";
+    echo "            <h3>Comment from ", LinkWithUsername($c->UsernameWriterMember), " about ", LinkWithUsername($c->UsernameReceiverMember), "</h3>\n";
     echo "            <p><strong>", $c->AdminAction, "</strong></p>\n";
     echo "            <form method=\"post\" action=\"admincomments.php\">\n";
     echo "              <div class=\"subcolumns\">\n";
@@ -86,22 +86,22 @@ function ShowList($TData) {
     echo "                  <div class=\"subcr\">\n";
     echo "                    <ul class=\"linklist\">\n";
     if ($c->AdminComment != "Checked")
-      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=Checked")."\" class=button>Mark as checked</a></li>\n";
-    if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminComment")))
-      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=AdminCommentMustCheck")."\">Admin Comment Must Check</a></li>\n";
+      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=Checked")."\" class=button>Mark as checked</a>\n";
     if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminAbuser")))
-      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=AdminAbuserMustCheck")."\">Admin Abuser Must Check</a></li>\n";
+      echo "                      <a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=AdminAbuserMustCheck")."\" class=button>Mark as abuse</a></li>\n";
+    if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminComment")))
+      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=AdminCommentMustCheck")."\" class=button>Move to negative</a>\n";
     if (($c->AdminComment != "Checked") and (HasRight("Comments", "DeleteComment")))
-      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=del\" onclick=\"return('Confirm delete ?');")."\">del</a></li>\n";
+      echo "                      <a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=del\" onclick=\"return('Confirm delete ?');")."\" class=button>Delete comment</a></li>\n";
     echo "                      <li><a href=\"".bwlink("admin/admincomments.php?FromIdMember=" . $c->UsernameWriterMember )."&amp;action=All\">Other comments written by ", $c->UsernameWriterMember, "</a></li>\n";
     echo "                      <li><a href=\"".bwlink("admin/admincomments.php?ToIdMember=" . $c->UsernameReceiverMember )."&amp;action=All\">Other comments written about ", $c->UsernameReceiverMember, "</a></li>\n";
-    echo "                      <li><a href=\"".bwlink("messages/compose/". $c->UsernameWriterMember, true)."\">contact writer (". $c->UsernameWriterMember.")</a></li>\n";
-    echo "                      <li><a href=\"".bwlink("messages/compose/". $c->UsernameReceiverMember, true)."\">contact receiver (". $c->UsernameReceiverMember.")</a></li>\n";
+    echo "                      <li><a href=\"".bwlink("messages/compose/". $c->UsernameWriterMember, true)."\">Contact writer (". $c->UsernameWriterMember.")</a></li>\n";
+    echo "                      <li><a href=\"".bwlink("messages/compose/". $c->UsernameReceiverMember, true)."\">Contact receiver (". $c->UsernameReceiverMember.")</a></li>\n";
     echo "                    </ul>\n";
     echo "                  </div> <!-- subcr -->\n";
     echo "                </div> <!-- c50r -->\n";
     echo "              </div> <!-- subcolumns -->\n";
-    echo "              <h4>Where ?</h4>\n";
+    echo "              <h4>Where?</h4>\n";
     echo "              <p><textarea name=\"TextWhere\" cols=\"70\" rows=\"5\">", $c->TextWhere, "</textarea></p>\n";
     echo "              <h4>Comment:</h4>\n";
     echo "              <p><textarea name=\"TextFree\" cols=\"70\" rows=\"8\">", $c->TextFree, "</textarea></p>\n";
@@ -114,11 +114,15 @@ function ShowList($TData) {
     echo "             </form>\n";
     echo "            </div> <!-- admincomment -->\n";
   }
-  echo "            <p><strong>Total number of comments:</strong> ", $count, "</p>\n";
+  if ($total != 0) {
+    echo "            <p><strong>Total number of comments:</strong> ", $total, "</p>\n";
+  } else {
+    echo "            <p><strong>Total number of comments:</strong> ", $count, "</p>\n";
+  }
   echo "        </div> <!-- info -->\n";
 } // end of ShowList
 
-function DisplayAdminComments($TData, $lastaction = "") {
+function DisplayAdminComments($TData, $lastaction = "", $page = 0, $itemsperpage = 0, $count = 0, $urlpiece = "") {
   global $countmatch;
   global $title;
   $title = "Admin Comments";
@@ -131,22 +135,45 @@ function DisplayAdminComments($TData, $lastaction = "") {
   Menu2("admincomments.php", ww('MainPage')); // Displays the second menu
 
   $MenuAction = "";
-  $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php")."\">Reported comments</a></li>\n";
+  $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php")."\">Negative comments</a></li>\n";
   if (HasRight("Comments", "AdminAbuser")) {
-      $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php?action=AdminAbuser")."\">Comments marked as abuse</a></li>\n";
+      $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php?action=AdminAbuser")."\">Abusive comments</a></li>\n";
   }
   $MenuAction .= "            <li><a href=\"".bwlink("admin/admincomments.php?action=All")."\">All comments</a></li>\n";
 
-  DisplayHeaderShortUserContent($title . " : " . $lastaction);
+  DisplayHeaderShortUserContent($title . ": " . $lastaction);
   ShowLeftColumn($MenuAction,VolMenu());
 
   echo "    <div id=\"col3\"> \n";
   echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
   echo "        <div class=\"info clearfix\">\n";
 
-  echo "          <h2> your Scope :", $AdminCommentsScope, "</h2>\n";
+  echo "          <h2>Your scope:", $AdminCommentsScope, "</h2>\n";
 
-  ShowList($TData);
+  if ($itemsperpage != 0) {
+	$params = new StdClass;
+	$params->strategy = new HalfPagePager('right');
+	if (empty($urlpiece)) {
+	  $params->page_url = 'admincomments.php?action=All';
+	} else {
+	  $params->page_url = 'admincomments.php?action=' . $urlpiece;
+	}
+	$params->page_url_marker = 'page';
+	$params->page_method = 'get';
+	$params->items = $count;
+	$params->active_page = $page;
+	$params->items_per_page = $itemsperpage;
+	$pager = new PagerWidget($params);
+	$pager->render();
+  }
 
+  if (!empty($TData)) {  
+    ShowList($TData, $page * $itemsperpage, $count);
+  }
+  
+  if (isset($pager)) {
+    $pager->render();
+  }
+  
   require_once "footer.php";
 } // end of DisplayAdminAccepter($Taccepted,$Tmailchecking,$Tpending)

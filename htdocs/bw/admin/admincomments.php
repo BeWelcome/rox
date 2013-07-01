@@ -26,7 +26,40 @@ require_once "lib/init.php";
 require_once "layout/error.php";
 require_once "layout/admincomments.php";
 
-function loaddata($Status, $RestrictToIdMember = "") {
+$comments_per_page = 25;
+
+function getcount($Status, $RestrictToIdMember = "") {
+
+	global $AccepterCommentsScope;
+	$TData = array ();
+
+	if (($AccepterCommentsScope == "\"All\"") or ($AccepterCommentsScope == "All") or ($AccepterCommentsScope == "'All'")) {
+		$InScope = "";
+	} else {
+	
+		$InScope = "and countries.id in (" . $AccepterCommentsScope . ")";
+	}
+
+	$str = "select count(*) as count from members as msend,members as mrece,comments where comments.IdFromMember=msend.id and comments.IdToMember=mrece.id";
+	if ($Status != "")
+		$str .= " and AdminAction='" . $Status . "'";
+	if ($RestrictToIdMember != "") {
+		$str .= $RestrictToIdMember;
+	}
+    // Filter by comment ID
+    $commentId = intval(Getparam('IdComment'));
+    if ($commentId > 0) {
+        $str .= " AND comments.id=" . $commentId;
+    }
+
+	$qry = sql_query($str);
+	$c = mysql_fetch_object($qry);
+
+	return ($c->count);
+
+} // end of load data
+
+function loaddata($Status, $RestrictToIdMember = "", $page = 0, $limit = 0) {
 
 	global $AccepterCommentsScope;
 	$TData = array ();
@@ -44,10 +77,18 @@ function loaddata($Status, $RestrictToIdMember = "") {
 	if ($RestrictToIdMember != "") {
 		$str .= $RestrictToIdMember;
 	}
+	
     // Filter by comment ID
     $commentId = intval(Getparam('IdComment'));
     if ($commentId > 0) {
         $str .= " AND comments.id=" . $commentId;
+    }
+
+	if ($limit != 0) {
+	    if ($page != 0) {
+		    $page = $page -1;
+		}
+		$str .= " LIMIT " . $page * $limit. ", " . $limit;
     }
 
 	$qry = sql_query($str);
@@ -84,6 +125,11 @@ if (GetStrParam("ToIdMember") != "") {
 }
 if (GetStrParam("FromIdMember") != "") {
 	$RestrictToIdMember = " and IdFromMember=" . IdMember(GetStrParam("FromIdMember"));
+}
+
+$page = GetParam('page', 0);
+if ($page == "") {
+	$page = 0;
 }
 
 $action = GetParam("action");
@@ -127,24 +173,22 @@ switch ($action) {
         break;
 
 	case "AdminAbuserMustCheck" :
-		$Message = " Set comment to to be check by Admin Comment";
+		$Message = "Set comment to be checked by Admin Comment";
 		$str = "Update comments set AdminAction='AdminAbuserMustCheck' where id=" . Getparam("IdComment");
 		sql_query($str);
 		LogStr(" Setting to <b>tobe check by Admin Abuser</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
-		;
 		break;
 	case "AdminCommentMustCheck" :
-		$Message = " Set comment to to be check by Admin Comment";
+		$Message = "Set comment to be checked by Admin Comment";
 		$str = "Update comments set AdminAction='AdminCommentMustCheck' where id=" . Getparam("IdComment");
 		sql_query($str);
 		LogStr(" Setting to <b>tobe check by Admin Comment</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
-		;
 		break;
 
 	case "del" :
 
 		if (!(HasRight("Comments", "DeleteComment"))) {
-		   $Message=" You haven't right for deleting comments" ;
+		   $Message="You don't have the right to delete comments" ;
 		   DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
 		   exit (0);
 		   break ;
@@ -152,7 +196,7 @@ switch ($action) {
 		$Message = " Delete comment #" . GetParam("IdComment");
 		$c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
 		if (!isset($c->id)) {
-		   $Message=" No such coment" ;
+		   $Message="No such coment" ;
 		   DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
 		   exit (0);
 		   break ;
@@ -165,11 +209,10 @@ switch ($action) {
 		break;
 
 	case "Checked" :
-		$Message = " Set comment to to be check by Admin Comment";
+		$Message = "Set comment to be checked by Admin Comment";
 		$str = "Update comments set AdminAction='Checked' where id=" . Getparam("IdComment");
 		sql_query($str);
 		LogStr(" Setting to <b>Checked</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
-		;
 		break;
 	case "editonecomment" :
 		$Message = " Editing one comment";
@@ -177,13 +220,15 @@ switch ($action) {
 		exit (0);
 		break;
 	case "AdminAbuser" :
-		$Message = " Comments needed to be checked by Admin Abuser";
-		DisplayAdminComments(loaddata("AdminAbuser", $RestrictToIdMember), $Message); // call the layout
+		$Message = "Abusive Comments";
+		$count = getcount("AdminAbuserMustCheck", $RestrictToIdMember);
+		DisplayAdminComments(loaddata("AdminAbuserMustCheck", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count, "AdminAbuserMustCheck"); // call the layout
 		exit (0);
 		break;
 	case "All" :
-		$Message = " All Comments ";
-		DisplayAdminComments(loaddata("", $RestrictToIdMember), $Message); // call the layout
+		$Message = "All Comments ";
+		$count = getcount("", $RestrictToIdMember);
+		DisplayAdminComments(loaddata("", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count); // call the layout
 		exit (0);
 		break;
 
@@ -192,6 +237,7 @@ switch ($action) {
 		break;
 }
 
-$Message = " Comments needed to be checked by AdminComment";
-DisplayAdminComments(loaddata("AdminCommentMustCheck", $RestrictToIdMember), $Message); // call the layout
+$Message = "Negative Comments";
+$count = getcount("AdminCommentMustCheck", $RestrictToIdMember);
+DisplayAdminComments(loaddata("AdminCommentMustCheck", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count, "AdminCommentMustCheckList"); // call the layout
 ?>

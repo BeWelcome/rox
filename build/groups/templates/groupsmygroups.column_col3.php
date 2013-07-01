@@ -13,9 +13,9 @@
                     echo '<div class="subcolumns">';
                 endif;
                 if ($ii % 3 != 2) :
-                    echo '<div class="c33l">' . "\n";
+                    echo '<div class="c33l">';
                 else :
-                    echo '<div class="c33r"> . "\n"';
+                    echo '<div class="c33r">';
                 endif; ?>
                 <div class="groupbox group_float_left">
                     <a href="groups/<?=$group_data->getPKValue() ?>">
@@ -34,13 +34,13 @@
                 </div> <!-- groupbox -->
 				</div> <!-- c33x -->
 			<?php if ($ii % 3 == 2) :
-				echo "</div> <!-- subcolumns -->" . "\n"; // subcolumns
+				echo "</div> <!-- subcolumns -->"; // subcolumns
 		    endif;
 			$ii++;
             endforeach ; 
 			// check if a subcolumns needs to be closed
 			if ($ii % 3 != 0) :
-				echo "</div> <!-- subcolumns -->" . "\n"; // subcolumns
+				echo "</div> <!-- subcolumns -->"; // subcolumns
 			endif;
             $this->pager->render();
         }

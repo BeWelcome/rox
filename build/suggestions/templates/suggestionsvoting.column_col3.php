@@ -32,7 +32,7 @@ if (empty($vars)) {
 } else {
 }
 ?>
-<div>
+<div class="no-checkedselector">
 <fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); ?></legend>
 <form method="post" id="suggestion-vote-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />

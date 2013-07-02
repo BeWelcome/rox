@@ -101,6 +101,7 @@ function ShowList($TData, $start = 0, $total = 0) {
     echo "                  </div> <!-- subcr -->\n";
     echo "                </div> <!-- c50r -->\n";
     echo "              </div> <!-- subcolumns -->\n";
+	echo " <h4>Last updated: " . $c->updated . "&nbsp;&nbsp;Created: " . $c->created . "</h4>\n";
     echo "              <h4>Where?</h4>\n";
     echo "              <p><textarea name=\"TextWhere\" cols=\"70\" rows=\"5\">", $c->TextWhere, "</textarea></p>\n";
     echo "              <h4>Comment:</h4>\n";

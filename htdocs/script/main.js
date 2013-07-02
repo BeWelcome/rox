@@ -1,5 +1,5 @@
 /*
-* main.js
+ * main.js
  *
  * Sets helper globals, creates BWRox namespace, creates bwrox singleton
  * and includes scripts based on current URL.
@@ -100,8 +100,7 @@ bwrox.selectScripts([
       "blog", 
       "trip", 
       "admin/massmail/enqueue", 
-      "activities/",
-      "suggestions/"]
+      "activities/"]
   },
   {
     file: "jquery-ui-1.10.2.custom.min.js",
@@ -319,11 +318,7 @@ bwrox.selectScripts([
     pages: ["searchmembers"]
   },
   {
-      file: "map/activities/activities_map.js",
+	  file: "map/activities/activities_map.js",
       pages: ["activities"]
-  },
-  {
-      file: "suggestionsiefix.js",
-      pages: ["suggestions"]
   }
 ]);

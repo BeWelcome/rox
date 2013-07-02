@@ -84,6 +84,8 @@ function loaddata($Status, $RestrictToIdMember = "", $page = 0, $limit = 0) {
         $str .= " AND comments.id=" . $commentId;
     }
 
+	$str .= " ORDER BY updated DESC";
+	
 	if ($limit != 0) {
 	    if ($page != 0) {
 		    $page = $page -1;

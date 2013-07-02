@@ -26,7 +26,7 @@ $R = MOD_right::get();
 $hasRight = $R->hasRight('Treasurer');
 $i18n = new MOD_i18n('date.php');
     echo "<h3>",$words->get("DonationPublicListSummary"),"</h3>";
-    echo "<table cellpadding=\"15\" cellspacing=\"15\" width=\"100%\">" ;
+    echo "<table cellpadding=\"15\" cellspacing=\"15\" style=\"width:100%\">" ;
     echo "<tr><th>",$words->get("DateDonation"),"</th><th>",$words->get("AmountDonation"),"</th><th>",$words->get("CommentDonation"),"</th><th>",$words->get("PlaceDonation"),"</th>" ;
     if ($hasRight) echo "<th>For treasurer eyes only</th>" ;
     echo "</tr>\n" ;

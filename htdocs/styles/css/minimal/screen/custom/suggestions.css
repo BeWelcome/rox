@@ -5,7 +5,9 @@
 @media all
 {
 .vote input[type="radio"].toggle {
-    display: none;
+    /*  display: none; */
+    position: absolute;
+    left: -99em;
 }
 
 .vote input[type="radio"]:checked + label, 

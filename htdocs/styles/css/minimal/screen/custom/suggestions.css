@@ -6,6 +6,7 @@
 {
 .vote input[type="radio"].toggle {
     display: none;
+    *display: inline; /* IE8 hack */
 }
 
 .vote input[type="radio"]:checked + label, .vote input[type="radio"] + label:hover {

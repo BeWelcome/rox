@@ -57,9 +57,9 @@ require_once "footer.helper.php";
      &copy; 2007-<?php echo date('Y') . ' ' . $words->get('CopyrightByBV', '<a href="http://www.bevolunteer.org/" target="_blank">', '</a>'); ?>
   </p>
   <p class="float_right">
-     Running on <a href="http://trac.bewelcome.org/">BW Rox</a> rev. <a href="http://gitorious.org/bewelcome/rox/commit/<?php echo $versionInfo; ?>"><?php echo $versionInfo; ?></a>
+     <?=$words->get('RunningOn') ?> <a href="http://trac.bewelcome.org/">BW Rox</a> rev. <a href="http://gitorious.org/bewelcome/rox/commit/<?php echo $versionInfo; ?>"><?php echo $versionInfo; ?></a>
      (<span title="<?php echo $deploymentDateTime; ?>"><?php echo $deploymentDate; ?></span>)
-     • <a href="<?php echo $bugreportLink; ?>">Report bug</a>
+     • <a href="<?php echo $bugreportLink; ?>"><?=$words->get('ReportBug') ?></a>
   </p>
   </div>
   </div> <!-- footer -->

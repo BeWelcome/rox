@@ -46,7 +46,7 @@ $cloudmade_conf = PVars::getObj('cloudmade');
                 <div class="subcl">
                   <!-- Content of left block -->
 
-                    <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
+                    <label for="create-location" style="width:15em"><?=$words->get('label_setlocation')?>:</label><br />
                     <input type="text" name="create-location" id="create-location" <?php
                     echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
                     ?>

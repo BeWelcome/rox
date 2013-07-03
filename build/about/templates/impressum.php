@@ -23,19 +23,15 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
-	
-<h3>Anbieterkennzeichung nach &sect;6 Teledienstgesetz (information provider identification according to &sect;6 Teledienstgesetz) :</h3>
-        <br />
-        <br />
+    
+<h3><?=$words->get('LegalNote'); ?></h3>
+    <p><?=$words->get('BeWelcomeOwner'); ?></p>
+    <p><strong><?=$words->get('Address'); ?>:</strong><br />
         BeVolunteer<br />
         c/o Jean-Yves Hegron<br />
         19 rue de Paris<br />
         35500 Vitre<br />
-        France<br />
-        <br />
-        <?php $words->get("SignupEmail") ?>: info@bevolunteer.org<br />
-		<p>
-		BeWelcome is the property of the BeVolunteer non profit organization (see <a href="http://www.bevolunteer.org/wiki/Main_Page">BeVolunteer Wiki</a>)
-		</p>
-    <p>The layout is based on <a href="http://www.yaml.de/">YAML</a> &copy; 2005-2006 by <a href="http://www.highresolution.info">Dirk Jesse</a>
+        France
     </p>
+    <p><strong><?=$words->get('SignupEmail'); ?>:</strong> info[at]bevolunteer.org</p>
+    <p><?=$words->get('YamlLayout'); ?></p>

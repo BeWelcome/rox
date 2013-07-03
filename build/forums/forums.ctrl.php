@@ -413,7 +413,7 @@ class ForumsController extends PAppController
         
         $page->content .= ob_get_contents();
          ob_end_clean();
-        //$page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
+        $page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
         $page->teaserBar .= $view->getAsString('teaser');
         $page->render();
     } // end of index
@@ -681,12 +681,8 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_VIEW_LANDING;
                     $showSticky = false;
                 } else if ($r == 'bwforum') {
-                    if ($this->_model->getTopMode() == Forums::CV_TOPMODE_CATEGORY) {
-                        $this->action = self::ACTION_VIEW_CATEGORY;
-		    } else {
-                        $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);
-                        $this->action = self::ACTION_VIEW_FORUM;
-                    }
+                    $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);
+                    $this->action = self::ACTION_VIEW_FORUM;
                 } else if ($r == 'lastposts') {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LASTPOSTS);
                     $this->action = self::ACTION_VIEW_LASTPOSTS;

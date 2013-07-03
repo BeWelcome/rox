@@ -120,7 +120,8 @@ class MemberPage extends PageWithActiveSkin
                 (isset($TCom[0])) ? array('commmentsadd', "members/$username/comments/edit", $ww->EditComments, 'commentsadd') : array('commmentsadd', "members/$username/comments/add", $ww->AddComments, 'commentsadd'),
                 array('relationsadd', "members/$username/relations/add", $ww->addRelation, 'relationsadd'),
                 array('notes', $mynotelinkname, $mynotewordsname, 'mynotes'),
-                array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),
+                // Verification link hidden in accordance with trac ticket 1992 until bugs which limit the validity of verification system are resolved:
+                /**array('verificationadd', "verification/$username", $ww->addVerification, 'verificationadd'),*/
                 array('space', '', '', 'space'),
                 array('profile', "members/$username", $ww->MemberPage),
                 array('comments', "members/$username/comments", $ww->ViewComments.' ('.$comments_count['all'].')'),

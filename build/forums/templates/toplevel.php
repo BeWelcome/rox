@@ -27,6 +27,7 @@ $User = APP_User::login();
 <div id="forum">
 
 <?php
+$noForumLegendBox = true;
 $ToogleTagCloud=true ;
 if ($User) $TagCloud=true ;
 if (!$User) {
@@ -52,17 +53,24 @@ if ($User && $ownGroupsButtonCallbackId) {
     <?php
     echo $this->words->flushBuffer();
 }
-?> 
+$uri = 'forums/';
+?>
 
 <!-- Now displays the recent post list -->	
+
 <?php
-    $uri = 'forums/';
     if ($threads = $boards->getThreads()) {
 ?>
   <div class="row"> 
     <h3><?php echo $this->words->getFormatted('ForumRecentPosts'); $boards->getTotalThreads(); ?>
     </h3>
   </div><!--  row -->
+
+  <div id="boardnewtopictop">
+      <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?>
+  </div>
+
+
 <?php
         require 'boardthreads.php';
 ?>

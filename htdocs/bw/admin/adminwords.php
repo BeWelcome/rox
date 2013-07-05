@@ -65,7 +65,8 @@ $ShortCode = $rr->ShortCode;
 $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
 $MenuAction  = "            <li><a href=\"http://www.bevolunteer.org/wiki/Adminwords\">Documentation</a></li>\n" ;
 $MenuAction  = "            <li><a href=\"".bwlink("admin/adminwords.php")."\">Admin word</a></li>\n";
-$MenuAction .= "            <li><a href=\"".bwlink("importantwords.php")."\">Important words</a></li>\n";
+//04072013 Tsjoek - temporarily? hidden, waiting for a better solution
+//$MenuAction .= "            <li><a href=\"".bwlink("importantwords.php")."\">Important words</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?ShowLanguageStatus=". $rr->id)."\"> All in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlymissing&ShowLanguageStatus=". $rr->id)."\"> Only missing in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Update needed in ". $rr->EnglishName. "</a></li>\n";
@@ -73,6 +74,10 @@ $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showsta
 // $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showmemcache")."\">Show memcache</a></li>\n"; -- removed as it has currently no function (requested in ticket 2041)
 
 
+/*
+ * Makes table with percentage of items that has been translated
+ * for 1 language or for all together
+ */
 function showPercentageAchieved($IdLanguage = null)
 {
     $rr = LoadRow("SELECT COUNT(*) AS cnt FROM words WHERE IdLanguage=0 AND donottranslate!='yes'");
@@ -83,9 +88,11 @@ function showPercentageAchieved($IdLanguage = null)
     }
     $str .= " GROUP BY words.IdLanguage ORDER BY cnt DESC";
     $qry=sql_query($str);
-    echo "<table>\n";
+    // height of table accustomed to space in action-menu
+    echo "<table height=100>\n";
     while ($rr=mysql_fetch_object($qry)) {
-        echo "<tr><td>", $rr->EnglishName, "</td><td>\n";
+        // vertical alignment=top to make 1 language situation look a bit better
+        echo "<tr valign=top><td>", $rr->EnglishName, "</td><td>\n";
         printf("%01.1f", ($rr->cnt / $cnt) * 100);
         echo  "% done</td>\n";
     }
@@ -135,12 +142,12 @@ function showmemcache($IdLanguage = null) {
 } // end of showmemcache
 
 
-
 DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
 ShowLeftColumn($MenuAction,VolMenu());
 
-UpdateVolunteer_Board("translator_board") ;
-DisplayVolunteer_Board("translator_board") ; 
+// 04072013 - Tsjoek - hide the volunteerboard on request translation team
+//UpdateVolunteer_Board("translator_board") ;
+//DisplayVolunteer_Board("translator_board") ; 
 
 $scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
@@ -570,7 +577,7 @@ echo "                  <td class=\"label\" >Description: </td>\n";
 echo "                  <td><em>", str_replace("\n","<br />",$rEnglish->Description), " </em></td>\n";
 echo "                </tr>\n";
 }
-echo "                  <td class=\"label\" >English source: </td>\n";
+echo "                  <tr><td class=\"label\" >English source: </td>\n";
 $tagold = array("&lt;", "&gt;");
 $tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
 echo "                  <td>", str_replace("\n","<br />",str_replace($tagold,$tagnew,htmlentities($rEnglish->Sentence, ENT_COMPAT | ENT_HTML401, 'UTF-8'))), " </td>\n";

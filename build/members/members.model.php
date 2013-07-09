@@ -1020,9 +1020,6 @@ ORDER BY
 		if ($vars["chat_SKYPE"]!="cryptedhidden") {
 			$m->chat_SKYPE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_SKYPE'])),"members.chat_SKYPE",$IdMember, $m->chat_SKYPE, $IdMember, $this->ShallICrypt($vars,"chat_SKYPE"));
 		}
-		if ($vars["chat_MSN"]!="cryptedhidden") {
-			$m->chat_MSN = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_MSN'])),"members.chat_MSN",$IdMember, $m->chat_MSN, $IdMember, $this->ShallICrypt($vars,"chat_MSN"));
-		}
 		if ($vars["chat_AOL"]!="cryptedhidden") {
 			$m->chat_AOL = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_AOL'])),"members.chat_AOL",$IdMember, $m->chat_AOL, $IdMember, $this->ShallICrypt($vars,"chat_AOL"));
 		}

@@ -24,22 +24,22 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 <div id="tour">
-    <h1><?php echo $words->get('tour_openness')?></h1>
+    <h3><?php echo $words->get('tour_openness')?></h3>
         
-    <h2><?php echo $words->getFormatted('tour_openness_title1')?></h2>
+    <h4><?php echo $words->getFormatted('tour_openness_title1')?></h4>
     <p><?php echo $words->getFormatted('tour_openness_text1')?></p>
     <div class="floatbox">
         <div class="float_left" style="padding:10px">
             <iframe width="400" height="300" src="http://www.youtube-nocookie.com/embed/aRS_wG4ZN4k?rel=0" frameborder="0" allowfullscreen></iframe>
         </div>
         <p><?php echo $words->getFormatted('tour_openness_videotext','<a href="http://en.wikipedia.org/wiki/unconference">','</a>')?></p>
-        <h2><?php echo $words->getFormatted('tour_openness_title2')?></h2>
+        <h4><?php echo $words->getFormatted('tour_openness_title2')?></h4>
         <p><?php echo $words->getFormatted('tour_openness_text2')?></p>
     </div>
     
-    <h2><?php echo $words->getFormatted('tour_openness_title3')?></h2>
+    <h4><?php echo $words->getFormatted('tour_openness_title3')?></h4>
     <p><?php echo $words->getFormatted('tour_openness_text3')?></p>
-    <h2><?php echo $words->getFormatted('tour_gosignup','<a href="signup">','</a>')?></h2>
+    <h4><?php echo $words->getFormatted('tour_gosignup','<a href="signup">','</a>')?></h4>
     <a class="bigbutton" href="signup" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('signup_now')?></span></a>
 </div>
         

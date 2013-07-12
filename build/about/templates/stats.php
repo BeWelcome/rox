@@ -79,6 +79,8 @@ drawCharts('messages', 'StatsMessagesAlltime', $words);
             <h3><?php echo $words->get("StatsMemberCountry") ?></h3>
         </div>
     </div>
+</div>
+<div class="subcolumns">
     <div class="c50l">
         <div class="subcl">
             <div><img class="statimage" src="/stats/loginpie.png" /></div>

@@ -28,65 +28,204 @@ Boston, MA  02111-1307, USA.
  */
 class SearchModel extends RoxModelBase
 {
-    public function getMembersForLocation($vars) {
-        $geonameid=$vars['search-geoname-id'];
-        if ($geonameid == 0) {
-            // Todo: Try to get id from search location
+    /*
+     * Depending on the number of results of a DB query returns
+     * a list of countries, admin units or places for a given
+     * location so that the user can choose from them.
+     */
+    private function getLocationsFromDatabase($location) {
+        $query = "
+            SELECT
+                g.*
+            FROM
+                geonames g, alternatenames a
+            WHERE
+                a.alternatename LIKE '" . $location . "'
+            UNION SELECT
+                g.*
+            FROM
+                geonames g
+            WHERE
+                g.name LIKE '" . $location . "'";
+        $querycnt = "SELECT COUNT(*) cnt FROM ( " . $query . " ) AS tmp";
+        error_log($querycnt);
+        $locCount = $this->singleLookup($querycnt);
+        $locations = $this->bulkLookup($query);
+        return $locations;
+    }
+
+    //------------------------------------------------------------------------------
+    // fage_value return a  the age value corresponding to date
+    private function fage_value($dd) {
+        $pieces = explode("-",$dd);
+        if(count($pieces) != 3) return 0;
+        list($year,$month,$day) = $pieces;
+        $year_diff = date("Y") - $year;
+        $month_diff = date("m") - $month;
+        $day_diff = date("d") - $day;
+        if ($month_diff < 0) $year_diff--;
+        elseif (($month_diff==0) && ($day_diff < 0)) $year_diff--;
+        return $year_diff;
+    } // end of fage_value
+
+    private function ellipsis($str, $len)
+    {
+        $length = strlen($str);
+        if($length <= $len) return $str;
+        return mb_substr($str, 0, $len, 'utf-8').'...';
+    }
+
+    /*
+     *
+     */
+    private function getMemberDetails($rawIds, $order = false) {
+        $ids = array();
+        foreach($rawIds as $rawId) {
+            $ids[] = $rawId->id;
         }
-        // now geoname id should be set
-        $query = "SELECT m.* FROM members m WHERE m.status = 'active' AND m.IdCity = " . $geonameid;
-        error_log($query);
-        $members = $this->bulkLookup( $query );
+        $str = "
+            SELECT
+                m.*,
+                date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
+                g.latitude AS Latitude,
+                g.longitude AS Longitude,
+                g.name AS CityName,
+                gc.name AS CountryName
+            FROM
+                members m,
+                addresses a,
+                geonames g,
+                geonamescountries gc
+            WHERE
+                m.id IN ('" . implode("', '", $ids) . "')
+                AND m.id = a.idmember
+                AND a.IdCity = g.geonameid
+                AND g.country = gc.country";
+
+
+        $rawMembers = $this->bulkLookup($str);
+        $members = array();
+
+        foreach($rawMembers as $member) {
+            $aboutMe = $this->ellipsis($this->FindTrad($member->ProfileSummary,true), 200);
+
+            $member->ProfileSummary = $aboutMe;
+
+            $commentQuery ="
+            SELECT
+                COUNT(*) as CommentCount
+            FROM
+                comments c,
+                members m
+            WHERE
+                c.IdToMember =" . $member->id . "
+                AND m.id = c.IdFromMember
+                AND m.status IN ('Active', 'ChoiceInactive')";
+            $commentData = $this->singleLookup($commentQuery);
+            $member->CommentCount=$commentData->CommentCount;
+
+            if ($member->HideBirthDate=="No") {
+                $member->Age =floor($this->fage_value($member->BirthDate));
+            } else {
+                $member->Age = "";
+            }
+            $members[] = $member;
+        }
+
         return $members;
     }
 
-    private function getBiggestCities($ids, $count = 3) {
+	/*
+	 * Returns either a list of members for a selected location or
+	 * a list of possible locations based on the input text
+	 */
+    public function getResultsForLocation($vars) {
+        $results = array();
+        $geonameid=$vars['search-geoname-id'];
+        if ($geonameid == 0) {
+            // User didn't select from the suggestion list or the sphinx daemon died
+            // get suggestions directly from the database
+            $results['type'] = 'suggestions';
+            $res = $this->getLocationsFromDatabase($vars['search-location']);
+        } else {
+            // we have a geoname id so we can just get all active members from that place
+            $results['type'] = 'members';
+            $query = "SELECT COUNT(*) cnt FROM members m WHERE m.status IN ('active', 'choiceinactive') AND m.IdCity = " . $geonameid;
+            $cnt = $this->singleLookup($query);
+            $results['count'] = $cnt->cnt;
+            $query = "
+                SELECT
+                    m.id
+                FROM
+                    members m
+                WHERE
+                    m.status IN ('active', 'choiceinactive') AND m.IdCity = " . $geonameid . "
+                LIMIT
+                    0, 5";
+            $memberIds = $this->bulkLookup( $query );
+            $results['values'] = $this->getMemberDetails($memberIds);
+        }
+        return $results;
+    }
+
+    private function getPlacesFromDatabase($ids) {
+        $time = time();
         $query = "
             SELECT
-                a.IdCity AS geonameid, COUNT(a.IdCity) AS cnt
+                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF (ad.idCity IS NULL, 0, COUNT(ad.IDCity)) cnt
             FROM
-                geonames g, addresses a
+                members m, geonames g
+            LEFT JOIN
+                geonamescountries c
+            ON
+                g.country = c.country
+            LEFT JOIN
+                geonamesadminunits a
+            ON
+                g.country = a.country AND
+                g.admin1 = a.admin1 AND
+                a.fcode = 'ADM1'
+            LEFT JOIN
+                addresses ad
+            ON
+                ad.IdCity = g.geonameId
             WHERE
-                g.geonameid in ('" . implode("','", $ids) . "') AND g.fclass='P' AND a.IdCity = g.geonameid
+                g.geonameid in ('" . implode("','", $ids) . "')
+                AND ad.IdMember = m.id AND m.Status IN ('active', 'choiceinactive')
             GROUP BY
-                a.IdCity
+                g.geonameid
             ORDER BY
-                cnt DESC
-            LIMIT 0, " . $count;
-        error_log($query);
+                cnt DESC";
+        $duration = time() - $time;
+        error_log($duration . ":" . $query);
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
         }
         $rows = array();
         while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
-            $rows[] = $row->geonameid;
+            $row->category = "places";
+            $rows[] = $row;
         }
         return $rows;
     }
 
     private function getFromDataBase($ids, $category = "") {
-        // get current UI language
-        $language = $_SESSION['lang'];
-        error_log($language);
         // get country names for found ids
         $query = "
-            SELECT DISTINCT
-                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country
+            SELECT
+                a.geonameid AS geonameid, a.name AS admin1, c.name AS country
             FROM
-                geonames g
+                geonames a
             LEFT JOIN
-                geonames c
+                geonamescountries c
             ON
-               c.country = g.country AND g.country = c.country
-               AND c.fcode = 'PCLI'
-           LEFT JOIN
-               geonames a
-           ON
-               g.country = a.country AND g.admin1 = a.admin1 AND a.fcode = 'ADM1'
-               AND g.geonameid <> a.geonameid
-           WHERE
-               g.geonameid in ('" . implode("','", $ids) . "')";
+                a.country = c.country
+            WHERE
+                a.geonameid in ('" . implode("','", $ids) . "')
+            ORDER BY
+                a.population DESC";
+        error_log($query);
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
@@ -99,33 +238,51 @@ class SearchModel extends RoxModelBase
         return $rows;
     }
 
-    public function suggestLocations($location, $type) {
-        $result = array();
-        $result["result"] = "failed";
+    private function sphinxSearch( $location, $places, $count = false ) {
         $sphinx = new MOD_sphinx();
         $sphinxClient = $sphinx->getSphinxGeoname();
-        $res = $sphinxClient->Query ($sphinxClient->EscapeString($location), 'welen_geoname' );
-        if ( $res===false )
-        {
+        if ($places) {
+            $sphinxClient->SetFilter("isplace", array( 1 ));
+        } else {
+            $sphinxClient->SetFilter("isadmin", array( 1 ));
+        }
+        if ($count) {
+            $sphinxClient->SetLimits(0, $count);
+        }
+        return $sphinxClient->Query($sphinxClient->EscapeString("^" . $location));
+    }
 
-            return $result;
-        }
-        if ($res['total'] == 0) {
-            return $result;
-        }
-        $ids = array();
-        if (is_array($res["matches"])) {
-            foreach ( $res["matches"] as $docinfo ) {
-                $ids[] = $docinfo['id'];
-            }
-        }
-        $biggestids = $this->getBiggestCities($ids);
+    public function suggestLocations($location, $type) {
+        $result = array();
         $locations = array();
-        $result["result"] = "success";
-        $biggest = $this->getFromDataBase($biggestids, "biggest");
-        $locations = array_merge($locations, $biggest);
-        $places = $this->getFromDataBase($ids, "places");
-        $locations = array_merge($locations, $places);
+        $result["result"] = "failed";
+        // First get places with BW members
+        $res = $this->sphinxSearch( $location, true );
+        error_log(print_r($res, true));
+        if ($res!==false && $res['total'] != 0) {
+            $ids = array();
+            if (is_array($res["matches"])) {
+                foreach ( $res["matches"] as $docinfo ) {
+                    $ids[] = $docinfo['id'];
+                }
+            }
+            $places = $this->getPlacesFromDataBase($ids);
+            $locations = array_merge($locations, $places);
+            $result["result"] = "success";
+        }
+        // Get administrative units
+        $res = $this->sphinxSearch( $location, false );
+        if ( $res !==false  && $res['total'] != 0) {
+            $ids = array();
+            if (is_array($res["matches"])) {
+                foreach ( $res["matches"] as $docinfo ) {
+                    $ids[] = $docinfo['id'];
+                }
+            }
+            $adminunits= $this->getFromDataBase($ids, "adminunits");
+            $locations = array_merge($locations, $adminunits);
+            $result["result"] = "success";
+        }
         $result["locations"] = $locations;
 
         return $result;

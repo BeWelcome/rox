@@ -31,8 +31,13 @@ class SearchController extends RoxControllerBase
      */
     public function searchMembersSimpleCallback(StdClass $args, ReadOnlyObject $action,
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) {
+        $vars = $args->post;
+        if (isset($vars['search-submit-advanced'])) {
+            // todo: Find a way to redirect to advanced with all the infos
+            return true;
+        }
         $mem_redirect->vars = $args->post;
-        $mem_redirect->members = $this->_model->getMembersForLocation($args->post);
+        $mem_redirect->results = $this->_model->getResultsForLocation($args->post);
         return true;
     }
 
@@ -69,6 +74,5 @@ class SearchController extends RoxControllerBase
         echo $javascript . "\n";
         exit;
     }
-
 }
 ?>

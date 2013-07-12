@@ -92,7 +92,7 @@ var bwrox = new BWRox;
 bwrox.selectScripts([
   {
     // JQuery has to be included before prototype to avoid conflicts
-    file: "jquery-1.8.2.min.js",
+    file: "jquery-1.9.1.js",
     pages: [
       "searchmembers",
       "search",

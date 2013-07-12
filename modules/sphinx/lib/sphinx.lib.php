@@ -67,12 +67,12 @@ class MOD_sphinx
         require_once(SCRIPT_BASE . 'lib/sphinx-2.0.8/sphinxapi.php');
         $sphinxClient = new SphinxClient();
         $sphinxClient->SetServer ( '127.0.0.1', 9312 );
-        $sphinxClient->SetConnectTimeout ( 1 );
+        $sphinxClient->SetConnectTimeout ( 20 );
         $sphinxClient->SetArrayResult ( true );
         $sphinxClient->SetWeights ( array ( 100, 1 ) );
         $sphinxClient->SetMatchMode ( SPH_MATCH_EXTENDED );
-        $sphinxClient->SetLimits(0, 200);
-        $sphinxClient->SetSortMode (SPH_SORT_EXPR, "@weight + LN(population+1)/5");
+        $sphinxClient->SetLimits(0, 10);
+        $sphinxClient->SetRankingMode( SPH_RANK_SPH04 );
         return $sphinxClient;
     }
 }

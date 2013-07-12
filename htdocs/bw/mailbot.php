@@ -240,7 +240,7 @@ while ($rr = mysql_fetch_object($qry)) {
             $UnsubscribeLink = '<a href="'.$baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.wwinlang('ForumUnSubscribe',$MemberIdLanguage).'</a>';
         }
     } elseif ($rr->TableSubscription == 'membersgroups') {
-        $UnsubscribeLink = "<hr /><br /><br />\n\n" . wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
+        $UnsubscribeLink = "<hr />" . wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
     }
 
     if ($rPost->IdGroup!=0) { // Get group name
@@ -293,20 +293,17 @@ while ($rr = mysql_fetch_object($qry)) {
     $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
 
     if ($rPost->IdGroup != 0) {
-        $text.='<tr><th align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th><th>' . $rGroupname->Name . '</th></tr>' ;
+        $text.='<tr><th align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a> [' . $rGroupname->Name . ']</th></tr>' ;
     } else {
-        $text.='<tr><th colspan="2"  align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
+        $text.='<tr><th align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
     }
-    $text.='<tr><td colspan="2">from: <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> ('.$rPost->cityname.', '.$rPost->countryname.')</td></tr>' ;
-    $text.='<tr><td valign="top">';
-
-    $text.=PictureInMail($rPost->Username) ;
-    $text .= '</td><td>'.$rPost->message.'</td></tr>';
+    $text.='<tr><td>'.wwinlang('PostFrom',$MemberIdLanguage).': <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> ('.$rPost->cityname.', '.$rPost->countryname.')</td></tr>' ;
+    $text.='<tr><td>'.$rPost->message.'</td></tr>';
     if ($UnsubscribeLink!="") {
-       $text .= '<tr><td colspan="2">'.$UnsubscribeLink.'</td></tr>';
+       $text .= '<tr><td>'.$UnsubscribeLink.'</td></tr>';
     } else {
         // This case should be for moderators only
-        $text .= '<tr><td colspan="2"> IdPost #'.$rr->IdPost.' action='.$NotificationType.'</td></tr>';
+        $text .= '<tr><td> IdPost #'.$rr->IdPost.' action='.$NotificationType.'</td></tr>';
     }
     $text .= '</table></body></html>';
     

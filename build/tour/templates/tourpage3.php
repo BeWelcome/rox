@@ -24,19 +24,19 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 <div id="tour">
-    <h1><?php echo $words->get('tour_share')?></h1>
+    <h3><?php echo $words->get('tour_share')?></h3>
 
-    <h2><?php echo $words->getFormatted('tour_share_title1')?></h2>
+    <h4><?php echo $words->getFormatted('tour_share_title1')?></h4>
     <div class="floatbox" style="margin-top: 20px">
         <img src="images/tour/share4_small.jpg" class="framed float_left" style="margin-bottom: 20px; margin-right: 20px;" alt="share" />
         <p><?php echo $words->getFormatted('tour_share_text1')?></p>
         
-        <h2><?php echo $words->getFormatted('tour_share_title2')?></h2>
+        <h4><?php echo $words->getFormatted('tour_share_title2')?></h4>
         <p><?php echo $words->getFormatted('tour_share_text2')?></p>
         
-        <h2><?php echo $words->getFormatted('tour_share_title3')?></h2>
+        <h4><?php echo $words->getFormatted('tour_share_title3')?></h4>
         <p><?php echo $words->getFormatted('tour_share_text3')?></p>
         
-        <h2><a class="bigbutton" href="tour/meet" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo;</span></a> <?php echo $words->getFormatted('tour_meet')?></h2>
+        <a class="bigbutton" href="tour/meet" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_meet')?></span></a>
     </div>
 </div>

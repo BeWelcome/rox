@@ -35,6 +35,13 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
               </colgroup>
               <tbody>
                 <tr align="left" >
+                  <td class="label"><?= $words->get('SignupUsername')?>:</td>
+                  <td colspan="3">
+                    <strong><?=$member->Username ?></strong>
+                    <div class="small"><?=$words->get('subline_username_edit')?></div>
+                  </td>
+                </tr>
+                </tr><tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
                   <td colspan="3" >
                     <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?>
@@ -358,7 +365,7 @@ HTML;
                 ?>
                 <tr align="left" >
                   <td class="label" ><?=$me["network"]?>
-                  <?="<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
+                  <?="<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$me["image"]."' height='14' title='".$me["network"]."' alt='".$me["network"]."' />"?>
                   </td>
                   <td>
                     <input type="text" size="25" name="<?=$val?>" value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>" />

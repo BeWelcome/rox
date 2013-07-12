@@ -25,7 +25,7 @@ class SetLocationPage extends RoxPageView
     protected function teaserHeadline()
     {
         $words = new MOD_words();
-        return $words->get('UpdateMandatoryPage');
+        return $words->get('SetLocation');
     }
 
     protected function leftSidebar()

@@ -24,26 +24,26 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
   <div id="tour">
-        <h1><?php echo $words->get('tourpage')?></h1>
+        <h3><?php echo $words->get('tourpage')?></h3>
         
-        <h2><?php echo $words->getFormatted('tourpage_title1')?></h2>
+        <h4><?php echo $words->getFormatted('tourpage_title1')?></h4>
         
         <div class="subcolumns">
           <div class="c50l">
             <div class="subcl">
-                <h2><?php echo $words->getFormatted('tour_link_share')?></h2>
+                <h4><?php echo $words->getFormatted('tour_link_share')?></h4>
                 <div class="floatbox">
                 <a href="tour/share"><img src="images/tour/arrow_share_small.png" class="float_right" alt="share" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text2')?></p>
                 </div>
                 
-                <h2><?php echo $words->getFormatted('tour_link_meet')?></h2>
+                <h4><?php echo $words->getFormatted('tour_link_meet')?></h4>
                 <div class="floatbox">
                 <a href="tour/meet"><img src="images/tour/arrow_world_small.png" class="float_right" alt="meet" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text3')?></p>
                 </div>
                 
-                <h2><?php echo $words->getFormatted('tour_link_trips')?></h2>
+                <h4><?php echo $words->getFormatted('tour_link_trips')?></h4>
                 <div class="floatbox">
                 <a href="tour/trips"><img src="images/tour/arrow_plan_small.png" class="float_right" alt="plan trips" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text4')?></p>
@@ -53,13 +53,13 @@ $words = new MOD_words();
 
           <div class="c50r">
             <div class="subcr">
-                <h2><?php echo $words->getFormatted('tour_link_maps')?></h2>
+                <h4><?php echo $words->getFormatted('tour_link_maps')?></h4>
                 <div class="floatbox">
                 <a href="tour/maps"><img src="images/tour/arrow_maps_small.png" class="float_right" alt="maps" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text5')?></p>
                 </div>
                 
-                <h2><?php echo $words->getFormatted('tour_link_openness')?></h2>
+                <h4><?php echo $words->getFormatted('tour_link_openness')?></h4>
                 <div class="floatbox">
                 <a href="tour/openness"><img src="images/tour/arrow_door_small.png" class="float_right" alt="open door" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text6')?></p>
@@ -68,6 +68,6 @@ $words = new MOD_words();
           </div> <!-- c50r -->
         </div> <!-- subcolumns index_row1 -->
         
-        <a class="bigbutton" href="tour/share" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_start')?> &raquo;</span></a>
+        <a class="bigbutton" href="tour/share" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_start')?></span></a>
     </div>
         

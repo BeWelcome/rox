@@ -180,3 +180,13 @@
     $this->addRoute('searchmembers_text', 'search/members/text', 'SearchController', 'searchMembersText');
     $this->addRoute('searchmembers_text_advanced', 'search/members/text/advanced', 'SearchController', 'searchMembersText');
     $this->addRoute('search_places', 'search/locations/:type:', 'SearchController', 'searchSuggestLocations');
+
+    // safety pages
+    $this->addRoute('safety', 'safety', 'safetyController', 'safety');
+    $this->addRoute('safety_basics', 'safety/basics', 'safetyController', 'safetyBasics');
+    $this->addRoute('safety_whattodo', 'safety/whattodo', 'safetyController', 'safetyWhatToDo');
+    $this->addRoute('safety_tips', 'safety/tips', 'safetyController', 'safetyTips');
+    $this->addRoute('safety_female', 'safety/female', 'safetyController', 'safetyFemale');
+    $this->addRoute('safety_faq', 'safety/faq', 'safetyController', 'safetyFaq');
+    $this->addRoute('safety_team', 'safety/team', 'safetyController', 'safetyTeam');
+    $this->addRoute('safety_contact', 'feedback?IdCategory=2', 'safetyController', 'safetyContact');

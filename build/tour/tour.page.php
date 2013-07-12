@@ -35,9 +35,32 @@ class TourPage extends PageWithActiveSkin
     
     protected function teaserContent()
     {
-        ?><div id="teaser" class="clearfix">
-        <h3><a href="tour">- The Tour -</a></h3>
-        </div><?php
+        $words = $this->getWords();
+        ?>
+        <div id="teaser" class="clearfix">
+        <h1><a href="tour"><?= $words->get("TheTour");?></a> 
+        <?php 
+        switch ($this->page_number) {
+            case '2':
+                echo "&raquo; " . $words->get("tour_link_openness");
+                break;
+            case '3':
+                echo "&raquo; " . $words->get("tour_link_share");
+                break;
+            case '4':
+                echo "&raquo; " . $words->get("tour_link_meet");
+                break;
+            case '5':
+                echo "&raquo; " . $words->get("tour_link_trips");
+                break;
+            case '6':
+                echo "&raquo; " . $words->get("tour_link_maps");
+                break;
+        } ?>       
+        </h1>
+        </div>
+        <?
+        
     }
     
     protected function column_col2()

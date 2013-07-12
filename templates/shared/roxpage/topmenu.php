@@ -33,6 +33,7 @@
               <li><a href="editmyprofile"><?=$words->get('EditMyProfile')?></a></li>
               <li><a href="mypreferences"><?=$words->get('MyPreferences')?></a></li>
               <li><a href="messages"><?=$words->get('MyMessages')?></a></li>
+              <li><a href="mynotes"><?=$words->get('ProfileMyNotes')?></a></li>
               <li><a href="groups/mygroups"><?=$words->get('MyGroups')?></a></li>
           </ul>
       </li>
@@ -57,6 +58,7 @@
                 <li><a href="wiki"><?=$words->get('Wiki')?></a></li>
             </ul>
         </li>
+        <li><a href="safety"><?=$words->get('Safety')?></a></li>
         <li><a href="about"><?=$words->get('GetAnswers')?></a>
             <ul>
                 <li><a href="faq"><?=$words->get('Faq')?></a></li>

@@ -7,9 +7,9 @@
                     <form action="groups/search" method="get">
                         <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
                     </form>
-                </div>        
+                </div>
             </div>
-            <div class="c50r">     
+            <div class="c50r">
                 <div class="groupbox float_left">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
@@ -28,7 +28,7 @@
             $created_order = (($this->result_order == "createdasc") ? 'createddesc' : 'createdasc');
             $category_order = (($this->result_order == "categoryasc") ? 'categorydesc' : 'categoryasc');
             ?>
-            <p><strong><?php echo $words->get('GroupsSearchOrdered');?>:</strong> <?php echo $words->get('GroupsSearchOrdered' . $this->result_order)?>&nbsp;&nbsp;&nbsp; 
+            <p><strong><?php echo $words->get('GroupsSearchOrdered');?>:</strong> <?php echo $words->get('GroupsSearchOrdered' . $this->result_order)?>&nbsp;&nbsp;&nbsp;
             <strong><?= $words->get('GroupsSearchOrder');?></strong>
             <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$act_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
             |
@@ -66,14 +66,27 @@ HTML;
                             <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
                             <li><?= $words->get('GroupsDateCreation');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime(strtotime($group_data->created))); ?></li>
                             <?php if ($group_data !== 0) {?>
-                            <li><?= $words->get('GroupsLastPost');?>: <?=date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost)); ?></li>
+                            <li><?php
+                                if ($group_data->latestPost) {
+                                    echo $words->get('GroupsLastPost') . ": " . date($words->getBuffered('DateHHMMShortFormat'), ServerToLocalDateTime($group_data->latestPost));
+                                } else {
+                                    echo $words->get('GroupsNoPostYet');
+                                }
+                            ?></li>
                             <?php } ?>
                         </ul>
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox  -->
-            <?php $ii++; ?>
             </div>
-            <?php endforeach ; ?>
+			<?php if ($ii % 3 == 2) :
+				echo "</div>"; // subcolumns
+		    endif;
+			$ii++;
+            endforeach ; 
+			// check if a subcolumns need to be closed
+			if ($ii % 3 != 0) :
+				echo "</div>"; // subcolumns
+			endif; ?>
 </div> <!-- floatbox -->
             <?php
             $this->pager->render();
@@ -86,4 +99,5 @@ HTML;
 HTML;
         endif;
         ?>
+</div> <!-- floatbox -->
 </div> <!-- groups -->

@@ -69,9 +69,9 @@ function _languageSelectorDropDown()
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel = '
-    <form id="language_select" action="a" method="post">
-    '.$words->get('Languages').':
-      <select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">'
+    <form id="language_select" action="a" method="post">';
+    // '.$words->get('Languages').':
+    $langsel.= '<select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">'
     ;
     $langsel .= _languageOptions($words) . '</select></form>';
     return $langsel;

@@ -462,10 +462,9 @@ WHERE IdMember = ".$this->id
 
     public function get_messengers() {
           $messengers = array(
-            array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png", "href" => ""),
+            array("network" => "GOOGLE", "nicename" => "Hangouts", "image" => "icon_ghangouts.png", "href" => ""),
             array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.png", "href" => ""),
             array("network" => "AOL", "nicename" => "AIM", "image" => "icon_aim.png", "href" => "aim:goim?"),
-            array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png", "href" => "msnim:chat?contact="),
             array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png", "href" => "ymsgr:sendIM?"),
             array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png", "href" => "skype:echo"),
             array("network" => "Others", "nicename" => "Other", "image" => "icon_other.png", "href" => "#")

@@ -113,8 +113,8 @@ SQL
             }
         }
 
-        if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
-            $text .= "- member requested an answer (".$EmailSender.")\r\n";
+        if (isset($vars["answernotneeded"]) && $vars["answernotneeded"]=="on") {
+            $text .= "- no reply needed" . "\r\n";
         }
 
         $text .= "\r\n";

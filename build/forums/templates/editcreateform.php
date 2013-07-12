@@ -102,9 +102,14 @@ if ($allow_title) { // New Topic
             <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
             <?php 
             $topic_titletrad = "";
-            if ( isset($vars['topic_title']) && isset($vars['IdTitle']) ) {
-                $topic_titletrad = $words->fTrad($vars['IdTitle']);
-            } 
+            if ( isset($vars['topic_title'])) {
+                if (isset($vars['IdTitle'])) {
+                    $topic_titletrad = $words->fTrad($vars['IdTitle']);
+                } 
+                else {
+                    $topic_titletrad = $vars['topic_title'];
+                }
+            }
             ?>
             <input type="text" style="width: 95%" name="topic_title" size="50" maxlength="200" id="topic_title" value="<?php echo $topic_titletrad; ?>" />
         </div> <!-- row -->

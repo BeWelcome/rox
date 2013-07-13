@@ -10,11 +10,11 @@
 */
 
 class Places extends PAppModel {
-	private $_dao;
-	
-	public function __construct() {
-		parent::__construct();
-	}
+    private $_dao;
+    
+    public function __construct() {
+        parent::__construct();
+    }
 
     /**
      * Get country details from database (name, Geoname ID, continent)

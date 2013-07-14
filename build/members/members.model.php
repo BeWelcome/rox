@@ -1,4 +1,4 @@
-<?php
+f<?php
 /*
 Copyright (c) 2007-2009 BeVolunteer
 
@@ -836,8 +836,16 @@ ORDER BY
     {
         $errors = array();
 
-        if (empty($vars['BirthDate']) || $this->validateBirthdate($vars['BirthDate']) === false) {
+        if (empty($vars['BirthDate'])) {
             $errors[] = 'SignupErrorInvalidBirthDate';
+        }
+        
+        $res=$this->validateBirthdate($vars['BirthDate']);
+        if ($res === self::DATE_INVALID) {
+            $errors[] = 'SignupErrorInvalidBirthDate';
+        }
+        if ($res === self::TOO_YOUNG) {
+            $errors[] = 'MembersErrorTooYoung';
         }
 
         if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','other'))) {
@@ -878,6 +886,17 @@ ORDER BY
      * @access public
      * @return string|bool
      */
+   
+       	public function ageValue($dd)
+	{
+		$iDate = strtotime($dd);
+		$age = (time() - $iDate) / (365 * 24 * 60 * 60);
+		return ($age);
+	}
+    
+    const TOO_YOUNG = -1;
+    const DATE_INVALID = -2;
+    
     public function validateBirthdate($birthdate)
     {
         $birthdate = str_replace(array('/','.'),'-',$birthdate);
@@ -902,18 +921,24 @@ ORDER BY
                 $day = $month;
                 $month = $temp;
             }
-            if (intval($year) < intval(date('Y', strtotime('-100 years'))) || intval($year) > intval(date('Y', strtotime('-17 years'))) || !checkdate($month, $day, $year))
-            {
-                return false;
+            
+            if (!checkdate($month, $day, $year)) {
+                return self::DATE_INVALID;
             }
-            else
-            {
-                return "{$year}-{$month}-{$day}";
+            
+            $iso_date =  $year . "-" . $month . "-" . $day; 
+            if (($this->ageValue($iso_date) < SignupModel::YOUNGEST_MEMBER))
+                {
+                return self::TOO_YOUNG;
+                }
+                else
+                {
+                return $iso_date;
             }
         }
         else
         {
-            return false;
+            return self::DATE_INVALID;
         }
     }
 

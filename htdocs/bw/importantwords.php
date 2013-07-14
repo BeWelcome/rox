@@ -22,6 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 require_once "lib/init.php";
+MustLogIn(); // Needs to be logged in
 
 require_once "layout/importantwords.php";
 DisplayImportantWords(); // call the layout to display important words

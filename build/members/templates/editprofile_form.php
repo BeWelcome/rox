@@ -118,11 +118,12 @@ HTML;
                                 {
                                     $selected = $vars['language_levels'][$jj] == $vars['languages_selected'][$ii]->Level? ' selected="selected"': '';
                                     echo <<<HTML
-                                    <option value='{$vars['language_levels'][$jj]}'{$selected}>{$words->get("LanguageLevel_" . $vars['language_levels'][$jj])}</option>
+                                    <option value='{$vars['language_levels'][$jj]}'{$selected}>{$words->getSilent("LanguageLevel_" . $vars['language_levels'][$jj])}</option>
 HTML;
                                 }
                             echo <<<HTML
                             </select>
+                            {$words->flushBuffer()}
                           </td>
                           <td><a href='#' class='remove_lang'>{$words->get('RemoveLanguage')}</a>
                           </td>
@@ -179,7 +180,8 @@ HTML;
                         </tr>
                       </tbody>
                       </table>
-                    <input type="button" id="langbutton" class="button" name="addlang" value="{$words->get('AddLanguage')}" />
+                    <input type="button" id="langbutton" class="button" name="addlang" value="{$words->getSilent('AddLanguage')}" />
+{$words->flushBuffer()}       
                   </td>
                 </tr>
               </tbody>
@@ -680,7 +682,7 @@ HTML;
             <tbody>
               <tr>
                 <td colspan="3"  align="center" >
-                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('Save Profile')?>" />
+                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->getSilent('Save Profile')?>" /> <?php echo $words->flushBuffer(); ?>
                 </td>
               </tr>
             </tbody>

@@ -24,10 +24,10 @@
 
         // check if member_ids contains a comment for the member browsing the
         // the profile
-        $comment_to_self = false;
+        $comment_to_self_exists = false;
         $visitor = $this->model->getLoggedInMember();
         if ($visitor && ($visitor->id <> $member->id) && (in_array($visitor->id, $member_ids))) {
-            $comment_to_self = true;
+            $comment_to_self_exists = true;
         }
 
         // now that we have all members we create one array with all comments
@@ -36,6 +36,11 @@
         $comments = array();
         foreach($member_ids as $id) {
             $comment = array();
+            $comment_to_self = false;
+            if ($visitor->id == $id) {
+                $comment_to_self = true;
+            }
+
             $ts_from = $ts_to = 0;
             if (isset($comments_from[$id])) {
                 $comment['from'] = $comments_from[$id];
@@ -45,9 +50,10 @@
                 $comment['to'] = $comments_to[$id];
                 $ts_to = $comments_to[$id]->unix_updated;
             }
+            
             // Add comments to list if it isn't for the current visitor
             // or if the visitor left a comment him-/herself
-            if (!$comment_to_self || (isset($comment['from']))) {
+            if (!$comment_to_self || isset($comment['from'])) {
                 $comment['timestamp'] = max($ts_from, $ts_to);
                 $comments[] = $comment;
             }
@@ -67,7 +73,7 @@
         // if current visitor didn't leave a comment add entry to the beginning 
         // of the comment list
 
-        if ($comment_to_self && (!isset($comments_from[$visitor->id]))) {
+        if ($comment_to_self_exists && (!isset($comments_from[$visitor->id]))) {
             $comment = array();
             $comment['to'] = $comments_to[$visitor->id];
             array_unshift($comments, $comment);

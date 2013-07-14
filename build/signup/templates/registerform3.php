@@ -130,12 +130,11 @@ $cloudmade_conf = PVars::getObj('cloudmade');
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
 
   <p>
-    <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
+    <input type="submit" value="<?php echo $words->get('Save Location'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     /><br /><br />
     <a href="signup/2" class="button back" title="<?php echo $words->get('LastStep'); ?>" ><span><?php echo $words->get('Back'); ?></span></a>
   </p>
-
 </form>
 </div> 
         

@@ -24,19 +24,19 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 ?>
 <div id="tour">
-    <h1><?php echo $words->get('tour_maps')?></h1>
+    <h3><?php echo $words->get('tour_maps')?></h3>
 
-    <h2><?php echo $words->getFormatted('tour_maps_title1')?></h2>
+    <h4><?php echo $words->getFormatted('tour_maps_title1')?></h4>
     <p><?php echo $words->getFormatted('tour_maps_text1')?></p>
 
     <div class="floatbox">
         <img src="images/tour/map2.png" class="float_left" alt="maps" />
-        <h2><?php echo $words->getFormatted('tour_maps_title2')?></h2>
+        <h4><?php echo $words->getFormatted('tour_maps_title2')?></h4>
         <p><?php echo $words->getFormatted('tour_maps_text2')?></p>
     </div>
 
-    <h2><?php echo $words->getFormatted('tour_maps_title3')?></h2>
+    <h4><?php echo $words->getFormatted('tour_maps_title3')?></h4>
     <p><?php echo $words->getFormatted('tour_maps_text3')?></p>
-    <h2><a class="bigbutton" href="tour/openness" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo;</span></a> <?php echo $words->getFormatted('tour_openness')?></h2>
+    <a class="bigbutton" href="tour/openness" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_openness')?></span></a>
 </div>
 

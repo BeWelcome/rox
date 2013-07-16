@@ -94,7 +94,7 @@
     ?>
     <?php
     if (isset($TCom->comQuality) && $TCom->comQuality == "Bad") {
-        echo $words->get("CantChangeNegative") . "<br />" . $words->get("CantChangeNegative_Explanation") . "<br />".  $words->get("ContactSafetyTeam");
+        echo "<h3>" . $words->get("CantChangeNegative") . "</h3>" . $words->get("CantChangeNegative_Explanation");
     } else {
     ?>
     <form method="post" name="addcomment" OnSubmit="return DoVerifySubmit('addcomment');">

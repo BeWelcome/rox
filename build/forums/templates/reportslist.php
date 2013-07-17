@@ -41,9 +41,9 @@ $iiMax = count($list) ; // This retrieve the number of polls
 
 <?php if ($list != false) { ?>
     <tr>
-        <th>status</th>
-        <th>author</th>
-        <th>title and text</th>
+        <th>Status</th>
+        <th>Author</th>
+        <th>Title and text</th>
         <th>Updated</th>
         <th>Action</th>
     </tr>

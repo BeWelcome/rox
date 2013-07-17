@@ -50,14 +50,14 @@ if (isset($DataPost->Thread->title))
         <input type="hidden" name="IdPost"  value="<?=$DataPost->Post->id;?>"/>
 <?
         echo "<tr><td>" ;
-        if (isset($DataPost->UserNameStarter)) echo "thread started by member ".$DataPost->UserNameStarter;
+        if (isset($DataPost->UserNameStarter)) echo "Thread started by ".$DataPost->UserNameStarter;
         echo "</td>" ;
-        echo "<td>post  by member <a href=\"bw/member.php?cid=".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td>";
-        echo "<td><a href=\"forums/s",$DataPost->Thread->id,"/#",$DataPost->Post->id,"\">go to post</a></td>" ;
+        echo "<td>Post by <a href=\"members/".$DataPost->Post->UserNamePoster,"\">".$DataPost->Post->UserNamePoster."</a></td>";
+        echo "<td><a href=\"forums/s",$DataPost->Thread->id,"/#post",$DataPost->Post->id,"\">go to post</a></td>" ;
         echo "</tr>" ;
         echo "<tr><td colspan=\"3\">",$DataPost->Thread->Title[0]->Sentence,"</td></tr>" ;
         echo "<tr><td colspan=\"3\" >",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
-        echo "<tr><td colspan=\"3\"><textarea name='PostComment' class=\"long\" rows=8></textarea>",$DataPost->Post->Content[0]->Sentence,"</td></tr>" ;
+        echo "<tr><td colspan=\"3\"><textarea name='PostComment' class=\"long\" rows=8></textarea></td></tr>" ;
 		
         echo "<tr><td colspan=\"1\">" ;
         echo "Status <select Name='Status'>" ;
@@ -67,7 +67,7 @@ if (isset($DataPost->Thread->title))
         echo ">Open</option>" ;
         echo "<option value='OnDiscussion'" ;
         if ($Status=='OnDiscussion') echo " selected" ;
-        echo ">OnDiscussion</option>" ;
+        echo ">InDiscussion</option>" ;
         echo "<option value='Closed'" ;
         if ($Status=='Closed') echo " selected" ;
         echo ">Closed</option>" ;
@@ -103,7 +103,7 @@ if (isset($DataPost->Thread->title))
         echo "</tr>" ;
         
 
-echo "<th valign=center align=center colspan=3><input type=\"submit\" name=\"submit\" value=\"add to report\"></th>" ;
+echo "<th valign=center align=center colspan=3><input type=\"submit\" name=\"submit\" value=\"Add to report\"></th>" ;
 if (isset($DataPost->Report->PostComment))  {
     echo "<tr><td colspan=\"3\" bgcolor=\"#FFFFFF\">",$DataPost->Report->PostComment,"</td></tr>" ;
     $PostComment=$DataPost->Report->PostComment ;

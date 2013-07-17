@@ -1464,7 +1464,7 @@ WHERE `threadid` = '%d' ",
 		$OldReport = $s->fetch(PDB::FETCH_OBJ) ;
 
 
-		$UsernameAddTime='at '.date("d-m-Y").' '.date("H:i").'(server time) <a href="'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a> wrote:<br/>' ;
+		$UsernameAddTime='On '.date("d-m-Y").' '.date("H:i"). '(server time) <a href="members/'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a> wrote:<br/>' ;
 		if (($this->BW_Right->HasRight("ForumModerator")) and (isset($OldReport->IdReporter))) {
 			$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
 			if (isset($OldReport->PostComment)) $PostComment=$PostComment."<hr />\n".$OldReport->PostComment ;

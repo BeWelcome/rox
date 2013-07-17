@@ -613,7 +613,7 @@ HTML;
                     ?>
                   </td>
                   <td>
-                    <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations" onclick="return confirm('<?php echo $words->get('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?></a>
+                    <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations" onclick="return confirm('<?php echo $words->getSilent('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?><?php echo $words->flushBuffer(); ?></a>
                   </td>
                 </tr>
                 <?php

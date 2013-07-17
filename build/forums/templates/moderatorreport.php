@@ -28,11 +28,11 @@ JeanYves notes : This is what is used to manage the report to moderators
 $words = new MOD_words();
 
 ?>
-<h2>Report to moderator</h2>
+<h3>Report to moderator</h3>
 
 <?php
 if (!empty($DataPost->Error)) {
-    echo "<h2 style=\"color:#ff0033;\" >",$DataPost->Error,"</h2>" ;
+    echo "<h3 style=\"color:#ff0033;\" >",$DataPost->Error,"</h3>" ;
 }
 
 $request = PRequest::get()->request;
@@ -67,7 +67,7 @@ if (isset($DataPost->Thread->title))
         echo ">Open</option>" ;
         echo "<option value='OnDiscussion'" ;
         if ($Status=='OnDiscussion') echo " selected" ;
-        echo ">InDiscussion</option>" ;
+        echo ">In discussion</option>" ;
         echo "<option value='Closed'" ;
         if ($Status=='Closed') echo " selected" ;
         echo ">Closed</option>" ;

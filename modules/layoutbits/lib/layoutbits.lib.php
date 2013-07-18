@@ -686,7 +686,7 @@ class MOD_layoutbits
      *
      * @return string Truncated version of string
      */
-    function truncate_words($text, $limit, $ellipsis = ' ...') {
+    public static function truncate_words($text, $limit, $ellipsis = ' ...') {
         $words = preg_split("/[\n\r\t ]+/", $text, $limit + 1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_OFFSET_CAPTURE);
         if (count($words) > $limit) {
             end($words); //ignore last element since it contains the rest of the string

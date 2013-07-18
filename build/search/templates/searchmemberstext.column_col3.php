@@ -2,6 +2,9 @@
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['search-location'] = '';
+    $vars['search-can-host'] = 1;
+    $vars['search-number-items'] = 10;
+    $vars['search-sort-order'] = SearchModel::ORDER_NAME_DESC;
 }
 $members = array ();
 $locations = array ();
@@ -60,7 +63,15 @@ $layoutbits = new MOD_layoutbits();
 <label class="labela"><input type="image" src="images/icons/expand.png" id="search-advanced-image" name="search-advanced-image" align="top"/> <?php echo $words->getFormatted('SearchMembersAdvanced'); ?></label>
 </div>
 <div class="floatbox">
-<div class="float_left"><label for="search-items">Show </label><select name="search-items"><option>5</option><option>10</option><option>20</option></select><span> items per page. </span><label for="search-order">Order by </label><select name="search-items"><option>name desc</option><option>name asc</option><option>age asc</option></select></div>
+<div class="float_left"><?php
+    $numberOfItems = array( '5', '10', '20', '50', '100'); ?><label for="search-number-items">Show </label><select name="search-number-items"><?php
+        foreach ($numberOfItems as $number) :
+            echo '<option value="' . $number . '"';
+            if ($vars['search-number-items']) :
+                echo ' selected="selected"';
+            endif;
+            echo ' >' . $number . '</option>';
+        endforeach;?></select><span> items per page. </span><label for="search-order">Order by </label><select name="search-items"><option>name desc</option><option>name asc</option><option>age asc</option></select></div>
 
 			<div class="float_right">
 				<input
@@ -111,8 +122,8 @@ foreach($members as $member) {
     $profileSummary = str_replace("\\r\\n", "<br/>", $member->ProfileSummary);
     $occupation = str_replace("\\r\\n", "<br/>", $member->Occupation);
     echo '<tr class="' . (($ii % 2) ? 'blank' : 'highlight') . '">';
-    echo '<td style="padding-right:1ex; align:left; vertical-align: top;">';
-    echo '<div style="float: left;  padding-right: 1em; text-align: center"><div style="clear:both">' . $layoutbits->PIC_75_75($member->Username, 'class="framed"') . '</div>';
+    echo '<td style="width: 95px; padding-right:1ex; text-align:center; vertical-align: top; word-wrap: break-word;">';
+    echo '<div padding-right: 1em; text-align: center"><div>' . $layoutbits->PIC_75_75($member->Username, 'class="framed"') . '</div>';
     echo '<div><a href="members/' . $member->Username . '" target="_blank">'.$member->Username.'</a></div>';
     echo '</div>';
     echo '</td><td style="padding-right:1ex;vertical-align: top;">';
@@ -120,18 +131,18 @@ foreach($members as $member) {
     echo '<strong><a href="members/' . $member->Username . '" target="_blank">'.(empty($member->Name) ? $member->Username : $member->Name).'</a></strong>';
     echo '<br>' . $words->get('SearchYearsOld', $member->Age);
     if (!$member->HideGender) {
-        echo ", " . $layoutbits->getGenderTranslated($TM->Gender, $TM->HideGender, false);
+        echo ", " . $layoutbits->getGenderTranslated($member->Gender, $member->HideGender, false);
     }
     echo '<br>';
-    // echo $member->CityName . ", " . $member->CountryName .'<br>';
+    echo $member->CityName . ", " . $member->CountryName .'<br>';
     echo '<div style="display: block; padding-top:0.5em";>';
     echo $member->Occupation . '</div></div>';
     echo '</div>';
     echo '</td>';
     echo '<td style="width: 50%; padding-right:1ex; align:left; vertical-align: top;">' .$profileSummary.'</td>';
-    echo '<td style="width: 20%; align:left; vertical-align: top;"><div class="red" style="display: block;"><div style="float: left; padding-right:1ex;">'.$accomodationIcon . '</div><div>Max. guests: <strong>' . $member->MaxGuest . '</strong><br><strong>'.
-      // $member->NbComment .
-      '0</strong> comments</div></div>';
+    echo '<td style="width: 20%; align:left; vertical-align: top;"><div class="red" style="display: block;"><div style="float: left; padding-right:1ex;">'.$accomodationIcon . '</div><div>Max. guests: <strong>' . $member->MaxGuest . '</strong><br><strong>' .
+      $member->CommentCount .
+      '</strong> comments</div></div>';
     echo '<div class="clearfix"></div>' . $offerIcons . $restrictionIcons . '<br>';
     echo 'Member since: <strong>' . date('d M y', strtotime($member->created)) . '</strong><br>';
     $lastlogin = (($member->LastLogin == '0000-00-00') ? 'Never' : $layoutbits->ago(strtotime($member->LastLogin)));

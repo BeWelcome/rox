@@ -28,6 +28,19 @@ Boston, MA  02111-1307, USA.
  */
 class SearchModel extends RoxModelBase
 {
+    const ORDER_NAME_DESC = 1;
+    const ORDER_NAME_ASC = 2;
+    const ORDER_AGE_DESC = 3;
+    const ORDER_AGE_ASC = 4;
+    const ORDER_ACCOM_DESC = 5;
+    const ORDER_ACCOM_ASC = 6;
+    const ORDER_LOGIN_DESC = 7;
+    const ORDER_LOGIN_ASC = 8;
+    const ORDER_MEMBERSHIP_DESC = 7;
+    const ORDER_MEMBERSHIP_ASC = 8;
+    const ORDER_COMMENTS_DESC = 7;
+    const ORDER_COMMENTS_ASC = 8;
+
     /*
      * Depending on the number of results of a DB query returns
      * a list of countries, admin units or places for a given
@@ -68,13 +81,98 @@ class SearchModel extends RoxModelBase
         return $year_diff;
     } // end of fage_value
 
-    private function ellipsis($str, $len)
-    {
-        $length = strlen($str);
-        if($length <= $len) return $str;
-        return mb_substr($str, 0, $len, 'utf-8').'...';
+    private function ReplaceWithBR($ss,$ReplaceWith=false) {
+        if (!$ReplaceWith) return ($ss);
+        return(str_replace("\n","<br>",$ss));
     }
 
+    private function FindTrad($IdTrad,$ReplaceWithBr=false) {
+
+        $AllowedTags = "<b><i><br>";
+        if ($IdTrad == "")
+            return ("");
+
+        if (isset($_SESSION['IdLanguage'])) {
+             $IdLanguage=$_SESSION['IdLanguage'] ;
+        }
+        else {
+             $IdLanguage=0 ; // by default laguange 0
+        }
+        // Try default language
+        $query = $this->dao->query(
+            "
+SELECT SQL_CACHE
+    Sentence
+FROM
+    memberstrads
+WHERE
+    IdTrad = $IdTrad AND
+    IdLanguage= $IdLanguage
+            "
+        );
+        $row = $query->fetch(PDB::FETCH_OBJ);
+        if (isset ($row->Sentence)) {
+            if (isset ($row->Sentence) == "") {
+                //LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
+            } else {
+               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+            }
+        }
+        // Try default eng
+        $query = $this->dao->query(
+           "
+SELECT SQL_CACHE
+    Sentence
+FROM
+    memberstrads
+WHERE
+    IdTrad = $IdTrad  AND
+    IdLanguage = 0
+            "
+        );
+        $row = $query->fetch(PDB::FETCH_OBJ);
+        if (isset ($row->Sentence)) {
+            if (isset ($row->Sentence) == "") {
+                //LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
+            } else {
+               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+            }
+        }
+        // Try first language available
+        $query = $this->dao->query(
+            "
+SELECT SQL_CACHE
+    Sentence
+FROM
+    memberstrads
+WHERE
+    IdTrad = $IdTrad
+ORDER BY id ASC
+LIMIT 1
+            "
+        );
+        $row = $query->fetch(PDB::FETCH_OBJ);
+        if (isset ($row->Sentence)) {
+            if (isset ($row->Sentence) == "") {
+                //LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
+            } else {
+               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+            }
+        }
+        return ("");
+    } // end of FindTrad
+
+    private function getNamePart($namePartId) {
+        $namePart = "";
+        if ($namePartId == 0) {
+            return $namePart;
+        }
+        if (MOD_crypt::IsCrypted($namePartId) == 1) {
+        } else {
+            $namePart = MOD_crypt::get_crypted($namePartId, "");
+        }
+        return $namePart;
+    }
     /*
      *
      */
@@ -85,7 +183,22 @@ class SearchModel extends RoxModelBase
         }
         $str = "
             SELECT
-                m.*,
+                m.id,
+                m.Username,
+                m.created,
+                m.BirthDate,
+                m.HideBirthDate,
+                m.Accomodation,
+                m.TypicOffer,
+                m.Restrictions,
+                m.ProfileSummary,
+                m.Occupation,
+                m.Gender,
+                m.HideGender,
+                m.MaxGuest,
+                m.FirstName,
+                m.SecondName,
+                m.LastName,
                 date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
                 g.latitude AS Latitude,
                 g.longitude AS Longitude,
@@ -107,8 +220,11 @@ class SearchModel extends RoxModelBase
         $members = array();
 
         foreach($rawMembers as $member) {
-            $aboutMe = $this->ellipsis($this->FindTrad($member->ProfileSummary,true), 200);
-
+            $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary,true), 70);
+            $FirstName = $this->getNamePart($member->FirstName);
+            $SecondName = $this->getNamePart($member->SecondName);
+            $LastName = $this->getNamePart($member->LastName);
+            $member->Name = trim($FirstName . " " . $SecondName . " " . $LastName);
             $member->ProfileSummary = $aboutMe;
 
             $commentQuery ="
@@ -129,6 +245,17 @@ class SearchModel extends RoxModelBase
             } else {
                 $member->Age = "";
             }
+            if ($member->HideGender != "Yes") {
+                $member->Gender = MOD_layoutbits::getGenderTranslated($member->Gender, false, false);
+            }
+            $member->Occupation = MOD_layoutbits::truncate_words($this->FindTrad($member->Occupation), 10);
+
+            $commentCount = 'SELECT COUNT(*) AS cnt FROM comments WHERE IdToMember=' . $member->id;
+
+            $qryData = $this->dao->query($commentCount);
+            $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
+            $member->CommentCount = $rData->cnt;
+
             $members[] = $member;
         }
 
@@ -140,19 +267,22 @@ class SearchModel extends RoxModelBase
 	 * a list of possible locations based on the input text
 	 */
     public function getResultsForLocation($vars) {
+        error_log(print_r($vars, true));
         $results = array();
         $geonameid=$vars['search-geoname-id'];
         if ($geonameid == 0) {
             // User didn't select from the suggestion list or the sphinx daemon died
             // get suggestions directly from the database
             $results['type'] = 'suggestions';
-            $res = $this->getLocationsFromDatabase($vars['search-location']);
+            $results['values'] = array('boring', 'sucks');
+            // $res = $this->getLocationsFromDatabase($vars['search-location']);
         } else {
             // we have a geoname id so we can just get all active members from that place
             $results['type'] = 'members';
             $query = "SELECT COUNT(*) cnt FROM members m WHERE m.status IN ('active', 'choiceinactive') AND m.IdCity = " . $geonameid;
             $cnt = $this->singleLookup($query);
             $results['count'] = $cnt->cnt;
+            $limit = $this->dao->escape($vars['search-number-items']);
             $query = "
                 SELECT
                     m.id
@@ -161,7 +291,7 @@ class SearchModel extends RoxModelBase
                 WHERE
                     m.status IN ('active', 'choiceinactive') AND m.IdCity = " . $geonameid . "
                 LIMIT
-                    0, 5";
+                    0, " . $limit;
             $memberIds = $this->bulkLookup( $query );
             $results['values'] = $this->getMemberDetails($memberIds);
         }
@@ -169,12 +299,11 @@ class SearchModel extends RoxModelBase
     }
 
     private function getPlacesFromDatabase($ids) {
-        $time = time();
         $query = "
             SELECT
-                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF (ad.idCity IS NULL, 0, COUNT(ad.IDCity)) cnt
+                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF(m.id IS NULL, 0, COUNT(g.geonameid)) AS cnt
             FROM
-                members m, geonames g
+                geonames g
             LEFT JOIN
                 geonamescountries c
             ON
@@ -182,22 +311,21 @@ class SearchModel extends RoxModelBase
             LEFT JOIN
                 geonamesadminunits a
             ON
-                g.country = a.country AND
-                g.admin1 = a.admin1 AND
-                a.fcode = 'ADM1'
+                g.country = a.country
+                AND g.admin1 = a.admin1
+                AND a.fclass = 'A'
+                AND a.fcode = 'ADM1'
             LEFT JOIN
-                addresses ad
+                members m
             ON
-                ad.IdCity = g.geonameId
+                g.geonameid = m.IdCity
+                AND m.Status IN ('Active', 'OutOfRemind')
             WHERE
                 g.geonameid in ('" . implode("','", $ids) . "')
-                AND ad.IdMember = m.id AND m.Status IN ('active', 'choiceinactive')
             GROUP BY
                 g.geonameid
             ORDER BY
-                cnt DESC";
-        $duration = time() - $time;
-        error_log($duration . ":" . $query);
+                cnt DESC, country, admin1";
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
@@ -214,7 +342,7 @@ class SearchModel extends RoxModelBase
         // get country names for found ids
         $query = "
             SELECT
-                a.geonameid AS geonameid, a.name AS admin1, c.name AS country
+                a.geonameid AS geonameid, a.name AS admin1, c.name AS country, 0 AS cnt
             FROM
                 geonames a
             LEFT JOIN
@@ -258,7 +386,6 @@ class SearchModel extends RoxModelBase
         $result["result"] = "failed";
         // First get places with BW members
         $res = $this->sphinxSearch( $location, true );
-        error_log(print_r($res, true));
         if ($res!==false && $res['total'] != 0) {
             $ids = array();
             if (is_array($res["matches"])) {

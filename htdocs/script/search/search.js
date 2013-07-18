@@ -44,7 +44,7 @@ jQuery(function() {
           response( 
           jQuery.map( data.locations, function( item ) {
             return {
-              label: (item.name ? item.name : "")+ (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "")  + (item.cnt ? " (" + item.cnt +")" : ""),
+              label: (item.name ? item.name : "")+ (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "")  + (item.cnt != 0 ? " (" + item.cnt +")" : ""),
               labelnocount: (item.name ? item.name : "")+ (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
               value: item.geonameid,
               category: item.category

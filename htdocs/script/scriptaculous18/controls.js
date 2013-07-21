@@ -872,7 +872,7 @@ Object.extend(Ajax.InPlaceEditor, {
   DefaultOptions: {
     ajaxOptions: { },
     autoRows: 3,                                // Use when multi-line w/ rows == 1
-    cancelControl: 'link',                      // 'link'|'button'|false
+    cancelControl: 'button',                      // 'link'|'button'|false
     cancelText: 'cancel',
     clickToEditText: 'Click to edit',
     externalControl: null,                      // id|elt

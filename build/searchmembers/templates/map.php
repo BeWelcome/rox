@@ -46,7 +46,7 @@ Boston, MA  02111-1307, USA.
     echo $words->flushBuffer();
     ?>
     </div>
-<input onclick="searchByMap(0);" type="button" id="mapBoundariesSearchButton" class="button" value="<?php echo $words->getFormatted('FindPeopleSubmitMapSearch'); ?>" >
+<input onclick="searchByMap(0);" type="button" id="mapBoundariesSearchButton" class="button" value="<?php echo $words->getSilent('FindPeopleSubmitMapSearch'); ?>" ><?=$words->flushBuffer()?>
    <?php } ?>
 
 <?php echo $words->flushBuffer();

@@ -5,7 +5,7 @@
                 <div class="groupbox float_left">
                     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
                     <form action="groups/search" method="get">
-                        <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
+                        <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->getSilent('GroupsSearchSubmit'); ?>" /><?=$words->flushBuffer()?><br />
                     </form>
                 </div>
             </div>

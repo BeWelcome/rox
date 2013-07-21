@@ -72,7 +72,7 @@
                             echo $catoption . "\n";
                         } 
                         ?>
-            </select><?php $words->flushBuffer(); ?>
+            </select><?php echo $words->flushBuffer(); ?>
             
         </div>
         <div class="type-text">

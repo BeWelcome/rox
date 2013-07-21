@@ -13,7 +13,7 @@ class GalleryPage extends GalleryBasePage
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/sets">'.$words->get("Photosets").'</a>';
+        return '<a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/sets">'.$words->get("Photosets").'</a>';
     }
     
     protected function getTopmenuActiveItem()
@@ -33,7 +33,7 @@ class GalleryPage extends GalleryBasePage
         $gallery = $this->gallery;
         $d = $this->d;
         $num_rows = $this->num_rows;
-        echo '<h2><a href="gallery/show/sets/'.$gallery->id.'">'.htmlspecialchars($gallery->title).'</a></h2>';
+        echo '<h3><a href="gallery/show/sets/'.$gallery->id.'">'.htmlspecialchars($gallery->title).'</a></h3>';
         if ($this->myself && $this->upload) {
             // Display the upload form
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';

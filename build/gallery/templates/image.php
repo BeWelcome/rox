@@ -22,7 +22,7 @@ if (!isset($vars['errors']))
 }
 
 echo <<<HTML
-<h2 id="g-title">{$d->title}</h2>
+<h3 id="g-title">{$d->title}</h3>
 HTML;
 
     if (!$d->description == 0)

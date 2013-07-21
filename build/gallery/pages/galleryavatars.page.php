@@ -17,7 +17,7 @@ class GalleryAvatarsPage extends GalleryBasePage
     }
 
     protected function teaserHeadline() {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryAvatars').'</a>';
+        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &raquo; '. $this->getWords()->getBuffered('GalleryAvatars').'</a>';
     }
 }
 

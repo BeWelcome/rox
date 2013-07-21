@@ -30,8 +30,10 @@ class GalleryUserPage extends GalleryBasePage
         if ($this->myself) {
             $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
             $tt[]= array("upload", 'gallery/upload', $ww->GalleryUpload, 'upload');
+            echo $words->flushBuffer();
         }
         return($tt) ;
+        
     }
     
     protected function submenu() {
@@ -56,12 +58,12 @@ class GalleryUserPage extends GalleryBasePage
 
     protected function breadcrumbs() {
         $words = $this->words;
-        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a>';
+        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a></h1>';
     }
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<h1 class="userpage">'.MOD_layoutbits::PIC_50_50($this->member->Username,'',$style='float_left').' <a href="members/'.$this->member->Username.'">'.$this->member->Username.'</a></h1>';
+        return '<h3 class="userpage">'.MOD_layoutbits::PIC_50_50($this->member->Username,'',$style='float_left').' <a href="members/'.$this->member->Username.'">'.$this->member->Username.'</a></h3>';
     }
     
     protected function teaser() {

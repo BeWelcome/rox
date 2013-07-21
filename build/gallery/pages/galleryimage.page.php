@@ -24,7 +24,7 @@ class GalleryImagePage extends GalleryBasePage
 
     protected function teaserHeadline() {
         $title = ($this->image) ? $this->image->title : '';
-        return '<h2 id="g-title">'.$title.'</h2>';
+        return '<h3 id="g-title">'.$title.'</h3>';
     }
 
     public function leftSidebar() {

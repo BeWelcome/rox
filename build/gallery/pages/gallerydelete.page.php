@@ -17,7 +17,7 @@ class GalleryDeletePage extends GallerySetPage
 
     protected function breadcrumbs()
     {
-        return '<a href="gallery">'.parent::breadcrumbs() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryDelete');
+        return '<h1><a href="gallery">'.$this->getWords()->getBuffered('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$this->getWords()->getBuffered("Photosets").'</a> &raquo; ' . $this->getWords()->getBuffered('GalleryDelete') . '</h1>';
     }
 
     protected function column_col3() {

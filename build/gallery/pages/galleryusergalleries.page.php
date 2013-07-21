@@ -22,7 +22,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
 
     protected function breadcrumbs() {
         $words = $this->words;
-        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a>';
+        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a></h1>';
     }
     
     public function leftSidebar()

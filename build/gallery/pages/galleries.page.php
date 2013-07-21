@@ -18,7 +18,7 @@ class GalleryGalleriesPage extends GalleryBasePage
 
     protected function teaserHeadline()
     {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->words->getBuffered("Photosets");
+        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &raquo; '. $this->words->getBuffered("Photosets");
     }
     
     public function leftSidebar()
@@ -31,7 +31,7 @@ class GalleryGalleriesPage extends GalleryBasePage
         $galleries = $this->galleries;
         $words = new MOD_words();
         ?>
-        <h2><?php echo $words->getFormatted('Photosets'); ?></h2>
+        <h3><?php echo $words->getFormatted('Photosets'); ?></h3>
         <?php
         require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }

@@ -33,11 +33,11 @@ class GalleryBasePage extends PageWithActiveSkin
     }
 
     protected function breadcrumbs() {
-        return '<a href="gallery">'.$this->getWords()->getBuffered('Gallery').'</a>';
+        return '<h1><a href="gallery">'.$this->getWords()->getBuffered('Gallery').'</a>' . $this->getWords()->flushBuffer() . '</h1>'; 
     }
 
     protected function teaserHeadline() {
-        echo $this->getWords()->getBuffered('Gallery');
+        echo $this->getWords()->getBuffered('Gallery') . $this->getWords()->flushBuffer();
     }
     
     protected function getTopmenuActiveItem()

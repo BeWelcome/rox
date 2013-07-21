@@ -15,7 +15,7 @@ if ($canEdit  || ($GalleryRight > 1)) {
 
     <a href="gallery/show/image/<?=$d->id?>" id="g-title-edit" class="button" style="display:none;"><?= $words->getSilent("EditTitle")?></a>
     <a href="gallery/show/image/<?=$d->id?>" id="g-text-edit" class="button" style="display:none;"><?= $words->getSilent("EditDescription")?></a>
-    <a style="cursor:pointer" href="gallery/show/image/<?=$d->id?>/delete" class="button" onclick="return confirm('<?= $words->getFormatted("confirmdeletepicture")?>')"><?= $words->getSilent("GalleryDeleteImage")?></a>
+    <a style="cursor:pointer" href="gallery/show/image/<?=$d->id?>/delete" class="button" onclick="return confirm('<?= $words->getSilent("confirmdeletepicture")?>')"><?= $words->getSilent("GalleryDeleteImage")?></a>
     <?=$words->flushBuffer()?>
 
 <form method="post" action="gallery/show/image/<?=$d->id?>/edit" class="def-form">

@@ -32,10 +32,10 @@ if (!isset($vars['errors'])) {
       ?>
       </p>
       <div class="floatbox">
-           <?=MOD_layoutbits::PIC_30_30($this->member->Username,'',$style='float_left')?>
+           <?=MOD_layoutbits::PIC_30_30($this->member->Username,'',$style='float_left')?><?php echo $words->flushBuffer(); ?>
            <p class="small"><?=$num_rows?> <?=$words->get('pictures')?><br />
            <?=$words->get('by')?> <a href="members/<?=$this->member->Username?>"><?=$this->member->Username?></a> 
-           <a href="gallery/show/user/<?=$this->member->Username?>" title="<?=$words->get('galleryUserOthers',$this->member->Username)?>">
+           <a href="gallery/show/user/<?=$this->member->Username?>" title="<?=$words->getSilent('galleryUserOthers',$this->member->Username)?>"><?php echo $words->flushBuffer(); ?>
            <img src="styles/css/minimal/images/iconsfam/pictures.png" style="float: none">
            </a>
            </p>

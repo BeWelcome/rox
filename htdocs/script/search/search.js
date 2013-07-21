@@ -39,7 +39,7 @@ jQuery(function() {
       },
       success: function( data ) {
         if (data.result != "success") {
-        	data.locations = [{ name: "No matches found or search service not running", category: "Information" }];
+        	data.locations = [{ name: noMatchesFound, category: "Information", cnt: 0 }];
         }
           response( 
           jQuery.map( data.locations, function( item ) {

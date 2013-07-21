@@ -36,11 +36,11 @@ class FullPagePager extends RoxWidget
     {
         if ($page == $this->active_page)
         {
-            return "<li class='current'>{$page}</li>\n";
+            return '<span class="page">' . $page . '</span>';
         }
         else
         {
-            return "<li>{$this->pager->outputLink($page, $page, $this->getWords()->getSilent('PagerGoToPage', $page))}</li>\n";
+            return '<input type="submit" class="page" name="' . $this->pager->outputLink($page, $page) . '" value="' . $page . '" />';
         }
     }
 
@@ -52,22 +52,22 @@ class FullPagePager extends RoxWidget
      */
     public function getHtml()
     {
-        $return = "<div class='fullpager'><ul>";
+        $return = "<div class='fullpager'>";
         if ($this->active_page > 1)
         {
             if ($this->pages > self::block_links)
             {
-                $return .= "<li>{$this->pager->outputLink(1, '&lt;&lt;', $this->getWords()->getSilent('PagerToFirstPage'))}</li>\n";
+                $return .= '<input type="submit" class="page" name="' . $this->pager->outputLink(1, '&laquo;') . '" value="&laquo;" />';
             }
-            $return .= "<li>{$this->pager->outputLink($this->active_page - 1, '&lt;',$this->getWords()->getSilent('PagerToFirstPage'))}</li>\n";
+            $return .= '<input type="submit" class="page" name="' . $this->pager->outputLink($this->active_page - 1, '&lsaquo;') . '" value="&lsaquo;" />';
         }
         else
         {
             if ($this->pages > self::block_links)
             {
-                $return .= "<li><a class=\"off\">&lt;&lt;</a></li>\n";
+                $return .= '<input type="submit" class="page" disabled="disabled" value="&laquo;" />';
             }
-            $return .= "<li><a class=\"off\">&lt;</a></li>\n";
+            $return .= '<input type="submit" class="page" disabled="disabled" value="&lsaquo;" />';
         }
         for ($i = 1; $i <= self::block_links && $i <= $this->pages; $i++)
         {
@@ -84,7 +84,7 @@ class FullPagePager extends RoxWidget
 
             if (($this->active_page - 1) > (self::block_links + 1))
             {
-                $return .= "<li>...</li>\n";
+                $return .= '<span class="page">...</span>';
             }
 
             if ($this->active_page >= self::block_links && $this->active_page <= $end_range)
@@ -101,7 +101,7 @@ class FullPagePager extends RoxWidget
 
             if ($end_range > ($this->active_page + 1) && $end_range > (self::block_links + 1))
             {
-                $return .= "<li>...</li>\n";
+                $return .= '<span class="page">...</span>';
             }
 
             while ($end_range <= $this->pages)
@@ -113,18 +113,18 @@ class FullPagePager extends RoxWidget
 
         if ($this->active_page < $this->pages)
         {
-            $return .= "<li>{$this->pager->outputLink($this->active_page + 1, '&gt;', $this->getWords()->getSilent('PagerToNextPage'))}</li>\n";
+            $return .= '<input type="submit" class="page" name="' . $this->pager->outputLink($this->active_page + 1, '&rsaquo;') . '" value="&rsaquo;">';
             if ($this->pages > self::block_links)
             {
-                $return .= "<li>{$this->pager->outputLink($this->pages, '&gt;&gt;', $this->getWords()->getSilent('PagerToLastPage'))}</li>\n";
+                $return .= '<input type="submit" class="page" name="' . $this->pager->outputLink($this->pages, '&raquo;') . '" value="&raquo;" />';
             }
         }
         else
         {
-            $return .= "<li><a class=\"off\">&gt;</a></li>\n";
+            $return .= '<input type="submit" class="page" disabled="disabled" value="&rsaquo;" />';
             if ($this->pages > self::block_links)
             {
-                $return .= "<li><a class=\"off\">&gt;&gt;</a></li>\n";
+                $return .= '<input type="submit" class="page" disabled="disabled" value="&raquo;" />';
             }
         }
         $return .= "</ul></div>";

@@ -28,18 +28,24 @@ Boston, MA  02111-1307, USA.
  */
 class SearchModel extends RoxModelBase
 {
-    const ORDER_NAME_DESC = 1;
-    const ORDER_NAME_ASC = 2;
-    const ORDER_AGE_DESC = 3;
-    const ORDER_AGE_ASC = 4;
-    const ORDER_ACCOM_DESC = 5;
-    const ORDER_ACCOM_ASC = 6;
-    const ORDER_LOGIN_DESC = 7;
-    const ORDER_LOGIN_ASC = 8;
-    const ORDER_MEMBERSHIP_DESC = 7;
-    const ORDER_MEMBERSHIP_ASC = 8;
-    const ORDER_COMMENTS_DESC = 7;
-    const ORDER_COMMENTS_ASC = 8;
+    // const ORDER_NOSORT = 0; // Not needed as this would be the same as for MEMBERSHIP
+    const ORDER_NAME = 2;
+    const ORDER_AGE = 4;
+    const ORDER_ACCOM = 6;
+    const ORDER_LOGIN = 8;
+    const ORDER_MEMBERSHIP = 10;
+    const ORDER_COMMENTS = 12;
+
+    private static $ORDERBY = array(
+        self::ORDER_NAME => array('WordCode' => 'SearchOrderName', 'Column' => 'm.Username'),
+        self::ORDER_ACCOM => array('WordCode' => 'SearchOrderAccommodation', 'Column' => 'm.Accomodation'),
+        self::ORDER_LOGIN => array('WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'),
+        self::ORDER_MEMBERSHIP => array('WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'),
+        self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'));
+
+    public static function getOrderByArray() {
+        return self::$ORDERBY;
+    }
 
     /*
      * Depending on the number of results of a DB query returns
@@ -49,20 +55,37 @@ class SearchModel extends RoxModelBase
     private function getLocationsFromDatabase($location) {
         $query = "
             SELECT
-                g.*
-            FROM
-                geonames g, alternatenames a
-            WHERE
-                a.alternatename LIKE '" . $location . "'
-            UNION SELECT
-                g.*
+                g.geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF (m.IdCity IS NULL, 0, m.membersCount) AS cnt
             FROM
                 geonames g
+            LEFT JOIN
+                geonamesadminunits a
+            ON
+                g.country = a.country
+                AND g.admin1 = a.admin1
+                AND a.fcode = 'ADM1'
+            LEFT JOIN
+                geonamescountries c
+            ON
+                g.country = c.country
+            LEFT JOIN (
+                SELECT
+                    COUNT(*) AS membersCount, IdCity
+                FROM
+                    members
+                WHERE
+                    Status IN ('Active', 'OutOfRemind')
+                    AND MaxGuest >= 1
+                GROUP BY
+                    IdCity
+                ) m
+            ON
+                m.IdCity = g.geonameid
             WHERE
-                g.name LIKE '" . $location . "'";
-        $querycnt = "SELECT COUNT(*) cnt FROM ( " . $query . " ) AS tmp";
-        error_log($querycnt);
-        $locCount = $this->singleLookup($querycnt);
+                g.name LIKE '" . $location . "'
+            ORDER BY
+                cnt DESC";
+        error_log($query);
         $locations = $this->bulkLookup($query);
         return $locations;
     }
@@ -173,16 +196,41 @@ LIMIT 1
         }
         return $namePart;
     }
+
+    private function getOrderBy($orderBy) {
+        $orderType = $orderBy - ($orderBy % 2);
+        $order = self::$ORDERBY[$orderType]['Column'];
+        if ($orderBy % 2 == 1) {
+            $order .= " DESC";
+        } else {
+            $order .= " ASC";
+        }
+        switch ($orderType) {
+        	case self::ORDER_ACCOM:
+        	case self::ORDER_COMMENTS:
+        	    $order .= ', HasProfileSummary DESC, HasProfilePhoto DESC';
+        	    break;
+        }
+        return $order;
+    }
+
     /*
      *
      */
-    private function getMemberDetails($rawIds, $order = false) {
-        $ids = array();
-        foreach($rawIds as $rawId) {
-            $ids[] = $rawId->id;
+    private function getMemberDetails(&$vars) {
+        // First get current page and limits
+        $limit = $vars['search-number-items'];
+        $pageno = 1;
+        foreach(array_keys($vars) as $key) {
+            if (strstr($key, 'search-page-') !== false) {
+                $pageno = str_replace('search-page-', '', $key);
+            }
         }
+        $start = ($pageno -1) * $limit;
+        $vars['search-page-current'] = $pageno;
+        // *FROM* will be replaced later on (don't change)
         $str = "
-            SELECT
+            SELECT SQL_CALC_FOUND_ROWS
                 m.id,
                 m.Username,
                 m.created,
@@ -200,23 +248,67 @@ LIMIT 1
                 m.SecondName,
                 m.LastName,
                 date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
+                IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
+                IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
                 g.latitude AS Latitude,
                 g.longitude AS Longitude,
                 g.name AS CityName,
-                gc.name AS CountryName
-            FROM
-                members m,
+                gc.name AS CountryName,
+                IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
+            *FROM*
                 addresses a,
                 geonames g,
-                geonamescountries gc
+                geonamescountries gc,
+                members m
+            LEFT JOIN (
+                SELECT
+                    COUNT(*) As commentCount, IdToMember
+                FROM
+                    comments, members m2
+                WHERE
+                    IdToMember = m2.id
+                    AND m2.Status IN ('Active', 'OutOfRemind')
+                GROUP BY
+                    IdToMember ) c
+            ON
+                c.IdToMember = m.id
+            LEFT JOIN (
+                SELECT
+                    COUNT(*) As photoCount, IdMember
+                FROM
+                    membersPhotos
+                GROUP BY
+                    IdMember) mp
+            ON
+                mp.IdMember = m.id
             WHERE
-                m.id IN ('" . implode("', '", $ids) . "')
+                m.MaxGuest >= " . $vars['search-can-host'] . "
+                AND m.IdCity = " . $vars['search-geoname-id'] . "
+                AND m.status IN ('Active', 'OutOfRemind')
                 AND m.id = a.idmember
                 AND a.IdCity = g.geonameid
-                AND g.country = gc.country";
+                AND g.country = gc.country
+            ORDER BY
+                " . $this->getOrderBy($vars['search-sort-order']) . "
+            LIMIT
+                " . $start . ", " . $limit;
 
+        // Make sure only public profiles are found if no one's logged in
+        if (!$this->getLoggedInMember()) {
+            $str = str_replace('*FROM*', 'FROM memberspublicprofiles mpp,', $str);
+            $str = str_replace('WHERE', 'WHERE m.id = mpp.id AND ', $str);
+        }
+        $str = str_replace('*FROM*', 'FROM', $str);
 
+        error_log($str);
         $rawMembers = $this->bulkLookup($str);
+
+        $count = $this->dao->query("SELECT FOUND_ROWS() as cnt");
+        $row = $count->fetch(PDB::FETCH_OBJ);
+        $vars['count'] = $row->cnt;
+
+        $loggedInMember = $this->getLoggedInMember();
+
         $members = array();
 
         foreach($rawMembers as $member) {
@@ -227,35 +319,31 @@ LIMIT 1
             $member->Name = trim($FirstName . " " . $SecondName . " " . $LastName);
             $member->ProfileSummary = $aboutMe;
 
-            $commentQuery ="
-            SELECT
-                COUNT(*) as CommentCount
-            FROM
-                comments c,
-                members m
-            WHERE
-                c.IdToMember =" . $member->id . "
-                AND m.id = c.IdFromMember
-                AND m.status IN ('Active', 'ChoiceInactive')";
-            $commentData = $this->singleLookup($commentQuery);
-            $member->CommentCount=$commentData->CommentCount;
-
             if ($member->HideBirthDate=="No") {
                 $member->Age =floor($this->fage_value($member->BirthDate));
             } else {
                 $member->Age = "";
             }
             if ($member->HideGender != "Yes") {
-                $member->Gender = MOD_layoutbits::getGenderTranslated($member->Gender, false, false);
+                $member->GenderString = MOD_layoutbits::getGenderTranslated($member->Gender, false, false);
             }
             $member->Occupation = MOD_layoutbits::truncate_words($this->FindTrad($member->Occupation), 10);
 
-            $commentCount = 'SELECT COUNT(*) AS cnt FROM comments WHERE IdToMember=' . $member->id;
-
-            $qryData = $this->dao->query($commentCount);
-            $rData = $qryData->fetch(PDB::FETCH_OBJ) ;
-            $member->CommentCount = $rData->cnt;
-
+            if ($loggedInMember) {
+                // get message count for found member with current member
+                $query = "
+                    SELECT
+                        COUNT(*) cnt
+                    FROM
+                        `messages`
+                    WHERE
+                        (IdSender = " . $member->id . " OR IdReceiver = " . $member->id . ")
+                        AND (IdSender = " . $loggedInMember->id . " OR IdReceiver = " . $loggedInMember->id . ")";
+                $messageCount = $this->singleLookup($query);
+                $member->MessageCount = $messageCount->cnt;
+            } else {
+                $member->MessageCount = 0;
+            }
             $members[] = $member;
         }
 
@@ -266,7 +354,7 @@ LIMIT 1
 	 * Returns either a list of members for a selected location or
 	 * a list of possible locations based on the input text
 	 */
-    public function getResultsForLocation($vars) {
+    public function getResultsForLocation(&$vars) {
         error_log(print_r($vars, true));
         $results = array();
         $geonameid=$vars['search-geoname-id'];
@@ -279,21 +367,8 @@ LIMIT 1
         } else {
             // we have a geoname id so we can just get all active members from that place
             $results['type'] = 'members';
-            $query = "SELECT COUNT(*) cnt FROM members m WHERE m.status IN ('active', 'choiceinactive') AND m.IdCity = " . $geonameid;
-            $cnt = $this->singleLookup($query);
-            $results['count'] = $cnt->cnt;
-            $limit = $this->dao->escape($vars['search-number-items']);
-            $query = "
-                SELECT
-                    m.id
-                FROM
-                    members m
-                WHERE
-                    m.status IN ('active', 'choiceinactive') AND m.IdCity = " . $geonameid . "
-                LIMIT
-                    0, " . $limit;
-            $memberIds = $this->bulkLookup( $query );
-            $results['values'] = $this->getMemberDetails($memberIds);
+            $results['values'] = $this->getMemberDetails($vars);
+            $results['count'] = $vars['count'];
         }
         return $results;
     }
@@ -320,19 +395,21 @@ LIMIT 1
             ON
                 g.geonameid = m.IdCity
                 AND m.Status IN ('Active', 'OutOfRemind')
+                AND m.MaxGuest >= 1
             WHERE
                 g.geonameid in ('" . implode("','", $ids) . "')
             GROUP BY
                 g.geonameid
             ORDER BY
                 cnt DESC, country, admin1";
+        error_log($query);
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
         }
         $rows = array();
         while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
-            $row->category = "places";
+            $row->category = $this->getWords()->getSilent('SearchPlaces');
             $rows[] = $row;
         }
         return $rows;
@@ -356,11 +433,11 @@ LIMIT 1
         error_log($query);
         $sql = $this->dao->query($query);
         if (!$sql) {
-            return false;
+            return array();
         }
         $rows = array();
         while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
-            $row->category = $category;
+            $row->category = $this->getWords()->getSilent('SearchPlaces');
             $rows[] = $row;
         }
         return $rows;
@@ -383,32 +460,38 @@ LIMIT 1
     public function suggestLocations($location, $type) {
         $result = array();
         $locations = array();
-        $result["result"] = "failed";
+        $result['result'] = 'failed';
         // First get places with BW members
         $res = $this->sphinxSearch( $location, true );
         if ($res!==false && $res['total'] != 0) {
             $ids = array();
-            if (is_array($res["matches"])) {
-                foreach ( $res["matches"] as $docinfo ) {
+            if (is_array($res['matches'])) {
+                foreach ( $res['matches'] as $docinfo ) {
                     $ids[] = $docinfo['id'];
                 }
             }
             $places = $this->getPlacesFromDataBase($ids);
             $locations = array_merge($locations, $places);
-            $result["result"] = "success";
+            $result['result'] = 'success';
         }
         // Get administrative units
         $res = $this->sphinxSearch( $location, false );
         if ( $res !==false  && $res['total'] != 0) {
             $ids = array();
-            if (is_array($res["matches"])) {
-                foreach ( $res["matches"] as $docinfo ) {
+            if (is_array($res['matches'])) {
+                foreach ( $res['matches'] as $docinfo ) {
                     $ids[] = $docinfo['id'];
                 }
             }
-            $adminunits= $this->getFromDataBase($ids, "adminunits");
+            $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
             $locations = array_merge($locations, $adminunits);
             $result["result"] = "success";
+        }
+        // If nothing was found assume that search daemon isn't running and
+        // try to get something from the database
+        $locations = $this->getLocationsFromDatabase($location);
+        if (!empty($locations)) {
+            $result['result'] = 'success';
         }
         $result["locations"] = $locations;
 

@@ -1,10 +1,14 @@
-<?php
+<script type="text/Javascript">
+var noMatchesFound = "<?php echo $words->getSilent('SearchNoMatchesFound');?>";
+</script><?php
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['search-location'] = '';
     $vars['search-can-host'] = 1;
+    $vars['search-geoname-id'] = 0;
     $vars['search-number-items'] = 10;
-    $vars['search-sort-order'] = SearchModel::ORDER_NAME_DESC;
+    $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
+    $vars['search-page-current'] = 1;
 }
 $members = array ();
 $locations = array ();
@@ -25,6 +29,13 @@ $Accommodation['anytime'] = $words->getBuffered('Accomodation_anytime');
 $Accommodation['dependonrequest'] = $words->getBuffered('Accomodation_dependonrequest');
 $Accommodation['neverask'] = $words->getBuffered('Accomodation_neverask');
 
+$orderBy = array();
+$orderArray = SearchModel::getOrderByArray();
+foreach($orderArray AS $key => $order) :
+    $orderBy[$key] = $words->getSilent($orderArray[$key]['WordCode'] . 'Asc');
+    $orderBy[$key + 1] = $words->getSilent($orderArray[$key]['WordCode']. 'Desc');
+endforeach;
+
 $layoutbits = new MOD_layoutbits();
 
 // The whole page is in one form to be able to fill the fields with the correct content even
@@ -35,11 +46,11 @@ $layoutbits = new MOD_layoutbits();
 		style="padding-bottom: 0.5em; width: 100%;">
         <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersSimpleCallback');?>
         <div class="floatbox bottom" style="width:100%">
-			<div class="float_left">
+			<div class="float_left" style="width: auto">
 				<label for='search-location'><span class="small"><?=$words->get('SearchEnterLocation');?></span></label><br />
 				<div>
 					<input type="hidden" name="search-geoname-id"
-						id="search-geoname-id" value="0" /> <input name="search-location"
+						id="search-geoname-id" value="<?php echo $vars['search-geoname-id']; ?>" /> <input style="width:50em" name="search-location"
 						id="search-location"
 						value="<?php echo $vars['search-location']; ?>" /> <img
 						id="search-loading" style="visibility: hidden"
@@ -53,39 +64,42 @@ $layoutbits = new MOD_layoutbits();
 				<span class="small"><?=$words->get('CanHost');?></span><br /> <select
 					id="search-can-host" name="search-can-host" style="width: 5em;"><?php
     for($ii = 1; $ii < 30; $ii++) :
-        echo "<option value='{$ii}'>{$ii}</option>";
-    endfor
-    ;
+        echo '<option value="' . $ii . '"';
+        if ($ii == $vars['search-can-host']) {
+            echo ' selected="selected"';
+        }
+        echo '>' . $ii . '</option>';
+    endfor;
     ?></select>
+			</div><div class="float_right">
+				<br /><input
+					id="search-submit-button" name="search-submit-button"
+					class="button" type="submit"
+					value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>" />
 			</div>
+
 		</div>
-<div class="floatbox" clear: both;">
-<label class="labela"><input type="image" src="images/icons/expand.png" id="search-advanced-image" name="search-advanced-image" align="top"/> <?php echo $words->getFormatted('SearchMembersAdvanced'); ?></label>
-</div>
 <div class="floatbox">
 <div class="float_left"><?php
     $numberOfItems = array( '5', '10', '20', '50', '100'); ?><label for="search-number-items">Show </label><select name="search-number-items"><?php
         foreach ($numberOfItems as $number) :
             echo '<option value="' . $number . '"';
-            if ($vars['search-number-items']) :
+            if ($vars['search-number-items'] == $number) :
                 echo ' selected="selected"';
             endif;
             echo ' >' . $number . '</option>';
-        endforeach;?></select><span> items per page. </span><label for="search-order">Order by </label><select name="search-items"><option>name desc</option><option>name asc</option><option>age asc</option></select></div>
-
-			<div class="float_right">
-				<input
-					id="search-reset-button" name="search-reset-button" class="button"
-					type="reset"
-					value="<?php echo $words->getBuffered('SearchClearValues'); ?>" />
-			</div>
-
-			<div class="float_right">
-				<input
-					id="search-submit-button" name="search-submit-button"
-					class="button" type="submit"
-					value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>" />
-			</div>
+        endforeach;?></select><span> items per page. </span><label for="search-sort-order">Order by </label><select name="search-sort-order"><?php
+        foreach($orderBy AS $key => $order) :
+            echo '<option value="' . $key . '"';
+            if ($vars['search-sort-order'] == $key) :
+                echo ' selected="selected"';
+            endif;
+            echo '>' . $order . '</option>';
+        endforeach;
+        ?></select></div>
+<!-- <div class="float_right">
+<input type="submit" class="button" id="search-advanced" name="search-advanced" value="<?php echo $words->getFormatted('SearchMembersAdvanced'); ?>" />
+</div> -->
 </div>
 <div class="floatbox">
 		<?php if (!$results) : ?>
@@ -94,16 +108,15 @@ $layoutbits = new MOD_layoutbits();
 </div>
     <div><?php
     if (!empty($members)) :
-        echo $results['count'] . "<br>";
         // Initialise pager widget
         $params = new StdClass;
         $params->strategy = new FullPagePager();
-        $params->page_url = 'search/members/text';
-        $params->page_url_marker = 'page';
-        $params->page_method = 'url';
+        $params->page_url = "/search/members/text?" . http_build_query($vars);
+        $params->page_url_marker = 'search-page-';
+        $params->page_method = 'form';
         $params->items = $results['count'];
-        $params->active_page = 1;
-        $params->items_per_page = 5;
+        $params->active_page = $vars['search-page-current'];
+        $params->items_per_page = $vars['search-number-items'];
         $pager = new PagerWidget($params);
         $pager->render();?>
 <table class="full" style="width: 100%">
@@ -129,9 +142,20 @@ foreach($members as $member) {
     echo '</td><td style="padding-right:1ex;vertical-align: top;">';
     echo '<div style="float:left;">';
     echo '<strong><a href="members/' . $member->Username . '" target="_blank">'.(empty($member->Name) ? $member->Username : $member->Name).'</a></strong>';
-    echo '<br>' . $words->get('SearchYearsOld', $member->Age);
-    if (!$member->HideGender) {
-        echo ", " . $layoutbits->getGenderTranslated($member->Gender, $member->HideGender, false);
+    if ($member->MessageCount) {
+        echo '<a href="messages/with/' . $member->Username . '"><img src="images/icons/comments.png" alt="'
+            . $words->getSilent('messages_allmessageswith', $member->Username)
+            . '" title="' . $words->getSilent('messages_allmessageswith',$member->Username) . '" /></a>';
+    }
+    echo '<br>';
+    $prefix = "";
+    if (!empty($member->Age)) {
+        echo $words->get('SearchYearsOld', $member->Age);
+        $prefix = ", ";
+    }
+    $gender = $layoutbits->getGenderTranslated($member->Gender, $member->HideGender, false);
+    if (!empty($gender)) {
+        echo $prefix . $gender;
     }
     echo '<br>';
     echo $member->CityName . ", " . $member->CountryName .'<br>';

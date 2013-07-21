@@ -124,9 +124,9 @@ Boston, MA  02111-1307, USA.
   </fieldset>
 
   <p>
-    <input type="submit" value="<?php echo $words->get('NextStep'); ?>" class="button"
+    <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    />
+    /><?php echo $words->flushBuffer(); ?>
   </p>
 
 </form>

@@ -34,6 +34,7 @@ if ($userHandle) {
     } else {
         echo '<h1>'.$titleSetting->value.'</h1>';
     }
-}
+}   
+echo $words->flushBuffer();
 ?>
 </div>

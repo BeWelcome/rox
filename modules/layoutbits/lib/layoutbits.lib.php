@@ -500,50 +500,46 @@ class MOD_layoutbits
     }
 
     // Returns a qualifier for how long ago the timestamp is
-    public function ago_qualified($timestamp)
-    {
+    public function ago_qualified($timestamp) {
         // test if the given timestamp could be a unix timestamp, otherwise try to make it one
         $timestamp = ((is_string($timestamp) && intval($timestamp) == $timestamp) ? intval($timestamp) : $timestamp);
         if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
 
         $difference = time() - $timestamp;
 
-        $periods = array('second','minute','hour','day','week','month','year','decade');
-        $lengths = array("60","60","24","7","4.35","12","10");
-        for ($j = 0; $j < count($lengths) && $difference >= $lengths[$j]; $j++)
-        {
-        $difference /= $lengths[$j];
+        $periods = array ('second','minute','hour','day','week','month','year','decade' );
+        $lengths = array ("60","60","24","7","4.35","12","10");
+        for($j = 0; $j < count($lengths) && $difference >= $lengths[$j]; $j++) {
+            $difference /= $lengths[$j];
         }
         $difference = round($difference);
         $qualified = 3;
-        switch($periods[$j])
-        {
-        case "second":
-        case "minute":
+        switch ($periods[$j]) {
+            case "second":
+            case "minute":
             case "hour":
-            $qualified = 0;
-            break;
-                    case "week":
-                    if ($difference > 4)
-                    {
-                        $qualified = 1;
-    }
-                    break;
-                        case "month":
-                        if ($difference <= 6)
-                        {
-                            $qualified = 1;
-    }
-    else
-    {
-    $qualified = 2;
-                        }
-                        break;
-                        default:
-                        $qualified = 2;
-                        }
+            case "day":
+                $qualified = 0;
+                break;
+            case "week":
+                if ($difference > 4) {
+                    $qualified = 1;
+                } else {
+                    $qualified = 0;
+                }
+                break;
+            case "month":
+                if ($difference <= 6) {
+                    $qualified = 1;
+                } else {
+                    $qualified = 2;
+                }
+                break;
+            default:
+                $qualified = 2;
+        }
 
-                        return $qualified;
+        return $qualified;
     }
 
 

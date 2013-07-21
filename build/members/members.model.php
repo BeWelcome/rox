@@ -836,18 +836,19 @@ ORDER BY
     {
         $errors = array();
 
-        if (empty($vars['BirthDate'])) {
+        if ($vars['BirthYear'] == 0 || $vars['BirthMonth'] == 0 || $vars['BirthDay'] == 0) {
             $errors[] = 'SignupErrorInvalidBirthDate';
         }
-
-        $res=$this->validateBirthdate($vars['BirthDate']);
-        if ($res === self::DATE_INVALID) {
-            $errors[] = 'SignupErrorInvalidBirthDate';
+        else 
+        {
+            $res=$this->validateBirthdate($vars['BirthYear'] . '-' . $vars['BirthMonth'] . '-' . $vars['BirthDay']);
+            if ($res === self::DATE_INVALID) {
+                $errors[] = 'SignupErrorInvalidBirthDate';
+            }
+            if ($res === self::TOO_YOUNG) {
+                $errors[] = 'MembersErrorTooYoung';
+            }
         }
-        if ($res === self::TOO_YOUNG) {
-            $errors[] = 'MembersErrorTooYoung';
-        }
-
         if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','other'))) {
             $errors[] = 'SignupErrorInvalidGender';
         }
@@ -978,11 +979,10 @@ ORDER BY
 //        $m->LastLogin = '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin)); // Members lastlogin is no to be updated here
         $m->Gender = $vars['gender'];
         $m->HideGender = $vars['HideGender'];
-        $m->BirthDate = $vars['BirthDate'];
-        $birthdate = $this->validateBirthdate($vars['BirthDate']);
-        $m->bday = substr($birthdate, -2);
-        $m->bmonth = substr($birthdate, 5,2);
-        $m->byear = substr($birthdate, 0,4);
+        $m->BirthDate = $vars['BirthYear'] . '-' . $vars['BirthMonth'] . '-' . $vars['BirthDay'];
+        $m->bday = $vars['BirthDay'];
+        $m->bmonth = $vars['BirthMonth'];
+        $m->byear = $vars['BirthYear'];
         $m->HideBirthDate = $vars['HideBirthDate'];
         $m->HideGender = $vars['HideGender'];
         $m->ProfileSummary = $words->ReplaceInMTrad($vars['ProfileSummary'],"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
@@ -1181,7 +1181,8 @@ ORDER BY
         // Prepare $vars
         // JY fix, the escaping will be done from ReplaceInMTrad so I remove it
 //        $vars['ProfileSummary'] = $this->dao->escape($vars['ProfileSummary']);
-        $vars['BirthDate'] = (($date = $this->validateBirthdate($vars['BirthDate'])) ? $date : $vars['BirthDate']);
+        $birthDate = $vars['BirthYear'] . '-' . $vars['BirthMonth'] . '-' . $vars['BirthDay'];
+        $vars['BirthDate'] = (($date = $this->validateBirthdate($birthDate)) ? $date : $birthDate);
         if (!isset($vars['HideBirthDate'])) $vars['HideBirthDate'] = 'No';
         // $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('ProfileOccupation', $profile_language) : '';
 

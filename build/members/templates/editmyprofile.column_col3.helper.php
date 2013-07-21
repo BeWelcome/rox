@@ -17,6 +17,17 @@ $CanTranslate = false; // FIXME that seems to be incorrect
 
 $vars = $this->editMyProfileFormPrepare($member);
 
+$old_member_born = date('Y') - 100;
+$young_member_born = date('Y') - SignupModel::YOUNGEST_MEMBER;
+
+$birthYearOptions = '';
+for ($i=$young_member_born; $i>$old_member_born; $i--) {
+    if ($vars['BirthYear'] == $i) {
+        $birthYearOptions .= "<option value=\"$i\" selected=\"selected\">$i</option>";
+    } else {
+        $birthYearOptions .= "<option value=\"$i\">$i</option>";
+    }
+}
 ?>
 <div id="profile">
 

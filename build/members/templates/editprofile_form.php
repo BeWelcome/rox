@@ -118,11 +118,12 @@ HTML;
                                 {
                                     $selected = $vars['language_levels'][$jj] == $vars['languages_selected'][$ii]->Level? ' selected="selected"': '';
                                     echo <<<HTML
-                                    <option value='{$vars['language_levels'][$jj]}'{$selected}>{$words->get("LanguageLevel_" . $vars['language_levels'][$jj])}</option>
+                                    <option value='{$vars['language_levels'][$jj]}'{$selected}>{$words->getSilent("LanguageLevel_" . $vars['language_levels'][$jj])}</option>
 HTML;
                                 }
                             echo <<<HTML
                             </select>
+                            {$words->flushBuffer()}
                           </td>
                           <td><a href='#' class='remove_lang'>{$words->get('RemoveLanguage')}</a>
                           </td>
@@ -179,7 +180,8 @@ HTML;
                         </tr>
                       </tbody>
                       </table>
-                    <input type="button" id="langbutton" class="button" name="addlang" value="{$words->get('AddLanguage')}" />
+                    <input type="button" id="langbutton" class="button" name="addlang" value="{$words->getSilent('AddLanguage')}" />
+{$words->flushBuffer()}       
                   </td>
                 </tr>
               </tbody>
@@ -365,7 +367,7 @@ HTML;
                 ?>
                 <tr align="left" >
                   <td class="label" ><?=$me["network"]?>
-                  <?="<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$me["image"]."' height='14' title='".$me["network"]."' alt='".$me["network"]."' />"?>
+                  <?="<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
                   </td>
                   <td>
                     <input type="text" size="25" name="<?=$val?>" value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>" />
@@ -611,7 +613,7 @@ HTML;
                     ?>
                   </td>
                   <td>
-                    <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations" onclick="return confirm('<?php echo $words->get('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?></a>
+                    <a href="/members/<?php echo $member->Username; ?>/relations/delete/<?php echo $Relation->id; ?>?redirect=editmyprofile#!specialrelations" onclick="return confirm('<?php echo $words->getSilent('Relation_delete_confirmation'); ?>');"><?php echo $words->getFormatted("delrelation", $Relation->Username); ?><?php echo $words->flushBuffer(); ?></a>
                   </td>
                 </tr>
                 <?php
@@ -680,7 +682,7 @@ HTML;
             <tbody>
               <tr>
                 <td colspan="3"  align="center" >
-                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->get('Save Profile')?>" />
+                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->getSilent('Save Profile')?>" /> <?php echo $words->flushBuffer(); ?>
                 </td>
               </tr>
             </tbody>

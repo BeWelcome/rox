@@ -41,9 +41,9 @@ $iiMax = count($list) ; // This retrieve the number of polls
 
 <?php if ($list != false) { ?>
     <tr>
-        <th>status</th>
-        <th>author</th>
-        <th>title and text</th>
+        <th>Status</th>
+        <th>Author</th>
+        <th>Title and text</th>
         <th>Updated</th>
         <th>Action</th>
     </tr>
@@ -62,7 +62,7 @@ for ($ii = 0; $ii < $iiMax; $ii++) {
             if (!empty($p->IdReporter)) {
                 echo MOD_layoutbits::PIC_50_50($p->Username) ;
                 echo "<br />" ;
-                echo "<a class=\"username\" href=\"bw/member.php?cid=",$p->Username,"\">",$p->Username,"</a>" ;
+                echo "<a class=\"username\" href=\"members/",$p->Username,"\">",$p->Username,"</a>" ;
             }
             ?>
         </td>

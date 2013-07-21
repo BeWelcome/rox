@@ -76,13 +76,14 @@ if (!isset($headingLevel)) {
 echo '<a href="blog/'.$blog->user_handle.'/'.$blog->blog_id.'#comments">';
 if ($commentsCount > 0) {
   if ($commentsCount == 1) {
-    echo '<img src="images/icons/comment.png" alt="'.$words->get('CommentsSingular').'"/> 1 '.$words->get('CommentsSingular');
+    echo '<img src="images/icons/comment.png" alt="'.$words->getSilent('CommentsSingular').'"/> 1 '.$words->getSilent('CommentsSingular');
   } else {
-    echo '<img src="images/icons/comments.png" alt="'.$words->get('CommentsPlural').'"/> '.$commentsCount.' '.$words->get('CommentsPlural');
+    echo '<img src="images/icons/comments.png" alt="'.$words->getSilent('CommentsPlural').'"/> '.$commentsCount.' '.$words->getSilent('CommentsPlural');
   }
 } else {
-  echo '<img src="images/icons/comment_add.png" alt="'.$words->get('CommentsAdd').'"/> '.$words->get('CommentsAdd');
+  echo '<img src="images/icons/comment_add.png" alt="'.$words->getSilent('CommentsAdd').'"/> '.$words->getSilent('CommentsAdd');
 }
+echo $words->flushBuffer();
 echo '</a>';
 if (isset($blog->latitude) && $blog->latitude && isset($blog->longitude) && $blog->longitude) {
     echo ' | <a href="#" onclick="javascript: displayMap(\'map_'.$blog->blog_id.'\', '.$blog->latitude.', '.$blog->longitude.', \''.$blog->geonamesname.', '.$blog->geonamescountry.'\'); return false;">'.$words->get('map').'</a>';

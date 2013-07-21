@@ -73,9 +73,10 @@ Boston, MA  02111-1307, USA.
                                 <h3><?php echo $words->getFormatted('StartpageSearchMember') ?></h3>
                                 <div id="search-bar">
                                     <form id="form1" name="form1" method="get" action="searchmembers">
-                                        <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='<?php echo $words->get('StartpageSearchMemberText'); ?>'" value="<?php echo $words->get('StartpageSearchMemberText'); ?>" onfocus="this.value='';" />
+                                        <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='<?php echo $words->getSilent('StartpageSearchMemberText'); ?>'" value="<?php echo $words->getSilent('StartpageSearchMemberText'); ?>" onfocus="this.value='';" />
                                         <input type="hidden" name="searchopt" id="searchopt" />
-                                        <input type="submit" value="<?php echo $words->getFormatted('FindPeopleSubmitSearch'); ?>" class="button"/>
+                                        <input type="submit" value="<?php echo $words->getSilent('FindPeopleSubmitSearch'); ?>" class="button"/>
+                                        <?php echo $words->flushBuffer(); ?>
                                     </form>
                                 </div>
 

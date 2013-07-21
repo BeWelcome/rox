@@ -9,101 +9,114 @@
 * @version $Id$
 */
 
-class PlacesView extends PAppView {
+class PlacesView extends PAppView
+{
     private $_model;
     
     public function __construct(Places $model) {
         $this->_model = $model;
     }
 
-    // only for testing
-    public function testpage() {
-        require 'templates/testPage.php';
-    }   
-    // only for testing // END
-    public function customStyles()
-    {       
-    // calls a 1column layout 
-         echo "<link rel=\"stylesheet\" href=\"styles/css/minimal/screen/custom/places.css?1\" type=\"text/css\"/>";
+    public function customStyles(){       
+        // calls a 1column layout 
+         echo '<link rel="stylesheet"
+                    href="styles/css/minimal/screen/custom/places.css?1"
+                    type="text/css"/>';
     }
+    
     public function teaserplaces($countrycode,$country,$region,$city) {
         require 'templates/teaserCountry.php';
     }
-    public function submenu($subTab) {
-        //require 'templates/submenu.php';
-    }
-    public function displayPlacesInfo($countryinfo, $members) {
-        $memberlist = $this->generateMemberList($members);
+
+    /*
+     * contains template for memberlist and wiki
+     * used for country-, region- and citypage
+     */
+    public function displayPlaceInfo($placeinfo, $members, $namevar,
+                                     $placelisttype = 'none',$list = null) {
         $forums = '';
         $wiki = new WikiController();
-        $wikipage = str_replace(' ', '', ucwords($countryinfo->name));
-        require 'templates/countryInfo.php';
-    }
-    public function displayRegionInfo($regioninfo, $members) {
-        //$memberlist = $this->generateMemberList($members);
-        $forums = '';
-        $wiki = new WikiController();
-        $wikipage = str_replace(' ', '', ucwords($regioninfo->region));
-        require 'templates/regionInfo.php';
-    }
-    public function displayCityInfo($cityinfo, $members) {
-        $forums = '';
-        $wiki = new WikiController();
-        $wikipage = str_replace(' ', '', ucwords($cityinfo->city));
-        require 'templates/cityInfo.php';
-    }
-    private function generateMemberList($members) {
-			return($members) ;
+        $wikipage = str_replace(' ', '', ucwords($placeinfo->$namevar));
+        require 'templates/placeinfo.php';
     }
 
-    public function displayPlacesOverview($allcountries) {
+    /*
+     * Shows countries by continent
+     */
+    public function displayCountries($allcountries) {
         $words = new MOD_words();
-        $countrylist = '<table><tr>';
-        $countrylist .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('Africa').'</h3>'.$this->displayContinent('AF', $allcountries['AF']).'</td>';
-        $countrylist .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('Asia').'</h3>'.$this->displayContinent('AS', $allcountries['AS']).'</td>';
-        $countrylist .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('Europe').'</h3>'.$this->displayContinent('EU', $allcountries['EU']).'</td>';
-        $countrylist .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('NorthAmerica').'</h3>'.$this->displayContinent('NA', $allcountries['NA']);
-        $countrylist .= '<h3>'.$words->getformatted('SouthAmerica').'</h3>'.$this->displayContinent('SA', $allcountries['SA']).'</td>';
-        $countrylist .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('Oceania').'</h3>'.$this->displayContinent('OC', $allcountries['OC']).'</td>';
-//      $countrylist .= $this->displayContinent('AN', $allcountries['AN']).'</td>';
-        
-        $countrylist .= '</tr></table>';
-    
-        require 'templates/countryOverview.php';
+        $list = '<table><tr>';
+        $list .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('Africa').'</h3>'.$this->displayContinent('AF', $allcountries['AF']).'</td>';
+        $list .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('Asia').'</h3>'.$this->displayContinent('AS', $allcountries['AS']).'</td>';
+        $list .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('Europe').'</h3>'.$this->displayContinent('EU', $allcountries['EU']).'</td>';
+        $list .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('NorthAmerica').'</h3>'.$this->displayContinent('NA', $allcountries['NA']);
+        $list .= '<h3>'.$words->getformatted('SouthAmerica').'</h3>'.$this->displayContinent('SA', $allcountries['SA']).'</td>';
+        $list .= '<td style="vertical-align: top;"><h3>'.$words->getformatted('Oceania').'</h3>'.$this->displayContinent('OC', $allcountries['OC']).'</td>';
+        $list .= '</tr></table>';
+
+        $placelisttype = 'country';
+        require 'templates/placeinfo.php';
     }
-    
-    public function displayRegions($regions,$countrycode) {
+
+    /*
+     * Shows the country page
+     *
+     * contains regionlist, members of this country and countrywiki
+     */
+    public function displayRegions($countrycode,$countryinfo,$members) {
+        define('MINROWS',5); // minimum number of rows to be used before next column
+        define('MAXCOLS',3); // maximum number columns before extending rows beyound MINROWS
         $regionlist = '<div class="floatbox places">';
         $regionlist .= '<ul class="float_left">';
-        $ii = 0;
-        foreach ($regions as $region) {
-            $ii++;
-            if ($ii > 10) {
+        $listcnt = 0;
+        $countryinfo->memberCount = 0;
+        foreach ($this->regions as $region) {
+            // counting total members for possible login-to-see-more message
+            $countryinfo->memberCount += $region['number'];
+
+            $listcnt++;
+            if ($listcnt > max(MINROWS,count($this->regions)/MAXCOLS)) {
                 $regionlist .= '</ul>';
                 $regionlist .= '<ul class="float_left">';
-                $ii = 0;
+                $listcnt = 1;
             }
             $regionlist .= '<li><a class="highlighted" href="places/'.$countrycode.'/'.$region['name'].'">'.$region['name'].' <span class="small grey">('.$region['number'].')</span>';
             $regionlist .= '</a></li>';
         }
-        $regionlist .= '</ul>';
-        $regionlist .= '</div>';
+        $regionlist .= '</ul></div>';
 
-        require 'templates/regionOverview.php';
-    }   
-    
-    public function displayCities($cities,$region,$countrycode) {
-        $citylist = '<ul>';
-        
-        foreach ($cities as $city) {
+        $this->displayPlaceInfo($countryinfo, $members,'name','region',$regionlist);
+    }
+
+    /*
+     * Shows the city page 
+     */
+    public function displayCities($region,$countrycode,$regioninfo,$members) {
+        define('MINROWS',5); // minimum number of rows to be used before next column
+        define('MAXCOLS',3); // maximum number columns before extending rows beyound MINROWS
+        $citylist = '<div class="floatbox places">';
+        $citylist .= '<ul class="float_left">';
+        $listcnt = 0;
+        $regioninfo->memberCount = 0;
+        foreach ($this->cities as $city) {
+            $regioninfo->memberCount += $city->NbMember;
+            $listcnt++;
+            if ($listcnt > max(MINROWS,count($this->cities)/MAXCOLS)) {
+                $citylist .= '</ul>';
+                $citylist .= '<ul class="float_left">';
+                $listcnt = 1;
+            }            
             $citylist .= '<li><a class="highlighted" href="places/'.$countrycode.'/'.$region.'/'.$city->city.'">'.$city->city.' <span class="small grey">('.$city->NbMember.')</span>';
             $citylist .= '</a></li>';
         }
-        $citylist .= '</ul>';        
-    
-        require 'templates/cityOverview.php';
+        $citylist .= '</ul></div>';        
+
+        $this->displayPlaceInfo($regioninfo, $members,'region','city',$citylist);
     }   
 
+    /*
+     * Creates the list of countries in a continent for the places page 
+     */
     private function displayContinent($continent, $countries) {
         $html = '';
         $html .= '<ul>';
@@ -118,8 +131,10 @@ class PlacesView extends PAppView {
         return $html;   
     }
     
-    public function placesNotFound($ss="") {
-        echo '<h2>Places '.$ss.' not found</h2>'; // TODO
+    public function placesNotFound($placename="") {
+        // Tsjoek 16072013 - fixed the xss hole, but the whole thing
+        // is still far from graceful ;-) should be fixed one other day
+        echo '<h2>Places '.htmlspecialchars($placename).' not found</h2>';
     }
 }
 ?>

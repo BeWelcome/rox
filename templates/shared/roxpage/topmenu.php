@@ -46,8 +46,8 @@
         </li>
         <li><a href="community"><?=$words->get('CommunityMenu')?></a>
             <ul>
-                <li><a href="forums" title="<?=$words->get('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a></li>
-                <li><a href="groups/search" title="<?=$words->get('GroupsTagLine')?>"><?=$words->get('Groups')?></a></li>
+                <li><a href="forums" title="<?=$words->getSilent('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a><?php echo $words->flushBuffer(); ?></li>
+                <li><a href="groups/search" title="<?=$words->getSilent('GroupsTagLine')?>"><?=$words->get('Groups')?></a><?php echo $words->flushBuffer(); ?></li>
                 <li><a href="activities"><?=$words->get('Activities')?></a></li>
                 <?php if ($logged_in) { ?>
                 <li><a href="suggestions"><?=$words->get('Suggestions')?></a></li>

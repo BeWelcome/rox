@@ -21,10 +21,25 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
+
 $words = new MOD_words();
-
+if ($placelisttype!=='none'){
+    // display list of sublocations
+    ?>
+    <h2><?=$words->get($placelisttype.'_overview_title'); ?></h2>
+    <?php
+    echo $list; 
+}
+if ($placelisttype!=='country'){
+    // display memberlist
+    ?>
+    <h2><?=$words->get('members');?></h2>
+    <?php require 'memberlist.php';
+    
+    // display wiki
+    ?>
+    <h2><?=$words->get('wiki');?></h2>
+    <div class="wiki"><?=$wiki->getWiki($wikipage,false);?></div>
+    <?php
+}
 ?>
-
-<h2><?php echo $words->get('Country_overview_title'); ?></h2>
-
-<div class="countrylist"><?php echo $countrylist; ?></div>

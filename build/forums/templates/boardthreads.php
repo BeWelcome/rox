@@ -72,7 +72,7 @@ Boston, MA  02111-1307, USA.
                 <td class="forumsboardthreadtitle">
                     <?php
                     if ($thread->stickyvalue < 0) {
-                        echo '<img src="styles/css/minimal/images/icons16/pin_blue.png" alt="'. $words->getBuffered('PinnedPost') .'" title="'. $words->getBuffered('PinnedPost') .'" class="forum_icon" />' . $words->flushBuffer();
+                        echo '<img src="styles/css/minimal/images/icons16/pin_blue.png" alt="'. $words->getSilent('PinnedPost') .'" title="'. $words->getSilent('PinnedPost') .'" class="forum_icon" />' . $words->flushBuffer();
                     }
                     if ($thread->ThreadDeleted=="Deleted") {
                         echo "[Deleted] " ;
@@ -192,7 +192,7 @@ Boston, MA  02111-1307, USA.
                         <?php echo $words->getFormatted('by'); ?>
                         <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                         <br />
-                        <span class="forumsboardthreadtags" title="<?php echo date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)); ?>"><a href="<?php echo $last_url; ?>"><?php echo $layoutbits->ago($thread->last_create_time); ?></a></span>
+                        <span class="forumsboardthreadtags" title="<?php echo date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)); ?>"><a href="<?php echo $last_url; ?>"><?php echo $layoutbits->ago($thread->last_create_time); ?></a></span>
                         <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" align="absmiddle" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" /></a><?php echo $words->flushBuffer(); ?>
                     </span>
                 </td>

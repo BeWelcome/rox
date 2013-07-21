@@ -7,6 +7,9 @@ $words = $this->getWords();
 
 $layoutbits = new MOD_layoutbits();
 $thumbsize = $this->thumbsize;
+
+echo $words->flushBuffer();
+
 if ($statement) {
     $requestStr = implode('/', $request);
     $matches = array();
@@ -30,14 +33,15 @@ if ($statement) {
         if ($this->loggedInMember && $this->loggedInMember->Username == $d->user_handle) {
             $d->HTML .= '<input type="checkbox" class="thumb_check input_check" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
         }
-        $d->HTML .= '<a href="gallery/show/image/'.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><img src="styles/css/minimal/images/icon_image_expand.gif" title="'.$words->get('Preview image').'" style="float: right"></a></h4>';
+        $d->HTML .= '<a href="gallery/show/image/'.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'" class=\'lightview\' rel=\'gallery[BestOf]\'><img src="styles/css/minimal/images/icon_image_expand.gif" style="float:right" title="'.$words->getSilent('Preview image').'"></a>'.$words->flushBuffer().'</h4>';
+        
         $d->HTML .= '
             <p class="small">
                 '.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by').'
                 <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>. 
-                <a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->get('galleryUserOthers',$d->user_handle).'">
+                <a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->getSilent('galleryUserOthers',$d->user_handle).'">
                 <img src="styles/css/minimal/images/iconsfam/pictures.png" style="float: none">
-                </a>
+                </a>'.$words->flushBuffer().'
             </p>
         </div>';
     }

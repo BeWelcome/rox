@@ -22,39 +22,46 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
+$countrycode = htmlspecialchars($countrycode);
+$region = htmlspecialchars($region);
+if (isset($country->name)){$country->name = htmlspecialchars($country->name);}
+$city = htmlspecialchars($city);
 ?>
 
 <div id="teaser" class="clearfix">
-
-        <h1>
-            <?php if (!$countrycode) { 
-             echo $words->getFormatted('CountryTitle');
-            } else { 
-                echo '<a href="places">'.$words->getFormatted('CountryTitle').'</a>';
-                echo '<span class="small">';
-                if (!$region) { 
-                 echo ' > '.$country->name;
-                } else {
-                     echo ' > <a href="places/'.$countrycode.'">'.$country->name.'</a>'; 
-                         if (!$city) { 
-                         echo ' > '.$region;
-                        } else {
-                         echo ' > <a href="places/'.$countrycode.'/'.$region.'">'.$region.'</a>'; 
-                         echo ' > '.$city;
-                        }
-                }
-                echo '</span>';
+<h1>
+    <?php
+    if (!$countrycode OR !isset($country->name)) { 
+        echo $words->getFormatted('CountryTitle');
+    } else { 
+        echo '<a href="places">'.$words->getFormatted('CountryTitle').'</a>';
+        echo '<span class="small">';
+        if (!$region) { 
+            echo ' > '.$country->name;
+        } else {
+            echo ' > <a href="places/'.$countrycode.'">'.$country->name.'</a>'; 
+            if (!$city) { 
+                echo ' > '.$region;
+            } else {
+                echo ' > <a href="places/'.$countrycode.'/'.$region.'">'.$region.'</a>'; 
+                echo ' > '.$city;
             }
-            ?>
-        </h1> 
-        <? if (isset($title)) { ?>
-            <? if (MOD_right::get()->HasRight('Debug')) {  ?>
-                <h2><?php echo $title; 
-                    // This is only visible to people with debug rights
-        		    echo " <a href=\"geo/displaylocation/".$countryinfo->IdCountry."\" title=\" specific debug right view database records\">view geo record #".$countryinfo->IdCountry."</a>" ;
+        }
+        echo '</span>';
+    }
+    ?>
+</h1> 
+<?php
+if (isset($title)) {
+    if (MOD_right::get()->HasRight('Debug')) {  ?>
+        <h2>
+        <?php
+        echo $title; 
+        // This is only visible to people with debug rights
+        echo " <a href=\"geo/displaylocation/".$countryinfo->IdCountry."\" title=\" specific debug right view database records\">view geo record #".$countryinfo->IdCountry."</a>" ;
         ?></h2>
-            <? } ?>
-        <? } ?>
-
-
+        <?php
+    }
+}
+?>
 </div>

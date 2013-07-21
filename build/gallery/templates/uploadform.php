@@ -30,7 +30,7 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
 <div id="gallery-upload-content">
     <form method="post" action="<?=$postURL?>" class="def-form" id="gallery-img-upload" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="<?=PFunctions::returnBytes(ini_get('upload_max_filesize'))?>"/>
-    <h3><?=$words->getFormatted('Gallery_UploadInstruction')?></h3>
+    <h4><?=$words->getFormatted('Gallery_UploadInstruction')?></h4>
     <div class="notify"><?=$words->getFormatted('Gallery_UploadWarning')?> <? printf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576); ?></div>
     <div id="gallery-img-upload-files">
         <div class="row">

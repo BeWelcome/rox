@@ -119,7 +119,7 @@ if (in_array('textlen', $vars['errors'])) {
         <p class="desc"><?=$words->get('CommentsSublineText')?></p>
     </div>
     <p>
-        <input type="submit" value="<?=$words->get('CommentsSubmitForm')?>" class="submit" />
+        <input type="submit" value="<?=$words->getSilent('CommentsSubmitForm')?>" class="submit" /><?php echo $words->flushBuffer(); ?>
         <input type="hidden" name="table" value="<?=$table?>"/>
         <input type="hidden" name="table_id" value="<?=$table_id?>"/>
         <input type="hidden" name="<?php

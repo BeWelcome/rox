@@ -88,7 +88,7 @@ class AddRelationPage extends RelationsPage
             }
             ?>
             <br />
-            <input type="submit" name="submit" value="<?=$words->get($action.'Relation')?>" />
+            <input type="submit" name="submit" value="<?=$words->getSilent($action.'Relation')?>" /><?php echo $words->flushBuffer(); ?>
             <br />
         </fieldset>
         </form>

@@ -10,9 +10,9 @@ if ($isOwnTrip) {
 ?>
     <div style="padding: 20px 0" id="destination-form">
     <h3>
-    <img src="images/icons/note_add.png" alt="<?=$words->get('Trip_SubtripsCreate')?>"/> <?=$words->get('Trip_SubtripsCreate')?><br />
+    <img src="images/icons/note_add.png" alt="<?=$words->getSilent('Trip_SubtripsCreate')?>"/> <?=$words->getSilent('Trip_SubtripsCreate')?><?php echo $words->flushBuffer(); ?><br />
     </h3>
-    <p class="small"><?=$words->get('Trip_SubtripsCreateDesc')?></p>
+    <p class="small"><?=$words->getSilent('Trip_SubtripsCreateDesc')?><?php echo $words->flushBuffer(); ?></p>
     </div>
  <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
 
@@ -26,10 +26,11 @@ if ($isOwnTrip) {
             $submitName = '';
             $submitValue = $words->getSilent('BlogCreateSubmit');
         } else if (isset($request[2]) && $request[2] === 'finish') {
-            echo '<p>'.$words->get('BlogCreateFinishText')."</p>\n";
+            echo '<p>'.$words->getSilent('BlogCreateFinishText')."</p>\n";
             $submitValue = $words->getSilent('BlogCreateSubmit');
             $actionUrl = 'trip/' . $request[1];
         }
+        echo $words->flushBuffer();
 /**
  * edit and create form template controller // mostly copied from Blog Application
  * for documentation look at build/blog/editcreateform.php
@@ -170,7 +171,7 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
 </div>
     <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label><br />
     <input type="text" name="create-location" id="create-location" value="" /> <br />
-    <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
+    <input type="button" id="btn-create-location" class="button" value="<?=$words->getSilent('label_search_location')?>" /><?php echo $words->flushBuffer(); ?>
     <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
 
           <div id="location-suggestion"></div>

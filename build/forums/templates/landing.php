@@ -91,6 +91,7 @@ if ($threads = $groups->getThreads()) {
         } else {
             $buttonText = $this->words->getBuffered('SwitchShowAllGroupsTopics');
         }
+         echo $words->flushBuffer();
 ?>
         <form class="morelessbuttons" method="post" action="<?php echo rtrim(implode('/', $request), '/').'/';?>">
             <input type="hidden" name="<?php echo $ownGroupsButtonCallbackId; ?>"  value="1">

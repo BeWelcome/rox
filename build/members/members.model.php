@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -36,9 +36,9 @@ Boston, MA  02111-1307, USA.
      */
 class MembersModel extends RoxModelBase
 {
-    
+
     private $profile_language = null;
-    
+
     /**
      * Constructor
      *
@@ -49,7 +49,7 @@ class MembersModel extends RoxModelBase
         parent::__construct();
         $this->bootstrap();
     }
-    
+
 
     public function getMemberFromEmail($email)
     {
@@ -67,7 +67,7 @@ class MembersModel extends RoxModelBase
 SELECT
     IdMember
 FROM
-   {$_SYSHCVOL['Crypted']}cryptedfields 
+   {$_SYSHCVOL['Crypted']}cryptedfields
 WHERE
     AdminCryptedValue = '{$db_version}'
     AND
@@ -84,7 +84,7 @@ SQL
     {
         return $this->createEntity('Member')->findByUsername($username);
     }
-    
+
     public function getMemberWithId($id)
     {
         if (!($id = intval($id)))
@@ -128,7 +128,7 @@ SQL
         return $comment->update();
     }
 
-      public function get_relation_between_members($IdMember_rel) 
+      public function get_relation_between_members($IdMember_rel)
       {
           $myself = $this->getMemberWithId($_SESSION['IdMember']);
           $member = $this->getMemberWithId($IdMember_rel);
@@ -158,15 +158,15 @@ SQL
      */
     public function setLocation($IdMember,$geonameid = false)
     {
-    
+
         // Address IdCity address must only consider Populated palces (definition of cities), it also must consider the address checking process
-    
+
         $Rank=0 ; // Rank=0 means the main address, todo when we will deal with several addresses we will need to consider the other rank Values ;
         $IdMember = (int)$IdMember;
         $geonameid = (int)($geonameid);
-        
+
         $errors = array();
-        
+
         if (empty($IdMember)) {
             // name is not set:
             $errors['Name'] = 'Name not set';
@@ -175,7 +175,7 @@ SQL
             // name is not set:
             $errors['Geonameid'] = 'Geoname not set';
         }
-        
+
         // get Member's current Location
         $result = $this->singleLookup(
             "
@@ -186,8 +186,8 @@ WHERE   a.IdMember = '{$IdMember}'
             "
         );
         if (!isset($result) || $result->IdCity != $geonameid) {
-            // Check Geo and maybe add location 
-            $geomodel = new GeoModel(); 
+            // Check Geo and maybe add location
+            $geomodel = new GeoModel();
             if(!$geomodel->getDataById($geonameid)) {
                 // if the geonameid is not in our DB, let's add it
                 if (!$geomodel->addGeonameId($geonameid,'member_primary')) {
@@ -200,17 +200,17 @@ WHERE   a.IdMember = '{$IdMember}'
                 $usagetypeId = $geomodel->getUsagetypeId('member_primary')->id;
                 $update = $geomodel->updateUsageCounter($geonameid,$usagetypeId,'add');
             }
-            
+
             $result = $this->singleLookup(
                 "
 UPDATE  addresses
 SET     IdCity = $geonameid
 WHERE   IdMember = $IdMember and Rank=".$Rank
             );
-            
+
             // name is not set:
             if (!empty($result)) $errors['Geonameid'] = 'Geoname not set';
-            
+
             $result = $this->singleLookup(
                 "
 UPDATE  members
@@ -241,11 +241,11 @@ WHERE   id = $IdMember
         }
     }
 
-    
+
     /**
      * Not totally sure it belongs here - but better this
      * than member object? As it's more of a business of this
-     * model to know about different states of the member 
+     * model to know about different states of the member
      * object to be displayed..
      *
      * JY: not sure neither, anyway, I change the $langcode parameter to be either a numeric (languages.id, or a not numeric languages.ShortCode)
@@ -284,7 +284,7 @@ WHERE
             $this->profile_language = $l;
         }
     }
-    
+
     public function get_profile_language()
     {
         if(isset($this->profile_language)) {
@@ -299,7 +299,7 @@ WHERE
                 $langs = $member->profile_languages;
                 foreach($langs as $lang) {
                     $found = ($lang->ShortCode == $_SESSION['lang']);
-                    if ($found) break; 
+                    if ($found) break;
                 }
             }
             if ($found) {
@@ -311,12 +311,12 @@ WHERE
             return $this->profile_language;
         }
     }
-    
-    
+
+
     /**
      * Delete a profile translation for a member
      */
-    public function delete_translation_multiple($trad_ids = array(),$IdOwner, $lang_id) 
+    public function delete_translation_multiple($trad_ids = array(),$IdOwner, $lang_id)
     {
         $words = new MOD_words();
         $count=0 ;
@@ -326,7 +326,7 @@ WHERE
         }
         $this->logWrite("Deleting translation for language " .$lang_id." ".$count." translations deleted", "Update profile") ;
     }
-        
+
     /**
      * Set the preferred language for a member
      *
@@ -337,7 +337,7 @@ WHERE
      * @access public
      * @return bool
      */
-    public function set_preference($IdMember,$IdPreference,$Value) 
+    public function set_preference($IdMember,$IdPreference,$Value)
     {
         $IdMember = $this->dao->escape($IdMember);
         $IdPreference = $this->dao->escape($IdPreference);
@@ -371,16 +371,16 @@ SQL;
         }
         return ((!$this->dao->query($query)) ? true : false);
     }
-    
+
     /**
      * Set a member's profile public/private
      */
-    public function set_public_profile ($IdMember,$Public = false) 
+    public function set_public_profile ($IdMember,$Public = false)
     {
         $rr = $this->singleLookup(
             "
 SELECT *
-FROM memberspublicprofiles 
+FROM memberspublicprofiles
 WHERE IdMember = ".$IdMember
          );
         if (!$rr && $Public == true) {
@@ -410,15 +410,15 @@ WHERE
             $this->logWrite("Remove public profile", "Update Preference");
         }
     }
-    
-    
-    
+
+
+
 
     // checkCommentForm - NOT FINISHED YET !
     public function checkCommentForm(&$vars)
     {
         $errors = array();
-        
+
         $syshcvol = PVars::getObj('syshcvol');
         $max = count($syshcvol->LenghtComments);
         $tt = $syshcvol->LenghtComments;
@@ -433,10 +433,10 @@ WHERE
         }
         if ($vars['Quality'] == "Good" && isset ($vars["Comment_NeverMetInRealLife"])) {
             $errors[] = 'NoPositiveComment_if_NeverMetInRealLife';
-        }        
+        }
         return $errors;
     }
-    
+
     public function addComment($TCom,&$vars)
     {
         $return = true;
@@ -504,7 +504,7 @@ INSERT INTO
             $str = "
 UPDATE
     comments
-SET 
+SET
     AdminAction='" . $AdminAction . "',
     IdToMember=" . $vars['IdMember'] . ",
     IdFromMember=" . $_SESSION['IdMember'] . ",
@@ -528,9 +528,9 @@ WHERE
             // Create a note (member-notification) for this action
             $c_add = ($vars['Quality'] == "Bad") ? '_bad' : '';
             $note = array(
-                'IdMember' => $vars['IdMember'], 
-                'IdRelMember' => $_SESSION['IdMember'], 
-                'Type' => 'profile_comment' . $c_add, 
+                'IdMember' => $vars['IdMember'],
+                'IdRelMember' => $_SESSION['IdMember'],
+                'Type' => 'profile_comment' . $c_add,
                 'Link' => 'members/' . $commentRecipient->Username . '/comments',
                 'WordCode' => $noteWordCode
             );
@@ -539,9 +539,9 @@ WHERE
             $noteEntity->createNote($note);
         }
         return $return;
-        
+
     }
-    
+
     public function addRelation(&$vars)
     {
         $return = true;
@@ -549,7 +549,7 @@ WHERE
         $mReceiver=
         $TData= $this->singleLookup("select * from specialrelations where IdRelation=".$vars["IdRelation"]." and IdOwner=".$_SESSION["IdMember"]);
         $mReceiver=$this->getMemberWithId($vars["IdRelation"]) ;
-        
+
         if (!isset ($TData->id) ) {
             $str = "
 INSERT INTO
@@ -579,9 +579,9 @@ INSERT INTO
             $noteEntity->createNote($note);
         }
         return $return;
-        
+
     }
-    
+
     public function updateRelation(&$vars)
     {
         $return = true;
@@ -610,9 +610,9 @@ WHERE
             $noteEntity->createNote($note);
         }
         return $return;
-        
+
     }
-    
+
     public function confirmRelation(&$vars)
     {
         $return = true;
@@ -761,7 +761,7 @@ WHERE
                 }
             }
         }
-        
+
         // Languages Check
         if (isset($vars['PreferenceLanguage'])) {
             $squery = "
@@ -781,22 +781,22 @@ ORDER BY
                   $langok = true;
             }
             if ($langok == false) {
-                $errors[] = 'PreferenceLanguageError'; 
+                $errors[] = 'PreferenceLanguageError';
             }
         }
-        
+
         // email (e-mail duplicates in BW database allowed)
         // if (!isset($vars['Email']) || !PFunctions::isEmailAddress($vars['Email'])) {
             // $errors[] = 'SignupErrorInvalidEmail';
             // $this->logWrite("Editmyprofile: Invalid Email update with value " .$vars['Email'], "Email Update");
         // }
-        
+
         return $errors;
     }
 
     /**
      * Edit a members preferences, one at a time
-     * 
+     *
      */
     public function editPreferences(&$vars)
     {
@@ -836,8 +836,16 @@ ORDER BY
     {
         $errors = array();
 
-        if (empty($vars['BirthDate']) || $this->validateBirthdate($vars['BirthDate']) === false) {
+        if (empty($vars['BirthDate'])) {
             $errors[] = 'SignupErrorInvalidBirthDate';
+        }
+
+        $res=$this->validateBirthdate($vars['BirthDate']);
+        if ($res === self::DATE_INVALID) {
+            $errors[] = 'SignupErrorInvalidBirthDate';
+        }
+        if ($res === self::TOO_YOUNG) {
+            $errors[] = 'MembersErrorTooYoung';
         }
 
         if (empty($vars['gender']) || !in_array($vars['gender'], array('male','female','other'))) {
@@ -878,6 +886,17 @@ ORDER BY
      * @access public
      * @return string|bool
      */
+
+       	public function ageValue($dd)
+	{
+		$iDate = strtotime($dd);
+		$age = (time() - $iDate) / (365 * 24 * 60 * 60);
+		return ($age);
+	}
+
+    const TOO_YOUNG = -1;
+    const DATE_INVALID = -2;
+
     public function validateBirthdate($birthdate)
     {
         $birthdate = str_replace(array('/','.'),'-',$birthdate);
@@ -902,18 +921,24 @@ ORDER BY
                 $day = $month;
                 $month = $temp;
             }
-            if (intval($year) < intval(date('Y', strtotime('-100 years'))) || intval($year) > intval(date('Y', strtotime('-17 years'))) || !checkdate($month, $day, $year))
-            {
-                return false;
+
+            if (!checkdate($month, $day, $year)) {
+                return self::DATE_INVALID;
             }
-            else
-            {
-                return "{$year}-{$month}-{$day}";
+
+            $iso_date =  $year . "-" . $month . "-" . $day;
+            if (($this->ageValue($iso_date) < SignupModel::YOUNGEST_MEMBER))
+                {
+                return self::TOO_YOUNG;
+                }
+                else
+                {
+                return $iso_date;
             }
         }
         else
         {
-            return false;
+            return self::DATE_INVALID;
         }
     }
 
@@ -933,7 +958,7 @@ ORDER BY
         $CanTranslate = false;
         // $CanTranslate = CanTranslate($vars["memberid"], $_SESSION['IdMember']);
         $ReadCrypted = "MemberReadCrypted"; // This might be changed in the future
-        if ($rights->hasRight('Admin') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles 
+        if ($rights->hasRight('Admin') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
         }
         $m->removeLanguages();;
@@ -945,7 +970,7 @@ ORDER BY
                 $ml->setSpokenLanguage($m, $language, $lang->Level);
             }
         }
-        
+
         // Set the language that ReplaceinMTrad uses for writing
         $words->setlangWrite($vars['profile_language']);
 
@@ -982,27 +1007,27 @@ ORDER BY
         $m->OfferGuests = $words->ReplaceInMTrad(strip_tags($vars['OfferGuests']),"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
         $m->OfferHosts = $words->ReplaceInMTrad(strip_tags($vars['OfferHosts']),"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
         $m->PublicTransport = $words->ReplaceInMTrad(strip_tags($vars['PublicTransport']),"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
-        
+
         // as $CanTranslate is set explicitly above, this is disabled
-        // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data        
+        // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data
 
         if ($vars["HouseNumber"] != $m->get_housenumber()) {
             $this->logWrite("Housenumber updated", "Address Update");
-        }                
+        }
         if ($vars["Street"] != $m->get_street()) {
             $this->logWrite("Street updated", "Address Update");
-        }                
+        }
         if ($vars["Zip"] != $m->get_zip()) {
             $this->logWrite("Zip updated", "Address Update");
-        }                
+        }
 
 		if ($vars["Email"]=="cryptedhidden") {
-			$this->logWrite("members.model updateprofile email keeps previous value (cryptedhidden detected)", "Debug"); 
+			$this->logWrite("members.model updateprofile email keeps previous value (cryptedhidden detected)", "Debug");
 		}
         else {
 			if ($vars["Email"] != $m->email) {
 				$this->logWrite("Email updated (previous was " . $m->email . ")", "Email Update"); // Sticking to old BW, the previous email is stored in logs,
-                                                                                               // this might be discussed, but if the member fills a bad email, 
+                                                                                               // this might be discussed, but if the member fills a bad email,
                                                                                                // there is no more way to retrieve him
                                                                                                // Todo : get rid with this, but implement a confimmation mail
 				$m->Email = MOD_crypt::NewReplaceInCrypted(strip_tags($vars['Email']),"members.Email",$IdMember, $m->Email, $IdMember, $this->ShallICrypt($vars,"Email"));
@@ -1033,7 +1058,7 @@ ORDER BY
 			$m->chat_Others = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_Others'])),"members.chat_Others",$IdMember, $m->chat_Others, $IdMember, $this->ShallICrypt($vars,"chat_Others"));
 		}
 		if ($vars["chat_GOOGLE"]!="cryptedhidden") {
-			$m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));        
+			$m->chat_GOOGLE = MOD_crypt::NewReplaceInCrypted(addslashes(strip_tags($vars['chat_GOOGLE'])),"members.chat_GOOGLE",$IdMember,$m->chat_GOOGLE, $IdMember, $this->ShallICrypt($vars,"chat_GOOGLE"));
 		}
 
         $firstname = MOD_crypt::AdminReadCrypted($m->FirstName);
@@ -1088,7 +1113,7 @@ ORDER BY
         // Check relations, and update them if they have changed
         $Relations=$m->get_all_relations() ;
         foreach($Relations as $Relation) {
-            if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id]) 
+            if (($words->mInTrad($Relation->Comment,$vars['profile_language'])!=$vars["RelationComment_".$Relation->id])
                 and (!empty($vars["RelationComment_".$Relation->id])))  {
 //              echo "Relation #".$Relation->id,"<br />", $words->mInTrad($Relation->Comment,$vars['profile_language']),"<br />",$vars['RelationComment_'.$Relation->id],"<br />" ;
                 $IdTrad = $words->ReplaceInMTrad(strip_tags($vars["RelationComment_".$Relation->id]),"specialrelations.Comment", $Relation->id, $Relation->Comment, $IdMember);
@@ -1111,7 +1136,7 @@ ORDER BY
             $group_name_translated = $words->get("Group_".$group->Name);
             $group_comment_translated = htmlspecialchars($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']), ENT_QUOTES);
             $IdMemberShip=$m->getGroupMembership($group)->id ;
-            if (($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language'])!=$vars["GroupMembership_".$IdMemberShip]) 
+            if (($words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language'])!=$vars["GroupMembership_".$IdMemberShip])
                 and (!empty($vars["GroupMembership_".$IdMemberShip])))  {
                 echo "Group #".$group_id,"<br />",$words->mInTrad($m->getGroupMembership($group)->Comment,$vars['profile_language']),"<br />",$vars["GroupMembership_".$IdMemberShip],"<br />" ;
                 $words->ReplaceInMTrad(strip_tags($vars["GroupMembership_".$IdMemberShip]),"membersgroups.Comment", $IdMemberShip, $m->getGroupMembership($group)->Comment, $IdMember);
@@ -1138,10 +1163,10 @@ ORDER BY
         else {
             $this->logWrite("update of another profile <b>".$m->Username."</b>", "Profile update"); // It can be an admin update or a delegated translation update
         }
-        
+
         return $status;
     }
-    
+
     /**
      * prettify values from post request
      *
@@ -1152,16 +1177,16 @@ ORDER BY
     public function polishProfileFormValues($vars)
     {
         $m = $vars['member'];
-        
+
         // Prepare $vars
         // JY fix, the escaping will be done from ReplaceInMTrad so I remove it
 //        $vars['ProfileSummary'] = $this->dao->escape($vars['ProfileSummary']);
         $vars['BirthDate'] = (($date = $this->validateBirthdate($vars['BirthDate'])) ? $date : $vars['BirthDate']);
         if (!isset($vars['HideBirthDate'])) $vars['HideBirthDate'] = 'No';
         // $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('ProfileOccupation', $profile_language) : '';
-        
+
         // update $vars for $languages
-        if(!isset($vars['languages_selected'])) { 
+        if(!isset($vars['languages_selected'])) {
             $vars['languages_selected'] = array();
         }
         $ii = 0;
@@ -1176,7 +1201,7 @@ ORDER BY
             }
             $ii2++;
         }
-        
+
         if (!isset($vars['IsHidden_FirstName'])) $vars['IsHidden_FirstName'] = 'No';
         if (!isset($vars['IsHidden_SecondName'])) $vars['IsHidden_SecondName'] = 'No';
         if (!isset($vars['IsHidden_LastName'])) $vars['IsHidden_LastName'] = 'No';
@@ -1186,13 +1211,13 @@ ORDER BY
         if (!isset($vars['IsHidden_HomePhoneNumber'])) $vars['IsHidden_HomePhoneNumber'] = 'No';
         if (!isset($vars['IsHidden_CellPhoneNumber'])) $vars['IsHidden_CellPhoneNumber']  = 'No';
         if (!isset($vars['IsHidden_WorkPhoneNumber'])) $vars['IsHidden_WorkPhoneNumber'] = 'No';
-        
+
 //        $vars['Accomodation'] = $this->dao->escape($vars['Accomodation']);
 //        $vars['MaxLenghtOfStay'] = $this->dao->escape($vars['MaxLenghtOfStay']);
 //        $vars['ILiveWith'] = $this->dao->escape($vars['ILiveWith']);
 //        $vars['OfferGuests'] = $this->dao->escape($vars['OfferGuests']);
 //        $vars['OfferHosts'] = $this->dao->escape($vars['OfferHosts']);
-        
+
         // Analyse TypicOffer list
         $TypicOffer = $m->TabTypicOffer;
         $max = count($TypicOffer);
@@ -1204,7 +1229,7 @@ ORDER BY
                 $vars['TypicOffer'] .= $TypicOffer[$ii];
             }
         } // end of for $ii
-        
+
         // Analyse Restrictions list
         $TabRestrictions = $m->TabRestrictions;
         $max = count($TabRestrictions);
@@ -1216,7 +1241,7 @@ ORDER BY
                 $vars['Restrictions'] .= $TabRestrictions[$ii];
             }
         } // end of for $ii
-            
+
 //        $vars['PublicTransport'] = $this->dao->escape($vars['PublicTransport']);
 //        $vars['Restrictions'] = $this->dao->escape($vars['Restrictions']);
 //        $vars['OtherRestrictions'] = $this->dao->escape($vars['OtherRestrictions']);
@@ -1266,7 +1291,7 @@ ORDER BY
         else
             return ("not crypted");
     } // end of ShallICrypt
-        
+
     /**
      * Shows a members picture in different sizes
      *
@@ -1306,7 +1331,7 @@ ORDER BY
         $this->avatarDir->readFile($file);
         PPHP::PExit();
     }
-        
+
     public function hasAvatar($memberid, $suffix = '')
     {
         if ($this->avatarDir->fileExists((int)$memberid . $suffix))
@@ -1318,19 +1343,19 @@ ORDER BY
             return $this->avatarMake($memberid,$img_path);
         }
     }
-    
-    
+
+
     public function getOldPicture($memberid) {
         $s = $this->dao->query('
-SELECT 
+SELECT
     `membersphotos`.`FilePath` as FilePath
-FROM     
-    `members` 
-LEFT JOIN 
-    `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` 
-WHERE 
+FROM
+    `members`
+LEFT JOIN
+    `membersphotos` on `membersphotos`.`IdMember`=`members`.`id`
+WHERE
     `members`.`id`=\'' . $memberid . '\' AND
-    `members`.`Status`=\'Active\' 
+    `members`.`Status`=\'Active\'
 ORDER BY membersphotos.SortOrder
 ');
         // look if any of the pics exists
@@ -1345,8 +1370,8 @@ ORDER BY membersphotos.SortOrder
             }
         }
         return false;
-    }    
-        
+    }
+
     public function avatarMake($memberid, $img_file, $using_original=false)
     {
         $img = new MOD_images_Image($img_file);
@@ -1364,7 +1389,7 @@ ORDER BY membersphotos.SortOrder
 
         if (!$using_original) {
         	$original_x = min($size[0],PVars::getObj('images')->max_width);
-        	$original_y = min($size[1],PVars::getObj('images')->max_height);        	
+        	$original_y = min($size[1],PVars::getObj('images')->max_height);
             $this->writeMemberphoto($memberid);
             $img->createThumb($this->avatarDir->dirName(), $memberid.'_original', $original_x, $original_y, true, 'ratio');
         }
@@ -1380,7 +1405,7 @@ ORDER BY membersphotos.SortOrder
     public function writeMemberphoto($memberid)
     {
         $s = $this->dao->exec("
-INSERT INTO 
+INSERT INTO
     `membersphotos`
     (
         FilePath,
@@ -1388,7 +1413,7 @@ INSERT INTO
         created,
         SortOrder,
         Comment
-    ) 
+    )
 VALUES
     (
         '" . $this->avatarDir->dirName() ."/". $memberid . "',
@@ -1421,10 +1446,10 @@ VALUES
 
     /**
      * Creates or updates a note for a member
-     * 
+     *
      * @param string username Username of the member for which the note is written
      * @param string category Category under which the note is filed
-     * @param string comment Comment text. May be empty  
+     * @param string comment Comment text. May be empty
      */
     public function writeNoteForMember($username, $category, $comment) {
         $loggedInMember = $this->getLoggedInMember();
@@ -1438,7 +1463,7 @@ VALUES
         }
         if ($res->numRows()) {
             $sql = "UPDATE mycontacts SET Updated = NOW(), Category = '" . $this->dao->escape($category) . "'"
-                 . ", Comment = '" . $this->dao->escape($comment) 
+                 . ", Comment = '" . $this->dao->escape($comment)
                  . "' WHERE IdMember = " . $loggedInMember->id . " AND IdContact = " . $member->id;
                     } else {
             $sql = "INSERT INTO mycontacts SET IdMember = " . $loggedInMember->id . ", IdContact = "
@@ -1450,7 +1475,7 @@ VALUES
 
     /**
      * Deletes the note for a member
-     * 
+     *
      * @param string memberId Id of the member for which the note was written
      */
     public function deleteNoteForMember($memberId) {

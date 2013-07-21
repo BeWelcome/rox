@@ -90,11 +90,11 @@ Boston, MA  02111-1307, USA.
         <div class="signup-row floatbox">
           <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
           <select id="BirthDate" name="birthyear">
-            <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
+            <option value=""><?php echo $words->getSilent('SignupBirthYear'); ?></option>
             <?php echo $birthYearOptions; ?>
           </select>
           <select name="birthmonth">
-            <option value=""><?php echo $words->get('SignupBirthMonth'); ?></option>
+            <option value=""><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
             <?php for ($i=1; $i<=12; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
             if (isset($vars['birthmonth']) && $vars['birthmonth'] == $i) {
@@ -104,7 +104,7 @@ Boston, MA  02111-1307, USA.
             <?php } ?>
           </select>
           <select name="birthday">
-            <option value=""><?php echo $words->get('SignupBirthDay'); ?></option>
+            <option value=""><?php echo $words->getSilent('SignupBirthDay'); ?></option>
             <?php for ($i=1; $i<=31; $i++) { ?>
             <option value="<?php echo $i; ?>"<?php
             if (isset($vars['birthday']) && $vars['birthday'] == $i) {
@@ -113,6 +113,7 @@ Boston, MA  02111-1307, USA.
             ?>><?php echo $i; ?></option>
             <?php } ?>
             </select>
+            <?php echo $words->flushBuffer(); ?>
             <?php
           if (in_array('SignupErrorBirthDate', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
@@ -161,10 +162,10 @@ Boston, MA  02111-1307, USA.
   </fieldset>
 
   <p class="floatbox">
-    <input style="float:left" type="submit" value="<?php echo $words->get('NextStep'); ?>" class="button"
+    <input style="float:left" type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    /><br /><br />
-    <a href="signup/1" class="button back" title="<?php echo $words->get('LastStep'); ?>" ><?php echo $words->get('Back'); ?> </a>
+    /><?php echo $words->flushBuffer(); ?><br /><br />
+    <a href="signup/1" class="button back" title="<?php echo $words->getSilent('LastStep'); ?>" ><?php echo $words->get('Back'); ?> </a><?php echo $words->flushBuffer(); ?>
   </p>
 
 </form>

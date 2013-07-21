@@ -54,13 +54,44 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
                   </td>
                 </tr>
+                           
+                
                 <tr align="left" >
                   <td class="label" ><strong><?=$words->get('SignupBirthDate')?></strong>: *</td>
                   <td colspan="2" >
-                    <input<?php if (isset($errorBirthDate)) { ?> class="error-input-text"<?php } ?> type='text' value="<?=$vars['BirthDate']?>" name="BirthDate"/>
-                    <?php if (isset($errorBirthDate)) { ?>
-                      <div class="error-caption"><?=$words->get('SignupErrorInvalidBirthDate')?></div>
-                    <?php } ?>
+                    <select id="BirthYear" name="BirthYear">
+                        <option value="0"><?php echo $words->getSilent('SignupBirthYear'); ?></option>
+                        <?php echo $birthYearOptions; ?>
+                    </select>
+                    <select name="BirthMonth">
+                        <option value="0"><?php echo $words->getSilent('SignupBirthMonth'); ?></option>
+                        <?php for ($i=1; $i<=12; $i++) { ?>
+                        <option value="<?php echo $i; ?>"<?php
+                        if (isset($vars['BirthMonth']) && $vars['BirthMonth'] == $i) {
+                            echo ' selected="selected"';
+                        }
+                        ?>><?php echo $i; ?></option>
+                        <?php } ?>
+                    </select>
+                    <select name="BirthDay">
+                        <option value="0"><?php echo $words->getSilent('SignupBirthDay'); ?></option>
+                        <?php for ($i=1; $i<=31; $i++) { ?>
+                        <option value="<?php echo $i; ?>"<?php
+                        if (isset($vars['BirthDay']) && $vars['BirthDay'] == $i) {
+                            echo ' selected="selected"';
+                        }
+                        ?>><?php echo $i; ?></option>
+                        <?php } ?>
+                    </select>
+                    <?php echo $words->flushBuffer(); ?>
+                    <?php
+                    if (in_array('SignupErrorBirthDate', $vars['errors'])) {
+                        echo '<div class="error">'.$words->get('SignupErrorBirthDate').'</div>';
+                    }
+                    if (in_array('SignupErrorBirthDateToLow', $vars['errors'])) {
+                        echo '<div class="error">'.$words->getFormatted('SignupErrorBirthDateToLow',SignupModel::YOUNGEST_MEMBER).'</div>';
+                    }
+                    ?>
                   </td>
                   <td><?=$words->get('EmailIsAlwayHidden')?></td>
                   </tr>

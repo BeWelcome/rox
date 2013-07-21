@@ -53,6 +53,9 @@ class EditProfilePage extends ProfilePage
         // Prepare $vars
         $vars['ProfileSummary'] = ($member->ProfileSummary > 0) ? $member->get_trad('ProfileSummary', $profile_language) : '';
         $vars['BirthDate'] = $member->BirthDate;
+        $vars['BirthYear'] = $member->byear;
+        $vars['BirthMonth'] = $member->bmonth;
+        $vars['BirthDay'] = $member->bday;
         $vars['HideBirthDate'] = $member->HideBirthDate;
         $vars['Occupation'] = ($member->Occupation > 0) ? $member->get_trad('Occupation', $profile_language) : '';
         $vars['Gender'] = $member->Gender;

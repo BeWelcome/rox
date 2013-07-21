@@ -276,7 +276,7 @@ LIMIT 1
                 SELECT
                     COUNT(*) As photoCount, IdMember
                 FROM
-                    membersPhotos
+                    membersphotos
                 GROUP BY
                     IdMember) mp
             ON

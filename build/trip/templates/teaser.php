@@ -22,7 +22,8 @@ $cloudmade_conf = PVars::getObj('cloudmade');
             	<div id="searchteaser" >
                 <form method="get" action="trip/search" class="float_right">
                     <input type="text" name="s" value="<?= htmlspecialchars($search, ENT_QUOTES)?>" />
-                    <input class="button" type="submit" name="submit" value="<?php echo $words->getFormatted('TripsSearch'); ?>" />
+                    <input class="button" type="submit" name="submit" value="<?php echo $words->getSilent('TripsSearch'); ?>" />
+                    <?php echo $words->flushBuffer(); ?>
                 </div>
                 </form>
             </div>

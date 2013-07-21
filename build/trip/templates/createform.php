@@ -59,7 +59,7 @@ if (isset($vars['d']) && $vars['d'])
 	}
 ?>
         <input type="hidden" name="<?=$callbackId?>" value="1"/>
-        <input type="submit" value="<?php echo $editing ? $words->get('TripSubmit_edit') : $words->get('TripSubmit_create');?>"/>
+        <input type="submit" value="<?php echo $editing ? $words->getSilent('TripSubmit_edit') : $words->getSilent('TripSubmit_create');?>"/><?php echo $words->flushBuffer(); ?>
     </p>
 </form>
 <?php

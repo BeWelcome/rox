@@ -497,11 +497,43 @@ dl.list {
     width:auto;
   }
 
-    /*\*/
-     * html div.pages li a {
-         width: 10px; /* IE */
-     }
-     /**/
+  /*\*/
+   * html div.pages li a {
+       width: 10px; /* IE */
+   }
+   /**/
+
+  div.fullpager {padding:1em 0; width: 100%; white-space: nowrap; overflow:hidden; text-align: center;}
+  div.fullpager ul{ margin:0; padding:0;display:inline-block; }
+  div.fullpager li{ display: inline-block; height: 18px; line-height: 16px; margin:0; padding: 0 0.2em; }
+  div.fullpager li.current a {color:#666;font-weight:bold; }
+  div.fullpager li a:hover {color: #333; background: transparent url(../images/cell_bg_orange.png) repeat-x scroll 0%; text-decoration:none; }
+  div.fullpager li a.off:hover {background: none; color: #666; }
+  div.fullpager li a:active {color: #fff; background: #ff9900;}
+  div.fullpager li a:focus {background-color: transparent; color: #333; text-decoration:none;}
+  div.fullpager li a{
+    background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    font-size:11px;
+    font-weight:bold;
+    text-decoration:none;
+    color: #ff8800;
+    height:18px !important;
+    line-height:16px !important;
+    margin:.2em;
+    padding:1px 5px;
+    text-align:center;
+    width:auto;
+  }
+
+  /*\*/
+   * html div.fullpager li a {
+       width: 10px; /* IE */
+   }
+  /**/
+
 
   /**
    * Footer

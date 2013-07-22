@@ -40,6 +40,9 @@ class MOD_layoutbits
     public static function PIC_100_100($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=100,$width=100,$quality=85,$picfile,$style);
     }
+    public static function PIC_75_75($username,$picfile='',$style="framed") {
+        return self::linkWithPictureVar($username,$height=75,$width=75,$quality=85,$picfile,$style);
+    }
     public static function PIC_50_50($username,$picfile='',$style="framed") {
         return self::linkWithPictureVar($username,$height=50,$width=50,$quality=85,$picfile,$style);
     }
@@ -206,7 +209,7 @@ class MOD_layoutbits
         $avatarDir = new PDataDir('user/avatars');
         if($avatarDir->fileExists((int)$userId.'_xs'))
             return 'members/avatar/'.$userId.'/?xs';
-        
+
         $picfile = self::userPic_userId($userId);
         $thumbfile = self::_getThumb($picfile, 100, 100, 100);
         return $thumbfile;
@@ -330,7 +333,7 @@ class MOD_layoutbits
         $filepath = getcwd()."/bw/memberphotos";
         $wwwpath = PVars::getObj('env')->baseuri."bw/memberphotos";
     	$avatarDir = new PDataDir('user/avatars');
-        
+
         $thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
 
         if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
@@ -478,7 +481,7 @@ class MOD_layoutbits
         // test if the given timestamp could be a unix timestamp, otherwise try to make it one
         $timestamp = ((is_string($timestamp) && intval($timestamp) == $timestamp) ? intval($timestamp) : $timestamp);
         if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
-        
+
         $words = new MOD_words();
         $difference = time() - $timestamp;
 
@@ -490,11 +493,53 @@ class MOD_layoutbits
         }
         $difference = round($difference);
         if($difference != 1) $periods[$j].= "s";
-        $periods[$j]=$periods[$j]."_ago" ;
-	
+        $periods[$j]=$periods[$j]."_ago";
         $text = $words->getSilent($periods[$j],$difference);
         return $text;
-        
+
+    }
+
+    // Returns a qualifier for how long ago the timestamp is
+    public function ago_qualified($timestamp) {
+        // test if the given timestamp could be a unix timestamp, otherwise try to make it one
+        $timestamp = ((is_string($timestamp) && intval($timestamp) == $timestamp) ? intval($timestamp) : $timestamp);
+        if (!is_int($timestamp)) $timestamp = strtotime($timestamp);
+
+        $difference = time() - $timestamp;
+
+        $periods = array ('second','minute','hour','day','week','month','year','decade' );
+        $lengths = array ("60","60","24","7","4.35","12","10");
+        for($j = 0; $j < count($lengths) && $difference >= $lengths[$j]; $j++) {
+            $difference /= $lengths[$j];
+        }
+        $difference = round($difference);
+        $qualified = 3;
+        switch ($periods[$j]) {
+            case "second":
+            case "minute":
+            case "hour":
+            case "day":
+                $qualified = 0;
+                break;
+            case "week":
+                if ($difference > 4) {
+                    $qualified = 1;
+                } else {
+                    $qualified = 0;
+                }
+                break;
+            case "month":
+                if ($difference <= 6) {
+                    $qualified = 1;
+                } else {
+                    $qualified = 2;
+                }
+                break;
+            default:
+                $qualified = 2;
+        }
+
+        return $qualified;
     }
 
 
@@ -577,12 +622,12 @@ class MOD_layoutbits
 //		echo "$Param=".$_SESSION["Param"]->$Param ;
 //		die(0) ;
 		return($_SESSION["Param"]->$Param) ;
-	/* 
-	
+	/*
+
 	// Removed by JeanYves Params are to be retrieve in $_SESSION["Param"]
 	// which is only to be fetched from database only once but at EACH page refresh
-	
-	
+
+
         // get the user id
         $row = self::get()->dao->query(
             "SELECT *".
@@ -590,9 +635,9 @@ class MOD_layoutbits
         )->fetch(PDB::FETCH_OBJ);
         return $row->$Param;
 	*/
-	
+
     }
-    
+
     // COPIED FROM OLD BW
     // fage_value return a  the age value corresponding to date
     public function fage_value($dd) {
@@ -636,21 +681,21 @@ class MOD_layoutbits
      *
      * @return string Truncated version of string
      */
-    function truncate_words($text, $limit, $ellipsis = ' ...') {
+    public static function truncate_words($text, $limit, $ellipsis = ' ...') {
         $words = preg_split("/[\n\r\t ]+/", $text, $limit + 1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_OFFSET_CAPTURE);
         if (count($words) > $limit) {
             end($words); //ignore last element since it contains the rest of the string
             $last_word = prev($words);
-               
+
             $text =  substr($text, 0, $last_word[1] + strlen($last_word[0])) . $ellipsis;
         }
         return $text;
     }
-    
+
     /**
-     * Returns a string with the gender if that isn't hidden. Translated of the 
+     * Returns a string with the gender if that isn't hidden. Translated of the
      * form 'Gender: male/female/other'
-     * 
+     *
      * @return string 'Gender: male/female/other/ translated or empty string
      */
     public static function getGenderTranslated($gender, $hideGender, $addGenderText = true) {
@@ -664,7 +709,7 @@ class MOD_layoutbits
                 $string .= $words->getFormatted($gender);
             } else {
                 $string .= $words->getFormatted('GenderOther');
-            } 
+            }
         }
         return $string;
     }

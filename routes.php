@@ -174,12 +174,12 @@
     $this->addRoute('suggestions_devlist_pages', 'suggestions/dev/page/:pageno:', 'suggestionsController', 'suggestionsDevList');
 
     // searchmembers
-    //$this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');
-    //$this->addRoute('searchmembers_map', 'search/members/map', 'SearchController', 'searchMembersOnMap');
-    //$this->addRoute('searchmembers_map_advanced', 'search/members/map/advanced', 'SearchController', 'searchMembersOnMap');
-    //$this->addRoute('searchmembers_text', 'search/members/text', 'SearchController', 'searchMembersText');
-    //$this->addRoute('searchmembers_text_advanced', 'search/members/text/advanced', 'SearchController', 'searchMembersText');
-    //$this->addRoute('search_places', 'search/locations/:type:', 'SearchController', 'searchSuggestLocations');
+    $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');
+    $this->addRoute('searchmembers_map', 'search/members/map', 'SearchController', 'searchMembersOnMap');
+    $this->addRoute('searchmembers_map_advanced', 'search/members/map/advanced', 'SearchController', 'searchMembersOnMap');
+    $this->addRoute('searchmembers_text', 'search/members/text', 'SearchController', 'searchMembersText');
+    $this->addRoute('searchmembers_text_advanced', 'search/members/text/advanced', 'SearchController', 'searchMembersText');
+    $this->addRoute('search_places', 'search/locations/:type:', 'SearchController', 'searchSuggestLocations');
 
     // safety pages
     $this->addRoute('safety', 'safety', 'safetyController', 'safety');

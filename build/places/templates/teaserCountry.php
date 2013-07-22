@@ -37,14 +37,14 @@ $city = htmlspecialchars($city);
         echo '<a href="places">'.$words->getFormatted('CountryTitle').'</a>';
         echo '<span class="small">';
         if (!$region) { 
-            echo ' > '.$country->name;
+            echo ' &raquo; '.$country->name;
         } else {
-            echo ' > <a href="places/'.$countrycode.'">'.$country->name.'</a>'; 
+            echo ' &raquo; <a href="places/'.$countrycode.'">'.$country->name.'</a>'; 
             if (!$city) { 
-                echo ' > '.$region;
+                echo ' &raquo; '.$region;
             } else {
-                echo ' > <a href="places/'.$countrycode.'/'.$region.'">'.$region.'</a>'; 
-                echo ' > '.$city;
+                echo ' &raquo; <a href="places/'.$countrycode.'/'.$region.'">'.$region.'</a>'; 
+                echo ' &raquo; '.$city;
             }
         }
         echo '</span>';

@@ -195,7 +195,7 @@ if (isset($vars['id']) && $vars['id']) {
         <!-- End trip start date block -->
         <!-- Start location search block -->
         <label for="create-location"><?=$words->get('BlogCreateTrips_LabelLocation')?>:</label><br />
-        <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->get('label_search_location')?>" />
+        <input type="text" name="create-location" id="create-location" value="" /> <input type="button" id="btn-create-location" class="button" value="<?=$words->getSilent('label_search_location')?>" /><?php echo $words->flushBuffer(); ?>
         <p class="desc"><?=$words->get('BlogCreateTrips_SublineLocation')?></p>
         <!-- End location search block -->
     </div>

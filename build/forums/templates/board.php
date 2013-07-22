@@ -75,6 +75,7 @@ if ($boardName != 'no tags') {
 	}
 
 ?>
+<?php echo $words->flushBuffer(); ?>
 
 <h3><?php
 

@@ -31,8 +31,8 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                     <?= $words->get('GroupsJoinLoginFirst'); ?>
                 <?php else : ?>
                 <div class="row clearfix">
-                    <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->get('GroupsJoinTheGroup') : $words->get('GroupsLeaveTheGroup') ); ?></span></a>
-                </div><br />
+                    <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->getSilent('GroupsJoinTheGroup') : $words->getSilent('GroupsLeaveTheGroup') ); ?></span></a>
+                </div><?php echo $words->flushBuffer(); ?><br />
                 <?php endif; ?>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">

@@ -22,7 +22,7 @@ $titleSetting = A PP_User::getSetting($userId, 'blog_title'); */
 $request = PRequest::get()->request;
     echo '<h1>';
     echo '<a href="blog">'.$words->getFormatted('blogs').'</a>';
-    if (isset($request[1])) echo '&raquo; <a href="blog/'.htmlspecialchars($request[1], ENT_QUOTES).'">'. $words->get('Blog' . htmlspecialchars($request[1], ENT_QUOTES)).'</a>';
+    if (isset($request[1])) echo ' &raquo; <a href="blog/'.htmlspecialchars($request[1], ENT_QUOTES).'">'. $words->get('Blog' . htmlspecialchars($request[1], ENT_QUOTES)).'</a>';
     echo '</h1>';
 ?>
 </div>

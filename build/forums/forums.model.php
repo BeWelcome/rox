@@ -876,8 +876,8 @@ WHERE `iso_alpha2` = '%s'
         $group = $gr->fetch(PDB::FETCH_OBJ);
 
         $subboards = array();
-		$gtitle= $this->words->getFormatted("ForumGroupTitle", $this->getGroupName($group->Name)) ;
-        if ($this->tags) {
+		$gtitle= $this->words->getSilent("ForumGroupTitle", $this->getGroupName($group->Name)) ;
+            if ($this->tags) {
             $taginfo = $this->getTagsNamed();
             $url = 'forums';
 

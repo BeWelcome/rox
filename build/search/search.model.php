@@ -55,7 +55,8 @@ class SearchModel extends RoxModelBase
     private function getLocationsFromDatabase($location) {
         $query = "
             SELECT
-                g.geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF (m.IdCity IS NULL, 0, m.membersCount) AS cnt
+                g.geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF (m.IdCity IS NULL, 0, m.membersCount) AS cnt, '" .
+                    $this->dao->escape($this->getWords()->getSilent('SearchPlaces')) . "' AS category
             FROM
                 geonames g
             LEFT JOIN
@@ -83,6 +84,8 @@ class SearchModel extends RoxModelBase
                 m.IdCity = g.geonameid
             WHERE
                 g.name LIKE '" . $location . "'
+                AND g.fclass = 'P'
+                AND g.fcode <> 'PPLH' AND g.fcode <> 'PPLW' AND g.fcode <> 'PPLQ' AND g.fcode <> 'PPLCH'
             ORDER BY
                 cnt DESC";
         error_log($query);
@@ -376,7 +379,8 @@ LIMIT 1
     private function getPlacesFromDatabase($ids) {
         $query = "
             SELECT
-                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF(m.id IS NULL, 0, COUNT(g.geonameid)) AS cnt
+                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF(m.id IS NULL, 0, COUNT(g.geonameid)) AS cnt, '"
+                    . $this->getWords()->getSilent('SearchPlaces') . "' AS category
             FROM
                 geonames g
             LEFT JOIN
@@ -409,7 +413,6 @@ LIMIT 1
         }
         $rows = array();
         while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
-            $row->category = $this->getWords()->getSilent('SearchPlaces');
             $rows[] = $row;
         }
         return $rows;

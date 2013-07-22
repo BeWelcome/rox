@@ -61,15 +61,16 @@ $layoutbits = new MOD_layoutbits();
 				</div>
         <?php echo $words->flushBuffer(); ?></div>
 			<div class="float_left">
-				<span class="small"><?=$words->get('CanHost');?></span><br /> <select
+				<span class="small"><?=$words->get('SearchCanHostAtLeast');?></span><br /> <select
 					id="search-can-host" name="search-can-host" style="width: 5em;"><?php
-    for($ii = 1; $ii < 30; $ii++) :
-        echo '<option value="' . $ii . '"';
-        if ($ii == $vars['search-can-host']) {
+	$canHost = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
+    foreach($canHost as $value => $display) :
+        echo '<option value="' . $value . '"';
+        if ($value == $vars['search-can-host']) {
             echo ' selected="selected"';
         }
-        echo '>' . $ii . '</option>';
-    endfor;
+        echo '>' . $display . '</option>';
+    endforeach;
     ?></select>
 			</div><div class="float_right">
 				<br /><input
@@ -121,7 +122,7 @@ $layoutbits = new MOD_layoutbits();
         $pager->render();?>
 <table class="full" style="width: 100%">
 <thead>
-<tr><th colspan="2">Member</th><th>Profile Summary</th><th>Details</th></tr>
+<tr><th colspan="2"><?php echo $words->get('SearchHeaderMember');?></th><th><?php echo $words->get('ProfileSummary');?></th><th><?php echo $words->get('SearchHeaderDetails'); ?></th></tr>
 </thead>
 <tbody>
 <?php

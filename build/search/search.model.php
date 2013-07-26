@@ -55,41 +55,31 @@ class SearchModel extends RoxModelBase
     private function getLocationsFromDatabase($location) {
         $query = "
             SELECT
-                g.geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF (m.IdCity IS NULL, 0, m.membersCount) AS cnt, '" .
-                    $this->dao->escape($this->getWords()->getSilent('SearchPlaces')) . "' AS category
+                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, COUNT(m.IdCity) AS cnt, 'SearchPlaces' AS category
             FROM
-                geonames g
+                members m, geonames g
+            LEFT JOIN
+                geonamescountries c
+            ON
+                g.country = c.country
             LEFT JOIN
                 geonamesadminunits a
             ON
                 g.country = a.country
                 AND g.admin1 = a.admin1
                 AND a.fcode = 'ADM1'
-            LEFT JOIN
-                geonamescountries c
-            ON
-                g.country = c.country
-            LEFT JOIN (
-                SELECT
-                    COUNT(*) AS membersCount, IdCity
-                FROM
-                    members
-                WHERE
-                    Status IN ('Active', 'OutOfRemind')
-                    AND MaxGuest >= 1
-                GROUP BY
-                    IdCity
-                ) m
-            ON
-                m.IdCity = g.geonameid
             WHERE
-                g.name LIKE '" . $location . "'
+                g.name LIKE '" . $location . "%'
                 AND g.fclass = 'P'
                 AND g.fcode <> 'PPLH' AND g.fcode <> 'PPLW' AND g.fcode <> 'PPLQ' AND g.fcode <> 'PPLCH'
+                AND m.IdCity = g.geonameid
+                AND m.Status IN ('Active')
+            GROUP BY
+                m.IdCity
             ORDER BY
                 cnt DESC";
-        error_log($query);
         $locations = $this->bulkLookup($query);
+
         return $locations;
     }
 
@@ -382,7 +372,7 @@ LIMIT 1
                 g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF(m.id IS NULL, 0, COUNT(g.geonameid)) AS cnt, '"
                     . $this->getWords()->getSilent('SearchPlaces') . "' AS category
             FROM
-                geonames g
+                members m, geonames g
             LEFT JOIN
                 geonamescountries c
             ON
@@ -457,7 +447,7 @@ LIMIT 1
         if ($count) {
             $sphinxClient->SetLimits(0, $count);
         }
-        return $sphinxClient->Query($sphinxClient->EscapeString("^" . $location));
+        return $sphinxClient->Query($sphinxClient->EscapeString("^" . $location . "*"));
     }
 
     public function suggestLocations($location, $type) {
@@ -476,6 +466,7 @@ LIMIT 1
             $places = $this->getPlacesFromDataBase($ids);
             $locations = array_merge($locations, $places);
             $result['result'] = 'success';
+            $result['places'] = 1;
         }
         // Get administrative units
         $res = $this->sphinxSearch( $location, false );
@@ -489,10 +480,14 @@ LIMIT 1
             $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
             $locations = array_merge($locations, $adminunits);
             $result["result"] = "success";
+            $result['adminunits'] = 1;
         }
         // If nothing was found assume that search daemon isn't running and
         // try to get something from the database
-        $locations = $this->getLocationsFromDatabase($location);
+        if (empty($locations)) {
+            $locations = $this->getLocationsFromDatabase($location);
+            $result['database'] = 1;
+        }
         if (!empty($locations)) {
             $result['result'] = 'success';
         }

@@ -72,7 +72,8 @@ class MOD_sphinx
         $sphinxClient->SetWeights ( array ( 100, 1 ) );
         $sphinxClient->SetMatchMode ( SPH_MATCH_EXTENDED );
         $sphinxClient->SetLimits(0, 10);
-        $sphinxClient->SetRankingMode( SPH_RANK_SPH04 );
+        // $sphinxClient->SetRankingMode( SPH_RANK_SPH04 );
+        $sphinxClient->SetSortMode( SPH_SORT_EXPR, "@weight + LN(population + 1 ) * 2");
         return $sphinxClient;
     }
 }

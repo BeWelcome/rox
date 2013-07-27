@@ -72,7 +72,7 @@ jQuery(function() {
     
     return false;
   },
-  minLength: 1,
+  minLength: 3,
   delay: 200,
     });
 });

@@ -75,7 +75,7 @@ class PlacesView extends PAppView
             $countryinfo->memberCount += $region['number'];
 
             $listcnt++;
-            if ($listcnt > max(MINROWS,count($this->regions)/MAXCOLS)) {
+            if ($listcnt > max(MINROWS,ceil(count($this->regions)/MAXCOLS))) {
                 $regionlist .= '</ul>';
                 $regionlist .= '<ul class="float_left">';
                 $listcnt = 1;
@@ -101,7 +101,7 @@ class PlacesView extends PAppView
         foreach ($this->cities as $city) {
             $regioninfo->memberCount += $city->NbMember;
             $listcnt++;
-            if ($listcnt > max(MINROWS,count($this->cities)/MAXCOLS)) {
+            if ($listcnt > max(MINROWS,ceil(count($this->cities)/MAXCOLS))) {
                 $citylist .= '</ul>';
                 $citylist .= '<ul class="float_left">';
                 $listcnt = 1;

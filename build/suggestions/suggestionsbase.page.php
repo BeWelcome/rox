@@ -50,17 +50,19 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $words = $this->getWords();
         $items = array();
         if ($this->hasSuggestionRights) {
-        //    $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
-        //    $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
-        }
-        // $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
-        if ($this->hasSuggestionRights) {
-        //    $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
+        $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
+            $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
+            $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
+            $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
         }
         $items[] = array('vote', 'suggestions/vote', $words->getSilent('SuggestionsVote'));
-        // $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
-        // $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
-        // $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
+        if ($this->hasSuggestionRights) {
+            $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
+            $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
+            $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
+            $items[] = array('process', 'suggestions/process', $words->getSilent('SuggestionsProcess'));
+            $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeam'));
+        }
         return $items;
     }
 

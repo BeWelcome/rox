@@ -111,6 +111,12 @@ Boston, MA  02111-1307, USA.
           <?php
           if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
+          } elseif (in_array('SignupErrorEmailCheck', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorEmailCheck').'</div>';
+          } elseif (in_array('SignupErrorEmailAddressAlreadyInUse', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorEmailAddressAlreadyInUse').'</div>';
+          } else {
+            echo '<br>';
           }
           ?>
           <!--
@@ -119,6 +125,14 @@ Boston, MA  02111-1307, USA.
           <span><?php echo $words->get('SignupEmailDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupEmailShortDesc'); ?></span>
           -->
+        </div> <!-- signup-row -->
+        
+        <!-- confirm email -->
+        <div class="signup-row floatbox">
+          <label for="register-emailcheck"><?php echo $words->get('SignupCheckEmail'); ?>* </label>
+          <input type="text" id="register-emailcheck" name="emailcheck" class="float_left" <?php
+            echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
+            ?> />
         </div> <!-- signup-row -->
 
   </fieldset>

@@ -117,10 +117,7 @@ Normally you cannot see it when logged in.<br>
 Please only use the page for translations!
 </div>
 <br>
-Related pages:
-<a href="signup/terms">terms</a> ::
-<a href="signup/privacy">privacy</a> ::
-<a href="signup/finish">finish</a>
+Related page: <a href="signup/finish">Signup confirmation</a>
 </div>
 '
             ;

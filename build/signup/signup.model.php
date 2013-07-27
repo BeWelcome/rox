@@ -611,7 +611,11 @@ VALUES
         if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email'])) {
             $errors[] = 'SignupErrorInvalidEmail';
         }
-
+        
+        if (!isset($vars['emailcheck']) || strcmp($vars['email'], $vars['emailcheck']) != 0) {
+            $errors[] = 'SignupErrorEmailCheck';
+        }
+        
         $users = $this->takeCareForNonUniqueEmailAddress($vars['email']);
         if ($users != '') {
             $errors[] = 'SignupErrorEmailAddressAlreadyInUse';

@@ -172,6 +172,8 @@
     $this->addRoute('suggestions_rejectedlist_pages', 'suggestions/rejected/page/:pageno:', 'suggestionsController', 'suggestionsRejectedList');
     $this->addRoute('suggestions_devlist', 'suggestions/dev', 'suggestionsController', 'suggestionsDevList');
     $this->addRoute('suggestions_devlist_pages', 'suggestions/dev/page/:pageno:', 'suggestionsController', 'suggestionsDevList');
+    $this->addRoute('suggestions_process', 'suggestions/process', 'suggestionsController', 'suggestionsProcess');
+    $this->addRoute('suggestions_team', 'suggestions/team', 'suggestionsController', 'suggestionsTeam');
 
     // searchmembers
     $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');

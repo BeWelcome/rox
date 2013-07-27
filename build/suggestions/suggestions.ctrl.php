@@ -123,9 +123,9 @@ class SuggestionsController extends RoxControllerBase
     }
 
     public function suggestionsEditCreate() {
+        error_log("Edit/Create");
         $loggedInMember = $this->_model->getLoggedInMember();
-        $hasSuggestionRights = $this->hasSuggestionRights();
-        if (!$loggedInMember | !$hasSuggestionRights) {
+        if (!$loggedInMember) {
             $this->redirectAbsolute($this->router->url('suggestions_votelist'));
         }
         if (isset($this->route_vars['id'])) {
@@ -139,7 +139,6 @@ class SuggestionsController extends RoxControllerBase
             $pageno = $this->route_vars['pageno'] - 1;
         }
         $page = new SuggestionsEditCreatePage();
-        $page->hasSuggestionRights = $hasSuggestionRights;
         $page->member = $loggedInMember;
         $page->suggestion = $suggestion;
         return $page;
@@ -152,7 +151,6 @@ class SuggestionsController extends RoxControllerBase
         }
         $page = new SuggestionsApproveListPage();
         $page->member = $this->_model->getLoggedInMember();
-        $page->hasSuggestionsRight = $this->hasSuggestionRights();
         $count = $this->_model->getSuggestionsCount(self::SUGGESTIONS_AWAIT_APPROVAL);
         $suggestions = $this->_model->getSuggestions(self::SUGGESTIONS_AWAIT_APPROVAL, $pageno, self::SUGGESTIONS_PER_PAGE);
         $page->suggestions = $suggestions;

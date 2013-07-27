@@ -46,7 +46,7 @@ jQuery(function() {
             return {
               label: (item.name ? item.name : "")+ (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "")  + (item.cnt != 0 ? " (" + item.cnt +")" : ""),
               labelnocount: (item.name ? item.name : "")+ (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : ""),
-              value: item.geonameid,
+              value: item.geonameid, latitude: item.latitude, longitude: item.longitude,
               category: item.category
             };
           }));
@@ -68,6 +68,8 @@ jQuery(function() {
   },
   select: function( event, ui ) {
     jQuery( "#search-geoname-id" ).val( ui.item.value );
+    jQuery( "#search-latitude" ).val( ui.item.latitude );
+    jQuery( "#search-longitude" ).val( ui.item.longitude );
     jQuery( this ).val( ui.item.labelnocount );
     
     return false;

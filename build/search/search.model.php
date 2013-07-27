@@ -29,22 +29,44 @@ Boston, MA  02111-1307, USA.
 class SearchModel extends RoxModelBase
 {
     // const ORDER_NOSORT = 0; // Not needed as this would be the same as for MEMBERSHIP
-    const ORDER_NAME = 2;
+    const ORDER_USERNAME = 2;
     const ORDER_AGE = 4;
     const ORDER_ACCOM = 6;
     const ORDER_LOGIN = 8;
     const ORDER_MEMBERSHIP = 10;
     const ORDER_COMMENTS = 12;
+    const ORDER_DISTANCE = 14;
 
     private static $ORDERBY = array(
-        self::ORDER_NAME => array('WordCode' => 'SearchOrderName', 'Column' => 'm.Username'),
+        self::ORDER_USERNAME => array('WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'),
         self::ORDER_ACCOM => array('WordCode' => 'SearchOrderAccommodation', 'Column' => 'm.Accomodation'),
+        self::ORDER_DISTANCE => array('WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'),
         self::ORDER_LOGIN => array('WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'),
         self::ORDER_MEMBERSHIP => array('WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'),
         self::ORDER_COMMENTS => array('WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'));
 
     public static function getOrderByArray() {
         return self::$ORDERBY;
+    }
+
+    private function getOrderBy($orderBy) {
+        $orderType = $orderBy - ($orderBy % 2);
+        $order = self::$ORDERBY[$orderType]['Column'];
+        if ($orderBy % 2 == 1) {
+            $order .= " DESC";
+        } else {
+            $order .= " ASC";
+        }
+        switch ($orderType) {
+        	case self::ORDER_ACCOM:
+        	case self::ORDER_COMMENTS:
+        	    $order .= ', Distance ASC, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+        	    break;
+        	case self::ORDER_DISTANCE:
+        	    $order .= ', m.Accomodation, HasProfileSummary DESC, HasProfilePhoto DESC, LastLogin DESC';
+        	    break;
+        }
+        return $order;
     }
 
     /*
@@ -55,7 +77,8 @@ class SearchModel extends RoxModelBase
     private function getLocationsFromDatabase($location) {
         $query = "
             SELECT
-                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, COUNT(m.IdCity) AS cnt, 'SearchPlaces' AS category
+                g.geonameid AS geonameid, g.name AS name, g.latitude AS latitude,
+                g.longitude AS longitude, a.name AS admin1, c.name AS country, COUNT(m.IdCity) AS cnt, 'SearchPlaces' AS category
             FROM
                 members m, geonames g
             LEFT JOIN
@@ -190,21 +213,52 @@ LIMIT 1
         return $namePart;
     }
 
-    private function getOrderBy($orderBy) {
-        $orderType = $orderBy - ($orderBy % 2);
-        $order = self::$ORDERBY[$orderType]['Column'];
-        if ($orderBy % 2 == 1) {
-            $order .= " DESC";
-        } else {
-            $order .= " ASC";
+    /**
+     * If distance was provided create condition to take them into account
+     *
+     * @param  array		$vars: Variables from query (passed by reference)
+     *
+     * @return string    WHERE condition
+     *
+     */
+    private function locationWhere($vars) {
+        error_log(print_r($vars, true));
+        $distance = $vars['search-distance'];
+        // calculate rectangle around place with given distance
+        $lat = deg2rad(doubleval($vars['search-latitude']));
+        $long = deg2rad(doubleval($vars['search-longitude']));
+
+        $latne = rad2deg(($distance + 12740 * $lat) / 12740);
+        $latsw = rad2deg((12740 * $lat - $distance) / 12740);
+
+        $radiusAtLongitude = 6370 * cos($long);
+        $longne = rad2deg(($distance + $radiusAtLongitude * $long) / $radiusAtLongitude);
+        $longsw = rad2deg(($radiusAtLongitude * $long - $distance) / $radiusAtLongitude);
+
+        // now fetch all location from geonames which are in that given rectangle
+        $query = "
+            SELECT
+                g.geonameid AS geonameid
+            FROM
+                geonames g
+            WHERE
+                g.fclass = 'P'
+                AND g.fcode <> 'PPLH' AND g.fcode <> 'PPLW' AND g.fcode <> 'PPLQ' AND g.fcode <> 'PPLCH'
+                AND g.latitude < " . $latne . "
+                AND g.latitude > " . $latsw . "
+                AND g.longitude < " . $longne . "
+                AND g.longitude > " . $longsw;
+
+        $where = "AND a.IdCity = g.geonameid
+                  AND g.geonameid IN ('";
+        error_log($query);
+        $geonameids = $this->bulkLookup($query);
+        error_log(print_r($geonameids, true));
+        foreach($geonameids as $geonameid) {
+            $where .= $geonameid->geonameid . "', '";
         }
-        switch ($orderType) {
-        	case self::ORDER_ACCOM:
-        	case self::ORDER_COMMENTS:
-        	    $order .= ', HasProfileSummary DESC, HasProfilePhoto DESC';
-        	    break;
-        }
-        return $order;
+        $where = substr($where, 0, -3) . ")";
+        return $where;
     }
 
     /*
@@ -221,7 +275,7 @@ LIMIT 1
         }
         $start = ($pageno -1) * $limit;
         $vars['search-page-current'] = $pageno;
-        // *FROM* will be replaced later on (don't change)
+        // *FROM* and *WHERE* will be replaced later on (don't change)
         $str = "
             SELECT SQL_CALC_FOUND_ROWS
                 m.id,
@@ -245,6 +299,8 @@ LIMIT 1
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
                 g.latitude AS Latitude,
                 g.longitude AS Longitude,
+                ((g.latitude - " . $vars['search-latitude'] . ") * (g.latitude - " . $vars['search-latitude'] . ") +
+                        (g.longitude - " . $vars['search-longitude'] . ") * (g.longitude - " . $vars['search-longitude'] . "))  AS Distance,
                 g.name AS CityName,
                 gc.name AS CountryName,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
@@ -274,12 +330,11 @@ LIMIT 1
                     IdMember) mp
             ON
                 mp.IdMember = m.id
-            WHERE
+            *WHERE*
                 m.MaxGuest >= " . $vars['search-can-host'] . "
-                AND m.IdCity = " . $vars['search-geoname-id'] . "
                 AND m.status IN ('Active', 'OutOfRemind')
                 AND m.id = a.idmember
-                AND a.IdCity = g.geonameid
+                " . $this->locationWhere($vars) . "
                 AND g.country = gc.country
             ORDER BY
                 " . $this->getOrderBy($vars['search-sort-order']) . "
@@ -289,9 +344,10 @@ LIMIT 1
         // Make sure only public profiles are found if no one's logged in
         if (!$this->getLoggedInMember()) {
             $str = str_replace('*FROM*', 'FROM memberspublicprofiles mpp,', $str);
-            $str = str_replace('WHERE', 'WHERE m.id = mpp.id AND ', $str);
+            $str = str_replace('*WHERE*', 'WHERE m.id = mpp.id AND ', $str);
         }
         $str = str_replace('*FROM*', 'FROM', $str);
+        $str = str_replace('*WHERE*', 'WHERE', $str);
 
         error_log($str);
         $rawMembers = $this->bulkLookup($str);
@@ -369,10 +425,11 @@ LIMIT 1
     private function getPlacesFromDatabase($ids) {
         $query = "
             SELECT
-                g.geonameid AS geonameid, g.name AS name, a.name AS admin1, c.name AS country, IF(m.id IS NULL, 0, COUNT(g.geonameid)) AS cnt, '"
+                g.geonameid AS geonameid, g.name AS name, g.latitude AS latitude, g.longitude AS longitude,
+                a.name AS admin1, c.name AS country, IF(m.id IS NULL, 0, COUNT(g.geonameid)) AS cnt, '"
                     . $this->getWords()->getSilent('SearchPlaces') . "' AS category
             FROM
-                members m, geonames g
+                geonames g
             LEFT JOIN
                 geonamescountries c
             ON
@@ -388,7 +445,7 @@ LIMIT 1
                 members m
             ON
                 g.geonameid = m.IdCity
-                AND m.Status IN ('Active', 'OutOfRemind')
+                AND m.Status = 'Active'
                 AND m.MaxGuest >= 1
             WHERE
                 g.geonameid in ('" . implode("','", $ids) . "')
@@ -412,7 +469,7 @@ LIMIT 1
         // get country names for found ids
         $query = "
             SELECT
-                a.geonameid AS geonameid, a.name AS admin1, c.name AS country, 0 AS cnt
+                a.geonameid AS geonameid, a.latitude AS latitude, a.longitude AS longitude, a.name AS admin1, c.name AS country, 0 AS cnt
             FROM
                 geonames a
             LEFT JOIN

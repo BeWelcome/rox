@@ -5,7 +5,10 @@ $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['search-location'] = '';
     $vars['search-can-host'] = 1;
+    $vars['search-distance'] = 25;
     $vars['search-geoname-id'] = 0;
+    $vars['search-latitude'] = 0;
+    $vars['search-longitude'] = 0;
     $vars['search-number-items'] = 10;
     $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
     $vars['search-page-current'] = 1;
@@ -50,7 +53,9 @@ $layoutbits = new MOD_layoutbits();
 				<label for='search-location'><span class="small"><?=$words->get('SearchEnterLocation');?></span></label><br />
 				<div>
 					<input type="hidden" name="search-geoname-id"
-						id="search-geoname-id" value="<?php echo $vars['search-geoname-id']; ?>" /> <input style="width:50em" name="search-location"
+						id="search-geoname-id" value="<?php echo $vars['search-geoname-id']; ?>" /><input type="hidden" name="search-latitude"
+						id="search-latitude" value="<?php echo $vars['search-latitude']; ?>" /><input type="hidden" name="search-longitude"
+						id="search-longitude" value="<?php echo $vars['search-longitude']; ?>" /> <input name="search-location"
 						id="search-location"
 						value="<?php echo $vars['search-location']; ?>" /> <img
 						id="search-loading" style="visibility: hidden"
@@ -62,11 +67,23 @@ $layoutbits = new MOD_layoutbits();
         <?php echo $words->flushBuffer(); ?></div>
 			<div class="float_left">
 				<span class="small"><?=$words->get('SearchCanHostAtLeast');?></span><br /> <select
-					id="search-can-host" name="search-can-host" style="width: 5em;"><?php
+					id="search-can-host" name="search-can-host" style="width: 7em;"><?php
 	$canHost = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
     foreach($canHost as $value => $display) :
         echo '<option value="' . $value . '"';
         if ($value == $vars['search-can-host']) {
+            echo ' selected="selected"';
+        }
+        echo '>' . $display . '</option>';
+    endforeach;
+    ?></select>
+			</div>			<div class="float_left">
+				<span class="small"><?=$words->get('SearchDistance');?></span><br /> <select
+					id="search-distance" name="search-distance" style="width: 7em;"><?php
+	$distance = array(0 => "Exact matches", 5  => '5', 10 => '10', 25 => '25', 50 => '50', 100 => '100');
+    foreach($distance as $value => $display) :
+        echo '<option value="' . $value . '"';
+        if ($value == $vars['search-distance']) {
             echo ' selected="selected"';
         }
         echo '>' . $display . '</option>';

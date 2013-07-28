@@ -32,7 +32,7 @@ jQuery(function() {
     jQuery( "#search-location" ).catcomplete({
   source: function( request, response ) {
     jQuery.ajax({
-      url: "/search/locations/places",
+      url: "/search/locations/all",
       dataType: "jsonp",
       data: {
         name: request.term

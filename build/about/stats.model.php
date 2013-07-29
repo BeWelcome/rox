@@ -79,7 +79,7 @@ class StatsModel extends RoxModelBase
 		// This fetches the languages spoken by the members along with their count
         $query = "
             SELECT
-                l.name language,
+                l.englishname language,
                 COUNT(m.id) cnt
             FROM
                 memberslanguageslevel mll,
@@ -123,21 +123,21 @@ class StatsModel extends RoxModelBase
 		// This fetches the languages spoken by the members along with their count
         $query = "
             SELECT
-                l.name language, COUNT(l.Name) cnt
+                COUNT(m.id) cnt, l.englishname language
             FROM
-                memberspreferences mp,
-                languages l,
-                members m
+                languages l, `members` m
+            LEFT JOIN
+                memberspreferences mp
+            ON
+                m.id = mp.idmember
+                AND mp.idpreference = 1
             WHERE
-                mp.IdPreference = 1
-                AND mp.Value = l.id
-                AND mp.IdMember = m.id
-                AND m.Status in ('Active','ChoiceInactive','OutOfRemind')
+                m.status IN ('Active', 'ChoiceInActive', 'OutOfRemind')
+                AND l.id = IFNULL(mp.value, 0)
             GROUP BY
-                l.name
+                language
             ORDER BY
-                cnt DESC
-            ";
+                cnt DESC";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve number of preferred languages per members!');
@@ -207,6 +207,7 @@ ORDER BY logindiff ASC
         $result['2-4 weeks'] = 0;
         $result['1-3 months'] = 0;
         $result['3-6 months'] = 0;
+        $result['6-12 months'] = 0;
         $result['longer'] = 0;
 
 
@@ -223,8 +224,10 @@ ORDER BY logindiff ASC
                     $result['1-3 months'] = $result['1-3 months'] + $row->cnt;
             } elseif ($row->logindiff<=182) {
                     $result['3-6 months'] = $result['3-6 months'] + $row->cnt;
+            } elseif ($row->logindiff<=365) {
+                    $result['6-12 months'] = $result['6-12 months'] + $row->cnt;
             } else {
-                    $result['longer'] =  $result['longer'] + $row->cnt;
+                $result['longer'] =  $result['longer'] + $row->cnt;
             }
         }
         return $result;
@@ -282,29 +285,29 @@ LIMIT 0,60
 
     private function drawCharts($filename, $yAxisLabel, $dataSeriesAllTime, $labelSeriesAllTime, $dataSeriesLast2Month, $labelSeriesLast2Month)
     {
-        error_log(getcwd());
-
         /* Build the dataset for all time*/
         $allTimeData = new pData();
         $allTimeData->addPoints($dataSeriesAllTime, "members");
         $allTimeData->setAxisName(0, $yAxisLabel);
         $allTimeData->addPoints($labelSeriesAllTime, "Labels");
+        $serieSettings = array("R"=>74,"G"=>102,"B"=>27);
+        $allTimeData->setPalette("members",$serieSettings);
         // $allTimeData->setSerieOnAxis("Labels", 1);
         $allTimeData->setAbscissa("Labels");
 
         /* Create the chart*/
-        $allTimePicture = new pImage(400,250,$allTimeData);
+        $allTimePicture = new pImage(400,250,$allTimeData, true);
         $allTimePicture->setFontProperties(array("FontName"=>"../lib/pchart-2.1.3/fonts/verdana.ttf","FontSize"=>6));
         $allTimePicture->Antialias = false;
 
         /* Add a border to the picture */
         $allTimePicture->setGraphArea(50,20,380,210);
-        $allTimePicture->drawFilledRectangle(50,20,380,210,array("R"=>232,"G"=>238,"B"=>248,"Surrounding"=>-200,"Alpha"=>100));
-        $allTimePicture->drawScale(array("XMargin" => 0, "DrawSubTicks" =>true, "DrawXLines" => false, "Mode"=>SCALE_MODE_START0, "CycleBackground"=>true, "LabelSkip"=> 52));
+        $allTimePicture->drawFilledRectangle(50,20,380,210,array("R"=>232,"G"=>238,"B"=>248,"Alpha"=>100));
+        $allTimePicture->drawScale(array("XMargin" => 0, "DrawSubTicks" =>true, "DrawXLines" => false,
+            "Mode"=>SCALE_MODE_START0, "CycleBackground" => true, "LabelSkip"=> 52, "ForceTransparency" => 100));
         $allTimePicture->setShadow(true,array("X"=>1,"Y"=>1,"R"=>0,"G"=>0,"B"=>0,"Alpha"=>10));
         $allTimePicture->drawAreaChart(array("DisplayValues"=>false,"DisplayColor"=>DISPLAY_AUTO, ""));
         $allTimePicture->setShadow(false);
-
         $allTimePicture->render($filename . "-alltime.png");
 
         /* Build the dataset for the last two month */
@@ -312,17 +315,17 @@ LIMIT 0,60
         $last2MonthData->addPoints($dataSeriesLast2Month, "members");
         $last2MonthData->setAxisName(0, $yAxisLabel);
         $last2MonthData->addPoints($labelSeriesLast2Month, "Labels");
-        // $last2MonthData->setSerieOnAxis("Labels", 1);
+        $last2MonthData->setPalette("members",$serieSettings);
         $last2MonthData->setAbscissa("Labels");
 
         /* Create the chart*/
-        $last2MonthPicture = new pImage(400,250,$last2MonthData);
+        $last2MonthPicture = new pImage(400,250,$last2MonthData, true);
         $last2MonthPicture->setFontProperties(array("FontName"=>"../lib/pchart-2.1.3/fonts/verdana.ttf","FontSize"=>6));
         $last2MonthPicture->Antialias = false;
 
         /* Add a border to the picture */
         $last2MonthPicture->setGraphArea(50,20,380,210);
-        $last2MonthPicture->drawFilledRectangle(50,20,380,210,array("R"=>232,"G"=>238,"B"=>248,"Surrounding"=>-200,"Alpha"=>100));
+        $last2MonthPicture->drawFilledRectangle(50,20,380,210,array("R"=>232,"G"=>238,"B"=>248,"Alpha"=>100));
 
         // get min and max values set scales accordingly
         $miny = min($dataSeriesLast2Month);
@@ -489,7 +492,7 @@ LIMIT 0,60
         $this->drawPieChart($statsdir . 'loginpie', $lastlogingroupedcnt, $lastlogingrouped);
         $this->drawPieChart($statsdir . 'countrypie', $countrycnt, $country);
         $this->drawPieChart($statsdir . 'languagepie', $languages, array_keys($languages));
-        $this->drawPieChart($statsdir . 'profilelanguagepie', $preferredLanguages, array_keys($preferredLanguages));
+        $this->drawPieChart($statsdir . 'preferredlanguagepie', $preferredLanguages, array_keys($preferredLanguages));
 
         $stats = fopen( $statsdir . $statsfile, "w");
         fwrite($stats, date('Y-m-d'));

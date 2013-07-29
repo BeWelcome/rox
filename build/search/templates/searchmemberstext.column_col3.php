@@ -102,7 +102,7 @@ $layoutbits = new MOD_layoutbits();
 		</div>
 <div class="floatbox">
 <div class="float_left"><?php
-    $numberOfItems = array( '1', '5', '10', '20', '50', '100'); ?><label for="search-number-items">Show </label><select name="search-number-items"><?php
+    $numberOfItems = array( '5', '10', '20', '50', '100'); ?><label for="search-number-items">Show </label><select name="search-number-items"><?php
         foreach ($numberOfItems as $number) :
             echo '<option value="' . $number . '"';
             if ($vars['search-number-items'] == $number) :

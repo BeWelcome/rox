@@ -589,7 +589,7 @@ LIMIT 1
         return $sphinxClient->Query($sphinxClient->EscapeString("^" . $location . "*"));
     }
 
-    private function getPlaces($place, $admin1, $country) {
+    private function getPlaces($place, $admin1, $country, $limit = false) {
         $query = "
             SELECT
                 g.geonameid, g.name AS name, a.name AS admin1, c.name AS country
@@ -599,10 +599,10 @@ LIMIT 1
                 geonamescountries c
             WHERE
                 g.name LIKE '" . $this->dao->escape($place);
-        if (strlen($place) >= 3) {
-            $query .= "%";
-        }
-        $query .= "'
+            if (strlen($place) > 5) {
+                $query .= "%";
+            }
+            $query .= "'
                 AND g.fclass = 'P'
                 AND g.admin1 = a.admin1
                 AND g.country = a.country
@@ -613,6 +613,10 @@ LIMIT 1
         $query .= " AND g.country = c.country ";
         if (!empty($country)) {
            $query .= "AND c.name LIKE '%" . $this->dao->escape($country) . "%'";
+        }
+        $query .= " ORDER BY g.population DESC";
+        if ($limit) {
+            $query .= " LIMIT 0, " . $limit;
         }
         $rawPlaces = $this->bulkLookup($query);
         // get members count for each place
@@ -648,7 +652,7 @@ LIMIT 1
             $data->cnt = $places[$rawPlace->geonameid];
             $places[$rawPlace->geonameid] = $data;
         }
-        return $places;
+        return array_values($places);
     }
 
     private function getAdmin1Units($place, $country) {
@@ -773,8 +777,8 @@ LIMIT 1
         $locations = array();
         $result['status'] = 'failed';
         // First get places with BW members
-        $res = $this->sphinxSearch( $location, true );
-        if ($res!==false && $res['total'] != 0) {
+        $resPlaces = $this->sphinxSearch( $location, true );
+        if ($resPlaces !== false && $res['total'] != 0) {
             $ids = array();
             if (is_array($res['matches'])) {
                 foreach ( $res['matches'] as $docinfo ) {
@@ -786,24 +790,40 @@ LIMIT 1
             $result['result'] = 'success';
             $result['places'] = 1;
         }
-        // Get administrative units
-        $res = $this->sphinxSearch( $location, false );
-        if ( $res !==false  && $res['total'] != 0) {
-            $ids = array();
-            if (is_array($res['matches'])) {
-                foreach ( $res['matches'] as $docinfo ) {
-                    $ids[] = $docinfo['id'];
+        if ($resPlaces !== false) {
+            // Get administrative units only when places call actually worked
+            $res = $this->sphinxSearch( $location, false );
+            if ( $res !==false  && $res['total'] != 0) {
+                $ids = array();
+                if (is_array($res['matches'])) {
+                    foreach ( $res['matches'] as $docinfo ) {
+                        $ids[] = $docinfo['id'];
+                    }
                 }
+                $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
+                $locations = array_merge($locations, $adminunits);
+                $result["status"] = "success";
+                $result['adminunits'] = 1;
             }
-            $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
-            $locations = array_merge($locations, $adminunits);
-            $result["status"] = "success";
-            $result['adminunits'] = 1;
         }
+
         // If nothing was found assume that search daemon isn't running and
         // try to get something from the database
         if (empty($locations)) {
-            $locations = $this->getLocationsFromDatabase($location);
+            // assume format place[, [admin1,] country
+            $admin1 = $country = "";
+            $locationParts = explode(',', $location);
+            $place = trim($locationParts[0]);
+            switch (count($locationParts)) {
+            	case 3:
+            	    $admin1 = trim($locationParts[1]);
+            	    $country = trim($locationParts[2]);
+            	    break;
+            	case 2:
+            	    $country = trim($locationParts[1]);
+            	    break;
+            }
+            $locations = $this->getPlaces($place, $admin1, $country, 10);
             $result['database'] = 1;
         }
         if (!empty($locations)) {

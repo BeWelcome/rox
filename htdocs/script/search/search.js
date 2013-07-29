@@ -38,7 +38,7 @@ jQuery(function() {
         name: request.term
       },
       success: function( data ) {
-        if (data.result != "success") {
+        if (data.status != "success") {
         	data.locations = [{ name: noMatchesFound, category: "Information", cnt: 0 }];
         }
           response( 

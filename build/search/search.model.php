@@ -223,6 +223,8 @@ LIMIT 1
      *
      */
     private function locationWhere($vars, $admin1, $country) {
+        error_log($admin1 . " - " . $country);
+        error_log(print_r($vars, true));
         if ($country) {
             if ($admin1) {
                 // We run based on an admin unit
@@ -249,7 +251,18 @@ LIMIT 1
                 $radiusAtLongitude = 6370 * cos($long);
                 $longne = rad2deg(($distance + $radiusAtLongitude * $long) / $radiusAtLongitude);
                 $longsw = rad2deg(($radiusAtLongitude * $long - $distance) / $radiusAtLongitude);
-
+                error_log("(" . $lat. ", " . $long . "): (" . $latne . ", " . $longne . ") - (" . $latsw . ", " . $longsw . ")");
+                // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
+                if ($latne < $latsw) {
+                    $tmp = $latne;
+                    $latne = $latsw;
+                    $latsw = $tmp;
+                }
+                if ($longne < $longsw) {
+                    $tmp = $longne;
+                    $longne = $longsw;
+                    $longsw = $tmp;
+                }
                 // now fetch all location from geonames which are in that given rectangle
                 $query = "
                     SELECT
@@ -263,10 +276,11 @@ LIMIT 1
                         AND g.latitude > " . $latsw . "
                         AND g.longitude < " . $longne . "
                         AND g.longitude > " . $longsw;
-
+error_log($query);
                 $where .= "
                         AND g.geonameid IN ('";
                 $geonameids = $this->bulkLookup($query);
+                error_log(print_r($geonameids, true));
                 foreach($geonameids as $geonameid) {
                     $where .= $geonameid->geonameid . "', '";
                 }
@@ -592,7 +606,7 @@ LIMIT 1
     private function getPlaces($place, $admin1, $country, $limit = false) {
         $query = "
             SELECT
-                g.geonameid, g.name AS name, a.name AS admin1, c.name AS country, '" . $this->getWords()->getSilent('SearchPlaces') . "' AS category
+                g.geonameid, g.name AS name, g.latitude AS latitude, g.longitude AS longitude, a.name AS admin1, c.name AS country, '" . $this->getWords()->getSilent('SearchPlaces') . "' AS category
             FROM
                 geonames g,
                 geonamesadminunits a,

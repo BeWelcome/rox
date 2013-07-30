@@ -592,7 +592,7 @@ LIMIT 1
     private function getPlaces($place, $admin1, $country, $limit = false) {
         $query = "
             SELECT
-                g.geonameid, g.name AS name, a.name AS admin1, c.name AS country
+                g.geonameid, g.name AS name, a.name AS admin1, c.name AS country, '" . $this->getWords()->getSilent('SearchPlaces') . "' AS category
             FROM
                 geonames g,
                 geonamesadminunits a,

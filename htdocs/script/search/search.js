@@ -75,6 +75,6 @@ jQuery(function() {
     return false;
   },
   minLength: 3,
-  delay: 200,
+  delay: 400,
     });
 });

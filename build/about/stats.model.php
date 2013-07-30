@@ -350,7 +350,7 @@ LIMIT 0,60
         $data->setAbscissa("Labels");
 
         /* Create the pChart object */
-        $picture = new pImage(400,250,$data);
+        $picture = new pImage(400,250,$data, true);
         /* Set the default font properties */
         $picture->setFontProperties(array("FontName"=>"../lib/pchart-2.1.3/fonts/verdana.ttf","FontSize"=>10));
 

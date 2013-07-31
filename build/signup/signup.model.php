@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -38,8 +38,8 @@ class SignupModel extends RoxModelBase
      * TODO: should get a more specific name - refactoring needed!
      */
     const HANDLE_PREGEXP = '%^[a-z][a-z0-9_]{3,}$%i';
-    
-    
+
+
     /**
      * TODO: check, if this is indeed the best form; I don't believe it (steinwinde, 2008-08-04)
      */
@@ -50,13 +50,13 @@ class SignupModel extends RoxModelBase
      * FIXME: use BW constant from config file instead of this one
      */
     const YOUNGEST_MEMBER = 18;
-    
+
     // TODO: obviously this should be standardized
     const BW_TRUE = 'Yes';
     const BW_FALSE = 'No';
     const BW_TRUE_A = 'True';
     const BW_FALSE_A = 'False';
-    
+
     /**
      * Constructor
      *
@@ -106,32 +106,32 @@ WHERE `email` = \''.$this->dao->escape(strtolower($email)).'\'';
 SELECT `id`
 FROM `members`
 WHERE `Email` = \'' . $this->dao->escape(strtolower($email)).'\'';
-        
+
         $s = $this->dao->query($query);
         if (!$s) {    // TODO: always integrate this check?
             throw new PException('Could not determine if email is in use!');
-        } 
+        }
 
         return $s->numRows();
     } // end of emailInUse
-    
+
     /**
      * Determine other users (plural!), who use the same
      * e-mail address, then
      * - add this fact to the feedback text and
      * - write this fact to the log
-     * 
+     *
      * FIXME: This method just finds e-mail addresses in
      * table cryptedfields, which are plain text.
      * TODO by jyh : this is the same stupid code as in old BW, it can be improved
-     * 
+     *
      * @param string $email lower case e-mail address
      * @return string text to be added to feedback text, in
      * 				  case of no hit ''
      */
     public function takeCareForNonUniqueEmailAddress($email)
     {
-        $email = str_replace("@", "%40", $email);
+        $email = str_replace("@", "\%40", $email);
         $query = '
 SELECT `Username`, members.`Status`, members.`id` AS `idMember`
 FROM `members`, '. PVars::getObj('syshcvol')->Crypted .'`cryptedfields`
@@ -141,7 +141,7 @@ WHERE members.`id` = cryptedfields.`IdMember`';
 AND members.`id`!=' . $_SESSION['IdMember']
 ; }
         $query .= '
-AND `AdminCryptedValue` LIKE \'%' . $email .'%\''
+AND `AdminCryptedValue` = \'<admincrypted>' . $email .'</admincrypted>\''
 ;
 
         $s = $this->dao->query($query);
@@ -151,24 +151,24 @@ AND `AdminCryptedValue` LIKE \'%' . $email .'%\''
         }
         $text = 'Unique email checking : These users use the same e-mail address: ';
 		while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-		    $text .= $row->Username . 
+		    $text .= $row->Username .
 		        '(id: ' . $row->idMember . ', status: ' . $row->Status . '), ';
 		}
 		$text = substr($text, 0, -2);
-        
+
 		MOD_log::get()->write($text." (With New Signup !)", "Signup");
 		return $text;
     } // end takeCareForNonUniqueEmailAddress
-    
+
     /**
      * Check, if computer has previously been used by BW member
-     * 
-     * (If signup team wanna get nicer e-mails, we'll provide adequate 
+     *
+     * (If signup team wanna get nicer e-mails, we'll provide adequate
      * functionalities via signup.view.php and a template.)
-     * 
+     *
      * TODO: I wonder, why BW signup team cares for my box; member Bin L.
      * has been logged in before at this computer, - should be nothing to them.
-     * 
+     *
      * @return string text (not HTML) to be added to feedback text, in
      * 				  case of no cookie ''
      */
@@ -298,26 +298,26 @@ FROM `user` WHERE
                 $vars['errors'] = $errors;
                 return false;
             }
-            
+
             $this->polishFormValues($vars);
-            
+
             $idTB = $this->registerTBMember($vars);
             if (!$idTB) {
 				MOD_log::get()->write("TB registration failed","Signup") ;
 				return false;
             }
-            
+
             $id = $this->registerBWMember($vars);
             $_SESSION['IdMember'] = $id;
-            
+
             $vars['feedback'] .= $this->takeCareForNonUniqueEmailAddress($vars['email']);
             $vars['feedback'] .= $this->takeCareForComputerUsedByBWMember();
-            
+
             $this->writeFeedback($vars['feedback']);
 			if (!empty($vars['feedback'])) {
 				MOD_log::get()->write("feedback[<b>".stripslashes($vars['feedback'])."</b>] IdMember=#".$_SESSION['IdMember']." (With New Signup !)","Signup");
 			}
-                                    
+
             $View = new SignupView($this);
             // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
             define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
@@ -330,7 +330,7 @@ FROM `user` WHERE
             return $c;
         }
     }
-    
+
     /**
      * TODO: use a language column with character codes
      * instead of integers (!?)
@@ -364,7 +364,7 @@ VALUES(
             $s = $this->dao->query($query);
         }
     }
-    
+
     private function determineLangInteger()
     {
         $query = '
@@ -374,20 +374,20 @@ WHERE `ShortCode` = \'' . $_SESSION['lang'] . '\'';
         $q = $this->dao->query($query);
         $result = $q->fetch(PDB::FETCH_OBJ);
         return $result->id;
-    }   
-    
+    }
+
     /**
-     * 
+     *
      * FIXME: IdCity is written both to the members and the address table!
      * 		  This is just imitating the strategy of bw/signup.php!
 		 *  JY Comment : wont fix, this redudancy is on purpose (this is so useful ...)
-     * 
+     *
      * This has NOT been executed:
      * ALTER TABLE members
      * MODIFY COLUMN `id` int( 11 ) NOT NULL COMMENT 'IdMember'
      * As a result, we do NOT use
      * '.$this->dao->nextId('members').',
-     * 
+     *
      */
     public function registerBWMember($vars)     {
         // ********************************************************************
@@ -417,8 +417,8 @@ VALUES
 	\'' . $vars['agehidden'] . '\'
 )';
         $members = $this->dao->query($query);
-        $memberID = $members->insertId(); 
-        
+        $memberID = $members->insertId();
+
         // ********************************************************************
         // e-mail, names/members
         // ********************************************************************
@@ -436,9 +436,9 @@ SET
 	`LastName`=' . $cryptedfieldsLastname . '
 WHERE
 	`id` = ' . $memberID;
-        
+
         $this->dao->query($query);
-        
+
         // ********************************************************************
         // address/addresses
         // ********************************************************************
@@ -469,15 +469,15 @@ VALUES
         }
 
         // ********************************************************************
-        // location (where Philipp would put it) 
+        // location (where Philipp would put it)
         // ********************************************************************
-		$geomodel = new GeoModel(); 
+		$geomodel = new GeoModel();
 		if(!$geomodel->addGeonameId($vars['geonameid'],'member_primary')) {
 		    $vars['errors'] = array('geoinserterror');
             return false;
         }
-        
-		
+
+
         // Only for bugtesting and backwards compatibility the geo-views in our DB
         $CityName = "not found in cities view";
         $geonameId = intval($vars['geonameid']);
@@ -502,9 +502,9 @@ VALUES
 		MOD_log::get()->writeIdMember($memberID,"member  <b>".$vars['username']."</b> is signuping with success in city [".$CityName."]  using language (".$_SESSION["lang"]." IdMember=#".$memberID." (With New Signup !)","Signup");
 
         return $memberID;
-		
-    }	
-	
+
+    }
+
     /**
      * $vars is required to contain an e-mail
      */
@@ -514,22 +514,22 @@ VALUES
                 strcmp($vars['agehidden'], self::BW_TRUE) == 0)) {
             $vars['agehidden'] = self::BW_FALSE;
         }
-        
+
         if (!(isset($vars['genderhidden']) &&
                 strcmp($vars['genderhidden'], self::BW_TRUE) == 0)) {
             $vars['genderhidden'] = self::BW_FALSE;
         }
-        
+
         if (isset($vars['geonameid'])) {
             $vars['IdCity'] = $vars['geonameid'];
         }
-        
-        // $vars['city'] = 
+
+        // $vars['city'] =
         // MOD_geo::get()->getCityID($this->dao->escape($vars['city']));
-        
+
         // TODO: this is not done so in BW 2007-08-14!
         $vars['email'] = strtolower($vars['email']);
-        
+
         $escapeList = array('username', 'email', 'password', 'gender',
                             'feedback', 'housenumber', 'street','FirstName','SecondName','LastName', 'zip');
         foreach($escapeList as $formfield) {
@@ -543,7 +543,7 @@ VALUES
     {
         $Auth = new MOD_bw_user_Auth;
         $authId = $Auth->checkAuth('defaultUser');
-        
+
         // TODO: we shouldn't use mysql's password(),
         // but for now it's to get nearer to the BW style
         $query = '
@@ -575,10 +575,10 @@ VALUES
             $vars['errors'] = array('inserror');
             return false;
         }
-        
+
         return $userId;
     }
-    
+
     /**
      * Check form values of registration form,
      * do some cautious corrections
@@ -596,26 +596,26 @@ VALUES
             $errors[] = 'SignupErrorProvideLocation';
             unset($vars['geonameid']);
         }
-        
-         
+
+
         // username
-        if (!isset($vars['username']) || 
+        if (!isset($vars['username']) ||
                 !preg_match(self::HANDLE_PREGEXP, $vars['username']) ||
                 strpos($vars['username'], 'xn--') !== false) {
             $errors[] = 'SignupErrorWrongUsername';
         } elseif ($this->UsernameInUse($vars['username'])) {
             $errors[] = 'SignupErrorUsernameAlreadyTaken';
         }
-        
+
         // email (e-mail duplicates in BW database *not* allowed (as of 1st May 2013, ticket ))
         if (!isset($vars['email']) || !PFunctions::isEmailAddress($vars['email'])) {
             $errors[] = 'SignupErrorInvalidEmail';
         }
-        
+
         if (!isset($vars['emailcheck']) || strcmp($vars['email'], $vars['emailcheck']) != 0) {
             $errors[] = 'SignupErrorEmailCheck';
         }
-        
+
         $users = $this->takeCareForNonUniqueEmailAddress($vars['email']);
         if ($users != '') {
             $errors[] = 'SignupErrorEmailAddressAlreadyInUse';
@@ -623,18 +623,18 @@ VALUES
 
         // password
         if (!isset($vars['password']) || !isset($vars['passwordcheck']) ||
-                strlen($vars['password']) < 6 || 
+                strlen($vars['password']) < 6 ||
                 strcmp($vars['password'], $vars['passwordcheck']) != 0
         ) {
             $errors[] = 'SignupErrorPasswordCheck';
         }
-        
+
         // firstname, lastname
         if (empty($vars['firstname']) || empty($vars['lastname']))
         {
             $errors[] = 'SignupErrorFullNameRequired';
         }
-             
+
         // (skipped:) secondname
 
         // gender
@@ -642,7 +642,7 @@ VALUES
              && $vars['gender']!='other')) {
             $errors[] = 'SignupErrorProvideGender';
         }
-        
+
         // birthyear
         $birthmonth = 12;
         if (!empty($vars['birthmonth'])) {
@@ -660,7 +660,7 @@ VALUES
                 $errors[] = 'SignupErrorBirthDateToLow';
             }
         }
-        
+
         // (skipped:) birthmonth
 
         // (skipped:) birthday
@@ -671,12 +671,12 @@ VALUES
         if (empty($vars['terms']) || !$vars['terms']) {
             $errors[] = 'SignupMustacceptTerms';    // TODO: looks like a wrong case in "Accept"
         }
-        
+
         return $errors;
     }
-    
+
     /** @return float (?!) value corresponding date
-	 * 
+	 *
 	 * FIXME: copied from FunctionsTools.php fage_value;
 	 * used in several places in BW website;
 	 * where should this been moved to?
@@ -687,20 +687,20 @@ VALUES
 		$age = (time() - $iDate) / (365 * 24 * 60 * 60);
 		return ($age);
 	}
-	
+
 	/**
 	 * (stolen from FunctionsTools->CheckEmail)
-	 * @return true , if e-mail address looks valid 
+	 * @return true , if e-mail address looks valid
 	 */
 	public function checkEmail($email)
 	{
 		return preg_match('/'.self::HANDLE_PREGEXP_EMAIL.'/', $email);
 	}
-	
+
 	/**
 	 * @see FunctionsTools.php (plain copy)
 	 * compute a nearly unique key according to parameters
-	 */ 
+	 */
 	public function createKey($s1, $s2, $IdMember = "", $ss = "default")
 	{
 	    $key = sprintf("%X", crc32($s1 . " " . $s2 . " " . $IdMember . "_" . $ss));
@@ -709,7 +709,7 @@ VALUES
 
 	/**
 	 * confirmProcess: check the given key and username
-	 */ 
+	 */
 	public function confirmSignup($username,$key)
 	{
         // The TB WAY:

@@ -220,7 +220,44 @@ foreach($members as $member) {
 
     if (!empty($locations)) :
         echo '<p>' . $words->get('SearchSelectLocation') . '</p>';
-        switch ($results['type']) :
+if (isset($results['biggest'])) :
+    $i = 0;
+    foreach($results['biggest'] as $big) :
+        if ($big->cnt >0) :
+            switch($i % 3) :
+            case 0 :
+                echo '<div class="floatbox">
+                    <div class="subcolumns row"><div class="c33l">';
+            break;
+            case 1 :
+                echo '<div class="c33l">';
+                break;
+            case 2 :
+                echo '<div class="c33r">';
+                break;
+            endswitch;
+            echo '<span id="geoname' . $big->geonameid . '"><input type="submit" id="geonameid-' . $big->geonameid . '" name="geonameid-' . $big->geonameid . '" value="' . htmlentities($big->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+                    . htmlentities($big->admin1, ENT_COMPAT, 'utf-8') . ', ' .htmlentities($big->country, ENT_COMPAT, 'utf-8') . ', ';
+            if ($big->cnt == 0) :
+                echo $words->get('SearchSuggestionsNoMembersFound');
+            else :
+                echo $words->get('SearchSuggestionsMembersFound', $big->cnt);
+            endif;
+            echo '</span></div>';
+            if ($i % 3 == 2) :
+                echo '</div>';
+            endif;
+            $i++;
+        endif;
+    endforeach;
+    if ($i %3 != 0) :
+        echo '</div>';
+    endif;
+    if($i!= 0) :
+        echo '</div>';
+    endif;
+endif;
+switch ($results['type']) :
 case "places": ?>
         <div class="floatbox">
         <?php
@@ -297,7 +334,7 @@ case "countries": ?>
         echo '<div class="c33r">';
         break;
         endswitch;
-        echo '<input type="submit" id="country-' . htmlentities($location->country, ENT_COMPAT, 'utf-8') . '" name="country-' . htmlentities($location->country, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->country, ENT_COMPAT, 'utf-8') . '" />';
+        echo '<input type="submit" id="country-' . htmlentities($location->code, ENT_COMPAT, 'utf-8') . '" name="country-' . htmlentities($location->code, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->country, ENT_COMPAT, 'utf-8') . '" />';
         echo '</div>';
         if ($i % 3 == 2) :
         echo '</div>';

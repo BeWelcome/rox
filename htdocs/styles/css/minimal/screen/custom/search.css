@@ -11,7 +11,7 @@
 }
 
 #search-location { 
-  width: 40em;
+  width: 38em;
 }
 
 input.page {
@@ -24,3 +24,6 @@ span.page {
   font-size: 1.1em;
   font-weight: bold;
 }
+
+/* Geo Selector */
+ol#suggestions li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 21.5em; float:left; background: transparent none no-repeat scroll right center; background-position: 250px; cursor: pointer;}

@@ -48,7 +48,6 @@ class AboutController extends RoxControllerBase
                 return $page;
             case 'stats':
             case 'statistics':
-                error_log("Keyword_2: " . $keyword_2);
                 if (!empty($keyword_2)) {
                     // return the given image
                     header('Content-type: image/png');

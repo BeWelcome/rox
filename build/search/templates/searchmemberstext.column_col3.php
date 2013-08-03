@@ -5,7 +5,10 @@ $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['search-location'] = '';
     $vars['search-can-host'] = 1;
+    $vars['search-distance'] = 25;
     $vars['search-geoname-id'] = 0;
+    $vars['search-latitude'] = 0;
+    $vars['search-longitude'] = 0;
     $vars['search-number-items'] = 10;
     $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
     $vars['search-page-current'] = 1;
@@ -18,8 +21,14 @@ if ($results) {
         case 'members':
             $members = $results['values'];
             break;
-        case 'locations':
-            $locations = $results['values'];
+        case 'places':
+            $locations = $results['locations'];
+            break;
+        case 'admin1s':
+            $locations = $results['locations'];
+            break;
+        case 'countries':
+            $locations = $results['locations'];
             break;
     }
 }
@@ -41,7 +50,7 @@ $layoutbits = new MOD_layoutbits();
 // The whole page is in one form to be able to fill the fields with the correct content even
 // when switching between pages of the result
 ?>
-<div>
+<div><!--  around form -->
 	<form method="post" name="searchmembers-form"
 		style="padding-bottom: 0.5em; width: 100%;">
         <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersSimpleCallback');?>
@@ -50,23 +59,34 @@ $layoutbits = new MOD_layoutbits();
 				<label for='search-location'><span class="small"><?=$words->get('SearchEnterLocation');?></span></label><br />
 				<div>
 					<input type="hidden" name="search-geoname-id"
-						id="search-geoname-id" value="<?php echo $vars['search-geoname-id']; ?>" /> <input style="width:50em" name="search-location"
+						id="search-geoname-id" value="<?php echo $vars['search-geoname-id']; ?>" /><input type="hidden" name="search-latitude"
+						id="search-latitude" value="<?php echo $vars['search-latitude']; ?>" /><input type="hidden" name="search-longitude"
+						id="search-longitude" value="<?php echo $vars['search-longitude']; ?>" /> <input name="search-location"
 						id="search-location"
 						value="<?php echo $vars['search-location']; ?>" /> <img
 						id="search-loading" style="visibility: hidden"
 						src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" />
-					<noscript>
-						<br /> <span class="small"><?php echo $words->get('SearchLocationFormat');?></span>
-					</noscript>
 				</div>
         <?php echo $words->flushBuffer(); ?></div>
 			<div class="float_left">
 				<span class="small"><?=$words->get('SearchCanHostAtLeast');?></span><br /> <select
-					id="search-can-host" name="search-can-host" style="width: 5em;"><?php
+					id="search-can-host" name="search-can-host" style="width: 7em;"><?php
 	$canHost = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
     foreach($canHost as $value => $display) :
         echo '<option value="' . $value . '"';
         if ($value == $vars['search-can-host']) {
+            echo ' selected="selected"';
+        }
+        echo '>' . $display . '</option>';
+    endforeach;
+    ?></select>
+			</div>			<div class="float_left">
+				<span class="small"><?=$words->get('SearchDistance');?></span><br /> <select
+					id="search-distance" name="search-distance" style="width: 10em;"><?php
+	$distance = array(0 => "Exact matches", 5  => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');
+    foreach($distance as $value => $display) :
+        echo '<option value="' . $value . '"';
+        if ($value == $vars['search-distance']) {
             echo ' selected="selected"';
         }
         echo '>' . $display . '</option>';
@@ -199,15 +219,138 @@ foreach($members as $member) {
     endif;
 
     if (!empty($locations)) :
-        print_r($locations);
-        foreach ( $locations as $location ) :
-            print_r($locations, true);
+        echo '<p>' . $words->get('SearchSelectLocation') . '</p>';
+if (isset($results['biggest'])) :
+    $i = 0;
+    foreach($results['biggest'] as $big) :
+        if ($big->cnt >0) :
+            switch($i % 3) :
+            case 0 :
+                echo '<div class="floatbox">
+                    <div class="subcolumns row"><div class="c33l">';
+            break;
+            case 1 :
+                echo '<div class="c33l">';
+                break;
+            case 2 :
+                echo '<div class="c33r">';
+                break;
+            endswitch;
+            echo '<span id="geoname' . $big->geonameid . '"><input type="submit" id="geonameid-' . $big->geonameid . '" name="geonameid-' . $big->geonameid . '" value="' . htmlentities($big->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+                    . htmlentities($big->admin1, ENT_COMPAT, 'utf-8') . ', ' .htmlentities($big->country, ENT_COMPAT, 'utf-8') . ', ';
+            if ($big->cnt == 0) :
+                echo $words->get('SearchSuggestionsNoMembersFound');
+            else :
+                echo $words->get('SearchSuggestionsMembersFound', $big->cnt);
+            endif;
+            echo '</span></div>';
+            if ($i % 3 == 2) :
+                echo '</div>';
+            endif;
+            $i++;
+        endif;
+    endforeach;
+    if ($i %3 != 0) :
+        echo '</div>';
+    endif;
+    if($i!= 0) :
+        echo '</div>';
+    endif;
+endif;
+switch ($results['type']) :
+case "places": ?>
+        <div class="floatbox">
+        <?php
+        $i = 0;
+        foreach($locations as $location) :
+            switch($i % 3) :
+                case 0 :
+                    echo '<div class="subcolumns row"><div class="c33l">';
+                    break;
+                case 1 :
+                    echo '<div class="c33l">';
+                    break;
+                case 2 :
+                    echo '<div class="c33r">';
+                    break;
+            endswitch;
+            echo '<span id="geoname' . $location->geonameid . '"><input type="submit" id="geonameid-' . $location->geonameid . '" name="geonameid-' . $location->geonameid . '" value="' . htmlentities($location->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+                . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . ', ' .htmlentities($location->country, ENT_COMPAT, 'utf-8') . ', ';
+            if ($location->cnt == 0) :
+                echo $words->get('SearchSuggestionsNoMembersFound');
+            else :
+                echo $words->get('SearchSuggestionsMembersFound', $location->cnt);
+            endif;
+            echo '</span></div>';
+            if ($i % 3 == 2) :
+                echo '</div>';
+            endif;
+            $i++;
         endforeach;
+        if ($i %3 != 0) :
+            echo '</div>';
+        endif;?></div><?php
+        break;
+case "admin1s": ?>
+        <div class="floatbox">
+        <?php
+        $i = 0;
+        foreach($locations as $location) :
+            switch($i % 3) :
+                case 0 :
+                    echo '<div class="subcolumns row"><div class="c33l">';
+                    break;
+                case 1 :
+                    echo '<div class="c33l">';
+                    break;
+                case 2 :
+                    echo '<div class="c33r">';
+                    break;
+            endswitch;
+            echo '<input type="submit" id="admin1-' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" name="admin1-' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" />';
+            echo '</div>';
+            if ($i % 3 == 2) :
+                echo '</div>';
+            endif;
+            $i++;
+        endforeach;
+        if ($i %3 != 0) :
+            echo '</div>';
+        endif;?></div><?php
+    break;
+case "countries": ?>
+    <div class="floatbox">
+    <?php
+    $i = 0;
+    foreach($locations as $location) :
+    switch($i % 3) :
+    case 0 :
+        echo '<div class="subcolumns row"><div class="c33l">';
+    break;
+    case 1 :
+        echo '<div class="c33l">';
+        break;
+    case 2 :
+        echo '<div class="c33r">';
+        break;
+        endswitch;
+        echo '<input type="submit" id="country-' . htmlentities($location->code, ENT_COMPAT, 'utf-8') . '" name="country-' . htmlentities($location->code, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->country, ENT_COMPAT, 'utf-8') . '" />';
+        echo '</div>';
+        if ($i % 3 == 2) :
+        echo '</div>';
+        endif;
+        $i++;
+        endforeach;
+        if ($i %3 != 0) :
+        echo '</div>';
+        endif;?></div><?php
+    break;
+    endswitch;
     endif;
     ?>
-    </div>
-	</form>
-</div>
+</div><!--  before form -->
+</form>
+</div><!-- around form-->
 <?php
 function ShowAccommodation($accom, $Accommodation)
 {

@@ -18,8 +18,6 @@ class SearchController extends RoxControllerBase
      * Redirects to my activities if a member is logged in otherwise shows upcoming activities
      */
     public function searchMembers() {
-        error_log(print_r($this->request_vars, true));
-        error_log('Before');
         $this->redirectAbsolute($this->router->url('searchmembers_text'));
     }
 
@@ -34,8 +32,6 @@ class SearchController extends RoxControllerBase
         $vars = $args->post;
         $mem_redirect->results = $this->_model->getResultsForLocation($vars);
         $mem_redirect->vars = $vars;
-        error_log(print_r($mem_redirect->results, true));
-        error_log(print_r($mem_redirect->vars, true));
         return true;
     }
 
@@ -44,8 +40,6 @@ class SearchController extends RoxControllerBase
      * options like number of guests and a place.
      */
     public function searchMembersOnMap() {
-        error_log(print_r($this->request_vars, true));
-        error_log('After');
         $page = new SearchMembersMapPage();
         return $page;
     }

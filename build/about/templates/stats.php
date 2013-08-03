@@ -33,7 +33,7 @@ function drawCharts($filename, $headlineCode, $words)
 {
 ?>
     <h3><?php echo $words->get($headlineCode) ?></h3>
-    <div class="subcolumns">
+    <div class="subcolumns row">
         <div class="c50l">
             <div class="subcl">
                 <h4><?php echo $words->get('StatsHeadCol1') ?></h4>
@@ -68,7 +68,7 @@ drawCharts('trust', 'StatsTrustAlltime', $words);
 drawCharts('messages', 'StatsMessagesAlltime', $words);
 ?>
 
-<div class="subcolumns">
+<div class="subcolumns row">
     <div class="c50l">
         <div class="subcl">
             <h3><?php echo $words->get("StatsLastLogin") ?></h3>
@@ -80,7 +80,7 @@ drawCharts('messages', 'StatsMessagesAlltime', $words);
         </div>
     </div>
 </div>
-<div class="subcolumns">
+<div class="subcolumns row">
     <div class="c50l">
         <div class="subcl">
             <div><img class="statimage" src="/stats/loginpie.png" /></div>
@@ -92,7 +92,7 @@ drawCharts('messages', 'StatsMessagesAlltime', $words);
         </div>
     </div>
 </div>
-<div class="subcolumns">
+<div class="subcolumns row">
     <div class="c50l">
         <div class="subcl">
             <h3><?php echo $words->get("StatsLanguages") ?></h3>
@@ -100,7 +100,7 @@ drawCharts('messages', 'StatsMessagesAlltime', $words);
     </div>
     <div class="c50r">
         <div class="subcr">
-            <h3><?php echo $words->get("StatsProfileLanguages") ?></h3>
+            <h3><?php echo $words->get("StatsPreferredLanguages") ?></h3>
         </div>
     </div>
     <div class="c50l">
@@ -110,7 +110,7 @@ drawCharts('messages', 'StatsMessagesAlltime', $words);
     </div>
     <div class="c50r">
         <div class="subcr">
-            <div><img class="statimage" src="/stats/profilelanguagepie.png" /></div>
+            <div><img class="statimage" src="/stats/preferredlanguagepie.png" /></div>
         </div>
     </div>
 </div>

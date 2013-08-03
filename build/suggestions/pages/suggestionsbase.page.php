@@ -38,28 +38,46 @@ class SuggestionsBasePage extends PageWithActiveSkin
         return $words->getBuffered('Suggestions') . ' - BeWelcome';
     }
 
-    protected function teaserContent()
+    protected function teaserHeadline()
     {
         $words = $this->getWords();
-        require('templates/teaser.php');
+        return $words->get('Suggestions');
     }
 
+    private function hasSuggestionRights()
+    {
+        $rights = $this->member->getOldRights();
+        if (empty($rights)) {
+            error_log("False");
+            return false;
+        }
+        error_log(print_r($rights, true));
+        if (in_array('Suggestions', array_keys($rights))) {
+            error_log("True");
+            return true;
+        } else {
+            error_log("False");
+            return false;
+        }
+        error_log("True");
+        return true;
+    }
 
     protected function getSubmenuItems()
     {
         $words = $this->getWords();
         $items = array();
-        if ($this->hasSuggestionRights) {
-        $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
+        if ($this->hasSuggestionRights()) {
+            $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
             $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
             $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
             $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
         }
         $items[] = array('vote', 'suggestions/vote', $words->getSilent('SuggestionsVote'));
-        if ($this->hasSuggestionRights) {
+        if ($this->hasSuggestionRights()) {
             $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
-            $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
             $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
+            $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
             $items[] = array('process', 'suggestions/process', $words->getSilent('SuggestionsProcess'));
             $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeam'));
         }

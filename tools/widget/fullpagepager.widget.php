@@ -52,7 +52,9 @@ class FullPagePager extends RoxWidget
      */
     public function getHtml()
     {
-        $return = "<div class='fullpager'>";
+        $pager = $this->pager;
+        $return = '<div class="fullpager"><span class="page" style="float: left; padding-left: 0; padding-right:0; padding-top: .25em;">' . $this->getWords()->get('PagerShowing', $pager->getActiveStart() + 1,
+            $pager->getActiveStart() + $pager->getActiveLength(), $pager->getTotalCount()) . '</span>';
         if ($this->active_page > 1)
         {
             if ($this->pages > self::block_links)
@@ -127,7 +129,7 @@ class FullPagePager extends RoxWidget
                 $return .= '<input type="submit" class="page" disabled="disabled" value="&raquo;" />';
             }
         }
-        $return .= "</ul></div>";
+        $return .= "</div>";
         return $return;
     }
 }

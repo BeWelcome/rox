@@ -988,25 +988,25 @@ ORDER BY
         $m->ProfileSummary = $words->ReplaceInMTrad($vars['ProfileSummary'],"members.ProfileSummary", $IdMember, $m->ProfileSummary, $IdMember);
         $m->WebSite = strip_tags($vars['WebSite']);
         $m->Accomodation = $vars['Accomodation'];
-        $m->Organizations = $words->ReplaceInMTrad(strip_tags($vars['Organizations']),"members.Organizations", $IdMember, $m->Organizations, $IdMember);
+        $m->Organizations = $words->ReplaceInMTrad($vars['Organizations'],"members.Organizations", $IdMember, $m->Organizations, $IdMember);
         $m->Occupation = $words->ReplaceInMTrad(strip_tags($vars['Occupation']),"members.Occupation", $IdMember, $m->Occupation, $IdMember);
-        $m->ILiveWith = $words->ReplaceInMTrad(strip_tags($vars['ILiveWith']),"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
+        $m->ILiveWith = $words->ReplaceInMTrad($vars['ILiveWith'],"members.ILiveWith", $IdMember, $m->ILiveWith, $IdMember);
         $m->MaxGuest = strip_tags($vars['MaxGuest']);
-        $m->MaxLenghtOfStay = $words->ReplaceInMTrad(strip_tags($vars['MaxLenghtOfStay']),"members.MaxLenghtOfStay", $IdMember, $m->MaxLenghtOfStay, $IdMember);
-        $m->AdditionalAccomodationInfo = $words->ReplaceInMTrad(strip_tags($vars['AdditionalAccomodationInfo']),"members.AdditionalAccomodationInfo", $IdMember, $m->AdditionalAccomodationInfo, $IdMember);
+        $m->MaxLenghtOfStay = $words->ReplaceInMTrad($vars['MaxLenghtOfStay'],"members.MaxLenghtOfStay", $IdMember, $m->MaxLenghtOfStay, $IdMember);
+        $m->AdditionalAccomodationInfo = $words->ReplaceInMTrad($vars['AdditionalAccomodationInfo'],"members.AdditionalAccomodationInfo", $IdMember, $m->AdditionalAccomodationInfo, $IdMember);
         $m->TypicOffer = strip_tags($vars['TypicOffer']);
         $m->Restrictions = strip_tags($vars['Restrictions']);
-        $m->OtherRestrictions = $words->ReplaceInMTrad(strip_tags($vars['OtherRestrictions']),"members.OtherRestrictions", $IdMember, $m->OtherRestrictions, $IdMember);
-        $m->Hobbies = $words->ReplaceInMTrad(strip_tags($vars['Hobbies']),"members.Hobbies", $IdMember, $m->Hobbies, $IdMember);
-        $m->Books = $words->ReplaceInMTrad(strip_tags($vars['Books']),"members.Books", $IdMember, $m->Books, $IdMember);
-        $m->Music = $words->ReplaceInMTrad(strip_tags($vars['Music']),"members.Music", $IdMember, $m->Music, $IdMember);
-        $m->Movies = $words->ReplaceInMTrad(strip_tags($vars['Movies']),"members.Movies", $IdMember, $m->Movies, $IdMember);
-        $m->PastTrips = $words->ReplaceInMTrad(strip_tags($vars['PastTrips']),"members.PastTrips", $IdMember, $m->PastTrips, $IdMember);
-        $m->PlannedTrips = $words->ReplaceInMTrad(strip_tags($vars['PlannedTrips']),"members.PlannedTrips", $IdMember, $m->PlannedTrips, $IdMember);
-        $m->PleaseBring = $words->ReplaceInMTrad(strip_tags($vars['PleaseBring']),"members.PleaseBring", $IdMember, $m->PleaseBring, $IdMember);
-        $m->OfferGuests = $words->ReplaceInMTrad(strip_tags($vars['OfferGuests']),"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
-        $m->OfferHosts = $words->ReplaceInMTrad(strip_tags($vars['OfferHosts']),"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
-        $m->PublicTransport = $words->ReplaceInMTrad(strip_tags($vars['PublicTransport']),"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
+        $m->OtherRestrictions = $words->ReplaceInMTrad($vars['OtherRestrictions'],"members.OtherRestrictions", $IdMember, $m->OtherRestrictions, $IdMember);
+        $m->Hobbies = $words->ReplaceInMTrad($vars['Hobbies'],"members.Hobbies", $IdMember, $m->Hobbies, $IdMember);
+        $m->Books = $words->ReplaceInMTrad($vars['Books'],"members.Books", $IdMember, $m->Books, $IdMember);
+        $m->Music = $words->ReplaceInMTrad($vars['Music'],"members.Music", $IdMember, $m->Music, $IdMember);
+        $m->Movies = $words->ReplaceInMTrad($vars['Movies'],"members.Movies", $IdMember, $m->Movies, $IdMember);
+        $m->PastTrips = $words->ReplaceInMTrad($vars['PastTrips'],"members.PastTrips", $IdMember, $m->PastTrips, $IdMember);
+        $m->PlannedTrips = $words->ReplaceInMTrad($vars['PlannedTrips'],"members.PlannedTrips", $IdMember, $m->PlannedTrips, $IdMember);
+        $m->PleaseBring = $words->ReplaceInMTrad($vars['PleaseBring'],"members.PleaseBring", $IdMember, $m->PleaseBring, $IdMember);
+        $m->OfferGuests = $words->ReplaceInMTrad($vars['OfferGuests'],"members.OfferGuests", $IdMember, $m->OfferGuests, $IdMember);
+        $m->OfferHosts = $words->ReplaceInMTrad($vars['OfferHosts'],"members.OfferHosts", $IdMember, $m->OfferHosts, $IdMember);
+        $m->PublicTransport = $words->ReplaceInMTrad($vars['PublicTransport'],"members.PublicTransport", $IdMember, $m->PublicTransport, $IdMember);
 
         // as $CanTranslate is set explicitly above, this is disabled
         // if (!$CanTranslate) { // a volunteer translator will not be allowed to update crypted data

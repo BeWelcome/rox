@@ -74,7 +74,7 @@ jQuery(function() {
     
     return false;
   },
-  minLength: 3,
-  delay: 400,
+  minLength: 1,
+  delay: 500,
     });
 });

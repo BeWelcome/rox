@@ -204,47 +204,51 @@ LIMIT 1
             if (!empty($vars['search-location'])) {
                 // a simple place with a square rectangle around it
                 $distance = $vars['search-distance'];
-                // calculate rectangle around place with given distance
-                $lat = deg2rad(doubleval($vars['search-latitude']));
-                $long = deg2rad(doubleval($vars['search-longitude']));
+                if ($distance != 0) {
+                    // calculate rectangle around place with given distance
+                    $lat = deg2rad(doubleval($vars['search-latitude']));
+                    $long = deg2rad(doubleval($vars['search-longitude']));
 
-                $latne = rad2deg(($distance + 12740 * $lat) / 12740);
-                $latsw = rad2deg((12740 * $lat - $distance) / 12740);
+                    $latne = rad2deg(($distance + 12740 * $lat) / 12740);
+                    $latsw = rad2deg((12740 * $lat - $distance) / 12740);
 
-                $radiusAtLongitude = 6370 * cos($long);
-                $longne = rad2deg(($distance + $radiusAtLongitude * $long) / $radiusAtLongitude);
-                $longsw = rad2deg(($radiusAtLongitude * $long - $distance) / $radiusAtLongitude);
-                // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
-                // todo: search around the date line
-                if ($latne < $latsw) {
-                    $tmp = $latne;
-                    $latne = $latsw;
-                    $latsw = $tmp;
+                    $radiusAtLongitude = 6370 * cos($long);
+                    $longne = rad2deg(($distance + $radiusAtLongitude * $long) / $radiusAtLongitude);
+                    $longsw = rad2deg(($radiusAtLongitude * $long - $distance) / $radiusAtLongitude);
+                    // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
+                    // todo: search around the date line
+                    if ($latne < $latsw) {
+                        $tmp = $latne;
+                        $latne = $latsw;
+                        $latsw = $tmp;
+                    }
+                    if ($longne < $longsw) {
+                        $tmp = $longne;
+                        $longne = $longsw;
+                        $longsw = $tmp;
+                    }
+                    // now fetch all location from geonames which are in that given rectangle
+                    $query = "
+                        SELECT
+                            g.geonameid AS geonameid
+                        FROM
+                            geonames g
+                        WHERE
+                            " . self::PLACES_FILTER . "
+                            AND g.latitude < " . $latne . "
+                            AND g.latitude > " . $latsw . "
+                            AND g.longitude < " . $longne . "
+                            AND g.longitude > " . $longsw;
+                    $where .= "
+                            AND g.geonameid IN ('";
+                    $geonameids = $this->bulkLookup($query);
+                    foreach($geonameids as $geonameid) {
+                        $where .= $geonameid->geonameid . "', '";
+                    }
+                    $where = substr($where, 0, -3) . ")";
+                } else {
+                    $where .= " AND g.geonameid = " . $this->dao->escape($vars['search-geoname-id']);
                 }
-                if ($longne < $longsw) {
-                    $tmp = $longne;
-                    $longne = $longsw;
-                    $longsw = $tmp;
-                }
-                // now fetch all location from geonames which are in that given rectangle
-                $query = "
-                    SELECT
-                        g.geonameid AS geonameid
-                    FROM
-                        geonames g
-                    WHERE
-                        " . self::PLACES_FILTER . "
-                        AND g.latitude < " . $latne . "
-                        AND g.latitude > " . $latsw . "
-                        AND g.longitude < " . $longne . "
-                        AND g.longitude > " . $longsw;
-                $where .= "
-                        AND g.geonameid IN ('";
-                $geonameids = $this->bulkLookup($query);
-                foreach($geonameids as $geonameid) {
-                    $where .= $geonameid->geonameid . "', '";
-                }
-                $where = substr($where, 0, -3) . ")";
             }
         }
         return $where;
@@ -626,8 +630,9 @@ LIMIT 1
             LEFT JOIN
                 members m
             ON
-                m.IdCity = geo.geonameid AND
-                m.Status = 'Active'
+                m.IdCity = geo.geonameid
+                AND m.Status = 'Active'
+                AND m.MaxGuest >= 1
             GROUP BY
                 geonameid
             ORDER BY
@@ -635,6 +640,7 @@ LIMIT 1
         if ($limit) {
             $query .= " LIMIT 0, " . $limit;
         }
+        error_log($query);
         $places = $this->bulkLookup($query);
         // Now fetch admin units and country name for the found entities
         // shevek: I tried to combine this into one query but search time exploded so separate step (for now?)
@@ -1028,10 +1034,9 @@ LIMIT 1
             	    $country = trim($locationParts[1]);
             	    break;
             }
-                $countryIds = array();
-        list($countryIds, $admin1Ids) = $this->getIdsForCountriesAndAdminUnits($country, $admin1);
-        $locations = $this->getPlaces($place, $admin1Ids, $countryIds, 10);
-        $result['database'] = 1;
+            list($countryIds, $admin1Ids) = $this->getIdsForCountriesAndAdminUnits($country, $admin1);
+            $locations = $this->getPlaces($place, $admin1Ids, $countryIds, 10);
+            $result['database'] = 1;
         }
         if (!empty($locations)) {
             $result['status'] = 'success';

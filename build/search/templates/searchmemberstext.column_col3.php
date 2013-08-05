@@ -102,22 +102,27 @@ $layoutbits = new MOD_layoutbits();
 		</div>
 <div class="floatbox">
 <div class="float_left"><?php
-    $numberOfItems = array( '5', '10', '20', '50', '100'); ?><label for="search-number-items">Show </label><select name="search-number-items"><?php
+    $numberOfItems = array( '5', '10', '20', '50', '100');
+    $select = '<select name="search-number-items">';
         foreach ($numberOfItems as $number) :
-            echo '<option value="' . $number . '"';
+            $select .= '<option value="' . $number . '"';
             if ($vars['search-number-items'] == $number) :
-                echo ' selected="selected"';
+                $select .= ' selected="selected"';
             endif;
-            echo ' >' . $number . '</option>';
-        endforeach;?></select><span> items per page. </span><label for="search-sort-order">Order by </label><select name="search-sort-order"><?php
-        foreach($orderBy AS $key => $order) :
-            echo '<option value="' . $key . '"';
-            if ($vars['search-sort-order'] == $key) :
-                echo ' selected="selected"';
-            endif;
-            echo '>' . $order . '</option>';
+            $select .= ' >' . $number . '</option>';
         endforeach;
-        ?></select></div>
+        $select .= '</select>';
+        echo $words->get('SearchShowItems', $select);
+        $select = '<select name="search-sort-order">';
+        foreach($orderBy AS $key => $order) :
+            $select .= '<option value="' . $key . '"';
+            if ($vars['search-sort-order'] == $key) :
+                $select .= ' selected="selected"';
+            endif;
+            $select .= '>' . $order . '</option>';
+        endforeach;
+        $select .= '</select>';
+        echo $words->get('SearchOrderItems', $select); ?></div>
 <!-- <div class="float_right">
 <input type="submit" class="button" id="search-advanced" name="search-advanced" value="<?php echo $words->getFormatted('SearchMembersAdvanced'); ?>" />
 </div> -->

@@ -262,11 +262,11 @@ LIMIT 1
         $lang = $langarr[0];
         // First get current page and limits
         $limit = $vars['search-number-items'];
-        $pagekey = array_search('search-page-', $vars);
-        if ($pagekey === false) {
-            $pageno = 1;
-        } else {
-            $pageno = str_replace('search-page-', '', $pagekey);
+        $pageno = 1;
+        foreach(array_keys($vars) as $key) {
+            if (strstr($key, 'search-page-') !== false) {
+                $pageno = str_replace('search-page-', '', $key);
+            }
         }
         $start = ($pageno -1) * $limit;
         $vars['search-page-current'] = $pageno;

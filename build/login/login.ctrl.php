@@ -55,18 +55,18 @@ class LoginController extends RoxControllerBase
         
         $errmsg = '';
         if (empty($post['u'])) {
-            $errmsg = 'no username given.';
+            $errmsg = $this->getWords()->get("LoginErrorNoUsername");
             
         } else if (!$bw_member = $this->model->getBWMemberByUsername($username = trim($post['u']))) {
-            $errmsg = 'member "'.htmlentities($username).'" does not exist';
+            $errmsg = $this->getWords()->get("LoginErrorWrongCredentials");
             
         } else if (!is_string($post['p']) || strlen($post['p'])==0) {
             if (PVars::getObj('development')->skip_password_check != 1) {
-                $errmsg = 'no password given';
+                $errmsg = $this->getWords()->get("LoginErrorNoPassword");
             }
         } else if (!$this->model->checkBWPassword($bw_member, $password = trim($post['p']))) {
             if (PVars::getObj('development')->skip_password_check != 1) {
-                $errmsg = 'wrong password given for username '.$bw_member->Username;
+                $errmsg = $this->getWords()->get("LoginErrorWrongCredentials");
             }
         } 
 
@@ -100,7 +100,7 @@ class LoginController extends RoxControllerBase
             } else {
                 if (!$this->model->setBWMemberAsLoggedIn($bw_member)) {
                     // something in the status was not ok.
-                    echo '<div id="loginmessage" class="false">Your status is "'.$bw_member->Status.'". No chance to log in.. we are sorry!</div>';
+                    echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
                 } else {
                     if ($bw_member->Status != 'Active')
                     {

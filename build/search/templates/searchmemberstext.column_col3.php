@@ -189,12 +189,12 @@ foreach($members as $member) {
     echo $member->Occupation . '</div></div>';
     echo '</div>';
     echo '</td>';
-    echo '<td style="width: 50%; padding-right:1ex; align:left; vertical-align: top;">' .$profileSummary.'</td>';
-    echo '<td style="width: 20%; align:left; vertical-align: top;"><div class="red" style="display: block;"><div style="float: left; padding-right:1ex;">'.$accomodationIcon . '</div><div>Max. guests: <strong>' . $member->MaxGuest . '</strong><br><strong>' .
-      $member->CommentCount .
-      '</strong> comments</div></div>';
+    echo '<td style="width: 50%; word-break:break-word; padding-right:1ex; align:left; vertical-align: top;">' .$profileSummary.'</td>';
+    echo '<td style="width: 20%; align:left; vertical-align: top;"><div class="red" style="display: block;"><div style="float: left; padding-right:1ex;">'.$accomodationIcon . '</div>'
+	    . '<div>' . $words->get('SearchMaxGuestInfo', '<strong>' . $member->MaxGuest . '</strong>') . '<br>'
+		. $words->get('SearchCommentsInfo', '<strong>' . $member->CommentCount . '</strong>') . '</div></div>';
     echo '<div class="clearfix"></div>' . $offerIcons . $restrictionIcons . '<br>';
-    echo 'Member since: <strong>' . date('d M y', strtotime($member->created)) . '</strong><br>';
+    echo $words->get('SearchMemberSinceInfo', '<strong>' . date('Y-m-d', strtotime($member->created)) . '</strong>') . '<br>';
     $lastlogin = (($member->LastLogin == '0000-00-00') ? 'Never' : $layoutbits->ago(strtotime($member->LastLogin)));
     $class = 'style="color: red;"';
     if ($member->LastLogin <> '0000-00-00')
@@ -213,8 +213,8 @@ foreach($members as $member) {
         }
     }
 
-    echo 'Last login: <span ' . $class . '>' . $lastlogin . '</span></td></tr>';
-    echo "\n";
+    echo $words->get('SearchMemberLastLoginInfo', '<span ' . $class . '>' . $lastlogin . '</span>');
+    echo "</td></tr>\n";
     $ii++;
 }
 ?>

@@ -22,6 +22,9 @@ class PlacesView extends PAppView
          echo '<link rel="stylesheet"
                     href="styles/css/minimal/screen/custom/places.css?1"
                     type="text/css"/>';
+         echo '<link rel="stylesheet"
+                    href="styles/css/minimal/screen/basemod_minimal_col3.css"
+                    type="text/css"/>';
     }
     
     public function teaserplaces($countrycode,$country,$region,$city) {
@@ -65,7 +68,7 @@ class PlacesView extends PAppView
      */
     public function displayRegions($countrycode,$countryinfo,$members) {
         define('MINROWS',5); // minimum number of rows to be used before next column
-        define('MAXCOLS',3); // maximum number columns before extending rows beyound MINROWS
+        define('MAXCOLS',4); // maximum number columns before extending rows beyound MINROWS
         $regionlist = '<div class="floatbox places">';
         $regionlist .= '<ul class="float_left">';
         $listcnt = 0;
@@ -93,7 +96,7 @@ class PlacesView extends PAppView
      */
     public function displayCities($region,$countrycode,$regioninfo,$members) {
         define('MINROWS',5); // minimum number of rows to be used before next column
-        define('MAXCOLS',3); // maximum number columns before extending rows beyound MINROWS
+        define('MAXCOLS',4); // maximum number columns before extending rows beyound MINROWS
         $citylist = '<div class="floatbox places">';
         $citylist .= '<ul class="float_left">';
         $listcnt = 0;

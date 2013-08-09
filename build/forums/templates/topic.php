@@ -30,7 +30,7 @@ This File display a topic and the messages which are inside it
 */
 
 // This means no thread was fetch or that it was outside visibility
-  if ( (!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) { 
+  if ( (!isset($topic->topicinfo->IdTitle)) and (!isset($topic->topicinfo->ThreadDeleted))) {
     echo "<h2 class=\"forumstopic\">",$topic->topicinfo->title,"</h2>" ;
   }
   else  {
@@ -62,7 +62,8 @@ This File display a topic and the messages which are inside it
       if (strpos($url,"/reverse")===false) { // THis in order to avoid to concatenate /reverse twice
         $url.="/reverse"  ;
       }
-      echo " <a href=\"".$url."\" title=\"reverse the display list\" ><img src=\"images/icons/reverse_order.png\" alt=\"reverse\" /></a> " ;
+      echo ' <a href="' .$url. '" title="' . $words->getSilent('ReverseOrder') . '" ><img src="images/icons/reverse_order.png" alt="'
+        . $words->getSilent('ReverseOrder') . '" /></a> ' . $words->flushBuffer();
     }
     echo "</h2>";
 
@@ -81,7 +82,7 @@ This File display a topic and the messages which are inside it
       <?php
     }
     ?>
-    
+
     <?php
 
     $url = ForumsView::getURI().'';
@@ -91,7 +92,7 @@ This File display a topic and the messages which are inside it
     if (substr($url, -1) != '/') {
       $url = $url . '/';
     }
-    
+
     $replyuri = preg_replace('#/page.{1,3}/#', '/', $uri . 'reply');
 
     $tagBase = $url;

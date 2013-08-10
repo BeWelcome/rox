@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -59,13 +59,13 @@ $baseuri = PVars::getObj('env')->baseuri;
 if (IsLoggedIn()) {
     ?>
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-    
+
     <html>
     <head>
     <title>Mail bot manual page</title>
     </head>
     <body>
-    <?php     
+    <?php
     if (HasRight("RunBot") <= 0) {
         echo "This need right <b>RunBot</b>";
         exit (0);
@@ -97,7 +97,7 @@ FROM
 WHERE
     broadcast.id = broadcastmessages.IdBroadcast  AND
     broadcastmessages.IdReceiver = members.id     AND
-    broadcastmessages.Status = 'ToSend' limit 100
+    broadcastmessages.Status = 'ToSend' limit 300
 ";
 $qry = sql_query($str);
 
@@ -108,9 +108,7 @@ while ($rr = mysql_fetch_object($qry)) {
     }
     $Email = GetEmail($rr->IdReceiver);
     $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
-    
-    $subj = getBroadCastElement("Broadcast_Title_" . $rr->word, $MemberIdLanguage, $rr->Username);
-    $text = getBroadCastElement("Broadcast_Body_" . $rr->word,$MemberIdLanguage, $rr->Username);
+
 //    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
 
         if (empty($rr->EmailFrom)) {
@@ -123,6 +121,9 @@ while ($rr = mysql_fetch_object($qry)) {
             $sender_mail=$rr->EmailFrom ;
         }
 
+    $subj = getBroadCastElement("Broadcast_Title_" . $rr->word, $MemberIdLanguage, $rr->Username);
+    $text = getBroadCastElement("Broadcast_Body_" . $rr->word,$MemberIdLanguage, $rr->Username, $Email);
+
     $res = bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ");
     $res = true;
     if (!$res) {
@@ -130,14 +131,14 @@ while ($rr = mysql_fetch_object($qry)) {
 SET   Status = 'Failed'
 WHERE    IdBroadcast =  $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
         LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."] Type=[".$rr->broadcast_type."]","mailbot");
-        
+
     } else {
-        
+
         // If this message was to count has a reminder
         if ($rr->broadcast_type=="RemindToLog") {
             sql_query("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$rr->IdReceiver);
         }
-                
+
 
         $str = "UPDATE    broadcastmessages
 SET    Status = 'Sent'
@@ -253,7 +254,7 @@ while ($rr = mysql_fetch_object($qry)) {
                 id = $rPost->IdGroup
         ");
     }
-    
+
     // Rewrite the title and the message to the corresponding default language for this member if any
     $rPost->thread_title=fTrad($rPost->IdTitle) ;
     $rPost->message=fTrad($rPost->IdContent) ;
@@ -283,7 +284,7 @@ while ($rr = mysql_fetch_object($qry)) {
 
     // Setting some default values
     $subj = $NotificationType . $rPost->thread_title;
-    if ($rPost->IdGroup != 0) { 
+    if ($rPost->IdGroup != 0) {
         $from = "\"BW " . $rPost->Username . "\" <group@bewelcome.org>";
         $subj .= " [" . $rGroupname->Name . "]";
     } else {
@@ -306,7 +307,7 @@ while ($rr = mysql_fetch_object($qry)) {
         $text .= '<tr><td> IdPost #'.$rr->IdPost.' action='.$NotificationType.'</td></tr>';
     }
     $text .= '</table></body></html>';
-    
+
     if (!bw_mail($Email, $subj, $text, "", $from, $MemberIdLanguage, "html", "", "")) {
         LogStr("Cannot send posts_notificationqueue=#" . $rr->id . " to <b>".$rPost->Username."</b> \$Email=[".$Email."]","mailbot");
         // Telling that the notification has been not sent
@@ -368,12 +369,12 @@ SET
     Status = 'Freeze'
 WHERE
     id = $rr->id and IdParent=0
-        "; 
+        ";
         sql_query($str);
         LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
         continue ;
-    } 
-     
+    }
+
     if ($_SESSION['Param']->MailBotMode!='Auto') {
         echo "messages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> messages.id=".$rr->id."<br>" ;
     }
@@ -412,23 +413,23 @@ WHERE
 //      $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
         $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
         $MessageFormatted .= '</td>';
-        
+
         if (IsLoggedIn()) { // In this case we display the tracks for the admin who will probably need to check who is sending for sure and who is not
             echo " from ".$rr->Username." to ".fUsername($rr->IdReceiver). " email=".$Email,"<br>" ;
         }
         if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
             $MessageFormatted .= '<tr><td colspan=2>'.ww('mailbot_JoinSenderMail', $rr->Username, GetEmail($rr->IdSender)).'</td>';
         }
-        
+
         $MessageFormatted .= '</table></body></html>';
-        
+
         $text=$MessageFormatted;
-        
+
     } else {
         // $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
         $text = ww('mailbot_YouveGotAMailText', fUsername($rr->IdReceiver), $rr->Username, $rr->Message, $urltoreply, $rr->Username, $rr->Username);
     }
-    
+
     // to force because context is not defined
     // TODO: What the hell is this?
     $_SERVER['SERVER_NAME'] = 'www.bewelcome.org';
@@ -459,38 +460,38 @@ WHERE
     sql_query($str);
 
 }
-   
+
 $sResult = $sResult.$count . " intermember Messages sent";
 if ($countbroadcast>0) {
     $sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
-} 
+}
 
 
     $str="select * from volunteers_reports_schedule where Type='Accepter' and TimeToDeliver<now() " ;
     $qryV=sql_query($str);
     while ($rrV = mysql_fetch_object($qryV)) {
         $AccepterReport="<table>" ;
-        
+
         $StrUpdate="update volunteers_reports_schedule set TimeToDeliver=date_add( TimeToDeliver, INTERVAL DelayInHourForNextOne hour) where id=".$rrV->id ;
         sql_query($StrUpdate);
-        
+
         $IdVolunteer=$rrV->IdVolunteer ;
-    
+
         $rr=LoadRow("SELECT concat(concat(' confirmed signup members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
-and (OldStatus='mailtoconfirm' and NewStatus='Pending') group by NewStatus") ;  
+and (OldStatus='mailtoconfirm' and NewStatus='Pending') group by NewStatus") ;
         if (isset($rr->Desc)) {
             $AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
         }
         else {
             $AccepterReport=$AccepterReport."<tr><td>No confirmed signup</td><td></td></tr>" ;
         }
-    
+
         $rr=LoadRow("SELECT concat(concat(' accepted members since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
-and (OldStatus='Pending' and NewStatus='Active') group by NewStatus") ; 
+and (OldStatus='Pending' and NewStatus='Active') group by NewStatus") ;
         if (isset($rr->Desc)) {
             $AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
         }
@@ -501,7 +502,7 @@ and (OldStatus='Pending' and NewStatus='Active') group by NewStatus") ;
         $rr=LoadRow("SELECT concat(concat(' members set to Needmore (may be duplicated) since ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
-and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;  
+and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;
         if (isset($rr->Desc)) {
         $AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
         }
@@ -512,11 +513,11 @@ and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;
         $rPref=LoadRow("select memberspreferences.* from memberspreferences,preferences where preferences.codeName='PreferenceLocalTimeDesc' and preferences.id=memberspreferences.IdPreference and memberspreferences.IdMember=".$IdVolunteer );
         $iSecondOffset=0 ;
         $iSecondOffset=$iSecondOffset+$_SESSION['Param']->DayLightOffset ; // We force the use of daylight offset
-        if (isset($rPref->Value)) { 
+        if (isset($rPref->Value)) {
             $iSecondOffset=$iSecondOffset+$rPref->Value ;
         }
-        
-        $rr=LoadRow("select concat(' total members are waiting for accepting at ',date_add(now(), INTERVAL ".$iSecondOffset." second)) as 'Desc',count(*)  as cnt from members where Status='Pending'") ;   
+
+        $rr=LoadRow("select concat(' total members are waiting for accepting at ',date_add(now(), INTERVAL ".$iSecondOffset." second)) as 'Desc',count(*)  as cnt from members where Status='Pending'") ;
         if (isset($rr->Desc)) {
             $AccepterReport=$AccepterReport."<tr><td colspan=\"2\"><b>".$rr->cnt."</b> ".$rr->Desc."</td></tr>" ;
         }
@@ -525,13 +526,13 @@ and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;
         }
         $str = "SELECT SQL_CACHE Scope,Level FROM rightsvolunteers,rights WHERE IdMember=".$IdVolunteer." AND rights.id=rightsvolunteers.IdRight AND rights.Name='Accepter'";
         $rr=LoadRow($str) ;
-    
+
         if (isset($rr->Scope)and $rr->Level>1) {
             $AccepterScope = $rr->Scope ;
             $AccepterScope = str_replace("\"", "'", $AccepterScope); // replace all " with '
             $AccepterScope = str_replace(";", ",", $AccepterScope); // replace all ; with ,
             if (($AccepterScope=="All")or($AccepterScope=="'All'")) {
-                $rCount=LoadRow("select count(*)  as cnt from members where Status='Pending'") ;    
+                $rCount=LoadRow("select count(*)  as cnt from members where Status='Pending'") ;
                 $AccepterReport=$AccepterReport."<tr><td coslpan=\"2\">Your accepting Scope is for <b>all</b> countries</td></tr>" ;
                 if (!empty($rCount->cnt)) {
                     $AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"yellow\">They are ".$rCount->cnt." pending members <a href=\"http://www.bewelcome.org/bw/admin/adminaccepter.php\">you could accept</a></td></tr>" ;
@@ -541,7 +542,7 @@ and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;
                 }
             }
             else {
-                $rCount=LoadRow("select count(*)  as cnt from members,countries,cities where Status='Pending' and cities.id=members.IdCity and cities.IdCountry=countries.id and (cities.IdCountry in (".$AccepterScope.") or  countries.Name in (".$AccepterScope."))") ;  
+                $rCount=LoadRow("select count(*)  as cnt from members,countries,cities where Status='Pending' and cities.id=members.IdCity and cities.IdCountry=countries.id and (cities.IdCountry in (".$AccepterScope.") or  countries.Name in (".$AccepterScope."))") ;
                 $AccepterReport=$AccepterReport."<tr><td coslpan=\"2\">Your accepting Scope is for ".$AccepterScope."</td></tr>" ;
                 if (!empty($rCount->cnt)) {
                     $AccepterReport=$AccepterReport."<tr><td coslpan=\"2\"  bgcolor=\"yellow\"> They are ".$rCount->cnt." pending members <a href=\"http://www.bewelcome.org/bw/admin/adminaccepter.php\">you could accept</a></td></tr>" ;
@@ -551,33 +552,33 @@ and (OldStatus='Pending' and NewStatus='NeedMore') group by NewStatus ") ;
                 }
             }
         }
-    
+
         $rr=LoadRow("SELECT concat(concat(' rejected members within the last ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
-and (NewStatus='Rejected') group by NewStatus ") ;  
+and (NewStatus='Rejected') group by NewStatus ") ;
         if (isset($rr->Desc)) {
             $AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
         }
         else {
             $AccepterReport=$AccepterReport."<tr><td>No member rejected in the period</td><td></td></tr>" ;
         }
-    
+
         $rr=LoadRow("SELECT concat(concat(' members have left by themself',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
-and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;  
+and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;
         if (isset($rr->Desc)) {
         $AccepterReport=$AccepterReport."<tr><td colspan=\"2\">".$rr->cnt." ".$rr->Desc."</td></tr>" ;
         }
         else {
             $AccepterReport=$AccepterReport."<tr><td>No member who have left by themself in the period</td><td></td></tr>" ;
         }
-    
+
         $rr=LoadRow("SELECT concat(concat('Number of members who have been TakenOut by support team because they requested it ',DelayInHourForNextOne),' Hours') as 'Desc',count(*) as cnt
 FROM `members_updating_status`,volunteers_reports_schedule
 where volunteers_reports_schedule.IdVolunteer=".$IdVolunteer." and (members_updating_status.created>date_sub( now( ) , INTERVAL DelayInHourForNextOne hour ))
-and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;  
+and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;
         if (isset($rr->Desc)) {
             $AccepterReport=$AccepterReport."<tr><td>".$rr->Desc."</td><td>".$rr->cnt."</td></tr>" ;
         }
@@ -585,7 +586,7 @@ and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;
             $AccepterReport=$AccepterReport."<tr><td>No member who have Been TakenOut by support team because they requested it in the period</td><td></td></tr>" ;
         }
         $AccepterReport=$AccepterReport."</table>" ;
-    
+
         $SenderMail="noreply@bewelcome.org" ;
         $subj="Accepter's report" ;
         $Email = GetEmail($IdVolunteer);
@@ -597,11 +598,11 @@ and (OldStatus='Active' and NewStatus='AskToLeave') group by NewStatus") ;
         else {
             $sResult=$sResult."<br />Accepter report sent to ".$Email ;
         }
-        if (IsLoggedIn()) { 
+        if (IsLoggedIn()) {
             echo "to ".$Email."<br />".$AccepterReport ;
-        } 
+        }
     } // end of while
-    
+
 
 if (IsLoggedIn()) {
     LogStr("Manual mail triggering " . $sResult, "mailbot");
@@ -623,14 +624,14 @@ if (IsLoggedIn()) {
 *
 */
 
-     
+
     /**
      * @param $IdTrad the id of a forum_trads.IdTrad record to retrieve
-      * @param $ReplaceWithBr allows 
+      * @param $ReplaceWithBr allows
      * @return string translated according to the best language find
      */
     function fTrad($IdTrad,$ReplaceWithBr=false,$IdForceLanguage=-1) {
-        
+
         global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
         $fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
                                                                                     // Will receive the choosen language
@@ -644,14 +645,14 @@ if (IsLoggedIn()) {
               die ("it look like you are using forum::fTrad with and allready translated word, a forum_trads.IdTrad is expected and it should be numeric !") ;
            }
         }
-        
+
         if ($IdForceLanguage<=0) {
             if (isset($_SESSION['IdLanguage'])) {
                 $IdLanguage=$_SESSION['IdLanguage'] ;
             }
             else {
                 $IdLanguage=0 ; // by default language 0
-            } 
+            }
         }
         else {
             $IdLanguage=$IdForceLanguage ;
@@ -663,7 +664,7 @@ if (IsLoggedIn()) {
         if (isset ($row->Sentence)) {
             if (isset ($row->Sentence) == "") {
                 LogStr("Blank Sentence for language " . $IdLanguage . " with forum_trads.IdTrad=" . $IdTrad, "Bug");
-            } 
+            }
             else {
                         $fTradIdLastUsedLanguage=$row->IdLanguage ;
                 return (strip_tags(ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));

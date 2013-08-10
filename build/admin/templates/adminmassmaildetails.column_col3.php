@@ -15,17 +15,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
+    /**
      * @author shevek
      */
 
-    /** 
+    /**
      * massmail details template
-     * 
+     *
      * @package Apps
      * @subpackage Admin
      */
@@ -37,10 +37,10 @@ $massmail = $this->massmail;;
 <table>
 <?php
 echo '<tr class="highlight"><th class="left" style="width:80%;">' . $massmail->Name . '</th>'
-    . '<th><img src="images/icons/tick.png" alt="' . $words->get('AdminMassMailEnqueued') . '" title="' . $words->get('AdminMassMailEnqueued') . '"></th>'
-    . '<th><img src="images/icons/exclamation.png" alt="' . $words->get('AdminMassMailTriggered') . '" title="' . $words->get('AdminMassMailTriggered') . '"></th>'
-    . '<th><img src="images/icons/email.png" alt="' . $words->get('AdminMassMailSent') . '" title="' . $words->get('AdminMassMailSent') . '"></th>'
-    . '<th><img src="images/icons/error.png" alt="' . $words->get('AdminMassMailFailed') . '"title="' . $words->get('AdminMassMailFailed') . '"></th>'
+    . '<th><img src="images/icons/tick.png" alt="' . $words->getSilent('AdminMassMailEnqueued') . '" title="' . $words->getSilent('AdminMassMailEnqueued') . '"></th>'
+    . '<th><img src="images/icons/exclamation.png" alt="' . $words->getSilent('AdminMassMailTriggered') . '" title="' . $words->getSilent('AdminMassMailTriggered') . '"></th>'
+    . '<th><img src="images/icons/email.png" alt="' . $words->getSilent('AdminMassMailSent') . '" title="' . $words->getSilent('AdminMassMailSent') . '"></th>'
+    . '<th><img src="images/icons/error.png" alt="' . $words->getSilent('AdminMassMailFailed') . '"title="' . $words->getSilent('AdminMassMailFailed') . '"></th>'
     . '</tr>';
 echo '<tr class="blank"><td>&nbsp;</td>';
 echo '<td><a href="admin/massmail/details/' . $this->id . '/enqueued">'. $massmail->ToApprove . '</a></td>';
@@ -60,15 +60,15 @@ if (!$this->detail) {
         }
     }
     $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
-    echo '<tr class="blank"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailSubject') . '</strong>: ' 
+    echo '<tr class="blank"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailSubject') . '</strong>: '
         . str_replace("%username%", "Username", $words->getAsIs('BroadCast_Title_' . $massmail->Name))
         . '</td></tr>';
-    echo '<tr class="blank"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailBody') . '</strong>:<br />' 
+    echo '<tr class="blank"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailBody') . '</strong>:<br />'
         . str_replace("%username%", "Username", nl2br($words->getAsIs('BroadCast_Body_' . $massmail->Name)))
         . '</td></tr>';
     echo '</table>';
 } else {
-    echo '<tr class="highlight"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailDetailsStatus') 
+    echo '<tr class="highlight"><td class="left" colspan="5"><strong>' . $words->get('AdminMassMailDetailsStatus')
         . ':</strong> ' . $words->get('AdminMassMail' . $this->type) . '</td></tr>';
     echo '<tr class="blank"><td class="left" colspan="5">' . $words->get('AdminMassMailShowRecipients', $this->ROWSPERPAGE) . '</td></tr>';
     echo '</table>';

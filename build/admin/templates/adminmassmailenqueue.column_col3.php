@@ -12,22 +12,22 @@
         }
       echo '</div>';
     }
-    
+
     $vars = $this->getRedirectedMem('vars');
     $action = $this->getRedirectedMem('action');
     if (!empty($action)) {
         switch($action) {
-            case 'enqueueMembers' : 
+            case 'enqueueMembers' :
                 $activefieldset = 'members';
                 break;
-            case 'enqueueLocation' : 
+            case 'enqueueLocation' :
                 $activefieldset = 'location';
                 break;
-            case 'enqueueGroup' : 
+            case 'enqueueGroup' :
                 $activefieldset = 'group';
                 break;
-            case 'enqueueVote' : 
-                $activefieldset = 'vote';
+            case 'enqueueLoginReminder' :
+                $activefieldset = 'reminder';
                 break;
         }
     } else {
@@ -37,12 +37,13 @@
             $defaultfieldset =  'location';
         } elseif ($this->canEnqueueGroup) {
             $defaultfieldset =  'group';
-        } elseif ($this->canEnqueueVote) {
-            $defaultfieldset =  'members';
+        } elseif ($this->canEnqueueReminder) {
+            $defaultfieldset =  'reminder';
         }
     }
-    
+
     $words = new MOD_words();
+    error_log(print_r($this, true))
 ?>
 <div id="adminmassmailenqueue">
 <form method="post" name="mass-mail-enqueue-form" id="mass-mail-enqueue-form" class="fieldset-menu-form" enctype="multipart/form-data">
@@ -54,7 +55,7 @@
     <table>
     <tr><td colspan="3"><?php echo $words->flushBuffer(); ?></td></tr>
     <tr>
-    <td><input type="radio" id="allmembers" name="members-type" value="allmembers" 
+    <td><input type="radio" id="allmembers" name="members-type" value="allmembers"
     <?php if (isset($vars['members-type']) && ($vars['members-type'] == 'allmembers')) {
         echo 'checked="checked"';
     }
@@ -65,12 +66,12 @@
     <td></td><td><label for="maxmembers"><?php echo $words->get('AdminMassMailEnqueueMaxMessages'); ?>:</label></td><td><input type="text" id="max-messages" name="max-messages" size="60" value="<?php if (isset($vars['max-messages'])) { echo $vars['max-messages']; }?>" /></td>
     </tr>
     <tr>
-    <td><input type="radio" id="selectedmembers" name="members-type" value="usernames"     
-    <?php 
+    <td><input type="radio" id="selectedmembers" name="members-type" value="usernames"
+    <?php
         if (isset($vars['members-type'])) {
             if (($vars['members-type'] == 'usernames')) {
                 echo 'checked="checked"';
-            } 
+            }
         }  else {
             echo 'checked="checked"';
         }
@@ -84,7 +85,7 @@
     <td></td><td></td><td><strong class="small"><?php echo $words->get('AdminMassMailEnqueueUsernamesInfo');?></strong></td>
     </tr>
     </table>
-    <div class="float_right"><br /><input class="button" type="submit" name="enqueuemembers" 
+    <div class="float_right"><br /><input class="button" type="submit" name="enqueuemembers"
         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitMembers'); ?>" /><?php echo $words->flushBuffer(); ?></div>
 </fieldset>
 <?php } ?>
@@ -117,7 +118,7 @@
         </select>
     </div>
     </div>
-    <div class="float_right"><br /><input class="button" type="submit" name="enqueuelocation" 
+    <div class="float_right"><br /><input class="button" type="submit" name="enqueuelocation"
         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitLocation'); ?>" /><?php echo $words->flushBuffer(); ?></div>
 </fieldset>
 <?php } ?>
@@ -135,18 +136,18 @@
         ?>
         </select>
     </div>
-    <div class="float_right"><br /><input class="button" type="submit" name="enqueuegroup" 
+    <div class="float_right"><br /><input class="button" type="submit" name="enqueuegroup"
         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitGroup'); ?>" /><?php echo $words->flushBuffer(); ?></div>
 </fieldset>
 <?php } ?>
-<?php if ($this->canEnqueueVote) { ?>
-<fieldset id="vote">
-    <legend><?php echo $words->getBuffered('AdminMassMailEnqueueVote');?></legend></legend><?php echo $words->flushBuffer(); ?>
+<?php if ($this->type == 'RemindToLog' && $this->canEnqueueReminder) { ?>
+<fieldset id="reminder">
+    <legend><?php echo $words->getBuffered('AdminMassMailEnqueueReminder');?></legend></legend><?php echo $words->flushBuffer(); ?>
     <div class="type-text">
-        <label for="Limit">Number of posters in thread (will be multiplied by 3): </label><input type="text" id="poster" name="poster" size="4" value="<?php if (isset($vars['poster'])) { echo $vars['poster']; }?>" />
+        <?php echo $words->get('AdminMassMailEnqueueReminderInfo'); ?>
     </div>
-    <div class="float_right"><br /><input class="button" type="submit" name="enqueuevote" 
-        value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitVote'); ?>" /><?php echo $words->flushBuffer(); ?></div>
+    <div class="float_right"><br /><input class="button" type="submit" name="enqueuereminder"
+        value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitReminder'); ?>" /><?php echo $words->flushBuffer(); ?></div>
 </fieldset>
 <?php } ?>
 </form>
@@ -174,7 +175,7 @@
         }
       }
       new FieldsetMenu('mass-mail-enqueue-form', {active: activeFieldset});
-      
+
       // geo dropdown stuff
       jQuery.noConflict();
       jQuery('#CountryIsoCode').change(function() {

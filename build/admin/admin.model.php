@@ -464,6 +464,7 @@ class AdminModel extends RoxModelBase
                 AND w2.IdLanguage = 0";
         $entry = $this->SingleLookup($query);
         $ret = new StdClass;
+        $ret->id = $id;
         $ret->Name = $broadcast->Name;
         $ret->Type = $broadcast->Type;
         $ret->Subject = $entry->Subject;
@@ -577,7 +578,7 @@ class AdminModel extends RoxModelBase
         $query = "
             INSERT INTO
                 broadcast
-            SET 
+            SET
                 Type = '" . $type . "',
                 Name = '" . $name . "',
                 created = NOW(),
@@ -723,8 +724,8 @@ class AdminModel extends RoxModelBase
             $action = 'enqueueLocation';
         } elseif (array_key_exists('enqueuegroup', $vars)) {
             $action = 'enqueueGroup';
-        } elseif (array_key_exists('enqueuevote', $vars)) {
-            $action = 'enqueueVote';
+        } elseif (array_key_exists('enqueuereminder', $vars)) {
+            $action = 'enqueueReminder';
         }
         return $action;
     }
@@ -762,11 +763,7 @@ class AdminModel extends RoxModelBase
                     $errors[] = 'AdminMassMailEnqueueNoGroupsSelected';
                 }
                 break;
-            case 'enqueueVote':
-                $count = $vars['poster'];
-                if (empty($count) || !is_numeric($count)) {
-                    $errors[] = 'AdminMassMailEnqueueVoteNoNumber';
-                }
+            case 'enqueueReminder':
                 break;
             default:
                 $errors[] = 'AdminMassMailEnqueueWrongAction';
@@ -852,22 +849,22 @@ class AdminModel extends RoxModelBase
         $count = $r->affectedRows();
         return $count;
     }
-    
+
     private function enqueueMassmailGroup($id, $groupId) {
         $pref_id = $this->getPreferenceIdForMassmail($id);
         $IdEnqueuer = $this->getLoggedInMember()->id;
         $query = "
             REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
-            SELECT 
+            SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
-            FROM 
+            FROM
                 membersgroups as mg, members AS m
-            LEFT JOIN 
-                memberspreferences AS mp 
+            LEFT JOIN
+                memberspreferences AS mp
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
             WHERE
-                m.id = mg.IdMember 
+                m.id = mg.IdMember
                 AND mg.IdGroup = " . $groupId . "
                 AND mg.Status = 'In'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
@@ -879,10 +876,19 @@ class AdminModel extends RoxModelBase
         $count = $r->affectedRows();
         return $count;
     }
-    
-    private function enqueueMassmailVoters($id, $voters) {
-        $pref_id = $this->getPreferenceIdForMassmail($id);
+
+    private function enqueueMassmailReminder($id) {
         $IdEnqueuer = $this->getLoggedInMember()->id;
+        // first set all members that didn't login for longer than a year to 'OutOfRemind'
+        $query = "
+                UPDATE
+                    members m
+                SET
+                    m.status = 'OutOfRemind'
+                WHERE
+                    DATEDIFF(NOW(), m.LastLogin) > 365
+                    AND m.status = 'Active'";
+        $r = $this->dao->query($query);
         $query = "
             REPLACE
                 broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
@@ -890,19 +896,11 @@ class AdminModel extends RoxModelBase
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
                 members AS m
-            LEFT JOIN
-                memberspreferences AS mp 
-                ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
             WHERE
-                m.Status IN ('Active', 'ActiveHidden')
-                AND DATEDIFF(NOW(), m.LastLogin) < 183
-            ORDER BY RAND()
-            LIMIT 0, " . $voters;
+                m.Status = 'OutOfRemind'";
+        error_log($query);
         $r = $this->dao->query($query);
         $count = $r->affectedRows();
-        if ($voters <> $count) {
-            return -1;
-        }
         return $count;
     }
 
@@ -939,9 +937,8 @@ class AdminModel extends RoxModelBase
                 $groupId = $vars['IdGroup'];
                 $count = $this->enqueueMassmailGroup($id, $groupId);
                 break;
-            case 'enqueueVote':
-                $voters = $vars['poster'] * 3;
-                $count = $this->enqueueMassmailVoters($id, $voters);
+            case 'enqueueReminder':
+                $count = $this->enqueueMassmailReminder($id);
                 break;
         }
         return $count;
@@ -1036,7 +1033,7 @@ class AdminModel extends RoxModelBase
         }
         return false;
     }
-    
+
     public function getCountryCodeForGeonameId($geonameid) {
         $query = "
             SELECT
@@ -1051,7 +1048,7 @@ class AdminModel extends RoxModelBase
         }
         return false;
     }
-    
+
     public function createDonation($memberid, $donatedon, $amount, $comment, $countryid) {
         $query = "
             INSERT INTO
@@ -1107,7 +1104,7 @@ class AdminModel extends RoxModelBase
         $donateModel = new DonateModel();
         return $donateModel->getDonations(true);
     }
-    
+
     public function getStatForDonations() {
         $donateModel = new DonateModel();
         return $donateModel->getStatForDonations();
@@ -1128,7 +1125,7 @@ class AdminModel extends RoxModelBase
                 id = " . $id;
         return $this->singleLookup($query);
     }
-    
+
     public function getDonationCampaignStatus() {
         $query = "
             SELECT
@@ -1141,7 +1138,7 @@ class AdminModel extends RoxModelBase
         }
         return false;
     }
- 
+
     public function treasurerStartDonationCampaignVarsOk(&$vars) {
         $errors = array();
         if (!is_numeric($vars['donate-needed-per-year'])) {

@@ -3,76 +3,48 @@
 $User = new APP_User;
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits;
-
-if (!$members) {
-    return $text['no_members'];
+if (!$this->members) {
+    echo $words->get('PlacesNoMembersFound');
 } else {
-    $request = PRequest::get()->request;
-    $requestStr = implode('/', $request);
-    $matches = array();
-
-    // determine on what page we are
-    if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
-        $page = $matches[1];
-        $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);
-    } else {
-        $page = 1;
+    // divide members into pages of Places::MEMBERS_PER_PAGE (20)
+    $url = '/places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/';
+    if ($this->regionCode) {
+        $url .= htmlspecialchars($this->regionName) . '/' . $this->regionCode . '/';
     }
-    
-    // divide members into pages of 15
-    define('ITEMSPERPAGE',15);
-    $p = PFunctions::paginate($members, $page, $itemsPerPage = ITEMSPERPAGE);
-    $members = $p[0];
-    $pages = $p[1];
-    $maxPage = $p[2];
-    $currentPage = $page;
+    if ($this->cityCode) {
+        $url .= htmlspecialchars($this->cityName) . '/' . $this->cityCode . '/';
+    }
+    $params = new StdClass;
+    $params->strategy = new HalfPagePager('right');
+    $params->page_url = $url;
+    $params->page_url_marker = 'page';
+    $params->page_method = 'url';
+    $params->items = $this->count;
+    $params->active_page = $this->pageNumber;
+    $params->items_per_page = Places::MEMBERS_PER_PAGE;
+    $pager = new PagerWidget($params);
+    $pager->render();
 
     // show members if there are any to show
-    if (count($members)>0){
-        echo '<ul class="floatbox">';
-        foreach ($members as $member) {
-            $image = new MOD_images_Image('',$member->username);
-            if ($member->HideBirthDate=="No") {
-                $member->age = floor($layoutbits->fage_value($member->BirthDate));
-            } else {
-                $member->age = $words->get("Hidden");
-            }
-            echo '<li class="userpicbox float_left">';
-            echo MOD_layoutbits::PIC_50_50($member->username,'',$style='framed float_left');
-            echo '<div class="userinfo">';
-            echo '  <a class="username" href="members/'.$member->username.'">'.
-                    $member->username.'</a><br />';
-            echo '  <span class="small">'.$words->get("yearsold",$member->age).
-                    '<br />'.$member->city.'</span>';
-            echo '</div>';
-            echo '</li>';
+    echo '<ul class="floatbox">';
+    foreach ($this->members as $member) {
+        $image = new MOD_images_Image('',$member->username);
+        if ($member->HideBirthDate=="No") {
+            $member->age = floor($layoutbits->fage_value($member->BirthDate));
+        } else {
+            $member->age = $words->get("Hidden");
         }
-        echo '</ul>';
+        echo '<li class="userpicbox float_left">';
+        echo MOD_layoutbits::PIC_50_50($member->username,'',$style='framed float_left');
+        echo '<div class="userinfo">';
+        echo '  <a class="username" href="members/'.$member->username.'">'.
+                $member->username.'</a><br />';
+        echo '  <span class="small">'.$words->get("yearsold",$member->age).
+                '<br />'.$member->city.'</span>';
+        echo '</div>';
+        echo '</li>';
     }
-
-    // display hint to login when that would show more members
-    if (!APP_User::isBWLoggedIn('NeedMore,Pending') AND $currentPage == $maxPage
-            OR !APP_User::isBWLoggedIn('NeedMore,Pending') AND !$members) {
-        // prepare login link with redirect to current page
-        $login_url = 'login/'.htmlspecialchars(implode('/', $request), ENT_QUOTES);
-        $loginstr = '<a href="'.$login_url.
-            '#login-widget" alt="login" id="header-login-link">'.
-            $words->getBuffered('GroupsMoreMemberLogin') . '</a>';
-        // count the number of members that can be seen as the number on the last page
-        // plus 15 for each page before the last one.
-        $visibleMemberCount = count($members) + ITEMSPERPAGE*max($maxPage-1,0);
-        // display actual hint if some members are hidden
-        if ($placeinfo->memberCount > $visibleMemberCount){
-            echo $words->get("GroupMoreMembers",
-                             $placeinfo->memberCount - $visibleMemberCount,
-                             $loginstr);
-            // if there are no visible members, there is no pagination and we
-            // need an extra line to separate from the wiki
-            if ($visibleMemberCount==0){echo '<p/>';}
-        } 
-    }
-    $request = $requestStr.'/=page%d';
-    require 'pages.php';
+    echo '</ul>';
+    $pager->render();
 }
-
 ?>

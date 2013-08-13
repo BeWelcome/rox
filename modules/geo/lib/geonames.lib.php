@@ -91,6 +91,24 @@ class MOD_geonames
                 if (!$res) {
                     $result = false;
                 }
+                if ($change[6] == 'A') {
+                    // update geonamesadminunits accordingly
+                    $res = $this->dao->query("
+    				    REPLACE INTO
+    				        `geonamesadminunits`
+    				    SET
+    				        geonameid = '".$this->dao->escape($change[0])."',
+    				        name = '".$this->dao->escape($change[1])."',
+    				        fclass = '".$this->dao->escape($change[6])."',
+    				        fcode = '".$this->dao->escape($change[7])."',
+    				        country = '".$this->dao->escape($change[8])."',
+    				        admin1 = '".$this->dao->escape($change[10])."',
+    				        moddate = '".$this->dao->escape($change[18])."'
+    				        ");
+                    if (!$res) {
+                        $result = false;
+                    }
+                }
             }
         }
 
@@ -156,6 +174,9 @@ class MOD_geonames
 	public function getUpdate() {
 		$result = $this->updateGeonames(date('Y-m-d', time() - 86400)); // Yesterday
 		$result |= $this->updateGeonames(date('Y-m-d', time() - 192800)); // the day before yesterday
+		if (date('d', time()) == '01') {
+		    // \todo: Update country list on the first day of a month
+		}
 		return $result;
 	}
 

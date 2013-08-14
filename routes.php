@@ -125,8 +125,16 @@
 
     // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
-
     $this->addRoute('api_member','api/v1/member/:username:\.:format:', 'ApiController', 'memberAction');
+
+    // places routes
+    $this->addRoute('places', 'places', 'PlacesController', 'countries');
+    $this->addRoute('places_country', 'places/:countryname:/:countrycode:', 'PlacesController', 'country');
+    $this->addRoute('places_country_page', 'places/:countryname:/:countrycode:/page/:page:', 'PlacesController', 'country');
+    $this->addRoute('places_region', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:', 'PlacesController', 'region');
+    $this->addRoute('places_region_page', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:/page/:page:', 'PlacesController', 'region');
+    $this->addRoute('places_city', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:/:cityname:/:citycode:', 'PlacesController', 'city');
+    $this->addRoute('places_city_page', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:/:cityname:/:citycode:/page/:page:', 'PlacesController', 'city');
 
     // activities feature
     $this->addRoute('activities', 'activities', 'ActivitiesController', 'activities');

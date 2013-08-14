@@ -101,10 +101,23 @@ Database installation
       $ mysql bewelcome -u bewelcome -pbewelcome < languages.sql
       $ mysql bewelcome -u bewelcome -pbewelcome < words.sql
 
-  5. Remove dumps:
+  5. Get geonames database tables:
+  
+      Change to your BW-Rox directory and download the geonames tables
 
-      $ rm bewelcome.sql languages.sql words.sql
+      $ wget http://download.geonames.org/export/dump/allCountries.txt
+      $ wget http://download.geonames.org/export/dump/alternateNames.txt
+      $ wget http://download.geonames.org/export/dump/countryInfo.txt
 
+  6. Import into the database:
+  
+      $ mysql bewelcome -u bewelcome -pbewelcome < import.sql
+
+      This will take a while as both files are relatively large.
+
+  7. Remove dumps and other files:
+
+      $ rm bewelcome.sql languages.sql words.sql allCountries.txt alternateNames.txt
 
 Configure Apache
 ----------------

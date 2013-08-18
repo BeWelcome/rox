@@ -99,7 +99,7 @@ Boston, MA  02111-1307, USA.
                                         if ($continent=='OC') { echo $words->getformatted('Oceania');}
                                         if ($continent=='AS') { echo $words->getformatted('Asia');} ?>">
                                         <?php foreach ($countries_group as $code => $country) { ?>
-                                             <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
+                                             <option label="<?=$country->name?>" value="places/<?=$country->name?>/<?=$code?>"><?=$country->name?> <?=($country->number != 0) ? ('('.$country->number.')') : ''?></option>
                                         <?php } ?>
                                     </optgroup>
                                     <?php } ?>

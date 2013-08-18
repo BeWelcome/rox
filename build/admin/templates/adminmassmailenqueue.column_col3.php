@@ -43,7 +43,6 @@
     }
 
     $words = new MOD_words();
-    error_log(print_r($this, true))
 ?>
 <div id="adminmassmailenqueue">
 <form method="post" name="mass-mail-enqueue-form" id="mass-mail-enqueue-form" class="fieldset-menu-form" enctype="multipart/form-data">

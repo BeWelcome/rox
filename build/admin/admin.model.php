@@ -898,7 +898,6 @@ class AdminModel extends RoxModelBase
                 members AS m
             WHERE
                 m.Status = 'OutOfRemind'";
-        error_log($query);
         $r = $this->dao->query($query);
         $count = $r->affectedRows();
         return $count;

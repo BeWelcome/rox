@@ -1,11 +1,18 @@
 <?php
-
+echo '<h2>' . $words->get('members') . '</h2>';
 $User = new APP_User;
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits;
 if (!$this->members) {
-    echo $words->get('PlacesNoMembersFound');
+    if ($this->totalMemberCount) {
+        echo $words->get('PlacesMoreMembers', $words->getSilent('PlacesMoreLogin'), 'LoginUrlOpen', 'LoginUrlClose') . $words->flushBuffer();
+    } else {
+        echo $words->get('PlacesNoMembersFound', htmlspecialchars($this->placeName));
+    }
 } else {
+    if ($this->totalMemberCount != $this->memberCount) {
+        echo $words->get('PlacesMoreMembers', $words->getSilent('PlacesMoreLogin'), 'LoginUrlOpen', 'LoginUrlClose') . $words->flushBuffer();
+    }
     // divide members into pages of Places::MEMBERS_PER_PAGE (20)
     $url = '/places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/';
     if ($this->regionCode) {

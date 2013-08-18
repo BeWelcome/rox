@@ -1,3 +1,4 @@
+<h2><?php echo $words->get('region_overview_title'); ?></h2>
 <?php
 define('MINROWS',1); // minimum number of rows to be used before next column
 define('MAXCOLS',5); // maximum number columns before extending rows beyound MINROWS
@@ -28,5 +29,5 @@ foreach ($this->regions as $code => $region) {
 }
 echo '</ul></div>';
 include_once 'memberlist.php';
-
+include 'placeinfo.php';
 ?>

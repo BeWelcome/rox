@@ -9,7 +9,7 @@
 * @version $Id$
 */
 
-class Places extends PAppModel {
+class Places extends RoxModelBase {
     const MEMBERS_PER_PAGE = 20;
 
     private $_dao;
@@ -23,98 +23,73 @@ class Places extends PAppModel {
         $this->lang = $langarr[0];
     }
 
-    /**
-     * Get country details from database (name, Geoname ID, continent)
-     * @param string $countrycode Country ISO alpha2 code, i.e. "BE"
-     * @return object|bool Database object, false if no match in database
-     */
-    public function getCountryInfo($countrycode) {
-        $query = sprintf("
-            SELECT SQL_CALC_FOUND_ROWS
-                geonames_cache.name,
-                geonames_cache.geonameId as IdCountry,
-                geonames_countries.continent
-            FROM
-                geonames_cache,
-                geonames_countries
-            WHERE
-                geonames_cache.fcode LIKE 'PCL%%'
-                AND
-                geonames_countries.iso_alpha2 = '%s'
-                AND
-                geonames_cache.fk_countrycode = geonames_countries.iso_alpha2
-            ", $this->dao->escape($countrycode));
-        $result = $this->dao->query($query);
-        if (!$result) {
-            throw new PException('Could not retrieve info about countries list.');
-        }
-        return $result->fetch(PDB::FETCH_OBJ);
-    }
-
-    /**
-     * Get details for a region
-     * @param string $regionName Name of region, i.e. "Flanders"
-     * @param string $countryCode Two-letter country code, i.e. "BE"
-     * @return object Region with its name and ID
-     */
-    public function getRegionInfo($regioncode, $countryCode) {
-        $query = sprintf("
+    public function getWikiPage($country, $admin1 = false, $geonameid = false) {
+        $query = "
             SELECT
-                g.name region,
-                g.admin1 admin1,
-                g.country country,
-                0 ispreferred,
-                0 isshort,
-                'geo' source
-            FROM
-                geonames g
-            WHERE
-                fcode = 'ADM1'
-                AND country = '%2\$s'
-                AND admin1 = '%1\$s'
-            UNION SELECT
-                a.alternatename region,
-                g.admin1 admin1,
-                g.country country,
-                0 ispreferred,
-                0 isshort,
-                'alt' source
-            FROM
-                geonames g
-            WHERE
-                fcode = 'ADM1'
-                AND country = '%2\$s'
-                AND admin1 = '%1\$s'
-            ", $this->dao->escape($regioncode),
-                $this->dao->escape($countryCode));
+                g.name
+            FROM ";
+        if ($geonameid) {
+            $query .= "geonames g ";
+        } else {
+            if ($admin1) {
+                $query .= "geonamesadminunits g";
+            } else {
+                $query .= "geonamescountries g";
+            }
+        }
+        $query .=" WHERE ";
+        if ($geonameid) {
+            $query .= "geonameid = '" . $this->dao->escape($geonameid) . "'";
+        } else {
+            $query .= "country = '" .  $this->dao->escape($country) . "'";
+            if ($admin1) {
+                $query .= " AND admin1 = '" .  $this->dao->escape($admin1) . "' AND fcode = 'ADM1'";
+            }
+        }
         $result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve info about Region.');
+            return false;
         }
-      return $result->fetch(PDB::FETCH_OBJ);
+        $name = $result->fetch(PDB::FETCH_OBJ)->name;
+        return str_replace(' ', '', ucwords($name));
     }
-
-    public function getCityInfo($cityname, $regionname = "", $countrycode = "") {
-        $query = sprintf("
-            SELECT
-                geonames_cache.name AS city,
-                geonames_cache.geonameid AS IdCity
-            FROM
-                geonames_cache
-            WHERE
-                geonames_cache.name = '%s'
-                AND
-                geonames_cache.fk_countrycode = '%s'
-            ", $this->dao->escape($cityname), $this->dao->escape($countrycode));
-
+    
+    /**
+     * get (alternate) name of given city
+     */ 
+    private function getCityName($geonameid) {
+        $query = "SELECT *  FROM (
+                SELECT 
+                    g.geonameid geonameid, g.name name, 0 ispreferred, 0 isshort, 'geo' source
+                FROM
+                    geonames g
+                WHERE
+                    geonameid = {$geonameid}
+                UNION SELECT
+                    a.geonameid geonameid, a.alternatename name, ispreferred, isshort, 'alt' source
+                FROM
+                    geonamesalternatenames a
+                WHERE
+                    geonameid = {$geonameid}
+                    AND isolanguage = '{$this->lang}'
+                ORDER BY
+                    geonameid, ispreferred DESC, isshort DESC, source, name 
+            ) geo
+            GROUP BY 
+                geonameid";
         $result = $this->dao->query($query);
         if (!$result) {
-            throw new PException('Could not retrieve the city.');
+            return false;
         }
-        return $result->fetch(PDB::FETCH_OBJ);
+        $row = $result->fetch(PDB::FETCH_OBJ);
+        return $row->name;
     }
-
-    private function getMembersAll($query) {
+    
+    /**
+     * get members and count based on privacy setting
+     *
+     */
+    private function getMembersFiltered($query) {
         // this condition makes sure that unlogged people won't see non-public profiles
         if (!(APP_User::isBWLoggedIn('NeedMore,Pending')))
         {
@@ -125,10 +100,36 @@ class Places extends PAppModel {
         $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve members list.');
-		}
-		return $result;
-	} // end of getMembersAll
+        }
+        $countQuery = $this->dao->query("SELECT FOUND_ROWS() as cnt");
+        $count = $countQuery->fetch(PDB::FETCH_OBJ)->cnt;
 
+        $members = array();
+        $cities = array();
+        while($row = $result->fetch(PDB::FETCH_OBJ)) {
+            if (!isset($cities[$row->idCity])) {
+                $cities[$row->idCity] = $this->getCityName($row->idCity);
+            }
+            $row->city = $cities[$row->idCity];
+            $members[] = $row;
+        }
+        return array($count, $members);
+    } // end of getMembersAll
+
+    /**
+     * get count of all members according to query regardless of privacy setting
+     * 
+     */
+    private function getTotalMemberCount($query) {
+        $result = $this->dao->query($query . " LIMIT 1");
+        if (!$result) {
+            throw new PException('Could not retrieve members list.');
+        }
+        $countQuery = $this->dao->query("SELECT FOUND_ROWS() as cnt");
+
+        return $countQuery->fetch(PDB::FETCH_OBJ)->cnt;;
+    }
+    
     /**
      * Get all members of a country
      * @param string $countryCode Two-letter country code, i.e. "BE"
@@ -142,31 +143,32 @@ class Places extends PAppModel {
                 m.Accomodation,
                 m.idCity,
                 m.username,
-                g.name AS city
+                IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
+                IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto
             FROM
-                members m,
-                geonames g
+                geonames g,
+                members m
+            LEFT JOIN (
+                SELECT
+                    COUNT(*) As photoCount, IdMember
+                FROM
+                    membersphotos
+                GROUP BY
+                    IdMember) mp
+            ON
+                mp.IdMember = m.id
             WHERE
                 m.Status = 'Active'
+                AND m.MaxGuest >= 1
                 AND g.geonameId = m.idCity
                 AND g.country = '%s'
             ORDER BY
-                m.Accomodation ASC, m.LastLogin DESC
-            LIMIT " . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE
-            ,$this->dao->escape($countrycode));
-        $result = $this->getMembersAll($query);
-        if (!$result) {
-            return false;
-        }
-
-        $countQuery = $this->dao->query("SELECT FOUND_ROWS() as cnt");
-        $count = $countQuery->fetch(PDB::FETCH_OBJ)->cnt;
-
-        $members = array();
-        while($row = $result->fetch(PDB::FETCH_OBJ)) {
-            $members[] = $row;
-        }
-        return array($count, $members);
+                m.Accomodation ASC, HasProfileSummary DESC, HasProfilePhoto DESC, m.LastLogin DESC",
+            $this->dao->escape($countrycode));
+        $totalCount = $this->getTotalMemberCount($query);
+        list($count, $members) = $this->getMembersFiltered($query ." LIMIT " 
+            . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
+        return array($count, $totalCount, $members);
     }
 
     public function getMembersOfRegion($regioncode, $countrycode, $pageNumber) {
@@ -176,33 +178,35 @@ class Places extends PAppModel {
                 m.HideBirthDate,
                 m.Accomodation,
                 m.username,
-                g.name AS city
+                m.idCity,
+                IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
+                IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto
             FROM
-                members m,
-                geonames g
+                geonames g,
+                members m
+            LEFT JOIN (
+                SELECT
+                    COUNT(*) As photoCount, IdMember
+                FROM
+                    membersphotos
+                GROUP BY
+                    IdMember) mp
+            ON
+                mp.IdMember = m.id
             WHERE
                 m.Status = 'Active'
+                AND m.MaxGuest >= 1
                 AND m.idCity = g.geonameid
                 AND g.admin1 = '%2\$s'
                 AND g.country = '%1\$s'
                 AND g.fclass = 'P'
             ORDER BY
-                m.Accomodation ASC, m.LastLogin DESC
-            LIMIT " . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE,
+                m.Accomodation ASC, HasProfileSummary DESC, HasProfilePhoto DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode), $this->dao->escape($regioncode));
-        $result = $this->getMembersAll($query);
-        if (!$result) {
-            return false;
-        }
-
-        $countQuery = $this->dao->query("SELECT FOUND_ROWS() as cnt");
-        $count = $countQuery->fetch(PDB::FETCH_OBJ)->cnt;
-
-        $members = array();
-        while($row = $result->fetch(PDB::FETCH_OBJ)) {
-            $members[] = $row;
-        }
-        return array($count, $members);
+        $totalCount = $this->getTotalMemberCount($query);
+        list($count, $members) = $this->getMembersFiltered($query ." LIMIT " 
+            . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
+        return array($count, $totalCount, $members);
     }
 
     public function getMembersOfCity($cityCode, $cityName, $pageNumber) {
@@ -212,32 +216,33 @@ class Places extends PAppModel {
                 m.HideBirthDate,
                 m.Accomodation,
                 m.username,
-                '%s' city
+                m.idCity,
+                IF(m.ProfileSummary != 0, 1, 0) AS HasProfileSummary,
+                IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto
             FROM
-                members m,
-                geonames g
+                geonames g,
+                members m
+            LEFT JOIN (
+                SELECT
+                    COUNT(*) As photoCount, IdMember
+                FROM
+                    membersphotos
+                GROUP BY
+                    IdMember) mp
+            ON
+                mp.IdMember = m.id
             WHERE
                 m.Status = 'Active'
+                AND m.MaxGuest >= 1
                 AND m.IdCity = g.geonameid
                 AND g.geonameid = '%s'
             ORDER BY
-                m.Accomodation ASC, m.LastLogin DESC
-            LIMIT
-                " . ($pageNumber -1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE,
-            $this->dao->escape($cityName), $this->dao->escape($cityCode));
-        $result = $this->getMembersAll($query);
-        if (!$result) {
-            return false;
-        }
-
-        $countQuery = $this->dao->query("SELECT FOUND_ROWS() as cnt");
-        $count = $countQuery->fetch(PDB::FETCH_OBJ)->cnt;
-
-        $members = array();
-        while($row = $result->fetch(PDB::FETCH_OBJ)) {
-            $members[] = $row;
-        }
-        return array($count, $members);
+                m.Accomodation ASC, HasProfileSummary DESC, HasProfilePhoto DESC, m.LastLogin DESC",
+            $this->dao->escape($cityCode));
+        $totalCount = $this->getTotalMemberCount($query);
+        list($count, $members) = $this->getMembersFiltered($query ." LIMIT " 
+            . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
+        return array($count, $totalCount, $members);
     }
 
     private function compareCountryNames($a, $b) {
@@ -277,6 +282,7 @@ class Places extends PAppModel {
                 AND g.fclass = 'P'
                 AND m.IdCity = g.geonameid
                 AND m.Status = 'Active'
+                AND m.MaxGuest >= 1
             GROUP BY
                 c.country";
 
@@ -316,7 +322,7 @@ class Places extends PAppModel {
             FROM
                 geonamescountries c
             ORDER BY
-                continent ASC, country, source ASC, ispreferred DESC, isshort DESC, name ASC) x
+                continent ASC, country, ispreferred DESC, isshort DESC, source ASC, name ASC) x
             GROUP BY country
             ";
         $result = $this->dao->query($query);
@@ -373,10 +379,11 @@ class Places extends PAppModel {
                 AND ga.geonameid = a.geonameid
                 AND a.isoLanguage = '%2\$s'
             ORDER BY
-                admin1, source, ispreferred DESC, isshort DESC, region) x
+                admin1, ispreferred DESC, isshort DESC, source ASC, region ASC) x
             GROUP BY
                 admin1
             ", $this->dao->escape($countrycode), $this->dao->escape($this->lang));
+             error_log($query);
         $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve region list.');
@@ -407,8 +414,10 @@ class Places extends PAppModel {
                 AND g.fclass = 'P'
                 AND m.IdCity = g.geonameid
                 AND m.Status = 'Active'
+                AND m.MaxGuest >= 1
             GROUP BY
                 a.admin1", $this->dao->escape($countrycode));
+               
         $result = $this->dao->query($query);
         if (!$result) {
             return false;
@@ -441,6 +450,7 @@ class Places extends PAppModel {
             return false;
         }
     }
+    
     /**
      * Retrieve list of all cities for a region that have members
      * @param int $regionId Geoname ID of region
@@ -463,6 +473,7 @@ class Places extends PAppModel {
                 AND g.geonameid = a.geonameid
                 AND a.isoLanguage = '%3\$s'
                 AND m.status = 'Active'
+                AND m.MaxGuest >= 1
             GROUP BY
                 geonameid
             UNION SELECT
@@ -475,10 +486,11 @@ class Places extends PAppModel {
                 AND g.admin1 = '%2\$s'
                 AND g.geonameid = m.IdCity
                 AND m.status = 'Active'
+                AND m.MaxGuest >= 1
             GROUP BY
                 geonameid
             ORDER BY
-                geonameid, source, ispreferred DESC, isshort DESC, city) x
+                geonameid, ispreferred DESC, isshort DESC, source ASC, city ASC) x
             GROUP BY
                 geonameid
             ", $this->dao->escape($countrycode), $this->dao->escape($regioncode), $this->dao->escape($this->lang));
@@ -490,7 +502,6 @@ class Places extends PAppModel {
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $cities[] = $row;
         }
-        // Now that we know all citions fetch members
         return $cities;
     }
 }

@@ -40,6 +40,12 @@ $words = new MOD_words();
                 <a name="why"></a>
                 <h3><?php echo $words->get('Donate_Why');?></h3>
                 <p><?php echo $words->getFormatted('Donate_WhyText','<a href="feedback">','</a>')?></p>
+                <a name="tax"></a>
+                <h3><?php echo $words->get('Donate_Tax'); ?></h3>
+                <p><?php echo $words->get('Donate_TaxText'); ?></p>
+                <a name="transparency"></a>
+                <h3><?php echo $words->get('Donate_Transparency'); ?></h3>
+                <p><?php echo $words->getFormatted('Donate_TransparencyText'); ?></p>
             </div>
         </div>
         <div class="c50r">
@@ -103,42 +109,17 @@ $words = new MOD_words();
                     <input type="submit" class="button" name="submit" alt="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" onmouseover="return('<?php echo $words->getBuffered('Donate_DonateNow'); ?>')" value="<?php echo $words->getBuffered('Donate_DonateNow'); ?>" />
                     <img alt="Donate now" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
                     </p>
+                    <h3><?=$words->get('Donate_Account_Legend')?></h3>
+                    <p><?=$words->get('Donate_Account')?></p>
+                    <p><?=$words->get('Donate_Account2')?></p>
+                    <h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
+                    <p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
                 </form>
                 <?php echo $words->flushBuffer() ?>  
             </div>
         </div>
 </div>
-<div class="subcolumns">
-        <div class="c50l">
-            <div class="subcl">
-                <a name="tax"></a>
-                <h3><?php echo $words->get('Donate_Tax'); ?></h3>
-                <p><?php echo $words->get('Donate_TaxText'); ?></p>
-            </div>
-        </div>
-        <div class="c50r">
-            <div class="subcr">
-                <h3><?=$words->get('Donate_Account_Legend')?></h3>
-                <p><?=$words->get('Donate_Account')?></p>
-                <p><?=$words->get('Donate_Account2')?></p>
-            </div>
-        </div>
-</div>
-<div class="subcolumns">
-        <div class="c50l">
-            <div class="subcl">
-                <a name="transparency"></a>
-                <h3><?php echo $words->get('Donate_Transparency'); ?></h3>
-                <p><?php echo $words->getFormatted('Donate_TransparencyText'); ?></p>
-            </div>
-        </div>
-        <div class="c50r">
-            <div class="subcr">
-                <h3><?php echo $words->get('Donate_FurtherInfo'); ?></h3>
-                <p><?php echo $words->get('Donate_FurtherInfoText','<a href="http://bevolunteer.org/wiki"','</a>');?></p>
-            </div>
-        </div>
-</div>
+
 <script type="text/javascript">
 
 /* update the amount-field in the donation form when an option is selected/ an amount is entered */

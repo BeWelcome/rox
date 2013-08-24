@@ -63,7 +63,7 @@ class MOD_mail
     private function __construct()
     {
         // Load the files we'll need
-        require_once SCRIPT_BASE . "lib/misc/swift-mailer/lib/swift_required.php";
+        require_once SCRIPT_BASE . "lib/misc/swift-5.0.1/lib/swift_required.php";
     }
 
     private function __clone() {}
@@ -125,7 +125,7 @@ class MOD_mail
         self::init();
 
         // Check that $to/$from are both arrays
-        $from = (is_array($from)) ? $from : explode(',', $from);        
+        $from = (is_array($from)) ? $from : explode(',', $from);
         $to = (is_array($to)) ? $to : explode(',', $to);
 
         //Create the message

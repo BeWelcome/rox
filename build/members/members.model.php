@@ -839,7 +839,7 @@ ORDER BY
         if ($vars['BirthYear'] == 0 || $vars['BirthMonth'] == 0 || $vars['BirthDay'] == 0) {
             $errors[] = 'SignupErrorInvalidBirthDate';
         }
-        else 
+        else
         {
             $res=$this->validateBirthdate($vars['BirthYear'] . '-' . $vars['BirthMonth'] . '-' . $vars['BirthDay']);
             if ($res === self::DATE_INVALID) {
@@ -959,7 +959,7 @@ ORDER BY
         $CanTranslate = false;
         // $CanTranslate = CanTranslate($vars["memberid"], $_SESSION['IdMember']);
         $ReadCrypted = "MemberReadCrypted"; // This might be changed in the future
-        if ($rights->hasRight('Admin') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles
+        if ($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam') /* or $CanTranslate */) { // admin or CanTranslate can alter other profiles
             $ReadCrypted = "AdminReadCrypted"; // In this case the AdminReadCrypted will be used
         }
         $m->removeLanguages();;

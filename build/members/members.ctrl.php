@@ -576,7 +576,7 @@ class MembersController extends RoxControllerBase
                 return false;
             }
             $rights = new MOD_right;
-            if (!$rights->hasRight('Admin'))
+            if (!($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam')))
             {
                 $vars['memberid'] = $this->model->getLoggedInMember()->getPKValue();
             }

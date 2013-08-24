@@ -209,14 +209,13 @@ LIMIT 1
                     $lat = deg2rad(doubleval($vars['search-latitude']));
                     $long = deg2rad(doubleval($vars['search-longitude']));
 
-                    $latne = rad2deg(($distance + 12740 * $lat) / 12740);
-                    $latsw = rad2deg((12740 * $lat - $distance) / 12740);
+                    $longne = rad2deg(($distance + 6370 * $long) / 6370);
+                    $longsw = rad2deg((6370 * $long - $distance) / 6370);
 
-                    $radiusAtLongitude = 6370 * cos($long);
-                    $longne = rad2deg(($distance + $radiusAtLongitude * $long) / $radiusAtLongitude);
-                    $longsw = rad2deg(($radiusAtLongitude * $long - $distance) / $radiusAtLongitude);
+                    $latne = rad2deg(($distance + 6370 * $lat) / 6370);
+                    $latsw = rad2deg((6370 * $lat - $distance) / 6370);
                     // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
-                    // todo: search around the date line
+                    // TODO: search around the date line
                     if ($latne < $latsw) {
                         $tmp = $latne;
                         $latne = $latsw;
@@ -235,10 +234,8 @@ LIMIT 1
                             geonames g
                         WHERE
                             " . self::PLACES_FILTER . "
-                            AND g.latitude < " . $latne . "
-                            AND g.latitude > " . $latsw . "
-                            AND g.longitude < " . $longne . "
-                            AND g.longitude > " . $longsw;
+                            AND g.latitude BETWEEN " . $latsw . " AND " . $latne . "
+                            AND g.longitude BETWEEN " . $longsw . " AND " . $longne;
                     $where .= "
                             AND g.geonameid IN ('";
                     $geonameids = $this->bulkLookup($query);
@@ -397,9 +394,9 @@ LIMIT 1
         $inGeonameIds = implode("', '", $geonameids);
         $query = "
             SELECT
-                g.geonameid geonameid, a.alternatename name, a.IsPreferredName ispreferred, a.IsShortName isshort, 'alternate' source
+                g.geonameid geonameid, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
             FROM
-                geonames g, alternatenames a
+                geonames g, geonamesalternatenames a
             WHERE
                 g.geonameid IN ('" . $inGeonameIds . "') AND g.geonameid = a.geonameid AND a.isoLanguage = '" . $lang . "'
             UNION SELECT
@@ -421,9 +418,9 @@ LIMIT 1
         // fetch country names, prefer alternate names (preferred, short) over geonames entry
         $query = "
             SELECT
-                c.geonameid geonameid, c.country countryCode, a.alternatename country, a.ispreferredname ispreferred, a.isshortname isshort, 'alternate' source
+                c.geonameid geonameid, c.country countryCode, a.alternatename country, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
             FROM
-                geonamescountries c, alternatenames a
+                geonamescountries c, geonamesalternatenames a
             WHERE
                 c.country IN ('" . $inCountries . "') AND c.geonameid = a.geonameid AND a.isoLanguage = '" . $lang . "'
             UNION SELECT
@@ -536,9 +533,9 @@ LIMIT 1
         // fetch country names, prefer alternate names (preferred, short) over geonames entry
         $query = "
             SELECT
-                c.geonameid geonameid, c.country countryCode, a.alternatename country, a.ispreferredname ispreferred, a.isshortname isshort, 'alternate' source
+                c.geonameid geonameid, c.country countryCode, a.alternatename country, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
             FROM
-                geonamescountries c, alternatenames a
+                geonamescountries c, geonamesalternatenames a
             WHERE
                 c.country IN ('" . $inCountries . "') AND c.geonameid = a.geonameid AND a.isoLanguage = '" . $lang . "'
             UNION SELECT
@@ -570,9 +567,9 @@ LIMIT 1
         $inAdminUnits = implode("', '", $admin1Ids);
         $query = "
             SELECT
-                a.geonameid geonameid, an.alternatename name, a.admin1 admin1Code, a.country country, an.ispreferredname ispreferred, an.isshortname isshort, 'alternate' source
+                a.geonameid geonameid, an.alternatename name, a.admin1 admin1Code, a.country country, an.ispreferred ispreferred, an.isshort isshort, 'alternate' source
             FROM
-                geonamesadminunits a , alternatenames an
+                geonamesadminunits a , geonamesalternatenames an
             WHERE
                 a.country IN ('" . $inCountries . "') AND a.admin1 IN ('" . $inAdminUnits . "') AND a.fcode = 'ADM1' AND a.geonameid = an.geonameid AND an.isoLanguage = '" . $lang . "'
             UNION SELECT
@@ -615,7 +612,7 @@ LIMIT 1
                 SELECT
                     a.geonameid geonameid, g.latitude, g.longitude, g.admin1, g.country, '" . $this->getWords()->getSilent('SearchPlaces') . "' category
                 FROM
-                    alternatenames a, geonames g
+                    geonamesalternatenames a, geonames g
                 WHERE
                     a.alternatename like '" . $this->dao->escape($place) . (strlen($place) >= 3 ? "%" : "") . "'
                     AND a.geonameid = g.geonameid AND " . self::PLACES_FILTER . $constraint . "
@@ -640,7 +637,7 @@ LIMIT 1
         if ($limit) {
             $query .= " LIMIT 0, " . $limit;
         }
-        error_log($query);
+
         $places = $this->bulkLookup($query);
         // Now fetch admin units and country name for the found entities
         // shevek: I tried to combine this into one query but search time exploded so separate step (for now?)
@@ -659,9 +656,9 @@ LIMIT 1
         $inGeonameIds = implode("', '", $geonameids);
         $query = "
             SELECT
-                g.geonameid geonameid, a.alternatename name, a.IsPreferredName ispreferred, a.IsShortName isshort, 'alternate' source
+                g.geonameid geonameid, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
             FROM
-                geonames g, alternatenames a
+                geonames g, geonamesalternatenames a
             WHERE
                 g.geonameid IN ('" . $inGeonameIds . "') AND g.geonameid = a.geonameid AND a.isoLanguage = '" . $lang . "'
             UNION SELECT
@@ -706,7 +703,7 @@ LIMIT 1
                 SELECT
                     c.country
                 FROM
-                    alternatenames a, geonamescountries c
+                    geonamesalternatenames a, geonamescountries c
                 WHERE
                     a.alternatename LIKE '" . $this->dao->escape($country) . "%' AND a.geonameid = c.geonameid
                 UNION SELECT
@@ -725,7 +722,7 @@ LIMIT 1
                 SELECT
                     a.admin1
                 FROM
-                    alternatenames an, geonamesadminunits a
+                    geonamesalternatenames an, geonamesadminunits a
                 WHERE
                     an.alternatename LIKE '" . $this->dao->escape($admin1) . "%' AND an.geonameid = a.geonameid AND a.fcode = 'ADM1'
                     AND a.country IN ('" . implode("', '", $countryIds) . "')
@@ -734,7 +731,7 @@ LIMIT 1
                 FROM
                     geonamesadminunits a
                 WHERE
-                    a.name LIKE '" . $this->dao->escape($admin1) . "%' AND a.fcode = 'ADM1'
+                    a.fcode = 'ADM1' AND a.name LIKE '" . $this->dao->escape($admin1) . "%'
                     AND a.country IN ('" . implode("', '", $countryIds) . "')";
             $admin1Ids = $this->bulkLookup_assoc($query);
             $admin1Ids = array_map(function($a) {  return array_pop($a); }, $admin1Ids);
@@ -763,8 +760,19 @@ LIMIT 1
             $vars['search-latitude'] = $row->lat;
             $vars['search-longitude'] = $row->lng;
             // Additionally we need to set the admin1 unit and the country for the given geonameid
-            $query = "SELECT g.name AS name, a.name AS admin1, c.name AS country FROM geonames g, geonamesadminunits a, geonamescountries c
-                    WHERE g.geonameid = " . $geonameid . " AND g.admin1 = a.admin1 AND g.country = a.country AND a.fcode = 'ADM1' AND g.country = c.country";
+            $query = "
+                SELECT
+                    g.name name, a.name admin1, c.name country
+                FROM
+                    geonames g,
+                    geonamesadminunits a,
+                    geonamescountries c
+                WHERE
+                    g.geonameid = " . $geonameid . "
+                    AND g.admin1 = a.admin1
+                    AND g.country = a.country
+                    AND a.fcode = 'ADM1'
+                    AND g.country = c.country";
             $row = $this->singleLookup($query);
             $vars['search-location'] = $row->name . ", " . $row->admin1 . ", " . $row->country;
         }
@@ -840,7 +848,7 @@ LIMIT 1
             SELECT
                  g.admin1
             FROM
-                alternatenames a, geonames g
+                geonamesalternatenames a, geonames g
             WHERE
                 a.alternatename LIKE '" . $this->dao->escape($place) . "%' AND a.geonameid = g.geonameid
                 AND g.country IN ('" . implode("', '", $countryIds) . "')
@@ -868,7 +876,7 @@ LIMIT 1
                 g.country AS country
             FROM
                 geonames g,
-                alternatenames a
+                geonamesalternatenames a
             WHERE
                 a.alternatename LIKE '" . $this->dao->escape($place) . "%'
                 AND a.geonameid = g.geonameid AND "
@@ -939,7 +947,7 @@ LIMIT 1
                 g.geonameid
             FROM
                 geonames g,
-                alternatenames a
+                geonamesalternatenames a
             WHERE
                 a.alternatename LIKE '" . $this->dao->escape($place);
         if (strlen($place) >= 3) {

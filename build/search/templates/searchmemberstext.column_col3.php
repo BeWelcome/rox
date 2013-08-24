@@ -280,7 +280,7 @@ case "places": ?>
                     break;
             endswitch;
             echo '<span id="geoname' . $location->geonameid . '"><input type="submit" id="geonameid-' . $location->geonameid . '" name="geonameid-' . $location->geonameid . '" value="' . htmlentities($location->name, ENT_COMPAT, 'utf-8') . '" /><br />'
-                . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . ', ' .htmlentities($location->country, ENT_COMPAT, 'utf-8') . ', ';
+                . ((isset($location->admin1)) ? htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . ', ' : '') . htmlentities($location->country, ENT_COMPAT, 'utf-8') . ', ';
             if ($location->cnt == 0) :
                 echo $words->get('SearchSuggestionsNoMembersFound');
             else :

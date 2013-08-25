@@ -20,7 +20,7 @@ CREATE TABLE `geonames` (
   `population` int(11) DEFAULT NULL,
   `moddate` date DEFAULT NULL,
   PRIMARY KEY (`geonameid`)
-); 
+) DEFAULT CHARACTER SET 'utf8'; 
 
 CREATE TABLE `geonamesadminunits` (
   `geonameid` int(11) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `geonamesadminunits` (
   `admin1` varchar(20) DEFAULT NULL,
   `moddate` date DEFAULT NULL,
   PRIMARY KEY (`geonameid`)
-);
+) DEFAULT CHARACTER SET 'utf8'; 
 
 CREATE TABLE geonamescountries ( 
 geonameId int(11), 
@@ -39,7 +39,7 @@ country char(2),
 name varchar(200),
 continent char(2),
 PRIMARY KEY (`country`)
-);
+) DEFAULT CHARACTER SET 'utf8'; 
 
 CREATE TABLE `geonamesalternatenames` (
   `alternatenameId` int(11) NOT NULL,
@@ -54,10 +54,8 @@ CREATE TABLE `geonamesalternatenames` (
   FOREIGN KEY (`geonameid`) 
         REFERENCES `geonames` (`geonameid`)
         ON DELETE CASCADE
-);
+) DEFAULT CHARACTER SET 'utf8'; 
 
-LOAD DATA LOCAL INFILE './allCountries.txt' INTO TABLE geonames CHARACTER SET 'utf8' (geonameid, name, @skip, @skip, latitude, longitude, fclass, fcode, country, @skip, admin1, @skip, @skip, @skip, population, @skip, @skip, @skip, moddate);
-LOAD DATA LOCAL INFILE './alternateNames.txt' INTO TABLE geonamesalternatenames CHARACTER SET 'utf8' (alternatenameid, geonameid, isolanguage, alternatename, ispreferred, isshort, iscolloquial, ishistoric);
 LOAD DATA LOCAL INFILE './countryInfo.txt' INTO TABLE geonamescountries IGNORE 51 LINES (country, @skip, @skip, @skip, name, @skip, @skip, @skip, continent, @skip, @skip, @skip, @skip, @skip, @skip, @skip, geonameid, @skip, @skip);
 
 /* treat North and South America and Europe and Asia as one continent */
@@ -66,6 +64,9 @@ UPDATE geonamescountries SET continent = 'EA' WHERE (continent = 'EU' OR contine
 
 /* Don't include dissolved countries */
 DELETE FROM geonamescountries WHERE geonameid = 0;
+
+LOAD DATA LOCAL INFILE './allCountries.txt' INTO TABLE geonames CHARACTER SET 'utf8' (geonameid, name, @skip, @skip, latitude, longitude, fclass, fcode, country, @skip, admin1, @skip, @skip, @skip, population, @skip, @skip, @skip, moddate);
+LOAD DATA LOCAL INFILE './alternateNames.txt' INTO TABLE geonamesalternatenames CHARACTER SET 'utf8' (alternatenameid, geonameid, isolanguage, alternatename, ispreferred, isshort, iscolloquial, ishistoric);
 
 /* fill the geonamesadminunits table based on the content of the geonames table (much faster with a separate table)*/
 INSERT INTO geonamesadminunits SELECT geonameid, name, fclass, fcode, country, admin1, moddate FROM geonames WHERE fclass = 'A';

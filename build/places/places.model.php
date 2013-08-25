@@ -289,11 +289,11 @@ class Places extends RoxModelBase {
     public function getContinents() {
         $words = new MOD_words();
         $continents = array(
-            "AM" => array($words->getSilent('PlacesAmerica'), "PlacesAmericaCont"),
-            "EA" => array($words->getSilent('PlacesEurAsia'), "PlacesEurAsiaCont"),
-            "AF" => array($words->getSilent('PlacesAfrica'),  "PlacesAfricaCont"),
-            "OC" => array($words->getSilent('PlacesOceania'), "PlacesOceaniaCont"),
-            "AN" => array($words->getSilent('PlacesAntarctica'), "PlacesAntarcticaCont")
+            "AM" => array($words->getSilent('PlacesAmerica'), $words->getSilent("PlacesAmericaCont")),
+            "EA" => array($words->getSilent('PlacesEurAsia'), $words->getSilent("PlacesEurAsiaCont")),
+            "AF" => array($words->getSilent('PlacesAfrica'),  $words->getSilent("PlacesAfricaCont")),
+            "OC" => array($words->getSilent('PlacesOceania'), $words->getSilent("PlacesOceaniaCont")),
+            "AN" => array($words->getSilent('PlacesAntarctica'), $words->getSilent("PlacesAntarcticaCont"))
         );
         uasort($continents, function($a, $b) { return strcmp($a[0], $b[0]); });
         return $continents;

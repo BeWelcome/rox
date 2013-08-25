@@ -16,7 +16,6 @@ foreach($this->continents as $continent => $value) {
             }
             echo '<ul>';
             $top = false;
-            $i++;
         } else {
             if ($continent != $lastcontinent) {
                 echo '<h3>' . $value[0] . '</h3>';

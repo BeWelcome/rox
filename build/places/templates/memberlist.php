@@ -26,7 +26,7 @@ if (!$this->members) {
     $params->page_url = $url;
     $params->page_url_marker = 'page';
     $params->page_method = 'url';
-    $params->items = $this->count;
+    $params->items = $this->memberCount;
     $params->active_page = $this->pageNumber;
     $params->items_per_page = Places::MEMBERS_PER_PAGE;
     $pager = new PagerWidget($params);

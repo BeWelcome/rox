@@ -28,6 +28,8 @@ Boston, MA  02111-1307, USA.
  */
 class SearchModel extends RoxModelBase
 {
+    const EARTH_RADIUS = 6378;
+
     // const ORDER_NOSORT = 0; // Not needed as this would be the same as for MEMBERSHIP
     const ORDER_USERNAME = 2;
     const ORDER_AGE = 4;
@@ -209,11 +211,12 @@ LIMIT 1
                     $lat = deg2rad(doubleval($vars['search-latitude']));
                     $long = deg2rad(doubleval($vars['search-longitude']));
 
-                    $longne = rad2deg(($distance + 6370 * $long) / 6370);
-                    $longsw = rad2deg((6370 * $long - $distance) / 6370);
+                    $longne = rad2deg(($distance + self::EARTH_RADIUS * $long) / self::EARTH_RADIUS);
+                    $longsw = rad2deg((self::EARTH_RADIUS * $long - $distance) / self::EARTH_RADIUS);
 
-                    $latne = rad2deg(($distance + 6370 * $lat) / 6370);
-                    $latsw = rad2deg((6370 * $lat - $distance) / 6370);
+                    $radiusAtLatitude = cos($lat) * self::EARTH_RADIUS;
+                    $latne = rad2deg(($distance + $radiusAtLatidute * $lat) / $radiusAtLatitude);
+                    $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
                     // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
                     // TODO: search around the date line
                     if ($latne < $latsw) {

@@ -9,7 +9,7 @@ class ActivitiesModel extends RoxModelBase
     // Limits for textareas
     const ACTIVITY_ADDRESS_LIMIT = 320;
     const ACTIVITY_DESCRIPTION_LIMIT = 65535;
-    
+
     /**
      * Default constructor.
      */
@@ -26,7 +26,7 @@ class ActivitiesModel extends RoxModelBase
                 . ' AND status = 0';
         return $sql;
     }
-    
+
     public function getUpcomingActivitiesCount($onlyPublic) {
         $temp = $this->CreateEntity('Activity');
         $count = $temp->countWhere($this->getUpcomingQuery($onlyPublic));
@@ -59,7 +59,7 @@ class ActivitiesModel extends RoxModelBase
         $sql .= '(dateTimeStart < NOW() AND dateTimeEnd < NOW())';
         return $sql;
     }
-    
+
     public function getPastActivitiesCount($onlyPublic) {
         $temp = $this->CreateEntity('Activity');
         $count = $temp->countWhere($this->getPastQuery($onlyPublic));
@@ -74,33 +74,41 @@ class ActivitiesModel extends RoxModelBase
     }
 
     protected function getNearMeQuery($distance, $count = false) {
-        // get latitude and logitude for location of logged in member
+        // get latitude and longitude for location of logged in member
         $loggedInMember = $this->getLoggedInMember();
-        $query = "SELECT latitude, longitude FROM geonames_cache WHERE geonameid = " . $loggedInMember->IdCity;
+        $query = "SELECT latitude, longitude FROM geonames WHERE geonameid = " . $loggedInMember->IdCity;
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
         }
         $row = $sql->fetch(PDB::FETCH_OBJ);
-        
+
         // calculate rectangle around place with given distance
         $lat = deg2rad(doubleval($row->latitude));
         $long = deg2rad(doubleval($row->longitude));
 
-        $latne = rad2deg(($distance + 12740 * $lat) / 12740);
-        $latsw = rad2deg((12740 * $lat - $distance) / 12740);
+        $longne = rad2deg(($distance + 6378 * $long) / 6378);
+        $longsw = rad2deg((6378 * $long - $distance) / 6378);
 
-        $radiusAtLongitude = 6370 * cos($long);
-
-        $longne = rad2deg(($distance + $radiusAtLongitude * $long) / $radiusAtLongitude);
-
-        $longsw = rad2deg(($radiusAtLongitude * $long - $distance) / $radiusAtLongitude);
+        $radiusAtLatitude = 6378 * cos($lat);
+        $latne = rad2deg(($distance + $radiusAtLatitude * $long) / $radiusAtLatitude);
+        $latsw = rad2deg(($radiusAtLatitude * $long - $distance) / $radiusAtLatitude);
+        if ($latne < $latsw) {
+            $tmp = $latne;
+            $latne = $latsw;
+            $latsw = $tmp;
+        }
+        if ($longne < $longsw) {
+            $tmp = $longne;
+            $longne = $longsw;
+            $longsw = $tmp;
+        }
         if ($count) {
             $query = "SELECT COUNT(*) AS count ";
         } else {
             $query = "SELECT a.* ";
         }
-        $query .= "FROM activities AS a, geonames_cache AS g WHERE a.locationId = g.geonameid ";
+        $query .= "FROM activities AS a, geonames AS g WHERE a.locationId = g.geonameid ";
         $query .= 'AND g.latitude < ' . $latne . '
             AND g.latitude > ' . $latsw . '
             AND g.longitude < ' . $longne . '
@@ -109,7 +117,7 @@ class ActivitiesModel extends RoxModelBase
             AND a.status = 0';
         return $query;
     }
-    
+
     public function getActivitiesNearMeCount($distance) {
         $query = $this->getNearMeQuery($distance, true);
         $sql = $this->dao->query($query);
@@ -133,7 +141,7 @@ class ActivitiesModel extends RoxModelBase
         $temp = $this->CreateEntity('Activity');
         return $temp->searchActivitiesCount($onlyPublic, $keyword);
     }
-    
+
     public function searchActivities($onlyPublic, $keyword, $pageno, $items) {
         $temp = $this->CreateEntity('Activity');
         return $temp->searchActivities($onlyPublic, $keyword, $pageno, $items);
@@ -149,7 +157,7 @@ class ActivitiesModel extends RoxModelBase
      *
      * To ensure that the user at least used the search button to set the activity-location-id one
      * check is added. If activity-location-id is still 0, the content of activity-location must match
-     * the city of the member.     
+     * the city of the member.
      *
      * @return array with the found problems
      */
@@ -231,7 +239,7 @@ class ActivitiesModel extends RoxModelBase
         }
         return $errors;
     }
-    
+
     public function joinLeaveActivity($post) {
         $activity = new Activity($post['activity-id']);
         // First check if the member wants to leave the activity
@@ -294,7 +302,7 @@ class ActivitiesModel extends RoxModelBase
                 return false;
             }
         }
-        
+
     }
 
     public function createActivity($args) {

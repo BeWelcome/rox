@@ -48,7 +48,7 @@ class CountriesPage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/places.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/places.css?2';
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        return $stylesheets;
     }

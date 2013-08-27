@@ -1,5 +1,5 @@
 <?php
-echo '<h2>' . $words->get('members') . '</h2>';
+echo '<h2 class="paddingtop">' . $words->get('members') . '</h2>';
 $User = new APP_User;
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits;
@@ -30,7 +30,6 @@ if (!$this->members) {
     $params->active_page = $this->pageNumber;
     $params->items_per_page = Places::MEMBERS_PER_PAGE;
     $pager = new PagerWidget($params);
-    $pager->render();
 
     // show members if there are any to show
     echo '<ul class="floatbox">';

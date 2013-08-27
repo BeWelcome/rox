@@ -10,15 +10,15 @@ foreach($this->continents as $continent => $value) {
         if ($top) {
             echo '<td>';
             if ($continent == $lastcontinent) {
-                echo '<h3>' . $value[1] . '</h3>';
+                echo '<h3 class="top">' . $value[1] . '</h3>';
             } else {
-                echo '<h3>' . $value[0] . '</h3>';
+                echo '<h3 class="top">' . $value[0] . '</h3>';
             }
             echo '<ul>';
             $top = false;
         } else {
             if ($continent != $lastcontinent) {
-                echo '<h3>' . $value[0] . '</h3>';
+                echo '</ul><h3 class="column">' . $value[0] . '</h3>';
                 echo '<ul>';
                 $i++;
             }

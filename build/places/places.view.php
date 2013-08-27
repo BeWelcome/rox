@@ -20,7 +20,7 @@ class PlacesView extends PAppView
     public function customStyles(){
         // calls a 1column layout
          echo '<link rel="stylesheet"
-                    href="styles/css/minimal/screen/custom/places.css?1"
+                    href="styles/css/minimal/screen/custom/places.css?2"
                     type="text/css"/>
                 <link rel="stylesheet" href="styles/css/minimal/screen/basemod_minimal_col3.css" />';
     }

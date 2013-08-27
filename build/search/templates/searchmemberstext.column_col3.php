@@ -83,7 +83,7 @@ $layoutbits = new MOD_layoutbits();
 			</div>			<div class="float_left">
 				<span class="small"><?=$words->get('SearchDistance');?></span><br /> <select
 					id="search-distance" name="search-distance" style="width: 10em;"><?php
-	$distance = array(0 => "Exact matches", 5  => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');
+	$distance = array(0 => $words->getSilent("SearchExactMatch"), 5  => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');
     foreach($distance as $value => $display) :
         echo '<option value="' . $value . '"';
         if ($value == $vars['search-distance']) {
@@ -91,6 +91,7 @@ $layoutbits = new MOD_layoutbits();
         }
         echo '>' . $display . '</option>';
     endforeach;
+    echo $words->flushBuffer();
     ?></select>
 			</div><div class="float_right">
 				<br /><input

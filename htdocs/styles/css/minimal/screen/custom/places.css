@@ -15,8 +15,16 @@
 		vertical-align: top;
 	}
 	
-	#places h4 {
-		padding-top: 0.5em;
+	h2.paddingtop {
+		padding-top: 0.75em;
+	}
+	
+	#places h3.top {
+	}
+	
+	#places h3.column {
+		clear: both;
+		padding-top: 0.75em;
 	}
 	
 	#places li {
@@ -37,6 +45,11 @@
 		float: left;
 		width: 87%;
 		margin-left: 4px;
+	}
+	
+	#places a {
+		color: black;
+		text-decoration: none;	
 	}
 	
 	[class^="famfamfam-flag"] {

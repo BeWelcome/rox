@@ -25,7 +25,7 @@ class GalleryDeletePage extends GallerySetPage
         $statement = $this->statement;
         $words = $this->getWords();
 
-        if ($this->deleted) echo 'Gallery successfully deleted.';
+        if ($this->deleted) echo $words->getFormatted('GalleryDeleted');
         else require SCRIPT_BASE . 'build/gallery/templates/gallerydelete.column_col3.php';
     }
 

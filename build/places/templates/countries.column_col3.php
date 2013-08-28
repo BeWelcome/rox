@@ -1,5 +1,6 @@
 <table id="places"><tr>
 <?php
+
 $i = 0;
 $max = 53;
 $top = true;

@@ -1,7 +1,7 @@
 <?php
 echo '<h2>' . $words->get('Cities') . '</h2>';
-define('MINROWS',1); // minimum number of rows to be used before next column
-define('MAXCOLS',5); // maximum number columns before extending rows beyond MINROWS
+define('MINROWS',5); // minimum number of rows to be used before next column
+define('MAXCOLS',4); // maximum number columns before extending rows beyond MINROWS
 echo '<div class="floatbox places">';
 echo '<ul class="float_left">';
 

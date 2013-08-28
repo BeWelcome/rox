@@ -11,17 +11,14 @@
 
 class PlacesController extends RoxControllerBase {
     private $_model;
-    //private $_view;
 
     public function __construct() {
         parent::__construct();
         $this->_model = new Places();
-      //  $this->_view =  new PlacesView($this->_model);
     }
 
     public function __destruct() {
         unset($this->_model);
-        //unset($this->_view);
     }
 
     /**
@@ -98,8 +95,5 @@ class PlacesController extends RoxControllerBase {
         return $page;
     }
 
-    //public function topMenu($currentTab) {
-    //    $this->_view->topMenu($currentTab);
-    //}
 }
 ?>

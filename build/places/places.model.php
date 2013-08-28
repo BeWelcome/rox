@@ -415,7 +415,7 @@ class Places extends RoxModelBase {
                 AND ga.fcode = 'ADM1'
                 AND a.isoLanguage = '%2\$s'
             ORDER BY
-                admin1, ispreferred DESC, isshort DESC, source ASC, region ASC) x
+                admin1, isshort DESC, ispreferred DESC, source ASC, region ASC) x
             GROUP BY
                 admin1
             ", $this->dao->escape($countrycode), $this->dao->escape($this->lang));
@@ -511,7 +511,7 @@ class Places extends RoxModelBase {
                         AND g.admin1 = '%2\$s'
                         AND g.geonameid = a.geonameid
                         AND a.isoLanguage = '%3\$s'
-                    ORDER BY ispreferred DESC, isshort DESC
+                    ORDER BY isshort DESC, ispreferred DESC
                 ) allA
             GROUP BY geonameid
             ) AByGid,
@@ -534,7 +534,7 @@ class Places extends RoxModelBase {
             GROUP BY
                 geonameid
             ORDER BY
-                geonameid, ispreferred DESC, isshort DESC, source ASC, city ASC) ag
+                geonameid, isshort DESC, ispreferred DESC, source ASC, city ASC) ag
             GROUP BY
                 geonameid
             ", $this->dao->escape($countrycode), $this->dao->escape($regioncode), $this->dao->escape($this->lang));

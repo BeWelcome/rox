@@ -3,24 +3,26 @@ echo '<h2 class="paddingtop">' . $words->get('members') . '</h2>';
 $User = new APP_User;
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits;
+$url = '/places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/';
+if ($this->regionCode) {
+    $url .= htmlspecialchars($this->regionName) . '/' . $this->regionCode . '/';
+}
+if ($this->cityCode) {
+    $url .= htmlspecialchars($this->cityName) . '/' . $this->cityCode . '/';
+}
+$loginUrlOpen = '<a href="login' . $url . '#login-widget">';
+$loginUrlClose = '</a>';
 if (!$this->members) {
     if ($this->totalMemberCount) {
-        echo $words->get('PlacesMoreMembers', $words->getSilent('PlacesMoreLogin'), 'LoginUrlOpen', 'LoginUrlClose') . $words->flushBuffer();
+        echo $words->get('PlacesMoreMembers', $words->getSilent('PlacesMoreLogin'), $loginUrlOpen, $loginUrlClose) . $words->flushBuffer();
     } else {
         echo $words->get('PlacesNoMembersFound', htmlspecialchars($this->placeName));
     }
 } else {
     if ($this->totalMemberCount != $this->memberCount) {
-        echo $words->get('PlacesMoreMembers', $words->getSilent('PlacesMoreLogin'), 'LoginUrlOpen', 'LoginUrlClose') . $words->flushBuffer();
+        echo $words->get('PlacesMoreMembers', $words->getSilent('PlacesMoreLogin'), $loginUrlOpen, $loginUrlClose) . $words->flushBuffer();
     }
     // divide members into pages of Places::MEMBERS_PER_PAGE (20)
-    $url = '/places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/';
-    if ($this->regionCode) {
-        $url .= htmlspecialchars($this->regionName) . '/' . $this->regionCode . '/';
-    }
-    if ($this->cityCode) {
-        $url .= htmlspecialchars($this->cityName) . '/' . $this->cityCode . '/';
-    }
     $params = new StdClass;
     $params->strategy = new HalfPagePager('right');
     $params->page_url = $url;

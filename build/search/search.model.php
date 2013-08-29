@@ -215,7 +215,7 @@ LIMIT 1
                     $longsw = rad2deg((self::EARTH_RADIUS * $long - $distance) / self::EARTH_RADIUS);
 
                     $radiusAtLatitude = cos($lat) * self::EARTH_RADIUS;
-                    $latne = rad2deg(($distance + $radiusAtLatidute * $lat) / $radiusAtLatitude);
+                    $latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
                     $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
                     // Sanity check if $latne < $latsw or $longne < $longsw switch the two (Melbourne)
                     // TODO: search around the date line

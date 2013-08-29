@@ -39,7 +39,7 @@ class StatsModel extends RoxModelBase
                 geonames_countries,
                 geonames_cache
             WHERE
-                members.Status IN ('Active','ChoiceInactive')
+                members.Status IN ('Active','ChoiceInactive','OutOfRemind')
                 AND
                 members.IdCity = geonames_cache.geonameId
                 AND
@@ -88,7 +88,7 @@ class StatsModel extends RoxModelBase
             WHERE
                 l.id = mll.IdLanguage
                 AND mll.idMember = m.id
-                AND m.Status IN ('Active','ChoiceInactive')
+                AND m.Status IN ('Active','ChoiceInactive','OutOfRemind')
             GROUP BY
                 l.name
             ORDER BY
@@ -132,7 +132,7 @@ class StatsModel extends RoxModelBase
                 m.id = mp.idmember
                 AND mp.idpreference = 1
             WHERE
-                m.status IN ('Active', 'ChoiceInActive')
+                m.status IN ('Active', 'ChoiceInActive', 'OutOfRemind')
                 AND l.id = IFNULL(mp.value, 0)
             GROUP BY
                 language

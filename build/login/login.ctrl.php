@@ -100,7 +100,10 @@ class LoginController extends RoxControllerBase
             } else {
                 if (!$this->model->setBWMemberAsLoggedIn($bw_member)) {
                     // something in the status was not ok.
-                    echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
+                    if ($bw_member->Status != 'SuspendedBeta') {
+                        echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
+                    } else
+                        echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorSuspended") .'</div>';
                 } else {
                     if ($bw_member->Status != 'Active')
                     {

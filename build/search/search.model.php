@@ -274,9 +274,46 @@ LIMIT 1
         }
         $start = ($pageno -1) * $limit;
         $vars['search-page-current'] = $pageno;
+
+        // Fetch count of members at/around the given place
+        $str = "
+            SELECT
+                COUNT(*) cnt
+            FROM
+                addresses a,
+                geonames g,
+                members m
+           WHERE
+                m.MaxGuest >= " . $vars['search-can-host'] . "
+                AND m.status = 'Active'
+                AND m.id = a.idmember
+                " . $this->locationWhere($vars, $admin1, $country);
+        $count = $this->dao->query($str);
+        $row = $count->fetch(PDB::FETCH_OBJ);
+        $vars['countOfMembers'] = $row->cnt;
+
+        // Fetch count of public members at/around the given place
+        $str = "
+            SELECT
+                COUNT(*) cnt
+            FROM
+                addresses a,
+                geonames g,
+                members m,
+                memberspublicprofiles mpp
+           WHERE
+                m.MaxGuest >= " . $vars['search-can-host'] . "
+                AND m.status = 'Active'
+                AND m.id = a.idmember
+                AND m.id = mpp.IdMember
+                " . $this->locationWhere($vars, $admin1, $country);
+        $count = $this->dao->query($str);
+        $row = $count->fetch(PDB::FETCH_OBJ);
+        $vars['countOfPublicMembers'] = $row->cnt;
+
         // *FROM* and *WHERE* will be replaced later on (don't change)
         $str = "
-            SELECT SQL_CALC_FOUND_ROWS
+            SELECT
                 m.id,
                 m.Username,
                 m.created,
@@ -347,10 +384,6 @@ LIMIT 1
         $str = str_replace('*WHERE*', 'WHERE', $str);
 
         $rawMembers = $this->bulkLookup($str);
-
-        $count = $this->dao->query("SELECT FOUND_ROWS() as cnt");
-        $row = $count->fetch(PDB::FETCH_OBJ);
-        $vars['count'] = $row->cnt;
 
         $loggedInMember = $this->getLoggedInMember();
 
@@ -842,7 +875,8 @@ LIMIT 1
                 $results['values'] = $this->getMemberDetails($vars);
             }
         }
-        $results['count'] = $vars['count'];
+        $results['countOfMembers'] = $vars['countOfMembers'];
+        $results['countOfPublicMembers'] = $vars['countOfPublicMembers'];
         return $results;
     }
 

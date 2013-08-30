@@ -135,13 +135,22 @@ $layoutbits = new MOD_layoutbits();
 </div>
     <div><?php
     if (!empty($members)) :
+        if ($results['countOfMembers'] != $results['countOfPublicMembers']) {
+            echo '<p>' . $words->get('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login/search#login-widget">', '</a>');
+            echo $words->flushBuffer() . '</p>';
+        }
+
         // Initialise pager widget
         $params = new StdClass;
         $params->strategy = new FullPagePager();
         $params->page_url = "/search/members/text?" . http_build_query($vars);
         $params->page_url_marker = 'search-page-';
         $params->page_method = 'form';
-        $params->items = $results['count'];
+        if ($this->member) {
+            $params->items = $results['countOfMembers'];
+        } else {
+            $params->items = $results['countOfPublicMembers'];
+        }
         $params->active_page = $vars['search-page-current'];
         $params->items_per_page = $vars['search-number-items'];
         $pager = new PagerWidget($params);

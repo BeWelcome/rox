@@ -341,7 +341,7 @@ LIMIT 1
         // Make sure only public profiles are found if no one's logged in
         if (!$this->getLoggedInMember()) {
             $str = str_replace('*FROM*', 'FROM memberspublicprofiles mpp,', $str);
-            $str = str_replace('*WHERE*', 'WHERE m.id = mpp.id AND ', $str);
+            $str = str_replace('*WHERE*', 'WHERE m.id = mpp.IdMember AND ', $str);
         }
         $str = str_replace('*FROM*', 'FROM', $str);
         $str = str_replace('*WHERE*', 'WHERE', $str);

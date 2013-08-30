@@ -42,6 +42,7 @@ class Member extends RoxEntityBase
     private $profile_languages = null;
     private $edit_mode = false;
     private $trad_by_tradid_inlang ; // Used to cache mTrad values
+    private $lang = 'en';
 
     public function __construct($member_id = false)
     {
@@ -50,7 +51,9 @@ class Member extends RoxEntityBase
         {
             $this->findById($member_id);
         }
-        $this->words=new MOD_words ;
+        $this->words=new MOD_words;
+        $langarr = explode('-', $_SESSION['lang']);
+        $this->lang = $langarr[0];
     }
 
     public function init($values, $dao)
@@ -618,6 +621,20 @@ WHERE IdMember = ".$this->id
 
 
     /**
+     * returns countrycode
+     *
+     * @access public
+     * @return int
+     */
+    public function get_regioncode() {
+        if(!isset($this->address)) {
+            $this->get_address();
+        }
+        return $this->address->RegionCode;
+    }
+
+
+    /**
      * returns address entity for first address
      *
      * @access public
@@ -909,16 +926,16 @@ WHERE IdMember = ".$this->id
             $city = $this->createEntity('Geo')->findById($addressRow->IdCity);
             if ($city) {
                 // Set city name
-                if ($city->getName() == '') {
+                $cityName = $city->getName($this->lang);
+                if ($cityName == '') {
                     $cityName = 'Error: City name not set';
-                } else {
-                    $cityName = $city->getName();
                 }
 
                 // Set region name
                 $region = $city->getParent();
                 if ($region) {
-                    $regionName = $region->getName();
+                    $regionName = $region->getName($this->lang);
+                    $regionCode = $region->admin1;
                 } else {
                     // Suppress display in template
                     $regionName = '';
@@ -927,8 +944,8 @@ WHERE IdMember = ".$this->id
                 // Set country name and code
                 $country = $city->getCountry();
                 if ($country) {
-                    $countryName = $country->getName();
-                    $countryCode = $country->fk_countrycode;
+                    $countryName = $country->getName($this->lang);
+                    $countryCode = $country->country;
                 }
 
                 // Set remaining address fields
@@ -969,10 +986,12 @@ WHERE IdMember = ".$this->id
         $address->Zip = $zip;
         $address->CityName = $cityName;
         $address->RegionName = $regionName;
+        $address->RegionCode = $regionCode;
         $address->CountryName = $countryName;
         $address->CountryCode = $countryCode;
 
         $this->address = $address;
+        error_log(print_r($this->address, true));
     }
 
     /*

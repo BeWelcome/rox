@@ -19,13 +19,13 @@ class GeoAlternateName extends RoxEntityBase
         {
             return false;
         }
+        $this->sql_order = 'isshort DESC, ispreferred DESC';
         if ($this->findByWhere("geonameId = '{$geo->getPKValue()}' AND isoLanguage = '{$this->dao->escape($lang)}'"))
         {
             return $this->alternatename;
         }
         else
         {
-        error_log("Not found");
             return false;
         }
     }

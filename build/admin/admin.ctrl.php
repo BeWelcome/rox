@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
     /**
      * admin controller
      * deals with actions that are available exclusively for administrators
-     * 
+     *
      * @package apps
      * @subpackage Admin
      */
@@ -40,16 +40,16 @@ class AdminController extends RoxControllerBase
     const MASSMAILCREATE  = 1;
     const MASSMAILENQUEUE = 1;
     const MASSMAILTRIGGER = 5;
-    
+
     private $_model;
-    
+
     public function __construct()
-    {        
+    {
         parent::__construct();
         $this->_model = new AdminModel();
     }
-    
-    public function __destruct() 
+
+    public function __destruct()
     {
         unset($this->_model);
     }
@@ -160,7 +160,7 @@ class AdminController extends RoxControllerBase
 
         $params->strategy = new HalfPagePager('left');
         $params->items = $this->_model->countMembersWithStatus($page->status);
-        $params->items_per_page = 25; 
+        $params->items_per_page = 25;
         $page->pager = new PagerWidget($params);
         $page->members = $this->_model->getMembersWithStatus($page->status, $page->pager);
         $page->members_count = $page->pager->getTotalCount();
@@ -213,7 +213,7 @@ class AdminController extends RoxControllerBase
         $page->bad_comments = $this->_model->getBadComments();
         $params->strategy = new HalfPagePager('left');
         $params->items = count($page->bad_comments);
-        $params->items_per_page = 25; 
+        $params->items_per_page = 25;
         $page->pager = new PagerWidget($params);
         return $page;
     }
@@ -232,7 +232,7 @@ class AdminController extends RoxControllerBase
         $page->member = $member;
         $params->strategy = new HalfPagePager('left');
         $params->items = count($page->bad_spam);
-        $params->items_per_page = 25; 
+        $params->items_per_page = 25;
         $page->pager = new PagerWidget($params);
         return $page;
     }
@@ -320,7 +320,7 @@ class AdminController extends RoxControllerBase
                 ob_end_clean();
 
     }
-    
+
     /**
      * Treasurer overview method
      *
@@ -358,10 +358,10 @@ class AdminController extends RoxControllerBase
         }
         $id = $vars['id'];
         if ($id == 0) {
-            $success = $this->_model->createDonation($vars['IdMember'], $vars['DonatedOn'], 
+            $success = $this->_model->createDonation($vars['IdMember'], $vars['DonatedOn'],
                 $vars['donate-amount'], $vars['donate-comment'], $countryid);
         } else {
-            $success = $this->_model->updateDonation($id, $vars['IdMember'], $vars['DonatedOn'], 
+            $success = $this->_model->updateDonation($id, $vars['IdMember'], $vars['DonatedOn'],
                 $vars['donate-amount'], $vars['donate-comment'], $countryid);
         }
         if (!$success) {
@@ -371,7 +371,7 @@ class AdminController extends RoxControllerBase
         }
         return $this->router->url('admin_treasurer_overview', array(), false);
     }
-    
+
     /**
      * Treasurer edit donation method
      *
@@ -392,7 +392,7 @@ class AdminController extends RoxControllerBase
     /**
      *
      */
-    public function treasurerStartDonationCampaignCallback(StdClass $args, 
+    public function treasurerStartDonationCampaignCallback(StdClass $args,
         ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         if (empty($args->post))
@@ -415,7 +415,7 @@ class AdminController extends RoxControllerBase
         $_SESSION['AdminTreasurerStatus'] = array('StartSuccess');
         return $this->router->url('admin_treasurer_overview', array(), false);
     }
-    
+
     /**
      * This enables the treasurer to start the donation campaign
      *
@@ -457,7 +457,7 @@ class AdminController extends RoxControllerBase
         return $page;
     }
 
-    /** 
+    /**
      * Massmail edit/create callback function
      *
      */
@@ -478,13 +478,13 @@ class AdminController extends RoxControllerBase
                 $args->post['Subject'], $args->post['Body'], $args->post['Description']);
             $_SESSION['AdminMassMailStatus'] = array( 'Create', $args->post['Name']);
         } else {
-            $this->_model->updateMassmail($args->post['Id'], $args->post['Name'], 
+            $this->_model->updateMassmail($args->post['Id'], $args->post['Name'],
                 $args->post['Type'], $args->post['Subject'], $args->post['Body']);
             $_SESSION['AdminMassMailStatus'] = array( 'Edit', $args->post['Name']);
         }
         return $this->router->url('admin_massmail', array(), false);
     }
-    
+
     /**
      * create a mass mailing
      *
@@ -563,8 +563,8 @@ class AdminController extends RoxControllerBase
         echo json_encode($places) . "\n";
         exit;
     }
-    
-    /** 
+
+    /**
      * Massmail enqueue callback function
      *
      */
@@ -595,7 +595,8 @@ class AdminController extends RoxControllerBase
     public function massmailEnqueue() {
         list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILENQUEUE);
         $id = $this->route_vars['id'];
-        $page = new AdminMassMailEnqueuePage($this->_model, $id);
+        $massmail = $this->_model->getMassmail($id);
+        $page = new AdminMassMailEnqueuePage($this->_model, $massmail);
         return $page;
     }
 
@@ -624,7 +625,7 @@ class AdminController extends RoxControllerBase
         $_SESSION['AdminMassMailStatus'] = array( 'Trigger', $massmail->Name, $count);
         $this->redirectAbsolute($this->router->url('admin_massmail'));
     }
-    
+
     /**
      * untrigger a mass mailing
      *

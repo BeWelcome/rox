@@ -46,7 +46,7 @@ if (isset($mem['data'])) {
 }
 $FeedbackQuestion = isset($mem['FeedbackQuestion']) ? $mem['FeedbackQuestion'] : '';
 $FeedbackEmail = isset($mem['FeedbackEmail']) ? $mem['FeedbackEmail'] : '';
-$answerneeded = isset($mem['answerneeded']) ? $mem['answerneeded'] : null;
+$answernotneeded = isset($mem['answernotneeded']) ? $mem['answernotneeded'] : null;
 $errors = $this->getRedirectedMem('errors');
 
 if ($errors = $this->getRedirectedMem('errors'))
@@ -71,11 +71,13 @@ if ($errors = $this->getRedirectedMem('errors'))
         <select id="IdCategory" name="IdCategory">
             <?php foreach ($categories as $cat) { ?>
                 <option value="<?php echo $cat->id ?>" <?=($cat->id == $IdCategory) ? 'selected="selected"': '' ?>>
-                    <?php echo $words->get("FeedBackName_" . $cat->name) ?>
+                    <?php echo $words->getSilent("FeedBackName_" . $cat->name) ?>
                 </option>
             <?php } ?>
         </select>
-    </div> <!-- type-select -->
+    </div>
+    <?php echo $words->flushBuffer(); ?>
+    <!-- type-select -->
 
     <div class="type-text <?php
         if (in_array('FeedbackErrorDataMissing', $errors))
@@ -110,11 +112,11 @@ if ($errors = $this->getRedirectedMem('errors'))
     <?php endif; ?>
 
     <div class="type-check">
-        <p><input type="checkbox" id="feedbackAnswerneeded" name="answerneeded" <?php if ($answerneeded) echo "checked='checked'";?>/> <label for="feedbackAnswerneeded"> <?php echo $words->get("FeedBackIWantAnAnswer")?></label></p>
+        <p><input type="checkbox" id="feedbackAnswernotneeded" name="answernotneeded" <?php if ($answernotneeded) echo "checked='checked'";?>/> <label for="feedbackAnswernotneeded"> <?php echo $words->get("FeedBackIDoNotWantAnAnswer")?></label></p>
     </div> <!-- type-check -->
 
     <div class="type-button">
-        <input type="submit" id="submit" name="submit" value="<?php echo $words->get("FeedbackSubmit")?>" />
+        <input type="submit" id="submit" name="submit" value="<?php echo $words->getSilent("FeedbackSubmit")?>" /><?php echo $words->flushBuffer(); ?>
         <input name="action" type="hidden" value="ask" />
     </div>
 </form>

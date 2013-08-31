@@ -117,10 +117,7 @@ Normally you cannot see it when logged in.<br>
 Please only use the page for translations!
 </div>
 <br>
-Related pages:
-<a href="signup/terms">terms</a> ::
-<a href="signup/privacy">privacy</a> ::
-<a href="signup/finish">finish</a>
+Related page: <a href="signup/finish">Signup confirmation</a>
 </div>
 '
             ;
@@ -138,9 +135,9 @@ Related pages:
 
         $old_member_born = date('Y') - 100;
         $young_member_born = date('Y') - SignupModel::YOUNGEST_MEMBER;
-
+        
         $out = '';
-        for ($i=$young_member_born+5; $i>$old_member_born; $i--) {
+        for ($i=$young_member_born; $i>$old_member_born; $i--) {
             if (!empty($selYear) && $selYear == $i) {
                 $out .= "<option value=\"$i\" selected=\"selected\">$i</option>";
             } else {

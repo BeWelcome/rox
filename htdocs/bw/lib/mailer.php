@@ -16,17 +16,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-
+error_reporting(E_ALL & ~E_STRICT);
 //Load the files we'll need
-require_once "swift/Swift.php";
-require_once "swift/Swift/Connection/SMTP.php";
-require_once "swift/Swift/Message/Encoder.php";
 require_once __DIR__."/../../../lib/htmlpurifier-4.0.0/library/HTMLPurifier.auto.php";
+require_once __DIR__."/../../../lib/misc/swift-5.0.1/lib/swift_required.php";
+require_once __DIR__.'/../../../modules/mail/lib/mail.lib.php';
 
 // -----------------------------------------------------------------------------
 // bw_mail is a function to centralise all mail send thru BW
@@ -49,7 +48,7 @@ function bw_mail($to, $subject, $text, $extra_headers = "", $from = "", $IdLangu
 } // end of bw_mail
 
 // -----------------------------------------------------------------------------
-// bw_sendmail is a function to centralise all mail send thru HC with more feature 
+// bw_sendmail is a function to centralise all mail send thru HC with more feature
 // $to = email of receiver this can be ; separated
 // $mail_subject=subject of mail
 // $text = text of mail
@@ -82,7 +81,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     // Is sender in format "name" <email@address>?
     if (strpos($FromParam, '" <')) {
         $parts = explode('" <', $FromParam);
-        $From = new Swift_Address(substr($parts[1],0,-1), substr($parts[0],1));
+        $From = array(substr($parts[1],0,-1) => substr($parts[0],1));
     } else {
         $From = $FromParam;
     }
@@ -93,7 +92,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     if ($use_html == "html")
         $use_html = "yes";
 
-    if ($verbose) { 
+    if ($verbose) {
         echo "<br />use_html=[" . $use_html . "] mail to " . $to . "<br />\n\$_SERVER['SERVER_NAME']=", $_SERVER['SERVER_NAME'], "<br />\n";
     }
 
@@ -137,10 +136,10 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         $headers = $headers . "Reply-To:" . utf8_encode($_SYSHCVOL['MessageSenderMail']);
         $replyto = $_SYSHCVOL['MessageSenderMail'];
     }
-    $headers .= "\nX-Mailer:PHP"; // mail of client			
+    $headers .= "\nX-Mailer:PHP"; // mail of client
 
     $Greetings = $ParamGreetings;
- 
+
     if ($use_html == "yes") {
         if ($verbose)
             echo "<br/ >4<br />\n";
@@ -170,14 +169,14 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
             $html_text = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" . str_replace("\n", "<br>\n", $texttosend); // In this case, its already in html, \n are to replace by <br>
         }
     }
-    
+
     if ($verbose)
         echo "<br>9 <br>\n";
 
     $plain_text = $text ."\n" . $Greetings;
     $plain_text = str_replace("<br>", "\n", $plain_text);
     $plain_text = str_replace("</td>", "</td>\n", $plain_text);
-    
+
 
     if ($verbose)
         echo "<br>10 " . nl2br($html_text) . "<br>\n";
@@ -218,41 +217,51 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
     //CZ_070619: Removing the newlines
     $mail_subject = str_replace("\n", "", $mail_subject);
     $mail_subject = str_replace("\r", "", $mail_subject);
-        
+
     //CZ_070702: Let's check if the string isnt already in utf8
-    if (!(Swift_Message_Encoder::instance()->isUTF8($mail_subject))) {
+    if (!mb_check_encoding($mail_subject, "UTF-8")) {
         //CZ_070619: now encoding the subject
         $mail_subject = utf8_encode($mail_subject);
     }
-    if (!is_object($From) && !(Swift_Message_Encoder::instance()->isUTF8($From))) {
+    if (!is_object($From) && !mb_check_encoding($From, "UTF-8")) {
         $From = utf8_encode($From);
     }
 
-    //Start Swift with localhost smtp
-    $swift = new Swift(new Swift_Connection_SMTP("localhost"));
     //Create the message
-    $message = new Swift_Message();
-    $message->headers->setCharset("utf-8");
-    $message->setCharset("utf-8");
-    $message->headers->set("Subject",  $mail_subject);
-    $message->headers->set("Reply-To", $replyto);
-    
+    $message = Swift_Message::newInstance()
+        //Give the message a subject
+        ->setSubject($mail_subject)
+
+        //Set the From address with an associative array
+        ->setFrom($From)
+
+        //Set the To addresses with an associative array
+        ->setTo($to);
+
+
     $config = HTMLPurifier_Config::createDefault();
     $config->set('HTML.Allowed', 'a[href]');
     $purifier = new HTMLPurifier($config);
     $plain_text = $purifier->purify($plain_text);
-    $message->attach(new Swift_Message_Part( $plain_text, "text/plain", "8bit", "utf-8"));
+    $message->setBody($plain_text);
+    $message->addPart($plain_text, 'text/plain', 'utf-8');
 
     //attach the html if used.
     if ($use_html){
-        $message->attach(new Swift_Message_Part($html_text, "text/html", "8bit", "utf-8"));
+        $message->addPart($html_text, 'text/html', 'utf-8');
     }
+
+    // Create transport
+    $transport = Swift_SmtpTransport::newInstance('localhost', 25, false);
+
+    // Create mailer using transport
+    $mailer = Swift_Mailer::newInstance($transport);
 
     //send the message to the list of member in the mail
     $tolist = explode(";", $to);
     $ret = "";
-    foreach ($tolist as $email) {		
-        $ret = $ret . $swift->send($message, $email, $From);
+    foreach ($tolist as $email) {
+        $ret = $ret . $mailer->send($message);
     }
 
     if ($verbose) {

@@ -164,7 +164,7 @@ if (in_array('textlen', $vars['errors'])) {
         <p class="desc"><?=$words->get('CommentsSublineText')?></p>
     </div>
     <p>
-        <input type="submit" value="<?=$words->get('CommentsSubmitForm')?>" class="submit" />
+        <input type="submit" value="<?=$words->getSilent('CommentsSubmitForm')?>" class="submit" /><?php echo $words->flushBuffer(); ?>
     <?= $callback;?>
     </p>
 </form>

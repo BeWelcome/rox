@@ -124,7 +124,7 @@ function DisplayAdminView($username, $name, $description, $TDatas, $TDatasVol, $
     echo "                  <td><textarea name=\"Comment\" rows=\"3\" cols=\"70\">", $rr->Comment, "</textarea></td>\n";
     echo "                </tr>\n";
     echo "                <tr>\n";
-    echo "                  <td colspan=\"3\" valign=\"center\" align=\"center\"><input type=\"submit\" id=\"submit\" name=\"submit\" value=\"update\" /></td>\n";
+    echo "                  <td colspan=\"3\" valign=\"center\" align=\"center\"><input type=\"submit\" id=\"submit\" name=\"submit\" value=\"update\" /> <input type=\"submit\" id=\"submit\" name=\"submit\" value=\"del\" /></td>\n";
     echo "                </tr>\n";
     echo "              </table>\n";
     echo "            </form>\n";

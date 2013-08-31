@@ -172,7 +172,7 @@ class UserView extends PAppView
 
     public function passwordForm()
     {
-        require TEMPLATE_DIR.'apps/user/passwordform.php';
+        header('Location: http://www.bewelcome.org/mypreferences') ;
     }
 
     public function userPage($userHandle)

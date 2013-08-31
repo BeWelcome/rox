@@ -46,12 +46,12 @@ $cloudmade_conf = PVars::getObj('cloudmade');
                 <div class="subcl">
                   <!-- Content of left block -->
 
-                    <label for="create-location"><?=$words->get('label_setlocation')?>:</label><br />
+                    <label for="create-location" style="width:15em"><?=$words->getSilent('label_setlocation')?>:</label><?php echo $words->flushBuffer(); ?><br />
                     <input type="text" name="create-location" id="create-location" <?php
                     echo isset($vars['create-location']) ? 'value="'.htmlentities($vars['create-location'], ENT_COMPAT, 'utf-8').'" ' : '';
                     ?>
                      />
-                     <input id="btn-create-location" class="button" onclick="javascript:return false;" type="submit" value="<?=$words->get('label_search_location')?>" />
+                     <input id="btn-create-location" class="button" onclick="javascript:return false;" type="submit" value="<?=$words->getSilent('label_search_location')?>" /><?php echo $words->flushBuffer(); ?>
                     <p class="desc"><?=$words->get('subline_location')?></p>
 
                     <div id="location-status"></div>
@@ -130,12 +130,11 @@ $cloudmade_conf = PVars::getObj('cloudmade');
     <input type="hidden" name="newgeo" id="newgeo" value="0" />
 
   <p>
-    <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
+    <input type="submit" value="<?php echo $words->getSilent('Save Location'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    /><br /><br />
-    <a href="signup/2" class="button back" title="<?php echo $words->get('LastStep'); ?>" ><span><?php echo $words->get('Back'); ?></span></a>
+    /><?php echo $words->flushBuffer(); ?><br /><br />
+    <a href="signup/2" class="button back" title="<?php echo $words->getSilent('LastStep'); ?>" ><span><?php echo $words->getSilent('Back'); ?></span></a><?php echo $words->flushBuffer(); ?>
   </p>
-
 </form>
 </div> 
         

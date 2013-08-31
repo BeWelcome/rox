@@ -92,7 +92,11 @@
     
     // Display the form to propose to add a comment	
     ?>
-    
+    <?php
+    if (isset($TCom->comQuality) && $TCom->comQuality == "Bad") {
+        echo "<h3>" . $words->get("CantChangeNegative") . "</h3>" . $words->get("CantChangeNegative_Explanation");
+    } else {
+    ?>
     <form method="post" name="addcomment" OnSubmit="return DoVerifySubmit('addcomment');">
     <?=$callback_tag ?>
     <fieldset>
@@ -169,6 +173,7 @@
     </table>
     </fieldset>
     </form>
+    
 
     <script type="text/javascript">
         function DoVerifySubmit(nameform) {
@@ -180,5 +185,7 @@
             return(true);
         }
     </script>
-    <?=$words->flushBuffer();?>
+    <?php 
+    } 
+    $words->flushBuffer();?>
     </div>

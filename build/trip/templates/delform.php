@@ -17,7 +17,7 @@ $words = new MOD_words();
 
 ?>
 <form method="post" action="trip/del" class="def-form">
-    <h2><?php echo $words->get('TripDelete_title'); ?></h2>
+    <h2><?php echo $words->get('TripDelete_title', htmlentities($vars['n'], ENT_COMPAT, 'utf-8')); ?></h2>
 
 	<p><?php echo $words->get('TripDelete_really_question'); ?></p>
 	<p class="small"><?php echo $words->get('TripDelete_info_blogentries'); ?></p>
@@ -34,8 +34,8 @@ if (isset($vars['n']) && $vars['n'])
 	}
 ?>
         <input type="hidden" name="<?=$callbackId?>" value="1"/>
-        <input class="button" type="submit" value="<?php echo $words->get('Yes');?>"/> 
-        <input class="button" type="button" value="<?php echo $words->get('No'); ?>" onclick="javascript: history.back();"/>
+        <input class="button" type="submit" value="<?php echo $words->getSilent('Yes');?>"/><?php echo $words->flushBuffer(); ?>
+        <input class="button" type="button" value="<?php echo $words->getSilent('No'); ?>" onclick="javascript: history.back();"/><?php echo $words->flushBuffer(); ?>
     </p>
 </form>
 <script type="text/javascript">//<!--

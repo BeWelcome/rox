@@ -15,17 +15,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
+    /**
      * @author crumbking
      */
 
-    /** 
+    /**
      * words management overview page
-     * 
+     *
      * @package Apps
      * @subpackage Admin
      */
@@ -33,18 +33,19 @@ Boston, MA  02111-1307, USA.
 class AdminMassMailEnqueuePage extends AdminMassMailBasePage
 {
     protected $id;
-    
-    public function __construct($model, $id) {
+
+    public function __construct($model, $massmail) {
         parent::__construct($model);
-        $this->id = $id;
+        $this->id = $massmail->id;
+        $this->type = $massmail->Type;
     }
-    
+
     public function teaserHeadline() {
         return '<a href="admin">' . $this->words->get('AdminTools') . "</a> "
             . ' &raquo; <a href="admin/massmail">' . $this->words->get('AdminMassMail') . "</a>"
             . ' &raquo; <a href="admin/massmail/enqueue/' . $this->id . '">' . $this->words->get('AdminMassMailEnqueue') . "</a>";
-    } 
-    
+    }
+
     public function leftSidebar() {
         $words = $this->getWords();
         echo '<h3>' . $words->get('AdminMassMailActions') . '</h3>';

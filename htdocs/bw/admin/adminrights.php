@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -67,31 +67,31 @@ switch (GetParam("action")) {
 		}
 		DisplayHelpRights($TDatas,$AdminRightScope);
 		break;
-		
+
 	case "viewbyusername" :
 		$TDatas = array ();
 		$str = "select ".$thememberstable.".Scope,".$thememberstable.".Level,".$thetable.".Name as TopicName,Username,countries.Name as CountryName,members.id as IdMember,members.LastLogin as LastLogin,members.Status as Status,membersphotos.FilePath as photo from (" . $thetable .",".$thememberstable.",members,cities,countries) left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where countries.id=cities.IdCountry and cities.id=members.IdCity and members.id=".$thememberstable.".IdMember and ".$thetable.".id=".$thememberstable.".IdRight order by members.id asc";
 		$qry = sql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
 			 $rComment=Loadrow("select count(*) as cnt from comments where IdToMember=".$rr->IdMember) ;
-			 $rr->NbComment=$rComment->cnt ; 
+			 $rr->NbComment=$rComment->cnt ;
 		   array_push($TDatas, $rr);
 		}
 		DisplayRightsList($TDatas,$AdminRightScope,false);
 		break;
-		 
+
 	case "viewbyright" :
 		$TDatas = array ();
 		$str = "select ".$thememberstable.".Scope,".$thememberstable.".Level,".$thetable.".Name as TopicName,Username,countries.Name as CountryName,members.id as IdMember,members.LastLogin as LastLogin,members.Status as Status,membersphotos.FilePath as photo from (" . $thetable .",".$thememberstable.",members,cities,countries) left join membersphotos on (membersphotos.IdMember=members.id and membersphotos.SortOrder=0) where countries.id=cities.IdCountry and cities.id=members.IdCity and members.id=".$thememberstable.".IdMember and ".$thetable.".id=".$thememberstable.".IdRight order by rights.id asc";
 		$qry = sql_query($str);
 		while ($rr = mysql_fetch_object($qry)) {
 			 $rComment=Loadrow("select count(*) as cnt from comments where IdToMember=".$rr->IdMember) ;
-			 $rr->NbComment=$rComment->cnt ; 
+			 $rr->NbComment=$rComment->cnt ;
 		   array_push($TDatas, $rr);
 		}
 		DisplayRightsList($TDatas,$AdminRightScope,true);
 		break;
-		 
+
 	case "add" :
 		if (HasRight($rightneeded, $Name) <= 0) {
 			echo "You miss $rightneeded on <b>", $Name, "</b> for this";
@@ -111,30 +111,28 @@ switch (GetParam("action")) {
 		}
 		break;
 	case "update" :
-		$IdItemVolunteer = GetParam("IdItemVolunteer");
+	    $IdItemVolunteer = GetParam("IdItemVolunteer");
 		$rbefore = LoadRow("select * from " . $thememberstable . " where id=" . $IdItemVolunteer);
 		$rCheck = LoadRow("select " . $thetable . ".Name as Name from " . $thetable . "," . $thememberstable . " where " . $thememberstable . "." . $IdItem . "=" . $thetable . ".id and " . $thememberstable . ".id=" . $IdItemVolunteer);
 		if ((HasRight($rightneeded, $Name) <= 0) or ($rCheck->Name != $Name)) {
 			echo "You miss Rights on <b>", $Name, "</b> for this";
 			exit (0);
 		}
-		$str = "update " . $thememberstable . " set Comment='" . GetStrParam("Comment") . "',Scope='" . GetStrParam("Scope") . "',Level=" . GetParam("Level") . " where id=$IdItemVolunteer";
-		$qry = sql_query($str);
-		$lastaction = "Updating " . $thetable . " <i>" . $Name . "</i> for <b>" . fUsername($rbefore->IdMember) . "</b>";
-		LogStr($lastaction, "Admin" . $thetable . "");
+	    $detail = GetStrParam("submit");
+	    if ($detail == "update") {
+    		$str = "update " . $thememberstable . " set Comment='" . GetStrParam("Comment") . "',Scope='" . GetStrParam("Scope") . "',Level=" . GetParam("Level") . " where id=$IdItemVolunteer";
+    		$qry = sql_query($str);
+    		$lastaction = "Updating " . $thetable . " <i>" . $Name . "</i> for <b>" . fUsername($rbefore->IdMember) . "</b>";
+    		LogStr($lastaction, "Admin" . $thetable . "");
+	    } else {
+    		$str = "delete from  " . $thememberstable . "  where id=$IdItemVolunteer";
+    		$qry = sql_query($str);
+    		$lastaction = "Deleting " . $thetable . " <i>" . $Name . "</i> for <b>" . fUsername($rbefore->IdMember) . "</b>";
+    		LogStr($lastaction, "Admin" . $thetable . "");
+    		$lastaction = "";
+	    }
 		break;
-	case "del" :
-		$IdItemVolunteer = GetStrParam("IdItemVolunteer");
-		$rbefore = LoadRow("select * from " . $thememberstable . " where id=" . $IdItemVolunteer);
-		$rCheck = LoadRow("select " . $thetable . ".Name as Name from " . $thetable . "," . $thememberstable . " where " . $thememberstable . "." . $IdItem . "=" . $thetable . ".id and " . $thememberstable . ".id=" . $IdItemVolunteer);
-		if ((HasRight($rightneeded, $Name) < 10) or ($rCheck->Name != $Name)) {
-			echo "You miss Rights on <b>", $Name, "</b> for this";
-			exit (0);
-		}
-		$str = "delete from  " . $thememberstable . "  where id=$IdItemVolunteer";
-		$qry = sql_query($str);
-		$lastaction = "Deleting " . $thetable . " <i>" . $Name . "</i> for <b>" . fUsername($rbefore->IdMember) . "</b>";
-		LogStr($lastaction, "Admin" . $thetable . "");
+	default:
 		break;
 }
 
@@ -157,7 +155,7 @@ if (($username != "") or ($Name != "")) { // if at least one parameter is select
 			$username=""; // reset username if none was found
 		}
 		$str .= " and " . $thememberstable . ".IdMember=" . $cid;
-		//			$groupby=" group by members.id"; 
+		//			$groupby=" group by members.id";
 	} else {
 	}
 

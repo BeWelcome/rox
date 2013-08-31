@@ -113,8 +113,8 @@ SQL
             }
         }
 
-        if (isset($vars["answerneeded"]) && $vars["answerneeded"]=="on") {
-            $text .= "- member requested an answer (".$EmailSender.")\r\n";
+        if (isset($vars["answernotneeded"]) && $vars["answernotneeded"]=="on") {
+            $text .= "- no reply needed" . "\r\n";
         }
 
         $text .= "\r\n";
@@ -149,7 +149,7 @@ SQL
         }
 
         //Load the files we'll need
-        require_once SCRIPT_BASE.'lib/misc/swift-mailer/lib/swift_required.php';
+        require_once SCRIPT_BASE.'lib/misc/swift-5.0.1/lib/swift_required.php';
 
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25);

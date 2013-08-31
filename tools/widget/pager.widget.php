@@ -10,7 +10,7 @@ class PagerWidget extends RoxWidget
     private $items_total;
     private $items_per_page;
     private $active_page;
-    
+
     /**
      *
      * @param object $params_object - standard object filled with vars
@@ -44,7 +44,7 @@ class PagerWidget extends RoxWidget
         }
         parent::__get($var);
     }
-    
+
     /**
      * outputs a list of list links, to reflect paging
      *
@@ -136,6 +136,9 @@ class PagerWidget extends RoxWidget
             case "get":
                 $term = "({$this->page_url_marker}=[0-9]+&?)";
                 break;
+            case "form":
+                $term = "({$this->page_url_marker}[0-9]+&?)";
+                break;
         }
         $this->page_url = preg_replace("!{$term}!",'', $this->page_url);
         $this->page_url = str_replace('&', '&amp;', $this->page_url);
@@ -161,6 +164,12 @@ class PagerWidget extends RoxWidget
                 break;
             case 'url':
                 if (preg_match("!/{$this->page_url_marker}/(\d+)!", $req->request_uri, $matches))
+                {
+                    return intval($matches[1]);
+                }
+                break;
+            case 'form':
+                if (preg_match("!/{$this->page_url_marker}(\d+)!", $req->request_uri, $matches))
                 {
                     return intval($matches[1]);
                 }
@@ -206,11 +215,16 @@ class PagerWidget extends RoxWidget
                 }
                 $url = ((substr($url_parts[0], -1) == '/') ? $url_parts[0] : $url_parts[0] . '/') . "{$this->page_url_marker}/{$page}{$url_parts[1]}";
                 break;
+            case 'form':
+                // directly return as we do not need a link in this case
+                return $this->page_url_marker . $page;
+                break;
             case 'get':
             default:
                 $url = $this->page_url . ((strstr($this->page_url, '?')) ? ((substr($this->page_url,-5) == '&amp;' || substr($this->page_url,-1) == '?') ? '' : "&amp;"): "?") . "{$this->page_url_marker}={$page}";
                 break;
         }
+        $url = htmlspecialchars($url, ENT_COMPAT | ENT_QUOTES, 'utf-8');
         return "<a href='{$url}'" . (($title) ? " title='{$title}'" : '') . ">{$text}</a>";
     }
 

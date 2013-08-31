@@ -27,21 +27,6 @@ class SuggestionsController extends RoxControllerBase
         $this->_model = new suggestionsModel();
     }
 
-    private function hasSuggestionRights()
-    {
-        $member = $this->_model->getLoggedInMember();
-        if (!$member) {
-            $this->redirectAbsolute($this->router->url('main_page'));
-            exit(0);
-        }
-        $rights = $member->getOldRights();
-        if (empty($rights) || (!empty($right) && !in_array('Suggestions', array_keys($rights)))) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public function suggestions() {
         $this->redirectAbsolute($this->router->url('suggestions_votelist'));
     }
@@ -114,7 +99,6 @@ class SuggestionsController extends RoxControllerBase
         }
         $page->suggestion = $suggestion;
         $page->member = $member;
-//        $page->hasSuggestionsRight = true;
         return $page;
     }
 
@@ -139,9 +123,9 @@ class SuggestionsController extends RoxControllerBase
     }
 
     public function suggestionsEditCreate() {
+        error_log("Edit/Create");
         $loggedInMember = $this->_model->getLoggedInMember();
-        $hasSuggestionRights = $this->hasSuggestionRights();
-        if (!$loggedInMember | !$hasSuggestionRights) {
+        if (!$loggedInMember) {
             $this->redirectAbsolute($this->router->url('suggestions_votelist'));
         }
         if (isset($this->route_vars['id'])) {
@@ -155,7 +139,6 @@ class SuggestionsController extends RoxControllerBase
             $pageno = $this->route_vars['pageno'] - 1;
         }
         $page = new SuggestionsEditCreatePage();
-        $page->hasSuggestionRights = $hasSuggestionRights;
         $page->member = $loggedInMember;
         $page->suggestion = $suggestion;
         return $page;
@@ -232,8 +215,25 @@ class SuggestionsController extends RoxControllerBase
             $pageno = $this->route_vars['pageno'] - 1;
         }
         $page = new SuggestionsRankListPage();
+        $page->member = $this->_model->getLoggedInMember();
         $count = $this->_model->getSuggestionsCount(self::SUGGESTIONS_RANKING);
         $suggestions = $this->_model->getSuggestions(self::SUGGESTIONS_RANKING, $pageno, self::SUGGESTIONS_PER_PAGE);
+        $page->suggestions = $suggestions;
+
+        $page->pager = $this->getPager('rank', $count, $pageno);
+
+        return $page;
+    }
+
+    public function suggestionsDevList() {
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
+        $page = new SuggestionsDevListPage();
+        $page->member = $this->_model->getLoggedInMember();
+        $count = $this->_model->getSuggestionsCount(self::SUGGESTIONS_DEV);
+        $suggestions = $this->_model->getSuggestions(self::SUGGESTIONS_DEV, $pageno, self::SUGGESTIONS_PER_PAGE);
         $page->suggestions = $suggestions;
 
         $page->pager = $this->getPager('rank', $count, $pageno);
@@ -247,6 +247,7 @@ class SuggestionsController extends RoxControllerBase
             $pageno = $this->route_vars['pageno'] - 1;
         }
         $page = new SuggestionsRejectedListPage();
+        $page->member = $this->_model->getLoggedInMember();
         $count = $this->_model->getSuggestionsCount(self::SUGGESTIONS_REJECTED);
         $suggestions = $this->_model->getSuggestions(self::SUGGESTIONS_REJECTED, $pageno, self::SUGGESTIONS_PER_PAGE);
         $page->suggestions = $suggestions;
@@ -256,18 +257,23 @@ class SuggestionsController extends RoxControllerBase
         return $page;
     }
 
-    public function suggestionsDevList() {
+    public function suggestionsProcess() {
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;
         }
-        $page = new SuggestionsDevListPage();
-        $count = $this->_model->getSuggestionsCount(self::SUGGESTIONS_DEV);
-        $suggestions = $this->_model->getSuggestions(self::SUGGESTIONS_DEV, $pageno, self::SUGGESTIONS_PER_PAGE);
-        $page->suggestions = $suggestions;
+        $page = new SuggestionsProcessPage();
+        $page->member = $this->_model->getLoggedInMember();
+        return $page;
+    }
 
-        $page->pager = $this->getPager('dev', $count, $pageno);
-
+    public function suggestionsTeam() {
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
+        $page = new SuggestionsTeamPage();
+        $page->member = $this->_model->getLoggedInMember();
         return $page;
     }
 }

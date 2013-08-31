@@ -33,7 +33,7 @@ $User = APP_User::login();
                 <input type="hidden" name="cof" value="FORID:9" />
                 <input type="hidden" name="ie" value="UTF-8" />
                 <input type="text" name="q" size="15" />
-                <input type="submit" name="sa" value="<?php echo $this->_model->words->get('Search')?>" />
+                <input type="submit" name="sa" value="<?php echo $this->_model->words->getSilent('Search')?>" /> <?php echo $this->_model->words->flushBuffer(); ?>
             </div>
         </form>
         <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>

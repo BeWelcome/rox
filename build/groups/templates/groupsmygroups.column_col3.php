@@ -8,7 +8,6 @@
             $mygroups = $this->pager->getActiveSubset($search_result);
             $this->pager->render();
             $ii = 0;
-            echo '<div class="subcolumns">';
             foreach ($mygroups as $group_data) :
                 if ($ii %3 == 0) :
                     echo '<div class="subcolumns">';
@@ -18,6 +17,7 @@
                 else :
                     echo '<div class="c33r">';
                 endif; ?>
+                <div class="groupbox group_float_left">
                     <a href="groups/<?=$group_data->getPKValue() ?>">
                         <img class="framed float_left"  width="80px" height="80px" alt="Group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                     </a>
@@ -31,10 +31,17 @@
                             <?php } ?>
                         </ul>
                     </div> <!-- groupinfo -->
-                </div> <!-- groupbox floatbox -->
-            <?php $ii++;
-            endforeach;
-            echo '</div>';
+                </div> <!-- groupbox -->
+				</div> <!-- c33x -->
+			<?php if ($ii % 3 == 2) :
+				echo "</div> <!-- subcolumns -->"; // subcolumns
+		    endif;
+			$ii++;
+            endforeach ; 
+			// check if a subcolumns needs to be closed
+			if ($ii % 3 != 0) :
+				echo "</div> <!-- subcolumns -->"; // subcolumns
+			endif;
             $this->pager->render();
         }
         else

@@ -11,7 +11,7 @@
         }
         echo "</div>";
     }
-    
+
     $vars = $this->getRedirectedMem('vars');
 
     if (empty($vars)) {
@@ -36,13 +36,16 @@
 <input type="hidden" name="Id" value="<?php echo $id; ?>">
 <p class="note center">Please write here in <strong>English</strong></p>
 <div class="type-text">
-<?php 
+<?php
 $options = array();
 if ($this->newsletterSpecific) {
     $options["Specific"] = $this->words->get('AdminMassMailEditTypeSpecific');
 }
 if ($this->newsletterGeneral) {
     $options["Normal"] = $this->words->get('AdminMassMailEditTypeGeneral');
+}
+if ($this->loginReminder) {
+    $options["RemindToLog"] = $this->words->get('AdminMassMailEditTypeLoginReminder');
 }
 ?>
 Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count($options) == 1) || ($id != 0))) { echo 'disabled="disabled"'; }?> />
@@ -68,17 +71,17 @@ Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count
 <label for="BroadCast_Title_">Subject for the newsletter</label>
 <input type="text" id="Subject" name="Subject" value="<?php echo $subject; ?>" />
 </div>
-  
+
 <div class="type-text">
 <label for="BroadCast_Body_">Body of the newsletter (%username%, if any, will be replaced by the username at sending)</label>
 <textarea id="Body" name="Body" rows="30"><?php echo $body; ?></textarea>
 </div>
-  
+
 <div class="type-text">
 <label for="Description">Description (as translators will see it in AdminWord) </label>
 <textarea id="Description" name="Description" rows="8"
-<?php 
-if ($id != 0) { 
+<?php
+if ($id != 0) {
     echo ' readonly="readonly"';
 }?>
 ><?php echo $description; ?></textarea>

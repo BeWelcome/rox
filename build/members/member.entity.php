@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -42,6 +42,7 @@ class Member extends RoxEntityBase
     private $profile_languages = null;
     private $edit_mode = false;
     private $trad_by_tradid_inlang ; // Used to cache mTrad values
+    private $lang = 'en';
 
     public function __construct($member_id = false)
     {
@@ -50,7 +51,9 @@ class Member extends RoxEntityBase
         {
             $this->findById($member_id);
         }
-        $this->words=new MOD_words ;
+        $this->words=new MOD_words;
+        $langarr = explode('-', $_SESSION['lang']);
+        $this->lang = $langarr[0];
     }
 
     public function init($values, $dao)
@@ -111,9 +114,9 @@ class Member extends RoxEntityBase
         $query = 'UPDATE addresses SET StreetName = ' . intval($cryptId)
             . ' WHERE IdMember = ' . $this->id . ' LIMIT 1';
         return $this->dao->exec($query);
-    } 
-    
-    
+    }
+
+
     /**
      * Checks which languages profile has been translated into
      */
@@ -144,7 +147,7 @@ class Member extends RoxEntityBase
     }
 
     /**
-     * Get all languages where 
+     * Get all languages where
      */
     private function get_all_languages_where($where) {
         $AllLanguages = array();
@@ -153,7 +156,7 @@ class Member extends RoxEntityBase
                 l.Name AS Name,
                 l.ShortCode AS ShortCode,
                 l.WordCode AS WordCode,
-                l.id AS id 
+                l.id AS id
             FROM
                 languages AS l ";
         $str .= $where;
@@ -303,7 +306,7 @@ class Member extends RoxEntityBase
      */
     protected function set_profile_languages()
     {
-        $trads_for_member = $this->bulkLookup("SELECT SQL_CACHE languages.id,ShortCode,Name from memberstrads,languages 
+        $trads_for_member = $this->bulkLookup("SELECT SQL_CACHE languages.id,ShortCode,Name from memberstrads,languages
         where languages.id=memberstrads.IdLanguage and IdOwner = $this->id and IdTrad=$this->ProfileSummary") ;
         $this->profile_languages = array();
 
@@ -321,7 +324,7 @@ class Member extends RoxEntityBase
      */
     protected function get_trads()
     {
-        // This code is obsolete (jy) 
+        // This code is obsolete (jy)
         $trads_for_member = $this->bulkLookup(
             "
 SELECT SQL_CACHE
@@ -462,10 +465,9 @@ WHERE IdMember = ".$this->id
 
     public function get_messengers() {
           $messengers = array(
-            array("network" => "GOOGLE", "nicename" => "Google Talk", "image" => "icon_gtalk.png", "href" => ""),
+            array("network" => "GOOGLE", "nicename" => "Hangouts", "image" => "icon_gplus.png", "href" => ""),
             array("network" => "ICQ", "nicename" => "ICQ", "image" => "icon_icq.png", "href" => ""),
             array("network" => "AOL", "nicename" => "AIM", "image" => "icon_aim.png", "href" => "aim:goim?"),
-            array("network" => "MSN", "nicename" => "MSN", "image" => "icon_msn.png", "href" => "msnim:chat?contact="),
             array("network" => "YAHOO", "nicename" => "Yahoo", "image" => "icon_yahoo.png", "href" => "ymsgr:sendIM?"),
             array("network" => "SKYPE", "nicename" => "Skype", "image" => "icon_skype.png", "href" => "skype:echo"),
             array("network" => "Others", "nicename" => "Other", "image" => "icon_other.png", "href" => "#")
@@ -507,11 +509,11 @@ WHERE IdMember = ".$this->id
     }
 
     public function get_age() {
-        
+
         if ($this->HideBirthDate=='Yes') {
             return('hidden' );
         }
-        $layoutbits = new MOD_layoutbits;    
+        $layoutbits = new MOD_layoutbits;
         return ($layoutbits->fage_value($this->BirthDate));
     }
 
@@ -615,6 +617,20 @@ WHERE IdMember = ".$this->id
             $this->get_address();
         }
         return $this->address->CountryCode;
+    }
+
+
+    /**
+     * returns countrycode
+     *
+     * @access public
+     * @return int
+     */
+    public function get_regioncode() {
+        if(!isset($this->address)) {
+            $this->get_address();
+        }
+        return $this->address->RegionCode;
     }
 
 
@@ -756,7 +772,7 @@ WHERE IdMember = ".$this->id
         $trip_data = $tripmodel->getTripData();
         return array($usertrips,$trip_data);
     }
-    
+
     /**
      * return an array of blog entities that the member created
      *
@@ -801,7 +817,7 @@ WHERE IdMember = ".$this->id
         {
             return false;
         }
-        return $this->createEntity('BlogEntity')->getComingPosts($this->id);        
+        return $this->createEntity('BlogEntity')->getComingPosts($this->id);
     }
 
     /**
@@ -910,16 +926,16 @@ WHERE IdMember = ".$this->id
             $city = $this->createEntity('Geo')->findById($addressRow->IdCity);
             if ($city) {
                 // Set city name
-                if ($city->getName() == '') {
+                $cityName = $city->getName($this->lang);
+                if ($cityName == '') {
                     $cityName = 'Error: City name not set';
-                } else {
-                    $cityName = $city->getName();
                 }
 
                 // Set region name
                 $region = $city->getParent();
                 if ($region) {
-                    $regionName = $region->getName();
+                    $regionName = $region->getName($this->lang);
+                    $regionCode = $region->admin1;
                 } else {
                     // Suppress display in template
                     $regionName = '';
@@ -928,8 +944,8 @@ WHERE IdMember = ".$this->id
                 // Set country name and code
                 $country = $city->getCountry();
                 if ($country) {
-                    $countryName = $country->getName();
-                    $countryCode = $country->fk_countrycode;
+                    $countryName = $country->getName($this->lang);
+                    $countryCode = $country->country;
                 }
 
                 // Set remaining address fields
@@ -970,10 +986,12 @@ WHERE IdMember = ".$this->id
         $address->Zip = $zip;
         $address->CityName = $cityName;
         $address->RegionName = $regionName;
+        $address->RegionCode = $regionCode;
         $address->CountryName = $countryName;
         $address->CountryCode = $countryCode;
 
         $this->address = $address;
+        error_log(print_r($this->address, true));
     }
 
     /*
@@ -987,10 +1005,10 @@ WHERE IdMember = ".$this->id
         }
         return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
     } // forums_posts_count
-    
+
     public function get_verification_status()
     {
-        // Loads the verification level of the member (if any) 
+        // Loads the verification level of the member (if any)
         $sql = "
 SELECT *
 FROM verifiedmembers
@@ -1013,9 +1031,9 @@ ORDER BY
     {
         $result = false;
         $sql = "
-            UPDATE 
+            UPDATE
                 specialrelations
-            SET 
+            SET
                 Comment = " . $IdTrad . "
             WHERE
                 Id = " . $IdRelation;
@@ -1025,7 +1043,7 @@ ORDER BY
         }
         return $result;
     }
-    
+
       public function get_relations()
       {
           $all_relations = $this->all_relations();
@@ -1036,7 +1054,7 @@ ORDER BY
           }
           return $Relations;
       }
-      
+
       public function get_all_relations()
       {
           $words = $this->getWords();
@@ -1054,7 +1072,7 @@ FROM
 WHERE
     specialrelations.IdOwner = $this->id  AND
     specialrelations.IdRelation = members.Id AND
-    members.Status in ('Active','ActiveHidden','ChoiceInactive') 
+    members.Status in ('Active','ActiveHidden','ChoiceInactive')
           ";
           $s = $this->dao->query($sql);
           $Relations = array();
@@ -1065,7 +1083,7 @@ WHERE
           }
           return $Relations;
       }
-      
+
       public function get_preferences() {
           $sql = "
 SELECT
@@ -1135,7 +1153,7 @@ ORDER BY preferences.position asc
      * @access public
      * @return array
      */
-    public function getVisitorsSubset(PagerWidget $pager) 
+    public function getVisitorsSubset(PagerWidget $pager)
     {
         return $this->createEntity('ProfileVisit')->getVisitingMembersSubset($this, $pager);
     }
@@ -1243,7 +1261,7 @@ ORDER BY
     public function get_trad($fieldname, $IdLanguage,$ReplaceWithBr=False) {
         if (!$this->IsFilled($fieldname)) return("") ;
         return ($this->get_trad_by_tradid($this->$fieldname,$IdLanguage,$ReplaceWithBr)) ;
-        
+
         // Code after this is obsolete (JY)
           if(!isset($this->trads)) {
             $this->trads = $this->get_trads();
@@ -1277,9 +1295,9 @@ ORDER BY
         }
         return($this->trad_by_tradid_inlang[$ReplaceWithBr][$IdTrad][$IdLanguage]) ;
 
-    
+
         // Following code is obsolete
-        
+
         if(!isset($this->trads)) {
             $this->get_trads();
         }
@@ -1314,7 +1332,7 @@ ORDER BY
         if ($crypted_id == "" or $crypted_id == 0) return "";
         // check for Admin
         $right = new MOD_right();
-        if ($right->hasRight('Admin')) {
+        if ($right->hasRight('Admin') || $right->hasRight('SafetyTeam')) {
             return urldecode(strip_tags(MOD_crypt::AdminReadCrypted($crypted_id)));
         }
         // check for Member's own data
@@ -1639,7 +1657,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         }
         return $this->old_rights;
     }
-    
+
     /**
      * sets a new password for this member
      *
@@ -1703,7 +1721,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
                 unset($_SESSION[$key]);
             }
         }
-                
+
         /**
          old stuff from TB - we don't rely on this
         if (!isset($this->sessionName))
@@ -1864,7 +1882,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $bodyHTML = $purifier->purify($body);
 
         //clear <br> tags stored in database
-        $body = strip_tags($body); 
+        $body = strip_tags($body);
 
         // Set language for email translations
         $languageCode = $this->getLanguagePreference();

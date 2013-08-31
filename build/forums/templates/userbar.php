@@ -28,10 +28,16 @@ Boston, MA  02111-1307, USA.
 ?>
     <h3><?php echo $this->words->getFormatted('Actions'); ?></h3>
     <ul class="linklist">
+
+<?php 
+      /*
     <li class="icon fam_commentadd">
         <a href="<?php echo $uri,'new'; ?>"><?php echo $this->words->get('ForumNewTopic'); ?></a>
     </li>
-        <li>
+      */
+?>
+
+    <li>
         <a href="groups/search"><?php echo $this->words->get('GroupsSearchHeading'); ?></a>
     </li>
     <?php

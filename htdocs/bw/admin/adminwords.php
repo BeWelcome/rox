@@ -65,14 +65,17 @@ $ShortCode = $rr->ShortCode;
 $_SESSION['IdLanguage'] = $IdLanguage = $rr->id;
 $MenuAction  = "            <li><a href=\"http://www.bevolunteer.org/wiki/Adminwords\">Documentation</a></li>\n" ;
 $MenuAction  = "            <li><a href=\"".bwlink("admin/adminwords.php")."\">Admin word</a></li>\n";
-$MenuAction .= "            <li><a href=\"".bwlink("importantwords.php")."\">Important words</a></li>\n";
+//04072013 Tsjoek - temporarily? hidden, waiting for a better solution
+//$MenuAction .= "            <li><a href=\"".bwlink("importantwords.php")."\">Important words</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?ShowLanguageStatus=". $rr->id)."\"> All in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlymissing&ShowLanguageStatus=". $rr->id)."\"> Only missing in ". $rr->EnglishName. "</a></li>\n";
-$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Only obsolete in ". $rr->EnglishName. "</a></li>\n";
+$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?onlyobsolete&ShowLanguageStatus=". $rr->id)."\"> Update needed in ". $rr->EnglishName. "</a></li>\n";
 $MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showstats")."\">Show stats</a></li>\n";
-$MenuAction .= "            <li><a href=\"".bwlink("admin/adminwords.php?showmemcache")."\">Show memcache</a></li>\n";
 
-
+/*
+ * Makes table with percentage of items that has been translated
+ * for 1 language or for all together
+ */
 function showPercentageAchieved($IdLanguage = null)
 {
     $rr = LoadRow("SELECT COUNT(*) AS cnt FROM words WHERE IdLanguage=0 AND donottranslate!='yes'");
@@ -83,64 +86,19 @@ function showPercentageAchieved($IdLanguage = null)
     }
     $str .= " GROUP BY words.IdLanguage ORDER BY cnt DESC";
     $qry=sql_query($str);
-    echo "<table>\n";
+    // height of table accustomed to space in action-menu
+    echo "<table height=100>\n";
     while ($rr=mysql_fetch_object($qry)) {
-        echo "<tr><td>", $rr->EnglishName, "</td><td>\n";
+        // vertical alignment=top to make 1 language situation look a bit better
+        echo "<tr valign=top><td>", $rr->EnglishName, "</td><td>\n";
         printf("%01.1f", ($rr->cnt / $cnt) * 100);
         echo  "% done</td>\n";
     }
     echo "</table>\n";
 }
 
-function showmemcache($IdLanguage = null) {
-	
-	echo "<h2>memcache statistics</h2>" ;
-	echo "\$_SESSION[\"Param\"]->memcache=",$_SESSION["Param"]->memcache,"<br />\n" ;
-
-	$memcache=new MemCache ;
-
-	$memcache->connect('localhost',11211) or die ("adminword: Could not connect to memcache") ;
-
-	$ServerStatus=$memcache->getServerStatus('localhost',11211) ;
-	echo "Memcache server Status=",$ServerStatus,"<br />" ;
-
-
-	
-
-	$Stats=$memcache->getStats('maps') ;
-	echo "\n<hr>Stats maps=<br/>\n" ;
-	$v=var_export($Stats,true);
-	echo str_replace("\n","<br>",$v) ;
-	echo "<br />" ;
-	
-	$Stats=$memcache->getStats('items') ;
-	echo "<hr>Stats items=<br/>\n" ;
-	$v=var_export($Stats,true);
-	$v=str_replace("\n","<br>\n",$v) ;
-	$v=str_replace(" ","&nbsp;",$v) ;
-	echo $v ;
-
-
-	$Stats=$memcache->getStats('cachedump') ;
-	echo "<hr>Stats cachedump=<br/>\n" ;
-	$v=var_export($Stats,true);
-	$v=str_replace("\n","<br>\n",$v) ;
-	$v=str_replace(" ","&nbsp;",$v) ;
-	echo $v ;
-
-	
-    require_once "layout/footer.php";
-	exit(0);
-	
-} // end of showmemcache
-
-
-
 DisplayHeaderShortUserContent("Admin Words",$MenuAction,""); // Display the header
 ShowLeftColumn($MenuAction,VolMenu());
-
-UpdateVolunteer_Board("translator_board") ;
-DisplayVolunteer_Board("translator_board") ; 
 
 $scope = RightScope('Words');
 $RightLevel = HasRight('Words',$lang); // Check the rights
@@ -200,17 +158,11 @@ if ((isset ($_POST['id'])) and ($_POST['id'] != ""))
 if (isset ($_POST['lang']))
   $lang = $_POST['lang'];
 
-
-
 // if it was a show translation on page request
 if (isset ($_GET['showstats'])) {
   showPercentageAchieved();
 }
 
-// if it was a show translation on page request
-if (isset ($_GET['showmemcache'])) {
-  showmemcache();
-}
 //OMG, this file is in desperate need of mysql_real_escape_string
 
 // If it was a find word request
@@ -317,7 +269,7 @@ if (isset ($_GET['showtransarray'])) {
       else {
           echo "<strong>not translatable</strong>" ;
       }
-			echo "Translation priority=",$rword->TranslationPriority ;
+            echo "Translation priority=",$rword->TranslationPriority ;
     }
     echo "</td></tr>";
   }
@@ -344,7 +296,6 @@ if (isset ($_GET['ShowLanguageStatus'])) {
   //without the int any translator can do anything with the database!
   $IdLanguage = (int)$_GET['ShowLanguageStatus'];
   $ssrlang="SELECT *,id AS IdLanguage FROM languages WHERE id = " . $IdLanguage;
-  //  echo "\$ssrlang=",$ssrlang,"<br />" ; ;
   $rlang = LoadRow($ssrlang);
   CheckRLang($rlang);
 
@@ -354,12 +305,12 @@ if (isset ($_GET['ShowLanguageStatus'])) {
   echo "Translation list for <strong>" . $rlang->EnglishName . "</strong> " . $PercentAchieved;
   echo "</th>";
   echo "<tr  bgcolor='#ffccff'><th  bgcolor=#ccff99>code</th><th  bgcolor=#ccffff>English</th><th bgcolor=#ffffcc>", $rlang->EnglishName, "</th>";
-	if (($onlyobsolete)or($onlymissing)) {
-  		 $qryEnglish = sql_query("select * from words where IdLanguage=0 order by TranslationPriority,id asc");
-	}
-	else {
-  		 $qryEnglish = sql_query("select * from words where IdLanguage=0");
-	}
+    if (($onlyobsolete)or($onlymissing)) {
+         $qryEnglish = sql_query("select * from words where IdLanguage=0 order by TranslationPriority,id asc");
+    }
+    else {
+         $qryEnglish = sql_query("select * from words where IdLanguage=0");
+    }
   while ($rEnglish = mysql_fetch_object($qryEnglish)) {
     $rr = LoadRow("select id as idword,updated,Sentence,IdMember,TranslationPriority from words where code='" . $rEnglish->code . "' and IdLanguage=" . $IdLanguage);
     $rword = LoadRow("select Sentence,updated,donottranslate,TranslationPriority from words where id=" . $rEnglish->id);
@@ -470,12 +421,12 @@ if ((isset ($_POST['DOACTION'])) and (strtolower($_POST['DOACTION']) == "submit"
       if (isset($_POST["donottranslate"])) {
         $donottranslate="donottranslate='".$_POST["donottranslate"]."',";
       }
-			
+            
       if (isset($_POST["TranslationPriority"])) {
         $TranslationPriority="TranslationPriority='".$_POST["TranslationPriority"]."',";
       }
-			
-			
+            
+            
       $str = "update words set ".$donottranslate.$TranslationPriority."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . mysql_real_escape_string($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
       $qry = sql_query($str);
       if ($qry) {
@@ -570,7 +521,7 @@ echo "                  <td class=\"label\" >Description: </td>\n";
 echo "                  <td><em>", str_replace("\n","<br />",$rEnglish->Description), " </em></td>\n";
 echo "                </tr>\n";
 }
-echo "                  <td class=\"label\" >English source: </td>\n";
+echo "                  <tr><td class=\"label\" >English source: </td>\n";
 $tagold = array("&lt;", "&gt;");
 $tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
 echo "                  <td>", str_replace("\n","<br />",str_replace($tagold,$tagnew,htmlentities($rEnglish->Sentence, ENT_COMPAT | ENT_HTML401, 'UTF-8'))), " </td>\n";

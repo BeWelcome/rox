@@ -86,7 +86,7 @@ class ReadMessagePage extends MessagesBasePage
                                 $max = count($languages);
                                 foreach($languages as $language) {
                                     $space = ($ii != $max -1) ? ', ' : '';
-                                  ?><strong><span title="<?=$words->get('LanguageLevel_'.$language->Level) ?>"><?=$language->Name ?><?=$space?></span></strong><?php
+                                  ?><strong><span title="<?=$words->getSilent('LanguageLevel_'.$language->Level) ?>"><?=$language->Name ?><?=$space?></span></strong><?php echo $words->flushBuffer(); ?><?php
                                     $ii++;
                                 }
                         } ?>

@@ -54,7 +54,7 @@ Boston, MA  02111-1307, USA.
                     $notify_widget->render();
                     ?>
                 </div> <!-- tab1 -->
-                
+
                 <div class="panel" id="tab2">
                     <?php /* NOTREADY: complete the stuff below
                                     <h3><?=$words->get('HowToFindAHost')?></h3>
@@ -73,9 +73,10 @@ Boston, MA  02111-1307, USA.
                                 <h3><?php echo $words->getFormatted('StartpageSearchMember') ?></h3>
                                 <div id="search-bar">
                                     <form id="form1" name="form1" method="get" action="searchmembers">
-                                        <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='<?php echo $words->get('StartpageSearchMemberText'); ?>'" value="<?php echo $words->get('StartpageSearchMemberText'); ?>" onfocus="this.value='';" />
+                                        <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='<?php echo $words->getSilent('StartpageSearchMemberText'); ?>'" value="<?php echo $words->getSilent('StartpageSearchMemberText'); ?>" onfocus="this.value='';" />
                                         <input type="hidden" name="searchopt" id="searchopt" />
-                                        <input type="submit" value="<?php echo $words->getFormatted('FindPeopleSubmitSearch'); ?>" class="button"/>
+                                        <input type="submit" value="<?php echo $words->getSilent('FindPeopleSubmitSearch'); ?>" class="button"/>
+                                        <?php echo $words->flushBuffer(); ?>
                                     </form>
                                 </div>
 
@@ -88,17 +89,15 @@ Boston, MA  02111-1307, USA.
                                 <div id="browsecities_dropdown" style="display:none;">
                                     <h3><?php echo $words->getFormatted('StartpageBrowseCountries') ?></h3>
                                     <select onchange="window.location.href=this.value; return false" style="width: 100%">
-                                    <?php foreach ($Countries as $continent => $countries_group) { ?>
-                                        <optgroup label="<?php
-                                        if ($continent=='AF') { echo $words->getformatted('Africa');} 
-                                        if ($continent=='AN') { echo $words->getformatted('Antarctica');} 
-                                        if ($continent=='EU') { echo $words->getformatted('Europe');} 
-                                        if ($continent=='NA') { echo $words->getformatted('NorthAmerica');}
-                                        if ($continent=='SA') { echo $words->getformatted('SouthAmerica');}
-                                        if ($continent=='OC') { echo $words->getformatted('Oceania');}
-                                        if ($continent=='AS') { echo $words->getformatted('Asia');} ?>">
-                                        <?php foreach ($countries_group as $code => $country) { ?>
-                                             <option label="<?=$country['name']?>" value="places/<?=$code?>"><?=$country['name']?> <?=($country['number'] != 0) ? ('('.$country['number'].')') : ''?></option>
+                                    <?php foreach ($Countries as $continent => $countries_group) {
+                                        if ($continent=='AF') { $label =$words->getSilent('Africa');}
+                                        if ($continent=='AN') { $label =$words->getSilent('Antarctica');}
+                                        if ($continent=='EA') { $label = $words->getSilent('Eurasia');}
+                                        if ($continent=='AM') { $label = $words->getSilent('Americas');}
+                                        if ($continent=='OC') { $label = $words->getSilent('Oceania');}
+                                        echo '<optgroup label="' . $label . '">';
+                                        foreach ($countries_group as $country) { ?>
+                                             <option label="<?=$country->name?>" value="places/<?=$country->country?>"><?=$country->name?> <?=($country->number != 0) ? ('('.$country->number.')') : ''?></option>
                                         <?php } ?>
                                     </optgroup>
                                     <?php } ?>
@@ -135,7 +134,7 @@ Boston, MA  02111-1307, USA.
                         </div> <!-- c50r -->
                     </div> <!-- subcolumns -->
                 </div> <!-- tab3 -->
-                
+
                 <div class="panel" id="tab3a">
                     <div class="subcolumns">
                         <div class="c50l">

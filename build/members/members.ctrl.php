@@ -29,17 +29,17 @@ class MembersController extends RoxControllerBase
             return $this->index_loggedOut($args);
         }
     }
-    
+
     protected function index_loggedOut($args)
     {
         $request = $args->request;
-        
+
         switch (isset($request[0]) ? $request[0] : false)
         {
             case 'updatemandatory':
             case 'mypreferences':
             case 'editmyprofile':
-            case 'myvisitors':      
+            case 'myvisitors':
             case 'self':
             case 'myself':
             case 'my':
@@ -109,13 +109,13 @@ class MembersController extends RoxControllerBase
         $page->model = $this->model;
         return $page;
     }
-    
+
     protected function index_loggedIn($args, $member_self)
     {
         $request = $args->request;
-        
+
         $myself = true;
-        
+
         switch (isset($request[0]) ? $request[0] : false) {
             case 'setlocation':
                 $page = new SetLocationPage();
@@ -157,7 +157,7 @@ class MembersController extends RoxControllerBase
                         break;
                     case 'visitors':
                         $page = new MyVisitorsPage();
-                        return;                        
+                        return;
                     case 'messages':
                         $this->redirect("messages/received");
                         return;
@@ -265,8 +265,8 @@ class MembersController extends RoxControllerBase
                             $page = new MembersMembernotfoundPage;
                             break;
                         }
-                    } 
-                    
+                    }
+
                     // found a member with given id or username
                     $myself = false;
                     if ($member->id == $member_self->id)
@@ -353,7 +353,7 @@ class MembersController extends RoxControllerBase
                             break;
                         case 'adminedit':
                             $rights = new MOD_right();
-                            if ($rights->hasRight('Admin'))
+                            if ($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam'))
                             {
                                 $page = new EditMyProfilePage();
                                 $page->adminedit = true;
@@ -392,7 +392,7 @@ class MembersController extends RoxControllerBase
         $page->model = $this->model;
         return $page;
     }
-    
+
     protected function getMember($cid)
     {
         $model = new MembersModel;
@@ -404,17 +404,17 @@ class MembersController extends RoxControllerBase
             return false;
         }
     }
-    
+
     protected function redirect_myprofile()
     {
-        if (isset($_SESSION['Username'])) { 
+        if (isset($_SESSION['Username'])) {
             $username = $_SESSION['Username'];
         } else {
             $username = 'henri';
         }
         $this->redirect("members/$username");
     }
-    
+
     public function setLocationCallback($args, $action, $mem_redirect, $mem_resend)
     {
         $request = $args->request;
@@ -423,7 +423,7 @@ class MembersController extends RoxControllerBase
             foreach ($args->post as $key => $value) {
                 $vars[$key] = $value;
             }
-            
+
             $errors = array();
             // member id
             if (empty($vars['id'])) {
@@ -435,14 +435,14 @@ class MembersController extends RoxControllerBase
                 $errors[] = 'SignupErrorProvideLocation';
                 unset($vars['geonameid']);
             }
-            
+
             if (count($errors) > 0) {
                 // show form again
                 $vars['errors'] = $errors;
                 $mem_redirect->post = $vars;
                 return false;
             }
-            
+
             // set the location
             $result = $this->model->setLocation($vars['id'],$vars['geonameid']);
             $errors['Geonameid'] = 'Geoname not set';
@@ -457,23 +457,23 @@ class MembersController extends RoxControllerBase
     {
         throw new Exception('This should not be used - mandatory details are taken care of in edit my profile');
     }
-    
+
     public function myPreferencesCallback($args, $action, $mem_redirect)
     {
         $vars = $args->post;
         $request = $args->request;
         $errors = $this->model->checkMyPreferences($vars);
-        
+
         if (count($errors) > 0) {
             // show form again
             $mem_redirect->problems = $errors;
             $mem_redirect->post = $vars;
             return false;
         }
-    
+
         if( !($User = APP_User::login()))
             return false;
-        
+
         $this->model->editPreferences($vars);
 
         if (isset($vars['PreferenceLanguage']) && $_SESSION['IdLanguage'] != $vars['PreferenceLanguage'])
@@ -482,7 +482,7 @@ class MembersController extends RoxControllerBase
         }
 
         // set profile as public
-        if( isset($vars['PreferencePublicProfile']) && $vars['PreferencePublicProfile'] != '') {   
+        if( isset($vars['PreferencePublicProfile']) && $vars['PreferencePublicProfile'] != '') {
             $this->model->set_public_profile($vars['memberid'],($vars['PreferencePublicProfile'] == 'Yes') ? true : false);
         }
         // set new password
@@ -498,12 +498,12 @@ class MembersController extends RoxControllerBase
         }
         return false;
     }
-    
+
     /**
      * commentCallback
      *
      * @param Object $args
-     * @param Object $action 
+     * @param Object $action
      * @param Object $mem_redirect memory for the page after redirect
      * @param Object $mem_resend memory for resending the form
      * @return string relative request for redirect
@@ -513,23 +513,23 @@ class MembersController extends RoxControllerBase
         $vars = $args->post;
         $request = $args->request;
         $errors = $this->model->checkCommentForm($vars); // TODO: checkCommentForm still needs more finetuning
-        
+
         if (count($errors) > 0) {
             // show form again
             $vars['errors'] = $errors;
             $mem_redirect->post = $vars;
             return false;
         }
-        
+
         $member = $this->getMember($request[1]);
         $TCom = $member->get_comments_commenter($this->model->getLoggedInMember()->id);
         // add the comment!
         if (!$this->model->addComment(isset($TCom[0]) ? $TCom[0] : false,$vars)) return false;
-        
+
         return 'members/'.$request[1].'/comments';
     }
-    
-    
+
+
     /**
      * handles edit profile form post - profile updating
      *
@@ -546,7 +546,7 @@ class MembersController extends RoxControllerBase
             $vars = $this->cleanVars($args->post);
             $request = $args->request;
             $errors = $this->model->checkProfileForm($vars);
-            		
+
             $uploadFailed = false;
 			if (in_array('UploadedProfileImageTooBig', $errors) === false
 				|| in_array('ProfileImageUploadFailed', $errors) === false
@@ -560,7 +560,7 @@ class MembersController extends RoxControllerBase
 					$uploadFailed = true;
 				}
 			}
-			
+
             $vars['errors'] = array();
             if (count($errors) > 0) {
                 $vars['errors'] = $errors;
@@ -576,7 +576,7 @@ class MembersController extends RoxControllerBase
                 return false;
             }
             $rights = new MOD_right;
-            if (!$rights->hasRight('Admin'))
+            if (!($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam')))
             {
                 $vars['memberid'] = $this->model->getLoggedInMember()->getPKValue();
             }
@@ -584,7 +584,7 @@ class MembersController extends RoxControllerBase
             $vars = $this->model->polishProfileFormValues($vars);
             $success = $this->model->updateProfile($vars);
             if (!$success) $mem_redirect->problems = array('Could not update profile');
-            
+
             // Redirect to a nice location like editmyprofile/finish
             $str = implode('/',$request);
             if (in_array('finish',$request)) return $str;
@@ -625,7 +625,7 @@ class MembersController extends RoxControllerBase
                     if (isset($vars['Type'])) $vars['stype'] = $vars['Type'];
                     else {
                         $TabRelationsType = $member->get_TabRelationsType();
-                        $stype=""; 
+                        $stype="";
                         $tt=$TabRelationsType;
                         $max=count($tt);
                         for ($ii = 0; $ii < $max; $ii++) {
@@ -734,7 +734,7 @@ class MembersController extends RoxControllerBase
         }
         if ($member->canLogIn()) {
             $member->model = $this->model;
-            
+
             // Generate random password (copied from bw)
             $totalChar = 8; // number of chars in the password
             $salt = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";  // salt to select chars from
@@ -814,7 +814,7 @@ class MembersController extends RoxControllerBase
      * noteCallback
      *
      * @param Object $args
-     * @param Object $action 
+     * @param Object $action
      * @param Object $mem_redirect memory for the page after redirect
      * @param Object $mem_resend memory for resending the form
      * @return string relative request for redirect
@@ -858,7 +858,7 @@ class MembersController extends RoxControllerBase
     public function addNote()
     {
         $loggedInMember = $this->model->getLoggedInMember();
-        $member =$this->model->getMemberWithUsername($this->route_vars['username']); 
+        $member =$this->model->getMemberWithUsername($this->route_vars['username']);
         if (!$loggedInMember || !$member) {
             return $page = new MembersMustloginPage;
         }
@@ -873,7 +873,7 @@ class MembersController extends RoxControllerBase
      * noteCallback
      *
      * @param Object $args
-     * @param Object $action 
+     * @param Object $action
      * @param Object $mem_redirect memory for the page after redirect
      * @param Object $mem_resend memory for resending the form
      * @return string relative request for redirect
@@ -894,7 +894,7 @@ class MembersController extends RoxControllerBase
     public function deleteNote()
     {
         $loggedInMember = $this->model->getLoggedInMember();
-        $member =$this->model->getMemberWithUsername($this->route_vars['username']); 
+        $member =$this->model->getMemberWithUsername($this->route_vars['username']);
         if (!$loggedInMember || !$member) {
             return $page = new MembersMustloginPage;
         }
@@ -902,7 +902,7 @@ class MembersController extends RoxControllerBase
         if (!$note) {
             $baseURL = PVars::getObj('env')->baseuri;
             return $this->redirectAbsolute($baseURL . 'members/' . $this->route_vars['username']);
-        } 
+        }
         $page = new DeleteNotePage();
         $page->model = $this->model;
         $page->loggedInMember = $loggedInMember;

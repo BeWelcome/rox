@@ -99,19 +99,21 @@ Boston, MA  02111-1307, USA.
           <label for="password"><?php echo $words->get('SignupPassword'); ?>* </label>
             <?php  echo '<p class="entered">********</p>'; ?>
         </div>
-<?php          }
-          ?>
-
+        <?php 
+        } 
+        ?>
 
     <!-- email -->
-        <div class="signup-row-thin">
+       <div class="signup-row-thin">
           <label for="register-email"><?php echo $words->get('SignupEmail'); ?>* </label>
-          <input <?=in_array('SignupErrorInvalidEmail', $vars['errors']) ? '':'type="hidden"'?> id="register-email" name="email"  <?php
+          <input <?=(in_array('SignupErrorInvalidEmail', $vars['errors']) || in_array('SignupErrorEmailCheck', $vars['errors'])) ? '':'type="hidden"'?> id="register-email" name="email"  <?php
           echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
-          ?> />
+          ?> />  
           <?php
           if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
+          } else if (in_array('SignupErrorEmailCheck', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorEmailCheck').'</div>';
           } else if (in_array('SignupErrorEmailAddressAlreadyInUse', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorEmailAddressAlreadyInUse').'</div>';
           } else {
@@ -120,7 +122,21 @@ Boston, MA  02111-1307, USA.
           ?>
 
         </div> <!-- signup-row-thin -->
-
+        
+        <!-- confirm email -->
+        <?php 
+        if (in_array('SignupErrorEmailCheck', $vars['errors']) || in_array('SignupErrorInvalidEmail', $vars['errors'])) { ?>
+            <div class="signup-row-thin">
+                <label for="register-emailcheck"><?php echo $words->get('SignupCheckEmail'); ?>* </label>
+                <input type="text" id="register-emaildcheck" name="emailcheck" <?php 
+                    echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
+                    ?> />
+            </div> 
+        <?php
+        } else {  
+        } 
+        ?>
+        <!-- signup-row -->
   </fieldset>
 
   <!-- Personal Information -->
@@ -342,10 +358,10 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
   ?>
   <?php echo $words->get('IAgreeWithTerms'); ?></p>
   <p>
-    <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="submit"
+    <input type="submit" value="<?php echo $words->getSilent('SubmitForm'); ?>" class="submit"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    /><br /><br />
-    <a href="signup/3" class="button back" title="<?php echo $words->get('LastStep'); ?>" ><span><?php echo $words->get('Back'); ?></span></a>
+    /><?php echo $words->flushBuffer(); ?><br /><br />
+    <a href="signup/3" class="button back" title="<?php echo $words->getSilent('LastStep'); ?>" ><span><?php echo $words->getSilent('Back'); ?></span></a><?php echo $words->flushBuffer(); ?>
   </p>
 
 </form>

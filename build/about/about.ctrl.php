@@ -23,13 +23,13 @@ class AboutController extends RoxControllerBase
         } else if (!isset($request[1])) {
             $page = new AboutTheideaPage();
         } else {
-            $page = $this->_getPageByKeyword($request[1], isset($request[2]) ? $request[2] : false); 
+            $page = $this->_getPageByKeyword($request[1], isset($request[2]) ? $request[2] : false);
         }
         return $page;
-    }    
-    
+    }
+
     private function _getPageByKeyword($keyword, $keyword_2)
-    {   
+    {
         switch ($keyword) {
             case 'thepeople':
                 return new AboutThepeoplePage();
@@ -48,8 +48,18 @@ class AboutController extends RoxControllerBase
                 return $page;
             case 'stats':
             case 'statistics':
+                if (!empty($keyword_2)) {
+                    // return the given image
+                    header('Content-type: image/png');
+                    $statsDir = new PDataDir('statimages');
+                    $statsDir->readFile($keyword_2);
+                    PPHP::PExit();
+                }
+                $statsModel = new StatsModel();
+                // Generate new statsImages if needed
+                $statsModel->generateStatsImages();
                 $page = new AboutStatisticsPage();
-                $page->setModel(new StatsModel());
+                $page->setModel($statsModel);
                 return $page;
             case 'feedback':
             case 'contact':
@@ -80,7 +90,7 @@ class AboutController extends RoxControllerBase
                 return new AboutTheideaPage();
         }
     }
-    
+
     public function feedbackCallback($args, $action, $mem_redirect, $mem_resend)
     {
         if (isset($args->post))
@@ -123,5 +133,5 @@ class AboutController extends RoxControllerBase
             return false;
         }
     }
-    
+
 }

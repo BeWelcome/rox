@@ -9,135 +9,91 @@
 * @version $Id$
 */
 
-class PlacesController extends PAppController {
+class PlacesController extends RoxControllerBase {
     private $_model;
-    private $_view;
-    
+
     public function __construct() {
         parent::__construct();
         $this->_model = new Places();
-        $this->_view =  new PlacesView($this->_model);
-    }
-    
-    public function __destruct() {
-        unset($this->_model);
-        unset($this->_view);
-    }
-    
-    /**
-    * index is called when http request = ./places
-    */
-    public function index() {
-        $request = PRequest::get()->request;
-        $User = APP_User::login();
-        $subTab = 'places';
-                
-        // submenu
-        ob_start();
-        $this->_view->submenu($subTab);
-        $str = ob_get_contents();
-        $P = PVars::getObj('page');
-        $P->subMenu .= $str;
-        ob_end_clean();
-        
-        ob_start();
-        $this->_view->customStyles();
-        $str = ob_get_contents();
-        $P = PVars::getObj('page');
-        $P->addStyles .= $str;
-        ob_end_clean(); 
-        
-        // teaser content
-        ob_start();
-        $countryinfo = '';
-        $region = '';
-        $city = '';
-        $countrycode = '';
-        if (isset($request[1]) && $request[1] && (substr($request[1], 0, 5) != '=page')) {
-            $countrycode = $request[1]; 
-            $countryinfo = $this->_model->getCountryInfo($request[1]);
-        }
-        if (isset($request[2]) && $request[2] && (substr($request[2], 0, 5) != '=page')) {$region = $request[2];}
-        if (isset($request[3]) && $request[3] && (substr($request[3], 0, 5) != '=page')) {$city = $request[3];}
-        $this->_view->teaserplaces($countrycode,$countryinfo,$region,$city);
-        $str = ob_get_contents();
-        $P = PVars::getObj('page');
-        $P->teaserBar .= $str;
-        ob_end_clean(); 
-        
-        if (isset($request[1]) && $request[1] && (substr($request[1], 0, 5) != '=page')) {
-            if (isset($request[2]) && $request[2] && (substr($request[2], 0, 5) != '=page')) {
-                if (isset($request[3]) && $request[3] && (substr($request[3], 0, 5) != '=page')) {
-                            ob_start();
-                            $cityinfo = $this->_model->getCityInfo($request[3],$request[2],$request[1]);
-                            if (!$cityinfo) {
-                                $this->_view->placesNotFound($request[3]);
-                            } else {
-                                $members = $this->_model->getMembersOfCity($request[3],$request[2],$request[1]);
-                                $this->_view->displayCityInfo($cityinfo, $members);
-                            }
-                            $Page = PVars::getObj('page');
-                            $Page->content .= ob_get_contents();
-                            ob_end_clean();                      
-                } else {
-                    switch ($request[2]) {
-                        case 'about':
-                        // main content    
-                        ob_start();
-                        $this->_view->testpage();
-                        $str = ob_get_contents();
-                        ob_end_clean();
-                        $P = PVars::getObj('page');
-                        $P->content .= $str;
-                        break;
-                        
-                        default:
-                        ob_start();
-                        $regioninfo = $this->_model->getRegionInfo($request[2],$request[1]);
-                        if (!$regioninfo) {
-                            $this->_view->placesNotFound($request[2]);
-                        } else {
-                            $IdRegion = $regioninfo->idregion;
-                            $cities = $this->_model->getAllCities($IdRegion);
-                            $this->_view->displayCities($cities,$request[2],$request[1]); // not yet
-                            $members = $this->_model->getMembersOfRegion($request[2],$request[1]);
-                            $this->_view->displayRegionInfo($regioninfo, $members);
-                        }
-                        $Page = PVars::getObj('page');
-                        $Page->content .= ob_get_contents();
-                        ob_end_clean();
-                        break;
-                    }    
-            }
-            } else {
-                ob_start();
-                if (!$countryinfo) {
-                    $this->_view->placesNotFound();
-                } else {
-                    $this->_view->regions = $this->_model->getAllRegions($request[1]);
-                    $this->_view->regions_req = $request[1];
-                    $members = $this->_model->getMembersOfCountry($request[1]);
-                    $this->_view->displayPlacesInfo($countryinfo, $members);
-                }
-                $Page = PVars::getObj('page');
-                $Page->content .= ob_get_contents();
-                ob_end_clean();
-            }
-        } else {       
-            // main content
-            ob_start();
-            $countries = $this->_model->getAllCountries();
-            $this->_view->displayPlacesOverview($countries);
-            $Page = PVars::getObj('page');
-            $Page->content .= ob_get_contents();
-            ob_end_clean();
-        }
     }
 
-    public function topMenu($currentTab) {
-        $this->_view->topMenu($currentTab);
-    }    
-    
+    public function __destruct() {
+        unset($this->_model);
+    }
+
+    /**
+     * Shows a list of all countries together with number of members if any
+     */
+    public function countries() {
+        $page = new CountriesPage();
+        $page->continents = $this->_model->getContinents();
+        $page->countries = $this->_model->getAllCountries();
+        return $page;
+    }
+
+    public function country() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $page = new CountryPage();
+        $page->pageNumber  = 1;
+        if (isset($this->route_vars['page'])) {
+            $page->pageNumber  = $this->route_vars['page'];
+        }
+        $countryCode = $this->route_vars['countrycode'];
+        $page->wikipage = $this->_model->getWikiPage($countryCode);
+        $page->regions = $this->_model->getAllRegions($countryCode);
+        list($memberCount, $totalMemberCount, $members) = $this->_model->getMembersOfCountry($countryCode, $page->pageNumber);
+        $page->totalMemberCount = $totalMemberCount;
+        $page->memberCount = $memberCount;
+        $page->members = $members;
+        $page->countryName = $this->route_vars['countryname'];
+        $page->countryCode = $countryCode;
+        return $page;
+    }
+
+    public function region() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $page = new RegionPage();
+        $page->pageNumber  = 1;
+        if (isset($this->route_vars['page'])) {
+            $page->pageNumber  = $this->route_vars['page'];
+        }
+        $countryCode = $this->route_vars['countrycode'];
+        $regionCode = $this->route_vars['regioncode'];
+        $page->wikipage = $this->_model->getWikiPage($countryCode, $regionCode);
+        $page->cities = $this->_model->getAllCities($regionCode, $countryCode);
+        list($memberCount, $totalMemberCount, $members) = $this->_model->getMembersOfRegion($regionCode,$countryCode, $page->pageNumber);
+        $page->totalMemberCount = $totalMemberCount;
+        $page->memberCount = $memberCount;
+        $page->members = $members;
+        $page->countryName = $this->route_vars['countryname'];
+        $page->countryCode = $countryCode;
+        $page->regionName = $this->route_vars['regionname'];
+        $page->regionCode = $regionCode;
+        return $page;
+    }
+
+    public function city() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $page = new CityPage();
+        $page->pageNumber = 1;
+        if (isset($this->route_vars['page'])) {
+            $page->pageNumber = $this->route_vars['page'];
+        }
+        $cityCode = $this->route_vars['citycode'];
+        $cityName = $this->route_vars['cityname'];
+        $page->wikipage = $this->_model->getWikiPage(false, false, $cityCode);
+        list($memberCount, $totalMemberCount, $members)  = $this->_model->getMembersOfCity($cityCode, $cityName, $page->pageNumber);
+        $page->totalMemberCount = $totalMemberCount;
+        $page->memberCount = $memberCount;
+        $page->members = $members;
+        $page->countryName = $this->route_vars['countryname'];
+        $page->countryCode = $this->route_vars['countrycode'];
+        $page->regionName = $this->route_vars['regionname'];
+        $page->regionCode = $this->route_vars['regioncode'];
+        $page->cityName = $cityName;
+        $page->cityCode = $cityCode;
+        return $page;
+    }
 
 }
 ?>

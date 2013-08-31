@@ -50,8 +50,8 @@ $R = MOD_right::get();
             array(
                 'Comments',
                 'bw/admin/admincomments.php',
-                'Reported comments (' . $numberReportedComments . ')',
-                'Review comments flagged by users'
+                'Negative comments (' . $numberReportedComments . ')',
+                'Review negative comments'
             ),
             array(
                 'Checker',

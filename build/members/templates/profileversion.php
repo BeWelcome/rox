@@ -42,7 +42,7 @@ if (count($languages) > 1 || $myself) {
             foreach($languages as $language) {
                 if ($language->ShortCode == $profile_language_code) {
                 ?>
-                    <span class="activelanguage"><?=$profile_language_name ?><? if ($this->myself) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete"> <img src="images/icons/cancel.png" title="<?=$words->get('delete')?>" alt="<?=$words->get('delete')?>" /></a> <? } ?></span><?
+                    <span class="activelanguage"><?=$profile_language_name ?><? if ($this->myself) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete"> <img src="images/icons/cancel.png" title="<?=$words->getSilent('delete')?>" alt="<?=$words->getSilent('delete')?>" /></a> <? } ?></span><?
                     $activelang_set = true;
                 } else {
                     
@@ -51,7 +51,7 @@ if (count($languages) > 1 || $myself) {
                 }
             } 
             if (!isset($activelang_set)) echo '<span class="activelanguage">'.$profile_language_name.'</span>';
-            ?></p>
+            ?><?php echo $words->flushBuffer(); ?></p>
 <?php if ($myself) { ?>
 <select class="floatbox" id="add_language">
     <option>- <?=$wwsilent->AddLanguage?> -</option>

@@ -91,7 +91,15 @@ class MOD_htmlpure
         return new HTMLPurifier($config);
     }
 
-    public function getActivitiesHtmlPurifier()
+    public function getSuggestionsHtmlPurifier() {
+        return self::getSophisticatedHtmlPurifier();
+    }
+
+    public function getActivitiesHtmlPurifier() {
+        return self::getSophisticatedHtmlPurifier();
+    }
+
+    private function getSophisticatedHtmlPurifier()
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();

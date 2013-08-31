@@ -2,7 +2,7 @@
 
 class Geo extends RoxEntityBase
 {
-    protected $_table_name = 'geonames_cache';
+    protected $_table_name = 'geonames';
     protected $alt_names = array();
 
     public function __construct($location_id = false)
@@ -12,6 +12,8 @@ class Geo extends RoxEntityBase
         {
             $this->findById(intval($location_id));
         }
+        $this->parentId = 0;
+        $this->countryId = 0;
     }
 
     /**
@@ -22,27 +24,27 @@ class Geo extends RoxEntityBase
      */
     public function getParent()
     {
-        if (!$this->isLoaded() || $this->parentAdm1Id == 0)
+        if (!$this->isLoaded())
         {
             return false;
         }
-        if (!$this->parent)
+        if ($this->parentId == 0)
         {
-            if ($this->parentAdm1Id)
+            if ($this->admin1)
             {
-                $id = $this->parentAdm1Id;
+                $this->parentGeo = $this->createEntity('Geo')->findByWhere("admin1 = '{$this->admin1}' AND fcode = 'ADM1' AND country = '{$this->country}'");
             }
-            elseif ($this->parentCountryId)
+            elseif ($this->country)
             {
-                $id = $this->parentCountryId;
+                $this->parentGeo = $this->createEntity('Geo')->findByWhere("fcode LIKE 'PCL%' AND fcode <> 'PCLH' AND country = '{$this->country}'");
             }
             else
             {
                 return false;
             }
-            $this->parent = $this->createEntity('Geo', $id);
+            $this->parentId = $this->parentGeo->geonameid;
         }
-        return $this->parent;
+        return $this->parentGeo;
     }
 
     /**
@@ -84,20 +86,13 @@ class Geo extends RoxEntityBase
         {
             return false;
         }
-        if ($this->parentCountryId == 0) {
-            $code = $this->fk_countrycode;
+        if ($this->countryId == 0) {
+            $code = $this->country;
             $geo = $this->createEntity('Geo');
-            $geo->findByWhere("fcode LIKE 'PC%' AND fk_countrycode = '$code'");
-            $this->country = $geo;
+            $this->countryGeo = $this->createEntity('Geo')->findByWhere("fcode LIKE 'PCL%' AND fcode <> 'PCLH' AND country = '{$this->country}'");
+            $this->countryId = $this->countryGeo->geonameid;
         }
-        if (!$this->country)
-        {
-            if ($geo = $this->createEntity('Geo')->findById($this->parentCountryId))
-            {
-                $this->country = $geo;
-            }
-        }
-        return $this->country;
+        return $this->countryGeo;
     }
 
     /**

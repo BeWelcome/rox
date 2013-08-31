@@ -33,6 +33,7 @@
               <li><a href="editmyprofile"><?=$words->get('EditMyProfile')?></a></li>
               <li><a href="mypreferences"><?=$words->get('MyPreferences')?></a></li>
               <li><a href="messages"><?=$words->get('MyMessages')?></a></li>
+              <li><a href="mynotes"><?=$words->get('ProfileMyNotes')?></a></li>
               <li><a href="groups/mygroups"><?=$words->get('MyGroups')?></a></li>
           </ul>
       </li>
@@ -45,8 +46,8 @@
         </li>
         <li><a href="community"><?=$words->get('CommunityMenu')?></a>
             <ul>
-                <li><a href="forums" title="<?=$words->get('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a></li>
-                <li><a href="groups/search" title="<?=$words->get('GroupsTagLine')?>"><?=$words->get('Groups')?></a></li>
+                <li><a href="forums" title="<?=$words->getSilent('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a><?php echo $words->flushBuffer(); ?></li>
+                <li><a href="groups/search" title="<?=$words->getSilent('GroupsTagLine')?>"><?=$words->get('Groups')?></a><?php echo $words->flushBuffer(); ?></li>
                 <li><a href="activities"><?=$words->get('Activities')?></a></li>
                 <?php if ($logged_in) { ?>
                 <li><a href="suggestions"><?=$words->get('Suggestions')?></a></li>
@@ -57,6 +58,7 @@
                 <li><a href="wiki"><?=$words->get('Wiki')?></a></li>
             </ul>
         </li>
+        <li><a href="safety"><?=$words->get('Safety')?></a></li>
         <li><a href="about"><?=$words->get('GetAnswers')?></a>
             <ul>
                 <li><a href="faq"><?=$words->get('Faq')?></a></li>

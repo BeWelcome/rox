@@ -69,6 +69,7 @@ Boston, MA  02111-1307, USA.
           <span><?php echo $words->get('SignupUsernameDescription'); ?></span></a><br />
           <span class="small"><?php echo $words->get('SignupUsernameShortDesc'); ?></span>
           -->
+          <p class="desc" style="margin-left:11.3em; display:inline-block"><?=$words->get('subline_username')?></p>
         </div> <!-- signup-row -->
 
     <!-- password -->
@@ -110,6 +111,12 @@ Boston, MA  02111-1307, USA.
           <?php
           if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
               echo '<div class="error">'.$words->get('SignupErrorInvalidEmail').'</div>';
+          } elseif (in_array('SignupErrorEmailCheck', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorEmailCheck').'</div>';
+          } elseif (in_array('SignupErrorEmailAddressAlreadyInUse', $vars['errors'])) {
+              echo '<div class="error">'.$words->get('SignupErrorEmailAddressAlreadyInUse').'</div>';
+          } else {
+            echo '<br>';
           }
           ?>
           <!--
@@ -119,13 +126,21 @@ Boston, MA  02111-1307, USA.
           <span class="small"><?php echo $words->get('SignupEmailShortDesc'); ?></span>
           -->
         </div> <!-- signup-row -->
+        
+        <!-- confirm email -->
+        <div class="signup-row floatbox">
+          <label for="register-emailcheck"><?php echo $words->get('SignupCheckEmail'); ?>* </label>
+          <input type="text" id="register-emailcheck" name="emailcheck" class="float_left" <?php
+            echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
+            ?> />
+        </div> <!-- signup-row -->
 
   </fieldset>
 
   <p>
-    <input type="submit" value="<?php echo $words->get('NextStep'); ?>" class="button"
+    <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
-    />
+    /><?php echo $words->flushBuffer(); ?>
   </p>
 
 </form>

@@ -63,13 +63,13 @@ $threadsliced = array_slice($threads, 0, 5);
                     <?php
                     echo $words->fTrad($thread->IdTitle);
                     ?></a><br />
-                    <span class="small grey"><?php echo $words->getFormatted('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
+                    <span class="small grey"><?php echo $words->getSilent('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>
                     <?php if ($thread->IdGroup > 0 && $showGroups)
                         {
-                            echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getFormatted('Group') . ": " . $thread->GroupName . '">' . MOD_layoutbits::truncate($thread->GroupName, 13);
+                            echo $words->getFormatted('in') . ' <a href="groups/' . $thread->IdGroup . '/" title="' . $words->getSilent('Group') . ": " . $thread->GroupName . '">' . MOD_layoutbits::truncate($thread->GroupName, 13);
                         }
                     ?>
-                    <?php echo '</a> - <span title="' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)) . '"><a href="' . $last_url . '" class="grey">' . $layoutbits->ago($thread->last_create_time) . '</a></span>'; ?>
+                    <?php echo '</a> - <span title="' . date($words->getSilent('DateHHMMShortFormat'), ServerToLocalDateTime($thread->last_create_time)) . '"><a href="' . $last_url . '" class="grey">' . $layoutbits->ago($thread->last_create_time) . '</a></span>'; ?>
                     </span>
                     <a href="<?php echo $last_url; ?>"><img src="styles/css/minimal/images/iconsfam/bullet_go.png" alt="<?php echo $words->getBuffered('to_last'); ?>" title="<?php echo $words->getBuffered('to_last'); ?>" align="absmiddle" /></a><?php echo $words->flushBuffer(); ?>
                 </td>

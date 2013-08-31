@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
-if (!$this->myself && !$comment_to_self && (count($comment_byloggedinmember) == 0) && $this->loggedInMember) {
+if (!$this->myself && !$comment_to_self_exists && (count($comment_byloggedinmember) == 0) && $this->loggedInMember) {
       // Show "Add comment" button
       echo '  <p class="floatbox"><a href="members/' . $username
           . '/comments/add" class="button">' . $words->get('addcomments')
@@ -61,7 +61,7 @@ if(isset($comment['from'])) {
                 <?php endif; ?>
               </span>
               <?php if ($this->loggedInMember) :?>
-                <a class="flagbutton" href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $c->id;?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/noun_project_flag.png" alt="<?=$ww->ReportCommentProblem ?>"></a>
+                <a class="flagbutton" href="members/reportcomment/<?php echo $this->member->Username;?>/<?php echo $c->id;?>" title="<?=$words->getSilent('ReportCommentProblem') ?>"><img src="images/icons/noun_project_flag.png" alt="<?=$words->getSilent('ReportCommentProblem') ?>"></a><?php echo $words->flushBuffer(); ?>
               <?php endif;?>
             </p>
             <p>
@@ -155,7 +155,7 @@ if(isset($comment['from'])) {
                     <? endif; ?>
                   </span>
                   <?php if ($this->loggedInMember) :?>
-                    <a class="flagbutton" href="members/reportcomment/<?php echo $cc->UsernameToMember; ?>/<?php echo $cc->id;?>/<?php echo $cc->UsernameFromMember; ?>" title="<?=$ww->ReportCommentProblem ?>"><img src="images/icons/noun_project_flag.png" alt="<?=$ww->ReportCommentProblem ?>"></a>
+                    <a class="flagbutton" href="members/reportcomment/<?php echo $cc->UsernameToMember; ?>/<?php echo $cc->id;?>/<?php echo $cc->UsernameFromMember; ?>" title="<?=$words->getSilent('ReportCommentProblem') ?>"><img src="images/icons/noun_project_flag.png" alt="<?=$words->getSIlent('ReportCommentProblem') ?>"></a><?php echo $words->flushBuffer(); ?>
                   <?php endif;?>
                 </p>
                 <p>

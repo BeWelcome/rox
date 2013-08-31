@@ -26,9 +26,9 @@ class AddRelationPage extends RelationsPage
                $action = 'add';
             }        ?>
          <? if ($action == 'update' && isset($relation['member']->Confirmed)) : ?>
-           	<p class="note"><?=$words->get('RelationIsConfirmed',$member->Username)?></p>
+            <p class="note"><?=$words->get('RelationIsConfirmed',$member->Username)?></p>
          <? elseif ($action == 'update') : ?>
-           	<p class="note"><?=$words->get('RelationWaitConfirmed',$member->Username)?></p>
+            <p class="note"><?=$words->get('RelationWaitConfirmed',$member->Username)?></p>
          <? endif ?>
         <form method="post" action="<?=$page_url?>" name="relation" id="relation" enctype="multipart/form-data">
         <fieldset>
@@ -50,14 +50,15 @@ class AddRelationPage extends RelationsPage
                     echo "> ".$words->get("Relation_Type_" . $tt[$ii])."<br />";
                 }
             ?>
+            <p class="desc"><?=$words->get('RelationListExplanation')?></p>
             </div>
             <? else : ?>
             <div class="row">
-            Relation-Type: <strong><?=$relation['member']->Type?></strong>
+            <?=$words->get('RelationType')?>: <strong><?=$words->get("Relation_Type_" . $relation['member']->Type)?></strong>
             </div>
             <? endif ?>
             <div class="row">
-                <label class="grey"><?=$words->get("RelationText",$member->Username)?></label>
+                <label class="grey"><?=$words->get("RelationText",$member->Username)?>:</label><br />
                 <textarea rows="4" cols="60" name="Comment"><?php
                     if (isset($relation['myself']->Comment)) {
                         $lang = $this->model->get_profile_language();
@@ -87,7 +88,7 @@ class AddRelationPage extends RelationsPage
             }
             ?>
             <br />
-            <input type="submit" name="submit" value="<?=$words->get($action.'Relation')?>" />
+            <input type="submit" name="submit" value="<?=$words->getSilent($action.'Relation')?>" /><?php echo $words->flushBuffer(); ?>
             <br />
         </fieldset>
         </form>

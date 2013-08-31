@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -27,7 +27,7 @@ Boston, MA  02111-1307, USA.
     <div class="c33l">
         <div class="subcl">
             <!-- Community news -->
-            <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a> <a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"><img src="images/icons/feed.png" alt="<?=$words->get('GetRSSFeed')?>"></a></h3>
+            <h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a> <a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"><img src="images/icons/feed.png" alt="<?=$words->getSilent('GetRSSFeed')?>"></a><?php $words->flushBuffer()?></h3>
             <div class="floatbox">
                 <?php
                 $blogModel = new Blog();
@@ -79,9 +79,13 @@ Boston, MA  02111-1307, USA.
             </div> <!-- floatbox -->
         </div> <!-- subcl -->
     </div> <!-- c33l -->
-    
-    <div class="c33l" > 
+
+    <div class="c33l" >
             <div class="subcl midcl">
+            <?php
+                // Show the recent member list only for members that joined at least a week ago
+                // to avoid direct spam hits
+                if (time() - strtotime($member->created) >  7 * 24 * 60 * 60) { ?>
                 <h3 class="first"><?php echo $words->getFormatted('RecentMember') ?></h3>
                 <div id="newmembers" class="floatbox">
                     <?php
@@ -108,14 +112,14 @@ HTML;
                         }
                         echo <<<HTML
                 </div> <!-- floatbox -->
-
 HTML;
+                }
                 if ($showVisitors) {
                         echo <<<HTML
-                <h3><a href="myvisitors">{$words->get('RecentVisitsOfyourProfile')}</a></h3> 
+                <h3><a href="myvisitors">{$words->get('RecentVisitsOfyourProfile')}</a></h3>
                 <div id="visitors" class="floatbox">
 HTML;
-                        
+
                         $last_visits=MOD_visits::get()->BuildLastVisits(0, 4) ;
                         for ($ii=0;$ii<count($last_visits);$ii++) {
                             $m=$last_visits[$ii] ;
@@ -167,7 +171,7 @@ $next_trips_count = count($next_trips);
                 </div> <!-- floatbox -->
             </div> <!-- subcr -->
         </div> <!-- c33r -->
-        
+
 
 </div> <!--subcolumns -->
 

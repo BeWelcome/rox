@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <moduleName>sphinx</moduleName>
+  <moduleVersion>0.0</moduleVersion>
+  <moduleDescription>Provide the sphinx API</moduleDescription>
+  <moduleFiles>
+    <lib>
+      <file class="MOD_sphinx">sphinx.lib.php</file>
+    </lib>
+  </moduleFiles>
+</module>

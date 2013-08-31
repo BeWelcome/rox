@@ -12,12 +12,12 @@ class GallerySetPage extends GalleryBasePage
 {
     protected function breadcrumbs() {
         $words = $this->words;
-        return '<a href="gallery">'.$words->get('Gallery').'</a> > <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> > <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$words->get("Photosets").'</a>';
+        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'/sets">'.$words->get("Photosets").'</a></h1>';
     }
 
     protected function teaserHeadline() {
         $words = $this->words;
-        return '<h2><a href="gallery/show/sets/'.$this->gallery->id.'" class="black" id="g-title">'.htmlspecialchars($this->gallery->title).'</a></h2>';
+        return '<h3><a href="gallery/show/sets/'.$this->gallery->id.'" class="black" id="g-title">'.htmlspecialchars($this->gallery->title).'</a></h3>';
     }
     
     protected function teaser() {

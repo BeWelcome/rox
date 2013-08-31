@@ -16,7 +16,7 @@ class GalleryImageNotFoundPage extends GalleryImagePage
     }
 
     protected function teaserHeadline() {
-        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &gt; '. $this->getWords()->getBuffered('GalleryImageNotFound');
+        return '<a href="gallery">'.parent::teaserHeadline() . '</a> &raquo; '. $this->getWords()->getBuffered('GalleryImageNotFound');
     }
     
     protected function column_col3() {

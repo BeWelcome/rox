@@ -21,7 +21,7 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
-error_reporting(E_ALL & ~E_STRICT);
+// error_reporting(E_ALL & ~E_STRICT);
 //Load the files we'll need
 require_once __DIR__."/../../../lib/htmlpurifier-4.0.0/library/HTMLPurifier.auto.php";
 require_once __DIR__."/../../../lib/misc/swift-5.0.1/lib/swift_required.php";
@@ -115,7 +115,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
 
     $headers = $extra_headers;
     if (!(strstr($headers, "From:")) and ($From != "")) {
-        $headers = $headers . "From:" . utf8_encode($From) . "\n";
+        $headers = $headers . "From:" . utf8_encode($FromParam) . "\n";
     }
 
     if (($use_html == "yes") or (strpos($text, "<html>") !== false)) { // if html is forced or text is in html then add the MIME header
@@ -130,7 +130,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         //replyto stays the same
     }
     if (!(strstr($headers, "Reply-To:")) and ($From != "")) {
-        $headers = $headers . "Reply-To:" . utf8_encode($From);
+        $headers = $headers . "Reply-To:" . utf8_encode($FromParam);
         $replyto = $From;
     } elseif (!strstr($headers, "Reply-To:")) {
         $headers = $headers . "Reply-To:" . utf8_encode($_SYSHCVOL['MessageSenderMail']);
@@ -223,7 +223,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         //CZ_070619: now encoding the subject
         $mail_subject = utf8_encode($mail_subject);
     }
-    if (!is_object($From) && !mb_check_encoding($From, "UTF-8")) {
+    if (!is_object($From) && !is_array($From) && !mb_check_encoding($From, "UTF-8")) {
         $From = utf8_encode($From);
     }
 

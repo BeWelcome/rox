@@ -89,7 +89,7 @@ class Geo extends RoxEntityBase
         if ($this->countryId == 0) {
             $code = $this->country;
             $geo = $this->createEntity('Geo');
-            $this->countryGeo = $this->createEntity('Geo')->findByWhere("fcode LIKE 'PCL%' AND fcode <> 'PCLH' AND country = '{$this->country}'");
+            $this->countryGeo = $this->createEntity('Geo')->findByWhere("((fcode LIKE 'PCL%' AND fcode <> 'PCLH') OR (fcode = 'TERR')) AND country = '{$this->country}'");
             $this->countryId = $this->countryGeo->geonameid;
         }
         return $this->countryGeo;
@@ -110,7 +110,7 @@ class Geo extends RoxEntityBase
         }
         if (!$this->children)
         {
-            $children = $this->createEntity('GeoHierarchy')->getAllChildren($this);        
+            $children = $this->createEntity('GeoHierarchy')->getAllChildren($this);
             $ids = array();
             foreach ($children as $child)
             {
@@ -136,7 +136,7 @@ class Geo extends RoxEntityBase
         }
         if (!$this->all_parents)
         {
-            $parents = $this->createEntity('GeoHierarchy')->getAllParents($this);        
+            $parents = $this->createEntity('GeoHierarchy')->getAllParents($this);
             $ids = array();
             foreach ($parents as $parent)
             {

@@ -1,6 +1,7 @@
 <script type="text/Javascript">
 var noMatchesFound = "<?php echo $words->getSilent('SearchNoMatchesFound');?>";
 </script><?php
+$errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['search-location'] = '';
@@ -51,6 +52,13 @@ $layoutbits = new MOD_layoutbits();
 // when switching between pages of the result
 ?>
 <div><!--  around form -->
+<?php if (count($errors) > 0) :
+    echo '<div class="error">';
+    foreach($errors as $error) :
+        echo '<p>' . $words->get($error) . '</p>';
+    endforeach;
+    echo '</div>';
+endif; ?>
 	<form method="post" name="searchmembers-form"
 		style="padding-bottom: 0.5em; width: 100%;">
         <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersSimpleCallback');?>
@@ -135,9 +143,11 @@ $layoutbits = new MOD_layoutbits();
 </div>
     <div><?php
     if (!empty($members)) :
-        if ($results['countOfMembers'] != $results['countOfPublicMembers']) {
-            echo '<p>' . $words->get('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login/search#login-widget">', '</a>');
-            echo $words->flushBuffer() . '</p>';
+        if (!$this->member) {
+            if ($results['countOfMembers'] != $results['countOfPublicMembers']) {
+                echo '<p>' . $words->get('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login/search#login-widget">', '</a>');
+                echo $words->flushBuffer() . '</p>';
+            }
         }
 
         // Initialise pager widget

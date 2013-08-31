@@ -30,8 +30,13 @@ class SearchController extends RoxControllerBase
     public function searchMembersSimpleCallback(StdClass $args, ReadOnlyObject $action,
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) {
         $vars = $args->post;
-        $mem_redirect->results = $this->_model->getResultsForLocation($vars);
         $mem_redirect->vars = $vars;
+        $errors = $this->_model->checkSearchVarsOk($vars);
+        if (count($errors)>0)  {
+            $mem_redirect->errors = $errors;
+            return false;
+        }
+        $mem_redirect->results = $this->_model->getResultsForLocation($vars);
         return true;
     }
 
@@ -50,6 +55,7 @@ class SearchController extends RoxControllerBase
      */
     public function searchMembersText() {
         $page = new SearchMembersTextPage();
+        $page->member = $this->_model->getLoggedInMember();
         return $page;
     }
 

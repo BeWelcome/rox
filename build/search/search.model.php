@@ -203,7 +203,9 @@ LIMIT 1
             }
         } else {
             $where = "AND a.IdCity = g.geonameid";
-            if (!empty($vars['search-location'])) {
+            if (empty($vars['search-location'])) {
+                // we search around the world.
+            } else {
                 // a simple place with a square rectangle around it
                 $distance = $vars['search-distance'];
                 if ($distance != 0) {
@@ -774,6 +776,17 @@ LIMIT 1
         }
 
         return array($countryIds, $admin1Ids);
+    }
+
+    /**
+     *
+     */
+    public function checkSearchVarsOk($vars) {
+        $errors = array();
+        if (empty($vars['search-location'])) {
+            $errors[] = 'SearchLocationEmpty';
+        }
+        return $errors;
     }
 
     /*

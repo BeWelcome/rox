@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
 /**
  * object types:
  * - class MOD_words: One global object of this type, to handle all the translation requests.
- * - 
+ * -
  */
 
 
@@ -52,10 +52,10 @@ class MOD_words
     /*private $_prepared = array();*/
     static private $_buffer = array();
     private $_dao;  // database access object
-	
+
 	private $WordMemcache ;
-    
-    
+
+
     /**
      * @param string $category optional value to set the page of the texts
      * 				 we're looking for (this needs an additional column in the
@@ -82,12 +82,12 @@ class MOD_words
         $this->_dao =& $dao;
 
 
-			
+
         $R = MOD_right::get();
         if ($R->hasRight("Words", $this->_lang)) {
             $this->_offerTranslationLink = true;
         }
-        
+
         // read translation mode from $_SESSION['tr_mode']
         if (array_key_exists("tr_mode", $_SESSION)) {
             $this->_trMode = $_SESSION['tr_mode'];
@@ -107,13 +107,13 @@ class MOD_words
                 if ($this->_offerTranslationLink) break;
             default:
                 if ($this->_offerTranslationLink) {
-                    $this->_trMode = 'translate'; 
+                    $this->_trMode = 'translate';
                 } else {
                     $this->_trMode = 'browse';
                 }
         }
     }
-    
+
     /**
      * Add a new word and log this action
 	 * @code: code of the new word
@@ -151,12 +151,12 @@ class MOD_words
                 throw new PException('MOD_Word::AddWord Failed  to find IdLanguage=#'.$p_IdLanguage);
 			}
 		}
-		
+
 		if (($IdLanguage==0) and empty($Description)) {
            throw new PException('MOD_Word::AddWord Failed  to insert word ['.$code.'] in '.
 		   $rLang->ShortCode.' because for an english word it is mandatory to provide a description');
 		}
-		
+
 		$sQuery="
 		insert into words(code,ShortCode,Sentence,created,donottranslate,IdLanguage,Description,IdMember,TranslationPriority)
 		values('".$this->_dao->escape($code)."','".
@@ -167,11 +167,11 @@ class MOD_words
         if (!$s) {
             throw new PException('MOD_Word::AddWord Failed to insert words ['.$code.'] in '.$rLang->ShortCode);
         }
-	
+
 		MOD_log::get()->write("inserting ".$code." in ".$rLang->ShortCode,"words");
-		
+
 	} // end of AddWords
-	
+
     /**
      * Update a  word and log this action
 	 * @code: code of the new word
@@ -183,7 +183,7 @@ class MOD_words
      * @return string the translated word
      */
 	public function UpdateWord($code,$Sentence,$p_IdLanguage,$p_Description='',$p_donottranslate='',$p_TranslationPriority=-1) {
-	
+
 		// check the proposed language
 		if  (!(is_numeric($p_IdLanguage))) {
             $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where ShortCode='".$p_IdLangauge."'");
@@ -211,7 +211,7 @@ class MOD_words
                 throw new PException('MOD_Word::UpdateWord Failed  to find IdLanguage=#'.$p_IdLanguage);
 			}
 		}
-		
+
 		$sQuery="select * from words where code='".$this->_dao->escape($code)."' and IdLanguage=".$IdLanguage ;
         $s = $this->_dao->query($sQuery);
         if (!$s) {
@@ -221,14 +221,14 @@ class MOD_words
 		if (empty($rWord->Sentence)) {
             throw new PException("MOD_Word::UpdateWord  no such code ['".$code."'] for language ". $rLang->ShortCode);
 		}
-		
+
 		if (($IdLanguage==0) and (empty($p_Description))) {
 			$Description=$rWord->Description ;
 		}
 		else {
 			$Description=$p_Description ;
 		}
-		
+
 		if (empty($p_donottranslate)) {
 			$donottranslate=$rWord->donottranslate ;
 		}
@@ -245,7 +245,7 @@ class MOD_words
 
 		MakeRevision($rWord->id, "words"); // create revision
 
-	  $sQuery="update words 
+	  $sQuery="update words
 		set Sentence='".$this->_dao->escape($Sentence)."',donottranslate='".$this->_dao->escape($donottranslate).
 		"',Description='".$this->_dao->escape($Description)."',TranslationPriority='".$this->_dao->escape($TranslationPriority)."'
 		where code='".$code."' and IdLanguage=".$IdLanguage ;
@@ -253,42 +253,42 @@ class MOD_words
         if (!$s) {
             throw new PException('MOD_Word::UpdareWord Failed to update word ['.$code.'] in '.$rLang->ShortCode);
         }
-	
+
 		MOD_log::get()->write("updating " . $code . " in " . $rlang->ShortCode, "AdminWord");
-		
+
 	} // end of AddWords
-	
+
     public function setlangWrite($IdLanguage) {
         $this->_langWrite = $IdLanguage;
     }
-	    
+
     public function getTrMode() {
         return $this->_trMode;
     }
-    
-    
+
+
     public static function trLinkBufferSize()
     {
         return sizeof(self::$_buffer);
     }
-    
-    
+
+
     public function translationLinksEnabled() {
         return $this->_offerTranslationLink;
     }
-    
+
 
     /**
-     * Returns a translation for the keycode, and puts a translation link on the buffer. 
+     * Returns a translation for the keycode, and puts a translation link on the buffer.
      * @return string the translated word
      */
     public function getBuffered($code)
     {
         $args = func_get_args();
         array_shift($args);
-        
+
         $word = $this->_lookup($code, $args);
-        
+
         return $this->_text_and_buffer($word);
     }
 
@@ -308,23 +308,23 @@ class MOD_words
     {
         return addslashes($this->getBuffered($code));
     }
-    
+
     function __call($code, $args) {
         return $this->_text_with_tr($this->_lookup($code, $args));
     }
-    
-    
+
+
     function __get($code) {
         return $this->_text_with_tr($this->_lookup($code, array()));
     }
-    
-    
+
+
     /**
      * any translation items that were remembered in the buffer are now flushed!
      */
     public function flushBuffer()
     {
-        
+
         $result = "";
         if($this->_offerTranslationLink) {
             foreach(self::$_buffer as $tr_link_string) {
@@ -336,17 +336,17 @@ class MOD_words
         return $result;
     }
 
-    
+
     /**
      * does the same as getFormatted($code, ...)
-     */    
+     */
     public function get($code)
     {
         // if it DOES the same, then make sure it ACTUALLY does the same instead of duplicating the code
         $args = func_get_args();
         return call_user_func_array(array($this, 'getFormatted'), $args);
     }
-    
+
     /**
      * Looks up (localized) texts in BW words table.
      * Newlines are replaced by HTML breaks, backslashes are stripped off.
@@ -357,12 +357,12 @@ class MOD_words
      * @param   string  $? formatted according to a variable number of arguments
      * @param   ... arguments to be inserted in the string
      * @return  string  localized text, in case of no hit the word keycode, evtl with tr links
-     */  
+     */
     public function getFormatted($code)
     {
         $args = func_get_args();
         array_shift($args);
-        
+
         $word = $this->_lookup($code, $args);
         $translation = $this->_text_with_tr($word);
         if (($translation == $code) && (!empty($args))) {
@@ -370,7 +370,7 @@ class MOD_words
         }
         return $translation;
     }
-    
+
     /**
      * Look up texts in words table.
      * No newlines or slashes are replaced. Never add translation links.
@@ -399,7 +399,7 @@ class MOD_words
     {
         $lang = $this->_lang;
         $whereCategory = $this->_whereCategory;
-        
+
         if (is_numeric($code)) {
             $query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
@@ -410,7 +410,7 @@ class MOD_words
             // First try in memcache
             if ($value=$this->WordMemcache->GetValue($code,$lang)) {
                 return $value;
-            } 
+            }
             $query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
                 "FROM `words` ".
@@ -454,7 +454,9 @@ class MOD_words
     public function getPurified($code, $replacements = array(), $language = false)
     {
         $text = $this->getRaw($code, $replacements, $language);
-        $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        // hack to work around a problem during signup
+        require_once '../modules/htmlpurify/lib/htmlpurify.lib.php';
+        $purifier = MOD_htmlpure::get()->getAdvancedHtmlPurifier();
         return $purifier->purify($text);
     }
 
@@ -469,18 +471,18 @@ class MOD_words
      * @param   string  $? formatted according to a variable number of arguments
      * @param   ... arguments to be inserted in the string
      * @return  string  localized text, in case of no hit the word keycode, evtl with tr links
-     */  
+     */
     public function getFormattedInLang($code,$lang)
     {
         $args = func_get_args();
         array_shift($args);  // need a second array shift, because of 2 default arguments in function
         array_shift($args);
-        
+
         $word = $this->_lookup($code, $args,$lang);
-        
+
         return $this->_text_with_tr($word);
     }
-    
+
     /**
      * If we want another than the active language
      *
@@ -493,13 +495,13 @@ class MOD_words
         $args = func_get_args();
         array_shift($args);  // need a second array shift, because of 2 default arguments in function
         array_shift($args);
-        
+
         $word = $this->_lookup($code, $args, $lang);
-        
+
         return $this->_text_with_tr($word);
     }
-    
-    
+
+
     /**
      * If we want another than the active language
      *
@@ -512,15 +514,15 @@ class MOD_words
         $args = func_get_args();
         array_shift($args);  // need a second array shift, because of 2 default arguments in function
         array_shift($args);
-        
+
         $word = $this->_lookup($code, $args, $lang);
-        
+
         return $this->_text_and_buffer($word);
     }
-    
-    
+
+
     /**
-     * creates a string that contains the translated word and evtl a tr link. 
+     * creates a string that contains the translated word and evtl a tr link.
      *
      * @param LookedUpWord $word an object of type LookedUpWord, containing all the stuff from DB lookup
      * @param array $args the arguments to be inserted in the translated word
@@ -547,14 +549,14 @@ class MOD_words
 						return $word->clickableText();
 					}
                 default:
-                    // create a tr link behind (that will be hidden) 
+                    // create a tr link behind (that will be hidden)
                     return $word->text().$word->standaloneTrLink();
             }
         }
     }
-    
-        
-    
+
+
+
     private function _text_and_buffer($word)
     {
         if ($word->get_tr_success() != LookedUpWord::NO_TR_LINK) {
@@ -564,14 +566,14 @@ class MOD_words
         }
         return $word->text();
     }
-    
-    
-    
+
+
+
     /**
      * looks up a word keycode in the DB, and returns an object of type LookedUpWord.
      * If a translation in the intended language is not found, it uses the English version.
-     * If no English definition exists, the keycode itself is used.   
-     * 
+     * If no English definition exists, the keycode itself is used.
+     *
      * @param unknown_type $code the key code for the db lookup
      * @return LookedUpWord information that is created from the word lookup
      */
@@ -579,8 +581,8 @@ class MOD_words
         if($lang == false) {
             $lang = $this->_lang;
         }
-		
-        
+
+
         if(! $this->_offerTranslationLink) {
             // normal people don't need the tr stuff
             $row = $this->_lookup_row($code, $lang);
@@ -655,9 +657,9 @@ class MOD_words
 	        return new LookedUpWord($code, $lang, $lookup_result, $tr_success, $tr_quality);
         }
     }
-    
-    
-    
+
+
+
     /**
      * Reads the (modified) translation sentence from a row in the database.
      * Modifications (if $get_raw is false):
@@ -679,12 +681,12 @@ class MOD_words
         }
         while (!$res = @vsprintf($lookup_string, $args)) {
             // if not enough arguments given, fill up with dummy arguments
-            $args[] = ' -x- '; 
+            $args[] = ' -x- ';
         }
         return $res;
     }
-    
-    
+
+
     /**
      * find out if a translation is obsolete - which depends on the timestamps of last update.
      *
@@ -701,15 +703,15 @@ class MOD_words
             return true;
         }
     }
-    
-    
-    
+
+
+
     /**
      * looks up only one row in the database
      *
      * Looks up (localized) texts in BW words table according to provided
      * language.
-     * 
+     *
      * @see wwinlang in /lib/lang.php
      * @param   string  $code keyword for finding text, not allowed to be empty
      * @param   string  $lang 2-letter code for language
@@ -718,13 +720,13 @@ class MOD_words
     private function _lookup_row($code, $lang)
     {
         $whereCategory = $this->_whereCategory;
-        
+
         /* we still need to find a clear parameter handling for this
         if (!empty($category)) {
             $whereCategory = ' `category`=\'' . $category . '\'';
         }
         */
-        
+
         if (is_numeric($code)) {
             $query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
@@ -733,7 +735,7 @@ class MOD_words
             ;
         } else {
         	// TODO: store translation quality in database!
-			
+
 			// First try in memcache
 			if ($value=$this->WordMemcache->GetValue($code,$lang)) {
 				$row->Sentence=$value ;
@@ -741,7 +743,7 @@ class MOD_words
 				$row->updated="2015-01-01 00:00:00" ;
 //				print_r($row) ; die(" here" ) ;
 				return($row) ;
-			} 
+			}
 
 			$query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
@@ -749,12 +751,12 @@ class MOD_words
                 "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
             ;
         }
-        
+
         $q = $this->_dao->query($query);
         $row = $q->fetch(PDB::FETCH_OBJ);
 		// update the statistic about the use of this word only if the option ToggleStatsForWordsUsage is active
-		if ((isset($_SESSION['Param']->ToggleStatsForWordsUsage) 
-		&& ($_SESSION['Param']->ToggleStatsForWordsUsage=="Yes") 
+		if ((isset($_SESSION['Param']->ToggleStatsForWordsUsage)
+		&& ($_SESSION['Param']->ToggleStatsForWordsUsage=="Yes")
 		&& (isset($row->code)))) {
 			$query ="CALL IncWordUse('".$row->code."')" ;
 			$s=$this->_dao->query($query);
@@ -762,12 +764,12 @@ class MOD_words
                 throw new PException('Failed to IncWordUse for code ['.$row->code.']');
             }
 		}
-        
+
         return $row;
     }
-    
-    
-    
+
+
+
     /**
      * should return an array of LookedUpWord objects, for caching purposes.
      * to be implemented!!
@@ -780,8 +782,8 @@ class MOD_words
     {
     	// TODO: implement _bulk_lookup for words from DB
     }
-    
-    
+
+
     private function _bulk_lookup_rows($array_of_codes, $lang)
     {
     	// we assume we have only word keycodes, no word IDs
@@ -792,12 +794,12 @@ class MOD_words
             "WHERE `code` IN ('" . implode($array_of_codes, "', '") . "') ".
             "AND `ShortCode`='" . $lang . "'"
         ;
-        
+
         $q = $this->_dao->query($query);
         $row = $q->fetch(PDB::FETCH_OBJ);
-        
+
 		// update the statistic about the use of this word only if the option ToggleStatsForWordsUsage is active
-		if ((isset($_SESSION['Param']->ToggleStatsForWordsUsage) 
+		if ((isset($_SESSION['Param']->ToggleStatsForWordsUsage)
 		&& ($_SESSION['Param']->ToggleStatsForWordsUsage=="Yes") and (!empty($row)))) {
 			foreach($row as $rr) {
 				$query ="CALL IncWordUse('".$rr->code."')" ;
@@ -816,8 +818,8 @@ class MOD_words
     * deleteMTrad function
     *
 	* This delete a translations
-    * 
-    */ 
+    *
+    */
     public function deleteMTrad($IdTrad, $IdOwner, $IdLanguage) {
         $IdMember = $_SESSION['IdMember'];
 
@@ -825,7 +827,7 @@ class MOD_words
         $str = <<<SQL
 SELECT
     *
-FROM 
+FROM
     memberstrads
 WHERE
     IdTrad = '{$IdTrad}' AND
@@ -850,18 +852,18 @@ SQL;
 
         $this->MakeRevision($Trad->id, "memberstrads"); // create revision before the delete
 
-        // If the IdTrad for this language was already deleted 
+        // If the IdTrad for this language was already deleted
         // SQL will throw an exception as the triple IdTrad, IdOwner and IdLanguage is already set
         // live DB has an index on this.
         $query = "
-DELETE FROM 
+DELETE FROM
     memberstrads
 WHERE
     IdTrad = '" . (-$IdTrad) . "' AND
     IdOwner = '{$IdMember}' AND
     IdLanguage = '{$IdLanguage}'";
         $this->_dao->query($query);
-        
+
         // Mark the tradId as deleted by turning it into -IdTrad
         $query = "
 UPDATE
@@ -874,13 +876,13 @@ WHERE
     IdLanguage = '{$IdLanguage}'";
         $this->_dao->query($query);
 
-        
+
         return false;
     } // end of deleteMTrad
 
 
     /**
-	 * retuns a string where 
+	 * retuns a string where
      * @param $ss the string where to replace \n
      * @param $RepalceWith a boolean to say wether the replace shoud occur or not
      * @return string where \n are replaced with <br \> if the ReplaceWith parameter was true
@@ -889,10 +891,10 @@ WHERE
      */
 	 private function ReplaceWithBr($ss,$ReplaceWith=false) {
 		if ($ReplaceWith) {
-            return(str_replace(array("\\r\\n","\r\n","\\n","\n"),"<br />",$ss)) ; 
+            return(str_replace(array("\\r\\n","\r\n","\\n","\n"),"<br />",$ss)) ;
         }
         else {
-            return(str_replace(array("\\r\\n","\r\n","\\n","\n"),"\n",$ss)) ; 
+            return(str_replace(array("\\r\\n","\r\n","\\n","\n"),"\n",$ss)) ;
         }
 	 }
 
@@ -900,7 +902,7 @@ WHERE
     /**
      * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
 	 * @param $IdLanguage, prefered language to use, beware if ommitted, english is used !
-	 * @param $ReplaceWithBr allows 
+	 * @param $ReplaceWithBr allows
      * @return string translated according to the best language find
      */
     public function mInTrad($IdTrad,$IdLanguage=0,$ReplaceWithBr=false) {
@@ -916,7 +918,7 @@ WHERE
 					die ($sBug) ;
 			   }
 			}
-		
+
 			// Try default chosen language
         	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
 			$q = $this->_dao->query($query);
@@ -924,7 +926,7 @@ WHERE
 			if (isset ($row->Sentence)) {
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
-				} 
+				}
 				else {
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
 //                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
@@ -957,10 +959,10 @@ WHERE
 			MOD_log::get()->write("mInTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
 			return (""); // If really nothing was found, return an empty string
 	 } // end of mInTrad
-	 
+
     /**
      * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
-	 * @param $ReplaceWithBr allows 
+	 * @param $ReplaceWithBr allows
      * @return string translated according to the best language find
      */
     public function mTrad($IdTrad,$ReplaceWithBr=false) {
@@ -969,18 +971,18 @@ WHERE
 		}
 		else {
 	 		$IdLanguage=0 ; // by default language 0
-		} 
+		}
 		return ($this->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
 	 } // end of mTrad
-	 
+
     /**
 	 * @param $IdTrad the id of a translations.IdTrad record to retrieve
-	 * @param $ReplaceWithBr allows 
+	 * @param $ReplaceWithBr allows
 	 * @parame $IdForceLanguage optional can be use to force the routine to try to choose a specific language
 	 * @return string translated according to the best language find
 	 */
     public function fTrad($IdTrad,$ReplaceWithBr=false,$IdForceLanguage=-1) {
-		
+
 			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 																					// Will receive the choosen language
@@ -994,14 +996,14 @@ WHERE
 			   	  die ("it look like you are using forum::fTrad with and allready translated word, a translations.IdTrad is expected and it should be numeric ! IdTrad=[".$IdTrad."]") ;
 			   }
 			}
-		
+
 			if ($IdForceLanguage<=0) {
 				if (isset($_SESSION['IdLanguage'])) {
 					$IdLanguage=$_SESSION['IdLanguage'] ;
 				}
 				else {
 					$IdLanguage=0 ; // by default language 0
-				} 
+				}
 			}
 			else {
 				$IdLanguage=$IdForceLanguage ;
@@ -1013,7 +1015,7 @@ WHERE
 			if (isset ($row->Sentence)) {
 				if (isset ($row->Sentence) == "") {
 					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with translations.IdTrad=" . $IdTrad, "Bug");
-				} 
+				}
 				else {
 					$fTradIdLastUsedLanguage=$row->IdLanguage ;
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
@@ -1049,8 +1051,8 @@ WHERE
 			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
 			MOD_log::get()->write($strerror, "Bug");
 			return ($strerror); // If really nothing was found, return an empty string
-	 } // end of fTrad	 
-    
+	 } // end of fTrad
+
     /*
      * author jeanyves
      * The following function are of generic use (for forums, for polls)
@@ -1058,7 +1060,7 @@ WHERE
      *
      */
 
-         
+
     /** ------------------------------------------------------------------------------
      * function : MakeRevision
      * this is a copy of a function allready running in Function tools
@@ -1066,7 +1068,7 @@ WHERE
      * MakeRevision this function save a copy of current value of record Id in table
      * TableName for member IdMember with Done By reason
      * @$Id : id of the record
-     * @$TableName : table where the revision is to be done 
+     * @$TableName : table where the revision is to be done
      * @$IdMemberParam : the member who cause the revision, the current memebr will be use if this is not set
      * @$DoneBy : a text to say why the update was done (this must be one of the value of the enum 'DoneByMember','DoneByOtherMember","DoneByVolunteer','DoneByAdmin','DoneByModerator')
      */
@@ -1087,7 +1089,7 @@ WHERE
 		if (!isset($rr->id)) {
 			return ; // No need to try to make a revision if the record was empty
 		}
-		
+
 
         $XMLstr = "";
         for ($ii = 0; $ii < $count; $ii++) {
@@ -1114,8 +1116,8 @@ WHERE
      * @$_IdMember ; is the id of the member who own the record
      * @$_IdLanguage
      * @$IdTrad  is probably useless (I don't remmber why I defined it)
-     * 
-     * 
+     *
+     *
      * Warning : as default language this function will use by priority :
      * 1) the content of $_IdLanguage if it is set to something else than -1
      * 2) the content of an optional $_POST[IdLanguage] if it is set
@@ -1127,8 +1129,8 @@ WHERE
 	 * Improvment: if the value is empty then nothing is inserted but 0 is returned
 	 *
 	 *
-     * 
-     */ 
+     *
+     */
     function InsertInMTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
         if ($ss=="") { // No need to insert an empty record in memberstrads
             return(0) ;
@@ -1197,11 +1199,11 @@ WHERE
         }
         // unlock membertrads table, the other table can be updated without lock.
         $this->_dao->query("UNLOCK TABLES");
-        
+
         // update the IdTrad in the original table (if the TableColumn was given properly and the IdRecord too)
         if (!empty($TableColumn) and !empty($Idrecord)) {
              $table=explode(".",$TableColumn) ;
-             $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where ".$table[0].".id=".$IdRecord ; 
+             $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where ".$table[0].".id=".$IdRecord ;
             $s = $this->_dao->query($str);
             if (!$s) {
                 throw new PException('Failed in InsertInMTrad updating table column [%s]');
@@ -1221,11 +1223,11 @@ WHERE
     * $IdTrad is the record in member_trads to replace they are several records with the smae IdTrad teh difference is thr language,
     * if IdTrad is set to 0 a new record will be created, this is the usual way to insert records
     * @$IdOwner ; is the id of the member who own the record, if set to 0 We Will use the current member
-    * 
+    *
     * Warning : as default language this function will use:
     * - the content of the current $_SESSION['IdLanguage'] of the current member
-    * 
-    */ 
+    *
+    */
     function ReplaceInMTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
         // temporary hack to undo the damage done by escaping in other places
         // todo: find all references to ReplaceInMTrad and fix them
@@ -1247,7 +1249,7 @@ WHERE
             $IdLanguage=$this->_langWrite;
         } else {
             $IdLanguage=0 ; // by default language 0
-        } 
+        }
         if ($IdTrad == 0) {
             return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
         }
@@ -1286,8 +1288,8 @@ WHERE
     * @$_IdMember ; is the id of the member who own the record
     * @$_IdLanguage
     * @$IdTrad  is probably useless (I don't remmber why I defined it)
-    * 
-    * 
+    *
+    *
     * Warning : as default language this function will use by priority :
     * 1) the content of $_IdLanguage if it is set to something else than -1
     * 2) the content of an optional $_POST[IdLanguage] if it is set
@@ -1298,7 +1300,7 @@ WHERE
     *
 	* improvment if the text value is empty, nothing is inserte din the table, and 0 is retruned as an IdTrad
 	*
-    */ 
+    */
     function InsertInFTrad($ss,$TableColumn,$IdRecord, $_IdMember = 0, $_IdLanguage = -1, $IdTrad = -1) {
         $DefLanguage=$this->GetLanguageChoosen() ;
         if ($_IdMember == 0) { // by default it is current member
@@ -1348,7 +1350,7 @@ WHERE
           if (!$s) {
               throw new PException("InsertInFTrad Failed in updating ".$TableColumn." for IdRecord=#".$IdRecord." with value=[".$IdTrad."]");
           }
-           
+
         }
         return ($IdTrad);
     } // end of InsertInFTrad
@@ -1356,7 +1358,7 @@ WHERE
     /**
     * GetLanguageChoosen function
     *
-    * This return the language choosen by the user 
+    * This return the language choosen by the user
     * this function is supposed to be called after a new post, and editpost or a reply
     * it return the language choosen if any
     */
@@ -1381,14 +1383,14 @@ WHERE
     * @$IdRecord is the num of the record in this table
     * $IdTrad is the record in translations to replace (unique for each IdLanguage)
     * @$Owner ; is the id of the member who own the record
-    * 
+    *
     * Warning : as default language this function will use by priority :
     * 1) the content of $_IdLanguage if it is set to something else than -1
     * 2) the content of an optional $_POST[IdLanguage] if it is set
     * 3) the content of the current $_SESSION['IdLanguage'] of the current membr if it set
     * 4) The default language (0)
-    * 
-    */ 
+    *
+    */
     function ReplaceInFTrad($ss,$TableColumn,$IdRecord, $IdTrad = 0, $IdOwner = 0) {
         $DefLanguage=$this->GetLanguageChoosen() ;
     //	echo " ReplaceInFTrad \$DefLanguage=".$DefLanguage ;
@@ -1428,32 +1430,32 @@ WHERE
  * This class stores all the information from looking up a word keycode in the database.
  * Objects of this type are created in MOD_words::_lookup($code[, $lang]), so all the db stuff happens there.
  * Objects of this type do not store the additional arguments from a call to $words->getFormatted($code, ..).
- * 
+ *
  * The main purpose is to package information for function arguments and return values,
  * and reduce the number of single variables to deal with in a function.
  */
 class LookedUpWord {
-	
+
     // constants for tr success
     const NO_TR_LINK = 0;
     const SUCCESSFUL = 1;
     const OBSOLETE = 2;
     const MISSING_TR = 3;
     const MISSING_WORD = 4;
-    
+
     // constants for tr quality - yet to be implemented in the DB
     const FINE = 5;  // translation quality is ok
     const DEBATABLE = 6;
     const AWKWARD = 7;
-    
+
     // attributes
     private $_code;  // key code for words DB
     private $_lang;  // intended language
     private $_lookup_result;  // a string, either in $_lang or in English, with argument placeholders
     private $_tr_success;  // can be 'obsolete', 'missing_translation', or 'missing_word'. Anything else means there is a translation.
     private $_tr_quality;  // can be 'awkward' or 'debatable'. Anything else means the translation is ok.
-    
-    
+
+
     /**
      * The constructor gets the parameters from MOD_words::_lookup($code)_
      *
@@ -1466,22 +1468,22 @@ class LookedUpWord {
     	$this->_tr_success = $tr_success;
     	$this->_tr_quality = $tr_quality;
     }
-    
+
     public function getCode() {
         return $this->_code;
     }
-    
+
     public function get_tr_success() {
     	return $this->_tr_success;
     }
-    
+
     function text()
     {
         return $this->_lookup_result;
     }
-    
-    
-    
+
+
+
     /**
      * @param array $args an array of arguments to be replaced in the lookup string
      * @return string translated word without any <a> tags, to avoid nested hyperlinks or worse things
@@ -1493,9 +1495,9 @@ class LookedUpWord {
             $this->text()
         );
     }
-    
-    
-    
+
+
+
     public function clickableText()
     {
         $text = str_replace(
@@ -1510,8 +1512,8 @@ class LookedUpWord {
             'href = "'.$this->_trLinkURL().'"'.
         '>'.$this->textWithoutLinks().'</a>'.$this->_trLinkInfoBox().'</span>';
     }
-    
-    
+
+
     public function standaloneTrLink()
     {
         return '<span class="tr_span"><a '.
@@ -1521,9 +1523,9 @@ class LookedUpWord {
             'href = "'.$this->_trLinkURL().'"'.
         '>'.$this->_trLinkLanguage().'</a>'.$this->_trLinkInfoBox().'</span>';
     }
-    
-    
-    
+
+
+
     static $_action_strings = array(
         self::NO_TR_LINK => 'do nothing',
         self::MISSING_WORD => 'define',
@@ -1531,7 +1533,7 @@ class LookedUpWord {
         self::OBSOLETE => 'update',
         self::SUCCESSFUL => 'edit'
     );
-    
+
     private function _trLinkInfoBox()
     {
         /*
@@ -1543,24 +1545,24 @@ class LookedUpWord {
         */
         return '';
     }
-    
+
     private function _trLinkURL()
     {
         return PVars::getObj('env')->baseuri.'bw/admin/adminwords_edit.php?lang='.$this->_trLinkLanguage().'&code='.$this->_code;
     }
-    
+
     private function _trLinkLanguage()
     {
         if($this->_tr_success == self::MISSING_WORD) return 'en';
         else return $this->_lang;
     }
-    
+
 
     private function _trLinkTitle()
     {
         return self::$_action_strings[''.$this->_tr_success].' '.$this->_code.' in '.$this->_lang;
     }
-    
+
     static $_class_strings = array(
         self::NO_TR_LINK => 'whatever',
         self::MISSING_WORD => 'missing_word',
@@ -1568,7 +1570,7 @@ class LookedUpWord {
         self::OBSOLETE => 'obsolete',
         self::SUCCESSFUL => 'successful_translation'
     );
-    
+
     private function _trLinkClass()
     {
         return 'tr_link '.self::$_class_strings[$this->_tr_success];

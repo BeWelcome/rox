@@ -99,8 +99,7 @@ endif; ?>
         }
         echo '>' . $display . '</option>';
     endforeach;
-    echo $words->flushBuffer();
-    ?></select>
+    ?></select><?php echo $words->flushBuffer(); ?>
 			</div><div class="float_right">
 				<br /><input
 					id="search-submit-button" name="search-submit-button"

@@ -391,15 +391,15 @@ function GetOfferIcons($offer)
     $icons = '';
     if (strstr($offer, "CanHostWeelChair"))
     {
-        $icons .= '<img src="images/icons/wheelchairblue.png" width="22" height="22" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWeelChairYes') . '" />';
+        $icons .= '<img src="images/icons/wheelchairblue.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_CanHostWheelChair') . '" title="' . $words->getSilent('TypicOffer_CanHostWheelChair') . '" />';
     }
     if (strstr($offer, "dinner"))
     {
-        $icons .= '<img src="images/icons/dinner.png" width="22" height="22" alt="' . $words->getSilent('dinner') . '" title="' . $words->getSilent('dinner') . '" />';
+        $icons .= '<img src="images/icons/dinner.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_dinner') . '" title="' . $words->getSilent('TypicOffer_dinner') . '" />';
     }
     if (strstr($offer, "guidedtour"))
     {
-        $icons .= '<img src="images/icons/guidedtour.png" width="22" height="22" alt="' . $words->getSilent('guidedtour') . '" title="' . $words->getSilent('guidedtour') . '" />';
+        $icons .= '<img src="images/icons/guidedtour.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_guidedtour') . '" title="' . $words->getSilent('TypicOffer_guidedtour') . '" />';
     }
     return $icons;
 }
@@ -410,15 +410,15 @@ function GetRestrictionIcons($restrictions)
     $icons = '';
     if (strstr($restrictions, "NoSmoker"))
     {
-        $icons .= '<img src="images/icons/no-smoking.png" width="22" height="22" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWeelChairYes') . '" />';
+        $icons .= '<img src="images/icons/no-smoking.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoSmoker') . '" title="' . $words->getSilent('Restriction_NoSmoker') . '" />';
     }
     if (strstr($restrictions, "NoAlchool"))
     {
-        $icons .= '<img src="images/icons/no-alcohol.png" width="22" height="22" alt="' . $words->getSilent('dinner') . '" title="' . $words->getSilent('dinner') . '" />';
+        $icons .= '<img src="images/icons/no-alcohol.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoAlchool') . '" title="' . $words->getSilent('Restriction_NoAlchool') . '" />';
     }
     if (strstr($restrictions, "NoDrugs"))
     {
-        $icons .= '<img src="images/icons/no-drugs.png" width="22" height="22" alt="' . $words->getSilent('guidedtour') . '" title="' . $words->getSilent('guidedtour') . '" />';
+        $icons .= '<img src="images/icons/no-drugs.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoDrugs') . '" title="' . $words->getSilent('Restriction_NoDrugs') . '" />';
     }
     return $icons;
 }

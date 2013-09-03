@@ -222,7 +222,7 @@ class MembersController extends RoxControllerBase
                         $data = array();
                         $data['Admin comment'] = $baseUri
                             . 'bw/admin/admincomments.php?IdComment='
-                            . $commentId;
+                            . $commentId . '&action=All';
                         $data['Member comment page'] = $baseUri
                             . 'members/' . $username . '/comments';
                         $dataEncoded = urlencode(serialize($data));

@@ -746,4 +746,39 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Active
         return false; // no error
 	}
 
+	/**
+	 * Resend the confirmation mail in case the user clicked on the link in the
+	 * login error message
+	 *
+	 * @param string $username
+	 */
+	public function resendConfirmationMail($username) {
+        // fetch ID for member $username
+        $html_purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        $mail = MOD_mail::sendEmail("HAllo", "a@b.cd", "a@b.cd", "body", "body");
+        $vars = array();
+        $MembersModel = new MembersModel();
+        $member = $MembersModel->getMemberWithUsername($username);
+        if ($member) {
+            if ($member->Status == 'MailToConfirm') {
+                $vars['firstname'] = MOD_crypt::AdminReadCrypted($member->Firstname);
+                $vars['secondname'] = MOD_crypt::AdminReadCrypted($member->Secondname);
+                $vars['lastname'] = MOD_crypt::AdminReadCrypted($member->Lastname);
+                $vars['email'] = MOD_crypt::AdminReadCrypted($member->Email);
+                $userId = APP_User::userId($username);
+                if( !$userId) {
+                    return 'NoSuchMember';
+                } else {
+                    $View = new SignupView($this);
+                    define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
+                    $View->registerMail($vars, $member->id, $userId);
+                }
+            } else {
+                return 'NoMailToConfirm';
+            }
+        } else {
+            return 'NoSuchMember';
+        }
+        return true;
+	}
 }

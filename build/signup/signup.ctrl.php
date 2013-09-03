@@ -38,8 +38,8 @@ class SignupController extends RoxControllerBase {
      *
      * @param void
      */
-    public function index($args = false) 
-    {	
+    public function index($args = false)
+    {
         // In case Signup is closed
         if (isset($_SESSION['Param']->FeatureSignupClose) && $_SESSION['Param']->FeatureSignupClose=="Yes") {
             return new SignupClosedPage();
@@ -56,7 +56,7 @@ class SignupController extends RoxControllerBase {
 
         $request = $args->request;
         $model = new SignupModel();
-        
+
         if (isset($_SESSION['IdMember']) && !MOD_right::get()->hasRight('words')) {
             if (!isset($_SESSION['Username'])) {
                 unset($_SESSION['IdMember']);
@@ -65,7 +65,7 @@ class SignupController extends RoxControllerBase {
                 $this->redirect('members/'.$_SESSION['Username']);
             }
         } else switch (isset($request[1]) ? $request[1] : '') {
-        
+
             // copied from TB:
             // checks e-mail address for validity and availability
             case 'checkemail':
@@ -87,7 +87,7 @@ class SignupController extends RoxControllerBase {
                 }
                 PPHP::PExit();
                 break;
-                
+
             // copied from TB: rewiewed by JeanYves
             // checks Username for validity and availability
             case 'checkhandle':
@@ -108,30 +108,30 @@ class SignupController extends RoxControllerBase {
                 echo (bool)!$model->UsernameInUse($request[2]);
                 PPHP::PExit();
                 break;
-                
+
             case 'getRegions':
             // ignore current request, so we can use the last request
             PRequest::ignoreCurrentRequest();
             if (!isset($request[2])) {
                 PPHP::PExit();
             }
-            
+
             case 'terms':
 				MOD_log::get()->write("Viewing terms","Signup") ;
                 // the termsandconditions popup
                 $page = new SignupTermsPopup();
                 break;
-                
+
             case 'privacy':
 				MOD_log::get()->write("Viewing privacy","Signup") ;
                 $page = new SignupPrivacyPopup();
                 break;
-            
+
             case 'confirm':  // or give it a different name?
                 // this happens when you click the link in the confirmation email
                 if (
-                    !isset($request[2]) 
-                    || !isset($request[3]) 
+                    !isset($request[2])
+                    || !isset($request[3])
                     || !preg_match(User::HANDLE_PREGEXP, $request[2])
                     || !$model->UsernameInUse($request[2])
                     || !preg_match('/^[a-f0-9]{16}$/', $request[3])
@@ -143,11 +143,25 @@ class SignupController extends RoxControllerBase {
                 $page = new SignupMailConfirmPage();
                 $page->error = $error;
                 break;
-                
+
+            case 'resendmail':  // shown when clicking on the link in the MailToConfirm error message
+                $error = '';
+                if (!isset($request[2])) {
+                    $error = 'InvalidLink';
+                } else {
+                    $resent = $model->resendConfirmationMail($request[2]);
+                    if ($resent !== true) {
+                        $error = $resent;
+                    }
+                }
+                $page = new SignupResentMailPage();
+                $page->error = $error;
+                break;
+
             case 'finish':
                 $page = new SignupFinishPage();
                 break;
-                
+
             default:
                 $page = new SignupPage();
                 $page->step = (isset($request[1]) && $request[1]) ? $request[1] : '1';
@@ -155,14 +169,14 @@ class SignupController extends RoxControllerBase {
 				MOD_log::get()->write($StrLog,"Signup") ;
                 $page->model = $model;
         }
-        
+
         return $page;
     }
-    
-    
+
+
     public function signupFormCallback($args, $action, $mem_redirect, $mem_resend)
     {
-        
+
         //$mem_redirect->post = $vars;
         foreach ($args->post as $key => $value) {
             $_SESSION['SignupBWVars'][$key] = $value;
@@ -178,17 +192,17 @@ class SignupController extends RoxControllerBase {
 		if (!empty($args->post["iso_date"])) {
 			$StrLog=$StrLog." iso_date=[".$args->post["iso_date"]."]" ;
 		}
-				
+
 		MOD_log::get()->write($StrLog,"Signup") ;
 
         $vars = $_SESSION['SignupBWVars'];
         $request = $args->request;
-        
+
         if (isset($request[1]) && $request[1] == '4') {
             $model = new SignupModel();
-            
+
             $errors = $model->checkRegistrationForm($vars);
-            
+
             if (count($errors) > 0) {
                 // show form again
                 $_SESSION['SignupBWVars']['errors'] = $errors;
@@ -196,7 +210,7 @@ class SignupController extends RoxControllerBase {
                 return false;
             }
             $model->polishFormValues($vars);
-            
+
             if (!$idTB = $model->registerTBMember($vars)) {
                 // MyTB registration didn't work
             } else {
@@ -204,17 +218,18 @@ class SignupController extends RoxControllerBase {
                 $id = $model->registerBWMember($vars);
                 $_SESSION['IdMember'] = $id;
 
-                $vars['feedback'] .= 
+                $vars['feedback'] .=
                     $model->takeCareForNonUniqueEmailAddress($vars['email']);
-                    
+
                 $vars['feedback'] .=
                     $model->takeCareForComputerUsedByBWMember();
-                    
+
                 $model->writeFeedback($vars['feedback']);
-                
+
                 $View = new SignupView($model);
                 // TODO: BW 2007-08-19: $_SYSHCVOL['EmailDomainName']
                 // look at that ... a two years plus old todo :) ... and now four years plus :P
+                // finally 6 years and counting...
 
                 define('DOMAIN_MESSAGE_ID', 'bewelcome.org');    // TODO: config
                 $View->registerMail($vars, $id, $idTB);
@@ -223,6 +238,6 @@ class SignupController extends RoxControllerBase {
                 return 'signup/finish';
             }
         }
-        return false;        
+        return false;
     }
 }

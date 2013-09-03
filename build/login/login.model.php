@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -33,8 +33,8 @@ Boston, MA  02111-1307, USA.
 class LoginModel extends RoxModelBase
 {
     const KEY_IN_SESSION = 'APP_User_id';
-    
-    
+
+
     function encryptPasswordBW($password)
     {
         $password = $this->dao->escape(trim($password));
@@ -50,8 +50,8 @@ SELECT  PASSWORD('$password')  AS  pw_enc_bw
             return $row->pw_enc_bw;
         }
     }
-    
-    
+
+
     function encryptPasswordTB($password)
     {
         if (CRYPT_MD5) {
@@ -63,8 +63,8 @@ SELECT  PASSWORD('$password')  AS  pw_enc_bw
         }
         return crypt ($password, $salt);
     }
-    
-    
+
+
     protected function randomString($len)
     {
         $times = ($len % 40) + 1;
@@ -74,18 +74,18 @@ SELECT  PASSWORD('$password')  AS  pw_enc_bw
             $r = mt_rand();
             $random .= sha1(uniqid($r,TRUE));
         }
-        return substr ($random, 0, $len);   
+        return substr ($random, 0, $len);
     }
-    
-    
-    
+
+
+
     /**
      * check if given auth name exists, creates if it does not
-     * 
+     *
      * @param string $authName
      * @return mixed id or false
      */
-    function checkAuth($authName) 
+    function checkAuth($authName)
     {
         try {
             $q = $this->dao->query("
@@ -93,22 +93,22 @@ SELECT  id
 FROM    mod_user_auth
 WHERE   name = '".$this->dao->escape($authName)."'
             ");
-            
+
             if ($q->numRows() == 1) {
                 return $q->fetch(PDB::FETCH_OBJ)->id;
             }
-            
+
             if ($q->numRows() != 0) {
                 throw new PException('D.i.e.!');
             }
-            
+
             $q = $this->dao->prepare(
                 "
 INSERT INTO     mod_user_auth (id, name)
 VALUES          (?, ?)
                 "
             );
-            
+
             $id = $this->dao->nextId('mod_user_auth');
             $q->bindParam(0, $id);
             $q->bindParam(1, $authName);
@@ -122,22 +122,22 @@ VALUES          (?, ?)
                 $e->addInfo('('.$this->dao->getErrNo().') '.$this->dao->getErrMsg());
             }
             throw $e;
-        }            
+        }
     }
-    
-    
-    
+
+
+
     //--------------------------------------------------------------------
-    
-    
-    
+
+
+
     function createMissingTBUser($member, $password)
     {
         $esc_handle = $this->dao->escape($member->Username);
         $esc_pwenc = $this->dao->escape($this->encryptPasswordTB($password));
         $member_id = (int)$member->id;
         $int_authId = (int)($this->checkAuth('defaultUser'));
-        
+
         if ($this->singleLookup(
             "
 INSERT IGNORE INTO
@@ -174,7 +174,7 @@ SET
             return false;
         }
     }
-    
+
     /*
     function repairTBUser($member, $tb_user, $password)
     {
@@ -182,7 +182,7 @@ SET
         $esc_pwenc = $this->dao->escape($this->encryptPasswordTB($password));
         $member_id = $_SESSION['IdMember'];
         $int_authId = (int)($this->checkAuth('defaultUser'));
-        
+
         if (!$this->singleLookup(
             "
 UPDATE  user
@@ -196,12 +196,12 @@ WHERE   id = $tb_user->id
         }
     }
     */
-    
-    
+
+
     //--------------------------------------------------------------------
-    
-    
-    
+
+
+
     function checkBWPassword($member, $password)
     {
         $password = $this->dao->escape(trim($password));
@@ -220,8 +220,8 @@ SELECT  PASSWORD('$password')  AS  PassMysqlEncrypted
             return true;
         }
     }
-    
-    
+
+
     function checkTBPassword($tb_user, $password)
     {
         $password = trim($password);
@@ -230,17 +230,17 @@ SELECT  PASSWORD('$password')  AS  PassMysqlEncrypted
                 return false;
             }
         } else switch ($matches[1]) {
-            
+
             case 'md5':
                 if (md5($password) != $matches[2])
                     return false;
                 break;
-            
+
             case 'sha1':
                 if (sha1($password) != $matches[2])
                     return false;
                 break;
-                
+
             case 'crypt':
             default:
                 if (crypt($password, $matches[2]) != $matches[2])
@@ -250,8 +250,8 @@ SELECT  PASSWORD('$password')  AS  PassMysqlEncrypted
         return true;
     }
 
-    
-        
+
+
     /**
      * gets a BW member by username
      *
@@ -276,9 +276,9 @@ SELECT  PASSWORD('$password')  AS  PassMysqlEncrypted
         }
         return $m;
     }
-    
-    
-        
+
+
+
     function getTBUserForBWMember($member)
     {
         $esc_handle = $this->dao->escape($member->Username);
@@ -295,13 +295,13 @@ WHERE   handle = '$esc_handle'
             return false;
         }
     }
-    
-    
-    
+
+
+
     //-----------------------------------------------------------------------
-    
-    
-    
+
+
+
     function setBWMemberAsLoggedIn($m)
     {
         // Process the login of the member according to his status
@@ -352,7 +352,7 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 $_SESSION['IdMember'] = $m->id ;
                 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
                 break ;
-            
+
             case "ToComplete" :
                 // TODO: This case seems to be nonsense.. ?
                 // TODO: Redirects are not the model's task!
@@ -360,18 +360,18 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 // FIXME: completeprofile.php does not exist - why used here? (steinwinde 2007-12-05)
                 header("Location: " . PVars::getObj('env')->baseuri . "bw/completeprofile.php");
                 PPHP::PExit();
-    
-            case "MailToConfirm" :  // I just add this here in case someone try to log with maul to confirm
+
+            case "MailToConfirm" :  // I just add this here in case someone try to log with mail to confirm
                 MOD_log::get()->write("Login with (MailToConfirm)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 return false ;
                 break;
-    
+
             case "NeedMore" :
                 $_SESSION['IdMember'] = $m->id ;
                 MOD_log::get()->write("Login with (needmore)<b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
                 $this->_immediateRedirect = PVars::getObj('env')->baseuri . "bw/updatemandatory.php";
                 break;
-    
+
             case "Banned" :
             case "TakenOut" :
             case "CompletedPending" :
@@ -389,33 +389,33 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 return false;
         }
         return true;
-    }    
-    
-    
+    }
+
+
     function setupBWSession( $m )
     {
         $member_id = (int)$m->id;
-        
+
         // Set the session identifier
         $_SESSION['IdMember'] = $m->id;
         $_SESSION['Username'] = $m->Username;
         $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
-        
+
         if ($_SESSION['IdMember'] != $m->id)
         { // Check is session work of
             $this->logout();
             throw new PException('Login sanity check failed miserably!');
         }; // end Check is session work of
-    
+
         $_SESSION['MemberCryptKey'] = crypt($m->PassWord, "rt"); // Set the key which will be used for member personal cryptation
         $_SESSION['LogCheck'] = Crc32($_SESSION['MemberCryptKey'] . $m->id); // Set the key for checking id and LohCheck (will be restricted in future)
-        
+
 
 				if ($m->NbRemindWithoutLogingIn>0) {
             MOD_log::get()->write("This member was having a NbRemindWithoutLogingIn=" .$m->NbRemindWithoutLogingIn, "Login");
 				}
-        
-        $this->dao->query(  
+
+        $this->dao->query(
             "
 UPDATE
     members
@@ -423,12 +423,12 @@ SET
     LogCount  = LogCount+1,
     LastLogin = NOW(),
     NbRemindWithoutLogingIn = 0
-		
+
 WHERE
     id = $member_id
             "
         ); // update the LastLogin date
-    
+
         // Load language prederence (IdPreference=1)
 
         // todo: come up with interesting idea like ... using just ONE query to load preferences
@@ -455,7 +455,7 @@ WHERE
         if ($preference_PreferenceDayLight = $this->singleLookup(
             "
 SELECT
-    memberspreferences.Value  
+    memberspreferences.Value
 FROM
     memberspreferences,
 	preferences
@@ -470,7 +470,7 @@ WHERE
         if ($preference_PreferenceLocalTime = $this->singleLookup(
             "
 SELECT
-    memberspreferences.Value  
+    memberspreferences.Value
 FROM
     memberspreferences,
 	preferences
@@ -481,7 +481,7 @@ WHERE
         )) {
             $_SESSION["TimeOffset"] = $preference_PreferenceLocalTime->Value;
         }
-		
+
         // Process the login of the member according to his status
         switch ($m->Status) {
             case "ChoiceInactive" :  // in case an inactive member comes back
@@ -504,21 +504,21 @@ WHERE
                 //if (HasRight("Words"))
                 //  $_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
                 break;
-            
+
             default:
                 throw new PException('SetupBWSession Weird Status!');
                 break;
         }
     }
-    
-    
+
+
 
     function setTBUserAsLoggedIn($tb_user)
     {
         session_regenerate_id();
-        
+
         $_SESSION[self::KEY_IN_SESSION] = $tb_user_id = (int)$tb_user->id;
-        
+
         $this->dao->query(
             "
 UPDATE  user

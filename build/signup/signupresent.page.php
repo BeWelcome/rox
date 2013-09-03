@@ -1,16 +1,14 @@
 <?php
-
-
-class SignupMailConfirmPage extends SignupPage
+class SignupResentMailPage extends SignupPage
 {
 
     protected function teaserHeadline()
     {
         $words = $this->layoutkit->words;
         if (!$this->error) {
-            echo $words->get('SignupMailConfirmedTitle');
+            echo $words->get('SignupResentMailTitle');
         } else {
-            echo $words->get('SignupMailConfirmedErrorTitle');
+            echo $words->get('SignupResentMailErrorTitle');
         }
     }
 
@@ -22,12 +20,13 @@ class SignupMailConfirmPage extends SignupPage
     {
         $words = $this->layoutkit->words;
         if (!$this->error) {
-            echo $words->get('SignupMailConfirmed');
+            echo $words->get('SignupResentMail');
         } else {
-            echo '<p class="error">'.$words->get('SignupMailConfirmedError'.$this->error).'</p>';
+            echo '<p class="error">'.$words->get('SignupResentMail'.$this->error).'</p>';
         }
         echo "<p>&nbsp;</p>";
         $widg = $this->createWidget('LoginFormWidget');
         $widg->render();
     }
 }
+?>

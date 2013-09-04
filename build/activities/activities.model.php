@@ -91,8 +91,8 @@ class ActivitiesModel extends RoxModelBase
         $longsw = rad2deg((6378 * $long - $distance) / 6378);
 
         $radiusAtLatitude = 6378 * cos($lat);
-        $latne = rad2deg(($distance + $radiusAtLatitude * $long) / $radiusAtLatitude);
-        $latsw = rad2deg(($radiusAtLatitude * $long - $distance) / $radiusAtLatitude);
+        $latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
+        $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
         if ($latne < $latsw) {
             $tmp = $latne;
             $latne = $latsw;

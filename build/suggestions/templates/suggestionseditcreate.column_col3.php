@@ -5,6 +5,10 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'suggestion-description';
     require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
 }
+if (isset($_SESSION['SuggestionStatus'])) {
+    $status = $_SESSION['SuggestionStatus'];
+    unset($_SESSION['SuggestionStatus']);
+}
 $errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
@@ -22,6 +26,9 @@ if (empty($vars)) {
 <form method="post" id="suggestion-create-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />
 <?php echo $callbackTags;
+if (isset($status)) {
+    echo '<div class="notice">' . $words->get($status[0]) . '</div>';
+}
 if (!empty($errors)) {
     $errStr = '<div class="error">';
     foreach ($errors as $error) {

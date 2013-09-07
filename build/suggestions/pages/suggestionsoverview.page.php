@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -25,26 +25,17 @@ Boston, MA  02111-1307, USA.
  */
 
 /**
- * shows a suggestion
+ * This page allows a member to vote on a given suggestion
  *
  * @package Apps
  * @subpackage Suggestions
  */
-class SuggestionsUpdatePage extends SuggestionsBasePage
+class SuggestionsProcessPage extends SuggestionsBasePage
 {
-    protected function getSubmenuItems()
+    protected function getSubmenuActiveItem()
     {
-        $items = parent::getSubmenuItems();
-        $suggestionId = $this->suggestion->id;
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-        // add details item to end of normal list like search results
-        $items[] = array('details', 'suggestions/'. $suggestionId, $words->getSilent('SuggestionsDetails'));
-        return $items;
-    }
-    
-    protected function getSubmenuActiveItem() 
-    {
-        return 'details';
+        return 'about';
     }
 }
+
+

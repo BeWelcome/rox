@@ -1,6 +1,7 @@
-﻿<?php
+<?php
 $formkit = $this->layoutkit->formkit;
-$callbackTags = $formkit->setPostCallback('SuggestionsController', 'approveSuggestionCallback');
+$callbackAddOptionTags = $formkit->setPostCallback('SuggestionsController', 'addOptionToSuggestionCallback');
+$callbackAddPostTags = $formkit->setPostCallback('SuggestionsController', 'postSuggestionCallback');
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
 $purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
@@ -28,16 +29,32 @@ if (empty($vars)) {
                     <h3><?= $words->get('SuggestionDescription'); ?></h3>
                     <?php echo $purifier->purify($this->suggestion->description); ?>
                 </div>
-                <?php if ($this->hasSuggestionRight) : ?>
+                <?php if ($this->suggestion->options) :
+                    foreach($this->suggestion->options as $option) : ?>
+                        <div><?php echo "Option"; ?></div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
                 <div class="row">
-                    <form method="post" id="suggestion-approve-form">
+                    <form method="post" id="suggestion-addoptions-form">
+                        <?php echo $callbackAddOptionsTags; ?>
+                        <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
+                        <input type="submit" id="suggestion-add-option" name="suggestion-add-option" value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+                        <input type="submit" id="suggestion-cancel" name="suggestion-cancel" value="<?php echo $words->getSilent('SuggestionsSubmitCancel'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+                    </form>
+                </div>
+                <?php if ($this->suggestion->discussions) :
+                    foreach($this->suggestion->discussions as $discussion) : ?>
+                        <div><?php echo "Discussion"; ?></div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <div class="row">
+                    <form method="post" id="suggestion-post-form">
                         <?php echo $callbackTags; ?>
                         <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
                         <input type="submit" id="suggestion-approve" name="suggestion-approve" value="<?php echo $words->getSilent('SuggestionsSubmitApprove'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
                         <input type="submit" id="suggestion-duplicate" name="suggestion-duplicate" value="<?php echo $words->getSilent('SuggestionsSubmitDuplicate'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
                     </form>
                 </div>
-                <?php endif; ?>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         <div class="c38r">
@@ -63,6 +80,9 @@ if (empty($vars)) {
                        <span class="small"><?php echo $this->suggestion->modified; ?></span>
                    </div>
                    </div>
+               <?php endif; ?>
+               <?php if ($this->suggestion->options) : ?>
+                   <h3><?php echo $words->get('SuggestionNumberOfOptions', count($this->suggestion->options)); ?></h3>
                <?php endif; ?>
             </div> <!-- subcr -->
         </div> <!-- c38r -->

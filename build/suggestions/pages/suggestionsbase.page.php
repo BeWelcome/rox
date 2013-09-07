@@ -33,6 +33,15 @@ Boston, MA  02111-1307, USA.
  */
 class SuggestionsBasePage extends PageWithActiveSkin
 {
+    protected $hasSuggestionRight = false;
+
+    public function __construct($member) {
+        $this->member = $member;
+        if ($member) {
+            $this->hasSuggestionRight = $this->checkSuggestionRight();
+        }
+    }
+
     protected function getPageTitle() {
         $words = $this->getWords();
         return $words->getBuffered('Suggestions') . ' - BeWelcome';
@@ -44,7 +53,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
         return $words->get('Suggestions');
     }
 
-    private function hasSuggestionRights()
+    private function checkSuggestionRight()
     {
         $rights = $this->member->getOldRights();
         if (empty($rights)) {
@@ -67,14 +76,15 @@ class SuggestionsBasePage extends PageWithActiveSkin
     {
         $words = $this->getWords();
         $items = array();
-        if ($this->hasSuggestionRights()) {
+        // The first item might be overwritten in SuggestionsEditCreatePage
+        if ($this->hasSuggestionRight) {
             $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
             $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
             $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
             $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
         }
         $items[] = array('vote', 'suggestions/vote', $words->getSilent('SuggestionsVote'));
-        if ($this->hasSuggestionRights()) {
+        if ($this->hasSuggestionRight) {
             $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
             $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
             $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
@@ -92,6 +102,4 @@ class SuggestionsBasePage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
        return $stylesheets;
     }
-
 }
-

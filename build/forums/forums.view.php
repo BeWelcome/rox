@@ -41,9 +41,13 @@ class ForumsView extends RoxAppView {
 //                           die ("1 IdGroup=".$IdGroup) ;
         $groupsDropdowns = $this->getGroupsDropdowns($IdGroup);
         $edit = false;
-        $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
-        $AppropriatedLanguage=0 ; // By default english will be proposed as défault language
-        $LanguageChoices=$this->_model->LanguageChoices() ;
+
+        $notifymecheck = "";
+        if ($boards->IdGroup == 0) {
+            $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
+        }
+        $AppropriatedLanguage = 0 ; // By default english will be proposed as défault language
+        $LanguageChoices = $this->_model->LanguageChoices() ;
         $visibilitiesDropdown = $this->getNewThreadVisibilitiesDropdown($IdGroup);
         $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
@@ -83,9 +87,9 @@ class ForumsView extends RoxAppView {
         $topic = $this->_model->getTopic();
         $allow_title = false;
         $edit = false;
-         $notifymecheck="" ;
+        $notifymecheck = "";
         if ($this->_model->IsThreadSubscribed($topic->IdThread,$_SESSION["IdMember"])) {
-            $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
+            $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
         }
 
          // We are trying to find the more appropriated language according to the current one available for
@@ -128,9 +132,9 @@ class ForumsView extends RoxAppView {
         $allow_title = $vars['first_postid'] == $vars['postid'];
         $edit = true;
         $messageid = $this->_model->getMessageId();
-        $notifymecheck="" ;
+        $notifymecheck = "" ;
         if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
-            $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
+            $notifymecheck = 'checked="checked"' ; // This is to tell that the notifyme cell is preticked
         }
         $IdGroup = $this->_model->IdGroup;
         $visibilityThread = $this->_model->GetThreadVisibility($vars['threadid']);
@@ -166,12 +170,12 @@ class ForumsView extends RoxAppView {
         $allow_title = $vars['first_postid'] == $vars['postid'];
         $edit = true;
         $messageid = $this->_model->getMessageId();
-        $notifymecheck="" ;
+        $notifymecheck="";
         if ($this->_model->IsThreadSubscribed($this->_model->getThreadId(),$_SESSION["IdMember"])) {
-            $notifymecheck="checked" ; // This is to tell that the notifyme cell is preticked
+            $notifymecheck = 'checked="checked"'; // This is to tell that the notifyme cell is preticked
         }
-                $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
-                $LanguageChoices=$this->_model->LanguageChoices() ;
+        $AppropriatedLanguage=$this->_model->FindAppropriatedLanguage($vars['first_postid']) ;
+        $LanguageChoices=$this->_model->LanguageChoices() ;
         $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     } // end of editPost

@@ -1,6 +1,7 @@
 <script type="text/Javascript">
 var noMatchesFound = "<?php echo $words->getSilent('SearchNoMatchesFound');?>";
 </script><?php
+$errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['search-location'] = '';
@@ -51,6 +52,13 @@ $layoutbits = new MOD_layoutbits();
 // when switching between pages of the result
 ?>
 <div><!--  around form -->
+<?php if (count($errors) > 0) :
+    echo '<div class="error">';
+    foreach($errors as $error) :
+        echo '<p>' . $words->get($error) . '</p>';
+    endforeach;
+    echo '</div>';
+endif; ?>
 	<form method="post" name="searchmembers-form"
 		style="padding-bottom: 0.5em; width: 100%;">
         <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersSimpleCallback');?>
@@ -91,8 +99,7 @@ $layoutbits = new MOD_layoutbits();
         }
         echo '>' . $display . '</option>';
     endforeach;
-    echo $words->flushBuffer();
-    ?></select>
+    ?></select><?php echo $words->flushBuffer(); ?>
 			</div><div class="float_right">
 				<br /><input
 					id="search-submit-button" name="search-submit-button"
@@ -135,13 +142,24 @@ $layoutbits = new MOD_layoutbits();
 </div>
     <div><?php
     if (!empty($members)) :
+        if (!$this->member) {
+            if ($results['countOfMembers'] != $results['countOfPublicMembers']) {
+                echo '<p>' . $words->get('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login/search#login-widget">', '</a>');
+                echo $words->flushBuffer() . '</p>';
+            }
+        }
+
         // Initialise pager widget
         $params = new StdClass;
         $params->strategy = new FullPagePager();
         $params->page_url = "/search/members/text?" . http_build_query($vars);
         $params->page_url_marker = 'search-page-';
         $params->page_method = 'form';
-        $params->items = $results['count'];
+        if ($this->member) {
+            $params->items = $results['countOfMembers'];
+        } else {
+            $params->items = $results['countOfPublicMembers'];
+        }
         $params->active_page = $vars['search-page-current'];
         $params->items_per_page = $vars['search-number-items'];
         $pager = new PagerWidget($params);
@@ -373,15 +391,15 @@ function GetOfferIcons($offer)
     $icons = '';
     if (strstr($offer, "CanHostWeelChair"))
     {
-        $icons .= '<img src="images/icons/wheelchairblue.png" width="22" height="22" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWeelChairYes') . '" />';
+        $icons .= '<img src="images/icons/wheelchairblue.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_CanHostWheelChair') . '" title="' . $words->getSilent('TypicOffer_CanHostWheelChair') . '" />';
     }
     if (strstr($offer, "dinner"))
     {
-        $icons .= '<img src="images/icons/dinner.png" width="22" height="22" alt="' . $words->getSilent('dinner') . '" title="' . $words->getSilent('dinner') . '" />';
+        $icons .= '<img src="images/icons/dinner.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_dinner') . '" title="' . $words->getSilent('TypicOffer_dinner') . '" />';
     }
     if (strstr($offer, "guidedtour"))
     {
-        $icons .= '<img src="images/icons/guidedtour.png" width="22" height="22" alt="' . $words->getSilent('guidedtour') . '" title="' . $words->getSilent('guidedtour') . '" />';
+        $icons .= '<img src="images/icons/guidedtour.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_guidedtour') . '" title="' . $words->getSilent('TypicOffer_guidedtour') . '" />';
     }
     return $icons;
 }
@@ -392,15 +410,15 @@ function GetRestrictionIcons($restrictions)
     $icons = '';
     if (strstr($restrictions, "NoSmoker"))
     {
-        $icons .= '<img src="images/icons/no-smoking.png" width="22" height="22" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWeelChairYes') . '" />';
+        $icons .= '<img src="images/icons/no-smoking.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoSmoker') . '" title="' . $words->getSilent('Restriction_NoSmoker') . '" />';
     }
     if (strstr($restrictions, "NoAlchool"))
     {
-        $icons .= '<img src="images/icons/no-alcohol.png" width="22" height="22" alt="' . $words->getSilent('dinner') . '" title="' . $words->getSilent('dinner') . '" />';
+        $icons .= '<img src="images/icons/no-alcohol.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoAlchool') . '" title="' . $words->getSilent('Restriction_NoAlchool') . '" />';
     }
     if (strstr($restrictions, "NoDrugs"))
     {
-        $icons .= '<img src="images/icons/no-drugs.png" width="22" height="22" alt="' . $words->getSilent('guidedtour') . '" title="' . $words->getSilent('guidedtour') . '" />';
+        $icons .= '<img src="images/icons/no-drugs.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoDrugs') . '" title="' . $words->getSilent('Restriction_NoDrugs') . '" />';
     }
     return $icons;
 }

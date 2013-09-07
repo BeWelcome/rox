@@ -481,7 +481,7 @@ INSERT INTO
         TextFree,
         AdminAction,
         created,
-		updated
+        updated
     )
     values (
         " . $vars['IdMember'] . ",
@@ -490,8 +490,8 @@ INSERT INTO
         '" . $this->dao->escape($vars['TextWhere']) . "',
         '" . $this->dao->escape($vars['TextFree']) . "',
         '" . $AdminAction . "',
-		now(), 
-		now()
+        now(),
+        now()
     )"
     ;
             $qry = $this->dao->query($str);
@@ -515,7 +515,7 @@ SET
     Quality='" . $vars['Quality'] . "',
     TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
     TextFree='" . $this->dao->escape($vars['TextFree']) . "',
-	updated = NOW()
+    updated = NOW()
 WHERE
     id=" . $TCom->id;
             $qry = $this->dao->exec($str);

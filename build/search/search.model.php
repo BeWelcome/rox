@@ -203,7 +203,9 @@ LIMIT 1
             }
         } else {
             $where = "AND a.IdCity = g.geonameid";
-            if (!empty($vars['search-location'])) {
+            if (empty($vars['search-location'])) {
+                // we search around the world.
+            } else {
                 // a simple place with a square rectangle around it
                 $distance = $vars['search-distance'];
                 if ($distance != 0) {
@@ -274,9 +276,46 @@ LIMIT 1
         }
         $start = ($pageno -1) * $limit;
         $vars['search-page-current'] = $pageno;
+
+        // Fetch count of members at/around the given place
+        $str = "
+            SELECT
+                COUNT(*) cnt
+            FROM
+                addresses a,
+                geonames g,
+                members m
+           WHERE
+                m.MaxGuest >= " . $vars['search-can-host'] . "
+                AND m.status = 'Active'
+                AND m.id = a.idmember
+                " . $this->locationWhere($vars, $admin1, $country);
+        $count = $this->dao->query($str);
+        $row = $count->fetch(PDB::FETCH_OBJ);
+        $vars['countOfMembers'] = $row->cnt;
+
+        // Fetch count of public members at/around the given place
+        $str = "
+            SELECT
+                COUNT(*) cnt
+            FROM
+                addresses a,
+                geonames g,
+                members m,
+                memberspublicprofiles mpp
+           WHERE
+                m.MaxGuest >= " . $vars['search-can-host'] . "
+                AND m.status = 'Active'
+                AND m.id = a.idmember
+                AND m.id = mpp.IdMember
+                " . $this->locationWhere($vars, $admin1, $country);
+        $count = $this->dao->query($str);
+        $row = $count->fetch(PDB::FETCH_OBJ);
+        $vars['countOfPublicMembers'] = $row->cnt;
+
         // *FROM* and *WHERE* will be replaced later on (don't change)
         $str = "
-            SELECT SQL_CALC_FOUND_ROWS
+            SELECT
                 m.id,
                 m.Username,
                 m.created,
@@ -341,16 +380,12 @@ LIMIT 1
         // Make sure only public profiles are found if no one's logged in
         if (!$this->getLoggedInMember()) {
             $str = str_replace('*FROM*', 'FROM memberspublicprofiles mpp,', $str);
-            $str = str_replace('*WHERE*', 'WHERE m.id = mpp.id AND ', $str);
+            $str = str_replace('*WHERE*', 'WHERE m.id = mpp.IdMember AND ', $str);
         }
         $str = str_replace('*FROM*', 'FROM', $str);
         $str = str_replace('*WHERE*', 'WHERE', $str);
 
         $rawMembers = $this->bulkLookup($str);
-
-        $count = $this->dao->query("SELECT FOUND_ROWS() as cnt");
-        $row = $count->fetch(PDB::FETCH_OBJ);
-        $vars['count'] = $row->cnt;
 
         $loggedInMember = $this->getLoggedInMember();
 
@@ -743,6 +778,17 @@ LIMIT 1
         return array($countryIds, $admin1Ids);
     }
 
+    /**
+     *
+     */
+    public function checkSearchVarsOk($vars) {
+        $errors = array();
+        if (empty($vars['search-location'])) {
+            $errors[] = 'SearchLocationEmpty';
+        }
+        return $errors;
+    }
+
     /*
      * Returns either a list of members for a selected location or
     * a list of possible locations based on the input text
@@ -842,7 +888,8 @@ LIMIT 1
                 $results['values'] = $this->getMemberDetails($vars);
             }
         }
-        $results['count'] = $vars['count'];
+        $results['countOfMembers'] = $vars['countOfMembers'];
+        $results['countOfPublicMembers'] = $vars['countOfPublicMembers'];
         return $results;
     }
 

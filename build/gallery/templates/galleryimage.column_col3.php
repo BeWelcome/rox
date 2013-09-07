@@ -4,12 +4,12 @@
 
 $desc = $d->description;
 if ($d->description == '' && $canEdit) {
-    $desc = $words->getBuffered("GalleryAddDescription");
+    $desc = $words->getSilent("GalleryAddDescription");
 }
 ?>
 <p id="g-text"><?=$desc?></p>
 <?php
-$words->flushBuffer();
+echo $words->flushBuffer();
 if ($canEdit  || ($GalleryRight > 1)) {
 ?>
 
@@ -21,15 +21,15 @@ if ($canEdit  || ($GalleryRight > 1)) {
 <form method="post" action="gallery/show/image/<?=$d->id?>/edit" class="def-form">
     <fieldset id="image-edit" class="inline NotDisplayed">
     <legend><?php echo $words->getFormatted('GalleryTitleEdit'); ?></legend>
-    
+
         <div class="row">
             <label for="image-edit-t"><?php echo $words->getFormatted('GalleryLabelTitle'); ?></label><br/>
             <input type="text" id="image-edit-t" name="t" class="short"<?php
                 echo ' value="'.htmlentities($d->title, ENT_COMPAT, 'utf-8').'"';
             ?>/><br/><br/>
             <label for="image-edit-txt"><?php echo $words->getFormatted('GalleryLabelText'); ?></label><br/>
-            <textarea id="image-edit-txt" name="txt" cols="30" rows="4"><?php 
-            echo htmlentities($d->description, ENT_COMPAT, 'utf-8'); 
+            <textarea id="image-edit-txt" name="txt" cols="30" rows="4"><?php
+            echo htmlentities($d->description, ENT_COMPAT, 'utf-8');
             ?></textarea>
             <div id="bcomment-text" class="statbtn"></div>
 	        <input type="hidden" name="<?php echo $callbackId; ?>" value="1"/>
@@ -38,7 +38,7 @@ if ($canEdit  || ($GalleryRight > 1)) {
             <input type="submit" name="button" value="submit" id="button" />
         </div>
         <div class="row">
-        </div>    
+        </div>
 </fieldset>
 </form>
     <script type="text/javascript">
@@ -76,11 +76,11 @@ echo '<a id="link_'.$d->id.'" href="gallery/img?id='.$d->id.'" title="'.$d->titl
 ?>
 </div>
 </div>
-    
+
 <?php
 $shoutsCtrl = new ShoutsController;
 $shoutsCtrl->shoutsList('gallery_items', $d->id);
 
-if ($member) { 
-PPostHandler::clearVars($callbackId); 
+if ($member) {
+PPostHandler::clearVars($callbackId);
 }

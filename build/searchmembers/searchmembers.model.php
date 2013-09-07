@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -86,42 +86,42 @@ SQL;
 
     /**
      * @param
-     * @return associative array mapping language abbreviations to 
+     * @return associative array mapping language abbreviations to
      *             long, English names of the language
      */
     public function getLangNames()
     {
         $this->getLangs();
-        
+
         $l =  '';
         foreach ($this->_langs as $lang) {
             $l .= '\'' . $lang . '\',';
         }
         $l = substr($l, 0, (strlen($l)-1));
-        
+
         $query =<<<SQL
 SELECT  EnglishName, ShortCode
 FROM    languages
 WHERE   ShortCode IN ($l)
 SQL;
         $result = $this->dao->query($query);
-        
+
         $langNames = array();
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $langNames[$row->ShortCode] = $row->EnglishName;
         }
         return $langNames;
     }
-    
+
     public function quicksearch($_searchtext)
     {
         $TMembers = array ();
         $TReturn->searchtext = $_searchtext ;
-        
+
         if(strlen($_searchtext) > 2)
         {
             $searchtext = $this->dao->escape(str_replace('*','%',$_searchtext)); // Allows for wildcard
-        
+
             // search for username
             $where = '';
             $tablelist = '';
@@ -149,7 +149,7 @@ WHERE
     $where
 LIMIT 20
 SQL;
-            
+
             $qry = $this->dao->query($str);
 
             while ($rr = $qry->fetch(PDB::FETCH_OBJ))
@@ -173,7 +173,7 @@ SQL;
 
                 $rr->ProfileSummary = $this->ellipsis($this->FindTrad($rr->ProfileSummary), 100);
                 $rr->result = '';
-    
+
                 $query = $this->dao->query("SELECT SQL_CACHE    *
 FROM
     membersphotos
@@ -183,7 +183,7 @@ WHERE
                 "
                 );
                 $photo = $query->fetch(PDB::FETCH_OBJ);
-    
+
                 if (isset($photo->FilePath)) $rr->photo=$photo->FilePath;
                 else $rr->photo=$this->DummyPict($rr->Gender,$rr->HideGender) ;
                 $rr->photo = MOD_layoutbits::linkWithPicture($rr->Username, $rr->photo);
@@ -194,23 +194,23 @@ WHERE
 
 // Now search in places
         $TPlaces=array() ;
-        
+
                 if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
             $searchtext = $this->dao->escape($_searchtext) ;
             $str = "SELECT DISTINCT(geonames_cache.geonameId) AS geonameid FROM geonames_alternate_names,geonames_cache WHERE alternateName='{$searchtext}' and geonames_alternate_names.geonameid=geonames_cache.geonameid";
             $qry = $this->dao->query($str);
-            
+
             while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
                 $str="select geonames_cache.*,geo_usage.count as NbMembers from geonames_cache left join geo_usage on geonames_cache.geonameid=geo_usage.geoId and typeId=1 where geonames_cache.geonameid=".$rr->geonameid;
                 $result = $this->dao->query($str);
                 $cc = $result->fetch(PDB::FETCH_OBJ);
-                
+
                 // Jeanyves trying to find a bug when venice is search in the quicksearch
                 if (empty($cc->fcode)) {
             		$this->logWrite("SearchMembersModel : Failed to [".$str."] searchtext=[".$searchtext."]", "Bug");
                 }
                 // end of Jeanyves trying to find a bug when venice is search in the quicksearch
-                
+
                 if (($cc->fcode=='PPLI') or ($cc->fcode=='PCLI')or ($cc->fcode=='PCLD')or ($cc->fcode=='PCLS')or ($cc->fcode=='PCLF')or ($cc->fcode=='PCLX')){
                     $cc->TypePlace='country' ; // Becareful this will be use as a word, take care with lowercase, don't change
                     $cc->link="places/".$cc->fk_countrycode ;
@@ -222,7 +222,7 @@ WHERE
                     $sRegion="select name from geonames_cache where geonameid=".$cc->parentAdm1Id;
                     $qryRegion = $this->dao->query($sRegion);
                     $Region=$qryRegion->fetch(PDB::FETCH_OBJ)  ;
-                    
+
                     $sCountry="select name from geonames_cache where geonameid=".$cc->parentCountryId;
                     $qryCountry = $this->dao->query($sCountry);
                     $Country=$qryCountry->fetch(PDB::FETCH_OBJ)  ;
@@ -258,14 +258,14 @@ WHERE
             }
         }// end of search for Places
         $TReturn->TPlaces=$TPlaces ;
-        
-        
+
+
 // Now search in forums tags
         $TForumTags=array() ;
-        
+
         if(strlen($_searchtext) > 1) { // Needs to give more that two chars for a place
             $searchtext=mysql_real_escape_string($_searchtext) ;
-            $str="select forums_tags.id as IdTag,counter as NbThreads 
+            $str="select forums_tags.id as IdTag,counter as NbThreads
             from forums_tags,translations
             where forums_tags.IdName=translations.IdTrad and Sentence='".$searchtext."'" ;
             $qry = $this->dao->query($str);
@@ -276,16 +276,16 @@ WHERE
         }// end of search for forums tags
         $TReturn->TForumTags = $TForumTags;
         return($TReturn) ;
-        
+
     }
-    
+
     private function ellipsis($str, $len)
     {
         $length = strlen($str);
         if($length <= $len) return $str;
         return mb_substr($str, 0, $len, 'utf-8').'...';
     }
-    
+
     /**
      * monstrous beast of a method to search for members by various input
      *
@@ -300,22 +300,22 @@ WHERE
         $limitcount = intval($this->GetParam($vars, 'limitcount', 10)); // Number of records per page
         if ($limitcount > 100) $limitcount = 100;
         $vars['limitcount'] = $limitcount;
-    
+
         $start_rec = intval($this->GetParam($vars, 'start_rec', 0)); // Number of records per page
         $vars['start_rec'] = $start_rec;
 
         // determine sort order
         list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, 'OrderBy', 'Accomodation'), $this->GetParam($vars, 'OrderByDirection',0) ? 1 : 0);
-        
+
         $OrderBy = '';
         if ($order_by != 'Accomodation' && $direction != 'ASC') {
             $OrderBy = 'ORDER BY '. $order_by . ' ' . $direction . ', HasLoggedIn DESC, HasSummary DESC, members.Accomodation ASC, members.LastLogin DESC';
         } else {
             $OrderBy = 'ORDER BY HasLoggedIn DESC, HasSummary DESC, members.Accomodation ASC, members.LastLogin DESC';
         }
-        
+
         $vars['OrderBy'] = $order_by;
-		
+
         // tables to query
         $tablelist = "members, geonames_cache, geonames_countries, addresses";
 
@@ -345,7 +345,7 @@ WHERE
         if (preg_match('/membersgroups/i',$where)) {
             $tablelist .= ', membersgroups';
         }
-        
+
         // map boundaries for search
         if($this->GetParam($vars, "mapsearch")) {
             $where .= ' AND ' . $this->generateMapSearchCond($vars);
@@ -387,7 +387,7 @@ WHERE
 
         return($TMember);
     }
-    
+
     /**
     *
     * Runs a members search with passed restrictions and returns
@@ -401,12 +401,12 @@ WHERE
     * @param    string   $limit: ORDER BY for query
     *
     * @return   array    list of matches (member records)
-    * 
+    *
     * @TODO: Optimise queries (jsfan)
     */
     private function doSearch(&$vars, $tablelist, $where, $orderBy, $start = 0, $limit = 100) {
         $TMember=array();
-        
+
         // This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
         $str = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT
                     members.id AS IdMember,
@@ -425,9 +425,9 @@ WHERE
         $result = $this->dao->query("SELECT FOUND_ROWS() as cnt");
         $row = $result->fetch(PDB::FETCH_OBJ);
         $rCount= $row->cnt;
-    
+
         $vars['rCount'] = $rCount;
-        
+
         while ($rr = $qry->fetch(PDB::FETCH_OBJ)) {
             $sData = 'SELECT
                           m.created,
@@ -498,13 +498,13 @@ WHERE
                 $rr->Age= "Hidden";
             }
 
-            // push found record to list of members to be output 
+            // push found record to list of members to be output
             array_push($TMember, $rr);
         }
 
         return $TMember;
     }
-        
+
    /**
     *
     * If map boundaries provided, creates condition to take them into
@@ -581,7 +581,7 @@ WHERE
     */
     private function generateLocationSearchCond(&$vars) {
         $where = '1=1';
-        
+
         // only use consistent records
         $where .= " AND geonames_cache.geonameid = addresses.IdCity AND addresses.IdMember = members.id AND geonames_countries.iso_alpha2=geonames_cache.fk_countrycode" ;
         if ($IdCountry = $this->GetParam($vars, 'IdCountry', 0)) {
@@ -782,10 +782,10 @@ WHERE
             return "Gender='" . $this->dao->escape($gender) . "' AND HideGender='No'";
         } elseif ($gender == 'genderOther') {
             return "Gender = 'other' AND HideGender='No'";
-        } 
+        }
         return '1=1';
     }
-    
+
    /**
     *
     * Reads passed parameters for age range to search for and processes
@@ -912,7 +912,7 @@ WHERE
         }
         return (0);
     } // end of IdMember
-    
+
     // todo: remove this code. A method like this SHOULD NEVER BE PLACED IN AN APP!
     // THis TestIfIsToReject function check wether the status of the members imply an immediate logoff
     // This for the case a member has just been banned
@@ -924,13 +924,13 @@ WHERE
             die(" You can't use this site anymore") ;
          }
     } // end of funtion IsToReject
-    
+
     private function FindTrad($IdTrad,$ReplaceWithBr=false) {
-    
+
         $AllowedTags = "<b><i><br>";
         if ($IdTrad == "")
             return ("");
-    
+
         if (isset($_SESSION['IdLanguage'])) {
              $IdLanguage=$_SESSION['IdLanguage'] ;
         }
@@ -1005,7 +1005,7 @@ LIMIT 1
             if (!$ReplaceWith) return ($ss);
             return(str_replace("\n","<br>",$ss));
     }
-    
+
     //------------------------------------------------------------------------------
     // fage_value return a  the age value corresponding to date
     private function fage_value($dd) {
@@ -1019,7 +1019,7 @@ LIMIT 1
         elseif (($month_diff==0) && ($day_diff < 0)) $year_diff--;
         return $year_diff;
     } // end of fage_value
-    
+
     /**
      * returns path to a dummy picture
      * function doesn't care about params
@@ -1035,7 +1035,7 @@ LIMIT 1
     {
         return 'images/misc/empty_avatar_30_30.png';
     }
-    
+
     //------------------------------------------------------------------------------
     // function LinkWithPicture build a link with picture and Username to the member profile
     // optional parameter status can be used to alter the link
@@ -1043,7 +1043,7 @@ LIMIT 1
     {
         $words = new MOD_words();
         $Photo=$ParamPhoto ;
-    
+
         if ($Photo=="") {
             $query = $this->dao->query(
                 "
@@ -1058,32 +1058,32 @@ WHERE
             $rr = $query->fetch(PDB::FETCH_OBJ);
             $Photo = $this->DummyPict($rr->Gender,$rr->HideGender) ;
         }
-    
+
         $thumb = $this->getthumb($Photo, 100, 100);
         if ($thumb === null) $thumb = "";
-        
+
         if($Status == 'map_style')
             return "<a href=\"javascript:newWindow('$Username')\" title=\"" . $words->getBuffered("SeeProfileOf", $Username) .
                 "\"><img class=\"framed\" style=\"float: left; margin: 4px\" src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
-    
+
         return "<a href=\"".$this->bwlink("bw/member.php?cid=$Username").
             "\" title=\"" . $words->getBuffered("SeeProfileOf", $Username) .
             "\"><img class=\"framed\" src=\"". $this->bwlink($thumb)."\" height=\"50px\" width=\"50px\" alt=\"Profile\" /></a>";
     } // end of LinkWithPicture
 
-    
+
     // Thumbnail creator. (by markus5, Markus Hutzler 25.02.2007)
     // tested with GD Version: bundled (2.0.28 compatible)
     // with GIF Read Support: Enabled
     // with JPG Support: Enabled
     // with PNG Support: Enabled
-    
+
     // this function creates a thumbnail of a JPEG, GIF or PNG image
     // file: path (with /)!!!
     // max_x / max_y delimit the maximal size. default = 100 (it keeps the ratio)
     // the quality can be set. default = 85
     // this function returns the thumb filename or null
-    
+
     // modified by Fake51
     // $mode specifies if the new image is based on a cropped and resized version of the old, or just a resized
     // $mode = "square" means a cropped version
@@ -1093,9 +1093,9 @@ WHERE
         // TODO: analyze MIME-TYPE of the input file (not try / catch)
         // TODO: error analysis of wrong paths
         // TODO: dynamic prefix (now: /th/)
-    
+
         if($file == "") return null;
-    
+
         $filename = basename($file);
         $filename_noext = substr($filename, 0, strrpos($filename, '.'));
         $filepath = getcwd()."/bw/memberphotos";
@@ -1103,38 +1103,38 @@ WHERE
             $wwwpath = "http://".$_SERVER['HTTP_HOST']."/bw/htdocs/bw/memberphotos";
         else
             $wwwpath = "http://".$_SERVER['HTTP_HOST']."/bw/memberphotos";
-        
+
         $thumbfile = $filename_noext.'.'.$mode.'.'.$max_x.'x'.$max_y.'.jpg';
-    
+
         if(is_file("$filepath/$thumbdir/$thumbfile")) return "$wwwpath/$thumbdir/$thumbfile";
-    
+
         // locate file
-    
+
         if (!is_file("$filepath/$filename")) return null;
-    
+
         // TODO: bw_error("get_thumb: no file found");
-    
+
         if(!is_dir("$filepath/$thumbdir")) return null;
-    
+
         // TODO: bw_error("get_thumb: no directory found");
-    
+
         ini_set("memory_limit",'64M'); //jeanyves increasing the memory these functions need a lot
         // read image
         $image = false;
         if (!$image) $image = @imagecreatefromjpeg("$filepath/$filename");
         if (!$image) $image = @imagecreatefrompng("$filepath/$filename");
         if (!$image) $image = @imagecreatefromgif("$filepath/$filename");
-    
+
         if($image == false) return null;
-    
+
         // calculate ratio
         $size_x = imagesx($image);
         $size_y = imagesy($image);
-    
+
         if($size_x == 0 or $size_y == 0){
             bw_error("bad image size (0)");
         }
-    
+
         switch($mode){
             case "ratio":
                 if (($max_x / $size_x) >= ($max_y / $size_y)){
@@ -1155,7 +1155,7 @@ WHERE
                     $startx = 0;
                     $size_y = $size_x;
                 }
-    
+
                 if ($max_x >= $max_y){
                     $ratio = $max_y / $size_y;
                 } else {
@@ -1163,26 +1163,26 @@ WHERE
                 }
                 break;
         }
-    
+
         $th_size_x = $size_x * $ratio;
         $th_size_y = $size_y * $ratio;
-    
+
         // creating thumb
         $thumb = imagecreatetruecolor($th_size_x,$th_size_y);
         imagecopyresampled($thumb,$image,0,0,$startx,$starty,$th_size_x,$th_size_y,$size_x,$size_y);
-    
+
         // try to write the new image
         imagejpeg($thumb, "$filepath/$thumbdir/$thumbfile", $quality);
         return "$wwwpath/$thumbdir/$thumbfile";
     }
-    
+
     //------------------------------------------------------------------------------
     // bwlink converts a relative link to an absolute link
     // It works from subdirectories too. Result is always relative
     // to the root directory of the site. Works in local environment too.
     // e.g. "" -> "http://www.bewelcome.org/"
     //      "layout/a.php" -> "http://www.bewelcome.org/layout/a.php"
-    
+
     private function bwlink( $target, $useTBroot = false )
     {
         if (strlen($target) > 8)
@@ -1191,7 +1191,7 @@ WHERE
                 substr_compare($target,"http://",0,7)==0)
                 return $target;
         }
-    
+
         if ( $useTBroot )
             $a = PVars::getObj('env')->baseuri . $target;
         else {
@@ -1202,7 +1202,7 @@ WHERE
         }
         return $a;
     }
-    
+
     //------------------------------------------------------------------------------
     // function fUsername return the Username of the member according to its id
     private function fUsername($cid) {
@@ -1225,7 +1225,7 @@ WHERE
         }
         return ("");
     } // end of fUsername
-    
+
     // sql_get_set returns in an array the possible set values of the colum of table name
     public function sql_get_set($table, $column) {
         $query = $this->dao->query(
@@ -1240,7 +1240,7 @@ LIKE '$column'
         $set = preg_replace("/.*\('(.*)'\).*/", "$1", $set);
         return preg_split("/','/", $set); // Split into and array
     } // end of sql_get_set($table,$column)
-    
+
     /**
      * useless function that will with 100% certainty cause many problems later
      * returning a complete a table with unknown rows in it is just not a good
@@ -1251,13 +1251,15 @@ LIKE '$column'
      */
     public function sql_get_groups()
     {
-        return $this->createEntity('Group')->findAll(); 
+        $groupEntity = $this->createEntity('Group');
+        $groupEntity->sql_order = 'Name ASC';
+        return $groupEntity->findAll();
     }
-    
+
     /**
      * returns an array of columns that can be sorted by
      * as well as the word codes for them
-     * 
+     *
      * @access public
      * @return array
      */
@@ -1269,7 +1271,7 @@ LIKE '$column'
     /**
      * returns an array of columns that can be sorted by
      * and the default direction to use
-     * 
+     *
      * @access public
      * @return array
      */

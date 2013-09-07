@@ -30,7 +30,7 @@ if (empty($vars)) {
 } ?></legend>
 <form method="post" id="activity-create-form">
 <input type="hidden" id="activity-id" name="activity-id" value="<?php echo $vars['activity-id']; ?>" />
-<input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" /> 
+<input type="hidden" id="activity-location-id" name="activity-location-id" value="<?php echo $vars['activity-location-id']; ?>" />
 <?php echo $callbackTags;
 if (!empty($errors)) {
     $errStr = '<div class="error">';
@@ -54,7 +54,7 @@ if (!empty($errors)) {
     <div class="row">
         <label for="activity-location"><?php echo $words->get('ActivityLocation'); ?>*</label><br/>
         <input type="text" id="activity-location" name="activity-location" class="long" value="<?php echo $vars['activity-location']; ?>" style="width:70%" />
-        <input class="button" type="submit" id="activity-location-button" name="activity-location-button" value="<?php echo $words->getBuffered('ActivitiesLocationSearch'); ?>" /><?php echo $words->flushBuffer(); ?> 
+        <input class="button" type="submit" id="activity-location-button" name="activity-location-button" value="<?php echo $words->getBuffered('ActivitiesLocationSearch'); ?>" /><?php echo $words->flushBuffer(); ?>
     </div>
     <div id="activity-location-suggestion" style="display: none;">
         <ol id="locations" class="plain"></ol>
@@ -95,8 +95,8 @@ if (!empty($errors)) {
     <div class="row">
         <?php echo $callbackTagsCancelUncancel; ?>
         <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
-        <?php 
-            if (!$this->activity->status == 1 && $vars['activity-id'] != 0) { 
+        <?php
+            if (!$this->activity->status == 1 && $vars['activity-id'] != 0) {
                 echo '<input type="submit" class="back" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityEditCreateCancel') . '"/>';
             }
         ?>
@@ -110,7 +110,7 @@ ActivityGeoSuggest.initialize('activity-create-form');
 
 var startDateTextBox = jQuery('#activity-start-date');
 var endDateTextBox = jQuery('#activity-end-date');
-startDateTextBox.datetimepicker({ 
+startDateTextBox.datetimepicker({
     onClose: function(dateText, inst) {
         if (endDateTextBox.val() != '') {
             var testStartDate = startDateTextBox.datetimepicker('getDate');
@@ -126,12 +126,12 @@ startDateTextBox.datetimepicker({
     onSelect: function (selectedDateTime){
         endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
     },
-    dateFormat: 'yy-mm-dd', 
-    timeFormat: 'HH:mm', 
-    minDate: +1,
+    dateFormat: 'yy-mm-dd',
+    timeFormat: 'HH:mm',
+    minDate: new Date(<?php echo time(); ?>),
     stepMinute: 15
 });
-endDateTextBox.datetimepicker({ 
+endDateTextBox.datetimepicker({
     onClose: function(dateText, inst) {
         if (startDateTextBox.val() != '') {
             var testStartDate = startDateTextBox.datetimepicker('getDate');
@@ -147,9 +147,9 @@ endDateTextBox.datetimepicker({
     onSelect: function (selectedDateTime){
         startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
     },
-    dateFormat: 'yy-mm-dd', 
-    timeFormat: 'HH:mm', 
-    minDate: +1, 
+    dateFormat: 'yy-mm-dd',
+    timeFormat: 'HH:mm',
+    minDate: new Date(<?php echo time(); ?>),
     stepMinute: 15
 });
 //-->

@@ -114,7 +114,7 @@ class MOD_mail
                 $logger = new Swift_Plugins_Loggers_EchoLogger();
                 $mailer->registerPlugin(new Swift_Plugins_LoggerPlugin($logger));
             }
-            return $mailer->batchSend($message);
+            return $mailer->send($message);
         } else {
             return false;
         }

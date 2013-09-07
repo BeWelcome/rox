@@ -287,6 +287,14 @@ class PageWithRoxLayout extends PageWithHTML
         $this->leftSidebar();
     }
 
+    protected function column_col2(){
+
+    }
+
+    protected function leftSidebar(){
+
+    }
+
     protected function volunteerMenu()
     {
         $widget = $this->createWidget('VolunteermenuWidget');

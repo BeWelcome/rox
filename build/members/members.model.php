@@ -480,7 +480,8 @@ INSERT INTO
         TextWhere,
         TextFree,
         AdminAction,
-        created
+        created,
+		updated
     )
     values (
         " . $vars['IdMember'] . ",
@@ -488,7 +489,9 @@ INSERT INTO
         '" . $LenghtComments . "','" . $vars['Quality'] . "',
         '" . $this->dao->escape($vars['TextWhere']) . "',
         '" . $this->dao->escape($vars['TextFree']) . "',
-        '" . $AdminAction . "',now()
+        '" . $AdminAction . "',
+		now(), 
+		now()
     )"
     ;
             $qry = $this->dao->query($str);
@@ -511,7 +514,8 @@ SET
     Lenght='" . $LenghtComments . "',
     Quality='" . $vars['Quality'] . "',
     TextWhere='" . $this->dao->escape($vars['TextWhere']) . "',
-    TextFree='" . $this->dao->escape($vars['TextFree']) . "'
+    TextFree='" . $this->dao->escape($vars['TextFree']) . "',
+	updated = NOW()
 WHERE
     id=" . $TCom->id;
             $qry = $this->dao->exec($str);
@@ -1439,7 +1443,7 @@ VALUES
         {
             $feedback_model = new FeedbackModel;
             $feedback_model->sendFeedback(array(
-                "IdCategory"       => FeedbackModel::OTHER,
+                "IdCategory"       => FeedbackModel::DELETE_PROFILE,
                 "FeedbackQuestion" => $feedback,
             ));
         }

@@ -13,15 +13,17 @@
 class FeedbackModel extends RoxModelBase
 {
 
-    const BUG_PROBLEM        = 1;
-    const ABUSE_REPORT       = 2;
-    const FEEDBACK_AT_SIGNUP = 3;
-    const COMMENT_ISSUE      = 4;
-    const MEDIA              = 5;
-    const FORUM              = 6;
-    const FEATURE_REQUEST    = 7;
-    const VOLUNTEERING       = 8;
-    const OTHER              = 9;
+    const SOFTWARE_ISSUE         = 1;
+    const SAFETY_AND_ABUSE       = 2;
+    const ACCOUNT                = 3;
+    const COMMENT_ISSUE          = 4; 
+    const MEDIA                  = 5;
+    const FORUM_MODERTION        = 6;
+    const SUGGESTIONS            = 7;
+    const VOLUNTEERING           = 8;
+    const OTHER                  = 9;
+    const DELETE_PROFILE         = 10;
+    const GENERAL_FEEDBACK       = 11;
 
     public function getFeedbackCategories()
     {
@@ -29,6 +31,8 @@ class FeedbackModel extends RoxModelBase
             "
 SELECT *, id, name
 FROM feedbackcategories
+WHERE visible = 1
+ORDER BY sortOrder
             ",
             array('IdCategory', false)
         );
@@ -85,9 +89,9 @@ SQL
 
         // Notify volunteers that a new feedback come in
         // This also send the message to OTRS
-        $subj = "New feedback from " . $username . " - Category: " . $category->Name;
+        $subj = "Your feedback in the category '" . str_replace("_", " ", $category->Name) . "' ";
         $text = "Feedback from " . $username . "\r\n";
-        $text .= "Category " . $category->Name . "\r\n\r\n";
+        //$text .= "Category '" . str_replace("_", " ", $category->Name) . "'\r\n\r\n";// information already in subject
 
         // Unserialise data parameter
         if (isset($vars["data"]) && !empty($vars["data"])) {
@@ -107,7 +111,7 @@ SQL
         }
 
         // Write extra data to mail if this is a comment issue
-        if($category->id == self::COMMENT_ISSUE) {
+        if($category->id == self::SAFETY_AND_ABUSE) {
             foreach($data as $key => $value) {
                 $text .= $key . ': ' . $value . "\r\n";
             }

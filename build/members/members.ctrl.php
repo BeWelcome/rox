@@ -228,7 +228,7 @@ class MembersController extends RoxControllerBase
                         $dataEncoded = urlencode(serialize($data));
 
                         // Redirect
-                        $url = 'feedback?IdCategory=4&redirect='
+                        $url = 'feedback?IdCategory=2&redirect='
                             . urlencode($redirect) . '&data=' . $dataEncoded;
                         $this->redirect($url);
                     } else {

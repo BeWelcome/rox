@@ -115,7 +115,7 @@ SQL
         {
             return false;
         }
-        return $this->createEntity('Feedback')->findByWhere("IdFeedbackCategory = " . FeedbackModel::FEEDBACK_AT_SIGNUP . " AND IdMember = {$member->id}");
+        return $this->createEntity('Feedback')->findByWhere("IdFeedbackCategory = " . FeedbackModel::ACCOUNT . " AND IdMember = {$member->id}");
     }
 
     /**

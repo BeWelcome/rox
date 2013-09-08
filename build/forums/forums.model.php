@@ -3240,7 +3240,8 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
      */
     private function cleanupText($txt)
     {
-        $purifier = MOD_htmlpure::get()->getPurifier();
+        $purifier = MOD_htmlpure::get()->getAdvancedHtmlPurifier();
+
         return $purifier->purify($txt);
     } // end of cleanupText
 
@@ -3496,11 +3497,14 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 			}
 
 		if (($rPost->PostVisibility=='GroupOnly') or ($rPost->ThreadVisibility=='GroupOnly')) { // If there is a group restriction, we need to check the membership of the member
-			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$_SESSION["IdMember"]." and IdGroup=".$rPost->IdGroup." and Status='In'");
+		    $query = "select IdGroup from membersgroups where IdMember=".$IdMember." and IdGroup=".$rPost->IdGroup." and Status='In'";
+		    error_log($query);
+			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$IdMember." and IdGroup=".$rPost->IdGroup." and Status='In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groupsmembership for member id =#'.$IdMember.'  !');
 			}
 			$rr=$qry->fetch(PDB::FETCH_OBJ) ;
+			error_log(print_r($rr, true));
 			if (isset($rr->IdGroup)) {	// If the guy is member of the group
 				return(false) ; // He is allowed to see
 			}
@@ -3514,6 +3518,152 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 	} // end of NotAllowedForGroup
 
 
+	/**
+	 * Handle forum notifications
+	 */
+    private function prepare_notification($postId, $type) {
+        // Get post details
+        $query = "
+            SELECT
+                p.threadid as threadId,
+                t.IdGroup as groupId,
+                p.PostVisibility,
+                p.PostDeleted,
+                t.ThreadVisibility,
+                t.ThreadDeleted
+            FROM
+                forums_posts p,
+                forums_threads t
+            WHERE
+                p.threadid = t.id
+                AND p.postid = '" . $this->dao->escape($postId) ."'";
+        error_log($query);
+        $res = $this->dao->query($query);
+        if (!$res) {
+            // just don't set notifications
+            return;
+        }
+        $post = $res->fetch(PDB::FETCH_OBJ);
+
+        // Some checks before we take the long way
+        if (($post->PostDeleted == 'deleted') || ($post->ThreadDeleted == 'deleted')) {
+            return;
+        }
+
+        // get group members in case of a group post to limit subscriptions to tags and threads
+        $groupMembers = array();
+        if ($post->groupId != 0) {
+            $group = $this->createEntity('Group')->findById($post->groupId);
+            $memberEntities = $group->getMembers();
+            foreach($memberEntities as $groupMember) {
+                $groupMembers[] = $groupMember->getPKValue();
+            }
+        }
+        // Set notifications for subscribed tags
+        $query = "
+            SELECT
+                mts.IdSubscriber as subscriber,
+                mts.id as subscriptionId
+            FROM
+                members_tags_subscribed mts,
+                tags_threads tt
+            WHERE
+                tt.IdTag = mts.IdTag
+                AND tt.IdThread = '" . $this->dao->escape($post->threadId) . "'";
+        $res = $this->dao->query($query);
+        if (!$res) {
+            // just don't write notifications
+            return;
+        }
+
+        $members = array(); // collects all members that get a notification (to avoid several notifications for the same post)
+        $membersTemp = array(); // members that will receive a notification because of tags
+        while ($row = $res->fetch(PDB::FETCH_OBJ)) {
+            $membersTemp[$row->subscriber] = $row->subscriptionId;
+            $members[] = $row->subscriber;
+        }
+        if (!empty($membersTemp)) {
+            $count = 0;
+            $query = "
+                INSERT INTO posts_notificationqueue (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`) VALUES ";
+            foreach($membersTemp as $member => $subscriptionId ) {
+                if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
+                    || (array_search($member, $groupMembers) !== false)) {
+                    $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_tags_subscribed', '" . $subscriptionId . "'), ";
+                    $count++;
+                }
+            }
+            if ($count > 0) {
+                $query = substr($query, 0, -2);
+                $this->dao->query($query);
+            }
+        }
+
+        // Set notifications for subscribed threads
+        $query = "
+            SELECT
+                IdSubscriber as subscriber,
+                members_threads_subscribed.id as subscriptionId
+            FROM
+                members_threads_subscribed
+            WHERE IdThread = '" . $this->dao->escape($post->threadId) . "'";
+        $res = $this->dao->query($query);
+        if (!$res) {
+            // just don't write notifications
+            return;
+        }
+        $membersTemp = array();
+        while ($row = $res->fetch(PDB::FETCH_OBJ)) {
+            if (array_search($row->subscriber, $members, true) === false) {
+                $membersTemp[$row->subscriber] = $row->subscriptionId;
+                $members[] = $row->subscriber;
+            }
+        }
+
+        if (!empty($membersTemp)) {
+            $query = "
+                INSERT INTO posts_notificationqueue (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`) VALUES ";
+            $count = 0;
+            foreach($membersTemp as $member => $subscriptionId) {
+                if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
+                    || (array_search($member, $groupMembers) !== false)) {
+                    $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_tags_subscribed', '" . $this->dao->escape($subscriptionId) . "'), ";
+                    $count++;
+                }
+            }
+            if ($count > 0) {
+                $query = substr($query, 0, -2);
+                $this->dao->query($query);
+            }
+        }
+
+        if ($post->groupId != 0) {
+            // We reuse the $group entity from above
+            $subscriberEntities = $group->getEmailAcceptingMembers();
+
+            $membersTemp = array();
+            foreach($subscriberEntities as $subscriber) {
+                $memberId = $subscriber->getPKValue();
+                if (array_search($memberId, $members, true) === false) {
+                    $membersTemp[] = $memberId;
+                    $members[] = $memberId;
+                }
+            }
+            if (!empty($membersTemp)) {
+                $count = 0;
+                $query = "
+                    INSERT INTO posts_notificationqueue (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`) VALUES ";
+                foreach($membersTemp as $member) {
+                    $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'membersgroups', 0), ";
+                    $count++;
+                }
+                if ($count > 0) {
+                    $query = substr($query, 0, -2);
+                    $this->dao->query($query);
+                }
+            }
+        }
+    }
 
 	/**
     // This will compute the needed notifications and will prepare enqueing
@@ -3524,9 +3674,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     // it is not a very big deal if a notification is lost so no need to worry about transations here
 	*/
 
-    private function prepare_notification($IdPost,$Type) {
-        $alwaynotified = array() ;// This will be the list of people who will be notified about every forum activity
-
+    private function prepare_notification_old($IdPost,$Type) {
         // retrieve the post data
         $query = sprintf("select forums_posts.threadid as IdThread,forums_threads.IdGroup as IdGroup,PostVisibility,PostDeleted,ThreadVisibility,ThreadDeleted from forums_posts,forums_threads where forums_posts.threadid=forums_threads.id and forums_posts.postid=%d",$IdPost) ;
         $s = $this->dao->query($query);
@@ -3535,37 +3683,37 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         }
         $rPost = $s->fetch(PDB::FETCH_OBJ) ;
 
-
-
         // retrieve the forummoderator with Scope ALL
-        $query = sprintf("
+        $moderators = array(); // This will be the list of people who will be notified about every forum activity
+
+        $query = "
 SELECT `rightsvolunteers`.`IdMember`
 FROM `rightsvolunteers`,`rights` ,`members`
 WHERE `rightsvolunteers`.`IdRight`=`rights`.`id` and `rights`.`Name`= 'ForumModerator'
-AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` >1
+AND `rightsvolunteers`.`Scope` = '\"All\"' and `rightsvolunteers`.`level` > 1
 AND `members`.`id`=`rightsvolunteers`.`IdMember`
 AND `members`.`Status` in ('Active','ActiveHidden')
-"
-        );
+";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve forum moderators!');
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-            array_push($alwaynotified,$row->IdMember) ;
+            $moderators[] = $row->IdMember ;
         }
-
-        for ($ii=0;$ii<count($alwaynotified);$ii++) {
-            $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`)
-                   VALUES (".$alwaynotified[$ii].",".$IdPost.",now(),'".$Type."')" ;
-                   $result = $this->dao->query($query);
-
-            if (!$result) {
-               throw new PException('prepare_notification failed : for Type='.$Type);
+        if (!empty($moderators)) {
+            $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`) VALUES ";
+            foreach($moderators as $moderator) {
+                $query .= "(" . $moderator.",".$IdPost.",now(),'".$Type."'), " ;
             }
-        } // end of for $ii
-
-
+            $query = substr($query, 0, -2);
+            error_log($query);
+            $s = $this->dao->query($query);
+            if (!$s) {
+                throw new PException('Could not update forum notifications for mods!');
+            }
+        }
+        error_log("tags");
 		 // Check the user who have subscribed to one tag of this thread
         $query = sprintf("select IdSubscriber,members_tags_subscribed.id as IdSubscription from members_tags_subscribed,tags_threads where tags_threads.IdTag=members_tags_subscribed.IdTag and tags_threads.IdThread=%d ",$rPost->IdThread) ;
         $s1 = $this->dao->query($query);
@@ -3588,7 +3736,6 @@ AND `members`.`Status` in ('Active','ActiveHidden')
             if (isset($rAllreadySubscribe->id)) {
                continue ; // We don't introduce another subscription if there is allready a pending one for this post for this member
             }
-
             $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_tags_subscribed',".$rSubscribed->IdSubscription.")" ;
             $result = $this->dao->query($query);
 
@@ -3597,8 +3744,7 @@ AND `members`.`Status` in ('Active','ActiveHidden')
             }
         } // end for each subscriber to this tag
 
-
-
+        error_log("Threads");
         // Check usual members subscription for thread
         // First retrieve the one who are subscribing to this thread
         $query = sprintf("select IdSubscriber,members_threads_subscribed.id as IdSubscription from members_threads_subscribed where IdThread=%d",$rPost->IdThread) ;
@@ -3622,6 +3768,7 @@ AND `members`.`Status` in ('Active','ActiveHidden')
             if (isset($rAllreadySubscribe->id)) {
                continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
             }
+            error_log($IdMember);
 
             $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_threads_subscribed',".$rSubscribed->IdSubscription.")" ;
             $result = $this->dao->query($query);
@@ -3630,7 +3777,7 @@ AND `members`.`Status` in ('Active','ActiveHidden')
                throw new PException('prepare_notification  for Thread=#'.$rPost->IdThread.' failed : for Type='.$Type);
             }
         } // end for each subscriber to this thread
-
+error_log("group");
 
 		 // Check the user who have subscribed to one group of this thread
          /*
@@ -3661,7 +3808,7 @@ AND `members`.`Status` in ('Active','ActiveHidden')
                 if (isset($rAllreadySubscribe->id)) {
                    continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
                 }
-
+error_log($subscriber->getPKValue());
                 $query = <<<SQL
 INSERT INTO posts_notificationqueue (IdMember, IdPost, created, `Type`, TableSubscription, IdSubscription)
 VALUES ('{$subscriber->getPKValue()}','{$IdPost}',now(),'{$Type}','membersgroups',0)

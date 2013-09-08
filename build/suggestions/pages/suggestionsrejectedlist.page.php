@@ -25,16 +25,17 @@ Boston, MA  02111-1307, USA.
  */
 
 /**
- * shows a suggestion
+ * This page lists all Suggestions for which voting is still running
  *
  * @package Apps
  * @subpackage Suggestions
  */
-class SuggestionsApprovePage extends SuggestionsBasePage
+class SuggestionsRejectedListPage extends SuggestionsBasePage
 {
     protected function getSubmenuActiveItem()
     {
-        return 'approve';
+        return 'rejected';
     }
-
 }
+
+

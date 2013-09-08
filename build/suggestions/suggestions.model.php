@@ -6,21 +6,32 @@
  */
 class SuggestionsModel extends RoxModelBase
 {
+    const SUGGESTIONS_DUPLICATE = 0; // suggestion already existed and was there marked as duplicate by suggestion team
+    const SUGGESTIONS_AWAIT_APPROVAL = 1; // wait for suggestion team to check
+    const SUGGESTIONS_DISCUSSION = 2; // discuss the suggestion try to find solutions
+    const SUGGESTIONS_ADD_OPTIONS = 4; // enter solutions into the system (10 days after start)
+    const SUGGESTIONS_VOTING = 8; // allow voting (30 days after switching to discussion mode)
+    const SUGGESTIONS_RANKING = 16; // Voting finished (30 days after voting started). Ranking can be done now.
+    const SUGGESTIONS_REJECTED = 32; // Suggestion didn't reach the necessary level of approval (at least 'good')
+    const SUGGESTIONS_IMPLEMENTING = 64; // Dev started implementing (no more ranking)
+    const SUGGESTIONS_IMPLEMENTED = 128; // Dev finished implementation
+    const SUGGESTIONS_DEV = 192;
+
     public function getSuggestionsCount($type) {
         if (!is_numeric($type) && !is_int($type)) {
             return -1;
         }
 
         switch($type) {
-            case SuggestionsController::SUGGESTIONS_REJECTED:
+            case self::SUGGESTIONS_REJECTED:
                 $query = "SELECT COUNT(*) FROM suggestions WHERE state = "
-                    . SuggestionsController::SUGGESTIONS_REJECTED
-                    . " OR state = " . SuggestionsController::SUGGESTIONS_DUPLICATE;
+                    . self::SUGGESTIONS_REJECTED
+                    . " OR state = " . self::SUGGESTIONS_DUPLICATE;
                 break;
-            case SuggestionsController::SUGGESTIONS_DEV:
+            case self::SUGGESTIONS_DEV:
                 $query = "SELECT COUNT(*) FROM suggestions WHERE state = "
-                    . SuggestionsController::SUGGESTIONS_IMPLEMENTED
-                    . " OR state = " . SuggestionsController::SUGGESTIONS_IMPLEMENTING;
+                    . self::SUGGESTIONS_IMPLEMENTED
+                    . " OR state = " . self::SUGGESTIONS_IMPLEMENTING;
                 break;
             default:
                 $query = "SELECT COUNT(*) FROM suggestions WHERE state = " . $type;
@@ -40,14 +51,14 @@ class SuggestionsModel extends RoxModelBase
         }
         $temp = $this->CreateEntity('Suggestion');
         switch($type) {
-            case SuggestionsController::SUGGESTIONS_REJECTED:
-                $query = "state = " . SuggestionsController::SUGGESTIONS_REJECTED
-                    . " OR state = " . SuggestionsController::SUGGESTIONS_DUPLICATE;
+            case self::SUGGESTIONS_REJECTED:
+                $query = "state = " . self::SUGGESTIONS_REJECTED
+                    . " OR state = " . self::SUGGESTIONS_DUPLICATE;
                 $temp->sql_order = "state DESC, created ASC";
                 break;
-            case SuggestionsController::SUGGESTIONS_DEV:
-                $query = "state = " . SuggestionsController::SUGGESTIONS_IMPLEMENTED
-                    . " OR state = " . SuggestionsController::SUGGESTIONS_IMPLEMENTING;
+            case self::SUGGESTIONS_DEV:
+                $query = "state = " . self::SUGGESTIONS_IMPLEMENTED
+                    . " OR state = " . self::SUGGESTIONS_IMPLEMENTING;
                 $temp->sql_order = "state ASC, created ASC";
                 break;
             default:
@@ -89,7 +100,7 @@ class SuggestionsModel extends RoxModelBase
 
     public function approveSuggestion($id) {
         $suggestion = new Suggestion($id);
-        $suggestion->state = SuggestionsController::SUGGESTIONS_DISCUSSION;
+        $suggestion->state = self::SUGGESTIONS_DISCUSSION;
         $suggestion->modified = date('Y-m-d');
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
         $suggestion->update();
@@ -97,7 +108,7 @@ class SuggestionsModel extends RoxModelBase
 
     public function markDuplicateSuggestion($id) {
         $suggestion = new Suggestion($id);
-        $suggestion->state = SuggestionsController::SUGGESTIONS_DUPLICATE;
+        $suggestion->state = self::SUGGESTIONS_DUPLICATE;
         $suggestion->modified = date('Y-m-d');
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
         $suggestion->update();

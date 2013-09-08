@@ -67,6 +67,12 @@ $R = MOD_right::get();
             )
         )
     ;
+if ($logged_in) {
+echo '<li><b>';
+$roxModel = new RoxModelBase();
+echo $roxModel->getLoggedInMember()->Username . '</b></li>';
+}
+
     foreach($array_of_items as $item) {
         if ($R->hasRight($item[0])) {
             if ($link == $item[1]) {
@@ -89,8 +95,6 @@ $R = MOD_right::get();
 
   <?php if ($logged_in) {
       ?>
-      <li><b><?php $roxModel = new RoxModelBase();
-      echo $roxModel->getLoggedInMember()->Username; ?></b></li>
       <li><img src="styles/css/minimal/images/icon_grey_mail.png" alt="mymessages"/><a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a>
           <?php if ($numberOfNewMessagees > 0) {
               echo "(" . intval($numberOfNewMessagees) . ")";

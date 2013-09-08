@@ -86,9 +86,11 @@ $R = MOD_right::get();
   <li><img src="styles/css/minimal/images/icon_grey_online.png" alt="onlinemembers" /> <a href="online" id="IdLoggedMembers"><?php echo $words->getBuffered('NbMembersOnline', $who_is_online_count); ?></a><?php echo $words->flushBuffer(); ?></li>
 */
 ?>
-  
-  <?php if ($logged_in) { 
+
+  <?php if ($logged_in) {
       ?>
+      <li><b><?php $roxModel = new RoxModelBase();
+      echo $roxModel->getLoggedInMember()->Username; ?></b></li>
       <li><img src="styles/css/minimal/images/icon_grey_mail.png" alt="mymessages"/><a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a>
           <?php if ($numberOfNewMessagees > 0) {
               echo "(" . intval($numberOfNewMessagees) . ")";

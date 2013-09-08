@@ -998,7 +998,7 @@ div.box div.boxbottom div.links {
     width: 10em;
 }
 #login-widget input#login-r {
-    vertical-align: bottom;
+    vertical-align: top;
 }
 #loginmessage {
     width: 100%;

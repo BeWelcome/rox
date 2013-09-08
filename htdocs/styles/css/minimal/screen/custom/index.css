@@ -22,12 +22,12 @@
     border-bottom: none;
 }
 #slideshow-content {
-    width: 360px;
+    width: 560px;
     height: 240px;
 }
 
 h1.slogan {
-    font-size: 3.5em;
+    font-size: 3em;
     padding-top: 0;
     padding-bottom: 0;
 }
@@ -40,7 +40,7 @@ h2 {
 }
 
 .slide {
-    width: 350px;
+    width: 550px;
     height: 230px;
     margin: 0;
     padding: 0;
@@ -100,7 +100,7 @@ td.login_widget {
     padding-left:0;
 }
 #login-widget {
-    padding: 1.3em;
+    padding: 1.5em;
 }
 }
 }

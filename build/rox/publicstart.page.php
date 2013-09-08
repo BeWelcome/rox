@@ -26,8 +26,7 @@ class PublicStartpage extends RoxPageView
         if (isset($_SESSION['Username'])) {
             return $words->getFormatted('WelcomeUsername',$_SESSION['Username']);
         } else {
-            // this should not happen actually!
-            return $words->getFormatted('WelcomeGuest');
+            return 'BeWelcome';
         }
     }
 

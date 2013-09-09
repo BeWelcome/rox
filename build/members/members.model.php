@@ -25,6 +25,7 @@ Boston, MA  02111-1307, USA.
      * @author Lemon-Head
      * @author Lupochen
      * @author Fake51
+     * @author shevek
 	 * @Fix jeanyves (2011-09-19)
      */
 
@@ -50,7 +51,23 @@ class MembersModel extends RoxModelBase
         $this->bootstrap();
     }
 
+    public function getStatuses() {
+        // get list of possible statuses
+        $res = $this->dao->query("SHOW COLUMNS FROM members LIKE 'status'");
+        if (!$res) {
+            return array();
+        }
+        $line = $res->fetch(PDB::FETCH_ASSOC);
+        $set = $line['Type'];
+        $set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
+        return preg_split("/','/", $set); // Split into and array
+    }
 
+    /**
+     *
+     * @param unknown $email
+     * @return boolean|Ambigous <object, mixed>
+     */
     public function getMemberFromEmail($email)
     {
         /**
@@ -981,6 +998,11 @@ ORDER BY
 
         // refactoring to use member entity
 //        $m->LastLogin = '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin)); // Members lastlogin is no to be updated here
+
+        if (isset($vars['Status']) && (!empty($vars['Status']))) {
+            // this can only happen when an admin or the safety team edits a profile
+            $m->Status = $vars['Status'];
+        }
         $m->Gender = $vars['gender'];
         $m->HideGender = $vars['HideGender'];
         $m->BirthDate = $vars['BirthYear'] . '-' . $vars['BirthMonth'] . '-' . $vars['BirthDay'];

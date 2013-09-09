@@ -34,7 +34,17 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                 <col width="35%" ></col>
               </colgroup>
               <tbody>
-                <tr align="left" >
+<?php if ($this->adminedit) : ?>
+                </tr><tr align="left" >
+                  <td class="label" ><?=$words->get('ProfileStatus')?>:</td>
+                  <td colspan="3" >
+                    <select id="Status" name="Status">
+                        <?php echo $statusOptions; ?>
+                    </select>
+                  </td>
+                </tr>
+<?php endif;?>
+              <tr align="left" >
                   <td class="label"><?= $words->get('SignupUsername')?>:</td>
                   <td colspan="3">
                     <strong><?=$member->Username ?></strong>
@@ -54,8 +64,8 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <textarea name="ProfileSummary" id="ProfileSummary" class="long" cols="50"  rows="6" ><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
                   </td>
                 </tr>
-                           
-                
+
+
                 <tr align="left" >
                   <td class="label" ><strong><?=$words->get('SignupBirthDate')?></strong>: *</td>
                   <td colspan="2" >
@@ -109,7 +119,7 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                         <input class="radio" type="radio" id="genderF" name="gender" value="female" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'female') ? ' checked="checked"' : ''); ?>/><label for='genderF'> <?= $words->get('female'); ?></label>&nbsp;&nbsp;
                         <input class="radio" type="radio" id='genderM' name="gender" value="male" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'male') ? ' checked="checked"' : '');?>/><label for='genderM'> <?= $words->get('male'); ?></label>&nbsp;&nbsp;
                         <input class="radio" type="radio" id='genderX' name="gender" value="other" <?= ((isset($vars['Gender']) && $vars['Gender'] == 'other') ? ' checked="checked"' : '');?>/><label for='genderX'> <?= $words->get('GenderOther'); ?></label></td>
-                        
+
                      <td><input name="HideGender" value="Yes" type="checkbox" id='HideGender' <?= ((isset($vars['HideGender']) && $vars['HideGender'] == "Yes") ? ' checked="checked"' : '');?>/><label for='HideGender'> <?= $words->get("Hidden");?></label></td>
                     <?php
                         if (in_array('SignupErrorInvalidGender', $vars['errors']))
@@ -212,7 +222,7 @@ HTML;
                       </tbody>
                       </table>
                     <input type="button" id="langbutton" class="button" name="addlang" value="{$words->getSilent('AddLanguage')}" />
-{$words->flushBuffer()}       
+{$words->flushBuffer()}
                   </td>
                 </tr>
               </tbody>
@@ -637,7 +647,7 @@ HTML;
                     <img class="framed"  src="members/avatar/<?=$Relation->Username?>?xs"  height="50px"  width="50px"  alt="Profile" />
                   </td>
                   <td>
-                    <?php 
+                    <?php
                     echo "<textarea cols=\"40\" rows=\"6\" name=\"", "RelationComment_" . $Relation->id, "\">";
                     echo $comment;
                     echo "</textarea>\n";
@@ -658,7 +668,7 @@ HTML;
 <?php if (1 == 0) : ?>
           <? // Groups (restored by JeanYves) -- disabled ?>
             <?php
-            $my_groups =$vars['Groups']; 
+            $my_groups =$vars['Groups'];
             // $my_groups=array() ; // uncomment this line if you don't want to have groups inside edit profile
             if (!empty($my_groups)) {
             ?>
@@ -706,9 +716,9 @@ HTML;
             </table>
           </fieldset>
             <?php
-            } // end if (!empty($my_groups) 
+            } // end if (!empty($my_groups)
             ?>
-          <?php endif; ?> 
+          <?php endif; ?>
           <table>
             <tbody>
               <tr>

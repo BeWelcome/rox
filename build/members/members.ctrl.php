@@ -357,6 +357,7 @@ class MembersController extends RoxControllerBase
                             {
                                 $page = new EditMyProfilePage();
                                 $page->adminedit = true;
+                                $page->statuses = $this->model->getStatuses();
                                 // $member->edit_mode = true;
                                 if (isset($request[3]) && $request[3] == 'delete')
                                     $page = new DeleteTranslationPage();

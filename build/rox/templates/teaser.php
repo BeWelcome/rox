@@ -29,8 +29,8 @@ $words = new MOD_words();
   <div class="subcolumns">
     <div class="c66l">
       <div class="subcl">
-          <h2 style="padding-bottom:0em;"><?php echo $words->get('IndexPageTagline');?></h2>
-          <p style="padding-bottom:0.5em; text-align:right;"><a class="button2" href="tour" onclick="this.blur();"><?php echo $words->get('tour_take');?></a> </p>
+          <h2 style="padding-bottom:0em; width:560px"><?php echo $words->get('IndexPageTagline');?></h2>
+          <p style="padding-bottom:0.5em; width:560px; text-align:right;"><a class="button2" href="tour" onclick="this.blur();"><?php echo $words->get('tour_take');?></a> </p>
           <div id="slideshow-content">
                 <div class="slide" id="slide1">
                 <img src="images/startpage/octobertales_01.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage1');?>" />
@@ -48,7 +48,7 @@ $words = new MOD_words();
                 <img src="images/startpage/smila_02.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage5');?>" />
                 </div>
                 <div class="slide" id="slide6" style="display: none;">
-                <img src="images/startpage/smila_03.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage6');?>" />
+                <img src="images/startpage/octobertales_02.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage6');?>" />
                 </div>
                 <div class="slide" id="slide7" style="display: none;">
                 <img src="images/startpage/sitatara_02.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage7');?>" />

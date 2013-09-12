@@ -516,7 +516,7 @@ class GroupsModel extends  RoxModelBase
      * @return bool
      * @access public
      */
-    public function updateGroupSettings($group, $description, $type, $visible_posts)
+    public function updateGroupSettings($group, $description, $type, $visible_posts, $visible_comments)
     {
         if (!is_object($group) || !$group->isLoaded())
         {
@@ -532,7 +532,7 @@ class GroupsModel extends  RoxModelBase
             }
         }
 
-        return $group->updateSettings($description, $type, $visible_posts, $picture);
+        return $group->updateSettings($description, $type, $visible_posts, $visible_comments, $picture);
     }
 
     /**
@@ -758,7 +758,8 @@ class GroupsModel extends  RoxModelBase
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
             $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-            $msg->Message = "Hi {$member->Username}<br/><br/>You have been invited to the group {$group->Name}. If you would like to join the group, click the following link: <a href='{$url}/acceptinvitation/{$member->getPKValue()}'>{$url}/acceptinvitation/{$member->getPKValue()}</a>.<br/>If you wish to decline the invitation, please click this link instead: <a href='{$url}/declineinvitation/{$member->getPKValue()}'>{$url}/declineinvitation/{$member->getPKValue()}</a><br/><br/>Have a great time<br/>BeWelcome";
+            $words = $this->getWords();
+            $msg->Message = $words->get('GroupInvitation', $member->Username, $group->Name, $url, $member->getPKValue());
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();

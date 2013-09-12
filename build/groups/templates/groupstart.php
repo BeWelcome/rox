@@ -101,9 +101,11 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
         <?php endforeach; ?>
     </ul>
     <?php
-        $shouts = new ShoutsController();
-        $shouts->shoutsList('groups',$group_id);
-    ?>
+        if (($this->group->VisibleComments == 'yes') && ($memberCount == $visibleMemberCount)){
+            $shouts = new ShoutsController();
+            $shouts->shoutsList('groups',$group_id);
+        }
+    ?> 
     </div><!-- subcolumns -->
 </div> <!-- groups -->
 

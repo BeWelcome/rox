@@ -60,6 +60,10 @@ class MOD_htmlpure
         return self::$_instance;
     }
 
+    private function getDefaultConfig() {
+        return $config;
+    }
+
     /**
      * wrapper for lazy loading and instantiating an HTMLPurifier object
      *
@@ -69,13 +73,16 @@ class MOD_htmlpure
     public function getPurifier()
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
-        return new HTMLPurifier();
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
+        return new HTMLPurifier($config);
     }
 
     public function getBasicHtmlPurifier()
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('AutoFormat.AutoParagraph', true);
         return new HTMLPurifier($config);
@@ -85,6 +92,7 @@ class MOD_htmlpure
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href|target],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('HTML.TargetBlank', true);
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
@@ -104,6 +112,7 @@ class MOD_htmlpure
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote');
         $config->set('HTML.MaxImgLength', '500');
         $config->set('HTML.TargetBlank', true);

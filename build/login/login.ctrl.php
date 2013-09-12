@@ -105,7 +105,7 @@ class LoginController extends RoxControllerBase
                             echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
                             break;
                     	case 'MailToConfirm':
-                    	    $url = PVars::getObj('env')->baseuri . '/signup/resendmail/' . htmlspecialchars($bw_member->Username, ENT_HTML401);
+                    	    $url = PVars::getObj('env')->baseuri . '/signup/resendmail/' . htmlspecialchars($bw_member->Username, ENT_COMPAT | ENT_HTML401, 'utf8');
                     	    $words = $this->getWords();
                     	    echo '<div id="loginmessage" class="false">'. $words->get("LoginErrorMailToConfirm",
                     	       $words->getSilent('LoginErrorMailToConfirmHere'), '<a href=' . $url . '">', '</a>') .'</div>';
@@ -132,6 +132,7 @@ class LoginController extends RoxControllerBase
                     }
                     $this->model->setupBWSession($bw_member);
                     $this->model->setTBUserAsLoggedIn($tb_user);
+                    $this->model->setPreferredLanguage($_SESSION['lang']);
                     if (!empty($post['r']) && $post['r']) { // member wants to stay logged in
                         $bw_member->refreshMemoryCookie(true);
                     }

@@ -758,8 +758,10 @@ class GroupsModel extends  RoxModelBase
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
             $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
+            $urlaccept = '<a href="' . $url . '/acceptinvitation/'. $member->getPKValue() .'">' . $url . '/acceptinvitation/' . $member->getPKValue() . '</a>';
+            $urldecline = '<a href="' . $url . '/declineinvitation/'. $member->getPKValue() .'">' . $url . '/declineinvitation/' . $member->getPKValue() . '</a>';
             $words = $this->getWords();
-            $msg->Message = $words->get('GroupInvitation', $member->Username, $group->Name, $url, $member->getPKValue());
+            $msg->Message = $words->get('GroupInvitation', $member->Username, $group->Name, $urlaccept, $urldecline);
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();

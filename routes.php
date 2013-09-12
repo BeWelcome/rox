@@ -56,7 +56,7 @@
     $this->addRoute('groups_forums_overview_paged','groups/forums/:page_number:', 'GroupsController', 'groupForumsOverview');
     $this->addRoute('groups_mygroups','groups/mygroups', 'GroupsController', 'myGroups');
     $this->addRoute('groups_new','groups/new', 'GroupsController', 'create');
-    $this->addRoute('groups_overview','groups', 'GroupsController', 'index');
+    $this->addRoute('groups_overview','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_realimg','groups/realimg/:group_id:', 'GroupsController', 'realImg');
     $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
     $this->addRoute('groups_thumbimg','groups/thumbimg/:group_id:', 'GroupsController', 'thumbImg');

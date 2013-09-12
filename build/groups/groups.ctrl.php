@@ -429,6 +429,7 @@ class GroupsController extends RoxControllerBase
             $this->redirectToLogin($this->router->url('group_declineinvitation', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
         }
         $this->redirectAbsolute($this->router->url('groups_overview'));
+        $this->setFlashNotice($this->getWords()->getSilent('GroupDeclineSuccess'));
     }
 
     /**

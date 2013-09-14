@@ -846,8 +846,9 @@ class GroupsModel extends  RoxModelBase
                 $msg->SendConfirmation = 'No';
                 $msg->Status = 'ToSend';
                 $msg->SpamInfo = 'NotSpam';
-                $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-                $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
+                $url = '<a href="' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration">' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration</a>';
+                $words = $this->getWords();
+                $msg->Message = $words->get('GroupJoinRequest', $admin->Username, $member->Username, $group->Name, $url);
                 $msg->InFolder = 'Normal';
                 $msg->JoinMemberPict = 'no';
                 $msg->insert();

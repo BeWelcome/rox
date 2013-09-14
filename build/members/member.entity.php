@@ -991,7 +991,6 @@ WHERE IdMember = ".$this->id
         $address->CountryCode = $countryCode;
 
         $this->address = $address;
-        error_log(print_r($this->address, true));
     }
 
     /*

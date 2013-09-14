@@ -14,7 +14,8 @@ class User extends PAppModel
     /**
      * PERL regular expression for user handle
      */
-    const HANDLE_PREGEXP = '%^[a-z][a-z0-9_]{3,}$%i';
+    //const HANDLE_PREGEXP = '%^[a-z][a-z0-9_]{3,}$%i';
+    const HANDLE_PREGEXP = '/^[a-z](?!.*(__|\.\.|--))[a-z0-9-._]{2,18}[a-z0-9]$/i';
 
     /**
      * Constructor
@@ -250,7 +251,7 @@ FROM `user` WHERE
             return $c;
         }
     }
-    
+
     public function logout()
     {
 		$User = APP_User::get();
@@ -495,7 +496,7 @@ VALUES
 				throw new PException('Access should not have been possible');
 			}
 			if( $User->hasRight('groupchange@user')) {
-			
+
 				$vars =& PPostHandler::getVars();
 				$query = sprintf("UPDATE `user` SET `auth_id` = '%d' WHERE `id` = '%d'", $vars['newgroup'], $vars['userid']);
 				$this->dao->query($query);
@@ -509,10 +510,10 @@ VALUES
 	}
     public function getPicture($username) {
         $s = $this->dao->query('SELECT `membersphotos`.`FilePath` as photo
-FROM 	`members` left join `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0 
-WHERE `members`.`username`=\'' . $username . '\' and `members`.`Status`=\'Active\' 
+FROM 	`members` left join `membersphotos` on `membersphotos`.`IdMember`=`members`.`id` and `membersphotos`.`SortOrder`=0
+WHERE `members`.`username`=\'' . $username . '\' and `members`.`Status`=\'Active\'
 limit 1');
-        return $s->fetch(PDB::FETCH_OBJ)->photo;       
-    }    
+        return $s->fetch(PDB::FETCH_OBJ)->photo;
+    }
 }
 ?>

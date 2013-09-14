@@ -10,3 +10,6 @@ htdocs/update_status.txt
 htdocs/revision.txt
 htdocs/cache/
 revision.txt
+.buildpath
+.project
+.idea

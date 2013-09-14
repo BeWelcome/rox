@@ -62,8 +62,9 @@ class MOD_mail
 
     private function __construct()
     {
-        // Load the files we'll need
-        require_once SCRIPT_BASE . "lib/misc/swift-5.0.1/lib/swift_required.php";
+        // Swift autoloader conflicts with the BW autoloader so we need to include swift_init.php
+        // and leave the rest to our autoloader
+        require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
     }
 
     private function __clone() {}
@@ -122,7 +123,7 @@ class MOD_mail
 
     public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array(), $language = 'en')
     {
-        self::init();
+         self::init();
 
         // Check that $to/$from are both arrays
         $from = (is_array($from)) ? $from : explode(',', $from);
@@ -131,18 +132,17 @@ class MOD_mail
         //Create the message
         $message = self::getSwift()
 
-          //Give the message a subject
-          ->setSubject($subject)
+            //Give the message a subject
+            ->setSubject($subject)
 
-          //Set the From address with an associative array
-          ->setFrom($from)
+            //Set the From address with an associative array
+            ->setFrom($from)
 
-          //Set the To addresses with an associative array
-          ->setTo($to)
+            //Set the To addresses with an associative array
+            ->setTo($to)
 
-          //Give it a body
-          ->setBody($body)
-        ;
+            //Give it a body
+            ->setBody($body);
 
         // Translate footer text (used in HTML template)
         $words = new MOD_words();

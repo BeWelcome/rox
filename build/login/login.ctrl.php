@@ -95,6 +95,9 @@ class LoginController extends RoxControllerBase
                 }
             }
 
+            // In case we want to show a message
+            $words = $this->getWords();
+
             if (!$tb_user = $this->model->getTBUserForBWMember($bw_member)) {
                 echo "<div id='loginmessage' class='false'>still no tb user found with handle = '$bw_member->Username'. Giving up.</div>";
             } else {
@@ -102,16 +105,15 @@ class LoginController extends RoxControllerBase
                     // something in the status was not ok.
                     switch ($bw_member->Status) {
                     	case 'SuspendedBeta':
-                            echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
+                            echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorSuspended") .'</div>';
                             break;
                     	case 'MailToConfirm':
-                    	    $url = PVars::getObj('env')->baseuri . '/signup/resendmail/' . htmlspecialchars($bw_member->Username, ENT_COMPAT | ENT_HTML401, 'utf8');
-                    	    $words = $this->getWords();
+                    	    $url = PVars::getObj('env')->baseuri . '/signup/resendmail/' . htmlspecialchars($bw_member->Username);
                     	    echo '<div id="loginmessage" class="false">'. $words->get("LoginErrorMailToConfirm",
                     	       $words->getSilent('LoginErrorMailToConfirmHere'), '<a href=' . $url . '">', '</a>') .'</div>';
                     	    break;
                     	default:
-                    	    echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorSuspended") .'</div>';
+                    	    echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
                     }
                 } else {
                     if ($bw_member->Status != 'Active')
@@ -132,7 +134,9 @@ class LoginController extends RoxControllerBase
                     }
                     $this->model->setupBWSession($bw_member);
                     $this->model->setTBUserAsLoggedIn($tb_user);
-                    $this->model->setPreferredLanguage($_SESSION['lang']);
+                    if ($this->model->setPreferredLanguage()) {
+                        $this->setFlashNotice($words->get('LoginPreferredLanguageSet', $words->getSilent('lang_' . $_SESSION['lang'])));
+                    }
                     if (!empty($post['r']) && $post['r']) { // member wants to stay logged in
                         $bw_member->refreshMemoryCookie(true);
                     }

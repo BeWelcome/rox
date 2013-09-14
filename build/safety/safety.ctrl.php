@@ -10,7 +10,7 @@ class SafetyController extends RoxControllerBase
      * Declaring private variables.
      */
     private $_model;
-    
+
     /**
      * Constructor.
      */
@@ -34,7 +34,7 @@ class SafetyController extends RoxControllerBase
         $page = new SafetyBasicsPage;
 		return $page;
     }
-	
+
 	/**
      * Redirects to safety whattodo
      */
@@ -50,7 +50,7 @@ class SafetyController extends RoxControllerBase
         $page = new SafetyTipsPage;
 		return $page;
     }
-	
+
 	/**
      * Redirects to safety female
      */
@@ -58,7 +58,7 @@ class SafetyController extends RoxControllerBase
         $page = new SafetyFemalePage;
 		return $page;
     }
-	
+
 	/**
      * Redirects to safety faqs
      */
@@ -66,15 +66,16 @@ class SafetyController extends RoxControllerBase
         $page = new SafetyFaqPage;
 		return $page;
     }
-	
+
 	/**
      * Redirects to safety team
      */
     public function safetyTeam() {
         $page = new SafetyTeamPage;
+        $page->listOfMembers = $this->_model->getListOfMembers();
 		return $page;
     }
-	
+
 	/**
      * Redirects to safety contact
      */

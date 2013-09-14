@@ -528,6 +528,25 @@ WHERE   id = $tb_user_id
         );
     }
 
+    public function setPreferredLanguage() {
+        $member = $this->getLoggedInMember();
+        $prefLang = $member->getPreference('PreferenceLanguage', 'none');
+        if ($prefLang === 'none') {
+            // the member has no preferred language set
+            // we use the current one and set that (for stats and to please the translators)
+            $update="
+                INSERT INTO
+                    memberspreferences
+                SET
+                    IdMember = " . $member->id . ",
+                    IdPreference = 1,
+                    Value = " . $_SESSION['IdLanguage'];
+            $this->dao->query($update);
+            return true;
+        }
+        return false;
+    }
+
     public function logout()
     {
         if (!$member = $this->getLoggedInMember())

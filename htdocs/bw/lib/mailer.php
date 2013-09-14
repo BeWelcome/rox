@@ -240,6 +240,7 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
 
 
     $config = HTMLPurifier_Config::createDefault();
+    $config->set('Cache.SerializerPath', '/../../../data');
     $config->set('HTML.Allowed', 'a[href]');
     $purifier = new HTMLPurifier($config);
     $plain_text = $purifier->purify($plain_text);

@@ -37,8 +37,8 @@ class SignupModel extends RoxModelBase
      * user
      * TODO: should get a more specific name - refactoring needed!
      */
-    const HANDLE_PREGEXP = '%^[a-z][a-z0-9_]{3,}$%i';
-
+    // const HANDLE_PREGEXP = '%^[a-z][a-z0-9_-\.]{3,19}$%i';
+    const HANDLE_PREGEXP = '/^[a-z](?!.*(__|\.\.|--))[a-z0-9-._]{2,18}[a-z0-9]$/i';
 
     /**
      * TODO: check, if this is indeed the best form; I don't believe it (steinwinde, 2008-08-04)

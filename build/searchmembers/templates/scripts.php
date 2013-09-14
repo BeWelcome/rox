@@ -54,9 +54,10 @@ var membersDisplayed = decodeURIComponent('<?php echo rawurlencode($words->getBu
 var noMembersFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('FindPeopleNoMembersFound')); ?>');
 var wordOf = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordOf')); ?>');
 var wordFound = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('wordFound')); ?>');
-var logIn = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('logSpaceIn')); ?>');
-var toSee = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('toSee')); ?>');
-var more = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('moreResults')); ?>');
+var searchShowMore = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login/search#login-widget">', '</a>')); ?>');
+//var logIn = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('logSpaceIn')); ?>');
+//var toSee = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('toSee')); ?>');
+//var more = decodeURIComponent('<?php echo rawurlencode($words->getBuffered('moreResults')); ?>');
 
 function addTips() {
 // prototip tips

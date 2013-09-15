@@ -54,7 +54,7 @@ $words = new MOD_words();
                 <img src="images/startpage/sitatara_02.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage7');?>" />
                 </div>
             </div>
-            <p class="small photodesc" style="color: #999; padding-top: 0.5em"><?=$words->get('StartPageNewListofPhotographers');?></p>
+            <p class="small photodesc" style="color: #999; padding-top: 0.5em"><?=$words->get('StartPageNewListofPhotographers');?>: paivisanteri (PD), mikael, OctoberTales, sitatara, smila (CC)</p>
 
             <script type="text/javascript">
 

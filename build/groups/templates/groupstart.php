@@ -32,18 +32,29 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                     // not logged in users cannot join groups
                     echo $words->get('GroupsJoinLoginFirst');
                 } else {
-                    if (!$this->isGroupMember() and $this->group->Type == 'NeedAcceptance') {
-                        // explain users that their application will be moderated
-                        echo $words->getSilent('GroupsJoinNeedAccept');
-                    } ?>
-                    <div class="row clearfix">
-                        <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>">
-                            <span>
-                                <?= ((!$this->isGroupMember()) ? $words->getSilent('GroupsJoinTheGroup') : $words->getSilent('GroupsLeaveTheGroup') ); ?>
-                            </span>
-                        </a>
-                    </div><?= $words->flushBuffer(); ?><br />
-            <?php } // endif logged in member ?>
+                    $model = new GroupsModel();
+                    if ($this->member){$memberid = $this->member->id;} else {$memberid = null;}
+                    switch ($model->getMembershipStatus($this->group,$memberid)){
+                    case 'Kicked' :
+                        // tell user he got banned
+                        echo $words->getSilent('GroupsBanned'); break;
+                    case 'WantToBeIn' :
+                        // tell user he already applied but still needs to wait confirmation
+                        echo $words->getSilent('GroupsAlreadyApplied'); break;
+                    default:
+                        if (!$this->isGroupMember() and $this->group->Type == 'NeedAcceptance') {
+                            // tell user that application will be moderated
+                            echo $words->getSilent('GroupsJoinNeedAccept');
+                        } ?>
+                        <div class="row clearfix">
+                            <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>">
+                                <span>
+                                    <?= ((!$this->isGroupMember()) ? $words->getSilent('GroupsJoinTheGroup') : $words->getSilent('GroupsLeaveTheGroup') ); ?>
+                                </span>
+                            </a>
+                        </div><?php } echo $words->flushBuffer(); ?><br />
+                <?php } // endif logged in member ?>
+                <p>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>

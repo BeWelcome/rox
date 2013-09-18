@@ -218,7 +218,25 @@ class GroupsModel extends  RoxModelBase
         $membership = $this->createEntity('GroupMembership');
         return $membership->countWhere("IdMember = {$this->getLoggedInMember()->getPKValue()} AND Status = 'In'");
     }
-    
+
+    /**
+     * returns the status of a membership
+     *
+     * @access public
+     * @return string
+     */
+    public function getMembershipStatus(Group $group,$memberid){
+        if (!$memberid) {return false;}
+        $status = '';
+        $sql = "SELECT status FROM membersgroups WHERE IdGroup=" . $group->id . " AND IdMember=" . $memberid;
+        $rr = $this->dao->query($sql);
+        if ($rr) {
+            $row = $rr->fetch(PDB::FETCH_OBJ);
+            if ($row){$status = $row->status;}
+        }
+        return $status;
+    }
+      
     /**
      * Find all groups I am member of
      *

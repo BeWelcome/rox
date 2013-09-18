@@ -141,7 +141,7 @@ class PagerWidget extends RoxWidget
                 break;
         }
         $this->page_url = preg_replace("!{$term}!",'', $this->page_url);
-        $this->page_url = str_replace('&', '&amp;', $this->page_url);
+        //$this->page_url = str_replace('&', '&amp;', $this->page_url);
     }
 
     /**
@@ -221,7 +221,15 @@ class PagerWidget extends RoxWidget
                 break;
             case 'get':
             default:
-                $url = $this->page_url . ((strstr($this->page_url, '?')) ? ((substr($this->page_url,-5) == '&amp;' || substr($this->page_url,-1) == '?') ? '' : "&amp;"): "?") . "{$this->page_url_marker}={$page}";
+                $url = $this->page_url .
+                    // add an ampersand if the link does not already end on a questionmark or ampersand
+                    ((strstr($this->page_url, '?')) ?
+                        ((substr($this->page_url,-1) == '&' || substr($this->page_url,-1) == '?') ?
+                         '' :
+                         "&")
+                    : "?") .
+                    // add the pagecounter variable
+                    "{$this->page_url_marker}={$page}";
                 break;
         }
         $url = htmlspecialchars($url, ENT_COMPAT | ENT_QUOTES, 'utf-8');

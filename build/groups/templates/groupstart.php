@@ -26,14 +26,24 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
         <div class="c38r">
             <div class="subcr"><br />
             
-                <?php
-                    if (!APP_user::isBWLoggedIn('NeedMore,Pending')) : ?>
-                    <?= $words->get('GroupsJoinLoginFirst'); ?>
-                <?php else : ?>
-                <div class="row clearfix">
-                    <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>"><span><?= ((!$this->isGroupMember()) ? $words->getSilent('GroupsJoinTheGroup') : $words->getSilent('GroupsLeaveTheGroup') ); ?></span></a>
-                </div><?php echo $words->flushBuffer(); ?><br />
-                <?php endif; ?>
+            <?php
+                
+                if (!APP_user::isBWLoggedIn('NeedMore,Pending')) {
+                    // not logged in users cannot join groups
+                    echo $words->get('GroupsJoinLoginFirst');
+                } else {
+                    if (!$this->isGroupMember() and $this->group->Type == 'NeedAcceptance') {
+                        // explain users that their application will be moderated
+                        echo $words->getSilent('GroupsJoinNeedAccept');
+                    } ?>
+                    <div class="row clearfix">
+                        <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>">
+                            <span>
+                                <?= ((!$this->isGroupMember()) ? $words->getSilent('GroupsJoinTheGroup') : $words->getSilent('GroupsLeaveTheGroup') ); ?>
+                            </span>
+                        </a>
+                    </div><?= $words->flushBuffer(); ?><br />
+            <?php } // endif logged in member ?>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>

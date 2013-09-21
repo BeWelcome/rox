@@ -228,7 +228,10 @@ class GroupsModel extends  RoxModelBase
     public function getMembershipStatus(Group $group,$memberid){
         if (!$memberid) {return false;}
         $status = '';
-        $sql = "SELECT status FROM membersgroups WHERE IdGroup=" . $group->id . " AND IdMember=" . $memberid;
+        $sql = "
+SELECT status
+FROM membersgroups
+WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         $rr = $this->dao->query($sql);
         if ($rr) {
             $row = $rr->fetch(PDB::FETCH_OBJ);

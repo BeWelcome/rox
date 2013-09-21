@@ -33,14 +33,20 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                     echo $words->get('GroupsJoinLoginFirst');
                 } else {
                     $model = new GroupsModel();
-                    if ($this->member){$memberid = $this->member->id;} else {$memberid = null;}
+                    if ($this->member){
+                        $memberid = $this->member->id;
+                    } else {
+                        $memberid = null;
+                    }
                     switch ($model->getMembershipStatus($this->group,$memberid)){
                     case 'Kicked' :
                         // tell user he got banned
-                        echo $words->getSilent('GroupsBanned'); break;
+                        echo $words->getSilent('GroupsBanned');
+                        break;
                     case 'WantToBeIn' :
                         // tell user he already applied but still needs to wait confirmation
-                        echo $words->getSilent('GroupsAlreadyApplied'); break;
+                        echo $words->getSilent('GroupsAlreadyApplied');
+                        break;
                     default:
                         if (!$this->isGroupMember() and $this->group->Type == 'NeedAcceptance') {
                             // tell user that application will be moderated

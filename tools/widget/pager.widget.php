@@ -141,7 +141,6 @@ class PagerWidget extends RoxWidget
                 break;
         }
         $this->page_url = preg_replace("!{$term}!",'', $this->page_url);
-        //$this->page_url = str_replace('&', '&amp;', $this->page_url);
     }
 
     /**

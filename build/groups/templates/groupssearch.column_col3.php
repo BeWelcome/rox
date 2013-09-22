@@ -30,13 +30,13 @@
             ?>
             <p><strong><?php echo $words->get('GroupsSearchOrdered');?>:</strong> <?php echo $words->get('GroupsSearchOrdered' . $this->result_order)?>&nbsp;&nbsp;&nbsp;
             <strong><?= $words->get('GroupsSearchOrder');?></strong>
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$act_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$act_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $act_order); ?></a>
             |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$name_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $name_order); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$name_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $name_order); ?></a>
             |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$member_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $member_order); ?></a>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$member_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderBy' . $member_order); ?></a>
             |
-            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&amp;order=<?=$created_order;?>&amp;<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate' . $created_order); ?></a></p>
+            <a class="grey" href="groups/search?GroupsSearchInput=<?=$this->search_terms;?>&order=<?=$created_order;?>&<?=$this->pager->getActivePageMarker();?>"><?= $words->get('GroupsOrderDate' . $created_order); ?></a></p>
 <?
 // Categories link disabled until we have categories
 //            |

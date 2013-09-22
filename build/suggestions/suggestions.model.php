@@ -43,7 +43,8 @@ class SuggestionsModel extends RoxModelBase
 
     public static function getGroupId() {
         $config = PVars::getObj('suggestions');
-        return $config->groupid;
+        // return $config->groupid;
+        return 1654;
     }
 
     public function getSuggestionsCount($type) {

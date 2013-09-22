@@ -30,10 +30,10 @@ Boston, MA  02111-1307, USA.
  * @package Apps
  * @subpackage Suggestions
  */
-class SuggestionsApprovePage extends SuggestionsBasePage
+class SuggestionsAddOptionsReplyPage extends SuggestionsBasePage
 {
     protected function getSubmenuActiveItem()
     {
-        return 'approve';
+        return 'addoptions';
     }
 }

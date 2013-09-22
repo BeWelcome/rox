@@ -172,6 +172,7 @@ bwrox.selectScripts([
       "blog",
       "forums",
       "groups",
+      "suggestions",
       "trip"
     ]
   },

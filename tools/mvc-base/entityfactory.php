@@ -6,7 +6,7 @@
      *
      * @author Fake51
      */
-     
+
 class RoxEntityFactory
 {
 
@@ -50,6 +50,7 @@ class RoxEntityFactory
         'Role'              => 'build/rights/role.entity',
         'RolePrivilege'     => 'build/rights/roleprivilege.entity',
         'Suggestion'        => 'build/suggestions/suggestion.entity',
+        'SuggestionOption'  => 'build/suggestions/suggestionoption.entity',
         'Thread'            => 'build/forums/thread.entity',
         'ThreadVote'        => 'build/forums/threadvote.entity',
         'VolunteerBoard'    => 'build/admin/volunteerboard.entity',

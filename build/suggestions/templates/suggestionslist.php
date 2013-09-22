@@ -1,23 +1,39 @@
 <?php
+$mod = new MOD_htmlpure();
+$purifier = $mod->getSuggestionsHtmlPurifier();
+$layoutbits = new MOD_layoutbits();
 if (count($this->suggestions) == 0) {
     echo "<p><strong>" . $words->get($this->NoItems) . "</strong></p>";
 } else {
 $this->pager->render(); ?>
-<table id='suggestionlist'>
+<table id='suggestionslist'>
 <?php
     $count= 0;
     foreach($this->suggestions as $suggestion) {
         switch ($suggestion->state) {
             case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
                 include 'approvelistitem.php';
-            break;
+                break;
             case SuggestionsModel::SUGGESTIONS_DISCUSSION:
                 include 'discussionlistitem.php';
-            break;
+                break;
+            case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
+                include 'addoptionslistitem.php';
+                break;
+            case SuggestionsModel::SUGGESTIONS_VOTING:
+                include 'votelistitem.php';
+                break;
+            case SuggestionsModel::SUGGESTIONS_RANKING:
+                include 'rankinglistitem.php';
+                break;
             case SuggestionsModel::SUGGESTIONS_DUPLICATE:
             case SuggestionsModel::SUGGESTIONS_REJECTED:
                 include 'rejectedlistitem.php';
-            break;
+                break;
+            case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
+            case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
+                include 'rejectedlistitem.php';
+                break;
         }
         $count++;
     }

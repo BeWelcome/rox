@@ -10,18 +10,18 @@ class EntityException extends PException {}
 /**
  * Unlike an application model,
  * an "entity" does actually represent a realworld (or imaginary) object!
- * 
+ *
  * This could be a group, a member, whatever.
- * 
+ *
  * The entity has its own database connection
  * and can answer questions about its associations in the database.
- *  
+ *
  */
 class RoxEntityBase extends RoxModelBase
 {
 
     public $sql_order = '';
-    
+
     /**
      * This is the table that the entity belongs to
      * Entity implementations should obviously override this to be meaningful
@@ -36,7 +36,7 @@ class RoxEntityBase extends RoxModelBase
      * @var array
      */
     protected $_columns_cache = array();
-    
+
     /**
      * The primary key of the table, most likely id
      * Again, needs an override in the implementations
@@ -70,7 +70,7 @@ class RoxEntityBase extends RoxModelBase
     protected $_validation_errors = array();
 
     private $_method_cache = array();
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -87,9 +87,9 @@ class RoxEntityBase extends RoxModelBase
     {
         $this->_parameters = $store;
         $this->_dao = $dao;
-    }    
+    }
 
-    /** 
+    /**
      * returns an array of column names for the entity
      *
      * @access public
@@ -104,7 +104,7 @@ class RoxEntityBase extends RoxModelBase
         return $this->_columns_cache;
     }
 
-    /** 
+    /**
      * returns the table name for the entity
      *
      * @access public
@@ -115,7 +115,7 @@ class RoxEntityBase extends RoxModelBase
         return $this->_table_name;
     }
 
-    /** 
+    /**
      * returns an array describing the table of the entity
      *
      * @access public
@@ -243,7 +243,7 @@ class RoxEntityBase extends RoxModelBase
         }
         return $this->_primary_key;
     }
-    
+
     /**
      * returns the value of the entity's primary key
      *
@@ -328,7 +328,7 @@ FROM `{$this->getTableName()}`
 WHERE `{$this->getPrimaryKey()}` = '{$id}'
 SQL;
         return $this->queryForEntity($query);
-    }    
+    }
 
     /**
      * load an object by a specified sql WHERE clause
@@ -516,7 +516,7 @@ SQL;
         {
             $query .= "\nORDER BY " . $this->sql_order;
         }
-        
+
         if (intval($limit) && intval($offset))
         {
             $query .= "\nLIMIT " . intval($limit) . " OFFSET " . intval($offset);
@@ -527,7 +527,7 @@ SQL;
         }
 
         return $this->queryForEntities($query);
-    }    
+    }
 
 /****************** SQL COUNT() functions ******************/
 
@@ -552,7 +552,7 @@ FROM `{$this->getTableName()}`
 SQL;
         return $this->sqlCount($query);
     }
-     
+
     /**
      * returns a count of all the rows in the entity's table
      *
@@ -715,7 +715,7 @@ SQL;
         {
             return false;
         }
-        
+
         $fields = $values = array();
         $description = $this->getTableDescription();
         foreach ($this->getTableDescription() as $field => $info)
@@ -780,7 +780,7 @@ SQL;
         {
             return false;
         }
-        
+
         if (!$this->validateSelf())
         {
             return false;
@@ -809,10 +809,15 @@ SQL;
                 }
             }
             $set_string .= (($set_string != '') ? ', ' : '');
-            $set_string .= "{$key} = '{$this->dao->escape($this->$key)}'";
+            if ($this->$key) {
+                $set_string .= "{$key} = '{$this->dao->escape($this->$key)}'";
+            } else {
+                $set_string .= "{$key} = NULL";
+            }
         }
 
         $query = "UPDATE `{$this->getTableName()}` SET {$set_string} WHERE {$where}";
+
         try
         {
             $this->dao->exec($query);

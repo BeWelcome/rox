@@ -13,11 +13,11 @@ class ForumsController extends PAppController
 {
     private $_model;
     private $_view;
-    
+
     protected $BW_Right;
     protected $BW_Flag;
     protected $request;
-    	
+
     public function __construct() {
         parent::__construct();
         $this->_model = new Forums();
@@ -29,16 +29,16 @@ class ForumsController extends PAppController
         $this->forums_uri = $this->get_forums_uri();
         $this->_model->forums_uri = $this->forums_uri;
     }
-    
+
     public function __destruct() {
         unset($this->_model);
         unset($this->_view);
     }
-    
+
     public function topMenu($currentTab) {
         $this->_view->topMenu($currentTab);
     }
-    
+
     public function get_forums_uri() {
         $request = PRequest::get()->request;
         $uri = array();
@@ -50,7 +50,7 @@ class ForumsController extends PAppController
         $uri = rtrim($uri, '/').'/';
         return $uri;
     }
-        
+
     /**
     * index is called when http request = ./forums
     * or during a new topic/edit of a group
@@ -59,10 +59,10 @@ class ForumsController extends PAppController
         if (PPostHandler::isHandling()) {
             return;
         }
-        
+
         $view = $this->_view;
-        $page = $view->page = new RoxGenericPage(); 
-        
+        $page = $view->page = new RoxGenericPage();
+
         $request = $this->request;
         if (isset($request[0]) && $request[0] != 'forums') {
             // if this is a ./groups url get the group number if any
@@ -78,41 +78,41 @@ class ForumsController extends PAppController
             $request = $new_request;
             $page = $view->page=new PageWithHTMLpart();
         }
-        
+
         // First check if the feature is closed
         if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
             $this->_view->showFeatureIsClosed();
             PPHP::PExit();
              break ;
-        } // end of test "if feature is closed" 
+        } // end of test "if feature is closed"
 
-        
+
         if (APP_User::isBWLoggedIn()) {
             $User = APP_User::login();
         }
         else {
             $User = false;
         }
-         
-        $showSticky = true;        
+
+        $showSticky = true;
 
         $this->parseRequest();
-        
+
         // set uri for correct links in group pages etc.
         $view->uri = $this->uri;
         $page->uri = $this->uri;
-        
+
         $view->BW_Right = $this->BW_Right;
         $page->BW_Right = $this->BW_Right;
-        
+
         $this->_model->prepareForum($showSticky);
-        
+
         // first include the col2-stylesheet
         $page->addStyles .= $view->customStyles();
-        $page->currentTab = 'forums'; 
+        $page->currentTab = 'forums';
         // then the userBar
         $page->newBar .= $view->getAsString('userBar');
-                
+
         // we can't replace this ob_start()
         ob_start();
         if ($this->action == self::ACTION_VOTE_POST) {
@@ -152,12 +152,12 @@ class ForumsController extends PAppController
                  die("You miss right ForumModerator") ;
             }
             $callbackId = $this->ModeratorEditPostProcess();
-             
+
             $DataPost=$this->_model->prepareModeratorEditPost($IdPost);
             $this->_view->showModeratorEditPost($callbackId,$DataPost);
             PPostHandler::clearVars($callbackId);
          }
-		 
+
         elseif ($this->action == self::ACTION_MODERATOR_EDITTAG) {
             if (!isset($request[2])) {
                  die("Need to have a IdTag") ;
@@ -168,7 +168,7 @@ class ForumsController extends PAppController
                  die("You miss right ForumModerator") ;
              }
             $callbackId = $this->ModeratorEditTagProcess();
-             
+
             $DataTag=$this->_model->prepareModeratorEditTag($IdTag);
             $this->_view->showModeratorEditTag($callbackId,$DataTag);
             PPostHandler::clearVars($callbackId);
@@ -177,7 +177,7 @@ class ForumsController extends PAppController
             if ($this->_model->isTopic()) {
                 $this->_model->prepareTopic(true);
                 $this->_view->showTopic();
-            } 
+            }
             else {
                 if ($this->isTopLevel) {
                     $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
@@ -185,7 +185,7 @@ class ForumsController extends PAppController
 
                     $onlymygroupscallbackId = $this->mygroupsonlyProcess();
                     $morelessthreadscallbackid = $this->morelessthreadsProcess();
-                    $this->_view->showTopLevelLandingPage($onlymygroupscallbackId, $morelessthreadscallbackid); 
+                    $this->_view->showTopLevelLandingPage($onlymygroupscallbackId, $morelessthreadscallbackid);
                     PPostHandler::clearVars($onlymygroupscallbackId);
                     PPostHandler::clearVars($morelessthreadscallbackid);
                 } else {
@@ -196,17 +196,17 @@ class ForumsController extends PAppController
         }
         else if ($this->action == self::ACTION_VIEW_CATEGORY) {
             $this->_view->showTopLevelCategories();
-        } 
+        }
         else if ($this->action == self::ACTION_VIEW_LASTPOSTS) {
             $callbackId = $this->mygroupsonlyProcess();
             $this->_view->showTopLevelRecentPosts($callbackId);
             PPostHandler::clearVars($callbackId);
-        } 
+        }
         else if ($this->action == self::ACTION_VIEW_LANDING) {
             $callbackId = $this->mygroupsonlyProcess();
             $this->_view->showTopLevelLandingPage($callbackId);
             PPostHandler::clearVars($callbackId);
-        } 
+        }
         else if ($this->action == self::ACTION_VIEW_FORUM) {
             $this->_view->showTopLevelRecentPosts();
         }
@@ -217,7 +217,7 @@ class ForumsController extends PAppController
         }
         else if ($this->action == self::ACTION_RULES) {
             $this->_view->rules();
-        } 
+        }
         else if ($this->action == self::ACTION_NEW) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
@@ -238,7 +238,7 @@ class ForumsController extends PAppController
             $callbackId = $this->createProcess();
             $this->_view->createTopic($callbackId,$IdGroup);
             PPostHandler::clearVars($callbackId);
-        } 
+        }
         else if ($this->action == self::ACTION_REPORT_TO_MOD) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if the user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
@@ -248,7 +248,7 @@ class ForumsController extends PAppController
                 PRequest::home();
             }
             $callbackId = $this->reportpostProcess();
-			
+
 			if (isset($request[2])) {
 				if ($request[2]=='AllMyReport') {
 					$DataPost=$this->_model->prepareReportList($_SESSION["IdMember"],""); // This retrieve all the reports for the current member
@@ -259,7 +259,7 @@ class ForumsController extends PAppController
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
 				elseif ($request[2]=='AllActiveReports') {
-					$DataPost=$this->_model->prepareReportList(0,"('Open','OnDiscussion')"); // This retrieve all the current Active pending report 
+					$DataPost=$this->_model->prepareReportList(0,"('Open','OnDiscussion')"); // This retrieve all the current Active pending report
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
 				else {
@@ -290,7 +290,7 @@ class ForumsController extends PAppController
             $callbackId = $this->replyProcess();
             $this->_view->replyTopic($callbackId);
             PPostHandler::clearVars($callbackId);
-        } 
+        }
         else if ($this->action == self::ACTION_SUGGEST) {
             // ignore current request, so we can use the last request
             PRequest::ignoreCurrentRequest();
@@ -300,8 +300,8 @@ class ForumsController extends PAppController
             $new_tags = $this->_model->suggestTags($request[2]);
             echo $this->_view->generateClickableTagSuggestions($new_tags);
             PPHP::PExit();
-            break;        
-        } 
+            break;
+        }
         else if ($this->action == self::ACTION_LOCATIONDROPDOWNS) {
             // ignore current request, so we can use the last request
             PRequest::ignoreCurrentRequest();
@@ -310,7 +310,7 @@ class ForumsController extends PAppController
             }
             echo $this->_view->getLocationDropdowns();
             PPHP::PExit();
-            break;        
+            break;
         } else if ($this->action == self::ACTION_DELETE) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;
@@ -371,7 +371,7 @@ class ForumsController extends PAppController
                 $this->SubscribeTag($request[3]);
             }
         } else if ($this->action == self::ACTION_SEARCH_SUBSCRIPTION) {
-        
+
             /*
              * Here the following syntax can be used :
              * forums/subscriptions : allow current user to see his subscribtions
@@ -380,19 +380,19 @@ class ForumsController extends PAppController
              * forums/subscriptions/thread/xxx : allow a forum moderator to see all subscribers and subscribtions for thread xxx
              * forums/subscribe/thread/xxx : subscribe to thread xxx
              */
-            
+
             $operation="" ;
             if (isset($request[2])) {
                 $operation=$request[2] ;
             }
             switch($operation) {
-                case "member" ; 
+                case "member" ;
                     $this->searchSubscriptions($request[3]);
                     break ;
-                case "thread" ; 
+                case "thread" ;
                     $this->searchSubscriptions(0,$request[3]);
                     break ;
-                case "unsubscribe" ; 
+                case "unsubscribe" ;
                     if (isset($request[3]) and ($request[3]=='thread')) {
                         $this->UnsubscribeThread($request[4],$request[5]);
                     }
@@ -410,14 +410,14 @@ class ForumsController extends PAppController
                 PRequest::home();
             }
         }
-        
+
         $page->content .= ob_get_contents();
          ob_end_clean();
-        $page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');		 
+        $page->newBar .= $view->getAsString('showCategoriesContinentsTagcloud');
         $page->teaserBar .= $view->getAsString('teaser');
         $page->render();
     } // end of index
-    
+
     private function searchSubscriptions($cid=0,$IdThread=0,$IdTag=0) {
         $TResults = $this->_model->searchSubscriptions($cid,$IdThread,$IdTag);
         $this->_view->displaySearchResultSubscriptions($TResults);
@@ -432,7 +432,7 @@ class ForumsController extends PAppController
         $res = $this->_model->UnsubscribeThread($IdSubscribe,$Key);
         $this->_view->Unsubscribe($res);
     }
-    
+
     private function SubscribeTag($IdTag) {
         $res = $this->_model->SubscribeTag($IdTag);
         $this->_view->SubscribeTag($res);
@@ -443,10 +443,10 @@ class ForumsController extends PAppController
         $res = $this->_model->UnsubscribeTag($IdSubscribe,$Key);
         $this->_view->Unsubscribe($res);
     }
-    
+
     private function searchUserposts($user) {
         // Data will be displayed only if the current user is Logged
-        if (APP_User::isBWLoggedIn()) { 
+        if (APP_User::isBWLoggedIn()) {
             $roxModel = new RoxModelBase;
             $profileVisitor = $roxModel->getLoggedInMember();
             $userId = APP_User::memberId($user);
@@ -455,27 +455,65 @@ class ForumsController extends PAppController
                 $posts = $this->_model->searchUserposts($user);
             } else {
                 $posts = array(); //TODO: post something that says that the user has not enabled that page
-            }       
+            }
         }
         else {
             $posts = array() ;
         }
         $this->_view->displaySearchResultPosts($posts); // TODO: post something suggesting to LogIn or to register to maybe see posts by this user
     }
-    
+
     /**
     * show latest threads belonging to a group
     *
     **/
     public function showExternalGroupThreads($groupId, $showsticky = true) {
-        $request = $this->request;    
+        $request = $this->request;
         $this->parseRequest();
         $this->_model->setGroupId($groupId);
         $this->isTopLevel = false;
         $this->_model->prepareForum($showsticky);
         $this->_view->uri = 'groups/'.$request[1].'/forum/';
         $this->_view->showExternal(true, $showsticky);
-    }          
+    }
+
+    /**
+    * shows one thread of the suggestions group
+    *
+    **/
+    public function showExternalSuggestionsThread($suggestionId, $groupId, $threadId) {
+        $request = $this->request;
+        $this->parseRequest();
+        $this->_model->setGroupId($groupId);
+        $this->_model->setThreadId($threadId);
+        $this->isTopLevel = false;
+        $this->_model->prepareForum();
+        $this->_model->prepareTopic();
+        $this->_view->uri = 'suggestions/' . $suggestionId . '/discuss/forum/';
+        $this->_view->showTopic();
+    }
+
+    /**
+    * allows to reply to a thread in the suggestions group
+    *
+    **/
+    public function showExternalSuggestionsThreadReply($suggestionId, $groupId, $threadId, $urlpart) {
+        $request = $this->request;
+        $this->parseRequest();
+        $this->_model->setGroupId($groupId);
+        $this->_model->setThreadId($threadId);
+        $this->isTopLevel = false;
+        $this->_model->prepareForum();
+        $this->_model->prepareTopic();
+        $this->_model->initLastPosts();
+        $this->_view->suggestionId = $suggestionId;
+        $this->_view->suggestionsGroupId = $groupId;
+        $this->_view->suggestionsThreadId = $threadId;
+        $this->_view->suggestionsUri = 'suggestions/' . $suggestionId . '/' . $urlpart . '/';
+        $callbackId = $this->replySuggestionsProcess();
+        $this->_view->replyTopic($callbackId);
+        PPostHandler::clearVars($callbackId);
+    }
 
     /**
      * Displays a teaser list with latest threads
@@ -494,7 +532,7 @@ class ForumsController extends PAppController
 
     public function editProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
             return $this->_model->editProcess();
@@ -503,10 +541,10 @@ class ForumsController extends PAppController
             return $callbackId;
         }
     }
-    
+
     public function createProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
             return $this->_model->createProcess();
@@ -515,10 +553,10 @@ class ForumsController extends PAppController
             return $callbackId;
         }
     }
-    
+
     public function replyProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
             return $this->_model->replyProcess();
@@ -527,10 +565,23 @@ class ForumsController extends PAppController
             return $callbackId;
         }
     }
-    
+
+    public function replySuggestionsProcess() {
+        $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
+
+        if (PPostHandler::isHandling()) {
+            $groupId = SuggestionsModel::getGroupId();
+            $this->_model->setGroupId($groupId);
+            return $this->_model->replyProcess(true);
+        } else {
+            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            return $callbackId;
+        }
+    }
+
     public function reportpostProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
             return $this->_model->reportpostProcess();
@@ -539,10 +590,10 @@ class ForumsController extends PAppController
             return $callbackId;
         }
     }
-    
+
     public function ModeratorEditPostProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
 //             echo ("here") ;
@@ -552,10 +603,10 @@ class ForumsController extends PAppController
             return $callbackId;
         }
     }
-    
+
     public function ModeratorEditTagProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             $this->parseRequest();
 //             echo ("here") ;
@@ -565,7 +616,7 @@ class ForumsController extends PAppController
             return $callbackId;
         }
     }
-    
+
     public function delProcess() {
         $this->parseRequest();
         $this->_model->delProcess();
@@ -573,7 +624,7 @@ class ForumsController extends PAppController
 
     public function mygroupsonlyProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             return $this->_model->switchShowMyGroupsTopicsOnly();
         } else {
@@ -584,7 +635,7 @@ class ForumsController extends PAppController
 
     public function morelessthreadsProcess() {
         $callbackId = PFunctions::hex2base64(sha1(__METHOD__));
-        
+
         if (PPostHandler::isHandling()) {
             return $this->_model->adjustThreadsCountToShow($step = 3);
         } else {
@@ -592,7 +643,7 @@ class ForumsController extends PAppController
             return $callbackId;
         }
     }
-    
+
     private $action = 0;
     private $isTopLevel = true;
     private $uri = 'forums/';
@@ -620,19 +671,20 @@ class ForumsController extends PAppController
     const ACTION_VIEW_FORUM = 21;
     const ACTION_VIEW_GROUPS = 22;
 
-    
+
     /**
     * Parses a request
     * Extracts the current action, geoname-id, country-code, admin-code, all tags and the threadid from the request uri
     */
     private function parseRequest() {
         $request = $this->request;
+
     //    die ("\$request[1]=".$request[1]) ;
         // If this is a subforum within a group
       if (isset($request[0]) && !isset($request[1]) && $request[0] == 'forums') {
           $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
           $this->action = self::ACTION_VIEW;
-      }  
+      }
 
       if (isset($request[0]) && $request[0] == 'groups') {
             if (isset($request[1])) {
@@ -646,9 +698,9 @@ class ForumsController extends PAppController
                     $this->isTopLevel = false;
                     $this->isTopCategories = false;
                     $this->uri = 'groups/'.$request[1].'/forum/';
-                } 
-            } 
-        } 
+                }
+            }
+        }
         if (!isset($request[1])) {
             $this->_model->setTopMode(Forums::CV_TOPMODE_LANDING);
             $this->action = self::ACTION_VIEW;

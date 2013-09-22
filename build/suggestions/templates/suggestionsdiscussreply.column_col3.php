@@ -13,8 +13,8 @@ if (empty($vars)) {
 // Show suggestion head (as on every page)
 include 'suggestion.php';
 
-// Now load the discussion board and show it
+// Now load the board and show it
 $Forums = new ForumsController;
-$Forums->showExternalSuggestionsThread( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId);
+$Forums->showExternalSuggestionsThreadReply( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId, 'discuss');
 
 ?>

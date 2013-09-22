@@ -39,6 +39,8 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $this->member = $member;
         if ($member) {
             $this->hasSuggestionRight = $this->checkSuggestionRight();
+            $this->disableTinyMCE = $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
+
         }
     }
 
@@ -57,18 +59,13 @@ class SuggestionsBasePage extends PageWithActiveSkin
     {
         $rights = $this->member->getOldRights();
         if (empty($rights)) {
-            error_log("False");
             return false;
         }
-        error_log(print_r($rights, true));
         if (in_array('Suggestions', array_keys($rights))) {
-            error_log("True");
             return true;
         } else {
-            error_log("False");
             return false;
         }
-        error_log("True");
         return true;
     }
 
@@ -77,20 +74,16 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $words = $this->getWords();
         $items = array();
         // The first item might be overwritten in SuggestionsEditCreatePage
-        if ($this->hasSuggestionRight) {
-            $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
-            $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
-            $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
-            $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
-        }
+        $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
+        $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
+        $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
+        $items[] = array('addoptions', 'suggestions/addoptions', $words->getSilent('SuggestionsAddOptions'));
         $items[] = array('vote', 'suggestions/vote', $words->getSilent('SuggestionsVote'));
-        if ($this->hasSuggestionRight) {
-            $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
-            $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
-            $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
-            $items[] = array('process', 'suggestions/process', $words->getSilent('SuggestionsProcess'));
-            $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeam'));
-        }
+        $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
+        $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
+        $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
+        $items[] = array('process', 'suggestions/process', $words->getSilent('SuggestionsProcess'));
+        $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeam'));
         return $items;
     }
 
@@ -100,6 +93,23 @@ class SuggestionsBasePage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css';
        return $stylesheets;
+    }
+
+    protected function getStateSelect($state) {
+        $select = '<select id="suggestion-state" name="suggestion-state">';
+        $words = $this->getWords();
+        $states = SuggestionsModel::getStatesByArray();
+        foreach($states as $key => $wordCode) {
+            $select .= '<option value="' . $key . '"';
+            if ($key == $state) {
+                $select .= ' selected="selected"';
+            }
+            $select .= '">' . $words->getSilent($wordCode) . '</option>';
+        }
+        $select .= '</select>';
+        $select .= $words->flushBuffer();
+        return $select;
     }
 }

@@ -11,7 +11,7 @@
 
 class ForumsView extends RoxAppView {
     private $_model;
-    public $page ;
+    public $page;
     private $words ;
     public $uri;
     public $forum_uri;
@@ -23,6 +23,7 @@ class ForumsView extends RoxAppView {
         $this->BW_Right=$this->_model->BW_Right ;
         $this->uri=$this->getURI() ;
         $this->forum_uri='forums' ;
+        $this->page = new stdClass();
     }
 
 

@@ -31,27 +31,13 @@ if (empty($vars)) {
     }
 } else {
 }
+include 'suggestionserrors.php';
 ?>
 <div>
 <fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); ?></legend>
 <form method="post" id="suggestion-vote-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />
-<?php echo $callbackTags;
-if (!empty($errors)) {
-    $errStr = '<div class="error">';
-    foreach ($errors as $error) {
-        $parts = explode("###", $error);
-        if (count($parts) > 1) {
-            $errStr .= $words->get($parts[0], $parts[1]);
-        } else {
-            $errStr .= $words->get($error);
-        }
-        $errStr .=  "<br />";
-    }
-    $errStr = substr($errStr, 0, -6) . '</div>';
-    echo $errStr;
-}
-?>
+<?php echo $callbackTags; ?>
     <h3><?php echo $purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', date('d.m.Y', $this->suggestion->votingendts)) .  ")"); ?></h3>
     <p><?php echo $purifier->purify($this->suggestion->description); ?></p>
     <hr />

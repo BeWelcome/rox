@@ -1,19 +1,19 @@
 <?php
 
 /**
- * represents a single decision
+ * represents a single suggestion
  *
  */
 class Suggestion extends RoxEntityBase
 {
     protected $_table_name = 'suggestions';
 
-    public function __construct($decisionId = false)
+    public function __construct($suggestionId = false)
     {
         parent::__construct();
-        if ($decisionId)
+        if ($suggestionId)
         {
-            $this->findById($decisionId);
+            $this->findById($suggestionId);
         }
     }
 
@@ -31,26 +31,22 @@ class Suggestion extends RoxEntityBase
         {
             $entityFactory = new RoxEntityFactory();
             $this->creator = $entityFactory->create('Member', $this->createdby);
-            // Add results etc. later
             if ($this->modifiedby) {
                 $this->modifier = $entityFactory->create('Member', $this->modifiedby);
             }
+
             // Load options for this suggestion
-            $options = array();
-            $query = "SELECT * FROM suggestions_options WHERE suggestionId = " . $this->id . " ORDER BY RAND()";
-            $sql = $this->dao->query($query);
-            if ($sql) {
-                while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
-                    $options[] = $row;
-                }
-            }
-            $this->options = $options;
+            $this->options = $entityFactory->create('SuggestionOption')->FindByWhereMany('suggestionId = ' . $this->id);
+
+            // Get number of votes
             $query = "SELECT COUNT(DISTINCT memberHash) AS count FROM suggestions_votes WHERE suggestionId = " . $this->id;
             $sql = $this->dao->query($query);
             if ($sql) {
                 $row = $sql->fetch(PDB::FETCH_OBJ);
                 $this->votes = $row->count;
             }
+
+            // get voting ended
             $query = "SELECT UNIX_TIMESTAMP(votingend) AS votingendts FROM " . $this->_table_name . " WHERE id = " . $this->id;
             if ($result = $this->dao->query($query)) {
                 $timestamp = $result->fetch(PDB::FETCH_OBJ);
@@ -60,5 +56,55 @@ class Suggestion extends RoxEntityBase
             }
         }
         return $status;
+    }
+
+    public function update($status = false) {
+        if ($status) {
+            return parent::update();
+        } else {
+            // update all fields except for the status field
+            // as this might have changed in the mean time
+            $query = "
+                UPDATE
+                    suggestions
+                SET
+                    summary = " . $this->dao->escape($this->summary) . ",
+                    description = " . $this->dao->escape($this->description) . ",
+                    modified = NOW(),
+                    modifiedby = " . $this->getLoggedInMember()->id . "
+                WHERE
+                    id = " . $this->id;
+            $this->dao->query($query);
+        }
+    }
+
+    public function addOption($summary, $description) {
+        $entityFactory = new RoxEntityFactory();
+        $option = $entityFactory->create('SuggestionOption');
+        $option->suggestionId = $this->id;
+        $option->summary = $summary;
+        $option->description = $description;
+        $option->created = date('Y-m-d');
+        $option->createdBy = $this->getLoggedInMember()->id;
+        $option->insert();
+        return $option;
+    }
+
+    public function editOption($optionId, $summary, $description) {
+        $entityFactory = new RoxEntityFactory();
+        $option = $entityFactory->create('SuggestionOption')->findById($optionId);
+        $option->summary = $summary;
+        $option->description = $description;
+        $option->updated = date('Y-m-d');
+        $option->updatedBy = $this->getLoggedInMember()->id;
+        $option->update();
+    }
+
+    public function deleteOption($optionId) {
+        $entityFactory = new RoxEntityFactory();
+        $option = $entityFactory->create('SuggestionOption')->findById($optionId);
+        $option->deleted = date('Y-m-d');
+        $option->deletedBy = $this->getLoggedInMember()->id;
+        $option->update();
     }
 }

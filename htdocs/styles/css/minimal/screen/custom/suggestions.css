@@ -4,6 +4,8 @@
 */
 @media all
 {
+#suggestionslist {width: 100%;}
+	
 .vote input[type="radio"].toggle {
     display: none;
     *display: inline; /* IE8 hack */

@@ -158,6 +158,7 @@
 
     // suggestions feature
     $this->addRoute('suggestions', 'suggestions', 'suggestionsController', 'suggestions');
+    $this->addRoute('suggestions_show', 'suggestions/:id:', 'suggestionsController', 'suggestionsShow');
     $this->addRoute('suggestions_create', 'suggestions/create', 'suggestionsController', 'suggestionsEditCreate');
     $this->addRoute('suggestions_edit', 'suggestions/:id:/edit', 'suggestionsController', 'suggestionsEditCreate');
     $this->addRoute('suggestions_approvelist', 'suggestions/approve', 'suggestionsController', 'suggestionsApproveList');
@@ -166,9 +167,14 @@
     $this->addRoute('suggestions_discusslist', 'suggestions/discuss', 'suggestionsController', 'suggestionsDiscussList');
     $this->addRoute('suggestions_discusslist_pages', 'suggestions/discuss/page/:pageno:', 'suggestionsController', 'suggestionsDiscussList');
     $this->addRoute('suggestions_discuss', 'suggestions/:id:/discuss', 'suggestionsController', 'suggestionsDiscuss');
+    $this->addRoute('suggestions_discuss_reply', 'suggestions/:id:/discuss/reply', 'suggestionsController', 'suggestionsDiscussReply');
     $this->addRoute('suggestions_optionslist', 'suggestions/addoptions', 'suggestionsController', 'suggestionsAddOptionsList');
     $this->addRoute('suggestions_optionslist_pages', 'suggestions/addoptions/page/:pageno:', 'suggestionsController', 'suggestionsAddOptionsList');
-    $this->addRoute('suggestions_options', 'suggestions/discuss/:id:/discuss', 'suggestionsController', 'suggestionsAddOptions');
+    $this->addRoute('suggestions_add_options', 'suggestions/:id:/addoptions', 'suggestionsController', 'suggestionsAddOptions');
+    $this->addRoute('suggestions_add_options_reply', 'suggestions/:id:/addoptions/reply', 'suggestionsController', 'suggestionsAddOptionsReply');
+    $this->addRoute('suggestions_add_options_edit', 'suggestions/:id:/addoptions/:optid:/edit', 'suggestionsController', 'editOption');
+    $this->addRoute('suggestions_add_options_delete', 'suggestions/:id:/addoptions/:optid:/delete', 'suggestionsController', 'deleteOption');
+    $this->addRoute('suggestions_add_options_restore', 'suggestions/:id:/addoptions/:optid:/restore', 'suggestionsController', 'restoreOption');
     $this->addRoute('suggestions_votelist', 'suggestions/vote', 'suggestionsController', 'suggestionsVoteList');
     $this->addRoute('suggestions_votelist_pages', 'suggestions/vote/page/:pageno:', 'suggestionsController', 'suggestionsVoteList');
     $this->addRoute('suggestions_vote', 'suggestions/:id:/vote', 'suggestionsController', 'suggestionsVote');

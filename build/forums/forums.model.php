@@ -304,7 +304,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 				$this->PostGroupsRestriction = $this->PostGroupsRestriction . "," . $rr->IdGroup;
 				$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "," . $rr->IdGroup;
 				array_push($MyGroups,$rr->IdGroup) ; // Save the group list
-			}	;
+			}
+			$this->ThreadGroupsRestriction .= "," . SuggestionsModel::getGroupId();
 			$this->PostGroupsRestriction = $this->PostGroupsRestriction . "))";
 			$this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . "))";
 		}
@@ -1120,8 +1121,8 @@ FROM `forums_posts`
 LEFT JOIN `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`threadid`)
 WHERE `postid` = $this->messageId
 and ($this->PublicPostVisibility)
-            "
-        ;
+            ";
+
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('getEditData :: Could not retrieve Postinfo!');
@@ -1421,18 +1422,29 @@ WHERE `threadid` = '%d' ",
         MOD_log::get()->write("Editing Topic Thread=#".$threadid, "Forum");
     } // end of editTopic
 
-    public function replyProcess() {
+    public function replyProcess($suggestion = false) {
         if (!($User = APP_User::login())) {
             return false;
         }
 
         $vars =& PPostHandler::getVars();
+        $this->checkVarsReply($vars);
 
-	     $this->checkVarsReply($vars);
+        // if thread id is set in $vars we're using forum for suggestions
+        // which means we redirect somewhere else in the end
+        if (isset($vars['ThreadId'])) {
+            $suggestionId = $vars['SuggestionId'];
+            $suggestionUri = $vars['SuggestionURI'];
+            $this->setThreadId($vars['ThreadId']);
+        }
         $this->replyTopic($vars);
 
         PPostHandler::clearVars();
-        return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
+        if ($suggestion) {
+            return PVars::getObj('env')->baseuri. $suggestionUri;
+        } else {
+            return PVars::getObj('env')->baseuri.$this->forums_uri.'s'.$this->threadid;
+        }
     } // end of replyProcess
 
     public function reportpostProcess() {
@@ -2274,7 +2286,6 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
 */
     public function prepareTopic($WithDetail=false) {
         $this->topic = new Topic();
-
         $this->topic->WithDetail = $WithDetail;
 
         // Topic Data
@@ -2312,7 +2323,6 @@ and ($this->ThreadGroupsRestriction)
         }
 
         $topicinfo = $s->fetch(PDB::FETCH_OBJ);
-
 		if (isset($topicinfo->WhoCanReply)) {
 			if ($topicinfo->WhoCanReply=="MembersOnly") {
 				$topicinfo->CanReply=true ;
@@ -3498,13 +3508,11 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
 		if (($rPost->PostVisibility=='GroupOnly') or ($rPost->ThreadVisibility=='GroupOnly')) { // If there is a group restriction, we need to check the membership of the member
 		    $query = "select IdGroup from membersgroups where IdMember=".$IdMember." and IdGroup=".$rPost->IdGroup." and Status='In'";
-		    error_log($query);
 			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$IdMember." and IdGroup=".$rPost->IdGroup." and Status='In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groupsmembership for member id =#'.$IdMember.'  !');
 			}
 			$rr=$qry->fetch(PDB::FETCH_OBJ) ;
-			error_log(print_r($rr, true));
 			if (isset($rr->IdGroup)) {	// If the guy is member of the group
 				return(false) ; // He is allowed to see
 			}
@@ -3537,7 +3545,6 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             WHERE
                 p.threadid = t.id
                 AND p.postid = '" . $this->dao->escape($postId) ."'";
-        error_log($query);
         $res = $this->dao->query($query);
         if (!$res) {
             // just don't set notifications
@@ -3707,13 +3714,12 @@ AND `members`.`Status` in ('Active','ActiveHidden')
                 $query .= "(" . $moderator.",".$IdPost.",now(),'".$Type."'), " ;
             }
             $query = substr($query, 0, -2);
-            error_log($query);
             $s = $this->dao->query($query);
             if (!$s) {
                 throw new PException('Could not update forum notifications for mods!');
             }
         }
-        error_log("tags");
+
 		 // Check the user who have subscribed to one tag of this thread
         $query = sprintf("select IdSubscriber,members_tags_subscribed.id as IdSubscription from members_tags_subscribed,tags_threads where tags_threads.IdTag=members_tags_subscribed.IdTag and tags_threads.IdThread=%d ",$rPost->IdThread) ;
         $s1 = $this->dao->query($query);
@@ -3744,7 +3750,6 @@ AND `members`.`Status` in ('Active','ActiveHidden')
             }
         } // end for each subscriber to this tag
 
-        error_log("Threads");
         // Check usual members subscription for thread
         // First retrieve the one who are subscribing to this thread
         $query = sprintf("select IdSubscriber,members_threads_subscribed.id as IdSubscription from members_threads_subscribed where IdThread=%d",$rPost->IdThread) ;
@@ -3768,7 +3773,6 @@ AND `members`.`Status` in ('Active','ActiveHidden')
             if (isset($rAllreadySubscribe->id)) {
                continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
             }
-            error_log($IdMember);
 
             $query = "INSERT INTO `posts_notificationqueue` (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`)  VALUES (".$IdMember.",".$IdPost.",now(),'".$Type."','members_threads_subscribed',".$rSubscribed->IdSubscription.")" ;
             $result = $this->dao->query($query);
@@ -3777,7 +3781,6 @@ AND `members`.`Status` in ('Active','ActiveHidden')
                throw new PException('prepare_notification  for Thread=#'.$rPost->IdThread.' failed : for Type='.$Type);
             }
         } // end for each subscriber to this thread
-error_log("group");
 
 		 // Check the user who have subscribed to one group of this thread
          /*
@@ -3808,7 +3811,7 @@ error_log("group");
                 if (isset($rAllreadySubscribe->id)) {
                    continue ; // We dont introduce another subscription if there is allready a pending one for this post for this member
                 }
-error_log($subscriber->getPKValue());
+
                 $query = <<<SQL
 INSERT INTO posts_notificationqueue (IdMember, IdPost, created, `Type`, TableSubscription, IdSubscription)
 VALUES ('{$subscriber->getPKValue()}','{$IdPost}',now(),'{$Type}','membersgroups',0)

@@ -16,6 +16,10 @@ if (empty($vars)) {
     $vars['suggestion-summary'] = $this->suggestion->summary;
     $vars['suggestion-description'] = $this->suggestion->description;
 }
+if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
+    $textarea = 'suggestion-description';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
+}
 ?>
 <div>
 <fieldset id="suggestion-create"><legend><?php if ($vars['suggestion-id'] != 0) {

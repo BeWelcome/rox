@@ -68,8 +68,8 @@ class Suggestion extends RoxEntityBase
                 UPDATE
                     suggestions
                 SET
-                    summary = " . $this->dao->escape($this->summary) . ",
-                    description = " . $this->dao->escape($this->description) . ",
+                    summary = '" . $this->dao->escape($this->summary) . "',
+                    description = '" . $this->dao->escape($this->description) . "',
                     modified = NOW(),
                     modifiedby = " . $this->getLoggedInMember()->id . "
                 WHERE

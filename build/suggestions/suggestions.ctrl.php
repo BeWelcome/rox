@@ -17,7 +17,7 @@ class SuggestionsController extends RoxControllerBase
     }
 
     public function suggestions() {
-        $this->redirectAbsolute($this->router->url('suggestions_votelist'));
+        $this->redirectAbsolute($this->router->url('suggestions_about'));
     }
 
     /**
@@ -390,21 +390,21 @@ class SuggestionsController extends RoxControllerBase
         return $page;
     }
 
-    public function suggestionsProcess() {
-        $pageno = 0;
-        if (isset($this->route_vars['pageno'])) {
-            $pageno = $this->route_vars['pageno'] - 1;
-        }
-        $page = new SuggestionsProcessPage($this->_model->getLoggedInMember());
-        return $page;
-    }
-
     public function suggestionsTeam() {
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;
         }
         $page = new SuggestionsTeamPage($this->_model->getLoggedInMember());
+        return $page;
+    }
+
+    public function suggestionsAbout() {
+        $pageno = 0;
+        if (isset($this->route_vars['pageno'])) {
+            $pageno = $this->route_vars['pageno'] - 1;
+        }
+        $page = new SuggestionsAboutPage($this->_model->getLoggedInMember());
         return $page;
     }
 }

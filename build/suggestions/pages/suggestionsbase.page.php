@@ -74,6 +74,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $words = $this->getWords();
         $items = array();
         // The first item might be overwritten in SuggestionsEditCreatePage
+        $items[] = array('about', 'suggestions/about', $words->getSilent('SuggestionsAbout'));
         $items[] = array('create', 'suggestions/create', $words->getSilent('SuggestionsCreate'));
         $items[] = array('approve', 'suggestions/approve', $words->getSilent('SuggestionsAwaitApproval'));
         $items[] = array('discuss', 'suggestions/discuss', $words->getSilent('SuggestionsDiscuss'));
@@ -82,8 +83,8 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
         $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
         $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
-        $items[] = array('process', 'suggestions/process', $words->getSilent('SuggestionsProcess'));
-        $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeam'));
+        $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeams'));
+        
         return $items;
     }
 

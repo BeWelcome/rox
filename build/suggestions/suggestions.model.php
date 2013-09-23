@@ -43,7 +43,7 @@ class SuggestionsModel extends RoxModelBase
 
     public static function getGroupId() {
         $config = PVars::getObj('suggestions');
-        // return $config->groupid;
+        return $config->groupid;
         return 1654;
     }
 
@@ -191,7 +191,7 @@ class SuggestionsModel extends RoxModelBase
         $result = $this->dao->query($query);
 
         $suggestion->threadId = $threadId;
-        $suggestion->update();
+        $suggestion->update(true);
     }
 
     public function markDuplicateSuggestion($id) {

@@ -64,6 +64,16 @@ class Suggestion extends RoxEntityBase
         } else {
             // update all fields except for the status field
             // as this might have changed in the mean time
+//             $voteStart = $this->dao->escape($this->votingstart) ? $this->dao->escape($this->votingstart) : 'NULL';
+//             $voteEnd = $this->dao->escape($this->votingend) ? $this->dao->escape($this->votingend) : 'NULL';
+//             $rankStart = $this->dao->escape($this->rankingstarted) ? $this->dao->escape($this->rankingstarted) : 'NULL';
+//             $rankEnd = $this->dao->escape($this->rankingended) ? $this->dao->escape($this->rankingended) : 'NULL';
+//             ,
+//             threadId = " . $this->dao->escape($this->threadId) . ",
+//             votingstart = " . $voteStart . ",
+//             votingend = " . $voteEnd . ",
+//             rankingstarted = " . $rankStart . ",
+//             rankingended = " . $rankEnd . "
             $query = "
                 UPDATE
                     suggestions

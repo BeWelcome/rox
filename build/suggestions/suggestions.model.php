@@ -39,12 +39,17 @@ class SuggestionsModel extends RoxModelBase
 
     public function __construct() {
         parent::__construct();
+        $this->groupId = $this->getGroupId();
     }
 
     public static function getGroupId() {
-        // $config = PVars::getObj('suggestions');
-        // return $config->groupid;
-        return 1654;
+        $config = PVars::getObj('suggestions');
+        if ($config->groupid) {
+            return $config->groupid;
+        } else {
+            // hard coded group for bewelcome (hack)
+            return 1654;
+        }
     }
 
     public function getSuggestionsCount($type) {
@@ -81,6 +86,11 @@ class SuggestionsModel extends RoxModelBase
         }
         $temp = $this->CreateEntity('Suggestion');
         switch($type) {
+        	case self::SUGGESTIONS_DISCUSSION:
+        	    $query = "state = " . self::SUGGESTIONS_DISCUSSION
+        	    . " OR state = " . self::SUGGESTIONS_ADD_OPTIONS;
+        	    $temp->sql_order = "created ASC";
+        	    break;
             case self::SUGGESTIONS_REJECTED:
                 $query = "state = " . self::SUGGESTIONS_REJECTED
                     . " OR state = " . self::SUGGESTIONS_DUPLICATE;
@@ -106,7 +116,7 @@ class SuggestionsModel extends RoxModelBase
         if (empty($vars['suggestion-summary'])) {
             $errors[] = 'SuggestionsSummaryEmpty';
         }
-        if (strlen($vars['suggestion-description']) > self::SUMMARY_MAX_LEN) {
+        if (strlen($vars['suggestion-summary']) > self::SUMMARY_MAX_LEN) {
             $errors[] = 'SuggestionsSummaryTooLong###' . self::SUMMARY_MAX_LEN . '###';
         }
         if (empty($vars['suggestion-description'])) {
@@ -140,23 +150,29 @@ class SuggestionsModel extends RoxModelBase
         return $suggestion;
     }
 
-    public function approveSuggestion($id) {
-        $suggestion = new Suggestion($id);
-        $suggestion->state = self::SUGGESTIONS_DISCUSSION;
-        $suggestion->modified = date('Y-m-d');
-        $suggestion->modifiedby = $this->getLoggedInMember()->id;
-
-        // Create a new thread in the suggestions group and add the id to the suggestion
+    private function addPost($text, $threadId = false) {
         $words = $this->getWords();
-        $suggestionText = '<p>' . $words->getSilent('SuggestionThreadStart', '<a href="/suggestions/' . $suggestion->id . '/">', '</a>', strip_tags($suggestion->summary)) . '</p>';
-        $suggestionText .= '<p>' . $suggestion->description . '</p>';
         $suggestionsTeam = $this->createEntity('Member')->findByUsername('SuggestionsTeam');
         $insert = "
             INSERT INTO
-                `forums_posts` (`authorid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
+                `forums_posts` (
+                    `authorid`,
+                    `create_time`,
+                    `message`,
+                    `IdWriter`,
+                    `IdFirstLanguageUsed`, ";
+        if ($threadId) {
+            $insert .= "`threadid`, ";
+        }
+        $insert .= "`PostVisibility`)
             VALUES
-                ('" . $this->dao->escape($suggestionsTeam->id) . "', NOW(), '" . $this->dao->escape($suggestionText) . "',
-                    '" . $this->dao->escape($suggestionsTeam->id) ."', 0, 'MembersOnly')";
+                ('" . $this->dao->escape($suggestionsTeam->id) . "', NOW(), '" . $this->dao->escape($text) . "',
+                    '" . $this->dao->escape($suggestionsTeam->id) ."', 0, ";
+        if ($threadId) {
+            $insert .= $threadId . ", ";
+        }
+        $insert .= "'MembersOnly')";
+
         $res = $this->dao->query($insert);
         if (!$res) {
             return false;
@@ -164,11 +180,25 @@ class SuggestionsModel extends RoxModelBase
         $postId = $res->insertId();
 
         // Still needed...
-		$query="UPDATE `forums_posts` SET `id`=`postid` WHERE id=0" ;
+        $query="UPDATE `forums_posts` SET `id`=`postid` WHERE id=0" ;
         $result = $this->dao->query($query);
 
-        $words->InsertInFTrad( $this->dao->escape($suggestionText), 'forums_posts.IdContent', $postId, $suggestionsTeam->id, -1, -1);
+        $words->InsertInFTrad( $this->dao->escape($text), 'forums_posts.IdContent', $postId, $suggestionsTeam->id, -1, -1);
+        return $postId;
+    }
 
+    public function approveSuggestion($id) {
+        $suggestion = new Suggestion($id);
+        $suggestion->state = self::SUGGESTIONS_DISCUSSION;
+        $suggestion->modified = date('Y-m-d');
+        $suggestion->modifiedby = $this->getLoggedInMember()->id;
+
+        $words = $this->getWords();
+        $suggestionText = '<p>' . $words->getSilent('SuggestionThreadStart', '<a href="/suggestions/' . $suggestion->id . '/">', '</a>', strip_tags($suggestion->summary)) . '</p>';
+        $suggestionText .= '<p>' . $suggestion->description . '</p>';
+        $postId = $this->addPost($suggestionText);
+
+        // Create a new thread in the suggestions group and add the id to the suggestion
         $title = $this->dao->escape(strip_tags($suggestion->summary));
         $insert = "
             INSERT INTO
@@ -224,8 +254,18 @@ class SuggestionsModel extends RoxModelBase
         $suggestion = new Suggestion($args->post['suggestion-id']);
         $suggestion->modified = date('Y-m-d');
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
+
+        $words = $this->getWords();
+        $addOptionPostText = '<p>' . $words->getSilent('SuggestionOptionAdded', $args->post['suggestion-option-summary']) . '</p>';
+        $addOptionPostText .= '<p>' . $args->post['suggestion-option-desc'] . '</p>';
+        $postId = $this->addPost($addOptionPostText, $suggestion->threadId);
+
+        $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
+        $result = $this->dao->query($query);
+
         $suggestion->addOption($args->post['suggestion-option-summary'], $args->post['suggestion-option-desc']);
         $suggestion->update();
+
         return $suggestion;
     }
 

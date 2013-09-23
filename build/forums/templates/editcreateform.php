@@ -87,7 +87,6 @@ if ($allow_title) { // New Topic
 
 <form method="post"  onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform" class="fieldset_toggles" id="forumsform">
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
-<?php echo $callbackId; ?>
 <?php
     if (isset($vars['errors']) && is_array($vars['errors'])) {
             if (in_array('title', $vars['errors'])) {

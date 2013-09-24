@@ -26,8 +26,10 @@
                     <?php echo MOD_layoutbits::PIC_50_50($this->suggestion->creator->Username,'',$style='framed float_left'); ?>
                    <a class="username" href="members/<?php echo $this->suggestion->creator->Username; ?>">
                    <?php echo $this->suggestion->creator->Username; ?></a><br />
-                   <span class="small"><b></b></span><br />
-                   <span class="small"><?php echo $this->suggestion->created; ?></span>
+                   <span class="small"><?php echo $this->suggestion->created; ?></span><br />
+                   <?php if ($this->member && $this->member->id == $this->suggestion->createdby) :?>
+                   <span class="small"><a href="suggestions/<?php echo $this->suggestion->id;?>/edit"><?php echo $words->get('SuggestionsEdit'); ?></a></span>
+                   <?php endif;?>
                    </div>
                </div>
                <?php if ($this->suggestion->modifier) : ?>
@@ -37,7 +39,6 @@
                    <?php echo MOD_layoutbits::PIC_50_50($this->suggestion->modifier->Username,'',$style='framed float_left'); ?>
                        <a class="username" href="members/<?php echo $this->suggestion->modifier->Username; ?>">
                        <?php echo $this->suggestion->modifier->Username; ?></a><br />
-                       <span class="small"><b></b></span><br />
                        <span class="small"><?php echo $this->suggestion->modified; ?></span>
                    </div>
                    </div>

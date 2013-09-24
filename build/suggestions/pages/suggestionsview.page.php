@@ -25,18 +25,26 @@ Boston, MA  02111-1307, USA.
  */
 
 /**
- * This page lists all Suggestions for which voting is still running
+ * This page lists all Suggestions for which voting hasn't started yet (which
+ * therefore can still be edited)
  *
  * @package Apps
  * @subpackage Suggestions
  */
-class SuggestionsAddOptionsListPage extends SuggestionsBasePage
+class SuggestionsViewPage extends SuggestionsBasePage
 {
-    protected $NoItems = 'SuggestionsNoAddOptions';
+    protected function getSubmenuItems()
+    {
+        $words = $this->getWords();
+
+        $items = parent::getSubmenuItems();
+        $items[1] = array('view', 'suggestions/' . $this->suggestion->id . '/view', $words->getSilent('SuggestionsView'));
+        return $items;
+    }
 
     protected function getSubmenuActiveItem()
     {
-        return 'addoptions';
+        return 'view';
     }
 }
 

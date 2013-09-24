@@ -65,13 +65,13 @@ Boston, MA  02111-1307, USA.
                                     </div>
                                     <p class="row"></p>
                                     <p class="row">after that</p>
-                    */ ?>
-                    <div class="subcolumns">
+                   */?>
+                    <?php /*<div class="subcolumns">
                         <div class="c50l">
                             <div class="subcl">
 
                                 <h3><?php echo $words->getFormatted('StartpageSearchMember') ?></h3>
-                                <div id="search-bar">
+                                <?<div id="search-bar">
                                     <form id="form1" name="form1" method="get" action="searchmembers">
                                         <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='<?php echo $words->getSilent('StartpageSearchMemberText'); ?>'" value="<?php echo $words->getSilent('StartpageSearchMemberText'); ?>" onfocus="this.value='';" />
                                         <input type="hidden" name="searchopt" id="searchopt" />
@@ -109,7 +109,8 @@ Boston, MA  02111-1307, USA.
 
                             </div> <!-- subcr -->
                         </div> <!--c50r -->
-                    </div> <!-- subclumns -->
+                    </div> <!-- subclumns --> */?>
+                    <p class="big"><?php echo $words->get('StartPageSearchMembers');?></p>
                 </div> <!-- tab2 -->
 
                 <div class="panel<?php echo (isset($_SESSION['Param']) && ($_SESSION['Param']->ToggleDonateBar)) ? ' active-tab-body' : '' ?>" id="tab3">

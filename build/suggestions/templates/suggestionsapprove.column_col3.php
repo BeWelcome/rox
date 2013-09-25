@@ -17,7 +17,8 @@ $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
 }
 include 'suggestion.php';
-?>
+
+if ($this->hasSuggestionRight) : ?>
 <div id='suggestion-form'>
 	<div class="subcolumns">
 		<div class="c62l">
@@ -44,3 +45,4 @@ include 'suggestion.php';
 		<div class="subcr"></div><!-- c38r -->
 	</div><!-- subcolums -->
 </div><!-- suggestion-form -->
+<?php endif; ?>

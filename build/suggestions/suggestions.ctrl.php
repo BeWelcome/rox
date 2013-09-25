@@ -24,14 +24,23 @@ class SuggestionsController extends RoxControllerBase
      * Redirects for a given suggestion to the appropiate page
      */
     public function suggestionsShow() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        if (!$loggedInMember) {
+            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
+        }
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
+        $params = array('id' => $id);
         switch ($suggestion->state) {
         	case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
-        	    $this->redirectAbsolute($this->router->url('suggestions_approve', array('id' => $id)));
+        	    if ($this->_model->hasSuggestionRight($loggedInMember)) {
+        	        $this->redirectAbsolute($this->router->url('suggestions_approve', $params));
+        	    } else {
+        	        $this->redirectAbsolute($this->router->url('suggestions_view', $params));
+        	    }
         	    break;
         	case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-        	    $this->redirectAbsolute($this->router->url('suggestions_discuss', array('id' => $id)));
+        	    $this->redirectAbsolute($this->router->url('suggestions_discuss', $params));
         	    break;
         }
     }
@@ -391,20 +400,18 @@ class SuggestionsController extends RoxControllerBase
     }
 
     public function suggestionsTeam() {
-        $pageno = 0;
-        if (isset($this->route_vars['pageno'])) {
-            $pageno = $this->route_vars['pageno'] - 1;
-        }
         $page = new SuggestionsTeamPage($this->_model->getLoggedInMember());
         return $page;
     }
 
     public function suggestionsAbout() {
-        $pageno = 0;
-        if (isset($this->route_vars['pageno'])) {
-            $pageno = $this->route_vars['pageno'] - 1;
-        }
         $page = new SuggestionsAboutPage($this->_model->getLoggedInMember());
+        return $page;
+    }
+
+    public function suggestionsView() {
+        $page = new SuggestionsViewPage($this->_model->getLoggedInMember());
+        $page->suggestion = new Suggestion($this->route_vars['id']);
         return $page;
     }
 }

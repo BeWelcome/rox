@@ -32,7 +32,7 @@ $this->pager->render(); ?>
                 break;
             case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
             case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
-                include 'rejectedlistitem.php';
+                include 'devlistitem.php';
                 break;
         }
         $count++;

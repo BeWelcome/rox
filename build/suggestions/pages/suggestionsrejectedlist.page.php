@@ -32,6 +32,8 @@ Boston, MA  02111-1307, USA.
  */
 class SuggestionsRejectedListPage extends SuggestionsBasePage
 {
+    protected $NoItems = 'SuggestionsNoRejected';
+
     protected function getSubmenuActiveItem()
     {
         return 'rejected';

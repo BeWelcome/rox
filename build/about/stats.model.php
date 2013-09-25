@@ -424,7 +424,7 @@ LIMIT 0,60
             $stats = fopen($statsdir. $statsfile, "r");
             $dateLine = fgets($stats);
             if ($dateLine == date('Y-m-d')) {
-//                return;
+                return;
             }
         }
 
@@ -525,13 +525,13 @@ LIMIT 0,60
         }
 
         $this->drawCharts($statsdir . 'allmembers', 'Members', $membersAllTime, $labelsAllTime, $membersLast2Month, $labelsLast2Month);
-/*      $this->drawCharts($statsdir . 'newmembers', 'Members', $newMembersAllTime, $labelsAllTime, $newMembersLast2Month, $labelsLast2Month);
+        $this->drawCharts($statsdir . 'newmembers', 'Members', $newMembersAllTime, $labelsAllTime, $newMembersLast2Month, $labelsLast2Month);
         $this->drawCharts($statsdir . 'percentmembers', '% members', $newMembersPercentAllTime, $labelsAllTime, $newMembersPercentLast2Month, $labelsLast2Month);
         $this->drawCharts($statsdir . 'login', 'Members', $membersLoggedInAllTime, $labelsAllTime, $membersLoggedInLast2Month, $labelsLast2Month);
         $this->drawCharts($statsdir . 'percentlogin', '% members', $membersLoggedInPercentAllTime, $labelsAllTime, $membersLoggedInPercentLast2Month, $labelsLast2Month);
         $this->drawCharts($statsdir . 'trust', 'Members', $membersWithPositiveCommentsAllTime, $labelsAllTime, $membersWithPositiveCommentsLast2Month, $labelsLast2Month);
         $this->drawCharts($statsdir . 'messages', 'Messages', $messageSentAllTime, $labelsAllTime, $messageSentLast2Month, $labelsLast2Month);
-*/      $this->drawPieChart($statsdir . 'loginpie', $lastlogingroupedcnt, $lastlogingrouped);
+        $this->drawPieChart($statsdir . 'loginpie', $lastlogingroupedcnt, $lastlogingrouped);
         $this->drawPieChart($statsdir . 'countrypie', $countrycnt, $country);
         $this->drawBarChart($statsdir . 'languagepie', 'Members', $languages, array_keys($languages));
         $this->drawPieChart($statsdir . 'preferredlanguagepie', $preferredLanguages, array_keys($preferredLanguages));

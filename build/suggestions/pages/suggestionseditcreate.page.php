@@ -46,7 +46,6 @@ class SuggestionsEditCreatePage extends SuggestionsBasePage
         return $items;
     }
 
-
     protected function getSubmenuActiveItem()
     {
         if ($this->suggestion->id) {

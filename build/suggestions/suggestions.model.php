@@ -190,8 +190,6 @@ class SuggestionsModel extends RoxModelBase
     public function approveSuggestion($id) {
         $suggestion = new Suggestion($id);
         $suggestion->state = self::SUGGESTIONS_DISCUSSION;
-        $suggestion->modified = date('Y-m-d');
-        $suggestion->modifiedby = $this->getLoggedInMember()->id;
 
         $words = $this->getWords();
         $suggestionText = '<p>' . $words->getSilent('SuggestionThreadStart', '<a href="/suggestions/' . $suggestion->id . '/">', '</a>', strip_tags($suggestion->summary)) . '</p>';
@@ -216,6 +214,7 @@ class SuggestionsModel extends RoxModelBase
 		$query="UPDATE `forums_threads` SET `id`=`threadid` WHERE id=0" ;
         $result = $this->dao->query($query);
 
+        $suggestionsTeam = $this->createEntity('Member')->findByUsername('SuggestionsTeam');
         $words->InsertInFTrad($title, "forums_threads.IdTitle", $threadId, $suggestionsTeam->id, -1, -1);
         $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $threadId, $postId);
         $result = $this->dao->query($query);
@@ -229,7 +228,7 @@ class SuggestionsModel extends RoxModelBase
         $suggestion->state = self::SUGGESTIONS_DUPLICATE;
         $suggestion->modified = date('Y-m-d');
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
-        $suggestion->update();
+        $suggestion->update(true);
     }
 
     public function checkAddOptionVarsOk($args) {

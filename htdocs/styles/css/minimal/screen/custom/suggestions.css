@@ -5,6 +5,7 @@
 @media all
 {
 #suggestionslist {width: 100%;}
+.picbox_activities { width: 240px; }
 	
 .vote input[type="radio"].toggle {
     display: none;

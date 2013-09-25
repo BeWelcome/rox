@@ -66,19 +66,20 @@ Boston, MA  02111-1307, USA.
                                     <p class="row"></p>
                                     <p class="row">after that</p>
                    */?>
-                    <?php /*<div class="subcolumns">
+                    <div class="subcolumns">
                         <div class="c50l">
                             <div class="subcl">
-
-                                <h3><?php echo $words->getFormatted('StartpageSearchMember') ?></h3>
-                                <?<div id="search-bar">
+                                <h3><?php echo $words->getFormatted('FindMembers') ?></h3>
+                                <p><?php echo $words->get('StartPageSearchMembers');?></p>
+                                <?php /*<h3><?php echo $words->getFormatted('StartpageSearchMember') ?></h3>
+                                <div id="search-bar">
                                     <form id="form1" name="form1" method="get" action="searchmembers">
                                         <input name="vars" type="text" class="search-style" id="searchq" size="20" onblur="if(this.value == '') this.value='<?php echo $words->getSilent('StartpageSearchMemberText'); ?>'" value="<?php echo $words->getSilent('StartpageSearchMemberText'); ?>" onfocus="this.value='';" />
                                         <input type="hidden" name="searchopt" id="searchopt" />
                                         <input type="submit" value="<?php echo $words->getSilent('FindPeopleSubmitSearch'); ?>" class="button"/>
                                         <?php echo $words->flushBuffer(); ?>
                                     </form>
-                                </div>
+                                </div>*/?>
 
                             </div> <!-- subcl -->
                         </div> <!-- c50l -->
@@ -97,8 +98,8 @@ Boston, MA  02111-1307, USA.
                                         if ($continent=='OC') { $label = $words->getSilent('Oceania');}
                                         echo '<optgroup label="' . $label . '">';
                                         foreach ($countries_group as $country) { ?>
-                                             <option label="<?=$country->name?>" value="places/<?=$country->country?>"><?=$country->name?> <?=($country->number != 0) ? ('('.$country->number.')') : ''?></option>
-                                        <?php } ?>
+                                             <option label="<?=$country->name?>" value="places/<?=$country->name?>/<?=$country->country?>"><?=$country->name?> <?=($country->number != 0) ? ('('.$country->number.')') : ''?></option>
+                                    <?php } ?>
                                     </optgroup>
                                     <?php } ?>
                                     </select>
@@ -109,8 +110,7 @@ Boston, MA  02111-1307, USA.
 
                             </div> <!-- subcr -->
                         </div> <!--c50r -->
-                    </div> <!-- subclumns --> */?>
-                    <p class="big"><?php echo $words->get('StartPageSearchMembers');?></p>
+                    </div> <!-- subclumns -->
                 </div> <!-- tab2 -->
 
                 <div class="panel<?php echo (isset($_SESSION['Param']) && ($_SESSION['Param']->ToggleDonateBar)) ? ' active-tab-body' : '' ?>" id="tab3">

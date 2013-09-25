@@ -150,7 +150,7 @@ class SuggestionsModel extends RoxModelBase
         return $suggestion;
     }
 
-    private function addPost($text, $threadId = false) {
+    private function addPost($poster, $text, $threadId = false) {
         $words = $this->getWords();
         $suggestionsTeam = $this->createEntity('Member')->findByUsername('SuggestionsTeam');
         $insert = "
@@ -166,8 +166,8 @@ class SuggestionsModel extends RoxModelBase
         }
         $insert .= "`PostVisibility`)
             VALUES
-                ('" . $this->dao->escape($suggestionsTeam->id) . "', NOW(), '" . $this->dao->escape($text) . "',
-                    '" . $this->dao->escape($suggestionsTeam->id) ."', 0, ";
+                ('" . $this->dao->escape($poster) . "', NOW(), '" . $this->dao->escape($text) . "',
+                    '" . $this->dao->escape($poster) ."', 0, ";
         if ($threadId) {
             $insert .= $threadId . ", ";
         }
@@ -183,7 +183,7 @@ class SuggestionsModel extends RoxModelBase
         $query="UPDATE `forums_posts` SET `id`=`postid` WHERE id=0" ;
         $result = $this->dao->query($query);
 
-        $words->InsertInFTrad( $this->dao->escape($text), 'forums_posts.IdContent', $postId, $suggestionsTeam->id, -1, -1);
+        $words->InsertInFTrad( $this->dao->escape($text), 'forums_posts.IdContent', $postId, $poster, -1, -1);
         return $postId;
     }
 
@@ -194,7 +194,7 @@ class SuggestionsModel extends RoxModelBase
         $words = $this->getWords();
         $suggestionText = '<p>' . $words->getSilent('SuggestionThreadStart', '<a href="/suggestions/' . $suggestion->id . '/">', '</a>', strip_tags($suggestion->summary)) . '</p>';
         $suggestionText .= '<p>' . $suggestion->description . '</p>';
-        $postId = $this->addPost($suggestionText);
+        $postId = $this->addPost($suggestion->createdby, $suggestionText);
 
         // Create a new thread in the suggestions group and add the id to the suggestion
         $title = $this->dao->escape(strip_tags($suggestion->summary));
@@ -257,7 +257,7 @@ class SuggestionsModel extends RoxModelBase
         $words = $this->getWords();
         $addOptionPostText = '<p>' . $words->getSilent('SuggestionOptionAdded', $args->post['suggestion-option-summary']) . '</p>';
         $addOptionPostText .= '<p>' . $args->post['suggestion-option-desc'] . '</p>';
-        $postId = $this->addPost($addOptionPostText, $suggestion->threadId);
+        $postId = $this->addPost($suggestion->modifiedby, $addOptionPostText, $suggestion->threadId);
 
         $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
         $result = $this->dao->query($query);

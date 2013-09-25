@@ -32,6 +32,7 @@ class SuggestionsController extends RoxControllerBase
         $suggestion = new Suggestion($id);
         $params = array('id' => $id);
         switch ($suggestion->state) {
+
         	case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
         	    if ($this->_model->hasSuggestionRight($loggedInMember)) {
         	        $this->redirectAbsolute($this->router->url('suggestions_approve', $params));

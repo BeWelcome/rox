@@ -159,7 +159,7 @@
     // suggestions feature
     $this->addRoute('suggestions', 'suggestions', 'suggestionsController', 'suggestions');
     $this->addRoute('suggestions_show', 'suggestions/:id:', 'suggestionsController', 'suggestionsShow');
-    $this->addRoute('suggestion_view', 'suggestions/:id:/view', 'suggestionsController', 'suggestionsView');
+    $this->addRoute('suggestions_view', 'suggestions/:id:/view', 'suggestionsController', 'suggestionsView');
     $this->addRoute('suggestions_create', 'suggestions/create', 'suggestionsController', 'suggestionsEditCreate');
     $this->addRoute('suggestions_edit', 'suggestions/:id:/edit', 'suggestionsController', 'suggestionsEditCreate');
     $this->addRoute('suggestions_approvelist', 'suggestions/approve', 'suggestionsController', 'suggestionsApproveList');

@@ -54,10 +54,10 @@ class SafetyController extends RoxControllerBase
 	/**
      * Redirects to safety female
      */
-    public function safetyFemale() {
+    /*public function safetyFemale() {
         $page = new SafetyFemalePage;
 		return $page;
-    }
+    }*/
 
 	/**
      * Redirects to safety faqs

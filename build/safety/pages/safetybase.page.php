@@ -56,7 +56,7 @@ class SafetyBasePage extends PageWithActiveSkin
 		$items[] = array('basics', 'safety/basics', $words->getSilent('SafetyBasics'));
 		$items[] = array('whattodo', 'safety/whattodo', $words->getSilent('SafetyWhatToDo'));
 		$items[] = array('tips', 'safety/tips', $words->getSilent('SafetyTips'));
-		$items[] = array('female', 'safety/female', $words->getSilent('SafetyFemale'));
+		/*$items[] = array('female', 'safety/female', $words->getSilent('SafetyFemale'));*/
 		$items[] = array('faq', 'safety/faq', $words->getSilent('SafetyFAQ'));
 		$items[] = array('team', 'safety/team', $words->getSilent('SafetyTeam'));
 		$items[] = array('contact', 'feedback?IdCategory=2', $words->getSilent('SafetyContact'));

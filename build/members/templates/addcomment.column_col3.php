@@ -18,6 +18,9 @@
     if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
         // this is a fresh form
         $ttLenght = ($TCom) ? explode(',',$TCom->Lenght) : array();
+        if ($this->commentGuidelinesRead) {
+            $vars["CommentGuidelines"] = 'checked';
+        }
     } else {
         // last time something went wrong.
         // recover old form input.
@@ -104,10 +107,15 @@
     <input name="IdMember" value="<?=$member->id?>" type="hidden" />
         <table valign="center" >
           <tr>
-            <td colspan=2><h3><?=$words->get("CommentQuality" , $Username)?></h3><br /><?=$words->get("RuleForNeverMetComment")?></td>
+            <td colspan=2>
+                <h2><?=$words->get("CommentHeading" , $Username)?></h2>
+                <p><strong><?=$words->get("FollowCommentGuidelines")?></strong></p>
+                <br />
+                <h3><?=$words->get("CommentQuality" , $Username)?></h3>
+            </td>
           </tr>
           <tr>
-            <td>
+            <td width>
                 <select name="Quality">
                     <option value="Good"
                     <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>
@@ -166,9 +174,16 @@
         <td style="vertical-align=top"><p class="grey"><?php echo $words->get("CommentsCommenterDescription", $Username) ?></p></td>
     </tr>
     <tr><td colspan="2">
+        <p class="checkbox"><input type="checkbox" name="CommentGuidelines"
+        <?php 
+        if (isset ($vars["CommentGuidelines"])) 
+            echo " checked=\"checked\"" ; 
+            echo " />";
+        ?>
+        <?php echo $words->get('ConfirmationCommentGuidelines'); ?> </p>
         <input type="hidden" value="<?php echo $member->id?>" name="cid">
         <input type="hidden" name="action" value="add">
-        <input type="submit" id="submit" name="valide" value="<?php echo $words->getFormatted('SubmitForm'); ?>"></td>
+        <input type="submit" id="submit" name="valide" value="<?php echo $words->getSilent('SubmitForm'); ?>"><?=$words->flushBuffer();?></td>
     </tr>
     </table>
     </fieldset>

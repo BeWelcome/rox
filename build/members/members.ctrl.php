@@ -334,6 +334,7 @@ class MembersController extends RoxControllerBase
                                 $page->adminedit;
                             } elseif (!$myself && isset($request[3]) && ($request[3] == 'add' || $request[3] == 'edit')) {
                                 $page = new AddCommentPage();
+                                $page->commentGuidelinesRead = $this->model->getCommentGuidelinesRead();
                             } else {
                                 $page = new CommentsPage();
                             }

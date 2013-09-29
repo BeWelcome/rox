@@ -428,6 +428,34 @@ WHERE
         }
     }
 
+    
+    /**
+     * Set preference if comment guidelines have been read.
+     */
+    public function setCommentGuidelinesRead() {
+        $query = "
+            SELECT
+                id
+            FROM
+                preferences
+            WHERE
+                CodeName = 'ReadCommentGuidelines'
+            LIMIT 1
+            ";
+        $row = $this->dao->query($query);
+        $readCommentGuidlinesPref = $row->fetch(PDB::FETCH_OBJ);
+        if ($readCommentGuidlinesPref === false) {
+            return false;
+        }
+
+        $membersModel = new MembersModel();
+        $membersModel->set_preference($this->getLoggedInMember()->id, $readCommentGuidlinesPref->id, 1);
+    }
+    
+    public function getCommentGuidelinesRead() {
+        $layoutbits = new MOD_layoutbits();
+        return intval($layoutbits->getPreference("ReadCommentGuidelines"));
+    }
 
 
 
@@ -451,7 +479,10 @@ WHERE
         if ($vars['Quality'] == "Good" && isset ($vars["Comment_NeverMetInRealLife"])) {
             $errors[] = 'NoPositiveComment_if_NeverMetInRealLife';
         }
-        return $errors;
+        if (!isset ($vars["CommentGuidelines"])) {
+            $errors[] = 'CommentMustAcceptGuidelines';
+        }
+        return $errors;       
     }
 
     public function addComment($TCom,&$vars)
@@ -559,6 +590,7 @@ WHERE
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
+        $this->setCommentGuidelinesRead();
         return $return;
 
     }

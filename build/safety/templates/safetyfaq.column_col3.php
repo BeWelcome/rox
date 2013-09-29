@@ -8,6 +8,8 @@
 <h3><?php echo $words->get('SafetyFaqCategoryComments');?></h3>
 <p><strong><?php echo $words->get('FaqQ_PurposeOfComment');?></strong></p>
 <p><?php echo $words->get('FaqA_PurposeOfComment');?></p>
+<p><strong><?php echo $words->get('FaqQ_CommentGuidelines');?></strong></p>
+<p><?php echo $words->get('FaqA_CommentGuidelines');?></p>
 <p><strong><?php echo $words->get('FaqQ_CanIEditComment');?></strong></p>
 <p><?php echo $words->get('FaqA_CanIEditComment');?></p>
 <a name="spam"></a>

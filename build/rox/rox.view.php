@@ -88,6 +88,10 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/terms.php';
     }
+    public function commentguidelines()
+    {
+        require TEMPLATE_DIR.'apps/rox/commentguidelines.php';
+    }
      public function impressum()
     {
         require TEMPLATE_DIR.'apps/rox/impressum.php';

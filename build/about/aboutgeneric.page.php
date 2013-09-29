@@ -23,6 +23,7 @@ class AboutGenericPage extends AboutBasePage
             //'getactive' => 'Get Active',
             'help' => 'Help',
             'terms' => 'Terms of Use',
+            'commentguidelines' => 'Comment Guidelines',
             'impressum' => 'Impressum',
             'affiliations' => 'Affiliations',
             'privacy' => 'Privacy policy',

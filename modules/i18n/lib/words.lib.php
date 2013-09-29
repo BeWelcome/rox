@@ -582,15 +582,10 @@ class MOD_words
             $lang = $this->_lang;
         }
 
-
         if(! $this->_offerTranslationLink) {
             // normal people don't need the tr stuff
             $row = $this->_lookup_row($code, $lang);
-            if (!$row && $lang != 'en') {
-                // try in English
-                $row = $this->_lookup_row($code, 'en');
-            }
-            if(!$row) {
+            if($row->priority == 0) {
                 // use the plain key code
                 $lookup_result = $code;
             } else {
@@ -604,39 +599,27 @@ class MOD_words
             $row = $this->_lookup_row($code, $lang);
             if ($row) {
                 $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-                if (($lang == 'en')or($row->donottranslate=='yes')) { // If language is english or if the word is not supposed to be translatable yet just consider display it
+                if ($row->donottranslate == 'yes') { 
+                    // If language is english or if the word is not supposed to be translatable yet just consider display it
                     $tr_success = LookedUpWord::SUCCESSFUL;
                 } else {
-                    $row_en = $this->_lookup_row($code, 'en');
-                    if($this->_is_obsolete($row, $row_en)) {
-                        $tr_success = LookedUpWord::OBSOLETE;
-                    } else {
-                        $tr_success = LookedUpWord::SUCCESSFUL;
+                    switch ($row->priority) {
+                        case 2:
+                            $tr_success = LookedUpWord::SUCCESSFUL;
+                            break;
+                        case 1:
+                            $tr_success = LookedUpWord::OBSOLETE;
+                            break;
+                        case 0:
+                            if ($lang == 'en') {
+                                $tr_success = LookedUpWord::MISSING_TR;
+                            } else {
+                                $tr_success = LookedUpWord::NO_TR_LINK;
+                            }
+                            break;
                     }
                 }
-            } else if($lang != 'en') {
-                // try in English
-                $row = $this->_lookup_row($code, 'en');
-
-                if($row) {
-                    // use English version
-					if ($row->donottranslate=='yes') {
-						$tr_success = LookedUpWord::SUCCESSFUL;
-						$lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-					}
-					else {
-						$tr_success = LookedUpWord::MISSING_TR;  // at least that bad
-						$lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-					}
-                } else {
-                    // no translation found
-                    $tr_success = LookedUpWord::MISSING_WORD;
-                    $lookup_result = $code;
- 	            }
-            } else {
-                // no translation found
-                $tr_success = LookedUpWord::MISSING_WORD;
-                $lookup_result = $code;
+                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
             }
             switch ($this->_trMode) {
                 case 'browse':
@@ -654,7 +637,7 @@ class MOD_words
                     // no need to do anything
                     break;
                 }
-	        return new LookedUpWord($code, $lang, $lookup_result, $tr_success, $tr_quality);
+            return new LookedUpWord($code, $lang, $lookup_result, $tr_success, $tr_quality);
         }
     }
 
@@ -745,11 +728,45 @@ class MOD_words
 				return($row) ;
 			}
 
-			$query =
-                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
-                "FROM `words` ".
-                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
-            ;
+            $query = "
+                SELECT SQL_CACHE 
+                    `code`,
+                    `Sentence`, 
+                    `donottranslate`, 
+                    `updated`,
+                     2 AS priority
+                FROM 
+                    `words`
+                WHERE 
+                    `code`='" . $this->_dao->escape($code) . "' 
+                    AND `ShortCode`='" . $this->_dao->escape($lang) . "'
+                ";
+            if ($lang != 'en') {
+                $query .= "
+                    UNION SELECT 
+                        `code`,
+                        `Sentence`, 
+                        `donottranslate`, 
+                        `updated`,
+                        1 AS priority
+                    FROM 
+                        `words`
+                    WHERE 
+                        `code`='" . $this->_dao->escape($code) . "' 
+                        AND `ShortCode`='en'
+                    ";
+            }
+            $query .= "    
+                UNION SELECT
+                    '" . $this->_dao->escape($code) . "' AS code,
+                    '" . $this->_dao->escape($code) . "' AS Sentence,
+                    'no' AS donottranslate,
+                    '1970-01-01' AS updated,
+                    0 AS priority
+                ORDER BY
+                    updated DESC
+                LIMIT 1
+            ";
         }
 
         $q = $this->_dao->query($query);

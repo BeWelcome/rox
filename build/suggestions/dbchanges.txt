@@ -14,5 +14,9 @@ VALUES ('ActivitiesNearMeRadius', 25,  'ActivitiesRadius',
 'Radius set by the user for the list of activities around his/her location', '25', 'Inactive');
 
 INSERT INTO preferences( codeName, position, codeDescription, Description, DefaultValue, Status ) 
+VALUES ('ReadCommentGuidelines', 0,  'ReadCommentGuidelines',  
+'Stores if user has read the comment guidelines (at least once)', '0', 'Inactive');
+
+INSERT INTO preferences( codeName, position, codeDescription, Description, DefaultValue, Status ) 
 VALUES ('SearchDistance', 25,  'SearchDistance',  
 'Stores the last distance used by the user', '25', 'Inactive');

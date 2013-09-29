@@ -25,25 +25,29 @@ class SuggestionsController extends RoxControllerBase
      */
     public function show() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         $params = array('id' => $id);
-        switch ($suggestion->state) {
-
-            case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
-                if ($this->_model->hasSuggestionRight($loggedInMember)) {
-                    $this->redirectAbsolute($this->router->url('suggestions_approve', $params));
-                } else {
-                    $this->redirectAbsolute($this->router->url('suggestions_view', $params));
-                }
-                break;
-            case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-                $this->redirectAbsolute($this->router->url('suggestions_discuss', $params));
-                break;
+        $url = $this->router->url('suggestions_view', $params);
+        if ($loggedInMember) {
+            switch ($suggestion->state) {
+                case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
+                    if ($this->_model->hasSuggestionRight($loggedInMember)) {
+                        $url = $this->router->url('suggestions_approve', $params);
+                    }
+                    break;
+                case SuggestionsModel::SUGGESTIONS_DISCUSSION:
+                    $this->redirectAbsolute($this->router->url('suggestions_discuss', $params));
+                    break;
+                case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
+                    $this->redirectAbsolute($this->router->url('suggestions_addoptions', $params));
+                    break;
+                case SuggestionsModel::SUGGESTIONS_VOTE:
+                    $this->redirectAbsolute($this->router->url('suggestions_voting', $params));
+                    break;
+            }
         }
+        $this->redirectAbsolute($url);
     }
 
     protected function getPager($url, $count, $pageno, $itemsPerPage = self::SUGGESTIONS_PER_PAGE) {

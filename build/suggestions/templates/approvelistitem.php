@@ -14,8 +14,8 @@ else :
 endif;
 if ($this->hasSuggestionRight) :
     echo '<td style="text-align: center;"><a href="suggestions/' . $suggestion->id . '/approve">'
-        . '<img src="images/icons/tick.png" alt="' . $words->getBuffered('SuggestionsApprove') . '" /></a><br><a href="suggestions/'
-        . $suggestion->id . '/approve">' . $words->getBuffered('SuggestionsApprove') . '</a></td>';
+        . '<img src="images/icons/tick.png" alt="' . $words->getBuffered('SuggestionsApproveReject') . '" /></a><br><a href="suggestions/'
+        . $suggestion->id . '/approve">' . $words->getBuffered('SuggestionsApproveReject') . '</a></td>';
 else :
     echo '<td></td>';
 endif;

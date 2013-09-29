@@ -5,7 +5,7 @@ if ($count == 0) : ?>
     echo '<tr class="' . $background = (($count % 2) ? 'highlight' : 'blank') . '">';
     echo '<td style="padding-bottom: 30px; width: 80%;">';
     echo '<h3><a href="suggestions/' . $suggestion->id . '/vote">' . htmlspecialchars($suggestion->summary) . '</a></h3></td>';
-    echo '<td style="text-align: center;">' . date('d.m.Y', $suggestion->votingendts) . '</td>';
+    echo '<td style="text-align: center;">' . date('Y-m-d', strtotime($suggestion->laststatechanged) + SuggestionsModel::DURATION_VOTING) . '</td>';
     echo '<td style="text-align: center;">' . $suggestion->votes . '</td>';
     echo '</tr>';
 ?>

@@ -160,30 +160,33 @@ if ($allow_title) { // New Topic
     </div></div>
     </fieldset> <!-- row -->
 
-<?php } // End if $allow_title ?>
+<?php } // End if $allow_title 
+
+if ($groupsforum) {
+	echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
+	if (isset($this->suggestionsThreadId)) {
+		echo '<input type="hidden" name="ThreadId" value="' . $this->suggestionsThreadId . '">';
+	}
+	if (isset($this->suggestionId)) {
+		echo '<input type="hidden" name="SuggestionId" value="' . $this->suggestionId . '">';
+	}
+	if (isset($this->suggestionsUri)) {
+		echo '<input type="hidden" name="SuggestionURI" value="' . $this->suggestionsUri . '">';
+	}
+} else {
+	if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
+		echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
+	} else {
+		echo '<input type="hidden" name="IdGroup" value="0">';
+	}
+}
+
+if (!isset($this->suggestionsGroupId)) { ?>
 
     <fieldset class="row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>
         <div id="fpost_vis"><div>
             <?php echo $visibilitiesDropdown;
-    if ($groupsforum) {
-        echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
-        if (isset($this->suggestionsThreadId)) {
-            echo '<input type="hidden" name="ThreadId" value="' . $this->suggestionsThreadId . '">';
-        }
-        if (isset($this->suggestionId)) {
-            echo '<input type="hidden" name="SuggestionId" value="' . $this->suggestionId . '">';
-        }
-        if (isset($this->suggestionsUri)) {
-            echo '<input type="hidden" name="SuggestionURI" value="' . $this->suggestionsUri . '">';
-        }
-    } else {
-        if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
-            echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
-        } else {
-            echo '<input type="hidden" name="IdGroup" value="0">';
-        }
-    }
     ?>
 
         </div></div>
@@ -239,7 +242,11 @@ if ($allow_title) { // New Topic
 <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
         </div></div>
     </fieldset> <!-- row -->
-
+<?php } else { 
+// don't show visibility and language settings if it is a suggestions discussion ?>
+<input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly" />
+<input type="hidden" name="IdLanguage" id="IdLanguage" value="0" />
+<?php } ?>
     <fieldset class="row" id="fpost_note_fieldset">
         <legend onclick="toggleFieldsets('fpost_note');"><?php echo $words->getFormatted("forum_Notify") ?></legend>
         <div id="fpost_note"><div>

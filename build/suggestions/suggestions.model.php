@@ -6,6 +6,11 @@
  */
 class SuggestionsModel extends RoxModelBase
 {
+    const DURATION_DISCUSSION = 864000; // 10 days = 10 * 24 * 60 * 60
+    const DURATION_ADDOPTIONS = 1728000; // 20 days = 20 * 24 * 60 * 60
+    const DURATION_OPEN = 2592000; // DURATION_DISCUSSION + DURATION_ADDOPTIONS
+    const DURATION_VOTING = 2592000; // 30 days = 30 * 24 * 60 * 60
+    
     const SUGGESTIONS_DUPLICATE = 0; // suggestion already existed and was there marked as duplicate by suggestion team
     const SUGGESTIONS_AWAIT_APPROVAL = 1; // wait for suggestion team to check
     const SUGGESTIONS_DISCUSSION = 2; // discuss the suggestion try to find solutions
@@ -52,45 +57,14 @@ class SuggestionsModel extends RoxModelBase
         }
     }
 
-    public function getSuggestionsCount($type) {
-        if (!is_numeric($type) && !is_int($type)) {
-            return -1;
-        }
-
+    private function getSuggestionsQueryWhere($type) {
+        $query = '';
         switch($type) {
-            case self::SUGGESTIONS_REJECTED:
-                $query = "SELECT COUNT(*) FROM suggestions WHERE state = "
-                    . self::SUGGESTIONS_REJECTED
-                    . " OR state = " . self::SUGGESTIONS_DUPLICATE;
+            case self::SUGGESTIONS_DISCUSSION:
+                $query = "state = " . self::SUGGESTIONS_DISCUSSION
+                . " OR state = " . self::SUGGESTIONS_ADD_OPTIONS;
+                $temp->sql_order = "created ASC";
                 break;
-            case self::SUGGESTIONS_DEV:
-                $query = "SELECT COUNT(*) FROM suggestions WHERE state = "
-                    . self::SUGGESTIONS_IMPLEMENTED
-                    . " OR state = " . self::SUGGESTIONS_IMPLEMENTING;
-                break;
-            default:
-                $query = "SELECT COUNT(*) FROM suggestions WHERE state = " . $type;
-                break;
-        }
-        $sql = $this->dao->query($query);
-        if (!$sql) {
-            return false;
-        }
-        $row = $sql->fetch(PDB::FETCH_NUM);
-        return $row[0];
-    }
-
-    public function getSuggestions($type, $pageno, $items) {
-        if (!is_numeric($type) && !is_int($type)) {
-            return false;
-        }
-        $temp = $this->CreateEntity('Suggestion');
-        switch($type) {
-        	case self::SUGGESTIONS_DISCUSSION:
-        	    $query = "state = " . self::SUGGESTIONS_DISCUSSION
-        	    . " OR state = " . self::SUGGESTIONS_ADD_OPTIONS;
-        	    $temp->sql_order = "created ASC";
-        	    break;
             case self::SUGGESTIONS_REJECTED:
                 $query = "state = " . self::SUGGESTIONS_REJECTED
                     . " OR state = " . self::SUGGESTIONS_DUPLICATE;
@@ -106,8 +80,43 @@ class SuggestionsModel extends RoxModelBase
                 $temp->sql_order = "created ASC";
                 break;
         }
-        $all = $temp->FindByWhereMany($query, $pageno * $items, $items);
-        return $all;
+        return $query;
+    }
+    
+    public function getSuggestionsCount($type) {
+        if (!is_numeric($type) && !is_int($type)) {
+            return -1;
+        }
+        $query = "SELECT COUNT(*) FROM suggestions WHERE "
+            . $this->getSuggestionsQueryWhere($type);
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return false;
+        }
+        $row = $sql->fetch(PDB::FETCH_NUM);
+        return $row[0];
+    }
+
+    private function filterSuggestions($var) {
+        if ($pos !== false) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getSuggestions($type, $pageno, $items) {
+        if (!is_numeric($type) && !is_int($type)) {
+            return false;
+        }
+        $temp = $this->CreateEntity('Suggestion');
+        $all = $temp->FindByWhereMany($this->getSuggestionsQueryWhere($type), $pageno * $items, $items);
+        $filtered = array();
+        foreach($all as $sug) {
+            if ($sug->state == $type) {
+                $filtered[] = $sug;
+            }
+        }
+        return $filtered;
     }
 
     public function checkEditCreateSuggestionVarsOk($args) {
@@ -210,15 +219,15 @@ class SuggestionsModel extends RoxModelBase
         }
         $threadId = $res->insertId();
 
-		// still needed...
-		$query="UPDATE `forums_threads` SET `id`=`threadid` WHERE id=0" ;
+        // still needed...
+        $query="UPDATE `forums_threads` SET `id`=`threadid` WHERE id=0" ;
         $result = $this->dao->query($query);
 
-        $suggestionsTeam = $this->createEntity('Member')->findByUsername('SuggestionsTeam');
-        $words->InsertInFTrad($title, "forums_threads.IdTitle", $threadId, $suggestionsTeam->id, -1, -1);
+        $words->InsertInFTrad($title, "forums_threads.IdTitle", $threadId, $suggestion->createdby, -1, -1);
         $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $threadId, $postId);
         $result = $this->dao->query($query);
 
+        $suggestion->approved = date('Y-m-d');
         $suggestion->threadId = $threadId;
         $suggestion->update(true);
     }
@@ -378,10 +387,10 @@ class SuggestionsModel extends RoxModelBase
         $suggestion = new Suggestion($args->post['suggestion-id']);
         $suggestion->state = $args->post['suggestion-state'];
         switch($suggestion->state) {
-        	case self::SUGGESTIONS_VOTING:
-        	    $suggestion->votingstart = date('Y-m-d');
-        	    $suggestion->votingend = date('Y-m-d', time() + 30 * 24 * 60 * 60);
-        	    break;
+            case self::SUGGESTIONS_VOTING:
+                $suggestion->votingstart = date('Y-m-d');
+                $suggestion->votingend = date('Y-m-d', time() + 30 * 24 * 60 * 60);
+                break;
         }
         $suggestion->update(true);
     }

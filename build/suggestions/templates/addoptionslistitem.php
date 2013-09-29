@@ -1,7 +1,13 @@
 <?php
-if ($count == 0) : ?>
-    <tr><th><?php echo $words->get('Suggestion'); ?></th></tr>
-<?php endif;
+if ($count == 0) : 
+    echo '<tr><th>' . $words->get('Suggestion') . '</th>';
+    if ($discuss) :
+        echo '<th></th>';
+    else :
+        echo '<th>' . $words->get('SuggestionNbOptions') . '</th>';
+    endif;
+    echo '<th>' . $words->get('SuggestionsVotingStarts') . '</th></tr>';
+endif;
 echo '<tr class="' . (($count % 2) ? 'highlight' : 'blank') . '">';
 echo '<td style="padding-bottom: 20px; width: 80%;">';
 if ($discuss) :
@@ -14,6 +20,9 @@ if ($discuss) :
     echo '<td style="text-align: center;"><a href="suggestions/' . $suggestion->id . '/addoptions">'
         . '<img src="images/icons/add.png" alt="' . $words->getBuffered('SuggestionsAddOptions') . '" /></a><br><a href="suggestions/'
         . $suggestion->id . '/addoptions">' . $words->getBuffered('SuggestionsAddOptions') . '</a></td>';
+else :
+    echo '<td>' . count($suggestion->options) . '</td>';
 endif;
+echo '<td>' . date('Y-m-d', strtotime($suggestion->laststatechanged) + SuggestionsModel::DURATION_ADDOPTIONS) . '</td>';
 echo '</tr>';
 ?>

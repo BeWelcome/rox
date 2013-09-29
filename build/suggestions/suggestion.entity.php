@@ -46,13 +46,37 @@ class Suggestion extends RoxEntityBase
                 $this->votes = $row->count;
             }
 
-            // get voting ended
-            $query = "SELECT UNIX_TIMESTAMP(votingend) AS votingendts FROM " . $this->_table_name . " WHERE id = " . $this->id;
-            if ($result = $this->dao->query($query)) {
-                $timestamp = $result->fetch(PDB::FETCH_OBJ);
-                $this->votingendts = $timestamp->votingendts;
-            } else {
-                $this->votingendts = 0;
+            // check if state should be updated
+            switch($this->state) {
+                case SuggestionsModel::SUGGESTIONS_DISCUSSION:
+                    $laststatechanged = strtotime($this->laststatechanged);
+                    // in discussion for more than 10 days?
+                    if (time() - $laststatechanged > SuggestionsModel::DURATION_DISCUSSION) {
+                        $this->state = SuggestionsModel::SUGGESTIONS_ADD_OPTIONS;
+                        $this->update(true);
+                    }
+                    break;
+                case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
+                    $laststatechanged = strtotime($this->laststatechanged);
+                    // in addoptions for more than 20 days?
+                    if (time() - $laststatechanged > SuggestionsModel::DURATION_ADDOPTIONS) {
+                        if (count($this->options)) {
+                            $this->state = SuggestionsModel::SUGGESTIONS_VOTING;
+                        } else {
+                            // no options added -> rejected
+                            $this->state = SuggestionsModel::SUGGESTIONS_REJECTED;
+                        }
+                        $this->update(true);
+                    }
+                    break;
+                case SuggestionsModel::SUGGESTIONS_VOTING:
+                    $laststatechanged = strtotime($this->laststatechanged);
+                    // voting open for more than 30 days? 
+                    if (time() - $laststatechanged > SuggestionsModel::DURATION_VOTING) {
+                        $this->state = SuggestionsModel::SUGGESTIONS_RANKING;
+                        $this->update(true);
+                    }
+                    break;
             }
         }
         return $status;
@@ -60,6 +84,7 @@ class Suggestion extends RoxEntityBase
 
     public function update($status = false) {
         if ($status) {
+            $this->laststatechanged = date('Y-m-d');
             return parent::update();
         } else {
             // update all fields except for the status field
@@ -105,8 +130,8 @@ class Suggestion extends RoxEntityBase
         $option = $entityFactory->create('SuggestionOption')->findById($optionId);
         $option->summary = $summary;
         $option->description = $description;
-        $option->updated = date('Y-m-d');
-        $option->updatedBy = $this->getLoggedInMember()->id;
+        $option->modified = date('Y-m-d');
+        $option->modifiedBy = $this->getLoggedInMember()->id;
         $option->update();
     }
 

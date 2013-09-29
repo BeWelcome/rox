@@ -10,6 +10,7 @@
                 </div>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
+        <? if ($this->member) : // this information is members only ?>
         <div class="c38r">
             <div class="subcr">
                <?php if ($this->hasSuggestionRight) :
@@ -45,5 +46,6 @@
                <?php endif; ?>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
+        <?php endif; // members only ?>
     </div> <!-- subcolums -->
 </div>

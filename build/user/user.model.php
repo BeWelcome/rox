@@ -15,7 +15,7 @@ class User extends PAppModel
      * PERL regular expression for user handle
      */
     //const HANDLE_PREGEXP = '%^[a-z][a-z0-9_]{3,}$%i';
-    const HANDLE_PREGEXP = '/^[a-z](?!.*(__|\.\.|--))[a-z0-9-._]{2,18}[a-z0-9]$/i';
+    const HANDLE_PREGEXP = '/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]$/i';
 
     /**
      * Constructor

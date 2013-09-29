@@ -38,7 +38,8 @@ class SignupModel extends RoxModelBase
      * TODO: should get a more specific name - refactoring needed!
      */
     // const HANDLE_PREGEXP = '%^[a-z][a-z0-9_-\.]{3,19}$%i';
-    const HANDLE_PREGEXP = '/^[a-z](?!.*(__|\.\.|--))[a-z0-9-._]{2,18}[a-z0-9]$/i';
+    // Allow usernames with up to 20 chars for new signup. Allow ., - and _. Don't allow consecutive special chars.
+    const HANDLE_PREGEXP = '/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]$/i';
 
     /**
      * TODO: check, if this is indeed the best form; I don't believe it (steinwinde, 2008-08-04)

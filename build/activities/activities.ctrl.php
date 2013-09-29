@@ -239,6 +239,13 @@ class ActivitiesController extends RoxControllerBase
         return $page;
     }
 
+    public function setRadiusCallback(StdClass $args, ReadOnlyObject $action, 
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) 
+    {
+        $this->_model->setRadius($args);
+        return $this->router->url('activities_near_me', array(), false);
+    }
+    
     public function activitiesNearMe() {
         $page = new ActivitiesActivitiesNearMePage();
         $loggedInMember = $this->_model->getLoggedInMember();
@@ -250,7 +257,8 @@ class ActivitiesController extends RoxControllerBase
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;
         }
-        $distance = 50;
+        $page->radius = $this->_model->getRadius();
+        $distance = 2 * $page->radius;
         $count = $this->_model->getActivitiesNearMeCount($distance);
         $page->activities = $this->_model->getActivitiesNearMe($distance, $pageno, self::ACTIVITIES_PER_PAGE);
         $page->pager = $this->getPager('nearme', $count, $pageno);

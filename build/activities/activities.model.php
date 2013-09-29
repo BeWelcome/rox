@@ -73,6 +73,32 @@ class ActivitiesModel extends RoxModelBase
         return $all;
     }
 
+    public function setRadius($args) {
+        $radius = $args->post['activity-radius'];
+        $query = "
+            SELECT
+                id
+            FROM
+                preferences
+            WHERE
+                CodeName = 'ActivitiesNearMeRadius'
+            LIMIT 1
+            ";
+        $row = $this->dao->query($query);
+        $radiusPref = $row->fetch(PDB::FETCH_OBJ);
+        if ($radiusPref === false) {
+            return false;
+        }
+
+        $membersModel = new MembersModel();
+        $membersModel->set_preference($this->getLoggedInMember()->id, $radiusPref->id, $radius);
+    }
+    
+    public function getRadius() {
+        $layoutbits = new MOD_layoutbits();
+        return intval($layoutbits->getPreference("ActivitiesNearMeRadius"));
+    }
+    
     protected function getNearMeQuery($distance, $count = false) {
         // get latitude and longitude for location of logged in member
         $loggedInMember = $this->getLoggedInMember();

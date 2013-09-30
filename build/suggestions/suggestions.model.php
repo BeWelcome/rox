@@ -10,7 +10,7 @@ class SuggestionsModel extends RoxModelBase
     const DURATION_ADDOPTIONS = 1728000; // 20 days = 20 * 24 * 60 * 60
     const DURATION_OPEN = 2592000; // DURATION_DISCUSSION + DURATION_ADDOPTIONS
     const DURATION_VOTING = 2592000; // 30 days = 30 * 24 * 60 * 60
-    
+
     const SUGGESTIONS_DUPLICATE = 0; // suggestion already existed and was there marked as duplicate by suggestion team
     const SUGGESTIONS_AWAIT_APPROVAL = 1; // wait for suggestion team to check
     const SUGGESTIONS_DISCUSSION = 2; // discuss the suggestion try to find solutions
@@ -63,32 +63,32 @@ class SuggestionsModel extends RoxModelBase
             case self::SUGGESTIONS_DISCUSSION:
                 $query = "state = " . self::SUGGESTIONS_DISCUSSION
                 . " OR state = " . self::SUGGESTIONS_ADD_OPTIONS;
-                $temp->sql_order = "created ASC";
+                $sql_order = "created ASC";
                 break;
             case self::SUGGESTIONS_REJECTED:
                 $query = "state = " . self::SUGGESTIONS_REJECTED
                     . " OR state = " . self::SUGGESTIONS_DUPLICATE;
-                $temp->sql_order = "state DESC, created ASC";
+                $sql_order = "state DESC, created ASC";
                 break;
             case self::SUGGESTIONS_DEV:
                 $query = "state = " . self::SUGGESTIONS_IMPLEMENTED
                     . " OR state = " . self::SUGGESTIONS_IMPLEMENTING;
-                $temp->sql_order = "state ASC, created ASC";
+                $sql_order = "state ASC, created ASC";
                 break;
             default:
                 $query = "state = " . $type;
-                $temp->sql_order = "created ASC";
+                $sql_order = "created ASC";
                 break;
         }
-        return $query;
+        return array($query, $sql_order);
     }
-    
+
     public function getSuggestionsCount($type) {
         if (!is_numeric($type) && !is_int($type)) {
             return -1;
         }
-        $query = "SELECT COUNT(*) FROM suggestions WHERE "
-            . $this->getSuggestionsQueryWhere($type);
+        list($where, $order) = $this->getSuggestionsQueryWhere($type);
+        $query = "SELECT COUNT(*) FROM suggestions WHERE " . $where;
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
@@ -97,11 +97,20 @@ class SuggestionsModel extends RoxModelBase
         return $row[0];
     }
 
-    private function filterSuggestions($var) {
-        if ($pos !== false) {
-            return true;
-        }
-        return false;
+    private function filterDiscussionAndAddOptions($var) {
+        return ($var->state == self::SUGGESTIONS_DISCUSS) || ($var->state == self::SUGGESTIONS_ADD_OPTIONS);
+    }
+
+    private function filterRejectedAndDuplicate($var) {
+        return ($var->state == self::SUGGESTIONS_DUPLICATE) || ($var->state == self::SUGGESTIONS_REJECTED);
+    }
+
+    private function filterImplementedAndImplementing($var) {
+        return ($var->state == self::SUGGESTIONS_IMPLEMENTING) || ($var->state == self::SUGGESTIONS_IMPLEMENTED);
+    }
+
+    private function filterSuggestionsVoting($var) {
+        return ($var->state == self::SUGGESTIONS_VOTING);
     }
 
     public function getSuggestions($type, $pageno, $items) {
@@ -109,13 +118,27 @@ class SuggestionsModel extends RoxModelBase
             return false;
         }
         $temp = $this->CreateEntity('Suggestion');
-        $all = $temp->FindByWhereMany($this->getSuggestionsQueryWhere($type), $pageno * $items, $items);
-        $filtered = array();
-        foreach($all as $sug) {
-            if ($sug->state == $type) {
-                $filtered[] = $sug;
-            }
+        list($where, $order) = $this->getSuggestionsQueryWhere($type);
+        $temp->sql_order = $order;
+        $all = $temp->FindByWhereMany($where, $pageno * $items, $items);
+        switch ($type) {
+            case self::SUGGESTIONS_DISCUSSION:
+                $filtered = array_filter($all, array($this, 'filterDiscussionAndAddOptions'));
+                break;
+            case self::SUGGESTIONS_REJECTED:
+                $filtered = array_filter($all, array($this, 'filterRejectedAndDuplicate'));
+                break;
+            case self::SUGGESTIONS_DEV:
+                $filtered = array_filter($all, array($this, 'filterImplementedAndImplementing'));
+                break;
+            case self::SUGGESTIONS_VOTING:
+                $filtered = array_filter($all, array($this, 'filterVoting'));
+                break;
+            default:
+                $filtered = $all;
+                break;
         }
+
         return $filtered;
     }
 

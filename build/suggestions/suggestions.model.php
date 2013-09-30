@@ -98,7 +98,7 @@ class SuggestionsModel extends RoxModelBase
     }
 
     private function filterDiscussionAndAddOptions($var) {
-        return ($var->state == self::SUGGESTIONS_DISCUSS) || ($var->state == self::SUGGESTIONS_ADD_OPTIONS);
+        return ($var->state == self::SUGGESTIONS_DISCUSSION) || ($var->state == self::SUGGESTIONS_ADD_OPTIONS);
     }
 
     private function filterRejectedAndDuplicate($var) {

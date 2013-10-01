@@ -42,7 +42,7 @@ class SuggestionsController extends RoxControllerBase
                 case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
                     $this->redirectAbsolute($this->router->url('suggestions_addoptions', $params));
                     break;
-                case SuggestionsModel::SUGGESTIONS_VOTE:
+                case SuggestionsModel::SUGGESTIONS_VOTING:
                     $this->redirectAbsolute($this->router->url('suggestions_voting', $params));
                     break;
             }
@@ -212,7 +212,7 @@ class SuggestionsController extends RoxControllerBase
         }
         $this->_model->editOption($args);
         $this->setFlashNotice('SuggestionEditOptionSuccess');
-        return $this->router->url('suggestions_addoptions', 
+        return $this->router->url('suggestions_addoptions',
             array(
                 'id' => $args->post['suggestion-id'],
             ), false);

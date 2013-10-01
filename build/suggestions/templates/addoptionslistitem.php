@@ -1,5 +1,5 @@
 <?php
-if ($count == 0) : 
+if ($count == 0) :
     echo '<tr><th>' . $words->get('Suggestion') . '</th>';
     if ($discuss) :
         echo '<th></th>';
@@ -10,11 +10,7 @@ if ($count == 0) :
 endif;
 echo '<tr class="' . (($count % 2) ? 'highlight' : 'blank') . '">';
 echo '<td style="padding-bottom: 20px; width: 80%;">';
-if ($discuss) :
 echo '<h3><a href="suggestions/' . $suggestion->id . '">' . htmlspecialchars($suggestion->summary) . '</a></h3>';
-else :
-    echo '<h3><a href="suggestions/' . $suggestion->id . '">' . htmlspecialchars($suggestion->summary) . '</a></h3>';
-endif;
 echo '<p>' . $purifier->purify($layoutbits->truncate_words($suggestion->description, 25)) . '</p></td>';
 if ($discuss) :
     echo '<td style="text-align: center;"><a href="suggestions/' . $suggestion->id . '/addoptions">'

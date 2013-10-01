@@ -24,7 +24,7 @@ $this->pager->render(); ?>
                 include 'votelistitem.php';
                 break;
             case SuggestionsModel::SUGGESTIONS_RANKING:
-                include 'rankinglistitem.php';
+                include 'ranklistitem.php';
                 break;
             case SuggestionsModel::SUGGESTIONS_DUPLICATE:
             case SuggestionsModel::SUGGESTIONS_REJECTED:

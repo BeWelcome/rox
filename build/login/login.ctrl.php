@@ -108,9 +108,9 @@ class LoginController extends RoxControllerBase
                             echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorSuspended") .'</div>';
                             break;
                     	case 'MailToConfirm':
-                    	    $url = PVars::getObj('env')->baseuri . '/signup/resendmail/' . htmlspecialchars($bw_member->Username);
+                    	    $url = PVars::getObj('env')->baseuri . 'signup/resendmail/' . htmlspecialchars($bw_member->Username);
                     	    echo '<div id="loginmessage" class="false">'. $words->get("LoginErrorMailToConfirm",
-                    	       $words->getSilent('LoginErrorMailToConfirmHere'), '<a href=' . $url . '">', '</a>') .'</div>';
+                    	       $words->getSilent('LoginErrorMailToConfirmHere'), '<a href="' . $url . '">', '</a>') .'</div>';
                     	    break;
                     	default:
                     	    echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';

@@ -117,8 +117,8 @@ class GroupSettingsPage extends GroupsBasePage
                     <div class="subcl">
                           <h3><?= $words->get('GroupCommentsVisibility'); ?></h3>
                             <ul>
-                                <li><input type="radio" id="visible" name="VisibleComments" value="yes"<?= (($VisibleComments=='yes') ? ' checked="checked"': ''); ?> /><label for="visible" ><?=$words->get('GroupsCommentsVisible'); ?></label></li>
-                                <li><input type="radio" id="invisible" name="VisibleComments" value="no"<?= (($VisibleComments=='no') ? ' checked="checked"': ''); ?> /><label for="invisible" ><?=$words->get('GroupsCommentsInvisible'); ?></label></li>
+                                <li><input type="radio" id="visiblecomments" name="VisibleComments" value="yes"<?= (($VisibleComments=='yes') ? ' checked="checked"': ''); ?> /><label for="visiblecomments" ><?=$words->get('GroupsCommentsVisible'); ?></label></li>
+                                <li><input type="radio" id="invisiblecomments" name="VisibleComments" value="no"<?= (($VisibleComments=='no') ? ' checked="checked"': ''); ?> /><label for="invisiblecomments" ><?=$words->get('GroupsCommentsInvisible'); ?></label></li>
                             </ul>
                     </div><!-- subcl -->
                 </div><!-- c50l -->

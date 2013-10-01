@@ -183,7 +183,7 @@
         <?php echo $words->get('ConfirmationCommentGuidelines'); ?> </p>
         <input type="hidden" value="<?php echo $member->id?>" name="cid">
         <input type="hidden" name="action" value="add">
-        <input type="submit" id="submit" name="valide" value="<?php echo $words->getSilent('SubmitForm'); ?>"><?=$words->flushBuffer();?></td>
+        <input type="submit" id="submit" name="valide" value="<?php echo $words->getSilent('SubmitComment'); ?>"><?=$words->flushBuffer();?></td>
     </tr>
     </table>
     </fieldset>

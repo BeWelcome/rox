@@ -16,6 +16,6 @@ $words = new MOD_words();
             <li><a href="http://www.bevolunteer.org/" target="_blank"><?php echo $words->get('BeVolunteerBlogs') ?></a></li>
             <li><a href="terms"><?php echo $words->get('TermsPage') ?></a></li>
             <li><a href="privacy"><?php echo $words->get('PrivacyPage') ?></a></li>
-            <li><a href="commentguidelines"><?php echo $words->get('CommentGuidelinesPage') ?></a></li>
+            <li><a href="about/commentguidelines"><?php echo $words->get('CommentGuidelinesPage') ?></a></li>
             <li><a href="stats"><?php echo $words->get('StatsPage') ?></a></li>
         </ul>

@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -29,12 +29,12 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Groups
      */
-     
+
 
 class GroupsModel extends  RoxModelBase
 {
     private $_group_list = 0;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -45,7 +45,7 @@ class GroupsModel extends  RoxModelBase
      *
      * @param int $groupId
      * @return mixed false or a Group entity
-     */    
+     */
     public function findGroup($groupId)
     {
         $group = $this->createEntity('Group',$groupId);
@@ -121,7 +121,7 @@ class GroupsModel extends  RoxModelBase
         }
         $terms_array = explode(' ', $terms);
         $strings = array();
-        
+
         foreach ($terms_array as $term)
         {
             $strings[] = "Name LIKE '%" . $this->dao->escape($term) . "%'";
@@ -138,10 +138,10 @@ class GroupsModel extends  RoxModelBase
      * @param string $order - sortorder
      * @param int $amount how many results to find
      * @return mixed false or an array of Groups
-     */    
+     */
     public function findGroups($terms = '', $page = 1, $order = '', $amount = 10)
     {
-    
+
         if (!empty($order))
         {
             switch ($order)
@@ -180,7 +180,7 @@ class GroupsModel extends  RoxModelBase
         {
             $order = 'Name ASC';
         }
-        
+
         $terms_array = explode(' ', $terms);
 
         $group = $this->createEntity('Group');
@@ -239,7 +239,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         }
         return $status;
     }
-      
+
     /**
      * Find all groups I am member of
      *
@@ -257,7 +257,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             return $this->getGroupsForMember($_SESSION['IdMember']);
         }
     }
-    
+
     /**
      * Find all groups $memberId is member of
      *
@@ -275,10 +275,10 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         return $member->getGroups();
 
     }
-    
-    
+
+
     /**
-     * remember the last visited groups, so 
+     * remember the last visited groups, so
      *
      * @param int $now_groupId id of the group you are visiting now
      */
@@ -292,13 +292,13 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $group_visits = array();
         }
         $group_visits[$groupId] = microtime(true);
-        
+
         // sort by value, while preserving the keys
         asort($group_visits);
         $_SESSION['my_group_visits'] = serialize(array_slice($group_visits, 0, 5));
         // unset($_SESSION['my_group_visits']);
     }
-    
+
     public function getLastVisited()
     {
         if (
@@ -313,7 +313,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 $groups[] = $this->findGroup($id);
             }
             return $groups;
-        } 
+        }
     }
 
     /**
@@ -328,19 +328,19 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         // check fields
 
         $problems = array();
-        
+
         if (empty($input['Group_']))
         {
             // name is not set:
             $problems['Group_'] = true;
         }
-        
+
         if (empty($input['GroupDesc_']))
         {
             // Description is not set.
             $problems['GroupDesc_'] = true;
         }
-        
+
         if (!isset($input['Type']) || !in_array($input['Type'], array('NeedAcceptance', 'NeedInvitation','Public')))
         {
             $problems['Type'] = true;
@@ -357,7 +357,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 $problems['image'] = true;
             }
         }
-        
+
         if (!empty($problems))
         {
             $groupId = false;
@@ -375,7 +375,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 $group->memberJoin($this->getLoggedInMember(), 'In');
                 $groupId = $group->id;
                 $group->setDescription($input['GroupDesc_']);
-                
+
                 if (!$group->setGroupOwner($this->getLoggedInMember()))
                 {
                     // TODO: display error message and something about contacting admins
@@ -573,7 +573,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $dir = new PDataDir('groups');
             $img = new MOD_images_Image($_FILES['group_image']['tmp_name']);
             $new_name = $img->getHash();
-            
+
             if (filesize($_FILES['group_image']['tmp_name']) > (500*1024) || !($dir->fileExists($new_name) || $dir->copyTo($_FILES['group_image']['tmp_name'], $new_name)))
             {
                 return false;
@@ -615,7 +615,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
 
         header('Content-type: '.$img->getMimetype());
         $dir->readFile('thumb' . $group->Picture);
-        PPHP::PExit();            
+        PPHP::PExit();
     }
 
     /**
@@ -641,7 +641,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
 
         header('Content-type: '.$img->getMimetype());
         $dir->readFile($group->Picture);
-        PPHP::PExit();            
+        PPHP::PExit();
     }
 
     /**
@@ -782,7 +782,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $urlaccept = '<a href="' . $url . '/acceptinvitation/'. $member->getPKValue() .'">' . $url . '/acceptinvitation/' . $member->getPKValue() . '</a>';
             $urldecline = '<a href="' . $url . '/declineinvitation/'. $member->getPKValue() .'">' . $url . '/declineinvitation/' . $member->getPKValue() . '</a>';
             $words = $this->getWords();
-            $msg->Message = $words->get('GroupInvitation', $member->Username, $group->Name, $urlaccept, $urldecline);
+            $msg->Message = $words->getFormattedInLang('GroupInvitation', $member->getLanguagePreference(), $member->Username, $group->Name, $urlaccept, $urldecline);
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();

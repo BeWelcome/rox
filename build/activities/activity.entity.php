@@ -19,14 +19,14 @@ class Activity extends RoxEntityBase
 
     private function getAttendeesCountByStatus($status) {
         $query = "
-            SELECT 
-                COUNT(a.attendeeId) AS count 
-            FROM 
+            SELECT
+                COUNT(a.attendeeId) AS count
+            FROM
                 activitiesattendees AS a,
                 members AS m
-            WHERE 
-                a.activityId = ' . $this->id . ' 
-                AND a.status = ' . $status . '
+            WHERE
+                a.activityId = " . $this->id . "
+                AND a.status = " . $status . "
                 AND a.attendeeId = m.Id
                 AND m.Status IN ('Active', 'OutOfRemind')
             ";
@@ -37,7 +37,7 @@ class Activity extends RoxEntityBase
         $row = $sql->fetch(PDB::FETCH_OBJ);
         return $row->count;
     }
-    
+
     /**
      * overloads RoxEntityBase::loadEntity to load related data
      *
@@ -59,18 +59,18 @@ class Activity extends RoxEntityBase
             $this->timeEnd = date('H:i', $enddatetime);
             // get organizers
             $query = "
-                SELECT 
-                    a.*, 
-                    m.Username 
-                FROM 
-                    activitiesattendees AS a, 
-                    members AS m 
-                WHERE 
-                    a.activityId = {$this->getPKValue()} 
-                    AND a.organizer = 1 
-                    AND a.attendeeId = m.Id 
+                SELECT
+                    a.*,
+                    m.Username
+                FROM
+                    activitiesattendees AS a,
+                    members AS m
+                WHERE
+                    a.activityId = {$this->getPKValue()}
+                    AND a.organizer = 1
+                    AND a.attendeeId = m.Id
                     AND m.Status IN ('Active', 'OutOfRemind')
-                ORDER BY 
+                ORDER BY
                     a.status, m.Username
                 ";
             if ($result = $this->dao->query($query)) {
@@ -82,17 +82,17 @@ class Activity extends RoxEntityBase
             }
             // get attendees
             $query = "
-                SELECT 
-                    a.*, 
-                    m.Username 
-                FROM 
-                    activitiesattendees AS a, 
-                    members AS m 
-                WHERE 
-                    a.activityId = {$this->getPKValue()} 
-                    AND a.attendeeId = m.Id 
+                SELECT
+                    a.*,
+                    m.Username
+                FROM
+                    activitiesattendees AS a,
+                    members AS m
+                WHERE
+                    a.activityId = {$this->getPKValue()}
+                    AND a.attendeeId = m.Id
                     AND m.Status IN ('Active', 'OutOfRemind')
-                ORDER BY 
+                ORDER BY
                     a.status, m.Username
                 ";
             if ($result = $this->dao->query($query)) {
@@ -112,7 +112,7 @@ class Activity extends RoxEntityBase
         }
         return $status;
     }
-    
+
     /**
      * overloads RoxEntityBase::insert
      *
@@ -135,10 +135,10 @@ class Activity extends RoxEntityBase
         }
         return $status;
     }
-    
-    /** 
+
+    /**
      * get all activities for a member
-     * 
+     *
      * @access public
      * @return list of ActivitiesBasePage
      */
@@ -148,9 +148,9 @@ class Activity extends RoxEntityBase
         return $this->sqlCount($query);
     }
 
-    /** 
+    /**
      * get all activities for a member
-     * 
+     *
      * @access public
      * @return list of ActivitiesBasePage
      */
@@ -165,16 +165,16 @@ class Activity extends RoxEntityBase
 
     /**
      * search for activities matching a keyword.
-     * 
+     *
      * Keyword can match any part of the activity (title, location, address and description)
-     * 
+     *
      * @access public
      * @return list of Activity objects if any match
      */
     public function searchActivities($publicOnly, $keyword, $pageno, $items) {
         $keywordEscaped = $this->dao->escape($keyword);
         $sql  = "SELECT * FROM (";
-        
+
         // Search activities text elements
         $sql .= "SELECT a.* FROM activities AS a WHERE ";
         if ($publicOnly) {
@@ -183,7 +183,7 @@ class Activity extends RoxEntityBase
         $sql .= "(a.title LIKE '%". $keywordEscaped . "%' OR a.address LIKE '%". $keywordEscaped . "%'";
         $sql .= "OR a.description LIKE '%". $keywordEscaped . "%') ";
         $sql .= "UNION ";
-        
+
         // Add results from place names
         $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g WHERE ";
         if ($publicOnly) {
@@ -191,7 +191,7 @@ class Activity extends RoxEntityBase
         }
         $sql .= "a.locationId = g.geonameid AND g.name LIKE '%" . $keywordEscaped . "%' ";
         $sql .= "UNION ";
-        
+
         // Add results for countries (english names only sorry)
         $sql .= "SELECT a.* FROM activities AS a, geonames_cache AS g, geonames_countries AS gc WHERE ";
         if ($publicOnly) {
@@ -204,9 +204,9 @@ class Activity extends RoxEntityBase
 
     /**
      * get count for activities matching a keyword.
-     * 
+     *
      * Keyword can match any part of the activity (title, location, address and description)
-     * 
+     *
      * @access public
      * @return list of Activity objects if any match
      */

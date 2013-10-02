@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -32,6 +32,17 @@ Boston, MA  02111-1307, USA.
      */
 class GroupMemberAdministrationPage extends GroupsBasePage
 {
+    private function javascript_escape($str) {
+        $new_str = '';
+
+        $str_len = strlen($str);
+        for($i = 0; $i < $str_len; $i++) {
+            $new_str .= '\\x' . dechex(ord(substr($str, $i, 1)));
+        }
+
+        return $new_str;
+    }
+
     protected function teaserContent()
     {
         $layoutkit = $this->layoutkit;
@@ -39,7 +50,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         // &gt; or &raquo; ?
         ?>
         <div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
+        <div id="teaser_l1">
         <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href=""><?= $words->get('GroupsAdministrateMembers');?></a></h1>
         </div>
         </div>
@@ -122,7 +133,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         var resignasadmin = $('current_members').getElementsBySelector('a.resignAdmin');
         memberban.each(function(elem){
             elem.observe('click', function(e){
-                if (!confirm('<?= $words->getSilent('GroupsConfirmMemberBan');?>'))
+                if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberBan'));?>'))
                 {
                     Event.stop(e);
                 }
@@ -130,7 +141,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         });
         memberkick.each(function(elem){
             elem.observe('click', function(e){
-                if (!confirm('<?= $words->getSilent('GroupsConfirmMemberKick');?>'))
+                if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberKick'));?>'))
                 {
                     Event.stop(e);
                 }
@@ -138,7 +149,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         });
         memberasadmin.each(function(elem){
             elem.observe('click', function(e){
-                if (!confirm('<?= $words->getSilent('GroupsConfirmMemberAsAdmin');?>'))
+                if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmMemberAsAdmin'));?>'))
                 {
                     Event.stop(e);
                 }
@@ -146,7 +157,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
         });
         resignasadmin.each(function(elem){
             elem.observe('click', function(e){
-                if (!confirm('<?= $words->getSilent('GroupsConfirmResignAsAdmin');?>'))
+                if (!confirm('<?= $this->javascript_escape($words->getSilent('GroupsConfirmResignAsAdmin'));?>'))
                 {
                     Event.stop(e);
                 }
@@ -215,8 +226,8 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             var a = document.createElement('a');
                             a.href = '';
                             a.id = 'invite_member_' + member_object[m];
-                            a.title = '<?= $words->get('GroupsClickToSendInvite');?>' + m;
-                            a.appendChild(document.createTextNode('<?= $words->getSilent('GroupsInvite');?>' + m));
+                            a.title = '<?= $this->javascript_escape($words->get('GroupsClickToSendInvite'));?>' + m;
+                            a.appendChild(document.createTextNode('<?= $this->javascript_escape($words->getSilent('GroupsInvite'));?>' + m));
                             $(a).observe('click',function(e){
                                 e = e || window.event;
                                 search_handler.add_invite(e);
@@ -228,7 +239,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                         }
                         if (counter == 0)
                         {
-                            search_div.appendChild(document.createTextNode('<?= $words->getSilent('GroupsCouldNotFindMembers');?>'));
+                            search_div.appendChild(document.createTextNode('<?= $this->javascript_escape($words->getSilent('GroupsCouldNotFindMembers'));?>'));
                         }
                     },
                     add_invite: function(e){
@@ -243,11 +254,11 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                                 }
                                 else
                                 {
-                                    alert('<?= $words->getSilent('GroupsCouldNotInvite');?>');
+                                    alert('<?= $this->javascript_escape($words->getSilent('GroupsCouldNotInvite'));?>');
                                 }
                             },
                             onFailure: function(transport){
-                                alert('<?= $words->getSilent('GroupsInviteFailedTechError');?>');
+                                alert('<?= $this->javascript_escape($words->getSilent('GroupsInviteFailedTechError'));?>');
                             }
                         });
                     },
@@ -255,7 +266,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                         var invited = it.firstChild.data.substr(7);
                         var tr = document.createElement('tr');
                         var td = document.createElement('td');
-                        td.appendChild(document.createTextNode(invited + '<?= $words->getSilent('GroupsHasBeenInvited');?>'));
+                        td.appendChild(document.createTextNode(invited + '<?= $this->javascript_escape($words->getSilent('GroupsHasBeenInvited'));?>'));
                         td.setAttribute('colspan', 2);
                         tr.appendChild(td);
                         $('invited_members').tBodies[0].appendChild(tr);
@@ -264,7 +275,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
 
                 };
                 $('search_username').observe('focus', function(e){
-                    if ($('search_username').value == '<?= $words->getSilent('GroupsEnterUsername');?>')
+                    if ($('search_username').value == '<?= $this->javascript_escape($words->getSilent('GroupsEnterUsername'));?>')
                     {
                         $('search_username').value = '';
                     }
@@ -278,7 +289,7 @@ class GroupMemberAdministrationPage extends GroupsBasePage
                             search_handler.display_result(result);
                         },
                         onFailure: function(transport){
-                            alert('<?= $words->getSilent('GroupsInviteFailedTechError');?>');
+                            alert('<?= $this->javascript_escape($words->getSilent('GroupsInviteFailedTechError'));?>');
                         }
                     });
                     Event.stop(e)

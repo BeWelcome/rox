@@ -19,14 +19,15 @@ class SignupResentMailPage extends SignupPage
     protected function column_col3()
     {
         $words = $this->layoutkit->words;
+        echo "<p>&nbsp;</p>";
         if (!$this->error) {
-            echo $words->get('SignupResentMail');
+            echo '<p>' . $words->get('SignupResentMail') . '</p>';
         } else {
             echo '<p class="error">'.$words->get('SignupResentMail'.$this->error).'</p>';
+            echo "<p>&nbsp;</p>";
+            $widg = $this->createWidget('LoginFormWidget');
+            $widg->render();
         }
-        echo "<p>&nbsp;</p>";
-        $widg = $this->createWidget('LoginFormWidget');
-        $widg->render();
     }
 }
 ?>

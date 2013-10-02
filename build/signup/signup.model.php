@@ -760,6 +760,7 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Active
         $vars = array();
         $MembersModel = new MembersModel();
         $member = $MembersModel->getMemberWithUsername($username);
+        error_log(print_r($member, true));
         if ($member) {
             if ($member->Status == 'MailToConfirm') {
                 $vars['firstname'] = MOD_crypt::AdminReadCrypted($member->Firstname);

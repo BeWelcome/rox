@@ -238,9 +238,8 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         //Set the To addresses with an associative array
         ->setTo($to);
 
-
     $config = HTMLPurifier_Config::createDefault();
-    $config->set('Cache.SerializerPath', '/../../../data');
+    $config->set('Cache.SerializerPath', SCRIPT_BASE . 'data');
     $config->set('HTML.Allowed', 'a[href]');
     $purifier = new HTMLPurifier($config);
     $plain_text = $purifier->purify($plain_text);

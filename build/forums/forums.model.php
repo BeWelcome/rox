@@ -3557,6 +3557,26 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             return;
         }
 
+        $members = array(); // collects all members that get a notification (to avoid several notifications for the same post)
+
+        // first we get all open (ToSend) post notifications from the database and build
+        // a list of members that don't need another reminder
+        $query = "
+            SELECT
+                IdMember
+            FROM
+                posts_notificationqueue p
+            WHERE
+                p.IdPost = $postId
+                AND Status = 'ToSend'
+            ";
+        $res = $this->dao->query($query);
+        if ($res) {
+            while ($row = $res->fetch(PDB::FETCH_OBJ)) {
+                $members[] = $row->IdMember;
+            }
+        }
+
         // get group members in case of a group post to limit subscriptions to tags and threads
         $groupMembers = array();
         if ($post->groupId != 0) {
@@ -3566,6 +3586,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
                 $groupMembers[] = $groupMember->getPKValue();
             }
         }
+
         // Set notifications for subscribed tags
         $query = "
             SELECT
@@ -3583,20 +3604,36 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             return;
         }
 
-        $members = array(); // collects all members that get a notification (to avoid several notifications for the same post)
         $membersTemp = array(); // members that will receive a notification because of tags
         while ($row = $res->fetch(PDB::FETCH_OBJ)) {
-            $membersTemp[$row->subscriber] = $row->subscriptionId;
-            $members[] = $row->subscriber;
+            // Unfortunately the DB has a lot of faulty entries
+            $subscriber = $row->subscriber;
+            if ($subscriber != 0) {
+                // Add only if the member doesn't already get a notification
+                if (array_search($subscriber, $members, true) === false) {
+                    $membersTemp[$subscriber] = $row->subscriptionId;
+                }
+            }
         }
         if (!empty($membersTemp)) {
             $count = 0;
             $query = "
-                INSERT INTO posts_notificationqueue (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`) VALUES ";
+                INSERT INTO
+                    posts_notificationqueue (
+                        `IdMember`,
+                        `IdPost`,
+                        `created`,
+                        `Type`,
+                        `TableSubscription`,
+                        `IdSubscription`
+                    )
+                VALUES ";
             foreach($membersTemp as $member => $subscriptionId ) {
+                if ($member == 0) continue;
                 if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
                     || (array_search($member, $groupMembers) !== false)) {
                     $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_tags_subscribed', '" . $subscriptionId . "'), ";
+                    $members[] = $member;
                     $count++;
                 }
             }
@@ -3621,20 +3658,31 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
         }
         $membersTemp = array();
         while ($row = $res->fetch(PDB::FETCH_OBJ)) {
-            if (array_search($row->subscriber, $members, true) === false) {
-                $membersTemp[$row->subscriber] = $row->subscriptionId;
-                $members[] = $row->subscriber;
+            if ($row->subscriber != 0) {
+                if (array_search($row->subscriber, $members, true) === false) {
+                    $membersTemp[$row->subscriber] = $row->subscriptionId;
+                }
             }
         }
 
         if (!empty($membersTemp)) {
-            $query = "
-                INSERT INTO posts_notificationqueue (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`) VALUES ";
             $count = 0;
+            $query = "
+                INSERT INTO
+                    posts_notificationqueue (
+                        `IdMember`,
+                        `IdPost`,
+                        `created`,
+                        `Type`,
+                        `TableSubscription`,
+                        `IdSubscription`
+                    )
+                VALUES ";
             foreach($membersTemp as $member => $subscriptionId) {
                 if (($post->groupId == 0) || ($post->PostVisibility != 'GroupOnly' && $post->ThreadVisibility != 'GroupOnly')
                     || (array_search($member, $groupMembers) !== false)) {
                     $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'members_tags_subscribed', '" . $this->dao->escape($subscriptionId) . "'), ";
+                    $members[] = $member;
                     $count++;
                 }
             }
@@ -3651,15 +3699,24 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             $membersTemp = array();
             foreach($subscriberEntities as $subscriber) {
                 $memberId = $subscriber->getPKValue();
+                if ($memberId == 0) continue;
                 if (array_search($memberId, $members, true) === false) {
                     $membersTemp[] = $memberId;
-                    $members[] = $memberId;
                 }
             }
             if (!empty($membersTemp)) {
                 $count = 0;
                 $query = "
-                    INSERT INTO posts_notificationqueue (`IdMember`, `IdPost`, `created`, `Type`, `TableSubscription`, `IdSubscription`) VALUES ";
+                    INSERT INTO
+                        posts_notificationqueue (
+                            `IdMember`,
+                            `IdPost`,
+                            `created`,
+                            `Type`,
+                            `TableSubscription`,
+                            `IdSubscription`
+                        )
+                    VALUES ";
                 foreach($membersTemp as $member) {
                     $query .= "(" . $member . ", " . $postId . ", now(), '" . $type . "', 'membersgroups', 0), ";
                     $count++;

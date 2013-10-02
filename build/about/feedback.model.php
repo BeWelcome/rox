@@ -16,7 +16,7 @@ class FeedbackModel extends RoxModelBase
     const SOFTWARE_ISSUE         = 1;
     const SAFETY_AND_ABUSE       = 2;
     const ACCOUNT                = 3;
-    const COMMENT_ISSUE          = 4; 
+    const COMMENT_ISSUE          = 4;
     const MEDIA                  = 5;
     const FORUM_MODERTION        = 6;
     const SUGGESTIONS            = 7;
@@ -153,7 +153,7 @@ SQL
         }
 
         //Load the files we'll need
-        require_once SCRIPT_BASE.'lib/misc/swift-5.0.1/lib/swift_required.php';
+        require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
 
         //Create the Transport
         $transport = Swift_SmtpTransport::newInstance('localhost', 25);

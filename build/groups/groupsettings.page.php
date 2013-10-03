@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /**
@@ -37,7 +37,7 @@ class GroupSettingsPage extends GroupsBasePage
         $words = $this->getWords();
         ?>
         <div id="teaser" class="clearfix">
-        <div id="teaser_l1"> 
+        <div id="teaser_l1">
         <h1><a href="groups"><?= $words->get('Groups');?></a> &raquo; <a href=""><?= $words->get('GroupsAdministrateGroup');?></a></h1>
         </div>
         </div>
@@ -58,13 +58,13 @@ class GroupSettingsPage extends GroupsBasePage
         $group_id = $this->group->id;
         $formkit = $layoutkit->formkit;
         $callback_tag = $formkit->setPostCallback('GroupsController', 'changeGroupSettings');
-        
+
         if ($redirected = $formkit->mem_from_redirect)
         {
             $GroupDesc_ = ((!empty($redirected->post['GroupDesc_'])) ? $redirected->post['GroupDesc_'] : '');
             $Type = ((!empty($redirected->post['Type'])) ? $redirected->post['Type']: 'Public');
             $VisiblePosts = ((!empty($redirected->post['VisiblePosts'])) ? $redirected->post['VisiblePosts'] : 'yes');
-            $VisibleComments = ((!empty($redirected->post['VisibleComments'])) ? $redirected->post['VisibleComments'] : 'yes');
+            $VisibleComments = ((!empty($redirected->post['VisibleComments'])) ? $redirected->post['VisibleComments'] : 'no');
             $DisplayedOnProfile = ((!empty($redirected->post['DisplayedOnProfile'])) ? $redirected->post['DisplayedOnProfile'] : 'Yes');
             $problems = ((is_array($redirected->problems)) ? $redirected->problems : array());
         }
@@ -95,7 +95,7 @@ class GroupSettingsPage extends GroupsBasePage
                     </div><!-- subcl -->
                 </div><!-- c50l -->
                 <div class="c50r">
-                    <div class="subcr">  
+                    <div class="subcr">
                      <h3><?= $words->get('GroupsPublicStatusHeading'); ?></h3><?= ((!empty($problems['Type'])) ? "<span class='error'>" . $words->get('GroupsCreationTypeMissing') . "</span>" : '' ); ?>
                             <ul>
                                 <li><input type="radio" id="public" name="Type" value="Public"<?= (($Type=='Public') ? ' checked': ''); ?> /><label for="public" ><?=$words->get('GroupsJoinPublic'); ?></label></li>
@@ -104,7 +104,7 @@ class GroupSettingsPage extends GroupsBasePage
                             </ul>
                     </div><!-- subcr -->
                 </div><!-- c50r -->
-            </div><!-- subcolumns -->             
+            </div><!-- subcolumns -->
             <div class="subcolumns">
                 <div class="c50l">
                     <div class="subcl">
@@ -123,14 +123,14 @@ class GroupSettingsPage extends GroupsBasePage
                     </div><!-- subcl -->
                 </div><!-- c50l -->
                 <div class="c50r">
-                    <div class="subcr">  
+                    <div class="subcr">
                      <h3><?= $words->get('GroupsAddImage'); ?></h3>
                             <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
-                        
+
                     </div><!-- subcr -->
                 </div><!-- c50r -->
-            </div><!-- subcolumns -->                                       
-           <div class="groupsettinginfo"><input type="submit" value="<?= $words->getSilent('GroupsUpdateGroupSettings'); ?>" /></div>  <?php echo $words->flushBuffer(); ?>         
+            </div><!-- subcolumns -->
+           <div class="groupsettinginfo"><input type="submit" value="<?= $words->getSilent('GroupsUpdateGroupSettings'); ?>" /></div>  <?php echo $words->flushBuffer(); ?>
             <div class="subcolumns">
                 <div class="c50l">
                     <div class="subcl">
@@ -139,16 +139,16 @@ class GroupSettingsPage extends GroupsBasePage
                     </div><!-- subcl -->
                 </div><!-- c50l -->
                 <div class="c50r">
-                    <div class="subcr">  
+                    <div class="subcr">
                     <h3><?= $words->get('GroupsDeleteGroup'); ?></h3>
                     <a class="button" href="groups/<?= $this->group->id; ?>/delete"><?= $words->get('GroupsDeleteGroup'); ?></a>
                     </div><!-- subcr -->
                 </div><!-- c50r -->
-            </div><!-- subcolumns -->                           
+            </div><!-- subcolumns -->
         </fieldset>
     </form>
-    </div><!-- groups --> 
-    <?php    
+    </div><!-- groups -->
+    <?php
     }
 
 

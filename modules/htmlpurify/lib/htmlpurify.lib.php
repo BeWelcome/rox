@@ -108,6 +108,10 @@ class MOD_htmlpure
         return self::getSophisticatedHtmlPurifier();
     }
 
+    public function getForumsHtmlPurifier() {
+        return self::getSophisticatedHtmlPurifier();
+    }
+
     private function getSophisticatedHtmlPurifier()
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');

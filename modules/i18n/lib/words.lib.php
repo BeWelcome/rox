@@ -754,7 +754,7 @@ class MOD_words
                     WHERE
                         `code`='" . $this->_dao->escape($code) . "'
                         AND `ShortCode`='en'
-                        AND `change` = 'Major'
+                        AND (`change` = 'Major' OR `change` IS NULL)
                     ";
             }
             $query .= "

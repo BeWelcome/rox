@@ -8,7 +8,7 @@ class PageWithHTML extends AbstractBasePage
     // Add or increment query string if a JS file changes to make sure browsers
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        'script/main.js?5',
+        'script/main.js?6',
         'script/common.js?1',
     );
 
@@ -20,7 +20,7 @@ class PageWithHTML extends AbstractBasePage
         $this->printHTML();
         PVars::getObj('page')->output_done = true;
     }
-    
+
     protected function init() {
         // by default, nothing happens.
         // the idea of this function is to set some values,
@@ -37,7 +37,7 @@ class PageWithHTML extends AbstractBasePage
     {
         return array();
     }
-    
+
     /**
      * don't forget to call
      * $stylesheets = parent::$this->getStylesheets();
@@ -53,7 +53,7 @@ class PageWithHTML extends AbstractBasePage
         }
         return $stylesheets;
     }
-    
+
     protected function getStylesheetPatches()
     {
         $stylesheet_patches = array();
@@ -124,8 +124,8 @@ class PageWithHTML extends AbstractBasePage
     protected function getPageTitle() {
         return 'BeWelcome';
     }
-    
-    
+
+
     /**
      * Widgets added this way will be asked
      * for stylesheet and scriptfile information
@@ -137,11 +137,11 @@ class PageWithHTML extends AbstractBasePage
     {
         $this->_widgets[] = $widget;
     }
-    
-    
+
+
     protected function printHTML()
     {
-        
+
         ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?=PVars::get()->lang; ?>" lang="<?=PVars::get()->lang; ?>" xmlns:v="urn:schemas-microsoft-com:vml">
         <head>
@@ -153,11 +153,11 @@ class PageWithHTML extends AbstractBasePage
         <!--
         '.$this->layoutkit->mem_from_redirect->buffered_text.'
         -->' : '') ?>
-        
-        
-        
+
+
+
         <?php
-        
+
         $this->head();
         $this->includeJsConfig();
         $this->includeScriptfiles();
@@ -165,19 +165,19 @@ class PageWithHTML extends AbstractBasePage
         </head>
         <body>
         <?php
-        
+
         echo (is_object($this->layoutkit) && (is_object($this->layoutkit->mem_from_redirect))) ? $this->layoutkit->mem_from_redirect->buffered_text : '';
-        
-        
+
+
         $this->body();
-        
+
         $this->includeLateScriptfiles();
         ?>
         </body>
         </html><?php
     }
-    
-    
+
+
     protected function includeStylesheets()
     {
         if (!$stylesheets = $this->getStylesheets()) {
@@ -267,7 +267,7 @@ class PageWithHTML extends AbstractBasePage
             }
         }
     }
-    
+
     protected function head()
     {
         $baseuri = PVars::getObj('env')->baseuri;
@@ -278,24 +278,24 @@ class PageWithHTML extends AbstractBasePage
         <meta name="verify-v1" content="NzxSlKbYK+CRnCfULeWj0RaPCGNIuPqq10oUpGAEyWw=" />
         <meta name="description" content="<?=$this->getPage_meta_description()?>" />
         <meta name="keywords" content="<?=$this->getPage_meta_keyword()?>" />
-        <meta name="robots" content="<?=$this->getPage_meta_robots()?>" />        
+        <meta name="robots" content="<?=$this->getPage_meta_robots()?>" />
         <?php
         $this->includeStylesheets();
         $this->includeCustomElements();
         $this->_tr_buffer_header = $this->getWords()->flushBuffer();
     }
-    
+
     protected function getPagePermalink() {
         return 'index';
     }
-    
-    protected function statusMessage() 
+
+    protected function statusMessage()
     {
         $words = new MOD_words();
         // messages about the member's status preceed the info messages
         $logged_in = APP_User::IsBWLoggedIn("NeedMore,Pending");
         if ($logged_in && $_SESSION['Status'] != 'Active') echo '<p class="status note big">'.$words->get('StatusMessage_'.$_SESSION['Status']).'</p>';
-        
+
         // infoMessage should be used by other Pages to show post-form-messages and other status-messages to the member
         $class = (isset($this->infoMessageClass) && $this->infoMessageClass != '') ? $this->infoMessageClass : '';
         if (isset($this->infoMessage) && $this->infoMessage != '') echo '<p class="note big '.$class.'">'.$this->infoMessage.'</p>';

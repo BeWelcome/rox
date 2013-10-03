@@ -115,7 +115,7 @@ bwrox.selectScripts([
     ]
   },
   {
-    file: "jquery-ui-timepicker-addon.js",
+    file: "jquery-ui-timepicker-addon.js?1",
     pages: [
       "activities" /*,
       "blog",

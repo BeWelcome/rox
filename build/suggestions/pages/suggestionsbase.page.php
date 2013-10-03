@@ -86,13 +86,13 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
         $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
         $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeams'));
-        
+
         return $items;
     }
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?1';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?2';
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';

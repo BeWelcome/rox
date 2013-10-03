@@ -161,7 +161,7 @@
     $this->addRoute('suggestions', 'suggestions', 'suggestionsController', 'suggestions');
     $this->addRoute('suggestions_show', 'suggestions/:id:', 'suggestionsController', 'show');
     $this->addRoute('suggestions_view', 'suggestions/:id:/view', 'suggestionsController', 'view');
-    $this->addRoute('suggestions_create', 'suggestions/create', 'suggestionsController', 'create');
+    $this->addRoute('suggestions_create', 'suggestions/create', 'suggestionsController', 'editCreate');
     $this->addRoute('suggestions_edit', 'suggestions/:id:/edit', 'suggestionsController', 'editCreate');
     $this->addRoute('suggestions_approvelist', 'suggestions/approve', 'suggestionsController', 'approveList');
     $this->addRoute('suggestions_approvelist_pages', 'suggestions/approve/page/:pageno:', 'suggestionsController', 'approveList');

@@ -114,7 +114,11 @@ class RelatedGroupsController extends RoxControllerBase
         $group = $this->_getGroupFromRequest();
         $isGroupAdmin = $group->isGroupOwner($member);
         $relatedgroup = $this->_getRelatedGroupFromRequest();
-        $result = $this->_model->memberAddsRelatedGroup($group->getPKValue(), $relatedgroup->getPKValue(), $member->getPKValue());
+        if (is_object($group) && is_object($relatedgroup) && is_object($member)) {
+            $result = $this->_model->memberAddsRelatedGroup($group->getPKValue(), $relatedgroup->getPKValue(), $member->getPKValue());
+        } else {
+            $result = false;
+        }
         if ($result) {
             $page = new GroupRelatedGroupLogPage();
             $page->group = $group;
@@ -164,7 +168,11 @@ class RelatedGroupsController extends RoxControllerBase
         $group = $this->_getGroupFromRequest();
         $isGroupAdmin = $group->isGroupOwner($member);
         $relatedgroup = $this->_getRelatedGroupFromRequest();
-        $result = $this->_model->memberDeletesRelatedGroup($group->getPKValue(), $relatedgroup->getPKValue(), $member->getPKValue());
+        if (is_object($group) && is_object($relatedgroup) && is_object($member)) {
+            $result = $this->_model->memberDeletesRelatedGroup($group->getPKValue(), $relatedgroup->getPKValue(), $member->getPKValue());
+        } else {
+            $result = false;
+        }
         if ($result) {
             $page = new GroupRelatedGroupLogPage();
             $page->group = $group;

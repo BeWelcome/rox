@@ -3,11 +3,11 @@
 
 class PublicStartpage extends RoxPageView
 {
-    
+
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/index.css?2';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/index.css?3';
         return $stylesheets;
     }
 
@@ -26,8 +26,7 @@ class PublicStartpage extends RoxPageView
         if (isset($_SESSION['Username'])) {
             return $words->getFormatted('WelcomeUsername',$_SESSION['Username']);
         } else {
-            // this should not happen actually!
-            return $words->getFormatted('WelcomeGuest');
+            return 'BeWelcome';
         }
     }
 

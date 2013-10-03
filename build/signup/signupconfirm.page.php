@@ -3,7 +3,7 @@
 
 class SignupMailConfirmPage extends SignupPage
 {
-    
+
     protected function teaserHeadline()
     {
         $words = $this->layoutkit->words;
@@ -13,11 +13,11 @@ class SignupMailConfirmPage extends SignupPage
             echo $words->get('SignupMailConfirmedErrorTitle');
         }
     }
-    
+
     protected function column_col2()
     {
     }
-    
+
     protected function column_col3()
     {
         $words = $this->layoutkit->words;
@@ -26,6 +26,7 @@ class SignupMailConfirmPage extends SignupPage
         } else {
             echo '<p class="error">'.$words->get('SignupMailConfirmedError'.$this->error).'</p>';
         }
+        echo "<p>&nbsp;</p>";
         $widg = $this->createWidget('LoginFormWidget');
         $widg->render();
     }

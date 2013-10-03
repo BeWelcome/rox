@@ -64,6 +64,7 @@ class GroupSettingsPage extends GroupsBasePage
             $GroupDesc_ = ((!empty($redirected->post['GroupDesc_'])) ? $redirected->post['GroupDesc_'] : '');
             $Type = ((!empty($redirected->post['Type'])) ? $redirected->post['Type']: 'Public');
             $VisiblePosts = ((!empty($redirected->post['VisiblePosts'])) ? $redirected->post['VisiblePosts'] : 'yes');
+            $VisibleComments = ((!empty($redirected->post['VisibleComments'])) ? $redirected->post['VisibleComments'] : 'yes');
             $DisplayedOnProfile = ((!empty($redirected->post['DisplayedOnProfile'])) ? $redirected->post['DisplayedOnProfile'] : 'Yes');
             $problems = ((is_array($redirected->problems)) ? $redirected->problems : array());
         }
@@ -72,6 +73,7 @@ class GroupSettingsPage extends GroupsBasePage
             $GroupDesc_ = str_replace(array('<br>','<br/>', '<br />'), "\n", $this->group->getDescription());
             $Type = $this->group->Type;
             $VisiblePosts = (($this->group->VisiblePosts == 'no') ? 'no' : 'yes');
+            $VisibleComments = (($this->group->VisibleComments == 'no') ? 'no' : 'yes');
             $DisplayedOnProfile = (($this->group->DisplayedOnProfile == 'No') ? 'No' : 'Yes');
             $problems = array();
         }
@@ -110,6 +112,13 @@ class GroupSettingsPage extends GroupsBasePage
                             <ul>
                                 <li><input type="radio" id="visible" name="VisiblePosts" value="yes"<?= (($VisiblePosts=='yes') ? ' checked="checked"': ''); ?> /><label for="visible" ><?=$words->get('GroupsVisiblePosts'); ?></label></li>
                                 <li><input type="radio" id="invisible" name="VisiblePosts" value="no"<?= (($VisiblePosts=='no') ? ' checked="checked"': ''); ?> /><label for="invisible" ><?=$words->get('GroupsInvisiblePosts'); ?></label></li>
+                            </ul>
+                    </div><!-- subcl -->
+                    <div class="subcl">
+                          <h3><?= $words->get('GroupCommentsVisibility'); ?></h3>
+                            <ul>
+                                <li><input type="radio" id="visiblecomments" name="VisibleComments" value="yes"<?= (($VisibleComments=='yes') ? ' checked="checked"': ''); ?> /><label for="visiblecomments" ><?=$words->get('GroupsCommentsVisible'); ?></label></li>
+                                <li><input type="radio" id="invisiblecomments" name="VisibleComments" value="no"<?= (($VisibleComments=='no') ? ' checked="checked"': ''); ?> /><label for="invisiblecomments" ><?=$words->get('GroupsCommentsInvisible'); ?></label></li>
                             </ul>
                     </div><!-- subcl -->
                 </div><!-- c50l -->

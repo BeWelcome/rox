@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -44,22 +44,22 @@ class LoginController extends RoxControllerBase
     {
         $count = $action->count;
         $redirect_req = $action->redirect_req;
-        
+
         $post = $args->post;
         $request = $args->request;
 
-        
+
         // note:
         // all the echos are buffered by the framework,
         // and sent out after the redirect.
-        
+
         $errmsg = '';
         if (empty($post['u'])) {
             $errmsg = $this->getWords()->get("LoginErrorNoUsername");
-            
+
         } else if (!$bw_member = $this->model->getBWMemberByUsername($username = trim($post['u']))) {
             $errmsg = $this->getWords()->get("LoginErrorWrongCredentials");
-            
+
         } else if (!is_string($post['p']) || strlen($post['p'])==0) {
             if (PVars::getObj('development')->skip_password_check != 1) {
                 $errmsg = $this->getWords()->get("LoginErrorNoPassword");
@@ -68,7 +68,7 @@ class LoginController extends RoxControllerBase
             if (PVars::getObj('development')->skip_password_check != 1) {
                 $errmsg = $this->getWords()->get("LoginErrorWrongCredentials");
             }
-        } 
+        }
 
         if ($errmsg != '') {
 			$mem_for_redirect->errmsg = $errmsg;
@@ -76,7 +76,7 @@ class LoginController extends RoxControllerBase
             //echo '<div id="loginmessage" class="false">' . $errmsg . '</div>';
         } else {
             // bw member exists, and pw matches.
-            
+
             // what about the tb user?
             if (!$tb_user = $this->model->getTBUserForBWMember($bw_member)) {
                 // no, he's not in TB. Buuuh.
@@ -95,15 +95,26 @@ class LoginController extends RoxControllerBase
                 }
             }
 
+            // In case we want to show a message
+            $words = $this->getWords();
+
             if (!$tb_user = $this->model->getTBUserForBWMember($bw_member)) {
                 echo "<div id='loginmessage' class='false'>still no tb user found with handle = '$bw_member->Username'. Giving up.</div>";
             } else {
                 if (!$this->model->setBWMemberAsLoggedIn($bw_member)) {
                     // something in the status was not ok.
-                    if ($bw_member->Status != 'SuspendedBeta') {
-                        echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
-                    } else
-                        echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorSuspended") .'</div>';
+                    switch ($bw_member->Status) {
+                    	case 'SuspendedBeta':
+                            echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorSuspended") .'</div>';
+                            break;
+                    	case 'MailToConfirm':
+                    	    $url = PVars::getObj('env')->baseuri . 'signup/resendmail/' . htmlspecialchars($bw_member->Username);
+                    	    echo '<div id="loginmessage" class="false">'. $words->get("LoginErrorMailToConfirm",
+                    	       $words->getSilent('LoginErrorMailToConfirmHere'), '<a href="' . $url . '">', '</a>') .'</div>';
+                    	    break;
+                    	default:
+                    	    echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
+                    }
                 } else {
                     if ($bw_member->Status != 'Active')
                     {
@@ -118,11 +129,14 @@ class LoginController extends RoxControllerBase
                           Effect.SlideUp('loginmessage_wrapper',{delay: 1.5});
                         });
                     </script>
-                    
+
                     <?
                     }
                     $this->model->setupBWSession($bw_member);
                     $this->model->setTBUserAsLoggedIn($tb_user);
+                    if ($this->model->setPreferredLanguage()) {
+                        $this->setFlashNotice($words->get('LoginPreferredLanguageSet', $words->getSilent('lang_' . $_SESSION['lang'])));
+                    }
                     if (!empty($post['r']) && $post['r']) { // member wants to stay logged in
                         $bw_member->refreshMemoryCookie(true);
                     }
@@ -149,7 +163,7 @@ class LoginController extends RoxControllerBase
         $redirect_url = implode('/', array_slice($this->args_vars->request, 1));
         if (!empty($_SERVER['QUERY_STRING'])) {
             $redirect_url .= '?'.$_SERVER['QUERY_STRING'];
-        }   
+        }
         if ($this->getLoggedInMember())
         {
             $this->redirect($redirect_url);

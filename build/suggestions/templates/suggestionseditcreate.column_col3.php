@@ -5,6 +5,10 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'suggestion-description';
     require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
 }
+if (isset($_SESSION['SuggestionStatus'])) {
+    $status = $_SESSION['SuggestionStatus'];
+    unset($_SESSION['SuggestionStatus']);
+}
 $errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
@@ -12,16 +16,23 @@ if (empty($vars)) {
     $vars['suggestion-summary'] = $this->suggestion->summary;
     $vars['suggestion-description'] = $this->suggestion->description;
 }
+if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
+    $textarea = 'suggestion-description';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
+}
 ?>
 <div>
 <fieldset id="suggestion-create"><legend><?php if ($vars['suggestion-id'] != 0) {
-    echo $words->get('SuggestionsEdit');
+    echo $words->get('SuggestionsEditProblemDescription');
 } else {
-    echo $words->get('SuggestionsCreate');
+    echo $words->get('SuggestionsCreateProblemDescription');
 } ?></legend>
 <form method="post" id="suggestion-create-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />
 <?php echo $callbackTags;
+if (isset($status)) {
+    echo '<div class="notice">' . $words->get($status[0]) . '</div>';
+}
 if (!empty($errors)) {
     $errStr = '<div class="error">';
     foreach ($errors as $error) {
@@ -38,6 +49,7 @@ if (!empty($errors)) {
 }
 ?>
     <div class="row">
+    <p><?php echo $words->get('SuggestionsCreateEditInfo');?></p>
         <label class="float_left"for="suggestion-summary"><?php echo $words->get('SuggestionSummary'); ?>*</label><span class="small float_right" style="margin-right: 0.3em;">* <?php echo $words->get('suggestionMandatoryFields'); ?></span><br />
         <input type="text" id="suggestion-summary" name="suggestion-summary" maxlength="80" class="long" style="width:99%" value="<?php echo $vars['suggestion-summary']; ?>" />
     </div>

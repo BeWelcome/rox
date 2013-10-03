@@ -110,7 +110,7 @@ class SignupView extends PAppView
      * @param array $vars with username
      */
     public function signupTeamMail($vars)
-    {   
+    {
         $language = $_SESSION['lang'];    // TODO: convert to something readable
         $subject = "[BW Signup Volunteer] New member " . $vars['username'] . " from " .
                    $vars['countryname'] .
@@ -120,21 +120,21 @@ class SignupView extends PAppView
         require 'templates/teammail.php';
         $body = ob_get_contents();
         ob_end_clean();
-                
+
         // set the receiver
         // $receiver = PVars::getObj('syshcvol')->MailToNotifyWhenNewMemberSignup;
         $MailToNotifyWhenNewMemberSignup=$_SESSION["Param"]->MailToNotifyWhenNewMemberSignup ;
         $MailToNotifyWhenNewMemberSignup=str_replace(array(" ",","),";",$MailToNotifyWhenNewMemberSignup) ; // we never know what separator has been used
         $to = explode(";",$MailToNotifyWhenNewMemberSignup) ;
-                
+
         if (count($to)<=0)  {
             die("Problem, receive cannot work properly you must have at least one valid email in the table params->MailToNotifyWhenNewMemberSignup  [".
             $MailToNotifyWhenNewMemberSignup."]") ;
         }
-        
+
         // set the sender
         $from = PVars::getObj('mailAddresses')->registration;
-        
+
         // Use MOD_mail to create and send a message
         $result = MOD_mail::sendEmail($subject,$from,$to,$subject,$body, false, array());
         //Now check if Swift actually sends it
@@ -153,13 +153,13 @@ class SignupView extends PAppView
      * @param string $userId
      */
     public function registerMail($vars, $IdMember, $idTB)
-    {   
+    {
         $MembersModel = new MembersModel();
         $member = $MembersModel->getMemberWithId($IdMember);
         if (!$member)
             return false;
         $words = new MOD_words();
-        
+
         // KEY-GENERATION the TB Way
         $key    = APP_User::getSetting($idTB, 'regkey');
         if (!$key)
@@ -167,7 +167,7 @@ class SignupView extends PAppView
         $key = $key->value;
         $confirmUrl = PVars::getObj('env')->baseuri.'signup/confirm/'.$member->Username.'/'.$key;
         $confirmUrl_html ="<a href=\"".$confirmUrl."\">".$confirmUrl."</a>";
-        
+
         $title = $words->get("Welcome").'!';
         $body_html = $words->get("SignupTextRegistration", $vars['firstname'], $vars['secondname'], $vars['lastname'], PVars::getObj('env')->sitename, $confirmUrl_html);
         $body = strip_tags($body_html);
@@ -175,17 +175,17 @@ class SignupView extends PAppView
         // set the sender & receiver
         $from    = PVars::getObj('mailAddresses')->registration;
         $to  = $vars['email'];
-        
+
         // set the subject
         $subject = $words->get('SignupSubjRegistration', PVars::getObj('env')->sitename);
-        
+
         // Use MOD_mail to create and send a message
         $result = MOD_mail::sendEmail($subject, $from, $to, $title, $body, $body_html, $attach = array());
 
         //Now check if Swift actually sends it
         if (!$result)
             MOD_log::get()->write(" in signup view registerMail: Failed to send a mail to [".$to."]", "signup");
-            
+
         return $result;
     }
 
@@ -209,7 +209,7 @@ class SignupView extends PAppView
         }
         return $out;
     }
-    
+
     public function style($text,$photo = false) {
         $html = '<p style="font-family: Arial; font-size: 12px; line-height: 1.5em">';
         if ($photo) {

@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  */
 class RoxView extends PAppView {
     private $_model;
-            
+
     public function __construct(Rox $model)
     {
         $this->_model = $model;
@@ -54,7 +54,7 @@ class RoxView extends PAppView {
         @copy($loc, 'php://output');
         exit();
     }
-    
+
     /**
      * Loading Simple Teaser - just needs defined title
      *
@@ -69,29 +69,33 @@ class RoxView extends PAppView {
 
     public function aboutpage()
     {
-        require_once ("magpierss/rss_fetch.inc");    
+        require_once ("magpierss/rss_fetch.inc");
         require TEMPLATE_DIR.'apps/rox/about.php';
     }
     public function bodpage()
     {
         require TEMPLATE_DIR.'apps/rox/bod.php';
-    }    
+    }
     public function thepeoplepage()
     {
         require TEMPLATE_DIR.'apps/rox/thepeople.php';
-    }    
+    }
     public function getactivepage()
     {
         require TEMPLATE_DIR.'apps/rox/getactive.php';
-    }   
+    }
     public function terms()
     {
         require TEMPLATE_DIR.'apps/rox/terms.php';
     }
+    public function commentguidelines()
+    {
+        require TEMPLATE_DIR.'apps/rox/commentguidelines.php';
+    }
      public function impressum()
     {
         require TEMPLATE_DIR.'apps/rox/impressum.php';
-    } 
+    }
 
      public function donate($sub = false,$TDonationArray = false)
     {
@@ -101,34 +105,34 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/donate.php';
 //        }
     }
-    
+
      public function affiliations()
     {
 		// check if member belongs to group Volunteers
 		$isvolunteer = $this->_model->isVolunteer($_SESSION['IdMember']);
         require TEMPLATE_DIR.'apps/rox/affiliations.php';
-    }  	
+    }
     public function privacy()
     {
         require TEMPLATE_DIR.'apps/rox/privacy.php';
     }
-    
+
     public function globalhelppage()
     {
         require TEMPLATE_DIR.'apps/rox/help.php';
     }
-    
+
 	 public function stats()
     {
         $countryrank = $this->_model->getMembersPerCountry();
 		$loginrank = $this->_model->getLastLoginRank();
-		$loginrankgrouped = $this->_model->getLastLoginRankGrouped();		
+		$loginrankgrouped = $this->_model->getLastLoginRankGrouped();
 		$statsall = $this->_model->getStatsLogAll();
 		$statslast = $this->_model->getStatsLog2Month();
 
 		require TEMPLATE_DIR.'apps/rox/stats.php';
 	}
-	
+
     public function volunteerpage()
     {
 		// check if member belongs to group Volunteers
@@ -137,18 +141,18 @@ class RoxView extends PAppView {
     	require_once ("magpierss/rss_fetch.inc");
 		require TEMPLATE_DIR.'apps/rox/volunteer.php';
     }
-	
+
     public function volunteertoolspage($currentSubPage)
     {
         require TEMPLATE_DIR.'apps/rox/volunteertoolspage.php';
     }
-	
+
 	public function volunteersearchpage()
     {
         require TEMPLATE_DIR.'apps/rox/volunteersearchpage.php';
     }
-	
-    
+
+
     public function startpage()
     {
         require 'templates/_languageselector.helper.php';
@@ -160,16 +164,16 @@ class RoxView extends PAppView {
     	// waitin for a later commit
 	    // PVars::getObj('page')->title = $_SESSION['Username'].' Home - BeWelcome';
 		$citylatlong = $this->_model->getAllCityLatLong();
-		$google_conf = PVars::getObj('config_google');	
+		$google_conf = PVars::getObj('config_google');
         require TEMPLATE_DIR.'apps/rox/mainpage.php';
-    }	
-    
-// Action menus (Everything in 'newBar' or 'rContent')    
+    }
+
+// Action menus (Everything in 'newBar' or 'rContent')
 
     public function userBar()
     {
         require TEMPLATE_DIR.'apps/rox/userbar.php';
-    }		
+    }
     public function aboutBar($currentSubPage)
     {
         require TEMPLATE_DIR.'apps/rox/aboutbar.php';
@@ -184,11 +188,11 @@ class RoxView extends PAppView {
     {
         require TEMPLATE_DIR.'apps/rox/volunteertoolsbar.php';
 //		require TEMPLATE_DIR.'apps/rox/volunteertoolsloginbar.php';
-		
-    }    		
+
+    }
 
 // Teasers (Everything in 'teaserBar')
-    
+
     public function teaser()
     {
         require TEMPLATE_DIR.'apps/rox/teaser.php';
@@ -210,9 +214,9 @@ class RoxView extends PAppView {
 				unset ($_SESSION['MemberHasNoPicture']) ;
 			}
 		}
-        
+
         $_newMessagesNumber = $this->_model->getNewMessagesNumber($_SESSION['IdMember']);
-        
+
         if ($_newMessagesNumber > 0) {
             $_mainPageNewMessagesMessage = $words->getFormatted('MainPageNewMessages', $_newMessagesNumber);
         } else {
@@ -220,7 +224,7 @@ class RoxView extends PAppView {
         }
         require 'templates/teaser_main.php';
     }
-       
+
     public function teasergetanswers()
     {
         require TEMPLATE_DIR.'apps/rox/teaser_getanswers.php';
@@ -231,52 +235,52 @@ class RoxView extends PAppView {
         require TEMPLATE_DIR.'apps/rox/teaser_volunteer.php';
     }
 
-// Sub menus (Everything in 'subMenu')    
-    
+// Sub menus (Everything in 'subMenu')
+
     public function submenuGetAnswers($subTab) {
-        require TEMPLATE_DIR.'apps/rox/submenu_getanswers.php';        
-    }      
-	
+        require TEMPLATE_DIR.'apps/rox/submenu_getanswers.php';
+    }
+
     public function submenuVolunteer($subTab) {
-        require TEMPLATE_DIR.'apps/rox/submenu_volunteer.php';        
-    }      
+        require TEMPLATE_DIR.'apps/rox/submenu_volunteer.php';
+    }
 	// This adds other custom styles to the page
 	public function customStyles()
-	{		
-	// calls a 2column layout 
+	{
+	// calls a 2column layout
 		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/bw_basemod_2col.css\" type=\"text/css\"/>";
-		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/index.css\" type=\"text/css\"/>";
+		 echo "<link rel=\"stylesheet\" href=\"styles/YAML/screen/custom/index.css?3\" type=\"text/css\"/>";
 	}
-    
+
     public function topMenu($currentTab)
     {
 	require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
-    
+
     private function buildFlagList()
     {
-        
+
         $pair = $this->_model->getLangNames();
         $flaglist = '';
         $request_string = implode('/',PVars::get()->request);
 		foreach($pair as $abbr => $title) {
 		    $png = $abbr.'.png';
-		    if ($_SESSION['lang'] == $abbr) {		        
+		    if ($_SESSION['lang'] == $abbr) {
 		        $flaglist .=
                     '<span><a href="rox/in/'.$abbr.'/'.$request_string.'"><img '.
                         'src="bw/images/flags/'.$png.'" '.
-                        'alt="'.$title.'" '. 
+                        'alt="'.$title.'" '.
                         'title="'.$title.'"'.
                     "/></a></span>\n"
 		        ;
 		    }
 		    else {
 		        $flaglist .= "<a href=\"rox/in/".$abbr.'/'.$request_string.
-		        "\"><img src=\"bw/images/flags/" . $png . 
+		        "\"><img src=\"bw/images/flags/" . $png .
 		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"/></a>\n";
 		    }
 		}
-		
+
 		return $flaglist;
     }
 
@@ -288,7 +292,7 @@ class RoxView extends PAppView {
 	// Space for advertisement
     //    require TEMPLATE_DIR.'apps/rox/ads.php';
 	}
-	
+
     public function rightContentOut()
     {
         $request = PRequest::get()->request;

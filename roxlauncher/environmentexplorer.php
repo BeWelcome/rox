@@ -10,66 +10,67 @@ class EnvironmentExplorer
     {
         // load data in base.xml
         $base_xml_xpath = $this->loadBaseXML();
-        
+
         $this->simulateMissingFunctions();
-        
+
         if (!$settings = $this->loadConfiguration()) {
             // ini files are not set..
             // launch repair program!!
             die('STOP');
         }
-        
+
         $this->initSession($settings);
-        
-        
-        
+
+
+
         // initialize classes autoloading
         require_once SCRIPT_BASE.'roxlauncher/autoload.plug.php';
         require_once SCRIPT_BASE.'roxlauncher/classloader.php';
         $class_loader = new ClassLoader;
-        
+
         AutoloadPlug::setCallback(array($class_loader, 'autoload'));
-        
+
         $this->loadRoxClasses($class_loader);
         $this->loadPTClasses($class_loader);
-        
+
         require_once SCRIPT_BASE.'pthacks/classes.php';
         Classes::set($class_loader);  // ???
-        
+
         PSurveillance::get();
-        
+
         // $this->loadRoxClasses($class_loader);
         $this->loadPModules($class_loader);
         $this->loadPApps($class_loader);
-        
+
         // TODO: fill with class names..
         $this->classes = array();
-        
-        
+
+
         // these two may actually kill the process
         $this->loadDefaults($base_xml_xpath, $settings);
         $this->checkEnvironment();
-        
+
         // initialize global vars and global registry
         $this->_initPVars($settings);
         $this->_initBWGlobals($settings);
-        
-        
+
+
         PSurveillance::setPoint('base_loaded');
-        
+
         // print_r($class_loader);
     }
-    
-    
+
+
     function loadBaseXML()
     {
         // load base.xml document
-        if (!$B = DOMDocument::load(SCRIPT_BASE.'base.xml')) {
+        $dom = new DOMDocument();
+        if (!$B = $dom->load(SCRIPT_BASE.'base.xml')) {
             die('base.xml error!');
         }
         // $B->x = new DOMXPath($B);
-        $xpath = new DOMXPath($B);
-        
+        $xpath = new DOMXPath($dom);
+
         // is platform PT?
         $is = $xpath->query('/basedata/is');
         if ($is->length != 1) {
@@ -78,14 +79,14 @@ class EnvironmentExplorer
         if ($is->item(0)->nodeValue != 'respice platform PT') {
             die('no, it\'s not');
         }
-        
+
         // version
         $version = $xpath->query('/basedata/version');
         if ($version->length != 1) {
             die('version?');
         }
         $version = $version->item(0)->nodeValue;
-        
+
         // lib dir
         $libdir = SCRIPT_BASE.'lib'.$version;
         if (!file_exists($libdir) || !is_dir($libdir))
@@ -93,7 +94,7 @@ class EnvironmentExplorer
         if (!file_exists($libdir) || !is_dir($libdir))
             die('libdir...');
         define('LIB_DIR', $libdir.'/');
-        
+
         // build dir
         $buildDir = 'build';
         $build = $xpath->query('/basedata/build');
@@ -106,7 +107,7 @@ class EnvironmentExplorer
         if (!file_exists(SCRIPT_BASE.$buildDir))
             die('builddir error!');
         define('BUILD_DIR', SCRIPT_BASE.$buildDir.'/');
-        
+
         // template dir (EEEE Embedded Easter Egg Engine)
         // TODO: what is this easter egg thing about???
         $template = $xpath->query('/basedata/template');
@@ -123,7 +124,7 @@ class EnvironmentExplorer
             die("Template dir '$templateDir' is not readable. Check your file permissions!");
         }
         define('TEMPLATE_DIR', $templateDir.'/');
-        
+
         $datadir = SCRIPT_BASE.'data';
         if (!is_dir($datadir)) {
             die("Data dir '$datadir' does not exist!");
@@ -132,11 +133,11 @@ class EnvironmentExplorer
         }
         define('DATA_DIR', $datadir.'/');
         // Do the same for $memberphotosdir = SCRIPT_BASE.'htdocs/memberphotos';
-        
+
         return $xpath;
     }
-    
-    
+
+
     /**
      * some native PHP functions could be missing, if they require a newer PHP version.
      *
@@ -153,8 +154,8 @@ class EnvironmentExplorer
             }
         }
     }
-    
-    
+
+
     /**
      * this is called at some point to check some environment stuff.
      *
@@ -166,8 +167,8 @@ class EnvironmentExplorer
             die('GD lib required!');
         }
     }
-    
-    
+
+
     protected function loadSettings()
     {
         // loads from an ini file, instead of a php file
@@ -189,8 +190,8 @@ class EnvironmentExplorer
             return $settings;
         }
     }
-    
-    
+
+
     /**
      * we override the parent method that would only load the inc/config.inc.php
      * we get the information from ini files instead.
@@ -201,7 +202,7 @@ class EnvironmentExplorer
     protected function loadConfiguration()
     {
         // loads from an ini file, instead of a php file
-        $loader = new RoxLoader(); 
+        $loader = new RoxLoader();
         if (is_file(SCRIPT_BASE.'rox_local.ini')) {
             // load everything, and continue as normal
             $settings = $loader->load(array(
@@ -231,35 +232,35 @@ class EnvironmentExplorer
         } else {
             // load nothing, show a warning.
             // TODO: A warning page, or even a setup form!
-            
+
             echo '
             <pre>
             "'.SCRIPT_BASE.'rox_local.ini" not found.
             This file is needed for bw-rox to run.
-                
+
             Trying to get read the old config file instead.
             "'.SCRIPT_BASE.'inc/config.inc.php" not found.
-                
+
             Please copy the "'.SCRIPT_BASE.'rox_local.example.ini"
             to "'.SCRIPT_BASE.'rox_local.ini",
             and fill it with your local settings (database and baseuri).
             </pre>';
-            
+
             return false;
         }
     }
-    
+
     /**
      * again, PT needs it.
-     * 
+     *
      */
     protected function loadDefaults($xpath, $settings)
     {
         // copied from defaults.inc.php
-        
+
         // we don't need PPckup() and translate($request) anymore,
         // we have chooseControllerClassname() instead.
-        
+
         // suspended
         $susp = $xpath->query('/basedata/suspended');
         if ($susp->length > 0) {
@@ -270,7 +271,7 @@ class EnvironmentExplorer
             }
             PPHP::PExit();
         }
-        
+
         // debug?
         $debug = $xpath->query('/basedata/debug');
         if ($debug->length > 0) {
@@ -279,11 +280,11 @@ class EnvironmentExplorer
             PVars::register('build', substr($build, 0, strlen($build) - 1));
         }
     }
-    
+
     protected function loadPTClasses($Classes)
     {
         // from here on, this is a copy of PT code, as in lib/libs.xml
-        
+
         //***************************************************************
         // Miscellaneous
         //***************************************************************
@@ -328,11 +329,11 @@ class EnvironmentExplorer
         // PEAR
         //***************************************************************
         $Classes->addClass('Mail', 'Mail.php');
-        
+
         // end of copied PT code
     }
-    
-    
+
+
     /**
      * globals are said to be evil, but we need them, at least for legacy reasons.
      *
@@ -361,8 +362,8 @@ class EnvironmentExplorer
                 PVars::register($key, $settings[$value]);
             }
         }
-        
-        
+
+
         if (empty ($_COOKIE[session_name ()]) ) {
             PVars::register('cookiesAccepted', false);
         } else {
@@ -370,7 +371,7 @@ class EnvironmentExplorer
         }
         PVars::register('queries', 0);
     }
-    
+
     /**
      * we need even more globals for bewelcome.
      *
@@ -380,32 +381,32 @@ class EnvironmentExplorer
         //********************************************************
         // LEGACY CODE FROM TRADITIONAL BW CONFIGURATION
         //********************************************************
-        
+
         // TODO: remove this when the old bw part is no longer needed.
-        
+
         global $_SYSHCVOL;
         $syshcvol = $settings['syshcvol'];
         $_SYSHCVOL = array();
-        
+
         $_SYSHCVOL['MYSQLServer'] = "localhost";
-        
+
         // We want autoupdates
         $_SYSHCVOL['NODBAUTOUPDATE'] = 0;
-        
+
         // Leave these empty for test environment
         $_SYSHCVOL['ARCH_DB'] = ""; // name of the archive DB
         $_SYSHCVOL['CRYPT_DB'] = isset($syshcvol['CRYPT_DB']) ? $syshcvol['CRYPT_DB'] : ""; // name of the crypted DB
-        
+
         // This parameter if set to True will force each call to HasRight to look in
-        // the database, this is usefull when a right is update to force it to be used 
-        // immediately, of course in the long run it slow the server 
+        // the database, this is usefull when a right is update to force it to be used
+        // immediately, of course in the long run it slow the server
         $_SYSHCVOL['ReloadRight'] = 'False'; // Deprecated use ($_SESSION['Param']->ReloadRightsAndFlags instead
-        
+
         // This parameter if the name of the database with (a dot) where are stored crypted data, there is no cryptation it it is left blank
         $_SYSHCVOL['Crypted'] = $_SYSHCVOL['CRYPT_DB'].'.';
-        
+
         $_SYSHCVOL['IMAGEDIR'] = "/var/www/upload/images/";
-        
+
         // this is the e-mail domain; we might use "bewelcome.org" on our productive system, but while development it is probably "localhost"
         $_SYSHCVOL['EmailDomainName'] = isset($syshcvol['EmailDomainName']) ? $syshcvol['EmailDomainName'] : "example.org";
         $_SYSHCVOL['MessageSenderMail'] = 'message@' . $_SYSHCVOL['EmailDomainName']; // This is the default mail used as mail sender
@@ -417,43 +418,43 @@ class EnvironmentExplorer
         $_SYSHCVOL['FeedbackSenderMail'] = 'feedbackform@' . $_SYSHCVOL['EmailDomainName']; // This is the mail use to send mail to volunteers
         $_SYSHCVOL['TestMail'] = 'testmail@' . $_SYSHCVOL['EmailDomainName']; // This is the sender to use with the TestMail feature
         $_SYSHCVOL['MailToNotifyWhenNewMemberSignup'] = 'user@example.org'; // This is the e-mail address, which is notified, when a new member has signed up
-        
+
         // These are the possible Qualifier for the comments
         $_SYSHCVOL['QualityComments'] = array (
             'Good',
             'Neutral',
             'Bad'
-        ); 
-        
+        );
+
         $_SYSHCVOL['SiteStatus'] = "Open"; // This can be "Closed" or "Open", depend if the site is to be closed or open
         $_SYSHCVOL['SiteCloseMessage'] = "The site is temporary closed"; // Message wich is displayed when the site is closed
-         
+
         // possible answers for accomodation
          $_SYSHCVOL['Accomodation'] = array (   'dependonrequest',  'neverask', 'anytime');
-        
+
         // possible lenght of stay
         $_SYSHCVOL['LenghtComments'] = array ('hewasmyguest', 'hehostedme', 'OnlyOnce', 'HeIsMyFamily', 'HeHisMyOldCloseFriend','NeverMetInRealLife');
-        
+
         $_SYSHCVOL['EvaluateEventMessageReceived'] = "Yes"; // If set to "Yes" events messages received is evaludated at each page refresh
         $_SYSHCVOL['UploadPictMaxSize'] = 500000; // This define the size of the max loaded pictures
-        $_SYSHCVOL['AgeMinForApplying'] = 18; // Minimum age a wannabe member must have to become a member 
-        $_SYSHCVOL['WhoIsOnlineActive'] = 'Yes'; // Wether who is online is active can be Yes or No 
-        $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] = 10; // The delay of non activity to consider a member off line 
-        $_SYSHCVOL['WhoIsOnlineLimit'] = 11; // This limit the number of whoisonline, causing the display of ww('MaxOnlineNumberExceeded') at login for new loggers 
+        $_SYSHCVOL['AgeMinForApplying'] = 18; // Minimum age a wannabe member must have to become a member
+        $_SYSHCVOL['WhoIsOnlineActive'] = 'Yes'; // Wether who is online is active can be Yes or No
+        $_SYSHCVOL['WhoIsOnlineDelayInMinutes'] = 10; // The delay of non activity to consider a member off line
+        $_SYSHCVOL['WhoIsOnlineLimit'] = 11; // This limit the number of whoisonline, causing the display of ww('MaxOnlineNumberExceeded') at login for new loggers
         $_SYSHCVOL['EncKey'] = "YEU76EY6"; // encryption key
-        
-        
+
+
         // some of the syshcvol settings should rather be extracted from other settings!
         $_SYSHCVOL['MYSQLUsername'] = PVars::getObj('config_rdbms')->user;
         $_SYSHCVOL['MYSQLPassword'] = PVars::getObj('config_rdbms')->password;
         $_SYSHCVOL['MYSQLDB'] = substr(strstr(PVars::getObj('config_rdbms')->dsn,"dbname="),strlen("dbname=")); // name of the main DB
-        
+
         $_SYSHCVOL['SiteName'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),0,strpos(substr(PVars::getObj('env')->baseuri,strlen("http://")),'/')); // This is the name of the web site
         $_SYSHCVOL['MainDir'] = substr(substr(PVars::getObj('env')->baseuri,strlen("http://")),strpos(substr(PVars::getObj('env')->baseuri,strlen        ("http://")),'/')) . "bw/"; // This is the name of the web site
-        
+
         $_SYSHCVOL['WWWIMAGEDIR'] = PVars::getObj('env')->baseuri."bw/memberphotos";
-        
-        
+
+
         // write the entire [syshcvol] ini section to $_SYSHCVOL..
         // this can overwrite settings from above, if they are manually set.
         // (this is legacy support for alpha.bw and www.bw)
@@ -470,17 +471,17 @@ class EnvironmentExplorer
      */
     protected function fillSessionWithValues()
     {
-        // TODO: This is maybe not the best place to do this,
-        // but so far I don't know a better one.
-        if (!isset($_SESSION['lang']) || !isset($_SESSION['IdLanguage'])) {
-            // normally either none or both of them are set.
-            $_SESSION['lang'] = 'en';
-            $_SESSION['IdLanguage'] = 0;
-        }
-        PVars::register('lang', $_SESSION['lang']);
+//         // TODO: This is maybe not the best place to do this,
+//         // but so far I don't know a better one.
+//         if (!isset($_SESSION['lang']) || !isset($_SESSION['IdLanguage'])) {
+//             // normally either none or both of them are set.
+//             $_SESSION['lang'] = 'en';
+//             $_SESSION['IdLanguage'] = 0;
+//         }
+//         PVars::register('lang', $_SESSION['lang']);
     }
-    
-    
+
+
     protected function loadPModules($class_loader)
     {
         PSurveillance::setPoint('loading_modules');
@@ -489,8 +490,8 @@ class EnvironmentExplorer
         $Mod->loadModules();
         PSurveillance::setPoint('modules_loaded');
     }
-    
-    
+
+
     protected function loadPApps($class_loader)
     {
         $Apps = PApps::get();
@@ -505,7 +506,7 @@ class EnvironmentExplorer
         PSurveillance::setPoint('apps_loaded');
     }
 
-    
+
     /**
      * do some things which are necessary to start
      * using the $_SESSION
@@ -515,7 +516,7 @@ class EnvironmentExplorer
     {
         if (!isset($settings['env']['session_name'])) {
             die('session name not set');
-        } else { 
+        } else {
             $session_name = $settings['env']['session_name'];
             try {
                 ini_set ('session.name', $session_name);
@@ -529,11 +530,11 @@ class EnvironmentExplorer
             }
         }
     }
-    
+
     protected function loadRoxClasses($class_loader)
     {
         // extensions mechanism
-        
+
         $autoload_folders = array();
         if (!isset($_SESSION['extension_folders'])) {
             // nothing
@@ -545,13 +546,13 @@ class EnvironmentExplorer
                 $autoload_folders[] = SCRIPT_BASE.'extensions/'.$folder;
             }
         }
-        
+
         // allow to use ini files for the autoload stuff.
         $autoload_folders[] = SCRIPT_BASE.'build';
         $autoload_folders[] = SCRIPT_BASE.'modules';
         $autoload_folders[] = SCRIPT_BASE.'tools';
         $autoload_folders[] = SCRIPT_BASE.'pthacks';
-        
+
         foreach ($autoload_folders as $maindir) {
             $class_loader->addClassesForAutoloadInisInFolder($maindir);
         }

@@ -15,8 +15,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
@@ -29,12 +29,12 @@ Boston, MA  02111-1307, USA.
      * @package Apps
      * @subpackage Groups
      */
-     
+
 
 class GroupsModel extends  RoxModelBase
 {
     private $_group_list = 0;
-    
+
     public function __construct()
     {
         parent::__construct();
@@ -45,7 +45,7 @@ class GroupsModel extends  RoxModelBase
      *
      * @param int $groupId
      * @return mixed false or a Group entity
-     */    
+     */
     public function findGroup($groupId)
     {
         $group = $this->createEntity('Group',$groupId);
@@ -121,7 +121,7 @@ class GroupsModel extends  RoxModelBase
         }
         $terms_array = explode(' ', $terms);
         $strings = array();
-        
+
         foreach ($terms_array as $term)
         {
             $strings[] = "Name LIKE '%" . $this->dao->escape($term) . "%'";
@@ -138,10 +138,10 @@ class GroupsModel extends  RoxModelBase
      * @param string $order - sortorder
      * @param int $amount how many results to find
      * @return mixed false or an array of Groups
-     */    
+     */
     public function findGroups($terms = '', $page = 1, $order = '', $amount = 10)
     {
-    
+
         if (!empty($order))
         {
             switch ($order)
@@ -180,7 +180,7 @@ class GroupsModel extends  RoxModelBase
         {
             $order = 'Name ASC';
         }
-        
+
         $terms_array = explode(' ', $terms);
 
         $group = $this->createEntity('Group');
@@ -218,7 +218,28 @@ class GroupsModel extends  RoxModelBase
         $membership = $this->createEntity('GroupMembership');
         return $membership->countWhere("IdMember = {$this->getLoggedInMember()->getPKValue()} AND Status = 'In'");
     }
-    
+
+    /**
+     * returns the status of a membership
+     *
+     * @access public
+     * @return string
+     */
+    public function getMembershipStatus(Group $group,$memberid){
+        if (!$memberid) {return false;}
+        $status = '';
+        $sql = "
+SELECT status
+FROM membersgroups
+WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
+        $rr = $this->dao->query($sql);
+        if ($rr) {
+            $row = $rr->fetch(PDB::FETCH_OBJ);
+            if ($row){$status = $row->status;}
+        }
+        return $status;
+    }
+
     /**
      * Find all groups I am member of
      *
@@ -236,7 +257,7 @@ class GroupsModel extends  RoxModelBase
             return $this->getGroupsForMember($_SESSION['IdMember']);
         }
     }
-    
+
     /**
      * Find all groups $memberId is member of
      *
@@ -254,10 +275,10 @@ class GroupsModel extends  RoxModelBase
         return $member->getGroups();
 
     }
-    
-    
+
+
     /**
-     * remember the last visited groups, so 
+     * remember the last visited groups, so
      *
      * @param int $now_groupId id of the group you are visiting now
      */
@@ -271,13 +292,13 @@ class GroupsModel extends  RoxModelBase
             $group_visits = array();
         }
         $group_visits[$groupId] = microtime(true);
-        
+
         // sort by value, while preserving the keys
         asort($group_visits);
         $_SESSION['my_group_visits'] = serialize(array_slice($group_visits, 0, 5));
         // unset($_SESSION['my_group_visits']);
     }
-    
+
     public function getLastVisited()
     {
         if (
@@ -292,7 +313,7 @@ class GroupsModel extends  RoxModelBase
                 $groups[] = $this->findGroup($id);
             }
             return $groups;
-        } 
+        }
     }
 
     /**
@@ -307,19 +328,19 @@ class GroupsModel extends  RoxModelBase
         // check fields
 
         $problems = array();
-        
+
         if (empty($input['Group_']))
         {
             // name is not set:
             $problems['Group_'] = true;
         }
-        
+
         if (empty($input['GroupDesc_']))
         {
             // Description is not set.
             $problems['GroupDesc_'] = true;
         }
-        
+
         if (!isset($input['Type']) || !in_array($input['Type'], array('NeedAcceptance', 'NeedInvitation','Public')))
         {
             $problems['Type'] = true;
@@ -336,7 +357,7 @@ class GroupsModel extends  RoxModelBase
                 $problems['image'] = true;
             }
         }
-        
+
         if (!empty($problems))
         {
             $groupId = false;
@@ -354,7 +375,7 @@ class GroupsModel extends  RoxModelBase
                 $group->memberJoin($this->getLoggedInMember(), 'In');
                 $groupId = $group->id;
                 $group->setDescription($input['GroupDesc_']);
-                
+
                 if (!$group->setGroupOwner($this->getLoggedInMember()))
                 {
                     // TODO: display error message and something about contacting admins
@@ -516,7 +537,7 @@ class GroupsModel extends  RoxModelBase
      * @return bool
      * @access public
      */
-    public function updateGroupSettings($group, $description, $type, $visible_posts)
+    public function updateGroupSettings($group, $description, $type, $visible_posts, $visible_comments)
     {
         if (!is_object($group) || !$group->isLoaded())
         {
@@ -532,7 +553,7 @@ class GroupsModel extends  RoxModelBase
             }
         }
 
-        return $group->updateSettings($description, $type, $visible_posts, $picture);
+        return $group->updateSettings($description, $type, $visible_posts, $visible_comments, $picture);
     }
 
     /**
@@ -552,7 +573,7 @@ class GroupsModel extends  RoxModelBase
             $dir = new PDataDir('groups');
             $img = new MOD_images_Image($_FILES['group_image']['tmp_name']);
             $new_name = $img->getHash();
-            
+
             if (filesize($_FILES['group_image']['tmp_name']) > (500*1024) || !($dir->fileExists($new_name) || $dir->copyTo($_FILES['group_image']['tmp_name'], $new_name)))
             {
                 return false;
@@ -594,7 +615,7 @@ class GroupsModel extends  RoxModelBase
 
         header('Content-type: '.$img->getMimetype());
         $dir->readFile('thumb' . $group->Picture);
-        PPHP::PExit();            
+        PPHP::PExit();
     }
 
     /**
@@ -620,7 +641,7 @@ class GroupsModel extends  RoxModelBase
 
         header('Content-type: '.$img->getMimetype());
         $dir->readFile($group->Picture);
-        PPHP::PExit();            
+        PPHP::PExit();
     }
 
     /**
@@ -758,7 +779,10 @@ class GroupsModel extends  RoxModelBase
             $msg->Status = 'ToSend';
             $msg->SpamInfo = 'NotSpam';
             $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-            $msg->Message = "Hi {$member->Username}<br/><br/>You have been invited to the group {$group->Name}. If you would like to join the group, click the following link: <a href='{$url}/acceptinvitation/{$member->getPKValue()}'>{$url}/acceptinvitation/{$member->getPKValue()}</a>.<br/>If you wish to decline the invitation, please click this link instead: <a href='{$url}/declineinvitation/{$member->getPKValue()}'>{$url}/declineinvitation/{$member->getPKValue()}</a><br/><br/>Have a great time<br/>BeWelcome";
+            $urlaccept = '<a href="' . $url . '/acceptinvitation/'. $member->getPKValue() .'">' . $url . '/acceptinvitation/' . $member->getPKValue() . '</a>';
+            $urldecline = '<a href="' . $url . '/declineinvitation/'. $member->getPKValue() .'">' . $url . '/declineinvitation/' . $member->getPKValue() . '</a>';
+            $words = $this->getWords();
+            $msg->Message = $words->getFormattedInLang('GroupInvitation', $member->getLanguagePreference(), $member->Username, $group->Name, $urlaccept, $urldecline);
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();
@@ -843,8 +867,9 @@ class GroupsModel extends  RoxModelBase
                 $msg->SendConfirmation = 'No';
                 $msg->Status = 'ToSend';
                 $msg->SpamInfo = 'NotSpam';
-                $url = PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue();
-                $msg->Message = "Hi {$admin->Username}<br/><br/>{$member->Username} wants to join the group {$group->Name}. To administrate the group members click the following link: <a href='{$url}/memberadministration'>group member administration</a>.<br/><br/>Have a great time<br/>BeWelcome";
+                $url = '<a href="' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration">' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration</a>';
+                $words = $this->getWords();
+                $msg->Message = $words->get('GroupJoinRequest', $admin->Username, $member->Username, $group->Name, $url);
                 $msg->InFolder = 'Normal';
                 $msg->JoinMemberPict = 'no';
                 $msg->insert();

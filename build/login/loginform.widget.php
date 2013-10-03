@@ -173,6 +173,7 @@ class LoginFormWidget extends RoxWidget
             <?php }  // Added because this is hidden for subdomain ?>
             <input type="submit" value="Login" class="button"/>
           </td></tr></table>
+          <br />
           <p><?=$ww->LoginformForgetPassword('<a href="resetpassword/">', '</a>') ?><br /><br /></p>
           <h3><?=$ww->SignupNow ?></h3>
           <p><?=$ww->IndexPageWord17('<a class="button" href="signup">', '</a>') ?></p>

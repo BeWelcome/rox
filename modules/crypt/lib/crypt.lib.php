@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -27,19 +27,19 @@ Boston, MA  02111-1307, USA.
  * @author Philipp Lange
  */
 class MOD_crypt {
-    
+
 
     /**
      * Singleton instance
-     * 
+     *
      * @var MOD_trips
      * @access private
      */
     private static $_instance;
-    
+
     public function __construct()
     {
-    
+
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
@@ -47,10 +47,10 @@ class MOD_crypt {
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
     }
-    
+
     /**
      * singleton getter
-     * 
+     *
      * @param void
      * @return PApps
      */
@@ -62,10 +62,10 @@ class MOD_crypt {
         }
         return self::$_instance;
     }
-    
+
     /**
      * singleton getter
-     * 
+     *
      * @param void
      * @return PApps
      */
@@ -85,11 +85,11 @@ class MOD_crypt {
                 return false;
         }
     }
-    
+
 
     /**
      * getall_crypted
-     * 
+     *
      * Equals the old BW style function "PublicReadCrypted"
      * Get a decrypted value for a given crypted_id
      */
@@ -99,12 +99,12 @@ class MOD_crypt {
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $rr = self::get()->dao->query(
             "
-SELECT * 
+SELECT *
 FROM ".$crypt_db."cryptedfields
 WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
-        
+
         if ($rr != NULL && sizeof($rr) > 0)
         {
             if ($rr->IsCrypted == "not crypted") {
@@ -124,16 +124,16 @@ WHERE id = $IdCrypt
         /*elseif(sizeof($rr) > 0) {
             return ("");
         }*/
-        else { 
+        else {
             return ($return_value);
         }
     }
 
-    
-    
+
+
     /**
      * get_crypted
-     * 
+     *
      * Equals the old BW style function "PublicReadCrypted"
      * Get a decrypted value for a given crypted_id
      */
@@ -143,12 +143,12 @@ WHERE id = $IdCrypt
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $rr = self::get()->dao->query(
             "
-SELECT * 
+SELECT *
 FROM ".$crypt_db."cryptedfields
 WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
-        
+
         if ($rr != NULL && sizeof($rr) > 0)
         {
             if ($rr->IsCrypted == "not crypted") {
@@ -164,7 +164,7 @@ WHERE id = $IdCrypt
         /*elseif(sizeof($rr) > 0) {
             return ("");
         }*/
-        else { 
+        else {
 			if ($return_value == "") {
 				$ww= new MOD_words();
 				return ($ww->getFormatted("cryptedhidden"));
@@ -174,12 +174,12 @@ WHERE id = $IdCrypt
 			}
         }
     }
-    
+
     /**
      * insertCrypted
      *
      * @param $TableComumn must be something like "members.ProfileSummary"
-     * @param $Idrecord is the id of the record in the corresponding $TableColumn, 
+     * @param $Idrecord is the id of the record in the corresponding $TableColumn,
      * it's not normalized but needed for mainteance
      * @return insertId()
      */
@@ -214,14 +214,14 @@ VALUES
         $cryptedfields = self::get()->dao->query($query);
         return $cryptedfields->insertId();
     }
-    
+
     /**
      * MemberCrypt
      *
      * allows a member to Crypt his data (to update it)
      *
      * @param $TableComumn must be something like "members.ProfileSummary"
-     * @param $Idrecord is the id of the record in the corresponding $TableColumn, 
+     * @param $Idrecord is the id of the record in the corresponding $TableColumn,
      * it's not normalized but needed for mainteance
      * @return insertId()
      */
@@ -235,7 +235,7 @@ VALUES
             return false;
         $ssM = self::GetCryptM($rr);
         $query = "
-        
+
 UPDATE
     ". $crypt_db ."cryptedfields
 SET
@@ -246,19 +246,19 @@ WHERE
     IdMember = '" . $IdMember . "',
     id = ". (int)$IdCrypt
     ;
-        
+
         self::get()->dao->query($query);
-        
+
     }
-    
-    
+
+
     /**
      * MemberCrypt
      *
      * allows a member to DeCrypt his data (to update it)
      *
      * @param $TableComumn must be something like "members.ProfileSummary"
-     * @param $Idrecord is the id of the record in the corresponding $TableColumn, 
+     * @param $Idrecord is the id of the record in the corresponding $TableColumn,
      * it's not normalized but needed for mainteance
      * @return insertId()
      */
@@ -268,7 +268,7 @@ WHERE
             return ('');
         $IdMember = $_SESSION['IdMember'];
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
-        
+
         $rr = self::get()->dao->query("
 SELECT
     MemberCryptedValue
@@ -278,12 +278,12 @@ WHERE
     IdMember = " . $IdMember . "
 AND id = " . $IdCrypt
         )->fetch(PDB::FETCH_OBJ);
-        
+
         if (!$rr = self::get_crypted($IdCrypt, false))
             return false;
         $ssM = self::GetDeCryptM($rr);
         $query = "
-        
+
 UPDATE
     ". $crypt_db ."cryptedfields
 SET
@@ -294,11 +294,11 @@ WHERE
     IdMember = '" . $IdMember . "',
     id = ". (int)$IdCrypt
     ;
-        
+
         self::get()->dao->query($query);
-        
+
     }
-    
+
     /**
      * IsCrypted
      * Get a decrypted value for a given crypted_id
@@ -309,7 +309,7 @@ WHERE
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
         $rr = self::get()->dao->query(
             "
-SELECT * 
+SELECT *
 FROM ". $crypt_db ."cryptedfields
 WHERE id = $IdCrypt
             "
@@ -339,24 +339,26 @@ WHERE id = $IdCrypt
      */
     public static function AdminReadCrypted($IdCrypt = false)
     {
-        $crypt_db = PVars::getObj('syshcvol')->Crypted;	
+        $crypt_db = PVars::getObj('syshcvol')->Crypted;
+error_log(__FUNCTION__ . ": " . print_r($crypt_db, true));
+error_log(__FUNCTION__ . ": " . print_r($IdCrypt, true));
         if (!$IdCrypt || $IdCrypt == '')
             return ('');
         $crypted_id = (int)$IdCrypt;
         // TODO: limit this to a right 'decrypt' or similar
         $rr = self::get()->dao->query(
             "
-SELECT * 
+SELECT *
 FROM ". $crypt_db ."cryptedfields
 WHERE id = $crypted_id
             "
         )->fetch(PDB::FETCH_OBJ);
-
+error_log(__FUNCTION__ . ": " . print_r($rr, true));
     	if (!$rr)
     		return (false); // if no value, it is not crypted
         return (self::GetDeCryptA($rr->AdminCryptedValue));
     }
-    
+
     // TODO: COMPLETE BELOW!
 
     //------------------------------------------------------------------------------
@@ -367,10 +369,10 @@ WHERE id = $crypted_id
     public static function MemberReadCrypted($IdCrypt) {
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
     	if ($IdCrypt == 0)
-    		return (""); // if 0 it mean that the field is empty 
+    		return (""); // if 0 it mean that the field is empty
         $rr = self::get()->dao->query(
             "
-SELECT * 
+SELECT *
 FROM ". $crypt_db ."cryptedfields
 WHERE id = $IdCrypt
             "
@@ -382,12 +384,12 @@ WHERE id = $IdCrypt
     		return (self::GetDeCryptM($rr->MemberCryptedValue));
     	} else {
     		if ($rr->MemberCryptedValue == "")
-    			return (""); // if empty no need to send crypted	
+    			return (""); // if empty no need to send crypted
     		return ("cryptedhidden");
     	}
     } // end of MemberReadCrypted
 
-    
+
     /**
      * ReverseCrypt
      *
@@ -408,7 +410,7 @@ WHERE id = $IdCrypt
      * Allows to replace an entry in cryptedfields
      *
      * @param $TableComumn must be something like "members.ProfileSummary"
-     * @param $Idrecord is the id of the record in the corresponding $TableColumn, 
+     * @param $Idrecord is the id of the record in the corresponding $TableColumn,
      * it's not normalized but needed for mainteance
      * @return insertId()
      */
@@ -423,12 +425,12 @@ WHERE id = $IdCrypt
     	}
         $rr = self::get()->dao->query(
             "
-SELECT * 
+SELECT *
 FROM ". $crypt_db ."cryptedfields
 WHERE id = $IdCrypt
             "
         )->fetch(PDB::FETCH_OBJ);
-        
+
     	if (!$rr)
     		return (self::insertCrypted($ss,$TableColumn,$IdRecord, $IdMember, $IsCrypted)); // Create a new entry
 
@@ -437,7 +439,7 @@ WHERE id = $IdCrypt
         $ssA = self::GetCryptA($ss);
         $ssM = self::GetCryptM($ss,$IsCrypted);
         $query = "
-        
+
 UPDATE
     ". $crypt_db ."cryptedfields
 SET
@@ -450,7 +452,7 @@ WHERE
     id = ". (int)$rr->id ." AND
     IdMember = '" . $rr->IdMember . "'"
     ;
-        
+
         self::get()->dao->query($query);
     	return $IdCrypt;
     } // end of NewReplaceInCrypted
@@ -467,7 +469,7 @@ WHERE
     {
         if (strstr($ss,"<admincrypted>") !== false)
             return($ss);
-                
+
         // TODO: Add a test for a specific right
         return ("<admincrypted>".self::enc('CryptA',$ss)."</admincrypted>");
     }
@@ -514,7 +516,7 @@ WHERE
              case "crypted" :
              case "always" :
                 if (strstr($ss,"<membercrypted>") !== false)
-                    return($ss); 
+                    return($ss);
                 // TODO: Add a test for a specific right
                 return ("<membercrypted>".self::enc('CryptM',$ss)."</membercrypted>");
                 break;
@@ -543,9 +545,9 @@ WHERE
      * @param string
      * @returns the decrypted value of $ss according to member cryptation algorithm
      */
-    private function GetDeCryptM($ss) { 
+    private function GetDeCryptM($ss) {
         if (strstr($ss, "<membercrypted>") === false)
-            return ($ss); 
+            return ($ss);
         $res = strip_tags($ss);
         // todo add right test
         return self::enc('DeCryptM',$res);

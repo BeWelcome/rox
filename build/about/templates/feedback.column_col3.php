@@ -22,7 +22,7 @@ Boston, MA  02111-1307, USA.
 
 */
 $words = new MOD_words();
-$IdCategory = '1';
+$IdCategory = '11';
 $RequestURI = '';
 $redirect = '';
 $data = '';

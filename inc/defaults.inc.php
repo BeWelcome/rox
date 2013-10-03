@@ -34,6 +34,7 @@ function translate($request) {
         'thepeople' => 'about',
         'getactive' => 'about',
         'terms' => 'about',
+        'commentguidelines' => 'about'
         'bod' => 'about',
         'help' => 'about',
         'terms' => 'about',

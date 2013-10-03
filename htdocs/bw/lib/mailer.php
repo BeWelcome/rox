@@ -23,8 +23,8 @@ Boston, MA  02111-1307, USA.
 */
 // error_reporting(E_ALL & ~E_STRICT);
 //Load the files we'll need
-require_once __DIR__."/../../../lib/htmlpurifier-4.0.0/library/HTMLPurifier.auto.php";
-require_once __DIR__."/../../../lib/misc/swift-5.0.1/lib/swift_required.php";
+require_once __DIR__."/../../../lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php";
+require_once __DIR__."/../../../lib/misc/swift-5.0.1/lib/swift_init.php";
 require_once __DIR__.'/../../../modules/mail/lib/mail.lib.php';
 
 // -----------------------------------------------------------------------------
@@ -238,8 +238,8 @@ function bw_sendmail($to, $_mail_subject, $text, $textinhtml = "", $extra_header
         //Set the To addresses with an associative array
         ->setTo($to);
 
-
     $config = HTMLPurifier_Config::createDefault();
+    $config->set('Cache.SerializerPath', SCRIPT_BASE . 'data');
     $config->set('HTML.Allowed', 'a[href]');
     $purifier = new HTMLPurifier($config);
     $plain_text = $purifier->purify($plain_text);

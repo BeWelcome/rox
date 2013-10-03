@@ -40,6 +40,7 @@ class AboutController extends RoxControllerBase
             case 'bod':
             case 'help':
             case 'terms':
+            case 'commentguidelines':
             case 'impressum':
             case 'affiliations':
             case 'privacy':

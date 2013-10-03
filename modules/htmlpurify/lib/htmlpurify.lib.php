@@ -60,6 +60,10 @@ class MOD_htmlpure
         return self::$_instance;
     }
 
+    private function getDefaultConfig() {
+        return $config;
+    }
+
     /**
      * wrapper for lazy loading and instantiating an HTMLPurifier object
      *
@@ -68,14 +72,17 @@ class MOD_htmlpure
      */
     public function getPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
-        return new HTMLPurifier();
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
+        return new HTMLPurifier($config);
     }
 
     public function getBasicHtmlPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('AutoFormat.AutoParagraph', true);
         return new HTMLPurifier($config);
@@ -83,9 +90,11 @@ class MOD_htmlpure
 
     public function getAdvancedHtmlPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
-        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
+        $config->set('HTML.Allowed', 'p,b,a[href|target],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
+        $config->set('HTML.TargetBlank', true);
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
         $config->set('AutoFormat.Linkify', true); // automatically turn stuff like http://domain.com into links
         return new HTMLPurifier($config);
@@ -101,10 +110,12 @@ class MOD_htmlpure
 
     private function getSophisticatedHtmlPurifier()
     {
-        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.0.0/library/HTMLPurifier.standalone.php');
+        require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote');
         $config->set('HTML.MaxImgLength', '500');
+        $config->set('HTML.TargetBlank', true);
         $config->set('CSS.MaxImgLength', '500px');
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
         $config->set('AutoFormat.Linkify', true); // automatically turn stuff like http://domain.com into links

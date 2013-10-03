@@ -16,18 +16,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
 	$words = new MOD_words();
 //	$i18n = new MOD_i18n('apps/forums/board.php');
 //	$boardText = $i18n->getText('boardText');
-	
-	
+
+
 	if ($this->BW_Right->HasRight("ForumModerator","All")) {
-	   echo " As a forum moderator with right \"ForumModerator\", \"All\" you are automatically subscribed to everything in the forum.<hr />" ; 
+	   echo " As a forum moderator with right \"ForumModerator\", \"All\" you are automatically subscribed to everything in the forum.<hr />" ;
 	}
 	if (!empty($TResults->Username)) {
 	   echo "<h3>Subscriptions for <a href=\"bw/member.php?cid=".$TResults->Username."\">".$TResults->Username."</a></h3>" ;
@@ -45,7 +45,7 @@ Boston, MA  02111-1307, USA.
 	}
     echo "<table><tr><td colspan=3>" ;
 	echo "</td></tr>\n" ;
-	echo "<tr><td colspan=2><h4>",$words->getFormatted("forum_YourThreadSubscribted"),"</h4></td>" ;
+	echo "<tr><td colspan=3><h4>",$words->getFormatted("forum_YourThreadSubscribted"),"</h4></td>" ;
 	foreach ($TResults->TData as $data) {
 		echo "<tr><td> ",$data->subscribedtime,"</td><td>" ;
 		if ($data->IdThread!=0) {
@@ -57,7 +57,7 @@ Boston, MA  02111-1307, USA.
 		echo "</td><td><a href=\"forums/subscriptions/unsubscribe/thread/" . $data->IdSubscribe . "/" . $data->UnSubscribeKey . "\" . class=\"button\">" . $words->getSilent('Unsubscribe') . "</a>{$words->flushBuffer()}</td></tr>\n";
         }
       	echo "<tr><td colspan=2><h4>",$words->getFormatted("forum_YourTagSubscribted"),"</h4></td>" ;
-	
+
 	foreach ($TResults->TDataTag as $data) {
 		echo "<tr><td> ",$data->subscribedtime,"</td><td>" ;
 		if ($data->IdTag!=0) {
@@ -69,5 +69,5 @@ Boston, MA  02111-1307, USA.
 		echo "</td><td><a href=\"forums/subscriptions/unsubscribe/tag/".$data->IdSubscribe."/".$data->UnSubscribeKey."\" . class=\"button\">" . $words->getSilent('Unsubscribe') . "</a>{$words->flushBuffer()}</td></tr>\n";
 	}
 	echo "</table>" ;
-		
+
 ?>

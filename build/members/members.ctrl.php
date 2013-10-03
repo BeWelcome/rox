@@ -222,13 +222,13 @@ class MembersController extends RoxControllerBase
                         $data = array();
                         $data['Admin comment'] = $baseUri
                             . 'bw/admin/admincomments.php?IdComment='
-                            . $commentId;
+                            . $commentId . '&action=All';
                         $data['Member comment page'] = $baseUri
                             . 'members/' . $username . '/comments';
                         $dataEncoded = urlencode(serialize($data));
 
                         // Redirect
-                        $url = 'feedback?IdCategory=4&redirect='
+                        $url = 'feedback?IdCategory=2&redirect='
                             . urlencode($redirect) . '&data=' . $dataEncoded;
                         $this->redirect($url);
                     } else {
@@ -334,6 +334,7 @@ class MembersController extends RoxControllerBase
                                 $page->adminedit;
                             } elseif (!$myself && isset($request[3]) && ($request[3] == 'add' || $request[3] == 'edit')) {
                                 $page = new AddCommentPage();
+                                $page->commentGuidelinesRead = $this->model->getCommentGuidelinesRead();
                             } else {
                                 $page = new CommentsPage();
                             }
@@ -357,6 +358,7 @@ class MembersController extends RoxControllerBase
                             {
                                 $page = new EditMyProfilePage();
                                 $page->adminedit = true;
+                                $page->statuses = $this->model->getStatuses();
                                 // $member->edit_mode = true;
                                 if (isset($request[3]) && $request[3] == 'delete')
                                     $page = new DeleteTranslationPage();

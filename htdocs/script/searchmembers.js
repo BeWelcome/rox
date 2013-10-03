@@ -306,7 +306,7 @@ function loadMap(i) {
 					var num_all_results = mapSearchResult.numAllResults;
 					var addRes = '';
 		            if (num_all_results > num_results) {
-		            	addRes = ' (<a href="login/searchmembers#login-widget">' + logIn + '</a> ' + toSee + ' ' + String(num_all_results - num_results) + ' ' + more + ')'            	          	
+		            	addRes = ' (' + searchShowMore + ')'            	          	
 		        	}
 		            if (num_results > 0) {            	            	
 		                put_html('loading', num_results + ' ' + wordFound + addRes);

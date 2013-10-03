@@ -24,31 +24,38 @@ Boston, MA  02111-1307, USA.
 $words = new MOD_words();
 
 ?>
-
 <div id="teaser" class="clearfix">
+  <h1 class="slogan"><span id="BeWelcome" >BeWelcome</span> <span id="opendoor"> - <?php echo $words->get('IndexPageTeaserOpenDoor');?></span></h1>
   <div class="subcolumns">
     <div class="c66l">
       <div class="subcl">
-          <h1 class="slogan"><span id="something" ><?php echo $words->get('IndexPageTeaserReal1a');?></span> <span id="real" ><?php echo $words->get('IndexPageTeaserReal1b');?></span>&nbsp;</h1>
-          <h2><?php echo $words->get('IndexPageTeaserReal2');?></h2>
-            <div id="slideshow-content" class="float_left" >
+          <h2 style="padding-bottom:0em; width:560px"><?php echo $words->get('IndexPageTagline');?></h2>
+          <p style="padding-bottom:0.5em; width:560px; text-align:right;"><a class="button2" href="tour" onclick="this.blur();"><?php echo $words->get('tour_take');?></a> </p>
+          <div id="slideshow-content">
                 <div class="slide" id="slide1">
-                <img src="images/startpage/pablod_01.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage1');?>" />
+                <img src="images/startpage/octobertales_01.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage1');?>" />
                 </div>
                 <div class="slide" id="slide2" style="display: none;">
-                <img src="images/startpage/Olga_Kruglova_01.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage2');?>" />
+                <img src="images/startpage/paivisanteri_01.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage2');?>" />
                 </div>
                 <div class="slide" id="slide3" style="display: none;">
-                <img src="images/startpage/pablod_02.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage3');?>" />
+                <img src="images/startpage/sitatara_01.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage3');?>" />
                 </div>
                 <div class="slide" id="slide4" style="display: none;">
-                <img src="images/startpage/Olga_Kruglova_02.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage4');?>" />
+                <img src="images/startpage/smila_01.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage4');?>" />
                 </div>
                 <div class="slide" id="slide5" style="display: none;">
-                <img src="images/startpage/pablod_03.jpg" style="width: 360px; height: 240px" alt="<?php echo $words->getSilent('SlideImage5');?>" />
+                <img src="images/startpage/smila_02.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage5');?>" />
+                </div>
+                <div class="slide" id="slide6" style="display: none;">
+                <img src="images/startpage/octobertales_02.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage6');?>" />
+                </div>
+                <div class="slide" id="slide7" style="display: none;">
+                <img src="images/startpage/sitatara_02.jpg" style="width: 560px; height: 240px" alt="<?php echo $words->getSilent('SlideImage7');?>" />
                 </div>
             </div>
-            
+            <p class="small photodesc" style="color: #999; padding-top: 0.5em"><?=$words->get('StartPageNewListofPhotographers');?>: paivisanteri (PD), mikael, OctoberTales, sitatara, smila (CC)</p>
+
             <script type="text/javascript">
 
               function start_slideshow(start_frame, end_frame, delay) {
@@ -65,27 +72,18 @@ $words = new MOD_words();
               }
 
             </script>
-          <div class="video-desc">
-            <p>
-            <a class="button2" href="tour" onclick="this.blur();"><span><?php echo $words->get('tour_take');?></span></a>
-            <br /><br />
-            </p>
-            <p class="small photodesc" style="color: #999;">
-                <?=$words->get('StartPageListofPhotographers');?>
-            </p>
-          </div>
-
+            
         <script type="text/javascript">
             <!--
             function realeffect() {
-                new Effect.toggle('real', 'appear', {duration: 2})
+                new Effect.toggle('opendoor', 'appear', {duration: 2})
             }
-            $('real').hide();
-            $('something').hide();
+            $('opendoor').hide();
+            $('BeWelcome').hide();
             window.onload = function () {
-                new Effect.toggle('something', 'appear', {duration: 2});
+                new Effect.toggle('BeWelcome', 'appear', {duration: 2});
                 setTimeout('realeffect()',2000);
-                start_slideshow(1, 5, 10000);
+                start_slideshow(1, 7, 7000);
             };
 
         // -->

@@ -33,6 +33,10 @@ $request = PRequest::get()->request;
 $uri = implode('/', $request);
 $groupsforum = ($request[0] == 'groups' && is_numeric($request[1])) ? $request[1] : false;
 
+if (isset($this->suggestionsGroupId)) {
+    $groupsforum = $this->suggestionsGroupId;
+}
+
 $vars =& PPostHandler::getVars($callbackId);
 
 if (isset($vars['tags']) && $vars['tags']) {
@@ -83,7 +87,6 @@ if ($allow_title) { // New Topic
 
 <form method="post"  onsubmit="return check_SelectedLanguage();" action="<?php echo $uri; ?>" name="editform" class="fieldset_toggles" id="forumsform">
     <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
-
 <?php
     if (isset($vars['errors']) && is_array($vars['errors'])) {
             if (in_array('title', $vars['errors'])) {
@@ -100,12 +103,12 @@ if ($allow_title) { // New Topic
 ?>
         <div class="row">
             <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br />
-            <?php 
+            <?php
             $topic_titletrad = "";
             if ( isset($vars['topic_title'])) {
                 if (isset($vars['IdTitle'])) {
                     $topic_titletrad = $words->fTrad($vars['IdTitle']);
-                } 
+                }
                 else {
                     $topic_titletrad = $vars['topic_title'];
                 }
@@ -136,7 +139,7 @@ if ($allow_title) { // New Topic
         <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
         <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
         <?php
-// In case we are in edit mode, this field is a read only, tags cannot be edited by members 
+// In case we are in edit mode, this field is a read only, tags cannot be edited by members
 // lupochen asks: Why?
         if ($edit) {
             echo "\"readonly\"" ;
@@ -157,21 +160,33 @@ if ($allow_title) { // New Topic
     </div></div>
     </fieldset> <!-- row -->
 
-<?php } // End if $allow_title ?>
+<?php } // End if $allow_title 
+
+if ($groupsforum) {
+	echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
+	if (isset($this->suggestionsThreadId)) {
+		echo '<input type="hidden" name="ThreadId" value="' . $this->suggestionsThreadId . '">';
+	}
+	if (isset($this->suggestionId)) {
+		echo '<input type="hidden" name="SuggestionId" value="' . $this->suggestionId . '">';
+	}
+	if (isset($this->suggestionsUri)) {
+		echo '<input type="hidden" name="SuggestionURI" value="' . $this->suggestionsUri . '">';
+	}
+} else {
+	if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
+		echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
+	} else {
+		echo '<input type="hidden" name="IdGroup" value="0">';
+	}
+}
+
+if (!isset($this->suggestionsGroupId)) { ?>
 
     <fieldset class="row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>
         <div id="fpost_vis"><div>
             <?php echo $visibilitiesDropdown;
-    if ($groupsforum) { 
-        echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
-    } else {
-        if (isset($vars['IdGroup']) && $vars['IdGroup'] != 0 && is_numeric($vars['IdGroup'])) {
-            echo '<input type="hidden" name="IdGroup" value="' . intval($vars['IdGroup']) . '">';
-        } else {
-            echo '<input type="hidden" name="IdGroup" value="0">';
-        }
-    }
     ?>
 
         </div></div>
@@ -191,15 +206,15 @@ if ($allow_title) { // New Topic
             foreach ($LanguageChoices as $Choices) {
                     if (is_string($Choices)) {
                         switch($Choices) {
-                            case "CurrentLanguage": 
+                            case "CurrentLanguage":
                                 echo '<optgroup label="' . $words->getSilent("ForumCurrentLanguage") . '">';
                                 $closeOptGroup = true;
                                 break;
-                            case "DefaultLanguage": 
+                            case "DefaultLanguage":
                                 echo '<optgroup label="' . $words->getSilent("ForumDefaultLanguage") . '">';
                                 $closeOptGroup = true;
                                 break;
-                            case "UILanguage": 
+                            case "UILanguage":
                                 echo '<optgroup label="' . $words->getSilent("ForumUILanguage") . '">';
                                 $closeOptGroup = true;
                                 break;
@@ -227,7 +242,11 @@ if ($allow_title) { // New Topic
 <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
         </div></div>
     </fieldset> <!-- row -->
-    
+<?php } else { 
+// don't show visibility and language settings if it is a suggestions discussion ?>
+<input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly" />
+<input type="hidden" name="IdLanguage" id="IdLanguage" value="0" />
+<?php } ?>
     <fieldset class="row" id="fpost_note_fieldset">
         <legend onclick="toggleFieldsets('fpost_note');"><?php echo $words->getFormatted("forum_Notify") ?></legend>
         <div id="fpost_note"><div>
@@ -235,9 +254,9 @@ if ($allow_title) { // New Topic
                 <label for="NotifyMe"><?php echo $words->getFormatted("forum_NotifyMeForThisThread") ?></label>
         </div></div>
     </fieldset> <!-- row -->
-    
 
-    
+
+
     <div class="row">
         <input type="submit" value="<?php
         if ($allow_title) { // New Topic

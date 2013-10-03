@@ -429,6 +429,7 @@ class GroupsController extends RoxControllerBase
             $this->redirectToLogin($this->router->url('group_declineinvitation', array('group_id' => $group->getPKValue(), 'member_id' => $member_id), false));
         }
         $this->redirectAbsolute($this->router->url('groups_overview'));
+        $this->setFlashNotice($this->getWords()->getSilent('GroupDeclineSuccess'));
     }
 
     /**
@@ -1055,13 +1056,13 @@ class GroupsController extends RoxControllerBase
         }
 
         $post = $args->post;
-        if (empty($post['GroupDesc_']) || empty($post['Type']) || empty($post['group_id']) || empty($post['VisiblePosts']) || !($group = $this->_model->findGroup($post['group_id'])) || !$this->_model->canAccessGroupAdmin($group))
+        if (empty($post['GroupDesc_']) || empty($post['Type']) || empty($post['group_id']) || empty($post['VisiblePosts']) || empty($post['VisibleComments']) || !($group = $this->_model->findGroup($post['group_id'])) || !$this->_model->canAccessGroupAdmin($group))
         {
             $mem_redirect->problems = array('General' => true);
             return $return;
         }
 
-        $result = $this->_model->updateGroupSettings($group, $post['GroupDesc_'], $post['Type'], $post['VisiblePosts']);
+        $result = $this->_model->updateGroupSettings($group, $post['GroupDesc_'], $post['Type'], $post['VisiblePosts'], $post['VisibleComments']);
 
         if ($result)
         {

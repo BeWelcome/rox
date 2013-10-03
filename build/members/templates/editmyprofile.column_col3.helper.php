@@ -28,6 +28,17 @@ for ($i=$young_member_born; $i>$old_member_born; $i--) {
         $birthYearOptions .= "<option value=\"$i\">$i</option>";
     }
 }
+$statusOptions = '';
+if (is_array($this->statuses)) {
+    $statusOptions = '<option value="">' . $words->getSilent('ProfileStatusNoChange') . '</option>';
+    foreach($this->statuses as $status) {
+   	    $statusOptions .= '<option value="' . $status . '"';
+   	    if ($member->Status == $status) {
+   	        $statusOptions .= ' selected="selected"';
+   	    }
+   	    $statusOptions .= '>' . $status . '</option>';
+    }
+}
 ?>
 <div id="profile">
 
@@ -45,7 +56,7 @@ if (isset($vars['errors']) and count($vars['errors']) > 0) {
     echo "</div>";
 } else {
     if ($this->status == 'finish') {
-          echo '<div class="success">'.$words->getFormatted("EditmyprofileFinish", $profile_language_name, 
+          echo '<div class="success">'.$words->getFormatted("EditmyprofileFinish", $profile_language_name,
                 '<a href="members/'. $member->Username . '/' . $profile_language_code . '">', '</a>') . '</div>';
     }
     $vars['errors'] = array();

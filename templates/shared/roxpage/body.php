@@ -4,8 +4,8 @@
 <div id="page_margins">
   <!-- #page: Used to hold the floats -->
   <div id="page" class="hold_floats">
-  
-    <div id="header">      
+
+    <div id="header">
     </div> <!-- header -->
     <?php $this->topmenu() ?>
     <div id="topnav">
@@ -14,6 +14,11 @@
 
     <!-- #main: content begins here -->
     <div id="main">
+        <?php $this->statusMessage() ?>
+        <div id="teaser_bg">
+            <?php $this->teaser() ?>
+        </div>
+
         <?php if ($this->getFlashError()): ?>
         <div class="flash error"><?php echo $this->getFlashError(true); ?></div>
         <?php endif; ?>
@@ -21,10 +26,6 @@
         <div class="flash notice"><?php echo $this->getFlashNotice(true); ?></div>
         <?php endif; ?>
 
-        <?php $this->statusMessage() ?>
-        <div id="teaser_bg">
-            <?php $this->teaser() ?>
-        </div>
         <?php $this->columnsArea() ?>
     </div> <!-- main -->
 
@@ -55,11 +56,11 @@ if ($piwikBaseURL) {
     }
 
     if ($piwikType == 'javascript') { ?>
-<!-- Piwik --> 
-<script type="text/javascript"> 
-   var _paq = _paq || []; 
+<!-- Piwik -->
+<script type="text/javascript">
+   var _paq = _paq || [];
    (function(){var u=(("https:" == document.location.protocol) ? "https" : "http") + "://<?php echo $piwikBaseName ?>/"; _paq.push(['setSiteId', <?php echo $piwikId ?>]); _paq.push(['setTrackerUrl', u+'piwik.php']); _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s); })();
-</script> 
+</script>
 <noscript><p><img src="<?php echo $proto ?>://<?php echo $piwikBaseName ?>/piwik.php?idsite=<?php echo $piwikId ?>&amp;rec=1" style="border:0" alt="" width="1" height="1" /></p></noscript>
 <!-- End Piwik Tracking Code -->
 <?php    } else { ?>

@@ -76,6 +76,14 @@ class RelatedGroup extends RoxEntityBase
             return false;
         }
 
+        // check if member has right privileges to add grouprelation (be member of both)
+        if (!$group->isMember($member)) {
+            return false;
+	}
+	if (!$relatedgroup->isMember($member)) {
+            return false;
+	}
+
         // only bother if related group is not already a related group
         if (!$this->isRelatedGroup($group, $relatedgroup)) {
             $this->group_id = $group->getPKValue();
@@ -101,6 +109,13 @@ class RelatedGroup extends RoxEntityBase
         if (!is_object($member) && !is_numeric($member->getPKValue())) {
             return false;
         }
+        
+        // check if user is member of this group
+        $group = $this->createEntity("Group", $this->group_id);
+	if (!$group->isMember($member)) {
+            return false;
+	}
+                
         $this->ts = date('Y-m-d H:i:s');
         $this->deletedby = intval($member->getPKValue());
         return $this->update();

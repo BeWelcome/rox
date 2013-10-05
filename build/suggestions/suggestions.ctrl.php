@@ -37,13 +37,13 @@ class SuggestionsController extends RoxControllerBase
                     }
                     break;
                 case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-                    $this->redirectAbsolute($this->router->url('suggestions_discuss', $params));
+                    $url = $this->router->url('suggestions_discuss', $params);
                     break;
                 case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
-                    $this->redirectAbsolute($this->router->url('suggestions_addoptions', $params));
+                    $url = $this->router->url('suggestions_addoptions', $params);
                     break;
                 case SuggestionsModel::SUGGESTIONS_VOTING:
-                    $this->redirectAbsolute($this->router->url('suggestions_voting', $params));
+                    $url = $this->router->url('suggestions_voting', $params);
                     break;
             }
         }

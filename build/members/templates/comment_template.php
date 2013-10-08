@@ -26,7 +26,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
 echo $words->get('CommentGuidlinesLink') . '<br /><br />';
-if (!$this->myself && !$comment_to_self_exists  && (count($comment_byloggedinmember) == 0) && $this->loggedInMember) {
+if (!$this->myself && !$comment_to_self_exists  && $this->loggedInMember) {
 
       // Show "Add comment" button
       echo '  <p class="floatbox"><a href="members/' . $username

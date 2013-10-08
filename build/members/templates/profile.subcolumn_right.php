@@ -194,7 +194,6 @@ if (count($relations) > 0) { ?>
     <h3><?php echo $words->get('LatestComments')?></h3> 
 
     <?php
-        $iiMax = (isset($max) && count($comments) > $max) ? $max : count($comments);
         $tt = array ();
         $commentLoopCount = 0;
         foreach ($comments as $c) {
@@ -211,7 +210,6 @@ if (count($relations) > 0) { ?>
             }
 
         $tt = explode(",", $comments[$ii]->Lenght);
-        // var_dump($c);
     ?>
     <div class="floatbox">
         <a href="members/<?=$c->UsernameFromMember?>">
@@ -229,7 +227,7 @@ if (count($relations) > 0) { ?>
                   echo MOD_layoutbits::truncate($textStripped, 250, $moreLink);
               ?>
             </p>
-          <? if ($ii != ($iiMax-1)) echo '<hr />' ?>
+          <? if ($commentLoopCount < $max) echo '<hr />' ?>
         </div> <!-- comment -->
     </div> <!-- floatbox -->
         <? } ?>

@@ -49,6 +49,8 @@ class LastcommentsModel extends  RoxModelBase
                 AND
                 DisplayableInCommentOfTheMonth = 'Yes' 
                 AND
+                DisplayInPublic = 1
+                AND
                 city1.geonameId = m1.IdCity
                 AND
                 country1.iso_alpha2 = city1.fk_countrycode

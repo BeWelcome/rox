@@ -196,8 +196,12 @@ if (count($relations) > 0) { ?>
     <?php
         $iiMax = (isset($max) && count($comments) > $max) ? $max : count($comments);
         $tt = array ();
-        for ($ii = 0; $ii < $iiMax; $ii++) {
-            $c = $comments[$ii];
+        $commentLoopCount = 0;
+        foreach ($comments as $c) {
+            // skip items that are hidden for public
+            if ($c->DisplayInPublic == 0) {continue;}
+            // stop looping when maximum has been reached
+            if (++$commentLoopCount>$max){break;}
             $quality = "neutral";
             if ($c->comQuality == "Good") {
                 $quality = "good";

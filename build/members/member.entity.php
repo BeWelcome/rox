@@ -743,6 +743,8 @@ WHERE IdMember = ".$this->id
                 members.id = comments.IdFromMember
                 AND
                 members.status IN ('Active', 'ChoiceInactive')
+                AND
+                DisplayInPublic = 1
             "
         );
 

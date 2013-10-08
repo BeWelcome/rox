@@ -26,7 +26,8 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
 echo $words->get('CommentGuidlinesLink') . '<br /><br />';
-if (!$this->myself && !$comment_to_self_exists && (count($comment_byloggedinmember) == 0) && $this->loggedInMember) {
+if (!$this->myself && !$comment_to_self_exists  && (count($comment_byloggedinmember) == 0) && $this->loggedInMember) {
+
       // Show "Add comment" button
       echo '  <p class="floatbox"><a href="members/' . $username
           . '/comments/add" class="button">' . $words->get('addcomments')
@@ -34,23 +35,42 @@ if (!$this->myself && !$comment_to_self_exists && (count($comment_byloggedinmemb
     }
 
 foreach($comments as $comment) {
-if(isset($comment['from'])) {
+    
+    // define if from-comment should be shown
+    $showfrom = false;
+    $editfrom = false;
+    if (isset($comment['from'])){
+        if ($comment['from']->DisplayInPublic == 1){$showfrom = true;}
+        if ($comment['from']->AllowEdit == 1){$editfrom = true;}
+    }
+
+    // define if to-comment should be shown
+    $showto = false;
+    $editto = false;
+    if (isset($comment['to'])){
+        if ($comment['to']->DisplayInPublic == 1){$showto = true;}
+        if ($comment['to']->AllowEdit == 1){$editto = true;}
+    }
+    
+if($showfrom || $editfrom || $showto || $editto) {
     echo '<div class="frame">';
 } else { 
     echo '<div>';
 }    ?>
 <div class="subcolumns profilecomment">
-    <?php if (isset($comment['from'])) { 
+    <?php if ($showfrom || $editfrom) { 
         $c = $comment['from']; 
         $quality = strtolower($c->comQuality); 
         $tt = explode(',', $c->Lenght); ?>
     <div class="c75l" >
       <div class="subcl" >
+      <?php if ($editfrom && !$showfrom ){echo $words->get('CommentHiddenEdit');} ?>
         <a href="members/<?=$c->UsernameFromMember?>">
            <img class="float_left framed"  src="members/avatar/<?=$c->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
             <p class="floatbox">
+
               <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
               <span class="small grey">
                 <?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?> <?= $words->get('CommentTo') ?> <a href="members/<?= $c->UsernameToMember ?>"><?= $c->UsernameToMember ?></a> -
@@ -101,7 +121,8 @@ if(isset($comment['from'])) {
       </div> <!-- subcr -->
     </div> <!-- c25r -->
     <?php 
-    } else { 
+    } elseif ($showto || $editto){
+    // profileowner has no comment given but did get a comment
         $cc = $comment['to'];?>
     <div class="c50l" >
       <div class="subcl" >
@@ -130,7 +151,7 @@ if(isset($comment['from'])) {
    ?>
   </div> <!-- subcolumns -->
   <?php 
-    if (isset($comment['to'])) {
+    if ($showto || $editto) {
         $cc = $comment['to'];
         $quality = strtolower($cc->comQuality);
         $tt = explode(',', $cc->Lenght); ?> 
@@ -139,6 +160,10 @@ if(isset($comment['from'])) {
 
         <div class="c75l" >
           <div class="subcl" >
+            <?php // give an aditional message when comment is shown for the reason that it has to be edited
+            if (!$showto && $editto){echo $words->get('CommentHiddenEdit');}
+            ?>
+
             <a href="members/<?= $cc->UsernameFromMember ?>">
                <img class="float_left framed" src="members/avatar/<?= $cc->UsernameFromMember ?>/?xs" height="50px" width="50px" alt="Profile" />
             </a>
@@ -197,7 +222,7 @@ if(isset($comment['from'])) {
       </div> <!-- subcolumns -->
   </div> <!-- profilecomment counter -->
 <?php } else {
-if ($this->myself) {
+if ($this->myself && $showfrom) {
     $cc = $comment['from'] ?>
     <div class="subcolumns profilecomment">
     <p class="float_right"><a class="button" href="members/<?= $cc->UsernameFromMember?>/comments/add"

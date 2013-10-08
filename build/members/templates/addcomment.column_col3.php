@@ -96,7 +96,7 @@
     // Display the form to propose to add a comment	
     ?>
     <?php
-    if (isset($TCom->comQuality) && $TCom->comQuality == "Bad") {
+    if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit != 1) {
         echo "<h3>" . $words->get("CantChangeNegative") . "</h3>" . $words->get("CantChangeNegative_Explanation");
     } else {
     ?>

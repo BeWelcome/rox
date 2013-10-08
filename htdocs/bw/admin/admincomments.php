@@ -233,11 +233,21 @@ switch ($action) {
 		DisplayAdminComments(loaddata("", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count); // call the layout
 		exit (0);
 		break;
-
 	case "ShowOneMember" :
 		$RestrictToIdMember = IdMember(GetParam("cid", 0));
 		break;
-}
+    case "ToggleHide" :
+        $Message = "Toggle hide for general public";
+        $str = "UPDATE comments SET DisplayInPublic = 1 - DisplayInPublic WHERE id=" . Getparam("IdComment");
+        sql_query($str);
+        LogStr(" Toggling <b>hide</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
+        break;
+    case "ToggleAllowEdit" :
+        $Message = "Toggle whether creator may edit post";
+        $str = "UPDATE comments SET AllowEdit = 1 - AllowEdit WHERE id=" . Getparam("IdComment");
+        sql_query($str);
+        LogStr(" Toggling <b>edit allowance</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
+        break;}
 
 $Message = "Negative Comments";
 $count = getcount("AdminCommentMustCheck", $RestrictToIdMember);

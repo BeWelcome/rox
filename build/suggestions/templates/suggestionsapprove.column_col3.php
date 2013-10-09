@@ -1,9 +1,7 @@
 ﻿<?php
-$formkit = $this->layoutkit->formkit;
-$callbackTags = $formkit->setPostCallback('SuggestionsController', 'approveSuggestionCallback');
+$callbackTags = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'approveSuggestionCallback');
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
-$purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
 $errors = $this->getRedirectedMem('errors');
 if (!empty($errors)) {
     $errStr = '<div class="error">';

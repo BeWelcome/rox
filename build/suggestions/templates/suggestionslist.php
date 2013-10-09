@@ -1,6 +1,4 @@
 <?php
-$mod = new MOD_htmlpure();
-$purifier = $mod->getSuggestionsHtmlPurifier();
 $layoutbits = new MOD_layoutbits();
 if (count($this->suggestions) == 0) {
     echo "<p><strong>" . $words->get($this->NoItems) . "</strong></p>";

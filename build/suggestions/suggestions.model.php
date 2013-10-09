@@ -29,15 +29,14 @@ class SuggestionsModel extends RoxModelBase
                     self::SUGGESTIONS_ADD_OPTIONS  => 'SuggestionsAddOptions',
                     self::SUGGESTIONS_VOTING => 'SuggestionsVoting',
                     self::SUGGESTIONS_RANKING => 'SuggestionsRanking',
+                    self::SUGGESTIONS_REJECTED => 'SuggestionsRejected',
                     self::SUGGESTIONS_IMPLEMENTING => 'SuggestionsImplementing',
                     self::SUGGESTIONS_IMPLEMENTED => 'SuggestionsImplemented',
-                    self::SUGGESTIONS_REJECTED => 'SuggestionsRejected',
     );
 
     public static function getStatesByArray() {
         return self::$STATES;
     }
-
 
     const DESCRIPTION_MAX_LEN = 65000;
     const SUMMARY_MAX_LEN = 160;
@@ -51,9 +50,91 @@ class SuggestionsModel extends RoxModelBase
         $config = PVars::getObj('suggestions');
         if ($config->groupid) {
             return $config->groupid;
-        } else {
-            // hard coded group for bewelcome (hack)
-            return 1654;
+        }
+        // Show suggestion threads in the BW forum
+        return 0;
+    }
+
+    private function informSuggestionTeam($suggestion) {
+        // get all team members
+        $query = "
+            SELECT
+                username
+            FROM
+                members, rights, rightsvolunteers
+            WHERE
+                members.Status = 'Active'
+                AND members.id = rightsvolunteers.IdMember
+                AND rights.`Name` = 'Suggestions'
+                AND rightsvolunteers.IdRight = rights.id
+                AND rightsvolunteers.Level > 0
+            ORDER BY
+                username
+                ";
+        $res = $this->dao->query($query);
+        if (!$res) {
+            return false;
+        }
+
+        $receivers = array();
+        while ($row = $res->fetch(PDB::FETCH_OBJ)) {
+            $member = $this->createEntity('Member')->findByUsername($row->username);
+            $email = MOD_crypt::AdminReadCrypted($member->Email);
+            $receivers["BW " . $row->username] = $email;
+        }
+
+        //Load the files we'll need
+        require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
+
+        //Create the Transport
+        $transport = Swift_SmtpTransport::newInstance('localhost', 25);
+
+        //Create the Mailer using your created Transport
+        $mailer = Swift_Mailer::newInstance($transport);
+
+        try
+        {
+            //Create the message
+            $message = Swift_Message::newInstance()
+
+              //Give the message a subject
+              ->setSubject("New suggestion added: " . $suggestion->summary)
+
+              //Set the From address with an associative array
+              ->setFrom("suggestions@bewelcome.org")
+
+              //Set the To addresses with an associative array
+              ->setTo($receivers)
+
+              //Give it a body
+              ->setBody($suggestion->description)
+              ;
+        }
+        catch (Exception $e)
+        {
+            $this->logWrite("In suggestions model creating mail message threw exception.", "suggestions");
+            return false;
+        }
+
+        //Now check if Swift actually sends it
+        try
+        {
+            $sendResult = $mailer->send($message);
+        }
+        catch (Exception $e)
+        {
+            $this->logWrite("Exception when executing Swift_Mailer::send()", "suggestions");
+            $sendResult = false;
+        }
+
+        if ($sendResult)
+        {
+            return true;
+        }
+        else
+        {
+            $this->logWrite("In suggestions model swift::send: Failed to send mail.", "suggestions");
+            return false;
         }
     }
 
@@ -63,23 +144,28 @@ class SuggestionsModel extends RoxModelBase
             case self::SUGGESTIONS_DISCUSSION:
                 $query = "state = " . self::SUGGESTIONS_DISCUSSION
                 . " OR state = " . self::SUGGESTIONS_ADD_OPTIONS;
-                $sql_order = "created ASC";
+                $sql_order = "laststatechanged ASC";
                 break;
             case self::SUGGESTIONS_REJECTED:
                 $query = "state = " . self::SUGGESTIONS_REJECTED
                     . " OR state = " . self::SUGGESTIONS_DUPLICATE;
-                $sql_order = "state DESC, created ASC";
+                $sql_order = "laststatechanged ASC";
                 break;
             case self::SUGGESTIONS_DEV:
                 $query = "state = " . self::SUGGESTIONS_IMPLEMENTED
                     . " OR state = " . self::SUGGESTIONS_IMPLEMENTING;
-                $sql_order = "state ASC, created ASC";
+                $sql_order = "state ASC, laststatechanged ASC";
                 break;
-            default:
+            case self::SUGGESTIONS_AWAIT_APPROVAL:
                 $query = "state = " . $type;
                 $sql_order = "created ASC";
                 break;
+            default:
+                $query = "state = " . $type;
+                $sql_order = "laststatechanged ASC";
+                break;
         }
+
         return array($query, $sql_order);
     }
 
@@ -109,7 +195,7 @@ class SuggestionsModel extends RoxModelBase
         return ($var->state == self::SUGGESTIONS_IMPLEMENTING) || ($var->state == self::SUGGESTIONS_IMPLEMENTED);
     }
 
-    private function filterSuggestionsVoting($var) {
+    private function filterVoting($var) {
         return ($var->state == self::SUGGESTIONS_VOTING);
     }
 
@@ -121,6 +207,7 @@ class SuggestionsModel extends RoxModelBase
         list($where, $order) = $this->getSuggestionsQueryWhere($type);
         $temp->sql_order = $order;
         $all = $temp->FindByWhereMany($where, $pageno * $items, $items);
+
         switch ($type) {
             case self::SUGGESTIONS_DISCUSSION:
                 $filtered = array_filter($all, array($this, 'filterDiscussionAndAddOptions'));
@@ -169,16 +256,28 @@ class SuggestionsModel extends RoxModelBase
         $suggestion->created = date('Y-m-d');
         $suggestion->createdby = $this->getLoggedInMember()->id;
         $suggestion->insert();
+        $this->informSuggestionTeam($suggestion);
         return $suggestion;
     }
 
     public function editSuggestion($args) {
         $suggestion = new Suggestion($args->post['suggestion-id']);
-        $suggestion->summary = $args->post['suggestion-summary'];
-        $suggestion->description = $args->post['suggestion-description'];
         $suggestion->modified = date('Y-m-d');
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
+
+        $words = $this->getWords();
+        $editPostText = '<p>' . $words->getSilent('SuggestionEdited', $suggestion->summary) . '</p>';
+        $editPostText .= '<p>' . $words->getSilent('SuggestionEditedDesc', $suggestion->description)  . '</p>';
+        $editPostText .= '<p>' . $words->getSilent('SuggestionEditedNewSummary', $args->post['suggestion-summary']) . '</p>';
+        $editPostText .= '<p>' . $words->getSilent('SuggestionEditedNewDesc', $args->post['suggestion-description'])  . '</p>';
+        $postId = $this->addPost($suggestion->modifiedby, $editPostText, $suggestion->threadId);
+
+        $suggestion->summary = $args->post['suggestion-summary'];
+        $suggestion->description = $args->post['suggestion-description'];
         $suggestion->update();
+
+        $this->setForumNotification($postId, "reply");
+
         return $suggestion;
     }
 
@@ -216,7 +315,14 @@ class SuggestionsModel extends RoxModelBase
         $result = $this->dao->query($query);
 
         $words->InsertInFTrad( $this->dao->escape($text), 'forums_posts.IdContent', $postId, $poster, -1, -1);
+
         return $postId;
+    }
+
+    private function setForumNotification($postId, $type) {
+        // Notify the members of the group
+        $forums = new Forums();
+        $forums->prepare_notification($postId, $type);
     }
 
     public function approveSuggestion($id) {
@@ -253,6 +359,7 @@ class SuggestionsModel extends RoxModelBase
         $suggestion->approved = date('Y-m-d');
         $suggestion->threadId = $threadId;
         $suggestion->update(true);
+        $this->setForumNotification($postId, "newthread");
     }
 
     public function markDuplicateSuggestion($id) {
@@ -297,6 +404,7 @@ class SuggestionsModel extends RoxModelBase
         $suggestion->addOption($args->post['suggestion-option-summary'], $args->post['suggestion-option-desc']);
         $suggestion->update();
 
+        $this->setForumNotification($postId, "reply");
         return $suggestion;
     }
 
@@ -304,8 +412,24 @@ class SuggestionsModel extends RoxModelBase
         $suggestion = new Suggestion($args->post['suggestion-id']);
         $suggestion->modified = date('Y-m-d');
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
-        $suggestion->editOption($args->post['suggestion-option-id'], $args->post['suggestion-option-summary'], $args->post['suggestion-option-desc']);
+
+        $words = $this->getWords();
+        $optionId = $args->post['suggestion-option-id'];
+        $option = new SuggestionOption($optionId);
+        $editOptionPostText = '<p>' . $words->getSilent('SuggestionOptionEdited', $option->summary) . '</p>';
+        $editOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionEditedDesc', $option->description)  . '</p>';
+        $editOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionEditedNewSummary', $args->post['suggestion-option-summary']) . '</p>';
+        $editOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionEditedNewDesc', $args->post['suggestion-option-desc'])  . '</p>';
+        $postId = $this->addPost($suggestion->modifiedby, $editOptionPostText, $suggestion->threadId);
+
+        $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
+        $result = $this->dao->query($query);
+
+        $suggestion->editOption($optionId, $args->post['suggestion-option-summary'], $args->post['suggestion-option-desc']);
         $suggestion->update();
+
+        $this->setForumNotification($postId, "reply");
+
         return $suggestion;
     }
 
@@ -313,8 +437,19 @@ class SuggestionsModel extends RoxModelBase
         $suggestion = new Suggestion($args->post['suggestion-id']);
         $suggestion->modified = date('Y-m-d');
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
+
+        $words = $this->getWords();
+        $optionId = $args->post['suggestion-option-id'];
+        $option = new SuggestionOption($optionId);
+        $deleteOptionPostText = '<p>' . $words->getSilent('SuggestionOptionDeleted', $option->summary) . '</p>';
+        $deleteOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionDeletedDesc', $option->description)  . '</p>';
+        $postId = $this->addPost($suggestion->modifiedby, $deleteOptionPostText, $suggestion->threadId);
+
         $suggestion->deleteOption($args->post['suggestion-option-id']);
         $suggestion->update();
+
+        $this->setForumNotification($postId, "reply");
+
         return $suggestion;
     }
 
@@ -322,9 +457,18 @@ class SuggestionsModel extends RoxModelBase
         $option = new SuggestionOption($optionId);
         $option->modified = date('Y-m-d');
         $option->modifiedBy = $this->getLoggedInMember()->id;
+
+        $words = $this->getWords();
+        $restoreOptionPostText = '<p>' . $words->getSilent('SuggestionOptionRestored', $option->summary) . '</p>';
+        $restoreOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionRestoredDesc', $option->description)  . '</p>';
+        $postId = $this->addPost($suggestion->modifiedby, $restoreOptionPostText, $suggestion->threadId);
+
         $option->deleted = null;
         $option->deletedBy = null;
         $option->update();
+
+        $this->setForumNotification($postId, "reply");
+
         return $option;
     }
 
@@ -403,6 +547,23 @@ class SuggestionsModel extends RoxModelBase
 
     public function checkChangeStateVarsOk($args) {
         $errors = array();
+        $newstate = $args->post['suggestion-state'];
+        $suggestion = new Suggestion($args->post['suggestion-id']);
+        $state = $suggestion->state;
+        switch($state) {
+            case self::SUGGESTIONS_DUPLICATE:
+                if ($newstate != self::SUGGESTIONS_APPROVE) {
+                    $errors[] = 'SuggestionErrorOnlyStateApprove';
+                }
+                break;
+            default:
+                if ($newstate < $state) {
+                    $errors[] = 'SuggestionErrorStateInvalid';
+                }
+                if ($newstate == $state) {
+                    $errors[] = 'SuggestionsErrorStateNotChanged';
+                }
+        }
         return $errors;
     }
 
@@ -413,6 +574,7 @@ class SuggestionsModel extends RoxModelBase
             case self::SUGGESTIONS_VOTING:
                 $suggestion->votingstart = date('Y-m-d');
                 $suggestion->votingend = date('Y-m-d', time() + 30 * 24 * 60 * 60);
+
                 break;
         }
         $suggestion->update(true);

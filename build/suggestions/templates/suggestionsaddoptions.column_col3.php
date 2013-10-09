@@ -1,9 +1,7 @@
 <?php
-$formkit = $this->layoutkit->formkit;
-$callbackTags = $formkit->setPostCallback('SuggestionsController', 'addOptionCallback');
+$callbackTags = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'addOptionCallback');
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
-$purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
 include 'suggestionserrors.php';
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
@@ -32,8 +30,8 @@ include 'suggestion.php'; ?>
 <div class="subcolumns row">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="submit" id="suggestion-add-option" name="suggestion-add-option"
-							value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>"
-							class="submit" /><?php echo $words->flushBuffer(); ?>
+    value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>"
+    class="submit" /><?php echo $words->flushBuffer(); ?>
 </div>
 </form>
 </div><!-- suggestion-form -->

@@ -38,6 +38,14 @@ class Suggestion extends RoxEntityBase
             // Load options for this suggestion
             $this->options = $entityFactory->create('SuggestionOption')->FindByWhereMany('suggestionId = ' . $this->id);
 
+            // Get number of discussion items (if thread ID != null)
+            $query = "SELECT COUNT(*) as count FROM forums_posts WHERE threadid = " . $this->threadId . " AND PostDeleted = 'NotDeleted'";
+            $sql = $this->dao->query($query);
+            if ($sql) {
+                $row = $sql->fetch(PDB::FETCH_OBJ);
+                $this->posts = $row->count;
+            }
+
             // Get number of votes
             $query = "SELECT COUNT(DISTINCT memberHash) AS count FROM suggestions_votes WHERE suggestionId = " . $this->id;
             $sql = $this->dao->query($query);
@@ -89,16 +97,6 @@ class Suggestion extends RoxEntityBase
         } else {
             // update all fields except for the status field
             // as this might have changed in the mean time
-//             $voteStart = $this->dao->escape($this->votingstart) ? $this->dao->escape($this->votingstart) : 'NULL';
-//             $voteEnd = $this->dao->escape($this->votingend) ? $this->dao->escape($this->votingend) : 'NULL';
-//             $rankStart = $this->dao->escape($this->rankingstarted) ? $this->dao->escape($this->rankingstarted) : 'NULL';
-//             $rankEnd = $this->dao->escape($this->rankingended) ? $this->dao->escape($this->rankingended) : 'NULL';
-//             ,
-//             threadId = " . $this->dao->escape($this->threadId) . ",
-//             votingstart = " . $voteStart . ",
-//             votingend = " . $voteEnd . ",
-//             rankingstarted = " . $rankStart . ",
-//             rankingended = " . $rankEnd . "
             $query = "
                 UPDATE
                     suggestions

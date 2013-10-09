@@ -185,8 +185,10 @@
     $this->addRoute('suggestions_rank', 'suggestions/:id:/rank', 'suggestionsController', 'rank');
     $this->addRoute('suggestions_rejectedlist', 'suggestions/rejected', 'suggestionsController', 'rejectedList');
     $this->addRoute('suggestions_rejectedlist_pages', 'suggestions/rejected/page/:pageno:', 'suggestionsController', 'rejectedList');
+    $this->addRoute('suggestions_rejected', 'suggestions/:id:/rejected', 'suggestionsController', 'rejected');
     $this->addRoute('suggestions_devlist', 'suggestions/dev', 'suggestionsController', 'devList');
     $this->addRoute('suggestions_devlist_pages', 'suggestions/dev/page/:pageno:', 'suggestionsController', 'devList');
+    $this->addRoute('suggestions_dev', 'suggestions/:id:/dev', 'suggestionsController', 'dev');
     $this->addRoute('suggestions_team', 'suggestions/team', 'suggestionsController', 'team');
 
     // searchmembers

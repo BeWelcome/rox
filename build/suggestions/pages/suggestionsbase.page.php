@@ -34,14 +34,16 @@ Boston, MA  02111-1307, USA.
 class SuggestionsBasePage extends PageWithActiveSkin
 {
     protected $hasSuggestionRight = false;
-
+    protected $viewOnly = true;
+    
     public function __construct($member) {
         $this->member = $member;
         if ($member) {
             $this->hasSuggestionRight = $this->checkSuggestionRight();
             $this->disableTinyMCE = $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
-
+            $this->viewOnly = false;
         }
+        $this->purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
     }
 
     protected function getPageTitle() {

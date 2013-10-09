@@ -1,19 +1,10 @@
 <?php
-$formkit = $this->layoutkit->formkit;
-$callbackAddOptionTags = $formkit->setPostCallback('SuggestionsController', 'addOptionToSuggestionCallback');
-$callbackAddPostTags = $formkit->setPostCallback('SuggestionsController', 'postSuggestionCallback');
+$callbackAddOptionTags = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'addOptionToSuggestionCallback');
+$callbackAddPostTags = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'postSuggestionCallback');
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
-$purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
 $errors = $this->getRedirectedMem('errors');
-if (!empty($errors)) {
-    $errStr = '<div class="error">';
-    foreach ($errors as $error) {
-        $errStr .= $words->get($error) . "<br />";
-    }
-    $errStr = substr($errStr, 0, -6) . '</div>';
-    echo $errStr;
-}
+include 'suggestionerrors.php';
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
 }

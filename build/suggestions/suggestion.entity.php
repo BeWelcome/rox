@@ -39,11 +39,14 @@ class Suggestion extends RoxEntityBase
             $this->options = $entityFactory->create('SuggestionOption')->FindByWhereMany('suggestionId = ' . $this->id);
 
             // Get number of discussion items (if thread ID != null)
-            $query = "SELECT COUNT(*) as count FROM forums_posts WHERE threadid = " . $this->threadId . " AND PostDeleted = 'NotDeleted'";
-            $sql = $this->dao->query($query);
-            if ($sql) {
-                $row = $sql->fetch(PDB::FETCH_OBJ);
-                $this->posts = $row->count;
+            $this->posts = 0;
+            if ($this->threadId) { 
+                $query = "SELECT COUNT(*) as count FROM forums_posts WHERE threadid = " . $this->threadId . " AND PostDeleted = 'NotDeleted'";
+                $sql = $this->dao->query($query);
+                if ($sql) {
+                    $row = $sql->fetch(PDB::FETCH_OBJ);
+                    $this->posts = $row->count;
+                }
             }
 
             // Get number of votes

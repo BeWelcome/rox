@@ -80,7 +80,7 @@ class SuggestionsModel extends RoxModelBase
         while ($row = $res->fetch(PDB::FETCH_OBJ)) {
             $member = $this->createEntity('Member')->findByUsername($row->username);
             $email = MOD_crypt::AdminReadCrypted($member->Email);
-            $receivers["BW " . $row->username] = $email;
+            $receivers[$email] = "BW " . $row->username;
         }
 
         //Load the files we'll need
@@ -94,21 +94,11 @@ class SuggestionsModel extends RoxModelBase
 
         try
         {
-            //Create the message
-            $message = Swift_Message::newInstance()
-
-              //Give the message a subject
-              ->setSubject("New suggestion added: " . $suggestion->summary)
-
-              //Set the From address with an associative array
-              ->setFrom("suggestions@bewelcome.org")
-
-              //Set the To addresses with an associative array
-              ->setTo($receivers)
-
-              //Give it a body
-              ->setBody($suggestion->description)
-              ;
+            $message = Swift_Message::newInstance();
+            $message->setSubject("New suggestion added: " . $suggestion->summary);
+            $message->setFrom("suggestions@bewelcome.org");
+            $message->setTo($receivers);
+            $message->setBody($suggestion->description);
         }
         catch (Exception $e)
         {

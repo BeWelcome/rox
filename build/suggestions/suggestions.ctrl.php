@@ -127,13 +127,13 @@ class SuggestionsController extends RoxControllerBase
     public function editCreate() {
         $loggedInMember = $this->_model->getLoggedInMember();
         if (isset($this->route_vars['id'])) {
-            if (!loggedInMember) {
+            if (!$loggedInMember) {
                 $this->setFlashNotice('SuggestionNotLoggedInEdit');
                 return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
             }
             $suggestion = new Suggestion($this->route_vars['id']);
         } else {
-            if (!loggedInMember) {
+            if (!$loggedInMember) {
                 $this->redirectAbsolute($this->router->url('suggestions_about'));
             }                
             $suggestion = new Suggestion;

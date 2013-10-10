@@ -543,7 +543,7 @@ class SuggestionsModel extends RoxModelBase
         $state = $suggestion->state;
         switch($state) {
             case self::SUGGESTIONS_DUPLICATE:
-                if ($newstate != self::SUGGESTIONS_APPROVE) {
+                if ($newstate != self::SUGGESTIONS_AWAIT_APPROVAL) {
                     $errors[] = 'SuggestionErrorOnlyStateApprove';
                 }
                 break;

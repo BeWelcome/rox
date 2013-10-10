@@ -18,29 +18,29 @@ include 'suggestion.php';
 
 if ($this->hasSuggestionRight) : ?>
 <div id='suggestion-form'>
-	<div class="subcolumns">
-		<div class="c62l">
-			<div class="subcl">
-				<div class="row">
-					<form method="post" id="suggestion-approve-form">
+    <div class="subcolumns">
+        <div class="c62l">
+            <div class="subcl">
+                <div class="row">
+                    <form method="post" id="suggestion-approve-form">
                         <?php echo $callbackTags; ?>
                         <input type="hidden" id="suggestion-id"
-							name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
-						<input type="submit" id="suggestion-approve"
-							name="suggestion-approve"
-							value="<?php echo $words->getSilent('SuggestionsSubmitApprove'); ?>"
-							class="submit" /><?php echo $words->flushBuffer(); ?>
+                            name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
+                        <input type="submit" id="suggestion-approve"
+                            name="suggestion-approve"
+                            value="<?php echo $words->getSilent('SuggestionsSubmitApprove'); ?>"
+                            class="submit" /><?php echo $words->flushBuffer(); ?>
                         <input type="submit" id="suggestion-duplicate"
-							name="suggestion-duplicate"
-							value="<?php echo $words->getSilent('SuggestionsSubmitDuplicate'); ?>"
-							class="submit" /><?php echo $words->flushBuffer(); ?>
+                            name="suggestion-duplicate"
+                            value="<?php echo $words->getSilent('SuggestionsSubmitDuplicate'); ?>"
+                            class="submit" /><?php echo $words->flushBuffer(); ?>
                     </form>
-				</div>
-			</div>
-		</div><!-- subcl -->
-	</div><!-- c62l -->
-	<div class="c38r">
-		<div class="subcr"></div><!-- c38r -->
-	</div><!-- subcolums -->
+                </div>
+            </div>
+        </div><!-- subcl -->
+    </div><!-- c62l -->
+    <div class="c38r">
+        <div class="subcr"></div><!-- c38r -->
+    </div><!-- subcolums -->
 </div><!-- suggestion-form -->
 <?php endif; ?>

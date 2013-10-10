@@ -29,8 +29,7 @@ if (empty($vars)) {
     }
 } else {
 }
-include 'suggestionserrors.php';
-?>
+include 'suggestionserrors.php'; ?>
 <div>
 <fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); ?></legend>
 <form method="post" id="suggestion-vote-form">
@@ -41,15 +40,26 @@ $votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + Sug
     <p><?php echo $this->purifier->purify($this->suggestion->description); ?></p>
     <hr />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
-    <div class="floatbox float_left"><p><strong><?php echo $this->purifier->purify($option->summary); ?></strong></p><p><?php echo $this->purifier->purify($option->description); ?></p></div>
-    <div class="vote floatbox float_right"><?php foreach($ranks as $key => $rank) :
-        $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?><input type="radio" class="toggle"
-        <?php if ($key == $this->votes[$option->id]->rank) { echo 'checked="checked"'; } ?> id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $key; ?>"/><label for="<?php echo $id; ?>"><?php echo $rank; ?></label>
-    <?php endforeach; ?>
-        </div></div><hr />
-    <?php endforeach; ?>
-    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', date('d.m.Y', $this->suggestion->votingendts));?></p>
+    <div class="floatbox float_left">
+        <p><strong><?php echo $this->purifier->purify($option->summary); ?></strong></p>
+        <p><?php echo $this->purifier->purify($option->description); ?></p></div>
+        <?php if (!$this->viewOnly) : ?>
+            <div class="vote floatbox float_right">
+            <?php foreach($ranks as $key => $rank) :
+                $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?>
+                <input type="radio" class="toggle" <?php if ($key == $this->votes[$option->id]->rank) :
+                    echo 'checked="checked"';
+                    endif;?> id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $key; ?>"/>
+                <label for="<?php echo $id; ?>"><?php echo $rank; ?></label>
+            <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div><hr />
+    <?php endforeach; 
+    if (!$this->viewOnly) : ?>
+    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', $votingends);?></p>
     <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
+    <?php endif; ?>
 </form>
 </fieldset>
 </div>

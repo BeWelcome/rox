@@ -5,7 +5,7 @@ $request = PRequest::get()->request;
 include 'suggestionserrors.php';
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
-	$vars['suggestion-option-summary'] = '';
+    $vars['suggestion-option-summary'] = '';
     $vars['suggestion-option-desc'] = '';
 }
 if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
@@ -16,7 +16,8 @@ if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
 // Show suggestion head (as on every page)
 include 'suggestion.php'; ?>
 <div id='suggestion-form'>
-<?php include 'suggestionoptions.php'; ?>
+<?php include 'suggestionoptions.php'; 
+if (!$this->viewOnly) { ?>
 <form method="POST">
 <?php echo $callbackTags;?>
 <div class="subcolumns row">
@@ -39,4 +40,4 @@ include 'suggestion.php'; ?>
 // Now load the board and show it
 $Forums = new ForumsController;
 $Forums->showExternalSuggestionsThread( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId);
-?>
+}?>

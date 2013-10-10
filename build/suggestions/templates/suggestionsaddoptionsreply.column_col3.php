@@ -12,11 +12,13 @@ if (empty($vars)) {
 // Show suggestion head (as on every page)
 include 'suggestion.php'; ?>
 <div id='suggestion-form'>
-<?php include 'suggestionoptions.php'; ?>
+<?php include 'suggestionoptions.php'; 
+?>
 </div><!-- suggestion-form -->
 <?php
-// Now load the board and show it
-$Forums = new ForumsController;
-$Forums->showExternalSuggestionsThreadReply( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId, 'addoptions');
-
+if (!$this->viewOnly) { 
+    // Now load the board and show it
+    $Forums = new ForumsController;
+    $Forums->showExternalSuggestionsThreadReply( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId, 'addoptions');
+}
 ?>

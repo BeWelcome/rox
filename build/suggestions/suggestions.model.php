@@ -485,6 +485,7 @@ class SuggestionsModel extends RoxModelBase
         while($row = $sql->fetch(PDB::FETCH_OBJ)) {
             $votes[$row->optionId] = $row;
         }
+        error_log(print_r($votes, true));
         return $votes;
     }
 

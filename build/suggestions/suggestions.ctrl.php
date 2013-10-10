@@ -180,7 +180,7 @@ class SuggestionsController extends RoxControllerBase
     public function approve() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL);
-        $suggestion = new Suggestion($this->id);
+        $suggestion = new Suggestion($this->route_vars['id']);
         $page = new SuggestionsApprovePage($loggedInMember);
         $page->suggestion = $suggestion;
         return $page;

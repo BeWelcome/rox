@@ -92,13 +92,18 @@ class SuggestionsModel extends RoxModelBase
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);
 
+        $purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
+        $plain = 'Please check the suggestion and take the necessary <a href="' . PVars::getObj('env')->baseuri . 'suggestions/' . $suggestion->id . '/approve">action</a>.';
+        $html = $purifier->purify($suggestion->description) . '<br/>' . $plain;
         try
         {
             $message = Swift_Message::newInstance();
             $message->setSubject("New suggestion added: " . $suggestion->summary);
             $message->setFrom("suggestions@bewelcome.org");
-            $message->setTo($receivers);
-            $message->setBody($suggestion->description);
+            $message->setBcc($receivers);
+            $message->addPart($html, 'text/html', 'utf-8');
+            $message->addPart($plain, 'text/plain', 'utf-8');
+            $message->setBody($plain);
         }
         catch (Exception $e)
         {

@@ -1,14 +1,13 @@
 <?php
-$formkit = $this->layoutkit->formkit;
-$callbackTags = $formkit->setPostCallback('SuggestionsController', 'deleteOptionCallback');
+$callbackTags = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'deleteOptionCallback');
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
-$purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
 include 'suggestionserrors.php';
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
+    $vars['suggestion-id'] = $this->suggestion->id;
     $vars['suggestion-option-id'] = $this->option->id;
-	$vars['suggestion-option-summary'] = $this->suggestion->options[$this->optionId]->summary;
+    $vars['suggestion-option-summary'] = $this->suggestion->options[$this->optionId]->summary;
     $vars['suggestion-option-desc'] = $this->suggestion->options[$this->optionId]->description;
 }
 if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
@@ -23,13 +22,13 @@ include 'suggestion.php';
 <form method="post" id="suggestion-addoptions-form">
 <?php echo $callbackTags; ?>
 <div class="subcolumns row">
-<h3><?php echo $purifier->purify($this->option->summary);?></h3>
+<h3><?php echo $this->purifier->purify($this->option->summary);?></h3>
 </div>
 <div class="subcolumns">
     <div class="c62l">
         <div class="subcl">
             <div class="row">
-            <?php echo $purifier->purify($this->option->description);?>
+            <?php echo $this->purifier->purify($this->option->description);?>
         </div>
     </div>
 </div>

@@ -1,13 +1,11 @@
 <?php
-$formkit = $this->layoutkit->formkit;
-$callbackTags = $formkit->setPostCallback('SuggestionsController', 'addOptionCallback');
+$callbackTags = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'addOptionCallback');
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
-$purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
 include 'suggestionserrors.php';
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
-	$vars['suggestion-option-summary'] = '';
+    $vars['suggestion-option-summary'] = '';
     $vars['suggestion-option-desc'] = '';
 }
 if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
@@ -18,7 +16,8 @@ if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
 // Show suggestion head (as on every page)
 include 'suggestion.php'; ?>
 <div id='suggestion-form'>
-<?php include 'suggestionoptions.php'; ?>
+<?php include 'suggestionoptions.php'; 
+if (!$this->viewOnly) { ?>
 <form method="POST">
 <?php echo $callbackTags;?>
 <div class="subcolumns row">
@@ -32,8 +31,8 @@ include 'suggestion.php'; ?>
 <div class="subcolumns row">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="submit" id="suggestion-add-option" name="suggestion-add-option"
-							value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>"
-							class="submit" /><?php echo $words->flushBuffer(); ?>
+    value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>"
+    class="submit" /><?php echo $words->flushBuffer(); ?>
 </div>
 </form>
 </div><!-- suggestion-form -->
@@ -41,4 +40,4 @@ include 'suggestion.php'; ?>
 // Now load the board and show it
 $Forums = new ForumsController;
 $Forums->showExternalSuggestionsThread( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId);
-?>
+}?>

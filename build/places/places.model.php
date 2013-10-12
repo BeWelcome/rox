@@ -186,12 +186,12 @@ class Places extends RoxModelBase {
             SELECT
                 COUNT(*) cnt
             FROM
-                members m,
-                geonames g
+                members m
             WHERE
                 m.status = 'Active'
                 AND m.MaxGuest >= 1
                 AND m.IdCity = %s", $this->dao->escape($city));
+
         $row = $this->singleLookup($countQuery);
         return $row->cnt;;
     }

@@ -4,7 +4,6 @@ if ($count == 0) : ?>
     <th></th>
     <th class="details"><?php echo $words->get('SuggestionNumberOfPosts') . '<br/>' . 
             $words->get('SuggestionNbOptions'); ?></th>
-    <th class="details"><?php echo $words->get('SuggestionNumberOfPosts'); ?></th>
     <th class="details"><?php echo $words->get('SuggestionsVotingStarts'); ?></th></tr>
 <?php endif;
 echo '<tr class="' . (($count % 2) ? 'highlight' : 'blank') . '">';

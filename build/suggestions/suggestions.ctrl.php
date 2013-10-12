@@ -44,8 +44,10 @@ class SuggestionsController extends RoxControllerBase
         $params = array('id' => $id);
         switch ($suggestion->state) {
             case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
-                if ($this->_model->hasSuggestionRight($loggedInMember)) {
+                if ($this->_model->hasSuggestionRight($this->_model->getLoggedInMember)) {
                     $url = $this->router->url('suggestions_approve', $params);
+                } else {
+                    $url = $this->router->url('suggestions_approvelist');
                 }
                 break;
             case SuggestionsModel::SUGGESTIONS_DISCUSSION:
@@ -443,9 +445,12 @@ class SuggestionsController extends RoxControllerBase
 
     public function rejected() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_IMPLEMENTING);
+        $suggestion = new Suggestion($this->route_vars['id']);
+        if ($suggestion->state <> 0) {
+            $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_REJECTED);
+        }
         $page = new SuggestionsRejectedPage($loggedInMember);
-        $page->suggestion = new Suggestion($this->route_vars['id']);
+        $page->suggestion = $suggestion;
         return $page;
     }
 

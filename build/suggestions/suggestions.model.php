@@ -139,7 +139,7 @@ class SuggestionsModel extends RoxModelBase
             case self::SUGGESTIONS_DISCUSSION:
                 $query = "state = " . self::SUGGESTIONS_DISCUSSION
                 . " OR state = " . self::SUGGESTIONS_ADD_OPTIONS;
-                $sql_order = "laststatechanged ASC";
+                $sql_order = "Created ASC";
                 break;
             case self::SUGGESTIONS_REJECTED:
                 $query = "state = " . self::SUGGESTIONS_REJECTED
@@ -480,7 +480,7 @@ class SuggestionsModel extends RoxModelBase
         while($row = $sql->fetch(PDB::FETCH_OBJ)) {
             $votes[$row->optionId] = $row;
         }
-        error_log(print_r($votes, true));
+
         return $votes;
     }
 

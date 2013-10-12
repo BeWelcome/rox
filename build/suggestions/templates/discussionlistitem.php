@@ -1,7 +1,9 @@
 <?php
 if ($count == 0) : ?>
     <tr><th class="description"><?php echo $words->get('Suggestion'); ?></th>
-    <th class="details"></th>
+    <th></th>
+    <th class="details"><?php echo $words->get('SuggestionNumberOfPosts') . '<br/>' . 
+            $words->get('SuggestionNbOptions'); ?></th>
     <th class="details"><?php echo $words->get('SuggestionNumberOfPosts'); ?></th>
     <th class="details"><?php echo $words->get('SuggestionsVotingStarts'); ?></th></tr>
 <?php endif;

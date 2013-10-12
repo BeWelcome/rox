@@ -31,7 +31,6 @@ class Suggestion extends RoxEntityBase
         {
             $entityFactory = new RoxEntityFactory();
             $this->creator = $entityFactory->create('Member', $this->createdby);
-            error_log($this->creator);
             if ($this->modifiedby) {
                 $this->modifier = $entityFactory->create('Member', $this->modifiedby);
             }

@@ -5,8 +5,13 @@
 @media all
 {
 #suggestionslist {width: 100%;}
+#suggestionslist th.description { vertical-align: bottom; text-align: left; }
+#suggestionslist th.details { vertical-align: bottom; text-align: center; }
+#suggestionslist td.description{ vertical-align: top; text-align: left; }
+#suggestionslist td.details{ vertical-align: top; text-align: center; width: 10%; }
+
 .picbox_activities { width: 240px; }
-	
+
 .vote input[type="radio"].toggle {
     display: none;
     *display: inline; /* IE8 hack */
@@ -41,5 +46,5 @@
     width:auto;
 }
 
-  h4 {font-size: 1.2em; color: #333; margin: 0 0 0.30em 0; font-weight:bold;}
+h4 {font-size: 1.2em; color: #333; margin: 0 0 0.30em 0; font-weight:bold;}
 }

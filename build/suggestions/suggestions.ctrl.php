@@ -20,32 +20,59 @@ class SuggestionsController extends RoxControllerBase
         $this->redirectAbsolute($this->router->url('suggestions_about'));
     }
 
+    /** 
+     * Redirects if no one's logged in or if someone tries to cheat (like trying to open the discuss page while
+     * voting already started
+     */
+    private function redirectOnSuggestionState($state) {
+        $id = $this->route_vars['id'];
+        $suggestion = new Suggestion($id);
+        if ($suggestion) {
+            if (($state & $suggestion->state) <> $suggestion->state) {
+            $params = array('id' => $id);
+            $this->redirectAbsolute($this->router->url('suggestions_show', $params));
+        }
+        }
+    }
+    
     /**
      * Redirects for a given suggestion to the appropiate page
      */
     public function show() {
-        $loggedInMember = $this->_model->getLoggedInMember();
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         $params = array('id' => $id);
-        $url = $this->router->url('suggestions_view', $params);
-        if ($loggedInMember) {
-            switch ($suggestion->state) {
-                case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
-                    if ($this->_model->hasSuggestionRight($loggedInMember)) {
-                        $url = $this->router->url('suggestions_approve', $params);
-                    }
-                    break;
-                case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-                    $url = $this->router->url('suggestions_discuss', $params);
-                    break;
-                case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
-                    $url = $this->router->url('suggestions_addoptions', $params);
-                    break;
-                case SuggestionsModel::SUGGESTIONS_VOTING:
-                    $url = $this->router->url('suggestions_voting', $params);
-                    break;
-            }
+        switch ($suggestion->state) {
+            case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
+                if ($this->_model->hasSuggestionRight($this->_model->getLoggedInMember)) {
+                    $url = $this->router->url('suggestions_approve', $params);
+                } else {
+                    $url = $this->router->url('suggestions_approvelist');
+                }
+                break;
+            case SuggestionsModel::SUGGESTIONS_DISCUSSION:
+                $url = $this->router->url('suggestions_discuss', $params);
+                break;
+            case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
+                $url = $this->router->url('suggestions_add_options', $params);
+                break;
+            case SuggestionsModel::SUGGESTIONS_VOTING:
+                $url = $this->router->url('suggestions_vote', $params);
+                break;
+            case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
+            case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
+                $url = $this->router->url('suggestions_dev', $params);
+                break;
+            case SuggestionsModel::SUGGESTIONS_VOTING:
+                $url = $this->router->url('suggestions_vote', $params);
+                break;
+            case SuggestionsModel::SUGGESTIONS_RANKING:
+                $url = $this->router->url('suggestions_rank', $params);
+                break;
+            case SuggestionsModel::SUGGESTIONS_DUPLICATE:
+            case SuggestionsModel::SUGGESTIONS_REJECTED:
+                $url = $this->router->url('suggestions_rejected', $params);
+                break;
         }
         $this->redirectAbsolute($url);
     }
@@ -101,15 +128,19 @@ class SuggestionsController extends RoxControllerBase
 
     public function editCreate() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
         if (isset($this->route_vars['id'])) {
-            $id = $this->route_vars['id'];
-            $suggestion = new Suggestion($id);
+            if (!$loggedInMember) {
+                $this->setFlashNotice('SuggestionNotLoggedInEdit');
+                return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
+            }
+            $suggestion = new Suggestion($this->route_vars['id']);
         } else {
+            if (!$loggedInMember) {
+                $this->redirectAbsolute($this->router->url('suggestions_about'));
+            }                
             $suggestion = new Suggestion;
         }
+        
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;
@@ -150,11 +181,8 @@ class SuggestionsController extends RoxControllerBase
 
     public function approve() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
-        $id = $this->route_vars['id'];
-        $suggestion = new Suggestion($id);
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL);
+        $suggestion = new Suggestion($this->route_vars['id']);
         $page = new SuggestionsApprovePage($loggedInMember);
         $page->suggestion = $suggestion;
         return $page;
@@ -177,9 +205,7 @@ class SuggestionsController extends RoxControllerBase
 
     public function discuss() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_DISCUSSION);
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         $page = new SuggestionsDiscussPage($loggedInMember);
@@ -190,9 +216,7 @@ class SuggestionsController extends RoxControllerBase
 
     public function discussReply() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_DISCUSSION);
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         $page = new SuggestionsDiscussReplyPage($loggedInMember);
@@ -212,7 +236,7 @@ class SuggestionsController extends RoxControllerBase
         }
         $this->_model->editOption($args);
         $this->setFlashNotice('SuggestionEditOptionSuccess');
-        return $this->router->url('suggestions_addoptions',
+        return $this->router->url('suggestions_add_options',
             array(
                 'id' => $args->post['suggestion-id'],
             ), false);
@@ -220,9 +244,7 @@ class SuggestionsController extends RoxControllerBase
 
     public function editOption() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_ADD_OPTIONS);
         $id = $this->route_vars['id'];
         $optionId = $this->route_vars['optid'];
         $suggestion = new Suggestion($id);
@@ -238,14 +260,12 @@ class SuggestionsController extends RoxControllerBase
     {
         $this->_model->deleteOption($args);
         $this->setFlashNotice('SuggestionDeleteOptionSuccess');
-        return $this->router->url('suggestions_addoptions', array('id' => $suggestion->id), false);
+        return $this->router->url('suggestions_add_options', array('id' => $args->post['suggestion-id']), false);
     }
 
     public function deleteOption() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_ADD_OPTIONS);
         $id = $this->route_vars['id'];
         $optionId = $this->route_vars['optid'];
         $suggestion = new Suggestion($id);
@@ -258,9 +278,7 @@ class SuggestionsController extends RoxControllerBase
 
     public function restoreOption() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_addoptions'));
-        }
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_ADD_OPTIONS);
         $optionId = $this->route_vars['optid'];
         $this->_model->restoreOption($optionId);
         $this->setFlashNotice('SuggestionRestoreOptionSuccess');
@@ -292,11 +310,12 @@ class SuggestionsController extends RoxControllerBase
         }
         $this->_model->changeState($args);
         $this->setFlashNotice('SuggestionChangeStatusSuccess');
-        return $this->redirect($this->router->url('suggestions_show', array('id' => $args->post['suggestion-id'])), false);
+        return $this->router->url('suggestions_show', array('id' => $args->post['suggestion-id']), false);
     }
 
     public function addOptions() {
         $loggedInMember = $this->_model->getLoggedInMember();
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_ADD_OPTIONS);
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         $page = new SuggestionsAddOptionsPage($loggedInMember);
@@ -307,9 +326,7 @@ class SuggestionsController extends RoxControllerBase
 
     public function addOptionsReply() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_ADD_OPTIONS);
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         $page = new SuggestionsAddOptionsReplyPage($loggedInMember);
@@ -349,13 +366,16 @@ class SuggestionsController extends RoxControllerBase
 
     public function vote() {
         $loggedInMember = $this->_model->getLoggedInMember();
-        if (!$loggedInMember) {
-            $this->redirectAbsolute($this->router->url('suggestions_votelist'));
-        }
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_VOTING);
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         $page = new SuggestionsVotingPage($loggedInMember);
-        $page->votes = $this->_model->getVotesForLoggedInMember($suggestion);
+        $page->votes = array();
+        if ($loggedInMember) {
+            $page->votes = $this->_model->getVotesForLoggedInMember($suggestion);
+        } else {
+            $this->setFlashNotice('SuggestionsNotLoggedIn');
+        }
         $page->suggestion = $suggestion;
         return $page;
     }
@@ -375,6 +395,14 @@ class SuggestionsController extends RoxControllerBase
         return $page;
     }
 
+    public function rank() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_RANKING);
+        $page = new SuggestionsRankingPage($loggedInMember);
+        $page->suggestion = new Suggestion($this->route_vars['id']);
+        return $page;
+    }
+    
     public function devList() {
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
@@ -390,6 +418,16 @@ class SuggestionsController extends RoxControllerBase
         return $page;
     }
 
+    public function dev() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $this->redirectOnSuggestionState(
+            SuggestionsModel::SUGGESTIONS_IMPLEMENTING 
+            | SuggestionsModel::SUGGESTIONS_IMPLEMENTED);
+        $page = new SuggestionsDevPage($this->_model->getLoggedInMember());
+        $page->suggestion = new Suggestion($this->route_vars['id']);
+        return $page;
+    }
+
     public function rejectedList() {
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
@@ -402,6 +440,17 @@ class SuggestionsController extends RoxControllerBase
 
         $page->pager = $this->getPager('rejected', $count, $pageno);
 
+        return $page;
+    }
+
+    public function rejected() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $suggestion = new Suggestion($this->route_vars['id']);
+        if ($suggestion->state <> 0) {
+            $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_REJECTED);
+        }
+        $page = new SuggestionsRejectedPage($loggedInMember);
+        $page->suggestion = $suggestion;
         return $page;
     }
 

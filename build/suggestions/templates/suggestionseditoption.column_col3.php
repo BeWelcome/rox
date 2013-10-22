@@ -1,14 +1,12 @@
 <?php
-$formkit = $this->layoutkit->formkit;
-$callbackTags = $formkit->setPostCallback('SuggestionsController', 'editOptionCallback');
+$callbackTags = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'editOptionCallback');
 $layoutbits = new Mod_layoutbits();
 $request = PRequest::get()->request;
-$purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
 include 'suggestionserrors.php';
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
     $vars['suggestion-option-id'] = $this->option->id;
-	$vars['suggestion-option-summary'] = $this->option->summary;
+    $vars['suggestion-option-summary'] = $this->option->summary;
     $vars['suggestion-option-desc'] = $this->option->description;
 }
 if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
@@ -24,12 +22,12 @@ include 'suggestion.php';
 <?php echo $callbackTags;
 foreach($this->suggestion->options as $option) :
     if ($option->id <> $vars['suggestion-option-id']) : ?>
-<div class="subcolumns row"><h3><?php echo $purifier->purify($option->summary);?></h3></div>
+<div class="subcolumns row"><h3><?php echo $this->purifier->purify($option->summary);?></h3></div>
 <div class="subcolumns">
 <div class="c62l">
             <div class="subcl">
                 <div class="row">
-<?php echo $purifier->purify($option->description);?></div></div></div>
+<?php echo $this->purifier->purify($option->description);?></div></div></div>
 <div class="c38r">
 <div class="subcl">
 <div class="row">
@@ -54,8 +52,8 @@ foreach($this->suggestion->options as $option) :
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="hidden" id="suggestion-option-id" name="suggestion-option-id" value="<?php echo $vars['suggestion-option-id']; ?>" />
 <input type="submit" id="suggestion-edit-option" name="suggestion-edit-option"
-							value="<?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?>"
-							class="submit" /><?php echo $words->flushBuffer(); ?>
+    value="<?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?>"
+    class="submit" /><?php echo $words->flushBuffer(); ?>
 </div>
 <?php endif;
 endforeach; ?>

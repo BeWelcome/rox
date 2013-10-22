@@ -49,9 +49,9 @@
                 <li><a href="forums" title="<?=$words->getSilent('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a><?php echo $words->flushBuffer(); ?></li>
                 <li><a href="groups/search" title="<?=$words->getSilent('GroupsTagLine')?>"><?=$words->get('Groups')?></a><?php echo $words->flushBuffer(); ?></li>
                 <li><a href="activities"><?=$words->get('Activities')?></a></li>
-                <?php if ($logged_in) { ?>
+                <?php // if ($logged_in) { ?>
                 <li><a href="suggestions"><?=$words->get('Suggestions')?></a></li>
-                <?php } ?>
+                <?php // } ?>
                 <li><a href="trip"><?=$words->get('Trips')?></a></li>
                 <li><a href="gallery"><?=$words->get('Gallery')?></a></li>
                 <li><a href="blog"><?=$words->get('Blogs')?></a></li>

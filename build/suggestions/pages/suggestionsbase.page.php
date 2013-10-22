@@ -34,14 +34,16 @@ Boston, MA  02111-1307, USA.
 class SuggestionsBasePage extends PageWithActiveSkin
 {
     protected $hasSuggestionRight = false;
-
+    protected $viewOnly = true;
+    
     public function __construct($member) {
         $this->member = $member;
         if ($member) {
             $this->hasSuggestionRight = $this->checkSuggestionRight();
             $this->disableTinyMCE = $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
-
+            $this->viewOnly = false;
         }
+        $this->purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
     }
 
     protected function getPageTitle() {
@@ -92,7 +94,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?2';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?3';
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';

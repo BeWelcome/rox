@@ -124,7 +124,7 @@ $qry=sql_query($str);
 $langarr = array();
 while ($language=mysql_fetch_object($qry)) {
     $langarr[] = $language;
-}
+} 
 echo "    <div id=\"col3\"> \n";
 echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";
 echo "          <div class=\"info\">\n";
@@ -421,22 +421,13 @@ if ((isset ($_POST['DOACTION'])) and (strtolower($_POST['DOACTION']) == "submit"
       if (isset($_POST["donottranslate"])) {
         $donottranslate="donottranslate='".$_POST["donottranslate"]."',";
       }
-
+            
       if (isset($_POST["TranslationPriority"])) {
         $TranslationPriority="TranslationPriority='".$_POST["TranslationPriority"]."',";
       }
-
-      $change = "";
-      if ($rlang->ShortCode == 'en') {
-          if (isset($_POST["change"])) {
-              $change = "`change` = 'minor',";
-          } else {
-              $change = "`change` = 'major',";
-          }
-    }
-
-      $str = "update words set ".$change.$donottranslate.$TranslationPriority."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . mysql_real_escape_string($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
-      error_log($str);
+            
+            
+      $str = "update words set ".$donottranslate.$TranslationPriority."code='" . $_POST['code'] . "',ShortCode='" . $rlang->ShortCode . "'" . $descupdate . ",IdLanguage=" . $rlang->IdLanguage . ",Sentence='" . mysql_real_escape_string($_POST['Sentence']) . "',updated=now(),IdMember=".$_SESSION['IdMember']." where id=$id";
       $qry = sql_query($str);
       if ($qry) {
         echo "update of <strong>$code</strong> successful<br />";
@@ -521,8 +512,8 @@ $NbRow=4;
     echo "<tr><td class=\"label\">Description: </td>\n";
     echo "<td><em>\n", $rEnglish->Description,"</em><br />";
     if ($RightLevel >= 10) { // Level 10 allow to change/set description
-        echo "                    <textarea name=\"Description\" cols=\"60\" class=\"long\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
-    }
+      echo "                    <textarea name=\"Description\" cols=\"60\" class=\"long\" rows=\"4\">", $rEnglish->Description, "</textarea>\n";
+}
     echo "                  </td></tr>\n";
   } else {
 echo "                <tr>\n";
@@ -556,20 +547,11 @@ echo "\" rows=",$NbRows,">", $Sentence, "</textarea></td>\n";
             echo '>' . trim($language->EnglishName) . ' (' . $language->ShortCode . ')</option>';
         }?></td>
   </tr>
-  <?php if ($lang == 'en') :?>
-    <tr>
-    <td class="label"><label for="change">Minor change?</label> </td>
-    <td><input type="checkbox" name="change" value="minor" /></td>
-  </tr>
-  <?php endif; ?>
-    <tr>
+  <tr>
     <td colspan="2" align="center">
       <input class="button" type="submit" id="submit" name="DOACTION" value="Submit">
       <input class="button" type="submit" id="submit" name="DOACTION" value="Find">
-      <!--  Hide delete button, we don't want words deleted but hidden
-        <input class="button" type="submit" id="submit" name="DOACTION" value="Delete" onclick="confirm('Are you sure you want to delete this?');">
-       -->
-      <?php ?>
+      <input class="button" type="submit" id="submit" name="DOACTION" value="Delete" onclick="confirm('Are you sure you want to delete this?');">
     </td>
   </tr>
 </table>

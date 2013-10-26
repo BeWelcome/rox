@@ -190,7 +190,7 @@ class PageWithHTML extends AbstractBasePage
             // no stylesheets
         } else foreach($stylesheet_patches as $url) {
             ?>
-    <!--[if lte IE 7]>
+    <!--[if lte IE 8]>
                     <link rel="stylesheet" href="<?=$url ?>" type="text/css" />
         <![endif]-->
             <?php

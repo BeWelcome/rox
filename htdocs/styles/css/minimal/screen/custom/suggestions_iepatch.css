@@ -1,0 +1,49 @@
+/*
+*  custom styles for suggestions
+*
+*/
+@media all
+{
+#suggestionslist {width: 100%;}
+#suggestionslist th.description { vertical-align: bottom; text-align: left; }
+#suggestionslist th.details { vertical-align: bottom; text-align: center; }
+#suggestionslist td.description{ vertical-align: top; text-align: left; }
+#suggestionslist td.details{ vertical-align: top; text-align: center; width: 10%; }
+
+.picbox_activities { width: 240px; }
+
+.vote input[type="radio"].toggle {
+    display: inline;
+}
+
+.vote input[type="radio"]:checked + label, .vote input[type="radio"] + label:hover {
+    background: transparent url(../../images/button_bg_checked.png) repeat-x scroll 0 0;
+    color:#f5f5f5;
+    font-size:1.1em;
+    font-weight:bold;
+    height:24px !important;
+    line-height:24px !important;
+    margin:1px 4px;
+    padding:3px 8px;
+    text-align:center;
+    width:auto;
+}
+
+.vote input[type="radio"] + label {
+    background: transparent url(../../images/button_bg.png) repeat-x scroll 0 0;
+    border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
+    border-style:solid;
+    border-width:1px;
+    color:#ff8800;
+    font-size:1.1em;
+    font-weight:bold;
+    height:24px !important;
+    line-height:24px !important;
+    margin:1px 4px;
+    padding:3px 8px;
+    text-align:center;
+    width:auto;
+}
+
+h4 {font-size: 1.2em; color: #333; margin: 0 0 0.30em 0; font-weight:bold;}
+}

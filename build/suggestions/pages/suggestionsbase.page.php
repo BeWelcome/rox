@@ -35,7 +35,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
 {
     protected $hasSuggestionRight = false;
     protected $viewOnly = true;
-    
+
     public function __construct($member) {
         $this->member = $member;
         if ($member) {
@@ -99,6 +99,12 @@ class SuggestionsBasePage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css';
+       return $stylesheets;
+    }
+
+    protected function getStylesheetPatches() {
+       $stylesheets = parent::getStylesheetPatches();
+       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions_iepatch.css';
        return $stylesheets;
     }
 

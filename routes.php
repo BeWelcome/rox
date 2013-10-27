@@ -95,7 +95,14 @@
     $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminController', 'spamOverview');
 
     // admin words routes
-    $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
+    //$this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
+    
+    $this->addRoute('admin_word_list', 'admin/word/list/:type:', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
+    
+    
+    
+    
     // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
     // admin activity routes

@@ -1,7 +1,6 @@
 <?php
 /*
-
-Copyright (c) 2007 BeVolunteer
+Copyright (c) 2007-2009 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -19,18 +18,24 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/> or 
 write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307, USA.
-
 */
-/** 
- * @author crumbking
- * 
- *  
- * @package Apps
- * @subpackage Admin
- */
-$words = new MOD_words();
-?>
-<h3><a href="admin" title="$words->get('BackToVolunteerToolsBarTitle')">&laquo; <?php echo $words->get('VolunteerToolsBarTitle') ?></a></h3>
-</br>
-FIXME Actions
-for Admin words
+    /** 
+     * @author crumbking
+     */
+
+    /** 
+     * words management overview page
+     * 
+     * @package Apps
+     * @subpackage Admin
+     */
+
+class AdminWordStatsPage extends AdminWordBasePage
+{
+    public function teaserHeadline()
+    {
+        $string = 'AdminWord';
+        $string .= ' » Statistics';
+        return $string;
+    }
+}

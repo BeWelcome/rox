@@ -20,26 +20,23 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /** 
-     * @author Tsjoek
+     * @author crumbking
      */
 
     /** 
-     * words management overview template
+     * words management overview page
      * 
      * @package Apps
      * @subpackage Admin
      */
-?>
 
-  <table class="awstatstable">
-<?php
-    foreach ($this->data as $dat) {
-        echo '<tr class="awstatsrow';
-        // mark languages that are within scope
-        if ($dat['scope']){echo ' awstatsinscope';}
-        echo '"><td>'.$dat['name'].'</td><td>';
-        printf("%01.1f", $dat['perc']);
-        echo  '% done</td></tr>';
+class AdminWordEditPage extends AdminWordBasePage
+{
+    public function teaserHeadline()
+    {
+        $string = 'AdminWord';
+        $string .= ' » '.$this->nav['currentLanguage'];
+        $string .= ' » Translate';
+        return $string;
     }
-?>
-</table>
+}

@@ -33,8 +33,10 @@ $words = new MOD_words();
 <h3>Action</h3>
 <ul class="linklist">
   <li><a href="admin/word/edit">AdminWord</a></li>
-  <li><a href="admin/word/list/all">All in <?= $this->nav['currentLanguage'] ?></a></li>
-  <li><a href="admin/word/list/missing">Only Missing in <?= $this->nav['currentLanguage'] ?></a></li>
-  <li><a href="admin/word/list/update">Update Needed in <?= $this->nav['currentLanguage'] ?></a></li>
   <li><a href="admin/word/stats">Show stats</a></li>
+  <li><b><em><?= $this->nav['currentLanguage'] ?></em> :</b><br></li>
+  <li>&nbsp;&nbsp;<a href="admin/word/list/all">All Words</a></li>
+  <li>&nbsp;&nbsp;<a href="admin/word/list/missing">Only Missing</a></li>
+  <li>&nbsp;&nbsp;<a href="admin/word/list/update">Update Needed</a></li>
+
 </ul>

@@ -99,7 +99,37 @@ class AdminWordController extends RoxControllerBase
         $nav['shortcode'] = $_SESSION['lang'];
         $nav['currentLanguage'] = $words->get('lang_'.$nav['shortcode']);
         $nav['scope'] = $this->rights['Words']['Scope'];
+        $nav['level'] = $this->rights['Words']['Level'];
+        $nav['grep'] = $this->rights['Grep']['Level'];
         return $nav;
+    }
+
+    public function editTranslation(){
+        $page = new AdminWordEditPage();
+        $nav = $this->getNavigationData();
+        $page->langarr = $this->_model->getLangarr($nav['scope']);
+        // default language can be overridden through url
+        if (isset($this->route_vars['shortcode'])){
+            $nav['shortcode'] = $this->route_vars['shortcode'];
+        }
+        // register if language is within scope
+        if ($this->checkScope($nav['scope'],$nav['shortcode'])) {
+            $page->noScope = false;
+        } else {
+            $page->noScope = true;
+        }
+        $page->nav = $nav;
+
+        if (isset($this->route_vars['wordcode'])){
+            // specific wordcode selected
+            $wordcode = $this->route_vars['wordcode'];
+            $page->data = $this->_model->getTranslationData('edit',$page->nav['shortcode'],$wordcode);
+        } else {
+            // no wordcode selected
+            $wordcode = false;
+            $page->data = null;
+        }
+        return $page;
     }
 
     /**
@@ -109,18 +139,16 @@ class AdminWordController extends RoxControllerBase
      * @return object
      */
     public function showList(){
-        
         $page = new AdminWordListPage;
-        $type = $this->route_vars['type'];
+        $page->type = $this->route_vars['type'];
         $page->nav = $this->getNavigationData();
-        $page->stat = $this->getStatistics($page->nav['idLanguage']);
-        $page->type = $type;
 
         if (!$this->checkScope($page->nav['scope'],$page->nav['shortcode'])){
             $page->noScope = true;
         } else {
             $page->noScope = false;
-            $page->data = $this->_model->getTrListData($type,$page->nav['idLanguage']);
+            $page->stat = $this->getStatistics($page->nav['idLanguage']);
+            $page->data = $this->_model->getTranslationData($page->type,$page->nav['shortcode']);
         }
         return $page;
     }
@@ -167,7 +195,70 @@ class AdminWordController extends RoxControllerBase
      * @return boolean
      */
     private function checkScope($scope,$shortcode){
-        return (strpos($scope,'"'.$shortcode.'"')>-1);
+        return (strpos($scope,'"'.$shortcode.'"')>-1 || $scope == '"All"');
     }
 
+    public function trListCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
+        if (empty($args->post)) {return false;}
+        $nav = $this->getNavigationData();
+        foreach(array_keys($args->post) as $key){
+            if (preg_match('#^Edit_(.*)$#',$key,$wordcode)){
+                return $this->router->url('admin_word_editone', array('wordcode'=>$wordcode[1]), false);    
+            }
+            if (preg_match('#^ThisIsOk_(.*)$#',$key,$wordcode)){
+                $this->_model->updateNoChanges($wordcode[1],$nav['idLanguage']);
+                return false;            
+            }
+        }
+        return false;
+    }
+
+    public function trEditCreateCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
+        if (empty($args->post)) {return false;}
+        $nav = $this->getNavigationData();
+        switch($args->post['DOACTION']){
+        case 'Submit' :
+            $res = $this->_model->UpdateSingleTranslation($args->post);
+            // prepare the result message
+            switch($res){
+            case 0 :
+                $type = 'setFlashError';
+                $msg = 'Processing the translation has failed.';
+                break;
+            case 1 :
+                $type = 'setFlashNotice';
+                $msg = $args->post['code'].' has been added succesfully';
+                break;
+            case 2 :
+                $type = 'setFlashNotice';
+                $msg = $args->post['code'].' has been updated succesfully';
+                break;
+            }
+            // get the flash notice/error
+            $this->$type($msg);
+            break;
+        case 'Find'   :
+            $searchparams = array();
+            foreach (array('code','Description','Sentence','lang') as $item){
+                if (isset($args->post[$item])){
+                    if (strlen($args->post[$item])>0){
+                        $searchparams[strtolower(substr($item,0,4))] = $args->post[$item];
+                    }
+                }
+            }
+            $_SESSION['trData'] = $this->_model->findTranslation($searchparams);
+            foreach($_SESSION['trData'] as $key => $item){
+                if ($this->checkScope($this->rights['Words']['Scope'],$item->TrShortcode)){
+                    $_SESSION['trData'][$key]->inScope = true;
+                } else {
+                    $_SESSION['trData'][$key]->inScope = false;
+                }
+            }
+            break;
+        case 'Delete' :
+            $res = $this->_model->DeleteSingleTranslation($args->post);
+            break;
+        }
+        return false;
+    }
 }

@@ -82,14 +82,38 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC";
         return $this->BulkLookup($sql);
     }
     
+    public function findTranslation($params){
+        $codeSelect = '';    
+        $descSelect = '';    
+        $sentSelect = '';
+        $langSelect = '';
+        if (isset($params['code'])){$codeSelect = ' AND w1.code LIKE "%'.$params['code'].'%"';}
+        if (isset($params['desc'])){$descSelect = ' AND w1.description LIKE "%'.$params['desc'].'%"';}
+        if (isset($params['sent'])){$sentSelect = ' AND w2.sentence LIKE "%'.$params['sent'].'%"';}
+        if (isset($params['lang'])){$langSelect = ' AND w2.shortcode = "'.$params['lang'].'"';}
+    
+        $sql = '
+SELECT
+    w1.code EngCode,
+    w1.description EngDesc,
+    w2.Sentence TrSent,
+    w2.shortcode TrShortcode
+FROM words w1
+    JOIN words w2 USING(code)
+WHERE w1.idlanguage=0'.$codeSelect.$descSelect.$sentSelect.$langSelect.'
+ORDER BY w1.code,w2.shortcode';
+        return $this->BulkLookup($sql);
+    }
+
     /*
      * Collect the data for in the translation list
      *
      * @param string $type Type of list: all, missing, update. '-x' for time-unlimited lists
-     * @param int idLanguage Language of the translations
+     * @param int $idLanguage Language of the translations
+     * @param string $wordcode Wordcode to select on
      * @return object Queryresult
      */    
-    public function getTrListData($type,$idLanguage){
+    public function getTranslationData($type,$shortcode,$wordcode = false){
         switch ($type) {
         case 'all'     :
         case 'missing' :
@@ -97,12 +121,21 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC";
             $dateSelect1 = ' AND datediff(now(),w1.created) > 6 AND datediff(now(),w1.updated) < 183';
             $dateSelect2 = ' AND datediff(now(),w3.created) > 6 AND datediff(now(),w3.updated) < 183';            
             break;
+        case 'edit'    :
         default        :
             $dateSelect1 = '';
             $dateSelect2 = '';
             break;
         }
-
+        if ($wordcode){
+            // select by wordcode if wordcode is given
+            $singleSelect1 = ' AND w1.code = "'.$wordcode.'"';
+            $singleSelect2 = ' AND w3.code = "'.$wordcode.'"';            
+        } else {
+            // only translatable items in translationlists
+            $singleSelect1 = ' AND w1.donottranslate = "no"';
+            $singleSelect2 = ' AND w3.donottranslate = "no"';                        
+        }
         $sql = '
 (SELECT
     w1.code EngCode,
@@ -111,13 +144,17 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC";
     w1.donottranslate EngDnt,
     w1.updated EngUpdated,
     w1.sentence EngSent,
+    w1.TranslationPriority EngPrio,
     w2.id as TrId,
     w2.updated TrUpdated,
     w2.Sentence TrSent,
     w2.IdMember TrMember
 FROM words w1
     JOIN words w2 USING(code)
-WHERE w1.idlanguage=0 AND w2.idlanguage='.$idLanguage.$dateSelect1.')
+WHERE w1.idlanguage=0  
+    AND w2.shortcode="'.$shortcode.'"'.
+    $dateSelect1.
+    $singleSelect1.')
 
 UNION
 
@@ -128,29 +165,110 @@ UNION
     w3.donottranslate EngDnt,
     w3.updated EngUpdated,
     w3.sentence EngSent,
+    w3.TranslationPriority EngPrio,
     null as TrId,
     null as TrUpdated,
     null as TrSent,
     null as TrMember
 FROM words w3
-WHERE w3.idlanguage=0 '.$dateSelect2.'
+WHERE w3.idlanguage=0'. 
+    $dateSelect2.
+    $singleSelect2.'
     AND w3.code NOT IN (SELECT code
-                        FROM words w2
-                        WHERE idlanguage='.$idLanguage.')
+                        FROM words w4
+                        WHERE w4.shortcode="'.$shortcode.'")
 )        
 ORDER BY EngUpdated DESC
             ';
         $listing = $this->BulkLookup($sql);
         $data = array();
     
-        foreach ($listing as $key => $item){
-            $item->missing = ($item->TrId?false:true);
-            $item->update  = ($item->TrId && $item->EngUpdated > $item->TrUpdated?true:false);
-            if (($type == 'missing' || $type == 'missingx') && !$item->missing) {continue;}
-            if (($type == 'update' || $type == 'updatex') && !$item->update) {continue;}
-            $data[$key] = $item;
-        }
+        // some postprocessing
+        if ($type == 'edit'){
+            if (isset($listing[0])){
+                return $listing[0];
+            } else {
+                return false;
+            }
+        } else {
+            foreach ($listing as $key => $item){
+                $item->missing = ($item->TrId?false:true);
+                $item->update  = ($item->TrId && $item->EngUpdated > $item->TrUpdated?true:false);
+                if (($type == 'missing' || $type == 'missingx') && !$item->missing) {continue;}
+                if (($type == 'update' || $type == 'updatex') && !$item->update) {continue;}
+                $data[$key] = $item;
+        }   }
 
     return $data;
+    }
+    
+    public function getWordCodeData($code,$idLanguage){
+        $sql = '
+SELECT id AS idword,updated,Sentence,TranslationPriority
+FROM words
+WHERE code="' . $code . '" AND IdLanguage=' . $idLanguage;
+        $query = $this->dao->query($sql);
+        return $query->fetch(PDB::FETCH_OBJ);
+    }
+    
+    public function getLangarr($scope){
+        $sql = "SELECT * FROM languages WHERE ";
+        if (strpos($scope, "All") === false) {
+            $langall = false;
+            $scope = str_replace('"', '', $scope);
+            $scope = str_replace(';', ',', $scope);
+            $langs = array_map('mysql_real_escape_string',explode(",", $scope));
+            $langs = array_map('trim',$langs);
+            $sql .= "ShortCode IN ('" . implode("','", $langs) . "')";
+        } else {
+            $langall = true;
+            $sql .= "1 = 1";
+        }
+        $sql .= " AND IsWrittenLanguage = 1 ORDER BY EnglishName";
+
+        $res = $this->BulkLookup($sql);
+        $langarr = array();
+        foreach ($res as $rec) {
+            $langarr[] = $rec;
+        }
+        return $langarr;
+    }
+    
+    public function updateNoChanges($code,$idLanguage){
+        $sql = 'UPDATE words SET updated = NOW() WHERE code = "'.$code.'" AND IdLanguage='.$idLanguage;
+        $this->dao->query($sql);
+    }
+    
+    public function updateSingleTranslation($form){
+        $sql = '
+INSERT INTO words SET
+    code = "'.$form["code"].'",
+    ShortCode = "'.$form["lang"].'",
+    IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$form["lang"].'"),
+    Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
+    updated = now(),
+    IdMember = '.$_SESSION["IdMember"].',
+    created = now(),
+    donottranslate = "'.$form["donottranslate"].'",
+    isdeleted = 0
+ON DUPLICATE KEY UPDATE
+    Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
+    updated = now(),
+    IdMember = '.$_SESSION["IdMember"].',
+    donottranslate = "'.$form["donottranslate"].'",
+    isdeleted = 0';
+        $this->dao->query($sql);
+        return mysql_affected_rows();
+
+    }
+    
+    public function deleteSingleTranslation($form){
+        $sql = '
+UPDATE words
+SET isdeleted = 1
+WHERE 
+    code = "'.$form["code"].'"';
+        $this->dao->query($sql);
+        return mysql_affected_rows();
     }
 }

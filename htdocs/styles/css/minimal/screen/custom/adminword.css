@@ -74,4 +74,11 @@ margin:0 0.5em 0.5em 0.5em;
     color:gray;
     font-size:11px;
 }
+
+.awdntwarning {
+background-color: #ff3;
+font-weight:bold;
+color: #f33;
+font-size:14px;
+}
 }

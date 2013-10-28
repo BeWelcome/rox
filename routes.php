@@ -97,6 +97,10 @@
     // admin words routes
     //$this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
     
+    
+    $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_editlang', 'admin/word/edit/:wordcode:/:shortcode:', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_list', 'admin/word/list/:type:', 'AdminWordController', 'showList');
     $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
     

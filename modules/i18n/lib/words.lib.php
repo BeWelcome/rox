@@ -1524,8 +1524,6 @@ class LookedUpWord {
         '>'.$this->_trLinkLanguage().'</a>'.$this->_trLinkInfoBox().'</span>';
     }
 
-
-
     static $_action_strings = array(
         self::NO_TR_LINK => 'do nothing',
         self::MISSING_WORD => 'define',
@@ -1548,7 +1546,8 @@ class LookedUpWord {
 
     private function _trLinkURL()
     {
-        return PVars::getObj('env')->baseuri.'bw/admin/adminwords_edit.php?lang='.$this->_trLinkLanguage().'&code='.$this->_code;
+        //return PVars::getObj('env')->baseuri.'bw/admin/adminwords_edit.php?lang='.$this->_trLinkLanguage().'&code='.$this->_code;
+        return PVars::getObj('env')->baseuri.'admin/word/edit/'.$this->_code.'/'.$this->_trLinkLanguage();
     }
 
     private function _trLinkLanguage()

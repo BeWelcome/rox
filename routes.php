@@ -95,9 +95,9 @@
     $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminController', 'spamOverview');
 
     // admin words routes
-    //$this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
-    
-    
+    // the overview route redirects to an empty edit screen,
+    // ideally this would become a real overview screen lateron
+    $this->addRoute('admin_word_overview', 'admin/word', 'AdminWordController', 'editTranslation');    
     $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editlang', 'admin/word/edit/:wordcode:/:shortcode:', 'AdminWordController', 'editTranslation');

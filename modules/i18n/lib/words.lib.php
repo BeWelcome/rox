@@ -737,18 +737,19 @@ class MOD_words
         	// TODO: store translation quality in database!
 
 			// First try in memcache
-			if ($value=$this->WordMemcache->GetValue($code,$lang)) {
-				$row->Sentence=$value ;
-				$row->donottranslate='No' ;
-				$row->updated="2015-01-01 00:00:00" ;
-//				print_r($row) ; die(" here" ) ;
-				return($row) ;
-			}
+			//if ($value=$this->WordMemcache->GetValue($code,$lang)) {
+			//	$row->Sentence=$value ;
+			//	$row->donottranslate='No' ;
+			//	$row->updated="2015-01-01 00:00:00" ;
+//			//	print_r($row) ; die(" here" ) ;
+			//	return($row) ;
+			//}
 
 			$query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
                 "FROM `words` ".
-                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
+                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'
+                    AND (updated >= (SELECT majorupdate FROM words WHERE (code='" . $this->_dao->escape($code) . "' AND ShortCode='en')) OR idlanguage=0)"
             ;
         }
 

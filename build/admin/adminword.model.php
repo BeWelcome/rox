@@ -247,7 +247,7 @@ INSERT INTO words SET
     IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$form["lang"].'"),
     Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
     updated = now(),
-    '.($idLanguage==0?'majorupdate = now(),':'').'
+    '.($form["lang"]=="en"?'majorupdate = now(),':'').'
     IdMember = '.$_SESSION["IdMember"].',
     created = now(),
     donottranslate = "'.$form["donottranslate"].'",
@@ -255,7 +255,7 @@ INSERT INTO words SET
 ON DUPLICATE KEY UPDATE
     Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
     updated = now(),
-    '.($form['changetype']=='major' && $idLanguage==0?'majorupdate = now(),':'').'
+    '.($form['changetype']=='major' && $form["lang"]=="en"?'majorupdate = now(),':'').'
     IdMember = '.$_SESSION["IdMember"].',
     donottranslate = "'.$form["donottranslate"].'",
     isarchived = 0';

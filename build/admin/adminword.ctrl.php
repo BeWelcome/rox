@@ -256,7 +256,7 @@ class AdminWordController extends RoxControllerBase
             }
             break;
         case 'Delete' :
-            $res = $this->_model->DeleteSingleTranslation($args->post);
+            $res = $this->_model->archiveSingleTranslation($args->post);
             break;
         }
         return false;

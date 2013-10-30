@@ -139,15 +139,25 @@ echo ' rows='.$NbRows.'>'. $trSent .'</textarea></td>';
 
     <select id="lang" name="lang"><option value=""></option>
 <?php
+    $showMinorMajor = '';
     foreach($this->langarr as $language) {
         echo '<option value="' . $language->ShortCode . '"';
         if ($this->nav['shortcode'] == $language->ShortCode) {
             echo ' selected="selected"';
         }
+        // if English is within scope then print the choice between minor/major
+        if ($language->ShortCode=='en'){
+            $showMinorMajor = '
+                <tr><td>Changetype<br>This is only relevant when updating an English translation</td>
+                <td><input type="radio" name="changetype" value="minor"> Minor change - old translations remain valid<br>
+                <input type="radio" name="changetype" value="major"> Major change - old translations are invalidated
+                </td></tr>';
+            }
         echo '>' . trim($language->EnglishName) . ' (' . $language->ShortCode . ')</option>';
     }
 ?>
 </select></td></tr>
+<?= $showMinorMajor ?>
   <tr>
     <td colspan="2" align="center">
       <input class="button" type="submit" id="submit1" name="DOACTION" value="Submit">

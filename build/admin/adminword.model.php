@@ -247,25 +247,27 @@ INSERT INTO words SET
     IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$form["lang"].'"),
     Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
     updated = now(),
+    '.($idLanguage==0?'majorupdate = now(),':'').'
     IdMember = '.$_SESSION["IdMember"].',
     created = now(),
     donottranslate = "'.$form["donottranslate"].'",
-    isdeleted = 0
+    isarchived = 0
 ON DUPLICATE KEY UPDATE
     Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
     updated = now(),
+    '.($form['changetype']=='major' && $idLanguage==0?'majorupdate = now(),':'').'
     IdMember = '.$_SESSION["IdMember"].',
     donottranslate = "'.$form["donottranslate"].'",
-    isdeleted = 0';
+    isarchived = 0';
         $this->dao->query($sql);
         return mysql_affected_rows();
 
     }
     
-    public function deleteSingleTranslation($form){
+    public function archiveSingleTranslation($form){
         $sql = '
 UPDATE words
-SET isdeleted = 1
+SET isarchived = 1
 WHERE 
     code = "'.$form["code"].'"';
         $this->dao->query($sql);

@@ -36,11 +36,13 @@ Boston, MA  02111-1307, USA.
 class AdminWordController extends RoxControllerBase
 {
     private $_model;
+    private $words;
 
     public function __construct() {
         parent::__construct();
         $this->_model = new AdminWordModel();
-        }
+        $this->words = new MOD_words();
+    }
 
     public function __destruct() {
         unset($this->_model);
@@ -91,14 +93,14 @@ class AdminWordController extends RoxControllerBase
      * @return array Containing all data
      */
     private function getNavigationData(){
-        $words = new MOD_words();
+
         // collect volunteerrights for this member;
         list($this->member, $this->wordrights) = $this->checkRights('Words');
         $rights = MOD_right::get();
         $nav = array();
         $nav['idLanguage'] = (int)$_SESSION['IdLanguage'];
         $nav['shortcode'] = $_SESSION['lang'];
-        $nav['currentLanguage'] = $words->get('lang_'.$nav['shortcode']);
+        $nav['currentLanguage'] = $this->words->get('lang_'.$nav['shortcode']);
         $nav['scope'] = $this->wordrights['Words']['Scope'];
         $nav['level'] = $this->wordrights['Words']['Level'];
         $nav['grep'] = $rights->hasRight('Grep');
@@ -223,7 +225,7 @@ class AdminWordController extends RoxControllerBase
         return false;
     }
 
-    private function getResultMsg($res,$code){
+    private function getResultMsg($res,$code,$shortcode){
     // prepare the result message
         switch($res){
         case 0 :
@@ -233,10 +235,12 @@ class AdminWordController extends RoxControllerBase
         case 1 :
             $type = 'setFlashNotice';
             $msg = 'Wordcode "'.$code.'" has been added succesfully';
+            MOD_log::get()->write('inserting '.$code.' in '.$shortcode, 'AdminWord');
             break;
         case 2 :
             $type = 'setFlashNotice';
             $msg = 'Wordcode "'.$code.'" has been updated succesfully';
+            MOD_log::get()->write('updating '.$code.' in '.$shortcode, 'AdminWord');
             break;
         }
         return array($type,$msg);
@@ -251,9 +255,10 @@ class AdminWordController extends RoxControllerBase
                 $_SESSION['form'] = $args->post;
                 return $this->router->url('admin_word_editeng', array(), false);
             }
-            $res = $this->_model->UpdateSingleTranslation($args->post);
+            list($id,$res) = $this->_model->UpdateSingleTranslation($args->post);
+            if ($res == 2) {$this->words->MakeRevision($id,'words');}
             // get the flash notice/error
-            list($type,$msg) = $this->getResultMsg($res,$args->post['code']);
+            list($type,$msg) = $this->getResultMsg($res,$args->post['code'],$args->post['lang']);
             $this->$type($msg);
             break;
         case 'Find'   :
@@ -285,9 +290,10 @@ class AdminWordController extends RoxControllerBase
         $nav = $this->getNavigationData();
         switch($args->post['DOACTION']){
         case 'Submit' :
-            $res = $this->_model->UpdateSingleTranslation($args->post);
+            list($id,$res) = $this->_model->UpdateSingleTranslation($args->post);
+            if ($res == 2) {$this->words->MakeRevision($id,'words');}
             // get the flash notice/error
-            list($type,$msg) = $this->getResultMsg($res,$args->post['code']);
+            list($type,$msg) = $this->getResultMsg($res,$args->post['code'],$args->post['lang']);
             $this->$type($msg);
             break;
         case 'Back' :

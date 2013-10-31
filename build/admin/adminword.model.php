@@ -137,8 +137,8 @@ ORDER BY w1.code,w2.shortcode';
             $singleSelect2 = 'AND w3.isarchived = 0';
         } else {
             // only translatable items in other translationlists
-            $singleSelect1 = ' AND w1.donottranslate = "no" AND w1.isarchived = 0)';
-            $singleSelect2 = ' AND w3.donottranslate = "no" AND w3.isarchived = 0)';                        
+            $singleSelect1 = ' AND w1.donottranslate = "no" AND w1.isarchived = 0';
+            $singleSelect2 = ' AND w3.donottranslate = "no" AND w3.isarchived = 0';                        
         }
         $sql = '
 (SELECT
@@ -294,7 +294,7 @@ ON DUPLICATE KEY UPDATE
     '.$eng_upd.$eng.'
     IdMember = '.$_SESSION["IdMember"];
         $this->dao->query($sql);
-        return mysql_affected_rows();
+        return array(mysql_insert_id(),mysql_affected_rows());
 
     }
 }

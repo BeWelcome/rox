@@ -101,12 +101,10 @@
     $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editlang', 'admin/word/edit/:wordcode:/:shortcode:', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_editeng', 'admin/word/edit-eng','AdminWordController','editEnglishTranslation');
     $this->addRoute('admin_word_list', 'admin/word/list/:type:', 'AdminWordController', 'showList');
     $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
-    
-    
-    
-    
+       
     // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
     // admin activity routes

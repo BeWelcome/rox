@@ -131,16 +131,20 @@ ORDER BY w1.code,w2.shortcode';
             // select by wordcode if wordcode is given
             $singleSelect1 = ' AND w1.code = "'.$wordcode.'"';
             $singleSelect2 = ' AND w3.code = "'.$wordcode.'"';            
+        } elseif ($shortcode == 'en') {
+            // show also the DNT items in English list
+            $singleSelect1 = 'AND w1.isarchived = 0';
+            $singleSelect2 = 'AND w3.isarchived = 0';
         } else {
-            // only translatable items in translationlists
-            $singleSelect1 = ' AND w1.donottranslate = "no"';
-            $singleSelect2 = ' AND w3.donottranslate = "no"';                        
+            // only translatable items in other translationlists
+            $singleSelect1 = ' AND w1.donottranslate = "no" AND w1.isarchived = 0)';
+            $singleSelect2 = ' AND w3.donottranslate = "no" AND w3.isarchived = 0)';                        
         }
         $sql = '
 (SELECT
     w1.code EngCode,
     w1.description EngDesc,
-    w1.IdMember EngMember,
+    (SELECT Username from members where id = w1.IdMember) EngMember,
     w1.donottranslate EngDnt,
     w1.updated EngUpdated,
     w1.sentence EngSent,
@@ -148,7 +152,7 @@ ORDER BY w1.code,w2.shortcode';
     w2.id as TrId,
     w2.updated TrUpdated,
     w2.Sentence TrSent,
-    w2.IdMember TrMember
+    (SELECT Username from members where id = w2.IdMember) TrMember
 FROM words w1
     JOIN words w2 USING(code)
 WHERE w1.idlanguage=0  
@@ -161,7 +165,7 @@ UNION
 (SELECT
     w3.code EngCode,
     w3.description EngDesc,
-    w3.IdMember EngMember,
+    (SELECT Username from members where id = w3.IdMember) EngMember,
     w3.donottranslate EngDnt,
     w3.updated EngUpdated,
     w3.sentence EngSent,
@@ -188,7 +192,12 @@ ORDER BY EngUpdated DESC
             if (isset($listing[0])){
                 return $listing[0];
             } else {
-                return false;
+                if ($shortcode=='en' && $wordcode){
+                    $dummy->EngCode = $wordcode;
+                    return $dummy;
+                } else {
+                    return false;
+                }
             }
         } else {
             foreach ($listing as $key => $item){
@@ -202,11 +211,11 @@ ORDER BY EngUpdated DESC
     return $data;
     }
     
-    public function getWordCodeData($code,$idLanguage){
+    public function getWordCodeData($code,$shortcode){
         $sql = '
-SELECT id AS idword,updated,Sentence,TranslationPriority
+SELECT TranslationPriority,donottranslate,isarchived,description,code
 FROM words
-WHERE code="' . $code . '" AND IdLanguage=' . $idLanguage;
+WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
         $query = $this->dao->query($sql);
         return $query->fetch(PDB::FETCH_OBJ);
     }
@@ -240,6 +249,35 @@ WHERE code="' . $code . '" AND IdLanguage=' . $idLanguage;
     }
     
     public function updateSingleTranslation($form){
+        
+        if ($form['lang']=='en'){
+            $eng_ins = 'majorupdate = now(),';
+            if (isset($form['changetype'])){
+                $eng_upd = ($form['changetype']=='major' && $form["lang"]=="en"?'majorupdate = now(),':'');
+            } else {
+                $eng_upd = '';
+            }
+            $eng = '';
+            if (isset($form['description'])){
+                $eng.= 'description = "'.$form['description'].'", ';
+            }
+            if (isset($form["donottranslate"])){
+                $eng.= 'donottranslate = "'.$form["donottranslate"].'", ';
+            }
+            if (isset($form["isarchived"])){
+                $eng.= 'isarchived = '.$form["isarchived"].', ';
+            }
+            if (isset($form["TranslationPriority"])){
+                $eng.= 'TranslationPriority = '.$form["TranslationPriority"].', ';
+            }
+
+
+        } else {
+            $eng_ins = '';
+            $eng_upd = '';
+            $eng = '';
+        }
+        
         $sql = '
 INSERT INTO words SET
     code = "'.$form["code"].'",
@@ -247,30 +285,16 @@ INSERT INTO words SET
     IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$form["lang"].'"),
     Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
     updated = now(),
-    '.($form["lang"]=="en"?'majorupdate = now(),':'').'
+    '.$eng_ins.$eng.'
     IdMember = '.$_SESSION["IdMember"].',
-    created = now(),
-    donottranslate = "'.$form["donottranslate"].'",
-    isarchived = 0
+    created = now()
 ON DUPLICATE KEY UPDATE
     Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
     updated = now(),
-    '.($form['changetype']=='major' && $form["lang"]=="en"?'majorupdate = now(),':'').'
-    IdMember = '.$_SESSION["IdMember"].',
-    donottranslate = "'.$form["donottranslate"].'",
-    isarchived = 0';
+    '.$eng_upd.$eng.'
+    IdMember = '.$_SESSION["IdMember"];
         $this->dao->query($sql);
         return mysql_affected_rows();
 
-    }
-    
-    public function archiveSingleTranslation($form){
-        $sql = '
-UPDATE words
-SET isarchived = 1
-WHERE 
-    code = "'.$form["code"].'"';
-        $this->dao->query($sql);
-        return mysql_affected_rows();
     }
 }

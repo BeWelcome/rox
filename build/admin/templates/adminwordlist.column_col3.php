@@ -33,13 +33,18 @@ Boston, MA  02111-1307, USA.
 $layoutbits = new MOD_layoutbits;
 $formkit = $this->layoutkit->formkit;
 $callback_tag = $formkit->setPostCallback('AdminWordController', 'trListCallback');
+$this->words = new MOD_words();
 
 ?>
-<p>Your scope is <?= $this->nav['scope'] ?>
-<?php
-    if ($this->noScope){
-        echo '<h2>You do not have translation rights for this language</h2>';
-    } else {
+<p>Your scope is : <?php
+if ($this->nav['scope']=='"All"'){
+    echo 'All';
+} else {
+    array_map(function ($lng){echo $this->words->get('lang_'.$lng->ShortCode).' ';},$this->langarr);
+}
+if ($this->noScope){
+    echo '<h2>You do not have translation rights for this language</h2>';
+} else {
 ?>
 <table class="awstatstable"><tr valign=top>
   <td><?= $this->nav['currentLanguage'] ?></td>
@@ -62,7 +67,7 @@ $callback_tag = $formkit->setPostCallback('AdminWordController', 'trListCallback
 <?= $callback_tag ?>
   <tr>
     <th class="awlistcode">Code & Description</th>
-    <th class="awlisteng">English</th>
+    <?php if ($this->nav['shortcode'] != 'en'){?><th class="awlisteng">English</th><?php } ?>
     <th class="awlisttrok"> <?= $this->nav['currentLanguage'] ?> </th>
   </tr>
 
@@ -73,11 +78,14 @@ $callback_tag = $formkit->setPostCallback('AdminWordController', 'trListCallback
            echo '<a href="bw/admin/admingrep.php?action=grep&submit=find&s2=ww&s1=' . $dat->EngCode . '&scope=layout/*;*;lib/*">grep</a>';
         }
         
-        echo '<p class="awlistdesc">' . $dat->EngDesc . '</p>';
-        echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->EngUpdated)).' '.$dat->EngMember.'</p>';
+        echo '<p class="smallXtext">' . $dat->EngDesc . '</p>';
     
         echo '</td>';
-        echo '<td class="awlisteng">'.$dat->EngSent.'</td>';
+        if ($this->nav['shortcode'] != 'en'){
+            echo '<td class="awlisteng">'.$dat->EngSent;
+            echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->EngUpdated)).' '.$dat->EngMember.'</p>';
+            echo '</td>';
+        }
         if ($dat->missing){
             // missing translation
             echo "<td bgcolor=white align=center>";

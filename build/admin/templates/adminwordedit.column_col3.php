@@ -34,7 +34,7 @@ if ($this->noScope){
     echo '<h2>You do not have translation rights for this language</h2>';
 } else {
 $engSent = (isset($this->data->EngSent)?$this->data->EngSent:'');
-$trSent  = (isset($this->data->TrSent)?$this->data->TrSent:'');
+$trSent  = (isset($this->data->TrSent)?$this->data->TrSent:(isset($_SESSION['form']['Sentence'])?$_SESSION['form']['Sentence']:''));
 $engDesc = (isset($this->data->EngDesc)?$this->data->EngDesc:'');
 $engCode = (isset($this->data->EngCode)?$this->data->EngCode:'');
 $engPrio = (isset($this->data->EngPrio)?$this->data->EngPrio:'');
@@ -68,7 +68,7 @@ if ($dat->inScope){
 }
 ?>
 </b><br>
-        <span class="awlistdesc"><?= $dat->EngDesc ?></span></td>
+        <span class="smallXtext"><?= $dat->EngDesc ?></span></td>
     <td><?= $dat->TrSent ?></td></tr>
 <?php } ?>
 </table>
@@ -84,38 +84,17 @@ if ($dat->inScope){
     <td class="label"><label for="code">Code:</label> </td>
     <td><input name="code" id="code" value="<?= $engCode ?>" size="56">
 <?php
-if ($this->nav['level'] >= 10) { // Level 10 allow to change/set description
-?>
-    <br><select name="donottranslate">
-    <option value="no"
-<?php if ($engDnt == "no") echo " selected"; ?>
-    >translatable</option>
-    <option value="yes"
-<?php if ($engDnt == "yes") echo " selected"; ?>
-    >not translatable</option>
-    </select>
-
-    &nbsp;&nbsp;Translation Priority <input type="text" name="TranslationPriority" value="
-    <?= $engPrio ?> " size="3">
-<?php } else {
     if ($engDnt == "yes") {
         echo '<span class="awdntwarning">Do not translate</span>';
     }
-    echo '<input type="hidden" name="donottranslate" value="'.$engDnt.'">';
-    } ?>
+?>
 </td></tr>
 <tr><td class="label">Description:</td><td>
-<?php 
-
-    if ($this->nav['idLanguage'] == 0 AND $this->nav['level'] >= 10) {
-        echo '<textarea name="Description" cols="60" class="long" rows="4">';
-        echo $engDesc.'</textarea>';
-    } else {
-        echo "<em>\n", $engDesc.'</em>';
-    }
-    echo '</td></tr>';
+<em><?= $engDesc ?></em>
+</td></tr>
     
-    echo "<tr><td class=\"label\" >English source: </td>\n";
+<tr><td class="label" >English source: </td>
+<?php
 $tagold = array("&lt;", "&gt;");
 $tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
 echo '<td>'. str_replace("\n","<br />",
@@ -127,9 +106,7 @@ echo '<td>'. str_replace("\n","<br />",
 <td class="label"><label for="Sentence">Translation:</label> </td>
 <td><textarea name="Sentence" id="Sentence" class="long" cols="60"
 <?php
-$NbRows = 3*((substr_count($engSent, '\n') +
-              substr_count($engSent, '<br />') +
-              substr_count($engSent, '<br />'))+1);
+$NbRows = 3 + strlen($trSent)/75;
 echo ' rows='.$NbRows.'>'. $trSent .'</textarea></td>';
 ?>
   </tr>
@@ -139,30 +116,20 @@ echo ' rows='.$NbRows.'>'. $trSent .'</textarea></td>';
 
     <select id="lang" name="lang"><option value=""></option>
 <?php
-    $showMinorMajor = '';
     foreach($this->langarr as $language) {
         echo '<option value="' . $language->ShortCode . '"';
         if ($this->nav['shortcode'] == $language->ShortCode) {
             echo ' selected="selected"';
         }
-        // if English is within scope then print the choice between minor/major
-        if ($language->ShortCode=='en'){
-            $showMinorMajor = '
-                <tr><td>Changetype<br>This is only relevant when updating an English translation</td>
-                <td><input type="radio" name="changetype" value="minor"> Minor change - old translations remain valid<br>
-                <input type="radio" name="changetype" value="major"> Major change - old translations are invalidated
-                </td></tr>';
-            }
         echo '>' . trim($language->EnglishName) . ' (' . $language->ShortCode . ')</option>';
     }
 ?>
 </select></td></tr>
-<?= $showMinorMajor ?>
   <tr>
     <td colspan="2" align="center">
       <input class="button" type="submit" id="submit1" name="DOACTION" value="Submit">
       <input class="button" type="submit" id="submit2" name="DOACTION" value="Find">
-      <input class="button" type="submit" id="submit3" name="DOACTION" value="Delete" onclick="confirm('Are you sure you want to delete this?');">
+      <?php //<input class="button" type="submit" id="submit3" name="DOACTION" value="Delete" onclick="confirm('Are you sure you want to delete this?');"> ?>
     </td>
   </tr>
 </table>

@@ -40,9 +40,7 @@ class AdminWordController extends RoxControllerBase
     public function __construct() {
         parent::__construct();
         $this->_model = new AdminWordModel();
-        // collect volunteerrights for this member;
-        list($this->member, $this->rights) = $this->checkRights('Words');
-    }
+        }
 
     public function __destruct() {
         unset($this->_model);
@@ -94,14 +92,24 @@ class AdminWordController extends RoxControllerBase
      */
     private function getNavigationData(){
         $words = new MOD_words();
+        // collect volunteerrights for this member;
+        list($this->member, $this->wordrights) = $this->checkRights('Words');
+        $rights = MOD_right::get();
         $nav = array();
         $nav['idLanguage'] = (int)$_SESSION['IdLanguage'];
         $nav['shortcode'] = $_SESSION['lang'];
         $nav['currentLanguage'] = $words->get('lang_'.$nav['shortcode']);
-        $nav['scope'] = $this->rights['Words']['Scope'];
-        $nav['level'] = $this->rights['Words']['Level'];
-        $nav['grep'] = $this->rights['Grep']['Level'];
+        $nav['scope'] = $this->wordrights['Words']['Scope'];
+        $nav['level'] = $this->wordrights['Words']['Level'];
+        $nav['grep'] = $rights->hasRight('Grep');
         return $nav;
+    }
+
+    public function editEnglishTranslation(){
+        $page = new AdminWordEditEngPage();
+        $page->nav = $this->getNavigationData();
+        $page->data = $this->_model->getWordCodeData($_SESSION['form']['code'],$_SESSION['form']['lang']);            
+        return $page;
     }
 
     public function editTranslation(){
@@ -111,7 +119,10 @@ class AdminWordController extends RoxControllerBase
         // default language can be overridden through url
         if (isset($this->route_vars['shortcode'])){
             $nav['shortcode'] = $this->route_vars['shortcode'];
+            //$nav['currentLanguage'] = $words->get('lang_'.$nav['shortcode']);
+
         }
+
         // register if language is within scope
         if ($this->checkScope($nav['scope'],$nav['shortcode'])) {
             $page->noScope = false;
@@ -142,6 +153,7 @@ class AdminWordController extends RoxControllerBase
         $page = new AdminWordListPage;
         $page->type = $this->route_vars['type'];
         $page->nav = $this->getNavigationData();
+        $page->langarr = $this->_model->getLangarr($page->nav['scope']);
 
         if (!$this->checkScope($page->nav['scope'],$page->nav['shortcode'])){
             $page->noScope = true;
@@ -160,12 +172,10 @@ class AdminWordController extends RoxControllerBase
      * @return object
      */
     public function showStatistics(){
-        if ($this->rights['Words']['Level']>0){
         $page = new AdminWordStatsPage;
         $page->nav = $this->getNavigationData();
         $page->data = $this->getStatistics();
         return $page;
-        }
     }
 
     /**
@@ -181,7 +191,7 @@ class AdminWordController extends RoxControllerBase
         foreach ($allLength as $key => $langData) {
             $data[$key]['perc'] = ($langData->translated / $englishLength->cnt) * 100;
             $data[$key]['name'] = $langData->englishName;
-            $data[$key]['scope'] = $this->checkScope($this->rights['Words']['Scope'],$langData->shortCode);
+            $data[$key]['scope'] = $this->checkScope($this->wordrights['Words']['Scope'],$langData->shortCode);
         }
         return $data;
     }
@@ -213,28 +223,37 @@ class AdminWordController extends RoxControllerBase
         return false;
     }
 
+    private function getResultMsg($res,$code){
+    // prepare the result message
+        switch($res){
+        case 0 :
+            $type = 'setFlashError';
+            $msg = 'Processing the translation has failed.';
+            break;
+        case 1 :
+            $type = 'setFlashNotice';
+            $msg = 'Wordcode "'.$code.'" has been added succesfully';
+            break;
+        case 2 :
+            $type = 'setFlashNotice';
+            $msg = 'Wordcode "'.$code.'" has been updated succesfully';
+            break;
+        }
+        return array($type,$msg);
+    }
+
     public function trEditCreateCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
         if (empty($args->post)) {return false;}
         $nav = $this->getNavigationData();
         switch($args->post['DOACTION']){
         case 'Submit' :
-            $res = $this->_model->UpdateSingleTranslation($args->post);
-            // prepare the result message
-            switch($res){
-            case 0 :
-                $type = 'setFlashError';
-                $msg = 'Processing the translation has failed.';
-                break;
-            case 1 :
-                $type = 'setFlashNotice';
-                $msg = $args->post['code'].' has been added succesfully';
-                break;
-            case 2 :
-                $type = 'setFlashNotice';
-                $msg = $args->post['code'].' has been updated succesfully';
-                break;
+            if ($args->post['lang']=='en'){
+                $_SESSION['form'] = $args->post;
+                return $this->router->url('admin_word_editeng', array(), false);
             }
+            $res = $this->_model->UpdateSingleTranslation($args->post);
             // get the flash notice/error
+            list($type,$msg) = $this->getResultMsg($res,$args->post['code']);
             $this->$type($msg);
             break;
         case 'Find'   :
@@ -248,7 +267,7 @@ class AdminWordController extends RoxControllerBase
             }
             $_SESSION['trData'] = $this->_model->findTranslation($searchparams);
             foreach($_SESSION['trData'] as $key => $item){
-                if ($this->checkScope($this->rights['Words']['Scope'],$item->TrShortcode)){
+                if ($this->checkScope($this->wordrights['Words']['Scope'],$item->TrShortcode)){
                     $_SESSION['trData'][$key]->inScope = true;
                 } else {
                     $_SESSION['trData'][$key]->inScope = false;
@@ -256,9 +275,25 @@ class AdminWordController extends RoxControllerBase
             }
             break;
         case 'Delete' :
-            $res = $this->_model->archiveSingleTranslation($args->post);
+            $res = $this->_model->removeSingleTranslation($args->post);
             break;
         }
         return false;
+    }
+    public function trEditEngCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
+        if (empty($args->post)) {return false;}
+        $nav = $this->getNavigationData();
+        switch($args->post['DOACTION']){
+        case 'Submit' :
+            $res = $this->_model->UpdateSingleTranslation($args->post);
+            // get the flash notice/error
+            list($type,$msg) = $this->getResultMsg($res,$args->post['code']);
+            $this->$type($msg);
+            break;
+        case 'Back' :
+            $_SESSION['form']['Sentence'] = $args->post['Sentence'];
+            return $this->router->url('admin_word_editone', array('wordcode'=>$args->post['code'],'shortcode'=>$args->post['lang']), false);
+        }
+        return $this->router->url('admin_word_editempty', array(), false);
     }
 }

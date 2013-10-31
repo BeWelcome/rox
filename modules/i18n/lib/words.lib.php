@@ -1517,6 +1517,12 @@ class LookedUpWord {
 
     public function standaloneTrLink()
     {
+        // do not offer a create wordcode link if not at level 10
+        $R = MOD_right::get();
+        if ($this->_tr_success == self::MISSING_WORD && $R->hasRight("Words")<10){
+            return '';
+        }
+
         return '<span class="tr_span"><a '.
             'class = "standalone '.$this->_trLinkClass().'" '.
             'title = "'.$this->_trLinkTitle().'" '.

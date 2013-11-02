@@ -31,26 +31,35 @@ Boston, MA  02111-1307, USA.
      */
     
 // first value for updates, second one for inserts
-$status = (isset($this->data->code)?'update':'create');
-$isarch  = (isset($this->data->isarchived)?$this->data->isarchived:'0');
-$descri = (isset($this->data->description)?$this->data->description:'');
-$wrdcod = (isset($this->data->code)?$this->data->code:$_SESSION['form']['code']);
-$trprio = (isset($this->data->TranslationPriority)?$this->data->TranslationPriority:'5');
-$donotr  = (isset($this->data->Engdonottranslate)?$this->data->donottranslate:'no');
+//$isarch  = (isset($this->data->isarchived)?$this->data->isarchived:'0');
+//$descri = (isset($this->data->description)?$this->data->description:'');
+//$wrdcod = (isset($this->data->code)?$this->data->code:$_SESSION['form']['code']);
+//$trprio = (isset($this->data->TranslationPriority)?$this->data->TranslationPriority:'5');
+//$donotr  = (isset($this->data->Engdonottranslate)?$this->data->donottranslate:'no');
+
 
 $formkit = $this->layoutkit->formkit;
 $callback_tag = $formkit->setPostCallback('AdminWordController', 'trEditEngCallback');
 
+$errors = $this->getRedirectedMem('errors');
+if (!empty($errors)) {
+    echo '<div class="error">';
+    foreach($errors as $error) {
+        echo $words->get($error) . "<br />";
+    }
+    echo "</div>";
+}
+
 if ($this->noScope){
     echo '<h2>You do not have translation rights for this language</h2>';
-} elseif ($status=='create' && $this->nav['level'] < 10){
+} elseif ($this->status=='create' && $this->nav['level'] < 10){
     // create new wordcode on Normal Level
     echo '<h2>You do not have rights to create a new wordcode</h2>';
 } else {
 
 
 ?>
-You are about to <?= $status ?> the English wordcode : <?=$wrdcod?>
+You are about to <?= $this->status ?> the English wordcode : <?=$this->formdata['EngCode']?>
 <form method="post" name="TrEdit">
 <?= $callback_tag ?>
 <table class="admin" border="0">
@@ -59,33 +68,39 @@ You are about to <?= $status ?> the English wordcode : <?=$wrdcod?>
     if ($this->nav['level'] >= 10 ) { 
     // On Admin Level show extra variables
 ?>
-<tr><td>Description :</td><td class="smallXtext"><textarea style="margin:0;" cols=60 rows=3 name='description'><?=$descri?></textarea><br>
+<tr><td>Description :</td><td class="smallXtext"><textarea style="margin:0;" cols=60 rows=3 name='EngDesc'><?=$this->formdata['EngDesc']?></textarea><br>
 Make sure the code has a proper description. Make clear where this code shows up,
 in which case it shows up, what the function is of the element where it shows up, etc.<br>
-Describe also the function and possible values of all included placeholders<br>
+Describe also the function and possible values of all included placeholders.<br>
 Do NOT copy the wordcode or the English text, that doesn't help anyone.</td></tr>
-    <tr><td>Should this code be translated?</td><td><select name="donottranslate">
+    <tr><td>Should this code be translated?</td><td><select name="EngDnt">
   <option value="no"
-<?php if ($donotr == "no") echo " selected"; ?>
+<?php if ($this->formdata['EngDnt'] == "no") echo " selected"; ?>
     >translatable</option>
   <option value="yes"
-<?php if ($donotr == "yes") echo " selected"; ?>
+<?php if ($this->formdata['EngDnt'] == "yes") echo " selected"; ?>
     >not translatable</option>
     </select></td></tr><tr>
 <td>Is this code still active?</td><td><select name="isarchived">
   <option value="0"
-<?php if ($isarch == "0") echo " selected"; ?>
+<?php if ($this->formdata['isarchived'] == "0") echo " selected"; ?>
     >active</option>
   <option value="1"
-<?php if ($isarch == "1") echo " selected"; ?>
+<?php if ($this->formdata['isarchived'] == "1") echo " selected"; ?>
     >archived</option>
     </select></td></tr><tr><td>
-Translation Priority</td><td><input type="text" name="TranslationPriority"
-    value="<?=$trprio ?>" size="2"></td></tr>
-<?php }
+Translation Priority</td><td><input type="text" name="EngPrio"
+    value="<?=$this->formdata['EngPrio'] ?>" size="2"></td></tr>
+<?php } else {
+?>
+    <input type=hidden name=EngDesc value="<?=$this->formdata['EngDesc']?>">
+    <input type=hidden name=EngPrio value="<?=$this->formdata['EngPrio']?>">
+    <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>">
+<?php
+}
 
     
-if ($status=='update'){
+if ($this->status=='update'){
     // updating an existing wordcode
 ?>
 <tr><td>What kind of change is this?</td>
@@ -93,7 +108,7 @@ if ($status=='update'){
 <input type="radio" name="changetype" value="major"> Major change - old translations are invalidated
 </td></tr>    
 <?php
-    }
+    } else echo '<input type=hidden name=changetype value=none>';
 ?>
   <tr>
     <td colspan="2" align="center">
@@ -102,8 +117,9 @@ if ($status=='update'){
     </td>
   </tr>
 </table>
-<input type=hidden name="Sentence" value="<?= $_SESSION['form']['Sentence'] ?>">
-<input type=hidden name="code" value="<?= $wrdcod ?>">
-<input type=hidden name="lang" value="<?= $_SESSION['form']['lang'] ?>">
+<input type=hidden name="TrSent" value="<?= htmlspecialchars($this->formdata['TrSent']) ?>">
+<input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['TrSent']) ?>">
+<input type=hidden name="EngCode" value="<?= $this->formdata['EngCode'] ?>">
+<input type=hidden name="lang" value="<?= $this->formdata['lang'] ?>">
 </form>
 <?php    } ?>

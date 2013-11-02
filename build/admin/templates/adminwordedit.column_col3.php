@@ -32,19 +32,26 @@ Boston, MA  02111-1307, USA.
     
 if ($this->noScope){
     echo '<h2>You do not have translation rights for this language</h2>';
+    echo 'Your scope: ';
+    $this->showScope();
 } else {
-$engSent = (isset($this->data->EngSent)?$this->data->EngSent:'');
-$trSent  = (isset($this->data->TrSent)?$this->data->TrSent:(isset($_SESSION['form']['Sentence'])?$_SESSION['form']['Sentence']:''));
-$engDesc = (isset($this->data->EngDesc)?$this->data->EngDesc:'');
-$engCode = (isset($this->data->EngCode)?$this->data->EngCode:'');
-$engPrio = (isset($this->data->EngPrio)?$this->data->EngPrio:'');
-$engDnt  = (isset($this->data->EngDnt)?$this->data->EngDnt:'');
-
-$formkit = $this->layoutkit->formkit;
-$callback_tag = $formkit->setPostCallback('AdminWordController', 'trEditCreateCallback');
-
-
-// searchresults
+    $vars = $this->getRedirectedMem('vars');
+   
+    $formkit = $this->layoutkit->formkit;
+    $callback_tag = $formkit->setPostCallback('AdminWordController', 'trEditCreateCallback');
+    
+    $errors = $this->getRedirectedMem('errors');
+    if (!empty($errors)) {
+        echo '<div class="error">';
+        foreach($errors as $error) {
+            echo $words->get($error) . "<br />";
+        }
+        echo "</div>";
+    }
+    
+/************************
+***   searchresults   ***
+************************/
 if (isset($_SESSION['trData'])){
     $data = $_SESSION['trData'];
     unset($_SESSION['trData']);
@@ -73,7 +80,14 @@ if ($dat->inScope){
 <?php } ?>
 </table>
 <?php } else {
-// end searchresults
+    
+/********************
+***   edit form   ***
+********************/
+
+//$_SESSION['form']['engSent'] = $this->formdata['engSent'];
+//$_SESSION['form']['description'] = $this->formdata['description'];
+//$_SESSION['form']['donottranslate'] = $this->formdata['donottranslate'];
 
 ?>
 
@@ -82,15 +96,15 @@ if ($dat->inScope){
 <table class="admin" border="0">
   <tr>
     <td class="label"><label for="code">Code:</label> </td>
-    <td><input name="code" id="code" value="<?= $engCode ?>" size="56">
+    <td><input name="EngCode" id="code" value="<?= $this->formdata['EngCode'] ?>" size="56">
 <?php
-    if ($engDnt == "yes") {
+    if ($this->formdata['EngDnt'] == "yes") {
         echo '<span class="awdntwarning">Do not translate</span>';
     }
 ?>
 </td></tr>
 <tr><td class="label">Description:</td><td>
-<em><?= $engDesc ?></em>
+<em><?= $this->formdata['EngDesc'] ?></em>
 </td></tr>
     
 <tr><td class="label" >English source: </td>
@@ -99,15 +113,15 @@ $tagold = array("&lt;", "&gt;");
 $tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
 echo '<td>'. str_replace("\n","<br />",
                 str_replace($tagold,$tagnew,
-                    htmlentities($engSent, ENT_COMPAT | ENT_HTML401, 'UTF-8'))).'</td>';
+                    htmlentities($this->formdata['EngSent'], ENT_COMPAT | ENT_HTML401, 'UTF-8'))).'</td>';
 ?>
 </tr>
 <tr>
 <td class="label"><label for="Sentence">Translation:</label> </td>
-<td><textarea name="Sentence" id="Sentence" class="long" cols="60"
+<td><textarea name="TrSent" id="Sentence" class="long" cols="60"
 <?php
-$NbRows = 3 + strlen($trSent)/75;
-echo ' rows='.$NbRows.'>'. $trSent .'</textarea></td>';
+$NbRows = 3 + strlen($this->formdata['TrSent'])/75;
+echo ' rows='.$NbRows.'>'. $this->formdata['TrSent'] .'</textarea></td>';
 ?>
   </tr>
   <tr>
@@ -118,7 +132,7 @@ echo ' rows='.$NbRows.'>'. $trSent .'</textarea></td>';
 <?php
     foreach($this->langarr as $language) {
         echo '<option value="' . $language->ShortCode . '"';
-        if ($this->nav['shortcode'] == $language->ShortCode) {
+        if ($this->formdata['lang'] == $language->ShortCode) {
             echo ' selected="selected"';
         }
         echo '>' . trim($language->EnglishName) . ' (' . $language->ShortCode . ')</option>';
@@ -126,6 +140,9 @@ echo ' rows='.$NbRows.'>'. $trSent .'</textarea></td>';
 ?>
 </select></td></tr>
   <tr>
+    <input type=hidden name=EngDesc value="<?=$this->formdata['EngDesc']?>">
+    <input type=hidden name=EngSent value="<?=htmlspecialchars($this->formdata['EngSent']);?>">
+    <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>">
     <td colspan="2" align="center">
       <input class="button" type="submit" id="submit1" name="DOACTION" value="Submit">
       <input class="button" type="submit" id="submit2" name="DOACTION" value="Find">

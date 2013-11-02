@@ -87,9 +87,9 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC";
         $descSelect = '';    
         $sentSelect = '';
         $langSelect = '';
-        if (isset($params['code'])){$codeSelect = ' AND w1.code LIKE "%'.$params['code'].'%"';}
-        if (isset($params['desc'])){$descSelect = ' AND w1.description LIKE "%'.$params['desc'].'%"';}
-        if (isset($params['sent'])){$sentSelect = ' AND w2.sentence LIKE "%'.$params['sent'].'%"';}
+        if (isset($params['EngCode'])){$codeSelect = ' AND w1.code LIKE "%'.$params['EngCode'].'%"';}
+        if (isset($params['EngDesc'])){$descSelect = ' AND w1.description LIKE "%'.$params['EngDesc'].'%"';}
+        if (isset($params['TrSent'])){$sentSelect = ' AND w2.sentence LIKE "%'.$params['TrSent'].'%"';}
         if (isset($params['lang'])){$langSelect = ' AND w2.shortcode = "'.$params['lang'].'"';}
     
         $sql = '
@@ -133,8 +133,8 @@ ORDER BY w1.code,w2.shortcode';
             $singleSelect2 = ' AND w3.code = "'.$wordcode.'"';            
         } elseif ($shortcode == 'en') {
             // show also the DNT items in English list
-            $singleSelect1 = 'AND w1.isarchived = 0';
-            $singleSelect2 = 'AND w3.isarchived = 0';
+            $singleSelect1 = ' AND w1.isarchived = 0';
+            $singleSelect2 = ' AND w3.isarchived = 0';
         } else {
             // only translatable items in other translationlists
             $singleSelect1 = ' AND w1.donottranslate = "no" AND w1.isarchived = 0';
@@ -213,7 +213,7 @@ ORDER BY EngUpdated DESC
     
     public function getWordCodeData($code,$shortcode){
         $sql = '
-SELECT TranslationPriority,donottranslate,isarchived,description,code
+SELECT count(*) cnt
 FROM words
 WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
         $query = $this->dao->query($sql);
@@ -258,20 +258,18 @@ WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
                 $eng_upd = '';
             }
             $eng = '';
-            if (isset($form['description'])){
-                $eng.= 'description = "'.$form['description'].'", ';
+            if (isset($form['EngDesc'])){
+                $eng.= 'description = "'.$form['EngDesc'].'", ';
             }
             if (isset($form["donottranslate"])){
-                $eng.= 'donottranslate = "'.$form["donottranslate"].'", ';
+                $eng.= 'donottranslate = "'.$form["EngDnt"].'", ';
             }
             if (isset($form["isarchived"])){
                 $eng.= 'isarchived = '.$form["isarchived"].', ';
             }
-            if (isset($form["TranslationPriority"])){
-                $eng.= 'TranslationPriority = '.$form["TranslationPriority"].', ';
+            if (isset($form["EngPrio"])){
+                $eng.= 'TranslationPriority = '.$form["EngPrio"].', ';
             }
-
-
         } else {
             $eng_ins = '';
             $eng_upd = '';
@@ -280,21 +278,85 @@ WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
         
         $sql = '
 INSERT INTO words SET
-    code = "'.$form["code"].'",
+    code = "'.$form["EngCode"].'",
     ShortCode = "'.$form["lang"].'",
     IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$form["lang"].'"),
-    Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
+    Sentence = "'.mysql_real_escape_string($form["TrSent"]).'",
     updated = now(),
     '.$eng_ins.$eng.'
     IdMember = '.$_SESSION["IdMember"].',
     created = now()
 ON DUPLICATE KEY UPDATE
-    Sentence = "'.mysql_real_escape_string($form["Sentence"]).'",
+    Sentence = "'.mysql_real_escape_string($form["TrSent"]).'",
     updated = now(),
     '.$eng_upd.$eng.'
     IdMember = '.$_SESSION["IdMember"];
         $this->dao->query($sql);
         return array(mysql_insert_id(),mysql_affected_rows());
-
     }
+    
+    public function editFormCheck($form){
+        $errors = array();
+        switch($form['DOACTION']){
+        case 'Submit':
+            if (empty($form['EngCode'])){
+                $errors[] = 'AdminWordErrorCodeEmpty';
+            } else {
+                $sql = '
+SELECT count(id) AS cnt
+FROM words
+WHERE code = "'.$form['EngCode'].'" AND idLanguage=0
+                    ';
+                $query = $this->dao->query($sql);
+                $res = $query->fetch(PDB::FETCH_OBJ);
+                if (!$res->cnt > 0) {
+                    if ($form['lang'] == 'en'){
+                        if (!preg_match('#^[a-z][-a-z0-9_]+[a-z0-9]$#i',$form['EngCode'])){
+                            $errors[] = 'AdminWordErrorBadCodeFormat';
+                        }
+                    } else {
+                        $errors[] = 'AdminWordErrorCodeNotExist';
+                    }
+                }
+            }
+    
+            if (empty($form['TrSent'])){$errors[] = 'AdminWordErrorSentenceEmpty';}
+            if (empty($form['lang'])){$errors[] = 'AdminWordErrorLangEmpty';}
+            break;
+        case 'Find':
+            if (empty($form['EngCode']) && empty($form['TrSent'])){
+                $errors[] = 'AdminWordErrorNeedOneSearchTerm';
+            }
+
+            break;
+        }
+        return $errors;
+    }
+
+    public function editEngFormCheck($form){
+        $errors = array();
+        switch($form['DOACTION']){
+        case 'Submit':
+            if ($form['EngDesc'] == $form['EngCode'] || $form['EngDesc'] == $form['EngSent']) {
+                $errors[] = 'AdminWordErrorDescIsCodeSent';
+            }
+            if (empty($form['EngDesc'])){
+                $errors[] = 'AdminWordErrorDescriptionEmpty';
+            } elseif (strlen($form['EngDesc'])<15){
+                $errors[] = 'AdminWordErrorDescriptionTooShort';
+            }
+            if (empty($form['EngPrio'])){
+                $errors[] = 'AdminWordErrorPriorityEmpty';
+            } elseif ($form['EngPrio']<1 || $form['EngPrio']>10) {
+                $errors[] = 'AdminWordErrorPriorityWrong';
+            }
+            
+            if (empty($form['changetype'])){$errors[] = 'AdminWordErrorChangeTypeEmpty';}
+            break;
+        case 'Back':
+            break;  
+        }
+        return $errors;        
+    }
+    
 }

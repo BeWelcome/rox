@@ -110,7 +110,11 @@ class AdminWordController extends RoxControllerBase
     public function editEnglishTranslation(){
         $page = new AdminWordEditEngPage();
         $page->nav = $this->getNavigationData();
-        $page->data = $this->_model->getWordCodeData($_SESSION['form']['code'],$_SESSION['form']['lang']);            
+        $page->data = $this->_model->getTranslationData('edit',$page->nav['shortcode'],$_SESSION['form']['EngCode']);
+        $wcexist = $this->_model->getWordcodeData($_SESSION['form']['EngCode'],'en');
+        $page->status = ($wcexist->cnt == 0?'create':'update');
+        $page->getFormData(array('EngCode','EngSent','EngDesc','EngDnt',
+            'TrSent','lang','isarchived','EngPrio'));
         return $page;
     }
 
@@ -121,8 +125,6 @@ class AdminWordController extends RoxControllerBase
         // default language can be overridden through url
         if (isset($this->route_vars['shortcode'])){
             $nav['shortcode'] = $this->route_vars['shortcode'];
-            //$nav['currentLanguage'] = $words->get('lang_'.$nav['shortcode']);
-
         }
 
         // register if language is within scope
@@ -132,7 +134,6 @@ class AdminWordController extends RoxControllerBase
             $page->noScope = true;
         }
         $page->nav = $nav;
-
         if (isset($this->route_vars['wordcode'])){
             // specific wordcode selected
             $wordcode = $this->route_vars['wordcode'];
@@ -142,6 +143,10 @@ class AdminWordController extends RoxControllerBase
             $wordcode = false;
             $page->data = null;
         }
+        $page->getFormData(array('EngCode','TrSent','EngDesc',
+                                 'EngDnt','EngSent','lang'));
+
+
         return $page;
     }
 
@@ -234,12 +239,12 @@ class AdminWordController extends RoxControllerBase
             break;
         case 1 :
             $type = 'setFlashNotice';
-            $msg = 'Wordcode "'.$code.'" has been added succesfully';
+            $msg = 'Wordcode "'.$code.'" has been added succesfully. Language: '.$this->words->get('lang_'.$shortcode);
             MOD_log::get()->write('inserting '.$code.' in '.$shortcode, 'AdminWord');
             break;
         case 2 :
             $type = 'setFlashNotice';
-            $msg = 'Wordcode "'.$code.'" has been updated succesfully';
+            $msg = 'Wordcode "'.$code.'" has been updated succesfully. Language: '.$this->words->get('lang_'.$shortcode);
             MOD_log::get()->write('updating '.$code.' in '.$shortcode, 'AdminWord');
             break;
         }
@@ -248,25 +253,45 @@ class AdminWordController extends RoxControllerBase
 
     public function trEditCreateCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
         if (empty($args->post)) {return false;}
+        // set posted variables in the session
+        foreach ($args->post as $key => $postvar){
+            $_SESSION['form'][$key] = $postvar;
+        }
+        $errors = $this->_model->editFormCheck($args->post);
+        if (!empty($errors)) {
+            $mem_redirect->vars = $args->post;
+            $mem_redirect->errors = $errors;
+//            $mem_redirect->action = $action;
+            return false;
+        }
+        
         $nav = $this->getNavigationData();
         switch($args->post['DOACTION']){
         case 'Submit' :
             if ($args->post['lang']=='en'){
-                $_SESSION['form'] = $args->post;
+                // and continue with the second page
                 return $this->router->url('admin_word_editeng', array(), false);
             }
-            list($id,$res) = $this->_model->UpdateSingleTranslation($args->post);
-            if ($res == 2) {$this->words->MakeRevision($id,'words');}
-            // get the flash notice/error
-            list($type,$msg) = $this->getResultMsg($res,$args->post['code'],$args->post['lang']);
+            // check if the wordcode exists in English
+            $wcexist = $this->_model->getWordcodeData($args->post['EngCode'],'en');
+            if ($wcexist->cnt > 0){
+                list($id,$res) = $this->_model->UpdateSingleTranslation($args->post);
+                if ($res == 2) {$this->words->MakeRevision($id,'words');}
+                // get the flash notice/error
+                list($type,$msg) = $this->getResultMsg($res,$args->post['EngCode'],$args->post['lang']);
+            }
+            else {
+                $type = 'setFlashError';
+                $msg = 'This wordcode does not yet exist. It needs to be created in English first.';
+            }
             $this->$type($msg);
             break;
         case 'Find'   :
             $searchparams = array();
-            foreach (array('code','Description','Sentence','lang') as $item){
+            foreach (array('EngCode','EngDesc','EngSent','lang') as $item){
                 if (isset($args->post[$item])){
                     if (strlen($args->post[$item])>0){
-                        $searchparams[strtolower(substr($item,0,4))] = $args->post[$item];
+                        $searchparams[$item] = $args->post[$item];
                     }
                 }
             }
@@ -287,18 +312,29 @@ class AdminWordController extends RoxControllerBase
     }
     public function trEditEngCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
         if (empty($args->post)) {return false;}
+        // set posted variables in the session
+        foreach ($args->post as $key => $postvar){
+            $_SESSION['form'][$key] = $postvar;
+        }
+        $errors = $this->_model->editEngFormCheck($args->post);
+        if (!empty($errors)) {
+            $mem_redirect->vars = $args->post;
+            $mem_redirect->errors = $errors;
+//            $mem_redirect->action = $action;
+            return false;
+        }
         $nav = $this->getNavigationData();
         switch($args->post['DOACTION']){
         case 'Submit' :
             list($id,$res) = $this->_model->UpdateSingleTranslation($args->post);
             if ($res == 2) {$this->words->MakeRevision($id,'words');}
             // get the flash notice/error
-            list($type,$msg) = $this->getResultMsg($res,$args->post['code'],$args->post['lang']);
+            list($type,$msg) = $this->getResultMsg($res,$args->post['EngCode'],$args->post['lang']);
             $this->$type($msg);
             break;
         case 'Back' :
-            $_SESSION['form']['Sentence'] = $args->post['Sentence'];
-            return $this->router->url('admin_word_editone', array('wordcode'=>$args->post['code'],'shortcode'=>$args->post['lang']), false);
+            $_SESSION['form']['TrSent'] = $args->post['TrSent'];
+            return $this->router->url('admin_word_editone', array('wordcode'=>$args->post['EngCode'],'shortcode'=>$args->post['lang']), false);
         }
         return $this->router->url('admin_word_editempty', array(), false);
     }

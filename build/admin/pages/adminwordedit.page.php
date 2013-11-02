@@ -32,11 +32,40 @@ Boston, MA  02111-1307, USA.
 
 class AdminWordEditPage extends AdminWordBasePage
 {
+    public $formdata = array();
+    
     public function teaserHeadline()
     {
         $string = 'AdminWord';
         $string .= ' » '.$this->nav['currentLanguage'];
         $string .= ' » Translate';
         return $string;
+    }
+    
+    public function getFormData($fields){
+            //$formdata = array();
+        foreach ($fields as $field) {
+            if (isset($vars[$field])){
+                $this->formdata[$field] = $vars[$field];
+            } elseif (isset($_SESSION['form'][$field])){
+                $this->formdata[$field] = $_SESSION['form'][$field];
+            } elseif (isset($this->data->$field)) {
+                $this->formdata[$field] = $this->data->$field;
+            } else {
+                $this->formdata[$field] = '';
+            }
+            unset ($_SESSION['form'][$field]);
+        }
+        if ($this->formdata['lang']==''){
+            $this->formdata['lang'] = $this->nav['shortcode'];
+        }
+    }
+    
+    public function showScope(){
+    if ($this->nav['scope']=='"All"'){
+        return 'All';
+    } else {
+        array_map(function ($lng){echo $this->words->get('lang_'.$lng->ShortCode).' ';},$this->langarr);
+    }
     }
 }

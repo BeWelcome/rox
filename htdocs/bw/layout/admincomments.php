@@ -85,8 +85,25 @@ function ShowList($TData, $start = 0, $total = 0) {
     echo "                <div class=\"c50r\">\n";
     echo "                  <div class=\"subcr\">\n";
     echo "                    <ul class=\"linklist\">\n";
-    if ($c->AdminComment != "Checked")
+
+    // define button texts
+    if ($c->DisplayInPublic == 1){
+        $ToggleHideText = 'Hide';
+    } else {
+        $ToggleHideText = 'Show';        
+    }
+    if ($c->AllowEdit == 1){
+        $ToggleEditText = 'Default editing';
+    } else {
+        $ToggleEditText = 'Allow editing';        
+    }
+
+
+    if ($c->AdminComment != "Checked"){
+      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=ToggleHide")."\" class=button>$ToggleHideText</a>\n";
+      echo "                      <a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=ToggleAllowEdit")."\" class=button>$ToggleEditText</a>\n";
       echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=Checked")."\" class=button>Mark as checked</a>\n";
+    }
     if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminAbuser")))
       echo "                      <a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=AdminAbuserMustCheck")."\" class=button>Mark as abuse</a></li>\n";
     if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminComment")))

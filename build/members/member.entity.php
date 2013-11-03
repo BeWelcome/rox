@@ -665,32 +665,6 @@ WHERE IdMember = ".$this->id
         return $this->createEntity('Feedback')->getSignupFeedback($this);
     }
 
-    public function get_photo() {
-        // $photos = $this->bulkLookup(
-            // "
-// SELECT * FROM membersphotos
-// WHERE IdMember = ".$this->id
-        // );
-
-        // return $photos;
-    }
-
-
-
-    public function get_previous_photo($photorank) {
-        // $photorank--;
-
-        // if($photorank < 0) {
-            // $photos = $this->bulkLookup(
-                // "
-// SELECT * FROM membersphotos
-// WHERE IdMember = $this->id
-// ORDER BY SortOrder DESC LIMIT 1"
-            // );
-        // }
-
-    }
-
     /*
     returns the number of notes the current logged in user has with  this member
     return : int or 0 if current user is not logged
@@ -743,6 +717,8 @@ WHERE IdMember = ".$this->id
                 members.id = comments.IdFromMember
                 AND
                 members.status IN ('Active', 'ChoiceInactive')
+                AND
+                DisplayInPublic = 1
             "
         );
 

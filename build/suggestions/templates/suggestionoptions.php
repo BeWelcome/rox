@@ -1,5 +1,5 @@
 <?php foreach ( $this->suggestion->options as $option ) :
-if ((!$option->deleted) | ($this->hasSuggestionRight)) : ?>
+if (!$option->deleted | ($this->hasSuggestionRight)) : ?>
 <div class="subcolumns row">
     <h3><?php echo $this->purifier->purify($option->summary);?></h3>
 </div>

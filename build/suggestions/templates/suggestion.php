@@ -1,4 +1,4 @@
-<?php 
+<?php
 $class = "c62l";
 if ($this->viewOnly & !$this->hasSuggestionRight) :
     $class = "c99l";
@@ -20,7 +20,7 @@ endif; ?>
             <div class="subcr">
                <?php if ($this->hasSuggestionRight  && $this->suggestion->state != SuggestionsModel::SUGGESTIONS_IMPLEMENTED) :
                     $callbackStatus = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'changeStateCallback'); ?>
-                <form method="POST"><?php echo $callbackStatus;
+                <form method="post"><?php echo $callbackStatus;
                     echo $this->getStateSelect($this->suggestion->state); ?>
                     <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id;?>" />
                     <input type="submit" id="suggestions-submit-status" name="suggestions-submit-status" value="change" />

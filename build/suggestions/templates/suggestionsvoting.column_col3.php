@@ -34,10 +34,11 @@ include 'suggestionserrors.php'; ?>
 <fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); ?></legend>
 <form method="post" id="suggestion-vote-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />
-<?php echo $callbackTags; 
+<?php echo $callbackTags;
 $votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + SuggestionsModel::DURATION_VOTING) ?>
     <h3><?php echo $this->purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', $votingends) .  ")"); ?></h3>
     <p><?php echo $this->purifier->purify($this->suggestion->description); ?></p>
+    <p><?php echo $words->get('SuggestionsVoteDiscussion', '<a href="/groups/' . SuggestionsModel::getGroupId() . '/forum/s' . $this->suggestion->threadId . '">', '</a>'); ?></p>
     <hr />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
     <div class="floatbox float_left">
@@ -55,7 +56,7 @@ $votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + Sug
             </div>
         <?php endif; ?>
     </div><hr />
-    <?php endforeach; 
+    <?php endforeach;
     if (!$this->viewOnly) : ?>
     <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', $votingends);?></p>
     <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
@@ -63,3 +64,16 @@ $votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + Sug
 </form>
 </fieldset>
 </div>
+<script type="text/javascript">
+jQuery.noConflict();
+jQuery('.no-checkedselector').on('change', 'input[type="radio"].toggle', function () {
+    if (this.checked) {
+    	jQuery('input[name="' + this.name + '"].checked').removeClass('checked');
+    	jQuery(this).addClass('checked');
+        // Force IE 8 to update the sibling selector immediately by
+        // toggling a class on a parent element
+        jQuery('.toggle-container').addClass('xyz').removeClass('xyz');
+    }
+});
+jQuery('.no-checkedselector input[type="radio"].toggle:checked').addClass('checked');
+</script>

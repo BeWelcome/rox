@@ -16,9 +16,9 @@ if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
 // Show suggestion head (as on every page)
 include 'suggestion.php'; ?>
 <div id='suggestion-form'>
-<?php include 'suggestionoptions.php'; 
+<?php include 'suggestionoptions.php';
 if (!$this->viewOnly) { ?>
-<form method="POST">
+<form method="post">
 <?php echo $callbackTags;?>
 <div class="subcolumns row">
     <label for="suggestion-option-summary"><?php echo $words->get('suggestionAddOptionSummary'); ?>*</label><br/>

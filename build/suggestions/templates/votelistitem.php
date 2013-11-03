@@ -9,6 +9,6 @@ if ($count == 0) : ?>
     echo '<h3><a href="suggestions/' . $suggestion->id . '">' . htmlspecialchars($suggestion->summary) . '</a></h3>';
     echo '<p>' . $this->purifier->purify($layoutbits->truncate_words($suggestion->description, 25)) . '</p></td>';
     echo '<td class="details">' . date('Y-m-d', strtotime($suggestion->laststatechanged) + SuggestionsModel::DURATION_VOTING) . '</td>';
-    echo '<td class="details">' . $suggestion->votes . '</td>';
+    echo '<td class="details">' . $suggestion->voteCount . '</td>';
     echo '</tr>';
 ?>

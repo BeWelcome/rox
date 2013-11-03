@@ -14,7 +14,7 @@ switch($member->Accomodation)
         $icons[] = '<img src="images/icons/yesicanhost.png" alt="' . $words->getSilent('yesicanhost') .'"' .
                    ' title="' . $words->getSilent('CanOfferAccomodation') . '" />';
         break;
-    case 'dependonrequest': 
+    case 'dependonrequest':
         $icons[] = '<img src="images/icons/maybe.png" alt="' . $words->getSilent('dependonrequest') .'"' .
                 ' title="' . $words->getSilent('CanOfferdependonrequest') . '" />';
         break;
@@ -49,7 +49,7 @@ if (strstr($member->Restrictions, "NoDrugs"))
 {
     $icons[] = '<img src="images/icons/no-drugs.png" alt="' . $words->getSilent('Restriction_NoDrugs') . '" title="' . $words->getSilent('Restriction_NoDrugs') . '" />';
 }
-$modul = count($icons) < 5 ? $modul = 5 : $modul = 2; 
+$modul = count($icons) < 5 ? $modul = 5 : $modul = 2;
 for($ii=0; $ii < count($icons); $ii++)
 {
     echo $icons[$ii];
@@ -64,33 +64,33 @@ for($ii=0; $ii < count($icons); $ii++)
             <dt class="label guests" ><?=$words->get('ProfileNumberOfGuests');?>:</dt>
             <dd><?php echo $member->MaxGuest ?></dd>
         <? } ?>
-        
+
         <?php if ($member->get_trad("MaxLenghtOfStay", $profile_language,true) != "") { ?>
             <dt class="label stay" ><?=$words->get('ProfileMaxLenghtOfStay');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("MaxLenghtOfStay", $profile_language,true)); ?></dd>
         <? } ?>
-        
+
         <?php if ($member->get_trad("ILiveWith", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('ProfileILiveWith');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("ILiveWith", $profile_language,true)); ?></dd>
         <? } ?>
-        
+
         <?php if ($member->get_trad("PleaseBring", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('ProfilePleaseBring');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></dd>
         <? } ?>
-        
+
         <?php
         if ($member->get_trad("OfferGuests", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('ProfileOfferGuests');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("OfferGuests", $profile_language,true)); ?></dd>
         <? } ?>
-        
+
         <?php if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('ProfileOfferHosts');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></dd>
         <? } ?>
-        
+
         <?php if ($member->get_trad("AdditionalAccomodationInfo", $profile_language,true) != "" or $member->get_trad("InformationToGuest", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('OtherInfosForGuest');?>:</dt>
             <dd>
@@ -103,7 +103,7 @@ for($ii=0; $ii < count($icons); $ii++)
             <dt class="label" ><?=$words->get('ProfilePublicTransport');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("PublicTransport", $profile_language,true)); ?></dd>
         <? } ?>
-        
+
         <?php
         $TabRestrictions = explode(",", $member->Restrictions);
         $max = count($TabRestrictions);
@@ -120,10 +120,10 @@ for($ii=0; $ii < count($icons); $ii++)
                     echo "</dd>\n";
                 }
             ?>
-            
+
             <dt class="label" ><?=$words->get('ProfileOtherRestrictions');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("OtherRestrictions", $profile_language,true)); ?></dd>
-            
+
         <? } ?>
     </dl>
 </div> <!-- profile_accommodation -->
@@ -134,11 +134,11 @@ for($ii=0; $ii < count($icons); $ii++)
     if (isset($_SESSION["IdMember"]) && strcmp($member->id,$_SESSION["IdMember"]) != 0) {
         $linkwidget = new LinkSinglePictureLinkpathWidget();
         $linkwidget->render($_SESSION["IdMember"],$member->id,'linkpath');
-    } 
+    }
 ?>
 
 <? // Profile Relations ?>
-<?php 
+<?php
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $relations = $member->relations;
 if (count($relations) > 0) { ?>
@@ -182,7 +182,7 @@ if (count($relations) > 0) { ?>
     $username = $this->member->Username;
     $layoutbits = new MOD_layoutbits();
     $max = 3;
-    if (count($comments) > 0) { 
+    if (count($comments) > 0) {
 ?>
 
   <div id="comments" class="floatbox box">
@@ -191,13 +191,16 @@ if (count($relations) > 0) { ?>
         <a href="members/<?php echo $member->Username; ?>/comments/"><?php echo $words->get('Edit'); ?></a>
     </span>
     <?php endif; ?>
-    <h3><?php echo $words->get('LatestComments')?></h3> 
+    <h3><?php echo $words->get('LatestComments')?></h3>
 
     <?php
-        $iiMax = (isset($max) && count($comments) > $max) ? $max : count($comments);
         $tt = array ();
-        for ($ii = 0; $ii < $iiMax; $ii++) {
-            $c = $comments[$ii];
+        $commentLoopCount = 0;
+        foreach ($comments as $c) {
+            // skip items that are hidden for public
+            if ($c->DisplayInPublic == 0) {continue;}
+            // stop looping when maximum has been reached
+            if (++$commentLoopCount>$max){break;}
             $quality = "neutral";
             if ($c->comQuality == "Good") {
                 $quality = "good";
@@ -206,8 +209,7 @@ if (count($relations) > 0) { ?>
                 $quality = "bad";
             }
 
-        $tt = explode(",", $comments[$ii]->Lenght);
-        // var_dump($c);
+       // $tt = explode(",", $c->Lenght);
     ?>
     <div class="floatbox">
         <a href="members/<?=$c->UsernameFromMember?>">
@@ -225,7 +227,7 @@ if (count($relations) > 0) { ?>
                   echo MOD_layoutbits::truncate($textStripped, 250, $moreLink);
               ?>
             </p>
-          <? if ($ii != ($iiMax-1)) echo '<hr />' ?>
+          <? if ($commentLoopCount < $max) echo '<hr />' ?>
         </div> <!-- comment -->
     </div> <!-- floatbox -->
         <? } ?>
@@ -245,7 +247,7 @@ if (count($relations) > 0) { ?>
             <?php endif; ?>
             <h3><?php echo $words->getSilent('TripsUpComing');?></h3>
             <ul>
-            <?php 
+            <?php
             foreach ($comingposts as $blog) {
                 $date = date("d M Y", strtotime($blog->blog_start));
                 $geoname = ($blog->getGeo()) ? $blog->getGeo()->name : $blog->title;

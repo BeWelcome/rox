@@ -157,14 +157,14 @@ WHERE
 
         if ($oldmsg->IdSender==$_SESSION["IdMember"]) {
             if ($DeleteRequest=="receiverdeleted") {
-                $DeleteRequest.="senderdeleted,receiverdeleted";
+                $DeleteRequest = "senderdeleted,receiverdeleted";
             } else {
                 $DeleteRequest="senderdeleted";
             }
         }
         if ($oldmsg->IdReceiver==$_SESSION["IdMember"]) {
             if ($DeleteRequest=="senderdeleted") {
-                $DeleteRequest.="senderdeleted,receiverdeleted";
+                $DeleteRequest = "senderdeleted,receiverdeleted";
             } else {
                 $DeleteRequest="receiverdeleted";
             }
@@ -210,7 +210,7 @@ WHERE id = $message_id
 
     /**
      * add and remove marks from the SpamInfo of a message
-     * 
+     *
      * @param integer $message_id
      * @param array/string $marks_to_add
      * @param array/string $marks_to_remove

@@ -53,4 +53,9 @@ class CountryPage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        return $stylesheets;
     }
+    
+    protected function leftSidebar(){
+
+    }
+
 }

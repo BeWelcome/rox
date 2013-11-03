@@ -276,9 +276,8 @@ class SuggestionsModel extends RoxModelBase
         return $suggestion;
     }
 
-    private function addPost($poster, $text, $threadId = false) {
+    public function addPost($poster, $text, $threadId = false) {
         $words = $this->getWords();
-        $suggestionsTeam = $this->createEntity('Member')->findByUsername('SuggestionsTeam');
         $insert = "
             INSERT INTO
                 `forums_posts` (
@@ -314,7 +313,7 @@ class SuggestionsModel extends RoxModelBase
         return $postId;
     }
 
-    private function setForumNotification($postId, $type) {
+    public function setForumNotification($postId, $type) {
         // Notify the members of the group
         $forums = new Forums();
         $forums->prepare_notification($postId, $type);

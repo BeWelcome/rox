@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -27,19 +27,19 @@ Boston, MA  02111-1307, USA.
  * @author Philipp Lange
  */
 class MOD_trips {
-    
+
 
     /**
      * Singleton instance
-     * 
+     *
      * @var MOD_trips
      * @access private
      */
     private static $_instance;
-    
+
     public function __construct()
     {
-    
+
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
@@ -47,10 +47,10 @@ class MOD_trips {
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
     }
-    
+
     /**
      * singleton getter
-     * 
+     *
      * @param void
      * @return PApps
      */
@@ -62,56 +62,73 @@ class MOD_trips {
         }
         return self::$_instance;
     }
-    
-     /** Retrieve the last accepted profile in the city of the member with a picture 
+
+     /** Retrieve the last accepted profile in the city of the member with a picture
 
      */
     public function RetrieveVisitorsInCityWithAPicture($IdMember, $limit = 3)
     {
-		//retrieve City for $IdMember
-        $query = '
-			SELECT SQL_CACHE `members`.`IdCity` 
-			FROM 	`members`
-			WHERE `members`.`id`= '.$IdMember
-		;
-    		$s = $this->dao->query($query);
-				if (!$s) {
-			 		 throw new PException('Cannot retrieve last member with photo!');
-				}
-		$result = $s->fetch(PDB::FETCH_OBJ);
-		
-		$TTrips=array() ;
+        // Reuse activities nearme or add new preference
+        $distance = 50;
+
+        // get all locations in a certain area
+        $member = new Member($IdMember);
+        $query = "SELECT latitude, longitude FROM geonames WHERE geonameid = " . $member->IdCity;
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return false;
+        }
+        $row = $sql->fetch(PDB::FETCH_OBJ);
+
+        // calculate rectangle around place with given distance
+        $lat = deg2rad(doubleval($row->latitude));
+        $long = deg2rad(doubleval($row->longitude));
+
+        $longne = rad2deg(($distance + 6378 * $long) / 6378);
+        $longsw = rad2deg((6378 * $long - $distance) / 6378);
+
+        $radiusAtLatitude = 6378 * cos($lat);
+        $latne = rad2deg(($distance + $radiusAtLatitude * $lat) / $radiusAtLatitude);
+        $latsw = rad2deg(($radiusAtLatitude * $lat - $distance) / $radiusAtLatitude);
+        if ($latne < $latsw) {
+            $tmp = $latne;
+            $latne = $latsw;
+            $latsw = $tmp;
+        }
+        if ($longne < $longsw) {
+            $tmp = $longne;
+            $longne = $longsw;
+            $longsw = $tmp;
+        }
+
+        $TTrips = array();
+
+        // $query .= "FROM activities AS a, geonames AS g WHERE a.locationId = g.geonameid ";
+        $rectangle = 'AND geonames.latitude < ' . $latne . '
+            AND geonames.latitude > ' . $latsw . '
+            AND geonames.longitude < ' . $longne . '
+            AND geonames.longitude > ' . $longsw;
 
         // retrieve the visiting members handle and trip data
-        $cityId = $result->IdCity;
         $query = "
             SELECT SQL_CACHE
                 bd.blog_id           AS tripId,
                 bd.blog_start        AS tripDate,
                 members.Username,
                 members.IdCity,
-                geonames_cache.name  AS city,
-                geonames_cache2.name AS country
+                geonames.name  AS city
             FROM
                 blog            AS b,
                 blog_data       AS bd,
                 members,
-                geonames_cache,
-                geonames_cache  AS geonames_cache2
+                geonames
             WHERE
-                b.blog_id                 = bd.blog_id 
-                AND
-                b.trip_id_foreign         IS NOT NULL
-                AND
-                bd.blog_geonameid         = $cityId
-                AND
-                b.IdMember                = members.id
-                AND
-                geonames_cache.geonameId  = members.IdCity
-                AND
-                geonames_cache2.geonameId = geonames_cache.parentCountryId
-                AND
-                bd.blog_start             >= CURDATE()
+                b.blog_id = bd.blog_id
+                AND b.trip_id_foreign IS NOT NULL
+                AND b.IdMember = members.id
+                AND bd.blog_geonameid = geonames.geonameid " .
+                $rectangle . "
+                AND bd.blog_start >= CURDATE()
             ORDER BY
                 bd.blog_start ASC
             LIMIT
@@ -122,9 +139,18 @@ class MOD_trips {
 			 		 throw new PException('Cannot retrieve last member with photo!');
 				}
 				while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-	  					array_push($TTrips, $row);
+				    $geo = new Geo($row->IdCity);
+				    $country = "SELECT * from geonamescountries WHERE country = '" . $this->dao->escape($geo->country) . "'";
+				    $countrySql = $this->dao->query($country);
+				    $countryRow = $countrySql->fetch(PDB::FETCH_OBJ);
+				    if (isset($countryRow->name)) {
+				        $row->country = $countryRow->name;
+				    } else {
+				        $row->country = "";
+				    }
+	  			    array_push($TTrips, $row);
 				} // end of while on visits
-				return($TTrips) ;				
-			
-		} // end of	RetrieveLastAcceptedProfileInCityWithAPicture		
+				return($TTrips) ;
+
+		} // end of	RetrieveLastAcceptedProfileInCityWithAPicture
 } // end of MOD_Trips

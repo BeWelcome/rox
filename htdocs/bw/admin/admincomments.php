@@ -112,31 +112,31 @@ $countmatch = 0;
 
 $RightLevel = HasRight('Comments'); // Check the rights
 if ($RightLevel < 1) {
-	echo "For this you need the <b>Comments</b> rights<br>";
-	exit (0);
+    echo "For this you need the <b>Comments</b> rights<br>";
+    exit (0);
 }
 
 $AccepterScope = RightScope('Comments');
 if ($AccepterScope != "All") {
-	$CommentsScope = str_replace("\"", "'", $CommentsScope);
+    $CommentsScope = str_replace("\"", "'", $CommentsScope);
 }
 
 $RestrictToIdMember = "";
 if (GetStrParam("ToIdMember") != "") {
-	$RestrictToIdMember = " and IdToMember=" . IdMember(GetStrParam("ToIdMember"));
+    $RestrictToIdMember = " and IdToMember=" . IdMember(GetStrParam("ToIdMember"));
 }
 if (GetStrParam("FromIdMember") != "") {
-	$RestrictToIdMember = " and IdFromMember=" . IdMember(GetStrParam("FromIdMember"));
+    $RestrictToIdMember = " and IdFromMember=" . IdMember(GetStrParam("FromIdMember"));
 }
 
 $page = GetParam('page', 0);
 if ($page == "") {
-	$page = 0;
+    $page = 0;
 }
 
 $action = GetParam("action");
 if ($action == "") {
-	$action = "";
+    $action = "";
 }
 $lastaction = "";
 switch ($action) {
@@ -170,76 +170,91 @@ switch ($action) {
         ";
         sql_query($str);
         LogStr("Updating comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
-        DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
+        // call the layout
+        DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message);
         exit (0);
         break;
-
-	case "AdminAbuserMustCheck" :
-		$Message = "Set comment to be checked by Admin Comment";
-		$str = "Update comments set AdminAction='AdminAbuserMustCheck' where id=" . Getparam("IdComment");
-		sql_query($str);
-		LogStr(" Setting to <b>tobe check by Admin Abuser</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
-		break;
-	case "AdminCommentMustCheck" :
-		$Message = "Set comment to be checked by Admin Comment";
-		$str = "Update comments set AdminAction='AdminCommentMustCheck' where id=" . Getparam("IdComment");
-		sql_query($str);
-		LogStr(" Setting to <b>tobe check by Admin Comment</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
-		break;
-
-	case "del" :
-
-		if (!(HasRight("Comments", "DeleteComment"))) {
-		   $Message="You don't have the right to delete comments" ;
-		   DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
-		   exit (0);
-		   break ;
-		}
-		$Message = " Delete comment #" . GetParam("IdComment");
-		$c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
-		if (!isset($c->id)) {
-		   $Message="No such coment" ;
-		   DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
-		   exit (0);
-		   break ;
-		}
-		$str = "delete from comments  where id=" . GetParam("IdComment");
-		sql_query($str);
-		LogStr("Deleting comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
-		DisplayAdminComments(loaddata("", " and comments.IdToMember=".$c->IdToMember ), $Message); // call the layout
-		exit (0);
-		break;
-
-	case "Checked" :
-		$Message = "Set comment to be checked by Admin Comment";
-		$str = "Update comments set AdminAction='Checked' where id=" . Getparam("IdComment");
-		sql_query($str);
-		LogStr(" Setting to <b>Checked</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
-		break;
-	case "editonecomment" :
-		$Message = " Editing one comment";
-		DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message); // call the layout
-		exit (0);
-		break;
-	case "AdminAbuser" :
-		$Message = "Abusive Comments";
-		$count = getcount("AdminAbuserMustCheck", $RestrictToIdMember);
-		DisplayAdminComments(loaddata("AdminAbuserMustCheck", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count, "AdminAbuserMustCheck"); // call the layout
-		exit (0);
-		break;
-	case "All" :
-		$Message = "All Comments ";
-		$count = getcount("", $RestrictToIdMember);
-		DisplayAdminComments(loaddata("", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count); // call the layout
-		exit (0);
-		break;
-
-	case "ShowOneMember" :
-		$RestrictToIdMember = IdMember(GetParam("cid", 0));
-		break;
+    case "AdminAbuserMustCheck" :
+        $Message = "Set comment to be checked by Admin Comment";
+        $str = "Update comments set AdminAction='AdminAbuserMustCheck' where id=" . Getparam("IdComment");
+        sql_query($str);
+        LogStr(" Setting to <b>tobe check by Admin Abuser</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
+        break;
+    case "AdminCommentMustCheck" :
+        $Message = "Set comment to be checked by Admin Comment";
+        $str = "Update comments set AdminAction='AdminCommentMustCheck' where id=" . Getparam("IdComment");
+        sql_query($str);
+        LogStr(" Setting to <b>tobe check by Admin Comment</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
+        break;
+    case "del" :
+        if (!(HasRight("Comments", "DeleteComment"))) {
+            $Message="You don't have the right to delete comments" ;
+            // call the layout
+            DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message);
+            exit (0);
+            break ;
+        }
+        $Message = " Delete comment #" . GetParam("IdComment");
+        $c = LoadRow("select * from comments where id=" . GetParam("IdComment"));
+        if (!isset($c->id)) {
+            $Message="No such coment" ;
+            // call the layout
+            DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message);
+            exit (0);
+            break ;
+        }
+        $str = "delete from comments  where id=" . GetParam("IdComment");
+        sql_query($str);
+        LogStr("Deleting comment #" . GetParam("IdComment") . " previous where=" . $c->TextWhere . " previous text=" . $c->TextFree . " previous Quality=" . $c->Quality, "AdminComment");
+        // call the layout
+        DisplayAdminComments(loaddata("", " and comments.IdToMember=".$c->IdToMember ), $Message);
+        exit (0);
+        break;
+    case "Checked" :
+        $Message = "Set comment to be checked by Admin Comment";
+        $str = "Update comments set AdminAction='Checked' where id=" . Getparam("IdComment");
+        sql_query($str);
+        LogStr(" Setting to <b>Checked</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
+        break;
+    case "editonecomment" :
+        $Message = " Editing one comment";
+        // call the layout
+        DisplayAdminComments(loaddata("", " and comments.id=" . GetParam("IdComment")), $Message);
+        exit (0);
+        break;
+    case "AdminAbuser" :
+        $Message = "Abusive Comments";
+        $count = getcount("AdminAbuserMustCheck", $RestrictToIdMember);
+        // call the layout
+        DisplayAdminComments(loaddata("AdminAbuserMustCheck", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count, "AdminAbuserMustCheck");
+        exit (0);
+        break;
+    case "All" :
+        $Message = "All Comments ";
+        $count = getcount("", $RestrictToIdMember);
+        // call the layout
+        DisplayAdminComments(loaddata("", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count);
+        exit (0);
+        break;
+    case "ShowOneMember" :
+        $RestrictToIdMember = IdMember(GetParam("cid", 0));
+        break;
+    case "ToggleHide" :
+        $Message = "Toggle hide for general public";
+        $str = "UPDATE comments SET DisplayInPublic = 1 - DisplayInPublic WHERE id=" . Getparam("IdComment");
+        sql_query($str);
+        LogStr(" Toggling <b>hide</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
+        break;
+    case "ToggleAllowEdit" :
+        $Message = "Toggle whether creator may edit post";
+        $str = "UPDATE comments SET AllowEdit = 1 - AllowEdit WHERE id=" . Getparam("IdComment");
+        sql_query($str);
+        LogStr(" Toggling <b>edit allowance</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
+        break;
 }
 
 $Message = "Negative Comments";
 $count = getcount("AdminCommentMustCheck", $RestrictToIdMember);
-DisplayAdminComments(loaddata("AdminCommentMustCheck", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count, "AdminCommentMustCheckList"); // call the layout
+// call the layout
+DisplayAdminComments(loaddata("AdminCommentMustCheck", $RestrictToIdMember, $page, $comments_per_page), $Message, $page, $comments_per_page, $count, "AdminCommentMustCheckList");
 ?>

@@ -35,7 +35,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
 {
     protected $hasSuggestionRight = false;
     protected $viewOnly = true;
-    
+
     public function __construct($member) {
         $this->member = $member;
         if ($member) {
@@ -102,6 +102,12 @@ class SuggestionsBasePage extends PageWithActiveSkin
        return $stylesheets;
     }
 
+    protected function getStylesheetPatches() {
+       $stylesheets = parent::getStylesheetPatches();
+       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions_iepatch.css';
+       return $stylesheets;
+    }
+
     protected function getStateSelect($state) {
         $select = '<select id="suggestion-state" name="suggestion-state">';
         $words = $this->getWords();
@@ -111,7 +117,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
             if ($key == $state) {
                 $select .= ' selected="selected"';
             }
-            $select .= '">' . $words->getSilent($wordCode) . '</option>';
+            $select .= '>' . $words->getSilent($wordCode) . '</option>';
         }
         $select .= '</select>';
         $select .= $words->flushBuffer();

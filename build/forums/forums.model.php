@@ -3527,9 +3527,9 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
 
 	/**
-	 * Handle forum notifications
+	 * Handle forum notifications (public to be able to call it from suggestions)
 	 */
-    private function prepare_notification($postId, $type) {
+    public function prepare_notification($postId, $type) {
         // Get post details
         $query = "
             SELECT
@@ -3545,6 +3545,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
             WHERE
                 p.threadid = t.id
                 AND p.postid = '" . $this->dao->escape($postId) ."'";
+
         $res = $this->dao->query($query);
         if (!$res) {
             // just don't set notifications

@@ -86,6 +86,7 @@ class Suggestion extends RoxEntityBase
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_VOTING) {
                         $this->state = SuggestionsModel::SUGGESTIONS_RANKING;
                         $this->update(true);
+                        $this->notifyVotingStarted();
                     }
                     break;
             }
@@ -142,5 +143,14 @@ class Suggestion extends RoxEntityBase
         $option->deleted = date('Y-m-d');
         $option->deletedBy = $this->getLoggedInMember()->id;
         $option->update();
+    }
+    
+    private function notifyVotingStarted() {
+        $entityFactory = new RoxEntityFactory();
+        $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
+        $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/>' . $this->summary . '</a>\' has started.<br /><br />Please cast your vote.';
+        $suggestions = new SuggestionsModel();
+        $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
+        $suggestions->setForumNotifications($postId, 'reply');
     }
 }

@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -27,19 +27,19 @@ Boston, MA  02111-1307, USA.
  * @author Philipp Lange
  */
 class MOD_trips {
-    
+
 
     /**
      * Singleton instance
-     * 
+     *
      * @var MOD_trips
      * @access private
      */
     private static $_instance;
-    
+
     public function __construct()
     {
-    
+
         $db = PVars::getObj('config_rdbms');
         if (!$db) {
             throw new PException('DB config error!');
@@ -47,10 +47,10 @@ class MOD_trips {
         $dao = PDB::get($db->dsn, $db->user, $db->password);
         $this->dao =& $dao;
     }
-    
+
     /**
      * singleton getter
-     * 
+     *
      * @param void
      * @return PApps
      */
@@ -62,15 +62,15 @@ class MOD_trips {
         }
         return self::$_instance;
     }
-    
-     /** Retrieve the last accepted profile in the city of the member with a picture 
+
+     /** Retrieve the last accepted profile in the city of the member with a picture
 
      */
     public function RetrieveVisitorsInCityWithAPicture($IdMember, $limit = 3)
     {
         // Reuse activities nearme or add new preference
         $distance = 50;
-        
+
         // get all locations in a certain area
         $member = new Member($IdMember);
         $query = "SELECT latitude, longitude FROM geonames WHERE geonameid = " . $member->IdCity;
@@ -100,15 +100,15 @@ class MOD_trips {
             $longne = $longsw;
             $longsw = $tmp;
         }
-        
+
         $TTrips = array();
-        
+
         // $query .= "FROM activities AS a, geonames AS g WHERE a.locationId = g.geonameid ";
         $rectangle = 'AND geonames.latitude < ' . $latne . '
             AND geonames.latitude > ' . $latsw . '
             AND geonames.longitude < ' . $longne . '
             AND geonames.longitude > ' . $longsw;
-        
+
         // retrieve the visiting members handle and trip data
         $query = "
             SELECT SQL_CACHE
@@ -125,11 +125,11 @@ class MOD_trips {
                 geonames,
                 geonamescountries
             WHERE
-                b.blog_id = bd.blog_id 
+                b.blog_id = bd.blog_id
                 AND b.trip_id_foreign IS NOT NULL
                 AND b.IdMember = members.id
                 AND bd.blog_geonameid = geonames.geonameid
-                AND geonames.geonameId = members.IdCity
+                /* AND geonames.geonameId = members.IdCity */
                 AND geonamescountries.country = geonames.country " .
                 $rectangle . "
                 AND bd.blog_start >= CURDATE()
@@ -146,7 +146,7 @@ class MOD_trips {
 				while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 	  					array_push($TTrips, $row);
 				} // end of while on visits
-				return($TTrips) ;				
-			
-		} // end of	RetrieveLastAcceptedProfileInCityWithAPicture		
+				return($TTrips) ;
+
+		} // end of	RetrieveLastAcceptedProfileInCityWithAPicture
 } // end of MOD_Trips

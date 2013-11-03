@@ -40,6 +40,7 @@ class Suggestion extends RoxEntityBase
             $optionsFactory = $entityFactory->create('SuggestionOption');
             switch ($this->state) {
             	case SuggestionsModel::SUGGESTIONS_VOTING:
+            	    $optionsWhere = " AND deleted IS NULL";
                     $optionsFactory->sql_order = "RAND()";
                     break;
             	case SuggestionsModel::SUGGESTIONS_RANKING:

@@ -38,6 +38,7 @@ include 'suggestionserrors.php'; ?>
 $votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + SuggestionsModel::DURATION_VOTING) ?>
     <h3><?php echo $this->purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', $votingends) .  ")"); ?></h3>
     <p><?php echo $this->purifier->purify($this->suggestion->description); ?></p>
+    <p><?php echo $words->get('SuggestionsVoteDiscussion', '<a href="/groups/' . SuggestionsModel::getGroupId() . '/forum/s' . $this->suggestion->threadId . '">', '</a>'); ?></p>
     <hr />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
     <div class="floatbox float_left">

@@ -116,21 +116,17 @@ class MOD_trips {
                 bd.blog_start        AS tripDate,
                 members.Username,
                 members.IdCity,
-                geonames.name  AS city,
-                geonamescountries.name AS country
+                geonames.name  AS city
             FROM
                 blog            AS b,
                 blog_data       AS bd,
                 members,
-                geonames,
-                geonamescountries
+                geonames
             WHERE
                 b.blog_id = bd.blog_id
                 AND b.trip_id_foreign IS NOT NULL
                 AND b.IdMember = members.id
-                AND bd.blog_geonameid = geonames.geonameid
-                /* AND geonames.geonameId = members.IdCity */
-                AND geonamescountries.country = geonames.country " .
+                AND bd.blog_geonameid = geonames.geonameid " .
                 $rectangle . "
                 AND bd.blog_start >= CURDATE()
             ORDER BY
@@ -138,13 +134,21 @@ class MOD_trips {
             LIMIT
                 $limit
             ";
-            error_log($query);
     		$s = $this->dao->query($query);
 				if (!$s) {
 			 		 throw new PException('Cannot retrieve last member with photo!');
 				}
 				while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-	  					array_push($TTrips, $row);
+				    $geo = new Geo($row->IdCity);
+				    $country = "SELECT * from geonamescountries WHERE country = '" . $this->dao->escape($geo->country) . "'";
+				    $countrySql = $this->dao->query($country);
+				    $countryRow = $countrySql->fetch(PDB::FETCH_OBJ);
+				    if (isset($countryRow->name)) {
+				        $row->country = $countryRow->name;
+				    } else {
+				        $row->country = "";
+				    }
+	  			    array_push($TTrips, $row);
 				} // end of while on visits
 				return($TTrips) ;
 

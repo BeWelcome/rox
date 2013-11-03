@@ -20,7 +20,7 @@ class SuggestionsController extends RoxControllerBase
         $this->redirectAbsolute($this->router->url('suggestions_about'));
     }
 
-    /** 
+    /**
      * Redirects if no one's logged in or if someone tries to cheat (like trying to open the discuss page while
      * voting already started
      */
@@ -34,7 +34,7 @@ class SuggestionsController extends RoxControllerBase
         }
         }
     }
-    
+
     /**
      * Redirects for a given suggestion to the appropiate page
      */
@@ -137,10 +137,10 @@ class SuggestionsController extends RoxControllerBase
         } else {
             if (!$loggedInMember) {
                 $this->redirectAbsolute($this->router->url('suggestions_about'));
-            }                
+            }
             $suggestion = new Suggestion;
         }
-        
+
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
             $pageno = $this->route_vars['pageno'] - 1;
@@ -402,7 +402,7 @@ class SuggestionsController extends RoxControllerBase
         $page->suggestion = new Suggestion($this->route_vars['id']);
         return $page;
     }
-    
+
     public function devList() {
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {
@@ -421,7 +421,7 @@ class SuggestionsController extends RoxControllerBase
     public function dev() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $this->redirectOnSuggestionState(
-            SuggestionsModel::SUGGESTIONS_IMPLEMENTING 
+            SuggestionsModel::SUGGESTIONS_IMPLEMENTING
             | SuggestionsModel::SUGGESTIONS_IMPLEMENTED);
         $page = new SuggestionsDevPage($this->_model->getLoggedInMember());
         $page->suggestion = new Suggestion($this->route_vars['id']);

@@ -68,5 +68,5 @@ if (!empty($errors)) {
         <input type="submit" id="suggestion-submit" name="suggestion-submit" value="<?php echo $suggestionseditcreatebutton; ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
     </div>
 </form>
-</div>
 </fieldset>
+</div>

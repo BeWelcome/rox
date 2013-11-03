@@ -117,7 +117,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
             if ($key == $state) {
                 $select .= ' selected="selected"';
             }
-            $select .= '">' . $words->getSilent($wordCode) . '</option>';
+            $select .= '>' . $words->getSilent($wordCode) . '</option>';
         }
         $select .= '</select>';
         $select .= $words->flushBuffer();

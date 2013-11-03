@@ -36,11 +36,29 @@ class Suggestion extends RoxEntityBase
             }
 
             // Load options for this suggestion
-            $this->options = $entityFactory->create('SuggestionOption')->FindByWhereMany('suggestionId = ' . $this->id);
+            $optionsWhere = "";
+            $optionsFactory = $entityFactory->create('SuggestionOption');
+            switch ($this->state) {
+            	case SuggestionsModel::SUGGESTIONS_VOTING:
+                    $optionsFactory->sql_order = "RAND()";
+                    break;
+            	case SuggestionsModel::SUGGESTIONS_RANKING:
+            	    $optionsFactory->sql_order = "`order` DESC";
+            	    $optionsWhere = " AND `rank` > 2";
+            	    break;
+            	default:
+            	    $query = 'SELECT COUNT(id) as cnt FROM suggestions_options WHERE suggestionId = ' . $this->id . ' AND deleted IS NULL';
+            	    $sql = $this->dao->query($query);
+            	    $row = $sql->fetch(PDB::FETCH_OBJ);
+            	    $this->optionsVisibleCount = $row->cnt;
+            	    $optionsFactory->sql_order = "`id` ASC";
+            	    break;
+            }
+            $this->options = $optionsFactory->FindByWhereMany('suggestionId = ' . $this->id . $optionsWhere);
 
             // Get number of discussion items (if thread ID != null)
             $this->posts = 0;
-            if ($this->threadId) { 
+            if ($this->threadId) {
                 $query = "SELECT COUNT(*) as count FROM forums_posts WHERE threadid = " . $this->threadId . " AND PostDeleted = 'NotDeleted'";
                 $sql = $this->dao->query($query);
                 if ($sql) {
@@ -54,8 +72,10 @@ class Suggestion extends RoxEntityBase
             $sql = $this->dao->query($query);
             if ($sql) {
                 $row = $sql->fetch(PDB::FETCH_OBJ);
-                $this->votes = $row->count;
+                $this->voteCount = $row->count;
             }
+
+            // $this->ranks = $this->getRanks();
 
             // check if state should be updated
             switch($this->state) {
@@ -73,6 +93,7 @@ class Suggestion extends RoxEntityBase
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_ADDOPTIONS) {
                         if (count($this->options)) {
                             $this->state = SuggestionsModel::SUGGESTIONS_VOTING;
+                            $this->notifyVotingStarted();
                         } else {
                             // no options added -> rejected
                             $this->state = SuggestionsModel::SUGGESTIONS_REJECTED;
@@ -82,11 +103,15 @@ class Suggestion extends RoxEntityBase
                     break;
                 case SuggestionsModel::SUGGESTIONS_VOTING:
                     $laststatechanged = strtotime($this->laststatechanged);
-                    // voting open for more than 30 days? 
+                    // voting open for more than 30 days?
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_VOTING) {
                         $this->state = SuggestionsModel::SUGGESTIONS_RANKING;
                         $this->update(true);
-                        $this->notifyVotingStarted();
+                        // $this->state = SuggestionsModel::SUGGESTIONS_RANKING;
+                        // $this->update(true);
+//                        error_log("Calculate Results");
+                        $this->calculateResults();
+                        // \todo: Update forum thread and close it.
                     }
                     break;
             }
@@ -144,7 +169,7 @@ class Suggestion extends RoxEntityBase
         $option->deletedBy = $this->getLoggedInMember()->id;
         $option->update();
     }
-    
+
     private function notifyVotingStarted() {
         $entityFactory = new RoxEntityFactory();
         $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
@@ -152,5 +177,129 @@ class Suggestion extends RoxEntityBase
         $suggestions = new SuggestionsModel();
         $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
         $suggestions->setForumNotifications($postId, 'reply');
+    }
+
+    /**
+     * Find order of options by dropping one median element at a time till
+     * option wins
+     *
+     * returns an ordered list of the options from the first dropped to the last
+     */
+    private function breakTie($ranks, $count) {
+        $orderedList = array();
+        $highestMedianFound = false;
+        while (!$highestMedianFound && ($count > 0)) {
+            $medians = $this->calculateMedians($ranks, $count);
+            $maxMedianCount = 0;
+            $maxMedian = max($medians);
+            foreach($medians as $optionId => $median) {
+                if ($median == $maxMedian) {
+                    $maxMedianCount++;
+                    $ranks[$optionId][$median] = $ranks[$optionId][$median] - 1;
+                } else {
+                    // Remove option from
+                    $orderedList[] = $optionId;
+                    unset($ranks[$optionId]);
+                }
+            }
+            if ($maxMedianCount == 1) {
+                $highestMedianFound = true;
+            }
+            $count--;
+        }
+        // stupid hack to get the remaining optionId
+        foreach($ranks as $optionId => $votes) {
+            $orderedList[] = $optionId;
+        }
+        return $orderedList;
+    }
+
+    private function calculateMedians($ranks, $count) {
+        $medians = array();
+        if ($count % 2 == 1) {
+            $medianIndex = intval($count/2) + 1;
+        } else {
+            $medianIndex = intval($count/2);
+        }
+        foreach($ranks as $optionId => $voteCount) {
+            $median = 0;
+            $upperBound = 0;
+            while ($median <= 4 && ($upperBound < $medianIndex)) {
+                $upperBound += $voteCount[$median + 1 ];
+                $median++;
+            }
+            $medians[$optionId] = $median;
+        }
+        return $medians;
+    }
+
+    private function getRanks() {
+        $query = "
+                SELECT
+                    optionid, rank, count(rank) as cnt
+                FROM
+                    suggestions_votes
+                WHERE
+                    suggestionid = " . $this->id . "
+                GROUP BY
+                    optionid, rank
+                ORDER BY
+                    optionid, rank
+                ";
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return false;
+        }
+        $ranks = array();
+        while ($row = $sql->fetch(PDB::FETCH_OBJ)) {
+            if (!isset($ranks[$row->optionid])) {
+                $ranks[$row->optionid] = array(
+                                1 => 0,
+                                2 => 0,
+                                3 => 0,
+                                4 => 0
+                );
+            }
+            $ranks[$row->optionid][$row->rank] = $row->cnt;
+        }
+        return $ranks;
+    }
+
+    private function calculateResults() {
+        $ranks = $this->getRanks();
+        $count = $this->voteCount; // $count / count($ranks);
+
+        // Calculate medians for all options
+        $medians = $this->calculateMedians($ranks, $count);
+        asort($medians);
+
+        // Now break ties for the different medians
+        $ties = array();
+        foreach($medians as $optionId => $median) {
+            if (!isset($ties[$median])) {
+                $ties[$median] = array();
+            }
+            $ties[$median][$optionId] = $ranks[$optionId];
+        }
+        $orderedOptionIds = array();
+        foreach($ties as $median => $tie) {
+            $optionIds = $this->breakTie($tie, $count);
+            $orderedOptionIds = array_merge($orderedOptionIds, $optionIds);
+        }
+
+        $count = 0;
+        $countOptions = count($this->options);
+        foreach($orderedOptionIds as $order => $optionId) {
+            $query = "
+            UPDATE
+                suggestions_options
+            SET
+                `order` = " . $order . ",
+                `rank` = " . $medians[$optionId] . "
+            WHERE
+                `id` = " . $optionId;
+            $this->dao->query($query);
+        }
+        return true;
     }
 }

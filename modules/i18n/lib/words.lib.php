@@ -582,10 +582,12 @@ class MOD_words
             $lang = $this->_lang;
         }
 
+        $row = $this->_lookup_row($code, $lang);
+        $row_en = $this->_lookup_row($code, 'en');
+        $R = MOD_right::get();
 
         if(! $this->_offerTranslationLink) {
             // normal people don't need the tr stuff
-            $row = $this->_lookup_row($code, $lang);
             if (!$row && $lang != 'en') {
                 // try in English
                 $row = $this->_lookup_row($code, 'en');
@@ -601,43 +603,43 @@ class MOD_words
         } else {
             // for translators, the LookedUpWord object needs more info
             $tr_quality = LookedUpWord::FINE;
-            $row = $this->_lookup_row($code, $lang);
-            if ($row) {
-                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-                if (($lang == 'en')or($row->donottranslate=='yes')) { // If language is english or if the word is not supposed to be translatable yet just consider display it
-                    $tr_success = LookedUpWord::SUCCESSFUL;
+            if (!$row_en){
+                // there is no English text: show the wordcode
+                // show as missing if user has enough rights
+                if ($R->hasRight("Words")<10){
+                    $tr_success = LookedUpWord::NO_TR_LINK;
                 } else {
-                    $row_en = $this->_lookup_row($code, 'en');
-                    if($this->_is_obsolete($row, $row_en)) {
-                        $tr_success = LookedUpWord::OBSOLETE;
-                    } else {
-                        $tr_success = LookedUpWord::SUCCESSFUL;
-                    }
-                }
-            } else if($lang != 'en') {
-                // try in English
-                $row = $this->_lookup_row($code, 'en');
-
-                if($row) {
-                    // use English version
-					if ($row->donottranslate=='yes') {
-						$tr_success = LookedUpWord::SUCCESSFUL;
-						$lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-					}
-					else {
-						$tr_success = LookedUpWord::MISSING_TR;  // at least that bad
-						$lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
-					}
-                } else {
-                    // no translation found
                     $tr_success = LookedUpWord::MISSING_WORD;
-                    $lookup_result = $code;
- 	            }
-            } else {
-                // no translation found
-                $tr_success = LookedUpWord::MISSING_WORD;
+                }
                 $lookup_result = $code;
+            } elseif (!$row){
+                // there is no translation: show the English text and as missing
+                $tr_success = LookedUpWord::MISSING_TR;
+                $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
+            } elseif (!($row_en->updated > $row->updated)){
+                // the English text has not been updated at all after the translation: show translation normally                
+                $tr_success = LookedUpWord::SUCCESSFUL;
+                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
+            } elseif (!($row_en->majorupdate > $row->updated)){
+                // the English text did not have a major update after the translation: show translation and as obsolete
+                $tr_success = LookedUpWord::OBSOLETE;
+                $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
+            } else {
+                // the English text did have a major update after the translation: show English text and as obsolete
+                $tr_success = LookedUpWord::OBSOLETE;
+                $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
             }
+
+            if ($row_en->donottranslate == 'yes') {
+                // text is dnt: show normally               
+                $tr_success = LookedUpWord::NO_TR_LINK;
+                if (!$row) {
+                    $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
+                } else {
+                    $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);                    
+                }
+            }
+            
             switch ($this->_trMode) {
                 case 'browse':
                     $tr_success = LookedUpWord::NO_TR_LINK;
@@ -729,28 +731,17 @@ class MOD_words
 
         if (is_numeric($code)) {
             $query =
-                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
+                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated`, majorupdate ".
                 "FROM `words` ".
                 "WHERE `id`=" . $this->_dao->escape($code)
             ;
         } else {
         	// TODO: store translation quality in database!
-
-			// First try in memcache
-			//if ($value=$this->WordMemcache->GetValue($code,$lang)) {
-			//	$row->Sentence=$value ;
-			//	$row->donottranslate='No' ;
-			//	$row->updated="2015-01-01 00:00:00" ;
-//			//	print_r($row) ; die(" here" ) ;
-			//	return($row) ;
-			//}
-
-			$query =
-                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
-                "FROM `words` ".
-                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'
-                    AND (updated >= (SELECT majorupdate FROM words WHERE (code='" . $this->_dao->escape($code) . "' AND ShortCode='en')) OR idlanguage=0)"
-            ;
+            $query =
+                '
+SELECT SQL_CACHE code, Sentence, donottranslate, updated, majorupdate
+FROM words
+WHERE code = "' . $this->_dao->escape($code) . '" AND ShortCode = "' . $this->_dao->escape($lang) . '"';
         }
 
         $q = $this->_dao->query($query);
@@ -1517,12 +1508,6 @@ class LookedUpWord {
 
     public function standaloneTrLink()
     {
-        // do not offer a create wordcode link if not at level 10
-        $R = MOD_right::get();
-        if ($this->_tr_success == self::MISSING_WORD && $R->hasRight("Words")<10){
-            return '';
-        }
-
         return '<span class="tr_span"><a '.
             'class = "standalone '.$this->_trLinkClass().'" '.
             'title = "'.$this->_trLinkTitle().'" '.

@@ -583,7 +583,8 @@ class MOD_words
         }
 
         $row = $this->_lookup_row($code, $lang);
-        $row_en = $this->_lookup_row($code, 'en');
+        // select the English wordcode only if not archived
+        $row_en = $this->_lookup_row($code, 'en','AND (isarchived=0 or isarchived is null)');
         $R = MOD_right::get();
 
         if(! $this->_offerTranslationLink) {
@@ -722,16 +723,8 @@ class MOD_words
      * @param   string  $lang 2-letter code for language
      * @return dbrow an object representing one row in the database (?)
      */
-    private function _lookup_row($code, $lang)
+    private function _lookup_row($code, $lang, $extraWhere = '')
     {
-        $whereCategory = $this->_whereCategory;
-
-        /* we still need to find a clear parameter handling for this
-        if (!empty($category)) {
-            $whereCategory = ' `category`=\'' . $category . '\'';
-        }
-        */
-
         if (is_numeric($code)) {
             $query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated`, majorupdate ".
@@ -744,7 +737,7 @@ class MOD_words
                 '
 SELECT SQL_CACHE code, Sentence, donottranslate, updated, majorupdate
 FROM words
-WHERE code = "' . $this->_dao->escape($code) . '" AND ShortCode = "' . $this->_dao->escape($lang) . '"';
+WHERE code = "' . $this->_dao->escape($code) . '" AND ShortCode = "' . $this->_dao->escape($lang) .'"'. $extraWhere;
         }
 
         $q = $this->_dao->query($query);

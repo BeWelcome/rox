@@ -260,6 +260,11 @@ WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
     
     public function updateSingleTranslation($form){
         
+        $eng_ins = '';
+        $eng_upd = '';
+        $desc = '';
+        $changeInAll = '';        
+            
         if ($form['lang']=='en'){
             $eng_ins = 'majorupdate = now(),';
             if (isset($form['changetype'])){
@@ -267,23 +272,18 @@ WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
             } else {
                 $eng_upd = '';
             }
-            $eng = '';
             if (isset($form['EngDesc'])){
-                $eng.= 'description = "'.$form['EngDesc'].'", ';
+                $desc = 'description = "'.$form['EngDesc'].'", ';
             }
             if (isset($form["donottranslate"])){
-                $eng.= 'donottranslate = "'.$form["EngDnt"].'", ';
+                $changeInAll.= 'donottranslate = "'.$form["EngDnt"].'", ';
             }
             if (isset($form["isarchived"])){
-                $eng.= 'isarchived = '.$form["isarchived"].', ';
+                $changeInAll.= 'isarchived = '.$form["isarchived"].', ';
             }
             if (isset($form["EngPrio"])){
-                $eng.= 'TranslationPriority = '.$form["EngPrio"].', ';
+                $changeInAll.= 'TranslationPriority = '.$form["EngPrio"].', ';
             }
-        } else {
-            $eng_ins = '';
-            $eng_upd = '';
-            $eng = '';
         }
         
         $sql = '
@@ -293,17 +293,30 @@ INSERT INTO words SET
     IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$form["lang"].'"),
     Sentence = "'.mysql_real_escape_string($form["TrSent"]).'",
     updated = now(),
-    '.$eng_ins.$eng.'
+    '.$eng_ins.$desc.'
     IdMember = '.$_SESSION["IdMember"].',
     created = now()
 ON DUPLICATE KEY UPDATE
     Sentence = "'.mysql_real_escape_string($form["TrSent"]).'",
     updated = now(),
-    '.$eng_upd.$eng.'
+    '.$eng_upd.$desc.'
     IdMember = '.$_SESSION["IdMember"];
         $this->dao->query($sql);
-        return array(mysql_insert_id(),mysql_affected_rows());
+        $returnval = array(mysql_insert_id(),mysql_affected_rows());
+        
+// update dnt,isarchived and TP for all translations,
+// but do not change the update moment for the other languages
+        if (count($changeInAll)>0){
+            $sql = '
+UPDATE words
+SET ' . $changeInAll. 'updated = updated
+WHERE code = "'.$form["EngCode"].'"
+                ';
+            $this->dao->query($sql);
+        }    
+        return $returnval;
     }
+    
     
     public function editFormCheck($form){
         $errors = array();

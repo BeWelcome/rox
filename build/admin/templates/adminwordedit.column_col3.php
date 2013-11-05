@@ -85,10 +85,6 @@ if ($dat->inScope){
 ***   edit form   ***
 ********************/
 
-//$_SESSION['form']['engSent'] = $this->formdata['engSent'];
-//$_SESSION['form']['description'] = $this->formdata['description'];
-//$_SESSION['form']['donottranslate'] = $this->formdata['donottranslate'];
-
 ?>
 
 <form method="post" name="TrEdit">
@@ -96,7 +92,7 @@ if ($dat->inScope){
 <table class="admin" border="0">
   <tr>
     <td class="label"><label for="code">Code:</label> </td>
-    <td><input name="EngCode" id="code" value="<?= $this->formdata['EngCode'] ?>" size="56">
+    <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56">
 <?php
     if ($this->formdata['EngDnt'] == "yes") {
         echo '<span class="awdntwarning">Do not translate</span>';
@@ -104,7 +100,7 @@ if ($dat->inScope){
 ?>
 </td></tr>
 <tr><td class="label">Description:</td><td>
-<em><?= $this->formdata['EngDesc'] ?></em>
+<em><?= htmlspecialchars($this->formdata['EngDesc']) ?></em>
 </td></tr>
     
 <tr><td class="label" >English source: </td>
@@ -121,7 +117,7 @@ echo '<td>'. str_replace("\n","<br />",
 <td><textarea name="TrSent" id="Sentence" class="long" cols="60"
 <?php
 $NbRows = 3 + strlen($this->formdata['TrSent'])/75;
-echo ' rows='.$NbRows.'>'. $this->formdata['TrSent'] .'</textarea></td>';
+echo ' rows='.$NbRows.'>'. htmlspecialchars($this->formdata['TrSent']) .'</textarea></td>';
 ?>
   </tr>
   <tr>
@@ -131,16 +127,16 @@ echo ' rows='.$NbRows.'>'. $this->formdata['TrSent'] .'</textarea></td>';
     <select id="lang" name="lang"><option value=""></option>
 <?php
     foreach($this->langarr as $language) {
-        echo '<option value="' . $language->ShortCode . '"';
+        echo '<option value="' . htmlspecialchars($language->ShortCode) . '"';
         if ($this->formdata['lang'] == $language->ShortCode) {
             echo ' selected="selected"';
         }
-        echo '>' . trim($language->EnglishName) . ' (' . $language->ShortCode . ')</option>';
+        echo '>' . htmlspecialchars(trim($language->EnglishName)) . ' (' . htmlspecialchars($language->ShortCode) . ')</option>';
     }
 ?>
 </select></td></tr>
   <tr>
-    <input type=hidden name=EngDesc value="<?=$this->formdata['EngDesc']?>">
+    <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>">
     <input type=hidden name=EngSent value="<?=htmlspecialchars($this->formdata['EngSent']);?>">
     <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>">
     <td colspan="2" align="center">

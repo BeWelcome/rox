@@ -59,7 +59,7 @@ if ($this->noScope){
 
 
 ?>
-You are about to <?= $this->status ?> the English wordcode : <?=$this->formdata['EngCode']?>
+You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars($this->formdata['EngCode'])?>
 <form method="post" name="TrEdit">
 <?= $callback_tag ?>
 <table class="admin" border="0">
@@ -90,11 +90,11 @@ Do NOT copy the wordcode or the English text, that doesn't help anyone.</td></tr
     >archived</option>
     </select></td></tr><tr><td>
 Translation Priority</td><td><input type="text" name="EngPrio"
-    value="<?=$this->formdata['EngPrio'] ?>" size="2"></td></tr>
+    value="<?=(int)$this->formdata['EngPrio'] ?>" size="2"></td></tr>
 <?php } else {
 ?>
-    <input type=hidden name=EngDesc value="<?=$this->formdata['EngDesc']?>">
-    <input type=hidden name=EngPrio value="<?=$this->formdata['EngPrio']?>">
+    <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>">
+    <input type=hidden name=EngPrio value="<?=htmlspecialchars($this->formdata['EngPrio'])?>">
     <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>">
 <?php
 }
@@ -119,7 +119,7 @@ if ($this->status=='update'){
 </table>
 <input type=hidden name="TrSent" value="<?= htmlspecialchars($this->formdata['TrSent']) ?>">
 <input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['TrSent']) ?>">
-<input type=hidden name="EngCode" value="<?= $this->formdata['EngCode'] ?>">
-<input type=hidden name="lang" value="<?= $this->formdata['lang'] ?>">
+<input type=hidden name="EngCode" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>">
+<input type=hidden name="lang" value="<?= htmlspecialchars($this->formdata['lang']) ?>">
 </form>
 <?php    } ?>

@@ -37,8 +37,8 @@ Boston, MA  02111-1307, USA.
         echo '<tr class="awstatsrow';
         // mark languages that are within scope
         if ($dat['scope']){echo ' awstatsinscope';}
-        echo '"><td>'.$dat['name'].'</td><td>';
-        printf("%01.1f", $dat['perc']);
+        echo '"><td>'.htmlspecialchars($dat['name']).'</td><td>';
+        printf("%01.1f", (float)$dat['perc']);
         echo  '% done</td></tr>';
     }
 ?>

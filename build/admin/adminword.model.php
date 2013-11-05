@@ -46,7 +46,8 @@ class AdminWordModel extends RoxModelBase
         $sql = "
 SELECT SUM(LENGTH(sentence)) AS cnt
 FROM words
-WHERE IdLanguage=0 AND (NOT donottranslate='yes') AND (isarchived=0 OR isarchived is NULL)";
+WHERE IdLanguage=0 AND (NOT donottranslate='yes')
+    AND (isarchived=0 OR isarchived is NULL)";
         $query = $this->dao->query($sql);
         return $query->fetch(PDB::FETCH_OBJ);
     }
@@ -90,10 +91,18 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC';
         $descSelect = '';    
         $sentSelect = '';
         $langSelect = '';
-        if (isset($params['EngCode'])){$codeSelect = ' AND w1.code LIKE "%'.$params['EngCode'].'%"';}
-        if (isset($params['EngDesc'])){$descSelect = ' AND w1.description LIKE "%'.$params['EngDesc'].'%"';}
-        if (isset($params['TrSent'])){$sentSelect = ' AND w2.sentence LIKE "%'.$params['TrSent'].'%"';}
-        if (isset($params['lang'])){$langSelect = ' AND w2.shortcode = "'.$params['lang'].'"';}
+        if (isset($params['EngCode'])){
+            $codeSelect = ' AND w1.code LIKE "%'.$this->dao->escape($params['EngCode']).'%"';
+        }
+        if (isset($params['EngDesc'])){
+            $descSelect = ' AND w1.description LIKE "%'.$this->dao->escape($params['EngDesc']).'%"';
+        }
+        if (isset($params['TrSent'])){
+            $sentSelect = ' AND w2.sentence LIKE "%'.$this->dao->escape($params['TrSent']).'%"';
+        }
+        if (isset($params['lang'])){
+            $langSelect = ' AND w2.shortcode = "'.$this->dao->escape($params['lang']).'"';
+        }
     
         $sql = '
 SELECT
@@ -132,8 +141,8 @@ ORDER BY w1.code,w2.shortcode';
         }
         if ($wordcode){
             // select by wordcode if wordcode is given
-            $singleSelect1 = ' AND w1.code = "'.$wordcode.'"';
-            $singleSelect2 = ' AND w3.code = "'.$wordcode.'"';            
+            $singleSelect1 = ' AND w1.code = "'.$this->dao->escape($wordcode).'"';
+            $singleSelect2 = ' AND w3.code = "'.$this->dao->escape($wordcode).'"';            
         } elseif ($shortcode == 'en') {
             // show also the DNT items in English list
             $singleSelect1 = ' AND (w1.isarchived = 0 OR w1.isarchived is null)';
@@ -159,7 +168,7 @@ ORDER BY w1.code,w2.shortcode';
 FROM words w1
     JOIN words w2 USING(code)
 WHERE w1.idlanguage=0  
-    AND w2.shortcode="'.$shortcode.'"'.
+    AND w2.shortcode="'.$this->dao->escape($shortcode).'"'.
     $dateSelect1.
     $singleSelect1.')
 
@@ -183,7 +192,7 @@ WHERE w3.idlanguage=0'.
     $singleSelect2.'
     AND w3.code NOT IN (SELECT code
                         FROM words w4
-                        WHERE w4.shortcode="'.$shortcode.'")
+                        WHERE w4.shortcode="'.$this->dao->escape($shortcode).'")
 )        
 ORDER BY EngUpdated DESC
             ';
@@ -224,7 +233,8 @@ ORDER BY EngUpdated DESC
         $sql = '
 SELECT count(*) cnt
 FROM words
-WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
+WHERE code="' . $this->dao->escape($code) . '"
+    AND shortcode="' . $this->dao->escape($shortcode) .'"';
         $query = $this->dao->query($sql);
         return $query->fetch(PDB::FETCH_OBJ);
     }
@@ -273,34 +283,34 @@ WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
                 $eng_upd = '';
             }
             if (isset($form['EngDesc'])){
-                $desc = 'description = "'.$form['EngDesc'].'", ';
+                $desc = 'description = "'.$this->dao->escape($form['EngDesc']).'", ';
             }
             if (isset($form["donottranslate"])){
-                $changeInAll.= 'donottranslate = "'.$form["EngDnt"].'", ';
+                $changeInAll.= 'donottranslate = "'.$this->dao->escape($form["EngDnt"]).'", ';
             }
             if (isset($form["isarchived"])){
-                $changeInAll.= 'isarchived = '.$form["isarchived"].', ';
+                $changeInAll.= 'isarchived = '.(int)$form["isarchived"].', ';
             }
             if (isset($form["EngPrio"])){
-                $changeInAll.= 'TranslationPriority = '.$form["EngPrio"].', ';
+                $changeInAll.= 'TranslationPriority = '.(int)$form["EngPrio"].', ';
             }
         }
         
         $sql = '
 INSERT INTO words SET
-    code = "'.$form["EngCode"].'",
-    ShortCode = "'.$form["lang"].'",
-    IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$form["lang"].'"),
-    Sentence = "'.mysql_real_escape_string($form["TrSent"]).'",
+    code = "'.$this->dao->escape($form["EngCode"]).'",
+    ShortCode = "'.$this->dao->escape($form["lang"]).'",
+    IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$this->dao->escape($form["lang"]).'"),
+    Sentence = "'.$this->dao->escape($form["TrSent"]).'",
     updated = now(),
     '.$eng_ins.$desc.'
-    IdMember = '.$_SESSION["IdMember"].',
+    IdMember = '.(int)$_SESSION["IdMember"].',
     created = now()
 ON DUPLICATE KEY UPDATE
-    Sentence = "'.mysql_real_escape_string($form["TrSent"]).'",
+    Sentence = "'.$this->dao->escape($form["TrSent"]).'",
     updated = now(),
     '.$eng_upd.$desc.'
-    IdMember = '.$_SESSION["IdMember"];
+    IdMember = '.(int)$_SESSION["IdMember"];
         $this->dao->query($sql);
         $returnval = array(mysql_insert_id(),mysql_affected_rows());
         
@@ -316,8 +326,7 @@ WHERE code = "'.$form["EngCode"].'"
         }    
         return $returnval;
     }
-    
-    
+
     public function editFormCheck($form){
         $errors = array();
         switch($form['DOACTION']){
@@ -328,7 +337,7 @@ WHERE code = "'.$form["EngCode"].'"
                 $sql = '
 SELECT count(id) AS cnt
 FROM words
-WHERE code = "'.$form['EngCode'].'" AND idLanguage=0
+WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
                     ';
                 $query = $this->dao->query($sql);
                 $res = $query->fetch(PDB::FETCH_OBJ);

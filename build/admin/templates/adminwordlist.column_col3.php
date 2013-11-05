@@ -40,7 +40,9 @@ $this->words = new MOD_words();
 if ($this->nav['scope']=='"All"'){
     echo 'All';
 } else {
-    array_map(function ($lng){echo $this->words->get('lang_'.$lng->ShortCode).' ';},$this->langarr);
+    array_map(function ($lng){
+            echo $this->words->get('lang_'.$lng->ShortCode.' ');
+        },$this->langarr);
 }
 if ($this->noScope){
     echo '<h2>You do not have translation rights for this language</h2>';
@@ -50,7 +52,7 @@ if ($this->noScope){
   <td><?= $this->nav['currentLanguage'] ?></td>
   <td>
 <?php
-        printf("%01.1f", $this->stat[0]['perc']);
+        printf("%01.1f", (float)$this->stat[0]['perc']);
 ?>
     % done</td>
 </tr></table>
@@ -59,7 +61,7 @@ if ($this->noScope){
         if (substr($this->type,-1,1)!='x'){
 ?>
 <span id="awlistlimit">This list only contains items created at least 7 days ago and updated at most 6 months ago.</span>
-<a href="admin/word/list/<?= $this->type ?>x">Show all</a>
+<a href="admin/word/list/<?= htmlspecialchars($this->type); ?>x">Show all</a>
 <p>
 <?php } ?>
 <table id="awlisttable">
@@ -73,40 +75,38 @@ if ($this->noScope){
 
 <?php
     foreach ($this->data as $dat){
-        echo '<tr><td class="awlistcode"><p>'.$dat->EngCode.'</p>';
+        echo '<tr><td class="awlistcode"><p>'.htmlspecialchars($dat->EngCode).'</p>';
         if ($this->nav['grep']>0) {
-           echo '<a href="bw/admin/admingrep.php?action=grep&submit=find&s2=ww&s1=' . $dat->EngCode . '&scope=layout/*;*;lib/*">grep</a>';
+           echo '<a href="bw/admin/admingrep.php?action=grep&submit=find&s2=ww&s1=' . htmlspecialchars($dat->EngCode) . '&scope=layout/*;*;lib/*">grep</a>';
         }
         
-        echo '<p class="smallXtext">' . $dat->EngDesc . '</p>';
+        echo '<p class="smallXtext">' . htmlspecialchars($dat->EngDesc) . '</p>';
     
         echo '</td>';
         if ($this->nav['shortcode'] != 'en'){
-            echo '<td class="awlisteng">'.$dat->EngSent;
-            echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->EngUpdated)).' '.$dat->EngMember.'</p>';
+            echo '<td class="awlisteng">'.htmlspecialchars($dat->EngSent);
+            echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->EngUpdated)).' '.htmlspecialchars($dat->EngMember).'</p>';
             echo '</td>';
         }
         if ($dat->missing){
             // missing translation
             echo "<td bgcolor=white align=center>";
-            echo '<br /><a href="/admin/word/edit/'.$dat->EngCode.'">ADD</a>';        
+            echo '<br /><a href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">ADD</a>';
         } else {
             if ($dat->update){
                 // update needed
                 echo '<td class="awlisttrupd">';
-                echo $dat->TrSent;
+                echo htmlspecialchars($dat->TrSent);
                 echo '<fieldset><legend>update needed?</legend>';
-                echo '<input type="submit" value="Edit" name="Edit_'.$dat->TrId.'">';
-                echo '<input type="submit" value="This is ok" name="ThisIsOk_'.$dat->TrId.'">';
+                echo '<input type="submit" value="Edit" name="Edit_'.(int)$dat->TrId.'">';
+                echo '<input type="submit" value="This is ok" name="ThisIsOk_'.(int)$dat->TrId.'">';
                 echo '</fieldset>';            
             } else {
                 // up-to-date translation
-                echo '<td class="awlisttrok"><p>'.$dat->TrSent.'</p>';
-                echo '<p><a href="/admin/word/edit/'.$dat->EngCode.'">edit</a></p>';  
+                echo '<td class="awlisttrok"><p>'.htmlspecialchars($dat->TrSent).'</p>';
+                echo '<p><a href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">edit</a></p>';  
             }
-    
-    
-                echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->TrUpdated)).' '.$dat->TrMember.'</p>';
+            echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->TrUpdated)).' '.htmlspecialchars($dat->TrMember).'</p>';
         }
         echo '</td></tr>';
     }

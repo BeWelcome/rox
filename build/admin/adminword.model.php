@@ -46,7 +46,7 @@ class AdminWordModel extends RoxModelBase
         $sql = "
 SELECT SUM(LENGTH(sentence)) AS cnt
 FROM words
-WHERE IdLanguage=0 AND donottranslate!='yes'";
+WHERE IdLanguage=0 AND (NOT donottranslate='yes') AND (isarchived=0 OR isarchived is NULL)";
         $query = $this->dao->query($sql);
         return $query->fetch(PDB::FETCH_OBJ);
     }
@@ -66,19 +66,22 @@ WHERE IdLanguage=0 AND donottranslate!='yes'";
         if ($idLanguage) {
             $strLang = " AND w1.idLanguage = " . (int)$idLanguage;
         } else {
-            $strLang = '';
+            $strLang = 'AND w1.idLanguage in (SELECT idlanguage FROM words where code = "WelcomeToSignup")';
         }
 
-        $sql = "
+        $sql = '
 SELECT languages.EnglishName englishName,
        languages.shortcode shortCode,
        SUM(LENGTH(w2.sentence)) translated
 FROM words w1
 	JOIN words w2 ON w2.code = w1.code AND w2.IdLanguage=0
 	JOIN languages ON w1.idlanguage=languages.id
-WHERE w2.donottranslate!='yes' AND w2.updated<=w1.updated $strLang
+WHERE (NOT w2.donottranslate="yes")
+    AND (w2.isarchived = 0 OR w2.isarchived is NULL)
+    AND w2.updated<=w1.updated
+    '.$strLang.'
 GROUP BY w1.idlanguage
-ORDER BY SUM(LENGTH(w2.sentence)) DESC";
+ORDER BY SUM(LENGTH(w2.sentence)) DESC';
         return $this->BulkLookup($sql);
     }
     
@@ -100,7 +103,7 @@ SELECT
     w2.shortcode TrShortcode
 FROM words w1
     JOIN words w2 USING(code)
-WHERE w1.idlanguage=0'.$codeSelect.$descSelect.$sentSelect.$langSelect.'
+WHERE w1.idlanguage=0 AND (w1.isarchived=0 or w1.isarchived is null)'.$codeSelect.$descSelect.$sentSelect.$langSelect.'
 ORDER BY w1.code,w2.shortcode';
         return $this->BulkLookup($sql);
     }
@@ -133,12 +136,12 @@ ORDER BY w1.code,w2.shortcode';
             $singleSelect2 = ' AND w3.code = "'.$wordcode.'"';            
         } elseif ($shortcode == 'en') {
             // show also the DNT items in English list
-            $singleSelect1 = ' AND w1.isarchived = 0';
-            $singleSelect2 = ' AND w3.isarchived = 0';
+            $singleSelect1 = ' AND (w1.isarchived = 0 OR w1.isarchived is null)';
+            $singleSelect2 = ' AND (w3.isarchived = 0 OR w3.isarchived is null)';
         } else {
             // only translatable items in other translationlists
-            $singleSelect1 = ' AND w1.donottranslate = "no" AND w1.isarchived = 0';
-            $singleSelect2 = ' AND w3.donottranslate = "no" AND w3.isarchived = 0';                        
+            $singleSelect1 = ' AND w1.donottranslate = "no" AND (w1.isarchived = 0 OR w1.isarchived is null)';
+            $singleSelect2 = ' AND w3.donottranslate = "no" AND (w3.isarchived = 0 OR w3.isarchived is null)';                        
         }
         $sql = '
 (SELECT
@@ -211,7 +214,13 @@ ORDER BY EngUpdated DESC
     return $data;
     }
     
-    public function getWordCodeData($code,$shortcode){
+    public function getWordcodeById($id){
+        $sql = 'SELECT code FROM words WHERE id=' . (int)$id;
+        $query = $this->dao->query($sql);
+        return $query->fetch(PDB::FETCH_OBJ);
+    }
+    
+    public function wordcodeExist($code,$shortcode){
         $sql = '
 SELECT count(*) cnt
 FROM words
@@ -243,8 +252,9 @@ WHERE code="' . $code . '" AND shortcode="' . $shortcode .'"';
         return $langarr;
     }
     
-    public function updateNoChanges($code,$idLanguage){
-        $sql = 'UPDATE words SET updated = NOW() WHERE code = "'.$code.'" AND IdLanguage='.$idLanguage;
+    public function updateNoChanges($id){
+        $sql = 'UPDATE words SET updated = NOW() WHERE id = '.(int)$id;
+        echo $sql;
         $this->dao->query($sql);
     }
     

@@ -96,8 +96,8 @@ if ($this->noScope){
                 echo '<td class="awlisttrupd">';
                 echo $dat->TrSent;
                 echo '<fieldset><legend>update needed?</legend>';
-                echo '<input type="submit" value="Edit" name="Edit_'.$dat->EngCode.'">';
-                echo '<input type="submit" value="This is ok" name="ThisIsOk_'.$dat->EngCode.'">';
+                echo '<input type="submit" value="Edit" name="Edit_'.$dat->TrId.'">';
+                echo '<input type="submit" value="This is ok" name="ThisIsOk_'.$dat->TrId.'">';
                 echo '</fieldset>';            
             } else {
                 // up-to-date translation

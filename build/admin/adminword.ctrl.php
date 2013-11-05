@@ -111,7 +111,7 @@ class AdminWordController extends RoxControllerBase
         $page = new AdminWordEditEngPage();
         $page->nav = $this->getNavigationData();
         $page->data = $this->_model->getTranslationData('edit',$page->nav['shortcode'],$_SESSION['form']['EngCode']);
-        $wcexist = $this->_model->getWordcodeData($_SESSION['form']['EngCode'],'en');
+        $wcexist = $this->_model->wordcodeExist($_SESSION['form']['EngCode'],'en');
         $page->status = ($wcexist->cnt == 0?'create':'update');
         $page->getFormData(array('EngCode','EngSent','EngDesc','EngDnt',
             'TrSent','lang','isarchived','EngPrio'));
@@ -219,11 +219,12 @@ class AdminWordController extends RoxControllerBase
         if (empty($args->post)) {return false;}
         $nav = $this->getNavigationData();
         foreach(array_keys($args->post) as $key){
-            if (preg_match('#^Edit_(.*)$#',$key,$wordcode)){
-                return $this->router->url('admin_word_editone', array('wordcode'=>$wordcode[1]), false);    
+            if (preg_match('#^Edit_(\d+)$#',$key,$id)){
+                $wordcode = $this->_model->getWordcodeById($id[1]);
+                return $this->router->url('admin_word_editone', array('wordcode'=>$wordcode->code), false);    
             }
-            if (preg_match('#^ThisIsOk_(.*)$#',$key,$wordcode)){
-                $this->_model->updateNoChanges($wordcode[1],$nav['idLanguage']);
+            if (preg_match('#^ThisIsOk_(\d+)$#',$key,$id)){
+                $this->_model->updateNoChanges($id[1]);
                 return false;            
             }
         }
@@ -273,7 +274,7 @@ class AdminWordController extends RoxControllerBase
                 return $this->router->url('admin_word_editeng', array(), false);
             }
             // check if the wordcode exists in English
-            $wcexist = $this->_model->getWordcodeData($args->post['EngCode'],'en');
+            $wcexist = $this->_model->wordcodeExist($args->post['EngCode'],'en');
             if ($wcexist->cnt > 0){
                 list($id,$res) = $this->_model->UpdateSingleTranslation($args->post);
                 if ($res == 2) {$this->words->MakeRevision($id,'words');}

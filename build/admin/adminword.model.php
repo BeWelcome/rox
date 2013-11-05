@@ -367,22 +367,26 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
 
     public function editEngFormCheck($form){
         $errors = array();
+        $rights = MOD_right::get();
+        $wordLevel = $rights->hasRight('Words');
+ 
         switch($form['DOACTION']){
         case 'Submit':
-            if ($form['EngDesc'] == $form['EngCode'] || $form['EngDesc'] == $form['EngSent']) {
-                $errors[] = 'AdminWordErrorDescIsCodeSent';
+            if ($wordLevel >= 10) {
+                if ($form['EngDesc'] == $form['EngCode'] || $form['EngDesc'] == $form['EngSent']) {
+                    $errors[] = 'AdminWordErrorDescIsCodeSent';
+                }
+                if (empty($form['EngDesc'])){
+                    $errors[] = 'AdminWordErrorDescriptionEmpty';
+                } elseif (strlen($form['EngDesc'])<15){
+                    $errors[] = 'AdminWordErrorDescriptionTooShort';
+                }
+                if (empty($form['EngPrio'])){
+                    $errors[] = 'AdminWordErrorPriorityEmpty';
+                } elseif ($form['EngPrio']<1 || $form['EngPrio']>10) {
+                    $errors[] = 'AdminWordErrorPriorityWrong';
+                }
             }
-            if (empty($form['EngDesc'])){
-                $errors[] = 'AdminWordErrorDescriptionEmpty';
-            } elseif (strlen($form['EngDesc'])<15){
-                $errors[] = 'AdminWordErrorDescriptionTooShort';
-            }
-            if (empty($form['EngPrio'])){
-                $errors[] = 'AdminWordErrorPriorityEmpty';
-            } elseif ($form['EngPrio']<1 || $form['EngPrio']>10) {
-                $errors[] = 'AdminWordErrorPriorityWrong';
-            }
-            
             if (empty($form['changetype'])){$errors[] = 'AdminWordErrorChangeTypeEmpty';}
             break;
         case 'Back':

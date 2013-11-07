@@ -32,18 +32,13 @@ Boston, MA  02111-1307, USA.
 
 class AdminWordBasePage extends PageWithActiveSkin
 {
-    protected $model = false;
-    protected $rights = false;
-    protected $member = false;
+    protected $purifier;
     
     public function __construct($model = false) {
         parent::__construct();
-        if ($model) {
-            $this->model = $model;
-            $this->member = $this->model->getLoggedInMember();
-            $this->rights = $this->member->getOldRights();
-        }
+        $this->purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
     }
+    
     protected function getPageTitle() {
         return 'Words management | BeWelcome';
     }

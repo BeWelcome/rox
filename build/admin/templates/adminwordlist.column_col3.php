@@ -36,14 +36,9 @@ $callback_tag = $formkit->setPostCallback('AdminWordController', 'trListCallback
 $this->words = new MOD_words();
 
 ?>
-<p>Your scope is : <?php
-if ($this->nav['scope']=='"All"'){
-    echo 'All';
-} else {
-    array_map(function ($lng){
-            echo $this->words->get('lang_'.$lng->ShortCode.' ');
-        },$this->langarr);
-}
+<p>Your scope is: <?php
+echo $this->nav['scopetext'];
+
 if ($this->noScope){
     echo '<h2>You do not have translation rights for this language</h2>';
 } else {
@@ -52,16 +47,16 @@ if ($this->noScope){
   <td><?= $this->nav['currentLanguage'] ?></td>
   <td>
 <?php
-        printf("%01.1f", (float)$this->stat[0]['perc']);
+    printf("%01.1f", (float)$this->stat[0]['perc']);
 ?>
     % done</td>
 </tr></table>
 </p>
 <?php
-        if (substr($this->type,-1,1)!='x'){
+    if (substr($this->type,-1,1)!='x'){
 ?>
 <span id="awlistlimit">This list only contains items created at least 7 days ago and updated at most 6 months ago.</span>
-<a href="admin/word/list/<?= htmlspecialchars($this->type); ?>x">Show all</a>
+<a href="admin/word/list/<?= htmlspecialchars($this->type); ?>x">Remove this limitation</a>
 <p>
 <?php } ?>
 <table id="awlisttable">
@@ -76,15 +71,17 @@ if ($this->noScope){
 <?php
     foreach ($this->data as $dat){
         echo '<tr><td class="awlistcode"><p>'.htmlspecialchars($dat->EngCode).'</p>';
+        if ($dat->EngDnt=='yes'){echo '<span class="awdntwarning">Do not translate</span>';}
         if ($this->nav['grep']>0) {
-           echo '<a href="bw/admin/admingrep.php?action=grep&submit=find&s2=ww&s1=' . htmlspecialchars($dat->EngCode) . '&scope=layout/*;*;lib/*">grep</a>';
+           echo '<a href="bw/admin/admingrep.php?action=grep&submit=find&s2=ww&s1=';
+           echo htmlspecialchars($dat->EngCode) . '&scope=layout/*;*;lib/*">grep</a>';
         }
-        
+
         echo '<p class="smallXtext">' . htmlspecialchars($dat->EngDesc) . '</p>';
     
         echo '</td>';
         if ($this->nav['shortcode'] != 'en'){
-            echo '<td class="awlisteng">'.htmlspecialchars($dat->EngSent);
+            echo '<td class="awlisteng">'.$this->purifier->purify($dat->EngSent);
             echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->EngUpdated)).' '.htmlspecialchars($dat->EngMember).'</p>';
             echo '</td>';
         }
@@ -96,14 +93,14 @@ if ($this->noScope){
             if ($dat->update){
                 // update needed
                 echo '<td class="awlisttrupd">';
-                echo htmlspecialchars($dat->TrSent);
+                echo $this->purifier->purify($dat->TrSent);
                 echo '<fieldset><legend>update needed?</legend>';
                 echo '<input type="submit" value="Edit" name="Edit_'.(int)$dat->TrId.'">';
                 echo '<input type="submit" value="This is ok" name="ThisIsOk_'.(int)$dat->TrId.'">';
                 echo '</fieldset>';            
             } else {
                 // up-to-date translation
-                echo '<td class="awlisttrok"><p>'.htmlspecialchars($dat->TrSent).'</p>';
+                echo '<td class="awlisttrok">'.$this->purifier->purify($dat->TrSent);
                 echo '<p><a href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">edit</a></p>';  
             }
             echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->TrUpdated)).' '.htmlspecialchars($dat->TrMember).'</p>';

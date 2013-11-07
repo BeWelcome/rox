@@ -98,10 +98,25 @@ class AdminWordController extends RoxControllerBase
         list($this->member, $this->wordrights) = $this->checkRights('Words');
         $rights = MOD_right::get();
         $nav = array();
+        // get the base language from the session
         $nav['idLanguage'] = (int)$_SESSION['IdLanguage'];
         $nav['shortcode'] = $_SESSION['lang'];
+        // translated full text of user language
         $nav['currentLanguage'] = $this->words->get('lang_'.$nav['shortcode']);
+        // array of objects with scope languages
         $nav['scope'] = $this->wordrights['Words']['Scope'];
+        if ($nav['scope']=='"All"'){
+            $nav['scopetext'] = 'All';
+        } else {
+            $sc_arr = explode(',',str_replace('"','',$nav['scope']));
+            $nav['scopetext'] = array_reduce($sc_arr,
+                    function($tot,$short){
+                        // glue everything together
+                        if ($tot) {$tot.=', ';}
+                        return $tot.$this->words->get('lang_'.$short); 
+                    }
+                );
+        }
         $nav['level'] = $this->wordrights['Words']['Level'];
         $nav['grep'] = $rights->hasRight('Grep');
         return $nav;

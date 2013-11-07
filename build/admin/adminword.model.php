@@ -264,7 +264,6 @@ WHERE code="' . $this->dao->escape($code) . '"
     
     public function updateNoChanges($id){
         $sql = 'UPDATE words SET updated = NOW() WHERE id = '.(int)$id;
-        echo $sql;
         $this->dao->query($sql);
     }
     
@@ -285,7 +284,7 @@ WHERE code="' . $this->dao->escape($code) . '"
             if (isset($form['EngDesc'])){
                 $desc = 'description = "'.$this->dao->escape($form['EngDesc']).'", ';
             }
-            if (isset($form["donottranslate"])){
+            if (isset($form["EngDnt"])){
                 $changeInAll.= 'donottranslate = "'.$this->dao->escape($form["EngDnt"]).'", ';
             }
             if (isset($form["isarchived"])){

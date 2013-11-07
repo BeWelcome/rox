@@ -30,14 +30,6 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
     
-// first value for updates, second one for inserts
-//$isarch  = (isset($this->data->isarchived)?$this->data->isarchived:'0');
-//$descri = (isset($this->data->description)?$this->data->description:'');
-//$wrdcod = (isset($this->data->code)?$this->data->code:$_SESSION['form']['code']);
-//$trprio = (isset($this->data->TranslationPriority)?$this->data->TranslationPriority:'5');
-//$donotr  = (isset($this->data->Engdonottranslate)?$this->data->donottranslate:'no');
-
-
 $formkit = $this->layoutkit->formkit;
 $callback_tag = $formkit->setPostCallback('AdminWordController', 'trEditEngCallback');
 
@@ -68,7 +60,8 @@ You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars
     if ($this->nav['level'] >= 10 ) { 
     // On Admin Level show extra variables
 ?>
-<tr><td>Description :</td><td class="smallXtext"><textarea style="margin:0;" cols=60 rows=3 name='EngDesc'><?=$this->formdata['EngDesc']?></textarea><br>
+<tr><td>Description :</td><td class="smallXtext">
+<textarea style="margin:0;" cols=60 rows=3 name='EngDesc'><?=$this->formdata['EngDesc']?></textarea><br>
 Make sure the code has a proper description. Make clear where this code shows up,
 in which case it shows up, what the function is of the element where it shows up, etc.<br>
 Describe also the function and possible values of all included placeholders.<br>
@@ -88,9 +81,17 @@ Do NOT copy the wordcode or the English text, that doesn't help anyone.</td></tr
   <option value="1"
 <?php if ($this->formdata['isarchived'] == "1") echo " selected"; ?>
     >archived</option>
-    </select></td></tr><tr><td>
-Translation Priority</td><td><input type="text" name="EngPrio"
-    value="<?=(int)$this->formdata['EngPrio'] ?>" size="2"></td></tr>
+    </select></td></tr>
+    <tr><td>Translation Priority</td><td><select name="EngPrio">
+<?php
+for ($prio=1;$prio<=10;$prio++){
+    echo '<option value='.$prio;
+    $default = (empty($this->formdata['EngPrio'])?5:$this->formdata['EngPrio']);
+    if ($prio==$default){echo ' selected';}
+    echo '>'.$prio.'</option>';
+}
+?>
+</select>
 <?php } else {
 ?>
     <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>">

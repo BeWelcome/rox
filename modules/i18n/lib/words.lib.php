@@ -588,18 +588,18 @@ class MOD_words
         $R = MOD_right::get();
 
         if(! $this->_offerTranslationLink) {
-            // normal people don't need the tr stuff
-            if (!$row && $lang != 'en') {
-                // try in English
-                $row = $this->_lookup_row($code, 'en');
-            }
-            if(!$row) {
-                // use the plain key code
+            // for normal people no translation stuff
+            if(!$row_en) {
+                // if English doesn't exist, show code
                 $lookup_result = $code;
+            } elseif (!$row || $row->updated < $row_en->majorupdate) {
+                // if no translation or translation is outdated, show English
+                $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
             } else {
-                // use the row that has been found
+                // if up-to-date translation present, show translation
                 $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
             }
+            
             return new LookedUpWord($code, $lang, $lookup_result);
         } else {
             // for translators, the LookedUpWord object needs more info

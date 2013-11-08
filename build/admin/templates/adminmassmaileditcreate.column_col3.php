@@ -37,7 +37,6 @@
 <p class="note center">Please write here in <strong>English</strong></p>
 <div class="type-text">
 <?php
-print_r($this);
 $options = array();
 if ($this->newsletterSpecific) {
     $options["Specific"] = $this->words->get('AdminMassMailEditTypeSpecific');

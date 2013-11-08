@@ -543,7 +543,12 @@ class AdminModel extends RoxModelBase
         }
 
         foreach($mmris as &$mmri) {
-            $mmri->Language = $languagesnames[$mmri->LanguageId];
+            if (isset($languagesnames[$mmri->LanguageId])) {
+                $mmri->Language = $languagesnames[$mmri->LanguageId];
+            } else {
+                $mmri->Language = $languagesnames[0];
+                $mmri->LanguageId = 0;
+            }
         }
 
         return $mmris;
@@ -724,8 +729,10 @@ class AdminModel extends RoxModelBase
             $action = 'enqueueLocation';
         } elseif (array_key_exists('enqueuegroup', $vars)) {
             $action = 'enqueueGroup';
-        } elseif (array_key_exists('enqueuereminder', $vars)) {
+                } elseif (array_key_exists('enqueuereminder', $vars)) {
             $action = 'enqueueReminder';
+        } elseif (array_key_exists('enqueuesuggestionsreminder', $vars)) {
+            $action = 'enqueueSuggestionsReminder';
         }
         return $action;
     }
@@ -764,6 +771,8 @@ class AdminModel extends RoxModelBase
                 }
                 break;
             case 'enqueueReminder':
+                break;
+            case 'enqueueSuggestionsReminder':
                 break;
             default:
                 $errors[] = 'AdminMassMailEnqueueWrongAction';
@@ -903,6 +912,31 @@ class AdminModel extends RoxModelBase
         return $count;
     }
 
+    private function enqueueMassmailSuggestionsReminder($id) {
+        $pref_id = $this->getPreferenceIdForMassmail($id);
+        $IdEnqueuer = $this->getLoggedInMember()->id;
+        $query = "
+            REPLACE
+                broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
+            SELECT
+                " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
+            FROM
+                members AS m
+            LEFT JOIN
+                memberspreferences AS mp
+                ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
+            WHERE
+                m.Status = 'Active'
+                AND (mp.Value = 'Yes' OR mp.Value IS NULL)
+                AND DATEDIFF(NOW(), m.LastLogin) < 180
+            ORDER BY
+                RAND()
+            LIMIT 0," . $this->getSuggestionsReminderCount();
+        $r = $this->dao->query($query);
+        $count = $r->affectedRows();
+        return $count;
+    }
+
     public function enqueueMassmail($vars) {
         $count = 0;
         $id = $vars['id'];
@@ -938,6 +972,9 @@ class AdminModel extends RoxModelBase
                 break;
             case 'enqueueReminder':
                 $count = $this->enqueueMassmailReminder($id);
+                break;
+            case 'enqueueSuggestionsReminder':
+                $count = $this->enqueueMassmailSuggestionsReminder($id);
                 break;
         }
         return $count;
@@ -976,6 +1013,37 @@ class AdminModel extends RoxModelBase
                 broadcastmessages.IdBroadcast = " . $id;
         $r = $this->dao->query($query);
         return $r->affectedRows();
+    }
+
+    /**
+     * Get the count of members to be invited randomly
+     *
+     * Maximum number of votes ever casted for one suggestion times three
+     */
+    public function getSuggestionsReminderCount() {
+        // fixed number of voters based on the number of members
+        // that voted for the decision making process
+        $votersCount = 763 * 3;
+        $query = "
+            SELECT
+                count(memberHash) as votersCount
+            FROM
+                suggestions_votes
+            GROUP BY
+                suggestionId,
+                optionId
+            ORDER BY
+                votersCount DESC
+                 ";
+        $r = $this->dao->query($query);
+        if (!$r) {
+            return $votersCount;
+        }
+        $row = $r->fetch(PDB::FETCH_OBJ);
+        if (!isset($row->votersCount)) {
+            return $votersCount;
+        }
+        return $row->votersCount * 3;
     }
 
     public function treasurerEditCreateDonationVarsOk(&$vars) {

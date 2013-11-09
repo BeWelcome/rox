@@ -17,7 +17,7 @@ class SuggestionsController extends RoxControllerBase
     }
 
     public function suggestions() {
-        $this->redirectAbsolute($this->router->url('suggestions_discuss'));
+        $this->redirectAbsolute($this->router->url('suggestions_discusslist'));
     }
 
     private function checkSuggestionRight()

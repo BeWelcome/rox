@@ -40,16 +40,23 @@ class SuggestionsController extends RoxControllerBase
 
     /**
      * Redirects if no one's logged in or if someone tries to cheat (like trying to open the discuss page while
-     * voting already started
+     * ranking already started
      */
     private function redirectOnSuggestionState($state) {
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         if ($suggestion) {
+            if ($state == SuggestionsModel::SUGGESTIONS_DISCUSSION ) {
+                if ($suggestion->state == SuggestionsModel::SUGGESTIONS_DISCUSSION |
+                    $suggestion->state == SuggestionsModel::SUGGESTIONS_ADD_OPTIONS |
+                    $suggestion->state == SuggestionsModel::SUGGESTIONS_VOTING) {
+                    return;
+                }
+            }
             if (($state & $suggestion->state) <> $suggestion->state) {
-            $params = array('id' => $id);
-            $this->redirectAbsolute($this->router->url('suggestions_show', $params));
-        }
+                $params = array('id' => $id);
+                $this->redirectAbsolute($this->router->url('suggestions_show', $params));
+            }
         }
     }
 

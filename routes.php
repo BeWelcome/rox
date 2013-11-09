@@ -104,6 +104,7 @@
     $this->addRoute('admin_word_editeng', 'admin/word/edit-eng','AdminWordController','editEnglishTranslation');
     $this->addRoute('admin_word_list', 'admin/word/list/:type:', 'AdminWordController', 'showList');
     $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
+    $this->addRoute('admin_word_find', 'admin/word/find', 'AdminWordController','findTranslations');
        
     // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');

@@ -86,7 +86,7 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC';
         return $this->BulkLookup($sql);
     }
     
-    public function findTranslation($params){
+    public function getFindData($params){
         $codeSelect = '';    
         $descSelect = '';    
         $sentSelect = '';
@@ -97,8 +97,8 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC';
         if (isset($params['EngDesc'])){
             $descSelect = ' AND w1.description LIKE "%'.$this->dao->escape($params['EngDesc']).'%"';
         }
-        if (isset($params['TrSent'])){
-            $sentSelect = ' AND w2.sentence LIKE "%'.$this->dao->escape($params['TrSent']).'%"';
+        if (isset($params['Sentence'])){
+            $sentSelect = ' AND w2.sentence LIKE "%'.$this->dao->escape($params['Sentence']).'%"';
         }
         if (isset($params['lang'])){
             $langSelect = ' AND w2.shortcode = "'.$this->dao->escape($params['lang']).'"';
@@ -328,38 +328,39 @@ WHERE code = "'.$form["EngCode"].'"
 
     public function editFormCheck($form){
         $errors = array();
-        switch($form['DOACTION']){
-        case 'Submit':
-            if (empty($form['EngCode'])){
-                $errors[] = 'AdminWordErrorCodeEmpty';
-            } else {
-                $sql = '
+        if (empty($form['EngCode'])){
+            $errors[] = 'AdminWordErrorCodeEmpty';
+        } elseif (isset($form['submitBtn'])) {
+            $sql = '
 SELECT count(id) AS cnt
 FROM words
 WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
-                    ';
-                $query = $this->dao->query($sql);
-                $res = $query->fetch(PDB::FETCH_OBJ);
-                if (!$res->cnt > 0) {
-                    if ($form['lang'] == 'en'){
-                        if (!preg_match('#^[a-z][-a-z0-9_]+[a-z0-9]$#i',$form['EngCode'])){
-                            $errors[] = 'AdminWordErrorBadCodeFormat';
-                        }
-                    } else {
-                        $errors[] = 'AdminWordErrorCodeNotExist';
+                ';
+            $query = $this->dao->query($sql);
+            $res = $query->fetch(PDB::FETCH_OBJ);
+            if (!$res->cnt > 0) {
+                if ($form['lang'] == 'en'){
+                    if (!preg_match('#^[a-z][-a-z0-9_]+[a-z0-9]$#i',$form['EngCode'])){
+                        $errors[] = 'AdminWordErrorBadCodeFormat';
                     }
+                } else {
+                    $errors[] = 'AdminWordErrorCodeNotExist';
                 }
             }
-    
-            if (empty($form['TrSent'])){$errors[] = 'AdminWordErrorSentenceEmpty';}
-            if (empty($form['lang'])){$errors[] = 'AdminWordErrorLangEmpty';}
-            break;
-        case 'Find':
-            if (empty($form['EngCode']) && empty($form['TrSent'])){
-                $errors[] = 'AdminWordErrorNeedOneSearchTerm';
-            }
+        }
 
-            break;
+        if (isset($form['submitBtn']) && empty($form['TrSent'])){
+            $errors[] = 'AdminWordErrorSentenceEmpty';
+        }
+        if (empty($form['lang'])){$errors[] = 'AdminWordErrorLangEmpty';}
+        return $errors;
+    }
+    public function findFormCheck($form){
+        $errors = array();
+        if (!preg_match('#(?![_])[\w]#u',$form['EngCode'])
+            && !preg_match('#(?![_])[\w]#u',$form['EngDesc'])
+            && !preg_match('#(?![_])[\w]#u',$form['Sentence'])){
+                $errors[] = 'AdminWordErrorNeedOneSearchTerm';
         }
         return $errors;
     }

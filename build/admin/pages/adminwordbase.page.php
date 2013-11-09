@@ -33,6 +33,7 @@ Boston, MA  02111-1307, USA.
 class AdminWordBasePage extends PageWithActiveSkin
 {
     protected $purifier;
+    public $formdata = array();
     
     public function __construct($model = false) {
         parent::__construct();
@@ -53,5 +54,14 @@ class AdminWordBasePage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/custom/adminword.css';
        return $stylesheets;
     }
+
+    public function showScope(){
+    if ($this->nav['scope']=='"All"'){
+        return 'All';
+    } else {
+        array_map(function ($lng){echo $this->words->get('lang_'.$lng->ShortCode).' ';},$this->langarr);
+    }
+    }
+
 
 }

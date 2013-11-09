@@ -49,38 +49,6 @@ if ($this->noScope){
         echo "</div>";
     }
     
-/************************
-***   searchresults   ***
-************************/
-if (isset($_SESSION['trData'])){
-    $data = $_SESSION['trData'];
-    unset($_SESSION['trData']);
-}
-
-if (isset($data[0])){
-?>
-
-<table>
-<tr><th>Code & Description</th><th>Sentence</th></tr>
-<?php
-foreach($data as $dat){
-?>
-<tr><td><b>
-<?php
-if ($dat->inScope){
-    echo '<a href="/admin/word/edit/'.$dat->EngCode.'/'.$dat->TrShortcode.'">';
-    echo $dat->EngCode.' - '.$words->get("lang_".$dat->TrShortcode).'</a>';    
-} else {
-    echo $dat->EngCode.' - '.$words->get("lang_".$dat->TrShortcode);
-}
-?>
-</b><br>
-        <span class="smallXtext"><?= $dat->EngDesc ?></span></td>
-    <td><?= $dat->TrSent ?></td></tr>
-<?php } ?>
-</table>
-<?php } else {
-    
 /********************
 ***   edit form   ***
 ********************/
@@ -139,12 +107,12 @@ echo ' rows='.$NbRows.'>'. htmlspecialchars($this->formdata['TrSent']) .'</texta
     <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>">
     <input type=hidden name=EngSent value="<?=htmlspecialchars($this->formdata['EngSent']);?>">
     <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>">
-    <td colspan="2" align="center">
-      <input class="button" type="submit" id="submit1" name="DOACTION" value="Submit">
-      <input class="button" type="submit" id="submit2" name="DOACTION" value="Find">
+    <td></td><td>
+      <input class="button" type="submit" name="findBtn" value="Find code">&nbsp;&nbsp;&nbsp;&nbsp;
+      <input class="button" type="submit" name="submitBtn" value="Submit translation">
       <?php //<input class="button" type="submit" id="submit3" name="DOACTION" value="Delete" onclick="confirm('Are you sure you want to delete this?');"> ?>
     </td>
   </tr>
 </table>
 </form>
-<?php }} ?>
+<?php } ?>

@@ -128,11 +128,23 @@ class AdminWordController extends RoxControllerBase
         $page->data = $this->_model->getTranslationData('edit',$page->nav['shortcode'],$_SESSION['form']['EngCode']);
         $wcexist = $this->_model->wordcodeExist($_SESSION['form']['EngCode'],'en');
         $page->status = ($wcexist->cnt == 0?'create':'update');
-        $page->getFormData(array('EngCode','EngSent','EngDesc','EngDnt',
-            'TrSent','lang','isarchived','EngPrio'));
+        $page->formdata = $this->getFormData(array('EngCode','EngSent','EngDesc','EngDnt',
+            'TrSent','lang','isarchived','EngPrio'),$page->nav);
         return $page;
     }
-
+    
+    public function findTranslations(){
+        $page = new AdminWordFindPage();
+        $page->nav = $this->getNavigationData();
+        $page->langarr = $this->_model->getLangarr($page->nav['scope']);
+        // default language can be overridden through url
+        if (isset($this->route_vars['shortcode'])){
+            $nav['shortcode'] = $this->route_vars['shortcode'];
+        }
+        $page->formdata = $this->getFormData(array('EngCode','EngDesc','Sentence','lang'),$page->nav);
+        return $page;
+    }
+    
     public function editTranslation(){
         $page = new AdminWordEditPage();
         $nav = $this->getNavigationData();
@@ -141,7 +153,6 @@ class AdminWordController extends RoxControllerBase
         if (isset($this->route_vars['shortcode'])){
             $nav['shortcode'] = $this->route_vars['shortcode'];
         }
-
         // register if language is within scope
         if ($this->checkScope($nav['scope'],$nav['shortcode'])) {
             $page->noScope = false;
@@ -152,16 +163,14 @@ class AdminWordController extends RoxControllerBase
         if (isset($this->route_vars['wordcode'])){
             // specific wordcode selected
             $wordcode = $this->route_vars['wordcode'];
-            $page->data = $this->_model->getTranslationData('edit',$page->nav['shortcode'],$wordcode);
+            $this->data = $this->_model->getTranslationData('edit',$page->nav['shortcode'],$wordcode);
         } else {
             // no wordcode selected
             $wordcode = false;
-            $page->data = null;
+            $this->data = null;
         }
-        $page->getFormData(array('EngCode','TrSent','EngDesc',
-                                 'EngDnt','EngSent','lang'));
-
-
+        $page->formdata = $this->getFormData(array('EngCode','TrSent','EngDesc',
+                                 'EngDnt','EngSent','lang'),$nav);
         return $page;
     }
 
@@ -282,8 +291,7 @@ class AdminWordController extends RoxControllerBase
         }
         
         $nav = $this->getNavigationData();
-        switch($args->post['DOACTION']){
-        case 'Submit' :
+        if (isset($args->post['submitBtn'])){
             if ($args->post['lang']=='en'){
                 // and continue with the second page
                 return $this->router->url('admin_word_editeng', array(), false);
@@ -301,29 +309,17 @@ class AdminWordController extends RoxControllerBase
                 $msg = 'This wordcode does not yet exist. It needs to be created in English first.';
             }
             $this->$type($msg);
-            break;
-        case 'Find'   :
-            $searchparams = array();
-            foreach (array('EngCode','EngDesc','EngSent','lang') as $item){
-                if (isset($args->post[$item])){
-                    if (strlen($args->post[$item])>0){
-                        $searchparams[$item] = $args->post[$item];
-                    }
-                }
-            }
-            $_SESSION['trData'] = $this->_model->findTranslation($searchparams);
-            foreach($_SESSION['trData'] as $key => $item){
-                if ($this->checkScope($this->wordrights['Words']['Scope'],$item->TrShortcode)){
-                    $_SESSION['trData'][$key]->inScope = true;
-                } else {
-                    $_SESSION['trData'][$key]->inScope = false;
-                }
-            }
-            break;
-        case 'Delete' :
-            $res = $this->_model->removeSingleTranslation($args->post);
-            break;
         }
+        if (isset($args->post['findBtn'])){
+            unset($_SESSION['form']);
+            return $this->router->url('admin_word_editlang',
+                array('wordcode'=>$args->post['EngCode'],
+                      'shortcode'=>$args->post['lang']), false);
+        }        
+//        case 'Delete' :
+//            $res = $this->_model->removeSingleTranslation($args->post);
+//            break;
+        
         return false;
     }
     public function trEditEngCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
@@ -354,4 +350,63 @@ class AdminWordController extends RoxControllerBase
         }
         return $this->router->url('admin_word_editempty', array(), false);
     }
+
+    public function trFindCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
+        if (empty($args->post)) {return false;}
+        // set posted variables in the session
+        foreach ($args->post as $key => $postvar){
+            $_SESSION['form'][$key] = $postvar;
+        }
+        $errors = $this->_model->findFormCheck($args->post);
+        if (!empty($errors)) {
+            $mem_redirect->vars = $args->post;
+            $mem_redirect->errors = $errors;
+//            $mem_redirect->action = $action;
+            return false;
+        }
+        
+        $nav = $this->getNavigationData();
+        $searchparams = array();
+        foreach (array('EngCode','EngDesc','Sentence','lang') as $item){
+            if (isset($args->post[$item])){
+                if (strlen($args->post[$item])>0){
+                    $searchparams[$item] = $args->post[$item];
+                }
+            }
+        }
+        $_SESSION['trData'] = $this->_model->getFindData($searchparams);
+        foreach($_SESSION['trData'] as $key => $item){
+            if ($this->checkScope($this->wordrights['Words']['Scope'],$item->TrShortcode)){
+                $_SESSION['trData'][$key]->inScope = true;
+            } else {
+                $_SESSION['trData'][$key]->inScope = false;
+            }
+        }
+        return false;
+    }
+
+    private function getFormData($fields,$vars = null){
+        $formdata = array();
+        foreach ($fields as $field) {
+            if (isset($vars[$field])){
+                $formdata[$field] = $vars[$field];
+            } elseif (isset($_SESSION['form'][$field])){
+                $formdata[$field] = $_SESSION['form'][$field];
+            } elseif (isset($this->data->$field)) {
+                $formdata[$field] = $this->data->$field;
+            } else {
+                $formdata[$field] = '';
+            }
+            unset ($_SESSION['form'][$field]);
+        }
+        if ($formdata['lang']==''){
+            $formdata['lang'] = $vars['shortcode'];
+        }
+        
+        return $formdata;
+        
+    }
+    
+
+
 }

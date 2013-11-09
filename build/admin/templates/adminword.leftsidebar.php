@@ -33,7 +33,8 @@ $words = new MOD_words();
 <h3>Action</h3>
 <ul class="linklist">
   <li><a href="admin/word">AdminWord</a></li>
-  <li><a href="admin/word/stats">Show stats</a></li>
+  <li><a href="admin/word/find">Find Words</a></li>
+  <li><a href="admin/word/stats">Show Stats</a></li>
   <li><b><em><?= $this->nav['currentLanguage'] ?></em> :</b><br></li>
   <li>&nbsp;&nbsp;<a href="admin/word/list/all
 <?php if ($this->nav['shortcode']=='en'){echo 'x';} ?>

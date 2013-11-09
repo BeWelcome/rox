@@ -30,13 +30,13 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-class AdminWordEditPage extends AdminWordBasePage
+class AdminWordFindPage extends AdminWordBasePage
 {
     public function teaserHeadline()
     {
         $string = 'AdminWord';
         $string .= ' » '.$this->nav['currentLanguage'];
-        $string .= ' » Translate';
+        $string .= ' » Find Words';
         return $string;
     }
     

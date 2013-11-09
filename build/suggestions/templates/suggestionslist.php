@@ -13,13 +13,9 @@ $this->pager->render(); ?>
                 include 'approvelistitem.php';
                 break;
             case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-                include 'discussionlistitem.php';
-                break;
             case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
-                include 'addoptionslistitem.php';
-                break;
             case SuggestionsModel::SUGGESTIONS_VOTING:
-                include 'votelistitem.php';
+                include 'openlistitem.php';
                 break;
             case SuggestionsModel::SUGGESTIONS_RANKING:
                 include 'ranklistitem.php';

@@ -18,9 +18,11 @@ if (!$option->deleted | ($this->hasSuggestionRight)) : ?>
     <div class="c38r">
         <div class="subcl">
             <div class="row">
+                <?php if (!$option->deleted) : ?>
                 <a class="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/edit">
                 <?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?></a>
-                <?php if ($option->deleted) :?>
+                <?php endif;
+                if ($option->deleted) :?>
                 <a class="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/restore">
                 <?php echo $words->getSilent('SuggestionsSubmitRestoreOption'); ?></a><br />
                 <?php else : ?>

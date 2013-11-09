@@ -34,9 +34,8 @@ include 'suggestionserrors.php'; ?>
 <fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); ?></legend>
 <form method="post" id="suggestion-vote-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />
-<?php echo $callbackTags;
-$votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + SuggestionsModel::DURATION_VOTING) ?>
-    <h3><?php echo $this->purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', $votingends) .  ")"); ?></h3>
+<?php echo $callbackTags; ?>
+    <h3><?php echo $this->purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', $this->suggestion->nextstatechange) .  ")"); ?></h3>
     <p><?php echo $this->purifier->purify($this->suggestion->description); ?></p>
     <p><?php echo $words->get('SuggestionsVoteDiscussion', '<a href="/groups/' . SuggestionsModel::getGroupId() . '/forum/s' . $this->suggestion->threadId . '">', '</a>'); ?></p>
     <hr />
@@ -58,7 +57,7 @@ $votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + Sug
     </div><hr />
     <?php endforeach;
     if (!$this->viewOnly) : ?>
-    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', $votingends);?></p>
+    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', $this->suggestion->nextstatechange);?></p>
     <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
     <?php endif; ?>
 </form>

@@ -6,7 +6,7 @@
  */
 class SuggestionsController extends RoxControllerBase
 {
-    const SUGGESTIONS_PER_PAGE = 10;
+    const SUGGESTIONS_PER_PAGE = 20;
 
     /**
      * Constructor.
@@ -18,6 +18,24 @@ class SuggestionsController extends RoxControllerBase
 
     public function suggestions() {
         $this->redirectAbsolute($this->router->url('suggestions_about'));
+    }
+
+    private function checkSuggestionRight()
+    {
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+        $rights = $member->getOldRights();
+        if (empty($rights)) {
+            return false;
+        }
+        if (in_array('Suggestions', array_keys($rights))) {
+            return true;
+        } else {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -44,10 +62,10 @@ class SuggestionsController extends RoxControllerBase
         $params = array('id' => $id);
         switch ($suggestion->state) {
             case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
-                if ($this->_model->hasSuggestionRight($this->_model->getLoggedInMember)) {
+                if ($this->checkSuggestionRight()) {
                     $url = $this->router->url('suggestions_approve', $params);
                 } else {
-                    $url = $this->router->url('suggestions_approvelist');
+                    $url = $this->router->url('suggestions_view', $params);
                 }
                 break;
             case SuggestionsModel::SUGGESTIONS_DISCUSSION:
@@ -101,7 +119,7 @@ class SuggestionsController extends RoxControllerBase
         }
         $member = $this->_model->getLoggedInMember();
         $suggestion = $this->_model->voteForSuggestion($member, $args);
-        $this->setFlashNotice($this->getWords()->get('SuggestionsVoted', date('d.m.Y', $suggestion->votingendts)));
+        $this->setFlashNotice($this->getWords()->get('SuggestionsVoted', $suggestion->nextstatechange));
         return true;
     }
 

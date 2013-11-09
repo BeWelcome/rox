@@ -138,8 +138,9 @@ class SuggestionsModel extends RoxModelBase
         switch($type) {
             case self::SUGGESTIONS_DISCUSSION:
                 $query = "state = " . self::SUGGESTIONS_DISCUSSION
-                . " OR state = " . self::SUGGESTIONS_ADD_OPTIONS;
-                $sql_order = "Created ASC";
+                . " OR state = " . self::SUGGESTIONS_ADD_OPTIONS
+                . " OR state = " . self::SUGGESTIONS_VOTING;
+                $sql_order = "state DESC, Created ASC";
                 break;
             case self::SUGGESTIONS_REJECTED:
                 $query = "state = " . self::SUGGESTIONS_REJECTED
@@ -178,8 +179,8 @@ class SuggestionsModel extends RoxModelBase
         return $row[0];
     }
 
-    private function filterDiscussionAndAddOptions($var) {
-        return ($var->state == self::SUGGESTIONS_DISCUSSION) || ($var->state == self::SUGGESTIONS_ADD_OPTIONS);
+    private function filterDiscussionAndAddOptionsAndVoting($var) {
+        return ($var->state == self::SUGGESTIONS_DISCUSSION) || ($var->state == self::SUGGESTIONS_ADD_OPTIONS)|| ($var->state == self::SUGGESTIONS_VOTING);
     }
 
     private function filterRejectedAndDuplicate($var) {
@@ -205,7 +206,7 @@ class SuggestionsModel extends RoxModelBase
 
         switch ($type) {
             case self::SUGGESTIONS_DISCUSSION:
-                $filtered = array_filter($all, array($this, 'filterDiscussionAndAddOptions'));
+                $filtered = array_filter($all, array($this, 'filterDiscussionAndAddOptionsAndVoting'));
                 break;
             case self::SUGGESTIONS_REJECTED:
                 $filtered = array_filter($all, array($this, 'filterRejectedAndDuplicate'));
@@ -260,18 +261,54 @@ class SuggestionsModel extends RoxModelBase
         $suggestion->modified = date('Y-m-d');
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
 
-        $words = $this->getWords();
-        $editPostText = '<p>' . $words->getSilent('SuggestionEdited', $suggestion->summary) . '</p>';
-        $editPostText .= '<p>' . $words->getSilent('SuggestionEditedDesc', $suggestion->description)  . '</p>';
-        $editPostText .= '<p>' . $words->getSilent('SuggestionEditedNewSummary', $args->post['suggestion-summary']) . '</p>';
-        $editPostText .= '<p>' . $words->getSilent('SuggestionEditedNewDesc', $args->post['suggestion-description'])  . '</p>';
-        $postId = $this->addPost($suggestion->modifiedby, $editPostText, $suggestion->threadId);
+        if (strcmp($suggestion->summary, $args->post['suggestion-summary']) == 0) {
+            $summaryEdited = false;
+        } else {
+            $summaryEdited = true;
+        }
 
-        $suggestion->summary = $args->post['suggestion-summary'];
-        $suggestion->description = $args->post['suggestion-description'];
-        $suggestion->update();
+        if (strcmp($suggestion->description, $args->post['suggestion-description']) == 0) {
+            $descriptionEdited = false;
+        } else {
+            $descriptionEdited = true;
+        }
 
-        $this->setForumNotification($postId, "reply");
+        if ($summaryEdited || $descriptionEdited) {
+            $editPostText = "";
+            if ($summaryEdited) {
+                $editPostText = '<p>The suggestion has been renamed to \''
+                    . $args->post['suggestion-summary'] . '\'.</p>';
+                // todo: Update the thread title
+                $query = "
+                    SELECT
+                        IdTitle
+                    FROM
+                        `forums_threads`
+                    WHERE
+                        threadId = " . $suggestion->threadId;
+                $sql = $this->dao->query($query);
+                if ($sql) {
+                    $row = $sql->fetch(PDB::FETCH_OBJ);
+                    $this->getWords()->ReplaceInFTrad($args->post['suggestion-summary'], 'forums_threads.title', $suggestion->threadId, $row->IdTitle);
+                }
+            }
+            if ($descriptionEdited) {
+                if ($summaryEdited) {
+                    $editPostText .= '<p>The description has been changed to:<br />'
+                                    . $args->post['suggestion-description'] . '</p>';
+                } else {
+                    $editPostText .= '<p>The suggestions\' description has been changed to:<br />'
+                                    . $args->post['suggestion-description'] . '</p>';
+                }
+            }
+            $postId = $this->addPost($suggestion->modifiedby, $editPostText, $suggestion->threadId);
+
+            $suggestion->summary = $args->post['suggestion-summary'];
+            $suggestion->description = $args->post['suggestion-description'];
+            $suggestion->update();
+
+            $this->setForumNotification($postId, "reply");
+        }
 
         return $suggestion;
     }
@@ -334,7 +371,7 @@ class SuggestionsModel extends RoxModelBase
             INSERT INTO
                 `forums_threads` (`title`, `first_postid`, `last_postid`, `geonameid`, `admincode`, `countrycode`, `continent`,`IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`)
             VALUES
-                ('" . $title . "', '" . $this->dao->escape($postId) . "', '" . $this->dao->escape($postId) . "',
+                ('" . $this->dao->escape($title) . "', '" . $this->dao->escape($postId) . "', '" . $this->dao->escape($postId) . "',
                     NULL, NULL, NULL, NULL, 0, '" . $this->groupId . "', 'MembersOnly')";
         $res = $this->dao->query($insert);
         if (!$res) {
@@ -388,8 +425,8 @@ class SuggestionsModel extends RoxModelBase
         $suggestion->modifiedby = $this->getLoggedInMember()->id;
 
         $words = $this->getWords();
-        $addOptionPostText = '<p>' . $words->getSilent('SuggestionOptionAdded', $args->post['suggestion-option-summary']) . '</p>';
-        $addOptionPostText .= '<p>' . $args->post['suggestion-option-desc'] . '</p>';
+        $addOptionPostText = '<p>A new option \'' . $args->post['suggestion-option-summary'] . '\' has been added.</p>';
+        $addOptionPostText .= '<p>The description is: <br />' . $args->post['suggestion-option-desc'] . '</p>';
         $postId = $this->addPost($suggestion->modifiedby, $addOptionPostText, $suggestion->threadId);
 
         $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
@@ -404,26 +441,49 @@ class SuggestionsModel extends RoxModelBase
 
     public function editOption($args) {
         $suggestion = new Suggestion($args->post['suggestion-id']);
-        $suggestion->modified = date('Y-m-d');
-        $suggestion->modifiedby = $this->getLoggedInMember()->id;
 
-        $words = $this->getWords();
         $optionId = $args->post['suggestion-option-id'];
         $option = new SuggestionOption($optionId);
-        $editOptionPostText = '<p>' . $words->getSilent('SuggestionOptionEdited', $option->summary) . '</p>';
-        $editOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionEditedDesc', $option->description)  . '</p>';
-        $editOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionEditedNewSummary', $args->post['suggestion-option-summary']) . '</p>';
-        $editOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionEditedNewDesc', $args->post['suggestion-option-desc'])  . '</p>';
-        $postId = $this->addPost($suggestion->modifiedby, $editOptionPostText, $suggestion->threadId);
 
-        $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
-        $result = $this->dao->query($query);
+        if (strcmp($option->summary, $args->post['suggestion-option-summary']) == 0) {
+            $summaryEdited = false;
+        } else {
+            $summaryEdited = true;
+        }
 
-        $suggestion->editOption($optionId, $args->post['suggestion-option-summary'], $args->post['suggestion-option-desc']);
-        $suggestion->update();
+        if (strcmp($option->description, $args->post['suggestion-option-desc']) == 0) {
+            $descriptionEdited = false;
+        } else {
+            $descriptionEdited = true;
+        }
 
-        $this->setForumNotification($postId, "reply");
+        if ($summaryEdited || $descriptionEdited) {
+            $editPostText = "";
+            if ($summaryEdited) {
+                $editPostText = '<p>The option \'' . $option->summary . '\' has been renamed to \''
+                    . $args->post['suggestion-option-summary'] . '\'.</p>';
+            }
+            if ($descriptionEdited) {
+                if ($summaryEdited) {
+                    $editPostText .= '<p>The description has been changed to:<br />'
+                                    . $args->post['suggestion-option-desc'] . '</p>';
+                } else {
+                    $editPostText .= '<p>The options\' description has been changed to:<br />'
+                                    . $args->post['suggestion-option-desc'] . '</p>';
+                }
+            }
+            $postId = $this->addPost($suggestion->modifiedby, $editPostText, $suggestion->threadId);
 
+            $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
+            $result = $this->dao->query($query);
+
+            $suggestion->editOption($optionId, $args->post['suggestion-option-summary'], $args->post['suggestion-option-desc']);
+            $suggestion->modified = date('Y-m-d');
+            $suggestion->modifiedby = $this->getLoggedInMember()->id;
+            $suggestion->update();
+
+            $this->setForumNotification($postId, "reply");
+        }
         return $suggestion;
     }
 
@@ -435,8 +495,7 @@ class SuggestionsModel extends RoxModelBase
         $words = $this->getWords();
         $optionId = $args->post['suggestion-option-id'];
         $option = new SuggestionOption($optionId);
-        $deleteOptionPostText = '<p>' . $words->getSilent('SuggestionOptionDeleted', $option->summary) . '</p>';
-        $deleteOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionDeletedDesc', $option->description)  . '</p>';
+        $deleteOptionPostText = '<p>The option \'' . $option->summary . '\' has been deleted</p>';
         $postId = $this->addPost($suggestion->modifiedby, $deleteOptionPostText, $suggestion->threadId);
 
         $suggestion->deleteOption($args->post['suggestion-option-id']);
@@ -453,8 +512,7 @@ class SuggestionsModel extends RoxModelBase
         $option->modifiedBy = $this->getLoggedInMember()->id;
 
         $words = $this->getWords();
-        $restoreOptionPostText = '<p>' . $words->getSilent('SuggestionOptionRestored', $option->summary) . '</p>';
-        $restoreOptionPostText .= '<p>' . $words->getSilent('SuggestionOptionRestoredDesc', $option->description)  . '</p>';
+        $restoreOptionPostText = '<p>The option \'' . $option->summary . '\' has been restored.</p>';
         $postId = $this->addPost($suggestion->modifiedby, $restoreOptionPostText, $suggestion->threadId);
 
         $option->deleted = null;

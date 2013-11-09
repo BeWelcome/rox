@@ -35,6 +35,12 @@ class Suggestion extends RoxEntityBase
                 $this->modifier = $entityFactory->create('Member', $this->modifiedby);
             }
 
+            // Get options count for this suggestion (visible to all members)
+            $query = 'SELECT COUNT(id) as cnt FROM suggestions_options WHERE suggestionId = ' . $this->id . ' AND deleted IS NULL';
+            $sql = $this->dao->query($query);
+            $row = $sql->fetch(PDB::FETCH_OBJ);
+            $this->optionsVisibleCount = $row->cnt;
+
             // Load options for this suggestion
             $optionsWhere = "";
             $optionsFactory = $entityFactory->create('SuggestionOption');
@@ -48,11 +54,7 @@ class Suggestion extends RoxEntityBase
             	    $optionsWhere = " AND `rank` > 2";
             	    break;
             	default:
-            	    $query = 'SELECT COUNT(id) as cnt FROM suggestions_options WHERE suggestionId = ' . $this->id . ' AND deleted IS NULL';
-            	    $sql = $this->dao->query($query);
-            	    $row = $sql->fetch(PDB::FETCH_OBJ);
-            	    $this->optionsVisibleCount = $row->cnt;
-            	    $optionsFactory->sql_order = "`id` ASC";
+            	    $optionsFactory->sql_order = "`deleted` ASC, `id` ASC";
             	    break;
             }
             $this->options = $optionsFactory->FindByWhereMany('suggestionId = ' . $this->id . $optionsWhere);
@@ -116,7 +118,20 @@ class Suggestion extends RoxEntityBase
                     }
                     break;
             }
+            // set next state change date (only needed for open suggestions)
+            switch($this->state) {
+            	case SuggestionsModel::SUGGESTIONS_DISCUSSION:
+            	    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_DISCUSSION);
+            	    break;
+            	case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
+            	    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_ADDOPTIONS);
+            	    break;
+            	case SuggestionsModel::SUGGESTIONS_VOTING:
+            	    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_VOTING);
+            	    break;
+            }
         }
+
         return $status;
     }
 

@@ -21,9 +21,15 @@ switch($suggestion->state) {
             . $suggestion->id . '/addoptions">' . $words->getBuffered('SuggestionsAddOptions') . '</a></td>';
         break;
 	case SuggestionsModel::SUGGESTIONS_VOTING:
-        echo '<td class="details"><a href="suggestions/' . $suggestion->id . '/vote">'
-            . '<img src="images/icons/tick.png" alt="' . $words->getBuffered('SuggestionsVote') . '" /></a><br /><a href="suggestions/'
-            . $suggestion->id . '/vote">' . $words->getBuffered('SuggestionsVote') . '</a></td>';
+	    if (count($suggestion->votes)) {
+            echo '<td class="details"><a href="suggestions/' . $suggestion->id . '/vote">'
+                . '<img src="images/icons/tick.png" alt="' . $words->getBuffered('SuggestionsReviewVote') . '" /></a><br /><a href="suggestions/'
+                . $suggestion->id . '/vote">' . $words->getBuffered('SuggestionsReviewVote') . '</a></td>';
+	    } else {
+            echo '<td class="details"><a href="suggestions/' . $suggestion->id . '/vote">'
+                . '<img src="images/icons/tick.png" alt="' . $words->getBuffered('SuggestionsVote') . '" /></a><br /><a href="suggestions/'
+                . $suggestion->id . '/vote">' . $words->getBuffered('SuggestionsVote') . '</a></td>';
+	    }
         break;
 }
 echo '<td class="details">' . $suggestion->posts;

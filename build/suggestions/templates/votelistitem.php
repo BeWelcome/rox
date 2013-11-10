@@ -6,7 +6,11 @@ if ($count == 0) : ?>
 <?php endif;
 echo '<tr class="' . $background = (($count % 2) ? 'highlighttop' : 'blanktop') . '">';
 echo '<td class="description">';
-echo '<h3><a href="suggestions/' . $suggestion->id . '">' . htmlspecialchars($suggestion->summary) . '</a></h3></td>';
+echo '<h3><a href="suggestions/' . $suggestion->id . '">' . htmlspecialchars($suggestion->summary);
+if (count($suggestion->votes)) {
+    echo ' (' . $words->get('SuggestionVoted') . ')';
+}
+echo '</a></h3></td>';
 echo '<td class="details">' . date('Y-m-d', strtotime($suggestion->laststatechanged) + SuggestionsModel::DURATION_VOTING) . '</td>';
 echo '<td class="details">' . $suggestion->voteCount . '</td>';
 echo '</tr>';

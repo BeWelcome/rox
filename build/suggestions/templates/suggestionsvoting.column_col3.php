@@ -13,7 +13,7 @@ if (empty($vars)) {
     $vars['suggestion-id'] = $this->suggestion->id;
     $vars['suggestion-summary'] = $this->suggestion->summary;
     $vars['suggestion-description'] = $this->suggestion->description;
-    if (count($this->votes) == 0) {
+    if (count($this->suggestion->votes) == 0) {
         $votes = array();
         foreach($this->suggestion->options as $option) {
             $vars['option' . $option->id . 'rank'] = 0;
@@ -21,9 +21,14 @@ if (empty($vars)) {
             $vote->rank = 0;
             $votes[$option->id] = $vote;
         }
-        $this->votes = $votes;
+        $this->suggestion->votes = $votes;
     } else {
-        foreach($this->votes as $key => $value) {
+        // sort options in the order of the votes (excellent, good, acceptable, bad)
+        $options = $this->suggestion->options;
+        uasort($options, array($this, "compareRanks"));
+        $this->suggestion->options = $options;
+
+        foreach($this->suggestion->votes as $key => $value) {
             $vars['option' . $key . 'rank'] = $value->rank;
         }
     }

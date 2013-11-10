@@ -78,6 +78,23 @@ class Suggestion extends RoxEntityBase
                 $this->voteCount = $row->count;
             }
 
+            // if member already voted on this suggestion get votes as well
+            $member = $this->getLoggedInMember();
+            if ($member) {
+                $hash = hash_hmac('sha256', $member->id, $this->salt);
+                $query = "SELECT * FROM suggestions_votes WHERE suggestionId = "
+                            . $this->id . " AND memberHash = '" . $hash . "' ORDER BY rank DESC";
+                $sql = $this->dao->query($query);
+                if ($sql) {
+                    $votes = array();
+                    while($row = $sql->fetch(PDB::FETCH_OBJ)) {
+                        $votes[$row->optionId] = $row;
+                    }
+                    $this->votes = $votes;
+                    error_log(print_r($votes, true));
+                }
+            }
+
             // $this->ranks = $this->getRanks();
 
             // check if state should be updated
@@ -96,7 +113,6 @@ class Suggestion extends RoxEntityBase
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_ADDOPTIONS) {
                         if (count($this->options)) {
                             $this->state = SuggestionsModel::SUGGESTIONS_VOTING;
-                            $this->notifyVotingStarted();
                         } else {
                             // no options added -> rejected
                             $this->state = SuggestionsModel::SUGGESTIONS_REJECTED;
@@ -110,11 +126,6 @@ class Suggestion extends RoxEntityBase
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_VOTING) {
                         $this->state = SuggestionsModel::SUGGESTIONS_RANKING;
                         $this->update(true);
-                        // $this->state = SuggestionsModel::SUGGESTIONS_RANKING;
-                        // $this->update(true);
-//                        error_log("Calculate Results");
-                        $this->calculateResults();
-                        // \todo: Update forum thread and close it.
                     }
                     break;
             }
@@ -131,13 +142,17 @@ class Suggestion extends RoxEntityBase
             	    break;
             }
         }
-
         return $status;
     }
 
     public function update($status = false) {
         if ($status) {
             $this->laststatechanged = date('Y-m-d');
+            switch ($state) {
+                case SuggestionsModel::SUGGESTIONS_RANKING:
+                    $this->calculateResults();
+                break;
+            }
             return parent::update();
         } else {
             // update all fields except for the status field

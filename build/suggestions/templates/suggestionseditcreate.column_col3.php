@@ -51,7 +51,7 @@ if (!empty($errors)) {
     <div class="row">
     <p><?php echo $words->get('SuggestionsCreateEditInfo');?></p>
         <label class="float_left"for="suggestion-summary"><?php echo $words->get('SuggestionSummary'); ?>*</label><span class="small float_right" style="margin-right: 0.3em;">* <?php echo $words->get('suggestionMandatoryFields'); ?></span><br />
-        <input type="text" id="suggestion-summary" name="suggestion-summary" maxlength="80" class="long" style="width:99%" value="<?php echo $vars['suggestion-summary']; ?>" />
+        <input type="text" id="suggestion-summary" name="suggestion-summary" maxlength="80" class="long" style="width:99%" value="<?php echo htmlspecialchars($vars['suggestion-summary'], ENT_QUOTES); ?>" />
     </div>
     <div class="subcolumns row">
         <label for="suggestion-description"><?php echo $words->get('suggestionDescription'); ?>*</label><br/>

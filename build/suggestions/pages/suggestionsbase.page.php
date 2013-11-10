@@ -54,7 +54,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
     protected function teaserHeadline()
     {
         $words = $this->getWords();
-        return $words->get('Suggestions');
+        return '<a href="/suggestions">' . $words->get('Suggestions') . '</a>';
     }
 
     private function checkSuggestionRight()

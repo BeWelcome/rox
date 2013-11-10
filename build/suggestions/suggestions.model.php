@@ -133,7 +133,7 @@ class SuggestionsModel extends RoxModelBase
         }
     }
 
-    private function getSuggestionsQueryWhere($type) {
+    private function getSuggestionsQueryWhereAndOrder($type) {
         $query = '';
         switch($type) {
             case self::SUGGESTIONS_DISCUSSION:
@@ -145,7 +145,7 @@ class SuggestionsModel extends RoxModelBase
             case self::SUGGESTIONS_REJECTED:
                 $query = "state = " . self::SUGGESTIONS_REJECTED
                     . " OR state = " . self::SUGGESTIONS_DUPLICATE;
-                $sql_order = "laststatechanged ASC";
+                $sql_order = "laststatechanged DESC";
                 break;
             case self::SUGGESTIONS_DEV:
                 $query = "state = " . self::SUGGESTIONS_IMPLEMENTED
@@ -169,7 +169,7 @@ class SuggestionsModel extends RoxModelBase
         if (!is_numeric($type) && !is_int($type)) {
             return -1;
         }
-        list($where, $order) = $this->getSuggestionsQueryWhere($type);
+        list($where, $order) = $this->getSuggestionsQueryWhereAndOrder($type);
         $query = "SELECT COUNT(*) FROM suggestions WHERE " . $where;
         $sql = $this->dao->query($query);
         if (!$sql) {
@@ -200,7 +200,7 @@ class SuggestionsModel extends RoxModelBase
             return false;
         }
         $temp = $this->CreateEntity('Suggestion');
-        list($where, $order) = $this->getSuggestionsQueryWhere($type);
+        list($where, $order) = $this->getSuggestionsQueryWhereAndOrder($type);
         $temp->sql_order = $order;
         $all = $temp->FindByWhereMany($where, $pageno * $items, $items);
 
@@ -289,7 +289,8 @@ class SuggestionsModel extends RoxModelBase
                 $sql = $this->dao->query($query);
                 if ($sql) {
                     $row = $sql->fetch(PDB::FETCH_OBJ);
-                    $this->getWords()->ReplaceInFTrad($args->post['suggestion-summary'], 'forums_threads.title', $suggestion->threadId, $row->IdTitle);
+                    $this->getWords()->ReplaceInFTrad($this->dao->escape($args->post['suggestion-summary']),
+                        'forums_threads.title', $suggestion->threadId, $row->IdTitle);
                 }
             }
             if ($descriptionEdited) {
@@ -297,7 +298,7 @@ class SuggestionsModel extends RoxModelBase
                     $editPostText .= '<p>The description has been changed to:<br />'
                                     . $args->post['suggestion-description'] . '</p>';
                 } else {
-                    $editPostText .= '<p>The suggestions\' description has been changed to:<br />'
+                    $editPostText .= '<p>The suggestion\'s description has been changed to:<br />'
                                     . $args->post['suggestion-description'] . '</p>';
                 }
             }
@@ -465,10 +466,10 @@ class SuggestionsModel extends RoxModelBase
             }
             if ($descriptionEdited) {
                 if ($summaryEdited) {
-                    $editPostText .= '<p>The description has been changed to:<br />'
+                    $editPostText .= '<p>The option\'s description has been changed to:<br />'
                                     . $args->post['suggestion-option-desc'] . '</p>';
                 } else {
-                    $editPostText .= '<p>The options\' description has been changed to:<br />'
+                    $editPostText .= '<p>The description of the option \'' . $option->summary . '\' has been changed to:<br />'
                                     . $args->post['suggestion-option-desc'] . '</p>';
                 }
             }
@@ -529,7 +530,7 @@ class SuggestionsModel extends RoxModelBase
         $member = $this->getLoggedInMember();
         $hash = hash_hmac('sha256', $member->id, $suggestion->salt);
         $query = "SELECT * FROM suggestions_votes WHERE suggestionId = "
-            . $suggestion->id . " AND memberHash = '" . $hash . "'";
+            . $suggestion->id . " AND memberHash = '" . $hash . "' ORDER BY rank DESC";
         $sql = $this->dao->query($query);
         if (!$sql) {
             return false;
@@ -627,7 +628,10 @@ class SuggestionsModel extends RoxModelBase
         switch($suggestion->state) {
             case self::SUGGESTIONS_VOTING:
                 $suggestion->votingstart = date('Y-m-d');
-                $suggestion->votingend = date('Y-m-d', time() + 30 * 24 * 60 * 60);
+                $suggestion->votingend = date('Y-m-d', time() + self::DURATION_VOTING);
+                break;
+            case self::SUGGESTIONS_RANKING:
+                $suggestion->state = SUGGESTIONS_VOTING;
 
                 break;
         }

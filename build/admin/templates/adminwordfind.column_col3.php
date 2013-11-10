@@ -77,7 +77,7 @@ if ($dat->inScope){
 ?>
 </b><br>
         <span class="smallXtext"><?= $dat->EngDesc ?></span></td>
-    <td><?= $dat->TrSent ?></td></tr>
+    <td><?= $dat->Sentence ?></td></tr>
 <?php } ?>
 </table><p>
 <?php
@@ -85,4 +85,3 @@ if ($dat->inScope){
     echo 'No results were found.';
 }
 ?>
-

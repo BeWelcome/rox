@@ -93,14 +93,14 @@ if ($this->noScope){
             if ($dat->update){
                 // update needed
                 echo '<td class="awlisttrupd">';
-                echo $this->purifier->purify($dat->TrSent);
+                echo $this->purifier->purify($dat->Sentence);
                 echo '<fieldset><legend>update needed?</legend>';
                 echo '<input type="submit" value="Edit" name="Edit_'.(int)$dat->TrId.'">';
                 echo '<input type="submit" value="This is ok" name="ThisIsOk_'.(int)$dat->TrId.'">';
                 echo '</fieldset>';            
             } else {
                 // up-to-date translation
-                echo '<td class="awlisttrok">'.$this->purifier->purify($dat->TrSent);
+                echo '<td class="awlisttrok">'.$this->purifier->purify($dat->Sentence);
                 echo '<p><a href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">edit</a></p>';  
             }
             echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->TrUpdated)).' '.htmlspecialchars($dat->TrMember).'</p>';

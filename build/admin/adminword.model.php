@@ -108,7 +108,7 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC';
 SELECT
     w1.code EngCode,
     w1.description EngDesc,
-    w2.Sentence TrSent,
+    w2.Sentence Sentence,
     w2.shortcode TrShortcode
 FROM words w1
     JOIN words w2 USING(code)
@@ -163,7 +163,7 @@ ORDER BY w1.code,w2.shortcode';
     w1.TranslationPriority EngPrio,
     w2.id as TrId,
     w2.updated TrUpdated,
-    w2.Sentence TrSent,
+    w2.Sentence Sentence,
     (SELECT Username from members where id = w2.IdMember) TrMember
 FROM words w1
     JOIN words w2 USING(code)
@@ -184,7 +184,7 @@ UNION
     w3.TranslationPriority EngPrio,
     null as TrId,
     null as TrUpdated,
-    null as TrSent,
+    null as Sentence,
     null as TrMember
 FROM words w3
 WHERE w3.idlanguage=0'. 
@@ -300,13 +300,13 @@ INSERT INTO words SET
     code = "'.$this->dao->escape($form["EngCode"]).'",
     ShortCode = "'.$this->dao->escape($form["lang"]).'",
     IdLanguage = (SELECT id FROM languages WHERE shortcode="'.$this->dao->escape($form["lang"]).'"),
-    Sentence = "'.$this->dao->escape($form["TrSent"]).'",
+    Sentence = "'.$this->dao->escape($form["Sentence"]).'",
     updated = now(),
     '.$eng_ins.$desc.'
     IdMember = '.(int)$_SESSION["IdMember"].',
     created = now()
 ON DUPLICATE KEY UPDATE
-    Sentence = "'.$this->dao->escape($form["TrSent"]).'",
+    Sentence = "'.$this->dao->escape($form["Sentence"]).'",
     updated = now(),
     '.$eng_upd.$desc.'
     IdMember = '.(int)$_SESSION["IdMember"];
@@ -326,6 +326,12 @@ WHERE code = "'.$form["EngCode"].'"
         return $returnval;
     }
 
+    private function checkWordcodeFormat($code,&$errors){
+        if (!preg_match('#^[a-z][-a-z0-9_]+[a-z0-9]$#i',$code)){
+            $errors[] = 'AdminWordErrorBadCodeFormat';
+        }
+    }
+
     public function editFormCheck($form){
         $errors = array();
         if (empty($form['EngCode'])){
@@ -340,16 +346,14 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
             $res = $query->fetch(PDB::FETCH_OBJ);
             if (!$res->cnt > 0) {
                 if ($form['lang'] == 'en'){
-                    if (!preg_match('#^[a-z][-a-z0-9_]+[a-z0-9]$#i',$form['EngCode'])){
-                        $errors[] = 'AdminWordErrorBadCodeFormat';
-                    }
+                    $this->checkWordcodeFormat($form['EngCode'],$errors);
                 } else {
                     $errors[] = 'AdminWordErrorCodeNotExist';
                 }
             }
         }
 
-        if (isset($form['submitBtn']) && empty($form['TrSent'])){
+        if (isset($form['submitBtn']) && empty($form['Sentence'])){
             $errors[] = 'AdminWordErrorSentenceEmpty';
         }
         if (empty($form['lang'])){$errors[] = 'AdminWordErrorLangEmpty';}
@@ -365,7 +369,7 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
         return $errors;
     }
 
-    public function editEngFormCheck($form){
+    public function editCodeFormCheck($form){
         $errors = array();
         $rights = MOD_right::get();
         $wordLevel = $rights->hasRight('Words');
@@ -373,25 +377,39 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
         switch($form['DOACTION']){
         case 'Submit':
             if ($wordLevel >= 10) {
-                if ($form['EngDesc'] == $form['EngCode'] || $form['EngDesc'] == $form['EngSent']) {
-                    $errors[] = 'AdminWordErrorDescIsCodeSent';
-                }
-                if (empty($form['EngDesc'])){
-                    $errors[] = 'AdminWordErrorDescriptionEmpty';
-                } elseif (strlen($form['EngDesc'])<15){
-                    $errors[] = 'AdminWordErrorDescriptionTooShort';
-                }
-                if (empty($form['EngPrio'])){
-                    $errors[] = 'AdminWordErrorPriorityEmpty';
-                } elseif ($form['EngPrio']<1 || $form['EngPrio']>10) {
-                    $errors[] = 'AdminWordErrorPriorityWrong';
-                }
+                $errors = $this->createCodeFormCheck($form);
             }
             if (empty($form['changetype'])){$errors[] = 'AdminWordErrorChangeTypeEmpty';}
             break;
         case 'Back':
             break;  
         }
+        return $errors;        
+    }
+    
+    public function createCodeFormCheck($form){
+        $errors = array();
+        if (empty($form['EngCode'])){
+            $errors[] = 'AdminWordErrorCodeEmpty';
+        } else {
+            $this->checkWordcodeFormat($form['EngCode'],$errors);
+        }
+        
+        if (empty($form['EngDesc'])){
+            $errors[] = 'AdminWordErrorDescriptionEmpty';
+        } else {
+            if ($form['EngDesc'] == $form['EngCode'] || $form['EngDesc'] == $form['Sentence']) {
+                $errors[] = 'AdminWordErrorDescIsCodeSent';
+            }    
+            if (strlen($form['EngDesc'])<15){
+                $errors[] = 'AdminWordErrorDescriptionTooShort';
+            }
+        }
+        if (empty($form['Sentence'])){
+            $errors[] = 'AdminWordErrorSentenceEmpty';
+        }
+
+        
         return $errors;        
     }
     

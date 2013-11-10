@@ -34,6 +34,11 @@ $words = new MOD_words();
 <ul class="linklist">
   <li><a href="admin/word">AdminWord</a></li>
   <li><a href="admin/word/find">Find Words</a></li>
+<?php
+if ($this->nav['level']>=10){
+?>
+  <li><a href="admin/word/createcode">Create Wordcode</a></li>
+<?php } ?>
   <li><a href="admin/word/stats">Show Stats</a></li>
   <li><b><em><?= $this->nav['currentLanguage'] ?></em> :</b><br></li>
   <li>&nbsp;&nbsp;<a href="admin/word/list/all
@@ -44,5 +49,11 @@ if ($this->nav['shortcode']!='en'){
 ?>
   <li>&nbsp;&nbsp;<a href="admin/word/list/missing">Only Missing</a></li>
   <li>&nbsp;&nbsp;<a href="admin/word/list/update">Update Needed</a></li>
-<?php } ?>
+<?php }
+
+
+
+
+
+?>
 </ul>

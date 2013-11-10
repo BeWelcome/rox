@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
      */
     
 $formkit = $this->layoutkit->formkit;
-$callback_tag = $formkit->setPostCallback('AdminWordController', 'trEditEngCallback');
+$callback_tag = $formkit->setPostCallback('AdminWordController', 'trEditCodeCallback');
 
 $errors = $this->getRedirectedMem('errors');
 if (!empty($errors)) {
@@ -51,57 +51,38 @@ if ($this->noScope){
 
 
 ?>
-You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars($this->formdata['EngCode'])?>
 <form method="post" name="TrEdit">
 <?= $callback_tag ?>
 <table class="admin" border="0">
+
 <?php
+    if (empty($this->formdata['EngCode'])){
+?>
+  <tr><td class="label"><label for="code">Code:</label> </td>
+  <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56"></tr>
+<?php
+    } else {
+?>
+You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars($this->formdata['EngCode'])?>
+<input type=hidden name="Sentence" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>">
+<input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>">
+<input type=hidden name="EngCode" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>">
+<input type=hidden name="lang" value="<?= htmlspecialchars($this->formdata['lang']) ?>">
+<?php
+    }
 
     if ($this->nav['level'] >= 10 ) { 
-    // On Admin Level show extra variables
-?>
-<tr><td>Description :</td><td class="smallXtext">
-<textarea style="margin:0;" cols=60 rows=3 name='EngDesc'><?=$this->formdata['EngDesc']?></textarea><br>
-Make sure the code has a proper description. Make clear where this code shows up,
-in which case it shows up, what the function is of the element where it shows up, etc.<br>
-Describe also the function and possible values of all included placeholders.<br>
-Do NOT copy the wordcode or the English text, that doesn't help anyone.</td></tr>
-    <tr><td>Should this code be translated?</td><td><select name="EngDnt">
-  <option value="no"
-<?php if ($this->formdata['EngDnt'] == "no") echo " selected"; ?>
-    >translatable</option>
-  <option value="yes"
-<?php if ($this->formdata['EngDnt'] == "yes") echo " selected"; ?>
-    >not translatable</option>
-    </select></td></tr><tr>
-<td>Is this code still active?</td><td><select name="isarchived">
-  <option value="0"
-<?php if ($this->formdata['isarchived'] == "0") echo " selected"; ?>
-    >active</option>
-  <option value="1"
-<?php if ($this->formdata['isarchived'] == "1") echo " selected"; ?>
-    >archived</option>
-    </select></td></tr>
-    <tr><td>Translation Priority</td><td><select name="EngPrio">
-<?php
-for ($prio=1;$prio<=10;$prio++){
-    echo '<option value='.$prio;
-    $default = (empty($this->formdata['EngPrio'])?5:$this->formdata['EngPrio']);
-    if ($prio==$default){echo ' selected';}
-    echo '>'.$prio.'</option>';
-}
-?>
-</select>
-<?php } else {
+        // On Admin Level show extra variables
+        include 'adminword.codevarsform.php';
+    } else {
 ?>
     <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>">
     <input type=hidden name=EngPrio value="<?=htmlspecialchars($this->formdata['EngPrio'])?>">
     <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>">
 <?php
-}
+    }
 
-    
-if ($this->status=='update'){
+    if ($this->status=='update'){
     // updating an existing wordcode
 ?>
 <tr><td>What kind of change is this?</td>
@@ -109,7 +90,9 @@ if ($this->status=='update'){
 <input type="radio" name="changetype" value="major"> Major change - old translations are invalidated
 </td></tr>    
 <?php
-    } else echo '<input type=hidden name=changetype value=none>';
+    } else {
+        echo '<input type=hidden name=changetype value=none>';
+    }
 ?>
   <tr>
     <td colspan="2" align="center">
@@ -118,9 +101,5 @@ if ($this->status=='update'){
     </td>
   </tr>
 </table>
-<input type=hidden name="TrSent" value="<?= htmlspecialchars($this->formdata['TrSent']) ?>">
-<input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['TrSent']) ?>">
-<input type=hidden name="EngCode" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>">
-<input type=hidden name="lang" value="<?= htmlspecialchars($this->formdata['lang']) ?>">
 </form>
 <?php    } ?>

@@ -82,10 +82,10 @@ echo '<td>'. str_replace("\n","<br />",
 </tr>
 <tr>
 <td class="label"><label for="Sentence">Translation:</label> </td>
-<td><textarea name="TrSent" id="Sentence" class="long" cols="60"
+<td><textarea name="Sentence" class="long" cols="60"
 <?php
-$NbRows = 3 + strlen($this->formdata['TrSent'])/75;
-echo ' rows='.$NbRows.'>'. htmlspecialchars($this->formdata['TrSent']) .'</textarea></td>';
+$NbRows = 3 + strlen($this->formdata['Sentence'])/75;
+echo ' rows='.$NbRows.'>'. htmlspecialchars($this->formdata['Sentence']) .'</textarea></td>';
 ?>
   </tr>
   <tr>

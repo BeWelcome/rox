@@ -14,6 +14,12 @@ textarea {margin-bottom: 1em;}
     background-color: #ffaf5f;
 }
 
+.awstatscol {
+    vertical-align:top;
+    border-left:1px solid grey;
+}
+
+
 #awlistlimit {
     font-weight:bold;
 }

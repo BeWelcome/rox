@@ -31,8 +31,10 @@ Boston, MA  02111-1307, USA.
      */
 ?>
 
-  <table class="awstatstable">
+  <table class="awstatstable"><tr><td valign=top><table>
 <?php
+    $split = round(count($this->data)/3+0.5);
+    $cnt = 0;
     foreach ($this->data as $dat) {
         echo '<tr class="awstatsrow';
         // mark languages that are within scope
@@ -40,6 +42,8 @@ Boston, MA  02111-1307, USA.
         echo '"><td>'.htmlspecialchars($dat['name']).'</td><td>';
         printf("%01.1f", (float)$dat['perc']);
         echo  '% done</td></tr>';
+        $cnt++;
+        if ($cnt % $split == 0){echo '</table></td><td class="awstatscol"><table>';}
     }
 ?>
-</table>
+</table></td></tr></table>

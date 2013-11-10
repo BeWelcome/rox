@@ -472,7 +472,8 @@ class SuggestionsModel extends RoxModelBase
                                     . $args->post['suggestion-option-desc'] . '</p>';
                 }
             }
-            $postId = $this->addPost($this->getLoggedInMember(), $editPostText, $suggestion->threadId);
+            $poster = $this->getLoggedInMember()->id;
+            $postId = $this->addPost($poster, $editPostText, $suggestion->threadId);
 
             $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
             $result = $this->dao->query($query);

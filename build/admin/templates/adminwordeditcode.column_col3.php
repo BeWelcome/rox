@@ -65,7 +65,7 @@ if ($this->noScope){
 ?>
 You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars($this->formdata['EngCode'])?>
 <input type=hidden name="Sentence" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>">
-<input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>">
+<input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['EngSent']) ?>">
 <input type=hidden name="EngCode" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>">
 <input type=hidden name="lang" value="<?= htmlspecialchars($this->formdata['lang']) ?>">
 <?php

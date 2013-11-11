@@ -53,7 +53,7 @@ if ($this->noScope){
 </tr></table>
 </p>
 <?php
-    if (substr($this->type,-1,1)!='x'){
+    if ($this->filter == 'short'){
 ?>
 <span id="awlistlimit">This list only contains items created at least 7 days ago and updated at most 6 months ago.</span>
 <a href="admin/word/list/<?= htmlspecialchars($this->type); ?>/long">Remove this limitation</a>

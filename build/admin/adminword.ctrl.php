@@ -307,6 +307,7 @@ class AdminWordController extends RoxControllerBase
     public function showList(){
         $page = new AdminWordShowListPage;
         $page->type = $this->args_vars->request[3];
+        $page->filter = $this->args_vars->request[4];        
         $page->nav = $this->getNavigationData();
         $page->langarr = $this->model->getLangarr($page->nav['scope']);
         
@@ -316,7 +317,7 @@ class AdminWordController extends RoxControllerBase
             $page->noScope = false;
             $page->stat = $this->getStatistics($page->nav['idLanguage']);
             $page->data = $this->model->getTranslationData($page->type,
-                                                            $this->args_vars->request[4],
+                                                            $page->filter,
                                                             $page->nav['shortcode']);
         }
         return $page;

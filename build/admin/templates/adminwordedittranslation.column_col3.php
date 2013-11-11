@@ -38,7 +38,7 @@ if ($this->noScope){
     $vars = $this->getRedirectedMem('vars');
    
     $formkit = $this->layoutkit->formkit;
-    $callback_tag = $formkit->setPostCallback('AdminWordController', 'trEditCreateCallback');
+    $callback_tag = $formkit->setPostCallback('AdminWordController', 'EditTranslationCallback');
     
     $errors = $this->getRedirectedMem('errors');
     if (!empty($errors)) {

@@ -24,20 +24,34 @@ Boston, MA  02111-1307, USA.
      */
 
     /** 
-     * words management overview page
+     * words management translationlist page
      * 
      * @package Apps
      * @subpackage Admin
      */
-
-class AdminWordFindPage extends AdminWordBasePage
+class AdminWordShowListPage extends AdminWordBasePage
 {
+    /*
+     * create custom teaser
+     *
+     * @access public
+     * @return string
+     */
     public function teaserHeadline()
     {
         $string = 'AdminWord';
         $string .= ' » '.$this->nav['currentLanguage'];
-        $string .= ' » Find Words';
+        switch ($this->type){
+            case 'all' :
+                $string .= ' » All words';
+                break;
+            case 'missing' :
+                $string .= ' » Missing';
+                break;
+            case 'update' :
+                $string .= ' » Update needed';
+                break;
+        }
         return $string;
     }
-    
 }

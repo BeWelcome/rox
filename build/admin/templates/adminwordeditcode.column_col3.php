@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
      */
     
 $formkit = $this->layoutkit->formkit;
-$callback_tag = $formkit->setPostCallback('AdminWordController', 'trEditCodeCallback');
+$callback_tag = $formkit->setPostCallback('AdminWordController', 'editCodeCallback');
 
 $errors = $this->getRedirectedMem('errors');
 if (!empty($errors)) {

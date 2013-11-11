@@ -20,18 +20,23 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /** 
-     * @author crumbking
+     * @author Tsjoek
      */
 
     /** 
-     * words management overview page
+     * words management language statistics page
      * 
      * @package Apps
      * @subpackage Admin
      */
-
-class AdminWordStatsPage extends AdminWordBasePage
+class AdminWordShowStatisticsPage extends AdminWordBasePage
 {
+    /*
+     * create custom teaser
+     *
+     * @access public
+     * @return string
+     */
     public function teaserHeadline()
     {
         $string = 'AdminWord';

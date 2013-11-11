@@ -38,7 +38,7 @@ class AdminWordModel extends RoxModelBase
     /*
      * Calculate the summed length of all translatable English wordcodes
      *
-     * This is used as the divisor for the stats calculation
+     * This is used as the divisor for the statistics calculation
      *
      * @return object Queryresult
      */
@@ -56,7 +56,7 @@ WHERE IdLanguage=0 AND (NOT donottranslate='yes')
      * Calculate the summed length of all translated English wordcodes
      *
      * For each language the total length of the English texts of the items that
-     * are translated in the language.
+     * are translated in the language. Used to calculate translation statistics
      *
      * @param int idLanguage Languageid to be used when only 1 language is selected
      * @return object Modified queryresult
@@ -86,6 +86,13 @@ ORDER BY SUM(LENGTH(w2.sentence)) DESC';
         return $this->BulkLookup($sql);
     }
     
+    /*
+     * Fetch translations from database according to searchparameters
+     *
+     * @access public
+     * @param array $params Array of searchparameters
+     * @return array Queryresult
+     */
     public function getFindData($params){
         $codeSelect = '';    
         $descSelect = '';    
@@ -217,12 +224,29 @@ ORDER BY EngUpdated DESC
     return $data;
     }
     
+    /*
+     * Fetch wordcode for any given translation id
+     *
+     * @access public
+     * @param integer $id translationid
+     * @return object Queryresult
+     */
     public function getWordcodeById($id){
         $sql = 'SELECT code FROM words WHERE id=' . (int)$id;
         $query = $this->dao->query($sql);
         return $query->fetch(PDB::FETCH_OBJ);
     }
     
+    /*
+     * Count number of times a wordcode exists in a language
+     *
+     * The cnt attribute of the returnobject should be 0 or 1
+     * 
+     * @access public
+     * @param string $code Wordcode
+     * @param string $shortcode Language shortcode
+     * @return object Queryresult
+     */
     public function wordcodeExist($code,$shortcode){
         $sql = '
 SELECT count(*) cnt
@@ -233,6 +257,15 @@ WHERE code="' . $this->dao->escape($code) . '"
         return $query->fetch(PDB::FETCH_OBJ);
     }
     
+    /*
+     * Fetch languages within scope from database
+     *
+     * A language should also be a WrittenLanguage
+     *
+     * @access public
+     * @param string $scope Value of scope field from rightstable
+     * @return array Array of shortcodes
+     */
     public function getLangarr($scope){
         $sql = "SELECT * FROM languages WHERE ";
         if (strpos($scope, "All") === false) {
@@ -256,18 +289,32 @@ WHERE code="' . $this->dao->escape($code) . '"
         return $langarr;
     }
     
+    /*
+     * Perform update when this-is-ok button is clicked
+     *
+     * Only set the timestamp forward
+     *
+     * @access public
+     * @param integer $id Translationid
+     */
     public function updateNoChanges($id){
         $sql = 'UPDATE words SET updated = NOW() WHERE id = '.(int)$id;
         $this->dao->query($sql);
     }
-    
-    public function updateSingleTranslation($form){
-        
+
+    /*
+     * Perform update after submitting one of the translation edit forms
+     *
+     * @access public
+     * @param array $form Content of the submitted form
+     * @return array Array: 0 => inserted ID, 1 => affected rows
+     */    
+    public function updateSingleTranslation($form){ 
         $eng_ins = '';
         $eng_upd = '';
         $desc = '';
         $changeInAll = '';        
-            
+ 
         if ($form['lang']=='en'){
             $eng_ins = 'majorupdate = now(),';
             if (isset($form['changetype'])){
@@ -307,8 +354,8 @@ ON DUPLICATE KEY UPDATE
         $this->dao->query($sql);
         $returnval = array(mysql_insert_id(),mysql_affected_rows());
         
-// update dnt,isarchived and TP for all translations,
-// but do not change the update moment for the other languages
+    // update dnt,isarchived and TP for all translations,
+    // but do not change the update moment for the other languages
         if (count($changeInAll)>0){
             $sql = '
 UPDATE words
@@ -320,13 +367,70 @@ WHERE code = "'.$form["EngCode"].'"
         return $returnval;
     }
 
-    private function checkWordcodeFormat($code,&$errors){
-        if (!preg_match('#^[a-z][-a-z0-9_]+[a-z0-9]$#i',$code)){
-            $errors[] = 'AdminWordErrorBadCodeFormat';
+    /*
+     * Check if form at createCode page contains well formatted data
+     *
+     * @access public
+     * @param array $form Content of the submitted form
+     * @return array Array of wordcodes of the error messages that need to be thrown
+     */    
+    public function createCodeFormCheck($form){
+        $errors = array();
+        if (empty($form['EngCode'])){
+            $errors[] = 'AdminWordErrorCodeEmpty';
+        } else {
+            $this->checkWordcodeFormat($form['EngCode'],$errors);
         }
+        
+        if (empty($form['EngDesc'])){
+            $errors[] = 'AdminWordErrorDescriptionEmpty';
+        } else {
+            if ($form['EngDesc'] == $form['EngCode'] || $form['EngDesc'] == $form['Sentence']) {
+                $errors[] = 'AdminWordErrorDescIsCodeSent';
+            }    
+            if (strlen($form['EngDesc'])<15){
+                $errors[] = 'AdminWordErrorDescriptionTooShort';
+            }
+        }
+        if (empty($form['Sentence'])){
+            $errors[] = 'AdminWordErrorSentenceEmpty';
+        }
+        return $errors;        
     }
 
-    public function editFormCheck($form){
+    /*
+     * Check if form at editCode page contains well formatted data
+     *
+     * @access public
+     * @param array $form Content of the submitted form
+     * @return array Array of wordcodes of the error messages that need to be thrown
+     */    
+    public function editCodeFormCheck($form){
+        $errors = array();
+        $rights = MOD_right::get();
+        $wordLevel = $rights->hasRight('Words');
+ 
+        switch($form['DOACTION']){
+        case 'Submit':
+            if ($wordLevel >= 10) {
+                $errors = $this->createCodeFormCheck($form);
+            }
+            if (empty($form['changetype'])){$errors[] = 'AdminWordErrorChangeTypeEmpty';}
+            break;
+        case 'Back':
+            break;  
+        }
+        return $errors;        
+    }
+
+    /*
+     * Check if form at editTranslation page contains well formatted data
+     *
+     * @access public
+     * @param array $form Content of the submitted form
+     * @return array Array of wordcodes of the error messages that need to be thrown
+     */    
+    public function editTranslationFormCheck($form){
         $errors = array();
         if (empty($form['EngCode'])){
             $errors[] = 'AdminWordErrorCodeEmpty';
@@ -353,7 +457,15 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
         if (empty($form['lang'])){$errors[] = 'AdminWordErrorLangEmpty';}
         return $errors;
     }
-    public function findFormCheck($form){
+
+    /*
+     * Check if form at findTranslations page contains well formatted data
+     *
+     * @access public
+     * @param array $form Content of the submitted form
+     * @return array Array of wordcodes of the error messages that need to be thrown
+     */    
+    public function findTranslationsFormCheck($form){
         $errors = array();
         if (!preg_match('#(?![_])[\w]#u',$form['EngCode'])
             && !preg_match('#(?![_])[\w]#u',$form['EngDesc'])
@@ -363,48 +475,16 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
         return $errors;
     }
 
-    public function editCodeFormCheck($form){
-        $errors = array();
-        $rights = MOD_right::get();
-        $wordLevel = $rights->hasRight('Words');
- 
-        switch($form['DOACTION']){
-        case 'Submit':
-            if ($wordLevel >= 10) {
-                $errors = $this->createCodeFormCheck($form);
-            }
-            if (empty($form['changetype'])){$errors[] = 'AdminWordErrorChangeTypeEmpty';}
-            break;
-        case 'Back':
-            break;  
+    /*
+     * Check if format of given wordcode is wellformed
+     *
+     * @access private
+     * @param string $code Wordcode
+     * @param array $errors Array of already collected error messages
+     */    
+    private function checkWordcodeFormat($code,&$errors){
+        if (!preg_match('#^[a-z][-a-z0-9_]+[a-z0-9]$#i',$code)){
+            $errors[] = 'AdminWordErrorBadCodeFormat';
         }
-        return $errors;        
     }
-    
-    public function createCodeFormCheck($form){
-        $errors = array();
-        if (empty($form['EngCode'])){
-            $errors[] = 'AdminWordErrorCodeEmpty';
-        } else {
-            $this->checkWordcodeFormat($form['EngCode'],$errors);
-        }
-        
-        if (empty($form['EngDesc'])){
-            $errors[] = 'AdminWordErrorDescriptionEmpty';
-        } else {
-            if ($form['EngDesc'] == $form['EngCode'] || $form['EngDesc'] == $form['Sentence']) {
-                $errors[] = 'AdminWordErrorDescIsCodeSent';
-            }    
-            if (strlen($form['EngDesc'])<15){
-                $errors[] = 'AdminWordErrorDescriptionTooShort';
-            }
-        }
-        if (empty($form['Sentence'])){
-            $errors[] = 'AdminWordErrorSentenceEmpty';
-        }
-
-        
-        return $errors;        
-    }
-    
 }

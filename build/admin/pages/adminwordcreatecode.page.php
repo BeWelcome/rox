@@ -24,18 +24,22 @@ Boston, MA  02111-1307, USA.
      */
 
     /** 
-     * words management overview page
+     * words management create wordcode page
      * 
      * @package Apps
      * @subpackage Admin
      */
-
-class AdminWordCreateCodePage extends AdminWordEditPage
+class AdminWordCreateCodePage extends AdminWordBasePage
 {
+    /*
+     * create custom teaser
+     *
+     * @access public
+     * @return string
+     */
     public function teaserHeadline(){
         $string = 'AdminWord';
         $string .= ' » Create WordCode';
         return $string;
     }
-    
 }

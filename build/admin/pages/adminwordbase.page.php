@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
      */
 
     /** 
-     * words management translationlist page
+     * words management base page
      * 
      * @package Apps
      * @subpackage Admin
@@ -32,16 +32,33 @@ Boston, MA  02111-1307, USA.
 
 class AdminWordBasePage extends PageWithActiveSkin
 {
-    protected $purifier;
-    public $formdata = array();
+    protected $purifier; // instance of html-purifier
+    public $formdata = array(); // data collected from the form
     
     public function __construct($model = false) {
         parent::__construct();
         $this->purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
     }
     
+    /*
+     * default browsertab title
+     *
+     * @access protected
+     * @return string
+     */
     protected function getPageTitle() {
         return 'Words management | BeWelcome';
+    }
+
+    /*
+     * create default teaser
+     *
+     * @access public
+     * @return string
+     */
+    public function teaserHeadline(){
+        $string = 'AdminWord';
+        return $string;
     }
 
     protected function leftSidebar() {
@@ -59,7 +76,12 @@ class AdminWordBasePage extends PageWithActiveSkin
     if ($this->nav['scope']=='"All"'){
         return 'All';
     } else {
-        array_map(function ($lng){echo $this->words->get('lang_'.$lng->ShortCode).' ';},$this->langarr);
+        array_map(
+            function ($lng){
+                echo $this->words->get('lang_'.$lng->ShortCode).' ';
+            }
+            ,$this->langarr
+        );
     }
     }
 

@@ -3,7 +3,7 @@
     $vars = $this->getRedirectedMem('vars');
    
     $formkit = $this->layoutkit->formkit;
-    $callback_tag = $formkit->setPostCallback('AdminWordController', 'trFindCallback');
+    $callback_tag = $formkit->setPostCallback('AdminWordController', 'findTranslationsCallback');
     
     $errors = $this->getRedirectedMem('errors');
     if (!empty($errors)) {

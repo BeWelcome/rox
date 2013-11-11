@@ -20,16 +20,28 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /** 
-     * @author crumbking  
+     * @author Tsjoek
      */
 
     /** 
-     * words management overview template
+     * words management overview page
      * 
      * @package Apps
      * @subpackage Admin
      */
-?>
-<?php
-?>
-New words management tool. Yeah!
+class AdminWordFindTranslationsPage extends AdminWordBasePage
+{
+    /*
+     * create custom teaser
+     *
+     * @access public
+     * @return string
+     */
+    public function teaserHeadline()
+    {
+        $string = 'AdminWord';
+        $string .= ' » '.$this->nav['currentLanguage'];
+        $string .= ' » Find Words';
+        return $string;
+    }
+}

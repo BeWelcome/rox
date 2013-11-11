@@ -41,14 +41,19 @@ if ($this->nav['level']>=10){
 <?php } ?>
   <li><a href="admin/word/stats">Show Stats</a></li>
   <li><b><em><?= $this->nav['currentLanguage'] ?></em> :</b><br></li>
-  <li>&nbsp;&nbsp;<a href="admin/word/list/all
-<?php if ($this->nav['shortcode']=='en'){echo 'x';} ?>
+  <li>&nbsp;&nbsp;<a href="admin/word/list/all/
+<?php if ($this->nav['idLanguage']==0){
+        echo 'long';
+    } else {
+        echo 'short';
+    }
+?>
   ">All Words</a></li>
 <?php
-if ($this->nav['shortcode']!='en'){
+if ($this->nav['idLanguage']>0){
 ?>
-  <li>&nbsp;&nbsp;<a href="admin/word/list/missing">Only Missing</a></li>
-  <li>&nbsp;&nbsp;<a href="admin/word/list/update">Update Needed</a></li>
+  <li>&nbsp;&nbsp;<a href="admin/word/list/missing/short">Only Missing</a></li>
+  <li>&nbsp;&nbsp;<a href="admin/word/list/update/short">Update Needed</a></li>
 <?php }
 
 

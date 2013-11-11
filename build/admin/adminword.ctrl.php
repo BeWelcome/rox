@@ -152,9 +152,9 @@ class AdminWordController extends RoxControllerBase
         $page->nav = $this->getNavigationData();
         $page->langarr = $this->_model->getLangarr($page->nav['scope']);
         // default language can be overridden through url
-        if (isset($this->route_vars['shortcode'])){
-            $nav['shortcode'] = $this->route_vars['shortcode'];
-        }
+        //if (isset($this->route_vars['shortcode'])){
+        //    $nav['shortcode'] = $this->route_vars['shortcode'];
+        //}
         $page->formdata = $this->getFormData(array('EngCode','EngDesc','Sentence','lang'),$page->nav);
         return $page;
     }
@@ -177,7 +177,9 @@ class AdminWordController extends RoxControllerBase
         if (isset($this->route_vars['wordcode'])){
             // specific wordcode selected
             $wordcode = $this->route_vars['wordcode'];
-            $this->data = $this->_model->getTranslationData('edit',$page->nav['shortcode'],$wordcode);
+            $data = $this->_model->getTranslationData('edit','',$page->nav['shortcode'],$wordcode);
+            if (!isset($data->EngCode)){$data->EngCode = $wordcode;}
+            $this->data = $data;
         } else {
             // no wordcode selected
             $wordcode = false;
@@ -196,7 +198,7 @@ class AdminWordController extends RoxControllerBase
      */
     public function showList(){
         $page = new AdminWordListPage;
-        $page->type = $this->route_vars['type'];
+        $page->type = $this->args_vars->request[3];
         $page->nav = $this->getNavigationData();
         $page->langarr = $this->_model->getLangarr($page->nav['scope']);
 
@@ -205,7 +207,9 @@ class AdminWordController extends RoxControllerBase
         } else {
             $page->noScope = false;
             $page->stat = $this->getStatistics($page->nav['idLanguage']);
-            $page->data = $this->_model->getTranslationData($page->type,$page->nav['shortcode']);
+            $page->data = $this->_model->getTranslationData($page->type,
+                                                            $this->args_vars->request[4],
+                                                            $page->nav['shortcode']);
         }
         return $page;
     }
@@ -362,7 +366,8 @@ class AdminWordController extends RoxControllerBase
             $_SESSION['form']['TrSent'] = $args->post['TrSent'];
             return $this->router->url('admin_word_editone', array('wordcode'=>$args->post['EngCode'],'shortcode'=>$args->post['lang']), false);
         }
-        return $this->router->url('admin_word_editempty', array(), false);
+        return $this->router->url('admin_word_editlang', array('wordcode'=>$args->post['EngCode'],'shortcode'=>'en'), false);
+        //return $this->router->url('admin_word_editempty', array(), false);
     }
 
     public function trCreateCodeCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){

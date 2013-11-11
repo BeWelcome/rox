@@ -103,7 +103,12 @@
     $this->addRoute('admin_word_editlang', 'admin/word/edit/:wordcode:/:shortcode:', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_create', 'admin/word/createcode', 'AdminWordController', 'createWordcode');
     $this->addRoute('admin_word_code', 'admin/word/editcode','AdminWordController','editWordcode');
-    $this->addRoute('admin_word_list', 'admin/word/list/:type:', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listal', 'admin/word/list/all/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listas', 'admin/word/list/all/short', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listml', 'admin/word/list/missing/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listms', 'admin/word/list/missing/short', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listul', 'admin/word/list/update/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listus', 'admin/word/list/update/short', 'AdminWordController', 'showList');
     $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
     $this->addRoute('admin_word_find', 'admin/word/find', 'AdminWordController','findTranslations');
        

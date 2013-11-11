@@ -125,19 +125,13 @@ ORDER BY w1.code,w2.shortcode';
      * @param string $wordcode Wordcode to select on
      * @return object Queryresult
      */    
-    public function getTranslationData($type,$shortcode,$wordcode = false){
-        switch ($type) {
-        case 'all'     :
-        case 'missing' :
-        case 'update'  :
+    public function getTranslationData($type,$limit,$shortcode,$wordcode = false){
+        if ($limit == 'short'){
             $dateSelect1 = ' AND datediff(now(),w1.created) > 6 AND datediff(now(),w1.updated) < 183';
             $dateSelect2 = ' AND datediff(now(),w3.created) > 6 AND datediff(now(),w3.updated) < 183';            
-            break;
-        case 'edit'    :
-        default        :
+        } else {
             $dateSelect1 = '';
             $dateSelect2 = '';
-            break;
         }
         if ($wordcode){
             // select by wordcode if wordcode is given
@@ -215,8 +209,8 @@ ORDER BY EngUpdated DESC
             foreach ($listing as $key => $item){
                 $item->missing = ($item->TrId?false:true);
                 $item->update  = ($item->TrId && $item->EngUpdated > $item->TrUpdated?true:false);
-                if (($type == 'missing' || $type == 'missingx') && !$item->missing) {continue;}
-                if (($type == 'update' || $type == 'updatex') && !$item->update) {continue;}
+                if ($type == 'missing' && !$item->missing) {continue;}
+                if ($type == 'update' && !$item->update) {continue;}
                 $data[$key] = $item;
         }   }
 

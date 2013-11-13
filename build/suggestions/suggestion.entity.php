@@ -50,7 +50,7 @@ class Suggestion extends RoxEntityBase
                     $optionsFactory->sql_order = "RAND()";
                     break;
             	case SuggestionsModel::SUGGESTIONS_RANKING:
-            	    $optionsFactory->sql_order = "`order` DESC";
+            	    $optionsFactory->sql_order = "`orderHint` DESC";
             	    $optionsWhere = " AND `rank` > 2";
             	    break;
             	default:
@@ -86,12 +86,11 @@ class Suggestion extends RoxEntityBase
                             . $this->id . " AND memberHash = '" . $hash . "' ORDER BY rank DESC";
                 $sql = $this->dao->query($query);
                 if ($sql) {
-                    $votes = array();
+                    $memberVotes = array();
                     while($row = $sql->fetch(PDB::FETCH_OBJ)) {
-                        $votes[$row->optionId] = $row;
+                        $memberVotes[$row->optionId] = $row;
                     }
-                    $this->votes = $votes;
-                    error_log(print_r($votes, true));
+                    $this->memberVotes = $memberVotes;
                 }
             }
 
@@ -148,10 +147,14 @@ class Suggestion extends RoxEntityBase
     public function update($status = false) {
         if ($status) {
             $this->laststatechanged = date('Y-m-d');
-            switch ($state) {
+            switch ($this->state) {
+                case SuggestionsModel::SUGGESTIONS_RANKING:
+                    $this->notifyVotingStarted();
+                    break;
                 case SuggestionsModel::SUGGESTIONS_RANKING:
                     $this->calculateResults();
-                break;
+                    $this->state = SuggestionsModel::SUGGESTIONS_VOTING;
+                    break;
             }
             return parent::update();
         } else {
@@ -297,14 +300,19 @@ class Suggestion extends RoxEntityBase
     }
 
     private function calculateResults() {
+        $entityFactory = new RoxEntityFactory();
+
         $ranks = $this->getRanks();
-        $count = $this->voteCount; // $count / count($ranks);
+        $count = $this->voteCount;
 
         // Calculate medians for all options
         $medians = $this->calculateMedians($ranks, $count);
         asort($medians);
 
         // Now break ties for the different medians
+        // Hint: Majority judgement would only break the tie for the best rank
+        // as we allow options that overlap we need to break tie for all ranks
+        // to get a meaningful order
         $ties = array();
         foreach($medians as $optionId => $median) {
             if (!isset($ties[$median])) {
@@ -317,10 +325,15 @@ class Suggestion extends RoxEntityBase
             $optionIds = $this->breakTie($tie, $count);
             $orderedOptionIds = array_merge($orderedOptionIds, $optionIds);
         }
+        $orderedOptionIds = array_reverse($orderedOptionIds, true);
+        $rankNames = SuggestionsModel::getRanksAsArray();
 
-        $count = 0;
-        $countOptions = count($this->options);
+        $postText = '<p>Voting for \'' . $this->summary . '\' is no longer possible.</p>';
+        $postText .= '<p>Number of votes given: ' . $this->voteCount . '</p>';
+        $postText .= '<p>Detailed results:</p>';
+        $postText .= '<table id="votingresults"><tr><th class="description">Option</th><th class="results" colspan="2">Results</th><th class="rank">Rank</th></tr>';
         foreach($orderedOptionIds as $order => $optionId) {
+            $option = $entityFactory->create('SuggestionOption')->findById($optionId);
             $query = "
             UPDATE
                 suggestions_options
@@ -330,7 +343,25 @@ class Suggestion extends RoxEntityBase
             WHERE
                 `id` = " . $optionId;
             $this->dao->query($query);
+            foreach($rankNames as $rank => $rankName) {
+                if ($rank == 4) {
+                    $postText .= '<tr><td class="description" rowspan="4">' . $option->summary . '</td>'
+                        . '<td class="resultsleft">' . $rankName . ':</td><td class="resultsright">'
+                        . $ranks[$optionId][$rank] . '</td><td class="rank" rowspan="4">' . $rankNames[$medians[$optionId]]
+                        . '</td></tr>';
+                } else {
+                    $postText .= '<tr><td class="resultsleft">' . $rankName . ':</td><td class="resultsright">'
+                        . $ranks[$optionId][$rank] . '</td></tr>';
+                }
+            }
         }
+        $postText .= '</table>';
+
+        $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
+        $suggestions = new SuggestionsModel();
+        $postId = $suggestions->addPost($suggestionsTeam->id, $postText, $this->threadId);
+        $suggestions->setForumNotifications($postId, 'reply');
+
         return true;
     }
 }

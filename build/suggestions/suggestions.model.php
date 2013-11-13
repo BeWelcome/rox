@@ -34,8 +34,18 @@ class SuggestionsModel extends RoxModelBase
                     self::SUGGESTIONS_IMPLEMENTED => 'SuggestionsImplemented',
     );
 
-    public static function getStatesByArray() {
+    public static function getStatesAsArray() {
         return self::$STATES;
+    }
+
+    public static function getRanksAsArray() {
+        $words = new MOD_words();
+        return array(
+            4 => $words->getBufferedInLang('SuggestionsExcellent', 'en'),
+            3 => $words->getBufferedInLang('SuggestionsGood', 'en'),
+            2 => $words->getBufferedInLang('SuggestionsFair', 'en'),
+            1 => $words->getBufferedInLang('SuggestionsPoor', 'en')
+        );
     }
 
     const DESCRIPTION_MAX_LEN = 65000;
@@ -302,13 +312,14 @@ class SuggestionsModel extends RoxModelBase
                                     . $args->post['suggestion-description'] . '</p>';
                 }
             }
-            $postId = $this->addPost($suggestion->modifiedby, $editPostText, $suggestion->threadId);
+            if (!isset($args->post['suggestion-minor-edit'])) {
+                $postId = $this->addPost($suggestion->modifiedby, $editPostText, $suggestion->threadId);
+                $this->setForumNotification($postId, "reply");
+            }
 
             $suggestion->summary = $args->post['suggestion-summary'];
             $suggestion->description = $args->post['suggestion-description'];
             $suggestion->update();
-
-            $this->setForumNotification($postId, "reply");
         }
 
         return $suggestion;
@@ -473,18 +484,19 @@ class SuggestionsModel extends RoxModelBase
                                     . $args->post['suggestion-option-desc'] . '</p>';
                 }
             }
-            $poster = $this->getLoggedInMember()->id;
-            $postId = $this->addPost($poster, $editPostText, $suggestion->threadId);
+            if (!isset($args->post['suggestion-minor-edit'])) {
+                $poster = $this->getLoggedInMember()->id;
+                $postId = $this->addPost($poster, $editPostText, $suggestion->threadId);
 
-            $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
-            $result = $this->dao->query($query);
+                $query = sprintf("UPDATE `forums_posts` SET `threadid` = '%d' WHERE `postid` = '%d'", $suggestion->threadId, $postId);
+                $result = $this->dao->query($query);
 
+                $this->setForumNotification($postId, "reply");
+            }
             $suggestion->editOption($optionId, $args->post['suggestion-option-summary'], $args->post['suggestion-option-desc']);
             $suggestion->modified = date('Y-m-d');
             $suggestion->modifiedby = $this->getLoggedInMember()->id;
             $suggestion->update();
-
-            $this->setForumNotification($postId, "reply");
         }
         return $suggestion;
     }
@@ -600,6 +612,20 @@ class SuggestionsModel extends RoxModelBase
         return $suggestion;
     }
 
+    public function setExclusions($member, $args) {
+        $optionKeys = array_filter(array_keys($args->post), array($this, 'filterOptions'));
+        foreach($optionKeys as $optionKey) {
+            $optionId = str_replace('option', '', $optionKey);
+            $option = new SuggestionOption($optionId);
+            $mutuallyExclusive = implode(',', $args->post[$optionKey]);
+            $option->mutuallyExclusiveWith = $mutuallyExclusive;
+            $option->update();
+        }
+
+        $suggestion = new Suggestion($args->post['suggestion-id']);
+        return $suggestion;
+    }
+
     public function checkChangeStateVarsOk($args) {
         $errors = array();
         $newstate = $args->post['suggestion-state'];
@@ -631,8 +657,6 @@ class SuggestionsModel extends RoxModelBase
                 $suggestion->votingend = date('Y-m-d', time() + self::DURATION_VOTING);
                 break;
             case self::SUGGESTIONS_RANKING:
-                $suggestion->state = SUGGESTIONS_VOTING;
-
                 break;
         }
         $suggestion->update(true);

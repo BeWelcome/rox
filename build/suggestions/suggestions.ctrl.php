@@ -115,21 +115,6 @@ class SuggestionsController extends RoxControllerBase
         return $pager;
     }
 
-    public function voteSuggestionCallback(StdClass $args, ReadOnlyObject $action,
-        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
-    {
-        $errors = $this->_model->checkVoteSuggestion($args);
-        if (!empty($errors)) {
-            $mem_redirect->errors = $errors;
-            $mem_redirect->vars = $args->post;
-            return false;
-        }
-        $member = $this->_model->getLoggedInMember();
-        $suggestion = $this->_model->voteForSuggestion($member, $args);
-        $this->setFlashNotice($this->getWords()->get('SuggestionsVoted', $suggestion->nextstatechange));
-        return true;
-    }
-
     public function editCreateSuggestionCallback(StdClass $args, ReadOnlyObject $action,
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
@@ -389,6 +374,21 @@ class SuggestionsController extends RoxControllerBase
         return $page;
     }
 
+    public function voteSuggestionCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $errors = $this->_model->checkVoteSuggestion($args);
+        if (!empty($errors)) {
+            $mem_redirect->errors = $errors;
+            $mem_redirect->vars = $args->post;
+            return false;
+        }
+        $member = $this->_model->getLoggedInMember();
+        $suggestion = $this->_model->voteForSuggestion($member, $args);
+        $this->setFlashNotice($this->getWords()->get('SuggestionsVoted', $suggestion->nextstatechange));
+        return true;
+    }
+
     public function vote() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_VOTING);
@@ -401,6 +401,25 @@ class SuggestionsController extends RoxControllerBase
         } else {
             $this->setFlashNotice('SuggestionsNotLoggedIn');
         }
+        $page->suggestion = $suggestion;
+        return $page;
+    }
+
+    public function excludeCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $member = $this->_model->getLoggedInMember();
+        $suggestion = $this->_model->setExclusions($member, $args);
+        $this->setFlashNotice($this->getWords()->get('SuggestionsExclusionsSet'));
+        return true;
+    }
+
+    public function exclude() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_VOTING);
+        $id = $this->route_vars['id'];
+        $suggestion = new Suggestion($id);
+        $page = new SuggestionsExcludePage($loggedInMember);
         $page->suggestion = $suggestion;
         return $page;
     }

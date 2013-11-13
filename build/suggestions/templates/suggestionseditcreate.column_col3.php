@@ -58,14 +58,19 @@ if (!empty($errors)) {
         <textarea id="suggestion-description" name="suggestion-description" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-description']; ?></textarea>
     </div>
     <div class="subcolumns row">
-        <?php
+    <?php
         if ($vars['suggestion-id'] != 0) {
-             $suggestionseditcreatebutton = $words->getSilent('SuggestionsEditCreateUpdate');
+             $suggestionseditcreatebutton = $words->getSilent('SuggestionsEditCreateUpdate'); ?>
+                <div class="float_left">
+                    <input type="checkbox" name="suggestion-minor-edit" id="suggestion-minor-edit" value="1">
+                    <label for="suggestion-minor-edit"><?php echo $words->get('suggestionMinorEdit'); ?></label>
+                </div>
+    <?php
         } else {
              $suggestionseditcreatebutton = $words->getSilent('SuggestionsSubmit');
         }
         ?>
-        <input type="submit" id="suggestion-submit" name="suggestion-submit" value="<?php echo $suggestionseditcreatebutton; ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" id="suggestion-submit" name="suggestion-submit" value="<?php echo $suggestionseditcreatebutton; ?>" class="submit float_right" /><?php echo $words->flushBuffer(); ?>
     </div>
 </form>
 </fieldset>

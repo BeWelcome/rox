@@ -21,7 +21,7 @@ switch($suggestion->state) {
             . $suggestion->id . '/addoptions">' . $words->getBuffered('SuggestionsAddOptions') . '</a></td>';
         break;
 	case SuggestionsModel::SUGGESTIONS_VOTING:
-	    if (count($suggestion->votes)) {
+	    if (count($suggestion->memberVotes)) {
             echo '<td class="details"><a href="suggestions/' . $suggestion->id . '/vote">'
                 . '<img src="images/icons/tick.png" alt="' . $words->getBuffered('SuggestionsReviewVote') . '" /></a><br /><a href="suggestions/'
                 . $suggestion->id . '/vote">' . $words->getBuffered('SuggestionsReviewVote') . '</a></td>';

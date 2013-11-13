@@ -111,7 +111,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
     protected function getStateSelect($state) {
         $select = '<select id="suggestion-state" name="suggestion-state">';
         $words = $this->getWords();
-        $states = SuggestionsModel::getStatesByArray();
+        $states = SuggestionsModel::getStatesAsArray();
         foreach($states as $key => $wordCode) {
             $select .= '<option value="' . $key . '"';
             if ($key == $state) {

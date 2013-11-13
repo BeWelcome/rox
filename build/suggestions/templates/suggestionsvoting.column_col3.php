@@ -13,7 +13,7 @@ if (empty($vars)) {
     $vars['suggestion-id'] = $this->suggestion->id;
     $vars['suggestion-summary'] = $this->suggestion->summary;
     $vars['suggestion-description'] = $this->suggestion->description;
-    if (count($this->suggestion->votes) == 0) {
+    if (count($this->suggestion->memberVotes) == 0) {
         $votes = array();
         foreach($this->suggestion->options as $option) {
             $vars['option' . $option->id . 'rank'] = 0;
@@ -21,14 +21,14 @@ if (empty($vars)) {
             $vote->rank = 0;
             $votes[$option->id] = $vote;
         }
-        $this->suggestion->votes = $votes;
+        $this->suggestion->memberVotes = $votes;
     } else {
         // sort options in the order of the votes (excellent, good, acceptable, bad)
         $options = $this->suggestion->options;
         uasort($options, array($this, "compareRanks"));
         $this->suggestion->options = $options;
 
-        foreach($this->suggestion->votes as $key => $value) {
+        foreach($this->suggestion->memberVotes as $key => $value) {
             $vars['option' . $key . 'rank'] = $value->rank;
         }
     }
@@ -67,6 +67,14 @@ include 'suggestionserrors.php'; ?>
     <?php endif; ?>
 </form>
 </fieldset>
+<?php if ($this->hasSuggestionRight) :
+    $callbackStatus = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'changeStateCallback'); ?>
+<form method="post"><?php echo $callbackStatus;
+    echo $this->getStateSelect($this->suggestion->state); ?>
+    <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id;?>" />
+    <input type="submit" id="suggestions-submit-status" name="suggestions-submit-status" value="change" />
+</form>
+<?php endif;?>
 </div>
 <script type="text/javascript">
 jQuery.noConflict();

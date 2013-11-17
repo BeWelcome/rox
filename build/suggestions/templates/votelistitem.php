@@ -13,9 +13,15 @@ if (count($suggestion->memberVotes)) {
 }
 echo '</a></h3></td>';
 if ($this->hasSuggestionRight) {
-    echo '<td class="details"><a href="suggestions/' . $suggestion->id . '/exclude">'
-        . '<img src="images/icons/tick.png" alt="' . $words->getBuffered('SuggestionsSetExclusions') . '" /></a><br /><a href="suggestions/'
-        . $suggestion->id . '/exclude">' . $words->getBuffered('SuggestionsSetExclusions') . '</a></td>';
+    if ($suggestion->exclusionsSet) {
+        echo '<td class="details"><a href="suggestions/' . $suggestion->id . '/exclude">'
+            . '<img src="images/icons/cancel.png" alt="' . $words->getBuffered('SuggestionsReviewExclusions') . '" /></a><br /><a href="suggestions/'
+            . $suggestion->id . '/exclude">' . $words->getBuffered('SuggestionsReviewExclusions') . '</a></td>';
+    } else {
+        echo '<td class="details"><a href="suggestions/' . $suggestion->id . '/exclude">'
+            . '<img src="images/icons/cancel.png" alt="' . $words->getBuffered('SuggestionsSetExclusions') . '" /></a><br /><a href="suggestions/'
+            . $suggestion->id . '/exclude">' . $words->getBuffered('SuggestionsSetExclusions') . '</a></td>';
+    }
 } else {
     echo '<td></td>';
 }

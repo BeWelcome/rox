@@ -58,11 +58,11 @@ foreach($this->suggestion->options as $option) :
     value="<?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?>"
     class="submit float_right" /><?php echo $words->flushBuffer(); ?>
 </div>
-<?php endif;
+<hr /><?php endif;
 endforeach; ?>
 </form>
 </div><!-- suggestion-form -->
-<hr /><?php
+<?php
 // Now load the board and show it
 $Forums = new ForumsController;
 $Forums->showExternalSuggestionsThread( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId);

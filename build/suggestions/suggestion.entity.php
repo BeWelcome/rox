@@ -59,6 +59,11 @@ class Suggestion extends RoxEntityBase
             }
             $this->options = $optionsFactory->FindByWhereMany('suggestionId = ' . $this->id . $optionsWhere);
 
+            $this->exclusionsSet = false;
+            foreach($this->options as $option) {
+                $this->exclusionsSet |= ($option->mutuallyExclusive != 'All');
+            }
+
             // Get number of discussion items (if thread ID != null)
             $this->posts = 0;
             if ($this->threadId) {

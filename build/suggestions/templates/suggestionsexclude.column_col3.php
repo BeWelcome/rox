@@ -8,14 +8,19 @@ if (empty($vars)) {
     $vars['suggestion-summary'] = $this->suggestion->summary;
     $vars['suggestion-description'] = $this->suggestion->description;
     foreach($this->suggestion->options as $option) {
-        if ($option->mutuallyExclusive) {
+        if ($option->mutuallyExclusive != 'All') {
             foreach($option->mutuallyExclusive as $mutuallyExclusive) {
                 $vars['option' . $option->id . 'option' . $mutuallyExclusive] = $mutuallyExclusive;
+            }
+        } else {
+            foreach($this->suggestion->options as $loopOption) {
+                if ($option->id < $loopOption->id) {
+                    $vars['option' . $option->id . 'option' . $loopOption->id] = $loopOption->id;
+                }
             }
         }
     }
 } else {
-    var_dump($vars);
 }
 $options = $this->suggestion->options;
 uasort($options, array($this, "compareOptionIds"));
@@ -31,7 +36,7 @@ include 'suggestionserrors.php'; ?>
     <p><?php echo $words->get('SuggestionsSetExclusionsInfo'); ?>
     <hr />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
-    <div class="floatbox float_left">
+    <div class="floatbox float_left" style="width:100%">
         <p><strong><?php echo $this->purifier->purify('Option ' . $option->id .': ' . $option->summary); ?></strong></p>
         <div class="small"><?php echo $this->purifier->purify($option->description); ?></div>
         <table style="width:100%">

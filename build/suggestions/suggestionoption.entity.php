@@ -39,6 +39,8 @@ class SuggestionOption extends RoxEntityBase
             }
             if ($this->mutuallyExclusiveWith) {
                 $this->mutuallyExclusive = explode(',',$this->mutuallyExclusiveWith);
+            } else {
+                $this->mutuallyExclusive = 'All';
             }
         }
         return $status;

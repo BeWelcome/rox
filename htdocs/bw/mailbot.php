@@ -116,6 +116,9 @@ while ($rr = mysql_fetch_object($qry)) {
             if ($rr->broadcast_type=="RemindToLog") {
                 $sender_mail="reminder@bewelcome.org" ;
             }
+            if ($rr->broadcast_type=="SuggestionsReminder") {
+                $sender_mail="suggestions@bewelcome.org" ;
+            }
         }
         else {
             $sender_mail=$rr->EmailFrom ;

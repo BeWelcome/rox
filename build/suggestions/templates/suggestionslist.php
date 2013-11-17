@@ -8,12 +8,12 @@ $this->pager->render(); ?>
 <?php
     $count= 0;
     foreach($this->suggestions as $suggestion) {
-        switch ($suggestion->state) {
+        switch ($state) {
             case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
                 include 'approvelistitem.php';
                 break;
             case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-                include 'discussionlistitem.php';
+                include 'openlistitem.php';
                 break;
             case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
                 include 'addoptionslistitem.php';
@@ -24,12 +24,11 @@ $this->pager->render(); ?>
             case SuggestionsModel::SUGGESTIONS_RANKING:
                 include 'ranklistitem.php';
                 break;
-            case SuggestionsModel::SUGGESTIONS_DUPLICATE:
+                case SuggestionsModel::SUGGESTIONS_DUPLICATE:
             case SuggestionsModel::SUGGESTIONS_REJECTED:
                 include 'rejectedlistitem.php';
                 break;
-            case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
-            case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
+            case SuggestionsModel::SUGGESTIONS_DEV:
                 include 'devlistitem.php';
                 break;
         }

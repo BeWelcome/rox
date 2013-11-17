@@ -37,6 +37,11 @@ class SuggestionOption extends RoxEntityBase
             if ($this->deletedBy) {
                 $this->deleter = $entityFactory->create('Member', $this->deletedBy);
             }
+            if ($this->mutuallyExclusiveWith) {
+                $this->mutuallyExclusive = explode(',',$this->mutuallyExclusiveWith);
+            } else {
+                $this->mutuallyExclusive = 'All';
+            }
         }
         return $status;
     }

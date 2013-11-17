@@ -149,6 +149,16 @@
         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitReminder'); ?>" /><?php echo $words->flushBuffer(); ?></div>
 </fieldset>
 <?php } ?>
+<?php if ($this->type == 'SuggestionReminder' && $this->canEnqueueSuggestionsReminder) { ?>
+<fieldset id="reminder">
+    <legend><?php echo $words->getBuffered('AdminMassMailEnqueueSuggestionsReminder');?></legend></legend><?php echo $words->flushBuffer(); ?>
+    <div class="type-text">
+        <?php echo $words->get('AdminMassMailEnqueueSuggestionsReminderInfo', $this->votersCount); ?>
+    </div>
+    <div class="float_right"><br /><input class="button" type="submit" name="enqueuesuggestionsreminder"
+        value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitSuggestionsReminder'); ?>" /><?php echo $words->flushBuffer(); ?></div>
+</fieldset>
+<?php } ?>
 </form>
 <script type="text/javascript">
     document.observe("dom:loaded", function() {

@@ -47,6 +47,9 @@ if ($this->newsletterGeneral) {
 if ($this->loginReminder) {
     $options["RemindToLog"] = $this->words->get('AdminMassMailEditTypeLoginReminder');
 }
+if ($this->suggestionsReminder) {
+    $options["SuggestionReminder"] = $this->words->get('AdminMassMailEditTypeSuggestionsReminder');
+}
 ?>
 Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count($options) == 1) || ($id != 0))) { echo 'disabled="disabled"'; }?> />
 <?php

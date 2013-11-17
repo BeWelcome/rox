@@ -51,21 +51,26 @@ if (!empty($errors)) {
     <div class="row">
     <p><?php echo $words->get('SuggestionsCreateEditInfo');?></p>
         <label class="float_left"for="suggestion-summary"><?php echo $words->get('SuggestionSummary'); ?>*</label><span class="small float_right" style="margin-right: 0.3em;">* <?php echo $words->get('suggestionMandatoryFields'); ?></span><br />
-        <input type="text" id="suggestion-summary" name="suggestion-summary" maxlength="80" class="long" style="width:99%" value="<?php echo $vars['suggestion-summary']; ?>" />
+        <input type="text" id="suggestion-summary" name="suggestion-summary" maxlength="80" class="long" style="width:99%" value="<?php echo htmlspecialchars($vars['suggestion-summary'], ENT_QUOTES); ?>" />
     </div>
     <div class="subcolumns row">
         <label for="suggestion-description"><?php echo $words->get('suggestionDescription'); ?>*</label><br/>
         <textarea id="suggestion-description" name="suggestion-description" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-description']; ?></textarea>
     </div>
     <div class="subcolumns row">
-        <?php
+    <?php
         if ($vars['suggestion-id'] != 0) {
-             $suggestionseditcreatebutton = $words->getSilent('SuggestionsEditCreateUpdate');
+             $suggestionseditcreatebutton = $words->getSilent('SuggestionsEditCreateUpdate'); ?>
+                <div class="float_left">
+                    <input type="checkbox" name="suggestion-minor-edit" id="suggestion-minor-edit" value="1">
+                    <label for="suggestion-minor-edit"><?php echo $words->get('suggestionMinorEdit'); ?></label>
+                </div>
+    <?php
         } else {
              $suggestionseditcreatebutton = $words->getSilent('SuggestionsSubmit');
         }
         ?>
-        <input type="submit" id="suggestion-submit" name="suggestion-submit" value="<?php echo $suggestionseditcreatebutton; ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" id="suggestion-submit" name="suggestion-submit" value="<?php echo $suggestionseditcreatebutton; ?>" class="submit float_right" /><?php echo $words->flushBuffer(); ?>
     </div>
 </form>
 </fieldset>

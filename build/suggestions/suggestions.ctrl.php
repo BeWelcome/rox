@@ -6,7 +6,7 @@
  */
 class SuggestionsController extends RoxControllerBase
 {
-    const SUGGESTIONS_PER_PAGE = 10;
+    const SUGGESTIONS_PER_PAGE = 20;
 
     /**
      * Constructor.
@@ -17,21 +17,46 @@ class SuggestionsController extends RoxControllerBase
     }
 
     public function suggestions() {
-        $this->redirectAbsolute($this->router->url('suggestions_about'));
+        $this->redirectAbsolute($this->router->url('suggestions_discusslist'));
+    }
+
+    private function checkSuggestionRight()
+    {
+        $member = $this->_model->getLoggedInMember();
+        if (!$member) {
+            return false;
+        }
+        $rights = $member->getOldRights();
+        if (empty($rights)) {
+            return false;
+        }
+        if (in_array('Suggestions', array_keys($rights))) {
+            return true;
+        } else {
+            return false;
+        }
+        return true;
     }
 
     /**
      * Redirects if no one's logged in or if someone tries to cheat (like trying to open the discuss page while
-     * voting already started
+     * ranking already started
      */
     private function redirectOnSuggestionState($state) {
         $id = $this->route_vars['id'];
         $suggestion = new Suggestion($id);
         if ($suggestion) {
+            if ($state == SuggestionsModel::SUGGESTIONS_DISCUSSION ) {
+                if ($suggestion->state == SuggestionsModel::SUGGESTIONS_DISCUSSION |
+                    $suggestion->state == SuggestionsModel::SUGGESTIONS_ADD_OPTIONS |
+                    $suggestion->state == SuggestionsModel::SUGGESTIONS_VOTING) {
+                    return;
+                }
+            }
             if (($state & $suggestion->state) <> $suggestion->state) {
-            $params = array('id' => $id);
-            $this->redirectAbsolute($this->router->url('suggestions_show', $params));
-        }
+                $params = array('id' => $id);
+                $this->redirectAbsolute($this->router->url('suggestions_show', $params));
+            }
         }
     }
 
@@ -44,10 +69,10 @@ class SuggestionsController extends RoxControllerBase
         $params = array('id' => $id);
         switch ($suggestion->state) {
             case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
-                if ($this->_model->hasSuggestionRight($this->_model->getLoggedInMember)) {
+                if ($this->checkSuggestionRight()) {
                     $url = $this->router->url('suggestions_approve', $params);
                 } else {
-                    $url = $this->router->url('suggestions_approvelist');
+                    $url = $this->router->url('suggestions_view', $params);
                 }
                 break;
             case SuggestionsModel::SUGGESTIONS_DISCUSSION:
@@ -88,21 +113,6 @@ class SuggestionsController extends RoxControllerBase
         $params->items_per_page = $itemsPerPage;
         $pager = new PagerWidget($params);
         return $pager;
-    }
-
-    public function voteSuggestionCallback(StdClass $args, ReadOnlyObject $action,
-        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
-    {
-        $errors = $this->_model->checkVoteSuggestion($args);
-        if (!empty($errors)) {
-            $mem_redirect->errors = $errors;
-            $mem_redirect->vars = $args->post;
-            return false;
-        }
-        $member = $this->_model->getLoggedInMember();
-        $suggestion = $this->_model->voteForSuggestion($member, $args);
-        $this->setFlashNotice($this->getWords()->get('SuggestionsVoted', date('d.m.Y', $suggestion->votingendts)));
-        return true;
     }
 
     public function editCreateSuggestionCallback(StdClass $args, ReadOnlyObject $action,
@@ -364,6 +374,21 @@ class SuggestionsController extends RoxControllerBase
         return $page;
     }
 
+    public function voteSuggestionCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $errors = $this->_model->checkVoteSuggestion($args);
+        if (!empty($errors)) {
+            $mem_redirect->errors = $errors;
+            $mem_redirect->vars = $args->post;
+            return false;
+        }
+        $member = $this->_model->getLoggedInMember();
+        $suggestion = $this->_model->voteForSuggestion($member, $args);
+        $this->setFlashNotice($this->getWords()->get('SuggestionsVoted', $suggestion->nextstatechange));
+        return true;
+    }
+
     public function vote() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_VOTING);
@@ -376,6 +401,25 @@ class SuggestionsController extends RoxControllerBase
         } else {
             $this->setFlashNotice('SuggestionsNotLoggedIn');
         }
+        $page->suggestion = $suggestion;
+        return $page;
+    }
+
+    public function excludeCallback(StdClass $args, ReadOnlyObject $action,
+        ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
+    {
+        $member = $this->_model->getLoggedInMember();
+        $suggestion = $this->_model->setExclusions($member, $args);
+        $this->setFlashNotice($this->getWords()->get('SuggestionsExclusionsSet'));
+        return true;
+    }
+
+    public function exclude() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_VOTING);
+        $id = $this->route_vars['id'];
+        $suggestion = new Suggestion($id);
+        $page = new SuggestionsExcludePage($loggedInMember);
         $page->suggestion = $suggestion;
         return $page;
     }

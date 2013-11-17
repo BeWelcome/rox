@@ -30,15 +30,15 @@ Boston, MA  02111-1307, USA.
  * @package Apps
  * @subpackage Suggestions
  */
-class SuggestionsVotingPage extends SuggestionsBasePage
+class SuggestionsExcludePage extends SuggestionsBasePage
 {
     protected function getSubmenuActiveItem()
     {
-        return 'vote';
+        return 'exclude';
     }
 
-    public function compareRanks($a, $b) {
-        return ($this->suggestion->memberVotes[$b->id]->rank - $this->suggestion->memberVotes[$a->id]->rank);
+    public function compareOptionIds($a, $b) {
+        return ($a->id - $b->id);
     }
 }
 

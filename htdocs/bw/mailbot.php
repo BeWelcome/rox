@@ -97,7 +97,7 @@ FROM
 WHERE
     broadcast.id = broadcastmessages.IdBroadcast  AND
     broadcastmessages.IdReceiver = members.id     AND
-    broadcastmessages.Status = 'ToSend' limit 100
+    broadcastmessages.Status = 'ToSend' limit 1
 ";
 $qry = sql_query($str);
 

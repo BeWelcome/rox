@@ -169,7 +169,7 @@ FROM
 WHERE
     posts_notificationqueue.IdMember = members.id  AND
     (members.Status = 'Active' OR members.Status = 'ActiveHidden')  AND
-    posts_notificationqueue.Status = 'ToSend'
+    posts_notificationqueue.Status = 'ToSend' LIMIT 50
 ";
 $qry = sql_query($str);
 
@@ -354,7 +354,7 @@ FROM
 WHERE
     messages.IdSender = members.id  AND
     messages.Status = 'ToSend' AND
-    messages.MessageType = 'MemberToMember' ";
+    messages.MessageType = 'MemberToMember' LIMIT 50";
 $qry = sql_query($str);
 
 $count = 0;

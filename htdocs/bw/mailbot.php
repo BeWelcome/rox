@@ -169,7 +169,9 @@ FROM
 WHERE
     posts_notificationqueue.IdMember = members.id  AND
     (members.Status = 'Active' OR members.Status = 'ActiveHidden')  AND
-    posts_notificationqueue.Status = 'ToSend' LIMIT 50
+    posts_notificationqueue.Status = 'ToSend'
+ORDER BY created_since_x_minute
+                LIMIT 100
 ";
 $qry = sql_query($str);
 

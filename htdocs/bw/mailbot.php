@@ -97,7 +97,7 @@ FROM
 WHERE
     broadcast.id = broadcastmessages.IdBroadcast  AND
     broadcastmessages.IdReceiver = members.id     AND
-    broadcastmessages.Status = 'ToSend' limit 300
+    broadcastmessages.Status = 'ToSend' LIMIT 50
 ";
 $qry = sql_query($str);
 
@@ -116,7 +116,7 @@ while ($rr = mysql_fetch_object($qry)) {
             if ($rr->broadcast_type=="RemindToLog") {
                 $sender_mail="reminder@bewelcome.org" ;
             }
-            if ($rr->broadcast_type=="SuggestionsReminder") {
+            if ($rr->broadcast_type=="SuggestionReminder") {
                 $sender_mail="suggestions@bewelcome.org" ;
             }
         }
@@ -354,7 +354,7 @@ FROM
 WHERE
     messages.IdSender = members.id  AND
     messages.Status = 'ToSend' AND
-    messages.MessageType = 'MemberToMember' ";
+    messages.MessageType = 'MemberToMember'";
 $qry = sql_query($str);
 
 $count = 0;

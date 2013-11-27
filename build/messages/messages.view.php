@@ -70,7 +70,9 @@ class ReadMessagePage extends MessagesBasePage
                   <?php } else { ?>
                   <a class="button float_left" href="messages/<?=$message->id ?>/edit"><?=$words->get('editmessage')?></a>
                   <?php } ?>
-                  <a class="button float_right" href="messages/<?=$message->id ?>/delete"><?=$words->get('delmessage')?></a>
+                  <a class="button float_right" href="messages/<?=$message->id ?>/delete"
+                  onclick="return confirm ('<?php echo $words->getBuffered ('MessagesWarningConfirmDelete'); ?>')" ><?=$words->get('delmessage')?></a>
+                  <?php echo $words->flushBuffer();?>
                 </p>
             </div> <!-- buttonstop -->
             <div id="messageheader" class="floatbox">

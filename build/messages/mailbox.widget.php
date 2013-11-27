@@ -72,10 +72,10 @@ class MailboxWidget extends ItemlistWithPagination
         ?>
         <table><tr>
         <td>
-        <?=MOD_layoutbits::PIC_30_30($contact_username,'')?>
+        <?=MOD_layoutbits::PIC_50_50($contact_username,'')?>
         </td>
         <td>
-        <a style="color: #333;" href="members/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
+        <a class="username" href="members/<?=$contact_username ?>"><strong><?=$contact_username ?></strong></a>
         <br />
         <span class="small" title="<?=$date_created?>"><?=$layoutbits->ago(strtotime($date_created)) ?></span>
         </td>
@@ -88,11 +88,9 @@ class MailboxWidget extends ItemlistWithPagination
         $TheMessage=str_replace(array("\n","<br />"),array(" "," "),$message->Message) ;
         $read = (int)$message->WhenFirstRead;
         $class = ($read) ? '' : 'class="unread"';
-        $text = strip_tags((strlen($TheMessage) >= 150) ? substr($TheMessage,0,150).' ...' : $TheMessage);
+        $text = strip_tags((strlen($TheMessage) >= 250) ? substr($TheMessage,0,250).' ...' : $TheMessage);
         echo <<<HTML
-        <span>
-        <a {$class} href="messages/{$message->id}">{$text}</a>
-        </span>
+        <p><a {$class} href="messages/{$message->id}">{$text}</a></p>
 HTML;
     }
 

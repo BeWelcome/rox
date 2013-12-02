@@ -32,6 +32,7 @@ Boston, MA  02111-1307, USA.
  */
 class MOD_htmlpure
 {
+    const ALLOWED_HTML = 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,strike,del';
 
     /**
      * Singleton instance
@@ -109,15 +110,23 @@ class MOD_htmlpure
     }
 
     public function getForumsHtmlPurifier() {
-        return self::getSophisticatedHtmlPurifier();
+        // allow tables in forum posts to be able to format the suggestion results nicely
+        // don't offer tables in TinyMCE for now
+        return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[style]'));
     }
 
-    private function getSophisticatedHtmlPurifier()
+    private function getSophisticatedHtmlPurifier($additionalTags = false)
     {
         require_once(SCRIPT_BASE . 'lib/htmlpurifier-4.5.0-standalone/HTMLPurifier.standalone.php');
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
-        $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote');
+        $allowedHtml = self::ALLOWED_HTML;
+        if ($additionalTags) {
+            foreach($additionalTags as $tag) {
+                $allowedHtml .= ',' . $tag;
+            }
+        }
+        $config->set('HTML.Allowed', $allowedHtml);
         $config->set('HTML.MaxImgLength', '500');
         $config->set('HTML.TargetBlank', true);
         $config->set('CSS.MaxImgLength', '500px');
@@ -125,5 +134,4 @@ class MOD_htmlpure
         $config->set('AutoFormat.Linkify', true); // automatically turn stuff like http://domain.com into links
         return new HTMLPurifier($config);
     }
-
 }

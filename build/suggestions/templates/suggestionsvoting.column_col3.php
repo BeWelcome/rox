@@ -52,7 +52,7 @@ include 'suggestionserrors.php'; ?>
             <div class="vote floatbox float_right">
             <?php foreach($ranks as $key => $rank) :
                 $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?>
-                <input type="radio" class="toggle" <?php if ($key == $this->votes[$option->id]->rank) :
+                <input type="radio" class="toggle" <?php if ($key == $this->suggestion->memberVotes[$option->id]->rank) :
                     echo 'checked="checked"';
                     endif;?> id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $key; ?>"/>
                 <label for="<?php echo $id; ?>"><?php echo $rank; ?></label>

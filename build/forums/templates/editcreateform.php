@@ -181,71 +181,72 @@ if ($groupsforum) {
 	}
 }
 
-if (!isset($this->suggestionsGroupId)) { ?>
+if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGroupId())) {
+    echo '<p>' . $words->get('SuggestionsGroupInfoReply') . '</p>'; ?>
+
+    <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly" />
+    <input type="hidden" name="IdLanguage" id="IdLanguage" value="0" />
+<?php } else { ?>
 
     <fieldset class="row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>
         <div id="fpost_vis"><div>
-            <?php echo $visibilitiesDropdown;
-    ?>
+                <?php echo $visibilitiesDropdown;
+                ?>
 
-        </div></div>
+            </div></div>
     </fieldset>
 
     <fieldset class="row" id="fpost_lang_fieldset">
         <legend onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
         <div id="fpost_lang"><div>
-        <select name="IdLanguage" id="IdLanguage"><?php
-        // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
-            if (!isset($AppropriatedLanguage)) {
-               echo "<option value=\"-1\">-</option>";
-            }
+                <select name="IdLanguage" id="IdLanguage"><?php
+                    // Here propose to choose a language, a javascript routine at the form checking must make it mandatory
+                    if (!isset($AppropriatedLanguage)) {
+                        echo "<option value=\"-1\">-</option>";
+                    }
 
-            $closeOptGroup = false;
-            $closeOptGroupFinal = false;
-            foreach ($LanguageChoices as $Choices) {
-                    if (is_string($Choices)) {
-                        switch($Choices) {
-                            case "CurrentLanguage":
-                                echo '<optgroup label="' . $words->getSilent("ForumCurrentLanguage") . '">';
-                                $closeOptGroup = true;
-                                break;
-                            case "DefaultLanguage":
-                                echo '<optgroup label="' . $words->getSilent("ForumDefaultLanguage") . '">';
-                                $closeOptGroup = true;
-                                break;
-                            case "UILanguage":
-                                echo '<optgroup label="' . $words->getSilent("ForumUILanguage") . '">';
-                                $closeOptGroup = true;
-                                break;
-                            case "AllLanguages":
-                                echo '<optgroup label="' . $words->getSilent("ForumAllLanguages") . '">';
-                                $closeOptGroupFinal = true;
-                                break;
-                        }
-                    } else {
-                        echo "<option value=\"",$Choices->IdLanguage,"\"" ;
-                        if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
-                           echo " selected='selected'" ;
-                        }
-                        echo ">",$Choices->Name,"</option>" ;
-                        if ($closeOptGroup) {
-                            echo "</optgroup>";
-                            $closeOptGroup = false;
+                    $closeOptGroup = false;
+                    $closeOptGroupFinal = false;
+                    foreach ($LanguageChoices as $Choices) {
+                        if (is_string($Choices)) {
+                            switch($Choices) {
+                                case "CurrentLanguage":
+                                    echo '<optgroup label="' . $words->getSilent("ForumCurrentLanguage") . '">';
+                                    $closeOptGroup = true;
+                                    break;
+                                case "DefaultLanguage":
+                                    echo '<optgroup label="' . $words->getSilent("ForumDefaultLanguage") . '">';
+                                    $closeOptGroup = true;
+                                    break;
+                                case "UILanguage":
+                                    echo '<optgroup label="' . $words->getSilent("ForumUILanguage") . '">';
+                                    $closeOptGroup = true;
+                                    break;
+                                case "AllLanguages":
+                                    echo '<optgroup label="' . $words->getSilent("ForumAllLanguages") . '">';
+                                    $closeOptGroupFinal = true;
+                                    break;
+                            }
+                        } else {
+                            echo "<option value=\"",$Choices->IdLanguage,"\"" ;
+                            if ((isset($AppropriatedLanguage)) and ($AppropriatedLanguage==$Choices->IdLanguage))  {
+                                echo " selected='selected'" ;
+                            }
+                            echo ">",$Choices->Name,"</option>" ;
+                            if ($closeOptGroup) {
+                                echo "</optgroup>";
+                                $closeOptGroup = false;
+                            }
                         }
                     }
-            }
-            if ($closeOptGroupFinal) {
-                echo "</optgroup>";
-            }
-        ?></select><?php echo $words->flushBuffer(); ?>
-<?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
-        </div></div>
+                    if ($closeOptGroupFinal) {
+                        echo "</optgroup>";
+                    }
+                    ?></select><?php echo $words->flushBuffer(); ?>
+                <?php echo $words->getFormatted("forum_ChooseYourLanguage") ?>
+            </div></div>
     </fieldset> <!-- row -->
-<?php } else { 
-// don't show visibility and language settings if it is a suggestions discussion ?>
-<input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly" />
-<input type="hidden" name="IdLanguage" id="IdLanguage" value="0" />
 <?php } ?>
     <fieldset class="row" id="fpost_note_fieldset">
         <legend onclick="toggleFieldsets('fpost_note');"><?php echo $words->getFormatted("forum_Notify") ?></legend>

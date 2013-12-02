@@ -98,7 +98,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?7';
        return $stylesheets;
     }
 

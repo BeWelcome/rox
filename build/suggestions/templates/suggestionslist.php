@@ -8,6 +8,18 @@ $this->pager->render(); ?>
 <?php
     $count= 0;
     foreach($this->suggestions as $suggestion) {
+        if (is_string($suggestion) && ($suggestion == "Implementing"))
+        {
+            $suggestionState = SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
+            $optionState = SuggestionOption::IMPLENENTING;
+            continue;
+        }
+        if (is_string($suggestion) && ($suggestion == "Implemented"))
+        {
+            $suggestionState = SuggestionsModel::SUGGESTIONS_IMPLEMENTED;
+            $optionState = SuggestionOption::IMPLEMENTED;
+            continue;
+        }
         switch ($state) {
             case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
                 include 'approvelistitem.php';

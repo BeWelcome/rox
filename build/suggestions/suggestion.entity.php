@@ -45,18 +45,27 @@ class Suggestion extends RoxEntityBase
             $optionsWhere = "";
             $optionsFactory = $entityFactory->create('SuggestionOption');
             switch ($this->state) {
-            	case SuggestionsModel::SUGGESTIONS_VOTING:
-            	    $optionsWhere = " AND deleted IS NULL";
+                case SuggestionsModel::SUGGESTIONS_VOTING:
+                    $optionsWhere = " AND deleted IS NULL";
                     $optionsFactory->sql_order = "RAND()";
                     break;
-            	case SuggestionsModel::SUGGESTIONS_RANKING:
-            	    $optionsFactory->sql_order = "`orderHint` DESC";
-            	    $optionsWhere = " AND `rank` > 2";
-            	    break;
-            	default:
-            	    $optionsFactory->sql_order = "`deleted` ASC, `id` ASC";
-            	    break;
+                case SuggestionsModel::SUGGESTIONS_RANKING:
+                    $optionsFactory->sql_order = "`orderHint` DESC";
+                    $optionsWhere = " AND state = " . SuggestionOption::RANKING;;
+                    break;
+                case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
+                    $optionsFactory->sql_order = "modified DESC";
+                    $optionsWhere = " AND state = " . SuggestionOption::IMPLEMENTED;
+                    break;
+                case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
+                    $optionsFactory->sql_order = "modified DESC";
+                    $optionsWhere = " AND state = " . SuggestionOption::IMPLENENTING;
+                    break;
+                default:
+                    $optionsFactory->sql_order = "`deleted` ASC, `id` ASC";
+                    break;
             }
+
             $this->options = $optionsFactory->FindByWhereMany('suggestionId = ' . $this->id . $optionsWhere);
 
             $this->exclusionsSet = false;
@@ -102,9 +111,9 @@ class Suggestion extends RoxEntityBase
             // $this->ranks = $this->getRanks();
 
             // check if state should be updated
+            $laststatechanged = strtotime($this->laststatechanged);
             switch($this->state) {
                 case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-                    $laststatechanged = strtotime($this->laststatechanged);
                     // in discussion for more than 10 days?
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_DISCUSSION) {
                         $this->state = SuggestionsModel::SUGGESTIONS_ADD_OPTIONS;
@@ -112,7 +121,6 @@ class Suggestion extends RoxEntityBase
                     }
                     break;
                 case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
-                    $laststatechanged = strtotime($this->laststatechanged);
                     // in addoptions for more than 20 days?
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_ADDOPTIONS) {
                         if (count($this->options)) {
@@ -125,7 +133,6 @@ class Suggestion extends RoxEntityBase
                     }
                     break;
                 case SuggestionsModel::SUGGESTIONS_VOTING:
-                    $laststatechanged = strtotime($this->laststatechanged);
                     // voting open for more than 30 days?
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_VOTING) {
                         $this->state = SuggestionsModel::SUGGESTIONS_RANKING;
@@ -135,15 +142,15 @@ class Suggestion extends RoxEntityBase
             }
             // set next state change date (only needed for open suggestions)
             switch($this->state) {
-            	case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-            	    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_DISCUSSION);
-            	    break;
-            	case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
-            	    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_ADDOPTIONS);
-            	    break;
-            	case SuggestionsModel::SUGGESTIONS_VOTING:
-            	    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_VOTING);
-            	    break;
+                case SuggestionsModel::SUGGESTIONS_DISCUSSION:
+                    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_DISCUSSION);
+                    break;
+                case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
+                    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_ADDOPTIONS);
+                    break;
+                case SuggestionsModel::SUGGESTIONS_VOTING:
+                    $this->nextstatechange = date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_VOTING);
+                    break;
             }
         }
         return $status;
@@ -153,12 +160,12 @@ class Suggestion extends RoxEntityBase
         if ($status) {
             $this->laststatechanged = date('Y-m-d');
             switch ($this->state) {
-                case SuggestionsModel::SUGGESTIONS_RANKING:
+                case SuggestionsModel::SUGGESTIONS_VOTING:
                     $this->notifyVotingStarted();
                     break;
                 case SuggestionsModel::SUGGESTIONS_RANKING:
                     $this->calculateResults();
-                    $this->state = SuggestionsModel::SUGGESTIONS_VOTING;
+                    // $this->state = SuggestionsModel::SUGGESTIONS_VOTING;
                     break;
             }
             return parent::update();
@@ -319,6 +326,7 @@ class Suggestion extends RoxEntityBase
         // as we allow options that overlap we need to break tie for all ranks
         // to get a meaningful order
         $ties = array();
+        $goodOrExcellent = array();
         foreach($medians as $optionId => $median) {
             if (!isset($ties[$median])) {
                 $ties[$median] = array();
@@ -336,18 +344,15 @@ class Suggestion extends RoxEntityBase
         $postText = '<p>Voting for \'' . $this->summary . '\' is no longer possible.</p>';
         $postText .= '<p>Number of votes given: ' . $this->voteCount . '</p>';
         $postText .= '<p>Detailed results:</p>';
-        $postText .= '<table id="votingresults"><tr><th class="description">Option</th><th class="results" colspan="2">Results</th><th class="rank">Rank</th></tr>';
+        $postText .= '<table id="votingresults"><tr><th class="description">Option</th><th class="results" colspan="2">Results</th><th class="rank">Median</th></tr>';
         foreach($orderedOptionIds as $order => $optionId) {
             $option = $entityFactory->create('SuggestionOption')->findById($optionId);
-            $query = "
-            UPDATE
-                suggestions_options
-            SET
-                `order` = " . $order . ",
-                `rank` = " . $medians[$optionId] . "
-            WHERE
-                `id` = " . $optionId;
-            $this->dao->query($query);
+            $option->orderHint = $order;
+            $option->rank = $medians[$optionId];
+            $option->update();
+            if ($medians[$optionId] > 2) {
+                $goodOrExcellent[$optionId] = $option;
+            }
             foreach($rankNames as $rank => $rankName) {
                 if ($rank == 4) {
                     $postText .= '<tr><td class="description" rowspan="4">' . $option->summary . '</td>'
@@ -362,10 +367,58 @@ class Suggestion extends RoxEntityBase
         }
         $postText .= '</table>';
 
+        // Check if any option got a higher rank than 'acceptable (2)'
+        if(empty($goodOrExcellent)) {
+            $postText .= '<p>No option got a better median than \'' . $rankNames[2] . '\' therefore the suggestion is rejected.</p>';
+            $this->state = SuggestionsModel::SUGGESTIONS_REJECTED;
+        } else {
+            // Remove options that are exclusive with the winning option(s)
+            $remove = array();
+
+            foreach($goodOrExcellent as $optionId => $option) {
+                if ($option->mutuallyExclusive === 'All') {
+                    foreach($goodOrExcellent as $checkId => $checkOption) {
+                        if ($optionId != $checkId && isset($goodOrExcellent[$checkId]) && ($option->orderHint > $checkOption->orderHint)) {
+                            $remove[] = $checkId;
+                        }
+                    }
+                } else {
+                    foreach($option->mutuallyExclusive as $exclude) {
+                        if (isset($goodOrExcellent[$exclude]) && ($option->orderHint > $goodOrExcellent[$exclude]->orderHint)) {
+                            $remove[] = $exclude;
+                        }
+                    }
+                }
+            }
+            foreach($remove as $id) {
+                if (isset($goodOrExcellent[$id])) {
+                    unset($goodOrExcellent[$id]);
+                }
+            }
+
+            // Mention remaining options
+            if (count($goodOrExcellent) == 1) {
+                $option = reset($goodOrExcellent);
+                $option->state = SuggestionOption::RANKING;
+                $option->update();
+                $postText .= '<p>The option \'' . $option->summary . '\' won the vote and can be ranked now.</p>';
+            } else {
+                foreach($goodOrExcellent as $option) {
+                    $postText .= '<p>The option \'' . $option->summary . '\' reached a median above \'' .
+                        $rankNames[2] . '\' and can be ranked now.</p>';
+                    $option->state = SuggestionOption::RANKING;;
+                    $option->update();
+                }
+                $postText .= '<p>All options not mentioned above (if any) were conflicting with an option with a higher median.</p>';
+            }
+        }
+
         $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
-        $suggestions = new SuggestionsModel();
-        $postId = $suggestions->addPost($suggestionsTeam->id, $postText, $this->threadId);
-        $suggestions->setForumNotifications($postId, 'reply');
+        if ($suggestionsTeam) {
+            $suggestions = new SuggestionsModel();
+            $postId = $suggestions->addPost($suggestionsTeam->id, $postText, $this->threadId);
+            $suggestions->setForumNotifications($postId, 'reply');
+        }
 
         return true;
     }

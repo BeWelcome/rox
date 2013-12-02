@@ -184,6 +184,10 @@
     $this->addRoute('suggestions_ranklist', 'suggestions/rank', 'suggestionsController', 'rankList');
     $this->addRoute('suggestions_ranklist_pages', 'suggestions/rank/page/:pageno:', 'suggestionsController', 'rankList');
     $this->addRoute('suggestions_rank', 'suggestions/:id:/rank', 'suggestionsController', 'rank');
+    $this->addRoute('suggestions_move_implementing', 'suggestions/:id:/implementing/:optionid:', 'suggestionsController', 'moveToImplementing');
+    $this->addRoute('suggestions_move_implemented', 'suggestions/:id:/implementied/:optionid:', 'suggestionsController', 'moveToImplemented');
+    $this->addRoute('suggestions_upvote', 'suggestions/:optionid:/upvote', 'suggestionsController', 'voteRanking');
+    $this->addRoute('suggestions_downvote', 'suggestions/:optionid:/downvote', 'suggestionsController', 'voteRanking');
     $this->addRoute('suggestions_rejectedlist', 'suggestions/rejected', 'suggestionsController', 'rejectedList');
     $this->addRoute('suggestions_rejectedlist_pages', 'suggestions/rejected/page/:pageno:', 'suggestionsController', 'rejectedList');
     $this->addRoute('suggestions_rejected', 'suggestions/:id:/rejected', 'suggestionsController', 'rejected');

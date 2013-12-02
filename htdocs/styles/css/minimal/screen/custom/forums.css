@@ -362,3 +362,51 @@ a.toggleedit:hover {
 
 /* Community landing more and less buttons */
 .morelessbuttons {display: inline; float: left; padding: 0.7em 0.7em 1.3em 0;}
+
+ /* Community landing more and less buttons */
+ .morelessbuttons {display: inline; float: left; padding: 0.7em 0.7em 1.3em 0;}
+
+/* Voting results for suggestions */
+#votingresults {
+	border: 1px solid black;
+	width: 99%;
+}
+
+#votingresults th.description, #votingresults td.description {
+	width:80%;
+	padding:1px 2px;
+	text-align: left;
+	vertical-align: top;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+}
+
+#votingresults th.results {
+	text-align: center;
+	padding:1px 2px;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+}
+
+#votingresults td.resultsleft {
+	text-align: left;
+	padding:1px 2px;
+	margin: 0;
+	border-bottom: 1px solid black;
+} 
+
+#votingresults td.resultsright {
+	text-align: right;
+	padding: 1px 2px;
+	margin: 0;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+} 
+
+#votingresults th.rank, #votingresults td.rank {
+	width:15%;
+	text-align: center;
+	vertical-align: top;
+	padding:1px 2px;
+	border-bottom: 1px solid black;
+} 

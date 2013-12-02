@@ -112,7 +112,7 @@ class MOD_htmlpure
     public function getForumsHtmlPurifier() {
         // allow tables in forum posts to be able to format the suggestion results nicely
         // don't offer tables in TinyMCE for now
-        return self::getSophisticatedPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]'));
+        return self::getSophisticatedHtmlPurifier(array('table[id]', 'tr[class]', 'td[class|rowspan]', 'th[class]', 'span[style]'));
     }
 
     private function getSophisticatedHtmlPurifier($additionalTags = false)
@@ -122,7 +122,7 @@ class MOD_htmlpure
         $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
         $allowedHtml = self::ALLOWED_HTML;
         if ($additionalTags) {
-            foreach($tags as $tag) {
+            foreach($additionalTags as $tag) {
                 $allowedHtml .= ',' . $tag;
             }
         }

@@ -6,7 +6,8 @@
  */
 class SuggestionsController extends RoxControllerBase
 {
-    const SUGGESTIONS_PER_PAGE = 20;
+    const SUGGESTIONS_PER_PAGE = 50;
+    const OPTIONS_PER_PAGE = 50;
 
     /**
      * Constructor.
@@ -126,11 +127,11 @@ class SuggestionsController extends RoxControllerBase
         } else {
             if ($args->post['suggestion-id'] == 0) {
                 $suggestion = $this->_model->createSuggestion($args);
-                $this->setFlashNotice('SuggestionCreateSuccess');
+                $this->setFlashNotice($this->getWords()->get('SuggestionCreateSuccess'));
                 return $this->router->url('suggestions_approvelist', array(), false);
             } else {
                 $suggestion = $this->_model->editSuggestion($args);
-                $this->setFlashNotice('SuggestionEditSuccess');
+                $this->setFlashNotice($this->getWords()->get('SuggestionEditSuccess'));
                 return $this->redirect($this->router->url('suggestions_show', array('id' => $suggestion->id)), false);
             }
         }
@@ -140,7 +141,7 @@ class SuggestionsController extends RoxControllerBase
         $loggedInMember = $this->_model->getLoggedInMember();
         if (isset($this->route_vars['id'])) {
             if (!$loggedInMember) {
-                $this->setFlashNotice('SuggestionNotLoggedInEdit');
+                $this->setFlashNotice($this->getWords()->get('SuggestionNotLoggedInEdit'));
                 return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
             }
             $suggestion = new Suggestion($this->route_vars['id']);
@@ -180,11 +181,11 @@ class SuggestionsController extends RoxControllerBase
     {
         if (array_key_exists('suggestion-approve', $args->post)) {
             $this->_model->approveSuggestion($args->post['suggestion-id']);
-            $this->setFlashNotice('SuggestionApproved');
+            $this->setFlashNotice($this->getWords()->get('SuggestionApproved'));
         }
         if (array_key_exists('suggestion-duplicate', $args->post)) {
             $this->_model->markDuplicateSuggestion($args->post['suggestion-id']);
-            $this->setFlashNotice('SuggestionSetAsDuplicate');
+            $this->setFlashNotice($this->getWords()->get('SuggestionSetAsDuplicate'));
         }
         return $this->router->url('suggestions_approvelist', array(), false);
     }
@@ -245,7 +246,7 @@ class SuggestionsController extends RoxControllerBase
             return false;
         }
         $this->_model->editOption($args);
-        $this->setFlashNotice('SuggestionEditOptionSuccess');
+        $this->setFlashNotice($this->getWords()->get('SuggestionEditOptionSuccess'));
         return $this->router->url('suggestions_add_options',
             array(
                 'id' => $args->post['suggestion-id'],
@@ -269,7 +270,7 @@ class SuggestionsController extends RoxControllerBase
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         $this->_model->deleteOption($args);
-        $this->setFlashNotice('SuggestionDeleteOptionSuccess');
+        $this->setFlashNotice($this->getWords()->get('SuggestionDeleteOptionSuccess'));
         return $this->router->url('suggestions_add_options', array('id' => $args->post['suggestion-id']), false);
     }
 
@@ -291,7 +292,7 @@ class SuggestionsController extends RoxControllerBase
         $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_ADD_OPTIONS);
         $optionId = $this->route_vars['optid'];
         $this->_model->restoreOption($optionId);
-        $this->setFlashNotice('SuggestionRestoreOptionSuccess');
+        $this->setFlashNotice($this->getWords()->get('SuggestionRestoreOptionSuccess'));
         return $this->router->url('suggestions_addoptions', array('id' => $this->route_vars['id']), false);
     }
 
@@ -305,7 +306,7 @@ class SuggestionsController extends RoxControllerBase
             return false;
         }
         $this->_model->addOption($args);
-        $this->setFlashNotice('SuggestionAddOptionSuccess');
+        $this->setFlashNotice($this->getWords()->get('SuggestionAddOptionSuccess'));
         return true;
     }
 
@@ -319,7 +320,7 @@ class SuggestionsController extends RoxControllerBase
             return false;
         }
         $this->_model->changeState($args);
-        $this->setFlashNotice('SuggestionChangeStatusSuccess');
+        $this->setFlashNotice($this->getWords()->get('SuggestionChangeStatusSuccess'));
         return $this->router->url('suggestions_show', array('id' => $args->post['suggestion-id']), false);
     }
 
@@ -399,7 +400,7 @@ class SuggestionsController extends RoxControllerBase
         if ($loggedInMember) {
             $page->votes = $this->_model->getVotesForLoggedInMember($suggestion);
         } else {
-            $this->setFlashNotice('SuggestionsNotLoggedIn');
+            $this->setFlashNotice($this->getWords()->get('SuggestionsNotLoggedIn'));
         }
         $page->suggestion = $suggestion;
         return $page;
@@ -430,11 +431,21 @@ class SuggestionsController extends RoxControllerBase
             $pageno = $this->route_vars['pageno'] - 1;
         }
         $page = new SuggestionsRankListPage($this->_model->getLoggedInMember());
-        $count = $this->_model->getSuggestionsCount(SuggestionsModel::SUGGESTIONS_RANKING);
-        $suggestions = $this->_model->getSuggestions(SuggestionsModel::SUGGESTIONS_RANKING, $pageno, self::SUGGESTIONS_PER_PAGE);
-        $page->suggestions = $suggestions;
-
-        $page->pager = $this->getPager('rank', $count, $pageno);
+        $count = $this->_model->getOptionsCount(SuggestionOption::RANKING);
+        $order = false;
+        $options = array();
+        if (isset($this->args_vars->get['order'])) {
+            $order = $this->args_vars->get['order'];
+            if ($order == 'asc' || $order == 'desc') {
+                $options = $this->_model->getOptions(SuggestionOption::RANKING, $this->args_vars->get['order'], $pageno, self::OPTIONS_PER_PAGE);
+            }
+        }
+        if (empty($options)) {
+            $options = $this->_model->getOptions(SuggestionOption::RANKING, false, $pageno, self::OPTIONS_PER_PAGE);
+        }
+        $page->options = $options;
+        $page->order = $order;
+        $page->pager = $this->getPager('rank', $count, $pageno, self::OPTIONS_PER_PAGE);
 
         return $page;
     }
@@ -445,6 +456,60 @@ class SuggestionsController extends RoxControllerBase
         $page = new SuggestionsRankingPage($loggedInMember);
         $page->suggestion = new Suggestion($this->route_vars['id']);
         return $page;
+    }
+
+    public function voteRanking() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $option = new SuggestionOption($this->route_vars['optionid']);
+        if (!$loggedInMember || !$option || $option->state  != SuggestionOption::RANKING) {
+            $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
+        }
+        // do something
+        if ($this->request_vars[2] == "upvote") {
+            $this->_model->voteRanking($option->id, '+1');
+            $this->setFlashNotice($this->getWords()->get('SuggestionsUpVoteSuccess'));
+        } else {
+            $this->_model->voteRanking($option->id, '-1');
+            $this->setFlashNotice($this->getWords()->get('SuggestionsDownVoteSuccess'));
+        }
+    }
+
+    public function moveToImplementing() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $id = $this->route_vars['id'];
+        $optionId = $this->route_vars['optionid'];
+        $suggestion = new Suggestion($id);
+        $option = new SuggestionOption($optionId);
+        if (!$loggedInMember || !$suggestion || !$option
+            || $option->state  != SuggestionOption::RANKING) {
+            $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
+        }
+        $suggestion->state = SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
+        $option->state = SuggestionOption::IMPLENENTING;
+        $suggestion->update(true);
+        $option->update();
+        $this->setFlashNotice($this->getWords()->get('SuggestionsMovedToImplementing', htmlspecialchars($option->summary, ENT_COMPAT || ENT_QUOTES)));
+
+        $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
+    }
+
+    public function moveToImplemented() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $id = $this->route_vars['id'];
+        $optionId = $this->route_vars['optionid'];
+        $suggestion = new Suggestion($id);
+        $option = new SuggestionOption($optionId);
+        if (!$loggedInMember || !$suggestion || !$option
+            || $option->state  != SuggestionOption::RANKING) {
+            $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
+        }
+        $suggestion->state = SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
+        $option->state = SuggestionOption::IMPLENENTING;
+        $suggestion->update(true);
+        $option->update();
+        $this->setFlashNotice($this->getWords()->get('SuggestionsMovedToImplemented', htmlspecialchars($option->summary, ENT_COMPAT || ENT_QUOTES)));
+
+        $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
     }
 
     public function devList() {

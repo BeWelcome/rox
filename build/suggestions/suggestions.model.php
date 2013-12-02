@@ -143,6 +143,40 @@ class SuggestionsModel extends RoxModelBase
         }
     }
 
+    public function getOptionsCount($state) {
+        $query = "SELECT COUNT(*) FROM suggestions_options WHERE state = " . $state;
+        $sql = $this->dao->query($query);
+        if (!$sql) {
+            return false;
+        }
+        $row = $sql->fetch(PDB::FETCH_NUM);
+        return $row[0];
+    }
+
+    public function getOptions($state, $ordered, $pageno = 0, $items = SuggestionsController::OPTIONS_PER_PAGE) {
+        $temp = $this->CreateEntity('SuggestionOption');
+        if ($ordered) {
+            $query = "
+                SELECT
+                    so.*
+                FROM
+                    suggestions_options so,
+                    suggestions_option_ranks sor
+                WHERE
+                    so.id = sor.optionid
+                GROUP BY sor.optionid
+                ORDER BY SUM(sor.vote) " . $ordered . "
+                LIMIT " . ($pageno * $items) . "," . $items
+            ;
+            error_log($query);
+            $all = $temp->FindBySQLMany($query);
+        } else {
+            $temp->sql_order = "RAND()";
+            $all = $temp->FindByWhereMany("state = " . $state, $pageno * $items, $items);
+        }
+        return $all;
+    }
+
     private function getSuggestionsQueryWhereAndOrder($type) {
         $query = '';
         switch($type) {
@@ -157,9 +191,14 @@ class SuggestionsModel extends RoxModelBase
                     . " OR state = " . self::SUGGESTIONS_DUPLICATE;
                 $sql_order = "laststatechanged DESC";
                 break;
-            case self::SUGGESTIONS_DEV:
+            case self::SUGGESTIONS_IMPLEMENTING:
+                $query = "state = " . self::SUGGESTIONS_IMPLEMENTING
+                    . " OR state = " . self::SUGGESTIONS_DEV;
+                $sql_order = "state ASC, laststatechanged ASC";
+                break;
+            case self::SUGGESTIONS_IMPLEMENTED:
                 $query = "state = " . self::SUGGESTIONS_IMPLEMENTED
-                    . " OR state = " . self::SUGGESTIONS_IMPLEMENTING;
+                    . " OR state = " . self::SUGGESTIONS_DEV;
                 $sql_order = "state ASC, laststatechanged ASC";
                 break;
             case self::SUGGESTIONS_AWAIT_APPROVAL:
@@ -198,7 +237,8 @@ class SuggestionsModel extends RoxModelBase
     }
 
     private function filterImplementedAndImplementing($var) {
-        return ($var->state == self::SUGGESTIONS_IMPLEMENTING) || ($var->state == self::SUGGESTIONS_IMPLEMENTED);
+        return (is_string($var)) || ($var->state == self::SUGGESTIONS_IMPLEMENTING) || ($var->state == self::SUGGESTIONS_IMPLEMENTED)
+            || ($var->state == self::SUGGESTIONS_DEV);
     }
 
     private function filterVoting($var) {
@@ -210,10 +250,27 @@ class SuggestionsModel extends RoxModelBase
             return false;
         }
         $temp = $this->CreateEntity('Suggestion');
-        list($where, $order) = $this->getSuggestionsQueryWhereAndOrder($type);
-        $temp->sql_order = $order;
-        $all = $temp->FindByWhereMany($where, $pageno * $items, $items);
+        if ($type <> self::SUGGESTIONS_DEV) {
+            list($where, $order) = $this->getSuggestionsQueryWhereAndOrder($type);
+            $temp->sql_order = $order;
+            $all = $temp->FindByWhereMany($where, $pageno * $items, $items);
+        } else {
+            list($where, $order) = $this->getSuggestionsQueryWhereAndOrder(self::SUGGESTIONS_IMPLEMENTING);
+            $temp->sql_order = $order;
+            $implementing = $temp->FindByWhereMany($where, $pageno * $items, $items);
 
+            list($where, $order) = $this->getSuggestionsQueryWhereAndOrder(self::SUGGESTIONS_IMPLEMENTED);
+            $temp->sql_order = $order;
+            $implemented = $temp->FindByWhereMany($where, $pageno * $items, $items);
+            $all = array( "Implementing");
+            foreach($implementing as $suggestion) {
+                $all[] = $suggestion;
+            }
+            $all[] = "Implemented";
+            foreach($implemented as $suggestion) {
+                $all[] = $suggestion;
+            }
+        }
         switch ($type) {
             case self::SUGGESTIONS_DISCUSSION:
                 $filtered = array_filter($all, array($this, 'filterDiscussionAndAddOptionsAndVoting'));
@@ -288,7 +345,6 @@ class SuggestionsModel extends RoxModelBase
             if ($summaryEdited) {
                 $editPostText = '<p>The suggestion has been renamed to \''
                     . $args->post['suggestion-summary'] . '\'.</p>';
-                // todo: Update the thread title
                 $query = "
                     SELECT
                         IdTitle
@@ -301,6 +357,15 @@ class SuggestionsModel extends RoxModelBase
                     $row = $sql->fetch(PDB::FETCH_OBJ);
                     $this->getWords()->ReplaceInFTrad($this->dao->escape($args->post['suggestion-summary']),
                         'forums_threads.title', $suggestion->threadId, $row->IdTitle);
+                    $query = "
+                        UPDATE
+                            `forums_threads`
+                        SET
+                            title = '" . $this->dao->escape($args->post['suggestion-summary']) . "'
+                        WHERE
+                            IdTitle = " . $row->IdTitle . "
+                            AND threadId = " . $suggestion->threadId;
+                    $this->dao->query($query);
                 }
             }
             if ($descriptionEdited) {
@@ -326,6 +391,8 @@ class SuggestionsModel extends RoxModelBase
     }
 
     public function addPost($poster, $text, $threadId = false) {
+        error_log(__FUNCTION__);
+        error_log(print_r($text, true));
         $words = $this->getWords();
         $insert = "
             INSERT INTO
@@ -346,23 +413,27 @@ class SuggestionsModel extends RoxModelBase
             $insert .= $threadId . ", ";
         }
         $insert .= "'MembersOnly')";
-
+error_log($insert);
         $res = $this->dao->query($insert);
         if (!$res) {
+error_log('?');
             return false;
         }
+error_log('!');
         $postId = $res->insertId();
 
         // Still needed...
         $query="UPDATE `forums_posts` SET `id`=`postid` WHERE id=0" ;
         $result = $this->dao->query($query);
-
+error_log('!');
         $words->InsertInFTrad( $this->dao->escape($text), 'forums_posts.IdContent', $postId, $poster, -1, -1);
+        error_log('!');
 
         return $postId;
     }
 
     public function setForumNotification($postId, $type) {
+        error_log(__FUNCTION__);
         // Notify the members of the group
         $forums = new Forums();
         $forums->prepare_notification($postId, $type);
@@ -384,7 +455,7 @@ class SuggestionsModel extends RoxModelBase
                 `forums_threads` (`title`, `first_postid`, `last_postid`, `geonameid`, `admincode`, `countrycode`, `continent`,`IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`)
             VALUES
                 ('" . $this->dao->escape($title) . "', '" . $this->dao->escape($postId) . "', '" . $this->dao->escape($postId) . "',
-                    NULL, NULL, NULL, NULL, 0, '" . $this->groupId . "', 'MembersOnly')";
+                    NULL, NULL, NULL, NULL, 0, '" . $this->dao->escape($this->groupId) . "', 'MembersOnly')";
         $res = $this->dao->query($insert);
         if (!$res) {
             return false;
@@ -520,14 +591,15 @@ class SuggestionsModel extends RoxModelBase
         return $suggestion;
     }
 
-    public function restoreOption($optionId) {
+    public function restoreOption($suggestionId, $optionId) {
+        $suggestion = new Suggestion($suggestionId);
         $option = new SuggestionOption($optionId);
         $option->modified = date('Y-m-d');
         $option->modifiedBy = $this->getLoggedInMember()->id;
 
         $words = $this->getWords();
         $restoreOptionPostText = '<p>The option \'' . $option->summary . '\' has been restored.</p>';
-        $postId = $this->addPost($suggestion->modifiedby, $restoreOptionPostText, $suggestion->threadId);
+        $postId = $this->addPost($option->modifiedby, $restoreOptionPostText, $suggestion->threadId);
 
         $option->deleted = null;
         $option->deletedBy = null;
@@ -613,16 +685,28 @@ class SuggestionsModel extends RoxModelBase
     }
 
     public function setExclusions($member, $args) {
+        $suggestion = new Suggestion($args->post['suggestion-id']);
+        $options = array();
+
         $optionKeys = array_filter(array_keys($args->post), array($this, 'filterOptions'));
         foreach($optionKeys as $optionKey) {
             $optionId = str_replace('option', '', $optionKey);
+            $options[] = $optionId;
             $option = new SuggestionOption($optionId);
             $mutuallyExclusive = implode(',', $args->post[$optionKey]);
             $option->mutuallyExclusiveWith = $mutuallyExclusive;
             $option->update();
         }
 
-        $suggestion = new Suggestion($args->post['suggestion-id']);
+        // Check for empty rows
+        foreach($suggestion->options as $option) {
+            if (array_search($option->id, $options) === false) {
+                error_log($option->id);
+                $option->mutuallyExclusiveWith = 'None';
+                $option->update();
+            }
+        }
+
         return $suggestion;
     }
 
@@ -656,10 +740,25 @@ class SuggestionsModel extends RoxModelBase
                 $suggestion->votingstart = date('Y-m-d');
                 $suggestion->votingend = date('Y-m-d', time() + self::DURATION_VOTING);
                 break;
-            case self::SUGGESTIONS_RANKING:
-                break;
         }
         $suggestion->update(true);
+    }
+
+    public function voteRanking($optionId, $vote) {
+        $member = $this->getLoggedInMember();
+        // hash can be simple, is only used to obfuscate
+        $hash = hash_hmac('sha256', $member->id, $optionId);
+        $query = "
+            REPLACE INTO
+              suggestions_option_ranks
+            SET
+              optionid = " . $optionId . ",
+              memberhash = '" . $hash . "',
+              vote = " . $vote . "
+            ";
+        error_log($query);
+        $sql = $this->dao->query($query);
+        return true;
     }
 }
 

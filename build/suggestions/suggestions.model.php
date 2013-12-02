@@ -168,7 +168,6 @@ class SuggestionsModel extends RoxModelBase
                 ORDER BY SUM(sor.vote) " . $ordered . "
                 LIMIT " . ($pageno * $items) . "," . $items
             ;
-            error_log($query);
             $all = $temp->FindBySQLMany($query);
         } else {
             $temp->sql_order = "RAND()";
@@ -340,7 +339,9 @@ class SuggestionsModel extends RoxModelBase
             $descriptionEdited = true;
         }
 
-        if ($summaryEdited || $descriptionEdited) {
+        if ($suggestion->state <> self::SUGGESTIONS_AWAIT_APPROVAL
+            && $suggestion->state <> self::SUGGESTIONS_DUPLICATE
+            && ($summaryEdited || $descriptionEdited)) {
             $editPostText = "";
             if ($summaryEdited) {
                 $editPostText = '<p>The suggestion has been renamed to \''
@@ -381,18 +382,15 @@ class SuggestionsModel extends RoxModelBase
                 $postId = $this->addPost($suggestion->modifiedby, $editPostText, $suggestion->threadId);
                 $this->setForumNotification($postId, "reply");
             }
-
-            $suggestion->summary = $args->post['suggestion-summary'];
-            $suggestion->description = $args->post['suggestion-description'];
-            $suggestion->update();
         }
+        $suggestion->summary = $args->post['suggestion-summary'];
+        $suggestion->description = $args->post['suggestion-description'];
+        $suggestion->update();
 
         return $suggestion;
     }
 
     public function addPost($poster, $text, $threadId = false) {
-        error_log(__FUNCTION__);
-        error_log(print_r($text, true));
         $words = $this->getWords();
         $insert = "
             INSERT INTO
@@ -413,27 +411,21 @@ class SuggestionsModel extends RoxModelBase
             $insert .= $threadId . ", ";
         }
         $insert .= "'MembersOnly')";
-error_log($insert);
         $res = $this->dao->query($insert);
         if (!$res) {
-error_log('?');
             return false;
         }
-error_log('!');
         $postId = $res->insertId();
 
         // Still needed...
         $query="UPDATE `forums_posts` SET `id`=`postid` WHERE id=0" ;
         $result = $this->dao->query($query);
-error_log('!');
         $words->InsertInFTrad( $this->dao->escape($text), 'forums_posts.IdContent', $postId, $poster, -1, -1);
-        error_log('!');
 
         return $postId;
     }
 
     public function setForumNotification($postId, $type) {
-        error_log(__FUNCTION__);
         // Notify the members of the group
         $forums = new Forums();
         $forums->prepare_notification($postId, $type);
@@ -701,7 +693,6 @@ error_log('!');
         // Check for empty rows
         foreach($suggestion->options as $option) {
             if (array_search($option->id, $options) === false) {
-                error_log($option->id);
                 $option->mutuallyExclusiveWith = 'None';
                 $option->update();
             }
@@ -756,7 +747,6 @@ error_log('!');
               memberhash = '" . $hash . "',
               vote = " . $vote . "
             ";
-        error_log($query);
         $sql = $this->dao->query($query);
         return true;
     }

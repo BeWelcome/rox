@@ -65,7 +65,7 @@ class Suggestion extends RoxEntityBase
                     $optionsFactory->sql_order = "`deleted` ASC, `id` ASC";
                     break;
             }
-            error_log($optionsWhere);
+
             $this->options = $optionsFactory->FindByWhereMany('suggestionId = ' . $this->id . $optionsWhere);
 
             $this->exclusionsSet = false;
@@ -157,7 +157,6 @@ class Suggestion extends RoxEntityBase
     }
 
     public function update($status = false) {
-        error_log($status);
         if ($status) {
             $this->laststatechanged = date('Y-m-d');
             switch ($this->state) {
@@ -313,7 +312,6 @@ class Suggestion extends RoxEntityBase
     }
 
     private function calculateResults() {
-        error_log(__FUNCTION__);
         $entityFactory = new RoxEntityFactory();
 
         $ranks = $this->getRanks();

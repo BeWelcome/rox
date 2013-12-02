@@ -61,7 +61,7 @@ class SuggestionOption extends RoxEntityBase
                 GROUP BY
                     optionid
                 ";
-            error_log($query);
+
             $this->rankVotes = 0;
             $sql = $this->dao->query($query);
             if ($sql) {

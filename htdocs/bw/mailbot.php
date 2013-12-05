@@ -97,7 +97,7 @@ FROM
 WHERE
     broadcast.id = broadcastmessages.IdBroadcast  AND
     broadcastmessages.IdReceiver = members.id     AND
-    broadcastmessages.Status = 'ToSend' LIMIT 50
+    broadcastmessages.Status = 'ToSend' LIMIT 100
 ";
 $qry = sql_query($str);
 
@@ -214,21 +214,12 @@ while ($rr = mysql_fetch_object($qry)) {
 
     // Skip to next item in queue if there was no result from database
     if (!is_object($rPost)) {
+        SetForumNotificationStatus($rr->id, 'Failed');
         continue;
     }
 
     // Sanitise IdMember
     $rPostIdMember = intval($rPost->IdMember);
-
-    $rImage=LoadRow("
-        SELECT
-            *
-        FROM
-            membersphotos
-        WHERE
-            IdMember = $rPostIdMember AND
-            SortOrder = 0
-    ");
 
     $UnsubscribeLink="" ;
     if ($rr->IdSubscription!=0) { // Compute the unsubscribe link according to the table where the subscription was coming from
@@ -313,28 +304,12 @@ while ($rr = mysql_fetch_object($qry)) {
 
     if (!bw_mail($Email, $subj, $text, "", $from, $MemberIdLanguage, "html", "", "")) {
         LogStr("Cannot send posts_notificationqueue=#" . $rr->id . " to <b>".$rPost->Username."</b> \$Email=[".$Email."]","mailbot");
-        // Telling that the notification has been not sent
-        $str = "
-            UPDATE
-                posts_notificationqueue
-            SET
-                posts_notificationqueue.Status = 'Failed'
-            WHERE
-                posts_notificationqueue.id = $rr->id
-        ";
+        SetForumNotificationStatus($rr->id, 'Failed');
     } else {
         $countposts_notificationqueue++;
         // Telling that the notification has been sent
-        $str = "
-            UPDATE
-                posts_notificationqueue
-            SET
-                posts_notificationqueue.Status='Sent'
-            WHERE
-                posts_notificationqueue.id = $rr->id
-        ";
+        SetForumNotificationStatus($rr->id, 'Sent');
     }
-    sql_query($str);
 }
 $sResult = "<br />".$countposts_notificationqueue . " forum notification sent <br \>";
 
@@ -703,7 +678,19 @@ if (IsLoggedIn()) {
     } // end of fTrad
 
     function PictureInMail($Username) {
-       $PictureFilePath='http://www.bewelcome.org/members/avatar/'.$Username ;
-       $rval= '<img alt="picture of '.$Username.'" src="'.$PictureFilePath.'"/>';
+       $PictureFilePath='http://www.bewelcome.org/members/avatar/'. $Username;
+       $rval= '<img alt="picture of ' . $Username.'" src="'.$PictureFilePath.'"/>';
         return($rval) ;
     } // End of PictureInMail
+
+    function SetForumNotificationStatus($notifId, $status) {
+        $str = "
+            UPDATE
+                posts_notificationqueue
+            SET
+                posts_notificationqueue.Status = '" . $status . "'
+            WHERE
+                posts_notificationqueue.id = $notifId
+            ";
+        sql_query($str);
+    }

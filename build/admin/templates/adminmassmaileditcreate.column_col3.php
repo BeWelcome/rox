@@ -37,7 +37,9 @@
 <p class="note center">Please write here in <strong>English</strong></p>
 <div class="type-text">
 <?php
-$options = array();
+$options = array(
+	"None" => $this->words->get('AdminMassMailEditSelectType')
+);
 if ($this->newsletterSpecific) {
     $options["Specific"] = $this->words->get('AdminMassMailEditTypeSpecific');
 }
@@ -50,8 +52,11 @@ if ($this->loginReminder) {
 if ($this->suggestionsReminder) {
     $options["SuggestionReminder"] = $this->words->get('AdminMassMailEditTypeSuggestionsReminder');
 }
+if ($this->termsOfUse) {
+    $options["TermsOfUse"] = $this->words->get('AdminMassMailEditTypeTermsOfUse');
+}
 ?>
-Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count($options) == 1) || ($id != 0))) { echo 'disabled="disabled"'; }?> />
+Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count($options) == 1) || ($id != 0))) { echo 'disabled="disabled"'; }?> >
 <?php
     foreach($options as $key => $option) {
         $opt = '<option value="' . $key . '"';

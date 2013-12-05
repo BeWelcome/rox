@@ -472,6 +472,7 @@ class SuggestionsController extends RoxControllerBase
             $this->_model->voteRanking($option->id, '-1');
             $this->setFlashNotice($this->getWords()->get('SuggestionsDownVoteSuccess'));
         }
+        $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
     }
 
     public function moveToImplementing() {

@@ -26,6 +26,9 @@ $words = new MOD_words(); ?>
 
 <h3>Terms of Use</h3>
 
+<table border=6><tr><td><p><strong><font color="#FF0000">Please note: These Terms of Use will be replaced by <a href="terms2014">new Terms of Use</a> on 11th January 2014 at 12:00 UTC.</font></strong><br />
+Please read the <a href="terms2014">new Terms of Use</a> carefully. Should you have any questions about the them, please post them in the <a href="forums/bwforum">BeWelcome Forum</a>. We have opened a thread there to collect all questions and answer them for every member to see. Alternatively, you can contact our <a href="feedback?IdCategory=9">Support Team</a> with your questions.</p></td></tr></table>
+
 <h4>1. Registration</h4>
 <p>By registering with BeWelcome and creating your profile, you agree to provide accurate, up-to-date and complete information about yourself. You further agree that you will ensure that this information is kept accurate and up to date at all times. This is especially important with respect to your email address, since that is the primary way in which we will communicate with you about your account. If you fail to follow this rule, we reserve the right to edit, close and/or delete your account and profile and thereby remove any information and prevent you from using the site.
 As part of the registration process, you will designate a password, subject to our password security requirements. It is your responsibility to keep this password confidential. If you find out that your password or account is being used by someone without your consent, or you discover any other breach of security, you agree to notify us promptly without delay.</p>

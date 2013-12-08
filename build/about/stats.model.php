@@ -16,7 +16,7 @@ include("../lib/pchart-2.1.3/class/pPie.class.php");
  */
 class StatsModel extends RoxModelBase
 {
-    const MEMBER_STATUS_COLLECTED = "'Active', 'ChoiceInactive', 'OutOfRemind', 'SuspendedBeta'";
+    const MEMBER_STATUS_COLLECTED = "'Active', 'ChoiceInactive', 'OutOfRemind'";
 
     public function __construct()
     {
@@ -358,7 +358,7 @@ LIMIT 0,60
         /* Create the pChart object */
         $picture = new pImage(400,250,$data, true);
         /* Set the default font properties */
-        $picture->setFontProperties(array("FontName"=>"../lib/pchart-2.1.3/fonts/verdana.ttf","FontSize"=>10));
+        $picture->setFontProperties(array("FontName"=>"../lib/pchart-2.1.3/fonts/verdana.ttf","FontSize"=>8));
 
         /* Enable shadow computing */
         $picture->setShadow(true,array("X"=>2,"Y"=>2,"R"=>150,"G"=>150,"B"=>150,"Alpha"=>100));

@@ -391,6 +391,9 @@ class SuggestionsModel extends RoxModelBase
     }
 
     public function addPost($poster, $text, $threadId = false) {
+        // Block access to dtabase while the data is written
+        $this->dao->query('START TRANSACTION');
+
         $words = $this->getWords();
         $insert = "
             INSERT INTO
@@ -421,6 +424,20 @@ class SuggestionsModel extends RoxModelBase
         $query="UPDATE `forums_posts` SET `id`=`postid` WHERE id=0" ;
         $result = $this->dao->query($query);
         $words->InsertInFTrad( $this->dao->escape($text), 'forums_posts.IdContent', $postId, $poster, -1, -1);
+
+        if ($threadId) {
+            $query = "
+            UPDATE
+              `forums_threads`
+            SET
+              `last_postid` = '" . $postId . "',
+              `replies` = `replies` + 1
+            WHERE
+              `threadid` = '" . $threadId . "'";
+
+            $this->dao->query($query);
+        }
+        $this->dao->query('COMMIT');
 
         return $postId;
     }

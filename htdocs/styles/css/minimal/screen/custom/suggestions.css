@@ -53,7 +53,10 @@ tr.highlighttop {
 	background: #eceff5;
 	border: none 0pt;
 	border-top: 1px solid #e5e5e5;
-	margin-right: 4px;
+}
+tr.highlightmiddle {
+    background: #eceff5;
+    border: none 0pt;
 }
 tr.highlightbottom {
 	background: #eceff5;
@@ -64,10 +67,17 @@ tr.highlightbottom {
 tr.blanktop {
 	border: none 0pt;
  	border-top: 1px solid #e5e5e5;
-   	margin-right: 4px;
+}
+tr.blankmiddle {
+    background: #eceff5;
+    border: none 0pt;
 }
 tr.blankbottom {
 	border: none 0pt;
  	border-bottom: 1px solid #e5e5e5;
-   	margin-right: 4px;
+}
+
+hr.suggestion {
+    color: #ffab0c;
+    border-color: #ffab0c;
 }

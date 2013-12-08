@@ -417,7 +417,7 @@ class Suggestion extends RoxEntityBase
         if ($suggestionsTeam) {
             $suggestions = new SuggestionsModel();
             $postId = $suggestions->addPost($suggestionsTeam->id, $postText, $this->threadId);
-            $suggestions->setForumNotifications($postId, 'reply');
+            $suggestions->setForumNotification($postId, 'reply');
         }
 
         return true;

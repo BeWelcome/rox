@@ -37,21 +37,26 @@
 <p class="note center">Please write here in <strong>English</strong></p>
 <div class="type-text">
 <?php
-$options = array();
+$options = array(
+	"None" => $this->words->getSilent('AdminMassMailEditSelectType')
+);
 if ($this->newsletterSpecific) {
-    $options["Specific"] = $this->words->get('AdminMassMailEditTypeSpecific');
+    $options["Specific"] = $this->words->getSilent('AdminMassMailEditTypeSpecific');
 }
 if ($this->newsletterGeneral) {
-    $options["Normal"] = $this->words->get('AdminMassMailEditTypeGeneral');
+    $options["Normal"] = $this->words->getSilent('AdminMassMailEditTypeGeneral');
 }
 if ($this->loginReminder) {
-    $options["RemindToLog"] = $this->words->get('AdminMassMailEditTypeLoginReminder');
+    $options["RemindToLog"] = $this->words->getSilent('AdminMassMailEditTypeLoginReminder');
 }
 if ($this->suggestionsReminder) {
-    $options["SuggestionReminder"] = $this->words->get('AdminMassMailEditTypeSuggestionsReminder');
+    $options["SuggestionReminder"] = $this->words->getSilent('AdminMassMailEditTypeSuggestionsReminder');
+}
+if ($this->termsOfUse) {
+    $options["TermsOfUse"] = $this->words->getSilent('AdminMassMailEditTypeTermsOfUse');
 }
 ?>
-Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count($options) == 1) || ($id != 0))) { echo 'disabled="disabled"'; }?> />
+Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count($options) == 1) || ($id != 0))) { echo 'disabled="disabled"'; }?> >
 <?php
     foreach($options as $key => $option) {
         $opt = '<option value="' . $key . '"';
@@ -62,7 +67,7 @@ Type: <select id="Type" name="Type" <?php if ((!$this->canChangeType) && ((count
         echo $opt;
     }
 ?>
-</select>
+</select><?php echo $this->words->flushBuffer();?>
 </div>
 <div class="type-text">
 <p>Give the code name of the broadcast as a word entry (must not exist in words table previously) like <b>NewsJuly2007</b> or <b>NewsAugust2007</b> without spaces!</p>

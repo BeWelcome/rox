@@ -77,268 +77,6 @@ if (IsLoggedIn()) {
     $_SESSION['IdMember'] = 0;
 } // not logged
 
-
-// -----------------------------------------------------------------------------
-// broadcast messages for members (massmail)
-// -----------------------------------------------------------------------------
-$str = "
-SELECT
-    broadcastmessages.*,
-    Username,
-    members.Status AS MemberStatus,
-    broadcast.Name AS word,
-    broadcast.Type as broadcast_type,
-    broadcast.EmailFrom as EmailFrom
-
-FROM
-    broadcast,
-    broadcastmessages,
-    members
-WHERE
-    broadcast.id = broadcastmessages.IdBroadcast  AND
-    broadcastmessages.IdReceiver = members.id     AND
-    broadcastmessages.Status = 'ToSend' LIMIT 50
-";
-$qry = sql_query($str);
-
-$countbroadcast = 0;
-while ($rr = mysql_fetch_object($qry)) {
-    if ($_SESSION['Param']->MailBotMode!='Auto') {
-        echo "broadcastmessages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> broadcastmessages.id=".$rr->id."<br>" ;
-    }
-    $Email = GetEmail($rr->IdReceiver);
-    $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
-
-//    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-
-        if (empty($rr->EmailFrom)) {
-            $sender_mail="newsletter@bewelcome.org" ;
-            if ($rr->broadcast_type=="RemindToLog") {
-                $sender_mail="reminder@bewelcome.org" ;
-            }
-            if ($rr->broadcast_type=="SuggestionReminder") {
-                $sender_mail="suggestions@bewelcome.org" ;
-            }
-        }
-        else {
-            $sender_mail=$rr->EmailFrom ;
-        }
-
-    $subj = getBroadCastElement("Broadcast_Title_" . $rr->word, $MemberIdLanguage, $rr->Username);
-    $text = getBroadCastElement("Broadcast_Body_" . $rr->word,$MemberIdLanguage, $rr->Username, $Email);
-
-    $res = bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ");
-    $res = true;
-    if (!$res) {
-        $str = "UPDATE   broadcastmessages
-SET   Status = 'Failed'
-WHERE    IdBroadcast =  $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
-        LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."] Type=[".$rr->broadcast_type."]","mailbot");
-
-    } else {
-
-        // If this message was to count has a reminder
-        if ($rr->broadcast_type=="RemindToLog") {
-            sql_query("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$rr->IdReceiver);
-        }
-
-
-        $str = "UPDATE    broadcastmessages
-SET    Status = 'Sent'
-WHERE    IdBroadcast = $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
-        $countbroadcast++ ;
-        LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast." send from:".$sender_mail,"Debug") ;
-    }
-    sql_query($str);
-} // end of while on broadcast (massmail)
-    if ($countbroadcast>0)  LogStr(" \$countbroadcast=".$countbroadcast." sent at this cycle","Debug") ;
-
-
-// -----------------------------------------------------------------------------
-// Forum notifications
-// -----------------------------------------------------------------------------
-$str = "
-SELECT
-    posts_notificationqueue.*,
-    Username,
-    TIMESTAMPDIFF( minute, posts_notificationqueue.created, now( )) as created_since_x_minute
-
-FROM
-    posts_notificationqueue,
-    members
-WHERE
-    posts_notificationqueue.IdMember = members.id  AND
-    (members.Status = 'Active' OR members.Status = 'ActiveHidden')  AND
-    posts_notificationqueue.Status = 'ToSend'
-";
-$qry = sql_query($str);
-
-$countposts_notificationqueue = 0;
-global $fTradIdLastUsedLanguage  ; // This is set for the fTrad function (will define which language to use)
-while ($rr = mysql_fetch_object($qry)) {
-    if (($rr->created_since_x_minute < 10) and(($rr->Type == 'newthread') or ($rr->Type == 'reply'))) {
-        continue ; // Don't process to recent change so it means give time for the user to fix it by an edit
-    }
-    if ($_SESSION['Param']->MailBotMode!='Auto') {
-        echo "posts_notificationqueue <b> Going to Get Email for IdMember : [".$rr->IdMember."]</b> posts_notificationqueue.id=".$rr->id."<br>" ;
-    }
-    $Email = GetEmail($rr->IdMember);
-    $fTradIdLastUsedLanguage=$MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
-
-    $rPost=LoadRow("
-        SELECT
-            forums_posts.*,
-            members.Username,
-            members.id AS IdMember,
-            forums_threads.title AS thread_title,
-            forums_threads.IdTitle,
-            forums_threads.threadid AS IdThread,
-            forums_threads.IdGroup AS IdGroup,
-            forums_posts.message,
-            forums_posts.IdContent,
-            geonames_cache.name AS cityname,
-            geonames_cache2.name AS countryname
-        FROM
-            forums_posts,
-            forums_threads,
-            members,
-            geonames_cache,
-            geonames_cache as geonames_cache2
-        WHERE
-            forums_threads.threadid = forums_posts.threadid  AND
-            forums_posts.IdWriter = members.id  AND
-            forums_posts.postid = $rr->IdPost AND
-            geonames_cache.geonameid = members.IdCity  AND
-            geonames_cache2.geonameid = geonames_cache.parentCountryId
-    ");
-
-    // Skip to next item in queue if there was no result from database
-    if (!is_object($rPost)) {
-        continue;
-    }
-
-    // Sanitise IdMember
-    $rPostIdMember = intval($rPost->IdMember);
-
-    $rImage=LoadRow("
-        SELECT
-            *
-        FROM
-            membersphotos
-        WHERE
-            IdMember = $rPostIdMember AND
-            SortOrder = 0
-    ");
-
-    $UnsubscribeLink="" ;
-    if ($rr->IdSubscription!=0) { // Compute the unsubscribe link according to the table where the subscription was coming from
-        $rSubscription = LoadRow("
-            SELECT
-                *
-            FROM
-                $rr->TableSubscription
-            WHERE
-                id = $rr->IdSubscription
-        ");
-        if ($rr->TableSubscription == "members_threads_subscribed") {
-            $UnsubscribeLink = '<a href="'.$baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.wwinlang('ForumUnSubscribe',$MemberIdLanguage).'</a>';
-        }
-    } elseif ($rr->TableSubscription == 'membersgroups') {
-        $UnsubscribeLink = "<hr />" . wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
-    }
-
-    if ($rPost->IdGroup!=0) { // Get group name
-        $rGroupname = LoadRow("
-            SELECT
-                Name
-            FROM
-                groups
-            WHERE
-                id = $rPost->IdGroup
-        ");
-    }
-
-    // Rewrite the title and the message to the corresponding default language for this member if any
-    $rPost->thread_title=fTrad($rPost->IdTitle) ;
-    $rPost->message=fTrad($rPost->IdContent) ;
-    $rPost->message=str_replace('<p><br />\n</p>','',$rPost->message) ;
-
-    $NotificationType='';
-
-    switch ($rr->Type) {
-        case 'newthread':
-            break ;
-        case 'reply':
-            $NotificationType='Re: ';
-            break ;
-        case 'moderatoraction':
-        case 'deletepost':
-        case 'deletethread':
-        case 'useredit':
-            $NotificationType=wwinlang("ForumMailbotEditedPost",$MemberIdLanguage);
-            break ;
-        case 'translation':
-            break ;
-        case 'buggy':
-        default :
-          $word->$text="Problem in forum notification Type=".$rr->Type."<br />" ;
-            break ;
-    }
-
-    // Setting some default values
-    $subj = $NotificationType . $rPost->thread_title;
-    if ($rPost->IdGroup != 0) {
-        $from = "\"BW " . $rPost->Username . "\" <group@bewelcome.org>";
-        $subj .= " [" . $rGroupname->Name . "]";
-    } else {
-        $from = "\"BW " . $rPost->Username . "\" <forum@bewelcome.org>";
-    }
-    $text = '<html><head><title>'.$subj.'</title></head>' ;
-    $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
-
-    if ($rPost->IdGroup != 0) {
-        $text.='<tr><th align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a> [' . $rGroupname->Name . ']</th></tr>' ;
-    } else {
-        $text.='<tr><th align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
-    }
-    $text.='<tr><td>'.wwinlang('PostFrom',$MemberIdLanguage).': <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> ('.$rPost->cityname.', '.$rPost->countryname.')</td></tr>' ;
-    $text.='<tr><td>'.$rPost->message.'</td></tr>';
-    if ($UnsubscribeLink!="") {
-       $text .= '<tr><td>'.$UnsubscribeLink.'</td></tr>';
-    } else {
-        // This case should be for moderators only
-        $text .= '<tr><td> IdPost #'.$rr->IdPost.' action='.$NotificationType.'</td></tr>';
-    }
-    $text .= '</table></body></html>';
-
-    if (!bw_mail($Email, $subj, $text, "", $from, $MemberIdLanguage, "html", "", "")) {
-        LogStr("Cannot send posts_notificationqueue=#" . $rr->id . " to <b>".$rPost->Username."</b> \$Email=[".$Email."]","mailbot");
-        // Telling that the notification has been not sent
-        $str = "
-            UPDATE
-                posts_notificationqueue
-            SET
-                posts_notificationqueue.Status = 'Failed'
-            WHERE
-                posts_notificationqueue.id = $rr->id
-        ";
-    } else {
-        $countposts_notificationqueue++;
-        // Telling that the notification has been sent
-        $str = "
-            UPDATE
-                posts_notificationqueue
-            SET
-                posts_notificationqueue.Status='Sent'
-            WHERE
-                posts_notificationqueue.id = $rr->id
-        ";
-    }
-    sql_query($str);
-}
-$sResult = "<br />".$countposts_notificationqueue . " forum notification sent <br \>";
-
-
 // -----------------------------------------------------------------------------
 // Normal messages between members
 // -----------------------------------------------------------------------------
@@ -369,9 +107,9 @@ while ($rr = mysql_fetch_object($qry)) {
 UPDATE
     messages
 SET
-    Status = 'Freeze'
+    Status = 'Failed'
 WHERE
-    id = $rr->id and IdParent=0
+    id = $rr->id
         ";
         sql_query($str);
         LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
@@ -470,7 +208,242 @@ if ($countbroadcast>0) {
 }
 
 
-    $str="select * from volunteers_reports_schedule where Type='Accepter' and TimeToDeliver<now() " ;
+// -----------------------------------------------------------------------------
+// Forum notifications
+// -----------------------------------------------------------------------------
+$str = "
+SELECT
+    posts_notificationqueue.*,
+    Username,
+    TIMESTAMPDIFF( minute, posts_notificationqueue.created, now( )) as created_since_x_minute
+
+FROM
+    posts_notificationqueue,
+    members
+WHERE
+    posts_notificationqueue.IdMember = members.id  AND
+    (members.Status = 'Active' OR members.Status = 'ActiveHidden')  AND
+    posts_notificationqueue.Status = 'ToSend'
+";
+$qry = sql_query($str);
+
+$countposts_notificationqueue = 0;
+global $fTradIdLastUsedLanguage  ; // This is set for the fTrad function (will define which language to use)
+while ($rr = mysql_fetch_object($qry)) {
+    if (($rr->created_since_x_minute < 10) and(($rr->Type == 'newthread') or ($rr->Type == 'reply'))) {
+        continue ; // Don't process to recent change so it means give time for the user to fix it by an edit
+    }
+    if ($_SESSION['Param']->MailBotMode!='Auto') {
+        echo "posts_notificationqueue <b> Going to Get Email for IdMember : [".$rr->IdMember."]</b> posts_notificationqueue.id=".$rr->id."<br>" ;
+    }
+    $Email = GetEmail($rr->IdMember);
+    $fTradIdLastUsedLanguage=$MemberIdLanguage = GetDefaultLanguage($rr->IdMember);
+
+    $rPost=LoadRow("
+        SELECT
+            forums_posts.*,
+            members.Username,
+            members.id AS IdMember,
+            forums_threads.title AS thread_title,
+            forums_threads.IdTitle,
+            forums_threads.threadid AS IdThread,
+            forums_threads.IdGroup AS IdGroup,
+            forums_posts.message,
+            forums_posts.IdContent,
+            geonames_cache.name AS cityname,
+            geonames_cache2.name AS countryname
+        FROM
+            forums_posts,
+            forums_threads,
+            members,
+            geonames_cache,
+            geonames_cache as geonames_cache2
+        WHERE
+            forums_threads.threadid = forums_posts.threadid  AND
+            forums_posts.IdWriter = members.id  AND
+            forums_posts.postid = $rr->IdPost AND
+            geonames_cache.geonameid = members.IdCity  AND
+            geonames_cache2.geonameid = geonames_cache.parentCountryId
+    ");
+
+    // Skip to next item in queue if there was no result from database
+    if (!is_object($rPost)) {
+        SetForumNotificationStatus($rr->id, 'Failed');
+        continue;
+    }
+
+    // Sanitise IdMember
+    $rPostIdMember = intval($rPost->IdMember);
+
+    $UnsubscribeLink="" ;
+    if ($rr->IdSubscription!=0) { // Compute the unsubscribe link according to the table where the subscription was coming from
+        $rSubscription = LoadRow("
+            SELECT
+                *
+            FROM
+                $rr->TableSubscription
+            WHERE
+                id = $rr->IdSubscription
+        ");
+        if ($rr->TableSubscription == "members_threads_subscribed") {
+            $UnsubscribeLink = '<a href="'.$baseuri.'forums/subscriptions/unsubscribe/thread/'.$rSubscription->id.'/'.$rSubscription->UnSubscribeKey.'">'.wwinlang('ForumUnSubscribe',$MemberIdLanguage).'</a>';
+        }
+    } elseif ($rr->TableSubscription == 'membersgroups') {
+        $UnsubscribeLink = "<hr />" . wwinlang('ForumUnSubscribeGroup', $MemberIdLanguage);
+    }
+
+    if ($rPost->IdGroup!=0) { // Get group name
+        $rGroupname = LoadRow("
+            SELECT
+                Name
+            FROM
+                groups
+            WHERE
+                id = $rPost->IdGroup
+        ");
+    }
+
+    // Rewrite the title and the message to the corresponding default language for this member if any
+    $rPost->thread_title=fTrad($rPost->IdTitle) ;
+    $rPost->message=fTrad($rPost->IdContent) ;
+    $rPost->message=str_replace('<p><br />\n</p>','',$rPost->message) ;
+
+    $NotificationType='';
+
+    switch ($rr->Type) {
+        case 'newthread':
+            break ;
+        case 'reply':
+            $NotificationType='Re: ';
+            break ;
+        case 'moderatoraction':
+        case 'deletepost':
+        case 'deletethread':
+        case 'useredit':
+            $NotificationType=wwinlang("ForumMailbotEditedPost",$MemberIdLanguage);
+            break ;
+        case 'translation':
+            break ;
+        case 'buggy':
+        default :
+            $word->$text="Problem in forum notification Type=".$rr->Type."<br />" ;
+            break ;
+    }
+
+    // Setting some default values
+    $subj = $NotificationType . $rPost->thread_title;
+    if ($rPost->IdGroup != 0) {
+        $from = "\"BW " . $rPost->Username . "\" <group@bewelcome.org>";
+        $subj .= " [" . $rGroupname->Name . "]";
+    } else {
+        $from = "\"BW " . $rPost->Username . "\" <forum@bewelcome.org>";
+    }
+    $text = '<html><head><title>'.$subj.'</title></head>' ;
+    $text.='<body><table border="0" cellpadding="0" cellspacing="10" width="700" style="margin: 20px; background-color: #fff; font-family:Arial, Helvetica, sans-serif; font-size:12px; color: #333;" align="left">' ;
+
+    if ($rPost->IdGroup != 0) {
+        $text.='<tr><th align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a> [' . $rGroupname->Name . ']</th></tr>' ;
+    } else {
+        $text.='<tr><th align="left"><a href="'.$baseuri.'forums/s'.$rPost->IdThread.'">'.$rPost->thread_title.'</a></th></tr>' ;
+    }
+    $text.='<tr><td>'.wwinlang('PostFrom',$MemberIdLanguage).': <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> ('.$rPost->cityname.', '.$rPost->countryname.')</td></tr>' ;
+    $text.='<tr><td>'.$rPost->message.'</td></tr>';
+    if ($UnsubscribeLink!="") {
+        $text .= '<tr><td>'.$UnsubscribeLink.'</td></tr>';
+    } else {
+        // This case should be for moderators only
+        $text .= '<tr><td> IdPost #'.$rr->IdPost.' action='.$NotificationType.'</td></tr>';
+    }
+    $text .= '</table></body></html>';
+
+    if (!bw_mail($Email, $subj, $text, "", $from, $MemberIdLanguage, "html", "", "")) {
+        LogStr("Cannot send posts_notificationqueue=#" . $rr->id . " to <b>".$rPost->Username."</b> \$Email=[".$Email."]","mailbot");
+        SetForumNotificationStatus($rr->id, 'Failed');
+    } else {
+        $countposts_notificationqueue++;
+        // Telling that the notification has been sent
+        SetForumNotificationStatus($rr->id, 'Sent');
+    }
+}
+$sResult = "<br />".$countposts_notificationqueue . " forum notification sent <br \>";
+
+// -----------------------------------------------------------------------------
+// broadcast messages for members (massmail)
+// -----------------------------------------------------------------------------
+$str = "
+SELECT
+    broadcastmessages.*,
+    Username,
+    members.Status AS MemberStatus,
+    broadcast.Name AS word,
+    broadcast.Type as broadcast_type,
+    broadcast.EmailFrom as EmailFrom
+
+FROM
+    broadcast,
+    broadcastmessages,
+    members
+WHERE
+    broadcast.id = broadcastmessages.IdBroadcast  AND
+    broadcastmessages.IdReceiver = members.id     AND
+    broadcastmessages.Status = 'ToSend' LIMIT 100
+";
+$qry = sql_query($str);
+
+$countbroadcast = 0;
+while ($rr = mysql_fetch_object($qry)) {
+    if ($_SESSION['Param']->MailBotMode!='Auto') {
+        echo "broadcastmessages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> broadcastmessages.id=".$rr->id."<br>" ;
+    }
+    $Email = GetEmail($rr->IdReceiver);
+    $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
+
+//    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+
+    if (empty($rr->EmailFrom)) {
+        $sender_mail="newsletter@bewelcome.org" ;
+        if ($rr->broadcast_type=="RemindToLog") {
+            $sender_mail="reminder@bewelcome.org" ;
+        }
+        if ($rr->broadcast_type=="SuggestionReminder") {
+            $sender_mail="suggestions@bewelcome.org" ;
+        }
+    }
+    else {
+        $sender_mail=$rr->EmailFrom ;
+    }
+
+    $subj = getBroadCastElement("Broadcast_Title_" . $rr->word, $MemberIdLanguage, $rr->Username);
+    $text = getBroadCastElement("Broadcast_Body_" . $rr->word,$MemberIdLanguage, $rr->Username, $Email);
+
+    $res = bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ");
+    $res = true;
+    if (!$res) {
+        $str = "UPDATE   broadcastmessages
+SET   Status = 'Failed'
+WHERE    IdBroadcast =  $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
+        LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."] Type=[".$rr->broadcast_type."]","mailbot");
+
+    } else {
+
+        // If this message was to count has a reminder
+        if ($rr->broadcast_type=="RemindToLog") {
+            sql_query("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$rr->IdReceiver);
+        }
+
+
+        $str = "UPDATE    broadcastmessages
+SET    Status = 'Sent'
+WHERE    IdBroadcast = $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
+        $countbroadcast++ ;
+        LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast." send from:".$sender_mail,"Debug") ;
+    }
+    sql_query($str);
+} // end of while on broadcast (massmail)
+if ($countbroadcast>0)  LogStr(" \$countbroadcast=".$countbroadcast." sent at this cycle","Debug") ;
+
+
+$str="select * from volunteers_reports_schedule where Type='Accepter' and TimeToDeliver<now() " ;
     $qryV=sql_query($str);
     while ($rrV = mysql_fetch_object($qryV)) {
         $AccepterReport="<table>" ;
@@ -703,7 +676,19 @@ if (IsLoggedIn()) {
     } // end of fTrad
 
     function PictureInMail($Username) {
-       $PictureFilePath='http://www.bewelcome.org/members/avatar/'.$Username ;
-       $rval= '<img alt="picture of '.$Username.'" src="'.$PictureFilePath.'"/>';
+       $PictureFilePath='http://www.bewelcome.org/members/avatar/'. $Username;
+       $rval= '<img alt="picture of ' . $Username.'" src="'.$PictureFilePath.'"/>';
         return($rval) ;
     } // End of PictureInMail
+
+    function SetForumNotificationStatus($notifId, $status) {
+        $str = "
+            UPDATE
+                posts_notificationqueue
+            SET
+                posts_notificationqueue.Status = '" . $status . "'
+            WHERE
+                posts_notificationqueue.id = $notifId
+            ";
+        sql_query($str);
+    }

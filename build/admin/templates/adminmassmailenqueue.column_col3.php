@@ -29,6 +29,9 @@
             case 'enqueueLoginReminder' :
                 $activefieldset = 'reminder';
                 break;
+            case 'enqueueTermsOfUse' :
+                $activefieldset = 'termsofuse';
+                break;
         }
     } else {
         if ($this->canEnqueueMembers) {
@@ -39,6 +42,8 @@
             $defaultfieldset =  'group';
         } elseif ($this->canEnqueueReminder) {
             $defaultfieldset =  'reminder';
+        } elseif ($this->canEnqueueTermsOfUse) {
+            $defaultfieldset =  'termsofuse';
         }
     }
 
@@ -157,6 +162,16 @@
     </div>
     <div class="float_right"><br /><input class="button" type="submit" name="enqueuesuggestionsreminder"
         value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitSuggestionsReminder'); ?>" /><?php echo $words->flushBuffer(); ?></div>
+</fieldset>
+<?php } ?>
+<?php if ($this->type == 'TermsOfUse' && $this->canEnqueueTermsOfUse) { ?>
+<fieldset id="termsofuse">
+    <legend><?php echo $words->getBuffered('AdminMassMailEnqueueTermsOfUse');?></legend></legend><?php echo $words->flushBuffer(); ?>
+    <div class="type-text">
+        <?php echo $words->get('AdminMassMailEnqueueTermsOfUseInfo'); ?>
+    </div>
+    <div class="float_right"><br /><input class="button" type="submit" name="enqueuetermsofuse"
+        value="<?php echo $words->getBuffered('AdminMassMailEnqueueSubmitTermsOfUse'); ?>" /><?php echo $words->flushBuffer(); ?></div>
 </fieldset>
 <?php } ?>
 </form>

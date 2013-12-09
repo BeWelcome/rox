@@ -47,7 +47,7 @@ include 'suggestion.php';
 </div>
 </form>
 </div><!-- suggestion-form -->
-<hr />
+<hr class="suggestion" />
 <?php
 // Now load the board and show it
 $Forums = new ForumsController;

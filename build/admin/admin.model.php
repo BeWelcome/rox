@@ -663,6 +663,7 @@ class AdminModel extends RoxModelBase
         $subject = $vars['Subject'];
         $body = $vars['Body'];
         $description = $vars['Description'];
+        $type = $vars['Type'];
         $errors = array();
         if (empty($name)) {
             $errors[] = 'AdminMassMailNameEmpty';
@@ -675,6 +676,10 @@ class AdminModel extends RoxModelBase
         }
         if (empty($description)) {
             $errors[] = 'AdminMassMailDescriptionEmpty';
+        }
+
+        if ($type == "None") {
+            $errors[] = 'AdminMassMailChooseAType';
         }
 
         // if $id = 0 check if a word code for $name already exists
@@ -733,6 +738,8 @@ class AdminModel extends RoxModelBase
             $action = 'enqueueReminder';
         } elseif (array_key_exists('enqueuesuggestionsreminder', $vars)) {
             $action = 'enqueueSuggestionsReminder';
+        } elseif (array_key_exists('enqueuetermsofuse', $vars)) {
+            $action = 'enqueueTermsOfUse';
         }
         return $action;
     }
@@ -773,6 +780,8 @@ class AdminModel extends RoxModelBase
             case 'enqueueReminder':
                 break;
             case 'enqueueSuggestionsReminder':
+                break;
+            case 'enqueueTermsOfUse':
                 break;
             default:
                 $errors[] = 'AdminMassMailEnqueueWrongAction';
@@ -937,6 +946,24 @@ class AdminModel extends RoxModelBase
         return $count;
     }
 
+    private function enqueueMassmailTermsOfUse($id) {
+        $pref_id = $this->getPreferenceIdForMassmail($id);
+        $IdEnqueuer = $this->getLoggedInMember()->id;
+        $query = "
+            REPLACE
+                broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
+            SELECT
+                " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
+            FROM
+                members AS m
+            WHERE
+                m.Status IN ('Active', 'OutOfRemind', 'ChoiceInactive', 'Pending')
+            ";
+        $r = $this->dao->query($query);
+        $count = $r->affectedRows();
+        return $count;
+    }
+
     public function enqueueMassmail($vars) {
         $count = 0;
         $id = $vars['id'];
@@ -975,6 +1002,9 @@ class AdminModel extends RoxModelBase
                 break;
             case 'enqueueSuggestionsReminder':
                 $count = $this->enqueueMassmailSuggestionsReminder($id);
+                break;
+            case 'enqueueTermsOfUse':
+                $count = $this->enqueueMassmailTermsOfUse($id);
                 break;
         }
         return $count;

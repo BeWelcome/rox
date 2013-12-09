@@ -43,7 +43,7 @@ include 'suggestionserrors.php'; ?>
     <h3><?php echo $this->purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', $this->suggestion->nextstatechange) .  ")"); ?></h3>
     <p><?php echo $this->purifier->purify($this->suggestion->description); ?></p>
     <p><?php echo $words->get('SuggestionsVoteDiscussion', '<a href="/groups/' . SuggestionsModel::getGroupId() . '/forum/s' . $this->suggestion->threadId . '">', '</a>'); ?></p>
-    <hr />
+    <hr class="suggestion" />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
     <div class="floatbox float_left">
         <p><strong><?php echo $this->purifier->purify($option->summary); ?></strong></p>
@@ -59,7 +59,7 @@ include 'suggestionserrors.php'; ?>
             <?php endforeach; ?>
             </div>
         <?php endif; ?>
-    </div><hr />
+    </div><hr class="suggestion" />
     <?php endforeach;
     if (!$this->viewOnly) : ?>
     <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', $this->suggestion->nextstatechange);?></p>

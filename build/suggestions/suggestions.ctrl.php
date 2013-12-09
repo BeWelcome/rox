@@ -472,9 +472,10 @@ class SuggestionsController extends RoxControllerBase
             $this->_model->voteRanking($option->id, '-1');
             $this->setFlashNotice($this->getWords()->get('SuggestionsDownVoteSuccess'));
         }
+        $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
     }
 
-    public function moveToImplementing() {
+    public function moveOptionToImplementing() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $id = $this->route_vars['id'];
         $optionId = $this->route_vars['optionid'];
@@ -484,33 +485,55 @@ class SuggestionsController extends RoxControllerBase
             || $option->state  != SuggestionOption::RANKING) {
             $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
         }
-        $suggestion->state = SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
+        $suggestion->state &= SuggestionsModel::SUGGESTIONS_DEV;
+        $suggestion->state |= SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
+
         $option->state = SuggestionOption::IMPLENENTING;
         $suggestion->update(true);
         $option->update();
-        $this->setFlashNotice($this->getWords()->get('SuggestionsMovedToImplementing', htmlspecialchars($option->summary, ENT_COMPAT || ENT_QUOTES)));
+        $this->setFlashNotice($this->getWords()->get('SuggestionsOptionMovedToImplementing', htmlspecialchars($option->summary, ENT_COMPAT || ENT_QUOTES)));
 
         $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
     }
 
-    public function moveToImplemented() {
+    public function moveOptionToImplemented() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $id = $this->route_vars['id'];
         $optionId = $this->route_vars['optionid'];
         $suggestion = new Suggestion($id);
         $option = new SuggestionOption($optionId);
         if (!$loggedInMember || !$suggestion || !$option
-            || $option->state  != SuggestionOption::RANKING) {
-            $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
+            || $option->state  != SuggestionOption::IMPLENENTING) {
+            $this->redirectAbsolute($this->router->url('suggestions_devlist'));
         }
-        $suggestion->state = SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
-        $option->state = SuggestionOption::IMPLENENTING;
+        $suggestion->state &= SuggestionsModel::SUGGESTIONS_DEV;
+        $suggestion->state |= SuggestionsModel::SUGGESTIONS_IMPLEMENTED;
+
+        $option->state = SuggestionOption::IMPLEMENTED;
         $suggestion->update(true);
         $option->update();
-        $this->setFlashNotice($this->getWords()->get('SuggestionsMovedToImplemented', htmlspecialchars($option->summary, ENT_COMPAT || ENT_QUOTES)));
+        $this->setFlashNotice($this->getWords()->get('SuggestionsOptionMovedToImplemented', htmlspecialchars($option->summary, ENT_COMPAT || ENT_QUOTES)));
 
-        $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
+        $this->redirectAbsolute($this->router->url('suggestions_devlist'));
     }
+
+    public function moveSuggestionToImplemented() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $id = $this->route_vars['id'];
+        $suggestion = new Suggestion($id);
+        $option = new SuggestionOption($optionId);
+        if (!$loggedInMember || !$suggestion || !$option
+            || $suggestion->state  != SuggestionsModel::SUGGESTIONS_IMPLEMENTING) {
+            $this->redirectAbsolute($this->router->url('suggestions_devlist'));
+        }
+        $suggestion->state = SuggestionsModel::SUGGESTIONS_IMPLEMENTED;
+        $suggestion->update(true);
+
+        $this->setFlashNotice($this->getWords()->get('SuggestionsMovedToImplemented', htmlspecialchars($suggestion->summary, ENT_COMPAT || ENT_QUOTES)));
+
+        $this->redirectAbsolute($this->router->url('suggestions_devlist'));
+    }
+
 
     public function devList() {
         $pageno = 0;

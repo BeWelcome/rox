@@ -34,7 +34,7 @@ include 'suggestionserrors.php'; ?>
 <?php echo $callbackTags; ?>
     <h3><?php echo $this->purifier->purify($this->suggestion->summary); ?></h3>
     <p><?php echo $words->get('SuggestionsSetExclusionsInfo'); ?>
-    <hr />
+    <hr class="suggestion" />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
     <div class="floatbox float_left" style="width:100%">
         <p><strong><?php echo $this->purifier->purify('Option ' . $option->id .': ' . $option->summary); ?></strong></p>
@@ -57,7 +57,7 @@ include 'suggestionserrors.php'; ?>
             <?php endforeach; ?>
         </tr>
         </table>
-    <hr />
+    <hr class="suggestion" />
     </div>
     </div>
     <?php endforeach; ?>

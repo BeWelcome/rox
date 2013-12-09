@@ -107,9 +107,9 @@ while ($rr = mysql_fetch_object($qry)) {
 UPDATE
     messages
 SET
-    Status = 'Freeze'
+    Status = 'Failed'
 WHERE
-    id = $rr->id and IdParent=0
+    id = $rr->id
         ";
         sql_query($str);
         LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");

@@ -242,9 +242,9 @@ class RequestRouter
         $alias_table = array();
 		// Added check for PVars::getObj('syshcvol')->IniCache to be able to switch on/off caching for the alias.ini files
         $force_refresh = ('localhost' == $_SERVER['SERVER_NAME'] || PVars::getObj('syshcvol')->IniCache == 0);
-        // if (is_file($cachefile = SCRIPT_BASE.'build/alias.cache.ini') && !$force_refresh) {
-        //     $this->iniParse($cachefile, $alias_table);
-        // } else {
+        if (is_file($cachefile = SCRIPT_BASE.'build/alias.cache.ini') && !$force_refresh) {
+            $this->iniParse($cachefile, $alias_table);
+        } else {
             foreach (scandir(SCRIPT_BASE.'build') as $subdir) {
                 $dir = SCRIPT_BASE.'build/'.$subdir;
                 if (!is_dir($dir)) {
@@ -256,7 +256,7 @@ class RequestRouter
                 }
             }
             $this->iniWrite($cachefile, $alias_table);
-        // }
+        }
         return $alias_table;
     }
 

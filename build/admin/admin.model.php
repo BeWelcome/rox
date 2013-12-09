@@ -957,7 +957,7 @@ class AdminModel extends RoxModelBase
             FROM
                 members AS m
             WHERE
-                m.Status IN ('Active', 'OutOfRemind', 'ChoiceInactive', 'Pending')
+                m.Status IN ('Active', 'OutOfRemind', 'ChoiceInactive', 'NeedMore')
             ";
         $r = $this->dao->query($query);
         $count = $r->affectedRows();

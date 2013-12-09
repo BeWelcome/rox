@@ -38,7 +38,7 @@
 <div class="type-text">
 <?php
 $options = array(
-	"None" => $this->words->get('AdminMassMailEditSelectType')
+	"None" => $this->words->getSilent('AdminMassMailEditSelectType')
 );
 if ($this->newsletterSpecific) {
     $options["Specific"] = $this->words->getSilent('AdminMassMailEditTypeSpecific');

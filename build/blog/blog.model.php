@@ -9,7 +9,7 @@
  * @version $Id:blog.model.php 201 2007-02-11 14:07:56Z marco $
 * Fix by JeanYves on July 2011 1st to avoid kicked members post to be displayed
  */
-class Blog extends RoxModelBase 
+class Blog extends RoxModelBase
 {
     private $_namespace;
 
@@ -40,7 +40,7 @@ class Blog extends RoxModelBase
                  ON b.trip_id_foreign = td.trip_id
                JOIN members AS m
                  ON b.IdMember = m.id
-                    AND m.Status IN ('Active', 'Pending', 'ChoiceInactive', 'OutOfRemind', 'PassedAway')
+                    AND m.Status IN ('Active', 'Pending', 'ChoiceInactive', 'OutOfRemind')
                LEFT JOIN blog_comments AS c
                  ON c.blog_id_foreign = b.blog_id
                LEFT JOIN geonames_cache AS geonames_cache
@@ -55,7 +55,7 @@ class Blog extends RoxModelBase
 
     /*
      * Blogentry flags
-     * 
+     *
      * binary
      */
     /**
@@ -66,13 +66,13 @@ class Blog extends RoxModelBase
      * protected
      */
     const FLAG_VIEW_PROTECTED = 2;
-    const FLAG_STICKY         = 8; 
+    const FLAG_STICKY         = 8;
     /**
      * anyone may comment
      */
     const FLAG_COMMENT_ALL    = 16;
 
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct();
     }
@@ -89,7 +89,7 @@ class Blog extends RoxModelBase
     {
         return $this->createEntity('BlogEntity')->findById($blog_id);
     }
-    
+
     public function createData($blogId, $title, $text, $start = false, $geonameId = false)
     {
         $query = '
@@ -100,12 +100,12 @@ VALUES
     '.$blogId.',
     \''.$this->dao->escape($title).'\',
     \''.$this->dao->escape($text).'\',
-    '.($start ? '\''.$this->dao->escape($start).'\'' : 'NULL').', 
+    '.($start ? '\''.$this->dao->escape($start).'\'' : 'NULL').',
     '.($geonameId ? "'".$this->dao->escape($geonameId)."'" : "NULL").'
 )';
         return $this->dao->exec($query);
     }
-    
+
     public function createEntry($flags, $userId, $tripId = false)
     {
         $query = '
@@ -115,18 +115,18 @@ VALUES
 (
     '.$this->dao->nextId('blog').',
     '.(int)$flags.',
-    NOW(), 
+    NOW(),
     '.(int)$userId.',
     '.($tripId ? (int)$tripId : 'NULL').'
-)'; 
+)';
         $s = $this->dao->query($query);
         return $s->insertId();
     }
-    
+
     public function setTripPosition($trip, $blogId) {
     	// Get the last trip entry
-    	$query = sprintf("SELECT MAX(`blog_display_order`) 
-			FROM `blog_data` 
+    	$query = sprintf("SELECT MAX(`blog_display_order`)
+			FROM `blog_data`
 			LEFT JOIN `blog` ON (`blog_data`.`blog_id` = `blog`.`blog_id`)
 			WHERE `trip_id_foreign` = '%d'",
 			$trip);
@@ -141,17 +141,17 @@ VALUES
 		$query = "UPDATE `blog_data` SET `blog_display_order` = '".$max."' WHERE `blog_id`= '".$blogId."'";
 		$this->dao->query($query);
     }
-    
+
     public function deleteData($postId)
     {
         return $this->dao->exec('DELETE FROM `blog_data` WHERE `blog_id` = '.(int)$postId);
     }
-    
+
     public function deleteEntry($blogId)
     {
         return $this->dao->exec('DELETE FROM `blog` WHERE `blog_id` = '.(int)$blogId);
     }
-    
+
     public function ajaxEditPost($id, $title = false, $text = false,$geoid = false)
     {
         if ($geoid) {
@@ -168,15 +168,15 @@ VALUES
         $this->dao->exec($query);
 		$this->dao->query("COMMIT");
     }
-    
+
     public function getEditData($blogId)
     {
         $query = '
 SELECT
     `b`.`trip_id_foreign`,
-    (`b`.`flags` & '.(int)Blog::FLAG_STICKY.') AS `is_sticky`, 
-    (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.') AS `is_private`, 
-    (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.') AS `is_protected`, 
+    (`b`.`flags` & '.(int)Blog::FLAG_STICKY.') AS `is_sticky`,
+    (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.') AS `is_private`,
+    (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.') AS `is_protected`,
     `bd`.`blog_title`, `bd`.`blog_text`, `bd`.`blog_start`, `bd`.`blog_end`,
     `bd`.`blog_geonameid`,
     `bc`.`blog_category_id_foreign` AS `category`,
@@ -199,7 +199,7 @@ WHERE `b`.`blog_id` = '.(int)$blogId.'
         }
         return $s->fetch(PDB::FETCH_OBJ);
     }
-    
+
     public function getTags($blogId)
     {
         // fetch tags.
@@ -229,9 +229,9 @@ WHERE b2t.`blog_id_foreign` = '.(int)$blogId.'
 INSERT INTO `blog_tags` (`blog_tag_id`, `name`) VALUES (?, ?)');
         $createTag->bindParam(0, $tagId);
         $createTag->bindParam(1, $tag);
-        
+
         $addAssoc = $this->dao->prepare('
-INSERT INTO `blog_to_tag` 
+INSERT INTO `blog_to_tag`
 (`blog_id_foreign`, `blog_tag_id_foreign`) VALUES (?, ?)');
         $addAssoc->bindParam(0, $blogId);
         $addAssoc->bindParam(1, $tagId);
@@ -263,9 +263,9 @@ SELECT `blog_tag_id` FROM `blog_tags` WHERE `name` = \''.$this->dao->escape($tag
         $query = '
 SELECT
     `b`.`trip_id_foreign`,
-    (`b`.`flags` & '.(int)Blog::FLAG_STICKY.') AS `is_sticky`, 
-    (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.') AS `is_private`, 
-    (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.') AS `is_protected`, 
+    (`b`.`flags` & '.(int)Blog::FLAG_STICKY.') AS `is_sticky`,
+    (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.') AS `is_private`,
+    (`b`.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.') AS `is_protected`,
     `bd`.`blog_title`, `bd`.`blog_text`, `bd`.`blog_start`, `bd`.`blog_end`,
     `bd`.`blog_geonameid`,
     `bc`.`blog_category_id_foreign` AS `category`,
@@ -327,7 +327,7 @@ WHERE `b`.`blog_id` = '.(int)$blogId.'
         if ($b->fk_admincode) {
             $vars['admincode'] = $b->fk_admincode;
         }
-        
+
 
         // fetch tags.
         $query = '
@@ -365,11 +365,11 @@ SQL;
         }
         return ($s->fetchColumn(0) > 0);
     }
-    
+
     public function isUserPost($userId, $postId)
     {
         $query = '
-SELECT 
+SELECT
     `blog_id`
 FROM `blog`
 WHERE
@@ -458,7 +458,7 @@ AND m.Status in ("Active","Pending","ChoiceInactive","OutOfRemind","PassedAway")
     public function getCategoryFromUserIt($userid,$galleryid = false)
     {
         $query = '
-SELECT `blog_category_id`, `name` 
+SELECT `blog_category_id`, `name`
 FROM `blog_categories` ';
         if ($userid) $query .= "
 WHERE IdMember = '" .(int)$userid. "'";
@@ -498,7 +498,7 @@ ORDER BY `name` ASC';
             return array();
         }
         $query = <<<SQL
-SELECT blog_category_id, name 
+SELECT blog_category_id, name
 FROM blog_categories
 WHERE {$where}
 ORDER BY name ASC
@@ -551,7 +551,7 @@ WHERE 1';
     AND
     (
         (
-            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
@@ -562,7 +562,7 @@ WHERE 1';
         ';
         /** temporarily removed, pending check on whether it's used - then needs refactoring
         OR (
-            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
             AND
             (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
@@ -613,7 +613,7 @@ WHERE 1';
     AND
     (
         (
-            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
@@ -628,6 +628,7 @@ WHERE 1';
     )
 GROUP BY b.`blog_id`
 ORDER BY b.`blog_created` DESC';
+        error_log($query);
         $query = "SELECT COUNT(blog_id) AS posts FROM ({$query}) AS temp";
         $s = $this->dao->query($query);
         if (!$s) {
@@ -666,7 +667,7 @@ WHERE 1';
     AND
     (
         (
-            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
@@ -677,7 +678,7 @@ WHERE 1';
         ';
         /** temporarily removed, pending check on whether it's used - then needs refactoring
         OR (
-            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
             AND
             (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
@@ -723,7 +724,7 @@ GROUP BY b.`blog_id`
     AND
     (
         (
-            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
@@ -734,7 +735,7 @@ GROUP BY b.`blog_id`
         ';
         /** temporarily removed, pending check on whether it's used - then needs refactoring
         OR (
-            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
             AND
             (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
@@ -760,7 +761,7 @@ ORDER BY bd.`edited` DESC';
     public function getTagsIt($like = false, $limit = false)
     {
         $query = '
-SELECT 
+SELECT
     `name`,
     COUNT(DISTINCT bl.`blog_id`) AS `usecount`
 FROM `blog_tags` AS t
@@ -769,11 +770,11 @@ LEFT JOIN `blog_to_tag` AS b ON
 LEFT JOIN `blog` AS `bl` ON';
         // visibility
         $query .= '
-    bl.`blog_id` = b.`blog_id_foreign` 
+    bl.`blog_id` = b.`blog_id_foreign`
     AND
     (
         (
-            bl.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            bl.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
             AND bl.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
@@ -782,9 +783,9 @@ LEFT JOIN `blog` AS `bl` ON';
         OR (bl.`flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND bl.IdMember = '.(int)$member->id.')
         OR (bl.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND bl.IdMember = '.(int)$member->id.')
             ';
-           /** taken out pending refactoring and removal of user table 
+           /** taken out pending refactoring and removal of user table
         OR (
-            bl.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+            bl.`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
             AND
             (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = bl.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
@@ -817,7 +818,7 @@ WHERE bt.`name` LIKE \'%'.$this->dao->escape($like).'%\'';
     AND
     (
         (
-            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';
@@ -828,7 +829,7 @@ WHERE bt.`name` LIKE \'%'.$this->dao->escape($like).'%\'';
         ';
         /* taken out, pending refactoring
         OR (
-            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+            `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
             AND
             (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = b.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$member->id.')
         )
@@ -853,7 +854,7 @@ GROUP BY b.`blog_id`
     /**
      * Gets all tags of given post.
      * @return The iterator to enumerate all tagnames.
-     */ 
+     */
     public function getPostTagsIt($postId, $tag = false)
     {
         $query = '
@@ -889,11 +890,11 @@ WHERE b2t.`blog_id_foreign` = '.(int)$postId;
             case 'p':
                 A PP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 2);
                 break;
-            
+
             case 'r':
                 A PP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 1);
                 break;
-            
+
             default:
                 A PP_User::addSetting($User->getId(), 'APP_blog_defaultVis', null, 0);
                 break;
@@ -1050,7 +1051,7 @@ SET
 
         return true;
     }
-    
+
     /**
     * Search for tags to suggest
     * Checks which word is being edited and looks for possible matches
@@ -1058,7 +1059,7 @@ SET
     * @param string $search comma-delimited search words
     * @return stringarray 2dimensional array with the new suggested tags
     */
-    public function suggestTags($search) 
+    public function suggestTags($search)
     {
         // Split words
         $words = explode(',', $search);
@@ -1094,9 +1095,9 @@ SET
         }
 
         if ($search_for) {
-    
+
             $_SESSION['prev_tag_content'] = $words;
-        
+
             // look for possible matches (from ALL tags)
 // TODO:
 // Limit number of returned tags? Order by popularity?
@@ -1113,7 +1114,7 @@ SET
             while ($row = $s->fetch(PDB::FETCH_OBJ)) {
                 $tags[] = $row->name;
             }
-            
+
             if ($tags) {
                 $out = array();
                 $suggestion_number = 0;
@@ -1134,7 +1135,7 @@ SET
         return array();
     }
 
-    
+
     public function updatePost($blogId, $flags, $tripId = false)
     {
         // insert into db
@@ -1147,7 +1148,7 @@ WHERE `blog_id` = '.(int)$blogId.'
 ';
         return $this->dao->exec($query);
     }
-    
+
     public function updatePostData($blogId, $title, $txt, $start = false, $geonameId = false)
     {
         $query = '
@@ -1162,7 +1163,7 @@ WHERE `blog_id` = '.(int)$blogId.'
         ';
         return $this->dao->exec($query);
     }
-    
+
     public function updateBlogToCategory($blogId, $category)
     {
         $query = '
@@ -1194,7 +1195,7 @@ SET
         }
     }
 
-	
+
 	//replaced by functionality in geo, see below
     // /**
     // * Checks if a location is already in the local geonames cache
@@ -1207,7 +1208,7 @@ SET
         // $s->execute(array($geonameid));
         // if ($s->numRows() == 0) { // We have to insert it
             // $query = "
-// INSERT INTO `geonames_cache` 
+// INSERT INTO `geonames_cache`
 // (`geonameid`, `latitude`, `longitude`, `name`, `fk_countrycode`, `fk_admincode`)
 // VALUES
 // (
@@ -1246,8 +1247,8 @@ SET
 			return true;
 		}
 	}
-	
-	
+
+
     /**
      * Search for blog posts
      *
@@ -1256,7 +1257,7 @@ SET
      * @return array
      * @throws PException
      */
-    public function searchPosts($search_for) 
+    public function searchPosts($search_for)
     {
         $query = Blog::SQL_BLOGPOST;
 /*        $query .= "JOIN `blog_tags`.`name` AS `tags` ON (`blog_tags` LIKE '".$this->dao->escape($search_for)."%')"; */
@@ -1264,13 +1265,13 @@ SET
                     OR `blog_text` LIKE '%{$this->dao->escape($search_for)}%'
                     OR m.Username LIKE '%{$this->dao->escape($search_for)}%'
                     ";
-                    
+
         // visibility
         $query .= '
     AND
     (
         (
-            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0 
+            `flags` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
             AND `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
         )
         ';

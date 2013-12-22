@@ -219,7 +219,7 @@ class Suggestion extends RoxEntityBase
     private function notifyVotingStarted() {
         $entityFactory = new RoxEntityFactory();
         $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
-        $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/>' . $this->summary . '</a>\' has started.<br /><br />Please cast your vote.';
+        $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/">' . $this->summary . '</a>\' has started.<br /><br />Please cast your vote.';
         $suggestions = new SuggestionsModel();
         $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
         $suggestions->setForumNotifications($postId, 'reply');

@@ -664,6 +664,7 @@ WHERE 1';
         }
         // visibility
         $query .= '
+    AND (b.trip_id_foreign IS NULL)
     AND
     (
         (

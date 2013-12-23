@@ -222,7 +222,7 @@ class Suggestion extends RoxEntityBase
         $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/">' . $this->summary . '</a>\' has started.<br /><br />Please cast your vote.';
         $suggestions = new SuggestionsModel();
         $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
-        $suggestions->setForumNotifications($postId, 'reply');
+        $suggestions->setForumNotification($postId, 'reply');
     }
 
     /**

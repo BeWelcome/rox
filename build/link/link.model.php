@@ -1,7 +1,7 @@
 <?php
 /**
  * Link model
- * 
+ *
  * @package link
  * @author Philipp (philipp)
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License (GPL)
@@ -18,7 +18,7 @@ class LinkModel extends RoxModelBase
 	/**
 	* Functions needed to create the link network and store it to the db
 	**/
-    
+
 	function createPath ($branch,$directlinks)
 	{
 		$first = $branch[0];
@@ -33,18 +33,18 @@ class LinkModel extends RoxModelBase
 		}
 		return($path);
 	} // createPath
-	
+
 	function createLinkList() 	{
 		$preferences = $this->getLinkPreferences();
-		echo "createLinkList getpreference ".count($preferences)." values created<br>" ;			
+		echo "createLinkList getpreference ".count($preferences)." values created<br>" ;
 
 		$comments = $this->getComments();
-		echo "createLinkList comments ".count($comments)." values created<br>" ;			
+		echo "createLinkList comments ".count($comments)." values created<br>" ;
 		$specialrelation = $this->getSpecialRelation();
 		echo "createLinkList specialrelation ".count($specialrelation)." values created<br>" ;
 
-		
-		
+
+
 		foreach ($comments as $comment) {
 			if (isset($preferences[$comment->IdFromMember])) {
 				if ($preferences[$comment->IdFromMember] == 'no') {
@@ -55,11 +55,11 @@ class LinkModel extends RoxModelBase
 					continue;
 				}
 			}
-		 
+
 			$directlinks[$comment->IdFromMember][$comment->IdToMember]['totype'][] = $comment->Quality;
 			$directlinks[$comment->IdFromMember][$comment->IdToMember]['reversetype'][] = 0;
 		}
-		
+
 		foreach ($specialrelation as $value) {
 			if (isset($preferences[$value->IdOwner])) {
 				if ($preferences[$value->IdOwner] == 'no') {
@@ -70,12 +70,12 @@ class LinkModel extends RoxModelBase
 					continue;
 				}
 			}
-		
+
 			$directlinks[$value->IdOwner][$value->IdRelation]['totype'][] = $value->Type;
 			$directlinks[$value->IdOwner][$value->IdRelation]['reversetype'][] = 0;
 		}
-		
-		echo "createLinkList Starting to process ".count($directlinks)." values for reversetype<br>" ;			
+
+		echo "createLinkList Starting to process ".count($directlinks)." values for reversetype<br>" ;
 		foreach ($directlinks as $key1 => $value1) {
 			foreach ($value1 as $key2 => $value2) {
 				if (isset($directlinks[$key2][$key1])) {
@@ -84,13 +84,13 @@ class LinkModel extends RoxModelBase
 			}
 		}
 
-		echo "createLinkList done ".count($directlinks)." values created<br>" ;			
-		
+		echo "createLinkList done ".count($directlinks)." values created<br>" ;
+
 	return $directlinks;
-		
-		
+
+
 	} // end of createLinkList
-	
+
 	function getTree($directlinks,$startids) {
 
 
@@ -134,11 +134,11 @@ class LinkModel extends RoxModelBase
 					if(count($added)>0) {
 						$newlist = array_merge($newlist,$added);
 						$new = 1;
-					} 
-						
+					}
+
 				}
 				$nolist = $newlist;
-				echo "<br>nolist:"; 
+				echo "<br>nolist:";
 				//var_dump($nolist);
 			}
 
@@ -153,11 +153,11 @@ class LinkModel extends RoxModelBase
 				$this->writeLinkList($fields);
 			}
 			echo "<br> ".count($matrix). " values written in link list<br>";
-			
+
 		}
 	}
-	
-	
+
+
 
 	/**
 	/ rebuild the link database
@@ -170,14 +170,14 @@ class LinkModel extends RoxModelBase
 		 }
 		 $this->getTree($directlinks,$startids);
      }
-     
+
      function rebuildMissingLinks() {
         $directlinks = $this->createLinkList();
         $existing_ids = $this->bulkLookup(
             "
             SELECT fromID FROM linklist GROUP BY fromID
             ");
-       $e_ids = array();     
+       $e_ids = array();
        foreach ($existing_ids as $v) {
 		    $e_ids[] = $v->fromID;
 		}
@@ -190,11 +190,11 @@ class LinkModel extends RoxModelBase
         }
 		$startids = array_slice($startids,0,100);
 		echo"<br> processing members:".implode(',',$startids)." <br>";
-        $this->getTree($directlinks,$startids);    
+        $this->getTree($directlinks,$startids);
       }
-      
-      
-      
+
+
+
      /**
      / update the link database to integrate links changed since last called
      **/
@@ -209,17 +209,17 @@ class LinkModel extends RoxModelBase
             $this->getTree($directlinks,$changed_ids);
         }
      }
-    
-    
 
-	/** 
+
+
+	/**
 	* write / flush database
 	**/
-	
+
 	function writeLinkList($fields) {
 
         return $this->dao->query(
-            "	
+            "
 	INSERT INTO linklist
 		SET
 		id = 'NULL',
@@ -231,14 +231,14 @@ class LinkModel extends RoxModelBase
 		"
 		);
     }
-	
+
 	function deleteLinkList() {
-	
+
 		return $this->dao->query(
 			"TRUNCATE TABLE `linklist`"
 		);
 	}
-	
+
 	function removeLink($id) {
 	    return $this->dao->query(
 	        "
@@ -246,26 +246,26 @@ class LinkModel extends RoxModelBase
 	        WHERE fromID = ".$id
 	        );
 	}
-	
-	
+
+
 	/**
 	* functions collecting connection data from other parts of the system
 	* - comments
 	* - special relations
 	**/
-	
 
-		
-	/** 
+
+
+	/**
 	* retrieve link information from the comment system
 	**/
-	
+
 	function getChanges() {
 	    $lastupdate = $this->singleLookup(
 	        "SELECT UNIX_TIMESTAMP(`updated`) as updated FROM `linklist` ORDER BY `updated` DESC LIMIT 1"
 	        );
 	     var_dump($lastupdate);
-	     
+
 	    $comments= $this->bulkLookup(
 	        "
 	        SELECT `IdFromMember` FROM `comments` WHERE UNIX_TIMESTAMP(`updated`) >= ".$lastupdate->updated."-120"
@@ -275,7 +275,7 @@ class LinkModel extends RoxModelBase
 	        SELECT `IdOwner` FROM `specialrelations` WHERE UNIX_TIMESTAMP(`updated`) >= ".$lastupdate->updated."-120"
 	        );
 	    $ids=array();
-    
+
 	    foreach($comments as $comment) {
 	        $ids[] = $comment->IdFromMember;
         }
@@ -291,87 +291,87 @@ class LinkModel extends RoxModelBase
             if ($links) {
                 foreach($links as $link) {
                     $ids[] = $link->fromID;
-                }   
+                }
             }
         }
 
         return(array_unique($ids));
-        
+
     }
-	
+
 	function getComments()
     {
 		return $this->bulkLookup(
             "
-			SELECT `comments`.`IdFromMember` AS `IdFromMember`,`comments`.`IdToMember` AS `IdToMember`,`comments`.`Quality` AS `Quality` , 
+			SELECT `comments`.`IdFromMember` AS `IdFromMember`,`comments`.`IdToMember` AS `IdToMember`,`comments`.`Quality` AS `Quality` ,
 			`members`.`id`, `members`.`status`
-			FROM `comments`, `members` 
-			WHERE `IdToMember` = `members`.`id` 
-			AND (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind','ActiveHidden'))
-			AND NOT FIND_IN_SET('NeverMetInRealLife',`comments`.`Lenght`) 
-			AND (FIND_IN_SET('hewasmyguest',`comments`.`Lenght`) or 
-					 FIND_IN_SET('hehostedme',`comments`.`Lenght`) or  
-					 FIND_IN_SET('OnlyOnce',`comments`.`Lenght`) or  
-					 FIND_IN_SET('HeIsMyFamily',`comments`.`Lenght`) or  
-					 FIND_IN_SET('HeHisMyOldCloseFriend',`comments`.`Lenght`) )  
+			FROM `comments`, `members`
+			WHERE `IdToMember` = `members`.`id`
+			AND (`members`.`Status` in ('Active','OutOfRemind','ActiveHidden'))
+			AND NOT FIND_IN_SET('NeverMetInRealLife',`comments`.`Lenght`)
+			AND (FIND_IN_SET('hewasmyguest',`comments`.`Lenght`) or
+					 FIND_IN_SET('hehostedme',`comments`.`Lenght`) or
+					 FIND_IN_SET('OnlyOnce',`comments`.`Lenght`) or
+					 FIND_IN_SET('HeIsMyFamily',`comments`.`Lenght`) or
+					 FIND_IN_SET('HeHisMyOldCloseFriend',`comments`.`Lenght`) )
 			ORDER BY `IdFromMember`,`IdToMember` Asc
             "
         );
 	}
-	
+
 	/**
-	* retrieve link information from the special relation system 
+	* retrieve link information from the special relation system
 	**/
-	
+
 		function getSpecialRelation()
     {
 		return $this->bulkLookup(
             "
 			SELECT `IdOwner`,`IdRelation`,`Type`, `members`.`id`, `members`.`status`
 			FROM `specialrelations` , `members`
-			WHERE `IdRelation` = `members`.`id` 
-			AND (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind') )
+			WHERE `IdRelation` = `members`.`id`
+			AND (`members`.`Status` in ('Active','OutOfRemind') )
 			ORDER BY `IdOwner`,`IdRelation` Asc
             "
         );
 	}
-	
-	
+
+
 	/**
 	* functions to retrieve link infromation from the db
 	**/
-	
+
 	function dbFriendsID($fromid,$degree = 1,$limit = 10) {
 			$ss="SELECT `toID`
-			FROM `linklist` 
+			FROM `linklist`
 			WHERE linklist.fromID = $fromid AND linklist.degree = $degree
 			LIMIT ".(int)$limit ;
-			
+
 //			echo $ss,"<br/>" ;
 			return $this->bulkLookup($ss);
 	}
-	
+
 	function dbFriends($fromid,$degree = 1,$limit = 10) {
 		return $this->bulkLookup(
 			"
 			SELECT *
-			FROM `linklist` 
+			FROM `linklist`
 			WHERE linklist.fromID = $fromid AND linklist.degree = $degree
 			LIMIT ".(int)$limit
 		);
 	}
-	
-	
+
+
 	function dbLinks($fromid,$toid,$limit=5) {
 		return $this->bulkLookup(
 			"
-			SELECT * 
-			FROM `linklist` 
+			SELECT *
+			FROM `linklist`
 			WHERE linklist.fromID = $fromid AND linklist.toID = $toid
 			LIMIT ".(int)$limit
 		);
-		
-	}	
+
+	}
 
 
 	/**
@@ -382,13 +382,13 @@ class LinkModel extends RoxModelBase
 		$memberdata=array() ;
 		if (count($ids)<=0) {
 			return $memberdata ; // Returns nothing if no Id where given
-		} 
+		}
 		//var_dump($ids);
 //		$idquery = implode(' OR `members`.`id` = ',$ids);
 		$idquery = implode(',',$ids);
 //		echo "\$idquery=".$idquery."<br />" ;
 		//var_dump($idquery);
-		
+
 		$rPref=$this->singleLookup("select `id`,`DefaultValue` from `preferences` where `preferences`.`codeName` = 'PreferenceLinkPrivacy'") ;
 		if (!isset($rPref->id)) {
 			die ("You need to create  the preference : 'PreferenceLinkPrivacy'") ;
@@ -398,10 +398,10 @@ class LinkModel extends RoxModelBase
 			SELECT SQL_CACHE members.Username, 'NbComment',memberspreferences.Value as PreferenceLinkPrivacy,'NbTrust','Verified',members.id, members.id as IdMember, g1.Name AS City, g2.Name AS Country,`members`.`Status`
 			FROM members
             JOIN addresses ON addresses.IdMember = members.id AND addresses.rank = 0
-			LEFT JOIN geonames_cache AS g1 ON addresses.IdCity =  g1.geonameid 
-			LEFT JOIN geonames_cache AS g2 ON g1.parentCountryId = g2.geonameid 
-			LEFT JOIN memberspreferences ON  `memberspreferences`.`IdPreference`=".$rPref->id." and `memberspreferences`.`IdMember`=`members`.`id` 
-			WHERE `members`.`id` in ($idquery) and (`members`.`Status` in ('Active','ChoiceInactive','OutOfRemind'))
+			LEFT JOIN geonames_cache AS g1 ON addresses.IdCity =  g1.geonameid
+			LEFT JOIN geonames_cache AS g2 ON g1.parentCountryId = g2.geonameid
+			LEFT JOIN memberspreferences ON  `memberspreferences`.`IdPreference`=".$rPref->id." and `memberspreferences`.`IdMember`=`members`.`id`
+			WHERE `members`.`id` in ($idquery) and (`members`.`Status` in ('Active', 'OutOfRemind'))
 			"
 			);
 		foreach ($result as $value) {
@@ -409,7 +409,7 @@ class LinkModel extends RoxModelBase
 				$value->PreferenceLinkPrivacy=$rPref->DefaultValue ;
 			}
 			if ($value->PreferenceLinkPrivacy=='no') continue ; // Skip member who have chosen PreferenceLinkPrivacy=='no'
-			
+
 			// Retrieve the verification level of this member
 			$ss="select max(Type) as TypeVerif from verifiedmembers where IdVerified=".$value->IdMember ;
 //			echo $ss ;
@@ -423,18 +423,18 @@ class LinkModel extends RoxModelBase
 			$ss="select count(*) as Cnt from comments where IdToMember=".$value->IdMember ;
 			$rr=$this->singleLookup($ss);
 			$value->NbComment=$rr->Cnt ;
-			
+
 			$ss="select count(*) as Cnt from comments where IdToMember=".$value->IdMember." and Quality='Good'";
 			$rr=$this->singleLookup($ss);
 			$value->NbTrust=$rr->Cnt ;
-			
+
 			$memberdata[$value->id] = $value;
 		}
 		return $memberdata;
     } // end of	getMemberdata
-	
 
-	/** 
+
+	/**
 	* retrieve the Preference setting for the link network (Yes, no, hidden)
 	**/
 	function getLinkPreferences() {
@@ -446,7 +446,7 @@ class LinkModel extends RoxModelBase
 			AND `preferences`.`codeName` = 'PreferenceLinkPrivacy'
 			"
 		);
-		
+
 		foreach ($result as $value) {
 			$prefarray[$value->IdMember] = $value->Value;
 			}
@@ -458,10 +458,10 @@ class LinkModel extends RoxModelBase
 	**/
 		function getMemberID($username)
 	{
-		if (is_numeric($username)) return $username ; 
+		if (is_numeric($username)) return $username ;
 		$result = $this->singleLookup(
 		"
-		SELECT `id` 
+		SELECT `id`
 		FROM `members`
 		WHERE `Username` = '$username'
 		"
@@ -473,8 +473,8 @@ class LinkModel extends RoxModelBase
 			return (-1) ;
 		}
 	}
-	
-	
+
+
 	function getIdsFromPath($path)
 	{
 		$inpath = array($path[0]);
@@ -483,18 +483,18 @@ class LinkModel extends RoxModelBase
 		}
 		return $inpath;
 	}
-	
-	/**	
+
+	/**
 	 *  often used functions to get data from the link system
-	 * 
+	 *
 	 **/
-	
+
 	/**
 	* returns an array of IDs
-	* get $limit number of friends of the distance of $degree for $from member (id or username) 
+	* get $limit number of friends of the distance of $degree for $from member (id or username)
 	* without additional $degree / $limit parameters it returnsthe ID for 10 direct friends
 	**/
-	
+
 	function getFriends($from,$degree = 1,$limit = 10)
 	{
 		if (!ctype_digit($from)) {
@@ -506,14 +506,14 @@ class LinkModel extends RoxModelBase
 		foreach ($result as $value) {
 			$friendIDs[] = $value->toID;
 		}
-		$friendIDs = array_unique($friendIDs);	
-		return $friendIDs;	
+		$friendIDs = array_unique($friendIDs);
+		return $friendIDs;
 
 	}
-	
+
 	/**
 	* returns an array (member ID as key) with useful memberdata for all IDs
-	* get $limit number of friends of the distance of $degree for $from member (id or username) 
+	* get $limit number of friends of the distance of $degree for $from member (id or username)
 	* without additional $degree / $limit parameters it returnsthe ID for 10 direct friends
 	**/
 	function getFriendsFull($from,$degree = 1,$limit = 10)
@@ -532,13 +532,13 @@ class LinkModel extends RoxModelBase
 			$friendsData[$value->id]= $value;
 		}
 		//var_dump($friendsData);
-		return $friendsData;		
+		return $friendsData;
 	}
-	
+
 	function getDegree($from,$to)
 	{
 	}
-	
+
 	function getLinks($from,$to,$limit = 10) {
 		if (!ctype_digit($from)) {
 			$from = $this->getMemberID($from);
@@ -547,7 +547,7 @@ class LinkModel extends RoxModelBase
 			$to = $this->getMemberID($to);
 		}
 		$result = $this->dbLinks($from,$to,$limit);
-		
+
 		if (empty($result)) {
 			return false;
 		} else {
@@ -559,8 +559,8 @@ class LinkModel extends RoxModelBase
 			return($ids);
 		}
 	}
-			
-	
+
+
 	function getLinksFull($from,$to,$limit = 10)
 	{
 		if (!ctype_digit($from)) {
@@ -601,9 +601,9 @@ class LinkModel extends RoxModelBase
 		//echo "<br>";
 		return $linkdata;
 	} // end of getLinksFull
-	
 
-	 
+
+
 
 }
 

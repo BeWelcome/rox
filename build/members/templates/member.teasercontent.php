@@ -73,10 +73,6 @@
       <div class="subcr" >
 
         <?php
-          if ($member->Status=="ChoiceInactive") {
-                echo "<div class=\"note big\">",$ww->WarningTemporayInactive," </div>\n";
-          }
-
             if (get_class($this) == 'EditMyProfilePage' || get_class($this) == 'EditProfilePage') $urlstring = 'editmyprofile';
             if (get_class($this) == 'ProfilePage' || get_class($this) == 'MyProfilePage') $urlstring = 'members/'.$member->Username;
             if (isset($urlstring)) {

@@ -820,11 +820,11 @@ class AdminModel extends RoxModelBase
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")";
         if (empty($usernames)) {
             // get count of members that would receive the newsletter
-            $where = "WHERE m.Status IN ('Active', 'ActiveHidden') AND (mp.Value = 'Yes' OR mp.Value IS NULL)";
+            $where = "WHERE m.Status IN (" . Member::ACTIVE_WITH_MESSAGES . ") AND (mp.Value = 'Yes' OR mp.Value IS NULL)";
         }
         else
         {
-            $where = "WHERE m.Status IN ('Active', 'ActiveHidden') AND (mp.Value = 'Yes' OR mp.Value IS NULL)
+            $where = "WHERE m.Status IN (" . Member::ACTIVE_WITH_MESSAGES . ") AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                     AND m.Username IN ('" . implode("', '", $usernames) . "')";
         }
         $limit = "";
@@ -853,7 +853,7 @@ class AdminModel extends RoxModelBase
                 (m.IdCity = g.geonameId)
                 AND g.fk_countrycode = '" . $this->dao->escape($countrycode) . "'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
-                AND (m.Status IN ('Active', 'ActiveHidden'))";
+                AND (m.Status IN (" . Member::ACTIVE_WITH_MESSAGES . "))";
         if ($adminunit) {
             $query .= " AND g.fk_admincode = '". $adminunit . "'";
         }
@@ -886,7 +886,7 @@ class AdminModel extends RoxModelBase
                 AND mg.IdGroup = " . $groupId . "
                 AND mg.Status = 'In'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
-                AND (m.Status IN ('Active', 'ActiveHidden'))";
+                AND (m.Status IN (" . Member::ACTIVE_WITH_MESSAGES . "))";
         $r = $this->dao->query($query);
             if (!$r) {
             return -1;
@@ -957,7 +957,7 @@ class AdminModel extends RoxModelBase
             FROM
                 members AS m
             WHERE
-                m.Status IN ('Active', 'OutOfRemind', 'ChoiceInactive', 'NeedMore')
+                m.Status IN (" . Member::ACTIVE_ALL . ")
             ";
         $r = $this->dao->query($query);
         $count = $r->affectedRows();

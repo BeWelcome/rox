@@ -25,22 +25,18 @@ Boston, MA  02111-1307, USA.
  * @author matthias (globetrotter_tt)
  * @author Fake51
  */
- 
+
 -->
 <form class="yform full" method="post" action="">
-    <?php echo $this->getCallbackOutput('MembersController','retireProfile'); ?>
-    <p><?php echo $words->getFormatted('ProfileDeleteInfo',$this->member->Username); ?></p>
-    <div class="type-text">
-        <label for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
-        <textarea name="explanation" id="explain" cols="65" rows="6"></textarea>
-    </div>
-    <p>
-        <input type="checkbox" name="Complete_retire" onclick="return confirm ('<?php echo $words->getBuffered ('retire_WarningConfirmWithdraw'); ?>')" />
-             <?php echo $words->flushBuffer();
-             echo $words->getFormatted ('retire_fulltickbox'); ?>
-    </p>
+<?php
+    if ($this->switchNotAllowed) {
+        echo $words->get('ProfileSetInactiveNotAllowed');
+    } else {
+?>
+    <?php echo $this->getCallbackOutput('MembersController','setProfileInactive'); ?>
+    <p><?php echo $words->getFormatted('ProfileSetInactiveInfo'); ?></p>
     <p class="center">
-    <input type="submit" value="<?php echo $words->getBuffered('DeleteProfile') ?>"
-        onclick="return confirm ('<?php echo $words->getBuffered ('retire_WarningConfirmRetire'); ?>')" />
+    <input type="submit" value="<?php echo $words->getBuffered('ProfileSetInactive') ?>" />
         <?php echo $words->flushBuffer(); ?>    </p>
+<?php } ?>
 </form>

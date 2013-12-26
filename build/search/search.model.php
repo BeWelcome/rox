@@ -353,7 +353,7 @@ LIMIT 1
                     comments, members m2
                 WHERE
                     IdFromMember = m2.id
-                    AND m2.Status IN ('Active', 'ChoiceInActive', 'OutOfRemind')
+                    AND m2.Status IN ('Active', 'OutOfRemind')
                 GROUP BY
                     IdToMember ) c
             ON

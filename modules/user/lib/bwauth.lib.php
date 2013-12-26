@@ -154,11 +154,6 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 		// Process the login of the member according to his status
 		switch ($m->Status) {
 
-			case "ChoiceInactive" :  // in case an inactive member comes back
-				MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='ChoiceInactive'") ;
-				$_SESSION['Status'] = $_SESSION['MemberStatus'] = $m->Status='Active' ;
-				break ;
 			case "OutOfRemind" :  // in case an inactive member comes back
 				MOD_log::get()->write("Successful login, becoming active again (Was OutOfRemind), with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
 				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='OutOfRemind'") ;
@@ -166,6 +161,7 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 				break ;
 			case "Active" :
 			case "ActiveHidden" :
+            case "ChoiceInactive" :
 				 $_SESSION['IdMember']=$m->id ; // this is needed for MOD_log::get, because if not it will not link the log with the right member
 				 MOD_log::get()->write("Successful login with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b> (".$m->Username.")", "Login");
 				 break ;
@@ -255,14 +251,12 @@ check the logs for "In doBWLogin, jy believe its obsolete"
 
     	// Process the login of the member according to his status
 		switch ($m->Status) {
-			case "ChoiceInactive" :  // in case an inactive member comes back
-				$this->dao->query("UPDATE members SET Status='Active' WHERE members.id=".$m->id." AND Status='ChoiceInactive'") ;
-				$_SESSION['Status'] = $m->Status='Active' ;
 			case "Active" :
 			case "ActiveHidden" :
 			case "NeedMore" :
 			case "Pending" :
-				//if (HasRight("Words"))
+            case "ChoiceInactive" :
+            	//if (HasRight("Words"))
 				//	$_SESSION['switchtrans'] = "on"; // Activate switchtrans oprion if its a translator
 				break;
 
@@ -339,11 +333,15 @@ VALUES
 			die ($strerror) ;
 		}
 
-		if ($_SESSION["MemberStatus"]=='Active') {
-			return (true) ;
-		}
+        if ($_SESSION["MemberStatus"]=='Active') {
+            return (true) ;
+        }
 
-		if ($_SESSION["MemberStatus"]=='ActiveHidden') {
+        if ($_SESSION["MemberStatus"]=='ChoiceInactive') {
+            return (true) ;
+        }
+
+        if ($_SESSION["MemberStatus"]=='ActiveHidden') {
 			return (true) ;
 		}
 

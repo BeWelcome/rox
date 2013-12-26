@@ -179,9 +179,10 @@ class BlogController extends RoxControllerBase {
                 $page = ((isset($this->args_vars->get['page']) && intval($this->args_vars->get['page'])) ? intval($this->args_vars->get['page']) : 1);
 
                 // display blogs of user $request[1]
-                if ($member = $this->_model->getMemberByUsername($request[1]))
+                $memberBlog = $this->_model->getMemberByUsername($request[1]);
+                if ($memberBlog)
                 {
-                    error_log(print_r($member, true));
+                    error_log(print_r($memberBlog, true));
 
                     if (!isset($request[2]))
                         $request[2] = '';
@@ -193,7 +194,7 @@ class BlogController extends RoxControllerBase {
                                 $p = new BlogPage($this->_model);
                                 $p->page = $page;
                                 $p->category = $request[3];
-                                $p->member = $member;
+                                $p->member = $memberBlog;
                                 $p->initPager($this->_model->countRecentPosts($member->id, $request[3]), $page);
                                 $p->posts = $this->_model->getRecentPostsArray($member->id, $request[3], $page);
                                 break;

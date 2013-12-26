@@ -44,6 +44,8 @@ class MembersController extends RoxControllerBase
             case 'myself':
             case 'my':
             case 'deleteprofile':
+            case 'setprofileinactive':
+            case 'setprofileactive':
                 // you are not supposed to open these pages when not logged in!
                 $page = new MembersMustloginPage;
                 break;
@@ -75,8 +77,9 @@ class MembersController extends RoxControllerBase
                     // this profile is not public
                     $page = new MembersMustloginPage;
                 }
-                else
-                {
+                else if ($member->status == 'ChoiceInactive') {
+                    $page = new InactiveProfilePage();
+                } else {
                     // found a member with given id or username. juhu
                     switch (isset($request[2]) ? $request[2] : false)
                     {
@@ -96,6 +99,7 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
+
                             $page = new ProfilePage();
                             break;
                         default:
@@ -125,6 +129,25 @@ class MembersController extends RoxControllerBase
                 break;
             case 'deleteprofile':
                 $page = new DeleteProfilePage();
+                break;
+            case 'setprofileinactive':
+                if ($member_self->Status != 'Active') {
+                    $this->redirect('editmyprofile');
+                }
+                // set to inactive only allowed in intervals of two weeks time
+                $page = new SetProfileInactivePage();
+                $timeSinceLastActiveSwitch = time() - strtotime($member_self->LastActiveSwitch);
+                if ($timeSinceLastActiveSwitch < 14 * 24 * 60 * 60 ) {
+                    $page->switchNotAllowed = true;
+                } else {
+                    $page->switchNotAllowed = false;
+                }
+                break;
+            case 'setprofileactive':
+                if ($member_self->Status != 'ChoiceActive') {
+                    $this->redirect('editmyprofile');
+                }
+                $page = new SetProfileActivePage();
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
@@ -252,7 +275,7 @@ class MembersController extends RoxControllerBase
                 {
                     //check if member can browse that profile
                     if (!$member->isBrowsable()){
-                        // found a member, but that member is not browsable(e.g. status "banned")
+                        // found a member, but that member is not browsable (e.g. status "banned")
                         $rights_self = $member_self->getOldRights();
                         if (empty($rights_self)){
                             // the profile is not shown because the request is coming from a member without admin rights
@@ -373,11 +396,20 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
-                            $page = new ProfilePage();
+                            if (!$myself && $member->Status == 'ChoiceInactive') {
+                                $page = new InactiveProfilePage();
+                            } else {
+                                $page = new ProfilePage();
+                            }
+
                             break;
                         default:
-                            $page = new ProfilePage();
-                            $this->model->set_profile_language($request[2]);
+                            if (!$myself && $member->Status == 'ChoiceInactive') {
+                                $page = new InactiveProfilePage();
+                            } else {
+                                $page = new ProfilePage();
+                                $this->model->set_profile_language($request[2]);
+                            }
                             break;
                     }
                 }
@@ -707,7 +739,57 @@ class MembersController extends RoxControllerBase
         return $page;
     }
 
-     /**
+    /**
+     * callback to set profile inactive
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff          $stuff1
+     * @param stuff          $stuff2
+     *
+     * @access public
+     * @return mixed
+     */
+    public function setProfileInactive(StdClass $args, $memory, $stuff1, $stuff2)
+    {
+        if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
+        {
+            return false;
+        }
+        // Update database
+        $member->inactivateProfile();
+        // Update session
+        $_SESSION["MemberStatus"] = $_SESSION["Status"] = 'ChoiceInactive';
+        $this->setFlashNotice($this->model->getWords()->get('ProfileSetInactiveSuccess'));
+        return 'editmyprofile';
+    }
+
+    /**
+     * callback to set profile inactive
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff          $stuff1
+     * @param stuff          $stuff2
+     *
+     * @access public
+     * @return mixed
+     */
+    public function setProfileActive(StdClass $args, $memory, $stuff1, $stuff2)
+    {
+        if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
+        {
+            return false;
+        }
+        // Update database
+        $member->activateProfile();
+        // Update session
+        $_SESSION["MemberStatus"] = $_SESSION["Status"] = 'Active';
+        $this->setFlashNotice($this->model->getWords()->get('ProfileSetActiveSuccess'));
+        return 'editmyprofile';
+    }
+
+    /**
      * callback for password reset
      *
      * @param stdClass       $args   - all sorts of variables

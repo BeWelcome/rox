@@ -34,6 +34,9 @@ Boston, MA  02111-1307, USA.
      */
 class Member extends RoxEntityBase
 {
+    const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
+    const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
+
     protected $_table_name = 'members';
 
     private $trads = null;
@@ -700,7 +703,7 @@ WHERE IdMember = ".$this->id
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN ('Active', 'ChoiceInactive')
+                members.status IN (" . self::ACTIVE_ALL . ")
             "
         );
 
@@ -716,7 +719,7 @@ WHERE IdMember = ".$this->id
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN ('Active', 'ChoiceInactive')
+                members.status IN (" . self::ACTIVE_ALL . ")
                 AND
                 DisplayInPublic = 1
             "
@@ -1047,7 +1050,7 @@ FROM
 WHERE
     specialrelations.IdOwner = $this->id  AND
     specialrelations.IdRelation = members.Id AND
-    members.Status in ('Active','ActiveHidden','ChoiceInactive')
+    members.Status in (" . self::ACTIVE_ALL . ")
           ";
           $s = $this->dao->query($sql);
           $Relations = array();
@@ -1152,7 +1155,7 @@ WHERE
     comments.IdToMember   = " . $this->id . " AND
     comments.IdFromMember = members.Id AND
     comments.IdToMember = members2.Id
-    AND members.Status IN ('Active', 'ChoiceInactive')
+    AND members.Status IN (" . self::ACTIVE_ALL . ")
 ORDER BY
     comments.updated DESC
           ";
@@ -1800,6 +1803,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             return false;
         }
         $this->Status = 'Active';
+        $this->LastActiveSwitch = date('Y-m-d H:i:s');
+        $this->LastActiveSwitch = date('Y-m-d H:i:s');
         return $this->update();
     }
 

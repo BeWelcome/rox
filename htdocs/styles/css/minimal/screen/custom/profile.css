@@ -210,9 +210,15 @@
 }
 #profile_linklist .deleteprofile {
     padding-left: 2em;
-    background: transparent url(../../images/iconsfam/delete.png) 0 3px no-repeat;
+    background: transparent url(../../../../../images/icons/cancel.png) 0 3px no-repeat;
 }
-
+#profile_linklist .setprofileinactive {
+    padding-left: 2em;
+    background: transparent  url(../../images/iconsfam/delete.png) 0 3px no-repeat;
+}
+#profile_linklist .leftpadding {
+    padding-left: 2em;
+}
 /* using css3 for round corners and shadow effect (only firefoxm chrome and safari) */
 #profile .box, #profile-info .box{
     border: 1px solid #ccc; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;

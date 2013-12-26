@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
-echo $words->get('CommentGuidlinesLink') . '<br /><br />';
+if (!$this->passedAway) { echo $words->get('CommentGuidlinesLink') . '<br /><br />'; }
 if (!$this->myself && !$comment_to_self_exists  && $this->loggedInMember) {
 
       // Show "Add comment" button
@@ -71,7 +71,7 @@ if($showfrom || $editfrom || $showto || $editto) {
         <div class="comment">
             <p class="floatbox">
 
-              <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
+              <?php if (!$this->passedAway) {?><strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/><?php }?>
               <span class="small grey">
                 <?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?> <?= $words->get('CommentTo') ?> <a href="members/<?= $c->UsernameToMember ?>"><?= $c->UsernameToMember ?></a> -
                 <span title="<?php echo $c->created; ?>">

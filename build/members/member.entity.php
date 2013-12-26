@@ -1840,7 +1840,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
-        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'Banned', 'Rejected', 'DuplicateSigned')))
+        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'Buggy', 'Banned', 'Rejected', 'DuplicateSigned')))
         {
             return false;
         }

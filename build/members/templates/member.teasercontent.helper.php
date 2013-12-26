@@ -21,7 +21,11 @@ $agestr = "";
 if ($member->age == "hidden") {
     $agestr .= $ww->AgeHidden;
 } else {
-    $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate));
+    if ($this->passedAway) {
+        $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate, substr($member->updated, 0, 10)));
+    } else {
+        $agestr= $ww->AgeEqualX($layoutbits->fage_value($member->BirthDate));
+    }
 }
 
 $occupation = $member->get_trad("Occupation", $profile_language,true);

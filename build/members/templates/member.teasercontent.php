@@ -1,8 +1,15 @@
 <div id="profile-info">
   <div class="subcolumns">
-    <h1 id="username">
-      <strong><?=$member->Username ?></strong>
+    <h1 id="username"><strong>
+      <?php if ($this->passedAway == 'PassedAway') {
+           echo $words->get('ProfileInMemoriam', $member->Username);
+      } else {
+            echo $member->Username;
+      } ?>
+      </strong>
+
       <?$name = $member->name(); ?><?=($name == '') ? $member->Occupation : $name;?>
+      <?php if (!$this->passedAway) : ?>
       <!-- Hidden in accordance with trac ticket 1992 until bugs which limit the validity of verification system are resolved.
       <?=($verification_status) ? '
         <a href="verifymembers/verifiersof/'.$member->Username.'">
@@ -10,6 +17,7 @@
       <?=($member->Accomodation == 'anytime') ? '
         <img src="images/icons/door_open.png" alt="'.$member->Accomodation.'" title="' . $words->getSilent('CanOfferAccomodation') . '" />': ''?>
       <?=$words->flushBuffer()?>
+      <?php endif; ?>
     </h1> <!-- username -->
     <div class="c50l">
       <div class="subcl">

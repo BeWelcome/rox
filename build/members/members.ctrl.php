@@ -144,7 +144,7 @@ class MembersController extends RoxControllerBase
                 }
                 break;
             case 'setprofileactive':
-                if ($member_self->Status != 'ChoiceActive') {
+                if ($member_self->Status != 'ChoiceInactive') {
                     $this->redirect('editmyprofile');
                 }
                 $page = new SetProfileActivePage();
@@ -424,6 +424,11 @@ class MembersController extends RoxControllerBase
         }
         $page->loggedInMember = $this->model->getLoggedInMember();
         $page->model = $this->model;
+        if ($member->Status == 'PassedAway') {
+            $page->passedAway = true;
+        } else {
+            $page->passedAway = false;
+        }
         return $page;
     }
 

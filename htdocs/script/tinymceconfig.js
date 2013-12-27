@@ -6,9 +6,9 @@ tinymce.init({
     mode: "exact",
     elements: "<?php echo $textarea; ?>",
     // plugins : "advimage,preview,fullscreen,autolink",
-    plugins: "textcolor, image, charmap, link, autolink, paste, preview",
+    plugins: "image, charmap, link, autolink, paste, preview",
     theme: "modern",
-    content_css : http_baseuri + "styles/css/minimal/screen/custom/tinymce_content.css?2",
+    content_css : http_baseuri + "styles/css/minimal/screen/tinymce.css",
     relative_urls:false,
     convert_urls:false,
     toolbar: "undo, redo,|,bold,italic,underline,strikethrough,|,bullist,numlist,|,forecolor,backcolor,|,charmap,link,image,|,blockquote,|,preview",
@@ -19,6 +19,7 @@ tinymce.init({
     gecko_spellcheck : true,
     plugin_preview_width : "600",
     plugin_preview_height : "500",
+    body_class : "forumsmessage",
 });
 //-->
 </script>

@@ -473,6 +473,9 @@ WHERE
                 $one_selected = true;
             }
         }
+        if ($vars['Quality'] == "") {
+            $errors[] = 'Comment_MustSelectQuality';
+        }
         if (!isset($one_selected)) {
             $errors[] = 'Comment_NoCommentLengthSelected';
         }

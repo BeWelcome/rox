@@ -117,12 +117,13 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
       <tr>
         <td width>
             <select name="Quality">
+                <option value=""><?=$words->get("CommentQuality_SelectOne")?></option>
                 <option value="Good"
                 <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>
                 >
                 <?=$words->get("CommentQuality_Good")?></option>
                 <option value="Neutral"
-                <?=(!isset($TCom->comQuality) || $TCom->comQuality == "Neutral") ? " selected " : ""?>
+                <?=(isset($TCom->comQuality) && $TCom->comQuality == "Neutral") ? " selected " : ""?>
                 >
                 <?=$words->get("CommentQuality_Neutral")?></option>
                 <option value="Bad"

@@ -134,10 +134,11 @@ class MembersController extends RoxControllerBase
                 if ($member_self->Status != 'Active') {
                     $this->redirect('editmyprofile');
                 }
-                // set to inactive only allowed in intervals of two weeks time
+                // set to inactive only allowed in intervals of two weeks time (for testing one day)
+                $minimumTimeBetweenSwitches = 1 * 24 * 60 * 60;
                 $page = new SetProfileInactivePage();
-                $timeSinceLastActiveSwitch = time() - strtotime($member_self->LastActiveSwitch);
-                if ($timeSinceLastActiveSwitch < 14 * 24 * 60 * 60 ) {
+                $timeSinceLastSwitchToActive = time() - strtotime($member_self->LastSwitchToActive);
+                if ($timeSinceLastSwitchToActive < $minimumTimeBetweenSwitches) {
                     $page->switchNotAllowed = true;
                 } else {
                     $page->switchNotAllowed = false;
@@ -424,7 +425,7 @@ class MembersController extends RoxControllerBase
         }
         $page->loggedInMember = $this->model->getLoggedInMember();
         $page->model = $this->model;
-        if ($member->Status == 'PassedAway') {
+        if ($page->member->Status == 'PassedAway') {
             $page->passedAway = true;
         } else {
             $page->passedAway = false;

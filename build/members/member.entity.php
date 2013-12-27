@@ -1803,8 +1803,8 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             return false;
         }
         $this->Status = 'Active';
-        $this->LastActiveSwitch = date('Y-m-d H:i:s');
-        $this->LastActiveSwitch = date('Y-m-d H:i:s');
+        $this->LastSwitchToActive = date('Y-m-d H:i:s');
+        $this->LastSwitchToActive = date('Y-m-d H:i:s');
         return $this->update();
     }
 

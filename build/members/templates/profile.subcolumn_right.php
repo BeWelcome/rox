@@ -1,3 +1,4 @@
+<?php if (!$this->passedAway) : ?>
 <div id="accommodationinfo" class="floatbox box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
@@ -127,6 +128,7 @@ for($ii=0; $ii < count($icons); $ii++)
         <? } ?>
     </dl>
 </div> <!-- profile_accommodation -->
+<?php endif; ?>
 
 <? // Linkpath widget ?>
     <?
@@ -191,7 +193,12 @@ if (count($relations) > 0) { ?>
         <a href="members/<?php echo $member->Username; ?>/comments/"><?php echo $words->get('Edit'); ?></a>
     </span>
     <?php endif; ?>
-    <h3><?php echo $words->get('LatestComments')?></h3>
+    <h3><?php if ($this->passedAway) {
+            echo $words->get('LatestCommentsAndCondolences');
+        } else {
+            echo $words->get('LatestComments');
+        }
+    ?></h3>
 
     <?php
         $tt = array ();
@@ -217,7 +224,8 @@ if (count($relations) > 0) { ?>
         </a>
         <div class="comment">
             <p>
-              <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/>
+              <?php if (!$this->passedAway) { ?>
+                <strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/><?php }?>
               <span class="small grey"><?=$words->get('CommentFrom','<a href="members/'.$c->UsernameFromMember.'">'.$c->UsernameFromMember.'</a>')?> - <?=$c->created?></span>
             </p>
             <p>

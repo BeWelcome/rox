@@ -166,7 +166,7 @@ bwrox.selectScripts([
     ]
   },
   {
-    file: "tiny_mce/tiny_mce.js",
+    file: "tinymce/tinymce.min.js",
     pages: [
       "activities",
       "blog",

@@ -32,11 +32,11 @@ if (!$this->viewOnly) { ?>
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="submit" id="suggestion-add-option" name="suggestion-add-option"
     value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>"
-    class="submit" /><?php echo $words->flushBuffer(); ?>
+    class="submit float_right" /><?php echo $words->flushBuffer(); ?>
 </div>
 </form>
 </div><!-- suggestion-form -->
-<?php
+<hr class="suggestion" /><?php
 // Now load the board and show it
 $Forums = new ForumsController;
 $Forums->showExternalSuggestionsThread( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId);

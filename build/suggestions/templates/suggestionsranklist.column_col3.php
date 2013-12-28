@@ -1,3 +1,3 @@
 <?php
-    include 'suggestionslist.php';
+    include 'optionslist.php';
 ?>

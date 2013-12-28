@@ -160,7 +160,7 @@ class RequestRouter
 
 
 
-    
+
     /**
      * checks to see if a route matches the incoming request
      * checks through the _routes array, to see if something matches
@@ -185,7 +185,7 @@ class RequestRouter
     /**
      * find the name of the controller to be called,
      * given the first part of the request string
-     * 
+     *
      * @param string $name first part of request
      * @return string controller classname
      */
@@ -203,8 +203,8 @@ class RequestRouter
         }
         return array($this->defaultControllerClassname(), 'index', null);
     }
-    
-    
+
+
     /**
      * replace the first part of the request by something else.
      *
@@ -214,18 +214,18 @@ class RequestRouter
     protected function translate($name)
     {
         if (!$name) return false;
-        
+
         $key = strtolower($name);
-        
+
         $ini_alias_table = $this->loadRoutingAliasTable();
-        
+
         if (array_key_exists($key, $ini_alias_table)) {
             return $ini_alias_table[$key];
         } else {
             return $key;
         }
     }
-    
+
     /**
      * if no controller fits the request, use a RoxController
      *
@@ -235,8 +235,8 @@ class RequestRouter
     {
         return 'RoxController';
     }
-    
-    
+
+
     protected function loadRoutingAliasTable()
     {
         $alias_table = array();
@@ -259,7 +259,7 @@ class RequestRouter
         }
         return $alias_table;
     }
-    
+
     protected function iniParse($file, &$alias_table)
     {
         if (!is_array($ini_settings = parse_ini_file($file))) {
@@ -272,9 +272,9 @@ class RequestRouter
         }
         return true;
     }
-    
+
     protected function iniWrite($file, $alias_table)
-    { 
+    {
         $rwd_table = array();
         foreach ($alias_table as $k => $v) {
             $rwd_table[$v][] = $k;
@@ -332,10 +332,10 @@ class RequestRouter
                 $classname = $this->controllerClassnameForString($request[0]);
                 $methodname = 'index';
         }
-        
+
         return array($classname, $methodname);
     }
-*/    
+*/
 
 }
 

@@ -31,7 +31,7 @@ class MessagesModel extends RoxModelBase
                 $sort_string = "IF(messages.created > messages.DateSent, messages.created, messages.DateSent) DESC";
         }
 
-        return $this->bulkLookup(
+        $query=
             "
 SELECT
     messages.*,
@@ -49,8 +49,8 @@ WHERE
     $where_string
 ORDER BY
     $sort_string
-            "
-        );
+            ";
+        return $this->bulkLookup($query);
     }
 
     public function sortFilters($sort_element=false)
@@ -82,7 +82,7 @@ ORDER BY
             if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
             else $sort_string = false;
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND DeleteRequest != "receiverdeleted"');
+            return $this->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND NOT DeleteRequest LIKE "%receiverdeleted%"');
         }
     }
 
@@ -95,7 +95,7 @@ ORDER BY
             if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
             else $sort_string = false;
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('messages.IdSender = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND DeleteRequest != "senderdeleted"');
+            return $this->filteredMailbox('messages.IdSender = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND NOT DeleteRequest LIKE "%senderdeleted%"');
         }
     }
 
@@ -108,7 +108,7 @@ ORDER BY
             if ($sort_element != false) $sort_string = $this->sortFilters($sort_element);
             else $sort_string = false;
             $member_id = $_SESSION['IdMember'];
-            return $this->filteredMailbox('messages.IdReceiver ='.$member_id.' AND messages.InFolder = "Spam" AND DeleteRequest != "receiverdeleted"');
+            return $this->filteredMailbox('messages.IdReceiver ='.$member_id.' AND messages.InFolder = "Spam" AND NOT DeleteRequest LIKE "%receiverdeleted%"');
         }
     }
 

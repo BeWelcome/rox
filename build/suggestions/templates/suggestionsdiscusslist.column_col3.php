@@ -1,6 +1,4 @@
 <?php
-    // the add options items to show as discussion items with
-    // additional icon to add options
-    $discuss = true;
+    $state = SuggestionsModel::SUGGESTIONS_DISCUSSION;
     include 'suggestionslist.php';
 ?>

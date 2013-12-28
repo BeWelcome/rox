@@ -1,5 +1,5 @@
 <?php
     // show addoptions items as normal items and not discussion items
-    $discuss = false;
+    $state = SuggestionsModel::SUGGESTIONS_ADD_OPTIONS;
     include 'suggestionslist.php';
 ?>

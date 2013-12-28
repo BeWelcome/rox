@@ -33,8 +33,10 @@ class GalleryController extends RoxControllerBase {
         $membersmodel = $this->membersmodel = new MembersModel();
 
         $request = PRequest::get()->request;
-        if (!isset($request[1]))
-            $request[1] = '';
+
+        if (!isset($request[1])) {
+            $this->redirect('main');
+        }
         switch ($request[1]) {
             case 'ajax':
                 if (!isset($request[2]))
@@ -78,16 +80,7 @@ class GalleryController extends RoxControllerBase {
                 break;
 
             case 'images':
-                if ($loggedInMember) {
-                    $statement = $this->_model->getLatestItems();
-                } else {
-                    $statement = $this->_model->getLatestItems(false, false,
-                        false, true);
-                }
-                $page = new GalleryAllImagesPage();
-                $page->statement = $statement;
-                $page->loggedInMember = $loggedInMember;
-                return $page;
+                $this->redirect('main');
                 
             case 'upload':
                 return $this->upload();
@@ -104,9 +97,7 @@ class GalleryController extends RoxControllerBase {
                 PPHP::PExit();
                 
             case 'flickr':
-                $page = new GalleryFlickrPage();
-                $page->loggedInMember = $loggedInMember;
-                return $page;
+                $this->redirect('main');
 
             case 'avatars': 
                 if ($loggedInMember) {

@@ -49,13 +49,16 @@ foreach($this->suggestion->options as $option) :
     <textarea id="suggestion-option-desc" name="suggestion-option-desc" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-option-desc']; ?></textarea>
 </div>
 <div class="subcolumns row">
+<div class="float_left">
+    <input type="checkbox" name="suggestion-minor-edit" id="suggestion-minor-edit" value="1"> <label for="suggestion-minor-edit"><?php echo $words->get('suggestionMinorEdit'); ?></label>
+</div>
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="hidden" id="suggestion-option-id" name="suggestion-option-id" value="<?php echo $vars['suggestion-option-id']; ?>" />
 <input type="submit" id="suggestion-edit-option" name="suggestion-edit-option"
     value="<?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?>"
-    class="submit" /><?php echo $words->flushBuffer(); ?>
+    class="submit float_right" /><?php echo $words->flushBuffer(); ?>
 </div>
-<?php endif;
+<hr class="suggestion" /><?php endif;
 endforeach; ?>
 </form>
 </div><!-- suggestion-form -->

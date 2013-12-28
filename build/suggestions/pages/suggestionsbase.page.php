@@ -54,7 +54,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
     protected function teaserHeadline()
     {
         $words = $this->getWords();
-        return $words->get('Suggestions');
+        return '<a href="/suggestions">' . $words->get('Suggestions') . '</a>';
     }
 
     private function checkSuggestionRight()
@@ -94,11 +94,11 @@ class SuggestionsBasePage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?3';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?4';
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?7';
        return $stylesheets;
     }
 
@@ -111,7 +111,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
     protected function getStateSelect($state) {
         $select = '<select id="suggestion-state" name="suggestion-state">';
         $words = $this->getWords();
-        $states = SuggestionsModel::getStatesByArray();
+        $states = SuggestionsModel::getStatesAsArray();
         foreach($states as $key => $wordCode) {
             $select .= '<option value="' . $key . '"';
             if ($key == $state) {

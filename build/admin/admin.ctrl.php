@@ -597,6 +597,7 @@ class AdminController extends RoxControllerBase
         $id = $this->route_vars['id'];
         $massmail = $this->_model->getMassmail($id);
         $page = new AdminMassMailEnqueuePage($this->_model, $massmail);
+        $page->votersCount = $this->_model->getSuggestionsReminderCount();
         return $page;
     }
 

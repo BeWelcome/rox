@@ -43,10 +43,11 @@ include 'suggestion.php';
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="hidden" id="suggestion-option-id" name="suggestion-option-id" value="<?php echo $vars['suggestion-option-id']; ?>" />
 <input type="submit" id="suggestion-delete-option" name="suggestion-delete-option"
-    value="<?php echo $words->getSilent('SuggestionsSubmitDeleteOption'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+    value="<?php echo $words->getSilent('SuggestionsSubmitDeleteOption'); ?>" class="submit float_right" /><?php echo $words->flushBuffer(); ?>
 </div>
 </form>
 </div><!-- suggestion-form -->
+<hr class="suggestion" />
 <?php
 // Now load the board and show it
 $Forums = new ForumsController;

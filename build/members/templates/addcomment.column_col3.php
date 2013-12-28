@@ -100,6 +100,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
     echo "<h3>" . $words->get("CantChangeNegative") . "</h3>" . $words->get("CantChangeNegative_Explanation");
 } else {
 ?>
+<?=$words->flushBuffer();?>
 <form method="post" name="addcomment" OnSubmit="return DoVerifySubmit('addcomment');">
 <?=$callback_tag ?>
 <fieldset>
@@ -117,19 +118,20 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
       <tr>
         <td width>
             <select name="Quality">
+                <option value=""><?=$words->getSilent("CommentQuality_SelectOne")?></option>
                 <option value="Good"
                 <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>
                 >
-                <?=$words->get("CommentQuality_Good")?></option>
+                <?=$words->getSilent("CommentQuality_Good")?></option>
                 <option value="Neutral"
-                <?=(!isset($TCom->comQuality) || $TCom->comQuality == "Neutral") ? " selected " : ""?>
+                <?=(isset($TCom->comQuality) && $TCom->comQuality == "Neutral") ? " selected " : ""?>
                 >
-                <?=$words->get("CommentQuality_Neutral")?></option>
+                <?=$words->getSilent("CommentQuality_Neutral")?></option>
                 <option value="Bad"
                 <?=(isset($TCom->comQuality) && $TCom->comQuality == "Bad") ? " selected " : ""?>
                 >
-                <?=$words->get("CommentQuality_Bad")?></option>
-            </selected>
+                <?=$words->getSilent("CommentQuality_Bad")?></option>
+            </select><?=$words->flushBuffer();?>
         </td>
         <td>
             <p class="grey"><?=$words->get("CommentQualityDescription", $Username, $Username, $Username)?></p>

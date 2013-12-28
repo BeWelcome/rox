@@ -7,8 +7,8 @@
 #suggestionslist {width: 100%;}
 #suggestionslist th.description { vertical-align: bottom; text-align: left; }
 #suggestionslist th.details { vertical-align: bottom; text-align: center; }
-#suggestionslist td.description{ vertical-align: top; text-align: left; }
-#suggestionslist td.details{ vertical-align: top; text-align: center; width: 10%; }
+#suggestionslist td.description{ vertical-align: middle; text-align: left; }
+#suggestionslist td.details{ vertical-align: middle; text-align: center; width: 10%; }
 
 .picbox_activities { width: 240px; }
 
@@ -47,4 +47,37 @@
 }
 
 h4 {font-size: 1.2em; color: #333; margin: 0 0 0.30em 0; font-weight:bold;}
+}
+
+tr.highlighttop {
+	background: #eceff5;
+	border: none 0pt;
+	border-top: 1px solid #e5e5e5;
+}
+tr.highlightmiddle {
+    background: #eceff5;
+    border: none 0pt;
+}
+tr.highlightbottom {
+	background: #eceff5;
+	border: none 0pt;
+	border-bottom: 1px solid #e5e5e5;
+	margin-right: 4px;
+}
+tr.blanktop {
+	border: none 0pt;
+ 	border-top: 1px solid #e5e5e5;
+}
+tr.blankmiddle {
+    background: #eceff5;
+    border: none 0pt;
+}
+tr.blankbottom {
+	border: none 0pt;
+ 	border-bottom: 1px solid #e5e5e5;
+}
+
+hr.suggestion {
+    color: #ffab0c;
+    border-color: #ffab0c;
 }

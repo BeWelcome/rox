@@ -196,9 +196,15 @@
     $this->addRoute('suggestions_votelist', 'suggestions/vote', 'suggestionsController', 'voteList');
     $this->addRoute('suggestions_votelist_pages', 'suggestions/vote/page/:pageno:', 'suggestionsController', 'voteList');
     $this->addRoute('suggestions_vote', 'suggestions/:id:/vote', 'suggestionsController', 'vote');
+    $this->addRoute('suggestions_exclude', 'suggestions/:id:/exclude', 'suggestionsController', 'exclude');
     $this->addRoute('suggestions_ranklist', 'suggestions/rank', 'suggestionsController', 'rankList');
     $this->addRoute('suggestions_ranklist_pages', 'suggestions/rank/page/:pageno:', 'suggestionsController', 'rankList');
     $this->addRoute('suggestions_rank', 'suggestions/:id:/rank', 'suggestionsController', 'rank');
+    $this->addRoute('suggestions_options_implementing', 'suggestions/:id:/implementing/:optionid:', 'suggestionsController', 'moveOptionToImplementing');
+    $this->addRoute('suggestions_options_implemented', 'suggestions/:id:/implemented/:optionid:', 'suggestionsController', 'moveOptionToImplemented');
+    $this->addRoute('suggestions_implemented', 'suggestions/:id:/implemented', 'suggestionsController', 'moveSuggestionToImplemented');
+    $this->addRoute('suggestions_upvote', 'suggestions/:optionid:/upvote', 'suggestionsController', 'voteRanking');
+    $this->addRoute('suggestions_downvote', 'suggestions/:optionid:/downvote', 'suggestionsController', 'voteRanking');
     $this->addRoute('suggestions_rejectedlist', 'suggestions/rejected', 'suggestionsController', 'rejectedList');
     $this->addRoute('suggestions_rejectedlist_pages', 'suggestions/rejected/page/:pageno:', 'suggestionsController', 'rejectedList');
     $this->addRoute('suggestions_rejected', 'suggestions/:id:/rejected', 'suggestionsController', 'rejected');

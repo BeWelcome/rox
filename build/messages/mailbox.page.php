@@ -44,14 +44,22 @@ class MessagesPageWithMailbox extends MessagesBasePage
         $widget = $this->getMailboxWidget();
         if ($widget->needsPagination()) {
             echo $formstart;
-            echo '<div class="floatbox">';
-            $widget->showPagination();
+            echo '<div class="subcolumns">';
+            echo '<div class="c50l">';
             $this->messageActions();
             echo '</div>';
-            $widget->render();
-            echo '<div class="floatbox">';
-            $this->messageActions();
+            echo '<div class="c50r">';
             $widget->showPagination();
+            echo '</div>';
+            echo '</div>';
+            $widget->render();
+            echo '<div class="subcolumns">';
+            echo '<div class="c50l">';
+            $this->messageActions();
+            echo '</div>';
+            echo '<div class="c50r">';
+            $widget->showPagination();
+            echo '</div>';
             echo '</div>';
             echo $formend;
         } else {

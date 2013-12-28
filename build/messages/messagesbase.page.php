@@ -12,9 +12,9 @@
 class MessagesBasePage extends RoxPageView
 {
     protected function getStylesheets() {
-        $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/YAML/screen/custom/bw_basemod_2col_left.css';
-        return $stylesheets;
+       $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+       return $stylesheets;
     }
     
     protected function teaserContent() {

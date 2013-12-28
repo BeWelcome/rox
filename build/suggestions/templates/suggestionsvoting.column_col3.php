@@ -13,7 +13,7 @@ if (empty($vars)) {
     $vars['suggestion-id'] = $this->suggestion->id;
     $vars['suggestion-summary'] = $this->suggestion->summary;
     $vars['suggestion-description'] = $this->suggestion->description;
-    if (count($this->votes) == 0) {
+    if (count($this->suggestion->memberVotes) == 0) {
         $votes = array();
         foreach($this->suggestion->options as $option) {
             $vars['option' . $option->id . 'rank'] = 0;
@@ -21,9 +21,14 @@ if (empty($vars)) {
             $vote->rank = 0;
             $votes[$option->id] = $vote;
         }
-        $this->votes = $votes;
+        $this->suggestion->memberVotes = $votes;
     } else {
-        foreach($this->votes as $key => $value) {
+        // sort options in the order of the votes (excellent, good, acceptable, bad)
+        $options = $this->suggestion->options;
+        uasort($options, array($this, "compareRanks"));
+        $this->suggestion->options = $options;
+
+        foreach($this->suggestion->memberVotes as $key => $value) {
             $vars['option' . $key . 'rank'] = $value->rank;
         }
     }
@@ -34,12 +39,11 @@ include 'suggestionserrors.php'; ?>
 <fieldset id="suggestion-vote"><legend><?php echo $words->get('SuggestionsVote'); ?></legend>
 <form method="post" id="suggestion-vote-form">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $vars['suggestion-id']; ?>" />
-<?php echo $callbackTags;
-$votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + SuggestionsModel::DURATION_VOTING) ?>
-    <h3><?php echo $this->purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', $votingends) .  ")"); ?></h3>
+<?php echo $callbackTags; ?>
+    <h3><?php echo $this->purifier->purify($this->suggestion->summary . " (" .  $words->get('SuggestionsVoteEnds', $this->suggestion->nextstatechange) .  ")"); ?></h3>
     <p><?php echo $this->purifier->purify($this->suggestion->description); ?></p>
     <p><?php echo $words->get('SuggestionsVoteDiscussion', '<a href="/groups/' . SuggestionsModel::getGroupId() . '/forum/s' . $this->suggestion->threadId . '">', '</a>'); ?></p>
-    <hr />
+    <hr class="suggestion" />
     <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
     <div class="floatbox float_left">
         <p><strong><?php echo $this->purifier->purify($option->summary); ?></strong></p>
@@ -48,21 +52,29 @@ $votingends = date('Y-m-d', strtotime($this->suggestion->laststatechanged) + Sug
             <div class="vote floatbox float_right">
             <?php foreach($ranks as $key => $rank) :
                 $name = "option" . $option->id . 'rank'; $id= $name . $rank; ?>
-                <input type="radio" class="toggle" <?php if ($key == $this->votes[$option->id]->rank) :
+                <input type="radio" class="toggle" <?php if ($key == $this->suggestion->memberVotes[$option->id]->rank) :
                     echo 'checked="checked"';
                     endif;?> id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $key; ?>"/>
                 <label for="<?php echo $id; ?>"><?php echo $rank; ?></label>
             <?php endforeach; ?>
             </div>
         <?php endif; ?>
-    </div><hr />
+    </div><hr class="suggestion" />
     <?php endforeach;
     if (!$this->viewOnly) : ?>
-    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', $votingends);?></p>
+    <p style="padding-top: 1em;"><?php echo $words->get('SuggestionsVoteHint', $this->suggestion->nextstatechange);?></p>
     <p><input type="submit" class="button float_right" name="suggestion-vote-submit" value="<?php echo $words->getSilent('SuggestionsVoteSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
     <?php endif; ?>
 </form>
 </fieldset>
+<?php if ($this->hasSuggestionRight) :
+    $callbackStatus = $this->layoutkit->formkit->setPostCallback('SuggestionsController', 'changeStateCallback'); ?>
+<form method="post"><?php echo $callbackStatus;
+    echo $this->getStateSelect($this->suggestion->state); ?>
+    <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id;?>" />
+    <input type="submit" id="suggestions-submit-status" name="suggestions-submit-status" value="change" />
+</form>
+<?php endif;?>
 </div>
 <script type="text/javascript">
 jQuery.noConflict();

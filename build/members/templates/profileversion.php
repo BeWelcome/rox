@@ -40,7 +40,7 @@ if (count($languages) > 1 || $myself) {
             $ii = 0;
             $max = count($languages);
             foreach($languages as $language) {
-                if ($language->ShortCode == $profile_language_code) {
+                if (($language->ShortCode == $profile_language_code) && ($max > 1)) {
                 ?>
                     <span class="activelanguage"><?=$profile_language_name ?><? if ($this->myself) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete"> <img src="images/icons/cancel.png" title="<?=$words->getSilent('delete')?>" alt="<?=$words->getSilent('delete')?>" /></a> <? } ?></span><?
                     $activelang_set = true;
@@ -50,7 +50,7 @@ if (count($languages) > 1 || $myself) {
                 $ii++;
                 }
             } 
-            if (!isset($activelang_set)) echo '<span class="activelanguage">'.$profile_language_name.'</span>';
+            if (!isset($activelang_set)) echo '<br/><span class="activelanguage">'.$words->get('ProfileNoMatchingLanguage').'</span>';
             ?><?php echo $words->flushBuffer(); ?></p>
 <?php if ($myself) { ?>
 <select class="floatbox" id="add_language">

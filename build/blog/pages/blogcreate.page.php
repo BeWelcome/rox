@@ -15,16 +15,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
-    /** 
+    /**
      * @author Fake51
      */
 
-    /** 
+    /**
      * displays a page for creating a blog post
      *
      * @package Apps
@@ -38,13 +38,13 @@ class BlogCreatePage extends BlogBasePage
     {
         $member = $this->_model->getLoggedInMember();
         $Blog = new Blog;
-        $callback = $this->getCallbackOutput('BlogController', 'createProcess'); 
+        $callback = $this->getCallbackOutput('BlogController', 'createProcess');
 
         // get the saved post vars
 
         // get current request
         $request = PRequest::get()->request;
-            
+
         $errors = array();
         $lang = array();
         $words = new MOD_words();
@@ -58,16 +58,17 @@ class BlogCreatePage extends BlogBasePage
         $catIt = $this->_model->getCategoryFromUserIt($member->id);
         $tripIt = $this->_model->getTripFromUserIt($member->id);
         $google_conf = PVars::getObj('config_google');
-        $defaultVis->valueint = 2; // hack: TB settings are disabled as they reference app_user - default visibility is public
+        $defaultVis = new StdClass;
+        $defaultVis->valueint = 1; // hack: TB settings are disabled as they reference app_user - default visibility is public
         //$defaultVis = A PP_User::getSetting($member->id, 'APP_blog_defaultVis');
-            
+
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();
-        }   
-            
+        }
+
         if (!isset($request[2]) || $request[2] != 'finish') {
             $actionUrl = 'blog/create';
-            $submitName = ''; 
+            $submitName = '';
             $submitValue = $words->getSilent('BlogCreateSubmit');
             echo '<h2>'.$words->get('Blog_CreateEntry').'</h2>';
         } else { // $request[2] == 'finish'

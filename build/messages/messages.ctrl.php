@@ -71,8 +71,12 @@ class MessagesController extends RoxControllerBase
                     } else if (!$member = $model->getMember($request[2])) {
                         $page = new MessagesInboxPage();
                     } else {
-                        $page = new ComposeMessagePage();
-                        $page->receiver = $member;
+                        if ($member->Status <> 'Active' && $member->Status <> 'ActiveHidden' && $member->Status <> 'OutOfRemind') {
+                            $page = new ComposeMessageProhibitedPage();
+                        }   else {
+                            $page = new ComposeMessagePage();
+                            $page->receiver = $member;
+                        }
                     }
                     break;
                 case 'with':

@@ -130,6 +130,8 @@ function Menu2_old($link = "", $tt = "") {
                       <li><a href="/editmyprofile"><?=ww('EditMyProfile')?></a></li>
                       <li><a href="/mypreferences"><?=ww('MyPreferences')?></a></li>
                       <li><a href="/messages"><?=ww('MyMessages')?></a></li>
+                      <li><a href="/mynotes"><?=ww('ProfileMyNotes')?></a></li>
+                      <li><a href="/groups/mygroups"><?=ww('MyGroups')?></a></li>
                   </ul>
               </li>
           <?php } ?>
@@ -143,16 +145,22 @@ function Menu2_old($link = "", $tt = "") {
                     <ul>
                         <li><a href="/forums"><?=ww('Community')?></a></li>
                         <li><a href="/groups"><?=ww('Groups')?></a></li>
+                        <li><a href="/activities"><?=ww('Activities')?></a></li>
+                        <?php // if ($logged_in) { ?>
+                        <li><a href="/suggestions"><?=ww('Suggestions')?></a></li>
+                        <?php // } ?>
                         <li><a href="/trip"><?=ww('Trips')?></a></li>
-                        <li><a href="/gallery"><?=ww('Gallery')?></a></li>
                         <li><a href="/blog"><?=ww('Blogs')?></a></li>
+                        <li><a href="/wiki"><?=ww('Wiki')?></a></li>
                     </ul>
                 </li>
+                <li><a href="/safety"><?=ww('Safety')?></a></li>
                 <li><a href="/about"><?=ww('GetAnswers')?></a>
                     <ul>
                         <li><a href="/faq"><?=ww('Faq')?></a></li>
                         <li><a href="/feedback"><?=ww('ContactUs')?></a></li>
                         <li><a href="/about/getactive"><?=ww('About_GetActive')?></a></li>
+                        <li><a href="/donate"><?=ww('DonateLink')?></a></li>
                     </ul>
                 </li>
                 <? if (IsVol()) { ?>

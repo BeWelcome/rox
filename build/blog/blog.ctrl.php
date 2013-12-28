@@ -182,8 +182,6 @@ class BlogController extends RoxControllerBase {
                 $memberBlog = $this->_model->getMemberByUsername($request[1]);
                 if ($memberBlog)
                 {
-                    error_log(print_r($memberBlog, true));
-
                     if (!isset($request[2]))
                         $request[2] = '';
                     switch ($request[2])
@@ -195,8 +193,8 @@ class BlogController extends RoxControllerBase {
                                 $p->page = $page;
                                 $p->category = $request[3];
                                 $p->member = $memberBlog;
-                                $p->initPager($this->_model->countRecentPosts($member->id, $request[3]), $page);
-                                $p->posts = $this->_model->getRecentPostsArray($member->id, $request[3], $page);
+                                $p->initPager($this->_model->countRecentPosts($memberBlog->id, $request[3]), $page);
+                                $p->posts = $this->_model->getRecentPostsArray($memberBlog->id, $request[3], $page);
                                 break;
                             }
                             // if we're not dealing with a category, fall through and hit the default
@@ -206,16 +204,16 @@ class BlogController extends RoxControllerBase {
                             if ($post = $this->_model->getPost($request[2]))
                             {
                                 $p = new BlogSinglePostPage($this->_model);
-                                $p->member = $member;
+                                $p->member = $memberBlog;
                                 $p->post = $post;
                             }
                             else
                             {
                                 $p = new BlogPage($this->_model);
                                 $p->page = $page;
-                                $p->member = $member;
-                                $p->initPager($this->_model->countRecentPosts($member->id, false), $page);
-                                $p->posts = $this->_model->getRecentPostsArray($member->id, false, $page);
+                                $p->member = $memberBlog;
+                                $p->initPager($this->_model->countRecentPosts($memberBlog->id, false), $page);
+                                $p->posts = $this->_model->getRecentPostsArray($memberBlog->id, false, $page);
                             }
                             break;
                     }

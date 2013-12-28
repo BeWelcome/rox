@@ -478,20 +478,28 @@ class AdminWordController extends RoxControllerBase
             $nav['scopetext'] = 'All';
         } else {
             $sc_arr = explode(',',str_replace('"','',$nav['scope']));
-            $nav['scopetext'] = array_reduce($sc_arr,
-                    function($tot,$short){
-                        // glue everything together
-                        if ($tot) {$tot.=', ';}
-                        return $tot.$this->words->get('lang_'.$short); 
-                    }
-                );
+            $nav['scopetext'] = $this->glueScope($sc_arr);
         }
         $nav['level'] = $this->wordrights['Words']['Level'];
         $nav['grep'] = $rights->hasRight('Grep');
         return $nav;
     }
 
-
+    /**
+     * Make humanreadable string from array containing scopes
+     *
+     * @access private
+     * @param Array $arr Array of scopes
+     * @return String List of scopes to be displayed on screen
+     **/
+    private function glueScope($arr){
+        $tot = '';
+        foreach ($arr as $item){
+            if (strlen($tot)>0) {$tot.=', ';}
+            $tot.=$this->words->get('lang_'.$item);
+        }
+        return $tot;
+    }
 
     /**
      * Perform base functions for the callbacks

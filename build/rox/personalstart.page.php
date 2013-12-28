@@ -55,7 +55,7 @@ class MailboxWidget_Personalstart extends MailboxWidget_Received
         } else {
             $member_id = $_SESSION['IdMember'];
             $sort_string = '(case when unixtime_whenfirstread = 0 then 1 else 0 end) desc, unixtime_datesent desc, senderusername desc';
-            return $this->model->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND DeleteRequest != "receiverdeleted"',$sort_string);
+            return $this->model->filteredMailbox('messages.IdReceiver = '.$member_id.' AND messages.Status = "Sent" AND messages.InFolder = "Normal" AND NOT DeleteRequest LIKE "receiverdeleted"',$sort_string);
         }
     }
 	

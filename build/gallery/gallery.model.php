@@ -448,7 +448,7 @@ AND ';
         $query .= '
 ORDER BY `created` DESC
         ';
-        error_log($query);
+
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
@@ -581,7 +581,7 @@ AND u.id = i.user_id_foreign
 AND m.Username = u.handle
 AND m.Status IN ('Active', 'Pending', 'OutOfRemind')
         ";
-        error_log($query);
+
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;

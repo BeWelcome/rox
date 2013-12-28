@@ -101,7 +101,9 @@ bwrox.selectScripts([
       "blog", 
       "trip", 
       "admin/massmail/enqueue", 
-      "activities/"]
+      "activities/",
+      "about/faq",
+      "faq"]
   },
   {
     // complete jquery ui with theme smoothness

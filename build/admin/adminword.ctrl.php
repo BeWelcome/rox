@@ -477,7 +477,7 @@ class AdminWordController extends RoxControllerBase
         if ($nav['scope']=='"All"'){
             $nav['scopetext'] = 'All';
         } else {
-            $sc_arr = explode(',',str_replace('"','',$nav['scope']));
+            $sc_arr = preg_split('#[,;]#',str_replace('"','',$nav['scope']));
             $nav['scopetext'] = $this->glueScope($sc_arr);
         }
         $nav['level'] = $this->wordrights['Words']['Level'];

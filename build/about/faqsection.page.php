@@ -75,7 +75,7 @@ jQuery(function(){
   jQuery(window).hashchange();
 
 });
-        --></script>';
+        --></script>
 <?php
     }
 }

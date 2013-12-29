@@ -206,6 +206,7 @@ ORDER BY EngUpdated DESC
                 return $listing[0];
             } else {
                 if ($shortcode=='en' && $wordcode){
+                    $dummy = new StdClass;
                     $dummy->EngCode = $wordcode;
                     return $dummy;
                 } else {

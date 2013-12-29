@@ -1256,6 +1256,7 @@ ORDER BY
         $lang_used = array();
         foreach($vars['memberslanguages'] as $lang) {
             if (ctype_digit($lang) and !in_array($lang,$lang_used)) { // check $lang is numeric, hence a legal IdLanguage
+                $vars['languages_selected'][$ii] = new StdClass;
                 $vars['languages_selected'][$ii]->IdLanguage = $lang;
                 $vars['languages_selected'][$ii]->Level = $vars['memberslanguageslevel'][$ii2];
                 array_push($lang_used, $vars['languages_selected'][$ii]->IdLanguage);

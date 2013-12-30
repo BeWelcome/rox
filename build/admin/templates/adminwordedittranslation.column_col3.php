@@ -32,8 +32,7 @@ Boston, MA  02111-1307, USA.
     
 if ($this->noScope){
     echo '<h2>You do not have translation rights for this language</h2>';
-    echo 'Your scope: ';
-    $this->showScope();
+    echo 'Your scope: '.$this->showScope();
 } else {
     $vars = $this->getRedirectedMem('vars');
    
@@ -77,7 +76,7 @@ $tagold = array("&lt;", "&gt;");
 $tagnew = array("<font color=\"#ff8800\">&lt;", "&gt;</font>");
 echo '<td>'. str_replace("\n","<br />",
                 str_replace($tagold,$tagnew,
-                    htmlentities($this->formdata['EngSent'], ENT_COMPAT | ENT_HTML401, 'UTF-8'))).'</td>';
+                    htmlentities($this->formdata['EngSent'], ENT_COMPAT, 'UTF-8'))).'</td>';
 ?>
 </tr>
 <tr>

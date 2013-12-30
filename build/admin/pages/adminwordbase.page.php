@@ -72,18 +72,22 @@ class AdminWordBasePage extends PageWithActiveSkin
        return $stylesheets;
     }
 
-    public function showScope(){
-    if ($this->nav['scope']=='"All"'){
-        return 'All';
-    } else {
-        array_map(
-            function ($lng){
-                echo $this->words->get('lang_'.$lng->ShortCode).' ';
+   /**
+     * Make humanreadable string from array containing scopes
+     *
+     * @access private
+     * @return String List of scopes to be displayed on screen
+     **/
+    protected function showScope(){
+        if ($this->nav['scope']=='"All"'){
+            return 'All';
+        } else {
+            $tot = '';
+            foreach ($this->langarr as $item){
+                if (strlen($tot)>0) {$tot.=', ';}
+                $tot .= trim($this->words->get('lang_'.$item->ShortCode));
             }
-            ,$this->langarr
-        );
+            return $tot;
+        }
     }
-    }
-
-
 }

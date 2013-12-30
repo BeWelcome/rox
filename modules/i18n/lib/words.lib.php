@@ -636,7 +636,7 @@ class MOD_words
                 if ($row_en->donottranslate == 'yes') {
                     // text is dnt: show normally               
                     $tr_success = LookedUpWord::NO_TR_LINK;
-                    if (!$row) {
+                    if (!$row || $row->updated < $row_en->majorupdate) {
                         $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
                     } else {
                         $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);                    

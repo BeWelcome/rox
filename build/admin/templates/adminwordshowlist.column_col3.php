@@ -35,13 +35,12 @@ $formkit = $this->layoutkit->formkit;
 $callback_tag = $formkit->setPostCallback('AdminWordController', 'showListCallback');
 $this->words = new MOD_words();
 
-?>
-<p>Your scope is: <?php
-echo $this->nav['scopetext'];
 
 if ($this->noScope){
     echo '<h2>You do not have translation rights for this language</h2>';
-} else {
+}
+echo 'Your scope: '.$this->showScope();
+if (!$this->noScope){
 ?>
 <table class="awstatstable"><tr valign=top>
   <td><?= $this->nav['currentLanguage'] ?></td>

@@ -77,17 +77,18 @@ INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
      */
     public function getTripsForUser($userId)
     {
-        $query = <<<SQL
+        $query = "
 SELECT
     t.trip_id,
     d.trip_name
 FROM trip AS t
 LEFT JOIN trip_data AS d ON d.trip_id = t.trip_id
 JOIN members AS m
-                 ON t.IdMember = '{$this->dao->escape($userId)}'
-               AND m.Status IN ('Active', 'Pending', 'OutOfRemind')
+ON t.IdMember = m.id
+AND m.id = '{$this->dao->escape($userId)}'
+AND m.Status IN (" . Member::ACTIVE_ALL . ")
 ORDER BY trip_touched DESC
-SQL;
+";
 error_log($query);
         return $this->bulkLookup($query);
     }
@@ -119,16 +120,16 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
     private $tripids;
 	public function getTrips($handle = false)
     {
-		$query = <<<SQL
+		$query = "
 SELECT trip.trip_id, trip_data.trip_name, trip_text, trip_descr, members.Username AS handle, geonames_cache.fk_countrycode, trip_to_gallery.gallery_id_foreign
     FROM trip
     RIGHT JOIN trip_data ON trip.trip_id = trip_data.trip_id
-    LEFT JOIN members ON members.id = trip.IdMember AND members.Status IN ('Active', 'Pending', 'OutOfRemind')
+    LEFT JOIN members ON members.id = trip.IdMember AND members.Status IN (" . Member::ACTIVE_ALL . ")
     LEFT JOIN addresses ON addresses.IdMember = members.id
     LEFT JOIN geonames_cache ON addresses.IdCity = geonames_cache.geonameid
     LEFT JOIN trip_to_gallery ON trip_to_gallery.trip_id_foreign = trip.trip_id
 WHERE 1 = 1
-SQL;
+";
 		if ($handle) {
 			$query .= " AND members.Username = '{$this->dao->escape($handle)}'";
 		}

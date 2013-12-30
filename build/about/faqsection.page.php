@@ -49,17 +49,33 @@ class AboutFaqsectionPage extends AboutFaqPage
         foreach ($this->faq_section->faqs as $faq_key => &$faq) {
             echo '
             <dt>'.$words->get("FaqQ_".$faq->QandA).'</dt>
-            <dd><p><a name="question'.$faq_key.'"></a>'.$words->get("FaqA_".$faq->QandA).'</p></dd>';
+            <dd id="question'.$faq_key.'">'.$words->get("FaqA_".$faq->QandA).'</dd>';
         }
-        echo '
+?>
         </dl>
         <script type="text/javascript"><!--
     jQuery("#faqs dd").hide();
-    jQuery("#faqs dt").click(function () {
+    jQuery("#faqs dt").click(function (e) {
+        e.preventDefault();
         jQuery(this).next("#faqs dd").slideToggle(500);
         jQuery(this).toggleClass("expanded");
-    });
-        --></script>';
+
+});
+jQuery(function(){
+
+  // Bind the event.
+  jQuery(window).hashchange( function(){
+    // Alerts every time the hash changes!
+    hash = location.hash;
+      jQuery( hash ).show();
+      jQuery(document).scrollTop( jQuery( hash ).offset().top );
+  })
+
+  // Trigger the event (useful on page load).
+  jQuery(window).hashchange();
+
+});
+        --></script>
+<?php
     }
 }
-

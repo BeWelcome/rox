@@ -28,14 +28,14 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
             <legend><?=$words->get('ProfileSummary')?></legend>
             <table border="0" >
               <colgroup>
-                <col width="25%" ></col>
-                <col width="25%" ></col>
-                <col width="15%" ></col>
-                <col width="35%" ></col>
+                <col width="25%" />
+                <col width="25%" />
+                <col width="15%" />
+                <col width="35%" />
               </colgroup>
               <tbody>
 <?php if ($this->adminedit) : ?>
-                </tr><tr align="left" >
+                <tr align="left" >
                   <td class="label" ><?=$words->get('ProfileStatus')?>:</td>
                   <td colspan="3" >
                     <select id="Status" name="Status">
@@ -51,11 +51,12 @@ if (in_array('SignupErrorInvalidEmail', $vars['errors'])) {
                     <div class="small"><?=$words->get('subline_username_edit')?></div>
                   </td>
                 </tr>
-                </tr><tr align="left" >
+                <tr align="left" >
                   <td class="label" ><?=$words->get('ProfilePicture')?>:<br/><img src="members/avatar/<?=$member->Username?>?xs" title="Current picture" alt="Current picture" style="padding: 1em"/></td>
                   <td colspan="3" >
-                    <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?>
-                    <div class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></div></label><br /><input id="profile_picture" name="profile_picture" type="file" />
+                    <label for="profile_picture"><?= $words->get('uploadselectpicture'); ?></label><br />
+                    <span class="small"><?= $words->get('Profile_UploadWarning', sprintf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576)); ?></span><br /><br />
+                    <input id="profile_picture" name="profile_picture" type="file" />
                   </td>
                 </tr>
                 <tr align="left" >
@@ -232,10 +233,10 @@ HTML;
             <legend>{$words->get('ContactInfo')}</legend>
             <table border="0" class="full" >
               <colgroup>
-                <col width="25%" ></col>
-                <col width="25%" ></col>
-                <col width="25%" ></col>
-                <col width="25%" ></col>
+                <col width="25%" />
+                <col width="25%" />
+                <col width="25%" />
+                <col width="25%" />
               </colgroup>
               <tbody>
 HTML;
@@ -429,8 +430,8 @@ HTML;
             <legend><?=$words->get('ProfileAccommodation')?></legend>
             <table border="0" >
               <colgroup>
-                <col width="25%" ></col>
-                <col width="75%" ></col>
+                <col width="25%" />
+                <col width="75%" />
               </colgroup>
               <tbody>
                 <tr align="left" >
@@ -554,8 +555,8 @@ HTML;
             <legend><?=$words->get('ProfileInterests')?></legend>
             <table border="0" class="full" >
               <colgroup>
-                <col width="25%" ></col>
-                <col width="75%" ></col>
+                <col width="25%" />
+                <col width="75%" />
               </colgroup>
               <tbody>
                 <tr align="left" >
@@ -593,8 +594,8 @@ HTML;
             <h3><?=$words->get('ProfileTravelExperience')?></h3>
             <table border="0" class="full" >
               <colgroup>
-                <col width="25%" ></col>
-                <col width="75%" ></col>
+                <col width="25%" />
+                <col width="75%" />
               </colgroup>
               <tbody>
                 <tr align="left" >
@@ -618,9 +619,9 @@ HTML;
             <legend><?=$words->get('MyRelations')?></legend>
             <table border="0" >
               <colgroup>
-                <col width="25%" ></col>
-                <col width="60%" ></col>
-                <col width="15%" ></col>
+                <col width="25%" />
+                <col width="60%" />
+                <col width="15%" />
               </colgroup>
               <tbody>
                 <?php
@@ -676,8 +677,8 @@ HTML;
             <legend class="icon groups22" ><?=$words->get('MyGroups')?></legend>
             <table border="0" >
               <colgroup>
-                <col width="25%" ></col>
-                <col width="75%" ></col>
+                <col width="25%" />
+                <col width="75%" />
               </colgroup>
               <tbody>
                 <?php

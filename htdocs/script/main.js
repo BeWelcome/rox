@@ -116,15 +116,22 @@ bwrox.selectScripts([
       "admin/treasurer" */
     ]
   },
-  {
-    file: "jquery-ui-timepicker-addon.js?1",
-    pages: [
-      "activities" /*,
-      "blog",
-      "trip",
-      "admin/treasurer" */
-    ]
-  },
+    {
+        file: "jquery-ui-timepicker-addon.js?1",
+        pages: [
+            "activities" /*,
+             "blog",
+             "trip",
+             "admin/treasurer" */
+        ]
+    },
+    {
+        file: "jquery-hashchange-1.4.min.js",
+        pages: [
+            "about/faq",
+             "faq"
+        ]
+    },
   {
     file: "leaflet/0.5.1/leaflet.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]

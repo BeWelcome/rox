@@ -557,6 +557,8 @@ class MembersController extends RoxControllerBase
         if (count($errors) > 0) {
             // show form again
             $vars['errors'] = $errors;
+            // if the form gets posted it means that it is allowed to edit the comment
+            $vars['AllowEdit'] = 1;
             $mem_redirect->post = $vars;
             return false;
         }

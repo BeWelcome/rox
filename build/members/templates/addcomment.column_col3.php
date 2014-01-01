@@ -42,6 +42,9 @@ if (!$mem_redirect = $this->layoutkit->formkit->getMemFromRedirect()) {
     if (isset($vars['TextFree'])) {
         $TCom->TextFree = $vars['TextFree'];
     }
+    if (isset($vars['AllowEdit'])) {
+        $TCom->AllowEdit = $vars['AllowEdit'];
+    }
 }
 
 // Remove injected tags from old comments, so users don't have to edit HTML

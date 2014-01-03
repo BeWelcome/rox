@@ -18,7 +18,16 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 
                 <h3><?php echo $words->getFormatted('ForumRecentPostsLong');?></h3>
                 <div class="row floatbox">
-                    <?php echo $Forums->showExternalGroupThreads($group_id, false); ?>
+                    <?php
+                        $showNewTopicButton = false;
+                        $suggestionsGroupId = PVars::getObj('suggestions')->groupid;
+                        if ($this->isGroupMember()) {
+                            $showNewTopicButton = true;
+                        }
+                        if ($group_id == $suggestionsGroupId) {
+                            $showNewTopicButton = false;
+                        }
+                    echo $Forums->showExternalGroupThreads($group_id, false, $showNewTopicButton); ?>
                 </div> <!-- floatbox -->
             </div> <!-- subcl -->
         </div> <!-- c62l -->
@@ -34,11 +43,11 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 } else {
                     $model = new GroupsModel();
                     if ($this->member){
-                        $memberid = $this->member->id;
+                        $memberId = $this->member->id;
                     } else {
-                        $memberid = null;
+                        $memberId = null;
                     }
-                    switch ($model->getMembershipStatus($this->group,$memberid)){
+                    switch ($model->getMembershipStatus($this->group,$memberId)){
                     case 'Kicked' :
                         // tell user he got banned
                         echo $words->getSilent('GroupsBanned');
@@ -51,15 +60,19 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                         if (!$this->isGroupMember() and $this->group->Type == 'NeedAcceptance') {
                             // tell user that application will be moderated
                             echo $words->getSilent('GroupsJoinNeedAccept');
-                        } ?>
+                        }
+                        if (!$this->isGroupMember()) { ?>
                         <div class="row clearfix">
-                            <a class="bigbutton" href="groups/<?=$this->group->id ?>/<?= (($this->isGroupMember()) ? 'leave' : 'join' ); ?>">
+                            <a class="bigbutton" href="groups/<?=$this->group->id ?>/join">
                                 <span>
-                                    <?= ((!$this->isGroupMember()) ? $words->getSilent('GroupsJoinTheGroup') : $words->getSilent('GroupsLeaveTheGroup') ); ?>
+                                    <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                                 </span>
                             </a>
-                        </div><?php } echo $words->flushBuffer(); ?><br />
-                <?php } // endif logged in member ?>
+                        </div><?php echo $words->flushBuffer(); ?><br />
+                        <?php }
+                    }
+                } // endif logged in member
+                ?>
                 <p>
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
@@ -96,7 +109,18 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                             echo $words->get('GroupNoAdmin');
                         } ?>
                 </div>
-                <?php }?>
+                <?php
+                if ($this->isGroupMember()) { ?>
+                <div class="row clearfix">
+                    <a class="button" href="groups/<?=$this->group->id ?>/leave">
+                                <span>
+                                    <?= $words->getSilent('GroupsLeaveTheGroup'); ?>
+                                </span>
+                    </a>
+                </div><?php echo $words->flushBuffer();
+                ?><br />
+                <?php }
+                } ?>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
     </div> <!-- subcolumns -->

@@ -88,13 +88,14 @@ $threadsliced = array_slice($threads, 0, 5);
     {
         echo $words->getBuffered('GroupsNoForumPosts');
     }
-    if ($User && $uri != 'forums/') {
+
+    if ($showNewTopicButton && $User && $uri != 'forums/') {
     ?>
-    <div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $this->uri; ?>new
+    <div id="boardnewtopicbottom"><a class="button" href="<?php echo $this->uri; ?>new
     <?php 
     if (!empty($this->_model->IdGroup)) echo "/u" . $this->_model->IdGroup ;
-    echo "\">",$words->getBuffered('ForumNewTopic'); 
-    ?></a></span><?php echo $words->flushBuffer(); ?></div>
+    echo "\"><span>",$words->getBuffered('ForumNewTopic');
+    ?></span></a><?php echo $words->flushBuffer(); ?></div>
     <?php
     }
 

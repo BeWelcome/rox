@@ -643,7 +643,6 @@ a.bigbutton {
     background: transparent url(../images/bg_bigbutton_a_w.gif) no-repeat scroll top right;
     color: #fff;
     display: block;
-    float: left;
     font: normal 12px arial, sans-serif;
     height: 30px;
     margin-right: 6px;

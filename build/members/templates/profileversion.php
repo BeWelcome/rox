@@ -39,9 +39,6 @@ $profile_language_name = $lang->Name;
 $languages = indexedLanguages($member->profile_languages);
 $languages_spoken = indexedLanguages($member->languages_spoken);
 $all_written_languages = sortLanguages($member->get_all_translatable_languages());
-error_log(print_r($languages, true));
-error_log(print_r($languages_spoken, true));
-error_log(print_r($all_written_languages, true));
 $words = $this->getWords();
 $myself = $this->myself;
 if (count($languages) > 1 || $myself) {

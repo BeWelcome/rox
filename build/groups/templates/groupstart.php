@@ -19,6 +19,10 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 <h3><?php echo $words->getFormatted('ForumRecentPostsLong');?></h3>
                 <div class="row floatbox">
                     <?php
+                        if (!$this->isGroupMember() && $this->group->latestPost) {
+                            echo $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost));
+                        }
+
                         $showNewTopicButton = false;
                         $suggestionsGroupId = PVars::getObj('suggestions')->groupid;
                         if ($this->isGroupMember()) {

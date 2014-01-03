@@ -514,4 +514,18 @@ class AdminWordController extends RoxControllerBase
         }
         return $this->getNavigationData();
     }
+
+    public function noUpdateNeeded() {
+        $id = intval($this->route_vars['id']);
+        $callback = $this->args_vars->get['callback'];
+        if (!$id) {
+            $result = "false";
+        } else {
+            $result = $this->model->setNoUpdateNeeded($id);
+        }
+        header('Content-type: application/javascript, charset=utf-8');
+        $javascript = $callback . '( ' . json_encode($result) . ')';
+        echo $javascript . "\n";
+        exit;
+    }
 }

@@ -54,12 +54,12 @@ if ($this->noScope){
 
 ?>
 
-<form method="post" name="TrEdit">
+<form method="post" name="TrEdit" action="">
 <?= $callback_tag ?>
 <table class="admin" border="0">
   <tr>
     <td class="label"><label for="code">Code:</label> </td>
-    <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56">
+    <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56" />
 <?php
     if ($this->formdata['EngDnt'] == "yes") {
         echo '<span class="awdntwarning">Do not translate</span>';
@@ -81,10 +81,10 @@ echo '<td>'. str_replace("\n","<br />",
 </tr>
 <tr>
 <td class="label"><label for="Sentence">Translation:</label> </td>
-<td><textarea name="Sentence" class="long" cols="60"
+<td><textarea id="Sentence" name="Sentence" class="long" cols="60"
 <?php
-$NbRows = 3 + strlen($this->formdata['Sentence'])/75;
-echo ' rows='.$NbRows.'>'. htmlspecialchars($this->formdata['Sentence']) .'</textarea></td>';
+$NbRows = ceil(3 + strlen($this->formdata['Sentence'])/75);
+echo ' rows="'.$NbRows.'">'. htmlspecialchars($this->formdata['Sentence']) .'</textarea></td>';
 ?>
   </tr>
   <tr>
@@ -102,13 +102,13 @@ echo ' rows='.$NbRows.'>'. htmlspecialchars($this->formdata['Sentence']) .'</tex
     }
 ?>
 </select></td></tr>
-  <tr>
-    <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>">
-    <input type=hidden name=EngSent value="<?=htmlspecialchars($this->formdata['EngSent']);?>">
-    <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>">
-    <td></td><td>
-      <input class="button" type="submit" name="findBtn" value="Find code">&nbsp;&nbsp;&nbsp;&nbsp;
-      <input class="button" type="submit" name="submitBtn" value="Submit translation">
+  <tr><td>
+    <input type="hidden" name="EngDesc" value="<?=htmlspecialchars($this->formdata['EngDesc'])?>" />
+    <input type="hidden" name="EngSent" value="<?=htmlspecialchars($this->formdata['EngSent']);?>" />
+    <input type="hidden" name="EngDnt" value="<?=$this->formdata['EngDnt']?>" />
+    </td><td>
+      <input class="button" type="submit" name="findBtn" value="Find code" />&nbsp;&nbsp;&nbsp;&nbsp;
+      <input class="button" type="submit" name="submitBtn" value="Submit translation" />
       <?php //<input class="button" type="submit" id="submit3" name="DOACTION" value="Delete" onclick="confirm('Are you sure you want to delete this?');"> ?>
     </td>
   </tr>

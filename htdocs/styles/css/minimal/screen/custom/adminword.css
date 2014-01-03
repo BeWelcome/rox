@@ -24,6 +24,10 @@ textarea {margin-bottom: 1em;}
     font-weight:bold;
 }
 
+#awform {
+    overflow: visible;
+    width:860px;
+}
 #awlisttable {
     width:100%;
 }
@@ -31,23 +35,29 @@ textarea {margin-bottom: 1em;}
 #awlisttable td, #awlisttable th {
     padding:3px;
     border-bottom:1px dashed grey;
+    width: 32%;
 }
 
 .awlistcode {
     background-color:#dfa;
+    vertical-align: top;
 }
 .awlisteng {
     background-color:#dff;
+    vertical-align: top;
 }
 .awlisttrok {
     background-color:#ffc;
+    vertical-align: top;
 }
 .awlisttrmis {
     background-color:#fff;
     text-align:center;
+    vertical-align: top;
 }
 .awlisttrupd {
     background-color:#fdf;
+    vertical-align: top;
 }
 
 .awlisttrupd form {

@@ -488,4 +488,12 @@ WHERE code = "'.$this->dao->escape($form['EngCode']).'" AND idLanguage=0
             $errors[] = 'AdminWordErrorBadCodeFormat';
         }
     }
+
+    public function setNoUpdateNeeded($id) {
+        $result = array();
+        $result['status'] = 'success';
+        // check if id exists
+        $this->updateNoChanges($id);
+        return $result;
+    }
 }

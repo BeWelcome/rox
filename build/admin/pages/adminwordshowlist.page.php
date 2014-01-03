@@ -54,4 +54,12 @@ class AdminWordShowListPage extends AdminWordBasePage
         }
         return $string;
     }
+
+    public function getLateLoadScriptfiles() {
+        $scriptFiles = parent::getLateLoadScriptfiles();
+        if ($this->type == 'update') {
+            $scriptFiles[] = 'adminwordajax.js';
+        }
+        return $scriptFiles;
+    }
 }

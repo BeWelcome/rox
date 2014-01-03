@@ -30,18 +30,18 @@ Describe also the function and possible values of all included placeholders.<br>
 Do NOT copy the wordcode or the English text, that doesn't help anyone.</td></tr>
     <tr><td>Should this code be translated?</td><td><select name="EngDnt">
   <option value="no"
-<?php if ($this->formdata['EngDnt'] == "no") echo " selected"; ?>
+<?php if ($this->formdata['EngDnt'] == "no") echo " selected='selected'"; ?>
     >translatable</option>
   <option value="yes"
-<?php if ($this->formdata['EngDnt'] == "yes") echo " selected"; ?>
+<?php if ($this->formdata['EngDnt'] == "yes") echo " selected='selected'"; ?>
     >not translatable</option>
     </select></td></tr><tr>
 <td>Is this code still active?</td><td><select name="isarchived">
   <option value="0"
-<?php if ($this->formdata['isarchived'] == "0") echo " selected"; ?>
+<?php if ($this->formdata['isarchived'] == "0") echo " selected='selected'"; ?>
     >active</option>
   <option value="1"
-<?php if ($this->formdata['isarchived'] == "1") echo " selected"; ?>
+<?php if ($this->formdata['isarchived'] == "1") echo " selected='selected'"; ?>
     >archived</option>
     </select></td></tr>
     <tr><td>Translation Priority</td><td><select name="EngPrio">
@@ -49,7 +49,7 @@ Do NOT copy the wordcode or the English text, that doesn't help anyone.</td></tr
 for ($prio=1;$prio<=10;$prio++){
     echo '<option value='.$prio;
     $default = (empty($this->formdata['EngPrio'])?5:$this->formdata['EngPrio']);
-    if ($prio==$default){echo ' selected';}
+    if ($prio==$default){echo ' selected="selected"';}
     echo '>'.$prio.'</option>';
 }
 ?>

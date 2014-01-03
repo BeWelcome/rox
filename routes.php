@@ -111,7 +111,8 @@
     $this->addRoute('admin_word_listus', 'admin/word/list/update/short', 'AdminWordController', 'showList');
     $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
     $this->addRoute('admin_word_find', 'admin/word/find', 'AdminWordController','findTranslations');
-       
+    $this->addRoute('admin_word_noupdate', 'admin/word/noupdate/:id:', 'AdminWordController','noUpdateNeeded');
+
     // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
     // admin activity routes

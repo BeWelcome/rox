@@ -27,7 +27,7 @@ $words = new MOD_words(); ?>
 <h2>BeWelcome Terms of Use (ToU)</h2>
 <p><strong>Effective date: 11 January 2014 </strong></p>
 
-<table border=6><tr><td><p><strong><font color="#FF0000">Please note: These new Terms of Use will replaced our <a href="terms">current Terms of Use</a> on 11th January 2014 at 12:00 UTC.</font></strong><br />
+<table border=6><tr><td><p><strong><font color="#FF0000">Please note: These new Terms of Use will replace our <a href="terms">current Terms of Use</a> on 11th January 2014 at 12:00 UTC.</font></strong><br />
 Please read the new Terms of Use</a> carefully. Should you have any questions about the them, please post them in the <a href="forums/bwforum">BeWelcome Forum</a>. We have opened a thread there to collect all questions and answer them for every member to see. Alternatively, you can contact our <a href="feedback?IdCategory=9">Support Team</a> with your questions.</p></td></tr></table>
 
 <p>BeWelcome (<a href="start">www.bewelcome.org</a>) is a network that promotes the ideas of hospitality and cultural exchange. It is a project of the non-profit association BeVolunteer and run exclusively by volunteers. BeVolunteer is a French association registered in the prefecture of Ille-et-Vilaine, in Rennes/France (registration number W3530003536).</p>

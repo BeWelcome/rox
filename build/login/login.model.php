@@ -316,21 +316,6 @@ WHERE   handle = '$esc_handle'
         	$_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status ;
 				}
         switch ($m->Status) {
-
-            case "ChoiceInactive" :  // in case an inactive member comes back
-                $this->singleLookup(
-                    "
-UPDATE  members
-SET     Status     = 'Active'
-WHERE   members.id = $member_id and Status='ChoiceInactive'
-                    "
-                );
-                // the following is needed for MOD_log::get,
-                // because otherwise it would not link the log with the right member
-                $_SESSION['IdMember'] = $m->id ;
-                $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status='Active' ;
-                MOD_log::get()->write("Successful login, becoming active again, with <b>" . $_SERVER['HTTP_USER_AGENT'] . "</b>", "Login");
-                break ;
             case "OutOfRemind" :  // in case an inactive member comes back
                 $this->singleLookup(
                     "
@@ -347,6 +332,7 @@ WHERE   members.id = $member_id and Status='OutOfRemind'
                 break ;
             case "Active" :
             case "ActiveHidden" :
+            case "ChoiceInactive" :
                 // the following is needed for MOD_log::get,
                 // because otherwise it would not link the log with the right member
                 $_SESSION['IdMember'] = $m->id ;
@@ -484,21 +470,9 @@ WHERE
 
         // Process the login of the member according to his status
         switch ($m->Status) {
-            case "ChoiceInactive" :  // in case an inactive member comes back
-                $this->dao->query(
-                    "
-UPDATE
-    members
-SET
-    Status = 'Active'
-WHERE
-    members.id = $member_id       AND
-    Status     = 'ChoiceInactive'
-                    "
-                );
-                $_SESSION['MemberStatus'] = $_SESSION['Status'] = $m->Status = 'Active' ;
             case "Active" :
             case "ActiveHidden" :
+            case "ChoiceInactive" :
             case "NeedMore" :
             case "Pending" :
                 //if (HasRight("Words"))

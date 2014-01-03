@@ -77,81 +77,135 @@ if (IsLoggedIn()) {
     $_SESSION['IdMember'] = 0;
 } // not logged
 
+// -----------------------------------------------------------------------------
+// Normal messages between members
+// -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
-// broadcast messages for members (massmail)
-// -----------------------------------------------------------------------------
 $str = "
 SELECT
-    broadcastmessages.*,
+    messages.*,
     Username,
-    members.Status AS MemberStatus,
-    broadcast.Name AS word,
-    broadcast.Type as broadcast_type,
-    broadcast.EmailFrom as EmailFrom
-
+    members.Status AS MemberStatus
 FROM
-    broadcast,
-    broadcastmessages,
+    messages,
     members
 WHERE
-    broadcast.id = broadcastmessages.IdBroadcast  AND
-    broadcastmessages.IdReceiver = members.id     AND
-    broadcastmessages.Status = 'ToSend' LIMIT 100
-";
+    messages.IdSender = members.id  AND
+    messages.Status = 'ToSend' AND
+    messages.MessageType = 'MemberToMember'";
 $qry = sql_query($str);
 
-$countbroadcast = 0;
+$count = 0;
 while ($rr = mysql_fetch_object($qry)) {
+//    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
+    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')and ($rr->MemberStatus!='NeedMore')and ($rr->MemberStatus!='Pending')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
+
+        if (IsLoggedIn()) {
+            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")<br>\n" ;
+        }
+        $str = "
+UPDATE
+    messages
+SET
+    Status = 'Failed'
+WHERE
+    id = $rr->id
+        ";
+        sql_query($str);
+        LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
+        continue ;
+    }
+
     if ($_SESSION['Param']->MailBotMode!='Auto') {
-        echo "broadcastmessages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> broadcastmessages.id=".$rr->id."<br>" ;
+        echo "messages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> messages.id=".$rr->id."<br>" ;
     }
     $Email = GetEmail($rr->IdReceiver);
     $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
-
-//    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-
-        if (empty($rr->EmailFrom)) {
-            $sender_mail="newsletter@bewelcome.org" ;
-            if ($rr->broadcast_type=="RemindToLog") {
-                $sender_mail="reminder@bewelcome.org" ;
-            }
-            if ($rr->broadcast_type=="SuggestionReminder") {
-                $sender_mail="suggestions@bewelcome.org" ;
-            }
+    $subj = ww("YouveGotAMail", $rr->Username);
+    $urltoreply = $baseuri."messages/{$rr->id}/reply";
+    $MessageFormatted=$rr->Message;
+    if ($rr->JoinMemberPict=="yes") {
+        $rImage=LoadRow("
+SELECT
+    *
+FROM
+    membersphotos
+WHERE
+    IdMember = $rr->IdSender  AND
+    SortOrder = 0
+        ");
+        $MessageFormatted = '
+            <html><head>
+            <title>'.$subj.'</title></head>
+            <body>
+            <table>
+            <tr><td>
+        ';
+        if (isset($rImage->FilePath)) {
+//            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+            $MessageFormatted .= PictureInMail($rr->Username);
         }
-        else {
-            $sender_mail=$rr->EmailFrom ;
+        if  (($rr->MemberStatus=='NeedMore')) {
+            LogStr("Mailbot procceds sending  message #".$rr->id." Message from Sender".$rr->Username."not active (".$rr->MemberStatus.")","mailbot");
+            $MessageFormatted=$MessageFormatted."<br>Message sent by a may be not yet verified member<br>" ;
         }
 
-    $subj = getBroadCastElement("Broadcast_Title_" . $rr->word, $MemberIdLanguage, $rr->Username);
-    $text = getBroadCastElement("Broadcast_Body_" . $rr->word,$MemberIdLanguage, $rr->Username, $Email);
+        $MessageFormatted .= '</td><td>';
+//      $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
+        $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
+        $MessageFormatted .= '</td>';
 
-    $res = bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ");
-    $res = true;
-    if (!$res) {
-        $str = "UPDATE   broadcastmessages
-SET   Status = 'Failed'
-WHERE    IdBroadcast =  $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
-        LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."] Type=[".$rr->broadcast_type."]","mailbot");
+        if (IsLoggedIn()) { // In this case we display the tracks for the admin who will probably need to check who is sending for sure and who is not
+            echo " from ".$rr->Username." to ".fUsername($rr->IdReceiver). " email=".$Email,"<br>" ;
+        }
+        if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
+            $MessageFormatted .= '<tr><td colspan=2>'.ww('mailbot_JoinSenderMail', $rr->Username, GetEmail($rr->IdSender)).'</td>';
+        }
+
+        $MessageFormatted .= '</table></body></html>';
+
+        $text=$MessageFormatted;
 
     } else {
+        // $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
+        $text = ww('mailbot_YouveGotAMailText', fUsername($rr->IdReceiver), $rr->Username, $rr->Message, $urltoreply, $rr->Username, $rr->Username);
+    }
 
-        // If this message was to count has a reminder
-        if ($rr->broadcast_type=="RemindToLog") {
-            sql_query("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$rr->IdReceiver);
-        }
+    // to force because context is not defined
+    // TODO: What the hell is this?
+    $_SERVER['SERVER_NAME'] = 'www.bewelcome.org';
 
-
-        $str = "UPDATE    broadcastmessages
-SET    Status = 'Sent'
-WHERE    IdBroadcast = $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
-        $countbroadcast++ ;
-        LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast." send from:".$sender_mail,"Debug") ;
+    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+        LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
+        $str = "
+UPDATE
+    messages
+SET
+    Status = 'Failed'
+WHERE
+    id = $rr->id
+        ";
+    } else {
+        $str = "
+UPDATE
+    messages
+SET
+    Status = 'Sent',
+    IdTriggerer = $IdTriggerer,
+    DateSent = NOW()
+WHERE
+    id = $rr->id
+        ";
+        $count++;
     }
     sql_query($str);
-} // end of while on broadcast (massmail)
-    if ($countbroadcast>0)  LogStr(" \$countbroadcast=".$countbroadcast." sent at this cycle","Debug") ;
+
+}
+
+$sResult = $sResult.$count . " intermember Messages sent";
+if ($countbroadcast>0) {
+    $sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
+}
 
 
 // -----------------------------------------------------------------------------
@@ -272,7 +326,7 @@ while ($rr = mysql_fetch_object($qry)) {
             break ;
         case 'buggy':
         default :
-          $word->$text="Problem in forum notification Type=".$rr->Type."<br />" ;
+            $word->$text="Problem in forum notification Type=".$rr->Type."<br />" ;
             break ;
     }
 
@@ -295,7 +349,7 @@ while ($rr = mysql_fetch_object($qry)) {
     $text.='<tr><td>'.wwinlang('PostFrom',$MemberIdLanguage).': <a href="'.$baseuri.'members/'.$rPost->Username.'">'.$rPost->Username.'</a> ('.$rPost->cityname.', '.$rPost->countryname.')</td></tr>' ;
     $text.='<tr><td>'.$rPost->message.'</td></tr>';
     if ($UnsubscribeLink!="") {
-       $text .= '<tr><td>'.$UnsubscribeLink.'</td></tr>';
+        $text .= '<tr><td>'.$UnsubscribeLink.'</td></tr>';
     } else {
         // This case should be for moderators only
         $text .= '<tr><td> IdPost #'.$rr->IdPost.' action='.$NotificationType.'</td></tr>';
@@ -313,139 +367,83 @@ while ($rr = mysql_fetch_object($qry)) {
 }
 $sResult = "<br />".$countposts_notificationqueue . " forum notification sent <br \>";
 
-
 // -----------------------------------------------------------------------------
-// Normal messages between members
+// broadcast messages for members (massmail)
 // -----------------------------------------------------------------------------
-
 $str = "
 SELECT
-    messages.*,
+    broadcastmessages.*,
     Username,
-    members.Status AS MemberStatus
+    members.Status AS MemberStatus,
+    broadcast.Name AS word,
+    broadcast.Type as broadcast_type,
+    broadcast.EmailFrom as EmailFrom
+
 FROM
-    messages,
+    broadcast,
+    broadcastmessages,
     members
 WHERE
-    messages.IdSender = members.id  AND
-    messages.Status = 'ToSend' AND
-    messages.MessageType = 'MemberToMember'";
+    broadcast.id = broadcastmessages.IdBroadcast  AND
+    broadcastmessages.IdReceiver = members.id     AND
+    broadcastmessages.Status = 'ToSend' LIMIT 100
+";
 $qry = sql_query($str);
 
-$count = 0;
+$countbroadcast = 0;
 while ($rr = mysql_fetch_object($qry)) {
-//    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
-    if (($rr->MemberStatus!='Active')and ($rr->MemberStatus!='ActiveHidden')and ($rr->MemberStatus!='NeedMore')and ($rr->MemberStatus!='Pending')) {  // Messages from not actived members will not be send this can happen because a member can have been just banned, unless it is a reply
-
-        if (IsLoggedIn()) {
-            echo "Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")<br>\n" ;
-        }
-        $str = "
-UPDATE
-    messages
-SET
-    Status = 'Freeze'
-WHERE
-    id = $rr->id and IdParent=0
-        ";
-        sql_query($str);
-        LogStr("Mailbot refuse to send message #".$rr->id." Message from ".$rr->Username." is rejected (".$rr->MemberStatus.")","mailbot");
-        continue ;
-    }
-
     if ($_SESSION['Param']->MailBotMode!='Auto') {
-        echo "messages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> messages.id=".$rr->id."<br>" ;
+        echo "broadcastmessages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> broadcastmessages.id=".$rr->id."<br>" ;
     }
     $Email = GetEmail($rr->IdReceiver);
     $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
-    $subj = ww("YouveGotAMail", $rr->Username);
-    $urltoreply = $baseuri."messages/{$rr->id}/reply";
-    $MessageFormatted=$rr->Message;
-    if ($rr->JoinMemberPict=="yes") {
-        $rImage=LoadRow("
-SELECT
-    *
-FROM
-    membersphotos
-WHERE
-    IdMember = $rr->IdSender  AND
-    SortOrder = 0
-        ");
-        $MessageFormatted = '
-            <html><head>
-            <title>'.$subj.'</title></head>
-            <body>
-            <table>
-            <tr><td>
-        ';
-        if (isset($rImage->FilePath)) {
-//            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
-            $MessageFormatted .= PictureInMail($rr->Username);
+
+//    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
+
+    if (empty($rr->EmailFrom)) {
+        $sender_mail="newsletter@bewelcome.org" ;
+        if ($rr->broadcast_type=="RemindToLog") {
+            $sender_mail="reminder@bewelcome.org" ;
         }
-        if  (($rr->MemberStatus=='NeedMore')) {
-            LogStr("Mailbot procceds sending  message #".$rr->id." Message from Sender".$rr->Username."not active (".$rr->MemberStatus.")","mailbot");
-            $MessageFormatted=$MessageFormatted."<br>Message sent by a may be not yet verified member<br>" ;
+        if ($rr->broadcast_type=="SuggestionReminder") {
+            $sender_mail="suggestions@bewelcome.org" ;
         }
-
-        $MessageFormatted .= '</td><td>';
-//      $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
-        $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
-        $MessageFormatted .= '</td>';
-
-        if (IsLoggedIn()) { // In this case we display the tracks for the admin who will probably need to check who is sending for sure and who is not
-            echo " from ".$rr->Username." to ".fUsername($rr->IdReceiver). " email=".$Email,"<br>" ;
-        }
-        if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
-            $MessageFormatted .= '<tr><td colspan=2>'.ww('mailbot_JoinSenderMail', $rr->Username, GetEmail($rr->IdSender)).'</td>';
-        }
-
-        $MessageFormatted .= '</table></body></html>';
-
-        $text=$MessageFormatted;
-
-    } else {
-        // $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
-        $text = ww('mailbot_YouveGotAMailText', fUsername($rr->IdReceiver), $rr->Username, $rr->Message, $urltoreply, $rr->Username, $rr->Username);
+    }
+    else {
+        $sender_mail=$rr->EmailFrom ;
     }
 
-    // to force because context is not defined
-    // TODO: What the hell is this?
-    $_SERVER['SERVER_NAME'] = 'www.bewelcome.org';
+    $subj = getBroadCastElement("Broadcast_Title_" . $rr->word, $MemberIdLanguage, $rr->Username);
+    $text = getBroadCastElement("Broadcast_Body_" . $rr->word,$MemberIdLanguage, $rr->Username, $Email);
 
-    if (!bw_mail($Email, $subj, $text, "", $_SYSHCVOL['MessageSenderMail'], $MemberIdLanguage, "html", "", "")) {
-        LogStr("Cannot send messages.id=#" . $rr->id . " to <b>".$rr->Username."</b> \$Email=[".$Email."]","mailbot");
-        $str = "
-UPDATE
-    messages
-SET
-    Status = 'Failed'
-WHERE
-    id = $rr->id
-        ";
+    $res = bw_mail($Email, $subj, $text, "", $sender_mail, $MemberIdLanguage, "html", "", ""," ");
+    $res = true;
+    if (!$res) {
+        $str = "UPDATE   broadcastmessages
+SET   Status = 'Failed'
+WHERE    IdBroadcast =  $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
+        LogStr("Cannot send broadcastmessages.id=#" . $rr->IdBroadcast . " to <b>".$rr->Username."</b> \$Email=[".$Email."] Type=[".$rr->broadcast_type."]","mailbot");
+
     } else {
-        $str = "
-UPDATE
-    messages
-SET
-    Status = 'Sent',
-    IdTriggerer = $IdTriggerer,
-    DateSent = NOW()
-WHERE
-    id = $rr->id
-        ";
-        $count++;
+
+        // If this message was to count has a reminder
+        if ($rr->broadcast_type=="RemindToLog") {
+            sql_query("update members set NbRemindWithoutLogingIn=NbRemindWithoutLogingIn+1 where members.id=".$rr->IdReceiver);
+        }
+
+
+        $str = "UPDATE    broadcastmessages
+SET    Status = 'Sent'
+WHERE    IdBroadcast = $rr->IdBroadcast  AND    IdReceiver = $rr->IdReceiver        ";
+        $countbroadcast++ ;
+        LogStr("This log is to be removed in mailbot.php, for now we count each broadcast : currently \$countbroadcast=".$countbroadcast." send from:".$sender_mail,"Debug") ;
     }
     sql_query($str);
-
-}
-
-$sResult = $sResult.$count . " intermember Messages sent";
-if ($countbroadcast>0) {
-    $sResult=$sResult. " and ".$countbroadcast. " broadcast messages sent" ;
-}
+} // end of while on broadcast (massmail)
+if ($countbroadcast>0)  LogStr(" \$countbroadcast=".$countbroadcast." sent at this cycle","Debug") ;
 
 
-    $str="select * from volunteers_reports_schedule where Type='Accepter' and TimeToDeliver<now() " ;
+$str="select * from volunteers_reports_schedule where Type='Accepter' and TimeToDeliver<now() " ;
     $qryV=sql_query($str);
     while ($rrV = mysql_fetch_object($qryV)) {
         $AccepterReport="<table>" ;

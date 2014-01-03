@@ -36,7 +36,7 @@ if (!$this->viewOnly) { ?>
 </div>
 </form>
 </div><!-- suggestion-form -->
-<hr /><?php
+<hr class="suggestion" /><?php
 // Now load the board and show it
 $Forums = new ForumsController;
 $Forums->showExternalSuggestionsThread( $this->suggestion->id, $this->model->getGroupId(), $this->suggestion->threadId);

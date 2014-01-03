@@ -37,7 +37,7 @@
         foreach($member_ids as $id) {
             $comment = array();
             $comment_to_self = false;
-            if ($visitor->id == $id) {
+            if ($visitor && ($visitor->id == $id)) {
                 $comment_to_self = true;
             }
 

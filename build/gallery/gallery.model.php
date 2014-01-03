@@ -1,7 +1,7 @@
 <?php
 /**
  * Gallery model
- * 
+ *
  * @package gallery
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
@@ -12,7 +12,7 @@ class GalleryModel extends RoxModelBase
 {
     const FLAG_VIEW_PRIVATE   = 1;
     const FLAG_VIEW_PROTECTED = 2;
-    
+
     public function __construct() {
         parent::__construct();
         $this->bootstrap();
@@ -26,9 +26,9 @@ class GalleryModel extends RoxModelBase
 INSERT INTO `gallery`
 (`id`, `user_id_foreign`, `flags`, `title`, `text`)
 VALUES
-('.$this->dao->nextId('gallery').', 
-'.(int)$member->get_userid().', 
-0, 
+('.$this->dao->nextId('gallery').',
+'.(int)$member->get_userid().',
+0,
 \''.$this->dao->escape($title).'\',
 \''.($desc ? $this->dao->escape($desc) : '').'\')
         ';
@@ -36,12 +36,12 @@ VALUES
         return $s->insertId();
     }
 
-    public function bootstrap() 
+    public function bootstrap()
     {
     	$dataDir = new PDataDir('gallery');
     }
 
-    public function deleteAll() 
+    public function deleteAll()
     {
     	$query = 'TRUNCATE TABLE `gallery_items`';
         $this->dao->exec($query);
@@ -50,7 +50,7 @@ VALUES
         $dataDir->remove(false, false, false);
         return true;
     }
-    
+
     // delete own uploaded pictures as logged in user or user with gallery rights
     public function deleteOneProcess($image)
     {
@@ -73,7 +73,7 @@ VALUES
             return true;
         } else return false;
     }
-    
+
     public function editProcess($vars)
     {
         $this->dao->exec("UPDATE `gallery_items` SET `title` = '".$vars['t']."' , `description` = '".$vars['txt']."' WHERE `id`= ".$vars['id']);
@@ -101,12 +101,12 @@ VALUES
         $this->dao->exec($query);
 		$this->dao->query("COMMIT");
     }
-    
+
 	public function reorderTripItems($items) {
 		if (!$this->checkTripItemOwnerShip($items)) {
 			return;
 		}
-		
+
 		$this->dao->query("START TRANSACTION");
 		foreach ($items as $position => $item) {
 			$query = sprintf("UPDATE `blog_data` SET `blog_display_order` = '%d' WHERE `blog_id` = '%d'", ($position + 1), $item);
@@ -124,7 +124,7 @@ VALUES
         $this->dao->exec($query);
 		$this->dao->query("COMMIT");
     }
-    
+
     public function editGalleryProcess($vars)
     {
         $this->dao->exec("UPDATE `gallery` SET `title` = '".$vars['t']."' , `description` = '".$vars['txt']."' WHERE `id`= ".$vars['id']);
@@ -143,7 +143,7 @@ VALUES
         foreach ($images as $image) {
             if (!$image)
                 return false;
-            if (($member->get_userid() == $this->imageOwner($image)) || ($GalleryRight > 1)) {                
+            if (($member->get_userid() == $this->imageOwner($image)) || ($GalleryRight > 1)) {
                 $image = $this->imageData($image);
                 // Log the deletion to prevent admin abuse
                 MOD_log::get()->write("Deleting multiple gallery items #".$image->id." filename: ".$image->file." belonging to user: ".$image->user_id_foreign, "Gallery");
@@ -191,7 +191,7 @@ VALUES
                     $this->dao->exec("DELETE FROM `gallery_items_to_gallery` WHERE `item_id_foreign`= ".$d);
                     if (!isset($vars['removeOnly']) || !$vars['removeOnly']) {
                         $this->dao->exec("INSERT INTO `gallery_items_to_gallery` SET `gallery_id_foreign` = '".$this->dao->escape($vars['gallery'])."',`item_id_foreign`= ".$d);
-                    } 
+                    }
                     // else {
                     //                         return 'gallery/show/user/'.$User->getHandle();
                     //                     }
@@ -200,7 +200,7 @@ VALUES
             return 'gallery/show/sets/'.$vars['gallery'];
         }
     }
-    
+
     public function deleteGalleryProcess($galleryId) {
         if ($this->getLatestGalleryItem($galleryId)) {
     	$query = '
@@ -218,7 +218,7 @@ WHERE `id` = '.(int)$galleryId.'
         return $this->dao->exec($query);
 
     }
-    
+
     /**
      * returns a single gallery entity
      *
@@ -236,14 +236,14 @@ WHERE `id` = '.(int)$galleryId.'
     {
     	$query = '
 SELECT
-    i.`item_id_foreign` 
+    i.`item_id_foreign`
 FROM `gallery_items_to_gallery` AS i
 WHERE i.`gallery_id_foreign` = '.(int)$galleryId.'
         ';
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
-        if ($count == true) 
+        if ($count == true)
             return $s->numRows();
         return $s;
     }
@@ -263,12 +263,12 @@ ORDER BY `item_id_foreign` DESC LIMIT 1
         //$img = $this->imageData((int)$s);
         return $s->fetch(PDB::FETCH_OBJ)->item_id;
     }
-    
+
     public function getItemGallery($imageId)
     {
     	$query = '
 SELECT
-    i.`item_id_foreign`, 
+    i.`item_id_foreign`,
     i.`gallery_id_foreign`
 FROM `gallery_items_to_gallery` AS i
 WHERE i.`item_id_foreign` = '.(int)$imageId.'
@@ -362,7 +362,7 @@ ORDER BY `id` DESC';
             return false;
         return $s;
     }
-    
+
     public function getGalleriesNotEmptyEntities()
     {
         /* Different way of getting the galleries
@@ -387,7 +387,7 @@ ORDER BY `id` DESC';
 SQL;
         return $this->createEntity('Gallery')->findBySQLMany($sql);
     }
-    
+
     public function getMemberWithUserId($userId)
     {
         if (!($userId = intval($userId)))
@@ -402,15 +402,15 @@ SQL;
     {
     	$query = '
 SELECT
-    i.`id`, 
+    i.`id`,
     i.`user_id_foreign`,
-    u.`handle` AS `user_handle`, 
-    i.`file`, 
-    i.`original`, 
-    i.`flags`, 
-    i.`mimetype`, 
-    i.`width`, 
-    i.`height`, 
+    u.`handle` AS `user_handle`,
+    i.`file`,
+    i.`original`,
+    i.`flags`,
+    i.`mimetype`,
+    i.`width`,
+    i.`height`,
     i.`title`,
     i.`created`
 FROM `gallery_items` AS i
@@ -441,13 +441,14 @@ AND ';
             $query .= '
     m.`id` = mp.`idMember`
 AND
-    m.`Status` = \'Active\'
+    m.`Status` IN ( \'Active\', \'Pending\', \'OutOfRemind\')
 AND ';
         }
-        $query .= '1';
+        $query .= '1 = 1';
         $query .= '
 ORDER BY `created` DESC
         ';
+
         $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
@@ -458,15 +459,15 @@ ORDER BY `created` DESC
     {
     	$query = '
 SELECT
-    i.`id`, 
+    i.`id`,
     i.`user_id_foreign`,
-    u.`handle` AS `user_handle`, 
-    i.`file`, 
-    i.`original`, 
-    i.`flags`, 
-    i.`mimetype`, 
-    i.`width`, 
-    i.`height`, 
+    u.`handle` AS `user_handle`,
+    i.`file`,
+    i.`original`,
+    i.`flags`,
+    i.`mimetype`,
+    i.`width`,
+    i.`height`,
     i.`title`,
     i.`created`
 FROM `gallery_items` AS i
@@ -486,21 +487,21 @@ ORDER BY `id` ASC LIMIT '.(int)$limit.'
         if ($s->numRows() == 0)
             return false;
         return $s;
-    }    
-    
+    }
+
     public function getPreviousItems($imageId,$limit = 1,$userId = false,$galleryId = false)
     {
     	$query = '
 SELECT
-    i.`id`, 
+    i.`id`,
     i.`user_id_foreign`,
-    u.`handle` AS `user_handle`, 
-    i.`file`, 
-    i.`original`, 
-    i.`flags`, 
-    i.`mimetype`, 
-    i.`width`, 
-    i.`height`, 
+    u.`handle` AS `user_handle`,
+    i.`file`,
+    i.`original`,
+    i.`flags`,
+    i.`mimetype`,
+    i.`width`,
+    i.`height`,
     i.`title`,
     i.`created`
 FROM `gallery_items` AS i
@@ -520,13 +521,13 @@ ORDER BY `id` DESC LIMIT '.(int)$limit.'
         if ($s->numRows() == 0)
             return false;
         return $s;
-    }        
+    }
 
     public function getNextGalleryItems($imageId,$limit = 1,$galleryId = false)
     {
     	$query = '
 SELECT
-    i.`item_id_foreign`, 
+    i.`item_id_foreign`,
     i.`gallery_id_foreign`
 FROM `gallery_items_to_gallery` AS i
 WHERE i.`gallery_id_foreign` = '.(int)$galleryId.'
@@ -537,13 +538,13 @@ ORDER BY `id` ASC LIMIT '.(int)$limit.'
         if ($s->numRows() == 0)
             return false;
         return $s;
-    }    
-    
+    }
+
     public function getPreviousGalleryItems($imageId,$limit = 1,$galleryId = false)
     {
     	$query = '
 SELECT
-    i.`item_id_foreign`, 
+    i.`item_id_foreign`,
     i.`gallery_id_foreign`
 FROM `gallery_items_to_gallery` AS i
 WHERE i.`gallery_id_foreign` = '.(int)$galleryId.'
@@ -554,39 +555,44 @@ ORDER BY `id` DESC LIMIT '.(int)$limit.'
         if ($s->numRows() == 0)
             return false;
         return $s;
-    }    
-    
-    public function imageData($itemId) 
+    }
+
+    public function imageData($itemId)
     {
-    	$s = $this->dao->query('
+        $query = "
 SELECT
-    i.`id`, 
+    i.`id`,
     i.`user_id_foreign`,
-    u.`handle` AS `user_handle`, 
-    i.`file`, 
-    i.`original`, 
-    i.`flags`, 
-    i.`mimetype`, 
-    i.`width`, 
-    i.`height`, 
+    u.`handle` AS `user_handle`,
+    i.`file`,
+    i.`original`,
+    i.`flags`,
+    i.`mimetype`,
+    i.`width`,
+    i.`height`,
     i.`title`,
     i.`description`,
     i.`created`
-FROM `gallery_items` AS i
-LEFT JOIN `user` AS `u` ON
-    u.`id` = i.`user_id_foreign`
-WHERE i.`id` = '.(int)$itemId.'
-        ');
+FROM `gallery_items` AS i,
+user as u,
+members as m
+WHERE i.`id` = ". (int)$itemId . "
+AND u.id = i.user_id_foreign
+AND m.Username = u.handle
+AND m.Status IN ('Active', 'Pending', 'OutOfRemind')
+        ";
+
+        $s = $this->dao->query($query);
         if ($s->numRows() == 0)
             return false;
         $d = $s->fetch(PDB::FETCH_OBJ);
         return $d;
     }
-    
+
     public function imageOwner($imageId)
     {
         $query = '
-SELECT 
+SELECT
     `user_id_foreign`
 FROM `gallery_items`
 WHERE
@@ -597,11 +603,11 @@ WHERE
             return false;
         return $s->fetch(PDB::FETCH_OBJ)->user_id_foreign;
     }
-    
+
     public function galleryOwner($galleryId)
     {
         $query = '
-SELECT 
+SELECT
     `user_id_foreign`
 FROM `gallery`
 WHERE
@@ -612,11 +618,11 @@ WHERE
             return false;
         return $s->fetch(PDB::FETCH_OBJ)->user_id_foreign;
     }
-    
+
 
     /**
      * processing image uploads
-     * 
+     *
      * @todo sizes should be customizable
      */
     public function uploadProcess(&$vars)
@@ -668,7 +674,7 @@ VALUES
                 		break;
         			default:
         				$vars['fileErrors'][$fileName] = 'Gallery_UploadError';
-            			break;                
+            			break;
             	}
         	} elseif (!empty($fileName)) { // upload succeeded -> check if image
             	$img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
@@ -681,12 +687,12 @@ VALUES
 		            $original_x = min($size[0],PVars::getObj('images')->max_width);
 		            $original_y = min($size[1],PVars::getObj('images')->max_height);
 		            $tempDir = dirname($_FILES['gallery-file']['tmp_name'][$key]);
-		            $resizedName = md5($_FILES['gallery-file']['tmp_name'][$key]) . '_resized';                         
+		            $resizedName = md5($_FILES['gallery-file']['tmp_name'][$key]) . '_resized';
 		            $img->createThumb($tempDir,$resizedName, $original_x, $original_y, true, 'ratio');
-		            $tempFile = $tempDir . '/' . $resizedName;                                    
-		            
+		            $tempFile = $tempDir . '/' . $resizedName;
+
 		            // create new image object from resized image
-		            $img = new MOD_images_Image($tempFile);                                    
+		            $img = new MOD_images_Image($tempFile);
 		            $size = $img->getImageSize();
 		            $type = $size[2];
 		            $hash = $img->getHash();
@@ -716,7 +722,7 @@ VALUES
         }
         return $noError;
     }
-    
+
     public function createThumbnails ($dataDir, $img)
     {
         $size = $img->getImageSize();

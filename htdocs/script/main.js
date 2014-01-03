@@ -101,7 +101,9 @@ bwrox.selectScripts([
       "blog", 
       "trip", 
       "admin/massmail/enqueue", 
-      "activities/"]
+      "activities/",
+      "about/faq",
+      "faq"]
   },
   {
     // complete jquery ui with theme smoothness
@@ -114,15 +116,22 @@ bwrox.selectScripts([
       "admin/treasurer" */
     ]
   },
-  {
-    file: "jquery-ui-timepicker-addon.js?1",
-    pages: [
-      "activities" /*,
-      "blog",
-      "trip",
-      "admin/treasurer" */
-    ]
-  },
+    {
+        file: "jquery-ui-timepicker-addon.js?1",
+        pages: [
+            "activities" /*,
+             "blog",
+             "trip",
+             "admin/treasurer" */
+        ]
+    },
+    {
+        file: "jquery-hashchange-1.4.min.js",
+        pages: [
+            "about/faq",
+             "faq"
+        ]
+    },
   {
     file: "leaflet/0.5.1/leaflet.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
@@ -166,7 +175,7 @@ bwrox.selectScripts([
     ]
   },
   {
-    file: "tiny_mce/tiny_mce.js",
+    file: "tinymce/tinymce.min.js",
     pages: [
       "activities",
       "blog",

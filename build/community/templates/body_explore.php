@@ -69,12 +69,12 @@ $words = new MOD_words();
     </div> <!-- subcl -->
   </div> <!-- c33l -->
 
-<div class="c50r">
-    <div class="subcr">
-      <!-- Content of right block -->
-        <h2><a href="gallery"><?php echo $words->get('Gallery') ?></a></h2>
-        <p><?php echo $words->get('ExploreGalleryDescription') ?></p>
-    </div> <!-- subcr -->
+  <div class="c50r">
+     <div class="subcr">
+        <!-- Content of right block -->
+        <h2><a href="wiki"><?php echo $words->get('Wiki') ?></a></h2>
+        <p><?php echo $words->get('ExploreWikiDescription') ?></p>
+     </div> <!-- subcr -->
   </div> <!-- c33r -->
 </div> <!-- subcolumns -->
 
@@ -87,13 +87,6 @@ $words = new MOD_words();
     </div> <!-- subcl -->
   </div> <!-- c33l -->
 
-<div class="c50r">
-    <div class="subcr">
-    <!-- Content of right block -->
-        <h2><a href="wiki"><?php echo $words->get('Wiki') ?></a></h2>
-        <p><?php echo $words->get('ExploreWikiDescription') ?></p>
-    </div> <!-- subcr -->
-  </div> <!-- c33r -->
 </div> <!-- subcolumns -->
 
 

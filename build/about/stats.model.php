@@ -16,8 +16,6 @@ include("../lib/pchart-2.1.3/class/pPie.class.php");
  */
 class StatsModel extends RoxModelBase
 {
-    const MEMBER_STATUS_COLLECTED = "'Active', 'ChoiceInactive', 'OutOfRemind'";
-
     public function __construct()
     {
         parent::__construct();
@@ -41,7 +39,7 @@ class StatsModel extends RoxModelBase
                 geonames_countries,
                 geonames_cache
             WHERE
-                members.Status IN (" . self::MEMBER_STATUS_COLLECTED . ")
+                members.Status IN (" . Member::ACTIVE_ALL . ")
                 AND
                 members.IdCity = geonames_cache.geonameId
                 AND
@@ -90,7 +88,7 @@ class StatsModel extends RoxModelBase
             WHERE
                 l.id = mll.IdLanguage
                 AND mll.idMember = m.id
-                AND m.Status IN (" . self::MEMBER_STATUS_COLLECTED . ")
+                AND m.Status IN (" . Member::ACTIVE_ALL . ")
             GROUP BY
                 l.name
             ORDER BY
@@ -134,7 +132,7 @@ class StatsModel extends RoxModelBase
                 m.id = mp.idmember
                 AND mp.idpreference = 1
             WHERE
-                m.status IN (" . self::MEMBER_STATUS_COLLECTED . ")
+                m.status IN (" . Member::ACTIVE_ALL . ")
                 AND l.id = IFNULL(mp.value, 0)
             GROUP BY
                 language
@@ -173,7 +171,7 @@ SELECT
     COUNT(*) AS cnt
 FROM members
 WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
-AND status IN (' . self::MEMBER_STATUS_COLLECTED . ')
+AND status IN (' . Member::ACTIVE_ALL . ')
 GROUP BY logindiff
 ORDER BY logindiff ASC';
         $s = $this->dao->query($query);
@@ -194,7 +192,7 @@ SELECT
     COUNT(*) AS cnt
 FROM members
 WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
-AND status IN (' . self::MEMBER_STATUS_COLLECTED . ')
+AND status IN (' . Member::ACTIVE_ALL . ')
 GROUP BY logindiff
 ORDER BY logindiff ASC
         ';

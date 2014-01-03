@@ -1,0 +1,16 @@
+@import url("content_minimal.css?8");
+@import url("custom/forums.css?7");
+
+ul,ol {
+    margin: 5px 10px !important;
+}
+ul li{
+    list-style-type: disc;
+    margin-left: 0.5em;
+}
+ol li{
+    list-style-type: decimal;
+    margin-left: 1em;
+    padding-bottom: 0em;
+}
+

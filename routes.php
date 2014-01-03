@@ -95,7 +95,23 @@
     $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminController', 'spamOverview');
 
     // admin words routes
-    $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
+    // the overview route redirects to an empty edit screen,
+    // ideally this would become a real overview screen lateron
+    $this->addRoute('admin_word_overview', 'admin/word', 'AdminWordController', 'editTranslation');    
+    $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_editlang', 'admin/word/edit/:wordcode:/:shortcode:', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_create', 'admin/word/createcode', 'AdminWordController', 'createCode');
+    $this->addRoute('admin_word_code', 'admin/word/editcode','AdminWordController','editCode');
+    $this->addRoute('admin_word_listal', 'admin/word/list/all/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listas', 'admin/word/list/all/short', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listml', 'admin/word/list/missing/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listms', 'admin/word/list/missing/short', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listul', 'admin/word/list/update/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listus', 'admin/word/list/update/short', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
+    $this->addRoute('admin_word_find', 'admin/word/find', 'AdminWordController','findTranslations');
+       
     // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
     // admin activity routes
@@ -184,8 +200,9 @@
     $this->addRoute('suggestions_ranklist', 'suggestions/rank', 'suggestionsController', 'rankList');
     $this->addRoute('suggestions_ranklist_pages', 'suggestions/rank/page/:pageno:', 'suggestionsController', 'rankList');
     $this->addRoute('suggestions_rank', 'suggestions/:id:/rank', 'suggestionsController', 'rank');
-    $this->addRoute('suggestions_move_implementing', 'suggestions/:id:/implementing/:optionid:', 'suggestionsController', 'moveToImplementing');
-    $this->addRoute('suggestions_move_implemented', 'suggestions/:id:/implementied/:optionid:', 'suggestionsController', 'moveToImplemented');
+    $this->addRoute('suggestions_options_implementing', 'suggestions/:id:/implementing/:optionid:', 'suggestionsController', 'moveOptionToImplementing');
+    $this->addRoute('suggestions_options_implemented', 'suggestions/:id:/implemented/:optionid:', 'suggestionsController', 'moveOptionToImplemented');
+    $this->addRoute('suggestions_implemented', 'suggestions/:id:/implemented', 'suggestionsController', 'moveSuggestionToImplemented');
     $this->addRoute('suggestions_upvote', 'suggestions/:optionid:/upvote', 'suggestionsController', 'voteRanking');
     $this->addRoute('suggestions_downvote', 'suggestions/:optionid:/downvote', 'suggestionsController', 'voteRanking');
     $this->addRoute('suggestions_rejectedlist', 'suggestions/rejected', 'suggestionsController', 'rejectedList');

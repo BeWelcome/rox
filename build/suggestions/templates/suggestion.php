@@ -54,3 +54,4 @@ endif; ?>
         <?php endif; // view only ?>
     </div> <!-- subcolums -->
 </div>
+<hr class="suggestion" />

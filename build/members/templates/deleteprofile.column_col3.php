@@ -29,14 +29,13 @@ Boston, MA  02111-1307, USA.
 -->
 <form class="yform full" method="post" action="">
     <?php echo $this->getCallbackOutput('MembersController','retireProfile'); ?>
-    <p><?php echo $words->getFormatted('retire_explanation',$this->member->Username); ?></p>
+    <p><?php echo $words->getFormatted('ProfileDeleteInfo',$this->member->Username); ?></p>
     <div class="type-text">
         <label for="explain"><?php echo $words->getFormatted ('retire_membercanexplain'); ?></label>
         <textarea name="explanation" id="explain" cols="65" rows="6"></textarea>
     </div>
     <p>
-        <input type="checkbox" name="Complete_retire" 
-             onclick="return confirm ('<?php echo $words->getBuffered ('retire_WarningConfirmWithdraw'); ?>')" />
+        <input type="checkbox" name="Complete_retire" onclick="return confirm ('<?php echo $words->getBuffered ('retire_WarningConfirmWithdraw'); ?>')" />
              <?php echo $words->flushBuffer();
              echo $words->getFormatted ('retire_fulltickbox'); ?>
     </p>

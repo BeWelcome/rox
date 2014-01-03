@@ -58,7 +58,7 @@ foreach($this->suggestion->options as $option) :
     value="<?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?>"
     class="submit float_right" /><?php echo $words->flushBuffer(); ?>
 </div>
-<hr /><?php endif;
+<hr class="suggestion" /><?php endif;
 endforeach; ?>
 </form>
 </div><!-- suggestion-form -->

@@ -62,7 +62,7 @@ function DisplayAdminGroups($TPending, $Message) {
     $rr = $TPending[$ii];
     $count++;
     echo "<tr>";
-    echo "<td>", ww("Group_" . $rr->GroupName), "</td>";
+    echo "<td>", $rr->GroupName, "</td>";
     echo "<td>", LinkWithUsername($rr->Username), "</td><td>";
     if ($rr->Comment > 0)
       echo FindTrad($rr->Comment);
@@ -126,7 +126,7 @@ function DisplayGroupList($TPending, $Message) {
 		if (!HasRight("Group", $rr->GroupName)) continue ;
     $count++;
     echo "<tr>";
-    echo "<td>", ww("Group_" . $rr->GroupName), "</td>";
+    echo "<td>", $rr->GroupName, "</td>";
     echo "<td>";
     echo "<form method=post action=admingroups.php>";
     echo "<input type=hidden name=action value=ShowMembers>";
@@ -263,7 +263,7 @@ function DisplayShowMembers($GroupName,$IdGroup,$TList, $Message) { // call the 
 
 	$bgcolor="#ffff99" ;
 	$previousUsername="" ;
-  echo "<h3> Members in group ".ww("Group_" . $GroupName)."</h3>\n";
+  echo "<h3> Members in group ". $GroupName ."</h3>\n";
   echo "<table class=\"fixed\">\n";
   for ($ii = 0; $ii < $max; $ii++) {
     $rr = $TList[$ii];

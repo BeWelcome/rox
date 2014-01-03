@@ -33,9 +33,7 @@ class TripController extends PAppController {
         // Enable ViewWrap for cleaner code
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
-        
-        $member = $this->_model->getLoggedInMember();
-        
+
         // Show the teaser
         $this->showTeaser();
         
@@ -92,7 +90,12 @@ class TripController extends PAppController {
 				if (intval($request[1])) {
 					return $this->showTrip($request[1]);
 				} else {
-	            	$this->showAllTrips();
+                    $member = $this->_model->getLoggedInMember();
+                    if ($member) {
+                        $this->showAllTrips();
+                    } else {
+                        $this->notLoggedIn();
+                    }
 	                break;
 	            }
         }
@@ -214,7 +217,14 @@ class TripController extends PAppController {
         }
         return $page;
     }
-    
+
+    private function notLoggedIn()
+    {
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->content .= $vw->notLoggedIn();
+    }
+
     private function showMyTrips()
     {
         if (($member = $this->_model->getLoggedInMember()) && ($handle = $member->Username))

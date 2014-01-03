@@ -63,6 +63,7 @@ if (!$option->deleted | ($this->hasSuggestionRight)) : ?>
     </div>
 <?php endif; ?>
 </div>
+<hr class="suggestion" />
 <?php
 endif;
 endforeach; ?>

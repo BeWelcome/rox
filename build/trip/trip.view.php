@@ -91,7 +91,11 @@ class TripView extends PAppView {
     public function searchPage($trips = false, $trip_data = false) {
         require 'templates/searchpage.php';
     }
-    
+
+    public function notLoggedIn() {
+        require 'templates/tripsnotloggedin.php';
+    }
+
 	/* This adds other custom styles to the page*/
 	public function customStyles() {
         $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/trip.css?2" type="text/css"/>';

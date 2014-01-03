@@ -25,7 +25,7 @@ if (!$this->order) { $order =  '?order=desc'; $title = 'Sort descending (votes)'
         echo '</a></h3></td>';
         if ($this->hasSuggestionRight) {
             echo '<td class="details"><a href="/suggestions/' . $option->suggestionId . '/implementing/'
-                . $option->id .'">Set Implementing</td>';
+                . $option->id .'">Set Implementing</a></td>';
         }
         echo '<td rowspan="2" style="text-align: center; vertical-align: top;">';
         if ($this->member) {

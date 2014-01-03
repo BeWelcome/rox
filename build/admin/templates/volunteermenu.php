@@ -51,7 +51,7 @@ Boston, MA  02111-1307, USA.
         array(
             array(
                 'Words',
-                'bw/admin/adminwords.php',
+                'admin/word',
                 'AdminWord',
                 'Words management'
             ),

@@ -640,13 +640,19 @@ class MOD_layoutbits
 
     // COPIED FROM OLD BW
     // fage_value return a  the age value corresponding to date
-    public function fage_value($dd) {
+    public function fage_value($dd, $nn = false) {
         $pieces = explode("-",$dd);
         if(count($pieces) != 3) return 0;
+        if (!$nn) {
+            $nn = date('Y-m-d');
+        }
+        $npieces = explode("-",$nn);
+        if(count($npieces) != 3) return 0;
         list($year,$month,$day) = $pieces;
-        $year_diff = date("Y") - $year;
-        $month_diff = date("m") - $month;
-        $day_diff = date("d") - $day;
+        list($nyear,$nmonth,$nday) = $npieces;
+        $year_diff = $nyear - $year;
+        $month_diff = $nmonth - $month;
+        $day_diff = $nday - $day;
         if ($month_diff < 0) $year_diff--;
         elseif (($month_diff==0) && ($day_diff < 0)) $year_diff--;
         return $year_diff;

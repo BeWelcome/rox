@@ -11,24 +11,24 @@
 class BlogController extends RoxControllerBase {
     private $_model;
     private $_view;
-    
+
     public function __construct() {
         parent::__construct();
         $this->_model = new Blog();
         $this->_view =  new BlogView($this->_model);
     }
-    
+
     public function __destruct() {
         unset($this->_model);
         unset($this->_view);
     }
-    
+
     public function index()
     {
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
         $cw = new ViewWrap($this);
-        
+
         // index is called when http request = ./blog
         if (PPostHandler::isHandling()) {
             return;
@@ -133,7 +133,7 @@ class BlogController extends RoxControllerBase {
 					$P->content .= $vw->editForm((int)$request[2], $callbackId);
 				}
                 break;
-                
+
             case 'search':
                 if (!empty($this->args_vars->get['s']) && (strlen($this->args_vars->get['s']) >= 3))
                 {
@@ -174,26 +174,27 @@ class BlogController extends RoxControllerBase {
                 $p = new BlogCategoriesPage($this->_model);
                 return $p;
                 break;
-            
+
             default:
                 $page = ((isset($this->args_vars->get['page']) && intval($this->args_vars->get['page'])) ? intval($this->args_vars->get['page']) : 1);
-                
+
                 // display blogs of user $request[1]
-                if ($member = $this->_model->getMemberByUsername($request[1]))
+                $memberBlog = $this->_model->getMemberByUsername($request[1]);
+                if ($memberBlog)
                 {
                     if (!isset($request[2]))
                         $request[2] = '';
                     switch ($request[2])
-                    { 
+                    {
                         case 'cat':
                             if (isset($request[3]))
                             {
                                 $p = new BlogPage($this->_model);
                                 $p->page = $page;
                                 $p->category = $request[3];
-                                $p->member = $member;
-                                $p->initPager($this->_model->countRecentPosts($member->id, $request[3]), $page);
-                                $p->posts = $this->_model->getRecentPostsArray($member->id, $request[3], $page);
+                                $p->member = $memberBlog;
+                                $p->initPager($this->_model->countRecentPosts($memberBlog->id, $request[3]), $page);
+                                $p->posts = $this->_model->getRecentPostsArray($memberBlog->id, $request[3], $page);
                                 break;
                             }
                             // if we're not dealing with a category, fall through and hit the default
@@ -203,16 +204,16 @@ class BlogController extends RoxControllerBase {
                             if ($post = $this->_model->getPost($request[2]))
                             {
                                 $p = new BlogSinglePostPage($this->_model);
-                                $p->member = $member;
+                                $p->member = $memberBlog;
                                 $p->post = $post;
                             }
                             else
                             {
                                 $p = new BlogPage($this->_model);
                                 $p->page = $page;
-                                $p->member = $member;
-                                $p->initPager($this->_model->countRecentPosts($member->id, false), $page);
-                                $p->posts = $this->_model->getRecentPostsArray($member->id, false, $page);
+                                $p->member = $memberBlog;
+                                $p->initPager($this->_model->countRecentPosts($memberBlog->id, false), $page);
+                                $p->posts = $this->_model->getRecentPostsArray($memberBlog->id, false, $page);
                             }
                             break;
                     }
@@ -227,7 +228,7 @@ class BlogController extends RoxControllerBase {
                 return $p;
         }
     }
-    
+
     private function ajaxPost() {
         PRequest::ignoreCurrentRequest();
         if (!$member = $this->_model->getLoggedInMember())
@@ -263,9 +264,9 @@ class BlogController extends RoxControllerBase {
     }
 
     // 2006-11-23 19:13:59 rs Copied to Message class :o
-    private function _cleanupText($txt) 
+    private function _cleanupText($txt)
     {
-        $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>'; 
+        $str = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head><body>'.$txt.'</body></html>';
         $doc = @DOMDocument::loadHTML($str);
         if ($doc) {
             $sanitize = new PSafeHTML($doc);
@@ -297,9 +298,9 @@ class BlogController extends RoxControllerBase {
             $sanitize->allow('ul');
             $sanitize->allow('ol');
             $sanitize->allow('li');
-        
-            $sanitize->allowAttribute('color'); 
-            $sanitize->allowAttribute('bgcolor');           
+
+            $sanitize->allowAttribute('color');
+            $sanitize->allowAttribute('bgcolor');
             $sanitize->allowAttribute('href');
             $sanitize->allowAttribute('style');
             $sanitize->allowAttribute('class');
@@ -320,7 +321,7 @@ class BlogController extends RoxControllerBase {
             // invalid HTML
             return '';
         }
-        
+
     }
 
     /**
@@ -402,7 +403,7 @@ class BlogController extends RoxControllerBase {
         return true;
     }
 
-    private function _validateVars(&$vars) 
+    private function _validateVars(&$vars)
     {
         $member = $this->_model->getLoggedInMember();
         $errors = array();
@@ -446,7 +447,7 @@ class BlogController extends RoxControllerBase {
         }
         return true;
     }
-    
+
     /**
      * Processing creation of a blog.
      *
@@ -463,7 +464,7 @@ class BlogController extends RoxControllerBase {
      * inserror     - error performing db insertion.
      * tagerror     - error while updating tags.
      */
-    public function createProcess($args, $action, $mem_redirect, $mem_resend) 
+    public function createProcess($args, $action, $mem_redirect, $mem_resend)
     {
         if (!$member = $this->_model->getLoggedInMember())
             return false;
@@ -496,11 +497,11 @@ class BlogController extends RoxControllerBase {
         switch($vars['vis']) {
             case 'pub':
                 break;
-                
+
             case 'prt':
                 $flags = ($flags | Blog::FLAG_VIEW_PROTECTED);
                 break;
-                
+
             default:
                 $flags = ($flags | Blog::FLAG_VIEW_PRIVATE);
                 break;
@@ -544,24 +545,24 @@ class BlogController extends RoxControllerBase {
         if ($trip) {
             $this->_model->setTripPosition($trip, $blogId);
         }
-        
+
         if (!$this->_model->updateTags($blogId, explode(',', $vars['tags']))) {
             $vars['errors'] = array('tagerror');
             return false;
         }
-        
+
         // 'Touch' the corresponding trip!
         if ($trip) {
             $TripModel = new Trip;
             $TripModel->touchTrip($trip);
         }
-        
+
         $request = PRequest::get()->request;
         if ($request[0] == 'trip')
             return implode('/', $request).'/finish';
         return 'blog/create/finish/'.$blogId;
     }
-    
+
     public function deleteProcess($args, $action, $mem_redirect, $mem_resend)
     {
         if (!$member = $this->_model->getLoggedInMember())
@@ -584,7 +585,7 @@ class BlogController extends RoxControllerBase {
         }
         return "blog/{$member->Username}";
     }
-    
+
     /**
      * Processing edit of a blog.
      *
@@ -629,19 +630,19 @@ class BlogController extends RoxControllerBase {
             case 'pub':
                 $flags = ($flags & ~(int)Blog::FLAG_VIEW_PROTECTED & ~(int)Blog::FLAG_VIEW_PRIVATE);
                 break;
-                
+
             case 'prt':
                 $flags = ($flags & ~(int)Blog::FLAG_VIEW_PRIVATE | (int)Blog::FLAG_VIEW_PROTECTED);
                 break;
-                
+
             default:
                 $flags = ($flags & ~(int)Blog::FLAG_VIEW_PROTECTED | (int)Blog::FLAG_VIEW_PRIVATE);
                 break;
         }
         $tripId = (isset($vars['tr']) && strcmp($vars['tr'],'')!=0) ? (int)$vars['tr'] : false;
-        
+
         $this->_model->updatePost($post->blog_id, $flags, $tripId);
-        
+
         // 'Touch' the corresponding trip!
         if ($tripId) {
             $TripModel = new Trip;
@@ -665,16 +666,16 @@ class BlogController extends RoxControllerBase {
         } else {
             $start = false;
         }
-        
+
         // Check if the location already exists in our DB and add it if necessary
         if ($vars['geonameid'] && $vars['latitude'] && $vars['longitude'] && $vars['geonamename'] && $vars['geonamecountrycode'] && $vars['admincode']) {
             $geoname_ok = $this->_model->checkGeonamesCache($vars['geonameid']);
         } else {
             $geoname_ok = false;
         }
-        
+
         $geonameId = $geoname_ok ? $vars['geonameid'] : false;
-        
+
         $this->_model->updatePostData($post->blog_id, $vars['t'], $vars['txt'], $start, $geonameId);
 
         if (!$this->_model->updateTags($post->blog_id, explode(',', $vars['tags']))) {
@@ -685,8 +686,8 @@ class BlogController extends RoxControllerBase {
         PPostHandler::clearVars();
         return 'blog/edit/'.$post->blog_id.'/finish';
     }
-    
-    public function singlePost($postId, $showComments = true) 
+
+    public function singlePost($postId, $showComments = true)
     {
         $blog = $this->_model->getPost($postId);
         $this->_view->singlePost($blog, $showComments);

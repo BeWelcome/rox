@@ -30,9 +30,4 @@ if ($member)
             <?php 
                 }
             ?>
-<?php } else { ?>
-<div class="infobox">
-          <h3><?=$words->get('TripYourOwnTripHeadline')?></h3>
-          <p><?=$words->get('TripYourOwnTripText')?></p>
-</div>
-<?php } ?>
+<?php }?>

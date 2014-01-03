@@ -3427,7 +3427,7 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
 
 		$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members
 										 WHERE membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
-										  members.Status in ('Active','ChoiceInactive','ActiveHidden') and members.id=".$_SESSION['IdMember']." and membersgroups.Status='In' group by groups.id order by groups.id ";
+										  members.Status in ('Active','ActiveHidden') and members.id=".$_SESSION['IdMember']." and membersgroups.Status='In' group by groups.id order by groups.id ";
      	$s = $this->dao->query($query);
      	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$this->getGroupName($row->Name);

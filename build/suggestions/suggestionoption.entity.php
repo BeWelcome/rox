@@ -10,6 +10,15 @@ class SuggestionOption extends RoxEntityBase
     const IMPLENENTING = 2;
     const IMPLEMENTED = 4;
 
+    public static function getStatesAsArray($lang = 'en') {
+        $words = new MOD_words();
+        return array(
+            self::RANKING => $words->getBufferedInLang('SuggestionsOptionRanking', $lang),
+            self::IMPLENENTING => $words->getBufferedInLang('SuggestionsOptionImplementing', $lang),
+            self::IMPLEMENTED => $words->getBufferedInLang('SuggestionsOptionImplemented', $lang)
+        );
+    }
+
     protected $_table_name = 'suggestions_options';
 
     public function __construct($optionId = false)

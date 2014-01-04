@@ -1,6 +1,7 @@
 <?php
-$ranks = SuggestionsModel::getRanksAsArray($_SESSION["lang"]);
+$ranks = SuggestionsModel::getRanksAsArray($_SESSION['lang']);
 $states = SuggestionsModel::getStatesAsArray();
+$optionStates = SuggestionOption::getStatesAsArray($_SESSION['lang']);
 ?><table style="width:100%">
     <tr>
         <th colspan="3"><h2><?php echo htmlspecialchars($this->suggestion->summary, ENT_COMPAT, 'utf-8'); ?></h2></th>
@@ -14,7 +15,8 @@ $states = SuggestionsModel::getStatesAsArray();
     <?php
 foreach($this->suggestion->options as $option) {
   if (!$option->deleted) { ?>
-      <tr><td colspan="3" style="vertical-align:top;"><h3><?php echo htmlspecialchars($option->summary, ENT_COMPAT, 'utf-8'); ?></h3></td><td><?= $ranks[$option->rank]; ?></td></tr>
+      <tr><td style="vertical-align:top;"><h3><?php echo htmlspecialchars($option->summary, ENT_COMPAT, 'utf-8'); ?></h3></td>
+          <td colspan="2"><strong><?= $ranks[$option->rank]; ?></strong></td><td><strong><?php if ($option->state) { echo $optionStates[$option->state]; } ?></strong></td></tr>
 <?php
       foreach($ranks as $rank => $rankName) {
           if ($rank == 4) {

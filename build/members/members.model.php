@@ -589,7 +589,9 @@ WHERE
                 'Link' => 'members/' . $commentRecipient->Username . '/comments',
                 'WordCode' => $noteWordCode
             );
-            $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
+            if ($TCom->DisplayInPublic == 1) {
+                $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
+            }
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }

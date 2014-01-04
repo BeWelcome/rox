@@ -10,6 +10,7 @@ class SuggestionsModel extends RoxModelBase
     const DURATION_ADDOPTIONS = 1728000; // 20 days = 20 * 24 * 60 * 60
     const DURATION_OPEN = 2592000; // DURATION_DISCUSSION + DURATION_ADDOPTIONS
     const DURATION_VOTING = 2592000; // 30 days = 30 * 24 * 60 * 60
+    const DURATION_VOTING_STARTS = 432000; // 5 days = 5 * 24 * 60 * 60
 
     const SUGGESTIONS_DUPLICATE = 0; // suggestion already existed and was there marked as duplicate by suggestion team
     const SUGGESTIONS_AWAIT_APPROVAL = 1; // wait for suggestion team to check
@@ -21,6 +22,7 @@ class SuggestionsModel extends RoxModelBase
     const SUGGESTIONS_IMPLEMENTING = 64; // Dev started implementing (no more ranking)
     const SUGGESTIONS_IMPLEMENTED = 128; // Dev finished implementation
     const SUGGESTIONS_DEV = 192;
+    const SUGGESTIONS_ALL = 255;
 
     private static $STATES = array(
                     self::SUGGESTIONS_DUPLICATE => 'SuggestionsDuplicate',
@@ -203,6 +205,10 @@ class SuggestionsModel extends RoxModelBase
             case self::SUGGESTIONS_AWAIT_APPROVAL:
                 $query = "state = " . $type;
                 $sql_order = "created ASC";
+                break;
+            case self::SUGGESTIONS_ALL:
+                $query = "1=1";
+                $sql_order = "created DESC";
                 break;
             default:
                 $query = "state = " . $type;

@@ -25,41 +25,73 @@ Boston, MA  02111-1307, USA.
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $rights = new MOD_right;
 $rights->HasRight('Comments');
-if (!$this->passedAway) { echo $words->get('CommentGuidlinesLink') . '<br /><br />'; }
-if (!$this->myself && !$comment_to_self_exists  && $this->loggedInMember) {
 
-      // Show "Add comment" button
-      echo '  <p class="floatbox"><a href="members/' . $username
-          . '/comments/add" class="button">' . $words->get('addcomments')
-          . '</a></p>' . "\n";
+
+
+
+function getShowCondition($com,$login){
+   // show comment when marked as display in public (default situation)
+   if ($com->DisplayInPublic == 1) return 1;
+   // show comment to Safety team
+   if (MOD_right::get()->HasRight('Comments')) return 2;
+   // show comment to writer
+   if ($com->UsernameFromMember == $login) return 3;
+   // do not show comment
+   return false;
+}
+
+function getEditCondition($com,$login){
+    
+    // don't allow edit bad comment if not marked so
+    if ($com->Quality == 'Bad' && $com->AllowEdit != 1) return false;
+    // don't allow edit is not logged in as writer
+    if ($com->UsernameFromMember != $login) return false;
+    
+    // allow edit
+    return true;
+}
+
+$loginuser = $this->loggedInMember->Username;
+
+if (!$this->passedAway) {
+    echo '<p>'.$words->get('CommentGuidlinesLink').'</p>';
+}
+
+$showfrom = false; $showto = false;
+foreach ($comments as $com){
+    if (isset($com['from'])
+        && $com['from']->UsernameFromMember == $loginuser){
+            $showfrom = getShowCondition($com['from'],$loginuser);
     }
+    // define if to-comment should be shown
+    if (isset($com['to'])
+        && $com['to']->UsernameToMember == $loginuser){
+            $showto = getShowCondition($com['to'],$loginuser);
+    }
+}
+
+if (!$showfrom && !$showto && $this->myself != $loginuser) {
+    // Show "Add comment" button
+    echo '  <p class="floatbox"><a href="members/' . $username
+        . '/comments/add" class="button">' . $words->get('addcomments')
+        . '</a></p>' . "\n";
+}
 
 foreach($comments as $comment) {
+    $showfrom = false; $showto = false; $editfrom = false; $editto = false;
+
     // define if from-comment should be shown
-    $showfrom = false;
-    $editfrom = false;
     if (isset($comment['from'])){
-        if ($comment['from']->DisplayInPublic == 1){$showfrom = true;}
-        if ($comment['from']->AllowEdit == 1){
-            if ($comment['from']->UsernameFromMember == $this->loggedInMember->Username) {
-                $editfrom = true;
-            }
-        }
+        $showfrom = getShowCondition($comment['from'],$loginuser);
+        $editfrom = getEditCondition($comment['from'],$loginuser);
+    }
+    // define if to-comment should be shown
+    if (isset($comment['to'])){
+        $showto = getShowCondition($comment['to'],$loginuser);
+        $editto = getEditCondition($comment['to'],$loginuser);
     }
 
-    // define if to-comment should be shown
-    $showto = false;
-    $editto = false;
-    if (isset($comment['to'])){
-        if ($comment['to']->DisplayInPublic == 1){$showto = true;}
-        if ($comment['to']->AllowEdit == 1){
-            if ($comment['to']->UsernameFromMember == $this->loggedInMember->Username) {
-                $editto = true;
-            }
-        }
-    }
-    
-if($showfrom || $editfrom || $showto || $editto) {
+if ($showfrom || $editfrom || $showto || $editto) {
     echo '<div class="frame">';
 } else { 
     echo '<div>';
@@ -74,7 +106,7 @@ if($showfrom || $editfrom || $showto || $editto) {
         $tt = explode(',', $c->Lenght); ?>
     <div class="c75l" >
       <div class="subcl" >
-      <?php if ($editfrom && !$showfrom ){echo $words->get('CommentHiddenEdit');} ?>
+      <?php if ($showfrom > 1){echo '<strong>'.$words->get('CommentHiddenEdit').'</strong>';} ?>
         <a href="members/<?=$c->UsernameFromMember?>">
            <img class="float_left framed"  src="members/avatar/<?=$c->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
@@ -102,9 +134,9 @@ if($showfrom || $editfrom || $showto || $editto) {
               <?php echo $purifier->purify(nl2br($c->TextFree)); ?>
             </p>
             <p>
-              <?php if ($this->loggedInMember && $c->IdFromMember == $this->loggedInMember->id): ?>
+              <?php if ($editfrom){ ?>
                 <a class="button small" href="members/<?= $this->member->Username ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
-              <? endif; ?>
+              <? } ?>
             </p>
         </div> <!-- comment -->
       </div> <!-- subcl -->
@@ -170,9 +202,8 @@ if($showfrom || $editfrom || $showto || $editto) {
 
         <div class="c75l" >
           <div class="subcl" >
-            <?php // give an aditional message when comment is shown for the reason that it has to be edited
-            if (!$showto && $editto){echo $words->get('CommentHiddenEdit');}
-            ?>
+            <?php // give an aditional message when comment is exceptionally shown
+            if ($showto > 1){echo '<strong>'.$words->get('CommentHiddenEdit').'</strong>';} ?>
             <a href="members/<?= $cc->UsernameFromMember ?>">
                <img class="float_left framed" src="members/avatar/<?= $cc->UsernameFromMember ?>/?xs" height="50px" width="50px" alt="Profile" />
             </a>
@@ -200,7 +231,7 @@ if($showfrom || $editfrom || $showto || $editto) {
                   <?php echo $purifier->purify(nl2br($cc->TextFree)); ?>
                 </p>
                 <p>
-                  <? if ($this->myself && $this->loggedInMember && $cc->IdFromMember == $this->loggedInMember->id): ?>
+                  <? if ($editto): ?>
                     <a class="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
                   <? endif; ?>
                 </p>

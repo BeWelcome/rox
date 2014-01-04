@@ -43,6 +43,9 @@ $this->pager->render(); ?>
             case SuggestionsModel::SUGGESTIONS_DEV:
                 include 'devlistitem.php';
                 break;
+            case SuggestionsModel::SUGGESTIONS_CLOSED:
+                include 'resultlistitem.php';
+                break;
         }
         $count++;
     }

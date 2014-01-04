@@ -86,7 +86,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $items[] = array('vote', 'suggestions/vote', $words->getSilent('SuggestionsVote'));
         $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
         $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
-        $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
+        $items[] = array('results', 'suggestions/results',  $words->getSilent('SuggestionsResults'));
         $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeams'));
 
         return $items;

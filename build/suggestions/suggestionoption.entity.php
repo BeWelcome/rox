@@ -35,7 +35,7 @@ class SuggestionOption extends RoxEntityBase
         {
             $entityFactory = new RoxEntityFactory();
             $this->creator = $entityFactory->create('Member', $this->createdBy);
-                    if ($this->modifiedBy) {
+            if ($this->modifiedBy) {
                 $this->modifier = $entityFactory->create('Member', $this->modifiedBy);
             }
             if ($this->deletedBy) {
@@ -50,7 +50,8 @@ class SuggestionOption extends RoxEntityBase
             } else {
                 $this->mutuallyExclusive = 'All';
             }
-            // fetch votes for this option
+
+            // fetch rank votes for this option
             $query = "
                 SELECT
                     SUM(vote) as sumVotes

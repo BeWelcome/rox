@@ -102,6 +102,7 @@ bwrox.selectScripts([
       "trip", 
       "admin/massmail/enqueue",
       "admin/word/list/update",
+      "suggestions/rank",
       "activities/",
       "about/faq",
       "faq"]

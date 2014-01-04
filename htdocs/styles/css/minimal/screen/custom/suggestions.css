@@ -6,7 +6,7 @@
 {
 #suggestionslist {width: 100%;}
 #suggestionslist th.description { vertical-align: bottom; text-align: left; }
-#suggestionslist th.details { vertical-align: bottom; text-align: center; }
+#suggestionslist th.details { vertical-align: bottom; text-align: center; width: 10%; }
 #suggestionslist td.description{ vertical-align: middle; text-align: left; }
 #suggestionslist td.details{ vertical-align: middle; text-align: center; width: 10%; }
 
@@ -69,7 +69,6 @@ tr.blanktop {
  	border-top: 1px solid #e5e5e5;
 }
 tr.blankmiddle {
-    background: #eceff5;
     border: none 0pt;
 }
 tr.blankbottom {
@@ -80,4 +79,8 @@ tr.blankbottom {
 hr.suggestion {
     color: #ffab0c;
     border-color: #ffab0c;
+}
+
+#suggestionslist a {
+    text-decoration: none;
 }

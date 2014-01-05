@@ -432,7 +432,8 @@ SQL;
 
 	public function getTripsForLocation()
     {
-		$query = <<<SQL
+        // Make use of the previously filled $this->tripsid array
+		$query = "
 SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, members.Username AS handle, `geonames_cache`.`fk_countrycode`, `trip_to_gallery`.`gallery_id_foreign`
     FROM `trip`
     RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
@@ -440,8 +441,11 @@ SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, mem
     LEFT JOIN addresses ON addresses.IdMember = members.id
     LEFT JOIN geonames_cache ON addresses.IdCity = geonames_cache.geonameid
     LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
+    WHERE `trip`.`trip_id` IN ('" . implode("', '", $this->tripids) . "')
     ORDER BY trip_touched DESC
-SQL;
+    LIMIT 0,100
+";
+
 		return $this->bulkLookup($query);
 	}
 

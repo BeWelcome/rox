@@ -152,11 +152,33 @@ switch (GetParam("action")) {
 		$rwa = LoadRow("SELECT * FROM words WHERE code='" . "FaqA_" . GetStrParam("QandA") . "' and IdLanguage=0");
 
 		if (!isset ($rwq->id)) {
-			$str = "INSERT INTO words(code,Description,IdLanguage,ShortCode) values('" . "FaqQ_" . GetStrParam("QandA") . "','This is a question for a Faq',0,'".$_SESSION['lang']."')";
+			$str = "INSERT INTO words
+                                    (code,
+                                     Description,
+                                     IdLanguage,
+                                     ShortCode,
+                                     created)
+                                VALUES
+                                    ('FaqQ_" . GetStrParam("QandA") . "',
+                                     'This is the questiontext for a Frequently Asked Question.',
+                                     0,
+                                     '".$_SESSION['lang']."',
+                                     NOW())";
 			sql_query($str);
 		}
 		if (!isset ($rwa->id)) {
-			$str = "INSERT INTO words(code,Description,IdLanguage,ShortCode) values('" . "FaqA_" . GetStrParam("QandA") . "','This is an an answer for a Faq',0,'".$_SESSION['lang']."')";
+			$str = "INSERT INTO words
+                                    (code,
+                                     Description,
+                                     IdLanguage,
+                                     ShortCode,
+                                     created)
+                                VALUES
+                                    ('FaqA_" . GetStrParam("QandA") . "',
+                                     'This is the answertext for a Frequently Asked Question.',
+                                     0,
+                                     '".$_SESSION['lang']."',
+                                     NOW())";
 			sql_query($str);
 		}
 

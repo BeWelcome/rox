@@ -1,3 +1,0 @@
-<?php
-$IdFaq=48;$lang="pt";require_once "publicfaq.php";
-?>

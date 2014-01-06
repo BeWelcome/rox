@@ -4,12 +4,10 @@ $states = SuggestionsModel::getStatesAsArray();
 $optionStates = SuggestionOption::getStatesAsArray($_SESSION['lang']);
 ?><table id="votingresults">
     <tr>
-        <td colspan="3"><h2><?php echo htmlspecialchars($this->suggestion->summary, ENT_COMPAT, 'utf-8'); ?></h2></td>
+        <td><h2><?php echo htmlspecialchars($this->suggestion->summary, ENT_COMPAT, 'utf-8'); ?></h2></td>
+        <td colspan="2" class="rank"><strong><?php if ($this->suggestion->voteCount) { echo $words->get('SuggestionsVotesGiven', $this->suggestion->voteCount); }?></strong></td>
         <td class="rank"><strong><?= $words->get($states[$this->suggestion->state]); ?></strong></td>
     </tr>
-    <?php if ($this->suggestion->voteCount) { ?>
-    <tr><td>Votes given: <?= $this->suggestion->voteCount; ?></td></tr>
-    <?php } ?>
     <tr><td colspan="4"><?php echo $this->purifier->purify($this->suggestion->description); ?></td></tr>
     <tr><td colspan="4"><hr class="suggestion" /></td></tr>
     <?php

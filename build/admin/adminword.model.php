@@ -124,6 +124,20 @@ ORDER BY w1.code,w2.shortcode';
         return $this->BulkLookup($sql);
     }
 
+    public function getEngSentByCode($code){
+        $sql = 'SELECT Sentence
+                FROM words
+                WHERE idlanguage=0 AND code="'.$code.'"';
+        $query = $this->dao->query($sql);
+        $res = $query->fetch(PDB::FETCH_OBJ);
+        if ($res) {
+            return $res->Sentence;
+        } else {
+            return '';
+        }
+    }
+    
+    
     /*
      * Collect the data for in the translation list
      *
@@ -314,15 +328,21 @@ WHERE code="' . $this->dao->escape($code) . '"
         $eng_ins = '';
         $eng_upd = '';
         $desc = '';
-        $changeInAll = '';        
- 
+        $changeInAll = '';
         if ($form['lang']=='en'){
             $eng_ins = 'majorupdate = now(),';
-            if (isset($form['changetype'])){
-                $eng_upd = ($form['changetype']=='major' && $form["lang"]=="en"?'majorupdate = now(),':'');
-            } else {
-                $eng_upd = '';
-            }
+            $eng_upd = 'updated = updated,';
+            if (isset($form['changetype']) && $form["lang"]=="en"){
+                switch ($form['changetype']){
+                    case 'major':
+                    $eng_upd = 'majorupdate = now(), IdMember = '.(int)$_SESSION["IdMember"].',';
+                    break;
+                    case 'none':
+                    $eng_upd = 'updated = updated,';
+                    break;
+                    default:
+                    $eng_upd = 'IdMember = '.(int)$_SESSION["IdMember"].',';
+            }}
             if (isset($form['EngDesc'])){
                 $desc = 'description = "'.$this->dao->escape($form['EngDesc']).'", ';
             }
@@ -348,13 +368,10 @@ INSERT INTO words SET
     IdMember = '.(int)$_SESSION["IdMember"].',
     created = now()
 ON DUPLICATE KEY UPDATE
-    Sentence = "'.$this->dao->escape($form["Sentence"]).'",
-    updated = now(),
     '.$eng_upd.$desc.'
-    IdMember = '.(int)$_SESSION["IdMember"];
+    Sentence = "'.$this->dao->escape($form["Sentence"]).'"';
         $this->dao->query($sql);
         $returnval = array(mysql_insert_id(),mysql_affected_rows());
-        
     // update dnt,isarchived and TP for all translations,
     // but do not change the update moment for the other languages
         if (count($changeInAll)>0){

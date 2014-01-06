@@ -62,8 +62,8 @@ if ($this->noScope){
   <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56" /></tr>
 <?php
     } else {
+echo $words->getformatted(($this->status),htmlspecialchars($this->formdata['EngCode']));
 ?>
-You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars($this->formdata['EngCode'])?>
 <input type=hidden name="Sentence" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>" />
 <input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['EngSent']) ?>" />
 <input type=hidden name="EngCode" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" />
@@ -82,7 +82,7 @@ You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars
 <?php
     }
 
-    if ($this->status=='update'){
+    if ($this->status=='AdminWordUpdateCodeMsg'){
     // updating an existing wordcode
 ?>
 <tr><td>What kind of change is this?</td>

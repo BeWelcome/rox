@@ -205,7 +205,7 @@
     $this->addRoute('suggestions_options_implemented', 'suggestions/:id:/implemented/:optionid:', 'suggestionsController', 'moveOptionToImplemented');
     $this->addRoute('suggestions_implemented', 'suggestions/:id:/implemented', 'suggestionsController', 'moveSuggestionToImplemented');
     $this->addRoute('suggestions_upvote', 'suggestions/:optionid:/upvote', 'suggestionsController', 'voteRanking');
-    $this->addRoute('suggestions_downvote', 'suggestions/:optionid:/downvote/ajax', 'suggestionsController', 'voteRanking');
+    $this->addRoute('suggestions_downvote', 'suggestions/:optionid:/downvote', 'suggestionsController', 'voteRanking');
     $this->addRoute('suggestions_rank_ajax', 'suggestions/ajax/:optionid:/:direction:', 'suggestionsController', 'voteAjaxRanking');
     $this->addRoute('suggestions_rejectedlist', 'suggestions/rejected', 'suggestionsController', 'rejectedList');
     $this->addRoute('suggestions_rejectedlist_pages', 'suggestions/rejected/page/:pageno:', 'suggestionsController', 'rejectedList');
@@ -224,6 +224,7 @@
     $this->addRoute('searchmembers_map_advanced', 'search/members/map/advanced', 'SearchController', 'searchMembersOnMap');
     $this->addRoute('searchmembers_text', 'search/members/text', 'SearchController', 'searchMembersText');
     $this->addRoute('searchmembers_text_advanced', 'search/members/text/advanced', 'SearchController', 'searchMembersText');
+    $this->addRoute('searchmembers_advanced', 'search/members/advanced', 'SearchController', 'loadAdvancedOptions');
     $this->addRoute('search_places', 'search/locations/:type:', 'SearchController', 'searchSuggestLocations');
 
     // safety pages

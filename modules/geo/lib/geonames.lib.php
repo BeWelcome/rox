@@ -130,10 +130,10 @@ class MOD_geonames
 
 	private function updateAltnames($date) {
 	    $result = true;
-		$changes = $this->fetchFile('http://download.geonames.org/export/dump/geonamesalternatenamesModifications-'.$date.'.txt');
+		$changes = $this->fetchFile('http://download.geonames.org/export/dump/alternateNamesModifications-'.$date.'.txt');
 		foreach($changes as $change) {
 			if (is_numeric($change[0])) {
-				$res = $this->dao->query("
+                $query= "
 				    REPLACE INTO
 				        `geonamesalternatenames`
 				    SET
@@ -144,14 +144,16 @@ class MOD_geonames
 				        ispreferred = '".$this->dao->escape($change[4])."',
 				        isshort = '".$this->dao->escape($change[5])."'
 				        isColloquial = '".$this->dao->escape($change[6])."'
-				        isHistoric = '".$this->dao->escape($change[7])."'");
+				        isHistoric = '".$this->dao->escape($change[7])."'";
+                error_log($query);
+				$res = $this->dao->query($query);
 				if (!$res) {
 				    $result = false;
 				}
 			}
 		}
 
-		$deletes = $this->fetchFile('http://download.geonames.org/export/dump/geonamesalternatenamesDeletes-'.$date.'.txt');
+		$deletes = $this->fetchFile('http://download.geonames.org/export/dump/alternateNamesDeletes-'.$date.'.txt');
 		foreach($deletes as $delete) {
 			if (is_numeric($delete[0])) {
 				$res = $this->dao->query("

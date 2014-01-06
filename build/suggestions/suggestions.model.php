@@ -172,7 +172,7 @@ class SuggestionsModel extends RoxModelBase
             ;
             $all = $temp->FindBySQLMany($query);
         } else {
-            $temp->sql_order = "RAND()";
+            $temp->sql_order = "created DESC, rank DESC";
             $all = $temp->FindByWhereMany("state = " . $state, $pageno * $items, $items);
         }
         return $all;

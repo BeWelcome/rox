@@ -8,6 +8,7 @@ $order = ""; $title = "Sort randomly (default)";
 if ($this->order == 'desc') { $order = '?order=asc'; $title = 'Sort ascending (votes)'; }
 if ($this->order == 'asc') { $order = ''; $title = 'Sort randomly (default)'; }
 if (!$this->order) { $order =  '?order=desc'; $title = 'Sort descending (votes)';}
+$currentOrder = (!$this->order) ? '' : '?order=' . $this->order;
 ?>
 <table id='suggestionslist'>
         <tr><th class="description"><?php echo $words->get('Suggestion'); ?></th>
@@ -32,13 +33,13 @@ if (!$this->order) { $order =  '?order=desc'; $title = 'Sort descending (votes)'
             if ($option->vote == +1) {
                 echo '<i class="icon-angle-up icon-3x" title="Already upvoted"></i><br />';
             } else {
-                echo '<a name="upvote_' . $option->id . '" href="/suggestions/' . $option->id . '/upvote" class="icon-chevron-up icon-3x" title="upvote"></a><br/>';
+                echo '<a name="upvote_' . $option->id . '" href="/suggestions/' . $option->id . '/upvote' . $currentOrder . '" class="icon-chevron-up icon-3x" title="upvote"></a><br/>';
             }
             echo '<span class="big">' . $option->rankVotes . '</span><br />';
             if ($option->vote == -1) {
                 echo '<i class="icon-angle-down icon-3x" title="Already downvoted"></i>';
             } else {
-                echo '<a name="downvote_' . $option->id . '" href="/suggestions/' . $option->id . '/downvote"class="icon-chevron-down icon-3x" title="down vote"></a>';
+                echo '<a name="downvote_' . $option->id . '" href="/suggestions/' . $option->id . '/downvote' . $currentOrder  . '"class="icon-chevron-down icon-3x" title="down vote"></a>';
             }
         } else {
             echo '<span class="big"' . $option->rankVotes . '</span>';

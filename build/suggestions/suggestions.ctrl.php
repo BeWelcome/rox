@@ -463,7 +463,7 @@ class SuggestionsController extends RoxControllerBase
         $loggedInMember = $this->_model->getLoggedInMember();
         $option = new SuggestionOption($this->route_vars['optionid']);
         if (!$loggedInMember || !$option || $option->state  != SuggestionOption::RANKING) {
-            $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
+            $this->redirectAbsolute($this->router->url('suggestions_ranklist'), $this->args_vars->get);
         }
         // do something
         if ($this->request_vars[2] == "upvote") {
@@ -473,7 +473,7 @@ class SuggestionsController extends RoxControllerBase
             $this->_model->voteRanking($option->id, '-1');
             $this->setFlashNotice($this->getWords()->get('SuggestionsDownVoteSuccess'));
         }
-        $this->redirectAbsolute($this->router->url('suggestions_ranklist'));
+        $this->redirectAbsolute($this->router->url('suggestions_ranklist'), $this->args_vars->get);
     }
 
     public function voteAjaxRanking() {

@@ -46,7 +46,7 @@
     width:auto;
 }
 
-h4 {font-size: 1.2em; color: #333; margin: 0 0 0.30em 0; font-weight:bold;}
+h4 {font-size: 1em; color: #333; margin: 0 0 0.30em 0; font-weight:bold;}
 }
 
 tr.highlighttop {
@@ -83,4 +83,36 @@ hr.suggestion {
 
 #suggestionslist a {
     text-decoration: none;
+}
+
+/* Voting results for suggestions */
+#votingresults {
+    width: 99%;
+}
+
+#votingresults th, #votingresults td {
+    vertical-align: top;
+    padding:1px 2px;
+}
+
+#votingresults th.description, #votingresults td.description {
+    width:80%;
+    text-align: left;
+}
+
+#votingresults th.results {
+    text-align: center;
+}
+
+#votingresults td.resultsleft {
+    text-align: left;
+}
+
+#votingresults td.resultsright {
+    text-align: right;
+}
+
+#votingresults th.rank, #votingresults td.rank {
+    width:15%;
+    text-align: center;
 }

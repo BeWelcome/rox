@@ -28,14 +28,14 @@ if (count($suggestion->options) == 0) {
         if (($option->state & $optionState) == $optionState)
         {
             echo '<tr class="' . (($count % 2) ? 'highlightmiddle' : 'blankmiddle') . '">';
-            if ($this->hasSuggestionRight && $optionState == SuggestionOption::IMPLENENTING) {
+            if ($this->hasSuggestionRight && $optionState == SuggestionOption::IMPLEMENTING) {
                 echo '<td>';
             } else {
                 echo '<td  colspan="3">';
             }
             echo '<h4>' . $this->purifier->purify($option->summary) . '</h4>';
             echo '</td>';
-            if ($this->hasSuggestionRight && $optionState == SuggestionOption::IMPLENENTING) {
+            if ($this->hasSuggestionRight && $optionState == SuggestionOption::IMPLEMENTING) {
                 echo '<td><a href="/suggestions/' . $suggestion->id . '/implemented/' . $option->id . '">Set Implemented</a></td>';
                 echo '<td></td>';
             }

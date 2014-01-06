@@ -51,19 +51,19 @@ class Suggestion extends RoxEntityBase
                     break;
                 case SuggestionsModel::SUGGESTIONS_RANKING:
                     $optionsFactory->sql_order = "`orderHint` DESC";
-                    $optionsWhere = " AND state = " . SuggestionOption::RANKING;
+                    $optionsWhere = " AND deleted IS NULL";
                     break;
                 case SuggestionsModel::SUGGESTIONS_REJECTED:
                     $optionsFactory->sql_order = "`orderHint` DESC";
                     $optionsWhere = " AND deleted IS NULL";
                     break;
                 case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
-                    $optionsFactory->sql_order = "`modified` DESC";
-                    $optionsWhere = " AND state = " . SuggestionOption::IMPLEMENTED;
+                    $optionsFactory->sql_order = "rank DESC, `modified` DESC";
+                    $optionsWhere = " AND deleted IS NULL";
                     break;
                 case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
-                    $optionsFactory->sql_order = "`modified` DESC";
-                    $optionsWhere = " AND state = " . SuggestionOption::IMPLENENTING;
+                    $optionsFactory->sql_order = "rank DESC, `modified` DESC";
+                    $optionsWhere = " AND deleted IS NULL";
                     break;
                 default:
                     $optionsFactory->sql_order = "`deleted` ASC, `id` ASC";

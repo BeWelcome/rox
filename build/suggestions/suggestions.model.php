@@ -819,7 +819,7 @@ class SuggestionsModel extends RoxModelBase
         $suggestion->state &= SuggestionsModel::SUGGESTIONS_DEV;
         $suggestion->state |= SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
 
-        $option->state = SuggestionOption::IMPLENENTING;
+        $option->state = SuggestionOption::IMPLEMENTING;
 
         $suggestion->update(true);
         $option->update();

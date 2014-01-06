@@ -529,7 +529,7 @@ class SuggestionsController extends RoxControllerBase
         $suggestion = new Suggestion($id);
         $option = new SuggestionOption($optionId);
         if (!$loggedInMember || !$suggestion || !$option
-            || $option->state  != SuggestionOption::IMPLENENTING) {
+            || $option->state  != SuggestionOption::IMPLEMENTING) {
             $this->redirectAbsolute($this->router->url('suggestions_devlist'));
         }
         $this->_model->moveOptionToImplemented($suggestion, $option);

@@ -11,7 +11,7 @@ $this->pager->render(); ?>
         if (is_string($suggestion) && ($suggestion == "Implementing"))
         {
             $suggestionState = SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
-            $optionState = SuggestionOption::IMPLENENTING;
+            $optionState = SuggestionOption::IMPLEMENTING;
             continue;
         }
         if (is_string($suggestion) && ($suggestion == "Implemented"))

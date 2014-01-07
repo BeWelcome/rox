@@ -20,7 +20,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 <div class="row floatbox">
                     <?php
                         if (!$this->isGroupMember() && $this->group->latestPost) {
-                            echo $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost));
+                            echo '<div class="small">' . $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost)) . '</div>';
                         }
 
                         $showNewTopicButton = false;
@@ -72,7 +72,8 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                                     <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                                 </span>
                             </a>
-                        </div><?php echo $words->flushBuffer(); ?><br />
+                            <?php echo $words->flushBuffer(); ?>
+                        </div>
                         <?php }
                     }
                 } // endif logged in member

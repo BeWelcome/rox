@@ -326,7 +326,7 @@ WHERE code="' . $this->dao->escape($code) . '"
      */    
     public function updateSingleTranslation($form){ 
         $eng_ins = '';
-        $eng_upd = '';
+        $eng_upd = 'IdMember = '.(int)$_SESSION["IdMember"].',';
         $desc = '';
         $changeInAll = '';
         if ($form['lang']=='en'){

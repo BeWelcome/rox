@@ -89,7 +89,7 @@ AND m.id = '{$this->dao->escape($userId)}'
 AND m.Status IN (" . Member::ACTIVE_ALL . ")
 ORDER BY trip_touched DESC
 ";
-error_log($query);
+
         return $this->bulkLookup($query);
     }
 

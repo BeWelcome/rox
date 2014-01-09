@@ -37,7 +37,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
         </div> <!-- c62l -->
         
         <div class="c38r">
-            <div class="subcr"><br />
+            <div class="subcr">
             
             <?php
                 
@@ -78,7 +78,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                     }
                 } // endif logged in member
                 ?>
-                <p>
+                
                 <h3><?= $words->get('GroupMembers'); ?></h3>
                 <div class="floatbox">
                     <?php $memberlist_widget->render() ?>

@@ -2,7 +2,7 @@
 $ranks = SuggestionsModel::getRanksAsArray($_SESSION['lang']);
 $states = SuggestionsModel::getStatesAsArray();
 $optionStates = SuggestionOption::getStatesAsArray($_SESSION['lang']);
-?><table id="votingresults">
+?><table id="results">
     <tr>
         <td><h2><?php echo htmlspecialchars($this->suggestion->summary, ENT_COMPAT, 'utf-8'); ?></h2></td>
         <td colspan="2" class="rank"><strong><?php if ($this->suggestion->voteCount) { echo $words->get('SuggestionsVotesGiven', $this->suggestion->voteCount); }?></strong></td>

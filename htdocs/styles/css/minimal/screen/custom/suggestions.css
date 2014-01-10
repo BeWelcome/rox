@@ -86,33 +86,33 @@ hr.suggestion {
 }
 
 /* Voting results for suggestions */
-#votingresults {
+#results {
     width: 99%;
 }
 
-#votingresults th, #votingresults td {
+#results th, #results td {
     vertical-align: top;
     padding:1px 2px;
 }
 
-#votingresults th.description, #votingresults td.description {
+#results th.description, #results td.description {
     width:80%;
     text-align: left;
 }
 
-#votingresults th.results {
+#results th.results {
     text-align: center;
 }
 
-#votingresults td.resultsleft {
+#results td.resultsleft {
     text-align: left;
 }
 
-#votingresults td.resultsright {
+#results td.resultsright {
     text-align: right;
 }
 
-#votingresults th.rank, #votingresults td.rank {
+#results th.rank, #results td.rank {
     width:15%;
     text-align: center;
 }

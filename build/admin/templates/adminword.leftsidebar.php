@@ -40,7 +40,7 @@ if ($this->nav['level']>=10){
   <li><a href="admin/word/createcode">Create Wordcode</a></li>
 <?php } ?>
   <li><a href="admin/word/stats">Show Stats</a></li>
-  <li><b><em><?= $this->nav['currentLanguage'] ?></em> :</b><br></li>
+  <li><b><em><?= $this->nav['currentLanguage'] ?></em> :</b><br /></li>
   <li>&nbsp;&nbsp;<a href="admin/word/list/all/
 <?php if ($this->nav['idLanguage']==0){
         echo 'long';

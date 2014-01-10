@@ -100,7 +100,9 @@ bwrox.selectScripts([
       "setlocation", 
       "blog", 
       "trip", 
-      "admin/massmail/enqueue", 
+      "admin/massmail/enqueue",
+      "admin/word/list/update",
+      "suggestions/rank",
       "activities/",
       "about/faq",
       "faq"]

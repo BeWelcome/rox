@@ -39,7 +39,8 @@ class TripController extends PAppController {
         
         // then include the col2-stylesheet
         $P->addStyles .= $vw->customStyles();
-        
+        $member = $this->_model->getLoggedInMember();
+
         switch($request[1]) {
         	case 'create':
                 if (!$member)
@@ -67,6 +68,7 @@ class TripController extends PAppController {
                         $trips = $this->_model->getTripsForLocation();
                     } else {
                         $error = 'To few arguments';
+                        $trip_data = array();
                         $trips = false;
                         //$tagsposts = false;
                     }
@@ -90,7 +92,6 @@ class TripController extends PAppController {
 				if (intval($request[1])) {
 					return $this->showTrip($request[1]);
 				} else {
-                    $member = $this->_model->getLoggedInMember();
                     if ($member) {
                         $this->showAllTrips();
                     } else {

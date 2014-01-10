@@ -42,7 +42,7 @@ if ($this->noScope){
 echo 'Your scope: '.$this->showScope();
 if (!$this->noScope){
 ?>
-<table class="awstatstable"><tr valign=top>
+<table class="awstatstable"><tr>
   <td><?= $this->nav['currentLanguage'] ?></td>
   <td>
 <?php
@@ -50,17 +50,16 @@ if (!$this->noScope){
 ?>
     % done</td>
 </tr></table>
-</p>
-<?php
+<p><?php
     if ($this->filter == 'short'){
 ?>
 <span id="awlistlimit">This list only contains items created at least 7 days ago and updated at most 6 months ago.</span>
 <a href="admin/word/list/<?= htmlspecialchars($this->type); ?>/long">Remove this limitation</a>
-<p>
+</p>
 <?php } ?>
-<table id="awlisttable">
-<form method="POST">
+<form method="post" action="" id="awform">
 <?= $callback_tag ?>
+<table id="awlisttable">
   <tr>
     <th class="awlistcode">Code & Description</th>
     <?php if ($this->nav['shortcode'] != 'en'){?><th class="awlisteng">English</th><?php } ?>
@@ -86,26 +85,28 @@ if (!$this->noScope){
         }
         if ($dat->missing){
             // missing translation
-            echo "<td bgcolor=white align=center>";
-            echo '<br /><a href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">ADD</a>';
+            echo '<td class="awlisttrmis">';
+            echo '<br /><a class="button" href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">ADD</a>';
         } else {
             if ($dat->update){
                 // update needed
                 echo '<td class="awlisttrupd">';
                 echo $this->purifier->purify($dat->Sentence);
                 echo '<fieldset><legend>update needed?</legend>';
-                echo '<input type="submit" value="Edit" name="Edit_'.(int)$dat->TrId.'">';
-                echo '<input type="submit" value="This is ok" name="ThisIsOk_'.(int)$dat->TrId.'">';
+                echo '<input type="submit" value="Edit" name="Edit_'.(int)$dat->TrId.'" />';
+                echo '<input type="submit" value="This is ok" onclick="" name="ThisIsOk_'.(int)$dat->TrId.'" />';
                 echo '</fieldset>';            
             } else {
                 // up-to-date translation
                 echo '<td class="awlisttrok">'.$this->purifier->purify($dat->Sentence);
-                echo '<p><a href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">edit</a></p>';  
+                echo '<p><a class="button" href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">edit</a></p>';
             }
             echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->TrUpdated)).' '.htmlspecialchars($dat->TrMember).'</p>';
         }
         echo '</td></tr>';
+        echo "\r\n";
     }
 ?>
-</form></table>
+</table>
+</form>
 <?php } ?>

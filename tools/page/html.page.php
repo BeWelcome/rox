@@ -263,7 +263,7 @@ class PageWithHTML extends AbstractBasePage
         {
             foreach($scriptfiles as $url)
             {
-                echo "<script type='text/javascript' src='{$url}'></script>";
+                echo "<script type='text/javascript' src='script/{$url}'></script>";
             }
         }
     }

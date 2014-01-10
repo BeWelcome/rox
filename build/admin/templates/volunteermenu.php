@@ -134,6 +134,12 @@ Boston, MA  02111-1307, USA.
                 'Manage donations, start/stop donation campaign'
             ),
             array(
+                'FAQ',
+                'abw/faq.php',
+                'Faq',
+                'Manage FAQs'
+            ),
+            array(
                 'SqlForVolunteers',
                 'bw/admin/adminquery.php',
                 'Queries for volunteers',

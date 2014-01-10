@@ -153,6 +153,7 @@ div#boardnewtopicbottom {
     width: 100%;
     text-align: right;
     margin-top: 5px;
+    float: right;
 }
 .forumsthreadtags {
     font-size: 11px;

@@ -11,7 +11,7 @@ $this->pager->render(); ?>
         if (is_string($suggestion) && ($suggestion == "Implementing"))
         {
             $suggestionState = SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
-            $optionState = SuggestionOption::IMPLENENTING;
+            $optionState = SuggestionOption::IMPLEMENTING;
             continue;
         }
         if (is_string($suggestion) && ($suggestion == "Implemented"))
@@ -33,15 +33,15 @@ $this->pager->render(); ?>
             case SuggestionsModel::SUGGESTIONS_VOTING:
                 include 'votelistitem.php';
                 break;
-            case SuggestionsModel::SUGGESTIONS_RANKING:
-                include 'ranklistitem.php';
-                break;
-                case SuggestionsModel::SUGGESTIONS_DUPLICATE:
+            case SuggestionsModel::SUGGESTIONS_DUPLICATE:
             case SuggestionsModel::SUGGESTIONS_REJECTED:
                 include 'rejectedlistitem.php';
                 break;
             case SuggestionsModel::SUGGESTIONS_DEV:
                 include 'devlistitem.php';
+                break;
+            case SuggestionsModel::SUGGESTIONS_CLOSED:
+                include 'resultlistitem.php';
                 break;
         }
         $count++;

@@ -10,6 +10,7 @@ class SuggestionsModel extends RoxModelBase
     const DURATION_ADDOPTIONS = 1728000; // 20 days = 20 * 24 * 60 * 60
     const DURATION_OPEN = 2592000; // DURATION_DISCUSSION + DURATION_ADDOPTIONS
     const DURATION_VOTING = 2592000; // 30 days = 30 * 24 * 60 * 60
+    const DURATION_VOTING_STARTS = 432000; // 5 days = 5 * 24 * 60 * 60
 
     const SUGGESTIONS_DUPLICATE = 0; // suggestion already existed and was there marked as duplicate by suggestion team
     const SUGGESTIONS_AWAIT_APPROVAL = 1; // wait for suggestion team to check
@@ -21,6 +22,7 @@ class SuggestionsModel extends RoxModelBase
     const SUGGESTIONS_IMPLEMENTING = 64; // Dev started implementing (no more ranking)
     const SUGGESTIONS_IMPLEMENTED = 128; // Dev finished implementation
     const SUGGESTIONS_DEV = 192;
+    const SUGGESTIONS_CLOSED = 255;
 
     private static $STATES = array(
                     self::SUGGESTIONS_DUPLICATE => 'SuggestionsDuplicate',
@@ -38,13 +40,13 @@ class SuggestionsModel extends RoxModelBase
         return self::$STATES;
     }
 
-    public static function getRanksAsArray() {
+    public static function getRanksAsArray($lang = 'en') {
         $words = new MOD_words();
         return array(
-            4 => $words->getBufferedInLang('SuggestionsExcellent', 'en'),
-            3 => $words->getBufferedInLang('SuggestionsGood', 'en'),
-            2 => $words->getBufferedInLang('SuggestionsFair', 'en'),
-            1 => $words->getBufferedInLang('SuggestionsPoor', 'en')
+            4 => $words->getBufferedInLang('SuggestionsExcellent', $lang),
+            3 => $words->getBufferedInLang('SuggestionsGood', $lang),
+            2 => $words->getBufferedInLang('SuggestionsFair', $lang),
+            1 => $words->getBufferedInLang('SuggestionsPoor', $lang)
         );
     }
 
@@ -170,7 +172,7 @@ class SuggestionsModel extends RoxModelBase
             ;
             $all = $temp->FindBySQLMany($query);
         } else {
-            $temp->sql_order = "RAND()";
+            $temp->sql_order = "created DESC, rank DESC";
             $all = $temp->FindByWhereMany("state = " . $state, $pageno * $items, $items);
         }
         return $all;
@@ -203,6 +205,10 @@ class SuggestionsModel extends RoxModelBase
             case self::SUGGESTIONS_AWAIT_APPROVAL:
                 $query = "state = " . $type;
                 $sql_order = "created ASC";
+                break;
+            case self::SUGGESTIONS_CLOSED:
+                $query = "state > " . self::SUGGESTIONS_VOTING . " OR state = 0";
+                $sql_order = "created DESC";
                 break;
             default:
                 $query = "state = " . $type;
@@ -765,7 +771,58 @@ class SuggestionsModel extends RoxModelBase
               vote = " . $vote . "
             ";
         $sql = $this->dao->query($query);
-        return true;
+
+        // return the new vote count
+        $query = "
+                SELECT
+                    SUM(vote) as sumVotes
+                FROM
+                    suggestions_option_ranks
+                WHERE
+                    optionid = " . $optionId . "
+                GROUP BY
+                    optionid
+                ";
+
+        $rankVotes = 0;
+        $sql = $this->dao->query($query);
+        if ($sql) {
+            $row = $sql->fetch(PDB::FETCH_OBJ);
+            if ($row) {
+                $rankVotes = $row->sumVotes;
+            }
+        }
+
+        return $rankVotes;
+    }
+
+    public function moveOptionToImplemented($suggestion, $option) {
+        $suggestion->state &= SuggestionsModel::SUGGESTIONS_DEV;
+        $suggestion->state |= SuggestionsModel::SUGGESTIONS_IMPLEMENTED;
+        $option->state = SuggestionOption::IMPLEMENTED;
+
+        // Check if there is any option left that is in state implementing. If not make sure the suggestion
+        // state changes to SuggestionsModel::SUGGESTIONS_IMPLEMENTED instead of SuggestionsModel::SUGGESTIONS_DEV
+        $implementing = false;
+        foreach($suggestions->options as $currentOption) {
+            $implementing |= ($currentOption->state == SuggestionOption::IMPLEMENTING);
+        }
+        if (!$implementing) {
+            $suggestion->state = SuggestionsModel::SUGGESTIONS_IMPLEMENTED;
+        }
+
+        $suggestion->update(true);
+        $option->update();
+    }
+
+    public function moveOptionToImplementing($suggestion, $option) {
+        $suggestion->state &= SuggestionsModel::SUGGESTIONS_DEV;
+        $suggestion->state |= SuggestionsModel::SUGGESTIONS_IMPLEMENTING;
+
+        $option->state = SuggestionOption::IMPLEMENTING;
+
+        $suggestion->update(true);
+        $option->update();
     }
 }
 

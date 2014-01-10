@@ -51,7 +51,7 @@ if ($this->noScope){
 
 
 ?>
-<form method="post" name="TrEdit">
+<form method="post" name="TrEdit" action="">
 <?= $callback_tag ?>
 <table class="admin" border="0">
 
@@ -59,15 +59,15 @@ if ($this->noScope){
     if (empty($this->formdata['EngCode'])){
 ?>
   <tr><td class="label"><label for="code">Code:</label> </td>
-  <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56"></tr>
+  <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="56" /></tr>
 <?php
     } else {
+echo $words->getformatted(($this->status),htmlspecialchars($this->formdata['EngCode']));
 ?>
-You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars($this->formdata['EngCode'])?>
-<input type=hidden name="Sentence" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>">
-<input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['EngSent']) ?>">
-<input type=hidden name="EngCode" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>">
-<input type=hidden name="lang" value="<?= htmlspecialchars($this->formdata['lang']) ?>">
+<input type=hidden name="Sentence" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>" />
+<input type=hidden name="EngSent" value="<?= htmlspecialchars($this->formdata['EngSent']) ?>" />
+<input type=hidden name="EngCode" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" />
+<input type=hidden name="lang" value="<?= htmlspecialchars($this->formdata['lang']) ?>" />
 <?php
     }
 
@@ -76,28 +76,28 @@ You are about to <?= $this->status ?> the English wordcode : <?=htmlspecialchars
         include 'adminword.codevarsform.php';
     } else {
 ?>
-    <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>">
-    <input type=hidden name=EngPrio value="<?=htmlspecialchars($this->formdata['EngPrio'])?>">
-    <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>">
+    <input type=hidden name=EngDesc value="<?=htmlspecialchars($this->formdata['EngDesc'])?>" />
+    <input type=hidden name=EngPrio value="<?=htmlspecialchars($this->formdata['EngPrio'])?>" />
+    <input type=hidden name=EngDnt value="<?=$this->formdata['EngDnt']?>" />
 <?php
     }
 
-    if ($this->status=='update'){
+    if ($this->status=='AdminWordUpdateCodeMsg'){
     // updating an existing wordcode
 ?>
 <tr><td>What kind of change is this?</td>
-<td><input type="radio" name="changetype" value="minor"> Minor change - old translations remain valid<br>
-<input type="radio" name="changetype" value="major"> Major change - old translations are invalidated
+<td><input type="radio" name="changetype" value="minor" /> Minor change - old translations remain valid<br />
+<input type="radio" name="changetype" value="major" /> Major change - old translations are invalidated
 </td></tr>    
 <?php
     } else {
-        echo '<input type=hidden name=changetype value=none>';
+        echo '<input type="hidden" name="changetype" value="none" />';
     }
 ?>
   <tr>
     <td colspan="2" align="center">
-      <input class="button" type="submit" id="submit3" name="DOACTION" value="Back">
-      <input class="button" type="submit" id="submit1" name="DOACTION" value="Submit">
+      <input class="button" type="submit" id="submit3" name="DOACTION" value="Back" />
+      <input class="button" type="submit" id="submit1" name="DOACTION" value="Submit" />
     </td>
   </tr>
 </table>

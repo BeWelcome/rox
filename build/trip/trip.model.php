@@ -89,7 +89,7 @@ AND m.id = '{$this->dao->escape($userId)}'
 AND m.Status IN (" . Member::ACTIVE_ALL . ")
 ORDER BY trip_touched DESC
 ";
-error_log($query);
+
         return $this->bulkLookup($query);
     }
 
@@ -128,7 +128,7 @@ SELECT trip.trip_id, trip_data.trip_name, trip_text, trip_descr, members.Usernam
     LEFT JOIN addresses ON addresses.IdMember = members.id
     LEFT JOIN geonames_cache ON addresses.IdCity = geonames_cache.geonameid
     LEFT JOIN trip_to_gallery ON trip_to_gallery.trip_id_foreign = trip.trip_id
-WHERE 1 = 1
+WHERE NOT members.Username IS NULL
 ";
 		if ($handle) {
 			$query .= " AND members.Username = '{$this->dao->escape($handle)}'";
@@ -411,10 +411,10 @@ SQL;
 			FROM `blog`
 			LEFT JOIN `blog_data` ON (`blog`.`blog_id` = `blog_data`.`blog_id`)
 			LEFT JOIN `geonames_cache` ON (`blog_data`.`blog_geonameid` = `geonames_cache`.`geonameid`)
-			WHERE `geonames_cache`.`name` LIKE '%s'
-            OR `blog_title` LIKE '%s'
-            OR `blog_text` LIKE '%s'",
-			$this->dao->escape($search),$this->dao->escape($search),$this->dao->escape($search));
+			WHERE `geonames_cache`.`name` LIKE '%1\$s'
+            OR `blog_title` LIKE '%1\$s'
+            OR `blog_text` LIKE '%1\$s'",
+			$this->dao->escape($search));
 
         $query .= "ORDER BY `trip_id_foreign` DESC";
 		$result = $this->dao->query($query);
@@ -432,16 +432,20 @@ SQL;
 
 	public function getTripsForLocation()
     {
-		$query = <<<SQL
+        // Make use of the previously filled $this->tripsid array
+		$query = "
 SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, members.Username AS handle, `geonames_cache`.`fk_countrycode`, `trip_to_gallery`.`gallery_id_foreign`
     FROM `trip`
     RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
-    LEFT JOIN members ON members.id = trip.IdMember
+    LEFT JOIN members ON members.id = trip.IdMember AND members.status IN (" . Member::ACTIVE_ALL .")
     LEFT JOIN addresses ON addresses.IdMember = members.id
     LEFT JOIN geonames_cache ON addresses.IdCity = geonames_cache.geonameid
     LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
+    WHERE `trip`.`trip_id` IN ('" . implode("', '", $this->tripids) . "')
     ORDER BY trip_touched DESC
-SQL;
+    LIMIT 0,100
+";
+
 		return $this->bulkLookup($query);
 	}
 

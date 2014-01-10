@@ -86,7 +86,7 @@ class SuggestionsBasePage extends PageWithActiveSkin
         $items[] = array('vote', 'suggestions/vote', $words->getSilent('SuggestionsVote'));
         $items[] = array('rank', 'suggestions/rank', $words->getSilent('SuggestionsRank'));
         $items[] = array('dev', 'suggestions/dev', $words->getSilent('SuggestionsDevelopment'));
-        $items[] = array('rejected', 'suggestions/rejected', $words->getSilent('SuggestionsRejected'));
+        $items[] = array('results', 'suggestions/results',  $words->getSilent('SuggestionsResults'));
         $items[] = array('team', 'suggestions/team', $words->getSilent('SuggestionsTeams'));
 
         return $items;
@@ -94,11 +94,12 @@ class SuggestionsBasePage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?7';
        $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?4';
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/fontawesome-ie7.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?7';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
+       // $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?7';
        return $stylesheets;
     }
 

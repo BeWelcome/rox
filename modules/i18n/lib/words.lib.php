@@ -1534,8 +1534,11 @@ class LookedUpWord {
 
     private function _trLinkURL()
     {
-        //return PVars::getObj('env')->baseuri.'bw/admin/adminwords_edit.php?lang='.$this->_trLinkLanguage().'&code='.$this->_code;
-        return PVars::getObj('env')->baseuri.'admin/word/edit/'.$this->_code.'/'.$this->_trLinkLanguage();
+        if($this->_tr_success == self::MISSING_WORD){
+            return PVars::getObj('env')->baseuri.'admin/word/createcode/'.$this->_code;
+        } else {
+            return PVars::getObj('env')->baseuri.'admin/word/edit/'.$this->_code.'/'.$this->_trLinkLanguage();
+        }
     }
 
     private function _trLinkLanguage()

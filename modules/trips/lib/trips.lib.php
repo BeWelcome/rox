@@ -128,7 +128,7 @@ class MOD_trips {
                 AND b.IdMember = members.id
                 AND bd.blog_geonameid = geonames.geonameid " .
                 $rectangle . "
-                AND bd.blog_start >= CURDATE()
+                AND bd.blog_start >= CURDATE() AND bd.blog_start <= DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
             ORDER BY
                 bd.blog_start ASC
             LIMIT

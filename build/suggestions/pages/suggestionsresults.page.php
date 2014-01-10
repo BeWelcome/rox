@@ -25,34 +25,17 @@ Boston, MA  02111-1307, USA.
  */
 
 /**
- * This page lists all Suggestions for which voting has taken place
+ * This page allows a member to vote on a given suggestion
  *
  * @package Apps
  * @subpackage Suggestions
  */
-class SuggestionsRankListPage extends SuggestionsBasePage
+class SuggestionsResultsPage extends SuggestionsBasePage
 {
-    protected $NoItems = 'SuggestionsNoRanks';
-
     protected function getSubmenuActiveItem()
     {
-        return 'rank';
+        return 'results';
     }
-
-    public function getLateLoadScriptfiles() {
-        $scriptFiles = parent::getLateLoadScriptfiles();
-        $scriptFiles[] = 'suggestionsrankingajax.js';
-        return $scriptFiles;
-    }
-
-    protected function getStylesheets()
-    {
-        $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
-        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
-        return $stylesheets;
-    }
-
 }
 
 

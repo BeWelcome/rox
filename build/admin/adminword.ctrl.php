@@ -97,8 +97,14 @@ class AdminWordController extends RoxControllerBase
     public function createCode(){
         $page = new AdminWordCreateCodePage();
         $page->nav = $this->getNavigationData();
+        if (isset($this->route_vars['wordcode'])){
+            $page->data = $this->model->getTranslationData('create','long','en',$this->route_vars['wordcode']);
+        }
+        if (!isset($page->data[0])) {
+            $page->data = array(array('EngCode' => $this->route_vars['wordcode']));
+        }
         $page->formdata = $this->getFormData(array('EngCode','Sentence','EngDesc','EngDnt',
-            'isarchived','EngPrio','lang'),$page->nav);
+            'isarchived','EngPrio','lang'),(array)$page->data[0]);
         return $page;
     }
 
@@ -135,7 +141,12 @@ class AdminWordController extends RoxControllerBase
         $page->nav = $this->getNavigationData();
         $page->data = $this->model->getTranslationData('edit',$page->nav['shortcode'],$_SESSION['form']['EngCode']);
         $wcexist = $this->model->wordcodeExist($_SESSION['form']['EngCode'],'en');
-        $page->status = ($wcexist->cnt == 0?'create':'update');
+        $page->status = ($wcexist->cnt == 0?'AdminWordCreateCodeMsg':'AdminWordUpdateCodeMsg');
+        
+        if ($this->model->getEngSentByCode($_SESSION['form']['EngCode']) == $_SESSION['form']['Sentence']){
+            $page->status = 'AdminWordUpdateCodeParsMsg';
+        }
+        
         $page->formdata = $this->getFormData(array('EngCode','EngSent','EngDesc','EngDnt',
             'Sentence','lang','isarchived','EngPrio'),$page->nav);
         return $page;
@@ -156,7 +167,7 @@ class AdminWordController extends RoxControllerBase
         switch($args->post['DOACTION']){
         case 'Submit' :
             list($id,$res) = $this->model->UpdateSingleTranslation($args->post);
-            if ($res == 2) {$this->words->MakeRevision($id,'words');}
+            if ($res != 1) {$this->words->MakeRevision($id,'words');}
             // get the flash notice/error
             list($type,$msg) = $this->getResultMsg($res,$args->post['EngCode'],$args->post['lang']);
             $this->$type($msg);
@@ -215,7 +226,6 @@ class AdminWordController extends RoxControllerBase
         return false;
     }
 
-
     /**
      * handles edit action of a single translation
      *
@@ -267,7 +277,12 @@ class AdminWordController extends RoxControllerBase
     public function editTranslationCallback(StdClass $args, ReadOnlyObject $action, ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend){
         if (!$nav = $this->baseCallback($args,$mem_redirect,'editTranslation')){return false;}
         if (isset($args->post['submitBtn'])){
-            if ($args->post['lang']=='en'){
+            if ($args->post['lang']=='en'
+                    && !($this->model->getEngSentByCode($_SESSION['form']['EngCode']) == $_SESSION['form']['Sentence']
+                            && $nav['level']<10)
+                ){
+                // dont do this if translation is equal to db and no admin rights
+                
                 // and continue with the second page
                 return $this->router->url('admin_word_code', array(), false);
             }
@@ -392,7 +407,11 @@ class AdminWordController extends RoxControllerBase
             unset ($_SESSION['form'][$field]);
         }
         if ($formdata['lang']==''){
-            $formdata['lang'] = $vars['shortcode'];
+            if (isset($vars['shortcode'])){
+                $formdata['lang'] = $vars['shortcode'];
+            } else {
+                $formdata['lang'] = 'en';
+            }
         }
         return $formdata;      
     }
@@ -409,15 +428,12 @@ class AdminWordController extends RoxControllerBase
     private function getResultMsg($res,$code,$shortcode){
     // prepare the result message
         switch($res){
-        case 0 :
-            $type = 'setFlashError';
-            $msg = 'Processing the translation has failed.';
-            break;
         case 1 :
             $type = 'setFlashNotice';
             $msg = 'Wordcode "'.$code.'" has been added succesfully. Language: '.$this->words->get('lang_'.$shortcode);
             MOD_log::get()->write('inserting '.$code.' in '.$shortcode, 'AdminWord');
             break;
+        case 0 :
         case 2 :
             $type = 'setFlashNotice';
             $msg = 'Wordcode "'.$code.'" has been updated succesfully. Language: '.$this->words->get('lang_'.$shortcode);
@@ -513,5 +529,19 @@ class AdminWordController extends RoxControllerBase
             return false;
         }
         return $this->getNavigationData();
+    }
+
+    public function noUpdateNeeded() {
+        $id = intval($this->route_vars['id']);
+        $callback = $this->args_vars->get['callback'];
+        if (!$id) {
+            $result = "false";
+        } else {
+            $result = $this->model->setNoUpdateNeeded($id);
+        }
+        header('Content-type: application/javascript, charset=utf-8');
+        $javascript = $callback . '( ' . json_encode($result) . ')';
+        echo $javascript . "\n";
+        exit;
     }
 }

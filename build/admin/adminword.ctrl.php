@@ -100,6 +100,9 @@ class AdminWordController extends RoxControllerBase
         if (isset($this->route_vars['wordcode'])){
             $page->data = $this->model->getTranslationData('create','long','en',$this->route_vars['wordcode']);
         }
+        if (!isset($page->data[0])) {
+            $page->data = array(array('EngCode' => $this->route_vars['wordcode']));
+        }
         $page->formdata = $this->getFormData(array('EngCode','Sentence','EngDesc','EngDnt',
             'isarchived','EngPrio','lang'),(array)$page->data[0]);
         return $page;

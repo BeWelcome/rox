@@ -135,7 +135,7 @@ Boston, MA  02111-1307, USA.
             ),
             array(
                 'FAQ',
-                'abw/faq.php',
+                'bw/faq.php',
                 'Faq',
                 'Manage FAQs'
             ),

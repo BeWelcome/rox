@@ -208,7 +208,15 @@ class ForumsController extends PAppController
             PPostHandler::clearVars($callbackId);
         }
         else if ($this->action == self::ACTION_VIEW_FORUM) {
-            $this->_view->showTopLevelRecentPosts();
+            $groupsCallback = false;
+            $member = $this->_model->getLoggedInMember();
+            if ($member && $member->Status != 'ChoiceInactive') {
+                $noForumNewTopicButton = false;
+            } else {
+                // Don't offer the new topic button to 'silent' members
+                $noForumNewTopicButton = true;
+            }
+            $this->_view->showTopLevelRecentPosts($groupsCallback, $noForumNewTopicButton);
         }
         else if ($this->action == self::ACTION_VIEW_GROUPS) {
             $callbackId = $this->mygroupsonlyProcess();
@@ -468,6 +476,7 @@ class ForumsController extends PAppController
     *
     **/
     public function showExternalGroupThreads($groupId, $showsticky = true, $showNewTopicButton = true) {
+
         $request = $this->request;
         $this->parseRequest();
         $this->_model->setGroupId($groupId);
@@ -523,11 +532,16 @@ class ForumsController extends PAppController
      */
     public function showExternalLatest($showGroups = false) {
         $request = $this->request;
+        $member = $this->_model->getLoggedInMember();
+        $showForumNewTopicButton = true;
+        if ($member->Status == 'ChoiceInactive') {
+            $showForumNewTopicButton = false;
+        }
         $this->parseRequest();
         $this->_model->setTopMode(Forums::CV_TOPMODE_FORUM);
         $this->_model->prepareForum(false);
         $this->_view->uri = 'forums/';
-        $this->_view->showExternal($showGroups);
+        $this->_view->showExternal($showGroups, false, $showForumNewTopicButton);
     }
 
     public function editProcess() {

@@ -59,7 +59,7 @@ class BlogCreatePage extends BlogBasePage
         $tripIt = $this->_model->getTripFromUserIt($member->id);
         $google_conf = PVars::getObj('config_google');
         $defaultVis = new StdClass;
-        $defaultVis->valueint = 1; // hack: TB settings are disabled as they reference app_user - default visibility is public
+        $defaultVis->valueint = 2; // hack: TB settings are disabled as they reference app_user - default visibility is public
         //$defaultVis = A PP_User::getSetting($member->id, 'APP_blog_defaultVis');
 
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {

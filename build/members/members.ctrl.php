@@ -75,7 +75,7 @@ class MembersController extends RoxControllerBase
                     // this profile is not public
                     $page = new MembersMustloginPage;
                 }
-                else if ($member->status == 'ChoiceInactive') {
+                else if ($member->status == 'ChoiceInactive' ) {
                     $page = new InactiveProfilePage();
                 } else {
                     // found a member with given id or username. juhu
@@ -97,7 +97,6 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
-
                             $page = new ProfilePage();
                             break;
                         default:
@@ -117,6 +116,13 @@ class MembersController extends RoxControllerBase
         $request = $args->request;
 
         $myself = true;
+
+        $adminMember = false;
+        $rights_self = $member_self->getOldRights();
+        if (in_array("SafetyTeam", array_keys($rights_self)) || in_array("Admin", array_keys($rights_self)))
+        {
+            $adminMember = true;
+        }
 
         switch (isset($request[0]) ? $request[0] : false) {
             case 'setlocation':
@@ -253,20 +259,9 @@ class MembersController extends RoxControllerBase
                 else
                 {
                     //check if member can browse that profile
-                    if (!$member->isBrowsable()){
-                        // found a member, but that member is not browsable (e.g. status "banned")
-                        $rights_self = $member_self->getOldRights();
-                        if (empty($rights_self)){
-                            // the profile is not shown because the request is coming from a member without admin rights
-                            $page = new MembersMembernotfoundPage;
-                            break;
-                        }
-                        else if (!in_array("SafetyTeam", array_keys($rights_self)) && !in_array("Admin", array_keys($rights_self)))
-                        {
-                            // the profile is not shown because the request is coming from a member without necessary admin rights
-                            $page = new MembersMembernotfoundPage;
-                            break;
-                        }
+                    if (!$member->isBrowsable() && !$adminMember){
+                        $page = new MembersMembernotfoundPage;
+                        break;
                     }
 
                     // found a member with given id or username
@@ -375,7 +370,8 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
-                            if (!$myself && $member->Status == 'ChoiceInactive') {
+                            $hideProfile = !$myself && $member->Status == 'ChoiceInactive' && !$adminMember;
+                            if ($hideProfile) {
                                 $page = new InactiveProfilePage();
                             } else {
                                 $page = new ProfilePage();
@@ -383,7 +379,8 @@ class MembersController extends RoxControllerBase
 
                             break;
                         default:
-                            if (!$myself && $member->Status == 'ChoiceInactive') {
+                            $hideProfile = !$myself && $member->Status == 'ChoiceInactive' && !$adminMember;
+                            if ($hideProfile) {
                                 $page = new InactiveProfilePage();
                             } else {
                                 $page = new ProfilePage();

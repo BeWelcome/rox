@@ -400,6 +400,9 @@ class SuggestionsController extends RoxControllerBase
         $page->votes = array();
         if ($loggedInMember) {
             $page->votes = $this->_model->getVotesForLoggedInMember($suggestion);
+            if ($loggedInMember->Status == 'ChoiceInactive') {
+                $this->setFlashNotice($this->getWords()->get('SuggestionsNotAllowedToVote'));
+            }
         } else {
             $this->setFlashNotice($this->getWords()->get('SuggestionsNotLoggedIn'));
         }

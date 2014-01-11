@@ -41,7 +41,9 @@ class SuggestionsBasePage extends PageWithActiveSkin
         if ($member) {
             $this->hasSuggestionRight = $this->checkSuggestionRight();
             $this->disableTinyMCE = $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
-            $this->viewOnly = false;
+            if ($member->Status != 'ChoiceInactive') {
+                $this->viewOnly = false;
+            }
         }
         $this->purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
     }

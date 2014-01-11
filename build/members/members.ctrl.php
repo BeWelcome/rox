@@ -44,8 +44,6 @@ class MembersController extends RoxControllerBase
             case 'myself':
             case 'my':
             case 'deleteprofile':
-            case 'setprofileinactive':
-            case 'setprofileactive':
                 // you are not supposed to open these pages when not logged in!
                 $page = new MembersMustloginPage;
                 break;
@@ -129,26 +127,6 @@ class MembersController extends RoxControllerBase
                 break;
             case 'deleteprofile':
                 $page = new DeleteProfilePage();
-                break;
-            case 'setprofileinactive':
-                if ($member_self->Status != 'Active') {
-                    $this->redirect('editmyprofile');
-                }
-                // set to inactive only allowed in intervals of two weeks time
-                $minimumTimeBetweenSwitches = 14 * 24 * 60 * 60;
-                $page = new SetProfileInactivePage();
-                $timeSinceLastSwitchToActive = time() - strtotime($member_self->LastSwitchToActive);
-                if ($timeSinceLastSwitchToActive < $minimumTimeBetweenSwitches) {
-                    $page->switchNotAllowed = true;
-                } else {
-                    $page->switchNotAllowed = false;
-                }
-                break;
-            case 'setprofileactive':
-                if ($member_self->Status != 'ChoiceInactive') {
-                    $this->redirect('editmyprofile');
-                }
-                $page = new SetProfileActivePage();
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
@@ -758,7 +736,7 @@ class MembersController extends RoxControllerBase
      * @access public
      * @return mixed
      */
-    public function setProfileInactive(StdClass $args, $memory, $stuff1, $stuff2)
+    public function setProfileInactiveCallback(StdClass $args, $memory, $stuff1, $stuff2)
     {
         if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
         {
@@ -772,6 +750,23 @@ class MembersController extends RoxControllerBase
         return 'editmyprofile';
     }
 
+    public function setActive() {
+        $member = $this->model->getLoggedInMember();
+        if (!$member) {
+            $page = new MembersMustloginPage;
+        } else {
+            if ($member->Status != 'ChoiceInactive') {
+                $this->redirectAbsolute('editmyprofile');
+            } else {
+                $page = new SetProfileActivePage();
+            }
+        }
+        $page->member = $member;
+        $page->myself = true;
+        $page->model = $this->model;
+        return $page;
+    }
+
     /**
      * callback to set profile inactive
      *
@@ -783,7 +778,7 @@ class MembersController extends RoxControllerBase
      * @access public
      * @return mixed
      */
-    public function setProfileActive(StdClass $args, $memory, $stuff1, $stuff2)
+    public function setProfileActiveCallback(StdClass $args, $memory, $stuff1, $stuff2)
     {
         if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
         {
@@ -795,6 +790,31 @@ class MembersController extends RoxControllerBase
         $_SESSION["MemberStatus"] = $_SESSION["Status"] = 'Active';
         $this->setFlashNotice($this->model->getWords()->get('ProfileSetActiveSuccess'));
         return 'editmyprofile';
+    }
+
+    public function setInactive() {
+        $member = $this->model->getLoggedInMember();
+        if (!$member) {
+            $page = new MembersMustloginPage;
+        } else {
+            if ($member->Status != 'Active') {
+                $this->redirectAbsolute('editmyprofile');
+            } else {
+                // set to inactive only allowed in intervals of two weeks time
+                $minimumTimeBetweenSwitches = 14 * 24 * 60 * 60;
+                $page = new SetProfileInactivePage();
+                $timeSinceLastSwitchToActive = time() - strtotime($member->LastSwitchToActive);
+                if ($timeSinceLastSwitchToActive < $minimumTimeBetweenSwitches) {
+                    $page->switchNotAllowed = true;
+                } else {
+                    $page->switchNotAllowed = false;
+                }
+            }
+        }
+        $page->member = $member;
+        $page->myself = true;
+        $page->model = $this->model;
+        return $page;
     }
 
     /**

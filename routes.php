@@ -70,6 +70,8 @@
 
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
+    $this->addRoute('members_profile_set_active', 'setprofileactive', 'MembersController', 'setactive');
+    $this->addRoute('members_profile_set_inactive', 'setprofileinactive', 'MembersController', 'setinactive');
     $this->addRoute('members_reset_password', 'resetpassword' , 'MembersController', 'resetPassword');
     $this->addRoute('members_reset_password_finish', 'resetpassword/finish' , 'MembersController', 'resetPasswordFinish');
 

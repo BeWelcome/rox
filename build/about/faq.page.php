@@ -6,7 +6,7 @@ class AboutFaqPage extends AboutBasePage
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/faq.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/faq.css?1';
         $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
         return $stylesheets;

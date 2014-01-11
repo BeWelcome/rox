@@ -10,7 +10,7 @@ if (empty($vars)) {
 }
 if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
     $textarea = 'suggestion-option-desc';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js?1';
 }
 
 // Show suggestion head (as on every page)

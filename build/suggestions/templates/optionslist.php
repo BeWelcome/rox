@@ -29,7 +29,7 @@ $currentOrder = (!$this->order) ? '' : '?order=' . $this->order;
                 . $option->id .'">Set Implementing</a></td>';
         }
         echo '<td rowspan="2" style="text-align: center; vertical-align: top;"><div style="text-align: center">';
-        if ($this->member) {
+        if ($this->member && $this->member->Status != 'ChoiceInactive') {
             if ($option->vote == +1) {
                 echo '<i class="icon-angle-up icon-3x" title="Already upvoted"></i><br />';
             } else {
@@ -42,7 +42,7 @@ $currentOrder = (!$this->order) ? '' : '?order=' . $this->order;
                 echo '<a name="downvote_' . $option->id . '" href="/suggestions/' . $option->id . '/downvote' . $currentOrder  . '"class="icon-chevron-down icon-3x" title="down vote"></a>';
             }
         } else {
-            echo '<span class="big"' . $option->rankVotes . '</span>';
+            echo '<span class="big">' . $option->rankVotes . '</span>';
         }
         echo '</div></td></tr>';
         echo '<tr class="' . $background = (($count % 2) ? 'highlightbottom' : 'blankbottom') . '">';

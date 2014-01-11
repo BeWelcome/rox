@@ -51,15 +51,19 @@ class Suggestion extends RoxEntityBase
                     break;
                 case SuggestionsModel::SUGGESTIONS_RANKING:
                     $optionsFactory->sql_order = "`orderHint` DESC";
-                    $optionsWhere = " AND state = " . SuggestionOption::RANKING;;
+                    $optionsWhere = " AND deleted IS NULL";
+                    break;
+                case SuggestionsModel::SUGGESTIONS_REJECTED:
+                    $optionsFactory->sql_order = "`orderHint` DESC";
+                    $optionsWhere = " AND deleted IS NULL";
                     break;
                 case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
-                    $optionsFactory->sql_order = "modified DESC";
-                    $optionsWhere = " AND state = " . SuggestionOption::IMPLEMENTED;
+                    $optionsFactory->sql_order = "rank DESC, `modified` DESC";
+                    $optionsWhere = " AND deleted IS NULL";
                     break;
                 case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
-                    $optionsFactory->sql_order = "modified DESC";
-                    $optionsWhere = " AND state = " . SuggestionOption::IMPLENENTING;
+                    $optionsFactory->sql_order = "rank DESC, `modified` DESC";
+                    $optionsWhere = " AND deleted IS NULL";
                     break;
                 default:
                     $optionsFactory->sql_order = "`deleted` ASC, `id` ASC";
@@ -108,7 +112,7 @@ class Suggestion extends RoxEntityBase
                 }
             }
 
-            // $this->ranks = $this->getRanks();
+            $this->ranks = $this->getRanks();
 
             // check if state should be updated
             $laststatechanged = strtotime($this->laststatechanged);
@@ -121,6 +125,20 @@ class Suggestion extends RoxEntityBase
                     }
                     break;
                 case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
+                    // post voting starts in five days?
+                    $elapsed = time() - $laststatechanged;
+                    if ( $elapsed > SuggestionsModel::DURATION_ADDOPTIONS - SuggestionsModel::DURATION_VOTING_STARTS) {
+                        $flags = $this->flags;
+                        if (!$flags || ($flags & 1) != 1) {
+                            $this->postVotingStartsMessage();
+                            if (!$flags) {
+                                $this->flags = 1;
+                            } else {
+                                $this->flags = $this->flags | 1;
+                            }
+                            $this->update();
+                        }
+                    }
                     // in addoptions for more than 20 days?
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_ADDOPTIONS) {
                         if (count($this->options)) {
@@ -179,6 +197,7 @@ class Suggestion extends RoxEntityBase
                     summary = '" . $this->dao->escape($this->summary) . "',
                     description = '" . $this->dao->escape($this->description) . "',
                     modified = NOW(),
+                    `flags` = " . $this->dao->escape($this->flags) . ",
                     modifiedby = " . $this->getLoggedInMember()->id . "
                 WHERE
                     id = " . $this->id;
@@ -219,10 +238,10 @@ class Suggestion extends RoxEntityBase
     private function notifyVotingStarted() {
         $entityFactory = new RoxEntityFactory();
         $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
-        $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/>' . $this->summary . '</a>\' has started.<br /><br />Please cast your vote.';
+        $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/">' . $this->summary . '</a>\' has started.<br /><br />Please cast your vote.';
         $suggestions = new SuggestionsModel();
         $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
-        $suggestions->setForumNotifications($postId, 'reply');
+        $suggestions->setForumNotification($postId, 'reply');
     }
 
     /**
@@ -344,7 +363,7 @@ class Suggestion extends RoxEntityBase
         $postText = '<p>Voting for \'' . $this->summary . '\' is no longer possible.</p>';
         $postText .= '<p>Number of votes given: ' . $this->voteCount . '</p>';
         $postText .= '<p>Detailed results:</p>';
-        $postText .= '<table id="votingresults"><tr><th class="description">Option</th><th class="results" colspan="2">Results</th><th class="rank">Median</th></tr>';
+        $postText .= '<table id="votingresults"><tr><th class="description">Solution</th><th class="results" colspan="2">Results</th><th class="rank">Median</th></tr>';
         foreach($orderedOptionIds as $order => $optionId) {
             $option = $entityFactory->create('SuggestionOption')->findById($optionId);
             $option->orderHint = $order;
@@ -369,7 +388,7 @@ class Suggestion extends RoxEntityBase
 
         // Check if any option got a higher rank than 'acceptable (2)'
         if(empty($goodOrExcellent)) {
-            $postText .= '<p>No option got a better median than \'' . $rankNames[2] . '\' therefore the suggestion is rejected.</p>';
+            $postText .= '<p>No solution got a better median than \'' . $rankNames[2] . '\' therefore the suggestion is rejected.</p>';
             $this->state = SuggestionsModel::SUGGESTIONS_REJECTED;
         } else {
             // Remove options that are exclusive with the winning option(s)
@@ -401,15 +420,15 @@ class Suggestion extends RoxEntityBase
                 $option = reset($goodOrExcellent);
                 $option->state = SuggestionOption::RANKING;
                 $option->update();
-                $postText .= '<p>The option \'' . $option->summary . '\' won the vote and can be ranked now.</p>';
+                $postText .= '<p>The solution \'' . $option->summary . '\' won the vote and can be ranked now.</p>';
             } else {
                 foreach($goodOrExcellent as $option) {
-                    $postText .= '<p>The option \'' . $option->summary . '\' reached a median above \'' .
+                    $postText .= '<p>The solution \'' . $option->summary . '\' reached a median above \'' .
                         $rankNames[2] . '\' and can be ranked now.</p>';
                     $option->state = SuggestionOption::RANKING;;
                     $option->update();
                 }
-                $postText .= '<p>All options not mentioned above (if any) were conflicting with an option with a higher median.</p>';
+                $postText .= '<p>All solutions not mentioned above (if any) were conflicting with a solution with a higher median.</p>';
             }
         }
 
@@ -421,5 +440,15 @@ class Suggestion extends RoxEntityBase
         }
 
         return true;
+    }
+
+    private function postVotingStartsMessage() {
+        $entityFactory = new RoxEntityFactory();
+        $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
+        $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/">' . $this->summary . '</a>\' will start on '
+            . date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_ADDOPTIONS) . '.<br /><br />Please have a look at the solutions and add your voice.';
+        $suggestions = new SuggestionsModel();
+        $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
+        $suggestions->setForumNotification($postId, 'reply');
     }
 }

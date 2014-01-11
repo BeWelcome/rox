@@ -1,7 +1,7 @@
 <?php
 /**
  * Gallery model
- * 
+ *
  * @package gallery
  * @author The myTravelbook Team <http://www.sourceforge.net/projects/mytravelbook>
  * @copyright Copyright (c) 2005-2006, myTravelbook Team
@@ -129,7 +129,7 @@ class OnlineModel extends PAppModel {
 	 // The GetGuests function will return an array with guest online
 	 // Not a only people with righ ShowAdctivity or Admin will be able to see them
     public function GetGuests() {
-	 	global $_SYSHCVOL ; 
+	 	global $_SYSHCVOL ;
         $Rights = MOD_right::get();
 	 	$TGuest=array() ;
 		// Case of members who can see additional information about members last activity
@@ -146,10 +146,10 @@ class OnlineModel extends PAppModel {
 	 	return($TGuest) ;
 	} // end of GetGuests
 
-	 
+
 	 // The GetTotMembers function will return the total number of members who can potentially fully use BW
     public function GetTotMembers() {
-		$query = "select SQL_CACHE count(*) as cnt from members where (Status='Active' or Status='ChoiceInActive' or Status='OutOfRemind')";
+		$query = "select SQL_CACHE count(*) as cnt from members where Status IN (" . self::ACTIVE . ")";
 		$s = $this->dao->query($query);
 		if (!$s) {
 			throw new PException('Failed to get Tot Members!');

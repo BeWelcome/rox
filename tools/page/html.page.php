@@ -8,7 +8,7 @@ class PageWithHTML extends AbstractBasePage
     // Add or increment query string if a JS file changes to make sure browsers
     // reload the file (e.g. "?1" -> "?2")
     private $_early_scriptfiles = array(
-        'script/main.js?6',
+        'script/main.js?7',
         'script/common.js?1',
     );
 
@@ -263,7 +263,7 @@ class PageWithHTML extends AbstractBasePage
         {
             foreach($scriptfiles as $url)
             {
-                echo "<script type='text/javascript' src='{$url}'></script>";
+                echo "<script type='text/javascript' src='script/{$url}'></script>";
             }
         }
     }

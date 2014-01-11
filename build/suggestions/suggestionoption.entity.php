@@ -7,8 +7,17 @@
 class SuggestionOption extends RoxEntityBase
 {
     const RANKING = 1;
-    const IMPLENENTING = 2;
+    const IMPLEMENTING = 2;
     const IMPLEMENTED = 4;
+
+    public static function getStatesAsArray($lang = 'en') {
+        $words = new MOD_words();
+        return array(
+            self::RANKING => $words->getBufferedInLang('SuggestionsOptionRanking', $lang),
+            self::IMPLEMENTING => $words->getBufferedInLang('SuggestionsOptionImplementing', $lang),
+            self::IMPLEMENTED => $words->getBufferedInLang('SuggestionsOptionImplemented', $lang)
+        );
+    }
 
     protected $_table_name = 'suggestions_options';
 
@@ -35,7 +44,7 @@ class SuggestionOption extends RoxEntityBase
         {
             $entityFactory = new RoxEntityFactory();
             $this->creator = $entityFactory->create('Member', $this->createdBy);
-                    if ($this->modifiedBy) {
+            if ($this->modifiedBy) {
                 $this->modifier = $entityFactory->create('Member', $this->modifiedBy);
             }
             if ($this->deletedBy) {
@@ -50,7 +59,8 @@ class SuggestionOption extends RoxEntityBase
             } else {
                 $this->mutuallyExclusive = 'All';
             }
-            // fetch votes for this option
+
+            // fetch rank votes for this option
             $query = "
                 SELECT
                     SUM(vote) as sumVotes

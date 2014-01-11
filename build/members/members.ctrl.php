@@ -75,8 +75,9 @@ class MembersController extends RoxControllerBase
                     // this profile is not public
                     $page = new MembersMustloginPage;
                 }
-                else
-                {
+                else if ($member->status == 'ChoiceInactive') {
+                    $page = new InactiveProfilePage();
+                } else {
                     // found a member with given id or username. juhu
                     switch (isset($request[2]) ? $request[2] : false)
                     {
@@ -96,6 +97,7 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
+
                             $page = new ProfilePage();
                             break;
                         default:
@@ -252,7 +254,7 @@ class MembersController extends RoxControllerBase
                 {
                     //check if member can browse that profile
                     if (!$member->isBrowsable()){
-                        // found a member, but that member is not browsable(e.g. status "banned")
+                        // found a member, but that member is not browsable (e.g. status "banned")
                         $rights_self = $member_self->getOldRights();
                         if (empty($rights_self)){
                             // the profile is not shown because the request is coming from a member without admin rights
@@ -373,11 +375,20 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
-                            $page = new ProfilePage();
+                            if (!$myself && $member->Status == 'ChoiceInactive') {
+                                $page = new InactiveProfilePage();
+                            } else {
+                                $page = new ProfilePage();
+                            }
+
                             break;
                         default:
-                            $page = new ProfilePage();
-                            $this->model->set_profile_language($request[2]);
+                            if (!$myself && $member->Status == 'ChoiceInactive') {
+                                $page = new InactiveProfilePage();
+                            } else {
+                                $page = new ProfilePage();
+                                $this->model->set_profile_language($request[2]);
+                            }
                             break;
                     }
                 }
@@ -392,6 +403,11 @@ class MembersController extends RoxControllerBase
         }
         $page->loggedInMember = $this->model->getLoggedInMember();
         $page->model = $this->model;
+        if ($page->member->Status == 'PassedAway') {
+            $page->passedAway = true;
+        } else {
+            $page->passedAway = false;
+        }
         return $page;
     }
 
@@ -519,6 +535,8 @@ class MembersController extends RoxControllerBase
         if (count($errors) > 0) {
             // show form again
             $vars['errors'] = $errors;
+            // if the form gets posted it means that it is allowed to edit the comment
+            $vars['AllowEdit'] = 1;
             $mem_redirect->post = $vars;
             return false;
         }
@@ -681,14 +699,7 @@ class MembersController extends RoxControllerBase
             return false;
         }
         $feedback = !empty($args->post['explanation']) ? $args->post['explanation'] : '';
-        if (isset($args->post['Complete_retire']))
-        {
-            $member->removeProfile();
-        }
-        else
-        {
-            $member->inactivateProfile();
-        }
+        $member->removeProfile();
         $this->model->sendRetiringFeedback($feedback);
         $member->logOut();
         return $this->router->url('members_profile_retired', array(), false);
@@ -707,7 +718,99 @@ class MembersController extends RoxControllerBase
         return $page;
     }
 
-     /**
+    /**
+     * callback to set profile inactive
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff          $stuff1
+     * @param stuff          $stuff2
+     *
+     * @access public
+     * @return mixed
+     */
+    public function setProfileInactiveCallback(StdClass $args, $memory, $stuff1, $stuff2)
+    {
+        if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
+        {
+            return false;
+        }
+        // Update database
+        $member->inactivateProfile();
+        // Update session
+        $_SESSION["MemberStatus"] = $_SESSION["Status"] = 'ChoiceInactive';
+        $this->setFlashNotice($this->model->getWords()->get('ProfileSetInactiveSuccess'));
+        return 'editmyprofile';
+    }
+
+    public function setActive() {
+        $member = $this->model->getLoggedInMember();
+        if (!$member) {
+            $page = new MembersMustloginPage;
+        } else {
+            if ($member->Status != 'ChoiceInactive') {
+                $this->redirectAbsolute('editmyprofile');
+            } else {
+                $page = new SetProfileActivePage();
+            }
+        }
+        $page->member = $member;
+        $page->myself = true;
+        $page->model = $this->model;
+        return $page;
+    }
+
+    /**
+     * callback to set profile inactive
+     *
+     * @param stdClass       $args   - all sorts of variables
+     * @param ReadOnlyObject $memory - memory related stuff
+     * @param stuff          $stuff1
+     * @param stuff          $stuff2
+     *
+     * @access public
+     * @return mixed
+     */
+    public function setProfileActiveCallback(StdClass $args, $memory, $stuff1, $stuff2)
+    {
+        if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
+        {
+            return false;
+        }
+        // Update database
+        $member->activateProfile();
+        // Update session
+        $_SESSION["MemberStatus"] = $_SESSION["Status"] = 'Active';
+        $this->setFlashNotice($this->model->getWords()->get('ProfileSetActiveSuccess'));
+        return 'editmyprofile';
+    }
+
+    public function setInactive() {
+        $member = $this->model->getLoggedInMember();
+        if (!$member) {
+            $page = new MembersMustloginPage;
+        } else {
+            if ($member->Status != 'Active') {
+                $this->redirectAbsolute('editmyprofile');
+            } else {
+                // set to inactive only allowed in intervals of two weeks time
+                $minimumTimeBetweenSwitches = 14 * 24 * 60 * 60;
+                $page = new SetProfileInactivePage();
+                $timeSinceLastSwitchToActive = time() - strtotime($member->LastSwitchToActive);
+                if ($timeSinceLastSwitchToActive < $minimumTimeBetweenSwitches) {
+                    $page->switchNotAllowed = true;
+                } else {
+                    $page->switchNotAllowed = false;
+                }
+            }
+        }
+        $page->member = $member;
+        $page->myself = true;
+        $page->model = $this->model;
+        return $page;
+    }
+
+    /**
      * callback for password reset
      *
      * @param stdClass       $args   - all sorts of variables

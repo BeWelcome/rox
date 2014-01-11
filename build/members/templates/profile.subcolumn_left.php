@@ -1,5 +1,4 @@
 
-
 <div id="profilesummary" class="floatbox box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
@@ -150,8 +149,7 @@ HTML;
             endif;
 ?>
 
-
-<?php if ($this->model->getLoggedInMember()) : ?>
+<?php if ($this->model->getLoggedInMember() && !$this->passedAway) : ?>
 <div class="address box" >
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">

@@ -51,7 +51,7 @@ Boston, MA  02111-1307, USA.
         array(
             array(
                 'Words',
-                'bw/admin/adminwords.php',
+                'admin/word',
                 'AdminWord',
                 'Words management'
             ),
@@ -132,6 +132,12 @@ Boston, MA  02111-1307, USA.
                 'admin/treasurer',
                 'Treasurer',
                 'Manage donations, start/stop donation campaign'
+            ),
+            array(
+                'FAQ',
+                'abw/faq.php',
+                'Faq',
+                'Manage FAQs'
             ),
             array(
                 'SqlForVolunteers',

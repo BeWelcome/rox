@@ -22,7 +22,7 @@ class DonateModel extends RoxModelBase
         // Calculate donations received for current year
         $result = $this->dao->query("
             SELECT
-                SUM(amount) AS YearDonation,
+                COALESCE(SUM(amount),0) AS YearDonation,
                 year(NOW()) AS yearnow,
                 month(NOW()) AS month,
                 quarter(NOW()) AS quarter
@@ -255,7 +255,7 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
                    $payment_currency="$" ;
                 }
                 else if ($keyarray['mc_currency']=="EUR") {
-                   $payment_currency="€" ;
+                   $payment_currency="ï¿½" ;
                 }
                 else {
                    $payment_currency=$keyarray['mc_currency'] ;

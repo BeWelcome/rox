@@ -104,8 +104,11 @@ class LoginController extends RoxControllerBase
                 if (!$this->model->setBWMemberAsLoggedIn($bw_member)) {
                     // something in the status was not ok.
                     switch ($bw_member->Status) {
-                    	case 'SuspendedBeta':
+                        case 'SuspendedBeta':
                             echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorSuspended") .'</div>';
+                            break;
+                        case 'PassedAway':
+                            echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorPassedAway") .'</div>';
                             break;
                     	case 'MailToConfirm':
                     	    $url = PVars::getObj('env')->baseuri . 'signup/resendmail/' . htmlspecialchars($bw_member->Username);
@@ -116,7 +119,7 @@ class LoginController extends RoxControllerBase
                     	    echo '<div id="loginmessage" class="false">'. $this->getWords()->get("LoginErrorWrongStatus", $bw_member->Status) .'</div>';
                     }
                 } else {
-                    if ($bw_member->Status != 'Active')
+                    if ($bw_member->Status != 'Active' && $bw_member->Status != 'ChoiceInactive')
                     {
                     echo '<div id="loginmessage_wrapper">';
                     echo '<div id="loginmessage">login successful</div>';

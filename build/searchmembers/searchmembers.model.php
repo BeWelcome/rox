@@ -474,7 +474,7 @@ WHERE
                 AND
                 members.id = comments.IdFromMember
                 AND
-                members.status IN ('Active', 'ChoiceInactive')
+                members.status IN ('Active')
             "
             ;
             $qryData = $this->dao->query($sData);
@@ -638,7 +638,7 @@ WHERE
     */
     private function generateMemberTypeCond(&$vars) {
         if ($this->GetParam($vars, 'IncludeInactive', '0') == '1') {
-            return "(members.Status in ('Pending', 'Active', 'ChoiceInActive', 'OutOfRemind'))";
+            return "(members.Status in ('Pending', 'Active', 'OutOfRemind'))";
         }
         // default is active members only
         return "(members.Status = 'Active' AND members.Accomodation != 0)";

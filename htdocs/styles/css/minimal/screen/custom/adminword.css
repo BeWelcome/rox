@@ -1,0 +1,100 @@
+@media all
+{
+textarea {margin-bottom: 1em;}
+
+.awstatstable {
+    height:175px;
+}
+
+.awstatsrow {
+    vertical-align:top;
+}
+
+.awstatsinscope {
+    background-color: #ffaf5f;
+}
+
+.awstatscol {
+    vertical-align:top;
+    border-left:1px solid grey;
+}
+
+
+#awlistlimit {
+    font-weight:bold;
+}
+
+#awform {
+    overflow: visible;
+    width:860px;
+}
+#awlisttable {
+    width:100%;
+}
+
+#awlisttable td, #awlisttable th {
+    padding:3px;
+    border-bottom:1px dashed grey;
+    width: 32%;
+}
+
+.awlistcode {
+    background-color:#dfa;
+    vertical-align: top;
+}
+.awlisteng {
+    background-color:#dff;
+    vertical-align: top;
+}
+.awlisttrok {
+    background-color:#ffc;
+    vertical-align: top;
+}
+.awlisttrmis {
+    background-color:#fff;
+    text-align:center;
+    vertical-align: top;
+}
+.awlisttrupd {
+    background-color:#fdf;
+    vertical-align: top;
+}
+
+.awlisttrupd form {
+text-align:center;
+}
+
+.awlisttrupd fieldset {
+vertical-align:middle;
+padding:0px;
+text-align:center;
+border-color:red;
+}
+
+.awlisttrupd fieldset legend {
+color:red;
+font-size:1.2em;
+margin-left:2em;
+}
+
+.awlisttrupd input[type=submit] {
+margin:0 0.5em 0.5em 0.5em;
+}
+
+.awlistupdate {
+    color:blue;
+    font-size:11px;
+}
+
+.smallXtext {
+    color:gray;
+    font-size:11px;
+}
+
+.awdntwarning {
+background-color: #ff3;
+font-weight:bold;
+color: #f33;
+font-size:14px;
+}
+}

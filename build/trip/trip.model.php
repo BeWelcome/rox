@@ -14,7 +14,7 @@ class Trip extends RoxModelBase
     {
         parent::__construct();
     }
-    
+
     public function assignGallery($tripId, $galleryId)
     {
     	$query = '
@@ -41,7 +41,7 @@ INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
     {
         return $this->createEntity('Geo')->findById($geonameid);
     }
-    
+
     public function createTrip($vars, Member $user)
     {
         if (!is_array($vars) || !$user->isLoaded())
@@ -70,25 +70,29 @@ INSERT INTO `trip_to_gallery` (`trip_id_foreign`, `gallery_id_foreign`) VALUES
         }
         return $tripId;
     }
-    
+
     /**
      * Intended to replace old functions:
      * tripropdown($userID)
      */
     public function getTripsForUser($userId)
     {
-        $query = <<<SQL
-SELECT 
+        $query = "
+SELECT
     t.trip_id,
-    d.trip_name 
+    d.trip_name
 FROM trip AS t
 LEFT JOIN trip_data AS d ON d.trip_id = t.trip_id
-WHERE t.IdMember = '{$this->dao->escape($userId)}'
+JOIN members AS m
+ON t.IdMember = m.id
+AND m.id = '{$this->dao->escape($userId)}'
+AND m.Status IN (" . Member::ACTIVE_ALL . ")
 ORDER BY trip_touched DESC
-SQL;
+";
+
         return $this->bulkLookup($query);
     }
-    
+
     public function insertTrip($name, $description, $userId)
     {
         if (!intval($userId))
@@ -109,26 +113,48 @@ INSERT INTO `trip_data` (`trip_id`, `trip_name`, `trip_text`, `trip_descr`) VALU
         if (!$tripId = $s->insertId())
           return false;
         $s->setCursor(1);
-        $s->execute(array(0=>$tripId, 1=>$name, 2=>$description)); 
+        $s->execute(array(0=>$tripId, 1=>$name, 2=>$description));
         return $tripId;
     }
-    
+
     private $tripids;
 	public function getTrips($handle = false)
     {
-		$query = <<<SQL
-SELECT trip.trip_id, trip_data.trip_name, trip_text, trip_descr, members.Username AS handle, geonames_cache.fk_countrycode, trip_to_gallery.gallery_id_foreign 
+		$query = "
+SELECT trip.trip_id, trip_data.trip_name, trip_text, trip_descr, members.Username AS handle, geonames_cache.fk_countrycode, trip_to_gallery.gallery_id_foreign
     FROM trip
     RIGHT JOIN trip_data ON trip.trip_id = trip_data.trip_id
-    LEFT JOIN members ON members.id = trip.IdMember
+    LEFT JOIN members ON members.id = trip.IdMember AND members.Status IN (" . Member::ACTIVE_ALL . ")
     LEFT JOIN addresses ON addresses.IdMember = members.id
     LEFT JOIN geonames_cache ON addresses.IdCity = geonames_cache.geonameid
     LEFT JOIN trip_to_gallery ON trip_to_gallery.trip_id_foreign = trip.trip_id
-SQL;
+WHERE NOT members.Username IS NULL
+";
 		if ($handle) {
-			$query .= "    WHERE members.Username = '{$this->dao->escape($handle)}'";
+			$query .= " AND members.Username = '{$this->dao->escape($handle)}'";
 		}
-        $query .= " ORDER BY `trip_touched` DESC";
+		$query .= "
+            AND (
+            (
+                `trip_options` & '.(int)Blog::FLAG_VIEW_PRIVATE.' = 0
+                AND `trip_options` & '.(int)Blog::FLAG_VIEW_PROTECTED.' = 0
+            )
+		    ";
+		$member = $this->getLoggedInMember();
+		if ($member) {
+		    $query .= '
+	        		OR (`trip_options` & '.(int)Blog::FLAG_VIEW_PRIVATE.' AND trip.IdMember = '.(int)$member->id.')
+	        		OR (`trip_options` & '.(int)Blog::FLAG_VIEW_PROTECTED.' AND trip.IdMember = '.(int)$member->id.')
+                    ';
+		    /* pending deletion
+		     OR (
+		                     `flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
+		                     AND
+		                     (SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = blog.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
+		     )';
+		    */
+		}
+        $query .= ") ORDER BY `trip_touched` DESC";
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve trips.');
@@ -147,21 +173,21 @@ SQL;
 		if (!$this->tripids) {
             return array();
 		}
-		
-		$query = sprintf("SELECT `blog`.`trip_id_foreign`, `blog`.`blog_id`, 
-				`blog_title`, `blog_text`, DATE(`blog_start`) AS `blog_start`, `blog_geonameid`, 
+
+		$query = sprintf("SELECT `blog`.`trip_id_foreign`, `blog`.`blog_id`,
+				`blog_title`, `blog_text`, DATE(`blog_start`) AS `blog_start`, `blog_geonameid`,
 				`geonames_cache`.`name`, `geonames_cache`.`latitude`, `geonames_cache`.`longitude`
 			FROM `blog`
 			LEFT JOIN `blog_data` ON (`blog`.`blog_id` = `blog_data`.`blog_id`)
 			LEFT JOIN `geonames_cache` ON (`blog_data`.`blog_geonameid` = `geonames_cache`.`geonameid`)
 			WHERE `blog`.`trip_id_foreign` IN (%s)",
 			implode(',', $this->tripids));
-			
+
 			// Copied from blog.model
-			$query .= "AND 
+			$query .= "AND
 				(
         			(
-			            `flags` & ".(int)Blog::FLAG_VIEW_PRIVATE." = 0 
+			            `flags` & ".(int)Blog::FLAG_VIEW_PRIVATE." = 0
 			            AND `flags` & ".(int)Blog::FLAG_VIEW_PROTECTED." = 0
         			)
 	        ";
@@ -172,14 +198,14 @@ SQL;
                     ';
                     /* pending deletion
 	        		OR (
-	            		`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.' 
+	            		`flags` & '.(int)Blog::FLAG_VIEW_PROTECTED.'
 	            		AND
 	            		(SELECT COUNT(*) FROM `user_friends` WHERE `user_id_foreign` = blog.`user_id_foreign` AND `user_id_foreign_friend` = '.(int)$User->getId().')
 	        		)';
                     */
 	        }
         	$query .= ") ORDER BY `blog_start` ASC, `name` ASC";
-			
+
 		$result = $this->dao->query($query);
 		if (!$result) {
 			throw new PException('Could not retrieve tripdata.');
@@ -190,7 +216,7 @@ SQL;
 		}
 		return $trip_data;
 	}
-	
+
 	public function getTrip($tripid)
     {
 		$this->tripids = array($tripid);
@@ -209,13 +235,13 @@ SQL;
 		}
 		return $result->fetch(PDB::FETCH_OBJ);
 	}
-	
+
 	public function reorderTripItems($items)
     {
 		if (!$this->checkTripItemOwnerShip($items)) {
 			return;
 		}
-		
+
 		$this->dao->query("START TRANSACTION");
 		foreach ($items as $position => $item)
         {
@@ -224,7 +250,7 @@ SQL;
 		}
 		$this->dao->query("COMMIT");
 	}
-	
+
 	private function checkTripItemOwnerShip($items)
     {
         if (!$member = $this->getLoggedInMember() || !is_array($items))
@@ -248,7 +274,7 @@ SQL;
         {
 			$entries[$row->blog_id] = $row->IdMember;
 		}
-		
+
 		foreach ($entries as $entry)
         {
 			if ($entry != $member->id)
@@ -258,7 +284,7 @@ SQL;
 		}
 		return true;
 	}
-	
+
     // todo: refactor call to getloggedinmember
     // todo: refactor call to getVars
 	public function prepareEditData($tripId, $callbackId)
@@ -269,7 +295,7 @@ SQL;
         $trip_id = $this->dao->escape($tripId);
 
 		$query = <<<SQL
-SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, IdMember AS `user_id_foreign`, IdMember, `trip_to_gallery`.`gallery_id_foreign` 
+SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, IdMember AS `user_id_foreign`, IdMember, `trip_to_gallery`.`gallery_id_foreign`
     FROM `trip`
     RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
     LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
@@ -280,7 +306,7 @@ SQL;
 			throw new PException('Could not retrieve trip (Access Error?).');
 		}
 		$trip = $result->fetch(PDB::FETCH_OBJ);
-		
+
 		$vars =& PPostHandler::getVars($callbackId);
 		$vars['trip_id'] = $trip->trip_id;
 		$vars['n'] = $trip->trip_name;
@@ -295,7 +321,7 @@ SQL;
 		$vars =& PPostHandler::getVars($callbackId);
 
 		if ($this->checkTripOwnership($vars['trip_id'])) {
-		
+
 			// Update the Tripdata
 	        $query = <<<SQL
 UPDATE `trip_data`
@@ -307,7 +333,7 @@ WHERE `trip_id` = '{$this->dao->escape($vars['trip_id'])}'
 SQL;
 
 			$this->dao->query($query);
-            
+
             if (isset($vars['cg']) && $vars['cg']) {
                 $Gallery = new GalleryModel;
                 $galleryId = $Gallery->createGallery($vars['n']);
@@ -319,21 +345,21 @@ SQL;
             } elseif (isset($vars['gallery']) && $vars['gallery']) {
                 $this->assignGallery($vars['trip_id'], $vars['gallery']);
             }
-			
+
 			return PVars::getObj('env')->baseuri.'trip/'.$vars['trip_id'];
 		}
 	}
-	
+
     // todo: refactor call to getloggedinmember
 	private function checkTripOwnership($tripid)
     {
 		// Check the ownership of the trip - better safe than sorry
-        
+
 		if (!$member = $this->getLoggedInMember())
         {
 			return false;
 		}
-	
+
 		$query = <<<SQL
 SELECT trip_id
 FROM trip
@@ -354,42 +380,42 @@ SQL;
 		$vars =& PPostHandler::getVars($callbackId);
 		if ($this->checkTripOwnership($vars['trip_id'])) {
 			$this->dao->query('START TRANSACTION');
-			
+
 			// Update all blog entries and remove the trip-foreign key
 	        $query = sprintf("UPDATE `blog` SET `trip_id_foreign` = NULL WHERE `trip_id_foreign` = '%d'",
 				$vars['trip_id']);
 			$this->dao->query($query);
-			
+
 			// Delete the trip data
 	        $query = sprintf("DELETE FROM `trip_data` WHERE `trip_id` = '%d' LIMIT 1",
 				$vars['trip_id']);
 			$this->dao->query($query);
-			
+
 			// Delete the trip
 	        $query = sprintf("DELETE FROM `trip` WHERE `trip_id` = '%d' LIMIT 1",
 				$vars['trip_id']);
 			$this->dao->query($query);
-			
+
 			$this->dao->query('COMMIT');
-			
+
 			return PVars::getObj('env')->baseuri.'trip';
 		}
 	}
-    
+
 	public function getTripsDataForLocation($search)
     {
         //TODO: Fix OR-part of query
-		$query = sprintf("SELECT `blog`.`trip_id_foreign`, `blog`.`blog_id`, 
-				`blog_title`, `blog_text`, DATE(`blog_start`) AS `blog_start`, `blog_geonameid`, 
+		$query = sprintf("SELECT `blog`.`trip_id_foreign`, `blog`.`blog_id`,
+				`blog_title`, `blog_text`, DATE(`blog_start`) AS `blog_start`, `blog_geonameid`,
 				`geonames_cache`.`name`, `geonames_cache`.`latitude`, `geonames_cache`.`longitude`
 			FROM `blog`
 			LEFT JOIN `blog_data` ON (`blog`.`blog_id` = `blog_data`.`blog_id`)
 			LEFT JOIN `geonames_cache` ON (`blog_data`.`blog_geonameid` = `geonames_cache`.`geonameid`)
-			WHERE `geonames_cache`.`name` LIKE '%s'
-            OR `blog_title` LIKE '%s'
-            OR `blog_text` LIKE '%s'",
-			$this->dao->escape($search),$this->dao->escape($search),$this->dao->escape($search));
-        
+			WHERE `geonames_cache`.`name` LIKE '%1\$s'
+            OR `blog_title` LIKE '%1\$s'
+            OR `blog_text` LIKE '%1\$s'",
+			$this->dao->escape($search));
+
         $query .= "ORDER BY `trip_id_foreign` DESC";
 		$result = $this->dao->query($query);
 		if (!$result) {
@@ -403,25 +429,29 @@ SQL;
 		}
 		return $trip_data;
 	}
-    
+
 	public function getTripsForLocation()
     {
-		$query = <<<SQL
-SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, members.Username AS handle, `geonames_cache`.`fk_countrycode`, `trip_to_gallery`.`gallery_id_foreign` 
+        // Make use of the previously filled $this->tripsid array
+		$query = "
+SELECT `trip`.`trip_id`, `trip_data`.`trip_name`, `trip_text`, `trip_descr`, members.Username AS handle, `geonames_cache`.`fk_countrycode`, `trip_to_gallery`.`gallery_id_foreign`
     FROM `trip`
     RIGHT JOIN `trip_data` ON (`trip`.`trip_id` = `trip_data`.`trip_id`)
-    LEFT JOIN members ON members.id = trip.IdMember
+    LEFT JOIN members ON members.id = trip.IdMember AND members.status IN (" . Member::ACTIVE_ALL .")
     LEFT JOIN addresses ON addresses.IdMember = members.id
     LEFT JOIN geonames_cache ON addresses.IdCity = geonames_cache.geonameid
     LEFT JOIN `trip_to_gallery` ON (`trip_to_gallery`.`trip_id_foreign` = `trip`.`trip_id`)
+    WHERE `trip`.`trip_id` IN ('" . implode("', '", $this->tripids) . "')
     ORDER BY trip_touched DESC
-SQL;
+    LIMIT 0,100
+";
+
 		return $this->bulkLookup($query);
 	}
-    
+
     public function touchTrip($tripId)
     {
-        if (!isset($tripId) || !$tripId) return false; 
+        if (!isset($tripId) || !$tripId) return false;
         // insert into db
         $query = <<<SQL
 UPDATE `trip`

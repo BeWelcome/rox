@@ -70,6 +70,8 @@
 
     // member app routes
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
+    $this->addRoute('members_profile_set_active', 'setprofileactive', 'MembersController', 'setactive');
+    $this->addRoute('members_profile_set_inactive', 'setprofileinactive', 'MembersController', 'setinactive');
     $this->addRoute('members_reset_password', 'resetpassword' , 'MembersController', 'resetPassword');
     $this->addRoute('members_reset_password_finish', 'resetpassword/finish' , 'MembersController', 'resetPasswordFinish');
 
@@ -95,7 +97,25 @@
     $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminController', 'spamOverview');
 
     // admin words routes
-    $this->addRoute('admin_words_overview', 'admin/words', 'AdminController', 'wordsOverview');
+    // the overview route redirects to an empty edit screen,
+    // ideally this would become a real overview screen lateron
+    $this->addRoute('admin_word_overview', 'admin/word', 'AdminWordController', 'editTranslation');    
+    $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_editlang', 'admin/word/edit/:wordcode:/:shortcode:', 'AdminWordController', 'editTranslation');
+    $this->addRoute('admin_word_create', 'admin/word/createcode', 'AdminWordController', 'createCode');
+    $this->addRoute('admin_word_createone', 'admin/word/createcode/:wordcode:', 'AdminWordController', 'createCode');
+    $this->addRoute('admin_word_code', 'admin/word/editcode','AdminWordController','editCode');
+    $this->addRoute('admin_word_listal', 'admin/word/list/all/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listas', 'admin/word/list/all/short', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listml', 'admin/word/list/missing/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listms', 'admin/word/list/missing/short', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listul', 'admin/word/list/update/long', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_listus', 'admin/word/list/update/short', 'AdminWordController', 'showList');
+    $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
+    $this->addRoute('admin_word_find', 'admin/word/find', 'AdminWordController','findTranslations');
+    $this->addRoute('admin_word_noupdate', 'admin/word/noupdate/:id:', 'AdminWordController','noUpdateNeeded');
+
     // admin rights routes
     $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
     // admin activity routes
@@ -189,12 +209,16 @@
     $this->addRoute('suggestions_implemented', 'suggestions/:id:/implemented', 'suggestionsController', 'moveSuggestionToImplemented');
     $this->addRoute('suggestions_upvote', 'suggestions/:optionid:/upvote', 'suggestionsController', 'voteRanking');
     $this->addRoute('suggestions_downvote', 'suggestions/:optionid:/downvote', 'suggestionsController', 'voteRanking');
+    $this->addRoute('suggestions_rank_ajax', 'suggestions/ajax/:optionid:/:direction:', 'suggestionsController', 'voteAjaxRanking');
     $this->addRoute('suggestions_rejectedlist', 'suggestions/rejected', 'suggestionsController', 'rejectedList');
     $this->addRoute('suggestions_rejectedlist_pages', 'suggestions/rejected/page/:pageno:', 'suggestionsController', 'rejectedList');
     $this->addRoute('suggestions_rejected', 'suggestions/:id:/rejected', 'suggestionsController', 'rejected');
     $this->addRoute('suggestions_devlist', 'suggestions/dev', 'suggestionsController', 'devList');
     $this->addRoute('suggestions_devlist_pages', 'suggestions/dev/page/:pageno:', 'suggestionsController', 'devList');
     $this->addRoute('suggestions_dev', 'suggestions/:id:/dev', 'suggestionsController', 'dev');
+    $this->addRoute('suggestions_resultslist', 'suggestions/results', 'suggestionsController', 'resultsList');
+    $this->addRoute('suggestions_resultslist', 'suggestions/results/page/:pageno:', 'suggestionsController', 'resultsList');
+    $this->addRoute('suggestions_results', 'suggestions/:id:/results', 'suggestionsController', 'results');
     $this->addRoute('suggestions_team', 'suggestions/team', 'suggestionsController', 'team');
 
     // searchmembers
@@ -203,6 +227,7 @@
     $this->addRoute('searchmembers_map_advanced', 'search/members/map/advanced', 'SearchController', 'searchMembersOnMap');
     $this->addRoute('searchmembers_text', 'search/members/text', 'SearchController', 'searchMembersText');
     $this->addRoute('searchmembers_text_advanced', 'search/members/text/advanced', 'SearchController', 'searchMembersText');
+    $this->addRoute('searchmembers_advanced', 'search/members/advanced', 'SearchController', 'loadAdvancedOptions');
     $this->addRoute('search_places', 'search/locations/:type:', 'SearchController', 'searchSuggestLocations');
 
     // safety pages

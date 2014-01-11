@@ -8,16 +8,27 @@ function cmpProfileLang($a, $b)
     return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
 }
 
-function sortLanguages($languages)
-{
-    $words = new MOD_words;
+function indexedLanguages($languages) {
     $langarr = array();
     foreach($languages as $language) {
         $lang = $language;
-        $lang->TranslatedName = $words->getSilent($language->WordCode);
-        $langarr[] = $lang;
+        if (isset($lang->id)) {
+            $langarr[$lang->id] = $lang;
+        } else {
+            $langarr[$lang->IdLanguage] = $lang;
+        }
     }
-    usort($langarr, "cmpProfileLang");
+    return $langarr;
+}
+
+function sortLanguages($languages)
+{
+    $words = new MOD_words;
+    $langarr = indexedLanguages($languages);
+    foreach($langarr as $language) {
+        $language->TranslatedName = $words->getSilent($language->WordCode);
+    }
+    uasort($langarr, "cmpProfileLang");
     return $langarr;
 }
 
@@ -25,10 +36,9 @@ $lang = $this->model->get_profile_language();
 $profile_language = $lang->id;
 $profile_language_code = $lang->ShortCode;
 $profile_language_name = $lang->Name;
-$languages = $member->profile_languages;
-$languages_spoken = $member->languages_spoken;
-$all_spoken_languages = sortLanguages($member->get_all_translatable_languages());
-
+$languages = indexedLanguages($member->profile_languages);
+$languages_spoken = indexedLanguages($member->languages_spoken);
+$all_written_languages = sortLanguages($member->get_all_translatable_languages());
 $words = $this->getWords();
 $myself = $this->myself;
 if (count($languages) > 1 || $myself) {
@@ -38,34 +48,40 @@ if (count($languages) > 1 || $myself) {
         <strong><?=$words->get('ProfileTranslations')?></strong>
         <p class="floatbox"><?php
             $ii = 0;
+            $activelang_set = false;
             $max = count($languages);
             foreach($languages as $language) {
-                if ($language->ShortCode == $profile_language_code) {
+                if (($language->ShortCode == $profile_language_code)) {
                 ?>
-                    <span class="activelanguage"><?=$profile_language_name ?><? if ($this->myself) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete"> <img src="images/icons/cancel.png" title="<?=$words->getSilent('delete')?>" alt="<?=$words->getSilent('delete')?>" /></a> <? } ?></span><?
+                    <span class="activelanguage"><?=$profile_language_name ?><? if ($this->myself && $max > 1) { ?><a href="editmyprofile/<?=$profile_language_code?>/delete"> <img src="images/icons/cancel.png" title="<?=$words->getSilent('delete')?>" alt="<?=$words->getSilent('delete')?>" /></a> <? } ?></span><?
                     $activelang_set = true;
                 } else {
                     
                 ?><a class="availablelanguages" href="<?=$urlstring?>/<?=$language->ShortCode ?>"><?=$language->Name ?></a> <?
                 $ii++;
                 }
-            } 
-            if (!isset($activelang_set)) echo '<span class="activelanguage">'.$profile_language_name.'</span>';
+            }
             ?><?php echo $words->flushBuffer(); ?></p>
 <?php if ($myself) { ?>
 <select class="floatbox" id="add_language">
     <option>- <?=$wwsilent->AddLanguage?> -</option>
-    <optgroup label="<?=$wwsilent->YourLanguages?>">
       <?php
+      $ownLanguages = "";
       foreach ($languages_spoken as $lang) {
-      if (!in_array($lang->ShortCode,$languages))
-      echo '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
-      } ?>
+          if ((!array_key_exists($lang->IdLanguage,$languages)) && (array_key_exists($lang->IdLanguage,$all_written_languages))) {
+           $ownLanguages .= '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
+          }
+      }
+      error_log($ownLanguages);
+      if (!empty($ownLanguages)) { ?>
+    <optgroup label="<?=$wwsilent->YourLanguages?>">
+    <?php echo $ownLanguages; ?>
     </optgroup>
+    <?php } ?>
     <optgroup label="<?=$wwsilent->AllLanguages?>">
       <?php
-      foreach ($all_spoken_languages as $lang) {
-      if (!in_array($lang->ShortCode,$languages))
+      foreach ($all_written_languages as $lang) {
+      if (!in_array($lang->id,$languages))
       echo '<option value="'.$lang->ShortCode.'">' . $lang->TranslatedName . ' (' . $lang->Name . ')</option>';
       } ?>
     </optgroup>
@@ -83,6 +99,7 @@ if (count($languages) > 1 || $myself) {
         var element = Event.element(event);
         var index = element.selectedIndex;
         var lang = element.options[index].value;
+
         window.location.href = http_baseuri + 'editmyprofile/' + lang;
     }
 

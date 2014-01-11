@@ -33,15 +33,14 @@ class TripController extends PAppController {
         // Enable ViewWrap for cleaner code
         $P = PVars::getObj('page');
         $vw = new ViewWrap($this->_view);
-        
-        $member = $this->_model->getLoggedInMember();
-        
+
         // Show the teaser
         $this->showTeaser();
         
         // then include the col2-stylesheet
         $P->addStyles .= $vw->customStyles();
-        
+        $member = $this->_model->getLoggedInMember();
+
         switch($request[1]) {
         	case 'create':
                 if (!$member)
@@ -69,6 +68,7 @@ class TripController extends PAppController {
                         $trips = $this->_model->getTripsForLocation();
                     } else {
                         $error = 'To few arguments';
+                        $trip_data = array();
                         $trips = false;
                         //$tagsposts = false;
                     }
@@ -92,7 +92,11 @@ class TripController extends PAppController {
 				if (intval($request[1])) {
 					return $this->showTrip($request[1]);
 				} else {
-	            	$this->showAllTrips();
+                    if ($member) {
+                        $this->showAllTrips();
+                    } else {
+                        $this->notLoggedIn();
+                    }
 	                break;
 	            }
         }
@@ -214,7 +218,14 @@ class TripController extends PAppController {
         }
         return $page;
     }
-    
+
+    private function notLoggedIn()
+    {
+        $P = PVars::getObj('page');
+        $vw = new ViewWrap($this->_view);
+        $P->content .= $vw->notLoggedIn();
+    }
+
     private function showMyTrips()
     {
         if (($member = $this->_model->getLoggedInMember()) && ($handle = $member->Username))

@@ -15,16 +15,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
 
-    /** 
+    /**
      * @author Fake51
      */
 
-    /** 
+    /**
      * base page for all blog pages
      *
      * @package Apps
@@ -49,6 +49,7 @@ class BlogBasePage extends PageWithActiveSkin
      */
     public function initPager($elements, $page = 1, $items_per_page = 5)
     {
+        $params = new StdClass;
         $params->strategy = new HalfPagePager('right');
         $params->items = $elements;
         $params->items_per_page = $items_per_page;

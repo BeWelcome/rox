@@ -89,19 +89,23 @@ function ShowList($TData, $start = 0, $total = 0) {
     // define button texts
     if ($c->DisplayInPublic == 1){
         $ToggleHideText = 'Hide';
+        $ToggleHideAction = 'HideAction';
     } else {
-        $ToggleHideText = 'Show';        
+        $ToggleHideText = 'Show';
+        $ToggleHideAction = 'UnhideAction';
     }
     if ($c->AllowEdit == 1){
         $ToggleEditText = 'Default editing';
+        $ToggleEditAction = 'DefaultEditAction';
     } else {
-        $ToggleEditText = 'Allow editing';        
+        $ToggleEditText = 'Allow editing';
+        $ToggleEditAction = 'AllowEditAction';
     }
 
 
     if ($c->AdminComment != "Checked"){
-      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=ToggleHide")."\" class=button>$ToggleHideText</a>\n";
-      echo "                      <a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=ToggleAllowEdit")."\" class=button>$ToggleEditText</a>\n";
+      echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=$ToggleHideAction")."\" class=button>$ToggleHideText</a>\n";
+      echo "                      <a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=$ToggleEditAction")."\" class=button>$ToggleEditText</a>\n";
       echo "                      <li><a href=\"".bwlink("admin/admincomments.php?IdComment=". $c->id. "&amp;action=Checked")."\" class=button>Mark as checked</a>\n";
     }
     if (($c->AdminComment != "Checked") and (HasRight("Comments", "AdminAbuser")))

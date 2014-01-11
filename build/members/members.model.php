@@ -473,6 +473,9 @@ WHERE
                 $one_selected = true;
             }
         }
+        if ($vars['Quality'] == "") {
+            $errors[] = 'Comment_MustSelectQuality';
+        }
         if (!isset($one_selected)) {
             $errors[] = 'Comment_NoCommentLengthSelected';
         }
@@ -586,7 +589,9 @@ WHERE
                 'Link' => 'members/' . $commentRecipient->Username . '/comments',
                 'WordCode' => $noteWordCode
             );
-            $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
+            if ($TCom->DisplayInPublic == 1) {
+                $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
+            }
             $noteEntity = $this->createEntity('Note');
             $noteEntity->createNote($note);
         }
@@ -1253,6 +1258,7 @@ ORDER BY
         $lang_used = array();
         foreach($vars['memberslanguages'] as $lang) {
             if (ctype_digit($lang) and !in_array($lang,$lang_used)) { // check $lang is numeric, hence a legal IdLanguage
+                $vars['languages_selected'][$ii] = new StdClass;
                 $vars['languages_selected'][$ii]->IdLanguage = $lang;
                 $vars['languages_selected'][$ii]->Level = $vars['memberslanguageslevel'][$ii2];
                 array_push($lang_used, $vars['languages_selected'][$ii]->IdLanguage);

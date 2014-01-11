@@ -66,7 +66,6 @@ class MemberPage extends PageWithActiveSkin
 
         $galleryItemsCount = $member->getGalleryItemsCount();
 
-        // TODO: move number out of translation string
         $viewForumPosts = $words->get("ViewForumPosts",$member->forums_posts_count());
         $membersForumPostsPagePublic = $member->getPreference("MyForumPostsPagePublic", $default = "No");
         $linkMembersForumPosts = false;
@@ -91,6 +90,11 @@ class MemberPage extends PageWithActiveSkin
             if ($this instanceof EditMyProfilePage)
             {
                 $tt[] = array('deleteprofile', 'deleteprofile', $ww->DeleteProfile, 'deleteprofile');
+                if ($member->Status <> 'ChoiceInactive') {
+                    $tt[] = array('setprofileinactive', 'setprofileinactive', $ww->SetProfileInactive, 'setprofileinactive');
+                } else {
+                    $tt[] = array('setprofileactive', 'setprofileactive', $ww->SetProfileActive);
+                }
             }
 
             $showVisitors = $member->getPreference('PreferenceShowProfileVisits',
@@ -217,7 +221,7 @@ class MemberPage extends PageWithActiveSkin
             $name = $item[0];
             $url = $item[1];
             $label = $item[2];
-            $class = isset($item[3]) ? $item[3] : '';
+            $class = isset($item[3]) ? $item[3] : 'leftpadding';
             if ($name === $active_menu_item) {
                 $attributes = ' class="active '.$class.'"';
                 $around = '';
@@ -241,7 +245,7 @@ class MemberPage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?1';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/profile.css?2';
        return $stylesheets;
     }
     

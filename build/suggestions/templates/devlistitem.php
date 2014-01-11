@@ -21,19 +21,21 @@ if (count($suggestion->options) == 0) {
     echo '<tr class="' . (($count % 2) ? 'highlightbottom' : 'blankbottom') . '">';
     echo '<td colspan="3">';
     echo $this->purifier->purify($layoutbits->truncate_words($suggestion->description, 50));
+    echo '</td></tr>';
+    echo "\r\n";
 } else {
     foreach($suggestion->options as $option) {
         if (($option->state & $optionState) == $optionState)
         {
             echo '<tr class="' . (($count % 2) ? 'highlightmiddle' : 'blankmiddle') . '">';
-            if ($this->hasSuggestionRight && $optionState == SuggestionOption::IMPLENENTING) {
+            if ($this->hasSuggestionRight && $optionState == SuggestionOption::IMPLEMENTING) {
                 echo '<td>';
             } else {
                 echo '<td  colspan="3">';
             }
             echo '<h4>' . $this->purifier->purify($option->summary) . '</h4>';
             echo '</td>';
-            if ($this->hasSuggestionRight && $optionState == SuggestionOption::IMPLENENTING) {
+            if ($this->hasSuggestionRight && $optionState == SuggestionOption::IMPLEMENTING) {
                 echo '<td><a href="/suggestions/' . $suggestion->id . '/implemented/' . $option->id . '">Set Implemented</a></td>';
                 echo '<td></td>';
             }
@@ -41,9 +43,8 @@ if (count($suggestion->options) == 0) {
             echo '<tr class="' . (($count % 2) ? 'highlightbottom' : 'blankbottom') . '">';
             echo '<td colspan="3">' . $this->purifier->purify($layoutbits->truncate_words($option->description, 50)) . '</td>';
             echo '</tr>';
+            echo "\r\n";
         }
     }
 }
-echo '<td>';
-echo '</tr>';
 ?>

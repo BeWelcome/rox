@@ -130,6 +130,7 @@ class MOD_htmlpure
         $config->set('HTML.MaxImgLength', '500');
         $config->set('HTML.TargetBlank', true);
         $config->set('CSS.MaxImgLength', '500px');
+        $config->set('CSS.AllowedProperties', array('text-decoration'));
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
         $config->set('AutoFormat.Linkify', true); // automatically turn stuff like http://domain.com into links
         return new HTMLPurifier($config);

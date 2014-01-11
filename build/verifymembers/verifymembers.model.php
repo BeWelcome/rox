@@ -46,14 +46,14 @@ WHERE   IdVerified = $member_id
             // problem
             	throw new PException('Buggy Value in verifiedmembers for IdMember=".$IdMember." !');
         	}
-         	else 
+         	else
          	{
             	if (!empty($rr->Type)) {
             		$sRet = $rr->Type;
             	}
          	}
         }
-        
+
 
          // if the member is a verifier and has ApprovedVerifier scope, this information will supersed all others
         // comment by lemon-head: Better do this in the controller?
@@ -186,9 +186,7 @@ WHERE   IdVerified = $member_id
                     geonames_cache.geonameId = m1.IdCity
                     AND
                     (
-                        m1.Status = 'Active'
-                        OR
-                        m1.Status = 'ChoiceInactive'
+                        m1.Status IN ('Active', 'OutOfRemind')
                     )
                     AND
                     m2.id = $userId
@@ -221,9 +219,7 @@ WHERE   IdVerified = $member_id
                     geonames_cache.geonameId = m1.IdCity
                     AND
                     (
-                        m1.Status = 'Active'
-                        OR
-                        m1.Status = 'ChoiceInactive'
+                        m1.Status IN ('Active', 'OutOfRemind')
                     )
                     AND
                     m2.Username = '$username'
@@ -331,9 +327,7 @@ WHERE   IdVerified = $member_id
                 geonames_cache.geonameId = m1.IdCity
                 AND
                 (
-                    m1.Status = 'Active'
-                    OR
-                    m1.Status = 'ChoiceInactive'
+                    m1.Status IN ('Active', 'OutOfRemind')
                 )
                 AND
                     m2.username = '$usernameEscaped'
@@ -355,7 +349,7 @@ WHERE   IdVerified = $member_id
      **/
     protected function CheckAndGetUsername($cid) {
         $where_cid = is_numeric($cid) ? 'members.id='.$cid : 'members.Username=\''.mysql_real_escape_string($cid).'\'';
-         if ($m=$this->singleLookup("SELECT Username FROM members WHERE (Status='Active' OR Status='ChoiceInactive') AND ".$where_cid)) {
+         if ($m=$this->singleLookup("SELECT Username FROM members WHERE (Status='Active' OR Status='OutOfRemind') AND ".$where_cid)) {
             return($m->Username) ;
          }
 //   echo "is_numeric($cid)=",is_numeric($cid) ;

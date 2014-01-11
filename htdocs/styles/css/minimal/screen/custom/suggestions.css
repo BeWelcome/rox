@@ -6,7 +6,7 @@
 {
 #suggestionslist {width: 100%;}
 #suggestionslist th.description { vertical-align: bottom; text-align: left; }
-#suggestionslist th.details { vertical-align: bottom; text-align: center; }
+#suggestionslist th.details { vertical-align: bottom; text-align: center; width: 10%; }
 #suggestionslist td.description{ vertical-align: middle; text-align: left; }
 #suggestionslist td.details{ vertical-align: middle; text-align: center; width: 10%; }
 
@@ -46,7 +46,7 @@
     width:auto;
 }
 
-h4 {font-size: 1.2em; color: #333; margin: 0 0 0.30em 0; font-weight:bold;}
+h4 {font-size: 1em; color: #333; margin: 0 0 0.30em 0; font-weight:bold;}
 }
 
 tr.highlighttop {
@@ -69,7 +69,6 @@ tr.blanktop {
  	border-top: 1px solid #e5e5e5;
 }
 tr.blankmiddle {
-    background: #eceff5;
     border: none 0pt;
 }
 tr.blankbottom {
@@ -80,4 +79,40 @@ tr.blankbottom {
 hr.suggestion {
     color: #ffab0c;
     border-color: #ffab0c;
+}
+
+#suggestionslist a {
+    text-decoration: none;
+}
+
+/* Voting results for suggestions */
+#results {
+    width: 99%;
+}
+
+#results th, #results td {
+    vertical-align: top;
+    padding:1px 2px;
+}
+
+#results th.description, #results td.description {
+    width:80%;
+    text-align: left;
+}
+
+#results th.results {
+    text-align: center;
+}
+
+#results td.resultsleft {
+    text-align: left;
+}
+
+#results td.resultsright {
+    text-align: right;
+}
+
+#results th.rank, #results td.rank {
+    width:15%;
+    text-align: center;
 }

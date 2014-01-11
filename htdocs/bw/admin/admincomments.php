@@ -239,18 +239,28 @@ switch ($action) {
     case "ShowOneMember" :
         $RestrictToIdMember = IdMember(GetParam("cid", 0));
         break;
-    case "ToggleHide" :
+    case "HideAction":
         $Message = "Toggle hide for general public";
-        $str = "UPDATE comments SET DisplayInPublic = 1 - DisplayInPublic WHERE id=" . Getparam("IdComment");
+        toggleAction('DisplayInPublic',0);
+        break;
+    case "UnhideAction":
+        $Message = "Toggle hide for general public";
+        toggleAction('DisplayInPublic',1);
+        break;
+    case "DefaultEditAction":
+        $Message = "Toggle whether creator may edit post";
+        toggleAction('AllowEdit',0);
+        break;
+    case "AllowEditAction" :
+        $Message = "Toggle whether creator may edit post";
+        toggleAction('AllowEdit',1);
+        break;
+}
+
+function toggleAction($act,$newValue){
+        $str = "UPDATE comments SET $act = $newValue WHERE id=" . Getparam("IdComment");
         sql_query($str);
         LogStr(" Toggling <b>hide</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
-        break;
-    case "ToggleAllowEdit" :
-        $Message = "Toggle whether creator may edit post";
-        $str = "UPDATE comments SET AllowEdit = 1 - AllowEdit WHERE id=" . Getparam("IdComment");
-        sql_query($str);
-        LogStr(" Toggling <b>edit allowance</b> for IdComment #" . Getparam("IdComment"), "AdminComment");
-        break;
 }
 
 $Message = "Negative Comments";

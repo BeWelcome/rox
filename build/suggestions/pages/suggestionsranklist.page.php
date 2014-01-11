@@ -38,6 +38,21 @@ class SuggestionsRankListPage extends SuggestionsBasePage
     {
         return 'rank';
     }
+
+    public function getLateLoadScriptfiles() {
+        $scriptFiles = parent::getLateLoadScriptfiles();
+        $scriptFiles[] = 'suggestionsrankingajax.js';
+        return $scriptFiles;
+    }
+
+    protected function getStylesheets()
+    {
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
+        return $stylesheets;
+    }
+
 }
 
 

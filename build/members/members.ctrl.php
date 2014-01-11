@@ -699,14 +699,7 @@ class MembersController extends RoxControllerBase
             return false;
         }
         $feedback = !empty($args->post['explanation']) ? $args->post['explanation'] : '';
-        if (isset($args->post['Complete_retire']))
-        {
-            $member->removeProfile();
-        }
-        else
-        {
-            $member->inactivateProfile();
-        }
+        $member->removeProfile();
         $this->model->sendRetiringFeedback($feedback);
         $member->logOut();
         return $this->router->url('members_profile_retired', array(), false);

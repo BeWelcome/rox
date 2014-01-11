@@ -4,7 +4,7 @@ $callbackTags = $formkit->setPostCallback('ActivitiesController', 'editCreateAct
 $callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
 if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     $textarea = 'activity-description';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js?1';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
 }
 $errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');

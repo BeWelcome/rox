@@ -14,7 +14,7 @@ if (empty($vars)) {
 }
 if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
     $textarea = 'suggestion-description';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js?1';
+    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
 }
 ?>
 <div>

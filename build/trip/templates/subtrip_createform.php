@@ -177,7 +177,7 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
           <div id="location-suggestion"></div>
 </fieldset>
 
-<!-- <fieldset id="destination-options">
+<fieldset id="destination-options">
 <legend><?=$words->get('TripDestinationOptionsLabelTab')?></legend>
 
     <div class="row">
@@ -199,7 +199,7 @@ if (isset($vars['id']) && $vars['id']) {
 }
 ?>
 
-    <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
+<!--    <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
 
     <label><?=$words->get('label_vis')?></label>
     <div class="row">
@@ -234,9 +234,9 @@ if (isset($vars['id']) && $vars['id']) {
         }
         ?>/> <label for="create-vis-pri"><?=$words->get('BlogCreateSettings_LabelVisprivate')?></label>
         <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprivate')?></p>
-    </div>
+    </div>-->
 </fieldset>
--->
+
     <p class="row">
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');

@@ -186,9 +186,14 @@ switch (GetParam("action")) {
 		$rwq = LoadRow("SELECT * FROM words WHERE code='" . "FaqQ_" . GetStrParam("QandA") . "' and IdLanguage=0");
 		$rwa = LoadRow("SELECT * FROM words WHERE code='" . "FaqA_" . GetStrParam("QandA") . "' and IdLanguage=0");
 
-		$str = "UPDATE words SET Description='" . addslashes($rwq->Description) . "',Sentence='" . GetStrParam("Question") . "' WHERE id=" . $rwq->id;
+                if (GetStrParam('changetype')=='major'){
+                    $majorupdate = ',majorupdate = NOW() ';
+                } else {
+                    $majorupdate = '';
+                }
+		$str = "UPDATE words SET Description='" . addslashes($rwq->Description) . "',Sentence='" . GetStrParam("Question") . "' $majorupdate WHERE id=" . $rwq->id;
 		sql_query($str);
-		$str = "UPDATE words SET Description='" . addslashes($rwa->Description) . "',Sentence='" . GetStrParam("Answer") . "' WHERE id=" . $rwa->id;
+		$str = "UPDATE words SET Description='" . addslashes($rwa->Description) . "',Sentence='" . GetStrParam("Answer") . "' $majorupdate WHERE id=" . $rwa->id;
 		sql_query($str);
 
 		$str = "UPDATE faq SET IdCategory=" . GetParam("IdCategory") . ",QandA='" . GetParam("QandA") . "',Active='" . GetStrParam("Status") . "',SortOrder=" . GetParam("SortOrder") . " WHERE id=" . $Faq->id;

@@ -263,7 +263,12 @@ function DisplayEditFaq($Faq, $TCategory) {
 		echo (wwinlang("FaqA_" . $Faq->QandA, 0));
 	echo "</textarea></td>\n";
 	echo "<tr><td colspan=2 align=center><input type=submit value=update></td>\n";
-	echo "</form>\n";
+	echo '<tr><td>What kind of change is this?</td>
+            <td><input type="radio" name="changetype" value="minor" /> Minor change - old translations remain valid<br />
+                <input type="radio" name="changetype" value="major" /> Major change - old translations are invalidated
+            </td></tr>';
+        
+        echo "</form>\n";
 	echo "</table>\n</center>\n";
 
 	include "footer.php";

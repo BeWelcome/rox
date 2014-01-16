@@ -291,8 +291,14 @@ class SuggestionsController extends RoxControllerBase
     public function restoreOption() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_ADD_OPTIONS);
+        $id = $this->route_vars['id'];
         $optionId = $this->route_vars['optid'];
-        $this->_model->restoreOption($optionId);
+        $suggestion = new Suggestion($id);
+        if (!$suggestion) {
+            $this->setFlashNotice($this->getWords()->get('SuggestionRestoreOptionSuccess'));
+            return $this->router->url('suggestions_addoptions_list', array());
+        }
+        $this->_model->restoreOption($id, $optionId);
         $this->setFlashNotice($this->getWords()->get('SuggestionRestoreOptionSuccess'));
         return $this->router->url('suggestions_addoptions', array('id' => $this->route_vars['id']), false);
     }

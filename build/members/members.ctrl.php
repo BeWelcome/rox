@@ -44,8 +44,6 @@ class MembersController extends RoxControllerBase
             case 'myself':
             case 'my':
             case 'deleteprofile':
-            case 'setprofileinactive':
-            case 'setprofileactive':
                 // you are not supposed to open these pages when not logged in!
                 $page = new MembersMustloginPage;
                 break;
@@ -77,7 +75,7 @@ class MembersController extends RoxControllerBase
                     // this profile is not public
                     $page = new MembersMustloginPage;
                 }
-                else if ($member->status == 'ChoiceInactive') {
+                else if ($member->status == 'ChoiceInactive' ) {
                     $page = new InactiveProfilePage();
                 } else {
                     // found a member with given id or username. juhu
@@ -99,7 +97,6 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
-
                             $page = new ProfilePage();
                             break;
                         default:
@@ -120,6 +117,13 @@ class MembersController extends RoxControllerBase
 
         $myself = true;
 
+        $adminMember = false;
+        $rights_self = $member_self->getOldRights();
+        if (in_array("SafetyTeam", array_keys($rights_self)) || in_array("Admin", array_keys($rights_self)))
+        {
+            $adminMember = true;
+        }
+
         switch (isset($request[0]) ? $request[0] : false) {
             case 'setlocation':
                 $page = new SetLocationPage();
@@ -129,26 +133,6 @@ class MembersController extends RoxControllerBase
                 break;
             case 'deleteprofile':
                 $page = new DeleteProfilePage();
-                break;
-            case 'setprofileinactive':
-                if ($member_self->Status != 'Active') {
-                    $this->redirect('editmyprofile');
-                }
-                // set to inactive only allowed in intervals of two weeks time (for testing one day)
-                $minimumTimeBetweenSwitches = 1 * 24 * 60 * 60;
-                $page = new SetProfileInactivePage();
-                $timeSinceLastSwitchToActive = time() - strtotime($member_self->LastSwitchToActive);
-                if ($timeSinceLastSwitchToActive < $minimumTimeBetweenSwitches) {
-                    $page->switchNotAllowed = true;
-                } else {
-                    $page->switchNotAllowed = false;
-                }
-                break;
-            case 'setprofileactive':
-                if ($member_self->Status != 'ChoiceInactive') {
-                    $this->redirect('editmyprofile');
-                }
-                $page = new SetProfileActivePage();
                 break;
             case 'editmyprofile':
                 $page = new EditMyProfilePage();
@@ -275,20 +259,9 @@ class MembersController extends RoxControllerBase
                 else
                 {
                     //check if member can browse that profile
-                    if (!$member->isBrowsable()){
-                        // found a member, but that member is not browsable (e.g. status "banned")
-                        $rights_self = $member_self->getOldRights();
-                        if (empty($rights_self)){
-                            // the profile is not shown because the request is coming from a member without admin rights
-                            $page = new MembersMembernotfoundPage;
-                            break;
-                        }
-                        else if (!in_array("SafetyTeam", array_keys($rights_self)) && !in_array("Admin", array_keys($rights_self)))
-                        {
-                            // the profile is not shown because the request is coming from a member without necessary admin rights
-                            $page = new MembersMembernotfoundPage;
-                            break;
-                        }
+                    if (!$member->isBrowsable() && !$adminMember){
+                        $page = new MembersMembernotfoundPage;
+                        break;
                     }
 
                     // found a member with given id or username
@@ -397,7 +370,8 @@ class MembersController extends RoxControllerBase
                         case 'profile':
                         case '':
                         case false:
-                            if (!$myself && $member->Status == 'ChoiceInactive') {
+                            $hideProfile = !$myself && $member->Status == 'ChoiceInactive' && !$adminMember;
+                            if ($hideProfile) {
                                 $page = new InactiveProfilePage();
                             } else {
                                 $page = new ProfilePage();
@@ -405,7 +379,8 @@ class MembersController extends RoxControllerBase
 
                             break;
                         default:
-                            if (!$myself && $member->Status == 'ChoiceInactive') {
+                            $hideProfile = !$myself && $member->Status == 'ChoiceInactive' && !$adminMember;
+                            if ($hideProfile) {
                                 $page = new InactiveProfilePage();
                             } else {
                                 $page = new ProfilePage();
@@ -721,14 +696,7 @@ class MembersController extends RoxControllerBase
             return false;
         }
         $feedback = !empty($args->post['explanation']) ? $args->post['explanation'] : '';
-        if (isset($args->post['Complete_retire']))
-        {
-            $member->removeProfile();
-        }
-        else
-        {
-            $member->inactivateProfile();
-        }
+        $member->removeProfile();
         $this->model->sendRetiringFeedback($feedback);
         $member->logOut();
         return $this->router->url('members_profile_retired', array(), false);
@@ -758,7 +726,7 @@ class MembersController extends RoxControllerBase
      * @access public
      * @return mixed
      */
-    public function setProfileInactive(StdClass $args, $memory, $stuff1, $stuff2)
+    public function setProfileInactiveCallback(StdClass $args, $memory, $stuff1, $stuff2)
     {
         if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
         {
@@ -772,6 +740,23 @@ class MembersController extends RoxControllerBase
         return 'editmyprofile';
     }
 
+    public function setActive() {
+        $member = $this->model->getLoggedInMember();
+        if (!$member) {
+            $page = new MembersMustloginPage;
+        } else {
+            if ($member->Status != 'ChoiceInactive') {
+                $this->redirectAbsolute('editmyprofile');
+            } else {
+                $page = new SetProfileActivePage();
+            }
+        }
+        $page->member = $member;
+        $page->myself = true;
+        $page->model = $this->model;
+        return $page;
+    }
+
     /**
      * callback to set profile inactive
      *
@@ -783,7 +768,7 @@ class MembersController extends RoxControllerBase
      * @access public
      * @return mixed
      */
-    public function setProfileActive(StdClass $args, $memory, $stuff1, $stuff2)
+    public function setProfileActiveCallback(StdClass $args, $memory, $stuff1, $stuff2)
     {
         if (empty($args->post) || !($member = $this->model->getLoggedInMember()))
         {
@@ -795,6 +780,31 @@ class MembersController extends RoxControllerBase
         $_SESSION["MemberStatus"] = $_SESSION["Status"] = 'Active';
         $this->setFlashNotice($this->model->getWords()->get('ProfileSetActiveSuccess'));
         return 'editmyprofile';
+    }
+
+    public function setInactive() {
+        $member = $this->model->getLoggedInMember();
+        if (!$member) {
+            $page = new MembersMustloginPage;
+        } else {
+            if ($member->Status != 'Active') {
+                $this->redirectAbsolute('editmyprofile');
+            } else {
+                // set to inactive only allowed in intervals of two weeks time
+                $minimumTimeBetweenSwitches = 14 * 24 * 60 * 60;
+                $page = new SetProfileInactivePage();
+                $timeSinceLastSwitchToActive = time() - strtotime($member->LastSwitchToActive);
+                if ($timeSinceLastSwitchToActive < $minimumTimeBetweenSwitches) {
+                    $page->switchNotAllowed = true;
+                } else {
+                    $page->switchNotAllowed = false;
+                }
+            }
+        }
+        $page->member = $member;
+        $page->myself = true;
+        $page->model = $this->model;
+        return $page;
     }
 
     /**

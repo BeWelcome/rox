@@ -97,11 +97,14 @@ class AdminWordController extends RoxControllerBase
     public function createCode(){
         $page = new AdminWordCreateCodePage();
         $page->nav = $this->getNavigationData();
-        $page->formdata = $this->getFormData(array('EngCode','Sentence','EngDesc','EngDnt',
-            'isarchived','EngPrio','lang'),$page->nav);
         if (isset($this->route_vars['wordcode'])){
-            $page->formdata['EngCode'] = $this->route_vars['wordcode'];
+            $page->data = $this->model->getTranslationData('create','long','en',$this->route_vars['wordcode']);
+            if (!isset($page->data[0])) {
+                $page->data = array(array('EngCode' => $this->route_vars['wordcode']));
+            }
         }
+        $page->formdata = $this->getFormData(array('EngCode','Sentence','EngDesc','EngDnt',
+            'isarchived','EngPrio','lang'),(array)$page->data[0]);
         return $page;
     }
 
@@ -404,7 +407,11 @@ class AdminWordController extends RoxControllerBase
             unset ($_SESSION['form'][$field]);
         }
         if ($formdata['lang']==''){
-            $formdata['lang'] = $vars['shortcode'];
+            if (isset($vars['shortcode'])){
+                $formdata['lang'] = $vars['shortcode'];
+            } else {
+                $formdata['lang'] = 'en';
+            }
         }
         return $formdata;      
     }

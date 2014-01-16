@@ -68,6 +68,7 @@ class TripController extends PAppController {
                         $trips = $this->_model->getTripsForLocation();
                     } else {
                         $error = 'To few arguments';
+                        $trip_data = array();
                         $trips = false;
                         //$tagsposts = false;
                     }

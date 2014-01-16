@@ -1,10 +1,6 @@
 <?php
 $formkit = $this->layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('SuggestionsController', 'editCreateSuggestionCallback');
-if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
-    $textarea = 'suggestion-description';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
-}
 if (isset($_SESSION['SuggestionStatus'])) {
     $status = $_SESSION['SuggestionStatus'];
     unset($_SESSION['SuggestionStatus']);

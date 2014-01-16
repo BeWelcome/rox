@@ -41,7 +41,9 @@ class SuggestionsBasePage extends PageWithActiveSkin
         if ($member) {
             $this->hasSuggestionRight = $this->checkSuggestionRight();
             $this->disableTinyMCE = $member->getPreference("PreferenceDisableTinyMCE", $default = "No");
-            $this->viewOnly = false;
+            if ($member->Status != 'ChoiceInactive') {
+                $this->viewOnly = false;
+            }
         }
         $this->purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
     }
@@ -94,11 +96,11 @@ class SuggestionsBasePage extends PageWithActiveSkin
 
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?4';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?8';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/suggestions.css?5';
        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome.min.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/font-awesome-ie7.min.css';
-       // $stylesheets[] = 'styles/css/minimal/screen/custom/forums.css?7';
        return $stylesheets;
     }
 

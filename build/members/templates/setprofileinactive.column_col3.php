@@ -30,11 +30,11 @@ Boston, MA  02111-1307, USA.
 <form class="yform full" method="post" action="">
 <?php
     if ($this->switchNotAllowed) {
-        echo $words->get('ProfileSetInactiveNotAllowed');
+        echo '<p><br />' . $words->get('ProfileSetInactiveNotAllowed', substr($this->member->LastSwitchToActive, 0,16)) . '</p>';
     } else {
 ?>
-    <?php echo $this->getCallbackOutput('MembersController','setProfileInactive'); ?>
-    <p><?php echo $words->getFormatted('ProfileSetInactiveInfo'); ?></p>
+    <?php echo $this->getCallbackOutput('MembersController','setProfileInactiveCallback'); ?>
+    <p><br /><?php echo $words->getFormatted('ProfileSetInactiveInfo'); ?></p>
     <p class="center">
     <input type="submit" value="<?php echo $words->getBuffered('ProfileSetInactive') ?>" />
         <?php echo $words->flushBuffer(); ?>    </p>

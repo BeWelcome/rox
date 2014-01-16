@@ -15,9 +15,6 @@ if (isset($request[1]) && $request[1] == 'show' && isset($request[2])) {
         </a>
         <?=$sub?>
     </h1>
-    <div class="trip_author">
-    	<a href="trip/search"><?=$words->get('TripsSearch')?> </a>
-    </div>
 </div>
 <div class="popupmap" id="map_alltrips">
     <div id="tripMap" class="tripmap"></div>

@@ -66,13 +66,14 @@ $uri = 'forums/';
     </h3>
   </div><!--  row -->
 
+<?php if (!$noForumNewTopicButton) { ?>
   <div id="boardnewtopictop">
       <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?>
   </div>
-
-
 <?php
-        require 'boardthreads.php';
+}
+
+require 'boardthreads.php';
 ?>
 </div> <!-- Forum-->
 <?php

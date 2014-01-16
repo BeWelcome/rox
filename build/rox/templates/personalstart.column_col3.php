@@ -167,7 +167,7 @@ $next_trips_count = count($next_trips);
             <div class="subcr">
                 <h3 class="first" ><a href="forums"><?php echo $words->getFormatted('ForumRecentPostsLong') ?></a></h3>
                 <div class="floatbox">
-                    <?php echo $Forums->showExternalLatest(true, false); ?>
+                    <?php $Forums->showExternalLatest(true); ?>
                 </div> <!-- floatbox -->
             </div> <!-- subcr -->
         </div> <!-- c33r -->

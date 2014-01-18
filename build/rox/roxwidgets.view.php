@@ -76,7 +76,7 @@ class LinkSinglePictureLinkpathWidget {
 		
 		if ($fromID != $toID && $logged) {
 			$linkpath = $this->_model->getLinksFull($fromID,$toID,1);
-			if ($linkpath) require TEMPLATE_DIR.'apps/rox/link.widget.singlepicturelinkpath.php';
+			if ($linkpath) require 'templates/link.widget.singlepicturelinkpath.php';
 		}
 	}
 

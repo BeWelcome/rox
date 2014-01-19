@@ -255,7 +255,7 @@ http://www.bewelcome.org/donate/?action=done&tx=0ME24142PE152304A&st=Completed&a
                    $payment_currency="$" ;
                 }
                 else if ($keyarray['mc_currency']=="EUR") {
-                   $payment_currency="�" ;
+                   $payment_currency="€" ;
                 }
                 else {
                    $payment_currency=$keyarray['mc_currency'] ;

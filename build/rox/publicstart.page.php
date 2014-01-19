@@ -31,15 +31,7 @@ class PublicStartpage extends RoxPageView
     }
 
     protected function column_col3() {
-        $members = $this->model->getMembersStartpage(2);
-        $request = PRequest::get()->request;
-        if(!isset($request[0])) {
-            $redirect_url = false;
-            require 'templates/startpage.php';
-        } else {
-            $redirect_url = false;
-            require 'templates/startpage.php';
-        }
+
     }
 
     protected function getColumnNames ()

@@ -9,12 +9,6 @@
 
 class TourPage extends PageWithActiveSkin
 {
-
-    protected function body()
-    {
-        require TEMPLATE_DIR . 'shared/roxpage/body_index.php';
-    }
-    
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';

@@ -110,7 +110,7 @@ class SuggestionsModel extends RoxModelBase
         try
         {
             $message = Swift_Message::newInstance();
-            $message->setSubject("New suggestion added by " . $suggestion->creator->username . ": " . $suggestion->summary);
+            $message->setSubject("New suggestion added by " . $suggestion->creator->Username . ": " . $suggestion->summary);
             $message->setFrom("suggestions@bewelcome.org");
             $message->setBcc($receivers);
             $message->addPart($html, 'text/html', 'utf-8');
@@ -320,6 +320,7 @@ class SuggestionsModel extends RoxModelBase
         $suggestion->summary = $args->post['suggestion-summary'];
         $suggestion->description = $args->post['suggestion-description'];
         $suggestion->state = self::SUGGESTIONS_AWAIT_APPROVAL;
+        $suggestion->flags = 0;
         $suggestion->salt = hash_hmac('sha256', $suggestion->description, $suggestion->summary);
         $suggestion->created = date('Y-m-d');
         $suggestion->createdby = $this->getLoggedInMember()->id;
@@ -397,7 +398,7 @@ class SuggestionsModel extends RoxModelBase
     }
 
     public function addPost($poster, $text, $threadId = false) {
-        // Block access to dtabase while the data is written
+        // Block access to database while the data is written
         $this->dao->query('START TRANSACTION');
 
         $words = $this->getWords();

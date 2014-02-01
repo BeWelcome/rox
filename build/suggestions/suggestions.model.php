@@ -109,8 +109,9 @@ class SuggestionsModel extends RoxModelBase
         $html = $purifier->purify($suggestion->description) . '<br/>' . $plain;
         try
         {
+            $creator = $this->createEntity('Member')->findById($suggestion->createdby);
             $message = Swift_Message::newInstance();
-            $message->setSubject("New suggestion added by " . $suggestion->creator->Username . ": " . $suggestion->summary);
+            $message->setSubject("New suggestion added by " . $creator->Username . ": " . $suggestion->summary);
             $message->setFrom("suggestions@bewelcome.org");
             $message->setBcc($receivers);
             $message->addPart($html, 'text/html', 'utf-8');

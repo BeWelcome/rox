@@ -48,5 +48,12 @@ class SearchMembersBasePage extends PageWithActiveSkin
        // $stylesheets[] = 'styles/css/minimal/screen/custom/search.css';
        return $stylesheets;
     }
+
+    public function getLateLoadScriptfiles() {
+        $scriptFiles = parent::getLateLoadScriptfiles();
+        $scriptFiles[] = 'search/searchajax.js';
+        return $scriptFiles;
+    }
+
 }
 

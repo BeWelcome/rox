@@ -41,4 +41,3 @@ class SearchMembersTextPage extends SearchMembersBasePage
        return $stylesheets;
     }
 }
-

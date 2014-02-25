@@ -31,7 +31,7 @@ class SearchController extends RoxControllerBase
     public function searchMembersCallback(StdClass $args, ReadOnlyObject $action,
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend) {
 
-        $vars = $args->post;
+        $vars = $args->get;
         $errors = $this->model->checkSearchVarsOk($vars);
         $isAdvanced = isset($vars['search-advanced']);
         if (count($errors)>0)  {
@@ -69,8 +69,18 @@ class SearchController extends RoxControllerBase
      */
     public function searchMembersText() {
         $page = new SearchMembersTextPage();
+        $vars = $this->args_vars->get;
+        $isAdvanced = (isset($this->request_vars[3]) && $this->request_vars[3] == 'advanced');
+        if (!empty($vars)) {
+            $isAdvanced = isset($vars['search-advanced']);
+            $page->errors = $this->model->checkSearchVarsOk($vars);
+            if (count($page->errors) == 0)  {
+                $page->results = $this->model->getResultsForLocation($vars);
+            }
+            $page->vars = $vars;
+        }
         $page->member = $this->model->getLoggedInMember();
-        if (isset($this->request_vars[3]) && $this->request_vars[3] == 'advanced') {
+        if ($isAdvanced) {
             $page->showAdvanced = true;
         } else {
             $page->showAdvanced = false;

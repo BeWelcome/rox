@@ -1,9 +1,9 @@
 <script type="text/Javascript">
 var noMatchesFound = "<?php echo $words->getSilent('SearchNoMatchesFound');?>";
 </script><?php
-$errors = $this->getRedirectedMem('errors');
-$vars = $this->getRedirectedMem('vars');
-if (empty($vars)) {
+$errors = $this->errors;
+if (empty($this->vars)) {
+    $vars = array();
     $vars['search-location'] = '';
     $vars['search-can-host'] = 1;
     $vars['search-distance'] = 25;
@@ -19,15 +19,15 @@ if (empty($vars)) {
     $vars['search-gender'] = 0;
     $vars['search-groups'] = 0;
     $vars['search-accommodation'] = array('anytime', 'dependonrequest', 'neverask');
-    $vars['search-typical-offer'] = array('guidedtour', 'dinner');
+    $vars['search-typical-offer'] = array();
     $vars['search-text'] = '';
     $vars['search-membership'] = 0;
     $vars['search-languages'] = 0;
+    $this->vars = $vars;
 }
-$this->vars = $vars;
 $members = array ();
 $locations = array ();
-$results = $this->getRedirectedMem('results');
+$results = $this->results;
 if ($results) {
     switch ($results['type']) {
         case 'members':
@@ -70,9 +70,9 @@ $layoutbits = new MOD_layoutbits();
     endforeach;
     echo '</div>';
 endif; ?>
-	<form method="post" name="searchmembers-form"
+<?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersCallback');?>
+<form method="get" name="searchmembers-form"
 		style="padding-bottom: 0.5em; width: 100%;">
-        <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersCallback');?>
         <div class="floatbox bottom" style="width:100%">
 			<div class="float_left" style="width: auto">
 				<label for='search-location'><span class="small"><?=$words->get('SearchEnterLocation');?></span></label><br />
@@ -90,7 +90,7 @@ endif; ?>
 			<div class="float_left">
 				<span class="small"><?=$words->get('SearchCanHostAtLeast');?></span><br /> <select
 					id="search-can-host" name="search-can-host" style="width: 7em;"><?php
-	$canHost = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
+	$canHost = array(0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
     foreach($canHost as $value => $display) :
         echo '<option value="' . $value . '"';
         if ($value == $this->vars['search-can-host']) {
@@ -119,7 +119,10 @@ endif; ?>
 			</div>
 
 		</div>
-<div id="search-advanced" class="floatbox"><?php if ($this->showAdvanced) { require_once('advancedoptions.php'); } ?></div>
+<div id="search-advanced" class="floatbox"><?php if ($this->showAdvanced) {
+    $vars = $this->vars; // Needed because advanced options might be loaded through ajax as well
+    require_once('advancedoptions.php');
+} ?></div>
 <div class="floatbox">
 <div class="float_left"><?php
     $numberOfItems = array( '5', '10', '20', '50', '100');
@@ -144,7 +147,11 @@ endif; ?>
         $select .= '</select>';
         echo $words->get('SearchOrderItems', $select); ?></div>
 <div class="float_right">
-<a name="search-advanced" href="search/members/text/advanced"><?php echo $words->getFormatted('SearchMembersAdvanced'); ?></a>
+<?php if ($this->showAdvanced) { ?>
+    <a name="search-simple" href="search/members/text"><?php echo $words->getFormatted('SearchMembersSimple'); ?></a>
+<?php } else { ?>
+    <a name="search-advanced" href="search/members/text/advanced"><?php echo $words->getFormatted('SearchMembersAdvanced'); ?></a>
+<?php } ?>
 </div>
 </div>
 <div class="floatbox">

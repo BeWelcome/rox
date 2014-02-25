@@ -77,4 +77,69 @@ function getLanguagesOptionsDropDown($vars) {
         </select>' . $words->flushBuffer();
     return $select;
 }
+
+function getAccommodationOptions($vars) {
+    $words = new MOD_words();
+    $accommodation = array();
+    if (isset($vars['search-accommodation']) && is_array($vars['search-accommodation'])) {
+        $accommodation = $vars['search-accommodation'];
+    }
+    $options = '<input type="checkbox" name="search-accommodation[]" id="search-accommodation-anytime" value="anytime"';
+    if (in_array("anytime", $accommodation) === true) {
+        $options .= ' checked="checked" ';
+    }
+    $options .= 'class="sval"/>
+        <label for="search-accommodation-anytime">' . $words->get('Accomodation_anytime') . '</label><br/>
+        <input type="checkbox" name="search-accommodation[]" id="search-accommodation-dependonrequest" value="dependonrequest"';
+    if (in_array("dependonrequest", $accommodation) === true) {
+        $options .= ' checked="checked" ';
+    }
+    $options .= 'class="sval"/>
+        <label for="search-accommodation-dependonrequest">' . $words->get('Accomodation_dependonrequest') . '</label><br/>
+        <input type="checkbox" name="search-accommodation[]" id="search-accommodation-neverask" value="neverask"';
+    if (in_array("neverask", $accommodation) === true) {
+        $options .= ' checked="checked" ';
+    }
+    $options .= 'class="sval"/>
+        <label for="search-accommodation-neverask">' . $words->get('Accomodation_neverask') . '</label><br/>';
+    return $options;
+}
+
+function getTypicalOfferOptions($vars) {
+    $words = new MOD_words();
+    $typicalOffers = array();
+    if (isset($vars['search-typical-offer']) && is_array($vars['search-typical-offer'])) {
+        $typicalOffers = $vars['search-typical-offer'];
+    }
+    $options = '<input type="checkbox" name="search-typical-offer[]" id="search-typical-guidedtour" value="guidedtour"';
+    if (in_array("guidedtour", $typicalOffers) === true) {
+        $options .= ' checked="checked" ';
+    }
+    $options .= 'class="sval"/>
+        <label for="search-typical-guidedtour">' . $words->get('TypicOffer_guidedtour') . '</label><br/>
+        <input type="checkbox" name="search-typical-offer[]" id="search-typical-dinner" value="dinner"';
+    if (in_array("dinner", $typicalOffers) === true) {
+        $options .= ' checked="checked" ';
+    }
+    $options .= 'class="sval"/>
+        <label for="search-typical-dinner">' . $words->get('TypicOffer_dinner') . '</label><br/>';
+    return $options;
+}
+
+function getMemberOptions($vars) {
+    $words = new MOD_words();
+    $select = '<select name="search-membership">
+                <option value="0"';
+    if ($vars['search-membership'] == 0) {
+        $select .= ' selected="selected"';
+    }
+    $select .= '>' . $words->getBuffered('Active') . '</option>
+        <option value="1"';
+    if ($vars['search-membership'] == 1) {
+        $select .= ' selected="selected"';
+    }
+    $select .= '>' . $words->getBuffered('All') . '</option>
+        </select>' . $words->flushBuffer();
+    return $select;
+}
 ?>

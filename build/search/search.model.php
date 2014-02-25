@@ -412,7 +412,7 @@ LIMIT 1
             " . $this->accommodationCondition . "
             " . $this->typicalOfferCondition;
         $count = $this->dao->query($str);
-        error_log($str);
+
         $row = $count->fetch(PDB::FETCH_OBJ);
         return $row->cnt;
     }
@@ -425,7 +425,6 @@ LIMIT 1
      * @return multitype:unknown
      */
     private function getMemberDetails(&$vars, $admin1 = false, $country = false) {
-        error_log(print_r($vars, true));
         $langarr = explode('-', $_SESSION['lang']);
         $lang = $langarr[0];
         // First get current page and limits
@@ -439,7 +438,7 @@ LIMIT 1
         $start = ($pageno -1) * $limit;
         $vars['search-page-current'] = $pageno;
 
-        if (isset($vars['search-membership']) & ($vars['search-membership'] == 1)) {
+        if (array_key_exists('search-membership', $vars) && ($vars['search-membership'] == 1)) {
             $this->status = " AND m.status IN (" . Member::ACTIVE_SEARCH . ")";
         } else {
             $this->status = " AND m.status IN ( 'Active')";
@@ -469,7 +468,6 @@ LIMIT 1
         }
         $this->tables .= ", members m";
 
-error_log($this->tables);
         // Fetch count of members at/around the given place
         $vars['countOfMembers'] = $this->getMembersCount(false);
         $vars['countOfPublicMembers'] = $this->getMembersCount(true);
@@ -551,7 +549,7 @@ error_log($this->tables);
         }
         $str = str_replace('*FROM*', 'FROM', $str);
         $str = str_replace('*WHERE*', 'WHERE', $str);
-error_log($str);
+
         $rawMembers = $this->bulkLookup($str);
 
         $loggedInMember = $this->getLoggedInMember();
@@ -951,12 +949,14 @@ error_log($str);
      */
     public function getDefaultAdvancedOptions() {
         $vars = array();
+        $vars['search-username'] = '';
+        $vars['search-text'] = '';
         $vars['search-age-minimum'] = 0;
         $vars['search-age-maximum'] = 0;
         $vars['search-gender'] = 0;
         $vars['search-groups'] = 0;
         $vars['search-accommodation'] = array('anytime', 'dependonrequest', 'neverask');
-        $vars['search-typical-offer'] = array('guidedtour', 'dinner');
+        $vars['search-typical-offer'] = array();
         $vars['search-text'] = '';
         $vars['search-membership'] = 0;
         $vars['search-languages'] = 0;

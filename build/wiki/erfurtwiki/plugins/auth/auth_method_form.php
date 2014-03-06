@@ -22,7 +22,7 @@ $ewiki_t["de"]["LOGIN_QUERY"] = "Bitte log dich ein, um diese Funktion zu verwen
 $ewiki_t["de"]["LOGIN_QUERY_2"] = "";
 #-- text snippet translations
 $ewiki_t["de"]["user"] = "Nutzer";
-$ewiki_t["de"]["password"] = "Paßwort";
+$ewiki_t["de"]["password"] = "Paï¿½wort";
 $ewiki_t["de"]["login"] = "Einloggen";
 
 
@@ -76,7 +76,7 @@ function ewiki_auth_query_form(&$data, $force_query=0) {
          . ewiki_t(
                '_{user} <input type="text" size="14" name="login_user"><br />' . "\n"
              . '_{password} <input type="password" size="10" maxsize="12" name="login_pw"><br /><br />' . "\n"
-             . '<input type="submit" value="_{login}"><br /><br />' . "\n"
+             . '<input type="submit" class="button" value="_{login}"><br /><br />' . "\n"
            )
          . $_REPOST
          . "</form><br /><br />\n"

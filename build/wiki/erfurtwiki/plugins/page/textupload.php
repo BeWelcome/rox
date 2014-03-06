@@ -94,7 +94,7 @@ archive or tarball (compressed or not).
 <form action="$url" method="POST" enctype="multipart/form-data">
   file <input type="file" name="upload_text_file" accept-type="$ACCEPT">
    <small><br /><br /></small>
-  <input type="submit" value="store into Wiki">
+  <input type="submit" class="button" value="store into Wiki">
    <br /><br />
   <input type="checkbox" name="textfile_overwrite_pages" value="1" checked="checked"> overwrite existing page
    <br />
@@ -214,7 +214,7 @@ function ewiki_textfile_save($file=array()) {
 
       #-- reject
       if (!$dest_id) {
-         return($o . "· Could not store '$fn_orig', please specify a page name to use as destination.<br />\n");
+         return($o . "ï¿½ Could not store '$fn_orig', please specify a page name to use as destination.<br />\n");
       }
 
 
@@ -224,7 +224,7 @@ function ewiki_textfile_save($file=array()) {
 
          $data = ewiki_db::GET($dest_id);
          if ($data && !$_REQUEST["textfile_overwrite_pages"]) {
-            $o .= "· did not overwrite existing page '$ahref_dest' with content from file '$fn_orig'<br />\n";
+            $o .= "ï¿½ did not overwrite existing page '$ahref_dest' with content from file '$fn_orig'<br />\n";
          }
          else {
             if (empty($data)) {
@@ -246,17 +246,17 @@ function ewiki_textfile_save($file=array()) {
             $data["refs"] = "\n\n".implode("\n", array_keys($ewiki_links))."\n\n";
 
             if (ewiki_db::WRITE($data)) {
-               $o .= "· extracted text from '$fn_orig' into page '$ahref_dest'<br />\n";
+               $o .= "ï¿½ extracted text from '$fn_orig' into page '$ahref_dest'<br />\n";
 
 #<debug>#  $o .= "<br /><br /><h1>src</h1>" . ($data["content"])."<h1>page</h1>" . ewiki_format($data["content"]);
             }
             else {
-               $o .= "· database error occoured, when writing to '$ahref_dest' from file '$fn_orig'<br />\n";
+               $o .= "ï¿½ database error occoured, when writing to '$ahref_dest' from file '$fn_orig'<br />\n";
             }
          }
       }
       else {
-         $o .= "· couldn't detect format (and text content) of '$fn_orig'<br />\n";
+         $o .= "ï¿½ couldn't detect format (and text content) of '$fn_orig'<br />\n";
       }
 
    }
@@ -488,7 +488,7 @@ function ewiki_unformat($html) {
       "em" => "''",
       "tt" => "==",
       "big" => "##",
-      "small" => "µµ",
+      "small" => "ï¿½ï¿½",
       "sup" => "^^",
       "br" => "\n%%%\n",
       "hr" => "\n\n----\n\n",

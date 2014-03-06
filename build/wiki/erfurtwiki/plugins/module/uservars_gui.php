@@ -240,7 +240,7 @@ function ewiki_page_uservars_full($id, $data, $action)
       <tr><td>Field Name</td><td><input type="text" name="new_accountfield"></td></tr>
       <tr><td>Value</td><td><input type="text" name="new_accountfieldvalue"></td></tr>
     </table>
-    <input type="submit" value="Add Field" name="submit_accountaddfield" />
+    <input type="submit" class="button" value="Add Field" name="submit_accountaddfield" />
   </form>
   <h3>Add/Edit Multiple Fields</h3>
   <p>On the left insert one field name per line.  On the right insert
@@ -253,7 +253,7 @@ function ewiki_page_uservars_full($id, $data, $action)
       <tr><td><textarea name="batch_fieldnames" rows="10" cols="25"></textarea></td>
       <td><textarea name="batch_fieldvalues" rows="10" cols="25"></textarea></td></tr>
     </table>
-    <input type="submit" name="submit_batchfields" value="Add Fields">
+    <input type="submit" class="button" name="submit_batchfields" value="Add Fields">
   </form>
   <h3>Add Field to Multiple Users</h3>
   <p>In the box below, insert one username per line.  Then insert a field
@@ -265,7 +265,7 @@ function ewiki_page_uservars_full($id, $data, $action)
     <tr><td colspan=2>User Names:</td></tr><tr><td colspan=2><textarea name="batch_usernames" rows="10"  cols="24"></textarea></td></tr>
       <tr><td>Field Name</td><td><input type="text" name="text_fieldname"></td></tr><tr><td>Field Value</td><td><input type="text" name="text_fieldvalue"></td></tr>
     </table>
-    <input type="submit" name="submit_batchusers" value="Add Fields">
+    <input type="submit" class="button" name="submit_batchusers" value="Add Fields">
   </form>
   <h3>Bulk Set</h3>
   <p>In the box below insert username,fieldname,value. Only one per line.</p>
@@ -274,7 +274,7 @@ function ewiki_page_uservars_full($id, $data, $action)
     <table>
     <tr><td><textarea name="bulk_items" rows="10"  cols="50"></textarea></td></tr>
     </table>
-    <input type="submit" name="submit_bulkset" value="Submit Bulk">
+    <input type="submit" class="button" name="submit_bulkset" value="Submit Bulk">
   </form>
 <?
   $o = ob_get_contents();

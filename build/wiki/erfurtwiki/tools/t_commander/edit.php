@@ -98,9 +98,9 @@
    
    #-- {version}
    print_field($data, "version", 3, "", "");
-   echo ' <input type="submit" name="refresh" value="refr" title="refresh view, show given version"> ';
+   echo ' <input type="submit" class="button" name="refresh" value="refr" title="refresh view, show given version"> ';
    echo ' <a href="list_vers.php?id='.urlencode($id).'">...</a> ';
-   echo '<input type="submit" name="delete" value="del" title="delete current page version"><br>' . "\n";
+   echo '<input type="submit" class="button" name="delete" value="del" title="delete current page version"><br>' . "\n";
    
    #-- {flags}
    print_flags($data);
@@ -114,7 +114,7 @@
   
    #-- [save]
    echo "\n<small><br>\n"
-      . '<input type="submit" name="save" value="update database entry">'
+      . '<input type="submit" class="button" name="save" value="update database entry">'
       . "\n<br></small><br>\n";
       
    #-- {content}

@@ -65,7 +65,7 @@
 
      <br>
 
-     <input type="submit" name="restore" value="restore">
+     <input type="submit" class="button" name="restore" value="restore">
      <br><br>
 
     </form>

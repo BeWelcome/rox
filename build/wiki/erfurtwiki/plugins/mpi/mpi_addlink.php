@@ -59,7 +59,7 @@ function ewiki_mpi_addlink($action, $args, &$iii, &$s)
 <form style="border:2px #333370 solid; background:#7770B0; padding:5px;"class="BugReport" action="$url" method="POST" enctype="multipart/form-data">
 <input type="hidden" name="id" value="$ewiki_action/$ewiki_id">
 Link <input type="text" name="link_url" value="http://www.example.com/" size="50">
-<input type="submit" name="link_save" value="hinzufügen">
+<input type="submit" class="button" name="link_save" value="hinzufï¿½gen">
 </form>
 EOT;
     }

@@ -36,7 +36,7 @@ function ewiki_mpi_brainfuck($action, $args, &$iii, &$s)
       return('<form action="'.ewiki_script("", $ewiki_id).'">'
             .'<input name="i" type="text"> '
             .'<input type="hidden" name="id" value="'.htmlentities($ewiki_id).'">'
-            .'<input type="submit"></form>'
+            .'<input type="submit" class="button"></form>'
       );
    }
    else {

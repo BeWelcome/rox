@@ -58,9 +58,9 @@ function ewiki_mpi_bugreportstate($action, $args, &$iii, &$s)
        $url = ewiki_script("", $ewiki_id);
        $o .=<<<EOT
 <form action="$url#added" method="POST" enctype="multipart/form-data">
-<input type="submit" name="brs_change" value="open">
-<input type="submit" name="brs_change" value="closed">
-<input type="submit" name="brs_change" value="frozen">
+<input type="submit" class="button" name="brs_change" value="open">
+<input type="submit" class="button" name="brs_change" value="closed">
+<input type="submit" class="button" name="brs_change" value="frozen">
 </form>
 EOT;
     }

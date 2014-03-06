@@ -105,8 +105,8 @@ else {
        <br>
        delete the last <input name="version_depth" size="2" value="5"> versions at max
        <br><br>
-       <input type="submit" name="list" value="--no-act">
-       <input type="submit" name="proceed" value="revert changes">
+       <input type="submit" class="button" name="list" value="--no-act">
+       <input type="submit" class="button" name="proceed" value="revert changes">
      </form>
      <?php 
 

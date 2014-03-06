@@ -15,7 +15,7 @@ function ewiki_mpi_registerspam($action, &$args, &$iii, &$s) {
       return<<<END
 <form action="$_SERVER[REQUEST_URI]" method="POST" enctype="multipart/form-data">
 <textarea name="add_spam" cols="50" rows="3"></textarea><br/>
-<input type="submit" name="regspam" value="add listed urls" />
+<input type="submit" class="button" name="regspam" value="add listed urls" />
 </form>
 END;
    }

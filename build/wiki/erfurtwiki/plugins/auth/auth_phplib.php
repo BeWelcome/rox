@@ -19,11 +19,11 @@
   	 if($perm->have_perm(EWIKI_PHPLIB_ALLUSERS_PERM)){
 	?>
 		Welcome <?php echo($GLOBALS["ewiki_author"]); ?><br />
-		» <A HREF='<?php echo(EWIKI_SCRIPT); ?>Logout'>Logout</A><br />
+		ï¿½ <A HREF='<?php echo(EWIKI_SCRIPT); ?>Logout'>Logout</A><br />
 	<?php
 		}else{
 	?>
-		» <A HREF='<?php echo(EWIKI_SCRIPT); ?>Login'>Login</A><br />
+		ï¿½ <A HREF='<?php echo(EWIKI_SCRIPT); ?>Login'>Login</A><br />
 	<?php
 		};
 	?>
@@ -82,8 +82,8 @@ Please identify yourself with a username and a password:<br />
  
  <tr>
   <td>&nbsp;</td>
-  <td align=right><input type="submit" name="cancel_login" value="Cancel">
-  <input type="submit" name="submit" value="Login now"></td>
+  <td align=right><input type="submit" class="button" name="cancel_login" value="Cancel">
+  <input type="submit" class="button" name="submit" value="Login now"></td>
  </tr>
 </table>
 
@@ -117,8 +117,8 @@ Please enter your old password once and your new password twice in the blanks be
  
  <tr>
   <td>&nbsp;</td>
-  <td align=right><input type="submit" name="cancel_pwchng" value="Cancel">
-  <input type="submit" name="submit" value="Change Password"></td>
+  <td align=right><input type="submit" class="button" name="cancel_pwchng" value="Cancel">
+  <input type="submit" class="button" name="submit" value="Change Password"></td>
  </tr>
 </table>
 

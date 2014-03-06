@@ -11,7 +11,7 @@ $ewiki_t["en"]["WIKIDUMP"] = "Here you can download all pages of this Wiki in HT
 $ewiki_t["de"]["WIKIDUMP"] = "Du kannst dir hier alle Seiten des Wikis im HTML-Format herunterladen. Das Archiv wird im UNIX .tar Format erstellt.";
 $ewiki_t["de"]["download tarball"] = "tarball herunterladen";
 $ewiki_t["de"]["with images"] = "mit Graphiken";
-$ewiki_t["de"]["complete .html files"] = "vollständige .html Dateien";
+$ewiki_t["de"]["complete .html files"] = "vollstï¿½ndige .html Dateien";
 $ewiki_t["de"]["include virtual pages"] = "auch virtuelle Seiten";
 
 #-- glue
@@ -56,7 +56,7 @@ _{WIKIDUMP}
 <br /><br />
 <form action="$url" method="POST" enctype="multipart/form-data">
 <input type="hidden" name="id" value="$id">
-<input type="submit" name="download_tarball" value="_{download tarball}">
+<input type="submit" class="button" name="download_tarball" value="_{download tarball}">
 <br /><br />
 <input type="checkbox" name="dump_images" value="1"> _{with images}<br />
 <input type="checkbox" name="dump_virtual" value="1"> _{include virtual pages}<br />

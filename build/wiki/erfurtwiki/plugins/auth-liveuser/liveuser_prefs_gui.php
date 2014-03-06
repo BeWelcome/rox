@@ -126,7 +126,7 @@ function ewiki_page_liveuser_admin_prefs($id, $data, $action)
 	?>
             </table>
             <input type="reset" text="Reset">
-            <input type="submit" name="changeprefs_submit">
+            <input type="submit" class="button" name="changeprefs_submit">
             </form>
         <?php
     } else {
@@ -143,7 +143,7 @@ function ewiki_page_liveuser_admin_prefs($id, $data, $action)
         <input id="public_chk" name="public_chk" type="checkbox"><br />    
         <label for="default_text">Default Value</label>
         <input id="default_text" name="default_text" type="text"><br />
-        <input type="submit" name="addprefs_submit">
+        <input type="submit" class="button" name="addprefs_submit">
         </form>
     <?php
     

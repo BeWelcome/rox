@@ -94,7 +94,7 @@
 
 
      echo '<form action="t_remove.php" method="POST" enctype="multipart/form-data">';
-     echo '<input type="submit" name="listall" value="listall">';
+     echo '<input type="submit" class="button" name="listall" value="listall">';
      echo '<table class="list" border="0" cellspacing="3" cellpadding="2" width="500">' . "\n";
      echo "<tr><th>page name</th><th>error / reason</th></tr>\n";
 
@@ -121,7 +121,7 @@
 
      }
 
-     echo '</table><br><input type="submit" value="&nbsp; delete selected pages &nbsp;"></form>';
+     echo '</table><br><input type="submit" class="button" value="&nbsp; delete selected pages &nbsp;"></form>';
 
   }
   else {
@@ -131,7 +131,7 @@
 
         $id = rawurldecode($id);
 
-        echo "<li>purging »".htmlentities($id)."«...</li>";
+        echo "<li>purging ï¿½".htmlentities($id)."ï¿½...</li>";
 
         $data = ewiki_db::GET($id);
         for ($version=1; $version<=$data["version"]; $version++) {

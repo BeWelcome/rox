@@ -30,7 +30,7 @@ be found using the search functions.<br /><br />";
 
       $o .= '<form action="'.ewiki_script("",$id).'" method="POST" enctype="text/html">'
           . '<input type="hidden" name="id" value="'.$id.'">'
-          . '<input type="submit" value="generate cache" name="generate_cache">'
+          . '<input type="submit" class="button" value="generate cache" name="generate_cache">'
           . '</form>';
 
    }

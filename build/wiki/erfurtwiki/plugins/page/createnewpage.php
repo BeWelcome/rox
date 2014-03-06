@@ -22,7 +22,7 @@ function ewiki_createpage($id, &$data, $version) {
       '<form action="'.ewiki_script("","").'" method="POST" enctype="multipart/formdata"> '
       .'_{name of the new page} <input type="text" name="id" size="26" value="">'
       .'<br />'
-      .'<input type="submit" value="_{create}">'
+      .'<input type="submit" class="button" value="_{create}">'
       .'</form>'
    );
    return($o);

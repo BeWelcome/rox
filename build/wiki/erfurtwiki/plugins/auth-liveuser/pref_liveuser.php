@@ -72,7 +72,7 @@ function ewiki_page_liveuser_chprefs($id, $data)
 	echo ' value='.liveuser_pref_getPref($liveuser->getHandle(), $result['field_name']).'></td></tr>';	
     }   
     
-    echo '<tr><td colspan="2"><input type="reset" text="Reset"><input type="submit"></td></tr></table></form>';        
+    echo '<tr><td colspan="2"><input type="reset" text="Reset"><input type="submit" class="button"></td></tr></table></form>';        
     
     $o = ob_get_contents();
     ob_end_clean();

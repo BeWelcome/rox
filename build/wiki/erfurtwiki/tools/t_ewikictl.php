@@ -280,7 +280,7 @@ function aform($action, $args) {
       }
       echo "<small>$l[3]</small>\n<br>\n";
    }
-   echo '<input type="submit" value="do">';
+   echo '<input type="submit" class="button" value="do">';
    echo "</form>\n";
    $xn++;
 }

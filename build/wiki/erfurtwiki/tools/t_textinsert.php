@@ -25,7 +25,7 @@
  <FORM ACTION="t_textinsert.php" METHOD="GET">
  subdir with page files: <INPUT NAME="from" VALUE="./init-pages">
  <br><br>
- <INPUT type="submit" VALUE="&nbsp;  list files  &nbsp;">
+ <input type="submit" class="button" VALUE="&nbsp;  list files  &nbsp;">
  </FORM>
 
      <?php
@@ -101,7 +101,7 @@
      }
      
      echo '</TABLE>' .
-          '<INPUT TYPE="submit" NAME="insert" VALUE="&nbsp;  insert files  &nbsp;">' .
+          '<input type="submit" class="button" NAME="insert" VALUE="&nbsp;  insert files  &nbsp;">' .
           '</FORM>';     
 
   }

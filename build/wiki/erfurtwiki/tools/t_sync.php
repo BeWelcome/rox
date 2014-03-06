@@ -99,7 +99,7 @@ latest version of every page.
     <option value="exact">exact</option>
   </select>
   <!-- ... -->
-  <input type="submit" value="transfer">
+  <input type="submit" class="button" value="transfer">
 </form>
 <?php
 

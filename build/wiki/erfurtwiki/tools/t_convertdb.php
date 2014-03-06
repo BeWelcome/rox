@@ -1,7 +1,7 @@
 <?php
 /*
    database conversion util
-   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+   ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    If you need to special settings to the ewiki database you're converting
    to, then please insert all required define(); statements above the first
    include line, so you can override the settings from your main config.php
@@ -91,7 +91,7 @@ include("t_config.php");
 
       <br>
       <br>
-      <input type="submit" name="readtest" value="test read access">
+      <input type="submit" class="button" name="readtest" value="test read access">
       
       <br><br>
       <br>
@@ -151,7 +151,7 @@ include("t_config.php");
 
       <br>
       <br>
-      <input type="submit" name="convert" value="start transfer">
+      <input type="submit" class="button" name="convert" value="start transfer">
 
     </td>
     </tr>

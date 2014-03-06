@@ -24,7 +24,7 @@
        <form action="'.ewiki_script("login",$id).'" method="get">
           your WikiName <input type="text" name="wikiauthor" size="20">
           <br /><br />
-          <input type="submit" value="log in">
+          <input type="submit" class="button" value="log in">
           <input type="hidden" name="page" value="'.$id.'">
           <br /><br />
           <input type="checkbox" name="forever" value="1"> make cookie persistent forever

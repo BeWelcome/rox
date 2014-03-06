@@ -86,7 +86,7 @@ function ewiki_page_recentchanges($recentchanges, $data, $action) {
    <form action="$url" method="GET">
      <input type="hidden" name="id" value="$recentchanges">
      _{show last} <input type="text" name="days" value="$days" size="5">
-     <input type="submit" value="_{days}">
+     <input type="submit" class="button" value="_{days}">
    </form>
    <br />
 EOT

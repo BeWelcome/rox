@@ -587,7 +587,7 @@ a {
   previously choosen settings:
   <br>
   <form action="t_setupwiz.php" method="POST" enctype="multipart/form-data" >
-  <input size="32" type="file" name="load_ini"> <input type="submit" value="load it">
+  <input size="32" type="file" name="load_ini"> <input type="submit" class="button" value="load it">
   <br><br>
   
 <?php
@@ -667,11 +667,11 @@ a {
   file distributed with ewiki.
   <br><br>
 
-  <input type="submit" name="ewiki_ini" value="save ewiki.ini"> is
+  <input type="submit" class="button" name="ewiki_ini" value="save ewiki.ini"> is
   useful to later come back and reuse the settings you've made here.
   <br><br>
   
-  <input type="submit" name="monsterwiki_php" value="create monsterwiki script"> with
+  <input type="submit" class="button" name="monsterwiki_php" value="create monsterwiki script"> with
   above options and extensions merged in; use this script instead of ewiki.php
   then (it is believed to run a bit faster)
   <br><br>

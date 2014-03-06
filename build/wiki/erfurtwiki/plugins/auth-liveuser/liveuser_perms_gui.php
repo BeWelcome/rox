@@ -122,7 +122,7 @@ function ewiki_page_liveuser_admin_perms($id, $data, $action)
 	
 	?>
 	    </select><br />
-	    <input type="submit" name="submit_addperm" value="Create Permission" />
+	    <input type="submit" class="button" name="submit_addperm" value="Create Permission" />
 	    </form>
         <?php
     }
@@ -150,7 +150,7 @@ function ewiki_page_liveuser_admin_perms($id, $data, $action)
     ?>
                 </select>
             </td>
-            <td><input type="submit" name="submit_filterperm" value="Filter" /></td>
+            <td><input type="submit" class="button" name="submit_filterperm" value="Filter" /></td>
         </tr><tr><td colspan="3"><label>First Letter</label>&nbsp;&nbsp;
     <?php
     

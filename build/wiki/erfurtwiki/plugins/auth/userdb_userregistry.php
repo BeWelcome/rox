@@ -34,26 +34,26 @@ $ewiki_t["en"]["USERNAME_MIN"] = "User names must be at least 3 characters long.
 $ewiki_t["en"]["USERNAME_ALREADY_USED"] = "This user name is already used.";
 #-- translations
 $ewiki_t["de"]["PLEASE_RETRY"] = "Bitte, versuch's nochmal.";
-$ewiki_t["de"]["WRONG_PW"] = "Du hast ein falsches Paßwort eingegeben!";
-$ewiki_t["de"]["RETYPE_PW"] = "Paßwort und Wiederholung stimmen nicht überein!";
-$ewiki_t["de"]["PW_ONLY_LETTERS"] = "Nur Buchstaben und Zahlen sind im Paßwort und Benutzernamen erlaubt.";
-$ewiki_t["en"]["USERNAME_MIN"] = "Benutzernamen müssen wenigstens 3 Zeichen lang sein.";
+$ewiki_t["de"]["WRONG_PW"] = "Du hast ein falsches Paï¿½wort eingegeben!";
+$ewiki_t["de"]["RETYPE_PW"] = "Paï¿½wort und Wiederholung stimmen nicht ï¿½berein!";
+$ewiki_t["de"]["PW_ONLY_LETTERS"] = "Nur Buchstaben und Zahlen sind im Paï¿½wort und Benutzernamen erlaubt.";
+$ewiki_t["en"]["USERNAME_MIN"] = "Benutzernamen mï¿½ssen wenigstens 3 Zeichen lang sein.";
 $ewiki_t["en"]["USERNAME_ALREADY_USED"] = "Dieser Benutzername wird schon verwendet.";
 // partial text _{snippets}
 $ewiki_t["de"]["New Account"] = "Neues Konto";
 $ewiki_t["de"]["Account Settings"] = "Konto Einstellungen";
-$ewiki_t["de"]["change password"] = "Paßwort Ändern";
-$ewiki_t["de"]["new password"] = "neues Paßwort";
-$ewiki_t["de"]["password"] = "Paßwort";
+$ewiki_t["de"]["change password"] = "Paï¿½wort ï¿½ndern";
+$ewiki_t["de"]["new password"] = "neues Paï¿½wort";
+$ewiki_t["de"]["password"] = "Paï¿½wort";
 $ewiki_t["de"]["retype"] = "wiederholen";
 $ewiki_t["de"]["user/login name"] = "Benutzer/Login-Name";
 $ewiki_t["de"]["name"] = "Name";
 $ewiki_t["de"]["save"] = "Speichern";
 $ewiki_t["de"]["optional infos"] = "Optionale Angaben";
-$ewiki_t["de"]["personal WikiPage"] = "persönliche WikiSeite";
+$ewiki_t["de"]["personal WikiPage"] = "persï¿½nliche WikiSeite";
 $ewiki_t["de"]["email address"] = "EMail-Adresse";
 $ewiki_t["de"]["create account"] = "Konto anlegen";
-$ewiki_t["de"]["change settings"] = "Einstellungen ändern";
+$ewiki_t["de"]["change settings"] = "Einstellungen ï¿½ndern";
 $ewiki_t["de"]["Data saved"] = "Daten gespeichert";
 $ewiki_t["de"]["Error saving"] = "Fehler beim Speichern";
 
@@ -117,7 +117,7 @@ _{user/login name} <input type="text" size="14" name="userreg_name" value="$user
 _{password} <input type="password" name="new_pw" size="10" maxsize="12" value="$pw"> <br />
 _{retype} <input type="password" name="new_pw2" size="10" maxsize="12" value=""> <br />
 <br />
-<input type="submit" name="userreg_store" value="_{create account}">
+<input type="submit" class="button" name="userreg_store" value="_{create account}">
 </form><br /><br />
 END
       );
@@ -245,7 +245,7 @@ opt string <input type="text" name="userreg_ue[5]" value="{$ue[5]}"><br />
 opt string <input type="text" name="userreg_ue[6]" value="{$ue[6]}"><br />
 -->
 <br />
-<input type="submit" name="userreg_store" value="_{save}">
+<input type="submit" class="button" name="userreg_store" value="_{save}">
 </form><br /><br />
 END
       );
@@ -260,12 +260,12 @@ END
 <div class="userreg-form-settings">
 <div class="userreg-form-register">
 _{name} <input type="text" size="14" name="userreg_name"> &nbsp;
-<input type="submit" name="userreg_register" value="_{create account}"><br />
+<input type="submit" class="button" name="userreg_register" value="_{create account}"><br />
 </div>
 <br />
 _{password} <input type="password" size="10" maxsize="12" name="userreg_pw"><br />
 <br />
-<input type="submit" name="userreg_login" value="_{change settings}">
+<input type="submit" class="button" name="userreg_login" value="_{change settings}">
 </div>
 </form><br /><br />
 END

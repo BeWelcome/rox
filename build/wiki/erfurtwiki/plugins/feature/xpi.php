@@ -231,10 +231,10 @@ function ewiki_xpi_password(&$access, &$jpi_access) {
          $o .= "On this Wiki everybody is allowed to install safe .jpi (phpjs) plugins. ";
       }
       $o .= "To install click-and-run .xpi plugins you must be administrator and provide the correct password. ";
-      $o .= '<p><b>access password</b><br /><input type="password" name="xpi_pw" size="16"><br /><input type="submit" value="log in"></p>';
+      $o .= '<p><b>access password</b><br /><input type="password" name="xpi_pw" size="16"><br /><input type="submit" class="button" value="log in"></p>';
    }
    else {
-      $o .= '<input type="submit" name="xpi_logout" value="log out">';
+      $o .= '<input type="submit" class="button" name="xpi_logout" value="log out">';
    }
    $o .= "</div>\n";
 
@@ -316,11 +316,11 @@ function ewiki_xpi_plugin_control_centre() {
          . '<td class="xs-id">' . $title . '</td>'
          . '<td><small>' . htmlentities($dat["description"]) . '</small></td>'
          . '<td>' . $dat["author"] . ", " . $dat["license"] . '</td>'
-         . '<td class="xs-check"><input type="submit" name="xpi_rm['.rawurlencode($dat["id"]).']" value="rm" title="uninstall plugin"'.($access?"":" disabled").'></td>'
+         . '<td class="xs-check"><input type="submit" class="button" name="xpi_rm['.rawurlencode($dat["id"]).']" value="rm" title="uninstall plugin"'.($access?"":" disabled").'></td>'
          . '</tr>';
    }
    $o .= '</table>';
-   $o .= '<br /><input type="submit" name="setup_xpi" value="configure"'.($access?"":" disabled").'>';
+   $o .= '<br /><input type="submit" class="button" name="setup_xpi" value="configure"'.($access?"":" disabled").'>';
    $o .= '</form></div>';
    
    return($o);
@@ -330,10 +330,10 @@ function ewiki_xpi_plugin_control_centre() {
 
 #-- plugin upload <form>
 function ewiki_xpi_upload_form() {
-   $o = '<b>Warning</b>: before uploading an extension plugin, you should check its source, because you\'ll otherwise may open big security leaks in your installation. <br /><br /> <input type="file" name="xpi_file"> <br /> <input type="submit" name="install_xpi" value="install"> <br /><br />';
+   $o = '<b>Warning</b>: before uploading an extension plugin, you should check its source, because you\'ll otherwise may open big security leaks in your installation. <br /><br /> <input type="file" name="xpi_file"> <br /> <input type="submit" class="button" name="install_xpi" value="install"> <br /><br />';
    $o .= 'Or install a plugin from one of the registered plugin directories:<br />';
    foreach ($ewiki_config["xpi_dirs"] as $s) {
-      $o .= '<input type="submit" name="xpidir" value="'.htmlentities($s).'"><br />';
+      $o .= '<input type="submit" class="button" name="xpidir" value="'.htmlentities($s).'"><br />';
    }
    return($o);
 }
@@ -360,7 +360,7 @@ function ewiki_xpi_show_remote_repository() {
      $o .= '<table border="0" cellspacing="1" cellpadding="2">';
      foreach ($r as $fn=>$xpi) {
         $o .= "\n".'<tr><td colspan="3">'
-           . '<input type="submit" name="install_remote_xpi" value="'
+           . '<input type="submit" class="button" name="install_remote_xpi" value="'
              .htmlentities($fn).'" title="'.$xpi["id"].'">'
            . '</td></tr><tr>'
            . "<td class=\"xs-id\">[{$xpi[type]}] {$xpi[id]} {$xpi[version]}</td>"

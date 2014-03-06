@@ -23,7 +23,7 @@ $ewiki_t["en"]["EXTODOTITLE"] = "Site Wide Todo Lists";
 $ewiki_t["en"]["EXTODOFOR"] = "Todo items for ";	
 $ewiki_t["en"]["EXTODOFORALL"] = "All todo items.";	
 $ewiki_t["en"]["EXALLCONTROLS"] = '<div id="ewiki_todofilter"><form name="input" action="liveweb.php?" method="get"><p>Enter initials: 
-  <input type="hidden" value="$controlid" name="id"><input type="text" id="q" name="q" size="2" maxlength"16"> <input type="submit"
+  <input type="hidden" value="$controlid" name="id"><input type="text" id="q" name="q" size="2" maxlength"16"> <input type="submit" class="button"
   value="Extract Items"><br />(Hint: For multiple users connect initials using "and" or "or")</p></form></div>';
 $ewiki_t["en"]["EXALLERROR"] = "<p><h4>Error</h4><ul><li>Unable to complete query.  Please do not combine the 'and' and 'or' operators.</li></ul></p>";
 

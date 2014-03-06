@@ -337,7 +337,7 @@ function ewiki_action_manage_liveuser($id, $data, $action)
     
     // ignore new pages
     if (!page_exists($id, $data)) {
-        $o .= ewiki_make_title('', ewiki_t('MANAGE_TITLE').' » '.$id.' «');
+        $o .= ewiki_make_title('', ewiki_t('MANAGE_TITLE').' ï¿½ '.$id.' ï¿½');
         $o .= ewiki_t('MANAGE_NEWPAGE');
         return $o;
     }
@@ -352,11 +352,11 @@ function ewiki_action_manage_liveuser($id, $data, $action)
     }
     
     // construct manage form
-    $o .= ewiki_make_title('', ewiki_t('MANAGE_TITLE').' » '.$id.' «');
+    $o .= ewiki_make_title('', ewiki_t('MANAGE_TITLE').' ï¿½ '.$id.' ï¿½');
     $o .= '<form action="" method="post">';
     $o .= ewiki_edit_form_append_liveuser_manage($id, $data, $action, false);
     $o .= ewiki_edit_form_append_liveuser_publish($id, $data, $action);
-    $o .= '<input type="submit" name="submit_manage" /></form>';
+    $o .= '<input type="submit" class="button" name="submit_manage" /></form>';
     
     return $o;
 }

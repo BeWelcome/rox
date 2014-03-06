@@ -87,7 +87,7 @@ else {
        file types <input type="text" name="glob" value="*.htm*"><br>
        (unix filename globbing!)
        <br><br>
-       <input type="submit" value="Generate" name="go">
+       <input type="submit" class="button" value="Generate" name="go">
      </form>
      <?php 
 

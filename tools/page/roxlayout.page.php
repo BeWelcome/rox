@@ -86,7 +86,7 @@ class PageWithRoxLayout extends PageWithHTML
      * Return a list of items to show in the sub menu.  Each item is
      * an array of keyword, url and translatable Word
      */
-/*    protected function getTopmenuItems()
+    protected function getTopmenuItems()
     {
         $items = array();
 
@@ -108,10 +108,10 @@ class PageWithRoxLayout extends PageWithHTML
      * Override this method to define which of the top menu items is active, e.g.
      * return 'forums';
      */
-/*    protected function getTopmenuActiveItem() {
+   protected function getTopmenuActiveItem() {
         return 0;
     }
-*/
+
     protected function getSubmenuItems() {
         return 0;
     }

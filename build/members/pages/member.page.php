@@ -152,34 +152,30 @@ class MemberPage extends PageWithActiveSkin
         }
         return($tt) ;
     }
-    
+        protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col1_left', 'col3_right');
+    }
     protected function columnsArea()
     {
-        $side_column_names = parent::getColumnNames();
-        $mid_column_name = array_pop($side_column_names);
         ?>
-        <?php foreach ($side_column_names as $column_name) { ?>
-
-          <div id="<?=$column_name ?>">
-            <div id="<?=$column_name ?>_content" class="clearfix">
-              <? $name = 'column_'.$column_name ?>
+        <div class="row">
+          <div id="col1_left">
+            <div id="col1_content">
+              <? $name = 'column_col1';?>
               <?php $this->$name() ?>
-            </div> <!-- <?=$column_name ?>_content -->
-          </div> <!-- <?=$column_name ?> -->
-
-        <?php } ?>
-
-          <div id="<?=$mid_column_name ?>">
-            <div id="<?=$mid_column_name ?>_content" class="clearfix">
+            </div>
+          </div> 
+          <div id="col3_right">
+            <div id="col3_content">
               <?php $this->teaserReplacement(); ?>
-              <? $name = 'column_'.$mid_column_name; ?>
+              <? $name = 'column_col3';?>
                 <?php $this->$name() ?>
               <?php $this->$name ?>
-            </div> <!-- <?=$mid_column_name ?>_content -->
-            <!-- IE Column Clearing -->
-            <div id="ie_clearing">&nbsp;</div>
-            <!-- Ende: IE Column Clearing -->
-          </div> <!-- <?=$mid_column_name ?> -->
+            </div> 
+          </div>
+        </div>
         <?php
     }
 

@@ -159,6 +159,13 @@ class PageWithRoxLayout extends PageWithHTML
                 $IdMember = intval($_SESSION["IdMember"]);
                 $roxmodel = new Rox();
                 $numberOfNewMessagees = $roxmodel->getNewMessagesNumber($IdMember);
+                if ($numberOfNewMessagees > 0) {
+                    $envelopestyle = "fa fa-envelope"; 
+                    $nbOfNewMessagees = "(" . intval($numberOfNewMessagees) . ")";
+                    echo $words->flushBuffer();
+                } else {
+                    $envelopestyle = "fa fa-envelope-o";
+                }
             }
         }
 
@@ -172,13 +179,6 @@ class PageWithRoxLayout extends PageWithHTML
                 $who_is_online_count = 0;
             }
         }*/
-        if ($numberOfNewMessagees > 0) {
-            $envelopestyle = "fa fa-envelope"; 
-            $nbOfNewMessagees = "(" . intval($numberOfNewMessagees) . ")";
-            echo $words->flushBuffer();
-    } else {
-        $envelopestyle = "fa fa-envelope-o";
-    }
         require TEMPLATE_DIR . 'shared/roxpage/topnav.php';
     }
 

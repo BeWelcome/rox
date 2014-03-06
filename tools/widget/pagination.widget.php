@@ -52,14 +52,14 @@ class ItemlistWithPagination extends ItemlistWidget
         $n_pages = $this->numberOfPages();
         
         echo '
-        <div class="pages">
-        <ul>';
+        <div class="pages clearfix">
+        <ul class="pagination pagination-nomargin pull-right">';
         if ($active_page > 1) {
             echo '
             <li><a href="'.$this->hrefPage($active_page-1).'">&laquo;</a></li>';
         } else {
             echo '
-            <li><a class="off">&laquo;</a></li>';
+            <li class="disabled"><a>&laquo;</a></li>';
         }
         if ($visible_range = $this->visible_range) {
             
@@ -73,7 +73,7 @@ class ItemlistWithPagination extends ItemlistWidget
             
             if ($active_page - $visible_range > 2) {
                 echo '
-                <li class="sep">...</li>';
+                <li class="disabled"><a>...</a></li>';
             }
             
             // links for pages 5 6 7
@@ -99,7 +99,7 @@ class ItemlistWithPagination extends ItemlistWidget
             
             if ($active_page + $visible_range < $n_pages - 1) {
                 echo '
-                <li class="sep">...</li>';
+                <li class="disabled"><a>...</a></li>';
             }
             
             // link for page 31
@@ -131,7 +131,7 @@ class ItemlistWithPagination extends ItemlistWidget
             <li><a href="'.$this->hrefPage($active_page+1).'">&raquo;</a></li>';
         } else {
             echo '
-            <li><a class="off">&raquo;</a></li>';
+            <li class="disabled"><a>&raquo;</a></li>';
         }
         echo '
         </ul>
@@ -181,7 +181,7 @@ class ItemlistWithPagination extends ItemlistWidget
     }
     
     protected function showActivePageLink($i_page) {
-        echo '<li class="current"><a class="off">'.$i_page.'</a></li>';
+        echo '<li class="active"><a>'.$i_page.'</a></li>';
     }
 
     

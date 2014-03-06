@@ -6,7 +6,7 @@ body{font-size:10pt}
 html{height:auto;margin-bottom:0}
 #topnav,#nav,#search{display:none}
 body a[href^="http:"],body a[href^="https:"]{padding-left:0;background-image:none}
-.floatbox,.subcolumns,.subcolums_oldgecko{overflow:visible;display:table}
+.clearfix,.subcolumns,.subcolums_oldgecko{overflow:visible;display:table}
 .c25l,.c33l,.c38l,.c50l,.c62l,.c66l,.c75l,.c25r,.c33r,.c38r,.c50r,.c62r,.c66r,.c75r{width:100%;margin:0;padding:0;float:none!important;overflow:visible;display:table!important}
 .subc,.subcl,.subcr{margin:0;padding:0}
 .print{position:static;left:0}

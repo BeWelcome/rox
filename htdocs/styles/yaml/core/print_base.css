@@ -56,7 +56,7 @@
   * @valid     yes
   */
 
-  .floatbox,
+  .clearfix,
   .subcolumns,
   .subcolums_oldgecko { overflow:visible; display: table; }
 

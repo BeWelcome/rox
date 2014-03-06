@@ -27,7 +27,7 @@ blockquote:before,blockquote:after,q:before,q:after{content:""}
 #col1_content,#col2_content,#col3_content{position:relative}
 .clearfix:after{content:".";display:block;font-size:0;height:0;clear:both;visibility:hidden}
 .clearfix{display:block}
-.floatbox{overflow:hidden}
+.clearfix{overflow:hidden}
 #ie_clearing{display:none}
 .subcolumns{width:100%;overflow:hidden}
 .subcolumns_oldgecko{width:100%;float:left}

@@ -35,7 +35,7 @@ class LoginFormWidget extends RoxWidget
 {
     private $_memory = false;
 
-    public function render($small = false)
+    public function render()
     {
         $layoutkit = $this->layoutkit;
         $words = $this->words;
@@ -62,19 +62,12 @@ class LoginFormWidget extends RoxWidget
 
         if ($logged_in) {
             // already logged in
-            // why show this form?
-            if ($small != true) {
             ?>
             <div>
               <p><?=$ww->LoginformAlreadyLogged($_SESSION['Username']) ?></p>
               <p><a href="user/logout"><?=$ww->Logout ?></a></p>
             </div>
             <?php
-            } else {
-            ?>
-                <span id="logout"><a href="user/logout" ><?=$words->get('Logout')?></a></span>
-            <?php
-            }
             // for translators, we want links for all the translations,
             // because otherwise they will never see the login form words.
             // we make this happen with a little trick :)
@@ -96,44 +89,8 @@ class LoginFormWidget extends RoxWidget
             $ItIsNotASubDomain=false ;
             $url_login="http://www.bewelcome.org/login#login-widget" ;
         } // end of adds for subdomains
-
-
         ?>
-        <?php if ($small == true) { ?>
-        <div class="login-widget-small" >
-        <form id="main-login-form" method="post" action="<?=$url_login ?>">
-          <?=$callback_tag ?>
-          <?=$mem_recovery_tag ?>
-            <?php if ($ItIsNotASubDomain) { // Added because this is hidden for subdomain ?>
-                <table>
-                    <tr>
-                        <td>
-                            <label for="login-u"><?=$ww->Username ?></label><br />
-                            <input type="text" id="login-u" name="u" />
-                        </td>
-                        <td>
-                            <label for="login-p"><?=$ww->Password ?></label><br />
-                            <input type="password" id="login-p" name="p" />
-                        </td>
-						<td title="<?=$ww->StayLoggedIn_SecurityHint($memoryExpiry) ?>">
-							<input type="checkbox" id="login-r" name="r" /><label for="login-r"><?=$ww->StayLoggedIn ?></label>
-						</td>
-                        <td>
-                            <br /><input type="submit" value="<?=$ww->IndexPageLoginSubmit; ?>" id="smallbutton" class="button"/>
-                        </td>
-                    </tr>
-                </table>
-        <?php }  // Added because this is hidden for subdomain ?>
-        </form>
-
-        <script type="text/javascript">
-            document.getElementById("login-u").focus();
-        </script>
-
-        </div>
-        <?php } else { ?>
         <div class="info" id="login-widget">
-        <h3><?=$ww->Login ?></h3>
         <?if ($err) : ?>
         <p class="note warning"><?=$err?></p>
         <? endif ?>
@@ -141,46 +98,33 @@ class LoginFormWidget extends RoxWidget
         	if(!navigator.cookieEnabled)
             	document.write("<p class=\"note warning\">Please enable cookies in your browser.</p>");
         </script>
-        <form method="post" action="<?=$url_login ?>">
+        <form id="main-login-form" role="form" class="form-signin" method="post" action="<?=$url_login ?>">
+        <h2><span class="hidden-xs"><?=$ww->Login ?></span></h2><h3><span id="BeWelcome" class="visible-xs center" >BeWelcome</span> <span id="opendoor" class="visible-xs center"> - <?php echo $words->get('IndexPageTeaserOpenDoor');?></span></h3>
           <?=$callback_tag ?>
           <?=$mem_recovery_tag ?>
 
             <?php if ($ItIsNotASubDomain) {  // Added because this is hidden for subdomain ?>
-                <table>
-                    <tr>
-                        <td align="right" class="login_widget">
-                            <label for="login-u"><?=$ww->Username ?></label>
-                        </td>
-                        <td>
-                            <input type="text" id="login-u" name="u" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="right">
-                            <label for="login-p"><?=$ww->Password ?></label>
-                        </td>
-                        <td>
-                            <input type="password" id="login-p" name="p" />
-                        </td>
-                    </tr>
-					<tr>
-						<td></td>
-						<td title="<?=$ww->StayLoggedIn_SecurityHint($memoryExpiry) ?>">
-							<input type="checkbox" id="login-r" name="r" />&nbsp;<label for="login-r"><?=$ww->StayLoggedIn ?></label>
-						</td>
-					</tr>
-                <tr><td>&nbsp;</td><td>
+                            <label class="sr-only" for="login-u"><?=$ww->Username ?></label>
+                            <input type="text" id="login-u" name="u" autofocus="" required="" placeholder="<?=$ww->Username ?>" class="form-control">
+                            <label class="sr-only" for="login-p"><?=$ww->Password ?></label>
+                            <input type="password" id="login-p" name="p" placeholder="<?=$ww->Password ?>" class="form-control">
+                            <label class="checkbox" for="login-r">
+                            <input type="checkbox" id="login-r" value="<?=$ww->StayLoggedIn ?>" name="r">&nbsp;<?=$ww->StayLoggedIn ?>
+                            </label>
             <?php }  // Added because this is hidden for subdomain ?>
-            <input type="submit" value="<?=$ww->IndexPageLoginSubmit; ?>" class="button"/>
-          </td></tr></table>
-          <br />
-          <p><?=$ww->LoginformForgetPassword('<a href="resetpassword/">', '</a>') ?><br /><br /></p>
-          <h3><?=$ww->SignupNow ?></h3>
-          <p><?=$ww->IndexPageWord17('<a class="button" href="signup">', '</a>') ?></p>
+                            <button type="submit" class="button btn-block">Login</button>
+                            <p class="dividerbox center"><?=$ww->LoginformForgetPassword('<a href="resetpassword/">', '</a>') ?>
+                                <span class="ordivider"><?=$ww->OrDivider ?></span>
+                            </p>
+                            <div class="center">
+                                <h3><?=$ww->SignupNow ?></h3>
+                                <?=$ww->IndexPageWord17('<a class="button btn-block" role="button" href="signup">', '</a>') ?>
+                                <p class="visible-xs"><a class="btn btn-primary btn-block" role="button" href="tour"><?php echo $words->get('tour_take');?></a></p>
+
+                            </div>
         </form>
         <script type="text/javascript">document.getElementById("login-u").focus();</script>
         </div>
-        <?php } ?>
         <?php
         if ($logged_in) {
             ob_end_clean();

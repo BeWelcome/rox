@@ -69,9 +69,9 @@ function _languageSelectorDropDown()
     $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
     $langsel = '
-    <form id="language_select" action="a" method="post">';
+    <form class="navbar-form navbar-right" id="language_select" action="a" method="post" role="form">';
     // '.$words->get('Languages').':
-    $langsel.= '<select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">'
+    $langsel.= '<select class="form-control input-sm" id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">'
     ;
     $langsel .= _languageOptions($words) . '</select></form>';
     return $langsel;
@@ -80,13 +80,24 @@ function _languageSelectorDropDown()
 function _languageFooterSelectorDropDown()
 {
     $words = new MOD_words();
-    $langsel = '';
     $request_string = htmlspecialchars(implode('/',PVars::get()->request), ENT_QUOTES);
-    $langsel = '
-    <form style="display: inline;" action="a" method="post">
-      <select id="language" name="language" class="combo" onchange="window.location.href=this.value; return false">';
-    $langsel .= _languageOptions($words) . '</select></form>';
-    return $langsel;
-}
+    ?>
+    <form class="form-inline" role="form" action="a" method="post">
+<div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-globe fa-lg" title="<?php echo $words->get('Languages');?>"></i></span>
+            <select class="form-control input-sm" id="language" name="languagefooter" class="combo" onchange="window.location.href=this.value; return false">
+                <?php echo _languageOptions($words); ?>
+            </select>
+        </div>
+</div>
+<div class="form-group">
+        <p class="form-control-static">
+            <?php echo $words->get('FooterHelpUsTranslate', '<a href="groups/60/wiki">', '</a>');?>
+        </p>
+</div>
 
+    </form>
+<?php
+}
 ?>

@@ -24,45 +24,30 @@ Boston, MA  02111-1307, USA.
 require_once "footer.helper.php";
 ?>
 
-<div id="footer">
+<footer>
   <?php translator_block() ?>
-  <div class="subcolumns">
-      <div class="c50l">
-          <div class="subcl">
-            <div class="floatbox">
-              <p class="float_left linklist">
-                <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> • 
-                <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> • 
-                <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> • 
-                <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> • 
-                <a href="faq"><?php echo $words->getFormatted('faq'); ?></a> • 
-                <a href="about/feedback"><?php echo $words->getFormatted('Contact'); ?></a>
-              </p>
-            </div>    
-          </div>
-      </div>
-      <div class="c50r">
-          <div class="subcr">
-            <div id="language-select" class="float_right">
-            <?php
-            echo $words->get('Languages') . ": " . _languageFooterSelectorDropDown()
-            . "&nbsp;&nbsp;&nbsp;" . $words->get('FooterHelpUsTranslate', '<a href="http://www.bewelcome.org/groups/60/wiki">', '</a>');
-            ?>
-            </div>    
-          </div>
-      </div>
+  <div class="center bw-row">
+    <p class="list-inline text-muted lead">
+        <a href="about"><?php echo $words->getFormatted('AboutUsPage'); ?></a> • 
+        <a href="terms" target="new"><?php echo $words->getFormatted('TermsOfUse'); ?></a> • 
+        <a href="privacy" target="new"><?php echo $words->getFormatted('Privacy'); ?></a> • 
+        <a href="impressum"><?php echo $words->getFormatted('Impressum') ?></a> • 
+        <a href="faq"><?php echo $words->getFormatted('faq'); ?></a> • 
+        <a href="about/feedback"><?php echo $words->getFormatted('Contact'); ?></a>
+    </p>   
+    <div class="bw-row">
+        <?php echo _languageFooterSelectorDropDown();?>
     </div>
-<div class="floatbox">
-  <p class="float_left">
-     &copy; 2007-<?php echo date('Y') . ' ' . $words->get('CopyrightByBV', '<a href="http://www.bevolunteer.org/" target="_blank">', '</a>'); ?>
-  </p>
-  <p class="float_right">
+    <p class="bw-row">
      <?=$words->get('RunningOn') ?> <a href="http://trac.bewelcome.org/">BW Rox</a> rev. <a href="http://gitorious.org/bewelcome/rox/commit/<?php echo $versionInfo; ?>"><?php echo $versionInfo; ?></a>
      (<span title="<?php echo $deploymentDateTime; ?>"><?php echo $deploymentDate; ?></span>)
      • <a href="<?php echo $bugreportLink; ?>"><?=$words->get('ReportBug') ?></a>
-  </p>
+    </p>
+    <p>
+     &copy; 2007-<?php echo date('Y') . ' ' . $words->get('CopyrightByBV', '<a href="http://www.bevolunteer.org/" target="_blank">', '</a>'); ?>
+    </p>
   </div>
-  </div> <!-- footer -->
+</footer> <!-- footer -->
 
 <?php
 // List of DB queries with execution time

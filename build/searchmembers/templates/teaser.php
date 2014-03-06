@@ -5,13 +5,13 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
 
 ?>
 
-<div id="teaser" class="clearfix">
+<div id="teaser" class="page-teaser clearfix">
     <h1><?php echo $words->getFormatted('searchmembersTitle'); ?></h1>
     <div id="scriptinfo" class="clearfix NotDisplayed">
         <p class="note"><b><?php echo $words->getFormatted('searchmembersScriptInfo'); ?></b><br /><?php echo $words->getFormatted('searchmembersScriptInfoText','<a href="searchmembers/quicksearch">','</a>','<a href="country/">','</a>'); ?></p>
     </div> <!-- scriptinfo -->
     
-    <div id="searchbox" class="floatbox">
+    <div id="searchbox" class="clearfix">
         <span class="small">
             <!--<input type="radio" name="SelectedSearchField" value="Address" checked="checked"><?php echo $words->getBuffered('Address'); ?>
             <input type="radio" name="SelectedSearchField" value="Username"><?php echo $words->getBuffered('Username'); ?>
@@ -35,7 +35,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
         </div> <!-- searchmore -->
     </div> <!-- searchbox -->
 <!-- NEXT ROW -->
-    <div id="searchoptions" class="floatbox">
+    <div id="searchoptions" class="clearfix">
 
         <div id="searchorder" class="float_left" >
             <span class="small"><label for="thisorder"><?php echo $words->getFormatted('Orderby'); ?>:</label></span>
@@ -69,7 +69,7 @@ if (isset($_GET['vars'])) $address = $_GET['vars'];
    -->
         </div> <!-- mapswitch -->
     </div> <!-- searchoptions -->
-    <div id="searchstatus" class="floatbox">        
+    <div id="searchstatus" class="clearfix">        
         <div id="loading" class="small"></div>
         <div id="paging-div" ></div>
     </div>

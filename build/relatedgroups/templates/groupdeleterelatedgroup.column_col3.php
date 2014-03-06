@@ -45,15 +45,15 @@ Boston, MA  02111-1307, USA.
                 } ?>
 
                 <div class="relatedgroupinfo">
-                    <div class="groupbox floatbox">
+                    <div class="groupbox clearfix">
                         <a href="groups/<?php echo $relatedgroup->getPKValue(); ?>">
                             <img class="framed float_left"  width="60px" height="60px" alt="Group" src="<?php echo $img_link; ?>"/>
                         </a>
                         <div class="groupinfo">
                             <h4><a href="groups/<?php echo $relatedgroup->getPKValue(); ?>"><?php echo htmlspecialchars($relatedgroup->Name, ENT_QUOTES); ?></a></h4>
-                            <a class="button" href="groups/<?php echo $group->getPKValue(); ?>/deleterelatedgroup/<?php echo $relatedgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
+                            <a class="button" role="button" href="groups/<?php echo $group->getPKValue(); ?>/deleterelatedgroup/<?php echo $relatedgroup->id; ?>"><span><?php echo $words->get('GroupsRemoveFromGroup'); ?></span></a>
                         </div> <!-- groupinfo -->
-                    </div> <!-- groupbox floatbox -->
+                    </div> <!-- groupbox clearfix -->
                 </div>   
             <?php endforeach;
         } ?>

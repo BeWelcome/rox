@@ -43,7 +43,7 @@ if (!isset($headingLevel)) {
             }
         ?>
     </div> <!-- author -->
-    <div class="floatbox">
+    <div class="clearfix">
         <?php
         $blogModel = new Blog;
         $blogView = new BlogView($blogModel);
@@ -69,7 +69,7 @@ if (!isset($headingLevel)) {
 
 
         ?>
-    </div> <!-- floatbox -->
+    </div> <!-- clearfix -->
 
     <p class="action">
 <?php

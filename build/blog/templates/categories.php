@@ -69,10 +69,10 @@ foreach ($catIt as $cat) {
 if (isset($request[2]) && $request[2] == 'del') {
 ?>
 <form method="post" action="<?=implode('/', $request)?>" class="def-form" id="blog-cat-form">
-    <div class="row">
+    <div class="bw-row">
         <p><?=$words->get('ask_delete')?></p>
-        <input type="submit" name="yes" value="<?=$words->get('yes')?>" class="submit" />
-        <input type="submit" name="no" value="<?=$words->get('no')?>" class="submit"/>
+        <input type="submit" class="button" name="yes" value="<?=$words->get('yes')?>" class="submit" />
+        <input type="submit" class="button" name="no" value="<?=$words->get('no')?>" class="submit"/>
         <?= $callback;?>
     </div>
 </form>
@@ -82,7 +82,7 @@ if (isset($request[2]) && $request[2] == 'del') {
 <h3><?php
 echo (isset($request[2]) && $request[2] == 'edit' ? $words->get('Category_title_edit') : $words->get('Category_title_create')); ?></h3>
 <form method="post" action="<?=implode('/', $request)?>" class="def-form" id="blog-cat-form">
-    <div class="row">
+    <div class="bw-row">
     <label for="category-name"><?=$words->get('Category_label_name')?>:</label><br/>
         <input type="text" id="category-name" name="n" class="long" <?php 
 echo isset($vars['n']) ? 'value="'.htmlentities($vars['n'], ENT_COMPAT, 'utf-8').'" ' : ''; 
@@ -102,7 +102,7 @@ if (in_array('nameempty', $vars['errors'])) {
         <p class="desc"></p>
     </div>
     <p>
-        <input type="submit" value="<?php
+        <input type="submit" class="button" value="<?php
 echo (isset($request[2]) && $request[2] == 'edit' ? $words->getBuffered('Category_submit_edit') : $words->getBuffered('Category_submit_add')); ?>" class="submit" />
     <?=$callback;?>
     </p>

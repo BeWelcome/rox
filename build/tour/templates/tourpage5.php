@@ -27,7 +27,7 @@ $words = new MOD_words();
     <h3><?php echo $words->get('tour_trips')?></h3>
         
     <h4><?php echo $words->getFormatted('tour_trips_title1')?></h4>
-    <div class="floatbox">
+    <div class="clearfix">
         <img src="images/tour/trips-example.png" class="float_left" alt="trips" />
         <p><?php echo $words->getFormatted('tour_trips_text1')?></p>
     </div>

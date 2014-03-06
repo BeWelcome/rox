@@ -46,7 +46,7 @@ Boston, MA  02111-1307, USA.
     <legend><?php echo $words->get('SignupName'); ?></legend>
 
     <!-- First Name -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
           <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
           echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -65,7 +65,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
 
     <!-- Second Name -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
           <input type="text" id="secondname" name="secondname" class="float_left" <?php
           echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -76,7 +76,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
 
     <!-- Last Name -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
           <input type="text" id="lastname" name="lastname" class="float_left" <?php
           echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -87,7 +87,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
 
     <!-- Birthdate -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label>
           <select id="BirthDate" name="birthyear">
             <option value=""><?php echo $words->getSilent('SignupBirthYear'); ?></option>
@@ -161,7 +161,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
   </fieldset>
 
-  <p class="floatbox">
+  <p class="clearfix">
     <input style="float:left" type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     /><?php echo $words->flushBuffer(); ?><br /><br />

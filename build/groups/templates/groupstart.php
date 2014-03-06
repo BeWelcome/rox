@@ -10,14 +10,14 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-                <div class="row floatbox">
+                <div class="bw-row clearfix">
                     <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='groups/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
                     <h3><?php echo $words->get('GroupDescription'); ?></h3>
                     <p><?php echo $purifier->purify(nl2br($this->group->getDescription())) ?></p>
-                </div> <!--row floatbox -->
+                </div> <!--row clearfix -->
 
                 <h3><?php echo $words->getFormatted('ForumRecentPostsLong');?></h3>
-                <div class="row floatbox">
+                <div class="bw-row clearfix">
                     <?php
                         if (!$this->isGroupMember() && $this->group->latestPost) {
                             echo '<div class="small">' . $words->get('GroupInfoLastActivity', date('Y-m-d H:i', $this->group->latestPost)) . '</div>';
@@ -32,7 +32,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                             $showNewTopicButton = false;
                         }
                     echo $Forums->showExternalGroupThreads($group_id, false, $showNewTopicButton); ?>
-                </div> <!-- floatbox -->
+                </div> <!-- clearfix -->
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         
@@ -66,7 +66,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                             echo $words->getSilent('GroupsJoinNeedAccept');
                         }
                         if (!$this->isGroupMember()) { ?>
-                        <div class="row clearfix">
+                        <div class="bw-row clearfix">
                             <a class="bigbutton" href="groups/<?=$this->group->id ?>/join">
                                 <span>
                                     <?= $words->getSilent('GroupsJoinTheGroup'); ?>
@@ -80,7 +80,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 ?>
                 
                 <h3><?= $words->get('GroupMembers'); ?></h3>
-                <div class="floatbox">
+                <div class="clearfix">
                     <?php $memberlist_widget->render() ?>
                 </div>
                 <p><?php
@@ -100,7 +100,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 ?>
                 <br><br>
                 <h4><?php echo $words->get('GroupAdmins'); ?></h4>
-                <div class="floatbox">
+                <div class="clearfix">
                         <?php $admins = $this->group->getGroupOwners();
                         if (isset($admins) && !empty($admins))
                         {
@@ -116,8 +116,8 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                 </div>
                 <?php
                 if ($this->isGroupMember()) { ?>
-                <div class="row clearfix">
-                    <a class="button" href="groups/<?=$this->group->id ?>/leave">
+                <div class="bw-row clearfix">
+                    <a class="button" role="button" href="groups/<?=$this->group->id ?>/leave">
                                 <span>
                                     <?= $words->getSilent('GroupsLeaveTheGroup'); ?>
                                 </span>
@@ -135,7 +135,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
     if (!empty($relatedgroups)) { ?>
         <h3><?php echo $words->getFormatted('RelatedGroupsTitle');?></h3>
     <?php } ?>
-    <ul class="floatbox">
+    <ul class="clearfix">
         <?php 
         foreach ($relatedgroups as $group_data) : 
             if (strlen($group_data->Picture) > 0) {

@@ -48,7 +48,7 @@ class GallerySetDetailsPage extends GallerySetPage
 
             <input name="gallery" type="hidden" value="{$gallery->id}">
             <input name="removeOnly" type="hidden" value="1">
-            <input type="submit" name="button" value="{$words->getBuffered('GalleryRemoveImagesFromPhotoset')}" class="button" style="cursor:pointer"/>
+            <input type="submit" class="button" name="button" value="{$words->getBuffered('GalleryRemoveImagesFromPhotoset')}" class="button" style="cursor:pointer"/>
             <a href="gallery/show/sets/{$this->gallery->id}/upload" class="button" /><img src="images/icons/picture_add.png">{$words->get('GalleryUploadPhotos')}</a>
 
         </p>

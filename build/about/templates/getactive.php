@@ -31,57 +31,57 @@ $words = new MOD_words();
 <div class="subcolumns">
   <div class="c50l">
     <div class="subcl">
-        <div class="floatbox">
+        <div class="clearfix">
             <img class="float_left" src="images/icons/tango/32x32/application-x-php.png" alt="development" />
             <h4><?php echo $words->get('GetActiveDevTitle')?></h4>
             <p><?php echo $words->get('GetActiveDevText')?></p>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
         
-        <div class="floatbox">
+        <div class="clearfix">
             <img class="float_left" src="images/icons/tango/32x32/applications-graphics.png" alt="design" />
             <h4><?php echo $words->get('GetActiveDesignTitle')?></h4>
             <p><?php echo $words->get('GetActiveDesignText')?></p>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
         
-        <div class="floatbox">
+        <div class="clearfix">
             <img class="float_left" src="images/icons/tango/32x32/applications-science.png" alt="testing" />
             <h4><?php echo $words->get('GetActiveTestingTitle')?></h4>
             <p><?php echo $words->get('GetActiveTestingText')?></p>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
         
-        <div class="floatbox">
+        <div class="clearfix">
           	<img class="float_left" src="images/icons/tango/32x32/donatek.png" alt="donation" />
             <h4><?php echo $words->get('GetActiveDonationTitle')?></h4>
             <p><?php echo $words->get('GetActiveDonationText')?></p>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
     </div>
    </div>
 
   <div class="c50r">
     <div class="subcr">
-        <div class="floatbox">
+        <div class="clearfix">
             <img class="float_left" src="images/icons/tango/32x32/help-browser.png" alt="support" />
             <h4><?php echo $words->get('GetActiveSupportTitle')?></h4>
             <p><?php echo $words->get('GetActiveSupportText')?></p>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
         
-        <div class="floatbox">
+        <div class="clearfix">
             <img class="float_left" src="images/icons/tango/32x32/languages.png" alt="translate" />
             <h4><?php echo $words->get('GetActiveTranslateTitle')?></h4>
             <p><?php echo $words->get('GetActiveTranslateText')?></p>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
         
-        <div class="floatbox">
+        <div class="clearfix">
             <img class="float_left" src="images/icons/tango/32x32/system-users.png" alt="local" />
             <h4><?php echo $words->get('GetActiveLocalTitle')?></h4>
             <p><?php echo $words->get('GetActiveLocalText')?></p>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
         
-        <div class="floatbox">
+        <div class="clearfix">
             <img class="float_left" src="images/icons/tango/32x32/megaphone.png" alt="PR" />
             <h4><?php echo $words->get('GetActivePRTitle')?></h4>
             <p><?php echo $words->get('GetActivePRText')?></p>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
     </div>
   </div>
 </div>

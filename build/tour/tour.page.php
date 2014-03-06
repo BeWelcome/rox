@@ -31,7 +31,7 @@ class TourPage extends PageWithActiveSkin
     {
         $words = $this->getWords();
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
         <h1><a href="tour"><?= $words->get("TheTour");?></a> 
         <?php 
         switch ($this->page_number) {

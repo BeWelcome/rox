@@ -232,7 +232,7 @@ function ewiki_action_control_page($id, &$data, $action) {
          if ($x==3) $o .= "</tr>\n";
       }
       $o .= '</table>';
-      $o .= '<input type="submit" name="pgc_setflags" value="chmod">';
+      $o .= '<input type="submit" class="button" name="pgc_setflags" value="chmod">';
       $o .= "\n<br /><br /><hr></div>\n"; 
 
       #-- rename
@@ -242,7 +242,7 @@ function ewiki_action_control_page($id, &$data, $action) {
           . '<br />'
           . '<input type="checkbox" name="mv_cr0" value="1" checked> also try to change all references from other pages accordingly '
           . '(<input type="checkbox" name="mv_cr1" value="1" checked> and act case-insensitive when doing so) ';
-      $o .= '<br /><input type="submit" name="pgc_rename" value="mv">';
+      $o .= '<br /><input type="submit" class="button" name="pgc_rename" value="mv">';
       $o .= "\n<br /><br /><hr></div>\n"; 
 
       #-- meta
@@ -256,7 +256,7 @@ function ewiki_action_control_page($id, &$data, $action) {
          $o .= htmlentities($key.": ".trim($value)) . "\n";
       }
       $o .= "</textarea>\n";
-      $o .= '<br /><input type="submit" name="pgc_setmeta" value="set">';
+      $o .= '<br /><input type="submit" class="button" name="pgc_setmeta" value="set">';
       $o .= "\n<br /><br /><hr></div>\n"; 
       }
 
@@ -264,7 +264,7 @@ function ewiki_action_control_page($id, &$data, $action) {
       $o .= '<div class="delete">';
       $o .= "<h4>delete page</h4>\n";
       $o .= '<input type="checkbox" name="pgc_purge1" value="1"> I\'m sure';
-      $o .= '<br /><input type="submit" name="pgc_purge" value="rm">';
+      $o .= '<br /><input type="submit" class="button" name="pgc_purge" value="rm">';
       $o .= "\n<br /><br /><hr></div>\n"; 
 
       $o .= '</form>';

@@ -1,12 +1,12 @@
 <div id="groups">
-    <div class="row">
+    <div class="bw-row">
         <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
         <form action="groups/search" method="get">
-            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
+            <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $words->get('GroupsSearchSubmit'); ?>" /><br />
         </form>
     </div> <!-- row -->
     
-    <div class="row">
+    <div class="bw-row">
         <h3><?= $words->get('GroupsSearchResult'); ?></h3>
         <?php
         if ($this->search_result)

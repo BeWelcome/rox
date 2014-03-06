@@ -1,4 +1,4 @@
-<div class="row"><?php 
+<div class="bw-row"><?php 
 if (count($this->activities) == 0) {
     if ($this->publicOnly) {
         echo '<p>' . $words->get('ActivitiesNoPublicPastActivities') . '</p>';

@@ -9,13 +9,13 @@ $map_conf = PVars::getObj('map');
 <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
 <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
 
-<div id="teaser" class="clearfix">
+<div id="teaser" class="page-teaser clearfix">
 
     <div class="float_right" style="padding-top: 1em">
         <form method="get" action="blog/search/" class="def-form" id="blog-search-form">
-                <div id="search" class="row">
+                <div id="search" class="bw-row">
                     <input type="text" id="search-field" name="s" />
-                    <input type="submit" value="Search" class="submit"<?php
+                    <input type="submit" class="button" value="Search" class="submit"<?php
                     echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
                     ?> />
                 </div>

@@ -124,7 +124,7 @@ endif; ?>
         echo $words->get('SearchOrderItems', $select); ?></div>
 
 </div>
-<div class="floatbox">
+<div class="clearfix">
     <?php if (!$this->results) : ?>
         <?php echo $words->get('SearchInfo'); ?>
     <?php endif; ?>

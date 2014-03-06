@@ -29,7 +29,7 @@ $words = new MOD_words();
     <h4><?php echo $words->getFormatted('tour_maps_title1')?></h4>
     <p><?php echo $words->getFormatted('tour_maps_text1')?></p>
 
-    <div class="floatbox">
+    <div class="clearfix">
         <img src="images/tour/map2.png" class="float_left" alt="maps" />
         <h4><?php echo $words->getFormatted('tour_maps_title2')?></h4>
         <p><?php echo $words->getFormatted('tour_maps_text2')?></p>

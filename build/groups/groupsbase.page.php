@@ -76,20 +76,10 @@ class GroupsBasePage extends PageWithActiveSkin
         }
     }
 
-
-    protected function leftSidebar()
+    protected function getColumnNames ()
     {
-        $layoutkit = $this->layoutkit;
-        $words = $layoutkit->getWords();
-        ?>
-        <h3><?= $words->get('GroupsActions'); ?></h3>
-        <ul class="linklist">
-            <li><a href="groups"><?= $words->get('GroupsOverview'); ?></a></li>
-            <li><a href="groups/mygroups"><?= $words->get('GroupsMyGroups'); ?></a></li>
-        </ul>
-        <?
+        return array('col3');
     }
-
 
     protected function getPageTitle() {
         $words = $this->getWords();
@@ -135,8 +125,8 @@ class GroupsBasePage extends PageWithActiveSkin
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
-        <div id="teaser" class="clearfix">
-        <div id="teaser_l1">
+        <div id="teaser">
+        <div id="teaser_l1" class="page-header">
         <h1><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="groups/<?=$this->group->id ?>"><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></a></h1>
         </div>
         </div>

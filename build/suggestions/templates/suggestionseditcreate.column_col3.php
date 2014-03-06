@@ -40,7 +40,7 @@ if (!empty($errors)) {
     echo $errStr;
 }
 ?>
-    <div class="row">
+    <div class="bw-row">
     <p><?php echo $words->get('SuggestionsCreateEditInfo');?></p>
         <label class="float_left"for="suggestion-summary"><?php echo $words->get('SuggestionSummary'); ?>*</label><span class="small float_right" style="margin-right: 0.3em;">* <?php echo $words->get('suggestionMandatoryFields'); ?></span><br />
         <input type="text" id="suggestion-summary" name="suggestion-summary" maxlength="80" class="long" style="width:99%" value="<?php echo htmlspecialchars($vars['suggestion-summary'], ENT_QUOTES); ?>" />
@@ -62,7 +62,7 @@ if (!empty($errors)) {
              $suggestionseditcreatebutton = $words->getSilent('SuggestionsSubmit');
         }
         ?>
-        <input type="submit" id="suggestion-submit" name="suggestion-submit" value="<?php echo $suggestionseditcreatebutton; ?>" class="submit float_right" /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="button" id="suggestion-submit" name="suggestion-submit" value="<?php echo $suggestionseditcreatebutton; ?>" class="submit float_right" /><?php echo $words->flushBuffer(); ?>
     </div>
 </form>
 </fieldset>

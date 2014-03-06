@@ -27,7 +27,7 @@ $words = new MOD_words();
   <div class="index_row2">
       <div class="info">
         <h3><?php  echo $words->get('LinkFriendOf',$mem_redirect->from);?></h3>
-        <div class="floatbox">
+        <div class="clearfix">
 
 <?php foreach ($friendsData as $f) {
 ?>
@@ -39,6 +39,6 @@ $words = new MOD_words();
                 </p>
             </div> <!-- float_left -->
 <?php } ?>
-        </div> <!-- floatbox -->
+        </div> <!-- clearfix -->
       </div> <!-- info index -->
   </div> <!-- index row2 -->

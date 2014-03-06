@@ -232,7 +232,7 @@ class GeoView extends PAppView {
                     $out .= '<input type="hidden" name="admincode" id="admincode" value="';
                     $out .= isset($location['adminName1']) ? htmlentities($location['adminName1'], ENT_COMPAT, 'utf-8') : '';
                     $out .= '" />';
-                    $out .= '<input type="submit" value="'.$words->get('Select').'" class="button" />';
+                    $out .= '<input type="submit" class="button" value="'.$words->get('Select').'" class="button" />';
                     $out .= '</form></li>';
                 }
             }

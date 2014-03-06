@@ -29,7 +29,7 @@ if ($statement) {
         <div class="img thumb" style="width: 244px;">
             <a href="gallery/show/image/'.$d->id.'" id="image_link_'.$d->id.'"><img class="framed" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image" style="margin: 5px 0; float:none;" /></a>';
 
-        $d->HTML .= '<h4 class="floatbox">';
+        $d->HTML .= '<h4 class="clearfix">';
         if ($this->loggedInMember && $this->loggedInMember->Username == $d->user_handle) {
             $d->HTML .= '<input type="checkbox" class="thumb_check input_check" name="imageId[]" onchange="highlightMe($(\'image_link_'.$d->id.'\'),this.checked);" value="'.$d->id.'">&nbsp;&nbsp; ';
         }
@@ -78,7 +78,7 @@ if ($statement) {
         </div>
 <?php
     }
-    echo '<div class="floatbox">';
+    echo '<div class="clearfix">';
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;

@@ -34,7 +34,7 @@ $words = new MOD_words();
 <form id="wordsdownload" name="wordsdownload" method="post" action="admin/wordsdownload" />
 <input type="checkbox" name="Replace">&nbsp;&nbsp;<?php echo $words->getBuffered("WordsDownload_ReplaceOption"); ?><br /><br />
 <input type="hidden" name="<?php echo $callbackId; ?>" value="1" />
-<input type="submit" name="SubmitDownload" value="<?php echo $words->getBuffered("WordsDownload_SubmitButton"); ?>" />
+<input type="submit" class="button" name="SubmitDownload" value="<?php echo $words->getBuffered("WordsDownload_SubmitButton"); ?>" />
 </form>
 <?php if($_SERVER["HTTP_HOST"] == "localhost") { ?>
 <p>
@@ -46,6 +46,6 @@ $words = new MOD_words();
 <input type="hidden" name="MAX_FILE_SIZE" value="1" />
 <input name="importfile" type="file" onchange="getElementById('importfilename').value=this.value.replace(/\\/g, '\\\\\\');" /><br />
 <input name="importfilename" id="importfilename" type="hidden" />
-<input type="submit" name="SubmitUpload" value="<?php echo $words->getBuffered("WordsUpload_SubmitButton"); ?>" />
+<input type="submit" class="button" name="SubmitUpload" value="<?php echo $words->getBuffered("WordsUpload_SubmitButton"); ?>" />
 </form>
 <? } ?>

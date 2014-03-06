@@ -26,23 +26,23 @@ Boston, MA  02111-1307, USA.
 
 <form method="post" action="<?=$page_url ?>">
     <?=$callback_tag ?>
-    <div class="row">
+    <div class="bw-row">
         <h3><label for="email"><?php echo $words->getFormatted("InviteEmailLabel"); ?></label></h3>
         <p><input name="email" id="email" value="<?= htmlspecialchars($email, ENT_QUOTES) ?>" size="60" /></p>
         <?php if (isset($problems['email']) && $problems['email']) echo '<p class="error">'.$problems['email'].'</p>';?>
         <span class="desc"><?php echo $words->getFormatted("InviteEmailDesc"); ?></span>
     </div>
     
-    <div class="row">
+    <div class="bw-row">
         <h3><label for="name"><?php echo $words->getFormatted("InviteSubjectLabel"); ?></label></h3>
         <p><input name="subject" id="name" value="<?= htmlspecialchars($subject, ENT_QUOTES) ?>" size="60" /></p>
     </div>
     
-    <div class="row">
+    <div class="bw-row">
         <h3><label for="text"><?php echo $words->getFormatted("InviteTextLabel"); ?></label></h3>
         <p><textarea name="text" id="text" rows="13" cols="60"><?= htmlspecialchars($text, ENT_QUOTES) ?></textarea></p>
         <span class="desc"><?php echo $words->getFormatted("InviteSubjectDesc"); ?></span>
     </div>
     
-    <p><input type="submit" value="Send Invitation"/></p>
+    <p><input type="submit" class="button" value="Send Invitation"/></p>
 </form>

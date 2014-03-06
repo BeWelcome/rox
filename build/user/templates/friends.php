@@ -15,13 +15,13 @@ $friendsText = $i18n->getText('friendsText');
 ?>
 <h2><?=$friendsText['title']?></h2>
 <form method="get" action="user/find" class="def-form">
-    <div class="row">
+    <div class="bw-row">
         <label for="friend-search"><?=$friendsText['label_friendsearch']?></label><br/>
         <input type="text" id="friend-search" name="q" class="long"/>
         <p class="desc"><?=$friendsText['desc_friendsearch']?></p>
     </div>
     <p>
-        <input type="submit" value="<?=$friendsText['submit_friendsearch']?>"/>
+        <input type="submit" class="button" value="<?=$friendsText['submit_friendsearch']?>"/>
     </p>
 </form>
 <?php

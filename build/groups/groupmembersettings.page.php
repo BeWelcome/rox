@@ -64,18 +64,18 @@ class GroupMemberSettingsPage extends GroupsBasePage
             <legend><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars($this->group->Name, ENT_QUOTES) ?></legend>
             <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
             <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
-            <div class="row">
+            <div class="bw-row">
                 <label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br />
                 <textarea id="comment" name="membershipinfo_comment" cols="60" rows="5" class="long" ><?= (($membershipinfo->Comment != '' ) ? htmlspecialchars($words->mTrad($membershipinfo->Comment)) : '' ); ?></textarea>
             </div> <!-- row -->
-            <div class="row">
+            <div class="bw-row">
                 <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label>
                 <input id='no_option' type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>/>
                 <label for="no_option"><?= $words->get('no') ;?></label>
                 <input id='yes_option' type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>/>
                 <label for="yes_option"><?= $words->get('yes') ;?></label>
             </div> <!-- row -->
-            <p style="padding-top: 2em"><input type="submit" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>" /><?=$words->flushBuffer();?></p>
+            <p style="padding-top: 2em"><input type="submit" class="button" value="<?= $words->getBuffered('GroupsUpdateMemberSettings') ;?>" /><?=$words->flushBuffer();?></p>
             </fieldset>
         </form>
         <?php

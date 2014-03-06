@@ -42,7 +42,7 @@ if ($d) {
 if ($this->myself) {
 ?>
 <hr/>
-<div class="floatbox"><a href="gallery/show/sets/<?=$gallery->id?>/delete" class="bigbuttongrey"><span><?=$words->get('GalleryDelete')?></span></a></div>
+<div class="clearfix"><a href="gallery/show/sets/<?=$gallery->id?>/delete" class="bigbuttongrey"><span><?=$words->get('GalleryDelete')?></span></a></div>
 <?
 }
 ?>

@@ -66,7 +66,7 @@ class ExtensionsPage extends PageWithActiveSkin
         echo '
         </p>
         <br>    
-        <input type="submit" value="Ok"/><br>
+        <input type="submit" class="button" value="Ok"/><br>
         </form>';
     }
 }

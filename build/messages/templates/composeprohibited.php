@@ -23,7 +23,7 @@ Boston, MA  02111-1307, USA.
 */
 $words = new MOD_words();
 ?>
-<div id="message" class="floatbox">
+<div id="message" class="clearfix">
     <p class="note big"><?php echo $words->get('MessageComposeProhibited'); ?></p>
 </div> <!-- message -->
 

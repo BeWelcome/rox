@@ -39,20 +39,20 @@ if (empty($vars)) {
 }
 ?>
 <div id="activity">
-    <div class="floatbox">
+    <div class="clearfix">
         <h2><?php echo $this->activity->title; ?></h2>
     </div>
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-                <div class="row">
+                <div class="bw-row">
                     <h3><?= $words->get('ActivityDescription'); ?></h3>
                     <?php echo $purifier->purify($this->activity->description); ?>
                 </div>
                 <?php if ($this->member) { ?>
                 <div><h3><?php echo $words->get('ActivityAttendees');?></h3>
                 <?php echo $this->attendeesPager->render(); ?>
-                <ul class="floatbox">
+                <ul class="clearfix">
                 <?php
                     foreach ($this->attendeesPager->getActiveSubset($this->activity->attendees) as $attendee) 
                     {
@@ -84,7 +84,7 @@ if (empty($vars)) {
                 </div>
                 <?php
                 } else {
-                        echo '<div class="row"><h3>' .  $words->get('ActivityAttendees') . '</h3>';
+                        echo '<div class="bw-row"><h3>' .  $words->get('ActivityAttendees') . '</h3>';
                         echo '<p>'.$words->getBuffered('ActivitiesLogInWhoIsComing', '<a href="' . $login_url . '">', '</a>').'</p>';
                         echo '</div>';
                 }?>
@@ -156,15 +156,15 @@ if (empty($vars)) {
                     <div class="type-button">
                         <h3><?php echo $words->get('ActivityOrgaStatusHeadline');?></h3>
                         <?php echo $callbackTagsCancelUncancel; ?>
-                        <input class="row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
+                        <input class="bw-row" type="hidden" id="activity-id" name="activity-id" value="<?php echo $this->activity->id; ?>" />
                         <?php 
                             $activityInTheFuture = (time() < strtotime($this->activity->dateTimeEnd));
                             if ($activityInTheFuture) {
                                 if ($this->activity->status == 1) { 
-                                    echo '<input type="submit" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
+                                    echo '<input type="submit" class="button" class="button" id="activity-uncancel" name="activity-uncancel" value="' . $words->getSilent('ActivityUnCancel') . '"/>';
                                 } else {
                                     echo '<a href="activities/' . $this->activity->id .'/edit" class="button" style="padding-bottom: 2.5px; padding-top: 4.5px;">' . $words->getSilent('ActivityEdit') . '</a>&nbsp;&nbsp;';
-                                    echo '<input type="submit" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
+                                    echo '<input type="submit" class="button" class="button" id="activity-cancel" name="activity-cancel" value="' . $words->getSilent('ActivityCancel') . '"/>';
                                 }
                             } else {
                                 echo $words->getSilent('ActivitityInThePastOrganizer');
@@ -178,7 +178,7 @@ if (empty($vars)) {
                 }?>
                 <div class="row abitright">
                     <h3><?php echo $words->get('ActivityOrganizers');?></h3>
-                    <ul class="floatbox">
+                    <ul class="clearfix">
                     <?php
                         foreach ($this->activity->organizers as $organizer) {
                             $image = new MOD_images_Image('',$organizer->Username);

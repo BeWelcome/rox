@@ -46,7 +46,7 @@ $words = new MOD_words();
 
 
 
-<div class="floatbox" style="padding-top: 30px">
+<div class="clearfix" style="padding-top: 30px">
 <p id="holder" style="border: 5px solid #999999; width: 500px; height: 333px; float: left">
 <a href="#"><img src="http://farm3.static.flickr.com/2200/2204242456_f2a726c103.jpg"></a>
 	<ul style="position: relative; right: 40px; top: 30px; width: 50px;">

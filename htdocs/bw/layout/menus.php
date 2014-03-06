@@ -451,7 +451,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 				echo "			  <div class=\"c50l\">\n"; 
 				echo "			  <div class=\"c50l\">\n"; 
 				echo "			    <div class=\"subl\">\n"; 
-				echo "				<p class=\"floatbox UserpicFloated\">";
+				echo "				<p class=\"clearfix UserpicFloated\">";
 				echo LinkWithPicture($m->Username,$m->photo), 
 	                             LinkWithUsername($m->Username),"<br />", 
                                      $m->countryname;
@@ -460,7 +460,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 				echo "			    </div>\n"; 
 				echo "			  <div class=\"c50r\">\n"; 
 					echo "			    <div class=\"subr\">\n"; 
-					echo "				<p class=\"floatbox UserpicFloated\">";
+					echo "				<p class=\"clearfix UserpicFloated\">";
 					echo LinkWithPicture($m->Username,$m->photo), LinkWithUsername($m->Username),"<br />",$m->countryname ;
 					echo "				</p>\n"; 
 					echo "			    </div>\n"; 
@@ -470,7 +470,7 @@ function DisplayHeaderIndexPage($TitleTopContent = "") {
 			
 			echo "			  <div class=\"c25l\">\n"; 
 			echo "			    <div class=\"subl\">\n"; 
-			echo "				<p class=\"floatbox\">";
+			echo "				<p class=\"clearfix\">";
 			echo "				</p>\n"; 
 			echo "			    </div>\n"; 
 			echo "			  </div>\n"; 

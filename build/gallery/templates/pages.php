@@ -8,7 +8,7 @@ if (!is_array($pages) || count($pages) == 0) {
     return false;
 }
 ?>
-<div class="pages">
+<div class="pages clearfix">
     <ul>
         <li><?php if ($currentPage != 1) { ?><a href="<?=sprintf($request, ($currentPage - 1))?>">&lt;&lt;</a><?php } else { ?>&lt;&lt;<?php } ?></li>
         <?php

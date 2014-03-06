@@ -11,7 +11,7 @@ class MessagesContactboxPage extends MessagesPageWithMailbox
         $contactUsername = $this->contact_member->Username;
         $myselfUsername = $_SESSION['Username'];
         ?>
-        <div class="floatbox">
+        <div class="clearfix">
             <div class="float_left framed">
                 <?=MOD_layoutbits::PIC_50_50($contactUsername,'')?>
             </div>

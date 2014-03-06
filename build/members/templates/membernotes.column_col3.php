@@ -1,5 +1,5 @@
 <div id="profile">
-    <div id="profile_notes" class="floatbox box">
+    <div id="profile_notes" class="clearfix box">
     <?php // display my notes, if there are any
     echo "<h3>" . $words->get('ProfileMyNotes') . "</h3>";
     if (!empty($mynotes)) {
@@ -17,7 +17,7 @@
                         <div class="userinfo">
                         <a href="members/<?php echo $m->Username ?>" class="username"><?php echo $m->Username ?></a><br>
                         <p class="small"><?php echo date($words->getSilent('DateFormatShort'),strtotime($note->updated)); ?></p>
-                        <p><a class="button" href="members/<?php echo $m->Username ?>/note/edit"><?php echo $words->get('Edit') ?></a>&nbsp;&nbsp; <a class="button" href="members/<?php echo $m->Username ?>/note/delete"><?php echo $words->get('Delete') ?></a></p>
+                        <p><a class="button" role="button" href="members/<?php echo $m->Username ?>/note/edit"><?php echo $words->get('Edit') ?></a>&nbsp;&nbsp; <a class="button" role="button" href="members/<?php echo $m->Username ?>/note/delete"><?php echo $words->get('Delete') ?></a></p>
                         </div>
                     </div>
                 </div>

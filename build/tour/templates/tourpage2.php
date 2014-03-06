@@ -28,7 +28,7 @@ $words = new MOD_words();
         
     <h4><?php echo $words->getFormatted('tour_openness_title1')?></h4>
     <p><?php echo $words->getFormatted('tour_openness_text1')?></p>
-    <div class="floatbox">
+    <div class="clearfix">
         <div class="float_left" style="padding:10px">
             <iframe width="400" height="300" src="http://www.youtube-nocookie.com/embed/aRS_wG4ZN4k?rel=0" frameborder="0" allowfullscreen></iframe>
         </div>

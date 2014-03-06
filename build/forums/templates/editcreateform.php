@@ -102,7 +102,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     if (isset($allow_title) && $allow_title) {
 
         ?>
-        <div class="row">
+        <div class="bw-row">
             <label for="topic_title"><?php echo $words->getFormatted("forum_label_topicTitle"); ?></label><br/>
             <?php
             $topic_titletrad = "";
@@ -118,7 +118,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
                    value="<?php echo $topic_titletrad; ?>"/>
         </div> <!-- row -->
     <? } ?>
-    <div class="row">
+    <div class="bw-row">
         <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label><br/>
         <textarea name="topic_text" cols="70" rows="15" id="topic_text" class="long"><?php
             if (isset($void_string)) {
@@ -134,40 +134,34 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
 
     if (isset($allow_title) && $allow_title) {
         ?>
-        <fieldset class="row" id="fpost_tags_and_location_fieldset">
-            <legend
-                onclick="toggleFieldsets('fpost_tags_and_location');"><?php echo $words->getFormatted("forum_label_tags_and_location"); ?></legend>
-            <div id="fpost_tags_and_location">
-                <div>
-                    <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
-                    <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
-                        <?php
-                        // In case we are in edit mode, this field is a read only, tags cannot be edited by members
-                        // lupochen asks: Why?
-                        if ($edit) {
-                            echo "\"readonly\"";
-                        }
-                        ?>><?php
-                        // the tags may be set
-                        echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : '';
-                        ?></textarea>
-
-                    <div id="suggestion"></div>
-                    <?php /*
+    <fieldset class="bw-row" id="fpost_tags_and_location_fieldset">
+        <legend onclick="toggleFieldsets('fpost_tags_and_location');"><?php echo $words->getFormatted("forum_label_tags_and_location"); ?></legend>
+        <div id="fpost_tags_and_location"><div>
+        <p class="small"><?php echo $words->getFormatted("forum_subline_tags"); ?></p>
+        <textarea id="create-tags" name="tags" cols="60" rows="2" class="long"
+        <?php
+// In case we are in edit mode, this field is a read only, tags cannot be edited by members
+// lupochen asks: Why?
+        if ($edit) {
+            echo "\"readonly\"" ;
+        }
+        ?>><?php
+        // the tags may be set
+            echo ($tags_with_commas) ? htmlentities($tags_with_commas, ENT_COMPAT, 'utf-8') : '';
+        ?></textarea>
+        <div id="suggestion"></div>
+<?php /*
         <p class="small"><?php echo $words->getFormatted("forum_subline_place"); ?></p>
         <div id="dropdowns">
         <?php
             echo $locationDropdowns;
         ?>
         </div>
-*/
-                    ?>
-                </div>
-            </div>
-        </fieldset> <!-- row -->
+*/?>
+    </div></div>
+    </fieldset> <!-- row -->
 
-    <?php
-    } // End if $allow_title
+<?php } // End if $allow_title 
 
     if ($groupsforum) {
         echo '<input type="hidden" name="IdGroup" value="' . $groupsforum . '">';
@@ -198,7 +192,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
         </div>
     </fieldset>
 <?php } else { ?>
-    <fieldset class="row" id="fpost_vis_fieldset">
+    <fieldset class="bw-row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?= $words->getFormatted("forum_label_visibility") ?></legend>
         <div>
             <?php
@@ -229,7 +223,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
             <?php } ?>
         </div>
     </fieldset>
-    <fieldset class="row" id="fpost_lang_fieldset">
+    <fieldset class="bw-row" id="fpost_lang_fieldset">
             <legend
                 onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
             <div id="fpost_lang">
@@ -283,7 +277,7 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
             </div>
         </fieldset> <!-- row -->
     <?php } ?>
-    <fieldset class="row" id="fpost_note_fieldset">
+    <fieldset class="bw-row" id="fpost_note_fieldset">
         <legend onclick="toggleFieldsets('fpost_note');"><?php echo $words->getFormatted("forum_Notify") ?></legend>
         <div id="fpost_note">
             <div>
@@ -295,8 +289,8 @@ if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
     <!-- row -->
 
 
-    <div class="row">
-        <input type="submit" value="<?php
+    <div class="bw-row">
+        <input type="submit" class="button" value="<?php
         if ($allow_title) { // New Topic
             if ($edit) {
                 echo $words->getFormatted("forum_label_update_topic");

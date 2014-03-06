@@ -31,7 +31,7 @@ if (!isset($vars['errors'])) {
         echo ($Own && !$g->text) ? $words->get('GalleryAddDescription') : $purifier->purify($g->text);
       ?>
       </p>
-      <div class="floatbox">
+      <div class="clearfix">
            <?=MOD_layoutbits::PIC_30_30($this->member->Username,'',$style='float_left')?><?php echo $words->flushBuffer(); ?>
            <p class="small"><?=$num_rows?> <?=$words->get('pictures')?><br />
            <?=$words->get('by')?> <a href="members/<?=$this->member->Username?>"><?=$this->member->Username?></a> 
@@ -81,7 +81,7 @@ HTML;
       // Display the upload form
       require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';
   } else {
-      echo '<div class="floatbox">';
+      echo '<div class="clearfix">';
       foreach ($statement as $d) {
       	echo '
     <div class="img thumb_container float_left">

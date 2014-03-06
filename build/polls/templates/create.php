@@ -190,7 +190,7 @@ Use English language for now only
 		}
 	?>
 </table>
-<p class="center"><input type="submit" value="go update"></p>
+<p class="center"><input type="submit" class="button" value="go update"></p>
 </form>
 
 <hr>
@@ -215,7 +215,7 @@ for ($ii=0;$ii<count($Data->Choices);$ii++) {
     <td><label for="Option">Option:</label></td>
     <td>
         <textarea id="Option" name="ChoiceText" cols="60" rows="2"><?=$words->fTrad($cc->IdChoiceText)?></textarea>
-        <input type="submit" value="update choice" />
+        <input type="submit" class="button" value="update choice" />
     <td>
 </tr>
 </form>
@@ -234,7 +234,7 @@ for ($ii=0;$ii<count($Data->Choices);$ii++) {
         <tr>
             <td><label for="NewOption">New option:</label></td>
             <td><textarea id="NewOption" name="ChoiceText" cols="60" rows="2"></textarea>
-                <input type="submit" value="Add" />
+                <input type="submit" class="button" value="Add" />
             </td>
         </tr>
     
@@ -274,7 +274,7 @@ Use English language for now only
         <td><input type="text"  id="GroupIdLimit" name="GroupIdLimit" size="8" class="long"> (experimental comma separated)</td>
     </tr>
 </table>
-<p class="center"><input type="submit" name="go create"></p>
+<p class="center"><input type="submit" class="button" name="go create"></p>
 
 </form>
 

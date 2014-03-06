@@ -49,7 +49,7 @@
         <input name="new" type="hidden" value="1">
         <input name="deleteOnly" type="hidden" value="0">
         <br />
-        <input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="return submitStuff();"/><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="button" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="return submitStuff();"/><?php echo $words->flushBuffer(); ?>
         </form>
     </p>
 

@@ -1,5 +1,5 @@
 <div id="profile">
-    <div id="profile_notes" class="floatbox box">
+    <div id="profile_notes" class="clearfix box">
     <?php
         $vars = array();
         $words = $this->words;
@@ -45,7 +45,7 @@
             <?php $m = $this->model->getMemberWithId($note->IdContact);
             $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();?>
             <input name="IdMember" value="<?=$member->id?>" type="hidden" />
-            <div class="row"></div>
+            <div class="bw-row"></div>
             <div class="subcolumns">
                 <div class="c33l">
                     <div class="subcl">
@@ -65,7 +65,7 @@
                 </div>
             </div>
         <div class="type-button">
-        <input type="submit" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonDelete"); ?>">
+        <input type="submit" class="button" id="submit" name="submit" value="<?php echo $words->get("ProfileNoteButtonDelete"); ?>">
         <a href="mynotes" class="button back"><?php echo $words->getFormatted('ProfileNoteButtonBack'); ?></a>
         </div> 
     </form>

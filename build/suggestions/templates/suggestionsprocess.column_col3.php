@@ -1,7 +1,7 @@
 <h2><a href="suggestions/process"><?php echo $words->get('DecisionMakingProcess'); ?></a></h2>
 <div class="small grey"><?php echo $words->get('DecisionMakingProcessValidity');?></div>
 <br />
-<div class="row">
+<div class="bw-row">
 	<p><?php echo $words->get('DecisionMakingProcessIntroText');?></p>
     <a name="makingsuggestions"></a>
 	<h3><?php echo $words->get('MakingSuggestions');?></h3>

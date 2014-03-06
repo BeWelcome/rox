@@ -19,7 +19,7 @@
             <?php
             /*if (isset($_SESSION['GeoVars']['geonameid'])) {
                 <p>Current location:</p>
-                <ol class="geoloc plain floatbox">
+                <ol class="geoloc plain clearfix">
                 <li style="background-color: #f5f5f5; font-weight: bold; background-image: url(images/icons/tick.png);"><a id="href_4544349">
                 <?=$_SESSION['GeoVars']['geonamename']?><br/>
                 <img alt="United States" src="images/icons/flags/<?=$_SESSION['GeoVars']['geonamecountrycode']?>.png"/>
@@ -39,7 +39,7 @@
                 <input type="text" name="geo-search" id="geo-search" <?php
                 echo isset($mem_redirect->location) ? 'value="'.htmlentities($mem_redirect->location, ENT_COMPAT, 'utf-8').'" ' : '';
                 ?>
-                 /> <input type="submit" id="btn-geo-search" class="button" value="<?=$words->get('label_search_location')?>" />
+                 /> <input type="submit" class="button" id="btn-geo-search" class="button" value="<?=$words->get('label_search_location')?>" />
                 <p class="desc"><?=$words->get('subline_location')?></p>
               </div>
             </div>

@@ -86,20 +86,20 @@ if (!$this->noScope){
         if ($dat->missing){
             // missing translation
             echo '<td class="awlisttrmis">';
-            echo '<br /><a class="button" href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">ADD</a>';
+            echo '<br /><a class="button" role="button" href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">ADD</a>';
         } else {
             if ($dat->update){
                 // update needed
                 echo '<td class="awlisttrupd">';
                 echo $this->purifier->purify($dat->Sentence);
                 echo '<fieldset><legend>update needed?</legend>';
-                echo '<input type="submit" value="Edit" name="Edit_'.(int)$dat->TrId.'" />';
-                echo '<input type="submit" value="This is ok" onclick="" name="ThisIsOk_'.(int)$dat->TrId.'" />';
+                echo '<input type="submit" class="button" value="Edit" name="Edit_'.(int)$dat->TrId.'" />';
+                echo '<input type="submit" class="button" value="This is ok" onclick="" name="ThisIsOk_'.(int)$dat->TrId.'" />';
                 echo '</fieldset>';            
             } else {
                 // up-to-date translation
                 echo '<td class="awlisttrok">'.$this->purifier->purify($dat->Sentence);
-                echo '<p><a class="button" href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">edit</a></p>';
+                echo '<p><a class="button" role="button" href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">edit</a></p>';
             }
             echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->TrUpdated)).' '.htmlspecialchars($dat->TrMember).'</p>';
         }

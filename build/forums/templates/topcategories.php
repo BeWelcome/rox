@@ -37,7 +37,7 @@ $User = APP_User::login();
 	if ($User) { 
 		?>
 		<div class="r">
-		<span class="button"><a href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span>
+		<a class="button" role="button" href="forums/new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
 		<?php echo $this->words->flushBuffer(); ?>
 		</div> <!-- r -->
 		<?php 
@@ -46,7 +46,7 @@ $User = APP_User::login();
 	foreach ($this->_model->ListBoards as $list) {
 		if ($threads = $list->threads) {
 ?>
-            <div class="row">
+            <div class="bw-row">
                 <h3>
                 <?php
                 if (isset($list->IdName)) {
@@ -82,7 +82,7 @@ $User = APP_User::login();
 <?php
 if ($User) {
 ?>
-<div id="boardnewtopicbottom"><span class="button"><a href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $this->words->flushBuffer(); ?></div>
+<div id="boardnewtopicbottom"><a class="button" role="button" href="<?php echo $uri; ?>new"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a><?php echo $this->words->flushBuffer(); ?></div>
 <?php
 }
 ?>

@@ -20,7 +20,7 @@
             </div>
 		</div>
 </div>
-<div class="row">
+<div class="bw-row">
 <a name="confidentiality"></a>
 <h3><?php echo $words->get('Safety_Confidentiality');?></h3>
 <p><?php echo $words->get('Safety_ConfidentialityText');?></p>

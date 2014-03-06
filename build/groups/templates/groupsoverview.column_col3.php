@@ -2,21 +2,21 @@
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-                <div class="row">
+                <div class="bw-row">
                     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
                     <p><?= $words->get('GroupsSearchDescription'); ?></p>
                     <form action="groups/search" method="get">
-                    <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->get('Search'); ?>" />
+                    <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $words->get('Search'); ?>" />
                     </form>
                 </div>
             </div> <!-- subcl -->
         </div> <!-- c62l -->
         <div class="c38r">
             <div class="subcr">
-                <div class="row">
+                <div class="bw-row">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
-                    <a class="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                    <a class="button" role="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
                 </div>
             </div> <!-- subcr -->
         </div> <!-- c38r -->
@@ -35,9 +35,9 @@
                 foreach($featured_groups as $group_data) :
                     if ($group_data->Type == 'NeedInvitation' && !$this->model->getLoggedInMember()) continue;
                     if ($count % 2 == 0) { ?>
-                    <div class="c50l groupbox floatbox">
+                    <div class="c50l groupbox clearfix">
                     <?php } else { ?>
-                    <div class="c50r groupbox floatbox">
+                    <div class="c50r groupbox clearfix">
                     <?php } ?>
                         <a href="groups/<?=$group_data->id ?>">
                             <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>

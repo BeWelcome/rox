@@ -28,7 +28,7 @@ if (isset($country->name)){$country->name = htmlspecialchars($country->name);}
 $city = htmlspecialchars($city);
 ?>
 
-<div id="teaser" class="clearfix">
+<div id="teaser" class="page-teaser clearfix">
 <h1>
     <?php
     if (!$countrycode OR !isset($country->name)) { 

@@ -30,7 +30,7 @@ if (!$this->viewOnly) { ?>
 </div>
 <div class="subcolumns row">
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
-<input type="submit" id="suggestion-add-option" name="suggestion-add-option"
+<input type="submit" class="button" id="suggestion-add-option" name="suggestion-add-option"
     value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>"
     class="submit float_right" /><?php echo $words->flushBuffer(); ?>
 </div>

@@ -77,7 +77,7 @@ Boston, MA  02111-1307, USA.
         ?>
     </div>
 
-    <div class="floatbox" style="padding-top: 30px">
+    <div class="clearfix" style="padding-top: 30px">
         <h4><?php 
         echo $words->getFormatted('tour_meet_title2')?></h4>
         <p><?php echo $words->getFormatted('tour_meet_text2')?></p>

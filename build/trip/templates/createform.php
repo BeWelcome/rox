@@ -30,7 +30,7 @@ if (in_array('not_created', $errors)) {
 ?>    
     <fieldset id="trip-main">
         <legend><?php echo $editing ? $words->get('Triptitle_edit') : $words->get('TripTitle_create'); ?></legend>
-        <div class="row">
+        <div class="bw-row">
             <label for="trip-name"><?=$words->get('TripLabel_name')?></label><br/>
             <input type="text" id="trip-name" name="n" class="long"<?php
 if (isset($vars['n']) && $vars['n'])
@@ -43,7 +43,7 @@ if (in_array('name', $errors)) {
 ?>
             <p class="desc"></p>
         </div>
-        <div class="row">
+        <div class="bw-row">
             <label for="trip-desc"><?=$words->get('TripLabel_desc')?></label><br/>
             <textarea id="trip-desc" name="d" cols="48" rows="7"><?php
 if (isset($vars['d']) && $vars['d'])
@@ -59,7 +59,7 @@ if (isset($vars['d']) && $vars['d'])
 	}
 ?>
         <input type="hidden" name="<?=$callbackId?>" value="1"/>
-        <input type="submit" value="<?php echo $editing ? $words->getSilent('TripSubmit_edit') : $words->getSilent('TripSubmit_create');?>"/><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="button" value="<?php echo $editing ? $words->getSilent('TripSubmit_edit') : $words->getSilent('TripSubmit_create');?>"/><?php echo $words->flushBuffer(); ?>
     </p>
 </form>
 <?php

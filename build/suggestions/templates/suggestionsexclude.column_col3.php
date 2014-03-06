@@ -35,8 +35,8 @@ include 'suggestionserrors.php'; ?>
     <h3><?php echo $this->purifier->purify($this->suggestion->summary); ?></h3>
     <p><?php echo $words->get('SuggestionsSetExclusionsInfo'); ?>
     <hr class="suggestion" />
-    <?php foreach($this->suggestion->options as $option) : ?><div class="option floatbox">
-    <div class="floatbox float_left" style="width:100%">
+    <?php foreach($this->suggestion->options as $option) : ?><div class="option clearfix">
+    <div class="clearfix float_left" style="width:100%">
         <p><strong><?php echo $this->purifier->purify('Option ' . $option->id .': ' . $option->summary); ?></strong></p>
         <div class="small"><?php echo $this->purifier->purify($option->description); ?></div>
         <table style="width:100%">
@@ -61,7 +61,7 @@ include 'suggestionserrors.php'; ?>
     </div>
     </div>
     <?php endforeach; ?>
-    <p><input type="submit" class="button float_right" name="suggestion-exclude-submit" value="<?php echo $words->getSilent('SuggestionsExcludeSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
+    <p><input type="submit" class="button" class="button float_right" name="suggestion-exclude-submit" value="<?php echo $words->getSilent('SuggestionsExcludeSubmit'); ?>" /><?php echo $words->flushBuffer(); ?></p>
 </form>
 </fieldset>
 </div>

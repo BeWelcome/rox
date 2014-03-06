@@ -43,6 +43,6 @@
             </ul>
             <h3><?= $words->get('GroupsAddImage'); ?></h3>
             <label for='group_image'><?= $words->get('GroupsImage'); ?></label><br /><input id='group_image' name='group_image' type='file' />
-            <p class="center"><input type="submit" value="Create Group" /></p>
+            <p class="center"><input type="submit" class="button" value="Create Group" /></p>
         </form>
     </div>

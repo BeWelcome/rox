@@ -73,7 +73,7 @@ class LinkShowPage extends LinkPage
       	echo '<p><form method="POST" action="'.$page_url.'">' ;
 				echo $this->layoutkit->formkit->setPostCallback('LinkController', 'LinkShowCallback') ;
 				echo 'From: <input name="from" value="'.$from.'"/> To: <input name="to" value="'.$to.'"/> Limit: <input name="limit"  value="'.$limit.'"/>' ;
-				echo '<input type="submit" value="send"/></form></p>';
+				echo '<input type="submit" class="button" value="send"/></form></p>';
 			}
 		
 		if ($mem_redirect) {

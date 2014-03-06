@@ -81,8 +81,8 @@ foreach($TList as $TL) {
         {$profileSummary}
     </div>
     <div class="zoom-buttons">
-        <a class="button" href="javascript: geosearchMapBuilder.zoomIn($TL->Latitude, $TL->Longitude);">Zoom In</a>
-        <a class="button" href="javascript: geosearchMapBuilder.zoomOut(-4);">Zoom Out</a>
+        <a class="button" role="button" href="javascript: geosearchMapBuilder.zoomIn($TL->Latitude, $TL->Longitude);">Zoom In</a>
+        <a class="button" role="button" href="javascript: geosearchMapBuilder.zoomOut(-4);">Zoom Out</a>
     </div>
 HTML;
     $summary = htmlspecialchars($string, ENT_QUOTES);

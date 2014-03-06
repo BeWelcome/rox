@@ -43,7 +43,7 @@ class GeoAdminPage extends RoxPageView
 			<p>
 			<form method="POST" action="'.$page_url.'">
 			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
-			Generate new geo tables based on the data in the address and blog tables: <input type="hidden" name="action"/ value="renew"> 	<input type="submit" value="Renew"/>
+			Generate new geo tables based on the data in the address and blog tables: <input type="hidden" name="action"/ value="renew"> 	<input type="submit" class="button" value="Renew"/>
 			</form>
 			</p>
         ';
@@ -61,7 +61,7 @@ class GeoAdminPage extends RoxPageView
 			<p>
 			<form method="POST" action="'.$page_url.'">
 			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
-			Recalculate how many items (blogs, members) we have in each region: <input type="hidden" name="action"/ value="recount"> 	<input type="submit" value="Update"/>
+			Recalculate how many items (blogs, members) we have in each region: <input type="hidden" name="action"/ value="recount"> 	<input type="submit" class="button" value="Update"/>
 			</form>
 			</p>
         ';
@@ -79,7 +79,7 @@ class GeoAdminPage extends RoxPageView
 			<p>
 			<form method="POST" action="'.$page_url.'">
 			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
-			Data by Id: <input type="hidden" name="action"/ value="byId"> 	<input type="text" name="id"><input type="submit" value="byId"/>
+			Data by Id: <input type="hidden" name="action"/ value="byId"> 	<input type="text" name="id"><input type="submit" class="button" value="byId"/>
 			</form>
 			</p>
         ';
@@ -96,7 +96,7 @@ class GeoAdminPage extends RoxPageView
 			<p>
 			<form method="POST" action="'.$page_url.'">
 			'.$this->layoutkit->formkit->setPostCallback('GeoController', 'AdminCallback').'
-			Get updates from Geonames.org: <input type="hidden" name="action"/ value="getUpdates"> <input type="submit" value="getUpdates"/>
+			Get updates from Geonames.org: <input type="hidden" name="action"/ value="getUpdates"> <input type="submit" class="button" value="getUpdates"/>
 			</form>
 			</p>
         ';
@@ -126,8 +126,12 @@ class GeoAdminPage extends RoxPageView
     protected function getPageTitle() {
         return 'Geo!';
     }
-    
 
+    protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
+    }
 }
 
 

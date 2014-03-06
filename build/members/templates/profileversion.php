@@ -43,10 +43,10 @@ $words = $this->getWords();
 $myself = $this->myself;
 if (count($languages) > 1 || $myself) {
 ?>
-<div class="floatbox">
+<div class="clearfix">
     <div class="profile_translations float_right">
         <strong><?=$words->get('ProfileTranslations')?></strong>
-        <p class="floatbox"><?php
+        <p class="clearfix"><?php
             $ii = 0;
             $activelang_set = false;
             $max = count($languages);
@@ -63,7 +63,7 @@ if (count($languages) > 1 || $myself) {
             }
             ?><?php echo $words->flushBuffer(); ?></p>
 <?php if ($myself) { ?>
-<select class="floatbox" id="add_language">
+<select class="clearfix" id="add_language">
     <option>- <?=$wwsilent->AddLanguage?> -</option>
       <?php
       $ownLanguages = "";

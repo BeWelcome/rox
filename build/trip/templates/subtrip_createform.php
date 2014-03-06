@@ -78,7 +78,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                     <p class="desc"></p>
                 </div>
                                 <label for="create-date"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
-                <div class="floatbox">
+                <div class="clearfix">
                     <input type="text" id="create-date" name="date" class="date" maxlength="10" <?php
                     echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
                     ?> />
@@ -110,7 +110,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
                     }
                     ?>
                     <p class="desc"></p>
-                <div class="row">
+                <div class="bw-row">
                     <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
                     <textarea id="create-txt" name="txt" rows="11" cols="30"><?php
                     // the content may be set
@@ -134,7 +134,7 @@ if (!isset($vars['trip_id_foreign']) && isset($trip->trip_id)) $vars['trip_id_fo
           </div> <!-- c50r -->
 
         </div> <!-- subcolumns -->
-    <div class="row">
+    <div class="bw-row">
 <?php
 
 if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
@@ -181,7 +181,7 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
 <fieldset id="destination-options">
 <legend><?=$words->get('TripDestinationOptionsLabelTab')?></legend>
 
-    <div class="row">
+    <div class="bw-row">
         <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
         <textarea id="create-tags" name="tags" cols="40" rows="1"><?php
         // the tags may be set
@@ -203,7 +203,7 @@ if (isset($vars['id']) && $vars['id']) {
 <!--    <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
 
     <label><?=$words->get('label_vis')?></label>
-    <div class="row">
+    <div class="bw-row">
         <input type="radio" name="vis" value="pub" id="create-vis-pub"<?php
         if (
             (isset($vars['vis']) && $vars['vis'] == 'pub')
@@ -214,7 +214,7 @@ if (isset($vars['id']) && $vars['id']) {
         ?>/> <label for="create-vis-pub"><?=$words->get('BlogCreateSettings_LabelVispublic')?></label>
         <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVispublic')?></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <input type="radio" name="vis" value="prt" id="create-vis-prt"<?php
         if (
             (isset($vars['vis']) && $vars['vis'] == 'prt')
@@ -225,7 +225,7 @@ if (isset($vars['id']) && $vars['id']) {
         ?>/> <label for="create-vis-prt"><?=$words->get('BlogCreateSettings_LabelVisprotected')?></label>
         <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprotected')?></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <input type="radio" name="vis" value="pri" id="create-vis-pri"<?php
         if (
             (isset($vars['vis']) && $vars['vis'] != 'prt' && $vars['vis'] != 'pub')
@@ -238,8 +238,8 @@ if (isset($vars['id']) && $vars['id']) {
     </div>-->
 </fieldset>
 
-    <p class="row">
-        <input type="submit" value="<?=$submitValue?>" class="submit"<?php
+    <p class="bw-row">
+        <input type="submit" class="button" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
     </p>

@@ -20,6 +20,6 @@
 <label for="UsernameOrEmail"><?php echo $words->get("UserNameOrEmail"); ?></label><br />
 <br />
 <input type="text" name="UsernameOrEmail" id="UsernameOrEmail" size="40" >
-<input type="submit" id="submit" name="submit" value="<?php echo $words->getBuffered("submit"); ?>"><?php echo $words->flushBuffer();?>
+<input type="submit" class="button" id="submit" name="submit" value="<?php echo $words->getBuffered("submit"); ?>"><?php echo $words->flushBuffer();?>
 </form>
 </div>

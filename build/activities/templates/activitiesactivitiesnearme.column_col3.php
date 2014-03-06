@@ -25,9 +25,9 @@ $radiusSelect .= '</select>';
 <?php 
 echo $this->layoutkit->formkit->setPostCallback('ActivitiesController', 'setRadiusCallback');
 echo $words->get('ActivitiesRadiusSelect', $radiusSelect); ?>. &nbsp;
-<input type="submit" id="activity-nearme" name="activity-nearme" value="update" /> 
+<input type="submit" class="button" id="activity-nearme" name="activity-nearme" value="update" /> 
 </form> 
-<div class="row"><?php 
+<div class="bw-row"><?php 
 if (count($this->activities) == 0) {
     echo '<p>' . $words->get('ActivitiesNoActivitiesNearYou', $vars['activity-radius']) . '</p>';
 } else {

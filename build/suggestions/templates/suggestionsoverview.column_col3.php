@@ -10,13 +10,13 @@ if (empty($vars)) {
 }
 ?>
 <div id="suggestion">
-    <div class="floatbox">
+    <div class="clearfix">
         <h2><?php echo $this->suggestion->title; ?></h2>
     </div>
     <div class="subcolumns">
         <div class="c62l">
             <div class="subcl">
-                <div class="row">
+                <div class="bw-row">
                     <h3><?= $words->get('SuggestionDescription'); ?></h3>
                     <?php echo $purifier->purify($this->suggestion->description); ?>
                 </div>
@@ -25,12 +25,12 @@ if (empty($vars)) {
                         <div><?php echo "Option"; ?></div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <div class="row">
+                <div class="bw-row">
                     <form method="post" id="suggestion-addoptions-form">
                         <?php echo $callbackAddOptionsTags; ?>
                         <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
-                        <input type="submit" id="suggestion-add-option" name="suggestion-add-option" value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
-                        <input type="submit" id="suggestion-cancel" name="suggestion-cancel" value="<?php echo $words->getSilent('SuggestionsSubmitCancel'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+                        <input type="submit" class="button" id="suggestion-add-option" name="suggestion-add-option" value="<?php echo $words->getSilent('SuggestionsSubmitAddOption'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+                        <input type="submit" class="button" id="suggestion-cancel" name="suggestion-cancel" value="<?php echo $words->getSilent('SuggestionsSubmitCancel'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
                     </form>
                 </div>
                 <?php if ($this->suggestion->discussions) :
@@ -38,12 +38,12 @@ if (empty($vars)) {
                         <div><?php echo "Discussion"; ?></div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <div class="row">
+                <div class="bw-row">
                     <form method="post" id="suggestion-post-form">
                         <?php echo $callbackTags; ?>
                         <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
-                        <input type="submit" id="suggestion-approve" name="suggestion-approve" value="<?php echo $words->getSilent('SuggestionsSubmitApprove'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
-                        <input type="submit" id="suggestion-duplicate" name="suggestion-duplicate" value="<?php echo $words->getSilent('SuggestionsSubmitDuplicate'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+                        <input type="submit" class="button" id="suggestion-approve" name="suggestion-approve" value="<?php echo $words->getSilent('SuggestionsSubmitApprove'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
+                        <input type="submit" class="button" id="suggestion-duplicate" name="suggestion-duplicate" value="<?php echo $words->getSilent('SuggestionsSubmitDuplicate'); ?>" class="submit" /><?php echo $words->flushBuffer(); ?>
                     </form>
                 </div>
             </div> <!-- subcl -->

@@ -108,5 +108,5 @@ else {
     <?
 }
 ?>
-<p class="center"><input type="submit" value="<?=$words->getFormatted("polls_vote");?>" /></p>
+<p class="center"><input type="submit" class="button" value="<?=$words->getFormatted("polls_vote");?>" /></p>
 </form>

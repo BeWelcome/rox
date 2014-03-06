@@ -724,7 +724,7 @@ HTML;
             <tbody>
               <tr>
                 <td colspan="3"  align="center" >
-                  <input type="submit"  id="submit"  name="submit"  value="<?=$words->getSilent('Save Profile')?>" /> <?php echo $words->flushBuffer(); ?>
+                  <input type="submit" class="button"  id="submit"  name="submit"  value="<?=$words->getSilent('Save Profile')?>" /> <?php echo $words->flushBuffer(); ?>
                 </td>
               </tr>
             </tbody>

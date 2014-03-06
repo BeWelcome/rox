@@ -55,7 +55,7 @@ $postIt      = $Blog->getTaggedPostsIt('Community News for the frontpage', true)
 $format = array('short'=>$words->getSilent('DateFormatShort'));
 
     ?><h3 class="first" ><a href="blog/tags/Community News for the frontpage"><?php echo $words->getFormatted('CommunityNews') ?></a> <a href="rss/blog/tags/Community%20News%20for%20the%20frontpage"><img src="images/icons/feed.png" alt="<?=$words->getSilent('GetRSSFeed')?>"></a><?php echo $words->flushBuffer(); ?></h3>
-                <div class="floatbox">
+                <div class="clearfix">
                     <?php
                     $i=1;
                     foreach ($postIt as $blog) {

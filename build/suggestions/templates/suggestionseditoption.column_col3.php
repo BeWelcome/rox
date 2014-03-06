@@ -22,14 +22,14 @@ foreach($this->suggestion->options as $option) :
 <div class="subcolumns">
 <div class="c62l">
             <div class="subcl">
-                <div class="row">
+                <div class="bw-row">
 <?php echo $this->purifier->purify($option->description);?></div></div></div>
 <div class="c38r">
 <div class="subcl">
-<div class="row">
-<a class="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/edit">
+<div class="bw-row">
+<a class="button" role="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/edit">
 <?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?></a>
-<a class="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/delete">
+<a class="button" role="button" href="/suggestions/<?php echo $this->suggestion->id ?>/addoptions/<?php echo $option->id; ?>/delete">
 <?php echo $words->getSilent('SuggestionsSubmitDeleteOption'); ?></a>
 </div>
 </div>
@@ -50,7 +50,7 @@ foreach($this->suggestion->options as $option) :
 </div>
 <input type="hidden" id="suggestion-id" name="suggestion-id" value="<?php echo $this->suggestion->id; ?>" />
 <input type="hidden" id="suggestion-option-id" name="suggestion-option-id" value="<?php echo $vars['suggestion-option-id']; ?>" />
-<input type="submit" id="suggestion-edit-option" name="suggestion-edit-option"
+<input type="submit" class="button" id="suggestion-edit-option" name="suggestion-edit-option"
     value="<?php echo $words->getSilent('SuggestionsSubmitEditOption'); ?>"
     class="submit float_right" /><?php echo $words->flushBuffer(); ?>
 </div>

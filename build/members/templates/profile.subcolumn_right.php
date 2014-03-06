@@ -161,7 +161,7 @@ if (!$this->passedAway){ ?>
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $relations = $member->relations;
 if (count($relations) > 0) { ?>
-    <div id="relations" class="floatbox box">
+    <div id="relations" class="clearfix box">
         <?php if ($showEditLinks): ?>
         <span class="float_right profile-edit-link">
             <a href="editmyprofile/<?php echo $profile_language_code; ?>#!specialrelations">
@@ -185,7 +185,7 @@ if (count($relations) > 0) { ?>
 
                     $rel->Comment = $purifier->purify($comment);
             ?>
-            <li class="floatbox">
+            <li class="clearfix">
                 <a href="<?=PVars::getObj('env')->baseuri."members/".$rel->Username?>"  title="See profile <?=$rel->Username?>">
                     <img class="framed float_left"  src="members/avatar/<?=$rel->Username?>?xs"  height="50px"  width="50px"  alt="Profile" />
                 </a>
@@ -241,7 +241,7 @@ if (count($relations) > 0) { ?>
                 $quality = "bad";
             }
     ?>
-    <div class="floatbox">
+    <div class="clearfix">
         <a href="members/<?=$c->UsernameFromMember?>">
            <img class="float_left framed"  src="members/avatar/<?=$c->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
@@ -259,7 +259,7 @@ if (count($relations) > 0) { ?>
             </p>
           <?php if ($commentLoopCount < $max) echo '<hr />' ?>
         </div> <!-- comment -->
-    </div> <!-- floatbox -->
+    </div> <!-- clearfix -->
         <?php } ?>
     <p class="float_right"><a href="members/<?=$member->Username?>/comments/"><?=$words->get('ShowAllComments')?></a></p>
 <?php } else {
@@ -275,7 +275,7 @@ if (count($relations) > 0) { ?>
 
 if ($comingposts = $member->getComingPosts()) {
     ?>
-    <div id="trips" class="floatbox box">
+            <div id="trips" class="clearfix box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
         <a href="/trip/show/my"><?php echo $words->get('Edit'); ?></a>
@@ -314,7 +314,7 @@ $gallery = new GalleryModel;
 $statement = $userid ? $gallery->getLatestItems($userid) : false;
 if ($statement) {
 ?>
-    <div id="gallery" class="floatbox box">
+          <div id="gallery" class="clearfix box">
     <?php if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
         <a href="/gallery/manage"><?php echo $words->get('Edit'); ?></a>
@@ -325,7 +325,7 @@ if ($statement) {
     // if the gallery is NOT empty, go show it
     $p = PFunctions::paginate($statement, 1, $itemsPerPage = 8);
     $statement = $p[0];
-    echo '<div class="floatbox">';
+          echo '<div class="clearfix">';
     foreach ($statement as $d) {
         echo '<a href="gallery/show/image/'.$d->id.'">' .
            '<img src="gallery/thumbimg?id='.$d->id.'"' .

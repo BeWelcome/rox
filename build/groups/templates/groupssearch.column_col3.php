@@ -1,11 +1,11 @@
 <div id="groups">
-        <div class="floatbox">
+        <div class="clearfix">
         <div class="subcolumns">
             <div class="c50l">
                 <div class="groupbox float_left">
                     <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
                     <form action="groups/search" method="get">
-                        <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->getSilent('GroupsSearchSubmit'); ?>" /><?=$words->flushBuffer()?><br />
+                        <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $words->getSilent('GroupsSearchSubmit'); ?>" /><?=$words->flushBuffer()?><br />
                     </form>
                 </div>
             </div>
@@ -13,7 +13,7 @@
                 <div class="groupbox float_left">
                     <h3><?= $words->get('GroupsCreateHeading'); ?></h3>
                     <p><?= $words->get('GroupsCreateDescription'); ?></p>
-                    <a class="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
+                    <a class="button" role="button" href="groups/new"><span><?= $words->get('GroupsCreateNew'); ?></span></a>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
 //            <a class="grey" href="groups/search?GroupsSearchInput={$this->search_terms}&amp;Order={$category_order}&Page={$this->result_page}">Category</a>
             $this->pager->render();
             echo <<<HTML
-<div class="floatbox">
+<div class="clearfix">
 HTML;
             $ii = 0;
             foreach ($search_result as $group_data) :
@@ -87,7 +87,7 @@ HTML;
 			if ($ii % 3 != 0) :
 				echo "</div>"; // subcolumns
 			endif; ?>
-</div> <!-- floatbox -->
+</div> <!-- clearfix -->
             <?php
             $this->pager->render();
             ?>
@@ -99,5 +99,5 @@ HTML;
 HTML;
         endif;
         ?>
-</div> <!-- floatbox -->
+</div> <!-- clearfix -->
 </div> <!-- groups -->

@@ -26,7 +26,7 @@ class GallerySetPage extends GalleryBasePage
         <div class="breadcrumbs">
         <?=$this->breadcrumbs()?>
         </div>
-        <div class="floatbox">
+        <div class="clearfix">
             <?=$this->teaserHeadline()?>
             <div class="gallery_menu">
             <?=$this->submenu()?>
@@ -81,19 +81,12 @@ class GallerySetPage extends GalleryBasePage
     
     public function leftSidebar() {
     }
-    
-    protected function getStylesheets() {
-        $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
-        return $stylesheets;
+
+    protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
     }
-    
-    /*
-    *  Custom functions
-    *
-    */
-
-
 }
 
 ?>

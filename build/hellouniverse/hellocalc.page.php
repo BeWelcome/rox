@@ -36,7 +36,7 @@ Result from last calculation: '.$mem_redirect->x.' + '.$mem_redirect->y.' = '.$m
 <form method="POST" action="'.$page_url.'">
 '.$this->layoutkit->formkit->setPostCallback('HellouniverseController', 'calculatorCallback').'
 <input name="x"/> + <input name="y"/> = ?
-<input type="submit" value="send"/>
+<input type="submit" class="button" value="send"/>
 </form>
 </p>
         ';

@@ -358,7 +358,7 @@ if (in_array('SignupErrorFullNameRequired', $vars['errors'])) {
   ?>
   <?php echo $words->get('IAgreeWithTerms'); ?></p>
   <p>
-    <input type="submit" value="<?php echo $words->getSilent('SubmitForm'); ?>" class="submit"
+    <input type="submit" class="button" value="<?php echo $words->getSilent('SubmitForm'); ?>" class="submit"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     /><?php echo $words->flushBuffer(); ?><br /><br />
     <a href="signup/3" class="button back" title="<?php echo $words->getSilent('LastStep'); ?>" ><span><?php echo $words->getSilent('Back'); ?></span></a><?php echo $words->flushBuffer(); ?>

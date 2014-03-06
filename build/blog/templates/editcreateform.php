@@ -44,7 +44,7 @@ if (in_array('upderror', $vars['errors'])) {
 
 <fieldset id="blog-text">
 <legend><?=$words->get('BlogCreateLabelText')?></legend>
-    <div class="row">
+    <div class="bw-row">
     <label for="create-title"><?=$words->get('BlogCreateLabelTitle')?>:</label><br/>
         <input type="text" id="create-title" name="t" class="long" size="65"  <?php
         // the title may be set
@@ -58,7 +58,7 @@ if (in_array('upderror', $vars['errors'])) {
         ?>
         <p class="desc"></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <label for="create-txt"><?=$words->get('BlogCreateLabelText')?>:</label><br/>
         <textarea id="create-txt" name="txt" rows="10" cols="65" class="long" ><?php
         // the content may be set
@@ -72,7 +72,7 @@ if (in_array('upderror', $vars['errors'])) {
         ?>
         <p class="desc"></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <label for="create-cat"><?=$words->get('BlogCreateLabelCategories')?>:</label><br />
         <select id="create-cat" name="cat">
             <option value="">-- <?=$words->get('BlogCreateNoCategories')?> --</option>
@@ -91,7 +91,7 @@ if (in_array('upderror', $vars['errors'])) {
         ?>
         <p class="desc"></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <label for="create-tags"><?=$words->get('BlogCreateLabelCreateTags')?>:</label><br />
         <textarea id="create-tags" name="tags" cols="40" rows="1"><?php
         // the tags may be set
@@ -106,7 +106,7 @@ if (in_array('upderror', $vars['errors'])) {
         <p class="desc"><?=$words->get('BlogCreateLabelSublineTags')?></p>
     </div>
     <p>
-        <input type="submit" value="<?=$submitValue?>" class="submit"<?php
+        <input type="submit" class="button" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
 <?php
@@ -175,7 +175,7 @@ if (isset($vars['id']) && $vars['id']) {
         <!-- End join with trip block -->
         <!-- Start trip start date block -->
         <label for="create-sty"><?=$words->get('BlogCreateTrips_LabelStartdate')?>:</label><br />
-        <div class="floatbox">
+        <div class="clearfix">
         <input type="text" id="create-date" name="date" class="date" maxlength="10" style="width:9em" <?php
         echo isset($vars['date']) ? 'value="'.htmlentities($vars['date'], ENT_COMPAT, 'utf-8').'" ' : '';
         ?> />
@@ -213,7 +213,7 @@ if (isset($vars['id']) && $vars['id']) {
 </div>
 <div id="location-suggestion"></div>
     <p>
-        <input type="submit" value="<?=$submitValue?>" class="submit"<?php
+        <input type="submit" class="button" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
     </p>
@@ -225,7 +225,7 @@ if (isset($vars['id']) && $vars['id']) {
     /* removed, referencing user app
     if ($User->hasRight('write_sticky@blog')) {
     ?>
-        <div class="row">
+        <div class="bw-row">
             <input type="checkbox" id="create-flag-sticky" name="flag-sticky"<?php
             if (isset($vars['flag-sticky']) && (int)$vars['flag-sticky']) {
                 echo ' checked="checked"';
@@ -238,7 +238,7 @@ if (isset($vars['id']) && $vars['id']) {
     */
     ?>
     <label><?=$words->get('label_vis')?></label>
-    <div class="row">
+    <div class="bw-row">
         <input type="radio" name="vis" value="pub" id="create-vis-pub"<?php
         if (
             (isset($vars['vis']) && $vars['vis'] == 'pub')
@@ -249,7 +249,7 @@ if (isset($vars['id']) && $vars['id']) {
         ?>/> <label for="create-vis-pub"><?=$words->get('BlogCreateSettings_LabelVispublic')?></label>
         <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVispublic')?></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <input type="radio" name="vis" value="prt" id="create-vis-prt"<?php
         if (
             (isset($vars['vis']) && $vars['vis'] == 'prt')
@@ -260,7 +260,7 @@ if (isset($vars['id']) && $vars['id']) {
         ?>/> <label for="create-vis-prt"><?=$words->get('BlogCreateSettings_LabelVisprotected')?></label>
         <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprotected')?></p>
     </div>
-    <div class="row">
+    <div class="bw-row">
         <input type="radio" name="vis" value="pri" id="create-vis-pri"<?php
         if (
             (isset($vars['vis']) && $vars['vis'] != 'prt' && $vars['vis'] != 'pub')
@@ -272,7 +272,7 @@ if (isset($vars['id']) && $vars['id']) {
         <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprivate')?></p>
     </div>
 <p>
-        <input type="submit" value="<?=$submitValue?>" class="submit"<?php
+        <input type="submit" class="button" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');
         ?> />
     </p>

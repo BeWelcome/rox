@@ -57,7 +57,7 @@ class LinkShowFriendsPage extends LinkPage
 			<form method="POST" action="'.$page_url.'">
 			'.$this->layoutkit->formkit->setPostCallback('LinkController', 'LinkShowFriendsCallback').'
 			From: <input name="from" value="'.$from.'"/> Degree: <input name="degree" value="'.$degree.'"/> Max Number : <input name="limit" value="'.$limit.'"/>
-			<input type="submit" value="send"/>
+			<input type="submit" class="button" value="send"/>
 			</form>
 			</p>
         ';

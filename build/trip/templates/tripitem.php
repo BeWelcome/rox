@@ -42,7 +42,7 @@ if ($trip->fk_countrycode) {
 
 </div> <!-- trip_author -->
 
-<div class="floatbox">
+<div class="clearfix">
 <?php
 if (!isset($trip_data[$trip->trip_id])) {
     if (isset($trip->trip_descr) && $trip->trip_descr) {

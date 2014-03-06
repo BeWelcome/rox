@@ -116,7 +116,7 @@ if ($errors = $this->getRedirectedMem('errors'))
     </div> <!-- type-check -->
 
     <div class="type-button">
-        <input type="submit" id="submit" name="submit" value="<?php echo $words->getSilent("FeedbackSubmit")?>" /><?php echo $words->flushBuffer(); ?>
+        <input type="submit" class="button" id="submit" name="submit" value="<?php echo $words->getSilent("FeedbackSubmit")?>" /><?php echo $words->flushBuffer(); ?>
         <input name="action" type="hidden" value="ask" />
     </div>
 </form>

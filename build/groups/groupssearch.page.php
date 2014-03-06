@@ -37,7 +37,7 @@ class GroupsSearchPage extends GroupsBasePage
         // &gt; or &raquo; ?
         $words = $this->getWords();
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
         <div id="teaser_l1">
         <h1><a href="forums"><?= $words->get('CommunityDiscussions');?></a> &raquo; <a href="groups/forums"><?= $words->get('Groups');?></a> &raquo; <a href="groups/search"><?= $words->get('search');?></a></h1>
         </div>

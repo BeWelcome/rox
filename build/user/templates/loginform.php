@@ -52,7 +52,7 @@ echo isset($vars['u']) ? 'value="'.htmlentities($vars['u'], ENT_COMPAT, 'utf-8')
 
 <tr>
 <td>&nbsp;</td>
-<td><input type="submit" value="<?php echo $words->get('login'); ?>" class="button"/></td></tr>
+<td><input type="submit" class="button" value="<?php echo $words->get('login'); ?>" class="button"/></td></tr>
 </table>
 
       <input type="hidden" name="<?php
@@ -80,7 +80,7 @@ $navText = $i18n->getText('navText');
 $countrycode = APP_User::countryCode($currUser->getHandle());
 $words = new MOD_words();
 ?>
-<div class="floatbox">
+<div class="clearfix">
 <p><?php echo $words->getFormatted('UserLoggedInAs'); ?> <br />
     <a href="user/<?php echo $currUser->getHandle(); ?>">
     <?=$currUser->getHandle()?></a>
@@ -104,7 +104,7 @@ echo implode('/', $request);
        
     </ul> -->
 <p>
-    <input type="submit" value="<?php echo $loginText['logout']; ?>"/>
+    <input type="submit" class="button" value="<?php echo $loginText['logout']; ?>"/>
     <input type="hidden" name="<?php echo $c; ?>" value="1"/>
 </p>
 </form>

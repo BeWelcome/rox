@@ -4,7 +4,7 @@ $words = new MOD_words();
 
 if ($message == '') {
 ?>
-    <div id="teaser" class="clearfix">
+    <div id="teaser" class="page-teaser clearfix">
     <h1><?php echo $words->getFormatted('InfoMessageTitle'); ?></h1>
     </div>
 <?php

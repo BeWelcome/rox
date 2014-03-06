@@ -12,7 +12,7 @@ if (true) {
    echo '<form action="' . url_script("", $pid)
       . '" method="GET" accept-charset="ISO-8859-1">'
       . '<input type="text" name="q" size="12">'
-      . '<input type="submit" value="?">'
+      . '<input type="submit" class="button" value="?">'
       . '</form>' . "\n";
 }
 

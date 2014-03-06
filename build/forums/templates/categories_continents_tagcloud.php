@@ -9,8 +9,8 @@
 <!-- Now displays the by continent -->
       
         <div class="regionlist">
-          <h4 class="floatbox"><?php echo '<img src="styles/css/minimal/images/iconsfam/world.png" alt="'. $this->words->getBuffered('geo') .'" title="'. $this->words->getBuffered('geo') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByContinent'); ?></h4>
-          <ul class=" floatbox">
+          <h4 class="clearfix"><?php echo '<img src="styles/css/minimal/images/iconsfam/world.png" alt="'. $this->words->getBuffered('geo') .'" title="'. $this->words->getBuffered('geo') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByContinent'); ?></h4>
+          <ul class=" clearfix">
             <li><a href="forums/kAF-Africa"><?php echo $this->words->getBuffered('Africa'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
             <li><a href="forums/kAN-Antarctica"><?php echo $this->words->getBuffered('Antarctica'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
             <li><a href="forums/kAS-Asia"><?php echo $this->words->getBuffered('Asia'); ?></a><?php echo $this->words->flushBuffer(); ?></li>
@@ -25,7 +25,7 @@
 <!-- Now displays the by category -->
 	
         <div class="categorylist">
-          <h4 class="floatbox"><?php echo '<img src="styles/css/minimal/images/iconsfam/folder_page.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByCategory'); ?></h4>
+          <h4 class="clearfix"><?php echo '<img src="styles/css/minimal/images/iconsfam/folder_page.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByCategory'); ?></h4>
           <ul>
           <?php
             foreach ($top_tags as $tagid => $tag) {
@@ -43,7 +43,7 @@
 <!-- Now displays the New Tag Cloud -->
       
     <div class="tags">
-          <h4 class="floatbox"><?php echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?></h4>
+          <h4 class="clearfix"><?php echo '<img src="styles/css/minimal/images/iconsfam/tag_blue.png" alt="'. $this->words->getBuffered('tags') .'" title="'. $this->words->getBuffered('tags') .'" class="forum_icon" />';?>&nbsp;<?php echo $this->words->flushBuffer(); ?><?php echo $this->words->getFormatted('ForumByTag'); ?></h4>
 	<?php
     if($all_tags_maximum == 0)
         $all_tags_maximum = 1;

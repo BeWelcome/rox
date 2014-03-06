@@ -72,7 +72,7 @@ foreach ($comments as $com){
 
 if (!$showfrom && !$showto && $this->myself != $loginuser) {
     // Show "Add comment" button
-    echo '  <p class="floatbox"><a href="members/' . $username
+    echo '  <p class="clearfix"><a href="members/' . $username
         . '/comments/add" class="button">' . $words->get('addcomments')
         . '</a></p>' . "\n";
 }
@@ -111,7 +111,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
            <img class="float_left framed"  src="members/avatar/<?=$c->UsernameFromMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
-            <p class="floatbox">
+            <p class="clearfix">
 
               <?php if (!$this->passedAway) {?><strong class="<?=$quality?>"><?=$c->comQuality?></strong><br/><?php }?>
               <span class="small grey">
@@ -172,7 +172,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
            <img class="float_left framed"  src="members/avatar/<?=$cc->UsernameToMember?>/?xs"  height="50px"  width="50px"  alt="Profile" />
         </a>
         <div class="comment">
-            <p class="floatbox">
+            <p class="clearfix">
               <strong class="neutral"><?php echo $words->get('CommentNoComment');?></strong><br/>
               <span class="small grey">
                 <?=$words->get('CommentFrom','<a href="members/'.$cc->UsernameToMember.'">'.$cc->UsernameToMember.'</a>')?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameFromMember ?>"><?= $cc->UsernameFromMember ?></a>
@@ -197,7 +197,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
         $cc = $comment['to'];
         $quality = strtolower($cc->comQuality);
         $tt = explode(',', $cc->Lenght); ?> 
-  <div class="profilecomment floatbox counter">
+  <div class="profilecomment clearfix counter">
       <div class="subcolumns profilecomment">
 
         <div class="c75l" >
@@ -208,7 +208,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
                <img class="float_left framed" src="members/avatar/<?= $cc->UsernameFromMember ?>/?xs" height="50px" width="50px" alt="Profile" />
             </a>
             <div class="comment">
-                <p class="floatbox">
+                <p class="clearfix">
                   <strong class="<?=$cc->comQuality?>"><?=$cc->comQuality?></strong><br/>
                   <span class="small grey">
                     <?= $words->get('CommentFrom', '<a href="members/' . $cc->UsernameFromMember . '">' . $cc->UsernameFromMember . '</a>') ?> <?= $words->get('CommentTo') ?> <a href="members/<?= $cc->UsernameToMember ?>"><?= $cc->UsernameToMember ?></a>
@@ -232,7 +232,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
                 </p>
                 <p>
                   <? if ($editto): ?>
-                    <a class="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
+                    <a class="button" role="button" href="members/<?= $cc->UsernameToMember ?>/comments/add" title="Edit"><?= $ww->edit ?></a>
                   <? endif; ?>
                 </p>
             </div> <!-- comment -->
@@ -265,7 +265,7 @@ if ($showfrom || $editfrom || $showto || $editto) {
 if ($this->myself && $showfrom) {
     $cc = $comment['from'] ?>
     <div class="subcolumns profilecomment">
-    <p class="float_right"><a class="button" href="members/<?= $cc->UsernameFromMember?>/comments/add"
+    <p class="float_right"><a class="button" role="button" href="members/<?= $cc->UsernameFromMember?>/comments/add"
         title="<? echo $words->getBuffered('CommentAddComment'); ?>"><?= $words->get('CommentAddComment'); ?></a></p>
         </div>
 <?php 

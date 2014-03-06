@@ -33,7 +33,7 @@ $cityName = empty($m->member_data->CityName) ? '&nbsp;' : $m->member_data->CityN
 <div class="box-bg">
     <div class="box">
 
-    <div class="row">
+    <div class="bw-row">
         <table>
             <tr>
                 <td><?php echo MOD_layoutbits::PIC_50_50($m->Username,'',$style='framed') ?></td>
@@ -47,7 +47,7 @@ $cityName = empty($m->member_data->CityName) ? '&nbsp;' : $m->member_data->CityN
         </table>
     </div>
 
-    <div class="row">
+    <div class="bw-row">
         <dl class="list">
             <dt><?=$words->getFormatted("FullName")?></dt><dd><?=$m->member_data->FirstName?> <?=$m->member_data->SecondName?> <?=$m->member_data->LastName?></dd>
             <dt><?=$words->getFormatted("HouseNumber")?></dt><dd><?=$houseNumber?></dd>
@@ -60,17 +60,17 @@ $cityName = empty($m->member_data->CityName) ? '&nbsp;' : $m->member_data->CityN
     </div> <!-- box -->
 </div> <!--box-bg -->
 
-<div class="row">
+<div class="bw-row">
     <input type="checkbox" name="NameConfirmed<?=$n?>" <?=(isset($vars['NameConfirmed'.$n])) ? 'checked="checked"' : ''?> />
     <?=$words->getFormatted("verifymembers_IdoConfirmTheName", $m->Username) ?>
 </div>
 
-<div class="row">
+<div class="bw-row">
     <input type="checkbox" name="AddressConfirmed<?=$n?>" <?=(isset($vars['AddressConfirmed'.$n])) ? 'checked="checked"' : ''?> />
     <?=$words->getFormatted("verifymembers_IdoConfirmTheAdress", $m->Username) ?>
 </div>
 
-<div class="row">
+<div class="bw-row">
     <textarea name="comment<?=$n?>" cols="35" rows="5" style="width: 97%" ><?=(isset($vars['comment'.$n])) ? $vars['comment'.$n] : ''?></textarea>
     <p class="small"><?=$words->getFormatted("verifymembers_Comment") ?></p>
 </div>

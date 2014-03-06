@@ -21,7 +21,7 @@ class NotifyBasePage extends PageWithActiveSkin
     {
         // &gt; or &raquo; ?
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
         <h1><a href="notify">Notify</a></h1>
         </div>
         <?php

@@ -152,7 +152,7 @@ requests to this site.<br>
 <br>
 <form action="{$_SERVER[REQUEST_URI]}" method="POST" enctype="application/x-www-form-urlencoded">
 <input type="checkbox" name="site_prot_unlock" value="true"> No, please
-<input type="submit" name="site_prot_unlock_button" value="unlock me!!">
+<input type="submit" class="button" name="site_prot_unlock_button" value="unlock me!!">
 </form>
 EOF;
    flush();

@@ -22,7 +22,7 @@ if (!empty($errors)) {
         <div class="subcl">
             <form id="activities-search-box" method="post" >
             <?php echo $callbackTags; ?>
-            <input type="text" name="activity-keyword" id="activity-keyword" size="50" value="<?php echo $this->keyword; ?>" /><input type="submit" name="activities-search" value="<?php echo $words->getSilent('ActivitiesSearchButton'); ?>" /><?php echo $words->flushBuffer(); ?>
+            <input type="text" name="activity-keyword" id="activity-keyword" size="50" value="<?php echo $this->keyword; ?>" /><input type="submit" class="button" name="activities-search" value="<?php echo $words->getSilent('ActivitiesSearchButton'); ?>" /><?php echo $words->flushBuffer(); ?>
             </form>
         </div>
     </div>

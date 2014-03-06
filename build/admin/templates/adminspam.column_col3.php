@@ -15,7 +15,7 @@ foreach ($this->pager->getActiveSubset($this->bad_spam) as $spam)
     echo <<<HTML
 <div class="checkcomment {$styles[$total_bad_comments%2]}">
     <p><b>{$spam->AdminAction}</b></p>
-    <div class="floatbox">
+    <div class="clearfix">
         <div class="float_left">
             <a href="members/{$from}">
                 <img class="framed"  src="members/avatar/{$from}/?xs"  height="50px"  width="50px"  alt="Profile" />

@@ -13,7 +13,7 @@ if (isset($this->current_set)) $current_set = $this->current_set;
 if ($this->myself || ($GalleryRight > 1) ) {
 
 ?>
-    <div class="floatbox">
+    <div class="clearfix">
         <hr />
 <?php if ($type == 'galleries') {
 
@@ -34,7 +34,7 @@ $vars = PPostHandler::getVars($callbackId);
     <input type="hidden" name="new" id="newGallery" value="1">
     <input name="g-user" type="hidden" value="<?=$User->getId()?>">
     <input name="g-title" type="text" size="20" maxlength="30">
-    <input type="submit" name="button" value="<?=$words->getBuffered('Create')?>" id="button" />
+    <input type="submit" class="button" name="button" value="<?=$words->getBuffered('Create')?>" id="button" />
 </p>
 </form>
 
@@ -53,7 +53,7 @@ $vars = PPostHandler::getVars($callbackId);
     <?=$words->get('GalleryWithSelected')?>: &nbsp;&nbsp;&nbsp;&nbsp;
 
     <input name="removeOnly" type="hidden" value="1">
-    <input type="submit" name="button" value="<?=$words->getBuffered('GalleryRemoveImagesFromPhotoset')?>" class="button" style="cursor:pointer"/>
+    <input type="submit" class="button" name="button" value="<?=$words->getBuffered('GalleryRemoveImagesFromPhotoset')?>" class="button" style="cursor:pointer"/>
     <a href="gallery/show/sets/<?=$this->gallery->id?>/upload" class="button" /><img src="images/icons/picture_add.png"><?=$words->get('GalleryUploadPhotos')?></a>
 
 </p>
@@ -72,7 +72,7 @@ $vars = PPostHandler::getVars($callbackId);
 
     <input name="deleteOnly" id="deleteonly" type="hidden" value="0">
     
-    <input type="submit" name="button" value="<?=$words->getBuffered('Delete')?>" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeleteimages")?>'); $('deleteonly').value = 1;" style="cursor:pointer"/>
+    <input type="submit" class="button" name="button" value="<?=$words->getBuffered('Delete')?>" class="button" onclick="return confirm('<?=$words->getBuffered("confirmdeleteimages")?>'); $('deleteonly').value = 1;" style="cursor:pointer"/>
 
     <br />
     <br />
@@ -100,7 +100,7 @@ if (isset($galleries) && $galleries) { ?>
 <input name="g-user" type="hidden" value="<?=$User->getId()?>">
 <input name="g-title" id="g-title" type="text" size="20" maxlength="30" onclick="$('newGallery').checked = true; $('deleteonly').value = 0;">
 <br>
-<input type="submit" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
+<input type="submit" class="button" name="button" value="<?=$words->getBuffered('Add')?>" id="button" onclick="$('deleteonly').value = 0; return submitStuff();"/>
 </p>
 
 

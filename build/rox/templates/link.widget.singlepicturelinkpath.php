@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
   $ii = 0;
 ?>
   <div id="<?php echo $cssID ?>" class="box">
-    <div class="floatbox">
+    <div class="clearfix">
       <?php foreach ($linkpath as $row) {
       ?>
       <?php if (count($row) > 2) { ?>

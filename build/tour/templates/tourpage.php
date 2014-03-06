@@ -32,19 +32,19 @@ $words = new MOD_words();
           <div class="c50l">
             <div class="subcl">
                 <h4><?php echo $words->getFormatted('tour_link_share')?></h4>
-                <div class="floatbox">
+                <div class="clearfix">
                 <a href="tour/share"><img src="images/tour/arrow_share_small.png" class="float_right" alt="share" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text2')?></p>
                 </div>
                 
                 <h4><?php echo $words->getFormatted('tour_link_meet')?></h4>
-                <div class="floatbox">
+                <div class="clearfix">
                 <a href="tour/meet"><img src="images/tour/arrow_world_small.png" class="float_right" alt="meet" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text3')?></p>
                 </div>
                 
                 <h4><?php echo $words->getFormatted('tour_link_trips')?></h4>
-                <div class="floatbox">
+                <div class="clearfix">
                 <a href="tour/trips"><img src="images/tour/arrow_plan_small.png" class="float_right" alt="plan trips" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text4')?></p>
                 </div>
@@ -54,13 +54,13 @@ $words = new MOD_words();
           <div class="c50r">
             <div class="subcr">
                 <h4><?php echo $words->getFormatted('tour_link_maps')?></h4>
-                <div class="floatbox">
+                <div class="clearfix">
                 <a href="tour/maps"><img src="images/tour/arrow_maps_small.png" class="float_right" alt="maps" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text5')?></p>
                 </div>
                 
                 <h4><?php echo $words->getFormatted('tour_link_openness')?></h4>
-                <div class="floatbox">
+                <div class="clearfix">
                 <a href="tour/openness"><img src="images/tour/arrow_door_small.png" class="float_right" alt="open door" /></a>
                 <p><?php echo $words->getFormatted('tourpage_text6')?></p>
                 </div>

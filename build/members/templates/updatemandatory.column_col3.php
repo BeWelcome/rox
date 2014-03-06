@@ -48,7 +48,7 @@ Boston, MA  02111-1307, USA.
           <!-- Content of left block -->
 
           <!-- First Name -->
-              <div class="signup-row floatbox">
+              <div class="signup-row clearfix">
                 <label for="register-firstname"><?php echo $words->get('FirstName'); ?>* </label>
                 <input type="text" id="register-firstname" name="firstname" class="float_left" <?php
                 echo isset($vars['firstname']) ? 'value="'.htmlentities($vars['firstname'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -67,7 +67,7 @@ Boston, MA  02111-1307, USA.
               </div> <!-- signup-row -->
 
           <!-- Second Name -->
-              <div class="signup-row floatbox">
+              <div class="signup-row clearfix">
                 <label for="secondname"><?php echo $words->get('SignupSecondNameOptional'); ?></label>
                 <input type="text" id="secondname" name="secondname" class="float_left" <?php
                 echo isset($vars['secondname']) ? 'value="'.htmlentities($vars['secondname'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -78,7 +78,7 @@ Boston, MA  02111-1307, USA.
               </div> <!-- signup-row -->
 
           <!-- Last Name -->
-              <div class="signup-row floatbox">
+              <div class="signup-row clearfix">
                 <label for="lastname"><?php echo $words->get('LastName'); ?>* </label>
                 <input type="text" id="lastname" name="lastname" class="float_left" <?php
                 echo isset($vars['lastname']) ? 'value="'.htmlentities($vars['lastname'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -96,7 +96,7 @@ Boston, MA  02111-1307, USA.
           <!-- Content of right block -->
 
           <!-- Birthdate -->
-              <div class="signup-row floatbox">
+              <div class="signup-row clearfix">
                 <label for="BirthDate"><?php echo $words->get('SignupBirthDate'); ?>*</label><br />
                 <select id="BirthDate" name="birthyear">
                   <option value=""><?php echo $words->get('SignupBirthYear'); ?></option>
@@ -176,7 +176,7 @@ Boston, MA  02111-1307, USA.
 
         <legend><?php echo $words->get('Location'); ?></legend>
 
-        <div class="floatbox" id="geoselectorjs" style="display: none;" >
+        <div class="clearfix" id="geoselectorjs" style="display: none;" >
 
             <div class="subcolumns">
               <div class="c50l">
@@ -244,7 +244,7 @@ Boston, MA  02111-1307, USA.
   <fieldset id="location">
       <legend><?php echo $words->get('Address'); ?></legend>
 
-          <ul class="floatbox input_float">
+          <ul class="clearfix input_float">
         <li style="float: left">
 
           <label for="register-street"><?php echo $words->get('SignupStreetName'); ?>*</label><br />
@@ -317,7 +317,7 @@ Boston, MA  02111-1307, USA.
   </fieldset>
 
   <p>
-    <input type="submit" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
+    <input type="submit" class="button" value="<?php echo $words->get('SubmitForm'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     />
   </p>

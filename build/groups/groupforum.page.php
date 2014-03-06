@@ -72,7 +72,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
         <div>
             <h3><?= $words->get('GroupsSearchHeading'); ?></h3>
             <form action="groups/search" method="get">
-                <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" value="<?= $words->getSilent('GroupsSearchSubmit'); ?>" /><?=$words->flushBuffer()?><br />
+                <input type="text" name="GroupsSearchInput" value="" id="GroupsSearchInput" /><input type="submit" class="button" value="<?= $words->getSilent('GroupsSearchSubmit'); ?>" /><?=$words->flushBuffer()?><br />
             </form>
         </div>             
     <?php 
@@ -83,7 +83,7 @@ class GroupForumsOverviewPage extends GroupsBasePage
     {
         $words = $this->getWords();
         ?>
-        <div id="teaser" class="clearfix">
+        <div id="teaser" class="page-teaser clearfix">
         <div id="teaser_l1"> 
         <h1><a href="forums"><?= $words->get('CommunityLanding');?></a> &raquo <a href="groups/forums"><?= $words->get('Groups');?></a></h1>
         </div>

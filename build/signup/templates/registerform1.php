@@ -44,7 +44,7 @@ Boston, MA  02111-1307, USA.
     <legend><?php echo $words->get('LoginInformation'); ?></legend>
 
     <!-- username -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="register-username"><?php echo $words->get('SignupUsername'); ?>* </label>
           <input type="text" id="register-username" name="username" class="float_left" <?php
             echo isset($vars['username']) ? 'value="'.htmlentities($vars['username'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -73,7 +73,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
 
     <!-- password -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="register-password"><?php echo $words->get('SignupPassword'); ?>* </label>
           <input type="password" id="register-password" name="password" class="float_left" <?php
           echo isset($vars['password']) ? 'value="'.$vars['password'].'" ' : '';
@@ -92,7 +92,7 @@ Boston, MA  02111-1307, USA.
        </div> <!-- signup-row -->
 
     <!-- confirm password -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="register-passwordcheck"><?php echo $words->get('SignupCheckPassword'); ?>* </label>
           <input type="password" id="register-passwordcheck" name="passwordcheck" class="float_left" <?php
             echo isset($vars['passwordcheck']) ? 'value="'.$vars['passwordcheck'].'" ' : '';
@@ -103,7 +103,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
 
     <!-- email -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="register-email"><?php echo $words->get('SignupEmail'); ?>* </label>
           <input type="text" id="register-email" name="email" class="float_left" <?php
           echo isset($vars['email']) ? 'value="'.htmlentities($vars['email'], ENT_COMPAT, 'utf-8').'" ' : '';
@@ -128,7 +128,7 @@ Boston, MA  02111-1307, USA.
         </div> <!-- signup-row -->
         
         <!-- confirm email -->
-        <div class="signup-row floatbox">
+        <div class="signup-row clearfix">
           <label for="register-emailcheck"><?php echo $words->get('SignupCheckEmail'); ?>* </label>
           <input type="text" id="register-emailcheck" name="emailcheck" class="float_left" <?php
             echo isset($vars['emailcheck']) ? 'value="'.$vars['emailcheck'].'" ' : '';
@@ -138,7 +138,7 @@ Boston, MA  02111-1307, USA.
   </fieldset>
 
   <p>
-    <input type="submit" value="<?php echo $words->getSilent('NextStep'); ?>" class="button"
+    <input type="submit" class="button" value="<?php echo $words->getSilent('NextStep'); ?>" class="button"
     onclick="javascript:document.signup.javascriptactive.value = 'true'; return true;"
     /><?php echo $words->flushBuffer(); ?>
   </p>

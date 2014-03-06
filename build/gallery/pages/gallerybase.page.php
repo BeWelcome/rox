@@ -22,7 +22,7 @@ class GalleryBasePage extends PageWithActiveSkin
         <div class="breadcrumbs">
         <?=$this->breadcrumbs()?>
         </div>
-        <div class="floatbox">
+        <div class="clearfix">
             <?=$this->teaserHeadline()?>
             <div class="gallery_menu">
             <?=$this->submenu()?>
@@ -50,9 +50,14 @@ class GalleryBasePage extends PageWithActiveSkin
         return 'overview';
     }
     
+        protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
+    }
+    
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/lightview.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/gallery.css';
         return $stylesheets;

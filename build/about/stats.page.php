@@ -29,10 +29,15 @@ class AboutStatisticsPage extends AboutBasePage
         require 'templates/stats.php';
     }
 
+        protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
+    }
+
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/stats.css';
         return $stylesheets;
     }

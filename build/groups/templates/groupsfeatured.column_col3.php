@@ -23,7 +23,7 @@
 //            <a class="grey" href="groups/search?GroupsSearchInput={$this->search_terms}&amp;Order={$category_order}&Page={$this->result_page}">Category</a>
             $this->pager->render();
             echo <<<HTML
-<div class="floatbox">
+<div class="clearfix">
 HTML;
             foreach ($search_result as $group_data) : ?>
                 <div class="groupbox float_left">
@@ -47,7 +47,7 @@ HTML;
                     </div> <!-- groupinfo -->
                 </div> <!-- groupbox -->
             <?php endforeach ;?>
-</div> <!-- floatbox -->
+</div> <!-- clearfix -->
             <?php
             $this->pager->render();
             ?>

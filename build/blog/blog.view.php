@@ -21,7 +21,6 @@ class BlogView extends RoxAppView
 	/* This adds other custom styles to the page*/
 	public function customStylesPublic() {
         $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/blog.css?3" type="text/css"/>';
-        $out .= '<link rel="stylesheet" href="styles/css/minimal/screen/custom/bw_basemod_blog_public.css" type="text/css"/>';
 		return $out;
     }    
 	/* This adds other custom styles to the page*/

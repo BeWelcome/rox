@@ -50,9 +50,14 @@ class SearchMembersBasePage extends PageWithActiveSkin
         return '';
     }
 
+    protected function getColumnNames()
+    {
+        // we don't need the other columns
+        return array('col3');
+    }
+
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.4.custom.min.css';

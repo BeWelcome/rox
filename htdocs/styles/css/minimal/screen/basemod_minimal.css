@@ -12,39 +12,9 @@
 @media screen, projection
 {
   /*-------------------------------------------------------------------------*/
-
-  /* (en) Marginal areas & page background */
-  /* (de) Randbereiche & Seitenhintergrund */
-  body { background: #f7f7f7 url(../images/bggrey.png) top left repeat-x; }
-
-  /* Layout Alignment | Layout-Ausrichtung */
-  #page_margins { min-width: 900px; max-width: 960px; margin: 0 auto; width: auto; }
-  #page { padding: 0 }
-
   
   /* Layout Properties | Layout-Eigenschaften */
-  #header { position: absolute; top: 0;}
-  #topnav { float: right; margin: 0 2em 1em 2em}  
-  #nav { background: transparent url(../images/header_index_960.png) no-repeat top left; height: 70px; top: 0; padding: 0 2em;}  
-  #teaser { margin: 0 0 1em 0; background: transparent url(../images/teaser_bg_white2.png) no-repeat bottom left; }
-  #main { padding: 0 4em; }
-  #footer { padding: 2.5em 4em; color:#666; background: #f9f9f9; border-top: 5px #efefef solid; }
+  
+  #footer { padding: 2.5em 4em; color:#666; border-top: 5px #efefef solid; }
 
  /*------------------------------------------------------------------------------------------------------*/
-
- /**
-   * (en) Formatting content container
-   * (de) Formatierung der Inhalts-Container
-   *
-   */
-
-  #col1 { float: right; width: 20%}
-  #col2 { display:none}
-  #col2_content { display:none}
-
-  #col3 { width: auto; margin: 0 20% 0 0}
-  #col1_content { padding: 0 0 0 2em }
-  #col3_content { padding: 0 2em 0 0 }
-
-
-}

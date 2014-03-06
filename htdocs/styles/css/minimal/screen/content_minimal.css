@@ -1,14 +1,5 @@
 @charset "UTF-8";
-/**
-* "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
-*
-*  YAML Version: 3.0.2
-*  file       : bw_content.css
-*  function   : formatting  of content (text, graphics, links, lists, tables, etc.)
-*
-*  last modification: 02.07.10 by gl0bi (BW: matthias)
-*
-*/
+
 
 @media all
 {
@@ -19,26 +10,7 @@
    * @section content-fonts
    */
 
-  /* (en) reset font size for all elements to standard (16 Pixel) */
-  html * { font-size: 100.01% }
-
-  /* (en) base layout gets standard font size 12px */
-  body {
-    font-family: Arial,'Trebuchet MS', Verdana, Helvetica, sans-serif;
-    font-size: 75.00%;
-    color: #333;
-  }
-
   /* ### headings ### */
-  h1,h2,h3,h4,h5 { font-family: Arial,'Lucida Grande', Verdana, Sans-Serif; font-weight:normal; line-height: 1.5em; }
-
-  h1 {font-size: 2.4em; color: #333; margin: 0 0 0.25em 0; padding-bottom: 0.5em; font-weight:bold; }
-  h2 {font-size: 1.8em; color: #333; margin: 0 0 0.50em 0; font-weight:bold; }
-  h3 {font-size: 1.3em; color: #333; margin: 0 0 0.25em 0; font-weight:bold; }
-  h4 {font-size: 1.0em; color: #333; margin: 0 0 0.30em 0; font-weight:bold; border-bottom: none;}
-  h5 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic;   padding-top: 3px; margin-bottom: 0; font-style: normal; color: #333;}
-  h6 {font-size: 1.0em; color: #888; margin: 0 0 0.30em 0; font-style:italic; }
-
   #main  h1 span, #main_top h1 span, #teaser h1 span.small { margin: 0; padding: 0; }
   .list h5 {  padding-top: 0;}
 
@@ -47,10 +19,8 @@
 
 
   /* ### paragraphs ###*/
-  p,ul,dd,dt { line-height: 1.5em; }
-  p { line-height: 1.5em; margin: 0 0 0.8em 0; }
-  #buttonstop p.floatbox,
-  #messagefooter p.floatbox  { margin: 0 }
+  #buttonstop p.clearfix,
+  #messagefooter p.clearfix  { margin: 0 }
 
   /* ### text formatting  ### */
   strong,b {font-weight: bold; }
@@ -101,7 +71,6 @@
   .note_big {color: #0066ff; font-weight: bold; line-height: 1.5em; font-size: 1.2em;}
   .important {background: #ffd; padding: 1em; border-top: 1px #ddb dotted; border-bottom: 1px #dbb dotted;}
   .desc {color: #AFABA3; font-size: 11px; line-height: 1.5em;}
-  .row { padding: .5em 0;}
   .row_nav { display: block; border-bottom: 1px solid #e5e5e5;}
   .warning {
     background: #fdd;
@@ -191,24 +160,6 @@
   img.center { text-align:center; background: #fff; padding: 4px; border:1px #ddd solid; }
   img.framed {padding:1px; border: 1px #ddd solid; background: #f3f3f3 }
 
-  /**
-   * Local and external Links
-   *
-   * (en) Formatting of hyperlinks
-   *
-   */
-  a, a em.file {color: #2184e8; text-decoration:none; background-color:transparent;}
-  a:hover {text-decoration:underline;}
-  a:focus {text-decoration:underline;}
-
-  /*#main a[href^="http:"], #main a[href^="https:"]
-    {
-      padding-left: 12px;
-      background-image: url('../../img/icons/ext_link.gif');
-      background-repeat: no-repeat;
-      background-position: 0 0.45em;
-    }
-    */
   #main a.imagelink {
     padding-left: 0;
     background: transparent;
@@ -352,7 +303,6 @@ dl.list {
    * @section content-forms
    */
 
-  form {overflow:hidden;}
   fieldset {
     border: 1px solid #ccc;
     padding: 2em;
@@ -414,7 +364,7 @@ dl.list {
     border: 0;
     background: transparent;
   }
-  input[type=submit] {
+/*  input[type=submit] {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
@@ -429,7 +379,7 @@ dl.list {
     text-align:center;
     width:auto !important;
     cursor: pointer;
-  }
+}*/
 
   input[type=reset] {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
@@ -468,7 +418,7 @@ dl.list {
    * (en) Generic classes for pagination
    *
    * @section content-pagination
-   */
+
 
   div.pages {padding:1em 0; white-space: nowrap; overflow:hidden;}
   div.pages ul{float:right; margin:0;padding:0;}
@@ -479,7 +429,7 @@ dl.list {
   div.pages li a:active {color: #fff; background: #ff9900;}
   div.pages li a:focus {background-color: transparent; color: #333; text-decoration:none;}
 
-  /* give pagination our 'button' style */
+  /* give pagination our 'button' style 
   div.pages li a{
     background:transparent url(../images/button_bg.png) repeat-x scroll 0%;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
@@ -501,7 +451,7 @@ dl.list {
    * html div.pages li a {
        width: 10px; /* IE */
    }
-   /**/
+   /*
 
   div.fullpager {padding:1em 0; width: 100%; white-space: nowrap; overflow:hidden; text-align: center;}
   div.fullpager ul{ margin:0; padding:0;display:inline-block; }
@@ -542,27 +492,16 @@ dl.list {
    * @section content-footer
    */
 
-  #footer {
-    border: none;
-    text-align: left;
-    color: #6A6A5B;
-  }
-  #footer p {font-size: 0.9em;}
 
-  #footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#777; font-weight: normal; text-align: left; white-space: nowrap; }
-  #footer a:hover { text-decoration:underline; }
-  #footer a:focus { text-decoration:underline; }
-  #footer .linklist {padding-top: 0.2em;}
-  #footer #language-select { font-size: 0.9em; }
+
+  footer a {margin: 0.1em 0 0 0; padding: 0.2em 0 0 0; color:#999; font-weight: normal; text-align: left; white-space: nowrap; }
+  footer a:hover { text-decoration:underline; }
+  footer a:focus { text-decoration:underline; }
+  footer .linklist {padding-top: 0.2em;}
   
-  #footer #flags {padding: 0 0 2.5em 0; line-height: 1em; }
-  #footer #flags a {
-    color: #333;
-    margin: 0.1em 0.2em 0 0;
-    padding: 0.2em 0.3em 0 0;
-  }
-  #footer #flags a:hover {color: #333; text-decoration:underline; }
-  #footer #flags a:focus {color: #333; text-decoration:underline; }
+  footer  {padding: 2em; color: #999;}
+  footer a:hover {color: #999; text-decoration:underline; }
+  footer a:focus {color: #999; text-decoration:underline; }
 
 
 /* ###########################################
@@ -579,20 +518,7 @@ h4.news {
   padding: 0 0 3px 0;
 }
 
-/* more padding to the left for the middle column on personal startpage */
-.midcl {
-  padding-left: 1em;
-}
 
-.newsitem {
-  margin-bottom: 1.5em;
-  line-height: 1.5em;
-}
-
-.newsitem p {
-  margin: 0;
-  padding: 0;
-}
 
 /* ###########################################
 ** ### Other classes & IDs #############################
@@ -605,7 +531,7 @@ h4.news {
 .action {font-size: .9em; color: #888; padding: 1em 0 0 0;}
 .hr_div {padding: 5px 30px 0 30px;}
 
-.button, input.button, .control-links a, .control-links input, a.cancel {
+/*.button, input.button, .control-links a, .control-links input, a.cancel {
     background:transparent url(../images/button_bg.png) repeat-x scroll 0 0;
     border-color:#E5E5E5 rgb(187, 187, 187) rgb(187, 187, 187) rgb(229, 229, 229);
     border-style:solid;
@@ -620,7 +546,7 @@ h4.news {
     text-align:center;
     width:auto;
 }
-input.button, .control-links input { /* Only for inputs. Otherwise we have problems in Safari and IE */
+input.button, .control-links input { /* Only for inputs. Otherwise we have problems in Safari and IE 
     height:24px !important;
     line-height:22px !important;
     margin:0;
@@ -647,7 +573,7 @@ a.bigbutton {
     font: normal 12px arial, sans-serif;
     height: 30px;
     margin-right: 6px;
-    padding-right: 18px; /* sliding doors padding */
+    padding-right: 18px; /* sliding doors padding 
     text-decoration: none;
 }
 a.bigbutton span {
@@ -661,13 +587,13 @@ a.bigbutton span {
 a.bigbutton:active {
     background-position: bottom right;
     color: #000;
-    outline: none; /* hide dotted outline in Firefox */
+    outline: none; /* hide dotted outline in Firefox 
 }
 a.bigbutton:active span {
     background-position: bottom left;
-    padding: 9px 0 7px 18px; /* push text down 1px */
+    padding: 9px 0 7px 18px; /* push text down 1px 
 }
-
+*/
 a.flagbutton {
   opacity: 0.2;
 }
@@ -684,7 +610,6 @@ a.flagbutton:hover {
 #mapsearch fieldset {padding: 15px 0 0 20px;}
 #mapsearch label {font-size: 1.5em; color: #fff;}
 #mapsearch input {padding: 0.2em; font-size: 1.2em;}
-#submit-button {vertical-align:middle; padding-bottom:4px}
 #loading_container {margin: 1em 0}
 
 /* Tagcloud */
@@ -744,32 +669,11 @@ background: none;
 #main li.userpicbox_vol {
     width: 146px;
 }
-/*
-	#main li.userpicbox_vol:hover{
-    background-color: #f5f5f5;
-    border-top:1px solid #ccc;
-    border-right:1px solid #777;
-    border-bottom:1px solid #777;
-    border-left:1px solid #ccc;
-}
-*/
 
 .userinfo {
     margin-left: 0px;
     overflow: hidden;
 }
-.newmember, .visitors {
-    margin: 0em 2% 1em 0.4em;
-    width: 120px;
-    float: left;
-    white-space:nowrap;
-    overflow: hidden;
-    display: inline;
-}
-#newmembers, #visitors {
-    margin-bottom: 1em;
-}
-
 /* blog & gallery comments */
 div.comment { padding:0; margin-bottom:1em; }
 div.comment h4 {padding:0.2em; margin:0; }
@@ -837,103 +741,8 @@ div.box h3 {
   font-size: 1.3em;
   font-weight: bold;
 }
-
-/*
-div.box {
-  background-color: transparent;
-  background-image:url(../images/box-right.png);
-  background-position:right center;
-  background-repeat:repeat-y;
-  margin:10px 10px 0pt;
-}
-
-div.box .first {
-  background-color: transparent;
-  background-image:url(../images/box-top-left.png);
-  background-repeat:no-repeat;
-  display:block;
-  line-height:20px;
-  padding:0;
-  margin: 0;
-  border: none;
-}
-
-div.box .first span,div.box .first a {
-  background-color: transparent;
-  background-image:url(../images/box-top.png);
-  background-repeat:repeat-x;
-  display:block;
-  line-height:30px;
-  margin:0pt 10px 0pt 20px;
-  text-decoration:none;
-  padding-top: 10px;
-  cursor: move;
-}
-
-div.box .first a img,div.box .first span img{
-  cursor: pointer;
-}
-
-div.box div.floatbox {
-  background-color: transparent;
-  background-image:url(../images/box-left.png);
-  background-position:left top;
-  background-repeat:repeat-y;
-  min-height:30px;
-  padding:10px 20px 10px 20px;
-  margin-right: 20px;
-}
-
-
-div.box div.corner {
-  background-color: transparent;
-  background-image:url(../images/box-top-right.png);
-  background-position:right top;
-  background-repeat:no-repeat;
-  float:right;
-  height:30px;
-  line-height:30px;
-  margin:0pt;
-  padding:0pt 15px 0pt 0pt;
-}
-
-div.box div.boxbottom {
-  background-color: transparent;
-  background-image:url(../images/box-bottom.png);
-  background-position:left bottom;
-  background-repeat:repeat-x;
-  color:#888888;
-  font-size:0.9em;
-  height:15px;
-  line-height:15px;
-}
-
-div.box div.boxbottom div.author {
-  background-color: transparent;
-  background-image:url(../images/box-bottom-left.png);
-  background-position:left bottom;
-  background-repeat:no-repeat;
-  float:left;
-  height:15px;
-  line-height:15px;
-  padding:0pt 0pt 0pt 20px;
-}
-
-div.box div.boxbottom div.links {
-  background-color: transparent;
-  background-image:url(../images/box-bottom-right.png);
-  background-position:right bottom;
-  background-repeat:no-repeat;
-  float:right;
-  height:15px;
-  line-height:15px;
-  padding:0pt 20px 0pt 0pt;
-}
-*/
 #teaser h1,#teaser h1 a { color: #333; line-height: 1.2em; }
 #teaser h1 a:hover, #teaser h1 a:focus { color: #888; text-decoration: none;}
-#teaser a.button { color: #ff8800;}
-#teaser a:hover.button { color: #333;}
 #teaser #title { float: left; margin-right: 0}
 #teaser #teaser_l {float:left; width: 120px; margin: 0 0 0 0; }
 #teaser #teaser_r {width: 70%; margin: 0 10px 0 0; }
@@ -988,18 +797,6 @@ div.box div.boxbottom div.links {
 	border-bottom: 1px solid #fff;
 }
 
-/* Login Widget */
-#login-widget {
-    padding: 2em;
-    border: 1px solid #ccc;
-    background-color: #f5f5f5;
-}
-#login-widget input#login-u, #login-widget input#login-p {
-    width: 10em;
-}
-#login-widget input#login-r {
-    vertical-align: top;
-}
 #loginmessage {
     width: 100%;
     padding: 1em 1em 1em 3em;
@@ -1010,13 +807,6 @@ div.box div.boxbottom div.links {
 #loginmessage.false {
     background: #222222 url(../images/iconsfam/exclamation.png) no-repeat scroll 1em 1em;
     border-bottom: 4px solid #ff0000;
-}
-#language_select {
-  color: #ffffff;
-  float: right;
-  padding: 1.4em 1.7em 0em;
-  font-size: 1.1em;
-  font-weight: bold;
 }
 
 /**

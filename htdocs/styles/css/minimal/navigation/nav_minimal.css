@@ -146,40 +146,6 @@
     padding-bottom: 1em;
   }
 
-  /* positioning of the quicksearchbar in the main menu */
-  #form-quicksearch {
-   /* width: 15em;*/
-    margin-bottom: 2px;
-    margin-right: 12px;
-    position: relative;
-    top: 14px;
-    float: right;
-  }
-  #form-quicksearch input{
-    font-size: 1.1em;
-  }
-  #form-quicksearch a {
-    color: #fff;
-  }
-  #form-quicksearch #submit-button {
-  }
-
-  /* login-widget will be displayed instead of quicksearch on public pages */
-  .login-widget-small {
-    color: #fff;
-    font-size: 0.9em;
-    float: right;
-    margin-right: 10px;
-  }
-
-  .login-widget-small input {
-    width: 8em;
-  }
-
-  /* logout link */
-  #logout {margin-left: 75em;}
-
-
   /* css for menus insides applications */
   .tabs {
     margin-left: 0;
@@ -222,75 +188,6 @@
     padding-bottom: .6em;
   }
 
-
-  /* css for personal startpage menu */
-  
-    #personalmenu, #personalmenu ul { /* all lists */
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        width : 100%;
-    }
-    
-    #personalmenu li { /* all list items */
-        display: inline;
-        position : relative;
-        line-height : 2.25em;
-        font-size: 1.4em;
-        width : 90%;
-        padding: 0;
-    }
-    
-    #personalmenu.sm li { /* all list items */
-        position : relative;
-        line-height : 2.25em;
-        font-size: 1.2em;
-        width : 90%;
-        padding: 0;
-    }
-
-    #personalmenu li a {
-        display : block;
-        color:#777777;
-        padding: 0;
-        font-weight : bold;
-        text-decoration : none;
-        background-color : transparent;
-        border-left : none;
-        border-right : none;
-        border-bottom : none;
-        border-top : 1px solid #dddddd;
-    }
-    
-    #personalmenu li a.first,#personalmenu li#sub0 a {
-        border-top : 1px solid transparent;
-    }
-    
-    #personalmenu li a:hover {
-        background-color : #fff;
-    }
-    #personalmenu li a:focus {
-        outline-style:none;
-        outline-width:0;
-    }
-    
-    #personalmenu li a.active-tab,#personalmenu li.active a {
-        /*background:transparent url(../images/bg_arrow_orange.png) no-repeat scroll right top;
-        border:none; */
-        color:#333;
-/*        padding: 1px .5em 1px 1em;
-        margin-right: -1em;  */
-    }
-    
-    .panel {
-       clear: both;
-       display: none;
-       background-color: transparent;
-    }
-    
-    .panel.active-tab-body {
-       display: block;
-    }
 
 
 /* topnav menu (little greys) */

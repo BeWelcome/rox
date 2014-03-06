@@ -106,8 +106,8 @@
   }
 
 
-  div[class="floatbox"] { background: #f4f4f4; }
-  div[class="floatbox"]:before {
+  div[class="clearfix"] { background: #f4f4f4; }
+  div[class="clearfix"]:before {
    display:block;
   color: #fff;
   padding: 2px;

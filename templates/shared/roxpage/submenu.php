@@ -1,9 +1,5 @@
-
-<div id="middle_nav" class="clearfix">
-  <div id="nav_sub">
-    <ul>
-      <?php
-
+<ul class="nav nav-pills nav-justifiedmedia submenu">
+<?php
 $active_menu_item = $this->getSubmenuActiveItem();
 foreach ($this->getSubmenuItems() as $index => $item) {
     $name = $item[0];
@@ -16,17 +12,10 @@ foreach ($this->getSubmenuItems() as $index => $item) {
     }
     
     ?><li id="sub<?=$index ?>" <?=$attributes ?>>
-      <a style="cursor:pointer;" href="<?=$url ?>">
-        <span><?=$label ?></span>
-      </a>
+      <a style="cursor:pointer;" href="<?=$url ?>"><?=$label ?></a>
       <?=$words->flushBuffer(); ?>
     </li>
     <?php
     
-}
-
-    ?></ul>
-  </div>
-</div>
-
-
+}?>
+</ul>

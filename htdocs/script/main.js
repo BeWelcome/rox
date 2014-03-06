@@ -51,6 +51,12 @@ BWRox.prototype.selectScripts = function (scripts) {
         } else {
             var prefix = 'script/';
         }
+    // add min.js if we have a min version
+    if (typeof script.min === "boolean" && script.min === true && typeof bwroxConfig != 'undefined' && bwroxConfig.uncompress_js == '1') {
+      script.file = script.file.replace('.js','.min.js');
+    } else {
+      script.file;
+    }
         var src = prefix + script.file;
 
         // Loop through pages array, if it exists
@@ -93,22 +99,10 @@ var bwrox = new BWRox;
 bwrox.selectScripts([
     {
         // JQuery has to be included before prototype to avoid conflicts
-        file: "jquery-1.10.1.min.js",
-        pages: [
-            "searchmembers",
-            "search",
-            "signup/3",
-            "setlocation",
-            "blog",
-            "trip",
-            "admin/massmail/enqueue",
-            "admin/word/list/update",
+    min: true,
+    file: "jquery-1.11.0.js",
             "admin/rights",
             "admin/flags",
-            "suggestions/rank",
-            "activities/",
-            "about/faq",
-            "faq"]
     },
     {
         // complete jquery ui with theme smoothness
@@ -171,15 +165,15 @@ bwrox.selectScripts([
         file: "leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js",
         pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
     },
-    {
-        file: "prototype162.js"
-    },
-    {
-        file: "fabtabulous.js"
-    },
-    {
-        file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"
-    },
+//  {
+//    file: "prototype162.js"
+//  },
+//  {
+//    file: "fabtabulous.js"
+//  },
+//  {
+//    file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"
+//  },
     {
         file: "registerrox.js?1",
         pages: [

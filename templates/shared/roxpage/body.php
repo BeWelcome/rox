@@ -1,23 +1,11 @@
-
-
-<!-- #page_margins: Obsolete for now. If we decide to use a fixed width or want a frame around the page, we will need them aswell -->
-<div id="page_margins">
-  <!-- #page: Used to hold the floats -->
-  <div id="page" class="hold_floats">
-
-    <div id="header">
-    </div> <!-- header -->
     <?php $this->topmenu() ?>
-    <div id="topnav">
+<div class="container">
         <?php $this->topnav() ?>
-    </div> <!-- topnav -->
 
     <!-- #main: content begins here -->
     <div id="main">
         <?php $this->statusMessage() ?>
-        <div id="teaser_bg">
-            <?php $this->teaser() ?>
-        </div>
+        <?php $this->teaser() ?>
 
         <?php if ($this->getFlashError()): ?>
         <div class="flash error"><?php echo $this->getFlashError(true); ?></div>
@@ -31,11 +19,8 @@
 
     <?php $this->footer() ?>
     <?php $this->leftoverTranslationLinks() ?>
-
-  </div> <!-- page -->
-</div> <!-- page_margins-->
-<?php $this->debugInfo() ?>
-
+    <?php $this->debugInfo() ?>
+</div>
 <?php
 $piwikBaseURL = PVars::getObj('piwik')->baseurl;
 $piwikType = PVars::getObj('piwik')->type;

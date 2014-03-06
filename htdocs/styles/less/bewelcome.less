@@ -1,0 +1,314 @@
+// Core variables and mixins
+@import "variables.less";
+@import "bootstrap/mixins.less";
+
+// Reset
+@import "bootstrap/normalize.less";
+@import "bootstrap/print.less";
+
+// Core CSS
+@import "bootstrap/scaffolding.less";
+@import "bootstrap/type.less";
+@import "bootstrap/code.less";
+@import "bootstrap/grid.less";
+@import "bootstrap/tables.less";
+@import "bootstrap/forms.less";
+@import "bootstrap/buttons.less";
+
+// Components
+@import "bootstrap/component-animations.less";
+@import "bootstrap/glyphicons.less";
+@import "bootstrap/dropdowns.less";
+@import "bootstrap/button-groups.less";
+@import "bootstrap/input-groups.less";
+@import "bootstrap/navs.less";
+@import "bootstrap/navbar.less";
+@import "bootstrap/breadcrumbs.less";
+@import "bootstrap/pagination.less";
+@import "bootstrap/pager.less";
+@import "bootstrap/labels.less";
+@import "bootstrap/badges.less";
+@import "bootstrap/jumbotron.less";
+@import "bootstrap/thumbnails.less";
+@import "bootstrap/alerts.less";
+@import "bootstrap/progress-bars.less";
+@import "bootstrap/media.less";
+@import "bootstrap/list-group.less";
+@import "bootstrap/panels.less";
+@import "bootstrap/wells.less";
+@import "bootstrap/close.less";
+
+// Components w/ JavaScript
+@import "bootstrap/modals.less";
+@import "bootstrap/tooltip.less";
+@import "bootstrap/popovers.less";
+@import "bootstrap/carousel.less";
+
+// Utility classes
+@import "bootstrap/utilities.less";
+@import "bootstrap/responsive-utilities.less";
+
+//Font-awesome
+@import "font-awesome/less/font-awesome.less";
+
+// Moving contet below fixed navbar
+body { 
+  padding-top: 70px; 
+  #gradient > .vertical(@start-color: #f7f7f7; @end-color: #fff;);
+}
+// #teaser {background: transparent url(../images/teaser_bg_white2.png) no-repeat bottom left; }
+.page-teaser {
+  border-bottom: 1px solid #EEEEEE;
+  margin: 40px 0 -1px;
+}
+#footer { padding: 2.5em 4em; color:#666; border-top: 5px #efefef solid; }
+
+.pagination-nomargin {
+  margin: 0;
+}
+.button, input.button, .control-links a, .control-links input, a.cancel {
+  .btn;
+  .btn-default;
+  border-color: #E5E5E5 #BBBBBB #BBBBBB #E5E5E5;
+  border-style: solid;
+  border-width:1px;
+}
+
+// Inverted custome BeWelcome (gradient) navbar
+.navbar-inverse {
+  #gradient > .vertical(@start-color: #ffbc00; @end-color: @navbar-inverse-bg);
+  .reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
+  
+  .navbar-nav > .active > a {
+    #gradient > .vertical(@start-color: @navbar-inverse-bg; @end-color: lighten(@navbar-inverse-bg, 2.5%));
+    .box-shadow(inset 0 3px 9px rgba(0,0,0,.25));
+    
+  }
+}
+.navbar-inverse {
+  font-weight: bold;
+}
+.dropdown-menu {
+  > li > a {
+  font-weight: bold;
+  font-color: #fff;
+  }
+}
+@media (min-width: @screen-sm-min){
+// middle submenu active button
+.nav-pills .active a:after {
+    border-top: 15px solid #2184E8;
+    border-left: 15px solid rgba(0, 0, 0, 0);
+    border-right: 15px solid rgba(0, 0, 0, 0);
+    bottom: -15px;
+    content: " ";
+    display: block;
+    height: 0;
+    left: 50%;
+    margin-left: -15px;
+    position: absolute;
+    vertical-align: middle;
+    width: 0;
+}
+}
+
+@media (min-width: @screen-sm-min){
+// middle submenu active button
+nav-justifiedmedia {
+    .nav-justified ();
+  }
+}
+/* Login Widget */
+#login-widget {
+    padding: 1em;
+    padding-top: 0;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    margin: 0 auto;
+    max-width: 360px;
+}
+.form-signin {
+    margin: 0 auto;
+    max-width: 330px;
+    padding: 15px;
+}
+.form-signin .form-signin-heading, .form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+.form-signin .form-control {
+    -moz-box-sizing: border-box;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    position: relative;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="text"] {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: -1px;
+}
+.form-signin input[type="password"] {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-bottom: 10px;
+}
+
+.dividerbox {
+    border-bottom: solid #DFDFDF;
+    position: relative;
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+}
+.ordivider {
+    background-color: #F5F5F5;
+    color: #666666;
+    left: 40%;
+    position: absolute;
+    text-align: center;
+    bottom: -11px;
+    text-transform: uppercase;
+    width: 60px;
+}
+#BeWelcome {
+   opacity:0;
+  .animation(fadein 3.5s ease-in 1);
+   animation-fill-mode:forwards;
+   -webkit-animation-fill-mode:forwards;
+}
+
+#opendoor {
+   opacity:0;
+  .animation(fadein 3.5s ease-in 1.5s 1);
+   animation-fill-mode:forwards;
+  -webkit-animation-fill-mode:forwards;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.submenu {
+  margin-bottom: 1.5em;
+}
+.bw-row {
+  padding: .5em 0;
+}
+.subcolumns {
+  .make-row();
+}
+
+.c50l {
+.make-sm-column(6);
+}
+.c50r {
+.make-sm-column(6);
+}
+
+.c66l {
+.make-sm-column(8);
+}
+.c33r {
+.make-sm-column(4);
+}
+
+.c33l {
+.make-sm-column(4);
+}
+.c66r {
+.make-sm-column(8);
+}
+.c75l {
+.make-sm-column(9);
+}
+.c25r {
+.make-sm-column(3);
+}
+
+.c25l {
+.make-sm-column(3);
+}
+.c75r {
+.make-sm-column(9);
+}
+.c62l {
+.make-sm-column(7);
+}
+.c38r {
+.make-sm-column(5);
+}
+
+.c38l {
+.make-sm-column(5);
+}
+.c62r {
+.make-sm-column(7);
+}
+// ******************
+// Full width col3 layout will be implemented with:
+//
+//        protected function getColumnNames()
+//    {
+//        return array('col3');
+//    }
+//
+// This way is needed as a 12 columns grid does not need any markup. 
+//******************
+// To be backward compatible we create a BW semantic grid with LESS:
+// Default: col1 or col 2 as left sidebar, col3 as main content.
+#col1{
+.make-xs-column(12);
+.make-xs-column-push (0);
+.make-sm-column(4);
+.make-sm-column-push (8);
+.make-md-column(3);
+.make-md-column-push (9);
+.make-lg-column(3);
+.make-lg-column-push (9);
+}
+
+#col2{
+.make-xs-column(12);
+.make-xs-column-push (0);
+.make-sm-column(4);
+.make-sm-column-push (8);
+.make-md-column(3);
+.make-md-column-push (9);
+.make-lg-column(3);
+.make-lg-column-push (9);
+}
+#col3{
+.make-xs-column(12);
+.make-sm-column-pull (12);
+.make-sm-column(8);
+.make-sm-column-pull (4);
+.make-md-column(9);
+.make-md-column-pull (3);
+.make-lg-column(9);
+.make-lg-column-pull (3);
+}
+// Custom: col1_right or col 2_right as right sidebar, col3 as main content (example: profile)
+#col1_left{
+.make-xs-column(12);
+.make-sm-column(4);
+.make-md-column(3);
+.make-lg-column(3);
+}
+#col2_left{
+.make-xs-column(12);
+.make-sm-column(4);
+.make-md-column(3);
+.make-lg-column(3);
+}
+#col3_right{
+.make-xs-column(12);
+.make-sm-column(8);
+.make-md-column(9);
+.make-lg-column(9);
+}

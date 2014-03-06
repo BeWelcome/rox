@@ -25,9 +25,9 @@ $words = new MOD_words();
 $model = new MembersModel();
 $member = $model->getMemberWithUsername($receiver_username);
 ?>
-<div id="message" class="floatbox">
+<div id="message" class="clearfix">
     <div id="shade_top"></div>
-    <div id="messageheader" class="floatbox">
+    <div id="messageheader" class="clearfix">
         <div id="messageside" class="float_right">
       <p class="small grey">
         <?=$words->get('LivesIn')?> <strong><?=$member->City?>, <?=$member->Country?></strong><br />
@@ -104,8 +104,8 @@ $member = $model->getMemberWithUsername($receiver_username);
 
     </div> <!-- messageconent -->
     <div id="messagefooter">
-        <p class="floatbox">
-            <input type="submit" value="<?php echo $words->getBuffered('ComposeSend');?>"/><?php echo $words->flushBuffer();?>
+        <p class="clearfix">
+            <input type="submit" class="button" value="<?php echo $words->getBuffered('ComposeSend');?>"/><?php echo $words->flushBuffer();?>
         </p>
     </div> <!-- messagefooter -->
     </form>

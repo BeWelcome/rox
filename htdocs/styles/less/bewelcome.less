@@ -51,15 +51,14 @@
 //Font-awesome
 @import "font-awesome/less/font-awesome.less";
 
-// Moving contet below fixed navbar
+// Moving content below fixed navbar
 body { 
   padding-top: 70px; 
   #gradient > .vertical(@start-color: #f7f7f7; @end-color: #fff;);
 }
-// #teaser {background: transparent url(../images/teaser_bg_white2.png) no-repeat bottom left; }
 .page-teaser {
   border-bottom: 1px solid #EEEEEE;
-  margin: 40px 0 -1px;
+  margin: 20px 0 -1px;
 }
 #footer { padding: 2.5em 4em; color:#666; border-top: 5px #efefef solid; }
 
@@ -85,8 +84,14 @@ body {
     
   }
 }
+.navbar-fixed-top {
+  border-width: 0px;
+}
 .navbar-inverse {
   font-weight: bold;
+}
+.dropdown-menu {
+  border:none;
 }
 .dropdown-menu {
   > li > a {
@@ -94,30 +99,83 @@ body {
   font-color: #fff;
   }
 }
-@media (min-width: @screen-sm-min){
-// middle submenu active button
-.nav-pills .active a:after {
-    border-top: 15px solid #2184E8;
-    border-left: 15px solid rgba(0, 0, 0, 0);
-    border-right: 15px solid rgba(0, 0, 0, 0);
-    bottom: -15px;
-    content: " ";
-    display: block;
-    height: 0;
-    left: 50%;
-    margin-left: -15px;
-    position: absolute;
-    vertical-align: middle;
-    width: 0;
-}
-}
-
-@media (min-width: @screen-sm-min){
-// middle submenu active button
-nav-justifiedmedia {
-    .nav-justified ();
+// middle submenu
+// custom .nav version for BW
+.nav {
+  > li {
+    // Disabled state sets text to gray
+    &.disabled > a {
+      color: @nav-disabled-link-color;
+      font-weight: bold;
+      
+      &:hover,
+      &:focus {
+        color: @nav-disabled-link-hover-color;
+        text-decoration: none;
+        background-color: @nav-link-hover-bg;
+        cursor: pointer;
+      }
+    }
   }
 }
+// custom .nav-pills version for BW
+.nav-pills {
+  > li {
+    // Active state
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        color: #fff;
+        font-weight: bold;
+        #gradient > .vertical(@start-color:#FFBC00 ; @end-color: #FF8700; @start-percent: 0%; @end-percent: 80%);
+        
+      }
+    }
+  }
+}
+@media (min-width: @screen-sm-min){
+  .nav-pills .active a:after {
+      border-top: 15px solid #FF8700;
+      border-left: 15px solid rgba(0, 0, 0, 0);
+      border-right: 15px solid rgba(0, 0, 0, 0);
+      bottom: -15px;
+      content: " ";
+      display: block;
+      height: 0;
+      left: 50%;
+      margin-left: -15px;
+      position: absolute;
+      vertical-align: middle;
+      width: 0;
+  }
+}
+// custom .nav-justified version for BW
+.nav-justifiedmedia {
+  width: 100%;
+
+  > li {
+    float: none;
+     > a {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+  }
+
+  > .dropdown .dropdown-menu {
+    top: auto;
+    left: auto;
+  }
+
+  @media (min-width: @screen-sm-min) {
+    > li {
+      float: left;
+      > a {
+        margin-bottom: 0;
+      }
+    }
+  }
+  }
 /* Login Widget */
 #login-widget {
     padding: 1em;
@@ -250,6 +308,7 @@ nav-justifiedmedia {
 .c62r {
 .make-sm-column(7);
 }
+
 // ******************
 // Full width col3 layout will be implemented with:
 //
@@ -259,9 +318,9 @@ nav-justifiedmedia {
 //    }
 //
 // This way is needed as a 12 columns grid does not need any markup. 
-//******************
-// To be backward compatible we create a BW semantic grid with LESS:
+// To be backward compatible we create a grid with current BW semantic in less:
 // Default: col1 or col 2 as left sidebar, col3 as main content.
+//******************
 #col1{
 .make-xs-column(12);
 .make-xs-column-push (0);

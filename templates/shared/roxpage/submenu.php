@@ -8,7 +8,7 @@ foreach ($this->getSubmenuItems() as $index => $item) {
     if ($name === $active_menu_item) {
         $attributes = ' class="active"';
     } else {
-        $attributes = '';
+        $attributes = ' class="disabled"';
     }
     
     ?><li id="sub<?=$index ?>" <?=$attributes ?>>

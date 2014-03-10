@@ -23,7 +23,7 @@ class SignupPage extends PageWithRoxLayout
 
     }
     
-    protected function column_col2()
+    protected function column_col1()
     {
         $request = PRequest::get()->request;
         if (!isset($request[1]) || $request[1]== '')

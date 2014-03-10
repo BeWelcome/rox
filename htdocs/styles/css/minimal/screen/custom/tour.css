@@ -1,20 +1,5 @@
 @media all
 {
-
-/*
-*  Show col2 on the right side for the tour-menu
-*
-*/
-#col2 { width: 25%; float: right; display: block;}
-#col2_content {display: block;}
-#col1 { width: 0; display: none;}
-
-#col3 {
-    margin-left: 0; padding:0;
-    margin-right:25%;
-    width: 75%;
-}
-
 /* modification for tour pages */
 
 #tour {
@@ -39,7 +24,7 @@
 }
 
  #steps div.desc{
-  padding:0 6px;
+  padding:10px 6px 0px 6px;
   vertical-align: middle;
 }
  #steps div.number{
@@ -67,7 +52,6 @@
 }
  #steps li.active{
     font-size: 1.5em;
-/*    background: transparent url(../images/arrow-right.gif) top right no-repeat; */
 }
 
 }

@@ -11,14 +11,8 @@ var reverseGeolocator;
 
 BWRox.prototype.initSearchMembers = function() {
 	
-	var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
-	
-	if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-		bwrox.error('CloudMade API key not defined!');
-	}
-	
 	// create a new map builder and init the map
-	 geosearchMapBuilder = new BWGeosearchMapBuilder(cloudmadeApiKey, "map", mapoff);
+	 geosearchMapBuilder = new BWGeosearchMapBuilder("map", mapoff);
 
 	// if we have vars stored in the session or given by a GET-parameter,
 	// perform a search to show the last results

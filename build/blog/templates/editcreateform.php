@@ -274,11 +274,11 @@ if (isset($vars['id']) && $vars['id']) {
 </fieldset>
 <?php 
 
-$cloudmade_conf = PVars::getObj('cloudmade');
+$map_conf = PVars::getObj('map');
 
 ?>
- <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
-
+<input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
+<input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
 </form>
 <script type="text/javascript">//<!--
 new FieldsetMenu('blog-create-form', {<?php

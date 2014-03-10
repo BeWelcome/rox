@@ -4,7 +4,7 @@
  * shows the add destinations form with destination and options tab
  */
  
-$cloudmade_conf = PVars::getObj('cloudmade');
+$map_conf = PVars::getObj('map');
 
 if ($isOwnTrip) {
 ?>
@@ -14,8 +14,9 @@ if ($isOwnTrip) {
     </h3>
     <p class="small"><?=$words->getSilent('Trip_SubtripsCreateDesc')?><?php echo $words->flushBuffer(); ?></p>
     </div>
- <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
-
+    
+    <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
+    <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
 <?php
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();

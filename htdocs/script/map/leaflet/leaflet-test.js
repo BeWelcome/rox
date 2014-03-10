@@ -1,12 +1,12 @@
 
  jQuery(document).ready(function(){
    var apiKey = 'f18f7e7fa8014d8ab1379c78df29f5c6';
-   var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/'+apiKey+'/997/256/{z}/{x}/{y}.png';
-   var cloudmadeAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="http://cloudmade.com">CloudMade</a>';
-   var cloudmade = new L.TileLayer(cloudmadeUrl, {maxZoom: 18, attribution: cloudmadeAttribution});
+   var url = 'http://otile2.mqcdn.com/tiles/1.0.0/map//{z}/{x}/{y}.jpg';
+   var mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>';
+   var layer = new L.TileLayer(url, {maxZoom: 18, attribution: mapAttribution});
 
    var map = new L.Map('map');
-   map.setView(new L.LatLng(51.505, -0.09), 13).addLayer(cloudmade);
+   map.setView(new L.LatLng(51.505, -0.09), 13).addLayer(layer);
  });
  //var marker = new L.Marker(new L.LatLng(51.5, -0.09));
 //map.addLayer(marker);

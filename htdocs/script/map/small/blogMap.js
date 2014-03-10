@@ -11,13 +11,7 @@ function displayMap(popupid,  markerLatitude, markerLongitude, markerDescription
 
     if (mapList[blogId] == null)
     {
-        var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
-
-      if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-        bwrox.error('CloudMade API key not defined!');
-      }
-
-      mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, popupid + '_map', false);
+      mapBuilder = new BWSimpleMapBuilder(popupid + '_map', false);
       mapList[blogId] = mapBuilder;
     }
     else

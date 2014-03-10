@@ -285,11 +285,11 @@ bwrox.selectScripts([
     pages: ["signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "map/builder/BWSimpleMapBuilder.js?1",
+    file: "map/builder/BWSimpleMapBuilder.js?2",
     pages: ["signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "map/builder/BWGeosearchMapBuilder.js",
+    file: "map/builder/BWGeosearchMapBuilder.js?2",
     pages: ["searchmembers"]
   },
   {
@@ -309,27 +309,27 @@ bwrox.selectScripts([
     pages: ["searchmembers"]
   },
   {
-    file: "map/small/smallMapGeoLocation.js",
+    file: "map/small/smallMapGeoLocation.js?2",
     pages: ["signup/3", "setlocation"]
   },
   {
-    file: "map/small/blogSmallMapGeoLocation.js?1",
+    file: "map/small/blogSmallMapGeoLocation.js?2",
     pages: ["blog", "trip"]
   },
   {
-    file: "map/small/blogMap.js",
+    file: "map/small/blogMap.js?2",
     pages: ["blog"]
   },
   {
-    file: "map/small/singlePost.js",
+    file: "map/small/singlePost.js?2",
     pages: ["blog"]
   },
   {
-    file: "map/small/tripMap.js",
+    file: "map/small/tripMap.js?2",
     pages: ["trip"]
   },
   {
-    file: "searchmembers.js?1",
+    file: "searchmembers.js?2",
     pages: ["searchmembers"]
   },
   {
@@ -337,7 +337,7 @@ bwrox.selectScripts([
     pages: ["search"]
   },
   {
-    file: "map/activities/activities_map.js",
+    file: "map/activities/activities_map.js?2",
     pages: ["activities"]
   }
 ]);

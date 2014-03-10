@@ -19,13 +19,7 @@ function initOsmMap() {
 
   if (jQuery('#spaf_map').length > 0){
 
-    var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
-
-    if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-      bwrox.error('CloudMade API key not defined!');
-    }
-
-    mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "spaf_map", false);
+    mapBuilder = new BWSimpleMapBuilder("spaf_map", false);
 
     var markerLatitude = jQuery('#markerLatitude').val();
     var markerLongitude = jQuery('#markerLongitude').val();

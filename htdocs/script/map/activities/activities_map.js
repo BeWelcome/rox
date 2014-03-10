@@ -23,20 +23,25 @@ jQuery(function() {
  */
 function initMap(){
 	
-	var cloudmadeApiKey = jQuery('#cloudmade-api-key-input').val();
+	var mapHtmlId = 'activities-map';
 	
-	if (cloudmadeApiKey != null){
+	var osmTilesProviderBaseUrl = jQuery('#osm-tiles-provider-base-url').val();
+	var osmTilesProviderApiKey = jQuery('#osm-tiles-provider-api-key').val();
 	
-		bwrox.debug('Initialize activities map with couldmade API key \'%s\' and style \'%s\'.', cloudmadeApiKey, bwroxConfig.cloudmade_style_id);
+	if (osmTilesProviderBaseUrl != null){
+	
+		bwrox.debug('Initialize activities map with OSM tiles provider \'%s\' and API key \'%s\' on map id \'%s\'.', osmTilesProviderBaseUrl, osmTilesProviderApiKey, mapHtmlId);
 		
-		var map = L.map('activities-map');
+		var map = L.map(mapHtmlId);
 		
-		// Cloudmade OSM layer
-		var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/' + cloudmadeApiKey + '/' + bwroxConfig.cloudmade_style_id + '/256/{z}/{x}/{y}.png';
+		// configure the OSM tiles provider
+        // no API KEY is currently required
+        var osmLayerUrl = osmTilesProviderBaseUrl;
+		
 		// OSM map attribution
-		var mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';
+		var mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>';
 	
-		L.tileLayer(cloudmadeUrl, {
+		L.tileLayer(osmLayerUrl, {
 		    attribution: mapAttribution,
 		    maxZoom: 14
 		}).addTo(map);
@@ -44,7 +49,7 @@ function initMap(){
 		return map;
 		
 	}else{
-		bwrox.error('Initialize activities map with couldmade API key \'%s\' and style \'%s\'.', cloudmadeApiKey, bwroxConfig.cloudmade_style_id);
+		bwrox.debug('Unable to initialize OSM layer: please set "osm_tiles_provider_base_url" property in [map] section of rox_local.ini file.');
 		return null;
 	}
 }

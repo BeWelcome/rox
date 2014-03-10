@@ -165,15 +165,18 @@ bwrox.selectScripts([
         file: "leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js",
         pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
     },
-//  {
-//    file: "prototype162.js"
-//  },
-//  {
-//    file: "fabtabulous.js"
-//  },
-//  {
-//    file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"
-//  },
+  {
+    file: "prototype162.js",
+    pages: ["signup"]
+  },
+  {
+    file: "fabtabulous.js",
+    pages: ["signup"]
+  },
+  {
+    file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop",
+        pages: ["signup"]
+  },
     {
         file: "registerrox.js?1",
         pages: [

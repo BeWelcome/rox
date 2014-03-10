@@ -67,7 +67,7 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                         }
                         if (!$this->isGroupMember()) { ?>
                         <div class="bw-row clearfix">
-                            <a class="bigbutton" href="groups/<?=$this->group->id ?>/join">
+                            <a class="button" href="groups/<?=$this->group->id ?>/join">
                                 <span>
                                     <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                                 </span>

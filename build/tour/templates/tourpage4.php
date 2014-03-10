@@ -100,5 +100,5 @@ for ($ii=0;$ii<count($members);$ii++) {
 <?php } ?>
 
     </div>
-    <a class="bigbutton" href="tour/trips" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_trips')?></span></a>
+    <a class="button" href="tour/trips" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_trips')?></span></a>
 </div>

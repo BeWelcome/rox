@@ -68,6 +68,6 @@ $words = new MOD_words();
           </div> <!-- c50r -->
         </div> <!-- subcolumns index_row1 -->
         
-        <a class="bigbutton" href="tour/share" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_start')?></span></a>
+        <a class="button" href="tour/share" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_start')?></span></a>
     </div>
         

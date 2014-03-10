@@ -40,6 +40,6 @@ $words = new MOD_words();
     <h4><?php echo $words->getFormatted('tour_openness_title3')?></h4>
     <p><?php echo $words->getFormatted('tour_openness_text3')?></p>
     <h4><?php echo $words->getFormatted('tour_gosignup','<a href="signup">','</a>')?></h4>
-    <a class="bigbutton" href="signup" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('signup_now')?></span></a>
+    <a class="button" href="signup" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('signup_now')?></span></a>
 </div>
         

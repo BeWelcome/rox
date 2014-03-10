@@ -37,6 +37,6 @@ $words = new MOD_words();
 
     <h4><?php echo $words->getFormatted('tour_maps_title3')?></h4>
     <p><?php echo $words->getFormatted('tour_maps_text3')?></p>
-    <a class="bigbutton" href="tour/openness" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_openness')?></span></a>
+    <a class="button" href="tour/openness" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_openness')?></span></a>
 </div>
 

@@ -37,6 +37,6 @@ $words = new MOD_words();
         <h4><?php echo $words->getFormatted('tour_share_title3')?></h4>
         <p><?php echo $words->getFormatted('tour_share_text3')?></p>
         
-        <a class="bigbutton" href="tour/meet" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_meet')?></span></a>
+        <a class="button" href="tour/meet" onclick="this.blur();" style="margin-bottom: 20px"><span><?php echo $words->getFormatted('tour_goNext')?> &raquo; <?php echo $words->getFormatted('tour_link_meet')?></span></a>
     </div>
 </div>

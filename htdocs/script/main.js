@@ -135,15 +135,19 @@ bwrox.selectScripts([
         ]
     },
   {
-    file: "leaflet/0.5.1/leaflet.js",
+    file: "leaflet/0.7.2/leaflet.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
   },
   {
-    file: "leaflet/plugins/Leaflet.markercluster/2013-04-09/leaflet.markercluster.js",
+    file: "leaflet/0.7.2/leaflet.include-css.js",
+    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
+  },
+  {
+    file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js",
     pages: ["activities"]
   },
   {
-    file: "leaflet/plugins/Leaflet.markercluster/2013-04-09/include_markercluster_css.js",
+    file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.include-css.js",
     pages: ["activities"]
   },
   {
@@ -152,7 +156,7 @@ bwrox.selectScripts([
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
-    file: "leaflet/plugins/Google.js",
+    file: "leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js",
     pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
   },
   {
@@ -271,10 +275,6 @@ bwrox.selectScripts([
   },
   {
     file: "util/console.js"
-  },
-  {
-    file: "map/include_css.js?1",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
   },
   {
     file: "map/geolocation/BWGoogleMapReverseGeolocator.js?1",

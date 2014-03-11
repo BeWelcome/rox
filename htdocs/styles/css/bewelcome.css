@@ -7403,9 +7403,9 @@ a.cancel .badge {
   background-color: #eeeeee;
   cursor: pointer;
 }
-.nav-pills > li.active > a,
-.nav-pills > li.active > a:hover,
-.nav-pills > li.active > a:focus {
+.nav-pills > li.active-bw > a,
+.nav-pills > li.active-bw > a:hover,
+.nav-pills > li.active-bw > a:focus {
   color: #fff;
   font-weight: bold;
   background-image: -webkit-linear-gradient(top, #ffbc00 0%, #ff8700 80%);
@@ -7414,7 +7414,7 @@ a.cancel .badge {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffbc00', endColorstr='#ffff8700', GradientType=0);
 }
 @media (min-width: 768px) {
-  .nav-pills .active a:after {
+  .nav-pills .active-bw a:after {
     border-top: 15px solid #FF8700;
     border-left: 15px solid rgba(0, 0, 0, 0);
     border-right: 15px solid rgba(0, 0, 0, 0);

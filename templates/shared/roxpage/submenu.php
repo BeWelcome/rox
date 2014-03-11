@@ -6,7 +6,7 @@ foreach ($this->getSubmenuItems() as $index => $item) {
     $url = $item[1];
     $label = $item[2];
     if ($name === $active_menu_item) {
-        $attributes = ' class="active"';
+        $attributes = ' class="active-bw"';
     } else {
         $attributes = ' class="disabled"';
     }

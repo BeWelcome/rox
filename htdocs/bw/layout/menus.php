@@ -41,7 +41,7 @@ function Menu1_old($link = "", $tt = "") {
 		$IdMember = "";	
 	
 	?>
-    <div id="topnav">
+    <ul class="list-inline pull-right topnav">
 <?php
 	function menu_link($link, $to, $msg, $src) {
     	/* tiny helper function to make things look nicer -- guaka wished PHP had lambdas! */
@@ -51,23 +51,18 @@ function Menu1_old($link = "", $tt = "") {
     	}
     	echo "<a href='".bwlink($to)."'>", $msg, "</a></span>\n";
 	}
-    if (isset($_SESSION['WhoIsOnlineCount'])) {
-        echo "<span", factive($link, "online"), ">";
-        echo "<img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_online.png\" alt=\"onlinemembers\" /> ";
-        echo '<a href="'.PVars::getObj('env')->baseuri.'online">', ww("NbMembersOnline", $_SESSION['WhoIsOnlineCount']), "</a></span>\n";
-    }
 	
-	if (IsLoggedIn('NeedMore,Pending')) {
-	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_mail.png\" alt=\"mymessages\" /><a href=\"" . PVars::getObj('env')->baseuri . "messages\">" . ww("Mymessages") . "</a></span>\n";
-	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_pref.png\" alt=\"mypreferences\" /><a href=\"" . PVars::getObj('env')->baseuri . "mypreferences\">" . ww("MyPreferences") . "</a></span>\n";
-	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_logout.png\" alt=\"logout\" /> <a href=\"" . PVars::getObj('env')->baseuri . "user/logout\" id='header-logout-link'>", ww("Logout"), "</a></span>\n";
-	} else {
-	    // menu_link($link, "index.php", ww("Login"));
-	    echo "        <span><img src=\"" . PVars::getObj('env')->baseuri . "styles/css/minimal/images/icon_grey_logout.png\" alt=\"logout\" /><a href=\"" . PVars::getObj('env')->baseuri . "logout\">" . ww("Login") . "</a></span>\n";
-	    echo "<span><a href=\"" . PVars::getObj('env')->baseuri . "signup\">", ww("Signup"), "</a></span>\n";
+	if (IsLoggedIn('NeedMore,Pending')) {?>
+        <li><i class="fa fa-envelope" title="<?php echo ww('Mymessages'); ?>"></i> <a href="messages"><?php echo ww('Mymessages'); ?></a></li>
+        <li><i class="fa fa-sign-out" title="<?php echo ww('Logout'); ?>"></i> <a href="logout" id="header-logout-link"><?php echo ww('Logout'); ?></a></li>
+    <?php
+	} else {?>
+        <li><i class="fa fa-power-off" title="<?php echo ww('Login'); ?>"></i> <a href="<?php PVars::getObj('env')->baseuri ?>#login-widget" id="header-login-link"><?php echo ww('Login'); ?></a></li>
+        <li><a href="signup"><?php echo ww('Signup'); ?></a></li>
+    <?php
 	}
-?>
-    </div> <!-- topnav -->
+    ?>
+    </ul> <!-- topnav -->
 
      <?php
 
@@ -90,90 +85,91 @@ function Menu2_old($link = "", $tt = "") {
 	else
 		$Username = "";
 	?>
-  <div id="page_margins">
-  <div id="page" class="hold_floats">
-  <div id="header">
-  </div>
+<!-- #nav: main navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bewelcome-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="<?=$active_menu_item == ('main' || '') ? 'main' : ''; ?>"><img height="19px" src="/images/logo_index_top.png" alt="BeWelcome" /></a>
+    </div>
 
-  <!-- son of suckerfish navigation (script to teach IE hover class used in dropdown menu-->
-    <script type="text/javascript"><!--//--><![CDATA[//><!--
-
-      sfHover = function() {
-          var sfEls = document.getElementById("nav_main").getElementsByTagName("li");
-          for (var i=0; i<sfEls.length; i++) {
-              sfEls[i].onmouseover=function() {
-                  this.className+=" sfhover";
-              }
-              sfEls[i].onmouseout=function() {
-                  this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
-              }
-          }
-      }
-      if (window.attachEvent) window.attachEvent("onload", sfHover);
-
-  //--><!]]></script>
-  <?php
-  	// #nav: main navigation 
-	echo "    <div id=\"nav\">\n";
-	echo "      <ul id=\"nav_main\">\n";
-?>
-        <li id="logo">
-          <a href="/">
-            <img src="/images/logo_index_top.png" alt="Be Welcome" />
-          </a>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bewelcome-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+<?php if (IsLoggedIn()) { ?>
+        <li class="dropdown">
+          <a href="/members/<?=$Username?>" class="dropdown-toggle" data-toggle="dropdown"><?=ww('MyProfile')?> <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+              <li><a href="//members/<?=$Username?>"><?=ww('Profile')?></a></li>
+              <li><a href="/editmyprofile"><?=ww('EditMyProfile')?></a></li>
+              <li><a href="/mypreferences"><?=ww('MyPreferences')?></a></li>
+              <li><a href="/messages"><?=ww('MyMessages')?></a></li>
+              <li><a href="/mynotes"><?=ww('ProfileMyNotes')?></a></li>
+              <li><a href="/groups/mygroups"><?=ww('MyGroups')?></a></li>
+          </ul>
         </li>
-        
-        <?php if (IsLoggedIn()) { ?>
-              <li><a href="/members/<?=$_SESSION['Username']?>"><?=ww('MyProfile')?></a>
-                  <ul>
-                      <li><a href="/members/<?=$_SESSION['Username']?>"><?=ww('Profile')?></a></li>
-                      <li><a href="/editmyprofile"><?=ww('EditMyProfile')?></a></li>
-                      <li><a href="/mypreferences"><?=ww('MyPreferences')?></a></li>
-                      <li><a href="/messages"><?=ww('MyMessages')?></a></li>
-                      <li><a href="/mynotes"><?=ww('ProfileMyNotes')?></a></li>
-                      <li><a href="/groups/mygroups"><?=ww('MyGroups')?></a></li>
-                  </ul>
-              </li>
-          <?php } ?>
-                <li><a href="/search"><?=ww('FindMembers')?></a>
-                    <ul>
-                        <li><a href="/searchmembers"><?=ww('MapSearch')?></a></li>
-                        <li><a href="/places"><?=ww('BrowseCountries')?></a></li>
-                    </ul>
-                </li>
-                <li><a href="/explore"><?=ww('Explore')?></a>
-                    <ul>
-                        <li><a href="/forums"><?=ww('Community')?></a></li>
-                        <li><a href="/groups"><?=ww('Groups')?></a></li>
-                        <li><a href="/activities"><?=ww('Activities')?></a></li>
-                        <?php // if ($logged_in) { ?>
-                        <li><a href="/suggestions"><?=ww('Suggestions')?></a></li>
-                        <?php // } ?>
-                        <li><a href="/trip"><?=ww('Trips')?></a></li>
-                        <li><a href="/blog"><?=ww('Blogs')?></a></li>
-                        <li><a href="/wiki"><?=ww('Wiki')?></a></li>
-                    </ul>
-                </li>
-                <li><a href="/safety"><?=ww('Safety')?></a></li>
-                <li><a href="/about"><?=ww('GetAnswers')?></a>
-                    <ul>
-                        <li><a href="/faq"><?=ww('Faq')?></a></li>
-                        <li><a href="/feedback"><?=ww('ContactUs')?></a></li>
-                        <li><a href="/about/getactive"><?=ww('About_GetActive')?></a></li>
-                        <li><a href="/donate"><?=ww('DonateLink')?></a></li>
-                    </ul>
-                </li>
-                <? if (IsVol()) { ?>
-                <li><a href="/volunteer"><?=ww('Volunteer')?></a>
-                    <ul>
-                    <?=VolMenu() ?>
-                    </ul>
-                </li>
-                <? } ?>
-            </ul>
-<?php
-	echo "    </div> <!-- nav -->\n"; // end nav
-} // end of Menu2
+<?php } ?>
+        <li class="dropdown">
+          <a href="/search" class="dropdown-toggle" data-toggle="dropdown"><?=ww('FindMembers')?> <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/searchmembers"><?=ww('MapSearch')?></a></li>
+            <li><a href="/places"><?=ww('BrowseCountries')?></a></li>
+            <li><a href="/search"><?=ww('FindMembers')?></a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=ww('CommunityMenu')?> <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/forums" title="<?=ww('AgoraTagLine')?>"><?=ww('CommunityDiscussions')?></a></li>
+            <li><a href="/groups/search" title="<?=ww('GroupsTagLine')?>"><?=ww('Groups')?></a></li>
+            <li><a href="/activities"><?=ww('Activities')?></a></li>
+            <li><a href="/suggestions"><?=ww('Suggestions')?></a></li>
+            <li><a href="/trip"><?=ww('Trips')?></a></li>
+            <li><a href="/blog"><?=ww('Blogs')?></a></li>
+            <li><a href="/wiki"><?=ww('Wiki')?></a></li>
+          </ul>
+        </li>
+        <li>
+        <a href="/safety"><?=ww('Safety')?></a>
+        </li>
+        <li class="dropdown">
+          <a href="/about" class="dropdown-toggle" data-toggle="dropdown"><?=ww('GetAnswers')?> <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+                <li><a href="/faq"><?=ww('Faq')?></a></li>
+                <li><a href="/feedback"><?=ww('ContactUs')?></a></li>
+                <li><a href="/about/getactive"><?=ww('About_GetActive')?></a></li>
+                <li><a href="/donate"><?=ww('DonateLink')?></a></li>
+          </ul>
+        </li>
+<? if (IsVol()) { ?>
+        <li class="dropdown">
+          <a href="/volunteer" class="dropdown-toggle" data-toggle="dropdown"><?=ww('Volunteer')?> <b class="caret"></b></a>
+          <?=VolMenu()?>
+        </li>
+<? } ?>
+      </ul>
+        <form class="navbar-form navbar-right" role="search" action="quicksearch" method="get" id="form-quicksearch">
+        <div class="form-group">
+            <div class="input-group" style="width: 160px;">
+                <input class="form-control input-sm" type="text" name="vars" size="15" maxlength="30" placeholder="Search..." id="text-field" value="Search..." />
+                <input type="hidden" name="quicksearch_callbackId" value="1"/>
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default btn-sm" id="submit-button"><i class="fa fa-search"></i></button>
+                </span>
+            </div><!-- /input-group -->
+        </div>
+        </form>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container -->
+</nav>
+<div class="container">
+<?php } // end of Menu2
 
 function factive($link, $value,$IdLanguage=-1) {
 	if ((strpos($link, $value) === 0) and (($IdLanguage==-1) or ($IdLanguage==$_SESSION["IdLanguage"]))) {
@@ -191,7 +187,7 @@ function VolMenu($link = "", $tt = "") {
 	$res = "";
 
 	if (HasRight("Words")) {
-		$res .= "\n<li><a";
+		$res .= "\n<ul class=\"dropdown-menu\"><li><a";
 		if ($link == "admin/word") {
 			$res .= " id=current ";
 		} else {
@@ -321,7 +317,7 @@ function VolMenu($link = "", $tt = "") {
 		} else {
 			$res .= " href=\"/admin/massmail\" method=post ";
 		}
-		$res .= " title=\"broadcast messages\">mass mails</a></li>\n";
+		$res .= " title=\"broadcast messages\">mass mails</a></li></ul>\n";
 	}
 
 

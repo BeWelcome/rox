@@ -165,6 +165,7 @@ class PageWithRoxLayout extends PageWithHTML
                     echo $words->flushBuffer();
                 } else {
                     $envelopestyle = "fa fa-envelope-o";
+                    $nbOfNewMessagees = '';
                 }
             }
         }

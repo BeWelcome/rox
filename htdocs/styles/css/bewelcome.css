@@ -1634,7 +1634,7 @@ legend {
   margin-bottom: 20px;
   font-size: 21px;
   line-height: inherit;
-  color: #333333;
+  color: #2184e8;
   border: 0;
   border-bottom: 1px solid #e5e5e5;
 }
@@ -7451,6 +7451,11 @@ a.cancel .badge {
     margin-bottom: 0;
   }
 }
+/* topnav menu (little greys) */
+.topnav > li > a,
+i {
+  color: #777;
+}
 /* Login Widget */
 #login-widget {
   padding: 1em;
@@ -7507,6 +7512,10 @@ a.cancel .badge {
   bottom: -11px;
   text-transform: uppercase;
   width: 60px;
+}
+th,
+td {
+  padding: 0.5em;
 }
 #BeWelcome {
   opacity: 0;

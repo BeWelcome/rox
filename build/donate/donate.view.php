@@ -35,7 +35,6 @@ class DonateView extends PAppView
     }
 
     public function submenu($sub) {
-//       $Stat=$this->_model->getStatForDonations() ;
         require 'templates/submenu_donate.php';
     }
 }

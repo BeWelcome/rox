@@ -22,7 +22,7 @@
 /* #### BW Costumizing #### */
 /*@import url(screen/basemod_minimal.css);*/
 @import url(screen/content_minimal.css?8);
-@import url(navigation/nav_minimal.css?1);
+/*@import url(navigation/nav_minimal.css?1);
 
 /* import print layout | Druck-Layout einbinden */
 /* @import url(/css/print/print_003.css); */

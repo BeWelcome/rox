@@ -18,7 +18,7 @@ class GalleryBasePage extends PageWithActiveSkin
     
     protected function teaser() {
         ?>
-        <div id="teaser">
+        <div id="teaser" class="page-header clearfix">
         <div class="breadcrumbs">
         <?=$this->breadcrumbs()?>
         </div>
@@ -49,13 +49,7 @@ class GalleryBasePage extends PageWithActiveSkin
     {
         return 'overview';
     }
-    
-        protected function getColumnNames()
-    {
-        // we don't need the other columns
-        return array('col3');
-    }
-    
+   
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/lightview.css';

@@ -40,13 +40,6 @@ class GalleryPage extends GalleryBasePage
         }
         require SCRIPT_BASE . 'build/gallery/templates/gallery.column_col3.php';
     }
-    
-    /*
-    *  Custom functions
-    *
-    */
-
-
 }
 
 ?>

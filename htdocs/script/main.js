@@ -167,15 +167,23 @@ bwrox.selectScripts([
     },
   {
     file: "prototype162.js",
-    pages: ["signup"]
+    pages: [
+    "signup",
+    "searchmembers"
+    ]
   },
   {
     file: "fabtabulous.js",
-    pages: ["signup"]
+    pages: [
+    "signup",
+    "searchmembers"]
   },
   {
     file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop",
-        pages: ["signup"]
+        pages: [
+        "signup",
+        "searchmembers"
+        ]
   },
     {
         file: "registerrox.js?1",
@@ -364,5 +372,13 @@ bwrox.selectScripts([
     {
         file: "map/activities/activities_map.js?4",
         pages: ["activities"]
+  },
+  {
+    file: "jqueryprototypefix.js",
+    pages: [
+    "signup",
+    "searchmembers"
+    ]
     }
 ]);
+

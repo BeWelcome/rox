@@ -48,13 +48,7 @@ class OnlineModel extends PAppModel {
                     AND
                     geonames_cache.geonameid = members.IdCity
                     AND
-                    (
-                        members.Status = 'Active'
-                        OR
-                        members.Status = 'Pending'
-                        OR
-                        members.Status = 'NeedMore'
-                    )
+                        members.Status IN ( " . Member::ACTIVE_ALL . ")
                     AND
                     online.IdMember = members.id
                     AND
@@ -94,13 +88,7 @@ class OnlineModel extends PAppModel {
                     AND
                     geonames_cache.geonameid = members.IdCity
                     AND
-                    (
-                        members.Status = 'Active'
-                        OR
-                        members.Status = 'Pending'
-                        OR
-                        members.Status = 'NeedMore'
-                    )
+                        members.Status IN ( " . Member::ACTIVE_ALL . ")
                     AND
                     online.IdMember = members.id
                     AND
@@ -149,7 +137,7 @@ class OnlineModel extends PAppModel {
 
 	 // The GetTotMembers function will return the total number of members who can potentially fully use BW
     public function GetTotMembers() {
-		$query = "select SQL_CACHE count(*) as cnt from members where Status IN (" . self::ACTIVE . ")";
+		$query = "select SQL_CACHE count(*) as cnt from members where Status IN (" . Member::ACTIVE_ALL . ")";
 		$s = $this->dao->query($query);
 		if (!$s) {
 			throw new PException('Failed to get Tot Members!');

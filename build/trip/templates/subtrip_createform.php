@@ -4,7 +4,7 @@
  * shows the add destinations form with destination and options tab
  */
  
-$cloudmade_conf = PVars::getObj('cloudmade');
+$map_conf = PVars::getObj('map');
 
 if ($isOwnTrip) {
 ?>
@@ -14,8 +14,9 @@ if ($isOwnTrip) {
     </h3>
     <p class="small"><?=$words->getSilent('Trip_SubtripsCreateDesc')?><?php echo $words->flushBuffer(); ?></p>
     </div>
- <input type="hidden" id="cloudmadeApiKeyInput" value="<?php echo ($cloudmade_conf->cloudmade_api_key); ?>"/>
-
+    
+    <input type="hidden" id="osm-tiles-provider-base-url" value="<?php echo ($map_conf->osm_tiles_provider_base_url); ?>"/>
+    <input type="hidden" id="osm-tiles-provider-api-key" value="<?php echo ($map_conf->osm_tiles_provider_api_key); ?>"/>
 <?php
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
             $vars['errors'] = array();
@@ -177,7 +178,7 @@ if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] &
           <div id="location-suggestion"></div>
 </fieldset>
 
-<!-- <fieldset id="destination-options">
+<fieldset id="destination-options">
 <legend><?=$words->get('TripDestinationOptionsLabelTab')?></legend>
 
     <div class="row">
@@ -199,7 +200,7 @@ if (isset($vars['id']) && $vars['id']) {
 }
 ?>
 
-    <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
+<!--    <legend><?=$words->get('BlogCreate_LabelSettings')?></legend>
 
     <label><?=$words->get('label_vis')?></label>
     <div class="row">
@@ -234,9 +235,9 @@ if (isset($vars['id']) && $vars['id']) {
         }
         ?>/> <label for="create-vis-pri"><?=$words->get('BlogCreateSettings_LabelVisprivate')?></label>
         <p class="desc"><?=$words->get('BlogCreateSettings_DescriptionVisprivate')?></p>
-    </div>
+    </div>-->
 </fieldset>
--->
+
     <p class="row">
         <input type="submit" value="<?=$submitValue?>" class="submit"<?php
         echo ((isset($submitName) && !empty($submitName))?' name="'.$submitName.'"':'');

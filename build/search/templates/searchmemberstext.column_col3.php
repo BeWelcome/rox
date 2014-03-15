@@ -1,9 +1,9 @@
 <script type="text/Javascript">
 var noMatchesFound = "<?php echo $words->getSilent('SearchNoMatchesFound');?>";
 </script><?php
-$errors = $this->getRedirectedMem('errors');
-$vars = $this->getRedirectedMem('vars');
-if (empty($vars)) {
+$errors = $this->errors;
+if (empty($this->vars)) {
+    $vars = array();
     $vars['search-location'] = '';
     $vars['search-can-host'] = 1;
     $vars['search-distance'] = 25;
@@ -13,10 +13,21 @@ if (empty($vars)) {
     $vars['search-number-items'] = 10;
     $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
     $vars['search-page-current'] = 1;
+    $vars['search-username'] = '';
+    $vars['search-age-minimum'] = 0;
+    $vars['search-age-maximum'] = 0;
+    $vars['search-gender'] = 0;
+    $vars['search-groups'] = 0;
+    $vars['search-accommodation'] = array('anytime', 'dependonrequest', 'neverask');
+    $vars['search-typical-offer'] = array();
+    $vars['search-text'] = '';
+    $vars['search-membership'] = 0;
+    $vars['search-languages'] = 0;
+    $this->vars = $vars;
 }
 $members = array ();
 $locations = array ();
-$results = $this->getRedirectedMem('results');
+$results = $this->results;
 if ($results) {
     switch ($results['type']) {
         case 'members':
@@ -59,19 +70,19 @@ $layoutbits = new MOD_layoutbits();
     endforeach;
     echo '</div>';
 endif; ?>
-	<form method="post" name="searchmembers-form"
+<?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersCallback');?>
+<form method="get" name="searchmembers-form"
 		style="padding-bottom: 0.5em; width: 100%;">
-        <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersSimpleCallback');?>
         <div class="floatbox bottom" style="width:100%">
 			<div class="float_left" style="width: auto">
 				<label for='search-location'><span class="small"><?=$words->get('SearchEnterLocation');?></span></label><br />
 				<div>
 					<input type="hidden" name="search-geoname-id"
-						id="search-geoname-id" value="<?php echo $vars['search-geoname-id']; ?>" /><input type="hidden" name="search-latitude"
-						id="search-latitude" value="<?php echo $vars['search-latitude']; ?>" /><input type="hidden" name="search-longitude"
-						id="search-longitude" value="<?php echo $vars['search-longitude']; ?>" /> <input name="search-location"
+						id="search-geoname-id" value="<?php echo $this->vars['search-geoname-id']; ?>" /><input type="hidden" name="search-latitude"
+						id="search-latitude" value="<?php echo $this->vars['search-latitude']; ?>" /><input type="hidden" name="search-longitude"
+						id="search-longitude" value="<?php echo $this->vars['search-longitude']; ?>" /> <input name="search-location"
 						id="search-location"
-						value="<?php echo $vars['search-location']; ?>" /> <img
+						value="<?php echo $this->vars['search-location']; ?>" /> <img
 						id="search-loading" style="visibility: hidden"
 						src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" />
 				</div>
@@ -79,10 +90,10 @@ endif; ?>
 			<div class="float_left">
 				<span class="small"><?=$words->get('SearchCanHostAtLeast');?></span><br /> <select
 					id="search-can-host" name="search-can-host" style="width: 7em;"><?php
-	$canHost = array(1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
+	$canHost = array(0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
     foreach($canHost as $value => $display) :
         echo '<option value="' . $value . '"';
-        if ($value == $vars['search-can-host']) {
+        if ($value == $this->vars['search-can-host']) {
             echo ' selected="selected"';
         }
         echo '>' . $display . '</option>';
@@ -94,7 +105,7 @@ endif; ?>
 	$distance = array(0 => $words->getSilent("SearchExactMatch"), 5  => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');
     foreach($distance as $value => $display) :
         echo '<option value="' . $value . '"';
-        if ($value == $vars['search-distance']) {
+        if ($value == $this->vars['search-distance']) {
             echo ' selected="selected"';
         }
         echo '>' . $display . '</option>';
@@ -108,13 +119,17 @@ endif; ?>
 			</div>
 
 		</div>
+<div id="search-advanced" class="floatbox"><?php if ($this->showAdvanced) {
+    $vars = $this->vars; // Needed because advanced options might be loaded through ajax as well
+    require_once('advancedoptions.php');
+} ?></div>
 <div class="floatbox">
 <div class="float_left"><?php
     $numberOfItems = array( '5', '10', '20', '50', '100');
     $select = '<select name="search-number-items">';
         foreach ($numberOfItems as $number) :
             $select .= '<option value="' . $number . '"';
-            if ($vars['search-number-items'] == $number) :
+            if ($this->vars['search-number-items'] == $number) :
                 $select .= ' selected="selected"';
             endif;
             $select .= ' >' . $number . '</option>';
@@ -124,20 +139,24 @@ endif; ?>
         $select = '<select name="search-sort-order">';
         foreach($orderBy AS $key => $order) :
             $select .= '<option value="' . $key . '"';
-            if ($vars['search-sort-order'] == $key) :
+            if ($this->vars['search-sort-order'] == $key) :
                 $select .= ' selected="selected"';
             endif;
             $select .= '>' . $order . '</option>';
         endforeach;
         $select .= '</select>';
         echo $words->get('SearchOrderItems', $select); ?></div>
-<!-- <div class="float_right">
-<input type="submit" class="button" id="search-advanced" name="search-advanced" value="<?php echo $words->getFormatted('SearchMembersAdvanced'); ?>" />
-</div> -->
+<div class="float_right">
+<?php if ($this->showAdvanced) { ?>
+    <a name="search-simple" href="search/members/text"><?php echo $words->getFormatted('SearchMembersSimple'); ?></a>
+<?php } else { ?>
+    <a name="search-advanced" href="search/members/text/advanced"><?php echo $words->getFormatted('SearchMembersAdvanced'); ?></a>
+<?php } ?>
+</div>
 </div>
 <div class="floatbox">
 		<?php if (!$results) : ?>
-		<span id="search-search-info"><?php echo $words->get('SearchInfo'); ?></span>
+		<?php echo $words->get('SearchInfo'); ?>
 		<?php endif; ?>
 </div>
     <div><?php
@@ -152,7 +171,7 @@ endif; ?>
         // Initialise pager widget
         $params = new StdClass;
         $params->strategy = new FullPagePager();
-        $params->page_url = "/search/members/text?" . http_build_query($vars);
+        $params->page_url = "/search/members/text?" . http_build_query($this->vars);
         $params->page_url_marker = 'search-page-';
         $params->page_method = 'form';
         if ($this->member) {
@@ -160,8 +179,8 @@ endif; ?>
         } else {
             $params->items = $results['countOfPublicMembers'];
         }
-        $params->active_page = $vars['search-page-current'];
-        $params->items_per_page = $vars['search-number-items'];
+        $params->active_page = $this->vars['search-page-current'];
+        $params->items_per_page = $this->vars['search-number-items'];
         $pager = new PagerWidget($params);
         $pager->render();?>
 <table class="full" style="width: 100%">

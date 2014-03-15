@@ -302,10 +302,10 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("Words")) {
 		$res .= "\n<li><a";
-		if ($link == "admin/adminwords.php") {
+		if ($link == "admin/word") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admin/adminwords.php")."\" method='post' ";
+			$res .= " href=\"/admin/word\" method='post' ";
 		}
 		$res .= " title=\"Words management\">AdminWord</a></li>\n";
 	}
@@ -477,10 +477,10 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("MassMail")) {
 		$res .= "<li><a";
-		if ($link == "admin/adminmassmails.php") {
+		if ($link == "admin/massmail") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admin/adminmassmails.php")."\" method=post ";
+			$res .= " href=\"/admin/massmail\" method=post ";
 		}
 		$res .= " title=\"broadcast messages\">mass mails</a></li>\n";
 	}

@@ -35,6 +35,7 @@ Boston, MA  02111-1307, USA.
 class Member extends RoxEntityBase
 {
     const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
+    const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
     const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
 
     protected $_table_name = 'members';

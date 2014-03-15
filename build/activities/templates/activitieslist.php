@@ -1,13 +1,12 @@
 <?php
 if ($this->allActivities != null && sizeof ($this->allActivities) > 0){
 
-    // retrieve cloudmade API key
-    $cloudmade_conf = PVars::getObj('cloudmade');
+    $map_conf = PVars::getObj('map');
 
     $env_conf = PVars::getObj('env');
 
-
-    echo '<input type="hidden" id="cloudmade-api-key-input" value="' . $cloudmade_conf->cloudmade_api_key . '"/>';
+    echo '<input type="hidden" id="osm-tiles-provider-base-url" value="' . $map_conf->osm_tiles_provider_base_url . '"/>';
+    echo '<input type="hidden" id="osm-tiles-provider-api-key" value="' . $map_conf->osm_tiles_provider_api_key . '"/>';
 
     // activities map container
     echo '<div id="activities-map"></div>';

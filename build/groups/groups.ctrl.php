@@ -402,7 +402,7 @@ class GroupsController extends RoxControllerBase
             $this->redirectAbsolute($this->router->url('groups_overview'));
         }
         $this->logWrite("Member #{$member_id} accepted invitation to join group #{$group->getPKValue()}");
-        $page = new GroupStartPage();
+        $page = new GroupMemberSettingsPage();
         $this->setFlashNotice($this->getWords()->getSilent('GroupJoinSuccess'));
         $this->_fillObject($page);
         $page->group = $group;

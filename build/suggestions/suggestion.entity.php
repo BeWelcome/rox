@@ -151,6 +151,20 @@ class Suggestion extends RoxEntityBase
                     }
                     break;
                 case SuggestionsModel::SUGGESTIONS_VOTING:
+                    // post voting starts in five days?
+                    $elapsed = time() - $laststatechanged;
+                    if ( $elapsed > SuggestionsModel::DURATION_VOTING - SuggestionsModel::DURATION_VOTING_STARTS) {
+                        $flags = $this->flags;
+                        if (!$flags || ($flags & 2) != 2) {
+                            $this->postVotingEndsMessage();
+                            if (!$flags) {
+                                $this->flags = 2;
+                            } else {
+                                $this->flags = $this->flags | 2;
+                            }
+                            $this->update();
+                        }
+                    }
                     // voting open for more than 30 days?
                     if (time() - $laststatechanged > SuggestionsModel::DURATION_VOTING) {
                         $this->state = SuggestionsModel::SUGGESTIONS_RANKING;
@@ -447,6 +461,16 @@ class Suggestion extends RoxEntityBase
         $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
         $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/">' . $this->summary . '</a>\' will start on '
             . date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_ADDOPTIONS) . '.<br /><br />Please have a look at the solutions and add your voice.';
+        $suggestions = new SuggestionsModel();
+        $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
+        $suggestions->setForumNotification($postId, 'reply');
+    }
+
+    private function postVotingEndsMessage() {
+        $entityFactory = new RoxEntityFactory();
+        $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
+        $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/">' . $this->summary . '</a>\' will end on '
+            . date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_VOTING) . '.<br /><br />if you haven\'t done so yet , please cast your vote.';
         $suggestions = new SuggestionsModel();
         $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
         $suggestions->setForumNotification($postId, 'reply');

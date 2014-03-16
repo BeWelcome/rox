@@ -240,6 +240,9 @@ class Member extends RoxEntityBase
     public function get_TabRestrictions() {
 
         $tt = $this->sql_get_set("members", "Restrictions");
+        if(($key = array_search('SeeOtherRestrictions', $tt)) !== false) {
+            unset($tt[$key]);
+        }
         return $tt;
     }
 

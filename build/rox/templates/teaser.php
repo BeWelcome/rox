@@ -32,13 +32,6 @@ $words = new MOD_words();
         <p class="clearfix"><a class="btn btn-primary" role="button" href="tour"><?php echo $words->get('tour_take');?></a></p>
         <!-- bootstrap carousel !-->
         <div id="carousel-example-generic" class="carousel" data-ride="carousel">
-  <!-- Indicators 
-  <ol class="carousel-indicators">
-    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
-  </ol>-->
-
   <!-- Wrapper for slides -->
   <div class="carousel-inner">
     <div class="item active">
@@ -64,14 +57,6 @@ $words = new MOD_words();
     </div>
 
   </div>
-
-  <!-- Controls 
-  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-    <span class="glyphicon glyphicon-chevron-left"></span>
-  </a>
-  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-    <span class="glyphicon glyphicon-chevron-right"></span>
-  </a>-->
 </div>
 <p class="small photodesc" style="color: #999; padding-top: 0.5em"><?=$words->get('StartPageNewListofPhotographers');?>: paivisanteri (PD), mikael, OctoberTales, sitatara, smila (CC)</p>
     </div> <!-- c66l -->

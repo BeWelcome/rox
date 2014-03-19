@@ -65,11 +65,6 @@ class TourPage extends PageWithActiveSkin
         else $step = $request[1];
         require 'templates/precontent_tour.php';
     }
-    
-    protected function leftSidebar()
-    {
-        
-    }
 
     protected function column_col3()
     {
@@ -83,6 +78,4 @@ class TourPage extends PageWithActiveSkin
     }
     
 }
-
-
 ?>

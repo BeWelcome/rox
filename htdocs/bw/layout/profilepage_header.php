@@ -91,9 +91,6 @@ if (!empty($m->IdPhoto)){
   }
   */
   echo "          </div>\n"; // end pic_main
-
-  // future flickr/gallery support
-  // echo "<a href=\"http://www.flickr.com\"><img src=\"images/flickr.gif\"  /></a>\n";
   echo "        </div>\n";  // end teaser_l
 
 

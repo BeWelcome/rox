@@ -96,9 +96,6 @@ class GalleryController extends RoxControllerBase {
                 $this->ajaxlatestimages($galleryId, true);
                 PPHP::PExit();
                 
-            case 'flickr':
-                $this->redirect('main');
-
             case 'avatars': 
                 if ($loggedInMember) {
                     $page = new GalleryAvatarsPage();

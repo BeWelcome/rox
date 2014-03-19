@@ -7117,19 +7117,46 @@ button.close {
 }
 body {
   padding-top: 70px;
-  background-image: -webkit-linear-gradient(top, #f7f7f7 0%, #ffffff 100%);
-  background-image: linear-gradient(to bottom, #f7f7f7 0%, #ffffff 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff7f7f7', endColorstr='#ffffffff', GradientType=0);
+  background: url("../../images/bggrey.png") repeat-x scroll left top #f7f7f7;
 }
 .page-teaser {
   border-bottom: 1px solid #EEEEEE;
   margin: 20px 0 -1px;
 }
-#footer {
-  padding: 2.5em 4em;
-  color: #666;
-  border-top: 5px #efefef solid;
+/**
+   * Footer
+   * (en) Generic classes for footer
+   *
+   * @section content-footer
+   */
+footer a {
+  margin: 0.1em 0 0 0;
+  padding: 0.2em 0 0 0;
+  color: #999;
+  font-weight: normal;
+  text-align: left;
+  white-space: nowrap;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+footer a:focus {
+  text-decoration: underline;
+}
+footer .linklist {
+  padding-top: 0.2em;
+}
+footer {
+  padding: 2em;
+  color: #999;
+}
+footer a:hover {
+  color: #999;
+  text-decoration: underline;
+}
+footer a:focus {
+  color: #999;
+  text-decoration: underline;
 }
 .pagination-nomargin {
   margin: 0;

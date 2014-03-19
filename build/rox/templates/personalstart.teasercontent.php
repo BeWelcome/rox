@@ -32,9 +32,9 @@ Boston, MA  02111-1307, USA.
         <div class="c33l">
             <div class="subcl">
                 <ul id="personalmenu" class="nav nav-pills nav-stacked">
-                    <li><a id="tablink1" <?php if(!$ShowDonateBar) { echo 'class="active"'; } ?> href="#tab1" data-toggle="pill"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
+                    <li <?php if(!$ShowDonateBar) { echo 'class="active"'; } ?>><a id="tablink1"  href="#tab1" data-toggle="pill"><?=$words->getSilent('NotifyWhatsHappening')?></a></li>
                     <li><a id="tablink2" href="#tab2" data-toggle="pill"><?=$words->getSilent('FindAHost')?></a></li>
-                    <li><a id="tablink3" <?php if($ShowDonateBar) { echo 'class="active"'; } ?> href="#tab3"data-toggle="pill"><?=$words->getSilent('HelpTheProject')?></a></li>
+                    <li <?php if($ShowDonateBar) { echo 'class="active"'; } ?>><a id="tablink3"  href="#tab3"data-toggle="pill"><?=$words->getSilent('HelpTheProject')?></a></li>
                     <li><a id="tablink5" href="#tab5" data-toggle="pill"><?=$words->getSilent('CheckYourMessages')?>
                     <?php if (isset($_mainPageNewMessagesMessage)) { ?>
                         <span style="color:#333333; font-weight:bold;">(<i title="My messages" class="fa fa-envelope"></i> <?=$_newMessagesNumber?>)</span>

@@ -241,48 +241,12 @@ class MOD_layoutbits
     public static function smallUserPic_usernameVar($username,$height,$width,$quality)
     {
         return self::member_pic_url().$username.'/?xs';
-        /*
-        $picfile = self::userPic_username($username);
-        $thumbfile = self::_getThumb($picfile,$height,$width,$quality);
-        return $thumbfile;
-        */
     }
 
 
     public static function userPic_userId($userId)
     {
         return self::member_pic_url().$userId.'/';
-        /*
-        // check if user is logged in
-        if (!APP_User::isBWLoggedIn('NeedMore,Pending')) {
-            // check if pic owner has a public profile
-            if (!( self::get()->dao->query(
-                'SELECT SQL_CACHE IdMember '.
-                'FROM memberspublicprofiles '.
-                "WHERE IdMember='$userId'"
-            )->fetch(PDB::FETCH_OBJ))) {
-                // hide the pic
-                return self::_incognitoPic_userId($userId);
-            }
-        }
-
-        // now we can safely display the user pic
-
-        $sql_result = self::get()->dao->query(
-            'SELECT SQL_CACHE FilePath '.
-            'FROM membersphotos '.
-            "WHERE IdMember='$userId' ".
-            'ORDER BY membersphotos.SortOrder'
-        );
-
-        // look if any of the pics exists
-        while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
-            if(is_file(getcwd().'/bw'.$row->FilePath)) {
-                return $row->FilePath;
-            }
-        }
-        return self::_dummyPic_userId($userId);
-        */
     }
 
 
@@ -420,16 +384,6 @@ class MOD_layoutbits
     private static function _dummyPic_userId($userId)
     {
         return 'images/misc/empty_avatar.png';
-        $row = self::get()->dao->query(
-            'SELECT SQL_CACHE Gender, HideGender '.
-            'FROM members '.
-            "WHERE id='$userId'"
-        )->fetch(PDB::FETCH_OBJ);
-        if(!$row) return '/memberphotos/et.jpg';
-        if ($row->HideGender=="Yes") return '/memberphotos/et.jpg';
-        else if ($row->Gender=="male") return '/memberphotos/et_male.jpg';
-        else if ($row->Gender=="female") return '/memberphotos/et_female.jpg';
-        else return '/memberphotos/et.jpg';
     }
 
 
@@ -444,11 +398,6 @@ class MOD_layoutbits
     private static function _incognitoPic_userId($userId)
     {
         return 'images/misc/empty_avatar.png';
-        if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
-            return '/memberphotos/incognito.jpg';
-        } else {
-            return '/memberphotos/et.jpg';
-        }
     }
 
 
@@ -461,11 +410,6 @@ class MOD_layoutbits
     private static function _memberNotFoundPic()
     {
         return 'images/misc/empty_avatar.png';
-        if(is_file(getcwd().'/bw/memberphotos/not_found.jpg')) {
-            return '/memberphotos/not_found.jpg';
-        } else {
-            return '/memberphotos/et.jpg';
-        }
     }
 
     /**

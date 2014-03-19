@@ -526,10 +526,6 @@ function LinkWithPicture($Username, $ParamPhoto="", $Status = "") {
 		"\" title=\"" . ww("SeeProfileOf", $Username) . 
 		"\"><img class=\"framed\" ".($Status == 'map_style' ? "style=\"float: left; margin: 4px\" " : "") . "src=\"". $Photo."\" height=\"50px\" width=\"50px\" alt=\"Profile without pict (".$rr->Gender.")\" /></a>";
 	}
-	// TODO: REMOVE THIS HACK:
-	if (strstr($Photo,"memberphotos/"))
-		$Photo = substr($Photo,strrpos($Photo,"/")+1);
-		
 	
 		
 	$orig = $_SYSHCVOL['IMAGEDIR']."/".$Photo;
@@ -1031,17 +1027,6 @@ function DummyPict($Gender="IDontTell",$HideGender="Yes") {
 
     // return this automatically, because memberphotos won't be available
   return "http://www.bewelcome.org/images/misc/empty_avatar_30_30.png" ;
-/*	
-  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "et.jpg") ;
-  if ($Gender=="male") return ($_SYSHCVOL['IMAGEDIR'] . "et_male.jpg") ;
-  if ($Gender=="female") return ($_SYSHCVOL['IMAGEDIR'] . "et_female.jpg") ;
- */
-  
-  if ($HideGender=="Yes") return ($_SYSHCVOL['IMAGEDIR'] . "et.jpg") ;
-  if ($Gender=="male") return ("http://www.bewelcome.org/bw/memberphotos/thumbs/et_male.square.50x50.jpg") ;
-  if ($Gender=="female") return ("http://www.bewelcome.org/bw/memberphotos/thumbs/et_female.square.50x50.jpg") ;
-  
-  return ("http://www.bewelcome.org/bw/memberphotos/thumbs/et.square.50x50.jpg") ;
 } // end of DummyPict
 
 

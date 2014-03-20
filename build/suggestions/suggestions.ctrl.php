@@ -146,9 +146,13 @@ class SuggestionsController extends RoxControllerBase
                 return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
             }
             $suggestion = new Suggestion($this->route_vars['id']);
+            if ((!$this->checkSuggestionRight()) && ($suggestion->createdBy != $loggedInMember->id)) {
+                $this->setFlashNotice($this->getWords()->get('SuggestionNoEditAllowed'));
+                return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
+            }
         } else {
             if (!$loggedInMember) {
-                $this->redirectAbsolute($this->router->url('suggestions_about'));
+                $this->redirectAbsolute($this->router->url('suggestions_discuss'));
             }
             $suggestion = new Suggestion;
         }

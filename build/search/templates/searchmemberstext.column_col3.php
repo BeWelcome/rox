@@ -1,5 +1,7 @@
 <script type="text/Javascript">
 var noMatchesFound = "<?php echo $words->getSilent('SearchNoMatchesFound');?>";
+var searchSimple = "<?php echo $words->getSilent('SearchMembersSimple');?>";
+var searchAdvanced = "<?php echo $words->getSilent('SearchMembersAdvanced');?>";
 </script><?php
 $errors = $this->errors;
 if (empty($this->vars)) {
@@ -99,7 +101,8 @@ endif; ?>
         echo '>' . $display . '</option>';
     endforeach;
     ?></select>
-			</div>			<div class="float_left">
+			</div>
+            <div class="float_left">
 				<span class="small"><?=$words->get('SearchDistance');?></span><br /> <select
 					id="search-distance" name="search-distance" style="width: 10em;"><?php
 	$distance = array(0 => $words->getSilent("SearchExactMatch"), 5  => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');

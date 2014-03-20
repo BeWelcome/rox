@@ -1,0 +1,11 @@
+<map id="MagpieRSS\MagpieRSS" name="MagpieRSS\MagpieRSS">
+<area shape="rect" id="node2" href="$class_magpie_r_s_s.html#ae66c404a09a0b8022a853f0925533e0e" title="MagpieRSS\\create_parser" alt="" coords="219,77,394,104"/>
+<area shape="rect" id="node5" href="$class_magpie_r_s_s.html#a28ff7e7b777702d05de7eadc18a02648" title="MagpieRSS\\error" alt="" coords="694,99,815,125"/>
+<area shape="rect" id="node7" href="$class_magpie_r_s_s.html#a94b74129373e089c426123c92fb67c43" title="MagpieRSS\\normalize" alt="" coords="231,212,382,239"/>
+<area shape="rect" id="node3" href="$class_magpie_r_s_s.html#a9e3797ce8268434534535f423b3d9fb4" title="MagpieRSS\\php4_create\l_parser" alt="" coords="443,5,610,46"/>
+<area shape="rect" id="node6" href="$class_magpie_r_s_s.html#a8336a3af1cbf90ee52122e08481a05f1" title="MagpieRSS\\php5_create\l_parser" alt="" coords="443,70,610,111"/>
+<area shape="rect" id="node4" href="$class_magpie_r_s_s.html#aa9abec433bfec13be683d73fe8d54e94" title="MagpieRSS\\known_encoding" alt="" coords="659,12,850,39"/>
+<area shape="rect" id="node8" href="$class_magpie_r_s_s.html#a20be834a44aaaf0cc9337dab98b3e772" title="MagpieRSS\\is_atom" alt="" coords="456,187,597,213"/>
+<area shape="rect" id="node9" href="$build_2about_2magpierss_2rss__utils_8inc.html#af89aa4d9d4dd44825acaf91c56edeb12" title="parse_w3cdtf" alt="" coords="477,237,576,264"/>
+<area shape="rect" id="node10" href="$class_magpie_r_s_s.html#aac4ef2bede9cef0813d1b83f6c8ec26d" title="MagpieRSS\\is_rss" alt="" coords="461,288,592,315"/>
+</map>

@@ -1,0 +1,28 @@
+<map id="GroupsBasePage" name="GroupsBasePage">
+<area shape="rect" id="node8" href="$class_group_add_related_group_page.html" title="GroupAddRelatedGroupPage" alt="" coords="1276,5,1465,32"/>
+<area shape="rect" id="node9" href="$class_group_delete_page.html" title="GroupDeletePage" alt="" coords="1309,56,1433,83"/>
+<area shape="rect" id="node10" href="$class_group_delete_related_group_page.html" title="GroupDeleteRelatedGroupPage" alt="" coords="1269,107,1472,133"/>
+<area shape="rect" id="node11" href="$class_group_forum_page.html" title="GroupForumPage" alt="" coords="1309,157,1433,184"/>
+<area shape="rect" id="node12" href="$class_group_forums_overview_page.html" title="GroupForumsOverviewPage" alt="" coords="1280,208,1461,235"/>
+<area shape="rect" id="node13" href="$class_group_invite_page.html" title="GroupInvitePage" alt="" coords="1313,259,1429,285"/>
+<area shape="rect" id="node14" href="$class_group_join_page.html" title="GroupJoinPage" alt="" coords="1315,309,1426,336"/>
+<area shape="rect" id="node15" href="$class_group_leave_page.html" title="GroupLeavePage" alt="" coords="1311,360,1431,387"/>
+<area shape="rect" id="node16" href="$class_group_member_administration_page.html" title="GroupMemberAdministrationPage" alt="" coords="1262,411,1479,437"/>
+<area shape="rect" id="node17" href="$class_group_member_settings_page.html" title="GroupMemberSettingsPage" alt="" coords="1279,461,1462,488"/>
+<area shape="rect" id="node18" href="$class_group_members_page.html" title="GroupMembersPage" alt="" coords="1300,512,1441,539"/>
+<area shape="rect" id="node19" href="$class_group_related_group_log_page.html" title="GroupRelatedGroupLogPage" alt="" coords="1277,563,1464,589"/>
+<area shape="rect" id="node20" href="$class_groups_creation_page.html" title="GroupsCreationPage" alt="" coords="1299,613,1442,640"/>
+<area shape="rect" id="node21" href="$class_group_settings_page.html" title="GroupSettingsPage" alt="" coords="1303,664,1438,691"/>
+<area shape="rect" id="node22" href="$class_groups_featured_page.html" title="GroupsFeaturedPage" alt="" coords="1298,715,1443,741"/>
+<area shape="rect" id="node23" href="$class_groups_my_groups_page.html" title="GroupsMyGroupsPage" alt="" coords="1293,765,1448,792"/>
+<area shape="rect" id="node24" href="$class_groups_overview_page.html" title="GroupsOverviewPage" alt="" coords="1299,816,1443,843"/>
+<area shape="rect" id="node25" href="$class_groups_search_page.html" title="GroupsSearchPage" alt="" coords="1303,867,1438,893"/>
+<area shape="rect" id="node26" href="$class_group_start_page.html" title="GroupStartPage" alt="" coords="1313,917,1428,944"/>
+<area shape="rect" id="node27" href="$class_group_wiki_page.html" title="GroupWikiPage" alt="" coords="1314,968,1427,995"/>
+<area shape="rect" id="node2" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="899,563,1039,589"/>
+<area shape="rect" id="node3" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="709,563,851,589"/>
+<area shape="rect" id="node4" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="547,563,661,589"/>
+<area shape="rect" id="node5" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="368,563,499,589"/>
+<area shape="rect" id="node6" href="$class_visual_component.html" title="VisualComponent" alt="" coords="195,563,319,589"/>
+<area shape="rect" id="node7" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,563,147,589"/>
+</map>

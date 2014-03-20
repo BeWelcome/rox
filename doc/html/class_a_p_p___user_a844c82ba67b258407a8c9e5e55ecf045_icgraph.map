@@ -1,0 +1,4 @@
+<map id="APP_User\activate" name="APP_User\activate">
+<area shape="rect" id="node2" href="$class_user.html#a8f39328d907153f03554636f1cc64b13" title="User\\confirmRegister" alt="" coords="209,5,351,32"/>
+<area shape="rect" id="node3" href="$class_signup_model.html#a8c2ec78f5bef30afba87a4e6cd8e6eec" title="SignupModel\\confirmRegister" alt="" coords="185,56,375,83"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="GroupsBasePage\isGroupMember" name="GroupsBasePage\isGroupMember">
+<area shape="rect" id="node2" href="$class_group_start_page.html#a27befc1c35c327aeabcec28757dda911" title="GroupStartPage\\column_col3" alt="" coords="280,5,472,32"/>
+<area shape="rect" id="node3" href="$class_group_wiki_page.html#a58e4146595fb8c619eb39caf26747f52" title="GroupWikiPage\\column_col3" alt="" coords="281,56,471,83"/>
+<area shape="rect" id="node4" href="$class_group_forum_page.html#a707534cbdb027f8f402323ab0a89eb5f" title="GroupForumPage\\column_col3" alt="" coords="275,107,477,133"/>
+<area shape="rect" id="node5" href="$class_groups_base_page.html#a6e9d19a4804e4734feff511ff631123b" title="GroupsBasePage\\getSubmenu\lItems" alt="" coords="275,158,477,199"/>
+</map>

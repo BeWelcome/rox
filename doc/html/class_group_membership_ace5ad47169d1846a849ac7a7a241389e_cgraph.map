@@ -1,0 +1,8 @@
+<map id="getNewGroupMembers" name="getNewGroupMembers">
+<area shape="rect" id="node2" href="$class_group_membership.html#ae816b19fdb95dd9944ba4471059cf50a" title="getGroupMembers" alt="" coords="209,81,338,108"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#afff4f3fb46af6a21d296062c42c2c9f5" title="RoxEntityBase\\findByWhereMany" alt="" coords="387,56,605,83"/>
+<area shape="rect" id="node7" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="1139,81,1323,108"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#a93566f2c8d709d410ae8ec46b813999b" title="RoxEntityBase\\getTableName" alt="" coords="659,5,855,32"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#a4583df34edb9afa955044027de7d57d3" title="RoxEntityBase\\queryForEntities" alt="" coords="653,56,861,83"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a540d3feaa287dff42642c68bc7b57206" title="RoxEntityBase\\loadEntities" alt="" coords="909,56,1091,83"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="RelatedGroupsController\addRelatedGroup" name="RelatedGroupsController\addRelatedGroup">
+<area shape="rect" id="node2" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="217,5,418,32"/>
+<area shape="rect" id="node3" href="$class_rox_controller_base.html#afa5715ca7b008a752325062987990ccd" title="RoxControllerBase\\setFlash\lError" alt="" coords="225,57,409,98"/>
+<area shape="rect" id="node4" href="$class_rox_controller_base.html#a08b2e66b9f6d0349269bf0aeb35dd5b9" title="RoxControllerBase\\setFlash\lNotice" alt="" coords="225,122,409,163"/>
+</map>

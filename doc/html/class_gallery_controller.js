@@ -1,0 +1,28 @@
+var class_gallery_controller =
+[
+    [ "__construct", "class_gallery_controller.html#addf881fc87de93d2a8814ebd5b63fb47", null ],
+    [ "__destruct", "class_gallery_controller.html#a29fb5ba2a7e8a50eadd6fd9db37d0add", null ],
+    [ "ajaxlatestimages", "class_gallery_controller.html#a0bd5c607d47bfcbb0fbb394487fd6044", null ],
+    [ "allgalleries", "class_gallery_controller.html#a5ad43f24e49ebe72fab1cf9dc1bd2af8", null ],
+    [ "commentProcess", "class_gallery_controller.html#a1d3ff768ec277fa94e530eb914177103", null ],
+    [ "createGalleryCallback", "class_gallery_controller.html#ac3723a57e80b6039f1df283267fcad6e", null ],
+    [ "deleteGallery", "class_gallery_controller.html#a8acec8377765de90f01d73015ed779e7", null ],
+    [ "deleteImage", "class_gallery_controller.html#a6e7fc88a663552850fd79edfc5849d4d", null ],
+    [ "editGalleryProcess", "class_gallery_controller.html#a49ccd2f4ade0704efdae4a09ba449bc2", null ],
+    [ "editProcess", "class_gallery_controller.html#ae181a56871ecb49e1c8b631b360c8950", null ],
+    [ "gallery", "class_gallery_controller.html#aee212a1eead4eb325b6c0359c8bc3553", null ],
+    [ "gallerydetails", "class_gallery_controller.html#ac98965837e66f1207c308993703ce36c", null ],
+    [ "image", "class_gallery_controller.html#af803032f10cb30029e172fec0375d172", null ],
+    [ "index", "class_gallery_controller.html#ab7c79bc2189f52aff2181e11437eaaac", null ],
+    [ "manage", "class_gallery_controller.html#ad06f7fa83d41d3c977012ad98f24e0e4", null ],
+    [ "manageCallback", "class_gallery_controller.html#ab37678e67d635642ae315661a5a09b7d", null ],
+    [ "overview", "class_gallery_controller.html#a9592b5ac8a77f46ffe9bda2b6da34562", null ],
+    [ "thumbImg", "class_gallery_controller.html#a658980e410acb3807ac27470e55ad3d3", null ],
+    [ "updateGalleryCallback", "class_gallery_controller.html#ad0e4aa4356f8e5894d2a8f10fd8ddf0b", null ],
+    [ "upload", "class_gallery_controller.html#abaea9ef40c91f7f6504973d097c3577d", null ],
+    [ "uploadedProcess", "class_gallery_controller.html#ab756db74a5c35a4ec867e0dbf950f760", null ],
+    [ "uploadProcess", "class_gallery_controller.html#a410130b851cd968c2909c013e3c634f0", null ],
+    [ "user", "class_gallery_controller.html#a7c01edb51528ceb3e55ace842c3dbb8d", null ],
+    [ "usergalleries", "class_gallery_controller.html#a6af75c89b3bb08e326ca1dda08a170d7", null ],
+    [ "userimages", "class_gallery_controller.html#a0f39bd00f7fe4613c468e5a6998fa1ad", null ]
+];

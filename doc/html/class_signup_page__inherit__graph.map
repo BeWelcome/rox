@@ -1,0 +1,12 @@
+<map id="SignupPage" name="SignupPage">
+<area shape="rect" id="node7" href="$class_signup_closed_page.html" title="SignupClosedPage" alt="" coords="1054,5,1186,32"/>
+<area shape="rect" id="node8" href="$class_signup_finish_page.html" title="SignupFinishPage" alt="" coords="1057,56,1183,83"/>
+<area shape="rect" id="node9" href="$class_signup_mail_confirm_page.html" title="SignupMailConfirmPage" alt="" coords="1040,107,1200,133"/>
+<area shape="rect" id="node10" href="$class_signup_problem_page.html" title="SignupProblemPage" alt="" coords="1050,157,1190,184"/>
+<area shape="rect" id="node11" href="$class_signup_resent_mail_page.html" title="SignupResentMailPage" alt="" coords="1041,208,1199,235"/>
+<area shape="rect" id="node2" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="709,107,851,133"/>
+<area shape="rect" id="node3" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="547,107,661,133"/>
+<area shape="rect" id="node4" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="368,107,499,133"/>
+<area shape="rect" id="node5" href="$class_visual_component.html" title="VisualComponent" alt="" coords="195,107,319,133"/>
+<area shape="rect" id="node6" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,107,147,133"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="MemberRole\getMemberRoles" name="MemberRole\getMemberRoles">
+<area shape="rect" id="node2" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="1003,19,1187,45"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a53f4c1eb56c2bec477db683048d92705" title="RoxEntityBase\\findByWhereMany" alt="" coords="251,31,469,57"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#ab323bb7926fa55e45d9a24554637a0bb" title="RoxEntityBase\\getTableName" alt="" coords="523,31,719,57"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#a6aeb649cf94583fd93a2173cd9d6d000" title="RoxEntityBase\\queryForEntities" alt="" coords="517,81,725,108"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a21c6b3bca8467772d4356378a084bde1" title="RoxEntityBase\\loadEntities" alt="" coords="773,56,955,83"/>
+</map>

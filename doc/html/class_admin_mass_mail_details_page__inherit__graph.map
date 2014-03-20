@@ -1,0 +1,10 @@
+<map id="AdminMassMailDetailsPage" name="AdminMassMailDetailsPage">
+<area shape="rect" id="node2" href="$class_admin_mass_mail_base_page.html" title="AdminMassMailBasePage" alt="" coords="10,528,184,555"/>
+<area shape="rect" id="node3" href="$class_admin_base_page.html" title="AdminBasePage" alt="" coords="38,453,156,480"/>
+<area shape="rect" id="node4" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="27,379,167,405"/>
+<area shape="rect" id="node5" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="27,304,168,331"/>
+<area shape="rect" id="node6" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="41,229,153,256"/>
+<area shape="rect" id="node7" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="32,155,163,181"/>
+<area shape="rect" id="node8" href="$class_visual_component.html" title="VisualComponent" alt="" coords="35,80,159,107"/>
+<area shape="rect" id="node9" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="27,5,168,32"/>
+</map>

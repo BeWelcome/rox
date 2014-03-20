@@ -1,0 +1,6 @@
+<map id="setLocation" name="setLocation">
+<area shape="rect" id="node2" href="$class_rox_component_base.html#a33a50c503ce289d20e2146edbe6abdbf" title="RoxComponentBase\\logWrite" alt="" coords="145,5,338,32"/>
+<area shape="rect" id="node5" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="149,56,333,83"/>
+<area shape="rect" id="node3" href="$class_rox_component_base.html#af8283af3e7c972d9c276dc634eec0bdc" title="RoxComponentBase\\getLog" alt="" coords="387,5,571,32"/>
+<area shape="rect" id="node4" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="619,5,717,32"/>
+</map>

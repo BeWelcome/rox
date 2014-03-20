@@ -1,0 +1,5 @@
+<map id="Forums\getGroupName" name="Forums\getGroupName">
+<area shape="rect" id="node2" href="$class_forums.html#ab4e469149ba1f0be8cbc6d720b638024" title="Forums\\GroupChoice" alt="" coords="239,5,385,32"/>
+<area shape="rect" id="node3" href="$class_forums.html#a17b4ff687b95d3d700ef120d98d8226b" title="Forums\\ModeratorGroupChoice" alt="" coords="211,56,413,83"/>
+<area shape="rect" id="node4" href="$class_forums.html#af71ae04ad1e95293ab656ee0395ec6c4" title="Forums\\prepareModeratorEditPost" alt="" coords="461,56,683,83"/>
+</map>

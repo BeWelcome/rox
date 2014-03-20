@@ -1,0 +1,25 @@
+<map id="AdminBasePage" name="AdminBasePage">
+<area shape="rect" id="node8" href="$class_admin_accepter_page.html" title="AdminAccepterPage" alt="" coords="1281,5,1423,32"/>
+<area shape="rect" id="node9" href="$class_admin_comments_page.html" title="AdminCommentsPage" alt="" coords="1276,56,1428,83"/>
+<area shape="rect" id="node10" href="$class_admin_logs_page.html" title="AdminLogsPage" alt="" coords="1293,107,1411,133"/>
+<area shape="rect" id="node11" href="$class_admin_mass_mail_base_page.html" title="AdminMassMailBasePage" alt="" coords="1265,157,1439,184"/>
+<area shape="rect" id="node16" href="$class_admin_no_rights_page.html" title="AdminNoRightsPage" alt="" coords="1281,208,1423,235"/>
+<area shape="rect" id="node17" href="$class_admin_overview_page.html" title="AdminOverviewPage" alt="" coords="1283,259,1421,285"/>
+<area shape="rect" id="node18" href="$class_admin_spam_page.html" title="AdminSpamPage" alt="" coords="1291,309,1413,336"/>
+<area shape="rect" id="node19" href="$class_admin_treasurer_edit_create_donation_page.html" title="AdminTreasurerEditCreate\lDonationPage" alt="" coords="1265,361,1439,402"/>
+<area shape="rect" id="node20" href="$class_admin_treasurer_page.html" title="AdminTreasurerPage" alt="" coords="1281,427,1423,453"/>
+<area shape="rect" id="node21" href="$class_admin_treasurer_start_donation_campaign_page.html" title="AdminTreasurerStartDonation\lCampaignPage" alt="" coords="1256,478,1448,519"/>
+<area shape="rect" id="node22" href="$class_admin_word_page.html" title="AdminWordPage" alt="" coords="1292,544,1412,571"/>
+<area shape="rect" id="node23" href="$class_admin_words_page.html" title="AdminWordsPage" alt="" coords="1289,595,1415,621"/>
+<area shape="rect" id="node24" href="$class_temp_vol_start_page.html" title="TempVolStartPage" alt="" coords="1287,645,1417,672"/>
+<area shape="rect" id="node2" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="899,309,1039,336"/>
+<area shape="rect" id="node3" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="709,309,851,336"/>
+<area shape="rect" id="node4" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="547,309,661,336"/>
+<area shape="rect" id="node5" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="368,309,499,336"/>
+<area shape="rect" id="node6" href="$class_visual_component.html" title="VisualComponent" alt="" coords="195,309,319,336"/>
+<area shape="rect" id="node7" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,309,147,336"/>
+<area shape="rect" id="node12" href="$class_admin_mass_mail_details_page.html" title="AdminMassMailDetailsPage" alt="" coords="1507,81,1693,108"/>
+<area shape="rect" id="node13" href="$class_admin_mass_mail_edit_create_page.html" title="AdminMassMailEditCreatePage" alt="" coords="1497,132,1703,159"/>
+<area shape="rect" id="node14" href="$class_admin_mass_mail_enqueue_page.html" title="AdminMassMailEnqueuePage" alt="" coords="1502,183,1698,209"/>
+<area shape="rect" id="node15" href="$class_admin_mass_mail_page.html" title="AdminMassMailPage" alt="" coords="1527,233,1673,260"/>
+</map>

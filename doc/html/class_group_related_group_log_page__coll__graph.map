@@ -1,0 +1,9 @@
+<map id="GroupRelatedGroupLogPage" name="GroupRelatedGroupLogPage">
+<area shape="rect" id="node2" href="$class_groups_base_page.html" title="GroupsBasePage" alt="" coords="37,453,160,480"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="29,379,168,405"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="28,304,169,331"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="42,229,155,256"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="33,155,164,181"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="37,80,160,107"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="28,5,169,32"/>
+</map>

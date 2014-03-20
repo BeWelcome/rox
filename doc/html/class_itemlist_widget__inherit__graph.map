@@ -1,0 +1,18 @@
+<map id="ItemlistWidget" name="ItemlistWidget">
+<area shape="rect" id="node5" href="$class_itemlist_with_pagination.html" title="ItemlistWithPagination" alt="" coords="659,225,811,252"/>
+<area shape="rect" id="node16" href="$class_scrolltable_widget.html" title="ScrolltableWidget" alt="" coords="673,276,797,303"/>
+<area shape="rect" id="node2" href="$class_rox_widget.html" title="RoxWidget" alt="" coords="369,251,455,277"/>
+<area shape="rect" id="node3" href="$class_visual_component.html" title="VisualComponent" alt="" coords="195,251,319,277"/>
+<area shape="rect" id="node4" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,251,147,277"/>
+<area shape="rect" id="node6" href="$class_mailbox_widget.html" title="MailboxWidget" alt="" coords="893,132,1001,159"/>
+<area shape="rect" id="node13" href="$class_notify_admin_widget.html" title="NotifyAdminWidget" alt="" coords="880,200,1013,227"/>
+<area shape="rect" id="node14" href="$class_notify_member_widget.html" title="NotifyMemberWidget" alt="" coords="875,251,1018,277"/>
+<area shape="rect" id="node7" href="$class_mailbox_widget___drafts.html" title="MailboxWidget_Drafts" alt="" coords="1103,5,1252,32"/>
+<area shape="rect" id="node8" href="$class_mailbox_widget___received.html" title="MailboxWidget_Received" alt="" coords="1094,56,1261,83"/>
+<area shape="rect" id="node10" href="$class_mailbox_widget___sent.html" title="MailboxWidget_Sent" alt="" coords="1106,107,1249,133"/>
+<area shape="rect" id="node11" href="$class_mailbox_widget___spam.html" title="MailboxWidget_Spam" alt="" coords="1103,157,1252,184"/>
+<area shape="rect" id="node12" href="$class_mailbox_widget___with_member.html" title="MailboxWidget_WithMember" alt="" coords="1083,208,1272,235"/>
+<area shape="rect" id="node9" href="$class_mailbox_widget___personalstart.html" title="MailboxWidget_Personalstart" alt="" coords="1320,56,1512,83"/>
+<area shape="rect" id="node15" href="$class_notify_member_widget___personalstart.html" title="NotifyMemberWidget\l_Personalstart" alt="" coords="1106,259,1249,301"/>
+<area shape="rect" id="node17" href="$class_database_summary_widget.html" title="DatabaseSummaryWidget" alt="" coords="859,301,1034,328"/>
+</map>

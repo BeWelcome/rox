@@ -1,0 +1,7 @@
+<map id="SimplePie\get_item_quantity" name="SimplePie\get_item_quantity">
+<area shape="rect" id="node2" href="$class_simple_pie.html#a214d16eb6f395cf252b627768d43339b" title="SimplePie\\get_items" alt="" coords="190,56,333,83"/>
+<area shape="rect" id="node3" href="$class_simple_pie.html#ab3fc684cd11ddaf03c7319be0f79328c" title="SimplePie\\merge_items" alt="" coords="395,5,555,32"/>
+<area shape="rect" id="node4" href="$class_simple_pie.html#a31e2cb6bdaa3e8742bfb06c523b62cb7" title="SimplePie\\get_feed_tags" alt="" coords="617,56,783,83"/>
+<area shape="rect" id="node6" href="$class_simple_pie.html#a65096224f3f77adc3010794f7168bfab" title="SimplePie\\get_channel_tags" alt="" coords="381,107,568,133"/>
+<area shape="rect" id="node5" href="$class_simple_pie.html#a807fc0843a5b3ac84b30c80226be87fe" title="SimplePie\\get_type" alt="" coords="833,81,967,108"/>
+</map>

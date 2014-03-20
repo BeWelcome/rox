@@ -1,0 +1,11 @@
+<map id="SimplePie_IRI\scheme_normalization" name="SimplePie_IRI\scheme_normalization">
+<area shape="rect" id="node2" href="$class_simple_pie___i_r_i.html#a8dea155a91b171429fbf40e2f44b34d5" title="SimplePie_IRI\\set_fragment" alt="" coords="435,6,618,33"/>
+<area shape="rect" id="node5" href="$class_simple_pie___i_r_i.html#a6a49da2acf7c582e689e53abecce01dd" title="SimplePie_IRI\\set_host" alt="" coords="219,43,376,70"/>
+<area shape="rect" id="node7" href="$class_simple_pie___i_r_i.html#ae7d20d3c5c945c6e8b44cf30164a4ac0" title="SimplePie_IRI\\set_path" alt="" coords="448,183,605,210"/>
+<area shape="rect" id="node8" href="$class_simple_pie___i_r_i.html#a49e4219357dd31d87c7286eea46ac92c" title="SimplePie_IRI\\set_port" alt="" coords="220,94,375,121"/>
+<area shape="rect" id="node9" href="$class_simple_pie___i_r_i.html#a857aaf5f8b33832575f732af132a0669" title="SimplePie_IRI\\set_query" alt="" coords="445,234,609,261"/>
+<area shape="rect" id="node10" href="$class_simple_pie___i_r_i.html#a06bbeefb844becb945db5cafcf0dc917" title="SimplePie_IRI\\set_userinfo" alt="" coords="209,145,386,171"/>
+<area shape="rect" id="node3" href="$class_simple_pie___i_r_i.html#ab4d8d327216607e25f96bf39e051ae1c" title="SimplePie_IRI\\set_iri" alt="" coords="667,146,810,173"/>
+<area shape="rect" id="node4" href="$class_simple_pie___i_r_i.html#aea70c37b837803b5a542da1dffd9947e" title="SimplePie_IRI\\__construct" alt="" coords="859,146,1034,173"/>
+<area shape="rect" id="node6" href="$class_simple_pie___i_r_i.html#a572389a6842a64f61f40e440fead1bc1" title="SimplePie_IRI\\set_authority" alt="" coords="435,107,618,134"/>
+</map>

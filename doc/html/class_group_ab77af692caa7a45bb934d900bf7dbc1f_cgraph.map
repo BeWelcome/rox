@@ -1,0 +1,8 @@
+<map id="createGroup" name="createGroup">
+<area shape="rect" id="node2" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="147,31,331,57"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a473241246338cfccc4709ba896749019" title="RoxEntityBase\\insert" alt="" coords="166,81,311,108"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="RoxEntityBase\\getPrimaryKey" alt="" coords="379,5,578,32"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="RoxEntityBase\\getTableDescription" alt="" coords="627,56,853,83"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a6287262cb9628d7a89d8fc16dcb51177" title="RoxEntityBase\\getColumns" alt="" coords="387,107,570,133"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#a1b73692f359aec5e87d6fcc1b47f20ff" title="RoxEntityBase\\validateField" alt="" coords="387,157,571,184"/>
+</map>

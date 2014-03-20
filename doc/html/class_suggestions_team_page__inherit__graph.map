@@ -1,0 +1,9 @@
+<map id="SuggestionsTeamPage" name="SuggestionsTeamPage">
+<area shape="rect" id="node2" href="$class_suggestions_base_page.html" title="SuggestionsBasePage" alt="" coords="5,453,160,480"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="13,379,152,405"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="12,304,153,331"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="26,229,139,256"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="17,155,148,181"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="21,80,144,107"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="12,5,153,32"/>
+</map>

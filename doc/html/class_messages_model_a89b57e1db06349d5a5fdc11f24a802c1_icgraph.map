@@ -1,0 +1,6 @@
+<map id="MessagesModel\filteredMailbox" name="MessagesModel\filteredMailbox">
+<area shape="rect" id="node2" href="$class_messages_model.html#aef8897b3d0e676720d2e02876fe54257" title="MessagesModel\\getMessagesWith" alt="" coords="259,5,485,32"/>
+<area shape="rect" id="node3" href="$class_messages_model.html#a6400265ff1be9fa35f2366066afe9a10" title="MessagesModel\\receivedMailbox" alt="" coords="265,56,479,83"/>
+<area shape="rect" id="node4" href="$class_messages_model.html#a2ddd6569957f621ed80f34114defa9ae" title="MessagesModel\\sentMailbox" alt="" coords="277,107,467,133"/>
+<area shape="rect" id="node5" href="$class_messages_model.html#a074b3e64b2b3ea7a868ccb293e112ad4" title="MessagesModel\\spamMailbox" alt="" coords="273,157,471,184"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="getScopesForMemberRole" name="getScopesForMemberRole">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#a2f27c20674620565aa8b3433bffe305d" title="RoxEntityBase\\isLoaded" alt="" coords="383,5,548,32"/>
+<area shape="rect" id="node3" href="$class_role.html#ae55ab9ee066f77a0595e0faada641561" title="getPrivileges" alt="" coords="230,31,325,57"/>
+<area shape="rect" id="node4" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="373,68,557,95"/>
+</map>

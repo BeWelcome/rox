@@ -1,0 +1,5 @@
+<map id="findAll" name="findAll">
+<area shape="rect" id="node2" href="$class_group.html#af40e81115fd026308a84517dd688c1c6" title="Group\\findBySearchTerms" alt="" coords="121,5,295,32"/>
+<area shape="rect" id="node3" href="$class_message.html#afd5aea8af296620760c6f1e85b3495d1" title="Message\\findBySearchTerms" alt="" coords="112,56,304,83"/>
+<area shape="rect" id="node4" href="$class_note.html#afd5aea8af296620760c6f1e85b3495d1" title="Note\\findBySearchTerms" alt="" coords="125,107,291,133"/>
+</map>

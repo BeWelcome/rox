@@ -1,0 +1,5 @@
+<map id="GroupsModel\joinGroup" name="GroupsModel\joinGroup">
+<area shape="rect" id="node2" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="484,5,668,32"/>
+<area shape="rect" id="node3" href="$class_groups_model.html#ab28c20edd68241d40dd4c6c30ff0d0a1" title="GroupsModel\\notifyGroupAdmins" alt="" coords="213,56,427,83"/>
+<area shape="rect" id="node4" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="475,56,677,83"/>
+</map>

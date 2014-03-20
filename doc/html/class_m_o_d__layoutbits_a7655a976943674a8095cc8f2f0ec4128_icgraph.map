@@ -1,0 +1,7 @@
+<map id="MOD_layoutbits\PIC_50_50" name="MOD_layoutbits\PIC_50_50">
+<area shape="rect" id="node2" href="$class_my_visitors_page.html#a4e5b689f5bfbf7c95a12d018f62b4513" title="MyVisitorsPage\\column_col3" alt="" coords="206,5,397,32"/>
+<area shape="rect" id="node3" href="$class_read_message_page.html#a665a84418ee75afe5b5d0e7c5d70ea34" title="ReadMessagePage\\column_col3" alt="" coords="195,56,407,83"/>
+<area shape="rect" id="node4" href="$class_messages_contactbox_page.html#af0f95f6deeaebe04c2ec5e943ecb085f" title="MessagesContactboxPage\l\\mailboxDescription" alt="" coords="212,107,391,149"/>
+<area shape="rect" id="node5" href="$class_group_memberlist_widget.html#add41a287647e613dc7bcbbcc98ee7a6f" title="GroupMemberlistWidget\l\\render" alt="" coords="220,173,383,214"/>
+<area shape="rect" id="node6" href="$class_mailbox_widget.html#ae84ae2e341fb55c58dd643464ab50c83" title="MailboxWidget\\tableCell_from" alt="" coords="204,239,399,265"/>
+</map>

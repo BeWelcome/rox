@@ -1,0 +1,28 @@
+var class_group =
+[
+    [ "__construct", "class_group.html#afec1ef931eeb0c82ecb2b7565317818a", null ],
+    [ "__get", "class_group.html#a51068fb7b71239f0bd76421b6d8237cb", null ],
+    [ "createGroup", "class_group.html#a639906ffec3ce503336fecef64071765", null ],
+    [ "deleteGroup", "class_group.html#a00b10c1664132feccb8d6136287fb8ae", null ],
+    [ "findBySearchTerms", "class_group.html#aee1cbd1e6bf559fbf81e8b339707515f", null ],
+    [ "findRelatedGroups", "class_group.html#abff8fccf35b21a10550e3e27371fc09f", null ],
+    [ "getDescription", "class_group.html#aacc287e9a4c0523da40f13df89ddf8b3", null ],
+    [ "getEmailAcceptingMembers", "class_group.html#a36a17580cf72c5ebea2a8b9d33e38c65", null ],
+    [ "getGroupForGeo", "class_group.html#a8a7e4141617cbb9a40ffe7437e6b8823", null ],
+    [ "getGroupOwners", "class_group.html#a21dd5af3f75b3b62ea927ae7ab19a6b4", null ],
+    [ "getLastLoggedInMembers", "class_group.html#abc494aec109f30537da70301fbb816ba", null ],
+    [ "getMemberCount", "class_group.html#af882b79e7b4a7d94b247715be309dddc", null ],
+    [ "getMembers", "class_group.html#a8608dfccd7977389fcc4443e22d8aa73", null ],
+    [ "getNewMembers", "class_group.html#a434a32cdb031270755533a92ac825a53", null ],
+    [ "isGroupOwner", "class_group.html#ac4fd0fca5072d35dddc06fbeff58e108", null ],
+    [ "isMember", "class_group.html#acbbea9becf71cd89223627d11491a031", null ],
+    [ "loadEntity", "class_group.html#a61930c3a52fdd7863cdf7cc86abd0937", null ],
+    [ "memberJoin", "class_group.html#ada8f8bc4a333709082d8c80b97c1e5f8", null ],
+    [ "memberLeave", "class_group.html#adcaaad1ba58f3753e47b5a0786f52395", null ],
+    [ "removeGroupOwner", "class_group.html#aec0b2fcbf66427ea84d866b84830fed7", null ],
+    [ "setDescription", "class_group.html#a16d2b92f7bc097e0fbe2dc7bc332314e", null ],
+    [ "setGroupOwner", "class_group.html#a3503df33ff3c95a119ea90738ad4719d", null ],
+    [ "updateSettings", "class_group.html#a86ba2e572e66c9a2d326fc2ebc060e3c", null ],
+    [ "$_table_name", "class_group.html#a2fc786aa85e15d6cddccf8061e8f8812", null ],
+    [ "$_validations", "class_group.html#a45d597f0d7b345cc4fa47ca398c6c7f3", null ]
+];

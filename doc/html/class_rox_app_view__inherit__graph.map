@@ -1,0 +1,7 @@
+<map id="RoxAppView" name="RoxAppView">
+<area shape="rect" id="node3" href="$class_activities_view.html" title="ActivitiesView" alt="" coords="5,155,107,181"/>
+<area shape="rect" id="node4" href="$class_admin_view.html" title="AdminView" alt="" coords="131,155,217,181"/>
+<area shape="rect" id="node5" href="$class_api_view.html" title="ApiView" alt="" coords="243,155,312,181"/>
+<area shape="rect" id="node6" href="$class_blog_view.html" title="BlogView" alt="" coords="337,155,412,181"/>
+<area shape="rect" id="node7" href="$class_forums_view.html" title="ForumsView" alt="" coords="437,155,531,181"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="Member\get_trad" name="Member\get_trad">
+<area shape="rect" id="node2" href="$class_member.html#aefdaed5f6eba6a5342d7c23288b72fa9" title="Member\\get_trad_by\l_tradid" alt="" coords="173,5,315,46"/>
+<area shape="rect" id="node4" href="$class_member.html#a35117f93b3f08a7a7727256a5c59499e" title="Member\\get_trads" alt="" coords="401,67,527,93"/>
+<area shape="rect" id="node7" href="$class_member.html#a255773faa1c2a8360c7ba13519b11cd0" title="Member\\IsFilled" alt="" coords="187,121,301,148"/>
+<area shape="rect" id="node3" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="363,12,565,39"/>
+<area shape="rect" id="node5" href="$class_rox_model_base.html#aa555ff4841071cf011132ef42ec8b791" title="RoxModelBase\\bulkLookup" alt="" coords="614,41,794,68"/>
+<area shape="rect" id="node6" href="$class_member.html#a1980eb36b2c39b3d3adbf030e2dc6316" title="Member\\get_trads_fields" alt="" coords="622,92,786,119"/>
+</map>

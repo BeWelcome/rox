@@ -1,0 +1,6 @@
+<map id="hasRight" name="hasRight">
+<area shape="rect" id="node2" href="$class_m_o_d__user___auth.html#a9612c91502351e1367c8c2761be16090" title="checkRight" alt="" coords="129,31,215,57"/>
+<area shape="rect" id="node3" href="$class_m_o_d__user___auth.html#a633609eb11b9030b5430ca5e510fed0c" title="rightExists" alt="" coords="265,5,349,32"/>
+<area shape="rect" id="node4" href="$class_m_o_d__user___auth.html#aba88df3d5d97886b3b3168c7b83b7d5b" title="addApp" alt="" coords="273,56,340,83"/>
+<area shape="rect" id="node5" href="$class_m_o_d__user___auth.html#af140eb3166b405fe18eb331e204a3236" title="appExists" alt="" coords="397,56,477,83"/>
+</map>

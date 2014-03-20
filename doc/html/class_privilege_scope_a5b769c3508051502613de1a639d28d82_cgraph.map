@@ -1,0 +1,11 @@
+<map id="PrivilegeScope\getMemberWithRoleObjectAccess" name="PrivilegeScope\getMemberWithRoleObjectAccess">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#a9e6add9e847be7034926561bb9efe853" title="RoxEntityBase\\findByWhere" alt="" coords="229,31,416,57"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#ab323bb7926fa55e45d9a24554637a0bb" title="RoxEntityBase\\getTableName" alt="" coords="466,5,662,32"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#ab4033ed31068ef82233d5cf6b7c995be" title="RoxEntityBase\\queryForEntity" alt="" coords="465,56,663,83"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#a0630eb83ddfc04e35598e97393672c80" title="RoxEntityBase\\loadEntity" alt="" coords="712,56,883,83"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a7d528d3b8d4736f35bcf5ba84cd6148d" title="RoxEntityBase\\getColumns" alt="" coords="1161,56,1343,83"/>
+<area shape="rect" id="node8" href="$class_rox_entity_base.html#a75e7ea82100dc21035a2072a64b311fc" title="RoxEntityBase\\isPKSet" alt="" coords="937,107,1098,133"/>
+<area shape="rect" id="node10" href="$class_rox_entity_base.html#ac0032c3707c30a8d6102279692b0927d" title="RoxEntityBase\\wipeEntity" alt="" coords="931,56,1104,83"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#a1aebc6bd22a3b454fc8c8c696ceb29ea" title="RoxEntityBase\\getTableDescription" alt="" coords="1400,81,1627,108"/>
+<area shape="rect" id="node9" href="$class_rox_entity_base.html#a8170e7217bec3edbeacbe62615567aa4" title="RoxEntityBase\\getPrimaryKey" alt="" coords="1153,107,1351,133"/>
+</map>

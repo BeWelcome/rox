@@ -1,0 +1,37 @@
+<map id="RoxEntityBase" name="RoxEntityBase">
+<area shape="rect" id="node4" href="$class_activity.html" title="Activity" alt="" coords="547,5,611,32"/>
+<area shape="rect" id="node5" href="$class_address.html" title="Address" alt="" coords="543,56,614,83"/>
+<area shape="rect" id="node6" href="$class_blog_entity.html" title="BlogEntity" alt="" coords="537,107,620,133"/>
+<area shape="rect" id="node7" href="$class_comment.html" title="Comment" alt="" coords="539,157,618,184"/>
+<area shape="rect" id="node8" href="$class_feedback.html" title="Feedback" alt="" coords="539,208,618,235"/>
+<area shape="rect" id="node9" href="$class_gallery.html" title="Gallery" alt="" coords="547,259,610,285"/>
+<area shape="rect" id="node10" href="$class_gallery_comment.html" title="GalleryComment" alt="" coords="519,309,638,336"/>
+<area shape="rect" id="node11" href="$class_gallery_item.html" title="GalleryItem" alt="" coords="535,360,623,387"/>
+<area shape="rect" id="node12" href="$class_geo.html" title="Geo" alt="" coords="555,411,602,437"/>
+<area shape="rect" id="node13" href="$class_geo_alternate_name.html" title="GeoAlternateName" alt="" coords="513,461,645,488"/>
+<area shape="rect" id="node14" href="$class_geo_hierarchy.html" title="GeoHierarchy" alt="" coords="528,512,629,539"/>
+<area shape="rect" id="node15" href="$class_geo_type.html" title="GeoType" alt="" coords="541,563,616,589"/>
+<area shape="rect" id="node16" href="$class_geo_use.html" title="GeoUse" alt="" coords="544,613,613,640"/>
+<area shape="rect" id="node17" href="$class_group.html" title="Group" alt="" coords="550,664,607,691"/>
+<area shape="rect" id="node18" href="$class_group_membership.html" title="GroupMembership" alt="" coords="515,715,643,741"/>
+<area shape="rect" id="node19" href="$class_language.html" title="Language" alt="" coords="539,765,618,792"/>
+<area shape="rect" id="node20" href="$class_member.html" title="Member" alt="" coords="544,816,613,843"/>
+<area shape="rect" id="node21" href="$class_member_language.html" title="MemberLanguage" alt="" coords="516,867,641,893"/>
+<area shape="rect" id="node22" href="$class_member_role.html" title="MemberRole" alt="" coords="531,917,626,944"/>
+<area shape="rect" id="node23" href="$class_message.html" title="Message" alt="" coords="541,968,616,995"/>
+<area shape="rect" id="node24" href="$class_note.html" title="Note" alt="" coords="554,1019,603,1045"/>
+<area shape="rect" id="node25" href="$class_post.html" title="Post" alt="" coords="554,1069,603,1096"/>
+<area shape="rect" id="node26" href="$class_privilege.html" title="Privilege" alt="" coords="543,1120,614,1147"/>
+<area shape="rect" id="node27" href="$class_privilege_scope.html" title="PrivilegeScope" alt="" coords="525,1171,632,1197"/>
+<area shape="rect" id="node28" href="$class_profile_note.html" title="ProfileNote" alt="" coords="536,1221,621,1248"/>
+<area shape="rect" id="node29" href="$class_profile_visit.html" title="ProfileVisit" alt="" coords="537,1272,621,1299"/>
+<area shape="rect" id="node30" href="$class_related_group.html" title="RelatedGroup" alt="" coords="528,1323,629,1349"/>
+<area shape="rect" id="node31" href="$class_role.html" title="Role" alt="" coords="555,1373,603,1400"/>
+<area shape="rect" id="node32" href="$class_role_privilege.html" title="RolePrivilege" alt="" coords="531,1424,627,1451"/>
+<area shape="rect" id="node33" href="$class_suggestion.html" title="Suggestion" alt="" coords="535,1475,622,1501"/>
+<area shape="rect" id="node34" href="$class_suggestion_option.html" title="SuggestionOption" alt="" coords="516,1525,641,1552"/>
+<area shape="rect" id="node35" href="$class_thread.html" title="Thread" alt="" coords="548,1576,609,1603"/>
+<area shape="rect" id="node36" href="$class_volunteer_board.html" title="VolunteerBoard" alt="" coords="523,1627,634,1653"/>
+<area shape="rect" id="node2" href="$class_rox_model_base.html" title="RoxModelBase" alt="" coords="195,816,306,843"/>
+<area shape="rect" id="node3" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,816,147,843"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="get_type" name="get_type">
+<area shape="rect" id="node2" href="$class_simple_pie___content___type___sniffer.html#a35ef4e3840e06610adb246c5d896ac58" title="text_or_binary" alt="" coords="269,5,373,32"/>
+<area shape="rect" id="node3" href="$class_simple_pie___content___type___sniffer.html#ae8724d1ff593f02e95c09abcf4917e08" title="unknown" alt="" coords="137,31,210,57"/>
+<area shape="rect" id="node4" href="$class_simple_pie___content___type___sniffer.html#ab4f40c94d3427e415d291c68d3e67cfa" title="image" alt="" coords="145,81,202,108"/>
+<area shape="rect" id="node5" href="$class_simple_pie___content___type___sniffer.html#a5042475e93a5433f0e2cf8c053bb3567" title="feed_or_html" alt="" coords="125,132,221,159"/>
+</map>

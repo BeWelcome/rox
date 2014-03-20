@@ -1,0 +1,6 @@
+<map id="ItemlistWidget\hideColumnTitles" name="ItemlistWidget\hideColumnTitles">
+<area shape="rect" id="node2" href="$class_itemlist_widget.html#aa4048f0a52074f5d2a053ffb3e7b3b20" title="ItemlistWidget\\showItems\l_float" alt="" coords="232,5,403,46"/>
+<area shape="rect" id="node3" href="$class_itemlist_widget.html#a3922870e61c7c835439487352fbbeb31" title="ItemlistWidget\\showItems\l_table" alt="" coords="232,70,403,111"/>
+<area shape="rect" id="node4" href="$class_itemlist_widget.html#a7a902737334f82eb4ef9f4bf88fe7edc" title="ItemlistWidget\\showItems" alt="" coords="451,77,621,104"/>
+<area shape="rect" id="node5" href="$class_itemlist_widget.html#a5fc5b3e9572c71f736db0bf42bc8563b" title="ItemlistWidget\\render" alt="" coords="670,77,815,104"/>
+</map>

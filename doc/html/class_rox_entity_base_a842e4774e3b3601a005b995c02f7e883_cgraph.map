@@ -1,0 +1,9 @@
+<map id="update" name="update">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="getPrimaryKey" alt="" coords="318,59,426,86"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#a6287262cb9628d7a89d8fc16dcb51177" title="getColumns" alt="" coords="327,135,417,162"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#a4fea73e12c9f974d5e00573ccf744e61" title="isPKSet" alt="" coords="157,34,227,60"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a579e261647d85c72a8f252931b4b3c42" title="validateSelf" alt="" coords="149,186,235,212"/>
+<area shape="rect" id="node8" href="$class_rox_entity_base.html#aacc98f1f38c58fc25a4ff77eb56baab1" title="preparePKWhereString" alt="" coords="115,84,269,111"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="getTableDescription" alt="" coords="475,135,611,162"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#a1b73692f359aec5e87d6fcc1b47f20ff" title="validateField" alt="" coords="325,236,419,263"/>
+</map>

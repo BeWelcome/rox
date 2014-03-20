@@ -1,0 +1,6 @@
+<map id="MembersModel\set_public_profile" name="MembersModel\set_public_profile">
+<area shape="rect" id="node2" href="$class_rox_component_base.html#a2204c3415eb543b4a40f27de2a1ea265" title="RoxComponentBase\\logWrite" alt="" coords="230,5,423,32"/>
+<area shape="rect" id="node5" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="231,56,422,83"/>
+<area shape="rect" id="node3" href="$class_rox_component_base.html#a41835e2ea2fd3b14ba0d5aa963b8fb38" title="RoxComponentBase\\getLog" alt="" coords="472,5,656,32"/>
+<area shape="rect" id="node4" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="704,5,803,32"/>
+</map>

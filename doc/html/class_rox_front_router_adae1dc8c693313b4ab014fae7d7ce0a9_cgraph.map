@@ -1,0 +1,16 @@
+<map id="RoxFrontRouter\route" name="RoxFrontRouter\route">
+<area shape="rect" id="node2" href="$class_rox_front_router.html#a7793200515ca5900276b8e6c886a8397" title="RoxFrontRouter\\initUser" alt="" coords="210,56,371,83"/>
+<area shape="rect" id="node6" href="$class_rox_front_router.html#ab3d3ebb0f1edd7b74fdfdf9ccb266f18" title="RoxFrontRouter\\route_ajax" alt="" coords="202,116,379,143"/>
+<area shape="rect" id="node9" href="$class_rox_front_router.html#a25ddd65b368b63c726412d3cb5cf3a51" title="RoxFrontRouter\\route\l_normal" alt="" coords="217,170,364,211"/>
+<area shape="rect" id="node15" href="$class_rox_front_router.html#aa078ff88196072a720f065b5fcfdfe47" title="RoxFrontRouter\\setBaseUri" alt="" coords="200,236,381,263"/>
+<area shape="rect" id="node3" href="$class_m_o_d__online.html#a168483f9624f76e81bfa7ede586f682f" title="MOD_online\\get" alt="" coords="468,5,583,32"/>
+<area shape="rect" id="node4" href="$class_rox_front_router.html#a46979ec99664329f90ce4bd4126ff79d" title="RoxFrontRouter\\setLanguage" alt="" coords="430,56,621,83"/>
+<area shape="rect" id="node5" href="$class_rox_front_router.html#ac29488a3753caa163d6d64a8a9b2fbd8" title="RoxFrontRouter\\setLanguage\lByBrowser" alt="" coords="670,49,861,90"/>
+<area shape="rect" id="node7" href="$class_rox_front_router.html#a04351e40e1d44ddbd6f72ca1036679b5" title="RoxFrontRouter\\runController\lAjaxMethod" alt="" coords="430,107,621,149"/>
+<area shape="rect" id="node8" href="$json__encode_8php.html#a0c561e7f4d2f5d58197136a88f8d20d7" title="json_encode" alt="" coords="718,115,813,141"/>
+<area shape="rect" id="node10" href="$class_rox_front_router.html#a9fa77b7602cf7ff490314b0f018ae044" title="RoxFrontRouter\\traditional\lPostHandling" alt="" coords="439,173,612,214"/>
+<area shape="rect" id="node12" href="$class_rox_front_router.html#a12ae8a994589b79fd7cc24054fc5da74" title="RoxFrontRouter\\runController\lMethod" alt="" coords="430,238,621,279"/>
+<area shape="rect" id="node11" href="$class_rox_front_router.html#a055b6f78f4cb89a253d2b9ee3168b90e" title="RoxFrontRouter\\try\l_unserialize" alt="" coords="699,173,831,214"/>
+<area shape="rect" id="node13" href="$class_rox_front_router.html#a2d092ed46de889011ccd223357ab9156" title="RoxFrontRouter\\renderPage" alt="" coords="674,245,857,272"/>
+<area shape="rect" id="node14" href="$class_rox_front_router.html#a66ef8b762874aa29ff7b3b601ebc5344" title="RoxFrontRouter\\createLayoutkit" alt="" coords="910,245,1117,272"/>
+</map>

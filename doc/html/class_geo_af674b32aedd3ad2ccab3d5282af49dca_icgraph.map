@@ -1,0 +1,6 @@
+<map id="placeType" name="placeType">
+<area shape="rect" id="node2" href="$class_geo.html#a702c7bcb55635f6d0bf8d2ada9c2720d" title="isCity" alt="" coords="149,5,203,32"/>
+<area shape="rect" id="node3" href="$class_geo.html#a190c1553dc0390c8fe45f334a4b57e9d" title="isBorough" alt="" coords="136,56,216,83"/>
+<area shape="rect" id="node4" href="$class_geo.html#af074b98e9e5027e3a6f777d72ced19a6" title="isRegion" alt="" coords="140,107,212,133"/>
+<area shape="rect" id="node5" href="$class_geo.html#a0e6838cb3f084adb10b3282d7c620fa4" title="isCountry" alt="" coords="137,157,215,184"/>
+</map>

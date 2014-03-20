@@ -1,0 +1,10 @@
+<map id="MembersModel\addComment" name="MembersModel\addComment">
+<area shape="rect" id="node2" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="840,96,1024,123"/>
+<area shape="rect" id="node3" href="$class_members_model.html#a3532f2c13155c91cce06c3253fc34b10" title="MembersModel\\getMemberWithId" alt="" coords="574,121,791,148"/>
+<area shape="rect" id="node4" href="$class_rox_component_base.html#a2204c3415eb543b4a40f27de2a1ea265" title="RoxComponentBase\\logWrite" alt="" coords="289,239,482,265"/>
+<area shape="rect" id="node7" href="$class_members_model.html#ab3996a24af635e659ba9d26b5871859e" title="MembersModel\\sendComment\lNotification" alt="" coords="286,173,485,214"/>
+<area shape="rect" id="node8" href="$class_members_model.html#a05728ff79231d0d6bf01180ddaa7c7ea" title="MembersModel\\setCommentGuidelinesRead" alt="" coords="245,16,525,43"/>
+<area shape="rect" id="node5" href="$class_rox_component_base.html#a41835e2ea2fd3b14ba0d5aa963b8fb38" title="RoxComponentBase\\getLog" alt="" coords="591,239,775,265"/>
+<area shape="rect" id="node6" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="883,239,981,265"/>
+<area shape="rect" id="node9" href="$class_rox_model_base.html#a9857a4097be598f85aef9ea231910c42" title="RoxModelBase\\getLoggedIn\lMember" alt="" coords="591,5,775,46"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="Snoopy\fetch" name="Snoopy\fetch">
+<area shape="rect" id="node2" href="$class_snoopy.html#aa7e938f6120eaf76bed21e3964c8d1ef" title="Snoopy\\_connect" alt="" coords="165,5,288,32"/>
+<area shape="rect" id="node3" href="$class_snoopy.html#a7d39123331dd6a00b0051a520941a291" title="Snoopy\\_disconnect" alt="" coords="157,56,297,83"/>
+<area shape="rect" id="node4" href="$class_snoopy.html#a60f5684f700c762b995b7ea7b65cd13d" title="Snoopy\\_httprequest" alt="" coords="155,107,298,133"/>
+<area shape="rect" id="node7" href="$jquery-1_88_82_8min_8js.html#a387d484f9833c70b563afe4ffe3a1165" title="each" alt="" coords="405,208,456,235"/>
+<area shape="rect" id="node9" href="$class_snoopy.html#a5e99eb406d33c28bf914859b63ecf722" title="Snoopy\\_httpsrequest" alt="" coords="152,157,301,184"/>
+<area shape="rect" id="node5" href="$class_snoopy.html#abe83e80a5a319892cca1dd76ca766fbe" title="Snoopy\\_check_timeout" alt="" coords="349,56,512,83"/>
+<area shape="rect" id="node6" href="$class_snoopy.html#af3d4a89a80f1b4117da79279ad151ad3" title="Snoopy\\_expandlinks" alt="" coords="357,107,504,133"/>
+<area shape="rect" id="node8" href="$class_snoopy.html#a5861ea034b5b774de90cbc520db07488" title="Snoopy\\setcookies" alt="" coords="364,157,497,184"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="SuggestionsController\getPager" name="SuggestionsController\getPager">
+<area shape="rect" id="node2" href="$class_suggestions_controller.html#a08aab0af852a36a8a842687bb621d874" title="SuggestionsController\l\\addOptionsList" alt="" coords="203,5,352,46"/>
+<area shape="rect" id="node3" href="$class_suggestions_controller.html#a4784c97d9e489f259d5d5e67aded0547" title="SuggestionsController\l\\approveList" alt="" coords="203,70,352,111"/>
+<area shape="rect" id="node4" href="$class_suggestions_controller.html#aedd4af35da85bd0877eff6ca3db96e97" title="SuggestionsController\l\\devList" alt="" coords="203,135,352,177"/>
+<area shape="rect" id="node5" href="$class_suggestions_controller.html#ad6df42d278430cf47b2c9c5da6ab7168" title="SuggestionsController\l\\discussList" alt="" coords="203,201,352,242"/>
+<area shape="rect" id="node6" href="$class_suggestions_controller.html#ad99f576bd77323e660e993e49da41ebb" title="SuggestionsController\l\\rankList" alt="" coords="203,266,352,307"/>
+<area shape="rect" id="node7" href="$class_suggestions_controller.html#a47eeeb27f20ccbd9d66bee1c82ea7f41" title="SuggestionsController\l\\rejectedList" alt="" coords="203,331,352,373"/>
+<area shape="rect" id="node8" href="$class_suggestions_controller.html#a30f43d3371b4781f47ecb6d1e0361189" title="SuggestionsController\l\\resultsList" alt="" coords="203,397,352,438"/>
+<area shape="rect" id="node9" href="$class_suggestions_controller.html#a3ef83c93e4cf319bdc94e448fe4f6726" title="SuggestionsController\l\\voteList" alt="" coords="203,462,352,503"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="ItemlistWidget\getItems" name="ItemlistWidget\getItems">
+<area shape="rect" id="node2" href="$class_itemlist_widget.html#aa4048f0a52074f5d2a053ffb3e7b3b20" title="ItemlistWidget\\showItems\l_float" alt="" coords="225,5,396,46"/>
+<area shape="rect" id="node3" href="$class_itemlist_widget.html#ae4a7206ad52a9643bceafbe269c407c3" title="ItemlistWidget\\showItems_list" alt="" coords="213,71,408,97"/>
+<area shape="rect" id="node5" href="$class_itemlist_widget.html#a3922870e61c7c835439487352fbbeb31" title="ItemlistWidget\\showItems\l_table" alt="" coords="225,122,396,163"/>
+<area shape="rect" id="node4" href="$class_mailbox_widget___personalstart.html#aeadbccd964aa5e6f519c603a4f955880" title="MailboxWidget_Personalstart\l\\showItems" alt="" coords="456,63,648,105"/>
+<area shape="rect" id="node6" href="$class_itemlist_widget.html#a7a902737334f82eb4ef9f4bf88fe7edc" title="ItemlistWidget\\showItems" alt="" coords="467,129,637,156"/>
+<area shape="rect" id="node7" href="$class_itemlist_widget.html#a5fc5b3e9572c71f736db0bf42bc8563b" title="ItemlistWidget\\render" alt="" coords="697,129,842,156"/>
+</map>

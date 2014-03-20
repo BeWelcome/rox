@@ -1,0 +1,8 @@
+<map id="RolePrivilege\createRolePrivilegeLink" name="RolePrivilege\createRolePrivilegeLink">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#abb4c75c351264d92968fcff5ed0bbb28" title="RoxEntityBase\\insert" alt="" coords="226,81,371,108"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#a80e77c5933530af9918ca8389c4c6f38" title="RoxEntityBase\\isLoaded" alt="" coords="216,132,381,159"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a8170e7217bec3edbeacbe62615567aa4" title="RoxEntityBase\\getPrimaryKey" alt="" coords="430,5,629,32"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#a1aebc6bd22a3b454fc8c8c696ceb29ea" title="RoxEntityBase\\getTableDescription" alt="" coords="677,56,904,83"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#a7d528d3b8d4736f35bcf5ba84cd6148d" title="RoxEntityBase\\getColumns" alt="" coords="438,107,621,133"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#ad78c347a220114cdc38f5b3005c28e30" title="RoxEntityBase\\validateField" alt="" coords="437,157,621,184"/>
+</map>

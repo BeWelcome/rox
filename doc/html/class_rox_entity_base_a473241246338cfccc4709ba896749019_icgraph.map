@@ -1,0 +1,10 @@
+<map id="insert" name="insert">
+<area shape="rect" id="node2" href="$class_group.html#ab77af692caa7a45bb934d900bf7dbc1f" title="Group\\createGroup" alt="" coords="159,5,291,32"/>
+<area shape="rect" id="node3" href="$class_group_membership.html#ac5b5484c13456ba6a0bbbc28b06b3ad2" title="GroupMembership\\memberJoin" alt="" coords="124,56,327,83"/>
+<area shape="rect" id="node4" href="$class_member_language.html#a9f69a2c205f0dba2c253024ce977b4d2" title="MemberLanguage\\setSpoken\lLanguage" alt="" coords="130,107,321,149"/>
+<area shape="rect" id="node5" href="$class_note.html#ad18788eb68e5724328eb2307df64cc55" title="Note\\createNote" alt="" coords="167,173,283,200"/>
+<area shape="rect" id="node6" href="$class_related_group.html#aa1e966190e48518d3e76669d5de8ea68" title="RelatedGroup\\AddRelatedGroup" alt="" coords="122,224,329,251"/>
+<area shape="rect" id="node7" href="$class_member_role.html#af0b13ff9bce4bf7fad47510ede4bd0e5" title="MemberRole\\createMemberRoleLink" alt="" coords="109,275,341,301"/>
+<area shape="rect" id="node8" href="$class_privilege_scope.html#a81ca30395cbfbd67bb7d1896811c9c82" title="PrivilegeScope\\createScope" alt="" coords="133,325,317,352"/>
+<area shape="rect" id="node9" href="$class_role_privilege.html#ad67ce954ea8586ec604ee8421d805b18" title="RolePrivilege\\createRole\lPrivilegeLink" alt="" coords="144,377,307,418"/>
+</map>

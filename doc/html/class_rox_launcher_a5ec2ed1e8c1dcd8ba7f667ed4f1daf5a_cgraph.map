@@ -1,0 +1,16 @@
+<map id="RoxLauncher\initBW" name="RoxLauncher\initBW">
+<area shape="rect" id="node2" href="$class_rox_launcher.html#a126f906fbb02ab48d97d59894e5a2883" title="RoxLauncher\\initializeGlobal\lState" alt="" coords="195,365,381,406"/>
+<area shape="rect" id="node3" href="$class_environment_explorer.html#a864e91b3955bb8e21fb5cc8ea489e8c7" title="EnvironmentExplorer\l\\initializeGlobalState" alt="" coords="429,365,571,406"/>
+<area shape="rect" id="node4" href="$class_environment_explorer.html#a0c4d7b27f26e1c7ffc3fdb3e77432607" title="EnvironmentExplorer\l\\checkEnvironment" alt="" coords="637,5,779,46"/>
+<area shape="rect" id="node5" href="$class_environment_explorer.html#a1aca7a61931eba5b3a920bfb5fd023ba" title="EnvironmentExplorer\l\\initSession" alt="" coords="637,70,779,111"/>
+<area shape="rect" id="node6" href="$class_environment_explorer.html#acdd32d4bfa6887db148e69d951c411ef" title="EnvironmentExplorer\l\\loadBaseXML" alt="" coords="637,135,779,177"/>
+<area shape="rect" id="node7" href="$class_environment_explorer.html#a4aee8a8db7c5c86d9a821a64693dbf92" title="EnvironmentExplorer\l\\loadConfiguration" alt="" coords="637,201,779,242"/>
+<area shape="rect" id="node8" href="$class_environment_explorer.html#a908b8cf0fbb5350b5cf17d29c909d629" title="EnvironmentExplorer\l\\loadDefaults" alt="" coords="637,266,779,307"/>
+<area shape="rect" id="node9" href="$class_environment_explorer.html#ab2c19c8b114f44d66480a81677760127" title="EnvironmentExplorer\l\\loadPApps" alt="" coords="637,331,779,373"/>
+<area shape="rect" id="node10" href="$class_environment_explorer.html#a27205f9c10c899d1c561070d39ec241e" title="EnvironmentExplorer\l\\loadPModules" alt="" coords="637,397,779,438"/>
+<area shape="rect" id="node11" href="$class_environment_explorer.html#aaed56eb793201ac59af33a110e2bbe70" title="EnvironmentExplorer\l\\loadPTClasses" alt="" coords="637,462,779,503"/>
+<area shape="rect" id="node12" href="$class_environment_explorer.html#af9fa666f3c399dd82ba3ab15a5b9bf67" title="EnvironmentExplorer\l\\loadRoxClasses" alt="" coords="637,527,779,569"/>
+<area shape="rect" id="node13" href="$class_classes.html#a3cf7aeea9fe6cdb2618821b7caf2431b" title="Classes\\set" alt="" coords="663,593,753,620"/>
+<area shape="rect" id="node14" href="$class_autoload_plug.html#a17fb14004e54804b6c785da7feac64c9" title="AutoloadPlug\\setCallback" alt="" coords="623,644,793,671"/>
+<area shape="rect" id="node15" href="$class_environment_explorer.html#a4663d6aaa12e8ba4b8590a6e72f34f08" title="EnvironmentExplorer\l\\simulateMissingFunctions" alt="" coords="619,695,797,737"/>
+</map>

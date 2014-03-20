@@ -1,0 +1,8 @@
+<map id="PollsModel\LoadList" name="PollsModel\LoadList">
+<area shape="rect" id="node2" href="$class_polls_model.html#a96cf9b6611ca5b1f06837b840f1e0228" title="PollsModel\\CanUserContribute" alt="" coords="193,56,391,83"/>
+<area shape="rect" id="node4" href="$class_polls_model.html#a363bd569e962bb588cb82be37923275d" title="PollsModel\\HasAlreadyContributed" alt="" coords="441,107,663,133"/>
+<area shape="rect" id="node5" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="713,132,903,159"/>
+<area shape="rect" id="node6" href="$class_m_o_d__right.html#a24a03652c737eac68aa6960ba5eb4425" title="MOD_right\\get" alt="" coords="239,208,345,235"/>
+<area shape="rect" id="node7" href="$class_polls_model.html#a18e360878dbc3f8c70f155dbf19e000b" title="PollsModel\\IsMemberAllowed" alt="" coords="456,233,648,260"/>
+<area shape="rect" id="node3" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="503,5,601,32"/>
+</map>

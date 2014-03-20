@@ -1,0 +1,30 @@
+<map id="queryForEntities" name="queryForEntities">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#afff4f3fb46af6a21d296062c42c2c9f5" title="findByWhereMany" alt="" coords="171,521,299,548"/>
+<area shape="rect" id="node26" href="$class_rox_entity_base.html#ad3dea9437766859053a5c8af2f69a1b9" title="findBySQLMany" alt="" coords="177,1120,293,1147"/>
+<area shape="rect" id="node29" href="$class_rox_entity_base.html#ad57905fc15b97d7bffeee81d627f9039" title="findAll" alt="" coords="206,81,263,108"/>
+<area shape="rect" id="node3" href="$class_geo.html#a8650a4f6150ed357d88fa043f1685ac5" title="Geo\\getChildren" alt="" coords="405,1011,520,1037"/>
+<area shape="rect" id="node4" href="$class_geo.html#aba7e535e07631c20911bcad2e3ef3444" title="Geo\\getAllParents" alt="" coords="399,1061,527,1088"/>
+<area shape="rect" id="node5" href="$class_geo.html#ac798e2e83527ad3ac2988e0f2ce7181c" title="Geo\\findLocationsByName" alt="" coords="375,157,551,184"/>
+<area shape="rect" id="node6" href="$class_geo.html#a159d431f02837b01d2adbebda3bec907" title="Geo\\findLocationsByCoordinates" alt="" coords="357,208,568,235"/>
+<area shape="rect" id="node7" href="$class_geo_use.html#a524a58dde4f9c826a9d428c7362ed21a" title="GeoUse\\getUsageForGeoByType" alt="" coords="355,259,570,285"/>
+<area shape="rect" id="node9" href="$class_group.html#af40e81115fd026308a84517dd688c1c6" title="Group\\findBySearchTerms" alt="" coords="375,5,550,32"/>
+<area shape="rect" id="node10" href="$class_group.html#aadfe6f2a546a52b37c9dfa7d2226931d" title="Group\\findRelatedGroups" alt="" coords="379,309,546,336"/>
+<area shape="rect" id="node12" href="$class_group_membership.html#ae816b19fdb95dd9944ba4471059cf50a" title="GroupMembership\\getGroup\lMembers" alt="" coords="370,361,555,402"/>
+<area shape="rect" id="node14" href="$class_group_membership.html#aa4785b8a38dfaeb15fb60039f42dc200" title="GroupMembership\\getMember\lGroups" alt="" coords="364,426,561,467"/>
+<area shape="rect" id="node15" href="$class_profile_note.html#a8502a3e565dbaece76d99dc5953798ea" title="ProfileNote\\getNotes" alt="" coords="392,492,533,519"/>
+<area shape="rect" id="node16" href="$class_profile_visit.html#a80e13b14da5f55f4c82efdfa1f048321" title="ProfileVisit\\getVisitsFor\lMember" alt="" coords="383,543,542,585"/>
+<area shape="rect" id="node17" href="$class_message.html#afd5aea8af296620760c6f1e85b3495d1" title="Message\\findBySearchTerms" alt="" coords="367,56,559,83"/>
+<area shape="rect" id="node18" href="$class_note.html#afd5aea8af296620760c6f1e85b3495d1" title="Note\\findBySearchTerms" alt="" coords="379,107,546,133"/>
+<area shape="rect" id="node19" href="$class_related_group.html#a8a3ba334a16e83c3f963179fb769eae2" title="RelatedGroup\\getRelatedGroupsLog" alt="" coords="347,609,578,636"/>
+<area shape="rect" id="node20" href="$class_member_role.html#a0f3285ed91cf4310999ad973c5355942" title="MemberRole\\getRoleMembers" alt="" coords="364,660,561,687"/>
+<area shape="rect" id="node21" href="$class_member_role.html#ac4bb0f2a9aad38a6a6095b80fe1da002" title="MemberRole\\getMemberRoles" alt="" coords="364,711,561,737"/>
+<area shape="rect" id="node22" href="$class_privilege_scope.html#a4e56edf392067b637b21002a234347c1" title="PrivilegeScope\\checkForEquivalent\lScope" alt="" coords="351,762,575,803"/>
+<area shape="rect" id="node23" href="$class_privilege_scope.html#a0556792ca1a181d8de453bd52143dcf6" title="PrivilegeScope\\getMembers\lWithRoleObjectAccess" alt="" coords="371,827,554,869"/>
+<area shape="rect" id="node24" href="$class_role_privilege.html#a692b1b630bb993903f90b02e0ba1f190" title="RolePrivilege\\getRolePrivileges" alt="" coords="363,893,562,920"/>
+<area shape="rect" id="node25" href="$class_role_privilege.html#aa053558459349fe22e860d1fffe2c403" title="RolePrivilege\\getPrivilege\lRoles" alt="" coords="379,945,546,986"/>
+<area shape="rect" id="node8" href="$class_geo_use.html#a65592f5c03cb43e92772e087c7aa36b1" title="GeoUse\\getAllUsageForGeo" alt="" coords="639,251,825,277"/>
+<area shape="rect" id="node11" href="$class_related_groups_model.html#a1b202485e6389a8405d4b7ac53866d43" title="RelatedGroupsModel\l\\getMyGroups" alt="" coords="661,302,803,343"/>
+<area shape="rect" id="node13" href="$class_group_membership.html#ace5ad47169d1846a849ac7a7a241389e" title="GroupMembership\\getNewGroup\lMembers" alt="" coords="627,367,837,409"/>
+<area shape="rect" id="node27" href="$class_activity.html#ad0dc93865ff1c2b8b020bdc441265aae" title="Activity\\getActivitiesFor\lMember" alt="" coords="384,1113,541,1154"/>
+<area shape="rect" id="node28" href="$class_activity.html#a65df0c740b0cc19d0681386383730006" title="Activity\\searchActivities" alt="" coords="383,1179,542,1205"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="LoadList" name="LoadList">
+<area shape="rect" id="node2" href="$class_polls_model.html#a90f963bb32304dfe6a9959144205b13c" title="IsMemberAllowed" alt="" coords="129,5,253,32"/>
+<area shape="rect" id="node3" href="$class_m_o_d__right.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_right\\get" alt="" coords="137,56,244,83"/>
+<area shape="rect" id="node4" href="$class_polls_model.html#a3fda8157e7f8b34967af5a8f8648825c" title="HasAlreadyContributed" alt="" coords="304,107,459,133"/>
+<area shape="rect" id="node5" href="$class_polls_model.html#a84f615528b3956b02d56ff848afb60b4" title="CanUserContribute" alt="" coords="125,157,256,184"/>
+<area shape="rect" id="node6" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="332,157,431,184"/>
+</map>

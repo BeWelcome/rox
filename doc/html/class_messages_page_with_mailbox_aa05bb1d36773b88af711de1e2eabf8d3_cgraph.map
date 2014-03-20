@@ -1,0 +1,6 @@
+<map id="MessagesPageWithMailbox\column_col3" name="MessagesPageWithMailbox\column_col3">
+<area shape="rect" id="node2" href="$class_messages_page_with_mailbox.html#a56e487cc07530acf5d8d6d545b64ee6f" title="MessagesPageWithMailbox\l\\getMailboxWidget" alt="" coords="237,5,421,46"/>
+<area shape="rect" id="node3" href="$class_abstract_base_page.html#a25df119c6d8f6a1bba6bdf804530865e" title="AbstractBasePage\\getModel" alt="" coords="477,41,665,68"/>
+<area shape="rect" id="node4" href="$class_messages_page_with_mailbox.html#a0306128cccb59852211f958722e547f7" title="MessagesPageWithMailbox\l\\messageActions" alt="" coords="237,122,421,163"/>
+<area shape="rect" id="node5" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="470,129,671,156"/>
+</map>

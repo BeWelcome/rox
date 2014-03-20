@@ -1,0 +1,10 @@
+<map id="getMyGroups" name="getMyGroups">
+<area shape="rect" id="node2" href="$class_related_groups_model.html#a42f3aa0ac922f16ac6062dea1154e952" title="getGroupsForMember" alt="" coords="422,5,570,32"/>
+<area shape="rect" id="node4" href="$class_group.html#aadfe6f2a546a52b37c9dfa7d2226931d" title="Group\\findRelatedGroups" alt="" coords="163,56,330,83"/>
+<area shape="rect" id="node9" href="$class_rox_entity_base.html#aa1def550942dd330be4ed6bf784344f7" title="RoxEntityBase\\getPKValue" alt="" coords="155,107,338,133"/>
+<area shape="rect" id="node3" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="1139,44,1323,71"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#afff4f3fb46af6a21d296062c42c2c9f5" title="RoxEntityBase\\findByWhereMany" alt="" coords="387,56,605,83"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a93566f2c8d709d410ae8ec46b813999b" title="RoxEntityBase\\getTableName" alt="" coords="659,56,855,83"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#a4583df34edb9afa955044027de7d57d3" title="RoxEntityBase\\queryForEntities" alt="" coords="653,107,861,133"/>
+<area shape="rect" id="node8" href="$class_rox_entity_base.html#a540d3feaa287dff42642c68bc7b57206" title="RoxEntityBase\\loadEntities" alt="" coords="909,81,1091,108"/>
+</map>

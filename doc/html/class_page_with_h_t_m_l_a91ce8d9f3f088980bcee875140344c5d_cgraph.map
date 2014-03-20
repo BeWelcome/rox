@@ -1,0 +1,9 @@
+<map id="PageWithHTML\head" name="PageWithHTML\head">
+<area shape="rect" id="node2" href="$class_page_with_h_t_m_l.html#a541e8801777f387b1e8b6bbed03d1920" title="PageWithHTML\\getPageTitle" alt="" coords="219,5,408,32"/>
+<area shape="rect" id="node3" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="213,56,414,83"/>
+<area shape="rect" id="node4" href="$class_page_with_h_t_m_l.html#aea9db451217a408c48ea4e63f99c44b0" title="PageWithHTML\\includeCustom\lElements" alt="" coords="212,107,415,149"/>
+<area shape="rect" id="node6" href="$class_page_with_h_t_m_l.html#a41cb41f09c907ff66f5c22cc7eb08377" title="PageWithHTML\\includeStylesheets" alt="" coords="200,173,427,200"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html#aff07c4e2cb55d62345e5036b3c6aa115" title="PageWithHTML\\getCustomElements" alt="" coords="475,115,709,141"/>
+<area shape="rect" id="node7" href="$class_page_with_h_t_m_l.html#a98a19ece29b4d74e681004ba2e548cab" title="PageWithHTML\\getStylesheets" alt="" coords="490,169,694,196"/>
+<area shape="rect" id="node8" href="$class_page_with_h_t_m_l.html#adf1bdcc77fb035627b25c4d4117eef85" title="PageWithHTML\\getStylesheet\lPatches" alt="" coords="493,221,691,262"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="RolePrivilege\getPrivilegeRoles" name="RolePrivilege\getPrivilegeRoles">
+<area shape="rect" id="node2" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="973,25,1157,52"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a53f4c1eb56c2bec477db683048d92705" title="RoxEntityBase\\findByWhereMany" alt="" coords="221,37,440,64"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#ab323bb7926fa55e45d9a24554637a0bb" title="RoxEntityBase\\getTableName" alt="" coords="494,37,690,64"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#a6aeb649cf94583fd93a2173cd9d6d000" title="RoxEntityBase\\queryForEntities" alt="" coords="488,88,696,115"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a21c6b3bca8467772d4356378a084bde1" title="RoxEntityBase\\loadEntities" alt="" coords="744,63,925,89"/>
+</map>

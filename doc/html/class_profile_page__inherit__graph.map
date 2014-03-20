@@ -1,0 +1,28 @@
+<map id="ProfilePage" name="ProfilePage">
+<area shape="rect" id="node9" href="$class_add_comment_page.html" title="AddCommentPage" alt="" coords="1381,5,1512,32"/>
+<area shape="rect" id="node10" href="$class_add_note_page.html" title="AddNotePage" alt="" coords="1395,56,1498,83"/>
+<area shape="rect" id="node11" href="$class_comments_page.html" title="CommentsPage" alt="" coords="1389,107,1504,133"/>
+<area shape="rect" id="node13" href="$class_delete_note_page.html" title="DeleteNotePage" alt="" coords="1389,157,1505,184"/>
+<area shape="rect" id="node14" href="$class_delete_profile_page.html" title="DeleteProfilePage" alt="" coords="1384,208,1509,235"/>
+<area shape="rect" id="node15" href="$class_edit_profile_page.html" title="EditProfilePage" alt="" coords="1391,259,1502,285"/>
+<area shape="rect" id="node19" href="$class_member_groups_page.html" title="MemberGroupsPage" alt="" coords="1376,309,1517,336"/>
+<area shape="rect" id="node20" href="$class_member_notes_page.html" title="MemberNotesPage" alt="" coords="1380,360,1513,387"/>
+<area shape="rect" id="node21" href="$class_my_preferences_page.html" title="MyPreferencesPage" alt="" coords="1377,411,1516,437"/>
+<area shape="rect" id="node22" href="$class_my_profile_page.html" title="MyProfilePage" alt="" coords="1393,461,1500,488"/>
+<area shape="rect" id="node23" href="$class_my_visitors_page.html" title="MyVisitorsPage" alt="" coords="1389,512,1504,539"/>
+<area shape="rect" id="node24" href="$class_relations_page.html" title="RelationsPage" alt="" coords="1393,563,1500,589"/>
+<area shape="rect" id="node26" href="$class_set_profile_active_page.html" title="SetProfileActivePage" alt="" coords="1375,613,1518,640"/>
+<area shape="rect" id="node27" href="$class_set_profile_inactive_page.html" title="SetProfileInactivePage" alt="" coords="1371,664,1522,691"/>
+<area shape="rect" id="node2" href="$class_member_page.html" title="MemberPage" alt="" coords="1088,335,1187,361"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="899,335,1039,361"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="709,335,851,361"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="547,335,661,361"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="368,335,499,361"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="195,335,319,361"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,335,147,361"/>
+<area shape="rect" id="node12" href="$class_my_comments_page.html" title="MyCommentsPage" alt="" coords="1580,107,1713,133"/>
+<area shape="rect" id="node16" href="$class_delete_translation_page.html" title="DeleteTranslationPage" alt="" coords="1571,233,1723,260"/>
+<area shape="rect" id="node17" href="$class_edit_my_profile_page.html" title="EditMyProfilePage" alt="" coords="1582,284,1711,311"/>
+<area shape="rect" id="node18" href="$class_update_mandatory_page.html" title="UpdateMandatoryPage" alt="" coords="1771,284,1925,311"/>
+<area shape="rect" id="node25" href="$class_add_relation_page.html" title="AddRelationPage" alt="" coords="1585,563,1708,589"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="MembersController\index" name="MembersController\index">
+<area shape="rect" id="node2" href="$class_members_controller.html#ab7a30b36bd3236994f439edf8476e46d" title="MembersController\\index\l_loggedIn" alt="" coords="222,118,389,159"/>
+<area shape="rect" id="node12" href="$class_members_controller.html#a76a5c173e8732b85364afc8ed56c1142" title="MembersController\\index\l_loggedOut" alt="" coords="222,53,389,94"/>
+<area shape="rect" id="node3" href="$class_rox_controller_base.html#a6f01a8f8d31733a545556d2b36e4071e" title="RoxControllerBase\\redirect" alt="" coords="450,12,627,39"/>
+<area shape="rect" id="node5" href="$class_rox_component_base.html#a2204c3415eb543b4a40f27de2a1ea265" title="RoxComponentBase\\logWrite" alt="" coords="442,245,635,272"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="438,296,639,323"/>
+<area shape="rect" id="node9" href="$class_rox_controller_base.html#a08b2e66b9f6d0349269bf0aeb35dd5b9" title="RoxControllerBase\\setFlash\lNotice" alt="" coords="447,114,631,155"/>
+<area shape="rect" id="node10" href="$class_members_controller.html#a4ad8021f7b7ca470c26f42b0d9dbc4b0" title="MembersController\\getMember" alt="" coords="439,63,639,89"/>
+<area shape="rect" id="node11" href="$class_rox_controller_base.html#afa5715ca7b008a752325062987990ccd" title="RoxControllerBase\\setFlash\lError" alt="" coords="447,179,631,221"/>
+<area shape="rect" id="node4" href="$class_rox_controller_base.html#a2c5d64649e0267f32198dd37a02c5d28" title="RoxControllerBase\\redirect\lAbsolute" alt="" coords="691,5,869,46"/>
+<area shape="rect" id="node6" href="$class_rox_component_base.html#a41835e2ea2fd3b14ba0d5aa963b8fb38" title="RoxComponentBase\\getLog" alt="" coords="688,245,872,272"/>
+<area shape="rect" id="node7" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="920,245,1019,272"/>
+</map>

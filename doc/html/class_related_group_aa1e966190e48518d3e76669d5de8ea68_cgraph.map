@@ -1,0 +1,17 @@
+<map id="AddRelatedGroup" name="AddRelatedGroup">
+<area shape="rect" id="node2" href="$class_group.html#a2405fe28eb4b635e2d1129733c23dde0" title="Group\\isMember" alt="" coords="179,5,298,32"/>
+<area shape="rect" id="node4" href="$class_related_group.html#a48d0fe962fdb041825bd0b20e7fa5765" title="isRelatedGroup" alt="" coords="183,107,294,133"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#aa1def550942dd330be4ed6bf784344f7" title="RoxEntityBase\\getPKValue" alt="" coords="349,56,531,83"/>
+<area shape="rect" id="node15" href="$class_rox_entity_base.html#a473241246338cfccc4709ba896749019" title="RoxEntityBase\\insert" alt="" coords="1062,181,1207,208"/>
+<area shape="rect" id="node3" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="348,5,532,32"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a9419d99090fe471aa5213056209286fb" title="RoxEntityBase\\findByWhere" alt="" coords="347,107,533,133"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#a93566f2c8d709d410ae8ec46b813999b" title="RoxEntityBase\\getTableName" alt="" coords="583,56,779,83"/>
+<area shape="rect" id="node8" href="$class_rox_entity_base.html#a1e186102f6289021322ae3a2fed04409" title="RoxEntityBase\\queryForEntity" alt="" coords="582,107,781,133"/>
+<area shape="rect" id="node9" href="$class_rox_entity_base.html#aab7d5c965938e7cbda9115091ae4e54b" title="RoxEntityBase\\loadEntity" alt="" coords="829,93,1000,120"/>
+<area shape="rect" id="node10" href="$class_rox_entity_base.html#a6287262cb9628d7a89d8fc16dcb51177" title="RoxEntityBase\\getColumns" alt="" coords="1278,80,1461,107"/>
+<area shape="rect" id="node12" href="$class_rox_entity_base.html#a4fea73e12c9f974d5e00573ccf744e61" title="RoxEntityBase\\isPKSet" alt="" coords="1054,131,1215,157"/>
+<area shape="rect" id="node14" href="$class_rox_entity_base.html#aea52249e2ff121bc2b9ea37e13cff95f" title="RoxEntityBase\\wipeEntity" alt="" coords="1048,80,1221,107"/>
+<area shape="rect" id="node11" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="RoxEntityBase\\getTableDescription" alt="" coords="1517,131,1744,157"/>
+<area shape="rect" id="node13" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="RoxEntityBase\\getPrimaryKey" alt="" coords="1270,131,1469,157"/>
+<area shape="rect" id="node16" href="$class_rox_entity_base.html#a1b73692f359aec5e87d6fcc1b47f20ff" title="RoxEntityBase\\validateField" alt="" coords="1277,232,1461,259"/>
+</map>

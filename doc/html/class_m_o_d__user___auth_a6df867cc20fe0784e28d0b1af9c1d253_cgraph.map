@@ -1,0 +1,5 @@
+<map id="MOD_user_Auth\checkRight" name="MOD_user_Auth\checkRight">
+<area shape="rect" id="node2" href="$class_m_o_d__user___auth.html#a5d0620889a8a2c20498cffded64b2515" title="MOD_user_Auth\\addApp" alt="" coords="249,5,415,32"/>
+<area shape="rect" id="node4" href="$class_m_o_d__user___auth.html#a26328d221af30a61d0e275470abee9e7" title="MOD_user_Auth\\rightExists" alt="" coords="240,56,424,83"/>
+<area shape="rect" id="node3" href="$class_m_o_d__user___auth.html#aabf7688cf5f309796202bca7b0a420b6" title="MOD_user_Auth\\appExists" alt="" coords="473,5,653,32"/>
+</map>

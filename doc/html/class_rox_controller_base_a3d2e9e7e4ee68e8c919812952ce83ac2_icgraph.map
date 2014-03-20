@@ -1,0 +1,11 @@
+<map id="setFlashNotice" name="setFlashNotice">
+<area shape="rect" id="node2" href="$class_groups_controller.html#a1eab95fd160f741b7c1f25e56de7401f" title="GroupsController\\acceptInvitation" alt="" coords="163,5,375,32"/>
+<area shape="rect" id="node3" href="$class_groups_controller.html#ac06ab7c1001b3b1af3b4858b5311fa12" title="GroupsController\\decline\lInvitation" alt="" coords="187,57,351,98"/>
+<area shape="rect" id="node4" href="$class_groups_controller.html#acbc372f73c0cfb0f34b582d15f2cdc01" title="GroupsController\\kickMember" alt="" coords="172,123,367,149"/>
+<area shape="rect" id="node5" href="$class_groups_controller.html#a8b80dfa3311d616d5ce5bc13cf315e0e" title="GroupsController\\addMember\lAsAdmin" alt="" coords="174,174,365,215"/>
+<area shape="rect" id="node6" href="$class_groups_controller.html#ad81716aef1f2106f9b37665451d17dcf" title="GroupsController\\resignAs\lAdmin" alt="" coords="182,239,357,281"/>
+<area shape="rect" id="node7" href="$class_groups_controller.html#a0afaa2536eea73e56254eca6630f2050" title="GroupsController\\joined" alt="" coords="191,305,348,332"/>
+<area shape="rect" id="node8" href="$class_groups_controller.html#aa0258726bd4d20bfa43d8146c9530119" title="GroupsController\\left" alt="" coords="199,356,339,383"/>
+<area shape="rect" id="node9" href="$class_related_groups_controller.html#a175be6cc6cc8fa007b842929fe210f05" title="RelatedGroupsController\l\\addRelatedGroup" alt="" coords="188,407,351,449"/>
+<area shape="rect" id="node10" href="$class_related_groups_controller.html#a6aed7819df1f3bb92c5b0a4d15c61a92" title="RelatedGroupsController\l\\deleteRelatedGroup" alt="" coords="188,473,351,514"/>
+</map>

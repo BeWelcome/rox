@@ -1,0 +1,15 @@
+<map id="RoxLauncher\initializeGlobalState" name="RoxLauncher\initializeGlobalState">
+<area shape="rect" id="node2" href="$class_environment_explorer.html#a864e91b3955bb8e21fb5cc8ea489e8c7" title="EnvironmentExplorer\l\\initializeGlobalState" alt="" coords="240,365,381,406"/>
+<area shape="rect" id="node3" href="$class_environment_explorer.html#a0c4d7b27f26e1c7ffc3fdb3e77432607" title="EnvironmentExplorer\l\\checkEnvironment" alt="" coords="448,5,589,46"/>
+<area shape="rect" id="node4" href="$class_environment_explorer.html#a1aca7a61931eba5b3a920bfb5fd023ba" title="EnvironmentExplorer\l\\initSession" alt="" coords="448,70,589,111"/>
+<area shape="rect" id="node5" href="$class_environment_explorer.html#acdd32d4bfa6887db148e69d951c411ef" title="EnvironmentExplorer\l\\loadBaseXML" alt="" coords="448,135,589,177"/>
+<area shape="rect" id="node6" href="$class_environment_explorer.html#a4aee8a8db7c5c86d9a821a64693dbf92" title="EnvironmentExplorer\l\\loadConfiguration" alt="" coords="448,201,589,242"/>
+<area shape="rect" id="node7" href="$class_environment_explorer.html#a908b8cf0fbb5350b5cf17d29c909d629" title="EnvironmentExplorer\l\\loadDefaults" alt="" coords="448,266,589,307"/>
+<area shape="rect" id="node8" href="$class_environment_explorer.html#ab2c19c8b114f44d66480a81677760127" title="EnvironmentExplorer\l\\loadPApps" alt="" coords="448,331,589,373"/>
+<area shape="rect" id="node9" href="$class_environment_explorer.html#a27205f9c10c899d1c561070d39ec241e" title="EnvironmentExplorer\l\\loadPModules" alt="" coords="448,397,589,438"/>
+<area shape="rect" id="node10" href="$class_environment_explorer.html#aaed56eb793201ac59af33a110e2bbe70" title="EnvironmentExplorer\l\\loadPTClasses" alt="" coords="448,462,589,503"/>
+<area shape="rect" id="node11" href="$class_environment_explorer.html#af9fa666f3c399dd82ba3ab15a5b9bf67" title="EnvironmentExplorer\l\\loadRoxClasses" alt="" coords="448,527,589,569"/>
+<area shape="rect" id="node12" href="$class_classes.html#a3cf7aeea9fe6cdb2618821b7caf2431b" title="Classes\\set" alt="" coords="473,593,564,620"/>
+<area shape="rect" id="node13" href="$class_autoload_plug.html#a17fb14004e54804b6c785da7feac64c9" title="AutoloadPlug\\setCallback" alt="" coords="433,644,604,671"/>
+<area shape="rect" id="node14" href="$class_environment_explorer.html#a4663d6aaa12e8ba4b8590a6e72f34f08" title="EnvironmentExplorer\l\\simulateMissingFunctions" alt="" coords="430,695,607,737"/>
+</map>

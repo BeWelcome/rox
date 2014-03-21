@@ -555,11 +555,11 @@ LIMIT 1
         $loggedInMember = $this->getLoggedInMember();
 
         $members = array();
-        $geonameids = array();
+        $geonameIds = array();
         $countryIds = array();
         $layoutBits = new MOD_layoutbits();
         foreach($rawMembers as $member) {
-            $geonameids[$member->geonameid] = $member->geonameid;
+            $geonameIds[$member->geonameid] = $member->geonameid;
             $countryIds[$member->country] = $member->country;
             $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary,true), 70);
             $FirstName = $this->getNamePart($member->FirstName);
@@ -979,7 +979,7 @@ LIMIT 1
     * a list of possible locations based on the input text
     */
     public function getResultsForLocation(&$vars) {
-        // first we need to check if someone click on one of the suggestions buttons
+        // first we need to check if someone clicked on one of the suggestions buttons
         $geonameid = 0;
         foreach(array_keys($vars) as $key) {
             if (strstr($key, 'geonameid-') !== false) {
@@ -989,26 +989,41 @@ LIMIT 1
         if ($geonameid != 0) {
             $vars['search-geoname-id'] = $geonameid;
             // We need longitude and latitude for the search so let's fetch that
-            $query = "SELECT g.latitude AS lat, g.longitude AS lng FROM geonames g WHERE g.geonameid = " . $geonameid;
-            $row = $this->singleLookup($query);
-            $vars['search-latitude'] = $row->lat;
-            $vars['search-longitude'] = $row->lng;
+            $query = "SELECT * FROM geonames g WHERE g.geonameid = " . $geonameid;
+            $rowGeonameId = $this->singleLookup($query);
+            $vars['search-latitude'] = $rowGeonameId->latitude;
+            $vars['search-longitude'] = $rowGeonameId->longitude;
+            // Now collect admin1 (if any) and country information to set search location correctly
             // Additionally we need to set the admin1 unit and the country for the given geonameid
             $query = "
                 SELECT
-                    g.name name, a.name admin1, c.name country
+                    g.name name, ";
+            if (!empty($rowGeonameId->admin1)) {
+                $query .= "a.name admin1, ";
+            }
+            $query .= "c.name country
                 FROM
-                    geonames g,
-                    geonamesadminunits a,
-                    geonamescountries c
+                    geonames g,";
+            if (!empty($rowGeonameId->admin1)) {
+                $query .= " geonamesadminunits a, ";
+            }
+            $query .= " geonamescountries c
                 WHERE
-                    g.geonameid = " . $geonameid . "
-                    AND g.admin1 = a.admin1
+                    g.geonameid = " . $geonameid;
+            if (!empty($rowGeonameId->admin1)) {
+                $query .= " AND g.admin1 = a.admin1
                     AND g.country = a.country
-                    AND a.fcode = 'ADM1'
+                    AND a.fcode = 'ADM1' ";
+            }
+            $query .= "
                     AND g.country = c.country";
             $row = $this->singleLookup($query);
-            $vars['search-location'] = $row->name . ", " . $row->admin1 . ", " . $row->country;
+            $searchLocation = $row->name . ", ";
+            if (!empty($rowGeonameId->admin1)) {
+                $searchLocation .= $row->admin1 . ", ";
+            }
+            $searchLocation .= $row->country;
+            $vars['search-location'] = $searchLocation;
         }
         $country = $admin1 = "";
         $countryCode = $admin1Code = "";

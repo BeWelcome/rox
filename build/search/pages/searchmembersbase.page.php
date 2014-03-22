@@ -37,6 +37,10 @@ class SearchMembersBasePage extends PageWithActiveSkin
         return $this->getWords()->get('FindMembers');
     }
 
+    protected function getPageTitle() {
+        return $this->getWords()->get('FindMembers') . ' - BeWelcome';
+    }
+
     protected function leftSidebar() {
         return '';
     }

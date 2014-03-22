@@ -66,7 +66,7 @@ $layoutbits = new MOD_layoutbits();
 // The whole page is in one form to be able to fill the fields with the correct content even
 // when switching between pages of the result
 ?>
-<div><!--  around form -->
+<div class="row"><!--  around form -->
 <?php if (count($errors) > 0) :
     echo '<div class="error">';
     foreach ($errors as $error) :
@@ -76,60 +76,76 @@ $layoutbits = new MOD_layoutbits();
 endif; ?>
 <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersCallback'); ?>
 <form method="get" name="searchmembers-form" style="padding-bottom: 0.5em; width: 100%;">
-<div class="floatbox bottom" style="width:100%">
-    <div class="float_left" style="width: auto">
-        <label for='search-location'><span class="small"><?= $words->get('SearchEnterLocation'); ?></span></label><br/>
-
-        <div>
-            <input type="hidden" name="search-geoname-id" id="search-geoname-id"
-                value="<?php echo $this->vars['search-geoname-id']; ?>"/>
-            <input type="hidden" name="search-latitude" id="search-latitude"
-                value="<?php echo $this->vars['search-latitude']; ?>"/>
-            <input type="hidden" name="search-longitude" id="search-longitude"
-                value="<?php echo $this->vars['search-longitude']; ?>"/>
-            <input name="search-location" id="search-location" value="<?php echo $this->vars['search-location']; ?>"/>
-            <img id="search-loading" style="visibility: hidden"
-                src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif"/>
-        </div>
-        <?php echo $words->flushBuffer(); ?></div>
-    <div class="float_left">
-        <span class="small"><?= $words->get('SearchCanHostAtLeast'); ?></span><br/> <select id="search-can-host"
-            name="search-can-host" style="width: 7em;"><?php
-            $canHost = array(0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
-            foreach ($canHost as $value => $display) :
-                echo '<option value="' . $value . '"';
-                if ($value == $this->vars['search-can-host']) {
-                    echo ' selected="selected"';
-                }
-                echo '>' . $display . '</option>';
-            endforeach;
-            ?></select>
-    </div>
-    <div class="float_left">
-        <span class="small"><?= $words->get('SearchDistance'); ?></span><br/> <select id="search-distance"
-            name="search-distance" style="width: 10em;"><?php
-            $distance = array(0 => $words->getSilent("SearchExactMatch"), 5 => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');
-            foreach ($distance as $value => $display) :
-                echo '<option value="' . $value . '"';
-                if ($value == $this->vars['search-distance']) {
-                    echo ' selected="selected"';
-                }
-                echo '>' . $display . '</option>';
-            endforeach;
-            ?></select><?php echo $words->flushBuffer(); ?>
-    </div>
-    <div class="float_right">
-        <br/><input id="search-submit-button" name="search-submit-button" class="button" type="submit"
+<div class="greybackground">
+    <table >
+        <tr>
+            <td>
+                <label for='search-location'><span class="small"><?= $words->get('SearchEnterLocation'); ?></span></label><br/>
+                    <div>
+                        <input type="hidden" name="search-geoname-id" id="search-geoname-id"
+                            value="<?php echo $this->vars['search-geoname-id']; ?>"/>
+                        <input type="hidden" name="search-latitude" id="search-latitude"
+                            value="<?php echo $this->vars['search-latitude']; ?>"/>
+                        <input type="hidden" name="search-longitude" id="search-longitude"
+                            value="<?php echo $this->vars['search-longitude']; ?>"/>
+                        <input name="search-location" id="search-location" value="<?php echo $this->vars['search-location']; ?>"/>
+                        <img id="search-loading" style="visibility: hidden"
+                            src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif"/>
+                   </div>
+                    <?php echo $words->flushBuffer(); ?>
+            </td>
+            <td>
+                <span class="small"><?= $words->get('SearchCanHostAtLeast'); ?></span><br/> <select id="search-can-host"
+                name="search-can-host" style="width: 7em;"><?php
+                $canHost = array(0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
+                foreach ($canHost as $value => $display) :
+                    echo '<option value="' . $value . '"';
+                    if ($value == $this->vars['search-can-host']) {
+                        echo ' selected="selected"';
+                    }
+                    echo '>' . $display . '</option>';
+                endforeach;
+                ?></select>
+            </td>
+            <td>
+                <span class="small"><?= $words->get('SearchDistance'); ?></span><br/> <select id="search-distance"
+                name="search-distance" style="width: 10em;"><?php
+                $distance = array(0 => $words->getSilent("SearchExactMatch"), 5 => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');
+                foreach ($distance as $value => $display) :
+                    echo '<option value="' . $value . '"';
+                    if ($value == $this->vars['search-distance']) {
+                        echo ' selected="selected"';
+                    }
+                    echo '>' . $display . '</option>';
+                endforeach;
+                ?></select><?php echo $words->flushBuffer(); ?>
+            </td>
+            <td class="float_right">
+                <br/><input id="search-submit-button" name="search-submit-button" class="button" type="submit"
             value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"/>
-    </div>
-
+            </td>
+        </tr>
+    </table>
+    <div id="search-advanced" class="floatbox">
+        <?php if ($this->showAdvanced) {
+                $vars = $this->vars; // Needed because advanced options might be loaded through ajax as well
+                require_once('advancedoptions.php');
+            } ?></div>
 </div>
-<div id="search-advanced" class="floatbox"><?php if ($this->showAdvanced) {
-        $vars = $this->vars; // Needed because advanced options might be loaded through ajax as well
-        require_once('advancedoptions.php');
-    } ?></div>
-<div class="floatbox">
-    <div class="float_left"><?php
+<div class="advance-container">
+        <div class="advance-link">
+        <?php if ($this->showAdvanced) { ?>
+            <a name="search-simple"
+                href="search/members/text"><?php echo $words->getFormatted('SearchMembersSimple'); ?></a>
+        <?php } else { ?>
+            <a name="search-advanced"
+                href="search/members/text/advanced"><?php echo $words->getFormatted('SearchMembersAdvanced'); ?></a>
+        <?php } ?>
+    </div>
+</div>
+
+<div class="floatbox row">
+    <div class="row"><?php
         $numberOfItems = array('5', '10', '20', '50', '100');
         $select = '<select name="search-number-items">';
         foreach ($numberOfItems as $number) :
@@ -151,15 +167,7 @@ endif; ?>
         endforeach;
         $select .= '</select>';
         echo $words->get('SearchOrderItems', $select); ?></div>
-    <div class="float_right">
-        <?php if ($this->showAdvanced) { ?>
-            <a name="search-simple"
-                href="search/members/text"><?php echo $words->getFormatted('SearchMembersSimple'); ?></a>
-        <?php } else { ?>
-            <a name="search-advanced"
-                href="search/members/text/advanced"><?php echo $words->getFormatted('SearchMembersAdvanced'); ?></a>
-        <?php } ?>
-    </div>
+
 </div>
 <div class="floatbox">
     <?php if (!$results) : ?>

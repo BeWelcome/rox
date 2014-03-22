@@ -62,6 +62,8 @@ class AdminBasePage extends PageWithActiveSkin
        $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css?1';
        return $stylesheets;
     }
-    
+    protected function getColumnNames() {
+        return array('col1', 'col3');
+    }
 
 }

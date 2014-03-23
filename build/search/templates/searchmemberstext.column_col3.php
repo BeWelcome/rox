@@ -49,11 +49,6 @@ if ($results) {
     }
 }
 
-$Accommodation = array();
-$Accommodation['anytime'] = $words->getBuffered('Accomodation_anytime');
-$Accommodation['dependonrequest'] = $words->getBuffered('Accomodation_dependonrequest');
-$Accommodation['neverask'] = $words->getBuffered('Accomodation_neverask');
-
 $orderBy = array();
 $orderArray = SearchModel::getOrderByArray();
 foreach ($orderArray AS $key => $order) :
@@ -74,8 +69,8 @@ $layoutbits = new MOD_layoutbits();
     endforeach;
     echo '</div>';
 endif; ?>
+<form method="get" name="searchmembers-form" style="padding-bottom: 0.5em; width: 100%;" action="">
 <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersCallback'); ?>
-<form method="get" name="searchmembers-form" style="padding-bottom: 0.5em; width: 100%;">
 <div class="greybackground">
     <table >
         <tr>
@@ -90,7 +85,7 @@ endif; ?>
                             value="<?php echo $this->vars['search-longitude']; ?>"/>
                         <input name="search-location" id="search-location" value="<?php echo $this->vars['search-location']; ?>"/>
                         <img id="search-loading" style="visibility: hidden"
-                            src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif"/>
+                            src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" alt="<?php echo $words->getSilent("SearchMembersLoading"); ?>" />
                    </div>
                     <?php echo $words->flushBuffer(); ?>
             </td>
@@ -211,15 +206,14 @@ if ($memberResultsReturned) :
             $ii = 0;
             // $markers contains the necessary array setup for Javascript to get the markers onto the map
             foreach ($members as $member) {
-                $accommodationIcon = ShowAccommodation($member->Accomodation, $Accommodation);
+                $accommodationIcon = ShowAccommodation($member->Accomodation);
                 $offerIcons = GetOfferIcons($member->TypicOffer);
-                // $restrictionIcons = GetRestrictionIcons($member->Restrictions);
                 // replace line breaks '\r\n' by html line break element '<br/>'
                 $profileSummary = str_replace("\\r\\n", "<br/>", $member->ProfileSummary);
                 $occupation = str_replace("\\r\\n", "<br/>", $member->Occupation);
                 echo '<tr class="' . (($ii % 2) ? 'blank' : 'highlight') . '">';
                 echo '<td style="width: 95px; padding-right:1ex; text-align:center; vertical-align: top; word-wrap: break-word;">';
-                echo '<div padding-right: 1em; text-align: center"><div>' . $layoutbits->PIC_75_75($member->Username, 'class="framed"') . '</div>';
+                echo '<div style="padding-right: 1em; text-align: center"><div>' . $layoutbits->PIC_75_75($member->Username, 'class="framed"') . '</div>';
                 echo '<div><a href="members/' . $member->Username . '" target="_blank">' . $member->Username . '</a></div>';
                 echo '</div>';
                 echo '</td><td style="padding-right:1ex;vertical-align: top;">';
@@ -230,7 +224,7 @@ if ($memberResultsReturned) :
                         . $words->getSilent('messages_allmessageswith', $member->Username)
                         . '" title="' . $words->getSilent('messages_allmessageswith', $member->Username) . '" /></a>';
                 }
-                echo '<br>';
+                echo '<br />';
                 $prefix = "";
                 if (!empty($member->Age)) {
                     echo $words->get('SearchYearsOld', $member->Age);
@@ -240,18 +234,18 @@ if ($memberResultsReturned) :
                 if (!empty($gender)) {
                     echo $prefix . $gender;
                 }
-                echo '<br>';
-                echo $member->CityName . ", " . $member->CountryName . '<br>';
-                echo '<div style="display: block; padding-top:0.5em";>';
+                echo '<br />';
+                echo $member->CityName . ", " . $member->CountryName . '<br />';
+                echo '<div style="display: block; padding-top:0.5em;">';
                 echo $member->Occupation . '</div></div>';
-                echo '</div>';
+                // echo '</div>';
                 echo '</td>';
                 echo '<td style="width: 50%; word-break:break-word; padding-right:1ex; align:left; vertical-align: top;">' . $profileSummary . '</td>';
                 echo '<td style="width: 20%; align:left; vertical-align: top;"><div class="red" style="display: block;"><div style="float: left; padding-right:1ex;">' . $accommodationIcon . '</div>'
-                    . '<div>' . $words->get('SearchMaxGuestInfo', '<strong>' . $member->MaxGuest . '</strong>') . '<br>'
+                    . '<div>' . $words->get('SearchMaxGuestInfo', '<strong>' . $member->MaxGuest . '</strong>') . '<br />'
                     . $words->get('SearchCommentsInfo', '<strong>' . $member->CommentCount . '</strong>') . '</div></div>';
-                echo '<div class="clearfix"></div>' . $offerIcons /*.  $restrictionIcons */ . '<br>';
-                echo $words->get('SearchMemberSinceInfo', '<strong>' . date('Y-m-d', strtotime($member->created)) . '</strong>') . '<br>';
+                echo '<div class="clearfix"></div>' . $offerIcons . '<br />';
+                echo $words->get('SearchMemberSinceInfo', '<strong>' . date('Y-m-d', strtotime($member->created)) . '</strong>') . '<br />';
                 $lastlogin = (($member->LastLogin == '0000-00-00') ? 'Never' : $layoutbits->ago(strtotime($member->LastLogin)));
                 $class = 'style="color: red;"';
                 if ($member->LastLogin <> '0000-00-00') {
@@ -372,7 +366,7 @@ if (!empty($locations)) :
                         echo '<div class="c33r">';
                         break;
                 endswitch;
-                echo '<input type="submit" id="admin1-' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" name="admin1-' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" />';
+                echo '<input type="submit" name="admin1-' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" />';
                 echo '</div>';
                 if ($i % 3 == 2) :
                     echo '</div>';
@@ -400,7 +394,7 @@ if (!empty($locations)) :
                         echo '<div class="c33r">';
                         break;
                 endswitch;
-                echo '<input type="submit" id="country-' . htmlentities($location->code, ENT_COMPAT, 'utf-8') . '" name="country-' . htmlentities($location->code, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->country, ENT_COMPAT, 'utf-8') . '" />';
+                echo '<input type="submit" name="country-' . htmlentities($location->code, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->country, ENT_COMPAT, 'utf-8') . '" />';
                 echo '</div>';
                 if ($i % 3 == 2) :
                     echo '</div>';
@@ -418,14 +412,25 @@ endif;
 </form>
 </div><!-- around form-->
 <?php
-function ShowAccommodation($accom, $Accommodation)
+function ShowAccommodation($accommodation)
 {
-    if ($accom == "anytime")
-        return "<img src=\"images/icons/yesicanhost.png\" title=\"" . $Accommodation['anytime'] . "\"  alt=\"yesicanhost\" />";
-    if (($accom == "dependonrequest") || ($accom == ""))
-        return "<img src=\"images/icons/maybe.png\" title=\"" . $Accommodation['dependonrequest'] . "\"  alt=\"dependonrequest\"   />";
-    if ($accom == "neverask")
-        return "<img src=\"images/icons/nosorry.png\" title=\"" . $Accommodation['neverask'] . "\"  alt=\"neverask\" />";
+    $words = new MOD_words();
+    switch($accommodation) {
+        case 'anytime':
+            $imgSrc = 'images/icons/yesicanhost.png';
+            break;
+        case 'dependonrequest':
+            $imgSrc = 'images/icons/yesicanhost.png';
+            break;
+        case 'neverask':
+            $imgSrc = 'images/icons/yesicanhost.png';
+            break;
+    }
+
+    $altText = $words->getSilent('Accomodation_' . $accommodation);
+    $imgTag = '<img src="' . $imgSrc . '" title="' . $altText . '" '
+        . ' alt="' . $altText . '" />';
+    return $imgTag;
 }
 
 function GetOfferIcons($offer)
@@ -433,31 +438,20 @@ function GetOfferIcons($offer)
     $words = new MOD_words();
     $icons = '';
     if (strstr($offer, "CanHostWeelChair")) {
-        $icons .= '<img src="images/icons/wheelchairblue.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_CanHostWheelChair') . '" title="' . $words->getSilent('TypicOffer_CanHostWheelChair') . '" />';
+        $icons .= '<img src="images/icons/wheelchairblue.png" width="22" height="22" alt="'
+            . $words->getSilent('TypicOffer_CanHostWheelChair') . '" title="'
+            . $words->getSilent('TypicOffer_CanHostWheelChair') . '" />';
     }
     if (strstr($offer, "dinner")) {
-        $icons .= '<img src="images/icons/dinner.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_dinner') . '" title="' . $words->getSilent('TypicOffer_dinner') . '" />';
+        $icons .= '<img src="images/icons/dinner.png" width="22" height="22" alt="'
+            . $words->getSilent('TypicOffer_dinner') . '" title="'
+            . $words->getSilent('TypicOffer_dinner') . '" />';
     }
     if (strstr($offer, "guidedtour")) {
-        $icons .= '<img src="images/icons/guidedtour.png" width="22" height="22" alt="' . $words->getSilent('TypicOffer_guidedtour') . '" title="' . $words->getSilent('TypicOffer_guidedtour') . '" />';
+        $icons .= '<img src="images/icons/guidedtour.png" width="22" height="22" alt="'
+            . $words->getSilent('TypicOffer_guidedtour') . '" title="'
+            . $words->getSilent('TypicOffer_guidedtour') . '" />';
     }
     return $icons;
 }
-
-function GetRestrictionIcons($restrictions)
-{
-    $words = new MOD_words();
-    $icons = '';
-    if (strstr($restrictions, "NoSmoker")) {
-        $icons .= '<img src="images/icons/no-smoking.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoSmoker') . '" title="' . $words->getSilent('Restriction_NoSmoker') . '" />';
-    }
-    if (strstr($restrictions, "NoAlchool")) {
-        $icons .= '<img src="images/icons/no-alcohol.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoAlchool') . '" title="' . $words->getSilent('Restriction_NoAlchool') . '" />';
-    }
-    if (strstr($restrictions, "NoDrugs")) {
-        $icons .= '<img src="images/icons/no-drugs.png" width="22" height="22" alt="' . $words->getSilent('Restriction_NoDrugs') . '" title="' . $words->getSilent('Restriction_NoDrugs') . '" />';
-    }
-    return $icons;
-}
-
 ?>

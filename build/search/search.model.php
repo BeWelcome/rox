@@ -595,7 +595,7 @@ LIMIT 1
             }
             $members[] = $member;
         }
-        $inGeonameIds = implode("', '", $geonameids);
+        $inGeonameIds = implode("', '", $geonameIds);
         $query = "
             SELECT
                 g.geonameid geonameid, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
@@ -845,19 +845,19 @@ LIMIT 1
         $places = $this->bulkLookup($query);
         // Now fetch admin units and country name for the found entities
         // shevek: I tried to combine this into one query but search time exploded so separate step (for now?)
-        $adminunits = array();
+        $adminUnits = array();
         $countries = array();
-        $geonameids = array();
+        $geonameIds = array();
         foreach($places as $place) {
-            $adminunits[$place->country . "-" .$place->admin1] = $place->admin1;
+            $adminUnits[$place->country . "-" .$place->admin1] = $place->admin1;
             $countries[$place->country] = $place->country;
-            $geonameids[$place->geonameid] = $place->geonameid;
+            $geonameIds[$place->geonameid] = $place->geonameid;
         }
         $countryNames = $this->getCountryNames($countries, $lang);
-        $admin1Names = $this->getAdminUnitNames($adminunits, $countries, $lang);
+        $admin1Names = $this->getAdminUnitNames($adminUnits, $countries, $lang);
 
         // And finally get the place names in the UI language
-        $inGeonameIds = implode("', '", $geonameids);
+        $inGeonameIds = implode("', '", $geonameIds);
         $query = "
             SELECT
                 g.geonameid geonameid, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source

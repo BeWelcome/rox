@@ -115,7 +115,7 @@ class FullPagePager extends RoxWidget
 
         if ($this->active_page < $this->pages)
         {
-            $return .= '<input type="submit" class="page" name="' . $this->pager->outputLink($this->active_page + 1, '&rsaquo;') . '" value="&rsaquo;">';
+            $return .= '<input type="submit" class="page" name="' . $this->pager->outputLink($this->active_page + 1, '&rsaquo;') . '" value="&rsaquo;" />';
             if ($this->pages > self::block_links)
             {
                 $return .= '<input type="submit" class="page" name="' . $this->pager->outputLink($this->pages, '&raquo;') . '" value="&raquo;" />';

@@ -19,12 +19,12 @@ if (empty($this->vars)) {
     $vars['search-age-minimum'] = 0;
     $vars['search-age-maximum'] = 0;
     $vars['search-gender'] = 0;
-    $vars['search-groups'] = 0;
+    $vars['search-groups'] = array();
     $vars['search-accommodation'] = array('anytime', 'dependonrequest', 'neverask');
     $vars['search-typical-offer'] = array();
     $vars['search-text'] = '';
     $vars['search-membership'] = 0;
-    $vars['search-languages'] = 0;
+    $vars['search-languages'] = array();
     $this->vars = $vars;
 }
 $members = array();
@@ -69,10 +69,10 @@ $layoutbits = new MOD_layoutbits();
     endforeach;
     echo '</div>';
 endif; ?>
-<form method="get" name="searchmembers-form" style="padding-bottom: 0.5em; width: 100%;" action="">
 <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersCallback'); ?>
+<form method="get" id="searchmembers-form" name="searchmembers-form"action="">
 <div class="greybackground">
-    <table >
+    <table>
         <tr>
             <td>
                 <label for='search-location'><span class="small"><?= $words->get('SearchEnterLocation'); ?></span></label><br/>
@@ -84,14 +84,14 @@ endif; ?>
                         <input type="hidden" name="search-longitude" id="search-longitude"
                             value="<?php echo $this->vars['search-longitude']; ?>"/>
                         <input name="search-location" id="search-location" value="<?php echo $this->vars['search-location']; ?>"/>
-                        <img id="search-loading" style="visibility: hidden"
+                        <img id="search-loading"
                             src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" alt="<?php echo $words->getSilent("SearchMembersLoading"); ?>" />
                    </div>
                     <?php echo $words->flushBuffer(); ?>
             </td>
             <td>
                 <span class="small"><?= $words->get('SearchCanHostAtLeast'); ?></span><br/> <select id="search-can-host"
-                name="search-can-host" style="width: 7em;"><?php
+                name="search-can-host"><?php
                 $canHost = array(0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
                 foreach ($canHost as $value => $display) :
                     echo '<option value="' . $value . '"';
@@ -104,7 +104,7 @@ endif; ?>
             </td>
             <td>
                 <span class="small"><?= $words->get('SearchDistance'); ?></span><br/> <select id="search-distance"
-                name="search-distance" style="width: 10em;"><?php
+                name="search-distance"><?php
                 $distance = array(0 => $words->getSilent("SearchExactMatch"), 5 => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');
                 foreach ($distance as $value => $display) :
                     echo '<option value="' . $value . '"';
@@ -125,7 +125,8 @@ endif; ?>
         <?php if ($this->showAdvanced) {
                 $vars = $this->vars; // Needed because advanced options might be loaded through ajax as well
                 require_once('advancedoptions.php');
-            } ?></div>
+            } ?>
+    </div>
 </div>
 <div class="advance-container">
         <div class="advance-link">
@@ -193,7 +194,7 @@ if ($memberResultsReturned) :
         $params->items_per_page = $this->vars['search-number-items'];
         $pager = new PagerWidget($params);
         $pager->render();?>
-        <table class="full" style="width: 100%">
+        <table id="memberresults">
             <thead>
             <tr>
                 <th colspan="2"><?php echo $words->get('SearchHeaderMember'); ?></th>
@@ -212,12 +213,12 @@ if ($memberResultsReturned) :
                 $profileSummary = $this->purifier->purify($member->ProfileSummary);
                 $occupation = $this->purifier->purify($member->Occupation);
                 echo '<tr class="' . (($ii % 2) ? 'blank' : 'highlight') . '">';
-                echo '<td style="width: 95px; padding-right:1ex; text-align:center; vertical-align: top; word-wrap: break-word;">';
-                echo '<div style="padding-right: 1em; text-align: center"><div>' . $layoutbits->PIC_75_75($member->Username, 'class="framed"') . '</div>';
+                echo '<td class="memberleft">';
+                echo '<div class="picture"><div>' . $layoutbits->PIC_75_75($member->Username, 'class="framed"') . '</div>';
                 echo '<div><a href="members/' . $member->Username . '" target="_blank">' . $member->Username . '</a></div>';
                 echo '</div>';
-                echo '</td><td style="padding-right:1ex;vertical-align: top;">';
-                echo '<div style="float:left;">';
+                echo '</td><td class="memberright">';
+                echo '<div class="left">';
                 echo '<strong><a href="members/' . $member->Username . '" target="_blank">' . (empty($member->Name) ? $member->Username : $member->Name) . '</a></strong>';
                 if ($member->MessageCount) {
                     echo '<a href="messages/with/' . $member->Username . '"><img src="images/icons/comments.png" alt="'
@@ -236,33 +237,32 @@ if ($memberResultsReturned) :
                 }
                 echo '<br />';
                 echo $member->CityName . ", " . $member->CountryName . '<br />';
-                echo '<div style="display: block; padding-top:0.5em;">';
-                echo $member->Occupation . '</div></div>';
-                // echo '</div>';
+                echo '<br />';
+                echo $member->Occupation . '</div>';
                 echo '</td>';
-                echo '<td style="width: 50%; word-break:break-word; padding-right:1ex; align:left; vertical-align: top;">' . $profileSummary . '</td>';
-                echo '<td style="width: 20%; align:left; vertical-align: top;"><div class="red" style="display: block;"><div style="float: left; padding-right:1ex;">' . $accommodationIcon . '</div>'
+                echo '<td class="summary">' . $profileSummary . '</td>';
+                echo '<td class="details"><div class="red"><div class="left">' . $accommodationIcon . '</div>'
                     . '<div>' . $words->get('SearchMaxGuestInfo', '<strong>' . $member->MaxGuest . '</strong>') . '<br />'
                     . $words->get('SearchCommentsInfo', '<strong>' . $member->CommentCount . '</strong>') . '</div></div>';
                 echo '<div class="clearfix"></div>' . $offerIcons . '<br />';
                 echo $words->get('SearchMemberSinceInfo', '<strong>' . date('Y-m-d', strtotime($member->created)) . '</strong>') . '<br />';
                 $lastlogin = (($member->LastLogin == '0000-00-00') ? 'Never' : $layoutbits->ago(strtotime($member->LastLogin)));
-                $class = 'style="color: red;"';
+                $class = 'red';
                 if ($member->LastLogin <> '0000-00-00') {
                     switch ($layoutbits->ago_qualified(strtotime($member->LastLogin))) {
                         case 0:
-                            $class = 'style="color: green;"';
+                            $class = 'green';
                             break;
                         case 1:
-                            $class = 'style="color: orange;"';
+                            $class = 'orange';
                             break;
                         case 2:
-                            $class = 'style="color: red;"';
+                            $class = 'red';
                             break;
                     }
                 }
 
-                echo $words->get('SearchMemberLastLoginInfo', '<span ' . $class . '>' . $lastlogin . '</span>');
+                echo $words->get('SearchMemberLastLoginInfo', '<span class="' . $class . '">' . $lastlogin . '</span>');
                 echo "</td></tr>\n";
                 $ii++;
             }

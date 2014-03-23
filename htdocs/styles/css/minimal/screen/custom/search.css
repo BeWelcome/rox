@@ -1,3 +1,52 @@
+#searchmembers-form, #memberresults {
+    padding-bottom: 0.5em;
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    padding-left: 1ex;
+}
+
+td {
+    vertical-align: top;
+    padding-right: 1ex;
+}
+
+td.memberleft {
+    width: 95px;
+    text-align:center;
+    word-wrap: break-word;
+}
+
+td.memberright {
+   width: 20%;
+}
+
+td.summary {
+    width: auto;
+}
+
+td.details {
+    width: 20%;
+}
+
+.left {
+    float:left;
+}
+
+#search-loading {
+    visibility: hidden;
+}
+
+#search-can-host {
+    width: 7em;
+}
+
+#search-distance {
+    width: 10em;
+}
+
 .ui-autocomplete { overflow-y: scroll; }
 * html .ui-autocomplete { /* IE max- */height: expression( this.scrollHeight > 200 ? "200px" : "auto" ); }
 .ui-autocomplete { max-height: 200px; }

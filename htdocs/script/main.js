@@ -29,7 +29,8 @@ var loc = new String(location);
 /**
  * Creating "BWRox" namespace.
  */
-function BWRox() {};
+function BWRox() {
+};
 
 /**
  * Select scripts to include on current page.
@@ -40,41 +41,41 @@ function BWRox() {};
  *         "^name.*"). If pages property is omitted the script will be included
  *         on every page.
  */
-BWRox.prototype.selectScripts = function(scripts) {
-  for (var i = 0; i < scripts.length; i++) {
-    var script = scripts[i];
+BWRox.prototype.selectScripts = function (scripts) {
+    for (var i = 0; i < scripts.length; i++) {
+        var script = scripts[i];
 
-    // No script prefix if remote location
-    if (typeof script.remote === "boolean" && script.remote === true) {
-      var prefix = '';
-    } else {
-      var prefix = 'script/';
-    }
-    var src = prefix + script.file;
-
-    // Loop through pages array, if it exists
-    if (typeof(script.pages) == 'object' && script.pages.length > 0) {
-      for (var j = 0; j < script.pages.length; j++) {
-        // Trim leading slash
-        var currentPage = req.substring(1, req.length);
-
-        // Include script if path starts with page name
-        if (currentPage.indexOf(script.pages[j]) == 0) {
-          this.includeScript(src);
+        // No script prefix if remote location
+        if (typeof script.remote === "boolean" && script.remote === true) {
+            var prefix = '';
+        } else {
+            var prefix = 'script/';
         }
-      }
-    } else {
-      this.includeScript(src);
+        var src = prefix + script.file;
+
+        // Loop through pages array, if it exists
+        if (typeof(script.pages) == 'object' && script.pages.length > 0) {
+            for (var j = 0; j < script.pages.length; j++) {
+                // Trim leading slash
+                var currentPage = req.substring(1, req.length);
+
+                // Include script if path starts with page name
+                if (currentPage.indexOf(script.pages[j]) == 0) {
+                    this.includeScript(src);
+                }
+            }
+        } else {
+            this.includeScript(src);
+        }
     }
-  }
 };
 
 /**
  * Include a JavaScript file.
  * @param {string} src Location of script file.
  */
-BWRox.prototype.includeScript = function(src) {
-  document.write('<script type="text/javascript" src="' + src + '"></script>');
+BWRox.prototype.includeScript = function (src) {
+    document.write('<script type="text/javascript" src="' + src + '"></script>');
 };
 
 /*
@@ -90,34 +91,34 @@ var bwrox = new BWRox;
  *         browsers reload the file (e.g. "gallery.js?1" -> "gallery.js?2")
  */
 bwrox.selectScripts([
-  {
-    // JQuery has to be included before prototype to avoid conflicts
-    file: "jquery-1.9.1.js",
-    pages: [
-      "searchmembers",
-      "search",
-      "signup/3", 
-      "setlocation", 
-      "blog", 
-      "trip", 
-      "admin/massmail/enqueue",
-      "admin/word/list/update",
-      "suggestions/rank",
-      "activities/",
-      "about/faq",
-      "faq"]
-  },
-  {
-    // complete jquery ui with theme smoothness
-    file: "jquery-ui-1.10.3.custom.min.js",
-    pages: [
-      "activities",
-      "search" /*,
-      "blog",
-      "trip",
-      "admin/treasurer" */
-    ]
-  },
+    {
+        // JQuery has to be included before prototype to avoid conflicts
+        file: "jquery-1.9.1.js",
+        pages: [
+            "searchmembers",
+            "search",
+            "signup/3",
+            "setlocation",
+            "blog",
+            "trip",
+            "admin/massmail/enqueue",
+            "admin/word/list/update",
+            "suggestions/rank",
+            "activities/",
+            "about/faq",
+            "faq"]
+    },
+    {
+        // complete jquery ui with theme smoothness
+        file: "jquery-ui-1.10.3.custom.min.js",
+        pages: [
+            "activities",
+            "search" /*,
+             "blog",
+             "trip",
+             "admin/treasurer" */
+        ]
+    },
     {
         file: "jquery-ui-timepicker-addon.js?1",
         pages: [
@@ -131,213 +132,219 @@ bwrox.selectScripts([
         file: "jquery-hashchange-1.4.min.js",
         pages: [
             "about/faq",
-             "faq"
+            "faq"
         ]
     },
-  {
-    file: "leaflet/0.7.2/leaflet.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
-  },
-  {
-    file: "leaflet/0.7.2/leaflet.include-css.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
-  },
-  {
-    file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js",
-    pages: ["activities"]
-  },
-  {
-    file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.include-css.js",
-    pages: ["activities"]
-  },
-  {
-    file: "//maps.googleapis.com/maps/api/js?sensor=false",
-    remote: true,
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-  },
-  {
-    file: "leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-  },
-  {
-    file: "prototype162.js"
-  },
-  {
-    file: "fabtabulous.js"
-  },
-  {
-    file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"
-  },
-  {
-    file: "registerrox.js",
-    pages: [
-      "signup"
-    ]
-  },
-  {
-    file: "geo_suggest.js?1",
-    pages: [
-      "signup", "setlocation"
-    ]
-  },
-  {
-    file: "tinymce/tinymce.min.js",
-    pages: [
-      "activities",
-      "blog",
-      "forums",
-      "groups",
-      "suggestions",
-      "trip"
-    ]
-  },
-  {
-    file: "blog_suggest.js",
-    pages: [
-      "blog",
-      "trip"
-    ]
-  },
-  {
-    file: "act_suggest.js",
-    pages: [
-      "activities"
-    ]
-  },
-  {
-    file: "datepicker.js",
-    pages: [
-      "activities",
-      "blog",
-      "trip",
-      "admin/treasurer"
-    ]
-  },
-  {
-    file: "fieldset.js",
-    pages: [
-      "blog/create",
-      "blog/edit",
-      "user/settings",
-      "trip/create",
-      "trip/edit",
-      "trip",
-      "gallery/show/image",
-      "message/write",
-      "editmyprofile",
-      "admin/massmail",
-      "members/"
-    ]
-  },
-  {
-    file: "gallery.js",
-    pages: [
-      "blog/create",
-      "editmyprofile"
-    ]
-  },
-  {
-    file: "uploader.js",
-    pages: [
-      "blog/create",
-      "editmyprofile"
-    ]
-  },
-  {
-    file: "lightview.js",
-    pages: [
-      "gallery",
-      "tour/meet"
-    ]
-  },
-  {
-    file: "transition.js",
-    pages: [
-      "thepeople"
-    ]
-  },
-  {
-    file: "prototip.js?1",
-    pages: [
-      "searchmembers"
-    ]
-  },
-  {
-    file: "fancyzoom.js",
-    pages: [
-      "members",
-      "editmyprofile",
-      "mypreferences",
-      "myvisitors",
-      "deleteprofile",
-      "people"
-    ]
-  },
-  {
-    file: "util/console.js"
-  },
-  {
-    file: "map/geolocation/BWGoogleMapReverseGeolocator.js?1",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-  },
-  {
-    file: "map/leaflet/LeafletFlagIcon.js",
-    pages: ["signup/3", "setlocation", "blog", "trip"]
-  },
-  {
-    file: "map/builder/BWSimpleMapBuilder.js?2",
-    pages: ["signup/3", "setlocation", "blog", "trip"]
-  },
-  {
-    file: "map/builder/BWGeosearchMapBuilder.js?2",
-    pages: ["searchmembers"]
-  },
-  {
-    file: "map/BWMapMaths.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-  },
-  {
-    file: "map/BWMapAddressPoint.js",
-    pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
-  },
-  {
-    file: "map/BWMapHostPoint.js",
-    pages: ["searchmembers"]
-  },
-  {
-    file: "map/BWMapSearchResult.js",
-    pages: ["searchmembers"]
-  },
-  {
-    file: "map/small/smallMapGeoLocation.js?2",
-    pages: ["signup/3", "setlocation"]
-  },
-  {
-    file: "map/small/blogSmallMapGeoLocation.js?2",
-    pages: ["blog", "trip"]
-  },
-  {
-    file: "map/small/blogMap.js?2",
-    pages: ["blog"]
-  },
-  {
-    file: "map/small/singlePost.js?2",
-    pages: ["blog"]
-  },
-  {
-    file: "map/small/tripMap.js?2",
-    pages: ["trip"]
-  },
-  {
-    file: "searchmembers.js?2",
-    pages: ["searchmembers"]
-  },
-  {
-    file: "search/search.js",
-    pages: ["search"]
-  },
-  {
-    file: "map/activities/activities_map.js?2",
-    pages: ["activities"]
-  }
+    {
+        file: "jquery.multiselect.min.js",
+        pages: [
+            "search"
+        ]
+    },
+    {
+        file: "leaflet/0.7.2/leaflet.js",
+        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
+    },
+    {
+        file: "leaflet/0.7.2/leaflet.include-css.js",
+        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
+    },
+    {
+        file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.js",
+        pages: ["activities"]
+    },
+    {
+        file: "leaflet/plugins/Leaflet.markercluster/0.4.0/leaflet.markercluster.include-css.js",
+        pages: ["activities"]
+    },
+    {
+        file: "//maps.googleapis.com/maps/api/js?sensor=false",
+        remote: true,
+        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+    },
+    {
+        file: "leaflet/plugins/shramov-leaflet-plugins/1.1.0/layer/tile/Google.js",
+        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+    },
+    {
+        file: "prototype162.js"
+    },
+    {
+        file: "fabtabulous.js"
+    },
+    {
+        file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"
+    },
+    {
+        file: "registerrox.js",
+        pages: [
+            "signup"
+        ]
+    },
+    {
+        file: "geo_suggest.js?1",
+        pages: [
+            "signup", "setlocation"
+        ]
+    },
+    {
+        file: "tinymce/tinymce.min.js",
+        pages: [
+            "activities",
+            "blog",
+            "forums",
+            "groups",
+            "suggestions",
+            "trip"
+        ]
+    },
+    {
+        file: "blog_suggest.js",
+        pages: [
+            "blog",
+            "trip"
+        ]
+    },
+    {
+        file: "act_suggest.js",
+        pages: [
+            "activities"
+        ]
+    },
+    {
+        file: "datepicker.js",
+        pages: [
+            "activities",
+            "blog",
+            "trip",
+            "admin/treasurer"
+        ]
+    },
+    {
+        file: "fieldset.js",
+        pages: [
+            "blog/create",
+            "blog/edit",
+            "user/settings",
+            "trip/create",
+            "trip/edit",
+            "trip",
+            "gallery/show/image",
+            "message/write",
+            "editmyprofile",
+            "admin/massmail",
+            "members/"
+        ]
+    },
+    {
+        file: "gallery.js",
+        pages: [
+            "blog/create",
+            "editmyprofile"
+        ]
+    },
+    {
+        file: "uploader.js",
+        pages: [
+            "blog/create",
+            "editmyprofile"
+        ]
+    },
+    {
+        file: "lightview.js",
+        pages: [
+            "gallery",
+            "tour/meet"
+        ]
+    },
+    {
+        file: "transition.js",
+        pages: [
+            "thepeople"
+        ]
+    },
+    {
+        file: "prototip.js?1",
+        pages: [
+            "searchmembers"
+        ]
+    },
+    {
+        file: "fancyzoom.js",
+        pages: [
+            "members",
+            "editmyprofile",
+            "mypreferences",
+            "myvisitors",
+            "deleteprofile",
+            "people"
+        ]
+    },
+    {
+        file: "util/console.js"
+    },
+    {
+        file: "map/geolocation/BWGoogleMapReverseGeolocator.js?1",
+        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+    },
+    {
+        file: "map/leaflet/LeafletFlagIcon.js",
+        pages: ["signup/3", "setlocation", "blog", "trip"]
+    },
+    {
+        file: "map/builder/BWSimpleMapBuilder.js?2",
+        pages: ["signup/3", "setlocation", "blog", "trip"]
+    },
+    {
+        file: "map/builder/BWGeosearchMapBuilder.js?2",
+        pages: ["searchmembers"]
+    },
+    {
+        file: "map/BWMapMaths.js",
+        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+    },
+    {
+        file: "map/BWMapAddressPoint.js",
+        pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
+    },
+    {
+        file: "map/BWMapHostPoint.js",
+        pages: ["searchmembers"]
+    },
+    {
+        file: "map/BWMapSearchResult.js",
+        pages: ["searchmembers"]
+    },
+    {
+        file: "map/small/smallMapGeoLocation.js?2",
+        pages: ["signup/3", "setlocation"]
+    },
+    {
+        file: "map/small/blogSmallMapGeoLocation.js?2",
+        pages: ["blog", "trip"]
+    },
+    {
+        file: "map/small/blogMap.js?2",
+        pages: ["blog"]
+    },
+    {
+        file: "map/small/singlePost.js?2",
+        pages: ["blog"]
+    },
+    {
+        file: "map/small/tripMap.js?2",
+        pages: ["trip"]
+    },
+    {
+        file: "searchmembers.js?2",
+        pages: ["searchmembers"]
+    },
+    {
+        file: "search/search.js",
+        pages: ["search"]
+    },
+    {
+        file: "map/activities/activities_map.js?2",
+        pages: ["activities"]
+    }
 ]);

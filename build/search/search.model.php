@@ -309,17 +309,13 @@ LIMIT 1
 
     private function getGroupsCondition($vars) {
         $condition = "";
-        if (isset($vars['search-groups']) && ($vars['search-groups'] == 1)) {
-            // get groups for logged in member
-            $member = $this->getLoggedInMember();
-            if ($member) {
-                $groups = array();
-                foreach($member->getGroups() as $group) {
-                    $groups[] = $group->id;
-                }
-                if (!empty($groups)) {
-                    $condition = " AND mg.IdMember = m.id AND mg.IdGroup IN ('" . implode("', '", $groups) . "')";
-                }
+        if (isset($vars['search-groups'])) {
+            $groups = array();
+            foreach($vars['search-groups'] as $group) {
+                $groups[] = $group;
+            }
+            if (!empty($groups)) {
+                $condition = " AND mg.IdMember = m.id AND mg.IdGroup IN ('" . implode("', '", $groups) . "')";
             }
         }
         return $condition;
@@ -327,18 +323,14 @@ LIMIT 1
 
     private function getLanguagesCondition($vars) {
         $condition = "";
-        if (isset($vars['search-languages']) && ($vars['search-languages'] == 1)) {
-            // get groups for logged in member
-            $member = $this->getLoggedInMember();
-            if ($member) {
-                $languages = array();
-                foreach($member->get_languages_spoken() as $language) {
-                    $languages[] = $language->IdLanguage;
-                }
-                if (!empty($languages)) {
-                    $condition = " AND mll.IdMember = m.id AND mll.IdLanguage IN ('" . implode("', '", $languages) . "')
-                        AND mll.Level <> 'HelloOnly'";
-                }
+        if (isset($vars['search-languages'])) {
+            $languages = array();
+            foreach($vars['search-languages'] as $language) {
+                $languages[] = $language;
+            }
+            if (!empty($languages)) {
+                $condition = " AND mll.IdMember = m.id AND mll.IdLanguage IN ('" . implode("', '", $languages) . "')
+                    AND mll.Level <> 'HelloOnly'";
             }
         }
         return $condition;
@@ -954,12 +946,13 @@ LIMIT 1
         $vars['search-age-minimum'] = 0;
         $vars['search-age-maximum'] = 0;
         $vars['search-gender'] = 0;
-        $vars['search-groups'] = 0;
+        $vars['search-groups'] = array();
         $vars['search-accommodation'] = array('anytime', 'dependonrequest', 'neverask');
         $vars['search-typical-offer'] = array();
         $vars['search-text'] = '';
         $vars['search-membership'] = 0;
-        $vars['search-languages'] = 0;
+        $vars['search-languages'] = array();
+        $vars['member'] = $this->getLoggedInMember();
         return $vars;
     }
 

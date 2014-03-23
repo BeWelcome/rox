@@ -21,7 +21,8 @@ function getAgeDropDown($vars, $name) {
 
 function getGenderDropDown($vars) {
     $words = new MOD_words();
-    $select = '<select name="search-gender">';
+    $select = '<strong class="small">' . $words->getFormatted('Gender') . '</strong><br/>';
+    $select .= '<select name="search-gender">';
     $select .= '<option value="0"></option>
                 <option value="male"';
     if ($vars['search-gender'] === 'male') {
@@ -43,38 +44,52 @@ function getGenderDropDown($vars) {
 }
 
 function getGroupOptionsDropDown($vars) {
+    $groups = array();
     $words = new MOD_words();
-    $select = '<select name="search-groups" class="sval">';
-    $select .= '<option value="0" ';
-    if ($vars['search-groups'] == 0) {
-        $select .= 'selected="selected"';
+    $model = new RoxModelBase();
+    $member = $model->getLoggedInMember();
+    if ($member) {
+        $groups = $member->getGroups();
     }
-    $select .= '>' . $words->getBuffered('SearchAllGroups');
-    $select .= '</option>
-        <option value="1" ';
-    if ($vars['search-groups'] == 1) {
-        $select .= 'selected="selected"';
+    $select = '<strong class="small">' . $words->getFormatted('Groups') . '</strong><br/>';
+    $select .= '<select name="search-groups[]" class="multiselect sval" ';
+    if ($member) {
+        $select .= 'disabled="disabled" ';
     }
-    $select .= '>' . $words->getBuffered('SearchMyGroups') . '</option>
-        </select>' . $words->flushBuffer();
+    $select .= 'multiple="multiple">';
+    foreach($groups as $group) {
+        $select .= '<option value="' . $group->id . '"';
+        if (in_array($group->id, $vars['search-groups']) === true) {
+            $select .= ' selected="selected"';
+        }
+        $select .= '>' . $group->Name . '</option>';
+    }
+    $select .= '</select>' . $words->flushBuffer();
     return $select;
 }
 
 function getLanguagesOptionsDropDown($vars) {
     $words = new MOD_words();
-    $select = '<select name="search-languages" class="sval">';
-    $select .= '<option value="0" ';
-    if ($vars['search-languages'] == 0) {
-        $select .= 'selected="selected"';
+    $languages = array();
+    $model = new RoxModelBase();
+    $member = $model->getLoggedInMember();
+    if ($member) {
+        $languages = $member->get_languages_spoken();
     }
-    $select .= '>' . $words->getBuffered('SearchAllLanguages');
-    $select .= '</option>
-        <option value="1" ';
-    if ($vars['search-languages'] == 1) {
-        $select .= 'selected="selected"';
+    $select = '<strong class="small">' . $words->getFormatted('SearchLanguages') . '</strong><br/>';
+    $select .= '<select name="search-languages[]" multiple="multiple" ';
+    if ($member) {
+        $select .= 'disabled="disabled" ';
     }
-    $select .= '>' . $words->getBuffered('SearchMyLanguages') . '</option>
-        </select>' . $words->flushBuffer();
+    $select .= 'class="multiselect sval">';
+    foreach($languages as $language) {
+        $select .= '<option value="' . $language->IdLanguage . '"';
+        if (in_array($language->IdLanguage, $vars['search-languages']) === true) {
+            $select .= ' selected="selected"';
+        }
+        $select .= '>' . $language->Name . '</option>';
+    }
+    $select .= '</select>' . $words->flushBuffer();
     return $select;
 }
 
@@ -88,19 +103,19 @@ function getAccommodationOptions($vars) {
     if (in_array("anytime", $accommodation) === true) {
         $options .= ' checked="checked" ';
     }
-    $options .= 'class="sval"/>
+    $options .= 'class="sval"/>&nbsp;
         <label for="search-accommodation-anytime">' . $words->get('Accomodation_anytime') . '</label><br/>
         <input type="checkbox" name="search-accommodation[]" id="search-accommodation-dependonrequest" value="dependonrequest"';
     if (in_array("dependonrequest", $accommodation) === true) {
         $options .= ' checked="checked" ';
     }
-    $options .= 'class="sval"/>
+    $options .= 'class="sval"/>&nbsp;
         <label for="search-accommodation-dependonrequest">' . $words->get('Accomodation_dependonrequest') . '</label><br/>
         <input type="checkbox" name="search-accommodation[]" id="search-accommodation-neverask" value="neverask"';
     if (in_array("neverask", $accommodation) === true) {
         $options .= ' checked="checked" ';
     }
-    $options .= 'class="sval"/>
+    $options .= 'class="sval"/>&nbsp;
         <label for="search-accommodation-neverask">' . $words->get('Accomodation_neverask') . '</label><br/>';
     return $options;
 }
@@ -115,31 +130,26 @@ function getTypicalOfferOptions($vars) {
     if (in_array("guidedtour", $typicalOffers) === true) {
         $options .= ' checked="checked" ';
     }
-    $options .= 'class="sval"/>
+    $options .= 'class="sval"/>&nbsp;
         <label for="search-typical-guidedtour">' . $words->get('TypicOffer_guidedtour') . '</label><br/>
         <input type="checkbox" name="search-typical-offer[]" id="search-typical-dinner" value="dinner"';
     if (in_array("dinner", $typicalOffers) === true) {
         $options .= ' checked="checked" ';
     }
-    $options .= 'class="sval"/>
+    $options .= 'class="sval"/>&nbsp;
         <label for="search-typical-dinner">' . $words->get('TypicOffer_dinner') . '</label><br/>';
     return $options;
 }
 
-function getMemberOptions($vars) {
+function getMembershipCheckbox($vars) {
     $words = new MOD_words();
-    $select = '<select name="search-membership">
-                <option value="0"';
-    if ($vars['search-membership'] == 0) {
-        $select .= ' selected="selected"';
+    $memberCheckbox = '<strong class="small">' . $words->getFormatted('FindPeopleMemberStatus') . '</strong><br/>';
+    $memberCheckbox .= '<input type="checkbox" id="search-membership" name="search-membership" value="1"';
+    if (isset($vars['search-membership']) && ($vars['search-membership'] == 1)) {
+        $memberCheckbox .= ' checked="checked"';
     }
-    $select .= '>' . $words->getBuffered('Active') . '</option>
-        <option value="1"';
-    if ($vars['search-membership'] == 1) {
-        $select .= ' selected="selected"';
-    }
-    $select .= '>' . $words->getBuffered('All') . '</option>
-        </select>' . $words->flushBuffer();
-    return $select;
+    $memberCheckbox .= ' />&nbsp;<label for="search-membership">' . $words->get('SearchIncludeInactive') . '</label>';
+
+    return $memberCheckbox;
 }
 ?>

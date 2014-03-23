@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright (c) 2007-2009 BeVolunteer
+Copyright (c) 2007-2014 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -33,6 +33,11 @@ Boston, MA  02111-1307, USA.
  */
 class SearchMembersBasePage extends PageWithActiveSkin
 {
+    public function __construct() {
+        parent::__construct();
+        $this->purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+    }
+
     protected function teaserHeadline() {
         return $this->getWords()->get('FindMembers');
     }
@@ -58,6 +63,5 @@ class SearchMembersBasePage extends PageWithActiveSkin
         $scriptFiles[] = 'search/searchajax.js';
         return $scriptFiles;
     }
-
 }
 

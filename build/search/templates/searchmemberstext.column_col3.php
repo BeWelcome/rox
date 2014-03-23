@@ -209,8 +209,8 @@ if ($memberResultsReturned) :
                 $accommodationIcon = ShowAccommodation($member->Accomodation);
                 $offerIcons = GetOfferIcons($member->TypicOffer);
                 // replace line breaks '\r\n' by html line break element '<br/>'
-                $profileSummary = str_replace("\\r\\n", "<br/>", $member->ProfileSummary);
-                $occupation = str_replace("\\r\\n", "<br/>", $member->Occupation);
+                $profileSummary = $this->purifier->purify($member->ProfileSummary);
+                $occupation = $this->purifier->purify($member->Occupation);
                 echo '<tr class="' . (($ii % 2) ? 'blank' : 'highlight') . '">';
                 echo '<td style="width: 95px; padding-right:1ex; text-align:center; vertical-align: top; word-wrap: break-word;">';
                 echo '<div style="padding-right: 1em; text-align: center"><div>' . $layoutbits->PIC_75_75($member->Username, 'class="framed"') . '</div>';

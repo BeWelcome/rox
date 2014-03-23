@@ -53,7 +53,7 @@ function getGroupOptionsDropDown($vars) {
     }
     $select = '<strong class="small">' . $words->getFormatted('Groups') . '</strong><br/>';
     $select .= '<select name="search-groups[]" class="multiselect sval" ';
-    if ($member) {
+    if (!$member) {
         $select .= 'disabled="disabled" ';
     }
     $select .= 'multiple="multiple">';
@@ -78,7 +78,7 @@ function getLanguagesOptionsDropDown($vars) {
     }
     $select = '<strong class="small">' . $words->getFormatted('SearchLanguages') . '</strong><br/>';
     $select .= '<select name="search-languages[]" multiple="multiple" ';
-    if ($member) {
+    if (!$member) {
         $select .= 'disabled="disabled" ';
     }
     $select .= 'class="multiselect sval">';

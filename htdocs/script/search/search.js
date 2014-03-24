@@ -29,6 +29,7 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
 });
 
 jQuery(function() {
+
     jQuery(".multiselect").multiselect();
     jQuery( "#search-location" ).on( "keydown", function( event ) {
 		jQuery( "#search-geoname-id" ).val( 0 );

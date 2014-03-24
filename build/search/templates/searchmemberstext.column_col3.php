@@ -2,6 +2,10 @@
     var noMatchesFound = "<?php echo $words->getSilent('SearchNoMatchesFound');?>";
     var searchSimple = "<?php echo $words->getSilent('SearchMembersSimple');?>";
     var searchAdvanced = "<?php echo $words->getSilent('SearchMembersAdvanced');?>";
+    var checkAllTextTranslation = "<?php echo $words->getSilent('SearchMembersCheckAll');?>";
+    var uncheckAllTextTranslation = "<?php echo $words->getSilent('SearchMembersUncheckAll');?>";
+    var noneSelectedTextTranslation = "<?php echo $words->getSilent('SearchMembersNoneSelected');?>";
+    var selectedTextTranslation = "<?php echo $words->getSilent('SearchMembersSelect');?>";
 </script><?php
 $errors = $this->errors;
 if (empty($this->vars)) {

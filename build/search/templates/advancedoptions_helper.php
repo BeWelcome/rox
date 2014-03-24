@@ -59,7 +59,7 @@ function getGroupOptionsDropDown($vars) {
     $select .= 'multiple="multiple">';
     foreach($groups as $group) {
         $select .= '<option value="' . $group->id . '"';
-        if (in_array($group->id, $vars['search-groups']) === true) {
+        if (isset($vars['search-groups']) && in_array($group->id, $vars['search-groups']) === true) {
             $select .= ' selected="selected"';
         }
         $select .= '>' . $group->Name . '</option>';
@@ -84,7 +84,7 @@ function getLanguagesOptionsDropDown($vars) {
     $select .= 'class="multiselect sval">';
     foreach($languages as $language) {
         $select .= '<option value="' . $language->IdLanguage . '"';
-        if (in_array($language->IdLanguage, $vars['search-languages']) === true) {
+        if (isset($vars['search-languages']) && in_array($language->IdLanguage, $vars['search-languages']) === true) {
             $select .= ' selected="selected"';
         }
         $select .= '>' . $language->Name . '</option>';

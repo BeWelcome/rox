@@ -54,7 +54,6 @@ class SearchMembersBasePage extends PageWithActiveSkin
        $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css';
-        $stylesheets[] = 'styles/css/minimal/screen/custom/chosen.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery.multiselect.css';
        // $stylesheets[] = 'styles/css/minimal/screen/custom/search.css';
        return $stylesheets;

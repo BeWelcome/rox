@@ -22,14 +22,14 @@ $words = new MOD_words;
             <span class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></span><br/>
             <?php echo getAccommodationOptions($vars); ?>
             <span class="small floatbox">
-                <div class="float_right"><i><?php echo $words->getFormatted('FindPeopleAccomodationTip'); ?></i></div>
+                <span class="float_right"><i><?php echo $words->getFormatted('FindPeopleAccomodationTip'); ?></i></span>
             </span>
-            <br>
-            <br>
+            <br/>
+            <br/>
          <span class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></span><br/>
             <?php echo getTypicalOfferOptions($vars); ?>
             <span class="small floatbox">
-                <div class="float_right"><i><?php echo $words->getFormatted('FindPeopleTypicOfferTip'); ?></i></div>
+                <span class="float_right"><i><?php echo $words->getFormatted('FindPeopleTypicOfferTip'); ?></i></span>
             </span>
         </td>
     </tr>

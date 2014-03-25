@@ -30,7 +30,12 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
 
 jQuery(function() {
 
-    jQuery(".multiselect").multiselect();
+    jQuery(".multiselect").multiselect( {
+        checkAllText: checkAllTextTranslation,
+        uncheckAllText: uncheckAllTextTranslation,
+        noneSelectedText: noneSelectedTextTranslation,
+        selectedText: selectedTextTranslation
+    } );
     jQuery( "#search-location" ).on( "keydown", function( event ) {
 		jQuery( "#search-geoname-id" ).val( 0 );
 	});
@@ -63,14 +68,8 @@ jQuery(function() {
     if (ui.item == null) {
       jQuery( "#search-geoname-id" ).val( 0 );
     } else {
-      jQuery( "#search-geoname-id" ).val(ui.item.value);
+      jQuery( "#search-geoname-id" ).val(ui.item.labelnocount);
     }
-  },
-  search: function( event, ui ) {
-	  jQuery( '#search-loading').css( 'visibility', 'visible');
-  },
-  response: function( event, ui ) {
-	  jQuery( '#search-loading').css( 'visibility', 'hidden');
   },
   select: function( event, ui ) {
     jQuery( "#search-geoname-id" ).val( ui.item.value );

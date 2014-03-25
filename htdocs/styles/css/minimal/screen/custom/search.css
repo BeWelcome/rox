@@ -36,7 +36,11 @@ td.details {
 }
 
 #search-loading {
-    visibility: hidden;
+    display: none;
+}
+
+#search-advanced-loading {
+    display: none;
 }
 
 #search-can-host {
@@ -52,14 +56,14 @@ td.details {
 .ui-autocomplete { max-height: 200px; }
 
 .ui-autocomplete-loading {
-  background: white url('/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat;
+  background: white url('/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat !important;
 }
 
 .ui-menu-item-highlight {
   font-weight: bold;
 }
 
-#search-location { 
+#search-location {
   width: 38em;
 }
 
@@ -104,7 +108,7 @@ ol#suggestions li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:
     width: 200px;
 }
 .advance-link a {
-    display: block;
+/*    display: block; */
 }
 select {
     margin-bottom: 0px;

@@ -51,12 +51,13 @@ class SearchMembersBasePage extends PageWithActiveSkin
     }
 
     protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
+        $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/search.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/jquery.multiselect.css';
-       // $stylesheets[] = 'styles/css/minimal/screen/custom/search.css';
-       return $stylesheets;
+        return $stylesheets;
     }
 
     public function getLateLoadScriptfiles() {

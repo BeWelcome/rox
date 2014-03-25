@@ -88,8 +88,6 @@ endif; ?>
                         <input type="hidden" name="search-longitude" id="search-longitude"
                             value="<?php echo $this->vars['search-longitude']; ?>"/>
                         <input name="search-location" id="search-location" value="<?php echo $this->vars['search-location']; ?>"/>
-                        <img id="search-loading"
-                            src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" alt="<?php echo $words->getSilent("SearchMembersLoading"); ?>" />
                    </div>
                     <?php echo $words->flushBuffer(); ?>
             </td>
@@ -138,6 +136,8 @@ endif; ?>
             <a name="search-simple"
                 href="search/members/text"><?php echo $words->getFormatted('SearchMembersSimple'); ?></a>
         <?php } else { ?>
+            <img id="search-advanced-loading"
+                 src="/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif" style="width:10px" alt="<?php echo $words->getSilent("SearchMembersAdvancedLoading"); ?>" />
             <a name="search-advanced"
                 href="search/members/text/advanced"><?php echo $words->getFormatted('SearchMembersAdvanced'); ?></a>
         <?php } ?>

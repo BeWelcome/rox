@@ -21,13 +21,15 @@ $words = new MOD_words;
         <td valign="top" rowspan="3">
             <strong class="small"><?php echo $words->getFormatted('FindPeopleAccomodationTitle'); ?></strong><br/>
             <?php echo getAccommodationOptions($vars); ?>
-            <strong class="small">
-                <?php echo $words->getFormatted('FindPeopleAccomodationTip'); ?>
-            </strong></td>
-        <td valign="top" rowspan="3"><strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br/>
+            <strong class="small floatbox">
+                <div class="float_right"><i><?php echo $words->getFormatted('FindPeopleAccomodationTip'); ?></i></div>
+            </strong>
+            <br>
+            <br>
+         <strong class="small"><?php echo $words->getFormatted('FindPeopleOfferTypeTitle'); ?></strong><br/>
             <?php echo getTypicalOfferOptions($vars); ?>
-            <strong class="small">
-                <?php echo $words->getFormatted('FindPeopleTypicOfferTip'); ?>
+            <strong class="small floatbox">
+                <div class="float_right"><i><?php echo $words->getFormatted('FindPeopleTypicOfferTip'); ?></i></div>
             </strong>
         </td>
     </tr>
@@ -39,15 +41,19 @@ $words = new MOD_words;
         <td colspan="2"><?php echo getLanguagesOptionsDropDown($vars); ?></td>
     </tr>
     <tr>
-        <td>
-            <strong class="small"><?php echo $words->getFormatted('FindPeopleMinimumAge'); ?></strong><br/>
-            <?php echo getAgeDropDown($vars, 'search-age-minimum'); ?>
+        <td colspan="2" class="floatbox">
+            <div class="float_left advance-margin">
+                <strong class="small"><?php echo $words->getFormatted('FindPeopleMinimumAge'); ?></strong><br/>
+                <?php echo getAgeDropDown($vars, 'search-age-minimum'); ?>
+            </div>
+            <div class="float_left advance-margin">
+                <strong class="small"><?php echo $words->getFormatted('FindPeopleMaximumAge'); ?></strong><br/>
+                <?php echo getAgeDropDown($vars, 'search-age-maximum'); ?>
+            </div>
+            <div class="float_left advance-margin">
+                <?php echo getGenderDropDown($vars); ?>
+            </div>
         </td>
-        <td>
-            <strong class="small"><?php echo $words->getFormatted('FindPeopleMaximumAge'); ?></strong><br/>
-            <?php echo getAgeDropDown($vars, 'search-age-maximum'); ?>
-        </td>
-        <td><?php echo getGenderDropDown($vars); ?></td>
         <td><?php echo getMembershipCheckbox($vars); ?></td>
     </tr>
 </table>

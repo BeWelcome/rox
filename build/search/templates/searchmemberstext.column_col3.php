@@ -424,10 +424,10 @@ function ShowAccommodation($accommodation)
             $imgSrc = 'images/icons/yesicanhost.png';
             break;
         case 'dependonrequest':
-            $imgSrc = 'images/icons/yesicanhost.png';
+            $imgSrc = 'images/icons/maybe.png';
             break;
         case 'neverask':
-            $imgSrc = 'images/icons/yesicanhost.png';
+            $imgSrc = 'images/icons/nosorry.png';
             break;
     }
 

@@ -76,7 +76,7 @@ endif; ?>
 <?php echo $this->layoutkit->formkit->setPostCallback('SearchController', 'searchMembersCallback'); ?>
 <form method="get" id="searchmembers-form" name="searchmembers-form"action="">
 <div class="greybackground">
-    <table>
+    <table class="full">
         <tr>
             <td>
                 <label for='search-location'><span class="small"><?= $words->get('SearchEnterLocation'); ?></span></label><br/>
@@ -117,7 +117,7 @@ endif; ?>
                 endforeach;
                 ?></select><?php echo $words->flushBuffer(); ?>
             </td>
-            <td class="float_right">
+            <td>
                 <br/><input id="search-submit-button" name="search-submit-button" class="button" type="submit"
             value="<?php echo $words->getBuffered('FindPeopleSubmitSearch'); ?>"/>
             </td>

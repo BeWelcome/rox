@@ -12,6 +12,9 @@ td {
     vertical-align: top;
     padding-right: 1ex;
 }
+.greybackground table td {
+    vertical-align: middle;
+}
 
 td.memberleft {
     width: 95px;

@@ -9,7 +9,7 @@ jQuery( function() {
                 function() {
                     jQuery(that).attr( 'href', '/search/members/text');
                     jQuery(that).html( searchSimple );
-                    jQuery(".multiselect").multiselect();
+                    enableMultiSelect();
                     jQuery('#search-advanced-loading').hide();
                 });
         } else {

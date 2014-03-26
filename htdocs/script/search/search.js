@@ -28,14 +28,17 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
     }
 });
 
-jQuery(function() {
-
+function enableMultiSelect() {
     jQuery(".multiselect").multiselect( {
         checkAllText: checkAllTextTranslation,
         uncheckAllText: uncheckAllTextTranslation,
         noneSelectedText: noneSelectedTextTranslation,
         selectedText: selectedTextTranslation
     } );
+}
+
+jQuery(function() {
+    enableMultiSelect();
     jQuery( "#search-location" ).on( "keydown", function( event ) {
 		jQuery( "#search-geoname-id" ).val( 0 );
 	});
@@ -68,7 +71,7 @@ jQuery(function() {
     if (ui.item == null) {
       jQuery( "#search-geoname-id" ).val( 0 );
     } else {
-      jQuery( "#search-geoname-id" ).val(ui.item.labelnocount);
+      jQuery( "#search-geoname-id" ).val(ui.item.value);
     }
   },
   select: function( event, ui ) {

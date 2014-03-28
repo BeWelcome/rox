@@ -71,14 +71,16 @@ class SearchController extends RoxControllerBase
         $page = new SearchMembersTextPage();
         $vars = $this->args_vars->get;
         $isAdvanced = (isset($this->request_vars[3]) && $this->request_vars[3] == 'advanced');
-        if (!empty($vars)) {
+        if (empty($vars)) {
+            $vars = array_merge($this->model->getDefaultSimpleOptions(), $this->model->getDefaultAdvancedOptions());
+        } else {
             $isAdvanced = isset($vars['search-advanced']);
             $page->errors = $this->model->checkSearchVarsOk($vars);
             if (count($page->errors) == 0)  {
                 $page->results = $this->model->getResultsForLocation($vars);
             }
-            $page->vars = $vars;
         }
+        $page->vars = $vars;
         $page->member = $this->model->getLoggedInMember();
         if ($isAdvanced) {
             $page->showAdvanced = true;

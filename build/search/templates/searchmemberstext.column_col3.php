@@ -5,32 +5,8 @@
     var checkAllTextTranslation = "<?php echo $words->getSilent('SearchMembersCheckAll');?>";
     var uncheckAllTextTranslation = "<?php echo $words->getSilent('SearchMembersUncheckAll');?>";
     var noneSelectedTextTranslation = "<?php echo $words->getSilent('SearchMembersNoneSelected');?>";
-    var selectedTextTranslation = "<?php echo $words->getSilent('SearchMembersSelect');?>";
+    var selectedTextTranslation = "<?php echo $words->getSilent('SearchMembersSelected');?>";
 </script><?php
-$errors = $this->errors;
-if (empty($this->vars)) {
-    $vars = array();
-    $vars['search-location'] = '';
-    $vars['search-can-host'] = 1;
-    $vars['search-distance'] = 25;
-    $vars['search-geoname-id'] = 0;
-    $vars['search-latitude'] = 0;
-    $vars['search-longitude'] = 0;
-    $vars['search-number-items'] = 10;
-    $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
-    $vars['search-page-current'] = 1;
-    $vars['search-username'] = '';
-    $vars['search-age-minimum'] = 0;
-    $vars['search-age-maximum'] = 0;
-    $vars['search-gender'] = 0;
-    $vars['search-groups'] = array();
-    $vars['search-accommodation'] = array('anytime', 'dependonrequest', 'neverask');
-    $vars['search-typical-offer'] = array();
-    $vars['search-text'] = '';
-    $vars['search-membership'] = 0;
-    $vars['search-languages'] = array();
-    $this->vars = $vars;
-}
 $members = array();
 $memberResultsReturned = false;
 $locations = array();
@@ -66,9 +42,9 @@ $layoutbits = new MOD_layoutbits();
 // when switching between pages of the result
 ?>
 <div class="row"><!--  around form -->
-<?php if (count($errors) > 0) :
+<?php if (count($this->errors) > 0) :
     echo '<div class="error">';
-    foreach ($errors as $error) :
+    foreach ($this->errors as $error) :
         echo '<p>' . $words->get($error) . '</p>';
     endforeach;
     echo '</div>';
@@ -281,35 +257,27 @@ if ($memberResultsReturned) :
 endif;
 if (!empty($locations)) :
     echo '<p>' . $words->get('SearchSelectLocation') . '</p>';
+    echo '<div class="floatbox">';
     if (isset($results['biggest'])) :
+        // biggest
         $i = 0;
         foreach ($results['biggest'] as $big) :
-            if ($big->cnt > 0) :
-                switch ($i % 3) :
-                    case 0 :
-                        echo '<div class="floatbox">
-                    <div class="subcolumns row"><div class="c33l">';
-                        break;
-                    case 1 :
-                        echo '<div class="c33l">';
-                        break;
-                    case 2 :
-                        echo '<div class="c33r">';
-                        break;
-                endswitch;
-                echo '<span id="geoname' . $big->geonameid . '"><input type="submit" id="geonameid-' . $big->geonameid . '" name="geonameid-' . $big->geonameid . '" value="' . htmlentities($big->name, ENT_COMPAT, 'utf-8') . '" /><br />'
-                    . htmlentities($big->admin1, ENT_COMPAT, 'utf-8') . ', ' . htmlentities($big->country, ENT_COMPAT, 'utf-8') . ', ';
-                if ($big->cnt == 0) :
-                    echo $words->get('SearchSuggestionsNoMembersFound');
-                else :
-                    echo $words->get('SearchSuggestionsMembersFound', $big->cnt);
-                endif;
-                echo '</span></div>';
-                if ($i % 3 == 2) :
-                    echo '</div>';
-                endif;
-                $i++;
-            endif;
+            if ($big->cnt == 0) continue;
+            $class = 'c33l';
+            if ($i % 3 == 0) {
+                echo '
+                        <div class="subcolumns row">';
+            };
+            if ($i % 3 == 2) {
+                $class = 'c33r';
+            }
+            echo '<div class="' . $class . '"><span id="geoname' . $big->geonameid . '"><input type="submit" id="geonameid-' . $big->geonameid . '" name="geonameid-' . $big->geonameid . '" value="' . htmlentities($big->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+                . htmlentities($big->admin1, ENT_COMPAT, 'utf-8') . ', ' . htmlentities($big->country, ENT_COMPAT, 'utf-8') . ', ' . $words->get('SearchSuggestionsMembersFound', $big->cnt);
+            echo '</span></div>';
+            if ($i %3 == 2) {
+                echo '</div>';
+            }
+            $i++;
         endforeach;
         if ($i % 3 != 0) :
             echo '</div>';
@@ -318,144 +286,56 @@ if (!empty($locations)) :
             echo '</div>';
         endif;
     endif;
-    switch ($results['type']) :
-        case "places":
-            ?>
-            <div class="floatbox">
-            <?php
-            $i = 0;
-            foreach ($locations as $location) :
-                switch ($i % 3) :
-                    case 0 :
-                        echo '<div class="subcolumns row"><div class="c33l">';
-                        break;
-                    case 1 :
-                        echo '<div class="c33l">';
-                        break;
-                    case 2 :
-                        echo '<div class="c33r">';
-                        break;
-                endswitch;
-                echo '<span id="geoname' . $location->geonameid . '"><input type="submit" id="geonameid-' . $location->geonameid . '" name="geonameid-' . $location->geonameid . '" value="' . htmlentities($location->name, ENT_COMPAT, 'utf-8') . '" /><br />'
-                    . ((isset($location->admin1)) ? htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . ', ' : '') . htmlentities($location->country, ENT_COMPAT, 'utf-8') . ', ';
-                if ($location->cnt == 0) :
-                    echo $words->get('SearchSuggestionsNoMembersFound');
-                else :
-                    echo $words->get('SearchSuggestionsMembersFound', $location->cnt);
-                endif;
-                echo '</span></div>';
-                if ($i % 3 == 2) :
-                    echo '</div>';
-                endif;
-                $i++;
-            endforeach;
-            if ($i % 3 != 0) :
-                echo '</div>';
-            endif;?></div><?php
+    $i = 0;
+    switch($results['type']) {
+        case 'admin1s':
+            $type = 'admin1';
             break;
-        case "admin1s":
-            ?>
-            <div class="floatbox">
-            <?php
-            $i = 0;
-            foreach ($locations as $location) :
-                switch ($i % 3) :
-                    case 0 :
-                        echo '<div class="subcolumns row"><div class="c33l">';
-                        break;
-                    case 1 :
-                        echo '<div class="c33l">';
-                        break;
-                    case 2 :
-                        echo '<div class="c33r">';
-                        break;
-                endswitch;
-                echo '<input type="submit" name="admin1-' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . '" />';
-                echo '</div>';
-                if ($i % 3 == 2) :
-                    echo '</div>';
-                endif;
-                $i++;
-            endforeach;
-            if ($i % 3 != 0) :
-                echo '</div>';
-            endif;?></div><?php
+        case 'countries':
+            $type = 'country';
             break;
-        case "countries":
-            ?>
-            <div class="floatbox">
-            <?php
-            $i = 0;
-            foreach ($locations as $location) :
-                switch ($i % 3) :
-                    case 0 :
-                        echo '<div class="subcolumns row"><div class="c33l">';
-                        break;
-                    case 1 :
-                        echo '<div class="c33l">';
-                        break;
-                    case 2 :
-                        echo '<div class="c33r">';
-                        break;
-                endswitch;
-                echo '<input type="submit" name="country-' . htmlentities($location->code, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($location->country, ENT_COMPAT, 'utf-8') . '" />';
-                echo '</div>';
-                if ($i % 3 == 2) :
-                    echo '</div>';
-                endif;
-                $i++;
-            endforeach;
-            if ($i % 3 != 0) :
-                echo '</div>';
-            endif;?></div><?php
-            break;
-    endswitch;
+        default:
+            $type = '';
+    }
+    foreach ($locations as $location) :
+        $class = 'c33l';
+        if ($i % 3 == 0) {
+            echo '<div class="subcolumns row">';
+        }
+        if ($i % 3 == 2) {
+            $class = 'c33r';
+        }
+        echo '<div class="' . $class . '">';
+        if (empty($type)) :
+            echo '<span id="geoname' . $location->geonameid . '"><input type="submit" id="geonameid-' . $location->geonameid . '" name="geonameid-' . $location->geonameid . '" value="' . htmlentities($location->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+                . ((isset($location->admin1)) ? htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . ', ' : '') . htmlentities($location->country, ENT_COMPAT, 'utf-8') . ', ';
+            if ($location->cnt == 0) :
+                echo $words->get('SearchSuggestionsNoMembersFound');
+            else :
+                echo $words->get('SearchSuggestionsMembersFound', $location->cnt);
+            endif;
+            echo '</span>';
+        else :
+            if ($type == 'admin1') :
+                $text = $location->admin1;
+
+            else :
+                $text = $location->country;
+            endif;
+            echo '<input type="submit" name="' . $type . '-' . htmlentities($text, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($text, ENT_COMPAT, 'utf-8') . '" />';
+        endif;
+        echo '</div>';
+        if ($i % 3 == 2) :
+            echo '</div>';
+        endif;
+        $i++;
+    endforeach;
+    if ($i % 3 != 0) :
+        echo '</div>' . "\n";
+    endif;
+    ?><?php
 endif;
 ?>
 </div>
 </form>
 </div><!-- around form-->
-<?php
-function ShowAccommodation($accommodation)
-{
-    $words = new MOD_words();
-    switch($accommodation) {
-        case 'anytime':
-            $imgSrc = 'images/icons/yesicanhost.png';
-            break;
-        case 'dependonrequest':
-            $imgSrc = 'images/icons/maybe.png';
-            break;
-        case 'neverask':
-            $imgSrc = 'images/icons/nosorry.png';
-            break;
-    }
-
-    $altText = $words->getSilent('Accomodation_' . $accommodation);
-    $imgTag = '<img src="' . $imgSrc . '" title="' . $altText . '" '
-        . ' alt="' . $altText . '" />';
-    return $imgTag;
-}
-
-function GetOfferIcons($offer)
-{
-    $words = new MOD_words();
-    $icons = '';
-    if (strstr($offer, "CanHostWeelChair")) {
-        $icons .= '<img src="images/icons/wheelchairblue.png" width="22" height="22" alt="'
-            . $words->getSilent('TypicOffer_CanHostWheelChair') . '" title="'
-            . $words->getSilent('TypicOffer_CanHostWheelChair') . '" />';
-    }
-    if (strstr($offer, "dinner")) {
-        $icons .= '<img src="images/icons/dinner.png" width="22" height="22" alt="'
-            . $words->getSilent('TypicOffer_dinner') . '" title="'
-            . $words->getSilent('TypicOffer_dinner') . '" />';
-    }
-    if (strstr($offer, "guidedtour")) {
-        $icons .= '<img src="images/icons/guidedtour.png" width="22" height="22" alt="'
-            . $words->getSilent('TypicOffer_guidedtour') . '" title="'
-            . $words->getSilent('TypicOffer_guidedtour') . '" />';
-    }
-    return $icons;
-}
-?>

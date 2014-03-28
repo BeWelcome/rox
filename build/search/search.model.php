@@ -957,6 +957,23 @@ LIMIT 1
     }
 
     /**
+     * Returns an array with the default settings for the advanced options.
+     */
+    public function getDefaultSimpleOptions() {
+        $vars = array();
+        $vars['search-location'] = '';
+        $vars['search-can-host'] = 1;
+        $vars['search-distance'] = 25;
+        $vars['search-geoname-id'] = 0;
+        $vars['search-latitude'] = 0;
+        $vars['search-longitude'] = 0;
+        $vars['search-number-items'] = 10;
+        $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
+        $vars['search-page-current'] = 1;
+        return $vars;
+    }
+
+    /**
      *
      */
     public function checkSearchVarsOk($vars) {

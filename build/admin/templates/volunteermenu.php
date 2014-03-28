@@ -56,28 +56,10 @@ Boston, MA  02111-1307, USA.
                 'Words management'
             ),
             array(
-                'Accepter',
-                'bw/admin/adminaccepter.php',
-                'Pending ('.$numberPersonsToBeAccepted.')',
-                'accept new member accounts'
-            ),
-            array(
-                'Accepter',
-                'bw/admin/adminmandatory.php',
-                'AdminMandatory('.$numberPersonsToBeChecked.')',
-                'check member accounts'
-            ),
-            array(
                 'Grep',
                 'bw/admin/admingrep.php',
                 'AdminGrep',
                 'grep files'
-            ),
-            array(
-                'Group',
-                'bw/admin/admingroups.php',
-                'AdminGroups('.$numberPersonsToAcceptInGroup.')',
-                'manage groups'
             ),
             array(
                 'Flags',

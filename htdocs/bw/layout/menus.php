@@ -309,7 +309,6 @@ function VolMenu($link = "", $tt = "") {
 		}
 		$res .= " title=\"Words management\">AdminWord</a></li>\n";
 	}
-
 	if (HasRight("Verifier")) {
 		$res .= "\n<li><a";
 		if ($link == "verify") {
@@ -320,46 +319,6 @@ function VolMenu($link = "", $tt = "") {
 		$res .= " title=\"verify a member\">".ww("LinkToVerifyPage")."</a></li>\n";
 	}
 
-	
-	if (HasRight("Accepter")) {
-		$res .= "<li><a";
-
-		if ($link == "admin/adminaccepter.php") {
-			$res .= " id=current ";
-		} else {
-			$res .= " href=\"".bwlink("admin/adminaccepter.php")."\" method='post' ";
-		}
-
-		$AccepterScope= RightScope('Accepter');
-		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-		   $InScope = " /* All countries */";
-		} else {
-		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
-		}
-	 	
-
-		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM members,countries,cities WHERE members.Status='Pending' AND cities.id=members.IdCity AND countries.id=cities.IdCountry ".$InScope);
-		$res .= " title=\"Accepting members (scope=".addslashes($InScope).")\">AdminAccepter(".$rr->cnt.")</a></li>\n";
-
-		$res .= "<li><a";
-
-		if ($link == "admin/adminmandatory.php") {
-			$res .= " id=current ";
-		} else {
-			$res .= " href=\"".bwlink("admin/adminmandatory.php")."\" method='post' ";
-		}
-		$AccepterScope= RightScope('Accepter');
-		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-		   $InScope = " /* All countries */";
-		} else {
-		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
-		}
-	 	
-
-		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM pendingmandatory,countries,cities WHERE pendingmandatory.Status='Pending' AND cities.id=pendingmandatory.IdCity AND countries.id=cities.IdCountry ".$InScope);
-		$res .= " title=\"update mandatory data(scope=".addslashes($InScope).")\">AdminMandatory(".$rr->cnt.")</a></li>\n";
-	}
-
 	if (HasRight("Grep")) {
 		$res .= "<li><a";
 		if ($link == "admin/admingrep.php") {
@@ -368,16 +327,6 @@ function VolMenu($link = "", $tt = "") {
 			$res .= " href=\"".bwlink("admin/admingrep.php")."\" method='post' ";
 		}
 		$res .= " title=\"Greping files\">AdminGrep</a></li>\n";
-	}
-
-	if (HasRight("Group")) {
-		$res .= "<li><a";
-		if ($link == "admin/admingroups.php") {
-			$res .= " id=current ";
-		} else {
-			$res .= " href=\"".bwlink("admin/admingroups.php")."\" method='post' ";
-		}
-		$res .= " title=\"Grepping file\">AdminGroups</a></li>\n";
 	}
 
 	if (HasRight("SqlForVolunteers")) {
@@ -492,36 +441,7 @@ function VolMenu($link = "", $tt = "") {
 //------------------------------------------------------------------------------
 // This function display the Ads 
 function ShowAds() {
-    return;
-	// right column 
-?>
-
-      <div id="col2">
-        <div id="col2_content" class="clearfix">
-	 <h3><? echo ww("Ads") ?></h3>
-<?php
-    //	if (IsAdmin()) echo "          <p>ADMIN - no ads</p>" ; //hmm, is this how it worked in HC? :)
-
-    echo str_replace("<br />","",ww(21607)); // Google Ads entry
-	/*
-?>
-<script type="text/javascript"><!--
-google_ad_client = "pub-2715182874315259";
-google_ad_width = 120;
-google_ad_height = 240;
-google_ad_format = "120x240_as";
-google_ad_type = "text_image";
-google_ad_channel = "";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-
-<?php
-	*/
-	echo "\n";
-	echo "        </div>\n"; //col2_content
-	echo "      </div>\n"; //col2
+    return 0;
 } // end of ShowAds
 
 //------------------------------------------------------------------------------

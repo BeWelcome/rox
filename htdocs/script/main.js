@@ -341,7 +341,7 @@ bwrox.selectScripts([
     },
     {
         file: "search/search.js",
-        pages: ["search"]
+        pages: ["search/"]
     },
     {
         file: "map/activities/activities_map.js?2",

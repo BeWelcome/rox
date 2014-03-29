@@ -9,6 +9,10 @@
     <div id="quickinfo" class="float_right" style="text-align: right;">
 <?php
 $icons = array();
+if (strstr($member->TypicOffer, "CanHostWeelChair"))
+{
+    $icons[] = '<img src="images/icons/wheelchairblue.png" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
+}
 switch($member->Accomodation)
 {
     case 'anytime':
@@ -25,11 +29,7 @@ switch($member->Accomodation)
         break;
 }
  // showing offer icons (several posibilities)
-if (strstr($member->TypicOffer, "CanHostWeelChair"))
-{
-    $icons[] = '<img src="images/icons/wheelchair.png" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWeelChairYes') . '" />';
-}
-if (strstr($member->TypicOffer, "guidedtour"))
+/* if (strstr($member->TypicOffer, "guidedtour"))
 {
     $icons[] = '<img src="images/icons/guidedtour.png" alt="' . $words->getSilent('CanOfferCityTour') . '" title="' . $words->getSilent('CanOfferCityTour') . '" />';
 }
@@ -37,8 +37,6 @@ if (strstr($member->TypicOffer, "dinner"))
 {
     $icons[] = '<img src="images/icons/dinner.png" alt="' . $words->getSilent('TypicOffer_dinner') . '" title="' . $words->getSilent('TypicOffer_dinner') . '" />';
 }
-/*
- *
 // showing restriction icons (several posibilities)
 if (strstr($member->Restrictions, "NoSmoker"))
 {
@@ -87,8 +85,24 @@ for($ii=0; $ii < count($icons); $ii++)
         <?php
         if ($member->get_trad("OfferGuests", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('ProfileOfferGuests');?>:</dt>
-            <dd><?php echo $purifier->purify($member->get_trad("OfferGuests", $profile_language,true)); ?></dd>
-        <? } ?>
+            <?php
+            $comma = false;
+            echo "<dd>\n";
+            $TabTypicOffer = explode(",", $member->TypicOffer);
+            foreach($TabTypicOffer as $typicOffer) {
+                if ($typicOffer == '') continue;
+                if ($comma) {
+                    echo ', ';
+                }
+                echo $words->get("TypicOffer_" . $typicOffer);
+                $comma = true;
+            }
+            if ($comma) {
+                echo ',<br />';
+            }
+            echo $purifier->purify($member->get_trad("OfferGuests", $profile_language,true));
+            echo "</dd>\n";
+        } ?>
 
         <?php if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('ProfileOfferHosts');?>:</dt>
@@ -125,7 +139,7 @@ for($ii=0; $ii < count($icons); $ii++)
                         if ($restriction == '') continue;
                         if ($restriction == 'SeeOtherRestrictions') continue;
                         if ($comma) {
-                            echo ',<br />';
+                            echo ', ';
                         }
                         echo $words->get("Restriction_" . $restriction);
                         $comma = true;

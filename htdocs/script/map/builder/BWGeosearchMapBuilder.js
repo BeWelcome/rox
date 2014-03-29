@@ -12,46 +12,50 @@ var BWGeosearchMapBuilder = Class
     	var osmTilesProviderBaseUrl = jQuery('#osm-tiles-provider-base-url').val();
     	var osmTilesProviderApiKey = jQuery('#osm-tiles-provider-api-key').val();
     		
-    	if (osmTilesProviderBaseUrl != null){
-    		
-    		bwrox.debug('Initialize activities map with OSM tiles provider \'%s\' and API key \'%s\' on map id \'%s\'.', osmTilesProviderBaseUrl, osmTilesProviderApiKey, mapHtmlId);
-    			
-	        this.isInitialized = false;
-	        this.mapHtmlId = mapHtmlId;
-	        this.mapoff = mapoff;
-	        // set zoom limits
-	        this.initialZoomLevel = 1;
-	        this.minZoom = 1;
-	        this.maxZoom = 18;
-
-			// configure the OSM tiles provider
-	        // no API KEY is currently required
-	        this.osmLayerUrl = osmTilesProviderBaseUrl;
+    	this.mapoff = mapoff;
+        
+    	if (!this.mapoff){
+    	
+	    	if (osmTilesProviderBaseUrl != null){
+	    		
+	    		bwrox.debug('Initialize activities map with OSM tiles provider \'%s\' and API key \'%s\' on map id \'%s\'.', osmTilesProviderBaseUrl, osmTilesProviderApiKey, mapHtmlId);
+	    			
+		        this.isInitialized = false;
+		        this.mapHtmlId = mapHtmlId;
+		        // set zoom limits
+		        this.initialZoomLevel = 1;
+		        this.minZoom = 1;
+		        this.maxZoom = 18;
 	
-	        // map attribution
-			var mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>';
-	
-	        this.labelAccomodation1 = jQuery('#accomodation1').html();
-	        this.labelAccomodation2 = jQuery('#accomodation2').html();
-	        this.labelAccomodation3 = jQuery('#accomodation3').html();
-	
-	        this.currentlyOpenMarkerIndex = null;
-	        this.maxZIndexOffset = 100;
-	
-	        this.memberListOffsets = null;
-	
-	        this.isLayerGroup1Used = false;
-	        this.isLayerGroup2Used = false;
-	        this.isLayerGroup3Used = false;
-	
-	        this.markers = new Array();
-	
-	        // init map
-	        this.initMap();
-	        
-    	}else{
-    		bwrox.debug('Unable to initialize OSM layer: please set "osm_tiles_provider_base_url" property in [map] section of rox_local.ini file.');
-    		return null;
+				// configure the OSM tiles provider
+		        // no API KEY is currently required
+		        this.osmLayerUrl = osmTilesProviderBaseUrl;
+		
+		        // map attribution
+				var mapAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>';
+		
+		        this.labelAccomodation1 = jQuery('#accomodation1').html();
+		        this.labelAccomodation2 = jQuery('#accomodation2').html();
+		        this.labelAccomodation3 = jQuery('#accomodation3').html();
+		
+		        this.currentlyOpenMarkerIndex = null;
+		        this.maxZIndexOffset = 100;
+		
+		        this.memberListOffsets = null;
+		
+		        this.isLayerGroup1Used = false;
+		        this.isLayerGroup2Used = false;
+		        this.isLayerGroup3Used = false;
+		
+		        this.markers = new Array();
+		
+		        // init map
+		        this.initMap();
+		        
+	    	}else{
+	    		bwrox.debug('Unable to initialize OSM layer: please set "osm_tiles_provider_base_url" property in [map] section of rox_local.ini file.');
+	    		return null;
+	    	}
     	}
       },
       /**

@@ -798,6 +798,11 @@ class SuggestionsModel extends RoxModelBase
         return $rankVotes;
     }
 
+    public function moveSuggestionToImplemented($suggestion, $option) {
+        $suggestion->state = SuggestionsModel::SUGGESTIONS_IMPLEMENTED;
+        $suggestion->update(true);
+    }
+
     public function moveOptionToImplemented($suggestion, $option) {
         $suggestion->state &= SuggestionsModel::SUGGESTIONS_DEV;
         $suggestion->state |= SuggestionsModel::SUGGESTIONS_IMPLEMENTED;

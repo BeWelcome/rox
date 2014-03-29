@@ -552,6 +552,21 @@ class SuggestionsController extends RoxControllerBase
         $this->redirectAbsolute($this->router->url('suggestions_devlist'));
     }
 
+    public function moveSuggestionToImplemented() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $id = $this->route_vars['id'];
+        $suggestion = new Suggestion($id);
+        if (!$loggedInMember || !$suggestion
+            || $suggestion->state  != SuggestionOption::IMPLEMENTING) {
+            $this->redirectAbsolute($this->router->url('suggestions_devlist'));
+        }
+        $this->_model->moveSuggestionToImplemented($suggestion);
+
+        $this->setFlashNotice($this->getWords()->get('SuggestionsMovedToImplemented', htmlspecialchars($suggestion->summary, ENT_COMPAT || ENT_QUOTES)));
+
+        $this->redirectAbsolute($this->router->url('suggestions_devlist'));
+    }
+
     public function devList() {
         $pageno = 0;
         if (isset($this->route_vars['pageno'])) {

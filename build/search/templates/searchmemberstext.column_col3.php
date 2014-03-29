@@ -188,7 +188,6 @@ if ($memberResultsReturned) :
             // $markers contains the necessary array setup for Javascript to get the markers onto the map
             foreach ($members as $member) {
                 $accommodationIcon = ShowAccommodation($member->Accomodation);
-                $offerIcons = GetOfferIcons($member->TypicOffer);
                 // replace line breaks '\r\n' by html line break element '<br/>'
                 $profileSummary = $this->purifier->purify($member->ProfileSummary);
                 $occupation = $this->purifier->purify($member->Occupation);
@@ -224,8 +223,8 @@ if ($memberResultsReturned) :
                 echo '<td class="details"><div class="red"><div class="left">' . $accommodationIcon . '</div>'
                     . '<div>' . $words->get('SearchMaxGuestInfo', '<strong>' . $member->MaxGuest . '</strong>') . '<br />'
                     . $words->get('SearchCommentsInfo', '<strong>' . $member->CommentCount . '</strong>') . '</div></div>';
-                echo '<div class="clearfix"></div>' . $offerIcons . '<br />';
-                echo $words->get('SearchMemberSinceInfo', '<strong>' . date('Y-m-d', strtotime($member->created)) . '</strong>') . '<br />';
+                echo '<div class="clearfix"></div>';
+                echo $words->get('SearchMemberSinceInfo', '<strong>' . date('d M y', strtotime($member->created)) . '</strong>') . '<br />';
                 $lastlogin = (($member->LastLogin == '0000-00-00') ? 'Never' : $layoutbits->ago(strtotime($member->LastLogin)));
                 $class = 'red';
                 if ($member->LastLogin <> '0000-00-00') {

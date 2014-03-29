@@ -137,7 +137,13 @@ function getTypicalOfferOptions($vars) {
         $options .= ' checked="checked" ';
     }
     $options .= 'class="sval"/>&nbsp;
-        <label for="search-typical-dinner">' . $words->get('TypicOffer_dinner') . '</label><br/>';
+        <label for="search-typical-dinner">' . $words->get('TypicOffer_dinner') . '</label><br/>
+        <input type="checkbox" name="search-typical-offer[]" id="search-typical-wheelchair" value="CanHostWeelChair"'; /* Typo in database table */
+    if (in_array("CanHostWeelChair", $typicalOffers) === true) {
+        $options .= ' checked="checked" ';
+    }
+    $options .= 'class="sval"/>&nbsp;
+        <label for="search-typical-wheelchair">' . $words->get('TypicOffer_CanHostWheelChair') . '</label>';
     return $options;
 }
 

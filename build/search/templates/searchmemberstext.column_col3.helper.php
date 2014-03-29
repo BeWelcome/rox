@@ -29,26 +29,4 @@ function ShowAccommodation($accommodation)
         . ' alt="' . $altText . '" />';
     return $imgTag;
 }
-
-function GetOfferIcons($offer)
-{
-    $words = new MOD_words();
-    $icons = '';
-    if (strstr($offer, "CanHostWeelChair")) {
-        $icons .= '<img src="images/icons/wheelchairblue.png" width="22" height="22" alt="'
-            . $words->getSilent('TypicOffer_CanHostWheelChair') . '" title="'
-            . $words->getSilent('TypicOffer_CanHostWheelChair') . '" />';
-    }
-    if (strstr($offer, "dinner")) {
-        $icons .= '<img src="images/icons/dinner.png" width="22" height="22" alt="'
-            . $words->getSilent('TypicOffer_dinner') . '" title="'
-            . $words->getSilent('TypicOffer_dinner') . '" />';
-    }
-    if (strstr($offer, "guidedtour")) {
-        $icons .= '<img src="images/icons/guidedtour.png" width="22" height="22" alt="'
-            . $words->getSilent('TypicOffer_guidedtour') . '" title="'
-            . $words->getSilent('TypicOffer_guidedtour') . '" />';
-    }
-    return $icons;
-}
 ?>

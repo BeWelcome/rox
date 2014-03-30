@@ -28,7 +28,7 @@ function processVote( e ) {
                 },
                 success: function( data ) {
                     if (data.status == "success") {
-                        // Update the zd containing the element
+                        // Update the id containing the element
                         var parent = jQuery(that).parent();
                         var newHtml = "";
                         if (upvote) {
@@ -44,8 +44,8 @@ function processVote( e ) {
                         }
                         parent.html(newHtml);
                         // rebind click event on new <a> tags
-                        jQuery( "a[name^='upvote_']" ).on("click", processVote );
-                        jQuery( "a[name^='downvote_']" ).on("click", processVote );
+                        jQuery( "a[name^='upvote_" + id + "']" ).on("click", processVote );
+                        jQuery( "a[name^='downvote_" + id + "']" ).on("click", processVote );
                     }
                 }
             });

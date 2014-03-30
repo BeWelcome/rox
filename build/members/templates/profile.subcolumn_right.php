@@ -91,10 +91,11 @@ for($ii=0; $ii < count($icons); $ii++)
             $TabTypicOffer = explode(",", $member->TypicOffer);
             foreach($TabTypicOffer as $typicOffer) {
                 if ($typicOffer == '') continue;
+                if ($typicOffer == 'CanHostWeelChair') continue;
                 if ($comma) {
                     echo ', ';
                 }
-                echo $words->get("TypicOffer_" . $typicOffer);
+                echo $words->get("ProfileTypicOffer_" . $typicOffer);
                 $comma = true;
             }
             if ($comma) {
@@ -131,7 +132,7 @@ for($ii=0; $ii < count($icons); $ii++)
         }
         if ($max > 0) {
         ?>
-            <dt class="label" ><?=$words->get('ProfileRestrictionForGuest');?>:</dt>
+            <dt class="label" ><?=$words->get('ProfileHouseRules');?>:</dt>
             <?php
                 $comma = false;
                 echo "<dd>\n";

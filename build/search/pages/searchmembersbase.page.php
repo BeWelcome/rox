@@ -62,7 +62,7 @@ class SearchMembersBasePage extends PageWithActiveSkin
 
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
-        $scriptFiles[] = 'search/searchajax.js';
+        $scriptFiles[] = 'search/searchajax.js.php';
         return $scriptFiles;
     }
 }

@@ -409,6 +409,14 @@ LIMIT 1
         return $row->cnt;
     }
 
+    private function getParameter($vars, $var, $default) {
+        $result = $default;
+        if (isset($vars[$var])) {
+            $result = $vars[$var];
+        }
+        return $result;
+    }
+
     /**
      *
      * @param array $vars
@@ -420,15 +428,9 @@ LIMIT 1
         $langarr = explode('-', $_SESSION['lang']);
         $lang = $langarr[0];
         // First get current page and limits
-        $limit = $vars['search-number-items'];
-        $pageno = 1;
-        foreach(array_keys($vars) as $key) {
-            if (strstr($key, 'search-page-') !== false) {
-                $pageno = str_replace('search-page-', '', $key);
-            }
-        }
-        $start = ($pageno -1) * $limit;
-        $vars['search-page-current'] = $pageno;
+        $limit = $this->getParameter($vars, 'search-number-items', 10);
+        $pageno = $this->getParameter($vars, 'search-page', 1);
+        $start = ($pageno - 1) * $limit;
 
         if (array_key_exists('search-membership', $vars) && ($vars['search-membership'] == 1)) {
             $this->status = " AND m.status IN (" . Member::ACTIVE_SEARCH . ")";
@@ -969,7 +971,7 @@ LIMIT 1
         $vars['search-longitude'] = 0;
         $vars['search-number-items'] = 10;
         $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
-        $vars['search-page-current'] = 1;
+        $vars['search-page'] = 1;
         return $vars;
     }
 
@@ -1060,7 +1062,7 @@ LIMIT 1
             if (empty($vars['search-location'])) {
                 // Search all over the world
                 $results['type'] = 'members';
-                $results['values'] = $this->getMemberDetails($vars);
+                $results['members'] = $this->getMemberDetails($vars);
             } else {
                 // User didn't select from the suggestion list (javascript might be disabled)
                 // get suggestions directly from the database
@@ -1084,18 +1086,18 @@ LIMIT 1
                 // check if found unit is a country
                 if (strstr($location->fcode, 'PCL') === false) {
                     $results['type'] = 'members';
-                    $results['values'] = $this->getMemberDetails($vars,
+                    $results['members'] = $this->getMemberDetails($vars,
                             $location->admin1, $location->country);
                 } else {
                     // get all members of that country
                     $results['type'] = 'members';
-                    $results['values'] = $this->getMemberDetails($vars,
+                    $results['members'] = $this->getMemberDetails($vars,
                             false, $location->country);
                 }
             } else {
                 // just get all active members from that place
                 $results['type'] = 'members';
-                $results['values'] = $this->getMemberDetails($vars);
+                $results['members'] = $this->getMemberDetails($vars);
             }
         }
         $results['countOfMembers'] = $vars['countOfMembers'];

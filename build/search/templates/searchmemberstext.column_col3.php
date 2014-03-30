@@ -7,27 +7,6 @@
     var noneSelectedTextTranslation = "<?php echo $words->getSilent('SearchMembersNoneSelected');?>";
     var selectedTextTranslation = "<?php echo $words->getSilent('SearchMembersSelected');?>";
 </script><?php
-$members = array();
-$memberResultsReturned = false;
-$locations = array();
-$results = $this->results;
-if ($results) {
-    switch ($results['type']) {
-        case 'members':
-            $memberResultsReturned = true;
-            $members = $results['values'];
-            break;
-        case 'places':
-            $locations = $results['locations'];
-            break;
-        case 'admin1s':
-            $locations = $results['locations'];
-            break;
-        case 'countries':
-            $locations = $results['locations'];
-            break;
-    }
-}
 
 $orderBy = array();
 $orderArray = SearchModel::getOrderByArray();
@@ -146,34 +125,22 @@ endif; ?>
 
 </div>
 <div class="floatbox">
-    <?php if (!$results) : ?>
+    <?php if (!$this->results) : ?>
         <?php echo $words->get('SearchInfo'); ?>
     <?php endif; ?>
 </div>
 <div><?php
-if ($memberResultsReturned) :
+if ($this->membersResultsReturned) :
+    $loginMessageShown = false;
     if (!$this->member) :
-        if ($results['countOfMembers'] != $results['countOfPublicMembers']) :
-            echo '<p>' . $words->get('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login/search#login-widget">', '</a>');
+        if ($this->results['countOfMembers'] != $this->results['countOfPublicMembers']) :
+            echo '<p>' . $words->get('SearchShowMore', $words->getSilent('SearchShowMoreLogin'), '<a href="/login' . "/search/members/text?" . http_build_query($this->vars) . '&search-page-#login-widget">', '</a>');
             echo $words->flushBuffer() . '</p>';
+            $loginMessageShown = true;
         endif;
     endif;
-    if (!empty($members)) :
-        // Initialise pager widget
-        $params = new StdClass;
-        $params->strategy = new FullPagePager();
-        $params->page_url = "/search/members/text?" . http_build_query($this->vars);
-        $params->page_url_marker = 'search-page-';
-        $params->page_method = 'form';
-        if ($this->member) {
-            $params->items = $results['countOfMembers'];
-        } else {
-            $params->items = $results['countOfPublicMembers'];
-        }
-        $params->active_page = $this->vars['search-page-current'];
-        $params->items_per_page = $this->vars['search-number-items'];
-        $pager = new PagerWidget($params);
-        $pager->render();?>
+    if (!empty($this->results['members'])) :
+        $this->pager->render();?>
         <table id="memberresults">
             <thead>
             <tr>
@@ -186,7 +153,7 @@ if ($memberResultsReturned) :
             <?php
             $ii = 0;
             // $markers contains the necessary array setup for Javascript to get the markers onto the map
-            foreach ($members as $member) {
+            foreach ($this->results['members'] as $member) {
                 $accommodationIcon = ShowAccommodation($member->Accomodation);
                 // replace line breaks '\r\n' by html line break element '<br/>'
                 $profileSummary = $this->purifier->purify($member->ProfileSummary);
@@ -249,18 +216,20 @@ if ($memberResultsReturned) :
             </tbody>
         </table>
         <?php
-        $pager->render();
+        $this->pager->render();
     else:
-        echo $words->get('SearchMembersNoneFound');
+        if (!$loginMessageShown) {
+            echo $words->get('SearchMembersNoneFound');
+        }
     endif;
 endif;
-if (!empty($locations)) :
+if ($this->locationsResultsReturned) :
     echo '<p>' . $words->get('SearchSelectLocation') . '</p>';
     echo '<div class="floatbox">';
-    if (isset($results['biggest'])) :
+    if (isset($this->results['biggest'])) :
         // biggest
         $i = 0;
-        foreach ($results['biggest'] as $big) :
+        foreach ($this->results['biggest'] as $big) :
             if ($big->cnt == 0) continue;
             $class = 'c33l';
             if ($i % 3 == 0) {
@@ -286,7 +255,7 @@ if (!empty($locations)) :
         endif;
     endif;
     $i = 0;
-    switch($results['type']) {
+    switch($this->results['type']) {
         case 'admin1s':
             $type = 'admin1';
             break;
@@ -296,7 +265,7 @@ if (!empty($locations)) :
         default:
             $type = '';
     }
-    foreach ($locations as $location) :
+    foreach ($this->locations as $location) :
         $class = 'c33l';
         if ($i % 3 == 0) {
             echo '<div class="subcolumns row">';

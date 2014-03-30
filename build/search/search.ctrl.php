@@ -69,6 +69,7 @@ class SearchController extends RoxControllerBase
      */
     public function searchMembersText() {
         $page = new SearchMembersTextPage();
+        $page->member = $this->model->getLoggedInMember();
         $vars = $this->args_vars->get;
         $isAdvanced = (isset($this->request_vars[3]) && $this->request_vars[3] == 'advanced');
         if (empty($vars)) {
@@ -80,8 +81,37 @@ class SearchController extends RoxControllerBase
                 $page->results = $this->model->getResultsForLocation($vars);
             }
         }
+        if ($page->results) {
+            switch ($page->results['type']) {
+                case 'members':
+                    $page->membersResultsReturned = true;
+                    $params = new StdClass;
+                    $params->strategy = new FullPagePager();
+                    $params->page_url = "/search/members/text?" . http_build_query($vars);
+                    $params->page_url_marker = 'search-page';
+                    $params->page_method = 'get';
+                    if ($page->member) {
+                        $params->items = $page->results['countOfMembers'];
+                    } else {
+                        $params->items = $page->results['countOfPublicMembers'];
+                    }
+                    $activePage = 1;
+                    if (isset($vars['search-page'])) {
+                        $activePage = $vars['search-page'];
+                    }
+                    $params->active_page = $activePage;
+                    $params->items_per_page = $vars['search-number-items'];
+                    $page->pager = new PagerWidget($params);
+                    break;
+                case 'places':
+                case 'admin1s':
+                case 'countries':
+                    $page->locationsResultsReturned = true;
+                    $page->locations = $page->results['locations'];
+                    break;
+            }
+        }
         $page->vars = $vars;
-        $page->member = $this->model->getLoggedInMember();
         if ($isAdvanced) {
             $page->showAdvanced = true;
         } else {

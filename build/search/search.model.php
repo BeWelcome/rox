@@ -180,6 +180,19 @@ LIMIT 1
     }
 
     /**
+     * @param array $vars
+     * r@return string
+     */
+    private function getStatusCondition($vars) {
+        if (array_key_exists('search-membership', $vars) && ($vars['search-membership'] == 1)) {
+            $statusCondition = " AND m.status IN (" . Member::ACTIVE_SEARCH . ") ";
+        } else {
+            $statusCondition = " AND m.status IN ( 'Active') ";
+        }
+        return $statusCondition;
+    }
+
+    /**
      *
      * @param array $vars
      * @param string $admin1
@@ -389,7 +402,7 @@ LIMIT 1
             WHERE
                 m.id = a.IdMember
                 " . $this->maxGuestCondition . "
-                " .$this->status;
+                " .$this->statusCondition;
         if ($publicOnly) {
             $str .= "
                 AND m.id = mpp.IdMember ";
@@ -432,12 +445,7 @@ LIMIT 1
         $pageno = $this->getParameter($vars, 'search-page', 1);
         $start = ($pageno - 1) * $limit;
 
-        if (array_key_exists('search-membership', $vars) && ($vars['search-membership'] == 1)) {
-            $this->status = " AND m.status IN (" . Member::ACTIVE_SEARCH . ")";
-        } else {
-            $this->status = " AND m.status IN ( 'Active')";
-        }
-
+        $this->statusCondition = $this->getStatusCondition($vars);
         $this->maxGuestCondition = "AND m.MaxGuest >= " . $vars['search-can-host'];
         $this->locationCondition = $this->getLocationCondition($vars, $admin1, $country);
         $this->genderCondition = $this->getGenderCondition($vars);

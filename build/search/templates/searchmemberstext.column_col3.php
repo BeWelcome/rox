@@ -224,7 +224,7 @@ if ($this->membersResultsReturned) :
     endif;
 endif;
 if ($this->locationsResultsReturned) :
-    echo '<p>' . $words->get('SearchSelectLocation') . '</p>';
+    echo '<p><strong>' . $words->get('SearchSelectLocation') . '</strong></p>';
     echo '<div class="floatbox">';
     if (isset($this->results['biggest'])) :
         // biggest

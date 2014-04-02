@@ -1,0 +1,7 @@
+<map id="PException\addInfo" name="PException\addInfo">
+<area shape="rect" id="node2" href="$class_login_model.html#ab18e47413f9ea5654bd2a45c62ea17d3" title="LoginModel\\checkAuth" alt="" coords="204,15,359,41"/>
+<area shape="rect" id="node4" href="$class_m_o_d__user___auth.html#a7a1ae540e342d76630d3cf57db1ea071" title="MOD_user_Auth\\checkAuth" alt="" coords="189,67,373,93"/>
+<area shape="rect" id="node6" href="$class_user_view.html#ad52693bb11ed4c736cbf93f958d8277e" title="UserView\\registerMail" alt="" coords="207,117,355,144"/>
+<area shape="rect" id="node3" href="$class_login_model.html#a53a5bfe172c6b102f12cd9e4cdfe6e5d" title="LoginModel\\createMissing\lTBUser" alt="" coords="421,5,595,46"/>
+<area shape="rect" id="node5" href="$class_user.html#a2101748f605b8ebda58167191883d9cc" title="User\\registerProcess" alt="" coords="436,71,580,97"/>
+</map>

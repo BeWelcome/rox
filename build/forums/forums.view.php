@@ -494,7 +494,7 @@ class ForumsView extends RoxAppView {
     }
 
     private function getVisibilitiesDropdown($currentVisibility, $highestVisibility, $IdGroup, $newtopic) {
-        $visiblities = array();
+        $visibilities = array();
         // If we have a group check if visibility is limited to GroupOnly
         if ($IdGroup != 0) {
             // getting group entity from model as createEntity isn't public
@@ -505,9 +505,6 @@ class ForumsView extends RoxAppView {
                 // check if highest visibility is not GroupOnly meaning
                 // thread was started before the group setting changed
                 if ($highestVisibility != "GroupOnly") {
-                    if ($highestVisibility == "NoRestriction") {
-                        $visibilities[] = "NoRestriction";
-                    }
                     $visibilities[] = "MembersOnly";
                     if ($isMember) {
                         $visibilities[] = "GroupOnly";
@@ -517,38 +514,20 @@ class ForumsView extends RoxAppView {
                     $visibilities[] = "GroupOnly";
                 }
             } else {
-                $visibilities[] = "NoRestriction";
                 $visibilities[] = "MembersOnly";
                 if ($isMember) {
                     $visibilities[] = "GroupOnly";
                 }
             }
         } else {
-            $visibilities[] = "NoRestriction";
             $visibilities[] = "MembersOnly";
         }
 
         if (!$newtopic) {
             $name = "PostVisibility";
             // if this is a reply or edit of a reply we need to limit the choices
-            switch($highestVisibility) {
-                case 'GroupOnly':
-
-                    $k = array_search("NoRestriction", $visibilities, true);
-                    if ($k !== false) {
-                        unset($visibilities[$k]);
-                    }
-                    $k = array_search("MembersOnly", $visibilities, true);
-                    if ($k !== false) {
-                        unset($visibilities[$k]);
-                    }
-                    break;
-                case 'MembersOnly':
-                    $k = array_search("NoRestriction", $visibilities, true);
-                    if ($k !== false) {
-                        unset($visibilities[$k]);
-                    }
-                    break;
+            if ($highestVisibility == 'GroupOnly') {
+                $visibilities = array( "GroupOnly");
             }
         } else {
             $name = "ThreadVisibility";
@@ -568,7 +547,7 @@ class ForumsView extends RoxAppView {
     }
 
     private function getNewThreadVisibilitiesDropdown($IdGroup) {
-        $visiblities = array();
+        $visibilities = array();
         // If we have a group check if visibility is limited to GroupOnly
         if ($IdGroup != 0) {
             $group = $this->_model->GetGroupEntity($IdGroup);
@@ -579,7 +558,6 @@ class ForumsView extends RoxAppView {
             }
             else
             {
-                $visibilities[] = "NoRestriction";
                 $visibilities[] = "MembersOnly";
                 $visibilities[] = "GroupOnly";
             }
@@ -587,7 +565,6 @@ class ForumsView extends RoxAppView {
         else
         {
             $currentVisibility = "MembersOnly";
-            $visibilities[] = "NoRestriction";
             $visibilities[] = "MembersOnly";
         }
 

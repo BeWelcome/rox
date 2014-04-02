@@ -1,0 +1,6 @@
+<map id="PageWithGivenRSS\formatFeedItem" name="PageWithGivenRSS\formatFeedItem">
+<area shape="rect" id="node2" href="$class_page_with_thread_r_s_s.html#a914f15330692fcbddaf97d645b48ab03" title="PageWithThreadRSS\\showItem" alt="" coords="286,5,490,32"/>
+<area shape="rect" id="node3" href="$class_page_with_forum_r_s_s.html#a3ba1cfed1a812fb81eb690305a127022" title="PageWithForumRSS\\showItem" alt="" coords="287,56,489,83"/>
+<area shape="rect" id="node4" href="$class_page_with_tag_r_s_s.html#a5b1f68280a5d44aa25dda3c7002507d1" title="PageWithTagRSS\\showItem" alt="" coords="295,107,481,133"/>
+<area shape="rect" id="node5" href="$class_page_with_blog_r_s_s.html#a773cb9d627bdd6119b244e7d4341e176" title="PageWithBlogRSS\\showItem" alt="" coords="293,157,483,184"/>
+</map>

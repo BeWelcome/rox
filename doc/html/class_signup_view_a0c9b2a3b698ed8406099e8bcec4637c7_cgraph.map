@@ -1,0 +1,6 @@
+<map id="SignupView\registerMail" name="SignupView\registerMail">
+<area shape="rect" id="node2" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="241,5,340,32"/>
+<area shape="rect" id="node3" href="$class_a_p_p___user.html#afb9dac964c0c50d69d297dd891cf5e40" title="APP_User\\getSetting" alt="" coords="217,56,364,83"/>
+<area shape="rect" id="node4" href="$class_m_o_d__mail.html#a9fbbdf3b8c47beaac18eef96c59632f7" title="MOD_mail\\sendEmail" alt="" coords="217,107,365,133"/>
+<area shape="rect" id="node5" href="$personalstart_8teasercontent_8php.html#a4be4055f3361d4800e16bc2e2e38cda6" title="init" alt="" coords="414,107,453,133"/>
+</map>

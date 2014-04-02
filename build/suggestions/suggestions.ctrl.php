@@ -146,9 +146,13 @@ class SuggestionsController extends RoxControllerBase
                 return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
             }
             $suggestion = new Suggestion($this->route_vars['id']);
+            if ((!$this->checkSuggestionRight()) && ($suggestion->createdBy != $loggedInMember->id)) {
+                $this->setFlashNotice($this->getWords()->get('SuggestionNoEditAllowed'));
+                return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
+            }
         } else {
             if (!$loggedInMember) {
-                $this->redirectAbsolute($this->router->url('suggestions_about'));
+                $this->redirectAbsolute($this->router->url('suggestions_discuss'));
             }
             $suggestion = new Suggestion;
         }
@@ -291,8 +295,14 @@ class SuggestionsController extends RoxControllerBase
     public function restoreOption() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $this->redirectOnSuggestionState(SuggestionsModel::SUGGESTIONS_ADD_OPTIONS);
+        $id = $this->route_vars['id'];
         $optionId = $this->route_vars['optid'];
-        $this->_model->restoreOption($optionId);
+        $suggestion = new Suggestion($id);
+        if (!$suggestion) {
+            $this->setFlashNotice($this->getWords()->get('SuggestionRestoreOptionSuccess'));
+            return $this->router->url('suggestions_addoptions_list', array());
+        }
+        $this->_model->restoreOption($id, $optionId);
         $this->setFlashNotice($this->getWords()->get('SuggestionRestoreOptionSuccess'));
         return $this->router->url('suggestions_addoptions', array('id' => $this->route_vars['id']), false);
     }
@@ -538,6 +548,21 @@ class SuggestionsController extends RoxControllerBase
         $this->_model->moveOptionToImplemented($suggestion, $option);
 
         $this->setFlashNotice($this->getWords()->get('SuggestionsOptionMovedToImplemented', htmlspecialchars($option->summary, ENT_COMPAT || ENT_QUOTES)));
+
+        $this->redirectAbsolute($this->router->url('suggestions_devlist'));
+    }
+
+    public function moveSuggestionToImplemented() {
+        $loggedInMember = $this->_model->getLoggedInMember();
+        $id = $this->route_vars['id'];
+        $suggestion = new Suggestion($id);
+        if (!$loggedInMember || !$suggestion
+            || $suggestion->state  != SuggestionOption::IMPLEMENTING) {
+            $this->redirectAbsolute($this->router->url('suggestions_devlist'));
+        }
+        $this->_model->moveSuggestionToImplemented($suggestion);
+
+        $this->setFlashNotice($this->getWords()->get('SuggestionsMovedToImplemented', htmlspecialchars($suggestion->summary, ENT_COMPAT || ENT_QUOTES)));
 
         $this->redirectAbsolute($this->router->url('suggestions_devlist'));
     }

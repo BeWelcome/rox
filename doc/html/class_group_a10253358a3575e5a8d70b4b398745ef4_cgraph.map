@@ -1,0 +1,8 @@
+<map id="deleteGroup" name="deleteGroup">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#a2f27c20674620565aa8b3433bffe305d" title="RoxEntityBase\\isLoaded" alt="" coords="644,5,809,32"/>
+<area shape="rect" id="node3" href="$class_group.html#a533ce244b6fbd4ecee7f00e8d9c4c82e" title="getMembers" alt="" coords="319,208,414,235"/>
+<area shape="rect" id="node5" href="$class_group.html#a1a621d4c3b91b7a81d73f4238e3ac6be" title="memberLeave" alt="" coords="147,107,250,133"/>
+<area shape="rect" id="node4" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="635,132,819,159"/>
+<area shape="rect" id="node6" href="$class_group.html#a58e12fc455d79122dbb64562a3296c21" title="isGroupOwner" alt="" coords="483,107,587,133"/>
+<area shape="rect" id="node7" href="$class_group.html#a5d727a426a9b286a73d36ff055f1f049" title="removeGroupOwner" alt="" coords="299,56,434,83"/>
+</map>

@@ -1,16 +1,72 @@
+#searchmembers-form, #memberresults {
+    padding-bottom: 0.5em;
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    padding-left: 1ex;
+}
+
+td {
+    vertical-align: top;
+    padding-right: 1ex;
+}
+.greybackground table td {
+    vertical-align: middle;
+}
+
+td.memberleft {
+    width: 95px;
+    text-align:center;
+    word-wrap: break-word;
+}
+
+td.memberright {
+   width: 20%;
+}
+
+td.summary {
+    width: auto;
+}
+
+td.details {
+    width: 20%;
+}
+
+.left {
+    float:left;
+}
+
+#search-loading {
+    display: none;
+}
+
+#search-advanced-loading {
+    display: none;
+}
+
+#search-can-host {
+    width: 7em;
+}
+
+#search-distance {
+    width: 10em;
+}
+
 .ui-autocomplete { overflow-y: scroll; }
 * html .ui-autocomplete { /* IE max- */height: expression( this.scrollHeight > 200 ? "200px" : "auto" ); }
 .ui-autocomplete { max-height: 200px; }
 
 .ui-autocomplete-loading {
-  background: white url('/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat;
+  background: white url('/styles/css/minimal/screen/custom/jquery-ui/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat !important;
 }
 
 .ui-menu-item-highlight {
   font-weight: bold;
 }
 
-#search-location { 
+#search-location {
   width: 38em;
 }
 
@@ -27,3 +83,46 @@ span.page {
 
 /* Geo Selector */
 ol#suggestions li { margin-bottom: 0; margin-top: 0; margin-right: 1em; padding:5px; border-top: 1px solid #e5e5e5; width: 21.5em; float:left; background: transparent none no-repeat scroll right center; background-position: 250px; cursor: pointer;}
+
+.greybackground {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.05);
+    border-top: 1px solid #999999;
+    padding-bottom: 7px;
+}
+.advance-container {
+    height: 17px;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+.advance-link {
+    background: none repeat scroll 0 0 rgba(0, 0, 9, 0.05);
+    border-radius: 0 0 4px 4px;
+    cursor: pointer;
+    display: block;
+    font-size: 10px;
+    height: 17px;
+    line-height: 14px;
+    margin: 0 auto;
+    text-align: center;
+    text-transform: uppercase;
+    vertical-align: top;
+    width: 200px;
+}
+.advance-link a {
+/*    display: block; */
+}
+select {
+    margin-bottom: 0px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  vertical-align: top;
+}
+
+.advance-margin {
+    margin-right:2em;
+}
+

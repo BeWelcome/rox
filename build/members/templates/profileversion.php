@@ -72,7 +72,7 @@ if (count($languages) > 1 || $myself) {
            $ownLanguages .= '<option value="'.$lang->ShortCode.'">' . $lang->Name . '</option>';
           }
       }
-      error_log($ownLanguages);
+
       if (!empty($ownLanguages)) { ?>
     <optgroup label="<?=$wwsilent->YourLanguages?>">
     <?php echo $ownLanguages; ?>

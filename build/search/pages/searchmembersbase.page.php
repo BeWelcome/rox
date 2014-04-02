@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright (c) 2007-2009 BeVolunteer
+Copyright (c) 2007-2014 BeVolunteer
 
 This file is part of BW Rox.
 
@@ -33,8 +33,17 @@ Boston, MA  02111-1307, USA.
  */
 class SearchMembersBasePage extends PageWithActiveSkin
 {
+    public function __construct() {
+        parent::__construct();
+        $this->purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+    }
+
     protected function teaserHeadline() {
         return $this->getWords()->get('FindMembers');
+    }
+
+    protected function getPageTitle() {
+        return $this->getWords()->get('FindMembers') . ' - BeWelcome';
     }
 
     protected function leftSidebar() {
@@ -42,11 +51,19 @@ class SearchMembersBasePage extends PageWithActiveSkin
     }
 
     protected function getStylesheets() {
-       $stylesheets = parent::getStylesheets();
-       $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css';
-       $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
-       // $stylesheets[] = 'styles/css/minimal/screen/custom/search.css';
-       return $stylesheets;
+        $stylesheets = parent::getStylesheets();
+        $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery.multiselect.css';
+        return $stylesheets;
+    }
+
+    public function getLateLoadScriptfiles() {
+        $scriptFiles = parent::getLateLoadScriptfiles();
+        $scriptFiles[] = 'search/searchajax.js.php';
+        return $scriptFiles;
     }
 }
 

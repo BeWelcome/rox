@@ -1,6 +1,8 @@
-var leafletCssBase = 'script/leaflet/0.5.1/';
+var leafletCssBase = 'script/leaflet/0.7.2/';
 
 document.write('<link media="all" type="text/css" href="' + leafletCssBase + 'leaflet.css" rel="stylesheet">');
-document.write('<!--[if lte IE 8]>');
-document.write('<link media="all" type="text/css" href="' + leafletCssBase + 'leaflet.ie.css" rel="stylesheet">');
-document.write('<![endif]-->');
+
+var leafletMarkerClusterCssBase = 'script/leaflet/plugins/Leaflet.markercluster/0.4.0/css/';
+
+document.write('<link media="all" type="text/css" href="' + leafletMarkerClusterCssBase + 'MarkerCluster.Default.css" rel="stylesheet">');
+document.write('<link media="all" type="text/css" href="' + leafletMarkerClusterCssBase + 'MarkerCluster.css" rel="stylesheet">');

@@ -1,0 +1,16 @@
+<map id="ItemlistWithPagination" name="ItemlistWithPagination">
+<area shape="rect" id="node6" href="$class_mailbox_widget.html" title="MailboxWidget" alt="" coords="877,132,985,159"/>
+<area shape="rect" id="node13" href="$class_notify_admin_widget.html" title="NotifyAdminWidget" alt="" coords="864,197,997,224"/>
+<area shape="rect" id="node14" href="$class_notify_member_widget.html" title="NotifyMemberWidget" alt="" coords="859,252,1002,279"/>
+<area shape="rect" id="node2" href="$class_itemlist_widget.html" title="ItemlistWidget" alt="" coords="505,197,610,224"/>
+<area shape="rect" id="node3" href="$class_rox_widget.html" title="RoxWidget" alt="" coords="369,197,455,224"/>
+<area shape="rect" id="node4" href="$class_visual_component.html" title="VisualComponent" alt="" coords="195,197,319,224"/>
+<area shape="rect" id="node5" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,197,147,224"/>
+<area shape="rect" id="node7" href="$class_mailbox_widget___drafts.html" title="MailboxWidget_Drafts" alt="" coords="1071,5,1220,32"/>
+<area shape="rect" id="node8" href="$class_mailbox_widget___received.html" title="MailboxWidget_Received" alt="" coords="1062,56,1229,83"/>
+<area shape="rect" id="node10" href="$class_mailbox_widget___sent.html" title="MailboxWidget_Sent" alt="" coords="1074,107,1217,133"/>
+<area shape="rect" id="node11" href="$class_mailbox_widget___spam.html" title="MailboxWidget_Spam" alt="" coords="1071,157,1220,184"/>
+<area shape="rect" id="node12" href="$class_mailbox_widget___with_member.html" title="MailboxWidget_WithMember" alt="" coords="1051,208,1240,235"/>
+<area shape="rect" id="node9" href="$class_mailbox_widget___personalstart.html" title="MailboxWidget_Personalstart" alt="" coords="1288,56,1480,83"/>
+<area shape="rect" id="node15" href="$class_notify_member_widget___personalstart.html" title="NotifyMemberWidget\l_Personalstart" alt="" coords="1074,259,1217,301"/>
+</map>

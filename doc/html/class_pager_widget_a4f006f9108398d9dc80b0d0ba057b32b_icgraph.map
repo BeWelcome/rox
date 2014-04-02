@@ -1,0 +1,8 @@
+<map id="numberOfPages" name="numberOfPages">
+<area shape="rect" id="node2" href="$class_pager_widget.html#ad7746b498109958633de4f4e1c8bae71" title="needsPagination" alt="" coords="169,31,287,57"/>
+<area shape="rect" id="node3" href="$class_pager_widget.html#a9596f1635d3c078fa06ab0166bcbb11b" title="prepare" alt="" coords="195,81,261,108"/>
+<area shape="rect" id="node4" href="$class_pager_widget.html#a48eb9c0945e678e61a347f9e4653eec5" title="__construct" alt="" coords="349,5,440,32"/>
+<area shape="rect" id="node5" href="$class_pager_widget.html#afde88292c44dc59faf017738dae6dffb" title="render" alt="" coords="365,56,424,83"/>
+<area shape="rect" id="node6" href="$class_pager_widget.html#aad5372c2036f7429fa893442042f10a6" title="getHtml" alt="" coords="361,107,428,133"/>
+<area shape="rect" id="node7" href="$class_pager_widget.html#a2036e520dae6e9a33d87ecb067939f15" title="getActiveSubset" alt="" coords="337,157,453,184"/>
+</map>

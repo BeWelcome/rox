@@ -1,0 +1,5 @@
+<map id="SignupModel\confirmRegister" name="SignupModel\confirmRegister">
+<area shape="rect" id="node2" href="$class_a_p_p___user.html#a844c82ba67b258407a8c9e5e55ecf045" title="APP_User\\activate" alt="" coords="253,5,384,32"/>
+<area shape="rect" id="node3" href="$class_a_p_p___user.html#afb9dac964c0c50d69d297dd891cf5e40" title="APP_User\\getSetting" alt="" coords="245,56,392,83"/>
+<area shape="rect" id="node4" href="$class_a_p_p___user.html#af6548ef5c8f7fb6e1e4ab621507048dc" title="APP_User\\userId" alt="" coords="257,107,380,133"/>
+</map>

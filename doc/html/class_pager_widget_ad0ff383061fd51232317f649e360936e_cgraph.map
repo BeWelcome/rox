@@ -1,0 +1,5 @@
+<map id="PagerWidget\needsPagination" name="PagerWidget\needsPagination">
+<area shape="rect" id="node2" href="$class_pager_widget.html#abde778ea912e2c28a38245039c4b4286" title="PagerWidget\\numberOfPages" alt="" coords="251,12,445,39"/>
+<area shape="rect" id="node3" href="$class_pager_widget.html#ab5e1e8537411886ee5f5219341a01b5e" title="PagerWidget\\prepare" alt="" coords="493,12,637,39"/>
+<area shape="rect" id="node4" href="$class_request_router.html#ab49e6b34b1cf30af5afd69549256e127" title="RequestRouter\\getRequest\lAndArgs" alt="" coords="685,5,864,46"/>
+</map>

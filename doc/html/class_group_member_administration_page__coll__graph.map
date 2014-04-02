@@ -1,0 +1,9 @@
+<map id="GroupMemberAdministrationPage" name="GroupMemberAdministrationPage">
+<area shape="rect" id="node2" href="$class_groups_base_page.html" title="GroupsBasePage" alt="" coords="51,453,175,480"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="43,379,183,405"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="43,304,184,331"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="57,229,169,256"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="48,155,179,181"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="51,80,175,107"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="43,5,184,32"/>
+</map>

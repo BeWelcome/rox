@@ -1,0 +1,7 @@
+<map id="MembersModel\showAvatar" name="MembersModel\showAvatar">
+<area shape="rect" id="node2" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="235,5,419,32"/>
+<area shape="rect" id="node3" href="$class_members_model.html#a3c484042bae7cc2de6313cbd66a1473d" title="MembersModel\\hasAvatar" alt="" coords="241,56,413,83"/>
+<area shape="rect" id="node4" href="$class_members_model.html#a4d36f5c1ea18046e0da0ac00a0bb8f68" title="MembersModel\\avatarMake" alt="" coords="473,31,655,57"/>
+<area shape="rect" id="node6" href="$class_members_model.html#ab5ade63ec3bddf1fbeb2accd47d79938" title="MembersModel\\getOldPicture" alt="" coords="467,81,661,108"/>
+<area shape="rect" id="node5" href="$class_members_model.html#ad35967459da3bbf50857f504b9d88e9a" title="MembersModel\\writeMemberphoto" alt="" coords="709,31,931,57"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="GallerySetPage\teaser" name="GallerySetPage\teaser">
+<area shape="rect" id="node2" href="$class_gallery_set_page.html#afdd72004922c037cbdeb9e77e016c0c7" title="GallerySetPage\\breadcrumbs" alt="" coords="213,5,405,32"/>
+<area shape="rect" id="node3" href="$class_gallery_base_page.html#a3abf67318000fa72301e0f79441b98ee" title="GalleryBasePage\\submenu" alt="" coords="219,56,399,83"/>
+<area shape="rect" id="node6" href="$class_gallery_set_page.html#a772a026b64de6b11e3d48d8db82d397f" title="GallerySetPage\\teaserHeadline" alt="" coords="208,107,411,133"/>
+<area shape="rect" id="node4" href="$class_gallery_base_page.html#a3134272ec98e8c8c5a1b81b1e8d641e3" title="GalleryBasePage\\getSubmenu\lActiveItem" alt="" coords="459,17,659,58"/>
+<area shape="rect" id="node5" href="$class_gallery_base_page.html#a4dc3474c4f6dce1ef9046f4fcb424a5b" title="GalleryBasePage\\getSubmenu\lItems" alt="" coords="459,82,659,123"/>
+</map>

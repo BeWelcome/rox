@@ -1,0 +1,6 @@
+<map id="checkGeonameId" name="checkGeonameId">
+<area shape="rect" id="node2" href="$class_geo_model.html#a3da6ac75c55d16c2404303939f6e3162" title="getDataById" alt="" coords="184,5,277,32"/>
+<area shape="rect" id="node3" href="$class_geo_model.html#a718917de09fa1979b8808c41558d0ff0" title="addGeonameId" alt="" coords="176,56,285,83"/>
+<area shape="rect" id="node4" href="$class_geo_model.html#ab6733586edb46fd7ae208f97705a9d92" title="getGeonamesHierarchy" alt="" coords="334,56,493,83"/>
+<area shape="rect" id="node5" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="541,56,640,83"/>
+</map>

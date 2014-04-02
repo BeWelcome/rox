@@ -1,0 +1,9 @@
+<map id="loggedIn" name="loggedIn">
+<area shape="rect" id="node2" href="$class_groups_controller.html#a5c4603e086a0e8ee140a4cbe13934311" title="GroupsController\\createGroup\lCallback" alt="" coords="135,5,329,46"/>
+<area shape="rect" id="node3" href="$class_groups_controller.html#a481b4aea6bdae75e266e35695f6f71ae" title="GroupsController\\changeMember\lSettings" alt="" coords="126,70,338,111"/>
+<area shape="rect" id="node4" href="$class_groups_controller.html#abbe57d19aad174c4c97ee25c2d49b9de" title="GroupsController\\changeGroup\lSettings" alt="" coords="132,135,332,177"/>
+<area shape="rect" id="node5" href="$class_invite_controller.html#a59c6d1b7c0d95ea7bc73913611f454ba" title="InviteController\\InviteCallback" alt="" coords="137,201,327,228"/>
+<area shape="rect" id="node6" href="$class_messages_controller.html#a6aa6bfed13724641708d3c446491e8a2" title="MessagesController\l\\sendMessageCallback" alt="" coords="153,253,311,294"/>
+<area shape="rect" id="node7" href="$class_messages_controller.html#a07a83bb133a85d6e9166d9ef7d8598c7" title="MessagesController\l\\mailBoxCallback" alt="" coords="163,318,301,359"/>
+<area shape="rect" id="node8" href="$class_notify_controller.html#a3eb50e80c28b5b41066650d5cda0096d" title="NotifyController\\NotifyAdmin\lCallback" alt="" coords="140,383,324,425"/>
+</map>

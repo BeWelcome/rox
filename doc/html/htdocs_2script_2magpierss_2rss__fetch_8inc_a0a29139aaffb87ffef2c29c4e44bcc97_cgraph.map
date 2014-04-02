@@ -1,0 +1,8 @@
+<map id="fetch_rss" name="fetch_rss">
+<area shape="rect" id="node2" href="$htdocs_2script_2magpierss_2rss__fetch_8inc.html#a196ba5a7e175cfd618e2b8ff0cba866f" title="_fetch_remote_file" alt="" coords="129,5,255,32"/>
+<area shape="rect" id="node3" href="$htdocs_2script_2magpierss_2rss__fetch_8inc.html#a21a3ff145ee5ae122b41653144051087" title="_response_to_rss" alt="" coords="129,56,255,83"/>
+<area shape="rect" id="node4" href="$htdocs_2script_2magpierss_2rss__fetch_8inc.html#a39af382bccbb736ba025aa3a2f87f739" title="error" alt="" coords="304,81,352,108"/>
+<area shape="rect" id="node5" href="$htdocs_2script_2magpierss_2rss__fetch_8inc.html#a2596bc36a6b0da79bb5aa3e9016a6b1a" title="debug2" alt="" coords="160,157,224,184"/>
+<area shape="rect" id="node6" href="$htdocs_2script_2magpierss_2rss__fetch_8inc.html#a1a856c4c6d2f705c354a6ddcfaea520e" title="init2" alt="" coords="169,208,215,235"/>
+<area shape="rect" id="node7" href="$htdocs_2script_2magpierss_2rss__fetch_8inc.html#af03de4192287dab9d7d665b84ad7a482" title="is_success" alt="" coords="148,259,236,285"/>
+</map>

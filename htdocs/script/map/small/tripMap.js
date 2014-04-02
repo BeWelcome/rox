@@ -8,13 +8,7 @@ var mapBuilder;
 function initTripMap() {
   if (jQuery('#tripMap').length > 0){
 
-    var cloudmadeApiKey = jQuery('#cloudmadeApiKeyInput').val();
-
-    if (cloudmadeApiKey == null || cloudmadeApiKey == ''){
-      bwrox.error('CloudMade API key not defined!');
-    }
-
-    mapBuilder = new BWSimpleMapBuilder(cloudmadeApiKey, "tripMap", false);
+    mapBuilder = new BWSimpleMapBuilder("tripMap", false);
 
     // center the map
     var centerLatitude = jQuery('#centerLatitude').val();

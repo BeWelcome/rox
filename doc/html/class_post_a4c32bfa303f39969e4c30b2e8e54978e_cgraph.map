@@ -1,0 +1,8 @@
+<map id="Post\getMemberPostCount" name="Post\getMemberPostCount">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#ad84710c9d2d0f9324a67b9b354dc5153" title="RoxEntityBase\\countWhere" alt="" coords="233,56,415,83"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#a80e77c5933530af9918ca8389c4c6f38" title="RoxEntityBase\\isLoaded" alt="" coords="241,107,407,133"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a8170e7217bec3edbeacbe62615567aa4" title="RoxEntityBase\\getPrimaryKey" alt="" coords="465,5,663,32"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#ab323bb7926fa55e45d9a24554637a0bb" title="RoxEntityBase\\getTableName" alt="" coords="466,56,662,83"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#addfb0ac3f5dcf1ca73dcc35e44b765ee" title="RoxEntityBase\\sqlCount" alt="" coords="482,107,646,133"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#a1aebc6bd22a3b454fc8c8c696ceb29ea" title="RoxEntityBase\\getTableDescription" alt="" coords="712,5,939,32"/>
+</map>

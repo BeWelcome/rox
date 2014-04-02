@@ -1,0 +1,5 @@
+<map id="APP_User\get" name="APP_User\get">
+<area shape="rect" id="node2" href="$class_user.html#a06ed977c877b02b420233d4f18a6a668" title="User\\logout" alt="" coords="195,5,283,32"/>
+<area shape="rect" id="node4" href="$class_user_view.html#af5d8839754351038be1ad2af52c1062c" title="UserView\\settingsForm" alt="" coords="160,56,317,83"/>
+<area shape="rect" id="node3" href="$class_user.html#addbc99429266bd797aa01c3139d59cac" title="User\\logoutProcess" alt="" coords="365,5,501,32"/>
+</map>

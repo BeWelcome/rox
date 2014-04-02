@@ -1,0 +1,9 @@
+<map id="AdminTreasurerStartDonationCampaignPage" name="AdminTreasurerStartDonationCampaignPage">
+<area shape="rect" id="node2" href="$class_admin_base_page.html" title="AdminBasePage" alt="" coords="42,453,160,480"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="31,379,171,405"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="31,304,172,331"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="45,229,157,256"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="36,155,167,181"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="39,80,163,107"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="31,5,172,32"/>
+</map>

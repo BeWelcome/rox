@@ -1,0 +1,5 @@
+<map id="quicksearch" name="quicksearch">
+<area shape="rect" id="node2" href="$class_rox_component_base.html#a4c107ce6073949a3af095193ea3530bc" title="RoxComponentBase\\getWords" alt="" coords="161,5,362,32"/>
+<area shape="rect" id="node3" href="$class_m_o_d__bw__user___auth.html#ad4cef3e0bc141def7e2a077a220419ba" title="MOD_bw_user_Auth\\isBWLoggedIn" alt="" coords="147,56,376,83"/>
+<area shape="rect" id="node4" href="$class_m_o_d__online.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_online\\get" alt="" coords="204,107,319,133"/>
+</map>

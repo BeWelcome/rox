@@ -1,0 +1,6 @@
+<map id="findById" name="findById">
+<area shape="rect" id="node2" href="$class_geo_use.html#a02f1e43b34c1cecaa1d10944c4eda48f" title="GeoUse\\__construct" alt="" coords="137,5,279,32"/>
+<area shape="rect" id="node3" href="$class_message.html#a17ce53adf49459a499c540288282dca5" title="Message\\__construct" alt="" coords="135,56,281,83"/>
+<area shape="rect" id="node4" href="$class_role.html#ab9f30a3ba53371f42e740bb5c8fa06c8" title="Role\\containsPrivilege" alt="" coords="133,107,283,133"/>
+<area shape="rect" id="node5" href="$class_role.html#a818ae870f17bf21b8f8e8a8308036d53" title="Role\\removeFromMember" alt="" coords="123,157,293,184"/>
+</map>

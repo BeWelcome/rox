@@ -1,0 +1,5 @@
+<map id="Note" name="Note">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html" title="RoxEntityBase" alt="" coords="21,155,131,181"/>
+<area shape="rect" id="node3" href="$class_rox_model_base.html" title="RoxModelBase" alt="" coords="21,80,131,107"/>
+<area shape="rect" id="node4" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,5,147,32"/>
+</map>

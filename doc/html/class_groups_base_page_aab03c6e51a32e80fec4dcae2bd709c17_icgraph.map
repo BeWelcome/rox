@@ -1,0 +1,5 @@
+<map id="GroupsBasePage\getGroupTitle" name="GroupsBasePage\getGroupTitle">
+<area shape="rect" id="node2" href="$class_group_start_page.html#a27befc1c35c327aeabcec28757dda911" title="GroupStartPage\\column_col3" alt="" coords="261,5,453,32"/>
+<area shape="rect" id="node3" href="$class_group_join_page.html#a1cce351a346dc151a36d3d869e84e3bf" title="GroupJoinPage\\column_col3" alt="" coords="264,56,451,83"/>
+<area shape="rect" id="node4" href="$class_group_leave_page.html#a5e0dc05732a8d4090c3f2923fc7c55df" title="GroupLeavePage\\column_col3" alt="" coords="259,107,456,133"/>
+</map>

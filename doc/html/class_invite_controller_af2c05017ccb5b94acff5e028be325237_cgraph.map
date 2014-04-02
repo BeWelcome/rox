@@ -1,0 +1,6 @@
+<map id="InviteController\index" name="InviteController\index">
+<area shape="rect" id="node2" href="$class_m_o_d__bw__user___auth.html#a4953f1f0c028f5273a069ef17179b015" title="MOD_bw_user_Auth\\isBWLoggedIn" alt="" coords="195,5,424,32"/>
+<area shape="rect" id="node3" href="$class_rox_controller_base.html#af0b494574e7b254efa37c7f16a474bb9" title="RoxControllerBase\\redirectHome" alt="" coords="204,56,415,83"/>
+<area shape="rect" id="node4" href="$class_rox_controller_base.html#a6f01a8f8d31733a545556d2b36e4071e" title="RoxControllerBase\\redirect" alt="" coords="473,56,650,83"/>
+<area shape="rect" id="node5" href="$class_rox_controller_base.html#a2c5d64649e0267f32198dd37a02c5d28" title="RoxControllerBase\\redirect\lAbsolute" alt="" coords="699,49,877,90"/>
+</map>

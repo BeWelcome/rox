@@ -25,14 +25,24 @@ jQuery.widget( "custom.catcomplete", jQuery.ui.autocomplete, {
             }
             that._renderItemData( ul, item );
         });
-    },
+    }
 });
 
+function enableMultiSelect() {
+    jQuery(".multiselect").multiselect( {
+        checkAllText: checkAllTextTranslation,
+        uncheckAllText: uncheckAllTextTranslation,
+        noneSelectedText: noneSelectedTextTranslation,
+        selectedText: selectedTextTranslation
+    } );
+}
+
 jQuery(function() {
-	jQuery( "#search-location" ).on( "keydown", function( event ) {
-		jQuery( "#search-geoname-id" ).val( 0 );	
+    enableMultiSelect();
+    jQuery( "#search-location" ).on( "keydown", function( event ) {
+		jQuery( "#search-geoname-id" ).val( 0 );
 	});
-	
+
     jQuery( "#search-location" ).catcomplete({
   source: function( request, response ) {
     jQuery.ajax({
@@ -45,7 +55,7 @@ jQuery(function() {
         if (data.status != "success") {
         	data.locations = [{ name: noMatchesFound, category: "Information", cnt: 0 }];
         }
-          response( 
+          response(
           jQuery.map( data.locations, function( item ) {
             return {
               label: (item.name ? item.name : "")+ (item.admin1 ? (item.name ? ", " : "") + item.admin1 : "") + (item.country ? ", " + item.country : "")  + (item.cnt != 0 ? " (" + item.cnt +")" : ""),
@@ -64,21 +74,15 @@ jQuery(function() {
       jQuery( "#search-geoname-id" ).val(ui.item.value);
     }
   },
-  search: function( event, ui ) {
-	  jQuery( '#search-loading').css( 'visibility', 'visible');
-  },
-  response: function( event, ui ) {
-	  jQuery( '#search-loading').css( 'visibility', 'hidden');
-  },
   select: function( event, ui ) {
     jQuery( "#search-geoname-id" ).val( ui.item.value );
     jQuery( "#search-latitude" ).val( ui.item.latitude );
     jQuery( "#search-longitude" ).val( ui.item.longitude );
     jQuery( this ).val( ui.item.labelnocount );
-    
+
     return false;
   },
   minLength: 1,
-  delay: 500,
+  delay: 500
     });
 });

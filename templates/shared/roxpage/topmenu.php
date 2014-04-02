@@ -41,6 +41,7 @@
         <li><a href="search"><?=$words->get('FindMembers')?></a>
             <ul>
                 <li><a href="searchmembers"><?=$words->get('MapSearch')?></a></li>
+                <li><a href="search"><?=$words->get('TextSearch')?></a></li>
                 <li><a href="places"><?=$words->get('BrowseCountries')?></a></li>
             </ul>
         </li>

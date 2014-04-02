@@ -1,0 +1,5 @@
+<map id="GeoModel\updateUsageCounter" name="GeoModel\updateUsageCounter">
+<area shape="rect" id="node2" href="$class_geo_model.html#a0460accc222ad8930649c0a977acb781" title="GeoModel\\addGeonameId" alt="" coords="262,31,434,57"/>
+<area shape="rect" id="node3" href="$class_geo_model.html#a82d9e74333a423d4c792bef33318497d" title="GeoModel\\checkGeonameId" alt="" coords="483,5,669,32"/>
+<area shape="rect" id="node4" href="$class_geo_model.html#a9779a77bcd5f2b6a5d3838b8d6e4d4ed" title="GeoModel\\RenewGeo" alt="" coords="502,56,650,83"/>
+</map>

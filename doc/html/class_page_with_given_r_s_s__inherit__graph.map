@@ -1,0 +1,10 @@
+<map id="PageWithGivenRSS" name="PageWithGivenRSS">
+<area shape="rect" id="node6" href="$class_page_with_blog_r_s_s.html" title="PageWithBlogRSS" alt="" coords="5,379,136,405"/>
+<area shape="rect" id="node7" href="$class_page_with_forum_r_s_s.html" title="PageWithForumRSS" alt="" coords="161,379,303,405"/>
+<area shape="rect" id="node8" href="$class_page_with_tag_r_s_s.html" title="PageWithTagRSS" alt="" coords="327,379,453,405"/>
+<area shape="rect" id="node9" href="$class_page_with_thread_r_s_s.html" title="PageWithThreadRSS" alt="" coords="478,379,623,405"/>
+<area shape="rect" id="node2" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="254,229,367,256"/>
+<area shape="rect" id="node3" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="245,155,376,181"/>
+<area shape="rect" id="node4" href="$class_visual_component.html" title="VisualComponent" alt="" coords="249,80,372,107"/>
+<area shape="rect" id="node5" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="240,5,381,32"/>
+</map>

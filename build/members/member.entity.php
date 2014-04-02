@@ -35,6 +35,7 @@ Boston, MA  02111-1307, USA.
 class Member extends RoxEntityBase
 {
     const ACTIVE_ALL = "'Active', 'ActiveHidden', 'ChoiceInactive', 'OutOfRemind', 'Pending'";
+    const ACTIVE_SEARCH = "'Active', 'ActiveHidden', 'OutOfRemind', 'Pending'";
     const ACTIVE_WITH_MESSAGES = "'Active', 'OutOfRemind', 'Pending'";
 
     protected $_table_name = 'members';
@@ -239,6 +240,9 @@ class Member extends RoxEntityBase
     public function get_TabRestrictions() {
 
         $tt = $this->sql_get_set("members", "Restrictions");
+        if(($key = array_search('SeeOtherRestrictions', $tt)) !== false) {
+            unset($tt[$key]);
+        }
         return $tt;
     }
 

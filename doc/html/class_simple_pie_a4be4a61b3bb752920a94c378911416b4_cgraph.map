@@ -1,0 +1,7 @@
+<map id="get_item_quantity" name="get_item_quantity">
+<area shape="rect" id="node2" href="$class_simple_pie.html#aec2ae5be383a7cb091c96adf438eca90" title="get_items" alt="" coords="179,56,258,83"/>
+<area shape="rect" id="node3" href="$class_simple_pie.html#a40df87d56f22e46bd18e1dcd754a1da0" title="merge_items" alt="" coords="321,5,418,32"/>
+<area shape="rect" id="node4" href="$class_simple_pie.html#a8089b17806a3d0cff0d5176c79f20c73" title="get_feed_tags" alt="" coords="481,56,583,83"/>
+<area shape="rect" id="node6" href="$class_simple_pie.html#ab07598a4b6b7afcf049ea777f629bd3d" title="get_channel_tags" alt="" coords="307,107,431,133"/>
+<area shape="rect" id="node5" href="$class_simple_pie.html#ab5be4c3d74f109176ef57e753ebd4918" title="get_type" alt="" coords="632,81,704,108"/>
+</map>

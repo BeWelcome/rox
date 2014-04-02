@@ -1,0 +1,5 @@
+<map id="MessagesModel\getMessagesWith" name="MessagesModel\getMessagesWith">
+<area shape="rect" id="node2" href="$class_messages_model.html#a89b57e1db06349d5a5fdc11f24a802c1" title="MessagesModel\\filteredMailbox" alt="" coords="281,31,485,57"/>
+<area shape="rect" id="node3" href="$class_rox_model_base.html#aa555ff4841071cf011132ef42ec8b791" title="RoxModelBase\\bulkLookup" alt="" coords="534,5,714,32"/>
+<area shape="rect" id="node4" href="$class_messages_model.html#ac07f7084af9d4e0f8c5ab639b634b50f" title="MessagesModel\\sortFilters" alt="" coords="535,56,713,83"/>
+</map>

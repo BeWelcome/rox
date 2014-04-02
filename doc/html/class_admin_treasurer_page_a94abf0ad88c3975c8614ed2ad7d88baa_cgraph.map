@@ -1,0 +1,8 @@
+<map id="AdminTreasurerPage\__construct" name="AdminTreasurerPage\__construct">
+<area shape="rect" id="node2" href="$class_admin_model.html#afbb9b31ef3c4c7c82a9af98f60670757" title="AdminModel\\getDonationCampaign\lStatus" alt="" coords="198,5,423,46"/>
+<area shape="rect" id="node4" href="$class_rox_model_base.html#a9857a4097be598f85aef9ea231910c42" title="RoxModelBase\\getLoggedIn\lMember" alt="" coords="219,70,403,111"/>
+<area shape="rect" id="node6" href="$class_admin_model.html#a6f263da203bfc47c27509f4a93eb3c8b" title="AdminModel\\getRecentDonations" alt="" coords="203,136,418,163"/>
+<area shape="rect" id="node7" href="$class_admin_model.html#a2ad7dcfc78c72f912edb27de0d9095b1" title="AdminModel\\getStatForDonations" alt="" coords="202,187,419,213"/>
+<area shape="rect" id="node3" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="473,12,663,39"/>
+<area shape="rect" id="node5" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="476,77,660,104"/>
+</map>

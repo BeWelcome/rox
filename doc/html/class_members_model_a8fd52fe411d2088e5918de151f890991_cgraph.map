@@ -1,0 +1,8 @@
+<map id="MembersModel\editPreferences" name="MembersModel\editPreferences">
+<area shape="rect" id="node2" href="$class_rox_model_base.html#aa555ff4841071cf011132ef42ec8b791" title="RoxModelBase\\bulkLookup" alt="" coords="269,5,449,32"/>
+<area shape="rect" id="node3" href="$class_members_model.html#a9ab853c22cf09b516946653618806b91" title="MembersModel\\set_preference" alt="" coords="259,56,459,83"/>
+<area shape="rect" id="node4" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="509,31,699,57"/>
+<area shape="rect" id="node5" href="$class_rox_component_base.html#a2204c3415eb543b4a40f27de2a1ea265" title="RoxComponentBase\\logWrite" alt="" coords="507,81,701,108"/>
+<area shape="rect" id="node6" href="$class_rox_component_base.html#a41835e2ea2fd3b14ba0d5aa963b8fb38" title="RoxComponentBase\\getLog" alt="" coords="749,81,933,108"/>
+<area shape="rect" id="node7" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="981,81,1080,108"/>
+</map>

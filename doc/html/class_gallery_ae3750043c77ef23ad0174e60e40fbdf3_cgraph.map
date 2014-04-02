@@ -1,0 +1,11 @@
+<map id="Gallery\__construct" name="Gallery\__construct">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#a339e5f4420297d8ae0e14abf64905a14" title="RoxEntityBase\\findById" alt="" coords="190,37,349,64"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a8170e7217bec3edbeacbe62615567aa4" title="RoxEntityBase\\getPrimaryKey" alt="" coords="1086,37,1285,64"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#ab323bb7926fa55e45d9a24554637a0bb" title="RoxEntityBase\\getTableName" alt="" coords="399,37,595,64"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#ab4033ed31068ef82233d5cf6b7c995be" title="RoxEntityBase\\queryForEntity" alt="" coords="398,88,597,115"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#a1aebc6bd22a3b454fc8c8c696ceb29ea" title="RoxEntityBase\\getTableDescription" alt="" coords="1333,63,1560,89"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#a0630eb83ddfc04e35598e97393672c80" title="RoxEntityBase\\loadEntity" alt="" coords="645,88,816,115"/>
+<area shape="rect" id="node8" href="$class_rox_entity_base.html#a7d528d3b8d4736f35bcf5ba84cd6148d" title="RoxEntityBase\\getColumns" alt="" coords="1094,88,1277,115"/>
+<area shape="rect" id="node9" href="$class_rox_entity_base.html#a75e7ea82100dc21035a2072a64b311fc" title="RoxEntityBase\\isPKSet" alt="" coords="870,37,1031,64"/>
+<area shape="rect" id="node10" href="$class_rox_entity_base.html#ac0032c3707c30a8d6102279692b0927d" title="RoxEntityBase\\wipeEntity" alt="" coords="864,139,1037,165"/>
+</map>

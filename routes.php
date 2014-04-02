@@ -217,7 +217,7 @@
     $this->addRoute('suggestions_devlist_pages', 'suggestions/dev/page/:pageno:', 'suggestionsController', 'devList');
     $this->addRoute('suggestions_dev', 'suggestions/:id:/dev', 'suggestionsController', 'dev');
     $this->addRoute('suggestions_resultslist', 'suggestions/results', 'suggestionsController', 'resultsList');
-    $this->addRoute('suggestions_resultslist', 'suggestions/results/page/:pageno:', 'suggestionsController', 'resultsList');
+    $this->addRoute('suggestions_resultslist_pages', 'suggestions/results/page/:pageno:', 'suggestionsController', 'resultsList');
     $this->addRoute('suggestions_results', 'suggestions/:id:/results', 'suggestionsController', 'results');
     $this->addRoute('suggestions_team', 'suggestions/team', 'suggestionsController', 'team');
 

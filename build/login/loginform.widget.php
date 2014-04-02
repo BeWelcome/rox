@@ -119,7 +119,7 @@ class LoginFormWidget extends RoxWidget
 							<input type="checkbox" id="login-r" name="r" /><label for="login-r"><?=$ww->StayLoggedIn ?></label>
 						</td>
                         <td>
-                            <br /><input type="submit" value="Login" id="smallbutton" class="button"/>
+                            <br /><input type="submit" value="<?=$ww->IndexPageLoginSubmit; ?>" id="smallbutton" class="button"/>
                         </td>
                     </tr>
                 </table>
@@ -171,7 +171,7 @@ class LoginFormWidget extends RoxWidget
 					</tr>
                 <tr><td>&nbsp;</td><td>
             <?php }  // Added because this is hidden for subdomain ?>
-            <input type="submit" value="Login" class="button"/>
+            <input type="submit" value="<?=$ww->IndexPageLoginSubmit; ?>" class="button"/>
           </td></tr></table>
           <br />
           <p><?=$ww->LoginformForgetPassword('<a href="resetpassword/">', '</a>') ?><br /><br /></p>

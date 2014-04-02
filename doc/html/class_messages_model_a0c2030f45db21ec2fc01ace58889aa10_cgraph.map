@@ -1,0 +1,7 @@
+<map id="MessagesModel\sendOrComplain" name="MessagesModel\sendOrComplain">
+<area shape="rect" id="node2" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="320,5,419,32"/>
+<area shape="rect" id="node3" href="$class_messages_model.html#a941fcb80cc64f7d770821766a590763a" title="MessagesModel\\getMember" alt="" coords="276,56,463,83"/>
+<area shape="rect" id="node4" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="515,132,706,159"/>
+<area shape="rect" id="node5" href="$class_messages_model.html#a9cd4b564bc7d69faf32e0106fc30a40b" title="MessagesModel\\getMessage" alt="" coords="273,157,465,184"/>
+<area shape="rect" id="node6" href="$class_messages_model.html#ad72e9832b50d43200b91038e469bce73" title="MessagesModel\\hasMessage\lLimitExceeded" alt="" coords="272,209,467,250"/>
+</map>

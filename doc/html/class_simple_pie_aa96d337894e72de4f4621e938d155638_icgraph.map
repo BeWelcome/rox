@@ -1,0 +1,34 @@
+<map id="SimplePie\sanitize" name="SimplePie\sanitize">
+<area shape="rect" id="node2" href="$class_simple_pie.html#af02c2c6334a2ebfe9453ef3f10de909f" title="SimplePie\\__construct" alt="" coords="213,5,366,32"/>
+<area shape="rect" id="node3" href="$class_simple_pie.html#a870a0498a2f7fd907f4be9b8db704476" title="SimplePie\\encode_instead\l_of_strip" alt="" coords="201,57,377,98"/>
+<area shape="rect" id="node4" href="$class_simple_pie.html#a0fd1019c95953d5c42944c8b7a77cb2c" title="SimplePie\\get_authors" alt="" coords="925,136,1078,163"/>
+<area shape="rect" id="node6" href="$class_simple_pie.html#a70c7ae7a211183082c8b396463729cf8" title="SimplePie\\get_categories" alt="" coords="204,629,375,656"/>
+<area shape="rect" id="node8" href="$class_simple_pie.html#a07fb4be66a366963abbf8e41bb43b3b0" title="SimplePie\\get_contributors" alt="" coords="912,212,1091,239"/>
+<area shape="rect" id="node10" href="$class_simple_pie.html#ac032a66fa4eda4057baa2c6cdc074ce3" title="SimplePie\\get_copyright" alt="" coords="920,313,1083,340"/>
+<area shape="rect" id="node11" href="$class_simple_pie.html#adb9323044091d25efe06f1175ad02658" title="SimplePie\\get_description" alt="" coords="915,396,1088,423"/>
+<area shape="rect" id="node12" href="$class_simple_pie.html#abb8fb22494152b59213051b7df22fc81" title="SimplePie\\get_encoding" alt="" coords="208,680,371,707"/>
+<area shape="rect" id="node14" href="$class_simple_pie.html#a3210fefe692842d92e26b86fc405492e" title="SimplePie\\get_image_link" alt="" coords="915,463,1087,489"/>
+<area shape="rect" id="node15" href="$class_simple_pie.html#a54277e42f24b873f05fefa0c6ae34a39" title="SimplePie\\get_image\l_title" alt="" coords="217,731,362,773"/>
+<area shape="rect" id="node16" href="$class_simple_pie.html#a0cae20b467d84317f499e6720263f350" title="SimplePie\\get_image_url" alt="" coords="918,521,1085,548"/>
+<area shape="rect" id="node17" href="$class_simple_pie.html#a454005c653a1df6d2eebea7acde19d27" title="SimplePie\\get_language" alt="" coords="208,797,371,824"/>
+<area shape="rect" id="node18" href="$class_simple_pie.html#a89bc7ca1fa51e94bcb2a73baf0a884d6" title="SimplePie\\get_links" alt="" coords="221,376,358,403"/>
+<area shape="rect" id="node21" href="$class_simple_pie.html#a6f3c25ea5e0549f995258e89ebe39f38" title="SimplePie\\get_title" alt="" coords="936,572,1067,599"/>
+<area shape="rect" id="node23" href="$class_simple_pie.html#a64b3c0dfd5f6c319fb62c39c456e2b35" title="SimplePie\\init" alt="" coords="238,848,341,875"/>
+<area shape="rect" id="node25" href="$class_simple_pie.html#a23ab8850e9f9e07562ee8f48262e7ad5" title="SimplePie\\remove_div" alt="" coords="215,1117,363,1144"/>
+<area shape="rect" id="node27" href="$class_simple_pie.html#a7a1fbadced1cbbb832318680ad6c1ccd" title="SimplePie\\set_image\l_handler" alt="" coords="217,899,362,941"/>
+<area shape="rect" id="node28" href="$class_simple_pie.html#a58bc15914e6bfceaa257aabff1e91aa9" title="SimplePie\\set_output\l_encoding" alt="" coords="216,1169,363,1210"/>
+<area shape="rect" id="node29" href="$class_simple_pie.html#a3a997996098de9f3d28df70f405bfa21" title="SimplePie\\set_url_replacements" alt="" coords="185,1235,394,1261"/>
+<area shape="rect" id="node30" href="$class_simple_pie.html#ad1b3618c0d3c7bef6e215738456f58c2" title="SimplePie\\strip_attributes" alt="" coords="204,965,375,992"/>
+<area shape="rect" id="node31" href="$class_simple_pie.html#a4da1bfa64972099fa3237d8c763e4fc8" title="SimplePie\\strip_comments" alt="" coords="200,1016,379,1043"/>
+<area shape="rect" id="node32" href="$class_simple_pie.html#afe46d62476062698e931ab4c792732ba" title="SimplePie\\strip_htmltags" alt="" coords="206,1067,373,1093"/>
+<area shape="rect" id="node33" href="$class_simple_pie.html#a128eeaeb14bdc6e246ba2e0bf655be9a" title="SimplePie\\subscribe_url" alt="" coords="464,275,627,301"/>
+<area shape="rect" id="node5" href="$class_simple_pie.html#a3080144364c434992ec20921cd8cf9e0" title="SimplePie\\get_author" alt="" coords="1151,136,1297,163"/>
+<area shape="rect" id="node7" href="$class_simple_pie.html#a8b5b71454b4f928aa51b37dee53975ab" title="SimplePie\\get_category" alt="" coords="465,629,625,656"/>
+<area shape="rect" id="node9" href="$class_simple_pie.html#a1e763bb232d68be7237fd3d4f0e6fde2" title="SimplePie\\get_contributor" alt="" coords="1139,212,1309,239"/>
+<area shape="rect" id="node13" href="$class_simple_pie.html#a846e710bcf813b6e5289b5816855f6e1" title="SimplePie\\handle_content_type" alt="" coords="443,680,648,707"/>
+<area shape="rect" id="node19" href="$class_simple_pie.html#a8e44cd93067c08c26da4e18175a0e814" title="SimplePie\\get_link" alt="" coords="480,376,611,403"/>
+<area shape="rect" id="node20" href="$class_simple_pie.html#a662d026555d4755a1b7968d5f46dd5e8" title="SimplePie\\get_base" alt="" coords="711,325,849,352"/>
+<area shape="rect" id="node22" href="$class_simple_pie.html#a4827b9bea7981ffc94299e428a25b1a6" title="SimplePie\\get_permalink" alt="" coords="697,376,863,403"/>
+<area shape="rect" id="node24" href="$class_simple_pie.html#af6a78cff9af9755f3ccf4f0b43c3c90b" title="SimplePie\\fetch_data" alt="" coords="473,848,618,875"/>
+<area shape="rect" id="node26" href="$class_simple_pie.html#a6dcf1759d29d47e4f9f987c6c6269d17" title="SimplePie\\set_stupidly_fast" alt="" coords="454,1016,637,1043"/>
+</map>

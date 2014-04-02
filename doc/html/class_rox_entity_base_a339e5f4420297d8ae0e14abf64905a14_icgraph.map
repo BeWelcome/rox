@@ -1,0 +1,29 @@
+<map id="RoxEntityBase\findById" name="RoxEntityBase\findById">
+<area shape="rect" id="node2" href="$class_geo_alternate_name.html#ad3f9ca2c071b3abfc8679d2733301b81" title="GeoAlternateName\\_\l_construct" alt="" coords="241,5,383,46"/>
+<area shape="rect" id="node3" href="$class_geo_hierarchy.html#ac97abc9b1d9034046d934bd62f0f0d91" title="GeoHierarchy\\__construct" alt="" coords="225,71,399,97"/>
+<area shape="rect" id="node4" href="$class_volunteer_board.html#aa5b597b874b231bfd210171b27d9c396" title="VolunteerBoard\\__construct" alt="" coords="221,121,403,148"/>
+<area shape="rect" id="node5" href="$class_role.html#aa0b4c69a262ce49cb8da1ec7601569ad" title="Role\\__construct" alt="" coords="252,172,372,199"/>
+<area shape="rect" id="node6" href="$class_member_language.html#ae1d144763962c24e20b80aee88f39c56" title="MemberLanguage\\__construct" alt="" coords="213,223,411,249"/>
+<area shape="rect" id="node7" href="$class_geo.html#a46ddbcad971faaf24aa3ff5d9d15094c" title="Geo\\__construct" alt="" coords="253,273,371,300"/>
+<area shape="rect" id="node8" href="$class_language.html#a90413c7f444806f29004a4cc3e66b108" title="Language\\__construct" alt="" coords="237,324,387,351"/>
+<area shape="rect" id="node9" href="$class_geo_type.html#a389bb98d1a96379a23a8e14b2453a456" title="GeoType\\__construct" alt="" coords="239,375,385,401"/>
+<area shape="rect" id="node10" href="$class_privilege.html#a95289dd48d03daea6f25af62b8f8408d" title="Privilege\\__construct" alt="" coords="241,425,383,452"/>
+<area shape="rect" id="node11" href="$class_activity.html#a261f47cea6e60c2334822129b9782ca7" title="Activity\\__construct" alt="" coords="244,476,380,503"/>
+<area shape="rect" id="node12" href="$class_suggestion.html#aa5b0d201a528a8a1558a322df4d434a3" title="Suggestion\\__construct" alt="" coords="233,527,391,553"/>
+<area shape="rect" id="node13" href="$class_note.html#a452465969ae42544dc8efccb9f75e573" title="Note\\__construct" alt="" coords="251,577,373,604"/>
+<area shape="rect" id="node14" href="$class_geo_use.html#a4d4ae30b09b0fea4e23b9e0899a074e1" title="GeoUse\\__construct" alt="" coords="241,628,383,655"/>
+<area shape="rect" id="node15" href="$class_suggestion_option.html#a29a41295eb664aa226cc7a39ffe7b3a5" title="SuggestionOption\\_\l_construct" alt="" coords="244,679,380,721"/>
+<area shape="rect" id="node16" href="$class_blog_entity.html#a37c61aff5256c946a55af197ad4fb448" title="BlogEntity\\__construct" alt="" coords="235,745,389,772"/>
+<area shape="rect" id="node17" href="$class_gallery_item.html#a03b5fa21b454cb49e50395daef12c184" title="GalleryItem\\__construct" alt="" coords="232,796,392,823"/>
+<area shape="rect" id="node18" href="$class_message.html#abcb3e57b9d65f2a5f3bc4a527ba95b6e" title="Message\\__construct" alt="" coords="239,847,385,873"/>
+<area shape="rect" id="node19" href="$class_gallery.html#ae3750043c77ef23ad0174e60e40fbdf3" title="Gallery\\__construct" alt="" coords="245,897,379,924"/>
+<area shape="rect" id="node20" href="$class_gallery_comment.html#a31a7dfa647a42f10386e6ac5d6742972" title="GalleryComment\\__construct" alt="" coords="217,948,407,975"/>
+<area shape="rect" id="node21" href="$class_feedback.html#a3f70a6e3c01581301dbd78c59dfd7da8" title="Feedback\\__construct" alt="" coords="237,999,387,1025"/>
+<area shape="rect" id="node22" href="$class_comment.html#a6cb8081c1ed264e4a681ac21b27709ea" title="Comment\\__construct" alt="" coords="237,1049,387,1076"/>
+<area shape="rect" id="node23" href="$class_profile_note.html#ab353bacf9f7425882ca3cdca375be2f3" title="ProfileNote\\__construct" alt="" coords="233,1100,391,1127"/>
+<area shape="rect" id="node24" href="$class_address.html#addb1360ad036252b024eae366feed05a" title="Address\\__construct" alt="" coords="241,1151,383,1177"/>
+<area shape="rect" id="node25" href="$class_member.html#a63612c6d8145f670876296eb11b9325e" title="Member\\__construct" alt="" coords="241,1201,383,1228"/>
+<area shape="rect" id="node26" href="$class_group.html#afec1ef931eeb0c82ecb2b7565317818a" title="Group\\__construct" alt="" coords="247,1252,377,1279"/>
+<area shape="rect" id="node27" href="$class_role.html#aa8fefdf7e9357b29e90a263ef8706cd2" title="Role\\containsPrivilege" alt="" coords="237,1303,387,1329"/>
+<area shape="rect" id="node28" href="$class_role.html#a6ddd30da76f641b3dccf3f6ff318b459" title="Role\\removeFromMember" alt="" coords="227,1353,397,1380"/>
+</map>

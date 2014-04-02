@@ -1,0 +1,16 @@
+<map id="GroupForumsOverviewPage\column_col3" name="GroupForumsOverviewPage\column_col3">
+<area shape="rect" id="node2" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="235,237,437,264"/>
+<area shape="rect" id="node3" href="$class_forums_controller.html#aba22a316505b49182315349d390e5ed2" title="ForumsController\\index" alt="" coords="258,288,414,315"/>
+<area shape="rect" id="node4" href="$class_forums_controller.html#aa62859cacc94ef2a5522229e08ca9130" title="ForumsController\\createProcess" alt="" coords="495,5,705,32"/>
+<area shape="rect" id="node5" href="$class_forums_controller.html#ad13250bb8443afadf88d67efef3d8cab" title="ForumsController\\delProcess" alt="" coords="505,56,695,83"/>
+<area shape="rect" id="node6" href="$class_forums_controller.html#ace1dd747ee1c81c6973c33fd17999a3f" title="ForumsController\\editProcess" alt="" coords="503,107,697,133"/>
+<area shape="rect" id="node7" href="$class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6" title="MOD_log\\get" alt="" coords="551,157,649,184"/>
+<area shape="rect" id="node8" href="$class_m_o_d__bw__user___auth.html#a4953f1f0c028f5273a069ef17179b015" title="MOD_bw_user_Auth\\isBWLoggedIn" alt="" coords="485,208,715,235"/>
+<area shape="rect" id="node9" href="$class_a_p_p___user.html#a3ac6e9d7486c682a292091a2b439a212" title="APP_User\\login" alt="" coords="543,259,657,285"/>
+<area shape="rect" id="node10" href="$class_forums_controller.html#a80b800fb58179a280e4ee728efa0a56a" title="ForumsController\\Moderator\lEditPostProcess" alt="" coords="509,310,691,351"/>
+<area shape="rect" id="node11" href="$class_forums_controller.html#a25faad97cd3a0dd85d382f483c482378" title="ForumsController\\Moderator\lEditTagProcess" alt="" coords="509,375,691,417"/>
+<area shape="rect" id="node12" href="$class_forums_controller.html#aa039d554c0f701ea6d0bbfe1ac75b7bd" title="ForumsController\\morelessthreads\lProcess" alt="" coords="489,441,711,482"/>
+<area shape="rect" id="node13" href="$class_forums_controller.html#a9e16bc0ac037c145ddb7193049fbae5b" title="ForumsController\\mygroupsonly\lProcess" alt="" coords="497,506,703,547"/>
+<area shape="rect" id="node14" href="$class_forums_controller.html#a008d84add812f0f91d66912e2614506a" title="ForumsController\\replyProcess" alt="" coords="499,572,701,599"/>
+<area shape="rect" id="node15" href="$class_forums_controller.html#a25b619167af4060ae411ba298a675a93" title="ForumsController\\reportpost\lProcess" alt="" coords="509,623,691,665"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="GallerySetPage" name="GallerySetPage">
+<area shape="rect" id="node9" href="$class_gallery_delete_page.html" title="GalleryDeletePage" alt="" coords="5,603,136,629"/>
+<area shape="rect" id="node10" href="$class_gallery_set_details_page.html" title="GallerySetDetailsPage" alt="" coords="161,603,313,629"/>
+<area shape="rect" id="node2" href="$class_gallery_base_page.html" title="GalleryBasePage" alt="" coords="92,453,215,480"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="83,379,223,405"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="83,304,224,331"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="97,229,209,256"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="88,155,219,181"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="91,80,215,107"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="83,5,224,32"/>
+</map>

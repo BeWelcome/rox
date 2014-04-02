@@ -9,6 +9,10 @@
     <div id="quickinfo" class="float_right" style="text-align: right;">
 <?php
 $icons = array();
+if (strstr($member->TypicOffer, "CanHostWeelChair"))
+{
+    $icons[] = '<img src="images/icons/wheelchairblue.png" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWheelChairYes') . '" />';
+}
 switch($member->Accomodation)
 {
     case 'anytime':
@@ -24,39 +28,10 @@ switch($member->Accomodation)
                 ' title="' . $words->getSilent('CannotOfferneverask') . '" />';
         break;
 }
-// showing offer icons (several posibilities)
-if (strstr($member->TypicOffer, "CanHostWeelChair"))
-{
-    $icons[] = '<img src="images/icons/wheelchair.png" alt="' . $words->getSilent('wheelchair') . '" title="' . $words->getSilent('CanHostWeelChairYes') . '" />';
-}
-if (strstr($member->TypicOffer, "guidedtour"))
-{
-    $icons[] = '<img src="images/icons/guidedtour.png" alt="' . $words->getSilent('CanOfferCityTour') . '" title="' . $words->getSilent('CanOfferCityTour') . '" />';
-}
-if (strstr($member->TypicOffer, "dinner"))
-{
-    $icons[] = '<img src="images/icons/dinner.png" alt="' . $words->getSilent('TypicOffer_dinner') . '" title="' . $words->getSilent('TypicOffer_dinner') . '" />';
-}
-// showing restriction icons (several posibilities)
-if (strstr($member->Restrictions, "NoSmoker"))
-{
-    $icons[] = '<img src="images/icons/no-smoking.png" alt="' . $words->getSilent('Restriction_NoSmoker') . '" title="' . $words->getSilent('Restriction_NoSmoker') . '" />';
-}
-if (strstr($member->Restrictions, "NoAlchool"))
-{
-    $icons[] = '<img src="images/icons/no-alcohol.png" alt="' . $words->getSilent('Restriction_NoAlchool') . '" title="' . $words->getSilent('Restriction_NoAlchool') . '" />';
-}
-if (strstr($member->Restrictions, "NoDrugs"))
-{
-    $icons[] = '<img src="images/icons/no-drugs.png" alt="' . $words->getSilent('Restriction_NoDrugs') . '" title="' . $words->getSilent('Restriction_NoDrugs') . '" />';
-}
-$modul = count($icons) < 5 ? $modul = 5 : $modul = 2;
+
 for($ii=0; $ii < count($icons); $ii++)
 {
     echo $icons[$ii];
-    if (($ii + 1) % $modul == 0) {
-        echo '<br />';
-    }
 }
 ?>
 </div> <!-- quickinfo -->
@@ -79,15 +54,38 @@ for($ii=0; $ii < count($icons); $ii++)
         <?php if ($member->get_trad("PleaseBring", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('ProfilePleaseBring');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("PleaseBring", $profile_language,true)); ?></dd>
-        <? } ?>
+        <? }
 
-        <?php
-        if ($member->get_trad("OfferGuests", $profile_language,true) != "") { ?>
-            <dt class="label" ><?=$words->get('ProfileOfferGuests');?>:</dt>
-            <dd><?php echo $purifier->purify($member->get_trad("OfferGuests", $profile_language,true)); ?></dd>
-        <? } ?>
+        $comma = false;
+        $offers = '';
 
-        <?php if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
+        $TabTypicOffer = explode(",", $member->TypicOffer);
+        foreach($TabTypicOffer as $typicOffer) {
+            if ($typicOffer == '') continue;
+            if ($typicOffer == 'CanHostWeelChair') continue;
+            if ($comma) {
+                $offers .= ', ';
+            }
+            $offers .=  $words->get("ProfileTypicOffer_" . $typicOffer);
+            $comma = true;
+        }
+        if ($comma) {
+            $offers .= '.';
+        }
+
+        $offerGuests = $member->get_trad("OfferGuests", $profile_language,true);
+        if (!empty($offerGuests)) {
+            if ($comma) {
+                $offers .= '<br /><br />';
+            }
+            $offers .= $purifier->purify($member->get_trad("OfferGuests", $profile_language,true));
+        }
+        if (!empty($offers)) { ?>
+
+        <dt class="label" ><?=$words->get('ProfileOfferGuests');?>:</dt>
+        <dd><?php echo $offers;?></dd>
+
+        <?php } if ($member->get_trad("OfferHosts", $profile_language,true) != "") { ?>
             <dt class="label" ><?=$words->get('ProfileOfferHosts');?>:</dt>
             <dd><?php echo $purifier->purify($member->get_trad("OfferHosts", $profile_language,true)); ?></dd>
         <? } ?>
@@ -106,26 +104,35 @@ for($ii=0; $ii < count($icons); $ii++)
         <? } ?>
 
         <?php
+        $restrictions = '';
         $TabRestrictions = explode(",", $member->Restrictions);
         $max = count($TabRestrictions);
-        if (($max > 0 and $TabRestrictions[0] != "") or ($member->Restrictions != "")) {
-        ?>
-            <dt class="label" ><?=$words->get('ProfileRestrictionForGuest');?>:</dt>
-            <?php
-                if ($max > 0) {
-                  echo "<dd>\n";
-                    for ($ii = 0; $ii < $max; $ii++) {
-                        echo ($ii > 0) ? ', <br />' : '';
-                        echo $words->get("Restriction_" . $TabRestrictions[$ii]);
-                    }
-                    echo "</dd>\n";
-                }
-            ?>
 
-            <dt class="label" ><?=$words->get('ProfileOtherRestrictions');?>:</dt>
-            <dd><?php echo $purifier->purify($member->get_trad("OtherRestrictions", $profile_language,true)); ?></dd>
+        $otherRestrictions = $member->get_trad("OtherRestrictions", $profile_language, true);
 
-        <? } ?>
+        $comma = false;
+        foreach($TabRestrictions as $restriction) {
+            if ($restriction == '') continue;
+            if ($restriction == 'SeeOtherRestrictions') continue;
+            if ($comma) {
+                $restrictions .= ', ';
+            }
+            $restrictions .= $words->get("Restriction_" . $restriction);
+            $comma = true;
+        }
+        if ($comma) {
+            $restrictions .= '.';
+        }
+        if (!empty($otherRestrictions)) {
+            if ($comma) {
+                $restrictions .= '<br /><br />';
+            }
+            $restrictions .= $purifier->purify($otherRestrictions);
+        }
+        if (!empty($restrictions)) { ?>
+            <dt class="label" ><?=$words->get('ProfileHouseRules');?>:</dt>
+            <dd><?php echo $restrictions; ?></dd>
+        <?php } ?>
     </dl>
 </div> <!-- profile_accommodation -->
 <?php endif; ?>

@@ -1,0 +1,9 @@
+<map id="delete" name="delete">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#a4fea73e12c9f974d5e00573ccf744e61" title="isPKSet" alt="" coords="154,5,225,32"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#aacc98f1f38c58fc25a4ff77eb56baab1" title="preparePKWhereString" alt="" coords="112,56,267,83"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#a93566f2c8d709d410ae8ec46b813999b" title="getTableName" alt="" coords="137,107,242,133"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#aea52249e2ff121bc2b9ea37e13cff95f" title="wipeEntity" alt="" coords="148,157,231,184"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="getPrimaryKey" alt="" coords="315,56,423,83"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="getTableDescription" alt="" coords="472,81,608,108"/>
+<area shape="rect" id="node8" href="$class_rox_entity_base.html#a6287262cb9628d7a89d8fc16dcb51177" title="getColumns" alt="" coords="324,132,415,159"/>
+</map>

@@ -1,0 +1,24 @@
+<map id="APP_User\login" name="APP_User\login">
+<area shape="rect" id="node2" href="$class_user.html#a8d997cc416a9b189738c28c4ffc0f4a9" title="User\\avatarProcess" alt="" coords="213,5,347,32"/>
+<area shape="rect" id="node3" href="$class_signup_finish_page.html#ade2999f9363ee883826898e0ae62a276" title="SignupFinishPage\\column_col3" alt="" coords="178,56,382,83"/>
+<area shape="rect" id="node4" href="$class_signup_page.html#a9665dabc09388e7b38d34983ae1f3887" title="SignupPage\\column_col3" alt="" coords="195,107,365,133"/>
+<area shape="rect" id="node5" href="$class_forums.html#a529dc44e61dfbe0c193057316dc33ac8" title="Forums\\createProcess" alt="" coords="203,157,357,184"/>
+<area shape="rect" id="node6" href="$class_forums.html#a46eef57d2ca3c0b15d77d2e693877dc2" title="Forums\\delProcess" alt="" coords="213,208,347,235"/>
+<area shape="rect" id="node7" href="$class_forums.html#af4d3285b862dab01a94b4618b0a06b1f" title="Forums\\editProcess" alt="" coords="211,259,349,285"/>
+<area shape="rect" id="node8" href="$class_user.html#ac820b84445cf06bb507281e6a6740871" title="User\\find" alt="" coords="243,309,317,336"/>
+<area shape="rect" id="node9" href="$class_signup_model.html#a0c564cc6deee9d7bf75c366ab6a7effb" title="SignupModel\\find" alt="" coords="219,360,341,387"/>
+<area shape="rect" id="node10" href="$class_online_model.html#ac8e9568e3f18772268e4e117c9908c48" title="OnlineModel\\GetMembers" alt="" coords="193,411,367,437"/>
+<area shape="rect" id="node11" href="$class_last_comments_controller.html#ad5d2ae195ea185d4fc8edaf6ef91cd1e" title="LastCommentsController\l\\index" alt="" coords="197,462,363,503"/>
+<area shape="rect" id="node12" href="$class_polls_controller.html#a833eb25beb829eae3e10399e6d3b959a" title="PollsController\\index" alt="" coords="209,528,351,555"/>
+<area shape="rect" id="node13" href="$class_shouts_controller.html#abff97090494cde9cc6f46c3dc0fb6188" title="ShoutsController\\index" alt="" coords="203,579,357,605"/>
+<area shape="rect" id="node14" href="$class_link_controller.html#a53b14bd8e4f2883e246fb069b3a7c238" title="LinkController\\index" alt="" coords="212,629,348,656"/>
+<area shape="rect" id="node15" href="$class_forums_controller.html#aba22a316505b49182315349d390e5ed2" title="ForumsController\\index" alt="" coords="202,680,358,707"/>
+<area shape="rect" id="node17" href="$class_user_controller.html#ac69a5e1ea6c4baac2dfc307971c3fdfd" title="UserController\\index" alt="" coords="211,731,349,757"/>
+<area shape="rect" id="node18" href="$class_user.html#acc4c70eb4a4b5c29ec82e0cf2376c5c7" title="User\\loginProcess" alt="" coords="216,781,344,808"/>
+<area shape="rect" id="node19" href="$class_forums.html#a4d8d8c0b145b5f75aed26bc20889b6dd" title="Forums\\ModeratorEditPost\lProcess" alt="" coords="191,833,369,874"/>
+<area shape="rect" id="node20" href="$class_forums.html#a4bbc0c2e150ba126c7583a39a624dffa" title="Forums\\ModeratorEditTagProcess" alt="" coords="170,899,390,925"/>
+<area shape="rect" id="node21" href="$class_members_controller.html#ab843ba6d98b2943a7a1803be87990c37" title="MembersController\\myPreferences\lCallback" alt="" coords="169,950,391,991"/>
+<area shape="rect" id="node22" href="$class_forums.html#a6fdfab1e441c7aadf9e41d39ce4cd6a5" title="Forums\\replyProcess" alt="" coords="207,1016,353,1043"/>
+<area shape="rect" id="node23" href="$class_forums.html#aacb4bf57159d2a539985b05012b4cad8" title="Forums\\reportpostProcess" alt="" coords="192,1067,368,1093"/>
+<area shape="rect" id="node16" href="$class_group_forums_overview_page.html#a3c3502d500e275e7b477e15f0cbfff02" title="GroupForumsOverviewPage\l\\column_col3" alt="" coords="440,673,621,714"/>
+</map>

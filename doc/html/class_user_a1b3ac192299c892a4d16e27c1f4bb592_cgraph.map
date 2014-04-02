@@ -1,0 +1,5 @@
+<map id="registerProcess" name="registerProcess">
+<area shape="rect" id="node2" href="$class_user.html#ae45770562ac3ba40d345f1a3dba5b66d" title="handleInUse" alt="" coords="213,5,307,32"/>
+<area shape="rect" id="node3" href="$class_user.html#a57a32bb9020d5e33521262b3bad38dfc" title="emailInUse" alt="" coords="217,56,303,83"/>
+<area shape="rect" id="node4" href="$class_m_o_d__user___auth.html#a334db567b1dd33a77cd3f82f4ac6fa76" title="MOD_user_Auth\\checkAuth" alt="" coords="168,107,352,133"/>
+</map>

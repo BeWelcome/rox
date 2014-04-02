@@ -1,0 +1,10 @@
+<map id="AbstractBasePage\createWidget" name="AbstractBasePage\createWidget">
+<area shape="rect" id="node2" href="$class_signup_resent_mail_page.html#ac63555a23803dcd99b8928e7081442c9" title="SignupResentMailPage\l\\column_col3" alt="" coords="303,5,460,46"/>
+<area shape="rect" id="node3" href="$class_signup_mail_confirm_page.html#a495e528bf91d8624b440953baa511ccf" title="SignupMailConfirmPage\l\\column_col3" alt="" coords="301,70,461,111"/>
+<area shape="rect" id="node4" href="$class_verify_must_login_page.html#a4eae4576f9f0fff23febe4f5fdf614a4" title="VerifyMustLoginPage\l\\column_col3" alt="" coords="309,135,454,177"/>
+<area shape="rect" id="node5" href="$class_group_join_page.html#a1cce351a346dc151a36d3d869e84e3bf" title="GroupJoinPage\\column_col3" alt="" coords="288,201,475,228"/>
+<area shape="rect" id="node6" href="$class_group_member_settings_page.html#a93a009b8de79dba21023b932a5607e87" title="GroupMemberSettingsPage\l\\column_col3" alt="" coords="290,253,473,294"/>
+<area shape="rect" id="node7" href="$class_group_leave_page.html#a5e0dc05732a8d4090c3f2923fc7c55df" title="GroupLeavePage\\column_col3" alt="" coords="283,319,480,345"/>
+<area shape="rect" id="node8" href="$class_login_page.html#ab582e696d1997490e62ba17f906fd941" title="LoginPage\\column_col3" alt="" coords="301,369,461,396"/>
+<area shape="rect" id="node9" href="$class_page_with_rox_layout.html#a8d76ba6ac88ffd3f1f620ccf01f8f7e7" title="PageWithRoxLayout\\volunteerMenu" alt="" coords="267,420,495,447"/>
+</map>

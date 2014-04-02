@@ -1,0 +1,8 @@
+<map id="GalleryUserPage\teaser" name="GalleryUserPage\teaser">
+<area shape="rect" id="node2" href="$class_gallery_user_page.html#a7f8adaf90a47da5ff4827a691f7b1d74" title="GalleryUserPage\\breadcrumbs" alt="" coords="219,5,418,32"/>
+<area shape="rect" id="node3" href="$class_gallery_user_page.html#a7d1be87ca7fcd1635415fd5f49d9f568" title="GalleryUserPage\\submenu" alt="" coords="230,56,407,83"/>
+<area shape="rect" id="node7" href="$class_gallery_user_page.html#a4f1383c904511abad9fa9a6867b76dba" title="GalleryUserPage\\teaserHeadline" alt="" coords="213,107,424,133"/>
+<area shape="rect" id="node4" href="$class_gallery_user_page.html#a17472d492b86723a69a076a9311778e8" title="GalleryUserPage\\getSubmenu\lActiveItem" alt="" coords="472,17,669,58"/>
+<area shape="rect" id="node5" href="$class_gallery_user_page.html#a07b93b28c611c84510e134b777084a7c" title="GalleryUserPage\\getSubmenu\lItems" alt="" coords="472,82,669,123"/>
+<area shape="rect" id="node6" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="718,89,919,116"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="User\registerProcess" name="User\registerProcess">
+<area shape="rect" id="node2" href="$class_m_o_d__user___auth.html#a7a1ae540e342d76630d3cf57db1ea071" title="MOD_user_Auth\\checkAuth" alt="" coords="200,5,384,32"/>
+<area shape="rect" id="node4" href="$class_user.html#a3f590f4a5a349340eca144f4007675cc" title="User\\emailInUse" alt="" coords="233,56,351,83"/>
+<area shape="rect" id="node5" href="$class_user.html#aa52bc9da951bdb79739bed2427be9a0b" title="User\\handleInUse" alt="" coords="230,107,354,133"/>
+<area shape="rect" id="node6" href="$class_m_o_d__user.html#acac6dea350af91cb9c1500974e354c7f" title="MOD_user\\passwordEncrypt" alt="" coords="198,157,386,184"/>
+<area shape="rect" id="node3" href="$class_p_exception.html#a669262d781cd19942dc81f3d7ff897ce" title="PException\\addInfo" alt="" coords="435,5,570,32"/>
+</map>

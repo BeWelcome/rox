@@ -1,0 +1,12 @@
+<map id="Role\containsPrivilege" name="Role\containsPrivilege">
+<area shape="rect" id="node2" href="$class_rox_model_base.html#af80ad09d7c0c201e2a5732fb59feb334" title="RoxModelBase\\createEntity" alt="" coords="203,13,387,40"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a339e5f4420297d8ae0e14abf64905a14" title="RoxEntityBase\\findById" alt="" coords="215,64,374,90"/>
+<area shape="rect" id="node10" href="$class_rox_entity_base.html#a75e7ea82100dc21035a2072a64b311fc" title="RoxEntityBase\\isPKSet" alt="" coords="907,140,1069,166"/>
+<area shape="rect" id="node4" href="$class_rox_entity_base.html#a8170e7217bec3edbeacbe62615567aa4" title="RoxEntityBase\\getPrimaryKey" alt="" coords="1123,140,1322,166"/>
+<area shape="rect" id="node6" href="$class_rox_entity_base.html#ab323bb7926fa55e45d9a24554637a0bb" title="RoxEntityBase\\getTableName" alt="" coords="437,38,633,65"/>
+<area shape="rect" id="node7" href="$class_rox_entity_base.html#ab4033ed31068ef82233d5cf6b7c995be" title="RoxEntityBase\\queryForEntity" alt="" coords="435,89,634,116"/>
+<area shape="rect" id="node5" href="$class_rox_entity_base.html#a1aebc6bd22a3b454fc8c8c696ceb29ea" title="RoxEntityBase\\getTableDescription" alt="" coords="1371,165,1597,192"/>
+<area shape="rect" id="node8" href="$class_rox_entity_base.html#a0630eb83ddfc04e35598e97393672c80" title="RoxEntityBase\\loadEntity" alt="" coords="683,190,853,217"/>
+<area shape="rect" id="node9" href="$class_rox_entity_base.html#a7d528d3b8d4736f35bcf5ba84cd6148d" title="RoxEntityBase\\getColumns" alt="" coords="1131,190,1314,217"/>
+<area shape="rect" id="node11" href="$class_rox_entity_base.html#ac0032c3707c30a8d6102279692b0927d" title="RoxEntityBase\\wipeEntity" alt="" coords="901,190,1075,217"/>
+</map>

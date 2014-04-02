@@ -326,13 +326,13 @@ WHERE code="' . $this->dao->escape($code) . '"
      */    
     public function updateSingleTranslation($form){ 
         $eng_ins = '';
-        $eng_upd = 'IdMember = '.(int)$_SESSION["IdMember"].',';
+        $eng_upd = 'IdMember = '.(int)$_SESSION["IdMember"].', updated = now(),';
         $desc = '';
         $changeInAll = '';
         if ($form['lang']=='en'){
             $eng_ins = 'majorupdate = now(),';
             $eng_upd = 'updated = updated,';
-            if (isset($form['changetype']) && $form["lang"]=="en"){
+            if (isset($form['changetype'])){
                 switch ($form['changetype']){
                     case 'major':
                     $eng_upd = 'majorupdate = now(), IdMember = '.(int)$_SESSION["IdMember"].',';

@@ -1,0 +1,5 @@
+<map id="AddVote" name="AddVote">
+<area shape="rect" id="node2" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="167,5,265,32"/>
+<area shape="rect" id="node3" href="$class_polls_model.html#a90f963bb32304dfe6a9959144205b13c" title="IsMemberAllowed" alt="" coords="154,56,278,83"/>
+<area shape="rect" id="node4" href="$class_rox_model_base.html#a9096e57fe15a61d5ba9dfc1fc3b24415" title="RoxModelBase\\bulkLookup" alt="" coords="126,107,306,133"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="AdminWordEditTranslationPage" name="AdminWordEditTranslationPage">
+<area shape="rect" id="node2" href="$class_admin_word_base_page.html" title="AdminWordBasePage" alt="" coords="33,453,183,480"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="38,379,177,405"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="37,304,179,331"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="51,229,164,256"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="43,155,173,181"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="46,80,169,107"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="37,5,179,32"/>
+</map>

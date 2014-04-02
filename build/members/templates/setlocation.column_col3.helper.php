@@ -15,6 +15,7 @@ if (isset($_SESSION['GeoVars']) && isset($_SESSION['GeoVars']['id']) && isset($_
 } 
 $callback_tag = $this->layoutkit->formkit->setPostCallback('MembersController', 'setLocationCallback');
 $member = $this->member;
+$m = new StdClass;
 $m->firstname = MOD_crypt::MemberReadCrypted($member->FirstName,'');
 $m->secondname = MOD_crypt::MemberReadCrypted($member->SecondName,'');
 $m->lastname = MOD_crypt::MemberReadCrypted($member->LastName,'');
@@ -31,6 +32,7 @@ if (!$mem_redirect || !isset($mem_redirect->post['id'])) {
     if (isset($vars['geonameid']) && !isset($vars['geonamename'])) {
         $geo = new GeoModel;
         $location = $geo->getLocationById($vars['geonameid']);
+        if ($location) {
         $country = $location->getCountry();
         $parent = $location->getParent();
         $vars['geonamename'] = $location->name;
@@ -43,6 +45,7 @@ if (!$mem_redirect || !isset($mem_redirect->post['id'])) {
         }
         $vars['geonamecountry'] = $country->name;
         $vars['countryname'] = $country->name;
+        }
     }
 } else {
     $vars = $mem_redirect->post;

@@ -1,0 +1,7 @@
+<map id="ItemlistWithPagination\getItemsForPage" name="ItemlistWithPagination\getItemsForPage">
+<area shape="rect" id="node2" href="$class_itemlist_with_pagination.html#aa8df121df3b4129c72cb5ceb298f3512" title="ItemlistWithPagination\l\\getItemsInRange" alt="" coords="205,5,357,46"/>
+<area shape="rect" id="node3" href="$class_itemlist_with_pagination.html#af6b1416248564bd8a0b1b922ed204c32" title="ItemlistWithPagination\l\\itemsTotalBegin" alt="" coords="205,70,357,111"/>
+<area shape="rect" id="node4" href="$class_itemlist_with_pagination.html#a0d5fb40b2371426693ace9a3358954e4" title="ItemlistWithPagination\l\\itemsTotalCount" alt="" coords="605,158,757,199"/>
+<area shape="rect" id="node5" href="$class_itemlist_with_pagination.html#a5c02acc114b62d7d4cfe3412379ffa57" title="ItemlistWithPagination\l\\prepare" alt="" coords="205,187,357,229"/>
+<area shape="rect" id="node6" href="$class_itemlist_with_pagination.html#aa7cc30e3ab98e4c0072dc44557c7f690" title="ItemlistWithPagination\l\\numberOfPages" alt="" coords="405,187,557,229"/>
+</map>

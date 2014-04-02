@@ -1,0 +1,31 @@
+<map id="sanitize" name="sanitize">
+<area shape="rect" id="node2" href="$class_simple_pie.html#a095c5d389db211932136b53f25f39685" title="__construct" alt="" coords="148,5,239,32"/>
+<area shape="rect" id="node3" href="$class_simple_pie.html#a9b86eec68c41a6b290ca136773998605" title="strip_htmltags" alt="" coords="141,56,245,83"/>
+<area shape="rect" id="node5" href="$class_simple_pie.html#ab0b064cf743bb7d7ee2c467493848db4" title="strip_attributes" alt="" coords="139,107,247,133"/>
+<area shape="rect" id="node6" href="$class_simple_pie.html#a36284b7249a84cf126c8228f0c2226d9" title="set_output_encoding" alt="" coords="122,208,265,235"/>
+<area shape="rect" id="node7" href="$class_simple_pie.html#a34ab28a9fc2f7c0f8531460afb976490" title="set_url_replacements" alt="" coords="120,259,267,285"/>
+<area shape="rect" id="node8" href="$class_simple_pie.html#a3a38e3cf1b378fcb4ef7a6ad6411889b" title="set_image_handler" alt="" coords="128,157,259,184"/>
+<area shape="rect" id="node9" href="$class_simple_pie.html#a4be4055f3361d4800e16bc2e2e38cda6" title="init" alt="" coords="174,309,213,336"/>
+<area shape="rect" id="node11" href="$class_simple_pie.html#a124804720cc02f50fedabc5f73c4a8f7" title="get_encoding" alt="" coords="144,360,243,387"/>
+<area shape="rect" id="node13" href="$class_simple_pie.html#a3b965616e4b4facd528112e9438e1be9" title="subscribe_url" alt="" coords="144,613,243,640"/>
+<area shape="rect" id="node15" href="$class_simple_pie.html#ac01f0421cdf853d8bdac45fcd181dc28" title="get_title" alt="" coords="530,411,598,437"/>
+<area shape="rect" id="node16" href="$class_simple_pie.html#a1e3e048b0e1e50f210bbf0813ac29069" title="get_authors" alt="" coords="519,461,609,488"/>
+<area shape="rect" id="node18" href="$class_simple_pie.html#aab11e05e70ba197200965fd6aab5cfe4" title="get_contributors" alt="" coords="507,512,621,539"/>
+<area shape="rect" id="node20" href="$class_simple_pie.html#a32d1f0bd101c392bb964b13e51b6575d" title="get_links" alt="" coords="527,563,601,589"/>
+<area shape="rect" id="node23" href="$class_simple_pie.html#a1e5090c99cec2b38d0dd2f5c144a6fb6" title="get_description" alt="" coords="509,664,619,691"/>
+<area shape="rect" id="node24" href="$class_simple_pie.html#abe0506154f2100a4180fbbf28bc99650" title="get_copyright" alt="" coords="514,715,614,741"/>
+<area shape="rect" id="node25" href="$class_simple_pie.html#a6059f56430d80d68802c28d03e39b386" title="get_image_url" alt="" coords="513,765,615,792"/>
+<area shape="rect" id="node26" href="$class_simple_pie.html#a90c2d1fd691f85ea01c05c66401e58bf" title="get_image_link" alt="" coords="509,816,619,843"/>
+<area shape="rect" id="node27" href="$class_simple_pie.html#a9248086a1b46a91b428bc12cc4212f1d" title="get_categories" alt="" coords="140,867,247,893"/>
+<area shape="rect" id="node29" href="$class_simple_pie.html#abc0f74a32c1f9e1b2986c12831cf383e" title="get_language" alt="" coords="144,917,243,944"/>
+<area shape="rect" id="node30" href="$class_simple_pie.html#a2afc664ab5338c08ee7962d88e191d22" title="get_image_title" alt="" coords="138,968,249,995"/>
+<area shape="rect" id="node4" href="$class_simple_pie.html#aa7f2d11755c20e017c56ce88de11cd8a" title="set_stupidly_fast" alt="" coords="327,107,447,133"/>
+<area shape="rect" id="node10" href="$class_simple_pie.html#ae0024f426ab0ca1141b76ecdb368e5ec" title="fetch_data" alt="" coords="345,309,428,336"/>
+<area shape="rect" id="node12" href="$class_simple_pie.html#a489704acf37faf3f61843f10b78e1ad0" title="handle_content_type" alt="" coords="315,360,458,387"/>
+<area shape="rect" id="node14" href="$class_simple_pie.html#ad6c8c70d58e8ba62c9638b705f652640" title="get_base" alt="" coords="349,613,424,640"/>
+<area shape="rect" id="node17" href="$class_simple_pie.html#a46b48553513d2c45d1395e3df75acbe4" title="get_author" alt="" coords="683,461,765,488"/>
+<area shape="rect" id="node19" href="$class_simple_pie.html#a603e687fa60fdd49a8e0cba0aedc2a58" title="get_contributor" alt="" coords="670,512,778,539"/>
+<area shape="rect" id="node21" href="$class_simple_pie.html#aa4156c6dff0a92091dfbd04ce88e7280" title="get_link" alt="" coords="691,588,757,615"/>
+<area shape="rect" id="node22" href="$class_simple_pie.html#aa89f08250c57fe9a64d5a07b9c9cc93c" title="get_permalink" alt="" coords="827,588,930,615"/>
+<area shape="rect" id="node28" href="$class_simple_pie.html#a87ee41a6b10d49e5b616b1cbedfb56a4" title="get_category" alt="" coords="338,867,435,893"/>
+</map>

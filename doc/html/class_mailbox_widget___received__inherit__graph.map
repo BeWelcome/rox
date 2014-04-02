@@ -1,0 +1,9 @@
+<map id="MailboxWidget_Received" name="MailboxWidget_Received">
+<area shape="rect" id="node8" href="$class_mailbox_widget___personalstart.html" title="MailboxWidget_Personalstart" alt="" coords="5,528,197,555"/>
+<area shape="rect" id="node2" href="$class_mailbox_widget.html" title="MailboxWidget" alt="" coords="47,379,155,405"/>
+<area shape="rect" id="node3" href="$class_itemlist_with_pagination.html" title="ItemlistWithPagination" alt="" coords="25,304,177,331"/>
+<area shape="rect" id="node4" href="$class_itemlist_widget.html" title="ItemlistWidget" alt="" coords="49,229,153,256"/>
+<area shape="rect" id="node5" href="$class_rox_widget.html" title="RoxWidget" alt="" coords="58,155,144,181"/>
+<area shape="rect" id="node6" href="$class_visual_component.html" title="VisualComponent" alt="" coords="39,80,163,107"/>
+<area shape="rect" id="node7" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="31,5,172,32"/>
+</map>

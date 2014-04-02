@@ -1,0 +1,13 @@
+<map id="AdminMassMailBasePage" name="AdminMassMailBasePage">
+<area shape="rect" id="node9" href="$class_admin_mass_mail_details_page.html" title="AdminMassMailDetailsPage" alt="" coords="1491,5,1677,32"/>
+<area shape="rect" id="node10" href="$class_admin_mass_mail_edit_create_page.html" title="AdminMassMailEditCreatePage" alt="" coords="1481,56,1687,83"/>
+<area shape="rect" id="node11" href="$class_admin_mass_mail_enqueue_page.html" title="AdminMassMailEnqueuePage" alt="" coords="1486,107,1682,133"/>
+<area shape="rect" id="node12" href="$class_admin_mass_mail_page.html" title="AdminMassMailPage" alt="" coords="1511,157,1657,184"/>
+<area shape="rect" id="node2" href="$class_admin_base_page.html" title="AdminBasePage" alt="" coords="1089,81,1207,108"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="899,81,1039,108"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="709,81,851,108"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="547,81,661,108"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="368,81,499,108"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="195,81,319,108"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="5,81,147,108"/>
+</map>

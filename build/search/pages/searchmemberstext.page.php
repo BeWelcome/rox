@@ -33,12 +33,15 @@ Boston, MA  02111-1307, USA.
  */
 class SearchMembersTextPage extends SearchMembersBasePage
 {
+    public $errors = array();
+    public $vars = array();
+    public $results = array();
+
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        // $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery-ui-1.10.3.custom.min.css';
        $stylesheets[] = 'styles/css/minimal/screen/custom/jquery-ui/smoothness/jquery.ui.all.css';
-       $stylesheets[] = 'styles/css/minimal/screen/custom/search.css';
+       $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?1';
        return $stylesheets;
     }
 }
-

@@ -1,0 +1,25 @@
+var class_board =
+[
+    [ "__construct", "class_board.html#a64e5e29aa797c06d5adf8b6f3cf3bb67", null ],
+    [ "add", "class_board.html#a270d2352618ade9961e49797d4f2c2fb", null ],
+    [ "current", "class_board.html#a5cab6df68830182eef85a9ccf536bcf5", null ],
+    [ "FilterThreadListResultsWithIdCriteria", "class_board.html#a862be864e9773640b41168bbe8a1eb31", null ],
+    [ "getBoardDescription", "class_board.html#aa646282e59826bf359c55cb546f54ccc", null ],
+    [ "getBoardLink", "class_board.html#abcb3b611203a35ee6f36786b5f67d8b6", null ],
+    [ "getBoardName", "class_board.html#acb1d66caad609c229c223629fb5fd143", null ],
+    [ "getNaviChain", "class_board.html#aa452b72e96bd2ede4186c4c35936e78e", null ],
+    [ "getNumberOfThreads", "class_board.html#afd17c815d830cc762499dab8f8817d4e", null ],
+    [ "getThreads", "class_board.html#aa25357e821f3c61441c5662ece5a8213", null ],
+    [ "getTotalThreads", "class_board.html#ade98256fdc365e159f71791c17e1ce51", null ],
+    [ "hasSubBoards", "class_board.html#a51158783f4a40307ca3c3f7a52c776bf", null ],
+    [ "initThreads", "class_board.html#a97a0fa78cf366f1c1e7fe83fd46dc490", null ],
+    [ "IsTagSubscribed", "class_board.html#abcd279ee9986a2431a628fc39882715e", null ],
+    [ "key", "class_board.html#a23f23edf63b46e2e5a2789ab6d12fe40", null ],
+    [ "LoadThreads", "class_board.html#a631e94fdfbbbe7b27764fa782b584ccc", null ],
+    [ "MailTheReport", "class_board.html#a2a6ab437b3986398f6980965a6aba8c0", null ],
+    [ "next", "class_board.html#acca5282cad526b83fb9725b114fd2198", null ],
+    [ "rewind", "class_board.html#aa9b18398dd420eb544cedd247bec1c2f", null ],
+    [ "valid", "class_board.html#aef4b6b225393e6f941e2f4ae0f718e37", null ],
+    [ "$POSTS_PER_PAGE", "class_board.html#a6bdcd0210ee331a061f8aff858d79564", null ],
+    [ "$THREADS_PER_PAGE", "class_board.html#af65bac8ccf35a6ecb4f3c9c1d57741da", null ]
+];

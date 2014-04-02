@@ -1,0 +1,9 @@
+<map id="getRequestAndArgs" name="getRequestAndArgs">
+<area shape="rect" id="node2" href="$class_pager_widget.html#a9596f1635d3c078fa06ab0166bcbb11b" title="PagerWidget\\prepare" alt="" coords="192,132,336,159"/>
+<area shape="rect" id="node3" href="$class_pager_widget.html#a48eb9c0945e678e61a347f9e4653eec5" title="PagerWidget\\__construct" alt="" coords="397,5,566,32"/>
+<area shape="rect" id="node4" href="$class_pager_widget.html#afde88292c44dc59faf017738dae6dffb" title="PagerWidget\\render" alt="" coords="413,56,550,83"/>
+<area shape="rect" id="node5" href="$class_pager_widget.html#aad5372c2036f7429fa893442042f10a6" title="PagerWidget\\getHtml" alt="" coords="408,107,555,133"/>
+<area shape="rect" id="node6" href="$class_pager_widget.html#a4f006f9108398d9dc80b0d0ba057b32b" title="PagerWidget\\numberOfPages" alt="" coords="384,157,579,184"/>
+<area shape="rect" id="node8" href="$class_pager_widget.html#a2036e520dae6e9a33d87ecb067939f15" title="PagerWidget\\getActiveSubset" alt="" coords="384,208,579,235"/>
+<area shape="rect" id="node7" href="$class_pager_widget.html#ad7746b498109958633de4f4e1c8bae71" title="PagerWidget\\needsPagination" alt="" coords="627,157,824,184"/>
+</map>

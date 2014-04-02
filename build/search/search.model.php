@@ -43,6 +43,17 @@ class SearchModel extends RoxModelBase
     // No need to find historical and destroyed places
     const PLACES_FILTER = " g.fclass = 'P' AND g.fcode <> 'PPLH' AND g.fcode <> 'PPLW' AND g.fcode <> 'PPLQ' AND g.fcode <> 'PPLCH' ";
 
+    private $keywordCondition = "";
+    private $ageCondition = "";
+    private $usernameCondition = "";
+    private $genderCondition = "";
+    private $locationCondition = "";
+    private $groupsCondition = "";
+    private $languagesCondition = "";
+    private $accommodationCondition = "";
+    private $typicalOfferCondition = "";
+    private $tables = "";
+
     private static $ORDERBY = array(
         self::ORDER_USERNAME => array('WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'),
         self::ORDER_ACCOM => array('WordCode' => 'SearchOrderAccommodation', 'Column' => 'm.Accomodation'),
@@ -74,20 +85,6 @@ class SearchModel extends RoxModelBase
         }
         return $order;
     }
-
-    //------------------------------------------------------------------------------
-    // fage_value return a  the age value corresponding to date
-    private function fage_value($dd) {
-        $pieces = explode("-",$dd);
-        if(count($pieces) != 3) return 0;
-        list($year,$month,$day) = $pieces;
-        $year_diff = date("Y") - $year;
-        $month_diff = date("m") - $month;
-        $day_diff = date("d") - $day;
-        if ($month_diff < 0) $year_diff--;
-        elseif (($month_diff==0) && ($day_diff < 0)) $year_diff--;
-        return $year_diff;
-    } // end of fage_value
 
     private function ReplaceWithBR($ss,$ReplaceWith=false) {
         if (!$ReplaceWith) return ($ss);
@@ -183,26 +180,39 @@ LIMIT 1
     }
 
     /**
+     * @param array $vars
+     * r@return string
+     */
+    private function getStatusCondition($vars) {
+        if (array_key_exists('search-membership', $vars) && ($vars['search-membership'] == 1)) {
+            $statusCondition = " AND m.status IN (" . Member::ACTIVE_SEARCH . ") ";
+        } else {
+            $statusCondition = " AND m.status IN ( 'Active') ";
+        }
+        return $statusCondition;
+    }
+
+    /**
      *
      * @param array $vars
      * @param string $admin1
      * @param string $country
      * @return string
      */
-    private function locationWhere($vars, $admin1, $country) {
+    private function getLocationCondition($vars, $admin1, $country) {
         if ($country) {
             if ($admin1) {
                 // We run based on an admin unit
-                $where = "AND a.IdCity = g.geonameid
+                $condition = "AND a.IdCity = g.geonameid
                 AND g.admin1 = '" . $admin1 . "'
                 AND g.country = '" . $country . "'";
             } else {
                 // we're looking for all members of a country
-                $where = "AND a.IdCity = g.geonameid
+                $condition = "AND a.IdCity = g.geonameid
                 AND g.country = '" . $country . "'";
             }
         } else {
-            $where = "AND a.IdCity = g.geonameid";
+            $condition = "AND a.IdCity = g.geonameid";
             if (empty($vars['search-location'])) {
                 // we search around the world.
             } else {
@@ -241,19 +251,183 @@ LIMIT 1
                             " . self::PLACES_FILTER . "
                             AND g.latitude BETWEEN " . $latsw . " AND " . $latne . "
                             AND g.longitude BETWEEN " . $longsw . " AND " . $longne;
-                    $where .= "
+                    $condition .= "
                             AND g.geonameid IN ('";
                     $geonameids = $this->bulkLookup($query);
                     foreach($geonameids as $geonameid) {
-                        $where .= $geonameid->geonameid . "', '";
+                        $condition .= $geonameid->geonameid . "', '";
                     }
-                    $where = substr($where, 0, -3) . ")";
+                    $condition = substr($condition, 0, -3) . ")";
                 } else {
-                    $where .= " AND g.geonameid = " . $this->dao->escape($vars['search-geoname-id']);
+                    $condition .= " AND g.geonameid = " . $this->dao->escape($vars['search-geoname-id']);
                 }
             }
         }
-        return $where;
+        return $condition;
+    }
+
+    private function getGenderCondition($vars) {
+        $condition = "";
+        if (isset($vars['search-gender'])) {
+            $gender = $vars['search-gender'];
+            switch($gender) {
+                case "male":
+                case "female":
+                    $condition = " AND m.Gender = '" . $gender . "' AND m.HideGender = 'No'";
+                    break;
+                case "genderOther":
+                    $condition = " AND m.Gender = 'other' AND m.HideGender = 'No'";
+                    break;
+            }
+        }
+        return $condition;
+    }
+
+    private function getAgeCondition($vars) {
+        $condition = "";
+        if (isset($vars['search-age-minimum']) && ($vars['search-age-minimum'] != 0)) {
+            $minAge = $vars['search-age-minimum'];
+            $condition .= ' AND m.BirthDate <= (NOW() - INTERVAL ' . $minAge . ' YEAR)';
+        }
+        if (isset($vars['search-age-maximum']) && ($vars['search-age-maximum'] != 0)) {
+            $maxAge = $vars['search-age-maximum'];
+            $condition .= ' AND m.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)' ;
+        }
+        if(!empty($condition)) {
+            $condition .= " AND m.HideBirthDate='No'";
+        }
+        return $condition;
+    }
+
+    private function getUsernameCondition($vars) {
+        $condition = "";
+        if (isset($vars['search-username']) && (!empty($vars['search-username']))) {
+            $username = $vars['search-username'];
+            // create LIKE condition from query parameter with wildcards
+            if (strpos($username, "*") !== false) {
+                $username = str_replace("*", "%", $username);
+            }
+            $condition = " AND m.username LIKE '" . $this->dao->escape($username) . "'";
+        }
+        return $condition;
+    }
+
+    private function getKeywordCondition($vars) {
+        $condition = "";
+        if (isset($vars['search-text']) && (!empty($vars['search-text']))) {
+            $condition = "AND mt.Sentence LIKE '%" . $this->dao->escape($vars['search-text']) . "%' AND mt.IdOwner = m.id";
+        }
+        return $condition;
+    }
+
+    private function getGroupsCondition($vars) {
+        $condition = "";
+        if (isset($vars['search-groups'])) {
+            $groups = array();
+            foreach($vars['search-groups'] as $group) {
+                $groups[] = $group;
+            }
+            if (!empty($groups)) {
+                $condition = " AND mg.IdMember = m.id AND mg.IdGroup IN ('" . implode("', '", $groups) . "')";
+            }
+        }
+        return $condition;
+    }
+
+    private function getLanguagesCondition($vars) {
+        $condition = "";
+        if (isset($vars['search-languages'])) {
+            $languages = array();
+            foreach($vars['search-languages'] as $language) {
+                $languages[] = $language;
+            }
+            if (!empty($languages)) {
+                $condition = " AND mll.IdMember = m.id AND mll.IdLanguage IN ('" . implode("', '", $languages) . "')
+                    AND mll.Level <> 'HelloOnly'";
+            }
+        }
+        return $condition;
+    }
+
+    private function getAccommodationCondition($vars) {
+        $condition = "";
+        if(isset($vars['search-accommodation'])) {
+            $accommodations = array();
+            $accommodation = $vars['search-accommodation'];
+            if(is_array($accommodation))
+            {
+                foreach ($accommodation as $value) {
+                    if ($value == '') continue;
+                    $accommodations[] = "Accomodation = '" . $this->dao->escape($value) . "'";
+                }
+            }
+            if (!empty($accommodations)) {
+                $condition = " AND (" . implode(" OR ", $accommodations) . ")";
+            }
+        }
+        return $condition;
+    }
+
+    private function getTypicalOfferCondition($vars) {
+        $condition = "";
+        if(isset($vars['search-typical-offer'])) {
+            $typicalOffers = array();
+            $typicalOffer = $vars['search-typical-offer'];
+            if(is_array($typicalOffer))
+            {
+                foreach ($typicalOffer as $value) {
+                    if ($value == '') continue;
+                    $typicalOffers[] = "TypicOffer = '" . $this->dao->escape($value) . "'";
+                }
+            }
+            if (!empty($typicalOffers)) {
+                $condition = " AND (" . implode(" AND ", $typicalOffers) . ")";
+            }
+        }
+        return $condition;
+    }
+
+    private function getMembersCount($publicOnly) {
+        // Fetch count of public members at/around the given place
+        $str = "
+            SELECT
+                COUNT( DISTINCT m.id) cnt
+            FROM
+            " . $this->tables;
+        if ($publicOnly) {
+            $str .= ",
+                memberspublicprofiles mpp";
+        }
+        $str .= "
+            WHERE
+                m.id = a.IdMember
+                " . $this->maxGuestCondition . "
+                " .$this->statusCondition;
+        if ($publicOnly) {
+            $str .= "
+                AND m.id = mpp.IdMember ";
+        }
+        $str .= $this->locationCondition . "
+            " . $this->genderCondition . "
+            " . $this->ageCondition . "
+            " . $this->usernameCondition . "
+            " . $this->keywordCondition . "
+            " . $this->groupsCondition . "
+            " . $this->languagesCondition . "
+            " . $this->accommodationCondition . "
+            " . $this->typicalOfferCondition;
+        $count = $this->dao->query($str);
+
+        $row = $count->fetch(PDB::FETCH_OBJ);
+        return $row->cnt;
+    }
+
+    private function getParameter($vars, $var, $default) {
+        $result = $default;
+        if (isset($vars[$var])) {
+            $result = $vars[$var];
+        }
+        return $result;
     }
 
     /**
@@ -267,55 +441,42 @@ LIMIT 1
         $langarr = explode('-', $_SESSION['lang']);
         $lang = $langarr[0];
         // First get current page and limits
-        $limit = $vars['search-number-items'];
-        $pageno = 1;
-        foreach(array_keys($vars) as $key) {
-            if (strstr($key, 'search-page-') !== false) {
-                $pageno = str_replace('search-page-', '', $key);
-            }
+        $limit = $this->getParameter($vars, 'search-number-items', 10);
+        $pageno = $this->getParameter($vars, 'search-page', 1);
+        $start = ($pageno - 1) * $limit;
+
+        $this->statusCondition = $this->getStatusCondition($vars);
+        $this->maxGuestCondition = "AND m.MaxGuest >= " . $vars['search-can-host'];
+        $this->locationCondition = $this->getLocationCondition($vars, $admin1, $country);
+        $this->genderCondition = $this->getGenderCondition($vars);
+        $this->ageCondition = $this->getAgeCondition($vars);
+        $this->usernameCondition = $this->getUsernameCondition($vars);
+        $this->keywordCondition = $this->getKeywordCondition($vars);
+        $this->groupsCondition = $this->getGroupsCondition($vars);
+        $this->languagesCondition = $this->getLanguagesCondition($vars);
+        $this->typicalOfferCondition = $this->getTypicalOfferCondition($vars);
+        $this->accommodationCondition = $this->getAccommodationCondition($vars);
+
+        $this->tables = "addresses a,
+                geonames g";
+        if (!empty($this->keywordCondition)) {
+            $this->tables .= ", memberstrads mt";
         }
-        $start = ($pageno -1) * $limit;
-        $vars['search-page-current'] = $pageno;
+        if (!empty($this->groupsCondition)) {
+            $this->tables .= ", membersgroups mg";
+        }
+        if (!empty($this->languagesCondition)) {
+            $this->tables .= ", memberslanguageslevel mll";
+        }
+        $this->tables .= ", members m";
 
         // Fetch count of members at/around the given place
-        $str = "
-            SELECT
-                COUNT(*) cnt
-            FROM
-                addresses a,
-                geonames g,
-                members m
-           WHERE
-                m.MaxGuest >= " . $vars['search-can-host'] . "
-                AND m.status = 'Active'
-                AND m.id = a.idmember
-                " . $this->locationWhere($vars, $admin1, $country);
-        $count = $this->dao->query($str);
-        $row = $count->fetch(PDB::FETCH_OBJ);
-        $vars['countOfMembers'] = $row->cnt;
-
-        // Fetch count of public members at/around the given place
-        $str = "
-            SELECT
-                COUNT(*) cnt
-            FROM
-                addresses a,
-                geonames g,
-                members m,
-                memberspublicprofiles mpp
-           WHERE
-                m.MaxGuest >= " . $vars['search-can-host'] . "
-                AND m.status = 'Active'
-                AND m.id = a.idmember
-                AND m.id = mpp.IdMember
-                " . $this->locationWhere($vars, $admin1, $country);
-        $count = $this->dao->query($str);
-        $row = $count->fetch(PDB::FETCH_OBJ);
-        $vars['countOfPublicMembers'] = $row->cnt;
+        $vars['countOfMembers'] = $this->getMembersCount(false);
+        $vars['countOfPublicMembers'] = $this->getMembersCount(true);
 
         // *FROM* and *WHERE* will be replaced later on (don't change)
         $str = "
-            SELECT
+            SELECT DISTINCT
                 m.id,
                 m.Username,
                 m.created,
@@ -343,9 +504,7 @@ LIMIT 1
                         (g.longitude - " . $vars['search-longitude'] . ") * (g.longitude - " . $vars['search-longitude'] . "))  AS Distance,
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             *FROM*
-                addresses a,
-                geonames g,
-                members m
+                " . $this->tables . "
             LEFT JOIN (
                 SELECT
                     COUNT(*) As commentCount, IdToMember
@@ -368,10 +527,18 @@ LIMIT 1
             ON
                 mp.IdMember = m.id
             *WHERE*
-                m.MaxGuest >= " . $vars['search-can-host'] . "
-                AND m.status = 'Active'
-                AND m.id = a.idmember
-                " . $this->locationWhere($vars, $admin1, $country) . "
+                m.id = a.idmember
+                " . $this->maxGuestCondition . "
+                " . $this->statusCondition . "
+                " . $this->locationCondition . "
+                " . $this->genderCondition . "
+                " . $this->ageCondition . "
+                " . $this->usernameCondition . "
+                " . $this->keywordCondition . "
+                " . $this->groupsCondition . "
+                " . $this->languagesCondition . "
+                " . $this->accommodationCondition . "
+                " . $this->typicalOfferCondition . "
             ORDER BY
                 " . $this->getOrderBy($vars['search-sort-order']) . "
             LIMIT
@@ -390,10 +557,11 @@ LIMIT 1
         $loggedInMember = $this->getLoggedInMember();
 
         $members = array();
-        $geonameids = array();
+        $geonameIds = array();
         $countryIds = array();
+        $layoutBits = new MOD_layoutbits();
         foreach($rawMembers as $member) {
-            $geonameids[$member->geonameid] = $member->geonameid;
+            $geonameIds[$member->geonameid] = $member->geonameid;
             $countryIds[$member->country] = $member->country;
             $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary,true), 70);
             $FirstName = $this->getNamePart($member->FirstName);
@@ -403,7 +571,7 @@ LIMIT 1
             $member->ProfileSummary = $aboutMe;
 
             if ($member->HideBirthDate=="No") {
-                $member->Age =floor($this->fage_value($member->BirthDate));
+                $member->Age =floor($layoutBits->fage_value($member->BirthDate));
             } else {
                 $member->Age = "";
             }
@@ -429,7 +597,7 @@ LIMIT 1
             }
             $members[] = $member;
         }
-        $inGeonameIds = implode("', '", $geonameids);
+        $inGeonameIds = implode("', '", $geonameIds);
         $query = "
             SELECT
                 g.geonameid geonameid, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
@@ -679,19 +847,19 @@ LIMIT 1
         $places = $this->bulkLookup($query);
         // Now fetch admin units and country name for the found entities
         // shevek: I tried to combine this into one query but search time exploded so separate step (for now?)
-        $adminunits = array();
+        $adminUnits = array();
         $countries = array();
-        $geonameids = array();
+        $geonameIds = array();
         foreach($places as $place) {
-            $adminunits[$place->country . "-" .$place->admin1] = $place->admin1;
+            $adminUnits[$place->country . "-" .$place->admin1] = $place->admin1;
             $countries[$place->country] = $place->country;
-            $geonameids[$place->geonameid] = $place->geonameid;
+            $geonameIds[$place->geonameid] = $place->geonameid;
         }
         $countryNames = $this->getCountryNames($countries, $lang);
-        $admin1Names = $this->getAdminUnitNames($adminunits, $countries, $lang);
+        $admin1Names = $this->getAdminUnitNames($adminUnits, $countries, $lang);
 
         // And finally get the place names in the UI language
-        $inGeonameIds = implode("', '", $geonameids);
+        $inGeonameIds = implode("', '", $geonameIds);
         $query = "
             SELECT
                 g.geonameid geonameid, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
@@ -779,6 +947,43 @@ LIMIT 1
     }
 
     /**
+     * Returns an array with the default settings for the advanced options.
+     */
+    public function getDefaultAdvancedOptions() {
+        $vars = array();
+        $vars['search-username'] = '';
+        $vars['search-text'] = '';
+        $vars['search-age-minimum'] = 0;
+        $vars['search-age-maximum'] = 0;
+        $vars['search-gender'] = 0;
+        $vars['search-groups'] = array();
+        $vars['search-accommodation'] = array('anytime', 'dependonrequest', 'neverask');
+        $vars['search-typical-offer'] = array();
+        $vars['search-text'] = '';
+        $vars['search-membership'] = 0;
+        $vars['search-languages'] = array();
+        $vars['member'] = $this->getLoggedInMember();
+        return $vars;
+    }
+
+    /**
+     * Returns an array with the default settings for the advanced options.
+     */
+    public function getDefaultSimpleOptions() {
+        $vars = array();
+        $vars['search-location'] = '';
+        $vars['search-can-host'] = 1;
+        $vars['search-distance'] = 25;
+        $vars['search-geoname-id'] = 0;
+        $vars['search-latitude'] = 0;
+        $vars['search-longitude'] = 0;
+        $vars['search-number-items'] = 10;
+        $vars['search-sort-order'] = SearchModel::ORDER_ACCOM;
+        $vars['search-page'] = 1;
+        return $vars;
+    }
+
+    /**
      *
      */
     public function checkSearchVarsOk($vars) {
@@ -794,7 +999,7 @@ LIMIT 1
     * a list of possible locations based on the input text
     */
     public function getResultsForLocation(&$vars) {
-        // first we need to check if someone click on one of the suggestions buttons
+        // first we need to check if someone clicked on one of the suggestions buttons
         $geonameid = 0;
         foreach(array_keys($vars) as $key) {
             if (strstr($key, 'geonameid-') !== false) {
@@ -804,26 +1009,41 @@ LIMIT 1
         if ($geonameid != 0) {
             $vars['search-geoname-id'] = $geonameid;
             // We need longitude and latitude for the search so let's fetch that
-            $query = "SELECT g.latitude AS lat, g.longitude AS lng FROM geonames g WHERE g.geonameid = " . $geonameid;
-            $row = $this->singleLookup($query);
-            $vars['search-latitude'] = $row->lat;
-            $vars['search-longitude'] = $row->lng;
+            $query = "SELECT * FROM geonames g WHERE g.geonameid = " . $geonameid;
+            $rowGeonameId = $this->singleLookup($query);
+            $vars['search-latitude'] = $rowGeonameId->latitude;
+            $vars['search-longitude'] = $rowGeonameId->longitude;
+            // Now collect admin1 (if any) and country information to set search location correctly
             // Additionally we need to set the admin1 unit and the country for the given geonameid
             $query = "
                 SELECT
-                    g.name name, a.name admin1, c.name country
+                    g.name name, ";
+            if (!empty($rowGeonameId->admin1)) {
+                $query .= "a.name admin1, ";
+            }
+            $query .= "c.name country
                 FROM
-                    geonames g,
-                    geonamesadminunits a,
-                    geonamescountries c
+                    geonames g,";
+            if (!empty($rowGeonameId->admin1)) {
+                $query .= " geonamesadminunits a, ";
+            }
+            $query .= " geonamescountries c
                 WHERE
-                    g.geonameid = " . $geonameid . "
-                    AND g.admin1 = a.admin1
+                    g.geonameid = " . $geonameid;
+            if (!empty($rowGeonameId->admin1)) {
+                $query .= " AND g.admin1 = a.admin1
                     AND g.country = a.country
-                    AND a.fcode = 'ADM1'
+                    AND a.fcode = 'ADM1' ";
+            }
+            $query .= "
                     AND g.country = c.country";
             $row = $this->singleLookup($query);
-            $vars['search-location'] = $row->name . ", " . $row->admin1 . ", " . $row->country;
+            $searchLocation = $row->name . ", ";
+            if (!empty($rowGeonameId->admin1)) {
+                $searchLocation .= $row->admin1 . ", ";
+            }
+            $searchLocation .= $row->country;
+            $vars['search-location'] = $searchLocation;
         }
         $country = $admin1 = "";
         $countryCode = $admin1Code = "";
@@ -850,7 +1070,7 @@ LIMIT 1
             if (empty($vars['search-location'])) {
                 // Search all over the world
                 $results['type'] = 'members';
-                $results['values'] = $this->getMemberDetails($vars);
+                $results['members'] = $this->getMemberDetails($vars);
             } else {
                 // User didn't select from the suggestion list (javascript might be disabled)
                 // get suggestions directly from the database
@@ -874,18 +1094,18 @@ LIMIT 1
                 // check if found unit is a country
                 if (strstr($location->fcode, 'PCL') === false) {
                     $results['type'] = 'members';
-                    $results['values'] = $this->getMemberDetails($vars,
+                    $results['members'] = $this->getMemberDetails($vars,
                             $location->admin1, $location->country);
                 } else {
                     // get all members of that country
                     $results['type'] = 'members';
-                    $results['values'] = $this->getMemberDetails($vars,
+                    $results['members'] = $this->getMemberDetails($vars,
                             false, $location->country);
                 }
             } else {
                 // just get all active members from that place
                 $results['type'] = 'members';
-                $results['values'] = $this->getMemberDetails($vars);
+                $results['members'] = $this->getMemberDetails($vars);
             }
         }
         $results['countOfMembers'] = $vars['countOfMembers'];

@@ -1,0 +1,14 @@
+<map id="LinkPage" name="LinkPage">
+<area shape="rect" id="node9" href="$class_link_display_page.html" title="LinkDisplayPage" alt="" coords="5,603,123,629"/>
+<area shape="rect" id="node10" href="$class_link_rebuild_page.html" title="LinkRebuildPage" alt="" coords="147,603,265,629"/>
+<area shape="rect" id="node11" href="$class_link_show_friends_page.html" title="LinkShowFriendsPage" alt="" coords="290,603,440,629"/>
+<area shape="rect" id="node12" href="$class_link_show_page.html" title="LinkShowPage" alt="" coords="465,603,572,629"/>
+<area shape="rect" id="node13" href="$class_link_update_page.html" title="LinkUpdatePage" alt="" coords="597,603,715,629"/>
+<area shape="rect" id="node2" href="$class_rox_page_view.html" title="RoxPageView" alt="" coords="314,453,416,480"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="295,379,435,405"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="295,304,436,331"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="309,229,421,256"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="300,155,431,181"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="303,80,427,107"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="295,5,436,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="leave" name="leave">
+<area shape="rect" id="node2" href="$class_rox_controller_base.html#a7a06d1c908cbeb60ebca15ecececfb68" title="RoxControllerBase\\redirect\lToLogin" alt="" coords="117,5,294,46"/>
+<area shape="rect" id="node3" href="$class_rox_controller_base.html#a8ef67f8cbc60e5041c18da020e1e0ac6" title="RoxControllerBase\\setFlash\lError" alt="" coords="113,70,297,111"/>
+<area shape="rect" id="node4" href="$class_rox_component_base.html#a4c107ce6073949a3af095193ea3530bc" title="RoxComponentBase\\getWords" alt="" coords="105,136,306,163"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="DonateModel\getDonations" name="DonateModel\getDonations">
+<area shape="rect" id="node2" href="$class_m_o_d__right.html#a24a03652c737eac68aa6960ba5eb4425" title="MOD_right\\get" alt="" coords="288,5,395,32"/>
+<area shape="rect" id="node3" href="$class_donate_model.html#a9a658d4bc0085af252e0a8d36457ad4a" title="DonateModel\\getCampaignValues" alt="" coords="232,56,451,83"/>
+<area shape="rect" id="node4" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="499,56,690,83"/>
+</map>

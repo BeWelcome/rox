@@ -1,0 +1,12 @@
+<map id="SuggestionsBaseViewPage" name="SuggestionsBaseViewPage">
+<area shape="rect" id="node9" href="$class_suggestions_dev_page.html" title="SuggestionsDevPage" alt="" coords="5,603,149,629"/>
+<area shape="rect" id="node10" href="$class_suggestions_ranking_page.html" title="SuggestionsRankingPage" alt="" coords="175,603,345,629"/>
+<area shape="rect" id="node11" href="$class_suggestions_rejected_page.html" title="SuggestionsRejectedPage" alt="" coords="370,603,544,629"/>
+<area shape="rect" id="node2" href="$class_suggestions_base_page.html" title="SuggestionsBasePage" alt="" coords="183,453,337,480"/>
+<area shape="rect" id="node3" href="$class_page_with_active_skin.html" title="PageWithActiveSkin" alt="" coords="190,379,329,405"/>
+<area shape="rect" id="node4" href="$class_page_with_rox_layout.html" title="PageWithRoxLayout" alt="" coords="189,304,331,331"/>
+<area shape="rect" id="node5" href="$class_page_with_h_t_m_l.html" title="PageWithHTML" alt="" coords="203,229,316,256"/>
+<area shape="rect" id="node6" href="$class_abstract_base_page.html" title="AbstractBasePage" alt="" coords="195,155,325,181"/>
+<area shape="rect" id="node7" href="$class_visual_component.html" title="VisualComponent" alt="" coords="198,80,321,107"/>
+<area shape="rect" id="node8" href="$class_rox_component_base.html" title="RoxComponentBase" alt="" coords="189,5,331,32"/>
+</map>

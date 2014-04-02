@@ -1,0 +1,12 @@
+<map id="RoxEntityBase\preparePKWhereString" name="RoxEntityBase\preparePKWhereString">
+<area shape="rect" id="node2" href="$class_rox_entity_base.html#abae6c08c09505cb0838db6d8a580390e" title="RoxEntityBase\\delete" alt="" coords="269,132,417,159"/>
+<area shape="rect" id="node3" href="$class_rox_entity_base.html#a46c739123f75cb71ce210825e6590819" title="RoxEntityBase\\update" alt="" coords="267,183,419,209"/>
+<area shape="rect" id="node4" href="$class_volunteer_board.html#a6dce886f67ed6714cd22f068cfd8e62f" title="VolunteerBoard\\updateText" alt="" coords="499,5,677,32"/>
+<area shape="rect" id="node5" href="$class_group.html#a16d2b92f7bc097e0fbe2dc7bc332314e" title="Group\\setDescription" alt="" coords="516,56,660,83"/>
+<area shape="rect" id="node6" href="$class_group.html#a86ba2e572e66c9a2d326fc2ebc060e3c" title="Group\\updateSettings" alt="" coords="758,81,906,108"/>
+<area shape="rect" id="node7" href="$class_group_membership.html#a43220508074ee5f8755cedde371295a2" title="GroupMembership\\updateMembership" alt="" coords="467,157,709,184"/>
+<area shape="rect" id="node8" href="$class_group_membership.html#a6c731c18fa1c4cd24202722807343f5f" title="GroupMembership\\updateStatus" alt="" coords="483,208,693,235"/>
+<area shape="rect" id="node9" href="$class_note.html#ab09a489670c2b1bde33330e4b4ed3f34" title="Note\\updateNote" alt="" coords="529,259,647,285"/>
+<area shape="rect" id="node10" href="$class_related_group.html#a238637ee2cfad8a8540411ad805e9816" title="RelatedGroup\\deleteRelated\lGroup" alt="" coords="496,310,680,351"/>
+<area shape="rect" id="node11" href="$class_suggestion.html#a2a7a3b7a7f4f1d4c71fe40bfbe169c51" title="Suggestion\\loadEntity" alt="" coords="513,376,663,403"/>
+</map>

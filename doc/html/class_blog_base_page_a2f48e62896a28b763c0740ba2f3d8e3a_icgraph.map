@@ -1,0 +1,5 @@
+<map id="BlogBasePage\sidebarRSS" name="BlogBasePage\sidebarRSS">
+<area shape="rect" id="node2" href="$class_blog_categories_page.html#a135a8b8197667bdd620073795e0ba041" title="BlogCategoriesPage\l\\leftSideBar" alt="" coords="238,5,378,46"/>
+<area shape="rect" id="node3" href="$class_blog_page.html#a94cfe691ab941069a768b30fcec0d9d2" title="BlogPage\\leftSideBar" alt="" coords="235,71,381,97"/>
+<area shape="rect" id="node4" href="$class_blog_single_post_page.html#a6d670b300cbba75ce78e81aaf5a45eee" title="BlogSinglePostPage\l\\leftSideBar" alt="" coords="237,122,379,163"/>
+</map>

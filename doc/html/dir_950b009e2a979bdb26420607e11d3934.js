@@ -1,7 +1,7 @@
 var dir_950b009e2a979bdb26420607e11d3934 =
 [
     [ "dicontainer.class.php", "dicontainer_8class_8php.html", [
-      [ "DIContainer", "class_d_i_container.html", null ]
+      [ "DIContainer", "class_d_i_container.html", "class_d_i_container" ]
     ] ],
     [ "difactory.class.php", "difactory_8class_8php.html", null ],
     [ "objectwithinjection.class.php", "objectwithinjection_8class_8php.html", [

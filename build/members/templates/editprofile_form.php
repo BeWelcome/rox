@@ -537,7 +537,7 @@ HTML;
                   </td>
                 </tr>
                 <tr align="left" >
-                  <td class="label" ><?=$words->get('ProfileOtherRestrictions')?>:</td>
+                  <td class="label" ><?=$words->get('ProfileHouseRules')?>:</td>
                   <td colspan="2" >
                     <textarea name="OtherRestrictions" class="long" cols="50" rows="4" ><?=$vars['OtherRestrictions']?></textarea>
                   </td>

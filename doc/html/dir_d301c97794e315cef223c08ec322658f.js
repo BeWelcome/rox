@@ -4,7 +4,7 @@ var dir_d301c97794e315cef223c08ec322658f =
       [ "SimplePie_Cache_Base", "interface_simple_pie___cache___base.html", "interface_simple_pie___cache___base" ]
     ] ],
     [ "DB.php", "_d_b_8php.html", [
-      [ "SimplePie_Cache_DB", "class_simple_pie___cache___d_b.html", null ]
+      [ "SimplePie_Cache_DB", "class_simple_pie___cache___d_b.html", "class_simple_pie___cache___d_b" ]
     ] ],
     [ "File.php", "_cache_2_file_8php.html", [
       [ "SimplePie_Cache_File", "class_simple_pie___cache___file.html", "class_simple_pie___cache___file" ]

@@ -9,5 +9,7 @@ var class_simple_pie___cache___file =
     [ "$extension", "class_simple_pie___cache___file.html#a2628f1d1c5faca94a33734dd8315366a", null ],
     [ "$filename", "class_simple_pie___cache___file.html#ab5834b498927e4e8743f2825b92ead52", null ],
     [ "$location", "class_simple_pie___cache___file.html#a029b1cff8970d6b5ac7583edfd7eebfc", null ],
-    [ "$name", "class_simple_pie___cache___file.html#a9d2df32134a0be0680ceb63c61e38242", null ]
+    [ "$name", "class_simple_pie___cache___file.html#a9d2df32134a0be0680ceb63c61e38242", null ],
+    [ "TYPE_FEED", "class_simple_pie___cache___file.html#abbc2f01133bb42c9881a448d3e4aec0d", null ],
+    [ "TYPE_IMAGE", "class_simple_pie___cache___file.html#a59246bcf60e4632efdffb3e46dfc352b", null ]
 ];

@@ -16,13 +16,13 @@ var dir_c817a21b167197a68f212956ae7de8ff =
       [ "DeleteNotePage", "class_delete_note_page.html", "class_delete_note_page" ]
     ] ],
     [ "deleteprofile.page.php", "deleteprofile_8page_8php.html", [
-      [ "DeleteProfilePage", "class_delete_profile_page.html", null ]
+      [ "DeleteProfilePage", "class_delete_profile_page.html", "class_delete_profile_page" ]
     ] ],
     [ "deletetranslation.page.php", "deletetranslation_8page_8php.html", [
       [ "DeleteTranslationPage", "class_delete_translation_page.html", "class_delete_translation_page" ]
     ] ],
     [ "editmyprofile.page.php", "editmyprofile_8page_8php.html", [
-      [ "EditMyProfilePage", "class_edit_my_profile_page.html", null ]
+      [ "EditMyProfilePage", "class_edit_my_profile_page.html", "class_edit_my_profile_page" ]
     ] ],
     [ "editprofile.page.php", "editprofile_8page_8php.html", "editprofile_8page_8php" ],
     [ "inactiveprofile.page.php", "inactiveprofile_8page_8php.html", [
@@ -47,13 +47,13 @@ var dir_c817a21b167197a68f212956ae7de8ff =
       [ "MembersMustloginPage", "class_members_mustlogin_page.html", "class_members_mustlogin_page" ]
     ] ],
     [ "mycomments.page.php", "mycomments_8page_8php.html", [
-      [ "MyCommentsPage", "class_my_comments_page.html", null ]
+      [ "MyCommentsPage", "class_my_comments_page.html", "class_my_comments_page" ]
     ] ],
     [ "mypreferences.page.php", "mypreferences_8page_8php.html", [
       [ "MyPreferencesPage", "class_my_preferences_page.html", "class_my_preferences_page" ]
     ] ],
     [ "myprofile.page.php", "myprofile_8page_8php.html", [
-      [ "MyProfilePage", "class_my_profile_page.html", null ]
+      [ "MyProfilePage", "class_my_profile_page.html", "class_my_profile_page" ]
     ] ],
     [ "myvisitors.page.php", "myvisitors_8page_8php.html", [
       [ "MyVisitorsPage", "class_my_visitors_page.html", "class_my_visitors_page" ]
@@ -77,10 +77,10 @@ var dir_c817a21b167197a68f212956ae7de8ff =
       [ "SetLocationPage", "class_set_location_page.html", "class_set_location_page" ]
     ] ],
     [ "setprofileactive.page.php", "setprofileactive_8page_8php.html", [
-      [ "SetProfileActivePage", "class_set_profile_active_page.html", null ]
+      [ "SetProfileActivePage", "class_set_profile_active_page.html", "class_set_profile_active_page" ]
     ] ],
     [ "setprofileinactive.page.php", "setprofileinactive_8page_8php.html", [
-      [ "SetProfileInactivePage", "class_set_profile_inactive_page.html", null ]
+      [ "SetProfileInactivePage", "class_set_profile_inactive_page.html", "class_set_profile_inactive_page" ]
     ] ],
     [ "updatemandatory.page.php", "updatemandatory_8page_8php.html", [
       [ "UpdateMandatoryPage", "class_update_mandatory_page.html", "class_update_mandatory_page" ]

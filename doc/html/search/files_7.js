@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['appbase_2eleftsidebar_2ephp',['appbase.leftsidebar.php',['../groups_2templates_2appbase_8leftsidebar_8php.html',1,'']]],
   ['galleries_2epage_2ephp',['galleries.page.php',['../galleries_8page_8php.html',1,'']]],
   ['galleries_5foverview_2ephp',['galleries_overview.php',['../galleries__overview_8php.html',1,'']]],
   ['gallery_2ecolumn_5fcol3_2ephp',['gallery.column_col3.php',['../gallery_8column__col3_8php.html',1,'']]],
@@ -79,27 +80,21 @@ var searchData=
   ['groups_2ewidgets_2ephp',['groups.widgets.php',['../groups_8widgets_8php.html',1,'']]],
   ['groupsbase_2epage_2ephp',['groupsbase.page.php',['../groupsbase_8page_8php.html',1,'']]],
   ['groupscreation_2ecolumn_5fcol3_2ephp',['groupscreation.column_col3.php',['../groups_2templates_2groupscreation_8column__col3_8php.html',1,'']]],
-  ['groupscreation_2ecolumn_5fcol3_2ephp',['groupscreation.column_col3.php',['../notify_2templates_2groupscreation_8column__col3_8php.html',1,'']]],
   ['groupscreation_2epage_2ephp',['groupscreation.page.php',['../groupscreation_8page_8php.html',1,'']]],
-  ['groupsettings_2epage_2ephp',['groupsettings.page.php',['../notify_2groupsettings_8page_8php.html',1,'']]],
   ['groupsettings_2epage_2ephp',['groupsettings.page.php',['../groups_2groupsettings_8page_8php.html',1,'']]],
-  ['groupsfeatured_2ecolumn_5fcol3_2ephp',['groupsfeatured.column_col3.php',['../notify_2templates_2groupsfeatured_8column__col3_8php.html',1,'']]],
   ['groupsfeatured_2ecolumn_5fcol3_2ephp',['groupsfeatured.column_col3.php',['../groups_2templates_2groupsfeatured_8column__col3_8php.html',1,'']]],
   ['groupsfeatured_2epage_2ephp',['groupsfeatured.page.php',['../groupsfeatured_8page_8php.html',1,'']]],
-  ['groupsmygroups_2ecolumn_5fcol3_2ephp',['groupsmygroups.column_col3.php',['../notify_2templates_2groupsmygroups_8column__col3_8php.html',1,'']]],
   ['groupsmygroups_2ecolumn_5fcol3_2ephp',['groupsmygroups.column_col3.php',['../groups_2templates_2groupsmygroups_8column__col3_8php.html',1,'']]],
   ['groupsmygroups_2epage_2ephp',['groupsmygroups.page.php',['../groupsmygroups_8page_8php.html',1,'']]],
-  ['groupsoverview_2ecolumn_5fcol3_2ephp',['groupsoverview.column_col3.php',['../notify_2templates_2groupsoverview_8column__col3_8php.html',1,'']]],
   ['groupsoverview_2ecolumn_5fcol3_2ephp',['groupsoverview.column_col3.php',['../groups_2templates_2groupsoverview_8column__col3_8php.html',1,'']]],
   ['groupsoverview_2epage_2ephp',['groupsoverview.page.php',['../groupsoverview_8page_8php.html',1,'']]],
   ['groupssearch_2ecolumn_5fcol3_2ephp',['groupssearch.column_col3.php',['../groups_2templates_2groupssearch_8column__col3_8php.html',1,'']]],
-  ['groupssearch_2ecolumn_5fcol3_2ephp',['groupssearch.column_col3.php',['../notify_2templates_2groupssearch_8column__col3_8php.html',1,'']]],
   ['groupssearch_2epage_2ephp',['groupssearch.page.php',['../groupssearch_8page_8php.html',1,'']]],
   ['groupstart_2epage_2ephp',['groupstart.page.php',['../groupstart_8page_8php.html',1,'']]],
-  ['groupstart_2ephp',['groupstart.php',['../notify_2templates_2groupstart_8php.html',1,'']]],
   ['groupstart_2ephp',['groupstart.php',['../groups_2templates_2groupstart_8php.html',1,'']]],
   ['groupwiki_2ecolumn_5fcol3_2ephp',['groupwiki.column_col3.php',['../groups_2templates_2groupwiki_8column__col3_8php.html',1,'']]],
-  ['groupwiki_2ecolumn_5fcol3_2ephp',['groupwiki.column_col3.php',['../notify_2templates_2groupwiki_8column__col3_8php.html',1,'']]],
   ['groupwiki_2epage_2ephp',['groupwiki.page.php',['../groupwiki_8page_8php.html',1,'']]],
-  ['gzdecode_2ephp',['gzdecode.php',['../gzdecode_8php.html',1,'']]]
+  ['gzdecode_2ephp',['gzdecode.php',['../gzdecode_8php.html',1,'']]],
+  ['pages_2ephp',['pages.php',['../gallery_2templates_2pages_8php.html',1,'']]],
+  ['pages_2ephp',['pages.php',['../geo_2templates_2pages_8php.html',1,'']]]
 ];

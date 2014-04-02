@@ -31,7 +31,7 @@ var dir_f2432186def45f0e5ee9675faded29ea =
       [ "AdminNoRightsPage", "class_admin_no_rights_page.html", "class_admin_no_rights_page" ]
     ] ],
     [ "adminoverview.page.php", "adminoverview_8page_8php.html", [
-      [ "AdminOverviewPage", "class_admin_overview_page.html", null ]
+      [ "AdminOverviewPage", "class_admin_overview_page.html", "class_admin_overview_page" ]
     ] ],
     [ "adminspam.page.php", "adminspam_8page_8php.html", [
       [ "AdminSpamPage", "class_admin_spam_page.html", "class_admin_spam_page" ]
@@ -47,7 +47,7 @@ var dir_f2432186def45f0e5ee9675faded29ea =
       [ "AdminTreasurerStartDonationCampaignPage", "class_admin_treasurer_start_donation_campaign_page.html", "class_admin_treasurer_start_donation_campaign_page" ]
     ] ],
     [ "adminword.page .php", "adminword_8page_01_8php.html", [
-      [ "AdminWordPage", "class_admin_word_page.html", null ]
+      [ "AdminWordPage", "class_admin_word_page.html", "class_admin_word_page" ]
     ] ],
     [ "adminwordbase.page.php", "adminwordbase_8page_8php.html", [
       [ "AdminWordBasePage", "class_admin_word_base_page.html", "class_admin_word_base_page" ]

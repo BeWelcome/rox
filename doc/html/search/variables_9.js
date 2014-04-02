@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['g',['g',['../leaflet_8js.html#a09bde43a14d02180b7a297725adaac8a',1,'g():&#160;leaflet.js'],['../fullpage_2plugin_8min_8js.html#a103df269476e78897c9c4c6cb8f4eb06',1,'g():&#160;plugin.min.js']]],
+  ['g',['g',['../fullpage_2plugin_8min_8js.html#a103df269476e78897c9c4c6cb8f4eb06',1,'plugin.min.js']]],
   ['gender',['gender',['../updatemandatory_8column__col3_8helper_8php.html#a39a82bcce6f3cb78fb59a447658dbaaa',1,'updatemandatory.column_col3.helper.php']]],
   ['general_5ffeedback',['GENERAL_FEEDBACK',['../class_feedback_model.html#aed379d026ae56f966111d094031c0ef0',1,'FeedbackModel']]],
   ['geocoder',['geocoder',['../findpeople_8js.html#a0df4516b7ca707aaf12874926ff82791',1,'geocoder():&#160;findpeople.js'],['../searchmembers_8js.html#a0df4516b7ca707aaf12874926ff82791',1,'geocoder():&#160;searchmembers.js']]],
@@ -15,5 +15,5 @@ var searchData=
   ['getpkvalue',['getPKValue',['../groups_2templates_2groupsfeatured_8column__col3_8php.html#aedb4d1859aafaf8c17c1929ed5410243',1,'groupsfeatured.column_col3.php']]],
   ['gettilepoint_5f',['getTilePoint_',['../marker__manager_8js.html#aa15617684bf4657b958a71a6522b2bf4',1,'marker_manager.js']]],
   ['gmarkers',['gmarkers',['../searchmembers_8js.html#a0fd0b7b99f32602071e59e8e071b9220',1,'searchmembers.js']]],
-  ['google',['google',['../_google_8js.html#adb9cb0195545ae3b5fb48b5f04fd911d',1,'Google.js']]]
+  ['google',['Google',['../_google_8js.html#ac579ae54d8c005e9d58defa395387531',1,'Google.js']]]
 ];

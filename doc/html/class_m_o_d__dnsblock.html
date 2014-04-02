@@ -128,8 +128,6 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Collection of methods to check ips against DNS Block Lists</p>
 <p>An example for its use: $dnsblock = <a class="el" href="class_m_o_d__dnsblock.html#a77be90e9b0275b79c40399ee1071f944">MOD_dnsblock::get()</a>; // get the singleton instance if ($dnsblock-&gt;checkIp($ipStr)) { // blocked } else { // not blocked }</p>
 <dl class="section author"><dt>Author</dt><dd>Jonas Hörsch <a href="#" onclick="location.href='mai'+'lto:'+'cor'+'oa'+'@on'+'li'+'ne.'+'de'; return false;">coroa<span style="display: none;">.nosp@m.</span>@onl<span style="display: none;">.nosp@m.</span>ine.d<span style="display: none;">.nosp@m.</span>e</a> </dd></dl>
-
-<p>Definition at line <a class="el" href="dnsblock_8lib_8php_source.html#l00037">37</a> of file <a class="el" href="dnsblock_8lib_8php_source.html">dnsblock.lib.php</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="ab98de0b43ac548777577e35ec2575ca4"></a>
 <div class="memitem">
@@ -154,11 +152,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int On how many DNS Blocklists does $ip figure </dd></dl>
 
-<p>Definition at line <a class="el" href="dnsblock_8lib_8php_source.html#l00083">83</a> of file <a class="el" href="dnsblock_8lib_8php_source.html">dnsblock.lib.php</a>.</p>
+<p>References <a class="el" href="ajax_8php.html#a12bbdcd3251cbbd7dac66b514f7b6ce0">$_SESSION</a>, <a class="el" href="build_2blog_2templates_2editcreateform_8php.html#a4833616ecea7b2c0615809f0d37cb11d">elseif</a>, and <a class="el" href="class_m_o_d__log.html#affe895ff124632e4c8c4d510ae4f73b6">MOD_log\get()</a>.</p>
 
-<p>References <a class="el" href="ajax_8php_source.html#l00153">$_SESSION</a>, <a class="el" href="build_2blog_2templates_2editcreateform_8php_source.html#l00198">elseif</a>, and <a class="el" href="log_8lib_8php_source.html#l00068">MOD_log\get()</a>.</p>
-
-<p>Referenced by <a class="el" href="dnsblock_8lib_8php_source.html#l00123">checkRemoteIp()</a>.</p>
+<p>Referenced by <a class="el" href="class_m_o_d__dnsblock.html#a52c47e39f44a816d5258194212adbe79">checkRemoteIp()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -202,9 +198,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int On how many DNS Blocklists does the remote ip figure </dd></dl>
 
-<p>Definition at line <a class="el" href="dnsblock_8lib_8php_source.html#l00123">123</a> of file <a class="el" href="dnsblock_8lib_8php_source.html">dnsblock.lib.php</a>.</p>
-
-<p>References <a class="el" href="dnsblock_8lib_8php_source.html#l00083">checkIp()</a>.</p>
+<p>References <a class="el" href="class_m_o_d__dnsblock.html#ab98de0b43ac548777577e35ec2575ca4">checkIp()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -246,12 +240,10 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>PApps </dd></dl>
 
-<p>Definition at line <a class="el" href="dnsblock_8lib_8php_source.html#l00067">67</a> of file <a class="el" href="dnsblock_8lib_8php_source.html">dnsblock.lib.php</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/xampp/htdocs/rox/modules/dnsblock/lib/<a class="el" href="dnsblock_8lib_8php_source.html">dnsblock.lib.php</a></li>
+<li><a class="el" href="dnsblock_8lib_8php.html">dnsblock.lib.php</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -259,7 +251,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_m_o_d__dnsblock.html">MOD_dnsblock</a></li>
-    <li class="footer">Generated on Sun Jan 12 2014 18:43:17 for Rox by
+    <li class="footer">Generated on Tue Apr 1 2014 19:04:15 for Rox by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

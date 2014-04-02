@@ -33,6 +33,7 @@ var dir_e6e9364de59d9b4c7ff816216c6bd44b =
     [ "jquery-ui-1.10.3.custom.js", "jquery-ui-1_810_83_8custom_8js.html", "jquery-ui-1_810_83_8custom_8js" ],
     [ "jquery-ui-1.10.3.custom.min.js", "jquery-ui-1_810_83_8custom_8min_8js.html", "jquery-ui-1_810_83_8custom_8min_8js" ],
     [ "jquery-ui-timepicker-addon.js", "jquery-ui-timepicker-addon_8js.html", "jquery-ui-timepicker-addon_8js" ],
+    [ "jquery.multiselect.min.js", "jquery_8multiselect_8min_8js.html", "jquery_8multiselect_8min_8js" ],
     [ "labeled_marker.js", "labeled__marker_8js.html", "labeled__marker_8js" ],
     [ "lightview.js", "lightview_8js.html", "lightview_8js" ],
     [ "main.js", "main_8js.html", "main_8js" ],

@@ -2,7 +2,7 @@ var dir_a41d132da6df8ca1f1cfeb084af934a9 =
 [
     [ "templates", "dir_81459690be6d2c1ed54342f43ff81cca.html", "dir_81459690be6d2c1ed54342f43ff81cca" ],
     [ "child.page.php", "child_8page_8php.html", [
-      [ "HellouniverseChildPage", "class_hellouniverse_child_page.html", null ]
+      [ "HellouniverseChildPage", "class_hellouniverse_child_page.html", "class_hellouniverse_child_page" ]
     ] ],
     [ "hello.ctrl.php", "hello_8ctrl_8php.html", [
       [ "HellouniverseController", "class_hellouniverse_controller.html", "class_hellouniverse_controller" ]

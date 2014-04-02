@@ -7,7 +7,7 @@ var dir_9b78f0ac922adf68620c1049e2866625 =
       [ "RoxControllerBase", "class_rox_controller_base.html", "class_rox_controller_base" ]
     ] ],
     [ "entity.php", "entity_8php.html", [
-      [ "EntityException", "class_entity_exception.html", null ],
+      [ "EntityException", "class_entity_exception.html", "class_entity_exception" ],
       [ "RoxEntityBase", "class_rox_entity_base.html", "class_rox_entity_base" ]
     ] ],
     [ "entityfactory.php", "entityfactory_8php.html", [

@@ -1,6 +1,6 @@
 var build_2blog_2templates_2editcreateform_8php =
 [
-    [ "$cloudmade_conf", "build_2blog_2templates_2editcreateform_8php.html#aa65eb41598445d1bb87667492cf4811c", null ],
+    [ "$map_conf", "build_2blog_2templates_2editcreateform_8php.html#a07a785438463f11ea9ffe62638b573f3", null ],
     [ "$words", "build_2blog_2templates_2editcreateform_8php.html#a6aaa6de43326dc0e94a9dac2c06ec125", null ],
     [ "else", "build_2blog_2templates_2editcreateform_8php.html#a76668951ec23f411251e646fd665e821", null ],
     [ "elseif", "build_2blog_2templates_2editcreateform_8php.html#a4833616ecea7b2c0615809f0d37cb11d", null ],

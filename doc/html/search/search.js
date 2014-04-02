@@ -10,7 +10,7 @@ var indexSectionsWithContent =
   0: "!$(_abcdefghijklmnopqrstuvwxyz",
   1: "abcdefghilmnoprstuvw",
   2: "abcefghilmnoprstuv",
-  3: "_abcdefghijlmnopqrstuvwx",
+  3: "_abcdefghijlmnoprstuvwx",
   4: "!$_abcdefghijklmnopqrstuvwxz",
   5: "$(_abcdefghijklmnopqrstuvwxyz",
   6: "drst"

@@ -7,6 +7,7 @@ var class_forums_view =
     [ "displaySearchResultSubscriptions", "class_forums_view.html#a62c4046ac1e2f29cb49cbb31efcc0f2a", null ],
     [ "editPost", "class_forums_view.html#a26395f07838e9cb1f9fe2d2c9e9a1464", null ],
     [ "generateClickableTagSuggestions", "class_forums_view.html#af393cf5423f1944dba3f2bbb13414f71", null ],
+    [ "getAsString", "class_forums_view.html#a96b2f4972d0600939ba935e9602e8fef", null ],
     [ "getLocationDropdowns", "class_forums_view.html#aecbb46f4ac8635e4327c4f58d699af7b", null ],
     [ "getURI", "class_forums_view.html#a7cc45cb981c62af2abd70c56daf627e5", null ],
     [ "ModeditPost", "class_forums_view.html#a00cbee2d80a1cf475d8942763987d819", null ],

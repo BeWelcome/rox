@@ -159,8 +159,6 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><dl class="section see"><dt>See Also</dt><dd>/htdocs/bw/lib/rights.php </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Felix van Hove <a href="#" onclick="location.href='mai'+'lto:'+'fva'+'nh'+'ove'+'@g'+'mx.'+'de'; return false;">fvanh<span style="display: none;">.nosp@m.</span>ove@<span style="display: none;">.nosp@m.</span>gmx.d<span style="display: none;">.nosp@m.</span>e</a></dd></dl>
 <p>@ modified by JeanYves : <a class="el" href="class_m_o_d__right.html">MOD_right</a> and <a class="el" href="class_m_o_d__flag.html">MOD_flag</a>, which are singleton will be defined from this class </p>
-
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00032">32</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a56a7d12bc2e3206a66d3448c0797c0c2"></a>
 <div class="memitem">
@@ -176,9 +174,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>By default it will be considerated that we are building a "rights" </p>
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00058">58</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
-
-<p>References <a class="el" href="right_8lib_8php_source.html#l00052">$dao</a>.</p>
+<p>References <a class="el" href="class_m_o_d__right__flag.html#a893e3f46428f80bcda303a3f38eb8b40">$dao</a>.</p>
 
 </div>
 </div>
@@ -194,8 +190,6 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00091">91</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
 
 </div>
 </div>
@@ -224,9 +218,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00239">239</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
-
-<p>References <a class="el" href="right_8lib_8php_source.html#l00256">TheScope()</a>.</p>
+<p>References <a class="el" href="class_m_o_d__right__flag.html#a49060ebd8859d17daccbe5aa64d0380d">TheScope()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -271,9 +263,7 @@ Here is the call graph for this function:</div>
 <p>FIXME: this is (with little exception) copy-paste from /htdocs/bw/lib/rights.php; to be improved!</p>
 <dl class="section see"><dt>See Also</dt><dd>/htdocs/bw/lib/rights.php return the FlagLevel <a class="el" href="console_8js.html#a10e4ac690e84630ea716842b42b31388">if</a> the members has the Flag $Name optional Scope <a class="el" href="fullpage_2plugin_8min_8js.html#ac56c57897e10f699d124e0103921aa20">value</a> can be send <a class="el" href="console_8js.html#a10e4ac690e84630ea716842b42b31388">if</a> the Scope is set to All then Scope will always match <a class="el" href="console_8js.html#a10e4ac690e84630ea716842b42b31388">if</a> not, the sentence in Scope must be find in RScope The function will use <a class="el" href="jquery-ui-1_810_83_8custom_8min_8js.html#a82ca4ee5dd63e58a2bb967077dc8b8fb">a</a> <a class="el" href="prototype_8js.html#a6324bb0105f969b76f2e23e9a2dc67a8">cache</a> in session (<a class="el" href="ajax_8php.html#acd0c20f92a426a50c3d064838f75912e">$_SESSION</a>['Param']-&gt;ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading from scope beware to the "" which must exist in the mysal table but NOT in the $Scope parameter $OptionalIdMember allow to specify another member than the current one, in <a class="el" href="table_2plugin_8min_8js.html#a05c09a5e9d53fa7adf0a7936038c2fa3">this</a> case the <a class="el" href="prototype_8js.html#a6324bb0105f969b76f2e23e9a2dc67a8">cache</a> is not used This function is just an allias of the <a class="el" href="class_m_o_d__right__flag.html#ade2be32f8d7f7d35445eb163c89a07e5">hasRight</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00114">114</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
-
-<p>References <a class="el" href="right_8lib_8php_source.html#l00127">hasRight()</a>.</p>
+<p>References <a class="el" href="class_m_o_d__right__flag.html#ade2be32f8d7f7d35445eb163c89a07e5">hasRight()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -317,11 +307,9 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>return the RightLevel if the members has the Right $Name optional Scope value can be send if the Scope is set to All then Scope will always match if not, the sentence in Scope must be find in RScope The function will use a cache in session ($_SESSION['Param']-&gt;ReloadRightsAndFlags == 'Yes') is used to force Rights / Flags Reloading from scope beware to the "" which must exist in the mysal table but NOT in the $Scope parameter $OptionalIdMember allow to specify another member than the current one, in this case the cache is not used </p>
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00127">127</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
+<p>References <a class="el" href="ajax_8php.html#a12bbdcd3251cbbd7dac66b514f7b6ce0">$_SESSION</a>.</p>
 
-<p>References <a class="el" href="ajax_8php_source.html#l00153">$_SESSION</a>.</p>
-
-<p>Referenced by <a class="el" href="right_8lib_8php_source.html#l00114">hasFlag()</a>.</p>
+<p>Referenced by <a class="el" href="class_m_o_d__right__flag.html#a5b69ff50fc0dc4fec9fb26bf2b0cd168">hasFlag()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -349,9 +337,7 @@ Here is the caller graph for this function:</div>
 <p>Checks, if the logged on member has any right by searching her in the table $table.volunteers</p>
 <dl class="section return"><dt>Returns</dt><dd>true, if the current user is logged on and exists in table $table.volunteers Improvment by JeanYves : if the member has not any right, a $_SESSION["hasRightAny"]="no" is set, this will allow for a faster test at next attempt </dd></dl>
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00202">202</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
-
-<p>References <a class="el" href="ajax_8php_source.html#l00153">$_SESSION</a>, and <a class="el" href="admintreasurereditcreate_8column__col3_8helper_8php_source.html#l00003">$query</a>.</p>
+<p>References <a class="el" href="ajax_8php.html#a12bbdcd3251cbbd7dac66b514f7b6ce0">$_SESSION</a>, and <a class="el" href="admintreasurereditcreate_8column__col3_8helper_8php.html#af59a5f7cd609e592c41dc3643efd3c98">$query</a>.</p>
 
 </div>
 </div>
@@ -376,8 +362,6 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00068">68</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
 
 </div>
 </div>
@@ -405,9 +389,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00235">235</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
-
-<p>References <a class="el" href="right_8lib_8php_source.html#l00256">TheScope()</a>.</p>
+<p>References <a class="el" href="class_m_o_d__right__flag.html#a49060ebd8859d17daccbe5aa64d0380d">TheScope()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -446,11 +428,9 @@ Here is the call graph for this function:</div>
 <p>FIXME: this is (with little exception) copy-paste from /htdocs/bw/lib/rights.php; to be improved!</p>
 <dl class="section see"><dt>See Also</dt><dd>/htdocs/bw/lib/rights.php </dd></dl>
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00256">256</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
+<p>References <a class="el" href="ajax_8php.html#a12bbdcd3251cbbd7dac66b514f7b6ce0">$_SESSION</a>.</p>
 
-<p>References <a class="el" href="ajax_8php_source.html#l00153">$_SESSION</a>.</p>
-
-<p>Referenced by <a class="el" href="right_8lib_8php_source.html#l00239">flagScope()</a>, and <a class="el" href="right_8lib_8php_source.html#l00235">rightScope()</a>.</p>
+<p>Referenced by <a class="el" href="class_m_o_d__right__flag.html#a89fd0c244ac33b5915c1342fa92eb95f">flagScope()</a>, and <a class="el" href="class_m_o_d__right__flag.html#aeddf7878c7bb994fa4efcfc8fb704f61">rightScope()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -482,9 +462,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00052">52</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
-
-<p>Referenced by <a class="el" href="right_8lib_8php_source.html#l00058">__construct()</a>.</p>
+<p>Referenced by <a class="el" href="class_m_o_d__right__flag.html#a56a7d12bc2e3206a66d3448c0797c0c2">__construct()</a>.</p>
 
 </div>
 </div>
@@ -498,12 +476,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="right_8lib_8php_source.html#l00045">45</a> of file <a class="el" href="right_8lib_8php_source.html">right.lib.php</a>.</p>
-
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/xampp/htdocs/rox/modules/user/lib/<a class="el" href="right_8lib_8php_source.html">right.lib.php</a></li>
+<li><a class="el" href="right_8lib_8php.html">right.lib.php</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -511,7 +487,7 @@ Here is the caller graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_m_o_d__right__flag.html">MOD_right_flag</a></li>
-    <li class="footer">Generated on Sun Jan 12 2014 18:43:17 for Rox by
+    <li class="footer">Generated on Tue Apr 1 2014 19:04:15 for Rox by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

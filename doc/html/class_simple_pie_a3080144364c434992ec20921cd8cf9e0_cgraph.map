@@ -1,11 +1,11 @@
 <map id="SimplePie\get_author" name="SimplePie\get_author">
-<area shape="rect" id="node2" href="$class_simple_pie.html#a0fd1019c95953d5c42944c8b7a77cb2c" title="SimplePie\\get_authors" alt="" coords="201,74,354,100"/>
-<area shape="rect" id="node3" href="$class_simple_pie.html#a65096224f3f77adc3010794f7168bfab" title="SimplePie\\get_channel_tags" alt="" coords="979,23,1165,50"/>
-<area shape="rect" id="node6" href="$class_simple_pie.html#aa96d337894e72de4f4621e938d155638" title="SimplePie\\sanitize" alt="" coords="1007,150,1137,176"/>
-<area shape="rect" id="node7" href="$class_simple_pie.html#a662d026555d4755a1b7968d5f46dd5e8" title="SimplePie\\get_base" alt="" coords="403,74,541,100"/>
-<area shape="rect" id="node4" href="$class_simple_pie.html#a807fc0843a5b3ac84b30c80226be87fe" title="SimplePie\\get_type" alt="" coords="1430,48,1565,75"/>
-<area shape="rect" id="node5" href="$class_simple_pie.html#a31e2cb6bdaa3e8742bfb06c523b62cb7" title="SimplePie\\get_feed_tags" alt="" coords="1214,48,1381,75"/>
-<area shape="rect" id="node8" href="$class_simple_pie.html#a8e44cd93067c08c26da4e18175a0e814" title="SimplePie\\get_link" alt="" coords="589,48,720,75"/>
-<area shape="rect" id="node10" href="$class_simple_pie.html#a128eeaeb14bdc6e246ba2e0bf655be9a" title="SimplePie\\subscribe_url" alt="" coords="768,150,931,176"/>
-<area shape="rect" id="node9" href="$class_simple_pie.html#a89bc7ca1fa51e94bcb2a73baf0a884d6" title="SimplePie\\get_links" alt="" coords="781,35,918,62"/>
+<area shape="rect" id="node2" href="$class_simple_pie.html#a0fd1019c95953d5c42944c8b7a77cb2c" title="SimplePie\\get_authors" alt="" coords="201,100,354,127"/>
+<area shape="rect" id="node3" href="$class_simple_pie.html#a662d026555d4755a1b7968d5f46dd5e8" title="SimplePie\\get_base" alt="" coords="403,100,541,127"/>
+<area shape="rect" id="node6" href="$class_simple_pie.html#a65096224f3f77adc3010794f7168bfab" title="SimplePie\\get_channel_tags" alt="" coords="979,75,1165,101"/>
+<area shape="rect" id="node9" href="$class_simple_pie.html#aa96d337894e72de4f4621e938d155638" title="SimplePie\\sanitize" alt="" coords="1007,125,1137,152"/>
+<area shape="rect" id="node4" href="$class_simple_pie.html#a8e44cd93067c08c26da4e18175a0e814" title="SimplePie\\get_link" alt="" coords="589,24,720,51"/>
+<area shape="rect" id="node8" href="$class_simple_pie.html#a807fc0843a5b3ac84b30c80226be87fe" title="SimplePie\\get_type" alt="" coords="1430,125,1565,152"/>
+<area shape="rect" id="node10" href="$class_simple_pie.html#a128eeaeb14bdc6e246ba2e0bf655be9a" title="SimplePie\\subscribe_url" alt="" coords="768,125,931,152"/>
+<area shape="rect" id="node5" href="$class_simple_pie.html#a89bc7ca1fa51e94bcb2a73baf0a884d6" title="SimplePie\\get_links" alt="" coords="781,75,918,101"/>
+<area shape="rect" id="node7" href="$class_simple_pie.html#a31e2cb6bdaa3e8742bfb06c523b62cb7" title="SimplePie\\get_feed_tags" alt="" coords="1214,125,1381,152"/>
 </map>

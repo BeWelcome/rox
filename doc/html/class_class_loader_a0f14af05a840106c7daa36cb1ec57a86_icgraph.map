@@ -2,7 +2,7 @@
 <area shape="rect" id="node2" href="$class_visual_component.html#afba6995d997474799b9ee3ff2dcbf8ae" title="VisualComponent\\getAppname" alt="" coords="230,5,431,32"/>
 <area shape="rect" id="node3" href="$class_visual_component.html#a46cfd3db33c269b95a07abb87d1b1b74" title="VisualComponent\\getTemplate\lPrefix" alt="" coords="231,57,430,98"/>
 <area shape="rect" id="node4" href="$class_visual_component.html#aa3258f7bd513d00393bc5bf376378817" title="VisualComponent\\__call" alt="" coords="480,64,643,91"/>
-<area shape="rect" id="node5" href="$class_member_page.html#ab9b477aee38e6db5071166505a17c311" title="MemberPage\\teaserReplacement" alt="" coords="691,35,906,61"/>
-<area shape="rect" id="node7" href="$class_personal_startpage.html#af32885ad65a4390179fb74ad34b48c5c" title="PersonalStartpage\\teaser\lContent" alt="" coords="714,86,883,127"/>
-<area shape="rect" id="node6" href="$class_member_page.html#a8c299c6e727ef54cb58e860460b511fa" title="MemberPage\\columnsArea" alt="" coords="955,35,1133,61"/>
+<area shape="rect" id="node5" href="$class_personal_startpage.html#af32885ad65a4390179fb74ad34b48c5c" title="PersonalStartpage\\teaser\lContent" alt="" coords="714,27,883,69"/>
+<area shape="rect" id="node6" href="$class_member_page.html#ab9b477aee38e6db5071166505a17c311" title="MemberPage\\teaserReplacement" alt="" coords="691,93,906,120"/>
+<area shape="rect" id="node7" href="$class_member_page.html#a8c299c6e727ef54cb58e860460b511fa" title="MemberPage\\columnsArea" alt="" coords="955,93,1133,120"/>
 </map>

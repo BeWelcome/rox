@@ -1,14 +1,11 @@
 var searchData=
 [
+  ['actions_2ephp',['actions.php',['../messages_2templates_2actions_8php.html',1,'']]],
+  ['compose_2ephp',['compose.php',['../messages_2templates_2compose_8php.html',1,'']]],
   ['mail_2elib_2ephp',['mail.lib.php',['../mail_8lib_8php.html',1,'']]],
-  ['mail_5fhtml_2ephp',['mail_html.php',['../build_2forums_2templates_2mail_2mail__html_8php.html',1,'']]],
-  ['mail_5fhtml_2ephp',['mail_html.php',['../build_2signup_2templates_2mail_2mail__html_8php.html',1,'']]],
-  ['mail_5fhtml_2ephp',['mail_html.php',['../templates_2shared_2mail__html_8php.html',1,'']]],
   ['mailbox_2epage_2ephp',['mailbox.page.php',['../mailbox_8page_8php.html',1,'']]],
   ['mailbox_2ewidget_2ephp',['mailbox.widget.php',['../mailbox_8widget_8php.html',1,'']]],
   ['main_2ejs',['main.js',['../main_8js.html',1,'']]],
-  ['map_2ephp',['map.php',['../searchmembers_2templates_2map_8php.html',1,'']]],
-  ['map_2ephp',['map.php',['../trip_2templates_2map_8php.html',1,'']]],
   ['marker_5fmanager_2ejs',['marker_manager.js',['../marker__manager_8js.html',1,'']]],
   ['member_2eentity_2ephp',['member.entity.php',['../member_8entity_8php.html',1,'']]],
   ['member_2elib_2ephp',['member.lib.php',['../member_8lib_8php.html',1,'']]],
@@ -19,8 +16,6 @@ var searchData=
   ['membergroups_2ecolumn_5fcol3_2ephp',['membergroups.column_col3.php',['../membergroups_8column__col3_8php.html',1,'']]],
   ['membergroups_2epage_2ephp',['membergroups.page.php',['../membergroups_8page_8php.html',1,'']]],
   ['memberlanguage_2eentity_2ephp',['memberlanguage.entity.php',['../memberlanguage_8entity_8php.html',1,'']]],
-  ['memberlist_2ephp',['memberlist.php',['../places_2templates_2memberlist_8php.html',1,'']]],
-  ['memberlist_2ephp',['memberlist.php',['../searchmembers_2templates_2memberlist_8php.html',1,'']]],
   ['memberlist_5fquicksearch_2ephp',['memberlist_quicksearch.php',['../memberlist__quicksearch_8php.html',1,'']]],
   ['membernotes_2ecolumn_5fcol3_2ehelper_2ephp',['membernotes.column_col3.helper.php',['../membernotes_8column__col3_8helper_8php.html',1,'']]],
   ['membernotes_2ecolumn_5fcol3_2ephp',['membernotes.column_col3.php',['../membernotes_8column__col3_8php.html',1,'']]],
@@ -33,8 +28,6 @@ var searchData=
   ['memcache_2ephp',['Memcache.php',['../_memcache_8php.html',1,'']]],
   ['memory_2eclass_2ephp',['memory.class.php',['../memory_8class_8php.html',1,'']]],
   ['message_2eentity_2ephp',['message.entity.php',['../message_8entity_8php.html',1,'']]],
-  ['message_2ephp',['message.php',['../en_2apps_2message_2message_8php.html',1,'']]],
-  ['message_2ephp',['message.php',['../de_2apps_2message_2message_8php.html',1,'']]],
   ['messages_2ectrl_2ephp',['messages.ctrl.php',['../messages_8ctrl_8php.html',1,'']]],
   ['messages_2emodel_2ephp',['messages.model.php',['../messages_8model_8php.html',1,'']]],
   ['messages_2eview_2ephp',['messages.view.php',['../messages_8view_8php.html',1,'']]],
@@ -55,5 +48,7 @@ var searchData=
   ['mypreferences_2epage_2ephp',['mypreferences.page.php',['../mypreferences_8page_8php.html',1,'']]],
   ['myprofile_2epage_2ephp',['myprofile.page.php',['../myprofile_8page_8php.html',1,'']]],
   ['mysql_2ephp',['MySQL.php',['../_my_s_q_l_8php.html',1,'']]],
-  ['myvisitors_2epage_2ephp',['myvisitors.page.php',['../myvisitors_8page_8php.html',1,'']]]
+  ['myvisitors_2epage_2ephp',['myvisitors.page.php',['../myvisitors_8page_8php.html',1,'']]],
+  ['plugin_2emin_2ejs',['plugin.min.js',['../media_2plugin_8min_8js.html',1,'']]],
+  ['user_2elib_2ephp',['user.lib.php',['../modules_2user_2lib_2user_8lib_8php.html',1,'']]]
 ];

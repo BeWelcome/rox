@@ -1,20 +1,14 @@
 var searchData=
 [
+  ['compose_2ephp',['compose.php',['../invite_2templates_2compose_8php.html',1,'']]],
   ['i18n_2elib_2ephp',['i18n.lib.php',['../i18n_8lib_8php.html',1,'']]],
   ['image_2elib_2ephp',['image.lib.php',['../image_8lib_8php.html',1,'']]],
-  ['image_2ephp',['image.php',['../build_2gallery_2templates_2image_8php.html',1,'']]],
-  ['image_2ephp',['image.php',['../text_2en_2apps_2gallery_2image_8php.html',1,'']]],
-  ['image_2ephp',['image.php',['../text_2de_2apps_2gallery_2image_8php.html',1,'']]],
   ['imagefixedcolumns_2elist_2ephp',['imagefixedcolumns.list.php',['../imagefixedcolumns_8list_8php.html',1,'']]],
   ['impressum_2ephp',['impressum.php',['../impressum_8php.html',1,'']]],
   ['inactiveprofile_2ecolumn_5fcol3_2ephp',['inactiveprofile.column_col3.php',['../inactiveprofile_8column__col3_8php.html',1,'']]],
   ['inactiveprofile_2epage_2ephp',['inactiveprofile.page.php',['../inactiveprofile_8page_8php.html',1,'']]],
-  ['inbox_2ephp',['inbox.php',['../de_2apps_2message_2inbox_8php.html',1,'']]],
-  ['inbox_2ephp',['inbox.php',['../en_2apps_2message_2inbox_8php.html',1,'']]],
   ['include_5fcss_2ejs',['include_css.js',['../include__css_8js.html',1,'']]],
-  ['include_5fmarkercluster_5fcss_2ejs',['include_markercluster_css.js',['../include__markercluster__css_8js.html',1,'']]],
   ['index_2ephp',['index.php',['../index_8php.html',1,'']]],
-  ['index_2ephp',['index.php',['../htdocs_2index_8php.html',1,'']]],
   ['infomessage_2ephp',['infomessage.php',['../infomessage_8php.html',1,'']]],
   ['inicache_2epage_2ephp',['inicache.page.php',['../inicache_8page_8php.html',1,'']]],
   ['injection_2ewrap_2ephp',['injection.wrap.php',['../injection_8wrap_8php.html',1,'']]],
@@ -26,5 +20,8 @@ var searchData=
   ['ipv6_2ephp',['IPv6.php',['../_i_pv6_8php.html',1,'']]],
   ['iri_2ephp',['IRI.php',['../_i_r_i_8php.html',1,'']]],
   ['item_2ephp',['Item.php',['../_item_8php.html',1,'']]],
-  ['itemlist_2ewidget_2ephp',['itemlist.widget.php',['../itemlist_8widget_8php.html',1,'']]]
+  ['itemlist_2ewidget_2ephp',['itemlist.widget.php',['../itemlist_8widget_8php.html',1,'']]],
+  ['plugin_2emin_2ejs',['plugin.min.js',['../importcss_2plugin_8min_8js.html',1,'']]],
+  ['plugin_2emin_2ejs',['plugin.min.js',['../image_2plugin_8min_8js.html',1,'']]],
+  ['plugin_2emin_2ejs',['plugin.min.js',['../insertdatetime_2plugin_8min_8js.html',1,'']]]
 ];

@@ -1,6 +1,6 @@
 <map id="SimplePie\get_image_height" name="SimplePie\get_image_height">
-<area shape="rect" id="node2" href="$class_simple_pie.html#a3d2c71fa6fc3ffbebb94172f9f75d51e" title="SimplePie\\get_image_tags" alt="" coords="201,57,378,83"/>
-<area shape="rect" id="node3" href="$class_simple_pie.html#a807fc0843a5b3ac84b30c80226be87fe" title="SimplePie\\get_type" alt="" coords="878,57,1013,83"/>
-<area shape="rect" id="node4" href="$class_simple_pie.html#a31e2cb6bdaa3e8742bfb06c523b62cb7" title="SimplePie\\get_feed_tags" alt="" coords="662,31,829,58"/>
-<area shape="rect" id="node5" href="$class_simple_pie.html#a65096224f3f77adc3010794f7168bfab" title="SimplePie\\get_channel_tags" alt="" coords="427,82,613,109"/>
+<area shape="rect" id="node2" href="$class_simple_pie.html#a3d2c71fa6fc3ffbebb94172f9f75d51e" title="SimplePie\\get_image_tags" alt="" coords="201,81,378,108"/>
+<area shape="rect" id="node5" href="$class_simple_pie.html#a807fc0843a5b3ac84b30c80226be87fe" title="SimplePie\\get_type" alt="" coords="878,81,1013,108"/>
+<area shape="rect" id="node3" href="$class_simple_pie.html#a65096224f3f77adc3010794f7168bfab" title="SimplePie\\get_channel_tags" alt="" coords="427,56,613,83"/>
+<area shape="rect" id="node4" href="$class_simple_pie.html#a31e2cb6bdaa3e8742bfb06c523b62cb7" title="SimplePie\\get_feed_tags" alt="" coords="662,5,829,32"/>
 </map>

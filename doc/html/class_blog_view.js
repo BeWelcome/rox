@@ -12,6 +12,7 @@ var class_blog_view =
     [ "editForm", "class_blog_view.html#a244c55f4b00419425cceeaeeed18b4d2", null ],
     [ "generateClickableTagSuggestions", "class_blog_view.html#a25eaf4e319d72d4c1bdda2a1c9251f45", null ],
     [ "generateLocationOverview", "class_blog_view.html#a02f08f2b6821925743eeab3d23de3996", null ],
+    [ "getAsString", "class_blog_view.html#a96b2f4972d0600939ba935e9602e8fef", null ],
     [ "linkRSS", "class_blog_view.html#ab234f1f67bcdc0e0c4fab93c4fc75d7c", null ],
     [ "pages", "class_blog_view.html#a1cd9e2345ad2530b53a886c07fe34bdd", null ],
     [ "PostsByCategory", "class_blog_view.html#af85d4a89640670bf2557425bcced8471", null ],

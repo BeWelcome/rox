@@ -33,7 +33,7 @@ var jquery_ui_1_810_83_8custom_8js =
     [ "cleanData", "jquery-ui-1_810_83_8custom_8js.html#a4d80c5737711144fedbc444c477b4ae1", null ],
     [ "cssText", "jquery-ui-1_810_83_8custom_8js.html#a9f4837e3f556db027bcbbafe8fcbacd3", null ],
     [ "datepicker", "jquery-ui-1_810_83_8custom_8js.html#a57c228fd2104fb16a033c56b6792c17e", null ],
-    [ "extend", "jquery-ui-1_810_83_8custom_8js.html#a97d2dfc7eacd4130836f6cf8b6766d1e", null ],
+    [ "extend", "jquery-ui-1_810_83_8custom_8js.html#a37eb77cea8545f12522b74a250465f01", null ],
     [ "ie", "jquery-ui-1_810_83_8custom_8js.html#a67ffdec83d9c9f0e01ec15c6402c2368", null ],
     [ "initialized", "jquery-ui-1_810_83_8custom_8js.html#af066129c46739605a04f3cd2e545e869", null ],
     [ "innerHTML", "jquery-ui-1_810_83_8custom_8js.html#a87f73c4f0391c1cf9fe60374a76d9a7b", null ],

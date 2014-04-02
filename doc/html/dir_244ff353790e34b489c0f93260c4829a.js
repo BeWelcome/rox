@@ -8,7 +8,7 @@ var dir_244ff353790e34b489c0f93260c4829a =
     [ "personalstart.page.php", "personalstart_8page_8php.html", [
       [ "PersonalStartpage", "class_personal_startpage.html", "class_personal_startpage" ],
       [ "MailboxWidget_Personalstart", "class_mailbox_widget___personalstart.html", "class_mailbox_widget___personalstart" ],
-      [ "NotifyMemberWidget_Personalstart", "class_notify_member_widget___personalstart.html", null ]
+      [ "NotifyMemberWidget_Personalstart", "class_notify_member_widget___personalstart.html", "class_notify_member_widget___personalstart" ]
     ] ],
     [ "publicstart.page.php", "publicstart_8page_8php.html", [
       [ "PublicStartpage", "class_public_startpage.html", "class_public_startpage" ]

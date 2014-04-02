@@ -4,7 +4,7 @@ var dir_8952fd74a6f5b8acc1150231115dc8b9 =
       [ "ArrayWrap", "class_array_wrap.html", "class_array_wrap" ]
     ] ],
     [ "injection.wrap.php", "injection_8wrap_8php.html", [
-      [ "InjectionWrap", "class_injection_wrap.html", null ]
+      [ "InjectionWrap", "class_injection_wrap.html", "class_injection_wrap" ]
     ] ],
     [ "method.wrap.php", "method_8wrap_8php.html", [
       [ "MethodWrap", "class_method_wrap.html", "class_method_wrap" ],
@@ -15,6 +15,6 @@ var dir_8952fd74a6f5b8acc1150231115dc8b9 =
     ] ],
     [ "view.wrap.php", "view_8wrap_8php.html", [
       [ "BufferWrap", "class_buffer_wrap.html", "class_buffer_wrap" ],
-      [ "ViewWrap", "class_view_wrap.html", null ]
+      [ "ViewWrap", "class_view_wrap.html", "class_view_wrap" ]
     ] ]
 ];

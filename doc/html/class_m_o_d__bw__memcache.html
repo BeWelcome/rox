@@ -124,10 +124,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a40a990850927673365c88cf35404be27"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_m_o_d__bw__memcache.html#a40a990850927673365c88cf35404be27">LookUp</a> ($Code, $IdLanguage)</td></tr>
 <tr class="separator:a40a990850927673365c88cf35404be27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="bw__memcache_8lib_8php_source.html#l00051">51</a> of file <a class="el" href="bw__memcache_8lib_8php_source.html">bw_memcache.lib.php</a>.</p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a3903d7837e579f25ccc468a88775401c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -159,9 +156,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>is the name of the table to consider  is the name of the column which is supposed to have the value in the table </p>
 
-<p>Definition at line <a class="el" href="bw__memcache_8lib_8php_source.html#l00063">63</a> of file <a class="el" href="bw__memcache_8lib_8php_source.html">bw_memcache.lib.php</a>.</p>
-
-<p>References <a class="el" href="ajax_8php_source.html#l00153">$_SESSION</a>.</p>
+<p>References <a class="el" href="ajax_8php.html#a12bbdcd3251cbbd7dac66b514f7b6ce0">$_SESSION</a>.</p>
 
 </div>
 </div>
@@ -197,11 +192,9 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>This function adds a value in memcache $Code : the code for the value $IdLanguage : the language for the value $value : the value </p>
 
-<p>Definition at line <a class="el" href="bw__memcache_8lib_8php_source.html#l00164">164</a> of file <a class="el" href="bw__memcache_8lib_8php_source.html">bw_memcache.lib.php</a>.</p>
+<p>References <a class="el" href="mypreferences_8column__col3_8helper_8php.html#a0f298096f322952a72a50f98a74c7b60">$value</a>.</p>
 
-<p>References <a class="el" href="mypreferences_8column__col3_8helper_8php_source.html#l00020">$value</a>.</p>
-
-<p>Referenced by <a class="el" href="bw__memcache_8lib_8php_source.html#l00105">GetValue()</a>.</p>
+<p>Referenced by <a class="el" href="class_m_o_d__bw__memcache.html#a2163573ed002e9ec43d08fe1ad7df97a">GetValue()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -239,9 +232,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>This function is the core one it tries to find in memchache the given value for $Code in $IdLanguage if it fails, it then tries to query it from the database if it success, if the value is marked as expired, it update it from the database, mark it as uptodate and returns the value to caller if the value is not marked as expired it returns to caller (this is expected to be the most common case !) it stored it in memcache and returns the value to caller if it fails it store in memcache infor </p>
 
-<p>Definition at line <a class="el" href="bw__memcache_8lib_8php_source.html#l00105">105</a> of file <a class="el" href="bw__memcache_8lib_8php_source.html">bw_memcache.lib.php</a>.</p>
-
-<p>References <a class="el" href="mypreferences_8column__col3_8helper_8php_source.html#l00020">$value</a>, <a class="el" href="bw__memcache_8lib_8php_source.html#l00164">AddValue()</a>, and <a class="el" href="bw__memcache_8lib_8php_source.html#l00196">LookUp()</a>.</p>
+<p>References <a class="el" href="mypreferences_8column__col3_8helper_8php.html#a0f298096f322952a72a50f98a74c7b60">$value</a>, <a class="el" href="class_m_o_d__bw__memcache.html#a9ae5f1170343eb69a8bce8eb0183db9a">AddValue()</a>, and <a class="el" href="class_m_o_d__bw__memcache.html#a40a990850927673365c88cf35404be27">LookUp()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -279,9 +270,7 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>This function looks in the database for the value correspondig to a Code and a <a class="el" href="class_language.html">Language</a> it returns false if it fails to find something </p>
 
-<p>Definition at line <a class="el" href="bw__memcache_8lib_8php_source.html#l00196">196</a> of file <a class="el" href="bw__memcache_8lib_8php_source.html">bw_memcache.lib.php</a>.</p>
-
-<p>Referenced by <a class="el" href="bw__memcache_8lib_8php_source.html#l00105">GetValue()</a>.</p>
+<p>Referenced by <a class="el" href="class_m_o_d__bw__memcache.html#a2163573ed002e9ec43d08fe1ad7df97a">GetValue()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -325,14 +314,12 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>This function replace a value in memcache $Code : the code for the value $IdLanguage : the language for the value $value : the value </p>
 
-<p>Definition at line <a class="el" href="bw__memcache_8lib_8php_source.html#l00181">181</a> of file <a class="el" href="bw__memcache_8lib_8php_source.html">bw_memcache.lib.php</a>.</p>
-
-<p>References <a class="el" href="mypreferences_8column__col3_8helper_8php_source.html#l00020">$value</a>.</p>
+<p>References <a class="el" href="mypreferences_8column__col3_8helper_8php.html#a0f298096f322952a72a50f98a74c7b60">$value</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>C:/xampp/htdocs/rox/modules/i18n/lib/<a class="el" href="bw__memcache_8lib_8php_source.html">bw_memcache.lib.php</a></li>
+<li><a class="el" href="bw__memcache_8lib_8php.html">bw_memcache.lib.php</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -340,7 +327,7 @@ Here is the caller graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_m_o_d__bw__memcache.html">MOD_bw_memcache</a></li>
-    <li class="footer">Generated on Sun Jan 12 2014 18:43:16 for Rox by
+    <li class="footer">Generated on Tue Apr 1 2014 19:04:15 for Rox by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

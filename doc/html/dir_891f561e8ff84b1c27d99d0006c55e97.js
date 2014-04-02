@@ -23,7 +23,7 @@ var dir_891f561e8ff84b1c27d99d0006c55e97 =
       [ "SimplePie_Copyright", "class_simple_pie___copyright.html", "class_simple_pie___copyright" ]
     ] ],
     [ "Core.php", "_core_8php.html", [
-      [ "SimplePie_Core", "class_simple_pie___core.html", null ]
+      [ "SimplePie_Core", "class_simple_pie___core.html", "class_simple_pie___core" ]
     ] ],
     [ "Credit.php", "_credit_8php.html", [
       [ "SimplePie_Credit", "class_simple_pie___credit.html", "class_simple_pie___credit" ]

@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['date_2ephp',['Date.php',['../build_2admin_2templates_2simplepie_2library_2_simple_pie_2_parse_2_date_8php.html',1,'']]],
-  ['date_2ephp',['date.php',['../text_2en_2_date_8php.html',1,'']]],
-  ['date_2ephp',['date.php',['../text_2de_2_date_8php.html',1,'']]],
+  ['comments_2ephp',['comments.php',['../de_2apps_2blog_2comments_8php.html',1,'']]],
+  ['countryoverview_2ephp',['countryOverview.php',['../de_2apps_2country_2country_overview_8php.html',1,'']]],
   ['datepicker_2ejs',['datepicker.js',['../datepicker_8js.html',1,'']]],
   ['db_2ephp',['DB.php',['../_d_b_8php.html',1,'']]],
   ['dbsummary_2emodel_2ephp',['dbsummary.model.php',['../dbsummary_8model_8php.html',1,'']]],
@@ -12,9 +11,6 @@ var searchData=
   ['debuginfo_2ephp',['debuginfo.php',['../debuginfo_8php.html',1,'']]],
   ['defaults_2einc_2ephp',['defaults.inc.php',['../defaults_8inc_8php.html',1,'']]],
   ['del_2ephp',['del.php',['../de_2apps_2trip_2del_8php.html',1,'']]],
-  ['del_2ephp',['del.php',['../en_2apps_2trip_2del_8php.html',1,'']]],
-  ['delete_2ephp',['delete.php',['../build_2blog_2templates_2delete_8php.html',1,'']]],
-  ['delete_2ephp',['delete.php',['../text_2en_2apps_2blog_2delete_8php.html',1,'']]],
   ['deletenote_2ecolumn_5fcol3_2ephp',['deletenote.column_col3.php',['../deletenote_8column__col3_8php.html',1,'']]],
   ['deletenote_2epage_2ephp',['deletenote.page.php',['../deletenote_8page_8php.html',1,'']]],
   ['deleteone_2ephp',['deleteone.php',['../deleteone_8php.html',1,'']]],
@@ -36,5 +32,18 @@ var searchData=
   ['donate_5flist_2ephp',['donate_list.php',['../donate__list_8php.html',1,'']]],
   ['drafts_2epage_2ephp',['drafts.page.php',['../drafts_8page_8php.html',1,'']]],
   ['dragdrop_2ejs',['dragdrop.js',['../dragdrop_8js.html',1,'']]],
-  ['dragdrop_2ejs',['dragdrop.js',['../scriptaculous18_2dragdrop_8js.html',1,'']]]
+  ['editcreate_2ephp',['editcreate.php',['../de_2apps_2blog_2editcreate_8php.html',1,'']]],
+  ['inbox_2ephp',['inbox.php',['../de_2apps_2message_2inbox_8php.html',1,'']]],
+  ['login_2ephp',['login.php',['../de_2apps_2user_2login_8php.html',1,'']]],
+  ['message_2ephp',['message.php',['../de_2apps_2message_2message_8php.html',1,'']]],
+  ['outbox_2ephp',['outbox.php',['../de_2apps_2message_2outbox_8php.html',1,'']]],
+  ['plugin_2emin_2ejs',['plugin.min.js',['../directionality_2plugin_8min_8js.html',1,'']]],
+  ['register_2ephp',['register.php',['../de_2apps_2user_2register_8php.html',1,'']]],
+  ['settings_2ephp',['settings.php',['../de_2apps_2blog_2settings_8php.html',1,'']]],
+  ['settings_2ephp',['settings.php',['../de_2apps_2user_2settings_8php.html',1,'']]],
+  ['trip_2ephp',['trip.php',['../de_2apps_2trip_2trip_8php.html',1,'']]],
+  ['upload_2ephp',['upload.php',['../de_2apps_2gallery_2upload_8php.html',1,'']]],
+  ['userbar_5fdonate_2ephp',['userbar_donate.php',['../donate_2templates_2userbar__donate_8php.html',1,'']]],
+  ['write_2ephp',['write.php',['../de_2apps_2message_2write_8php.html',1,'']]],
+  ['xppubwiz_2ephp',['xppubwiz.php',['../de_2apps_2gallery_2xppubwiz_8php.html',1,'']]]
 ];

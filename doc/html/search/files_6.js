@@ -1,11 +1,12 @@
 var searchData=
 [
+  ['comments_2ephp',['comments.php',['../fr_2apps_2blog_2comments_8php.html',1,'']]],
+  ['editcreate_2ephp',['editcreate.php',['../fr_2apps_2blog_2editcreate_8php.html',1,'']]],
   ['fabtabulous_2ejs',['fabtabulous.js',['../fabtabulous_8js.html',1,'']]],
   ['fancyzoom_2ejs',['fancyzoom.js',['../fancyzoom_8js.html',1,'']]],
   ['faq_2epage_2ephp',['faq.page.php',['../faq_8page_8php.html',1,'']]],
   ['faqsection_2epage_2ephp',['faqsection.page.php',['../faqsection_8page_8php.html',1,'']]],
   ['featureclosed_2ephp',['featureclosed.php',['../forums_2templates_2featureclosed_8php.html',1,'']]],
-  ['featureclosed_2ephp',['featureclosed.php',['../searchmembers_2templates_2featureclosed_8php.html',1,'']]],
   ['feedback_2ecolumn_5fcol3_2ehelper_2ephp',['feedback.column_col3.helper.php',['../feedback_8column__col3_8helper_8php.html',1,'']]],
   ['feedback_2ecolumn_5fcol3_2ephp',['feedback.column_col3.php',['../feedback_8column__col3_8php.html',1,'']]],
   ['feedback_2eentity_2ephp',['feedback.entity.php',['../feedback_8entity_8php.html',1,'']]],
@@ -13,7 +14,6 @@ var searchData=
   ['feedback_2epage_2ephp',['feedback.page.php',['../feedback_8page_8php.html',1,'']]],
   ['feedbacksent_2epage_2ephp',['feedbacksent.page.php',['../feedbacksent_8page_8php.html',1,'']]],
   ['fieldset_2ejs',['fieldset.js',['../fieldset_8js.html',1,'']]],
-  ['file_2ephp',['File.php',['../_cache_2_file_8php.html',1,'']]],
   ['file_2ephp',['File.php',['../_file_8php.html',1,'']]],
   ['filters_2ephp',['filters.php',['../filters_8php.html',1,'']]],
   ['findpeople_2ejs',['findpeople.js',['../findpeople_8js.html',1,'']]],
@@ -28,8 +28,10 @@ var searchData=
   ['forums_2emodel_2ephp',['forums.model.php',['../forums_8model_8php.html',1,'']]],
   ['forums_2eview_2ephp',['forums.view.php',['../forums_8view_8php.html',1,'']]],
   ['forums_5fsuggest_2ejs',['forums_suggest.js',['../forums__suggest_8js.html',1,'']]],
-  ['friends_2ephp',['friends.php',['../templates_2apps_2user_2friends_8php.html',1,'']]],
-  ['friends_2ephp',['friends.php',['../text_2en_2apps_2user_2friends_8php.html',1,'']]],
-  ['friends_2ephp',['friends.php',['../text_2de_2apps_2user_2friends_8php.html',1,'']]],
-  ['fullpagepager_2ewidget_2ephp',['fullpagepager.widget.php',['../fullpagepager_8widget_8php.html',1,'']]]
+  ['fullpagepager_2ewidget_2ephp',['fullpagepager.widget.php',['../fullpagepager_8widget_8php.html',1,'']]],
+  ['pages_2ephp',['pages.php',['../forums_2templates_2pages_8php.html',1,'']]],
+  ['plugin_2emin_2ejs',['plugin.min.js',['../fullscreen_2plugin_8min_8js.html',1,'']]],
+  ['plugin_2emin_2ejs',['plugin.min.js',['../fullpage_2plugin_8min_8js.html',1,'']]],
+  ['settings_2ephp',['settings.php',['../fr_2apps_2blog_2settings_8php.html',1,'']]],
+  ['singlepost_2ephp',['singlepost.php',['../forums_2templates_2singlepost_8php.html',1,'']]]
 ];

@@ -41,7 +41,7 @@ class SuggestionsRankListPage extends SuggestionsBasePage
 
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
-        $scriptFiles[] = 'suggestionsrankingajax.js';
+        $scriptFiles[] = 'suggestionsrankingajax.js?1';
         return $scriptFiles;
     }
 

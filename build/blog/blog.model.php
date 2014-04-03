@@ -220,6 +220,8 @@ WHERE b2t.`blog_id_foreign` = '.(int)$blogId.'
 
     public function updateTags($blogId, $tags)
     {
+        $member = $this->getLoggedInMember();
+        $communityNews = $member->hasRight('CommunityNews');
         $blogId = (int)$blogId;
         $this->dao->exec('DELETE FROM `blog_to_tag` WHERE `blog_id_foreign` = '.(int)$blogId);
         $tag = false;
@@ -239,6 +241,8 @@ INSERT INTO `blog_to_tag`
             $tag = trim($tag);
             if (!$tag)
                 continue;
+            // Don't allow to post community news if the right isn't set
+            if ((strcasecmp($tag, 'Community News for the frontpage') == 0) && (!$communityNews)) continue;
             $tagId = $this->dao->query('
 SELECT `blog_tag_id` FROM `blog_tags` WHERE `name` = \''.$this->dao->escape($tag).'\'');
             if (!$tagId || !$tagId->numRows()) {
@@ -626,7 +630,7 @@ WHERE 1';
     )
 GROUP BY b.`blog_id`
 ORDER BY b.`blog_created` DESC';
-        error_log($query);
+
         $query = "SELECT COUNT(blog_id) AS posts FROM ({$query}) AS temp";
         $s = $this->dao->query($query);
         if (!$s) {
@@ -1109,8 +1113,16 @@ SET
             if (!$s) {
                 throw new PException('Could not retrieve tag entries');
             }
+
+            // select tags based on rights
+            $member = $this->getLoggedInMember();
+            $communityNews = false;
+            if ($member) {
+                $communityNews = $member->hasRight('CommunityNews');
+            }
             $tags = array();
             while ($row = $s->fetch(PDB::FETCH_OBJ)) {
+                if ((strcasecmp($row->name, "Community news for the frontpage") == 0) && !$communityNews) continue;
                 $tags[] = $row->name;
             }
 

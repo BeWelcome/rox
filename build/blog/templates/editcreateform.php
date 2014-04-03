@@ -98,6 +98,11 @@ if (in_array('upderror', $vars['errors'])) {
             echo isset($vars['tags']) ? htmlentities($vars['tags'], ENT_COMPAT, 'utf-8') : '';
         ?></textarea>
         <div id="suggestion"></div>
+        <?php
+        if (in_array('communitynews', $vars['errors'])) {
+            echo '<span class="error">'.$words->get('BlogErrorsCommunityNews').'</span>';
+        }
+        ?>
         <p class="desc"><?=$words->get('BlogCreateLabelSublineTags')?></p>
     </div>
     <p>

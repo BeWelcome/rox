@@ -220,8 +220,8 @@ WHERE b2t.`blog_id_foreign` = '.(int)$blogId.'
 
     public function updateTags($blogId, $tags)
     {
-        $member = $this->getLoggedInMember();
-        $communityNews = $member->hasRight('CommunityNews');
+        $right = new MOD_right();
+        $communityNews = $right->hasRight('CommunityNews');
         $blogId = (int)$blogId;
         $this->dao->exec('DELETE FROM `blog_to_tag` WHERE `blog_id_foreign` = '.(int)$blogId);
         $tag = false;
@@ -1118,7 +1118,8 @@ SET
             $member = $this->getLoggedInMember();
             $communityNews = false;
             if ($member) {
-                $communityNews = $member->hasRight('CommunityNews');
+                $right = new MOD_right();
+                $communityNews = $right->hasRight('CommunityNews');
             }
             $tags = array();
             while ($row = $s->fetch(PDB::FETCH_OBJ)) {

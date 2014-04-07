@@ -296,7 +296,7 @@ bwrox.selectScripts([
         pages: ["signup/3", "setlocation", "blog", "trip"]
     },
     {
-        file: "map/builder/BWGeosearchMapBuilder.js?3",
+        file: "map/builder/BWGeosearchMapBuilder.js?4",
         pages: ["searchmembers"]
     },
     {

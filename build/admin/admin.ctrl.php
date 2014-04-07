@@ -34,14 +34,12 @@ Boston, MA  02111-1307, USA.
      * @package apps
      * @subpackage Admin
      */
-class AdminController extends RoxControllerBase
+class AdminController extends RoxController
 {
     const MASSMAILEDIT    = 1;
     const MASSMAILCREATE  = 1;
     const MASSMAILENQUEUE = 1;
     const MASSMAILTRIGGER = 5;
-
-    private $_model;
 
     public function __construct()
     {

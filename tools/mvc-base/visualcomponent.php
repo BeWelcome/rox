@@ -78,14 +78,17 @@ class VisualComponent extends RoxComponentBase
         } else {
             // using a heuristic to guess which is the correct application directory name
             $subdirs = preg_split('/[\\/\\\]/', dirname($file));
-            if ($subdirs[count($subdirs)-2] != 'build') {
-                array_pop($subdirs);
-            }
-            if ($subdirs[count($subdirs)-2] != 'build') {
+            $build = array_search('build', $subdirs, true);
+            if (!$build) {
                 $appname = 'yummytummy';
             } else {
-                $appname = end($subdirs);
+                $len = count($subdirs) - $build - 2;
+                if (end($subdirs) != 'pages') {
+                    $len++;
+                }
+                $appname = implode('/', array_slice($subdirs, $build + 1, $len));
             }
+            error_log($appname);
         }
         $filename_prefix = basename($file, '.page.php');
         return SCRIPT_BASE.'build/'.$appname.'/templates/'.$filename_prefix.'.';

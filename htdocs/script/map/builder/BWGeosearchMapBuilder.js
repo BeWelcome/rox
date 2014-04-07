@@ -169,7 +169,7 @@ var BWGeosearchMapBuilder = Class
 
         bwrox.debug('Adding layers control');
 
-        this.overlayMaps= new Array();
+        this.overlayMaps= {};
         this.overlayMaps[this.labelAccomodation1] = this.layerGroup1;
         this.overlayMaps[this.labelAccomodation2] = this.layerGroup2;
         this.overlayMaps[this.labelAccomodation3] = this.layerGroup3;

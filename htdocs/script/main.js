@@ -88,7 +88,7 @@ var bwrox = new BWRox;
  * Extend selectScripts() first parameter array to load more files.
  *
  *   Note: Add or increment query string if a JS file changes to make sure
- *         browsers reload the file (e.g. "gallery.js?1" -> "gallery.js?2")
+ *         browsers reload the file (e.g. "gallery.js?2" -> "gallery.js?3")
  */
 bwrox.selectScripts([
     {
@@ -120,7 +120,7 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "jquery-ui-timepicker-addon.js?1",
+        file: "jquery-ui-timepicker-addon.js?2",
         pages: [
             "activities" /*,
              "blog",
@@ -176,13 +176,13 @@ bwrox.selectScripts([
         file: "scriptaculous18/scriptaculous.js?load=effects,controls,builder,dragdrop"
     },
     {
-        file: "registerrox.js",
+        file: "registerrox.js?1",
         pages: [
             "signup"
         ]
     },
     {
-        file: "geo_suggest.js?1",
+        file: "geo_suggest.js?2",
         pages: [
             "signup", "setlocation"
         ]
@@ -199,20 +199,20 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "blog_suggest.js",
+        file: "blog_suggest.js?1",
         pages: [
             "blog",
             "trip"
         ]
     },
     {
-        file: "act_suggest.js",
+        file: "act_suggest.js?1",
         pages: [
             "activities"
         ]
     },
     {
-        file: "datepicker.js",
+        file: "datepicker.js?1",
         pages: [
             "activities",
             "blog",
@@ -221,7 +221,7 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "fieldset.js",
+        file: "fieldset.js?1",
         pages: [
             "blog/create",
             "blog/edit",
@@ -237,40 +237,40 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "gallery.js",
+        file: "gallery.js?1",
         pages: [
             "blog/create",
             "editmyprofile"
         ]
     },
     {
-        file: "uploader.js",
+        file: "uploader.js?1",
         pages: [
             "blog/create",
             "editmyprofile"
         ]
     },
     {
-        file: "lightview.js",
+        file: "lightview.js?1",
         pages: [
             "gallery",
             "tour/meet"
         ]
     },
     {
-        file: "transition.js",
+        file: "transition.js?1",
         pages: [
             "thepeople"
         ]
     },
     {
-        file: "prototip.js?1",
+        file: "prototip.js?2",
         pages: [
             "searchmembers"
         ]
     },
     {
-        file: "fancyzoom.js",
+        file: "fancyzoom.js?1",
         pages: [
             "members",
             "editmyprofile",
@@ -281,70 +281,70 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "util/console.js"
+        file: "util/console.js?1"
     },
     {
-        file: "map/geolocation/BWGoogleMapReverseGeolocator.js?1",
+        file: "map/geolocation/BWGoogleMapReverseGeolocator.js?2",
         pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
     },
     {
-        file: "map/leaflet/LeafletFlagIcon.js",
+        file: "map/leaflet/LeafletFlagIcon.js?1",
         pages: ["signup/3", "setlocation", "blog", "trip"]
     },
     {
-        file: "map/builder/BWSimpleMapBuilder.js?3",
+        file: "map/builder/BWSimpleMapBuilder.js?4",
         pages: ["signup/3", "setlocation", "blog", "trip"]
     },
     {
-        file: "map/builder/BWGeosearchMapBuilder.js?3",
+        file: "map/builder/BWGeosearchMapBuilder.js?4",
         pages: ["searchmembers"]
     },
     {
-        file: "map/BWMapMaths.js",
+        file: "map/BWMapMaths.js?1",
         pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
     },
     {
-        file: "map/BWMapAddressPoint.js",
+        file: "map/BWMapAddressPoint.js?1",
         pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip"]
     },
     {
-        file: "map/BWMapHostPoint.js",
+        file: "map/BWMapHostPoint.js?1",
         pages: ["searchmembers"]
     },
     {
-        file: "map/BWMapSearchResult.js",
+        file: "map/BWMapSearchResult.js?1",
         pages: ["searchmembers"]
     },
     {
-        file: "map/small/smallMapGeoLocation.js?3",
+        file: "map/small/smallMapGeoLocation.js?4",
         pages: ["signup/3", "setlocation"]
     },
     {
-        file: "map/small/blogSmallMapGeoLocation.js?3",
+        file: "map/small/blogSmallMapGeoLocation.js?4",
         pages: ["blog", "trip"]
     },
     {
-        file: "map/small/blogMap.js?3",
+        file: "map/small/blogMap.js?4",
         pages: ["blog"]
     },
     {
-        file: "map/small/singlePost.js?3",
+        file: "map/small/singlePost.js?4",
         pages: ["blog"]
     },
     {
-        file: "map/small/tripMap.js?3",
+        file: "map/small/tripMap.js?4",
         pages: ["trip"]
     },
     {
-        file: "searchmembers.js?3",
+        file: "searchmembers.js?4",
         pages: ["searchmembers"]
     },
     {
-        file: "search/search.js",
+        file: "search/search.js?1",
         pages: ["search/"]
     },
     {
-        file: "map/activities/activities_map.js?3",
+        file: "map/activities/activities_map.js?4",
         pages: ["activities"]
     }
 ]);

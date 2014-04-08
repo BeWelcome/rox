@@ -257,33 +257,6 @@ class RoxView extends PAppView {
 	require TEMPLATE_DIR . 'shared/roxpage/topmenu.php';
     }
 
-    private function buildFlagList()
-    {
-
-        $pair = $this->_model->getLangNames();
-        $flaglist = '';
-        $request_string = implode('/',PVars::get()->request);
-		foreach($pair as $abbr => $title) {
-		    $png = $abbr.'.png';
-		    if ($_SESSION['lang'] == $abbr) {
-		        $flaglist .=
-                    '<span><a href="rox/in/'.$abbr.'/'.$request_string.'"><img '.
-                        'src="bw/images/flags/'.$png.'" '.
-                        'alt="'.$title.'" '.
-                        'title="'.$title.'"'.
-                    "/></a></span>\n"
-		        ;
-		    }
-		    else {
-		        $flaglist .= "<a href=\"rox/in/".$abbr.'/'.$request_string.
-		        "\"><img src=\"bw/images/flags/" . $png .
-		        "\" alt=\"" . $title . "\" title=\"" . $title . "\"/></a>\n";
-		    }
-		}
-
-		return $flaglist;
-    }
-
 }
 /* removed functions referencing app user - pending deletion
 

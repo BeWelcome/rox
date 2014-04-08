@@ -49,7 +49,7 @@ class UserView extends PAppView
 
     public function friends($friends)
     {
-    	require TEMPLATE_DIR.'apps/user/friends.php';
+    	require 'templates/friends.php';
     }
 
     /**
@@ -59,7 +59,7 @@ class UserView extends PAppView
      */
     public function ShowInfoMessage($message, $messagetitle)
     {
-        require TEMPLATE_DIR.'apps/user/infomessage.php';
+        require 'templates/infomessage.php';
     }
 
     /**
@@ -73,7 +73,7 @@ class UserView extends PAppView
             $request = PRequest::get()->request;
             $redirect_url = PVars::getObj('env')->baseuri . implode('/', $request);
         }
-        require TEMPLATE_DIR.'apps/user/loginform.php';
+        require 'templates/loginform.php';
     }
 
 
@@ -87,16 +87,6 @@ class UserView extends PAppView
         require TEMPLATE_DIR.'apps/user/confirmerror.php';
     }
 
-    /**
-     * Loading register form template
-     *
-     * @param void
-     */
-    public function registerForm()
-    {
-        require TEMPLATE_DIR.'apps/user/registerform.php';
-    }
-    
     /**
      * Sends a confirmation e-mail
      *
@@ -124,11 +114,11 @@ class UserView extends PAppView
         $logoCid = $Mail->addAttachment(HTDOCS_BASE.'images/logo.png', 'image/png');
 
         ob_start();
-        require TEMPLATE_DIR.'apps/user/mail/register_html.php';
+        require 'templates/register_html.php';
         $mailHTML = ob_get_contents();
         ob_end_clean();
         $mailText = '';
-        require TEMPLATE_DIR.'apps/user/mail/register_plain.php';
+        require 'templates/register_plain.php';
 
         $Mail->addMessage($mailText);
         $Mail->addMessage($mailHTML, 'text/html');
@@ -167,7 +157,7 @@ class UserView extends PAppView
         } else {
             $location = false;
         }
-    	require TEMPLATE_DIR.'apps/user/settingsform.php';
+    	require 'templates/settingsform.php';
     }
 
     public function passwordForm()
@@ -183,7 +173,7 @@ class UserView extends PAppView
 
         $groupChange = $this->getGroupChangeForm($userHandle, $userId);
 
-        require TEMPLATE_DIR.'apps/user/userpage.php';
+        require 'templates/userpage.php';
     }
 
     private function getGroupChangeForm($userHandle, $userId) {
@@ -209,25 +199,12 @@ class UserView extends PAppView
 	}
 	
     public function teaser() {
-        require TEMPLATE_DIR.'apps/user/teaser.php';
+        require 'templates/teaser.php';
     }
-
-	public function customStyles() {
-		$out = '';
-		/* 2column layout */
-	//	$out .= '<link rel="stylesheet" href="styles/YAML/screen/custom/bw_basemod_2col.css" type="text/css"/>';
-		return $out;
-    }
-
+    
     public function rightContent() {
     	$User = new UserController;
 		$User->displayLoginForm();
-	}
-
-    public function picture($picture)
-    {
-    	require TEMPLATE_DIR.'apps/user/picture.php';
-    }    
-
+	} 
 }
 ?>

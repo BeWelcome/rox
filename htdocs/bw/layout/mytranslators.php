@@ -39,7 +39,6 @@ function DisplayMyTranslators($TData, $m) {
 
 	menumember("mytranslators.php?cid=" . $m->id, $m);
 	ShowActions(""); // Show the Actions
-	ShowAds(); // Show the Ads
 	// open col3 (middle column)
 	echo "    <div id=\"col3\"> \n"; 
 	echo "      <div id=\"col3_content\" class=\"clearfix\"> \n";

@@ -58,9 +58,6 @@ function DisplayFaq($TFaq) {
 	menugetanswers("faq.php", $title); // Display the generic header
 	echo "      </div>\n";
 
-        // ShowLeftColumn($MenuAction)  ; // Show the Actions
-	ShowAds(); // Show the Ads
-    
 	// Content with just two columns
 	echo "\n";
 	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
@@ -153,9 +150,6 @@ function DisplayFaqWiki($TFaq) {
 	menugetanswers("faq.php", $title); // Display the generic header
 	echo "      </div>\n";
 
-        // ShowLeftColumn($MenuAction)  ; // Show the Actions
-	ShowAds(); // Show the Ads
-    
 	// Content with just two columns
 	echo "\n";
 	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
@@ -204,9 +198,6 @@ function DisplayEditFaq($Faq, $TCategory) {
 	menugetanswers("faq.php", $title); // Display the generic header
 	echo "      </div>\n";
 
-        // ShowLeftColumn($MenuAction)  ; // Show the Actions
-	ShowAds(); // Show the Ads
-    
 	// Content with just two columns
 	echo "\n";
 	echo "      <div id=\"col3\" class=\"twocolumns\">\n";

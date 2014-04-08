@@ -1,1 +1,0 @@
-The rox and user templates are used in many places.  It's a bit harder to move them to build/.

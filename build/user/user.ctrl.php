@@ -179,20 +179,6 @@ class UserController extends PAppController {
 				header("Location: " . PVars::getObj('env')->baseuri);
 				break;
             
-            // register form
-            case 'register':
-                if (!PModules::moduleLoaded('mail')) {
-                    throw new PException('Module "mail" not found!');
-                }
-                // start output buffering to save all to content
-                ob_start();
-                $this->_view->registerForm();
-                $str = ob_get_contents();
-                ob_end_clean();
-                $P = PVars::getObj('page');
-                $P->content .= $str;
-                break;
-
             // waiting approval message
                 case 'waitingapproval':
 				// now the teaser content

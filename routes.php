@@ -82,23 +82,27 @@
 
     // admin temporary vol page route
     $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminController', 'tempVolStart');
+
     // admin app routes
     $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
-    // admin no rights routes
     $this->addRoute('admin_norights', 'admin/norights', 'AdminController', 'noRights');
-    // admin debug routes
     $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminController', 'debugLogs');
-    // admin accepter routes
     $this->addRoute('admin_accepter', 'admin/accepter', 'AdminController', 'accepter');
     $this->addRoute('admin_accepter_search', 'admin/accepter/search', 'AdminController', 'accepterSearch');
-    // admin comments routes
     $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminController', 'commentsOverview');
-    // admin spam routes
     $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminController', 'spamOverview');
+    $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');
+
+    // admin rights
+    $this->addRoute('admin_rights', 'admin/rights', 'AdminRightsController', 'assign');
+    $this->addRoute('admin_rights_member', 'admin/rights/list/member', 'AdminRightsController', 'listMember');
+    $this->addRoute('admin_rights_right', 'admin/rights/list/right', 'AdminRightsController', 'listRight');
+    $this->addRoute('admin_rights_create', 'admin/rights/create', 'AdminRightsController', 'create');
+    $this->addRoute('admin_rights_assign', 'admin/rights/assign', 'AdminRightsController', 'assign');
 
     // admin words routes
     // the overview route redirects to an empty edit screen,
-    // ideally this would become a real overview screen lateron
+    // ideally this would become a real overview screen later on
     $this->addRoute('admin_word_overview', 'admin/word', 'AdminWordController', 'editTranslation');    
     $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
@@ -115,11 +119,6 @@
     $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
     $this->addRoute('admin_word_find', 'admin/word/find', 'AdminWordController','findTranslations');
     $this->addRoute('admin_word_noupdate', 'admin/word/noupdate/:id:', 'AdminWordController','noUpdateNeeded');
-
-    // admin rights routes
-    $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
-    // admin activity routes
-    $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');
 
     // admin massmailing
     $this->addRoute('admin_massmail', 'admin/massmail', 'AdminController', 'massmail');

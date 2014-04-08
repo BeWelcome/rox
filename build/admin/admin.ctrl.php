@@ -140,61 +140,6 @@ class AdminController extends RoxController
 
 //}}} END: Debug right methods
 
-//{{{ START: Accepter right methods
-    /**
-     * displays members not yet accepted into bw
-     * or in various other statuses ...
-     *
-     * @access public
-     * @return object
-     */
-    public function accepter()
-    {
-        list($member, $rights) = $this->checkRights('Accepter');
-        $page = new AdminAccepterPage;
-        $page->member = $member;
-        $page->scope = explode(',', str_replace('"', '', $rights['Accepter']['Scope']));
-        $page->status = ((!empty($this->args_vars->get['status'])) ? $this->args_vars->get['status'] : 'Pending');
-
-        $params->strategy = new HalfPagePager('left');
-        $params->items = $this->_model->countMembersWithStatus($page->status);
-        $params->items_per_page = 25;
-        $page->pager = new PagerWidget($params);
-        $page->members = $this->_model->getMembersWithStatus($page->status, $page->pager);
-        $page->members_count = $page->pager->getTotalCount();
-        $page->model = $this->_model;
-        $page->board = $this->_model->getAccepterBoard();
-        return $page;
-    }
-
-     /**
-     * updates members, primarily their status
-     *
-     * @param stdClass       $args   - all sorts of variables
-     * @param ReadOnlyObject $memory - memory related stuff
-     * @param stuff stuff
-     * @param stuff stuff
-     *
-     * @access public
-     * @return string return url
-     */
-    public function accepterProcessMembers(stdClass $args, ReadOnlyObject $memory, $stuff3, $stuff4)
-    {
-        list($member, $rights) = $this->checkRights('Accepter');
-        if (empty($args->post))
-        {
-            return false;
-        }
-        $result = $this->_model->processMembers($args->post);
-        if (!empty($result['errors']))
-        {
-            return false;
-        }
-        return false;
-    }
-
-//}}} END: Accepter right methods
-
 //{{{ START: admin comments stuff
     /**
      * comments overview method

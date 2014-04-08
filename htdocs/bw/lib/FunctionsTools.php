@@ -1066,34 +1066,6 @@ function BuildVolMenu() {
 
 	$res=array();
 
-	if (HasRight("Words")) {
-		 $M=new CVolMenu("admin/adminwords.php","AdminWords","Translation using AdminWords") ;
-		 array_push($res,$M) ;
-	}
-	
-	if (HasRight("Accepter")) {
-		$AccepterScope= RightScope('Accepter');
-		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-		   $InScope = " /* All countries */";
-		} else {
-		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
-		}
-		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM members,countries,cities WHERE members.Status='Pending' AND cities.id=members.IdCity AND countries.id=cities.IdCountry ".$InScope);
-		$text="AdminAccepter(".$rr->cnt.")";
-		array_push($res,new CVolMenu("admin/adminaccepter.php",$text,"accept members data(scope=".addslashes($InScope).")")) ;
-
-	 	
-		$AccepterScope= RightScope('Accepter');
-		if (($AccepterScope == "\"All\"") or ($AccepterScope == "All") or ($AccepterScope == "'All'")) {
-		   $InScope = " /* All countries */";
-		} else {
-		  $InScope = "AND countries.id IN (" . $AccepterScope . ")";
-		}
-		$rr=LoadRow("SELECT SQL_CACHE COUNT(*) AS cnt FROM members,pendingmandatory,countries,cities WHERE pendingmandatory.Status='Pending' AND cities.id=pendingmandatory.IdCity AND countries.id=cities.IdCountry and members.id=pendingmandatory.IdMember and (members.Status='Active' or members.Status='InActive') ".$InScope);
-		$text="AdminMandatory(".$rr->cnt.")";
-		array_push($res,new CVolMenu("admin/adminmandatory.php",$text,"update mandatory data(scope=".addslashes($InScope).")")) ;
-	}
-
 	if (HasRight("Grep")) {
 		 array_push($res,new CVolMenu("admin/admingrep.php","AdminGrep","Grepping files")) ;
 	}
@@ -1142,7 +1114,6 @@ function BuildVolMenu() {
 	if (HasRight("MassMail")) {
 		 array_push($res,new CVolMenu("admin/adminmassmails.php","mass mails","Broadcast messages")) ;
 	}
-
 
 	return ($res);
 } // end of VolMenu

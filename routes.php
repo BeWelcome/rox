@@ -87,8 +87,6 @@
     $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
     $this->addRoute('admin_norights', 'admin/norights', 'AdminController', 'noRights');
     $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminController', 'debugLogs');
-    $this->addRoute('admin_accepter', 'admin/accepter', 'AdminController', 'accepter');
-    $this->addRoute('admin_accepter_search', 'admin/accepter/search', 'AdminController', 'accepterSearch');
     $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminController', 'commentsOverview');
     $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminController', 'spamOverview');
     $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');

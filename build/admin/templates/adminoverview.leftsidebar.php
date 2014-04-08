@@ -49,7 +49,7 @@ HTML;
     {
         $description = htmlspecialchars($this->rights['Words']['Description'], ENT_QUOTES);
         echo <<<HTML
-<li><a href='{$this->router->url('admin_words_overview')}' title='{$description}' class='header'>Words</a></li>
+<li><a href='{$this->router->url('admin_word_overview')}' title='{$description}' class='header'>Words</a></li>
 HTML;
     }
     if (in_array('Accepter', $right_names))

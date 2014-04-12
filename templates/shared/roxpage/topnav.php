@@ -32,7 +32,6 @@ if ($R->hasRight('Comments')) {
 if ($R->hasRight('Checker')) {
     echo '<li><a href="bw/admin/adminchecker.php?action=viewSpamSayMember" title="Review messages reported by users as spam">Reported messages ('.$numberSpamToBeChecked.')</a></li>';
 }
-if ($logged_in) {
     ?>
     <li><i class="<?php echo $envelopestyle ?>" title="<?php echo $words->getBuffered('Mymessages'); ?>"></i> <a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a> <?php echo $nbOfNewMessagees;?>
     </li>

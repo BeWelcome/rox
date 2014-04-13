@@ -183,14 +183,14 @@ class ClassLoader
                 if ($this->requireFile('build/'.$begin.'/'.$subdir.implode('', array_slice($camel_explode, 1)).'.'.$suffix, $classname)) {
                     return true;
                 }
+                if ($this->requireFile('build/'. $camel_explode[0] . '/' . $camel_explode[1] .'/'. $subdir .
+                    implode('', $camel_explode) . '.' . $suffix, $classname)) {
+                    return true;
+                }
             } else if ($this->requireFile('build/'.$begin.'/'.$subdir.$suffix, $classname)) {
                 return true;
             }
             if ($this->requireFile('build/'.$begin.'/'.$subdir.implode('', $camel_explode).'.'.$suffix, $classname)) {
-                return true;
-            }
-            if ($this->requireFile('build/'. $camel_explode[0] . '/' . $camel_explode[1] .'/'. $subdir .
-                implode('', $camel_explode) . '.' . $suffix, $classname)) {
                 return true;
             }
         }

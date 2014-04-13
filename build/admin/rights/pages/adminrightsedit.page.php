@@ -6,11 +6,11 @@
  * Time: 12:07
  */
 
-class AdminRightsOverviewPage extends AdminRightsBasePage
+class AdminRightsEditPage extends AdminRightsBasePage
 {
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
-        return $headline . "&raquo; <a href='admin/rights/list/member'>{$this->words->get('AdminRightsOverview')}</a>";
+        return $headline . "&raquo; <a href='admin/rights'>{$this->words->get('AdminRights')}</a>";
     }
 }

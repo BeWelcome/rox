@@ -93,7 +93,7 @@ var bwrox = new BWRox;
 bwrox.selectScripts([
     {
         // JQuery has to be included before prototype to avoid conflicts
-        file: "jquery-1.9.1.js",
+        file: "jquery-1.10.1.min.js",
         pages: [
             "searchmembers",
             "search",
@@ -103,6 +103,7 @@ bwrox.selectScripts([
             "trip",
             "admin/massmail/enqueue",
             "admin/word/list/update",
+            "admin/rights",
             "suggestions/rank",
             "activities/",
             "about/faq",
@@ -110,10 +111,11 @@ bwrox.selectScripts([
     },
     {
         // complete jquery ui with theme smoothness
-        file: "jquery-ui-1.10.3.custom.min.js",
+        file: "jquery-ui-1.10.4.custom.min.js",
         pages: [
             "activities",
-            "search" /*,
+            "search" ,
+            "admin/rights" /*,
              "blog",
              "trip",
              "admin/treasurer" */
@@ -139,6 +141,12 @@ bwrox.selectScripts([
         file: "jquery.multiselect.min.js",
         pages: [
             "search"
+        ]
+    },
+    {
+        file: "jquery.tooltipster.min.js",
+        pages: [
+            "admin/rights/list"
         ]
     },
     {
@@ -218,6 +226,12 @@ bwrox.selectScripts([
             "blog",
             "trip",
             "admin/treasurer"
+        ]
+    },
+    {
+        file: "adminrightstooltip.js",
+        pages: [
+            "admin/rights/list"
         ]
     },
     {

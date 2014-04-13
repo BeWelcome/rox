@@ -1,6 +1,6 @@
 <?php
     $formkit = $this->layoutkit->formkit;
-    $callback_tag = $formkit->setPostCallback('AdminController', 'massmailEditCreateCallback');
+    $callback_tag = $formkit->setPostCallback('AdminGeneralController', 'massmailEditCreateCallback');
 
     $errors = $this->getRedirectedMem('errors');
     if (!empty($errors))

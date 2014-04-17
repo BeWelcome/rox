@@ -470,7 +470,7 @@ class Suggestion extends RoxEntityBase
         $entityFactory = new RoxEntityFactory();
         $suggestionsTeam = $entityFactory->create('Member')->findByUsername('SuggestionsTeam');
         $text = 'Voting for the suggestion \'<a href="/suggestions/' . $this->id . '/">' . $this->summary . '</a>\' will end on '
-            . date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_VOTING) . '.<br /><br />if you haven\'t done so yet , please cast your vote.';
+            . date('Y-m-d', strtotime($this->laststatechanged) + SuggestionsModel::DURATION_VOTING) . '.<br /><br />if you haven\'t done so yet, please cast your vote.';
         $suggestions = new SuggestionsModel();
         $postId = $suggestions->addPost($suggestionsTeam->id, $text, $this->threadId);
         $suggestions->setForumNotification($postId, 'reply');

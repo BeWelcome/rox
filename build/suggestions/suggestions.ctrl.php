@@ -66,40 +66,44 @@ class SuggestionsController extends RoxControllerBase
      */
     public function show() {
         $id = $this->route_vars['id'];
-        $suggestion = new Suggestion($id);
-        $params = array('id' => $id);
-        switch ($suggestion->state) {
-            case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
-                if ($this->checkSuggestionRight()) {
-                    $url = $this->router->url('suggestions_approve', $params);
-                } else {
-                    $url = $this->router->url('suggestions_view', $params);
-                }
-                break;
-            case SuggestionsModel::SUGGESTIONS_DISCUSSION:
-                $url = $this->router->url('suggestions_discuss', $params);
-                break;
-            case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
-                $url = $this->router->url('suggestions_add_options', $params);
-                break;
-            case SuggestionsModel::SUGGESTIONS_VOTING:
-                $url = $this->router->url('suggestions_vote', $params);
-                break;
-            case SuggestionsModel::SUGGESTIONS_DEV:
-            case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
-            case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
-                $url = $this->router->url('suggestions_dev', $params);
-                break;
-            case SuggestionsModel::SUGGESTIONS_VOTING:
-                $url = $this->router->url('suggestions_vote', $params);
-                break;
-            case SuggestionsModel::SUGGESTIONS_RANKING:
-                $url = $this->router->url('suggestions_rank', $params);
-                break;
-            case SuggestionsModel::SUGGESTIONS_DUPLICATE:
-            case SuggestionsModel::SUGGESTIONS_REJECTED:
-                $url = $this->router->url('suggestions_rejected', $params);
-                break;
+        if (is_numeric($id)) {
+            $suggestion = new Suggestion($id);
+            $params = array('id' => $id);
+            switch ($suggestion->state) {
+                case SuggestionsModel::SUGGESTIONS_AWAIT_APPROVAL:
+                    if ($this->checkSuggestionRight()) {
+                        $url = $this->router->url('suggestions_approve', $params);
+                    } else {
+                        $url = $this->router->url('suggestions_view', $params);
+                    }
+                    break;
+                case SuggestionsModel::SUGGESTIONS_DISCUSSION:
+                    $url = $this->router->url('suggestions_discuss', $params);
+                    break;
+                case SuggestionsModel::SUGGESTIONS_ADD_OPTIONS:
+                    $url = $this->router->url('suggestions_add_options', $params);
+                    break;
+                case SuggestionsModel::SUGGESTIONS_VOTING:
+                    $url = $this->router->url('suggestions_vote', $params);
+                    break;
+                case SuggestionsModel::SUGGESTIONS_DEV:
+                case SuggestionsModel::SUGGESTIONS_IMPLEMENTING:
+                case SuggestionsModel::SUGGESTIONS_IMPLEMENTED:
+                    $url = $this->router->url('suggestions_dev', $params);
+                    break;
+                case SuggestionsModel::SUGGESTIONS_VOTING:
+                    $url = $this->router->url('suggestions_vote', $params);
+                    break;
+                case SuggestionsModel::SUGGESTIONS_RANKING:
+                    $url = $this->router->url('suggestions_rank', $params);
+                    break;
+                case SuggestionsModel::SUGGESTIONS_DUPLICATE:
+                case SuggestionsModel::SUGGESTIONS_REJECTED:
+                    $url = $this->router->url('suggestions_rejected', $params);
+                    break;
+            }
+        } else {
+            $url = $this->router->url('suggestions_discusslist', array());
         }
         $this->redirectAbsolute($url);
     }

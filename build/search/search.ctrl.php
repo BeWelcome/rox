@@ -151,7 +151,6 @@ class SearchController extends RoxControllerBase
      */
     public function searchMemberUsernames()
     {
-        error_log(print_r($this->args_vars->get, true));
         $username = $this->args_vars->get['username'];
         $callback = $this->args_vars->get['callback'];
         $usernames = $this->model->suggestUsernames($username, $callback);

@@ -29,6 +29,7 @@ Boston, MA  02111-1307, USA.
 <ul class="linklist">
 <?php
     foreach($this->sidebar as $key => $item) {
+        if (!$this->create && $key == 'AdminRightsCreate') continue;
         echo '<li>';
         if ($this->current == $key) {
             echo '<span>' . $this->words->get($key) . '</span>';

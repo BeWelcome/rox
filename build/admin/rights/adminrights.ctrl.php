@@ -67,8 +67,9 @@ class AdminRightsController extends AdminBaseController
             'username' => '',
             'right' => 0,
             'level' => 0,
-            'scope' => '');
-        $page->rights = $this->model->getRights();
+            'scope' => '',
+			'comment' => '');
+        $page->rights = $this->model->getRights(true);
         return $page;
     }
 
@@ -150,30 +151,47 @@ class AdminRightsController extends AdminBaseController
         $errors = $this->model->checkEditVarsOk($vars);
         if (count($errors) > 0) {
             $mem_redirect->errors = $errors;
-            $mem_redirect->vars = $args->post;
+
+            // Set variables (necessary due to disabled flag)
+            $vars['right'] = $vars['rightid'];
+
+            $mem_redirect->vars = $vars;
             return false;
         }
-        $this->model->editRight($vars);
+        $this->model->edit($vars);
+        $this->setFlashNotice($this->getWords()->get('AdminRightsRightEdited'));
         return true;
     }
 
     public function edit()
     {
         $this->checkRights('Rights');
+
         $rightId = $this->route_vars['id'];
         $username = $this->route_vars['username'];
-        // Check if rights exist, redirect if not
-        $page = new AdminRightsEditPage();
-        $page->rights = $this->model->getRights();
+        // Check if right and user exist and if right is assigned to user at all; redirect if not
+        $right = new Right($rightId);
+        if (!$right) {
+            $this->redirectAbsolute($this->router->url('admin_rights_overview'));
+        }
         $temp = new Member();
         $member = $temp->findByUsername($username);
-        $page->member = $member;
-        list($level, $scope) = $this->model->getRightScopeAndLevelForMember($member, $rightId);
+        if (!$member) {
+            $this->redirectAbsolute($this->router->url('admin_rights_overview'));
+        }
+        $assigned = $right->getRightForMember($member);
+        if (!$assigned) {
+            $this->redirectAbsolute($this->router->url('admin_rights_overview'));
+        }
+
+        $page = new AdminRightsEditPage();
+        $page->rights = $this->model->getRights(true);
         $vars = array(
             'username' => $username,
             'right' => $rightId,
-            'level' => $level,
-            'scope' => $scope
+            'level' => $assigned->Level,
+            'scope' => $assigned->Scope,
+            'comment' => $assigned->Comment
         );
         $page->vars = $vars;
         return $page;
@@ -183,8 +201,9 @@ class AdminRightsController extends AdminBaseController
                                  ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         $vars = $args->post;
-        // $this->model->removeRight($vars);
-        $this->setFlashNotice($this->getWords()->get('AdminRightsRightRemoved', $vars['username'], $vars['right']));
+        $rights = $this->model->getRights();
+        $right = $rights[$vars['right']];
+        $this->setFlashNotice($this->getWords()->get('AdminRightsRightRemoved', $vars['username'], $right->Name ));
         switch ($vars['redirect']) {
             case 'members':
                 $url = $this->router->url('admin_rights_members', array(), false);
@@ -201,6 +220,7 @@ class AdminRightsController extends AdminBaseController
             default:
                 $url = $this->router->url('admin_rights', array(), false);
         }
+        $this->model->remove($vars);
         return $url;
     }
 
@@ -209,14 +229,24 @@ class AdminRightsController extends AdminBaseController
         $this->checkRights('Rights');
         $rightId = $this->route_vars['id'];
         $username = $this->route_vars['username'];
-        // Check if rights exist, redirect if not
-        $page = new AdminRightsRemovePage();
-
-        $rights = $this->model->getRights();
-        $page->rights = $rights;
+        // Check if right and user exist and if right is assigned to user at all; redirect if not
+        $right = new Right($rightId);
+        if (!$right) {
+            $this->redirectAbsolute($this->router->url('admin_rights_overview'));
+        }
         $temp = new Member();
         $member = $temp->findByUsername($username);
-        $page->member = $member;
+        if (!$member) {
+            $this->redirectAbsolute($this->router->url('admin_rights_overview'));
+        }
+        $assigned = $right->getRightForMember($member);
+        if (!$assigned) {
+            $this->redirectAbsolute($this->router->url('admin_rights_overview'));
+        }
+        $page = new AdminRightsRemovePage();
+
+        $rights = $this->model->getRights(true);
+        $page->rights = $rights;
         $redirectTo = '';
         if (isset($_SERVER['HTTP_REFERER'])) {
             if (strpos($_SERVER['HTTP_REFERER'], "/list/members") !== false) {
@@ -232,12 +262,12 @@ class AdminRightsController extends AdminBaseController
                 $redirectTo = 'right';
             }
         }
-        list($level, $scope) = $this->model->getRightScopeAndLevelForMember($member, $rightId);
         $vars = array(
             'username' => $username,
             'right' => $rightId,
-            'level' => $level,
-            'scope' => $scope,
+            'level' => $assigned->Level,
+            'scope' => $assigned->Scope,
+            'comment' => $assigned->Comment,
             'redirect' => $redirectTo
         );
         $page->vars = $vars;
@@ -255,16 +285,16 @@ class AdminRightsController extends AdminBaseController
             return false;
         }
         $this->model->createRight($vars);
-        return true;
+        $this->setFlashNotice($this->getWords()->get('AdminRightsRightCreate', $vars['name']));
+        return $this->router->url('admin_rights_overview', array(), false);
     }
 
     public function create()
     {
         list($loggedInMember, $rights) = $this->checkRights('Rights');
-        error_log(print_r($rights, true));
         // Check if member has create right if not redirect to overview
-        if (!(($rights['Rights']['Level'] == 10) && (stripos($rights['Rights']['Scope'], 'create') !== false
-            || stripos($rights['Rights']['Scope'], 'all') !== false))) {
+        if ((stripos($rights['Rights']['Scope'], 'create') === false
+            && stripos($rights['Rights']['Scope'], 'all') === false)) {
             $this->redirectAbsolute($this->router->url('admin_rights_overview'));
         }
         $page = new AdminRightsCreatePage();

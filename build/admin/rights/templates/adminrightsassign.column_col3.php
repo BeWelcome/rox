@@ -26,14 +26,9 @@ if ($vars) {
     // overwrite the vars
     $this->vars = $vars;
 }
-$errors = $this->getRedirectedMem('errors');
-if ($errors) {
-    echo '<div class="error">';
-    foreach($errors as $error) {
-        echo '<p>' . $this->words->get($error) . '<p>';
-    }
-    echo '</div>';
-}
+
+include 'adminrightserrors.php';
+
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'assignCallback');
 ?>
 <form class="yform" method="post">
@@ -49,12 +44,18 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     </div>
     <div class="type-select">
         <label for="level"><?php echo $words->get("AdminRightsLevel") ?></label>
-        <?= $this->levelSelect($this->vars['level']) ?>
+        <?= $this->levelSelect($this->vars['level'], false, true) ?>
     </div>
     <div class="type-text">
         <label for="scope"><?php echo $this->words->get("AdminRightsScope") ?></label>
         <input type="text" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"
-               title="Enter the scope. Use ';' as delimiter and &quot; around blocks"/>
+            title="Enter the scope. Use ';' as delimiter and &quot; around blocks"/>
+    </div>
+    <div class="type-text">
+        <label for="comment"><?php echo $this->words->get("AdminRightsComment") ?></label>
+        <textarea id="comment" name="comment" rows="4" title="Enter a comment, so that others know why the right was assigned.">
+            <?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?>
+        </textarea>
     </div>
     <div class="type-button">
         <input type="submit" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>

@@ -5,6 +5,18 @@
  */
 class AdminRightsModel extends RoxModelBase {
 
+    public function checkScopeWellFormed($scope) {
+        $countQuotes = substr_count($scope, '"');
+        $countSemiColons = substr_count($scope, ';');
+        if ($countQuotes % 2 == 1) {
+            return false;
+        }
+        if ($countQuotes > 2 && $countSemiColons <> ($countQuotes / 2)) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @param $vars
      * @return array
@@ -23,6 +35,15 @@ class AdminRightsModel extends RoxModelBase {
         }
         if ($vars['right'] == 0) {
             $errors[] = 'AdminRightsNoRightSelected';
+        } else {
+            // check if right is already assigned
+            if (isset($member)) {
+                $right = new Right($vars['right']);
+                $assigned = $right->getRightForMember($member);
+                if ($assigned) {
+                    $errors[] = 'AdminRightsAlreadyAssigned';
+                }
+            }
         }
         if ($vars['level'] == 0) {
             $errors[] = 'AdminRightsNoLevelSelected';
@@ -31,6 +52,12 @@ class AdminRightsModel extends RoxModelBase {
             $errors[] = 'AdminRightsScopeEmpty';
         } else {
             // check if scope is well formed
+            if (!$this->checkScopeWellFormed($vars['scope'])) {
+                $errors[] = 'AdminRightsScopeNotWellFormed';
+            }
+        }
+        if (empty($vars['comment'])) {
+            $errors[] = 'AdminRightsCommentEmpty';
         }
         return $errors;
     }
@@ -48,8 +75,8 @@ class AdminRightsModel extends RoxModelBase {
                 IdRight = '" . $this->dao->escape($vars['right']) . "',
                 IdMember = '" . $member->id . "',
                 Scope = '" . $this->dao->escape($vars['scope']) . "',
-                Level = '" . $this->dao->escape($vars['level']) . "'";
-        error_log($query);
+                Level = '" . $this->dao->escape($vars['level']) . "',
+				Comment = '" . $this->dao->escape($vars['comment']) . "'";
         $this->dao->query($query);
     }
 
@@ -101,7 +128,8 @@ class AdminRightsModel extends RoxModelBase {
                 gc.Name as CountryName,
                 r.id rightId,
                 rv.Level,
-                rv.Scope
+                rv.Scope,
+                rv.Comment
             FROM
                 rights r,
                 rightsvolunteers rv,
@@ -112,6 +140,12 @@ class AdminRightsModel extends RoxModelBase {
                 m.Status in (' . Member::ACTIVE_ALL . ')';
         if ($member) {
             $query .= ' AND m.id = ' . $member->id;
+        }
+        $rights = implode("','", $this->getAllowedRights());
+        if (!empty($rights)) {
+            $query .= "
+            AND
+				r.Name IN ('" . $rights . "') ";
         }
         $query .= '
                 AND rv.IdMember = m.id
@@ -142,6 +176,7 @@ class AdminRightsModel extends RoxModelBase {
             $rightDetails = new StdClass();
             $rightDetails->level = $mwr->Level;
             $rightDetails->scope = $mwr->Scope;
+            $rightDetails->comment = $mwr->Comment;
             $membersWithRights[$mwr->Username]->Rights[$mwr->rightId] = $rightDetails;
         }
         return $membersWithRights;
@@ -160,6 +195,7 @@ class AdminRightsModel extends RoxModelBase {
                 r.id rightId,
                 rv.Level,
                 rv.Scope,
+                rv.Comment,
                 m.Username,
                 m.id as id,
                 m.status,
@@ -178,6 +214,12 @@ class AdminRightsModel extends RoxModelBase {
         if ($rightId) {
             $query .= ' AND r.id = ' . $rightId;
         }
+        $rights = implode("','", $this->getAllowedRights());
+		if (!empty($rights)) {
+			$query .= "
+            AND
+				r.Name IN ('" . $rights . "') ";
+		}
         $query .= '
                 AND m.IdCity = g.geonameid
                 AND g.country = gc.country ';
@@ -189,7 +231,7 @@ class AdminRightsModel extends RoxModelBase {
                 r.Name,
                 m.Username
             ';
-        $result = $this->bulkLookup($query);
+       $result = $this->bulkLookup($query);
 
         $rightsWithMembers = array();
         foreach ($result as $rwm) {
@@ -205,30 +247,133 @@ class AdminRightsModel extends RoxModelBase {
             $memberDetails->CountryName = $rwm->CountryName;
             $memberDetails->level = $rwm->Level;
             $memberDetails->scope = $rwm->Scope;
+            $memberDetails->comment = $rwm->Comment;
             $rightsWithMembers[$rwm->rightId]->Members[$rwm->id] = $memberDetails;
         }
         return $rightsWithMembers;
     }
 
+	private function getAllowedRights() {
+		$member = $this->getLoggedInMember();
+		if (!$member) {
+			return array('None');
+		}
+		$memberRights = $member->getOldRights();
+		$scope= str_replace('"', '', $memberRights['Rights']['Scope']);
+		$rights = array();
+		if (stripos($scope, 'All') === false) {
+			$rights = explode(',', $scope);
+		}
+		
+		return $rights;
+	}
+	
     /**
-     * get all rights defined
+     * get all rights defined or rights allowed for member
      *
      * @access public
      * @return array list of rights
      */
-    public function getRights() {
-        $query = '
+    public function getRights($memberRightsOnly = false) {
+		$query = "
             SELECT
                 *
             FROM
-                rights
-            ORDER BY
+                rights";
+		if ($memberRightsOnly) {
+            $rights = $this->getAllowedRights();
+            if (count($rights) > 0) {
+			    $query .= " WHERE
+				    Name IN ('" . implode("','", $rights) . "') ";
+		    }
+        }
+		$query .= "
+			ORDER BY
                 Name
-            ';
-        return $this->bulkLookup($query, array('id'));
+            ";
+		return $this->bulkLookup($query, array('id'));
     }
 
-    public function getRightScopeAndLevelForMember($member, $rightId) {
-        return array(5, '"All", "alot", "and some more"');
+    public function checkEditVarsOk($vars) {
+        $errors = array();
+        if (empty($vars['scope'])) {
+            $errors[] = 'AdminRightsScopeEmpty';
+        } else {
+            // check if scope is well formed
+            if (!$this->checkScopeWellFormed($vars['scope'])) {
+                $errors[] = 'AdminRightsScopeNotWellFormed';
+            }
+        }
+        if (empty($vars['comment'])) {
+            $errors[] = 'AdminRightsCommentEmpty';
+        }
+        return $errors;
+    }
+
+    public function edit($vars) {
+        $temp = new Member();
+        $member = $temp->findByUsername($vars['username']);
+        $query = "
+            UPDATE
+                rightsvolunteers
+            SET
+                Level = '" . $this->dao->escape($vars['level']) . "',
+                Scope = '" . $this->dao->escape($vars['scope']) . "',
+                Comment = '" . $this->dao->escape($vars['comment']) . "'
+            WHERE
+                IdMember = " . $member->id . "
+                AND IdRight = " . $this->dao->escape($vars['rightid']) . "
+            ";
+        $this->dao->query($query);
+        return true;
+    }
+
+    public function remove($vars) {
+        $temp = new Member();
+        $member = $temp->findByUsername($vars['username']);
+        $query = "
+            DELETE FROM
+                rightsvolunteers
+            WHERE
+                IdMember = " . $member->id . "
+                AND IdRight = " . $vars['right'] . "
+            ";
+        $this->dao->query($query);
+        return true;
+    }
+
+    public function checkCreateVarsOk($vars) {
+        $errors = array();
+        if (empty($vars['name'])) {
+            $errors[] = 'AdminRightsNameEmpty';
+        } else {
+            $query = "
+                SELECT
+                    *
+                FROM
+                    rights r
+                WHERE
+                    r.Name LIKE '" . $this->dao->escape($vars['name']) . "'";
+            $name = $this->singleLookup($query);
+            if ($name) {
+                $errors[] = 'AdminRightsRightExists';
+            }
+        }
+        if (empty($vars['description'])) {
+            $errors[] = 'AdminRightsDescriptionEmpty';
+        }
+        return $errors;
+    }
+
+    public function createRight($vars) {
+        $query = "
+            INSERT INTO
+                rights
+            SET
+                `Name` = '" . $this->dao->escape($vars['name']) . "',
+                `Description` = '" . $this->dao->escape($vars['description']) . "'";
+        $this->dao->query($query);
+
+        return true;
     }
 }

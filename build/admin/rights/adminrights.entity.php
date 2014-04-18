@@ -33,15 +33,16 @@ class Right extends RoxEntityBase
         return $status;
     }
 
-    /**
-     * get all members with $this right
-     *
-     * @access public
-     * @return list of Activities
-     */
-    public function getMembersForRight() {
-        $activities = array();
-        $activities = $this->findBySQLMany('');
-        return $activities;
+    public function getRightForMember(Member $member) {
+        $query = "
+            SELECT
+                *
+            FROM
+                rightsvolunteers rv
+            WHERE
+                rv.IdRight = " . $this->id . "
+                AND rv.IdMember = " . $member->id . "
+            ";
+        return $this->singleLookup($query);
     }
 }

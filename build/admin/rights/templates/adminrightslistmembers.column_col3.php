@@ -6,9 +6,11 @@
  * Time: 20:48
  */
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'listMembersCallBack');
+$layoutbits = new MOD_layoutbits();
+
 ?>
 <div>
-    <form class="yform" method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
+    <form class="yform" method="post">
         <?= $callbackTags ?>
         <div class="type-select">
             <label for="MemberSelect"><?= $words->get("AdminRightsMember") ?></label>
@@ -25,7 +27,8 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
             <th class="usercol"><?= $words->get('AdminRightsUsername') ?></th>
             <th class="right"><?= $words->get('AdminRightsRight') ?></th>
             <th class="level"><?= $words->get('AdminRightsLevel') ?></th>
-            <th colspan="3" class="scope"><?= $words->get('AdminRightsScope') ?></th>
+            <th class="scope"><?= $words->get('AdminRightsScope') ?></th>
+            <th colspan="3" class="comment"><?= $words->get('AdminRightsComment') ?></th>
         </tr>
 <?php
     $i = 0;
@@ -36,16 +39,19 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     } else {
         $class = 'blank';
     }?>
-    <tr class="<?= $class ?>"><td class="usercol" rowspan="<?= count($details->Rights) ?>"><?= $username ?></td>
+    <tr class="<?= $class ?>"><td class="usercol" rowspan="<?= count($details->Rights) ?>"><?php
+		echo $layoutbits->PIC_50_50($username, 'class="framed"') . '<br />';
+		echo $username; ?></td>
         <?php foreach($details->Rights as $id => $right) :
             if ($firstRow) :
                 $firstRow = false;
             else :
                 echo '<tr class="' . $class . '">';
             endif; ?>
-        <td class="right"><?= $this->rights[$id]->Name ?></td>
+        <td class="right"><span title="tooltip<?= $id ?>"><?= $this->rights[$id]->Name ?></span></td>
         <td class="level"><?= $right->level ?></td>
         <td class="scope"><?= $right->scope ?></td>
+        <td class="comment"><?= $right->comment ?></td>
         <td class="icon"><a href="admin/rights/edit/<?= $id ?>/<?= $username ?>">
                 <img src="images/icons/comment_edit.png" alt="edit"/></a></td>
         <td class="icon"><a href="admin/rights/remove/<?= $id ?>/<?= $username ?>">

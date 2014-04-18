@@ -145,7 +145,6 @@ class MOD_geonames
 				        isshort = '".$this->dao->escape($change[5])."'
 				        isColloquial = '".$this->dao->escape($change[6])."'
 				        isHistoric = '".$this->dao->escape($change[7])."'";
-                error_log($query);
 				$res = $this->dao->query($query);
 				if (!$res) {
 				    $result = false;

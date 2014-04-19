@@ -238,8 +238,7 @@ if (count($relations) > 0) { ?>
             <p>
               <?php
                   $textStripped = strip_tags($c->TextFree, '<font>');
-                  $moreLink = '... <a href="members/' . $member->Username . '/comments">' . $ww->more . '</a>';
-                  echo MOD_layoutbits::truncate($textStripped, 250, $moreLink);
+                  echo $textStripped;
               ?>
             </p>
           <? if ($commentLoopCount < $max) echo '<hr />' ?>

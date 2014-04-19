@@ -186,7 +186,9 @@ if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGr
 
     <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly" />
     <input type="hidden" name="IdLanguage" id="IdLanguage" value="0" />
-<?php } else { ?>
+<?php } else {
+    if (!empty($visibilitiesDropdown)) {
+        // Show dropdown only for groups ?>
 
     <fieldset class="row" id="fpost_vis_fieldset">
         <legend onclick="toggleFieldsets('fpost_vis');"><?php echo $words->getFormatted("forum_label_visibility"); ?></legend>
@@ -196,7 +198,10 @@ if (isset($this->suggestionsGroupId) || ($groupsforum == SuggestionsModel::getGr
 
             </div></div>
     </fieldset>
-
+<?php } else { ?>
+        <input type="hidden" name="PostVisibility" id="PostVisibility" value="MembersOnly" />
+        <input type="hidden" name="ThreadVisibility" id="ThreadVisibility" value="MembersOnly" />
+<?php } ?>
     <fieldset class="row" id="fpost_lang_fieldset">
         <legend onclick="toggleFieldsets('fpost_lang');"><?php echo $words->getFormatted("forum_label_lang") ?></legend>
         <div id="fpost_lang"><div>

@@ -83,7 +83,7 @@ if (isset($_SESSION["IdMember"])) {
             for ($jj=0;(($jj<$max) and ($topic->WithDetail) );$jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                 if (($post->Trad[$jj]->trad_created!=$post->Trad[$jj]->trad_updated) ) { // If one of the trads have been updated
                     if ($post->Trad[$jj]->IdLanguage==$_SESSION["IdLanguage"]) {
-                        echo " by ",$post->Trad[$jj]->OwnerUsername,"<br /><em>last edited on ",date($words->getFormatted('DateHHMMShortFormat'),ServerToLocalDateTime($post->Trad[$jj]->trad_updated))," by ",$post->Trad[$jj]->TranslatorUsername, "</em>";
+                        echo "<br /><em>last edited on ",date($words->getFormatted('DateHHMMShortFormat'),ServerToLocalDateTime($post->Trad[$jj]->trad_updated))," by ",$post->Trad[$jj]->TranslatorUsername, "</em>";
                     }
                 }
             }

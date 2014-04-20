@@ -49,11 +49,9 @@ class MOD_words
     private $_whereCategory = '';
     private $_offerTranslationLink = false;
     private $_langWrite = 0;
-    /*private $_prepared = array();*/
     static private $_buffer = array();
     private $_dao;  // database access object
-
-	private $WordMemcache ;
+    private $WordMemcache ;
 
 
     /**
@@ -80,8 +78,6 @@ class MOD_words
         }
         $dao = PDB::get($db_vars->dsn, $db_vars->user, $db_vars->password);
         $this->_dao =& $dao;
-
-
 
         $R = MOD_right::get();
         if ($R->hasRight("Words", $this->_lang)) {
@@ -113,150 +109,6 @@ class MOD_words
                 }
         }
     }
-
-    /**
-     * Add a new word and log this action
-	 * @code: code of the new word
-	 * @Sentence : sentence of the word
-	 * @IdLanguage : language
-	 * @Description: This is meaningfull for english words only, this is the description of the words, it is mandatory if the words is in english
-	 * @donottranslate: by default, this is no, but you can force it to yes
-	 * @Translation priority: the priority of the translation, its default to 5
-     */
-	public function AddWord($code,$Sentence,$p_IdLanguage,$Description,$donottranslate='no',$TranslationPriority=5) {
-		// check the proposed language
-		if  (!(is_numeric($p_IdLanguage))) {
-            $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where ShortCode='".$p_IdLangauge."'");
-            if (!$s) {
-                throw new PException('MOD_Word::AddWord Failed query to find language '.$p_IdLanguage);
-            }
-            $rLang=$s->fetch(PDB::FETCH_OBJ) ;
-			if (isset($rLang->IdLanguage)) {
-				$IdLanguage=$rLang->IdLanguage ;
-			}
-			else {
-                throw new PException('MOD_Word::AddWord Failed  to find language ['.$p_IdLanguage.']');
-			}
-		}
-		else {
-            $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where IdLanguage='".$p_IdLangauge."'");
-            if (!$s) {
-                throw new PException('MOD_Word::AddWord Failed query to find language '.$p_IdLanguage);
-            }
-            $rLang=$s->fetch(PDB::FETCH_OBJ) ;
-			if (isset($rLang->IdLanguage)) {
-				$IdLanguage=$rLang->IdLanguage ;
-			}
-			else {
-                throw new PException('MOD_Word::AddWord Failed  to find IdLanguage=#'.$p_IdLanguage);
-			}
-		}
-
-		if (($IdLanguage==0) and empty($Description)) {
-           throw new PException('MOD_Word::AddWord Failed  to insert word ['.$code.'] in '.
-		   $rLang->ShortCode.' because for an english word it is mandatory to provide a description');
-		}
-
-		$sQuery="
-		insert into words(code,ShortCode,Sentence,created,donottranslate,IdLanguage,Description,IdMember,TranslationPriority)
-		values('".$this->_dao->escape($code)."','".
-		$rLang->ShortCode."',now(),'".
-		$this->_dao->escape($donottranslate)."',".$this->_dao->escape($IdLanguage).",'".
-		$this->_dao->escape($Description)."',".$_SESSION["IdMember"].",".$this->_dao->escape($TranslationPriority).")" ;
-		$s = $this->_dao->query(sQuery);
-        if (!$s) {
-            throw new PException('MOD_Word::AddWord Failed to insert words ['.$code.'] in '.$rLang->ShortCode);
-        }
-
-		MOD_log::get()->write("inserting ".$code." in ".$rLang->ShortCode,"words");
-
-	} // end of AddWords
-
-    /**
-     * Update a  word and log this action
-	 * @code: code of the new word
-	 * @Sentence : sentence of the word
-	 * @IdLanguage : language
-	 * @Description: It is optional, and empty description will not overwrite an existing one
-	 * @donottranslate: by default, this is no, but you can force it to yes
-	 * @Translation priority: the priority of the translation, its default to 5
-     * @return string the translated word
-     */
-	public function UpdateWord($code,$Sentence,$p_IdLanguage,$p_Description='',$p_donottranslate='',$p_TranslationPriority=-1) {
-
-		// check the proposed language
-		if  (!(is_numeric($p_IdLanguage))) {
-            $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where ShortCode='".$p_IdLangauge."'");
-            if (!$s) {
-                throw new PException('MOD_Word::UpdateWord Failed query to find language '.$p_IdLanguage);
-            }
-            $rLang=$s->fetch(PDB::FETCH_OBJ) ;
-			if (isset($rLang->IdLanguage)) {
-				$IdLanguage=$rLang->IdLanguage ;
-			}
-			else {
-                throw new PException('MOD_Word::UpdateWord Failed  to find language ['.$p_IdLanguage.']');
-			}
-		}
-		else {
-            $s = $this->_dao->query("SELECT IdLanguage,EnglishName,ShortCode from languages where IdLanguage='".$p_IdLangauge."'");
-            if (!$s) {
-                throw new PException('MOD_Word::UpdateWord Failed query to find language '.$p_IdLanguage);
-            }
-            $rLang=$s->fetch(PDB::FETCH_OBJ) ;
-			if (isset($rLang->IdLanguage)) {
-				$IdLanguage=$rLang->IdLanguage ;
-			}
-			else {
-                throw new PException('MOD_Word::UpdateWord Failed  to find IdLanguage=#'.$p_IdLanguage);
-			}
-		}
-
-		$sQuery="select * from words where code='".$this->_dao->escape($code)."' and IdLanguage=".$IdLanguage ;
-        $s = $this->_dao->query($sQuery);
-        if (!$s) {
-            throw new PException('MOD_Word::UpdateWord Failed for ['.$code."'] for language ". $rLang->ShortCode);
-        }
-        $rWord=$s->fetch(PDB::FETCH_OBJ) ;
-		if (empty($rWord->Sentence)) {
-            throw new PException("MOD_Word::UpdateWord  no such code ['".$code."'] for language ". $rLang->ShortCode);
-		}
-
-		if (($IdLanguage==0) and (empty($p_Description))) {
-			$Description=$rWord->Description ;
-		}
-		else {
-			$Description=$p_Description ;
-		}
-
-		if (empty($p_donottranslate)) {
-			$donottranslate=$rWord->donottranslate ;
-		}
-		else {
-			$donottranslate=$p_donottranslate;
-		}
-
-		if (empty($p_TranslationPriority)) {
-			$donottranslate=$rWord->TranslationPriority ;
-		}
-		else {
-			$TranslationPriority=$p_TranslationPriority ;
-		}
-
-		MakeRevision($rWord->id, "words"); // create revision
-
-	  $sQuery="update words
-		set Sentence='".$this->_dao->escape($Sentence)."',donottranslate='".$this->_dao->escape($donottranslate).
-		"',Description='".$this->_dao->escape($Description)."',TranslationPriority='".$this->_dao->escape($TranslationPriority)."'
-		where code='".$code."' and IdLanguage=".$IdLanguage ;
-		$s = $this->_dao->query(sQuery);
-        if (!$s) {
-            throw new PException('MOD_Word::UpdareWord Failed to update word ['.$code.'] in '.$rLang->ShortCode);
-        }
-
-		MOD_log::get()->write("updating " . $code . " in " . $rlang->ShortCode, "AdminWord");
-
-	} // end of AddWords
 
     public function setlangWrite($IdLanguage) {
         $this->_langWrite = $IdLanguage;
@@ -756,22 +608,6 @@ WHERE code = "' . $this->_dao->escape($code) . '" AND ShortCode = "' . $this->_d
         return $row;
     }
 
-
-
-    /**
-     * should return an array of LookedUpWord objects, for caching purposes.
-     * to be implemented!!
-     * (hmm, is this really benefitial?)
-     *
-     * @param array $array_of_codes an array of word keycodes.
-     * @return array an array of LookedUpWord objects
-     */
-    private function _bulk_lookup($array_of_codes)
-    {
-    	// TODO: implement _bulk_lookup for words from DB
-    }
-
-
     private function _bulk_lookup_rows($array_of_codes, $lang)
     {
     	// we assume we have only word keycodes, no word IDs
@@ -917,7 +753,6 @@ WHERE
 				}
 				else {
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try default en
@@ -929,7 +764,6 @@ WHERE
 					MOD_log::get()->write("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
 				} else {
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try first language available
@@ -941,7 +775,6 @@ WHERE
 					MOD_log::get()->write("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
 				} else {
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-//                    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			MOD_log::get()->write("mInTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
@@ -950,7 +783,7 @@ WHERE
 
     /**
      * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
-	 * @param $ReplaceWithBr allows
+     * @param $ReplaceWithBr allows
      * @return string translated according to the best language find
      */
     public function mTrad($IdTrad,$ReplaceWithBr=false) {
@@ -1007,7 +840,6 @@ WHERE
 				else {
 					$fTradIdLastUsedLanguage=$row->IdLanguage ;
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-//			   	    return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try default eng
@@ -1020,7 +852,6 @@ WHERE
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-//				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			// Try first language available
@@ -1033,7 +864,6 @@ WHERE
 				} else {
 					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
                     return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-//				   return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
 				}
 			}
 			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
@@ -1470,8 +1300,6 @@ class LookedUpWord {
         return $this->_lookup_result;
     }
 
-
-
     /**
      * @param array $args an array of arguments to be replaced in the lookup string
      * @return string translated word without any <a> tags, to avoid nested hyperlinks or worse things
@@ -1498,7 +1326,7 @@ class LookedUpWord {
             'title = "'.$this->_trLinkTitle().'" '.
             'target = "new" '.
             'href = "'.$this->_trLinkURL().'"'.
-        '>'.$this->textWithoutLinks().'</a>'.$this->_trLinkInfoBox().'</span>';
+        '>'.$this->textWithoutLinks().'</a></span>';
     }
 
 
@@ -1509,7 +1337,7 @@ class LookedUpWord {
             'title = "'.$this->_trLinkTitle().'" '.
             'target = "new" '.
             'href = "'.$this->_trLinkURL().'"'.
-        '>'.$this->_trLinkLanguage().'</a>'.$this->_trLinkInfoBox().'</span>';
+        '>'.$this->_trLinkLanguage().'</a></span>';
     }
 
     static $_action_strings = array(
@@ -1519,18 +1347,6 @@ class LookedUpWord {
         self::OBSOLETE => 'update',
         self::SUCCESSFUL => 'edit'
     );
-
-    private function _trLinkInfoBox()
-    {
-        /*
-        return '<div class="tr_info_box">'.
-            self::$_action_strings[''.$this->_tr_success].' '.
-            '<b>'.$this->_code.'</b>'.
-            ' in '.$this->_lang.
-        '</div>';
-        */
-        return '';
-    }
 
     private function _trLinkURL()
     {

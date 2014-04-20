@@ -267,6 +267,10 @@ class ForumsController extends PAppController
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
 				elseif ($request[2]=='AllActiveReports') {
+                    if (!$this->BW_Right->HasRight("ForumModerator")) {
+                        // if a non forum moderator tries to access this just pull the brakes
+                        PPHP::PExit();
+                    }
 					$DataPost=$this->_model->prepareReportList(0,"('Open','OnDiscussion')"); // This retrieve all the current Active pending report
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
@@ -277,8 +281,12 @@ class ForumsController extends PAppController
 						$IdWriter=$request[3] ;
 					}
 
-					$DataPost=$this->_model->prepareModeratorEditPost($IdPost); // We will use the same data has teh one used for Moderator edit
+					$DataPost=$this->_model->prepareModeratorEditPost($IdPost); // We will use the same data as the one used for Moderator edit
 					$DataPost->Report=$this->_model->prepareReportPost($IdPost,$IdWriter) ;
+                    if (!$DataPost->Report) {
+                        // if someone who didn't write a report tries to access this just pull the brakes
+                        PPHP::PExit();
+                    }
 					$this->_view->showReportPost($callbackId,$DataPost);
 				}
 				PPostHandler::clearVars($callbackId);

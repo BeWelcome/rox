@@ -2356,7 +2356,8 @@ and ($this->ThreadGroupsRestriction)
 			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=-1 and forums_tags.id=tags_threads.IdTag"; // This will return nothing
 			require SCRIPT_BASE.'build/members/pages/mustlogin.page.php';
-			$topicinfo->title="Please log in to see the thread" ;
+            $words = new MOD_words;
+			$topicinfo->title= $words->get('ForumNotLoggedInOrNotInGroup');
 			$topicinfo->replies=0 ;
 
 		}

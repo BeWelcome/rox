@@ -144,12 +144,6 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "jquery.tooltipster.min.js",
-        pages: [
-            "admin/rights/list"
-        ]
-    },
-    {
         file: "leaflet/0.7.2/leaflet.js",
         pages: ["searchmembers", "signup/3", "setlocation", "blog", "trip", "activities"]
     },

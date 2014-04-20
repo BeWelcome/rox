@@ -26,12 +26,4 @@
     <br />
   </li>
   <?php } ?>
-  <!--<li>
-    <a href="members/henri"  title="See profile henri" >
-      <img class="framed" src="/"  height="50px"  width="50px"  alt="Profile" >
-    </a>
-    <br />                     
-    <a href="members/henri" >henri</a>
-    <br />
-  </li>-->
 </ul>

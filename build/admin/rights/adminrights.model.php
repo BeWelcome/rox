@@ -69,14 +69,15 @@ class AdminRightsModel extends RoxModelBase {
         $member = new Member();
         $member = $member->findByUsername($vars['username']);
         $query = "
-            UPDATE
+            INSERT INTO
                 rightsvolunteers
             SET
                 IdRight = '" . $this->dao->escape($vars['right']) . "',
                 IdMember = '" . $member->id . "',
                 Scope = '" . $this->dao->escape($vars['scope']) . "',
                 Level = '" . $this->dao->escape($vars['level']) . "',
-				Comment = '" . $this->dao->escape($vars['comment']) . "'";
+				Comment = '" . $this->dao->escape($vars['comment']) . "',
+				created = NOW()";
         $this->dao->query($query);
     }
 
@@ -231,7 +232,7 @@ class AdminRightsModel extends RoxModelBase {
                 r.Name,
                 m.Username
             ';
-       $result = $this->bulkLookup($query);
+        $result = $this->bulkLookup($query);
 
         $rightsWithMembers = array();
         foreach ($result as $rwm) {
@@ -274,7 +275,7 @@ class AdminRightsModel extends RoxModelBase {
      * @access public
      * @return array list of rights
      */
-    public function getRights($memberRightsOnly = false) {
+    public function getRights($memberRightsOnly = false, $member = false) {
 		$query = "
             SELECT
                 *
@@ -291,7 +292,18 @@ class AdminRightsModel extends RoxModelBase {
 			ORDER BY
                 Name
             ";
-		return $this->bulkLookup($query, array('id'));
+        $memberRights = array();
+        if ($member) {
+            $memberRights = $member->getOldRights();
+        }
+        $result = $this->bulkLookup($query, array('id'));
+
+        foreach($memberRights as $right) {
+            if (isset($result[$right['id']])) {
+                unset($result[$right['id']]);
+            }
+        }
+        return $result;
     }
 
     public function checkEditVarsOk($vars) {

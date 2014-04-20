@@ -41,7 +41,11 @@ $layoutbits = new MOD_layoutbits();
     }?>
     <tr class="<?= $class ?>"><td class="usercol" rowspan="<?= count($details->Rights) ?>"><?php
 		echo $layoutbits->PIC_50_50($username, 'class="framed"') . '<br />';
-		echo $username; ?></td>
+		echo $username . '<br />'; ?>
+        <a href="admin/rights/assign/<?= $username ?>">
+            <img src="images/icons/add.png" alt="add right"></a><br />
+        <a href="admin/rights/assign/<?= $username ?>">
+            <?= $words->getSilent('AdminRightsAssignRight') ?></a><?= $words->flushBuffer() ?></td>
         <?php foreach($details->Rights as $id => $right) :
             if ($firstRow) :
                 $firstRow = false;

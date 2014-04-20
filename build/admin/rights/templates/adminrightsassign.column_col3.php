@@ -36,6 +36,7 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     <div class="type-text">
         <label for="username"><?php echo $this->words->get("AdminRightsUserName")?></label>
         <input type="text" id="username" name="username" value="<?= $this->vars['username'] ?>"
+            <?= ($this->member ? 'readonly="readonly"' : '') ?>
                />
     </div>
     <div class="type-select">

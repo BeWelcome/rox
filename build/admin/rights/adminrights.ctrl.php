@@ -62,14 +62,20 @@ class AdminRightsController extends AdminBaseController
 
     public function assign() {
         $this->checkRights('Rights');
+        $member = false;
+        if (isset($this->route_vars['username'])) {
+            $temp = new Member();
+            $member = $temp->findByUsername($this->route_vars['username']);
+        };
         $page = new AdminRightsAssignPage();
-        $this->vars = array(
-            'username' => '',
+        $page->member = $member;
+        $page->vars = array(
+            'username' => ($member ? $member->Username : ''),
             'right' => 0,
             'level' => 0,
             'scope' => '',
 			'comment' => '');
-        $page->rights = $this->model->getRights(true);
+        $page->rights = $this->model->getRights(true, $member);
         return $page;
     }
 

@@ -148,6 +148,7 @@ for($ii=0; $ii < count($icons); $ii++)
 
 <? // Profile Relations ?>
 <?php
+
 $purifier = MOD_htmlpure::getBasicHtmlPurifier();
 $relations = $member->relations;
 if (count($relations) > 0) { ?>
@@ -158,6 +159,9 @@ if (count($relations) > 0) { ?>
         </span>
         <?php endif; ?>
         <h3><?php echo $words->get('MyRelations');?></h3>
+<?php   if ($this->model->getLoggedInMember()){ ?>
+
+
         <ul class="linklist">
             <?php
                 foreach ($relations as $rel) {
@@ -181,6 +185,10 @@ if (count($relations) > 0) { ?>
             </li>
           <?php } ?>
         </ul>
+    <?php } else {
+        echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowRelations');
+    }?>
+    
     </div> <!-- relations -->
 <?php } ?>
 
@@ -190,12 +198,12 @@ if (count($relations) > 0) { ?>
     $comments = $this->member->comments;
     $username = $this->member->Username;
     $layoutbits = new MOD_layoutbits();
+    
+
     $max = 3;
     if (count($comments) > 0) {
-?>
-
-  <div id="comments" class="floatbox box">
-    <?php if ($showEditLinks): ?>
+        ?> <div id="comments" class="floatbox box"> <?php
+            if ($showEditLinks): ?>
     <span class="float_right profile-edit-link">
         <a href="members/<?php echo $member->Username; ?>/comments/"><?php echo $words->get('Edit'); ?></a>
     </span>
@@ -208,6 +216,7 @@ if (count($relations) > 0) { ?>
     ?></h3>
 
     <?php
+        if ($this->model->getLoggedInMember()){
         $tt = array ();
         $commentLoopCount = 0;
         foreach ($comments as $c) {
@@ -222,8 +231,6 @@ if (count($relations) > 0) { ?>
             if ($c->comQuality == "Bad") {
                 $quality = "bad";
             }
-
-       // $tt = explode(",", $c->Lenght);
     ?>
     <div class="floatbox">
         <a href="members/<?=$c->UsernameFromMember?>">
@@ -246,10 +253,13 @@ if (count($relations) > 0) { ?>
     </div> <!-- floatbox -->
         <? } ?>
     <p class="float_right"><a href="members/<?=$member->Username?>/comments/"><?=$words->get('ShowAllComments')?></a></p>
-  </div> <!-- comments -->
-<? } ?>
+<? } else {
+        // hide comments from others when not logged in
+        echo $this->getLoginLink('/members/' . $member->Username,'ProfileShowComments');
+} ?>
+    </div> <!-- comments -->
+<?php }
 
-<?php
         // This member's upcoming trips
         if ($comingposts = $member->getComingPosts()) {
             ?>

@@ -281,12 +281,14 @@ class ForumsController extends PAppController
 						$IdWriter=$request[3] ;
 					}
 
-					$DataPost=$this->_model->prepareModeratorEditPost($IdPost); // We will use the same data as the one used for Moderator edit
-					$DataPost->Report=$this->_model->prepareReportPost($IdPost,$IdWriter) ;
-                    if (!$DataPost->Report) {
-                        // if someone who didn't write a report tries to access this just pull the brakes
+					$DataPost=$this->_model->prepareModeratorEditPost($IdPost, $this->BW_Right->HasRight('Moderator')); // We will use the same data as the one used for Moderator edit
+
+                    if ($DataPost->Error == 'NoGroupMember') {
+                        // if someone who isn't a member of the associated group
+                        // tries to access this just pull the brakes
                         PPHP::PExit();
                     }
+					$DataPost->Report=$this->_model->prepareReportPost($IdPost,$IdWriter) ;
 					$this->_view->showReportPost($callbackId,$DataPost);
 				}
 				PPostHandler::clearVars($callbackId);

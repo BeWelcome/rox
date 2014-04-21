@@ -26,21 +26,17 @@ if ($vars) {
     // overwrite the vars
     $this->vars = $vars;
 }
-$errors = $this->getRedirectedMem('errors');
-if ($errors) {
-    echo '<div class="error">';
-    foreach($errors as $error) {
-        echo '<p>' . $this->words->get($error) . '<p>';
-    }
-    echo '</div>';
-}
-$callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'assignCallback');
+
+include 'adminrightserrors.php';
+
+$callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'editCallback');
 ?>
 <form class="yform" method="post">
     <?= $callbackTags ?>
+    <input type="hidden" name="rightid" value="<?= $this->vars['right'] ?>" />
     <div class="type-text">
         <label for="username"><?php echo $this->words->get("AdminRightsUserName")?></label>
-        <input type="text" id="username" name="username" disabled="disabled" value="<?= $this->vars['username'] ?>"/>
+        <input type="text" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
     </div>
     <div class="type-select">
         <label for="right"><?php echo $words->get("AdminRightsRights")?></label>
@@ -48,11 +44,15 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     </div>
     <div class="type-select">
         <label for="level"><?php echo $words->get("AdminRightsLevel") ?></label>
-        <?= $this->levelSelect($this->vars['level']) ?>
+        <?= $this->levelSelect($this->vars['level'], false, false) ?>
     </div>
     <div class="type-text">
         <label for="scope"><?php echo $this->words->get("AdminRightsScope") ?></label>
         <input type="text" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
+    </div>
+    <div class="type-text">
+        <label for="comment"><?php echo $this->words->get("AdminRightsComment") ?></label>
+        <textarea id="comment" name="comment" rows="5"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <div class="type-button">
         <input type="submit" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>

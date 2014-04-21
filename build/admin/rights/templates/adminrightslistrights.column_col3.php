@@ -5,14 +5,26 @@
  * Date: 08.04.14
  * Time: 20:48
  */
-$callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'listRightsCallBack');
+$vars = $this->getRedirectedMem('vars');
+if ($vars) {
+    // overwrite the vars
+    $this->vars = $vars;
+    $this->rightsWithMembers = $this->getRedirectedMem('rightsWithMembers');
+}
+
+$callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'listRightsCallback');
+$layoutbits = new MOD_layoutbits();
 ?>
 <div>
-    <form class="yform" method="POST" action="<?= $_SERVER['PHP_SELF'] ?>">
+    <form class="yform" method="post">
         <?= $callbackTags ?>
         <div class="type-select">
-            <label for="MemberSelect"><?= $words->get("AdminRightsMember") ?></label>
-            <?= rightSelect($this->rights, $this->rightId) ?>
+            <label for="right"><?= $words->get("AdminRightsRight") ?></label>
+            <?= $this->rightsSelect($this->rights, $this->vars['rightid']) ?>
+        </div>
+        <div class="type-check">
+            <input type="checkbox" id="history" name="history" value="1" <?= ($this->vars['history']) ? 'checked="checked' : '' ?> />
+            <label for="history"><?= $words->get("AdminRightsHistory") ?></label>
         </div>
         <div class="type-button">
             <input type="submit" id="submit" name="submit"
@@ -25,7 +37,8 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
             <th class="right"><?= $words->get('AdminRightsRight') ?></th>
             <th class="usercol"><?= $words->get('AdminRightsUsername') ?></th>
             <th class="level"><?= $words->get('AdminRightsLevel') ?></th>
-            <th colspan="3" class="scope"><?= $words->get('AdminRightsScope') ?></th>
+            <th class="scope"><?= $words->get('AdminRightsScope') ?></th>
+            <th colspan="3" ><?= $words->get('AdminRightsComment') ?></th>
         </tr>
 <?php
     $i = 0;
@@ -42,14 +55,23 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
                 $firstRow = false;
             else :
                 echo '<tr class="' . $class . '">';
-            endif; ?>
-        <td class="usercol"><span name="tooltip<?= $id ?>"><?= $memberDetails->Username ?></span></td>
-        <td class="level"><?= $memberDetails->level ?></td>
-        <td class="scope"><?= $memberDetails->scope ?></td>
+            endif;
+            $ss = ($memberDetails->level == 0) ? '<span style="text-decoration: line-through; color: red;">' : '';
+            $se = ($memberDetails->level == 0) ? '</span>' : '';
+        ?>
+        <td class="usercol"> 
+			<div class="picture"><div><?= $layoutbits->PIC_30_30($memberDetails->Username) ?></div>
+            <div><a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a></div></div>           
+		</td>
+        <td class="level"><?= $ss . $memberDetails->level . $se ?></td>
+        <td class="scope"><?= $ss . $memberDetails->scope . $se ?></td>
+        <td class="comment"><?= $ss . $memberDetails->comment . $se ?></td>
         <td class="icon"><a href="admin/rights/edit/<?= $rightId ?>/<?= $memberDetails->Username ?>">
                 <img src="images/icons/comment_edit.png" alt="edit"/></a></td>
-        <td class="icon"><a href="admin/rights/remove/<?= $rightId ?>/<?= $memberDetails->Username ?>">
-                <img src="images/icons/delete.png" alt="remove"/></a></td>
+        <td class="icon"><?php if ($memberDetails->level <> 0) : ?>
+            <a href="admin/rights/remove/<?= $rightId ?>/<?= $memberDetails->Username ?>">
+                <img src="images/icons/delete.png" alt="remove"/></a>
+            <?php endif; ?></td>
         </tr>
         <?php
             endforeach;

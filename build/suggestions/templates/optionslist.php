@@ -4,10 +4,10 @@ if (count($this->options) == 0) {
 echo "<p><strong>" . $words->get($this->NoItems) . "</strong></p>";
 } else {
 $this->pager->render();
-$order = ""; $title = "Sort randomly (default)";
-if ($this->order == 'desc') { $order = '?order=asc'; $title = 'Sort ascending (votes)'; }
-if ($this->order == 'asc') { $order = ''; $title = 'Sort randomly (default)'; }
-if (!$this->order) { $order =  '?order=desc'; $title = 'Sort descending (votes)';}
+$order = ""; $title = $words->getSilent('SuggestionsRankSortDefault');
+if ($this->order == 'desc') { $order = '?order=asc'; $title = $words->getSilent('SuggestionsRankSortVotesAsc'); }
+if ($this->order == 'asc') { $order = ''; $title = $words->getSilent('SuggestionsRankSortDefault'); }
+if (!$this->order) { $order =  '?order=desc'; $title = $words->getSilent('SuggestionsRankSortVotesDesc'); }
 $currentOrder = (!$this->order) ? '' : '?order=' . $this->order;
 ?>
 <table id='suggestionslist'>
@@ -16,7 +16,7 @@ $currentOrder = (!$this->order) ? '' : '?order=' . $this->order;
                 echo '<th class="details"></th>';
             } ?>
             <th class="details"><a href="/suggestions/rank<?php echo $order;?>"
-            title="<?php echo $title; ?>"><?php echo $words->get('SuggestionsRank'); ?></a></th></tr>
+            title="<?php echo $title; ?>"><?php echo $words->get('SuggestionsRank'); ?></a><?= $words->flushBuffer() ?></th></tr>
 <?php
     $count= 0;
     foreach($this->options as $option) {

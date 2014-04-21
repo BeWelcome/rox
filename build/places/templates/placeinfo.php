@@ -1,4 +1,4 @@
-<h2><?=$words->get('wiki');?></h2>
+<h2><?=$words->get('PlacesWikiTitle');?></h2>
 <?php if (APP_User::isBWLoggedIn()) :?><p><?=$words->get('PlacesWikiHelp');?></p><?php endif;?>
 <?php if ($this->wikipage) : ?>
 <div class="wiki"><?php

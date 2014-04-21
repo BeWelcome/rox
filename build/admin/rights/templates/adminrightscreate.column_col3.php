@@ -26,14 +26,9 @@ if ($vars) {
     // overwrite the vars
     $this->vars = $vars;
 }
-$errors = $this->getRedirectedMem('errors');
-if ($errors) {
-    echo '<div class="error">';
-    foreach($errors as $error) {
-        echo '<p>' . $this->words->get($error) . '<p>';
-    }
-    echo '</div>';
-}
+
+include 'adminrightserrors.php';
+
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'createCallback');
 ?>
 <form class="yform" method="post">

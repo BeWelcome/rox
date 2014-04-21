@@ -1337,8 +1337,11 @@ LIMIT 1
                 members m
             WHERE
                 username like '" . $this->dao->escape($username) . "%'
+                AND Status in (" . Member::ACTIVE_ALL . ")
             ORDER BY
-                username";
+                username
+            LIMIT
+                0,10";
         $usernames = $this->bulkLookup($query);
         if (!empty($usernames)) {
             $result['status'] = 'success';

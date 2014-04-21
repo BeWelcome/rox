@@ -340,8 +340,6 @@ WHERE id = $IdCrypt
     public static function AdminReadCrypted($IdCrypt = false)
     {
         $crypt_db = PVars::getObj('syshcvol')->Crypted;
-error_log(__FUNCTION__ . ": " . print_r($crypt_db, true));
-error_log(__FUNCTION__ . ": " . print_r($IdCrypt, true));
         if (!$IdCrypt || $IdCrypt == '')
             return ('');
         $crypted_id = (int)$IdCrypt;
@@ -353,7 +351,6 @@ FROM ". $crypt_db ."cryptedfields
 WHERE id = $crypted_id
             "
         )->fetch(PDB::FETCH_OBJ);
-error_log(__FUNCTION__ . ": " . print_r($rr, true));
     	if (!$rr)
     		return (false); // if no value, it is not crypted
         return (self::GetDeCryptA($rr->AdminCryptedValue));

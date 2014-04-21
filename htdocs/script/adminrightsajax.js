@@ -24,7 +24,6 @@ jQuery(function () {
         },
         change: function (event, ui) {
             if (ui.item == null) {
-                jQuery("#username").val('');
             } else {
                 jQuery("#username").val(ui.item.value);
             }

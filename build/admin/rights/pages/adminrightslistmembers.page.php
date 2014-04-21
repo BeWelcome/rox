@@ -8,6 +8,11 @@
 
 class AdminRightsListMembersPage extends AdminRightsBasePage
 {
+    public function __construct($model = false) {
+        parent::__construct($model);
+        $this->setCurrent('AdminRightsListMembers');
+    }
+
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();

@@ -61,15 +61,17 @@
                 }
              ?>
             <?php if (!empty($logged_member)) : ?>
-                <?php echo $words->get("MemberSince");?>: <?php echo $layoutbits->ago(strtotime($member->created));?> <br />
-                <?php
-                    if (strtotime($member->LastLogin) > strtotime('-1 week'))
-                    {
-                        echo $words->get("LastLogin")?>: <?php echo $words->get("LastLoginPrivacy");
+                <?php echo $words->get("MemberSince").': ';
+                    if (strtotime($member->created) > strtotime('-1 week')){
+                        echo $words->get("LastLoginPrivacy");
+                    } else {
+                        echo $layoutbits->ago(strtotime($member->created));
                     }
-                    else
-                    {
-                        echo $words->get("LastLogin")?>: <?php echo $layoutbits->ago(strtotime($member->LastLogin));
+                    echo '<br>'.$words->get("LastLogin").': ';
+                    if (strtotime($member->LastLogin) > strtotime('-1 week')){
+                        echo $words->get("LastLoginPrivacy");
+                    } else {
+                        echo $layoutbits->ago(strtotime($member->LastLogin));
                     }
                     ?>
             <?php endif; ?>

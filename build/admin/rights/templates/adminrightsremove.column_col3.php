@@ -26,22 +26,18 @@ if ($vars) {
     // overwrite the vars
     $this->vars = $vars;
 }
-$errors = $this->getRedirectedMem('errors');
-if ($errors) {
-    echo '<div class="error">';
-    foreach($errors as $error) {
-        echo '<p>' . $this->words->get($error) . '<p>';
-    }
-    echo '</div>';
-}
+
+include 'adminrightserrors.php';
+
 $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'removeCallback');
 ?>
-<form class="yform" method="post">
+<form class="yform" method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
     <?= $callbackTags ?>
-    <input type="button" id="redirect" name="redirect" value="<?= $this->vars['redirect'] ?>"/>
+    <input type="hidden" id="redirect" name="redirect" value="<?= $this->vars['redirect'] ?>"/>
+    <input type="hidden" id="rightid" name="rightid" value="<?= $this->vars['right'] ?>" />
     <div class="type-text">
         <label for="username"><?php echo $this->words->get("AdminRightsUserName")?></label>
-        <input type="text" id="username" name="username" disabled="disabled" value="<?= $this->vars['username'] ?>"/>
+        <input type="text" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>
     </div>
     <div class="type-select">
         <label for="right"><?php echo $words->get("AdminRightsRights")?></label>
@@ -53,7 +49,11 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     </div>
     <div class="type-text">
         <label for="scope"><?php echo $this->words->get("AdminRightsScope") ?></label>
-        <input type="text" id="scope" name="scope" disabled="disabled" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
+        <input type="text" id="scope" name="scope" readonly="readonly" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
+    </div>
+    <div class="type-text">
+        <label for="comment"><?php echo $this->words->get("AdminRightsComment") ?></label>
+        <textarea id="comment" name="comment" readonly="readonly"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <div class="type-button">
         <input type="submit" id="AdminRightsRemove" name="AdminRightsRemove" value="<?php echo $this->words->getSilent("AdminRightsRemove")?>" /><?php echo $words->flushBuffer(); ?>

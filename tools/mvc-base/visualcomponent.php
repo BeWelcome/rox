@@ -88,7 +88,6 @@ class VisualComponent extends RoxComponentBase
                 }
                 $appname = implode('/', array_slice($subdirs, $build + 1, $len));
             }
-            error_log($appname);
         }
         $filename_prefix = basename($file, '.page.php');
         return SCRIPT_BASE.'build/'.$appname.'/templates/'.$filename_prefix.'.';

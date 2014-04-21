@@ -160,7 +160,7 @@ if ($this->membersResultsReturned) :
                 $occupation = $this->purifier->purify($member->Occupation);
                 echo '<tr class="' . (($ii % 2) ? 'blank' : 'highlight') . '">';
                 echo '<td class="memberleft">';
-                echo '<div class="picture"><div>' . $layoutbits->PIC_75_75($member->Username, 'class="framed"') . '</div>';
+                echo '<div class="picture"><div>' . $layoutbits->PIC_75_75($member->Username) . '</div>';
                 echo '<div><a href="members/' . $member->Username . '" target="_blank">' . $member->Username . '</a></div>';
                 echo '</div>';
                 echo '</td><td class="memberright">';

@@ -83,11 +83,19 @@ class AdminRightsController extends AdminBaseController
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         $vars = $args->post;
+        $member = false;
         if (isset($vars['member']) && $vars['member'] <> '0') {
-            return $this->router->url('admin_rights_member', array("username" => $vars['member']), false);
-        } else {
-            return $this->router->url('admin_rights_members', array(), false);
+            $temp = new Member();
+            $member = $temp->findById($vars['member']);
         }
+        $history = false;
+        if (isset($vars['history']) && $vars['history'] <> '0') {
+            $history= true;
+        }
+        $mem_redirect->vars = $vars;
+        $mem_redirect->members = $this->model->getMembersWithRights(false, $history);
+        // get list of members with rights (as assigned, filter by $member if set)
+        $mem_redirect->membersWithRights = $this->model->getMembersWithRights($member, $history);
     }
 
     public function listMembers()
@@ -99,9 +107,12 @@ class AdminRightsController extends AdminBaseController
             $member = $temp->findByUsername($this->route_vars['username']);
         };
         $page = new AdminRightsListMembersPage();
+        $page->vars = array(
+            'member' => $member,
+            'history' => 0
+        );
         $page->current = 'AdminRightsListMembers';
         $page->rights = $this->model->getRights();
-        $page->member = $member;
         // get list of members (with assigned rights)
         $page->members = $this->model->getMembersWithRights();
         // get list of members with rights (as assigned, filter by $member if set)
@@ -113,11 +124,17 @@ class AdminRightsController extends AdminBaseController
                                       ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         $vars = $args->post;
+        $rightId = false;
         if (isset($vars['right']) && $vars['right'] <> '0') {
-            return $this->router->url('admin_rights_right', array("id" => $vars['right']), false);
-        } else {
-            return $this->router->url('admin_rights_rights', array(), false);
+            $rightId = $vars['right'];
         }
+        $history = false;
+        if (isset($vars['history']) && $vars['history'] <> '0') {
+            $history = true;
+        }
+        $mem_redirect->vars = $vars;
+        $mem_redirect->rightsWithMembers = $this->model->getRightsWithMembers($rightId, $history);
+        return true;
     }
 
     public function listRights()
@@ -129,7 +146,10 @@ class AdminRightsController extends AdminBaseController
         };
         $page = new AdminRightsListRightsPage();
         $page->rights = $this->model->getRights();
-        $page->rightId = $rightId;
+        $page->vars = array(
+            'rightid' => $rightId,
+            'history' => 0
+        );
         $page->rightsWithMembers = $this->model->getRightsWithMembers($rightId);
         return $page;
     }
@@ -208,7 +228,7 @@ class AdminRightsController extends AdminBaseController
     {
         $vars = $args->post;
         $rights = $this->model->getRights();
-        $right = $rights[$vars['right']];
+        $right = $rights[$vars['rightid']];
         $this->setFlashNotice($this->getWords()->get('AdminRightsRightRemoved', $vars['username'], $right->Name ));
         switch ($vars['redirect']) {
             case 'members':

@@ -81,37 +81,37 @@ class AdminRightsModel extends RoxModelBase {
         $this->dao->query($query);
     }
 
-    /**
-     * get list of members which have a right assigned
-     *
-     * @access public
-     * @return list of members
-     */
-    public function getMembers($includeLevelZero = false)
-    {
-        $query = '
-            SELECT
-                m.Username,
-                m.id as id,
-                m.status
-            FROM
-                rights r,
-                rightsvolunteers rv,
-                members m
-            WHERE
-                m.Status in (' . Member::ACTIVE_ALL . ')
-                AND rv.IdMember = m.id
-                AND rv.IdRight = r.id';
-        if (!$includeLevelZero) {
-            $query .= ' AND rv.Level <> 0';
-        }
-        $query .= '
-            ORDER BY
-                m.Username
-            ';
-        return $this->bulkLookup($query);
-    }
-
+//    /**
+//     * get list of members which have a right assigned
+//     *
+//     * @access public
+//     * @return list of members
+//     */
+//    public function getMembers($includeLevelZero = false)
+//    {
+//        $query = '
+//            SELECT
+//                m.Username,
+//                m.id as id,
+//                m.status
+//            FROM
+//                rights r,
+//                rightsvolunteers rv,
+//                members m
+//            WHERE
+//                m.Status in (' . Member::ACTIVE_ALL . ')
+//                AND rv.IdMember = m.id
+//                AND rv.IdRight = r.id';
+//        if (!$includeLevelZero) {
+//            $query .= ' AND rv.Level <> 0';
+//        }
+//        $query .= '
+//            ORDER BY
+//                m.Username
+//            ';
+//        return $this->bulkLookup($query);
+//    }
+//
     /**
      * get list of members with all assigned rights
      *
@@ -331,7 +331,8 @@ class AdminRightsModel extends RoxModelBase {
             SET
                 Level = '" . $this->dao->escape($vars['level']) . "',
                 Scope = '" . $this->dao->escape($vars['scope']) . "',
-                Comment = '" . $this->dao->escape($vars['comment']) . "'
+                Comment = '" . $this->dao->escape($vars['comment']) . "',
+                Updated = NOW()
             WHERE
                 IdMember = " . $member->id . "
                 AND IdRight = " . $this->dao->escape($vars['rightid']) . "
@@ -340,15 +341,31 @@ class AdminRightsModel extends RoxModelBase {
         return true;
     }
 
+    /**
+     * Removes a right from a member
+     * Keeps the history by setting the level to 0 and updating the comment
+     * with a note when the removal happened and by whom
+     *
+     * @param $vars
+     * @return bool
+     */
     public function remove($vars) {
         $temp = new Member();
         $member = $temp->findByUsername($vars['username']);
+        $loggedInMember = $this->getLoggedInMember();
+        $comment = $vars['comment'] . "\n\nRemoved by " .$loggedInMember->Username . " on "
+            . date('Y-m-d');
         $query = "
-            DELETE FROM
+            UPDATE
                 rightsvolunteers
+            SET
+                Level = '0',
+                Scope = '" . $this->dao->escape($vars['scope']) . "',
+                Comment = '" . $this->dao->escape( $comment ) . "',
+                Updated = NOW()
             WHERE
                 IdMember = " . $member->id . "
-                AND IdRight = " . $vars['right'] . "
+                AND IdRight = " . $this->dao->escape($vars['rightid']) . "
             ";
         $this->dao->query($query);
         return true;

@@ -163,6 +163,9 @@ WHERE IdMember=' . $IdMember . ' AND '.$this->nomtable.'.id='.$this->nomtablevol
 			return (0); // Return false if the Right does'nt exist for this member in the DB
 		}
 		$rlevel = $row->Level;
+        if ($rlevel == 0) {
+            return (0);
+        }
 		$rscope = ltrim(rtrim($row->Scope)); // remove extra space
 		if ($OptionalIdMember == 0) { // if its current member cache for next research 
 //			$_SESSION[$this->IdSession . $Name]="set" ;  // Caching is not enable if this line is commented (but test are needed before uncomenting it)

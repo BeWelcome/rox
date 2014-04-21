@@ -5,7 +5,15 @@
  * Date: 08.04.14
  * Time: 20:48
  */
-$callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'listMembersCallBack');
+$vars = $this->getRedirectedMem('vars');
+if ($vars) {
+    // overwrite the vars
+    $this->vars = $vars;
+    $this->members = $this->getRedirectedMem('members');
+    $this->membersWithRights = $this->getRedirectedMem('membersWithRights');
+}
+
+$callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsController', 'listMembersCallback');
 $layoutbits = new MOD_layoutbits();
 
 ?>
@@ -13,8 +21,12 @@ $layoutbits = new MOD_layoutbits();
     <form class="yform" method="post">
         <?= $callbackTags ?>
         <div class="type-select">
-            <label for="MemberSelect"><?= $words->get("AdminRightsMember") ?></label>
-            <?= memberSelect($this->members, $this->member) ?>
+            <label for="member"><?= $words->get("AdminRightsMember") ?></label>
+            <?= memberSelect($this->members, $this->vars['member']) ?>
+        </div>
+        <div class="type-check">
+            <input type="checkbox" id="history" name="history" value="1" <?= ($this->vars['history']) ? 'checked="checked' : '' ?> />
+            <label for="history"><?= $words->get("AdminRightsHistory") ?></label>
         </div>
         <div class="type-button">
             <input type="submit" id="submit" name="submit"
@@ -51,15 +63,20 @@ $layoutbits = new MOD_layoutbits();
                 $firstRow = false;
             else :
                 echo '<tr class="' . $class . '">';
-            endif; ?>
-        <td class="right"><span title="tooltip<?= $id ?>"><?= $this->rights[$id]->Name ?></span></td>
-        <td class="level"><?= $right->level ?></td>
-        <td class="scope"><?= $right->scope ?></td>
+            endif;
+            $ss = ($right->level == 0) ? '<span style="text-decoration: line-through; color: red;">' : '';
+            $se = ($right->level == 0) ? '</span>' : '';
+        ?>
+        <td class="right"><span title="tooltip<?= $id ?>"><?= $ss .  $this->rights[$id]->Name . $se ?></span></td>
+        <td class="level"><?= $ss . $right->level . $se ?></td>
+        <td class="scope"><?= $ss . $right->scope . $se ?></td>
         <td class="comment"><?= $right->comment ?></td>
         <td class="icon"><a href="admin/rights/edit/<?= $id ?>/<?= $username ?>">
                 <img src="images/icons/comment_edit.png" alt="edit"/></a></td>
-        <td class="icon"><a href="admin/rights/remove/<?= $id ?>/<?= $username ?>">
-                <img src="images/icons/delete.png" alt="remove"/></a></td>
+        <td class="icon"><?php if ($right->level <> 0) : ?>
+            <a href="admin/rights/remove/<?= $id ?>/<?= $username ?>">
+                <img src="images/icons/delete.png" alt="remove"/></a>
+            <?php endif; ?></td>
         </tr>
         <?php
             endforeach;

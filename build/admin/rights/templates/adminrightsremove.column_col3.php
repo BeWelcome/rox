@@ -33,7 +33,8 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
 ?>
 <form class="yform" method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
     <?= $callbackTags ?>
-    <input type="text" id="redirect" name="redirect" value="<?= $this->vars['redirect'] ?>"/>
+    <input type="hidden" id="redirect" name="redirect" value="<?= $this->vars['redirect'] ?>"/>
+    <input type="hidden" id="rightid" name="rightid" value="<?= $this->vars['right'] ?>" />
     <div class="type-text">
         <label for="username"><?php echo $this->words->get("AdminRightsUserName")?></label>
         <input type="text" id="username" name="username" readonly="readonly" value="<?= $this->vars['username'] ?>"/>

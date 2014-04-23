@@ -1276,15 +1276,23 @@ form .date {
   border-bottom: 1px solid #e5e5e5;
 }
 #messagecontent {
-  background-color: #fff;
-  padding: 1em 1.5em;
+    background-color: #fff;
+    padding: 1em 1.5em;
 }
 #messagecontent .text {
-/*
-  font-family: Georgia;
-  font-style: normal;
-*/
-  font-size: 1.1em;
+    /*
+      font-family: Georgia;
+      font-style: normal;
+    */
+    font-size: 1.1em;
+}
+#messagesubject {
+    background-color: #fff;
+    padding: .5em 1.5em;
+}
+#messagesubject .text {
+    font-weight: bold;
+    font-size: 1.1em;
 }
 #messageside {
   width: 22em;

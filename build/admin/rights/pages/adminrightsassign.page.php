@@ -8,6 +8,11 @@
 
 class AdminRightsAssignPage extends AdminRightsBasePage
 {
+    public function __construct($model = false) {
+        parent::__construct($model);
+        $this->setCurrent('AdminRightsAssign');
+    }
+
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
@@ -25,7 +30,6 @@ class AdminRightsAssignPage extends AdminRightsBasePage
     {
         $scripts = parent::getLateLoadScriptfiles();
         $scripts[] = 'adminrightsajax.js';
-//        $scripts[] = 'adminrightstooltip.js';
         return $scripts;
     }
 }

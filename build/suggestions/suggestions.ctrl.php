@@ -39,6 +39,24 @@ class SuggestionsController extends RoxControllerBase
         return true;
     }
 
+    protected function getPager($url, $count, $pageno, $useGet = false, $itemsPerPage = self::SUGGESTIONS_PER_PAGE) {
+        $params = new StdClass;
+        $params->strategy = new HalfPagePager('right');
+        $params->page_url_marker = 'page';
+        if ($useGet) {
+            $params->page_url = 'suggestions/' . $url;
+            $params->page_method = 'get';
+        } else {
+            $params->page_url = 'suggestions/' . $url . '/';
+            $params->page_method = 'url';
+        }
+        $params->items = $count;
+        $params->active_page = $pageno + 1;
+        $params->items_per_page = $itemsPerPage;
+        $pager = new PagerWidget($params);
+        return $pager;
+    }
+
     /**
      * Redirects if no one's logged in or if someone tries to cheat (like trying to open the discuss page while
      * ranking already started
@@ -108,19 +126,6 @@ class SuggestionsController extends RoxControllerBase
         $this->redirectAbsolute($url);
     }
 
-    protected function getPager($url, $count, $pageno, $itemsPerPage = self::SUGGESTIONS_PER_PAGE) {
-        $params = new StdClass;
-        $params->strategy = new HalfPagePager('right');
-        $params->page_url = 'suggestions/' . $url . '/';
-        $params->page_url_marker = 'page';
-        $params->page_method = 'url';
-        $params->items = $count;
-        $params->active_page = $this->pageno;
-        $params->items_per_page = $itemsPerPage;
-        $pager = new PagerWidget($params);
-        return $pager;
-    }
-
     public function editCreateSuggestionCallback(StdClass $args, ReadOnlyObject $action,
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
@@ -147,12 +152,14 @@ class SuggestionsController extends RoxControllerBase
         if (isset($this->route_vars['id'])) {
             if (!$loggedInMember) {
                 $this->setFlashNotice($this->getWords()->get('SuggestionNotLoggedInEdit'));
-                return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
+                $this->redirectAbsolute($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
             }
             $suggestion = new Suggestion($this->route_vars['id']);
-            if ((!$this->checkSuggestionRight()) && ($suggestion->createdBy != $loggedInMember->id)) {
+            $sugEdit = $this->checkSuggestionRight();
+            $ownEdit = ($suggestion->createdby) == ($loggedInMember->id);
+            if (!$sugEdit && !$ownEdit) {
                 $this->setFlashNotice($this->getWords()->get('SuggestionNoEditAllowed'));
-                return $this->redirect($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
+                $this->redirectAbsolute($this->router->url('suggestions_show', array('id' => $this->route_vars['id'])), false);
             }
         } else {
             if (!$loggedInMember) {
@@ -445,8 +452,8 @@ class SuggestionsController extends RoxControllerBase
 
     public function rankList() {
         $pageno = 0;
-        if (isset($this->route_vars['pageno'])) {
-            $pageno = $this->route_vars['pageno'] - 1;
+        if (isset($this->args_vars->get['page'])) {
+            $pageno = $this->args_vars->get['page'] - 1;
         }
         $page = new SuggestionsRankListPage($this->_model->getLoggedInMember());
         $count = $this->_model->getOptionsCount(SuggestionOption::RANKING);
@@ -463,8 +470,11 @@ class SuggestionsController extends RoxControllerBase
         }
         $page->options = $options;
         $page->order = $order;
-        $page->pager = $this->getPager('rank', $count, $pageno, self::OPTIONS_PER_PAGE);
-
+        if ($order) {
+            $page->pager = $this->getPager('rank?order=' . $order, $count, $pageno, true, self::OPTIONS_PER_PAGE);
+        } else {
+            $page->pager = $this->getPager('rank', $count, $pageno, true, self::OPTIONS_PER_PAGE);
+        }
         return $page;
     }
 
@@ -581,7 +591,7 @@ class SuggestionsController extends RoxControllerBase
         $suggestions = $this->_model->getSuggestions(SuggestionsModel::SUGGESTIONS_DEV, $pageno, self::SUGGESTIONS_PER_PAGE);
         $page->suggestions = $suggestions;
 
-        $page->pager = $this->getPager('rank', $count, $pageno);
+        $page->pager = $this->getPager('dev', $count, $pageno);
 
         return $page;
     }

@@ -47,6 +47,7 @@ class RoxEntityFactory
         'PostVote'          => 'build/forums/postvote.entity',
         'Privilege'         => 'build/rights/privilege.entity',
         'PrivilegeScope'    => 'build/rights/privilegescope.entity',
+        'Right'             => 'build/admin/rights/adminrights.entity',
         'Role'              => 'build/rights/role.entity',
         'RolePrivilege'     => 'build/rights/roleprivilege.entity',
         'Suggestion'        => 'build/suggestions/suggestion.entity',

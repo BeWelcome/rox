@@ -1,6 +1,6 @@
 <?php
 
-function rightSelect($rights, $currentRightId = false) {
+function rightSelectionBox($rights, $currentRightId = false) {
     $select = '<select id="right" name="right">';
     $select .= '<option value="0"></option>';
     foreach($rights as $rightId => $rightDetails) {

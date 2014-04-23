@@ -16,14 +16,17 @@ class AdminRightsBasePage extends AdminBasePage
         'AdminRightsCreate' => 'admin/rights/create',
     );
 
-    private $current = false;
+    protected $current = false;
     protected $rights = false;
+    protected $create = false;
 
-    public function __construct($model = false) {
-        parent::__construct($model);
-        if ($model) {
-            $this->rights = $model->getRights();
-        }
+    public function __construct() {
+        parent::__construct(new AdminRightsModel());
+        $member = $this->model->getLoggedInMember();
+        $rights = $member->getOldRights();
+        $scope = $rights['Rights']['Scope'];
+        $this->create = stripos($scope, '"create"') !== false;
+        $this->create |= stripos($scope, '"all"') !== false;
     }
 
     public function teaserHeadline()
@@ -44,14 +47,13 @@ class AdminRightsBasePage extends AdminBasePage
     /**
      * @param $current current item in the side bar
      */
-    public function setCurrent($current) {
+    protected function setCurrent($current) {
         $this->current = $current;
     }
 
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        // $stylesheets[] = 'styles/css/minimal/screen/custom/tooltipster.css';
         $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
         return $stylesheets;
     }
@@ -71,10 +73,12 @@ class AdminRightsBasePage extends AdminBasePage
         return $select;
     }
 
-    function levelSelect($current, $disabled = false)
+    function levelSelect($current, $disabled = false, $showEmpty = true)
     {
         $select = '<select id="level" name="level"' . ($disabled ? ' disabled="disabled"' : '') . '>';
-        $select .= '<option value="0"></option>';
+        if ($showEmpty) {
+            $select .= '<option value="0"></option>';
+        }
         for ($i = 1; $i <= 10; $i++) {
             $select .= '<option value="' . $i . '"';
             if ($i == $current) {
@@ -85,5 +89,4 @@ class AdminRightsBasePage extends AdminBasePage
         $select .= '</select>';
         return $select;
     }
-
 }

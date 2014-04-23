@@ -1593,9 +1593,10 @@ WHERE `threadid` = '%d' ",
     * This will prepare a post for a full edit moderator action
     * @IdPost : Id of the post to process
 	 */
-    public function prepareModeratorEditPost($IdPost) {
+    public function prepareModeratorEditPost($IdPost, $moderator = false) {
 	 	$DataPost->IdPost=$IdPost ;
 		$DataPost->Error="" ; // This will receive the error sentence if any
+
         $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
         $s = $this->dao->query($query);
 		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
@@ -1605,7 +1606,27 @@ WHERE `threadid` = '%d' ",
 			return($DataPost) ;
 		}
 
-// retrieve all trads for content
+        if (!$moderator) {
+            // first check if post was made in a group and if the current member is a member of that group
+            $query = "SELECT IdGroup FROM forums_posts fp, forums_threads ft WHERE fp.id = " . $this->dao->escape($IdPost) . " AND fp.threadId = ft.id";
+            $s = $this->dao->query($query);
+            $row = $s->fetch(PDB::FETCH_OBJ);
+            $IdGroup = $row->IdGroup;
+            if ($IdGroup <> 0) {
+                $group = $this->createEntity('Group')->findByid($IdGroup);
+                $member = $this->getLoggedInMember();
+                // Can't use $group->isMember() for some reason
+                $query = " SELECT * FROM membersgroups WHERE IdMember = " . $member->id . " AND IdGroup = " . $IdGroup;
+                $s = $this->dao->query($query);
+                $row = $s->fetch(PDB::FETCH_OBJ);
+                if (!$row) {
+		 	        $DataPost->Error="NoGroupMember";
+			        return($DataPost) ;
+                }
+            }
+        }
+
+        // retrieve all trads for content
         $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
         $s = $this->dao->query($query);
 		 $DataPost->Post->Content=array() ;
@@ -2013,7 +2034,10 @@ WHERE `threadid` = '$topicinfo->threadid'
         }
 
         $this->dao->query("START TRANSACTION");
-
+        $postVisibility = 'MembersOnly';
+        if ($vars['IdGroup'] <> 0) {
+            $postVisibility = $vars['PostVisibility'];
+        }
         $query = sprintf(
             "
 INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
@@ -2022,7 +2046,7 @@ VALUES ('%d', '%d', NOW(), '%s','%d',%d,'%s')
             $User->getId(),
             $this->threadid,
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $_SESSION["IdMember"],$this->GetLanguageChoosen(),$vars['PostVisibility']
+            $_SESSION["IdMember"], $this->GetLanguageChoosen(), $postVisibility
         );
 
         $result = $this->dao->query($query);
@@ -2077,8 +2101,8 @@ WHERE `threadid` = '$this->threadid'
         if (!($User = APP_User::login())) {
             throw new PException('User gone missing...');
         }
-        $IdGroup=0 ;
-		$ThreadVisibility=$vars['ThreadVisibility'] ;
+        $IdGroup=0;
+        $ThreadVisibility = 'MembersOnly';
 		if (isset($vars['IdGroup'])) {
 			$IdGroup=$vars['IdGroup'] ;
 			if (!empty($IdGroup)) {
@@ -2091,10 +2115,7 @@ WHERE `threadid` = '$this->threadid'
 					}
 				}
 			}
-		}
-		if ($ThreadVisibility=='Default') {
-			$ThreadVisibility='NoRestriction' ;
-		}
+        }
 
         $this->dao->query("START TRANSACTION");
 
@@ -2356,7 +2377,8 @@ and ($this->ThreadGroupsRestriction)
 			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=-1 and forums_tags.id=tags_threads.IdTag"; // This will return nothing
 			require SCRIPT_BASE.'build/members/pages/mustlogin.page.php';
-			$topicinfo->title="Please log in to see the thread" ;
+            $words = new MOD_words;
+			$topicinfo->title= $words->get('ForumNotLoggedInOrNotInGroup');
 			$topicinfo->replies=0 ;
 
 		}

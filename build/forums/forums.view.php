@@ -520,7 +520,8 @@ class ForumsView extends RoxAppView {
                 }
             }
         } else {
-            $visibilities[] = "MembersOnly";
+            // return empty string for forum posts
+            return '';
         }
 
         if (!$newtopic) {
@@ -564,8 +565,8 @@ class ForumsView extends RoxAppView {
         }
         else
         {
-            $currentVisibility = "MembersOnly";
-            $visibilities[] = "MembersOnly";
+            // Return empty string for forum posts
+            return '';
         }
 
         $out = '<select name="ThreadVisibility" id="ThreadVisibility" onchange="javascript: ();">';

@@ -15,7 +15,10 @@ class DonateView extends PAppView
 
     public function ShowSimpleTeaser($title)
     {
-        require TEMPLATE_DIR.'apps/rox/teaser_simple.php';
+        $words = new MOD_words();
+        echo '<div id="teaser" class="clearfix">';
+        echo '<h1>'.$words->getFormatted($title).'</h1>';
+        echo '</div>';
     }
 
     public function donate($sub = false,$TDonationArray = false, $error = false)

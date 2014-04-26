@@ -43,6 +43,7 @@ class MailboxWidget extends ItemlistWithPagination
         return array(
             'select' => '',
             'from' => '<a href="'.$request_str.'?sort=sender&amp;dir='.$dir_str.'">'.$words->getSilent('From').'</a> / <a href="'.$request_str.'?sort=date&amp;dir='.(isset($_GET['dir']) ? $dir_str : 'ASC').'">'.$words->getSilent('Date').'</a>'.$words->flushBuffer(),
+            'subject' => $words->get('ComposeSubject'),
             'message' => $words->get('MessagesText'),
             // 'status' => 'Status'
             //'date' => 'Date',
@@ -83,6 +84,15 @@ class MailboxWidget extends ItemlistWithPagination
         <?php
     }
 
+    protected function tableCell_subject($message)
+    {
+        $read = (int)$message->WhenFirstRead;
+        $class = ($read) ? '' : 'class="unread"';
+        echo <<<HTML
+        <p><a {$class} href="messages/{$message->id}">{$message->Subject}</a></p>
+HTML;
+    }
+
     protected function tableCell_message($message)
     {
         $TheMessage=str_replace(array("\n","<br />"),array(" "," "),$message->Message) ;
@@ -104,5 +114,4 @@ HTML;
         <a href="messages/with/<?=$contact_username ?>"><img src="images/icons/comments.png" alt="conversation with <?=$contact_username ?>" title="conversation with <?=$contact_username ?>"></a>
         <?php
     }
-
 }

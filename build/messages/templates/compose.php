@@ -71,43 +71,25 @@ $member = $model->getMemberWithUsername($receiver_username);
       <?php } ?>
         </div>
     </div> <!-- messageheader -->
-    <form method="post" action="<?=$page_url ?>">
+    <form class="yform full" method="post" action="<?=$page_url ?>">
         <?=$callback_tag ?>
-    <div id="messagecontent">
-
-            <?php if ($receiver_username) { ?>
+        <?php if ($receiver_username) { ?>
             <input type="hidden" name="receiver_id" value="<?=$receiver_id ?>"/>
-            <?php } else { ?>
+        <?php } else { ?>
             <p>To: <input name="receiver_username"/></p>
-            <?php } ?>
+        <?php } ?>
 
-            <p>
-                <textarea name="text" rows="15" cols="60" ><?=$text ?></textarea>
-            </p>
-
-          <?php
-
-                 /* Deactivate Display of Captcha
-                  * (on reenabling also uncomment the Captcha line in
-                  *  the model's _createMessage function)
-
-          if ($this->_model->CaptchaNeeded($_SESSION["IdMember"])) {
-            $CaptchaValue=rand(100000,999999) ;
-            echo "<p>" ;
-            $_SESSION["ExpectedCaptchaValue"]=$CaptchaValue ; // Store the CaptCha for comparison
-            echo $words->getFormatted("ContactCaptchaRequest",$this->_model->DisplayCaptcha($CaptchaValue))," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
-        //    echo $words->get("ContactCaptchaRequest"," "),$this->_model->DisplayCaptcha($CaptchaValue)," <input type=\"text\" name=\"c_verification\" value=\"\">" ;
-            echo "</p>" ;
-          }
-                 */
-          ?>
-
-    </div> <!-- messageconent -->
-    <div id="messagefooter">
-        <p class="floatbox">
-            <input type="submit" value="<?php echo $words->getBuffered('ComposeSend');?>"/><?php echo $words->flushBuffer();?>
-        </p>
-    </div> <!-- messagefooter -->
+        <div class="type-text">
+            <label for="subject"><?= $words->get('ComposeSubject') ?></label>
+            <input type="text" id="subject" name="subject" value="<?= $subject ?>" />
+        </div>
+        <div class="type-text">
+            <label for="text"><?= $words->get('ComposeText') ?></label>
+            <textarea id="text" name="text" rows="15" cols="60" ><?=$text ?></textarea>
+        </div>
+        <div class="type-button">
+                <input type="submit" value="<?php echo $words->getBuffered('ComposeSend');?>"/><?php echo $words->flushBuffer();?>
+        </div> <!-- messagefooter -->
     </form>
     <div id="shade"> </div>
 </div> <!-- message -->

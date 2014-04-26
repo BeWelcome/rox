@@ -1079,7 +1079,7 @@ function BuildVolMenu() {
 	}
 
 	if (HasRight("Rights")) {
-		 array_push($res,new CVolMenu("admin/adminrights.php","AdminRights","administration of members rights")) ;
+		 array_push($res,new CVolMenu("/admin/rights","AdminRights","administration of members rights")) ;
 	}
 
 	if (HasRight("Logs")) {

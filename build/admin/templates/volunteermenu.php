@@ -74,12 +74,6 @@ Boston, MA  02111-1307, USA.
                 'manage admin rights of other members'
             ),
             array(
-                'Rights',
-                'bw/admin/adminrights.php',
-                'AdminRights',
-                'manage admin rights of other members'
-            ),
-            array(
                 'Logs',
                 'bw/admin/adminlogs.php',
                 'AdminLogs',

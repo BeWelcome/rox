@@ -241,10 +241,10 @@ function VolMenu($link = "", $tt = "") {
 
 	if (HasRight("Rights")) {
 		$res .= "<li><a";
-		if ($link == "admin/adminrights.php") {
+		if ($link == "/admin/rights") {
 			$res .= " id=current ";
 		} else {
-			$res .= " href=\"".bwlink("admin/adminrights.php")."\" method=post ";
+			$res .= ' href="/admin/rights" method=post ';
 		}
 		$res .= " title=\"administration of members rights\">AdminRights</a></li>\n";
 	}

@@ -2,10 +2,14 @@
 
 class AdminBaseController extends RoxController {
 
-    public function __construct()
+    public function __construct($model = false)
     {
         parent::__construct();
-        $this->_model = new AdminBaseModel();
+        if ($model) {
+            $this->_model = $model;
+        } else {
+            $this->_model = new AdminBaseModel();
+        }
     }
 
     public function __destruct()

@@ -41,6 +41,11 @@ class AdminGeneralController extends AdminBaseController
     const MASSMAILENQUEUE = 1;
     const MASSMAILTRIGGER = 5;
 
+    public function __construct()
+    {
+        parent::__construct(new AdminModel());
+    }
+
     /**
      * overview page, displays tools for admins
      *
@@ -103,6 +108,7 @@ class AdminGeneralController extends AdminBaseController
         $page->member = $member;
 
         $page->bad_comments = $this->_model->getBadComments();
+        $params = new StdClass();
         $params->strategy = new HalfPagePager('left');
         $params->items = count($page->bad_comments);
         $params->items_per_page = 25;
@@ -122,6 +128,7 @@ class AdminGeneralController extends AdminBaseController
         list($member, $rights) = $this->checkRights('Checker');
         $page = new AdminSpamPage;
         $page->member = $member;
+        $params = new StdClass;
         $params->strategy = new HalfPagePager('left');
         $params->items = count($page->bad_spam);
         $params->items_per_page = 25;
@@ -193,25 +200,26 @@ class AdminGeneralController extends AdminBaseController
 
     public function wordsDownload()
     {
-                $level = $R->hasRight('Words');
-                if (!$level || $level < 1) {
-                    PPHP::PExit(); // TODO: redirect or display message?
-                }
+        /* This does not work yet. If you call admin/activitylogs ..
+                        $level = $R->hasRight('Words');
+                        if (!$level || $level < 1) {
+                            PPHP::PExit(); // TODO: redirect or display message?
+                        }
 
-                ob_start();
-                $this->_view->wordsdownload($this->_model->wordsdownload());
-                $str = ob_get_contents();
-                ob_end_clean();
-                $Page = PVars::getObj('page');
-                $Page->content .= $str;
+                        ob_start();
+                        $this->_view->wordsdownload($this->_model->wordsdownload());
+                        $str = ob_get_contents();
+                        ob_end_clean();
+                        $Page = PVars::getObj('page');
+                        $Page->content .= $str;
 
-                ob_start();
-                $this->_view->wordsdownload_teaser();
-                $str = ob_get_contents();
-                $Page->teaserBar .= $str;
-                ob_end_clean();
-
-    }
+                        ob_start();
+                        $this->_view->wordsdownload_teaser();
+                        $str = ob_get_contents();
+                        $Page->teaserBar .= $str;
+                        ob_end_clean();
+*/
+            }
 
     /**
      * Treasurer overview method

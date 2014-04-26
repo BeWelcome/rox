@@ -32,7 +32,6 @@ class ComposeMessagePage extends MessagesBasePage
 
         if ($message = $this->message) {
             $receiver = $model->getMember($message->receiverUsername);
-            $subject = $message->Subject;
             $text = $message->Message;
             $attach_picture = ($message->JoinMemberPict == 'yes' ? ' checked' : '');
         } else if (!$receiver = $this->receiver) {
@@ -49,9 +48,6 @@ class ComposeMessagePage extends MessagesBasePage
         } else {
             // from previous form
             if ($memory->post) {
-                if (isset($memory->post['subject'])) {
-                    $subject = $memory->post['subject'];
-                }
                 if (isset($memory->post['text'])) {
                     $text = $memory->post['text'];
                 }

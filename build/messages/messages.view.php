@@ -107,9 +107,6 @@ class ReadMessagePage extends MessagesBasePage
                   <span class="grey"><?=$words->get('MessagesDate')?> : </span> <?=date($words->getSilent('DateFormatShort'),strtotime($message->created)) ?>
                 </p>
             </div>
-            <?php if (!empty($message->Subject)) : ?>
-            <div id="messagesubject"><p class="text"><?= $message->Subject ?></p></div>
-            <?php endif; ?>
             <div id="messagecontent">
                 <p class="text">
                 <?echo $purifier->purify(str_replace("\n","<br />",$message->Message)) ; ?>
@@ -153,9 +150,6 @@ class ReplyMessagePage extends ComposeMessagePage
     {
         $message = $this->message;
         // Sender becomes Receiver
-        if (strpos($message->Subject, 'Re: ') === false) {
-            $message->Subject = 'Re: ' . $message->Subject;
-        }
         $message->receiverUsername = $message->senderUsername;
         $message->senderUsername = $_SESSION['Username'];
         $message->Message = "\n\n>".str_replace("\n", "\n> ", wordwrap($message->Message, 70));

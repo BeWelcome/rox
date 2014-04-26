@@ -121,13 +121,57 @@ WHERE
     if ($_SESSION['Param']->MailBotMode!='Auto') {
         echo "messages <b> Going to Get Email for IdMember : [".$rr->IdReceiver."]</b> messages.id=".$rr->id."<br>" ;
     }
-
     $Email = GetEmail($rr->IdReceiver);
     $MemberIdLanguage = GetDefaultLanguage($rr->IdReceiver);
-    $subj = $rr->Subject;
+    $subj = ww("YouveGotAMail", $rr->Username);
     $urltoreply = $baseuri."messages/{$rr->id}/reply";
     $MessageFormatted=$rr->Message;
-    $text = ww('mailbot_YouveGotAMailText', fUsername($rr->IdReceiver), $rr->Username, $rr->Message, $urltoreply, $rr->Username, $rr->Username);
+    if ($rr->JoinMemberPict=="yes") {
+        $rImage=LoadRow("
+SELECT
+    *
+FROM
+    membersphotos
+WHERE
+    IdMember = $rr->IdSender  AND
+    SortOrder = 0
+        ");
+        $MessageFormatted = '
+            <html><head>
+            <title>'.$subj.'</title></head>
+            <body>
+            <table>
+            <tr><td>
+        ';
+        if (isset($rImage->FilePath)) {
+//            $MessageFormatted .= '<img alt="picture of '.$rr->Username.'" height="200px" src="'.$baseuri.$rImage->FilePath.'"/>';
+            $MessageFormatted .= PictureInMail($rr->Username);
+        }
+        if  (($rr->MemberStatus=='NeedMore')) {
+            LogStr("Mailbot procceds sending  message #".$rr->id." Message from Sender".$rr->Username."not active (".$rr->MemberStatus.")","mailbot");
+            $MessageFormatted=$MessageFormatted."<br>Message sent by a may be not yet verified member<br>" ;
+        }
+
+        $MessageFormatted .= '</td><td>';
+//      $MessageFormatted.=ww("YouveGotAMailText", $rr->Username, $rr->Message, $urltoreply);
+        $MessageFormatted .= ww("mailbot_YouveGotAMailText", fUsername($rr->IdReceiver),$rr->Username, $rr->Message, $urltoreply,$rr->Username,$rr->Username);
+        $MessageFormatted .= '</td>';
+
+        if (IsLoggedIn()) { // In this case we display the tracks for the admin who will probably need to check who is sending for sure and who is not
+            echo " from ".$rr->Username." to ".fUsername($rr->IdReceiver). " email=".$Email,"<br>" ;
+        }
+        if ((isset($rr->JoinSenderMail)) and ($rr->JoinSenderMail=="yes")) { // Preparing what is needed in case a joind sender mail option was added
+            $MessageFormatted .= '<tr><td colspan=2>'.ww('mailbot_JoinSenderMail', $rr->Username, GetEmail($rr->IdSender)).'</td>';
+        }
+
+        $MessageFormatted .= '</table></body></html>';
+
+        $text=$MessageFormatted;
+
+    } else {
+        // $text = ww("YouveGotAMailText", $rr->Username, $MessageFormatted, $urltoreply);
+        $text = ww('mailbot_YouveGotAMailText', fUsername($rr->IdReceiver), $rr->Username, $rr->Message, $urltoreply, $rr->Username, $rr->Username);
+    }
 
     // to force because context is not defined
     // TODO: What the hell is this?

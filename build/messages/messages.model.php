@@ -413,7 +413,6 @@ AND DeleteRequest != 'receiverdeleted'
     public function sendOrComplain($input)
     {
         // check fields
-        $words = new MOD_words();
 
         $problems = array();
 
@@ -448,10 +447,6 @@ WHERE id = ".$input['receiver_id']."
             // sender is not the person who is logged in.
             $problems['sender_id'] = 'you are not the sender.';
             MOD_log::get()->write("Trying to send a message with IdMember #".$input['sender_id']." (MessagesModel::sendOrComplain)", "hacking");
-        }
-
-        if (empty($input['subject'])) {
-            $problems[$words->getSilent('ComposeSubject')] = $words->getSilent('ComposeSubjectEmpty');
         }
 
         if (empty($input['text'])) {
@@ -542,7 +537,6 @@ WHERE id = ".$input['receiver_id']."
         $status = $this->dao->escape($fields['status']);
         $sender = intval($fields['sender_id']);
         $receiver = intval($fields['receiver_id']);
-        $subject = $this->dao->escape($fields['subject']);
         $text = $this->dao->escape($fields['text']);
         $parent = !empty($fields['reply_to_id']) ? intval($fields['reply_to_id']) : 0;
         $iMes= $this->dao->query(
@@ -550,7 +544,6 @@ WHERE id = ".$input['receiver_id']."
 INSERT INTO messages
 SET
     created = NOW(),
-    Subject = '{$subject}',
     Message = '{$text}',
     IdReceiver = {$receiver},
     IdSender = {$sender},

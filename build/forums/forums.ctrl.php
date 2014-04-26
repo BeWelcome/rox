@@ -281,7 +281,7 @@ class ForumsController extends PAppController
 						$IdWriter=$request[3] ;
 					}
 
-					$DataPost=$this->_model->prepareModeratorEditPost($IdPost, $this->BW_Right->HasRight('Moderator')); // We will use the same data as the one used for Moderator edit
+					$DataPost=$this->_model->prepareModeratorEditPost($IdPost, $this->BW_Right->HasRight('ForumModerator')); // We will use the same data as the one used for Moderator edit
 
                     if ($DataPost->Error == 'NoGroupMember') {
                         // if someone who isn't a member of the associated group

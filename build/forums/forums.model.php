@@ -2102,7 +2102,6 @@ WHERE `threadid` = '$this->threadid'
             throw new PException('User gone missing...');
         }
         $IdGroup=0;
-        $ThreadVisibility = 'MembersOnly';
 		if (isset($vars['IdGroup'])) {
 			$IdGroup=$vars['IdGroup'] ;
 			if (!empty($IdGroup)) {
@@ -2115,6 +2114,8 @@ WHERE `threadid` = '$this->threadid'
 					}
 				}
 			}
+        } else {
+            $ThreadVisibility = 'MembersOnly';
         }
 
         $this->dao->query("START TRANSACTION");

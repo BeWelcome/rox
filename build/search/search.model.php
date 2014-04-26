@@ -377,11 +377,11 @@ LIMIT 1
             {
                 foreach ($typicalOffer as $value) {
                     if ($value == '') continue;
-                    $typicalOffers[] = "TypicOffer = '" . $this->dao->escape($value) . "'";
+                    $typicalOffers[] = " FIND_IN_SET('" . $this->dao->escape($value) . "', TypicOffer)";
                 }
             }
             if (!empty($typicalOffers)) {
-                $condition = " AND (" . implode(" AND ", $typicalOffers) . ")";
+                $condition = " AND ( " . implode(" AND ", $typicalOffers) . ") ";
             }
         }
         return $condition;

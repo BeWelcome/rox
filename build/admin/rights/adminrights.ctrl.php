@@ -57,7 +57,11 @@ class AdminRightsController extends AdminBaseController
             return false;
         }
         $this->model->assignRight($vars);
-        return true;
+        $rights = $this->model->getRights();
+        $right = $rights[$vars['rightid']];
+        $this->setFlashNotice($this->getWords()->get('AdminRightsRightAssigned', $vars['username'], $right->Name));
+
+        return $this->router->url('admin_rights_member', array("username" => $vars['username']), false);
     }
 
     public function assign() {
@@ -74,7 +78,7 @@ class AdminRightsController extends AdminBaseController
             'rightid' => 0,
             'level' => 0,
             'scope' => '',
-			'comment' => '');
+            'comment' => '');
         $page->rights = $this->model->getRights(true, $member);
         return $page;
     }
@@ -108,7 +112,7 @@ class AdminRightsController extends AdminBaseController
         };
         $page = new AdminRightsListMembersPage();
         $page->vars = array(
-            'member' => $member
+            'member' => $member->id
         );
         $page->current = 'AdminRightsListMembers';
         $page->rights = $this->model->getRights();

@@ -41,7 +41,7 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     </div>
     <div class="type-select">
         <label for="right"><?php echo $words->get("AdminRightsRights")?></label>
-        <?= $this->rightsSelect($this->rights, $this->vars['right']) ?>
+        <?= $this->rightsSelect($this->rights, $this->vars['rightid']) ?>
     </div>
     <div class="type-select">
         <label for="level"><?php echo $words->get("AdminRightsLevel") ?></label>

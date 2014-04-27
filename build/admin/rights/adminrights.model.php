@@ -33,12 +33,12 @@ class AdminRightsModel extends RoxModelBase {
                 $errors[] = 'AdminRightsUsernameNotExisting';
             }
         }
-        if ($vars['right'] == 0) {
+        if ($vars['rightid'] == 0) {
             $errors[] = 'AdminRightsNoRightSelected';
         } else {
             // check if right is already assigned
             if (isset($member)) {
-                $right = new Right($vars['right']);
+                $right = new Right($vars['rightid']);
                 $assigned = $right->getRightForMember($member);
                 if ($assigned) {
                     $errors[] = 'AdminRightsAlreadyAssigned';

@@ -83,7 +83,6 @@ class ForumsController extends PAppController
         if (($_SESSION["Param"]->FeatureForumClosed!='No')and(!$this->BW_Right->HasRight("Admin"))) {
             $this->_view->showFeatureIsClosed();
             PPHP::PExit();
-             break ;
         } // end of test "if feature is closed"
 
 
@@ -318,7 +317,6 @@ class ForumsController extends PAppController
             $new_tags = $this->_model->suggestTags($request[2]);
             echo $this->_view->generateClickableTagSuggestions($new_tags);
             PPHP::PExit();
-            break;
         }
         else if ($this->action == self::ACTION_LOCATIONDROPDOWNS) {
             // ignore current request, so we can use the last request
@@ -328,7 +326,6 @@ class ForumsController extends PAppController
             }
             echo $this->_view->getLocationDropdowns();
             PPHP::PExit();
-            break;
         } else if ($this->action == self::ACTION_DELETE) {
             if ($this->BW_Flag->hasFlag("NotAllowToPostInForum")) { // Test if teh user has right for this, if not rough exit
                 MOD_log::get()->write("Forums.ctrl : Forbid to do action [".$this->action."] because of Flag "."NotAllowToPostInForum","FlagEvent") ;

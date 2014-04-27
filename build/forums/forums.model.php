@@ -2030,12 +2030,18 @@ WHERE `threadid` = '$topicinfo->threadid'
         if (!($User = APP_User::login())) {
             throw new PException('User gone missing...');
         }
+        $IdGroup = 0;
+        if (isset($vars['IdGroup'])) {
+            $IdGroup = $vars['IdGroup'];
+        }
+        if (isset($vars['PostVisibility'])) {
+            $postVisibility = $vars['PostVisibility'];
+        } else {
+            // Someone unchecked the box for group only posts
+            $postVisibility = 'MembersOnly';
+        }
 
         $this->dao->query("START TRANSACTION");
-        $postVisibility = 'MembersOnly';
-        if ($vars['IdGroup'] <> 0) {
-            $postVisibility = $vars['PostVisibility'];
-        }
         $query = sprintf(
             "
 INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
@@ -2099,20 +2105,14 @@ WHERE `threadid` = '$this->threadid'
         if (!($User = APP_User::login())) {
             throw new PException('User gone missing...');
         }
-        $IdGroup=0;
-		if (isset($vars['IdGroup'])) {
-			$IdGroup=$vars['IdGroup'] ;
-			if (!empty($IdGroup)) {
-				$ss="select * from groups where id=".intval($IdGroup);
-                $s = $this->dao->query($ss);
-                $rGroup = $s->fetch(PDB::FETCH_OBJ);
-				if ($vars['ThreadVisibility']=='Default') {
-					if ($rGroup->VisiblePosts=='no') {
-						$ThreadVisibility='GroupOnly' ;
-					}
-				}
-			}
+        $IdGroup = 0;
+        if (isset($vars['IdGroup'])) {
+            $IdGroup = $vars['IdGroup'];
+        }
+        if (isset($vars['ThreadVisibility'])) {
+            $ThreadVisibility = $vars['ThreadVisibility'];
         } else {
+            // Someone unchecked the box for group only posts
             $ThreadVisibility = 'MembersOnly';
         }
 
@@ -2227,7 +2227,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
         }
 
         $this->prepare_notification($postid,"newthread") ; // Prepare a notification
-        MOD_log::get()->write("New Thread new Tread=#".$threadid." Post=#". $postid." IdGroup=#".$IdGroup." NotifyMe=[".$vars['NotifyMe']."] initial Visibility=".$vars['ThreadVisibility'], "Forum");
+        MOD_log::get()->write("New Thread new Tread=#".$threadid." Post=#". $postid." IdGroup=#".$IdGroup." NotifyMe=[".$vars['NotifyMe']."] initial Visibility=".$ThreadVisibility, "Forum");
 
         return $threadid;
     } // end of NewTopic

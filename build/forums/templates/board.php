@@ -92,7 +92,7 @@ if ($boardName != 'no tags') {
 ?></h3>
 
 <?php
-if ($User) {
+if ($User && empty($noForumNewTopicButton)) {
 ?>
 	<div id="boardnewtopictop">
     <span class="button"><a href="<?php echo $uri; ?>new"><?php echo $words->getBuffered('ForumNewTopic'); ?></a></span><?php echo $words->flushBuffer(); ?></div>

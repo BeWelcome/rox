@@ -24,10 +24,10 @@ $purifier = MOD_htmlpure::getBasicHtmlPurifier();
                         }
 
                         $showNewTopicButton = false;
-                        $suggestionsGroupId = PVars::getObj('suggestions')->groupid;
                         if ($this->isGroupMember()) {
                             $showNewTopicButton = true;
                         }
+                        $suggestionsGroupId = PVars::getObj('suggestions')->groupid;
                         if ($group_id == $suggestionsGroupId) {
                             $showNewTopicButton = false;
                         }

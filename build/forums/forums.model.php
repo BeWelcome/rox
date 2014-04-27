@@ -1215,6 +1215,9 @@ WHERE `postid` = $this->messageId
                 $this->dao->query("START TRANSACTION");
 
                 if ($is_topic) {
+                    if (!isset($vars['ThreadVisibility'])) {
+                        $vars['ThreadVisibility'] = 'MembersOnly';
+                    }
                     $vars['PostVisibility'] = $vars['ThreadVisibility'];
                 }
 

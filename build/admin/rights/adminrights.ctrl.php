@@ -112,7 +112,7 @@ class AdminRightsController extends AdminBaseController
         };
         $page = new AdminRightsListMembersPage();
         $page->vars = array(
-            'member' => $member->id
+            'member' => ($member ? $member->id : 0)
         );
         $page->current = 'AdminRightsListMembers';
         $page->rights = $this->model->getRights();

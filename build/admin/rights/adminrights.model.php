@@ -72,7 +72,7 @@ class AdminRightsModel extends RoxModelBase {
             INSERT INTO
                 rightsvolunteers
             SET
-                IdRight = '" . $this->dao->escape($vars['right']) . "',
+                IdRight = '" . $this->dao->escape($vars['rightid']) . "',
                 IdMember = '" . $member->id . "',
                 Scope = '" . $this->dao->escape($vars['scope']) . "',
                 Level = '" . $this->dao->escape($vars['level']) . "',
@@ -81,37 +81,6 @@ class AdminRightsModel extends RoxModelBase {
         $this->dao->query($query);
     }
 
-//    /**
-//     * get list of members which have a right assigned
-//     *
-//     * @access public
-//     * @return list of members
-//     */
-//    public function getMembers($includeLevelZero = false)
-//    {
-//        $query = '
-//            SELECT
-//                m.Username,
-//                m.id as id,
-//                m.status
-//            FROM
-//                rights r,
-//                rightsvolunteers rv,
-//                members m
-//            WHERE
-//                m.Status in (' . Member::ACTIVE_ALL . ')
-//                AND rv.IdMember = m.id
-//                AND rv.IdRight = r.id';
-//        if (!$includeLevelZero) {
-//            $query .= ' AND rv.Level <> 0';
-//        }
-//        $query .= '
-//            ORDER BY
-//                m.Username
-//            ';
-//        return $this->bulkLookup($query);
-//    }
-//
     /**
      * get list of members with all assigned rights
      *

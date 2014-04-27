@@ -19,11 +19,11 @@ $layoutbits = new MOD_layoutbits();
     <form class="yform" method="post">
         <?= $callbackTags ?>
         <div class="type-select">
-            <label for="right"><?= $words->get("AdminRightsRight") ?></label>
+            <label for="rightid"><?= $words->get("AdminRightsRight") ?></label>
             <?= $this->rightsSelect($this->rights, $this->vars['rightid']) ?>
         </div>
         <div class="type-check">
-            <input type="checkbox" id="history" name="history" value="1" <?= ($this->vars['history']) ? 'checked="checked' : '' ?> />
+            <input type="checkbox" id="history" name="history" value="1" <?= (isset($this->vars['history'])) ? 'checked="checked' : '' ?> />
             <label for="history"><?= $words->get("AdminRightsHistory") ?></label>
         </div>
         <div class="type-button">

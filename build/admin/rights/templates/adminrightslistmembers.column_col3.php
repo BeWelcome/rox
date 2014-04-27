@@ -25,7 +25,7 @@ $layoutbits = new MOD_layoutbits();
             <?= memberSelect($this->members, $this->vars['member']) ?>
         </div>
         <div class="type-check">
-            <input type="checkbox" id="history" name="history" value="1" <?= ($this->vars['history']) ? 'checked="checked' : '' ?> />
+            <input type="checkbox" id="history" name="history" value="1" <?= (isset($this->vars['history'])) ? 'checked="checked' : '' ?> />
             <label for="history"><?= $words->get("AdminRightsHistory") ?></label>
         </div>
         <div class="type-button">

@@ -60,7 +60,7 @@ class AdminRightsBasePage extends AdminBasePage
 
     protected function rightsSelect($rights, $current, $disabled = false)
     {
-        $select = '<select id="right" name="right"' . ($disabled ? ' disabled="disabled"' : '') . '>';
+        $select = '<select id="rightid" name="rightid"' . ($disabled ? ' disabled="disabled"' : '') . '>';
         $select .= '<option value="0"></option>';
         foreach ($rights as $right) {
             $select .= '<option value="' . $right->id . '"';

@@ -71,7 +71,7 @@ class AdminRightsController extends AdminBaseController
         $page->member = $member;
         $page->vars = array(
             'username' => ($member ? $member->Username : ''),
-            'right' => 0,
+            'rightid' => 0,
             'level' => 0,
             'scope' => '',
 			'comment' => '');
@@ -108,8 +108,7 @@ class AdminRightsController extends AdminBaseController
         };
         $page = new AdminRightsListMembersPage();
         $page->vars = array(
-            'member' => $member,
-            'history' => 0
+            'member' => $member
         );
         $page->current = 'AdminRightsListMembers';
         $page->rights = $this->model->getRights();
@@ -125,8 +124,8 @@ class AdminRightsController extends AdminBaseController
     {
         $vars = $args->post;
         $rightId = false;
-        if (isset($vars['right']) && $vars['right'] <> '0') {
-            $rightId = $vars['right'];
+        if (isset($vars['rightid']) && $vars['rightid'] <> '0') {
+            $rightId = $vars['rightid'];
         }
         $history = false;
         if (isset($vars['history']) && $vars['history'] <> '0') {
@@ -147,8 +146,7 @@ class AdminRightsController extends AdminBaseController
         $page = new AdminRightsListRightsPage();
         $page->rights = $this->model->getRights();
         $page->vars = array(
-            'rightid' => $rightId,
-            'history' => 0
+            'rightid' => $rightId
         );
         $page->rightsWithMembers = $this->model->getRightsWithMembers($rightId);
         return $page;

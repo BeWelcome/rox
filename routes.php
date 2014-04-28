@@ -92,7 +92,6 @@
     $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminGeneralController', 'activityLogs');
 
     // admin rights
-    //$this->addRoute('admin_rights', 'admin/rights', 'AdminRightsController', 'assign');
     $this->addRoute('admin_rights', 'admin/rights', 'AdminRightsController', 'assign');
     $this->addRoute('admin_rights_overview', 'admin/rights/overview', 'AdminRightsController', 'overview');
     $this->addRoute('admin_rights_members', 'admin/rights/list/members', 'AdminRightsController', 'listMembers');
@@ -100,7 +99,7 @@
     $this->addRoute('admin_rights_rights', 'admin/rights/list/rights', 'AdminRightsController', 'listRights');
     $this->addRoute('admin_rights_right', 'admin/rights/list/rights/:id:', 'AdminRightsController', 'listRights');
     $this->addRoute('admin_rights_create', 'admin/rights/create', 'AdminRightsController', 'create');
-    $this->addRoute('admin_rights_assign', 'admin/rights/assign', 'AdminRightsController', 'assign');
+    $this->addRoute('admin_rights_assign', 'admin/rights/assign/:username:', 'AdminRightsController', 'assign');
     $this->addRoute('admin_rights_edit', 'admin/rights/edit/:id:/:username:', 'AdminRightsController', 'edit');
     $this->addRoute('admin_rights_remove', 'admin/rights/remove/:id:/:username:', 'AdminRightsController', 'remove');
     $this->addRoute('admin_rights_tooltip', 'admin/rights/tooltip', 'AdminRightsController', 'tooltip');

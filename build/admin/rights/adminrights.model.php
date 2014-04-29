@@ -94,6 +94,7 @@ class AdminRightsModel extends RoxModelBase {
                 m.Username,
                 m.id as id,
                 m.status,
+                m.LastLogin,
                 g.Name as PlaceName,
                 gc.Name as CountryName,
                 r.id rightId,
@@ -138,6 +139,7 @@ class AdminRightsModel extends RoxModelBase {
                 $memberDetails = new StdClass();
                 $memberDetails->id = $mwr->id;
                 $memberDetails->Status = $mwr->status;
+                $memberDetails->LastLogin = date('Y-m-d', strtotime($mwr->LastLogin));
                 $memberDetails->PlaceName = $mwr->PlaceName;
                 $memberDetails->CountryName = $mwr->CountryName;
                 $memberDetails->Rights = array();
@@ -169,6 +171,7 @@ class AdminRightsModel extends RoxModelBase {
                 m.Username,
                 m.id as id,
                 m.status,
+                m.LastLogin,
                 g.Name as PlaceName,
                 gc.Name as CountryName
             FROM
@@ -212,6 +215,7 @@ class AdminRightsModel extends RoxModelBase {
             }
             $memberDetails = new StdClass();
             $memberDetails->Status = $rwm->status;
+            $memberDetails->LastLogin = date('Y-m-d', strtotime($rwm->LastLogin));
             $memberDetails->Username = $rwm->Username;
             $memberDetails->PlaceName = $rwm->PlaceName;
             $memberDetails->CountryName = $rwm->CountryName;

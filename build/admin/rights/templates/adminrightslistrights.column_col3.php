@@ -61,7 +61,8 @@ $layoutbits = new MOD_layoutbits();
         ?>
         <td class="usercol"> 
 			<div class="picture"><div><?= $layoutbits->PIC_30_30($memberDetails->Username) ?></div>
-            <div><a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a></div></div>           
+            <div><a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a><br/>
+                (<?= $memberDetails->Status ?> , <?= $memberDetails->LastLogin ?>)<br/></div></div>
 		</td>
         <td class="level"><?= $ss . $memberDetails->level . $se ?></td>
         <td class="scope"><?= $ss . $memberDetails->scope . $se ?></td>

@@ -1,0 +1,6 @@
+INSERT INTO words (code, ShortCode, IdLanguage, Sentence, Description, IdMember)
+SELECT 'Broadcast_Title_LoginReminder052014', shortcode, IdLanguage, sentence, description, Idmember FROM words
+ WHERE code = 'Broadcast_Title_LoginReminder092013';
+INSERT INTO words (code, ShortCode, IdLanguage, Sentence, Description, IdMember)
+SELECT 'Broadcast_Body_LoginReminder052014', shortcode, IdLanguage, sentence, description, Idmember FROM words
+  WHERE code = 'Broadcast_Body_LoginReminder092013';

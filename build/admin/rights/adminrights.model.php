@@ -33,12 +33,12 @@ class AdminRightsModel extends RoxModelBase {
                 $errors[] = 'AdminRightsUsernameNotExisting';
             }
         }
-        if ($vars['right'] == 0) {
+        if ($vars['rightid'] == 0) {
             $errors[] = 'AdminRightsNoRightSelected';
         } else {
             // check if right is already assigned
             if (isset($member)) {
-                $right = new Right($vars['right']);
+                $right = new Right($vars['rightid']);
                 $assigned = $right->getRightForMember($member);
                 if ($assigned) {
                     $errors[] = 'AdminRightsAlreadyAssigned';
@@ -72,7 +72,7 @@ class AdminRightsModel extends RoxModelBase {
             INSERT INTO
                 rightsvolunteers
             SET
-                IdRight = '" . $this->dao->escape($vars['right']) . "',
+                IdRight = '" . $this->dao->escape($vars['rightid']) . "',
                 IdMember = '" . $member->id . "',
                 Scope = '" . $this->dao->escape($vars['scope']) . "',
                 Level = '" . $this->dao->escape($vars['level']) . "',
@@ -81,37 +81,6 @@ class AdminRightsModel extends RoxModelBase {
         $this->dao->query($query);
     }
 
-//    /**
-//     * get list of members which have a right assigned
-//     *
-//     * @access public
-//     * @return list of members
-//     */
-//    public function getMembers($includeLevelZero = false)
-//    {
-//        $query = '
-//            SELECT
-//                m.Username,
-//                m.id as id,
-//                m.status
-//            FROM
-//                rights r,
-//                rightsvolunteers rv,
-//                members m
-//            WHERE
-//                m.Status in (' . Member::ACTIVE_ALL . ')
-//                AND rv.IdMember = m.id
-//                AND rv.IdRight = r.id';
-//        if (!$includeLevelZero) {
-//            $query .= ' AND rv.Level <> 0';
-//        }
-//        $query .= '
-//            ORDER BY
-//                m.Username
-//            ';
-//        return $this->bulkLookup($query);
-//    }
-//
     /**
      * get list of members with all assigned rights
      *
@@ -125,6 +94,7 @@ class AdminRightsModel extends RoxModelBase {
                 m.Username,
                 m.id as id,
                 m.status,
+                m.LastLogin,
                 g.Name as PlaceName,
                 gc.Name as CountryName,
                 r.id rightId,
@@ -169,6 +139,7 @@ class AdminRightsModel extends RoxModelBase {
                 $memberDetails = new StdClass();
                 $memberDetails->id = $mwr->id;
                 $memberDetails->Status = $mwr->status;
+                $memberDetails->LastLogin = date('Y-m-d', strtotime($mwr->LastLogin));
                 $memberDetails->PlaceName = $mwr->PlaceName;
                 $memberDetails->CountryName = $mwr->CountryName;
                 $memberDetails->Rights = array();
@@ -200,6 +171,7 @@ class AdminRightsModel extends RoxModelBase {
                 m.Username,
                 m.id as id,
                 m.status,
+                m.LastLogin,
                 g.Name as PlaceName,
                 gc.Name as CountryName
             FROM
@@ -243,6 +215,7 @@ class AdminRightsModel extends RoxModelBase {
             }
             $memberDetails = new StdClass();
             $memberDetails->Status = $rwm->status;
+            $memberDetails->LastLogin = date('Y-m-d', strtotime($rwm->LastLogin));
             $memberDetails->Username = $rwm->Username;
             $memberDetails->PlaceName = $rwm->PlaceName;
             $memberDetails->CountryName = $rwm->CountryName;

@@ -25,7 +25,7 @@ $layoutbits = new MOD_layoutbits();
             <?= memberSelect($this->members, $this->vars['member']) ?>
         </div>
         <div class="type-check">
-            <input type="checkbox" id="history" name="history" value="1" <?= ($this->vars['history']) ? 'checked="checked' : '' ?> />
+            <input type="checkbox" id="history" name="history" value="1" <?= (isset($this->vars['history'])) ? 'checked="checked' : '' ?> />
             <label for="history"><?= $words->get("AdminRightsHistory") ?></label>
         </div>
         <div class="type-button">
@@ -53,7 +53,7 @@ $layoutbits = new MOD_layoutbits();
     }?>
     <tr class="<?= $class ?>"><td class="usercol" rowspan="<?= count($details->Rights) ?>"><?php
 		echo $layoutbits->PIC_50_50($username, 'class="framed"') . '<br />';
-		echo $username . '<br />'; ?>
+		echo $username; ?><br/>(<?= $details->Status ?>, <?= $details->LastLogin ?>)<br />
         <a href="admin/rights/assign/<?= $username ?>">
             <img src="images/icons/add.png" alt="add right"></a><br />
         <a href="admin/rights/assign/<?= $username ?>">

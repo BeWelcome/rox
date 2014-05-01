@@ -19,11 +19,11 @@ $layoutbits = new MOD_layoutbits();
     <form class="yform" method="post">
         <?= $callbackTags ?>
         <div class="type-select">
-            <label for="right"><?= $words->get("AdminRightsRight") ?></label>
+            <label for="rightid"><?= $words->get("AdminRightsRight") ?></label>
             <?= $this->rightsSelect($this->rights, $this->vars['rightid']) ?>
         </div>
         <div class="type-check">
-            <input type="checkbox" id="history" name="history" value="1" <?= ($this->vars['history']) ? 'checked="checked' : '' ?> />
+            <input type="checkbox" id="history" name="history" value="1" <?= (isset($this->vars['history'])) ? 'checked="checked' : '' ?> />
             <label for="history"><?= $words->get("AdminRightsHistory") ?></label>
         </div>
         <div class="type-button">
@@ -61,7 +61,8 @@ $layoutbits = new MOD_layoutbits();
         ?>
         <td class="usercol"> 
 			<div class="picture"><div><?= $layoutbits->PIC_30_30($memberDetails->Username) ?></div>
-            <div><a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a></div></div>           
+            <div><a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a><br/>
+                (<?= $memberDetails->Status ?> , <?= $memberDetails->LastLogin ?>)<br/></div></div>
 		</td>
         <td class="level"><?= $ss . $memberDetails->level . $se ?></td>
         <td class="scope"><?= $ss . $memberDetails->scope . $se ?></td>

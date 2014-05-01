@@ -49,7 +49,18 @@ class ForumsView extends RoxAppView {
         }
         $AppropriatedLanguage = 0 ; // By default english will be proposed as défault language
         $LanguageChoices = $this->_model->LanguageChoices() ;
-        $visibilitiesDropdown = $this->getNewThreadVisibilitiesDropdown($IdGroup);
+        if ($IdGroup == 0) {
+            $visibilityCheckbox = ''; // MembersOnly
+        } else {
+            $group = $this->_model->getGroupEntity($IdGroup);
+            $groupOnly = ($group->VisiblePosts == 'no');
+            if ($groupOnly) {
+                $threadVisibility = 'GroupOnly';
+            } else {
+                $threadVisibility = 'MembersOnly';
+            }
+            $visibilityCheckbox = $this->getVisibilityCheckbox('GroupOnly', $threadVisibility, $IdGroup, true);
+        }
         $disableTinyMCE = $this->_model->getTinyMCEPreference();
         require 'templates/editcreateform.php';
     }
@@ -114,7 +125,7 @@ class ForumsView extends RoxAppView {
         }
 
         $visibility = $this->_model->getThreadVisibility($topic->IdThread);
-        $visibilitiesDropdown = $this->getVisibilitiesDropdown($visibility, $visibility, $IdGroup, false);
+        $visibilityCheckbox = $this->getVisibilityCheckbox($visibility, $visibility, $IdGroup, false);
         $disableTinyMCE = $this->_model->getTinyMCEPreference();
 
         require 'templates/editcreateform.php';
@@ -140,7 +151,7 @@ class ForumsView extends RoxAppView {
         $IdGroup = $this->_model->IdGroup;
         $visibilityThread = $this->_model->GetThreadVisibility($vars['threadid']);
         $visibilityPost = $this->_model->GetPostVisibility($vars['postid']);
-        $visibilitiesDropdown = $this->getVisibilitiesDropdown($visibilityPost, $visibilityThread, $IdGroup, $allow_title);
+        $visibilityCheckbox = $this->getVisibilityCheckbox($visibilityPost, $visibilityThread, $IdGroup, $allow_title);
 
         // By default no appropriated language is propose, the member can choose to translate
         $LanguageChoices=$this->_model->LanguageChoices() ;
@@ -330,6 +341,15 @@ class ForumsView extends RoxAppView {
         $uri = rtrim($uri, '/').'/';
         $this->SetPageTitle($boards->getBoardName().' - BeWelcome '.$this->words->getBuffered('Forum'));
 
+        if ($boards->IdGroup != 0) {
+            $memberIsGroupMember = $this->_model->checkGroupMembership($boards->IdGroup);
+            if (!$memberIsGroupMember) {
+                $noForumNewTopicButton = true;
+            }
+        }
+        if ($boards->IdGroup == SuggestionsModel::getGroupId()) {
+            $noForumNewTopicButton = true;
+        }
         $pages = $this->getBoardPageLinks();
         $currentPage = $this->_model->getPage();
         $max = $this->_model->getBoard()->getNumberOfThreads();
@@ -423,7 +443,8 @@ class ForumsView extends RoxAppView {
         require 'templates/searchresultsubscriptions.php';
     }
     public function displaySearchResultPosts($posts) {
-                $topic->WithDetail=true ; // to avoid a warning
+        $topic = new StdClass();
+        $topic->WithDetail=true ; // to avoid a warning
         require 'templates/searchresultposts.php';
     }
 
@@ -493,92 +514,32 @@ class ForumsView extends RoxAppView {
         return '';
     }
 
-    private function getVisibilitiesDropdown($currentVisibility, $highestVisibility, $IdGroup, $newtopic) {
-        $visibilities = array();
-        // If we have a group check if visibility is limited to GroupOnly
-        if ($IdGroup != 0) {
-            // getting group entity from model as createEntity isn't public
-            $group = $this->_model->GetGroupEntity($IdGroup);
-            $groupOnly = ($group->VisiblePosts == "no");
-            $isMember = $group->isMember($this->_model->getLoggedInMember());
-            if ($groupOnly) {
-                // check if highest visibility is not GroupOnly meaning
-                // thread was started before the group setting changed
-                if ($highestVisibility != "GroupOnly") {
-                    $visibilities[] = "MembersOnly";
-                    if ($isMember) {
-                        $visibilities[] = "GroupOnly";
-                    }
-                } else {
-                    $currentVisibility = "GroupOnly";
-                    $visibilities[] = "GroupOnly";
-                }
-            } else {
-                $visibilities[] = "MembersOnly";
-                if ($isMember) {
-                    $visibilities[] = "GroupOnly";
-                }
-            }
-        } else {
-            // return empty string for forum posts
+    private function getVisibilityCheckbox($visibility, $highestVisibility, $IdGroup, $newTopic) {
+        if ($IdGroup == 0) {
+            // Indicate to the form that only MembersOnly is allowed; this is a hack to avoid too much code changes
             return '';
         }
 
-        if (!$newtopic) {
+        if ($highestVisibility == 'GroupOnly') {
+            // This will tell the form that the post is GroupOnly (IdGroup set and no visibilityCheckbox content
+            return '';
+        }
+
+        if (!$newTopic) {
             $name = "PostVisibility";
-            // if this is a reply or edit of a reply we need to limit the choices
-            if ($highestVisibility == 'GroupOnly') {
-                $visibilities = array( "GroupOnly");
-            }
+            $word = 'ForumVisibilityGroupOnlyPost';
         } else {
             $name = "ThreadVisibility";
+            $word = 'ForumVisibilityGroupOnlyThread';
         }
 
-        $out = '<select name="' . $name . '" id="' . $name . '" onchange="javascript: ();">';
-        foreach ($visibilities as $visibility) {
-            $selected = "";
-            if ($visibility == $currentVisibility) {
-                $selected = ' selected="selected"';
-            }
-            $out .= '<option value="'. $visibility . '"'. $selected . '>'
-                . $this->words->getBuffered("forum_edit_vis_" . $visibility) .'</option>';
-        }
-        $out .= '</select>' . $this->words->flushBuffer();
-        return $out;
-    }
+        $words = new MOD_words();
 
-    private function getNewThreadVisibilitiesDropdown($IdGroup) {
-        $visibilities = array();
-        // If we have a group check if visibility is limited to GroupOnly
-        if ($IdGroup != 0) {
-            $group = $this->_model->GetGroupEntity($IdGroup);
-            $groupOnly = ($group->VisiblePosts == "no");
-            $currentVisibility = "GroupOnly";
-            if ($groupOnly) {
-                $visibilities[] = "GroupOnly";
-            }
-            else
-            {
-                $visibilities[] = "MembersOnly";
-                $visibilities[] = "GroupOnly";
-            }
+        $out = '<input type="checkbox" name="' . $name . '" id="' . $name . '" value="GroupOnly"';
+        if ($visibility == 'GroupOnly') {
+            $out .= ' checked="checked" ';
         }
-        else
-        {
-            // Return empty string for forum posts
-            return '';
-        }
-
-        $out = '<select name="ThreadVisibility" id="ThreadVisibility" onchange="javascript: ();">';
-        foreach ($visibilities as $visibility) {
-            $selected = "";
-            if ($visibility == $currentVisibility) {
-                $selected = ' selected="selected"';
-            }
-            $out .= '<option value="' . $visibility . '"'. $selected . '>'
-                . $this->words->getBuffered("forum_edit_vis_" . $visibility) .'</option>';
-        }
-        $out .= '</select>' . $this->words->flushBuffer();
+        $out .= '/> <label for="' . $name . '">' . $words->get($word) . '</label>';
         return $out;
     }
 

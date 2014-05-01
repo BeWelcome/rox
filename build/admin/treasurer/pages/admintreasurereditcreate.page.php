@@ -27,12 +27,11 @@ Boston, MA  02111-1307, USA.
      * Treasurer management page
      * 
      * @package Apps
-     * @subpackage Admin
+     * @subpackage Admin/Treasurer
      */
-
 class AdminTreasurerEditCreateDonationPage extends AdminBasePage
 {
-    public function __construct(AdminModel $model, $id) {
+    public function __construct(AdminTreasurerModel $model, $id) {
         $this->model = $model;
         $this->member = $model->getLoggedInMember();
 

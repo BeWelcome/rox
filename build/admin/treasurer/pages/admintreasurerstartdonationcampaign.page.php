@@ -30,26 +30,19 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-class AdminTreasurerPage extends AdminBasePage
+class AdminTreasurerStartDonationCampaignPage extends AdminBasePage
 {
-    public function __construct(AdminModel $model) {
+    public function __construct(AdminTreasurerModel $model) {
         $this->model = $model;
         $this->member = $model->getLoggedInMember();
-        $this->donations = $model->getRecentDonations();
-        $stats = $model->getStatForDonations();
-        $this->donatedInCampaign = $stats->YearDonation;
-        if (!$this->donatedInCampaign) {
-            $this->donatedInCampaign = 0;
-        }
-        // Check if a donation campaign is currently running
-        $this->campaign = ($model->getDonationCampaignStatus() == 1);
         list($amount, $date) = $this->model->getDonationCampaignValues();
-        $this->neededPerYear = $amount;
-        $this->campaignStartDate = $date;
+        $this->amount = $amount;
+        list($year, $month, $day) = preg_split('/[\/.-]/', $date);
+        $this->date = $day . "." . $month . "." . $year;
     }
     
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; {$this->words->get('AdminTreasurer')}";
+        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/treasurer'>{$this->words->get('AdminTreasurer')}</a> &raquo; {$this->words->get('AdminTreasurerStartDonationCampaign')}</a>";
     }
 }

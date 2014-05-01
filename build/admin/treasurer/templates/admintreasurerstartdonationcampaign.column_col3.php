@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
  * @subpackage Admin
  */
 $formkit = $this->layoutkit->formkit;
-$callback_tag = $formkit->setPostCallback('AdminGeneralController', 'treasurerStartDonationCampaignCallback');
+$callback_tag = $formkit->setPostCallback('AdminTreasurerController', 'treasurerStartDonationCampaignCallback');
 
 $errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');

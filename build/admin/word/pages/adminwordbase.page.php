@@ -62,7 +62,7 @@ class AdminWordBasePage extends PageWithActiveSkin
     }
 
     protected function leftSidebar() {
-        include '../build/admin/templates/adminword.leftsidebar.php';
+        include '../build/admin/word/templates/adminword.leftsidebar.php';
     }
     
     protected function getStylesheets() 

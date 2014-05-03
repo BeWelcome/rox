@@ -2,7 +2,7 @@
     $activefieldset = "";
     $defaultfieldset = "members";
     $formkit = $this->layoutkit->formkit;
-    $callback_tags = $formkit->setPostCallback('AdminGeneralController', 'massmailEnqueueCallback');
+    $callback_tags = $formkit->setPostCallback('AdminMassmailController', 'massmailEnqueueCallback');
 
     $errors = $this->getRedirectedMem('errors');
     if (!empty($errors)) {

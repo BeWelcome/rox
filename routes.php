@@ -69,6 +69,8 @@
     $this->addRoute('relatedgroup_log','groups/:group_id:/relatedgroupsettings', 'RelatedGroupsController', 'showRelatedGroupLog');
 
     // member app routes
+    $this->addRoute('members_profile', '/members/:username:', 'MembersController', 'index');
+
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
     $this->addRoute('members_profile_set_active', 'setprofileactive', 'MembersController', 'setactive');
     $this->addRoute('members_profile_set_inactive', 'setprofileinactive', 'MembersController', 'setinactive');
@@ -125,18 +127,27 @@
     $this->addRoute('admin_word_noupdate', 'admin/word/noupdate/:id:', 'AdminWordController','noUpdateNeeded');
 
     // admin massmailing
-    $this->addRoute('admin_massmail', 'admin/massmail', 'AdminGeneralController', 'massmail');
-    $this->addRoute('admin_massmail_create', 'admin/massmail/create', 'AdminGeneralController', 'massmailCreate');
-    $this->addRoute('admin_massmail_details', 'admin/massmail/details/:id:', 'AdminGeneralController', 'massmailDetails');
-    $this->addRoute('admin_massmail_details_mailing', 'admin/massmail/details/:id:/:type:', 'AdminGeneralController', 'massmailDetailsMailing');
-    $this->addRoute('admin_massmail_details_mailing_pages', 'admin/massmail/details/:id:/:type:/page/:page:', 'AdminGeneralController', 'massmailDetailsMailing');
-    $this->addRoute('admin_massmail_edit', 'admin/massmail/edit/:id:', 'AdminGeneralController', 'massmailEdit');
-    $this->addRoute('admin_massmail_enqueue', 'admin/massmail/enqueue/:id:', 'AdminGeneralController', 'massmailEnqueue');
-    $this->addRoute('admin_massmail_unqueue', 'admin/massmail/unqueue/:id:', 'AdminGeneralController', 'massmailUnqueue');
-    $this->addRoute('admin_massmail_getadminunits', 'admin/massmail/getadminunits/:countrycode:', 'AdminGeneralController', 'getAdminUnits');
-    $this->addRoute('admin_massmail_getplaces', 'admin/massmail/getplaces/:countrycode:/:adminunit:', 'AdminGeneralController', 'getPlaces');
-    $this->addRoute('admin_massmail_trigger', 'admin/massmail/trigger/:id:', 'AdminGeneralController', 'massmailTrigger');
-    $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminGeneralController', 'massmailUntrigger');
+    $this->addRoute('admin_massmail', 'admin/massmail', 'AdminMassmailController', 'massmail');
+    $this->addRoute('admin_massmail_create', 'admin/massmail/create', 'AdminMassmailController', 'massmailCreate');
+    $this->addRoute('admin_massmail_details', 'admin/massmail/details/:id:', 'AdminMassmailController',
+        'massmailDetails');
+    $this->addRoute('admin_massmail_details_mailing', 'admin/massmail/details/:id:/:type:',
+        'AdminMassmailController', 'massmailDetailsMailing');
+    $this->addRoute('admin_massmail_details_mailing_pages', 'admin/massmail/details/:id:/:type:/page/:page:',
+        'AdminMassmailController', 'massmailDetailsMailing');
+    $this->addRoute('admin_massmail_edit', 'admin/massmail/edit/:id:', 'AdminMassmailController', 'massmailEdit');
+    $this->addRoute('admin_massmail_enqueue', 'admin/massmail/enqueue/:id:', 'AdminMassmailController',
+        'massmailEnqueue');
+    $this->addRoute('admin_massmail_unqueue', 'admin/massmail/unqueue/:id:', 'AdminMassmailController',
+        'massmailUnqueue');
+    $this->addRoute('admin_massmail_getadminunits', 'admin/massmail/getadminunits/:countrycode:',
+        'AdminMassmailController', 'getAdminUnits');
+    $this->addRoute('admin_massmail_getplaces', 'admin/massmail/getplaces/:countrycode:/:adminunit:',
+        'AdminMassmailController', 'getPlaces');
+    $this->addRoute('admin_massmail_trigger', 'admin/massmail/trigger/:id:', 'AdminMassmailController',
+        'massmailTrigger');
+    $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminMassmailController',
+        'massmailUntrigger');
 
     // admin treasurer routes
     $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminTreasurerController', 'treasurerOverview');

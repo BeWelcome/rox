@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-class AdminMassMailDetailsPage extends AdminMassMailBasePage
+class AdminMassmailDetailsPage extends AdminMassmailBasePage
 {
     protected $ROWSPERPAGE = 20;
     protected $id;

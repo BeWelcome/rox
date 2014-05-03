@@ -20,55 +20,30 @@ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
     /**
-     * @author Fake51
+     * @author shevek
      */
 
     /**
-     * Translation management page
+     * massmailing enqueue page
      *
      * @package Apps
      * @subpackage Admin
      */
 
-class AdminMassMailEditCreatePage extends AdminMassMailBasePage
+class AdminMassmailEnqueuePage extends AdminMassmailBasePage
 {
     protected $id;
-    protected $name;
-    protected $subject;
-    protected $text;
-    protected $description;
 
-    public function __construct($model, $id = 0) {
+    public function __construct($model, $massmail) {
         parent::__construct($model);
-        // No idea how to access class constants in column_col3. Works here but
-        //   not in adminmassmaileditcreate.column_col3.php. While $this-> works fine there
-        if ($id == 0) {
-            $this->id = 0;
-
-            // empty fields as we create a new mass mailing
-            $this->name = $this->subject = $this->text = $this->description = "";
-            $this->type = "None";
-        } else {
-            $this->id = $id;
-            // get fields from database
-            $entry = $model->getMassmail($id);
-            $this->name = $entry->Name;
-            $this->subject = $entry->Subject;
-            $this->body = $entry->Body;
-            $this->description = $entry->Description;
-            $this->type = $entry->Type;
-        }
+        $this->id = $massmail->id;
+        $this->type = $massmail->Type;
     }
 
     public function teaserHeadline() {
-        if ($this->id == 0) {
-            $editcreate = 'create';
-        } else {
-            $editcreate = 'edit';
-        }
         return '<a href="admin">' . $this->words->get('AdminTools') . "</a> "
             . ' &raquo; <a href="admin/massmail">' . $this->words->get('AdminMassMail') . "</a>"
-            . ' &raquo; <a href="admin/massmail/' . $editcreate . '">' . $this->words->get('AdminMassMail'. $editcreate) . "</a>";
+            . ' &raquo; <a href="admin/massmail/enqueue/' . $this->id . '">' . $this->words->get('AdminMassMailEnqueue') . "</a>";
     }
 
     public function leftSidebar() {

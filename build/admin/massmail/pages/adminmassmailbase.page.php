@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-class AdminMassMailBasePage extends AdminBasePage
+class AdminMassmailBasePage extends AdminBasePage
 {
     const NEWSLETTERSPECIFIC = 1;
     const NEWSLETTERGENERAL = 2;

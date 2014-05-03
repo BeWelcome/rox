@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-class AdminMassMailPage extends AdminMassMailBasePage
+class AdminMassmailPage extends AdminMassmailBasePage
 {
     public function __construct($model) {
         parent::__construct($model);

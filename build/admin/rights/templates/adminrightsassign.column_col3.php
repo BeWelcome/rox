@@ -54,9 +54,8 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     </div>
     <div class="type-text">
         <label for="comment"><?php echo $this->words->get("AdminRightsComment") ?></label>
-        <textarea id="comment" name="comment" rows="4" title="Enter a comment, so that others know why the right was assigned.">
-            <?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?>
-        </textarea>
+        <textarea id="comment" name="comment" rows="4" placeholder="Enter a comment, so that others know why the right was assigned."><?= 
+        htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <div class="type-button">
         <input type="submit" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>

@@ -1593,9 +1593,10 @@ WHERE `threadid` = '%d' ",
     * This will prepare a post for a full edit moderator action
     * @IdPost : Id of the post to process
 	 */
-    public function prepareModeratorEditPost($IdPost) {
+    public function prepareModeratorEditPost($IdPost, $moderator = false) {
 	 	$DataPost->IdPost=$IdPost ;
 		$DataPost->Error="" ; // This will receive the error sentence if any
+
         $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
         $s = $this->dao->query($query);
 		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
@@ -1605,7 +1606,27 @@ WHERE `threadid` = '%d' ",
 			return($DataPost) ;
 		}
 
-// retrieve all trads for content
+        if (!$moderator) {
+            // first check if post was made in a group and if the current member is a member of that group
+            $query = "SELECT IdGroup FROM forums_posts fp, forums_threads ft WHERE fp.id = " . $this->dao->escape($IdPost) . " AND fp.threadId = ft.id";
+            $s = $this->dao->query($query);
+            $row = $s->fetch(PDB::FETCH_OBJ);
+            $IdGroup = $row->IdGroup;
+            if ($IdGroup <> 0) {
+                $group = $this->createEntity('Group')->findByid($IdGroup);
+                $member = $this->getLoggedInMember();
+                // Can't use $group->isMember() for some reason
+                $query = " SELECT * FROM membersgroups WHERE IdMember = " . $member->id . " AND IdGroup = " . $IdGroup;
+                $s = $this->dao->query($query);
+                $row = $s->fetch(PDB::FETCH_OBJ);
+                if (!$row) {
+		 	        $DataPost->Error="NoGroupMember";
+			        return($DataPost) ;
+                }
+            }
+        }
+
+        // retrieve all trads for content
         $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
         $s = $this->dao->query($query);
 		 $DataPost->Post->Content=array() ;

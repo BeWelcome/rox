@@ -29,6 +29,8 @@ $words = new MOD_words();
   <div class="subcolumns">
     <div class="c66l">
       <div class="subcl">
+          <h2 style="color:red"><strong>If you login your browser will show a security warning as the server currently uses a self-signed certificate. Please accept this for now.<br />Additionally
+              no message notifications are currently send. Sorry about the inconvenience. </strong></h2>
           <h2 style="padding-bottom:0em; width:560px"><?php echo $words->get('IndexPageTagline');?></h2>
           <p style="padding-bottom:0.5em; width:560px; text-align:right;"><a class="button2" href="tour" onclick="this.blur();"><?php echo $words->get('tour_take');?></a> </p>
           <div id="slideshow-content">

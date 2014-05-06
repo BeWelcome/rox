@@ -23,6 +23,8 @@ Boston, MA  02111-1307, USA.
 */
 
 ?>
+<h3 style="color:red"><strong>Because of the ongoing server migration message notifications via email will be
+        delayed. Sorry for the inconvenience.</strong></h3>
 <div class="subcolumns">
     <div class="c33l">
         <div class="subcl">

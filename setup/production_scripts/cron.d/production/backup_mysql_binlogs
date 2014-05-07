@@ -1,1 +1,0 @@
-9 * * * * bwbackup /home/bwrox/www.bewelcome.org/setup/production_scripts/cronscripts/backup_mysql_binlogs.sh

@@ -1,3 +1,4 @@
+#!/bin/bash
 cat <<EOF | mysql BW_MAIN 
 /*
 This script is run each 30 minutes by a cron and results in closing edit possibility for the post which have been already repiled to

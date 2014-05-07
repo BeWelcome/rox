@@ -1,1 +1,0 @@
-0,30 * * * * bwscripts /home/bwrox/www.bewelcome.org/setup/production_scripts/cronscripts/close_edit_forum.sh

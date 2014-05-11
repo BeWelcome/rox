@@ -56,7 +56,7 @@ function main() {
     ini_set('error_log', SCRIPT_BASE.'errors.log');
     // error_reporting(E_ALL);
     // for php5.4x uncomment the below and comment out the above
-    error_reporting(E_ALL & ~E_STRICT);
+    error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
 
     try {
         require_once SCRIPT_BASE.'roxlauncher/roxlauncher.php';

@@ -109,7 +109,9 @@ Database installation
       $ wget http://download.geonames.org/export/dump/alternateNames.zip
       $ wget http://download.geonames.org/export/dump/countryInfo.txt
       
-      unzip allCountries.zip alternateNames.zip
+      unzip allCountries.zip
+
+      unzip alternateNames.zip
 
   6. Import into the database:
   

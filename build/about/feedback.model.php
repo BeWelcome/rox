@@ -156,7 +156,7 @@ SQL
         require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
 
         //Create the Transport
-        $transport = Swift_SmtpTransport::newInstance('localhost', 25);
+        $transport = Swift_SmtpTransport::newInstance('localhost', 25, false);
 
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);

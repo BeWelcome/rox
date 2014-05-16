@@ -196,6 +196,8 @@ SQL
             $sendResult = false;
         }
 
+        error_log(__FUNCTION__ . ' Send result: ' . $sendResult);
+        error_log(__FUNCTION__ . ' Send result: ' . print_r($receiver, true));
         if ($sendResult)
         {
             return true;

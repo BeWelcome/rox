@@ -8,14 +8,3 @@ and stores tags in a different (and better) way.
 
 One problem with this app is too big and monolithic classes
 with too much coupling. 
-
-A rewrite has been started in build/forum, by lemon-head,
-who now is busy with different other things.
-
-If you decide that this recoding is a bad idea,
-and you would rather work on the older version,
-this can be discussed.
-
-
-
-

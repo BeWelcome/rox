@@ -1,1 +1,0 @@
-A lot of these templates need to be moved into build/*/templates/

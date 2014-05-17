@@ -134,13 +134,28 @@ class SearchController extends RoxControllerBase
     /**
      * Returns a JSON encoded list of possible locations based on the provided location
      */
-    public function searchSuggestLocations() {
+    public function searchSuggestLocations()
+    {
         $type = $this->route_vars['type'];
         $location = $this->args_vars->get['name'];
         $callback = $this->args_vars->get['callback'];
         $locations = $this->model->suggestLocations($location, $type, $callback);
         header('Content-type: application/javascript, charset=utf-8');
         $javascript = $callback . '(' . json_encode($locations) . ')';
+        echo $javascript . "\n";
+        exit;
+    }
+
+    /**
+     * Returns a JSON encoded list of possible locations based on the provided location
+     */
+    public function searchMemberUsernames()
+    {
+        $username = $this->args_vars->get['username'];
+        $callback = $this->args_vars->get['callback'];
+        $usernames = $this->model->suggestUsernames($username, $callback);
+        header('Content-type: application/javascript, charset=utf-8');
+        $javascript = $callback . '(' . json_encode($usernames) . ')';
         echo $javascript . "\n";
         exit;
     }

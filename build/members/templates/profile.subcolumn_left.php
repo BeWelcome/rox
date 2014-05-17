@@ -204,7 +204,7 @@ HTML;
           <?php
             foreach($messengers as $m) {
                 if (isset($m["address"]) && $m["address"] != '')
-                echo "<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' /> "
+                echo "<img src='".PVars::getObj('env')->baseuri."images/icons/icons1616/".$m["image"]."' width='16' height='16' title='".$m["network"]."' alt='".$m["network"]."' /> "
                     .$m["network"].": ".$m["address"]."<br />";
             }
           ?>

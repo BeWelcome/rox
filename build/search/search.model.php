@@ -377,11 +377,11 @@ LIMIT 1
             {
                 foreach ($typicalOffer as $value) {
                     if ($value == '') continue;
-                    $typicalOffers[] = "TypicOffer = '" . $this->dao->escape($value) . "'";
+                    $typicalOffers[] = " FIND_IN_SET('" . $this->dao->escape($value) . "', TypicOffer)";
                 }
             }
             if (!empty($typicalOffers)) {
-                $condition = " AND (" . implode(" AND ", $typicalOffers) . ")";
+                $condition = " AND ( " . implode(" AND ", $typicalOffers) . ") ";
             }
         }
         return $condition;
@@ -1258,44 +1258,45 @@ LIMIT 1
         return $result;
     }
 
-    /*
+    /**
      * Used as AJAX source by the autosuggest on the search form
      */
-    public function suggestLocations($location, $type) {
+    public function suggestLocations($location, $type)
+    {
         $result = array();
         $locations = array();
-/*        $result['status'] = 'failed';
-        // First get places with BW members
-        $resPlaces = $this->sphinxSearch( $location, true );
-        if ($resPlaces !== false && $res['total'] != 0) {
-            $ids = array();
-            if (is_array($res['matches'])) {
-                foreach ( $res['matches'] as $docinfo ) {
-                    $ids[] = $docinfo['id'];
+        /*        $result['status'] = 'failed';
+                // First get places with BW members
+                $resPlaces = $this->sphinxSearch( $location, true );
+                if ($resPlaces !== false && $res['total'] != 0) {
+                    $ids = array();
+                    if (is_array($res['matches'])) {
+                        foreach ( $res['matches'] as $docinfo ) {
+                            $ids[] = $docinfo['id'];
+                        }
+                    }
+                    $places = $this->getPlacesFromDataBase($ids);
+                    $locations = array_merge($locations, $places);
+                    $result['result'] = 'success';
+                    $result['places'] = 1;
                 }
-            }
-            $places = $this->getPlacesFromDataBase($ids);
-            $locations = array_merge($locations, $places);
-            $result['result'] = 'success';
-            $result['places'] = 1;
-        }
-        if ($resPlaces !== false) {
-            // Get administrative units only when places call actually worked
-            $res = $this->sphinxSearch( $location, false );
-            if ( $res !==false  && $res['total'] != 0) {
-                $ids = array();
-                if (is_array($res['matches'])) {
-                    foreach ( $res['matches'] as $docinfo ) {
-                        $ids[] = $docinfo['id'];
+                if ($resPlaces !== false) {
+                    // Get administrative units only when places call actually worked
+                    $res = $this->sphinxSearch( $location, false );
+                    if ( $res !==false  && $res['total'] != 0) {
+                        $ids = array();
+                        if (is_array($res['matches'])) {
+                            foreach ( $res['matches'] as $docinfo ) {
+                                $ids[] = $docinfo['id'];
+                            }
+                        }
+                        $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
+                        $locations = array_merge($locations, $adminunits);
+                        $result["status"] = "success";
+                        $result['adminunits'] = 1;
                     }
                 }
-                $adminunits= $this->getFromDataBase($ids, $this->getWords()->getSilent('SearchAdminUnits'));
-                $locations = array_merge($locations, $adminunits);
-                $result["status"] = "success";
-                $result['adminunits'] = 1;
-            }
-        }
-*/
+        */
         // If nothing was found assume that search daemon isn't running and
         // try to get something from the database
         if (empty($locations)) {
@@ -1304,13 +1305,13 @@ LIMIT 1
             $locationParts = explode(',', $location);
             $place = trim($locationParts[0]);
             switch (count($locationParts)) {
-            	case 3:
-            	    $admin1 = trim($locationParts[1]);
-            	    $country = trim($locationParts[2]);
-            	    break;
-            	case 2:
-            	    $country = trim($locationParts[1]);
-            	    break;
+                case 3:
+                    $admin1 = trim($locationParts[1]);
+                    $country = trim($locationParts[2]);
+                    break;
+                case 2:
+                    $country = trim($locationParts[1]);
+                    break;
             }
             list($countryIds, $admin1Ids) = $this->getIdsForCountriesAndAdminUnits($country, $admin1);
             $locations = $this->getPlaces($place, $admin1Ids, $countryIds, 10);
@@ -1320,6 +1321,32 @@ LIMIT 1
             $result['status'] = 'success';
         }
         $result["locations"] = $locations;
+        return $result;
+    }
+
+    /**
+     * Used as AJAX source by the autosuggest for usernames
+     */
+    public function suggestUsernames($username)
+    {
+        $result = array();
+        $query = "
+            SELECT
+                username
+            FROM
+                members m
+            WHERE
+                username like '" . $this->dao->escape($username) . "%'
+                AND Status in (" . Member::ACTIVE_ALL . ")
+            ORDER BY
+                username
+            LIMIT
+                0,10";
+        $usernames = $this->bulkLookup($query);
+        if (!empty($usernames)) {
+            $result['status'] = 'success';
+        }
+        $result['usernames'] = $usernames;
         return $result;
     }
 }

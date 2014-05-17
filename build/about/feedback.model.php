@@ -142,7 +142,7 @@ SQL
         // check if the receiver email address is good
         if (!$this->validateEmail($receiver))
         {
-            $this->logWrite("In feedback model swift::send: bad email [{$receiver}]", "feedback");
+            $this->logWrite("In feedback model swift::send: bad email [" . implode(',', $receiver) . "]", "feedback");
             return false;
         }
 
@@ -156,7 +156,7 @@ SQL
         require_once SCRIPT_BASE . 'lib/misc/swift-5.0.1/lib/swift_init.php';
 
         //Create the Transport
-        $transport = Swift_SmtpTransport::newInstance('localhost', 25);
+        $transport = Swift_SmtpTransport::newInstance('localhost', 25, false);
 
         //Create the Mailer using your created Transport
         $mailer = Swift_Mailer::newInstance($transport);
@@ -181,7 +181,7 @@ SQL
         }
         catch (Exception $e)
         {
-            $this->logWrite("In feedback model swift::send: caught exception try to send email to [{$receiver}]", "feedback");
+            $this->logWrite("In feedback model swift::send: caught exception try to send email to [" . implode(',', $receiver) . "]", "feedback");
             return false;
         }
 
@@ -202,7 +202,7 @@ SQL
         }
         else
         {
-            $this->logWrite("In feedback model swift::send: Failed to send a mail to [{$receiver}]", "feedback");
+            $this->logWrite("In feedback model swift::send: Failed to send a mail to [" . implode(',', $receiver) . "]", "feedback");
             return false;
         }
     }

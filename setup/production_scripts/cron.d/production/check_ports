@@ -1,1 +1,0 @@
-5 00 * * * root /home/bwrox/www.bewelcome.org/setup/production_scripts/cronscripts/check_ports.php deer

@@ -82,7 +82,9 @@ class MembersController extends RoxControllerBase
                     switch (isset($request[2]) ? $request[2] : false)
                     {
                         case 'comments':
-                            $page = new CommentsPage();
+                        case 'relations':
+                            // not logged in users don't get to see comments page
+                            $page = new MembersMustLoginPage;
                             break;
                         case 'groups':
                             $my_groups = $member->getGroups();

@@ -409,7 +409,7 @@ HTML;
                 ?>
                 <tr align="left" >
                   <td class="label" ><?=$me["network"]?>
-                  <?="<img src='".PVars::getObj('env')->baseuri."bw/images/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
+                  <?="<img src='".PVars::getObj('env')->baseuri."images/icons/icons1616/".$me["image"]."' width='16' height='16' title='".$me["network"]."' alt='".$me["network"]."' />"?>
                   </td>
                   <td>
                     <input type="text" size="25" name="<?=$val?>" value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>" />

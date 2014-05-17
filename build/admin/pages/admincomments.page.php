@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
      */
 
     /** 
-     * accepter overview page
+     * comments overview page
      * 
      * @package Apps
      * @subpackage Admin

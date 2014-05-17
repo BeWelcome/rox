@@ -161,15 +161,26 @@ class SuggestionsModel extends RoxModelBase
         if ($ordered) {
             $query = "
                 SELECT
-                    so.*
+                    so.*,
+                    IFNULL(voted.total, 0) votes
                 FROM
-                    suggestions_options so,
-                    suggestions_option_ranks sor
+                    suggestions_options so
+                LEFT JOIN (
+                    SELECT
+                        SUM(vote) total, optionId
+                    FROM
+                        suggestions_option_ranks
+                    GROUP BY
+                        optionId
+                    ) voted
+                ON
+                    (voted.optionid = so.id)
                 WHERE
-                    so.id = sor.optionid
-                GROUP BY sor.optionid
-                ORDER BY SUM(sor.vote) " . $ordered . "
-                LIMIT " . ($pageno * $items) . "," . $items
+                    so.state = " . $state . "
+                ORDER BY
+                    votes " . $ordered . "
+                LIMIT
+                    " . ($pageno * $items) . "," . $items
             ;
             $all = $temp->FindBySQLMany($query);
         } else {
@@ -798,7 +809,7 @@ class SuggestionsModel extends RoxModelBase
         return $rankVotes;
     }
 
-    public function moveSuggestionToImplemented($suggestion, $option) {
+    public function moveSuggestionToImplemented($suggestion) {
         $suggestion->state = SuggestionsModel::SUGGESTIONS_IMPLEMENTED;
         $suggestion->update(true);
     }
@@ -811,7 +822,7 @@ class SuggestionsModel extends RoxModelBase
         // Check if there is any option left that is in state implementing. If not make sure the suggestion
         // state changes to SuggestionsModel::SUGGESTIONS_IMPLEMENTED instead of SuggestionsModel::SUGGESTIONS_DEV
         $implementing = false;
-        foreach($suggestions->options as $currentOption) {
+        foreach($suggestion->options as $currentOption) {
             $implementing |= ($currentOption->state == SuggestionOption::IMPLEMENTING);
         }
         if (!$implementing) {

@@ -183,6 +183,10 @@ class ClassLoader
                 if ($this->requireFile('build/'.$begin.'/'.$subdir.implode('', array_slice($camel_explode, 1)).'.'.$suffix, $classname)) {
                     return true;
                 }
+                if ($this->requireFile('build/'. $camel_explode[0] . '/' . $camel_explode[1] .'/'. $subdir .
+                    implode('', $camel_explode) . '.' . $suffix, $classname)) {
+                    return true;
+                }
             } else if ($this->requireFile('build/'.$begin.'/'.$subdir.$suffix, $classname)) {
                 return true;
             }
@@ -206,7 +210,6 @@ class ClassLoader
             if (!is_string($classname)) {
                 return true;
             } else if (class_exists($classname) || interface_exists($classname)) {
-//                eval($classname.'::$where_defined = \''.$abs_path.'\';');
                 self::$_where_is_class[$classname] = $abs_path;
                 return true;
             } else {

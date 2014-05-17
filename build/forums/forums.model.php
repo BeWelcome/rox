@@ -1215,6 +1215,9 @@ WHERE `postid` = $this->messageId
                 $this->dao->query("START TRANSACTION");
 
                 if ($is_topic) {
+                    if (!isset($vars['ThreadVisibility'])) {
+                        $vars['ThreadVisibility'] = 'MembersOnly';
+                    }
                     $vars['PostVisibility'] = $vars['ThreadVisibility'];
                 }
 
@@ -1482,8 +1485,6 @@ WHERE `threadid` = '%d' ",
 			if (isset($OldReport->PostComment)) $PostComment=$PostComment."<hr />\n".$OldReport->PostComment ;
 			$ss="update reports_to_moderators set  LastWhoSpoke='Moderator',PostComment='".$this->dao->escape($PostComment)."',IdModerator=".$_SESSION["IdMember"].",Status='".$this->dao->escape($Status)."',Type='".$this->dao->escape($Type)."',IdModerator=".$_SESSION['IdMember']." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 			$this->dao->query($ss);
-			$this->MailTheReport($IdPost,$IdReporter,$PostComment,0,$Status,1) ;
-
 		}
 		else {
 			if ($IdReporter!=$_SESSION["IdMember"]) {
@@ -1494,7 +1495,6 @@ WHERE `threadid` = '%d' ",
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment'])."<hr />\n".$OldReport->PostComment ;
 				$ss="update reports_to_moderators set LastWhoSpoke='Member',PostComment='".$this->dao->escape($PostComment)."',Status='".$this->dao->escape($Status)."'"." where IdPost=".$IdPost." and IdReporter=".$IdReporter ;
 				$this->dao->query($ss);
-				$this->MailTheReport($IdPost,$OldReport->IdReporter,$PostComment,$OldReport->IdModerator,$Status,0) ;
 			}
 			else {
 				$PostComment=$UsernameAddTime.$this->cleanupText($vars['PostComment']) ;
@@ -1594,6 +1594,7 @@ WHERE `threadid` = '%d' ",
     * @IdPost : Id of the post to process
 	 */
     public function prepareModeratorEditPost($IdPost, $moderator = false) {
+        $DataPost = new StdClass();
 	 	$DataPost->IdPost=$IdPost ;
 		$DataPost->Error="" ; // This will receive the error sentence if any
 
@@ -2032,9 +2033,18 @@ WHERE `threadid` = '$topicinfo->threadid'
         if (!($User = APP_User::login())) {
             throw new PException('User gone missing...');
         }
+        $IdGroup = 0;
+        if (isset($vars['IdGroup'])) {
+            $IdGroup = $vars['IdGroup'];
+        }
+        if (isset($vars['PostVisibility'])) {
+            $postVisibility = $vars['PostVisibility'];
+        } else {
+            // Someone unchecked the box for group only posts
+            $postVisibility = 'MembersOnly';
+        }
 
         $this->dao->query("START TRANSACTION");
-
         $query = sprintf(
             "
 INSERT INTO `forums_posts` (`authorid`, `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
@@ -2043,7 +2053,7 @@ VALUES ('%d', '%d', NOW(), '%s','%d',%d,'%s')
             $User->getId(),
             $this->threadid,
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $_SESSION["IdMember"],$this->GetLanguageChoosen(),$vars['PostVisibility']
+            $_SESSION["IdMember"], $this->GetLanguageChoosen(), $postVisibility
         );
 
         $result = $this->dao->query($query);
@@ -2098,24 +2108,16 @@ WHERE `threadid` = '$this->threadid'
         if (!($User = APP_User::login())) {
             throw new PException('User gone missing...');
         }
-        $IdGroup=0 ;
-		$ThreadVisibility=$vars['ThreadVisibility'] ;
-		if (isset($vars['IdGroup'])) {
-			$IdGroup=$vars['IdGroup'] ;
-			if (!empty($IdGroup)) {
-				$ss="select * from groups where id=".intval($IdGroup);
-                $s = $this->dao->query($ss);
-                $rGroup = $s->fetch(PDB::FETCH_OBJ);
-				if ($vars['ThreadVisibility']=='Default') {
-					if ($rGroup->VisiblePosts=='no') {
-						$ThreadVisibility='GroupOnly' ;
-					}
-				}
-			}
-		}
-		if ($ThreadVisibility=='Default') {
-			$ThreadVisibility='NoRestriction' ;
-		}
+        $IdGroup = 0;
+        if (isset($vars['IdGroup'])) {
+            $IdGroup = $vars['IdGroup'];
+        }
+        if (isset($vars['ThreadVisibility'])) {
+            $ThreadVisibility = $vars['ThreadVisibility'];
+        } else {
+            // Someone unchecked the box for group only posts
+            $ThreadVisibility = 'MembersOnly';
+        }
 
         $this->dao->query("START TRANSACTION");
 
@@ -2228,7 +2230,7 @@ VALUES ('%s', '%d', '%d', %s, %s, %s, %s,%d,%d,'%s')
         }
 
         $this->prepare_notification($postid,"newthread") ; // Prepare a notification
-        MOD_log::get()->write("New Thread new Tread=#".$threadid." Post=#". $postid." IdGroup=#".$IdGroup." NotifyMe=[".$vars['NotifyMe']."] initial Visibility=".$vars['ThreadVisibility'], "Forum");
+        MOD_log::get()->write("New Thread new Tread=#".$threadid." Post=#". $postid." IdGroup=#".$IdGroup." NotifyMe=[".$vars['NotifyMe']."] initial Visibility=".$ThreadVisibility, "Forum");
 
         return $threadid;
     } // end of NewTopic
@@ -2377,7 +2379,8 @@ and ($this->ThreadGroupsRestriction)
 			$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=-1 and forums_tags.id=tags_threads.IdTag"; // This will return nothing
 			require SCRIPT_BASE.'build/members/pages/mustlogin.page.php';
-			$topicinfo->title="Please log in to see the thread" ;
+            $words = new MOD_words;
+			$topicinfo->title= $words->get('ForumNotLoggedInOrNotInGroup');
 			$topicinfo->replies=0 ;
 
 		}
@@ -2595,6 +2598,7 @@ LIMIT %d
     public function searchSubscriptions($cid=0,$IdThread=0,$IdTag=0) {
         $IdMember=0 ;
 
+        $TResults = new StdClass();
         $TResults->Username="" ;
         $TResults->ThreadTitle="" ;
         $TResults->IdThread=0 ;
@@ -3464,8 +3468,9 @@ ORDER BY `posttime` DESC    ",    $IdMember   );
     * @IdTag : Id of the post to process
 	 */
     public function prepareModeratorEditTag($IdTag) {
-	 	 $DataTag->IdTag=$IdTag ;
-		 $DataTag->Error="" ; // This will receive the error sentence if any
+        $DataTag = new StdClass();
+	 	$DataTag->IdTag=$IdTag ;
+		$DataTag->Error="" ; // This will receive the error sentence if any
 
 
 // retrieve The tag
@@ -4369,6 +4374,7 @@ class Board implements Iterator {
 
 // Now fetch the tags associated with this thread
             $row->NbTags=0 ;
+            $row2 = new StdClass();
 			$row2->IdName=99999 ; // Nedeed because we need an identifier !
         	$query2="SELECT IdTag,IdName from tags_threads,forums_tags ".
 							  "WHERE IdThread=".$row->IdThread." and forums_tags.id=tags_threads.IdTag";
@@ -4462,108 +4468,4 @@ class Board implements Iterator {
         $var = $this->current() !== false;
         return $var;
     }
-
-
-
-/**
-     * Notify volunteers
-     * // TODO: create appropriate template
-     * @param array $vars with username
-*/
-
-Public function MailTheReport($IdPost,$IdReporter,$message,$IdModerator=0,$ReportStatus,$ToMember=0)    {
-    //Load the files we'll need
-    require_once "bw/lib/swift/Swift.php";
-    require_once "bw/lib/swift/Swift/Connection/SMTP.php";
-    require_once "bw/lib/swift/Swift/Message/Encoder.php";
-
-
-	$ss=" select forums_threads.title as ThreadTitle,forums_threads.id as IdThread,writer.Username as UsernamePostWriter,reporter.Username as UsernameReporter " ;
-	$ss=$ss." from forums_posts,members as writer,members as reporter,forums_threads where writer.id=forums_posts.IdWriter and reporter.id=".$IdReporter." and forums_posts.id=".$IdPost." and forums_threads.id=forums_posts.threadid" ;
-	$qry=mysql_query($ss) ;
-    if (!$qry) {
-        throw new PException('Could not retrieve '.$ss);
-    }
-	$rPost=mysql_fetch_object($qry) ;
-	$IdThread=$rPost->IdThread ;
-	$UsernamePostWriter=$rPost->UsernamePostWriter ;
-	$UsernameReporter=$rPost->UsernameReporter ;
-
-    // FOR TESTING ONLY (using Gmail SMTP Connection for example):
-    // $smtp =& new Swift_Connection_SMTP("smtp.gmail.com", Swift_Connection_SMTP::PORT_SECURE, Swift_Connection_SMTP::ENC_TLS);
-    // $smtp->setUsername("YOURUSERNAME");
-    // $smtp->setpassword("YOURPASSWORD");
-    // $swift =& new Swift($smtp);
-
-    $language = $_SESSION['lang'];    // TODO: convert to something readable
-
-	$reportlink="http://".PVars::getObj('env')->baseuri."/forums/reporttomod/".$IdPost ;
-	$postlink="http://".PVars::getObj('env')->baseuri."/forums/s".$IdThread."/#".$IdPost ;
-	if ($ToMember==1) {
-		$subject = "Forum moderator report for post #".$IdPost." to ".$UsernameReporter ;
-		$text="A BeWelcome moderator has answered your request<br />" ;
-		$text=$text."Thread: <b>".$rPost->ThreadTitle."</b><br />" ;
-		$text=$text."The status of this report is ".$ReportStatus ;
-		$text=$text."You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;
-		$text=$text."<hr />".$message ;
-		$mReceiver= $this->createEntity('Member',$IdReporter) ;
-		$Email=$mReceiver->get_email() ;
-		$sender = "noreply@bewelcome.org" ;
-	}
-	else {
-		$subject = "moderator report from ".$UsernameReporter." for the post #".$IdPost." written by ".$UsernamePostWriter ;
-		$text="member <a href=\"".PVars::getObj('env')->baseuri."/members/".$UsernameReporter."\">".$UsernameReporter."</a>" ;
-		$text=$text." has written a report about member <a href=\"http://".PVars::getObj('env')->baseuri."/members/".$UsernamePostWriter."\">".$UsernamePostWriter."</a> for post <a href=\"".$postlink."\">".$postlink."</a>" ;
-		$text=$text."Thread: <b>".$rPost->ThreadTitle."</b><br />" ;
-		$text.="The status of this report is ".$ReportStatus ;
-		$text.="You can view this report at <a href=\"".$reportlink."\">".$reportlink."</a>" ;
-		$text.="<hr />".$message ;
-		$mModerator= $this->createEntity('Member',$IdModerator) ;
-		$Email=$mModerator->get_email() ;
-		$mReporter= $this->createEntity('Member',$IdReporter) ;
-		// set the sender
-		$sender = strip_tags(str_replace("%40","@",$mReporter->get_email())) ;
-	}
-	$Email=strip_tags(str_replace("%40","@",$Email)) ;
-
-
-
-/*
-echo "Email=".$Email,"<br />" ; ;
-echo "Subject=".$subject,"<br />" ;
-echo "text=".$text,"<br />" ;
-die("force stop") ;
-*/
-
-
-    //Start Swift
-    $swift = new Swift(new Swift_Connection_SMTP("localhost"));
-
-    //Create a message
-    $message = new Swift_Message($subject);
-
-    //Add some "parts"
-    $message->attach(new Swift_Message_Part($text));
-
-    // Using a html-template
-    ob_start();
-    require 'templates/mail/mail_html.php';
-    $message_html = ob_get_contents();
-    ob_end_clean();
-    $message->attach(new Swift_Message_Part($message_html, "text/html"));
-
-    //Now check if Swift actually sends it
-     MOD_log::get()->write("about sending report for post #".$IdPost." message=<br />".$text."<br /> sent to [".$Email."] from [".$sender."] for post #".$IdPost, "Forum");
-    if ($swift->send($message, $Email , $sender)) {
-        MOD_log::get()->write("report for post #".$IdPost." sent to ".$Email." from ".$sender." for post #".$IdPost, "Forum");
-        $status = true;
-    } else {
-/*
-	print_r($recipients) ;
-	die(0) ;
-	*/
-        MOD_log::get()->write("<b>FAILURE</b> to report for post #".$IdPost." sent to ".$recipents[0]." from ".$sender." for post #".$IdPost, "Forum");
-        $status = false;
-    }
-} // end of MailTheReport
 }

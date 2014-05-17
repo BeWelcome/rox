@@ -25,75 +25,23 @@ $words = new MOD_words();
 
 $model = new VolunteerbarModel();
 
-$numberPersonsToBeAccepted = $model->getNumberPersonsToBeAccepted() ;
 $numberReportedComments = $model->getNumberReportedComments();
-$numberPersonsToBeChecked = $model->getNumberPersonsToBeChecked() ;
 $numberSpamToBeChecked = $model->getNumberSpamToBeChecked() ;
-$numberPersonsToAcceptInGroup = $model->getNumberPersonsToAcceptInGroup() ;
 
 $R = MOD_right::get();
-
 ?>
 
 <ul>
 <?php
-
-    $res = "";
-    $request = PRequest::get()->request;
-    $link = ""; // FIXME: all link checks should be transfered to be "rox style"
-    if (count($request) > 1) {
-        $link = $request[0] . '/' . $request[1];
-    }
-
-    $array_of_items =
-        array(
-            array(
-                'Comments',
-                'bw/admin/admincomments.php',
-                'Negative comments (' . $numberReportedComments . ')',
-                'Review negative comments'
-            ),
-            array(
-                'Checker',
-                'bw/admin/adminchecker.php?action=viewSpamSayMember',
-                'Reported messages ('.$numberSpamToBeChecked.')',
-                'Review messages reported by users as spam'
-            ),
-            array(
-                'Group',
-                'bw/admin/admingroups.php',
-                'Group applications ('.$numberPersonsToAcceptInGroup.')',
-                'Review join requests for groups'
-            )
-        )
-    ;
 if ($logged_in) {
-echo '<li><b>';
-$roxModel = new RoxModelBase();
-echo $roxModel->getLoggedInMember()->Username . '</b></li>';
+    $roxModel = new RoxModelBase();
+    echo '<li><b>' . $roxModel->getLoggedInMember()->Username . '</b></li>';
+if ($R->hasRight('Comments')) {
+    echo '<li><a href="bw/admin/admincomments.php" title="Review negative comments">Negative comments (' . $numberReportedComments . ')</a></li>';
 }
-
-    foreach($array_of_items as $item) {
-        if ($R->hasRight($item[0])) {
-            if ($link == $item[1]) {
-                echo '<li><strong>'.$item[2].'</strong></li>
-                ';
-            } else {
-                echo '<li><a href="'.$item[1].'" title="'.$item[3].'">'.$item[2].'</a></li>
-                ';
-            }
-        }
-    }
-?>
-<?
-/*
- * disabled because of low traffic. see forum: http://www.bewelcome.org/groups/47/forum/s1079-Please__please__let_us_remove_the__x_members_online__
- *
-  <li><img src="styles/css/minimal/images/icon_grey_online.png" alt="onlinemembers" /> <a href="online" id="IdLoggedMembers"><?php echo $words->getBuffered('NbMembersOnline', $who_is_online_count); ?></a><?php echo $words->flushBuffer(); ?></li>
-*/
-?>
-
-  <?php if ($logged_in) {
+if ($R->hasRight('Checker')) {
+    echo '<li><a href="bw/admin/adminchecker.php?action=viewSpamSayMember" title="Review messages reported by users as spam">Reported messages ('.$numberSpamToBeChecked.')</a></li>';
+}
       ?>
       <li><img src="styles/css/minimal/images/icon_grey_mail.png" alt="mymessages"/><a href="messages"><?php echo $words->getBuffered('Mymessages'); ?></a>
           <?php if ($numberOfNewMessagees > 0) {

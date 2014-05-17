@@ -22,7 +22,6 @@
         <li <?php echo ($subTab === 'overview') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery"><span><?php echo $words->getBuffered('Photosets'); ?></span></a></li>
         <li <?php echo ($subTab === 'images') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/images"><span><?php echo $words->getBuffered('GalleryAllPhotos'); ?></span></a>
         </li>
-        <li <?php echo ($subTab === 'flickr') ? ' class="active"' : ''; ?>><a style="cursor:pointer;" href="gallery/flickr"><span><?php echo $words->getBuffered('GalleryFlickr'); ?></span></a></li>
     </ul>
     <?php echo $words->flushBuffer(); ?>
 </div>

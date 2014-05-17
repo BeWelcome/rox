@@ -9,12 +9,6 @@
 
 class TourPage extends PageWithActiveSkin
 {
-
-    protected function body()
-    {
-        require TEMPLATE_DIR . 'shared/roxpage/body_index.php';
-    }
-    
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/tour.css';
@@ -71,11 +65,6 @@ class TourPage extends PageWithActiveSkin
         else $step = $request[1];
         require 'templates/precontent_tour.php';
     }
-    
-    protected function leftSidebar()
-    {
-        
-    }
 
     protected function column_col3()
     {
@@ -89,6 +78,4 @@ class TourPage extends PageWithActiveSkin
     }
     
 }
-
-
 ?>

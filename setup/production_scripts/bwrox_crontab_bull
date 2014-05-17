@@ -1,4 +1,0 @@
-# m h  dom mon dow   command
-*/5 * * * * cd /home/bwrox/www.bewelcome.org ; env SERVER_NAME=www.bewelcome.org php /home/bwrox/www.bewelcome.org/htdocs/bw/mailbot.php
-0 7 * * * cd /home/bwrox/www.bewelcome.org   ; env SERVER_NAME=www.bewelcome.org php /home/bwrox/www.bewelcome.org/htdocs/bw/updatestats.php
-*/10 * * * * /home/bwrox/bwrox.production/setup/production_scripts/freespace

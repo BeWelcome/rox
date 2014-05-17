@@ -69,6 +69,8 @@
     $this->addRoute('relatedgroup_log','groups/:group_id:/relatedgroupsettings', 'RelatedGroupsController', 'showRelatedGroupLog');
 
     // member app routes
+    $this->addRoute('members_profile', '/members/:username:', 'MembersController', 'index');
+
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
     $this->addRoute('members_profile_set_active', 'setprofileactive', 'MembersController', 'setactive');
     $this->addRoute('members_profile_set_inactive', 'setprofileinactive', 'MembersController', 'setinactive');
@@ -81,24 +83,32 @@
     $this->addRoute('members_delete_note', 'members/:username:/note/delete', 'MembersController', 'deleteNote');
 
     // admin temporary vol page route
-    $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminController', 'tempVolStart');
+    $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminGeneralController', 'tempVolStart');
+
     // admin app routes
-    $this->addRoute('admin_main', 'admin', 'AdminController', 'index');
-    // admin no rights routes
-    $this->addRoute('admin_norights', 'admin/norights', 'AdminController', 'noRights');
-    // admin debug routes
-    $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminController', 'debugLogs');
-    // admin accepter routes
-    $this->addRoute('admin_accepter', 'admin/accepter', 'AdminController', 'accepter');
-    $this->addRoute('admin_accepter_search', 'admin/accepter/search', 'AdminController', 'accepterSearch');
-    // admin comments routes
-    $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminController', 'commentsOverview');
-    // admin spam routes
-    $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminController', 'spamOverview');
+    $this->addRoute('admin_main', 'admin', 'AdminGeneralController', 'index');
+    $this->addRoute('admin_norights', 'admin/norights', 'AdminGeneralController', 'noRights');
+    $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminGeneralController', 'debugLogs');
+    $this->addRoute('admin_comments_overview', 'admin/comments', 'AdminGeneralController', 'commentsOverview');
+    $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminGeneralController', 'spamOverview');
+    $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminGeneralController', 'activityLogs');
+
+    // admin rights
+    $this->addRoute('admin_rights', 'admin/rights', 'AdminRightsController', 'assign');
+    $this->addRoute('admin_rights_overview', 'admin/rights/overview', 'AdminRightsController', 'overview');
+    $this->addRoute('admin_rights_members', 'admin/rights/list/members', 'AdminRightsController', 'listMembers');
+    $this->addRoute('admin_rights_member', 'admin/rights/list/members/:username:', 'AdminRightsController', 'listMembers');
+    $this->addRoute('admin_rights_rights', 'admin/rights/list/rights', 'AdminRightsController', 'listRights');
+    $this->addRoute('admin_rights_right', 'admin/rights/list/rights/:id:', 'AdminRightsController', 'listRights');
+    $this->addRoute('admin_rights_create', 'admin/rights/create', 'AdminRightsController', 'create');
+    $this->addRoute('admin_rights_assign', 'admin/rights/assign/:username:', 'AdminRightsController', 'assign');
+    $this->addRoute('admin_rights_edit', 'admin/rights/edit/:id:/:username:', 'AdminRightsController', 'edit');
+    $this->addRoute('admin_rights_remove', 'admin/rights/remove/:id:/:username:', 'AdminRightsController', 'remove');
+    $this->addRoute('admin_rights_tooltip', 'admin/rights/tooltip', 'AdminRightsController', 'tooltip');
 
     // admin words routes
     // the overview route redirects to an empty edit screen,
-    // ideally this would become a real overview screen lateron
+    // ideally this would become a real overview screen later on
     $this->addRoute('admin_word_overview', 'admin/word', 'AdminWordController', 'editTranslation');    
     $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
     $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
@@ -116,32 +126,36 @@
     $this->addRoute('admin_word_find', 'admin/word/find', 'AdminWordController','findTranslations');
     $this->addRoute('admin_word_noupdate', 'admin/word/noupdate/:id:', 'AdminWordController','noUpdateNeeded');
 
-    // admin rights routes
-    $this->addRoute('admin_rights_overview', 'admin/rights', 'AdminController', 'rightsOverview');
-    // admin activity routes
-    $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminController', 'activityLogs');
-
     // admin massmailing
-    $this->addRoute('admin_massmail', 'admin/massmail', 'AdminController', 'massmail');
-    $this->addRoute('admin_massmail_create', 'admin/massmail/create', 'AdminController', 'massmailCreate');
-    $this->addRoute('admin_massmail_details', 'admin/massmail/details/:id:', 'AdminController', 'massmailDetails');
-    $this->addRoute('admin_massmail_details_mailing', 'admin/massmail/details/:id:/:type:', 'AdminController', 'massmailDetailsMailing');
-    $this->addRoute('admin_massmail_details_mailing_pages', 'admin/massmail/details/:id:/:type:/page/:page:', 'AdminController', 'massmailDetailsMailing');
-    $this->addRoute('admin_massmail_edit', 'admin/massmail/edit/:id:', 'AdminController', 'massmailEdit');
-    $this->addRoute('admin_massmail_enqueue', 'admin/massmail/enqueue/:id:', 'AdminController', 'massmailEnqueue');
-    $this->addRoute('admin_massmail_unqueue', 'admin/massmail/unqueue/:id:', 'AdminController', 'massmailUnqueue');
-    $this->addRoute('admin_massmail_getadminunits', 'admin/massmail/getadminunits/:countrycode:', 'AdminController', 'getAdminUnits');
-    $this->addRoute('admin_massmail_getplaces', 'admin/massmail/getplaces/:countrycode:/:adminunit:', 'AdminController', 'getPlaces');
-    $this->addRoute('admin_massmail_trigger', 'admin/massmail/trigger/:id:', 'AdminController', 'massmailTrigger');
-    $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminController', 'massmailUntrigger');
+    $this->addRoute('admin_massmail', 'admin/massmail', 'AdminMassmailController', 'massmail');
+    $this->addRoute('admin_massmail_create', 'admin/massmail/create', 'AdminMassmailController', 'massmailCreate');
+    $this->addRoute('admin_massmail_details', 'admin/massmail/details/:id:', 'AdminMassmailController',
+        'massmailDetails');
+    $this->addRoute('admin_massmail_details_mailing', 'admin/massmail/details/:id:/:type:',
+        'AdminMassmailController', 'massmailDetailsMailing');
+    $this->addRoute('admin_massmail_details_mailing_pages', 'admin/massmail/details/:id:/:type:/page/:page:',
+        'AdminMassmailController', 'massmailDetailsMailing');
+    $this->addRoute('admin_massmail_edit', 'admin/massmail/edit/:id:', 'AdminMassmailController', 'massmailEdit');
+    $this->addRoute('admin_massmail_enqueue', 'admin/massmail/enqueue/:id:', 'AdminMassmailController',
+        'massmailEnqueue');
+    $this->addRoute('admin_massmail_unqueue', 'admin/massmail/unqueue/:id:', 'AdminMassmailController',
+        'massmailUnqueue');
+    $this->addRoute('admin_massmail_getadminunits', 'admin/massmail/getadminunits/:countrycode:',
+        'AdminMassmailController', 'getAdminUnits');
+    $this->addRoute('admin_massmail_getplaces', 'admin/massmail/getplaces/:countrycode:/:adminunit:',
+        'AdminMassmailController', 'getPlaces');
+    $this->addRoute('admin_massmail_trigger', 'admin/massmail/trigger/:id:', 'AdminMassmailController',
+        'massmailTrigger');
+    $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminMassmailController',
+        'massmailUntrigger');
 
     // admin treasurer routes
-    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
-    $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminController', 'treasurerEditCreateDonation');
-    $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminController', 'treasurerEditCreateDonation');
-    $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminController', 'treasurerStartDonationCampaign');
-    $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminController', 'treasurerStopDonationCampaign');
-    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminController', 'treasurerOverview');
+    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminTreasurerController', 'treasurerOverview');
+    $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminTreasurerController', 'treasurerEditCreateDonation');
+    $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminTreasurerController', 'treasurerEditCreateDonation');
+    $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminTreasurerController', 'treasurerStartDonationCampaign');
+    $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminTreasurerController', 'treasurerStopDonationCampaign');
+    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminTreasurerController', 'treasurerOverview');
 
     // Simple newsletter page
     $this->addRoute('newsletter', 'newsletter', 'NewsletterController', 'index');
@@ -229,6 +243,8 @@
     $this->addRoute('searchmembers_text_advanced', 'search/members/text/advanced', 'SearchController', 'searchMembersText');
     $this->addRoute('searchmembers_advanced', 'search/members/advanced', 'SearchController', 'loadAdvancedOptions');
     $this->addRoute('search_places', 'search/locations/:type:', 'SearchController', 'searchSuggestLocations');
+
+    $this->addRoute('searchmembers_username', 'search/members/username', 'SearchController', 'searchMemberUsernames');
 
     // safety pages
     $this->addRoute('safety', 'safety', 'safetyController', 'safety');

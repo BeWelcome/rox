@@ -39,4 +39,24 @@ class ProfilePage extends MemberPage
     {
         return 'profile';
     }
+
+    /*
+     * Creates login link displayed to not loggedin users in stead of hidden content
+     *
+     * @param string $url Link to forward to after login
+     * @param string $code Wordcode to show after logintext
+     * @param Word $words Translation functionality
+     * @return string Text for login including link
+     */
+    public function getLoginLink($url,$code){
+
+    $loginUrlOpen = '<a href="login' . $url . '#login-widget">';
+    $loginUrlClose = '</a>';
+
+    return $this->words->get($code,
+                             $this->words->getSilent('ProfileShowLogin'),
+                             $loginUrlOpen,
+                             $loginUrlClose);
+    
+    }
 }

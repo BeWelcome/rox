@@ -47,7 +47,7 @@ function DisplayFaq($TFaq) {
 	include "header.php";
 
 	Menu1("faq.php", ww('FaqPage')); // Displays the top menu
-	Menu2("aboutus.php", ww('GetAnswers'));
+	Menu2("faq.php", ww('GetAnswers'));
     
     echo "\n";
 	echo "    <div id=\"main\">\n";
@@ -55,12 +55,9 @@ function DisplayFaq($TFaq) {
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
-	menugetanswers("faq.php", $title); // Display the generic header
+	//menugetanswers("faq.php", $title); // Display the generic header
 	echo "      </div>\n";
 
-        // ShowLeftColumn($MenuAction)  ; // Show the Actions
-	ShowAds(); // Show the Ads
-    
 	// Content with just two columns
 	echo "\n";
 	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
@@ -150,12 +147,9 @@ function DisplayFaqWiki($TFaq) {
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>", $title, " </h1>\n";
 	echo "      </div>\n";
-	menugetanswers("faq.php", $title); // Display the generic header
+	//menugetanswers("faq.php", $title); // Display the generic header
 	echo "      </div>\n";
 
-        // ShowLeftColumn($MenuAction)  ; // Show the Actions
-	ShowAds(); // Show the Ads
-    
 	// Content with just two columns
 	echo "\n";
 	echo "      <div id=\"col3\" class=\"twocolumns\">\n";
@@ -201,12 +195,9 @@ function DisplayEditFaq($Faq, $TCategory) {
 	echo "      <div id=\"teaser\">\n";
 	echo "        <h1>Editing FAQ#", $Faq->id , " (" , $Faq->QandA , ") </h1>\n";
 	echo "      </div>\n";
-	menugetanswers("faq.php", $title); // Display the generic header
+	//menugetanswers("faq.php", $title); // Display the generic header
 	echo "      </div>\n";
 
-        // ShowLeftColumn($MenuAction)  ; // Show the Actions
-	ShowAds(); // Show the Ads
-    
 	// Content with just two columns
 	echo "\n";
 	echo "      <div id=\"col3\" class=\"twocolumns\">\n";

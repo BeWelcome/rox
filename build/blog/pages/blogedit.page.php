@@ -55,6 +55,7 @@ class BlogEditPage extends BlogBasePage
         $catIt = $this->_model->getCategoryFromUserIt($member->id);
         $tripIt = $this->_model->getTripFromUserIt($member->id);
         $google_conf = PVars::getObj('config_google');
+        $defaultVis = new StdClass;
         $defaultVis->valueint = 2; // hack: TB settings are disabled as they reference app_user - default visibility is public
         //$defaultVis = A PP_User::getSetting($member->id, 'APP_blog_defaultVis');
 

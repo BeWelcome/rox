@@ -142,7 +142,7 @@ SQL
         // check if the receiver email address is good
         if (!$this->validateEmail($receiver))
         {
-            $this->logWrite("In feedback model swift::send: bad email [{$receiver}]", "feedback");
+            $this->logWrite("In feedback model swift::send: bad email [" . implode(',', $receiver) . "]", "feedback");
             return false;
         }
 
@@ -181,7 +181,7 @@ SQL
         }
         catch (Exception $e)
         {
-            $this->logWrite("In feedback model swift::send: caught exception try to send email to [{$receiver}]", "feedback");
+            $this->logWrite("In feedback model swift::send: caught exception try to send email to [" . implode(',', $receiver) . "]", "feedback");
             return false;
         }
 
@@ -196,16 +196,13 @@ SQL
             $sendResult = false;
         }
 
-        error_log(__FUNCTION__ . ' Send result: ' . $sendResult);
-        error_log(__FUNCTION__ . ' Send result: ' . print_r($sender, true));
-        error_log(__FUNCTION__ . ' Send result: ' . print_r($receiver, true));
         if ($sendResult)
         {
             return true;
         }
         else
         {
-            $this->logWrite("In feedback model swift::send: Failed to send a mail to [{$receiver}]", "feedback");
+            $this->logWrite("In feedback model swift::send: Failed to send a mail to [" . implode(',', $receiver) . "]", "feedback");
             return false;
         }
     }

@@ -54,7 +54,7 @@ class AdminRightsBasePage extends AdminBasePage
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
-        $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css';
+        $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css?1';
         return $stylesheets;
     }
 

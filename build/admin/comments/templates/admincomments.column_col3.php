@@ -30,19 +30,39 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-$total_bad_comments = count($this->bad_comments);
+function getProximityBlock($sel)
+{
+    $selected = explode(",", $sel);
+    $proximityBlock = "";
+    $syshcvol = PVars::getObj('syshcvol');
+    $words = new MOD_words();
+    foreach ($syshcvol->LenghtComments as $proximity)
+    {
+        $proximityBlock .= "<input type=\"checkbox\" name=\"" . $proximity . "\" " .
+            (in_array($proximity, $selected)?"checked=\"checked\" ":"") .
+            ">" . $words->get("Comment_" . $proximity) . 
+            "</input><br>\n";
+    }
+  
+    return $proximityBlock;
+}
+
+$total_bad_comments = count($this->comments);
 $words = $this->getWords();
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 echo <<<HTML
-<p>Displaying comments marked problematic ({$total_bad_comments}):</p>
+<h2>Your Scope: <!-- TODO: -->{$scope}</h2>
+<p>Displaying {$total_bad_comments} comments.</p>
+<form name="update" action="admin/" method="POST">
 
 {$this->pager->render()}
 HTML;
 
-foreach ($this->pager->getActiveSubset($this->bad_comments) as $comment)
+foreach ($this->pager->getActiveSubset($this->comments) as $comment)
 {
     $from = ($member = $comment->getFromMember()) ? $member->Username : '';
     $to = ($member = $comment->getToMember()) ? $member->Username : '';
+    $proximityBlock = getProximityBlock($comment->Lenght);
     echo <<<HTML
 <div class="checkcomment {$styles[$total_bad_comments%2]}">
     <p><b>{$comment->AdminAction}</b></p>
@@ -58,27 +78,41 @@ foreach ($this->pager->getActiveSubset($this->bad_comments) as $comment)
         </div>
             <p class="{$comment->Quality}">{$comment->Quality}</p>
             <p class="small">
-                From: <a href="members/{$from}"><b>{$from}</b></a>
-                To: <a href="members/{$to}"><b>{$to}</b></a>&nbsp;
-                |&nbsp;Created: <b>{$comment->created}</b> | Updated: <b>{$comment->updated}</b>
+                From <a href="members/{$from}"><b>{$from}</b></a>
+                about <a href="members/{$to}"><b>{$to}</b></a>
             </p>
-            <p class="small">Meeting type: <b>{$comment->Lenght}</b></p>
-           
+            <p class="small">
+                Created: <b>{$comment->created}</b> | Updated: <b>{$comment->updated}</b>
+            </p>                
     </div>    
-    
+
+   <h4>Meeting type:</h4>
+   <p>{$proximityBlock}</p>
+                    
     <h4>Meeting place:</h4>
-    <p>{$comment->TextWhere}</p>   
+    <textarea rows="5" cols="70" name="TextWhere">{$comment->TextWhere}</textarea>   
        
     <h4>Comment text:</h4>
-    <p>{$comment->TextFree}</p>    
+    <textarea rows="8" cols="70" name="TextFree">{$comment->TextFree}</textarea>
     
-    <h4>Feedback:</h4>
-    <p>FIXME: Insert Feedback message from reporter</p>  
+    <a href="admin/comments?action=showAll&idUser={$from}">Other comments written by user {$from}.</a><br>
+    
+    <a href="admin/comments?action=showAll&idUser={$to}">Other comments written about user {$to}.</a><br>
+
+    <a href="messages/compose/{$from}">Contact writer {$from}</a><br>
+    
+    <a href="messages/compose/{$to}">Contact receiver {$to}</a><br>
     
     <h4>Action:</h4>
-    <a href="#">Mark comment as checked</a> | 
-    <a href="#">Edit Comment</a> |
-    <a href="#">Delete Comment</a>
+
+    <input type="submit" value="update" />
+    </form>
+    
+    <a href="admin/comments?idComment={$comment->id}&action=markChecked">Mark As Checked</a> | 
+    
+    <a href="admin/comments?idComment={$comment->id}&action=toggleHide">Toggle Show/Hide</a> |
+   
+    <a href="admin/comments?idComment={$comment->id}&action=delete">Delete</a>
     
 </div>
 HTML;

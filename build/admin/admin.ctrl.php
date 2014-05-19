@@ -94,28 +94,6 @@ class AdminGeneralController extends AdminBaseController
 
 //}}} END: Debug right methods
 
-//{{{ START: admin comments stuff
-    /**
-     * comments overview method
-     *
-     * @access public
-     * @return object
-     */
-    public function commentsOverview()
-    {
-        list($member, $rights) = $this->checkRights('Comments');
-        $page = new AdminCommentsPage;
-        $page->member = $member;
-
-        $page->bad_comments = $this->_model->getBadComments();
-        $params = new StdClass();
-        $params->strategy = new HalfPagePager('left');
-        $params->items = count($page->bad_comments);
-        $params->items_per_page = 25;
-        $page->pager = new PagerWidget($params);
-        return $page;
-    }
-//}}} END: admin comment stuff
 //{{{ START: admin spam stuff
     /**
      * spam overview method

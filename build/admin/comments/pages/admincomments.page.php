@@ -32,9 +32,32 @@ Boston, MA  02111-1307, USA.
 
 class AdminCommentsPage extends AdminBasePage
 {
+    // TODO: is ugly
+    // TODO: this doesn't work in case of an exception while updating
+    private $comment_action2comment_teaser = array(
+        "delete" => "Comments",
+        "update" => "Updated Comment",
+        "markChecked" => "Checked Comment",
+        "toggleHide" => "Hidden / Unhidden Comment",
+        "showAll" => "All Comments",
+        "showAbusive" => "Abusive Comments",
+        "showNegative" => "Negative Comments"
+    );
+    
+     /**
+     * @var string
+     */
+    private $teaser; // default
+    
+    
+    public function __construct($teaser)
+    {
+        parent::__construct();
+        $this->teaser = $comment_action2comment_teaser[$teaser];
+    }
 
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminComments')}</a>";
+        return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->teaser}</a>";
     }
 }

@@ -55,57 +55,135 @@ class AdminCommentsController extends AdminBaseController
     {
         list($member, $rights) = $this->checkRights('Comments');
     
-        $page = new AdminCommentsPage($action);
+        $page = new AdminCommentsPage("list");
         $page->member = $member;
         
         $action = $this->args_vars->get['action'];
-        
-        switch($action) {
-            case "delete":
-                $page->comments = $this->model->deleteComment($this->args_vars->get['idComment']);
-                // TODO: check what feedback the user gets in current implementation...
-                // $page->say("Success");
-                
-                // drop through
-            case "showAll":
-                // drop through
-            case "showAbusive":
-                // drop through
-            case "":
-                // drop through
-            case "showNegative":
-                $page->comments = $this->model->getComments($action);
-                break;
-            case "toggleHide":
-                $this->_model->toggleHideComment($this->args_vars->get['idComment']);
-                $comments = array();
-                $comments[] = $this->model->getComment($this->args_vars->get['idComment']);
-                $page->comments = $comments;
-                break;
-            case "markChecked":
-                //$this->_model->checkedComment($this->args_vars->get['idComment']);
-                $comments = array();
-                $comments[] = $this->model->getComment($this->args_vars->get['idComment']);
-                $page->comments = $comments;
-                break;
-            case "update":
-                //$this->_model->updatedComment($this->args_vars->get['idComment']);
-                $comments = array();
-                $comments[] = $this->model->getComment($this->args_vars->get['idComment']);
-                $page->comments = $comments;
-                break;
-            default:
-                // TODO: log error: unsupported param exception
-                break;
-        }
-        
-        // TODO: a paging mechanism is hardly the best way for single items
+        $page->comments = $this->model->get($action);
+               
         $params = new StdClass();
         $params->strategy = new HalfPagePager('left');
         $params->items = count($page->bad_comments); // TODO: needed for single-item pages?
         $params->items_per_page = 25;
         $page->pager = new PagerWidget($params);
 
+        return $page;
+    }
+    
+    /**
+     * Button "Show" resp. button "Hide"
+     * 
+     * @see routes.php
+     * @return page
+     */
+    public function toggleHide()
+    {
+        list($member, $rights) = $this->checkRights('Comments');
+        $this->model->toggleHide($this->args_vars->get['id']);
+        return $this->_singleComment($this->args_vars->get['id'], "toggleHide", $member);
+    }
+    
+    /**
+     * Button "Allow Editing" resp. button ?! 
+     * @see routes.php
+     * @return page
+     */
+    public function toggleAllowEdit()
+    {
+        list($member, $rights) = $this->checkRights('Comments');
+        $this->model->toggleAllowEdit($this->args_vars->get['id']);
+        return $this->_singleComment($this->args_vars->get['id'], "toggleAllowEdit", $member);
+    }
+    
+    /**
+     * Button "Mark as Checked"
+     * 
+     * @return type
+     */
+    public function markChecked()
+    {
+        list($member, $rights) = $this->checkRights('Comments');
+        $this->model->markChecked($this->args_vars->get['id']);
+        return $this->_singleComment($this->args_vars->get['id'], "markChecked", $member);
+    }
+    
+    /**
+     * Button "Mark as Abuse"
+     * 
+     * @see routes.php
+     * @return type
+     */
+    public function markAdminAbuserMustCheck()
+    {
+        list($member, $rights) = $this->checkRights('Comments');
+        $this->model->markAdminAbuserMustCheck($this->args_vars->get['id']);
+        return $this->_singleComment($this->args_vars->get['id'], "markAdminAbuserMustCheck", $member);
+    }
+
+
+    /**
+     * Button "Move to Negative"
+     * 
+     * @see routes.php
+     * @return type
+     */
+    public function markAdminCommentMustCheck()
+    {
+        list($member, $rights) = $this->checkRights('Comments');
+        $this->model->markAdminCommentMustCheck($this->args_vars->get['id']);
+        return $this->_singleComment($this->args_vars->get['id'], "markAdminCommentMustCheck", $member);
+    }
+
+
+    public function update()
+    {
+        list($member, $rights) = $this->checkRights('Comments');
+        $id = $this->args_vars->get['id'];
+        $oldComment = $this->model->getSingle($id);
+        $this->model->update($id);
+        $msg = "";
+        MOD_log::get()->write($msg, 'AdminComments');
+        return $this->_singleComment($id, "update", $member);
+    }
+    
+    public function delete()
+    {
+        list($member, $rights) = $this->checkRights('Comments');
+        // TODO: test this scope check!
+        if ((stripos($rights['Rights']['Scope'], 'DeleteComment') === false) &&
+             (stripos($rights['Rights']['Scope'], 'All') === false)) {
+            $msg = "You%20don%27t%20have%20the%20right%20to%20delete%20comments";
+            $this->redirectAbsolute($this->router->url('admin_comments_list'), "msg=".$msg);
+        }
+        // TODO: why not use this?
+        // $userRights = MOD_right::get();
+        // $scope = $userRights->RightScope('Accepter');
+        // see volunteerbar.model.php
+        
+        $id = $this->args_vars->get['id'];
+        $oldComment = $this->model->getSingle($id);
+        $msg = "Deleting comment #". $id . " previous where=" . $oldComment->TextWhere . 
+                " previous text=" . $oldComment->TextFree . " previous Quality=" . 
+                $oldComment->Quality;
+        MOD_log::get()->write($msg, 'AdminComment');
+        $this->model->delete($this->args_vars->get['id']);
+        return $this->_singleComment(null, "delete", $member);
+    }
+    
+    private function _singleComment($id, $action, $member)
+    {
+        $page = new AdminCommentsPage($action);
+        $page->member = $member;
+        $comments = array();
+        $comments[] = $this->model->getSingle($id);
+        $page->comments = $comments;
+
+        // TODO: a paging mechanism is hardly the best way for a single item
+        $params = new StdClass();
+        $params->strategy = new HalfPagePager('left');
+        $params->items = count($page->bad_comments); // TODO: needed for single-item pages?
+        $params->items_per_page = 25;
+        $page->pager = new PagerWidget($params);
         return $page;
     }
 }

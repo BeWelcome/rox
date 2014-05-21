@@ -11,15 +11,17 @@ class AdminCommentsModel extends RoxModelBase {
      * @access public
      * @return array
      */
-    public function getComments($type)
+    public function get($type)
     {
-        echo "HUHU";
         if($type === "All")
-            return $this->createEntity('Comment')->findByWhereMany("AdminAction NOT IN ('NothingNeeded', 'Checked')");
+            return $this->createEntity('Comment')->findByWhereMany(
+                    "AdminAction NOT IN ('NothingNeeded', 'Checked')");
         elseif($type === "Abusive")
-            return $this->createEntity('Comment')->findByWhereMany("AdminAction NOT IN ('NothingNeeded', 'Checked')");
+            return $this->createEntity('Comment')->findByWhereMany(
+                    "AdminAction NOT IN ('NothingNeeded', 'Checked')");
         else // default: "Negative"
-            return $this->createEntity('Comment')->findByWhereMany("AdminAction NOT IN ('NothingNeeded', 'Checked')");
+            return $this->createEntity('Comment')->findByWhereMany(
+                    "AdminAction NOT IN ('NothingNeeded', 'Checked')");
     }
     
     /**
@@ -28,38 +30,59 @@ class AdminCommentsModel extends RoxModelBase {
      * @param type $id
      * @return type
      */
-    public function getComment($id)
+    public function getSingle($id)
     {
         $result = $this->createEntity('Comment')->findById($id);
         return $result;
     }
     
-    /*
-    public function deleteComment($comment)
-    {
-        if (!is_object($comment) || !$comment->isLoaded())
-        {
-            return false;
-        }
-        return $comment->deleteComment();
+    public function checkUpdate($vars) {
+        
     }
-     */
     
-    public function deleteComment($id)
+    // TODO: dummy
+    public function update($vars) {
+        // $this->dao->escape($vars['level'])
+    }
+
+    public function delete($id)
     {
         return $this->createEntity('Comment')->findById($id)->delete();
     }
     
-    public function toggleHideComment($id)
+    public function toggleHide($id)
     {
-        // FIXME: faked dummy
-        $visibility = true;
-        return $this->createEntity('Comment')->findById($id)->update('visible', $visibility);
+        $c = $this->createEntity('Comment')->findById($id);
+        $c->DisplayInPublic = ($c->DisplayInPublic==0 ? 1 : 0);
+        return $c->update();
     }
     
-    public function checkedComment($id)
+    public function toggleAllowEdit($id)
     {
-        // FIXME: faked dummy
-        return $this->createEntity('Comment')->findById($id)->update('checked', 'true');
+        $c = $this->createEntity('Comment')->findById($id);
+        $c->AllowEdit = ($c->AllowEdit==0 ? 1 : 0);
+        return $c->update();
+    }
+    
+    public function markChecked($id)
+    {
+        $this->_setAdminAction($id, "Checked");
+    }
+    
+    public function markAdminAbuserMustCheck($id)
+    {
+        $this->_setAdminAction($id, "AdminAbuserMustCheck");
+    }
+    
+    public function markAdminCommentMustCheck($id)
+    {
+        $this->_setAdminAction($id, "AdminCommentMustCheck");
+    }
+    
+    private function _setAdminAction($id, $value)
+    {
+        $c = $this->createEntity('Comment')->findById($id);
+        $c->AdminAction = $value;
+        return $c->update();
     }
 }

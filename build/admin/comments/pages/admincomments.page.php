@@ -32,12 +32,17 @@ Boston, MA  02111-1307, USA.
 
 class AdminCommentsPage extends AdminBasePage
 {
-    // TODO: is ugly
-    // TODO: this doesn't work in case of an exception while updating
-    private $comment_action2comment_teaser = array(
+    // TODO: is ugly, because it repeats some of the information in the 
+    // controller
+    // TODO: the mechanism behind this doesn't have a process in case an
+    // update fails or another exception appears
+    private $_action2Teaser = array(
         "delete" => "Comments",
         "update" => "Updated Comment",
         "markChecked" => "Checked Comment",
+        "markAdminCommentMustCheck" => "???", // TODO
+        "markAdminAbuserMustCheck" => "???", // TODO
+        "toggleAllowEdit" => "Allow / Disallow Edit Comment",
         "toggleHide" => "Hidden / Unhidden Comment",
         "showAll" => "All Comments",
         "showAbusive" => "Abusive Comments",
@@ -47,17 +52,82 @@ class AdminCommentsPage extends AdminBasePage
      /**
      * @var string
      */
-    private $teaser; // default
+    private $teaser = "";
+
+    private $words;
     
-    
-    public function __construct($teaser)
+    public function __construct($action)
     {
         parent::__construct();
-        $this->teaser = $comment_action2comment_teaser[$teaser];
+        $this->words = new MOD_words();
+        $this->teaser = $_action2Teaser[$action];
+        if($this->teaser=="")
+        {
+            // TODO: throw exception
+            return "Unsupported Action";
+        }
     }
 
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->teaser}</a>";
+    }
+    
+    protected function message()
+    {
+        if($action==="delete"||$action==="update")
+        {
+            return "Successfully updated database";
+        }
+        return "";
+    }
+    
+    protected function displayInPublic($f)
+    {
+        return ($f ? "Hide" : "Show");
+    }
+
+    protected function allowEdit($f)
+    {
+        // TODO: or is it the other way around?
+        return ($f ? "Allow Editing" : "Default Editing");
+    }
+
+    protected function getProximityBlock($sel)
+    {
+        $selected = explode(",", $sel);
+        $proximityBlock = "";
+        $syshcvol = PVars::getObj('syshcvol');
+        //$words = new MOD_words();
+        foreach ($syshcvol->LenghtComments as $proximity)
+        {
+            $proximityBlock .= "<input type=\"checkbox\" name=\"" . $proximity . "\" " .
+                (in_array($proximity, $selected)?"checked=\"checked\" ":"") .
+                ">" . $this->words->get("Comment_" . $proximity) . 
+                "</input><br>\n";
+        }
+        return $proximityBlock;
+    }
+    
+    protected function getQualityBlock($q)
+    {
+        $s = "background-color:lightgreen;";
+        if($q=="Neutral")
+            $s = "background-color:lightgray;";
+        elseif($q=="Bad")
+            $s = "background-color:red;color:white;";
+        
+        return
+        '<select style="' . $s . '">
+        <option value="Neutral"' . 
+                ($q=="Neutral" ? " selected=\"selected\"" : "") . 
+                '>' . $this->words->get("CommentQuality_Neutral") . '</option>
+        <option value="Bad"' .
+                ($q=="Bad" ? " selected=\"selected\" style=\"background-color:red;color:white;\"" : "") .
+                '>' . $this->words->get("CommentQuality_Bad") . '</option>
+        <option value="Good"' .
+                ($q=="Good" ? " selected=\"selected\" style=\"background-color:lightgreen;\"" : "") .
+                '>' . $this->words->get("CommentQuality_Good") . '</option>
+        </select>';
     }
 }

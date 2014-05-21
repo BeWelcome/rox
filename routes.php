@@ -89,9 +89,18 @@
     $this->addRoute('admin_main', 'admin', 'AdminGeneralController', 'index');
     $this->addRoute('admin_norights', 'admin/norights', 'AdminGeneralController', 'noRights');
     $this->addRoute('admin_debug_logs', 'admin/debug/:log_type:', 'AdminGeneralController', 'debugLogs');
-    $this->addRoute('admin_comments_overview', 'admin/comments/list', 'AdminCommentsController', 'listComments');
     $this->addRoute('admin_spam_overview', 'admin/spam', 'AdminGeneralController', 'spamOverview');
     $this->addRoute('admin_activity_overview', 'admin/activitylogs', 'AdminGeneralController', 'activityLogs');
+    
+    // admin comments
+    $this->addRoute('admin_comments_list', 'admin/comments/list', 'AdminCommentsController', 'listComments');
+    $this->addRoute('admin_comments_toggle_hide', 'admin/comments/toggleHide', 'AdminCommentsController', 'toggleHide');
+    $this->addRoute('admin_comments_mark_checked', 'admin/comments/markChecked', 'AdminCommentsController', 'markChecked');    
+    $this->addRoute('admin_comments_update', 'admin/comments/update', 'AdminCommentsController', 'update');    
+    $this->addRoute('admin_comments_delete', 'admin/comments/delete', 'AdminCommentsController', 'delete');    
+    $this->addRoute('admin_comments_toggle_allow_edit', 'admin/comments/toggleAllowEdit', 'AdminCommentsController', 'toggleAllowEdit');
+    $this->addRoute('admin_comments_mark_admin_abuser_must_check', 'admin/comments/markAdminAbuserMustCheck', 'AdminCommentsController', 'markAdminAbuserMustCheck');
+    $this->addRoute('admin_comments_mark_admin_comment_must_check', 'admin/comments/markAdminCommentMustCheck', 'AdminCommentsController', 'markAdminCommentMustCheck');
 
     // admin rights
     $this->addRoute('admin_rights', 'admin/rights', 'AdminRightsController', 'assign');

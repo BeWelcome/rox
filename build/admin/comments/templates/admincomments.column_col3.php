@@ -37,7 +37,7 @@ $styles = array( 'highlight', 'blank' ); // alternating background for table row
 echo <<<HTML
 <h2>Your Scope: <!-- TODO: (but this might neither work on production -->{$scope}</h2>
 <p>Displaying {$total_bad_comments} comments.</p>
-<form name="update" action="admin/" method="POST">
+<form name="update" action="{$this->router->url('admin_comments_list')}" method="POST">
 
 {$this->pager->render()}
 HTML;
@@ -96,6 +96,8 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
 
     <br>
     <br>
+    <input type="hidden" name="id" value="{$comment->id}"/>
+    {$this->getCallbackTag()}
     <input type="submit" value="Update" />&nbsp;&nbsp;
     </form>
 HTML;

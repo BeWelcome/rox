@@ -55,10 +55,10 @@ class AdminCommentsController extends AdminBaseController
     {
         list($member, $rights) = $this->checkRights('Comments');
     
-        $page = new AdminCommentsPage("list");
+        $action = $this->args_vars->get['action'];
+        $page = new AdminCommentsPage($action);
         $page->member = $member;
         
-        $action = $this->args_vars->get['action'];
         $page->comments = $this->model->get($action);
                
         $params = new StdClass();
@@ -135,15 +135,29 @@ class AdminCommentsController extends AdminBaseController
     }
 
 
-    public function update()
+    public function updateCallback(StdClass $args, ReadOnlyObject $action,
+            ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         list($member, $rights) = $this->checkRights('Comments');
-        $id = $this->args_vars->get['id'];
-        $oldComment = $this->model->getSingle($id);
-        $this->model->update($id);
-        $msg = "";
+        
+        // TODO: another option would be
+        //$vars = PPostHandler::getVars($callbackId);
+        // why is the one below better?
+
+        $errors = $this->model->checkUpdate($args->post);
+        if (count($errors) > 0) {
+            // show form again
+            $vars['errors'] = $errors;
+            $mem_redirect->post = $vars;
+            return false;
+        }
+
+        $comment = $this->model->getSingle($args->post['id']);
+        $this->model->update($comment, $args->post);
+        
+        $msg = ""; // TODO
         MOD_log::get()->write($msg, 'AdminComments');
-        return $this->_singleComment($id, "update", $member);
+        return $this->_singleComment($args->post['id'], "update", $member);
     }
     
     public function delete()

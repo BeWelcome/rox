@@ -36,13 +36,42 @@ class AdminCommentsModel extends RoxModelBase {
         return $result;
     }
     
-    public function checkUpdate($vars) {
-        
+    // TODO: this is a dummy
+    // @see MembersModel.checkCommentForm()
+    public function checkUpdate(&$vars)
+    {
+        $errors = array();
+//        if (!isset($vars['TextFree'])) {
+//            $errors[] = 'Comment_NoCommentLengthSelected';
+//        }
+        return $errors;
     }
-    
-    // TODO: dummy
-    public function update($vars) {
-        // $this->dao->escape($vars['level'])
+        
+    public function update($c, &$vars)
+    {
+        // TODO: all must be escaped in order to avoid SQL injection, right?
+        $this->dao->escape($vars['TextWhere']);
+        $this->dao->escape($vars['TextFree']);
+        $this->dao->escape($vars['Quality']);
+
+        $syshcvol = PVars::getObj('syshcvol');
+        
+        $proximity = "";
+        foreach($syshcvol->LenghtComments as $elem)
+        {
+            $this->dao->escape($vars[$elem]);
+            $proximity .= ($vars[$elem]=='on' ? ($elem.',') : '');
+        }
+        
+        if(strlen($proximity)>0)
+            $proximity = substr($proximity, 0, strlen($proximity)-1);
+        
+        $c->TextWhere = $vars['TextWhere'];
+        $c->TextFree = $vars['TextFree'];
+        $c->Quality = $vars['Quality'];
+        $c->Lenght = $proximity;
+        
+        return $c->update();
     }
 
     public function delete($id)

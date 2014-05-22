@@ -46,6 +46,7 @@ class AdminCommentsPage extends AdminBasePage
         "toggleHide" => "Hidden / Unhidden Comment",
         "showAll" => "All Comments",
         "showAbusive" => "Abusive Comments",
+        "" => "Negative Comments",
         "showNegative" => "Negative Comments"
     );
     
@@ -60,11 +61,11 @@ class AdminCommentsPage extends AdminBasePage
     {
         parent::__construct();
         $this->words = new MOD_words();
-        $this->teaser = $_action2Teaser[$action];
+        $this->teaser = $this->_action2Teaser[$action];
         if($this->teaser=="")
         {
             // TODO: throw exception
-            return "Unsupported Action";
+            echo "Unsupported Action: " . $action;
         }
     }
 
@@ -98,7 +99,6 @@ class AdminCommentsPage extends AdminBasePage
         $selected = explode(",", $sel);
         $proximityBlock = "";
         $syshcvol = PVars::getObj('syshcvol');
-        //$words = new MOD_words();
         foreach ($syshcvol->LenghtComments as $proximity)
         {
             $proximityBlock .= "<input type=\"checkbox\" name=\"" . $proximity . "\" " .
@@ -118,7 +118,7 @@ class AdminCommentsPage extends AdminBasePage
             $s = "background-color:red;color:white;";
         
         return
-        '<select style="' . $s . '">
+        '<select name="Quality" style="' . $s . '">
         <option value="Neutral"' . 
                 ($q=="Neutral" ? " selected=\"selected\"" : "") . 
                 '>' . $this->words->get("CommentQuality_Neutral") . '</option>
@@ -129,5 +129,16 @@ class AdminCommentsPage extends AdminBasePage
                 ($q=="Good" ? " selected=\"selected\" style=\"background-color:lightgreen;\"" : "") .
                 '>' . $this->words->get("CommentQuality_Good") . '</option>
         </select>';
+    }
+    
+    // One way is described here:
+    // http://trac.bewelcome.org/wiki/Handler_POST
+    // ... but here it's apparantly even simpler!
+    public function getCallbackTag()
+    {
+        $layoutbits = new MOD_layoutbits;
+        $formkit = $this->layoutkit->formkit;
+        $callback_tag = $formkit->setPostCallback('AdminCommentsController', 'updateCallback');
+        return $callback_tag;
     }
 }

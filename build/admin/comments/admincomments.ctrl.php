@@ -34,6 +34,9 @@ Boston, MA  02111-1307, USA.
  */
 class AdminCommentsController extends AdminBaseController
 {
+    // TODO: is it not enough we've got this in parent classes?
+    // TODO: should this not be $_model - but why is it often not $_model
+    // in other classes? or is it not?
     private $model;
 
     public function __construct() {
@@ -63,7 +66,7 @@ class AdminCommentsController extends AdminBaseController
                
         $params = new StdClass();
         $params->strategy = new HalfPagePager('left');
-        $params->items = count($page->bad_comments); // TODO: needed for single-item pages?
+        $params->items = count($page->comments);
         $params->items_per_page = 25;
         $page->pager = new PagerWidget($params);
 
@@ -193,10 +196,11 @@ class AdminCommentsController extends AdminBaseController
         $page->comments = $comments;
 
         // TODO: a paging mechanism is hardly the best way for a single item
+        // - but this enables us to leave the template as it is
         $params = new StdClass();
         $params->strategy = new HalfPagePager('left');
-        $params->items = count($page->bad_comments); // TODO: needed for single-item pages?
-        $params->items_per_page = 25;
+        $params->items = 1;
+        $params->items_per_page = 1;
         $page->pager = new PagerWidget($params);
         return $page;
     }

@@ -56,7 +56,7 @@ HTML;
     {
         $description = htmlspecialchars($this->rights['Comments']['Description'], ENT_QUOTES);
         echo <<<HTML
-<li><a href='{$this->router->url('admin_comments_overview')}' title='{$description}' class='header'>Comments</a></li>
+<li><a href='{$this->router->url('admin_comments_list')}' title='{$description}' class='header'>Comments</a></li>
 HTML;
     }
     if (in_array('Checker', $right_names))

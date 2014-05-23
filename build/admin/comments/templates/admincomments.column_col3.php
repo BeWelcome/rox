@@ -31,17 +31,21 @@ Boston, MA  02111-1307, USA.
      * @subpackage Admin
      */
 
-$total_bad_comments = count($this->comments);
-$words = $this->getWords();
+$userRights = MOD_right::get();
+$scope = $userRights->RightScope('Comments');
+
+$total_comments = count($this->comments);
+
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
+
+$this->pager->render();
+
 echo <<<HTML
 <h2>Your Scope: <!-- TODO: (but this might neither work on production -->{$scope}</h2>
-<p>Displaying {$total_bad_comments} comments.</p>
+<p>Displaying {$total_comments} comments.</p>
 <form name="update" action="{$this->router->url('admin_comments_list')}" method="POST">
 
-{$this->pager->render()}
 HTML;
-
 foreach ($this->pager->getActiveSubset($this->comments) as $comment)
 {
     $from = ($member = $comment->getFromMember()) ? $member->Username : '';
@@ -52,16 +56,17 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
     $displayInPublic = $this->displayInPublic($comment->DisplayInPublic);
     echo <<<HTML
 <div class="checkcomment {$styles[$total_bad_comments%2]}">
-    <p><b>{$comment->AdminAction}</b></p>
-    <p>
-        From <a href="members/{$from}"><b>{$from}</b></a>
-        about <a href="members/{$to}"><b>{$to}</b></a>
-    </p>
-    <p class="small">
-        Created: <b>{$comment->created}</b> | Updated: <b>{$comment->updated}</b>
-    </p>
     <div class="floatbox">
         <div class="float_left">
+            <p><b>{$comment->AdminAction}</b></p>
+            <p>
+                From <a href="members/{$from}"><b>{$from}</b></a>
+                about <a href="members/{$to}"><b>{$to}</b></a>
+            </p>
+            <p class="small">
+                Created: <b>{$comment->created}</b> | Updated: <b>{$comment->updated}</b>
+            </p>
+            <br/>
             <div style="display:inline-block;">
                 <a href="members/{$from}">
                     <img class="framed" src="members/avatar/{$from}/?xs" height="100px" width="100px" alt="Profile" />
@@ -77,17 +82,18 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
                 </a><br>
                 <a href="admin/comments?action=showAll&idUser={$to}">comments about me</a><br>
                 <a href="messages/compose/{$to}">contact me</a>
-            </div><br><br>
+            </div>
+        </div>
+        <div class="float_right">
             <p class="{$comment->Quality}">
                 {$qualityBlock}
             </p>
-        </div>
-        <div class="float_right">
             <h4>Meeting type:</h4>
             <p>{$proximityBlock}</p>
         </div>    
     </div>
-                    
+     
+    <br>
     <h4>Meeting place:</h4>
     <textarea rows="5" cols="70" name="TextWhere">{$comment->TextWhere}</textarea>   
        
@@ -116,10 +122,6 @@ HTML;
         Mark As Checked
     </a>&nbsp;&nbsp;
 HTML;
-        // TODO: there MUST be a better way!
-        $userRights = MOD_right::get();
-        $scope = $userRights->RightScope('Comments');
-
         if($scope=="AdminAbuser"||$scope=="\"All\"")
         {
             echo <<<HTML

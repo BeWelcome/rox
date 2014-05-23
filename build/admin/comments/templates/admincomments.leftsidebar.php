@@ -26,7 +26,13 @@ Boston, MA  02111-1307, USA.
  */
 $words = new MOD_words();
 ?>
-<h3><a href="admin" title="$words->get('BackToVolunteerToolsBarTitle')">&laquo; <?php echo $words->get('VolunteerToolsBarTitle') ?></a></h3>
+<h3>
+    <?php
+        // TODO: this doesn't work with the latest db, the code is archived! 
+        echo $this->words->get('VolunteerToolsBarTitle');
+    ?>
+</h3>
+<!-- TODO: how to insert ../../templates/adminoverview.leftsidebar.php? -->
 </br>
 <h3><?php echo $words->get('Action'); ?></h3>
 <ul class="linklist">

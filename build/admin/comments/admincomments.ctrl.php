@@ -59,11 +59,13 @@ class AdminCommentsController extends AdminBaseController
         list($member, $rights) = $this->checkRights('Comments');
     
         $action = $this->args_vars->get['action'];
+        $from = $this->args_vars->get['from'];
+        $to = $this->args_vars->get['to'];
         $page = new AdminCommentsPage($action);
         $page->member = $member;
         
-        $page->comments = $this->model->get($action);
-               
+        $page->comments = $this->model->get($action, $from, $to);
+        
         $params = new StdClass();
         $params->strategy = new HalfPagePager('left');
         $params->items = count($page->comments);
@@ -163,6 +165,9 @@ class AdminCommentsController extends AdminBaseController
         return $this->_singleComment($args->post['id'], "update", $member);
     }
     
+    // TODO: according to current logic after a successful deletion all (other)
+    // comments to the same member are displayed. This didn't seem to me very
+    // intuitive and has therefore not been replicated here. Okay?
     public function delete()
     {
         list($member, $rights) = $this->checkRights('Comments');

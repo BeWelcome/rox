@@ -11,14 +11,23 @@ class AdminCommentsModel extends RoxModelBase {
      * @access public
      * @return array
      */
-    public function get($type)
+    public function get($type, $from, $to)
     {
-        if($type === "All")
+        // TODO:  ORDER BY updated DESC
+        // TODO: differentiate type queries
+        echo "from=".$from." to=".$to;
+        if(isset($from) && $from>0)
+            return $this->createEntity ('Comment')->findByWhereMany(
+                    "IdFromMember = ".$from);
+        elseif(isset($to) && $to>0)
+            return $this->createEntity ('Comment')->findByWhereMany(
+                    "IdToMember = ".$to);
+        elseif($type === "showAll")
             return $this->createEntity('Comment')->findByWhereMany(
                     "AdminAction NOT IN ('NothingNeeded', 'Checked')");
-        elseif($type === "Abusive")
+        elseif($type === "showAbusive")
             return $this->createEntity('Comment')->findByWhereMany(
-                    "AdminAction NOT IN ('NothingNeeded', 'Checked')");
+                    "AdminAction = 'AdminAbuserMustCheck'");
         else // default: "Negative"
             return $this->createEntity('Comment')->findByWhereMany(
                     "AdminAction NOT IN ('NothingNeeded', 'Checked')");

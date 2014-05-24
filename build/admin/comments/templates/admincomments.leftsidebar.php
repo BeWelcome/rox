@@ -36,13 +36,13 @@ $words = new MOD_words();
 </br>
 <h3><?php echo $words->get('Action'); ?></h3>
 <ul class="linklist">
-    <li><a href="<?php echo $this->router->url('admin_comments_list'); ?>">Negative comments</a></li>
+    <li><a href="<?php echo $this->router->url('admin_comments_list'); ?>?action=showNegative">Negative comments</a></li>
     <?php
         $right_names = array_keys($this->rights);
         if (in_array('Comments', $right_names) && 1==1 /* TODO: placeholder for: Scope must be "AdminAbuser" aka "Abusive" */ )
         {
     ?>
-        <li><a href="<?php echo $this->router->url('admin_comments_list') .'?action=showAbusive'; ?>">Abusive comments</a></li>
+        <li><a href="<?php echo $this->router->url('admin_comments_list'); ?>?action=showAbusive">Abusive comments</a></li>
     <?php } ?>
-    <li><a href="<?php echo $this->router->url('admin_comments_list') . '?action=showAll'; ?>">All comments</a></li>
+    <li><a href="<?php echo $this->router->url('admin_comments_list'); ?>?action=showAll">All comments</a></li>
 </ul>

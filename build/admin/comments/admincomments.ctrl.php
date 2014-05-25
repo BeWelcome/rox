@@ -49,30 +49,22 @@ class AdminCommentsController extends AdminBaseController
     }
 
     /**
-     * comments overview method
+     * comments overview method; used for lists of comments from or to
+     * specific members or lists comprising all relevant, all apparantly 
+     * abusive or negative comments
      *
      * @access public
      * @return object
      */
     public function listComments()
     {
-        list($member, $rights) = $this->checkRights('Comments');
-    
-        $action = $this->args_vars->get['action'];
-        $from = $this->args_vars->get['from'];
-        $to = $this->args_vars->get['to'];
-        $page = new AdminCommentsPage($action);
-        $page->member = $member;
-        
-        $page->comments = $this->model->get($action, $from, $to);
-        
-        $params = new StdClass();
-        $params->strategy = new HalfPagePager('left');
-        $params->items = count($page->comments);
-        $params->items_per_page = 25;
-        $page->pager = new PagerWidget($params);
-
-        return $page;
+        list($member, $rights) = $this->checkRights('Comments');    
+        return $this->_manyComments(
+                $member,
+                $this->args_vars->get['action'],
+                null,
+                $this->args_vars->get['from'],
+                $this->args_vars->get['to']);
     }
     
     /**
@@ -85,7 +77,7 @@ class AdminCommentsController extends AdminBaseController
     {
         list($member, $rights) = $this->checkRights('Comments');
         $this->model->toggleHide($this->args_vars->get['id']);
-        return $this->_singleComment($this->args_vars->get['id'], "toggleHide", $member);
+        return $this->_manyComments($member);
     }
     
     /**
@@ -97,7 +89,7 @@ class AdminCommentsController extends AdminBaseController
     {
         list($member, $rights) = $this->checkRights('Comments');
         $this->model->toggleAllowEdit($this->args_vars->get['id']);
-        return $this->_singleComment($this->args_vars->get['id'], "toggleAllowEdit", $member);
+        return $this->_manyComments($member);
     }
     
     /**
@@ -109,7 +101,7 @@ class AdminCommentsController extends AdminBaseController
     {
         list($member, $rights) = $this->checkRights('Comments');
         $this->model->markChecked($this->args_vars->get['id']);
-        return $this->_singleComment($this->args_vars->get['id'], "markChecked", $member);
+        return $this->_manyComments($member);
     }
     
     /**
@@ -122,7 +114,7 @@ class AdminCommentsController extends AdminBaseController
     {
         list($member, $rights) = $this->checkRights('Comments');
         $this->model->markAdminAbuserMustCheck($this->args_vars->get['id']);
-        return $this->_singleComment($this->args_vars->get['id'], "markAdminAbuserMustCheck", $member);
+        return $this->_manyComments($member);
     }
 
 
@@ -136,10 +128,12 @@ class AdminCommentsController extends AdminBaseController
     {
         list($member, $rights) = $this->checkRights('Comments');
         $this->model->markAdminCommentMustCheck($this->args_vars->get['id']);
-        return $this->_singleComment($this->args_vars->get['id'], "markAdminCommentMustCheck", $member);
+        return $this->_manyComments($member);
     }
 
-
+    /**
+     *  comment form triggers an update
+     */
     public function updateCallback(StdClass $args, ReadOnlyObject $action,
             ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
@@ -165,31 +159,39 @@ class AdminCommentsController extends AdminBaseController
         return $this->_singleComment($args->post['id'], "update", $member);
     }
     
-    // TODO: according to current logic after a successful deletion all (other)
-    // comments to the same member are displayed. This didn't seem to me very
-    // intuitive and has therefore not been replicated here. Okay?
+    /**
+     * Delete a comment.
+     * 
+     * @return AdminCommentsPage
+     */
     public function delete()
     {
+        $action = $this->args_vars->get['action'];
         list($member, $rights) = $this->checkRights('Comments');
         // TODO: test this scope check!
-        if ((stripos($rights['Rights']['Scope'], 'DeleteComment') === false) &&
-             (stripos($rights['Rights']['Scope'], 'All') === false)) {
-            $msg = "You%20don%27t%20have%20the%20right%20to%20delete%20comments";
-            $this->redirectAbsolute($this->router->url('admin_comments_list'), "msg=".$msg);
+        if ((stripos($rights['Comments']['Scope'], 'DeleteComment') === false) &&
+             (stripos($rights['Comments']['Scope'], 'All') === false) &&
+             (stripos($rights['Comments']['Scope'], '"All"') === false)) {
+            //$msg = "You%20don%27t%20have%20the%20right%20to%20delete%20comments";
+            //$this->redirectAbsolute($this->router->url('admin_comments_list'), "msg=".$msg);
+            return $this->_manyComments($member, $action,
+                    "You don't have the right to delete comments;".$rights['Rights']['Scope']."!");
         }
-        // TODO: why not use this?
+        // TODO: the above is from AdminBaseController.checkRights;
+        // why not use this?:
         // $userRights = MOD_right::get();
-        // $scope = $userRights->RightScope('Accepter');
+        // $scope = $userRights->RightScope('Comments');
         // see volunteerbar.model.php
         
         $id = $this->args_vars->get['id'];
-        $oldComment = $this->model->getSingle($id);
-        $msg = "Deleting comment #". $id . " previous where=" . $oldComment->TextWhere . 
-                " previous text=" . $oldComment->TextFree . " previous Quality=" . 
-                $oldComment->Quality;
+        $comment = $this->model->getSingle($id);
+        $to = $comment->IdToMember;
+        $msg = "Deleting comment #". $id . " previous where=" . $comment->TextWhere . 
+                " previous text=" . $comment->TextFree . " previous Quality=" . 
+                $comment->Quality;
         MOD_log::get()->write($msg, 'AdminComment');
         $this->model->delete($this->args_vars->get['id']);
-        return $this->_singleComment(null, "delete", $member);
+        return $this->_manyComments($member, $action, "Comment deleted", null, $to);
     }
     
     private function _singleComment($id, $action, $member)
@@ -200,13 +202,37 @@ class AdminCommentsController extends AdminBaseController
         $comments[] = $this->model->getSingle($id);
         $page->comments = $comments;
 
-        // TODO: a paging mechanism is hardly the best way for a single item
-        // - but this enables us to leave the template as it is
+        // despite dealing with a single item we use the PagerWidget;
+        // - this enables us to use the template as it is
         $params = new StdClass();
         $params->strategy = new HalfPagePager('left');
         $params->items = 1;
         $params->items_per_page = 1;
         $page->pager = new PagerWidget($params);
+        return $page;
+    }
+    
+    /**
+     * 
+     * @param type $member
+     * @param type $action
+     * @param type $from
+     * @param type $to
+     * @return \AdminCommentsPage
+     */
+    private function _manyComments($member, $action, $message, $from, $to)
+    {
+        $page = new AdminCommentsPage($action, $message);
+        $page->member = $member;
+        
+        $page->comments = $this->model->get($action, $from, $to);
+        
+        $params = new StdClass();
+        $params->strategy = new HalfPagePager('left');
+        $params->items = count($page->comments);
+        $params->items_per_page = 25;
+        $page->pager = new PagerWidget($params);
+
         return $page;
     }
 }

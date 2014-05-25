@@ -33,19 +33,21 @@ Boston, MA  02111-1307, USA.
 
 $userRights = MOD_right::get();
 $scope = $userRights->RightScope('Comments');
-
 $total_comments = count($this->comments);
-
 $styles = array( 'highlight', 'blank' ); // alternating background for table rows
 
-$this->pager->render();
+if(isset($this->message) && strlen($this.message)>0)
+{
+    echo "<p class=\"note\">" . $this->message . "</p>";
+}
 
 echo <<<HTML
-<h2>Your Scope: <!-- TODO: (but this might neither work on production -->{$scope}</h2>
+<h2>Your Scope: {$scope}</h2>
+
 <p>Displaying {$total_comments} comments.</p>
-<form name="update" action="{$this->router->url('admin_comments_list')}" method="POST">
 
 HTML;
+$this->pager->render();
 foreach ($this->pager->getActiveSubset($this->comments) as $comment)
 {
     $from = ($member = $comment->getFromMember()) ? $member->Username : '';
@@ -55,6 +57,7 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
     $allowEdit = $this->allowEdit($comment->AllowEdit);
     $displayInPublic = $this->displayInPublic($comment->DisplayInPublic);
     echo <<<HTML
+<form name="update" action="{$this->router->url('admin_comments_list')}" method="POST">
 <div class="checkcomment {$styles[$total_bad_comments%2]}">
     <div class="floatbox">
         <div class="float_left">
@@ -105,9 +108,10 @@ foreach ($this->pager->getActiveSubset($this->comments) as $comment)
     <input type="hidden" name="id" value="{$comment->id}"/>
     {$this->getCallbackTag()}
     <input type="submit" value="Update" />&nbsp;&nbsp;
-    </form>
+</div>
+</form>
 HTML;
-    if($comment->AdminComment != "Checked")
+    if($comment->AdminAction != "Checked" && $comment->AdminAction != "NothingNeeded")
     {
         echo <<<HTML
     <a href="{$this->router->url('admin_comments_toggle_allow_edit')}?id={$comment->id}" class="button">
@@ -116,7 +120,9 @@ HTML;
         
     <a href="{$this->router->url('admin_comments_toggle_hide')}?id={$comment->id}" class="button">
         {$displayInPublic}
-    </a>&nbsp;&nbsp;
+    </a>
+        
+        <br/>
         
     <a href="{$this->router->url('admin_comments_mark_checked')}?id={$comment->id}" class="button">
         Mark As Checked
@@ -143,7 +149,7 @@ HTML;
         if($scope=="AdminDelete"||$scope=="\"All\"")
         {
             echo <<<HTML
-        <a href="{$this->router->url('admin_comments_delete')}?id={$comment->id}" class="button">
+        <a href="{$this->router->url('admin_comments_delete')}?id={$comment->id}&action={$this->action}" class="button">
             Delete
         </a>
         </div>

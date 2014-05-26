@@ -82,6 +82,8 @@
     $this->addRoute('members_update_note', 'members/:username:/note/edit', 'MembersController', 'addNote');
     $this->addRoute('members_delete_note', 'members/:username:/note/delete', 'MembersController', 'deleteNote');
 
+    $this->addRoute('members_edit_flags', 'members/:username:/flags', 'MembersController', 'editFlags');
+
     // admin temporary vol page route
     $this->addRoute('admin_tempvolstart', 'volunteer', 'AdminGeneralController', 'tempVolStart');
 
@@ -264,3 +266,6 @@
     $this->addRoute('safety_faq', 'safety/faq', 'safetyController', 'safetyFaq');
     $this->addRoute('safety_team', 'safety/team', 'safetyController', 'safetyTeam');
     $this->addRoute('safety_contact', 'feedback?IdCategory=2', 'safetyController', 'safetyContact');
+
+    // Update statistics
+    $this->addRoute('updatestats', 'about/updatestats', 'AboutController', 'updateStatistics');

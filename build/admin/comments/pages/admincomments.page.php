@@ -56,16 +56,22 @@ class AdminCommentsPage extends AdminBasePage
     private $teaser = "";
 
     private $words;
+
+    protected $action;
     
-    public function __construct($action)
+    protected $message;
+    
+    public function __construct($action, $message)
     {
         parent::__construct();
+        $this->action = $action;
+        $this->message = $message;
         $this->words = new MOD_words();
         $this->teaser = $this->_action2Teaser[$action];
         if($this->teaser=="")
         {
             // TODO: throw exception
-            echo "Unsupported Action: " . $action;
+            echo "Unsupported action: " . $action;
         }
     }
 
@@ -103,8 +109,8 @@ class AdminCommentsPage extends AdminBasePage
         {
             $proximityBlock .= "<input type=\"checkbox\" name=\"" . $proximity . "\" " .
                 (in_array($proximity, $selected)?"checked=\"checked\" ":"") .
-                ">" . $this->words->get("Comment_" . $proximity) . 
-                "</input><br>\n";
+                "/>" . $this->words->get("Comment_" . $proximity) . 
+                "<br/>\n";
         }
         return $proximityBlock;
     }

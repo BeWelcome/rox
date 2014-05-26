@@ -13,24 +13,23 @@ class AdminCommentsModel extends RoxModelBase {
      */
     public function get($type, $from, $to)
     {
-        // TODO:  ORDER BY updated DESC
-        // TODO: differentiate type queries
-        echo "from=".$from." to=".$to;
+        $entity = $this->createEntity('Comment');
+        $entity->sql_order = "updated DESC";
         if(isset($from) && $from>0)
-            return $this->createEntity ('Comment')->findByWhereMany(
-                    "IdFromMember = ".$from);
+            return $entity->findByWhereMany("IdFromMember = ".$from);
         elseif(isset($to) && $to>0)
-            return $this->createEntity ('Comment')->findByWhereMany(
-                    "IdToMember = ".$to);
+            return $entity->findByWhereMany("IdToMember = ".$to);
         elseif($type === "showAll")
-            return $this->createEntity('Comment')->findByWhereMany(
+            // TODO: this limitation is not like on production, but I found it
+            // in the given code and it makes sense. I therefore assume it's
+            // here on purpose, as an improvement, and leave it.
+            return $entity->findByWhereMany(
                     "AdminAction NOT IN ('NothingNeeded', 'Checked')");
         elseif($type === "showAbusive")
-            return $this->createEntity('Comment')->findByWhereMany(
+            return $entity->findByWhereMany(
                     "AdminAction = 'AdminAbuserMustCheck'");
-        else // default: "Negative"
-            return $this->createEntity('Comment')->findByWhereMany(
-                    "AdminAction NOT IN ('NothingNeeded', 'Checked')");
+        // default: "Negative"
+        return $entity->findByWhereMany("AdminAction = 'AdminCommentMustCheck'");
     }
     
     /**

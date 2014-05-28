@@ -1,6 +1,0 @@
-<map id="ItemlistWidget\render" name="ItemlistWidget\render">
-<area shape="rect" id="node2" href="$class_itemlist_widget.html#a7a902737334f82eb4ef9f4bf88fe7edc" title="ItemlistWidget\\showItems" alt="" coords="200,35,371,61"/>
-<area shape="rect" id="node3" href="$class_itemlist_widget.html#a3922870e61c7c835439487352fbbeb31" title="ItemlistWidget\\showItems\l_table" alt="" coords="419,27,589,69"/>
-<area shape="rect" id="node4" href="$class_itemlist_widget.html#a439dfdf0234a63870af461fad548316c" title="ItemlistWidget\\getItems" alt="" coords="647,5,806,32"/>
-<area shape="rect" id="node5" href="$class_itemlist_widget.html#a795961d317bc72f229c657d295d73a52" title="ItemlistWidget\\hideColumn\lTitles" alt="" coords="638,57,815,98"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="SimplePie_Decode_HTML_Entities\parse" name="SimplePie_Decode_HTML_Entities\parse">
-<area shape="rect" id="node2" href="$class_simple_pie___decode___h_t_m_l___entities.html#ab13cda3d8f9de56016675155fa332eed" title="SimplePie_Decode_HTML\l_Entities\\consume" alt="" coords="449,5,623,46"/>
-<area shape="rect" id="node3" href="$class_simple_pie___decode___h_t_m_l___entities.html#a88d1abac58c50aa674196d12620a53bc" title="SimplePie_Decode_HTML\l_Entities\\entity" alt="" coords="227,70,400,111"/>
-<area shape="rect" id="node4" href="$class_simple_pie___misc.html#aff3bd75f8333c6509b0f93a03c508ff0" title="SimplePie_Misc\\codepoint\l_to_utf8" alt="" coords="448,70,624,111"/>
-<area shape="rect" id="node5" href="$class_simple_pie___decode___h_t_m_l___entities.html#a39c76fae36a4a3b4d474e11025f7eb83" title="SimplePie_Decode_HTML\l_Entities\\consume_range" alt="" coords="449,135,623,177"/>
-<area shape="rect" id="node6" href="$class_simple_pie___decode___h_t_m_l___entities.html#ab671e4fd9fa5f7d1f8eef60808e798a2" title="SimplePie_Decode_HTML\l_Entities\\unconsume" alt="" coords="449,201,623,242"/>
-</map>

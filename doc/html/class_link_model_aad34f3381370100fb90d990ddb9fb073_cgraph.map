@@ -1,8 +1,0 @@
-<map id="LinkModel\getLinksFull" name="LinkModel\getLinksFull">
-<area shape="rect" id="node2" href="$class_link_model.html#a0d8989801580efa5d67e70c6e4f20707" title="LinkModel\\dbLinks" alt="" coords="232,5,363,32"/>
-<area shape="rect" id="node4" href="$class_link_model.html#a70f58a1c4a31e087ebef5abe06f0a5bd" title="LinkModel\\getIdsFromPath" alt="" coords="209,56,386,83"/>
-<area shape="rect" id="node5" href="$class_link_model.html#a5ac93d09dc5fbb2e66e98f22e7840dc6" title="LinkModel\\getMemberdata" alt="" coords="210,107,385,133"/>
-<area shape="rect" id="node7" href="$class_link_model.html#a167d181fc13c0ae650128f5295781915" title="LinkModel\\getMemberID" alt="" coords="216,157,379,184"/>
-<area shape="rect" id="node3" href="$class_rox_model_base.html#aa555ff4841071cf011132ef42ec8b791" title="RoxModelBase\\bulkLookup" alt="" coords="441,81,621,108"/>
-<area shape="rect" id="node6" href="$class_rox_model_base.html#a7b9edf679f49fa2bea9b14d9b0f7a2f3" title="RoxModelBase\\singleLookup" alt="" coords="435,144,626,171"/>
-</map>

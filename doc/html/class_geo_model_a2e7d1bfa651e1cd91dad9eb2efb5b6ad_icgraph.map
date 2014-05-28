@@ -1,6 +1,0 @@
-<map id="GeoModel\getGeonamesHierarchy" name="GeoModel\getGeonamesHierarchy">
-<area shape="rect" id="node2" href="$class_geo_model.html#a0460accc222ad8930649c0a977acb781" title="GeoModel\\addGeonameId" alt="" coords="285,31,457,57"/>
-<area shape="rect" id="node5" href="$class_geo_model.html#a798e9cb6d0c644dad10c1e3cb7f9f4e7" title="GeoModel\\updateGeonameId" alt="" coords="275,81,466,108"/>
-<area shape="rect" id="node3" href="$class_geo_model.html#a82d9e74333a423d4c792bef33318497d" title="GeoModel\\checkGeonameId" alt="" coords="515,5,701,32"/>
-<area shape="rect" id="node4" href="$class_geo_model.html#a9779a77bcd5f2b6a5d3838b8d6e4d4ed" title="GeoModel\\RenewGeo" alt="" coords="534,56,682,83"/>
-</map>

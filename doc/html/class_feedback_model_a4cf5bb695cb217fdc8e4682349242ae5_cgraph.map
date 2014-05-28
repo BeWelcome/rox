@@ -1,5 +1,0 @@
-<map id="feedbackMail" name="feedbackMail">
-<area shape="rect" id="node2" href="$class_rox_component_base.html#a33a50c503ce289d20e2146edbe6abdbf" title="RoxComponentBase\\logWrite" alt="" coords="153,5,346,32"/>
-<area shape="rect" id="node3" href="$class_rox_component_base.html#af8283af3e7c972d9c276dc634eec0bdc" title="RoxComponentBase\\getLog" alt="" coords="395,5,579,32"/>
-<area shape="rect" id="node4" href="$class_m_o_d__log.html#a5ba61361bf0695a285bbaefefc427191" title="MOD_log\\get" alt="" coords="627,5,725,32"/>
-</map>

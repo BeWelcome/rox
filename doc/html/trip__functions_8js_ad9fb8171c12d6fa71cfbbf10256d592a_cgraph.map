@@ -1,7 +1,0 @@
-<map id="load" name="load">
-<area shape="rect" id="node2" href="$marker__manager_8js.html#a3770c18acd95a76cd38e4cb4bdcdcffd" title="MarkerManager" alt="" coords="113,5,225,32"/>
-<area shape="rect" id="node3" href="$trip__functions_8js.html#a6b1f6c477096a0d7ba44a994304be60f" title="setupOfficeMarkers" alt="" coords="102,56,237,83"/>
-<area shape="rect" id="node6" href="$trip__functions_8js.html#a8505c5bde8d4bc559f9859e3f01b0231" title="zoomfit" alt="" coords="137,107,201,133"/>
-<area shape="rect" id="node4" href="$trip__functions_8js.html#ab7dbfa1d0e211287283930094d6350ea" title="getIcon" alt="" coords="303,31,367,57"/>
-<area shape="rect" id="node5" href="$trip__functions_8js.html#a1b370852f528eeeda3c16b9b36fc564e" title="createMarker" alt="" coords="285,81,384,108"/>
-</map>

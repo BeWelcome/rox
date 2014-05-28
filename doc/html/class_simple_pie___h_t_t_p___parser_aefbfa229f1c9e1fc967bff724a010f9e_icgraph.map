@@ -1,8 +1,0 @@
-<map id="value" name="value">
-<area shape="rect" id="node2" href="$class_simple_pie___h_t_t_p___parser.html#a195226652b40272d8cb59f3c78ac4a41" title="new_line" alt="" coords="131,5,203,32"/>
-<area shape="rect" id="node3" href="$class_simple_pie___h_t_t_p___parser.html#acdc092743e82635472f589f632734e86" title="linear_whitespace" alt="" coords="104,56,229,83"/>
-<area shape="rect" id="node5" href="$class_simple_pie___h_t_t_p___parser.html#a2b3b1ab6485bf98d518a287990c70301" title="value_char" alt="" coords="125,107,208,133"/>
-<area shape="rect" id="node6" href="$class_simple_pie___h_t_t_p___parser.html#a707562be1346fb38d561d2d4aec6b7b1" title="quote_char" alt="" coords="123,157,210,184"/>
-<area shape="rect" id="node7" href="$class_simple_pie___h_t_t_p___parser.html#abee68060f4729aa3ffcf562b04688905" title="quote_escaped" alt="" coords="111,208,222,235"/>
-<area shape="rect" id="node4" href="$class_simple_pie___h_t_t_p___parser.html#a5aac41bd4bee6ee8cf4cfff33840d478" title="quote" alt="" coords="278,56,333,83"/>
-</map>

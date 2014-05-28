@@ -1,7 +1,0 @@
-<map id="ActivitiesController\getPager" name="ActivitiesController\getPager">
-<area shape="rect" id="node2" href="$class_activities_controller.html#ae48b6525453e4ba55f36d70ccaf7e5d9" title="ActivitiesController\l\\activitiesNearMe" alt="" coords="187,5,317,46"/>
-<area shape="rect" id="node3" href="$class_activities_controller.html#a05a13f8fb50881719421e1bb1eae6801" title="ActivitiesController\l\\myActivities" alt="" coords="187,70,317,111"/>
-<area shape="rect" id="node4" href="$class_activities_controller.html#adf285b683b9c05a192dfd359308dc383" title="ActivitiesController\l\\pastActivities" alt="" coords="187,135,317,177"/>
-<area shape="rect" id="node5" href="$class_activities_controller.html#a804d4dc02593f4493d09d5ab78777b52" title="ActivitiesController\l\\search" alt="" coords="187,201,317,242"/>
-<area shape="rect" id="node6" href="$class_activities_controller.html#aa806472c4563257740685d7ef331aa79" title="ActivitiesController\l\\upcomingActivities" alt="" coords="185,266,319,307"/>
-</map>

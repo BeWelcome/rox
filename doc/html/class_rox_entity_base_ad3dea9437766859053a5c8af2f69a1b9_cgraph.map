@@ -1,5 +1,0 @@
-<map id="findBySQLMany" name="findBySQLMany">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#a4583df34edb9afa955044027de7d57d3" title="queryForEntities" alt="" coords="171,5,288,32"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#a540d3feaa287dff42642c68bc7b57206" title="loadEntities" alt="" coords="336,5,427,32"/>
-<area shape="rect" id="node4" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="475,5,659,32"/>
-</map>

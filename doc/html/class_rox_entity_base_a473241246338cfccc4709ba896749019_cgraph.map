@@ -1,6 +1,0 @@
-<map id="insert" name="insert">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#a7ec14e8ec3cff8883cd8ca176af2807c" title="getPrimaryKey" alt="" coords="110,5,218,32"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#aa4afd6ae68aa53bee950d3d2c7b72f18" title="getTableDescription" alt="" coords="267,56,403,83"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#a6287262cb9628d7a89d8fc16dcb51177" title="getColumns" alt="" coords="119,107,209,133"/>
-<area shape="rect" id="node5" href="$class_rox_entity_base.html#a1b73692f359aec5e87d6fcc1b47f20ff" title="validateField" alt="" coords="117,157,211,184"/>
-</map>

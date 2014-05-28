@@ -1,8 +1,0 @@
-<map id="findBySearchTerms" name="findBySearchTerms">
-<area shape="rect" id="node2" href="$class_rox_entity_base.html#ad57905fc15b97d7bffeee81d627f9039" title="RoxEntityBase\\findAll" alt="" coords="225,5,373,32"/>
-<area shape="rect" id="node7" href="$class_rox_entity_base.html#afff4f3fb46af6a21d296062c42c2c9f5" title="RoxEntityBase\\findByWhereMany" alt="" coords="189,56,408,83"/>
-<area shape="rect" id="node3" href="$class_rox_entity_base.html#a93566f2c8d709d410ae8ec46b813999b" title="RoxEntityBase\\getTableName" alt="" coords="462,5,658,32"/>
-<area shape="rect" id="node4" href="$class_rox_entity_base.html#a4583df34edb9afa955044027de7d57d3" title="RoxEntityBase\\queryForEntities" alt="" coords="456,56,664,83"/>
-<area shape="rect" id="node5" href="$class_rox_entity_base.html#a540d3feaa287dff42642c68bc7b57206" title="RoxEntityBase\\loadEntities" alt="" coords="712,56,893,83"/>
-<area shape="rect" id="node6" href="$class_rox_model_base.html#a31265ca609e83367571773a2e4db3035" title="RoxModelBase\\createEntity" alt="" coords="941,56,1125,83"/>
-</map>

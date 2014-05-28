@@ -1,6 +1,0 @@
-<map id="check_ipv6" name="check_ipv6">
-<area shape="rect" id="node2" href="$class_simple_pie___i_r_i.html#a1c7c44c55082496e39f0d5a381a4e041" title="SimplePie_IRI\\set_host" alt="" coords="141,5,299,32"/>
-<area shape="rect" id="node3" href="$class_simple_pie___i_r_i.html#ab059cbaa30cf99b2ae5a20f0a43c9607" title="SimplePie_IRI\\set_authority" alt="" coords="347,5,530,32"/>
-<area shape="rect" id="node4" href="$class_simple_pie___i_r_i.html#a6552430c2f5c0f6b2040a97d2c111289" title="SimplePie_IRI\\set_iri" alt="" coords="579,5,722,32"/>
-<area shape="rect" id="node5" href="$class_simple_pie___i_r_i.html#a54c81d81a5bfe5d32e5a05637f65e279" title="SimplePie_IRI\\__construct" alt="" coords="771,5,946,32"/>
-</map>

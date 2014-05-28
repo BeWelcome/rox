@@ -1,6 +1,0 @@
-<map id="getGeonamesHierarchy" name="getGeonamesHierarchy">
-<area shape="rect" id="node2" href="$class_geo_model.html#a718917de09fa1979b8808c41558d0ff0" title="addGeonameId" alt="" coords="223,31,332,57"/>
-<area shape="rect" id="node5" href="$class_geo_model.html#a9212949bb13719a84e6a021eb50e5d01" title="updateGeonameId" alt="" coords="214,81,341,108"/>
-<area shape="rect" id="node3" href="$class_geo_model.html#ab75e64db4aa9691488792d46dd42530c" title="RenewGeo" alt="" coords="408,5,493,32"/>
-<area shape="rect" id="node4" href="$class_geo_model.html#af74a94ab5d988354d43688e16ebe6a3d" title="checkGeonameId" alt="" coords="389,56,512,83"/>
-</map>

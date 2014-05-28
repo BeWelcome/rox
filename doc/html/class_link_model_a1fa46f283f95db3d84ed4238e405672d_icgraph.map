@@ -1,6 +1,0 @@
-<map id="LinkModel\getLinkPreferences" name="LinkModel\getLinkPreferences">
-<area shape="rect" id="node2" href="$class_link_model.html#af2ea63da1745973d9c1f7d4b5a725c7d" title="LinkModel\\createLinkList" alt="" coords="251,64,418,91"/>
-<area shape="rect" id="node3" href="$class_link_model.html#af1121e35b4df436c1d2875b46d95e9b0" title="LinkModel\\rebuildLinks" alt="" coords="473,5,628,32"/>
-<area shape="rect" id="node4" href="$class_link_model.html#adfc7bd032ee7bb1700c1f00b80c21d00" title="LinkModel\\rebuildMissing\lLinks" alt="" coords="467,57,635,98"/>
-<area shape="rect" id="node5" href="$class_link_model.html#aefc68414351114d55ba246b1a71d4e8e" title="LinkModel\\updateLinks" alt="" coords="473,123,628,149"/>
-</map>

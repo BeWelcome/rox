@@ -1,5 +1,0 @@
-<map id="GroupLeavePage\column_col3" name="GroupLeavePage\column_col3">
-<area shape="rect" id="node2" href="$class_abstract_base_page.html#ad32945d0557e4e27e2d67c7517bb8924" title="AbstractBasePage\\createWidget" alt="" coords="251,5,463,32"/>
-<area shape="rect" id="node3" href="$class_groups_base_page.html#aab03c6e51a32e80fec4dcae2bd709c17" title="GroupsBasePage\\getGroupTitle" alt="" coords="255,56,460,83"/>
-<area shape="rect" id="node4" href="$class_rox_component_base.html#a89d9333d4f8c1d421c68fd580942d532" title="RoxComponentBase\\getWords" alt="" coords="257,107,458,133"/>
-</map>

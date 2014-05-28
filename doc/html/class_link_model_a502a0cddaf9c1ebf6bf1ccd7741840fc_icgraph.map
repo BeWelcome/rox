@@ -1,6 +1,0 @@
-<map id="LinkModel\getComments" name="LinkModel\getComments">
-<area shape="rect" id="node2" href="$class_link_model.html#af2ea63da1745973d9c1f7d4b5a725c7d" title="LinkModel\\createLinkList" alt="" coords="222,64,389,91"/>
-<area shape="rect" id="node3" href="$class_link_model.html#af1121e35b4df436c1d2875b46d95e9b0" title="LinkModel\\rebuildLinks" alt="" coords="444,5,599,32"/>
-<area shape="rect" id="node4" href="$class_link_model.html#adfc7bd032ee7bb1700c1f00b80c21d00" title="LinkModel\\rebuildMissing\lLinks" alt="" coords="437,57,605,98"/>
-<area shape="rect" id="node5" href="$class_link_model.html#aefc68414351114d55ba246b1a71d4e8e" title="LinkModel\\updateLinks" alt="" coords="444,123,599,149"/>
-</map>

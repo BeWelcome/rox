@@ -1,7 +1,0 @@
-<map id="login" name="login">
-<area shape="rect" id="node2" href="$class_forums_controller.html#a80150695f1aa25edd4763fe4a1cfced2" title="ForumsController\\index" alt="" coords="105,5,261,32"/>
-<area shape="rect" id="node3" href="$class_link_controller.html#a6c44569121a7e594f537aba6b578f9d4" title="LinkController\\index" alt="" coords="115,56,251,83"/>
-<area shape="rect" id="node4" href="$class_polls_controller.html#a6c44569121a7e594f537aba6b578f9d4" title="PollsController\\index" alt="" coords="112,107,253,133"/>
-<area shape="rect" id="node5" href="$class_user_controller.html#a149eb92716c1084a935e04a8d95f7347" title="UserController\\index" alt="" coords="113,157,252,184"/>
-<area shape="rect" id="node6" href="$class_user.html#ad3ff4029df05be358175a6de45da1c38" title="User\\loginProcess" alt="" coords="119,208,247,235"/>
-</map>

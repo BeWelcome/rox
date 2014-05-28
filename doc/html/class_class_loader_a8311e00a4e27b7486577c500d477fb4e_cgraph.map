@@ -1,6 +1,0 @@
-<map id="ClassLoader\addClassesForAutoloadInisInFolder" name="ClassLoader\addClassesForAutoloadInisInFolder">
-<area shape="rect" id="node2" href="$class_class_loader.html#ae9140de876b373efc72b5781ae76a889" title="ClassLoader\\addClass" alt="" coords="248,5,400,32"/>
-<area shape="rect" id="node3" href="$class_class_loader.html#a8190c11e04514d5a5d61ee0f553666ab" title="ClassLoader\\createIniFile" alt="" coords="240,56,408,83"/>
-<area shape="rect" id="node4" href="$class_class_loader.html#a2c6df8cddada703121738fe6b9c03f9b" title="ClassLoader\\iniParsing" alt="" coords="456,136,611,163"/>
-<area shape="rect" id="node5" href="$class_class_loader.html#ab3995dff01eda50272c5edcfdbdaf7ba" title="ClassLoader\\recursiveIni\lParsing" alt="" coords="243,158,405,199"/>
-</map>

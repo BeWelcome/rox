@@ -121,7 +121,7 @@ class MOD_mail
         }
     }
 
-    public static function sendEmail($subject, $from, $to, $title = false, $body, $body_html = false, $attach = array(), $language = 'en')
+    public static function sendEmail($subject, $from, $to, $title, $body, $language = 'en', $html = true, $attach = array())
     {
          self::init();
 
@@ -139,10 +139,7 @@ class MOD_mail
             ->setFrom($from)
 
             //Set the To addresses with an associative array
-            ->setTo($to)
-
-            //Give it a body
-            ->setBody($body);
+            ->setTo($to);
 
         // Translate footer text (used in HTML template)
         $words = new MOD_words();
@@ -150,11 +147,21 @@ class MOD_mail
 
         // Using a html-template
         ob_start();
-        require SCRIPT_BASE.'templates/shared/mail_html.php';
+        require SCRIPT_BASE . 'templates/shared/mail_html.php';
         $mail_html = ob_get_contents();
         ob_end_clean();
-        // Add the html-body
-        $message->addPart($mail_html, 'text/html');
+
+        require_once SCRIPT_BASE . '/modules/mail/lib/html2text.php';
+        $h2t = new Html2Text($mail_html);
+        $mail_plain = $h2t->get_text();
+        $message->setBody($mail_plain);
+
+        $message->addPart($mail_plain, 'text/plain');
+
+        // Add the html-body only if the member wants HTML mails
+        if ($html) {
+            $message->addPart($mail_html, 'text/html');
+        }
 
         //Optionally add any attachments
         if (!empty($attach)) {

@@ -12,10 +12,6 @@ if (empty($vars)) {
     $vars['suggestion-summary'] = $this->suggestion->summary;
     $vars['suggestion-description'] = $this->suggestion->description;
 }
-if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
-    $textarea = 'suggestion-description';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
-}
 ?>
 <div>
 <fieldset id="suggestion-create"><legend><?php if ($vars['suggestion-id'] != 0) {
@@ -51,7 +47,7 @@ if (!empty($errors)) {
     </div>
     <div class="subcolumns row">
         <label for="suggestion-description"><?php echo $words->get('suggestionDescription'); ?>*</label><br/>
-        <textarea id="suggestion-description" name="suggestion-description" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-description']; ?></textarea>
+        <textarea id="suggestion-description" name="suggestion-description" class="mce" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-description']; ?></textarea>
     </div>
     <div class="subcolumns row">
     <?php

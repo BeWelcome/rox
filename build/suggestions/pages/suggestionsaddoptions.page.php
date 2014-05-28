@@ -36,4 +36,14 @@ class SuggestionsAddOptionsPage extends SuggestionsBasePage
     {
         return 'addoptions';
     }
+
+    public function getLateLoadScriptFiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        $pref = $this->member->getPreference("PreferenceDisableTinyMCE", $default = "No");
+        if ($this->member->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymceconfig.js';
+        }
+        return $scripts;
+    }
 }

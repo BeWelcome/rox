@@ -88,4 +88,13 @@ class ComposeMessagePage extends MessagesBasePage
 
         return $field_values;
     }
+
+    public function getLateLoadScriptFiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        if ($this->sender->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymceconfig.js';
+        }
+        return $scripts;
+    }
 }

@@ -2,10 +2,7 @@
 $formkit = $this->layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('ActivitiesController', 'editCreateActivityCallback');
 $callbackTagsCancelUncancel = $formkit->setPostCallback('ActivitiesController', 'cancelUncancelActivityCallback');
-if (!isset($disableTinyMCE) || ($disableTinyMCE == 'No')) {
-    $textarea = 'activity-description';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
-}
+
 $errors = $this->getRedirectedMem('errors');
 $vars = $this->getRedirectedMem('vars');
 if (empty($vars)) {
@@ -61,7 +58,7 @@ if (!empty($errors)) {
     </div>
     <div class="row">
         <label for="activity-address"><?php echo $words->get('ActivityAddress'); ?>*</label><br/>
-        <textarea id="activity-address" name="activity-address" rows="3" cols="80" class="long" style="width:99%" ><?php echo $vars['activity-address']; ?></textarea>
+        <textarea id="activity-address" name="activity-address" class="nomce" rows="3" cols="80" class="long" style="width:99%" ><?php echo $vars['activity-address']; ?></textarea>
     </div>
     <div class="subcolumns row">
     <div class="c50l"><div class="subcl">
@@ -75,7 +72,7 @@ if (!empty($errors)) {
     </div>
     <div class="subcolumns row">
         <label for="activity-description"><?php echo $words->get('ActivityDescription'); ?>*</label><br/>
-        <textarea id="activity-description" name="activity-description" rows="10" cols="80" style="width:99%"><?php echo $vars['activity-description']; ?></textarea>
+        <textarea id="activity-description" name="activity-description" class="mce" rows="10" cols="80" style="width:99%"><?php echo $vars['activity-description']; ?></textarea>
     </div>
     <div class="subcolumns row">
         <input type="checkbox" id="activity-public" name="activity-public" <?php if (isset($vars['activity-public'])) { echo 'checked="checked"'; } ?>/>&nbsp;<label for="activity-public"><?php echo $words->get('ActivityPublic'); ?></label>

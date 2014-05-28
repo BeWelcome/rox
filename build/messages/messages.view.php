@@ -152,7 +152,7 @@ class ReplyMessagePage extends ComposeMessagePage
         // Sender becomes Receiver
         $message->receiverUsername = $message->senderUsername;
         $message->senderUsername = $_SESSION['Username'];
-        $message->Message = "\n\n>".str_replace("\n", "\n> ", wordwrap($message->Message, 70));
+        $message->Message = "<blockquote>" . wordwrap($message->Message, 70) . "</blockquote><p></p>";
         $contact_username = $message->senderUsername;
         $direction_in = true;
         if ($contact_username == $_SESSION['Username']) {
@@ -190,5 +190,14 @@ class MessageSentPage extends ReadMessagePage
     
     protected function getSubmenuActiveItem() {
         return 'sent';
+    }
+
+    public function getLateLoadScriptFiles()
+    {
+        $scripts = parent::getLateLoadScriptfiles();
+        if ($this->sender->getPreference("PreferenceDisableTinyMCE", $default = "No") == 'No') {
+            $scripts[] = 'tinymceconfig.js';
+        }
+        return $scripts;
     }
 }

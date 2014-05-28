@@ -114,7 +114,8 @@ bwrox.selectScripts([
         file: "jquery-ui-1.10.4.custom.min.js",
         pages: [
             "activities",
-            "search" ,
+            "search",
+            "signup/3",
             "admin/rights" /*,
              "blog",
              "trip",
@@ -197,7 +198,8 @@ bwrox.selectScripts([
             "forums",
             "groups",
             "suggestions",
-            "trip"
+            "trip",
+            "messages/"
         ]
     },
     {
@@ -348,8 +350,17 @@ bwrox.selectScripts([
         pages: ["searchmembers"]
     },
     {
-        file: "search/search.js?1",
-        pages: ["search/"]
+        file: "search/searchlocation.js?1",
+        pages: [
+            "search/",
+            "signup/3"
+        ]
+    },
+    {
+        file: "search/searchmultiselect.js",
+        pages: [
+            "search/"
+        ]
     },
     {
         file: "map/activities/activities_map.js?4",

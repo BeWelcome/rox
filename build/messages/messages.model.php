@@ -195,6 +195,34 @@ WHERE id = $message_id
         MOD_log::get()->write("Has read message #" . $message_id."  (MessagesModel::markReadMessage)", "readmessage");
     } // end of markReadMessage
 
+    /**
+     * Mark a message as 'sent' (or failed) by mailbot
+     *
+     * @param int    message_id   id of the message to update
+     * @param string status       status value to set
+     * @param int    triggerer_id the id of the user that triggered message sending (default to 0 for mailbot)
+     *
+     * @return nothing
+     */
+    public function markSent($message_id, $status, $triggerer_id)
+    {
+        $query_str = "
+UPDATE messages
+SET
+    Status = '$status'";
+
+        if ($status == 'Sent') {
+            $query_str .= ",IdTriggerer = " . $triggerer_id;
+            $query_str .= ",DateSent = NOW()";
+        }
+        $query_str .= " WHERE id = $message_id";
+        if ($status == 'Freeze') {
+            $query_str .= " and IdParent=0";
+        }
+
+        $this->dao->query($query_str);
+    }
+
     // Mark a message as "read" or "unread"
     public function moveMessage($message_id, $folder)
     {

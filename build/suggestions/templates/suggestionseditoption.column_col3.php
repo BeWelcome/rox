@@ -9,10 +9,6 @@ if (empty($vars)) {
     $vars['suggestion-option-summary'] = $this->option->summary;
     $vars['suggestion-option-desc'] = $this->option->description;
 }
-if (!isset($this->disableTinyMCE) || ($this->disableTinyMCE == 'No')) {
-    $textarea = 'suggestion-option-desc';
-    require_once SCRIPT_BASE . 'htdocs/script/tinymceconfig.js';
-}
 
 // Show suggestion head (as on every page)
 include 'suggestion.php';
@@ -46,7 +42,7 @@ foreach($this->suggestion->options as $option) :
 </div>
 <div class="subcolumns row">
     <label for="suggestion-option-desc"><?php echo $words->get('suggestionEditOptionDesc'); ?>*</label><br/>
-    <textarea id="suggestion-option-desc" name="suggestion-option-desc" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-option-desc']; ?></textarea>
+    <textarea id="suggestion-option-desc" name="suggestion-option-desc" class="mce" rows="10" cols="80" style="width:99%"><?php echo $vars['suggestion-option-desc']; ?></textarea>
 </div>
 <div class="subcolumns row">
 <div class="float_left">

@@ -52,11 +52,8 @@ class SignupModel extends RoxModelBase
      */
     const YOUNGEST_MEMBER = 18;
 
-    // TODO: obviously this should be standardized
     const BW_TRUE = 'Yes';
     const BW_FALSE = 'No';
-    const BW_TRUE_A = 'True';
-    const BW_FALSE_A = 'False';
 
     /**
      * Constructor
@@ -695,7 +692,7 @@ VALUES
 	 */
 	public function checkEmail($email)
 	{
-		return preg_match('/'.self::HANDLE_PREGEXP_EMAIL.'/', $email);
+		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 
 	/**
@@ -755,8 +752,6 @@ WHERE id=" . $m->id; // The email is confirmed > make the status Active
 	 */
 	public function resendConfirmationMail($username) {
         // fetch ID for member $username
-        $html_purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
-        $mail = MOD_mail::sendEmail("HAllo", "a@b.cd", "a@b.cd", "body", "body");
         $vars = array();
         $MembersModel = new MembersModel();
         $member = $MembersModel->getMemberWithUsername($username);

@@ -44,12 +44,5 @@ Boston, MA  02111-1307, USA.
         <span class="desc"><?php echo $words->getFormatted("InviteSubjectDesc"); ?></span>
     </div>
     
-    <div class="row">
-        <p>
-            <input type="checkbox" name="attach_picture" id="JoinMemberPict"<?=$attach_picture ?>/>
-            <label for="JoinMemberPict"><?php echo $words->getFormatted("InvitePicture"); ?></label>
-        </p>
-    </div>
-    
     <p><input type="submit" value="Send Invitation"/></p>
 </form>

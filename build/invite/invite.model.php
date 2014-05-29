@@ -69,9 +69,7 @@ class InviteModel extends RoxModelBase
         if (empty($input['text'])) {
             $problems['text'] = 'text is empty.';
         }
-        if (!isset($input['attach_picture']))
-            $input['attach_picture'] = false;
-        
+
         $input['status'] = 'ToSend';
         
         if (!empty($problems)) {
@@ -85,7 +83,7 @@ class InviteModel extends RoxModelBase
             $sender = MOD_crypt::MemberReadCrypted($member->Email);
             //$sender = PVars::getObj('syshcvol')->MessageSenderMail;
 
-            $result = MOD_mail::sendEmail($input['subject'],$sender,$email_array,false,$input['text'],$this->style(stripslashes(str_replace("\n","<br \>",$input['text'])),$input['attach_picture']));
+            $result = MOD_mail::sendEmail($input['subject'],$sender,$email_array, false, $input['text']);
             
         	//Now check if Swift actually sends it
         	if ($result) {
@@ -93,6 +91,7 @@ class InviteModel extends RoxModelBase
                 $_SESSION['InviteCount'] = isset($_SESSION['InviteCount']) ? ($_SESSION['InviteCount'] + count($email_array)) : count($email_array);
         	} else {
         		MOD_log::write("MOD_mail: Failed to send a mail to ".implode(',',$email_array), "MOD_mail");
+                $problems['notsend'] = 'InviteNotSent';
                 $status = false;
         	}
         }
@@ -103,11 +102,11 @@ class InviteModel extends RoxModelBase
         );
     }
 
-	public function isEmailAddress ($email) {
-		return preg_match ('#^([a-zA-Z0-9_\-])+(\.([a-zA-Z0-9_\-])+)*@((\[(((([0-1])?([0-9])?[0-9])|(2[0-4][0-9])|(2[0-5][0-5])))\.(((([0-1])?([0-9])?[0-9])|(2[0-4][0-9])|(2[0-5][0-5])))\.(((([0-1])?([0-9])?[0-9])|(2[0-4][0-9])|(2[0-5][0-5])))\.(((([0-1])?([0-9])?[0-9])|(2[0-4][0-9])|(2[0-5][0-5]))\]))|((([a-zA-Z0-9])+(([\-])+([a-zA-Z0-9])+)*\.)+([a-zA-Z])+(([\-])+([a-zA-Z0-9])+)*))$#', $email);
-	}
+    public function isEmailAddress ($email) {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
     
-	public function style($text,$photo) {
+    public function style($text,$photo) {
         $html = '<p style="font-family: Arial; font-size: 12px; line-height: 1.5em">';
         if ($photo) {
             $src = MOD_layoutbits::smallUserPic_username($_SESSION['Username']);

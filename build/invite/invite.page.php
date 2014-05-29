@@ -51,8 +51,7 @@ class InvitePage extends RoxPageView
         $subject = $words->get("MailInviteAFriendSubject", $member->name(),$_SESSION['Username']);
         $urltosignup = PVars::getObj('env')->baseuri.'signup';
         $text = str_replace('<br />','',$words->getFormatted('InviteAFriendStandardText','<a href="'.PVars::getObj('env')->baseuri.'members/'.$_SESSION["Username"].'">'.$_SESSION["Username"].'</a>',$urltosignup));
-        $attach_picture = '';
-        
+
         if (!$memory = $formkit->getMemFromRedirect()) {
             // no memory
         } else {
@@ -66,9 +65,6 @@ class InvitePage extends RoxPageView
                 }
                 if (isset($memory->post['text'])) {
                     $text = $memory->post['text'];
-                }
-                if (isset($memory->post['attach_picture'])) {
-                    $attach_picture = ' checked';
                 }
             }
             

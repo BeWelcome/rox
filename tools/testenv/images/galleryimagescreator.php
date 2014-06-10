@@ -18,7 +18,7 @@ ORDER BY user_id_foreign ASC ' . $this->getLimitText($limit);
     }
 
     /**
-     * Wrapper to get all images for groups
+     * Wrapper to get all images for galleries
      *
      * @access protected
      * @param array $pic Queryresults from database

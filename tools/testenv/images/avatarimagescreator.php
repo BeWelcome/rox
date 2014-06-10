@@ -19,7 +19,7 @@ ORDER BY id ' . $this->getLimitText($limit);
     }
 
     /**
-     * Wrapper to get all images for groups
+     * Wrapper to get all images for avatars
      *
      * @access protected
      * @param array $pic Queryresults from database

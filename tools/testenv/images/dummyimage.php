@@ -25,7 +25,7 @@ class DummyImage
     {
         // define main color
         $div = bcadd(bcpow(256,3),bcmod($this->id,$divmod));
-        $val = bcadd(bcpow($id,$pow1),bcpow($this->id+$add,$pow2));
+        $val = bcadd(bcpow($this->id,$pow1),bcpow($this->id + $add,$pow2));
         $mod = bcmod($val,$div);
         $c1 = floor($mod / pow(256,2));
         $c2 = floor($mod / 256 % 256);

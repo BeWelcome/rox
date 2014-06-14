@@ -117,6 +117,20 @@
     $this->addRoute('admin_rights_remove', 'admin/rights/remove/:id:/:username:', 'AdminRightsController', 'remove');
     $this->addRoute('admin_rights_tooltip', 'admin/rights/tooltip', 'AdminRightsController', 'tooltip');
 
+    // admin flags
+    $this->addRoute('admin_flags', 'admin/flags', 'AdminFlagsController', 'listMembers');
+    $this->addRoute('admin_flags_overview', 'admin/flags/overview', 'AdminFlagsController', 'overview');
+    $this->addRoute('admin_flags_members', 'admin/flags/list/members', 'AdminFlagsController', 'listMembers');
+    $this->addRoute('admin_flags_member', 'admin/flags/list/members/:username:', 'AdminFlagsController', 'listMembers');
+    $this->addRoute('admin_flags_flags', 'admin/flags/list/flags', 'AdminFlagsController', 'listFlags');
+    $this->addRoute('admin_flags_right', 'admin/flags/list/flags/:id:', 'AdminFlagsController', 'listFlags');
+    $this->addRoute('admin_flags_create', 'admin/flags/create', 'AdminFlagsController', 'create');
+    $this->addRoute('admin_flags_assign', 'admin/flags/assign', 'AdminFlagsController', 'assign');
+    $this->addRoute('admin_flags_assign', 'admin/flags/assign/:username:', 'AdminFlagsController', 'assign');
+    $this->addRoute('admin_flags_edit', 'admin/flags/edit/:id:/:username:', 'AdminFlagsController', 'edit');
+    $this->addRoute('admin_flags_remove', 'admin/flags/remove/:id:/:username:', 'AdminFlagsController', 'remove');
+    $this->addRoute('admin_flags_tooltip', 'admin/flags/tooltip', 'AdminFlagsController', 'tooltip');
+
     // admin words routes
     // the overview route redirects to an empty edit screen,
     // ideally this would become a real overview screen later on

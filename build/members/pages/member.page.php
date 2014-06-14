@@ -139,13 +139,13 @@ class MemberPage extends PageWithActiveSkin
         }
         if (MOD_right::get()->HasRight('SafetyTeam') || MOD_right::get()->HasRight('Admin'))
         {
-            $tt[] = array('admin',"members/{$username}/adminedit",'Admin: Edit Profile');
+            $tt[] = array('adminedit',"members/{$username}/adminedit",'Admin: Edit Profile');
         }
         if (MOD_right::get()->HasRight('Rights')) {
-            array_push($tt,array('admin','admin/rights/list/members/'.$username,$ww->AdminRights) ) ;
+            array_push($tt,array('adminrights','admin/rights/list/members/'.$username,$ww->AdminRights) ) ;
         }
         if (MOD_right::get()->HasRight('Flags')) {
-            array_push($tt,array('admin','bw/admin/adminflags.php?username='.$username,$ww->AdminFlags) ) ;
+            array_push($tt,array('adminflags', 'admin/flags/list/members/'. $username, $ww->AdminFlags) ) ;
         }
         if (MOD_right::get()->HasRight('Logs')) {
             array_push($tt,array('admin','bw/admin/adminlogs.php?Username='.$username,$ww->AdminLogs) ) ;

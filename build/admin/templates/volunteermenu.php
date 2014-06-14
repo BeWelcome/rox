@@ -63,6 +63,12 @@ Boston, MA  02111-1307, USA.
             ),
             array(
                 'Flags',
+                'admin/flags',
+                'AdminFlags',
+                'manage member flags'
+            ),
+            array(
+                'Flags (old)',
                 'bw/admin/adminflags.php',
                 'AdminFlags',
                 'administrate member flags'

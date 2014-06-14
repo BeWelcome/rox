@@ -24,6 +24,7 @@ class RoxEntityFactory
         'Comment'           => 'build/members/comment.entity',
         'Donation'          => 'build/donate/donation.entity',
         'Feedback'          => 'build/about/feedback.entity',
+        'Flag'              => 'build/admin/flags/adminflags.entity',
         'Gallery'           => 'build/gallery/gallery.entity',
         'GalleryComment'    => 'build/gallery/gallerycomment.entity',
         'GalleryItem'       => 'build/gallery/galleryitem.entity',

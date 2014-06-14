@@ -104,6 +104,7 @@ bwrox.selectScripts([
             "admin/massmail/enqueue",
             "admin/word/list/update",
             "admin/rights",
+            "admin/flags",
             "suggestions/rank",
             "activities/",
             "about/faq",
@@ -116,7 +117,8 @@ bwrox.selectScripts([
             "activities",
             "search",
             "signup/3",
-            "admin/rights" /*,
+            "admin/rights",
+             "admin/flags" /*,
              "blog",
              "trip",
              "admin/treasurer" */

@@ -17,7 +17,7 @@ class ImagesCreator
      * @param integer $limit Number of items to be created maximum
      * @access public
      **/    
-    public function getImages($limit = false)
+    public function getImages($limit = null)
     {
         $t1 = time();
         $this->createImages($limit);
@@ -25,6 +25,34 @@ class ImagesCreator
         $this->displayResult($t2-$t1);
     }
 
+    /**
+     * Retrieve limit from URL
+     *
+     * Limit is to be defined as a url paramater, <type>=<number>
+     * where type is one of the relevant types, <number> is the maximum number
+     * of imagesets that will be created
+     *
+     * @access public
+     * @return integer|boolean Number of images to be created as a maximum, false if no limit applies
+     **/
+    public function getLimit()
+    {
+        $type = $this->getType();
+        
+        // default to zero, if parameter is omitted or empty
+        if (!isset($_GET[$type]) || $_GET[$type] === ''){
+            return 0;
+        }
+        
+        // no limit if value 'max' is given
+        if (strtolower($_GET[$type]) === 'max'){
+            return false;
+        }
+        
+        // use limit as given in URL
+        return (int)$_GET[$type];
+    }
+    
     /**
      * Create images
      *
